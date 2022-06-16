@@ -1,53 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C434E23B6
-	for <loongarch@lists.linux.dev>; Thu, 16 Jun 2022 12:13:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10113C34114;
-	Thu, 16 Jun 2022 12:13:36 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Huacai Chen <chenhuacai@gmail.com>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] MAINTAINERS: Add maillist information for LoongArch
-Date: Thu, 16 Jun 2022 20:14:56 +0800
-Message-Id: <20220616121456.3613470-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.27.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B8628E4
+	for <loongarch@lists.linux.dev>; Thu, 16 Jun 2022 12:21:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1655382063; bh=dMkXkbRo80VKUtNbZXQUgDEsYjkDN9QPvX0sgb47bHY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=C9+E90tCTyhOQKxDJUbdlmBcr5sr9FydxAFLnVK2oBrcV2wApCHIJbYZTc1GkwquJ
+	 7Yoor+Lk0PYne5E+irgfYvFGhTQdRCLxu8pvHTXad8CU1ca2r+wJRl6t+vbSTPtzdB
+	 ky59ZdGC3pfjxu4gRotEvJFL1PZQ5jKRw7K+sw7g=
+Received: from [100.100.57.190] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id D827D60691;
+	Thu, 16 Jun 2022 20:21:02 +0800 (CST)
+Message-ID: <ab6e2213-0795-68d1-c596-3dae1e174421@xen0n.name>
+Date: Thu, 16 Jun 2022 20:21:02 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:103.0)
+ Gecko/20100101 Thunderbird/103.0a1
+Subject: Re: [PATCH] MAINTAINERS: Add maillist information for LoongArch
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+ Xuefeng Li <lixuefeng@loongson.cn>, Huacai Chen <chenhuacai@gmail.com>,
+ Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <20220616121456.3613470-1-chenhuacai@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20220616121456.3613470-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Now there is a dedicated maillist (loongarch@lists.linux.dev) for
-LoongArch, add it for better development.
+On 2022/6/16 20:14, Huacai Chen wrote:
+> Now there is a dedicated maillist (loongarch@lists.linux.dev) for
+> LoongArch, add it for better development.
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Obligatory English fixes:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1fc9ead83d2a..dba5e89527a2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11590,6 +11590,7 @@ F:	drivers/gpu/drm/bridge/lontium-lt8912b.c
- LOONGARCH
- M:	Huacai Chen <chenhuacai@kernel.org>
- R:	WANG Xuerui <kernel@xen0n.name>
-+L:	loongarch@lists.linux.dev
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git
- F:	arch/loongarch/
--- 
-2.27.0
+ > Now that there is a dedicated mailing list for LoongArch, add it for 
+better collaboration.
+
+Is this version better? We have the list address below so I feel no need 
+for duplicating it in the commit message.
+
+>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>   MAINTAINERS | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1fc9ead83d2a..dba5e89527a2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11590,6 +11590,7 @@ F:	drivers/gpu/drm/bridge/lontium-lt8912b.c
+>   LOONGARCH
+>   M:	Huacai Chen <chenhuacai@kernel.org>
+>   R:	WANG Xuerui <kernel@xen0n.name>
+> +L:	loongarch@lists.linux.dev
+>   S:	Maintained
+>   T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git
+>   F:	arch/loongarch/
+
+Otherwise LGTM. I should become the 4th subscriber shortly ;-)
+
+Reviewed-by: WANG Xuerui <git@xen0n.name>
 
