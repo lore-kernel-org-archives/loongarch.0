@@ -1,9 +1,9 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DB832F52
-	for <loongarch@lists.linux.dev>; Fri, 17 Jun 2022 12:46:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C7862F53
+	for <loongarch@lists.linux.dev>; Fri, 17 Jun 2022 12:46:24 +0000 (UTC)
 Received: from localhost.localdomain (unknown [112.20.110.105])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx702Zd6xiZJVIAA--.12677S2;
-	Fri, 17 Jun 2022 20:46:18 +0800 (CST)
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx702Zd6xiZJVIAA--.12677S4;
+	Fri, 17 Jun 2022 20:46:20 +0800 (CST)
 From: Yanteng Si <siyanteng@loongson.cn>
 To: chenhuacai@kernel.org,
 	alexs@kernel.org,
@@ -16,10 +16,12 @@ Cc: Yanteng Si <siyanteng@loongson.cn>,
 	linux-doc@vger.kernel.org,
 	siyanteng01@gmail.com,
 	loongarch@lists.linux.dev
-Subject: [PATCH v4 0/2] docs: Improve loongarch documents
-Date: Fri, 17 Jun 2022 20:47:53 +0800
-Message-Id: <cover.1655469906.git.siyanteng@loongson.cn>
+Subject: [PATCH v4 2/2] docs/zh_CN/LoongArch: Fix notes rendering by using reST directives
+Date: Fri, 17 Jun 2022 20:47:55 +0800
+Message-Id: <6b96845497e7f2a33708d002ef93c01e29b84bfc.1655469906.git.siyanteng@loongson.cn>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1655469906.git.siyanteng@loongson.cn>
+References: <cover.1655469906.git.siyanteng@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -28,53 +30,89 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf9Dx702Zd6xiZJVIAA--.12677S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrur4DWF1xZr4Dur1DGw4xtFb_yoWfWrg_uF
-	Z7Jay5Aw42gFyrWaySkr13AF98JF4j93W5CF1ktFZFkFyIyrsxZr4DGrWFvr1IqFsrurZ8
-	KrWkXryrAr12qjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb38FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxkIecxEwVAFwVW5JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF
-	0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWI
-	evJa73UjIFyTuYvjfUeWlkDUUUU
+X-CM-TRANSID:AQAAf9Dx702Zd6xiZJVIAA--.12677S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxJF17Zr13ZFWxGw1kGrWxWFg_yoWrur1kpa
+	s2kr93KF1kA347Jr4kCF1UCa1xGF1xuanrCFWfK3WkJrnrZwn5tr18tF9rXFW3GrySyFZY
+	vr4rKw4kZr1YkwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPC14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCY02Avz4vE14v_Xr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l
+	x2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14
+	v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IY
+	x2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87
+	Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI
+	43ZEXa7VUjZa93UUUUU==
 X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
 
-v4:
-Modify commit message.
+Notes are better expressed with reST admonitions.
 
-v3:
-Modify Subject.
+Fixes: f23b22599f8e ("Documentation/zh_CN: Add basic LoongArch documentations")
+Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+---
+ .../translations/zh_CN/loongarch/introduction.rst  | 14 ++++++++------
+ .../zh_CN/loongarch/irq-chip-model.rst             | 14 ++++++++------
+ 2 files changed, 16 insertions(+), 12 deletions(-)
 
-v2:
-Fix ``inline literals``.
-Delete "注：" of zh_CN patch.
-Add fix tag.
-
-v1:
-Rewrite all the notes in the loongarch document.
-Note is an admonition, let's use the directives
-implemented in the reference reStructuredText parser.
-About reStructuredText Directives,
-see <https://docutils.sourceforge.io/docs/ref/rst/directives.html>
-
-Yanteng Si (2):
-  docs/LoongArch: Fix notes rendering by using reST directives
-  docs/zh_CN/LoongArch: Fix notes rendering by using reST directives
-
- Documentation/loongarch/introduction.rst      | 15 ++++++++-----
- Documentation/loongarch/irq-chip-model.rst    | 22 +++++++++++--------
- .../zh_CN/loongarch/introduction.rst          | 14 +++++++-----
- .../zh_CN/loongarch/irq-chip-model.rst        | 14 +++++++-----
- 4 files changed, 38 insertions(+), 27 deletions(-)
-
+diff --git a/Documentation/translations/zh_CN/loongarch/introduction.rst b/Documentation/translations/zh_CN/loongarch/introduction.rst
+index e31a1a928c48..11686ee0caeb 100644
+--- a/Documentation/translations/zh_CN/loongarch/introduction.rst
++++ b/Documentation/translations/zh_CN/loongarch/introduction.rst
+@@ -46,10 +46,11 @@ LA64中每个寄存器为64位宽。 ``$r0`` 的内容总是固定为0，而其
+ ``$r23``-``$r31`` ``$s0``-``$s8`` 静态寄存器          是
+ ================= =============== =================== ==========
+ 
+-注意：``$r21``寄存器在ELF psABI中保留未使用，但是在Linux内核用于保存每CPU
+-变量基地址。该寄存器没有ABI命名，不过在内核中称为``$u0``。在一些遗留代码
+-中有时可能见到``$v0``和``$v1``，它们是``$a0``和``$a1``的别名，属于已经废弃
+-的用法。
++.. note::
++    注意： ``$r21`` 寄存器在ELF psABI中保留未使用，但是在Linux内核用于保
++    存每CPU变量基地址。该寄存器没有ABI命名，不过在内核中称为 ``$u0`` 。在
++    一些遗留代码中有时可能见到 ``$v0`` 和 ``$v1`` ，它们是 ``$a0`` 和
++    ``$a1`` 的别名，属于已经废弃的用法。
+ 
+ 浮点寄存器
+ ----------
+@@ -68,8 +69,9 @@ LA64中每个寄存器为64位宽。 ``$r0`` 的内容总是固定为0，而其
+ ``$f24``-``$f31`` ``$fs0``-``$fs7``  静态寄存器          是
+ ================= ================== =================== ==========
+ 
+-注意：在一些遗留代码中有时可能见到 ``$v0`` 和 ``$v1`` ，它们是 ``$a0``
+-和 ``$a1`` 的别名，属于已经废弃的用法。
++.. note::
++    注意：在一些遗留代码中有时可能见到 ``$v0`` 和 ``$v1`` ，它们是
++    ``$a0`` 和 ``$a1`` 的别名，属于已经废弃的用法。
+ 
+ 
+ 向量寄存器
+diff --git a/Documentation/translations/zh_CN/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/loongarch/irq-chip-model.rst
+index 2a4c3ad38be4..fb5d23b49ed5 100644
+--- a/Documentation/translations/zh_CN/loongarch/irq-chip-model.rst
++++ b/Documentation/translations/zh_CN/loongarch/irq-chip-model.rst
+@@ -147,9 +147,11 @@ PCH-LPC::
+ 
+   https://github.com/loongson/LoongArch-Documentation/releases/latest/download/Loongson-7A1000-usermanual-2.00-EN.pdf (英文版)
+ 
+-注：CPUINTC即《龙芯架构参考手册卷一》第7.4节所描述的CSR.ECFG/CSR.ESTAT寄存器及其中断
+-控制逻辑；LIOINTC即《龙芯3A5000处理器使用手册》第11.1节所描述的“传统I/O中断”；EIOINTC
+-即《龙芯3A5000处理器使用手册》第11.2节所描述的“扩展I/O中断”；HTVECINTC即《龙芯3A5000
+-处理器使用手册》第14.3节所描述的“HyperTransport中断”；PCH-PIC/PCH-MSI即《龙芯7A1000桥
+-片用户手册》第5章所描述的“中断控制器”；PCH-LPC即《龙芯7A1000桥片用户手册》第24.3节所
+-描述的“LPC中断”。
++.. note::
++    - CPUINTC：即《龙芯架构参考手册卷一》第7.4节所描述的CSR.ECFG/CSR.ESTAT寄存器及其
++      中断控制逻辑；
++    - LIOINTC：即《龙芯3A5000处理器使用手册》第11.1节所描述的“传统I/O中断”；
++    - EIOINTC：即《龙芯3A5000处理器使用手册》第11.2节所描述的“扩展I/O中断”；
++    - HTVECINTC：即《龙芯3A5000处理器使用手册》第14.3节所描述的“HyperTransport中断”；
++    - PCH-PIC/PCH-MSI：即《龙芯7A1000桥片用户手册》第5章所描述的“中断控制器”；
++    - PCH-LPC：即《龙芯7A1000桥片用户手册》第24.3节所描述的“LPC中断”。
 -- 
 2.27.0
 
