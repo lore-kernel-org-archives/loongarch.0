@@ -1,9 +1,9 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 065C82917
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03B1A7F
 	for <loongarch@lists.linux.dev>; Fri, 17 Jun 2022 09:32:06 +0000 (UTC)
 Received: from localhost.localdomain (unknown [112.20.110.105])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9CxD+YQSqxiAz1IAA--.12781S4;
-	Fri, 17 Jun 2022 17:32:05 +0800 (CST)
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9CxD+YQSqxiAz1IAA--.12781S3;
+	Fri, 17 Jun 2022 17:32:04 +0800 (CST)
 From: Yanteng Si <siyanteng@loongson.cn>
 To: chenhuacai@kernel.org,
 	alexs@kernel.org,
@@ -16,9 +16,9 @@ Cc: Yanteng Si <siyanteng@loongson.cn>,
 	linux-doc@vger.kernel.org,
 	siyanteng01@gmail.com,
 	loongarch@lists.linux.dev
-Subject: [PATCH v2 2/2] docs/zh_CN: Rewrite all the notes
-Date: Fri, 17 Jun 2022 17:33:11 +0800
-Message-Id: <23219467adbf0dc6f066d9589a8c21045639f586.1655456950.git.siyanteng@loongson.cn>
+Subject: [PATCH v2 1/2] docs/LoongArch: Rewrite all the notes
+Date: Fri, 17 Jun 2022 17:33:10 +0800
+Message-Id: <ad1d2316a4240ae05697759990b7e0c6f94faa83.1655456950.git.siyanteng@loongson.cn>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1655456950.git.siyanteng@loongson.cn>
 References: <cover.1655456950.git.siyanteng@loongson.cn>
@@ -28,15 +28,14 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf9CxD+YQSqxiAz1IAA--.12781S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxuF1DXw47Gr43KFyxuFWxWFg_yoWrury5pa
-	s2kr93KF1DA347Jr4kCF1UCa1xGF1xuanrCFWrK3WkJrnrZwn5Kr18tF9rXFW3GryfAFZY
-	vr4rKr4kZr1YkwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPG14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+X-CM-TRANSID:AQAAf9CxD+YQSqxiAz1IAA--.12781S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxCr4kZFyxKFW3Aw18WF13CFg_yoWrXF4xpF
+	WDA39agrn8J347Zw48A3W7Zr1YvFn7JFsrW3y0kr1UAwsxZ3s5tr1ayF4fXay5Gry8AayF
+	vr18Kw4UWa4UA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPG14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
 	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
 	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
@@ -47,73 +46,82 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxuF1DXw47Gr43KFyxuFWxWFg_yoWrury5pa
 	v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IY
 	x2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87
 	Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIF
-	yTuYvjfU86pBDUUUU
+	yTuYvjTR_fQRUUUUU
 X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
 
-Since f23b22599f8e ("Documentation/zh_CN: Add basic
-LoongArch documentations"), Note is an admonition, But
+Since 0ea8ce61cb2c ("Documentation: LoongArch: Add
+basic documentations"), Note is an admonition, But
 it doesn't show correctly, let's fix it.
 
 Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
 ---
- .../translations/zh_CN/loongarch/introduction.rst  | 14 ++++++++------
- .../zh_CN/loongarch/irq-chip-model.rst             | 14 ++++++++------
- 2 files changed, 16 insertions(+), 12 deletions(-)
+ Documentation/loongarch/introduction.rst   | 15 +++++++++------
+ Documentation/loongarch/irq-chip-model.rst | 22 +++++++++++++---------
+ 2 files changed, 22 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/loongarch/introduction.rst b/Documentation/translations/zh_CN/loongarch/introduction.rst
-index e31a1a928c48..11686ee0caeb 100644
---- a/Documentation/translations/zh_CN/loongarch/introduction.rst
-+++ b/Documentation/translations/zh_CN/loongarch/introduction.rst
-@@ -46,10 +46,11 @@ LA64中每个寄存器为64位宽。 ``$r0`` 的内容总是固定为0，而其
- ``$r23``-``$r31`` ``$s0``-``$s8`` 静态寄存器          是
- ================= =============== =================== ==========
+diff --git a/Documentation/loongarch/introduction.rst b/Documentation/loongarch/introduction.rst
+index 2bf40ad370df..46e3f8d54067 100644
+--- a/Documentation/loongarch/introduction.rst
++++ b/Documentation/loongarch/introduction.rst
+@@ -45,10 +45,12 @@ Name              Alias           Usage               Preserved
+ ``$r23``-``$r31`` ``$s0``-``$s8`` Static registers    Yes
+ ================= =============== =================== ============
  
--注意：``$r21``寄存器在ELF psABI中保留未使用，但是在Linux内核用于保存每CPU
--变量基地址。该寄存器没有ABI命名，不过在内核中称为``$u0``。在一些遗留代码
--中有时可能见到``$v0``和``$v1``，它们是``$a0``和``$a1``的别名，属于已经废弃
--的用法。
-+.. note::
-+    注意： ``$r21`` 寄存器在ELF psABI中保留未使用，但是在Linux内核用于保
-+    存每CPU变量基地址。该寄存器没有ABI命名，不过在内核中称为 ``$u0`` 。在
-+    一些遗留代码中有时可能见到 ``$v0`` 和 ``$v1`` ，它们是 ``$a0`` 和
-+    ``$a1`` 的别名，属于已经废弃的用法。
+-Note: The register ``$r21`` is reserved in the ELF psABI, but used by the Linux
+-kernel for storing the percpu base address. It normally has no ABI name, but is
+-called ``$u0`` in the kernel. You may also see ``$v0`` or ``$v1`` in some old code,
+-however they are deprecated aliases of ``$a0`` and ``$a1`` respectively.
++.. Note::
++    The register ``$r21`` is reserved in the ELF psABI, but used by the Linux
++    kernel for storing the percpu base address. It normally has no ABI name,
++    but is called ``$u0`` in the kernel. You may also see ``$v0`` or ``$v1``
++    in some old code,however they are deprecated aliases of ``$a0`` and ``$a1``
++    respectively.
  
- 浮点寄存器
- ----------
-@@ -68,8 +69,9 @@ LA64中每个寄存器为64位宽。 ``$r0`` 的内容总是固定为0，而其
- ``$f24``-``$f31`` ``$fs0``-``$fs7``  静态寄存器          是
- ================= ================== =================== ==========
+ FPRs
+ ----
+@@ -69,8 +71,9 @@ Name              Alias              Usage               Preserved
+ ``$f24``-``$f31`` ``$fs0``-``$fs7``  Static registers    Yes
+ ================= ================== =================== ============
  
--注意：在一些遗留代码中有时可能见到 ``$v0`` 和 ``$v1`` ，它们是 ``$a0``
--和 ``$a1`` 的别名，属于已经废弃的用法。
-+.. note::
-+    注意：在一些遗留代码中有时可能见到 ``$v0`` 和 ``$v1`` ，它们是
-+    ``$a0`` 和 ``$a1`` 的别名，属于已经废弃的用法。
+-Note: You may see ``$fv0`` or ``$fv1`` in some old code, however they are deprecated
+-aliases of ``$fa0`` and ``$fa1`` respectively.
++.. Note::
++    You may see ``$fv0`` or ``$fv1`` in some old code, however they are
++    deprecated aliases of ``$fa0`` and ``$fa1`` respectively.
  
+ VRs
+ ----
+diff --git a/Documentation/loongarch/irq-chip-model.rst b/Documentation/loongarch/irq-chip-model.rst
+index 8d88f7ab2e5e..7988f4192363 100644
+--- a/Documentation/loongarch/irq-chip-model.rst
++++ b/Documentation/loongarch/irq-chip-model.rst
+@@ -145,12 +145,16 @@ Documentation of Loongson's LS7A chipset:
  
- 向量寄存器
-diff --git a/Documentation/translations/zh_CN/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/loongarch/irq-chip-model.rst
-index 2a4c3ad38be4..fb5d23b49ed5 100644
---- a/Documentation/translations/zh_CN/loongarch/irq-chip-model.rst
-+++ b/Documentation/translations/zh_CN/loongarch/irq-chip-model.rst
-@@ -147,9 +147,11 @@ PCH-LPC::
+   https://github.com/loongson/LoongArch-Documentation/releases/latest/download/Loongson-7A1000-usermanual-2.00-EN.pdf (in English)
  
-   https://github.com/loongson/LoongArch-Documentation/releases/latest/download/Loongson-7A1000-usermanual-2.00-EN.pdf (英文版)
- 
--注：CPUINTC即《龙芯架构参考手册卷一》第7.4节所描述的CSR.ECFG/CSR.ESTAT寄存器及其中断
--控制逻辑；LIOINTC即《龙芯3A5000处理器使用手册》第11.1节所描述的“传统I/O中断”；EIOINTC
--即《龙芯3A5000处理器使用手册》第11.2节所描述的“扩展I/O中断”；HTVECINTC即《龙芯3A5000
--处理器使用手册》第14.3节所描述的“HyperTransport中断”；PCH-PIC/PCH-MSI即《龙芯7A1000桥
--片用户手册》第5章所描述的“中断控制器”；PCH-LPC即《龙芯7A1000桥片用户手册》第24.3节所
--描述的“LPC中断”。
-+.. note::
-+    - CPUINTC：即《龙芯架构参考手册卷一》第7.4节所描述的CSR.ECFG/CSR.ESTAT寄存器及其
-+      中断控制逻辑；
-+    - LIOINTC：即《龙芯3A5000处理器使用手册》第11.1节所描述的“传统I/O中断”；
-+    - EIOINTC：即《龙芯3A5000处理器使用手册》第11.2节所描述的“扩展I/O中断”；
-+    - HTVECINTC：即《龙芯3A5000处理器使用手册》第14.3节所描述的“HyperTransport中断”；
-+    - PCH-PIC/PCH-MSI：即《龙芯7A1000桥片用户手册》第5章所描述的“中断控制器”；
-+    - PCH-LPC：即《龙芯7A1000桥片用户手册》第24.3节所描述的“LPC中断”。
+-Note: CPUINTC is CSR.ECFG/CSR.ESTAT and its interrupt controller described
+-in Section 7.4 of "LoongArch Reference Manual, Vol 1"; LIOINTC is "Legacy I/O
+-Interrupts" described in Section 11.1 of "Loongson 3A5000 Processor Reference
+-Manual"; EIOINTC is "Extended I/O Interrupts" described in Section 11.2 of
+-"Loongson 3A5000 Processor Reference Manual"; HTVECINTC is "HyperTransport
+-Interrupts" described in Section 14.3 of "Loongson 3A5000 Processor Reference
+-Manual"; PCH-PIC/PCH-MSI is "Interrupt Controller" described in Section 5 of
+-"Loongson 7A1000 Bridge User Manual"; PCH-LPC is "LPC Interrupts" described in
+-Section 24.3 of "Loongson 7A1000 Bridge User Manual".
++.. Note::
++    - CPUINTC is CSR.ECFG/CSR.ESTAT and its interrupt controller described
++      in Section 7.4 of "LoongArch Reference Manual, Vol 1";
++    - LIOINTC is "Legacy I/OInterrupts" described in Section 11.1 of
++      "Loongson 3A5000 Processor Reference Manual";
++    - EIOINTC is "Extended I/O Interrupts" described in Section 11.2 of
++      "Loongson 3A5000 Processor Reference Manual";
++    - HTVECINTC is "HyperTransport Interrupts" described in Section 14.3 of
++      "Loongson 3A5000 Processor Reference Manual";
++    - PCH-PIC/PCH-MSI is "Interrupt Controller" described in Section 5 of
++      "Loongson 7A1000 Bridge User Manual";
++    - PCH-LPC is "LPC Interrupts" described in Section 24.3 of
++      "Loongson 7A1000 Bridge User Manual".
 -- 
 2.27.0
 
