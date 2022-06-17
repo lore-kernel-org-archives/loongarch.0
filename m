@@ -1,20 +1,28 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67413201
-	for <loongarch@lists.linux.dev>; Fri, 17 Jun 2022 16:11:11 +0000 (UTC)
-Received: from mail-yb1-f177.google.com ([209.85.219.177]) by
- mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1M5Q6n-1o1P561f1h-001Tz6 for <loongarch@lists.linux.dev>; Fri, 17 Jun 2022
- 18:11:09 +0200
-Received: by mail-yb1-f177.google.com with SMTP id l66so6575606ybl.10
-        for <loongarch@lists.linux.dev>; Fri, 17 Jun 2022 09:11:09 -0700 (PDT)
-X-Gm-Message-State: AJIora8Xd50io87afMWrMasVDO6P27jOTVLndzgTnr0seM0HVE/GqTOL
-	4AZoPKBsceRHXtG4MdFzdqz6w5hnTfVLu7D+qV0=
-X-Google-Smtp-Source: AGRyM1sbbvu9586IFsDKfhRXyuh39sqCv/fj6t9J7hwRcICdNbr1TowZgPSHRclPKN99FLzQu3aGwMo5zUy9wxfXsRc=
-X-Received: by 2002:a25:ab65:0:b0:668:b6e6:b2e6 with SMTP id
- u92-20020a25ab65000000b00668b6e6b2e6mr3862998ybi.394.1655482268119; Fri, 17
- Jun 2022 09:11:08 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB64217E6
+	for <loongarch@lists.linux.dev>; Fri, 17 Jun 2022 16:35:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69715C385A2
+	for <loongarch@lists.linux.dev>; Fri, 17 Jun 2022 16:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1655483744;
+	bh=ujA6W7LFr7rXdt2ZCV1SvHbRfeTZ6xU9+c6NUEShkk0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fzdf90fdzIPnvLlwXD/WPzebUlPLoxC70kFQZhjpl4niCzUPFdTVgZuATgZzPkzeb
+	 QYL57BeMeBCzPsXb0jRCRAtLwj9hiG/fIfzPD55d2brxZXGgrdGni2ttty0Vxvx5Hs
+	 pap7EIexbRpi4Owxaay/mkjSCqkisEfNWIMM85RmOUrAZ/U0cga2XoOmyMDgMO2CAG
+	 aBiV8ZfGTGFBvP9JPh8O0lh+HIa7WAtFwSSvqRNiRM2z46sbygrLvES0wCRugxMFV5
+	 caDQelEeNwL9sXbzOGxZwRuutkNnMy5gFD3YxRElthE4yfxzzfDOmxRaTerOR2wkLu
+	 /gO1/mPQM/LQQ==
+Received: by mail-ua1-f41.google.com with SMTP id l9so1726393uac.4
+        for <loongarch@lists.linux.dev>; Fri, 17 Jun 2022 09:35:44 -0700 (PDT)
+X-Gm-Message-State: AJIora+Z87LR+WHOquA/NCa5Cd+f1CDA5s0cWiC+96zoyvsyU5149an7
+	Jf242VO3aK7MB1Hud1Gp1Hga//QXaHG+o5q+Usw=
+X-Google-Smtp-Source: AGRyM1uq7hGH7l3uxkO9HvoLlIuUD5FyMHtKgabUnXXkAQ0D1oYfLpIX8Ch4y5u3JZ8Q1eBB6czs0wVdhGismHqzWfc=
+X-Received: by 2002:ab0:2747:0:b0:373:5408:d086 with SMTP id
+ c7-20020ab02747000000b003735408d086mr4721219uap.12.1655483743167; Fri, 17 Jun
+ 2022 09:35:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -23,70 +31,359 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20220617145705.581985-1-chenhuacai@loongson.cn>
 In-Reply-To: <20220617145705.581985-1-chenhuacai@loongson.cn>
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Fri, 17 Jun 2022 18:10:51 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2nD_Zxv5X_LB7AbO=kxHQyk3vz09fQZ-TTX4PL0b3g1g@mail.gmail.com>
-Message-ID: <CAK8P3a2nD_Zxv5X_LB7AbO=kxHQyk3vz09fQZ-TTX4PL0b3g1g@mail.gmail.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Sat, 18 Jun 2022 00:35:31 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQv8GGX4JjQ-q0e4s3KP9ewB6LM5kWMC5D5ia70K8RxUw@mail.gmail.com>
+Message-ID: <CAJF2gTQv8GGX4JjQ-q0e4s3KP9ewB6LM5kWMC5D5ia70K8RxUw@mail.gmail.com>
 Subject: Re: [PATCH] LoongArch: Add qspinlock support
-To: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@loongson.cn>, Peter Zijlstra <peterz@infradead.org>
 Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
 	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
 	Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:+/VgToJ5AQXJnH0YlJ9art9163iDONqP/80sPNFhoEyHeCFm7dO
- wFBJVCkTGS3u8CdKWjt4YbdVWQMH6pT9e2LA4pcIRz+j4LT2Y48V6k5OwuVXdB+gz3AJpLR
- lJYZ9f1fDZTwddUc75AeZ9j2tYTCOgUPstEvshU5QAhFvF3/8KrRHe78wNDosTOMMZwOu6g
- ANJBqzh8jt3KW2TX2uDMQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4us+6DdMQ1U=:BokzkAJP504RZXiH6/wkjU
- 3dewCRUEWeMEolHLdg82qYuSlBr7zD69d6WJYS33LF2GK/TEv4xC8s6KigJT75/bJ1vTFW0jr
- vs537TIZe1xuBuHb3ftYRmbZxRsT2mFaULr7uHVo5LRfZvfE3dS14iYQ9ozmFlc2G3AG9fix9
- NU2uKEGIVOxscwtVQnCmMZX92XBKKhiWcI2uR1vB2kXhg4ZczW/YcxjU/5m2EfF+CZnO0Y8oO
- nUPvfViRHh/cPufzvvqUBikzyM9hlgQ4X0qCUQRo24X7Xpkj4OXsBW8/NCVmdjRSkM0Nga83n
- CTB+Mm93IuKgpdyQ3HTKh7ZXFpWlsEKf80rlxuPiitjwJt7C/2OrMpZKGfh82DYW9kP03LXai
- ezGzWh9iK803yHX2H1blVWJko3N+J+NqQicigE7QFRxuun1o1FqPIC9qSWTSUr07a5uCXdZHm
- /jEFPAqpdlJqQIxukm6UlTq81edPJyWIY3xKIvHhn7eNo7uI0MA+TT+NjHOD5Mkk28mW7TUWn
- iknwFSWYOWsx9n5YG7WmhTwhWbvDEbda7YiCtt25cwLWCoZIBU5FzBu7lIuZvQpZeCyLSQLW8
- ywm7vrskuerexHUiTwKETb28fwwxNxQSUkudABkeoZOH8qQHEs+51DssUtQrMATpOxVzLJSFE
- DuQsFigus78TdC4UqG3Ct+94omPB/508c7ZO5rV1CTA+Zav9fPTbwHfS5+mY9zw569sYmMQrR
- pANGMXuXMSg+iLY8IqalQAn3qW89O1qKFGbH1HI398rSpu1GR82HYImAbmznfvk/3JUf2p1BU
- FkeLMdZgHf6olB2cZFrZQfFdd+Zure5RXFT+swHhHvmMrfV8zd9vjJ+KVisfp/7r15TvguKTB
- sv9ZDcLB0Txv+67pSt7Cj7K0jnoVl+UFP2gpl94I4=
 
-On Fri, Jun 17, 2022 at 4:57 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
+On Fri, Jun 17, 2022 at 10:55 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
 >
 > On NUMA system, the performance of qspinlock is better than generic
 > spinlock. Below is the UnixBench test results on a 8 nodes (4 cores
 > per node, 32 cores in total) machine.
 >
+> A. With generic spinlock:
+>
+> System Benchmarks Index Values               BASELINE       RESULT    INDEX
+> Dhrystone 2 using register variables         116700.0  449574022.5  38523.9
+> Double-Precision Whetstone                       55.0      85190.4  15489.2
+> Execl Throughput                                 43.0      14696.2   3417.7
+> File Copy 1024 bufsize 2000 maxblocks          3960.0     143157.8    361.5
+> File Copy 256 bufsize 500 maxblocks            1655.0      37631.8    227.4
+> File Copy 4096 bufsize 8000 maxblocks          5800.0     444814.2    766.9
+> Pipe Throughput                               12440.0    5047490.7   4057.5
+> Pipe-based Context Switching                   4000.0    2021545.7   5053.9
+> Process Creation                                126.0      23829.8   1891.3
+> Shell Scripts (1 concurrent)                     42.4      33756.7   7961.5
+> Shell Scripts (8 concurrent)                      6.0       4062.9   6771.5
+> System Call Overhead                          15000.0    2479748.6   1653.2
+>                                                                    ========
+> System Benchmarks Index Score                                        2955.6
+>
+> B. With qspinlock:
+>
+> System Benchmarks Index Values               BASELINE       RESULT    INDEX
+> Dhrystone 2 using register variables         116700.0  449467876.9  38514.8
+> Double-Precision Whetstone                       55.0      85174.6  15486.3
+> Execl Throughput                                 43.0      14769.1   3434.7
+> File Copy 1024 bufsize 2000 maxblocks          3960.0     146150.5    369.1
+> File Copy 256 bufsize 500 maxblocks            1655.0      37496.8    226.6
+> File Copy 4096 bufsize 8000 maxblocks          5800.0     447527.0    771.6
+> Pipe Throughput                               12440.0    5175989.2   4160.8
+> Pipe-based Context Switching                   4000.0    2207747.8   5519.4
+> Process Creation                                126.0      25125.5   1994.1
+> Shell Scripts (1 concurrent)                     42.4      33461.2   7891.8
+> Shell Scripts (8 concurrent)                      6.0       4024.7   6707.8
+> System Call Overhead                          15000.0    2917278.6   1944.9
+>                                                                    ========
+> System Benchmarks Index Score                                        3040.1
+>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  arch/loongarch/Kconfig                      |   1 +
+>  arch/loongarch/include/asm/Kbuild           |   5 +-
+>  arch/loongarch/include/asm/cmpxchg.h        |  14 +++
+>  arch/loongarch/include/asm/percpu.h         |   8 ++
+>  arch/loongarch/include/asm/spinlock.h       |  12 +++
+>  arch/loongarch/include/asm/spinlock_types.h |  11 ++
+>  arch/loongarch/kernel/Makefile              |   2 +-
+>  arch/loongarch/kernel/cmpxchg.c             | 105 ++++++++++++++++++++
+>  8 files changed, 154 insertions(+), 4 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/spinlock.h
+>  create mode 100644 arch/loongarch/include/asm/spinlock_types.h
+>  create mode 100644 arch/loongarch/kernel/cmpxchg.c
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 1920d52653b4..1ec220df751d 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -46,6 +46,7 @@ config LOONGARCH
+>         select ARCH_USE_BUILTIN_BSWAP
+>         select ARCH_USE_CMPXCHG_LOCKREF
+>         select ARCH_USE_QUEUED_RWLOCKS
+> +       select ARCH_USE_QUEUED_SPINLOCKS
+>         select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+>         select ARCH_WANTS_NO_INSTR
+>         select BUILDTIME_TABLE_SORT
+> diff --git a/arch/loongarch/include/asm/Kbuild b/arch/loongarch/include/asm/Kbuild
+> index 83bc0681e72b..a0eed6076c79 100644
+> --- a/arch/loongarch/include/asm/Kbuild
+> +++ b/arch/loongarch/include/asm/Kbuild
+> @@ -1,12 +1,11 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  generic-y += dma-contiguous.h
+>  generic-y += export.h
+> +generic-y += mcs_spinlock.h
+>  generic-y += parport.h
+>  generic-y += early_ioremap.h
+>  generic-y += qrwlock.h
+> -generic-y += qrwlock_types.h
+> -generic-y += spinlock.h
+> -generic-y += spinlock_types.h
+> +generic-y += qspinlock.h
+>  generic-y += rwsem.h
+>  generic-y += segment.h
+>  generic-y += user.h
+> diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/include/asm/cmpxchg.h
+> index 75b3a4478652..afcd05be010e 100644
+> --- a/arch/loongarch/include/asm/cmpxchg.h
+> +++ b/arch/loongarch/include/asm/cmpxchg.h
+> @@ -21,10 +21,17 @@
+>                 __ret;                          \
+>  })
+>
+> +extern unsigned long __xchg_small(volatile void *ptr, unsigned long x,
+> +                                 unsigned int size);
+> +
+>  static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+>                                    int size)
+>  {
+>         switch (size) {
+> +       case 1:
+> +       case 2:
+> +               return __xchg_small(ptr, x, size);
+> +
+>         case 4:
+>                 return __xchg_asm("amswap_db.w", (volatile u32 *)ptr, (u32)x);
+>
+> @@ -67,10 +74,17 @@ static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+>         __ret;                                                          \
+>  })
+>
+> +extern unsigned long __cmpxchg_small(volatile void *ptr, unsigned long old,
+> +                                    unsigned long new, unsigned int size);
+> +
+>  static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
+>                                       unsigned long new, unsigned int size)
+>  {
+>         switch (size) {
+> +       case 1:
+> +       case 2:
+> +               return __cmpxchg_small(ptr, old, new, size);
+> +
+>         case 4:
+>                 return __cmpxchg_asm("ll.w", "sc.w", (volatile u32 *)ptr,
+>                                      (u32)old, new);
+> diff --git a/arch/loongarch/include/asm/percpu.h b/arch/loongarch/include/asm/percpu.h
+> index e6569f18c6dd..0bd6b0110198 100644
+> --- a/arch/loongarch/include/asm/percpu.h
+> +++ b/arch/loongarch/include/asm/percpu.h
+> @@ -123,6 +123,10 @@ static inline unsigned long __percpu_xchg(void *ptr, unsigned long val,
+>                                                 int size)
+>  {
+>         switch (size) {
+> +       case 1:
+> +       case 2:
+> +               return __xchg_small((volatile void *)ptr, val, size);
+> +
+>         case 4:
+>                 return __xchg_asm("amswap.w", (volatile u32 *)ptr, (u32)val);
+>
+> @@ -204,9 +208,13 @@ do {                                                                       \
+>  #define this_cpu_write_4(pcp, val) _percpu_write(pcp, val)
+>  #define this_cpu_write_8(pcp, val) _percpu_write(pcp, val)
+>
+> +#define this_cpu_xchg_1(pcp, val) _percpu_xchg(pcp, val)
+> +#define this_cpu_xchg_2(pcp, val) _percpu_xchg(pcp, val)
+>  #define this_cpu_xchg_4(pcp, val) _percpu_xchg(pcp, val)
+>  #define this_cpu_xchg_8(pcp, val) _percpu_xchg(pcp, val)
+>
+> +#define this_cpu_cmpxchg_1(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
+> +#define this_cpu_cmpxchg_2(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
+>  #define this_cpu_cmpxchg_4(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
+>  #define this_cpu_cmpxchg_8(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
+>
+> diff --git a/arch/loongarch/include/asm/spinlock.h b/arch/loongarch/include/asm/spinlock.h
+> new file mode 100644
+> index 000000000000..7cb3476999be
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/spinlock.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+> + */
+> +#ifndef _ASM_SPINLOCK_H
+> +#define _ASM_SPINLOCK_H
+> +
+> +#include <asm/processor.h>
+> +#include <asm/qspinlock.h>
+> +#include <asm/qrwlock.h>
+> +
+> +#endif /* _ASM_SPINLOCK_H */
+> diff --git a/arch/loongarch/include/asm/spinlock_types.h b/arch/loongarch/include/asm/spinlock_types.h
+> new file mode 100644
+> index 000000000000..7458d036c161
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/spinlock_types.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+> + */
+> +#ifndef _ASM_SPINLOCK_TYPES_H
+> +#define _ASM_SPINLOCK_TYPES_H
+> +
+> +#include <asm-generic/qspinlock_types.h>
+> +#include <asm-generic/qrwlock_types.h>
+> +
+> +#endif
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+> index 940de9173542..07930921f7b5 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -5,7 +5,7 @@
+>
+>  extra-y                := head.o vmlinux.lds
+>
+> -obj-y          += cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
+> +obj-y          += cpu-probe.o cacheinfo.o cmpxchg.o env.o setup.o entry.o genex.o \
+>                    traps.o irq.o idle.o process.o dma.o mem.o io.o reset.o switch.o \
+>                    elf.o syscall.o signal.o time.o topology.o inst.o ptrace.o vdso.o
+>
+> diff --git a/arch/loongarch/kernel/cmpxchg.c b/arch/loongarch/kernel/cmpxchg.c
+> new file mode 100644
+> index 000000000000..4c83471c4e47
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/cmpxchg.c
+> @@ -0,0 +1,105 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Author: Huacai Chen <chenhuacai@loongson.cn>
+> + * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+> + *
+> + * Derived from MIPS:
+> + * Copyright (C) 2017 Imagination Technologies
+> + * Author: Paul Burton <paul.burton@mips.com>
+> + */
+> +
+> +#include <linux/bug.h>
+> +#include <asm/barrier.h>
+> +#include <asm/cmpxchg.h>
+> +
+> +unsigned long __xchg_small(volatile void *ptr, unsigned long val, unsigned int size)
+> +{
+> +       u32 old32, mask, temp;
+> +       volatile u32 *ptr32;
+> +       unsigned int shift;
+> +
+> +       /* Check that ptr is naturally aligned */
+> +       WARN_ON((unsigned long)ptr & (size - 1));
+> +
+> +       /* Mask value to the correct size. */
+> +       mask = GENMASK((size * BITS_PER_BYTE) - 1, 0);
+> +       val &= mask;
+> +
+> +       /*
+> +        * Calculate a shift & mask that correspond to the value we wish to
+> +        * exchange within the naturally aligned 4 byte integerthat includes
+> +        * it.
+> +        */
+> +       shift = (unsigned long)ptr & 0x3;
+> +       shift *= BITS_PER_BYTE;
+> +       mask <<= shift;
+> +
+> +       /*
+> +        * Calculate a pointer to the naturally aligned 4 byte integer that
+> +        * includes our byte of interest, and load its value.
+> +        */
+> +       ptr32 = (volatile u32 *)((unsigned long)ptr & ~0x3);
+> +
+> +       asm volatile (
+> +       "1:     ll.w            %0, %3          \n"
+> +       "       andn            %1, %0, %4      \n"
+> +       "       or              %1, %1, %5      \n"
+> +       "       sc.w            %1, %2          \n"
+> +       "       beqz            %1, 1b          \n"
+Above depends on how micro-arch implements ll/sc with strong forward
+guarantee,  eg:
+A. Just check if there is remote write from snoop channel, that's a
+monitor style in cache coherency. And I think it's a weak forward
+guarantee not a good ll/sc implementation.
+B. Lock snoop channel and block other remote write requests until
+sc/branch/interrupt/normal load/store happen. That's strong enough for
+qspinlock and only interrupt could break ll/sc pair. (ISA should
+writes some limitation in spec, just like RISC-V)
+C. Fusion ll + alu + sc into one atomic bus transaction, See Atomic
+transactions in AMBA CHI - Arm Developer
 
-The performance increase is nice, but this is only half the story we need here.
+We are also preparing similar patch for RISC-V, but I think your spec
+should give out some details on ll/sc atomic forward guarantee.
 
-I think the more important bit is how you can guarantee that the xchg16()
-implementation is correct and always allows forward progress.
+Only for the code implementation, I give Reviewed-by: Guo Ren
+<guoren@kernel.org>
 
->@@ -123,6 +123,10 @@ static inline unsigned long __percpu_xchg(void *ptr, unsigned long val,
->                                                int size)
-> {
->        switch (size) {
->+       case 1:
->+       case 2:
->+               return __xchg_small((volatile void *)ptr, val, size);
->+
+> +       : "=&r" (old32), "=&r" (temp), "=" GCC_OFF_SMALL_ASM() (*ptr32)
+> +       : GCC_OFF_SMALL_ASM() (*ptr32), "Jr" (mask), "Jr" (val << shift)
+> +       : "memory");
+> +
+> +       return (old32 & mask) >> shift;
+> +}
+> +
+> +unsigned long __cmpxchg_small(volatile void *ptr, unsigned long old,
+> +                             unsigned long new, unsigned int size)
+> +{
+> +       u32 old32, mask, temp;
+> +       volatile u32 *ptr32;
+> +       unsigned int shift;
+> +
+> +       /* Check that ptr is naturally aligned */
+> +       WARN_ON((unsigned long)ptr & (size - 1));
+> +
+> +       /* Mask inputs to the correct size. */
+> +       mask = GENMASK((size * BITS_PER_BYTE) - 1, 0);
+> +       old &= mask;
+> +       new &= mask;
+> +
+> +       /*
+> +        * Calculate a shift & mask that correspond to the value we wish to
+> +        * compare & exchange within the naturally aligned 4 byte integer
+> +        * that includes it.
+> +        */
+> +       shift = (unsigned long)ptr & 0x3;
+> +       shift *= BITS_PER_BYTE;
+> +       old <<= shift;
+> +       new <<= shift;
+> +       mask <<= shift;
+> +
+> +       /*
+> +        * Calculate a pointer to the naturally aligned 4 byte integer that
+> +        * includes our byte of interest, and load its value.
+> +        */
+> +       ptr32 = (volatile u32 *)((unsigned long)ptr & ~0x3);
+> +
+> +       asm volatile (
+> +       "1:     ll.w            %0, %3          \n"
+> +       "       and             %1, %0, %4      \n"
+> +       "       bne             %1, %5, 2f      \n"
+> +       "       andn            %1, %0, %4      \n"
+> +       "       or              %1, %1, %6      \n"
+> +       "       sc.w            %1, %2          \n"
+> +       "       beqz            %1, 1b          \n"
+> +       "       b               3f              \n"
+> +       "2:                                     \n"
+> +       __WEAK_LLSC_MB
+> +       "3:                                     \n"
+> +       : "=&r" (old32), "=&r" (temp), "=" GCC_OFF_SMALL_ASM() (*ptr32)
+> +       : GCC_OFF_SMALL_ASM() (*ptr32), "Jr" (mask), "Jr" (old), "Jr" (new)
+> +       : "memory");
+> +
+> +       return (old32 & mask) >> shift;
+> +}
+> --
+> 2.27.0
+>
 
-Do you actually need the size 1 as well?
 
-Generally speaking, I would like to rework the xchg()/cmpxchg() logic
-to only cover the 32-bit and word-sized (possibly 64-bit) case, while
-having separate optional 8-bit and 16-bit functions. I had a patch for
-this in the past, and can try to dig that out, this may be the time to
-finally do that.
+-- 
+Best Regards
+ Guo Ren
 
-I see that the qspinlock() code actually calls a 'relaxed' version of xchg16(),
-but you only implement the one with the full barrier. Is it possible to
-directly provide a relaxed version that has something less than the
-__WEAK_LLSC_MB?
-
-       Arnd
+ML: https://lore.kernel.org/linux-csky/
