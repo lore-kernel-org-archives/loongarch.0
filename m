@@ -1,96 +1,126 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044B728E4
-	for <loongarch@lists.linux.dev>; Thu, 16 Jun 2022 12:34:10 +0000 (UTC)
-Received: by mail-lf1-f45.google.com with SMTP id s6so1966844lfo.13
-        for <loongarch@lists.linux.dev>; Thu, 16 Jun 2022 05:34:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TcmjiftvmvstcVVvvRVC96LjLQUb9YXPsyorLZpT7Eo=;
-        b=qhLeneM5IfLMq6+4CtNi+ecFfjQWnvkJeicJAimHxgtTT7+vPBKc2RchZH9p+wYdTD
-         gMmFHIrevsoJGwvEysG0Bgu/NNM2miz97uOmyCdWH5koYymF8rzEEaIqr4arGIYve0oV
-         6zBDSsvtf7R7jOPbN6xQ7yOtEtrajwCbex+Nny24SuYJbwJXPhIY3vts/IHGmE+JCOW1
-         3IOwRVmh/zoCs7R7z1WzsLtKqqoZGSenaEjYbI/4cMamYyU9BrKLrTrB6Mv0DXEJxPln
-         64Yh3jwH+FgRBBYA6ktvU7u7cjXvqR9zULWt8vsbPNSlXOnjcmVxaINh7LgMq3rq+yCZ
-         wxaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TcmjiftvmvstcVVvvRVC96LjLQUb9YXPsyorLZpT7Eo=;
-        b=cqCdbPFjcRcLvCYoLzYu5GFm6/+YnQ93V65vay00Gbv26cyNyj7O8dRtvBjUhCvKLF
-         xtNCjt9b5FG2p63vyG07uzKHsFcmzofdNupRHCxfNxjvNvt6iaovwiVCJ/vqY+k//UQb
-         w4lhpClivGE4Awh+lCZmWea9Mdcip+ve0kpw2wG4GwyDgRF2cvok8hfJMgCreAy8RVaR
-         Ad+Ln47R8Oe3GIs2S0BGz8LMqGgIiADlyMi/ZnnlJcIuFZyYVqEYcDopdwPqNXWntrd5
-         XR8mxC3yth1QbWYvdXN+eQ4AtO5sp3/svzUVcjVOGed50dewZ4RKLscbeRuyrOxn7to/
-         9AzA==
-X-Gm-Message-State: AJIora+/dDTGHEsRl/uGduQT2g/Ap9qD5hrQ6WKbWY9NszgpzNb/X2sr
-	VVRGmp5yCbj5fvRvGUo6SHM2jY1QbGqS5rX1TJs=
-X-Google-Smtp-Source: AGRyM1tQ8rUEgj2RZPiOje7V1yhvKo6lrBJQedfMEkmkj33ARiAh6lkPBtd6vdK9szIPiA2o2U85nF/g+uupa8H6/dE=
-X-Received: by 2002:a05:6512:2398:b0:479:24aa:6454 with SMTP id
- c24-20020a056512239800b0047924aa6454mr2732604lfv.664.1655382849043; Thu, 16
- Jun 2022 05:34:09 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF6297F
+	for <loongarch@lists.linux.dev>; Fri, 17 Jun 2022 07:17:37 +0000 (UTC)
+Received: from localhost.localdomain (unknown [112.20.110.105])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX92JKqxirf5HAA--.12068S3;
+	Fri, 17 Jun 2022 15:17:34 +0800 (CST)
+From: Yanteng Si <siyanteng@loongson.cn>
+To: chenhuacai@kernel.org,
+	alexs@kernel.org,
+	bobwxc@email.cn,
+	seakeel@gmail.com
+Cc: Yanteng Si <siyanteng@loongson.cn>,
+	corbet@lwn.net,
+	kernel@xen0n.name,
+	jiaxun.yang@flygoat.com,
+	linux-doc@vger.kernel.org,
+	siyanteng01@gmail.com,
+	loongarch@lists.linux.dev
+Subject: [PATCH 1/2] docs/loongarch: rewrite all the notes
+Date: Fri, 17 Jun 2022 15:19:06 +0800
+Message-Id: <67f35d431f8a1565403c03fa5d855ddcf15c87d4.1655450200.git.siyanteng@loongson.cn>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1655450200.git.siyanteng@loongson.cn>
+References: <cover.1655450200.git.siyanteng@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220616121456.3613470-1-chenhuacai@loongson.cn> <ab6e2213-0795-68d1-c596-3dae1e174421@xen0n.name>
-In-Reply-To: <ab6e2213-0795-68d1-c596-3dae1e174421@xen0n.name>
-From: Huacai Chen <chenhuacai@gmail.com>
-Date: Thu, 16 Jun 2022 20:33:58 +0800
-Message-ID: <CAAhV-H7MPgKN1CUCZNDUL00_hyMrhVRxjNOXioZfbjYvS8favg@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Add maillist information for LoongArch
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9DxX92JKqxirf5HAA--.12068S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxCF1xZrW3AFy5XFyDAr1UZFb_yoWrXr4DpF
+	WDA39agrn8J3y7Zw48A3WfZr1YvFn7JFsxW3y0kr1UAwsxZ3s5tr1ayF4fXay5Gry8AFWF
+	vr18Kw4UWa4UA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPC14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
+	8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
+	jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0x
+	kIwI1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+	AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
+	cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
+	80aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI
+	43ZEXa7VUUAnY5UUUUU==
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
 
-Hi, Xuerui,
+Note is an admonition, let's use the directives
+implemented in the reference reStructuredText parser.
 
-On Thu, Jun 16, 2022 at 8:21 PM WANG Xuerui <kernel@xen0n.name> wrote:
->
-> On 2022/6/16 20:14, Huacai Chen wrote:
-> > Now there is a dedicated maillist (loongarch@lists.linux.dev) for
-> > LoongArch, add it for better development.
->
-> Obligatory English fixes:
->
->  > Now that there is a dedicated mailing list for LoongArch, add it for
-> better collaboration.
->
-> Is this version better? We have the list address below so I feel no need
-> for duplicating it in the commit message.
-Thank you, it is better, but I will keep the list address in the commit message.
+Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+---
+ Documentation/loongarch/introduction.rst   | 15 +++++++++------
+ Documentation/loongarch/irq-chip-model.rst | 22 +++++++++++++---------
+ 2 files changed, 22 insertions(+), 15 deletions(-)
 
-Huacai
->
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >   MAINTAINERS | 1 +
-> >   1 file changed, 1 insertion(+)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 1fc9ead83d2a..dba5e89527a2 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -11590,6 +11590,7 @@ F:    drivers/gpu/drm/bridge/lontium-lt8912b.c
-> >   LOONGARCH
-> >   M:  Huacai Chen <chenhuacai@kernel.org>
-> >   R:  WANG Xuerui <kernel@xen0n.name>
-> > +L:   loongarch@lists.linux.dev
-> >   S:  Maintained
-> >   T:  git git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git
-> >   F:  arch/loongarch/
->
-> Otherwise LGTM. I should become the 4th subscriber shortly ;-)
->
-> Reviewed-by: WANG Xuerui <git@xen0n.name>
->
+diff --git a/Documentation/loongarch/introduction.rst b/Documentation/loongarch/introduction.rst
+index 2bf40ad370df..46e3f8d54067 100644
+--- a/Documentation/loongarch/introduction.rst
++++ b/Documentation/loongarch/introduction.rst
+@@ -45,10 +45,12 @@ Name              Alias           Usage               Preserved
+ ``$r23``-``$r31`` ``$s0``-``$s8`` Static registers    Yes
+ ================= =============== =================== ============
+ 
+-Note: The register ``$r21`` is reserved in the ELF psABI, but used by the Linux
+-kernel for storing the percpu base address. It normally has no ABI name, but is
+-called ``$u0`` in the kernel. You may also see ``$v0`` or ``$v1`` in some old code,
+-however they are deprecated aliases of ``$a0`` and ``$a1`` respectively.
++.. Note:
++    The register ``$r21`` is reserved in the ELF psABI, but used by the Linux
++    kernel for storing the percpu base address. It normally has no ABI name,
++    but is called ``$u0`` in the kernel. You may also see ``$v0`` or ``$v1``
++    in some old code,however they are deprecated aliases of ``$a0`` and ``$a1``
++    respectively.
+ 
+ FPRs
+ ----
+@@ -69,8 +71,9 @@ Name              Alias              Usage               Preserved
+ ``$f24``-``$f31`` ``$fs0``-``$fs7``  Static registers    Yes
+ ================= ================== =================== ============
+ 
+-Note: You may see ``$fv0`` or ``$fv1`` in some old code, however they are deprecated
+-aliases of ``$fa0`` and ``$fa1`` respectively.
++.. Note::
++    You may see ``$fv0`` or ``$fv1`` in some old code, however they are
++    deprecated aliases of ``$fa0`` and ``$fa1`` respectively.
+ 
+ VRs
+ ----
+diff --git a/Documentation/loongarch/irq-chip-model.rst b/Documentation/loongarch/irq-chip-model.rst
+index 8d88f7ab2e5e..7988f4192363 100644
+--- a/Documentation/loongarch/irq-chip-model.rst
++++ b/Documentation/loongarch/irq-chip-model.rst
+@@ -145,12 +145,16 @@ Documentation of Loongson's LS7A chipset:
+ 
+   https://github.com/loongson/LoongArch-Documentation/releases/latest/download/Loongson-7A1000-usermanual-2.00-EN.pdf (in English)
+ 
+-Note: CPUINTC is CSR.ECFG/CSR.ESTAT and its interrupt controller described
+-in Section 7.4 of "LoongArch Reference Manual, Vol 1"; LIOINTC is "Legacy I/O
+-Interrupts" described in Section 11.1 of "Loongson 3A5000 Processor Reference
+-Manual"; EIOINTC is "Extended I/O Interrupts" described in Section 11.2 of
+-"Loongson 3A5000 Processor Reference Manual"; HTVECINTC is "HyperTransport
+-Interrupts" described in Section 14.3 of "Loongson 3A5000 Processor Reference
+-Manual"; PCH-PIC/PCH-MSI is "Interrupt Controller" described in Section 5 of
+-"Loongson 7A1000 Bridge User Manual"; PCH-LPC is "LPC Interrupts" described in
+-Section 24.3 of "Loongson 7A1000 Bridge User Manual".
++.. Note::
++    - CPUINTC is CSR.ECFG/CSR.ESTAT and its interrupt controller described
++      in Section 7.4 of "LoongArch Reference Manual, Vol 1";
++    - LIOINTC is "Legacy I/OInterrupts" described in Section 11.1 of
++      "Loongson 3A5000 Processor Reference Manual";
++    - EIOINTC is "Extended I/O Interrupts" described in Section 11.2 of
++      "Loongson 3A5000 Processor Reference Manual";
++    - HTVECINTC is "HyperTransport Interrupts" described in Section 14.3 of
++      "Loongson 3A5000 Processor Reference Manual";
++    - PCH-PIC/PCH-MSI is "Interrupt Controller" described in Section 5 of
++      "Loongson 7A1000 Bridge User Manual";
++    - PCH-LPC is "LPC Interrupts" described in Section 24.3 of
++      "Loongson 7A1000 Bridge User Manual".
+-- 
+2.27.0
+
