@@ -1,38 +1,28 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1663C7B
-	for <loongarch@lists.linux.dev>; Sun, 19 Jun 2022 15:38:27 +0000 (UTC)
-Received: by mail-io1-f45.google.com with SMTP id c189so8943572iof.3
-        for <loongarch@lists.linux.dev>; Sun, 19 Jun 2022 08:38:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8tM8O+xkuaCIyuZXLINVOSy+TYLUrRj5V+dI6D9B0EI=;
-        b=JKWzm9GaEyXFJ5CP8b9pr/tNfyo0L6CtnOYtwyPeiMJcCtG2jLofIDUCFvYlIxjd+Q
-         V4QfrLXtQqXuDWXdTufDECD6pO1MYSEc9rXabsTR1zjl0z0BqBPCHH9jGtgK2yJksx0w
-         eBiK6JCWHF8ATM7dLQLheO4VGpkQGeIP7Y0C8a0ktiJ/k5ugJFnb3gkfMz3ZcJ55xQ4A
-         oZVoJivg3hSVTIMMnWoc7DrtfxL/uVOaXz7sTLcZRsWWtPV4TQKq8A3pd8eD91gE4HDN
-         xUJuPnlSMJMQmOeZmxNXUK20OQ7XDWJ1k9lfGT2c9oPXDz4TKZzAq5dZZzBn9/+XY9iE
-         GQPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8tM8O+xkuaCIyuZXLINVOSy+TYLUrRj5V+dI6D9B0EI=;
-        b=QewZOH94cI2UdE2Z/7+LiEkZkDM3RSOZoLR01yhftK5T2Wtt+P168gUf3wkr2Qky1m
-         9gjRt7eafLhiX7FMzlW3yAvrFAIePKIHshfIEcvQKWtJ60j9LOLp8eOHk6NoIicEoFWL
-         i3HMVjRxBploaFdt9tBzNolz27vCpPlgRrtpoXrYAXXhfEx/7G4VQiV9gOupnmkf8aiv
-         ifpDGPwyMWmbk1dEYJ1LYrF2Yr9l4QGuHnGqqd6r7fIku0zKEcys3+OQ9JcRa24vZn9L
-         cGmLUCudPEo8VK65gwiwXp/ebh96AEG1gcW5pHCtMJEKEG9W14S2MQlaTlk9wEg9iuzj
-         MN5A==
-X-Gm-Message-State: AJIora/9ghAiLZc79YSEXHmnNogEQxdHLNuIi+4gOgGtuoyuG17MLNXK
-	GJdWMw6YhxAOdQ7Ev9si6Hj1PcbAx6mDLBxc65vNYg==
-X-Google-Smtp-Source: AGRyM1sSstpRHPKLkSjZ24IwBRJKywWh28xqzFAmxMukDjmYUY342goiYySEJKHCHp/aDaomOBbxLied3A8JISuA26c=
-X-Received: by 2002:a05:6602:1212:b0:669:d627:acf4 with SMTP id
- y18-20020a056602121200b00669d627acf4mr9637501iot.82.1655653107109; Sun, 19
- Jun 2022 08:38:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433247B
+	for <loongarch@lists.linux.dev>; Sun, 19 Jun 2022 15:48:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1A9FC341C6
+	for <loongarch@lists.linux.dev>; Sun, 19 Jun 2022 15:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1655653715;
+	bh=rl7XmNGRsfIK0mLmKVN8EHtLLorUOOxWkObhiqyX5Jo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=O1vy0l5cVlWQIa/aQlkCmd3pu7t61WD84gyc990Ub9ISJGcLWdPl6ISiNCYKDKUSF
+	 SNkdu0PW/LO7Bk4wVB3Q8BrnH1TN6YcQnU0GBp6yTjyKmp1A6/Mv8sJXt04RfAJjT+
+	 TYkddwadBDfjmvvCTPVClTOxisr+UxV2z7mN8I2CLZYCg2ZJGoPcknLcyYKy3U+bpw
+	 EVfZvrYXLbT6D10yTVP/k0dQl/acAi2KPe/thvCe2psWQOJKkuM95xLOB1/P7dR9Ky
+	 3TmUcGBCU4/rT0E8lWc+NPSzqfnD/u7FU26Ss0pikJV6hJ4/qcPB3FO8ymgRDYuqOk
+	 Vs4Mgq4UlryXA==
+Received: by mail-vk1-f171.google.com with SMTP id x6so4136708vkn.2
+        for <loongarch@lists.linux.dev>; Sun, 19 Jun 2022 08:48:35 -0700 (PDT)
+X-Gm-Message-State: AJIora/Els8qlDf8+2qArn+ZfRoe7a32iQ2L6kol7GJkFdBrULzMuiUX
+	YCGfvMEJROVfXpMdWIS9hSMWmQmKueQx3IE1fo8=
+X-Google-Smtp-Source: AGRyM1uZwsY5+FMzxmdY6xIXfATdOVeX4b27EJJrhLYC5ZoU57GaiCIcXGDfJqMtVbEv5fdg8VbsBQTY+l7avNwPM50=
+X-Received: by 2002:a05:6122:239:b0:36c:1187:a347 with SMTP id
+ e25-20020a056122023900b0036c1187a347mr517430vko.28.1655653714775; Sun, 19 Jun
+ 2022 08:48:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,71 +32,67 @@ MIME-Version: 1.0
 References: <20220617145705.581985-1-chenhuacai@loongson.cn>
  <CAK8P3a2nD_Zxv5X_LB7AbO=kxHQyk3vz09fQZ-TTX4PL0b3g1g@mail.gmail.com>
  <CAJF2gTT_etFg7-N4f=A4LMOYvd3+H505e0xt8NyxK4uPtkuEXg@mail.gmail.com>
- <bcc38a55-30dc-98a8-cbfc-5a51924b9373@xen0n.name> <CAHirt9goPWs-_EpSpUOY4DWpK1nbaJxM2rSM3oLUqnCh5fVi4Q@mail.gmail.com>
- <CAJF2gTQbb_RmF6Hn5E91waamecRZ+B7FRxo_GT23wkc0ydN4ug@mail.gmail.com>
-In-Reply-To: <CAJF2gTQbb_RmF6Hn5E91waamecRZ+B7FRxo_GT23wkc0ydN4ug@mail.gmail.com>
-From: hev <r@hev.cc>
-Date: Sun, 19 Jun 2022 23:38:16 +0800
-Message-ID: <CAHirt9jJpX0N=z1mLJtvsdsv7hPqAX+t+Eg1nr-_QQRLrt5wuw@mail.gmail.com>
+ <CAK8P3a078r6zkZYYeV7Qg3AEOvFxgG+eRN9bFE_3DNwHq=_1ZA@mail.gmail.com>
+ <CAJF2gTQL+ysc+juQfNVxz1QtXgrLAYe=CyA9L_c3fzd4F8aFxQ@mail.gmail.com> <CAK8P3a3wRqLAvywX2zbD0kdt19m2pKazqA2Y6_sNL1L=_4N3vQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a3wRqLAvywX2zbD0kdt19m2pKazqA2Y6_sNL1L=_4N3vQ@mail.gmail.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Sun, 19 Jun 2022 23:48:23 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQG0SBninPg7MsCFP=60p8u5KT+HaLNBzgjxM_fTMr+Dg@mail.gmail.com>
+Message-ID: <CAJF2gTQG0SBninPg7MsCFP=60p8u5KT+HaLNBzgjxM_fTMr+Dg@mail.gmail.com>
 Subject: Re: [PATCH] LoongArch: Add qspinlock support
-To: Guo Ren <guoren@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, WANG Xuerui <kernel@xen0n.name>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
 	loongarch@lists.linux.dev, linux-arch <linux-arch@vger.kernel.org>, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>
+	Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Jun 19, 2022 at 11:06 PM Guo Ren <guoren@kernel.org> wrote:
+On Sat, Jun 18, 2022 at 1:40 PM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> On Sun, Jun 19, 2022 at 12:28 PM hev <r@hev.cc> wrote:
+> On Sat, Jun 18, 2022 at 1:19 AM Guo Ren <guoren@kernel.org> wrote:
 > >
-> > Hello,
-> >
-> > On Sat, Jun 18, 2022 at 8:59 PM WANG Xuerui <kernel@xen0n.name> wrote:
+> > > static inline u32 arch_xchg32(u32 *ptr, u32 x) {...}
+> > > static inline u64 arch_xchg64(u64 *ptr, u64 x) {...}
 > > >
-> > > On 6/18/22 01:45, Guo Ren wrote:
-> > > >
-> > > >> I see that the qspinlock() code actually calls a 'relaxed' version of xchg16(),
-> > > >> but you only implement the one with the full barrier. Is it possible to
-> > > >> directly provide a relaxed version that has something less than the
-> > > >> __WEAK_LLSC_MB?
-> > > > I am also curious that __WEAK_LLSC_MB is very magic. How does it
-> > > > prevent preceded accesses from happening after sc for a strong
-> > > > cmpxchg?
-> > > >
-> > > > #define __cmpxchg_asm(ld, st, m, old, new)                              \
-> > > > ({                                                                      \
-> > > >          __typeof(old) __ret;                                            \
-> > > >                                                                          \
-> > > >          __asm__ __volatile__(                                           \
-> > > >          "1:     " ld "  %0, %2          # __cmpxchg_asm \n"             \
-> > > >          "       bne     %0, %z3, 2f                     \n"             \
-> > > >          "       or      $t0, %z4, $zero                 \n"             \
-> > > >          "       " st "  $t0, %1                         \n"             \
-> > > >          "       beq     $zero, $t0, 1b                  \n"             \
-> > > >          "2:                                             \n"             \
-> > > >          __WEAK_LLSC_MB                                                  \
-> > > >
-> > > > And its __smp_mb__xxx are just defined as a compiler barrier()?
-> > > > #define __smp_mb__before_atomic()       barrier()
-> > > > #define __smp_mb__after_atomic()        barrier()
-> > > I know this one. There is only one type of barrier defined in the v1.00
-> > > of LoongArch, that is the full barrier, but this is going to change.
-> > > Huacai hinted in the bringup patchset that 3A6000 and later models would
-> > > have finer-grained barriers. So these indeed could be relaxed in the
-> > > future, just that Huacai has to wait for their embargo to expire.
-> > >
+> > > #ifdef CONFIG_64BIT
+> > > #define xchg(ptr, x) (sizeof(*ptr) == 8) ? \
+> > >             arch_xchg64((u64*)ptr, (uintptr_t)x)  \
+> > >             arch_xchg32((u32*)ptr, x)
+> > > #else
+> > > #define xchg(ptr, x) arch_xchg32((u32*)ptr, (uintptr_t)x)
+> > > #endif
 > >
-> > IIRC, The Loongson LL/SC behaves differently than others:
-> >
-> > Loongson:
-> > LL: Full barrier + Load exclusive
-> > SC: Store conditional + Full barrier
-> How about your "am"#asm_op"_db."?
+> > The above primitive implies only long & int type args are permitted, right?
 >
-> Full barrier + AMO + Full barrier ?
+> The idea is to allow any scalar or pointer type, but not structures or
+> unions. If we need to deal with those as well, the macro could be extended
+> accordingly, but I would prefer to limit it as much as possible.
+>
+> There is already cmpxchg64(), which is used for types that are fixed to
+> 64 bit integers even on 32-bit architectures, but it is rarely used except
+> to implement the atomic64_t helpers.
+A lot of 32bit arches couldn't provide cmpxchg64 (like arm's ldrexd/strexd).
 
-Yes. AMO without '_db' is relaxed.
+Another question: Do you know why arm32 didn't implement
+HAVE_CMPXCHG_DOUBLE with ldrexd/strexd?
 
-hev
+>
+> 80% of the uses of cmpxchg() and xchg() deal with word-sized
+> quantities like 'unsigned long', or 'void *', but the others are almost
+> all fixed 32-bit quantities. We could change those to use cmpxchg32()
+> directly and simplify the cmpxchg() function further to only deal
+> with word-sized arguments, but I would not do that in the first step.
+Don't forget cmpxchg_double for this cleanup, when do you want to
+restart the work?
+
+>
+>         Arnd
+
+
+
+-- 
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
