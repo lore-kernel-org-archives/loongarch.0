@@ -1,120 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982EF7B
-	for <loongarch@lists.linux.dev>; Mon, 20 Jun 2022 04:26:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38465C341C8
-	for <loongarch@lists.linux.dev>; Mon, 20 Jun 2022 04:26:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323097F6
+	for <loongarch@lists.linux.dev>; Mon, 20 Jun 2022 09:50:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C8DC341C4
+	for <loongarch@lists.linux.dev>; Mon, 20 Jun 2022 09:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1655699216;
-	bh=OAthta1phLKkQIKQW9+J+eds3olo6VBueIgwDcoHNwI=;
+	s=k20201202; t=1655718609;
+	bh=Fr0ix5EjKeIi2iLMs/BddEnbNzT+Ffa1oytTOGedzwE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FrzhF+9UTHmUMgHjqx/dRyRX9v4jSHYXTV6rgRGubVNnp/9PIz/LEzY1GHDoYwMCT
-	 FWDUTQ1Haww04lDAalm0aAREZQK6+7tuMes3kf//vRJK8UIi69sKIDcpoj2eGceSwL
-	 SxcB4IUOq0DUBUQuy6pCKC0B3TaGlHr1DeEpBbsCVtq9hBwcp+KuZM2kAxCxQiRJyK
-	 RtShmDPVnQf/ElkbcDvgUxzgyDqqvUGkfOt4HLHYWgP833UzvQn+jhIb78izB/dblP
-	 Ybw8i92I0afUvL/BAMbt+uYooaP6VodJHDOQZ3JLzfl05BO6neUMKNhXMax558Fz1C
-	 Mu4z1XKOHyN7Q==
-Received: by mail-lf1-f51.google.com with SMTP id a2so15302248lfg.5
-        for <loongarch@lists.linux.dev>; Sun, 19 Jun 2022 21:26:56 -0700 (PDT)
-X-Gm-Message-State: AJIora/iDMtevC1lYIO+BLi7qIt0GkhYLDePwopfuobihTCNzupw3va9
-	eAi+4vED2CCBnFKIy4VHE3N2YcmcYbWBgN9MVDk=
-X-Google-Smtp-Source: AGRyM1uYyyQjf9Decjv0WPr7mJzVYnU+TOsVlPnJvM4Za2MdmoVcQWzOB7ITLBdGYmYg7Kh2IT1KTqP3MSGzl+OkCHc=
-X-Received: by 2002:a05:6512:258a:b0:47d:bb62:910f with SMTP id
- bf10-20020a056512258a00b0047dbb62910fmr12198749lfb.447.1655699214150; Sun, 19
- Jun 2022 21:26:54 -0700 (PDT)
+	b=ZtLWQaCGxyDeiyzSl067qaTebE7hO3c0CA4rZhDm7N/Jqe6N3Ife2IY5iOTBzNA5B
+	 T/K85aWEKSMFg2VirBOMTh416Y53TnyQNEesyYktxFIks1njwqhbfbo4JjzH4aeYXD
+	 69bRlEREj53fp80p76Q0IDl5dn6Gc3wu7E3DMY663Dntt22Hwzh7f7qH800TGcGYjO
+	 molJfiwtXmNxs1t40w9OYbxPHYqxdbhKyLcTVqM9FBi8DwxEs2qfxuQjKPWN7d60G0
+	 RIkdQF4VSAiSCaJCu8iubZE4eS6cOM6UEypZ+lURdj3LcMaChNLCm07vlnUDmxN9Xf
+	 xUT89mDoje6zg==
+Received: by mail-lj1-f171.google.com with SMTP id w9so2241585lji.4
+        for <loongarch@lists.linux.dev>; Mon, 20 Jun 2022 02:50:09 -0700 (PDT)
+X-Gm-Message-State: AJIora8+5faA+G16ct8tVnHASUHvs6wZH928zWi7sIywif4zQpj28gOh
+	ZjDzQnG89U5TiVs05ZNwVcRjuN/ycQ58AmwNYpk=
+X-Google-Smtp-Source: AGRyM1u26ZTxYYwp6BW03Vv9IYXi2WFR5VcYdjY22Y8n/MuB9XsnBOuNlJp6bjGBF2txoIIO2DXn7JbMPW1np5BsB8g=
+X-Received: by 2002:a05:651c:506:b0:257:c12:b941 with SMTP id
+ o6-20020a05651c050600b002570c12b941mr11442398ljp.429.1655718607867; Mon, 20
+ Jun 2022 02:50:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220617145828.582117-1-chenhuacai@loongson.cn>
- <CAHirt9hRs_iTvAZ=UxBBK448j7p+pYxKsMVise=Jj2qCtNky2Q@mail.gmail.com>
- <CAAhV-H4=04qygAFqm36RBM-ktXhO7M8HMBeCPBOnB8xYz268Zw@mail.gmail.com> <94bebe28-5988-d6b6-bf82-03ef5901cd69@xen0n.name>
-In-Reply-To: <94bebe28-5988-d6b6-bf82-03ef5901cd69@xen0n.name>
+References: <20220617145705.581985-1-chenhuacai@loongson.cn>
+ <CAK8P3a2nD_Zxv5X_LB7AbO=kxHQyk3vz09fQZ-TTX4PL0b3g1g@mail.gmail.com>
+ <CAJF2gTT_etFg7-N4f=A4LMOYvd3+H505e0xt8NyxK4uPtkuEXg@mail.gmail.com>
+ <CAK8P3a078r6zkZYYeV7Qg3AEOvFxgG+eRN9bFE_3DNwHq=_1ZA@mail.gmail.com>
+ <CAJF2gTQL+ysc+juQfNVxz1QtXgrLAYe=CyA9L_c3fzd4F8aFxQ@mail.gmail.com>
+ <CAK8P3a3wRqLAvywX2zbD0kdt19m2pKazqA2Y6_sNL1L=_4N3vQ@mail.gmail.com>
+ <CAJF2gTQG0SBninPg7MsCFP=60p8u5KT+HaLNBzgjxM_fTMr+Dg@mail.gmail.com> <CAK8P3a1LgmZDssQoCciZ0YRy3UHWV3yK99UHTCdvahCFBG+u+Q@mail.gmail.com>
+In-Reply-To: <CAK8P3a1LgmZDssQoCciZ0YRy3UHWV3yK99UHTCdvahCFBG+u+Q@mail.gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 20 Jun 2022 12:26:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4-=T5hA1UwFq2uN=PU0L9KV9jU9jkDQh9UuyyuUr=zEQ@mail.gmail.com>
-Message-ID: <CAAhV-H4-=T5hA1UwFq2uN=PU0L9KV9jU9jkDQh9UuyyuUr=zEQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add vDSO syscall __vdso_getcpu()
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: hev <r@hev.cc>, Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
-	loongarch@lists.linux.dev, linux-arch <linux-arch@vger.kernel.org>, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Date: Mon, 20 Jun 2022 17:49:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6-K_mHSm9CWRB+v2a_Zqy-Z9x3XmQPuF7XT3yiTB=rbw@mail.gmail.com>
+Message-ID: <CAAhV-H6-K_mHSm9CWRB+v2a_Zqy-Z9x3XmQPuF7XT3yiTB=rbw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Add qspinlock support
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Guo Ren <guoren@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi, Xuerui,
+Hi,
 
-On Sat, Jun 18, 2022 at 8:56 PM WANG Xuerui <kernel@xen0n.name> wrote:
+On Mon, Jun 20, 2022 at 12:11 AM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> On 6/18/22 17:10, Huacai Chen wrote:
-> > Hi,
+> On Sun, Jun 19, 2022 at 5:48 PM Guo Ren <guoren@kernel.org> wrote:
 > >
-> > On Fri, Jun 17, 2022 at 11:35 PM hev <r@hev.cc> wrote:
-> >> Hello,
-> >>
-> >> On Fri, Jun 17, 2022 at 10:57 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> >>> We test 20 million times of getcpu(), the real syscall version take 25
-> >>> seconds, while the vsyscall version take only 2.4 seconds.
-> >>>
-> >>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> >>> ---
-> >>>   arch/loongarch/include/asm/vdso.h      |  4 +++
-> >>>   arch/loongarch/include/asm/vdso/vdso.h | 10 +++++-
-> >>>   arch/loongarch/kernel/vdso.c           | 23 +++++++++-----
-> >>>   arch/loongarch/vdso/Makefile           |  3 +-
-> >>>   arch/loongarch/vdso/vdso.lds.S         |  1 +
-> >>>   arch/loongarch/vdso/vgetcpu.c          | 43 ++++++++++++++++++++++++++
-> >>>   6 files changed, 74 insertions(+), 10 deletions(-)
-> >>>   create mode 100644 arch/loongarch/vdso/vgetcpu.c
-> >>>
-> >>> diff --git a/arch/loongarch/include/asm/vdso.h b/arch/loongarch/include/asm/vdso.h
-> >>> index 8f8a0f9a4953..e76d5e37480d 100644
-> >>> --- a/arch/loongarch/include/asm/vdso.h
-> >>> +++ b/arch/loongarch/include/asm/vdso.h
-> >>> @@ -12,6 +12,10 @@
-> >>>
-> >>>   #include <asm/barrier.h>
-> >>>
-> >>> +typedef struct vdso_pcpu_data {
-> >>> +       u32 node;
-> >>> +} ____cacheline_aligned_in_smp vdso_pcpu_data;
-> >>> +
-> >>>   /*
-> >>>    * struct loongarch_vdso_info - Details of a VDSO image.
-> >>>    * @vdso: Pointer to VDSO image (page-aligned).
-> >>> diff --git a/arch/loongarch/include/asm/vdso/vdso.h b/arch/loongarch/include/asm/vdso/vdso.h
-> >>> index 5a01643a65b3..94055f7c54b7 100644
-> >>> --- a/arch/loongarch/include/asm/vdso/vdso.h
-> >>> +++ b/arch/loongarch/include/asm/vdso/vdso.h
-> >>> @@ -8,6 +8,13 @@
-> >>>
-> >>>   #include <asm/asm.h>
-> >>>   #include <asm/page.h>
-> >>> +#include <asm/vdso.h>
-> >>> +
-> >>> +#if PAGE_SIZE < SZ_16K
-> >>> +#define VDSO_DATA_SIZE SZ_16K
-> >> Whether we add members to the vdso data structure or extend
-> >> SMP_CACHE_BYTES/NR_CPUS, the static VDSO_DATA_SIZE may not match, and
-> >> there is no assertion checking to help us catch bugs early. So I
-> >> suggest defining VDSO_DATA_SIZE as ALIGN_UP(sizeof (struct vdso_data),
-> >> PAGE_SIZE).
-> > VSYSCALL usage is very limited (you know, VSYSCALL appears for so many
-> > years, but the number nearly doesn't increase until now), so I think
-> > 16KB is enough in the future.
+> > On Sat, Jun 18, 2022 at 1:40 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > >
+> > > On Sat, Jun 18, 2022 at 1:19 AM Guo Ren <guoren@kernel.org> wrote:
+> > > >
+> > > > > static inline u32 arch_xchg32(u32 *ptr, u32 x) {...}
+> > > > > static inline u64 arch_xchg64(u64 *ptr, u64 x) {...}
+> > > > >
+> > > > > #ifdef CONFIG_64BIT
+> > > > > #define xchg(ptr, x) (sizeof(*ptr) == 8) ? \
+> > > > >             arch_xchg64((u64*)ptr, (uintptr_t)x)  \
+> > > > >             arch_xchg32((u32*)ptr, x)
+> > > > > #else
+> > > > > #define xchg(ptr, x) arch_xchg32((u32*)ptr, (uintptr_t)x)
+> > > > > #endif
+> > > >
+> > > > The above primitive implies only long & int type args are permitted, right?
+> > >
+> > > The idea is to allow any scalar or pointer type, but not structures or
+> > > unions. If we need to deal with those as well, the macro could be extended
+> > > accordingly, but I would prefer to limit it as much as possible.
+> > >
+> > > There is already cmpxchg64(), which is used for types that are fixed to
+> > > 64 bit integers even on 32-bit architectures, but it is rarely used except
+> > > to implement the atomic64_t helpers.
+> > A lot of 32bit arches couldn't provide cmpxchg64 (like arm's ldrexd/strexd).
 >
-> I don't think omitting compile-time assertions for *correctness* is
-> worth the negligible improvement in brevity and ease of maintenance. In
-> fact, static checks for correctness actually *lightens* maintenance
-> burden, by explicitly calling out the assumptions so that newcomers
-> (i.e. me or some other random linux/arch developer refactoring code)
-> would find them very helpful.
+> Most 32-bit architectures also lack SMP support, so they can fall back to
+> the generic version from include/asm-generic/cmpxchg-local.h
 >
-> So I'm in support for declaring the VDSO_DATA_SIZE explicitly in terms
-> of sizeof(struct vdso_data) and PAGE_SIZE.
-I'll use hev's method, thank you.
+> > Another question: Do you know why arm32 didn't implement
+> > HAVE_CMPXCHG_DOUBLE with ldrexd/strexd?
+>
+> I think it's just fairly obscure, the slub code appears to be the only
+> code that would use it.
+>
+> > >
+> > > 80% of the uses of cmpxchg() and xchg() deal with word-sized
+> > > quantities like 'unsigned long', or 'void *', but the others are almost
+> > > all fixed 32-bit quantities. We could change those to use cmpxchg32()
+> > > directly and simplify the cmpxchg() function further to only deal
+> > > with word-sized arguments, but I would not do that in the first step.
+> > Don't forget cmpxchg_double for this cleanup, when do you want to
+> > restart the work?
+>
+> I have no specific plans at the moment. If you or someone else likes
+> to look into it, I can dig out my old patch though.
+>
+> The cmpxchg_double() call seems to already fit in, since it is an
+> inline function and does not expect arbitrary argument types.
+Thank all of you. :)
+
+As Rui and Xuerui said, ll and sc in LoongArch both have implicit full
+barriers, so there is no "relaxed" version.
+
+The __WEAK_LLSC_MB in __cmpxchg_small() have nothing to do with ll and
+ sc themselves, we need a barrier at the branch target just because
+Loongson-3A5000 has a hardware flaw (and will be fixed in
+Loongson-3A6000).
+
+qspinlock just needs xchg_small(), but cmpxchg_small() is also useful
+for percpu operations. So I plan to split this patch to two: the first
+add xchg_small() and cmpxchg_small(), the second enable qspinlock.
 
 Huacai
+
+>
+>        Arnd
