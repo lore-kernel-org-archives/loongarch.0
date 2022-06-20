@@ -1,88 +1,142 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8370E7F6
-	for <loongarch@lists.linux.dev>; Mon, 20 Jun 2022 11:26:58 +0000 (UTC)
-Received: from mail-yw1-f178.google.com ([209.85.128.178]) by
- mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MhUDj-1nQb9n1E9r-00egOD for <loongarch@lists.linux.dev>; Mon, 20 Jun 2022
- 13:26:56 +0200
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-3178ea840easo58869157b3.13
-        for <loongarch@lists.linux.dev>; Mon, 20 Jun 2022 04:26:56 -0700 (PDT)
-X-Gm-Message-State: AJIora/o55J8PWlNLAGEeu6pzZQ9YswX0dge1+zlWCZ3aBx65n34Xz30
-	6+Jv1tI5dzJ5IWWoKwKC+5qnyoyk2Ja/GKeN3kM=
-X-Google-Smtp-Source: AGRyM1u96dMc7NQSr64fMvJHkkfPwQF10BArwoGPZrI0++jMEyDVdKrxQlsin6cZpuKPKbHfsaERKjvgbnrA7J4ywnc=
-X-Received: by 2002:a0d:ca0f:0:b0:317:a2cc:aa2 with SMTP id
- m15-20020a0dca0f000000b00317a2cc0aa2mr11456604ywd.347.1655724415136; Mon, 20
- Jun 2022 04:26:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200F42562
+	for <loongarch@lists.linux.dev>; Mon, 20 Jun 2022 16:01:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C54D5C341C5
+	for <loongarch@lists.linux.dev>; Mon, 20 Jun 2022 16:01:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1655740864;
+	bh=i8rnv2RSIk4dnldSkK+CMeE7I1PJ2LYpDhOTV4sOumE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Vk9d9MuAA7+buSCXcT8mUoK356GVSoZ4BtQUITVfV7eTE8aGlap0BFzCRTYgeiSwm
+	 ze2Wh15nW1BmKvAeXSDiB4mp0SsTamkjAW+50oIoAIcnmB9BWwHsaEbSr9Hy5i2HCz
+	 IGpdmZybqltpaFB2W2eqIAfMexfbkwIi6IYe/PZ5YFB0R6JmOhiXlCBzsREt078Cfu
+	 tLh0f778Uw5TkZHWRhMeV1OLRVfIB0rw3fjYru6ml7vKnC0OxJ8Da+jPg+lqBrYfIt
+	 veDa7SQ4cMqvpl79w0s0HNJwWOjxd+iB4Pk4SdTAlhArm1NAu3GCjna7HufGCGKAop
+	 pqKLhx1xNYASA==
+Received: by mail-ua1-f42.google.com with SMTP id u13so4104392uaq.10
+        for <loongarch@lists.linux.dev>; Mon, 20 Jun 2022 09:01:04 -0700 (PDT)
+X-Gm-Message-State: AJIora9esYSLiBdOeeONDLXXssC5ewrqCayHKoOwlDWZcwKwRLz1xtY2
+	xuOC84ZgTOJQaO3ZDAU6BzEUNB7K27sE3T7uxa4=
+X-Google-Smtp-Source: AGRyM1sz9XD3azQUtJ/GADdhzMeKlhXm9cAlSBFsE/ne5DWtl9pMIcI002XLRQMHeWaWyxZzT6aNclaelXE6MnOcUSc=
+X-Received: by 2002:a9f:23c2:0:b0:365:958:e807 with SMTP id
+ 60-20020a9f23c2000000b003650958e807mr8331051uao.114.1655740863709; Mon, 20
+ Jun 2022 09:01:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220617145859.582176-1-chenhuacai@loongson.cn>
- <CAK8P3a1L40=P8GnuyK--K7URyrdAb4XcPJ-+HxwY4_+siA25oQ@mail.gmail.com> <CAAhV-H4AO3friSYrpAN_VM6aLO7yfV2svKg=7w_3F3HpV7Dq4Q@mail.gmail.com>
-In-Reply-To: <CAAhV-H4AO3friSYrpAN_VM6aLO7yfV2svKg=7w_3F3HpV7Dq4Q@mail.gmail.com>
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Mon, 20 Jun 2022 13:26:38 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3Wu7vCzxgjAWugiaBonARqU88NYuQj4JyqATmTDrPEaw@mail.gmail.com>
-Message-ID: <CAK8P3a3Wu7vCzxgjAWugiaBonARqU88NYuQj4JyqATmTDrPEaw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add sparse memory vmemmap support
+References: <20220617145705.581985-1-chenhuacai@loongson.cn>
+ <CAK8P3a2nD_Zxv5X_LB7AbO=kxHQyk3vz09fQZ-TTX4PL0b3g1g@mail.gmail.com>
+ <CAJF2gTT_etFg7-N4f=A4LMOYvd3+H505e0xt8NyxK4uPtkuEXg@mail.gmail.com>
+ <CAK8P3a078r6zkZYYeV7Qg3AEOvFxgG+eRN9bFE_3DNwHq=_1ZA@mail.gmail.com>
+ <CAJF2gTQL+ysc+juQfNVxz1QtXgrLAYe=CyA9L_c3fzd4F8aFxQ@mail.gmail.com>
+ <CAK8P3a3wRqLAvywX2zbD0kdt19m2pKazqA2Y6_sNL1L=_4N3vQ@mail.gmail.com>
+ <CAJF2gTQG0SBninPg7MsCFP=60p8u5KT+HaLNBzgjxM_fTMr+Dg@mail.gmail.com>
+ <CAK8P3a1LgmZDssQoCciZ0YRy3UHWV3yK99UHTCdvahCFBG+u+Q@mail.gmail.com> <CAAhV-H6-K_mHSm9CWRB+v2a_Zqy-Z9x3XmQPuF7XT3yiTB=rbw@mail.gmail.com>
+In-Reply-To: <CAAhV-H6-K_mHSm9CWRB+v2a_Zqy-Z9x3XmQPuF7XT3yiTB=rbw@mail.gmail.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Tue, 21 Jun 2022 00:00:52 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTS_i5f6At6F9G9WKubnz4mrazzDTJCDC2PA+0mXWZ3pWA@mail.gmail.com>
+Message-ID: <CAJF2gTS_i5f6At6F9G9WKubnz4mrazzDTJCDC2PA+0mXWZ3pWA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Add qspinlock support
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
 	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linux-MM <linux-mm@kvack.org>, Min Zhou <zhoumin@loongson.cn>
+	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:bTC9LPGk19j4zbZhdY9ttlFg/aqFrIueyFvc5JOG6IXA2nkhKtm
- szYfZQzk92fU0XU3CsFRp7L/RpcadC7xISGcesOWJg5mU/DWx07Z6wjOyzlXYisG89kX2k/
- BA6y0SZQx/pawUxIEMvjDHiEqxEoQuqNni9DwleL1pmR0jYS9VkrL4iAzgKWE9ijCIM1KZ8
- KLoe/AHYSyDCkMJnu6opA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DsGz0LefbYE=:tdePvepNvaDovSrXSyRaY/
- w/65urQVBy6ELZkBr1rUAB/TZq/iKz3s3fU2SFbDfiSd9SUZlutMsHh0ZD4rbCqkMIpHbeXED
- 1kAGdkpiThgJCoWx7ezpYSV6yTZF2PKJO0596HBBL09ukzRgODdLz9Ev2u8DOwIeRYEY7F/W/
- GJm5hDyu9cDdWhP4t4xC9p1qLdXB8c7gH3sHg6O7uswDcIZHHx+hGy2agZvERUMc0hGaPOgL8
- y5anOh/4AsFVSKez62zbZZMdQp8LQhAzy9H2+u3rFu9mp7WlJ1nqYIbzQXz8C7yYU5EUiyTkm
- Cdi6ztH/xbB7roDuts0HK3sO2jdbMIG+o30N7ZHdr1UL0/zKcEAjMfJlF7MKqm/+5e7y0UR2v
- Rf1wSkkZth4+0tflHK402vqVRdpY+T8ZdBtjgYKksrhmndCxzsCae+kNIx6C5dDeXAPPjF+TW
- rRJkX8g3sz3dwsFt26f89eIY1ox+xRSbgkYO7hfuuf4BAvj/8puxn8MLgsQPuzRwprkXXG4I3
- QZ3ikZ2eAJbm2k+IPeRAlWLJh/titBlQeb85z7q/l2CYCu8WIUNw5WGu95Tw0rsMHiOUj77ph
- Dg4Slp0atPAfcrLqmQINpFI+uxN031hFJsQs/MHQ2ofDCTYgzyFMtMyypQalXkvD58F1ZGrFE
- Mu+PlvD1gwksR8xkjxpNlCnW7WG8IViYEDA3nnNLTI5blvq086Hi7HP2qem4IzM19OnA86VaG
- KNybx7tiVYAolnn9EohHPysdQuXw59g7Kf3dZQ==
 
-On Mon, Jun 20, 2022 at 12:24 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> On Fri, Jun 17, 2022 at 11:42 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Fri, Jun 17, 2022 at 4:58 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> > >
-> > > Add sparse memory vmemmap support for LoongArch. SPARSEMEM_VMEMMAP
-> > > uses a virtually mapped memmap to optimise pfn_to_page and page_to_pfn
-> > > operations. This is the most efficient option when sufficient kernel
-> > > resources are available.
-> >
-> > I have not looked at this in detail, but from a high-level perspective, it
-> > seems very similar to the corresponding code in arch/arm64 and arch/x86.
-> >
-> > Can you try to merge the three copies into a generic helper and add that
-> > to mm/sparse-vmemmap.c? If this does not work, can you describe in the
-> > changelog text why these have to be architecture specific?
+Hi Huacai & Arnd,
+
+Please have a look at riscv qspinlock V5:
+https://lore.kernel.org/linux-riscv/a498a2ff-2503-b25c-53c9-55f5f2480bf6@microchip.com/T/#t
+
+
+
+On Mon, Jun 20, 2022 at 5:50 PM Huacai Chen <chenhuacai@kernel.org> wrote:
 >
-> It is difficult to merge, because LoongArch needs to call pud_init(),
-> pmd_init() and other similar things which are unnecessary on ARM64 and
-> X86.
+> Hi,
+>
+> On Mon, Jun 20, 2022 at 12:11 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Sun, Jun 19, 2022 at 5:48 PM Guo Ren <guoren@kernel.org> wrote:
+> > >
+> > > On Sat, Jun 18, 2022 at 1:40 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > >
+> > > > On Sat, Jun 18, 2022 at 1:19 AM Guo Ren <guoren@kernel.org> wrote:
+> > > > >
+> > > > > > static inline u32 arch_xchg32(u32 *ptr, u32 x) {...}
+> > > > > > static inline u64 arch_xchg64(u64 *ptr, u64 x) {...}
+> > > > > >
+> > > > > > #ifdef CONFIG_64BIT
+> > > > > > #define xchg(ptr, x) (sizeof(*ptr) == 8) ? \
+> > > > > >             arch_xchg64((u64*)ptr, (uintptr_t)x)  \
+> > > > > >             arch_xchg32((u32*)ptr, x)
+> > > > > > #else
+> > > > > > #define xchg(ptr, x) arch_xchg32((u32*)ptr, (uintptr_t)x)
+> > > > > > #endif
+> > > > >
+> > > > > The above primitive implies only long & int type args are permitted, right?
+> > > >
+> > > > The idea is to allow any scalar or pointer type, but not structures or
+> > > > unions. If we need to deal with those as well, the macro could be extended
+> > > > accordingly, but I would prefer to limit it as much as possible.
+> > > >
+> > > > There is already cmpxchg64(), which is used for types that are fixed to
+> > > > 64 bit integers even on 32-bit architectures, but it is rarely used except
+> > > > to implement the atomic64_t helpers.
+> > > A lot of 32bit arches couldn't provide cmpxchg64 (like arm's ldrexd/strexd).
+> >
+> > Most 32-bit architectures also lack SMP support, so they can fall back to
+> > the generic version from include/asm-generic/cmpxchg-local.h
+> >
+> > > Another question: Do you know why arm32 didn't implement
+> > > HAVE_CMPXCHG_DOUBLE with ldrexd/strexd?
+> >
+> > I think it's just fairly obscure, the slub code appears to be the only
+> > code that would use it.
+> >
+> > > >
+> > > > 80% of the uses of cmpxchg() and xchg() deal with word-sized
+> > > > quantities like 'unsigned long', or 'void *', but the others are almost
+> > > > all fixed 32-bit quantities. We could change those to use cmpxchg32()
+> > > > directly and simplify the cmpxchg() function further to only deal
+> > > > with word-sized arguments, but I would not do that in the first step.
+> > > Don't forget cmpxchg_double for this cleanup, when do you want to
+> > > restart the work?
+> >
+> > I have no specific plans at the moment. If you or someone else likes
+> > to look into it, I can dig out my old patch though.
+> >
+> > The cmpxchg_double() call seems to already fit in, since it is an
+> > inline function and does not expect arbitrary argument types.
+> Thank all of you. :)
+>
+> As Rui and Xuerui said, ll and sc in LoongArch both have implicit full
+> barriers, so there is no "relaxed" version.
+>
+> The __WEAK_LLSC_MB in __cmpxchg_small() have nothing to do with ll and
+>  sc themselves, we need a barrier at the branch target just because
+> Loongson-3A5000 has a hardware flaw (and will be fixed in
+> Loongson-3A6000).
+>
+> qspinlock just needs xchg_small(), but cmpxchg_small() is also useful
+> for percpu operations. So I plan to split this patch to two: the first
+> add xchg_small() and cmpxchg_small(), the second enable qspinlock.
+>
+> Huacai
+>
+> >
+> >        Arnd
 
- I can see that this part of the code is the same as mips. What is the
-initialization
- for? Can it be encapsulated in an architecture specific inline
-function (for mips
-and loongarch), with a generic version like this?
 
-#ifndef pud_init_invalid
-static inline void pud_init_invalid(void *) {}
-#endif
 
-       Arnd
+--
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
