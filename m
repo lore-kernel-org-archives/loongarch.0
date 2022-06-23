@@ -1,256 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9820043EA
-	for <loongarch@lists.linux.dev>; Thu, 23 Jun 2022 08:04:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 321BFC341CA
-	for <loongarch@lists.linux.dev>; Thu, 23 Jun 2022 08:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1655971460;
-	bh=W9F13nUUH++x1QvFinQ+pF83Qi6CvNA1tEYk3CJB5vs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EPx/W8Uazp1P3SJjypqfRLqO1Iuvv8npYekoqLFoF8RE+1ZdZsi9YeN2AO+HsfY2T
-	 HcWQ+6LduqerZ+v73k1H7GX+Ik72Rx0q5F6ESIZWgA88+4M0JHZtw1BWoy5XFwWZnr
-	 pb9u++O44ig8qpzjILdUL2ogdBPVtPzyKQbrwkE45vXkBgYKBTaCv0OCzLv3XhVYCB
-	 s/KcltrI/cvFD2ZjXPw0n+RaJrxfdK8MaEyEZhvLhGjiWim9QL+8Fof8gUkQj7oGnp
-	 Ru0QfGBtE1yk6B+IDpO9yx+26twtEgqAhL2B95pbX61SxtfZfbRJBg12sZGK9kwyN5
-	 /MdV35AMT5X6g==
-Received: by mail-lj1-f180.google.com with SMTP id c30so22298782ljr.9
-        for <loongarch@lists.linux.dev>; Thu, 23 Jun 2022 01:04:20 -0700 (PDT)
-X-Gm-Message-State: AJIora8kNKUJkBQv2g0J9PReNSyIL3mOjlZFUIC2IrwqN4aSVeu56wcj
-	QRfiQAy2bre+2D12LqkQW5b2WoYT1PiMGVwGLYA=
-X-Google-Smtp-Source: AGRyM1tKlgTgGb/xnSBWsXm8jk5QVcEdflzha6Vw6Bf3jaOsNXaovqNCTnFdaTNl7j+FTuKEpISxZmC5fzqijqj/Kkg=
-X-Received: by 2002:a2e:95c8:0:b0:255:abb5:d0e7 with SMTP id
- y8-20020a2e95c8000000b00255abb5d0e7mr3938882ljh.23.1655971458003; Thu, 23 Jun
- 2022 01:04:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A882D43EB
+	for <loongarch@lists.linux.dev>; Thu, 23 Jun 2022 08:26:59 +0000 (UTC)
+Received: from mail-oi1-f179.google.com ([209.85.167.179]) by
+ mrelayeu.kundenserver.de (mreue107 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1MKKlN-1oNtUS1xh1-00LkWn for <loongarch@lists.linux.dev>; Thu, 23 Jun 2022
+ 10:26:51 +0200
+Received: by mail-oi1-f179.google.com with SMTP id v4so24409639oiv.1
+        for <loongarch@lists.linux.dev>; Thu, 23 Jun 2022 01:26:51 -0700 (PDT)
+X-Gm-Message-State: AJIora8dha0ZDYoBBwSDWi6LMMAROX4cLCNnK0V9BVNRmI3rYnH6ZYRI
+	nH9cy7StjJv+djC2507Mwa8C77WdsHpEriQrvGw=
+X-Google-Smtp-Source: AGRyM1u9pqhopZfdeBwO5Xx/VVhkNHcq295BMkoofP9ZNnYY2D6jA3KH7S/W8w1wfJ7YkyJ8w4hAFE87FHJq0iNcABM=
+X-Received: by 2002:a05:6808:1147:b0:32f:1a3a:2210 with SMTP id
+ u7-20020a056808114700b0032f1a3a2210mr1518557oiu.155.1655972810216; Thu, 23
+ Jun 2022 01:26:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220623044752.2074066-1-chenhuacai@loongson.cn> <CAJF2gTQF-e+OUw9VLFOUvFbyroMnxsYyYxCJepQVWnvOTsx1HQ@mail.gmail.com>
-In-Reply-To: <CAJF2gTQF-e+OUw9VLFOUvFbyroMnxsYyYxCJepQVWnvOTsx1HQ@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 23 Jun 2022 16:04:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4O__55JFr9eoYnitdDUXvtFm2p1k-wniVNqK7OB2uVYA@mail.gmail.com>
-Message-ID: <CAAhV-H4O__55JFr9eoYnitdDUXvtFm2p1k-wniVNqK7OB2uVYA@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] LoongArch: Add subword xchg/cmpxchg emulation
-To: Guo Ren <guoren@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
+References: <20220623044752.2074066-1-chenhuacai@loongson.cn>
+ <20220623044752.2074066-2-chenhuacai@loongson.cn> <CAJF2gTR1ksvWWT1tec1QnOt6rzDucx5qzWO44nA_vHFhqMtG_g@mail.gmail.com>
+ <CAAhV-H7p=zr7vjzENLgByqRUsH1mNQb8fFxNBkQu2YsWp1gMWA@mail.gmail.com>
+In-Reply-To: <CAAhV-H7p=zr7vjzENLgByqRUsH1mNQb8fFxNBkQu2YsWp1gMWA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Thu, 23 Jun 2022 10:26:31 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0pKc7=iLcFY028HqJXmGupacm=tV7Wqgx0+bYSqczoog@mail.gmail.com>
+Message-ID: <CAK8P3a0pKc7=iLcFY028HqJXmGupacm=tV7Wqgx0+bYSqczoog@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] LoongArch: Add qspinlock support
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Guo Ren <guoren@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
 	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
 	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
 	Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
 	Rui Wang <wangrui@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:2IEc3W9Y3VIm545kZ5mGWfLILC0nnxbYvfeaQ5CIZgyo9tMDz+e
+ 8CReAjioRap1sRlbxasr4fFS1pPwDWcM+CfJeWGpiMUD4xSkkFp3z+bZuVYCA2k3Uy4fXKr
+ AlVy/EBTAE5CosXJvcNn985JZHXFdTTRUyUT5CXcSUdHtEn262v1Pz+w3vDjVSfBIpHVwts
+ lBuF2lG7sIf/HehuR2TWQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qIDdZ9tAWrA=:ujEBRfMTl3Uu91jMqadCXi
+ Moopxik8Yg9cmiugcKiFJPG16hsVpGyQbfe9n+Lz48jzAFLZuF92/uUv8zTjvz/GjQfFYk+BS
+ yg4zyNfZ1i92AQwlN/QiR55eKajNgiHwOmQ/3f2Ox5/88ZiFEsntgTCPWK7bV4Bo+Y9AinswR
+ IAx3tbIhEOI9mJvclT9VK+GrUlIhRBxe62OtAWjjPY+Ueztm21zDvjsySUehFdXAQMSwXGuJS
+ wciET9Nxw00twiGJcIdPBwb82qti+khj3vL1R0bryp9gHt3rUPvny/ZFkcnB6lrSEl//k5FK8
+ ekyLLup7/HUWdEt3C/F+y7nUrSSlF6FY5KJhAfqeDsgAei+rhFykkf1gRelY3gTAMw27GIx6I
+ UL0n6ODyaQpDXxyGQVIU4Mn+Iug/O/2f6TmP4KjEmWdjC+jpRNupTM93Uk/9WubDHJPyLwDr5
+ iGZG5fKWhHdWGUiMIMRu/noMwewWCSSaj1O8tkTnASxEJyp3wfmyv2q/kJRfKdY+4TFjBuyaL
+ 1/+qdy405fJMg1GIRR3Y0ij/gtNMc2R0orBb4sphttoazYbuJiIEGmU5FD9ZSWFE2DR6udIdO
+ tE/l98haSL77Qw+rEPvCBzCtgmPqzeTvl3rj5wm2LsxVy4ZrVWxmoxtKnTRaeyc1o4PFfDt+2
+ VdvFwdLz2jYs8EwIYj1ha65uUZCdrHxhSO2TJ3YY1vtlqbSyES1iNPRh9+vue/yvKiptNN4Xq
+ xqi/gYA+5nIPXvu3l7iJfUPCczP6jKlL1dlfQte2S6AdNe+qw15f4vzL2JHxj8fqMoqUHVGg8
+ pkP/2coEquZvNwWvBVYPu+1F857K8P4pqZ10Px113uP25a95XCd4s8WNHpkBXICTnpPY/k8ir
+ uSKYmBhiX1hypYQyCSUg==
 
-Hi, Ren,
+On Thu, Jun 23, 2022 at 9:56 AM Huacai Chen <chenhuacai@kernel.org> wrote:
+> On Thu, Jun 23, 2022 at 1:45 PM Guo Ren <guoren@kernel.org> wrote:
+> >
+> > On Thu, Jun 23, 2022 at 12:46 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
+> > >
+> > > On NUMA system, the performance of qspinlock is better than generic
+> > > spinlock. Below is the UnixBench test results on a 8 nodes (4 cores
+> > > per node, 32 cores in total) machine.
 
-On Thu, Jun 23, 2022 at 2:49 PM Guo Ren <guoren@kernel.org> wrote:
->
-> On Thu, Jun 23, 2022 at 12:46 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> >
-> > LoongArch only support 32-bit/64-bit xchg/cmpxchg in native. But percpu
-> > operation and qspinlock need 8-bit/16-bit xchg/cmpxchg. On NUMA system,
-> > the performance of subword xchg/cmpxchg emulation is better than the
-> > generic implementation (especially for qspinlock, data will be shown in
-> > the next patch). This patch (of 2) adds subword xchg/cmpxchg emulation
-> > with ll/sc and enable its usage for percpu operations.
-> The xchg/cmpxchg are designed for multi-processor data-sharing issues.
-> The percpu data won't share with other harts and disabling
-> irq/preemption is enough. Do you have the same issue with f97fc810798c
-> ("arm64: percpu: Implement this_cpu operations")?
-Yes, very similar, our csr operations are even slower than atomic operations. :(
+You are still missing an explanation here about why this is safe to
+do. Is there are
+architectural guarantee for forward progress, or do you rely on
+specific microarchitectural
+behavior?
 
+> > Could you base the patch on [1]?
+> >
+> > [1] https://lore.kernel.org/linux-riscv/20220621144920.2945595-2-guoren@kernel.org/raw
+> I found that whether we use qspinlock or tspinlock, we always use
+> qrwlock, so maybe it is better like this?
 >
+> #ifdef CONFIG_ARCH_USE_QUEUED_SPINLOCKS
+> #include <asm/qspinlock.h>
+> #else
+> #include <asm-generic/tspinlock.h>
+> #endif
 >
-> >
-> > Signed-off-by: Rui Wang <wangrui@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  arch/loongarch/include/asm/cmpxchg.h | 98 +++++++++++++++++++++++++++-
-> >  arch/loongarch/include/asm/percpu.h  |  8 +++
-> >  2 files changed, 105 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/include/asm/cmpxchg.h
-> > index 75b3a4478652..967e64bf2c37 100644
-> > --- a/arch/loongarch/include/asm/cmpxchg.h
-> > +++ b/arch/loongarch/include/asm/cmpxchg.h
-> > @@ -5,8 +5,9 @@
-> >  #ifndef __ASM_CMPXCHG_H
-> >  #define __ASM_CMPXCHG_H
-> >
-> > -#include <asm/barrier.h>
-> > +#include <linux/bits.h>
-> >  #include <linux/build_bug.h>
-> > +#include <asm/barrier.h>
-> >
-> >  #define __xchg_asm(amswap_db, m, val)          \
-> >  ({                                             \
-> > @@ -21,10 +22,53 @@
-> >                 __ret;                          \
-> >  })
-> >
-> > +static inline unsigned int __xchg_small(volatile void *ptr, unsigned int val,
-> > +                                       unsigned int size)
-> > +{
-> > +       unsigned int shift;
-> > +       u32 old32, mask, temp;
-> > +       volatile u32 *ptr32;
-> > +
-> > +       /* Mask value to the correct size. */
-> > +       mask = GENMASK((size * BITS_PER_BYTE) - 1, 0);
-> > +       val &= mask;
-> > +
-> > +       /*
-> > +        * Calculate a shift & mask that correspond to the value we wish to
-> > +        * exchange within the naturally aligned 4 byte integerthat includes
-> > +        * it.
-> > +        */
-> > +       shift = (unsigned long)ptr & 0x3;
-> > +       shift *= BITS_PER_BYTE;
-> > +       mask <<= shift;
-> > +
-> > +       /*
-> > +        * Calculate a pointer to the naturally aligned 4 byte integer that
-> > +        * includes our byte of interest, and load its value.
-> > +        */
-> > +       ptr32 = (volatile u32 *)((unsigned long)ptr & ~0x3);
-> > +
-> > +       asm volatile (
-> > +       "1:     ll.w            %0, %3          \n"
-> > +       "       andn            %1, %0, %z4     \n"
-> > +       "       or              %1, %1, %z5     \n"
-> > +       "       sc.w            %1, %2          \n"
-> > +       "       beqz            %1, 1b          \n"
-> > +       : "=&r" (old32), "=&r" (temp), "=" GCC_OFF_SMALL_ASM() (*ptr32)
-> > +       : GCC_OFF_SMALL_ASM() (*ptr32), "Jr" (mask), "Jr" (val << shift)
-> > +       : "memory");
-> > +
-> > +       return (old32 & mask) >> shift;
-> > +}
-> > +
-> >  static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
-> >                                    int size)
-> >  {
-> >         switch (size) {
-> > +       case 1:
-> > +       case 2:
-> > +               return __xchg_small(ptr, x, size);
-> > +
-> >         case 4:
-> >                 return __xchg_asm("amswap_db.w", (volatile u32 *)ptr, (u32)x);
-> >
-> > @@ -67,10 +111,62 @@ static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
-> >         __ret;                                                          \
-> >  })
-> >
-> > +static inline unsigned int __cmpxchg_small(volatile void *ptr, unsigned int old,
-> > +                                          unsigned int new, unsigned int size)
-> > +{
-> > +       unsigned int shift;
-> > +       u32 old32, mask, temp;
-> > +       volatile u32 *ptr32;
-> > +
-> > +       /* Mask inputs to the correct size. */
-> > +       mask = GENMASK((size * BITS_PER_BYTE) - 1, 0);
-> > +       old &= mask;
-> > +       new &= mask;
-> > +
-> > +       /*
-> > +        * Calculate a shift & mask that correspond to the value we wish to
-> > +        * compare & exchange within the naturally aligned 4 byte integer
-> > +        * that includes it.
-> > +        */
-> > +       shift = (unsigned long)ptr & 0x3;
-> > +       shift *= BITS_PER_BYTE;
-> > +       old <<= shift;
-> > +       new <<= shift;
-> > +       mask <<= shift;
-> > +
-> > +       /*
-> > +        * Calculate a pointer to the naturally aligned 4 byte integer that
-> > +        * includes our byte of interest, and load its value.
-> > +        */
-> > +       ptr32 = (volatile u32 *)((unsigned long)ptr & ~0x3);
-> > +
-> > +       asm volatile (
-> > +       "1:     ll.w            %0, %3          \n"
-> > +       "       and             %1, %0, %z4     \n"
-> > +       "       bne             %1, %z5, 2f     \n"
-> > +       "       andn            %1, %0, %z4     \n"
-> > +       "       or              %1, %1, %z6     \n"
-> > +       "       sc.w            %1, %2          \n"
-> > +       "       beqz            %1, 1b          \n"
-> > +       "       b               3f              \n"
-> > +       "2:                                     \n"
-> > +       __WEAK_LLSC_MB
-> > +       "3:                                     \n"
-> > +       : "=&r" (old32), "=&r" (temp), "=" GCC_OFF_SMALL_ASM() (*ptr32)
-> > +       : GCC_OFF_SMALL_ASM() (*ptr32), "Jr" (mask), "Jr" (old), "Jr" (new)
-> > +       : "memory");
-> > +
-> > +       return (old32 & mask) >> shift;
-> > +}
-> > +
-> >  static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
-> >                                       unsigned long new, unsigned int size)
-> >  {
-> >         switch (size) {
-> > +       case 1:
-> > +       case 2:
-> > +               return __cmpxchg_small(ptr, old, new, size);
-> > +
-> >         case 4:
-> >                 return __cmpxchg_asm("ll.w", "sc.w", (volatile u32 *)ptr,
-> >                                      (u32)old, new);
-> > diff --git a/arch/loongarch/include/asm/percpu.h b/arch/loongarch/include/asm/percpu.h
-> > index e6569f18c6dd..0bd6b0110198 100644
-> > --- a/arch/loongarch/include/asm/percpu.h
-> > +++ b/arch/loongarch/include/asm/percpu.h
-> > @@ -123,6 +123,10 @@ static inline unsigned long __percpu_xchg(void *ptr, unsigned long val,
-> >                                                 int size)
-> >  {
-> >         switch (size) {
-> > +       case 1:
-> > +       case 2:
-> > +               return __xchg_small((volatile void *)ptr, val, size);
-> > +
-> >         case 4:
-> >                 return __xchg_asm("amswap.w", (volatile u32 *)ptr, (u32)val);
-> The percpu operations are local and we shouldn't combine them with the
-> normal xchg/cmpxchg (They have different semantics one for local, one
-> for share.), please implement your own percpu ops here to fix the irq
-> disable/enable performance issue.
-Yes, percpu operations are local and atomic operations are for
-sharing. But we are using atomic ops to implement percpu ops (for
-performance), so just implementing common emulated operations and
-using it for both percpu ops and qspinlock is just OK?
+> #include <asm/qrwlock.h>
 
-Huacai
->
-> >
-> > @@ -204,9 +208,13 @@ do {                                                                       \
-> >  #define this_cpu_write_4(pcp, val) _percpu_write(pcp, val)
-> >  #define this_cpu_write_8(pcp, val) _percpu_write(pcp, val)
-> >
-> > +#define this_cpu_xchg_1(pcp, val) _percpu_xchg(pcp, val)
-> > +#define this_cpu_xchg_2(pcp, val) _percpu_xchg(pcp, val)
-> >  #define this_cpu_xchg_4(pcp, val) _percpu_xchg(pcp, val)
-> >  #define this_cpu_xchg_8(pcp, val) _percpu_xchg(pcp, val)
-> >
-> > +#define this_cpu_cmpxchg_1(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
-> > +#define this_cpu_cmpxchg_2(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
-> >  #define this_cpu_cmpxchg_4(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
-> >  #define this_cpu_cmpxchg_8(ptr, o, n) _protect_cmpxchg_local(ptr, o, n)
-> >
-> > --
-> > 2.27.0
-> >
->
->
-> --
-> Best Regards
->  Guo Ren
->
-> ML: https://lore.kernel.org/linux-csky/
+Yes, that seems better, but I would go one step further and include
+asm-generic/qspinlock.h
+in place of asm/qspinlock.h here: The two architectures that have a
+custom asm/qspinlock.h
+also have a custom asm/spinlock.h, so they have no need to include
+asm-generic/spinlock.h
+either.
+
+        Arnd
