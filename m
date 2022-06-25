@@ -1,93 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5E317C8
-	for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 09:04:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B367C341D4
-	for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 09:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1656147882;
-	bh=d1m4ViZsUEwStF52CXPdQ9iCbz67N/mVOzUvE7P5wcw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tWDHnfEZx3QkxTH3f5U99sMoIvQNLix0IJC3qrVIHPB3LtrfqVkeLo536RMlO1nX2
-	 +Zabn6PkNK2NitORIlQENHi7oVs169Ukh+JWLU+KUspJyrPdVMDh55KEsKzoNMwo19
-	 II3+rohbnpBr34zHgbJElz449MY5eHORDiw89iwKvfC1LTP32yZAMV60SnKbFV1ZSL
-	 S1tJWHQ4Wk/xcmGgcHuIiuwxbmiTMdzqUlFhblv3jxSnHArza6Ga46gNXqboW1fRnd
-	 X1qWUuhF2YW95iBfWvQP2T+51fUdhFBFJBtt6wjONoPRTXDGLoMgCwtzfqEfF9XJZF
-	 HA17ncpGUVN0A==
-Received: by mail-vk1-f169.google.com with SMTP id n203so2244795vke.7
-        for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 02:04:42 -0700 (PDT)
-X-Gm-Message-State: AJIora/EemAu/WkJLn5HzclT1PsxERXeIuccFOdxHm46qzto7T3DWrz8
-	afWFEhVBuSuaxNjm//vOJQvBME3sJgonswM8qac=
-X-Google-Smtp-Source: AGRyM1uJK+hFV1788av5WDmrYXC8l5SBL9TOTOr7dxCRSj9z5BhWbOhQj1/NWCoCyOaSvuBXPif8Z3VMPiFIkHM61ZI=
-X-Received: by 2002:a05:6122:13ab:b0:36c:65f:ea30 with SMTP id
- n11-20020a05612213ab00b0036c065fea30mr943426vkp.37.1656147881167; Sat, 25 Jun
- 2022 02:04:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D5017C8
+	for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 09:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1656149475; bh=vTNVhF1+7D1O5qZqp0P2k5Vd4q9zXO6mcYhzdI2e+g4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=udXhW2stTwjhg2VwTuoVNFg4JiF/XG1r3xJaYFWs6f/DNXg+16A7cg0fAezoCOr6g
+	 ga+1PelFiouOi9RoNqrFVPImh9tulS45jNxOu9jxePwNItYWSlU/JMRfrYO7jaAykX
+	 3UnVXjy9J3gipJQhDi6q/1JZYcKQw7xQG1ucNW88=
+Received: from [192.168.9.172] (unknown [101.228.137.40])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 7F42060723;
+	Sat, 25 Jun 2022 17:31:15 +0800 (CST)
+Message-ID: <e960e9c9-dec6-6ac6-ed7c-7ba60e1f4ace@xen0n.name>
+Date: Sat, 25 Jun 2022 17:31:15 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220625080423.2797-1-chenfeiyang@loongson.cn> <CAMZfGtWT7oPq6bD_fRn2gVNX8Lj3=ev21EAoaCCPeq-P_NYF0g@mail.gmail.com>
-In-Reply-To: <CAMZfGtWT7oPq6bD_fRn2gVNX8Lj3=ev21EAoaCCPeq-P_NYF0g@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 25 Jun 2022 17:04:28 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5K9LG5P6WYJ+64-fi+s=TZbbJQG9E0vHJwOf9Pai5z4w@mail.gmail.com>
-Message-ID: <CAAhV-H5K9LG5P6WYJ+64-fi+s=TZbbJQG9E0vHJwOf9Pai5z4w@mail.gmail.com>
-Subject: Re: [PATCH] page-flags.h: Fix a missing header include of static_keys.h
-To: Muchun Song <songmuchun@bytedance.com>
-Cc: Feiyang Chen <chris.chenfeiyang@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>, loongarch@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:103.0) Gecko/20100101
+ Thunderbird/103.0a1
+Subject: Re: [PATCH] LoongArch: Fix the _stext symbol address
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
+ Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <20220625090150.3171909-1-chenhuacai@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20220625090150.3171909-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi, Muchun,
+On 6/25/22 17:01, Huacai Chen wrote:
+> _stext means the start of .text section (see __is_kernel_text()), but we
+> put its definition in .ref.text by mistake. Fix it by defining it at the
+> head of head.S.
+>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>   arch/loongarch/kernel/head.S | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> index e596dfcd924b..d8c625b89c7d 100644
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -12,10 +12,10 @@
+>   #include <asm/loongarch.h>
+>   #include <asm/stackframe.h>
+>   
+> -	__REF
+> -
+>   SYM_ENTRY(_stext, SYM_L_GLOBAL, SYM_A_NONE)
+>   
+> +	__REF
+> +
+So why aren't we going the riscv way and just define _stext in 
+vmlinux.lds.S so that there's no chance it's placed incorrectly?
+>   SYM_CODE_START(kernel_entry)			# kernel entry point
+>   
+>   	/* Config direct window and set PG */
 
-On Sat, Jun 25, 2022 at 4:50 PM Muchun Song <songmuchun@bytedance.com> wrote:
->
-> On Sat, Jun 25, 2022 at 4:04 PM Feiyang Chen
-> <chris.chenfeiyang@gmail.com> wrote:
-> >
-> > The page-flags.h header relies on static keys since commit
-> > a6b40850c442bf ("mm: hugetlb: replace hugetlb_free_vmemmap_enabled
-> > with a static_key"), so make sure to include the header to avoid
-> > compilation errors.
-> >
-> > Fixes: a6b40850c442bf ("mm: hugetlb: replace hugetlb_free_vmemmap_enabled with a static_key")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-> > ---
-> >  include/linux/page-flags.h | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> > index e66f7aa3191d..147b336c7a35 100644
-> > --- a/include/linux/page-flags.h
-> > +++ b/include/linux/page-flags.h
-> > @@ -11,6 +11,7 @@
-> >  #include <linux/mmdebug.h>
-> >  #ifndef __GENERATING_BOUNDS_H
-> >  #include <linux/mm_types.h>
-> > +#include <linux/static_key.h>
->
-> I did not include this. The change makes sense to me. But I am
-> curious what configs cause the compiling error. Would you mind
-> sharing the config with us?
-We found this problem when we add
-ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP to LoongArch. Since this isn't
-upstream yet, we cannot give such a config now (the default config of
-X86 and ARM64 is just OK).
+-- 
+WANG "xen0n" Xuerui
 
-Huacai
->
-> Thanks.
->
-> >  #include <generated/bounds.h>
-> >  #endif /* !__GENERATING_BOUNDS_H */
-> >
-> > --
-> > 2.27.0
-> >
->
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
