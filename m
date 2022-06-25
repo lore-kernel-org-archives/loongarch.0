@@ -1,114 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72704A2C
-	for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 14:00:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 986EEC341CA
-	for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 14:00:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1FA7C
+	for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 14:03:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6492FC341CD
+	for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 14:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1656165654;
-	bh=t0wqaEAT95jEcBs2WtJA4yI32Lyw6AFlDCsfOkURjBQ=;
+	s=k20201202; t=1656165839;
+	bh=C5zyn33P/zx+/OuoboKif52+Z4ZI1k2KgZZOj1rGIKI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TdoAg3zvctWPn9sTc/JsN9ZOr5JTEREYZPRnJwnNTebnN1xf6ishvrLBGE8Glb/md
-	 mjt6gZofTuO1t5d5KPPqGSIQMIlyIS2lKt0OcJUFUtxsZlMeszosch+FafTLSJyrQh
-	 CznIA0KZIQB4WNr526ko6F5BMQMkhbLWKLJ+5mYjIlefIhjCcgGE/thjF79lzBgFr+
-	 FsfzaG59RGfMWd0hFavU/r+7jzAan6QjBMYWyZ1821Y161Uih+xauFoZc3pEgRJfWA
-	 J7tk/xKikJf5FhoHoXguZ2wZOy/W0pRrjihMDMuBfdGR8Y5L6hVhe1R1zNb8yb9h2i
-	 lIzMgmzWJN3cQ==
-Received: by mail-vs1-f41.google.com with SMTP id h38so4853786vsv.7
-        for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 07:00:54 -0700 (PDT)
-X-Gm-Message-State: AJIora/BBA16fH0cjNUufzoLC8gSi7Ymvgeh4Y212IsyJmBZRMkW0Pq/
-	PilAxcMSBR5QcZ8J1vBhNTFX6bj1zn3wThsrqfQ=
-X-Google-Smtp-Source: AGRyM1tifc9J0S1N4mqgBfibJ6KQ39UMSRNc3CynbAEj61eOx7fHO87FxOw8W9F9Sk2ELboBFgtduKSv66mU1Ha0xxs=
-X-Received: by 2002:a67:7347:0:b0:354:3f46:21ec with SMTP id
- o68-20020a677347000000b003543f4621ecmr1331348vsc.70.1656165653567; Sat, 25
- Jun 2022 07:00:53 -0700 (PDT)
+	b=eGOJ+M7R2mWnfreF/Y0aGTx6aPyLa8FVD9TCuG1cU5i36xAL34LCR2de3nUIrfCA9
+	 XKHn12QDeHPXKkQf/kk/X3DoH4pyd7jdqwjqO8oIepsj7vQvYellIMUcW2i8LB7JyU
+	 +wL7jKhC8sEsXrAo1RIzgBNc1+mCh2XRW+36C4XIvrfKy6ids7oBeAHnIwYQjy8QfN
+	 8Uvb7pPXVQxRoJxjARNlvzRuvJiglYG9SmqR16ebHpThtpcx+nt4S0eiCWv1cy05fJ
+	 FpPrv4fW0Z9ffaj8xx4xXcR0JgcWuJk1Om6u10pFmtqA7KFfUeoi6aGdDdaxR16sBr
+	 Px5/YArFDK0qg==
+Received: by mail-vs1-f42.google.com with SMTP id 63so4834233vsv.10
+        for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 07:03:59 -0700 (PDT)
+X-Gm-Message-State: AJIora/VmkixN1t0UAW9ZNuFYLm78XYdZckId7F22hlSEyYX8hbAVL8W
+	KkH1zavCd2oawuG8wRKnt6qhz4imNcDTj+G+3Mk=
+X-Google-Smtp-Source: AGRyM1v6VtHGN1cdlWiRNaLV08Fcs+aEOaNEQOgBwRhWVk3LFQJtmcSejFESeQ/ppUSgU+hyjIwUB2prsgMwb1L1TTY=
+X-Received: by 2002:a67:f588:0:b0:354:35de:4329 with SMTP id
+ i8-20020a67f588000000b0035435de4329mr1596413vso.84.1656165838248; Sat, 25 Jun
+ 2022 07:03:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220625080423.2797-1-chenfeiyang@loongson.cn>
- <CAMZfGtWT7oPq6bD_fRn2gVNX8Lj3=ev21EAoaCCPeq-P_NYF0g@mail.gmail.com>
- <CAAhV-H5K9LG5P6WYJ+64-fi+s=TZbbJQG9E0vHJwOf9Pai5z4w@mail.gmail.com> <CAMZfGtVq0VwMETGdzAXLkjes8W0gVBw=r0Xk5rpPnhe7x6tRiw@mail.gmail.com>
-In-Reply-To: <CAMZfGtVq0VwMETGdzAXLkjes8W0gVBw=r0Xk5rpPnhe7x6tRiw@mail.gmail.com>
+References: <20220623091412.2479084-1-chenhuacai@loongson.cn>
+ <c737a16e-81ee-de53-bf2c-352592a06821@xen0n.name> <743ca1b4-9157-7059-666d-34f7fec0419f@xen0n.name>
+In-Reply-To: <743ca1b4-9157-7059-666d-34f7fec0419f@xen0n.name>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 25 Jun 2022 22:00:43 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4T3ixOWB67XOij3P1xvM+_BUu+THLGtx-VvrCYUgjZyw@mail.gmail.com>
-Message-ID: <CAAhV-H4T3ixOWB67XOij3P1xvM+_BUu+THLGtx-VvrCYUgjZyw@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] page-flags.h: Fix a missing header include
- of static_keys.h
-To: Muchun Song <songmuchun@bytedance.com>
-Cc: Feiyang Chen <chris.chenfeiyang@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>, loongarch@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, linux- stable <stable@vger.kernel.org>
+Date: Sat, 25 Jun 2022 22:03:46 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7ROXWYTTpyMKccnrnvQMX7XhFB0KGfCs9h=09sSAQjVw@mail.gmail.com>
+Message-ID: <CAAhV-H7ROXWYTTpyMKccnrnvQMX7XhFB0KGfCs9h=09sSAQjVw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Fix EENTRY/MERRENTRY setting in setup_tlb_handler()
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi, Muchun,
+Hi, Xuerui,
 
-On Sat, Jun 25, 2022 at 7:17 PM Muchun Song <songmuchun@bytedance.com> wrote:
+On Sat, Jun 25, 2022 at 6:18 PM WANG Xuerui <kernel@xen0n.name> wrote:
 >
-> On Sat, Jun 25, 2022 at 5:04 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+> On 6/25/22 17:33, WANG Xuerui wrote:
+> > On 6/23/22 17:14, Huacai Chen wrote:
+> >> setup_tlb_handler() is expected to set per-cpu exception handlers, but
+> >> it only set the TLBRENTRY successfully because of copy & paste errors,
+> >> so fix it.
+> >>
+> >> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> >> ---
+> >>   arch/loongarch/mm/tlb.c | 3 ++-
+> >>   1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+> >> index 6d050973241c..0cb2f2aa88aa 100644
+> >> --- a/arch/loongarch/mm/tlb.c
+> >> +++ b/arch/loongarch/mm/tlb.c
+> >> @@ -289,7 +289,8 @@ void setup_tlb_handler(int cpu)
+> >>           pcpu_handlers[cpu] = virt_to_phys(addr);
+> >>           memcpy((void *)addr, (void *)eentry, vec_sz);
+> >>           local_flush_icache_range((unsigned long)addr, (unsigned
+> >> long)addr + vec_sz);
+> >> -        csr_write64(pcpu_handlers[cpu], LOONGARCH_CSR_TLBRENTRY);
+> >> +        csr_write64(pcpu_handlers[cpu], LOONGARCH_CSR_EENTRY);
+> >> +        csr_write64(pcpu_handlers[cpu], LOONGARCH_CSR_MERRENTRY);
+> >>           csr_write64(pcpu_handlers[cpu] + 80*VECSIZE,
+> >> LOONGARCH_CSR_TLBRENTRY);
+> >>       }
+> >>   #endif
 > >
-> > Hi, Muchun,
+> > Kinda interesting no problem showed up on my devbox so far...
 > >
-> > On Sat, Jun 25, 2022 at 4:50 PM Muchun Song <songmuchun@bytedance.com> wrote:
-> > >
-> > > On Sat, Jun 25, 2022 at 4:04 PM Feiyang Chen
-> > > <chris.chenfeiyang@gmail.com> wrote:
-> > > >
-> > > > The page-flags.h header relies on static keys since commit
-> > > > a6b40850c442bf ("mm: hugetlb: replace hugetlb_free_vmemmap_enabled
-> > > > with a static_key"), so make sure to include the header to avoid
-> > > > compilation errors.
-> > > >
-> > > > Fixes: a6b40850c442bf ("mm: hugetlb: replace hugetlb_free_vmemmap_enabled with a static_key")
-> > > > Cc: stable@vger.kernel.org
-> > > > Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-> > > > ---
-> > > >  include/linux/page-flags.h | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> > > > index e66f7aa3191d..147b336c7a35 100644
-> > > > --- a/include/linux/page-flags.h
-> > > > +++ b/include/linux/page-flags.h
-> > > > @@ -11,6 +11,7 @@
-> > > >  #include <linux/mmdebug.h>
-> > > >  #ifndef __GENERATING_BOUNDS_H
-> > > >  #include <linux/mm_types.h>
-> > > > +#include <linux/static_key.h>
-> > >
-> > > I did not include this. The change makes sense to me. But I am
-> > > curious what configs cause the compiling error. Would you mind
-> > > sharing the config with us?
-> > We found this problem when we add
-> > ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP to LoongArch. Since this isn't
+> > Reviewed-by: WANG Xuerui <git@xen0n.name>
 >
-> Good news to me. I would love to hear more archs support for HVO (HugeTLB
-> Vmemmap Optimization).
+> Actually, my box failed to boot up with this applied, even if the code
+> looked innocuous... The boot simply hangs after printing CPU/FPU
+> revisions for CPU1 and nothing else after that (apart from a lone "crng
+> init done" line) so it's very likely this patch is the culprit. (I was
+> boot-testing 5 patches at once.)
 >
-> > upstream yet, we cannot give such a config now (the default config of
-> > X86 and ARM64 is just OK).
->
-> All right. In this case, the "Cc: stable@vger.kernel.org" is unnecessary.
-Maybe make randconfig will have problems on X86/ARM64, so backporting
-to 5.18 seems reasonable.
+> Might have to check again; don't apply as-is in the meantime.
+Very sorry to hear that, I have fixed that locally but forgot to send
+V2, and now the fixed version is in the latest PR.
 
 Huacai
 >
-> Thanks.
-> >
-> > Huacai
-> > >
-> > > Thanks.
-> > >
-> > > >  #include <generated/bounds.h>
-> > > >  #endif /* !__GENERATING_BOUNDS_H */
-> > > >
-> > > > --
-> > > > 2.27.0
-> > > >
-> > >
+> --
+> WANG "xen0n" Xuerui
+>
+> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+>
