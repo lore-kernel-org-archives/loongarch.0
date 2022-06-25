@@ -1,99 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4FD7A
-	for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 06:55:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A79DFC341C7
-	for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 06:55:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1656140103;
-	bh=qt3sJUPetBPeub2FfPXWu+9b8b/75M8N6O14srSnXVg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=svrIoPOaHYgsERl1YshHVfgjTi4auGageCP++OuX7wKyqOOhx41oNOAq/q6qT4b4I
-	 Ji7Zrmyb8qFgCQpnSkIKGXqpVzRj7NfOK7SFno8S//SP2fajpIBXRq4I/ObSKpDMh2
-	 3lFSHmaZIsLLpexBKC563V9pjJ/sx9R/NmJ+ISF0BvjbMY/SWR2+ltrHg9gNarK3us
-	 w41knpCC4QdA3rmNG1LfaZqCnzicZngZOsBVvAWl38v93CQIP7uQM1aJN+IPCQWVUT
-	 AWvTLFnSQo5RTiRqfa9XC3hCk4N4gfhLdYljbdU3eaOlNnGQokg1jIrxuQsof2T52A
-	 OiIMjff7c/O2A==
-Received: by mail-vs1-f44.google.com with SMTP id h38so4232687vsv.7
-        for <loongarch@lists.linux.dev>; Fri, 24 Jun 2022 23:55:03 -0700 (PDT)
-X-Gm-Message-State: AJIora9xPXRNuYCxq74YXrSG/h9UV5Md4LryoUZ7cRXYIgTXBR6m+P45
-	oqXfcAdr6b4UZ9u/IXPcwNOmuZGu5t8Eh7eXPds=
-X-Google-Smtp-Source: AGRyM1sNpDlWjNkNqBS7go7KSEAgsr1MH/WGdjQU0Z1OIm6O/14Cyj6RhsnRavlnIqWogqXzvsNCELBqIEoDTm6P4XA=
-X-Received: by 2002:a67:6fc3:0:b0:356:18:32ba with SMTP id k186-20020a676fc3000000b00356001832bamr911328vsc.43.1656140102561;
- Fri, 24 Jun 2022 23:55:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10777A
+	for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 08:04:36 +0000 (UTC)
+Received: by mail-pg1-f172.google.com with SMTP id 68so4420289pgb.10
+        for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 01:04:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BfzrLrWFlU3AsBKqqcHgoNoL2/cAeQlLWsne6vZJpyA=;
+        b=gSnHhutlBGP0Zc+ke5/gSYv2nW8AY/IpA/SwV+4+7wiGESDHAf8BgjxZZ3EFN+DdEH
+         f+/9k4M2yvJV9hw9JWBknq1f3ZsTTg/f4CDLrJ2r2vGBjh/ZFtxYSXEG6C475B5rWxN1
+         5gbKYQovNRteKDG0Ga5xz93ysmM+5W5c26mza0Fa0afXMoKGjCa1NwE98/77WJ6QVqUG
+         4pY0+HiRTkRUuZaA38bFeOr4AyrAB40vHsat5xjbHADCw7QBVYi2Ci/eQpcuFMLTzzMg
+         nn/fa+LiUBnTFAV0Ptcnx6VrYISzLutBG98U6zRPzeUasA1ULuM7/O6vbVf1OX4eBL7m
+         en4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BfzrLrWFlU3AsBKqqcHgoNoL2/cAeQlLWsne6vZJpyA=;
+        b=wvROEt1rcgrXh88ti8nsnw1DoH8HXJqkZ/ANDxTo+iBnrdw4Gv/ozOZCsE7eGLpRmJ
+         3jdubWY/U47W80cRgFWhnNN97oJEHKKvLkMAGsrdUUWeGVTqF83hJ79WgLmWFs/rcK4B
+         QXdN+w+DnvnrZsjvFnTkLWEX0qkscEZ98uIA0YtCPRQbjbKOhR348NVCr8hKxbZNdPCh
+         KXy0qHMsRJ7cwAIM9qHRjk/N/nXfptYZl6qG5R/2lQrnNiuKCQP1T3TLxw/rOj0KBkGJ
+         CNkPmZlutmIzuq8bHGGpKzD3+jgqg6KuuPvUB6f6pXGtrPJGwzn7vPI9By2AuU/aEKek
+         guOQ==
+X-Gm-Message-State: AJIora8WfVPWBA/n2fv18Gu33ndru65zr41fRUda1Vm1qwtwKlxHlR61
+	esJp/iNrZGaHc8IFc4qVUEc=
+X-Google-Smtp-Source: AGRyM1sxtS9VevqvfBbYWfIogi3zIDyhDpdZQ4zG+5Ws8pWwVgzyfWnuLDMmesowsg6pj5ia02Qpuw==
+X-Received: by 2002:a05:6a00:2292:b0:525:6c57:8dd5 with SMTP id f18-20020a056a00229200b005256c578dd5mr3131042pfe.17.1656144276147;
+        Sat, 25 Jun 2022 01:04:36 -0700 (PDT)
+Received: from localhost.localdomain ([112.20.112.134])
+        by smtp.gmail.com with ESMTPSA id s9-20020a170902a50900b001690ca017fasm3056609plq.38.2022.06.25.01.04.31
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sat, 25 Jun 2022 01:04:35 -0700 (PDT)
+From: Feiyang Chen <chris.chenfeiyang@gmail.com>
+X-Google-Original-From: Feiyang Chen <chenfeiyang@loongson.cn>
+To: akpm@linux-foundation.org,
+	willy@infradead.org,
+	vbabka@suse.cz,
+	songmuchun@bytedance.com
+Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
+	chenhuacai@kernel.org,
+	chris.chenfeiyang@gmail.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] page-flags.h: Fix a missing header include of static_keys.h
+Date: Sat, 25 Jun 2022 16:04:23 +0800
+Message-Id: <20220625080423.2797-1-chenfeiyang@loongson.cn>
+X-Mailer: git-send-email 2.36.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220623044752.2074066-1-chenhuacai@loongson.cn>
- <20220623044752.2074066-2-chenhuacai@loongson.cn> <CAJF2gTR1ksvWWT1tec1QnOt6rzDucx5qzWO44nA_vHFhqMtG_g@mail.gmail.com>
- <CAAhV-H7p=zr7vjzENLgByqRUsH1mNQb8fFxNBkQu2YsWp1gMWA@mail.gmail.com>
- <CAK8P3a0pKc7=iLcFY028HqJXmGupacm=tV7Wqgx0+bYSqczoog@mail.gmail.com>
- <CAAhV-H6MDm_jDFhcT-QBzJ-fLRc6VKoNbsoJC_BGN66sozdqfA@mail.gmail.com> <CAK8P3a0pyLgFXq5Wrwi9BBgNnZkEdLYXm9dOaOci2ouTnEAqGQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a0pyLgFXq5Wrwi9BBgNnZkEdLYXm9dOaOci2ouTnEAqGQ@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 25 Jun 2022 14:54:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7nLJ4q_raDbWH+EP+TFRbkrXOzB8bUkUiDnNBa2ai_+A@mail.gmail.com>
-Message-ID: <CAAhV-H7nLJ4q_raDbWH+EP+TFRbkrXOzB8bUkUiDnNBa2ai_+A@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] LoongArch: Add qspinlock support
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Guo Ren <guoren@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Rui Wang <wangrui@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi, Arnd,
+The page-flags.h header relies on static keys since commit
+a6b40850c442bf ("mm: hugetlb: replace hugetlb_free_vmemmap_enabled
+with a static_key"), so make sure to include the header to avoid
+compilation errors.
 
-On Thu, Jun 23, 2022 at 10:04 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Thu, Jun 23, 2022 at 3:05 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> > On Thu, Jun 23, 2022 at 4:26 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >
-> > > On Thu, Jun 23, 2022 at 9:56 AM Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > On Thu, Jun 23, 2022 at 1:45 PM Guo Ren <guoren@kernel.org> wrote:
-> > > > >
-> > > > > On Thu, Jun 23, 2022 at 12:46 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> > > > > >
-> > > > > > On NUMA system, the performance of qspinlock is better than generic
-> > > > > > spinlock. Below is the UnixBench test results on a 8 nodes (4 cores
-> > > > > > per node, 32 cores in total) machine.
-> > >
-> > > You are still missing an explanation here about why this is safe to
-> > > do. Is there are
-> > > architectural guarantee for forward progress, or do you rely on
-> > > specific microarchitectural
-> > > behavior?
-> > In my understanding, "guarantee for forward progress" means to avoid
-> > many ll/sc happening at the same time and no one succeeds.
-> > LoongArch uses "exclusive access (with timeout) of ll" to avoid
-> > simultaneous ll (it also blocks other memory load/store on the same
-> > address), and uses "random delay of sc" to avoid simultaneous sc
-> > (introduced in CPUCFG3, bit 3 and bit 4 [1]). This mechanism can
-> > guarantee forward progress in practice.
-> >
-> > [1] https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#_cpucfg
->
-> If there is an architected feature bit for the delay, does that mean that there
-> is a chance of CPUs getting released that set this to zero?
-I had an offline discussion with hardware engineers, they told me that
-it is a mandatory requirement for LoongArch to implement "exclusive
-access of ll" and "random delay of sc" for multi-core chips. Only
-single-core and dual-core processors (and not support multi-chip
-interconnection) are allowed to have no such features.
+Fixes: a6b40850c442bf ("mm: hugetlb: replace hugetlb_free_vmemmap_enabled with a static_key")
+Cc: stable@vger.kernel.org
+Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+---
+ include/linux/page-flags.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Huacai
->
-> In that case, you probably need a boot-time check for this feature bit
-> to refuse booting a kernel with qspinlock enabled when it has more than
-> one active CPU but does not support the random backoff, and you need
-> to make the choice user-visible, so users are able to configure their
-> kernels using the ticket spinlock. The ticket lock may also be the best
-> choice for smaller configurations such as a single-socket 3A5000 with
-> four cores and no NUMA.
->
->        Arnd
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index e66f7aa3191d..147b336c7a35 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -11,6 +11,7 @@
+ #include <linux/mmdebug.h>
+ #ifndef __GENERATING_BOUNDS_H
+ #include <linux/mm_types.h>
++#include <linux/static_key.h>
+ #include <generated/bounds.h>
+ #endif /* !__GENERATING_BOUNDS_H */
+ 
+-- 
+2.27.0
+
