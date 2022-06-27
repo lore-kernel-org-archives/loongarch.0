@@ -1,53 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7E129A3
-	for <loongarch@lists.linux.dev>; Sat, 25 Jun 2022 18:30:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1686DC341CD;
-	Sat, 25 Jun 2022 18:30:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1656181806;
-	bh=D+q0GY66KBjvz7Tf84fUYfo0NBFp+pvfXYyQjGeTVOA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=XZSxEHW0iWYDYH7G7DhrGkNQMJG1V1QQ9DyVEhp/rzHUh5eYFFYj5a7wHoduGu/zQ
-	 gh4ftbDhPuKflO6ZIJN/8z2GIk/2G5a3smro76VXfNxZTH2cSqVrjMlZ0MQZ4IYrz0
-	 k949Oh3UoLhCHQf/aMvPT0YK0cIvvup2tjuf/Ps5HxIKLj6PbytQsQNjLJE7Nu73qY
-	 o6CIgwR8tL8NKkP0CwgTvCBdEtfNg5agmJvLQ399zaeGy8xAbuVhfzqFC2swhoD4UA
-	 6BxBh7B8gniUhUa4J9vT3CE5Ympm3NpWhEnSuPut4za1x5lsuPJ1s+3eR3KoOxDNu6
-	 dOdSE+4jXHRyA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 04FADE85DBE;
-	Sat, 25 Jun 2022 18:30:06 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v5.19-rc4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20220625101720.3837334-1-chenhuacai@loongson.cn>
-References: <20220625101720.3837334-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-arch.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220625101720.3837334-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-5.19-3
-X-PR-Tracked-Commit-Id: ea18d434781105ce61ff3ef7f74c9e51812f0580
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cb84318baa063ffd11d4c5eec5c429c85855504a
-Message-Id: <165618180601.26648.5792753231229306970.pr-tracker-bot@kernel.org>
-Date: Sat, 25 Jun 2022 18:30:06 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D244420F3
+	for <loongarch@lists.linux.dev>; Mon, 27 Jun 2022 06:57:38 +0000 (UTC)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_9ffVLliS7pfAA--.12285S2;
+	Mon, 27 Jun 2022 14:57:36 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Fix section mismatch warning
+Date: Mon, 27 Jun 2022 14:57:35 +0800
+Message-Id: <1656313055-547-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf9Dx_9ffVLliS7pfAA--.12285S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xr4UCF45CF4ruFW3GF43GFg_yoWkurXE9r
+	4xtw1rGr4kGw4jvFWxXw4SqF1jv3yrZ3WIq3WxXw4rG3Wftw13AF4xJay3Zw1DKrZrCFs8
+	ArWjgr9Iyr47tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb48FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r47
+	MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+	W8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUiiSJUUUU
+	U==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-The pull request you sent on Sat, 25 Jun 2022 18:17:20 +0800:
+init_numa_memory() is annotated __init and not used by any module,
+thus don't export it.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-5.19-3
+Remove not needed EXPORT_SYMBOL for init_numa_memory() to fix the
+following section mismatch warning:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cb84318baa063ffd11d4c5eec5c429c85855504a
+  MODPOST vmlinux.symvers
+WARNING: modpost: vmlinux.o(___ksymtab+init_numa_memory+0x0): Section mismatch in reference
+from the variable __ksymtab_init_numa_memory to the function .init.text:init_numa_memory()
+The symbol init_numa_memory is exported and annotated __init
+Fix this by removing the __init annotation of init_numa_memory or drop the export.
 
-Thank you!
+This is build on Linux 5.19-rc4.
 
+Fixes: d4b6f1562a3c ("LoongArch: Add Non-Uniform Memory Access (NUMA) support")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/kernel/numa.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index a76f547..a13f925 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -429,7 +429,6 @@ int __init init_numa_memory(void)
+ 	return 0;
+ }
+ 
+-EXPORT_SYMBOL(init_numa_memory);
+ #endif
+ 
+ void __init paging_init(void)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.1.0
+
