@@ -1,65 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5387624
-	for <loongarch@lists.linux.dev>; Tue, 28 Jun 2022 07:29:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 860B8C341CB
-	for <loongarch@lists.linux.dev>; Tue, 28 Jun 2022 07:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1656401376;
-	bh=gajtv8igkxsalepIVsDrLsd6ac/KAzU/0AKP3t/oWm8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=NWIhdzsLkx/fuKi2CbKB7Gp774a+W5f5NwfOLFGwf3z90rhbsxTMinAkxh8jcakiU
-	 nFrPTKtgbDMuLxRd0Xdx9bpR4/QBGWpd0POhws/XpGi/1wmu5e9nUW4kKHPnhwWig+
-	 UpCnnLlJfykJj/VcFNhWGS/FtmJs2xj1Ddrm8eyloOPYBdU4uGQotjTtPKa/4Oma91
-	 tdCSm41+p768sEEUMv99WiRf6/XE0MVqmyprGMYjISm2T7Kh/9UemWgRYdSs6YkrsO
-	 Pup2m93l3AuJc/2Dy1Av+NVS1WtGQb0E3uSL+iHvLYbPguARV2hzBVt14ZdapXvH74
-	 mGf2sF2D/D3vg==
-Received: by mail-vs1-f42.google.com with SMTP id k25so11186451vso.6
-        for <loongarch@lists.linux.dev>; Tue, 28 Jun 2022 00:29:36 -0700 (PDT)
-X-Gm-Message-State: AJIora/xGb2OqoB1p2p0+gHE3kUeydpZk42njoCwyYf3jIwiHB5FPLwY
-	p9u4WG/P+H7FBmTZWpJO6vVOYNVGcccnWh0u6iA=
-X-Google-Smtp-Source: AGRyM1v78quckxzZ1EVy8zY1GzwUlah3HJmvB0SJzL+HccAA+AcvunAA4R7teXMtlllIWtG3ET26bvghE23c1jGqAhM=
-X-Received: by 2002:a67:f588:0:b0:354:35de:4329 with SMTP id
- i8-20020a67f588000000b0035435de4329mr690432vso.84.1656401375514; Tue, 28 Jun
- 2022 00:29:35 -0700 (PDT)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 136113209
+	for <loongarch@lists.linux.dev>; Tue, 28 Jun 2022 13:00:10 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93C2B152B;
+	Tue, 28 Jun 2022 06:00:10 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 78A983F5A1;
+	Tue, 28 Jun 2022 06:00:09 -0700 (PDT)
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: loongarch@lists.linux.dev,
+	linux-efi@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Subject: [PATCH] LoongArch: efi: Simplify arch_efi_call_virt() macro by using typeof()
+Date: Tue, 28 Jun 2022 14:00:06 +0100
+Message-Id: <20220628130006.694368-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.37.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1656313055-547-1-git-send-email-yangtiezhu@loongson.cn> <4a4bce7b-cc75-6035-9ce2-1727d97a458d@loongson.cn>
-In-Reply-To: <4a4bce7b-cc75-6035-9ce2-1727d97a458d@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 28 Jun 2022 15:29:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5W2TL9Vg7Zk+JV+9hQgnH9FPJJGFz+W0Y7fx2_FsphKw@mail.gmail.com>
-Message-ID: <CAAhV-H5W2TL9Vg7Zk+JV+9hQgnH9FPJJGFz+W0Y7fx2_FsphKw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix section mismatch warning
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, WANG Xuerui <kernel@xen0n.name>, 
-	LKML <linux-kernel@vger.kernel.org>, Li Xuefeng <lixuefeng@loongson.cn>, 
-	loongarch@lists.linux.dev, Masahiro Yamada <masahiroy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Applied to loongarch-fixes, thanks.
+Currently, the arch_efi_call_virt() assumes all users of it will have
+defined a type 'efi_##f##_t' to make use of it. It is unnecessarily
+forcing the users to create a new typedef when __efi_rt_asm_wrapper()
+actually expects void pointer.
 
-Huacai
+Simplify the arch_efi_call_virt() macro by using typeof(p->f) which must
+be a pointer as required by __efi_rt_asm_wrapper() and eliminate the
+explicit need for efi_##f##_t type for every user of this macro.
 
-On Tue, Jun 28, 2022 at 8:18 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> Cc Masahiro Yamada <masahiroy@kernel.org>
->
-> Hi Masahiro,
->
-> Please review this patch.
->
-> https://lore.kernel.org/lkml/1656313055-547-1-git-send-email-yangtiezhu@loongson.cn/
->
-> I think it is related with the following issue, thank you.
->
-> https://lore.kernel.org/lkml/CAHk-=wgcsUU-TNoLS7Q6YF3RCSVAKwNM7gFOwqnPQTiU_oGEWA@mail.gmail.com/
->
-> Thanks,
-> Tiezhu
->
+This change is done to align with implementations on other similar
+architectures.
+
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ arch/loongarch/include/asm/efi.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+Hi,
+
+Reference for this change [1] and in particular[2]
+
+Regards,
+Sudeep
+
+[1] https://lore.kernel.org/r/20220628125346.693304-1-sudeep.holla@arm.com
+[2] https://lore.kernel.org/r/20220628125346.693304-3-sudeep.holla@arm.com/
+
+diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/asm/efi.h
+index 0127d84d5e1d..b5f23b501196 100644
+--- a/arch/loongarch/include/asm/efi.h
++++ b/arch/loongarch/include/asm/efi.h
+@@ -19,8 +19,7 @@ void efifb_setup_from_dmi(struct screen_info *si, const char *opt);
+ 
+ #define arch_efi_call_virt(p, f, args...)        \
+ ({                                               \
+-	efi_##f##_t * __f;                       \
+-	__f = p->f;                              \
++	typeof(p->f) __f = p->f;                 \
+ 	__f(args);                               \
+ })
+ 
+-- 
+2.37.0
+
