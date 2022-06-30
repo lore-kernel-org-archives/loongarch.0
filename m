@@ -1,65 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CF5EA6
-	for <loongarch@lists.linux.dev>; Thu, 30 Jun 2022 08:53:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14276C341CD
-	for <loongarch@lists.linux.dev>; Thu, 30 Jun 2022 08:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1656579219;
-	bh=98LP8TqrAriutG23cVTk9h4C/uw9Lw8fbs5WwhfVi40=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pCfiIOuRlS6deNhUfZbpGjWGIVTgcU0TRbrE7TwiGCQmgN9h+Y0+o3y8lEfj18X77
-	 RNUhjvbez2W1w6C/exIBHvBpRc/fIV79Subv49LmORt2pGCJvv7MuOt2sxyHeB4taG
-	 4uydP7XdjpETqE5JlfQQzv2k8snm0uZT5+DRQfQUAFTGZMSmFocpnnHQM1H0fOZECM
-	 V/v05y+Ym3VHBNrG1DAIqZMGh4L8Ky/jyN0i4jTqNy5yHwgs6LdlT73i261gE+fdt1
-	 c7aIO8r3XE+6GTt4LQL6RU+YQ6kRuxk4KyCQCtq7Hquecwd2ESdkKwDWhFzBGzXRPx
-	 L3ujRJ7vRnVeQ==
-Received: by mail-vs1-f43.google.com with SMTP id o13so17597517vsn.4
-        for <loongarch@lists.linux.dev>; Thu, 30 Jun 2022 01:53:38 -0700 (PDT)
-X-Gm-Message-State: AJIora9AKmoN0KCn8eaRn3msm8dPHgvsI6MyYBd1OZ/Tw5ZmtjuV5c9/
-	10gXUte7IdJCAigIKm66+xQW/GbUKCtYHE1DLWg=
-X-Google-Smtp-Source: AGRyM1usGSpW65/S+D3bTGvnsIsuanAbAX0oa4OCyYXk/MFf5yU3THi8COlykfUvDOw9YX5tbgBR13xexsBTWE/4zc0=
-X-Received: by 2002:a05:6102:6c4:b0:354:3f88:4d3f with SMTP id
- m4-20020a05610206c400b003543f884d3fmr8085454vsg.78.1656579217987; Thu, 30 Jun
- 2022 01:53:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974723D83
+	for <loongarch@lists.linux.dev>; Thu, 30 Jun 2022 14:06:25 +0000 (UTC)
+Received: by mail-pj1-f41.google.com with SMTP id cv13so18868856pjb.4
+        for <loongarch@lists.linux.dev>; Thu, 30 Jun 2022 07:06:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:message-id:date:mime-version:user-agent:content-language:to
+         :from:subject:content-transfer-encoding;
+        bh=wLqBzcUifmh3gBEe8CEummUFK9VmCdUDMqe11T20KsQ=;
+        b=Jhc9AarAoUDA4qAbziYUpZysg95tzeAC4p6s0O2p+N0ttInQqQxp3ghT7la9Ehz1IT
+         qpeAYZ9m8ZRQY3R0dLOw0xHwWspQfk7eiy7bnSiQBNgjaPbLIpfP9R5bs6rhpqqgMvRm
+         g8LDF4MxRBP3XI7dXIC8fXTsyaLTHsra5/HqZT30FWnb4JmNBLGqtGPk9boIlZ1xEWhk
+         l8fWW1TYqjWRKVsqJJI71DkxZkCu69TuOlD1dm1Cc0Vk+deRoAhVuRFCHDDENR7NnmsH
+         tBTbFrrvyx+Kxh8IREvbjNqT6+d2vtjqObIFMIfrGi75m8CD+aBv54yYqhemJ3FLfCvs
+         qEfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
+         :content-language:to:from:subject:content-transfer-encoding;
+        bh=wLqBzcUifmh3gBEe8CEummUFK9VmCdUDMqe11T20KsQ=;
+        b=U0XfadDa9Dn95PAJYjvMiJnTBnYuln4+GpL8TykoFT1trGl5qE0T8yWcFBN1agSTFk
+         QDroODXLeAHEFN/NEjuSOciCv1EWSKvaBZfyU1CfoTr3cOQYWcKrCV9eD4Z5VmpGb/HS
+         uE1NYj1DQMVqtkIArADLCcCHe5bXYGsMtmPAy2tem+bxQTHZjHlUqXjkUftIgA7qtbQ8
+         weEGDkt0hMhh6ktStJEefPlh3xKdITq0L1O+rlsTfoSE70zVxWee3HnyRNB9B4frtPD3
+         taV30eCcnrMI81psjClxS+gWS0pk0K5MCt0lMKIcefoZYTzNQlgpAmSWjkHa9aKkC68h
+         6ORA==
+X-Gm-Message-State: AJIora/omnhdhGEuXKgdMj3k5zktAHgNBd59mV4wK3dUEfcCm7oWgxTo
+	1/JlSqm69QTTDZ5iogrMRIyf36Xj+7o=
+X-Google-Smtp-Source: AGRyM1szvNUIMb6trBNxwhdTqF75WNZMFS+I83tOx4DU9k+1OzzOii2WPlWon+DhMXTe+c9D0UZZjw==
+X-Received: by 2002:a17:90a:f288:b0:1ec:7f71:b05f with SMTP id fs8-20020a17090af28800b001ec7f71b05fmr12232138pjb.184.1656597984654;
+        Thu, 30 Jun 2022 07:06:24 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e7-20020a170902784700b0015eab1b097dsm13544343pln.22.2022.06.30.07.06.22
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jun 2022 07:06:23 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <f83d6a9d-ec07-21d1-87e3-700475192694@roeck-us.net>
+Date: Thu, 30 Jun 2022 07:06:21 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220630043237.2059576-1-chenhuacai@loongson.cn> <35094088-d5da-cd36-66e2-5117304c5712@gmail.com>
-In-Reply-To: <35094088-d5da-cd36-66e2-5117304c5712@gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 30 Jun 2022 16:53:25 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6NubNmoNvOkjnDT925O7Kb0yKPDKhGXroxhrU+AuECfQ@mail.gmail.com>
-Message-ID: <CAAhV-H6NubNmoNvOkjnDT925O7Kb0yKPDKhGXroxhrU+AuECfQ@mail.gmail.com>
-Subject: Re: [PATCH V2 0/4] mm/sparse-vmemmap: Generalise helpers and enable for
-To: Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linux-MM <linux-mm@kvack.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Content-Language: en-US
+To: loongarch@lists.linux.dev
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Building loongarch64 toolchain
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi, Sergei,
+Hi,
 
-On Thu, Jun 30, 2022 at 4:30 PM Sergei Shtylyov
-<sergei.shtylyov@gmail.com> wrote:
->
-> Hello!
->
->    Your subject looks unfinished...
-Thank you, this seems because the subject is too long.
+I have been trying to build a toolchain for loongarch64 using gcc 12.1.0 and
+binutils 2.38. Unfortunately, the resulting toolchain doesn't work for me.
+Tracking down the problem, it turns out that gcc passes -mabi=lp64d to the
+assembler, but the assembler only supports -mabi=lp64.
 
-Huacai
->
-> MBR, Sergey
+Where can I find guidance on how to build a working toolchain ? Using the
+available toolchain binaries is not an option.
+
+Thanks,
+Guenter
