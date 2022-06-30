@@ -1,38 +1,28 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BBEA35
-	for <loongarch@lists.linux.dev>; Thu, 30 Jun 2022 06:56:08 +0000 (UTC)
-Received: by mail-lj1-f172.google.com with SMTP id a11so21835346ljb.5
-        for <loongarch@lists.linux.dev>; Wed, 29 Jun 2022 23:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9T64cR/FufP6/CunzmPu+rS6tL4/EEVZVw0GWwm9EzE=;
-        b=nl5CzODxaap3kUpQ3c2ewioKttk0evPfzAmsXqdVyJfDD8Xz+h/P9z06jbmly4yY7L
-         /SM81HeOvWYYR0bESzaNPrOyZkAsFvQIjXs194O9V8hUZkGD02pFl87F8XvIsCO+LlWv
-         mkecnJBaPs4XiX7XR3NVe5iGdkM+0fGDXQ50hC0hcvxwOJf4ZKwmlrSa6jYlba9pQc9w
-         T7fp9kDH3QmsLOkOhsJPm3WXqFH2iFPXVYbxfLCZViV5EDzIyz6oMIMFmzVd/t9KU61S
-         UkykkTPPYWyMxXlgV5ldCyrJkG2Wg5OMuNDb+cllPJ+UdoQLg8xNwuYJts5K7Oi0xqEb
-         rw1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9T64cR/FufP6/CunzmPu+rS6tL4/EEVZVw0GWwm9EzE=;
-        b=1KIAm0lveSyqRPA+1HiA1MZhrFjBMc7m7UXCaxs7ImrQFYyiFBT/xi/tHjSiukh0dw
-         c2Vdp7mFoFlLiesC0JF5yLEtu1W7890/O+GDsS2Imy5FiAduZT7vF8UdDvy7q3UVnhS6
-         m1B0kPbIRg5b7f2VkBrbJMXJV9c4ZhXGNsNYrG/IbxGDUYexIzR2eJxSW7SaOUFgs/wB
-         qGvaiINvBzoXsE8K46Yyg550d9pfZ2Au65FSQ9xnzNtcBYMvFyCV4+X+2YaAg5VqQWDO
-         dqO8gK7q5fyPNSR3wQj0GwSEKq5k3n46710FdZ3ETTqyFi/SNAAA3etSv4LVCHov1d+a
-         q1XA==
-X-Gm-Message-State: AJIora8SsRkaZBrHqNxH/THtUYKjQHv6JLMtsd9d9VzH7GUVXM9xJBMN
-	CCe1alqq0DGGhBeQQeepwd7GNvLcNDY04I+KqA4=
-X-Google-Smtp-Source: AGRyM1sBSAIZws0B107oPIkAqK3Mwmga7wYdFH+S0RC6qMSnCbwXbR12svkou4bYDjabtTAqq0wQOWxW/qt69hbMDDY=
-X-Received: by 2002:a2e:4e12:0:b0:25a:9d28:7d6b with SMTP id
- c18-20020a2e4e12000000b0025a9d287d6bmr4218881ljb.482.1656572166748; Wed, 29
- Jun 2022 23:56:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A073EA2
+	for <loongarch@lists.linux.dev>; Thu, 30 Jun 2022 08:28:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44CCBC341CD
+	for <loongarch@lists.linux.dev>; Thu, 30 Jun 2022 08:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1656577687;
+	bh=SkqClHc7drj1TyPDl23yksWfycVYMTWrSPIUHoyfEwE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=B7CPMIbhC1C2mpkc3aoWjdmyrIVGqtmC9zFMsPeE1twNFdxgdBwruNn9qlvq8jzmX
+	 b03vb4SBq2jZqMvhnz6275h/IvCA4d/VfOrPuNA5rzaHdo29eitnlBN1wIs7Nmd0CR
+	 t0Gkex5Mr/Gtcew15u8uW4194ALBx15jBKU/1NqqQxEExH85aA42xfX63VYP+ugC+i
+	 j0K069hCdHJbRgrll1Czxbqz5fUNEfMB0Punsrjm2p8Uo5vaZsWTT4nSiLhSEbYU5G
+	 ZQnWhtgOV9XEzpRWWmolnlYDZNX7CKsEpxY6zkvLG69hHnu/NQy3A4yHfbFmEPM4m7
+	 Qsg1KIf2WNBPQ==
+Received: by mail-vk1-f175.google.com with SMTP id bb7so8629812vkb.9
+        for <loongarch@lists.linux.dev>; Thu, 30 Jun 2022 01:28:07 -0700 (PDT)
+X-Gm-Message-State: AJIora8VXz74HNPjKnSnZOFw9A0ykmcGiLMOGYm2RkHoulwfocSyS+9J
+	OPHZU/P0DAxqxGmGMivI5paymsyx/LxfuHah1GQ=
+X-Google-Smtp-Source: AGRyM1t6MEV6NE/9g+uMmfb0idguxwxwLsxO+IOwvim6D9NJDdUn8BK07k7k+g6g0DwK3bhD1CtaM6+xNPvZKqjZrrA=
+X-Received: by 2002:a1f:2a86:0:b0:370:8ff3:d5f with SMTP id
+ q128-20020a1f2a86000000b003708ff30d5fmr3791575vkq.35.1656577686160; Thu, 30
+ Jun 2022 01:28:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -40,17 +30,18 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20220630043237.2059576-1-chenhuacai@loongson.cn>
- <20220630043237.2059576-5-chenhuacai@loongson.cn> <CAK8P3a1x=ZX+W0XL-=MkZebHdbvB0Ngam5LxXJUnm7USpMaFMA@mail.gmail.com>
-In-Reply-To: <CAK8P3a1x=ZX+W0XL-=MkZebHdbvB0Ngam5LxXJUnm7USpMaFMA@mail.gmail.com>
-From: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Date: Thu, 30 Jun 2022 14:55:54 +0800
-Message-ID: <CACWXhKn9FEWMc_QkrPsXUxTP33BnzZCZuesxNRDYaAWnSxWtsA@mail.gmail.com>
-Subject: Re: [PATCH V2 4/4] LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+ <20220630043237.2059576-4-chenhuacai@loongson.cn> <CAK8P3a1f94z4oSnMr73PuiXkMR7uGhthzY_EWVniB+G4KXBcBQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a1f94z4oSnMr73PuiXkMR7uGhthzY_EWVniB+G4KXBcBQ@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 30 Jun 2022 16:27:53 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5kywXfSLaKRhobqzozOuU0UyEKcOApu3Abz+csCgJPgg@mail.gmail.com>
+Message-ID: <CAAhV-H5kywXfSLaKRhobqzozOuU0UyEKcOApu3Abz+csCgJPgg@mail.gmail.com>
+Subject: Re: [PATCH V2 3/4] mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages()
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
 	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
 	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
 	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
@@ -61,61 +52,58 @@ Cc: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
 	Feiyang Chen <chenfeiyang@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 30 Jun 2022 at 14:07, Arnd Bergmann <arnd@arndb.de> wrote:
+Hi, Arnd,
+
+On Thu, Jun 30, 2022 at 2:05 PM Arnd Bergmann <arnd@arndb.de> wrote:
 >
 > On Thu, Jun 30, 2022 at 6:32 AM Huacai Chen <chenhuacai@loongson.cn> wrote:
 > >
-> > To avoid build error on LoongArch we should include linux/static_key.h
-> > in page-flags.h.
+> > From: Feiyang Chen <chenfeiyang@loongson.cn>
+> >
+> > Generalise vmemmap_populate_hugepages() so ARM64 & X86 & LoongArch can
+> > share its implementation.
 >
-> This is an expensive change in terms of compile speed, as static_key.h has
-> lots of dependencies, and page-flags.h is included in a lot of places. What
-> it is actually needed for?
+> Sharing this function is good, thanks for consolidating this
 >
-
-Hi, Arnd,
-
-If CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP=y, the page-flags.h relies
-on static keys. If we don't include static_key.h, we will get the
-following errors when compiling.
-
-In file included from ./include/linux/mmzone.h:22,
-from ./include/linux/gfp.h:6,
-from ./include/linux/mm.h:7,
-from arch/loongarch/kernel/asm-offsets.c:9:
-./include/linux/page-flags.h:208:1: warning: data definition has no
-type or storage class
-208 | DECLARE_STATIC_KEY_MAYBE(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-| ^~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/page-flags.h:208:1: error: type defaults to 'int' in
-declaration of 'DECLARE_STATIC_KEY_MAYBE' [-Werror=implicit-int]
-./include/linux/page-flags.h:209:26: warning: parameter names (without
-types) in function declaration
-209 | hugetlb_optimize_vmemmap_key);
-| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/page-flags.h: In function 'hugetlb_optimize_vmemmap_enabled':
-./include/linux/page-flags.h:213:16: error: implicit declaration of
-function 'static_branch_maybe' [-Werror=implicit-function-declaration]
-213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-| ^~~~~~~~~~~~~~~~~~~
-./include/linux/page-flags.h:213:36: error:
-'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON' undeclared (first
-use in this function); did you mean
-'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP'?
-213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-| CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-./include/linux/page-flags.h:213:36: note: each undeclared identifier
-is reported only once for each function it appears in
-./include/linux/page-flags.h:214:37: error:
-'hugetlb_optimize_vmemmap_key' undeclared (first use in this
-function); did you mean 'hugetlb_optimize_vmemmap_enabled'?
-214 | &hugetlb_optimize_vmemmap_key);
-| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-| hugetlb_optimize_vmemmap_enabled
-
-Thanks,
-Feiyang
-
->          Arnd
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
 >
+> The Signed-off-by lines are in the wrong order, it should start with the author
+> and end with the final submitter.
+OK,  I will change the order.
+
+>
+> > index 33e2a1ceee72..6f2e40bb695d 100644
+> > --- a/mm/sparse-vmemmap.c
+> > +++ b/mm/sparse-vmemmap.c
+> > @@ -686,6 +686,60 @@ int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
+> >         return vmemmap_populate_range(start, end, node, altmap, NULL);
+> >  }
+> >
+> > +void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
+> > +                                     unsigned long addr, unsigned long next)
+> > +{
+> > +}
+> > +
+> > +int __weak __meminit vmemmap_check_pmd(pmd_t *pmd, int node, unsigned long addr,
+> > +                                      unsigned long next)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+>
+> I think inline functions would be better here, both for compiler optimization
+> and to make it easier to track the code flow. The normal way we do these
+> in architecture specific headers is to override the functions by defining a
+> macro of the same name.
+In my opinion, weak functions are suitable for overriding if they are
+only used in a single .c file (this case). If we don't use weak
+functions, this series needs as many as 4 #ifdefs, for pud_init(),
+pmd_init(), vmemmap_set_pmd() and  vmemmap_check_pmd() respectively,
+which increase the difficulty of maintain (just my own opinion, maybe
+not a objective fact).
+
+Huacai
+>
+>
+>         Arnd
