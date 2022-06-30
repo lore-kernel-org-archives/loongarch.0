@@ -1,23 +1,36 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 136113209
-	for <loongarch@lists.linux.dev>; Tue, 28 Jun 2022 13:00:10 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93C2B152B;
-	Tue, 28 Jun 2022 06:00:10 -0700 (PDT)
-Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 78A983F5A1;
-	Tue, 28 Jun 2022 06:00:09 -0700 (PDT)
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: loongarch@lists.linux.dev,
-	linux-efi@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CB9A2A
+	for <loongarch@lists.linux.dev>; Thu, 30 Jun 2022 04:31:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2FEFC34115;
+	Thu, 30 Jun 2022 04:31:30 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Subject: [PATCH] LoongArch: efi: Simplify arch_efi_call_virt() macro by using typeof()
-Date: Tue, 28 Jun 2022 14:00:06 +0100
-Message-Id: <20220628130006.694368-1-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.37.0
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Feiyang Chen <chenfeiyang@loongson.cn>
+Subject: [PATCH V2 0/4] mm/sparse-vmemmap: Generalise helpers and enable for
+Date: Thu, 30 Jun 2022 12:32:33 +0800
+Message-Id: <20220630043237.2059576-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -26,50 +39,45 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, the arch_efi_call_virt() assumes all users of it will have
-defined a type 'efi_##f##_t' to make use of it. It is unnecessarily
-forcing the users to create a new typedef when __efi_rt_asm_wrapper()
-actually expects void pointer.
+This series is in order to enable sparse-vmemmap for LoongArch. But
+LoongArch cannot use generic helpers directly because MIPS&LoongArch
+need to call pgd_init()/pud_init()/pmd_init() when populating page
+tables. So we adjust the prototypes of p?d_init() to make generic
+helpers can call them, then enable sparse-vmemmap with generic helpers,
+and to be further, generalise vmemmap_populate_hugepages() for ARM64,
+X86 and LoongArch.
 
-Simplify the arch_efi_call_virt() macro by using typeof(p->f) which must
-be a pointer as required by __efi_rt_asm_wrapper() and eliminate the
-explicit need for efi_##f##_t type for every user of this macro.
+V1 -> V2:
+Split ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP to a separate patch.
 
-This change is done to align with implementations on other similar
-architectures.
+Huacai Chen and Feiyang Chen(4):
+ MIPS&LoongArch: Adjust prototypes of p?d_init().
+ LoongArch: Add sparse memory vmemmap support.
+ mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages().
+ LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP.
 
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn> 
 ---
- arch/loongarch/include/asm/efi.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-Hi,
-
-Reference for this change [1] and in particular[2]
-
-Regards,
-Sudeep
-
-[1] https://lore.kernel.org/r/20220628125346.693304-1-sudeep.holla@arm.com
-[2] https://lore.kernel.org/r/20220628125346.693304-3-sudeep.holla@arm.com/
-
-diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/asm/efi.h
-index 0127d84d5e1d..b5f23b501196 100644
---- a/arch/loongarch/include/asm/efi.h
-+++ b/arch/loongarch/include/asm/efi.h
-@@ -19,8 +19,7 @@ void efifb_setup_from_dmi(struct screen_info *si, const char *opt);
- 
- #define arch_efi_call_virt(p, f, args...)        \
- ({                                               \
--	efi_##f##_t * __f;                       \
--	__f = p->f;                              \
-+	typeof(p->f) __f = p->f;                 \
- 	__f(args);                               \
- })
- 
--- 
-2.37.0
+ arch/arm64/mm/mmu.c                    | 53 ++++++--------------
+ arch/loongarch/Kconfig                 |  2 +
+ arch/loongarch/include/asm/pgalloc.h   | 13 +----
+ arch/loongarch/include/asm/pgtable.h   | 13 +++--
+ arch/loongarch/include/asm/sparsemem.h |  8 +++
+ arch/loongarch/kernel/numa.c           |  4 +-
+ arch/loongarch/mm/init.c               | 44 +++++++++++++++-
+ arch/loongarch/mm/pgtable.c            | 23 +++++----
+ arch/mips/include/asm/pgalloc.h        |  8 +--
+ arch/mips/include/asm/pgtable-64.h     |  8 +--
+ arch/mips/kvm/mmu.c                    |  3 +-
+ arch/mips/mm/pgtable-32.c              | 10 ++--
+ arch/mips/mm/pgtable-64.c              | 18 ++++---
+ arch/mips/mm/pgtable.c                 |  2 +-
+ arch/x86/mm/init_64.c                  | 92 ++++++++++++----------------------
+ include/linux/mm.h                     |  8 +++
+ include/linux/page-flags.h             |  1 +
+ mm/sparse-vmemmap.c                    | 64 +++++++++++++++++++++++
+ 18 files changed, 222 insertions(+), 152 deletions(-)
+--
+2.27.0
 
