@@ -1,98 +1,72 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2839110E9
-	for <loongarch@lists.linux.dev>; Fri,  1 Jul 2022 06:39:06 +0000 (UTC)
-Received: by mail-pg1-f176.google.com with SMTP id e132so1564249pgc.5
-        for <loongarch@lists.linux.dev>; Thu, 30 Jun 2022 23:39:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CF41C3A
+	for <loongarch@lists.linux.dev>; Fri,  1 Jul 2022 14:49:50 +0000 (UTC)
+Received: by mail-pf1-f176.google.com with SMTP id bo5so2681145pfb.4
+        for <loongarch@lists.linux.dev>; Fri, 01 Jul 2022 07:49:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:content-language:to
-         :cc:references:from:subject:in-reply-to:content-transfer-encoding;
-        bh=hvRrAuGM1kHUKhG33THxL0eJlLI2uU+5uJ5jA1dR9Lk=;
-        b=U20ezyf5X+rLZixvA/lmckzqS+pZZqSJb2CZzXIhLIANmsNL7qXyIB+3jyJfHcCoNX
-         CRJe1BUwqIeUgstjxH0/8Gc0EW7esgIaz5uNv84Vo+I6IPACsZXjhQ10p+R0lv7+f1VL
-         y4cEyPZYt0JB+9NTTmthfnbjlvQRFrpO45uVoqEnmV6sGJg4s2HmDLDQs6m7LefThSAZ
-         LZyntKJxy0hKzbuNBbFo1lptoTekHFyuFbRENMCEYvqChmI4vXhSFovD2oT27TBiiv1F
-         NO13JvEH8PbB/hTy30pbnGks5FGRbvQOGnukhJ5CjWVwRLCiijoJKloblsoVs1ZHw198
-         7dJA==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8BCU8tBwV7dKAMv2Q/+gFcUqrZxq5rWryWL5G4eU2og=;
+        b=JZoMZBtPSWOfni4WXIdW0sBq/fo9s07HVGREtlQjpLh1UNmRzQ5AS26LCn7mH8r51T
+         AZT36Owc9hS7rIx2qZPkDtFe2WlNHkHGo1IHcjK54JY4ZeDrIdtTYvOxHTZU88o75EvU
+         6/WSWrsChD63sPRCtEs1KNnbLCb/gMvhdXr0bGmtpVKnVSggdtxGNeWq5hkbpqt3U+cQ
+         dD+F7UOHXKB12XbBmwRMe1Lp+XA3l6maJv5UXoHlDxrbqmiVv26H+OtJCmbSiZMxZakX
+         PD6c7WLWxx2N1EIGkdgvF0gOh2WEGxdl3ttGZJqHQAmUg+Yg9rpXgE7xeu1YJ1ulGUbh
+         Ecew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :content-language:to:cc:references:from:subject:in-reply-to
-         :content-transfer-encoding;
-        bh=hvRrAuGM1kHUKhG33THxL0eJlLI2uU+5uJ5jA1dR9Lk=;
-        b=ZHLjsjK4XvXO1Awh6mE35zxmKd3XLrCDsfzPFblCJl6XzTUTOflTst9pTjidvSCIL3
-         w7gDTyRLCVkaYKsb3hXnlI7BT3GpO+EWwIONgb87n7Nmh9Oynbi9t0eQuHcNey/qEXyT
-         nZo6rydnmYRzc0+DJQGYNM7lhouhUg4uOOCF53cYEOaV7D97g+kSWOYn2QP8ygSppupY
-         Z1oNCLrs/5Uw4KEE1a3MLWYTiwMUxporcc7zGGUzP83dgpVUqJd9cCXeWnugbtZSZdZr
-         uhMMgkHSGwukPlZ3hbAi/JQrPcsc+/VZEc0Wl8UBrlCxHx4z4MQg5Pb+HjeOj1Ueegxw
-         bv8A==
-X-Gm-Message-State: AJIora8H9ret1Bazt4cnP2hG3bOzoqdKwx0ehC3RoWoD+2ecFq7e45D2
-	OUKuQEKPg8sabXxqsLEP/RI=
-X-Google-Smtp-Source: AGRyM1ukVc5Tq22ULcvfowbLS+/guY3eeBFaZLAZkiSTwFZ2548EGLsxxBqB53uV5NP36vUWq8c9KA==
-X-Received: by 2002:a65:604a:0:b0:3f9:f423:b474 with SMTP id a10-20020a65604a000000b003f9f423b474mr10822563pgp.527.1656657545514;
-        Thu, 30 Jun 2022 23:39:05 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m20-20020aa79014000000b00525550222edsm14704564pfo.214.2022.06.30.23.39.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jun 2022 23:39:02 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=8BCU8tBwV7dKAMv2Q/+gFcUqrZxq5rWryWL5G4eU2og=;
+        b=5xb4EbAD1RXO2OPNGsBHn3yhlPQ1wn0p0uIJZq/rsayUaRA129V3VSkrq9o+Duk7X0
+         irDm6YwUDWSpC7g2F2BF+chnCGx9nN2s17GbrkOAy/qxEIHzPHEkLRIXq/gptLtnWsVZ
+         HKafaZTvPUXGCFXq8A7jXcSqrq//2ucIP2LH7DfGLXzOKjWbp+HQsCr6NLcvmhIL+C4e
+         45N62AmSmA9iVEEZgHaAaJidce1Osm0j4Z7orpWl52V/je//bwNsctCl4dzjNOrRB5H3
+         E2Jg24AKpNQ5qKKJSDPzqHp0Lqij4PhUoLz55Wzv2HcybE2aihVWngvseN9LjGdJv8df
+         7EfQ==
+X-Gm-Message-State: AJIora8hTFrYD5MtiGfXL8RtPnJ04WGZBHvcVTTBJqCeRLk2+JM/hnGR
+	N0O96r4YBPa69CryiRuF96A=
+X-Google-Smtp-Source: AGRyM1va10ykgy0jlmrGOYnU4/U5uHmwRoYtfc/m2piSKKUV3DAhYHAvq5L9Sudz3HuAcIuPcN5M8g==
+X-Received: by 2002:a05:6a00:24cc:b0:50d:58bf:5104 with SMTP id d12-20020a056a0024cc00b0050d58bf5104mr20429691pfv.36.1656686989915;
+        Fri, 01 Jul 2022 07:49:49 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id bo7-20020a056a000e8700b0052515a79b78sm15517450pfb.189.2022.07.01.07.49.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Jul 2022 07:49:49 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <9427ebf1-8b5a-cebc-6ec4-2414197c24a8@roeck-us.net>
-Date: Thu, 30 Jun 2022 23:39:00 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Guo Ren <guoren@kernel.org>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 0/3] LoongArch: Fix build errors
+Date: Fri,  1 Jul 2022 07:49:43 -0700
+Message-Id: <20220701144946.2528972-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev
-References: <f83d6a9d-ec07-21d1-87e3-700475192694@roeck-us.net>
- <CAAhV-H41pxiYudNRYOYK8hndMA2Ki6VUXxSaqa27yME1mjWjgw@mail.gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: Building loongarch64 toolchain
-In-Reply-To: <CAAhV-H41pxiYudNRYOYK8hndMA2Ki6VUXxSaqa27yME1mjWjgw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/30/22 19:14, Huacai Chen wrote:
-> Hi, Xuerui,
-> 
-> On Thu, Jun 30, 2022 at 10:06 PM Guenter Roeck <linux@roeck-us.net> wrote:
->>
->> Hi,
->>
->> I have been trying to build a toolchain for loongarch64 using gcc 12.1.0 and
->> binutils 2.38. Unfortunately, the resulting toolchain doesn't work for me.
->> Tracking down the problem, it turns out that gcc passes -mabi=lp64d to the
->> assembler, but the assembler only supports -mabi=lp64.
->>
->> Where can I find guidance on how to build a working toolchain ? Using the
->> available toolchain binaries is not an option.
-> Could you please give some guidance?
-> 
+A number of build errors is seen when trying to build loongarch:allnoconfig
+or loongarch:tinyconfig. This patch series tries to fix the observed
+errors. 
 
-I ended up hacking binutils to accept all lp64 mabi variants.
+----------------------------------------------------------------
+Guenter Roeck (3):
+      LoongArch: page.h: Add missing include file
+      LoongArch: Do not include file from toolchain
+      LoongArch: Always select EFI
 
---- binutils-2.38.orig/gas/config/tc-loongarch.c	2022-01-22 04:14:08.000000000 -0800
-+++ binutils-2.38/gas/config/tc-loongarch.c	2022-06-30 07:41:29.545038901 -0700
-@@ -142,7 +142,8 @@
-    switch (c)
-      {
-      case OPTION_ABI:
--      if (strcasecmp (arg, "lp64") == 0)
-+      if (!strcasecmp (arg, "lp64") || !strcasecmp (arg, "lp64d") ||
-+          !strcasecmp (arg, "lp64s") || !strcasecmp (arg, "lp64f"))
-  	{
-  	  LARCH_opts.ase_abi |= EF_LOONGARCH_ABI_LP64;
-  	  LARCH_opts.ase_ilp32 = 1;
-
-With that, I am able to compile loongarch:defconfig. I'd still like
-to understand the problem and avoid the hack, though.
-
-Thanks,
-Guenter
+ arch/loongarch/Kconfig                 |  6 ++----
+ arch/loongarch/include/asm/loongarch.h | 23 +++++++++++------------
+ arch/loongarch/include/asm/page.h      |  1 +
+ 3 files changed, 14 insertions(+), 16 deletions(-)
