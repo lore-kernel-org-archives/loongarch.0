@@ -1,116 +1,107 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0531C3A
-	for <loongarch@lists.linux.dev>; Fri,  1 Jul 2022 14:49:55 +0000 (UTC)
-Received: by mail-pf1-f181.google.com with SMTP id 136so2655948pfy.10
-        for <loongarch@lists.linux.dev>; Fri, 01 Jul 2022 07:49:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pqMb0KOfCroCHzZCRJBLoaGqIjZaAOZQcoQFpuniEAU=;
-        b=iqElCf2nLVHzYVAdYWrLj9kQextoXw5/lM+F1TrQfsSfGKjgi8lnLpOwnB8oGPInNS
-         2HbTjmKn9yHrrg4564kJ9H4NSE5IoLMmOcinGFBOdE3zHBUvPC3BElf5rulEJAr/uxZn
-         sSDg7b29yWNE8Xt/PNkP44W69DRPmYl+3GYLoIF95//PIE2BKJSGnMRWMVQYbEnzGC/u
-         u1qdEeaWdnUT5d3H+PnT+SHZ3SOG9iJLIwShR2K5Xp9yfJR3m0vxjVvacRYVV81TN4We
-         aE+tdwu2GLaud/0R484BiVW7Viil9KBY896PDMiV3wDLU/BfmkSt5m/otBS09eIWBZD6
-         DZMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=pqMb0KOfCroCHzZCRJBLoaGqIjZaAOZQcoQFpuniEAU=;
-        b=vTZTBqUqEn+PjzB/Zt+eAEb0Y++kxBwgKnNCoEDDpl/QP1QzKh/W6uQ75+PeShyFP9
-         ha38q9WEyful6FGlb63VhcpRhxdNvyOeR+oLFUhj1rQ9QrYn14HTwvMh68USvGRneHjL
-         2f3fk90lj2Ul27cEf4yaE1IphLNv8xhzIiMtbVeL0vlaCWyRQIr4U/wrfx/kyFduuJEG
-         3AEO4WZqy9GoMC1ZLxQo1pX+ofJgyVHRHcVkC8SoGUI4LNtWRRMc5wq63+Ea7+6BiFCw
-         rYuNOFYHDrykkHzfWjNuy3acLBUgKB5wNKNbCliq5wR0Y/LBBCs8xGCmRXOArEursN1k
-         sdkQ==
-X-Gm-Message-State: AJIora+0I9hqPUHAjj6FACcrmGUTNPO5EffpziiRbf5vZBW2tQdTuO8J
-	rDPrI9FP5RHvS/1Z7rQnupc=
-X-Google-Smtp-Source: AGRyM1ujzX4+2snf9JEZCHKobVnV3AXYNXLy92oxBVRgTjHFoVbs3ApNGjl8YMTkNld0kiTaPllBbA==
-X-Received: by 2002:a05:6a00:3486:b0:527:ca02:8e24 with SMTP id cp6-20020a056a00348600b00527ca028e24mr19200977pfb.34.1656686995529;
-        Fri, 01 Jul 2022 07:49:55 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 70-20020a621849000000b0051bb79437f7sm15747872pfy.37.2022.07.01.07.49.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Jul 2022 07:49:54 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Guo Ren <guoren@kernel.org>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 3/3] LoongArch: Always select EFI
-Date: Fri,  1 Jul 2022 07:49:46 -0700
-Message-Id: <20220701144946.2528972-4-linux@roeck-us.net>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220701144946.2528972-1-linux@roeck-us.net>
-References: <20220701144946.2528972-1-linux@roeck-us.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F16D1850
+	for <loongarch@lists.linux.dev>; Fri,  1 Jul 2022 16:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1656693442; bh=BSohsvmD5egGH+mMv/WusSgBQ2gB+6qWrNoArEj34uE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aENPBhooUKD7yV0sNXOyZrW0mVnNrqWTQBMkLgyaOXHrg6JylAn8vjqLBXNaUzszu
+	 hVitKJdlpAoSgletz+LyP6SLtMVF6iAFXe4AHfoS4gZmXZ5K/JztUagaGGEYVxE5hD
+	 gHSbFn6kPy5u8SX9JOMnz1gYzq4YPkSuFtKpsahM=
+Received: from [192.168.9.172] (unknown [101.228.137.40])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 0F3D46010B;
+	Sat,  2 Jul 2022 00:37:22 +0800 (CST)
+Message-ID: <4f874205-d004-fa00-6fe0-b959ba21c186@xen0n.name>
+Date: Sat, 2 Jul 2022 00:37:21 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:104.0) Gecko/20100101
+ Thunderbird/104.0a1
+Subject: Re: Building loongarch64 toolchain
+To: Guenter Roeck <linux@roeck-us.net>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev
+References: <f83d6a9d-ec07-21d1-87e3-700475192694@roeck-us.net>
+ <CAAhV-H41pxiYudNRYOYK8hndMA2Ki6VUXxSaqa27yME1mjWjgw@mail.gmail.com>
+ <9427ebf1-8b5a-cebc-6ec4-2414197c24a8@roeck-us.net>
+Content-Language: en-US
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <9427ebf1-8b5a-cebc-6ec4-2414197c24a8@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Building loongarch:allnoconfig or loongarch:tinyconfig fails with the
-following error.
+Hi,
 
-loongarch64-linux-gnu-ld: arch/loongarch/kernel/env.o: in function `init_environ':
-env.c:(.init.text+0xe4): undefined reference to `efi'
-loongarch64-linux-gnu-ld: env.c:(.init.text+0xe8): undefined reference to `efi'
-loongarch64-linux-gnu-ld: env.c:(.init.text+0xe8): undefined reference to `efi'
-loongarch64-linux-gnu-ld: env.c:(.init.text+0x108): undefined reference to `efi_get_fdt_params'
-loongarch64-linux-gnu-ld: env.c:(.init.text+0x11c): undefined reference to `efi_memmap_init_early'
-loongarch64-linux-gnu-ld: arch/loongarch/kernel/setup.o: in function `platform_init':
-setup.c:(.init.text+0x228): undefined reference to `efi_init'
-loongarch64-linux-gnu-ld: setup.c:(.init.text+0x250): undefined reference to `efi_runtime_init'
-loongarch64-linux-gnu-ld: arch/loongarch/kernel/mem.o: in function `memblock_init':
-mem.c:(.init.text+0x24): undefined reference to `efi'
-loongarch64-linux-gnu-ld: mem.c:(.init.text+0x28): undefined reference to `efi'
-loongarch64-linux-gnu-ld: mem.c:(.init.text+0x28): undefined reference to `efi'
+On 7/1/22 14:39, Guenter Roeck wrote:
+> On 6/30/22 19:14, Huacai Chen wrote:
+>> Hi, Xuerui,
+>>
+>> On Thu, Jun 30, 2022 at 10:06 PM Guenter Roeck <linux@roeck-us.net> 
+>> wrote:
+>>>
+>>> Hi,
+>>>
+>>> I have been trying to build a toolchain for loongarch64 using gcc 
+>>> 12.1.0 and
+>>> binutils 2.38. Unfortunately, the resulting toolchain doesn't work 
+>>> for me.
+>>> Tracking down the problem, it turns out that gcc passes -mabi=lp64d 
+>>> to the
+>>> assembler, but the assembler only supports -mabi=lp64.
+>>>
+>>> Where can I find guidance on how to build a working toolchain ? 
+>>> Using the
+>>> available toolchain binaries is not an option.
+>> Could you please give some guidance?
+>>
+>
+> I ended up hacking binutils to accept all lp64 mabi variants.
+>
+> --- binutils-2.38.orig/gas/config/tc-loongarch.c    2022-01-22 
+> 04:14:08.000000000 -0800
+> +++ binutils-2.38/gas/config/tc-loongarch.c    2022-06-30 
+> 07:41:29.545038901 -0700
+> @@ -142,7 +142,8 @@
+>    switch (c)
+>      {
+>      case OPTION_ABI:
+> -      if (strcasecmp (arg, "lp64") == 0)
+> +      if (!strcasecmp (arg, "lp64") || !strcasecmp (arg, "lp64d") ||
+> +          !strcasecmp (arg, "lp64s") || !strcasecmp (arg, "lp64f"))
+>      {
+>        LARCH_opts.ase_abi |= EF_LOONGARCH_ABI_LP64;
+>        LARCH_opts.ase_ilp32 = 1;
+>
+> With that, I am able to compile loongarch:defconfig. I'd still like
+> to understand the problem and avoid the hack, though.
 
-Since it is mandatory, auto-select EFI support to fix the error. Drop the
-EFI Kconfig help message since it is not needed.
+This is due to an incompatible change to the LoongArch toolchain 
+convention spec (the first version was like [1], got criticized mainly 
+by me, then morphed into the final take [2], all discussion was in 
+Chinese though), after the initial port went public and got accepted by 
+binutils upstream. The binutils trunk has already been updated; in 
+particular, you want at least [3] for compatibility with gcc.
 
-Fixes: fa96b57c1490 ("LoongArch: Add build infrastructure")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- arch/loongarch/Kconfig | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+BTW, you could use the Gentoo toolchain for easy experimentation if 
+that's acceptable for you. (I maintain the Gentoo/LoongArch port so I 
+know that toolchain is working for most commonly encountered software. 
+It's probably carrying more downstream patches than some of you would 
+prefer, although I don't find that to be a problem so far.)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 1920d52653b4..4ed8d0916be7 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -50,6 +50,7 @@ config LOONGARCH
- 	select ARCH_WANTS_NO_INSTR
- 	select BUILDTIME_TABLE_SORT
- 	select COMMON_CLK
-+	select EFI
- 	select GENERIC_CLOCKEVENTS
- 	select GENERIC_CMOS_UPDATE
- 	select GENERIC_CPU_AUTOPROBE
-@@ -296,13 +297,10 @@ config DMI
- 	  DMI to identify machine quirks.
- 
- config EFI
--	bool "EFI runtime service support"
-+	bool
- 	select UCS2_STRING
- 	select EFI_PARAMS_FROM_FDT
- 	select EFI_RUNTIME_WRAPPERS
--	help
--	  This enables the kernel to use EFI runtime services that are
--	  available (such as the EFI variable services).
- 
- config SMP
- 	bool "Multi-Processing support"
+[1]: https://github.com/loongson/LoongArch-Documentation/pull/23
+[2]: https://github.com/loongson/LoongArch-Documentation/pull/24
+[3]: 
+https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=3b14682a432e61c756ec9ad0b5bf5f8136e2cdce
+
 -- 
-2.35.1
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
