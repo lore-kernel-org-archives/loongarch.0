@@ -1,53 +1,120 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD101FA0
-	for <loongarch@lists.linux.dev>; Sun,  3 Jul 2022 04:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=rucRFvpOsDc52A2QntChyESyfLe7Ora1LslugDlcseU=; b=ZRipj/oToh79hyhqe/Obn0YXtg
-	Ori3VMGREiPDCg7n5Xs4NVzE/mKqUpLYI6S2/S8qs/HLwGA/cx8O1YS9Hgn1S0etp+3SHNF9SwB7i
-	gX2C/2qv0xm1oMduNsmiC2/RzZ30eaP4z+o4//nzcdBo0aVOfaIzMY8t44ZwRdXcveb9unhea62Fc
-	S0YNbtFUtC4ApLuEjRG/S0UDRgPZVpdkExPKrVdnwk/hALr/hvpJLxyLVsjtJbuCGy6SvnV+eqt+y
-	cfTs8+oR4ykuREqyrf9xgFb0Qfz5k0+zrqXt70UZiAQuZ19uGgHCc/kNA9Dhuy+7Le1P6ulOuPjPe
-	bCcNmssg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o7qZf-00GDeQ-Ql; Sun, 03 Jul 2022 03:47:07 +0000
-Date: Sun, 3 Jul 2022 04:47:07 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, rppt@linux.ibm.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [RFC PATCH v3 2/3] mm: Add PUD level pagetable account
-Message-ID: <YsERO3OpZSJuC4hW@casper.infradead.org>
-References: <cover.1656586863.git.baolin.wang@linux.alibaba.com>
- <6a6a768634b9ce8537154264e35e6a66a79b6ca8.1656586863.git.baolin.wang@linux.alibaba.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7D223CF
+	for <loongarch@lists.linux.dev>; Sun,  3 Jul 2022 14:12:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01306C341C6;
+	Sun,  3 Jul 2022 14:12:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1656857540;
+	bh=2fK2Mo95TrQ9YyvETTkhsR/j4qd6wNxp5Cu4kSAA7jw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Dk0D1nBvfXpeECpi/rc7AbSXNvOSYMh3QZABip646bL8INt4bVSWQ6WbjmgIJmjQN
+	 lv26uSYVMuoOBhc5ntut4CgaUZScUPsk00OGR28shXprMLlcbL9AhdAMc+bRI5A8RP
+	 h6u2fWCjyUxO+qS3bQ2bjnHCMYhhIFHJJmeczlw2vyahAIKe9e7oNHzotLvBJ6twDI
+	 MRSPwcb1/wKgJYtkMCHgzbytpKqE6AUzXHzhDDr9EtoTSdv3BB/tuj5DwBn43Ztem4
+	 Dzdpzu9OU8FbK69qhfKwC1BXFEs5O8lOs/EC/Hes9GkcQjZTD0P1tnVmUQIST45NC5
+	 rEs1Ev3mMCPlQ==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Guo Ren <guoren@kernel.org>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Mike Rapoport <rppt@linux.ibm.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	WANG Xuerui <kernel@xen0n.name>,
+	linux-arch@vger.kernel.org,
+	linux-csky@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-parisc@vger.kernel.org,
+	linux-xtensa@linux-xtensa.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH 00/14] arch: make PxD_ORDER generically available
+Date: Sun,  3 Jul 2022 17:11:49 +0300
+Message-Id: <20220703141203.147893-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6a6a768634b9ce8537154264e35e6a66a79b6ca8.1656586863.git.baolin.wang@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 30, 2022 at 07:11:15PM +0800, Baolin Wang wrote:
-> +++ b/arch/loongarch/include/asm/pgalloc.h
-> @@ -89,10 +89,15 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address)
->  static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
->  {
->  	pud_t *pud;
-> +	struct page *page;
->  
-> -	pud = (pud_t *) __get_free_pages(GFP_KERNEL, PUD_ORDER);
-> -	if (pud)
-> -		pud_init((unsigned long)pud, (unsigned long)invalid_pmd_table);
-> +	page = alloc_pages(GFP_KERNEL, PUD_ORDER);
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Argh.  I just got rid of PMD_ORDER from PA-RISC.  Now Loongstupid has
-reintroduced it, and worse introduced PUD_ORDER.  See commit
-7bf82eb3873f.
+Hi,
+
+The question what does PxD_ORDER define raises from time to time and
+there is still a conflict between MIPS and DAX definitions.
+
+Some time ago Matthew Wilcox suggested to use PMD_TABLE_ORDER to define
+the order of page table allocation: 
+
+[1] https://lore.kernel.org/linux-arch/YPCJftSTUBEnq2lI@casper.infradead.org/
+
+The parisc patch made it in, but mips didn't. 
+Now mips defines from asm/include/pgtable.h were copied to loongarch which
+made it worse.
+
+Let's deal with it once and for all and rename PxD_ORDER defines to
+PxD_TABLE_ORDER or just drop them when the only possible order of page
+table is 0.
+
+I think the best way to merge this via mm tree with acks from arch
+maintainers.
+
+Matthew Wilcox (Oracle) (1):
+  mips: Rename PMD_ORDER to PMD_TABLE_ORDER
+
+Mike Rapoport (13):
+  csky: drop definition of PTE_ORDER
+  csky: drop definition of PGD_ORDER
+  mips: Rename PUD_ORDER to PUD_TABLE_ORDER
+  mips: drop definitions of PTE_ORDER
+  mips: Rename PGD_ORDER to PGD_TABLE_ORDER
+  nios2: drop definition of PTE_ORDER
+  nios2: drop definition of PGD_ORDER
+  loongarch: drop definition of PTE_ORDER
+  loongarch: drop definition of PMD_ORDER
+  loongarch: drop definition of PUD_ORDER
+  loongarch: drop definition of PGD_ORDER
+  parisc: Rename PGD_ORDER to PGD_TABLE_ORDER
+  xtensa: drop definition of PGD_ORDER
+
+ arch/csky/include/asm/pgalloc.h      |  2 +-
+ arch/csky/include/asm/pgtable.h      |  6 +--
+ arch/loongarch/include/asm/pgalloc.h |  6 +--
+ arch/loongarch/include/asm/pgtable.h | 27 +++++-------
+ arch/loongarch/kernel/asm-offsets.c  |  5 ---
+ arch/loongarch/mm/pgtable.c          |  2 +-
+ arch/loongarch/mm/tlbex.S            |  6 +--
+ arch/mips/include/asm/pgalloc.h      |  8 ++--
+ arch/mips/include/asm/pgtable-32.h   | 19 ++++-----
+ arch/mips/include/asm/pgtable-64.h   | 61 +++++++++++++---------------
+ arch/mips/kernel/asm-offsets.c       |  5 ---
+ arch/mips/kvm/mmu.c                  |  2 +-
+ arch/mips/mm/pgtable.c               |  2 +-
+ arch/mips/mm/tlbex.c                 | 14 +++----
+ arch/nios2/include/asm/pgtable.h     |  7 +---
+ arch/nios2/mm/init.c                 |  5 +--
+ arch/nios2/mm/pgtable.c              |  2 +-
+ arch/parisc/include/asm/pgalloc.h    |  6 +--
+ arch/parisc/include/asm/pgtable.h    |  8 ++--
+ arch/xtensa/include/asm/pgalloc.h    |  2 +-
+ arch/xtensa/include/asm/pgtable.h    |  1 -
+ 21 files changed, 84 insertions(+), 112 deletions(-)
+
+
+base-commit: 03c765b0e3b4cb5063276b086c76f7a612856a9a
+-- 
+2.34.1
+
