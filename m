@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8463F23CF
-	for <loongarch@lists.linux.dev>; Sun,  3 Jul 2022 14:13:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC649C341CF;
-	Sun,  3 Jul 2022 14:13:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F05323CF
+	for <loongarch@lists.linux.dev>; Sun,  3 Jul 2022 14:13:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD358C341CA;
+	Sun,  3 Jul 2022 14:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1656857599;
-	bh=SjvzdzE2ttb5T4CvAtofk3e4OOOHvWuIERA5ikgNjmw=;
+	s=k20201202; t=1656857605;
+	bh=2HLdhGohvtU2vrk5zor8RsOnp9/oF/6GSuTN52JoA1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=siH4M69sheNMyxc/JpYu8lPCDXTyunyYIiDWEyB5IkRDloa5bkujqL2b9/nYTNRBZ
-	 K23e89eTVvZu5aZ7UwzYLMaX1bQCsHsHKwNuuFO9mvOIJkB0IspdA3tmlQ1ogNN+4E
-	 oeAmY8ydY6PCwzOi0Qz5vh/feaf4wy9cEJKEDSBND30Oweo7w535DkkXw0koY/mAlo
-	 dn9A/M8nMHzj00eQZ5b7j77+VEWaa03Ij4eszc3zp/13wEsIrVKCWlONmfu1wJshiB
-	 h7T3Cxi6gX2/78U0EV5pdogYFQVGQbrv3wD5MO29jpCb75ze+qpPWgpoO1C3s9WGp+
-	 bIYYz5FFpcs8A==
+	b=uiJEPNefQ1Xwgm1PCjI1uzqAfLOCjVuzKjLNFQ/4h8ca55UN/5ogUX2EsaJt0Ewhd
+	 tpWMJ5kQmPDezI3ykQebfoZkWyRYsGVVU6rbOL0jzC3KbPchJQ7b9Oj44Muu+0YJWs
+	 HyWURIoPgsirPb4gNJ+sa04pTj8YcYSiiit/Ar0nwIGE3Q4xn5EJw9d5qbmqnn+F/D
+	 CpkpqjzGVHfXSduECjvmjHJKd/FIbiLu6fbGxADk9f8I3+W0Vm2yFv4zOrYuBY3EX7
+	 h5F1L0WwnnEZvSU45s+rUdz0tSDRdKYdsn40qGClG1q48k/BUGv+cPhbVizr+529+f
+	 f5YkfcNNgUfQQ==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Arnd Bergmann <arnd@arndb.de>,
@@ -37,9 +37,9 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
 	linux-parisc@vger.kernel.org,
 	linux-xtensa@linux-xtensa.org,
 	loongarch@lists.linux.dev
-Subject: [PATCH 10/14] loongarch: drop definition of PMD_ORDER
-Date: Sun,  3 Jul 2022 17:11:59 +0300
-Message-Id: <20220703141203.147893-11-rppt@kernel.org>
+Subject: [PATCH 11/14] loongarch: drop definition of PUD_ORDER
+Date: Sun,  3 Jul 2022 17:12:00 +0300
+Message-Id: <20220703141203.147893-12-rppt@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220703141203.147893-1-rppt@kernel.org>
 References: <20220703141203.147893-1-rppt@kernel.org>
@@ -53,85 +53,58 @@ Content-Transfer-Encoding: 8bit
 
 From: Mike Rapoport <rppt@linux.ibm.com>
 
-This is the order of the page table allocation, not the order of a PMD.
+This is the order of the page table allocation, not the order of a PUD.
 Since its always hardwired to 0, simply drop it.
 
 Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- arch/loongarch/include/asm/pgalloc.h | 4 ++--
- arch/loongarch/include/asm/pgtable.h | 7 +++----
- arch/loongarch/kernel/asm-offsets.c  | 3 ---
- 3 files changed, 5 insertions(+), 9 deletions(-)
+ arch/loongarch/include/asm/pgalloc.h | 2 +-
+ arch/loongarch/include/asm/pgtable.h | 5 ++---
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/arch/loongarch/include/asm/pgalloc.h b/arch/loongarch/include/asm/pgalloc.h
-index b0a57b25c131..93e785f46639 100644
+index 93e785f46639..4bfeb3c9c9ac 100644
 --- a/arch/loongarch/include/asm/pgalloc.h
 +++ b/arch/loongarch/include/asm/pgalloc.h
-@@ -66,12 +66,12 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address)
- 	pmd_t *pmd;
- 	struct page *pg;
+@@ -90,7 +90,7 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
+ {
+ 	pud_t *pud;
  
--	pg = alloc_pages(GFP_KERNEL_ACCOUNT, PMD_ORDER);
-+	pg = alloc_page(GFP_KERNEL_ACCOUNT);
- 	if (!pg)
- 		return NULL;
- 
- 	if (!pgtable_pmd_page_ctor(pg)) {
--		__free_pages(pg, PMD_ORDER);
-+		__free_page(pg);
- 		return NULL;
- 	}
- 
+-	pud = (pud_t *) __get_free_pages(GFP_KERNEL, PUD_ORDER);
++	pud = (pud_t *) __get_free_page(GFP_KERNEL);
+ 	if (pud)
+ 		pud_init((unsigned long)pud, (unsigned long)invalid_pmd_table);
+ 	return pud;
 diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index e0bbfc31fe72..f926537d2233 100644
+index f926537d2233..a97996fefaed 100644
 --- a/arch/loongarch/include/asm/pgtable.h
 +++ b/arch/loongarch/include/asm/pgtable.h
-@@ -23,7 +23,6 @@
+@@ -22,7 +22,6 @@
+ #endif
  
  #define PGD_ORDER		0
- #define PUD_ORDER		0
--#define PMD_ORDER		0
+-#define PUD_ORDER		0
  
  #if CONFIG_PGTABLE_LEVELS == 2
  #define PGDIR_SHIFT	(PAGE_SHIFT + (PAGE_SHIFT - 3))
-@@ -31,12 +30,12 @@
- #define PMD_SHIFT	(PAGE_SHIFT + (PAGE_SHIFT - 3))
- #define PMD_SIZE	(1UL << PMD_SHIFT)
- #define PMD_MASK	(~(PMD_SIZE-1))
--#define PGDIR_SHIFT	(PMD_SHIFT + (PAGE_SHIFT + PMD_ORDER - 3))
-+#define PGDIR_SHIFT	(PMD_SHIFT + (PAGE_SHIFT - 3))
- #elif CONFIG_PGTABLE_LEVELS == 4
- #define PMD_SHIFT	(PAGE_SHIFT + (PAGE_SHIFT - 3))
- #define PMD_SIZE	(1UL << PMD_SHIFT)
- #define PMD_MASK	(~(PMD_SIZE-1))
--#define PUD_SHIFT	(PMD_SHIFT + (PAGE_SHIFT + PMD_ORDER - 3))
-+#define PUD_SHIFT	(PMD_SHIFT + (PAGE_SHIFT - 3))
+@@ -38,7 +37,7 @@
+ #define PUD_SHIFT	(PMD_SHIFT + (PAGE_SHIFT - 3))
  #define PUD_SIZE	(1UL << PUD_SHIFT)
  #define PUD_MASK	(~(PUD_SIZE-1))
- #define PGDIR_SHIFT	(PUD_SHIFT + (PAGE_SHIFT + PUD_ORDER - 3))
-@@ -52,7 +51,7 @@
- #define PTRS_PER_PUD	((PAGE_SIZE << PUD_ORDER) >> 3)
+-#define PGDIR_SHIFT	(PUD_SHIFT + (PAGE_SHIFT + PUD_ORDER - 3))
++#define PGDIR_SHIFT	(PUD_SHIFT + (PAGE_SHIFT - 3))
+ #endif
+ 
+ #define PGDIR_SIZE	(1UL << PGDIR_SHIFT)
+@@ -48,7 +47,7 @@
+ 
+ #define PTRS_PER_PGD	((PAGE_SIZE << PGD_ORDER) >> 3)
+ #if CONFIG_PGTABLE_LEVELS > 3
+-#define PTRS_PER_PUD	((PAGE_SIZE << PUD_ORDER) >> 3)
++#define PTRS_PER_PUD	(PAGE_SIZE >> 3)
  #endif
  #if CONFIG_PGTABLE_LEVELS > 2
--#define PTRS_PER_PMD	((PAGE_SIZE << PMD_ORDER) >> 3)
-+#define PTRS_PER_PMD	(PAGE_SIZE >> 3)
- #endif
- #define PTRS_PER_PTE	(PAGE_SIZE >> 3)
- 
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index 1a1166a7e61c..aa4ef42d759f 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -191,9 +191,6 @@ void output_mm_defines(void)
- 	DEFINE(_PTE_T_LOG2, PTE_T_LOG2);
- 	BLANK();
- 	DEFINE(_PGD_ORDER, PGD_ORDER);
--#ifndef __PAGETABLE_PMD_FOLDED
--	DEFINE(_PMD_ORDER, PMD_ORDER);
--#endif
- 	BLANK();
- 	DEFINE(_PMD_SHIFT, PMD_SHIFT);
- 	DEFINE(_PGDIR_SHIFT, PGDIR_SHIFT);
+ #define PTRS_PER_PMD	(PAGE_SIZE >> 3)
 -- 
 2.34.1
 
