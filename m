@@ -1,65 +1,110 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CD815A2
-	for <loongarch@lists.linux.dev>; Mon,  4 Jul 2022 03:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1656907050; bh=nEFAaimDHQ9+9OzaA/ZB4ZaY0ZaBzpTQo6pKly4wWzE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=wWuMthucJbzktwB/xbORvGK5uNDweBclk0LJ/uzlpsQK+o4fTm4aPZIJnR97asuj4
-	 se5k8kontPi/E0XftB0voNn3GTQzXY3ltXkJ/jG6SnX7/pCZdcQPZQudGzRHp0TKsU
-	 VuBFExTLic5XZTBaNkmMj2c6SHB23jyZof9/3I0I=
-Received: from [100.100.57.190] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 32DAA60091;
-	Mon,  4 Jul 2022 11:57:29 +0800 (CST)
-Message-ID: <aa74c870-e4e9-a2aa-ddae-91cce62a3fe5@xen0n.name>
-Date: Mon, 4 Jul 2022 11:57:28 +0800
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C4707E
+	for <loongarch@lists.linux.dev>; Mon,  4 Jul 2022 06:14:22 +0000 (UTC)
+Received: from lingfengzhe-ms7c94.loongson.cn (unknown [192.168.200.1])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxeeA6hcJi0foHAA--.19629S2;
+	Mon, 04 Jul 2022 14:14:18 +0800 (CST)
+From: huqi <huqi@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Qi Hu <huqi@loongson.cn>
+Subject: [PATCH] LoongArch: Clean useless vcsr in loongarch_fpu.
+Date: Mon,  4 Jul 2022 14:14:02 +0800
+Message-Id: <20220704061402.683762-1-huqi@loongson.cn>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0)
- Gecko/20100101 Thunderbird/104.0a1
-Subject: Re: [PATCH 12/14] loongarch: drop definition of PGD_ORDER
-Content-Language: en-US
-To: Matthew Wilcox <willy@infradead.org>, Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
- Dinh Nguyen <dinguyen@kernel.org>, Guo Ren <guoren@kernel.org>,
- Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Max Filippov <jcmvbkbc@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- WANG Xuerui <kernel@xen0n.name>, linux-arch@vger.kernel.org,
- linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-parisc@vger.kernel.org, linux-xtensa@linux-xtensa.org,
- loongarch@lists.linux.dev
-References: <20220703141203.147893-1-rppt@kernel.org>
- <20220703141203.147893-13-rppt@kernel.org>
- <YsIBFVcdJSQNK+pV@casper.infradead.org>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <YsIBFVcdJSQNK+pV@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9AxeeA6hcJi0foHAA--.19629S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr1DZFyxury7JFWUur1fXrb_yoW8tF1kpF
+	9rZrn7GF4rWFn3JFyDt3s5WrWkJwnrGw1aga42ka4fCrsrX3WUXrykAryDXFyjqa1xKrW0
+	gF1rGw1Sq3WUJ3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UUUUUUUUU==
+X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQAQCV3QvPwhdwAtsu
 
+From: Qi Hu <huqi@loongson.cn>
 
-On 2022/7/4 04:50, Matthew Wilcox wrote:
-> On Sun, Jul 03, 2022 at 05:12:01PM +0300, Mike Rapoport wrote:
->> +++ b/arch/loongarch/kernel/asm-offsets.c
->> @@ -190,7 +190,6 @@ void output_mm_defines(void)
->>   #endif
->>   	DEFINE(_PTE_T_LOG2, PTE_T_LOG2);
->>   	BLANK();
->> -	DEFINE(_PGD_ORDER, PGD_ORDER);
->>   	BLANK();
->>   	DEFINE(_PMD_SHIFT, PMD_SHIFT);
->>   	DEFINE(_PGDIR_SHIFT, PGDIR_SHIFT);
-> Should probably also drop one of these BLANK() lines too?
->
-Agreed; IMO the blank lines can and should be removed because the 
-surrounding lines are also mm definitions.
+The `vcsr` do not use anymore. Remove this member from `loongarch_fpu`.
+
+Signed-off-by: Qi Hu <huqi@loongson.cn>
+---
+ arch/loongarch/include/asm/fpregdef.h  |  1 -
+ arch/loongarch/include/asm/processor.h |  2 --
+ arch/loongarch/kernel/asm-offsets.c    |  1 -
+ arch/loongarch/kernel/fpu.S            | 10 ----------
+ 4 files changed, 14 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/fpregdef.h b/arch/loongarch/include/asm/fpregdef.h
+index adb16e4b43b0..b6be527831dd 100644
+--- a/arch/loongarch/include/asm/fpregdef.h
++++ b/arch/loongarch/include/asm/fpregdef.h
+@@ -48,6 +48,5 @@
+ #define fcsr1	$r1
+ #define fcsr2	$r2
+ #define fcsr3	$r3
+-#define vcsr16	$r16
+ 
+ #endif /* _ASM_FPREGDEF_H */
+diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+index 1d63c934b289..57ec45aa078e 100644
+--- a/arch/loongarch/include/asm/processor.h
++++ b/arch/loongarch/include/asm/processor.h
+@@ -80,7 +80,6 @@ BUILD_FPR_ACCESS(64)
+ 
+ struct loongarch_fpu {
+ 	unsigned int	fcsr;
+-	unsigned int	vcsr;
+ 	uint64_t	fcc;	/* 8x8 */
+ 	union fpureg	fpr[NUM_FPU_REGS];
+ };
+@@ -161,7 +160,6 @@ struct thread_struct {
+ 	 */							\
+ 	.fpu			= {				\
+ 		.fcsr		= 0,				\
+-		.vcsr		= 0,				\
+ 		.fcc		= 0,				\
+ 		.fpr		= {{{0,},},},			\
+ 	},							\
+diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+index bfb65eb2844f..20cd9e16a95a 100644
+--- a/arch/loongarch/kernel/asm-offsets.c
++++ b/arch/loongarch/kernel/asm-offsets.c
+@@ -166,7 +166,6 @@ void output_thread_fpu_defines(void)
+ 
+ 	OFFSET(THREAD_FCSR, loongarch_fpu, fcsr);
+ 	OFFSET(THREAD_FCC,  loongarch_fpu, fcc);
+-	OFFSET(THREAD_VCSR, loongarch_fpu, vcsr);
+ 	BLANK();
+ }
+ 
+diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
+index 75c6ce0682a2..a631a7137667 100644
+--- a/arch/loongarch/kernel/fpu.S
++++ b/arch/loongarch/kernel/fpu.S
+@@ -146,16 +146,6 @@
+ 	movgr2fcsr	fcsr0, \tmp0
+ 	.endm
+ 
+-	.macro sc_save_vcsr base, tmp0
+-	movfcsr2gr	\tmp0, vcsr16
+-	EX	st.w \tmp0, \base, 0
+-	.endm
+-
+-	.macro sc_restore_vcsr base, tmp0
+-	EX	ld.w \tmp0, \base, 0
+-	movgr2fcsr	vcsr16, \tmp0
+-	.endm
+-
+ /*
+  * Save a thread's fp context.
+  */
+-- 
+2.36.1
+
