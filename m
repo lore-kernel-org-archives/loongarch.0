@@ -1,64 +1,128 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 879B315DE
-	for <loongarch@lists.linux.dev>; Mon,  4 Jul 2022 12:37:48 +0000 (UTC)
-Received: from [198.18.0.1] (unknown [192.168.200.1])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT+MS38JiIZoIAA--.25892S3;
-	Mon, 04 Jul 2022 20:37:39 +0800 (CST)
-Message-ID: <7012090d-560c-a9ce-7852-0cc57d9c7edc@loongson.cn>
-Date: Mon, 4 Jul 2022 20:37:38 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 183023D99
+	for <loongarch@lists.linux.dev>; Mon,  4 Jul 2022 15:36:18 +0000 (UTC)
+Received: from localhost.localdomain (unknown [223.104.41.228])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX+PsCMNiS8wIAA--.26936S2;
+	Mon, 04 Jul 2022 23:36:16 +0800 (CST)
+From: Qi Hu <huqi@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: Clean useless vcsr in loongarch_fpu.
+Date: Mon,  4 Jul 2022 23:36:12 +0800
+Message-Id: <20220704153612.314112-1-huqi@loongson.cn>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] LoongArch: Clean useless vcsr in loongarch_fpu.
-Content-Language: en-US
-To: Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20220704061402.683762-1-huqi@loongson.cn>
- <1470d272-e148-c600-f759-a1e2dac776e1@xen0n.name>
- <7904571e-3ef4-5841-497d-6796c8c36c52@loongson.cn>
- <e187cda4edf0a3186e7caae8ed285e2564742f26.camel@xry111.site>
-From: Qi Hu <huqi@loongson.cn>
-In-Reply-To: <e187cda4edf0a3186e7caae8ed285e2564742f26.camel@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9DxT+MS38JiIZoIAA--.25892S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr1DAF1xArykAryUCF4kWFg_yoW8Gr15pa
-	y7Ww40kFn3JrWxGF4qqan7Ca4rXrW5Ga15XwnxG34Fvr1DWFyfK3yrJFW5CrW8WryqqayU
-	XFs7ta4xGF4UZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UUUUUUUUU==
-X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQARCV3QvPwxlQABsx
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9DxX+PsCMNiS8wIAA--.26936S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF15XF47KF43Jw17KF48JFb_yoW5JF1DpF
+	ZrZrn7GF4rWrn3JryDt34kWrWkJ3ZrGw1agasIka4fCr47Xw1UWrWvyryDXFyjqa1rK3y0
+	gF1rGw1SqF1DJ3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkYb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
+	A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMc
+	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_XrWl42xK82IY
+	c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
+	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
+	vE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU5XJ57UUUUU==
+X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQARCV3QvPwzrgAkst
 
+The `vcsr` is not used anymore. Remove this member from `loongarch_fpu`.
 
-On 2022/7/4 17:58, Xi Ruoyao wrote:
-> On Mon, 2022-07-04 at 17:27 +0800, huqi wrote:
->
->>> The original code was written with future LSX/LASX support in mind;
->>> the code is dead currently, but expected to get utilized Soon (TM).
->>>
->>> So, I'd like to confirm if future LoongArch models would *not* feature
->>> LSX/LASX in its current form, and that the Loongson Corporation is not
->>> going to upstream LSX/LASX support, given you are apparently a
->>> Loongson employee with the first-hand information? We'd like to avoid
->>> code churn in general, so if the LSX/LASX support is to be eventually
->>> mainlined, removing them now would only lead to them being introduced
->>> later.
->> `vcsr` is removed because it has been removed in hardware. What's more,
->> it will not be used to support LSX/LASX in the future.
-> It would be better to add this information into the commit message.  Is
-> it already removed in 3A5000?  On my machine "movfcsr2gr $a0, $r16"
-> produces SIGILL (but maybe it's because LSX is not enabled via the EUEN
-> register).
+From 3A5000(LoongArch), `vcsr` is removed in hardware. FP and LSX/LASX
+both use `fcsr` as their csr.
 
-Yes, adding this information to the commit message will be more 
-reasonable. I will do it later.
+Particularly, fcsr from $r16 to $r31 are reserved for LSX/LASX, and
+using the registers in this area will cause SXD/ASXD if LSX/LASX is
+not enabled.
 
-It is true that 3A5000 has removed this register. $r16 to $r31 are 
-reserved for LSX/LASX. So "movfcsr2gr $a0, $r16" will raise SXD/ASXD if 
-LSX/LASX is not enabled, and kernel will raise SIGILL.
+Signed-off-by: Qi Hu <huqi@loongson.cn>
+---
+V2:
+- Add more details in the commit message.
+---
+ arch/loongarch/include/asm/fpregdef.h  |  1 -
+ arch/loongarch/include/asm/processor.h |  2 --
+ arch/loongarch/kernel/asm-offsets.c    |  1 -
+ arch/loongarch/kernel/fpu.S            | 10 ----------
+ 4 files changed, 14 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/fpregdef.h b/arch/loongarch/include/asm/fpregdef.h
+index adb16e4b4..b6be52783 100644
+--- a/arch/loongarch/include/asm/fpregdef.h
++++ b/arch/loongarch/include/asm/fpregdef.h
+@@ -48,6 +48,5 @@
+ #define fcsr1	$r1
+ #define fcsr2	$r2
+ #define fcsr3	$r3
+-#define vcsr16	$r16
+ 
+ #endif /* _ASM_FPREGDEF_H */
+diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+index 1d63c934b..57ec45aa0 100644
+--- a/arch/loongarch/include/asm/processor.h
++++ b/arch/loongarch/include/asm/processor.h
+@@ -80,7 +80,6 @@ BUILD_FPR_ACCESS(64)
+ 
+ struct loongarch_fpu {
+ 	unsigned int	fcsr;
+-	unsigned int	vcsr;
+ 	uint64_t	fcc;	/* 8x8 */
+ 	union fpureg	fpr[NUM_FPU_REGS];
+ };
+@@ -161,7 +160,6 @@ struct thread_struct {
+ 	 */							\
+ 	.fpu			= {				\
+ 		.fcsr		= 0,				\
+-		.vcsr		= 0,				\
+ 		.fcc		= 0,				\
+ 		.fpr		= {{{0,},},},			\
+ 	},							\
+diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+index bfb65eb28..20cd9e16a 100644
+--- a/arch/loongarch/kernel/asm-offsets.c
++++ b/arch/loongarch/kernel/asm-offsets.c
+@@ -166,7 +166,6 @@ void output_thread_fpu_defines(void)
+ 
+ 	OFFSET(THREAD_FCSR, loongarch_fpu, fcsr);
+ 	OFFSET(THREAD_FCC,  loongarch_fpu, fcc);
+-	OFFSET(THREAD_VCSR, loongarch_fpu, vcsr);
+ 	BLANK();
+ }
+ 
+diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
+index 75c6ce068..a631a7137 100644
+--- a/arch/loongarch/kernel/fpu.S
++++ b/arch/loongarch/kernel/fpu.S
+@@ -146,16 +146,6 @@
+ 	movgr2fcsr	fcsr0, \tmp0
+ 	.endm
+ 
+-	.macro sc_save_vcsr base, tmp0
+-	movfcsr2gr	\tmp0, vcsr16
+-	EX	st.w \tmp0, \base, 0
+-	.endm
+-
+-	.macro sc_restore_vcsr base, tmp0
+-	EX	ld.w \tmp0, \base, 0
+-	movgr2fcsr	vcsr16, \tmp0
+-	.endm
+-
+ /*
+  * Save a thread's fp context.
+  */
+-- 
+2.36.1
 
