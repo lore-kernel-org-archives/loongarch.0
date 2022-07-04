@@ -1,76 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E272115A3
-	for <loongarch@lists.linux.dev>; Mon,  4 Jul 2022 06:37:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9052CC3411E;
-	Mon,  4 Jul 2022 06:37:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1656916654;
-	bh=Ev99x2/dGK/AfHwjAp99Abizv7vniBu6IQA5CawQMQE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PFJVmhiYn6Ic6FTheiyt1yAOHTodfrybFiqBvVQ/qjJyqvMcrf1iEMEQ/sockNodS
-	 ONjRsGxOWH8Cfs69RjqlQ6woEHTlfn5jDBz8nPLFjT72zKvzgWfCgsTNTPCO4TvPkj
-	 uwLufFvGkCfNTFWsGIoYzNf29FFaGS0USFD+b4wjw7PxPT6FVuf/T0z4or7bBn/A2i
-	 NLtBgjQ1GgdHb5h/x2cfDvUqGj0IWK9OcUpaBWJIWtp5mJNteU1glbswFU1WdZNqOb
-	 JmmU/VcV1X3eYwOhhr4yzKOS0q9pNiC0cCirbCUjL6QELQ10pfnXNAwNGPmOVMkb4+
-	 HTG0pR49rjXDg==
-Date: Mon, 4 Jul 2022 09:37:17 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@kernel.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Mike Rapoport <rppt@linux.ibm.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-	linux-xtensa@linux-xtensa.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH 12/14] loongarch: drop definition of PGD_ORDER
-Message-ID: <YsKKnSk/kgf2uMg6@kernel.org>
-References: <20220703141203.147893-1-rppt@kernel.org>
- <20220703141203.147893-13-rppt@kernel.org>
- <YsIBFVcdJSQNK+pV@casper.infradead.org>
- <aa74c870-e4e9-a2aa-ddae-91cce62a3fe5@xen0n.name>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D84515A3
+	for <loongarch@lists.linux.dev>; Mon,  4 Jul 2022 07:28:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1656919682; bh=kaLh3zXYVaHL4R8erG3gOGPF0Omnf3NJzFTyx4+2o6Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mQvYX2AAGbJyw6O/ov0WduYizcZckh39qF+S5WVGIGKTCs5tBRxTjKiKwTLDtlExY
+	 ZSd9gTaDC+8qBIxeatvRo4j09u18sRPomEXei2/8pi4LfOvuLd6oMtn1Vv/GZ6gIZ9
+	 r6RpTTAa9kGsam1N7BMGk29QikmFjT93U3ufJQhA=
+Received: from [100.100.57.190] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 4167560114;
+	Mon,  4 Jul 2022 15:28:02 +0800 (CST)
+Message-ID: <1470d272-e148-c600-f759-a1e2dac776e1@xen0n.name>
+Date: Mon, 4 Jul 2022 15:28:01 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aa74c870-e4e9-a2aa-ddae-91cce62a3fe5@xen0n.name>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0)
+ Gecko/20100101 Thunderbird/104.0a1
+Subject: Re: [PATCH] LoongArch: Clean useless vcsr in loongarch_fpu.
+Content-Language: en-US
+To: huqi <huqi@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20220704061402.683762-1-huqi@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20220704061402.683762-1-huqi@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 04, 2022 at 11:57:28AM +0800, WANG Xuerui wrote:
-> 
-> On 2022/7/4 04:50, Matthew Wilcox wrote:
-> > On Sun, Jul 03, 2022 at 05:12:01PM +0300, Mike Rapoport wrote:
-> > > +++ b/arch/loongarch/kernel/asm-offsets.c
-> > > @@ -190,7 +190,6 @@ void output_mm_defines(void)
-> > >   #endif
-> > >   	DEFINE(_PTE_T_LOG2, PTE_T_LOG2);
-> > >   	BLANK();
-> > > -	DEFINE(_PGD_ORDER, PGD_ORDER);
-> > >   	BLANK();
-> > >   	DEFINE(_PMD_SHIFT, PMD_SHIFT);
-> > >   	DEFINE(_PGDIR_SHIFT, PGDIR_SHIFT);
-> > Should probably also drop one of these BLANK() lines too?
-> > 
-> Agreed; IMO the blank lines can and should be removed because the
-> surrounding lines are also mm definitions.
+On 2022/7/4 14:14, huqi wrote:
+> From: Qi Hu <huqi@loongson.cn>
+>
+> The `vcsr` do not use anymore. Remove this member from `loongarch_fpu`.
+"The VCSR is not used any more."
+>
+> Signed-off-by: Qi Hu <huqi@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/fpregdef.h  |  1 -
+>   arch/loongarch/include/asm/processor.h |  2 --
+>   arch/loongarch/kernel/asm-offsets.c    |  1 -
+>   arch/loongarch/kernel/fpu.S            | 10 ----------
+>   4 files changed, 14 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/fpregdef.h b/arch/loongarch/include/asm/fpregdef.h
+> index adb16e4b43b0..b6be527831dd 100644
+> --- a/arch/loongarch/include/asm/fpregdef.h
+> +++ b/arch/loongarch/include/asm/fpregdef.h
+> @@ -48,6 +48,5 @@
+>   #define fcsr1	$r1
+>   #define fcsr2	$r2
+>   #define fcsr3	$r3
+> -#define vcsr16	$r16
+>   
+>   #endif /* _ASM_FPREGDEF_H */
+> diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+> index 1d63c934b289..57ec45aa078e 100644
+> --- a/arch/loongarch/include/asm/processor.h
+> +++ b/arch/loongarch/include/asm/processor.h
+> @@ -80,7 +80,6 @@ BUILD_FPR_ACCESS(64)
+>   
+>   struct loongarch_fpu {
+>   	unsigned int	fcsr;
+> -	unsigned int	vcsr;
+>   	uint64_t	fcc;	/* 8x8 */
+>   	union fpureg	fpr[NUM_FPU_REGS];
+>   };
+> @@ -161,7 +160,6 @@ struct thread_struct {
+>   	 */							\
+>   	.fpu			= {				\
+>   		.fcsr		= 0,				\
+> -		.vcsr		= 0,				\
+>   		.fcc		= 0,				\
+>   		.fpr		= {{{0,},},},			\
+>   	},							\
+> diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+> index bfb65eb2844f..20cd9e16a95a 100644
+> --- a/arch/loongarch/kernel/asm-offsets.c
+> +++ b/arch/loongarch/kernel/asm-offsets.c
+> @@ -166,7 +166,6 @@ void output_thread_fpu_defines(void)
+>   
+>   	OFFSET(THREAD_FCSR, loongarch_fpu, fcsr);
+>   	OFFSET(THREAD_FCC,  loongarch_fpu, fcc);
+> -	OFFSET(THREAD_VCSR, loongarch_fpu, vcsr);
+>   	BLANK();
+>   }
+>   
+> diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
+> index 75c6ce0682a2..a631a7137667 100644
+> --- a/arch/loongarch/kernel/fpu.S
+> +++ b/arch/loongarch/kernel/fpu.S
+> @@ -146,16 +146,6 @@
+>   	movgr2fcsr	fcsr0, \tmp0
+>   	.endm
+>   
+> -	.macro sc_save_vcsr base, tmp0
+> -	movfcsr2gr	\tmp0, vcsr16
+> -	EX	st.w \tmp0, \base, 0
+> -	.endm
+> -
+> -	.macro sc_restore_vcsr base, tmp0
+> -	EX	ld.w \tmp0, \base, 0
+> -	movgr2fcsr	vcsr16, \tmp0
+> -	.endm
+> -
+>   /*
+>    * Save a thread's fp context.
+>    */
 
-They are mm definitions, but still they are separated by blanks to have
-nice grouping in the generated asm-offsets.h.
+The original code was written with future LSX/LASX support in mind; the 
+code is dead currently, but expected to get utilized Soon (TM).
 
-I suspect that there are more unused definitions in asm-offsets.c, worth
-taking a look.
+So, I'd like to confirm if future LoongArch models would *not* feature 
+LSX/LASX in its current form, and that the Loongson Corporation is not 
+going to upstream LSX/LASX support, given you are apparently a Loongson 
+employee with the first-hand information? We'd like to avoid code churn 
+in general, so if the LSX/LASX support is to be eventually mainlined, 
+removing them now would only lead to them being introduced later.
 
--- 
-Sincerely yours,
-Mike.
