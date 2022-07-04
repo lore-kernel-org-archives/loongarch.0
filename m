@@ -1,128 +1,71 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33B8923B5
-	for <loongarch@lists.linux.dev>; Mon,  4 Jul 2022 09:35:16 +0000 (UTC)
-Received: from [198.18.0.1] (unknown [192.168.200.1])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxWeBxssJi2E0IAA--.20655S3;
-	Mon, 04 Jul 2022 17:27:14 +0800 (CST)
-Message-ID: <7904571e-3ef4-5841-497d-6796c8c36c52@loongson.cn>
-Date: Mon, 4 Jul 2022 17:27:13 +0800
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D068D23B5
+	for <loongarch@lists.linux.dev>; Mon,  4 Jul 2022 09:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1656928740;
+	bh=1PaN7z3o+qL7iftcZWMXpLjiyNu9bigwG/ufouKEZLA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=fNc+v4yeZHLtc2UPbLRASxgt4uuRtX1o+I8PVFSaOldI3PYC7bF18c6O2qdUk1Mh6
+	 3GgANmeSPb5Vstal1PusSIQtnHFc94Rwj+cYCntXpq1xiYxtfQTAVUtctPGwG40KLY
+	 UWrnYigguF8RmstqLFNoSRYi8oPKBzs36gQtShSA=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 3B4BA667B9;
+	Mon,  4 Jul 2022 05:58:59 -0400 (EDT)
+Message-ID: <e187cda4edf0a3186e7caae8ed285e2564742f26.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: Clean useless vcsr in loongarch_fpu.
+From: Xi Ruoyao <xry111@xry111.site>
+To: huqi <huqi@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, Huacai Chen
+	 <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Mon, 04 Jul 2022 17:58:57 +0800
+In-Reply-To: <7904571e-3ef4-5841-497d-6796c8c36c52@loongson.cn>
+References: <20220704061402.683762-1-huqi@loongson.cn>
+	 <1470d272-e148-c600-f759-a1e2dac776e1@xen0n.name>
+	 <7904571e-3ef4-5841-497d-6796c8c36c52@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] LoongArch: Clean useless vcsr in loongarch_fpu.
-Content-Language: en-US
-To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20220704061402.683762-1-huqi@loongson.cn>
- <1470d272-e148-c600-f759-a1e2dac776e1@xen0n.name>
-From: huqi <huqi@loongson.cn>
-In-Reply-To: <1470d272-e148-c600-f759-a1e2dac776e1@xen0n.name>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf9AxWeBxssJi2E0IAA--.20655S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJFW7trW8ury8KF15trWxXrb_yoWrAryrpF
-	1kAr1kJFW5Gr1kJryUtr1UWryUJr1UGw12qF1UJFy8Jr4UXr1jgr18Xr1qgF1UJw48Jr10
-	qF1rXw17ZF1UJ3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UUUUUUUUU==
-X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQARCV3QvPwsxQADs+
 
+On Mon, 2022-07-04 at 17:27 +0800, huqi wrote:
 
-On 2022/7/4 15:28, WANG Xuerui wrote:
-> On 2022/7/4 14:14, huqi wrote:
->> From: Qi Hu <huqi@loongson.cn>
->>
->> The `vcsr` do not use anymore. Remove this member from `loongarch_fpu`.
-> "The VCSR is not used any more."
-Thanks, this is incorrect to use `use`.
->>
->> Signed-off-by: Qi Hu <huqi@loongson.cn>
->> ---
->>   arch/loongarch/include/asm/fpregdef.h  |  1 -
->>   arch/loongarch/include/asm/processor.h |  2 --
->>   arch/loongarch/kernel/asm-offsets.c    |  1 -
->>   arch/loongarch/kernel/fpu.S            | 10 ----------
->>   4 files changed, 14 deletions(-)
->>
->> diff --git a/arch/loongarch/include/asm/fpregdef.h 
->> b/arch/loongarch/include/asm/fpregdef.h
->> index adb16e4b43b0..b6be527831dd 100644
->> --- a/arch/loongarch/include/asm/fpregdef.h
->> +++ b/arch/loongarch/include/asm/fpregdef.h
->> @@ -48,6 +48,5 @@
->>   #define fcsr1    $r1
->>   #define fcsr2    $r2
->>   #define fcsr3    $r3
->> -#define vcsr16    $r16
->>     #endif /* _ASM_FPREGDEF_H */
->> diff --git a/arch/loongarch/include/asm/processor.h 
->> b/arch/loongarch/include/asm/processor.h
->> index 1d63c934b289..57ec45aa078e 100644
->> --- a/arch/loongarch/include/asm/processor.h
->> +++ b/arch/loongarch/include/asm/processor.h
->> @@ -80,7 +80,6 @@ BUILD_FPR_ACCESS(64)
->>     struct loongarch_fpu {
->>       unsigned int    fcsr;
->> -    unsigned int    vcsr;
->>       uint64_t    fcc;    /* 8x8 */
->>       union fpureg    fpr[NUM_FPU_REGS];
->>   };
->> @@ -161,7 +160,6 @@ struct thread_struct {
->>        */                            \
->>       .fpu            = {                \
->>           .fcsr        = 0,                \
->> -        .vcsr        = 0,                \
->>           .fcc        = 0,                \
->>           .fpr        = {{{0,},},},            \
->>       },                            \
->> diff --git a/arch/loongarch/kernel/asm-offsets.c 
->> b/arch/loongarch/kernel/asm-offsets.c
->> index bfb65eb2844f..20cd9e16a95a 100644
->> --- a/arch/loongarch/kernel/asm-offsets.c
->> +++ b/arch/loongarch/kernel/asm-offsets.c
->> @@ -166,7 +166,6 @@ void output_thread_fpu_defines(void)
->>         OFFSET(THREAD_FCSR, loongarch_fpu, fcsr);
->>       OFFSET(THREAD_FCC,  loongarch_fpu, fcc);
->> -    OFFSET(THREAD_VCSR, loongarch_fpu, vcsr);
->>       BLANK();
->>   }
->>   diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
->> index 75c6ce0682a2..a631a7137667 100644
->> --- a/arch/loongarch/kernel/fpu.S
->> +++ b/arch/loongarch/kernel/fpu.S
->> @@ -146,16 +146,6 @@
->>       movgr2fcsr    fcsr0, \tmp0
->>       .endm
->>   -    .macro sc_save_vcsr base, tmp0
->> -    movfcsr2gr    \tmp0, vcsr16
->> -    EX    st.w \tmp0, \base, 0
->> -    .endm
->> -
->> -    .macro sc_restore_vcsr base, tmp0
->> -    EX    ld.w \tmp0, \base, 0
->> -    movgr2fcsr    vcsr16, \tmp0
->> -    .endm
->> -
->>   /*
->>    * Save a thread's fp context.
->>    */
->
-> The original code was written with future LSX/LASX support in mind; 
-> the code is dead currently, but expected to get utilized Soon (TM).
->
-> So, I'd like to confirm if future LoongArch models would *not* feature 
-> LSX/LASX in its current form, and that the Loongson Corporation is not 
-> going to upstream LSX/LASX support, given you are apparently a 
-> Loongson employee with the first-hand information? We'd like to avoid 
-> code churn in general, so if the LSX/LASX support is to be eventually 
-> mainlined, removing them now would only lead to them being introduced 
-> later.
+>=20
+> > The original code was written with future LSX/LASX support in mind;=20
+> > the code is dead currently, but expected to get utilized Soon (TM).
+> >=20
+> > So, I'd like to confirm if future LoongArch models would *not* feature=
+=20
+> > LSX/LASX in its current form, and that the Loongson Corporation is not=
+=20
+> > going to upstream LSX/LASX support, given you are apparently a=20
+> > Loongson employee with the first-hand information? We'd like to avoid=
+=20
+> > code churn in general, so if the LSX/LASX support is to be eventually=
+=20
+> > mainlined, removing them now would only lead to them being introduced=
+=20
+> > later.
+>=20
+> `vcsr` is removed because it has been removed in hardware. What's more,=
+=20
+> it will not be used to support LSX/LASX in the future.
 
-`vcsr` is removed because it has been removed in hardware. What's more, 
-it will not be used to support LSX/LASX in the future.
+It would be better to add this information into the commit message.  Is
+it already removed in 3A5000?  On my machine "movfcsr2gr $a0, $r16"
+produces SIGILL (but maybe it's because LSX is not enabled via the EUEN
+register).
 
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
