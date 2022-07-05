@@ -1,38 +1,20 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59823182
-	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 08:39:19 +0000 (UTC)
-Received: by mail-yb1-f171.google.com with SMTP id i7so20581174ybe.11
-        for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022 01:39:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wZnyPsEVZX6HmXQzS1Foy24/qSSliAvcCxVhRkBUcHs=;
-        b=SEYfGEtMxhAMfqAivJTEH2Kz8wbyh2XsCXYeFtFb1I28PpU+lCPk12AA4R9K6dl/bY
-         woHhjBEVabd/bI0pHf8zsBRzuKo9ccK4QyVnqR4OQOMtx1LaA2a9AxK3wkuZNul/LzQV
-         UM51yjWWue6IUw1bK29hDbsh4AwqTyWZZsxAMqbjOcfiIX594dSUkrN1Z+LfE+LXYOW9
-         WbVktB4yHG4/CR/IBsxUfDoZP5ktqV4FqwcpaZcINT18MM4gCszCXnUDZekNhyzuGtua
-         P2dMbvegXbnzzkLO7dP9z3PzUbofUX0Fv15BJ+c44vzBFlDQt4v4kPDl83LagrfGLi9C
-         xQig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wZnyPsEVZX6HmXQzS1Foy24/qSSliAvcCxVhRkBUcHs=;
-        b=dACtikaTU7wdBDrBH8R8XhBWz89cl69TKl1vH3tfpfJh3m9a4a3QCCierEUdA+56kR
-         m8EWCsf7JNu/sXjEqoFAPopnikEnsn6hsW4dnxWeUkHgHMnt7jP5zMRFwVRR7gvA5Oth
-         /zSEBx1qGXKYpvej0UBKM3kSD7AL3ENOy57eUEckSLSVjfKWVzJ0xDspUa/92AMzUOl1
-         VUH2dls01iqtxLG9EUKBLfhomRYcKB/XPiV0QiX6N1O7mrFn77O5RZxHBK+87S3sDXd/
-         pHbYPIQKCACRejPa3iCv1CCcpESk6T90gUGmrvVblMMzdhLTjEzelEfbC+2hK9wwcU2p
-         3gbQ==
-X-Gm-Message-State: AJIora80YO74XSdAdKREZkETKb157ea2umv/yplLFIcpxarTsI3Teu3u
-	h7Y+hrjTphh0Ux2gNH/oyH86OfXqswR24kHFaEPVww==
-X-Google-Smtp-Source: AGRyM1sb7EaZDlA3TlP6vCkKVLuCtGyEFUyGiDkCzrHwcXTE7yLWJhhYPQxkfnh364COElsTV8UMrZRX8TXd5VzakYY=
-X-Received: by 2002:a25:8388:0:b0:66e:3afd:9299 with SMTP id
- t8-20020a258388000000b0066e3afd9299mr12223142ybk.246.1657010358371; Tue, 05
- Jul 2022 01:39:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616F9182
+	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 08:45:26 +0000 (UTC)
+Received: from mail-yw1-f176.google.com ([209.85.128.176]) by
+ mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1N17cq-1nS3700koM-012blW for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022
+ 10:45:24 +0200
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-2ef5380669cso101578467b3.9
+        for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022 01:45:23 -0700 (PDT)
+X-Gm-Message-State: AJIora/nMdlKG0NwUL+s+krzzQJJgmUOJWmqFLS+hpc+it4kZGdQS0C7
+	xDANWjsEPR+t711jrgG4K8+hro4/unrtbUbTJdM=
+X-Google-Smtp-Source: AGRyM1uYOtyfJXKuzgeWcPon6/rt8pxK0qL+mbZnG1H+QlCtBup1RqkQZxF1vAGhyIUYZLMpsbPW6k5+SWmkY5+yibA=
+X-Received: by 2002:a81:230c:0:b0:31b:f368:d0b0 with SMTP id
+ j12-20020a81230c000000b0031bf368d0b0mr38196589ywj.249.1657010722935; Tue, 05
+ Jul 2022 01:45:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,17 +24,20 @@ MIME-Version: 1.0
 References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
  <20220704112526.2492342-5-chenhuacai@loongson.cn> <CAK8P3a2XBGtJMB=Z-W56MLREAr3sAYKqDHo3yg=4hJ4T6x+QdQ@mail.gmail.com>
  <CAAhV-H5djQOzRsW-JaRPzaAnh64WgHiGvHxc1UdAUV43tirukg@mail.gmail.com>
- <CAMZfGtXLxPO3jmkKpF7n9Scb=542yrf1taWHZGdPwK-tZsJXgQ@mail.gmail.com> <CAK8P3a14VTkTjRNTWsGmwLDuVm=QPL17_VZ8QkcCYnyQzBjXHA@mail.gmail.com>
-In-Reply-To: <CAK8P3a14VTkTjRNTWsGmwLDuVm=QPL17_VZ8QkcCYnyQzBjXHA@mail.gmail.com>
-From: Muchun Song <songmuchun@bytedance.com>
-Date: Tue, 5 Jul 2022 16:38:41 +0800
-Message-ID: <CAMZfGtU0n_-Bq95X+_rZjcyeK3QhKSq2t5HRvx5Kw5+tR9h+oA@mail.gmail.com>
+ <CAMZfGtXLxPO3jmkKpF7n9Scb=542yrf1taWHZGdPwK-tZsJXgQ@mail.gmail.com>
+ <CAK8P3a14VTkTjRNTWsGmwLDuVm=QPL17_VZ8QkcCYnyQzBjXHA@mail.gmail.com> <CAMZfGtU0n_-Bq95X+_rZjcyeK3QhKSq2t5HRvx5Kw5+tR9h+oA@mail.gmail.com>
+In-Reply-To: <CAMZfGtU0n_-Bq95X+_rZjcyeK3QhKSq2t5HRvx5Kw5+tR9h+oA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Tue, 5 Jul 2022 10:45:06 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1K9fmLK=dh8shHX2y=fOYzr02D9Ek9uQri-u_2MsBXdQ@mail.gmail.com>
+Message-ID: <CAK8P3a1K9fmLK=dh8shHX2y=fOYzr02D9Ek9uQri-u_2MsBXdQ@mail.gmail.com>
 Subject: Re: [PATCH V4 4/4] LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
+To: Muchun Song <songmuchun@bytedance.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
 	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
 	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
 	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
@@ -62,64 +47,35 @@ Cc: Huacai Chen <chenhuacai@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>,
 	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
 	Feiyang Chen <chenfeiyang@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:F2xXSEZSHmvQ1wkYFqBT9gAA5fhEDBboHLbYfnDkt0Y4d6xTgrY
+ 7oRv8h5Z6LSe+Xf5JBEmY66jVhB8Z0y8icanI6VE1BHfGpCn89+4Zd42okdqlCGVYH6ACzy
+ Vd5hc+jo+0aX8mm3O2KKr6ZoDfpuLWafePw2cmkTBO0Zn4ZD4H4JLDsLGo0QidZID7fFzt4
+ 6jbLk10xTgVcrjjm4cfdg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:g5cVJ9PgMpA=:2SF2DWVXGSqw/+GfMdz+mR
+ HFA3EsKwHSyLJb5LhfMyyBJYR3N8pKn2zOkOhOqOafn4nxEVlt2QxuH4/fDrodEH2i79izdzY
+ 9YgRdKjO75E9oS1NJKQYwQsehoROiC0GCFMI8kpIpu/TAYl0uHv4u1Hbfq3cSR/p6mcJM8VWq
+ Y+5GAGd6pOwe7RrV6ATM1mmPNBB5ig3zJtt3LsfWWex3TZWKr7IT+LcnZLGnYKgeTNhy8Mx3j
+ OlG0SlHnliSOchTwYYhDPa3ueN/4L0HCQJRsjmZRWSDLfm3DBeWXAj/Qz8UCOzMYGfEw9sBny
+ rr+WniTTtSHcqLaU+DakPz4YSFKx9Fp12XsMMV/R7Dw9/gz1YpocXLEbZ1grf8WhMKdqfxtGx
+ Er5UizhrMn+9i62ozd+uYaZzyGhcfcy9z1eptiha58LvZuEnHpNMzHx2ltCuAU1CVX1D2HG8B
+ Z4pMv6IOZaAdiy14EHkxc1g36jKfVBZIZLpjUv2keWYzSm2k91FHwzvOKNU5qUZ3U/5jyV5Tw
+ GmJigHvjDDhNZ1rlHGzodrCEOhR4uygM5CjRtjouDg4OiRa3k60SMJCHQbHwKRaEXrQNvAdbw
+ hYtpBlaB8J6SFKc5SkWA/+zxyUdxNNZrv4puSWQjK72ZtZ+O/afLFdyXaf/Rp1Cj9QG7UcBTg
+ Si9jopVZ41oWwMOwN/XC1Jg1pXmxCf2h3lP+TZ7tnOJAhJAYaRS6lT7O4jN2e/HeHwAd60GLe
+ 3vwScu0QFjO2ZRzznNp1ilJSUyHnMgqQkZW22UxwVaG87qVcKBcaMS+YrzB7ErejQpeJrSB8s
+ 7HvraT46IAieieyIj9Dh0mfe8641lY+35YPA9pvjj9WkK2rwznxWiC/JHlU8uozxCEH5vak1n
+ jtXnXzIqekwCwLTGffnw==
 
-On Tue, Jul 5, 2022 at 4:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
+On Tue, Jul 5, 2022 at 10:38 AM Muchun Song <songmuchun@bytedance.com> wrote:
+> On Tue, Jul 5, 2022 at 4:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Tue, Jul 5, 2022 at 9:51 AM Muchun Song <songmuchun@bytedance.com> wrote:
 >
-> On Tue, Jul 5, 2022 at 9:51 AM Muchun Song <songmuchun@bytedance.com> wrote:
-> >
-> > On Tue, Jul 5, 2022 at 2:22 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> > >
-> > > Hi, Arnd,
-> > >
-> > > On Mon, Jul 4, 2022 at 8:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > >
-> > > > On Mon, Jul 4, 2022 at 1:25 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> > > > > To avoid the following build error on LoongArch we should include linux/
-> > > > > static_key.h in page-flags.h.
-> > > > >
-> > > > > In file included from ./include/linux/mmzone.h:22,
-> > > > > from ./include/linux/gfp.h:6,
-> > > > > from ./include/linux/mm.h:7,
-> > > > > from arch/loongarch/kernel/asm-offsets.c:9:
-> > > > > ./include/linux/page-flags.h:208:1: warning: data definition has no
-> > > > > type or storage class
-> > > > > 208 | DECLARE_STATIC_KEY_MAYBE(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-> > > > > | ^~~~~~~~~~~~~~~~~~~~~~~~
-> > > > > ./include/linux/page-flags.h:208:1: error: type defaults to 'int' in
-> > > > > declaration of 'DECLARE_STATIC_KEY_MAYBE' [-Werror=implicit-int]
-> > > > > ./include/linux/page-flags.h:209:26: warning: parameter names (without
-> > > > > types) in function declaration
-> > > >
-> > > > I wonder if page_fixed_fake_head() should be moved out of line to avoid
-> > > > this, it's already nontrivial here, and that would avoid the static key
-> > > > in a central header.
-> > > I have some consideration here. I think both inline function and
-> > > static key are instruments to make things faster, in other words,
-> > > page_fixed_fake_head() is a performance critical function. If so, it
-> > > is not suitable to move it out of line.
-> >
-> > +1
-> >
-> > The static key is an optimization when HVO is disabled.
->
-> How about splitting up linux/page_flags.h so the static_key header is
-> only included
-> in those places that use one of the inline functions that depend on it?
->
+> How about including the static key header in the scope of
+> CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP?
 
-How about including the static key header in the scope of
-CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP?
+That helps a little, but it means we still pay for it on x86 and
+arm64, which are the
+most common architectures.
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 465ff35a8c00..4dd005ad43fc 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -205,6 +205,8 @@ enum pageflags {
- #ifndef __GENERATING_BOUNDS_H
-
- #ifdef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-+#include <linux/static_key.h>
-+
- DECLARE_STATIC_KEY_FALSE(hugetlb_optimize_vmemmap_key);
-
- /*
+       Arnd
