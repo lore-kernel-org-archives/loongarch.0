@@ -1,81 +1,152 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616F9182
-	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 08:45:26 +0000 (UTC)
-Received: from mail-yw1-f176.google.com ([209.85.128.176]) by
- mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1N17cq-1nS3700koM-012blW for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022
- 10:45:24 +0200
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-2ef5380669cso101578467b3.9
-        for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022 01:45:23 -0700 (PDT)
-X-Gm-Message-State: AJIora/nMdlKG0NwUL+s+krzzQJJgmUOJWmqFLS+hpc+it4kZGdQS0C7
-	xDANWjsEPR+t711jrgG4K8+hro4/unrtbUbTJdM=
-X-Google-Smtp-Source: AGRyM1uYOtyfJXKuzgeWcPon6/rt8pxK0qL+mbZnG1H+QlCtBup1RqkQZxF1vAGhyIUYZLMpsbPW6k5+SWmkY5+yibA=
-X-Received: by 2002:a81:230c:0:b0:31b:f368:d0b0 with SMTP id
- j12-20020a81230c000000b0031bf368d0b0mr38196589ywj.249.1657010722935; Tue, 05
- Jul 2022 01:45:22 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8412D182
+	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 08:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1657010819; bh=bcPVtZXhJ8U6tcwRs69D2ygTpn/9qa0uoHQou6i7Ay8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vaCz/z+f7Gw12g+vnXmTA+N7jbm5F0jneEY+0o4E1jsrpdNXZuRqC0Xg78GlUgHC4
+	 pCTilYw7pYsWAw4lup3VFS/bOvyyvlUWM/4E7LS42SI3iBkgoH7hvqITxjIlbJ6Yiy
+	 uIeYqTM3TN3oKC7UChqR6uWvmJIkf74H5corQeOk=
+Received: from [100.100.57.190] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 05C506010B;
+	Tue,  5 Jul 2022 16:46:58 +0800 (CST)
+Message-ID: <4273e104-8392-6a06-5d18-a1933978d8c3@xen0n.name>
+Date: Tue, 5 Jul 2022 16:46:58 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
- <20220704112526.2492342-5-chenhuacai@loongson.cn> <CAK8P3a2XBGtJMB=Z-W56MLREAr3sAYKqDHo3yg=4hJ4T6x+QdQ@mail.gmail.com>
- <CAAhV-H5djQOzRsW-JaRPzaAnh64WgHiGvHxc1UdAUV43tirukg@mail.gmail.com>
- <CAMZfGtXLxPO3jmkKpF7n9Scb=542yrf1taWHZGdPwK-tZsJXgQ@mail.gmail.com>
- <CAK8P3a14VTkTjRNTWsGmwLDuVm=QPL17_VZ8QkcCYnyQzBjXHA@mail.gmail.com> <CAMZfGtU0n_-Bq95X+_rZjcyeK3QhKSq2t5HRvx5Kw5+tR9h+oA@mail.gmail.com>
-In-Reply-To: <CAMZfGtU0n_-Bq95X+_rZjcyeK3QhKSq2t5HRvx5Kw5+tR9h+oA@mail.gmail.com>
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Tue, 5 Jul 2022 10:45:06 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1K9fmLK=dh8shHX2y=fOYzr02D9Ek9uQri-u_2MsBXdQ@mail.gmail.com>
-Message-ID: <CAK8P3a1K9fmLK=dh8shHX2y=fOYzr02D9Ek9uQri-u_2MsBXdQ@mail.gmail.com>
-Subject: Re: [PATCH V4 4/4] LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-To: Muchun Song <songmuchun@bytedance.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linux-MM <linux-mm@kvack.org>, 
-	"open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:F2xXSEZSHmvQ1wkYFqBT9gAA5fhEDBboHLbYfnDkt0Y4d6xTgrY
- 7oRv8h5Z6LSe+Xf5JBEmY66jVhB8Z0y8icanI6VE1BHfGpCn89+4Zd42okdqlCGVYH6ACzy
- Vd5hc+jo+0aX8mm3O2KKr6ZoDfpuLWafePw2cmkTBO0Zn4ZD4H4JLDsLGo0QidZID7fFzt4
- 6jbLk10xTgVcrjjm4cfdg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:g5cVJ9PgMpA=:2SF2DWVXGSqw/+GfMdz+mR
- HFA3EsKwHSyLJb5LhfMyyBJYR3N8pKn2zOkOhOqOafn4nxEVlt2QxuH4/fDrodEH2i79izdzY
- 9YgRdKjO75E9oS1NJKQYwQsehoROiC0GCFMI8kpIpu/TAYl0uHv4u1Hbfq3cSR/p6mcJM8VWq
- Y+5GAGd6pOwe7RrV6ATM1mmPNBB5ig3zJtt3LsfWWex3TZWKr7IT+LcnZLGnYKgeTNhy8Mx3j
- OlG0SlHnliSOchTwYYhDPa3ueN/4L0HCQJRsjmZRWSDLfm3DBeWXAj/Qz8UCOzMYGfEw9sBny
- rr+WniTTtSHcqLaU+DakPz4YSFKx9Fp12XsMMV/R7Dw9/gz1YpocXLEbZ1grf8WhMKdqfxtGx
- Er5UizhrMn+9i62ozd+uYaZzyGhcfcy9z1eptiha58LvZuEnHpNMzHx2ltCuAU1CVX1D2HG8B
- Z4pMv6IOZaAdiy14EHkxc1g36jKfVBZIZLpjUv2keWYzSm2k91FHwzvOKNU5qUZ3U/5jyV5Tw
- GmJigHvjDDhNZ1rlHGzodrCEOhR4uygM5CjRtjouDg4OiRa3k60SMJCHQbHwKRaEXrQNvAdbw
- hYtpBlaB8J6SFKc5SkWA/+zxyUdxNNZrv4puSWQjK72ZtZ+O/afLFdyXaf/Rp1Cj9QG7UcBTg
- Si9jopVZ41oWwMOwN/XC1Jg1pXmxCf2h3lP+TZ7tnOJAhJAYaRS6lT7O4jN2e/HeHwAd60GLe
- 3vwScu0QFjO2ZRzznNp1ilJSUyHnMgqQkZW22UxwVaG87qVcKBcaMS+YrzB7ErejQpeJrSB8s
- 7HvraT46IAieieyIj9Dh0mfe8641lY+35YPA9pvjj9WkK2rwznxWiC/JHlU8uozxCEH5vak1n
- jtXnXzIqekwCwLTGffnw==
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0)
+ Gecko/20100101 Thunderbird/104.0a1
+Subject: Re: [PATCH v2] LoongArch: Clean useless vcsr in loongarch_fpu.
+Content-Language: en-US
+To: Qi Hu <huqi@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20220704153612.314112-1-huqi@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20220704153612.314112-1-huqi@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 5, 2022 at 10:38 AM Muchun Song <songmuchun@bytedance.com> wrote:
-> On Tue, Jul 5, 2022 at 4:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Tue, Jul 5, 2022 at 9:51 AM Muchun Song <songmuchun@bytedance.com> wrote:
+Hi,
+
+I just noticed that the subject line is in Chinglish too. It should 
+probably be just "LoongArch: remove mentions of vcsr" and without the 
+trailing period.
+
+On 2022/7/4 23:36, Qi Hu wrote:
+> The `vcsr` is not used anymore. Remove this member from `loongarch_fpu`.
 >
-> How about including the static key header in the scope of
-> CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP?
+>  From 3A5000(LoongArch), `vcsr` is removed in hardware. FP and LSX/LASX
+> both use `fcsr` as their csr.
+>
+> Particularly, fcsr from $r16 to $r31 are reserved for LSX/LASX, and
+> using the registers in this area will cause SXD/ASXD if LSX/LASX is
+> not enabled.
 
-That helps a little, but it means we still pay for it on x86 and
-arm64, which are the
-most common architectures.
+Actually I'm still not very satisfied with the explanation; the code 
+must be written with *something* in mind, since GS464V/LA464 is the only 
+LoongArch implementation so far, it must have a VCSR to begin with. And 
+you can't magically melt the VCSR on the tens of thousands of 
+3A5000/3C5000's already shipped, because the old-world kernel obviously 
+comes with LSX/LASX and it most likely utilizes the VCSR. In addition, 
+you didn't mention what will happen if LSX/LASX *is* enabled on this 
+new-world kernel, *and* fcsr16 is being accessed.
 
-       Arnd
+I think maybe you just want to remove the mentions of VCSR since they 
+are dead code right now, as I don't believe it's gone in shipped 
+hardware, as explained above. Except if there's magically a way to 
+implement LSX/LASX without touching the said-to-have-disappeared VCSR, 
+which I don't know of, and can't know because the LSX/LASX ISA manual is 
+still not publicly accessible; so I don't feel comfortable approving 
+this patch.
+
+(BTW, the $rXX-style reference to the FCSRs is obviously an 
+implementation wart of the toolchain, the FCSR is nothing like GPR so it 
+obviously shouldn't be referred to as one. Binutils patch will be out 
+shortly.)
+
+>
+> Signed-off-by: Qi Hu <huqi@loongson.cn>
+> ---
+> V2:
+> - Add more details in the commit message.
+> ---
+>   arch/loongarch/include/asm/fpregdef.h  |  1 -
+>   arch/loongarch/include/asm/processor.h |  2 --
+>   arch/loongarch/kernel/asm-offsets.c    |  1 -
+>   arch/loongarch/kernel/fpu.S            | 10 ----------
+>   4 files changed, 14 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/fpregdef.h b/arch/loongarch/include/asm/fpregdef.h
+> index adb16e4b4..b6be52783 100644
+> --- a/arch/loongarch/include/asm/fpregdef.h
+> +++ b/arch/loongarch/include/asm/fpregdef.h
+> @@ -48,6 +48,5 @@
+>   #define fcsr1	$r1
+>   #define fcsr2	$r2
+>   #define fcsr3	$r3
+> -#define vcsr16	$r16
+>   
+>   #endif /* _ASM_FPREGDEF_H */
+> diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+> index 1d63c934b..57ec45aa0 100644
+> --- a/arch/loongarch/include/asm/processor.h
+> +++ b/arch/loongarch/include/asm/processor.h
+> @@ -80,7 +80,6 @@ BUILD_FPR_ACCESS(64)
+>   
+>   struct loongarch_fpu {
+>   	unsigned int	fcsr;
+> -	unsigned int	vcsr;
+>   	uint64_t	fcc;	/* 8x8 */
+>   	union fpureg	fpr[NUM_FPU_REGS];
+>   };
+> @@ -161,7 +160,6 @@ struct thread_struct {
+>   	 */							\
+>   	.fpu			= {				\
+>   		.fcsr		= 0,				\
+> -		.vcsr		= 0,				\
+>   		.fcc		= 0,				\
+>   		.fpr		= {{{0,},},},			\
+>   	},							\
+> diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+> index bfb65eb28..20cd9e16a 100644
+> --- a/arch/loongarch/kernel/asm-offsets.c
+> +++ b/arch/loongarch/kernel/asm-offsets.c
+> @@ -166,7 +166,6 @@ void output_thread_fpu_defines(void)
+>   
+>   	OFFSET(THREAD_FCSR, loongarch_fpu, fcsr);
+>   	OFFSET(THREAD_FCC,  loongarch_fpu, fcc);
+> -	OFFSET(THREAD_VCSR, loongarch_fpu, vcsr);
+>   	BLANK();
+>   }
+>   
+> diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
+> index 75c6ce068..a631a7137 100644
+> --- a/arch/loongarch/kernel/fpu.S
+> +++ b/arch/loongarch/kernel/fpu.S
+> @@ -146,16 +146,6 @@
+>   	movgr2fcsr	fcsr0, \tmp0
+>   	.endm
+>   
+> -	.macro sc_save_vcsr base, tmp0
+> -	movfcsr2gr	\tmp0, vcsr16
+> -	EX	st.w \tmp0, \base, 0
+> -	.endm
+> -
+> -	.macro sc_restore_vcsr base, tmp0
+> -	EX	ld.w \tmp0, \base, 0
+> -	movgr2fcsr	vcsr16, \tmp0
+> -	.endm
+> -
+>   /*
+>    * Save a thread's fp context.
+>    */
