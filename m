@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6EA7C
-	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 15:48:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 941B5C36AE2;
-	Tue,  5 Jul 2022 15:48:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA467C
+	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 15:48:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A945CC385A9;
+	Tue,  5 Jul 2022 15:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657036124;
-	bh=9oaDWzRU6R0GkjSESj8xB0w7pNOdSSaExN3Vy3D6ls8=;
+	s=k20201202; t=1657036130;
+	bh=KLRO24VwSLVIulcSBrEsq68hsqfeXNzy27r4Yp11+QA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cAfMts3hGwakKfseM8AZpijDZr4H9urWzpwNHqBWOGC/J2thqz6Q7V+VJXrNotL/4
-	 yaiztHNM0qSW8XYTkHylOjgM08kCHXZ6cxSjjqJR/BmqhY0EAU9qO1jn6l4NQNfhbW
-	 7eMU4fqbWgfMxzxC0C5NniYlNoAfabHyegMlfcisMGqFTRjGUsGesf5Y0CocKNLRi6
-	 7W+TvZKbJLUYR9ss9hEgMRV77Hy+JoigITZMvmNcahZysMrcw7kiCF4CLMiAQPx72h
-	 XUylFJ1YQ9pVlFOo27H5jyvHNjew2ZquZi9Qqzua7/n6nOxbaQ6Ur3TM2QKZCeXQxM
-	 nM6xNf0OuqgsA==
+	b=GdrXl/xpgVVg8YOxhIc1ceTrw9pKv9FhQkwz1UEXm+27lUW9d5MgCTfJzzq4H0zxU
+	 DH4Zdk5p2rI3NgRROs/gqUH6QnF2naI1n3Xj9kniWdfPyWHv7EzPMQm/6vrOb3mGru
+	 Ns3ekv3193vDT4yBwRa3tByMpmPYaD4ycpGFe3a2dOobnrqj0IA6kyVR/aTRdWvm4r
+	 qWXKPvRQ0PS2iUo/8PdMtrfM8+0M4fllLxebI2/x+C5TZ73uUPPMGVw4PpKIzSklV3
+	 NAROaW7bpnOghvYVskifhYpquvhD20yHgMV6oyOBoGeskXT24OzJY599Idb/zgLrgY
+	 fvpnqRFkiizdw==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Arnd Bergmann <arnd@arndb.de>,
@@ -38,9 +38,9 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
 	linux-parisc@vger.kernel.org,
 	linux-xtensa@linux-xtensa.org,
 	loongarch@lists.linux.dev
-Subject: [PATCH v2 13/15] parisc: Rename PGD_ORDER to PGD_TABLE_ORDER
-Date: Tue,  5 Jul 2022 18:47:06 +0300
-Message-Id: <20220705154708.181258-14-rppt@kernel.org>
+Subject: [PATCH v2 14/15] xtensa: drop definition of PGD_ORDER
+Date: Tue,  5 Jul 2022 18:47:07 +0300
+Message-Id: <20220705154708.181258-15-rppt@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220705154708.181258-1-rppt@kernel.org>
 References: <20220705154708.181258-1-rppt@kernel.org>
@@ -55,69 +55,39 @@ Content-Transfer-Encoding: 8bit
 From: Mike Rapoport <rppt@linux.ibm.com>
 
 This is the order of the page table allocation, not the order of a PGD.
+Since its always hardwired to 0, simply drop it.
 
 Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Acked-by: Helge Deller <deller@gmx.de>
 ---
- arch/parisc/include/asm/pgalloc.h | 6 +++---
- arch/parisc/include/asm/pgtable.h | 8 ++++----
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ arch/xtensa/include/asm/pgalloc.h | 2 +-
+ arch/xtensa/include/asm/pgtable.h | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/parisc/include/asm/pgalloc.h b/arch/parisc/include/asm/pgalloc.h
-index 54b63374579b..e3e142b1c5c5 100644
---- a/arch/parisc/include/asm/pgalloc.h
-+++ b/arch/parisc/include/asm/pgalloc.h
-@@ -20,18 +20,18 @@ static inline pgd_t *pgd_alloc(struct mm_struct *mm)
+diff --git a/arch/xtensa/include/asm/pgalloc.h b/arch/xtensa/include/asm/pgalloc.h
+index eeb2de3a89e5..7fc0f9126dd3 100644
+--- a/arch/xtensa/include/asm/pgalloc.h
++++ b/arch/xtensa/include/asm/pgalloc.h
+@@ -29,7 +29,7 @@
+ static inline pgd_t*
+ pgd_alloc(struct mm_struct *mm)
  {
- 	pgd_t *pgd;
- 
--	pgd = (pgd_t *) __get_free_pages(GFP_KERNEL, PGD_ORDER);
-+	pgd = (pgd_t *) __get_free_pages(GFP_KERNEL, PGD_TABLE_ORDER);
- 	if (unlikely(pgd == NULL))
- 		return NULL;
- 
--	memset(pgd, 0, PAGE_SIZE << PGD_ORDER);
-+	memset(pgd, 0, PAGE_SIZE << PGD_TABLE_ORDER);
- 
- 	return pgd;
+-	return (pgd_t*) __get_free_pages(GFP_KERNEL | __GFP_ZERO, PGD_ORDER);
++	return (pgd_t*) __get_free_page(GFP_KERNEL | __GFP_ZERO);
  }
  
- static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
- {
--	free_pages((unsigned long)pgd, PGD_ORDER);
-+	free_pages((unsigned long)pgd, PGD_TABLE_ORDER);
- }
+ static inline void ptes_clear(pte_t *ptep)
+diff --git a/arch/xtensa/include/asm/pgtable.h b/arch/xtensa/include/asm/pgtable.h
+index 0a91376131c5..4bd77d2b6715 100644
+--- a/arch/xtensa/include/asm/pgtable.h
++++ b/arch/xtensa/include/asm/pgtable.h
+@@ -57,7 +57,6 @@
+ #define PTRS_PER_PTE		1024
+ #define PTRS_PER_PTE_SHIFT	10
+ #define PTRS_PER_PGD		1024
+-#define PGD_ORDER		0
+ #define USER_PTRS_PER_PGD	(TASK_SIZE/PGDIR_SIZE)
+ #define FIRST_USER_PGD_NR	(FIRST_USER_ADDRESS >> PGDIR_SHIFT)
  
- #if CONFIG_PGTABLE_LEVELS == 3
-diff --git a/arch/parisc/include/asm/pgtable.h b/arch/parisc/include/asm/pgtable.h
-index 69765a6dbe89..6790b554bdfd 100644
---- a/arch/parisc/include/asm/pgtable.h
-+++ b/arch/parisc/include/asm/pgtable.h
-@@ -118,9 +118,9 @@ extern void __update_cache(pte_t pte);
- 
- #if CONFIG_PGTABLE_LEVELS == 3
- #define PMD_TABLE_ORDER	1
--#define PGD_ORDER	0
-+#define PGD_TABLE_ORDER	0
- #else
--#define PGD_ORDER	1
-+#define PGD_TABLE_ORDER	1
- #endif
- 
- /* Definitions for 3rd level (we use PLD here for Page Lower directory
-@@ -144,10 +144,10 @@ extern void __update_cache(pte_t pte);
- 
- /* Definitions for 1st level */
- #define PGDIR_SHIFT	(PLD_SHIFT + BITS_PER_PTE + BITS_PER_PMD)
--#if (PGDIR_SHIFT + PAGE_SHIFT + PGD_ORDER - BITS_PER_PGD_ENTRY) > BITS_PER_LONG
-+#if (PGDIR_SHIFT + PAGE_SHIFT + PGD_TABLE_ORDER - BITS_PER_PGD_ENTRY) > BITS_PER_LONG
- #define BITS_PER_PGD	(BITS_PER_LONG - PGDIR_SHIFT)
- #else
--#define BITS_PER_PGD	(PAGE_SHIFT + PGD_ORDER - BITS_PER_PGD_ENTRY)
-+#define BITS_PER_PGD	(PAGE_SHIFT + PGD_TABLE_ORDER - BITS_PER_PGD_ENTRY)
- #endif
- #define PGDIR_SIZE	(1UL << PGDIR_SHIFT)
- #define PGDIR_MASK	(~(PGDIR_SIZE-1))
 -- 
 2.34.1
 
