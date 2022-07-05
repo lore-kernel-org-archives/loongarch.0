@@ -1,86 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4554D7C
-	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 06:22:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA81C341D1
-	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 06:22:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657002128;
-	bh=Zaf7DjhcD3ZxfJHUz1tOGgDGa4JYJfrWSDwsbtdTNwI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=a6923plIqslsbqyEgJGkAr8COlwhQHlzqDOMUImf0zNEq9HfBY7kyJ31P00pKVrG7
-	 y7sOCX7KFkZaKbXr1TBsB4bdPWDPbdUss/s+YWLl5peIIfTQnNr2M9MJNM8bwnRZW4
-	 pBP1mWfqbYSTfbLQr0IfiTFeIF0vLC+jWt2IFvckuj94X5lLXreY0OPKMdqj4JP0Ql
-	 smnsWL54j9bAu/0Q6bfOaMqEB5kKVAhMB4U0bMIbAk2LT3svlb0Axbi55/JXgywmOj
-	 gLpT9G8YpXf0KUjDyEO/m/I2r9HiqXWMGXjvdGjetJDbeHeFEekkqecyZHbQLOGFi+
-	 XCBAa5kvP21lg==
-Received: by mail-vs1-f53.google.com with SMTP id t124so548755vsb.8
-        for <loongarch@lists.linux.dev>; Mon, 04 Jul 2022 23:22:07 -0700 (PDT)
-X-Gm-Message-State: AJIora8hWUwOf2FKvvKiOd5bJlkviHS5hOsfyD6K+bYoUu5xKGw5+Sqf
-	IERhDY2Fb/w5btzxKzMwMjPnsqIgtBo2htuWgn0=
-X-Google-Smtp-Source: AGRyM1uR3kDpQ/MbyXcNWqnHFpFRoA+f7XpzR2mn61Kf/oGLc1bqoMRFlPTGI0x9k49ir5CWsNuWr5PQo6T9BiLh8ww=
-X-Received: by 2002:a67:6fc3:0:b0:356:18:32ba with SMTP id k186-20020a676fc3000000b00356001832bamr18421067vsc.43.1657002126922;
- Mon, 04 Jul 2022 23:22:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8941C196
+	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 07:35:06 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id fd6so14151810edb.5
+        for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022 00:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=KFPReaWp4iE0d89rtMax+2rkd3ntUoznFB0WH//1SAU=;
+        b=m3uILjjSJQCijcu1qUuoP3VOpsJ/Ubs4YcdgIBxpLPJKDw3l2snMT9W9/rbNdMBmGf
+         /wbRZ0Vw+SBbmhicz+q0GY2eBHsBBQgtooCRRrcOCsxr/Z2qSJCqI17G9DJy/GmAKHUo
+         BsaDJ0/67EcJnI9IeOTzWqwbiBlUks9bqteMjHuXTmiESC6NFiaK1gxe1wB3yDLEJmtn
+         ml6QgN78n2oyKaQJbtaG3TuT66l7zq1CP5Frj0aP6lv7odq1Z8v6Yw8FgiMOQ62r8Sz0
+         AN61lEh0kCwEL3aHkmodoa25g1QwbTvUFm+j/GWePT/gprOB79/jb5dSWpBrJiQg6Hkx
+         BqQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KFPReaWp4iE0d89rtMax+2rkd3ntUoznFB0WH//1SAU=;
+        b=EP22trudaXTu+YsZNVA4En4DT1Rsc6czTqqjOWGFmkMB9zZ5JFUY81VAm811O2ifoe
+         GqFIK2pgnY95cMlzdfqMopt4rnKKULAH3SabgtvnixswX9QWo5pjWcR7Mc7AmdC6weyM
+         KXFZUBvk7GAs4k2x2B98NfAbrSHLSfG8CksYmY+PFJxm4G1fDdyPpqAUuwRCCukf2qGm
+         q12MGP4HYc2sEO8iN44U48hYBEoI76HSROXwmb0yXqaT3wEecjC7aXU1FuiB+yhBQ3nK
+         w9u59PaZRh+t+7TerpF6Tpok+Fpnp7ENedTg7saNdaxJ6N+GJK+lY+F12WhM54rCW0y1
+         VN0w==
+X-Gm-Message-State: AJIora/D83/pWOuLVih7Q8KPRi0hz6c48bKTcb3aQy3dhdqAi9/zFYq6
+	sshen0kCWE0wI9manxgAyI46W4PlHX8=
+X-Google-Smtp-Source: AGRyM1uRbTO5Hpq4pxJ0UjNa6FgGHVzoucgx5VAEsPXEiOToUzZLC69YAUmavOMzr5GzK5LRstnFOQ==
+X-Received: by 2002:aa7:cf89:0:b0:43a:4e6b:50e4 with SMTP id z9-20020aa7cf89000000b0043a4e6b50e4mr13244256edx.108.1657006504765;
+        Tue, 05 Jul 2022 00:35:04 -0700 (PDT)
+Received: from felia.fritz.box (200116b82698ad00a9019cf0f015ae6b.dip.versatel-1u1.de. [2001:16b8:2698:ad00:a901:9cf0:f015:ae6b])
+        by smtp.gmail.com with ESMTPSA id w3-20020a1709067c8300b00722fc0779e3sm15369282ejo.85.2022.07.05.00.35.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Jul 2022 00:35:04 -0700 (PDT)
+From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] LoongArch: drop these obsolete selects in Kconfig
+Date: Tue,  5 Jul 2022 09:34:05 +0200
+Message-Id: <20220705073405.29618-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
- <20220704112526.2492342-5-chenhuacai@loongson.cn> <CAK8P3a2XBGtJMB=Z-W56MLREAr3sAYKqDHo3yg=4hJ4T6x+QdQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a2XBGtJMB=Z-W56MLREAr3sAYKqDHo3yg=4hJ4T6x+QdQ@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 5 Jul 2022 14:21:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5djQOzRsW-JaRPzaAnh64WgHiGvHxc1UdAUV43tirukg@mail.gmail.com>
-Message-ID: <CAAhV-H5djQOzRsW-JaRPzaAnh64WgHiGvHxc1UdAUV43tirukg@mail.gmail.com>
-Subject: Re: [PATCH V4 4/4] LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linux-MM <linux-mm@kvack.org>, 
-	"open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>, Muchun Song <songmuchun@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
 
-Hi, Arnd,
+Commit fa96b57c1490 ("LoongArch: Add build infrastructure") adds the new
+file arch/loongarch/Kconfig.
 
-On Mon, Jul 4, 2022 at 8:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Mon, Jul 4, 2022 at 1:25 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> > To avoid the following build error on LoongArch we should include linux/
-> > static_key.h in page-flags.h.
-> >
-> > In file included from ./include/linux/mmzone.h:22,
-> > from ./include/linux/gfp.h:6,
-> > from ./include/linux/mm.h:7,
-> > from arch/loongarch/kernel/asm-offsets.c:9:
-> > ./include/linux/page-flags.h:208:1: warning: data definition has no
-> > type or storage class
-> > 208 | DECLARE_STATIC_KEY_MAYBE(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-> > | ^~~~~~~~~~~~~~~~~~~~~~~~
-> > ./include/linux/page-flags.h:208:1: error: type defaults to 'int' in
-> > declaration of 'DECLARE_STATIC_KEY_MAYBE' [-Werror=implicit-int]
-> > ./include/linux/page-flags.h:209:26: warning: parameter names (without
-> > types) in function declaration
->
-> I wonder if page_fixed_fake_head() should be moved out of line to avoid
-> this, it's already nontrivial here, and that would avoid the static key
-> in a central header.
-I have some consideration here. I think both inline function and
-static key are instruments to make things faster, in other words,
-page_fixed_fake_head() is a performance critical function. If so, it
-is not suitable to move it out of line.
+As the work on LoongArch was probably quite some time under development,
+various config symbols have changed and disappeared from the time of
+initial writing of the Kconfig file and its inclusion in the repository.
 
-Huacai
->
->        Arnd
->
+The following four commits:
+
+  commit c126a53c2760 ("arch: remove GENERIC_FIND_FIRST_BIT entirely")
+  commit 140c8180eb7c ("arch: remove HAVE_COPY_THREAD_TLS")
+  commit aca52c398389 ("mm: remove CONFIG_HAVE_MEMBLOCK")
+  commit 3f08a302f533 ("mm: remove CONFIG_HAVE_MEMBLOCK_NODE_MAP option")
+
+remove the mentioned config symbol, and enable the intended setup by
+default without configuration.
+
+Drop these obsolete selects in loongarch's Kconfig.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Huacai Chen, please pick this minor clean-up patch.
+
+ arch/loongarch/Kconfig | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 2dee595bf4b6..9be4d0eef299 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -54,7 +54,6 @@ config LOONGARCH
+ 	select GENERIC_CMOS_UPDATE
+ 	select GENERIC_CPU_AUTOPROBE
+ 	select GENERIC_ENTRY
+-	select GENERIC_FIND_FIRST_BIT
+ 	select GENERIC_GETTIMEOFDAY
+ 	select GENERIC_IRQ_MULTI_HANDLER
+ 	select GENERIC_IRQ_PROBE
+@@ -77,7 +76,6 @@ config LOONGARCH
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+ 	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_CONTEXT_TRACKING_USER
+-	select HAVE_COPY_THREAD_TLS
+ 	select HAVE_DEBUG_STACKOVERFLOW
+ 	select HAVE_DMA_CONTIGUOUS
+ 	select HAVE_EXIT_THREAD
+@@ -86,8 +84,6 @@ config LOONGARCH
+ 	select HAVE_IOREMAP_PROT
+ 	select HAVE_IRQ_EXIT_ON_IRQ_STACK
+ 	select HAVE_IRQ_TIME_ACCOUNTING
+-	select HAVE_MEMBLOCK
+-	select HAVE_MEMBLOCK_NODE_MAP
+ 	select HAVE_MOD_ARCH_SPECIFIC
+ 	select HAVE_NMI
+ 	select HAVE_PERF_EVENTS
+-- 
+2.17.1
+
