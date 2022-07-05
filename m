@@ -1,38 +1,27 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267C129A1
-	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 10:49:26 +0000 (UTC)
-Received: by mail-lf1-f43.google.com with SMTP id z25so2296481lfr.2
-        for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022 03:49:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6ZrVWfoteR5GrzCoHkSriCPMIPEv5ipRG8Y7JTRl1kw=;
-        b=Uyp+2DkuYMDKuMOS0vYpIDMbWkzCj7YOT7vGJ8J7ZBJ6xPONJaHE60xQlzZWpd2THc
-         2i77jcDW+7EvQOIPfIQ3LJ8Lo5CW75e4wPfrSarkRgLvblivvSmnINSgNUSPKLEGH5Xv
-         0xEzoCRin08WOvm6kmRt0LF4zy7+Y2HVD4jHRw3wwEvBLgtdy874Q9Mkg+bBUSM95NSl
-         QoV+36qe3uBrZ2+fSsH2RxpHjQ1n5JpfmL2FwAWslwP/UNYunOL4rK3tDF0MqPAKCbum
-         +nXvfCIMHOy7k+4s+ugENntMUbQ+3dmO9m5voxelAmsq5scDbga8fIZlFdtTDOdjVjjW
-         xf+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ZrVWfoteR5GrzCoHkSriCPMIPEv5ipRG8Y7JTRl1kw=;
-        b=eNyVRrUh0YuMrp3YPxu+LLbU8t7ZmF7g90x/3ae+jV1gq+5HnFyoeD5qu852+zxI9K
-         RgNgakiDApj2IfPc41zQLhPtFS8cUIuF/6DPBNII/KGAHKLN3mRCpKmcvYoE1GwnZPjk
-         Er3DT7xnMaQvrQs/8wFvBK0FQ7v7E3gFneqDoSHGWet+81nMgj5cVBiFRkIOOeLt8w96
-         OcUvF2dOe8vQMNTAqidA2Jh0gQQFUHj14ziv2mkkbWqTbE61+qSS0sLLwqi03OeoZnNj
-         0n+6AbQ9yavdnHrKUnoNWA+0IZVtQhE/oxHXa2qHBJJJVatpZ7C/ORBVYUCK/g1CJf8J
-         vyOw==
-X-Gm-Message-State: AJIora/8W64FyYNI4cqeNP7D/YMN1nn9N0IY7rZ8ejsidfkr7VkAtp4w
-	4xt9glrF8qZlpgXP9EH8Wulzda3SNYebNu+ZqRc=
-X-Google-Smtp-Source: AGRyM1vYTuygFt3JTMn8nW/7T2k8/9hIoI6+Mnjfaa7nq0cDeG+mciiiBVQPotF7kbD4qDeSCrXqjbYsQZ4mZFdz1GE=
-X-Received: by 2002:ac2:59cb:0:b0:483:45c3:8cfc with SMTP id
- x11-20020ac259cb000000b0048345c38cfcmr2425134lfn.274.1657018164101; Tue, 05
- Jul 2022 03:49:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C2C2F56
+	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 13:08:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3219FC341CB
+	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 13:08:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1657026520;
+	bh=FBpr5Vxk8rpjU3foapuN0AsBsz2vq5+OmGi4f2NIeIM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EEvPz/rG6h5WvJxeFYRhlWQen0gH9VdMfHsKNvWw0spAc2YL4YZZ4fSVXYiAl+ZZr
+	 yR5xLVoup3hf4qC2lPSzBMwG9NDeUL7v1obxWOarttHqheHaEGWswpusSfBd0uohj+
+	 CsWJvDsEg3ls+oPlUBqBejFUb0myJSeM0bYSD3o8D5tfY5M+IaPl4WV5R9Siv9b1mj
+	 ZFyRkBi1vEdNAEYLGlg+zp8lpbWmMzna8IEHDvtlJbULN+5HSiyaF19i+Wx7Dh5B9F
+	 S22kSDAJK6hMjvSaShaQMXeKzPmbTV/034x2t/XwDsVvQnRGfTdIDcCaz3wNYR+lD5
+	 woKhDCn/UqSgw==
+Received: by mail-vs1-f41.google.com with SMTP id d187so11767254vsd.10
+        for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022 06:08:40 -0700 (PDT)
+X-Gm-Message-State: AJIora/Fvn/aNu4oqD7963mp34w/EhTP8ZwSyhx/fsmp0cx79BByLmPs
+	SUn+amQKWeQfsP8CNolIYgm3U21EborGIBbqnXw=
+X-Google-Smtp-Source: AGRyM1sLv5H5ImzU8A4omTHConu13vLIxH/TbVKFk9gJyyKCawdNyOH0las+ED6pwX9b5yeqM1fF1JPmNgDOz7WFVk4=
+X-Received: by 2002:a67:d801:0:b0:357:58:f5bc with SMTP id e1-20020a67d801000000b003570058f5bcmr812751vsj.59.1657026519024;
+ Tue, 05 Jul 2022 06:08:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -40,132 +29,182 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
- <20220704112526.2492342-5-chenhuacai@loongson.cn> <CAK8P3a2XBGtJMB=Z-W56MLREAr3sAYKqDHo3yg=4hJ4T6x+QdQ@mail.gmail.com>
- <CAAhV-H5djQOzRsW-JaRPzaAnh64WgHiGvHxc1UdAUV43tirukg@mail.gmail.com>
- <CAMZfGtXLxPO3jmkKpF7n9Scb=542yrf1taWHZGdPwK-tZsJXgQ@mail.gmail.com>
- <CAK8P3a14VTkTjRNTWsGmwLDuVm=QPL17_VZ8QkcCYnyQzBjXHA@mail.gmail.com>
- <CAMZfGtU0n_-Bq95X+_rZjcyeK3QhKSq2t5HRvx5Kw5+tR9h+oA@mail.gmail.com> <CAK8P3a1K9fmLK=dh8shHX2y=fOYzr02D9Ek9uQri-u_2MsBXdQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a1K9fmLK=dh8shHX2y=fOYzr02D9Ek9uQri-u_2MsBXdQ@mail.gmail.com>
-From: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Date: Tue, 5 Jul 2022 18:49:11 +0800
-Message-ID: <CACWXhKn6QxFB4kYrj_6xxcq5oR_0wnprGiw38pEGSY9wDpSLvg@mail.gmail.com>
-Subject: Re: [PATCH V4 4/4] LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Muchun Song <songmuchun@bytedance.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
+ <20220704112526.2492342-4-chenhuacai@loongson.cn> <20220705092937.GA552@willie-the-truck>
+In-Reply-To: <20220705092937.GA552@willie-the-truck>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 5 Jul 2022 21:07:59 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5r8HDaxt8fkO97in5-eH8X9gokVNervmUWn6km4S0e-w@mail.gmail.com>
+Message-ID: <CAAhV-H5r8HDaxt8fkO97in5-eH8X9gokVNervmUWn6km4S0e-w@mail.gmail.com>
+Subject: Re: [PATCH V4 3/4] mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages()
+To: Will Deacon <will@kernel.org>, Dan Williams <dan.j.williams@intel.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, loongarch@lists.linux.dev, 
 	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
 	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
 	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linux-MM <linux-mm@kvack.org>, 
-	"open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Linux-MM <linux-mm@kvack.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
 	Feiyang Chen <chenfeiyang@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 5 Jul 2022 at 16:45, Arnd Bergmann <arnd@arndb.de> wrote:
+Hi, Will,
+
+On Tue, Jul 5, 2022 at 5:29 PM Will Deacon <will@kernel.org> wrote:
 >
-> On Tue, Jul 5, 2022 at 10:38 AM Muchun Song <songmuchun@bytedance.com> wrote:
-> > On Tue, Jul 5, 2022 at 4:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Tue, Jul 5, 2022 at 9:51 AM Muchun Song <songmuchun@bytedance.com> wrote:
+> On Mon, Jul 04, 2022 at 07:25:25PM +0800, Huacai Chen wrote:
+> > From: Feiyang Chen <chenfeiyang@loongson.cn>
 > >
-> > How about including the static key header in the scope of
-> > CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP?
+> > Generalise vmemmap_populate_hugepages() so ARM64 & X86 & LoongArch can
+> > share its implementation.
+> >
+> > Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  arch/arm64/mm/mmu.c      | 53 ++++++-----------------
+> >  arch/loongarch/mm/init.c | 63 ++++++++-------------------
+> >  arch/x86/mm/init_64.c    | 92 ++++++++++++++--------------------------
+> >  include/linux/mm.h       |  6 +++
+> >  mm/sparse-vmemmap.c      | 54 +++++++++++++++++++++++
+> >  5 files changed, 124 insertions(+), 144 deletions(-)
+> >
+> > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> > index 626ec32873c6..b080a65c719d 100644
+> > --- a/arch/arm64/mm/mmu.c
+> > +++ b/arch/arm64/mm/mmu.c
+> > @@ -1158,49 +1158,24 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+> >       return vmemmap_populate_basepages(start, end, node, altmap);
+> >  }
+> >  #else        /* !ARM64_KERNEL_USES_PMD_MAPS */
+> > +void __meminit vmemmap_set_pmd(pmd_t *pmdp, void *p, int node,
+> > +                            unsigned long addr, unsigned long next)
+> > +{
+> > +     pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
+> > +}
+> > +
+> > +int __meminit vmemmap_check_pmd(pmd_t *pmdp, int node, unsigned long addr,
+> > +                             unsigned long next)
+> > +{
+> > +     vmemmap_verify((pte_t *)pmdp, node, addr, next);
+> > +     return 1;
+> > +}
+> > +
+> >  int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+> >               struct vmem_altmap *altmap)
+> >  {
+> > -     unsigned long addr = start;
+> > -     unsigned long next;
+> > -     pgd_t *pgdp;
+> > -     p4d_t *p4dp;
+> > -     pud_t *pudp;
+> > -     pmd_t *pmdp;
+> > -
+> >       WARN_ON((start < VMEMMAP_START) || (end > VMEMMAP_END));
+> > -     do {
+> > -             next = pmd_addr_end(addr, end);
+> > -
+> > -             pgdp = vmemmap_pgd_populate(addr, node);
+> > -             if (!pgdp)
+> > -                     return -ENOMEM;
+> > -
+> > -             p4dp = vmemmap_p4d_populate(pgdp, addr, node);
+> > -             if (!p4dp)
+> > -                     return -ENOMEM;
+> > -
+> > -             pudp = vmemmap_pud_populate(p4dp, addr, node);
+> > -             if (!pudp)
+> > -                     return -ENOMEM;
+> > -
+> > -             pmdp = pmd_offset(pudp, addr);
+> > -             if (pmd_none(READ_ONCE(*pmdp))) {
+> > -                     void *p = NULL;
+> > -
+> > -                     p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
+> > -                     if (!p) {
+> > -                             if (vmemmap_populate_basepages(addr, next, node, altmap))
+> > -                                     return -ENOMEM;
+> > -                             continue;
+> > -                     }
+> > -
+> > -                     pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
+> > -             } else
+> > -                     vmemmap_verify((pte_t *)pmdp, node, addr, next);
+> > -     } while (addr = next, addr != end);
+> > -
+> > -     return 0;
+> > +     return vmemmap_populate_hugepages(start, end, node, altmap);
+> >  }
+> >  #endif       /* !ARM64_KERNEL_USES_PMD_MAPS */
 >
-> That helps a little, but it means we still pay for it on x86 and
-> arm64, which are the
-> most common architectures.
 >
-
-Hi, Arnd,
-
-It seems that arm64 and x86 include static_key.h or jump_label.h in some
-more basic header files, otherwise they would not compile successfully
-when they including page-flags.h.
-
-In file included from ./arch/arm64/include/asm/lse.h:13,
-from ./arch/arm64/include/asm/cmpxchg.h:14,
-from ./arch/arm64/include/asm/atomic.h:16,
-from ./include/linux/atomic.h:7,
-from ./include/asm-generic/bitops/atomic.h:5,
-from ./arch/arm64/include/asm/bitops.h:25,
-from ./include/linux/bitops.h:33,
-from ./include/linux/log2.h:12,
-from kernel/bounds.c:13:
-./include/linux/jump_label.h:5:2: error: #error "Hi"
-5 | #error "Hi"
-
-In file included from ./arch/x86/include/asm/nospec-branch.h:6,
-from ./arch/x86/include/asm/paravirt_types.h:40,
-from ./arch/x86/include/asm/ptrace.h:97,
-from ./arch/x86/include/asm/math_emu.h:5,
-from ./arch/x86/include/asm/processor.h:13,
-from ./arch/x86/include/asm/cpufeature.h:5,
-from ./arch/x86/include/asm/thread_info.h:53,
-from ./include/linux/thread_info.h:60,
-from ./arch/x86/include/asm/preempt.h:7,
-from ./include/linux/preempt.h:78,
-from ./include/linux/spinlock.h:55,
-from ./include/linux/mmzone.h:8,
-from ./include/linux/gfp.h:6,
-from ./include/linux/slab.h:15,
-from ./include/linux/crypto.h:20,
-from arch/x86/kernel/asm-offsets.c:9:
-./include/linux/static_key.h:3:2: error: #error "Hi"
-#error "Hi"
-^~~~~
-In file included from ./include/linux/tracepoint-defs.h:12,
-from ./arch/x86/include/asm/msr.h:58,
-from ./arch/x86/include/asm/processor.h:22,
-from ./arch/x86/include/asm/cpufeature.h:5,
-from ./arch/x86/include/asm/thread_info.h:53,
-from ./include/linux/thread_info.h:60,
-from ./arch/x86/include/asm/preempt.h:7,
-from ./include/linux/preempt.h:78,
-from ./include/linux/spinlock.h:55,
-from ./include/linux/mmzone.h:8,
-from ./include/linux/gfp.h:6,
-from ./include/linux/slab.h:15,
-from ./include/linux/crypto.h:20,
-from arch/x86/kernel/asm-offsets.c:9:
-./include/linux/static_key.h:3:2: error: #error "Hi"
-#error "Hi"
-^~~~~
-In file included from ./include/linux/kasan-enabled.h:5,
-from ./include/linux/kasan.h:6,
-from ./include/linux/slab.h:140,
-from ./include/linux/crypto.h:20,
-from arch/x86/kernel/asm-offsets.c:9:
-./include/linux/static_key.h:3:2: error: #error "Hi"
-#error "Hi"
-^~~~~
-In file included from ./include/linux/kasan.h:8,
-from ./include/linux/slab.h:140,
-from ./include/linux/crypto.h:20,
-from arch/x86/kernel/asm-offsets.c:9:
-./include/linux/static_key.h:3:2: error: #error "Hi"
-#error "Hi"
-^~~~~
-In file included from ./include/linux/context_tracking_state.h:6,
-from ./include/linux/hardirq.h:5,
-from arch/x86/kernel/asm-offsets.c:12:
-./include/linux/static_key.h:3:2: error: #error "Hi"
-#error "Hi"
-^~~~~
-In file included from ./include/linux/vmstat.h:10,
-from ./include/linux/mm.h:1771,
-from ./include/linux/memcontrol.h:20,
-from ./include/linux/swap.h:9,
-from ./include/linux/suspend.h:5,
-from arch/x86/kernel/asm-offsets.c:13:
-./include/linux/static_key.h:3:2: error: #error "Hi"
-#error "Hi"
-
-Thanks,
-Feiyang
-
->        Arnd
+> I think the arm64 change is mostly ok (thanks!), but I have a question about
+> the core code you're introducing:
 >
+> > diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+> > index 33e2a1ceee72..6f2e40bb695d 100644
+> > --- a/mm/sparse-vmemmap.c
+> > +++ b/mm/sparse-vmemmap.c
+> > @@ -686,6 +686,60 @@ int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
+> >       return vmemmap_populate_range(start, end, node, altmap, NULL);
+> >  }
+> >
+> > +void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
+> > +                                   unsigned long addr, unsigned long next)
+> > +{
+> > +}
+> > +
+> > +int __weak __meminit vmemmap_check_pmd(pmd_t *pmd, int node, unsigned long addr,
+> > +                                    unsigned long next)
+> > +{
+> > +     return 0;
+> > +}
+> > +
+> > +int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
+> > +                                      int node, struct vmem_altmap *altmap)
+> > +{
+> > +     unsigned long addr;
+> > +     unsigned long next;
+> > +     pgd_t *pgd;
+> > +     p4d_t *p4d;
+> > +     pud_t *pud;
+> > +     pmd_t *pmd;
+> > +
+> > +     for (addr = start; addr < end; addr = next) {
+> > +             next = pmd_addr_end(addr, end);
+> > +
+> > +             pgd = vmemmap_pgd_populate(addr, node);
+> > +             if (!pgd)
+> > +                     return -ENOMEM;
+> > +
+> > +             p4d = vmemmap_p4d_populate(pgd, addr, node);
+> > +             if (!p4d)
+> > +                     return -ENOMEM;
+> > +
+> > +             pud = vmemmap_pud_populate(p4d, addr, node);
+> > +             if (!pud)
+> > +                     return -ENOMEM;
+> > +
+> > +             pmd = pmd_offset(pud, addr);
+> > +             if (pmd_none(READ_ONCE(*pmd))) {
+> > +                     void *p;
+> > +
+> > +                     p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
+> > +                     if (p) {
+> > +                             vmemmap_set_pmd(pmd, p, node, addr, next);
+> > +                             continue;
+> > +                     } else if (altmap)
+> > +                             return -ENOMEM; /* no fallback */
+>
+> Why do you return -ENOMEM if 'altmap' here? That seems to be different to
+> what we currently have on arm64 and it's not clear to me why we're happy
+> with an altmap for the pmd case, but not for the pte case.
+The generic version is the same as X86. It seems that ARM64 always
+fallback whether there is an altmap, but X86 only fallback in the no
+altmap case. I don't know the reason of X86, can Dan Williams give
+some explaination?
+
+Huacai
+>
+> Will
