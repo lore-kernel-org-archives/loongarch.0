@@ -1,47 +1,86 @@
-Received: from server.cwsithost.com (server.cwsithost.com [162.144.211.127])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E14182
-	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 00:47:44 +0000 (UTC)
-Received: from autismspectrumal by server.cwsithost.com with local (Exim 4.94.2)
-	(envelope-from <autismspectrumal@server.cwsithost.com>)
-	id 1o8WFz-0005Uo-NG; Tue, 05 Jul 2022 00:17:35 +0000
-To: prportal@continuumgroup.net, loongarch@lists.linux.dev
-Subject: Continuum | Behavioral Health Treatment, Intervention, And Diagnosis "muhmbr"
-X-PHP-Script: autism.cwsithost.com/index.php for 23.128.248.13
-X-PHP-Originating-Script: 500:class-phpmailer.php
-Date: Tue, 5 Jul 2022 00:17:35 +0000
-From: =?UTF-8?Q?=F0=9F=96=A4_Have_you_ever_tried_this_sex_game_before=3F_GIVE_I?=
- =?UTF-8?Q?T_A_TRY=3A_https=3A//letsg0dancing=2Epage=2Elink/go=3Ftiecv_?=
- =?UTF-8?Q?=F0=9F=96=A4?= <wordpress@autismspectrumalliance.com>
-Reply-To: loongarch@lists.linux.dev
-Message-ID: <b3011daa1d6b662cafc881fd6ef1da85@autism.cwsithost.com>
-X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4554D7C
+	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 06:22:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA81C341D1
+	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 06:22:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1657002128;
+	bh=Zaf7DjhcD3ZxfJHUz1tOGgDGa4JYJfrWSDwsbtdTNwI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=a6923plIqslsbqyEgJGkAr8COlwhQHlzqDOMUImf0zNEq9HfBY7kyJ31P00pKVrG7
+	 y7sOCX7KFkZaKbXr1TBsB4bdPWDPbdUss/s+YWLl5peIIfTQnNr2M9MJNM8bwnRZW4
+	 pBP1mWfqbYSTfbLQr0IfiTFeIF0vLC+jWt2IFvckuj94X5lLXreY0OPKMdqj4JP0Ql
+	 smnsWL54j9bAu/0Q6bfOaMqEB5kKVAhMB4U0bMIbAk2LT3svlb0Axbi55/JXgywmOj
+	 gLpT9G8YpXf0KUjDyEO/m/I2r9HiqXWMGXjvdGjetJDbeHeFEekkqecyZHbQLOGFi+
+	 XCBAa5kvP21lg==
+Received: by mail-vs1-f53.google.com with SMTP id t124so548755vsb.8
+        for <loongarch@lists.linux.dev>; Mon, 04 Jul 2022 23:22:07 -0700 (PDT)
+X-Gm-Message-State: AJIora8hWUwOf2FKvvKiOd5bJlkviHS5hOsfyD6K+bYoUu5xKGw5+Sqf
+	IERhDY2Fb/w5btzxKzMwMjPnsqIgtBo2htuWgn0=
+X-Google-Smtp-Source: AGRyM1uR3kDpQ/MbyXcNWqnHFpFRoA+f7XpzR2mn61Kf/oGLc1bqoMRFlPTGI0x9k49ir5CWsNuWr5PQo6T9BiLh8ww=
+X-Received: by 2002:a67:6fc3:0:b0:356:18:32ba with SMTP id k186-20020a676fc3000000b00356001832bamr18421067vsc.43.1657002126922;
+ Mon, 04 Jul 2022 23:22:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.cwsithost.com
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [500 500] / [47 12]
-X-AntiAbuse: Sender Address Domain - server.cwsithost.com
-X-Get-Message-Sender-Via: server.cwsithost.com: authenticated_id: autismspectrumal/primary_hostname/system user
-X-Authenticated-Sender: server.cwsithost.com: autismspectrumal
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
+ <20220704112526.2492342-5-chenhuacai@loongson.cn> <CAK8P3a2XBGtJMB=Z-W56MLREAr3sAYKqDHo3yg=4hJ4T6x+QdQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a2XBGtJMB=Z-W56MLREAr3sAYKqDHo3yg=4hJ4T6x+QdQ@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 5 Jul 2022 14:21:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5djQOzRsW-JaRPzaAnh64WgHiGvHxc1UdAUV43tirukg@mail.gmail.com>
+Message-ID: <CAAhV-H5djQOzRsW-JaRPzaAnh64WgHiGvHxc1UdAUV43tirukg@mail.gmail.com>
+Subject: Re: [PATCH V4 4/4] LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
+	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linux-MM <linux-mm@kvack.org>, 
+	"open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Feiyang Chen <chenfeiyang@loongson.cn>, Muchun Song <songmuchun@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: 🖤 Have you ever tried this sex game before? GIVE IT A TRY: https://letsg0dancing.page.link/go?tiecv 🖤 <loongarch@lists.linux.dev>
-Subject: muhmbr
+Hi, Arnd,
 
-Message Body:
-y69yd8
+On Mon, Jul 4, 2022 at 8:18 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Mon, Jul 4, 2022 at 1:25 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
+> > To avoid the following build error on LoongArch we should include linux/
+> > static_key.h in page-flags.h.
+> >
+> > In file included from ./include/linux/mmzone.h:22,
+> > from ./include/linux/gfp.h:6,
+> > from ./include/linux/mm.h:7,
+> > from arch/loongarch/kernel/asm-offsets.c:9:
+> > ./include/linux/page-flags.h:208:1: warning: data definition has no
+> > type or storage class
+> > 208 | DECLARE_STATIC_KEY_MAYBE(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
+> > | ^~~~~~~~~~~~~~~~~~~~~~~~
+> > ./include/linux/page-flags.h:208:1: error: type defaults to 'int' in
+> > declaration of 'DECLARE_STATIC_KEY_MAYBE' [-Werror=implicit-int]
+> > ./include/linux/page-flags.h:209:26: warning: parameter names (without
+> > types) in function declaration
+>
+> I wonder if page_fixed_fake_head() should be moved out of line to avoid
+> this, it's already nontrivial here, and that would avoid the static key
+> in a central header.
+I have some consideration here. I think both inline function and
+static key are instruments to make things faster, in other words,
+page_fixed_fake_head() is a performance critical function. If so, it
+is not suitable to move it out of line.
 
---
-This e-mail was sent from a contact form on Continuum | Behavioral Health Treatment, Intervention, And Diagnosis (http://autism.cwsithost.com/main-site)
-
+Huacai
+>
+>        Arnd
+>
