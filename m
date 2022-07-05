@@ -1,84 +1,198 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762FA2F34
-	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 09:12:52 +0000 (UTC)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-31c86fe1dddso54752777b3.1
-        for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022 02:12:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rNfgCc3yCLXG4f0YNRR9AvD14vQhINiZLzedPaTIf9I=;
-        b=fMFzd1R/h9ptIi0eWVtG1yiS04l8AtBOczWU5B26FI7Qgq6vBDPrC4OI02valMNslC
-         OgLA9cO2/IuX3Vkj5znR//+UIZGu1SpUc94RMkkhGhvuBHxU0f2SKEFX1T7WIeHrz36X
-         +np+TMYdRK20KpMUTgIm3QgqDzBgQChl33XuO2WMRAcXng8wVPlQiHlw54KDDgORtkm/
-         C8Ge7tVo5eCwvxtdC1xEhGnBsvCKK4Eq1/LwpC9UyzH+kOaLljdyk9oem68H3Wg90fE6
-         mfydkzdE8Goc8xU3IyBDA+pR8u4IrctiQR5hYc3FiEA02nxjihuPVr4EbDy8EWK/Q1HA
-         Ck6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rNfgCc3yCLXG4f0YNRR9AvD14vQhINiZLzedPaTIf9I=;
-        b=1m2MirgaT6djVJW6GSJ5RTWCNO7sXtYLMFVlknI92qkLSild8asmUk2qAXM/0XPVc/
-         BkJxW/CfoYhk+eYj8mkVhrYIfWOwASQvQHqmGeHr2C1fGPj8WPT8Gf+XwLEuXDUwJL6h
-         y2SVxEytxb1GVQOg7wflQP2NjoyOwgwnMUu+kDAdRFZe0yDrCbzBdxBdZLLihSxzH7nP
-         zteHqQGxQVNjWmu6ikTgtHcCyvCBCd86XNVWVOF3FhniE7DmWDzF4DXauWjkY6+/2ARX
-         +JfQQcNuUnL1/HLoJZMTNAlmKLrxyye1cIossDxnZgcFdGrH9LmnDET89SxO0v0H2v5z
-         mVmw==
-X-Gm-Message-State: AJIora+bwUr+vCYqHBKZpynKuVVlMWYLgrxySsK+nBo2okkxTssGbBdP
-	rnHROYu5Vk3y0NokLjlXinvszDbXff0wI41+Hs0qCQ==
-X-Google-Smtp-Source: AGRyM1sbcjhr993M5UN/hKcISXvGQJQZShycW9sF9JvX21iMvRl9030G7E9hqK+I1HH1arRudDZfaWm2jSKWk8efvnE=
-X-Received: by 2002:a81:5dd5:0:b0:31b:a0f1:254e with SMTP id
- r204-20020a815dd5000000b0031ba0f1254emr41155573ywb.141.1657012371427; Tue, 05
- Jul 2022 02:12:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913B52F34
+	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 09:29:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD127C341C7;
+	Tue,  5 Jul 2022 09:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1657013385;
+	bh=kGkmp8dPxzCCK114+0OM+AKFI00s3XSfhycOZJPJOlk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ulmzVpFf4aXRHwq+z6RYvnhTexooB8AMl3S7I2TeN59zwM5eunXVPWgFl9cM57OpW
+	 bq6hNbJ1xNpiDZ+Exf8NMU8/+15BNEH8FrQViQJJ2SVWdH9Ahk1ZhB7Rrudygq2+J3
+	 bR3rdhguoBudEGLYe5xClBPRn4MDtesG1dATflzPN8t6I4Swf5DAmW3Qxe4pvh79Sm
+	 TpdEgrft+3/r5kInwNblNRWn4DzPuHFvVvjZDJ7xs4FZZDYrrun1Sc3RqyAiS9bJSi
+	 1bujS052C+AeT6ccnqqZWlaIenIvvTFUk579henLIV1MojIa08mDP2VPX5QcBLYoRt
+	 LU5PxHa+sIh5A==
+Date: Tue, 5 Jul 2022 10:29:37 +0100
+From: Will Deacon <will@kernel.org>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Feiyang Chen <chenfeiyang@loongson.cn>
+Subject: Re: [PATCH V4 3/4] mm/sparse-vmemmap: Generalise
+ vmemmap_populate_hugepages()
+Message-ID: <20220705092937.GA552@willie-the-truck>
+References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
+ <20220704112526.2492342-4-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
- <20220704112526.2492342-5-chenhuacai@loongson.cn> <CAK8P3a2XBGtJMB=Z-W56MLREAr3sAYKqDHo3yg=4hJ4T6x+QdQ@mail.gmail.com>
- <CAAhV-H5djQOzRsW-JaRPzaAnh64WgHiGvHxc1UdAUV43tirukg@mail.gmail.com>
- <CAMZfGtXLxPO3jmkKpF7n9Scb=542yrf1taWHZGdPwK-tZsJXgQ@mail.gmail.com>
- <CAK8P3a14VTkTjRNTWsGmwLDuVm=QPL17_VZ8QkcCYnyQzBjXHA@mail.gmail.com>
- <CAMZfGtU0n_-Bq95X+_rZjcyeK3QhKSq2t5HRvx5Kw5+tR9h+oA@mail.gmail.com> <CAK8P3a1K9fmLK=dh8shHX2y=fOYzr02D9Ek9uQri-u_2MsBXdQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a1K9fmLK=dh8shHX2y=fOYzr02D9Ek9uQri-u_2MsBXdQ@mail.gmail.com>
-From: Muchun Song <songmuchun@bytedance.com>
-Date: Tue, 5 Jul 2022 17:12:14 +0800
-Message-ID: <CAMZfGtVQnxEr1gqfMgU1YzFsPXA08aOnR-mu-8cKnuS=LUyLKg@mail.gmail.com>
-Subject: Re: [PATCH V4 4/4] LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linux-MM <linux-mm@kvack.org>, 
-	"open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220704112526.2492342-4-chenhuacai@loongson.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Jul 5, 2022 at 4:46 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Jul 5, 2022 at 10:38 AM Muchun Song <songmuchun@bytedance.com> wrote:
-> > On Tue, Jul 5, 2022 at 4:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Tue, Jul 5, 2022 at 9:51 AM Muchun Song <songmuchun@bytedance.com> wrote:
-> >
-> > How about including the static key header in the scope of
-> > CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP?
->
-> That helps a little, but it means we still pay for it on x86 and
-> arm64, which are the
-> most common architectures.
+On Mon, Jul 04, 2022 at 07:25:25PM +0800, Huacai Chen wrote:
+> From: Feiyang Chen <chenfeiyang@loongson.cn>
+> 
+> Generalise vmemmap_populate_hugepages() so ARM64 & X86 & LoongArch can
+> share its implementation.
+> 
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  arch/arm64/mm/mmu.c      | 53 ++++++-----------------
+>  arch/loongarch/mm/init.c | 63 ++++++++-------------------
+>  arch/x86/mm/init_64.c    | 92 ++++++++++++++--------------------------
+>  include/linux/mm.h       |  6 +++
+>  mm/sparse-vmemmap.c      | 54 +++++++++++++++++++++++
+>  5 files changed, 124 insertions(+), 144 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 626ec32873c6..b080a65c719d 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1158,49 +1158,24 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>  	return vmemmap_populate_basepages(start, end, node, altmap);
+>  }
+>  #else	/* !ARM64_KERNEL_USES_PMD_MAPS */
+> +void __meminit vmemmap_set_pmd(pmd_t *pmdp, void *p, int node,
+> +			       unsigned long addr, unsigned long next)
+> +{
+> +	pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
+> +}
+> +
+> +int __meminit vmemmap_check_pmd(pmd_t *pmdp, int node, unsigned long addr,
+> +				unsigned long next)
+> +{
+> +	vmemmap_verify((pte_t *)pmdp, node, addr, next);
+> +	return 1;
+> +}
+> +
+>  int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>  		struct vmem_altmap *altmap)
+>  {
+> -	unsigned long addr = start;
+> -	unsigned long next;
+> -	pgd_t *pgdp;
+> -	p4d_t *p4dp;
+> -	pud_t *pudp;
+> -	pmd_t *pmdp;
+> -
+>  	WARN_ON((start < VMEMMAP_START) || (end > VMEMMAP_END));
+> -	do {
+> -		next = pmd_addr_end(addr, end);
+> -
+> -		pgdp = vmemmap_pgd_populate(addr, node);
+> -		if (!pgdp)
+> -			return -ENOMEM;
+> -
+> -		p4dp = vmemmap_p4d_populate(pgdp, addr, node);
+> -		if (!p4dp)
+> -			return -ENOMEM;
+> -
+> -		pudp = vmemmap_pud_populate(p4dp, addr, node);
+> -		if (!pudp)
+> -			return -ENOMEM;
+> -
+> -		pmdp = pmd_offset(pudp, addr);
+> -		if (pmd_none(READ_ONCE(*pmdp))) {
+> -			void *p = NULL;
+> -
+> -			p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
+> -			if (!p) {
+> -				if (vmemmap_populate_basepages(addr, next, node, altmap))
+> -					return -ENOMEM;
+> -				continue;
+> -			}
+> -
+> -			pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
+> -		} else
+> -			vmemmap_verify((pte_t *)pmdp, node, addr, next);
+> -	} while (addr = next, addr != end);
+> -
+> -	return 0;
+> +	return vmemmap_populate_hugepages(start, end, node, altmap);
+>  }
+>  #endif	/* !ARM64_KERNEL_USES_PMD_MAPS */
 
-Alright. Make sense.
 
->
->        Arnd
+I think the arm64 change is mostly ok (thanks!), but I have a question about
+the core code you're introducing:
+
+> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+> index 33e2a1ceee72..6f2e40bb695d 100644
+> --- a/mm/sparse-vmemmap.c
+> +++ b/mm/sparse-vmemmap.c
+> @@ -686,6 +686,60 @@ int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
+>  	return vmemmap_populate_range(start, end, node, altmap, NULL);
+>  }
+>  
+> +void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
+> +				      unsigned long addr, unsigned long next)
+> +{
+> +}
+> +
+> +int __weak __meminit vmemmap_check_pmd(pmd_t *pmd, int node, unsigned long addr,
+> +				       unsigned long next)
+> +{
+> +	return 0;
+> +}
+> +
+> +int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
+> +					 int node, struct vmem_altmap *altmap)
+> +{
+> +	unsigned long addr;
+> +	unsigned long next;
+> +	pgd_t *pgd;
+> +	p4d_t *p4d;
+> +	pud_t *pud;
+> +	pmd_t *pmd;
+> +
+> +	for (addr = start; addr < end; addr = next) {
+> +		next = pmd_addr_end(addr, end);
+> +
+> +		pgd = vmemmap_pgd_populate(addr, node);
+> +		if (!pgd)
+> +			return -ENOMEM;
+> +
+> +		p4d = vmemmap_p4d_populate(pgd, addr, node);
+> +		if (!p4d)
+> +			return -ENOMEM;
+> +
+> +		pud = vmemmap_pud_populate(p4d, addr, node);
+> +		if (!pud)
+> +			return -ENOMEM;
+> +
+> +		pmd = pmd_offset(pud, addr);
+> +		if (pmd_none(READ_ONCE(*pmd))) {
+> +			void *p;
+> +
+> +			p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
+> +			if (p) {
+> +				vmemmap_set_pmd(pmd, p, node, addr, next);
+> +				continue;
+> +			} else if (altmap)
+> +				return -ENOMEM; /* no fallback */
+
+Why do you return -ENOMEM if 'altmap' here? That seems to be different to
+what we currently have on arm64 and it's not clear to me why we're happy
+with an altmap for the pmd case, but not for the pte case.
+
+Will
