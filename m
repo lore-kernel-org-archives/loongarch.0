@@ -1,107 +1,171 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCCC2F34
-	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 10:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1657015256;
-	bh=E6o1RFAIrfJESU+NgsvD4EBv6BUvExPltXkj7Me7Lig=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=W2uSUEQVyJ1nU4GF9JWZsE5ljwM+NxAicX93mST+EjexPE67/aXOHPrAAWpdFyHIF
-	 BfrUFpxX6tdWnhTi5FfMdn+QCv77veSoEod+dG0yrb/bJGe5ClXvNqSAcRK3b7ETbx
-	 ApWMhajAkNXSB211DyPNWwiknW38dlLSp6R8Aa0U=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id A1EEE667AC;
-	Tue,  5 Jul 2022 06:00:54 -0400 (EDT)
-Message-ID: <16c9ccaa5e5a2ffd39272cff6f66e487c659b571.camel@xry111.site>
-Subject: Re: [PATCH v2] LoongArch: Clean useless vcsr in loongarch_fpu.
-From: Xi Ruoyao <xry111@xry111.site>
-To: WANG Xuerui <kernel@xen0n.name>, Qi Hu <huqi@loongson.cn>, Huacai Chen
-	 <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Date: Tue, 05 Jul 2022 18:00:52 +0800
-In-Reply-To: <22a1ba993e298ce12a374decefebeca484240883.camel@xry111.site>
-References: <20220704153612.314112-1-huqi@loongson.cn>
-	 <4273e104-8392-6a06-5d18-a1933978d8c3@xen0n.name>
-	 <22a1ba993e298ce12a374decefebeca484240883.camel@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267C129A1
+	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 10:49:26 +0000 (UTC)
+Received: by mail-lf1-f43.google.com with SMTP id z25so2296481lfr.2
+        for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022 03:49:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6ZrVWfoteR5GrzCoHkSriCPMIPEv5ipRG8Y7JTRl1kw=;
+        b=Uyp+2DkuYMDKuMOS0vYpIDMbWkzCj7YOT7vGJ8J7ZBJ6xPONJaHE60xQlzZWpd2THc
+         2i77jcDW+7EvQOIPfIQ3LJ8Lo5CW75e4wPfrSarkRgLvblivvSmnINSgNUSPKLEGH5Xv
+         0xEzoCRin08WOvm6kmRt0LF4zy7+Y2HVD4jHRw3wwEvBLgtdy874Q9Mkg+bBUSM95NSl
+         QoV+36qe3uBrZ2+fSsH2RxpHjQ1n5JpfmL2FwAWslwP/UNYunOL4rK3tDF0MqPAKCbum
+         +nXvfCIMHOy7k+4s+ugENntMUbQ+3dmO9m5voxelAmsq5scDbga8fIZlFdtTDOdjVjjW
+         xf+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6ZrVWfoteR5GrzCoHkSriCPMIPEv5ipRG8Y7JTRl1kw=;
+        b=eNyVRrUh0YuMrp3YPxu+LLbU8t7ZmF7g90x/3ae+jV1gq+5HnFyoeD5qu852+zxI9K
+         RgNgakiDApj2IfPc41zQLhPtFS8cUIuF/6DPBNII/KGAHKLN3mRCpKmcvYoE1GwnZPjk
+         Er3DT7xnMaQvrQs/8wFvBK0FQ7v7E3gFneqDoSHGWet+81nMgj5cVBiFRkIOOeLt8w96
+         OcUvF2dOe8vQMNTAqidA2Jh0gQQFUHj14ziv2mkkbWqTbE61+qSS0sLLwqi03OeoZnNj
+         0n+6AbQ9yavdnHrKUnoNWA+0IZVtQhE/oxHXa2qHBJJJVatpZ7C/ORBVYUCK/g1CJf8J
+         vyOw==
+X-Gm-Message-State: AJIora/8W64FyYNI4cqeNP7D/YMN1nn9N0IY7rZ8ejsidfkr7VkAtp4w
+	4xt9glrF8qZlpgXP9EH8Wulzda3SNYebNu+ZqRc=
+X-Google-Smtp-Source: AGRyM1vYTuygFt3JTMn8nW/7T2k8/9hIoI6+Mnjfaa7nq0cDeG+mciiiBVQPotF7kbD4qDeSCrXqjbYsQZ4mZFdz1GE=
+X-Received: by 2002:ac2:59cb:0:b0:483:45c3:8cfc with SMTP id
+ x11-20020ac259cb000000b0048345c38cfcmr2425134lfn.274.1657018164101; Tue, 05
+ Jul 2022 03:49:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
+ <20220704112526.2492342-5-chenhuacai@loongson.cn> <CAK8P3a2XBGtJMB=Z-W56MLREAr3sAYKqDHo3yg=4hJ4T6x+QdQ@mail.gmail.com>
+ <CAAhV-H5djQOzRsW-JaRPzaAnh64WgHiGvHxc1UdAUV43tirukg@mail.gmail.com>
+ <CAMZfGtXLxPO3jmkKpF7n9Scb=542yrf1taWHZGdPwK-tZsJXgQ@mail.gmail.com>
+ <CAK8P3a14VTkTjRNTWsGmwLDuVm=QPL17_VZ8QkcCYnyQzBjXHA@mail.gmail.com>
+ <CAMZfGtU0n_-Bq95X+_rZjcyeK3QhKSq2t5HRvx5Kw5+tR9h+oA@mail.gmail.com> <CAK8P3a1K9fmLK=dh8shHX2y=fOYzr02D9Ek9uQri-u_2MsBXdQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a1K9fmLK=dh8shHX2y=fOYzr02D9Ek9uQri-u_2MsBXdQ@mail.gmail.com>
+From: Feiyang Chen <chris.chenfeiyang@gmail.com>
+Date: Tue, 5 Jul 2022 18:49:11 +0800
+Message-ID: <CACWXhKn6QxFB4kYrj_6xxcq5oR_0wnprGiw38pEGSY9wDpSLvg@mail.gmail.com>
+Subject: Re: [PATCH V4 4/4] LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Muchun Song <songmuchun@bytedance.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, loongarch@lists.linux.dev, 
+	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linux-MM <linux-mm@kvack.org>, 
+	"open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Feiyang Chen <chenfeiyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 2022-07-05 at 17:49 +0800, Xi Ruoyao wrote:
-> On Tue, 2022-07-05 at 16:46 +0800, WANG Xuerui wrote:
->=20
-> > Actually I'm still not very satisfied with the explanation; the code
-> > must be written with *something* in mind, since GS464V/LA464 is the onl=
-y=20
-> > LoongArch implementation so far, it must have a VCSR to begin with. And=
-=20
-> > you can't magically melt the VCSR on the tens of thousands of=20
-> > 3A5000/3C5000's already shipped, because the old-world kernel obviously=
-=20
-> > comes with LSX/LASX and it most likely utilizes the VCSR. In addition,
-> > you didn't mention what will happen if LSX/LASX *is* enabled on this
-> > new-world kernel, *and* fcsr16 is being accessed.
-> >=20
-> > I think maybe you just want to remove the mentions of VCSR since they=
-=20
-> > are dead code right now, as I don't believe it's gone in shipped=20
-> > hardware, as explained above. Except if there's magically a way to=20
-> > implement LSX/LASX without touching the said-to-have-disappeared VCSR,
-> > which I don't know of, and can't know because the LSX/LASX ISA manual i=
-s=20
-> > still not publicly accessible; so I don't feel comfortable approving
-> > this patch.
->=20
-> Let me make some bold guess here.=C2=A0 In the MIPS-compatible 3A4000 we =
-had
-> "MSACSR" register.=C2=A0 According to the MSA manual, only the 24-th bit =
-of
-> this register is used:
->=20
-> "Some MSA floating point instructions might not handle subnormal input
-> operands or compute tiny non-zero results. Such instructions may signal
-> the Unimplemented Operation Exception and let the software emulation
-> finalize the operation. If software emulation is not needed or desired,
-> MSACSR FS bit could be set to replace every tiny non-zero result and
-> subnormal input operand with zero of the same sign."
->=20
-> And, it says:
->=20
-> "Should the alternate exception handling attributes of the IEEE Standard
-> for Floating-Point Arithmetic 754-2008, Section 8 be desired, the MSACSR
-> FS bit should be zero, the Underflow Exception be enabled and a trap
-> handler be provided to carry out the execution of the alternate
-> exception handling attributes."
->=20
-> We can see Loongson has been trying to make 3A processors more IEEE-754
-> compatible.=C2=A0 For example, 3A4000 is the only non-R6 MIPS-compatible
-> processor using IEEE-754-2008 NaN encoding.=C2=A0 And LoongArch manual
-> directly refers to IEEE-754-2008 manual in many places.=C2=A0 So I guess =
-this
-> change means Loongson won't set this bit to 1 for 3A5000 at all, and any
-> attempt by the user to set this bit could be considered undefined
-> behavior (causing inconsistent behavior on 3A5000 as the kernel doesn't
-> save/restore VCSR at context switch, and SIGILL on 3A6000 as the
-> register is removed).
+On Tue, 5 Jul 2022 at 16:45, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Tue, Jul 5, 2022 at 10:38 AM Muchun Song <songmuchun@bytedance.com> wrote:
+> > On Tue, Jul 5, 2022 at 4:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Tue, Jul 5, 2022 at 9:51 AM Muchun Song <songmuchun@bytedance.com> wrote:
+> >
+> > How about including the static key header in the scope of
+> > CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP?
+>
+> That helps a little, but it means we still pay for it on x86 and
+> arm64, which are the
+> most common architectures.
+>
 
-P. S. I'm just playing an "intelligence game" writing the reply so maybe
-I'm completely wrong.  And, it does not indicate any position of me or
-my affiliation about some "controversial topics".  And, even if my guess
-is correct, it's still better to add something like "the use of VCSR is
-optional in LA464 and we've decided to remove it in future
-architectures, so it's not supported to use it even on LA464" into the
-commit message.
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Hi, Arnd,
+
+It seems that arm64 and x86 include static_key.h or jump_label.h in some
+more basic header files, otherwise they would not compile successfully
+when they including page-flags.h.
+
+In file included from ./arch/arm64/include/asm/lse.h:13,
+from ./arch/arm64/include/asm/cmpxchg.h:14,
+from ./arch/arm64/include/asm/atomic.h:16,
+from ./include/linux/atomic.h:7,
+from ./include/asm-generic/bitops/atomic.h:5,
+from ./arch/arm64/include/asm/bitops.h:25,
+from ./include/linux/bitops.h:33,
+from ./include/linux/log2.h:12,
+from kernel/bounds.c:13:
+./include/linux/jump_label.h:5:2: error: #error "Hi"
+5 | #error "Hi"
+
+In file included from ./arch/x86/include/asm/nospec-branch.h:6,
+from ./arch/x86/include/asm/paravirt_types.h:40,
+from ./arch/x86/include/asm/ptrace.h:97,
+from ./arch/x86/include/asm/math_emu.h:5,
+from ./arch/x86/include/asm/processor.h:13,
+from ./arch/x86/include/asm/cpufeature.h:5,
+from ./arch/x86/include/asm/thread_info.h:53,
+from ./include/linux/thread_info.h:60,
+from ./arch/x86/include/asm/preempt.h:7,
+from ./include/linux/preempt.h:78,
+from ./include/linux/spinlock.h:55,
+from ./include/linux/mmzone.h:8,
+from ./include/linux/gfp.h:6,
+from ./include/linux/slab.h:15,
+from ./include/linux/crypto.h:20,
+from arch/x86/kernel/asm-offsets.c:9:
+./include/linux/static_key.h:3:2: error: #error "Hi"
+#error "Hi"
+^~~~~
+In file included from ./include/linux/tracepoint-defs.h:12,
+from ./arch/x86/include/asm/msr.h:58,
+from ./arch/x86/include/asm/processor.h:22,
+from ./arch/x86/include/asm/cpufeature.h:5,
+from ./arch/x86/include/asm/thread_info.h:53,
+from ./include/linux/thread_info.h:60,
+from ./arch/x86/include/asm/preempt.h:7,
+from ./include/linux/preempt.h:78,
+from ./include/linux/spinlock.h:55,
+from ./include/linux/mmzone.h:8,
+from ./include/linux/gfp.h:6,
+from ./include/linux/slab.h:15,
+from ./include/linux/crypto.h:20,
+from arch/x86/kernel/asm-offsets.c:9:
+./include/linux/static_key.h:3:2: error: #error "Hi"
+#error "Hi"
+^~~~~
+In file included from ./include/linux/kasan-enabled.h:5,
+from ./include/linux/kasan.h:6,
+from ./include/linux/slab.h:140,
+from ./include/linux/crypto.h:20,
+from arch/x86/kernel/asm-offsets.c:9:
+./include/linux/static_key.h:3:2: error: #error "Hi"
+#error "Hi"
+^~~~~
+In file included from ./include/linux/kasan.h:8,
+from ./include/linux/slab.h:140,
+from ./include/linux/crypto.h:20,
+from arch/x86/kernel/asm-offsets.c:9:
+./include/linux/static_key.h:3:2: error: #error "Hi"
+#error "Hi"
+^~~~~
+In file included from ./include/linux/context_tracking_state.h:6,
+from ./include/linux/hardirq.h:5,
+from arch/x86/kernel/asm-offsets.c:12:
+./include/linux/static_key.h:3:2: error: #error "Hi"
+#error "Hi"
+^~~~~
+In file included from ./include/linux/vmstat.h:10,
+from ./include/linux/mm.h:1771,
+from ./include/linux/memcontrol.h:20,
+from ./include/linux/swap.h:9,
+from ./include/linux/suspend.h:5,
+from arch/x86/kernel/asm-offsets.c:13:
+./include/linux/static_key.h:3:2: error: #error "Hi"
+#error "Hi"
+
+Thanks,
+Feiyang
+
+>        Arnd
+>
