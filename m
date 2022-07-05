@@ -1,198 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913B52F34
-	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 09:29:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD127C341C7;
-	Tue,  5 Jul 2022 09:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657013385;
-	bh=kGkmp8dPxzCCK114+0OM+AKFI00s3XSfhycOZJPJOlk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ulmzVpFf4aXRHwq+z6RYvnhTexooB8AMl3S7I2TeN59zwM5eunXVPWgFl9cM57OpW
-	 bq6hNbJ1xNpiDZ+Exf8NMU8/+15BNEH8FrQViQJJ2SVWdH9Ahk1ZhB7Rrudygq2+J3
-	 bR3rdhguoBudEGLYe5xClBPRn4MDtesG1dATflzPN8t6I4Swf5DAmW3Qxe4pvh79Sm
-	 TpdEgrft+3/r5kInwNblNRWn4DzPuHFvVvjZDJ7xs4FZZDYrrun1Sc3RqyAiS9bJSi
-	 1bujS052C+AeT6ccnqqZWlaIenIvvTFUk579henLIV1MojIa08mDP2VPX5QcBLYoRt
-	 LU5PxHa+sIh5A==
-Date: Tue, 5 Jul 2022 10:29:37 +0100
-From: Will Deacon <will@kernel.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Feiyang Chen <chenfeiyang@loongson.cn>
-Subject: Re: [PATCH V4 3/4] mm/sparse-vmemmap: Generalise
- vmemmap_populate_hugepages()
-Message-ID: <20220705092937.GA552@willie-the-truck>
-References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
- <20220704112526.2492342-4-chenhuacai@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9AC2F34
+	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 09:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1657014566;
+	bh=Z+hfuckJXn2N0NdhfHFRttHDNHn+Cxgpd8HIRKe5oJU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=S95TBTZkbKVK5wzQwON5TqT5xh1YS6mXSGSA3GD24SgJOzUZOYg7gEmF6uIrnaadq
+	 oywkhgoQYObCt2hy3iX9HmQQ23eA3J2WHNNasqnP1ZYbDioIzBC3s3rbHRg3otxF8J
+	 Y2hVuzs3HPrwAuzj2YAoRiBoHXBWicePJoMmrdX8=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id A6F39667A5;
+	Tue,  5 Jul 2022 05:49:24 -0400 (EDT)
+Message-ID: <22a1ba993e298ce12a374decefebeca484240883.camel@xry111.site>
+Subject: Re: [PATCH v2] LoongArch: Clean useless vcsr in loongarch_fpu.
+From: Xi Ruoyao <xry111@xry111.site>
+To: WANG Xuerui <kernel@xen0n.name>, Qi Hu <huqi@loongson.cn>, Huacai Chen
+	 <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Tue, 05 Jul 2022 17:49:22 +0800
+In-Reply-To: <4273e104-8392-6a06-5d18-a1933978d8c3@xen0n.name>
+References: <20220704153612.314112-1-huqi@loongson.cn>
+	 <4273e104-8392-6a06-5d18-a1933978d8c3@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220704112526.2492342-4-chenhuacai@loongson.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Jul 04, 2022 at 07:25:25PM +0800, Huacai Chen wrote:
-> From: Feiyang Chen <chenfeiyang@loongson.cn>
-> 
-> Generalise vmemmap_populate_hugepages() so ARM64 & X86 & LoongArch can
-> share its implementation.
-> 
-> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  arch/arm64/mm/mmu.c      | 53 ++++++-----------------
->  arch/loongarch/mm/init.c | 63 ++++++++-------------------
->  arch/x86/mm/init_64.c    | 92 ++++++++++++++--------------------------
->  include/linux/mm.h       |  6 +++
->  mm/sparse-vmemmap.c      | 54 +++++++++++++++++++++++
->  5 files changed, 124 insertions(+), 144 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 626ec32873c6..b080a65c719d 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -1158,49 +1158,24 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->  	return vmemmap_populate_basepages(start, end, node, altmap);
->  }
->  #else	/* !ARM64_KERNEL_USES_PMD_MAPS */
-> +void __meminit vmemmap_set_pmd(pmd_t *pmdp, void *p, int node,
-> +			       unsigned long addr, unsigned long next)
-> +{
-> +	pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
-> +}
-> +
-> +int __meminit vmemmap_check_pmd(pmd_t *pmdp, int node, unsigned long addr,
-> +				unsigned long next)
-> +{
-> +	vmemmap_verify((pte_t *)pmdp, node, addr, next);
-> +	return 1;
-> +}
-> +
->  int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->  		struct vmem_altmap *altmap)
->  {
-> -	unsigned long addr = start;
-> -	unsigned long next;
-> -	pgd_t *pgdp;
-> -	p4d_t *p4dp;
-> -	pud_t *pudp;
-> -	pmd_t *pmdp;
-> -
->  	WARN_ON((start < VMEMMAP_START) || (end > VMEMMAP_END));
-> -	do {
-> -		next = pmd_addr_end(addr, end);
-> -
-> -		pgdp = vmemmap_pgd_populate(addr, node);
-> -		if (!pgdp)
-> -			return -ENOMEM;
-> -
-> -		p4dp = vmemmap_p4d_populate(pgdp, addr, node);
-> -		if (!p4dp)
-> -			return -ENOMEM;
-> -
-> -		pudp = vmemmap_pud_populate(p4dp, addr, node);
-> -		if (!pudp)
-> -			return -ENOMEM;
-> -
-> -		pmdp = pmd_offset(pudp, addr);
-> -		if (pmd_none(READ_ONCE(*pmdp))) {
-> -			void *p = NULL;
-> -
-> -			p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
-> -			if (!p) {
-> -				if (vmemmap_populate_basepages(addr, next, node, altmap))
-> -					return -ENOMEM;
-> -				continue;
-> -			}
-> -
-> -			pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
-> -		} else
-> -			vmemmap_verify((pte_t *)pmdp, node, addr, next);
-> -	} while (addr = next, addr != end);
-> -
-> -	return 0;
-> +	return vmemmap_populate_hugepages(start, end, node, altmap);
->  }
->  #endif	/* !ARM64_KERNEL_USES_PMD_MAPS */
+On Tue, 2022-07-05 at 16:46 +0800, WANG Xuerui wrote:
 
+> Actually I'm still not very satisfied with the explanation; the code=20
+> must be written with *something* in mind, since GS464V/LA464 is the only=
+=20
+> LoongArch implementation so far, it must have a VCSR to begin with. And=
+=20
+> you can't magically melt the VCSR on the tens of thousands of=20
+> 3A5000/3C5000's already shipped, because the old-world kernel obviously=
+=20
+> comes with LSX/LASX and it most likely utilizes the VCSR. In addition,
+> you didn't mention what will happen if LSX/LASX *is* enabled on this=20
+> new-world kernel, *and* fcsr16 is being accessed.
+>=20
+> I think maybe you just want to remove the mentions of VCSR since they=20
+> are dead code right now, as I don't believe it's gone in shipped=20
+> hardware, as explained above. Except if there's magically a way to=20
+> implement LSX/LASX without touching the said-to-have-disappeared VCSR,
+> which I don't know of, and can't know because the LSX/LASX ISA manual is=
+=20
+> still not publicly accessible; so I don't feel comfortable approving=20
+> this patch.
 
-I think the arm64 change is mostly ok (thanks!), but I have a question about
-the core code you're introducing:
+Let me make some bold guess here.  In the MIPS-compatible 3A4000 we had
+"MSACSR" register.  According to the MSA manual, only the 24-th bit of
+this register is used:
 
-> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-> index 33e2a1ceee72..6f2e40bb695d 100644
-> --- a/mm/sparse-vmemmap.c
-> +++ b/mm/sparse-vmemmap.c
-> @@ -686,6 +686,60 @@ int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
->  	return vmemmap_populate_range(start, end, node, altmap, NULL);
->  }
->  
-> +void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
-> +				      unsigned long addr, unsigned long next)
-> +{
-> +}
-> +
-> +int __weak __meminit vmemmap_check_pmd(pmd_t *pmd, int node, unsigned long addr,
-> +				       unsigned long next)
-> +{
-> +	return 0;
-> +}
-> +
-> +int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
-> +					 int node, struct vmem_altmap *altmap)
-> +{
-> +	unsigned long addr;
-> +	unsigned long next;
-> +	pgd_t *pgd;
-> +	p4d_t *p4d;
-> +	pud_t *pud;
-> +	pmd_t *pmd;
-> +
-> +	for (addr = start; addr < end; addr = next) {
-> +		next = pmd_addr_end(addr, end);
-> +
-> +		pgd = vmemmap_pgd_populate(addr, node);
-> +		if (!pgd)
-> +			return -ENOMEM;
-> +
-> +		p4d = vmemmap_p4d_populate(pgd, addr, node);
-> +		if (!p4d)
-> +			return -ENOMEM;
-> +
-> +		pud = vmemmap_pud_populate(p4d, addr, node);
-> +		if (!pud)
-> +			return -ENOMEM;
-> +
-> +		pmd = pmd_offset(pud, addr);
-> +		if (pmd_none(READ_ONCE(*pmd))) {
-> +			void *p;
-> +
-> +			p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
-> +			if (p) {
-> +				vmemmap_set_pmd(pmd, p, node, addr, next);
-> +				continue;
-> +			} else if (altmap)
-> +				return -ENOMEM; /* no fallback */
+"Some MSA floating point instructions might not handle subnormal input
+operands or compute tiny non-zero results. Such instructions may signal
+the Unimplemented Operation Exception and let the software emulation
+finalize the operation. If software emulation is not needed or desired,
+MSACSR FS bit could be set to replace every tiny non-zero result and
+subnormal input operand with zero of the same sign."
 
-Why do you return -ENOMEM if 'altmap' here? That seems to be different to
-what we currently have on arm64 and it's not clear to me why we're happy
-with an altmap for the pmd case, but not for the pte case.
+And, it says:
 
-Will
+"Should the alternate exception handling attributes of the IEEE Standard
+for Floating-Point Arithmetic 754-2008, Section 8 be desired, the MSACSR
+FS bit should be zero, the Underflow Exception be enabled and a trap
+handler be provided to carry out the execution of the alternate
+exception handling attributes."
+
+We can see Loongson has been trying to make 3A processors more IEEE-754
+compatible.  For example, 3A4000 is the only non-R6 MIPS-compatible
+processor using IEEE-754-2008 NaN encoding.  And LoongArch manual
+directly refers to IEEE-754-2008 manual in many places.  So I guess this
+change means Loongson won't set this bit to 1 for 3A5000 at all, and any
+attempt by the user to set this bit could be considered undefined
+behavior (causing inconsistent behavior on 3A5000 as the kernel doesn't
+save/restore VCSR at context switch, and SIGILL on 3A6000 as the
+register is removed).
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
