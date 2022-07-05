@@ -1,128 +1,47 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 183023D99
-	for <loongarch@lists.linux.dev>; Mon,  4 Jul 2022 15:36:18 +0000 (UTC)
-Received: from localhost.localdomain (unknown [223.104.41.228])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX+PsCMNiS8wIAA--.26936S2;
-	Mon, 04 Jul 2022 23:36:16 +0800 (CST)
-From: Qi Hu <huqi@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Clean useless vcsr in loongarch_fpu.
-Date: Mon,  4 Jul 2022 23:36:12 +0800
-Message-Id: <20220704153612.314112-1-huqi@loongson.cn>
-X-Mailer: git-send-email 2.36.1
+Received: from server.cwsithost.com (server.cwsithost.com [162.144.211.127])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E14182
+	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 00:47:44 +0000 (UTC)
+Received: from autismspectrumal by server.cwsithost.com with local (Exim 4.94.2)
+	(envelope-from <autismspectrumal@server.cwsithost.com>)
+	id 1o8WFz-0005Uo-NG; Tue, 05 Jul 2022 00:17:35 +0000
+To: prportal@continuumgroup.net, loongarch@lists.linux.dev
+Subject: Continuum | Behavioral Health Treatment, Intervention, And Diagnosis "muhmbr"
+X-PHP-Script: autism.cwsithost.com/index.php for 23.128.248.13
+X-PHP-Originating-Script: 500:class-phpmailer.php
+Date: Tue, 5 Jul 2022 00:17:35 +0000
+From: =?UTF-8?Q?=F0=9F=96=A4_Have_you_ever_tried_this_sex_game_before=3F_GIVE_I?=
+ =?UTF-8?Q?T_A_TRY=3A_https=3A//letsg0dancing=2Epage=2Elink/go=3Ftiecv_?=
+ =?UTF-8?Q?=F0=9F=96=A4?= <wordpress@autismspectrumalliance.com>
+Reply-To: loongarch@lists.linux.dev
+Message-ID: <b3011daa1d6b662cafc881fd6ef1da85@autism.cwsithost.com>
+X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf9DxX+PsCMNiS8wIAA--.26936S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uF15XF47KF43Jw17KF48JFb_yoW5JF1DpF
-	ZrZrn7GF4rWrn3JryDt34kWrWkJ3ZrGw1agasIka4fCr47Xw1UWrWvyryDXFyjqa1rK3y0
-	gF1rGw1SqF1DJ3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkYb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
-	A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMc
-	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_XrWl42xK82IY
-	c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-	jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU5XJ57UUUUU==
-X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQARCV3QvPwzrgAkst
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.cwsithost.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [500 500] / [47 12]
+X-AntiAbuse: Sender Address Domain - server.cwsithost.com
+X-Get-Message-Sender-Via: server.cwsithost.com: authenticated_id: autismspectrumal/primary_hostname/system user
+X-Authenticated-Sender: server.cwsithost.com: autismspectrumal
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-The `vcsr` is not used anymore. Remove this member from `loongarch_fpu`.
+From: 🖤 Have you ever tried this sex game before? GIVE IT A TRY: https://letsg0dancing.page.link/go?tiecv 🖤 <loongarch@lists.linux.dev>
+Subject: muhmbr
 
-From 3A5000(LoongArch), `vcsr` is removed in hardware. FP and LSX/LASX
-both use `fcsr` as their csr.
+Message Body:
+y69yd8
 
-Particularly, fcsr from $r16 to $r31 are reserved for LSX/LASX, and
-using the registers in this area will cause SXD/ASXD if LSX/LASX is
-not enabled.
-
-Signed-off-by: Qi Hu <huqi@loongson.cn>
----
-V2:
-- Add more details in the commit message.
----
- arch/loongarch/include/asm/fpregdef.h  |  1 -
- arch/loongarch/include/asm/processor.h |  2 --
- arch/loongarch/kernel/asm-offsets.c    |  1 -
- arch/loongarch/kernel/fpu.S            | 10 ----------
- 4 files changed, 14 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/fpregdef.h b/arch/loongarch/include/asm/fpregdef.h
-index adb16e4b4..b6be52783 100644
---- a/arch/loongarch/include/asm/fpregdef.h
-+++ b/arch/loongarch/include/asm/fpregdef.h
-@@ -48,6 +48,5 @@
- #define fcsr1	$r1
- #define fcsr2	$r2
- #define fcsr3	$r3
--#define vcsr16	$r16
- 
- #endif /* _ASM_FPREGDEF_H */
-diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
-index 1d63c934b..57ec45aa0 100644
---- a/arch/loongarch/include/asm/processor.h
-+++ b/arch/loongarch/include/asm/processor.h
-@@ -80,7 +80,6 @@ BUILD_FPR_ACCESS(64)
- 
- struct loongarch_fpu {
- 	unsigned int	fcsr;
--	unsigned int	vcsr;
- 	uint64_t	fcc;	/* 8x8 */
- 	union fpureg	fpr[NUM_FPU_REGS];
- };
-@@ -161,7 +160,6 @@ struct thread_struct {
- 	 */							\
- 	.fpu			= {				\
- 		.fcsr		= 0,				\
--		.vcsr		= 0,				\
- 		.fcc		= 0,				\
- 		.fpr		= {{{0,},},},			\
- 	},							\
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index bfb65eb28..20cd9e16a 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -166,7 +166,6 @@ void output_thread_fpu_defines(void)
- 
- 	OFFSET(THREAD_FCSR, loongarch_fpu, fcsr);
- 	OFFSET(THREAD_FCC,  loongarch_fpu, fcc);
--	OFFSET(THREAD_VCSR, loongarch_fpu, vcsr);
- 	BLANK();
- }
- 
-diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
-index 75c6ce068..a631a7137 100644
---- a/arch/loongarch/kernel/fpu.S
-+++ b/arch/loongarch/kernel/fpu.S
-@@ -146,16 +146,6 @@
- 	movgr2fcsr	fcsr0, \tmp0
- 	.endm
- 
--	.macro sc_save_vcsr base, tmp0
--	movfcsr2gr	\tmp0, vcsr16
--	EX	st.w \tmp0, \base, 0
--	.endm
--
--	.macro sc_restore_vcsr base, tmp0
--	EX	ld.w \tmp0, \base, 0
--	movgr2fcsr	vcsr16, \tmp0
--	.endm
--
- /*
-  * Save a thread's fp context.
-  */
--- 
-2.36.1
+--
+This e-mail was sent from a contact form on Continuum | Behavioral Health Treatment, Intervention, And Diagnosis (http://autism.cwsithost.com/main-site)
 
