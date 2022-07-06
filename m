@@ -1,108 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A388117C9
-	for <loongarch@lists.linux.dev>; Wed,  6 Jul 2022 00:46:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D9C7C341CB
-	for <loongarch@lists.linux.dev>; Wed,  6 Jul 2022 00:46:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032BA17EF
+	for <loongarch@lists.linux.dev>; Wed,  6 Jul 2022 02:35:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AE61C341CD
+	for <loongarch@lists.linux.dev>; Wed,  6 Jul 2022 02:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657068408;
-	bh=Jj3FwQ4HBpuobPyZ832SIAC1FCJMY+cubble0ym22lU=;
+	s=k20201202; t=1657074928;
+	bh=odXUxn3yXrrHvlOzMGJbrTaSnOuDZ37Y8U+5wx5W1MI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=paD2SriR9dq0LeSQzHUkus7DS1R1cDpKzYiazgLLHb0TapI2S28vHj7Ac+Eovwkdz
-	 5SSRAtU3snJJnjkwRA2ENSY59EUnSz1dnEOSIVvjgNFrSxvjxRPRDZ6Ji+WUeKObPn
-	 4YUEwgwZf/fUeyxDdmZJ1+N/D9msZ+MuyQwKPhws74WEiL8mfutVvLiF1luRDAbFxj
-	 s977SrJ3v7Vusf3rx8g7KnN4VJ4dz724e7+JPS6vr9SXrsnG9EINJMOJTy/JzNgDQJ
-	 gCOEJphamsF/ui6GNotMfbeFllru1eY0p2AKtKUYBnX2CY54wubtShaP2jhhdKuum4
-	 QrwqJabKPYE9w==
-Received: by mail-vk1-f169.google.com with SMTP id 18so1208667vkz.2
-        for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022 17:46:48 -0700 (PDT)
-X-Gm-Message-State: AJIora8N3f6+jW7SYz5X9Y5nGlGmK/aMRAL15GgDG2giMecF+Wpa/p9p
-	1RxZJp+teMXYn9mr20VANmymME2swLJJyU42vpI=
-X-Google-Smtp-Source: AGRyM1vvuIe+qf8xo4fOT9nX4g9oGlyOV4noxQuTgIoficxPhRAT9xdDT8InaTVVk/i+GPr16viVr4OgIgFCQhrAX9o=
-X-Received: by 2002:a1f:2a86:0:b0:370:8ff3:d5f with SMTP id
- q128-20020a1f2a86000000b003708ff30d5fmr18265507vkq.35.1657068407238; Tue, 05
- Jul 2022 17:46:47 -0700 (PDT)
+	b=r5s7HV8LvjO7Zm91/Mi+t9brclcE3n7WL/sLiQeWCFrKQzOzDQ33hNo5GbGqhXpeY
+	 F71n5aDP7thfGo52pcvGEemJaoTHD5Jg4zekdbwa4NH7V+CpxoHU/Laoy8aQ2Pn3wN
+	 w3+vaSiO/HT2NWkLCy+ZO15WkEBzNZLVbAKXzJzmd1N3/Lc5B4pSRiR6LOKIEw+FsG
+	 syThcgGdfYGPlQS+L5T1UT1DJOb929oOnRgU0YTD1xbTmlUmEy7P80TclO/uwEitW5
+	 NZdH/td57GJvjs2PRuMpjokgkzd3WL1fQw31A3HUJ8XMEH+YAU1evurM4Ha/H2776W
+	 LI4dOl+AmU2RA==
+Received: by mail-vk1-f170.google.com with SMTP id j15so6780244vkp.5
+        for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022 19:35:28 -0700 (PDT)
+X-Gm-Message-State: AJIora/Ex5Iv43I0z1zM11zd3dLIorO1+Q0jX9IYsGwn6FER5V96HBOa
+	Kfo63w84WY5cvFtG9h/6Tg9SPJ6LMk17oMx/Mfw=
+X-Google-Smtp-Source: AGRyM1uAngO5m2udrmv51xAN0r4gQJS2lYeBLGvNMMaEU2T4TxWx008yRfQwpEADKLejzKbcgCLBxNFrv0kYPr/yo+Y=
+X-Received: by 2002:a1f:17d2:0:b0:374:3ca2:def3 with SMTP id
+ 201-20020a1f17d2000000b003743ca2def3mr11377vkx.18.1657074927520; Tue, 05 Jul
+ 2022 19:35:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220705073405.29618-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20220705073405.29618-1-lukas.bulwahn@gmail.com>
+References: <20220704153612.314112-1-huqi@loongson.cn> <4273e104-8392-6a06-5d18-a1933978d8c3@xen0n.name>
+ <22a1ba993e298ce12a374decefebeca484240883.camel@xry111.site> <16c9ccaa5e5a2ffd39272cff6f66e487c659b571.camel@xry111.site>
+In-Reply-To: <16c9ccaa5e5a2ffd39272cff6f66e487c659b571.camel@xry111.site>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 6 Jul 2022 08:46:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5s4gZf+vU=Vs1uGAqXMC+fBSRbNJdUgqkgmGNCdwxhxw@mail.gmail.com>
-Message-ID: <CAAhV-H5s4gZf+vU=Vs1uGAqXMC+fBSRbNJdUgqkgmGNCdwxhxw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: drop these obsolete selects in Kconfig
-To: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	kernel-janitors@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Date: Wed, 6 Jul 2022 10:35:15 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5+qd1ZrOqE8fgRmWshXy57AfEFpyKSK8ZstZZEQ53owQ@mail.gmail.com>
+Message-ID: <CAAhV-H5+qd1ZrOqE8fgRmWshXy57AfEFpyKSK8ZstZZEQ53owQ@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: Clean useless vcsr in loongarch_fpu.
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: WANG Xuerui <kernel@xen0n.name>, Qi Hu <huqi@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, 
+	LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Queued for loongarch-fixes, thanks.
+Hi, all,
+
+On Tue, Jul 5, 2022 at 6:01 PM Xi Ruoyao <xry111@xry111.site> wrote:
+>
+> On Tue, 2022-07-05 at 17:49 +0800, Xi Ruoyao wrote:
+> > On Tue, 2022-07-05 at 16:46 +0800, WANG Xuerui wrote:
+> >
+> > > Actually I'm still not very satisfied with the explanation; the code
+> > > must be written with *something* in mind, since GS464V/LA464 is the only
+> > > LoongArch implementation so far, it must have a VCSR to begin with. And
+> > > you can't magically melt the VCSR on the tens of thousands of
+> > > 3A5000/3C5000's already shipped, because the old-world kernel obviously
+> > > comes with LSX/LASX and it most likely utilizes the VCSR. In addition,
+> > > you didn't mention what will happen if LSX/LASX *is* enabled on this
+> > > new-world kernel, *and* fcsr16 is being accessed.
+> > >
+> > > I think maybe you just want to remove the mentions of VCSR since they
+> > > are dead code right now, as I don't believe it's gone in shipped
+> > > hardware, as explained above. Except if there's magically a way to
+> > > implement LSX/LASX without touching the said-to-have-disappeared VCSR,
+> > > which I don't know of, and can't know because the LSX/LASX ISA manual is
+> > > still not publicly accessible; so I don't feel comfortable approving
+> > > this patch.
+> >
+> > Let me make some bold guess here.  In the MIPS-compatible 3A4000 we had
+> > "MSACSR" register.  According to the MSA manual, only the 24-th bit of
+> > this register is used:
+> >
+> > "Some MSA floating point instructions might not handle subnormal input
+> > operands or compute tiny non-zero results. Such instructions may signal
+> > the Unimplemented Operation Exception and let the software emulation
+> > finalize the operation. If software emulation is not needed or desired,
+> > MSACSR FS bit could be set to replace every tiny non-zero result and
+> > subnormal input operand with zero of the same sign."
+> >
+> > And, it says:
+> >
+> > "Should the alternate exception handling attributes of the IEEE Standard
+> > for Floating-Point Arithmetic 754-2008, Section 8 be desired, the MSACSR
+> > FS bit should be zero, the Underflow Exception be enabled and a trap
+> > handler be provided to carry out the execution of the alternate
+> > exception handling attributes."
+> >
+> > We can see Loongson has been trying to make 3A processors more IEEE-754
+> > compatible.  For example, 3A4000 is the only non-R6 MIPS-compatible
+> > processor using IEEE-754-2008 NaN encoding.  And LoongArch manual
+> > directly refers to IEEE-754-2008 manual in many places.  So I guess this
+> > change means Loongson won't set this bit to 1 for 3A5000 at all, and any
+> > attempt by the user to set this bit could be considered undefined
+> > behavior (causing inconsistent behavior on 3A5000 as the kernel doesn't
+> > save/restore VCSR at context switch, and SIGILL on 3A6000 as the
+> > register is removed).
+>
+> P. S. I'm just playing an "intelligence game" writing the reply so maybe
+> I'm completely wrong.  And, it does not indicate any position of me or
+> my affiliation about some "controversial topics".  And, even if my guess
+> is correct, it's still better to add something like "the use of VCSR is
+> optional in LA464 and we've decided to remove it in future
+> architectures, so it's not supported to use it even on LA464" into the
+> commit message.
+
+Maybe Xuerui and Ruoyao have some misunderstanding. LSX/LASX will
+surely be upstream, this has nothing to do with cleanup VCSR16.
+Because FP/LSX/LASX share the same control bits in FCSR now. Am I
+right? Qi Hu?
+
+If I'm right, Qi Hu, please tell us what control bits were in VCSR16,
+and where their replacements in FCSR are. Thanks.
 
 Huacai
 
-On Tue, Jul 5, 2022 at 3:35 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
->
-> Commit fa96b57c1490 ("LoongArch: Add build infrastructure") adds the new
-> file arch/loongarch/Kconfig.
->
-> As the work on LoongArch was probably quite some time under development,
-> various config symbols have changed and disappeared from the time of
-> initial writing of the Kconfig file and its inclusion in the repository.
->
-> The following four commits:
->
->   commit c126a53c2760 ("arch: remove GENERIC_FIND_FIRST_BIT entirely")
->   commit 140c8180eb7c ("arch: remove HAVE_COPY_THREAD_TLS")
->   commit aca52c398389 ("mm: remove CONFIG_HAVE_MEMBLOCK")
->   commit 3f08a302f533 ("mm: remove CONFIG_HAVE_MEMBLOCK_NODE_MAP option")
->
-> remove the mentioned config symbol, and enable the intended setup by
-> default without configuration.
->
-> Drop these obsolete selects in loongarch's Kconfig.
->
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Huacai Chen, please pick this minor clean-up patch.
->
->  arch/loongarch/Kconfig | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 2dee595bf4b6..9be4d0eef299 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -54,7 +54,6 @@ config LOONGARCH
->         select GENERIC_CMOS_UPDATE
->         select GENERIC_CPU_AUTOPROBE
->         select GENERIC_ENTRY
-> -       select GENERIC_FIND_FIRST_BIT
->         select GENERIC_GETTIMEOFDAY
->         select GENERIC_IRQ_MULTI_HANDLER
->         select GENERIC_IRQ_PROBE
-> @@ -77,7 +76,6 @@ config LOONGARCH
->         select HAVE_ARCH_TRANSPARENT_HUGEPAGE
->         select HAVE_ASM_MODVERSIONS
->         select HAVE_CONTEXT_TRACKING_USER
-> -       select HAVE_COPY_THREAD_TLS
->         select HAVE_DEBUG_STACKOVERFLOW
->         select HAVE_DMA_CONTIGUOUS
->         select HAVE_EXIT_THREAD
-> @@ -86,8 +84,6 @@ config LOONGARCH
->         select HAVE_IOREMAP_PROT
->         select HAVE_IRQ_EXIT_ON_IRQ_STACK
->         select HAVE_IRQ_TIME_ACCOUNTING
-> -       select HAVE_MEMBLOCK
-> -       select HAVE_MEMBLOCK_NODE_MAP
->         select HAVE_MOD_ARCH_SPECIFIC
->         select HAVE_NMI
->         select HAVE_PERF_EVENTS
 > --
-> 2.17.1
->
->
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
