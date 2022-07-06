@@ -1,74 +1,128 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5640C20EC
-	for <loongarch@lists.linux.dev>; Wed,  6 Jul 2022 04:00:35 +0000 (UTC)
-Received: from [198.18.0.1] (unknown [192.168.200.1])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Axn+LhCMViZP0LAA--.36560S3;
-	Wed, 06 Jul 2022 12:00:33 +0800 (CST)
-Message-ID: <c824b9ca-c9c4-1912-7845-99a0989277a4@loongson.cn>
-Date: Wed, 6 Jul 2022 12:00:33 +0800
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01477C
+	for <loongarch@lists.linux.dev>; Wed,  6 Jul 2022 08:59:36 +0000 (UTC)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0VIXnCQL_1657097963;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VIXnCQL_1657097963)
+          by smtp.aliyun-inc.com;
+          Wed, 06 Jul 2022 16:59:24 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org
+Cc: rppt@linux.ibm.com,
+	willy@infradead.org,
+	will@kernel.org,
+	aneesh.kumar@linux.ibm.com,
+	npiggin@gmail.com,
+	peterz@infradead.org,
+	catalin.marinas@arm.com,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	tsbogend@alpha.franken.de,
+	dave.hansen@linux.intel.com,
+	luto@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	hpa@zytor.com,
+	arnd@arndb.de,
+	guoren@kernel.org,
+	monstr@monstr.eu,
+	jonas@southpole.se,
+	stefan.kristiansson@saunalahti.fi,
+	shorne@gmail.com,
+	baolin.wang@linux.alibaba.com,
+	x86@kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linux-csky@vger.kernel.org,
+	openrisc@lists.librecores.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] mm: Factor out the pagetable pages account into new helper function
+Date: Wed,  6 Jul 2022 16:59:15 +0800
+Message-Id: <a131bd98f7fd0c5b904b05496d53caaa2c62cde5.1657096412.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
+References: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
+In-Reply-To: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
+References: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2] LoongArch: Clean useless vcsr in loongarch_fpu.
-Content-Language: en-US
-To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-References: <20220704153612.314112-1-huqi@loongson.cn>
- <4273e104-8392-6a06-5d18-a1933978d8c3@xen0n.name>
- <22a1ba993e298ce12a374decefebeca484240883.camel@xry111.site>
- <16c9ccaa5e5a2ffd39272cff6f66e487c659b571.camel@xry111.site>
- <CAAhV-H5+qd1ZrOqE8fgRmWshXy57AfEFpyKSK8ZstZZEQ53owQ@mail.gmail.com>
- <ac46f5cb4c8d1154cfc3e862fb5211e869839c9a.camel@xry111.site>
-From: Qi Hu <huqi@loongson.cn>
-In-Reply-To: <ac46f5cb4c8d1154cfc3e862fb5211e869839c9a.camel@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9Axn+LhCMViZP0LAA--.36560S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7ArWUurWDJw45KrWUurWkXrb_yoW8Gw17pF
-	4xWw4fAF4kArnIva1kAw4rKa13W348WayUKwsIvr1jkrn2q343KrWrXFs5GFyfGr1SyF45
-	Xr4qqryxZ3yDZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UUUUUUUUU==
-X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQATCV3QvPxRrAABsq
 
+Factor out the pagetable pages account and pagetable setting into new
+helper functions to avoid duplicated code. Meanwhile these helper
+functions also will be used to account pagetable pages which do not
+need split pagetable lock.
 
-On 2022/7/6 10:51, Xi Ruoyao wrote:
-> On Wed, 2022-07-06 at 10:35 +0800, Huacai Chen wrote:
->
->> Maybe Xuerui and Ruoyao have some misunderstanding. LSX/LASX will
->> surely be upstream, this has nothing to do with cleanup VCSR16.
->> Because FP/LSX/LASX share the same control bits in FCSR now.
-> My guess:
->
-> Almost all behavior of vector unit is controlled by FCSR (for example,
-> the rounding of both FPU and vector unit should be controlled by FCSR
-> altogether), except one bit similar to the bit 24 of MSACSR ("flush to
-> zero") is in VCSR [^1].  And "flush to zero" is not really useful so it
-> will be removed in 3A6000, and we'll not use it for 3A5000.
-Actually, flush to zero has been removed in 3A5000.
->
-> [^1]: A more bold guess: the hardware engineers could have just said
-> "let's wire this register called MSACSR in GS464V as FCSR16/VCSR in
-> LA464, maybe it will be useful and who knows?"  But now in practice it's
-> not useful.
->
-> Am I correct?
-The hardware(LA464) has removed the vcsr("has but not use" is 
-incorrect), and here are some details:
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+---
+ include/linux/mm.h | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-- For all FP operations, including LSX/LASX, they are controlled by 
-fcsr0/1/2/3.
-
-- For LSX/LASX other operations, they are *not* controlled by any other 
-CSR now. And fcsr16 to fcsr31 are reserved to control these operations 
-(now they are *undefined*).
-
-- Flush to zero(MSACSR.FS) is removed and not supported.
-
-- If you use "movfcsr2gr" to read the fcsr16, the value is *UNDEFINED*.
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index d084ce5..7894bc5 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2352,20 +2352,30 @@ static inline void pgtable_init(void)
+ 	pgtable_cache_init();
+ }
+ 
++static inline void page_set_pgtable(struct page *page)
++{
++	__SetPageTable(page);
++	inc_lruvec_page_state(page, NR_PAGETABLE);
++}
++
++static inline void page_clear_pgtable(struct page *page)
++{
++	__ClearPageTable(page);
++	dec_lruvec_page_state(page, NR_PAGETABLE);
++}
++
+ static inline bool pgtable_pte_page_ctor(struct page *page)
+ {
+ 	if (!ptlock_init(page))
+ 		return false;
+-	__SetPageTable(page);
+-	inc_lruvec_page_state(page, NR_PAGETABLE);
++	page_set_pgtable(page);
+ 	return true;
+ }
+ 
+ static inline void pgtable_pte_page_dtor(struct page *page)
+ {
+ 	ptlock_free(page);
+-	__ClearPageTable(page);
+-	dec_lruvec_page_state(page, NR_PAGETABLE);
++	page_clear_pgtable(page);
+ }
+ 
+ #define pte_offset_map_lock(mm, pmd, address, ptlp)	\
+@@ -2451,16 +2461,14 @@ static inline bool pgtable_pmd_page_ctor(struct page *page)
+ {
+ 	if (!pmd_ptlock_init(page))
+ 		return false;
+-	__SetPageTable(page);
+-	inc_lruvec_page_state(page, NR_PAGETABLE);
++	page_set_pgtable(page);
+ 	return true;
+ }
+ 
+ static inline void pgtable_pmd_page_dtor(struct page *page)
+ {
+ 	pmd_ptlock_free(page);
+-	__ClearPageTable(page);
+-	dec_lruvec_page_state(page, NR_PAGETABLE);
++	page_clear_pgtable(page);
+ }
+ 
+ /*
+-- 
+1.8.3.1
 
