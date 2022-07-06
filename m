@@ -1,12 +1,12 @@
-Received: from out199-5.us.a.mail.aliyun.com (out199-5.us.a.mail.aliyun.com [47.90.199.5])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B3C7C
-	for <loongarch@lists.linux.dev>; Wed,  6 Jul 2022 08:59:53 +0000 (UTC)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0VIXd7l-_1657097967;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VIXd7l-_1657097967)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A537C
+	for <loongarch@lists.linux.dev>; Wed,  6 Jul 2022 09:15:03 +0000 (UTC)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0VIXd7j9_1657097961;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VIXd7j9_1657097961)
           by smtp.aliyun-inc.com;
-          Wed, 06 Jul 2022 16:59:29 +0800
+          Wed, 06 Jul 2022 16:59:22 +0800
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
 To: akpm@linux-foundation.org
 Cc: rppt@linux.ibm.com,
@@ -41,126 +41,64 @@ Cc: rppt@linux.ibm.com,
 	openrisc@lists.librecores.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] mm: Add kernel PTE level pagetable pages account
-Date: Wed,  6 Jul 2022 16:59:17 +0800
-Message-Id: <398ead25695e530f766849be5edafaf62c1c864d.1657096412.git.baolin.wang@linux.alibaba.com>
+Subject: [PATCH 0/3] Add PUD and kernel PTE level pagetable account
+Date: Wed,  6 Jul 2022 16:59:14 +0800
+Message-Id: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
-References: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
-In-Reply-To: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
-References: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-Now the kernel PTE level ptes are always protected by mm->page_table_lock
-instead of split pagetable lock, so the kernel PTE level pagetable pages
-are not accounted. Especially the vmalloc()/vmap() can consume lots of
-kernel pagetable, so to get an accurate pagetable accounting, calling new
-helpers page_{set,clear}_pgtable() when allocating or freeing a kernel
-PTE level pagetable page.
+Hi,
 
-Meanwhile converting architectures to use corresponding generic PTE pagetable
-allocation and freeing functions.
+Now we will miss to account the PUD level pagetable and kernel PTE level
+pagetable, as well as missing to set the PG_table flags for these pagetable
+pages, which will get an inaccurate pagetable accounting, and miss
+PageTable() validation in some cases. So this patch set introduces new
+helpers to help to account PUD and kernel PTE pagetable pages.
 
-Note this patch only adds accounting to the page tables allocated after boot.
+Note there are still some architectures specific pagetable allocation
+that need to account the pagetable pages, which need more investigation
+and cleanup in future.
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Reported-by: kernel test robot <oliver.sang@intel.com>
----
- arch/csky/include/asm/pgalloc.h |  2 +-
- arch/microblaze/mm/pgtable.c    |  2 +-
- arch/openrisc/mm/ioremap.c      |  2 +-
- arch/x86/mm/pgtable.c           |  2 +-
- include/asm-generic/pgalloc.h   | 14 ++++++++++++--
- 5 files changed, 16 insertions(+), 6 deletions(-)
+Changes from RFC v3:
+ - Rebased on 20220706 linux-next.
+ - Introduce new pgtable_pud_page_ctor/dtor() and rename the helpers.
+ - Change back to use inc_lruvec_page_state()/dec_lruvec_page_state().
+ - Update some commit message.
+link: https://lore.kernel.org/all/cover.1656586863.git.baolin.wang@linux.alibaba.com/
 
-diff --git a/arch/csky/include/asm/pgalloc.h b/arch/csky/include/asm/pgalloc.h
-index 7d57e5d..56f8d25 100644
---- a/arch/csky/include/asm/pgalloc.h
-+++ b/arch/csky/include/asm/pgalloc.h
-@@ -29,7 +29,7 @@ static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
- 	pte_t *pte;
- 	unsigned long i;
- 
--	pte = (pte_t *) __get_free_page(GFP_KERNEL);
-+	pte = __pte_alloc_one_kernel(mm);
- 	if (!pte)
- 		return NULL;
- 
-diff --git a/arch/microblaze/mm/pgtable.c b/arch/microblaze/mm/pgtable.c
-index 9f73265..e96dd1b 100644
---- a/arch/microblaze/mm/pgtable.c
-+++ b/arch/microblaze/mm/pgtable.c
-@@ -245,7 +245,7 @@ unsigned long iopa(unsigned long addr)
- __ref pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
- {
- 	if (mem_init_done)
--		return (pte_t *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
-+		return __pte_alloc_one_kernel(mm);
- 	else
- 		return memblock_alloc_try_nid(PAGE_SIZE, PAGE_SIZE,
- 					      MEMBLOCK_LOW_LIMIT,
-diff --git a/arch/openrisc/mm/ioremap.c b/arch/openrisc/mm/ioremap.c
-index daae13a..3453acc 100644
---- a/arch/openrisc/mm/ioremap.c
-+++ b/arch/openrisc/mm/ioremap.c
-@@ -118,7 +118,7 @@ pte_t __ref *pte_alloc_one_kernel(struct mm_struct *mm)
- 	pte_t *pte;
- 
- 	if (likely(mem_init_done)) {
--		pte = (pte_t *)get_zeroed_page(GFP_KERNEL);
-+		pte = __pte_alloc_one_kernel(mm);
- 	} else {
- 		pte = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
- 		if (!pte)
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index ea39670..20f3076 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -858,7 +858,7 @@ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
- 	/* INVLPG to clear all paging-structure caches */
- 	flush_tlb_kernel_range(addr, addr + PAGE_SIZE-1);
- 
--	free_page((unsigned long)pte);
-+	pte_free_kernel(NULL, pte);
- 
- 	return 1;
- }
-diff --git a/include/asm-generic/pgalloc.h b/include/asm-generic/pgalloc.h
-index 8ce8d7c..cd8420f 100644
---- a/include/asm-generic/pgalloc.h
-+++ b/include/asm-generic/pgalloc.h
-@@ -18,7 +18,14 @@
-  */
- static inline pte_t *__pte_alloc_one_kernel(struct mm_struct *mm)
- {
--	return (pte_t *)__get_free_page(GFP_PGTABLE_KERNEL);
-+	struct page *page;
-+	gfp_t gfp = GFP_PGTABLE_KERNEL;
-+
-+	page = alloc_pages(gfp, 0);
-+	if (!page)
-+		return NULL;
-+	page_set_pgtable(page);
-+	return (pte_t *)page_address(page);
- }
- 
- #ifndef __HAVE_ARCH_PTE_ALLOC_ONE_KERNEL
-@@ -41,7 +48,10 @@ static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
-  */
- static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
- {
--	free_page((unsigned long)pte);
-+	struct page *page = virt_to_page(pte);
-+
-+	page_clear_pgtable(page);
-+	__free_page(page);
- }
- 
- /**
+Changes from RFC v2:
+ - Convert to use mod_lruvec_page_state() for non-order-0 case.
+ - Rename the helpers.
+ - Update some commit messages.
+ - Remove unnecessary __GFP_HIGHMEM clear.
+link: https://lore.kernel.org/all/cover.1655887440.git.baolin.wang@linux.alibaba.com/
+
+Changes from RFC v1:
+ - Update some commit message.
+ - Add missing pgtable_clear_and_dec() on X86 arch.
+ - Use __free_page() to free pagetable which can avoid duplicated virt_to_page().
+link: https://lore.kernel.org/all/cover.1654271618.git.baolin.wang@linux.alibaba.com/
+
+Baolin Wang (3):
+  mm: Factor out the pagetable pages account into new helper function
+  mm: Add PUD level pagetable account
+  mm: Add kernel PTE level pagetable pages account
+
+ arch/arm64/include/asm/tlb.h         |  5 ++++-
+ arch/csky/include/asm/pgalloc.h      |  2 +-
+ arch/loongarch/include/asm/pgalloc.h | 12 +++++++++---
+ arch/microblaze/mm/pgtable.c         |  2 +-
+ arch/mips/include/asm/pgalloc.h      | 12 +++++++++---
+ arch/openrisc/mm/ioremap.c           |  2 +-
+ arch/x86/mm/pgtable.c                |  7 +++++--
+ include/asm-generic/pgalloc.h        | 26 ++++++++++++++++++++++----
+ include/linux/mm.h                   | 34 ++++++++++++++++++++++++++--------
+ 9 files changed, 78 insertions(+), 24 deletions(-)
+
 -- 
 1.8.3.1
 
