@@ -1,104 +1,122 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A537C
-	for <loongarch@lists.linux.dev>; Wed,  6 Jul 2022 09:15:03 +0000 (UTC)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0VIXd7j9_1657097961;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VIXd7j9_1657097961)
-          by smtp.aliyun-inc.com;
-          Wed, 06 Jul 2022 16:59:22 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org
-Cc: rppt@linux.ibm.com,
-	willy@infradead.org,
-	will@kernel.org,
-	aneesh.kumar@linux.ibm.com,
-	npiggin@gmail.com,
-	peterz@infradead.org,
-	catalin.marinas@arm.com,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	tsbogend@alpha.franken.de,
-	dave.hansen@linux.intel.com,
-	luto@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	hpa@zytor.com,
-	arnd@arndb.de,
-	guoren@kernel.org,
-	monstr@monstr.eu,
-	jonas@southpole.se,
-	stefan.kristiansson@saunalahti.fi,
-	shorne@gmail.com,
-	baolin.wang@linux.alibaba.com,
-	x86@kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linux-csky@vger.kernel.org,
-	openrisc@lists.librecores.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] Add PUD and kernel PTE level pagetable account
-Date: Wed,  6 Jul 2022 16:59:14 +0800
-Message-Id: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20BFC2F3A
+	for <loongarch@lists.linux.dev>; Wed,  6 Jul 2022 11:29:44 +0000 (UTC)
+Received: from lingfengzhe-ms7c94.loongson.cn (unknown [192.168.200.1])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxKeEicsViT60MAA--.38242S2;
+	Wed, 06 Jul 2022 19:29:39 +0800 (CST)
+From: huqi <huqi@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Qi Hu <huqi@loongson.cn>
+Subject: [PATCH v3] LoongArch: Remove vcsr in loongarch_fpu
+Date: Wed,  6 Jul 2022 19:29:37 +0800
+Message-Id: <20220706112937.1218573-1-huqi@loongson.cn>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9AxKeEicsViT60MAA--.38242S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxZr47uw4rZr13Aw15XF1xGrg_yoW5GF15pF
+	ZrZrn7GF4rWFn3JFyDt34kWrWkJ3ZrGw1aga4aka4fCr47Xw1UWrWktFyDZFyjqa1rK3y0
+	gF1rGw1SqF1DJ3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UUUUUUUUU==
+X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQATCV3QvPxZJgAmsP
 
-Hi,
+From: Qi Hu <huqi@loongson.cn>
 
-Now we will miss to account the PUD level pagetable and kernel PTE level
-pagetable, as well as missing to set the PG_table flags for these pagetable
-pages, which will get an inaccurate pagetable accounting, and miss
-PageTable() validation in some cases. So this patch set introduces new
-helpers to help to account PUD and kernel PTE pagetable pages.
+The `vcsr` is not used anymore. Remove this member from `loongarch_fpu`.
 
-Note there are still some architectures specific pagetable allocation
-that need to account the pagetable pages, which need more investigation
-and cleanup in future.
+From 3A5000(LoongArch), `vcsr` is removed in hardware. FP and LSX/LASX
+both use `fcsr` as their csr.
 
-Changes from RFC v3:
- - Rebased on 20220706 linux-next.
- - Introduce new pgtable_pud_page_ctor/dtor() and rename the helpers.
- - Change back to use inc_lruvec_page_state()/dec_lruvec_page_state().
- - Update some commit message.
-link: https://lore.kernel.org/all/cover.1656586863.git.baolin.wang@linux.alibaba.com/
+Particularly, fcsr from $r16 to $r31 are reserved for LSX/LASX, an
+using the registers in this area will cause SXD/ASXD if LSX/LASX is
+not enabled.
 
-Changes from RFC v2:
- - Convert to use mod_lruvec_page_state() for non-order-0 case.
- - Rename the helpers.
- - Update some commit messages.
- - Remove unnecessary __GFP_HIGHMEM clear.
-link: https://lore.kernel.org/all/cover.1655887440.git.baolin.wang@linux.alibaba.com/
+Signed-off-by: Qi Hu <huqi@loongson.cn>
+---
+V3:
+- Modify commit message to conform to the format.
+V2:
+- Add more details in the commit message.
+---
+ arch/loongarch/include/asm/fpregdef.h  |  1 -
+ arch/loongarch/include/asm/processor.h |  2 --
+ arch/loongarch/kernel/asm-offsets.c    |  1 -
+ arch/loongarch/kernel/fpu.S            | 10 ----------
+ 4 files changed, 14 deletions(-)
 
-Changes from RFC v1:
- - Update some commit message.
- - Add missing pgtable_clear_and_dec() on X86 arch.
- - Use __free_page() to free pagetable which can avoid duplicated virt_to_page().
-link: https://lore.kernel.org/all/cover.1654271618.git.baolin.wang@linux.alibaba.com/
-
-Baolin Wang (3):
-  mm: Factor out the pagetable pages account into new helper function
-  mm: Add PUD level pagetable account
-  mm: Add kernel PTE level pagetable pages account
-
- arch/arm64/include/asm/tlb.h         |  5 ++++-
- arch/csky/include/asm/pgalloc.h      |  2 +-
- arch/loongarch/include/asm/pgalloc.h | 12 +++++++++---
- arch/microblaze/mm/pgtable.c         |  2 +-
- arch/mips/include/asm/pgalloc.h      | 12 +++++++++---
- arch/openrisc/mm/ioremap.c           |  2 +-
- arch/x86/mm/pgtable.c                |  7 +++++--
- include/asm-generic/pgalloc.h        | 26 ++++++++++++++++++++++----
- include/linux/mm.h                   | 34 ++++++++++++++++++++++++++--------
- 9 files changed, 78 insertions(+), 24 deletions(-)
-
+diff --git a/arch/loongarch/include/asm/fpregdef.h b/arch/loongarch/include/asm/fpregdef.h
+index adb16e4b43b0..b6be527831dd 100644
+--- a/arch/loongarch/include/asm/fpregdef.h
++++ b/arch/loongarch/include/asm/fpregdef.h
+@@ -48,6 +48,5 @@
+ #define fcsr1	$r1
+ #define fcsr2	$r2
+ #define fcsr3	$r3
+-#define vcsr16	$r16
+ 
+ #endif /* _ASM_FPREGDEF_H */
+diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+index 1d63c934b289..57ec45aa078e 100644
+--- a/arch/loongarch/include/asm/processor.h
++++ b/arch/loongarch/include/asm/processor.h
+@@ -80,7 +80,6 @@ BUILD_FPR_ACCESS(64)
+ 
+ struct loongarch_fpu {
+ 	unsigned int	fcsr;
+-	unsigned int	vcsr;
+ 	uint64_t	fcc;	/* 8x8 */
+ 	union fpureg	fpr[NUM_FPU_REGS];
+ };
+@@ -161,7 +160,6 @@ struct thread_struct {
+ 	 */							\
+ 	.fpu			= {				\
+ 		.fcsr		= 0,				\
+-		.vcsr		= 0,				\
+ 		.fcc		= 0,				\
+ 		.fpr		= {{{0,},},},			\
+ 	},							\
+diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+index bfb65eb2844f..20cd9e16a95a 100644
+--- a/arch/loongarch/kernel/asm-offsets.c
++++ b/arch/loongarch/kernel/asm-offsets.c
+@@ -166,7 +166,6 @@ void output_thread_fpu_defines(void)
+ 
+ 	OFFSET(THREAD_FCSR, loongarch_fpu, fcsr);
+ 	OFFSET(THREAD_FCC,  loongarch_fpu, fcc);
+-	OFFSET(THREAD_VCSR, loongarch_fpu, vcsr);
+ 	BLANK();
+ }
+ 
+diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
+index 75c6ce0682a2..a631a7137667 100644
+--- a/arch/loongarch/kernel/fpu.S
++++ b/arch/loongarch/kernel/fpu.S
+@@ -146,16 +146,6 @@
+ 	movgr2fcsr	fcsr0, \tmp0
+ 	.endm
+ 
+-	.macro sc_save_vcsr base, tmp0
+-	movfcsr2gr	\tmp0, vcsr16
+-	EX	st.w \tmp0, \base, 0
+-	.endm
+-
+-	.macro sc_restore_vcsr base, tmp0
+-	EX	ld.w \tmp0, \base, 0
+-	movgr2fcsr	vcsr16, \tmp0
+-	.endm
+-
+ /*
+  * Save a thread's fp context.
+  */
 -- 
-1.8.3.1
+2.36.1
 
