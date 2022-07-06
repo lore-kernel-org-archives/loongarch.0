@@ -1,87 +1,108 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A063E7C
-	for <loongarch@lists.linux.dev>; Tue,  5 Jul 2022 16:03:04 +0000 (UTC)
-Received: by mail-ej1-f50.google.com with SMTP id lg18so2642110ejb.0
-        for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022 09:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/PzUf+FWtruBA74xPia/zJ0RuCFti96ThSU9HTzIsqY=;
-        b=XluqUvEc2FFAEeUVR9EHhmnZ4fduhRT7w/m9u0J2BO7tZOwSBo7mn8BaOQgqzoSDjh
-         X0pO9Rj7sIcvIuoe/ROCFriYf+jU1vOTUfqvfCtN125Ylu3zQgqKqEbKSpZrITIomEan
-         BZAau+BMtL5HOpzppw5a+e3jGUrgHgPPfbGc5bsU3OpFMoGuJuoBj847iLPHKCzZpauf
-         jf+2378y/+37186yQm4a00uEwBFAvMwZm17YIt+qATt8ZYGJLJ4pWsc0U3fKbmLSOXLk
-         5+3oyqmZyrGCj6g5F5sm3U2otbom9tA/Hnz9GFjdlZ5PnMVgvCa13m+Igy3HH86a48ZB
-         o7ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/PzUf+FWtruBA74xPia/zJ0RuCFti96ThSU9HTzIsqY=;
-        b=VLdEJjyG9OQYOBIfhqIbSviBNl7S0YTygE2/wF4lOFUDuRufC/Ts+EyEzDRT0OqZye
-         AiAiQaAJZV7kGHWkSOz75Qt8RV7HBGWcYdOuh7xFGPYs/iShyPPR4pI1efvZjUPjDIsY
-         PjkuJ13wsxn+932Ew6HHuC7T+mo9snuz6kSM3MgASZ2gmSGtLZi1chJ36b9SCBA1TNPY
-         p8FSvT9TFJT9hQ7ern8Nxl5vANHPUORKGuqMGu7UajErcTDj1RvUYr7gW2knnVaCJVoD
-         8AvYBVqYGe+CAn5YFpn7qAb5JyR50KodGbh8Pj32T5AwhNqUdb4ntCHNZSv5+oBqukO2
-         1lDw==
-X-Gm-Message-State: AJIora/fMIg8Qg9Cg9MdnL3IlLlNCTTMq8V7jL6hgU3YI2wY+b87PYua
-	LV1ugRE0KzFIqGDKt8x6i1HKT0tlEMdmIFsNicY=
-X-Google-Smtp-Source: AGRyM1s2bR2/fTLYxh4UjqmPZv6LUB0HejEOyCZJAkhG5FfXs1uf2EFDs1t2xo1dxtAeQiITYADdpH1zQ6Q1UVRLsF0=
-X-Received: by 2002:a17:907:2d8c:b0:726:2b37:6d44 with SMTP id
- gt12-20020a1709072d8c00b007262b376d44mr34529009ejc.224.1657036982875; Tue, 05
- Jul 2022 09:03:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A388117C9
+	for <loongarch@lists.linux.dev>; Wed,  6 Jul 2022 00:46:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D9C7C341CB
+	for <loongarch@lists.linux.dev>; Wed,  6 Jul 2022 00:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1657068408;
+	bh=Jj3FwQ4HBpuobPyZ832SIAC1FCJMY+cubble0ym22lU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=paD2SriR9dq0LeSQzHUkus7DS1R1cDpKzYiazgLLHb0TapI2S28vHj7Ac+Eovwkdz
+	 5SSRAtU3snJJnjkwRA2ENSY59EUnSz1dnEOSIVvjgNFrSxvjxRPRDZ6Ji+WUeKObPn
+	 4YUEwgwZf/fUeyxDdmZJ1+N/D9msZ+MuyQwKPhws74WEiL8mfutVvLiF1luRDAbFxj
+	 s977SrJ3v7Vusf3rx8g7KnN4VJ4dz724e7+JPS6vr9SXrsnG9EINJMOJTy/JzNgDQJ
+	 gCOEJphamsF/ui6GNotMfbeFllru1eY0p2AKtKUYBnX2CY54wubtShaP2jhhdKuum4
+	 QrwqJabKPYE9w==
+Received: by mail-vk1-f169.google.com with SMTP id 18so1208667vkz.2
+        for <loongarch@lists.linux.dev>; Tue, 05 Jul 2022 17:46:48 -0700 (PDT)
+X-Gm-Message-State: AJIora8N3f6+jW7SYz5X9Y5nGlGmK/aMRAL15GgDG2giMecF+Wpa/p9p
+	1RxZJp+teMXYn9mr20VANmymME2swLJJyU42vpI=
+X-Google-Smtp-Source: AGRyM1vvuIe+qf8xo4fOT9nX4g9oGlyOV4noxQuTgIoficxPhRAT9xdDT8InaTVVk/i+GPr16viVr4OgIgFCQhrAX9o=
+X-Received: by 2002:a1f:2a86:0:b0:370:8ff3:d5f with SMTP id
+ q128-20020a1f2a86000000b003708ff30d5fmr18265507vkq.35.1657068407238; Tue, 05
+ Jul 2022 17:46:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220705154708.181258-1-rppt@kernel.org> <20220705154708.181258-15-rppt@kernel.org>
-In-Reply-To: <20220705154708.181258-15-rppt@kernel.org>
-From: Max Filippov <jcmvbkbc@gmail.com>
-Date: Tue, 5 Jul 2022 09:03:01 -0700
-Message-ID: <CAMo8Bf+5cN4TYNGs=PXsZuunyZX2xQAdk+nGd5wARP8MuZVXuA@mail.gmail.com>
-Subject: Re: [PATCH v2 14/15] xtensa: drop definition of PGD_ORDER
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>, 
-	Huacai Chen <chenhuacai@kernel.org>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Matthew Wilcox <willy@infradead.org>, Mike Rapoport <rppt@linux.ibm.com>, 
-	"Russell King (Oracle)" <linux@armlinux.org.uk>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	WANG Xuerui <kernel@xen0n.name>, Linux-Arch <linux-arch@vger.kernel.org>, 
-	linux-csky@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	linux-mips@vger.kernel.org, Linux Memory Management List <linux-mm@kvack.org>, 
-	"open list:PARISC ARCHITECTURE" <linux-parisc@vger.kernel.org>, 
-	"open list:TENSILICA XTENSA PORT (xtensa)" <linux-xtensa@linux-xtensa.org>, loongarch@lists.linux.dev
+References: <20220705073405.29618-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20220705073405.29618-1-lukas.bulwahn@gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 6 Jul 2022 08:46:34 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5s4gZf+vU=Vs1uGAqXMC+fBSRbNJdUgqkgmGNCdwxhxw@mail.gmail.com>
+Message-ID: <CAAhV-H5s4gZf+vU=Vs1uGAqXMC+fBSRbNJdUgqkgmGNCdwxhxw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: drop these obsolete selects in Kconfig
+To: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	kernel-janitors@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jul 5, 2022 at 8:48 AM Mike Rapoport <rppt@kernel.org> wrote:
->
-> From: Mike Rapoport <rppt@linux.ibm.com>
->
-> This is the order of the page table allocation, not the order of a PGD.
-> Since its always hardwired to 0, simply drop it.
+Queued for loongarch-fixes, thanks.
 
-it's
+Huacai
 
+On Tue, Jul 5, 2022 at 3:35 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
 >
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Commit fa96b57c1490 ("LoongArch: Add build infrastructure") adds the new
+> file arch/loongarch/Kconfig.
+>
+> As the work on LoongArch was probably quite some time under development,
+> various config symbols have changed and disappeared from the time of
+> initial writing of the Kconfig file and its inclusion in the repository.
+>
+> The following four commits:
+>
+>   commit c126a53c2760 ("arch: remove GENERIC_FIND_FIRST_BIT entirely")
+>   commit 140c8180eb7c ("arch: remove HAVE_COPY_THREAD_TLS")
+>   commit aca52c398389 ("mm: remove CONFIG_HAVE_MEMBLOCK")
+>   commit 3f08a302f533 ("mm: remove CONFIG_HAVE_MEMBLOCK_NODE_MAP option")
+>
+> remove the mentioned config symbol, and enable the intended setup by
+> default without configuration.
+>
+> Drop these obsolete selects in loongarch's Kconfig.
+>
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 > ---
->  arch/xtensa/include/asm/pgalloc.h | 2 +-
->  arch/xtensa/include/asm/pgtable.h | 1 -
->  2 files changed, 1 insertion(+), 2 deletions(-)
+> Huacai Chen, please pick this minor clean-up patch.
 >
-> diff --git a/arch/xtensa/include/asm/pgalloc.h b/arch/xtensa/include/asm/pgalloc.h
-> index eeb2de3a89e5..7fc0f9126dd3 100644
-> --- a/arch/xtensa/include/asm/pgalloc.h
-> +++ b/arch/xtensa/include/asm/pgalloc.h
-
-Acked-by: Max Filippov <jcmvbkbc@gmail.com>
-
--- 
-Thanks.
--- Max
+>  arch/loongarch/Kconfig | 4 ----
+>  1 file changed, 4 deletions(-)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 2dee595bf4b6..9be4d0eef299 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -54,7 +54,6 @@ config LOONGARCH
+>         select GENERIC_CMOS_UPDATE
+>         select GENERIC_CPU_AUTOPROBE
+>         select GENERIC_ENTRY
+> -       select GENERIC_FIND_FIRST_BIT
+>         select GENERIC_GETTIMEOFDAY
+>         select GENERIC_IRQ_MULTI_HANDLER
+>         select GENERIC_IRQ_PROBE
+> @@ -77,7 +76,6 @@ config LOONGARCH
+>         select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+>         select HAVE_ASM_MODVERSIONS
+>         select HAVE_CONTEXT_TRACKING_USER
+> -       select HAVE_COPY_THREAD_TLS
+>         select HAVE_DEBUG_STACKOVERFLOW
+>         select HAVE_DMA_CONTIGUOUS
+>         select HAVE_EXIT_THREAD
+> @@ -86,8 +84,6 @@ config LOONGARCH
+>         select HAVE_IOREMAP_PROT
+>         select HAVE_IRQ_EXIT_ON_IRQ_STACK
+>         select HAVE_IRQ_TIME_ACCOUNTING
+> -       select HAVE_MEMBLOCK
+> -       select HAVE_MEMBLOCK_NODE_MAP
+>         select HAVE_MOD_ARCH_SPECIFIC
+>         select HAVE_NMI
+>         select HAVE_PERF_EVENTS
+> --
+> 2.17.1
+>
+>
