@@ -1,14 +1,14 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E432624
-	for <loongarch@lists.linux.dev>; Thu,  7 Jul 2022 11:38:10 +0000 (UTC)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0VIdIQWG_1657193558;
-Received: from 30.97.48.62(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VIdIQWG_1657193558)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87AA624
+	for <loongarch@lists.linux.dev>; Thu,  7 Jul 2022 11:45:36 +0000 (UTC)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=32;SR=0;TI=SMTPD_---0VIcuH0b_1657194323;
+Received: from 30.97.48.62(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VIcuH0b_1657194323)
           by smtp.aliyun-inc.com;
-          Thu, 07 Jul 2022 19:32:40 +0800
-Message-ID: <ef376131-bf5f-7e5b-ea1b-1e8f64a6d060@linux.alibaba.com>
-Date: Thu, 7 Jul 2022 19:32:44 +0800
+          Thu, 07 Jul 2022 19:45:25 +0800
+Message-ID: <12227412-1d79-4ff6-b4e6-0d438dac7359@linux.alibaba.com>
+Date: Thu, 7 Jul 2022 19:45:29 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -17,9 +17,9 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH 0/3] Add PUD and kernel PTE level pagetable account
-To: Dave Hansen <dave.hansen@intel.com>, akpm@linux-foundation.org
-Cc: rppt@linux.ibm.com, willy@infradead.org, will@kernel.org,
+Subject: Re: [PATCH 3/3] mm: Add kernel PTE level pagetable pages account
+To: Matthew Wilcox <willy@infradead.org>
+Cc: akpm@linux-foundation.org, rppt@linux.ibm.com, will@kernel.org,
  aneesh.kumar@linux.ibm.com, npiggin@gmail.com, peterz@infradead.org,
  catalin.marinas@arm.com, chenhuacai@kernel.org, kernel@xen0n.name,
  tsbogend@alpha.franken.de, dave.hansen@linux.intel.com, luto@kernel.org,
@@ -31,26 +31,43 @@ Cc: rppt@linux.ibm.com, willy@infradead.org, will@kernel.org,
  linux-csky@vger.kernel.org, openrisc@lists.librecores.org,
  linux-mm@kvack.org, linux-kernel@vger.kernel.org
 References: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
- <d2d58cc2-7e6d-aa2d-3096-a500ce321494@intel.com>
+ <398ead25695e530f766849be5edafaf62c1c864d.1657096412.git.baolin.wang@linux.alibaba.com>
+ <YsWuC9+b3JaEAr0Q@casper.infradead.org>
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <d2d58cc2-7e6d-aa2d-3096-a500ce321494@intel.com>
+In-Reply-To: <YsWuC9+b3JaEAr0Q@casper.infradead.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 7/6/2022 11:48 PM, Dave Hansen wrote:
-> On 7/6/22 01:59, Baolin Wang wrote:
->> Now we will miss to account the PUD level pagetable and kernel PTE level
->> pagetable, as well as missing to set the PG_table flags for these pagetable
->> pages, which will get an inaccurate pagetable accounting, and miss
->> PageTable() validation in some cases. So this patch set introduces new
->> helpers to help to account PUD and kernel PTE pagetable pages.
+On 7/6/2022 11:45 PM, Matthew Wilcox wrote:
+> On Wed, Jul 06, 2022 at 04:59:17PM +0800, Baolin Wang wrote:
+>> Now the kernel PTE level ptes are always protected by mm->page_table_lock
+>> instead of split pagetable lock, so the kernel PTE level pagetable pages
+>> are not accounted. Especially the vmalloc()/vmap() can consume lots of
+>> kernel pagetable, so to get an accurate pagetable accounting, calling new
+>> helpers page_{set,clear}_pgtable() when allocating or freeing a kernel
+>> PTE level pagetable page.
+>>
+>> Meanwhile converting architectures to use corresponding generic PTE pagetable
+>> allocation and freeing functions.
+>>
+>> Note this patch only adds accounting to the page tables allocated after boot.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> Reported-by: kernel test robot <oliver.sang@intel.com>
 > 
-> Could you explain the motivation for this series a bit more?  Is there a
-> real-world problem that this fixes?
+> What does this Reported-by: even mean?  the kernel test robot told you
+> that the page tables weren't being accounted?
 
-Not fix real problem. The motivation is that making the pagetable 
-accounting more accurate, which helps us to analyse the consumption of 
-the pagetable pages in some cases, and maybe help to do some empty 
-pagetable reclaiming in future.
+I fixed an issue reported by this robot. OK, I can remove the tag.
+
+> I don't understand why we want to start accounting kernel page tables.
+> an we have a *discussion* about that with a sensible thread name instead
+> of just trying to sneak it in as patch 3/3?
+
+I think I have replied to you in below link [1]. The reason is we should 
+keep consistent with PMD or PUD pagetable allocation.
+
+[1] 
+https://lore.kernel.org/all/68a5286b-7ff3-2c4e-1ab2-305e7860a2f3@linux.alibaba.com/
