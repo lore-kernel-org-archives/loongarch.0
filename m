@@ -1,58 +1,14 @@
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7014B625
-	for <loongarch@lists.linux.dev>; Thu,  7 Jul 2022 09:58:18 +0000 (UTC)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.west.internal (Postfix) with ESMTP id 33A553200901;
-	Thu,  7 Jul 2022 05:58:17 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Thu, 07 Jul 2022 05:58:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to; s=fm1; t=1657187896; x=
-	1657274296; bh=blIZCyCRaX2Kykl2XYQhF1kcXz91lm/t4KZgjyH+ZSU=; b=U
-	jWvfp3BGT724u6qaVZOepvcwjgDtug4sqsJGq7/sCMaBVbNaY8dKYhwUUCqGlgzW
-	yKbrVoLvr/yBH7tMxOaBxGnArfmgCM01YWSunZjDCk4QA4gmXelihCT8qzA4h7tO
-	fbwBogSGdHwWGQpc2vDO4FYtM9t1LhpTbYO47n4ul/3ebDUPjn8YoJhGGXMS1p1n
-	uPynTK2HtNt1UTcNvs1bVR7MZzOrnk0eBw5DyVKoxxGJl74Sds/ScU6uWwdQYL2S
-	i9pZ5nMh0HavCCe5YszT4Xb+plfg/O7ezCxn/UBVMMYfavl2g1UlhU43gPdP2feA
-	5RsGL+WmgCCzpEuoPeEpA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1657187896; x=
-	1657274296; bh=blIZCyCRaX2Kykl2XYQhF1kcXz91lm/t4KZgjyH+ZSU=; b=f
-	f2K2vPEEaVg45MA5zpZZ6E6RtM0VZRK3uni3dVVA498kXQqr/M2LQ/plFWsw2s7q
-	cJ6gMDlrX+mMf/ixkOQdbncGcV72IS7KF2KZn4P1ClMbpOkYyj+xLHJ6kxCQtpXi
-	+sKeZwXVEd8SM/nvvNPc3Dlh8uv2J6dTq2k9pVtwrfI0jL9h7yZDtRFWzOLZPuYd
-	+8Po+bLlxdBuHYos+iYwxbiuofaZGN5h+cFXMNzaDUOLe4Ngcob2VPMKwHLRWM2h
-	EzjiOOti1MWmbNI7X6KtRzF6t0eomwnvVtGnNswRgRNdiQPoVxIEmL5dOxA5+lh7
-	wyXvcMMJ4GRQE+9NLGTQw==
-X-ME-Sender: <xms:OK7GYicSPJdA3n6VN9QQiZvc115LX9eCMcCRWo6v4-yaelBXmZlF3w>
-    <xme:OK7GYsPgzDLT_xunQDkncSVu2EdX76G7oeShBPUWqSgMwtKeAaSVw0vjmWFc-59Tg
-    JfEVGpTrUaP5UiLtdI>
-X-ME-Received: <xmr:OK7GYjg9T_jcYBz2iivNqw6Zc991v1rMtyeIJFawv1iFRsPDM_4I5NuJ4sBGRgavD7cuW2TJQrurDy10TDPxU7WOaat-eei73ssbddcIwNE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudeihedgvdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtfeejnecuhfhrohhmpeflihgr
-    gihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
-    cuggftrfgrthhtvghrnhepudfhkeevvddtueekfeefgfetlefgueegueeltddtieejgeei
-    heevgfehgfdvfeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:OK7GYv_MQC8eTz6hABoOIOlQlYSrEVS7o2CrmNTl1wS2rnfvQcaJtw>
-    <xmx:OK7GYusmHLDClTO6gpmZaLqU0uyENVdxtiy-8TrkXFBEVZ0uAjZA7Q>
-    <xmx:OK7GYmFQfnL6allvSrvn-H_Xq-OrcdXFq67SYeNYTe_BT9FoLrJnUQ>
-    <xmx:OK7GYiIB4vjqPLaA5Y93IKg6Ij3_YN091oKDp-ZBYp8dM3JxhVMxKQ>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 7 Jul 2022 05:58:15 -0400 (EDT)
-Message-ID: <bf9d6c87-1264-6d14-bf67-154ee7795bdd@flygoat.com>
-Date: Thu, 7 Jul 2022 10:58:14 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E432624
+	for <loongarch@lists.linux.dev>; Thu,  7 Jul 2022 11:38:10 +0000 (UTC)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0VIdIQWG_1657193558;
+Received: from 30.97.48.62(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VIdIQWG_1657193558)
+          by smtp.aliyun-inc.com;
+          Thu, 07 Jul 2022 19:32:40 +0800
+Message-ID: <ef376131-bf5f-7e5b-ea1b-1e8f64a6d060@linux.alibaba.com>
+Date: Thu, 7 Jul 2022 19:32:44 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -61,32 +17,40 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v3] LoongArch: Remove vcsr in loongarch_fpu
-Content-Language: en-GB
-To: WANG Xuerui <kernel@xen0n.name>, Qi Hu <huqi@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-References: <20220706112937.1218573-1-huqi@loongson.cn>
- <CAAhV-H6MHjzdwyZqk6a3sKByRofG1Th6QEk0Be5NBhiAsVNcTg@mail.gmail.com>
- <8a9cd14a-54ed-cd2b-88ad-647a43b09d0e@loongson.cn>
- <2e0bb05b-cd85-4eb0-bf8f-f90156196a63@www.fastmail.com>
- <0125879d-7452-17bc-8b46-3d4ae21648d1@xen0n.name>
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-In-Reply-To: <0125879d-7452-17bc-8b46-3d4ae21648d1@xen0n.name>
+Subject: Re: [PATCH 0/3] Add PUD and kernel PTE level pagetable account
+To: Dave Hansen <dave.hansen@intel.com>, akpm@linux-foundation.org
+Cc: rppt@linux.ibm.com, willy@infradead.org, will@kernel.org,
+ aneesh.kumar@linux.ibm.com, npiggin@gmail.com, peterz@infradead.org,
+ catalin.marinas@arm.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ tsbogend@alpha.franken.de, dave.hansen@linux.intel.com, luto@kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+ arnd@arndb.de, guoren@kernel.org, monstr@monstr.eu, jonas@southpole.se,
+ stefan.kristiansson@saunalahti.fi, shorne@gmail.com, x86@kernel.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linux-csky@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
+ <d2d58cc2-7e6d-aa2d-3096-a500ce321494@intel.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <d2d58cc2-7e6d-aa2d-3096-a500ce321494@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-在 2022/7/7 9:56, WANG Xuerui 写道:
->
-> However, the experiment result is counter-intuitive to me after all; 
-> are you aware that perhaps *some* 3A5000's in the wild actually have 
-> functional VCSR? If so, the state obviously needs isolation 
-> (saving/restoring simply becoming no-ops on later steppings), but 
-> otherwise this cleanup should be correct.
-^ Yep, my concern was 3A5000 with VCSR enabled can be vulnerable.
+On 7/6/2022 11:48 PM, Dave Hansen wrote:
+> On 7/6/22 01:59, Baolin Wang wrote:
+>> Now we will miss to account the PUD level pagetable and kernel PTE level
+>> pagetable, as well as missing to set the PG_table flags for these pagetable
+>> pages, which will get an inaccurate pagetable accounting, and miss
+>> PageTable() validation in some cases. So this patch set introduces new
+>> helpers to help to account PUD and kernel PTE pagetable pages.
+> 
+> Could you explain the motivation for this series a bit more?  Is there a
+> real-world problem that this fixes?
 
-Thanks
-- Jiaxun
-
+Not fix real problem. The motivation is that making the pagetable 
+accounting more accurate, which helps us to analyse the consumption of 
+the pagetable pages in some cases, and maybe help to do some empty 
+pagetable reclaiming in future.
