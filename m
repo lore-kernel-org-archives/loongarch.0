@@ -1,41 +1,37 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5C1362
-	for <loongarch@lists.linux.dev>; Thu,  7 Jul 2022 07:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1657178015; bh=ppbGeYOQcIvSTiYj6vLLsomHZRDhW2cFfKDbRX+db6U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WjRzEqDqktrI48vPzdcQq4D3jO8oqbt3yBlDzJncnbSU02vXOLBjPFX1ry6B9sWbY
-	 YbjLkmNnZVOzxhohwQLsPS8EqcjB4qI+rY/a8dAsILcERzqqSaZ1TZH5G/lyd/KV5z
-	 sTlyWl6AetR6ULV/Ya3muCHhwzhG3gx3r/1Evr2s=
-Received: from [100.100.57.190] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 3B6EB6010B;
-	Thu,  7 Jul 2022 15:13:35 +0800 (CST)
-Message-ID: <0145342f-920a-0ce6-e50e-2b3285b5fb4f@xen0n.name>
-Date: Thu, 7 Jul 2022 15:13:34 +0800
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEDA0362
+	for <loongarch@lists.linux.dev>; Thu,  7 Jul 2022 07:42:00 +0000 (UTC)
+Received: from [10.90.50.23] (unknown [192.168.200.1])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv9C9jMZibp8OAA--.1787S3;
+	Thu, 07 Jul 2022 15:35:25 +0800 (CST)
+Message-ID: <8a9cd14a-54ed-cd2b-88ad-647a43b09d0e@loongson.cn>
+Date: Thu, 7 Jul 2022 15:35:14 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0)
- Gecko/20100101 Thunderbird/104.0a1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
 Subject: Re: [PATCH v3] LoongArch: Remove vcsr in loongarch_fpu
 Content-Language: en-US
-To: Huacai Chen <chenhuacai@kernel.org>, huqi <huqi@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
  loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
 References: <20220706112937.1218573-1-huqi@loongson.cn>
  <CAAhV-H6MHjzdwyZqk6a3sKByRofG1Th6QEk0Be5NBhiAsVNcTg@mail.gmail.com>
-From: WANG Xuerui <kernel@xen0n.name>
+From: Qi Hu <huqi@loongson.cn>
 In-Reply-To: <CAAhV-H6MHjzdwyZqk6a3sKByRofG1Th6QEk0Be5NBhiAsVNcTg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf9Dxv9C9jMZibp8OAA--.1787S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF4fJF1rtryxXF4UtFWfAFb_yoWrJF15pF
+	ZrAF4kGF4rGrn3tryqy34DWFWktw4DGw12gasFkFyrCr4qqw1kWry8tF98uFyjqa1FkrW0
+	gFyrWwnaqF1UX3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UUUUUUUUU==
+X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQAACV3QvPyW3wABsN
+
 
 On 2022/7/7 14:45, Huacai Chen wrote:
 > Hi, all,
@@ -47,21 +43,16 @@ On 2022/7/7 14:45, Huacai Chen wrote:
 > shipped hardware from Loongson-3A5000 on. FPU and LSX/LASX both use the
 > `fcsr` as their control and status registers now. For example, the RM
 > control bit in fcsr0 is shared by FPU, LSX and LASX.
-
-FPU is a function unit while LSX/LASX are ISA extensions, they don't 
-belong to the same category.
-
-"Scalar FP and LSX/LASX instructions all use ...", and "... is shared by 
-FP, LSX and LASX instructions." sound better.
-
+>
 > Particularly, fcsr16 to fcsr31 are reserved for LSX/LASX now, access to
 > these registers has no visible effect if LSX/LASX is enabled, and will
 > cause SXD/ASXD exceptions if LSX/LASX is not enabled.
 >
 > So, mentions of vcsr are obsolete in the first place, let's remove them.
 
-Works for me and the wording is objective enough.
+Or simply say this?
 
+Remove VCSR from "loongarch_fpu" which is used for debugging.
 > --
 > Huacai
 >
@@ -158,7 +149,4 @@ Works for me and the wording is objective enough.
 >> 2.36.1
 >>
 >>
-Apart from the syntactical nit:
-
-Reviewed-by: WANG Xuerui <git@xen0n.name>
 
