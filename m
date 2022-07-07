@@ -1,158 +1,73 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929B1367
-	for <loongarch@lists.linux.dev>; Thu,  7 Jul 2022 03:05:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1657163127; bh=3fMmtr4cgbsob89vngXI1qnEjO+r9ALND5XHCDGdjL8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HKbDT6WSnay7gmalfGk/E/ZiOH09Wgr96rCZURtwRpOysQW9O5vEAHB+QcCGUzIEg
-	 clVc/Am/XDAFLAfTl65QfDe6VdtZOYrq7kfA4BUFY/aW+0ccShZIjKvtgb3m27OAt3
-	 /BsekbHlHyDPJkuC8LGMR2+/jT7jy07kptAf5zMY=
-Received: from [100.100.57.190] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id B653660114;
-	Thu,  7 Jul 2022 11:05:26 +0800 (CST)
-Message-ID: <0583a335-72f7-55cf-3cd9-4dbd8109a440@xen0n.name>
-Date: Thu, 7 Jul 2022 11:05:26 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BE3367
+	for <loongarch@lists.linux.dev>; Thu,  7 Jul 2022 04:05:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1657166715;
+	bh=xMn7MrQA8Rmpsy+c97xahDZzxB54Wg0Ugt9J9SQO4vc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=EOafTUqNac5KDAd9ls46gfsCl24HWzca6XRCAz1uXx8HGJnv5dTrHFG0ZEM/z7D2Y
+	 N86zIwO+ObrVe2stwKGm96K5rgkbVmXOIc+fUGbRxYJL23O6er5akeRm2ynmVrfoba
+	 DlJNO2AVhJiMDFgEkmoUMgJ2+MLVsUKVYsf+sU3M=
+Received: from [IPv6:240e:358:1139:6500:dc73:854d:832e:4] (unknown [IPv6:240e:358:1139:6500:dc73:854d:832e:4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id CB233669AA;
+	Thu,  7 Jul 2022 00:05:06 -0400 (EDT)
+Message-ID: <bd889cd7b72138a12b1339a33156ff46530c20b0.camel@xry111.site>
+Subject: Re: [PATCH v2] LoongArch: Clean useless vcsr in loongarch_fpu.
+From: Xi Ruoyao <xry111@xry111.site>
+To: WANG Xuerui <kernel@xen0n.name>, Qi Hu <huqi@loongson.cn>, Jiaxun Yang
+	 <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Date: Thu, 07 Jul 2022 12:04:28 +0800
+In-Reply-To: <0583a335-72f7-55cf-3cd9-4dbd8109a440@xen0n.name>
+References: <20220704153612.314112-1-huqi@loongson.cn>
+	 <4273e104-8392-6a06-5d18-a1933978d8c3@xen0n.name>
+	 <22a1ba993e298ce12a374decefebeca484240883.camel@xry111.site>
+	 <16c9ccaa5e5a2ffd39272cff6f66e487c659b571.camel@xry111.site>
+	 <CAAhV-H5+qd1ZrOqE8fgRmWshXy57AfEFpyKSK8ZstZZEQ53owQ@mail.gmail.com>
+	 <ac46f5cb4c8d1154cfc3e862fb5211e869839c9a.camel@xry111.site>
+	 <c824b9ca-c9c4-1912-7845-99a0989277a4@loongson.cn>
+	 <9d064771-9402-4e84-96f8-4713cddf42f2@www.fastmail.com>
+	 <730cb4c4-a6a3-783e-3e4c-7c2bdc35c088@loongson.cn>
+	 <0583a335-72f7-55cf-3cd9-4dbd8109a440@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0)
- Gecko/20100101 Thunderbird/104.0a1
-Subject: Re: [PATCH v2] LoongArch: Clean useless vcsr in loongarch_fpu.
-Content-Language: en-US
-To: Qi Hu <huqi@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
- LKML <linux-kernel@vger.kernel.org>
-References: <20220704153612.314112-1-huqi@loongson.cn>
- <4273e104-8392-6a06-5d18-a1933978d8c3@xen0n.name>
- <22a1ba993e298ce12a374decefebeca484240883.camel@xry111.site>
- <16c9ccaa5e5a2ffd39272cff6f66e487c659b571.camel@xry111.site>
- <CAAhV-H5+qd1ZrOqE8fgRmWshXy57AfEFpyKSK8ZstZZEQ53owQ@mail.gmail.com>
- <ac46f5cb4c8d1154cfc3e862fb5211e869839c9a.camel@xry111.site>
- <c824b9ca-c9c4-1912-7845-99a0989277a4@loongson.cn>
- <9d064771-9402-4e84-96f8-4713cddf42f2@www.fastmail.com>
- <730cb4c4-a6a3-783e-3e4c-7c2bdc35c088@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <730cb4c4-a6a3-783e-3e4c-7c2bdc35c088@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 2022/7/7 09:29, Qi Hu wrote:
->
-> On 2022/7/7 04:49, Jiaxun Yang wrote:
->>
->> 在2022年7月6日七月 上午5:00，Qi Hu写道：
->>> On 2022/7/6 10:51, Xi Ruoyao wrote:
->>>> On Wed, 2022-07-06 at 10:35 +0800, Huacai Chen wrote:
->>>>
->>>>> Maybe Xuerui and Ruoyao have some misunderstanding. LSX/LASX will
->>>>> surely be upstream, this has nothing to do with cleanup VCSR16.
->>>>> Because FP/LSX/LASX share the same control bits in FCSR now.
->>>> My guess:
->>>>
->>>> Almost all behavior of vector unit is controlled by FCSR (for example,
->>>> the rounding of both FPU and vector unit should be controlled by FCSR
->>>> altogether), except one bit similar to the bit 24 of MSACSR ("flush to
->>>> zero") is in VCSR [^1].  And "flush to zero" is not really useful 
->>>> so it
->>>> will be removed in 3A6000, and we'll not use it for 3A5000.
->>> Actually, flush to zero has been removed in 3A5000.
->>>> [^1]: A more bold guess: the hardware engineers could have just said
->>>> "let's wire this register called MSACSR in GS464V as FCSR16/VCSR in
->>>> LA464, maybe it will be useful and who knows?"  But now in practice 
->>>> it's
->>>> not useful.
->>>>
->>>> Am I correct?
->>> The hardware(LA464) has removed the vcsr("has but not use" is
->>> incorrect), and here are some details:
->>>
->>> - For all FP operations, including LSX/LASX, they are controlled by
->>> fcsr0/1/2/3.
->>>
->>> - For LSX/LASX other operations, they are *not* controlled by any other
->>> CSR now. And fcsr16 to fcsr31 are reserved to control these operations
->>> (now they are *undefined*).
->> Sorry but what do you meant by “these” here?
-> "These operations" means "LSX/LASX other operations", except its 
-> floating-point operations.
+On Thu, 2022-07-07 at 11:05 +0800, WANG Xuerui wrote:
 
-This is getting hard to follow. Assuming the expression "LSX/LASX other 
-operations" is Chinglish (it's certainly not proper English), I think 
-you mean "the non-FP operations belonging to LSX/LASX" here right?
+> To be frank, at this point I think you're trying to hide something.=20
+> (This is not your fault, blame someone else of course because they told=
+=20
+> you the fact.) In the old-world kernel the VCSR a.k.a. FCSR16 is=20
+> certainly being saved/restored, and there's apparently no harm in doing=
+=20
+> so. And if the contents are indeed "undefined", why are the code there
+> in the first place? Certainly the bits *are* meaningful, only that for
+> some reason you aren't revealing the semantics and pretending that they=
+=20
+> are "undefined" and probably "do nothing externally observable" if=20
+> accessed in the first place.
 
-And it's strange, that these ops do exist in LSX/LASX, hence also 
-present in 3A5000, but the control bits are undefined. How come this is 
-even possible?
+On a 3A5000LL, I did an experiment via a kernel module, which enables
+LSX/LASX and tries to write and read fcsr16.  I tried each bit (1, 2, 4,
+8, ..., 1 << 31) one by one.  The result: no matter which bit I wrote
+into fcsr16, I always read out 0.
 
->> If it means LSX/LASX, are you trying to say that future chip’s 
->> LSX/LASX won’t be
->> compatible with present 3A5000? As your said fcsr16 and fcsr31 are 
->> undefined
->> for now.
->>
->> Thanks
->> -
->
-> "not compatible" is incorrect. If future chips add new features to 
-> define and use these registers, some bits in CPUCFG should be set, 
-> like CPUID in X86.
->
-> And at that time, if the applications do not use these new 
-> features(like some old apps), they can run at *default* state which is 
-> the same as current 3A5000.
->
-> So, "reserved" is just to prepare for adding something, not 
-> "incompatible".
-
-To be frank, at this point I think you're trying to hide something. 
-(This is not your fault, blame someone else of course because they told 
-you the fact.) In the old-world kernel the VCSR a.k.a. FCSR16 is 
-certainly being saved/restored, and there's apparently no harm in doing 
-so. And if the contents are indeed "undefined", why are the code there 
-in the first place? Certainly the bits *are* meaningful, only that for 
-some reason you aren't revealing the semantics and pretending that they 
-are "undefined" and probably "do nothing externally observable" if 
-accessed in the first place.
-
-Then, either
-
-(1) I am wrong and being hyper-aggressive here (and if it turns out to 
-be the case, I'd immediately apologize for that), and the VCSR is indeed 
-only meaningful for some early development steppings of 3A5000, and does 
-nothing on the 3A5000 we all have now;
-
-or, (2) the VCSR is still relevant for the "other" applicable LSX/LASX 
-ops on 3A5000, but this patch is taking the VCSR out thus rendering such 
-ops unreliable/incorrect in case they depend on the additional state.
-
-Either way, the new-world kernel is handling LSX/LASX differently from 
-the old-world, and I fear this would create unnecessary churn both in 
-kernel and downstream projects already carrying LSX/LASX assembly, in 
-case they actually used said ops. I can't rule out such possibility 
-because at this time all LSX/LASX assembly was written by Loongson 
-people with access to the manuals, and tested on old-world systems, so 
-they might not be aware that some non-FP ops are going to magically 
-change behavior on new-world systems because VCSR is suddenly not being 
-saved/restored.
-
-(Actually, people outside of Loongson might never know if (2) is the 
-case, because the insns dependent on VCSR could be simply deleted from 
-manuals, so they "don't exist" for outsiders, and "compatibility" of 
-course doesn't suffer.)
-
->
-> Thanks.
->
->>> - Flush to zero(MSACSR.FS) is removed and not supported.
->>>
->>> - If you use "movfcsr2gr" to read the fcsr16, the value is *UNDEFINED*.
->
+And I've objdump'ed a kernel shipped in an early Loongnix release.  It
+seems the only reference to fcsr16 is a "movgr2fcsr $r16, $r0"
+instruction.
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
