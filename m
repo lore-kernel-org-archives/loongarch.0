@@ -1,73 +1,77 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BE3367
-	for <loongarch@lists.linux.dev>; Thu,  7 Jul 2022 04:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1657166715;
-	bh=xMn7MrQA8Rmpsy+c97xahDZzxB54Wg0Ugt9J9SQO4vc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EOafTUqNac5KDAd9ls46gfsCl24HWzca6XRCAz1uXx8HGJnv5dTrHFG0ZEM/z7D2Y
-	 N86zIwO+ObrVe2stwKGm96K5rgkbVmXOIc+fUGbRxYJL23O6er5akeRm2ynmVrfoba
-	 DlJNO2AVhJiMDFgEkmoUMgJ2+MLVsUKVYsf+sU3M=
-Received: from [IPv6:240e:358:1139:6500:dc73:854d:832e:4] (unknown [IPv6:240e:358:1139:6500:dc73:854d:832e:4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id CB233669AA;
-	Thu,  7 Jul 2022 00:05:06 -0400 (EDT)
-Message-ID: <bd889cd7b72138a12b1339a33156ff46530c20b0.camel@xry111.site>
-Subject: Re: [PATCH v2] LoongArch: Clean useless vcsr in loongarch_fpu.
-From: Xi Ruoyao <xry111@xry111.site>
-To: WANG Xuerui <kernel@xen0n.name>, Qi Hu <huqi@loongson.cn>, Jiaxun Yang
-	 <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Date: Thu, 07 Jul 2022 12:04:28 +0800
-In-Reply-To: <0583a335-72f7-55cf-3cd9-4dbd8109a440@xen0n.name>
-References: <20220704153612.314112-1-huqi@loongson.cn>
-	 <4273e104-8392-6a06-5d18-a1933978d8c3@xen0n.name>
-	 <22a1ba993e298ce12a374decefebeca484240883.camel@xry111.site>
-	 <16c9ccaa5e5a2ffd39272cff6f66e487c659b571.camel@xry111.site>
-	 <CAAhV-H5+qd1ZrOqE8fgRmWshXy57AfEFpyKSK8ZstZZEQ53owQ@mail.gmail.com>
-	 <ac46f5cb4c8d1154cfc3e862fb5211e869839c9a.camel@xry111.site>
-	 <c824b9ca-c9c4-1912-7845-99a0989277a4@loongson.cn>
-	 <9d064771-9402-4e84-96f8-4713cddf42f2@www.fastmail.com>
-	 <730cb4c4-a6a3-783e-3e4c-7c2bdc35c088@loongson.cn>
-	 <0583a335-72f7-55cf-3cd9-4dbd8109a440@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CB0367
+	for <loongarch@lists.linux.dev>; Thu,  7 Jul 2022 04:22:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1657167773; bh=kVK+K1j5mB45c4TjayXPR0CHym4BWHEeRog+G28gmD4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=isW7nzFD73L6p2ml5+cAPqYl4RKlNVriE6R+uySXyUk146ghNKzC/K9WSfQrT1NOq
+	 hL/GcXSW4BJhw7YBkg7ABoC9BZeAEzNHDtNJXLiF0XcnF8pV120J/ZNh7uUZXKvHRf
+	 CSsA3C1+iC/yQ3PQDRIDP70wOQI8tjAaXOW18aHA=
+Received: from [100.100.57.190] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 037FE6010B;
+	Thu,  7 Jul 2022 12:22:52 +0800 (CST)
+Message-ID: <e67e03ae-e2d4-79e6-7f6a-5558ea9de52b@xen0n.name>
+Date: Thu, 7 Jul 2022 12:22:52 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0)
+ Gecko/20100101 Thunderbird/104.0a1
+Subject: Re: [PATCH v2] LoongArch: Clean useless vcsr in loongarch_fpu.
+To: Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>,
+ Qi Hu <huqi@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+References: <20220704153612.314112-1-huqi@loongson.cn>
+ <4273e104-8392-6a06-5d18-a1933978d8c3@xen0n.name>
+ <22a1ba993e298ce12a374decefebeca484240883.camel@xry111.site>
+ <16c9ccaa5e5a2ffd39272cff6f66e487c659b571.camel@xry111.site>
+ <CAAhV-H5+qd1ZrOqE8fgRmWshXy57AfEFpyKSK8ZstZZEQ53owQ@mail.gmail.com>
+ <ac46f5cb4c8d1154cfc3e862fb5211e869839c9a.camel@xry111.site>
+ <c824b9ca-c9c4-1912-7845-99a0989277a4@loongson.cn>
+ <9d064771-9402-4e84-96f8-4713cddf42f2@www.fastmail.com>
+ <730cb4c4-a6a3-783e-3e4c-7c2bdc35c088@loongson.cn>
+ <0583a335-72f7-55cf-3cd9-4dbd8109a440@xen0n.name>
+ <bd889cd7b72138a12b1339a33156ff46530c20b0.camel@xry111.site>
+Content-Language: en-US
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <bd889cd7b72138a12b1339a33156ff46530c20b0.camel@xry111.site>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2022-07-07 at 11:05 +0800, WANG Xuerui wrote:
+On 2022/7/7 12:04, Xi Ruoyao wrote:
+> On Thu, 2022-07-07 at 11:05 +0800, WANG Xuerui wrote:
+>
+>> To be frank, at this point I think you're trying to hide something.
+>> (This is not your fault, blame someone else of course because they told
+>> you the fact.) In the old-world kernel the VCSR a.k.a. FCSR16 is
+>> certainly being saved/restored, and there's apparently no harm in doing
+>> so. And if the contents are indeed "undefined", why are the code there
+>> in the first place? Certainly the bits *are* meaningful, only that for
+>> some reason you aren't revealing the semantics and pretending that they
+>> are "undefined" and probably "do nothing externally observable" if
+>> accessed in the first place.
+> On a 3A5000LL, I did an experiment via a kernel module, which enables
+> LSX/LASX and tries to write and read fcsr16.  I tried each bit (1, 2, 4,
+> 8, ..., 1 << 31) one by one.  The result: no matter which bit I wrote
+> into fcsr16, I always read out 0.
+>
+> And I've objdump'ed a kernel shipped in an early Loongnix release.  It
+> seems the only reference to fcsr16 is a "movgr2fcsr $r16, $r0"
+> instruction.
 
-> To be frank, at this point I think you're trying to hide something.=20
-> (This is not your fault, blame someone else of course because they told=
-=20
-> you the fact.) In the old-world kernel the VCSR a.k.a. FCSR16 is=20
-> certainly being saved/restored, and there's apparently no harm in doing=
-=20
-> so. And if the contents are indeed "undefined", why are the code there
-> in the first place? Certainly the bits *are* meaningful, only that for
-> some reason you aren't revealing the semantics and pretending that they=
-=20
-> are "undefined" and probably "do nothing externally observable" if=20
-> accessed in the first place.
+Hmm this is weird. I can't understand why the vcsr code was there in the 
+first place then... I'd like to check a few Loongnix/Kylin/UOS kernels 
+but currently I don't have the time.
 
-On a 3A5000LL, I did an experiment via a kernel module, which enables
-LSX/LASX and tries to write and read fcsr16.  I tried each bit (1, 2, 4,
-8, ..., 1 << 31) one by one.  The result: no matter which bit I wrote
-into fcsr16, I always read out 0.
+If this is the case, indeed all vcsr-related code should be removed. 
+Although I'm still not sure how to best word the commit message.
 
-And I've objdump'ed a kernel shipped in an early Loongnix release.  It
-seems the only reference to fcsr16 is a "movgr2fcsr $r16, $r0"
-instruction.
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
