@@ -1,140 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0477A
-	for <loongarch@lists.linux.dev>; Fri,  8 Jul 2022 09:48:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47DFEC341C8
-	for <loongarch@lists.linux.dev>; Fri,  8 Jul 2022 09:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657273690;
-	bh=jh5gWjN504oG2VIQVhjUJ6awryeK4kG9bLyyFcKUZb8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=J0mN0kb8BszGexKgP2TR/Konu1FNhSKLfU1dFk8MjbV9m7dxbBYbF7wwZZqxMrDOr
-	 F2lUZZbiAoibyzsScrc+PqTDnUNQtvqgiIQRLx+9QXwEy71uIlZvZibgVknoklSdR3
-	 N5ej6+Cm1mxWT82xms9zIjE+kIojLNBIi/syuWuMiojBoq8gL4lbqP2fdR4MIRR5aC
-	 C3otI4srlob2HKRGqzFgtB+NkDdngWbUpx5Yan/H9nA5wO5bog/qQzNIgkjEnalQT/
-	 OhQHVVnJ4iu0TKhX6ULYi7/yPg+BKcMgFSIBiwxtrlrtdvCYjxTJwBxwY398mZfvn4
-	 ctAgmZK0ZrrCw==
-Received: by mail-vs1-f53.google.com with SMTP id a184so11708165vsa.1
-        for <loongarch@lists.linux.dev>; Fri, 08 Jul 2022 02:48:10 -0700 (PDT)
-X-Gm-Message-State: AJIora/fYia0LjDSpX+bGLkIccNX5LZwDQrxbPaEnuoX3c3EvYkWFz+7
-	igtyn4IHmKmnkok7hgcdp+QW4B84RysJsvAJJlw=
-X-Google-Smtp-Source: AGRyM1trh8V62HAkUcCKd0tDx5d1m4TVW3lDdgWUkgyB2uid/kYHUhgnGZyGqTvYMyG8IlCpF+vPKmaWyo2itMFkJxg=
-X-Received: by 2002:a05:6102:3543:b0:357:3ae7:bbd0 with SMTP id
- e3-20020a056102354300b003573ae7bbd0mr431000vss.84.1657273689209; Fri, 08 Jul
- 2022 02:48:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC56B7A
+	for <loongarch@lists.linux.dev>; Sun, 10 Jul 2022 11:35:33 +0000 (UTC)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R401e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0VIrBUyv_1657451992;
+Received: from 30.39.247.23(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VIrBUyv_1657451992)
+          by smtp.aliyun-inc.com;
+          Sun, 10 Jul 2022 19:19:54 +0800
+Message-ID: <7628e9a7-8e2d-dcfb-09e5-27de36da5af7@linux.alibaba.com>
+Date: Sun, 10 Jul 2022 19:19:56 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
- <20220704112526.2492342-4-chenhuacai@loongson.cn> <20220705092937.GA552@willie-the-truck>
- <CAAhV-H5r8HDaxt8fkO97in5-eH8X9gokVNervmUWn6km4S0e-w@mail.gmail.com> <20220706161736.GC3204@willie-the-truck>
-In-Reply-To: <20220706161736.GC3204@willie-the-truck>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 8 Jul 2022 17:47:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7uY_KiLJRRjj4+8mewcWbuhvC=zDp5VAs03=BLdSMKLw@mail.gmail.com>
-Message-ID: <CAAhV-H7uY_KiLJRRjj4+8mewcWbuhvC=zDp5VAs03=BLdSMKLw@mail.gmail.com>
-Subject: Re: [PATCH V4 3/4] mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages()
-To: Will Deacon <will@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
-	Sudarshan Rajagopalan <sudaraja@codeaurora.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linux-MM <linux-mm@kvack.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 0/3] Add PUD and kernel PTE level pagetable account
+To: Dave Hansen <dave.hansen@intel.com>, akpm@linux-foundation.org
+Cc: rppt@linux.ibm.com, willy@infradead.org, will@kernel.org,
+ aneesh.kumar@linux.ibm.com, npiggin@gmail.com, peterz@infradead.org,
+ catalin.marinas@arm.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ tsbogend@alpha.franken.de, dave.hansen@linux.intel.com, luto@kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+ arnd@arndb.de, guoren@kernel.org, monstr@monstr.eu, jonas@southpole.se,
+ stefan.kristiansson@saunalahti.fi, shorne@gmail.com, x86@kernel.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linux-csky@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1657096412.git.baolin.wang@linux.alibaba.com>
+ <d2d58cc2-7e6d-aa2d-3096-a500ce321494@intel.com>
+ <ef376131-bf5f-7e5b-ea1b-1e8f64a6d060@linux.alibaba.com>
+ <8821beda-4d60-4d01-b5c8-1629a19c7f0d@intel.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <8821beda-4d60-4d01-b5c8-1629a19c7f0d@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-+Dan Williams
-+Sudarshan Rajagopalan
 
-On Thu, Jul 7, 2022 at 12:17 AM Will Deacon <will@kernel.org> wrote:
->
-> On Tue, Jul 05, 2022 at 09:07:59PM +0800, Huacai Chen wrote:
-> > On Tue, Jul 5, 2022 at 5:29 PM Will Deacon <will@kernel.org> wrote:
-> > > On Mon, Jul 04, 2022 at 07:25:25PM +0800, Huacai Chen wrote:
-> > > > diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-> > > > index 33e2a1ceee72..6f2e40bb695d 100644
-> > > > --- a/mm/sparse-vmemmap.c
-> > > > +++ b/mm/sparse-vmemmap.c
-> > > > @@ -686,6 +686,60 @@ int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
-> > > >       return vmemmap_populate_range(start, end, node, altmap, NULL);
-> > > >  }
-> > > >
-> > > > +void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
-> > > > +                                   unsigned long addr, unsigned long next)
-> > > > +{
-> > > > +}
-> > > > +
-> > > > +int __weak __meminit vmemmap_check_pmd(pmd_t *pmd, int node, unsigned long addr,
-> > > > +                                    unsigned long next)
-> > > > +{
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > > +int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
-> > > > +                                      int node, struct vmem_altmap *altmap)
-> > > > +{
-> > > > +     unsigned long addr;
-> > > > +     unsigned long next;
-> > > > +     pgd_t *pgd;
-> > > > +     p4d_t *p4d;
-> > > > +     pud_t *pud;
-> > > > +     pmd_t *pmd;
-> > > > +
-> > > > +     for (addr = start; addr < end; addr = next) {
-> > > > +             next = pmd_addr_end(addr, end);
-> > > > +
-> > > > +             pgd = vmemmap_pgd_populate(addr, node);
-> > > > +             if (!pgd)
-> > > > +                     return -ENOMEM;
-> > > > +
-> > > > +             p4d = vmemmap_p4d_populate(pgd, addr, node);
-> > > > +             if (!p4d)
-> > > > +                     return -ENOMEM;
-> > > > +
-> > > > +             pud = vmemmap_pud_populate(p4d, addr, node);
-> > > > +             if (!pud)
-> > > > +                     return -ENOMEM;
-> > > > +
-> > > > +             pmd = pmd_offset(pud, addr);
-> > > > +             if (pmd_none(READ_ONCE(*pmd))) {
-> > > > +                     void *p;
-> > > > +
-> > > > +                     p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
-> > > > +                     if (p) {
-> > > > +                             vmemmap_set_pmd(pmd, p, node, addr, next);
-> > > > +                             continue;
-> > > > +                     } else if (altmap)
-> > > > +                             return -ENOMEM; /* no fallback */
-> > >
-> > > Why do you return -ENOMEM if 'altmap' here? That seems to be different to
-> > > what we currently have on arm64 and it's not clear to me why we're happy
-> > > with an altmap for the pmd case, but not for the pte case.
-> > The generic version is the same as X86. It seems that ARM64 always
-> > fallback whether there is an altmap, but X86 only fallback in the no
-> > altmap case. I don't know the reason of X86, can Dan Williams give
-> > some explaination?
->
-> Right, I think we need to understand the new behaviour here before we adopt
-> it on arm64.
-Hi, Dan,
-Could you please tell us the reason? Thanks.
 
-And Sudarshan,
-You are the author of adding a fallback mechanism to ARM64,  do you
-know why ARM64 is different from X86 (only fallback in no altmap
-case)?
+On 7/7/2022 10:44 PM, Dave Hansen wrote:
+> On 7/7/22 04:32, Baolin Wang wrote:
+>> On 7/6/2022 11:48 PM, Dave Hansen wrote:
+>>> On 7/6/22 01:59, Baolin Wang wrote:
+>>>> Now we will miss to account the PUD level pagetable and kernel PTE level
+>>>> pagetable, as well as missing to set the PG_table flags for these
+>>>> pagetable
+>>>> pages, which will get an inaccurate pagetable accounting, and miss
+>>>> PageTable() validation in some cases. So this patch set introduces new
+>>>> helpers to help to account PUD and kernel PTE pagetable pages.
+>>>
+>>> Could you explain the motivation for this series a bit more?  Is there a
+>>> real-world problem that this fixes?
+>>
+>> Not fix real problem. The motivation is that making the pagetable
+>> accounting more accurate, which helps us to analyse the consumption of
+>> the pagetable pages in some cases, and maybe help to do some empty
+>> pagetable reclaiming in future.
+> 
+> This accounting isn't free.  It costs storage (and also parts of
+> cachelines) in each mm and CPU time to maintain it, plus maintainer
+> eyeballs to maintain.  PUD pages are also fundamentally (on x86 at
+> least) 0.0004% of the overhead of PTE and 0.2% of the overhead of PMD
+> pages unless someone is using gigantic hugetlbfs mappings.
 
-Huacai
+Yes, agree. However I think the performence influence of this patch is 
+small from some testing I did (like mysql, no obvious performance 
+influence). Moreover the pagetable accounting gap is about 1% from below 
+testing data.
 
->
-> Will
+Without this patchset, the pagetable consumption is about 110M with 
+mysql testing.
+              flags      page-count       MB  symbolic-flags 
+          long-symbolic-flags
+0x0000000004000000           28232      110 
+__________________________g__________________      pgtable
+
+With this patchset, and the consumption is about 111M.
+              flags      page-count       MB  symbolic-flags 
+          long-symbolic-flags
+0x0000000004000000           28459      111 
+__________________________g__________________      pgtable
+
+
+> Even with 1G gigantic pages, you would need a quarter of a million
+> (well, 262144 or 512*512) mappings of one 1G page to consume 1G of
+> memory on PUD pages.
+> 
+> That just doesn't seem like something anyone is likely to actually do in
+> practice.  That makes the benefits of the PUD portion of this series
+> rather unclear in the real world.
+> 
+> As for the kernel page tables, I'm not really aware of them causing any
+> problems.  We have a pretty good idea how much space they consume from
+> the DirectMap* entries in meminfo:
+> 
+> 	DirectMap4k:     2262720 kB
+> 	DirectMap2M:    40507392 kB
+> 	DirectMap1G:    24117248 kB
+
+However these statistics are arch-specific information, which only 
+available on x86, s390 and powerpc.
+
+> as well as our page table debugging infrastructure.  I haven't found
+> myself dying for more specific info on them.
+> 
+> So, nothing in this series seems like a *BAD* idea, but I'm not sure in
+> the end it solves more problems than it creates.
+
+Thanks for your input.
