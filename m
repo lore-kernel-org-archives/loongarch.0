@@ -1,48 +1,94 @@
-Received: from absceraw.gazzettait.com (absceraw.gazzettait.com [45.141.237.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B292F47
-	for <loongarch@lists.linux.dev>; Sun, 10 Jul 2022 21:54:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=dkim; d=gazzettait.com;
- h=Content-Type:MIME-Version:Content-Transfer-Encoding:Content-Description:Subject:To:From:Date:Reply-To:Message-ID; i=mar.ste@gazzettait.com;
- bh=WUPTBNCY7DKAhAMRCEhYI8mxbak=;
- b=bXjNJ0C8kPcnS1Rp580i/nnyqu6TRyccHHKEYnD/nxI32TcIyjeC0SuM4Z2b+u57/i6FPIP3QlSC
-   8aBACk53+nRT4G9fjNuVBpOn6xzkhxSIduwJ0KPvA9L/+CUHVxwdjn7O7mI41Quu2PcWK2cHj3nX
-   r3+4F6UbCTZEiERGMdmpgxSZhU02bvYWps3dwf6GF6bb6HJaPTny6diERabRcTnaLhxshUQdTkKf
-   v5PcRSFqdh+frsKyBxcG6HSxZHm2KQC/UfjC+VRIRyTOt/5hiW6gBI1XH5lEVuEprNsusWf2Fh05
-   QokIMtSBfFsMlSRVA5EFih965x9x+yjIWTNKGg==
-DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=dkim; d=gazzettait.com;
- b=E1B237gg2iNormHYd9xUkOENcFsGa1VhYS5hvBN2DmyOyeIuq0gnzVlS9CT/sN2IlIVjHGdEn9jq
-   vJm2+N98wgQmyMtKBF2+zXYjrJ1mXLuabBtV/m2UcfS4+X0vAahqytYrdKOuugVbYn/eb7+qmfl4
-   f9tVZIa28+ToL+eMMA1BjluooE16XCaiQFO6QdOSZ6AZSs0trgqRygO0MuWfa6qbmI9bcftmnTqx
-   LEpzUHc5VdYkOhajIREPXhu6yr2I3eHAYeiFCPVJCb/oUJByYAkCPLPA6Sr01Uof1tYRPkO/A5C3
-   INc7lSx24rL2Knx0LSn24LB3YvIUymAbVVXJMg==;
-Content-Type: text/plain; charset="iso-8859-1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC26653A4
+	for <loongarch@lists.linux.dev>; Mon, 11 Jul 2022 22:55:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E0F7C34115;
+	Mon, 11 Jul 2022 22:55:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1657580114;
+	bh=14pnKIJT4xGcd7MxjhIRhm94fsD1jimb9rOIpABahqo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=j3qpaHz6AIkJFBeD2OgRxoT8189q2v4Ect7vzDMo7mlAYKpjBl1wQdj9e2Q3FU8we
+	 01bt32X5/15z3SCQN8lLH1c4XaX1sdOeJyq1LkMjmZt4RC6cLZr/fMX5KI8znDehbA
+	 EpIRiPXw89kkJ+71ZugqXyOsjZaLQmg0NzB3DsQpnATtWCAwxLHEu2Ndyc1xNTnPyr
+	 yo4bGdzCuVFqqCN4XE45SgU7Ng33B8iW254Om2wUAp1PUejZZcTTYkjE2T5JEVkjbh
+	 gLhjoBu+ao52ASgUa2qXUDnWikLQMyg5VryICGW/S46SAjD20gdBZ/TMap8bWVlkSA
+	 GUfoY0G/YZxVw==
+Message-ID: <c5a8eeeb-80fa-b542-e7a3-e0052177ca53@kernel.org>
+Date: Mon, 11 Jul 2022 17:55:09 -0500
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Proposition 
-To: loongarch@lists.linux.dev
-From: "Julio" <mar.ste@gazzettait.com>
-Date: Sun, 10 Jul 2022 14:54:52 -0700
-Reply-To: juliobol@laboragt.com
-Message-ID: <0.0.3.6D9.1D894A7AEC3DDC6.0@absceraw.gazzettait.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v2 07/15] nios2: drop definition of PTE_ORDER
+Content-Language: en-US
+To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+ Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Matthew Wilcox <willy@infradead.org>, Max Filippov <jcmvbkbc@gmail.com>,
+ Mike Rapoport <rppt@linux.ibm.com>,
+ "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ WANG Xuerui <kernel@xen0n.name>, linux-arch@vger.kernel.org,
+ linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-mm@kvack.org,
+ linux-parisc@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+ loongarch@lists.linux.dev
+References: <20220705154708.181258-1-rppt@kernel.org>
+ <20220705154708.181258-8-rppt@kernel.org>
+From: Dinh Nguyen <dinguyen@kernel.org>
+In-Reply-To: <20220705154708.181258-8-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Good Day
-
-I'm Julio Bologna, working with A Laboratories UK Ltd as a research consult=
-ant..
-
-I have a business proposal that would interest you on this, Kindly contact =
-me for full details. bologjulio@gmail.com
 
 
+On 7/5/22 10:47, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> This is the order of the page table allocation, not the order of a PTE.
+> Since its always hardwired to 0, simply drop it.
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>   arch/nios2/include/asm/pgtable.h | 3 +--
+>   arch/nios2/mm/init.c             | 2 +-
+>   2 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/nios2/include/asm/pgtable.h b/arch/nios2/include/asm/pgtable.h
+> index 262d0609268c..eaf8f28baa8b 100644
+> --- a/arch/nios2/include/asm/pgtable.h
+> +++ b/arch/nios2/include/asm/pgtable.h
+> @@ -69,10 +69,9 @@ struct mm_struct;
+>   #define PAGE_COPY MKP(0, 0, 1)
+>   
+>   #define PGD_ORDER	0
+> -#define PTE_ORDER	0
+>   
+>   #define PTRS_PER_PGD	((PAGE_SIZE << PGD_ORDER) / sizeof(pgd_t))
+> -#define PTRS_PER_PTE	((PAGE_SIZE << PTE_ORDER) / sizeof(pte_t))
+> +#define PTRS_PER_PTE	(PAGE_SIZE / sizeof(pte_t))
+>   
+>   #define USER_PTRS_PER_PGD	\
+>   	(CONFIG_NIOS2_KERNEL_MMU_REGION_BASE / PGDIR_SIZE)
+> diff --git a/arch/nios2/mm/init.c b/arch/nios2/mm/init.c
+> index 613fcaa5988a..2d6dbf7701f6 100644
+> --- a/arch/nios2/mm/init.c
+> +++ b/arch/nios2/mm/init.c
+> @@ -80,7 +80,7 @@ void __init mmu_init(void)
+>   
+>   #define __page_aligned(order) __aligned(PAGE_SIZE << (order))
+>   pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned(PGD_ORDER);
+> -pte_t invalid_pte_table[PTRS_PER_PTE] __page_aligned(PTE_ORDER);
+> +pte_t invalid_pte_table[PTRS_PER_PTE] __aligned(PAGE_SIZE);
+>   static struct page *kuser_page[1];
+>   
+>   static int alloc_kuser_page(void)
 
-Thank you.
-Regards
-Julio Bologna
+Acked-by: Dinh Nguyen <dinguyen@kernel.org>
