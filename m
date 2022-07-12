@@ -1,38 +1,36 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2FB7A
-	for <loongarch@lists.linux.dev>; Tue, 12 Jul 2022 08:53:45 +0000 (UTC)
-Received: by mail-vs1-f52.google.com with SMTP id 185so7177761vse.6
-        for <loongarch@lists.linux.dev>; Tue, 12 Jul 2022 01:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kpinsuut8uy/po5okYJBMsfKic8kB6vMadZAvETnKBk=;
-        b=dwJv1Pib8Q7+nvpJSurnA2xBBEzBrTNW5L3cdY1SvxMosGk6cx1B0idKPFxZEIioGY
-         AqcX5e4NBdjPBEq7A/CCssiZgQL3MJhWHJvRl6jFVmov/5NnQu8w8hIWhurofLTxLKSF
-         7hdX1g2K84bWUxhnsweKaXjgI2dYVRWiD0zYcTwM+QfWBgCRp+OAjV0bKtVfpAz5BFIc
-         ubqtALxkDCKIOKalZTp1RfBFi+fF80JGD634VfPEY5Z6Xt/6aUrezn2nuycjL2MOvrQo
-         LvFLPxdQ4RyM9UuJGv9NYBzeB4PszmM/TLyxcL7UBHI1/X9WR94/3HDXConzrUZwztQV
-         R1rQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970E27A
+	for <loongarch@lists.linux.dev>; Tue, 12 Jul 2022 09:01:19 +0000 (UTC)
+Received: by mail-qv1-f49.google.com with SMTP id l15so2123893qvo.11
+        for <loongarch@lists.linux.dev>; Tue, 12 Jul 2022 02:01:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kpinsuut8uy/po5okYJBMsfKic8kB6vMadZAvETnKBk=;
-        b=uMWm/WK8It+uACmA3Hp6MKnsewuNvPSQ0aWB6Q4wsbqHZEW1/LpLwHh2q9Ur+MvLoO
-         b1nHqYplkArotPHZ6S6ocxfpQywpEdRfTvJ04VfuI3zBbp2iPR5lfPuFmjQkOESsFOq4
-         WcnO6tZNhJJpdG4wTZPcTEY0010c/1pIh/xSNqMjqmxCEPDrxOV7dulW58lMZcyFeSaH
-         5NFmWDdbVF6qGNfILvIzfKLpIK7OIcwTlQ8Jo5AsgAmOGUj59k8BG5ANIxsONJmrUwB2
-         C3uOIg/1rkD0D8cSq1sbI3FDAfbLOF7tkwvn91hYBuJRN81LUxporiMGZJRI2Qdpr/H3
-         uBWg==
-X-Gm-Message-State: AJIora88Ei5wmpLn+ntLPiSUjlh+CgctHF2DvRna9LX68uDyqyVp1I2R
-	cFHJ1zHNLhuVxg/0EI+yh37+bMosfrvH5iQ5uH0=
-X-Google-Smtp-Source: AGRyM1vGuZr37QKxGZELIk3qMdL5HX6pFPV1LqHc7xDSaL+xY6Ja4/bjdrQ9Vps4TUIPmQDgFhEufFvyr1b+jLsacsM=
-X-Received: by 2002:a67:ec05:0:b0:357:7a48:cba8 with SMTP id
- d5-20020a67ec05000000b003577a48cba8mr637429vso.78.1657616024024; Tue, 12 Jul
- 2022 01:53:44 -0700 (PDT)
+        bh=t9ec7iguCfy6L3waGgPnWXclPbbw0CysomvMpi7xE8A=;
+        b=jCF3DzrR933nGrp485pjqd1uTs7tVT8GFK9JN95vmlDL4oUQVHAY7F+Dy2+Yf1g7Wn
+         cZ5/IFmQbdJ8SjmTMN0BGcG/wwgy0PLUxEUUBPN++yAG0rcvrne1qeHnav3reTgrevI5
+         abYSk0YCxPGE8cu8HEQ6x+0dqVIFhPcNMhs7zb3Vh0i5Y+HIkGD2MeeSVLNnneQYvvbT
+         oMFcNZCs3gycie1Qllgmgo362L904iIIQOK8hxQ4gGBstxnpCS0t5N19kOw/QA5Zh+TA
+         84yEg+xA32gtHSknytPktkuSCKcj8wcOjMJhrZn3vk5TxmF3/EbN9EGimUAeMTqMbKJ+
+         ekdQ==
+X-Gm-Message-State: AJIora8m7US23hYxWowcF1mn3SqyUMFf2/oTBC1+Tn2EzygZGyY7mkJi
+	Y839MO6Gr/rzyrx0l1RfQIEnDwNmQu36MA==
+X-Google-Smtp-Source: AGRyM1tTP+Z3Czv69e/ysFVCyG6kMY5b1Qxm0HSc1ngIgACyMho6DOr+CLz3haMkvk0A3/HJeH72ZQ==
+X-Received: by 2002:a0c:a94b:0:b0:473:2a12:8d2a with SMTP id z11-20020a0ca94b000000b004732a128d2amr16754739qva.65.1657616478396;
+        Tue, 12 Jul 2022 02:01:18 -0700 (PDT)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
+        by smtp.gmail.com with ESMTPSA id bs18-20020a05620a471200b006a6b564e9b8sm8639853qkb.4.2022.07.12.02.01.14
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Jul 2022 02:01:17 -0700 (PDT)
+Received: by mail-yb1-f172.google.com with SMTP id p129so12862508yba.7
+        for <loongarch@lists.linux.dev>; Tue, 12 Jul 2022 02:01:14 -0700 (PDT)
+X-Received: by 2002:a05:6902:701:b0:66e:a06d:53d7 with SMTP id
+ k1-20020a056902070100b0066ea06d53d7mr20596635ybt.604.1657616474618; Tue, 12
+ Jul 2022 02:01:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,12 +39,14 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20220712075255.1345991-1-chenhuacai@loongson.cn>
  <20220712075255.1345991-3-chenhuacai@loongson.cn> <CAMuHMdUazqHLbc80vpZ+Msg9A3j5aPJ3fx+CdCG3kuWDSf8WSw@mail.gmail.com>
-In-Reply-To: <CAMuHMdUazqHLbc80vpZ+Msg9A3j5aPJ3fx+CdCG3kuWDSf8WSw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@gmail.com>
-Date: Tue, 12 Jul 2022 16:53:32 +0800
-Message-ID: <CAAhV-H775jXMbcR9j=oLBuHo1PfFziZSUQWttJAEw20sUt+GAA@mail.gmail.com>
+ <CAAhV-H775jXMbcR9j=oLBuHo1PfFziZSUQWttJAEw20sUt+GAA@mail.gmail.com>
+In-Reply-To: <CAAhV-H775jXMbcR9j=oLBuHo1PfFziZSUQWttJAEw20sUt+GAA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 12 Jul 2022 11:01:02 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUHbepd974u5iox3BcOyo_Q2ZgT-znruk+WCt+HMQ_Lgw@mail.gmail.com>
+Message-ID: <CAMuHMdUHbepd974u5iox3BcOyo_Q2ZgT-znruk+WCt+HMQ_Lgw@mail.gmail.com>
 Subject: Re: [PATCH 3/6] M68K: cpuinfo: Fix a warning for CONFIG_CPUMASK_OFFSTACK
-To: Geert Uytterhoeven <geert@linux-m68k.org>
+To: Huacai Chen <chenhuacai@gmail.com>
 Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Michal Simek <monstr@monstr.eu>, 
 	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
@@ -60,97 +60,39 @@ Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
 	stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi, Geert,
+Hi Huacai,
 
-On Tue, Jul 12, 2022 at 4:33 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Tue, Jul 12, 2022 at 10:53 AM Huacai Chen <chenhuacai@gmail.com> wrote:
+> On Tue, Jul 12, 2022 at 4:33 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Jul 12, 2022 at 9:53 AM Huacai Chen <chenhuacai@loongson.cn> wrote:
+> > > When CONFIG_CPUMASK_OFFSTACK and CONFIG_DEBUG_PER_CPU_MAPS is selected,
+> >
+> > DEBUG_PER_CPU_MAPS depends on SMP, which is not supported on m68k,
+> > and thus cannot be enabled.
+> This patch is derived from MIPS and LoongArch, I search all
+> architectures and change those that look the same as MIPS and
+> LoongArch.
+> And the warning message below is also a copy-paste from LoongArch, sorry.
 >
-> Hi Huacai,
->
-> Thanks for your patch!
->
-> On Tue, Jul 12, 2022 at 9:53 AM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> > When CONFIG_CPUMASK_OFFSTACK and CONFIG_DEBUG_PER_CPU_MAPS is selected,
->
-> DEBUG_PER_CPU_MAPS depends on SMP, which is not supported on m68k,
-> and thus cannot be enabled.
-This patch is derived from MIPS and LoongArch, I search all
-architectures and change those that look the same as MIPS and
-LoongArch.
-And the warning message below is also a copy-paste from LoongArch, sorry.
+> Since M68K doesn't support SMP, then this patch seems to make no
+> difference, but does it make sense to keep consistency across all
+> architectures?
 
-Since M68K doesn't support SMP, then this patch seems to make no
-difference, but does it make sense to keep consistency across all
-architectures?
+Yes, having consistency is good.  But that should be mentioned in the
+patch description, instead of a scary warning CCed to stable ;-)
 
-Huacai
->
-> > cpu_max_bits_warn() generates a runtime warning similar as below while
-> > we show /proc/cpuinfo. Fix this by using nr_cpu_ids (the runtime limit)
-> > instead of NR_CPUS to iterate CPUs.
-> >
-> > [    3.052463] ------------[ cut here ]------------
-> > [    3.059679] WARNING: CPU: 3 PID: 1 at include/linux/cpumask.h:108 show_cpuinfo+0x5e8/0x5f0
-> > [    3.070072] Modules linked in: efivarfs autofs4
->
-> efivarfs on m68k?
->
-> EFIVAR_FS depends on EFI depends on !CPU_BIG_ENDIAN
->
-> > [    3.076257] CPU: 0 PID: 1 Comm: systemd Not tainted 5.19-rc5+ #1052
-> > [    3.099465] Stack : 9000000100157b08 9000000000f18530 9000000000cf846c 9000000100154000
-> > [    3.109127]         9000000100157a50 0000000000000000 9000000100157a58 9000000000ef7430
-> > [    3.118774]         90000001001578e8 0000000000000040 0000000000000020 ffffffffffffffff
-> > [    3.128412]         0000000000aaaaaa 1ab25f00eec96a37 900000010021de80 900000000101c890
-> > [    3.138056]         0000000000000000 0000000000000000 0000000000000000 0000000000aaaaaa
-> > [    3.147711]         ffff8000339dc220 0000000000000001 0000000006ab4000 0000000000000000
-> > [    3.157364]         900000000101c998 0000000000000004 9000000000ef7430 0000000000000000
-> > [    3.167012]         0000000000000009 000000000000006c 0000000000000000 0000000000000000
-> > [    3.176641]         9000000000d3de08 9000000001639390 90000000002086d8 00007ffff0080286
-> > [    3.186260]         00000000000000b0 0000000000000004 0000000000000000 0000000000071c1c
-> > [    3.195868]         ...
-> > [    3.199917] Call Trace:
-> > [    3.203941] [<90000000002086d8>] show_stack+0x38/0x14c
-> > [    3.210666] [<9000000000cf846c>] dump_stack_lvl+0x60/0x88
-> > [    3.217625] [<900000000023d268>] __warn+0xd0/0x100
-> > [    3.223958] [<9000000000cf3c90>] warn_slowpath_fmt+0x7c/0xcc
-> > [    3.231150] [<9000000000210220>] show_cpuinfo+0x5e8/0x5f0
-> > [    3.238080] [<90000000004f578c>] seq_read_iter+0x354/0x4b4
-> > [    3.245098] [<90000000004c2e90>] new_sync_read+0x17c/0x1c4
-> > [    3.252114] [<90000000004c5174>] vfs_read+0x138/0x1d0
-> > [    3.258694] [<90000000004c55f8>] ksys_read+0x70/0x100
-> > [    3.265265] [<9000000000cfde9c>] do_syscall+0x7c/0x94
-> > [    3.271820] [<9000000000202fe4>] handle_syscall+0xc4/0x160
-> > [    3.281824] ---[ end trace 8b484262b4b8c24c ]---
-> >
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->
-> Does this need a Fixes tag, so we know when the problem was introduced?
->
-> > --- a/arch/m68k/kernel/setup_no.c
-> > +++ b/arch/m68k/kernel/setup_no.c
-> > @@ -201,7 +201,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
-> >
-> >  static void *c_start(struct seq_file *m, loff_t *pos)
-> >  {
-> > -       return *pos < NR_CPUS ? ((void *) 0x12345678) : NULL;
-> > +       return *pos < nr_cpu_ids ? ((void *) 0x12345678) : NULL;
-> >  }
->
-> include/linux/cpumask.h has:
->
->     #if NR_CPUS == 1
->     #define nr_cpu_ids              1U
->
-> so on m68k, both evaluate to the same value?
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+BTW, you probably want to update the other copy of c_start() in
+arch/m68k/kernel/setup_mm.c, too.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
