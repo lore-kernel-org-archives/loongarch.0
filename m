@@ -1,108 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D79F53A4
-	for <loongarch@lists.linux.dev>; Mon, 11 Jul 2022 22:55:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30295C3411C;
-	Mon, 11 Jul 2022 22:55:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657580149;
-	bh=306Zt8on93XWkgQdga4uepYhOUdbfhX4MuA93F+mjDg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CK6oxDOms/jOi0NV/YznDDefa7DzL+1hTYbuZsX1ubF2D7Dc5bCKUoODI2BCGJX89
-	 6NLGGeBf3orU1q8LBrJxMsNrQ0j6cVdbG3FhfCDMN0ZUKz6D4riXo6CB4iwPDRT739
-	 WOsA0EPpXuYXczd0Z+7ZxV5U8ulJl+qvCV/9mIm8Od50we4E7mN8kQ/5NHAjIteesc
-	 FN/ZwBzoV7cycc328T5X0MdbBOZh++pvIOcHOY+cxZ32ENLjyEp+N/wTvpM+lrH73/
-	 OAKQmoBmgIRy7tKoG4wIdPCUTRZq+cWBaLHhQcwgxOs/xFu2GAaqFudOGbWjPVirLB
-	 ATxDuYv4YevKQ==
-Message-ID: <bced9f7f-992d-0965-949f-2682d31a6a2e@kernel.org>
-Date: Mon, 11 Jul 2022 17:55:44 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1161223A7
+	for <loongarch@lists.linux.dev>; Tue, 12 Jul 2022 07:52:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD2EC3411E;
+	Tue, 12 Jul 2022 07:52:12 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	Jeff Dike <jdike@addtoit.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-mips@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-sh@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/6] MIPS: cpuinfo: Fix a warning for CONFIG_CPUMASK_OFFSTACK
+Date: Tue, 12 Jul 2022 15:52:50 +0800
+Message-Id: <20220712075255.1345991-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v2 08/15] nios2: drop definition of PGD_ORDER
-Content-Language: en-US
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
- Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Matthew Wilcox <willy@infradead.org>, Max Filippov <jcmvbkbc@gmail.com>,
- Mike Rapoport <rppt@linux.ibm.com>,
- "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- WANG Xuerui <kernel@xen0n.name>, linux-arch@vger.kernel.org,
- linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-parisc@vger.kernel.org, linux-xtensa@linux-xtensa.org,
- loongarch@lists.linux.dev
-References: <20220705154708.181258-1-rppt@kernel.org>
- <20220705154708.181258-9-rppt@kernel.org>
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <20220705154708.181258-9-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+When CONFIG_CPUMASK_OFFSTACK and CONFIG_DEBUG_PER_CPU_MAPS is selected,
+cpu_max_bits_warn() generates a runtime warning similar as below while
+we show /proc/cpuinfo. Fix this by using nr_cpu_ids (the runtime limit)
+instead of NR_CPUS to iterate CPUs.
 
+[    3.052463] ------------[ cut here ]------------
+[    3.059679] WARNING: CPU: 3 PID: 1 at include/linux/cpumask.h:108 show_cpuinfo+0x5e8/0x5f0
+[    3.070072] Modules linked in: efivarfs autofs4
+[    3.076257] CPU: 0 PID: 1 Comm: systemd Not tainted 5.19-rc5+ #1052
+[    3.084034] Hardware name: Loongson Loongson-3A4000-7A1000-1w-V0.1-CRB/Loongson-LS3A4000-7A1000-1w-EVB-V1.21, BIOS Loongson-UDK2018-V2.0.04082-beta7 04/27
+[    3.099465] Stack : 9000000100157b08 9000000000f18530 9000000000cf846c 9000000100154000
+[    3.109127]         9000000100157a50 0000000000000000 9000000100157a58 9000000000ef7430
+[    3.118774]         90000001001578e8 0000000000000040 0000000000000020 ffffffffffffffff
+[    3.128412]         0000000000aaaaaa 1ab25f00eec96a37 900000010021de80 900000000101c890
+[    3.138056]         0000000000000000 0000000000000000 0000000000000000 0000000000aaaaaa
+[    3.147711]         ffff8000339dc220 0000000000000001 0000000006ab4000 0000000000000000
+[    3.157364]         900000000101c998 0000000000000004 9000000000ef7430 0000000000000000
+[    3.167012]         0000000000000009 000000000000006c 0000000000000000 0000000000000000
+[    3.176641]         9000000000d3de08 9000000001639390 90000000002086d8 00007ffff0080286
+[    3.186260]         00000000000000b0 0000000000000004 0000000000000000 0000000000071c1c
+[    3.195868]         ...
+[    3.199917] Call Trace:
+[    3.203941] [<98000000002086d8>] show_stack+0x38/0x14c
+[    3.210666] [<9800000000cf846c>] dump_stack_lvl+0x60/0x88
+[    3.217625] [<980000000023d268>] __warn+0xd0/0x100
+[    3.223958] [<9800000000cf3c90>] warn_slowpath_fmt+0x7c/0xcc
+[    3.231150] [<9800000000210220>] show_cpuinfo+0x5e8/0x5f0
+[    3.238080] [<98000000004f578c>] seq_read_iter+0x354/0x4b4
+[    3.245098] [<98000000004c2e90>] new_sync_read+0x17c/0x1c4
+[    3.252114] [<98000000004c5174>] vfs_read+0x138/0x1d0
+[    3.258694] [<98000000004c55f8>] ksys_read+0x70/0x100
+[    3.265265] [<9800000000cfde9c>] do_syscall+0x7c/0x94
+[    3.271820] [<9800000000202fe4>] handle_syscall+0xc4/0x160
+[    3.281824] ---[ end trace 8b484262b4b8c24c ]---
 
-On 7/5/22 10:47, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> This is the order of the page table allocation, not the order of a PGD.
-> Since its always hardwired to 0, simply drop it.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->   arch/nios2/include/asm/pgtable.h | 4 +---
->   arch/nios2/mm/init.c             | 3 +--
->   arch/nios2/mm/pgtable.c          | 2 +-
->   3 files changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/nios2/include/asm/pgtable.h b/arch/nios2/include/asm/pgtable.h
-> index eaf8f28baa8b..74af16dafe86 100644
-> --- a/arch/nios2/include/asm/pgtable.h
-> +++ b/arch/nios2/include/asm/pgtable.h
-> @@ -68,9 +68,7 @@ struct mm_struct;
->   
->   #define PAGE_COPY MKP(0, 0, 1)
->   
-> -#define PGD_ORDER	0
-> -
-> -#define PTRS_PER_PGD	((PAGE_SIZE << PGD_ORDER) / sizeof(pgd_t))
-> +#define PTRS_PER_PGD	(PAGE_SIZE / sizeof(pgd_t))
->   #define PTRS_PER_PTE	(PAGE_SIZE / sizeof(pte_t))
->   
->   #define USER_PTRS_PER_PGD	\
-> diff --git a/arch/nios2/mm/init.c b/arch/nios2/mm/init.c
-> index 2d6dbf7701f6..eab65e8ea69c 100644
-> --- a/arch/nios2/mm/init.c
-> +++ b/arch/nios2/mm/init.c
-> @@ -78,8 +78,7 @@ void __init mmu_init(void)
->   	flush_tlb_all();
->   }
->   
-> -#define __page_aligned(order) __aligned(PAGE_SIZE << (order))
-> -pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned(PGD_ORDER);
-> +pgd_t swapper_pg_dir[PTRS_PER_PGD] __aligned(PAGE_SIZE);
->   pte_t invalid_pte_table[PTRS_PER_PTE] __aligned(PAGE_SIZE);
->   static struct page *kuser_page[1];
->   
-> diff --git a/arch/nios2/mm/pgtable.c b/arch/nios2/mm/pgtable.c
-> index 9b587fd592dd..7c76e8a7447a 100644
-> --- a/arch/nios2/mm/pgtable.c
-> +++ b/arch/nios2/mm/pgtable.c
-> @@ -54,7 +54,7 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
->   {
->   	pgd_t *ret, *init;
->   
-> -	ret = (pgd_t *) __get_free_pages(GFP_KERNEL, PGD_ORDER);
-> +	ret = (pgd_t *) __get_free_page(GFP_KERNEL);
->   	if (ret) {
->   		init = pgd_offset(&init_mm, 0UL);
->   		pgd_init(ret);
+Cc: stable@vger.kernel.org
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/mips/kernel/proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+diff --git a/arch/mips/kernel/proc.c b/arch/mips/kernel/proc.c
+index 4184d641f05e..33a02f3814f5 100644
+--- a/arch/mips/kernel/proc.c
++++ b/arch/mips/kernel/proc.c
+@@ -172,7 +172,7 @@ static void *c_start(struct seq_file *m, loff_t *pos)
+ {
+ 	unsigned long i = *pos;
+ 
+-	return i < NR_CPUS ? (void *) (i + 1) : NULL;
++	return i < nr_cpu_ids ? (void *) (i + 1) : NULL;
+ }
+ 
+ static void *c_next(struct seq_file *m, void *v, loff_t *pos)
+-- 
+2.31.1
+
