@@ -1,10 +1,10 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98A423A7
-	for <loongarch@lists.linux.dev>; Tue, 12 Jul 2022 07:54:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C8EFC341CA;
-	Tue, 12 Jul 2022 07:54:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEF123A7
+	for <loongarch@lists.linux.dev>; Tue, 12 Jul 2022 07:56:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D570C341C0;
+	Tue, 12 Jul 2022 07:56:05 +0000 (UTC)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Arnd Bergmann <arnd@arndb.de>,
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -28,9 +28,9 @@ Cc: loongarch@lists.linux.dev,
 	linux-um@lists.infradead.org,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	stable@vger.kernel.org
-Subject: [PATCH 5/6] SH: cpuinfo: Fix a warning for CONFIG_CPUMASK_OFFSTACK
-Date: Tue, 12 Jul 2022 15:52:54 +0800
-Message-Id: <20220712075255.1345991-5-chenhuacai@loongson.cn>
+Subject: [PATCH 6/6] UM: cpuinfo: Fix a warning for CONFIG_CPUMASK_OFFSTACK
+Date: Tue, 12 Jul 2022 15:52:55 +0800
+Message-Id: <20220712075255.1345991-6-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20220712075255.1345991-1-chenhuacai@loongson.cn>
 References: <20220712075255.1345991-1-chenhuacai@loongson.cn>
@@ -79,22 +79,22 @@ instead of NR_CPUS to iterate CPUs.
 Cc: stable@vger.kernel.org
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/sh/kernel/cpu/proc.c | 2 +-
+ arch/um/kernel/um_arch.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/sh/kernel/cpu/proc.c b/arch/sh/kernel/cpu/proc.c
-index a306bcd6b341..5f6d0e827bae 100644
---- a/arch/sh/kernel/cpu/proc.c
-+++ b/arch/sh/kernel/cpu/proc.c
-@@ -132,7 +132,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+diff --git a/arch/um/kernel/um_arch.c b/arch/um/kernel/um_arch.c
+index a149a5e9a16a..03177c9907d5 100644
+--- a/arch/um/kernel/um_arch.c
++++ b/arch/um/kernel/um_arch.c
+@@ -93,7 +93,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
  
  static void *c_start(struct seq_file *m, loff_t *pos)
  {
 -	return *pos < NR_CPUS ? cpu_data + *pos : NULL;
 +	return *pos < nr_cpu_ids ? cpu_data + *pos : NULL;
  }
+ 
  static void *c_next(struct seq_file *m, void *v, loff_t *pos)
- {
 -- 
 2.31.1
 
