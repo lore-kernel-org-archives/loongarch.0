@@ -1,119 +1,88 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906CF198
-	for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022 02:07:24 +0000 (UTC)
-Received: by mail-ua1-f49.google.com with SMTP id x31so149701uaf.10
-        for <loongarch@lists.linux.dev>; Wed, 13 Jul 2022 19:07:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NpLH38IQjk7redhO9PrQcXlLl1raddOqHif56KP33pc=;
-        b=gJ/Poz6fnHmy6tw3/ekjOTdZC6WAanr/z9pOUQdssMiy7McyExvpdd2WUfWAj5C8de
-         TncoEwlo8JJLiUN9u6ikmdNggPa0I8xHqcrzSFyA8+4axrtQt1keJ3CngNjRaLncRycp
-         qQwcp767wZ15QiyGPZzbaIaVB7YDgBsPq6aKOkidU3/YYJI9s6YTbbDDpyvbGvociREx
-         d54hnyqMsAqBySNzMiQPlt7aNjoilHYVamiweBh9OT8UgjMxk8qBjyBkfRVI/cBrDttl
-         e0diMOgIGJYy6CfzH7aYgBRsDb70meGOSPVAWYLpYBJ5O+5isELaxkVSWBkr3TqqsNUZ
-         J84g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NpLH38IQjk7redhO9PrQcXlLl1raddOqHif56KP33pc=;
-        b=Iht+D+ZKux59N+4o03oRsuF4tuJqqTP2hyTjLWL7MBIiwAuM4QecVv1Xjr3wWhPwpz
-         SUBI/BhRh+26ehibqUmpx/C28/wlPZGLelW7qXyhckeZVmjGHjhAVrCJMTPO1iJiTKX5
-         0W4+VzpH//w8V+qlPW6Ak4HjvtKjGnyVmJpLpcyLkyCzTpuoIJ+PNvDBZrqfnlbMHU2a
-         R3nesb2ljmC9XVOT04AOSJ3uEbEHbKxdeUZggWN2o5Y728xojwP2FJbTSTkOeg5XQs9G
-         ncu1Hjuwoj8w1oAK9cXv/jz2mlIwXuLHOSdWZ65XZTtI0XU3KP74qebHPrvHRoHgrezg
-         LYvA==
-X-Gm-Message-State: AJIora8LP8BH8j0csl7wJ+0mRlnYuodNcNnFSP0JdyrGkIR6Tb+EcTmT
-	c49vT1ixhTSN5WPNQ0znmopqBL0wQChOQHKHKHk=
-X-Google-Smtp-Source: AGRyM1vFQyB5NO+1tpFvYvLDE44n1imGoxyRKDVxoA97HOyDWY4NrzjwmwdLmSMIFxgFLR+iBY3k18fU4R1SCofoqMw=
-X-Received: by 2002:ab0:6798:0:b0:382:d9f4:8d0 with SMTP id
- v24-20020ab06798000000b00382d9f408d0mr2611303uar.63.1657764443460; Wed, 13
- Jul 2022 19:07:23 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9F787A
+	for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022 06:26:15 +0000 (UTC)
+Received: from lingfengzhe-ms7c94.loongson.cn (unknown [10.90.50.23])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9P+ts9igHYdAA--.21617S2;
+	Thu, 14 Jul 2022 14:26:06 +0800 (CST)
+From: Qi Hu <huqi@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Oleg Nesterov <oleg@redhat.com>
+Cc: Xu Li <lixu@loongson.cn>,
+	loongarch@lists.linux.dev,
+	LKML <linux-kernel@vger.kernel.org>,
+	Qi Hu <huqi@loongson.cn>
+Subject: [PATCH] LoongArch: Fix missing fcsr in ptrace's fpr_set
+Date: Thu, 14 Jul 2022 14:25:50 +0800
+Message-Id: <20220714062550.4934-1-huqi@loongson.cn>
+X-Mailer: git-send-email 2.37.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220712075255.1345991-1-chenhuacai@loongson.cn>
- <20220712075255.1345991-3-chenhuacai@loongson.cn> <CAMuHMdUazqHLbc80vpZ+Msg9A3j5aPJ3fx+CdCG3kuWDSf8WSw@mail.gmail.com>
- <CAAhV-H775jXMbcR9j=oLBuHo1PfFziZSUQWttJAEw20sUt+GAA@mail.gmail.com>
- <CAMuHMdUHbepd974u5iox3BcOyo_Q2ZgT-znruk+WCt+HMQ_Lgw@mail.gmail.com>
- <CAAhV-H78Fi0aE-h5MOgRa5L+Jt7D0wG0nLcYzx45jVney8T1BQ@mail.gmail.com>
- <CAMuHMdVXFmKR4LuXHYRrSk3Q0VRqATGbsM512DxayWCPCE-wvg@mail.gmail.com> <c8c959fa-f17d-f0dd-6a8d-e0b0ce622f3a@xen0n.name>
-In-Reply-To: <c8c959fa-f17d-f0dd-6a8d-e0b0ce622f3a@xen0n.name>
-From: Huacai Chen <chenhuacai@gmail.com>
-Date: Thu, 14 Jul 2022 10:07:10 +0800
-Message-ID: <CAAhV-H6g5nLGJMz0ZsZqC5-73VSGffVdc6r0=3HHBo3Z8PQOBg@mail.gmail.com>
-Subject: Re: [PATCH 3/6] M68K: cpuinfo: Fix a warning for CONFIG_CPUMASK_OFFSTACK
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Arnd Bergmann <arnd@arndb.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Michal Simek <monstr@monstr.eu>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, loongarch@lists.linux.dev, 
-	Linux-Arch <linux-arch@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	"open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, linux-m68k <linux-m68k@lists.linux-m68k.org>, 
-	Linux-sh list <linux-sh@vger.kernel.org>, linux-um <linux-um@lists.infradead.org>, 
-	stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9Dxn9P+ts9igHYdAA--.21617S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uryrtF1UJFyDJw43tF45Awb_yoW8Xr13pr
+	ZxAas3Wr45GFWFvr4Dtw1v9r1DX3s2gryS9397J3WfAwnrXrs8XryqyFZ2vFW2y348Wayx
+	ZF9Y9r45KFsFqaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUka14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK6svPMxAI
+	w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
+	4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxG
+	rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8Jw
+	CI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+	6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQAHCV3QvP1CugAWst
 
-Hi, all,
+In file ptrace.c, function fpr_set does not copy fcsr data from ubuf
+to kbuf. That's the reason why fcsr cannot be modified by ptrace.
 
-On Tue, Jul 12, 2022 at 6:15 PM WANG Xuerui <kernel@xen0n.name> wrote:
->
-> Hi Geert and Huacai,
->
-> On 2022/7/12 17:13, Geert Uytterhoeven wrote:
-> > Hi Huacai,
-> >
-> > On Tue, Jul 12, 2022 at 11:08 AM Huacai Chen <chenhuacai@gmail.com> wrote:
-> >> On Tue, Jul 12, 2022 at 5:01 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >>> On Tue, Jul 12, 2022 at 10:53 AM Huacai Chen <chenhuacai@gmail.com> wrote:
-> >>>> On Tue, Jul 12, 2022 at 4:33 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >>>>> On Tue, Jul 12, 2022 at 9:53 AM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> >>>>>> When CONFIG_CPUMASK_OFFSTACK and CONFIG_DEBUG_PER_CPU_MAPS is selected,
-> >>>>> DEBUG_PER_CPU_MAPS depends on SMP, which is not supported on m68k,
-> >>>>> and thus cannot be enabled.
-> >>>> This patch is derived from MIPS and LoongArch, I search all
-> >>>> architectures and change those that look the same as MIPS and
-> >>>> LoongArch.
-> >>>> And the warning message below is also a copy-paste from LoongArch, sorry.
-> >>>>
-> >>>> Since M68K doesn't support SMP, then this patch seems to make no
-> >>>> difference, but does it make sense to keep consistency across all
-> >>>> architectures?
-> >>> Yes, having consistency is good.  But that should be mentioned in the
-> >>> patch description, instead of a scary warning CCed to stable ;-)
-> >>>
-> >>> BTW, you probably want to update the other copy of c_start() in
-> >>> arch/m68k/kernel/setup_mm.c, too.
-> >> For no-SMP architectures, it seems c_start() in
-> >> arch/m68k/kernel/setup_mm.c is more reasonable (just use 1, neither
-> >> NR_CPUS, nor nr_cpu_ids)?
-> > The advantage of using nr_cpu_ids() is that this is one place less
-> > to update when adding SMP support later...
->
-> Hmm, so I've been watching m68k development lately (although not as
-> closely as I'd like to, due to lack of vintage hardware at hand), given
-> the current amazing  momentum all the hobbyists/developers have been
-> contributing to, SMP is well within reach...
->
-> But judging from the intent of this patch series (fixing WARNs on
-> certain configs), and that the triggering condition is currently
-> impossible on m68k (and other non-SMP) platforms, I think cleanups for
-> such arches could come as a separate patch series later. I think the
-> m68k refactoring is reasonable after all, due to my observation above,
-> but for the other non-SMP arches we may want to wait for the respective
-> maintainers' opinions.
-It seems that the best solution is only fix architectures with SMP
-support and leave others (m68k, microblaze, um) as is. :)
+This patch fixs this problem and allows users using ptrace to modify
+the fcsr.
 
-Huacai
->
+Signed-off-by: Qi Hu <huqi@loongson.cn>
+Signed-off-by: Xu Li <lixu@loongson.cn>
+---
+ arch/loongarch/kernel/ptrace.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+index e6ab87948e1d..dc2b82ea894c 100644
+--- a/arch/loongarch/kernel/ptrace.c
++++ b/arch/loongarch/kernel/ptrace.c
+@@ -193,7 +193,7 @@ static int fpr_set(struct task_struct *target,
+ 		   const void *kbuf, const void __user *ubuf)
+ {
+ 	const int fcc_start = NUM_FPU_REGS * sizeof(elf_fpreg_t);
+-	const int fcc_end = fcc_start + sizeof(u64);
++	const int fcsr_start = fcc_start + sizeof(u64);
+ 	int err;
+ 
+ 	BUG_ON(count % sizeof(elf_fpreg_t));
+@@ -209,10 +209,12 @@ static int fpr_set(struct task_struct *target,
+ 	if (err)
+ 		return err;
+ 
+-	if (count > 0)
+-		err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+-					  &target->thread.fpu.fcc,
+-					  fcc_start, fcc_end);
++	err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				  &target->thread.fpu.fcc, fcc_start,
++				  fcc_start + sizeof(u64));
++	err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				  &target->thread.fpu.fcsr, fcsr_start,
++				  fcsr_start + sizeof(u32));
+ 
+ 	return err;
+ }
+-- 
+2.37.0
+
