@@ -1,146 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28647184
-	for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022 12:34:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D06B2C341CD
-	for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022 12:34:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF1446B9
+	for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022 13:12:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8510C385A2
+	for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022 13:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657802061;
-	bh=qBirXXWP2MvpS4lCr+loYwR+cC50dveyyNNYEAD0Bqs=;
+	s=k20201202; t=1657804353;
+	bh=nEK6K0+xvlBOpmwF55h7AMv2fTvVGg4WhQpZfCPwTck=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=knaJXlPNMLbIxCYOYMKHQqEMkMwL8qRRGZXzl/1Qohf6zRJ4xd5gHTnKhqZGWjL5z
-	 IE3X3Bjl8UC8cPhRzT8Lo1Z77YCok4yj9Li87twVXITrGIy5y0GSYPTriXuzrL1ZRd
-	 So5VG7MxrP7o5O2V7W9WewYzwer1iy2NrPvjAe+fJ+BQlJcSROjm4xmXwPYlK9qtjL
-	 N9MlAm+IdGj8Lrx/MtDnSYWoQX2tVJlDZBeQbkBOwGGPU9MwhV3RYTqhi+0Sni30X3
-	 VfzICXYjlk9lNLCwb4yVi+zsq16JVeK8ufwSXNeZ1D1dXediYjTaoI56H6W/usVSjy
-	 pHwz+P4RBhSFw==
-Received: by mail-vs1-f49.google.com with SMTP id x125so1287176vsb.13
-        for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022 05:34:21 -0700 (PDT)
-X-Gm-Message-State: AJIora/8iX66+eyK64izMk15f8W8+BZHmB+1nnBClfI9wnbdjqMXPJkS
-	LwsTbPEKHKvrGcBAsk60ycZnlFwdAYZfPoRJfNo=
-X-Google-Smtp-Source: AGRyM1ty5yRBbaVRJ8PJWbtdv5Dy7XJuthHHzmRMybTtmDUVI2vw0cugeBgictCY0ND5UquBP9+bozDTgNcHp02K6aM=
-X-Received: by 2002:a67:6fc3:0:b0:356:18:32ba with SMTP id k186-20020a676fc3000000b00356001832bamr3253584vsc.43.1657802060763;
- Thu, 14 Jul 2022 05:34:20 -0700 (PDT)
+	b=K4QkIeEnSjNOVvIakhJPaz+BMQichtSdqlqgo/9PLPrADjb9O9Q7eTVA5sAArg7G7
+	 Wz2U29ZAffJAfCXtoyOV+ugQq7WiQTilWhdtejxGRfB79Ei8UPkylXA7hifTOYzqpj
+	 9eX59A1bmQ3oOtuS7yZxkIBZwJGXLb+YCFMrXg3CYQJ1PRRSeHFzf+o083G/g+ZpBO
+	 9bueQO2PlVC/gxQyaExACobVz9Y4bQZD+UWOczvu6Jwr3S1gjUffzVLPx7VLI0t5H/
+	 hNOIwmDnOoxuaMcs3fXNaRIurBTkTWzTK5+hYAONAWeGobvMhsha+U2cAlgrdgnXBr
+	 FcjGfj2Ij2hbA==
+Received: by mail-vk1-f177.google.com with SMTP id 7so804701vkq.0
+        for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022 06:12:33 -0700 (PDT)
+X-Gm-Message-State: AJIora/90SlaU3mInQrAAa0HxewJWlb6WmnGkzCG24TULgSZlGGU3+ts
+	7rj8puGUicz+QTkhnTG+T7oRvXmmZw2Ek3vz+C0=
+X-Google-Smtp-Source: AGRyM1vfuUcnXizkvLae+QNNbMgGaJxyylCp70bxKvXjxeF0ccvn003iMZHCh7GShPROgiewYW9IR85nmtOm2qXw1Wg=
+X-Received: by 2002:a05:6122:329:b0:374:f09c:876f with SMTP id
+ d9-20020a056122032900b00374f09c876fmr3625484vko.12.1657804352795; Thu, 14 Jul
+ 2022 06:12:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
- <20220704112526.2492342-4-chenhuacai@loongson.cn> <20220705092937.GA552@willie-the-truck>
- <CAAhV-H5r8HDaxt8fkO97in5-eH8X9gokVNervmUWn6km4S0e-w@mail.gmail.com>
- <20220706161736.GC3204@willie-the-truck> <CAAhV-H7uY_KiLJRRjj4+8mewcWbuhvC=zDp5VAs03=BLdSMKLw@mail.gmail.com>
-In-Reply-To: <CAAhV-H7uY_KiLJRRjj4+8mewcWbuhvC=zDp5VAs03=BLdSMKLw@mail.gmail.com>
+References: <20220714062550.4934-1-huqi@loongson.cn>
+In-Reply-To: <20220714062550.4934-1-huqi@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 14 Jul 2022 20:34:08 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6EziBQ=3SveRvaPxHfbsGpmYrhVHfuBkpLJXn-t-uTZA@mail.gmail.com>
-Message-ID: <CAAhV-H6EziBQ=3SveRvaPxHfbsGpmYrhVHfuBkpLJXn-t-uTZA@mail.gmail.com>
-Subject: Re: [PATCH V4 3/4] mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages()
-To: Will Deacon <will@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
-	Sudarshan Rajagopalan <quic_sudaraja@quicinc.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linux-MM <linux-mm@kvack.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>
+Date: Thu, 14 Jul 2022 21:12:20 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6NWYG1ChLRyK-EAGAmhDvP-x+z9BgBo3a=GAbQ-2bKig@mail.gmail.com>
+Message-ID: <CAAhV-H6NWYG1ChLRyK-EAGAmhDvP-x+z9BgBo3a=GAbQ-2bKig@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Fix missing fcsr in ptrace's fpr_set
+To: Qi Hu <huqi@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Oleg Nesterov <oleg@redhat.com>, Xu Li <lixu@loongson.cn>, 
+	loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Oh, Sudarshan Rajagopalan's Email has changed, Let's update.
+Hi,
+
+On Thu, Jul 14, 2022 at 2:26 PM Qi Hu <huqi@loongson.cn> wrote:
+>
+> In file ptrace.c, function fpr_set does not copy fcsr data from ubuf
+> to kbuf. That's the reason why fcsr cannot be modified by ptrace.
+>
+> This patch fixs this problem and allows users using ptrace to modify
+> the fcsr.
+>
+> Signed-off-by: Qi Hu <huqi@loongson.cn>
+> Signed-off-by: Xu Li <lixu@loongson.cn>
+> ---
+>  arch/loongarch/kernel/ptrace.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+> index e6ab87948e1d..dc2b82ea894c 100644
+> --- a/arch/loongarch/kernel/ptrace.c
+> +++ b/arch/loongarch/kernel/ptrace.c
+> @@ -193,7 +193,7 @@ static int fpr_set(struct task_struct *target,
+>                    const void *kbuf, const void __user *ubuf)
+>  {
+>         const int fcc_start = NUM_FPU_REGS * sizeof(elf_fpreg_t);
+> -       const int fcc_end = fcc_start + sizeof(u64);
+> +       const int fcsr_start = fcc_start + sizeof(u64);
+>         int err;
+>
+>         BUG_ON(count % sizeof(elf_fpreg_t));
+> @@ -209,10 +209,12 @@ static int fpr_set(struct task_struct *target,
+>         if (err)
+>                 return err;
+>
+> -       if (count > 0)
+> -               err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+> -                                         &target->thread.fpu.fcc,
+> -                                         fcc_start, fcc_end);
+> +       err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+> +                                 &target->thread.fpu.fcc, fcc_start,
+> +                                 fcc_start + sizeof(u64));
+> +       err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+> +                                 &target->thread.fpu.fcsr, fcsr_start,
+> +                                 fcsr_start + sizeof(u32));
+You shouldn't remove (count > 0) here, because  the above
+user_regset_copyin() will modify count inside, and so "count == 0" is
+possible.
 
 Huacai
-
-On Fri, Jul 8, 2022 at 5:47 PM Huacai Chen <chenhuacai@kernel.org> wrote:
 >
-> +Dan Williams
-> +Sudarshan Rajagopalan
+>         return err;
+>  }
+> --
+> 2.37.0
 >
-> On Thu, Jul 7, 2022 at 12:17 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Tue, Jul 05, 2022 at 09:07:59PM +0800, Huacai Chen wrote:
-> > > On Tue, Jul 5, 2022 at 5:29 PM Will Deacon <will@kernel.org> wrote:
-> > > > On Mon, Jul 04, 2022 at 07:25:25PM +0800, Huacai Chen wrote:
-> > > > > diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-> > > > > index 33e2a1ceee72..6f2e40bb695d 100644
-> > > > > --- a/mm/sparse-vmemmap.c
-> > > > > +++ b/mm/sparse-vmemmap.c
-> > > > > @@ -686,6 +686,60 @@ int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
-> > > > >       return vmemmap_populate_range(start, end, node, altmap, NULL);
-> > > > >  }
-> > > > >
-> > > > > +void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
-> > > > > +                                   unsigned long addr, unsigned long next)
-> > > > > +{
-> > > > > +}
-> > > > > +
-> > > > > +int __weak __meminit vmemmap_check_pmd(pmd_t *pmd, int node, unsigned long addr,
-> > > > > +                                    unsigned long next)
-> > > > > +{
-> > > > > +     return 0;
-> > > > > +}
-> > > > > +
-> > > > > +int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
-> > > > > +                                      int node, struct vmem_altmap *altmap)
-> > > > > +{
-> > > > > +     unsigned long addr;
-> > > > > +     unsigned long next;
-> > > > > +     pgd_t *pgd;
-> > > > > +     p4d_t *p4d;
-> > > > > +     pud_t *pud;
-> > > > > +     pmd_t *pmd;
-> > > > > +
-> > > > > +     for (addr = start; addr < end; addr = next) {
-> > > > > +             next = pmd_addr_end(addr, end);
-> > > > > +
-> > > > > +             pgd = vmemmap_pgd_populate(addr, node);
-> > > > > +             if (!pgd)
-> > > > > +                     return -ENOMEM;
-> > > > > +
-> > > > > +             p4d = vmemmap_p4d_populate(pgd, addr, node);
-> > > > > +             if (!p4d)
-> > > > > +                     return -ENOMEM;
-> > > > > +
-> > > > > +             pud = vmemmap_pud_populate(p4d, addr, node);
-> > > > > +             if (!pud)
-> > > > > +                     return -ENOMEM;
-> > > > > +
-> > > > > +             pmd = pmd_offset(pud, addr);
-> > > > > +             if (pmd_none(READ_ONCE(*pmd))) {
-> > > > > +                     void *p;
-> > > > > +
-> > > > > +                     p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
-> > > > > +                     if (p) {
-> > > > > +                             vmemmap_set_pmd(pmd, p, node, addr, next);
-> > > > > +                             continue;
-> > > > > +                     } else if (altmap)
-> > > > > +                             return -ENOMEM; /* no fallback */
-> > > >
-> > > > Why do you return -ENOMEM if 'altmap' here? That seems to be different to
-> > > > what we currently have on arm64 and it's not clear to me why we're happy
-> > > > with an altmap for the pmd case, but not for the pte case.
-> > > The generic version is the same as X86. It seems that ARM64 always
-> > > fallback whether there is an altmap, but X86 only fallback in the no
-> > > altmap case. I don't know the reason of X86, can Dan Williams give
-> > > some explaination?
-> >
-> > Right, I think we need to understand the new behaviour here before we adopt
-> > it on arm64.
-> Hi, Dan,
-> Could you please tell us the reason? Thanks.
->
-> And Sudarshan,
-> You are the author of adding a fallback mechanism to ARM64,  do you
-> know why ARM64 is different from X86 (only fallback in no altmap
-> case)?
->
-> Huacai
->
-> >
-> > Will
