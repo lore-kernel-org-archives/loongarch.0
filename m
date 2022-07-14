@@ -1,92 +1,108 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DB617EC
-	for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022 06:59:49 +0000 (UTC)
-Received: from mail-yw1-f173.google.com ([209.85.128.173]) by
- mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MLRDv-1ntWj20O3f-00IS7L for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022
- 08:59:47 +0200
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-31c8bb90d09so7834087b3.8
-        for <loongarch@lists.linux.dev>; Wed, 13 Jul 2022 23:59:46 -0700 (PDT)
-X-Gm-Message-State: AJIora+PVQp7IRi/+ChL48ys/Y+ORPdSe04IMdxSLM23aR0xyp6hjgN/
-	JwLIKhDDl0AvehFZDpgpJYu5OyXXc9zF9jehFBs=
-X-Google-Smtp-Source: AGRyM1tgxYSVD/gYAxs1WCM6JhzELwA8WwTUgiYEaMRwN6Q6Zg/uUd6yRx65tlEIUnIRkovs/IpphI7wi/ZKPISkkKw=
-X-Received: by 2002:a81:f8f:0:b0:31c:bd9f:31ce with SMTP id
- 137-20020a810f8f000000b0031cbd9f31cemr8121384ywp.347.1657781985894; Wed, 13
- Jul 2022 23:59:45 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FAFA17EC
+	for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022 07:15:03 +0000 (UTC)
+Received: from [10.90.50.23] (unknown [10.90.50.23])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxSeFzws9iU4odAA--.62026S3;
+	Thu, 14 Jul 2022 15:15:00 +0800 (CST)
+Message-ID: <8f3d86e4-f051-2cf8-d5ec-f1046632bbda@loongson.cn>
+Date: Thu, 14 Jul 2022 15:14:59 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220712075255.1345991-1-chenhuacai@loongson.cn>
- <20220712075255.1345991-3-chenhuacai@loongson.cn> <CAMuHMdUazqHLbc80vpZ+Msg9A3j5aPJ3fx+CdCG3kuWDSf8WSw@mail.gmail.com>
- <CAAhV-H775jXMbcR9j=oLBuHo1PfFziZSUQWttJAEw20sUt+GAA@mail.gmail.com>
- <CAMuHMdUHbepd974u5iox3BcOyo_Q2ZgT-znruk+WCt+HMQ_Lgw@mail.gmail.com>
- <CAAhV-H78Fi0aE-h5MOgRa5L+Jt7D0wG0nLcYzx45jVney8T1BQ@mail.gmail.com>
- <CAMuHMdVXFmKR4LuXHYRrSk3Q0VRqATGbsM512DxayWCPCE-wvg@mail.gmail.com>
- <c8c959fa-f17d-f0dd-6a8d-e0b0ce622f3a@xen0n.name> <CAAhV-H6g5nLGJMz0ZsZqC5-73VSGffVdc6r0=3HHBo3Z8PQOBg@mail.gmail.com>
-In-Reply-To: <CAAhV-H6g5nLGJMz0ZsZqC5-73VSGffVdc6r0=3HHBo3Z8PQOBg@mail.gmail.com>
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Thu, 14 Jul 2022 08:59:28 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0GUPSYBai3Z9vzw0wrXGLFiik6hdY3zc6nQ6mQs7yHvQ@mail.gmail.com>
-Message-ID: <CAK8P3a0GUPSYBai3Z9vzw0wrXGLFiik6hdY3zc6nQ6mQs7yHvQ@mail.gmail.com>
-Subject: Re: [PATCH 3/6] M68K: cpuinfo: Fix a warning for CONFIG_CPUMASK_OFFSTACK
-To: Huacai Chen <chenhuacai@gmail.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Michal Simek <monstr@monstr.eu>, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-	Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, loongarch@lists.linux.dev, 
-	Linux-Arch <linux-arch@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	"open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, linux-m68k <linux-m68k@lists.linux-m68k.org>, 
-	Linux-sh list <linux-sh@vger.kernel.org>, linux-um <linux-um@lists.infradead.org>, 
-	stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:d+U2UyhBtR3jVETLPeN0SIT+Jsv9xe0YREDHEMAlJKchVWmt6C+
- avX4XIGOJ4JiiRaWMJ7bNthuHZW6mh71T7Z5m7weKzjzU0cih0WCZjVePMoGlVnHyjIFNhd
- kYHMTywEXOeZirsUxVo/Zx6Biilak8GMBbIYG1n8cRO0VoWZpZN5GusrchA5kBuRCkb80le
- MOrbYy4exsCdHnvQqE5Pw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XgWN1vCutP0=:qkns28hbgTqVsDKk4b+9I8
- oFYQHJ3v0zjYIIwbWxdao60p0WSoSgsRGZYh1qon4pRYupAkDRqs1vf17VYvUcqvnGwUojie8
- rn5/gFJwFQ85uWE+stMA/17QbeLW795BMu7SJqg5nwgeq9mYuzfNMA9/yk04JFffSvuq8Nwl2
- N9M6D3j2TycufmsvYcDsXKNRvYK6faMNbiCCNF6uPPYz2bIY8C7oP0JmvV4MrUGoHGoBolbkq
- fr+M9zzsrQdQNZmerm5Sa14JYgGWLn5Lami7CK9MDwWc7RZCFFod3UZh2xoPi+oj5/X7oD7Oy
- QtenxSoMzlCD9M/yHeMVZ+AiFH97dOpw1PprRXs8s4vRp1fsTRaHmj8666HBjdzkFKKWIldGU
- kplX0UzH0NouRYOZgeEmGHBhDCxqlVVZjdb4a/3KWWwzt6N62cSLT/jrSvmeox8iqz+vswJUe
- QCg0WC+iFUUqYwJxuDXAYH0qoZTzgQ0v2ZqF6oPNi2aEd25KzHkCCrLEJmOMvh0poRvjZm8hs
- mlvQgJhKMIigrxpzL7J5+FUT8fhWvFuqqFjsK7cUes3TU6or/gKd12mizyHAiQ1cnvtTGootm
- mHDNJolJxNwVj8/vQPISv5vOXKJHlYAFFP2bRX820DWN2ZEpiI2v3or353y50bF/ccbAygEI7
- CoVt5aVxg73Rgw5uwayz/EICDS5rqFzq8jz8OfuAwYMSOxRTIqfArAp0QBtlbPtubtzfTSDgI
- RRJToze7l2HLeZOa8USX+gAlRATIIcBdoE77IYDBasrN2z14IEkfqJBh3L179M8vFLiTT7+qw
- F6ZGgbDTVsRhhY/pP82OPgl/E5d/WgmTiIos46gXYBwcjw1Sziy6Rccl4vj17TH1dx6bqVvDg
- hBYtfk8OihMX40lybwOA==
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] LoongArch: Fix missing fcsr in ptrace's fpr_set
+Content-Language: en-US
+To: Conor.Dooley@microchip.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ oleg@redhat.com
+Cc: lixu@loongson.cn, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20220714062550.4934-1-huqi@loongson.cn>
+ <6bc55cd5-bb6e-8d4a-79ec-4555c0b7765b@microchip.com>
+From: Qi Hu <huqi@loongson.cn>
+In-Reply-To: <6bc55cd5-bb6e-8d4a-79ec-4555c0b7765b@microchip.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf9AxSeFzws9iU4odAA--.62026S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7CrWfuF4DuryxAFWrKw17Jrb_yoW8Cw1xpr
+	ZxAas5WFW8JFWfCr1qqrsY9r1qqwn2gFySg3s3t3WrAwnrXrs8GryqyrWIvFs2y348G3yx
+	Zr909Fs0yFsrAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+	c2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWU
+	twCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU56c_DUUUUU==
+X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQAHCV3QvP1HFQABsQ
 
-On Thu, Jul 14, 2022 at 4:07 AM Huacai Chen <chenhuacai@gmail.com> wrote:
-> On Tue, Jul 12, 2022 at 6:15 PM WANG Xuerui <kernel@xen0n.name> wrote:
-> > On 2022/7/12 17:13, Geert Uytterhoeven wrote:
-> >
-> > But judging from the intent of this patch series (fixing WARNs on
-> > certain configs), and that the triggering condition is currently
-> > impossible on m68k (and other non-SMP) platforms, I think cleanups for
-> > such arches could come as a separate patch series later. I think the
-> > m68k refactoring is reasonable after all, due to my observation above,
-> > but for the other non-SMP arches we may want to wait for the respective
-> > maintainers' opinions.
+
+On 2022/7/14 14:51, Conor.Dooley@microchip.com wrote:
+> On 14/07/2022 07:25, Qi Hu wrote:
+>> In file ptrace.c, function fpr_set does not copy fcsr data from ubuf
+>> to kbuf. That's the reason why fcsr cannot be modified by ptrace.
+>>
+>> This patch fixs this problem and allows users using ptrace to modify
+>> the fcsr.
+>>
+>> Signed-off-by: Qi Hu <huqi@loongson.cn>
+>> Signed-off-by: Xu Li <lixu@loongson.cn>
+> Hey Qi Hu,
 >
-> It seems that the best solution is only fix architectures with SMP
-> support and leave others (m68k, microblaze, um) as is. :)
+> Why does this have Xu Li's SoB if they're neither the author nor listed
+> as a Co-developed-by:?
+>
+> As submitter, your SoB should be last anyway.
+> Thanks,
+> Conor.
+>
+Ops. I realize using SoB here is incorrect. I will change it into 
+Co-developed-by.
 
-I think it probably makes sense to do this as a combined cleanup patch,
-which I can merge through the asm-generic tree, for all architectures
-whose maintainer does not pick it up directly. For SMP architectures,
-it's a bugfix that we probably want backported into stable kernels, while
-for non-SMP targets it is just a minor cleanup for consistency.
+Thanks.
 
-        Arnd
+Qi.
+
+>> ---
+>>    arch/loongarch/kernel/ptrace.c | 12 +++++++-----
+>>    1 file changed, 7 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+>> index e6ab87948e1d..dc2b82ea894c 100644
+>> --- a/arch/loongarch/kernel/ptrace.c
+>> +++ b/arch/loongarch/kernel/ptrace.c
+>> @@ -193,7 +193,7 @@ static int fpr_set(struct task_struct *target,
+>>    		   const void *kbuf, const void __user *ubuf)
+>>    {
+>>    	const int fcc_start = NUM_FPU_REGS * sizeof(elf_fpreg_t);
+>> -	const int fcc_end = fcc_start + sizeof(u64);
+>> +	const int fcsr_start = fcc_start + sizeof(u64);
+>>    	int err;
+>>    
+>>    	BUG_ON(count % sizeof(elf_fpreg_t));
+>> @@ -209,10 +209,12 @@ static int fpr_set(struct task_struct *target,
+>>    	if (err)
+>>    		return err;
+>>    
+>> -	if (count > 0)
+>> -		err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+>> -					  &target->thread.fpu.fcc,
+>> -					  fcc_start, fcc_end);
+>> +	err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+>> +				  &target->thread.fpu.fcc, fcc_start,
+>> +				  fcc_start + sizeof(u64));
+>> +	err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+>> +				  &target->thread.fpu.fcsr, fcsr_start,
+>> +				  fcsr_start + sizeof(u32));
+>>    
+>>    	return err;
+>>    }
+
