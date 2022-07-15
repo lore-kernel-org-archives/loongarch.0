@@ -1,9 +1,9 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D846E20EB
-	for <loongarch@lists.linux.dev>; Fri, 15 Jul 2022 07:06:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63F4220E0
+	for <loongarch@lists.linux.dev>; Fri, 15 Jul 2022 07:06:12 +0000 (UTC)
 Received: from localhost.localdomain.localdomain (unknown [10.2.5.46])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxWeDQEdFiyyogAA--.1717S17;
-	Fri, 15 Jul 2022 15:06:03 +0800 (CST)
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxWeDQEdFiyyogAA--.1717S11;
+	Fri, 15 Jul 2022 15:06:00 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Marc Zyngier <maz@kernel.org>
@@ -13,17 +13,17 @@ Cc: linux-kernel@vger.kernel.org,
 	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V15 15/15] irqchip / ACPI: Introduce ACPI_IRQ_MODEL_LPIC for LoongArch
-Date: Fri, 15 Jul 2022 15:05:51 +0800
-Message-Id: <1657868751-30444-16-git-send-email-lvjianmin@loongson.cn>
+Subject: [PATCH V15 09/15] irqchip/loongson-pch-msi: Add ACPI init support
+Date: Fri, 15 Jul 2022 15:05:45 +0800
+Message-Id: <1657868751-30444-10-git-send-email-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1657868751-30444-1-git-send-email-lvjianmin@loongson.cn>
 References: <1657868751-30444-1-git-send-email-lvjianmin@loongson.cn>
-X-CM-TRANSID:AQAAf9AxWeDQEdFiyyogAA--.1717S17
-X-Coremail-Antispam: 1UD129KBjvJXoWxuF1rZryUXr1fJrW8tFWkZwb_yoW5AF1xpF
-	WqgF15Ar48Kay7W3sxCa1Dury3uFyrGrW2qayfG347Cw4kGrykWF1kZF9FvFZ8A3y5Wa17
-	uF1DXFs8W3WUZrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvF1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+X-CM-TRANSID:AQAAf9AxWeDQEdFiyyogAA--.1717S11
+X-Coremail-Antispam: 1UD129KBjvJXoW3Aw1UGw43tF1xJF48CFyrCrg_yoW3Ar18pF
+	W3A39Fqr48G34UWrWvkF4DZryayFySkFsFqa1fC3Z3tw4qyr9YgF18JF129F15ArWUWF1a
+	vr1xKa1UuF4DAa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv01xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
 	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
 	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
 	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzx
@@ -32,10 +32,10 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxuF1rZryUXr1fJrW8tFWkZwb_yoW5AF1xpF
 	AKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l
 	42xK82IY6x8ErcxFaVAv8VW5Wr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
 	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
-	6r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj
-	fUoOJ5UUUUU
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb
+	XdbUUUUUU==
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -43,105 +43,256 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-For LoongArch, ACPI_IRQ_MODEL_LPIC is introduced, and then the
-callback acpi_get_gsi_domain_id and acpi_gsi_to_irq_fallback are
-implemented.
+From: Huacai Chen <chenhuacai@loongson.cn>
 
-The acpi_get_gsi_domain_id callback returns related fwnode handle
-of irqdomain for different GSI range.
+PCH-PIC/PCH-MSI stands for "Interrupt Controller" that described in
+Section 5 of "Loongson 7A1000 Bridge User Manual". For more information
+please refer Documentation/loongarch/irq-chip-model.rst.
 
-The acpi_gsi_to_irq_fallback will create new mapping for gsi when
-the mapping of it is not found.
-
+Co-developed-by: Jianmin Lv <lvjianmin@loongson.cn>
 Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/acpi/bus.c                  |  3 +++
- drivers/irqchip/irq-loongarch-cpu.c | 38 +++++++++++++++++++++++++++++++++++++
- include/linux/acpi.h                |  1 +
- 3 files changed, 42 insertions(+)
+ arch/loongarch/include/asm/irq.h       |   4 +-
+ arch/loongarch/kernel/irq.c            |   1 -
+ drivers/irqchip/irq-loongson-pch-msi.c | 131 ++++++++++++++++++++++-----------
+ 3 files changed, 91 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-index 86fa61a..63fbf00 100644
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -1145,6 +1145,9 @@ static int __init acpi_bus_init_irq(void)
- 	case ACPI_IRQ_MODEL_PLATFORM:
- 		message = "platform specific model";
- 		break;
-+	case ACPI_IRQ_MODEL_LPIC:
-+		message = "LPIC";
-+		break;
- 	default:
- 		pr_info("Unknown interrupt routing model\n");
- 		return -ENODEV;
-diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-loongarch-cpu.c
-index 476f407..93a4b15 100644
---- a/drivers/irqchip/irq-loongarch-cpu.c
-+++ b/drivers/irqchip/irq-loongarch-cpu.c
-@@ -16,6 +16,42 @@
- static struct irq_domain *irq_domain;
- struct fwnode_handle *cpuintc_handle;
+diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
+index 74fef60..6022406 100644
+--- a/arch/loongarch/include/asm/irq.h
++++ b/arch/loongarch/include/asm/irq.h
+@@ -106,11 +106,12 @@ struct irq_domain *htvec_acpi_init(struct irq_domain *parent,
+ 					struct acpi_madt_ht_pic *acpi_htvec);
+ int pch_lpc_acpi_init(struct irq_domain *parent,
+ 					struct acpi_madt_lpc_pic *acpi_pchlpc);
+-struct irq_domain *pch_msi_acpi_init(struct irq_domain *parent,
++int pch_msi_acpi_init(struct irq_domain *parent,
+ 					struct acpi_madt_msi_pic *acpi_pchmsi);
+ int pch_pic_acpi_init(struct irq_domain *parent,
+ 					struct acpi_madt_bio_pic *acpi_pchpic);
+ int find_pch_pic(u32 gsi);
++struct fwnode_handle *get_pch_msi_handle(int pci_segment);
  
-+static u32 lpic_gsi_to_irq(u32 gsi)
+ extern struct acpi_madt_lio_pic *acpi_liointc;
+ extern struct acpi_madt_eio_pic *acpi_eiointc[MAX_IO_PICS];
+@@ -123,7 +124,6 @@ int pch_pic_acpi_init(struct irq_domain *parent,
+ extern struct irq_domain *cpu_domain;
+ extern struct irq_domain *liointc_domain;
+ extern struct fwnode_handle *pch_lpc_handle;
+-extern struct irq_domain *pch_msi_domain[MAX_IO_PICS];
+ extern struct fwnode_handle *pch_pic_handle[MAX_IO_PICS];
+ 
+ extern irqreturn_t loongson3_ipi_interrupt(int irq, void *dev);
+diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
+index 866b2ee..ce21281 100644
+--- a/arch/loongarch/kernel/irq.c
++++ b/arch/loongarch/kernel/irq.c
+@@ -27,7 +27,6 @@
+ 
+ struct irq_domain *cpu_domain;
+ struct irq_domain *liointc_domain;
+-struct irq_domain *pch_msi_domain[MAX_IO_PICS];
+ 
+ /*
+  * 'what should we do if we get a hw irq event on an illegal vector'.
+diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
+index e3801c4..b3f1f8e 100644
+--- a/drivers/irqchip/irq-loongson-pch-msi.c
++++ b/drivers/irqchip/irq-loongson-pch-msi.c
+@@ -15,6 +15,8 @@
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ 
++static int nr_pics;
++
+ struct pch_msi_data {
+ 	struct mutex	msi_map_lock;
+ 	phys_addr_t	doorbell;
+@@ -23,6 +25,8 @@ struct pch_msi_data {
+ 	unsigned long	*msi_map;
+ };
+ 
++static struct fwnode_handle *pch_msi_handle[MAX_IO_PICS];
++
+ static void pch_msi_mask_msi_irq(struct irq_data *d)
+ {
+ 	pci_msi_mask_irq(d);
+@@ -154,12 +158,12 @@ static void pch_msi_middle_domain_free(struct irq_domain *domain,
+ };
+ 
+ static int pch_msi_init_domains(struct pch_msi_data *priv,
+-				struct device_node *node,
+-				struct irq_domain *parent)
++				struct irq_domain *parent,
++				struct fwnode_handle *domain_handle)
+ {
+ 	struct irq_domain *middle_domain, *msi_domain;
+ 
+-	middle_domain = irq_domain_create_linear(of_node_to_fwnode(node),
++	middle_domain = irq_domain_create_linear(domain_handle,
+ 						priv->num_irqs,
+ 						&pch_msi_middle_domain_ops,
+ 						priv);
+@@ -171,7 +175,7 @@ static int pch_msi_init_domains(struct pch_msi_data *priv,
+ 	middle_domain->parent = parent;
+ 	irq_domain_update_bus_token(middle_domain, DOMAIN_BUS_NEXUS);
+ 
+-	msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(node),
++	msi_domain = pci_msi_create_irq_domain(domain_handle,
+ 					       &pch_msi_domain_info,
+ 					       middle_domain);
+ 	if (!msi_domain) {
+@@ -183,19 +187,11 @@ static int pch_msi_init_domains(struct pch_msi_data *priv,
+ 	return 0;
+ }
+ 
+-static int pch_msi_init(struct device_node *node,
+-			    struct device_node *parent)
++static int pch_msi_init(phys_addr_t msg_address, int irq_base, int irq_count,
++			struct irq_domain *parent_domain, struct fwnode_handle *domain_handle)
+ {
+-	struct pch_msi_data *priv;
+-	struct irq_domain *parent_domain;
+-	struct resource res;
+ 	int ret;
+-
+-	parent_domain = irq_find_host(parent);
+-	if (!parent_domain) {
+-		pr_err("Failed to find the parent domain\n");
+-		return -ENXIO;
+-	}
++	struct pch_msi_data *priv;
+ 
+ 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+@@ -203,48 +199,99 @@ static int pch_msi_init(struct device_node *node,
+ 
+ 	mutex_init(&priv->msi_map_lock);
+ 
+-	ret = of_address_to_resource(node, 0, &res);
+-	if (ret) {
+-		pr_err("Failed to allocate resource\n");
+-		goto err_priv;
+-	}
+-
+-	priv->doorbell = res.start;
+-
+-	if (of_property_read_u32(node, "loongson,msi-base-vec",
+-				&priv->irq_first)) {
+-		pr_err("Unable to parse MSI vec base\n");
+-		ret = -EINVAL;
+-		goto err_priv;
+-	}
+-
+-	if (of_property_read_u32(node, "loongson,msi-num-vecs",
+-				&priv->num_irqs)) {
+-		pr_err("Unable to parse MSI vec number\n");
+-		ret = -EINVAL;
+-		goto err_priv;
+-	}
++	priv->doorbell = msg_address;
++	priv->irq_first = irq_base;
++	priv->num_irqs = irq_count;
+ 
+ 	priv->msi_map = bitmap_zalloc(priv->num_irqs, GFP_KERNEL);
+-	if (!priv->msi_map) {
+-		ret = -ENOMEM;
++	if (!priv->msi_map)
+ 		goto err_priv;
+-	}
+ 
+ 	pr_debug("Registering %d MSIs, starting at %d\n",
+ 		 priv->num_irqs, priv->irq_first);
+ 
+-	ret = pch_msi_init_domains(priv, node, parent_domain);
++	ret = pch_msi_init_domains(priv, parent_domain, domain_handle);
+ 	if (ret)
+ 		goto err_map;
+ 
++	pch_msi_handle[nr_pics++] = domain_handle;
+ 	return 0;
+ 
+ err_map:
+ 	bitmap_free(priv->msi_map);
+ err_priv:
+ 	kfree(priv);
+-	return ret;
++
++	return -EINVAL;
++}
++
++#ifdef CONFIG_OF
++static int pch_msi_of_init(struct device_node *node, struct device_node *parent)
 +{
-+	/* Only pch irqdomain transferring is required for LoongArch. */
-+	if (gsi >= GSI_MIN_PCH_IRQ && gsi <= GSI_MAX_PCH_IRQ)
-+		return acpi_register_gsi(NULL, gsi, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_HIGH);
++	int err;
++	int irq_base, irq_count;
++	struct resource res;
++	struct irq_domain *parent_domain;
++
++	parent_domain = irq_find_host(parent);
++	if (!parent_domain) {
++		pr_err("Failed to find the parent domain\n");
++		return -ENXIO;
++	}
++
++	if (of_address_to_resource(node, 0, &res)) {
++		pr_err("Failed to allocate resource\n");
++		return -EINVAL;
++	}
++
++	if (of_property_read_u32(node, "loongson,msi-base-vec", &irq_base)) {
++		pr_err("Unable to parse MSI vec base\n");
++		return -EINVAL;
++	}
++
++	if (of_property_read_u32(node, "loongson,msi-num-vecs", &irq_count)) {
++		pr_err("Unable to parse MSI vec number\n");
++		return -EINVAL;
++	}
++
++	err = pch_msi_init(res.start, irq_base, irq_count, parent_domain, of_node_to_fwnode(node));
++	if (err < 0)
++		return err;
 +
 +	return 0;
 +}
 +
-+static struct fwnode_handle *lpic_get_gsi_domain_id(u32 gsi)
++IRQCHIP_DECLARE(pch_msi, "loongson,pch-msi-1.0", pch_msi_of_init);
++#endif
++
++#ifdef CONFIG_ACPI
++struct fwnode_handle *get_pch_msi_handle(int pci_segment)
 +{
-+	int id;
-+	struct fwnode_handle *domain_handle = NULL;
++	int i;
 +
-+	switch (gsi) {
-+	case GSI_MIN_CPU_IRQ ... GSI_MAX_CPU_IRQ:
-+		if (liointc_handle)
-+			domain_handle = liointc_handle;
-+		break;
-+
-+	case GSI_MIN_LPC_IRQ ... GSI_MAX_LPC_IRQ:
-+		if (pch_lpc_handle)
-+			domain_handle = pch_lpc_handle;
-+		break;
-+
-+	case GSI_MIN_PCH_IRQ ... GSI_MAX_PCH_IRQ:
-+		id = find_pch_pic(gsi);
-+		if (id >= 0 && pch_pic_handle[id])
-+			domain_handle = pch_pic_handle[id];
-+
-+		break;
++	for (i = 0; i < MAX_IO_PICS; i++) {
++		if (msi_group[i].pci_segment == pci_segment)
++			return pch_msi_handle[i];
 +	}
-+
-+	return domain_handle;
-+}
-+
- static void mask_loongarch_irq(struct irq_data *d)
- {
- 	clear_csr_ecfg(ECFGF(d->hwirq));
-@@ -71,6 +107,8 @@ static int __init loongarch_cpu_irq_init(void)
- 		panic("Failed to add irqdomain for LoongArch CPU");
- 
- 	set_handle_irq(&handle_cpu_irq);
-+	acpi_set_irq_model(ACPI_IRQ_MODEL_LPIC, lpic_get_gsi_domain_id);
-+	acpi_set_gsi_to_irq_fallback(lpic_gsi_to_irq);
- 
- 	return 0;
++	return NULL;
  }
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index e2b60d5..76520f3 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -105,6 +105,7 @@ enum acpi_irq_model_id {
- 	ACPI_IRQ_MODEL_IOSAPIC,
- 	ACPI_IRQ_MODEL_PLATFORM,
- 	ACPI_IRQ_MODEL_GIC,
-+	ACPI_IRQ_MODEL_LPIC,
- 	ACPI_IRQ_MODEL_COUNT
- };
  
+-IRQCHIP_DECLARE(pch_msi, "loongson,pch-msi-1.0", pch_msi_init);
++int __init pch_msi_acpi_init(struct irq_domain *parent,
++					struct acpi_madt_msi_pic *acpi_pchmsi)
++{
++	int ret;
++	struct fwnode_handle *domain_handle;
++
++	if (!acpi_pchmsi)
++		return -EINVAL;
++
++	domain_handle = irq_domain_alloc_fwnode((phys_addr_t *)acpi_pchmsi);
++
++	ret = pch_msi_init(acpi_pchmsi->msg_address, acpi_pchmsi->start,
++				acpi_pchmsi->count, parent, domain_handle);
++	if (ret < 0)
++		irq_domain_free_fwnode(domain_handle);
++
++	return ret;
++}
++#endif
 -- 
 1.8.3.1
 
