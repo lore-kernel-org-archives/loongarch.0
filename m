@@ -1,112 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842987A
-	for <loongarch@lists.linux.dev>; Fri, 15 Jul 2022 03:20:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D458C34115
-	for <loongarch@lists.linux.dev>; Fri, 15 Jul 2022 03:20:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657855221;
-	bh=r9nH0nnXki3fn2qUEx//h7cuqEVQBiYMXEgpzqbyJ5g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oKw6mCZOD1HPIbLdEpgbQaev8ZMcZVxjKSGNSOdQchcnAh9IwRz8aZ2io+E+MTbbs
-	 XcmIqOkLdbMkSErlBQNXmCN4tH1N8M/5uhNwn5IT0Kmiky4/q9Qmhqt5V75U7eniEm
-	 od+2dX50pYreYY7GoKdd23jyYFRPrlFJH0r5Lh71vaftCd8mhUuqbtRkv5VnYyG+nx
-	 1Jr5VxxHNSn4Qt9Gsn9P+a75y1IMp6sMMBkO2CFQtG+DOX3Gif1PGBMreTHt/PN/zc
-	 rT5vLW7VBRTgIxnF15DbEyWLedboADMcTJUBusvin3BHOr002YDnkexTbxCWudGtpY
-	 Ki5496NqPPDSg==
-Received: by mail-vk1-f169.google.com with SMTP id u204so1617988vkb.7
-        for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022 20:20:21 -0700 (PDT)
-X-Gm-Message-State: AJIora8rDbbFeE9mQKgakYu5F7fomBh/v3Dq38/d0CMAKAlFnxfBVVFq
-	dfIylBqRIYwiwtOY9bm+KIzd0MnoJ7zo+R/fqyo=
-X-Google-Smtp-Source: AGRyM1sN/ekI6UBawgnS3GWAQCMGXmmQNl+i2V8eRmbTHANUBobaCVtXNRsxJogDqP7TV8roV7OyjVCMMeIJdfGqkbs=
-X-Received: by 2002:a1f:340f:0:b0:374:7b8a:378 with SMTP id
- b15-20020a1f340f000000b003747b8a0378mr4918379vka.37.1657855220231; Thu, 14
- Jul 2022 20:20:20 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6005F17F8
+	for <loongarch@lists.linux.dev>; Fri, 15 Jul 2022 07:06:12 +0000 (UTC)
+Received: from localhost.localdomain.localdomain (unknown [10.2.5.46])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxWeDQEdFiyyogAA--.1717S5;
+	Fri, 15 Jul 2022 15:05:58 +0800 (CST)
+From: Jianmin Lv <lvjianmin@loongson.cn>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH V15 03/15] ACPI: irq: Allow acpi_gsi_to_irq() to have an arch-specific fallback
+Date: Fri, 15 Jul 2022 15:05:39 +0800
+Message-Id: <1657868751-30444-4-git-send-email-lvjianmin@loongson.cn>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1657868751-30444-1-git-send-email-lvjianmin@loongson.cn>
+References: <1657868751-30444-1-git-send-email-lvjianmin@loongson.cn>
+X-CM-TRANSID:AQAAf9AxWeDQEdFiyyogAA--.1717S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxZw1DKF18Jr43Xw4xAr4ruFg_yoW5WF4kpF
+	Wxuw1xJrWIqr17ZrZ7C3yfuF13W3Z5JFWxXrW2k347CayDKF1agrnFgry2gryDAF4fCFWj
+	v3ZIkFW8GF1DCa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkE1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCF
+	04k20xvE74AGY7Cv6cx26ryrJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
+	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHU
+	DUUUUU=
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20220714062550.4934-1-huqi@loongson.cn> <CAAhV-H6NWYG1ChLRyK-EAGAmhDvP-x+z9BgBo3a=GAbQ-2bKig@mail.gmail.com>
- <6896bb4c-5224-678f-e73c-fe95be41d196@loongson.cn>
-In-Reply-To: <6896bb4c-5224-678f-e73c-fe95be41d196@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 15 Jul 2022 11:20:07 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6eBuGS5F2=DQEMnV1JWOi8rn8g=SR++FxAWa5V6WABgQ@mail.gmail.com>
-Message-ID: <CAAhV-H6eBuGS5F2=DQEMnV1JWOi8rn8g=SR++FxAWa5V6WABgQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix missing fcsr in ptrace's fpr_set
-To: Qi Hu <huqi@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Oleg Nesterov <oleg@redhat.com>, Xu Li <lixu@loongson.cn>, 
-	loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jul 14, 2022 at 10:07 PM Qi Hu <huqi@loongson.cn> wrote:
->
->
-> On 2022/7/14 21:12, Huacai Chen wrote:
-> > Hi,
-> >
-> > On Thu, Jul 14, 2022 at 2:26 PM Qi Hu <huqi@loongson.cn> wrote:
-> >> In file ptrace.c, function fpr_set does not copy fcsr data from ubuf
-> >> to kbuf. That's the reason why fcsr cannot be modified by ptrace.
-> >>
-> >> This patch fixs this problem and allows users using ptrace to modify
-> >> the fcsr.
-> >>
-> >> Signed-off-by: Qi Hu <huqi@loongson.cn>
-> >> Signed-off-by: Xu Li <lixu@loongson.cn>
-> >> ---
-> >>   arch/loongarch/kernel/ptrace.c | 12 +++++++-----
-> >>   1 file changed, 7 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
-> >> index e6ab87948e1d..dc2b82ea894c 100644
-> >> --- a/arch/loongarch/kernel/ptrace.c
-> >> +++ b/arch/loongarch/kernel/ptrace.c
-> >> @@ -193,7 +193,7 @@ static int fpr_set(struct task_struct *target,
-> >>                     const void *kbuf, const void __user *ubuf)
-> >>   {
-> >>          const int fcc_start = NUM_FPU_REGS * sizeof(elf_fpreg_t);
-> >> -       const int fcc_end = fcc_start + sizeof(u64);
-> >> +       const int fcsr_start = fcc_start + sizeof(u64);
-> >>          int err;
-> >>
-> >>          BUG_ON(count % sizeof(elf_fpreg_t));
-> >> @@ -209,10 +209,12 @@ static int fpr_set(struct task_struct *target,
-> >>          if (err)
-> >>                  return err;
-> >>
-> >> -       if (count > 0)
-> >> -               err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-> >> -                                         &target->thread.fpu.fcc,
-> >> -                                         fcc_start, fcc_end);
-> >> +       err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-> >> +                                 &target->thread.fpu.fcc, fcc_start,
-> >> +                                 fcc_start + sizeof(u64));
-> >> +       err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-> >> +                                 &target->thread.fpu.fcsr, fcsr_start,
-> >> +                                 fcsr_start + sizeof(u32));
-> > You shouldn't remove (count > 0) here, because  the above
-> > user_regset_copyin() will modify count inside, and so "count == 0" is
-> > possible.
-> >
-> > Huacai
->
-> Yes, the "count" should be considered. But the "count" is checked at the
-> beginning of the "user_regset_copyin()".
->
-> So "count > 0" is useless, i think.
-Yes, you are right, thanks.
+From: Marc Zyngier <maz@kernel.org>
 
-Huacai
->
-> Also like riscv, "count" is not checked in "riscv_fpr_set()".
->
-> >>          return err;
-> >>   }
-> >> --
-> >> 2.37.0
-> >>
->
+It appears that the generic version of acpi_gsi_to_irq() doesn't
+fallback to establishing a mapping if there is no pre-existing
+one while the x86 version does.
+
+While arm64 seems unaffected by it, LoongArch is relying on the x86
+behaviour. In an effort to prevent new architectures from reinventing
+the proverbial wheel, provide an optional callback that the arch code
+can set to restore the x86 behaviour.
+
+Hopefully we can eventually get rid of this in the future once
+the expected behaviour has been clarified.
+
+Reported-by: Jianmin Lv <lvjianmin@loongson.cn>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+Tested-by: Hanjun Guo <guohanjun@huawei.com>
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+---
+ drivers/acpi/irq.c   | 18 ++++++++++++++++--
+ include/linux/acpi.h |  1 +
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
+index f0de768..dabe45e 100644
+--- a/drivers/acpi/irq.c
++++ b/drivers/acpi/irq.c
+@@ -13,6 +13,7 @@
+ enum acpi_irq_model_id acpi_irq_model;
+ 
+ static struct fwnode_handle *(*acpi_get_gsi_domain_id)(u32 gsi);
++static u32 (*acpi_gsi_to_irq_fallback)(u32 gsi);
+ 
+ /**
+  * acpi_gsi_to_irq() - Retrieve the linux irq number for a given GSI
+@@ -32,9 +33,12 @@ int acpi_gsi_to_irq(u32 gsi, unsigned int *irq)
+ 					DOMAIN_BUS_ANY);
+ 	*irq = irq_find_mapping(d, gsi);
+ 	/*
+-	 * *irq == 0 means no mapping, that should
+-	 * be reported as a failure
++	 * *irq == 0 means no mapping, that should be reported as a
++	 * failure, unless there is an arch-specific fallback handler.
+ 	 */
++	if (!*irq && acpi_gsi_to_irq_fallback)
++		*irq = acpi_gsi_to_irq_fallback(gsi);
++
+ 	return (*irq > 0) ? 0 : -EINVAL;
+ }
+ EXPORT_SYMBOL_GPL(acpi_gsi_to_irq);
+@@ -302,6 +306,16 @@ void __init acpi_set_irq_model(enum acpi_irq_model_id model,
+ }
+ 
+ /**
++ * acpi_set_gsi_to_irq_fallback - Register a GSI transfer
++ * callback to fallback to arch specified implementation.
++ * @fn: arch-specific fallback handler
++ */
++void __init acpi_set_gsi_to_irq_fallback(u32 (*fn)(u32))
++{
++	acpi_gsi_to_irq_fallback = fn;
++}
++
++/**
+  * acpi_irq_create_hierarchy - Create a hierarchical IRQ domain with the default
+  *                             GSI domain as its parent.
+  * @flags:      Irq domain flags associated with the domain
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 957e23f..e2b60d5 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -357,6 +357,7 @@ static inline bool acpi_sci_irq_valid(void)
+ 
+ void acpi_set_irq_model(enum acpi_irq_model_id model,
+ 			struct fwnode_handle *(*)(u32));
++void acpi_set_gsi_to_irq_fallback(u32 (*)(u32));
+ 
+ struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
+ 					     unsigned int size,
+-- 
+1.8.3.1
+
