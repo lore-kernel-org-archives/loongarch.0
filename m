@@ -1,90 +1,112 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 461307A
-	for <loongarch@lists.linux.dev>; Fri, 15 Jul 2022 02:38:01 +0000 (UTC)
-Received: from lingfengzhe-ms7c94.loongson.cn (unknown [10.90.50.23])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf+ME09BiLbsfAA--.64763S2;
-	Fri, 15 Jul 2022 10:37:56 +0800 (CST)
-From: Qi Hu <huqi@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Oleg Nesterov <oleg@redhat.com>
-Cc: Xu Li <lixu@loongson.cn>,
-	loongarch@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	Qi Hu <huqi@loongson.cn>
-Subject: [PATCH v2] LoongArch: Fix missing fcsr in ptrace's fpr_set
-Date: Fri, 15 Jul 2022 10:37:53 +0800
-Message-Id: <20220715023753.436226-1-huqi@loongson.cn>
-X-Mailer: git-send-email 2.37.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842987A
+	for <loongarch@lists.linux.dev>; Fri, 15 Jul 2022 03:20:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D458C34115
+	for <loongarch@lists.linux.dev>; Fri, 15 Jul 2022 03:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1657855221;
+	bh=r9nH0nnXki3fn2qUEx//h7cuqEVQBiYMXEgpzqbyJ5g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oKw6mCZOD1HPIbLdEpgbQaev8ZMcZVxjKSGNSOdQchcnAh9IwRz8aZ2io+E+MTbbs
+	 XcmIqOkLdbMkSErlBQNXmCN4tH1N8M/5uhNwn5IT0Kmiky4/q9Qmhqt5V75U7eniEm
+	 od+2dX50pYreYY7GoKdd23jyYFRPrlFJH0r5Lh71vaftCd8mhUuqbtRkv5VnYyG+nx
+	 1Jr5VxxHNSn4Qt9Gsn9P+a75y1IMp6sMMBkO2CFQtG+DOX3Gif1PGBMreTHt/PN/zc
+	 rT5vLW7VBRTgIxnF15DbEyWLedboADMcTJUBusvin3BHOr002YDnkexTbxCWudGtpY
+	 Ki5496NqPPDSg==
+Received: by mail-vk1-f169.google.com with SMTP id u204so1617988vkb.7
+        for <loongarch@lists.linux.dev>; Thu, 14 Jul 2022 20:20:21 -0700 (PDT)
+X-Gm-Message-State: AJIora8rDbbFeE9mQKgakYu5F7fomBh/v3Dq38/d0CMAKAlFnxfBVVFq
+	dfIylBqRIYwiwtOY9bm+KIzd0MnoJ7zo+R/fqyo=
+X-Google-Smtp-Source: AGRyM1sN/ekI6UBawgnS3GWAQCMGXmmQNl+i2V8eRmbTHANUBobaCVtXNRsxJogDqP7TV8roV7OyjVCMMeIJdfGqkbs=
+X-Received: by 2002:a1f:340f:0:b0:374:7b8a:378 with SMTP id
+ b15-20020a1f340f000000b003747b8a0378mr4918379vka.37.1657855220231; Thu, 14
+ Jul 2022 20:20:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf9Dxf+ME09BiLbsfAA--.64763S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uryrtF1UJw4rWF1rXw1xuFg_yoW8XFWrpr
-	ZxAas3Wr4rGFWSvr4Dt3yv9ryDX3s2gFyS9393J3WfAwnrXrs8XryjyFZ2vFW2y348Wayx
-	XF9Y9r4YyFsFqaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
-	WxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK6svP
-	MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-	W8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
-X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQAICV3QvP1zwwACs+
+References: <20220714062550.4934-1-huqi@loongson.cn> <CAAhV-H6NWYG1ChLRyK-EAGAmhDvP-x+z9BgBo3a=GAbQ-2bKig@mail.gmail.com>
+ <6896bb4c-5224-678f-e73c-fe95be41d196@loongson.cn>
+In-Reply-To: <6896bb4c-5224-678f-e73c-fe95be41d196@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 15 Jul 2022 11:20:07 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6eBuGS5F2=DQEMnV1JWOi8rn8g=SR++FxAWa5V6WABgQ@mail.gmail.com>
+Message-ID: <CAAhV-H6eBuGS5F2=DQEMnV1JWOi8rn8g=SR++FxAWa5V6WABgQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Fix missing fcsr in ptrace's fpr_set
+To: Qi Hu <huqi@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Oleg Nesterov <oleg@redhat.com>, Xu Li <lixu@loongson.cn>, 
+	loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-In file ptrace.c, function fpr_set does not copy fcsr data from ubuf
-to kbuf. That's the reason why fcsr cannot be modified by ptrace.
+On Thu, Jul 14, 2022 at 10:07 PM Qi Hu <huqi@loongson.cn> wrote:
+>
+>
+> On 2022/7/14 21:12, Huacai Chen wrote:
+> > Hi,
+> >
+> > On Thu, Jul 14, 2022 at 2:26 PM Qi Hu <huqi@loongson.cn> wrote:
+> >> In file ptrace.c, function fpr_set does not copy fcsr data from ubuf
+> >> to kbuf. That's the reason why fcsr cannot be modified by ptrace.
+> >>
+> >> This patch fixs this problem and allows users using ptrace to modify
+> >> the fcsr.
+> >>
+> >> Signed-off-by: Qi Hu <huqi@loongson.cn>
+> >> Signed-off-by: Xu Li <lixu@loongson.cn>
+> >> ---
+> >>   arch/loongarch/kernel/ptrace.c | 12 +++++++-----
+> >>   1 file changed, 7 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+> >> index e6ab87948e1d..dc2b82ea894c 100644
+> >> --- a/arch/loongarch/kernel/ptrace.c
+> >> +++ b/arch/loongarch/kernel/ptrace.c
+> >> @@ -193,7 +193,7 @@ static int fpr_set(struct task_struct *target,
+> >>                     const void *kbuf, const void __user *ubuf)
+> >>   {
+> >>          const int fcc_start = NUM_FPU_REGS * sizeof(elf_fpreg_t);
+> >> -       const int fcc_end = fcc_start + sizeof(u64);
+> >> +       const int fcsr_start = fcc_start + sizeof(u64);
+> >>          int err;
+> >>
+> >>          BUG_ON(count % sizeof(elf_fpreg_t));
+> >> @@ -209,10 +209,12 @@ static int fpr_set(struct task_struct *target,
+> >>          if (err)
+> >>                  return err;
+> >>
+> >> -       if (count > 0)
+> >> -               err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+> >> -                                         &target->thread.fpu.fcc,
+> >> -                                         fcc_start, fcc_end);
+> >> +       err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+> >> +                                 &target->thread.fpu.fcc, fcc_start,
+> >> +                                 fcc_start + sizeof(u64));
+> >> +       err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+> >> +                                 &target->thread.fpu.fcsr, fcsr_start,
+> >> +                                 fcsr_start + sizeof(u32));
+> > You shouldn't remove (count > 0) here, because  the above
+> > user_regset_copyin() will modify count inside, and so "count == 0" is
+> > possible.
+> >
+> > Huacai
+>
+> Yes, the "count" should be considered. But the "count" is checked at the
+> beginning of the "user_regset_copyin()".
+>
+> So "count > 0" is useless, i think.
+Yes, you are right, thanks.
 
-This patch fixs this problem and allows users using ptrace to modify
-the fcsr.
-
-Co-developed-by: Xu Li <lixu@loongson.cn>
-Signed-off-by: Qi Hu <huqi@loongson.cn>
----
-V1 -> V2: Change Signed-off-by to Co-developed-by in the commit message.
----
- arch/loongarch/kernel/ptrace.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
-index e6ab87948e1d..dc2b82ea894c 100644
---- a/arch/loongarch/kernel/ptrace.c
-+++ b/arch/loongarch/kernel/ptrace.c
-@@ -193,7 +193,7 @@ static int fpr_set(struct task_struct *target,
- 		   const void *kbuf, const void __user *ubuf)
- {
- 	const int fcc_start = NUM_FPU_REGS * sizeof(elf_fpreg_t);
--	const int fcc_end = fcc_start + sizeof(u64);
-+	const int fcsr_start = fcc_start + sizeof(u64);
- 	int err;
- 
- 	BUG_ON(count % sizeof(elf_fpreg_t));
-@@ -209,10 +209,12 @@ static int fpr_set(struct task_struct *target,
- 	if (err)
- 		return err;
- 
--	if (count > 0)
--		err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
--					  &target->thread.fpu.fcc,
--					  fcc_start, fcc_end);
-+	err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				  &target->thread.fpu.fcc, fcc_start,
-+				  fcc_start + sizeof(u64));
-+	err |= user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				  &target->thread.fpu.fcsr, fcsr_start,
-+				  fcsr_start + sizeof(u32));
- 
- 	return err;
- }
--- 
-2.37.0
-
+Huacai
+>
+> Also like riscv, "count" is not checked in "riscv_fpr_set()".
+>
+> >>          return err;
+> >>   }
+> >> --
+> >> 2.37.0
+> >>
+>
