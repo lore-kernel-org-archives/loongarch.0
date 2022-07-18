@@ -1,142 +1,275 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB923EA6
-	for <loongarch@lists.linux.dev>; Mon, 18 Jul 2022 09:04:24 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id mf4so20026226ejc.3
-        for <loongarch@lists.linux.dev>; Mon, 18 Jul 2022 02:04:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=3y6mB0hrnaV46VnRdVCEKqtLVV2m+vYW81yoBr+fw0w=;
-        b=lazb5AJju1MIZiojh4ugOqp3SpUeeN4m9pS4gWOOnJbgrHukSBCMpnqykr4R6rEOKM
-         po8QLW0Y+VzxM3g1dOM7i/6BAjT9Q9BlTiTVmrac89YvdKky0kmYJSAp/0HX4drLUcFc
-         L41YTwau745fy7DAYoCjPMWpCEEOgB5YsZnp05gpatqBMCwI1wZeO9eylWprvWs6OY00
-         cqoSUOmPUNMqhMS1tjqK0Ax6pFAhDGVEAVwrgkC1jZ9cXJo9Yxzy3mi/WgjQ8ny0z9Ii
-         BHOPafrZBMcQWqNHyW1SIPdatfxNXyzNbBUOiCILDiq+iys5YIJoEne7lul8CoZkG7Qp
-         1dLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=3y6mB0hrnaV46VnRdVCEKqtLVV2m+vYW81yoBr+fw0w=;
-        b=ruyO63s1xAHla81DU2PIedasca9hedN8a5FeIDi6YfAe/mdjLVXgBycvJQraOgPq1D
-         lTJgU7I/sk+SjvQrYThoazTaJRH+tNqCCpYnf5RJwBa/0eypCO241/VDU3Qy+OeKaL4d
-         q0i5wqhM3mr3leJGnjgRfxw2sxRpbYpLXHxmD/7JS9oOIgRInQymyJZVNO+n99o7sWHr
-         tgx6GQcCpnXmBIMtMtYChr9rVtBSMwplHB9ZTfhIGpaZcGot7YB7RI90e2//qcP2lMsE
-         oPz4HDMtMJa/nxhDuFyOOzsrWaWOMqRgi+ZzzLIrbDigDu73vuAQxJR2ujIzMuAr/vQl
-         U6DA==
-X-Gm-Message-State: AJIora/jISj+yxzmQ8/XKerLTXrS5aedG040GoEKsCOk7uSKeNI5/hpB
-	+stz0TyYC5BvBLXakaU/VARnjQ==
-X-Google-Smtp-Source: AGRyM1shiX+UWsxgu56aWSxDBQiM5H9sYKjZglHKR9uDIypb1Ru+e71R8EEH25Apr7Yq430Wp4Nzhg==
-X-Received: by 2002:a17:907:2d2b:b0:72b:546a:bd03 with SMTP id gs43-20020a1709072d2b00b0072b546abd03mr25807330ejc.149.1658135062709;
-        Mon, 18 Jul 2022 02:04:22 -0700 (PDT)
-Received: from ?IPV6:2a02:768:2307:40d6::f9e? ([2a02:768:2307:40d6::f9e])
-        by smtp.gmail.com with ESMTPSA id u15-20020a056402064f00b0043a6c538047sm8259072edx.70.2022.07.18.02.04.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Jul 2022 02:04:21 -0700 (PDT)
-Message-ID: <9cc11fd0-28c7-fd0d-fe55-cce0bb5e92a7@monstr.eu>
-Date: Mon, 18 Jul 2022 11:04:19 +0200
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3778AECC
+	for <loongarch@lists.linux.dev>; Mon, 18 Jul 2022 12:28:28 +0000 (UTC)
+Received: from [10.20.42.19] (unknown [10.20.42.19])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx7+PcUdViYbQmAA--.8726S3;
+	Mon, 18 Jul 2022 20:28:12 +0800 (CST)
+Subject: Re: [PATCH V15 01/15] ACPICA: MADT: Add LoongArch APICs support
+To: Marc Zyngier <maz@kernel.org>, Robert Moore <robert.moore@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, Hanjun Guo <guohanjun@huawei.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+References: <1657868751-30444-1-git-send-email-lvjianmin@loongson.cn>
+ <1657868751-30444-2-git-send-email-lvjianmin@loongson.cn>
+ <87mtd93p3n.wl-maz@kernel.org>
+From: Jianmin Lv <lvjianmin@loongson.cn>
+Message-ID: <7ed06824-4ccb-a9c4-fa01-583006ab90c1@loongson.cn>
+Date: Mon, 18 Jul 2022 20:28:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 4/6] MicroBlaze: cpuinfo: Fix a warning for
- CONFIG_CPUMASK_OFFSTACK
+In-Reply-To: <87mtd93p3n.wl-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@gmail.com>,
- Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, linux-sh@vger.kernel.org,
- linux-um@lists.infradead.org, stable@vger.kernel.org
-References: <20220712075255.1345991-1-chenhuacai@loongson.cn>
- <20220712075255.1345991-4-chenhuacai@loongson.cn>
-From: Michal Simek <monstr@monstr.eu>
-In-Reply-To: <20220712075255.1345991-4-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9Dx7+PcUdViYbQmAA--.8726S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3AFyxZw4DZr4DXFy7Cry7trb_yoWxCFy8pr
+	ZrCw17Kw4UXr1ftF1aqw4Yva43Ja4SkF1xZwsxGa4xCFnrKF47XF1vkF13WFW3ta1rKay0
+	vw10q3W8ua1UArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU901xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+	Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	ACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE-syl
+	42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW5Wr1UJr1l4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0D
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 
 
 
-On 7/12/22 09:52, Huacai Chen wrote:
-> When CONFIG_CPUMASK_OFFSTACK and CONFIG_DEBUG_PER_CPU_MAPS is selected,
-> cpu_max_bits_warn() generates a runtime warning similar as below while
-> we show /proc/cpuinfo. Fix this by using nr_cpu_ids (the runtime limit)
-> instead of NR_CPUS to iterate CPUs.
+On 2022/7/17 上午2:10, Marc Zyngier wrote:
+> [+ Robert Moore]
 > 
-> [    3.052463] ------------[ cut here ]------------
-> [    3.059679] WARNING: CPU: 3 PID: 1 at include/linux/cpumask.h:108 show_cpuinfo+0x5e8/0x5f0
-> [    3.070072] Modules linked in: efivarfs autofs4
-> [    3.076257] CPU: 0 PID: 1 Comm: systemd Not tainted 5.19-rc5+ #1052
-> [    3.099465] Stack : 9000000100157b08 9000000000f18530 9000000000cf846c 9000000100154000
-> [    3.109127]         9000000100157a50 0000000000000000 9000000100157a58 9000000000ef7430
-> [    3.118774]         90000001001578e8 0000000000000040 0000000000000020 ffffffffffffffff
-> [    3.128412]         0000000000aaaaaa 1ab25f00eec96a37 900000010021de80 900000000101c890
-> [    3.138056]         0000000000000000 0000000000000000 0000000000000000 0000000000aaaaaa
-> [    3.147711]         ffff8000339dc220 0000000000000001 0000000006ab4000 0000000000000000
-> [    3.157364]         900000000101c998 0000000000000004 9000000000ef7430 0000000000000000
-> [    3.167012]         0000000000000009 000000000000006c 0000000000000000 0000000000000000
-> [    3.176641]         9000000000d3de08 9000000001639390 90000000002086d8 00007ffff0080286
-> [    3.186260]         00000000000000b0 0000000000000004 0000000000000000 0000000000071c1c
-> [    3.195868]         ...
-> [    3.199917] Call Trace:
-> [    3.203941] [<90000000002086d8>] show_stack+0x38/0x14c
-> [    3.210666] [<9000000000cf846c>] dump_stack_lvl+0x60/0x88
-> [    3.217625] [<900000000023d268>] __warn+0xd0/0x100
-> [    3.223958] [<9000000000cf3c90>] warn_slowpath_fmt+0x7c/0xcc
-> [    3.231150] [<9000000000210220>] show_cpuinfo+0x5e8/0x5f0
-> [    3.238080] [<90000000004f578c>] seq_read_iter+0x354/0x4b4
-> [    3.245098] [<90000000004c2e90>] new_sync_read+0x17c/0x1c4
-> [    3.252114] [<90000000004c5174>] vfs_read+0x138/0x1d0
-> [    3.258694] [<90000000004c55f8>] ksys_read+0x70/0x100
-> [    3.265265] [<9000000000cfde9c>] do_syscall+0x7c/0x94
-> [    3.271820] [<9000000000202fe4>] handle_syscall+0xc4/0x160
-> [    3.281824] ---[ end trace 8b484262b4b8c24c ]---
+> On Fri, 15 Jul 2022 08:05:37 +0100,
+> Jianmin Lv <lvjianmin@loongson.cn> wrote:
+>>
+>> From: Huacai Chen <chenhuacai@loongson.cn>
+>>
+>> LoongArch-specific interrupt controllers (similar to APIC) are added
+>> in the next revision of ACPI Specification (current revision is 6.4),
+>> which including CORE_PIC (CPUINTC), LIO_PIC (LIOINTC), EIO_PIC (EIOINTC),
+>> HT_PIC (HTVECINTC), BIO_PIC (PCHINTC), LPC_PIC (PCHLPC) and MSI_PIC
+>> (PCHMSI). This patch add their definition.
+>>
+>> ACPI changes of LoongArch-specific interrupt controllers have already
+>> been approved in the ECRs, and will be public in the next revision of
+>> ACPI Specification.
+>>
+>> Reference: https://mantis.uefi.org/mantis/view.php?id=2203
+>> Reference: https://mantis.uefi.org/mantis/view.php?id=2313
+>>
+>> Above links needs login(available for ASWG), so the following link(
+>> the ECR file for adding LoongArch APICs into ACPI spec) is provided
+>> for public:
+>>
+>> https://github.com/lvjianmin-loongson/acpica/blob/master/Add%20APIC%20Structures%20for%20Loongarch%20in%20MADT-rev3.pdf
+>>
+>> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Since the ACPI maintainers are unwilling to take this patch (for
+> undisclosed reasons), we need something to unblock this sorry
+> situation, as I don't think it is fair on the LoongArch folks to be
+> blocked for another cycle on this ground only.
+> 
+> I'm proposing to replace this patch with the following, which will
+> allow the patches to be merged without breaking anything. Once the
+> ACPI support is updated, we'll be able to simply revert this patch.
+> 
+> Thanks,
+> 
+> 	M.
+> 
+>  From 43ec25d2dbde3c422cce430c9d5ec32fbe7b255c Mon Sep 17 00:00:00 2001
+> From: Marc Zyngier <maz@kernel.org>
+> Date: Sat, 16 Jul 2022 18:56:10 +0100
+> Subject: [PATCH] LoongArch: Provisionally add ACPICA data structures
+> 
+> The LoongArch architecture is using ACPI, but the spec containing
+> the required updates still is in an unreleased state.
+> 
+> Instead of preventing the inclusion of the IRQ support into the
+> kernel, add the missing bits to the arch-specific parts of
+> the ACPICA support.
+> 
+> Once the ACPICA bits are updated to the version that supports
+> LoongArch, these bits can eventually be removed.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 > ---
->   arch/microblaze/kernel/cpu/mb.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   arch/loongarch/include/asm/acpi.h | 138 ++++++++++++++++++++++++++++++
+>   1 file changed, 138 insertions(+)
 > 
-> diff --git a/arch/microblaze/kernel/cpu/mb.c b/arch/microblaze/kernel/cpu/mb.c
-> index 9581d194d9e4..689de7f75614 100644
-> --- a/arch/microblaze/kernel/cpu/mb.c
-> +++ b/arch/microblaze/kernel/cpu/mb.c
-> @@ -137,7 +137,7 @@ static void *c_start(struct seq_file *m, loff_t *pos)
->   {
->   	int i = *pos;
+> diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
+> index 62044cd5b7bc..6155e46098af 100644
+> --- a/arch/loongarch/include/asm/acpi.h
+> +++ b/arch/loongarch/include/asm/acpi.h
+> @@ -31,6 +31,144 @@ static inline bool acpi_has_cpu_in_madt(void)
 >   
-> -	return i < NR_CPUS ? (void *) (i + 1) : NULL;
-> +	return i < nr_cpu_ids ? (void *) (i + 1) : NULL;
->   }
+>   extern struct list_head acpi_wakeup_device_list;
 >   
->   static void *c_next(struct seq_file *m, void *v, loff_t *pos)
+> +/*
+> + * Temporary definitions until the core ACPICA code gets updated (see
+> + * 1656837932-18257-1-git-send-email-lvjianmin@loongson.cn and its
+> + * follow-ups for the "rationale").
+> + *
+> + * Once the "legal reasons" are cleared and that the code is merged,
+> + * this can be dropped entierely.
+> + */
+> +#if (ACPI_CA_VERSION == 0x20220331 && !defined(LOONGARCH_ACPICA_EXT))
+> +
+> +#define LOONGARCH_ACPICA_EXT	1
+> +
+> +#define	ACPI_MADT_TYPE_CORE_PIC		17
+> +#define	ACPI_MADT_TYPE_LIO_PIC		18
+> +#define	ACPI_MADT_TYPE_HT_PIC		19
+> +#define	ACPI_MADT_TYPE_EIO_PIC		20
+> +#define	ACPI_MADT_TYPE_MSI_PIC		21
+> +#define	ACPI_MADT_TYPE_BIO_PIC		22
+> +#define	ACPI_MADT_TYPE_LPC_PIC		23
+> +
+> +/* Values for Version field above */
+> +
+> +enum acpi_madt_core_pic_version {
+> +	ACPI_MADT_CORE_PIC_VERSION_NONE = 0,
+> +	ACPI_MADT_CORE_PIC_VERSION_V1 = 1,
+> +	ACPI_MADT_CORE_PIC_VERSION_RESERVED = 2	/* 2 and greater are reserved */
+> +};
+> +
+> +enum acpi_madt_lio_pic_version {
+> +	ACPI_MADT_LIO_PIC_VERSION_NONE = 0,
+> +	ACPI_MADT_LIO_PIC_VERSION_V1 = 1,
+> +	ACPI_MADT_LIO_PIC_VERSION_RESERVED = 2	/* 2 and greater are reserved */
+> +};
+> +
+> +enum acpi_madt_eio_pic_version {
+> +	ACPI_MADT_EIO_PIC_VERSION_NONE = 0,
+> +	ACPI_MADT_EIO_PIC_VERSION_V1 = 1,
+> +	ACPI_MADT_EIO_PIC_VERSION_RESERVED = 2	/* 2 and greater are reserved */
+> +};
+> +
+> +enum acpi_madt_ht_pic_version {
+> +	ACPI_MADT_HT_PIC_VERSION_NONE = 0,
+> +	ACPI_MADT_HT_PIC_VERSION_V1 = 1,
+> +	ACPI_MADT_HT_PIC_VERSION_RESERVED = 2	/* 2 and greater are reserved */
+> +};
+> +
+> +enum acpi_madt_bio_pic_version {
+> +	ACPI_MADT_BIO_PIC_VERSION_NONE = 0,
+> +	ACPI_MADT_BIO_PIC_VERSION_V1 = 1,
+> +	ACPI_MADT_BIO_PIC_VERSION_RESERVED = 2	/* 2 and greater are reserved */
+> +};
+> +
+> +enum acpi_madt_msi_pic_version {
+> +	ACPI_MADT_MSI_PIC_VERSION_NONE = 0,
+> +	ACPI_MADT_MSI_PIC_VERSION_V1 = 1,
+> +	ACPI_MADT_MSI_PIC_VERSION_RESERVED = 2	/* 2 and greater are reserved */
+> +};
+> +
+> +enum acpi_madt_lpc_pic_version {
+> +	ACPI_MADT_LPC_PIC_VERSION_NONE = 0,
+> +	ACPI_MADT_LPC_PIC_VERSION_V1 = 1,
+> +	ACPI_MADT_LPC_PIC_VERSION_RESERVED = 2	/* 2 and greater are reserved */
+> +};
+> +
 
-As was said in m68k thread commit message should be fixed. MB upstream in not 
-SMP. We have SMP configuration in soc vendor tree but upstream we can't enable 
-DEBUG_PER_CPU_MAPS which depends on SMP. But definitely worth to fix it.
+Hi, Marc, I add #pragma here to make following structures align to 1 
+byte as include/acpi/actbl2.h, or else, the MADT will not be parsed 
+correctly.
 
-Thanks,
-Michal
+#pragma pack(1)
 
--- 
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+> +/* Core Interrupt Controller */
+> +
+> +struct acpi_madt_core_pic {
+> +	struct acpi_subtable_header header;
+> +	u8 version;
+> +	u32 processor_id;
+> +	u32 core_id;
+> +	u32 flags;
+> +};
+> +
+> +/* Legacy I/O Interrupt Controller */
+> +
+> +struct acpi_madt_lio_pic {
+> +	struct acpi_subtable_header header;
+> +	u8 version;
+> +	u64 address;
+> +	u16 size;
+> +	u8 cascade[2];
+> +	u32 cascade_map[2];
+> +};
+> +
+> +/* Extend I/O Interrupt Controller */
+> +
+> +struct acpi_madt_eio_pic {
+> +	struct acpi_subtable_header header;
+> +	u8 version;
+> +	u8 cascade;
+> +	u8 node;
+> +	u64 node_map;
+> +};
+> +
+> +/* HT Interrupt Controller */
+> +
+> +struct acpi_madt_ht_pic {
+> +	struct acpi_subtable_header header;
+> +	u8 version;
+> +	u64 address;
+> +	u16 size;
+> +	u8 cascade[8];
+> +};
+> +
+> +/* Bridge I/O Interrupt Controller */
+> +
+> +struct acpi_madt_bio_pic {
+> +	struct acpi_subtable_header header;
+> +	u8 version;
+> +	u64 address;
+> +	u16 size;
+> +	u16 id;
+> +	u16 gsi_base;
+> +};
+> +
+> +/* MSI Interrupt Controller */
+> +
+> +struct acpi_madt_msi_pic {
+> +	struct acpi_subtable_header header;
+> +	u8 version;
+> +	u64 msg_address;
+> +	u32 start;
+> +	u32 count;
+> +};
+> +
+> +/* LPC Interrupt Controller */
+> +
+> +struct acpi_madt_lpc_pic {
+> +	struct acpi_subtable_header header;
+> +	u8 version;
+> +	u64 address;
+> +	u16 size;
+> +	u8 cascade;
+> +};
+> +
+
+#pragma pack()
+
+> +#endif
+> +
+>   #endif /* !CONFIG_ACPI */
+>   
+>   #define ACPI_TABLE_UPGRADE_MAX_PHYS ARCH_LOW_ADDRESS_LIMIT
+> 
 
