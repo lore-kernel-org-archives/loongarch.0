@@ -1,125 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84118EA6
-	for <loongarch@lists.linux.dev>; Mon, 18 Jul 2022 08:39:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37659C385A2
-	for <loongarch@lists.linux.dev>; Mon, 18 Jul 2022 08:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1658133572;
-	bh=6868ghL+z9k6lE8Zhf9thtidSkGyAy7loJEZcnhZTxI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=p97gLbODcmBvh5cx7H8owMnLX98xsIx2FgXC4yXlnl19Hz7HI4E8JOY/1jydlLR6D
-	 MEMjmxDE3NdqXJdm0rb2PRkr+WRMgBcE2/rJlBhmd+4hxJHQHjo44Eu+AUF4FRV41P
-	 Dalu8ydIZruE/3I5aflT94cLsmYQZ/NjpQF3+tDQaNmrAs5IWWYnSd3Gmpog8otznn
-	 SJ0wlpK35/j2GNjApbNpx1E+F17fJJZu9UkIdzl0YR/xuf5KDe3EAoJDw58Lfdiy+m
-	 q7bUtbsLvcgOqyJjMWx7SPURcbFSoAS0Xqe1Ue9xaAUlzmzXt8Rr0IVNQ+/YBGXCXu
-	 N+ITPhKgp6gIA==
-Received: by mail-vs1-f48.google.com with SMTP id x125so9709241vsb.13
-        for <loongarch@lists.linux.dev>; Mon, 18 Jul 2022 01:39:32 -0700 (PDT)
-X-Gm-Message-State: AJIora8wSHKfET56rGMqHevbdATHIy7xDdkxFjbyfffWOrVTBH+J2FRM
-	tzJHBeryuDvb2oXBkwfHMchGTZgpCuAOfpo9tKE=
-X-Google-Smtp-Source: AGRyM1vYLPKEzTkdiSMW1GoG0z6Et3OxAmvTioua6BelylBjw6xGvfHRIegg4/8Hd4BjWHhuVTSj/PKWlz4YBTaVEiY=
-X-Received: by 2002:a05:6102:3f06:b0:356:f57f:4f59 with SMTP id
- k6-20020a0561023f0600b00356f57f4f59mr8650321vsv.70.1658133571179; Mon, 18 Jul
- 2022 01:39:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB923EA6
+	for <loongarch@lists.linux.dev>; Mon, 18 Jul 2022 09:04:24 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id mf4so20026226ejc.3
+        for <loongarch@lists.linux.dev>; Mon, 18 Jul 2022 02:04:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=3y6mB0hrnaV46VnRdVCEKqtLVV2m+vYW81yoBr+fw0w=;
+        b=lazb5AJju1MIZiojh4ugOqp3SpUeeN4m9pS4gWOOnJbgrHukSBCMpnqykr4R6rEOKM
+         po8QLW0Y+VzxM3g1dOM7i/6BAjT9Q9BlTiTVmrac89YvdKky0kmYJSAp/0HX4drLUcFc
+         L41YTwau745fy7DAYoCjPMWpCEEOgB5YsZnp05gpatqBMCwI1wZeO9eylWprvWs6OY00
+         cqoSUOmPUNMqhMS1tjqK0Ax6pFAhDGVEAVwrgkC1jZ9cXJo9Yxzy3mi/WgjQ8ny0z9Ii
+         BHOPafrZBMcQWqNHyW1SIPdatfxNXyzNbBUOiCILDiq+iys5YIJoEne7lul8CoZkG7Qp
+         1dLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=3y6mB0hrnaV46VnRdVCEKqtLVV2m+vYW81yoBr+fw0w=;
+        b=ruyO63s1xAHla81DU2PIedasca9hedN8a5FeIDi6YfAe/mdjLVXgBycvJQraOgPq1D
+         lTJgU7I/sk+SjvQrYThoazTaJRH+tNqCCpYnf5RJwBa/0eypCO241/VDU3Qy+OeKaL4d
+         q0i5wqhM3mr3leJGnjgRfxw2sxRpbYpLXHxmD/7JS9oOIgRInQymyJZVNO+n99o7sWHr
+         tgx6GQcCpnXmBIMtMtYChr9rVtBSMwplHB9ZTfhIGpaZcGot7YB7RI90e2//qcP2lMsE
+         oPz4HDMtMJa/nxhDuFyOOzsrWaWOMqRgi+ZzzLIrbDigDu73vuAQxJR2ujIzMuAr/vQl
+         U6DA==
+X-Gm-Message-State: AJIora/jISj+yxzmQ8/XKerLTXrS5aedG040GoEKsCOk7uSKeNI5/hpB
+	+stz0TyYC5BvBLXakaU/VARnjQ==
+X-Google-Smtp-Source: AGRyM1shiX+UWsxgu56aWSxDBQiM5H9sYKjZglHKR9uDIypb1Ru+e71R8EEH25Apr7Yq430Wp4Nzhg==
+X-Received: by 2002:a17:907:2d2b:b0:72b:546a:bd03 with SMTP id gs43-20020a1709072d2b00b0072b546abd03mr25807330ejc.149.1658135062709;
+        Mon, 18 Jul 2022 02:04:22 -0700 (PDT)
+Received: from ?IPV6:2a02:768:2307:40d6::f9e? ([2a02:768:2307:40d6::f9e])
+        by smtp.gmail.com with ESMTPSA id u15-20020a056402064f00b0043a6c538047sm8259072edx.70.2022.07.18.02.04.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Jul 2022 02:04:21 -0700 (PDT)
+Message-ID: <9cc11fd0-28c7-fd0d-fe55-cce0bb5e92a7@monstr.eu>
+Date: Mon, 18 Jul 2022 11:04:19 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1657868751-30444-1-git-send-email-lvjianmin@loongson.cn>
- <87less52bx.wl-maz@kernel.org> <6e9def1e-31fe-787d-1b2b-a328424352f0@loongson.cn>
- <87ilnw3vlg.wl-maz@kernel.org> <20994a99-b5b1-442d-d23d-2a11ecef24a0@loongson.cn>
- <87wncbzteg.wl-maz@kernel.org> <058aed14-3644-5fc4-8eda-ec645df91836@loongson.cn>
- <87fsiy53h3.wl-maz@kernel.org> <6d534d7d-766c-d5d1-59ed-1ecdd96837be@loongson.cn>
-In-Reply-To: <6d534d7d-766c-d5d1-59ed-1ecdd96837be@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 18 Jul 2022 16:39:19 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4yZYkZBvn0dwCWbdhVjP9wBZ+2yPUcRo8p3m6J_89otQ@mail.gmail.com>
-Message-ID: <CAAhV-H4yZYkZBvn0dwCWbdhVjP9wBZ+2yPUcRo8p3m6J_89otQ@mail.gmail.com>
-Subject: Re: [PATCH V15 00/15] irqchip: Add LoongArch-related irqchip drivers
-To: Jianmin Lv <lvjianmin@loongson.cn>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	LKML <linux-kernel@vger.kernel.org>, loongarch@lists.linux.dev, 
-	Hanjun Guo <guohanjun@huawei.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 4/6] MicroBlaze: cpuinfo: Fix a warning for
+ CONFIG_CPUMASK_OFFSTACK
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@gmail.com>,
+ Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-sh@vger.kernel.org,
+ linux-um@lists.infradead.org, stable@vger.kernel.org
+References: <20220712075255.1345991-1-chenhuacai@loongson.cn>
+ <20220712075255.1345991-4-chenhuacai@loongson.cn>
+From: Michal Simek <monstr@monstr.eu>
+In-Reply-To: <20220712075255.1345991-4-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi, Jianmin and Marc,
 
-On Mon, Jul 18, 2022 at 4:29 PM Jianmin Lv <lvjianmin@loongson.cn> wrote:
->
->
->
-> On 2022/7/18 =E4=B8=8B=E5=8D=882:39, Marc Zyngier wrote:
-> > On Mon, 18 Jul 2022 02:07:21 +0100,
-> > Jianmin Lv <lvjianmin@loongson.cn> wrote:
-> >>
-> >>
-> >>
-> >> On 2022/7/17 =E4=B8=8B=E5=8D=8810:49, Marc Zyngier wrote:
-> >>> On Sun, 17 Jul 2022 12:29:05 +0100,
-> >>> Jianmin Lv <lvjianmin@loongson.cn> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2022/7/17 =E4=B8=8B=E5=8D=886:02, Marc Zyngier wrote:
-> >>>>> But the other issue is that you seem to call this function from two
-> >>>>> different locations. This cannot be right, as there should be only =
-one
-> >>>>> probe order, and not multiple.
-> >>>>>
-> >>>>
-> >>>> As we described two IRQ models(Legacy and Extended) in this cover
-> >>>> letter, the parent domain of MSI domain can be htvec domain(Legacy) =
-or
-> >>>> eiointc domain(Extended). In MADT, only one APIC(HTPIC for htvec or
-> >>>> EIOPIC for eiointc) is allowed to pass into kernel, and then in the
-> >>>> irqchip driver, only one kind APIC of them can be parsed from MADT, =
-so
-> >>>> we have to support two probe order for them.
-> >>>
-> >>> Do you really have the two variants in the wild? Or is this just
-> >>> because this is a possibility?
-> >>>
-> >>
-> >> Currently, there are not CPUs(used for PC and server) based on
-> >> LoongArch shipped with only HTPIC, but with both HTPIC and EIOPIC, we
-> >> just want to provide two choices for designers(but obviously, EIOPIC
-> >> may be enough currently). Do you think we don't have to do like this,
-> >> yes? If so, maybe we don't have to support ACPI-way entry for htvec
-> >> currently, and do the work in future if required.
-> >
-> > If the existing HW is only following the 'Extended' model, then I'd
-> > suggest you only support this for now. It has two effects:
-> >
-> > - it simplifies the current code, making it more maintainable and
-> >    easier to reason about
-> >
-> > - it sends the message to integrators that 'Extended' is the correct
-> >    model, and that it is what they should support
-> >
-> > Now, we don't have much time left to get this series into -next (I
-> > will be closing the tree to new features this week, and only queue
-> > fixes).
-> >
-> > So whatever you need to do, please do it quickly so that we can have
-> > at least some of this in 5.20.
-> >
-> > Thanks,
-> >
-> >       M.
-> >
->
-> Ok, Marc, thanks for your suggestion, got it, I'll remove 'Legacy' mode
-> support and send next version as soon as possible.
-I think keeping the "Legacy" mode is faster than removing it for now
-to keep up with the merge window, since it is already here and doesn't
-need to modify.
 
-Huacai
->
->
+On 7/12/22 09:52, Huacai Chen wrote:
+> When CONFIG_CPUMASK_OFFSTACK and CONFIG_DEBUG_PER_CPU_MAPS is selected,
+> cpu_max_bits_warn() generates a runtime warning similar as below while
+> we show /proc/cpuinfo. Fix this by using nr_cpu_ids (the runtime limit)
+> instead of NR_CPUS to iterate CPUs.
+> 
+> [    3.052463] ------------[ cut here ]------------
+> [    3.059679] WARNING: CPU: 3 PID: 1 at include/linux/cpumask.h:108 show_cpuinfo+0x5e8/0x5f0
+> [    3.070072] Modules linked in: efivarfs autofs4
+> [    3.076257] CPU: 0 PID: 1 Comm: systemd Not tainted 5.19-rc5+ #1052
+> [    3.099465] Stack : 9000000100157b08 9000000000f18530 9000000000cf846c 9000000100154000
+> [    3.109127]         9000000100157a50 0000000000000000 9000000100157a58 9000000000ef7430
+> [    3.118774]         90000001001578e8 0000000000000040 0000000000000020 ffffffffffffffff
+> [    3.128412]         0000000000aaaaaa 1ab25f00eec96a37 900000010021de80 900000000101c890
+> [    3.138056]         0000000000000000 0000000000000000 0000000000000000 0000000000aaaaaa
+> [    3.147711]         ffff8000339dc220 0000000000000001 0000000006ab4000 0000000000000000
+> [    3.157364]         900000000101c998 0000000000000004 9000000000ef7430 0000000000000000
+> [    3.167012]         0000000000000009 000000000000006c 0000000000000000 0000000000000000
+> [    3.176641]         9000000000d3de08 9000000001639390 90000000002086d8 00007ffff0080286
+> [    3.186260]         00000000000000b0 0000000000000004 0000000000000000 0000000000071c1c
+> [    3.195868]         ...
+> [    3.199917] Call Trace:
+> [    3.203941] [<90000000002086d8>] show_stack+0x38/0x14c
+> [    3.210666] [<9000000000cf846c>] dump_stack_lvl+0x60/0x88
+> [    3.217625] [<900000000023d268>] __warn+0xd0/0x100
+> [    3.223958] [<9000000000cf3c90>] warn_slowpath_fmt+0x7c/0xcc
+> [    3.231150] [<9000000000210220>] show_cpuinfo+0x5e8/0x5f0
+> [    3.238080] [<90000000004f578c>] seq_read_iter+0x354/0x4b4
+> [    3.245098] [<90000000004c2e90>] new_sync_read+0x17c/0x1c4
+> [    3.252114] [<90000000004c5174>] vfs_read+0x138/0x1d0
+> [    3.258694] [<90000000004c55f8>] ksys_read+0x70/0x100
+> [    3.265265] [<9000000000cfde9c>] do_syscall+0x7c/0x94
+> [    3.271820] [<9000000000202fe4>] handle_syscall+0xc4/0x160
+> [    3.281824] ---[ end trace 8b484262b4b8c24c ]---
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>   arch/microblaze/kernel/cpu/mb.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/microblaze/kernel/cpu/mb.c b/arch/microblaze/kernel/cpu/mb.c
+> index 9581d194d9e4..689de7f75614 100644
+> --- a/arch/microblaze/kernel/cpu/mb.c
+> +++ b/arch/microblaze/kernel/cpu/mb.c
+> @@ -137,7 +137,7 @@ static void *c_start(struct seq_file *m, loff_t *pos)
+>   {
+>   	int i = *pos;
+>   
+> -	return i < NR_CPUS ? (void *) (i + 1) : NULL;
+> +	return i < nr_cpu_ids ? (void *) (i + 1) : NULL;
+>   }
+>   
+>   static void *c_next(struct seq_file *m, void *v, loff_t *pos)
+
+As was said in m68k thread commit message should be fixed. MB upstream in not 
+SMP. We have SMP configuration in soc vendor tree but upstream we can't enable 
+DEBUG_PER_CPU_MAPS which depends on SMP. But definitely worth to fix it.
+
+Thanks,
+Michal
+
+-- 
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+
