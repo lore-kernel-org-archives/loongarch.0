@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F403F10E9
-	for <loongarch@lists.linux.dev>; Tue, 19 Jul 2022 02:25:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C668C385A5
-	for <loongarch@lists.linux.dev>; Tue, 19 Jul 2022 02:25:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986DBEA8
+	for <loongarch@lists.linux.dev>; Tue, 19 Jul 2022 02:38:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C1D4C385A2
+	for <loongarch@lists.linux.dev>; Tue, 19 Jul 2022 02:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1658197515;
-	bh=aI9ncPSXA3G53kXq/YMko+2HDyZfj7ntxxBrDiT0Nno=;
+	s=k20201202; t=1658198310;
+	bh=eo8dR8UxBG4GcoyxQWNmWqivK6NI2ddRfXnjJa6OZHw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Hn8XCKwHct9aaA89WpZ+sMfnB2YCPoWm553kjo3uLxx4bI9hrKBDWhnmJEO2YJ5c2
-	 lLi2202A+Z50JYmlSyO8VHW9XPBOc8FlI3rcY/Moo6vU38pR7vUe03sPsbcq/4ymWi
-	 iyM157w4gkyNqyXT/IYDMbOoD9Iwh5a1Av6S5ksuDLmT+JUmwTzBf2KxHxp28Po6/a
-	 VrIn0HZ8j9E7wvfu4wAxnGUSe3SHsYdYpYD6MMIQhORwHnBZFGEkBlV0/z4y+XkBLX
-	 owd8ibE6akyjcv1AJP1tahyAm71M+WVra7Wg+jdMNT7c0NLUexDlf1Pa2xI/eInBOk
-	 xUJVptSIcXvkQ==
-Received: by mail-vs1-f46.google.com with SMTP id 185so2514879vsi.2
-        for <loongarch@lists.linux.dev>; Mon, 18 Jul 2022 19:25:15 -0700 (PDT)
-X-Gm-Message-State: AJIora9YICxF6uS91ch/EicgJLtA4np22I/6Gzg/Ah+7OqSkDkXRhzH8
-	NGWRxEO32+FmGolmCYuNh91LqSj4M+/yuJCfpbU=
-X-Google-Smtp-Source: AGRyM1tsgsYpAKl8MNki1e2BrydFDJ+tIHElZy+8QdDKHXWRH6PdAiHQMT50PmKMPcmpqnYXFfEHo5jEqW1RPS/tdRk=
-X-Received: by 2002:a67:ec05:0:b0:357:7a48:cba8 with SMTP id
- d5-20020a67ec05000000b003577a48cba8mr11439234vso.78.1658197514595; Mon, 18
- Jul 2022 19:25:14 -0700 (PDT)
+	b=GxpXOovoD/dcd9csiboqWSW8yDJRQzsloauHWZnad+X5gl6UjgP1ff3zgsDg9WTef
+	 o5nksAMD2/NHSqVCXzBZiw0YbBZIJkcnAiITUnLa2EULypVLyXJp81IlFXYXD1EkSC
+	 J21UVXMh5fdXRDfKbj3NBIzz6n7xRwFwsz2yfJ9R/+k5mWcrV7Q9xpOKcpn/NG0aRh
+	 61SajwaQ4OCULxUDMAbsoxgmEep+lZI5nWkwMFYdQLvehcmXfgE3r7CN1YTsDMOoKk
+	 vMUeLVW92YVSq7J4PGPYlSoXXB5Cq8fdPAaMGKpY+aoR7/voiuCTRY89EpSyYAKHLN
+	 4+nD9KcoboiOA==
+Received: by mail-ua1-f43.google.com with SMTP id v17so4947905uam.1
+        for <loongarch@lists.linux.dev>; Mon, 18 Jul 2022 19:38:30 -0700 (PDT)
+X-Gm-Message-State: AJIora+OCew+CZdMv8N28ZR5b7EB/pCzCJXBoW4woqmEPDHoMM8ApgJB
+	yp58ZVR57qVYWy/ZiPntDudfpSbxqeqxK6mGNHA=
+X-Google-Smtp-Source: AGRyM1uq0+oApbWu0nRO+BDAaKnNcccyMDrhQZqa10uOBalRUFcDUxKy26H7RRIC+XTrmPzZxpXtryxpeqA8S0yWfHk=
+X-Received: by 2002:a9f:3253:0:b0:383:c330:68 with SMTP id y19-20020a9f3253000000b00383c3300068mr7232632uad.104.1658198309199;
+ Mon, 18 Jul 2022 19:38:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1658153621-40445-1-git-send-email-lvjianmin@loongson.cn> <1658153621-40445-15-git-send-email-lvjianmin@loongson.cn>
-In-Reply-To: <1658153621-40445-15-git-send-email-lvjianmin@loongson.cn>
+References: <1658153621-40445-1-git-send-email-lvjianmin@loongson.cn> <1658153621-40445-12-git-send-email-lvjianmin@loongson.cn>
+In-Reply-To: <1658153621-40445-12-git-send-email-lvjianmin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 19 Jul 2022 10:25:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6sdaVDDifrmD8G-d7zpxC8k3WA_K5w3yp3URsjLTbyfA@mail.gmail.com>
-Message-ID: <CAAhV-H6sdaVDDifrmD8G-d7zpxC8k3WA_K5w3yp3URsjLTbyfA@mail.gmail.com>
-Subject: Re: [PATCH V16 14/14] irqchip / ACPI: Introduce ACPI_IRQ_MODEL_LPIC
- for LoongArch
+Date: Tue, 19 Jul 2022 10:38:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6ap2pMR44JC7PEBB4RPKcUdJotXS-AHuCCfR7mXrnH0Q@mail.gmail.com>
+Message-ID: <CAAhV-H6ap2pMR44JC7PEBB4RPKcUdJotXS-AHuCCfR7mXrnH0Q@mail.gmail.com>
+Subject: Re: [PATCH V16 11/14] LoongArch: prepare to support multiple pch-pic
+ and pch-msi irqdomain
 To: Jianmin Lv <lvjianmin@loongson.cn>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>, 
 	LKML <linux-kernel@vger.kernel.org>, loongarch@lists.linux.dev, 
@@ -46,110 +45,119 @@ Content-Type: text/plain; charset="UTF-8"
 
 Hi, Jianmin,
 
+Please change "prepare" to "Prepare" in the title, and move this patch
+just after "LoongArch: Use ACPI_GENERIC_GSI for gsi handling", since
+the former patches are all "preparation".
+
+Huacai
+
 On Mon, Jul 18, 2022 at 10:21 PM Jianmin Lv <lvjianmin@loongson.cn> wrote:
 >
-> For LoongArch, ACPI_IRQ_MODEL_LPIC is introduced, and then the
-> callback acpi_get_gsi_domain_id and acpi_gsi_to_irq_fallback are
-> implemented.
+> For systems with two chipsets, there are two related pch-pic and
+> pch-msi irqdomains, each of which has the same node id as its
+> parent irqdomain. So we use a structure to mantain the relation
+> of node and it's parent irqdomain as pch irqdomin, the 'pci_segment'
+> field is only used to match the pci segment of a pci device when
+> setting msi irqdomain for the device.
 >
-> The acpi_get_gsi_domain_id callback returns related fwnode handle
-> of irqdomain for different GSI range.
+> struct acpi_vector_group {
+>         int node;
+>         int pci_segment;
+>         struct irq_domain *parent;
+> };
 >
-> The acpi_gsi_to_irq_fallback will create new mapping for gsi when
-> the mapping of it is not found.
+> The field 'pci_segment' and 'node' are initialized from MCFG, and
+> the parent irqdomain driver will set field 'parent' by matching same
+> 'node'.
 >
 > Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 > ---
->  drivers/acpi/bus.c                  |  3 +++
->  drivers/irqchip/irq-loongarch-cpu.c | 38 +++++++++++++++++++++++++++++++++++++
->  include/linux/acpi.h                |  1 +
->  3 files changed, 42 insertions(+)
+>  arch/loongarch/include/asm/irq.h |  8 ++++++++
+>  arch/loongarch/kernel/irq.c      | 38 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 46 insertions(+)
 >
-> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> index 86fa61a..63fbf00 100644
-> --- a/drivers/acpi/bus.c
-> +++ b/drivers/acpi/bus.c
-> @@ -1145,6 +1145,9 @@ static int __init acpi_bus_init_irq(void)
->         case ACPI_IRQ_MODEL_PLATFORM:
->                 message = "platform specific model";
->                 break;
-> +       case ACPI_IRQ_MODEL_LPIC:
-> +               message = "LPIC";
-> +               break;
->         default:
->                 pr_info("Unknown interrupt routing model\n");
->                 return -ENODEV;
-> diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-loongarch-cpu.c
-> index b4db430..a5e0bf0 100644
-> --- a/drivers/irqchip/irq-loongarch-cpu.c
-> +++ b/drivers/irqchip/irq-loongarch-cpu.c
-> @@ -16,6 +16,42 @@
->  static struct irq_domain *irq_domain;
->  struct fwnode_handle *cpuintc_handle;
+> diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
+> index de8af43..c847300 100644
+> --- a/arch/loongarch/include/asm/irq.h
+> +++ b/arch/loongarch/include/asm/irq.h
+> @@ -48,6 +48,14 @@ static inline bool on_irq_stack(int cpu, unsigned long sp)
+>  #define MAX_IO_PICS 2
+>  #define NR_IRQS        (64 + (256 * MAX_IO_PICS))
 >
-> +static u32 lpic_gsi_to_irq(u32 gsi)
+> +struct acpi_vector_group {
+> +       int node;
+> +       int pci_segment;
+> +       struct irq_domain *parent;
+> +};
+> +extern struct acpi_vector_group pch_group[MAX_IO_PICS];
+> +extern struct acpi_vector_group msi_group[MAX_IO_PICS];
+> +
+>  #define CORES_PER_EIO_NODE     4
+>
+>  #define LOONGSON_CPU_UART0_VEC         10 /* CPU UART0 */
+> diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
+> index b04201c..06f2a15 100644
+> --- a/arch/loongarch/kernel/irq.c
+> +++ b/arch/loongarch/kernel/irq.c
+> @@ -26,6 +26,8 @@
+>  EXPORT_PER_CPU_SYMBOL(irq_stat);
+>
+>  struct irq_domain *cpu_domain;
+> +struct acpi_vector_group pch_group[MAX_IO_PICS];
+> +struct acpi_vector_group msi_group[MAX_IO_PICS];
+>
+>  /*
+>   * 'what should we do if we get a hw irq event on an illegal vector'.
+> @@ -52,6 +54,41 @@ int arch_show_interrupts(struct seq_file *p, int prec)
+>         return 0;
+>  }
+>
+> +static int __init early_pci_mcfg_parse(struct acpi_table_header *header)
 > +{
-> +       /* Only pch irqdomain transferring is required for LoongArch. */
-> +       if (gsi >= GSI_MIN_PCH_IRQ && gsi <= GSI_MAX_PCH_IRQ)
-> +               return acpi_register_gsi(NULL, gsi, ACPI_LEVEL_SENSITIVE, ACPI_ACTIVE_HIGH);
+> +       struct acpi_table_mcfg *mcfg;
+> +       struct acpi_mcfg_allocation *mptr;
+> +       int i, n;
+> +
+> +       if (header->length < sizeof(struct acpi_table_mcfg))
+> +               return -EINVAL;
+> +
+> +       n = (header->length - sizeof(struct acpi_table_mcfg)) /
+> +                                       sizeof(struct acpi_mcfg_allocation);
+> +       mcfg = (struct acpi_table_mcfg *)header;
+> +       mptr = (struct acpi_mcfg_allocation *) &mcfg[1];
+> +
+> +       for (i = 0; i < n; i++, mptr++) {
+> +               msi_group[i].pci_segment = mptr->pci_segment;
+> +               pch_group[i].node = msi_group[i].node = (mptr->address >> 44) & 0xf;
+> +       }
 > +
 > +       return 0;
 > +}
 > +
-> +static struct fwnode_handle *lpic_get_gsi_domain_id(u32 gsi)
+> +static void __init init_vec_parent_group(void)
 > +{
-> +       int id;
-> +       struct fwnode_handle *domain_handle = NULL;
+> +       int i;
 > +
-> +       switch (gsi) {
-> +       case GSI_MIN_CPU_IRQ ... GSI_MAX_CPU_IRQ:
-> +               if (liointc_handle)
-> +                       domain_handle = liointc_handle;
-> +               break;
-> +
-> +       case GSI_MIN_LPC_IRQ ... GSI_MAX_LPC_IRQ:
-> +               if (pch_lpc_handle)
-> +                       domain_handle = pch_lpc_handle;
-> +               break;
-> +
-> +       case GSI_MIN_PCH_IRQ ... GSI_MAX_PCH_IRQ:
-> +               id = find_pch_pic(gsi);
-> +               if (id >= 0 && pch_pic_handle[id])
-> +                       domain_handle = pch_pic_handle[id];
-> +
-Remove this blank line, please.
-
-Huacai
-> +               break;
+> +       for (i = 0; i < MAX_IO_PICS; i++) {
+> +               msi_group[i].pci_segment = -1;
+> +               msi_group[i].node = -1;
+> +               pch_group[i].node = -1;
 > +       }
 > +
-> +       return domain_handle;
+> +       acpi_table_parse(ACPI_SIG_MCFG, early_pci_mcfg_parse);
 > +}
 > +
->  static void mask_loongarch_irq(struct irq_data *d)
+>  void __init init_IRQ(void)
 >  {
->         clear_csr_ecfg(ECFGF(d->hwirq));
-> @@ -102,6 +138,8 @@ static int __init cpuintc_acpi_init_v1(union acpi_subtable_headers *header,
->                 panic("Failed to add irqdomain for LoongArch CPU");
+>         int i;
+> @@ -65,6 +102,7 @@ void __init init_IRQ(void)
+>         clear_csr_ecfg(ECFG0_IM);
+>         clear_csr_estat(ESTATF_IP);
 >
->         set_handle_irq(&handle_cpu_irq);
-> +       acpi_set_irq_model(ACPI_IRQ_MODEL_LPIC, lpic_get_gsi_domain_id);
-> +       acpi_set_gsi_to_irq_fallback(lpic_gsi_to_irq);
->         acpi_cascade_irqdomain_init();
->
->         return 0;
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index e2b60d5..76520f3 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -105,6 +105,7 @@ enum acpi_irq_model_id {
->         ACPI_IRQ_MODEL_IOSAPIC,
->         ACPI_IRQ_MODEL_PLATFORM,
->         ACPI_IRQ_MODEL_GIC,
-> +       ACPI_IRQ_MODEL_LPIC,
->         ACPI_IRQ_MODEL_COUNT
->  };
->
+> +       init_vec_parent_group();
+>         irqchip_init();
+>  #ifdef CONFIG_SMP
+>         ipi_irq = EXCCODE_IPI - EXCCODE_INT_START;
 > --
 > 1.8.3.1
 >
