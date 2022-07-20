@@ -1,325 +1,125 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 068547B
-	for <loongarch@lists.linux.dev>; Wed, 20 Jul 2022 08:33:05 +0000 (UTC)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz9O8vddiXDwqAA--.38277S2;
-	Wed, 20 Jul 2022 16:33:00 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Remove LOONGARCH_CPUCFG48 and some CSR definitions
-Date: Wed, 20 Jul 2022 16:32:59 +0800
-Message-Id: <1658305979-2073-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf9Dxz9O8vddiXDwqAA--.38277S2
-X-Coremail-Antispam: 1UD129KBjvAXoWfGw43Zr4rAw47ArW8CFykKrg_yoW8JF18Go
-	W8Jw43Z3yrG34fCwsF9w47Wr9rAry8ZF1DX340qFWktwnIq39FkF1Utryvgr13W34UWr13
-	GrsYkFsrta9Ivrs8n29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUY87k0a2IF6w4kM7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0
-	x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj4
-	1l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0
-	I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4
-	vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_GFyl42xK
-	82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
-	C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48J
-	MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
-	IF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvE
-	x4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IUYbjjPUUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CA37B
+	for <loongarch@lists.linux.dev>; Wed, 20 Jul 2022 09:01:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E823C3411E
+	for <loongarch@lists.linux.dev>; Wed, 20 Jul 2022 09:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1658307668;
+	bh=vij3xEAreA0G5szeWk88+d4Xp57P6c4ll2m+XCxei8A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=O5Wg1M9j1o/NGtP/V0wOdyp6Sb/+31Lpnf5yGATdQVx9KdJpKYjCM8AY9dgsCVwD+
+	 wLstczMebtKfXc0Ar3+/nu6UmkcmVtKrhOkDvh9VCdCPsJgH28tqLNu4JJA4sfAstZ
+	 4Z0rOAnumJRejbI0Hz/ssEvWu5bbrjP6/KaZeUiDWlEbk8QcMKu7Ksu2IFyfIfhALS
+	 anK1PVDv/lbMA5Y7B6rQlFdKQCf7r+nPdybjbn7wAhORqKk1bpJaKCJ2+hYgaJFANr
+	 t68rdrPscBWD4TlC7i91tDrNtLShQEajiB4LtqCupFz2VGO5i/0p41heejm7CowMrI
+	 pCj0hJ7EPJBmA==
+Received: by mail-ua1-f54.google.com with SMTP id t21so7766331uaq.3
+        for <loongarch@lists.linux.dev>; Wed, 20 Jul 2022 02:01:08 -0700 (PDT)
+X-Gm-Message-State: AJIora8apqFw0TH4v7v7aYinfVKrAb+C9G02IQ7rltwP3FdnEvt/0hZv
+	3M7En7AKkbi3H/FCOqLW+aEKIaYhKhmwl66brNA=
+X-Google-Smtp-Source: AGRyM1uzuCkEWr8GdNBqK0qQcQu6vZNJfhOZ771XERIbrKrdEjicTad3sHXaky/ZCMV5I2IQd9jw3HxI2kAEmIpe0mI=
+X-Received: by 2002:a9f:3253:0:b0:383:c330:68 with SMTP id y19-20020a9f3253000000b00383c3300068mr9795065uad.104.1658307666982;
+ Wed, 20 Jul 2022 02:01:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <20220720072152.3894559-1-maobibo@loongson.cn>
+In-Reply-To: <20220720072152.3894559-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 20 Jul 2022 17:00:54 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6tdimtT4P6LTaR7iMbL9ChF5_RDEFZPZvm-gQrtTotMA@mail.gmail.com>
+Message-ID: <CAAhV-H6tdimtT4P6LTaR7iMbL9ChF5_RDEFZPZvm-gQrtTotMA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] LoongArch: Remove clock setting during cpu hotplug stage
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-According to the configuration information accessible by the CPUCFG
-instruction [1] and the Overview of Control and Status Registers [2],
-we can not see the descriptions about LOONGARCH_CPUCFG48 (0x30),
-LOONGARCH_CSR_PRID (0xc0), LOONGARCH_CSR_MCSR* (0xc0 ~ 0xff) and
-LOONGARCH_CSR_UCAWIN* (0x100 ~ 0x109), they are not used in the
-current kernel code.
+Hi, Bibo,
 
-LOONGARCH_CPUCFG48 may be used only in the firmware layer, it should
-not be used in the future for kernel developers, remove the related
-LOONGARCH_CPUCFG48 definitions.
+This series looks good to me, but I want to wait for some time to see
+if others have comments. Thanks.
 
-LOONGARCH_CSR_MCSR* is shadow of LOONGARCH_CPUCFG*, no need to access
-LOONGARCH_CSR_MCSR* and LOONGARCH_CSR_PRID through CSR instruction,
-use CPUCFG instruction to access LOONGARCH_CPUCFG* is enough, so also
-remove LOONGARCH_CSR_MCSR* and LOONGARCH_CSR_PRID definitions.
+Huacai
 
-LOONGARCH_CSR_UCAWIN* may be not implemented in hardware, use CSR
-instruction to access them is meaningless, so also remove the related
-LOONGARCH_CSR_UCAWIN* definitions.
-
-The intention of this patch is to keep consistent between the code and
-the manual.
-
-[1] https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#the-configuration-information-accessible-by-the-cpucfg-instruction
-[2] https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#table-overview-of-control-and-status-registers
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
-
-v2:
-  -- Remove LOONGARCH_CSR_PRID and LOONGARCH_CSR_UCAWIN*
-  -- Modify the patch subject and update the commit message
-
- arch/loongarch/include/asm/loongarch.h | 229 ---------------------------------
- 1 file changed, 229 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 3ba4f7e..43755f9 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -218,12 +218,6 @@ static inline u32 read_cpucfg(u32 reg)
- #define  CPUCFG20_L3_SETS		16
- #define  CPUCFG20_L3_SIZE		24
- 
--#define LOONGARCH_CPUCFG48		0x30
--#define  CPUCFG48_MCSR_LCK		BIT(0)
--#define  CPUCFG48_NAP_EN		BIT(1)
--#define  CPUCFG48_VFPU_CG		BIT(2)
--#define  CPUCFG48_RAM_CG		BIT(3)
--
- #ifndef __ASSEMBLY__
- 
- /* CSR */
-@@ -728,229 +722,6 @@ static __always_inline void iocsr_write64(u64 val, u32 reg)
- 
- #define LOONGARCH_CSR_CTAG		0x98	/* TagLo + TagHi */
- 
--#define LOONGARCH_CSR_PRID		0xc0
--
--/* Shadow MCSR : 0xc0 ~ 0xff */
--#define LOONGARCH_CSR_MCSR0		0xc0	/* CPUCFG0 and CPUCFG1 */
--#define  MCSR0_INT_IMPL_SHIFT		58
--#define  MCSR0_INT_IMPL			0
--#define  MCSR0_IOCSR_BRD_SHIFT		57
--#define  MCSR0_IOCSR_BRD		(_ULCAST_(1) << MCSR0_IOCSR_BRD_SHIFT)
--#define  MCSR0_HUGEPG_SHIFT		56
--#define  MCSR0_HUGEPG			(_ULCAST_(1) << MCSR0_HUGEPG_SHIFT)
--#define  MCSR0_RPLMTLB_SHIFT		55
--#define  MCSR0_RPLMTLB			(_ULCAST_(1) << MCSR0_RPLMTLB_SHIFT)
--#define  MCSR0_EP_SHIFT			54
--#define  MCSR0_EP			(_ULCAST_(1) << MCSR0_EP_SHIFT)
--#define  MCSR0_RI_SHIFT			53
--#define  MCSR0_RI			(_ULCAST_(1) << MCSR0_RI_SHIFT)
--#define  MCSR0_UAL_SHIFT		52
--#define  MCSR0_UAL			(_ULCAST_(1) << MCSR0_UAL_SHIFT)
--#define  MCSR0_VABIT_SHIFT		44
--#define  MCSR0_VABIT_WIDTH		8
--#define  MCSR0_VABIT			(_ULCAST_(0xff) << MCSR0_VABIT_SHIFT)
--#define  VABIT_DEFAULT			0x2f
--#define  MCSR0_PABIT_SHIFT		36
--#define  MCSR0_PABIT_WIDTH		8
--#define  MCSR0_PABIT			(_ULCAST_(0xff) << MCSR0_PABIT_SHIFT)
--#define  PABIT_DEFAULT			0x2f
--#define  MCSR0_IOCSR_SHIFT		35
--#define  MCSR0_IOCSR			(_ULCAST_(1) << MCSR0_IOCSR_SHIFT)
--#define  MCSR0_PAGING_SHIFT		34
--#define  MCSR0_PAGING			(_ULCAST_(1) << MCSR0_PAGING_SHIFT)
--#define  MCSR0_GR64_SHIFT		33
--#define  MCSR0_GR64			(_ULCAST_(1) << MCSR0_GR64_SHIFT)
--#define  GR64_DEFAULT			1
--#define  MCSR0_GR32_SHIFT		32
--#define  MCSR0_GR32			(_ULCAST_(1) << MCSR0_GR32_SHIFT)
--#define  GR32_DEFAULT			0
--#define  MCSR0_PRID_WIDTH		32
--#define  MCSR0_PRID			0x14C010
--
--#define LOONGARCH_CSR_MCSR1		0xc1	/* CPUCFG2 and CPUCFG3 */
--#define  MCSR1_HPFOLD_SHIFT		43
--#define  MCSR1_HPFOLD			(_ULCAST_(1) << MCSR1_HPFOLD_SHIFT)
--#define  MCSR1_SPW_LVL_SHIFT		40
--#define  MCSR1_SPW_LVL_WIDTH		3
--#define  MCSR1_SPW_LVL			(_ULCAST_(7) << MCSR1_SPW_LVL_SHIFT)
--#define  MCSR1_ICACHET_SHIFT		39
--#define  MCSR1_ICACHET			(_ULCAST_(1) << MCSR1_ICACHET_SHIFT)
--#define  MCSR1_ITLBT_SHIFT		38
--#define  MCSR1_ITLBT			(_ULCAST_(1) << MCSR1_ITLBT_SHIFT)
--#define  MCSR1_LLDBAR_SHIFT		37
--#define  MCSR1_LLDBAR			(_ULCAST_(1) << MCSR1_LLDBAR_SHIFT)
--#define  MCSR1_SCDLY_SHIFT		36
--#define  MCSR1_SCDLY			(_ULCAST_(1) << MCSR1_SCDLY_SHIFT)
--#define  MCSR1_LLEXC_SHIFT		35
--#define  MCSR1_LLEXC			(_ULCAST_(1) << MCSR1_LLEXC_SHIFT)
--#define  MCSR1_UCACC_SHIFT		34
--#define  MCSR1_UCACC			(_ULCAST_(1) << MCSR1_UCACC_SHIFT)
--#define  MCSR1_SFB_SHIFT		33
--#define  MCSR1_SFB			(_ULCAST_(1) << MCSR1_SFB_SHIFT)
--#define  MCSR1_CCDMA_SHIFT		32
--#define  MCSR1_CCDMA			(_ULCAST_(1) << MCSR1_CCDMA_SHIFT)
--#define  MCSR1_LAMO_SHIFT		22
--#define  MCSR1_LAMO			(_ULCAST_(1) << MCSR1_LAMO_SHIFT)
--#define  MCSR1_LSPW_SHIFT		21
--#define  MCSR1_LSPW			(_ULCAST_(1) << MCSR1_LSPW_SHIFT)
--#define  MCSR1_MIPSBT_SHIFT		20
--#define  MCSR1_MIPSBT			(_ULCAST_(1) << MCSR1_MIPSBT_SHIFT)
--#define  MCSR1_ARMBT_SHIFT		19
--#define  MCSR1_ARMBT			(_ULCAST_(1) << MCSR1_ARMBT_SHIFT)
--#define  MCSR1_X86BT_SHIFT		18
--#define  MCSR1_X86BT			(_ULCAST_(1) << MCSR1_X86BT_SHIFT)
--#define  MCSR1_LLFTPVERS_SHIFT		15
--#define  MCSR1_LLFTPVERS_WIDTH		3
--#define  MCSR1_LLFTPVERS		(_ULCAST_(7) << MCSR1_LLFTPVERS_SHIFT)
--#define  MCSR1_LLFTP_SHIFT		14
--#define  MCSR1_LLFTP			(_ULCAST_(1) << MCSR1_LLFTP_SHIFT)
--#define  MCSR1_VZVERS_SHIFT		11
--#define  MCSR1_VZVERS_WIDTH		3
--#define  MCSR1_VZVERS			(_ULCAST_(7) << MCSR1_VZVERS_SHIFT)
--#define  MCSR1_VZ_SHIFT			10
--#define  MCSR1_VZ			(_ULCAST_(1) << MCSR1_VZ_SHIFT)
--#define  MCSR1_CRYPTO_SHIFT		9
--#define  MCSR1_CRYPTO			(_ULCAST_(1) << MCSR1_CRYPTO_SHIFT)
--#define  MCSR1_COMPLEX_SHIFT		8
--#define  MCSR1_COMPLEX			(_ULCAST_(1) << MCSR1_COMPLEX_SHIFT)
--#define  MCSR1_LASX_SHIFT		7
--#define  MCSR1_LASX			(_ULCAST_(1) << MCSR1_LASX_SHIFT)
--#define  MCSR1_LSX_SHIFT		6
--#define  MCSR1_LSX			(_ULCAST_(1) << MCSR1_LSX_SHIFT)
--#define  MCSR1_FPVERS_SHIFT		3
--#define  MCSR1_FPVERS_WIDTH		3
--#define  MCSR1_FPVERS			(_ULCAST_(7) << MCSR1_FPVERS_SHIFT)
--#define  MCSR1_FPDP_SHIFT		2
--#define  MCSR1_FPDP			(_ULCAST_(1) << MCSR1_FPDP_SHIFT)
--#define  MCSR1_FPSP_SHIFT		1
--#define  MCSR1_FPSP			(_ULCAST_(1) << MCSR1_FPSP_SHIFT)
--#define  MCSR1_FP_SHIFT			0
--#define  MCSR1_FP			(_ULCAST_(1) << MCSR1_FP_SHIFT)
--
--#define LOONGARCH_CSR_MCSR2		0xc2	/* CPUCFG4 and CPUCFG5 */
--#define  MCSR2_CCDIV_SHIFT		48
--#define  MCSR2_CCDIV_WIDTH		16
--#define  MCSR2_CCDIV			(_ULCAST_(0xffff) << MCSR2_CCDIV_SHIFT)
--#define  MCSR2_CCMUL_SHIFT		32
--#define  MCSR2_CCMUL_WIDTH		16
--#define  MCSR2_CCMUL			(_ULCAST_(0xffff) << MCSR2_CCMUL_SHIFT)
--#define  MCSR2_CCFREQ_WIDTH		32
--#define  MCSR2_CCFREQ			(_ULCAST_(0xffffffff))
--#define  CCFREQ_DEFAULT			0x5f5e100	/* 100MHz */
--
--#define LOONGARCH_CSR_MCSR3		0xc3	/* CPUCFG6 */
--#define  MCSR3_UPM_SHIFT		14
--#define  MCSR3_UPM			(_ULCAST_(1) << MCSR3_UPM_SHIFT)
--#define  MCSR3_PMBITS_SHIFT		8
--#define  MCSR3_PMBITS_WIDTH		6
--#define  MCSR3_PMBITS			(_ULCAST_(0x3f) << MCSR3_PMBITS_SHIFT)
--#define  PMBITS_DEFAULT			0x40
--#define  MCSR3_PMNUM_SHIFT		4
--#define  MCSR3_PMNUM_WIDTH		4
--#define  MCSR3_PMNUM			(_ULCAST_(0xf) << MCSR3_PMNUM_SHIFT)
--#define  MCSR3_PAMVER_SHIFT		1
--#define  MCSR3_PAMVER_WIDTH		3
--#define  MCSR3_PAMVER			(_ULCAST_(0x7) << MCSR3_PAMVER_SHIFT)
--#define  MCSR3_PMP_SHIFT		0
--#define  MCSR3_PMP			(_ULCAST_(1) << MCSR3_PMP_SHIFT)
--
--#define LOONGARCH_CSR_MCSR8		0xc8	/* CPUCFG16 and CPUCFG17 */
--#define  MCSR8_L1I_SIZE_SHIFT		56
--#define  MCSR8_L1I_SIZE_WIDTH		7
--#define  MCSR8_L1I_SIZE			(_ULCAST_(0x7f) << MCSR8_L1I_SIZE_SHIFT)
--#define  MCSR8_L1I_IDX_SHIFT		48
--#define  MCSR8_L1I_IDX_WIDTH		8
--#define  MCSR8_L1I_IDX			(_ULCAST_(0xff) << MCSR8_L1I_IDX_SHIFT)
--#define  MCSR8_L1I_WAY_SHIFT		32
--#define  MCSR8_L1I_WAY_WIDTH		16
--#define  MCSR8_L1I_WAY			(_ULCAST_(0xffff) << MCSR8_L1I_WAY_SHIFT)
--#define  MCSR8_L3DINCL_SHIFT		16
--#define  MCSR8_L3DINCL			(_ULCAST_(1) << MCSR8_L3DINCL_SHIFT)
--#define  MCSR8_L3DPRIV_SHIFT		15
--#define  MCSR8_L3DPRIV			(_ULCAST_(1) << MCSR8_L3DPRIV_SHIFT)
--#define  MCSR8_L3DPRE_SHIFT		14
--#define  MCSR8_L3DPRE			(_ULCAST_(1) << MCSR8_L3DPRE_SHIFT)
--#define  MCSR8_L3IUINCL_SHIFT		13
--#define  MCSR8_L3IUINCL			(_ULCAST_(1) << MCSR8_L3IUINCL_SHIFT)
--#define  MCSR8_L3IUPRIV_SHIFT		12
--#define  MCSR8_L3IUPRIV			(_ULCAST_(1) << MCSR8_L3IUPRIV_SHIFT)
--#define  MCSR8_L3IUUNIFY_SHIFT		11
--#define  MCSR8_L3IUUNIFY		(_ULCAST_(1) << MCSR8_L3IUUNIFY_SHIFT)
--#define  MCSR8_L3IUPRE_SHIFT		10
--#define  MCSR8_L3IUPRE			(_ULCAST_(1) << MCSR8_L3IUPRE_SHIFT)
--#define  MCSR8_L2DINCL_SHIFT		9
--#define  MCSR8_L2DINCL			(_ULCAST_(1) << MCSR8_L2DINCL_SHIFT)
--#define  MCSR8_L2DPRIV_SHIFT		8
--#define  MCSR8_L2DPRIV			(_ULCAST_(1) << MCSR8_L2DPRIV_SHIFT)
--#define  MCSR8_L2DPRE_SHIFT		7
--#define  MCSR8_L2DPRE			(_ULCAST_(1) << MCSR8_L2DPRE_SHIFT)
--#define  MCSR8_L2IUINCL_SHIFT		6
--#define  MCSR8_L2IUINCL			(_ULCAST_(1) << MCSR8_L2IUINCL_SHIFT)
--#define  MCSR8_L2IUPRIV_SHIFT		5
--#define  MCSR8_L2IUPRIV			(_ULCAST_(1) << MCSR8_L2IUPRIV_SHIFT)
--#define  MCSR8_L2IUUNIFY_SHIFT		4
--#define  MCSR8_L2IUUNIFY		(_ULCAST_(1) << MCSR8_L2IUUNIFY_SHIFT)
--#define  MCSR8_L2IUPRE_SHIFT		3
--#define  MCSR8_L2IUPRE			(_ULCAST_(1) << MCSR8_L2IUPRE_SHIFT)
--#define  MCSR8_L1DPRE_SHIFT		2
--#define  MCSR8_L1DPRE			(_ULCAST_(1) << MCSR8_L1DPRE_SHIFT)
--#define  MCSR8_L1IUUNIFY_SHIFT		1
--#define  MCSR8_L1IUUNIFY		(_ULCAST_(1) << MCSR8_L1IUUNIFY_SHIFT)
--#define  MCSR8_L1IUPRE_SHIFT		0
--#define  MCSR8_L1IUPRE			(_ULCAST_(1) << MCSR8_L1IUPRE_SHIFT)
--
--#define LOONGARCH_CSR_MCSR9		0xc9	/* CPUCFG18 and CPUCFG19 */
--#define  MCSR9_L2U_SIZE_SHIFT		56
--#define  MCSR9_L2U_SIZE_WIDTH		7
--#define  MCSR9_L2U_SIZE			(_ULCAST_(0x7f) << MCSR9_L2U_SIZE_SHIFT)
--#define  MCSR9_L2U_IDX_SHIFT		48
--#define  MCSR9_L2U_IDX_WIDTH		8
--#define  MCSR9_L2U_IDX			(_ULCAST_(0xff) << MCSR9_IDX_LOG_SHIFT)
--#define  MCSR9_L2U_WAY_SHIFT		32
--#define  MCSR9_L2U_WAY_WIDTH		16
--#define  MCSR9_L2U_WAY			(_ULCAST_(0xffff) << MCSR9_L2U_WAY_SHIFT)
--#define  MCSR9_L1D_SIZE_SHIFT		24
--#define  MCSR9_L1D_SIZE_WIDTH		7
--#define  MCSR9_L1D_SIZE			(_ULCAST_(0x7f) << MCSR9_L1D_SIZE_SHIFT)
--#define  MCSR9_L1D_IDX_SHIFT		16
--#define  MCSR9_L1D_IDX_WIDTH		8
--#define  MCSR9_L1D_IDX			(_ULCAST_(0xff) << MCSR9_L1D_IDX_SHIFT)
--#define  MCSR9_L1D_WAY_SHIFT		0
--#define  MCSR9_L1D_WAY_WIDTH		16
--#define  MCSR9_L1D_WAY			(_ULCAST_(0xffff) << MCSR9_L1D_WAY_SHIFT)
--
--#define LOONGARCH_CSR_MCSR10		0xca	/* CPUCFG20 */
--#define  MCSR10_L3U_SIZE_SHIFT		24
--#define  MCSR10_L3U_SIZE_WIDTH		7
--#define  MCSR10_L3U_SIZE		(_ULCAST_(0x7f) << MCSR10_L3U_SIZE_SHIFT)
--#define  MCSR10_L3U_IDX_SHIFT		16
--#define  MCSR10_L3U_IDX_WIDTH		8
--#define  MCSR10_L3U_IDX			(_ULCAST_(0xff) << MCSR10_L3U_IDX_SHIFT)
--#define  MCSR10_L3U_WAY_SHIFT		0
--#define  MCSR10_L3U_WAY_WIDTH		16
--#define  MCSR10_L3U_WAY			(_ULCAST_(0xffff) << MCSR10_L3U_WAY_SHIFT)
--
--#define LOONGARCH_CSR_MCSR24		0xf0	/* cpucfg48 */
--#define  MCSR24_RAMCG_SHIFT		3
--#define  MCSR24_RAMCG			(_ULCAST_(1) << MCSR24_RAMCG_SHIFT)
--#define  MCSR24_VFPUCG_SHIFT		2
--#define  MCSR24_VFPUCG			(_ULCAST_(1) << MCSR24_VFPUCG_SHIFT)
--#define  MCSR24_NAPEN_SHIFT		1
--#define  MCSR24_NAPEN			(_ULCAST_(1) << MCSR24_NAPEN_SHIFT)
--#define  MCSR24_MCSRLOCK_SHIFT		0
--#define  MCSR24_MCSRLOCK		(_ULCAST_(1) << MCSR24_MCSRLOCK_SHIFT)
--
--/* Uncached accelerate windows registers */
--#define LOONGARCH_CSR_UCAWIN		0x100
--#define LOONGARCH_CSR_UCAWIN0_LO	0x102
--#define LOONGARCH_CSR_UCAWIN0_HI	0x103
--#define LOONGARCH_CSR_UCAWIN1_LO	0x104
--#define LOONGARCH_CSR_UCAWIN1_HI	0x105
--#define LOONGARCH_CSR_UCAWIN2_LO	0x106
--#define LOONGARCH_CSR_UCAWIN2_HI	0x107
--#define LOONGARCH_CSR_UCAWIN3_LO	0x108
--#define LOONGARCH_CSR_UCAWIN3_HI	0x109
--
- /* Direct Map windows registers */
- #define LOONGARCH_CSR_DMWIN0		0x180	/* 64 direct map win0: MEM & IF */
- #define LOONGARCH_CSR_DMWIN1		0x181	/* 64 direct map win1: MEM & IF */
--- 
-2.1.0
-
+On Wed, Jul 20, 2022 at 3:22 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>
+> On physical machine we can save power by disabling clock of hot removed cpu.
+> However there will be problem, since different platforms have different clock
+> setting methods, the code is platform relative. Also it can be in firmware/pmu
+> compoments or cpu regulator driver, rather than general loongarch cpu booting
+> flow.
+>
+> Also on qemu virt machine, device clock/freq setting is not
+> emulated, there is no such registers.
+>
+> This patch removes hard-coded register accessing in generic
+> loongarch cpu boot flow.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/kernel/smp.c | 29 -----------------------------
+>  include/linux/cpuhotplug.h  |  1 -
+>  2 files changed, 30 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+> index 73cec62504fb..98b3e059d344 100644
+> --- a/arch/loongarch/kernel/smp.c
+> +++ b/arch/loongarch/kernel/smp.c
+> @@ -359,35 +359,6 @@ void play_dead(void)
+>         play_dead_uncached(state_addr);
+>  }
+>
+> -static int loongson3_enable_clock(unsigned int cpu)
+> -{
+> -       uint64_t core_id = cpu_data[cpu].core;
+> -       uint64_t package_id = cpu_data[cpu].package;
+> -
+> -       LOONGSON_FREQCTRL(package_id) |= 1 << (core_id * 4 + 3);
+> -
+> -       return 0;
+> -}
+> -
+> -static int loongson3_disable_clock(unsigned int cpu)
+> -{
+> -       uint64_t core_id = cpu_data[cpu].core;
+> -       uint64_t package_id = cpu_data[cpu].package;
+> -
+> -       LOONGSON_FREQCTRL(package_id) &= ~(1 << (core_id * 4 + 3));
+> -
+> -       return 0;
+> -}
+> -
+> -static int register_loongson3_notifier(void)
+> -{
+> -       return cpuhp_setup_state_nocalls(CPUHP_LOONGARCH_SOC_PREPARE,
+> -                                        "loongarch/loongson:prepare",
+> -                                        loongson3_enable_clock,
+> -                                        loongson3_disable_clock);
+> -}
+> -early_initcall(register_loongson3_notifier);
+> -
+>  #endif
+>
+>  /*
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index 19f0dbfdd7fe..b66c5f389159 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -130,7 +130,6 @@ enum cpuhp_state {
+>         CPUHP_ZCOMP_PREPARE,
+>         CPUHP_TIMERS_PREPARE,
+>         CPUHP_MIPS_SOC_PREPARE,
+> -       CPUHP_LOONGARCH_SOC_PREPARE,
+>         CPUHP_BP_PREPARE_DYN,
+>         CPUHP_BP_PREPARE_DYN_END                = CPUHP_BP_PREPARE_DYN + 20,
+>         CPUHP_BRINGUP_CPU,
+> --
+> 2.31.1
+>
+>
