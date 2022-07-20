@@ -1,9 +1,9 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C9821C27
-	for <loongarch@lists.linux.dev>; Wed, 20 Jul 2022 02:01:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65C557B
+	for <loongarch@lists.linux.dev>; Wed, 20 Jul 2022 02:01:15 +0000 (UTC)
 Received: from localhost.localdomain.localdomain (unknown [10.2.5.46])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9DeYddirMYpAA--.14711S9;
-	Wed, 20 Jul 2022 10:01:07 +0800 (CST)
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9DeYddirMYpAA--.14711S5;
+	Wed, 20 Jul 2022 10:01:06 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Marc Zyngier <maz@kernel.org>
@@ -13,17 +13,17 @@ Cc: linux-kernel@vger.kernel.org,
 	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V17 07/13] irqchip: Add Loongson PCH LPC controller support
-Date: Wed, 20 Jul 2022 10:00:55 +0800
-Message-Id: <1658282461-35489-8-git-send-email-lvjianmin@loongson.cn>
+Subject: [PATCH V17 03/13] ACPI: irq: Allow acpi_gsi_to_irq() to have an arch-specific fallback
+Date: Wed, 20 Jul 2022 10:00:51 +0800
+Message-Id: <1658282461-35489-4-git-send-email-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1658282461-35489-1-git-send-email-lvjianmin@loongson.cn>
 References: <1658282461-35489-1-git-send-email-lvjianmin@loongson.cn>
-X-CM-TRANSID:AQAAf9Dxn9DeYddirMYpAA--.14711S9
-X-Coremail-Antispam: 1UD129KBjvJXoW3JFW8Ww4xuF1kCrWxZryDtrb_yoWfCFykpF
-	W5Z3y7Xr4UXF4jqr1kCa1UZrWayw1fKayjkan3Ga43Jr9rZryvkF1vyFnruFs8AFWagFya
-	vFsxtFy8uF15A3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvF1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+X-CM-TRANSID:AQAAf9Dxn9DeYddirMYpAA--.14711S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxZw1DKF18Jr43Xw4xAr4ruFg_yoW5WF4kpF
+	Wxuw1xJrWIqr17ZrZ7C3yfuF13W3Z5JFWxXrW2k347CayDKF1agrnFgry2gryDAF4fCFWj
+	v3ZIkFW8GF1DCa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvY1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
 	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
 	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
 	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcx
@@ -32,10 +32,10 @@ X-Coremail-Antispam: 1UD129KBjvJXoW3JFW8Ww4xuF1kCrWxZryDtrb_yoWfCFykpF
 	Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVCm-wCF04k20xvY0x0EwIxG
 	rwCF04k20xvE74AGY7Cv6cx26ryrJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
 	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
-	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-	fUoOJ5UUUUU
+	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
+	UdHUDUUUUU=
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -43,300 +43,86 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-From: Huacai Chen <chenhuacai@loongson.cn>
+From: Marc Zyngier <maz@kernel.org>
 
-PCH-LPC stands for "LPC Interrupts" that described in Section 24.3 of
-"Loongson 7A1000 Bridge User Manual". For more information please refer
-Documentation/loongarch/irq-chip-model.rst.
+It appears that the generic version of acpi_gsi_to_irq() doesn't
+fallback to establishing a mapping if there is no pre-existing
+one while the x86 version does.
 
-Co-developed-by: Jianmin Lv <lvjianmin@loongson.cn>
+While arm64 seems unaffected by it, LoongArch is relying on the x86
+behaviour. In an effort to prevent new architectures from reinventing
+the proverbial wheel, provide an optional callback that the arch code
+can set to restore the x86 behaviour.
+
+Hopefully we can eventually get rid of this in the future once
+the expected behaviour has been clarified.
+
+Reported-by: Jianmin Lv <lvjianmin@loongson.cn>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Tested-by: Hanjun Guo <guohanjun@huawei.com>
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
 ---
- arch/loongarch/include/asm/irq.h       |   4 +-
- arch/loongarch/kernel/irq.c            |   1 -
- drivers/irqchip/Kconfig                |   8 ++
- drivers/irqchip/Makefile               |   1 +
- drivers/irqchip/irq-loongson-pch-lpc.c | 205 +++++++++++++++++++++++++++++++++
- 5 files changed, 216 insertions(+), 3 deletions(-)
- create mode 100644 drivers/irqchip/irq-loongson-pch-lpc.c
+ drivers/acpi/irq.c   | 18 ++++++++++++++++--
+ include/linux/acpi.h |  1 +
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
-index a2540d7..76a7b36 100644
---- a/arch/loongarch/include/asm/irq.h
-+++ b/arch/loongarch/include/asm/irq.h
-@@ -112,7 +112,7 @@ struct irq_domain *eiointc_acpi_init(struct irq_domain *parent,
+diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
+index f0de768..dabe45e 100644
+--- a/drivers/acpi/irq.c
++++ b/drivers/acpi/irq.c
+@@ -13,6 +13,7 @@
+ enum acpi_irq_model_id acpi_irq_model;
  
- struct irq_domain *htvec_acpi_init(struct irq_domain *parent,
- 					struct acpi_madt_ht_pic *acpi_htvec);
--struct irq_domain *pch_lpc_acpi_init(struct irq_domain *parent,
-+int pch_lpc_acpi_init(struct irq_domain *parent,
- 					struct acpi_madt_lpc_pic *acpi_pchlpc);
- struct irq_domain *pch_msi_acpi_init(struct irq_domain *parent,
- 					struct acpi_madt_msi_pic *acpi_pchmsi);
-@@ -129,7 +129,7 @@ struct irq_domain *pch_pic_acpi_init(struct irq_domain *parent,
+ static struct fwnode_handle *(*acpi_get_gsi_domain_id)(u32 gsi);
++static u32 (*acpi_gsi_to_irq_fallback)(u32 gsi);
  
- extern struct irq_domain *cpu_domain;
- extern struct irq_domain *liointc_domain;
--extern struct irq_domain *pch_lpc_domain;
-+extern struct fwnode_handle *pch_lpc_handle;
- extern struct irq_domain *pch_msi_domain[MAX_IO_PICS];
- extern struct irq_domain *pch_pic_domain[MAX_IO_PICS];
- 
-diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
-index 37dd2dc..181504b 100644
---- a/arch/loongarch/kernel/irq.c
-+++ b/arch/loongarch/kernel/irq.c
-@@ -27,7 +27,6 @@
- 
- struct irq_domain *cpu_domain;
- struct irq_domain *liointc_domain;
--struct irq_domain *pch_lpc_domain;
- struct irq_domain *pch_msi_domain[MAX_IO_PICS];
- struct irq_domain *pch_pic_domain[MAX_IO_PICS];
- 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 1f23a6b..c1d527f 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -591,6 +591,14 @@ config LOONGSON_PCH_MSI
- 	help
- 	  Support for the Loongson PCH MSI Controller.
- 
-+config LOONGSON_PCH_LPC
-+	bool "Loongson PCH LPC Controller"
-+	depends on MACH_LOONGSON64
-+	default (MACH_LOONGSON64 && LOONGARCH)
-+	select IRQ_DOMAIN_HIERARCHY
-+	help
-+	  Support for the Loongson PCH LPC Controller.
+ /**
+  * acpi_gsi_to_irq() - Retrieve the linux irq number for a given GSI
+@@ -32,9 +33,12 @@ int acpi_gsi_to_irq(u32 gsi, unsigned int *irq)
+ 					DOMAIN_BUS_ANY);
+ 	*irq = irq_find_mapping(d, gsi);
+ 	/*
+-	 * *irq == 0 means no mapping, that should
+-	 * be reported as a failure
++	 * *irq == 0 means no mapping, that should be reported as a
++	 * failure, unless there is an arch-specific fallback handler.
+ 	 */
++	if (!*irq && acpi_gsi_to_irq_fallback)
++		*irq = acpi_gsi_to_irq_fallback(gsi);
 +
- config MST_IRQ
- 	bool "MStar Interrupt Controller"
- 	depends on ARCH_MEDIATEK || ARCH_MSTARV7 || COMPILE_TEST
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 5b67450..242b8b3 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -108,6 +108,7 @@ obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
- obj-$(CONFIG_LOONGSON_HTVEC)		+= irq-loongson-htvec.o
- obj-$(CONFIG_LOONGSON_PCH_PIC)		+= irq-loongson-pch-pic.o
- obj-$(CONFIG_LOONGSON_PCH_MSI)		+= irq-loongson-pch-msi.o
-+obj-$(CONFIG_LOONGSON_PCH_LPC)		+= irq-loongson-pch-lpc.o
- obj-$(CONFIG_MST_IRQ)			+= irq-mst-intc.o
- obj-$(CONFIG_SL28CPLD_INTC)		+= irq-sl28cpld.o
- obj-$(CONFIG_MACH_REALTEK_RTL)		+= irq-realtek-rtl.o
-diff --git a/drivers/irqchip/irq-loongson-pch-lpc.c b/drivers/irqchip/irq-loongson-pch-lpc.c
-new file mode 100644
-index 0000000..bf23249
---- /dev/null
-+++ b/drivers/irqchip/irq-loongson-pch-lpc.c
-@@ -0,0 +1,205 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Loongson LPC Interrupt Controller support
-+ *
-+ * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+ 	return (*irq > 0) ? 0 : -EINVAL;
+ }
+ EXPORT_SYMBOL_GPL(acpi_gsi_to_irq);
+@@ -302,6 +306,16 @@ void __init acpi_set_irq_model(enum acpi_irq_model_id model,
+ }
+ 
+ /**
++ * acpi_set_gsi_to_irq_fallback - Register a GSI transfer
++ * callback to fallback to arch specified implementation.
++ * @fn: arch-specific fallback handler
 + */
-+
-+#define pr_fmt(fmt) "lpc: " fmt
-+
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+
-+/* Registers */
-+#define LPC_INT_CTL		0x00
-+#define LPC_INT_ENA		0x04
-+#define LPC_INT_STS		0x08
-+#define LPC_INT_CLR		0x0c
-+#define LPC_INT_POL		0x10
-+#define LPC_COUNT		16
-+
-+/* LPC_INT_CTL */
-+#define LPC_INT_CTL_EN		BIT(31)
-+
-+struct pch_lpc {
-+	void __iomem		*base;
-+	struct irq_domain	*lpc_domain;
-+	raw_spinlock_t		lpc_lock;
-+	u32			saved_reg_ctl;
-+	u32			saved_reg_ena;
-+	u32			saved_reg_pol;
-+};
-+
-+struct fwnode_handle *pch_lpc_handle;
-+
-+static void lpc_irq_ack(struct irq_data *d)
++void __init acpi_set_gsi_to_irq_fallback(u32 (*fn)(u32))
 +{
-+	unsigned long flags;
-+	struct pch_lpc *priv = d->domain->host_data;
-+
-+	raw_spin_lock_irqsave(&priv->lpc_lock, flags);
-+	writel(0x1 << d->hwirq, priv->base + LPC_INT_CLR);
-+	raw_spin_unlock_irqrestore(&priv->lpc_lock, flags);
++	acpi_gsi_to_irq_fallback = fn;
 +}
 +
-+static void lpc_irq_mask(struct irq_data *d)
-+{
-+	unsigned long flags;
-+	struct pch_lpc *priv = d->domain->host_data;
-+
-+	raw_spin_lock_irqsave(&priv->lpc_lock, flags);
-+	writel(readl(priv->base + LPC_INT_ENA) & (~(0x1 << (d->hwirq))),
-+			priv->base + LPC_INT_ENA);
-+	raw_spin_unlock_irqrestore(&priv->lpc_lock, flags);
-+}
-+
-+static void lpc_irq_unmask(struct irq_data *d)
-+{
-+	unsigned long flags;
-+	struct pch_lpc *priv = d->domain->host_data;
-+
-+	raw_spin_lock_irqsave(&priv->lpc_lock, flags);
-+	writel(readl(priv->base + LPC_INT_ENA) | (0x1 << (d->hwirq)),
-+			priv->base + LPC_INT_ENA);
-+	raw_spin_unlock_irqrestore(&priv->lpc_lock, flags);
-+}
-+
-+static int lpc_irq_set_type(struct irq_data *d, unsigned int type)
-+{
-+	u32 val;
-+	u32 mask = 0x1 << (d->hwirq);
-+	struct pch_lpc *priv = d->domain->host_data;
-+
-+	if (!(type & IRQ_TYPE_LEVEL_MASK))
-+		return 0;
-+
-+	val = readl(priv->base + LPC_INT_POL);
-+
-+	if (type == IRQ_TYPE_LEVEL_HIGH)
-+		val |= mask;
-+	else
-+		val &= ~mask;
-+
-+	writel(val, priv->base + LPC_INT_POL);
-+
-+	return 0;
-+}
-+
-+static const struct irq_chip pch_lpc_irq_chip = {
-+	.name			= "PCH LPC",
-+	.irq_mask		= lpc_irq_mask,
-+	.irq_unmask		= lpc_irq_unmask,
-+	.irq_ack		= lpc_irq_ack,
-+	.irq_set_type		= lpc_irq_set_type,
-+	.flags			= IRQCHIP_SKIP_SET_WAKE,
-+};
-+
-+static void lpc_irq_dispatch(struct irq_desc *desc)
-+{
-+	u32 pending, bit;
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct pch_lpc *priv = irq_desc_get_handler_data(desc);
-+
-+	chained_irq_enter(chip, desc);
-+
-+	pending = readl(priv->base + LPC_INT_ENA);
-+	pending &= readl(priv->base + LPC_INT_STS);
-+	if (!pending)
-+		spurious_interrupt();
-+
-+	while (pending) {
-+		bit = __ffs(pending);
-+
-+		generic_handle_domain_irq(priv->lpc_domain, bit);
-+		pending &= ~BIT(bit);
-+	}
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static int pch_lpc_map(struct irq_domain *d, unsigned int irq,
-+			irq_hw_number_t hw)
-+{
-+	irq_set_chip_and_handler(irq, &pch_lpc_irq_chip, handle_level_irq);
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops pch_lpc_domain_ops = {
-+	.map 		= pch_lpc_map,
-+	.translate	= irq_domain_translate_twocell,
-+};
-+
-+static void pch_lpc_reset(struct pch_lpc *priv)
-+{
-+	/* Enable the LPC interrupt, bit31: en  bit30: edge */
-+	writel(LPC_INT_CTL_EN, priv->base + LPC_INT_CTL);
-+	writel(0, priv->base + LPC_INT_ENA);
-+	/* Clear all 18-bit interrpt bit */
-+	writel(GENMASK(17, 0), priv->base + LPC_INT_CLR);
-+}
-+
-+static int pch_lpc_disabled(struct pch_lpc *priv)
-+{
-+	return (readl(priv->base + LPC_INT_ENA) == 0xffffffff) &&
-+			(readl(priv->base + LPC_INT_STS) == 0xffffffff);
-+}
-+
-+int __init pch_lpc_acpi_init(struct irq_domain *parent,
-+					struct acpi_madt_lpc_pic *acpi_pchlpc)
-+{
-+	int parent_irq;
-+	struct pch_lpc *priv;
-+	struct irq_fwspec fwspec;
-+	struct fwnode_handle *irq_handle;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	raw_spin_lock_init(&priv->lpc_lock);
-+
-+	priv->base = ioremap(acpi_pchlpc->address, acpi_pchlpc->size);
-+	if (!priv->base)
-+		goto free_priv;
-+
-+	if (pch_lpc_disabled(priv)) {
-+		pr_err("Failed to get LPC status\n");
-+		goto iounmap_base;
-+	}
-+
-+	irq_handle = irq_domain_alloc_named_fwnode("lpcintc");
-+	if (!irq_handle) {
-+		pr_err("Unable to allocate domain handle\n");
-+		goto iounmap_base;
-+	}
-+
-+	priv->lpc_domain = irq_domain_create_linear(irq_handle, LPC_COUNT,
-+					&pch_lpc_domain_ops, priv);
-+	if (!priv->lpc_domain) {
-+		pr_err("Failed to create IRQ domain\n");
-+		goto free_irq_handle;
-+	}
-+	pch_lpc_reset(priv);
-+
-+	fwspec.fwnode = parent->fwnode;
-+	fwspec.param[0] = acpi_pchlpc->cascade + GSI_MIN_PCH_IRQ;
-+	fwspec.param[1] = IRQ_TYPE_LEVEL_HIGH;
-+	fwspec.param_count = 2;
-+	parent_irq = irq_create_fwspec_mapping(&fwspec);
-+	irq_set_chained_handler_and_data(parent_irq, lpc_irq_dispatch, priv);
-+
-+	pch_lpc_handle = irq_handle;
-+	return 0;
-+
-+free_irq_handle:
-+	irq_domain_free_fwnode(irq_handle);
-+iounmap_base:
-+	iounmap(priv->base);
-+free_priv:
-+	kfree(priv);
-+
-+	return -ENOMEM;
-+}
++/**
+  * acpi_irq_create_hierarchy - Create a hierarchical IRQ domain with the default
+  *                             GSI domain as its parent.
+  * @flags:      Irq domain flags associated with the domain
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 957e23f..e2b60d5 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -357,6 +357,7 @@ static inline bool acpi_sci_irq_valid(void)
+ 
+ void acpi_set_irq_model(enum acpi_irq_model_id model,
+ 			struct fwnode_handle *(*)(u32));
++void acpi_set_gsi_to_irq_fallback(u32 (*)(u32));
+ 
+ struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
+ 					     unsigned int size,
 -- 
 1.8.3.1
 
