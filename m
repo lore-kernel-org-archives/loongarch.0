@@ -1,117 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6AB1FAE
-	for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 08:36:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBEFBC341D3
-	for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 08:36:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1658392581;
-	bh=nKpz/OqRztg5EzCK42ZfWepbK8TN0TvfFCyvjm5mdIY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=A+bMhyz+nHDfKK4NfWjEW+Vv65X+YF922kXyOusZOYcgGfruM+e6flOuE99wPPcHT
-	 dl4geEg4tuNIBIZpKpJqAVrlBGI82HGMfVVOSHjTpG/wyOqyVjii1hXCfq8bLj+kiv
-	 0lhMS18hTlbxo0g6TsB1cz9pU9ltIzBTGStm4VKFJrsjs7++0e/1qNqdVFE0t94yLf
-	 b7XO4QFmkJvlSu+3N+zB9xI49PajgB6WuhwV+QzQhDQFMqcaVJIV9o8uXlRuZNXTng
-	 FjgDS8Sd+4A2+uLWjRmieS6Hqoh/nZIznpUGitL/IdrFGy+AWndZOT/ei0BP1NBsxg
-	 l5qRuGqNhEHAw==
-Received: by mail-ua1-f41.google.com with SMTP id w22so449491uau.7
-        for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 01:36:21 -0700 (PDT)
-X-Gm-Message-State: AJIora+dpbjnihDCJg3h1ywT60LQszOVnStUn5+WbiuEFEdMQT+MiI35
-	1VpZ910j397FP2WniBpmaFNcTKGql/DuH7f5Sks=
-X-Google-Smtp-Source: AGRyM1s3YfCfLq6toB5w0XxbU0n07z9DjrkLgoEL84RlBpFnEkguxwPqkVoRBkP0FWDYxyCvF7QqKys2qruTxPL8kPE=
-X-Received: by 2002:ab0:37d7:0:b0:384:47a1:eb8e with SMTP id
- e23-20020ab037d7000000b0038447a1eb8emr2239729uav.23.1658392580666; Thu, 21
- Jul 2022 01:36:20 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC64C28EA
+	for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 09:53:08 +0000 (UTC)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv9L9Idlipk0sAA--.307S2;
+	Thu, 21 Jul 2022 17:53:01 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Fix wrong "ROM Size" of boardinfo
+Date: Thu, 21 Jul 2022 17:53:01 +0800
+Message-Id: <1658397181-2095-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf9Dxv9L9Idlipk0sAA--.307S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF1Dur4DJF1xKFWUZF45GFg_yoW8urWUpr
+	43Aws7Grs8Wrn3u34rX348Wr45KF9xGFn2qa17Ar4xArZxWr12gw40vFyfuFW2y3yrGFW0
+	qa4fKa1FgF4DG3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUk2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8uwCF04k2
+	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+	AIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
+	z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUyD7aUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20220721021127.1086628-1-yijun@loongson.cn> <CAAhV-H4YL-8tj+-329tWguwxrPaL7DpiTT2QkXBPh_feT7M5jA@mail.gmail.com>
- <dcfac9ad-d6e0-b157-4f11-cc2d3e2f1376@xen0n.name> <CAAhV-H6RGZwKjV4Shm9fvH_XJ1+yqq9KpxkXNEWwOaPRmahSLQ@mail.gmail.com>
- <4a8f5963-28f1-7439-9b52-7084d51707b2@xen0n.name>
-In-Reply-To: <4a8f5963-28f1-7439-9b52-7084d51707b2@xen0n.name>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 21 Jul 2022 16:36:08 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4fqirffgyhc1Ros9KiOtM32vHqVKprLfvaROE3DHzYdw@mail.gmail.com>
-Message-ID: <CAAhV-H4fqirffgyhc1Ros9KiOtM32vHqVKprLfvaROE3DHzYdw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Remove unused header compiler.h
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Jun Yi <yijun@loongson.cn>, loongarch@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
 
-OK, please update the commit message and send V2, please.
+We can see the "ROM Size" is different in the following outputs:
 
-On Thu, Jul 21, 2022 at 1:38 PM WANG Xuerui <kernel@xen0n.name> wrote:
->
-> On 2022/7/21 11:22, Huacai Chen wrote:
-> > Hi, Xuerui,
-> >
-> > On Thu, Jul 21, 2022 at 11:17 AM WANG Xuerui <kernel@xen0n.name> wrote:
-> >> Hi YI Jun and Huacai,
-> >>
-> >> On 2022/7/21 10:52, Huacai Chen wrote:
-> >>> Hi, Jun,
-> >>>
-> >>> On Thu, Jul 21, 2022 at 10:11 AM Jun Yi <yijun@loongson.cn> wrote:
-> >>>> Loongarch not used arch-specific compiler.h
-> >>> I'm not sure whether compiler.h will be used in future. If it will be
-> >>> used, I want to keep it as is. Xuerui, what do you think about it?
-> >> I surveyed all the existing arch compiler.h in the tree:
-> >>
-> >> $ find ./arch -name compiler.h
-> >> ./arch/alpha/include/asm/compiler.h
-> >> ./arch/alpha/include/uapi/asm/compiler.h
-> >> ./arch/arm/include/asm/compiler.h
-> >> ./arch/arm64/include/asm/compiler.h
-> >> ./arch/mips/include/asm/compiler.h
-> >> ./arch/loongarch/include/asm/compiler.h
-> >>
-> >> Of all these occurrences:
-> >>
-> >> - alpha needs to ensure a certain insn is being emitted from time to
-> >> time, with plain C constructs (or built-ins) on compiler versions with
-> >> said support, falling back to inline asm otherwise;
-> >> - arm and arm64 both need some inline assembly help (of different sort),
-> >> with arm64 stuffing some pointer authentication helpers into this file too;
-> >> - mips, which is obviously what the loongarch version is based on, needs
-> >> (1) a kludge for older compilers to fix delay slot filling around
-> >> __builtin_unreachable, (2) definitions for explicit arch level
-> >> selection. There is also the historical GCC_OFF_SMALL_ASM() constraint
-> >> definition that was rendered redundant by commit 4abaacc704729 ("MIPS:
-> >> remove GCC < 4.9 support").
-> >>
-> >> For loongarch, the "ZC" constraint (I don't think it was a coincidence
-> >> BTW) should be usable for all present and future hardware, so I do think
-> >> the GCC_OFF_SMALL_ASM() here is redundant. We may want to remove the
-> >> mips one too. And the arch level thing is not currently needed either,
-> >> future revisions to the LoongArch ISA should be largely backwards
-> >> compatible, so it could be a long time before such explicit selection of
-> >> arch level is necessary, for exact control over emitted insn.
-> >>
-> >> So overall, I'm in favor of removing this header for now.
-> > Have you considered the new relocation types will be added in the near
-> > future? I think we need compiler.h at that time.
->
-> I assume you mean the proposal being discussed at [1] [2] and [3].
->
-> For new reloc types that affect module loading, asm/elf.h and
-> kernel/module.c need modification to add awareness, but this doesn't
-> involve compiler.h. The kernel image itself is not affected.
->
-> There is also the case of building LoongArch kernel sources without
-> support for the new reloc types, but on a newer compiler that emits the
-> new-style reloc records by default. In this case, a switch reverting the
-> compiler to the old-style relocs is needed in CFLAGS, but (1) not all
-> essential support are merged for LoongArch so practically we don't need
-> to care about non-kernel-ABI compatibility at this time, and (2) CFLAGS
-> tweaks don't involve compiler.h either.
->
-> [1]: https://sourceware.org/pipermail/binutils/2022-July/121849.html
-> [2]: https://sourceware.org/pipermail/binutils/2022-July/121933.html
-> [3]: https://github.com/loongson/LoongArch-Documentation/pull/57
->
->
+[root@linux loongson]# cat /sys/firmware/loongson/boardinfo
+BIOS Information
+Vendor                  : Loongson
+Version                 : vUDK2018-LoongArch-V2.0.pre-beta8
+ROM Size                : 63 KB
+Release Date            : 06/15/2022
+
+Board Information
+Manufacturer            : Loongson
+Board Name              : Loongson-LS3A5000-7A1000-1w-A2101
+Family                  : LOONGSON64
+
+[root@linux loongson]# dmidecode | head -11
+...
+Handle 0x0000, DMI type 0, 26 bytes
+BIOS Information
+	Vendor: Loongson
+	Version: vUDK2018-LoongArch-V2.0.pre-beta8
+	Release Date: 06/15/2022
+	ROM Size: 4 MB
+
+According to "BIOS Information (Type 0) structure" in the SMBIOS
+Reference Specification [1], it shows 64K * (n+1) is the size of
+the physical device containing the BIOS if the size is less than
+16M.
+
+Additionally, we can see the related code in dmidecode [2]:
+
+  u64 s = { .l = (code1 + 1) << 6 };
+
+So the output of dmidecode is correct, the output of boardinfo
+is wrong, fix it.
+
+By the way, at present no need to consider the size is 16M or
+greater on LoongArch, because it is usually 4M or 8M which is
+enough to use.
+
+[1] https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.6.0.pdf
+[2] https://git.savannah.nongnu.org/cgit/dmidecode.git/tree/dmidecode.c#n347
+
+Fixes: 628c3bb40e9a ("LoongArch: Add boot and setup routines")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/kernel/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index c74860b..8f5c2f9 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -126,7 +126,7 @@ static void __init parse_bios_table(const struct dmi_header *dm)
+ 	char *dmi_data = (char *)dm;
+ 
+ 	bios_extern = *(dmi_data + SMBIOS_BIOSEXTERN_OFFSET);
+-	b_info.bios_size = *(dmi_data + SMBIOS_BIOSSIZE_OFFSET);
++	b_info.bios_size = (*(dmi_data + SMBIOS_BIOSSIZE_OFFSET) + 1) << 6;
+ 
+ 	if (bios_extern & LOONGSON_EFI_ENABLE)
+ 		set_bit(EFI_BOOT, &efi.flags);
+-- 
+2.1.0
+
