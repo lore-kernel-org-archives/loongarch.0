@@ -1,172 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63DA91FA5
-	for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 02:08:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0823C385A9
-	for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 02:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1658369304;
-	bh=x2rMvlfF8THw8fAt70svf2hA+mf9vGMD4Y6bBnFyvts=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BLcuIGvOlv1iapA63NjHjKi18FtlUlcvVlm2hlS40e8fIIRrARqJbKTfVfzG4Qffs
-	 B6HvNou9eVk3xD2jdldGn2Niu4MzYx2bzH+cVKdLzaXDahzONuKWbzLLJwafHQpkSo
-	 mBeDHa5ql/u2NhOBTInZFjWNsKy6ohS4eEcMapbukDziT8olUpLhyfT0cwXHMNbhAN
-	 J0oXfPIIf2dIwpicKXsnLqDuAFMU9YwX9/eTZXX0rNr9Gl8LurDhPcYCnTuAm3L9kB
-	 KCvxylzgOt6ZF+NZIFZ5zAuCzKpldUze8pXNJ2/aRkgFGXi61VN4ZRhdftKSbZK6JR
-	 ctheXKplI4lTA==
-Received: by mail-vs1-f44.google.com with SMTP id x125so266357vsb.13
-        for <loongarch@lists.linux.dev>; Wed, 20 Jul 2022 19:08:23 -0700 (PDT)
-X-Gm-Message-State: AJIora97/Pu5ZWxgBPQsl9q1fZ0U0YR9f4TetNDEzFab1EYZzL2lzk2A
-	CC1a+23ua6AxTHaq2RakCcqPKG6qzKSEhCv3CPY=
-X-Google-Smtp-Source: AGRyM1vVxa3lqP8AcFV31tQ5vDERIi/melRduGpdj7d9pTPRjhrmeIjSHfa7BiZMsn6SS4xFD7+MeF8wIBRYRpe7hyQ=
-X-Received: by 2002:a05:6102:3543:b0:357:3ae7:bbd0 with SMTP id
- e3-20020a056102354300b003573ae7bbd0mr15376874vss.84.1658369302762; Wed, 20
- Jul 2022 19:08:22 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E45F1FA5
+	for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 02:11:35 +0000 (UTC)
+Received: from 5.5.5 (unknown [10.2.5.5])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX9PPtdhix7srAA--.41027S2;
+	Thu, 21 Jul 2022 10:11:27 +0800 (CST)
+From: Jun Yi <yijun@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH] LoongArch: Remove unused header compiler.h
+Date: Thu, 21 Jul 2022 10:11:27 +0800
+Message-Id: <20220721021127.1086628-1-yijun@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
- <20220704112526.2492342-4-chenhuacai@loongson.cn> <20220705092937.GA552@willie-the-truck>
- <CAAhV-H5r8HDaxt8fkO97in5-eH8X9gokVNervmUWn6km4S0e-w@mail.gmail.com>
- <20220706161736.GC3204@willie-the-truck> <CAAhV-H7uY_KiLJRRjj4+8mewcWbuhvC=zDp5VAs03=BLdSMKLw@mail.gmail.com>
- <CAAhV-H6EziBQ=3SveRvaPxHfbsGpmYrhVHfuBkpLJXn-t-uTZA@mail.gmail.com> <4216f48f-fdf1-ec1e-b963-6f7fe6ba0f63@redhat.com>
-In-Reply-To: <4216f48f-fdf1-ec1e-b963-6f7fe6ba0f63@redhat.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 21 Jul 2022 10:08:10 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5chctqBLayAJZOker_Li1db2NTcT9qwMCUYK44tBHVSg@mail.gmail.com>
-Message-ID: <CAAhV-H5chctqBLayAJZOker_Li1db2NTcT9qwMCUYK44tBHVSg@mail.gmail.com>
-Subject: Re: [PATCH V4 3/4] mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages()
-To: David Hildenbrand <david@redhat.com>, Will Deacon <will@kernel.org>, 
-	Dan Williams <dan.j.williams@intel.com>, 
-	Sudarshan Rajagopalan <quic_sudaraja@quicinc.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Linux-MM <linux-mm@kvack.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9DxX9PPtdhix7srAA--.41027S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3ArWrXry7Cr4xCF4rAFWfGrg_yoW7ZFy7pF
+	9rCr4kGFZ5WryrJF9FkFyj9r1UJw4kCr1agFyY9a48AF12qr1UZrykKryDZFyUJan5t340
+	gFyfGw1YqF47Xw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkYb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
+	vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJV
+	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK6svPMxAIw28I
+	cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI
+	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+	IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU56UDtUUUUU==
+X-CM-SenderInfo: p1lm30o6or00hjvr0hdfq/1tbiAQAOAV3QvP5digABsX
 
-Hi, Will,
+Loongarch not used arch-specific compiler.h
 
-On Wed, Jul 20, 2022 at 5:34 PM David Hildenbrand <david@redhat.com> wrote:
->
-> On 14.07.22 14:34, Huacai Chen wrote:
-> > Oh, Sudarshan Rajagopalan's Email has changed, Let's update.
-> >
-> > Huacai
-> >
-> > On Fri, Jul 8, 2022 at 5:47 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> >>
-> >> +Dan Williams
-> >> +Sudarshan Rajagopalan
-> >>
-> >> On Thu, Jul 7, 2022 at 12:17 AM Will Deacon <will@kernel.org> wrote:
-> >>>
-> >>> On Tue, Jul 05, 2022 at 09:07:59PM +0800, Huacai Chen wrote:
-> >>>> On Tue, Jul 5, 2022 at 5:29 PM Will Deacon <will@kernel.org> wrote:
-> >>>>> On Mon, Jul 04, 2022 at 07:25:25PM +0800, Huacai Chen wrote:
-> >>>>>> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-> >>>>>> index 33e2a1ceee72..6f2e40bb695d 100644
-> >>>>>> --- a/mm/sparse-vmemmap.c
-> >>>>>> +++ b/mm/sparse-vmemmap.c
-> >>>>>> @@ -686,6 +686,60 @@ int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
-> >>>>>>       return vmemmap_populate_range(start, end, node, altmap, NULL);
-> >>>>>>  }
-> >>>>>>
-> >>>>>> +void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
-> >>>>>> +                                   unsigned long addr, unsigned long next)
-> >>>>>> +{
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +int __weak __meminit vmemmap_check_pmd(pmd_t *pmd, int node, unsigned long addr,
-> >>>>>> +                                    unsigned long next)
-> >>>>>> +{
-> >>>>>> +     return 0;
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
-> >>>>>> +                                      int node, struct vmem_altmap *altmap)
-> >>>>>> +{
-> >>>>>> +     unsigned long addr;
-> >>>>>> +     unsigned long next;
-> >>>>>> +     pgd_t *pgd;
-> >>>>>> +     p4d_t *p4d;
-> >>>>>> +     pud_t *pud;
-> >>>>>> +     pmd_t *pmd;
-> >>>>>> +
-> >>>>>> +     for (addr = start; addr < end; addr = next) {
-> >>>>>> +             next = pmd_addr_end(addr, end);
-> >>>>>> +
-> >>>>>> +             pgd = vmemmap_pgd_populate(addr, node);
-> >>>>>> +             if (!pgd)
-> >>>>>> +                     return -ENOMEM;
-> >>>>>> +
-> >>>>>> +             p4d = vmemmap_p4d_populate(pgd, addr, node);
-> >>>>>> +             if (!p4d)
-> >>>>>> +                     return -ENOMEM;
-> >>>>>> +
-> >>>>>> +             pud = vmemmap_pud_populate(p4d, addr, node);
-> >>>>>> +             if (!pud)
-> >>>>>> +                     return -ENOMEM;
-> >>>>>> +
-> >>>>>> +             pmd = pmd_offset(pud, addr);
-> >>>>>> +             if (pmd_none(READ_ONCE(*pmd))) {
-> >>>>>> +                     void *p;
-> >>>>>> +
-> >>>>>> +                     p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
-> >>>>>> +                     if (p) {
-> >>>>>> +                             vmemmap_set_pmd(pmd, p, node, addr, next);
-> >>>>>> +                             continue;
-> >>>>>> +                     } else if (altmap)
-> >>>>>> +                             return -ENOMEM; /* no fallback */
-> >>>>>
-> >>>>> Why do you return -ENOMEM if 'altmap' here? That seems to be different to
-> >>>>> what we currently have on arm64 and it's not clear to me why we're happy
-> >>>>> with an altmap for the pmd case, but not for the pte case.
-> >>>> The generic version is the same as X86. It seems that ARM64 always
-> >>>> fallback whether there is an altmap, but X86 only fallback in the no
-> >>>> altmap case. I don't know the reason of X86, can Dan Williams give
-> >>>> some explaination?
-> >>>
-> >>> Right, I think we need to understand the new behaviour here before we adopt
-> >>> it on arm64.
-> >> Hi, Dan,
-> >> Could you please tell us the reason? Thanks.
-> >>
-> >> And Sudarshan,
-> >> You are the author of adding a fallback mechanism to ARM64,  do you
-> >> know why ARM64 is different from X86 (only fallback in no altmap
-> >> case)?
->
-> I think that's a purely theoretical issue: I assume that in any case we
-> care about, the altmap should be reasonably sized and aligned such that
-> this will always succeed.
->
-> To me it even sounds like the best idea to *consistently* fail if there
-> is no more space in the altmap, even if we'd have to fallback to PTE
-> (again, highly unlikely that this is relevant in practice). Could
-> indicate an altmap-size configuration issue.
+Signed-off-by: Jun Yi <yijun@loongson.cn>
+---
+ arch/loongarch/Kconfig                |  1 -
+ arch/loongarch/include/asm/atomic.h   |  9 ++++-----
+ arch/loongarch/include/asm/compiler.h | 15 ---------------
+ arch/loongarch/include/asm/futex.h    |  5 ++---
+ arch/loongarch/include/asm/irqflags.h |  1 -
+ arch/loongarch/include/asm/local.h    |  1 -
+ arch/loongarch/kernel/reset.c         |  1 -
+ arch/loongarch/lib/delay.c            |  1 -
+ 8 files changed, 6 insertions(+), 28 deletions(-)
+ delete mode 100644 arch/loongarch/include/asm/compiler.h
 
-Does David's explanation make things clear? Moreover, I think Dan's
-dedicated comments "no fallback" implies that his design is carefully
-considered. So I think the generic version using the X86 logic is just
-OK.
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 53a912befb62..89da3e09084e 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -69,7 +69,6 @@ config LOONGARCH
+ 	select GENERIC_TIME_VSYSCALL
+ 	select GPIOLIB
+ 	select HAVE_ARCH_AUDITSYSCALL
+-	select HAVE_ARCH_COMPILER_H
+ 	select HAVE_ARCH_MMAP_RND_BITS if MMU
+ 	select HAVE_ARCH_SECCOMP_FILTER
+ 	select HAVE_ARCH_TRACEHOOK
+diff --git a/arch/loongarch/include/asm/atomic.h b/arch/loongarch/include/asm/atomic.h
+index 979367ad4e2c..b5e2e3201af1 100644
+--- a/arch/loongarch/include/asm/atomic.h
++++ b/arch/loongarch/include/asm/atomic.h
+@@ -10,7 +10,6 @@
+ #include <linux/types.h>
+ #include <asm/barrier.h>
+ #include <asm/cmpxchg.h>
+-#include <asm/compiler.h>
+ 
+ #if __SIZEOF_LONG__ == 4
+ #define __LL		"ll.w	"
+@@ -164,7 +163,7 @@ static inline int arch_atomic_sub_if_positive(int i, atomic_t *v)
+ 		"2:							\n"
+ 		__WEAK_LLSC_MB
+ 		: "=&r" (result), "=&r" (temp),
+-		  "+" GCC_OFF_SMALL_ASM() (v->counter)
++		  "+ZC" (v->counter)
+ 		: "I" (-i));
+ 	} else {
+ 		__asm__ __volatile__(
+@@ -177,7 +176,7 @@ static inline int arch_atomic_sub_if_positive(int i, atomic_t *v)
+ 		"2:							\n"
+ 		__WEAK_LLSC_MB
+ 		: "=&r" (result), "=&r" (temp),
+-		  "+" GCC_OFF_SMALL_ASM() (v->counter)
++		  "+ZC" (v->counter)
+ 		: "r" (i));
+ 	}
+ 
+@@ -327,7 +326,7 @@ static inline long arch_atomic64_sub_if_positive(long i, atomic64_t *v)
+ 		"2:							\n"
+ 		__WEAK_LLSC_MB
+ 		: "=&r" (result), "=&r" (temp),
+-		  "+" GCC_OFF_SMALL_ASM() (v->counter)
++		  "+ZC" (v->counter)
+ 		: "I" (-i));
+ 	} else {
+ 		__asm__ __volatile__(
+@@ -340,7 +339,7 @@ static inline long arch_atomic64_sub_if_positive(long i, atomic64_t *v)
+ 		"2:							\n"
+ 		__WEAK_LLSC_MB
+ 		: "=&r" (result), "=&r" (temp),
+-		  "+" GCC_OFF_SMALL_ASM() (v->counter)
++		  "+ZC" (v->counter)
+ 		: "r" (i));
+ 	}
+ 
+diff --git a/arch/loongarch/include/asm/compiler.h b/arch/loongarch/include/asm/compiler.h
+deleted file mode 100644
+index 657cebe70ace..000000000000
+--- a/arch/loongarch/include/asm/compiler.h
++++ /dev/null
+@@ -1,15 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+- */
+-#ifndef _ASM_COMPILER_H
+-#define _ASM_COMPILER_H
+-
+-#define GCC_OFF_SMALL_ASM() "ZC"
+-
+-#define LOONGARCH_ISA_LEVEL "loongarch"
+-#define LOONGARCH_ISA_ARCH_LEVEL "arch=loongarch"
+-#define LOONGARCH_ISA_LEVEL_RAW loongarch
+-#define LOONGARCH_ISA_ARCH_LEVEL_RAW LOONGARCH_ISA_LEVEL_RAW
+-
+-#endif /* _ASM_COMPILER_H */
+diff --git a/arch/loongarch/include/asm/futex.h b/arch/loongarch/include/asm/futex.h
+index 9de8231694ec..e28b65d9c67a 100644
+--- a/arch/loongarch/include/asm/futex.h
++++ b/arch/loongarch/include/asm/futex.h
+@@ -8,7 +8,6 @@
+ #include <linux/futex.h>
+ #include <linux/uaccess.h>
+ #include <asm/barrier.h>
+-#include <asm/compiler.h>
+ #include <asm/errno.h>
+ 
+ #define __futex_atomic_op(insn, ret, oldval, uaddr, oparg)		\
+@@ -95,8 +94,8 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr, u32 oldval, u32 newv
+ 	"	"__UA_ADDR "\t1b, 4b				\n"
+ 	"	"__UA_ADDR "\t2b, 4b				\n"
+ 	"	.previous					\n"
+-	: "+r" (ret), "=&r" (val), "=" GCC_OFF_SMALL_ASM() (*uaddr)
+-	: GCC_OFF_SMALL_ASM() (*uaddr), "Jr" (oldval), "Jr" (newval),
++	: "+r" (ret), "=&r" (val), "=ZC" (*uaddr)
++	: "ZC" (*uaddr), "Jr" (oldval), "Jr" (newval),
+ 	  "i" (-EFAULT)
+ 	: "memory", "t0");
+ 
+diff --git a/arch/loongarch/include/asm/irqflags.h b/arch/loongarch/include/asm/irqflags.h
+index 52121cd791fe..319a8c616f1f 100644
+--- a/arch/loongarch/include/asm/irqflags.h
++++ b/arch/loongarch/include/asm/irqflags.h
+@@ -9,7 +9,6 @@
+ 
+ #include <linux/compiler.h>
+ #include <linux/stringify.h>
+-#include <asm/compiler.h>
+ #include <asm/loongarch.h>
+ 
+ static inline void arch_local_irq_enable(void)
+diff --git a/arch/loongarch/include/asm/local.h b/arch/loongarch/include/asm/local.h
+index 2052a2267337..65fbbae9fc4d 100644
+--- a/arch/loongarch/include/asm/local.h
++++ b/arch/loongarch/include/asm/local.h
+@@ -9,7 +9,6 @@
+ #include <linux/bitops.h>
+ #include <linux/atomic.h>
+ #include <asm/cmpxchg.h>
+-#include <asm/compiler.h>
+ 
+ typedef struct {
+ 	atomic_long_t a;
+diff --git a/arch/loongarch/kernel/reset.c b/arch/loongarch/kernel/reset.c
+index 2b86469e4718..800c965a17ea 100644
+--- a/arch/loongarch/kernel/reset.c
++++ b/arch/loongarch/kernel/reset.c
+@@ -13,7 +13,6 @@
+ #include <linux/console.h>
+ 
+ #include <acpi/reboot.h>
+-#include <asm/compiler.h>
+ #include <asm/idle.h>
+ #include <asm/loongarch.h>
+ #include <asm/reboot.h>
+diff --git a/arch/loongarch/lib/delay.c b/arch/loongarch/lib/delay.c
+index 5d856694fcfe..831d4761f385 100644
+--- a/arch/loongarch/lib/delay.c
++++ b/arch/loongarch/lib/delay.c
+@@ -7,7 +7,6 @@
+ #include <linux/smp.h>
+ #include <linux/timex.h>
+ 
+-#include <asm/compiler.h>
+ #include <asm/processor.h>
+ 
+ void __delay(unsigned long cycles)
+-- 
+2.31.1
 
-Huacai
->
-> --
-> Thanks,
->
-> David / dhildenb
->
->
