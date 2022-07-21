@@ -1,103 +1,143 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC64C28EA
-	for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 09:53:08 +0000 (UTC)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv9L9Idlipk0sAA--.307S2;
-	Thu, 21 Jul 2022 17:53:01 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC2D28EA
+	for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 09:55:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EF00C3411E;
+	Thu, 21 Jul 2022 09:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1658397336;
+	bh=OXWed5vpkzsz0jYpBxkXQrbeEPRaqZHtgrQjnkoQfp0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NC8h0OOaZSdyUOlE3739Y6vphXUDOgoHE3XwrBc918ss0UlL9dXGVHA25hGA+YvJe
+	 XDyM1G5B4/gIgjuL9yHAfq50wfWyrsue7EAa4hzVgkc8J49XYm4oZsTRCnT/Iup/bb
+	 6qswWRDqunoZYVGbDCv5P2i0fsHAStNaFkeDGzL54j8uFSnLgic3tnDtT9Vpgn7hkJ
+	 oYBzPUqjW3zMG1+9f+PZKQOVaD8m8uLO8Ni0YWpdWYY5mPbAr9nhVAAG1HiGqHeUK3
+	 zheBGryvqfamq9a5biiKz1jcuE5YG4pdpY0sgA+a6dU49ZxY8WaZjt7JtIsO1uoUZD
+	 xtdX/Hb/ah02w==
+Date: Thu, 21 Jul 2022 10:55:28 +0100
+From: Will Deacon <will@kernel.org>
 To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
+Cc: David Hildenbrand <david@redhat.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Sudarshan Rajagopalan <quic_sudaraja@quicinc.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	loongarch@lists.linux.dev, linux-arch <linux-arch@vger.kernel.org>,
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Fix wrong "ROM Size" of boardinfo
-Date: Thu, 21 Jul 2022 17:53:01 +0800
-Message-Id: <1658397181-2095-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf9Dxv9L9Idlipk0sAA--.307S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF1Dur4DJF1xKFWUZF45GFg_yoW8urWUpr
-	43Aws7Grs8Wrn3u34rX348Wr45KF9xGFn2qa17Ar4xArZxWr12gw40vFyfuFW2y3yrGFW0
-	qa4fKa1FgF4DG3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUk2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
-	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8uwCF04k2
-	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
-	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
-	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-	AIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
-	z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUyD7aUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux-MM <linux-mm@kvack.org>,
+	"open list:MIPS" <linux-mips@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+	Feiyang Chen <chenfeiyang@loongson.cn>
+Subject: Re: [PATCH V4 3/4] mm/sparse-vmemmap: Generalise
+ vmemmap_populate_hugepages()
+Message-ID: <20220721095527.GB17088@willie-the-truck>
+References: <20220704112526.2492342-1-chenhuacai@loongson.cn>
+ <20220704112526.2492342-4-chenhuacai@loongson.cn>
+ <20220705092937.GA552@willie-the-truck>
+ <CAAhV-H5r8HDaxt8fkO97in5-eH8X9gokVNervmUWn6km4S0e-w@mail.gmail.com>
+ <20220706161736.GC3204@willie-the-truck>
+ <CAAhV-H7uY_KiLJRRjj4+8mewcWbuhvC=zDp5VAs03=BLdSMKLw@mail.gmail.com>
+ <CAAhV-H6EziBQ=3SveRvaPxHfbsGpmYrhVHfuBkpLJXn-t-uTZA@mail.gmail.com>
+ <4216f48f-fdf1-ec1e-b963-6f7fe6ba0f63@redhat.com>
+ <CAAhV-H5chctqBLayAJZOker_Li1db2NTcT9qwMCUYK44tBHVSg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAhV-H5chctqBLayAJZOker_Li1db2NTcT9qwMCUYK44tBHVSg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-We can see the "ROM Size" is different in the following outputs:
+On Thu, Jul 21, 2022 at 10:08:10AM +0800, Huacai Chen wrote:
+> On Wed, Jul 20, 2022 at 5:34 PM David Hildenbrand <david@redhat.com> wrote:
+> > On 14.07.22 14:34, Huacai Chen wrote:
+> > > On Fri, Jul 8, 2022 at 5:47 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+> > >> On Thu, Jul 7, 2022 at 12:17 AM Will Deacon <will@kernel.org> wrote:
+> > >>> On Tue, Jul 05, 2022 at 09:07:59PM +0800, Huacai Chen wrote:
+> > >>>> On Tue, Jul 5, 2022 at 5:29 PM Will Deacon <will@kernel.org> wrote:
+> > >>>>> On Mon, Jul 04, 2022 at 07:25:25PM +0800, Huacai Chen wrote:
+> > >>>>>> +int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
+> > >>>>>> +                                      int node, struct vmem_altmap *altmap)
+> > >>>>>> +{
+> > >>>>>> +     unsigned long addr;
+> > >>>>>> +     unsigned long next;
+> > >>>>>> +     pgd_t *pgd;
+> > >>>>>> +     p4d_t *p4d;
+> > >>>>>> +     pud_t *pud;
+> > >>>>>> +     pmd_t *pmd;
+> > >>>>>> +
+> > >>>>>> +     for (addr = start; addr < end; addr = next) {
+> > >>>>>> +             next = pmd_addr_end(addr, end);
+> > >>>>>> +
+> > >>>>>> +             pgd = vmemmap_pgd_populate(addr, node);
+> > >>>>>> +             if (!pgd)
+> > >>>>>> +                     return -ENOMEM;
+> > >>>>>> +
+> > >>>>>> +             p4d = vmemmap_p4d_populate(pgd, addr, node);
+> > >>>>>> +             if (!p4d)
+> > >>>>>> +                     return -ENOMEM;
+> > >>>>>> +
+> > >>>>>> +             pud = vmemmap_pud_populate(p4d, addr, node);
+> > >>>>>> +             if (!pud)
+> > >>>>>> +                     return -ENOMEM;
+> > >>>>>> +
+> > >>>>>> +             pmd = pmd_offset(pud, addr);
+> > >>>>>> +             if (pmd_none(READ_ONCE(*pmd))) {
+> > >>>>>> +                     void *p;
+> > >>>>>> +
+> > >>>>>> +                     p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
+> > >>>>>> +                     if (p) {
+> > >>>>>> +                             vmemmap_set_pmd(pmd, p, node, addr, next);
+> > >>>>>> +                             continue;
+> > >>>>>> +                     } else if (altmap)
+> > >>>>>> +                             return -ENOMEM; /* no fallback */
+> > >>>>>
+> > >>>>> Why do you return -ENOMEM if 'altmap' here? That seems to be different to
+> > >>>>> what we currently have on arm64 and it's not clear to me why we're happy
+> > >>>>> with an altmap for the pmd case, but not for the pte case.
+> > >>>> The generic version is the same as X86. It seems that ARM64 always
+> > >>>> fallback whether there is an altmap, but X86 only fallback in the no
+> > >>>> altmap case. I don't know the reason of X86, can Dan Williams give
+> > >>>> some explaination?
+> > >>>
+> > >>> Right, I think we need to understand the new behaviour here before we adopt
+> > >>> it on arm64.
+> > >> Hi, Dan,
+> > >> Could you please tell us the reason? Thanks.
+> > >>
+> > >> And Sudarshan,
+> > >> You are the author of adding a fallback mechanism to ARM64,  do you
+> > >> know why ARM64 is different from X86 (only fallback in no altmap
+> > >> case)?
+> >
+> > I think that's a purely theoretical issue: I assume that in any case we
+> > care about, the altmap should be reasonably sized and aligned such that
+> > this will always succeed.
+> >
+> > To me it even sounds like the best idea to *consistently* fail if there
+> > is no more space in the altmap, even if we'd have to fallback to PTE
+> > (again, highly unlikely that this is relevant in practice). Could
+> > indicate an altmap-size configuration issue.
+> 
+> Does David's explanation make things clear? Moreover, I think Dan's
+> dedicated comments "no fallback" implies that his design is carefully
+> considered. So I think the generic version using the X86 logic is just
+> OK.
 
-[root@linux loongson]# cat /sys/firmware/loongson/boardinfo
-BIOS Information
-Vendor                  : Loongson
-Version                 : vUDK2018-LoongArch-V2.0.pre-beta8
-ROM Size                : 63 KB
-Release Date            : 06/15/2022
+I think the comment isn't worth the metaphorical paper that it's written
+on! If you can bulk it up a bit based on David's reasoning, then that would
+help. But yes, I'm happy with the code now, thanks both.
 
-Board Information
-Manufacturer            : Loongson
-Board Name              : Loongson-LS3A5000-7A1000-1w-A2101
-Family                  : LOONGSON64
-
-[root@linux loongson]# dmidecode | head -11
-...
-Handle 0x0000, DMI type 0, 26 bytes
-BIOS Information
-	Vendor: Loongson
-	Version: vUDK2018-LoongArch-V2.0.pre-beta8
-	Release Date: 06/15/2022
-	ROM Size: 4 MB
-
-According to "BIOS Information (Type 0) structure" in the SMBIOS
-Reference Specification [1], it shows 64K * (n+1) is the size of
-the physical device containing the BIOS if the size is less than
-16M.
-
-Additionally, we can see the related code in dmidecode [2]:
-
-  u64 s = { .l = (code1 + 1) << 6 };
-
-So the output of dmidecode is correct, the output of boardinfo
-is wrong, fix it.
-
-By the way, at present no need to consider the size is 16M or
-greater on LoongArch, because it is usually 4M or 8M which is
-enough to use.
-
-[1] https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.6.0.pdf
-[2] https://git.savannah.nongnu.org/cgit/dmidecode.git/tree/dmidecode.c#n347
-
-Fixes: 628c3bb40e9a ("LoongArch: Add boot and setup routines")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/kernel/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index c74860b..8f5c2f9 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -126,7 +126,7 @@ static void __init parse_bios_table(const struct dmi_header *dm)
- 	char *dmi_data = (char *)dm;
- 
- 	bios_extern = *(dmi_data + SMBIOS_BIOSEXTERN_OFFSET);
--	b_info.bios_size = *(dmi_data + SMBIOS_BIOSSIZE_OFFSET);
-+	b_info.bios_size = (*(dmi_data + SMBIOS_BIOSSIZE_OFFSET) + 1) << 6;
- 
- 	if (bios_extern & LOONGSON_EFI_ENABLE)
- 		set_bit(EFI_BOOT, &efi.flags);
--- 
-2.1.0
-
+Will
