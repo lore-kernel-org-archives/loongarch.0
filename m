@@ -1,44 +1,117 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2B41854
-	for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 06:50:02 +0000 (UTC)
-Received: from [10.20.42.28] (unknown [10.20.42.28])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxaeAX99hihg0sAA--.9902S3;
-	Thu, 21 Jul 2022 14:49:59 +0800 (CST)
-Message-ID: <0ac03ab0-23f0-e89c-be68-f4d76d2b5aa1@loongson.cn>
-Date: Thu, 21 Jul 2022 14:49:59 +0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6AB1FAE
+	for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 08:36:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBEFBC341D3
+	for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 08:36:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1658392581;
+	bh=nKpz/OqRztg5EzCK42ZfWepbK8TN0TvfFCyvjm5mdIY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=A+bMhyz+nHDfKK4NfWjEW+Vv65X+YF922kXyOusZOYcgGfruM+e6flOuE99wPPcHT
+	 dl4geEg4tuNIBIZpKpJqAVrlBGI82HGMfVVOSHjTpG/wyOqyVjii1hXCfq8bLj+kiv
+	 0lhMS18hTlbxo0g6TsB1cz9pU9ltIzBTGStm4VKFJrsjs7++0e/1qNqdVFE0t94yLf
+	 b7XO4QFmkJvlSu+3N+zB9xI49PajgB6WuhwV+QzQhDQFMqcaVJIV9o8uXlRuZNXTng
+	 FjgDS8Sd+4A2+uLWjRmieS6Hqoh/nZIznpUGitL/IdrFGy+AWndZOT/ei0BP1NBsxg
+	 l5qRuGqNhEHAw==
+Received: by mail-ua1-f41.google.com with SMTP id w22so449491uau.7
+        for <loongarch@lists.linux.dev>; Thu, 21 Jul 2022 01:36:21 -0700 (PDT)
+X-Gm-Message-State: AJIora+dpbjnihDCJg3h1ywT60LQszOVnStUn5+WbiuEFEdMQT+MiI35
+	1VpZ910j397FP2WniBpmaFNcTKGql/DuH7f5Sks=
+X-Google-Smtp-Source: AGRyM1s3YfCfLq6toB5w0XxbU0n07z9DjrkLgoEL84RlBpFnEkguxwPqkVoRBkP0FWDYxyCvF7QqKys2qruTxPL8kPE=
+X-Received: by 2002:ab0:37d7:0:b0:384:47a1:eb8e with SMTP id
+ e23-20020ab037d7000000b0038447a1eb8emr2239729uav.23.1658392580666; Thu, 21
+ Jul 2022 01:36:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Content-Language: en-US
-To: =?UTF-8?B?5p2o6ZOB5p+x?= <yangtiezhu@loongson.cn>
-Cc: chenhuacai@kernel.org, jiaxun.yang@flygoat.com, kernel@xen0n.name,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-From: yijun <yijun@loongson.cn>
-Subject: Re: [PATCH v2] LoongArch: Remove LOONGARCH_CPUCFG48 and some CSR
- definitions
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9AxaeAX99hihg0sAA--.9902S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYa7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z2
-	80aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
-	zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx
-	8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY
-	jI0SjxkI62AI1cAE67vIY487MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
-	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
-	MI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
-	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3
-	Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
-	UvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: p1lm30o6or00hjvr0hdfq/1tbiAQAOAV3QvP5jAwABsg
+References: <20220721021127.1086628-1-yijun@loongson.cn> <CAAhV-H4YL-8tj+-329tWguwxrPaL7DpiTT2QkXBPh_feT7M5jA@mail.gmail.com>
+ <dcfac9ad-d6e0-b157-4f11-cc2d3e2f1376@xen0n.name> <CAAhV-H6RGZwKjV4Shm9fvH_XJ1+yqq9KpxkXNEWwOaPRmahSLQ@mail.gmail.com>
+ <4a8f5963-28f1-7439-9b52-7084d51707b2@xen0n.name>
+In-Reply-To: <4a8f5963-28f1-7439-9b52-7084d51707b2@xen0n.name>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 21 Jul 2022 16:36:08 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4fqirffgyhc1Ros9KiOtM32vHqVKprLfvaROE3DHzYdw@mail.gmail.com>
+Message-ID: <CAAhV-H4fqirffgyhc1Ros9KiOtM32vHqVKprLfvaROE3DHzYdw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Remove unused header compiler.h
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: Jun Yi <yijun@loongson.cn>, loongarch@lists.linux.dev, 
+	LKML <linux-kernel@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Acked-by: Jun Yi <yijun@loongson.cn>
+OK, please update the commit message and send V2, please.
 
+On Thu, Jul 21, 2022 at 1:38 PM WANG Xuerui <kernel@xen0n.name> wrote:
+>
+> On 2022/7/21 11:22, Huacai Chen wrote:
+> > Hi, Xuerui,
+> >
+> > On Thu, Jul 21, 2022 at 11:17 AM WANG Xuerui <kernel@xen0n.name> wrote:
+> >> Hi YI Jun and Huacai,
+> >>
+> >> On 2022/7/21 10:52, Huacai Chen wrote:
+> >>> Hi, Jun,
+> >>>
+> >>> On Thu, Jul 21, 2022 at 10:11 AM Jun Yi <yijun@loongson.cn> wrote:
+> >>>> Loongarch not used arch-specific compiler.h
+> >>> I'm not sure whether compiler.h will be used in future. If it will be
+> >>> used, I want to keep it as is. Xuerui, what do you think about it?
+> >> I surveyed all the existing arch compiler.h in the tree:
+> >>
+> >> $ find ./arch -name compiler.h
+> >> ./arch/alpha/include/asm/compiler.h
+> >> ./arch/alpha/include/uapi/asm/compiler.h
+> >> ./arch/arm/include/asm/compiler.h
+> >> ./arch/arm64/include/asm/compiler.h
+> >> ./arch/mips/include/asm/compiler.h
+> >> ./arch/loongarch/include/asm/compiler.h
+> >>
+> >> Of all these occurrences:
+> >>
+> >> - alpha needs to ensure a certain insn is being emitted from time to
+> >> time, with plain C constructs (or built-ins) on compiler versions with
+> >> said support, falling back to inline asm otherwise;
+> >> - arm and arm64 both need some inline assembly help (of different sort),
+> >> with arm64 stuffing some pointer authentication helpers into this file too;
+> >> - mips, which is obviously what the loongarch version is based on, needs
+> >> (1) a kludge for older compilers to fix delay slot filling around
+> >> __builtin_unreachable, (2) definitions for explicit arch level
+> >> selection. There is also the historical GCC_OFF_SMALL_ASM() constraint
+> >> definition that was rendered redundant by commit 4abaacc704729 ("MIPS:
+> >> remove GCC < 4.9 support").
+> >>
+> >> For loongarch, the "ZC" constraint (I don't think it was a coincidence
+> >> BTW) should be usable for all present and future hardware, so I do think
+> >> the GCC_OFF_SMALL_ASM() here is redundant. We may want to remove the
+> >> mips one too. And the arch level thing is not currently needed either,
+> >> future revisions to the LoongArch ISA should be largely backwards
+> >> compatible, so it could be a long time before such explicit selection of
+> >> arch level is necessary, for exact control over emitted insn.
+> >>
+> >> So overall, I'm in favor of removing this header for now.
+> > Have you considered the new relocation types will be added in the near
+> > future? I think we need compiler.h at that time.
+>
+> I assume you mean the proposal being discussed at [1] [2] and [3].
+>
+> For new reloc types that affect module loading, asm/elf.h and
+> kernel/module.c need modification to add awareness, but this doesn't
+> involve compiler.h. The kernel image itself is not affected.
+>
+> There is also the case of building LoongArch kernel sources without
+> support for the new reloc types, but on a newer compiler that emits the
+> new-style reloc records by default. In this case, a switch reverting the
+> compiler to the old-style relocs is needed in CFLAGS, but (1) not all
+> essential support are merged for LoongArch so practically we don't need
+> to care about non-kernel-ABI compatibility at this time, and (2) CFLAGS
+> tweaks don't involve compiler.h either.
+>
+> [1]: https://sourceware.org/pipermail/binutils/2022-July/121849.html
+> [2]: https://sourceware.org/pipermail/binutils/2022-July/121933.html
+> [3]: https://github.com/loongson/LoongArch-Documentation/pull/57
+>
+>
