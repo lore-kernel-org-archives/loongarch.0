@@ -1,55 +1,47 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89AFB15A2
-	for <loongarch@lists.linux.dev>; Fri, 22 Jul 2022 07:16:28 +0000 (UTC)
-Received: from [10.20.42.19] (unknown [10.20.42.19])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX+PKTtpiXGAuAA--.2939S3;
-	Fri, 22 Jul 2022 15:16:26 +0800 (CST)
-Subject: Re: [PATCH v2] LoongArch: Remove LOONGARCH_CPUCFG48 and some CSR
- definitions
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <1658305979-2073-1-git-send-email-yangtiezhu@loongson.cn>
- <fc5a891d-e5a9-c02d-08e0-318213cde8f4@loongson.cn>
-From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <6ccd15ed-bbed-18fd-ec97-510d2150c27c@loongson.cn>
-Date: Fri, 22 Jul 2022 15:16:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618DF15A2
+	for <loongarch@lists.linux.dev>; Fri, 22 Jul 2022 07:34:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1658475231; bh=T33GVH8f5eLsNBuftvVxlcnpfNmKejbXJKmjJ5lvpUk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=guTB4N9RgJi3l17IYvwKjfR/E+cJUrUTz9TupsvIv7hcHB1vATgZGyMXoB8WGLwsq
+	 EGHudXUjV30Vrf/yhWnw0qkWhihU2JNCKdOEAAu7zBwGe904Gmqy0HNbAzq0abyCXo
+	 xKiOyn7teymo3FcQzK8VSbW4n3bYu+9AXYhGkzlo=
+Received: from [100.100.35.250] (unknown [58.34.185.106])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 8C1526061B;
+	Fri, 22 Jul 2022 15:33:51 +0800 (CST)
+Message-ID: <f43b5f40-9e2b-b179-390d-591a73603afa@xen0n.name>
+Date: Fri, 22 Jul 2022 15:33:51 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0)
+ Gecko/20100101 Thunderbird/104.0a1
+Subject: Re: [PATCH v2] LoongArch: Remove LOONGARCH_CPUCFG48 and some CSR
+ definitions
+Content-Language: en-US
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Jianmin Lv <lvjianmin@loongson.cn>
+References: <1658305979-2073-1-git-send-email-yangtiezhu@loongson.cn>
+ <fc5a891d-e5a9-c02d-08e0-318213cde8f4@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
 In-Reply-To: <fc5a891d-e5a9-c02d-08e0-318213cde8f4@loongson.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf9DxX+PKTtpiXGAuAA--.2939S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7KF47ZF13AFWkWrW8Cry5CFg_yoW8Gr4xpr
-	1UGayUKF4kKF93GF1kJ3yruF13GF4IyrW7Jr1UAws2gr98urW7tryjkF1akFy5Jrn5WF1x
-	Arn2y39F9a1kAw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-	z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzx
-	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	JVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vIY487MxkIecxEwVCm
-	-wCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26ryrJr1UJwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWr
-	Zr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 
-
-
-On 2022/7/22 下午2:58, Tiezhu Yang wrote:
-> 
-> 
+On 2022/7/22 14:58, Tiezhu Yang wrote:
+>
+>
 > On 07/20/2022 04:32 PM, Tiezhu Yang wrote:
 >> According to the configuration information accessible by the CPUCFG
 >> instruction [1] and the Overview of Control and Status Registers [2],
@@ -74,8 +66,37 @@ On 2022/7/22 下午2:58, Tiezhu Yang wrote:
 >> The intention of this patch is to keep consistent between the code and
 >> the manual.
 >>
+>> [1] 
+>> https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#the-configuration-information-accessible-by-the-cpucfg-instruction
+>> [2] 
+>> https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#table-overview-of-control-and-status-registers
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>
+>> v2:
+>>   -- Remove LOONGARCH_CSR_PRID and LOONGARCH_CSR_UCAWIN*
+>>   -- Modify the patch subject and update the commit message
+>>
+>>  arch/loongarch/include/asm/loongarch.h | 229 
+>> ---------------------------------
+>>  1 file changed, 229 deletions(-)
+>> Hi all,
+>
+> Are you OK with this change? Any comments will be much appreciated.
 
-Agree, they are should be cleaned up for consistency.
+Sorry for not getting to this earlier; $DAY_JOB is taking its toll on my 
+Linux contributions these days.
 
-Acked-by: Jianmin Lv <lvjianmin@loongson.cn>
+IMO, it's probably better to keep the definitions for documentation 
+purposes.
+
+As a Loongson employee, you may be aware of the fact that your company's 
+"official" documentation is often lacking, and this information you're 
+removing is not found elsewhere. So for preserving this knowledge, 
+either (1) ask your documentation people to properly record these 
+information in official docs then you can go ahead removing them here, 
+or (2) just keep the content here if (1) isn't doable for any reason. 
+You do want 3rd-parties to freely develop on your platforms, making full 
+use of the products' capabilities, don't you? ;-)
 
