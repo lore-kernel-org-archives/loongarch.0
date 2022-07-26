@@ -1,28 +1,28 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1902323B
-	for <loongarch@lists.linux.dev>; Tue, 26 Jul 2022 15:57:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107D54C8B
+	for <loongarch@lists.linux.dev>; Tue, 26 Jul 2022 15:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1658851053; bh=xFCvGAenGJJQna/tIOBJVcrHf4RHTbc5T3XKhUgdvK0=;
+	t=1658851056; bh=UTjL3AkBhih4nagKvLFj+cPKxcs0YUgLvIbMJ1itsBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Lg3wRN/uyfM/LZKdm5Q0r3s1UxRpwnvetw7Du6nY+sCieLTTd5QSrb+a80ETwlC/e
-	 d+JFs5WZszA6GTQmrWoNCXYEo+Ew19hkNmAMDFfLlx0Ml4fKGcsEcta8blyV/AM2+N
-	 0Nu62ZLoiGnujp0EAagYqpXrru9Z7Ug5WxqXIStM=
+	b=lT78SswhyzoEzkIX3+TaNXICY5NHLSZeOVCV9EZXx9uE6mrkuRx0Fu2ZjwXZYKr4v
+	 W9enfNFoaMXnb1LMEoHryCyxkTJa8/UnxuO9KmCIxPTWIGxpWhZONidXao2BUPFUY5
+	 te9amPaLaH9LsUx44600q5TF1vGClh75/HXpnHBs=
 Received: from ld50.lan (unknown [101.228.137.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 012C160680;
-	Tue, 26 Jul 2022 23:57:31 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id E25ED60689;
+	Tue, 26 Jul 2022 23:57:35 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: Jinyang He <hejinyang@loongson.cn>,
 	loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v3 2/8] LoongArch: Use ABI names of registers where appropriate
-Date: Tue, 26 Jul 2022 23:57:16 +0800
-Message-Id: <20220726155722.2402337-3-kernel@xen0n.name>
+Subject: [PATCH v3 4/8] LoongArch: Use the "move" pseudo-instruction where applicable
+Date: Tue, 26 Jul 2022 23:57:18 +0800
+Message-Id: <20220726155722.2402337-5-kernel@xen0n.name>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220726155722.2402337-1-kernel@xen0n.name>
 References: <20220726155722.2402337-1-kernel@xen0n.name>
@@ -36,423 +36,116 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Some of the assembly in the LoongArch port seem to come from a
-prehistoric time, when the assembler didn't even have support for the
-ABI names we all come to know and love, thus used raw register numbers
-which hampered readability.
+Some of the assembly code in the LoongArch port likely originated
+from a time when the assembler did not support pseudo-instructions like
+"move" or "jr", so the desugared form was used and readability suffers
+(to a minor degree) as a result.
 
-The usages are found with a regex match inside arch/loongarch, then
-manually adjusted for those non-definitions.
+As the upstream toolchain supports these pseudo-instructions from the
+beginning, migrate the existing few usages to them for better
+readability.
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/include/asm/barrier.h     |  4 +-
- arch/loongarch/include/asm/loongson.h    |  4 +-
- arch/loongarch/include/asm/stacktrace.h  | 12 ++--
- arch/loongarch/include/asm/thread_info.h |  4 +-
- arch/loongarch/include/asm/uaccess.h     |  2 +-
- arch/loongarch/mm/page.S                 |  4 +-
- arch/loongarch/mm/tlbex.S                | 80 ++++++++++++------------
- 7 files changed, 55 insertions(+), 55 deletions(-)
+ arch/loongarch/include/asm/atomic.h  | 8 ++++----
+ arch/loongarch/include/asm/cmpxchg.h | 2 +-
+ arch/loongarch/include/asm/futex.h   | 2 +-
+ arch/loongarch/include/asm/uaccess.h | 2 +-
+ arch/loongarch/kernel/head.S         | 2 +-
+ 5 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/barrier.h b/arch/loongarch/include/asm/barrier.h
-index b6517eeeb141..cda977675854 100644
---- a/arch/loongarch/include/asm/barrier.h
-+++ b/arch/loongarch/include/asm/barrier.h
-@@ -48,9 +48,9 @@ static inline unsigned long array_index_mask_nospec(unsigned long index,
- 	__asm__ __volatile__(
- 		"sltu	%0, %1, %2\n\t"
- #if (__SIZEOF_LONG__ == 4)
--		"sub.w	%0, $r0, %0\n\t"
-+		"sub.w	%0, $zero, %0\n\t"
- #elif (__SIZEOF_LONG__ == 8)
--		"sub.d	%0, $r0, %0\n\t"
-+		"sub.d	%0, $zero, %0\n\t"
- #endif
- 		: "=r" (mask)
- 		: "r" (index), "r" (size)
-diff --git a/arch/loongarch/include/asm/loongson.h b/arch/loongarch/include/asm/loongson.h
-index 6a8038725ba7..8522afafc24e 100644
---- a/arch/loongarch/include/asm/loongson.h
-+++ b/arch/loongarch/include/asm/loongson.h
-@@ -58,7 +58,7 @@ static inline void xconf_writel(u32 val, volatile void __iomem *addr)
- {
- 	asm volatile (
- 	"	st.w	%[v], %[hw], 0	\n"
--	"	ld.b	$r0, %[hw], 0	\n"
-+	"	ld.b	$zero, %[hw], 0	\n"
- 	:
- 	: [hw] "r" (addr), [v] "r" (val)
- 	);
-@@ -68,7 +68,7 @@ static inline void xconf_writeq(u64 val64, volatile void __iomem *addr)
- {
- 	asm volatile (
- 	"	st.d	%[v], %[hw], 0	\n"
--	"	ld.b	$r0, %[hw], 0	\n"
-+	"	ld.b	$zero, %[hw], 0	\n"
- 	:
- 	: [hw] "r" (addr),  [v] "r" (val64)
- 	);
-diff --git a/arch/loongarch/include/asm/stacktrace.h b/arch/loongarch/include/asm/stacktrace.h
-index 26483e396ad1..6b5c2a7aa706 100644
---- a/arch/loongarch/include/asm/stacktrace.h
-+++ b/arch/loongarch/include/asm/stacktrace.h
-@@ -23,13 +23,13 @@
- static __always_inline void prepare_frametrace(struct pt_regs *regs)
- {
- 	__asm__ __volatile__(
--		/* Save $r1 */
-+		/* Save $ra */
- 		STORE_ONE_REG(1)
--		/* Use $r1 to save PC */
--		"pcaddi	$r1, 0\n\t"
--		STR_LONG_S " $r1, %0\n\t"
--		/* Restore $r1 */
--		STR_LONG_L " $r1, %1, "STR_LONGSIZE"\n\t"
-+		/* Use $ra to save PC */
-+		"pcaddi	$ra, 0\n\t"
-+		STR_LONG_S " $ra, %0\n\t"
-+		/* Restore $ra */
-+		STR_LONG_L " $ra, %1, "STR_LONGSIZE"\n\t"
- 		STORE_ONE_REG(2)
- 		STORE_ONE_REG(3)
- 		STORE_ONE_REG(4)
-diff --git a/arch/loongarch/include/asm/thread_info.h b/arch/loongarch/include/asm/thread_info.h
-index 99beb11c2fa8..b7dd9f19a5a9 100644
---- a/arch/loongarch/include/asm/thread_info.h
-+++ b/arch/loongarch/include/asm/thread_info.h
-@@ -44,14 +44,14 @@ struct thread_info {
- }
- 
- /* How to get the thread information struct from C. */
--register struct thread_info *__current_thread_info __asm__("$r2");
-+register struct thread_info *__current_thread_info __asm__("$tp");
- 
- static inline struct thread_info *current_thread_info(void)
- {
- 	return __current_thread_info;
- }
- 
--register unsigned long current_stack_pointer __asm__("$r3");
-+register unsigned long current_stack_pointer __asm__("$sp");
- 
- #endif /* !__ASSEMBLY__ */
- 
+diff --git a/arch/loongarch/include/asm/atomic.h b/arch/loongarch/include/asm/atomic.h
+index 979367ad4e2c..a0a33ee793d6 100644
+--- a/arch/loongarch/include/asm/atomic.h
++++ b/arch/loongarch/include/asm/atomic.h
+@@ -157,7 +157,7 @@ static inline int arch_atomic_sub_if_positive(int i, atomic_t *v)
+ 		__asm__ __volatile__(
+ 		"1:	ll.w	%1, %2		# atomic_sub_if_positive\n"
+ 		"	addi.w	%0, %1, %3				\n"
+-		"	or	%1, %0, $zero				\n"
++		"	move	%1, %0					\n"
+ 		"	blt	%0, $zero, 2f				\n"
+ 		"	sc.w	%1, %2					\n"
+ 		"	beq	$zero, %1, 1b				\n"
+@@ -170,7 +170,7 @@ static inline int arch_atomic_sub_if_positive(int i, atomic_t *v)
+ 		__asm__ __volatile__(
+ 		"1:	ll.w	%1, %2		# atomic_sub_if_positive\n"
+ 		"	sub.w	%0, %1, %3				\n"
+-		"	or	%1, %0, $zero				\n"
++		"	move	%1, %0					\n"
+ 		"	blt	%0, $zero, 2f				\n"
+ 		"	sc.w	%1, %2					\n"
+ 		"	beq	$zero, %1, 1b				\n"
+@@ -320,7 +320,7 @@ static inline long arch_atomic64_sub_if_positive(long i, atomic64_t *v)
+ 		__asm__ __volatile__(
+ 		"1:	ll.d	%1, %2	# atomic64_sub_if_positive	\n"
+ 		"	addi.d	%0, %1, %3				\n"
+-		"	or	%1, %0, $zero				\n"
++		"	move	%1, %0					\n"
+ 		"	blt	%0, $zero, 2f				\n"
+ 		"	sc.d	%1, %2					\n"
+ 		"	beq	%1, $zero, 1b				\n"
+@@ -333,7 +333,7 @@ static inline long arch_atomic64_sub_if_positive(long i, atomic64_t *v)
+ 		__asm__ __volatile__(
+ 		"1:	ll.d	%1, %2	# atomic64_sub_if_positive	\n"
+ 		"	sub.d	%0, %1, %3				\n"
+-		"	or	%1, %0, $zero				\n"
++		"	move	%1, %0					\n"
+ 		"	blt	%0, $zero, 2f				\n"
+ 		"	sc.d	%1, %2					\n"
+ 		"	beq	%1, $zero, 1b				\n"
+diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/include/asm/cmpxchg.h
+index 75b3a4478652..9e9939196471 100644
+--- a/arch/loongarch/include/asm/cmpxchg.h
++++ b/arch/loongarch/include/asm/cmpxchg.h
+@@ -55,7 +55,7 @@ static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+ 	__asm__ __volatile__(						\
+ 	"1:	" ld "	%0, %2		# __cmpxchg_asm \n"		\
+ 	"	bne	%0, %z3, 2f			\n"		\
+-	"	or	$t0, %z4, $zero			\n"		\
++	"	move	$t0, %z4			\n"		\
+ 	"	" st "	$t0, %1				\n"		\
+ 	"	beq	$zero, $t0, 1b			\n"		\
+ 	"2:						\n"		\
+diff --git a/arch/loongarch/include/asm/futex.h b/arch/loongarch/include/asm/futex.h
+index 9de8231694ec..170ec9f97e58 100644
+--- a/arch/loongarch/include/asm/futex.h
++++ b/arch/loongarch/include/asm/futex.h
+@@ -82,7 +82,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr, u32 oldval, u32 newv
+ 	"# futex_atomic_cmpxchg_inatomic			\n"
+ 	"1:	ll.w	%1, %3					\n"
+ 	"	bne	%1, %z4, 3f				\n"
+-	"	or	$t0, %z5, $zero				\n"
++	"	move	$t0, %z5				\n"
+ 	"2:	sc.w	$t0, %2					\n"
+ 	"	beq	$zero, $t0, 1b				\n"
+ 	"3:							\n"
 diff --git a/arch/loongarch/include/asm/uaccess.h b/arch/loongarch/include/asm/uaccess.h
-index 217c6a3727b1..42da43211765 100644
+index 42da43211765..2b44edc604a2 100644
 --- a/arch/loongarch/include/asm/uaccess.h
 +++ b/arch/loongarch/include/asm/uaccess.h
 @@ -162,7 +162,7 @@ do {									\
  	"2:							\n"	\
  	"	.section .fixup,\"ax\"				\n"	\
  	"3:	li.w	%0, %3					\n"	\
--	"	or	%1, $r0, $r0				\n"	\
-+	"	or	%1, $zero, $zero			\n"	\
+-	"	or	%1, $zero, $zero			\n"	\
++	"	move	%1, $zero				\n"	\
  	"	b	2b					\n"	\
  	"	.previous					\n"	\
  	"	.section __ex_table,\"a\"			\n"	\
-diff --git a/arch/loongarch/mm/page.S b/arch/loongarch/mm/page.S
-index ddc78ab33c7b..270d509adbaa 100644
---- a/arch/loongarch/mm/page.S
-+++ b/arch/loongarch/mm/page.S
-@@ -32,7 +32,7 @@ SYM_FUNC_START(clear_page)
- 	st.d     zero, a0, -8
- 	bne      t0,   a0, 1b
+diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+index e553c5fc17da..fd6a62f17161 100644
+--- a/arch/loongarch/kernel/head.S
++++ b/arch/loongarch/kernel/head.S
+@@ -50,7 +50,7 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
+ 	/* KSave3 used for percpu base, initialized as 0 */
+ 	csrwr		zero, PERCPU_BASE_KS
+ 	/* GPR21 used for percpu base (runtime), initialized as 0 */
+-	or		u0, zero, zero
++	move		u0, zero
  
--	jirl     $r0, ra, 0
-+	jirl     zero, ra, 0
- SYM_FUNC_END(clear_page)
- EXPORT_SYMBOL(clear_page)
- 
-@@ -79,6 +79,6 @@ SYM_FUNC_START(copy_page)
- 	st.d     t7, a0,  -8
- 
- 	bne      t8, a0, 1b
--	jirl     $r0, ra, 0
-+	jirl     zero, ra, 0
- SYM_FUNC_END(copy_page)
- EXPORT_SYMBOL(copy_page)
-diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
-index 7eee40271577..9e98afe7a67f 100644
---- a/arch/loongarch/mm/tlbex.S
-+++ b/arch/loongarch/mm/tlbex.S
-@@ -47,7 +47,7 @@ SYM_FUNC_START(handle_tlb_load)
- 	 * The vmalloc handling is not in the hotpath.
- 	 */
- 	csrrd	t0, LOONGARCH_CSR_BADV
--	blt	t0, $r0, vmalloc_load
-+	blt	t0, zero, vmalloc_load
- 	csrrd	t1, LOONGARCH_CSR_PGDL
- 
- vmalloc_done_load:
-@@ -80,7 +80,7 @@ vmalloc_done_load:
- 	 * see if we need to jump to huge tlb processing.
- 	 */
- 	andi	t0, ra, _PAGE_HUGE
--	bne	t0, $r0, tlb_huge_update_load
-+	bne	t0, zero, tlb_huge_update_load
- 
- 	csrrd	t0, LOONGARCH_CSR_BADV
- 	srli.d	t0, t0, (PAGE_SHIFT + PTE_ORDER)
-@@ -100,12 +100,12 @@ smp_pgtable_change_load:
- 
- 	srli.d	ra, t0, _PAGE_PRESENT_SHIFT
- 	andi	ra, ra, 1
--	beq	ra, $r0, nopage_tlb_load
-+	beq	ra, zero, nopage_tlb_load
- 
- 	ori	t0, t0, _PAGE_VALID
- #ifdef CONFIG_SMP
- 	sc.d	t0, t1, 0
--	beq	t0, $r0, smp_pgtable_change_load
-+	beq	t0, zero, smp_pgtable_change_load
- #else
- 	st.d	t0, t1, 0
- #endif
-@@ -139,23 +139,23 @@ tlb_huge_update_load:
- #endif
- 	srli.d	ra, t0, _PAGE_PRESENT_SHIFT
- 	andi	ra, ra, 1
--	beq	ra, $r0, nopage_tlb_load
-+	beq	ra, zero, nopage_tlb_load
- 	tlbsrch
- 
- 	ori	t0, t0, _PAGE_VALID
- #ifdef CONFIG_SMP
- 	sc.d	t0, t1, 0
--	beq	t0, $r0, tlb_huge_update_load
-+	beq	t0, zero, tlb_huge_update_load
- 	ld.d	t0, t1, 0
- #else
- 	st.d	t0, t1, 0
- #endif
--	addu16i.d	t1, $r0, -(CSR_TLBIDX_EHINV >> 16)
-+	addu16i.d	t1, zero, -(CSR_TLBIDX_EHINV >> 16)
- 	addi.d	ra, t1, 0
- 	csrxchg	ra, t1, LOONGARCH_CSR_TLBIDX
- 	tlbwr
- 
--	csrxchg	$r0, t1, LOONGARCH_CSR_TLBIDX
-+	csrxchg	zero, t1, LOONGARCH_CSR_TLBIDX
- 
- 	/*
- 	 * A huge PTE describes an area the size of the
-@@ -178,27 +178,27 @@ tlb_huge_update_load:
- 	addi.d	t0, ra, 0
- 
- 	/* Convert to entrylo1 */
--	addi.d	t1, $r0, 1
-+	addi.d	t1, zero, 1
- 	slli.d	t1, t1, (HPAGE_SHIFT - 1)
- 	add.d	t0, t0, t1
- 	csrwr	t0, LOONGARCH_CSR_TLBELO1
- 
- 	/* Set huge page tlb entry size */
--	addu16i.d	t0, $r0, (CSR_TLBIDX_PS >> 16)
--	addu16i.d	t1, $r0, (PS_HUGE_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
-+	addu16i.d	t0, zero, (CSR_TLBIDX_PS >> 16)
-+	addu16i.d	t1, zero, (PS_HUGE_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
- 	csrxchg		t1, t0, LOONGARCH_CSR_TLBIDX
- 
- 	tlbfill
- 
--	addu16i.d	t0, $r0, (CSR_TLBIDX_PS >> 16)
--	addu16i.d	t1, $r0, (PS_DEFAULT_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
-+	addu16i.d	t0, zero, (CSR_TLBIDX_PS >> 16)
-+	addu16i.d	t1, zero, (PS_DEFAULT_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
- 	csrxchg		t1, t0, LOONGARCH_CSR_TLBIDX
- 
- nopage_tlb_load:
- 	dbar	0
- 	csrrd	ra, EXCEPTION_KS2
- 	la.abs	t0, tlb_do_page_fault_0
--	jirl	$r0, t0, 0
-+	jirl	zero, t0, 0
- SYM_FUNC_END(handle_tlb_load)
- 
- SYM_FUNC_START(handle_tlb_store)
-@@ -210,7 +210,7 @@ SYM_FUNC_START(handle_tlb_store)
- 	 * The vmalloc handling is not in the hotpath.
- 	 */
- 	csrrd	t0, LOONGARCH_CSR_BADV
--	blt	t0, $r0, vmalloc_store
-+	blt	t0, zero, vmalloc_store
- 	csrrd	t1, LOONGARCH_CSR_PGDL
- 
- vmalloc_done_store:
-@@ -244,7 +244,7 @@ vmalloc_done_store:
- 	 * see if we need to jump to huge tlb processing.
- 	 */
- 	andi	t0, ra, _PAGE_HUGE
--	bne	t0, $r0, tlb_huge_update_store
-+	bne	t0, zero, tlb_huge_update_store
- 
- 	csrrd	t0, LOONGARCH_CSR_BADV
- 	srli.d	t0, t0, (PAGE_SHIFT + PTE_ORDER)
-@@ -265,12 +265,12 @@ smp_pgtable_change_store:
- 	srli.d	ra, t0, _PAGE_PRESENT_SHIFT
- 	andi	ra, ra, ((_PAGE_PRESENT | _PAGE_WRITE) >> _PAGE_PRESENT_SHIFT)
- 	xori	ra, ra, ((_PAGE_PRESENT | _PAGE_WRITE) >> _PAGE_PRESENT_SHIFT)
--	bne	ra, $r0, nopage_tlb_store
-+	bne	ra, zero, nopage_tlb_store
- 
- 	ori	t0, t0, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
- #ifdef CONFIG_SMP
- 	sc.d	t0, t1, 0
--	beq	t0, $r0, smp_pgtable_change_store
-+	beq	t0, zero, smp_pgtable_change_store
- #else
- 	st.d	t0, t1, 0
- #endif
-@@ -306,24 +306,24 @@ tlb_huge_update_store:
- 	srli.d	ra, t0, _PAGE_PRESENT_SHIFT
- 	andi	ra, ra, ((_PAGE_PRESENT | _PAGE_WRITE) >> _PAGE_PRESENT_SHIFT)
- 	xori	ra, ra, ((_PAGE_PRESENT | _PAGE_WRITE) >> _PAGE_PRESENT_SHIFT)
--	bne	ra, $r0, nopage_tlb_store
-+	bne	ra, zero, nopage_tlb_store
- 
- 	tlbsrch
- 	ori	t0, t0, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
- 
- #ifdef CONFIG_SMP
- 	sc.d	t0, t1, 0
--	beq	t0, $r0, tlb_huge_update_store
-+	beq	t0, zero, tlb_huge_update_store
- 	ld.d	t0, t1, 0
- #else
- 	st.d	t0, t1, 0
- #endif
--	addu16i.d	t1, $r0, -(CSR_TLBIDX_EHINV >> 16)
-+	addu16i.d	t1, zero, -(CSR_TLBIDX_EHINV >> 16)
- 	addi.d	ra, t1, 0
- 	csrxchg	ra, t1, LOONGARCH_CSR_TLBIDX
- 	tlbwr
- 
--	csrxchg	$r0, t1, LOONGARCH_CSR_TLBIDX
-+	csrxchg	zero, t1, LOONGARCH_CSR_TLBIDX
- 	/*
- 	 * A huge PTE describes an area the size of the
- 	 * configured huge page size. This is twice the
-@@ -345,28 +345,28 @@ tlb_huge_update_store:
- 	addi.d	t0, ra, 0
- 
- 	/* Convert to entrylo1 */
--	addi.d	t1, $r0, 1
-+	addi.d	t1, zero, 1
- 	slli.d	t1, t1, (HPAGE_SHIFT - 1)
- 	add.d	t0, t0, t1
- 	csrwr	t0, LOONGARCH_CSR_TLBELO1
- 
- 	/* Set huge page tlb entry size */
--	addu16i.d	t0, $r0, (CSR_TLBIDX_PS >> 16)
--	addu16i.d	t1, $r0, (PS_HUGE_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
-+	addu16i.d	t0, zero, (CSR_TLBIDX_PS >> 16)
-+	addu16i.d	t1, zero, (PS_HUGE_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
- 	csrxchg		t1, t0, LOONGARCH_CSR_TLBIDX
- 
- 	tlbfill
- 
- 	/* Reset default page size */
--	addu16i.d	t0, $r0, (CSR_TLBIDX_PS >> 16)
--	addu16i.d	t1, $r0, (PS_DEFAULT_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
-+	addu16i.d	t0, zero, (CSR_TLBIDX_PS >> 16)
-+	addu16i.d	t1, zero, (PS_DEFAULT_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
- 	csrxchg		t1, t0, LOONGARCH_CSR_TLBIDX
- 
- nopage_tlb_store:
- 	dbar	0
- 	csrrd	ra, EXCEPTION_KS2
- 	la.abs	t0, tlb_do_page_fault_1
--	jirl	$r0, t0, 0
-+	jirl	zero, t0, 0
- SYM_FUNC_END(handle_tlb_store)
- 
- SYM_FUNC_START(handle_tlb_modify)
-@@ -378,7 +378,7 @@ SYM_FUNC_START(handle_tlb_modify)
- 	 * The vmalloc handling is not in the hotpath.
- 	 */
- 	csrrd	t0, LOONGARCH_CSR_BADV
--	blt	t0, $r0, vmalloc_modify
-+	blt	t0, zero, vmalloc_modify
- 	csrrd	t1, LOONGARCH_CSR_PGDL
- 
- vmalloc_done_modify:
-@@ -411,7 +411,7 @@ vmalloc_done_modify:
- 	 * see if we need to jump to huge tlb processing.
- 	 */
- 	andi	t0, ra, _PAGE_HUGE
--	bne	t0, $r0, tlb_huge_update_modify
-+	bne	t0, zero, tlb_huge_update_modify
- 
- 	csrrd	t0, LOONGARCH_CSR_BADV
- 	srli.d	t0, t0, (PAGE_SHIFT + PTE_ORDER)
-@@ -431,12 +431,12 @@ smp_pgtable_change_modify:
- 
- 	srli.d	ra, t0, _PAGE_WRITE_SHIFT
- 	andi	ra, ra, 1
--	beq	ra, $r0, nopage_tlb_modify
-+	beq	ra, zero, nopage_tlb_modify
- 
- 	ori	t0, t0, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
- #ifdef CONFIG_SMP
- 	sc.d	t0, t1, 0
--	beq	t0, $r0, smp_pgtable_change_modify
-+	beq	t0, zero, smp_pgtable_change_modify
- #else
- 	st.d	t0, t1, 0
- #endif
-@@ -471,14 +471,14 @@ tlb_huge_update_modify:
- 
- 	srli.d	ra, t0, _PAGE_WRITE_SHIFT
- 	andi	ra, ra, 1
--	beq	ra, $r0, nopage_tlb_modify
-+	beq	ra, zero, nopage_tlb_modify
- 
- 	tlbsrch
- 	ori	t0, t0, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
- 
- #ifdef CONFIG_SMP
- 	sc.d	t0, t1, 0
--	beq	t0, $r0, tlb_huge_update_modify
-+	beq	t0, zero, tlb_huge_update_modify
- 	ld.d	t0, t1, 0
- #else
- 	st.d	t0, t1, 0
-@@ -504,28 +504,28 @@ tlb_huge_update_modify:
- 	addi.d	t0, ra, 0
- 
- 	/* Convert to entrylo1 */
--	addi.d	t1, $r0, 1
-+	addi.d	t1, zero, 1
- 	slli.d	t1, t1, (HPAGE_SHIFT - 1)
- 	add.d	t0, t0, t1
- 	csrwr	t0, LOONGARCH_CSR_TLBELO1
- 
- 	/* Set huge page tlb entry size */
--	addu16i.d	t0, $r0, (CSR_TLBIDX_PS >> 16)
--	addu16i.d	t1, $r0, (PS_HUGE_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
-+	addu16i.d	t0, zero, (CSR_TLBIDX_PS >> 16)
-+	addu16i.d	t1, zero, (PS_HUGE_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
- 	csrxchg	t1, t0, LOONGARCH_CSR_TLBIDX
- 
- 	tlbwr
- 
- 	/* Reset default page size */
--	addu16i.d	t0, $r0, (CSR_TLBIDX_PS >> 16)
--	addu16i.d	t1, $r0, (PS_DEFAULT_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
-+	addu16i.d	t0, zero, (CSR_TLBIDX_PS >> 16)
-+	addu16i.d	t1, zero, (PS_DEFAULT_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
- 	csrxchg	t1, t0, LOONGARCH_CSR_TLBIDX
- 
- nopage_tlb_modify:
- 	dbar	0
- 	csrrd	ra, EXCEPTION_KS2
- 	la.abs	t0, tlb_do_page_fault_1
--	jirl	$r0, t0, 0
-+	jirl	zero, t0, 0
- SYM_FUNC_END(handle_tlb_modify)
- 
- SYM_FUNC_START(handle_tlb_refill)
+ 	la		tp, init_thread_union
+ 	/* Set the SP after an empty pt_regs.  */
 -- 
 2.35.1
 
