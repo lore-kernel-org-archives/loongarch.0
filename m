@@ -1,76 +1,85 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5BD812
-	for <loongarch@lists.linux.dev>; Tue, 26 Jul 2022 12:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1658838576; bh=NV+yavBPbFtEcwfkQQlHlIAK3M6yPJ8NxM7pKdKCDc0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QCxTn7bMSXI5l7c0FQ8wvuH2zgQXudBQfzG567x6qFk47/YvZqcE3HD+fHROY6ZKd
-	 LMsVyBBZB7XD0kwKZehnbW5Ukdm+/D3pXCWEHgJb9+mLF+69MIOmUNyuVcgWi4zVfT
-	 fSUh51a5d564PU48UdvUaMy0GYNWaN3xauD68t7E=
-Received: from ld50.lan (unknown [101.228.137.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 482336068A;
-	Tue, 26 Jul 2022 20:29:36 +0800 (CST)
-From: WANG Xuerui <kernel@xen0n.name>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v2 6/6] LoongArch: Simplify "BGT foo, zero" with BGTZ
-Date: Tue, 26 Jul 2022 20:29:20 +0800
-Message-Id: <20220726122920.2291947-7-kernel@xen0n.name>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220726122920.2291947-1-kernel@xen0n.name>
-References: <20220726122920.2291947-1-kernel@xen0n.name>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E114653
+	for <loongarch@lists.linux.dev>; Tue, 26 Jul 2022 12:40:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5331C341C0
+	for <loongarch@lists.linux.dev>; Tue, 26 Jul 2022 12:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1658839209;
+	bh=bCYD9vRu/AfAajj4LHEbqZFnMrA7xpqr3VuMRvzz5WU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tfMNZ0iJYAwwkkgv8UcM1eGZIQ/ut9shOmA0ai6zEqK+eU/Am7+s0Grhl/dn/v6UZ
+	 lMGJKOcZ5hXKoSu72TMo6POFQk1XG+V116MhVgz+Ww1zWbcnp6MQIAyQuvWq23VD1B
+	 Ls7475lhmI2pv8zZOpNoMD6VcBePcAotqBBERRElz39HdRiP1CKisEvnPdIVKZawHk
+	 By6lzuvR/aad0G/qFjq98mXn6nWvZHnYaXJBEYgmvy9HR9UMMXL9FNotbDJywngtfe
+	 ROfbu8337FQyMzyLsymHQckTl1k/G24AeVul77a/KVBh9HjxkIHVnV/Y1LAQ/p6AEe
+	 8hvccjCkp1rPQ==
+Received: by mail-vs1-f42.google.com with SMTP id 129so5927618vsq.8
+        for <loongarch@lists.linux.dev>; Tue, 26 Jul 2022 05:40:09 -0700 (PDT)
+X-Gm-Message-State: AJIora8K5mqqrY6s84Xo/Vpb9NgBxAvCMMLlZsk1Sbh5zR8RB3uQclJm
+	9Zykp6YMvRhn7nyyHf4skCsetHQie1Mst4JQTKg=
+X-Google-Smtp-Source: AGRyM1tx5Tw3iO0yxDhPS3tWZUQuQDn096FgFl8b+O6W/sLCOLcZj7S+xUlsOYKAYZd5g65v0vMXLwpZty52IqrMUQQ=
+X-Received: by 2002:a05:6102:3d3:b0:358:8a04:30cb with SMTP id
+ n19-20020a05610203d300b003588a0430cbmr598915vsq.43.1658839208858; Tue, 26 Jul
+ 2022 05:40:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220726122920.2291947-1-kernel@xen0n.name> <20220726122920.2291947-4-kernel@xen0n.name>
+In-Reply-To: <20220726122920.2291947-4-kernel@xen0n.name>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 26 Jul 2022 20:39:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6Q9VNWBevwA-ekv6KfZ5okck+Q9XONNCv3THTwSAhGUw@mail.gmail.com>
+Message-ID: <CAAhV-H6Q9VNWBevwA-ekv6KfZ5okck+Q9XONNCv3THTwSAhGUw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] LoongArch: Remove several syntactic sugar macros
+ for branches
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, WANG Xuerui <git@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
 
-From: WANG Xuerui <git@xen0n.name>
+Hi, Xuerui,
 
-Support for the syntactic sugar is present in upstream binutils port
-from the beginning. Use it for shorter lines and better consistency.
-Generated code should be identical.
+This patch should be the first one or the last one, why it is in the middle?
 
-Signed-off-by: WANG Xuerui <git@xen0n.name>
----
- arch/loongarch/lib/clear_user.S | 2 +-
- arch/loongarch/lib/copy_user.S  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Huacai
 
-diff --git a/arch/loongarch/lib/clear_user.S b/arch/loongarch/lib/clear_user.S
-index 25d9be5fbb19..16ba2b8dd68a 100644
---- a/arch/loongarch/lib/clear_user.S
-+++ b/arch/loongarch/lib/clear_user.S
-@@ -32,7 +32,7 @@ SYM_FUNC_START(__clear_user)
- 1:	st.b	zero, a0, 0
- 	addi.d	a0, a0, 1
- 	addi.d	a1, a1, -1
--	bgt	a1, zero, 1b
-+	bgtz	a1, 1b
- 
- 2:	move	a0, a1
- 	jr	ra
-diff --git a/arch/loongarch/lib/copy_user.S b/arch/loongarch/lib/copy_user.S
-index 9ae507f851b5..97d20327a69e 100644
---- a/arch/loongarch/lib/copy_user.S
-+++ b/arch/loongarch/lib/copy_user.S
-@@ -35,7 +35,7 @@ SYM_FUNC_START(__copy_user)
- 	addi.d	a0, a0, 1
- 	addi.d	a1, a1, 1
- 	addi.d	a2, a2, -1
--	bgt	a2, zero, 1b
-+	bgtz	a2, 1b
- 
- 3:	move	a0, a2
- 	jr	ra
--- 
-2.35.1
-
+On Tue, Jul 26, 2022 at 8:29 PM WANG Xuerui <kernel@xen0n.name> wrote:
+>
+> From: WANG Xuerui <git@xen0n.name>
+>
+> These syntactic sugars have been supported by upstream binutils from the
+> beginning, so no need to patch them locally.
+>
+> Signed-off-by: WANG Xuerui <git@xen0n.name>
+> ---
+>  arch/loongarch/include/asm/asmmacro.h | 12 ------------
+>  1 file changed, 12 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/asmmacro.h b/arch/loongarch/include/asm/asmmacro.h
+> index a1a04083bd67..be037a40580d 100644
+> --- a/arch/loongarch/include/asm/asmmacro.h
+> +++ b/arch/loongarch/include/asm/asmmacro.h
+> @@ -274,16 +274,4 @@
+>         nor     \dst, \src, zero
+>  .endm
+>
+> -.macro bgt r0 r1 label
+> -       blt     \r1, \r0, \label
+> -.endm
+> -
+> -.macro bltz r0 label
+> -       blt     \r0, zero, \label
+> -.endm
+> -
+> -.macro bgez r0 label
+> -       bge     \r0, zero, \label
+> -.endm
+> -
+>  #endif /* _ASM_ASMMACRO_H */
+> --
+> 2.35.1
+>
