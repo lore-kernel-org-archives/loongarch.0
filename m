@@ -1,27 +1,27 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C57805
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CDD811
 	for <loongarch@lists.linux.dev>; Tue, 26 Jul 2022 12:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1658838575; bh=7wo6HqeCuJgS/l+hBxf0yAs2vK4p0UkAukjWzg8QRvA=;
+	t=1658838575; bh=4qbT8DoyoHLREdovm95KF4jkTAcraPcmvTA9Tz5uBwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sUO4unte1Cb3be7VjuC5DdtQOCbyMCYaVKxkg4yXFoC8lXCEREdZ2N+BP+e9xPjKq
-	 4JeCAxHlLWtpq3PCkaag8X7jGMVeJ/rO/eZDeaey1sdtYhkNOxHpNZz6VWu/iO+3g4
-	 9MTy6VuRd90gcivRQYuVMziOoAoqHfGbrb9g7VGA=
+	b=GKwin8No+jZr13EiPBYBX4efKVLAtMi+fS52//Pi6DuYO5uB2F7vy0+zXt2KOrKxC
+	 7/wgFTA+sHkKttKQrcau+lMBSuBAy+JUInB8epJ/32CWRsS81L9xF0S54xa06ckGA6
+	 pTsRnm87Vp111Ij4DWyxTBU/UpMV+MMFpHK2jBAY=
 Received: from ld50.lan (unknown [101.228.137.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 3211260104;
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 551126067B;
 	Tue, 26 Jul 2022 20:29:35 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v2 1/6] LoongArch: Use the "jr" pseudo-instruction where applicable
-Date: Tue, 26 Jul 2022 20:29:15 +0800
-Message-Id: <20220726122920.2291947-2-kernel@xen0n.name>
+Subject: [PATCH v2 2/6] LoongArch: Use the "move" pseudo-instruction where applicable
+Date: Tue, 26 Jul 2022 20:29:16 +0800
+Message-Id: <20220726122920.2291947-3-kernel@xen0n.name>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220726122920.2291947-1-kernel@xen0n.name>
 References: <20220726122920.2291947-1-kernel@xen0n.name>
@@ -46,106 +46,91 @@ readability.
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/kernel/fpu.S   | 12 ++++++------
- arch/loongarch/kernel/genex.S |  4 ++--
- arch/loongarch/kernel/head.S  |  4 ++--
- 3 files changed, 10 insertions(+), 10 deletions(-)
+ arch/loongarch/include/asm/atomic.h  | 8 ++++----
+ arch/loongarch/include/asm/cmpxchg.h | 2 +-
+ arch/loongarch/include/asm/futex.h   | 2 +-
+ arch/loongarch/kernel/head.S         | 2 +-
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
-index a631a7137667..e14f096d40bd 100644
---- a/arch/loongarch/kernel/fpu.S
-+++ b/arch/loongarch/kernel/fpu.S
-@@ -153,7 +153,7 @@ SYM_FUNC_START(_save_fp)
- 	fpu_save_csr	a0 t1
- 	fpu_save_double a0 t1			# clobbers t1
- 	fpu_save_cc	a0 t1 t2		# clobbers t1, t2
--	jirl zero, ra, 0
-+	jr	ra
- SYM_FUNC_END(_save_fp)
- EXPORT_SYMBOL(_save_fp)
- 
-@@ -164,7 +164,7 @@ SYM_FUNC_START(_restore_fp)
- 	fpu_restore_double a0 t1		# clobbers t1
- 	fpu_restore_csr	a0 t1
- 	fpu_restore_cc	a0 t1 t2		# clobbers t1, t2
--	jirl zero, ra, 0
-+	jr	ra
- SYM_FUNC_END(_restore_fp)
- 
- /*
-@@ -216,7 +216,7 @@ SYM_FUNC_START(_init_fpu)
- 	movgr2fr.d	$f30, t1
- 	movgr2fr.d	$f31, t1
- 
--	jirl zero, ra, 0
-+	jr	ra
- SYM_FUNC_END(_init_fpu)
- 
- /*
-@@ -229,7 +229,7 @@ SYM_FUNC_START(_save_fp_context)
- 	sc_save_fcsr a2 t1
- 	sc_save_fp a0
- 	li.w	a0, 0					# success
--	jirl zero, ra, 0
-+	jr	ra
- SYM_FUNC_END(_save_fp_context)
- 
- /*
-@@ -242,10 +242,10 @@ SYM_FUNC_START(_restore_fp_context)
- 	sc_restore_fcc a1 t1 t2
- 	sc_restore_fcsr a2 t1
- 	li.w	a0, 0					# success
--	jirl zero, ra, 0
-+	jr	ra
- SYM_FUNC_END(_restore_fp_context)
- 
- SYM_FUNC_START(fault)
- 	li.w	a0, -EFAULT				# failure
--	jirl zero, ra, 0
-+	jr	ra
- SYM_FUNC_END(fault)
-diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
-index 93496852b3cc..0df6d17dde23 100644
---- a/arch/loongarch/kernel/genex.S
-+++ b/arch/loongarch/kernel/genex.S
-@@ -28,7 +28,7 @@ SYM_FUNC_START(__arch_cpu_idle)
- 	nop
- 	idle	0
- 	/* end of rollback region */
--1:	jirl	zero, ra, 0
-+1:	jr	ra
- SYM_FUNC_END(__arch_cpu_idle)
- 
- SYM_FUNC_START(handle_vint)
-@@ -91,5 +91,5 @@ SYM_FUNC_END(except_vec_cex)
- 
- SYM_FUNC_START(handle_sys)
- 	la.abs	t0, handle_syscall
--	jirl    zero, t0, 0
-+	jr	t0
- SYM_FUNC_END(handle_sys)
+diff --git a/arch/loongarch/include/asm/atomic.h b/arch/loongarch/include/asm/atomic.h
+index 979367ad4e2c..a0a33ee793d6 100644
+--- a/arch/loongarch/include/asm/atomic.h
++++ b/arch/loongarch/include/asm/atomic.h
+@@ -157,7 +157,7 @@ static inline int arch_atomic_sub_if_positive(int i, atomic_t *v)
+ 		__asm__ __volatile__(
+ 		"1:	ll.w	%1, %2		# atomic_sub_if_positive\n"
+ 		"	addi.w	%0, %1, %3				\n"
+-		"	or	%1, %0, $zero				\n"
++		"	move	%1, %0					\n"
+ 		"	blt	%0, $zero, 2f				\n"
+ 		"	sc.w	%1, %2					\n"
+ 		"	beq	$zero, %1, 1b				\n"
+@@ -170,7 +170,7 @@ static inline int arch_atomic_sub_if_positive(int i, atomic_t *v)
+ 		__asm__ __volatile__(
+ 		"1:	ll.w	%1, %2		# atomic_sub_if_positive\n"
+ 		"	sub.w	%0, %1, %3				\n"
+-		"	or	%1, %0, $zero				\n"
++		"	move	%1, %0					\n"
+ 		"	blt	%0, $zero, 2f				\n"
+ 		"	sc.w	%1, %2					\n"
+ 		"	beq	$zero, %1, 1b				\n"
+@@ -320,7 +320,7 @@ static inline long arch_atomic64_sub_if_positive(long i, atomic64_t *v)
+ 		__asm__ __volatile__(
+ 		"1:	ll.d	%1, %2	# atomic64_sub_if_positive	\n"
+ 		"	addi.d	%0, %1, %3				\n"
+-		"	or	%1, %0, $zero				\n"
++		"	move	%1, %0					\n"
+ 		"	blt	%0, $zero, 2f				\n"
+ 		"	sc.d	%1, %2					\n"
+ 		"	beq	%1, $zero, 1b				\n"
+@@ -333,7 +333,7 @@ static inline long arch_atomic64_sub_if_positive(long i, atomic64_t *v)
+ 		__asm__ __volatile__(
+ 		"1:	ll.d	%1, %2	# atomic64_sub_if_positive	\n"
+ 		"	sub.d	%0, %1, %3				\n"
+-		"	or	%1, %0, $zero				\n"
++		"	move	%1, %0					\n"
+ 		"	blt	%0, $zero, 2f				\n"
+ 		"	sc.d	%1, %2					\n"
+ 		"	beq	%1, $zero, 1b				\n"
+diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/include/asm/cmpxchg.h
+index 75b3a4478652..9e9939196471 100644
+--- a/arch/loongarch/include/asm/cmpxchg.h
++++ b/arch/loongarch/include/asm/cmpxchg.h
+@@ -55,7 +55,7 @@ static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+ 	__asm__ __volatile__(						\
+ 	"1:	" ld "	%0, %2		# __cmpxchg_asm \n"		\
+ 	"	bne	%0, %z3, 2f			\n"		\
+-	"	or	$t0, %z4, $zero			\n"		\
++	"	move	$t0, %z4			\n"		\
+ 	"	" st "	$t0, %1				\n"		\
+ 	"	beq	$zero, $t0, 1b			\n"		\
+ 	"2:						\n"		\
+diff --git a/arch/loongarch/include/asm/futex.h b/arch/loongarch/include/asm/futex.h
+index 9de8231694ec..170ec9f97e58 100644
+--- a/arch/loongarch/include/asm/futex.h
++++ b/arch/loongarch/include/asm/futex.h
+@@ -82,7 +82,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr, u32 oldval, u32 newv
+ 	"# futex_atomic_cmpxchg_inatomic			\n"
+ 	"1:	ll.w	%1, %3					\n"
+ 	"	bne	%1, %z4, 3f				\n"
+-	"	or	$t0, %z5, $zero				\n"
++	"	move	$t0, %z5				\n"
+ 	"2:	sc.w	$t0, %2					\n"
+ 	"	beq	$zero, $t0, 1b				\n"
+ 	"3:							\n"
 diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index d01e62dd414f..e553c5fc17da 100644
+index e553c5fc17da..fd6a62f17161 100644
 --- a/arch/loongarch/kernel/head.S
 +++ b/arch/loongarch/kernel/head.S
-@@ -32,7 +32,7 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
- 	/* We might not get launched at the address the kernel is linked to,
- 	   so we jump there.  */
- 	la.abs		t0, 0f
--	jirl		zero, t0, 0
-+	jr		t0
- 0:
- 	la		t0, __bss_start		# clear .bss
- 	st.d		zero, t0, 0
-@@ -86,7 +86,7 @@ SYM_CODE_START(smpboot_entry)
- 	ld.d		tp, t0, CPU_BOOT_TINFO
+@@ -50,7 +50,7 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
+ 	/* KSave3 used for percpu base, initialized as 0 */
+ 	csrwr		zero, PERCPU_BASE_KS
+ 	/* GPR21 used for percpu base (runtime), initialized as 0 */
+-	or		u0, zero, zero
++	move		u0, zero
  
- 	la.abs	t0, 0f
--	jirl	zero, t0, 0
-+	jr	t0
- 0:
- 	bl		start_secondary
- SYM_CODE_END(smpboot_entry)
+ 	la		tp, init_thread_union
+ 	/* Set the SP after an empty pt_regs.  */
 -- 
 2.35.1
 
