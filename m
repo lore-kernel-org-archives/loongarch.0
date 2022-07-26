@@ -1,27 +1,27 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CDD811
-	for <loongarch@lists.linux.dev>; Tue, 26 Jul 2022 12:29:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01258815
+	for <loongarch@lists.linux.dev>; Tue, 26 Jul 2022 12:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1658838575; bh=4qbT8DoyoHLREdovm95KF4jkTAcraPcmvTA9Tz5uBwM=;
+	t=1658838575; bh=DtPW2v4hv1RbbAs85X/FaRB7B5J3+llX0O5ulbN4OkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GKwin8No+jZr13EiPBYBX4efKVLAtMi+fS52//Pi6DuYO5uB2F7vy0+zXt2KOrKxC
-	 7/wgFTA+sHkKttKQrcau+lMBSuBAy+JUInB8epJ/32CWRsS81L9xF0S54xa06ckGA6
-	 pTsRnm87Vp111Ij4DWyxTBU/UpMV+MMFpHK2jBAY=
+	b=x4pzBroenFY03uCuAgXf6xhd7Avw/gaZJVy9OWknf0406imXahDeoCJwjGNJh/rAM
+	 77FaVzKsc9HJlmljhOltVZeaqMppDvEZB5YMvW35NADAJktc/gnmsydMMobRGFakQY
+	 NT7oi8UMFRm+YiK0bkHcRGZQCFdSPZepUUevi9yc=
 Received: from ld50.lan (unknown [101.228.137.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 551126067B;
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 90D1860680;
 	Tue, 26 Jul 2022 20:29:35 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v2 2/6] LoongArch: Use the "move" pseudo-instruction where applicable
-Date: Tue, 26 Jul 2022 20:29:16 +0800
-Message-Id: <20220726122920.2291947-3-kernel@xen0n.name>
+Subject: [PATCH v2 3/6] LoongArch: Remove several syntactic sugar macros for branches
+Date: Tue, 26 Jul 2022 20:29:17 +0800
+Message-Id: <20220726122920.2291947-4-kernel@xen0n.name>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220726122920.2291947-1-kernel@xen0n.name>
 References: <20220726122920.2291947-1-kernel@xen0n.name>
@@ -35,102 +35,35 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Some of the assembly code in the LoongArch port likely originated
-from a time when the assembler did not support pseudo-instructions like
-"move" or "jr", so the desugared form was used and readability suffers
-(to a minor degree) as a result.
-
-As the upstream toolchain supports these pseudo-instructions from the
-beginning, migrate the existing few usages to them for better
-readability.
+These syntactic sugars have been supported by upstream binutils from the
+beginning, so no need to patch them locally.
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/include/asm/atomic.h  | 8 ++++----
- arch/loongarch/include/asm/cmpxchg.h | 2 +-
- arch/loongarch/include/asm/futex.h   | 2 +-
- arch/loongarch/kernel/head.S         | 2 +-
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ arch/loongarch/include/asm/asmmacro.h | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/atomic.h b/arch/loongarch/include/asm/atomic.h
-index 979367ad4e2c..a0a33ee793d6 100644
---- a/arch/loongarch/include/asm/atomic.h
-+++ b/arch/loongarch/include/asm/atomic.h
-@@ -157,7 +157,7 @@ static inline int arch_atomic_sub_if_positive(int i, atomic_t *v)
- 		__asm__ __volatile__(
- 		"1:	ll.w	%1, %2		# atomic_sub_if_positive\n"
- 		"	addi.w	%0, %1, %3				\n"
--		"	or	%1, %0, $zero				\n"
-+		"	move	%1, %0					\n"
- 		"	blt	%0, $zero, 2f				\n"
- 		"	sc.w	%1, %2					\n"
- 		"	beq	$zero, %1, 1b				\n"
-@@ -170,7 +170,7 @@ static inline int arch_atomic_sub_if_positive(int i, atomic_t *v)
- 		__asm__ __volatile__(
- 		"1:	ll.w	%1, %2		# atomic_sub_if_positive\n"
- 		"	sub.w	%0, %1, %3				\n"
--		"	or	%1, %0, $zero				\n"
-+		"	move	%1, %0					\n"
- 		"	blt	%0, $zero, 2f				\n"
- 		"	sc.w	%1, %2					\n"
- 		"	beq	$zero, %1, 1b				\n"
-@@ -320,7 +320,7 @@ static inline long arch_atomic64_sub_if_positive(long i, atomic64_t *v)
- 		__asm__ __volatile__(
- 		"1:	ll.d	%1, %2	# atomic64_sub_if_positive	\n"
- 		"	addi.d	%0, %1, %3				\n"
--		"	or	%1, %0, $zero				\n"
-+		"	move	%1, %0					\n"
- 		"	blt	%0, $zero, 2f				\n"
- 		"	sc.d	%1, %2					\n"
- 		"	beq	%1, $zero, 1b				\n"
-@@ -333,7 +333,7 @@ static inline long arch_atomic64_sub_if_positive(long i, atomic64_t *v)
- 		__asm__ __volatile__(
- 		"1:	ll.d	%1, %2	# atomic64_sub_if_positive	\n"
- 		"	sub.d	%0, %1, %3				\n"
--		"	or	%1, %0, $zero				\n"
-+		"	move	%1, %0					\n"
- 		"	blt	%0, $zero, 2f				\n"
- 		"	sc.d	%1, %2					\n"
- 		"	beq	%1, $zero, 1b				\n"
-diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/include/asm/cmpxchg.h
-index 75b3a4478652..9e9939196471 100644
---- a/arch/loongarch/include/asm/cmpxchg.h
-+++ b/arch/loongarch/include/asm/cmpxchg.h
-@@ -55,7 +55,7 @@ static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
- 	__asm__ __volatile__(						\
- 	"1:	" ld "	%0, %2		# __cmpxchg_asm \n"		\
- 	"	bne	%0, %z3, 2f			\n"		\
--	"	or	$t0, %z4, $zero			\n"		\
-+	"	move	$t0, %z4			\n"		\
- 	"	" st "	$t0, %1				\n"		\
- 	"	beq	$zero, $t0, 1b			\n"		\
- 	"2:						\n"		\
-diff --git a/arch/loongarch/include/asm/futex.h b/arch/loongarch/include/asm/futex.h
-index 9de8231694ec..170ec9f97e58 100644
---- a/arch/loongarch/include/asm/futex.h
-+++ b/arch/loongarch/include/asm/futex.h
-@@ -82,7 +82,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr, u32 oldval, u32 newv
- 	"# futex_atomic_cmpxchg_inatomic			\n"
- 	"1:	ll.w	%1, %3					\n"
- 	"	bne	%1, %z4, 3f				\n"
--	"	or	$t0, %z5, $zero				\n"
-+	"	move	$t0, %z5				\n"
- 	"2:	sc.w	$t0, %2					\n"
- 	"	beq	$zero, $t0, 1b				\n"
- 	"3:							\n"
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index e553c5fc17da..fd6a62f17161 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -50,7 +50,7 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
- 	/* KSave3 used for percpu base, initialized as 0 */
- 	csrwr		zero, PERCPU_BASE_KS
- 	/* GPR21 used for percpu base (runtime), initialized as 0 */
--	or		u0, zero, zero
-+	move		u0, zero
+diff --git a/arch/loongarch/include/asm/asmmacro.h b/arch/loongarch/include/asm/asmmacro.h
+index a1a04083bd67..be037a40580d 100644
+--- a/arch/loongarch/include/asm/asmmacro.h
++++ b/arch/loongarch/include/asm/asmmacro.h
+@@ -274,16 +274,4 @@
+ 	nor	\dst, \src, zero
+ .endm
  
- 	la		tp, init_thread_union
- 	/* Set the SP after an empty pt_regs.  */
+-.macro bgt r0 r1 label
+-	blt	\r1, \r0, \label
+-.endm
+-
+-.macro bltz r0 label
+-	blt	\r0, zero, \label
+-.endm
+-
+-.macro bgez r0 label
+-	bge	\r0, zero, \label
+-.endm
+-
+ #endif /* _ASM_ASMMACRO_H */
 -- 
 2.35.1
 
