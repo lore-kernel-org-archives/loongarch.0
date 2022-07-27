@@ -1,29 +1,29 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A887A
-	for <loongarch@lists.linux.dev>; Wed, 27 Jul 2022 16:29:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A0E1397
+	for <loongarch@lists.linux.dev>; Wed, 27 Jul 2022 16:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1658939381;
-	bh=5uWlBqSdy2RPXpPwAJasX2ffP9FsCCAt1xQrucd15uE=;
+	s=default; t=1658939469;
+	bh=HrNxPzF6dJ12J1BPkZaz5pUYuW251mjEZT0aRcTaEHQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=OpQy5wSbA7dWTR3bn656uDvmG/mlT/P6ZI96Voa5qTeK1Vq4TWpncb5MS+OaJX+mz
-	 1XQ0HhQ+DX1OP+BOznPPVsBVcB2raCCtbmA4XY1/CS2PZW6Agv/tj+ujn2wV8rdrks
-	 ndK8/A+E1blc08HcrDtXY/pHtkmPR+sB3UUeDcv0=
+	b=XIRjQux7MbnnW0Aj0AGPLttXUPm8Yw+iCdS0o3c7e7/Gy0uXgEXPAHrwHhZ72i6Lf
+	 fqaVEsfKo4q64xC5x21iUOLSzZi6rftk8SS/xchNMpz8KvjB77nmvW0kI/w8j3rk/N
+	 kM4u3WWUKTS7rNAQ9S2LjSh8OcZGrTGTfKbHLQqM=
 Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 40DDD66986;
-	Wed, 27 Jul 2022 12:29:39 -0400 (EDT)
-Message-ID: <4f09c81c22d0a16883a6914a8f7209957386c07c.camel@xry111.site>
-Subject: [PATCH 4/5] LoongArch: Stop using undocumented assembler options
+	by xry111.site (Postfix) with ESMTPSA id 4B3016698A;
+	Wed, 27 Jul 2022 12:31:08 -0400 (EDT)
+Message-ID: <4007f3ef167f93ffd9fcae841e144a0fc89f0117.camel@xry111.site>
+Subject: [PATCH 5/5] LoongArch: Support modules with new relocation types
 From: Xi Ruoyao <xry111@xry111.site>
 To: loongarch@lists.linux.dev
 Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
  Chen <chenhuacai@kernel.org>
-Date: Thu, 28 Jul 2022 00:29:38 +0800
+Date: Thu, 28 Jul 2022 00:31:07 +0800
 In-Reply-To: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
 References: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
@@ -36,69 +36,204 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-Now we can handle GOT and GOT-based relocations properly, remove the
-undocumented `-Wa,-mla-{global,local}-with-{pcrel,abs}` assembler hacks.
-
-Adjust assembly code to explicitly use "la.pcrel" where necessary.
+If GAS 2.40 and/or GCC 13 is used to build the kernel, the modules will
+contain R_LARCH_B26, R_LARCH_PCALA_HI20, R_LARCH_PCALA_LO12,
+R_LARCH_GOT_PC_HI20, and R_LARCH_GOT_PC_LO12 relocations.  Support them
+in the module loader to allow a kernel built with latest toolchain
+capable to load the modules.
 
 Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 ---
- arch/loongarch/Makefile      |  5 +----
- arch/loongarch/kernel/head.S | 10 +++++-----
- 2 files changed, 6 insertions(+), 9 deletions(-)
+ arch/loongarch/include/asm/elf.h        | 37 +++++++++++
+ arch/loongarch/kernel/module-sections.c | 12 +++-
+ arch/loongarch/kernel/module.c          | 83 +++++++++++++++++++++++++
+ 3 files changed, 130 insertions(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index 039dcc4fe1f3..9552c7880d34 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -40,10 +40,7 @@ endif
+diff --git a/arch/loongarch/include/asm/elf.h b/arch/loongarch/include/asm/=
+elf.h
+index f3960b18a90e..aeca7a9924ea 100644
+--- a/arch/loongarch/include/asm/elf.h
++++ b/arch/loongarch/include/asm/elf.h
+@@ -74,6 +74,43 @@
+ #define R_LARCH_SUB64				56
+ #define R_LARCH_GNU_VTINHERIT			57
+ #define R_LARCH_GNU_VTENTRY			58
++#define R_LARCH_B16				64
++#define R_LARCH_B21				65
++#define R_LARCH_B26				66
++#define R_LARCH_ABS_HI20			67
++#define R_LARCH_ABS_LO12			68
++#define R_LARCH_ABS64_LO20			69
++#define R_LARCH_ABS64_HI12			70
++#define R_LARCH_PCALA_HI20			71
++#define R_LARCH_PCALA_LO12			72
++#define R_LARCH_PCALA64_LO20			73
++#define R_LARCH_PCALA64_HI12			74
++#define R_LARCH_GOT_PC_HI20			75
++#define R_LARCH_GOT_PC_LO12			76
++#define R_LARCH_GOT64_PC_LO20			77
++#define R_LARCH_GOT64_PC_HI12			78
++#define R_LARCH_GOT_HI20			79
++#define R_LARCH_GOT_LO12			80
++#define R_LARCH_GOT64_LO20			81
++#define R_LARCH_GOT64_HI12			82
++#define R_LARCH_TLS_LE_HI20			83
++#define R_LARCH_TLS_LE_LO12			84
++#define R_LARCH_TLS_LE64_LO20			85
++#define R_LARCH_TLS_LE64_HI12			86
++#define R_LARCH_TLS_IE_PC_HI20			87
++#define R_LARCH_TLS_IE_PC_LO12			88
++#define R_LARCH_TLS_IE64_PC_LO20		89
++#define R_LARCH_TLS_IE64_PC_HI12		90
++#define R_LARCH_TLS_IE_HI20			91
++#define R_LARCH_TLS_IE_LO12			92
++#define R_LARCH_TLS_IE64_LO20			93
++#define R_LARCH_TLS_IE64_HI12			94
++#define R_LARCH_TLS_LD_PC_HI20			95
++#define R_LARCH_TLS_LD_HI20			96
++#define R_LARCH_TLS_GD_PC_HI20			97
++#define R_LARCH_TLS_GD_HI20			98
++#define R_LARCH_32_PCREL			99
++#define R_LARCH_RELAX				100
 =20
- cflags-y			+=3D -G0 -pipe -msoft-float
- LDFLAGS_vmlinux			+=3D -G0 -static -n -nostdlib
--KBUILD_AFLAGS_KERNEL		+=3D -Wa,-mla-global-with-pcrel
--KBUILD_CFLAGS_KERNEL		+=3D -Wa,-mla-global-with-pcrel
--KBUILD_AFLAGS_MODULE		+=3D -Wa,-mla-global-with-abs
--KBUILD_CFLAGS_MODULE		+=3D -fplt -Wa,-mla-global-with-abs,-mla-local-with-=
-abs
-+KBUILD_CFLAGS_MODULE		+=3D -fplt
+ #ifndef ELF_ARCH
 =20
- cflags-y +=3D -ffreestanding
- cflags-y +=3D $(call cc-option, -mno-check-zero-division)
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index 74ea7bf6c8d6..193329ed6e8c 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -60,17 +60,17 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
- 	la.abs		t0, 0f
- 	jirl		zero, t0, 0
- 0:
--	la		t0, __bss_start		# clear .bss
-+	la.pcrel	t0, __bss_start		# clear .bss
- 	st.d		zero, t0, 0
--	la		t1, __bss_stop - LONGSIZE
-+	la.pcrel	t1, __bss_stop - LONGSIZE
- 1:
- 	addi.d		t0, t0, LONGSIZE
- 	st.d		zero, t0, 0
- 	bne		t0, t1, 1b
+diff --git a/arch/loongarch/kernel/module-sections.c b/arch/loongarch/kerne=
+l/module-sections.c
+index 73976addbf60..9baf119388b9 100644
+--- a/arch/loongarch/kernel/module-sections.c
++++ b/arch/loongarch/kernel/module-sections.c
+@@ -76,12 +76,20 @@ static void count_max_entries(Elf_Rela *relas, int num,
 =20
--	la		t0, fw_arg0
-+	la.pcrel	t0, fw_arg0
- 	st.d		a0, t0, 0		# firmware arguments
--	la		t0, fw_arg1
-+	la.pcrel	t0, fw_arg1
- 	st.d		a1, t0, 0
+ 	for (i =3D 0; i < num; i++) {
+ 		type =3D ELF_R_TYPE(relas[i].r_info);
+-		if (type =3D=3D R_LARCH_SOP_PUSH_PLT_PCREL) {
++		switch (type) {
++		case R_LARCH_SOP_PUSH_PLT_PCREL:
++		case R_LARCH_B26:
+ 			if (!duplicate_rela(relas, i))
+ 				(*plts)++;
+-		} else if (type =3D=3D R_LARCH_SOP_PUSH_GPREL)
++			break;
++		case R_LARCH_SOP_PUSH_GPREL:
++		case R_LARCH_GOT_PC_HI20:
+ 			if (!duplicate_rela(relas, i))
+ 				(*gots)++;
++			break;
++		default:
++			/* Do nothing. */
++		}
+ 	}
+ }
 =20
- 	/* KSave3 used for percpu base, initialized as 0 */
-@@ -78,7 +78,7 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
- 	/* GPR21 used for percpu base (runtime), initialized as 0 */
- 	or		u0, zero, zero
+diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/module.=
+c
+index e5f1fd022cd0..1aa6a58b1c21 100644
+--- a/arch/loongarch/kernel/module.c
++++ b/arch/loongarch/kernel/module.c
+@@ -291,6 +291,84 @@ static int apply_r_larch_add_sub(struct module *mod, u=
+32 *location, Elf_Addr v,
+ 	}
+ }
 =20
--	la		tp, init_thread_union
-+	la.pcrel	tp, init_thread_union
- 	/* Set the SP after an empty pt_regs.  */
- 	PTR_LI		sp, (_THREAD_SIZE - 32 - PT_SIZE)
- 	PTR_ADD		sp, sp, tp
++static int apply_r_larch_b26(struct module *mod, u32 *location, Elf_Addr v=
+,
++			s64 *rela_stack, size_t *rela_stack_top, unsigned int type)
++{
++	ptrdiff_t offset =3D (void *)v - (void *)location;
++
++	if (offset >=3D SZ_128M)
++		v =3D module_emit_plt_entry(mod, v);
++
++	if (offset < -SZ_128M)
++		v =3D module_emit_plt_entry(mod, v);
++
++	offset =3D (void *)v - (void *)location;
++
++	if (!signed_imm_check(offset, 28)) {
++		pr_err("module %s: jump offset =3D 0x%llx overflow! dangerous R_LARCH_B2=
+6 (%u) relocation\n",
++				mod->name, (long long)offset, type);
++		return -ENOEXEC;
++	}
++
++	if (offset & 3) {
++		pr_err("module %s: jump offset =3D 0x%llx unaligned! dangerous R_LARCH_B=
+26 (%u) relocation\n",
++				mod->name, (long long)offset, type);
++		return -ENOEXEC;
++	}
++
++	*location &=3D ~(u32)0x3ffffff;
++	*location |=3D (offset >> 18) & 0x3ff;
++	*location |=3D ((offset >> 2) & 0xffff) << 10;
++	return 0;
++}
++
++static int apply_r_larch_pcala_hi20(struct module *mod, u32 *location,
++		Elf_Addr v, s64 *rela_stack, size_t *rela_stack_top,
++		unsigned int type)
++{
++	ptrdiff_t offset =3D (void *)((v + 0x800) & ~0xfff) -
++		(void *)((Elf_Addr)location & ~0xfff);
++
++	if (!signed_imm_check(offset, 32)) {
++		pr_err("module %s: PCALA offset =3D 0x%llx does not fit in 32-bit signed=
+ and is unsupported by kernel! dangerous %s (%u) relocation\n",
++				mod->name, (long long)offset, __func__, type);
++		return -ENOEXEC;
++	}
++
++	*location &=3D ~((u32)0xfffff << 5);
++	*location |=3D ((offset >> 12) & 0xfffff) << 5;
++	return 0;
++}
++
++static int apply_r_larch_got_pc_hi20(struct module *mod, u32 *location,
++		Elf_Addr v, s64 *rela_stack, size_t *rela_stack_top,
++		unsigned int type)
++{
++	Elf_Addr got =3D module_emit_got_entry(mod, v);
++
++	return apply_r_larch_pcala_hi20(mod, location, got, rela_stack,
++			rela_stack_top, type);
++}
++
++static int apply_r_larch_pcala_lo12(struct module *mod, u32 *location,
++		Elf_Addr v, s64 *rela_stack, size_t *rela_stack_top,
++		unsigned int type)
++{
++	*location &=3D ~((u32)0xfff << 10);
++	*location |=3D ((u32)v & 0xfff) << 10;
++	return 0;
++}
++
++static int apply_r_larch_got_pc_lo12(struct module *mod, u32 *location,
++		Elf_Addr v, s64 *rela_stack, size_t *rela_stack_top,
++		unsigned int type)
++{
++	Elf_Addr got =3D module_emit_got_entry(mod, v);
++
++	return apply_r_larch_pcala_lo12(mod, location, got, rela_stack,
++			rela_stack_top, type);
++}
++
+ /*
+  * reloc_handlers_rela() - Apply a particular relocation to a module
+  * @mod: the module to apply the reloc to
+@@ -321,6 +399,11 @@ static reloc_rela_handler reloc_rela_handlers[] =3D {
+ 	[R_LARCH_SOP_POP_32_S_10_5 ... R_LARCH_SOP_POP_32_U] =3D apply_r_larch_so=
+p_imm_field,
+ 	[R_LARCH_ADD32 ... R_LARCH_SUB64]		     =3D apply_r_larch_add_sub,
+ 	[R_LARCH_SOP_PUSH_GPREL]			     =3D apply_r_larch_sop_push_gprel,
++	[R_LARCH_B26]					     =3D apply_r_larch_b26,
++	[R_LARCH_PCALA_HI20]				     =3D apply_r_larch_pcala_hi20,
++	[R_LARCH_PCALA_LO12]				     =3D apply_r_larch_pcala_lo12,
++	[R_LARCH_GOT_PC_HI20]				     =3D apply_r_larch_got_pc_hi20,
++	[R_LARCH_GOT_PC_LO12]				     =3D apply_r_larch_got_pc_lo12,
+ };
+=20
+ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
 --=20
 2.37.0
 
