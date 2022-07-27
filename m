@@ -1,30 +1,29 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D95A7A
-	for <loongarch@lists.linux.dev>; Wed, 27 Jul 2022 16:28:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A887A
+	for <loongarch@lists.linux.dev>; Wed, 27 Jul 2022 16:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1658939322;
-	bh=Iwt8WdYsuC5jK4JTIRtEaA1Ad9D4kr5a9YoeDI0+3FU=;
+	s=default; t=1658939381;
+	bh=5uWlBqSdy2RPXpPwAJasX2ffP9FsCCAt1xQrucd15uE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ggUT3csrm6pEJ5Wmol1fudCE/EKG7wqnSEXfikmrzN+PId1w+FCAFt1KI5jXx5vR4
-	 EQZyhh27swq4ZjBoxFDDvhO+wRGLrlculT22SI0eE9uJGohhNj36eaiR7l3vP3UqnI
-	 kQtnSlTbcHEX26UpQspAh35ZnYqaKnIyHzJEXjN0=
+	b=OpQy5wSbA7dWTR3bn656uDvmG/mlT/P6ZI96Voa5qTeK1Vq4TWpncb5MS+OaJX+mz
+	 1XQ0HhQ+DX1OP+BOznPPVsBVcB2raCCtbmA4XY1/CS2PZW6Agv/tj+ujn2wV8rdrks
+	 ndK8/A+E1blc08HcrDtXY/pHtkmPR+sB3UUeDcv0=
 Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 0E74266986;
-	Wed, 27 Jul 2022 12:28:40 -0400 (EDT)
-Message-ID: <99733532831377ab6585d43ee40bf314a2d4c5a3.camel@xry111.site>
-Subject: [PATCH 3/5] LoongArch: Support relocation against
- _GLOBAL_OFFSET_TABLE_
+	by xry111.site (Postfix) with ESMTPSA id 40DDD66986;
+	Wed, 27 Jul 2022 12:29:39 -0400 (EDT)
+Message-ID: <4f09c81c22d0a16883a6914a8f7209957386c07c.camel@xry111.site>
+Subject: [PATCH 4/5] LoongArch: Stop using undocumented assembler options
 From: Xi Ruoyao <xry111@xry111.site>
 To: loongarch@lists.linux.dev
 Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
  Chen <chenhuacai@kernel.org>
-Date: Thu, 28 Jul 2022 00:28:39 +0800
+Date: Thu, 28 Jul 2022 00:29:38 +0800
 In-Reply-To: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
 References: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
@@ -37,73 +36,69 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-With the stack-based relocations, the assembler emits three relocations
-to push the PC-relative offset of a GOT entry:
+Now we can handle GOT and GOT-based relocations properly, remove the
+undocumented `-Wa,-mla-{global,local}-with-{pcrel,abs}` assembler hacks.
 
-    R_LARCH_SOP_PUSH_PCREL _GLOBAL_OFFSET_TABLE_
-    R_LARCH_SOP_PUSH_GPREL foo
-    R_LARCH_SOP_ADD
-
-"_GLOBAL_OFFSET_TABLE_" does not really exist in the symtab and the BFD
-linker handles it with special hack.  Implement a similar hack for
-kernel so we will be able to really use R_LARCH_SOP_PUSH_GPREL
-relocation.
+Adjust assembly code to explicitly use "la.pcrel" where necessary.
 
 Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 ---
- arch/loongarch/kernel/module-sections.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/loongarch/Makefile      |  5 +----
+ arch/loongarch/kernel/head.S | 10 +++++-----
+ 2 files changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/arch/loongarch/kernel/module-sections.c b/arch/loongarch/kerne=
-l/module-sections.c
-index 509c0b86b1e9..73976addbf60 100644
---- a/arch/loongarch/kernel/module-sections.c
-+++ b/arch/loongarch/kernel/module-sections.c
-@@ -89,6 +89,9 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *s=
-echdrs,
- 			      char *secstrings, struct module *mod)
- {
- 	unsigned int i, num_plts =3D 0, num_gots =3D 0;
-+	Elf_Shdr *symtab =3D NULL;
-+	Elf_Sym *symbols;
-+	char *strings;
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index 039dcc4fe1f3..9552c7880d34 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -40,10 +40,7 @@ endif
 =20
- 	/*
- 	 * Find the empty .plt sections.
-@@ -100,6 +103,8 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr =
-*sechdrs,
- 			mod->arch.plt_idx.shdr =3D sechdrs + i;
- 		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".got"))
- 			mod->arch.got.shdr =3D sechdrs + i;
-+		else if (sechdrs[i].sh_type =3D=3D SHT_SYMTAB)
-+			symtab =3D sechdrs + i;
- 	}
+ cflags-y			+=3D -G0 -pipe -msoft-float
+ LDFLAGS_vmlinux			+=3D -G0 -static -n -nostdlib
+-KBUILD_AFLAGS_KERNEL		+=3D -Wa,-mla-global-with-pcrel
+-KBUILD_CFLAGS_KERNEL		+=3D -Wa,-mla-global-with-pcrel
+-KBUILD_AFLAGS_MODULE		+=3D -Wa,-mla-global-with-abs
+-KBUILD_CFLAGS_MODULE		+=3D -fplt -Wa,-mla-global-with-abs,-mla-local-with-=
+abs
++KBUILD_CFLAGS_MODULE		+=3D -fplt
 =20
- 	if (!mod->arch.plt.shdr) {
-@@ -115,6 +120,22 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr=
- *sechdrs,
- 		return -ENOEXEC;
- 	}
+ cflags-y +=3D -ffreestanding
+ cflags-y +=3D $(call cc-option, -mno-check-zero-division)
+diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+index 74ea7bf6c8d6..193329ed6e8c 100644
+--- a/arch/loongarch/kernel/head.S
++++ b/arch/loongarch/kernel/head.S
+@@ -60,17 +60,17 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
+ 	la.abs		t0, 0f
+ 	jirl		zero, t0, 0
+ 0:
+-	la		t0, __bss_start		# clear .bss
++	la.pcrel	t0, __bss_start		# clear .bss
+ 	st.d		zero, t0, 0
+-	la		t1, __bss_stop - LONGSIZE
++	la.pcrel	t1, __bss_stop - LONGSIZE
+ 1:
+ 	addi.d		t0, t0, LONGSIZE
+ 	st.d		zero, t0, 0
+ 	bne		t0, t1, 1b
 =20
-+	if (!symtab) {
-+		pr_err("%s: module symbol table missing\n", mod->name);
-+		return -ENOEXEC;
-+	}
-+
-+	symbols =3D (void *) ehdr + symtab->sh_offset;
-+	strings =3D (void *) ehdr + sechdrs[symtab->sh_link].sh_offset;
-+
-+	for (i =3D 0; i < symtab->sh_size / sizeof(Elf_Sym); i++)
-+		if (symbols[i].st_shndx =3D=3D SHN_UNDEF &&
-+		    strcmp(strings + symbols[i].st_name,
-+			   "_GLOBAL_OFFSET_TABLE_") =3D=3D 0) {
-+			symbols[i].st_shndx =3D mod->arch.got.shdr - sechdrs;
-+			symbols[i].st_value =3D 0;
-+		}
-+
- 	/* Calculate the maxinum number of entries */
- 	for (i =3D 0; i < ehdr->e_shnum; i++) {
- 		int num_rela =3D sechdrs[i].sh_size / sizeof(Elf_Rela);
+-	la		t0, fw_arg0
++	la.pcrel	t0, fw_arg0
+ 	st.d		a0, t0, 0		# firmware arguments
+-	la		t0, fw_arg1
++	la.pcrel	t0, fw_arg1
+ 	st.d		a1, t0, 0
+=20
+ 	/* KSave3 used for percpu base, initialized as 0 */
+@@ -78,7 +78,7 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
+ 	/* GPR21 used for percpu base (runtime), initialized as 0 */
+ 	or		u0, zero, zero
+=20
+-	la		tp, init_thread_union
++	la.pcrel	tp, init_thread_union
+ 	/* Set the SP after an empty pt_regs.  */
+ 	PTR_LI		sp, (_THREAD_SIZE - 32 - PT_SIZE)
+ 	PTR_ADD		sp, sp, tp
 --=20
 2.37.0
 
