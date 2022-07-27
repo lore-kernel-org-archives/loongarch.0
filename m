@@ -1,30 +1,30 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA587A
-	for <loongarch@lists.linux.dev>; Wed, 27 Jul 2022 16:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D95A7A
+	for <loongarch@lists.linux.dev>; Wed, 27 Jul 2022 16:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1658939237;
-	bh=w78BZb3/xqbgYQ+T36abwKpBBa08iLK+uJwtwbDSaKg=;
+	s=default; t=1658939322;
+	bh=Iwt8WdYsuC5jK4JTIRtEaA1Ad9D4kr5a9YoeDI0+3FU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HrXKGczgsN/yeNOdBYgBvIkK2za43JLopbFjIe09dStH7jCVaz901Wnmb3OlH8/HG
-	 dZ1f5HK6FVF06WYvVUwtGqx23jJwLaT21lZhoEGuo/HbfWGUVLy2vuwes/QSAkUXs3
-	 ep6P+ub1a17cbpCpEzrRQo7O7rqOdecgo/1byKao=
+	b=ggUT3csrm6pEJ5Wmol1fudCE/EKG7wqnSEXfikmrzN+PId1w+FCAFt1KI5jXx5vR4
+	 EQZyhh27swq4ZjBoxFDDvhO+wRGLrlculT22SI0eE9uJGohhNj36eaiR7l3vP3UqnI
+	 kQtnSlTbcHEX26UpQspAh35ZnYqaKnIyHzJEXjN0=
 Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id EC28766986;
-	Wed, 27 Jul 2022 12:27:15 -0400 (EDT)
-Message-ID: <26cf3550ce5f6a02631da29361b3fcac30a598d9.camel@xry111.site>
-Subject: [PATCH 2/5] LoongArch: Support R_LARCH_SOP_PUSH_GPREL relocation
- type in kernel module
+	by xry111.site (Postfix) with ESMTPSA id 0E74266986;
+	Wed, 27 Jul 2022 12:28:40 -0400 (EDT)
+Message-ID: <99733532831377ab6585d43ee40bf314a2d4c5a3.camel@xry111.site>
+Subject: [PATCH 3/5] LoongArch: Support relocation against
+ _GLOBAL_OFFSET_TABLE_
 From: Xi Ruoyao <xry111@xry111.site>
 To: loongarch@lists.linux.dev
 Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
  Chen <chenhuacai@kernel.org>
-Date: Thu, 28 Jul 2022 00:27:14 +0800
+Date: Thu, 28 Jul 2022 00:28:39 +0800
 In-Reply-To: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
 References: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
@@ -37,50 +37,73 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-This relocation type pushes the offset of the GOT entry for a symbol
-from the beginning of GOT into the relocation stack.  Our linker script
-has initialized an empty GOT, so we need to create a new GOT entry if
-there is no exist one for a symbol.
+With the stack-based relocations, the assembler emits three relocations
+to push the PC-relative offset of a GOT entry:
+
+    R_LARCH_SOP_PUSH_PCREL _GLOBAL_OFFSET_TABLE_
+    R_LARCH_SOP_PUSH_GPREL foo
+    R_LARCH_SOP_ADD
+
+"_GLOBAL_OFFSET_TABLE_" does not really exist in the symtab and the BFD
+linker handles it with special hack.  Implement a similar hack for
+kernel so we will be able to really use R_LARCH_SOP_PUSH_GPREL
+relocation.
 
 Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 ---
- arch/loongarch/kernel/module.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/loongarch/kernel/module-sections.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/module.=
-c
-index 638427ff0d51..e5f1fd022cd0 100644
---- a/arch/loongarch/kernel/module.c
-+++ b/arch/loongarch/kernel/module.c
-@@ -122,6 +122,16 @@ static int apply_r_larch_sop_push_plt_pcrel(struct mod=
-ule *mod, u32 *location, E
- 	return apply_r_larch_sop_push_pcrel(mod, location, v, rela_stack, rela_st=
-ack_top, type);
- }
-=20
-+static int apply_r_larch_sop_push_gprel(struct module *mod, u32 *location,
-+			Elf_Addr v, s64 *rela_stack, size_t *rela_stack_top,
-+			unsigned int type)
-+{
-+	Elf_Addr got =3D module_emit_got_entry(mod, v);
-+	ptrdiff_t offset =3D (void *)got - (void *)mod->arch.got.shdr->sh_addr;
-+
-+	return rela_stack_push(offset, rela_stack, rela_stack_top);
-+}
-+
- static int apply_r_larch_sop(struct module *mod, u32 *location, Elf_Addr v=
-,
- 			s64 *rela_stack, size_t *rela_stack_top, unsigned int type)
+diff --git a/arch/loongarch/kernel/module-sections.c b/arch/loongarch/kerne=
+l/module-sections.c
+index 509c0b86b1e9..73976addbf60 100644
+--- a/arch/loongarch/kernel/module-sections.c
++++ b/arch/loongarch/kernel/module-sections.c
+@@ -89,6 +89,9 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *s=
+echdrs,
+ 			      char *secstrings, struct module *mod)
  {
-@@ -310,6 +320,7 @@ static reloc_rela_handler reloc_rela_handlers[] =3D {
- 	[R_LARCH_SOP_SUB ... R_LARCH_SOP_IF_ELSE] 	     =3D apply_r_larch_sop,
- 	[R_LARCH_SOP_POP_32_S_10_5 ... R_LARCH_SOP_POP_32_U] =3D apply_r_larch_so=
-p_imm_field,
- 	[R_LARCH_ADD32 ... R_LARCH_SUB64]		     =3D apply_r_larch_add_sub,
-+	[R_LARCH_SOP_PUSH_GPREL]			     =3D apply_r_larch_sop_push_gprel,
- };
+ 	unsigned int i, num_plts =3D 0, num_gots =3D 0;
++	Elf_Shdr *symtab =3D NULL;
++	Elf_Sym *symbols;
++	char *strings;
 =20
- int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+ 	/*
+ 	 * Find the empty .plt sections.
+@@ -100,6 +103,8 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr =
+*sechdrs,
+ 			mod->arch.plt_idx.shdr =3D sechdrs + i;
+ 		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".got"))
+ 			mod->arch.got.shdr =3D sechdrs + i;
++		else if (sechdrs[i].sh_type =3D=3D SHT_SYMTAB)
++			symtab =3D sechdrs + i;
+ 	}
+=20
+ 	if (!mod->arch.plt.shdr) {
+@@ -115,6 +120,22 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr=
+ *sechdrs,
+ 		return -ENOEXEC;
+ 	}
+=20
++	if (!symtab) {
++		pr_err("%s: module symbol table missing\n", mod->name);
++		return -ENOEXEC;
++	}
++
++	symbols =3D (void *) ehdr + symtab->sh_offset;
++	strings =3D (void *) ehdr + sechdrs[symtab->sh_link].sh_offset;
++
++	for (i =3D 0; i < symtab->sh_size / sizeof(Elf_Sym); i++)
++		if (symbols[i].st_shndx =3D=3D SHN_UNDEF &&
++		    strcmp(strings + symbols[i].st_name,
++			   "_GLOBAL_OFFSET_TABLE_") =3D=3D 0) {
++			symbols[i].st_shndx =3D mod->arch.got.shdr - sechdrs;
++			symbols[i].st_value =3D 0;
++		}
++
+ 	/* Calculate the maxinum number of entries */
+ 	for (i =3D 0; i < ehdr->e_shnum; i++) {
+ 		int num_rela =3D sechdrs[i].sh_size / sizeof(Elf_Rela);
 --=20
 2.37.0
 
