@@ -1,87 +1,75 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FB1A3D
-	for <loongarch@lists.linux.dev>; Wed, 27 Jul 2022 07:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1658905504; bh=UT8bWIMZYd2/hRcgWb7BU9Sbsu2ImVUasxeDJLxN/TM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EvDSrylctg96lCOmdGJhQdcc1hL5XVmb3I+uI6zSm4ISPph+oNGYQ6KWAqDAJ6kHy
-	 uZRY8ZKyPPTZ0NtHdiRZoaEyUDmyc0jofnLkHq7gs7Em4Iup0Rqnzsfb+ytWn9ZReK
-	 r6v9bg3Q5j0SK8HsrO7r/ZgBlZZ7wZSnVfkZBBMU=
-Received: from [100.100.57.219] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 4E6926061B;
-	Wed, 27 Jul 2022 15:05:04 +0800 (CST)
-Message-ID: <4457577a-64b8-4f17-c071-b23af1fe2aa5@xen0n.name>
-Date: Wed, 27 Jul 2022 15:05:03 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D2F7A
+	for <loongarch@lists.linux.dev>; Wed, 27 Jul 2022 16:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1658939083;
+	bh=URBEKTfwamiTdM/8PEcGrd5kvmSXQHincxTHAC54EM0=;
+	h=Subject:From:To:Cc:Date:From;
+	b=NZkdcT/0CeqNwa/lruV78hA5Li3djhwETZd0GhLUQsL1WThIV9La26O4FVQMIqnLQ
+	 UztdGKT98oWuQd5Ws2bHX5M1RrLfC71n6A1m998hW8LY4E5Sy3XBaJ2Wm1OOTifeNf
+	 +lRE/0m418PzjJwBa/iovnZQjtJzRyzHS6wWF69U=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id D6D5E66986;
+	Wed, 27 Jul 2022 12:24:42 -0400 (EDT)
+Message-ID: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
+Subject: [PATCH 0/5] LoongArch: Support new relocation types
+From: Xi Ruoyao <xry111@xry111.site>
+To: loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
+ Chen <chenhuacai@kernel.org>
+Date: Thu, 28 Jul 2022 00:24:40 +0800
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:105.0)
- Gecko/20100101 Thunderbird/105.0a1
-Subject: Re: [PATCH] LoongArch: Disable executable stack by default
-Content-Language: en-US
-To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@loongson.cn>,
- Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <20220726130224.3987623-1-chenhuacai@loongson.cn>
- <c873f358-628a-72d9-42e3-5f40354745b1@xen0n.name>
- <221507a09870312d86193b96f680cdf4fa5742fc.camel@xry111.site>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <221507a09870312d86193b96f680cdf4fa5742fc.camel@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 2022/7/27 14:59, Xi Ruoyao wrote:
-> On Tue, 2022-07-26 at 21:10 +0800, WANG Xuerui wrote:
->> On 2022/7/26 21:02, Huacai Chen wrote:
->>> Disable executable stack for LoongArch by default, as all modern
->>> architectures do.
->>
->> I don't know why this slipped in under everyone's eyes... Struggling
->> to
->> recall some of my mental activities during the initial review, I may
->> be
->> not too familiar with the code at that time (maybe still the case
->> now),
->> and didn't check what exactly "read_implies_exec" means in this
->> particular context. That could be just the reason for my part.
->>
->> But better mention the discussion leading to the discovery of this
->> bug:
->> "The problematic behavior was initially discovered by Andreas Schwab
->> in
->> a binutils discussion [1], fix suggested by WANG Xuerui" or something
->> along the line.
->>
->> [1]: https://sourceware.org/pipermail/binutils/2022-July/121992.html
-> 
-> I think we already have a "standard" format for this:
-> 
-> "Reported-by: Andreas Schwab <...>"
-> "Suggested-by: Wang Xuerui <...>"
-> "Url: https://sourceware.org/pipermail/binutils/2022-July/121992.html"
+The version 2.00 of LoongArch ELF ABI specification introduced new
+relocation types, and the development tree of Binutils and GCC has
+started to use them.  If the kernel is built with the latest snapshot of
+Binutils or GCC, it will fail to load the modules because of unrecognized
+relocation types in modules.
 
-Hmm, I didn't find any occurrence of "Url:" but plenty of "Link:" in the 
-kernel's commit history, so I agree the tag trio should sound even better...
+Add support for GOT and new relocation types for the module loader, so
+the kernel (with modules) can be built with the "normal" code model and
+function properly.
 
-> 
-> Tested on my A2101 board and nothing is broken so far.
-> 
-> Tested-by: Xi Ruoyao <xry111@xry111.site>
-> 
-> 
+Tested by building the kernel with Binutils & GCC master branch, and
+running the kernel with 35 in-tree modules loaded.
 
--- 
-WANG "xen0n" Xuerui
+Link: https://github.com/loongson/LoongArch-Documentation/pull/57
+Link: https://gcc.gnu.org/r13-1834
+Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommit;h=3Df0948=
+2a
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+Xi Ruoyao (5):
+  LoongArch: Add section of GOT for kernel module
+  LoongArch: Support R_LARCH_SOP_PUSH_GPREL relocation type in kernel
+    module
+  LoongArch: Support relocation against _GLOBAL_OFFSET_TABLE_
+  LoongArch: Stop using undocumented assembler options
+  LoongArch: Support modules with new relocation types
+
+ arch/loongarch/Makefile                 |  5 +-
+ arch/loongarch/include/asm/elf.h        | 37 ++++++++++
+ arch/loongarch/include/asm/module.h     | 23 ++++++
+ arch/loongarch/include/asm/module.lds.h |  1 +
+ arch/loongarch/kernel/head.S            | 10 +--
+ arch/loongarch/kernel/module-sections.c | 72 +++++++++++++++++--
+ arch/loongarch/kernel/module.c          | 94 +++++++++++++++++++++++++
+ 7 files changed, 229 insertions(+), 13 deletions(-)
+
+--=20
+2.37.0
+
 
