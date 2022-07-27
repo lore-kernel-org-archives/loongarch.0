@@ -1,588 +1,79 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837604C8B
-	for <loongarch@lists.linux.dev>; Tue, 26 Jul 2022 15:57:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1658851061; bh=R0MYn85UMyAgO/O4prSLpl1OFP6F5F9LNxrMgB8ZDBo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tE8GfMWLLoNGwwPk8rM07mta9kPkPCbJcjzB1HpPsDY4OvSEKiSHoFij113jfDxW9
-	 jev4jcajIrHNauSHKjSf2oq3bOTWMQMtu+rtr9U1a3hug098Usr+hJ4Fg+cL4wnonH
-	 MuDZYQ35CP4+O2r0wzkulZL8aUZz4/dBb1d82Tic=
-Received: from ld50.lan (unknown [101.228.137.40])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07391A3D
+	for <loongarch@lists.linux.dev>; Wed, 27 Jul 2022 06:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1658905183;
+	bh=LUb7IaUmkPxUtf7zK+C9AQwLgqePZGGBUxeRPAmvHjE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=O6EdaYemcI9C8hjUGHbHxBdnoVJ13AMudulaz4am2tqsz5lpWUCQyQkVy+h3bmW1y
+	 maheLpyuQaV+eB5sUU0HryVgfLGLHThPtwuzIVuOF0dvPpJuaN9Y2oEcfUdcOU59Pp
+	 WALomcJsfBfK1KmGqL6QVK/TRc4FMheoW8d9iNVY=
+Received: from [IPv6:240e:358:1119:7700:dc73:854d:832e:3] (unknown [IPv6:240e:358:1119:7700:dc73:854d:832e:3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 7C77B60680;
-	Tue, 26 Jul 2022 23:57:41 +0800 (CST)
-From: WANG Xuerui <kernel@xen0n.name>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jinyang He <hejinyang@loongson.cn>,
-	loongarch@lists.linux.dev,
-	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v3 8/8] LoongArch: Re-tab the assembly files
-Date: Tue, 26 Jul 2022 23:57:22 +0800
-Message-Id: <20220726155722.2402337-9-kernel@xen0n.name>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220726155722.2402337-1-kernel@xen0n.name>
-References: <20220726155722.2402337-1-kernel@xen0n.name>
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id AC535667AD;
+	Wed, 27 Jul 2022 02:59:37 -0400 (EDT)
+Message-ID: <221507a09870312d86193b96f680cdf4fa5742fc.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: Disable executable stack by default
+From: Xi Ruoyao <xry111@xry111.site>
+To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Arnd Bergmann
+	 <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org, Xuefeng Li
+	 <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, Jiaxun Yang
+	 <jiaxun.yang@flygoat.com>
+Date: Wed, 27 Jul 2022 14:59:29 +0800
+In-Reply-To: <c873f358-628a-72d9-42e3-5f40354745b1@xen0n.name>
+References: <20220726130224.3987623-1-chenhuacai@loongson.cn>
+	 <c873f358-628a-72d9-42e3-5f40354745b1@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: WANG Xuerui <git@xen0n.name>
+On Tue, 2022-07-26 at 21:10 +0800, WANG Xuerui wrote:
+> On 2022/7/26 21:02, Huacai Chen wrote:
+> > Disable executable stack for LoongArch by default, as all modern
+> > architectures do.
+>=20
+> I don't know why this slipped in under everyone's eyes... Struggling
+> to=20
+> recall some of my mental activities during the initial review, I may
+> be=20
+> not too familiar with the code at that time (maybe still the case
+> now),=20
+> and didn't check what exactly "read_implies_exec" means in this=20
+> particular context. That could be just the reason for my part.
+>=20
+> But better mention the discussion leading to the discovery of this
+> bug:=20
+> "The problematic behavior was initially discovered by Andreas Schwab
+> in=20
+> a binutils discussion [1], fix suggested by WANG Xuerui" or something=20
+> along the line.
+>=20
+> [1]: https://sourceware.org/pipermail/binutils/2022-July/121992.html
 
-Reflow the *.S files for better stylistic consistency, namely hard tabs
-after mnemonic position, and vertical alignment of the first operand
-with hard tabs. Tab width is obviously 8. Some pre-existing intra-block
-vertical alignments are preserved.
+I think we already have a "standard" format for this:
 
-Signed-off-by: WANG Xuerui <git@xen0n.name>
----
- arch/loongarch/kernel/entry.S  |   4 +-
- arch/loongarch/kernel/fpu.S    | 170 ++++++++++++++++-----------------
- arch/loongarch/kernel/genex.S  |   8 +-
- arch/loongarch/kernel/head.S   |   4 +-
- arch/loongarch/kernel/switch.S |   4 +-
- arch/loongarch/mm/page.S       | 118 +++++++++++------------
- arch/loongarch/mm/tlbex.S      |  18 ++--
- 7 files changed, 163 insertions(+), 163 deletions(-)
+"Reported-by: Andreas Schwab <...>"
+"Suggested-by: Wang Xuerui <...>"
+"Url:=C2=A0https://sourceware.org/pipermail/binutils/2022-July/121992.html"
 
-diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-index d5b3dbcf5425..d53b631c9022 100644
---- a/arch/loongarch/kernel/entry.S
-+++ b/arch/loongarch/kernel/entry.S
-@@ -27,7 +27,7 @@ SYM_FUNC_START(handle_syscall)
- 
- 	addi.d	sp, sp, -PT_SIZE
- 	cfi_st	t2, PT_R3
--	cfi_rel_offset  sp, PT_R3
-+	cfi_rel_offset	sp, PT_R3
- 	st.d	zero, sp, PT_R0
- 	csrrd	t2, LOONGARCH_CSR_PRMD
- 	st.d	t2, sp, PT_PRMD
-@@ -50,7 +50,7 @@ SYM_FUNC_START(handle_syscall)
- 	cfi_st	a7, PT_R11
- 	csrrd	ra, LOONGARCH_CSR_ERA
- 	st.d	ra, sp, PT_ERA
--	cfi_rel_offset ra, PT_ERA
-+	cfi_rel_offset	ra, PT_ERA
- 
- 	cfi_st	tp, PT_R2
- 	cfi_st	u0, PT_R21
-diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
-index e14f096d40bd..576b3370a296 100644
---- a/arch/loongarch/kernel/fpu.S
-+++ b/arch/loongarch/kernel/fpu.S
-@@ -27,78 +27,78 @@
- 	.endm
- 
- 	.macro sc_save_fp base
--	EX	fst.d $f0,  \base, (0 * FPU_REG_WIDTH)
--	EX	fst.d $f1,  \base, (1 * FPU_REG_WIDTH)
--	EX	fst.d $f2,  \base, (2 * FPU_REG_WIDTH)
--	EX	fst.d $f3,  \base, (3 * FPU_REG_WIDTH)
--	EX	fst.d $f4,  \base, (4 * FPU_REG_WIDTH)
--	EX	fst.d $f5,  \base, (5 * FPU_REG_WIDTH)
--	EX	fst.d $f6,  \base, (6 * FPU_REG_WIDTH)
--	EX	fst.d $f7,  \base, (7 * FPU_REG_WIDTH)
--	EX	fst.d $f8,  \base, (8 * FPU_REG_WIDTH)
--	EX	fst.d $f9,  \base, (9 * FPU_REG_WIDTH)
--	EX	fst.d $f10, \base, (10 * FPU_REG_WIDTH)
--	EX	fst.d $f11, \base, (11 * FPU_REG_WIDTH)
--	EX	fst.d $f12, \base, (12 * FPU_REG_WIDTH)
--	EX	fst.d $f13, \base, (13 * FPU_REG_WIDTH)
--	EX	fst.d $f14, \base, (14 * FPU_REG_WIDTH)
--	EX	fst.d $f15, \base, (15 * FPU_REG_WIDTH)
--	EX	fst.d $f16, \base, (16 * FPU_REG_WIDTH)
--	EX	fst.d $f17, \base, (17 * FPU_REG_WIDTH)
--	EX	fst.d $f18, \base, (18 * FPU_REG_WIDTH)
--	EX	fst.d $f19, \base, (19 * FPU_REG_WIDTH)
--	EX	fst.d $f20, \base, (20 * FPU_REG_WIDTH)
--	EX	fst.d $f21, \base, (21 * FPU_REG_WIDTH)
--	EX	fst.d $f22, \base, (22 * FPU_REG_WIDTH)
--	EX	fst.d $f23, \base, (23 * FPU_REG_WIDTH)
--	EX	fst.d $f24, \base, (24 * FPU_REG_WIDTH)
--	EX	fst.d $f25, \base, (25 * FPU_REG_WIDTH)
--	EX	fst.d $f26, \base, (26 * FPU_REG_WIDTH)
--	EX	fst.d $f27, \base, (27 * FPU_REG_WIDTH)
--	EX	fst.d $f28, \base, (28 * FPU_REG_WIDTH)
--	EX	fst.d $f29, \base, (29 * FPU_REG_WIDTH)
--	EX	fst.d $f30, \base, (30 * FPU_REG_WIDTH)
--	EX	fst.d $f31, \base, (31 * FPU_REG_WIDTH)
-+	EX	fst.d	$f0,  \base, (0 * FPU_REG_WIDTH)
-+	EX	fst.d	$f1,  \base, (1 * FPU_REG_WIDTH)
-+	EX	fst.d	$f2,  \base, (2 * FPU_REG_WIDTH)
-+	EX	fst.d	$f3,  \base, (3 * FPU_REG_WIDTH)
-+	EX	fst.d	$f4,  \base, (4 * FPU_REG_WIDTH)
-+	EX	fst.d	$f5,  \base, (5 * FPU_REG_WIDTH)
-+	EX	fst.d	$f6,  \base, (6 * FPU_REG_WIDTH)
-+	EX	fst.d	$f7,  \base, (7 * FPU_REG_WIDTH)
-+	EX	fst.d	$f8,  \base, (8 * FPU_REG_WIDTH)
-+	EX	fst.d	$f9,  \base, (9 * FPU_REG_WIDTH)
-+	EX	fst.d	$f10, \base, (10 * FPU_REG_WIDTH)
-+	EX	fst.d	$f11, \base, (11 * FPU_REG_WIDTH)
-+	EX	fst.d	$f12, \base, (12 * FPU_REG_WIDTH)
-+	EX	fst.d	$f13, \base, (13 * FPU_REG_WIDTH)
-+	EX	fst.d	$f14, \base, (14 * FPU_REG_WIDTH)
-+	EX	fst.d	$f15, \base, (15 * FPU_REG_WIDTH)
-+	EX	fst.d	$f16, \base, (16 * FPU_REG_WIDTH)
-+	EX	fst.d	$f17, \base, (17 * FPU_REG_WIDTH)
-+	EX	fst.d	$f18, \base, (18 * FPU_REG_WIDTH)
-+	EX	fst.d	$f19, \base, (19 * FPU_REG_WIDTH)
-+	EX	fst.d	$f20, \base, (20 * FPU_REG_WIDTH)
-+	EX	fst.d	$f21, \base, (21 * FPU_REG_WIDTH)
-+	EX	fst.d	$f22, \base, (22 * FPU_REG_WIDTH)
-+	EX	fst.d	$f23, \base, (23 * FPU_REG_WIDTH)
-+	EX	fst.d	$f24, \base, (24 * FPU_REG_WIDTH)
-+	EX	fst.d	$f25, \base, (25 * FPU_REG_WIDTH)
-+	EX	fst.d	$f26, \base, (26 * FPU_REG_WIDTH)
-+	EX	fst.d	$f27, \base, (27 * FPU_REG_WIDTH)
-+	EX	fst.d	$f28, \base, (28 * FPU_REG_WIDTH)
-+	EX	fst.d	$f29, \base, (29 * FPU_REG_WIDTH)
-+	EX	fst.d	$f30, \base, (30 * FPU_REG_WIDTH)
-+	EX	fst.d	$f31, \base, (31 * FPU_REG_WIDTH)
- 	.endm
- 
- 	.macro sc_restore_fp base
--	EX	fld.d $f0,  \base, (0 * FPU_REG_WIDTH)
--	EX	fld.d $f1,  \base, (1 * FPU_REG_WIDTH)
--	EX	fld.d $f2,  \base, (2 * FPU_REG_WIDTH)
--	EX	fld.d $f3,  \base, (3 * FPU_REG_WIDTH)
--	EX	fld.d $f4,  \base, (4 * FPU_REG_WIDTH)
--	EX	fld.d $f5,  \base, (5 * FPU_REG_WIDTH)
--	EX	fld.d $f6,  \base, (6 * FPU_REG_WIDTH)
--	EX	fld.d $f7,  \base, (7 * FPU_REG_WIDTH)
--	EX	fld.d $f8,  \base, (8 * FPU_REG_WIDTH)
--	EX	fld.d $f9,  \base, (9 * FPU_REG_WIDTH)
--	EX	fld.d $f10, \base, (10 * FPU_REG_WIDTH)
--	EX	fld.d $f11, \base, (11 * FPU_REG_WIDTH)
--	EX	fld.d $f12, \base, (12 * FPU_REG_WIDTH)
--	EX	fld.d $f13, \base, (13 * FPU_REG_WIDTH)
--	EX	fld.d $f14, \base, (14 * FPU_REG_WIDTH)
--	EX	fld.d $f15, \base, (15 * FPU_REG_WIDTH)
--	EX	fld.d $f16, \base, (16 * FPU_REG_WIDTH)
--	EX	fld.d $f17, \base, (17 * FPU_REG_WIDTH)
--	EX	fld.d $f18, \base, (18 * FPU_REG_WIDTH)
--	EX	fld.d $f19, \base, (19 * FPU_REG_WIDTH)
--	EX	fld.d $f20, \base, (20 * FPU_REG_WIDTH)
--	EX	fld.d $f21, \base, (21 * FPU_REG_WIDTH)
--	EX	fld.d $f22, \base, (22 * FPU_REG_WIDTH)
--	EX	fld.d $f23, \base, (23 * FPU_REG_WIDTH)
--	EX	fld.d $f24, \base, (24 * FPU_REG_WIDTH)
--	EX	fld.d $f25, \base, (25 * FPU_REG_WIDTH)
--	EX	fld.d $f26, \base, (26 * FPU_REG_WIDTH)
--	EX	fld.d $f27, \base, (27 * FPU_REG_WIDTH)
--	EX	fld.d $f28, \base, (28 * FPU_REG_WIDTH)
--	EX	fld.d $f29, \base, (29 * FPU_REG_WIDTH)
--	EX	fld.d $f30, \base, (30 * FPU_REG_WIDTH)
--	EX	fld.d $f31, \base, (31 * FPU_REG_WIDTH)
-+	EX	fld.d	$f0,  \base, (0 * FPU_REG_WIDTH)
-+	EX	fld.d	$f1,  \base, (1 * FPU_REG_WIDTH)
-+	EX	fld.d	$f2,  \base, (2 * FPU_REG_WIDTH)
-+	EX	fld.d	$f3,  \base, (3 * FPU_REG_WIDTH)
-+	EX	fld.d	$f4,  \base, (4 * FPU_REG_WIDTH)
-+	EX	fld.d	$f5,  \base, (5 * FPU_REG_WIDTH)
-+	EX	fld.d	$f6,  \base, (6 * FPU_REG_WIDTH)
-+	EX	fld.d	$f7,  \base, (7 * FPU_REG_WIDTH)
-+	EX	fld.d	$f8,  \base, (8 * FPU_REG_WIDTH)
-+	EX	fld.d	$f9,  \base, (9 * FPU_REG_WIDTH)
-+	EX	fld.d	$f10, \base, (10 * FPU_REG_WIDTH)
-+	EX	fld.d	$f11, \base, (11 * FPU_REG_WIDTH)
-+	EX	fld.d	$f12, \base, (12 * FPU_REG_WIDTH)
-+	EX	fld.d	$f13, \base, (13 * FPU_REG_WIDTH)
-+	EX	fld.d	$f14, \base, (14 * FPU_REG_WIDTH)
-+	EX	fld.d	$f15, \base, (15 * FPU_REG_WIDTH)
-+	EX	fld.d	$f16, \base, (16 * FPU_REG_WIDTH)
-+	EX	fld.d	$f17, \base, (17 * FPU_REG_WIDTH)
-+	EX	fld.d	$f18, \base, (18 * FPU_REG_WIDTH)
-+	EX	fld.d	$f19, \base, (19 * FPU_REG_WIDTH)
-+	EX	fld.d	$f20, \base, (20 * FPU_REG_WIDTH)
-+	EX	fld.d	$f21, \base, (21 * FPU_REG_WIDTH)
-+	EX	fld.d	$f22, \base, (22 * FPU_REG_WIDTH)
-+	EX	fld.d	$f23, \base, (23 * FPU_REG_WIDTH)
-+	EX	fld.d	$f24, \base, (24 * FPU_REG_WIDTH)
-+	EX	fld.d	$f25, \base, (25 * FPU_REG_WIDTH)
-+	EX	fld.d	$f26, \base, (26 * FPU_REG_WIDTH)
-+	EX	fld.d	$f27, \base, (27 * FPU_REG_WIDTH)
-+	EX	fld.d	$f28, \base, (28 * FPU_REG_WIDTH)
-+	EX	fld.d	$f29, \base, (29 * FPU_REG_WIDTH)
-+	EX	fld.d	$f30, \base, (30 * FPU_REG_WIDTH)
-+	EX	fld.d	$f31, \base, (31 * FPU_REG_WIDTH)
- 	.endm
- 
- 	.macro sc_save_fcc base, tmp0, tmp1
- 	movcf2gr	\tmp0, $fcc0
--	move	\tmp1, \tmp0
-+	move		\tmp1, \tmp0
- 	movcf2gr	\tmp0, $fcc1
- 	bstrins.d	\tmp1, \tmp0, 15, 8
- 	movcf2gr	\tmp0, $fcc2
-@@ -113,11 +113,11 @@
- 	bstrins.d	\tmp1, \tmp0, 55, 48
- 	movcf2gr	\tmp0, $fcc7
- 	bstrins.d	\tmp1, \tmp0, 63, 56
--	EX	st.d \tmp1, \base, 0
-+	EX	st.d	\tmp1, \base, 0
- 	.endm
- 
- 	.macro sc_restore_fcc base, tmp0, tmp1
--	EX	ld.d \tmp0, \base, 0
-+	EX	ld.d	\tmp0, \base, 0
- 	bstrpick.d	\tmp1, \tmp0, 7, 0
- 	movgr2cf	$fcc0, \tmp1
- 	bstrpick.d	\tmp1, \tmp0, 15, 8
-@@ -138,11 +138,11 @@
- 
- 	.macro sc_save_fcsr base, tmp0
- 	movfcsr2gr	\tmp0, fcsr0
--	EX	st.w \tmp0, \base, 0
-+	EX	st.w	\tmp0, \base, 0
- 	.endm
- 
- 	.macro sc_restore_fcsr base, tmp0
--	EX	ld.w \tmp0, \base, 0
-+	EX	ld.w	\tmp0, \base, 0
- 	movgr2fcsr	fcsr0, \tmp0
- 	.endm
- 
-@@ -151,9 +151,9 @@
-  */
- SYM_FUNC_START(_save_fp)
- 	fpu_save_csr	a0 t1
--	fpu_save_double a0 t1			# clobbers t1
-+	fpu_save_double	a0 t1			# clobbers t1
- 	fpu_save_cc	a0 t1 t2		# clobbers t1, t2
--	jr	ra
-+	jr		ra
- SYM_FUNC_END(_save_fp)
- EXPORT_SYMBOL(_save_fp)
- 
-@@ -161,10 +161,10 @@ EXPORT_SYMBOL(_save_fp)
-  * Restore a thread's fp context.
-  */
- SYM_FUNC_START(_restore_fp)
--	fpu_restore_double a0 t1		# clobbers t1
--	fpu_restore_csr	a0 t1
--	fpu_restore_cc	a0 t1 t2		# clobbers t1, t2
--	jr	ra
-+	fpu_restore_double	a0 t1		# clobbers t1
-+	fpu_restore_csr		a0 t1
-+	fpu_restore_cc		a0 t1 t2	# clobbers t1, t2
-+	jr			ra
- SYM_FUNC_END(_restore_fp)
- 
- /*
-@@ -225,11 +225,11 @@ SYM_FUNC_END(_init_fpu)
-  * a2: fcsr
-  */
- SYM_FUNC_START(_save_fp_context)
--	sc_save_fcc a1 t1 t2
--	sc_save_fcsr a2 t1
--	sc_save_fp a0
--	li.w	a0, 0					# success
--	jr	ra
-+	sc_save_fcc	a1 t1 t2
-+	sc_save_fcsr	a2 t1
-+	sc_save_fp	a0
-+	li.w		a0, 0				# success
-+	jr		ra
- SYM_FUNC_END(_save_fp_context)
- 
- /*
-@@ -238,11 +238,11 @@ SYM_FUNC_END(_save_fp_context)
-  * a2: fcsr
-  */
- SYM_FUNC_START(_restore_fp_context)
--	sc_restore_fp a0
--	sc_restore_fcc a1 t1 t2
--	sc_restore_fcsr a2 t1
--	li.w	a0, 0					# success
--	jr	ra
-+	sc_restore_fp	a0
-+	sc_restore_fcc	a1 t1 t2
-+	sc_restore_fcsr	a2 t1
-+	li.w		a0, 0				# success
-+	jr		ra
- SYM_FUNC_END(_restore_fp_context)
- 
- SYM_FUNC_START(fault)
-diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
-index 0df6d17dde23..75e5be807a0d 100644
---- a/arch/loongarch/kernel/genex.S
-+++ b/arch/loongarch/kernel/genex.S
-@@ -35,16 +35,16 @@ SYM_FUNC_START(handle_vint)
- 	BACKUP_T0T1
- 	SAVE_ALL
- 	la.abs	t1, __arch_cpu_idle
--	LONG_L  t0, sp, PT_ERA
-+	LONG_L	t0, sp, PT_ERA
- 	/* 32 byte rollback region */
- 	ori	t0, t0, 0x1f
- 	xori	t0, t0, 0x1f
- 	bne	t0, t1, 1f
--	LONG_S  t0, sp, PT_ERA
-+	LONG_S	t0, sp, PT_ERA
- 1:	move	a0, sp
- 	move	a1, sp
- 	la.abs	t0, do_vint
--	jirl    ra, t0, 0
-+	jirl	ra, t0, 0
- 	RESTORE_ALL_AND_RET
- SYM_FUNC_END(handle_vint)
- 
-@@ -72,7 +72,7 @@ SYM_FUNC_END(except_vec_cex)
- 	build_prep_\prep
- 	move	a0, sp
- 	la.abs	t0, do_\handler
--	jirl    ra, t0, 0
-+	jirl	ra, t0, 0
- 	RESTORE_ALL_AND_RET
- 	SYM_FUNC_END(handle_\exception)
- 	.endm
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index fd6a62f17161..7062cdf0e33e 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -85,8 +85,8 @@ SYM_CODE_START(smpboot_entry)
- 	ld.d		sp, t0, CPU_BOOT_STACK
- 	ld.d		tp, t0, CPU_BOOT_TINFO
- 
--	la.abs	t0, 0f
--	jr	t0
-+	la.abs		t0, 0f
-+	jr		t0
- 0:
- 	bl		start_secondary
- SYM_CODE_END(smpboot_entry)
-diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
-index 53e2fa8e580e..37e84ac8ffc2 100644
---- a/arch/loongarch/kernel/switch.S
-+++ b/arch/loongarch/kernel/switch.S
-@@ -24,8 +24,8 @@ SYM_FUNC_START(__switch_to)
- 	move	tp, a2
- 	cpu_restore_nonscratch a1
- 
--	li.w	t0, _THREAD_SIZE - 32
--	PTR_ADD	t0, t0, tp
-+	li.w		t0, _THREAD_SIZE - 32
-+	PTR_ADD		t0, t0, tp
- 	set_saved_sp	t0, t1, t2
- 
- 	ldptr.d	t1, a1, THREAD_CSRPRMD
-diff --git a/arch/loongarch/mm/page.S b/arch/loongarch/mm/page.S
-index 1e20dd5e3a4b..4c874a7af0ad 100644
---- a/arch/loongarch/mm/page.S
-+++ b/arch/loongarch/mm/page.S
-@@ -10,75 +10,75 @@
- 
- 	.align 5
- SYM_FUNC_START(clear_page)
--	lu12i.w  t0, 1 << (PAGE_SHIFT - 12)
--	add.d    t0, t0, a0
-+	lu12i.w	t0, 1 << (PAGE_SHIFT - 12)
-+	add.d	t0, t0, a0
- 1:
--	st.d     zero, a0, 0
--	st.d     zero, a0, 8
--	st.d     zero, a0, 16
--	st.d     zero, a0, 24
--	st.d     zero, a0, 32
--	st.d     zero, a0, 40
--	st.d     zero, a0, 48
--	st.d     zero, a0, 56
--	addi.d   a0,   a0, 128
--	st.d     zero, a0, -64
--	st.d     zero, a0, -56
--	st.d     zero, a0, -48
--	st.d     zero, a0, -40
--	st.d     zero, a0, -32
--	st.d     zero, a0, -24
--	st.d     zero, a0, -16
--	st.d     zero, a0, -8
--	bne      t0,   a0, 1b
-+	st.d	zero, a0, 0
-+	st.d	zero, a0, 8
-+	st.d	zero, a0, 16
-+	st.d	zero, a0, 24
-+	st.d	zero, a0, 32
-+	st.d	zero, a0, 40
-+	st.d	zero, a0, 48
-+	st.d	zero, a0, 56
-+	addi.d	a0,   a0, 128
-+	st.d	zero, a0, -64
-+	st.d	zero, a0, -56
-+	st.d	zero, a0, -48
-+	st.d	zero, a0, -40
-+	st.d	zero, a0, -32
-+	st.d	zero, a0, -24
-+	st.d	zero, a0, -16
-+	st.d	zero, a0, -8
-+	bne	t0,   a0, 1b
- 
--	jr       ra
-+	jr	ra
- SYM_FUNC_END(clear_page)
- EXPORT_SYMBOL(clear_page)
- 
- .align 5
- SYM_FUNC_START(copy_page)
--	lu12i.w  t8, 1 << (PAGE_SHIFT - 12)
--	add.d    t8, t8, a0
-+	lu12i.w	t8, 1 << (PAGE_SHIFT - 12)
-+	add.d	t8, t8, a0
- 1:
--	ld.d     t0, a1,  0
--	ld.d     t1, a1,  8
--	ld.d     t2, a1,  16
--	ld.d     t3, a1,  24
--	ld.d     t4, a1,  32
--	ld.d     t5, a1,  40
--	ld.d     t6, a1,  48
--	ld.d     t7, a1,  56
-+	ld.d	t0, a1, 0
-+	ld.d	t1, a1, 8
-+	ld.d	t2, a1, 16
-+	ld.d	t3, a1, 24
-+	ld.d	t4, a1, 32
-+	ld.d	t5, a1, 40
-+	ld.d	t6, a1, 48
-+	ld.d	t7, a1, 56
- 
--	st.d     t0, a0,  0
--	st.d     t1, a0,  8
--	ld.d     t0, a1,  64
--	ld.d     t1, a1,  72
--	st.d     t2, a0,  16
--	st.d     t3, a0,  24
--	ld.d     t2, a1,  80
--	ld.d     t3, a1,  88
--	st.d     t4, a0,  32
--	st.d     t5, a0,  40
--	ld.d     t4, a1,  96
--	ld.d     t5, a1,  104
--	st.d     t6, a0,  48
--	st.d     t7, a0,  56
--	ld.d     t6, a1,  112
--	ld.d     t7, a1,  120
--	addi.d   a0, a0,  128
--	addi.d   a1, a1,  128
-+	st.d	t0, a0, 0
-+	st.d	t1, a0, 8
-+	ld.d	t0, a1, 64
-+	ld.d	t1, a1, 72
-+	st.d	t2, a0, 16
-+	st.d	t3, a0, 24
-+	ld.d	t2, a1, 80
-+	ld.d	t3, a1, 88
-+	st.d	t4, a0, 32
-+	st.d	t5, a0, 40
-+	ld.d	t4, a1, 96
-+	ld.d	t5, a1, 104
-+	st.d	t6, a0, 48
-+	st.d	t7, a0, 56
-+	ld.d	t6, a1, 112
-+	ld.d	t7, a1, 120
-+	addi.d	a0, a0, 128
-+	addi.d	a1, a1, 128
- 
--	st.d     t0, a0,  -64
--	st.d     t1, a0,  -56
--	st.d     t2, a0,  -48
--	st.d     t3, a0,  -40
--	st.d     t4, a0,  -32
--	st.d     t5, a0,  -24
--	st.d     t6, a0,  -16
--	st.d     t7, a0,  -8
-+	st.d	t0, a0, -64
-+	st.d	t1, a0, -56
-+	st.d	t2, a0, -48
-+	st.d	t3, a0, -40
-+	st.d	t4, a0, -32
-+	st.d	t5, a0, -24
-+	st.d	t6, a0, -16
-+	st.d	t7, a0, -8
- 
--	bne      t8, a0, 1b
--	jr       ra
-+	bne	t8, a0, 1b
-+	jr	ra
- SYM_FUNC_END(copy_page)
- EXPORT_SYMBOL(copy_page)
-diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
-index 9ca1e3ff1ded..de19fa2d7f0d 100644
---- a/arch/loongarch/mm/tlbex.S
-+++ b/arch/loongarch/mm/tlbex.S
-@@ -18,7 +18,7 @@
- 	REG_S	a2, sp, PT_BVADDR
- 	li.w	a1, \write
- 	la.abs	t0, do_page_fault
--	jirl    ra, t0, 0
-+	jirl	ra, t0, 0
- 	RESTORE_ALL_AND_RET
- 	SYM_FUNC_END(tlb_do_page_fault_\write)
- 	.endm
-@@ -34,7 +34,7 @@ SYM_FUNC_START(handle_tlb_protect)
- 	csrrd	a2, LOONGARCH_CSR_BADV
- 	REG_S	a2, sp, PT_BVADDR
- 	la.abs	t0, do_page_fault
--	jirl    ra, t0, 0
-+	jirl	ra, t0, 0
- 	RESTORE_ALL_AND_RET
- SYM_FUNC_END(handle_tlb_protect)
- 
-@@ -151,8 +151,8 @@ tlb_huge_update_load:
- 	st.d	t0, t1, 0
- #endif
- 	addu16i.d	t1, zero, -(CSR_TLBIDX_EHINV >> 16)
--	addi.d	ra, t1, 0
--	csrxchg	ra, t1, LOONGARCH_CSR_TLBIDX
-+	addi.d		ra, t1, 0
-+	csrxchg		ra, t1, LOONGARCH_CSR_TLBIDX
- 	tlbwr
- 
- 	csrxchg	zero, t1, LOONGARCH_CSR_TLBIDX
-@@ -319,8 +319,8 @@ tlb_huge_update_store:
- 	st.d	t0, t1, 0
- #endif
- 	addu16i.d	t1, zero, -(CSR_TLBIDX_EHINV >> 16)
--	addi.d	ra, t1, 0
--	csrxchg	ra, t1, LOONGARCH_CSR_TLBIDX
-+	addi.d		ra, t1, 0
-+	csrxchg		ra, t1, LOONGARCH_CSR_TLBIDX
- 	tlbwr
- 
- 	csrxchg	zero, t1, LOONGARCH_CSR_TLBIDX
-@@ -454,7 +454,7 @@ leave_modify:
- 	ertn
- #ifdef CONFIG_64BIT
- vmalloc_modify:
--	la.abs  t1, swapper_pg_dir
-+	la.abs	t1, swapper_pg_dir
- 	b	vmalloc_done_modify
- #endif
- 
-@@ -512,14 +512,14 @@ tlb_huge_update_modify:
- 	/* Set huge page tlb entry size */
- 	addu16i.d	t0, zero, (CSR_TLBIDX_PS >> 16)
- 	addu16i.d	t1, zero, (PS_HUGE_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
--	csrxchg	t1, t0, LOONGARCH_CSR_TLBIDX
-+	csrxchg		t1, t0, LOONGARCH_CSR_TLBIDX
- 
- 	tlbwr
- 
- 	/* Reset default page size */
- 	addu16i.d	t0, zero, (CSR_TLBIDX_PS >> 16)
- 	addu16i.d	t1, zero, (PS_DEFAULT_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
--	csrxchg	t1, t0, LOONGARCH_CSR_TLBIDX
-+	csrxchg		t1, t0, LOONGARCH_CSR_TLBIDX
- 
- nopage_tlb_modify:
- 	dbar	0
--- 
-2.35.1
+Tested on my A2101 board and nothing is broken so far.
 
+Tested-by: Xi Ruoyao <xry111@xry111.site>
+
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
