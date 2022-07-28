@@ -1,77 +1,138 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B32271101
-	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 09:21:07 +0000 (UTC)
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX9MBVeJivcQ+AA--.797S3;
-	Thu, 28 Jul 2022 17:21:05 +0800 (CST)
-Subject: Re: [PATCH 1/5] LoongArch: Add section of GOT for kernel module
-To: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
-References: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
- <3f43d51d530344f73a0a7087407799ff9dff3ba8.camel@xry111.site>
- <849f514e-f78a-72a2-b94e-6974074b75eb@loongson.cn>
- <00914cf65b64e06f370213fdc079111aa2a27145.camel@xry111.site>
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@kernel.org>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <fac4319d-26ee-1702-518c-2d6fbb1a0d57@loongson.cn>
-Date: Thu, 28 Jul 2022 17:21:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E8B1101
+	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 09:25:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C3EC433D6
+	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 09:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1659000307;
+	bh=7pq/2Z60GYWXwFYneAORoRndD27DanVgbiYGcaR6gLk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ffMQFUj302iUtf3No5xdZTKyr38PfuNjv35jUAOBYxbQpNOaYu5z1qie/PPrwudVp
+	 rbor1vghIWM3G77lJrAH1ar/K9X8EzGnc9e8/UWwcqBQUJClCdBAXm5ooTEhvWwumk
+	 nqWNMZknE4HIUKhEpEMEaSDf5b46pcxY5XBNcKVtb9D7GXve33Rx3pdiwh9bXodyFe
+	 XEg3bRfmARBEBSYJiMwKWc/Xd5bITzO99wuWYIPrtYKdWbh4BZVGGcGNj9G+JeF806
+	 5OBqXWTaqiT/tRN1vGY4LeozcX0cGiLJGgnRmws4Ijuhc3+ZSH82D/StYdeoCaOheq
+	 jGKkfn69WhEcg==
+Received: by mail-vs1-f42.google.com with SMTP id x125so1057956vsb.13
+        for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 02:25:07 -0700 (PDT)
+X-Gm-Message-State: AJIora/z8xFvegfzFCPU1jAmYqPmksnK1qJd6euDtO6SwwoX2Z8Gzyet
+	FE1EtaHvc1jtrqi8vwU06vheHNpQXxlvsWwb4VE=
+X-Google-Smtp-Source: AGRyM1vyH+nsbqzZjGAJ6qBx3wXBi1+dUz0jOf3JsHZ5+CvaVM8g+iopMUmY8qoZiCb4cLiRSfo3Wa34/mRjVsyJuuo=
+X-Received: by 2002:a67:d599:0:b0:358:6371:4cfb with SMTP id
+ m25-20020a67d599000000b0035863714cfbmr6080587vsj.78.1659000306050; Thu, 28
+ Jul 2022 02:25:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <00914cf65b64e06f370213fdc079111aa2a27145.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9DxX9MBVeJivcQ+AA--.797S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrZF4xtFy5KFyxKw48CFykKrg_yoWfZrgEvr
-	nruw1kGayxuryrAwsxtrW5GrnxtanIvrykZrsrXF9xCr95tF92kF4vgw1fu3W5KrWfJrs8
-	urnaqaykZayaqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbIAYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-	8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
-	cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-	8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY
-	02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
-	6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
-	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-	uYvjxUxT5dDUUUU
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+References: <20220721130419.1904711-1-chenhuacai@loongson.cn>
+ <20220721130419.1904711-4-chenhuacai@loongson.cn> <20220722091604.GD18125@willie-the-truck>
+In-Reply-To: <20220722091604.GD18125@willie-the-truck>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 28 Jul 2022 17:24:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7sWvcVCNtzKscnYK5q0+MqdZiuywuy=_7oB7iLN9pQTA@mail.gmail.com>
+Message-ID: <CAAhV-H7sWvcVCNtzKscnYK5q0+MqdZiuywuy=_7oB7iLN9pQTA@mail.gmail.com>
+Subject: Re: [PATCH V5 3/4] mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages()
+To: Will Deacon <will@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, loongarch@lists.linux.dev, 
+	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linux-MM <linux-mm@kvack.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
+	Feiyang Chen <chenfeiyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi, Will,
 
-
-On 07/28/2022 05:02 PM, Xi Ruoyao wrote:
-> On Thu, 2022-07-28 at 16:29 +0800, Youling Tang wrote:
->> On 07/28/2022 12:26 AM, Xi Ruoyao wrote:
->>> +	mod->arch.got.shdr->sh_type = SHT_NOBITS;
->>> +	mod->arch.got.shdr->sh_flags = SHF_ALLOC;
->>> +	mod->arch.got.shdr->sh_addralign = L1_CACHE_BYTES;
->>> +	mod->arch.got.shdr->sh_size = (num_plts + 1) *
->>> sizeof(struct plt_entry);
->>> +	mod->arch.got.num_entries = 0;
->>> +	mod->arch.got.max_entries = num_plts;
->>  Hi, Ruoyao
->>
->>   We should use num_gots instead of num_plts when creating .got
->> section.
+On Fri, Jul 22, 2022 at 5:16 PM Will Deacon <will@kernel.org> wrote:
 >
-> Yes, it's a stupid error and I'll fix it in V2.
+> On Thu, Jul 21, 2022 at 09:04:18PM +0800, Huacai Chen wrote:
+> > diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+> > index 0abcb0a5f1b5..eafd084b8e19 100644
+> > --- a/mm/sparse-vmemmap.c
+> > +++ b/mm/sparse-vmemmap.c
+> > @@ -694,6 +694,69 @@ int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
+> >       return vmemmap_populate_range(start, end, node, altmap, NULL);
+> >  }
+> >
+> > +void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
+> > +                                   unsigned long addr, unsigned long next)
+> > +{
+> > +}
+> > +
+> > +int __weak __meminit vmemmap_check_pmd(pmd_t *pmd, int node, unsigned long addr,
+> > +                                    unsigned long next)
+> > +{
+> > +     return 0;
+> > +}
+> > +
+> > +int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
+> > +                                      int node, struct vmem_altmap *altmap)
+> > +{
+> > +     unsigned long addr;
+> > +     unsigned long next;
+> > +     pgd_t *pgd;
+> > +     p4d_t *p4d;
+> > +     pud_t *pud;
+> > +     pmd_t *pmd;
+> > +
+> > +     for (addr = start; addr < end; addr = next) {
+> > +             next = pmd_addr_end(addr, end);
+> > +
+> > +             pgd = vmemmap_pgd_populate(addr, node);
+> > +             if (!pgd)
+> > +                     return -ENOMEM;
+> > +
+> > +             p4d = vmemmap_p4d_populate(pgd, addr, node);
+> > +             if (!p4d)
+> > +                     return -ENOMEM;
+> > +
+> > +             pud = vmemmap_pud_populate(p4d, addr, node);
+> > +             if (!pud)
+> > +                     return -ENOMEM;
+> > +
+> > +             pmd = pmd_offset(pud, addr);
+> > +             if (pmd_none(READ_ONCE(*pmd))) {
+> > +                     void *p;
+> > +
+> > +                     p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
+> > +                     if (p) {
+> > +                             vmemmap_set_pmd(pmd, p, node, addr, next);
+> > +                             continue;
+> > +                     } else if (altmap) {
+> > +                             /*
+> > +                              * No fallback: In any case we care about, the
+> > +                              * altmap should be reasonably sized and aligned
+> > +                              * such that vmemmap_alloc_block_buf() will always
+> > +                              * succeed. If there is no more space in the altmap
+> > +                              * and we'd have to fallback to PTE (highly unlikely).
 >
-> But why didn't this cause a malfunction on my system? :(.
-
-Maybe num_plts is greater than num_gots, and the size of plt_entry is 
-equivalent to the size of four got_entry, so that when the module is 
-loaded, it just allocates a larger space without causing the module to 
-fail to load.
-
-Thanks,
-Youling
+> Can you tweak the last couple of sentences please, as they don't make sense
+> to me? To be specific, I'd suggest replacing:
 >
+>   "If there is no more space in the altmap and we'd have to fallback to PTE
+>   (highly unlikely). That could indicate an altmap-size configuration
+>   issue."
+>
+> with something like:
+>
+>   "For consistency with the PTE case, return an error here as failure could
+>    indicate a configuration issue with the size of the altmap."
+>
+> With that:
+>
+> Acked-by: Will Deacon <will@kernel.org>
+OK, I will send V5, thanks.
 
+Huacai
+>
+> Will
