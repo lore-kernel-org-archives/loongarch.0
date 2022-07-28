@@ -1,78 +1,81 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA0BE1101
-	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 09:52:59 +0000 (UTC)
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr9L_WuJi7dU+AA--.24856S3;
-	Thu, 28 Jul 2022 17:46:40 +0800 (CST)
-Subject: Re: [PATCH 4/5] LoongArch: Stop using undocumented assembler options
-To: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7802A111F
+	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 10:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1659005607;
+	bh=yRmMveNaOUKifT4ewJ5e1rXURoy9i48LHR1X4r7j7CQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=JYpaftwlnDdye6MzckAT39py18n6vZ1gI3QYA3T+dVXlNR7twUrO9OUHPMGwrHmRP
+	 blxNw0wwU0uxGCO7k/wBaKs0Ww9/8fVb5k0HzWkfeTOgonME53uANDEbvB9OmzkBKz
+	 fn42Ifm8Xd+Sa1LrBlH4AmJxbSkOG0MQMoGMBLWc=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 8381B667D6;
+	Thu, 28 Jul 2022 06:53:26 -0400 (EDT)
+Message-ID: <39d3b56e3265e70d26e1d08698b461d81c3e1c1d.camel@xry111.site>
+Subject: Re: [PATCH 1/5] LoongArch: Add section of GOT for kernel module
+From: Xi Ruoyao <xry111@xry111.site>
+To: Youling Tang <tangyouling@loongson.cn>, loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
+ Chen <chenhuacai@kernel.org>
+Date: Thu, 28 Jul 2022 18:53:24 +0800
+In-Reply-To: <fac4319d-26ee-1702-518c-2d6fbb1a0d57@loongson.cn>
 References: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
- <4f09c81c22d0a16883a6914a8f7209957386c07c.camel@xry111.site>
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@kernel.org>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <4f4ced23-2046-586c-2590-542923025149@loongson.cn>
-Date: Thu, 28 Jul 2022 17:46:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	 <3f43d51d530344f73a0a7087407799ff9dff3ba8.camel@xry111.site>
+	 <849f514e-f78a-72a2-b94e-6974074b75eb@loongson.cn>
+	 <00914cf65b64e06f370213fdc079111aa2a27145.camel@xry111.site>
+	 <fac4319d-26ee-1702-518c-2d6fbb1a0d57@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <4f09c81c22d0a16883a6914a8f7209957386c07c.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9Dxr9L_WuJi7dU+AA--.24856S3
-X-Coremail-Antispam: 1UD129KBjvJXoWrKFW5AFW5XF1fKF1fXrWUurg_yoW8Jr13pF
-	Z2kr4DJa1fGFy8tr12v343Xr1q9a1DtF12vFZI9ry8CF4UZr1fXrWaya4DWFyDX3s7AFy0
-	qr9agFy2qF45twUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
-	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
-	c2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
-	AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
-	CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280
-	aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43
-	ZEXa7IUYjXd5UUUUU==
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 
+On Thu, 2022-07-28 at 17:21 +0800, Youling Tang wrote:
+>=20
+>=20
+> On 07/28/2022 05:02 PM, Xi Ruoyao wrote:
+> > On Thu, 2022-07-28 at 16:29 +0800, Youling Tang wrote:
+> > > On 07/28/2022 12:26 AM, Xi Ruoyao wrote:
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mod->arch.got.shdr->sh_t=
+ype =3D SHT_NOBITS;
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mod->arch.got.shdr->sh_f=
+lags =3D SHF_ALLOC;
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mod->arch.got.shdr->sh_a=
+ddralign =3D L1_CACHE_BYTES;
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mod->arch.got.shdr->sh_s=
+ize =3D (num_plts + 1) *
+> > > > sizeof(struct plt_entry);
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mod->arch.got.num_entrie=
+s =3D 0;
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mod->arch.got.max_entrie=
+s =3D num_plts;
+> > > =C2=A0Hi, Ruoyao
+> > >=20
+> > > =C2=A0 We should use num_gots instead of num_plts when creating .got
+> > > section.
+> >=20
+> > Yes, it's a stupid error and I'll fix it in V2.
+> >=20
+> > But why didn't this cause a malfunction on my system? :(.
+>=20
+> Maybe num_plts is greater than num_gots, and the size of plt_entry is=20
+> equivalent to the size of four got_entry, so that when the module is=20
+> loaded, it just allocates a larger space without causing the module to
+> fail to load.
 
-On 07/28/2022 12:29 AM, Xi Ruoyao wrote:
-> Now we can handle GOT and GOT-based relocations properly, remove the
-> undocumented `-Wa,-mla-{global,local}-with-{pcrel,abs}` assembler hacks.
->
-> Adjust assembly code to explicitly use "la.pcrel" where necessary.
->
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->  arch/loongarch/Makefile      |  5 +----
->  arch/loongarch/kernel/head.S | 10 +++++-----
->  2 files changed, 6 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index 039dcc4fe1f3..9552c7880d34 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -40,10 +40,7 @@ endif
->
->  cflags-y			+= -G0 -pipe -msoft-float
->  LDFLAGS_vmlinux			+= -G0 -static -n -nostdlib
-> -KBUILD_AFLAGS_KERNEL		+= -Wa,-mla-global-with-pcrel
-> -KBUILD_CFLAGS_KERNEL		+= -Wa,-mla-global-with-pcrel
-> -KBUILD_AFLAGS_MODULE		+= -Wa,-mla-global-with-abs
-> -KBUILD_CFLAGS_MODULE		+= -fplt -Wa,-mla-global-with-abs,-mla-local-with-abs
-> +KBUILD_CFLAGS_MODULE		+= -fplt
+I'll write a module to load address of 10 kernel symbols with only one
+printk call to test before sending V2 :).
 
-The -fplt flag may be removed, the compiler defaults to -fplt if not
-specified (riscv is also not manually specified as -fplt).
-
-Thanks,
-Youling
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
