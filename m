@@ -1,35 +1,34 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4695F1399
-	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 13:10:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9F01C29
+	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 13:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1659013838;
-	bh=i9d4o6t0mhJMAsILy/hKFYjulyc2V0jBY92Uw7RPIbI=;
+	s=default; t=1659015046;
+	bh=5oTiHyOqGMawFY6tGFgbqtXOrPzO1JFb4QEGmlDiFJ4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=B4rECBn32cVv0aeGLiUQ6s/l2IZ1gpYKN8JxTAv/PgTjEPHZqGznbe7ggZHZJuLxE
-	 5bPQ9O7LG8n7mWCkPZ3Njl0BMBytp8IZ4gG4SY1ItIn9GqDeqfr6FmlP3Vqs4DmoWR
-	 xe2P50xBtMKuLih+Un/Cb0pmNBr4qjfz5qs/4rNw=
+	b=T54MoILf1qdvnrImPAyGaR/fk8q5mQMl1TZGl8Xf4ongKnRPe8RGkbU/TZrSpsTXZ
+	 cstEVYH+ytGW4V0KbquVJ3QoIq3jtRBsOErQfTpre/ZYEhMMtT2NlbCFgtkPS+ZWEg
+	 1LYw9k1bFEJqqn1xJoJrDOP0cxh2rAOR0nwJJQEc=
 Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 0037066805;
-	Thu, 28 Jul 2022 09:10:36 -0400 (EDT)
-Message-ID: <615b5bc79c9e48409361bde1af9374cacb06ec9c.camel@xry111.site>
-Subject: Re: [PATCH v2 3/4] LoongArch: Stop using undocumented assembler
- options
+	by xry111.site (Postfix) with ESMTPSA id A808166970;
+	Thu, 28 Jul 2022 09:30:44 -0400 (EDT)
+Message-ID: <20d86df48af5e0f0f17a1b1bc6b365d1c158280f.camel@xry111.site>
+Subject: Re: [PATCH v2 4/4] LoongArch: Support modules with new relocation
+ types
 From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, WANG
- Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>, Jinyang
- He <hejinyang@loongson.cn>
-Date: Thu, 28 Jul 2022 21:10:34 +0800
-In-Reply-To: <CAAhV-H5nuP2xYREtZuJnq3Sr+JpVbOzLDw+N1ep5yFSUd1+nFQ@mail.gmail.com>
+To: Youling Tang <tangyouling@loongson.cn>, loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
+ Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>
+Date: Thu, 28 Jul 2022 21:30:42 +0800
+In-Reply-To: <1c1b5d2f-84f0-534c-ace2-2da48b5a7419@loongson.cn>
 References: <c596e7a73953a1c49e8f5e94ec2db642f72e7813.camel@xry111.site>
-	 <e95cfe70e2e5faa5b9cdc9452bdb3ab8d664aff0.camel@xry111.site>
-	 <CAAhV-H5nuP2xYREtZuJnq3Sr+JpVbOzLDw+N1ep5yFSUd1+nFQ@mail.gmail.com>
+	 <93087353ec0d23c56345d4c05e3d9719b284942c.camel@xry111.site>
+	 <1c1b5d2f-84f0-534c-ace2-2da48b5a7419@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.3 
@@ -40,25 +39,35 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Thu, 2022-07-28 at 20:25 +0800, Huacai Chen wrote:
-> Hi, Ruoyao,
+On Thu, 2022-07-28 at 20:41 +0800, Youling Tang wrote:
+> Unaligned is handled more efficiently before overflow checking, while
+> being consistent with apply_r_larch_sop_imm_field.
+
+Will move unaligned before overflow in V3.
+
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*location &=3D ~(u32)0x3ffff=
+ff;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*location |=3D (offset >> 18=
+) & 0x3ff;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*location |=3D ((offset >> 2=
+) & 0xffff) << 10;
 >=20
-> On Thu, Jul 28, 2022 at 8:03 PM Xi Ruoyao <xry111@xry111.site> wrote:
-> >=20
-> > Now we can handle GOT and GOT-based relocations properly, remove the
-> > undocumented `-Wa,-mla-{global,local}-with-{pcrel,abs}` assembler
-> > hacks.
-> I think "-Wa,-mla-{global,local}-with-{pcrel,abs}" may be regular
-> options rather than "hacks". If I'm right, the title and commit
-> message should be updated. And we can send patches to binutils to make
-> them "documented".
+> It may be better to use the loongarch_instruction format to modify the
+> immediate field of the instruction, similar to the following:
+>=20
+> union loongarch_instruction *insn =3D (union loongarch_instruction *)loca=
+tion;
+>=20
+> offset >>=3D 2;
+> insn->reg0i26_format.immediate_l =3D offset & 0xffff;
+> insn->reg0i26_format.immediate_h =3D (offset >> 16) & 0x3ff;
 
-How about changing the message to:
+Will use union loongarch_instruction in V3.  Why didn't I notice it
+before? :(
 
-   GCC 13 no longer generates la.global and la.local in assembly, but
-   produces explicit PC-relative relocations to local symbols and GOT
-   entries for global symbols instead.  As the result, -Wa,-mla-* are no
-   longer sufficient to control the code generation for symbol address
-   loading.  As now we can handle GOT and GOT-based relocations
-   properly, remove those options to use GOT for global symbol address
-   consistently.
+Thanks for the review!
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
