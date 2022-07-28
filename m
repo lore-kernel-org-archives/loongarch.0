@@ -1,65 +1,99 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03669137B
-	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 11:21:16 +0000 (UTC)
-Received: from localhost.localdomain (unknown [111.9.175.10])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9EmceJizQI_AA--.43170S3;
-	Thu, 28 Jul 2022 19:21:11 +0800 (CST)
-Subject: Re: [PATCH 3/5] LoongArch: Support relocation against
- _GLOBAL_OFFSET_TABLE_
-To: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
-References: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
- <99733532831377ab6585d43ee40bf314a2d4c5a3.camel@xry111.site>
- <10c1e0f9-8409-a0f4-9b18-a5f56dfb14e1@loongson.cn>
- <9a79a424a11339ae025539c38fe121104ff00804.camel@xry111.site>
- <caf8ec4b-f74d-e6ef-17f2-9e899d41b3a9@loongson.cn>
- <73f83b51eaf40ff1f173059e1f187182db47a1c6.camel@xry111.site>
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@kernel.org>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <1671786a-d2a5-5f98-e8be-244ba0a91e91@loongson.cn>
-Date: Thu, 28 Jul 2022 19:21:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF06E137B
+	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 11:37:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 864BEC433D6;
+	Thu, 28 Jul 2022 11:37:36 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Dinh Nguyen <dinguyen@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Feiyang Chen <chenfeiyang@loongson.cn>
+Subject: [PATCH V6 0/4] mm/sparse-vmemmap: Generalise helpers and enable for LoongArch
+Date: Thu, 28 Jul 2022 19:37:57 +0800
+Message-Id: <20220728113801.2235151-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <73f83b51eaf40ff1f173059e1f187182db47a1c6.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9Dxn9EmceJizQI_AA--.43170S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jr1DCF48Gw4DuF48CFyfWFg_yoW3urcE9F
-	Z2qrn5G398Zr9FgF47KF43tr9IgF4fGr4xZFsrXa1Dt3sYqFsxCFs3urn09FyYga1jvr9I
-	gws5XF4jvwsI9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbc8YjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-	8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
-	cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
-	A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
-	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAI
-	w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
-	4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxG
-	rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8Jw
-	CI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-	6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUgg_TUUUUU
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+Content-Transfer-Encoding: 8bit
 
-On 07/28/2022 06:57 PM, Xi Ruoyao wrote:
+This series is in order to enable sparse-vmemmap for LoongArch. But
+LoongArch cannot use generic helpers directly because MIPS&LoongArch
+need to call pgd_init()/pud_init()/pmd_init() when populating page
+tables. So we adjust the prototypes of p?d_init() to make generic
+helpers can call them, then enable sparse-vmemmap with generic helpers,
+and to be further, generalise vmemmap_populate_hugepages() for ARM64,
+X86 and LoongArch.
 
-> On Thu, 2022-07-28 at 17:14 +0800, Jinyang He wrote:
->> Not sure but maybe re-align is needed here.
->> Since '{BYTE(0)}' actually use 1byte. _GLOABL_OFFSET_TABLE_ may have
->> difference with really GOT table entry. Have no machine and without
->> test... :-(
-> BYTE(0) is only for preventing the linker from removing the section.
-> All we want from the linker is a slot for .got in the section table, and
-> the actual property (including size) will be filled at runtime by
-> module_frob_arch_sections.  The first GOT entry won't be "appended"
-> after one byte, it is wrote into the start of .got (at runtime).
-Thank you for the detail answer which solves a doubt
-that bothered me for a long time. I used to define the
-'sym' outside of '.sec'. It always failed without align.
+V1 -> V2:
+Split ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP to a separate patch.
+
+V2 -> V3:
+1, Change the Signed-off-by order of author and committer;
+2, Update commit message about the build error on LoongArch.
+
+V3 -> V4:
+Change pmd to pmdp for ARM64 for consistency.
+
+V4 -> V5:
+Add a detailed comment for no-fallback in the altmap case.
+
+V5 -> V6:
+1, Fix build error for NIOS2;
+2, Fix build error for allnoconfig;
+3, Update comment for no-fallback in the altmap case.
+
+Huacai Chen and Feiyang Chen(4):
+ MIPS&LoongArch&NIOS2: Adjust prototypes of p?d_init().
+ LoongArch: Add sparse memory vmemmap support.
+ mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages().
+ LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP.
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn> 
+---
+ arch/arm64/mm/mmu.c                    | 53 ++++++--------------
+ arch/loongarch/Kconfig                 |  2 +
+ arch/loongarch/include/asm/pgalloc.h   | 13 +----
+ arch/loongarch/include/asm/pgtable.h   | 13 +++--
+ arch/loongarch/include/asm/sparsemem.h |  8 +++
+ arch/loongarch/kernel/numa.c           |  4 +-
+ arch/loongarch/mm/init.c               | 44 +++++++++++++++-
+ arch/loongarch/mm/pgtable.c            | 23 +++++----
+ arch/mips/include/asm/pgalloc.h        |  8 +--
+ arch/mips/include/asm/pgtable-64.h     |  8 +--
+ arch/mips/kvm/mmu.c                    |  3 +-
+ arch/mips/mm/pgtable-32.c              | 10 ++--
+ arch/mips/mm/pgtable-64.c              | 18 ++++---
+ arch/mips/mm/pgtable.c                 |  2 +-
+ arch/x86/mm/init_64.c                  | 92 ++++++++++++----------------------
+ include/linux/mm.h                     |  8 +++
+ include/linux/page-flags.h             |  1 +
+ mm/sparse-vmemmap.c                    | 64 +++++++++++++++++++++++
+ 18 files changed, 222 insertions(+), 152 deletions(-)
+--
+2.27.0
 
