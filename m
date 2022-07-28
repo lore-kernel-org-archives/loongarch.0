@@ -1,93 +1,65 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183CA111F
-	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 10:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1659005923;
-	bh=y319GJZ42LdkVPQdcO0bdeXk+v6i2YLb2hHt78rlabo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=TLQnLTWUCKPR0ZKBW4k7cxvSLPQwmV5oLCQnR+oz0gGlB8E56tqMvw5PZy7DFXYfC
-	 uvzEl4YR/7WH8J7yY2UpSK3iR63dYCzYu2x4tp9NE+6l4PbJVmNVbk7igVOPO7ytts
-	 3tSKwARcmFNTntEOUjmDqNRS513Agl+ApOYrbrpU=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 3A502667D7;
-	Thu, 28 Jul 2022 06:58:42 -0400 (EDT)
-Message-ID: <4f8b9895d807b954b3af435b5ef4b70ddd95862b.camel@xry111.site>
-Subject: Re: [PATCH 4/5] LoongArch: Stop using undocumented assembler options
-From: Xi Ruoyao <xry111@xry111.site>
-To: Youling Tang <tangyouling@loongson.cn>, loongarch@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
- Chen <chenhuacai@kernel.org>
-Date: Thu, 28 Jul 2022 18:58:40 +0800
-In-Reply-To: <4f4ced23-2046-586c-2590-542923025149@loongson.cn>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03669137B
+	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 11:21:16 +0000 (UTC)
+Received: from localhost.localdomain (unknown [111.9.175.10])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9EmceJizQI_AA--.43170S3;
+	Thu, 28 Jul 2022 19:21:11 +0800 (CST)
+Subject: Re: [PATCH 3/5] LoongArch: Support relocation against
+ _GLOBAL_OFFSET_TABLE_
+To: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
 References: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
-	 <4f09c81c22d0a16883a6914a8f7209957386c07c.camel@xry111.site>
-	 <4f4ced23-2046-586c-2590-542923025149@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+ <99733532831377ab6585d43ee40bf314a2d4c5a3.camel@xry111.site>
+ <10c1e0f9-8409-a0f4-9b18-a5f56dfb14e1@loongson.cn>
+ <9a79a424a11339ae025539c38fe121104ff00804.camel@xry111.site>
+ <caf8ec4b-f74d-e6ef-17f2-9e899d41b3a9@loongson.cn>
+ <73f83b51eaf40ff1f173059e1f187182db47a1c6.camel@xry111.site>
+Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
+ Huacai Chen <chenhuacai@kernel.org>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <1671786a-d2a5-5f98-e8be-244ba0a91e91@loongson.cn>
+Date: Thu, 28 Jul 2022 19:21:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <73f83b51eaf40ff1f173059e1f187182db47a1c6.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf9Dxn9EmceJizQI_AA--.43170S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jr1DCF48Gw4DuF48CFyfWFg_yoW3urcE9F
+	Z2qrn5G398Zr9FgF47KF43tr9IgF4fGr4xZFsrXa1Dt3sYqFsxCFs3urn09FyYga1jvr9I
+	gws5XF4jvwsI9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbc8YjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+	8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+	cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
+	A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
+	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAI
+	w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
+	4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxG
+	rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8Jw
+	CI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+	6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUgg_TUUUUU
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-On Thu, 2022-07-28 at 17:46 +0800, Youling Tang wrote:
->=20
-> On 07/28/2022 12:29 AM, Xi Ruoyao wrote:
-> > Now we can handle GOT and GOT-based relocations properly, remove the
-> > undocumented `-Wa,-mla-{global,local}-with-{pcrel,abs}` assembler
-> > hacks.
-> >=20
-> > Adjust assembly code to explicitly use "la.pcrel" where necessary.
-> >=20
-> > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> > ---
-> > =C2=A0arch/loongarch/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 5 +=
-----
-> > =C2=A0arch/loongarch/kernel/head.S | 10 +++++-----
-> > =C2=A02 files changed, 6 insertions(+), 9 deletions(-)
-> >=20
-> > diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> > index 039dcc4fe1f3..9552c7880d34 100644
-> > --- a/arch/loongarch/Makefile
-> > +++ b/arch/loongarch/Makefile
-> > @@ -40,10 +40,7 @@ endif
-> >=20
-> > =C2=A0cflags-y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0+=3D -G0 -pipe -msoft-float
-> > =C2=A0LDFLAGS_vmlinux=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0+=3D -G0 -static -n -nostdlib
-> > -KBUILD_AFLAGS_KERNEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0+=3D -Wa,-mla-global-with-pcrel
-> > -KBUILD_CFLAGS_KERNEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0+=3D -Wa,-mla-global-with-pcrel
-> > -KBUILD_AFLAGS_MODULE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0+=3D -Wa,-mla-global-with-abs
-> > -KBUILD_CFLAGS_MODULE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0+=3D -fplt -Wa,-mla-global-with-abs,-
-> > mla-local-with-abs
-> > +KBUILD_CFLAGS_MODULE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0+=3D -fplt
->=20
-> The -fplt flag may be removed, the compiler defaults to -fplt if not
-> specified (riscv is also not manually specified as -fplt).
+On 07/28/2022 06:57 PM, Xi Ruoyao wrote:
 
-Will remove explicit -fplt in V2.
+> On Thu, 2022-07-28 at 17:14 +0800, Jinyang He wrote:
+>> Not sure but maybe re-align is needed here.
+>> Since '{BYTE(0)}' actually use 1byte. _GLOABL_OFFSET_TABLE_ may have
+>> difference with really GOT table entry. Have no machine and without
+>> test... :-(
+> BYTE(0) is only for preventing the linker from removing the section.
+> All we want from the linker is a slot for .got in the section table, and
+> the actual property (including size) will be filled at runtime by
+> module_frob_arch_sections.  The first GOT entry won't be "appended"
+> after one byte, it is wrote into the start of .got (at runtime).
+Thank you for the detail answer which solves a doubt
+that bothered me for a long time. I used to define the
+'sym' outside of '.sec'. It always failed without align.
 
-By the way, how do you think about "-G0"?  It does not have any effect
-now because the toolchain does not attempt to use sbss/sdata sections.
-Do we have any plan to add sbss and sdata support in the toolchain?
-
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
