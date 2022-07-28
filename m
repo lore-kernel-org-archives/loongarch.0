@@ -1,30 +1,32 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD14137B
-	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 11:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56116137B
+	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 11:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1659008983;
-	bh=RkPofTIZqMBvPv1I2e5S6bPSJnJmJKBQeR6T5MWoMVg=;
-	h=Subject:From:To:Cc:Date:From;
-	b=T3SoH2wVHaQNwvLDUPMw28NKQ4KvZba2cCGxyMPhwe1K/5PdlJAQbsftINrmgsN4l
-	 hjhDtBT+KTSVVt6gSfrkrgLgbrHhhqyg8q7t5vWosic7qeBDcCE0pYepp1o27LENsh
-	 iQdTiA1no4mGBMhsdfRvyImK4EnEGFbGbwT22Dac=
+	s=default; t=1659009274;
+	bh=Pr7+lAk3BpHjZc9aaO+tL3K4NBHyUQwC5PAB5P1mSzc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=gX7+8E5ACAEh8OMW1MIiSBhIX+YBgeKApBPV91u1whsO3jNX4xJ8QGhvrImHdjgo0
+	 K0Dqr32IhJqSmPKlI3Wim2mle3fLZkjvfRsbqeZF4ZpnfNTTvsvw8Q3nkPi5LbJdnk
+	 HLqYBdFvOLE0CYeYVsrrrCzvhCfMD+O3YkY/CZSA=
 Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 71C9B667F7;
-	Thu, 28 Jul 2022 07:49:41 -0400 (EDT)
-Message-ID: <c596e7a73953a1c49e8f5e94ec2db642f72e7813.camel@xry111.site>
-Subject: [PATCH v2 0/4] LoongArch: Support new relocation types
+	by xry111.site (Postfix) with ESMTPSA id 32564667F9;
+	Thu, 28 Jul 2022 07:54:33 -0400 (EDT)
+Message-ID: <c2a0007eee2dca269c90a0731f19fcc929c495a0.camel@xry111.site>
+Subject: [PATCH v2 1/4] LoongArch: Add section of GOT for kernel module
 From: Xi Ruoyao <xry111@xry111.site>
 To: loongarch@lists.linux.dev
 Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
  Chen <chenhuacai@kernel.org>, Youling Tang <tangyouling@loongson.cn>,
  Jinyang He <hejinyang@loongson.cn>
-Date: Thu, 28 Jul 2022 19:49:39 +0800
+Date: Thu, 28 Jul 2022 19:54:31 +0800
+In-Reply-To: <c596e7a73953a1c49e8f5e94ec2db642f72e7813.camel@xry111.site>
+References: <c596e7a73953a1c49e8f5e94ec2db642f72e7813.camel@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.3 
@@ -35,56 +37,221 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-The version 2.00 of LoongArch ELF ABI specification introduced new
-relocation types, and the development tree of Binutils and GCC has
-started to use them.  If the kernel is built with the latest snapshot of
-Binutils or GCC, it will fail to load the modules because of unrecognized
-relocation types in modules.
+The address of external symbols will locate more than 32-bit offset.  We
+were using the `-Wa,-mla-global-with-abs` and `-Wa,-mla-local-with-abs`
+to prevent the compiler and assembler from generating GOT relocations,
+but these options are undocumented hacks and do not work anymore with
+GAS 2.40 and GCC 13.
 
-Add support for GOT and new relocation types for the module loader, so
-the kernel (with modules) can be built with the "normal" code model and
-function properly.
+Let the module loader emit GOT entries for data symbols so we would be
+able to handle GOT relocations.  The GOT entry is just the data symbol
+address.
 
-Tested by building the kernel with Binutils & GCC master branch,
-running the kernel with 35 in-tree modules loaded, and loading one
-module with 20 GOT loads (both old SOP_PUSH_GPREL and new
-GOT_PC_HI20/GOT_PC_LO12 relocations tested, and loaded addresses
-verified by comparing with /proc/kallsyms).
+In module.lds, emit a stub .got section for a section header entry.
+The actual content of the entry will be filled at runtime by
+module_frob_arch_sections.
 
-Link: https://github.com/loongson/LoongArch-Documentation/pull/57
-Link: https://gcc.gnu.org/r13-1834
-Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommit;h=3Df0948=
-2a
+A special symbol named "_GLOBAL_OFFSET_TABLE_" is used by stack-based
+relocations for the PC-relative offset of a GOT entry, like:
 
-Changes from v1 to v2:
+    R_LARCH_SOP_PUSH_PCREL _GLOBAL_OFFSET_TABLE_
+    R_LARCH_SOP_PUSH_GPREL foo
+    R_LARCH_SOP_ADD
 
-- Fix a stupid programming error (confusion between the number of PLT
-  entries and the number of GOT entries).  (Bug spotted by Youling).
-- Synthesize the _GLOBAL_OFFSET_TABLE_ symbol with module.lds, instead
-  of faking it at runtime.  The 3rd patch from V1 is now merged into
-  the 1st patch because it would be a one-line change.  (Suggested by
-  Jinyang).
-- Keep reloc_rela_handlers[] ordered by the relocation type ID.
-  (Suggested by Youling).
-- Remove -fplt along with -Wa,-mla-* options because it's the default.
-  (Suggested by Youling).
+Each kernel module has its own GOT (like a shared object), so we need
+to generate _GLOBAL_OFFSET_TABLE_ as a local symbol for each module.
 
-Xi Ruoyao (4):
-  LoongArch: Add section of GOT for kernel module
-  LoongArch: Support R_LARCH_SOP_PUSH_GPREL relocation type in kernel
-    module
-  LoongArch: Stop using undocumented assembler options
-  LoongArch: Support modules with new relocation types
-
- arch/loongarch/Makefile                 |  4 --
- arch/loongarch/include/asm/elf.h        | 37 ++++++++++
- arch/loongarch/include/asm/module.h     | 23 ++++++
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ arch/loongarch/include/asm/module.h     | 23 +++++++++++++
  arch/loongarch/include/asm/module.lds.h |  1 +
- arch/loongarch/kernel/head.S            | 10 +--
- arch/loongarch/kernel/module-sections.c | 51 ++++++++++++--
- arch/loongarch/kernel/module.c          | 94 +++++++++++++++++++++++++
- 7 files changed, 207 insertions(+), 13 deletions(-)
+ arch/loongarch/kernel/module-sections.c | 43 ++++++++++++++++++++++---
+ 3 files changed, 63 insertions(+), 4 deletions(-)
 
+diff --git a/arch/loongarch/include/asm/module.h b/arch/loongarch/include/a=
+sm/module.h
+index 9f6718df1854..76a98a0ab8a0 100644
+--- a/arch/loongarch/include/asm/module.h
++++ b/arch/loongarch/include/asm/module.h
+@@ -19,6 +19,7 @@ struct mod_section {
+ struct mod_arch_specific {
+ 	struct mod_section plt;
+ 	struct mod_section plt_idx;
++	struct mod_section got;
+ };
+=20
+ struct plt_entry {
+@@ -28,11 +29,16 @@ struct plt_entry {
+ 	u32 inst_jirl;
+ };
+=20
++struct got_entry {
++	Elf_Addr symbol_addr;
++};
++
+ struct plt_idx_entry {
+ 	unsigned long symbol_addr;
+ };
+=20
+ Elf_Addr module_emit_plt_entry(struct module *mod, unsigned long val);
++Elf_Addr module_emit_got_entry(struct module *mod, Elf_Addr val);
+=20
+ static inline struct plt_entry emit_plt_entry(unsigned long val)
+ {
+@@ -51,6 +57,11 @@ static inline struct plt_idx_entry emit_plt_idx_entry(un=
+signed long val)
+ 	return (struct plt_idx_entry) { val };
+ }
+=20
++static inline struct got_entry emit_got_entry(Elf_Addr val)
++{
++	return (struct got_entry) { val };
++}
++
+ static inline int get_plt_idx(unsigned long val, const struct mod_section =
+*sec)
+ {
+ 	int i;
+@@ -77,4 +88,16 @@ static inline struct plt_entry *get_plt_entry(unsigned l=
+ong val,
+ 	return plt + plt_idx;
+ }
+=20
++static inline struct got_entry *get_got_entry(Elf_Addr val,
++					      const struct mod_section *sec)
++{
++	struct got_entry *got =3D (struct got_entry *)sec->shdr->sh_addr;
++	int i;
++
++	for (i =3D 0; i < sec->num_entries; i++)
++		if (got[i].symbol_addr =3D=3D val)
++			return &got[i];
++	return NULL;
++}
++
+ #endif /* _ASM_MODULE_H */
+diff --git a/arch/loongarch/include/asm/module.lds.h b/arch/loongarch/inclu=
+de/asm/module.lds.h
+index 31c1c0db11a3..42b7cca0b947 100644
+--- a/arch/loongarch/include/asm/module.lds.h
++++ b/arch/loongarch/include/asm/module.lds.h
+@@ -4,4 +4,5 @@ SECTIONS {
+ 	. =3D ALIGN(4);
+ 	.plt : { BYTE(0) }
+ 	.plt.idx : { BYTE(0) }
++	.got : { HIDDEN(_GLOBAL_OFFSET_TABLE_ =3D .); BYTE(0) }
+ }
+diff --git a/arch/loongarch/kernel/module-sections.c b/arch/loongarch/kerne=
+l/module-sections.c
+index 6d498288977d..36a77771d18c 100644
+--- a/arch/loongarch/kernel/module-sections.c
++++ b/arch/loongarch/kernel/module-sections.c
+@@ -33,6 +33,25 @@ Elf_Addr module_emit_plt_entry(struct module *mod, unsig=
+ned long val)
+ 	return (Elf_Addr)&plt[nr];
+ }
+=20
++Elf_Addr module_emit_got_entry(struct module *mod, Elf_Addr val)
++{
++	struct mod_section *got_sec =3D &mod->arch.got;
++	int i =3D got_sec->num_entries;
++	struct got_entry *got =3D get_got_entry(val, got_sec);
++
++	if (got)
++		return (Elf_Addr)got;
++
++	/* There is no GOT entry existing for val yet.  Create a new one.  */
++	got =3D (struct got_entry *)got_sec->shdr->sh_addr;
++	got[i] =3D emit_got_entry(val);
++
++	got_sec->num_entries++;
++	BUG_ON(got_sec->num_entries > got_sec->max_entries);
++
++	return (Elf_Addr)&got[i];
++}
++
+ static int is_rela_equal(const Elf_Rela *x, const Elf_Rela *y)
+ {
+ 	return x->r_info =3D=3D y->r_info && x->r_addend =3D=3D y->r_addend;
+@@ -50,7 +69,8 @@ static bool duplicate_rela(const Elf_Rela *rela, int idx)
+ 	return false;
+ }
+=20
+-static void count_max_entries(Elf_Rela *relas, int num, unsigned int *plts=
+)
++static void count_max_entries(Elf_Rela *relas, int num,
++			      unsigned int *plts, unsigned int *gots)
+ {
+ 	unsigned int i, type;
+=20
+@@ -59,14 +79,16 @@ static void count_max_entries(Elf_Rela *relas, int num,=
+ unsigned int *plts)
+ 		if (type =3D=3D R_LARCH_SOP_PUSH_PLT_PCREL) {
+ 			if (!duplicate_rela(relas, i))
+ 				(*plts)++;
+-		}
++		} else if (type =3D=3D R_LARCH_SOP_PUSH_GPREL)
++			if (!duplicate_rela(relas, i))
++				(*gots)++;
+ 	}
+ }
+=20
+ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+ 			      char *secstrings, struct module *mod)
+ {
+-	unsigned int i, num_plts =3D 0;
++	unsigned int i, num_plts =3D 0, num_gots =3D 0;
+=20
+ 	/*
+ 	 * Find the empty .plt sections.
+@@ -76,6 +98,8 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *s=
+echdrs,
+ 			mod->arch.plt.shdr =3D sechdrs + i;
+ 		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".plt.idx"))
+ 			mod->arch.plt_idx.shdr =3D sechdrs + i;
++		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".got"))
++			mod->arch.got.shdr =3D sechdrs + i;
+ 	}
+=20
+ 	if (!mod->arch.plt.shdr) {
+@@ -86,6 +110,10 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr =
+*sechdrs,
+ 		pr_err("%s: module PLT.IDX section(s) missing\n", mod->name);
+ 		return -ENOEXEC;
+ 	}
++	if (!mod->arch.got.shdr) {
++		pr_err("%s: module GOT section(s) missing\n", mod->name);
++		return -ENOEXEC;
++	}
+=20
+ 	/* Calculate the maxinum number of entries */
+ 	for (i =3D 0; i < ehdr->e_shnum; i++) {
+@@ -100,7 +128,7 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr =
+*sechdrs,
+ 		if (!(dst_sec->sh_flags & SHF_EXECINSTR))
+ 			continue;
+=20
+-		count_max_entries(relas, num_rela, &num_plts);
++		count_max_entries(relas, num_rela, &num_plts, &num_gots);
+ 	}
+=20
+ 	mod->arch.plt.shdr->sh_type =3D SHT_NOBITS;
+@@ -117,5 +145,12 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr=
+ *sechdrs,
+ 	mod->arch.plt_idx.num_entries =3D 0;
+ 	mod->arch.plt_idx.max_entries =3D num_plts;
+=20
++	mod->arch.got.shdr->sh_type =3D SHT_NOBITS;
++	mod->arch.got.shdr->sh_flags =3D SHF_ALLOC;
++	mod->arch.got.shdr->sh_addralign =3D L1_CACHE_BYTES;
++	mod->arch.got.shdr->sh_size =3D (num_gots + 1) * sizeof(struct got_entry)=
+;
++	mod->arch.got.num_entries =3D 0;
++	mod->arch.got.max_entries =3D num_gots;
++
+ 	return 0;
+ }
 --=20
 2.37.0
+
 
