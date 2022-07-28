@@ -1,73 +1,350 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9F01C29
-	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 13:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1659015046;
-	bh=5oTiHyOqGMawFY6tGFgbqtXOrPzO1JFb4QEGmlDiFJ4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=T54MoILf1qdvnrImPAyGaR/fk8q5mQMl1TZGl8Xf4ongKnRPe8RGkbU/TZrSpsTXZ
-	 cstEVYH+ytGW4V0KbquVJ3QoIq3jtRBsOErQfTpre/ZYEhMMtT2NlbCFgtkPS+ZWEg
-	 1LYw9k1bFEJqqn1xJoJrDOP0cxh2rAOR0nwJJQEc=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id A808166970;
-	Thu, 28 Jul 2022 09:30:44 -0400 (EDT)
-Message-ID: <20d86df48af5e0f0f17a1b1bc6b365d1c158280f.camel@xry111.site>
-Subject: Re: [PATCH v2 4/4] LoongArch: Support modules with new relocation
- types
-From: Xi Ruoyao <xry111@xry111.site>
-To: Youling Tang <tangyouling@loongson.cn>, loongarch@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
- Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>
-Date: Thu, 28 Jul 2022 21:30:42 +0800
-In-Reply-To: <1c1b5d2f-84f0-534c-ace2-2da48b5a7419@loongson.cn>
-References: <c596e7a73953a1c49e8f5e94ec2db642f72e7813.camel@xry111.site>
-	 <93087353ec0d23c56345d4c05e3d9719b284942c.camel@xry111.site>
-	 <1c1b5d2f-84f0-534c-ace2-2da48b5a7419@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAB3F1C34
+	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 14:05:23 +0000 (UTC)
+Received: from localhost.localdomain (unknown [113.200.148.30])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv9Kfl+JiblM_AA--.25680S2;
+	Thu, 28 Jul 2022 22:05:19 +0800 (CST)
+From: Qing Zhang <zhangqing@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	hejinyang@loongson.cn
+Subject: [PATCH 1/3] LoongArch: Add guess unwinder support
+Date: Thu, 28 Jul 2022 22:05:17 +0800
+Message-Id: <20220728140519.5420-1-zhangqing@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9Dxv9Kfl+JiblM_AA--.25680S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3AF1xAFyrXw4rZF4Dur1xKrg_yoWfJryxpF
+	95C3Z3WrW3K340gr9rXr4kZrn8Gr4kCw17KF9xtFyFkF12qFyfWrnaya4DZFs8J3ykW3Wx
+	WFZ5KrZ8Ka1UXaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkq14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW5XwCF
+	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+	18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+	r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+	1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAI
+	cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjc183UUUUU==
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
-On Thu, 2022-07-28 at 20:41 +0800, Youling Tang wrote:
-> Unaligned is handled more efficiently before overflow checking, while
-> being consistent with apply_r_larch_sop_imm_field.
+Name "guess unwinder" comes from x86, It scans the stack and reports
+every kernel text address it finds.
 
-Will move unaligned before overflow in V3.
+Three stages when we do unwind,
+  (1)unwind_start(), the prapare of unwinding, fill unwind_state.
+  (2)unwind_done(), judge whether the unwind process is finished or not.
+  (3)unwind_next_frame(), unwind the next frame.
 
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*location &=3D ~(u32)0x3ffff=
-ff;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*location |=3D (offset >> 18=
-) & 0x3ff;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*location |=3D ((offset >> 2=
-) & 0xffff) << 10;
->=20
-> It may be better to use the loongarch_instruction format to modify the
-> immediate field of the instruction, similar to the following:
->=20
-> union loongarch_instruction *insn =3D (union loongarch_instruction *)loca=
-tion;
->=20
-> offset >>=3D 2;
-> insn->reg0i26_format.immediate_l =3D offset & 0xffff;
-> insn->reg0i26_format.immediate_h =3D (offset >> 16) & 0x3ff;
+Make the dump_stack process go through unwind process.
+Add get_stack_info() to get stack info. At present we have irq stack and
+task stack. Maybe add another type in future. The next_sp means the key
+info between this type stack and next type stack.
 
-Will use union loongarch_instruction in V3.  Why didn't I notice it
-before? :(
+Dividing unwinder helps to add new unwinders in the future.
 
-Thanks for the review!
+Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+diff --git a/arch/loongarch/Kconfig.debug b/arch/loongarch/Kconfig.debug
+index e69de29bb2d1..68634d4fa27b 100644
+--- a/arch/loongarch/Kconfig.debug
++++ b/arch/loongarch/Kconfig.debug
+@@ -0,0 +1,9 @@
++config UNWINDER_GUESS
++	bool "Guess unwinder"
++	help
++	  This option enables the "guess" unwinder for unwinding kernel stack
++	  traces.  It scans the stack and reports every kernel text address it
++	  finds.  Some of the addresses it reports may be incorrect.
++
++	  While this option often produces false positives, it can still be
++	  useful in many cases.
+diff --git a/arch/loongarch/include/asm/stacktrace.h b/arch/loongarch/include/asm/stacktrace.h
+index 26483e396ad1..33077010356d 100644
+--- a/arch/loongarch/include/asm/stacktrace.h
++++ b/arch/loongarch/include/asm/stacktrace.h
+@@ -10,6 +10,23 @@
+ #include <asm/loongarch.h>
+ #include <linux/stringify.h>
+ 
++enum stack_type {
++	STACK_TYPE_UNKNOWN,
++	STACK_TYPE_TASK,
++	STACK_TYPE_IRQ,
++};
++
++struct stack_info {
++	enum stack_type type;
++	unsigned long begin, end, next_sp;
++};
++
++bool in_task_stack(unsigned long stack, struct task_struct *task,
++			struct stack_info *info);
++bool in_irq_stack(unsigned long stack, struct stack_info *info);
++int get_stack_info(unsigned long stack, struct task_struct *task,
++			struct stack_info *info);
++
+ #define STR_LONG_L    __stringify(LONG_L)
+ #define STR_LONG_S    __stringify(LONG_S)
+ #define STR_LONGSIZE  __stringify(LONGSIZE)
+diff --git a/arch/loongarch/include/asm/unwind.h b/arch/loongarch/include/asm/unwind.h
+new file mode 100644
+index 000000000000..243330b39d0d
+--- /dev/null
++++ b/arch/loongarch/include/asm/unwind.h
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Most of this ideas comes from x86.
++ *
++ * Copyright (C) 2022 Loongson Technology Corporation Limited
++ */
++#ifndef _ASM_UNWIND_H
++#define _ASM_UNWIND_H
++
++#include <linux/sched.h>
++
++#include <asm/stacktrace.h>
++
++struct unwind_state {
++	struct stack_info stack_info;
++	struct task_struct *task;
++	unsigned long sp, pc;
++	bool first;
++	bool error;
++};
++
++void unwind_start(struct unwind_state *state, struct task_struct *task,
++		      struct pt_regs *regs);
++bool unwind_next_frame(struct unwind_state *state);
++unsigned long unwind_get_return_address(struct unwind_state *state);
++
++static inline bool unwind_done(struct unwind_state *state)
++{
++	return state->stack_info.type == STACK_TYPE_UNKNOWN;
++}
++
++static inline bool unwind_error(struct unwind_state *state)
++{
++	return state->error;
++}
++
++#endif /* _ASM_UNWIND_H */
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 940de9173542..c5fa4adb23b6 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -22,4 +22,6 @@ obj-$(CONFIG_SMP)		+= smp.o
+ 
+ obj-$(CONFIG_NUMA)		+= numa.o
+ 
++obj-$(CONFIG_UNWINDER_GUESS)	+= unwind_guess.o
++
+ CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index bfa0dfe8b7d7..709b7a1664f8 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -44,6 +44,7 @@
+ #include <asm/pgtable.h>
+ #include <asm/processor.h>
+ #include <asm/reg.h>
++#include <asm/unwind.h>
+ #include <asm/vdso.h>
+ 
+ /*
+@@ -183,6 +184,66 @@ unsigned long __get_wchan(struct task_struct *task)
+ 	return 0;
+ }
+ 
++bool in_task_stack(unsigned long stack, struct task_struct *task,
++			struct stack_info *info)
++{
++	unsigned long begin = (unsigned long)task_stack_page(task);
++	unsigned long end = begin + THREAD_SIZE - 32;
++
++	if (stack < begin || stack >= end)
++		return false;
++
++	info->type = STACK_TYPE_TASK;
++	info->begin = begin;
++	info->end = end;
++	info->next_sp = 0;
++
++	return true;
++}
++
++bool in_irq_stack(unsigned long stack, struct stack_info *info)
++{
++	unsigned long nextsp;
++	unsigned long begin = (unsigned long)this_cpu_read(irq_stack);
++	unsigned long end = begin + IRQ_STACK_START;
++
++	if (stack < begin || stack >= end)
++		return false;
++
++	nextsp = *(unsigned long *)end;
++	if (nextsp & (SZREG - 1))
++		return false;
++
++	info->type = STACK_TYPE_IRQ;
++	info->begin = begin;
++	info->end = end;
++	info->next_sp = nextsp;
++
++	return true;
++}
++
++int get_stack_info(unsigned long stack, struct task_struct *task,
++		   struct stack_info *info)
++{
++	task = task ? : current;
++
++	if (!stack || stack & (SZREG - 1))
++		goto unknown;
++
++	if (in_task_stack(stack, task, info))
++		return 0;
++
++	if (task != current)
++		goto unknown;
++
++	if (in_irq_stack(stack, info))
++		return 0;
++
++unknown:
++	info->type = STACK_TYPE_UNKNOWN;
++	return -EINVAL;
++}
++
+ unsigned long stack_top(void)
+ {
+ 	unsigned long top = TASK_SIZE & PAGE_MASK;
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index 1bf58c65e2bf..ef2c3aeb1dab 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -43,6 +43,7 @@
+ #include <asm/stacktrace.h>
+ #include <asm/tlb.h>
+ #include <asm/types.h>
++#include <asm/unwind.h>
+ 
+ #include "access-helper.h"
+ 
+@@ -64,19 +65,18 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs,
+ 			   const char *loglvl, bool user)
+ {
+ 	unsigned long addr;
+-	unsigned long *sp = (unsigned long *)(regs->regs[3] & ~3);
++	struct unwind_state state;
++	struct pt_regs *pregs = (struct pt_regs *)regs;
++
++	if (!task)
++		task = current;
++
++	unwind_start(&state, task, pregs);
+ 
+ 	printk("%sCall Trace:", loglvl);
+-#ifdef CONFIG_KALLSYMS
+-	printk("%s\n", loglvl);
+-#endif
+-	while (!kstack_end(sp)) {
+-		if (__get_addr(&addr, sp++, user)) {
+-			printk("%s (Bad stack address)", loglvl);
+-			break;
+-		}
+-		if (__kernel_text_address(addr))
+-			print_ip_sym(loglvl, addr);
++	for (; !unwind_done(&state); unwind_next_frame(&state)) {
++		addr = unwind_get_return_address(&state);
++		print_ip_sym(loglvl, addr);
+ 	}
+ 	printk("%s\n", loglvl);
+ }
+diff --git a/arch/loongarch/kernel/unwind_guess.c b/arch/loongarch/kernel/unwind_guess.c
+new file mode 100644
+index 000000000000..7eeb3e1a989d
+--- /dev/null
++++ b/arch/loongarch/kernel/unwind_guess.c
+@@ -0,0 +1,65 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2022 Loongson Technology Corporation Limited
++ */
++#include <linux/kernel.h>
++
++#include <asm/unwind.h>
++
++unsigned long unwind_get_return_address(struct unwind_state *state)
++{
++	if (unwind_done(state))
++		return 0;
++	else if (state->first)
++		return state->pc;
++
++	return *(unsigned long *)(state->sp);
++}
++EXPORT_SYMBOL_GPL(unwind_get_return_address);
++
++bool unwind_next_frame(struct unwind_state *state)
++{
++	struct stack_info *info = &state->stack_info;
++	unsigned long addr;
++
++	if (unwind_done(state))
++		return false;
++
++	if (state->first)
++		state->first = false;
++
++	do {
++		for (state->sp += sizeof(unsigned long);
++		     state->sp < info->end;
++		     state->sp += sizeof(unsigned long)) {
++			addr = *(unsigned long *)(state->sp);
++
++			if (__kernel_text_address(addr))
++				return true;
++		}
++
++		state->sp = info->next_sp;
++
++	} while (!get_stack_info(state->sp, state->task, info));
++
++	return false;
++}
++EXPORT_SYMBOL_GPL(unwind_next_frame);
++
++void unwind_start(struct unwind_state *state, struct task_struct *task,
++		    struct pt_regs *regs)
++{
++	memset(state, 0, sizeof(*state));
++
++	state->task = task;
++
++	state->sp = regs->regs[3];
++	state->pc = regs->csr_era;
++	state->first = true;
++
++	get_stack_info(state->sp, state->task, &state->stack_info);
++
++	if (!unwind_done(state) && !__kernel_text_address(state->pc))
++		unwind_next_frame(state);
++}
++EXPORT_SYMBOL_GPL(unwind_start);
+-- 
+2.20.1
+
