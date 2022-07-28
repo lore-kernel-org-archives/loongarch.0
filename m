@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317E7137B
-	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 12:25:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5BCBC433C1
-	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 12:25:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0548310E9
+	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 12:30:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1F12C433D6
+	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 12:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1659011122;
-	bh=g5InCYzCGrDsbPmc+ADfWHf+9LhwtsQs5DQCtq4x3RU=;
+	s=k20201202; t=1659011429;
+	bh=iv54j1mHM1UKpygMWX9SMc2VsQtTs7Br5QyTcza7ZCI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jO3kLyLgR+n8cMt9gOJShwFvtFGDYvS4eeGB4xuZezR2yy9CaAp6008KcP72+wn4o
-	 v3IFjw7o9pHXr2AksMzkAl+smt9NBPvmE0HU+dfRqtyTTWQYjW63WsZnP5Sd4QUkHC
-	 GR3+rmLwiGQH4YHHaK3EfWl1DMDUyfk9kqKmlMiKN2MwaVLnvWICtjk+QmwB4T9rQT
-	 h3W/GPRj95XCmWO8UgSyHAViTuy4Xh26hcgKesfMXAEtGhGTct322FjSVoyVNFeWeo
-	 8bve5R8tpcW3TVRxySFqf2CKJ/QjHtj96/Y9UXq+nVKgWvsaQzgNEx1Rd2VF4gtpUS
-	 Mx5M0oPDeWkZg==
-Received: by mail-vk1-f170.google.com with SMTP id z9so761573vkb.9
-        for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 05:25:22 -0700 (PDT)
-X-Gm-Message-State: AJIora9L7OvkZoYGPJsRIOMAlu7Vc50PztrSUjIvAzWWEDt7qMmEMwXW
-	Dlo5wa+celAeExQWpD1ruTm/Arbj9AVi2lG6JL0=
-X-Google-Smtp-Source: AGRyM1tq3HvSmAJKxeFZVp3d0YyXdYAyfn4sr97qDBntOs7KlpKPn8omNlIOvAwCqY15GzcPetU6WfjSRLae19gBvic=
-X-Received: by 2002:a1f:aa8b:0:b0:376:e14b:c10e with SMTP id
- t133-20020a1faa8b000000b00376e14bc10emr953045vke.19.1659011121683; Thu, 28
- Jul 2022 05:25:21 -0700 (PDT)
+	b=mjrMP/MH712h+HhGvQQ1kymV+ulGFsQtzZ/Ijr94LT2WGjm/dNHxjCLy6bc2AkVP4
+	 Evqy4l3EdkssdMZpfmDz+uhkFO0zUQcXykMkSO/T0aSe8+NZ4rMWV+2hY9oKAIbvFU
+	 i9QIpps2+On3Ehw3kmrLq9M9BOp91RoDZO4FzGHv/vFBSlscDBHZ/Rzd1Pa6x65w/j
+	 tqjP2lvl0TfEDSXR0d+6c51F1KpFVHUZwT97l7KuaZ2cLp2qUkjGgo4iIuVB88PFiv
+	 IkkDEgYEwdqeq1tcvAXWwTyWGmpbxouGT1lqCQMc6cendhkCsno6p3QSAigjyNeJF/
+	 JlsPjXRq3X5Jw==
+Received: by mail-vs1-f47.google.com with SMTP id k3so1453904vsr.9
+        for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 05:30:29 -0700 (PDT)
+X-Gm-Message-State: AJIora/e6Q2O0YxM25ibqYJ0qF83OcAaaC/VTzJgsEZTS0WtcvnyIqa9
+	PgiaQeRezHU4TgyZCIpRYN3V2CvxINOQ2v/PIng=
+X-Google-Smtp-Source: AGRyM1uWtlOR7OMPRfU0AmOx6O5BINwixPbzdpuPUTNDSbsdfGMQkeHg4O6nN54+epVupYXoDw6Gt2MGWnneslj/oNA=
+X-Received: by 2002:a67:d599:0:b0:358:6371:4cfb with SMTP id
+ m25-20020a67d599000000b0035863714cfbmr6290530vsj.78.1659011428530; Thu, 28
+ Jul 2022 05:30:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <c596e7a73953a1c49e8f5e94ec2db642f72e7813.camel@xry111.site> <e95cfe70e2e5faa5b9cdc9452bdb3ab8d664aff0.camel@xry111.site>
-In-Reply-To: <e95cfe70e2e5faa5b9cdc9452bdb3ab8d664aff0.camel@xry111.site>
+References: <c596e7a73953a1c49e8f5e94ec2db642f72e7813.camel@xry111.site> <81c67c5f4c5f20fa5e6862f260884c61cafcaf93.camel@xry111.site>
+In-Reply-To: <81c67c5f4c5f20fa5e6862f260884c61cafcaf93.camel@xry111.site>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 28 Jul 2022 20:25:08 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5nuP2xYREtZuJnq3Sr+JpVbOzLDw+N1ep5yFSUd1+nFQ@mail.gmail.com>
-Message-ID: <CAAhV-H5nuP2xYREtZuJnq3Sr+JpVbOzLDw+N1ep5yFSUd1+nFQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] LoongArch: Stop using undocumented assembler options
+Date: Thu, 28 Jul 2022 20:30:15 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4vurz+-jwJm4SCQeaChLkXhrPFginpzNpYX6HkcD_xqA@mail.gmail.com>
+Message-ID: <CAAhV-H4vurz+-jwJm4SCQeaChLkXhrPFginpzNpYX6HkcD_xqA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] LoongArch: Support R_LARCH_SOP_PUSH_GPREL relocation
+ type in kernel module
 To: Xi Ruoyao <xry111@xry111.site>
 Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
 	WANG Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>, 
@@ -44,78 +45,51 @@ Content-Type: text/plain; charset="UTF-8"
 
 Hi, Ruoyao,
 
-On Thu, Jul 28, 2022 at 8:03 PM Xi Ruoyao <xry111@xry111.site> wrote:
->
-> Now we can handle GOT and GOT-based relocations properly, remove the
-> undocumented `-Wa,-mla-{global,local}-with-{pcrel,abs}` assembler hacks.
-I think "-Wa,-mla-{global,local}-with-{pcrel,abs}" may be regular
-options rather than "hacks". If I'm right, the title and commit
-message should be updated. And we can send patches to binutils to make
-them "documented".
+Missing V2 in the title?
 
 Huacai
+
+On Thu, Jul 28, 2022 at 7:59 PM Xi Ruoyao <xry111@xry111.site> wrote:
 >
-> And, -fplt is the default of all supported compilers (GCC, and maybe
-> Clang in the future), so it can be removed as well.
->
-> Adjust assembly code to explicitly use "la.pcrel" where necessary.
+> This relocation type pushes the offset of the GOT entry for a symbol
+> from the beginning of GOT into the relocation stack.  Our linker script
+> has initialized an empty GOT, so we need to create a new GOT entry if
+> there is no exist one for a symbol.
 >
 > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 > ---
->  arch/loongarch/Makefile      |  4 ----
->  arch/loongarch/kernel/head.S | 10 +++++-----
->  2 files changed, 5 insertions(+), 9 deletions(-)
+>  arch/loongarch/kernel/module.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 >
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index 039dcc4fe1f3..800349ea9310 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -40,10 +40,6 @@ endif
+> diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/module.c
+> index 638427ff0d51..3ac4fbb5f109 100644
+> --- a/arch/loongarch/kernel/module.c
+> +++ b/arch/loongarch/kernel/module.c
+> @@ -122,6 +122,16 @@ static int apply_r_larch_sop_push_plt_pcrel(struct module *mod, u32 *location, E
+>         return apply_r_larch_sop_push_pcrel(mod, location, v, rela_stack, rela_stack_top, type);
+>  }
 >
->  cflags-y                       += -G0 -pipe -msoft-float
->  LDFLAGS_vmlinux                        += -G0 -static -n -nostdlib
-> -KBUILD_AFLAGS_KERNEL           += -Wa,-mla-global-with-pcrel
-> -KBUILD_CFLAGS_KERNEL           += -Wa,-mla-global-with-pcrel
-> -KBUILD_AFLAGS_MODULE           += -Wa,-mla-global-with-abs
-> -KBUILD_CFLAGS_MODULE           += -fplt -Wa,-mla-global-with-abs,-mla-local-with-abs
->
->  cflags-y += -ffreestanding
->  cflags-y += $(call cc-option, -mno-check-zero-division)
-> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> index 74ea7bf6c8d6..193329ed6e8c 100644
-> --- a/arch/loongarch/kernel/head.S
-> +++ b/arch/loongarch/kernel/head.S
-> @@ -60,17 +60,17 @@ SYM_CODE_START(kernel_entry)                        # kernel entry point
->         la.abs          t0, 0f
->         jirl            zero, t0, 0
->  0:
-> -       la              t0, __bss_start         # clear .bss
-> +       la.pcrel        t0, __bss_start         # clear .bss
->         st.d            zero, t0, 0
-> -       la              t1, __bss_stop - LONGSIZE
-> +       la.pcrel        t1, __bss_stop - LONGSIZE
->  1:
->         addi.d          t0, t0, LONGSIZE
->         st.d            zero, t0, 0
->         bne             t0, t1, 1b
->
-> -       la              t0, fw_arg0
-> +       la.pcrel        t0, fw_arg0
->         st.d            a0, t0, 0               # firmware arguments
-> -       la              t0, fw_arg1
-> +       la.pcrel        t0, fw_arg1
->         st.d            a1, t0, 0
->
->         /* KSave3 used for percpu base, initialized as 0 */
-> @@ -78,7 +78,7 @@ SYM_CODE_START(kernel_entry)                  # kernel entry point
->         /* GPR21 used for percpu base (runtime), initialized as 0 */
->         or              u0, zero, zero
->
-> -       la              tp, init_thread_union
-> +       la.pcrel        tp, init_thread_union
->         /* Set the SP after an empty pt_regs.  */
->         PTR_LI          sp, (_THREAD_SIZE - 32 - PT_SIZE)
->         PTR_ADD         sp, sp, tp
+> +static int apply_r_larch_sop_push_gprel(struct module *mod, u32 *location,
+> +                       Elf_Addr v, s64 *rela_stack, size_t *rela_stack_top,
+> +                       unsigned int type)
+> +{
+> +       Elf_Addr got = module_emit_got_entry(mod, v);
+> +       ptrdiff_t offset = (void *)got - (void *)mod->arch.got.shdr->sh_addr;
+> +
+> +       return rela_stack_push(offset, rela_stack, rela_stack_top);
+> +}
+> +
+>  static int apply_r_larch_sop(struct module *mod, u32 *location, Elf_Addr v,
+>                         s64 *rela_stack, size_t *rela_stack_top, unsigned int type)
+>  {
+> @@ -306,6 +316,7 @@ static reloc_rela_handler reloc_rela_handlers[] = {
+>         [R_LARCH_SOP_PUSH_PCREL]                             = apply_r_larch_sop_push_pcrel,
+>         [R_LARCH_SOP_PUSH_ABSOLUTE]                          = apply_r_larch_sop_push_absolute,
+>         [R_LARCH_SOP_PUSH_DUP]                               = apply_r_larch_sop_push_dup,
+> +       [R_LARCH_SOP_PUSH_GPREL]                             = apply_r_larch_sop_push_gprel,
+>         [R_LARCH_SOP_PUSH_PLT_PCREL]                         = apply_r_larch_sop_push_plt_pcrel,
+>         [R_LARCH_SOP_SUB ... R_LARCH_SOP_IF_ELSE]            = apply_r_larch_sop,
+>         [R_LARCH_SOP_POP_32_S_10_5 ... R_LARCH_SOP_POP_32_U] = apply_r_larch_sop_imm_field,
 > --
 > 2.37.0
 >
