@@ -1,122 +1,92 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12283EC6
-	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 01:03:07 +0000 (UTC)
-Received: from localhost.localdomain (unknown [111.9.175.10])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz9JB4OFiEr49AA--.23298S3;
-	Thu, 28 Jul 2022 09:02:58 +0800 (CST)
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154C97A
+	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 06:41:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1658990480;
+	bh=fDQSFbUZY0M91qUtS+Iv4m66BChIz9OnKWn9rwXW7a8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=EL+39Ph7bEITu8PzwGES+iF6ugZ9jlOeunCVSXGJ/r1RIVqM3360AImW/NUIrgarS
+	 tvBU4piCpYWB1LawjkV0fIrMdUepuC7gXpV16UmhLKp1tmcYOs72hjXAQ0GvBg5Nqo
+	 AQVwO0r1Sh+qFccIn8+RxdKMUj1TnYecvIwKA4Qg=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id D8A62669E8;
+	Thu, 28 Jul 2022 02:41:18 -0400 (EDT)
+Message-ID: <9a79a424a11339ae025539c38fe121104ff00804.camel@xry111.site>
 Subject: Re: [PATCH 3/5] LoongArch: Support relocation against
  _GLOBAL_OFFSET_TABLE_
-To: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
+From: Xi Ruoyao <xry111@xry111.site>
+To: Jinyang He <hejinyang@loongson.cn>, loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
+ Chen <chenhuacai@kernel.org>
+Date: Thu, 28 Jul 2022 14:41:16 +0800
+In-Reply-To: <10c1e0f9-8409-a0f4-9b18-a5f56dfb14e1@loongson.cn>
 References: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
- <99733532831377ab6585d43ee40bf314a2d4c5a3.camel@xry111.site>
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@kernel.org>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <10c1e0f9-8409-a0f4-9b18-a5f56dfb14e1@loongson.cn>
-Date: Thu, 28 Jul 2022 09:02:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	 <99733532831377ab6585d43ee40bf314a2d4c5a3.camel@xry111.site>
+	 <10c1e0f9-8409-a0f4-9b18-a5f56dfb14e1@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <99733532831377ab6585d43ee40bf314a2d4c5a3.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9Dxz9JB4OFiEr49AA--.23298S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF1xZFyDKr13uFWfXw4UXFb_yoW5JFyxpF
-	Wqk395Wr4fCr1DG3Z3Z3WkuFy5GFZ7Gr4jgFW7G345Aw1jqryFyayxKryq9a18X34kC3y0
-	qr1rWFW7Kan7ArUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkvb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I
-	8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487
-	MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-	W8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07bOoGdUUUUU=
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-On 07/28/2022 12:28 AM, Xi Ruoyao wrote:
-> With the stack-based relocations, the assembler emits three relocations
-> to push the PC-relative offset of a GOT entry:
->
->      R_LARCH_SOP_PUSH_PCREL _GLOBAL_OFFSET_TABLE_
->      R_LARCH_SOP_PUSH_GPREL foo
->      R_LARCH_SOP_ADD
->
-> "_GLOBAL_OFFSET_TABLE_" does not really exist in the symtab and the BFD
-> linker handles it with special hack.  Implement a similar hack for
-> kernel so we will be able to really use R_LARCH_SOP_PUSH_GPREL
-> relocation.
->
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->   arch/loongarch/kernel/module-sections.c | 21 +++++++++++++++++++++
->   1 file changed, 21 insertions(+)
->
-> diff --git a/arch/loongarch/kernel/module-sections.c b/arch/loongarch/kernel/module-sections.c
-> index 509c0b86b1e9..73976addbf60 100644
-> --- a/arch/loongarch/kernel/module-sections.c
-> +++ b/arch/loongarch/kernel/module-sections.c
-> @@ -89,6 +89,9 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->   			      char *secstrings, struct module *mod)
->   {
->   	unsigned int i, num_plts = 0, num_gots = 0;
-> +	Elf_Shdr *symtab = NULL;
-> +	Elf_Sym *symbols;
-> +	char *strings;
->   
->   	/*
->   	 * Find the empty .plt sections.
-> @@ -100,6 +103,8 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->   			mod->arch.plt_idx.shdr = sechdrs + i;
->   		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".got"))
->   			mod->arch.got.shdr = sechdrs + i;
-> +		else if (sechdrs[i].sh_type == SHT_SYMTAB)
-> +			symtab = sechdrs + i;
->   	}
->   
->   	if (!mod->arch.plt.shdr) {
-> @@ -115,6 +120,22 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->   		return -ENOEXEC;
->   	}
->   
-> +	if (!symtab) {
-> +		pr_err("%s: module symbol table missing\n", mod->name);
-> +		return -ENOEXEC;
-> +	}
-> +
-> +	symbols = (void *) ehdr + symtab->sh_offset;
-> +	strings = (void *) ehdr + sechdrs[symtab->sh_link].sh_offset;
-> +
-> +	for (i = 0; i < symtab->sh_size / sizeof(Elf_Sym); i++)
-> +		if (symbols[i].st_shndx == SHN_UNDEF &&
-> +		    strcmp(strings + symbols[i].st_name,
-> +			   "_GLOBAL_OFFSET_TABLE_") == 0) {
-> +			symbols[i].st_shndx = mod->arch.got.shdr - sechdrs;
-> +			symbols[i].st_value = 0;
-> +		}
-> +
->   	/* Calculate the maxinum number of entries */
->   	for (i = 0; i < ehdr->e_shnum; i++) {
->   		int num_rela = sechdrs[i].sh_size / sizeof(Elf_Rela);
+On Thu, 2022-07-28 at 09:02 +0800, Jinyang He wrote:
 
-Hi, Ruoyao,
+> Hi, Ruoyao,
+>=20
+> It is possible to create a symbol when linking, which means
+> maybe we can add _GLOBAL_OFFSET_TABLE_ in 'module.lds.h'.
+> What do you think about it?
 
+Hi Jinyang,
 
-It is possible to create a symbol when linking, which means
-maybe we can add _GLOBAL_OFFSET_TABLE_ in 'module.lds.h'.
-What do you think about it?
+I think you are right, this patch can be replaced with the following,
+which is much simpler.
 
+-- >8 --
 
-Thanks,
+With the stack-based relocations, the assembler emits three relocations
+to push the PC-relative offset of a GOT entry:
 
-Jinyang
+    R_LARCH_SOP_PUSH_PCREL _GLOBAL_OFFSET_TABLE_
+    R_LARCH_SOP_PUSH_GPREL foo
+    R_LARCH_SOP_ADD
 
+In normal relocatable ELF object files, "_GLOBAL_OFFSET_TABLE_" is
+undefined in the symtab and the BFD linker generates it on final link.
+Define it for kernel modules so we will be able to really use
+R_LARCH_SOP_PUSH_GPREL relocation.
+
+Note that we need to use "HIDDEN" to make it a local symbol because each
+kernel module has its own GOT and the reference to it should not be
+resolved to the GOT in the main kernel image.
+
+Suggested-by: Jinyang He <hejinyang@loongson.cn>
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ arch/loongarch/include/asm/module.lds.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/include/asm/module.lds.h b/arch/loongarch/inclu=
+de/asm/module.lds.h
+index 57bbd0cedd26..42b7cca0b947 100644
+--- a/arch/loongarch/include/asm/module.lds.h
++++ b/arch/loongarch/include/asm/module.lds.h
+@@ -4,5 +4,5 @@ SECTIONS {
+ 	. =3D ALIGN(4);
+ 	.plt : { BYTE(0) }
+ 	.plt.idx : { BYTE(0) }
+-	.got : { BYTE(0) }
++	.got : { HIDDEN(_GLOBAL_OFFSET_TABLE_ =3D .); BYTE(0) }
+ }
+--=20
+2.37.0
