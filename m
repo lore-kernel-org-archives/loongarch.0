@@ -1,102 +1,122 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9742566
-	for <loongarch@lists.linux.dev>; Wed, 27 Jul 2022 16:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1658940417;
-	bh=7ILEiHkZaaxtluhCY7IN0k/C4z/OAzKEwdfgQuLQnP8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=mpLqyFpBqF9FNRtrKpzraGF8g9SzmkzzzmdF5BuoUAYv/6S1va6AMpCFQ8b1wYMuM
-	 6ubR9vwpgdSJ7dq1/KqEfm42+kkJW+rKsauiI24h5O+0X0SeogAIYz+9RygPM1uX4C
-	 qO/9Y6dmrvBl/5jdqIL0InWp0I8S2nUmPCpDeG5Y=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 7E4596685A;
-	Wed, 27 Jul 2022 12:46:55 -0400 (EDT)
-Message-ID: <aced7303ca2a4130b73cfa46d7a25c1f4812a651.camel@xry111.site>
-Subject: Re: [PATCH 0/5] LoongArch: Support new relocation types
-From: Xi Ruoyao <xry111@xry111.site>
-To: loongarch@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
- Chen <chenhuacai@kernel.org>
-Date: Thu, 28 Jul 2022 00:46:53 +0800
-In-Reply-To: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12283EC6
+	for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 01:03:07 +0000 (UTC)
+Received: from localhost.localdomain (unknown [111.9.175.10])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz9JB4OFiEr49AA--.23298S3;
+	Thu, 28 Jul 2022 09:02:58 +0800 (CST)
+Subject: Re: [PATCH 3/5] LoongArch: Support relocation against
+ _GLOBAL_OFFSET_TABLE_
+To: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
 References: <385f63bcbee8e37c42f479ce9cdc7e7d731d419b.camel@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+ <99733532831377ab6585d43ee40bf314a2d4c5a3.camel@xry111.site>
+Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
+ Huacai Chen <chenhuacai@kernel.org>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <10c1e0f9-8409-a0f4-9b18-a5f56dfb14e1@loongson.cn>
+Date: Thu, 28 Jul 2022 09:02:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <99733532831377ab6585d43ee40bf314a2d4c5a3.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf9Dxz9JB4OFiEr49AA--.23298S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF1xZFyDKr13uFWfXw4UXFb_yoW5JFyxpF
+	Wqk395Wr4fCr1DG3Z3Z3WkuFy5GFZ7Gr4jgFW7G345Aw1jqryFyayxKryq9a18X34kC3y0
+	qr1rWFW7Kan7ArUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkvb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I
+	8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487
+	MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+	W8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07bOoGdUUUUU=
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-Self notes:
+On 07/28/2022 12:28 AM, Xi Ruoyao wrote:
+> With the stack-based relocations, the assembler emits three relocations
+> to push the PC-relative offset of a GOT entry:
+>
+>      R_LARCH_SOP_PUSH_PCREL _GLOBAL_OFFSET_TABLE_
+>      R_LARCH_SOP_PUSH_GPREL foo
+>      R_LARCH_SOP_ADD
+>
+> "_GLOBAL_OFFSET_TABLE_" does not really exist in the symtab and the BFD
+> linker handles it with special hack.  Implement a similar hack for
+> kernel so we will be able to really use R_LARCH_SOP_PUSH_GPREL
+> relocation.
+>
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+>   arch/loongarch/kernel/module-sections.c | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
+>
+> diff --git a/arch/loongarch/kernel/module-sections.c b/arch/loongarch/kernel/module-sections.c
+> index 509c0b86b1e9..73976addbf60 100644
+> --- a/arch/loongarch/kernel/module-sections.c
+> +++ b/arch/loongarch/kernel/module-sections.c
+> @@ -89,6 +89,9 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+>   			      char *secstrings, struct module *mod)
+>   {
+>   	unsigned int i, num_plts = 0, num_gots = 0;
+> +	Elf_Shdr *symtab = NULL;
+> +	Elf_Sym *symbols;
+> +	char *strings;
+>   
+>   	/*
+>   	 * Find the empty .plt sections.
+> @@ -100,6 +103,8 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+>   			mod->arch.plt_idx.shdr = sechdrs + i;
+>   		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".got"))
+>   			mod->arch.got.shdr = sechdrs + i;
+> +		else if (sechdrs[i].sh_type == SHT_SYMTAB)
+> +			symtab = sechdrs + i;
+>   	}
+>   
+>   	if (!mod->arch.plt.shdr) {
+> @@ -115,6 +120,22 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+>   		return -ENOEXEC;
+>   	}
+>   
+> +	if (!symtab) {
+> +		pr_err("%s: module symbol table missing\n", mod->name);
+> +		return -ENOEXEC;
+> +	}
+> +
+> +	symbols = (void *) ehdr + symtab->sh_offset;
+> +	strings = (void *) ehdr + sechdrs[symtab->sh_link].sh_offset;
+> +
+> +	for (i = 0; i < symtab->sh_size / sizeof(Elf_Sym); i++)
+> +		if (symbols[i].st_shndx == SHN_UNDEF &&
+> +		    strcmp(strings + symbols[i].st_name,
+> +			   "_GLOBAL_OFFSET_TABLE_") == 0) {
+> +			symbols[i].st_shndx = mod->arch.got.shdr - sechdrs;
+> +			symbols[i].st_value = 0;
+> +		}
+> +
+>   	/* Calculate the maxinum number of entries */
+>   	for (i = 0; i < ehdr->e_shnum; i++) {
+>   		int num_rela = sechdrs[i].sh_size / sizeof(Elf_Rela);
 
-With "-mla-global-with-pcrel" in KBUILD_CFLAGS_KERNEL gone (even if I
-don't remove it, it will be ineffective with binutils-2.40/gcc-13), the
-kernel will use GOT to access the objects in other translation units.=20
-It may cause a performance regression.
+Hi, Ruoyao,
 
-*If* such a performance regression is really observed, we need to change
-GCC to use PC relative addressing (instead of GOT) for loading external
-objects when -fno-PIC.  Such a change will benefit userspace apps as
-well, *if* PC relative addressing is really faster than GOT access.
 
-(Emphasize "if" here: I've not run any benchmarks yet.)
+It is possible to create a symbol when linking, which means
+maybe we can add _GLOBAL_OFFSET_TABLE_ in 'module.lds.h'.
+What do you think about it?
 
-I'll be mostly AFK in the following one or two weeks, apologize for
-possible slow respond.
 
-On Thu, 2022-07-28 at 00:24 +0800, Xi Ruoyao wrote:
-> The version 2.00 of LoongArch ELF ABI specification introduced new
-> relocation types, and the development tree of Binutils and GCC has
-> started to use them.=C2=A0 If the kernel is built with the latest snapsho=
-t of
-> Binutils or GCC, it will fail to load the modules because of unrecognized
-> relocation types in modules.
->=20
-> Add support for GOT and new relocation types for the module loader, so
-> the kernel (with modules) can be built with the "normal" code model and
-> function properly.
->=20
-> Tested by building the kernel with Binutils & GCC master branch, and
-> running the kernel with 35 in-tree modules loaded.
->=20
-> Link: https://github.com/loongson/LoongArch-Documentation/pull/57
-> Link: https://gcc.gnu.org/r13-1834
-> Link: https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommit;h=3Df09=
-482a
->=20
-> Xi Ruoyao (5):
-> =C2=A0 LoongArch: Add section of GOT for kernel module
-> =C2=A0 LoongArch: Support R_LARCH_SOP_PUSH_GPREL relocation type in kerne=
-l
-> =C2=A0=C2=A0=C2=A0 module
-> =C2=A0 LoongArch: Support relocation against _GLOBAL_OFFSET_TABLE_
-> =C2=A0 LoongArch: Stop using undocumented assembler options
-> =C2=A0 LoongArch: Support modules with new relocation types
->=20
-> =C2=A0arch/loongarch/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 5 +-
-> =C2=A0arch/loongarch/include/asm/elf.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 37 ++++++++++
-> =C2=A0arch/loongarch/include/asm/module.h=C2=A0=C2=A0=C2=A0=C2=A0 | 23 ++=
-++++
-> =C2=A0arch/loongarch/include/asm/module.lds.h |=C2=A0 1 +
-> =C2=A0arch/loongarch/kernel/head.S=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 10 +--
-> =C2=A0arch/loongarch/kernel/module-sections.c | 72 +++++++++++++++++--
-> =C2=A0arch/loongarch/kernel/module.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 94 +++++++++++++++++++++++++
-> =C2=A07 files changed, 229 insertions(+), 13 deletions(-)
->=20
+Thanks,
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Jinyang
+
