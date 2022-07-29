@@ -1,110 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1862F22
-	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 14:42:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9CE0C433C1;
-	Fri, 29 Jul 2022 14:42:02 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v5.19-final
-Date: Fri, 29 Jul 2022 22:42:05 +0800
-Message-Id: <20220729144205.3412161-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7D24C77
+	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 17:55:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1659117333;
+	bh=4pZFEPPW1rCD+FxOWH5IvuT+sX+ksBOFETw6F8Vgj8U=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=PRF5VNP27p6ja7lRqq7yVkXXSkaMOp+kkK03ZIOakIIior+DFJ3SIN8qilDlw4Ijy
+	 zmjfgYulz7PRICqylcVscRR7DuMzBUK2arHVt9ku1SPnki18CWp/DufnfFPrJbSHjS
+	 K3TkLuZ4TTxxnUzFvVD08daYPjn0Za5g5YRjwT30=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 6638D66898;
+	Fri, 29 Jul 2022 13:55:31 -0400 (EDT)
+Message-ID: <7cad6e78014168a8906e130e1cf3809077d2bda7.camel@xry111.site>
+Subject: Re: [PATCH v4 0/4] LoongArch: Support new relocation types
+From: Xi Ruoyao <xry111@xry111.site>
+To: Youling Tang <tangyouling@loongson.cn>, loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
+ Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>, Lulu
+ Cheng <chenglulu@loongson.cn>
+Date: Sat, 30 Jul 2022 01:55:29 +0800
+In-Reply-To: <d7670b60-2782-4642-995b-7baa01779a66@loongson.cn>
+References: <32a74a218c76611f897fd1df1ad0059068621133.camel@xry111.site>
+	 <ec52fd49-4a30-15d9-3d32-fd7bc6d8b3f0@loongson.cn>
+	 <0179679b736aea7258981dec2d83107cce74dfc1.camel@xry111.site>
+	 <a139a8475fe295ac9f17064269cd0312dca6f96e.camel@xry111.site>
+	 <6b5d2188f93ed72b67a4bbb7116113f833fe1ee5.camel@xry111.site>
+	 <d7670b60-2782-4642-995b-7baa01779a66@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The following changes since commit e0dccc3b76fb35bb257b4118367a883073d7390e:
+On Fri, 2022-07-29 at 20:19 +0800, Youling Tang wrote:
 
-  Linux 5.19-rc8 (2022-07-24 13:26:27 -0700)
+> On 07/29/2022 07:45 PM, Xi Ruoyao wrote:
+> > Hmm... The problem is the "addresses" of per-cpu symbols are faked: the=
+y
+> > are actually offsets from $r21.=C2=A0 So we can't just load such an off=
+set
+> > with PCALA addressing.
+> >=20
+> > It looks like we'll need to introduce an attribute for GCC to make an
+> > variable "must be addressed via GOT", and add the attribute into
+> > PER_CPU_ATTRIBUTES.
 
-are available in the Git repository at:
+> Yes, we need a GCC attribute to specify the per-cpu variable.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-5.19-5
+GCC patch adding "addr_global" attribute for LoongArch:
+https://gcc.gnu.org/pipermail/gcc-patches/2022-July/599064.html
 
-for you to fetch changes up to 45b53c9051770c0d9145083a328548745ee2e75b:
+An experiment to use it:
+https://github.com/xry111/linux/commit/c1d5d70
 
-  LoongArch: Fix wrong "ROM Size" of boardinfo (2022-07-29 18:22:33 +0800)
-
-----------------------------------------------------------------
-LoongArch fixes for v5.19-final
-
-1, Fix cache size calculation, stack protection attributes, ptrace's
-   fpr_set and "ROM Size" in boardinfo;
-2, Some cleanups and improvements of assembly.
-3, Some cleanups of unused code and useless code.
-----------------------------------------------------------------
-Bibo Mao (2):
-      LoongArch: Remove clock setting during cpu hotplug stage
-      LoongArch: Remove unused variables
-
-Huacai Chen (2):
-      LoongArch: Disable executable stack by default
-      LoongArch: Fix shared cache size calculation
-
-Jun Yi (1):
-      LoongArch: Remove useless header compiler.h
-
-Qi Hu (1):
-      LoongArch: Fix missing fcsr in ptrace's fpr_set
-
-Tiezhu Yang (1):
-      LoongArch: Fix wrong "ROM Size" of boardinfo
-
-WANG Xuerui (8):
-      LoongArch: Use ABI names of registers where appropriate
-      LoongArch: Use the "jr" pseudo-instruction where applicable
-      LoongArch: Use the "move" pseudo-instruction where applicable
-      LoongArch: Simplify "BEQ/BNE foo, zero" with BEQZ/BNEZ
-      LoongArch: Simplify "BLT foo, zero" with BLTZ
-      LoongArch: Simplify "BGT foo, zero" with BGTZ
-      LoongArch: Re-tab the assembly files
-      LoongArch: Remove several syntactic sugar macros for branches
-
- arch/loongarch/Kconfig                   |   1 -
- arch/loongarch/include/asm/asmmacro.h    |  12 ---
- arch/loongarch/include/asm/atomic.h      |  37 +++----
- arch/loongarch/include/asm/barrier.h     |   4 +-
- arch/loongarch/include/asm/cmpxchg.h     |   4 +-
- arch/loongarch/include/asm/compiler.h    |  15 ---
- arch/loongarch/include/asm/elf.h         |   2 -
- arch/loongarch/include/asm/futex.h       |  11 +-
- arch/loongarch/include/asm/irqflags.h    |   1 -
- arch/loongarch/include/asm/local.h       |   1 -
- arch/loongarch/include/asm/loongson.h    |  16 +--
- arch/loongarch/include/asm/stacktrace.h  |  12 +--
- arch/loongarch/include/asm/thread_info.h |   4 +-
- arch/loongarch/include/asm/uaccess.h     |   2 +-
- arch/loongarch/kernel/cacheinfo.c        |  11 +-
- arch/loongarch/kernel/entry.S            |   4 +-
- arch/loongarch/kernel/env.c              |  20 ----
- arch/loongarch/kernel/fpu.S              | 174 +++++++++++++++----------------
- arch/loongarch/kernel/genex.S            |  12 +--
- arch/loongarch/kernel/head.S             |   8 +-
- arch/loongarch/kernel/ptrace.c           |  12 ++-
- arch/loongarch/kernel/reset.c            |   1 -
- arch/loongarch/kernel/setup.c            |   2 +-
- arch/loongarch/kernel/smp.c              | 113 +++-----------------
- arch/loongarch/kernel/switch.S           |   4 +-
- arch/loongarch/lib/clear_user.S          |   2 +-
- arch/loongarch/lib/copy_user.S           |   2 +-
- arch/loongarch/lib/delay.c               |   1 -
- arch/loongarch/mm/page.S                 | 118 ++++++++++-----------
- arch/loongarch/mm/tlbex.S                |  98 ++++++++---------
- include/linux/cpuhotplug.h               |   1 -
- 31 files changed, 277 insertions(+), 428 deletions(-)
- delete mode 100644 arch/loongarch/include/asm/compiler.h
+This fixes "modprobe x_tables" for me.
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
