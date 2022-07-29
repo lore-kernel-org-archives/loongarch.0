@@ -1,96 +1,78 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467727A
-	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 02:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1659061797;
-	bh=fTlP0CuEA0WSeT1/OShyf0j1Ca8AYpjBY4e4Mf9jVJE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=nihWEJV59BFCRJaoTnpQ5dcKwLycOwOSZWDc1kK6fUsI3ryW7GYPxAH18ml9p3ZTs
-	 N/2FeTj+4dzRhqTfBJoj+jflXEKD5k5TqoBEmieDZyD1AwkggyLFwKSWOz12gLpUA1
-	 0aMsbZGtcuOISVMe8LSKRhFMcanI6Ne6yvuNJJRs=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 43A3366B51;
-	Thu, 28 Jul 2022 22:29:55 -0400 (EDT)
-Message-ID: <a30e39a1b41dc63fff32b8d350fecb92dfe27d09.camel@xry111.site>
-Subject: Re: [PATCH v3 0/4] LoongArch: Support new relocation types
-From: Xi Ruoyao <xry111@xry111.site>
-To: Youling Tang <tangyouling@loongson.cn>, loongarch@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
- Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>
-Date: Fri, 29 Jul 2022 10:29:53 +0800
-In-Reply-To: <879dc428-0407-3280-617d-840352aa6d08@loongson.cn>
-References: <bb7824d39a694b13069718c2b8193379f79229b4.camel@xry111.site>
-	 <879dc428-0407-3280-617d-840352aa6d08@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5F07A
+	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 02:46:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 273E6C43470
+	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 02:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1659062794;
+	bh=w4Wkpn0druzPuiqSOhHxN7Fku75Q30SBmK1KU9uVjn0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=r1VZnR41b0F/2zvn35yxe37yr0wgVu/7CaQhktQtwol3ZENRxDnC5NIKYzw7QyHYA
+	 RS8o6RcoqSdNI1KRYchZZI/XdSs3Qn6nnAOmp4TIhY/VZWTFOhsfY+R5GFWiIIx+1k
+	 N7EHps2jiCQr15qf7jAIH/SW1ZWsbdIBAKvsHBqLv/VfYVC4CgwcyZOSWF0YEvcZbc
+	 WqAHB0eN/2zc3ScVwqWGaIQt1X94mc2ivwgJNschmyXvx/PM5rHid5VdHG4XCa2265
+	 IjYKpjH51AHMu44/j0gjwmBtJ+RMAZlt/RbTUBYtoSfwcFQKsyZQt/6T0L2/Y1UcNE
+	 ZnGgj0Y4JbHXg==
+Received: by mail-vs1-f48.google.com with SMTP id o4so3298948vsc.12
+        for <loongarch@lists.linux.dev>; Thu, 28 Jul 2022 19:46:34 -0700 (PDT)
+X-Gm-Message-State: AJIora+HD2s43OBCgrHcNCpjRSqtcTozdYI1W4ki617yYfj+APFUYr0I
+	h477M5rcsll9UjnNcuRFwQzVWawX32YPBcN0qPw=
+X-Google-Smtp-Source: AGRyM1u6SxglJ8d+1eIrMCQU+a1v3FvbM3qnTSGMMaf6Z3NWacIpU9z4O4rYWdTNnPSEGJNamNzbWeLA7BVZWT1v3ZI=
+X-Received: by 2002:a05:6102:3d3:b0:358:8a04:30cb with SMTP id
+ n19-20020a05610203d300b003588a0430cbmr530018vsq.43.1659062793140; Thu, 28 Jul
+ 2022 19:46:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <c596e7a73953a1c49e8f5e94ec2db642f72e7813.camel@xry111.site>
+ <e95cfe70e2e5faa5b9cdc9452bdb3ab8d664aff0.camel@xry111.site>
+ <CAAhV-H5nuP2xYREtZuJnq3Sr+JpVbOzLDw+N1ep5yFSUd1+nFQ@mail.gmail.com> <615b5bc79c9e48409361bde1af9374cacb06ec9c.camel@xry111.site>
+In-Reply-To: <615b5bc79c9e48409361bde1af9374cacb06ec9c.camel@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 29 Jul 2022 10:46:19 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Fr5OEZCq+C88BWmT2fvW3aZBnFpjx9dgJXNNwVtp8Uw@mail.gmail.com>
+Message-ID: <CAAhV-H7Fr5OEZCq+C88BWmT2fvW3aZBnFpjx9dgJXNNwVtp8Uw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] LoongArch: Stop using undocumented assembler options
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>, 
+	Jinyang He <hejinyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 2022-07-29 at 10:23 +0800, Youling Tang wrote:
-> Hi, Ruoyao
->=20
-> On 07/29/2022 10:07 AM, Xi Ruoyao wrote:
-> > The version 2.00 of LoongArch ELF ABI specification introduced new
-> > relocation types, and the development tree of Binutils and GCC has
-> > started to use them.=C2=A0 If the kernel is built with the latest snaps=
-hot of
-> > Binutils or GCC, it will fail to load the modules because of unrecogniz=
-ed
-> > relocation types in modules.
-> >=20
-> > Add support for GOT and new relocation types for the module loader, so
-> > the kernel (with modules) can be built with the "normal" code model and
-> > function properly.
-> >=20
-> > This series does not break the compatibility with old toolchain using
-> > stack-based relocation types, so with the patches applied the kernel ca=
-n
-> > be be built with both old and new toolchains.
-> >=20
-> > Tested by building the kernel with both Binutils & GCC master branch an=
-d
-> > my system Binutils & GCC (without new relocation type support), running
-> > both the builds with 35 in-tree modules loaded, and loading one module
-> > with 20 GOT loads (loaded addresses verified by comparing with
-> > /proc/kallsyms).
-> >=20
-> > Changes from v2 to v3:
-> >=20
-> > - Use `union loongarch_instruction` instead of explicit bit shifts
-> > =C2=A0 applying the relocation.=C2=A0 Suggested by Youling.
-> > - For R_LARCH_B26, move the alignment check before the range check to b=
-e
-> > =C2=A0 consistent with stack pop relocations.=C2=A0 Suggested by Youlin=
-g.
-> > - Reword the commit message of the 3rd patch.=C2=A0 Suggested by Huacai=
-.
->=20
-> The log of changes from v1 to v2 should be preserved.
->=20
-Retroactively, append the changes from v1 to v2:
+Hi, Ruoyao,
 
-- Fix a stupid programming error (confusion between the number of PLT
-  entries and the number of GOT entries).  (Bug spotted by Youling).
-- Synthesize the _GLOBAL_OFFSET_TABLE_ symbol with module.lds, instead
-  of faking it at runtime.  The 3rd patch from V1 is now merged into
-  the 1st patch because it would be a one-line change.  (Suggested by
-  Jinyang).
-- Keep reloc_rela_handlers[] ordered by the relocation type ID.
-  (Suggested by Youling).
-- Remove -fplt along with -Wa,-mla-* options because it's the default.
-  (Suggested by Youling).
+On Thu, Jul 28, 2022 at 9:10 PM Xi Ruoyao <xry111@xry111.site> wrote:
+>
+> On Thu, 2022-07-28 at 20:25 +0800, Huacai Chen wrote:
+> > Hi, Ruoyao,
+> >
+> > On Thu, Jul 28, 2022 at 8:03 PM Xi Ruoyao <xry111@xry111.site> wrote:
+> > >
+> > > Now we can handle GOT and GOT-based relocations properly, remove the
+> > > undocumented `-Wa,-mla-{global,local}-with-{pcrel,abs}` assembler
+> > > hacks.
+> > I think "-Wa,-mla-{global,local}-with-{pcrel,abs}" may be regular
+> > options rather than "hacks". If I'm right, the title and commit
+> > message should be updated. And we can send patches to binutils to make
+> > them "documented".
+>
+> How about changing the message to:
+>
+>    GCC 13 no longer generates la.global and la.local in assembly, but
+>    produces explicit PC-relative relocations to local symbols and GOT
+>    entries for global symbols instead.  As the result, -Wa,-mla-* are no
+>    longer sufficient to control the code generation for symbol address
+>    loading.  As now we can handle GOT and GOT-based relocations
+>    properly, remove those options to use GOT for global symbol address
+>    consistently.
+GCC 13 can still generate la.global and la.local, so "GCC 13 no longer
+generates la.global and la.local in assembly by default" may be
+better. And "undocumented" in the title should be "non-preferred", I
+think.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Huacai
