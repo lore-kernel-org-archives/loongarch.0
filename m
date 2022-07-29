@@ -1,97 +1,78 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B8597A
-	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 02:23:27 +0000 (UTC)
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9GcRONiRspAAA--.45504S3;
-	Fri, 29 Jul 2022 10:23:25 +0800 (CST)
-Subject: Re: [PATCH v3 0/4] LoongArch: Support new relocation types
-To: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
-References: <bb7824d39a694b13069718c2b8193379f79229b4.camel@xry111.site>
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <879dc428-0407-3280-617d-840352aa6d08@loongson.cn>
-Date: Fri, 29 Jul 2022 10:23:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A84B7A
+	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 02:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1659061684;
+	bh=3Vqu37WO9M8OmlJ6f+Ltkq8HAoeghNsD/Pz+erySmno=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=NGvT8NGVa1pi/RjmLZIxGd+XVfcuv6XvBcGE2GzHSsqfOR7m+5RlBwsNUYDZqEDoQ
+	 AjMecyfpb2o8Bcr+6yNRMjf5O8+WtKYXxcEe52bCdSWaOuKpX10o9H1fswaT9NCFiJ
+	 pNaMXW27QBTGvFqHTUUf1XISj+9UZDAQjoaoOaFc=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 8002C66B51;
+	Thu, 28 Jul 2022 22:28:02 -0400 (EDT)
+Message-ID: <06a332490e21353bcaf0678dc3f2f04e74bb3faf.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: Disable executable stack by default
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org, Xuefeng Li
+	 <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, Xuerui Wang
+	 <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Date: Fri, 29 Jul 2022 10:28:01 +0800
+In-Reply-To: <20220726130224.3987623-1-chenhuacai@loongson.cn>
+References: <20220726130224.3987623-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <bb7824d39a694b13069718c2b8193379f79229b4.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9Dxn9GcRONiRspAAA--.45504S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7CF1xCFyxtr48JrWrJFW5ZFb_yoW8uw13pr
-	9xCrn5JFZ7Grn3Xa1aq3WUWF15Ga97G3yaqay3t34rArnxXF1UCF15tw15AFy7Xws3KF40
-	gFyaga409a1UAwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjc
-	xK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
-	FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr
-	0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxv
-	r21lc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
-	8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
-	xVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
-	8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2
-	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
-	UI43ZEXa7IU5Ssj5UUUUU==
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 
-Hi, Ruoyao
+On Tue, 2022-07-26 at 21:02 +0800, Huacai Chen wrote:
+> Disable executable stack for LoongArch by default, as all modern
+> architectures do.
 
-On 07/29/2022 10:07 AM, Xi Ruoyao wrote:
-> The version 2.00 of LoongArch ELF ABI specification introduced new
-> relocation types, and the development tree of Binutils and GCC has
-> started to use them.  If the kernel is built with the latest snapshot of
-> Binutils or GCC, it will fail to load the modules because of unrecognized
-> relocation types in modules.
->
-> Add support for GOT and new relocation types for the module loader, so
-> the kernel (with modules) can be built with the "normal" code model and
-> function properly.
->
-> This series does not break the compatibility with old toolchain using
-> stack-based relocation types, so with the patches applied the kernel can
-> be be built with both old and new toolchains.
->
-> Tested by building the kernel with both Binutils & GCC master branch and
-> my system Binutils & GCC (without new relocation type support), running
-> both the builds with 35 in-tree modules loaded, and loading one module
-> with 20 GOT loads (loaded addresses verified by comparing with
-> /proc/kallsyms).
->
-> Changes from v2 to v3:
->
-> - Use `union loongarch_instruction` instead of explicit bit shifts
->   applying the relocation.  Suggested by Youling.
-> - For R_LARCH_B26, move the alignment check before the range check to be
->   consistent with stack pop relocations.  Suggested by Youling.
-> - Reword the commit message of the 3rd patch.  Suggested by Huacai.
+Should this be a 5.19 fix?  IIUC after the first release we'll be
+impossible to change it because it would "break userspace".
 
-The log of changes from v1 to v2 should be preserved.
+Note that 5.19 release is scheduled this weekend.
 
-Thanks,
-Youling
->
-> Xi Ruoyao (4):
->   LoongArch: Add section of GOT for kernel module
->   LoongArch: Support R_LARCH_SOP_PUSH_GPREL relocation type in kernel
->     module
->   LoongArch: Remove -fplt and -Wa,-mla-* from CFLAGS
->   LoongArch: Support modules with new relocation types
->
->  arch/loongarch/Makefile                 |  4 --
->  arch/loongarch/include/asm/elf.h        | 37 ++++++++++
->  arch/loongarch/include/asm/module.h     | 23 ++++++
->  arch/loongarch/include/asm/module.lds.h |  1 +
->  arch/loongarch/kernel/head.S            | 10 +--
->  arch/loongarch/kernel/module-sections.c | 51 +++++++++++--
->  arch/loongarch/kernel/module.c          | 96 +++++++++++++++++++++++++
->  7 files changed, 209 insertions(+), 13 deletions(-)
->
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+> =C2=A0arch/loongarch/include/asm/elf.h | 2 --
+> =C2=A01 file changed, 2 deletions(-)
+>=20
+> diff --git a/arch/loongarch/include/asm/elf.h
+> b/arch/loongarch/include/asm/elf.h
+> index f3960b18a90e..5f3ff4781fda 100644
+> --- a/arch/loongarch/include/asm/elf.h
+> +++ b/arch/loongarch/include/asm/elf.h
+> @@ -288,8 +288,6 @@ struct arch_elf_state {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.interp_fp_abi =3D LOONGA=
+RCH_ABI_FP_ANY,=C2=A0=C2=A0\
+> =C2=A0}
+> =C2=A0
+> -#define elf_read_implies_exec(ex, exec_stk) (exec_stk =3D=3D
+> EXSTACK_DEFAULT)
+> -
+> =C2=A0extern int arch_elf_pt_proc(void *ehdr, void *phdr, struct file *el=
+f,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 bool is_interp, struct arch_elf_state
+> *state);
+> =C2=A0
 
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
