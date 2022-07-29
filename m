@@ -1,67 +1,110 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86D2F1360
-	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 12:19:59 +0000 (UTC)
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9BxM9Bt0ONiWgJCAA--.28421S3;
-	Fri, 29 Jul 2022 20:19:57 +0800 (CST)
-Subject: Re: [PATCH v4 0/4] LoongArch: Support new relocation types
-To: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
-References: <32a74a218c76611f897fd1df1ad0059068621133.camel@xry111.site>
- <ec52fd49-4a30-15d9-3d32-fd7bc6d8b3f0@loongson.cn>
- <0179679b736aea7258981dec2d83107cce74dfc1.camel@xry111.site>
- <a139a8475fe295ac9f17064269cd0312dca6f96e.camel@xry111.site>
- <6b5d2188f93ed72b67a4bbb7116113f833fe1ee5.camel@xry111.site>
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>,
- Lulu Cheng <chenglulu@loongson.cn>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <d7670b60-2782-4642-995b-7baa01779a66@loongson.cn>
-Date: Fri, 29 Jul 2022 20:19:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1862F22
+	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 14:42:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9CE0C433C1;
+	Fri, 29 Jul 2022 14:42:02 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v5.19-final
+Date: Fri, 29 Jul 2022 22:42:05 +0800
+Message-Id: <20220729144205.3412161-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <6b5d2188f93ed72b67a4bbb7116113f833fe1ee5.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9BxM9Bt0ONiWgJCAA--.28421S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY-7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2js
-	IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
-	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeV
-	CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2
-	V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_Xr1l42xK82IYc2Ij64vIr41l4I8I3I0E4I
-	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-	WwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWr
-	Zr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
-	1UYxBIdaVFxhVjvjDU0xZFpf9x0JUID73UUUUU=
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+Content-Transfer-Encoding: 8bit
 
+The following changes since commit e0dccc3b76fb35bb257b4118367a883073d7390e:
 
-On 07/29/2022 07:45 PM, Xi Ruoyao wrote:
-> On Fri, 2022-07-29 at 18:36 +0800, Xi Ruoyao wrote:
->
->> The relocation against local percpu variable is broken up.  I'll try
->> to fix it.
->
-> Hmm... The problem is the "addresses" of per-cpu symbols are faked: they
-> are actually offsets from $r21.  So we can't just load such an offset
-> with PCALA addressing.
->
-> It looks like we'll need to introduce an attribute for GCC to make an
-> variable "must be addressed via GOT", and add the attribute into
-> PER_CPU_ATTRIBUTES.
-Yes, we need a GCC attribute to specify the per-cpu variable.
+  Linux 5.19-rc8 (2022-07-24 13:26:27 -0700)
 
-Thanks,
-Youling
->
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-5.19-5
+
+for you to fetch changes up to 45b53c9051770c0d9145083a328548745ee2e75b:
+
+  LoongArch: Fix wrong "ROM Size" of boardinfo (2022-07-29 18:22:33 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v5.19-final
+
+1, Fix cache size calculation, stack protection attributes, ptrace's
+   fpr_set and "ROM Size" in boardinfo;
+2, Some cleanups and improvements of assembly.
+3, Some cleanups of unused code and useless code.
+----------------------------------------------------------------
+Bibo Mao (2):
+      LoongArch: Remove clock setting during cpu hotplug stage
+      LoongArch: Remove unused variables
+
+Huacai Chen (2):
+      LoongArch: Disable executable stack by default
+      LoongArch: Fix shared cache size calculation
+
+Jun Yi (1):
+      LoongArch: Remove useless header compiler.h
+
+Qi Hu (1):
+      LoongArch: Fix missing fcsr in ptrace's fpr_set
+
+Tiezhu Yang (1):
+      LoongArch: Fix wrong "ROM Size" of boardinfo
+
+WANG Xuerui (8):
+      LoongArch: Use ABI names of registers where appropriate
+      LoongArch: Use the "jr" pseudo-instruction where applicable
+      LoongArch: Use the "move" pseudo-instruction where applicable
+      LoongArch: Simplify "BEQ/BNE foo, zero" with BEQZ/BNEZ
+      LoongArch: Simplify "BLT foo, zero" with BLTZ
+      LoongArch: Simplify "BGT foo, zero" with BGTZ
+      LoongArch: Re-tab the assembly files
+      LoongArch: Remove several syntactic sugar macros for branches
+
+ arch/loongarch/Kconfig                   |   1 -
+ arch/loongarch/include/asm/asmmacro.h    |  12 ---
+ arch/loongarch/include/asm/atomic.h      |  37 +++----
+ arch/loongarch/include/asm/barrier.h     |   4 +-
+ arch/loongarch/include/asm/cmpxchg.h     |   4 +-
+ arch/loongarch/include/asm/compiler.h    |  15 ---
+ arch/loongarch/include/asm/elf.h         |   2 -
+ arch/loongarch/include/asm/futex.h       |  11 +-
+ arch/loongarch/include/asm/irqflags.h    |   1 -
+ arch/loongarch/include/asm/local.h       |   1 -
+ arch/loongarch/include/asm/loongson.h    |  16 +--
+ arch/loongarch/include/asm/stacktrace.h  |  12 +--
+ arch/loongarch/include/asm/thread_info.h |   4 +-
+ arch/loongarch/include/asm/uaccess.h     |   2 +-
+ arch/loongarch/kernel/cacheinfo.c        |  11 +-
+ arch/loongarch/kernel/entry.S            |   4 +-
+ arch/loongarch/kernel/env.c              |  20 ----
+ arch/loongarch/kernel/fpu.S              | 174 +++++++++++++++----------------
+ arch/loongarch/kernel/genex.S            |  12 +--
+ arch/loongarch/kernel/head.S             |   8 +-
+ arch/loongarch/kernel/ptrace.c           |  12 ++-
+ arch/loongarch/kernel/reset.c            |   1 -
+ arch/loongarch/kernel/setup.c            |   2 +-
+ arch/loongarch/kernel/smp.c              | 113 +++-----------------
+ arch/loongarch/kernel/switch.S           |   4 +-
+ arch/loongarch/lib/clear_user.S          |   2 +-
+ arch/loongarch/lib/copy_user.S           |   2 +-
+ arch/loongarch/lib/delay.c               |   1 -
+ arch/loongarch/mm/page.S                 | 118 ++++++++++-----------
+ arch/loongarch/mm/tlbex.S                |  98 ++++++++---------
+ include/linux/cpuhotplug.h               |   1 -
+ 31 files changed, 277 insertions(+), 428 deletions(-)
+ delete mode 100644 arch/loongarch/include/asm/compiler.h
