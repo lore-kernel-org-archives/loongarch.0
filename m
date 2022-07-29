@@ -1,69 +1,109 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DB6B7A
-	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 02:56:26 +0000 (UTC)
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxOeBXTONiStZAAA--.27204S3;
-	Fri, 29 Jul 2022 10:56:24 +0800 (CST)
-Subject: Re: [PATCH 1/3] LoongArch: Add guess unwinder support
-To: Jinyang He <hejinyang@loongson.cn>, Qing Zhang <zhangqing@loongson.cn>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0197C7A
+	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 05:38:49 +0000 (UTC)
+Received: from [10.130.0.63] (unknown [113.200.148.30])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz9JmcuNiJipBAA--.27572S3;
+	Fri, 29 Jul 2022 13:38:47 +0800 (CST)
+Subject: Re: [PATCH 2/3] LoongArch: Add prologue unwinder support
+To: Youling Tang <tangyouling@loongson.cn>,
  Huacai Chen <chenhuacai@kernel.org>
-References: <20220728140519.5420-1-zhangqing@loongson.cn>
- <1288a80b-4038-126f-aec0-74f18cf2fea2@loongson.cn>
- <b49c5d32-81fb-0c56-16cc-8fe6cafa3957@loongson.cn>
 Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <67911739-b8f3-578f-4d10-7aabb193ddf1@loongson.cn>
-Date: Fri, 29 Jul 2022 10:56:23 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+ linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ hejinyang@loongson.cn
+References: <20220728140519.5420-1-zhangqing@loongson.cn>
+ <20220728140519.5420-2-zhangqing@loongson.cn>
+ <ef9a03ee-6fdf-3968-de04-057cafc7c7c7@loongson.cn>
+From: zhangqing <zhangqing@loongson.cn>
+Message-ID: <fd01dabd-4ba2-ff7a-0dee-c99b1478be03@loongson.cn>
+Date: Fri, 29 Jul 2022 13:38:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <b49c5d32-81fb-0c56-16cc-8fe6cafa3957@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9AxOeBXTONiStZAAA--.27204S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7XF1kWF43Jw43Gw18Kr48JFb_yoWxurX_Za
-	10gasrCr9IqF1vvF15JrWak3y7Ww47XFyDuw4Yq34xJw1ftF4DZrZ29r12va1rWr42yr47
-	W34UZwsavw12vjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-	IcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjfU55rcDUUUU
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+In-Reply-To: <ef9a03ee-6fdf-3968-de04-057cafc7c7c7@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9Dxz9JmcuNiJipBAA--.27572S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF4rXFy3Xr47CF4DWF1Dtrb_yoW8Zr1xpr
+	4ktFWDtFyDKrn3ur1UJr4kuF98ArWkGw1DtFZ5XF4UGr1DXw1Iqrya9w1v93Z7Jr4kGr18
+	Ar15Zr9ruF1DWFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+	Y487MxkIecxEwVAFwVW8WwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+	wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvE
+	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUjivttUUUUU==
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
-Hi, Jinyang
 
-On 07/29/2022 10:28 AM, Jinyang He wrote:
-> Hi, Youling,
->
-> [...]
->>> +unsigned long unwind_get_return_address(struct unwind_state *state)
->>> +{
->>> +    if (unwind_done(state))
->>> +        return 0;
->> This judgment can be removed, because unwind_done() has been judged
->> before entering this function, and unwind_get_return_address will not
->> be called if it is true.
-> These unwinder functions are exported by "EXPORT_SYMBOL_GPL".
-> What's more, new ways to use them will be added in the future possible.
-> Assuming has judged unwind_done is not reliable.
-In this case, most of the code will be checked twice by unwind_done(),
-which feels a bit redundant.
+
+On 2022/7/29 上午10:03, Youling Tang wrote:
+> 
+> 
+> On 07/28/2022 10:05 PM, Qing Zhang wrote:
+>> It unwind the stack frame based on prologue code analyze.
+>> CONFIG_KALLSYMS is needed, at least the address and length
+>> of each function.
+>>
+>> Three stages when we do unwind,
+>>   (1)unwind_start(), the prapare of unwinding, fill unwind_state.
+>>   (2)unwind_done(), judge whether the unwind process is finished or not.
+>>   (3)unwind_next_frame(), unwind the next frame.
+>>
+>> Dividing unwinder helps to add new unwinders in the future, eg:
+>> unwind_frame, unwind_orc .etc
+>>
+>> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+>>
+>> +
+>> +    while (ip < ip_end) {
+>> +        if (is_ra_save_ins(ip)) {
+>> +            frame_ra = ip->reg2i12_format.immediate;
+> Because the immediate member in struct reg2i12_format is defined as an
+> unsigned type, the value obtained by frame_ra here can only be a
+> positive number.
+> 
+>> +            break;
+>> +        }
+>> +        if (is_branch_insn(*ip))
+>> +            break;
+>> +        ip++;
+>> +    }
+>> +
+>> +    if (frame_ra < 0) {
+> In addition to judging whether the initial value of frame_ra is
+> negative, we also want to judge whether the previously assigned
+> frame_ra is negative.
+> 
+> Save the ra value to the stack in the prologue, offset must be a
+> positive number, so we can add another judgment to is_ra_save_ins, the
+> code is as follows:
+> +static inline bool is_ra_save_ins(union loongarch_instruction *ip)
+> +{
+> +    /* st.d $ra, $sp, offset */
+> +    return ip->reg2i12_format.opcode == std_op &&
+> +        ip->reg2i12_format.rj == LOONGARCH_GPR_SP &&
+> +        ip->reg2i12_format.rd == LOONGARCH_GPR_RA &&
+> +        !(ip->reg2i12_format.immediate & (1 << 11));
+> +}
+
+Hi,
+youling
+
+you are right and I will send v2.
 
 Thanks,
-Youling
+Qing
 
