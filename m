@@ -1,61 +1,96 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23B317A
-	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 02:28:33 +0000 (UTC)
-Received: from localhost.localdomain (unknown [111.9.175.10])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL9PPReNiH8xAAA--.45065S3;
-	Fri, 29 Jul 2022 10:28:32 +0800 (CST)
-Subject: Re: [PATCH 1/3] LoongArch: Add guess unwinder support
-To: Youling Tang <tangyouling@loongson.cn>, Qing Zhang
- <zhangqing@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-References: <20220728140519.5420-1-zhangqing@loongson.cn>
- <1288a80b-4038-126f-aec0-74f18cf2fea2@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <b49c5d32-81fb-0c56-16cc-8fe6cafa3957@loongson.cn>
-Date: Fri, 29 Jul 2022 10:28:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467727A
+	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 02:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1659061797;
+	bh=fTlP0CuEA0WSeT1/OShyf0j1Ca8AYpjBY4e4Mf9jVJE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=nihWEJV59BFCRJaoTnpQ5dcKwLycOwOSZWDc1kK6fUsI3ryW7GYPxAH18ml9p3ZTs
+	 N/2FeTj+4dzRhqTfBJoj+jflXEKD5k5TqoBEmieDZyD1AwkggyLFwKSWOz12gLpUA1
+	 0aMsbZGtcuOISVMe8LSKRhFMcanI6Ne6yvuNJJRs=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 43A3366B51;
+	Thu, 28 Jul 2022 22:29:55 -0400 (EDT)
+Message-ID: <a30e39a1b41dc63fff32b8d350fecb92dfe27d09.camel@xry111.site>
+Subject: Re: [PATCH v3 0/4] LoongArch: Support new relocation types
+From: Xi Ruoyao <xry111@xry111.site>
+To: Youling Tang <tangyouling@loongson.cn>, loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
+ Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>
+Date: Fri, 29 Jul 2022 10:29:53 +0800
+In-Reply-To: <879dc428-0407-3280-617d-840352aa6d08@loongson.cn>
+References: <bb7824d39a694b13069718c2b8193379f79229b4.camel@xry111.site>
+	 <879dc428-0407-3280-617d-840352aa6d08@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1288a80b-4038-126f-aec0-74f18cf2fea2@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9DxL9PPReNiH8xAAA--.45065S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY67AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4
-	A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8Jw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
-	Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI48JMxC20s
-	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xva
-	j40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbN6pPUUUUU==
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-Hi, Youling,
+On Fri, 2022-07-29 at 10:23 +0800, Youling Tang wrote:
+> Hi, Ruoyao
+>=20
+> On 07/29/2022 10:07 AM, Xi Ruoyao wrote:
+> > The version 2.00 of LoongArch ELF ABI specification introduced new
+> > relocation types, and the development tree of Binutils and GCC has
+> > started to use them.=C2=A0 If the kernel is built with the latest snaps=
+hot of
+> > Binutils or GCC, it will fail to load the modules because of unrecogniz=
+ed
+> > relocation types in modules.
+> >=20
+> > Add support for GOT and new relocation types for the module loader, so
+> > the kernel (with modules) can be built with the "normal" code model and
+> > function properly.
+> >=20
+> > This series does not break the compatibility with old toolchain using
+> > stack-based relocation types, so with the patches applied the kernel ca=
+n
+> > be be built with both old and new toolchains.
+> >=20
+> > Tested by building the kernel with both Binutils & GCC master branch an=
+d
+> > my system Binutils & GCC (without new relocation type support), running
+> > both the builds with 35 in-tree modules loaded, and loading one module
+> > with 20 GOT loads (loaded addresses verified by comparing with
+> > /proc/kallsyms).
+> >=20
+> > Changes from v2 to v3:
+> >=20
+> > - Use `union loongarch_instruction` instead of explicit bit shifts
+> > =C2=A0 applying the relocation.=C2=A0 Suggested by Youling.
+> > - For R_LARCH_B26, move the alignment check before the range check to b=
+e
+> > =C2=A0 consistent with stack pop relocations.=C2=A0 Suggested by Youlin=
+g.
+> > - Reword the commit message of the 3rd patch.=C2=A0 Suggested by Huacai=
+.
+>=20
+> The log of changes from v1 to v2 should be preserved.
+>=20
+Retroactively, append the changes from v1 to v2:
 
-[...]
->> +unsigned long unwind_get_return_address(struct unwind_state *state)
->> +{
->> +    if (unwind_done(state))
->> +        return 0;
-> This judgment can be removed, because unwind_done() has been judged
-> before entering this function, and unwind_get_return_address will not
-> be called if it is true.
-These unwinder functions are exported by "EXPORT_SYMBOL_GPL".
-What's more, new ways to use them will be added in the future possible.
-Assuming has judged unwind_done is not reliable.
+- Fix a stupid programming error (confusion between the number of PLT
+  entries and the number of GOT entries).  (Bug spotted by Youling).
+- Synthesize the _GLOBAL_OFFSET_TABLE_ symbol with module.lds, instead
+  of faking it at runtime.  The 3rd patch from V1 is now merged into
+  the 1st patch because it would be a one-line change.  (Suggested by
+  Jinyang).
+- Keep reloc_rela_handlers[] ordered by the relocation type ID.
+  (Suggested by Youling).
+- Remove -fplt along with -Wa,-mla-* options because it's the default.
+  (Suggested by Youling).
 
-Thanks,
-Jinyang
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
