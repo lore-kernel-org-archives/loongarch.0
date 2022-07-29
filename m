@@ -1,225 +1,103 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96D4F7A
-	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 05:39:29 +0000 (UTC)
-Received: from [10.130.0.63] (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9BxQ9CPcuNiiCpBAA--.27529S3;
-	Fri, 29 Jul 2022 13:39:27 +0800 (CST)
-Subject: Re: [PATCH 2/3] LoongArch: Add prologue unwinder support
-To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <20220728140519.5420-1-zhangqing@loongson.cn>
- <20220728140519.5420-2-zhangqing@loongson.cn>
- <ddddff68-cae3-24e7-d0b7-d08abc94baf2@loongson.cn>
-From: zhangqing <zhangqing@loongson.cn>
-Message-ID: <dc76df52-eb46-5039-a008-de3c9a7e3363@loongson.cn>
-Date: Fri, 29 Jul 2022 13:39:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527BB3D9E
+	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 08:38:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1659083925;
+	bh=nhRJetfqLKjmUCbDBNY/1f03LEEuOrUUxiVJylmuTJE=;
+	h=Subject:From:To:Cc:Date:From;
+	b=FUPN6Cpcxd7PojPojV6dE7ZyP1ozEemFkP/TZvrTC9cJwmTdB2ehw5D6zz21VxfkV
+	 R0QrPz/6vaAcqfXrA84ZZ1d8ayALTh+y+IiP3qZCiEj3GiAd1cX61IrC54bTJulrOj
+	 PPQ1g6inqJxLLcRKfK8uAh4rZTAP//RHm53LCnVE=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 972CE669EA;
+	Fri, 29 Jul 2022 04:38:43 -0400 (EDT)
+Message-ID: <32a74a218c76611f897fd1df1ad0059068621133.camel@xry111.site>
+Subject: [PATCH v4 0/4] LoongArch: Support new relocation types
+From: Xi Ruoyao <xry111@xry111.site>
+To: loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
+ Chen <chenhuacai@kernel.org>, Youling Tang <tangyouling@loongson.cn>,
+ Jinyang He <hejinyang@loongson.cn>
+Date: Fri, 29 Jul 2022 16:38:41 +0800
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ddddff68-cae3-24e7-d0b7-d08abc94baf2@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf9BxQ9CPcuNiiCpBAA--.27529S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Xr4UJr1fJr13ZFyUtF4Dtwb_yoWxXrW7pr
-	1kAFZ5GrW7Grn5Jr1Utrn8ZF98Ar1kGw1DJF1kXF1UJr4UXry0gr15Wryv9F1UJr48Gr1U
-	Ar15XrnruF17JrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-	Y487MxkIecxEwVAFwVW8WwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUMIIF0xvEx4A2
-	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-	ZFpf9x0JU6mhwUUUUU=
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
+The version 2.00 of LoongArch ELF ABI specification introduced new
+relocation types, and the development tree of Binutils and GCC has
+started to use them.  If the kernel is built with the latest snapshot of
+Binutils or GCC, it will fail to load the modules because of unrecognized
+relocation types in modules.
 
+Add support for GOT and new relocation types for the module loader, so
+the kernel (with modules) can be built with the "normal" code model and
+function properly.
 
-On 2022/7/29 上午10:14, Jinyang He wrote:
-> Hi, Qing,
-> 
-> 
-> On 07/28/2022 10:05 PM, Qing Zhang wrote:
->> It unwind the stack frame based on prologue code analyze.
->> CONFIG_KALLSYMS is needed, at least the address and length
->> of each function.
->>
->> Three stages when we do unwind,
->>    (1)unwind_start(), the prapare of unwinding, fill unwind_state.
->>    (2)unwind_done(), judge whether the unwind process is finished or not.
->>    (3)unwind_next_frame(), unwind the next frame.
->>
->> Dividing unwinder helps to add new unwinders in the future, eg:
->> unwind_frame, unwind_orc .etc
->>
->> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
->>
->> +static inline bool is_stack_alloc_ins(union loongarch_instruction *ip)
->> +{
->> +    /* addi.d $sp, $sp, -imm */
->> +    return ip->reg2i12_format.opcode == addid_op &&
->> +        ip->reg2i12_format.rj == LOONGARCH_GPR_SP &&
->> +        ip->reg2i12_format.rd == LOONGARCH_GPR_SP &&
->> +        ip->reg2i12_format.immediate & (1 << 11);
-> Checking the sign bit can be used in other place.
->> +}
->> +
->> +static inline bool is_ra_save_ins(union loongarch_instruction *ip)
->> +{
->> +    /* st.d $ra, $sp, offset */
->> +    return ip->reg2i12_format.opcode == std_op &&
->> +        ip->reg2i12_format.rj == LOONGARCH_GPR_SP &&
->> +        ip->reg2i12_format.rd == LOONGARCH_GPR_RA;
->> +}
->> +
->> +static inline bool is_branch_insn(union loongarch_instruction insn)
-> Does it by using pointer parameter as above functions do.
->> +{
->> +    return insn.reg1i21_format.opcode >= beqz_op &&
->> +            insn.reg1i21_format.opcode <= bgeu_op;
->> +}
->> +
->>   u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
->>   u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr 
->> rj, int imm);
->>   u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr 
->> rj, unsigned long pc, unsigned long dest);
->> diff --git a/arch/loongarch/include/asm/unwind.h 
->> b/arch/loongarch/include/asm/unwind.h
->> index 243330b39d0d..09394e536ea9 100644
->> --- a/arch/loongarch/include/asm/unwind.h
->> +++ b/arch/loongarch/include/asm/unwind.h
->> @@ -14,6 +14,10 @@
->>   struct unwind_state {
->>       struct stack_info stack_info;
->>       struct task_struct *task;
->> +#if defined(CONFIG_UNWINDER_PROLOGUE)
->> +    unsigned long ra;
->> +    bool enable;
-> Annotating here is appreciating. Enable is the way of prologue analysis
-> while !enable is the way of guess.
->> +#endif
->>       unsigned long sp, pc;
->>       bool first;
->>       bool error;
-> [...]
->> +
->> +unsigned long unwind_get_return_address(struct unwind_state *state)
->> +{
->> +
->> +    if (unwind_done(state))
->> +        return 0;
->> +
->> +    if (state->enable)
->> +        return state->pc;
->> +    else if (state->first)
->> +        return state->pc;
-> Combine conditions.
->> +
->> +    return *(unsigned long *)(state->sp);
->> +
->> +}
->> +EXPORT_SYMBOL_GPL(unwind_get_return_address);
->> +
->> +static bool unwind_by_prologue(struct unwind_state *state)
->> +{
->> +    struct stack_info *info = &state->stack_info;
->> +    union loongarch_instruction *ip, *ip_end;
->> +    unsigned long frame_size = 0, frame_ra = -1;
->> +    unsigned long size, offset, pc = state->pc;
->> +
->> +    if (state->sp >= info->end || state->sp < info->begin)
->> +        return false;
->> +
->> +    if (!kallsyms_lookup_size_offset(pc, &size, &offset))
->> +        return false;
->> +
->> +    ip = (union loongarch_instruction *)(pc - offset);
->> +    ip_end = (union loongarch_instruction *)pc;
->> +
->> +    while (ip < ip_end) {
->> +        if (is_stack_alloc_ins(ip)) {
->> +            frame_size = (1 << 12) - ip->reg2i12_format.immediate;
-> Due to there will be other place convert unsigned to signed, we have
-> a chance that create a inline function in inst.h. Do it as same as
-> checking the sign bit.Hi,
-Jinyang
+This series does not break the compatibility with old toolchain using
+stack-based relocation types, so with the patches applied the kernel can
+be be built with both old and new toolchains.
 
-I will fix all in v2.
-eg:
-#define is_imm12_negative(val)  is_imm_negative(val, 12)
-static inline bool is_imm_negative(unsigned long val, unsigned int bit)
-{
-         return val & (1UL << (bit-1));
-}
+Tested by building the kernel with both Binutils & GCC master branch and
+my system Binutils & GCC (without new relocation type support), running
+both the builds with 35 in-tree modules loaded, and loading one module
+with 20 GOT loads (loaded addresses verified by comparing with
+/proc/kallsyms).
 
-static inline bool is_stack_alloc_ins(union loongarch_instruction *ip)
-{
-...
-                 ip->reg2i12_format.rd == LOONGARCH_GPR_SP &&
-                 is_imm12_negative(ip->reg2i12_format.immediate);
-}
+Changes from v3 to v4:
 
-static inline bool is_ra_save_ins(union loongarch_instruction *ip)
-{
-...
-                 !is_imm12_negative(ip->reg2i12_format.immediate);
-}
+- No code change.  Reword the commit message of the 3rd patch again
+  based on suggestion from Huacai.
 
-Thanks,
-Qing
-> 
->> +            ip++;
->> +            break;
->> +        }
->> +        ip++;
->> +    }
->> +
-> [...]
->> +
->> +    do {
->> +        if (state->enable) {
->> +            if (unwind_by_prologue(state))
->> +                return true;
->> +
->> +            if (info->type == STACK_TYPE_IRQ &&
->> +                info->end == state->sp) {
->> +                regs = (struct pt_regs *)info->next_sp;
->> +                pc = regs->csr_era;
->> +                if (user_mode(regs) || !__kernel_text_address(pc))
->> +                    return false;
->> +
->> +                state->pc = pc;
->> +                state->sp = regs->regs[3];
->> +                state->ra = regs->regs[1];
->> +                state->first = true;
->> +                get_stack_info(state->sp, state->task, info);
->> +
->> +                return true;
->> +            }
->> +        } else {
->> +            if (state->first)
->> +                state->first = false;
->> +
->> +            if (unwind_by_guess(state))
->> +                return true;
->> +        }
-> I'd prefer separate the block of 'if...else...' into two inline
-> functions, that makes codes clear.
-> 
-> Thanks,
-> Jinyang
+Changes from v2 to v3:
+
+- Use `union loongarch_instruction` instead of explicit bit shifts
+  applying the relocation.  Suggested by Youling.
+- For R_LARCH_B26, move the alignment check before the range check to be
+  consistent with stack pop relocations.  Suggested by Youling.
+- Reword the commit message of the 3rd patch.  Suggested by Huacai.
+
+Changes from v1 to v2:
+
+- Fix a stupid programming error (confusion between the number of PLT
+  entries and the number of GOT entries).  (Bug spotted by Youling).
+- Synthesize the _GLOBAL_OFFSET_TABLE_ symbol with module.lds, instead
+  of faking it at runtime.  The 3rd patch from V1 is now merged into
+  the 1st patch because it would be a one-line change.  (Suggested by
+  Jinyang).
+- Keep reloc_rela_handlers[] ordered by the relocation type ID.
+  (Suggested by Youling).
+- Remove -fplt along with -Wa,-mla-* options because it's the default.
+  (Suggested by Youling).
+
+Xi Ruoyao (4):
+  LoongArch: Add section of GOT for kernel module
+  LoongArch: Support R_LARCH_SOP_PUSH_GPREL relocation type in kernel
+    module
+  LoongArch: Remove -fplt and -Wa,-mla-* from CFLAGS
+  LoongArch: Support modules with new relocation types
+
+ arch/loongarch/Makefile                 |  4 --
+ arch/loongarch/include/asm/elf.h        | 37 ++++++++++
+ arch/loongarch/include/asm/module.h     | 23 ++++++
+ arch/loongarch/include/asm/module.lds.h |  1 +
+ arch/loongarch/kernel/head.S            | 10 +--
+ arch/loongarch/kernel/module-sections.c | 51 +++++++++++--
+ arch/loongarch/kernel/module.c          | 96 +++++++++++++++++++++++++
+ 7 files changed, 209 insertions(+), 13 deletions(-)
+
+--=20
+2.37.0
+
 
