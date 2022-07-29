@@ -1,78 +1,61 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A84B7A
-	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 02:28:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1659061684;
-	bh=3Vqu37WO9M8OmlJ6f+Ltkq8HAoeghNsD/Pz+erySmno=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=NGvT8NGVa1pi/RjmLZIxGd+XVfcuv6XvBcGE2GzHSsqfOR7m+5RlBwsNUYDZqEDoQ
-	 AjMecyfpb2o8Bcr+6yNRMjf5O8+WtKYXxcEe52bCdSWaOuKpX10o9H1fswaT9NCFiJ
-	 pNaMXW27QBTGvFqHTUUf1XISj+9UZDAQjoaoOaFc=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 8002C66B51;
-	Thu, 28 Jul 2022 22:28:02 -0400 (EDT)
-Message-ID: <06a332490e21353bcaf0678dc3f2f04e74bb3faf.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Disable executable stack by default
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org, Xuefeng Li
-	 <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, Xuerui Wang
-	 <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Fri, 29 Jul 2022 10:28:01 +0800
-In-Reply-To: <20220726130224.3987623-1-chenhuacai@loongson.cn>
-References: <20220726130224.3987623-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23B317A
+	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 02:28:33 +0000 (UTC)
+Received: from localhost.localdomain (unknown [111.9.175.10])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL9PPReNiH8xAAA--.45065S3;
+	Fri, 29 Jul 2022 10:28:32 +0800 (CST)
+Subject: Re: [PATCH 1/3] LoongArch: Add guess unwinder support
+To: Youling Tang <tangyouling@loongson.cn>, Qing Zhang
+ <zhangqing@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+References: <20220728140519.5420-1-zhangqing@loongson.cn>
+ <1288a80b-4038-126f-aec0-74f18cf2fea2@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <b49c5d32-81fb-0c56-16cc-8fe6cafa3957@loongson.cn>
+Date: Fri, 29 Jul 2022 10:28:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <1288a80b-4038-126f-aec0-74f18cf2fea2@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf9DxL9PPReNiH8xAAA--.45065S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY67AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4
+	A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8Jw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+	Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI48JMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xva
+	j40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbN6pPUUUUU==
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-On Tue, 2022-07-26 at 21:02 +0800, Huacai Chen wrote:
-> Disable executable stack for LoongArch by default, as all modern
-> architectures do.
+Hi, Youling,
 
-Should this be a 5.19 fix?  IIUC after the first release we'll be
-impossible to change it because it would "break userspace".
+[...]
+>> +unsigned long unwind_get_return_address(struct unwind_state *state)
+>> +{
+>> +    if (unwind_done(state))
+>> +        return 0;
+> This judgment can be removed, because unwind_done() has been judged
+> before entering this function, and unwind_get_return_address will not
+> be called if it is true.
+These unwinder functions are exported by "EXPORT_SYMBOL_GPL".
+What's more, new ways to use them will be added in the future possible.
+Assuming has judged unwind_done is not reliable.
 
-Note that 5.19 release is scheduled this weekend.
+Thanks,
+Jinyang
 
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
-> =C2=A0arch/loongarch/include/asm/elf.h | 2 --
-> =C2=A01 file changed, 2 deletions(-)
->=20
-> diff --git a/arch/loongarch/include/asm/elf.h
-> b/arch/loongarch/include/asm/elf.h
-> index f3960b18a90e..5f3ff4781fda 100644
-> --- a/arch/loongarch/include/asm/elf.h
-> +++ b/arch/loongarch/include/asm/elf.h
-> @@ -288,8 +288,6 @@ struct arch_elf_state {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.interp_fp_abi =3D LOONGA=
-RCH_ABI_FP_ANY,=C2=A0=C2=A0\
-> =C2=A0}
-> =C2=A0
-> -#define elf_read_implies_exec(ex, exec_stk) (exec_stk =3D=3D
-> EXSTACK_DEFAULT)
-> -
-> =C2=A0extern int arch_elf_pt_proc(void *ehdr, void *phdr, struct file *el=
-f,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 bool is_interp, struct arch_elf_state
-> *state);
-> =C2=A0
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
