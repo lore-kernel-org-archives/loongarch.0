@@ -1,116 +1,69 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC297A
-	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 02:51:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1659063062;
-	bh=CFRXsQSgGZPmMci7VZMi7Cg1t1nxFRUf8fi3wwhGew4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=l2YFMuq9czxdVPVJi0ZRftHO46JsNcw+r7r76pcOeoufSm2nYjS61J5W1bRMf2WNK
-	 5xDvtLs5GKzX1CoaOgvseSis2lL58mK76K6kPQ+JlbE46Y9LRaqtpCww3+MMSgp71r
-	 5l3mupB/g/IRXM4/Rnv1coEFkVUV+aJX4S/WBTKg=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id CC86F65938;
-	Thu, 28 Jul 2022 22:51:00 -0400 (EDT)
-Message-ID: <54026014a1894a3f1eb0056dbc61a8ce31f4d2da.camel@xry111.site>
-Subject: Re: [PATCH v3 3/4] LoongArch: Remove -fplt and -Wa,-mla-* from
- CFLAGS
-From: Xi Ruoyao <xry111@xry111.site>
-To: loongarch@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Youling
- Tang <tangyouling@loongson.cn>, Jinyang He <hejinyang@loongson.cn>
-Date: Fri, 29 Jul 2022 10:50:59 +0800
-In-Reply-To: <4da7ce6a6e5b6d609c37ebf6815caacc3b3b8297.camel@xry111.site>
-References: <bb7824d39a694b13069718c2b8193379f79229b4.camel@xry111.site>
-	 <4da7ce6a6e5b6d609c37ebf6815caacc3b3b8297.camel@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.44.3 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DB6B7A
+	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 02:56:26 +0000 (UTC)
+Received: from [10.130.0.193] (unknown [113.200.148.30])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxOeBXTONiStZAAA--.27204S3;
+	Fri, 29 Jul 2022 10:56:24 +0800 (CST)
+Subject: Re: [PATCH 1/3] LoongArch: Add guess unwinder support
+To: Jinyang He <hejinyang@loongson.cn>, Qing Zhang <zhangqing@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>
+References: <20220728140519.5420-1-zhangqing@loongson.cn>
+ <1288a80b-4038-126f-aec0-74f18cf2fea2@loongson.cn>
+ <b49c5d32-81fb-0c56-16cc-8fe6cafa3957@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <67911739-b8f3-578f-4d10-7aabb193ddf1@loongson.cn>
+Date: Fri, 29 Jul 2022 10:56:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <b49c5d32-81fb-0c56-16cc-8fe6cafa3957@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf9AxOeBXTONiStZAAA--.27204S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7XF1kWF43Jw43Gw18Kr48JFb_yoWxurX_Za
+	10gasrCr9IqF1vvF15JrWak3y7Ww47XFyDuw4Yq34xJw1ftF4DZrZ29r12va1rWr42yr47
+	W34UZwsavw12vjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+	IcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
+	73UjIFyTuYvjfU55rcDUUUU
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 
-T24gRnJpLCAyMDIyLTA3LTI5IGF0IDEwOjA5ICswODAwLCBYaSBSdW95YW8gd3JvdGU6Cj4gLWZw
-bHQgaXMgdGhlIGRlZmF1bHQgb2YgYWxsIHN1cHBvcnRlZCBjb21waWxlcnMgKEdDQywgYW5kIG1h
-eWJlIENsYW5nIGluCj4gdGhlIGZ1dHVyZSksIHNvIGl0IG5lZWRzIG5vdCB0byBiZSBleHBsaWNp
-dGx5IHNwZWNpZmllZC4KPiAKPiAtV2EsLW1sYS0qIG9wdGlvbnMgd2VyZSB1c2VkIHRvIHByZXZl
-bnQgdGhlIGFzc2VtYmxlciBmcm9tIGdlbmVyYXRpbmcKPiBHT1QgYWNjZXNzZXMgZm9yICJsYS5s
-b2NhbCIgYW5kICJsYS5nbG9iYWwiIG1hY3Jvcy7CoCBCdXQgR0NDID49IDEzIHdpbGwKPiBnZW5l
-cmF0ZSBHT1QgYWNjZXNzIGV4cGxpY2l0bHkgd2l0aG91dCB1c2Ugb2YgdGhlc2UgbWFjcm9zCgpX
-aWxsIGFkZCAiYnkgZGVmYXVsdCB3aXRoIGFuIGFzc2VtYmxlciBzdXBwb3J0aW5nIGV4cGxpY2l0
-IHJlbG9jYXRpb25zLAphbmQgaXQncyBub3QgcmVjb21tZW5kZWQgdG8gb3ZlcnJpZGUgdGhlIGRl
-ZmF1bHQiIGhlcmUgaW4gVjQuCgo+IG9wdGlvbnMgYXJlIGluZWZmZWN0aXZlIGZvciBzeW1ib2wg
-YWRkcmVzc2luZyBpbiBDIGNvZGUgd2l0aCBHQ0MgPj0gMTMuCj4gTm93IHdlIGNhbiBoYW5kbGUg
-R09UIGFuZCBHT1QtYmFzZWQgcmVsb2NhdGlvbnMgcHJvcGVybHksIHNvIHdlIGNhbgo+IHJlbW92
-ZSB0aGVzZSBvcHRpb25zIGFuZCB1c2UgR09UIGFjY2VzcyBmb3IgYm90aCBHQ0MgMTIgYW5kIDEz
-Cj4gKG9yIG5ld2VyKS4KPiAKPiBHQVMgPD0gMi4zOSBkb2VzIG5vdCBzdXBwb3J0ICJsYS5nb3Qg
-W3JlZ10sIFtzeW1dICsgW29mZnNldF0iIHdpdGggYQo+IG5vbi16ZXJvIG9mZnNldC7CoCBTbyBp
-biB0aGUgYXNzZW1ibHkgY29kZSB3ZSBleHBsaWNpdGx5IHVzZSAibGEucGNyZWwiCj4gaW5zdGVh
-ZCBvZiAibGEiIChub3cgZGVmYXVsdGVkIHRvICJsYS5nb3QiKSB3aGVyZSBhIFBDLXJlbGF0aXZl
-Cj4gYWRkcmVzc2luZyBpcyBzdWl0YWJsZSwgaW4gb3JkZXIgdG8gd29yayBhcm91bmQgdGhpcyBs
-aW1pdGF0aW9uIGFuZCBrZWVwCj4gdGhlIGNvbXBhdGliaWxpdHkgd2l0aCBvbGQgdG9vbGNoYWlu
-cy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBYaSBSdW95YW8gPHhyeTExMUB4cnkxMTEuc2l0ZT4KPiAt
-LS0KPiDCoGFyY2gvbG9vbmdhcmNoL01ha2VmaWxlwqDCoMKgwqDCoCB8wqAgNCAtLS0tCj4gwqBh
-cmNoL2xvb25nYXJjaC9rZXJuZWwvaGVhZC5TIHwgMTAgKysrKystLS0tLQo+IMKgMiBmaWxlcyBj
-aGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBh
-L2FyY2gvbG9vbmdhcmNoL01ha2VmaWxlIGIvYXJjaC9sb29uZ2FyY2gvTWFrZWZpbGUKPiBpbmRl
-eCAwMzlkY2M0ZmUxZjMuLjgwMDM0OWVhOTMxMCAxMDA2NDQKPiAtLS0gYS9hcmNoL2xvb25nYXJj
-aC9NYWtlZmlsZQo+ICsrKyBiL2FyY2gvbG9vbmdhcmNoL01ha2VmaWxlCj4gQEAgLTQwLDEwICs0
-MCw2IEBAIGVuZGlmCj4gwqAKPiDCoGNmbGFncy15wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCs9IC1HMCAtcGlwZSAtbXNvZnQtZmxvYXQKPiDCoExERkxBR1Nf
-dm1saW51eMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCs9
-IC1HMCAtc3RhdGljIC1uIC1ub3N0ZGxpYgo+IC1LQlVJTERfQUZMQUdTX0tFUk5FTMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqArPSAtV2EsLW1sYS1nbG9iYWwtd2l0aC1wY3JlbAo+IC1LQlVJTERfQ0ZM
-QUdTX0tFUk5FTMKgwqDCoMKgwqDCoMKgwqDCoMKgwqArPSAtV2EsLW1sYS1nbG9iYWwtd2l0aC1w
-Y3JlbAo+IC1LQlVJTERfQUZMQUdTX01PRFVMRcKgwqDCoMKgwqDCoMKgwqDCoMKgwqArPSAtV2Es
-LW1sYS1nbG9iYWwtd2l0aC1hYnMKPiAtS0JVSUxEX0NGTEFHU19NT0RVTEXCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgKz0gLWZwbHQgLVdhLC1tbGEtZ2xvYmFsLXdpdGgtYWJzLC1tbGEtbG9jYWwtd2l0
-aC1hYnMKPiDCoAo+IMKgY2ZsYWdzLXkgKz0gLWZmcmVlc3RhbmRpbmcKPiDCoGNmbGFncy15ICs9
-ICQoY2FsbCBjYy1vcHRpb24sIC1tbm8tY2hlY2stemVyby1kaXZpc2lvbikKPiBkaWZmIC0tZ2l0
-IGEvYXJjaC9sb29uZ2FyY2gva2VybmVsL2hlYWQuUyBiL2FyY2gvbG9vbmdhcmNoL2tlcm5lbC9o
-ZWFkLlMKPiBpbmRleCA3NGVhN2JmNmM4ZDYuLjE5MzMyOWVkNmU4YyAxMDA2NDQKPiAtLS0gYS9h
-cmNoL2xvb25nYXJjaC9rZXJuZWwvaGVhZC5TCj4gKysrIGIvYXJjaC9sb29uZ2FyY2gva2VybmVs
-L2hlYWQuUwo+IEBAIC02MCwxNyArNjAsMTcgQEAgU1lNX0NPREVfU1RBUlQoa2VybmVsX2VudHJ5
-KcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCMga2VybmVs
-IGVudHJ5IHBvaW50Cj4gwqDCoMKgwqDCoMKgwqDCoGxhLmFic8KgwqDCoMKgwqDCoMKgwqDCoMKg
-dDAsIDBmCj4gwqDCoMKgwqDCoMKgwqDCoGppcmzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB6ZXJv
-LCB0MCwgMAo+IMKgMDoKPiAtwqDCoMKgwqDCoMKgwqBsYcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqB0MCwgX19ic3Nfc3RhcnTCoMKgwqDCoMKgwqDCoMKgwqAjIGNsZWFyIC5ic3MKPiArwqDC
-oMKgwqDCoMKgwqBsYS5wY3JlbMKgwqDCoMKgwqDCoMKgwqB0MCwgX19ic3Nfc3RhcnTCoMKgwqDC
-oMKgwqDCoMKgwqAjIGNsZWFyIC5ic3MKPiDCoMKgwqDCoMKgwqDCoMKgc3QuZMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoHplcm8sIHQwLCAwCj4gLcKgwqDCoMKgwqDCoMKgbGHCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgdDEsIF9fYnNzX3N0b3AgLSBMT05HU0laRQo+ICvCoMKgwqDCoMKgwqDC
-oGxhLnBjcmVswqDCoMKgwqDCoMKgwqDCoHQxLCBfX2Jzc19zdG9wIC0gTE9OR1NJWkUKPiDCoDE6
-Cj4gwqDCoMKgwqDCoMKgwqDCoGFkZGkuZMKgwqDCoMKgwqDCoMKgwqDCoMKgdDAsIHQwLCBMT05H
-U0laRQo+IMKgwqDCoMKgwqDCoMKgwqBzdC5kwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgemVybywg
-dDAsIDAKPiDCoMKgwqDCoMKgwqDCoMKgYm5lwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB0MCwg
-dDEsIDFiCj4gwqAKPiAtwqDCoMKgwqDCoMKgwqBsYcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqB0MCwgZndfYXJnMAo+ICvCoMKgwqDCoMKgwqDCoGxhLnBjcmVswqDCoMKgwqDCoMKgwqDCoHQw
-LCBmd19hcmcwCj4gwqDCoMKgwqDCoMKgwqDCoHN0LmTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBh
-MCwgdDAsIDDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjIGZpcm13YXJlIGFyZ3VtZW50
-cwo+IC3CoMKgwqDCoMKgwqDCoGxhwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHQwLCBmd19h
-cmcxCj4gK8KgwqDCoMKgwqDCoMKgbGEucGNyZWzCoMKgwqDCoMKgwqDCoMKgdDAsIGZ3X2FyZzEK
-PiDCoMKgwqDCoMKgwqDCoMKgc3QuZMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGExLCB0MCwgMAo+
-IMKgCj4gwqDCoMKgwqDCoMKgwqDCoC8qIEtTYXZlMyB1c2VkIGZvciBwZXJjcHUgYmFzZSwgaW5p
-dGlhbGl6ZWQgYXMgMCAqLwo+IEBAIC03OCw3ICs3OCw3IEBAIFNZTV9DT0RFX1NUQVJUKGtlcm5l
-bF9lbnRyeSnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjIGtlcm5lbCBlbnRy
-eSBwb2ludAo+IMKgwqDCoMKgwqDCoMKgwqAvKiBHUFIyMSB1c2VkIGZvciBwZXJjcHUgYmFzZSAo
-cnVudGltZSksIGluaXRpYWxpemVkIGFzIDAgKi8KPiDCoMKgwqDCoMKgwqDCoMKgb3LCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgdTAsIHplcm8sIHplcm8KPiDCoAo+IC3CoMKgwqDCoMKgwqDC
-oGxhwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHRwLCBpbml0X3RocmVhZF91bmlvbgo+ICvC
-oMKgwqDCoMKgwqDCoGxhLnBjcmVswqDCoMKgwqDCoMKgwqDCoHRwLCBpbml0X3RocmVhZF91bmlv
-bgo+IMKgwqDCoMKgwqDCoMKgwqAvKiBTZXQgdGhlIFNQIGFmdGVyIGFuIGVtcHR5IHB0X3JlZ3Mu
-wqAgKi8KPiDCoMKgwqDCoMKgwqDCoMKgUFRSX0xJwqDCoMKgwqDCoMKgwqDCoMKgwqBzcCwgKF9U
-SFJFQURfU0laRSAtIDMyIC0gUFRfU0laRSkKPiDCoMKgwqDCoMKgwqDCoMKgUFRSX0FERMKgwqDC
-oMKgwqDCoMKgwqDCoHNwLCBzcCwgdHAKCi0tIApYaSBSdW95YW8gPHhyeTExMUB4cnkxMTEuc2l0
-ZT4KU2Nob29sIG9mIEFlcm9zcGFjZSBTY2llbmNlIGFuZCBUZWNobm9sb2d5LCBYaWRpYW4gVW5p
-dmVyc2l0eQo=
+Hi, Jinyang
+
+On 07/29/2022 10:28 AM, Jinyang He wrote:
+> Hi, Youling,
+>
+> [...]
+>>> +unsigned long unwind_get_return_address(struct unwind_state *state)
+>>> +{
+>>> +    if (unwind_done(state))
+>>> +        return 0;
+>> This judgment can be removed, because unwind_done() has been judged
+>> before entering this function, and unwind_get_return_address will not
+>> be called if it is true.
+> These unwinder functions are exported by "EXPORT_SYMBOL_GPL".
+> What's more, new ways to use them will be added in the future possible.
+> Assuming has judged unwind_done is not reliable.
+In this case, most of the code will be checked twice by unwind_done(),
+which feels a bit redundant.
+
+Thanks,
+Youling
 
