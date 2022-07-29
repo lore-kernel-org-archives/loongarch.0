@@ -1,69 +1,53 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7D24C77
-	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 17:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1659117333;
-	bh=4pZFEPPW1rCD+FxOWH5IvuT+sX+ksBOFETw6F8Vgj8U=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=PRF5VNP27p6ja7lRqq7yVkXXSkaMOp+kkK03ZIOakIIior+DFJ3SIN8qilDlw4Ijy
-	 zmjfgYulz7PRICqylcVscRR7DuMzBUK2arHVt9ku1SPnki18CWp/DufnfFPrJbSHjS
-	 K3TkLuZ4TTxxnUzFvVD08daYPjn0Za5g5YRjwT30=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 6638D66898;
-	Fri, 29 Jul 2022 13:55:31 -0400 (EDT)
-Message-ID: <7cad6e78014168a8906e130e1cf3809077d2bda7.camel@xry111.site>
-Subject: Re: [PATCH v4 0/4] LoongArch: Support new relocation types
-From: Xi Ruoyao <xry111@xry111.site>
-To: Youling Tang <tangyouling@loongson.cn>, loongarch@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
- Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>, Lulu
- Cheng <chenglulu@loongson.cn>
-Date: Sat, 30 Jul 2022 01:55:29 +0800
-In-Reply-To: <d7670b60-2782-4642-995b-7baa01779a66@loongson.cn>
-References: <32a74a218c76611f897fd1df1ad0059068621133.camel@xry111.site>
-	 <ec52fd49-4a30-15d9-3d32-fd7bc6d8b3f0@loongson.cn>
-	 <0179679b736aea7258981dec2d83107cce74dfc1.camel@xry111.site>
-	 <a139a8475fe295ac9f17064269cd0312dca6f96e.camel@xry111.site>
-	 <6b5d2188f93ed72b67a4bbb7116113f833fe1ee5.camel@xry111.site>
-	 <d7670b60-2782-4642-995b-7baa01779a66@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E6F110C
+	for <loongarch@lists.linux.dev>; Fri, 29 Jul 2022 18:35:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 92229C433D6;
+	Fri, 29 Jul 2022 18:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1659119749;
+	bh=7F1PDpeRGQFgkhTwqADv6QxlfNJDub32cinES52/dgI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=rNl8uTr+MXxtlXM8als0SsguzzPHzzih6UrPP54gcclbwA+wJ2g67BR4Ll4JbpTfo
+	 s6REJeycwqBmVGTDBRuRSBaNFi4qHjF6xg2FOB1sHqEwlfDZ6KJYTwcp2GQlsbBp1z
+	 aewkcO9UauBGgw0gi9xzXHwC3JNm+Mnt41RfwrT14fs+LmudErQ6kDHr2BGTdFfQqM
+	 WJV8x/YKmw8uElbVTaJTzHNp6O4m5xgfFZSVEisziysgTk0+MQfDY7x4dzzzfhWIW9
+	 lfiSXKPTM4PlVxElwYUFaD33UOmhbp1Uq5RKc6ULaGGzCTqN+eL8t2COjHWQvn0Eyz
+	 4mWtwP/NYDt9A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7EA58C43142;
+	Fri, 29 Jul 2022 18:35:49 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v5.19-final
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20220729144205.3412161-1-chenhuacai@loongson.cn>
+References: <20220729144205.3412161-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220729144205.3412161-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-5.19-5
+X-PR-Tracked-Commit-Id: 45b53c9051770c0d9145083a328548745ee2e75b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a95eb1d086dcc579d52ca4c34742516f6434d1f2
+Message-Id: <165911974951.994.1693047203751898890.pr-tracker-bot@kernel.org>
+Date: Fri, 29 Jul 2022 18:35:49 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
 
-On Fri, 2022-07-29 at 20:19 +0800, Youling Tang wrote:
+The pull request you sent on Fri, 29 Jul 2022 22:42:05 +0800:
 
-> On 07/29/2022 07:45 PM, Xi Ruoyao wrote:
-> > Hmm... The problem is the "addresses" of per-cpu symbols are faked: the=
-y
-> > are actually offsets from $r21.=C2=A0 So we can't just load such an off=
-set
-> > with PCALA addressing.
-> >=20
-> > It looks like we'll need to introduce an attribute for GCC to make an
-> > variable "must be addressed via GOT", and add the attribute into
-> > PER_CPU_ATTRIBUTES.
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-5.19-5
 
-> Yes, we need a GCC attribute to specify the per-cpu variable.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a95eb1d086dcc579d52ca4c34742516f6434d1f2
 
-GCC patch adding "addr_global" attribute for LoongArch:
-https://gcc.gnu.org/pipermail/gcc-patches/2022-July/599064.html
+Thank you!
 
-An experiment to use it:
-https://github.com/xry111/linux/commit/c1d5d70
-
-This fixes "modprobe x_tables" for me.
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
