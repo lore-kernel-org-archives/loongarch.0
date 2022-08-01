@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B787F
-	for <loongarch@lists.linux.dev>; Mon,  1 Aug 2022 15:26:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBB49C43140
-	for <loongarch@lists.linux.dev>; Mon,  1 Aug 2022 15:26:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B3D7F
+	for <loongarch@lists.linux.dev>; Mon,  1 Aug 2022 15:28:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21F19C4347C
+	for <loongarch@lists.linux.dev>; Mon,  1 Aug 2022 15:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1659367594;
-	bh=i8d0cLuEiZPD1LgL6qi1TtC9pXQQ3GBsTnxaZNuRmpE=;
+	s=k20201202; t=1659367732;
+	bh=IvLjinAcR92q5qqTTt/D9wTHmp/vQPJ0xw+Rd3m2/e8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hwTcJuIEWe8YEU8nWQ5I9muExZQsPs2skoJMbQhlVPlOAjD8KJCVspGCewKkcGHB1
-	 u4SFNJQv8Hr6IG3OqffGCxDDyVT5tQ9EP+e6c1ynO8sY/SJn392Op6a74rdBqxU+T8
-	 9cLYk9mGEh0v0li2NMENwqluixqpf8nzFSHu1OZNQfHaEscarAvR6C4I5r/asTERur
-	 DLCHcK1lmixFfJvXTwILCAtDQL/5CkaI4YnOlVHsffaXxFCvJWtX/dZ6/ib2Bh2+y6
-	 Y2Kdijj2qP3gajfY7UscAdk+nssV90lk4R1NqOhTNo4sS7q6ZV2CAULFhvFcFhuuPr
-	 HnpTsTt+e8rrg==
-Received: by mail-vs1-f53.google.com with SMTP id l68so11639211vsc.0
-        for <loongarch@lists.linux.dev>; Mon, 01 Aug 2022 08:26:33 -0700 (PDT)
-X-Gm-Message-State: ACgBeo2wQdEjkf0t9snrEjZwIuZDsY12jU39hob5s5xB8eXI0Q3OvURc
-	dWFFHJompR8sFwe0FBo70GF08d2VDCaVD7UP4Vc=
-X-Google-Smtp-Source: AA6agR5LK8hmJvnG86lpB9eL+JiW99/ERVz2wrNc3SpzzioCMvJbOuR7XYI3VJnOjIHM0Zew0MR6jfNo7bHS/iL6s4k=
-X-Received: by 2002:a05:6102:390d:b0:387:78b9:bf9c with SMTP id
- e13-20020a056102390d00b0038778b9bf9cmr334986vsu.43.1659367592849; Mon, 01 Aug
- 2022 08:26:32 -0700 (PDT)
+	b=fedvmcAGx/q0LoZ9LVRORKKkuCumYS5YwJHhTWi2AKWuhij7Cn1ZHkmhqBKe/vMhU
+	 Vnq+Uxmd0xlyCAYvafHFAEwFyu3CNkmt5Lf0zu8DZPXBPw/iy0VwGrMcQJhvxZvMHa
+	 neOh91A0019U41oxSdYe2I1p/M6QW58ZQdoOWCTAZCXuCLo0QVUnXsAtlIq4l5olNz
+	 GqquyKtNTrLBD+BJLnUsT5SQdk3981eXlR/oga23u7BPUhkd7ZaOmr9o0BrA+JO8bX
+	 Cyp0U2gD5jVdYHxrTzAAzO0+JivUIS2fRss+9smfb4mNN44SokxSKwkrLutSn5Hhtv
+	 RAjn6sg2YRgCw==
+Received: by mail-vs1-f46.google.com with SMTP id a63so11643134vsa.3
+        for <loongarch@lists.linux.dev>; Mon, 01 Aug 2022 08:28:52 -0700 (PDT)
+X-Gm-Message-State: ACgBeo2HhkWGUd7DhUVq/4hgIDtINajdChYJ5M+Pi6OPwJ52Pr91Xcsf
+	+EK3sfqmifcOB3jxlAGWirFhv7QBa6WFoRKP82M=
+X-Google-Smtp-Source: AA6agR4/IwVp39rNpUDpwrpfW406nnWwKLvW32OshTAw1Y0y31vUvzrEY/miTRtRFJNApeafolt8HdT7GfO+uzv7Iq8=
+X-Received: by 2002:a67:d487:0:b0:385:1a6b:6f33 with SMTP id
+ g7-20020a67d487000000b003851a6b6f33mr1857321vsj.59.1659367730980; Mon, 01 Aug
+ 2022 08:28:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220801121726.9681-1-zhangqing@loongson.cn> <20220801121726.9681-3-zhangqing@loongson.cn>
-In-Reply-To: <20220801121726.9681-3-zhangqing@loongson.cn>
+References: <20220801121726.9681-1-zhangqing@loongson.cn> <20220801121726.9681-2-zhangqing@loongson.cn>
+In-Reply-To: <20220801121726.9681-2-zhangqing@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 1 Aug 2022 23:26:03 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4hR-Xdk5EpakR9ft0J+V5qgPj5q2T=zjh1SHMnnHK1vw@mail.gmail.com>
-Message-ID: <CAAhV-H4hR-Xdk5EpakR9ft0J+V5qgPj5q2T=zjh1SHMnnHK1vw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] LoongArch: Add prologue unwinder support
+Date: Mon, 1 Aug 2022 23:28:39 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4aaE7f9Qd5tPZ3daRBe8Fsd4BX5zUVXjUpiTtfT73ukg@mail.gmail.com>
+Message-ID: <CAAhV-H4aaE7f9Qd5tPZ3daRBe8Fsd4BX5zUVXjUpiTtfT73ukg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] LoongArch: Add guess unwinder support
 To: Qing Zhang <zhangqing@loongson.cn>
 Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
 	LKML <linux-kernel@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
@@ -46,344 +46,297 @@ Hi, Qing,
 
 On Mon, Aug 1, 2022 at 8:17 PM Qing Zhang <zhangqing@loongson.cn> wrote:
 >
-> It unwind the stack frame based on prologue code analyze.
-> CONFIG_KALLSYMS is needed, at least the address and length
-> of each function.
+> Name "guess unwinder" comes from x86, It scans the stack and reports
+> every kernel text address it finds.
 >
 > Three stages when we do unwind,
 >   (1)unwind_start(), the prapare of unwinding, fill unwind_state.
 >   (2)unwind_done(), judge whether the unwind process is finished or not.
 >   (3)unwind_next_frame(), unwind the next frame.
 >
-> Dividing unwinder helps to add new unwinders in the future, eg:
-> unwind_frame, unwind_orc .etc
+> Make the dump_stack process go through unwind process.
+> Add get_stack_info() to get stack info. At present we have irq stack and
+> task stack. Maybe add another type in future. The next_sp means the key
+> info between this type stack and next type stack.
+>
+> Dividing unwinder helps to add new unwinders in the future.
 >
 > Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
 > ---
->  arch/loongarch/Kconfig.debug            |  19 +++
->  arch/loongarch/include/asm/inst.h       |  52 +++++++
->  arch/loongarch/include/asm/unwind.h     |   8 ++
->  arch/loongarch/kernel/Makefile          |   1 +
->  arch/loongarch/kernel/traps.c           |   5 +
->  arch/loongarch/kernel/unwind_prologue.c | 172 ++++++++++++++++++++++++
->  6 files changed, 257 insertions(+)
->  create mode 100644 arch/loongarch/kernel/unwind_prologue.c
+>  arch/loongarch/Kconfig.debug            |  9 ++++
+>  arch/loongarch/include/asm/stacktrace.h | 17 +++++++
+>  arch/loongarch/include/asm/unwind.h     | 37 ++++++++++++++
+>  arch/loongarch/kernel/Makefile          |  2 +
+>  arch/loongarch/kernel/process.c         | 61 +++++++++++++++++++++++
+>  arch/loongarch/kernel/traps.c           | 22 ++++-----
+>  arch/loongarch/kernel/unwind_guess.c    | 65 +++++++++++++++++++++++++
+>  7 files changed, 202 insertions(+), 11 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/unwind.h
+>  create mode 100644 arch/loongarch/kernel/unwind_guess.c
 >
 > diff --git a/arch/loongarch/Kconfig.debug b/arch/loongarch/Kconfig.debug
-> index 68634d4fa27b..57cdbe0cfd98 100644
+> index e69de29bb2d1..68634d4fa27b 100644
 > --- a/arch/loongarch/Kconfig.debug
 > +++ b/arch/loongarch/Kconfig.debug
-> @@ -1,3 +1,11 @@
-> +choice
-> +       prompt "Choose kernel unwinder"
-> +       default UNWINDER_PROLOGUE if KALLSYMS
+> @@ -0,0 +1,9 @@
+> +config UNWINDER_GUESS
+> +       bool "Guess unwinder"
 > +       help
-> +         This determines which method will be used for unwinding kernel stack
-> +         traces for panics, oopses, bugs, warnings, perf, /proc/<pid>/stack,
-> +         lockdep, and more.
+> +         This option enables the "guess" unwinder for unwinding kernel stack
+> +         traces.  It scans the stack and reports every kernel text address it
+> +         finds.  Some of the addresses it reports may be incorrect.
 > +
->  config UNWINDER_GUESS
->         bool "Guess unwinder"
->         help
-> @@ -7,3 +15,14 @@ config UNWINDER_GUESS
+> +         While this option often produces false positives, it can still be
+> +         useful in many cases.
+> diff --git a/arch/loongarch/include/asm/stacktrace.h b/arch/loongarch/include/asm/stacktrace.h
+> index 6b5c2a7aa706..49cb89213aeb 100644
+> --- a/arch/loongarch/include/asm/stacktrace.h
+> +++ b/arch/loongarch/include/asm/stacktrace.h
+> @@ -10,6 +10,23 @@
+>  #include <asm/loongarch.h>
+>  #include <linux/stringify.h>
 >
->           While this option often produces false positives, it can still be
->           useful in many cases.
-> +
-> +config UNWINDER_PROLOGUE
-> +       bool "Prologue unwinder"
-> +       depends on KALLSYMS
-> +       help
-> +         This option enables the "prologue" unwinder for unwinding kernel stack
-> +         traces.  It unwind the stack frame based on prologue code analyze.  Symbol
-> +         information is needed, at least the address and length of each function.
-> +         Some of the addresses it reports may be incorrect.
-> +
-> +endchoice
-> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-> index 575d1bb66ffb..b876907ca65a 100644
-> --- a/arch/loongarch/include/asm/inst.h
-> +++ b/arch/loongarch/include/asm/inst.h
-> @@ -23,12 +23,33 @@ enum reg1i20_op {
->         lu32id_op       = 0x0b,
->  };
->
-> +enum reg1i21_op {
-> +       beqz_op         = 0x10,
-> +       bnez_op         = 0x11,
+> +enum stack_type {
+> +       STACK_TYPE_UNKNOWN,
+> +       STACK_TYPE_TASK,
+> +       STACK_TYPE_IRQ,
 > +};
 > +
->  enum reg2i12_op {
-> +       addiw_op        = 0x0a,
-> +       addid_op        = 0x0b,
->         lu52id_op       = 0x0c,
-> +       ldb_op          = 0xa0,
-> +       ldh_op          = 0xa1,
-> +       ldw_op          = 0xa2,
-> +       ldd_op          = 0xa3,
-> +       stb_op          = 0xa4,
-> +       sth_op          = 0xa5,
-> +       stw_op          = 0xa6,
-> +       std_op          = 0xa7,
->  };
->
->  enum reg2i16_op {
->         jirl_op         = 0x13,
-> +       beq_op          = 0x16,
-> +       bne_op          = 0x17,
-> +       blt_op          = 0x18,
-> +       bge_op          = 0x19,
-> +       bltu_op         = 0x1a,
-> +       bgeu_op         = 0x1b,
->  };
->
->  struct reg0i26_format {
-> @@ -110,6 +131,37 @@ enum loongarch_gpr {
->         LOONGARCH_GPR_MAX
->  };
->
-> +#define is_imm12_negative(val) is_imm_negative(val, 12)
+> +struct stack_info {
+> +       enum stack_type type;
+> +       unsigned long begin, end, next_sp;
+> +};
 > +
-> +static inline bool is_imm_negative(unsigned long val, unsigned int bit)
-> +{
-> +       return val & (1UL << (bit - 1));
-> +}
+> +bool in_task_stack(unsigned long stack, struct task_struct *task,
+> +                       struct stack_info *info);
+> +bool in_irq_stack(unsigned long stack, struct stack_info *info);
+> +int get_stack_info(unsigned long stack, struct task_struct *task,
+> +                       struct stack_info *info);
 > +
-> +static inline bool is_stack_alloc_ins(union loongarch_instruction *ip)
-> +{
-> +       /* addi.d $sp, $sp, -imm */
-> +       return ip->reg2i12_format.opcode == addid_op &&
-> +               ip->reg2i12_format.rj == LOONGARCH_GPR_SP &&
-> +               ip->reg2i12_format.rd == LOONGARCH_GPR_SP &&
-> +               is_imm12_negative(ip->reg2i12_format.immediate);
-> +}
-> +
-> +static inline bool is_ra_save_ins(union loongarch_instruction *ip)
-> +{
-> +       /* st.d $ra, $sp, offset */
-> +       return ip->reg2i12_format.opcode == std_op &&
-> +               ip->reg2i12_format.rj == LOONGARCH_GPR_SP &&
-> +               ip->reg2i12_format.rd == LOONGARCH_GPR_RA &&
-> +               !is_imm12_negative(ip->reg2i12_format.immediate);
-> +}
-> +
-> +static inline bool is_branch_insn(union loongarch_instruction insn)
-> +{
-> +       return insn.reg1i21_format.opcode >= beqz_op &&
-> +               insn.reg1i21_format.opcode <= bgeu_op;
-> +}
-> +
->  u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
->  u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
->  u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
+>  #define STR_LONG_L    __stringify(LONG_L)
+>  #define STR_LONG_S    __stringify(LONG_S)
+>  #define STR_LONGSIZE  __stringify(LONGSIZE)
 > diff --git a/arch/loongarch/include/asm/unwind.h b/arch/loongarch/include/asm/unwind.h
-> index 243330b39d0d..f9f73a26504e 100644
-> --- a/arch/loongarch/include/asm/unwind.h
+> new file mode 100644
+> index 000000000000..243330b39d0d
+> --- /dev/null
 > +++ b/arch/loongarch/include/asm/unwind.h
-> @@ -14,6 +14,14 @@
->  struct unwind_state {
->         struct stack_info stack_info;
->         struct task_struct *task;
-> +#if defined(CONFIG_UNWINDER_PROLOGUE)
-> +       unsigned long ra;
-> +       bool enable;
-> +       /*
-> +        * Enable is the prologue analysis method
-> +        * otherwise is the way to guess.
-> +        */
-> +#endif
->         unsigned long sp, pc;
->         bool first;
->         bool error;
-This data struct makes me very uncomfortable, especially "enable" and
-the #ifdef, maybe we can rework it like this?
-
-#define UNWINDER_GUESS     0
-#define UNWINDER_PROLOGURE 1
-struct unwind_state {
-        char type; /* UNWINDER_xxx */
-        bool first, error;
-        unsigned long sp, pc, ra;
-        struct task_struct *task;
-        struct stack_info stack_info;
-};
-
-Huacai
-
+> @@ -0,0 +1,37 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Most of this ideas comes from x86.
+> + *
+> + * Copyright (C) 2022 Loongson Technology Corporation Limited
+> + */
+> +#ifndef _ASM_UNWIND_H
+> +#define _ASM_UNWIND_H
+> +
+> +#include <linux/sched.h>
+> +
+> +#include <asm/stacktrace.h>
+> +
+> +struct unwind_state {
+> +       struct stack_info stack_info;
+> +       struct task_struct *task;
+> +       unsigned long sp, pc;
+> +       bool first;
+> +       bool error;
+> +};
+> +
+> +void unwind_start(struct unwind_state *state, struct task_struct *task,
+> +                     struct pt_regs *regs);
+> +bool unwind_next_frame(struct unwind_state *state);
+> +unsigned long unwind_get_return_address(struct unwind_state *state);
+> +
+> +static inline bool unwind_done(struct unwind_state *state)
+> +{
+> +       return state->stack_info.type == STACK_TYPE_UNKNOWN;
+> +}
+> +
+> +static inline bool unwind_error(struct unwind_state *state)
+> +{
+> +       return state->error;
+> +}
+> +
+> +#endif /* _ASM_UNWIND_H */
 > diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-> index c5fa4adb23b6..918600e7b30f 100644
+> index 940de9173542..c5fa4adb23b6 100644
 > --- a/arch/loongarch/kernel/Makefile
 > +++ b/arch/loongarch/kernel/Makefile
-> @@ -23,5 +23,6 @@ obj-$(CONFIG_SMP)             += smp.o
+> @@ -22,4 +22,6 @@ obj-$(CONFIG_SMP)             += smp.o
+>
 >  obj-$(CONFIG_NUMA)             += numa.o
 >
->  obj-$(CONFIG_UNWINDER_GUESS)   += unwind_guess.o
-> +obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
->
+> +obj-$(CONFIG_UNWINDER_GUESS)   += unwind_guess.o
+> +
 >  CPPFLAGS_vmlinux.lds           := $(KBUILD_CFLAGS)
+> diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+> index bfa0dfe8b7d7..709b7a1664f8 100644
+> --- a/arch/loongarch/kernel/process.c
+> +++ b/arch/loongarch/kernel/process.c
+> @@ -44,6 +44,7 @@
+>  #include <asm/pgtable.h>
+>  #include <asm/processor.h>
+>  #include <asm/reg.h>
+> +#include <asm/unwind.h>
+>  #include <asm/vdso.h>
+>
+>  /*
+> @@ -183,6 +184,66 @@ unsigned long __get_wchan(struct task_struct *task)
+>         return 0;
+>  }
+>
+> +bool in_task_stack(unsigned long stack, struct task_struct *task,
+> +                       struct stack_info *info)
+> +{
+> +       unsigned long begin = (unsigned long)task_stack_page(task);
+> +       unsigned long end = begin + THREAD_SIZE - 32;
+> +
+> +       if (stack < begin || stack >= end)
+> +               return false;
+> +
+> +       info->type = STACK_TYPE_TASK;
+> +       info->begin = begin;
+> +       info->end = end;
+> +       info->next_sp = 0;
+> +
+> +       return true;
+> +}
+> +
+> +bool in_irq_stack(unsigned long stack, struct stack_info *info)
+> +{
+> +       unsigned long nextsp;
+> +       unsigned long begin = (unsigned long)this_cpu_read(irq_stack);
+> +       unsigned long end = begin + IRQ_STACK_START;
+> +
+> +       if (stack < begin || stack >= end)
+> +               return false;
+> +
+> +       nextsp = *(unsigned long *)end;
+> +       if (nextsp & (SZREG - 1))
+> +               return false;
+> +
+> +       info->type = STACK_TYPE_IRQ;
+> +       info->begin = begin;
+> +       info->end = end;
+> +       info->next_sp = nextsp;
+> +
+> +       return true;
+> +}
+> +
+> +int get_stack_info(unsigned long stack, struct task_struct *task,
+> +                  struct stack_info *info)
+> +{
+> +       task = task ? : current;
+> +
+> +       if (!stack || stack & (SZREG - 1))
+> +               goto unknown;
+> +
+> +       if (in_task_stack(stack, task, info))
+> +               return 0;
+> +
+> +       if (task != current)
+> +               goto unknown;
+> +
+> +       if (in_irq_stack(stack, info))
+> +               return 0;
+> +
+> +unknown:
+> +       info->type = STACK_TYPE_UNKNOWN;
+> +       return -EINVAL;
+> +}
+> +
+>  unsigned long stack_top(void)
+>  {
+>         unsigned long top = TASK_SIZE & PAGE_MASK;
 > diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-> index ef2c3aeb1dab..3e904fa12d48 100644
+> index 1bf58c65e2bf..ef2c3aeb1dab 100644
 > --- a/arch/loongarch/kernel/traps.c
 > +++ b/arch/loongarch/kernel/traps.c
-> @@ -73,6 +73,11 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs,
+> @@ -43,6 +43,7 @@
+>  #include <asm/stacktrace.h>
+>  #include <asm/tlb.h>
+>  #include <asm/types.h>
+> +#include <asm/unwind.h>
 >
->         unwind_start(&state, task, pregs);
+>  #include "access-helper.h"
 >
-> +#ifdef CONFIG_UNWINDER_PROLOGUE
-> +       if (user_mode(regs))
-> +               state.enable = false;
-> +#endif
+> @@ -64,19 +65,18 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs,
+>                            const char *loglvl, bool user)
+>  {
+>         unsigned long addr;
+> -       unsigned long *sp = (unsigned long *)(regs->regs[3] & ~3);
+> +       struct unwind_state state;
+> +       struct pt_regs *pregs = (struct pt_regs *)regs;
 > +
+> +       if (!task)
+> +               task = current;
+> +
+> +       unwind_start(&state, task, pregs);
+>
 >         printk("%sCall Trace:", loglvl);
->         for (; !unwind_done(&state); unwind_next_frame(&state)) {
->                 addr = unwind_get_return_address(&state);
-> diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
+> -#ifdef CONFIG_KALLSYMS
+> -       printk("%s\n", loglvl);
+> -#endif
+They should be after unwind_start()? If not, moving unwind_start() to
+the for-loop seems better.
+
+> -       while (!kstack_end(sp)) {
+> -               if (__get_addr(&addr, sp++, user)) {
+> -                       printk("%s (Bad stack address)", loglvl);
+> -                       break;
+> -               }
+> -               if (__kernel_text_address(addr))
+> -                       print_ip_sym(loglvl, addr);
+> +       for (; !unwind_done(&state); unwind_next_frame(&state)) {
+> +               addr = unwind_get_return_address(&state);
+> +               print_ip_sym(loglvl, addr);
+>         }
+>         printk("%s\n", loglvl);
+>  }
+> diff --git a/arch/loongarch/kernel/unwind_guess.c b/arch/loongarch/kernel/unwind_guess.c
 > new file mode 100644
-> index 000000000000..072d1f7bf4ac
+> index 000000000000..7eeb3e1a989d
 > --- /dev/null
-> +++ b/arch/loongarch/kernel/unwind_prologue.c
-> @@ -0,0 +1,172 @@
+> +++ b/arch/loongarch/kernel/unwind_guess.c
+> @@ -0,0 +1,65 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
 > + * Copyright (C) 2022 Loongson Technology Corporation Limited
 > + */
-> +#include <linux/kallsyms.h>
+> +#include <linux/kernel.h>
 > +
-> +#include <asm/inst.h>
-> +#include <asm/ptrace.h>
 > +#include <asm/unwind.h>
 > +
 > +unsigned long unwind_get_return_address(struct unwind_state *state)
 > +{
-> +
 > +       if (unwind_done(state))
 > +               return 0;
-> +       else if (state->enable)
-> +               return state->pc;
 > +       else if (state->first)
 > +               return state->pc;
 > +
 > +       return *(unsigned long *)(state->sp);
-> +
 > +}
 > +EXPORT_SYMBOL_GPL(unwind_get_return_address);
-> +
-> +static bool unwind_by_prologue(struct unwind_state *state)
-> +{
-> +       struct stack_info *info = &state->stack_info;
-> +       union loongarch_instruction *ip, *ip_end;
-> +       unsigned long frame_size = 0, frame_ra = -1;
-> +       unsigned long size, offset, pc = state->pc;
-> +
-> +       if (state->sp >= info->end || state->sp < info->begin)
-> +               return false;
-> +
-> +       if (!kallsyms_lookup_size_offset(pc, &size, &offset))
-> +               return false;
-> +
-> +       ip = (union loongarch_instruction *)(pc - offset);
-> +       ip_end = (union loongarch_instruction *)pc;
-> +
-> +       while (ip < ip_end) {
-> +               if (is_stack_alloc_ins(ip)) {
-> +                       frame_size = (1 << 12) - ip->reg2i12_format.immediate;
-> +                       ip++;
-> +                       break;
-> +               }
-> +               ip++;
-> +       }
-> +
-> +       if (!frame_size) {
-> +               if (state->first)
-> +                       goto first;
-> +
-> +               return false;
-> +       }
-> +
-> +       while (ip < ip_end) {
-> +               if (is_ra_save_ins(ip)) {
-> +                       frame_ra = ip->reg2i12_format.immediate;
-> +                       break;
-> +               }
-> +               if (is_branch_insn(*ip))
-> +                       break;
-> +               ip++;
-> +       }
-> +
-> +       if (frame_ra < 0) {
-> +               if (state->first) {
-> +                       state->sp = state->sp + frame_size;
-> +                       goto first;
-> +               }
-> +               return false;
-> +       }
-> +
-> +       if (state->first)
-> +               state->first = false;
-> +
-> +       state->pc = *(unsigned long *)(state->sp + frame_ra);
-> +       state->sp = state->sp + frame_size;
-> +       return !!__kernel_text_address(state->pc);
-> +
-> +first:
-> +       state->first = false;
-> +       if (state->pc == state->ra)
-> +               return false;
-> +
-> +       state->pc = state->ra;
-> +
-> +       return !!__kernel_text_address(state->ra);
-> +}
-> +
-> +static bool unwind_by_guess(struct unwind_state *state)
-> +{
-> +       struct stack_info *info = &state->stack_info;
-> +       unsigned long addr;
-> +
-> +       for (state->sp += sizeof(unsigned long);
-> +            state->sp < info->end;
-> +            state->sp += sizeof(unsigned long)) {
-> +               addr = *(unsigned long *)(state->sp);
-> +               if (__kernel_text_address(addr))
-> +                       return true;
-> +       }
-> +
-> +       return false;
-> +}
 > +
 > +bool unwind_next_frame(struct unwind_state *state)
 > +{
 > +       struct stack_info *info = &state->stack_info;
-> +       struct pt_regs *regs;
-> +       unsigned long pc;
+> +       unsigned long addr;
 > +
 > +       if (unwind_done(state))
 > +               return false;
 > +
+> +       if (state->first)
+> +               state->first = false;
+> +
 > +       do {
-> +               if (state->enable) {
-> +                       if (unwind_by_prologue(state))
-> +                               return true;
+> +               for (state->sp += sizeof(unsigned long);
+> +                    state->sp < info->end;
+> +                    state->sp += sizeof(unsigned long)) {
+> +                       addr = *(unsigned long *)(state->sp);
 > +
-> +                       if (info->type == STACK_TYPE_IRQ &&
-> +                               info->end == state->sp) {
-> +                               regs = (struct pt_regs *)info->next_sp;
-> +                               pc = regs->csr_era;
-> +                               if (user_mode(regs) || !__kernel_text_address(pc))
-> +                                       return false;
-> +
-> +                               state->pc = pc;
-> +                               state->sp = regs->regs[3];
-> +                               state->ra = regs->regs[1];
-> +                               state->first = true;
-> +                               get_stack_info(state->sp, state->task, info);
-> +
-> +                               return true;
-> +                       }
-> +               } else {
-> +                       if (state->first)
-> +                               state->first = false;
-> +                       else if (unwind_by_guess(state))
+> +                       if (__kernel_text_address(addr))
 > +                               return true;
 > +               }
 > +
@@ -394,19 +347,20 @@ Huacai
 > +       return false;
 > +}
 > +EXPORT_SYMBOL_GPL(unwind_next_frame);
+Move this function after unwind_start() seems more natural.
+
+Huacai
+
 > +
 > +void unwind_start(struct unwind_state *state, struct task_struct *task,
 > +                   struct pt_regs *regs)
 > +{
 > +       memset(state, 0, sizeof(*state));
 > +
-> +       if (__kernel_text_address(regs->csr_era))
-> +               state->enable = true;
-> +
 > +       state->task = task;
-> +       state->pc = regs->csr_era;
+> +
 > +       state->sp = regs->regs[3];
-> +       state->ra = regs->regs[1];
+> +       state->pc = regs->csr_era;
 > +       state->first = true;
 > +
 > +       get_stack_info(state->sp, state->task, &state->stack_info);
