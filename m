@@ -1,444 +1,115 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434E123C2
-	for <loongarch@lists.linux.dev>; Sun, 31 Jul 2022 12:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659269893; x=1690805893;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rL7pSsRpSxy1xNctCfIeaAMR+N04fzaBts8U6GlJ+SY=;
-  b=KlJ+kSzMSQF+u1i5gfMOzcOFrSlm2ins1kqqRu7AnNC7VtoJh29/iQCK
-   MCeUSoBJhb7qVVNZbjEtKpjz/05WFRq+sAqXORqoxOqHAP6rcXwQJvDgj
-   FXte86TX0sb8qKA5FU6NuONk2slXV8wtCJHF8mhqMjr68vSGaMZj1BgeA
-   PJFdRFiCpoU453f9hISQWi3BL0Op+k6HHiOQs4D6pfOF0MEqlZw/rwsAO
-   9hzHenUO3roYF60tgmCvWFG/6Ai9sdw2BSw9/cmRldDu90YyzXklDetsI
-   f1PCBcMOiU285nvgw/++fiGAsqrTfzsdNIewN4IoQwqTd4D6qg84vX0ah
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10424"; a="289762473"
-X-IronPort-AV: E=Sophos;i="5.93,206,1654585200"; 
-   d="scan'208";a="289762473"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2022 05:18:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,206,1654585200"; 
-   d="scan'208";a="577474282"
-Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 31 Jul 2022 05:18:10 -0700
-Received: from kbuild by e0eace57cfef with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1oI7tZ-000E79-21;
-	Sun, 31 Jul 2022 12:18:09 +0000
-Date: Sun, 31 Jul 2022 20:17:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Qing Zhang <zhangqing@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: kbuild-all@lists.01.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	hejinyang@loongson.cn
-Subject: Re: [PATCH 3/3] LoongArch: Add stacktrace support
-Message-ID: <202207312058.P3VcvB4t-lkp@intel.com>
-References: <20220728140519.5420-3-zhangqing@loongson.cn>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A71517F
+	for <loongarch@lists.linux.dev>; Mon,  1 Aug 2022 02:16:20 +0000 (UTC)
+Received: from [10.130.0.193] (unknown [113.200.148.30])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT+NpN+diN_VHAA--.51469S3;
+	Mon, 01 Aug 2022 10:16:09 +0800 (CST)
+Subject: Re: [PATCH v4 0/4] LoongArch: Support new relocation types
+To: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
+References: <32a74a218c76611f897fd1df1ad0059068621133.camel@xry111.site>
+ <ec52fd49-4a30-15d9-3d32-fd7bc6d8b3f0@loongson.cn>
+ <0179679b736aea7258981dec2d83107cce74dfc1.camel@xry111.site>
+ <a139a8475fe295ac9f17064269cd0312dca6f96e.camel@xry111.site>
+ <6b5d2188f93ed72b67a4bbb7116113f833fe1ee5.camel@xry111.site>
+ <d7670b60-2782-4642-995b-7baa01779a66@loongson.cn>
+ <7cad6e78014168a8906e130e1cf3809077d2bda7.camel@xry111.site>
+ <1d0783b87bda3e454a111862fcc5b5faffcb16b0.camel@xry111.site>
+ <00eede4b1380888a500f74b1e818bb25a550632b.camel@xry111.site>
+Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
+ Huacai Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>,
+ Lulu Cheng <chenglulu@loongson.cn>
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <7512ae16-b171-d072-674f-a6b9a5e764d6@loongson.cn>
+Date: Mon, 1 Aug 2022 10:16:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220728140519.5420-3-zhangqing@loongson.cn>
+In-Reply-To: <00eede4b1380888a500f74b1e818bb25a550632b.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf9DxT+NpN+diN_VHAA--.51469S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr13AryUKF1DuFWxXF4fZrb_yoW8tF1UpF
+	Z7GFW5Kr4kJr1rAa92yw1293Wjvws8Jr1xWw1FqayjvF9FqFn3Ar4Iv3yrCFy2vr95G3WU
+	XrW7A34xXrWrZw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
+	zVAYIcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF
+	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kf
+	nxnUUI43ZEXa7VUbpwZ7UUUUU==
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 
-Hi Qing,
+Hi, Ruoyao
 
-Thank you for the patch! Perhaps something to improve:
+On 07/30/2022 10:52 AM, Xi Ruoyao wrote:
+> On Sat, 2022-07-30 at 10:24 +0800, Xi Ruoyao wrote:
+>> On Sat, 2022-07-30 at 01:55 +0800, Xi Ruoyao wrote:
+>>> On Fri, 2022-07-29 at 20:19 +0800, Youling Tang wrote:
+>>>
+>>>> On 07/29/2022 07:45 PM, Xi Ruoyao wrote:
+>>>>> Hmm... The problem is the "addresses" of per-cpu symbols are
+>>>>> faked: they
+>>>>> are actually offsets from $r21.  So we can't just load such an
+>>>>> offset
+>>>>> with PCALA addressing.
+>>>>>
+>>>>> It looks like we'll need to introduce an attribute for GCC to
+>>>>> make
+>>>>> an
+>>>>> variable "must be addressed via GOT", and add the attribute into
+>>>>> PER_CPU_ATTRIBUTES.
+>>>
+>>>> Yes, we need a GCC attribute to specify the per-cpu variable.
+>>>
+>>> GCC patch adding "addr_global" attribute for LoongArch:
+>>> https://gcc.gnu.org/pipermail/gcc-patches/2022-July/599064.html
+>>>
+>>> An experiment to use it:
+>>> https://github.com/xry111/linux/commit/c1d5d70
+>>
+>> Correction: https://github.com/xry111/linux/commit/c1d5d708
+>>
+>> It seems 7-bit SHA is not enough for kernel repo.
+>
+> If addr_global is rejected or not implemented (for example, building the
+> kernel with GCC 12), *I expect* the following hack to work (I've not
+> tested it because I'm AFK now).  Using visibility in kernel seems
+> strange, but I think it may make some sense because the modules are some
+> sort of similar to an ELF shared object being dlopen()'ed, and our way
+> to inject per-CPU symbols is analog to ELF interposition.
+>
+> arch/loongarch/include/asm/percpu.h:
+>
+>    #if !__has_attribute(__addr_global__) && defined(MODULE)
+>    /* Magically remove "static" for per-CPU variables.  */
+>    # define ARCH_NEEDS_WEAK_PER_CPU
+>    /* Force GOT-relocation for per-CPU variables.  */
+>    # define PER_CPU_ATTRIBUTES __attribute__((__visibility__("default")))
+>    #endif
+>
+> arch/loongarch/Makefile:
+>
+>    # Hack for per-CPU variables, see PER_CPU_ATTRIBUTES in
+>    # include/asm/percpu.h
+>    if (call gcc-does-not-support-addr-global)
+>      KBUILD_CFLAGS_MODULE += -fPIC -fvisibility=hidden
+>    endif
+>
+Using the old toolchain (GCC 12) can successfully load the nf_tables.ko
+module after applying the above patch.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v5.19-rc8 next-20220728]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks,
+Youling
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Qing-Zhang/LoongArch-Add-guess-unwinder-support/20220728-220739
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 6e7765cb477a9753670d4351d14de93f1e9dbbd4
-config: loongarch-randconfig-s041-20220731 (https://download.01.org/0day-ci/archive/20220731/202207312058.P3VcvB4t-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 12.1.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # apt-get install sparse
-        # sparse version: v0.6.4-39-gce1a6720-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/32ef6acf6f5ecfadda21be77cbebb07b1c69e56a
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Qing-Zhang/LoongArch-Add-guess-unwinder-support/20220728-220739
-        git checkout 32ef6acf6f5ecfadda21be77cbebb07b1c69e56a
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=loongarch SHELL=/bin/bash kernel/entry/ kernel/trace/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-sparse warnings: (new ones prefixed by >>)
->> kernel/entry/common.c:447:29: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/entry/common.c:447:29: sparse:     expected void *ptr
-   kernel/entry/common.c:447:29: sparse:     got int [noderef] __percpu *
->> kernel/entry/common.c:447:29: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/entry/common.c:447:29: sparse:     expected void *ptr
-   kernel/entry/common.c:447:29: sparse:     got int [noderef] __percpu *
->> kernel/entry/common.c:447:29: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/entry/common.c:447:29: sparse:     expected void *ptr
-   kernel/entry/common.c:447:29: sparse:     got int [noderef] __percpu *
->> kernel/entry/common.c:447:29: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/entry/common.c:447:29: sparse:     expected void *ptr
-   kernel/entry/common.c:447:29: sparse:     got int [noderef] __percpu *
-   kernel/entry/common.c: note: in included file:
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
-   include/linux/context_tracking.h:98:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int enum ctx_state [noderef] __percpu * @@
-   include/linux/context_tracking.h:98:17: sparse:     expected void *ptr
-   include/linux/context_tracking.h:98:17: sparse:     got int enum ctx_state [noderef] __percpu *
---
->> kernel/trace/trace_preemptirq.c:30:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:30:13: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:30:13: sparse:     got int [noderef] __percpu *
->> kernel/trace/trace_preemptirq.c:30:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:30:13: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:30:13: sparse:     got int [noderef] __percpu *
->> kernel/trace/trace_preemptirq.c:30:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:30:13: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:30:13: sparse:     got int [noderef] __percpu *
->> kernel/trace/trace_preemptirq.c:30:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:30:13: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:30:13: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:34:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:34:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:34:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:34:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:34:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:34:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:34:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:34:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:34:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:34:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:34:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:34:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:42:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:42:13: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:42:13: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:42:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:42:13: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:42:13: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:42:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:42:13: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:42:13: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:42:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:42:13: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:42:13: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:46:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:46:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:46:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:46:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:46:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:46:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:46:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:46:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:46:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:46:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:46:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:46:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:63:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:63:14: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:63:14: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:63:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:63:14: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:63:14: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:63:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:63:14: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:63:14: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:63:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:63:14: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:63:14: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:64:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:64:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:64:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:64:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:64:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:64:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:64:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:64:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:64:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:64:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:64:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:64:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:78:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:78:14: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:78:14: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:78:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:78:14: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:78:14: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:78:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:78:14: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:78:14: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:78:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:78:14: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:78:14: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:79:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:79:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:79:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:79:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:79:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:79:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:79:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:79:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:79:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:79:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:79:17: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:79:17: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:90:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:90:13: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:90:13: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:90:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:90:13: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:90:13: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:90:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:90:13: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:90:13: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:90:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:90:13: sparse:     expected void *ptr
-   kernel/trace/trace_preemptirq.c:90:13: sparse:     got int [noderef] __percpu *
-   kernel/trace/trace_preemptirq.c:94:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got int [noderef] __percpu * @@
-   kernel/trace/trace_preemptirq.c:94:17: sparse:     expected void *ptr
---
-   kernel/trace/trace_events_user.c:280:37: sparse: sparse: Using plain integer as NULL pointer
-   kernel/trace/trace_events_user.c:461:38: sparse: sparse: Using plain integer as NULL pointer
-   kernel/trace/trace_events_user.c:482:40: sparse: sparse: Using plain integer as NULL pointer
-   kernel/trace/trace_events_user.c:1181:16: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   kernel/trace/trace_events_user.c:1181:16: sparse:    void [noderef] __rcu *
-   kernel/trace/trace_events_user.c:1181:16: sparse:    void *
-   kernel/trace/trace_events_user.c:1248:13: sparse: sparse: cast removes address space '__user' of expression
-   kernel/trace/trace_events_user.c:1248:13: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void [noderef] __user *buf @@     got char * @@
-   kernel/trace/trace_events_user.c:1248:13: sparse:     expected void [noderef] __user *buf
-   kernel/trace/trace_events_user.c:1248:13: sparse:     got char *
-   kernel/trace/trace_events_user.c:1264:16: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   kernel/trace/trace_events_user.c:1264:16: sparse:    void [noderef] __rcu *
-   kernel/trace/trace_events_user.c:1264:16: sparse:    void *
-   kernel/trace/trace_events_user.c:1291:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   kernel/trace/trace_events_user.c:1291:9: sparse:    void [noderef] __rcu *
-   kernel/trace/trace_events_user.c:1291:9: sparse:    void *
-   kernel/trace/trace_events_user.c: note: in included file:
->> kernel/trace/trace.h:1338:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got struct ring_buffer_event *[noderef] __percpu * @@
-   kernel/trace/trace.h:1338:13: sparse:     expected void *ptr
-   kernel/trace/trace.h:1338:13: sparse:     got struct ring_buffer_event *[noderef] __percpu *
->> kernel/trace/trace.h:1338:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got struct ring_buffer_event *[noderef] __percpu * @@
-   kernel/trace/trace.h:1338:13: sparse:     expected void *ptr
-   kernel/trace/trace.h:1338:13: sparse:     got struct ring_buffer_event *[noderef] __percpu *
->> kernel/trace/trace.h:1338:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got struct ring_buffer_event *[noderef] __percpu * @@
-   kernel/trace/trace.h:1338:13: sparse:     expected void *ptr
-   kernel/trace/trace.h:1338:13: sparse:     got struct ring_buffer_event *[noderef] __percpu *
->> kernel/trace/trace.h:1338:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got struct ring_buffer_event *[noderef] __percpu * @@
-   kernel/trace/trace.h:1338:13: sparse:     expected void *ptr
-   kernel/trace/trace.h:1338:13: sparse:     got struct ring_buffer_event *[noderef] __percpu *
-   kernel/trace/trace_events_user.c: note: in included file (through include/linux/uaccess.h, include/linux/sched/task.h, include/linux/sched/signal.h, ...):
-   arch/loongarch/include/asm/uaccess.h:232:32: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const *from @@     got void const [noderef] __user *from @@
-   arch/loongarch/include/asm/uaccess.h:232:32: sparse:     expected void const *from
-   arch/loongarch/include/asm/uaccess.h:232:32: sparse:     got void const [noderef] __user *from
---
->> kernel/trace/trace_events.c:796:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:796:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:796:9: sparse:     got bool [noderef] __percpu *
->> kernel/trace/trace_events.c:796:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:796:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:796:9: sparse:     got bool [noderef] __percpu *
->> kernel/trace/trace_events.c:796:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:796:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:796:9: sparse:     got bool [noderef] __percpu *
->> kernel/trace/trace_events.c:796:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:796:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:796:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:814:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:814:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:814:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:814:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:814:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:814:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:814:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:814:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:814:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:814:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:814:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:814:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:826:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:826:14: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:826:14: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:826:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:826:14: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:826:14: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:826:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:826:14: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:826:14: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:826:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:826:14: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:826:14: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:832:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:832:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:832:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:832:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:832:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:832:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:832:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:832:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:832:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:832:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:832:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:832:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:844:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:844:13: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:844:13: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:844:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:844:13: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:844:13: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:844:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:844:13: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:844:13: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:844:13: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:844:13: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:844:13: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:851:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:851:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:851:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:851:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:851:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:851:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:851:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:851:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:851:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:851:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:851:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:851:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:999:31: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct event_filter *filter @@     got struct event_filter [noderef] __rcu *filter @@
-   kernel/trace/trace_events.c:999:31: sparse:     expected struct event_filter *filter
-   kernel/trace/trace_events.c:999:31: sparse:     got struct event_filter [noderef] __rcu *filter
-   kernel/trace/trace_events.c:1907:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:1907:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:1907:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:1907:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:1907:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:1907:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:1907:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:1907:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:1907:9: sparse:     got bool [noderef] __percpu *
-   kernel/trace/trace_events.c:1907:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got bool [noderef] __percpu * @@
-   kernel/trace/trace_events.c:1907:9: sparse:     expected void *ptr
-   kernel/trace/trace_events.c:1907:9: sparse:     got bool [noderef] __percpu *
---
-   kernel/trace/trace.c:406:28: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct trace_export **list @@     got struct trace_export [noderef] __rcu ** @@
-   kernel/trace/trace.c:406:28: sparse:     expected struct trace_export **list
-   kernel/trace/trace.c:406:28: sparse:     got struct trace_export [noderef] __rcu **
-   kernel/trace/trace.c:420:33: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct trace_export **list @@     got struct trace_export [noderef] __rcu ** @@
-   kernel/trace/trace.c:420:33: sparse:     expected struct trace_export **list
-   kernel/trace/trace.c:420:33: sparse:     got struct trace_export [noderef] __rcu **
-   kernel/trace/trace.c:2864:38: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct event_filter *filter @@     got struct event_filter [noderef] __rcu *filter @@
-   kernel/trace/trace.c:2864:38: sparse:     expected struct event_filter *filter
-   kernel/trace/trace.c:2864:38: sparse:     got struct event_filter [noderef] __rcu *filter
->> kernel/trace/trace.c:7333:20: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got struct ring_buffer_event *[noderef] __percpu * @@
-   kernel/trace/trace.c:7333:20: sparse:     expected void *ptr
-   kernel/trace/trace.c:7333:20: sparse:     got struct ring_buffer_event *[noderef] __percpu *
->> kernel/trace/trace.c:7333:20: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got struct ring_buffer_event *[noderef] __percpu * @@
-   kernel/trace/trace.c:7333:20: sparse:     expected void *ptr
-   kernel/trace/trace.c:7333:20: sparse:     got struct ring_buffer_event *[noderef] __percpu *
->> kernel/trace/trace.c:7333:20: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got struct ring_buffer_event *[noderef] __percpu * @@
-   kernel/trace/trace.c:7333:20: sparse:     expected void *ptr
-   kernel/trace/trace.c:7333:20: sparse:     got struct ring_buffer_event *[noderef] __percpu *
->> kernel/trace/trace.c:7333:20: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *ptr @@     got struct ring_buffer_event *[noderef] __percpu * @@
-   kernel/trace/trace.c:7333:20: sparse:     expected void *ptr
-   kernel/trace/trace.c:7333:20: sparse:     got struct ring_buffer_event *[noderef] __percpu *
-   kernel/trace/trace.c:360:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   kernel/trace/trace.c:360:9: sparse:    struct trace_export [noderef] __rcu *
-   kernel/trace/trace.c:360:9: sparse:    struct trace_export *
-   kernel/trace/trace.c:375:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   kernel/trace/trace.c:375:9: sparse:    struct trace_export [noderef] __rcu *
-   kernel/trace/trace.c:375:9: sparse:    struct trace_export *
-
-vim +447 kernel/entry/common.c
-
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  442  
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  443  irqentry_state_t noinstr irqentry_nmi_enter(struct pt_regs *regs)
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  444  {
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  445  	irqentry_state_t irq_state;
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  446  
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02 @447  	irq_state.lockdep = lockdep_hardirqs_enabled();
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  448  
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  449  	__nmi_enter();
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  450  	lockdep_hardirqs_off(CALLER_ADDR0);
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  451  	lockdep_hardirq_enter();
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  452  	rcu_nmi_enter();
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  453  
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  454  	instrumentation_begin();
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  455  	trace_hardirqs_off_finish();
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  456  	ftrace_nmi_enter();
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  457  	instrumentation_end();
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  458  
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  459  	return irq_state;
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  460  }
-b6be002bcd1dd1 Thomas Gleixner 2020-11-02  461  
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
