@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D19D7F
-	for <loongarch@lists.linux.dev>; Tue,  2 Aug 2022 06:03:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CBA4C4347C
-	for <loongarch@lists.linux.dev>; Tue,  2 Aug 2022 06:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183647F
+	for <loongarch@lists.linux.dev>; Tue,  2 Aug 2022 06:09:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC329C433D7
+	for <loongarch@lists.linux.dev>; Tue,  2 Aug 2022 06:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1659420224;
-	bh=qeYh9cQBoOkbdAHtdqnjh8k8Af2Ywy/TvdgrSgMCD5E=;
+	s=k20201202; t=1659420557;
+	bh=EtnTwiGnu4HXQ9Ajm3QFxagD2pw2qahfshy7dOh36ls=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tE0MoTcfFtIduOQj1oKi05WFgRndh8qZAs43PWH4pWFjKUebecCEceikWRXDt4wb3
-	 QfX2767vQVxJ2F2ZygH+zXtxiOISYwX7pnhyhvSH0UjJdc7tTm3A+pOfDF6kHeE30p
-	 7LFt+iX5+hBdPVPja/1+P8xdZR3GGevJFG8T9xD0G3epT5thrYOWhf900FH5FOx1aO
-	 W742w0M+Ibml0/2keJz5BcgJHhVtp36TBPEEEiPbvYmqjgckaThFz3P303ZKw/CMgp
-	 16j/0bqkQ+jtzDgxjeGGJhb4dk03zKpnsNYiQjsAp81jRneW1or+g5AwhtJHfstj/S
-	 O/p/Q4XxDKyfg==
-Received: by mail-vk1-f169.google.com with SMTP id n15so6618442vkk.8
-        for <loongarch@lists.linux.dev>; Mon, 01 Aug 2022 23:03:44 -0700 (PDT)
-X-Gm-Message-State: AJIora/HsUfDh0GBGX3LyH7Xp33Heoqv+7BK44PqKN8C03ZehFEFP6O9
-	3Z2Uzor4agjOqQEfbwLqbSI5NEk6YspF4Raagfk=
-X-Google-Smtp-Source: AGRyM1vXaVAi55NVrpTrammO6b5ZOG99hTs2taAEfIv2SUTFNXcsTn3VfbdYcG4x2nG76/q7rZ9cmYXNn+xBqzVdtQg=
-X-Received: by 2002:a1f:aa8b:0:b0:376:e14b:c10e with SMTP id
- t133-20020a1faa8b000000b00376e14bc10emr6972720vke.19.1659420222979; Mon, 01
- Aug 2022 23:03:42 -0700 (PDT)
+	b=XuJv1FjJJhESBQNK/rbwjWz1hSf46Jyy/N98IPoFZuLePEz+Qbofv2pnjUlbj1RxB
+	 jx3hcRpJWZUn6bwLgrBlwIfKYehV4s8uDDj66OFFO1EGVvByw1R8dZDRnnaGB/LEAN
+	 n6WXmQZh7aj9GJ2hyc1i8TsUeajXrDV3QhGtk6u0kTE9Bm8rRxYXxXMnfkQg4VNB/p
+	 hnfzSj8TI9vK+lqkqRsWjS64BHqmbCrQ9K5SZi08DRqcy9tYNkQMUu4jyqP8ktVVNS
+	 3SXvDZK2vOpG7NQuVZmz04slz8m7Z8mYDs2SkR7kFuyNi7wdQYBsVqf1qfsreFLMh5
+	 xhytxNTBPsnbQ==
+Received: by mail-vs1-f47.google.com with SMTP id s129so5126671vsb.11
+        for <loongarch@lists.linux.dev>; Mon, 01 Aug 2022 23:09:17 -0700 (PDT)
+X-Gm-Message-State: ACgBeo1z7nNaOBJv+71sBXeEpTd8cUDST0LqEAQ34f/4/lm5Or2UqJHs
+	+WOCTEbCepmUAP9iVdhRXsxS6TQE/FmTQMh1DtI=
+X-Google-Smtp-Source: AA6agR6j61B+NJ3XBdxdJflIlHm8f5slQ+DzX3WG0PxUB1DsIcuiKtnbh3IMcK1OYrz/i6ueMTYs7kZf0FDxw8QgX74=
+X-Received: by 2002:a67:d487:0:b0:385:1a6b:6f33 with SMTP id
+ g7-20020a67d487000000b003851a6b6f33mr3002902vsj.59.1659420556640; Mon, 01 Aug
+ 2022 23:09:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -32,9 +32,9 @@ MIME-Version: 1.0
 References: <20220802053818.18051-1-zhangqing@loongson.cn> <20220802053818.18051-4-zhangqing@loongson.cn>
 In-Reply-To: <20220802053818.18051-4-zhangqing@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 2 Aug 2022 14:03:28 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4qWTbjb45VNbA0is_2w1sgSW54kSngVhVpac5VehwoEg@mail.gmail.com>
-Message-ID: <CAAhV-H4qWTbjb45VNbA0is_2w1sgSW54kSngVhVpac5VehwoEg@mail.gmail.com>
+Date: Tue, 2 Aug 2022 14:09:03 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7NLgM4zWkhsmMtx8uL1AwC28=YxFvQPo1LbppHHHHRtQ@mail.gmail.com>
+Message-ID: <CAAhV-H7NLgM4zWkhsmMtx8uL1AwC28=YxFvQPo1LbppHHHHRtQ@mail.gmail.com>
 Subject: Re: [PATCH v3 3/4] LoongArch: Add stacktrace support
 To: Qing Zhang <zhangqing@loongson.cn>
 Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
@@ -45,16 +45,14 @@ Content-Type: text/plain; charset="UTF-8"
 
 Hi, Qing,
 
-Though we had an offline discussion, I still think adding get_wchan()
-support is worthy. :)
-
-Huacai
-
 On Tue, Aug 2, 2022 at 1:38 PM Qing Zhang <zhangqing@loongson.cn> wrote:
 >
 > Use common arch_stack_walk infrastructure to avoid duplicated code and
 > avoid taking care of the stack storage and filtering.
 > Add sra (means __schedule return address) and scfa (means __schedule call
+I think you want to say sched_ra and sched_cfa here. :)
+
+Huacai
 > frame address) to thread_info and store it in switch_to().
 >
 > Now we can print the process stack by cat /proc/*/stack and can better
