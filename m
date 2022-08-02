@@ -1,55 +1,119 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4629B7F
-	for <loongarch@lists.linux.dev>; Tue,  2 Aug 2022 01:15:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1659402909;
-	bh=tAumF/NJz2IyfqS8SnDKwWnb2pe+/WlR4W2uaAgaVoM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ftaANTyCW4q9eeL5t4IM8eoFmqnxFlewYdX4Atv/2jUkaSkT0Iwx9fgaSZULTh2YI
-	 91GbXgkHnMtgxZWD74zTU/um+T8XQiaj9HJDnKMCmnDfLdH0a9Obv4SMZq8Ras6Xoq
-	 OM+xjHY6gXN9jwiK9DBnIssXMOacMgyzFFZe9Sd0=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id C6205668F0;
-	Mon,  1 Aug 2022 21:15:07 -0400 (EDT)
-Message-ID: <4236c3ec4bc02653965a637da5e75d399de8a9bc.camel@xry111.site>
-Subject: Re: [PATCH 0/4] LoongArch: Add unwinder support
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>, Qing Zhang <zhangqing@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, LKML
-	 <linux-kernel@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Jinyang He <hejinyang@loongson.cn>
-Date: Tue, 02 Aug 2022 09:15:05 +0800
-In-Reply-To: <CAAhV-H61DOGHXeVmZif7e04jpYBZNja-wPyLFhAtECZkZSQScA@mail.gmail.com>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 946B57F
+	for <loongarch@lists.linux.dev>; Tue,  2 Aug 2022 01:19:58 +0000 (UTC)
+Received: from [10.130.0.63] (unknown [113.200.148.30])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9BxHOS6e+hiV+EAAA--.4933S3;
+	Tue, 02 Aug 2022 09:19:55 +0800 (CST)
+Subject: Re: [PATCH 3/4] LoongArch: Add stacktrace support
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ LKML <linux-kernel@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Jinyang He <hejinyang@loongson.cn>
 References: <20220801121726.9681-1-zhangqing@loongson.cn>
-	 <CAAhV-H61DOGHXeVmZif7e04jpYBZNja-wPyLFhAtECZkZSQScA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 
+ <20220801121726.9681-4-zhangqing@loongson.cn>
+ <CAAhV-H6Az_X1afvAO+JxnDaW-Ey_8wmozehd++qOZoGmimM+6g@mail.gmail.com>
+From: zhangqing <zhangqing@loongson.cn>
+Message-ID: <3cc6aebc-87e7-f0d0-2a88-e7e742e1e5ee@loongson.cn>
+Date: Tue, 2 Aug 2022 09:19:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H6Az_X1afvAO+JxnDaW-Ey_8wmozehd++qOZoGmimM+6g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9BxHOS6e+hiV+EAAA--.4933S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxurWUZrWfuFy5Zr1kGr48JFb_yoW5WF1xpF
+	ykArsxGF4kCr1fCFyav345uFyrJwn7Gr12qF9rKa45CrnFvF1aqr1kGF1DuFWjqan8J3yI
+	9FyfWr9Iga1UXw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
+	bIxvr21lc2xSY4AK67AK6w4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvE
+	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUbLiSPUUUUU==
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
-On Mon, 2022-08-01 at 23:34 +0800, Huacai Chen wrote:
+
+
+On 2022/8/1 下午11:30, Huacai Chen wrote:
 > Hi, Qing,
->=20
-> I think we don't need to CC linux-kernel; on the other hand, CC
-> linux-arch and Arnd is worthy.
-> BTW, it seems you are missing V2 in the title.
+> 
+> On Mon, Aug 1, 2022 at 8:17 PM Qing Zhang <zhangqing@loongson.cn> wrote:
+>>
+>> Use common arch_stack_walk infrastructure to avoid duplicated code and
+>> avoid taking care of the stack storage and filtering.
+>> Add sra (means __schedule return address) and scfa (means __schedule call
+>> frame address) to thread_info and store it in switch_to().
+>>
+>> Now we can print the process stack by cat /proc/*/stack and can better
+>> support ftrace.
+>>
+>> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+>> ---
+>>   arch/loongarch/Kconfig                 |  5 ++++
+>>   arch/loongarch/include/asm/processor.h |  9 +++++++
+>>   arch/loongarch/include/asm/switch_to.h | 14 ++++++----
+>>   arch/loongarch/include/asm/uaccess.h   |  4 +--
+>>   arch/loongarch/kernel/Makefile         |  1 +
+>>   arch/loongarch/kernel/asm-offsets.c    |  2 ++
+>>   arch/loongarch/kernel/process.c        |  3 +++
+>>   arch/loongarch/kernel/stacktrace.c     | 37 ++++++++++++++++++++++++++
+>>   arch/loongarch/kernel/switch.S         |  2 ++
+>>   9 files changed, 70 insertions(+), 7 deletions(-)
+>>   create mode 100644 arch/loongarch/kernel/stacktrace.c
+>>
+>> diff --git a/arch/loongarch/include/asm/uaccess.h b/arch/loongarch/include/asm/uaccess.h
+>> index 2b44edc604a2..a8ae2af4025a 100644
+>> --- a/arch/loongarch/include/asm/uaccess.h
+>> +++ b/arch/loongarch/include/asm/uaccess.h
+>> @@ -229,13 +229,13 @@ extern unsigned long __copy_user(void *to, const void *from, __kernel_size_t n);
+>>   static inline unsigned long __must_check
+>>   raw_copy_from_user(void *to, const void __user *from, unsigned long n)
+>>   {
+>> -       return __copy_user(to, from, n);
+>> +       return __copy_user(to, (__force const void *)from, n);
+>>   }
+>>
+>>   static inline unsigned long __must_check
+>>   raw_copy_to_user(void __user *to, const void *from, unsigned long n)
+>>   {
+>> -       return __copy_user(to, from, n);
+>> +       return __copy_user((__force void *)to, from, n);
+> Why this? Does it have something to do with stacktrace?
+> 
+> Huacai
 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sele=
-ct-the-recipients-for-your-patch:
-"linux-kernel@vger.kernel.org should be used by default for all
-patches".
+Hi, huacai
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+This is kernel test robot report sparse warnings:
+I reproduced locally and found that other architectures calling 
+__copy_user also use __force conversion, Is this modification appropriate?
+
+kernel/trace/trace_events_user.c: note: in included file (through 
+include/linux/uaccess.h, include/linux/sched/task.h, 
+include/linux/sched/signal.h, ...):
+    arch/loongarch/include/asm/uaccess.h:232:32: sparse: sparse: 
+incorrect type in argument 2 (different address spaces) @@     expected 
+void const *from @@     got void const [noderef] __user *from @@
+    arch/loongarch/include/asm/uaccess.h:232:32: sparse:     expected 
+void const *from
+    arch/loongarch/include/asm/uaccess.h:232:32: sparse:     got void 
+const [noderef] __user *from
+
+Thanks,
+-Qing
+
+
