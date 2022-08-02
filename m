@@ -1,72 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14AC7F
-	for <loongarch@lists.linux.dev>; Tue,  2 Aug 2022 01:53:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DFA6C43470
-	for <loongarch@lists.linux.dev>; Tue,  2 Aug 2022 01:53:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1659405236;
-	bh=Ji1d5P2JFD8eg6AjTCjdkhd67npMDhGaNZy8jS/PYWs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gskRq/ApykGFhpi+aCpK1RpLyHxAoYS2j0Yo+KT9ey0J+pirEg+c6FuXtfGTuqljl
-	 wcWzBrKbpgY1VSQUgfB7zlpi+T1EVrjjLY1t77QQNG8jdyPUe+bj/AnokdFTIxZ2hM
-	 +mRgEH5W7sq4q942RF4ovmfbhARPyiB5mUgxg81BCc87ToRTxBQcQl3Ds+JHXP5OK2
-	 /ZhDJlWOJkKJX/lvoREiIWDY2qyzhE6rzp2iHA7yoMzFulFNXw5ML4rBB+NEpzID6x
-	 LcwRUI7rtDm0vX1cjdbcbZU1/qMOvOCV3MG6yH9TinIVIjSMSencA7bBc5lV0VuxFf
-	 gD+5AUotDNOeQ==
-Received: by mail-ua1-f43.google.com with SMTP id s7so5282520uao.4
-        for <loongarch@lists.linux.dev>; Mon, 01 Aug 2022 18:53:56 -0700 (PDT)
-X-Gm-Message-State: ACgBeo1Eb3n+ONQauls8kPaNPGykoZ0tuW9RTnq/IW2vTVpUSaOgoZnm
-	yG6T23GVi7P1sB1rDmMFIL5R/ZjU6KnblHIzgTc=
-X-Google-Smtp-Source: AA6agR4vJQuLtNDbVrQJwjfOvM3OFTgchZN191QtiHRsJvs8AYpMmeqJAEAOGnsFwfJyVQJZZ1k30J23ljMln5UrBMI=
-X-Received: by 2002:ab0:6798:0:b0:382:d9f4:8d0 with SMTP id
- v24-20020ab06798000000b00382d9f408d0mr7215680uar.63.1659405235487; Mon, 01
- Aug 2022 18:53:55 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 739DC7F
+	for <loongarch@lists.linux.dev>; Tue,  2 Aug 2022 02:01:17 +0000 (UTC)
+Received: from [10.130.0.63] (unknown [113.200.148.30])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx4M5rhehieO0AAA--.5051S3;
+	Tue, 02 Aug 2022 10:01:16 +0800 (CST)
+Subject: Re: [PATCH 3/4] LoongArch: Add stacktrace support
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ LKML <linux-kernel@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Jinyang He <hejinyang@loongson.cn>
+References: <20220801121726.9681-1-zhangqing@loongson.cn>
+ <20220801121726.9681-4-zhangqing@loongson.cn>
+ <CAAhV-H6Az_X1afvAO+JxnDaW-Ey_8wmozehd++qOZoGmimM+6g@mail.gmail.com>
+ <3cc6aebc-87e7-f0d0-2a88-e7e742e1e5ee@loongson.cn>
+ <CAAhV-H61ZXvF2xvXsyrxRYj6impet0w83svkt94FUhJhzj-2EQ@mail.gmail.com>
+From: Qing Zhang <zhangqing@loongson.cn>
+Message-ID: <59d9ef26-d378-b311-82a9-95fc8d14a8a6@loongson.cn>
+Date: Tue, 2 Aug 2022 10:01:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220801121726.9681-1-zhangqing@loongson.cn> <20220801121726.9681-3-zhangqing@loongson.cn>
- <CAAhV-H4hR-Xdk5EpakR9ft0J+V5qgPj5q2T=zjh1SHMnnHK1vw@mail.gmail.com>
- <6e6a7219-8666-bd9e-770a-e60e4b329832@loongson.cn> <CAAhV-H7yfxX-ZsXjvWvSTwsyc8jf34jEOeLJ+dJ6jktJzuiryA@mail.gmail.com>
- <1afd44fab8dacdda7927b6e699bf74c8a1cad773.camel@xry111.site>
-In-Reply-To: <1afd44fab8dacdda7927b6e699bf74c8a1cad773.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 2 Aug 2022 09:53:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5s_x13ws+Mt=6VfXPdXJ8wp82c8HS2hJ_ND7qKL6_V5g@mail.gmail.com>
-Message-ID: <CAAhV-H5s_x13ws+Mt=6VfXPdXJ8wp82c8HS2hJ_ND7qKL6_V5g@mail.gmail.com>
-Subject: Re: [PATCH 2/4] LoongArch: Add prologue unwinder support
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Youling Tang <tangyouling@loongson.cn>, Qing Zhang <zhangqing@loongson.cn>, 
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Jinyang He <hejinyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAAhV-H61ZXvF2xvXsyrxRYj6impet0w83svkt94FUhJhzj-2EQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9Dx4M5rhehieO0AAA--.5051S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxCF15Ar13AFW5JrWkZFW7twb_yoW5Kr43pF
+	ykAF1DGF4kGryfCryavw1j9r1Utwn7Gr12qF9rKFy5ArnFvF12qr4kGF1DuFWjqws8GayI
+	9FWfKrZIg3WUJw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
+	zVAYIcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI
+	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+	evJa73UjIFyTuYvjfUOyCGUUUUU
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
-Hi, Ruoyao,
 
-On Tue, Aug 2, 2022 at 9:39 AM Xi Ruoyao <xry111@xry111.site> wrote:
->
-> On Tue, 2022-08-02 at 09:34 +0800, Huacai Chen wrote:
-> > > > #define UNWINDER_GUESS     0
-> > > > #define UNWINDER_PROLOGURE 1
-> > >
-> > > Maybe it's better to define with enum type?
-> > > enum unwind_type {
-> > >          UNWINDER_GUESS,
-> > >          UNWINDER_PROLOGURE,
-> > > };
-> > Both macro and enum are acceptable, but enum is essentially "int",
-> > while the "type" member is "char" here.
->
-> "0" or "1" will also be "int" (C99 6.4.4.1 para 5).
-OK, then Zhang Qing has her rights to choose. :)
 
-Huacai
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
+On 2022/8/2 上午9:30, Huacai Chen wrote:
+> Hi, Qing,
+> 
+> On Tue, Aug 2, 2022 at 9:20 AM zhangqing <zhangqing@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2022/8/1 下午11:30, Huacai Chen wrote:
+>>> Hi, Qing,
+>>>
+>>> On Mon, Aug 1, 2022 at 8:17 PM Qing Zhang <zhangqing@loongson.cn> wrote:
+>>>>
+>>>> Use common arch_stack_walk infrastructure to avoid duplicated code and
+>>>> avoid taking care of the stack storage and filtering.
+>>>> Add sra (means __schedule return address) and scfa (means __schedule call
+>>>> frame address) to thread_info and store it in switch_to().
+>>>>
+>>>> Now we can print the process stack by cat /proc/*/stack and can better
+>>>> support ftrace.
+>>>>
+>>>> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/Kconfig                 |  5 ++++
+>>>>    arch/loongarch/include/asm/processor.h |  9 +++++++
+>>>>    arch/loongarch/include/asm/switch_to.h | 14 ++++++----
+>>>>    arch/loongarch/include/asm/uaccess.h   |  4 +--
+>>>>    arch/loongarch/kernel/Makefile         |  1 +
+>>>>    arch/loongarch/kernel/asm-offsets.c    |  2 ++
+>>>>    arch/loongarch/kernel/process.c        |  3 +++
+>>>>    arch/loongarch/kernel/stacktrace.c     | 37 ++++++++++++++++++++++++++
+>>>>    arch/loongarch/kernel/switch.S         |  2 ++
+>>>>    9 files changed, 70 insertions(+), 7 deletions(-)
+>>>>    create mode 100644 arch/loongarch/kernel/stacktrace.c
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/uaccess.h b/arch/loongarch/include/asm/uaccess.h
+>>>> index 2b44edc604a2..a8ae2af4025a 100644
+>>>> --- a/arch/loongarch/include/asm/uaccess.h
+>>>> +++ b/arch/loongarch/include/asm/uaccess.h
+>>>> @@ -229,13 +229,13 @@ extern unsigned long __copy_user(void *to, const void *from, __kernel_size_t n);
+>>>>    static inline unsigned long __must_check
+>>>>    raw_copy_from_user(void *to, const void __user *from, unsigned long n)
+>>>>    {
+>>>> -       return __copy_user(to, from, n);
+>>>> +       return __copy_user(to, (__force const void *)from, n);
+>>>>    }
+>>>>
+>>>>    static inline unsigned long __must_check
+>>>>    raw_copy_to_user(void __user *to, const void *from, unsigned long n)
+>>>>    {
+>>>> -       return __copy_user(to, from, n);
+>>>> +       return __copy_user((__force void *)to, from, n);
+>>> Why this? Does it have something to do with stacktrace?
+>>>
+>>> Huacai
+>>
+>> Hi, huacai
+>>
+>> This is kernel test robot report sparse warnings:
+>> I reproduced locally and found that other architectures calling
+>> __copy_user also use __force conversion, Is this modification appropriate?
+>>
+>> kernel/trace/trace_events_user.c: note: in included file (through
+>> include/linux/uaccess.h, include/linux/sched/task.h,
+>> include/linux/sched/signal.h, ...):
+>>      arch/loongarch/include/asm/uaccess.h:232:32: sparse: sparse:
+>> incorrect type in argument 2 (different address spaces) @@     expected
+>> void const *from @@     got void const [noderef] __user *from @@
+>>      arch/loongarch/include/asm/uaccess.h:232:32: sparse:     expected
+>> void const *from
+>>      arch/loongarch/include/asm/uaccess.h:232:32: sparse:     got void
+>> const [noderef] __user *from
+> The modification might be correct, but should it be in this patch?
+> 
+> Huacai
+I will send this patch separately,  it has nothing to do with the series 
+patch.
+
+arch/loongarch/kernel/ptrace.c: note: in included file (through 
+include/linux/uaccess.h, include/linux/sched/task.h, 
+include/linux/sched/signal.h, include/linux/ptrace.h, include/linux/audit.h)
+
+-Qing
+>>
+>> Thanks,
+>> -Qing
+>>
+>>
+>>
+
