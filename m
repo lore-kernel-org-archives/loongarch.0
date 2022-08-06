@@ -1,9 +1,9 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 105051112
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1E6F1111
 	for <loongarch@lists.linux.dev>; Sat,  6 Aug 2022 08:10:25 +0000 (UTC)
 Received: from localhost.localdomain (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxbyPdIe5ixooIAA--.1165S5;
-	Sat, 06 Aug 2022 16:10:08 +0800 (CST)
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxbyPdIe5ixooIAA--.1165S3;
+	Sat, 06 Aug 2022 16:10:06 +0800 (CST)
 From: Qing Zhang <zhangqing@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Xuerui <kernel@xen0n.name>,
@@ -15,9 +15,9 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	hejinyang@loongson.cn,
 	tangyouling@loongson.cn,
 	zhangqing@loongson.cn
-Subject: [PATCH v4 3/4] LoongArch: Add stacktrace and get_wchan support
-Date: Sat,  6 Aug 2022 16:10:04 +0800
-Message-Id: <20220806081005.332-4-zhangqing@loongson.cn>
+Subject: [PATCH v4 1/4] LoongArch: Add guess unwinder support
+Date: Sat,  6 Aug 2022 16:10:02 +0800
+Message-Id: <20220806081005.332-2-zhangqing@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20220806081005.332-1-zhangqing@loongson.cn>
 References: <20220806081005.332-1-zhangqing@loongson.cn>
@@ -28,287 +28,343 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf9DxbyPdIe5ixooIAA--.1165S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxtF43tFy5Zr18WrWkGryrXrb_yoWfKr4kpF
-	9rCwsrJr4jgw1I9r9xt395ur98twn2gw42gF9xta4rAF12qFyrXry8JasrZF4Yv3y8Ga1S
-	qrn5K39rKan8JaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPK14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
-	8EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxd
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-	v20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
-	IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
-	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
-	AFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4
-	A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU
-	0xZFpf9x0JUBWlkUUUUU=
+X-CM-TRANSID:AQAAf9DxbyPdIe5ixooIAA--.1165S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3Gr43Xw43Jw1fJr1kAF1DKFg_yoWfCr48pF
+	98C3Z3GrW5G34Igr9xXr18Zrn8Gr4kCw12gF9xtFyFkF12qFyfXrnaya4DZFs8J3ykW3WI
+	gF95Krs8Ka1UXaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPC14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWl
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
+	8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
+	jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0x
+	kIwI1lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+	AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0
+	cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
+	80aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI
+	43ZEXa7VUjZ2-5UUUUU==
 X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
-1. Use common arch_stack_walk infrastructure to avoid duplicated code and
-avoid taking care of the stack storage and filtering.
-2. Add sra (means sched return address) and scfa (means sched call
-frame address) to thread_info and store it in switch_to().
-3. Add get wchan implement.
+Name "guess unwinder" comes from x86, It scans the stack and reports
+every kernel text address it finds.
 
-Now we can print the process stack and wait channel by cat /proc/*/stack
-and /proc/*/wchan.
+Three stages when we do unwind,
+  1) unwind_start(), the prapare of unwinding, fill unwind_state.
+  2) unwind_done(), judge whether the unwind process is finished or not.
+  3) unwind_next_frame(), unwind the next frame.
+
+Make the dump_stack process go through unwind process.
+Add get_stack_info() to get stack info. At present we have irq stack and
+task stack. Maybe add another type in future. The next_sp means the key
+info between this type stack and next type stack.
+
+Dividing unwinder helps to add new unwinders in the future.
 
 Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
 ---
- arch/loongarch/Kconfig                 |  5 ++++
- arch/loongarch/include/asm/processor.h |  9 +++++++
- arch/loongarch/include/asm/switch_to.h | 14 ++++++----
- arch/loongarch/kernel/Makefile         |  1 +
- arch/loongarch/kernel/asm-offsets.c    |  2 ++
- arch/loongarch/kernel/process.c        | 30 ++++++++++++++++++++-
- arch/loongarch/kernel/stacktrace.c     | 37 ++++++++++++++++++++++++++
- arch/loongarch/kernel/switch.S         |  2 ++
- 8 files changed, 94 insertions(+), 6 deletions(-)
- create mode 100644 arch/loongarch/kernel/stacktrace.c
+ arch/loongarch/Kconfig.debug            |  9 ++++
+ arch/loongarch/include/asm/stacktrace.h | 17 +++++++
+ arch/loongarch/include/asm/unwind.h     | 37 ++++++++++++++
+ arch/loongarch/kernel/Makefile          |  2 +
+ arch/loongarch/kernel/process.c         | 61 ++++++++++++++++++++++
+ arch/loongarch/kernel/traps.c           | 21 ++++----
+ arch/loongarch/kernel/unwind_guess.c    | 67 +++++++++++++++++++++++++
+ 7 files changed, 203 insertions(+), 11 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/unwind.h
+ create mode 100644 arch/loongarch/kernel/unwind_guess.c
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index fc2465892a60..8143774f99cb 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -39,6 +39,7 @@ config LOONGARCH
- 	select ARCH_INLINE_SPIN_UNLOCK_IRQRESTORE if !PREEMPTION
- 	select ARCH_MIGHT_HAVE_PC_PARPORT
- 	select ARCH_MIGHT_HAVE_PC_SERIO
-+	select ARCH_STACKWALK
- 	select ARCH_SPARSEMEM_ENABLE
- 	select ARCH_SUPPORTS_ACPI
- 	select ARCH_SUPPORTS_ATOMIC_RMW
-@@ -141,6 +142,10 @@ config LOCKDEP_SUPPORT
- 	bool
- 	default y
- 
-+config STACKTRACE_SUPPORT
-+	bool
-+	default y
+diff --git a/arch/loongarch/Kconfig.debug b/arch/loongarch/Kconfig.debug
+index e69de29bb2d1..68634d4fa27b 100644
+--- a/arch/loongarch/Kconfig.debug
++++ b/arch/loongarch/Kconfig.debug
+@@ -0,0 +1,9 @@
++config UNWINDER_GUESS
++	bool "Guess unwinder"
++	help
++	  This option enables the "guess" unwinder for unwinding kernel stack
++	  traces.  It scans the stack and reports every kernel text address it
++	  finds.  Some of the addresses it reports may be incorrect.
 +
- # MACH_LOONGSON32 and MACH_LOONGSON64 are delibrately carried over from the
- # MIPS Loongson code, to preserve Loongson-specific code paths in drivers that
- # are shared between architectures, and specifically expecting the symbols.
-diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
-index 57ec45aa078e..1c4b4308378d 100644
---- a/arch/loongarch/include/asm/processor.h
-+++ b/arch/loongarch/include/asm/processor.h
-@@ -101,6 +101,10 @@ struct thread_struct {
- 	unsigned long reg23, reg24, reg25, reg26; /* s0-s3 */
- 	unsigned long reg27, reg28, reg29, reg30, reg31; /* s4-s8 */
++	  While this option often produces false positives, it can still be
++	  useful in many cases.
+diff --git a/arch/loongarch/include/asm/stacktrace.h b/arch/loongarch/include/asm/stacktrace.h
+index 6b5c2a7aa706..49cb89213aeb 100644
+--- a/arch/loongarch/include/asm/stacktrace.h
++++ b/arch/loongarch/include/asm/stacktrace.h
+@@ -10,6 +10,23 @@
+ #include <asm/loongarch.h>
+ #include <linux/stringify.h>
  
-+	/* __schedule() return address / call frame address */
-+	unsigned long sched_ra;
-+	unsigned long sched_cfa;
++enum stack_type {
++	STACK_TYPE_UNKNOWN,
++	STACK_TYPE_TASK,
++	STACK_TYPE_IRQ,
++};
 +
- 	/* CSR registers */
- 	unsigned long csr_prmd;
- 	unsigned long csr_crmd;
-@@ -129,6 +133,9 @@ struct thread_struct {
- 	struct loongarch_fpu fpu FPU_ALIGN;
- };
- 
-+#define thread_saved_ra(tsk)	(tsk->thread.sched_ra)
-+#define thread_saved_fp(tsk)	(tsk->thread.sched_cfa)
++struct stack_info {
++	enum stack_type type;
++	unsigned long begin, end, next_sp;
++};
 +
- #define INIT_THREAD  {						\
- 	/*							\
- 	 * Main processor registers				\
-@@ -145,6 +152,8 @@ struct thread_struct {
- 	.reg29			= 0,				\
- 	.reg30			= 0,				\
- 	.reg31			= 0,				\
-+	.sched_ra		= 0,				\
-+	.sched_cfa		= 0,				\
- 	.csr_crmd		= 0,				\
- 	.csr_prmd		= 0,				\
- 	.csr_euen		= 0,				\
-diff --git a/arch/loongarch/include/asm/switch_to.h b/arch/loongarch/include/asm/switch_to.h
-index 2a8d04375574..43a5ab162d38 100644
---- a/arch/loongarch/include/asm/switch_to.h
-+++ b/arch/loongarch/include/asm/switch_to.h
-@@ -15,12 +15,15 @@ struct task_struct;
-  * @prev:	The task previously executed.
-  * @next:	The task to begin executing.
-  * @next_ti:	task_thread_info(next).
-+ * @sched_ra:	__schedule return address.
-+ * @sched_cfa:	__schedule call frame address.
-  *
-  * This function is used whilst scheduling to save the context of prev & load
-  * the context of next. Returns prev.
-  */
- extern asmlinkage struct task_struct *__switch_to(struct task_struct *prev,
--			struct task_struct *next, struct thread_info *next_ti);
-+			struct task_struct *next, struct thread_info *next_ti,
-+			void *sched_ra, void *sched_cfa);
- 
- /*
-  * For newly created kernel threads switch_to() will return to
-@@ -28,10 +31,11 @@ extern asmlinkage struct task_struct *__switch_to(struct task_struct *prev,
-  * That is, everything following __switch_to() will be skipped for new threads.
-  * So everything that matters to new threads should be placed before __switch_to().
-  */
--#define switch_to(prev, next, last)					\
--do {									\
--	lose_fpu_inatomic(1, prev);					\
--	(last) = __switch_to(prev, next, task_thread_info(next));	\
-+#define switch_to(prev, next, last)						\
-+do {										\
-+	lose_fpu_inatomic(1, prev);						\
-+	(last) = __switch_to(prev, next, task_thread_info(next),		\
-+		 __builtin_return_address(0), __builtin_frame_address(0));	\
- } while (0)
- 
- #endif /* _ASM_SWITCH_TO_H */
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index 918600e7b30f..7449513eb08d 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_EFI) 		+= efi.o
- obj-$(CONFIG_CPU_HAS_FPU)	+= fpu.o
- 
- obj-$(CONFIG_MODULES)		+= module.o module-sections.o
-+obj-$(CONFIG_STACKTRACE)        += stacktrace.o
- 
- obj-$(CONFIG_PROC_FS)		+= proc.o
- 
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index 20cd9e16a95a..eb350f3ffae5 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -103,6 +103,8 @@ void output_thread_defines(void)
- 	OFFSET(THREAD_REG29, task_struct, thread.reg29);
- 	OFFSET(THREAD_REG30, task_struct, thread.reg30);
- 	OFFSET(THREAD_REG31, task_struct, thread.reg31);
-+	OFFSET(THREAD_SCHED_RA, task_struct, thread.sched_ra);
-+	OFFSET(THREAD_SCHED_CFA, task_struct, thread.sched_cfa);
- 	OFFSET(THREAD_CSRCRMD, task_struct,
- 	       thread.csr_crmd);
- 	OFFSET(THREAD_CSRPRMD, task_struct,
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index 709b7a1664f8..d9dba725ef02 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -135,6 +135,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
- 	childregs = (struct pt_regs *) childksp - 1;
- 	/*  Put the stack after the struct pt_regs.  */
- 	childksp = (unsigned long) childregs;
-+	p->thread.sched_cfa = 0;
- 	p->thread.csr_euen = 0;
- 	p->thread.csr_crmd = csr_read32(LOONGARCH_CSR_CRMD);
- 	p->thread.csr_prmd = csr_read32(LOONGARCH_CSR_PRMD);
-@@ -145,6 +146,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
- 		p->thread.reg23 = (unsigned long)args->fn;
- 		p->thread.reg24 = (unsigned long)args->fn_arg;
- 		p->thread.reg01 = (unsigned long)ret_from_kernel_thread;
-+		p->thread.sched_ra = (unsigned long)ret_from_kernel_thread;
- 		memset(childregs, 0, sizeof(struct pt_regs));
- 		childregs->csr_euen = p->thread.csr_euen;
- 		childregs->csr_crmd = p->thread.csr_crmd;
-@@ -161,6 +163,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
- 
- 	p->thread.reg03 = (unsigned long) childregs;
- 	p->thread.reg01 = (unsigned long) ret_from_fork;
-+	p->thread.sched_ra = (unsigned long) ret_from_fork;
- 
- 	/*
- 	 * New tasks lose permission to use the fpu. This accelerates context
-@@ -181,9 +184,34 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
- 
- unsigned long __get_wchan(struct task_struct *task)
- {
--	return 0;
-+	unsigned long pc;
-+	struct unwind_state state;
++bool in_task_stack(unsigned long stack, struct task_struct *task,
++			struct stack_info *info);
++bool in_irq_stack(unsigned long stack, struct stack_info *info);
++int get_stack_info(unsigned long stack, struct task_struct *task,
++			struct stack_info *info);
 +
-+	if (!try_get_task_stack(task))
-+		return 0;
-+
-+	unwind_start(&state, task, NULL);
-+	state.sp = thread_saved_fp(task);
-+	get_stack_info(state.sp, state.task, &state.stack_info);
-+	state.pc = thread_saved_ra(task);
-+#ifdef CONFIG_UNWINDER_PROLOGUE
-+	state.type = UNWINDER_PROLOGUE;
-+#endif
-+	for ( ; !unwind_done(&state); unwind_next_frame(&state)) {
-+		pc = unwind_get_return_address(&state);
-+		if (!pc)
-+			break;
-+		if (in_sched_functions(pc))
-+			continue;
-+		break;
-+	}
-+
-+	put_task_stack(task);
-+
-+	return pc;
- }
- 
-+
- bool in_task_stack(unsigned long stack, struct task_struct *task,
- 			struct stack_info *info)
- {
-diff --git a/arch/loongarch/kernel/stacktrace.c b/arch/loongarch/kernel/stacktrace.c
+ #define STR_LONG_L    __stringify(LONG_L)
+ #define STR_LONG_S    __stringify(LONG_S)
+ #define STR_LONGSIZE  __stringify(LONGSIZE)
+diff --git a/arch/loongarch/include/asm/unwind.h b/arch/loongarch/include/asm/unwind.h
 new file mode 100644
-index 000000000000..f4f4b8ad3917
+index 000000000000..243330b39d0d
 --- /dev/null
-+++ b/arch/loongarch/kernel/stacktrace.c
++++ b/arch/loongarch/include/asm/unwind.h
 @@ -0,0 +1,37 @@
-+// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Stack trace management functions
++ * Most of this ideas comes from x86.
 + *
 + * Copyright (C) 2022 Loongson Technology Corporation Limited
 + */
++#ifndef _ASM_UNWIND_H
++#define _ASM_UNWIND_H
++
 +#include <linux/sched.h>
-+#include <linux/stacktrace.h>
 +
 +#include <asm/stacktrace.h>
-+#include <asm/unwind.h>
 +
-+void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
-+		     struct task_struct *task, struct pt_regs *regs)
++struct unwind_state {
++	struct stack_info stack_info;
++	struct task_struct *task;
++	unsigned long sp, pc;
++	bool first;
++	bool error;
++};
++
++void unwind_start(struct unwind_state *state, struct task_struct *task,
++		      struct pt_regs *regs);
++bool unwind_next_frame(struct unwind_state *state);
++unsigned long unwind_get_return_address(struct unwind_state *state);
++
++static inline bool unwind_done(struct unwind_state *state)
 +{
-+	struct pt_regs dummyregs;
++	return state->stack_info.type == STACK_TYPE_UNKNOWN;
++}
++
++static inline bool unwind_error(struct unwind_state *state)
++{
++	return state->error;
++}
++
++#endif /* _ASM_UNWIND_H */
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 940de9173542..c5fa4adb23b6 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -22,4 +22,6 @@ obj-$(CONFIG_SMP)		+= smp.o
+ 
+ obj-$(CONFIG_NUMA)		+= numa.o
+ 
++obj-$(CONFIG_UNWINDER_GUESS)	+= unwind_guess.o
++
+ CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index bfa0dfe8b7d7..709b7a1664f8 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -44,6 +44,7 @@
+ #include <asm/pgtable.h>
+ #include <asm/processor.h>
+ #include <asm/reg.h>
++#include <asm/unwind.h>
+ #include <asm/vdso.h>
+ 
+ /*
+@@ -183,6 +184,66 @@ unsigned long __get_wchan(struct task_struct *task)
+ 	return 0;
+ }
+ 
++bool in_task_stack(unsigned long stack, struct task_struct *task,
++			struct stack_info *info)
++{
++	unsigned long begin = (unsigned long)task_stack_page(task);
++	unsigned long end = begin + THREAD_SIZE - 32;
++
++	if (stack < begin || stack >= end)
++		return false;
++
++	info->type = STACK_TYPE_TASK;
++	info->begin = begin;
++	info->end = end;
++	info->next_sp = 0;
++
++	return true;
++}
++
++bool in_irq_stack(unsigned long stack, struct stack_info *info)
++{
++	unsigned long nextsp;
++	unsigned long begin = (unsigned long)this_cpu_read(irq_stack);
++	unsigned long end = begin + IRQ_STACK_START;
++
++	if (stack < begin || stack >= end)
++		return false;
++
++	nextsp = *(unsigned long *)end;
++	if (nextsp & (SZREG - 1))
++		return false;
++
++	info->type = STACK_TYPE_IRQ;
++	info->begin = begin;
++	info->end = end;
++	info->next_sp = nextsp;
++
++	return true;
++}
++
++int get_stack_info(unsigned long stack, struct task_struct *task,
++		   struct stack_info *info)
++{
++	task = task ? : current;
++
++	if (!stack || stack & (SZREG - 1))
++		goto unknown;
++
++	if (in_task_stack(stack, task, info))
++		return 0;
++
++	if (task != current)
++		goto unknown;
++
++	if (in_irq_stack(stack, info))
++		return 0;
++
++unknown:
++	info->type = STACK_TYPE_UNKNOWN;
++	return -EINVAL;
++}
++
+ unsigned long stack_top(void)
+ {
+ 	unsigned long top = TASK_SIZE & PAGE_MASK;
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index 1bf58c65e2bf..f65fdf90d29e 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -43,6 +43,7 @@
+ #include <asm/stacktrace.h>
+ #include <asm/tlb.h>
+ #include <asm/types.h>
++#include <asm/unwind.h>
+ 
+ #include "access-helper.h"
+ 
+@@ -64,19 +65,17 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs,
+ 			   const char *loglvl, bool user)
+ {
+ 	unsigned long addr;
+-	unsigned long *sp = (unsigned long *)(regs->regs[3] & ~3);
 +	struct unwind_state state;
-+	unsigned long addr;
++	struct pt_regs *pregs = (struct pt_regs *)regs;
 +
-+	regs = &dummyregs;
-+
-+	if (task == current) {
-+		regs->csr_era = (unsigned long)__builtin_return_address(0);
-+		regs->regs[3] = (unsigned long)__builtin_frame_address(0);
-+	} else {
-+		regs->csr_era = thread_saved_ra(task);
-+		regs->regs[3] = thread_saved_fp(task);
-+	}
-+
-+	regs->regs[1] = 0;
-+	for (unwind_start(&state, task, regs);
++	if (!task)
++		task = current;
+ 
+ 	printk("%sCall Trace:", loglvl);
+-#ifdef CONFIG_KALLSYMS
+-	printk("%s\n", loglvl);
+-#endif
+-	while (!kstack_end(sp)) {
+-		if (__get_addr(&addr, sp++, user)) {
+-			printk("%s (Bad stack address)", loglvl);
+-			break;
+-		}
+-		if (__kernel_text_address(addr))
+-			print_ip_sym(loglvl, addr);
++	for (unwind_start(&state, task, pregs);
 +	      !unwind_done(&state); unwind_next_frame(&state)) {
 +		addr = unwind_get_return_address(&state);
-+		if (!addr || !consume_entry(cookie, addr))
-+			break;
-+	}
++		print_ip_sym(loglvl, addr);
+ 	}
+ 	printk("%s\n", loglvl);
+ }
+diff --git a/arch/loongarch/kernel/unwind_guess.c b/arch/loongarch/kernel/unwind_guess.c
+new file mode 100644
+index 000000000000..5afa6064d73e
+--- /dev/null
++++ b/arch/loongarch/kernel/unwind_guess.c
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2022 Loongson Technology Corporation Limited
++ */
++#include <linux/kernel.h>
++
++#include <asm/unwind.h>
++
++unsigned long unwind_get_return_address(struct unwind_state *state)
++{
++	if (unwind_done(state))
++		return 0;
++	else if (state->first)
++		return state->pc;
++
++	return *(unsigned long *)(state->sp);
 +}
-diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
-index 37e84ac8ffc2..43ebbc3990f7 100644
---- a/arch/loongarch/kernel/switch.S
-+++ b/arch/loongarch/kernel/switch.S
-@@ -21,6 +21,8 @@ SYM_FUNC_START(__switch_to)
- 
- 	cpu_save_nonscratch a0
- 	stptr.d	ra, a0, THREAD_REG01
-+	stptr.d a3, a0, THREAD_SCHED_RA
-+	stptr.d a4, a0, THREAD_SCHED_CFA
- 	move	tp, a2
- 	cpu_restore_nonscratch a1
- 
++EXPORT_SYMBOL_GPL(unwind_get_return_address);
++
++void unwind_start(struct unwind_state *state, struct task_struct *task,
++		    struct pt_regs *regs)
++{
++	memset(state, 0, sizeof(*state));
++
++	if (regs) {
++		state->sp = regs->regs[3];
++		state->pc = regs->csr_era;
++	}
++
++	state->task = task;
++	state->first = true;
++
++	get_stack_info(state->sp, state->task, &state->stack_info);
++
++	if (!unwind_done(state) && !__kernel_text_address(state->pc))
++		unwind_next_frame(state);
++}
++EXPORT_SYMBOL_GPL(unwind_start);
++
++bool unwind_next_frame(struct unwind_state *state)
++{
++	struct stack_info *info = &state->stack_info;
++	unsigned long addr;
++
++	if (unwind_done(state))
++		return false;
++
++	if (state->first)
++		state->first = false;
++
++	do {
++		for (state->sp += sizeof(unsigned long);
++		     state->sp < info->end;
++		     state->sp += sizeof(unsigned long)) {
++			addr = *(unsigned long *)(state->sp);
++
++			if (__kernel_text_address(addr))
++				return true;
++		}
++
++		state->sp = info->next_sp;
++
++	} while (!get_stack_info(state->sp, state->task, info));
++
++	return false;
++}
++EXPORT_SYMBOL_GPL(unwind_next_frame);
 -- 
 2.20.1
 
