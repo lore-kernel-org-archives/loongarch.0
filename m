@@ -1,39 +1,24 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE071107
-	for <loongarch@lists.linux.dev>; Sat,  6 Aug 2022 07:58:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77CE0C433D6;
-	Sat,  6 Aug 2022 07:58:08 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-mips@vger.kernel.org,
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD6351107
+	for <loongarch@lists.linux.dev>; Sat,  6 Aug 2022 08:10:25 +0000 (UTC)
+Received: from localhost.localdomain (unknown [113.200.148.30])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxbyPdIe5ixooIAA--.1165S2;
+	Sat, 06 Aug 2022 16:10:06 +0800 (CST)
+From: Qing Zhang <zhangqing@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Feiyang Chen <chenfeiyang@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V8 4/4] LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-Date: Sat,  6 Aug 2022 15:55:26 +0800
-Message-Id: <20220806075526.1735954-5-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220806075526.1735954-1-chenhuacai@loongson.cn>
-References: <20220806075526.1735954-1-chenhuacai@loongson.cn>
+	linux-arch@vger.kernel.org,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	hejinyang@loongson.cn,
+	tangyouling@loongson.cn,
+	zhangqing@loongson.cn
+Subject: [PATCH v4 0/4] Add unwinder support
+Date: Sat,  6 Aug 2022 16:10:01 +0800
+Message-Id: <20220806081005.332-1-zhangqing@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,83 +26,90 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9DxbyPdIe5ixooIAA--.1165S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXF4UJFWkCw4rZw1DWrWUXFb_yoW5XryrpF
+	ZrCrnxGr4DGrySvFnxtw18urn5Jr4kGrW2qa9FyryrCF4aqa47ZrnYvF1DZ3WDJ3yrJry0
+	qFn5G3s0ga1UtaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1U
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUP-B_UUUUU=
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
-From: Feiyang Chen <chenfeiyang@loongson.cn>
+This series in order to add stacktrace support, Some upcoming features require
+these changes, like trace, divide unwinder into guess unwinder and prologue
+unwinder is to add new unwinders in the future.
+eg:unwinder_frame, unwinder_orc .etc.
 
-The feature of minimizing overhead of struct page associated with each
-HugeTLB page is implemented on x86_64. However, the infrastructure of
-this feature is already there, so just select ARCH_WANT_HUGETLB_PAGE_
-OPTIMIZE_VMEMMAP is enough to enable this feature for LoongArch.
+Three stages when we do unwind,
+  1) unwind_start(), the prapare of unwinding, fill unwind_state.
+  2) unwind_done(), judge whether the unwind process is finished or not.
+  3) unwind_next_frame(), unwind the next frame.
 
-To avoid the following build error on LoongArch we should include linux/
-static_key.h in page-flags.h.
+you can test them by:
+  1) echo t > /proc/sysrq-trigger
+  2) cat /proc/*/stack
+  3) ftrace: function graph
+  4) uprobe: echo 1 > ./options/userstacktrace
 
-In file included from ./include/linux/mmzone.h:22,
-from ./include/linux/gfp.h:6,
-from ./include/linux/mm.h:7,
-from arch/loongarch/kernel/asm-offsets.c:9:
-./include/linux/page-flags.h:208:1: warning: data definition has no
-type or storage class
-208 | DECLARE_STATIC_KEY_MAYBE(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-| ^~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/page-flags.h:208:1: error: type defaults to 'int' in
-declaration of 'DECLARE_STATIC_KEY_MAYBE' [-Werror=implicit-int]
-./include/linux/page-flags.h:209:26: warning: parameter names (without
-types) in function declaration
-209 | hugetlb_optimize_vmemmap_key);
-| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/page-flags.h: In function 'hugetlb_optimize_vmemmap_enabled':
-./include/linux/page-flags.h:213:16: error: implicit declaration of
-function 'static_branch_maybe' [-Werror=implicit-function-declaration]
-213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-| ^~~~~~~~~~~~~~~~~~~
-./include/linux/page-flags.h:213:36: error:
-'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON' undeclared (first
-use in this function); did you mean
-'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP'?
-213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-| CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-./include/linux/page-flags.h:213:36: note: each undeclared identifier
-is reported only once for each function it appears in
-./include/linux/page-flags.h:214:37: error:
-'hugetlb_optimize_vmemmap_key' undeclared (first use in this
-function); did you mean 'hugetlb_optimize_vmemmap_enabled'?
-214 | &hugetlb_optimize_vmemmap_key);
-| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-| hugetlb_optimize_vmemmap_enabled
+Changes from v1 to v2:
 
-Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/Kconfig     | 1 +
- include/linux/page-flags.h | 1 +
- 2 files changed, 2 insertions(+)
+- Add the judgment of the offset value of ra in the prologue.
+  (Suggested by Youling).
+- Create an inline function to check the sign bit, which is convenient
+  for extending other types of immediates.  (Suggested by Jinyang).
+- Fix sparse warning :
+    arch/loongarch/include/asm/uaccess.h:232:32: sparse: sparse: incorrect
+    type in argument 2 (different address spaces) @@     expected void const
+    *from @@     got void const [noderef] __user *from @@
+- Add USER_STACKTRACE support as a series.
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index cff781d92c81..de78c86a205c 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -49,6 +49,7 @@ config LOONGARCH
- 	select ARCH_USE_CMPXCHG_LOCKREF
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-+	select ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
- 	select ARCH_WANTS_NO_INSTR
- 	select BUILDTIME_TABLE_SORT
- 	select COMMON_CLK
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index e66f7aa3191d..28a53ac7aa3e 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -9,6 +9,7 @@
- #include <linux/types.h>
- #include <linux/bug.h>
- #include <linux/mmdebug.h>
-+#include <linux/static_key.h>
- #ifndef __GENERATING_BOUNDS_H
- #include <linux/mm_types.h>
- #include <generated/bounds.h>
+Changes from v2 to v3:
+
+- Move unwind_start definition and use location, remove #ifdef in unwind_state
+  and use type instead of enable. (Suggested by Huacai).
+- Separated fixes for uaccess.h. (Suggested by Huacai).
+
+Changes from v3 to v4:
+
+- Add get wchan implement. (Suggested by Huacai).
+
+Qing Zhang (4):
+  LoongArch: Add guess unwinder support
+  LoongArch: Add prologue unwinder support
+  LoongArch: Add stacktrace and get_wchan support
+  LoongArch: Add USER_STACKTRACE support
+
+ arch/loongarch/Kconfig                  |   6 +
+ arch/loongarch/Kconfig.debug            |  28 ++++
+ arch/loongarch/include/asm/inst.h       |  52 +++++++
+ arch/loongarch/include/asm/processor.h  |   9 ++
+ arch/loongarch/include/asm/stacktrace.h |  22 +++
+ arch/loongarch/include/asm/switch_to.h  |  14 +-
+ arch/loongarch/include/asm/unwind.h     |  47 +++++++
+ arch/loongarch/kernel/Makefile          |   4 +
+ arch/loongarch/kernel/asm-offsets.c     |   2 +
+ arch/loongarch/kernel/process.c         |  91 ++++++++++++-
+ arch/loongarch/kernel/stacktrace.c      |  78 +++++++++++
+ arch/loongarch/kernel/switch.S          |   2 +
+ arch/loongarch/kernel/traps.c           |  24 ++--
+ arch/loongarch/kernel/unwind_guess.c    |  67 +++++++++
+ arch/loongarch/kernel/unwind_prologue.c | 173 ++++++++++++++++++++++++
+ 15 files changed, 602 insertions(+), 17 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/unwind.h
+ create mode 100644 arch/loongarch/kernel/stacktrace.c
+ create mode 100644 arch/loongarch/kernel/unwind_guess.c
+ create mode 100644 arch/loongarch/kernel/unwind_prologue.c
+
 -- 
-2.31.1
+2.20.1
 
