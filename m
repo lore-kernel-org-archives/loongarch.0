@@ -1,19 +1,19 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D14373D94
-	for <loongarch@lists.linux.dev>; Tue,  9 Aug 2022 11:31:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 578C44403
+	for <loongarch@lists.linux.dev>; Tue,  9 Aug 2022 12:01:49 +0000 (UTC)
 Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Ax6sx9RfJiqw4LAA--.19335S3;
-	Tue, 09 Aug 2022 19:31:10 +0800 (CST)
-Subject: Re: [PATCH v4 4/4] LoongArch: Support modules with new relocation
- types
-To: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
-References: <32a74a218c76611f897fd1df1ad0059068621133.camel@xry111.site>
- <7fbcd23074e58117c6bcfbd832679de2386ff995.camel@xry111.site>
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxKsyqTPJiJhYLAA--.5282S3;
+	Tue, 09 Aug 2022 20:01:47 +0800 (CST)
+Subject: Re: [RFC PATCH 1/5] LoongArch: Fix some instruction formats
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+References: <1660013580-19053-1-git-send-email-yangtiezhu@loongson.cn>
+ <1660013580-19053-2-git-send-email-yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ bpf@vger.kernel.org, loongarch@lists.linux.dev
 From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <1610cce7-ec7c-7a16-9b0f-3999ee081692@loongson.cn>
-Date: Tue, 9 Aug 2022 19:31:09 +0800
+Message-ID: <41d7214b-54db-6637-ee8b-2f94ca2b70c5@loongson.cn>
+Date: Tue, 9 Aug 2022 20:01:46 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -22,13 +22,13 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <7fbcd23074e58117c6bcfbd832679de2386ff995.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1660013580-19053-2-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9Ax6sx9RfJiqw4LAA--.19335S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3AryrtF1fGF1rJw1UJF43Wrg_yoWxKF4DpF
-	yDZr9rtF48CFn7Wa48t3W5ZF17Ww1kKrW2ga43W3yxAFnrJryIkF1xKryDJayUWrnYkry8
-	XFnYgw1xZa9rJ37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:AQAAf9AxKsyqTPJiJhYLAA--.5282S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXF1fWry3Zr18JFy8KF1kAFb_yoW5XrW5pF
+	s2yw1DKrWkGr1IvF1rJws5WFyfAw4fG3s2qFWaqryUGryYqFn8X343K345AFWkGw48uF1j
+	vrW3Z347CF4DJaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
 	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
@@ -36,214 +36,101 @@ X-Coremail-Antispam: 1UD129KBjvJXoW3AryrtF1fGF1rJw1UJF43Wrg_yoWxKF4DpF
 	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
 	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
 	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-	Y487MxkIecxEwVAFwVW8KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+	Y487MxkIecxEwVAFwVW5JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
 	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
 	wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2
-	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73Uj
-	IFyTuYvjfU589NDUUUU
+	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E
+	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+	IFyTuYvjfUeWlkDUUUU
 X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 
-Hi, Ruoyao
+Hi, Tiezhu
 
-On 07/29/2022 04:42 PM, Xi Ruoyao wrote:
-> If GAS 2.40 and/or GCC 13 is used to build the kernel, the modules will
-> contain R_LARCH_B26, R_LARCH_PCALA_HI20, R_LARCH_PCALA_LO12,
-> R_LARCH_GOT_PC_HI20, and R_LARCH_GOT_PC_LO12 relocations.  Support them
-> in the module loader to allow a kernel built with latest toolchain
-> capable to load the modules.
+On 08/09/2022 10:52 AM, Tiezhu Yang wrote:
+> struct reg2i12_format is used to generate the instruction lu52id
+> in larch_insn_gen_lu52id(), according to the instruction format
+> of lu52id in LoongArch Reference Manual [1], the type of field
+> "immediate" should be "signed int" rather than "unsigned int".
 >
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->  arch/loongarch/include/asm/elf.h        | 37 +++++++++++
->  arch/loongarch/kernel/module-sections.c | 12 +++-
->  arch/loongarch/kernel/module.c          | 85 +++++++++++++++++++++++++
->  3 files changed, 132 insertions(+), 2 deletions(-)
+> There are similar problems in the other structs reg0i26_format,
+> reg1i20_format, reg1i21_format and reg2i16_format, fix them.
 >
-> diff --git a/arch/loongarch/include/asm/elf.h b/arch/loongarch/include/asm/elf.h
-> index 5f3ff4781fda..7af0cebf28d7 100644
-> --- a/arch/loongarch/include/asm/elf.h
-> +++ b/arch/loongarch/include/asm/elf.h
-> @@ -74,6 +74,43 @@
->  #define R_LARCH_SUB64				56
->  #define R_LARCH_GNU_VTINHERIT			57
->  #define R_LARCH_GNU_VTENTRY			58
-> +#define R_LARCH_B16				64
-> +#define R_LARCH_B21				65
-> +#define R_LARCH_B26				66
-> +#define R_LARCH_ABS_HI20			67
-> +#define R_LARCH_ABS_LO12			68
-> +#define R_LARCH_ABS64_LO20			69
-> +#define R_LARCH_ABS64_HI12			70
-ARCH_REL_TYPE_ABS should add the corresponding absolute relocation type
-with the new relocation type added. Maybe we should add R_LARCH_ABS* in
-arch/loongarch/vdso/Makefile?
+> [1] https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#_lu12i_w_lu32i_d_lu52i_d
+>
+> Fixes: b738c106f735 ("LoongArch: Add other common headers")
+ >
+We may not be able to say "Fixes" here, because it is also correct to
+treat each field of the instruction as an "unsinged int" type (signed
+or not has no effect on the machine instruction stream, but it does
+affect the programmer).
+
+For example, when reg2i12_format.immediate is changed to "signed" type,
+the immediate judgment in is_stack_alloc_ins() can be simplified,
+
+static inline bool is_stack_alloc_ins(union loongarch_instruction *ip)
+{
+     /* addi.d $sp, $sp, -imm */
+     return ip->reg2i12_format.opcode == addid_op &&
+         ip->reg2i12_format.rj == LOONGARCH_GPR_SP &&
+         ip->reg2i12_format.rd == LOONGARCH_GPR_SP &&
+-        is_imm12_negative(ip->reg2i12_format.immediate);
++        (ip->reg2i12_format.immediate < 0;
+}
+
 
 Thanks,
 Youling
-
-> +#define R_LARCH_PCALA_HI20			71
-> +#define R_LARCH_PCALA_LO12			72
-> +#define R_LARCH_PCALA64_LO20			73
-> +#define R_LARCH_PCALA64_HI12			74
-> +#define R_LARCH_GOT_PC_HI20			75
-> +#define R_LARCH_GOT_PC_LO12			76
-> +#define R_LARCH_GOT64_PC_LO20			77
-> +#define R_LARCH_GOT64_PC_HI12			78
-> +#define R_LARCH_GOT_HI20			79
-> +#define R_LARCH_GOT_LO12			80
-> +#define R_LARCH_GOT64_LO20			81
-> +#define R_LARCH_GOT64_HI12			82
-> +#define R_LARCH_TLS_LE_HI20			83
-> +#define R_LARCH_TLS_LE_LO12			84
-> +#define R_LARCH_TLS_LE64_LO20			85
-> +#define R_LARCH_TLS_LE64_HI12			86
-> +#define R_LARCH_TLS_IE_PC_HI20			87
-> +#define R_LARCH_TLS_IE_PC_LO12			88
-> +#define R_LARCH_TLS_IE64_PC_LO20		89
-> +#define R_LARCH_TLS_IE64_PC_HI12		90
-> +#define R_LARCH_TLS_IE_HI20			91
-> +#define R_LARCH_TLS_IE_LO12			92
-> +#define R_LARCH_TLS_IE64_LO20			93
-> +#define R_LARCH_TLS_IE64_HI12			94
-> +#define R_LARCH_TLS_LD_PC_HI20			95
-> +#define R_LARCH_TLS_LD_HI20			96
-> +#define R_LARCH_TLS_GD_PC_HI20			97
-> +#define R_LARCH_TLS_GD_HI20			98
-> +#define R_LARCH_32_PCREL			99
-> +#define R_LARCH_RELAX				100
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/inst.h | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 >
->  #ifndef ELF_ARCH
->
-> diff --git a/arch/loongarch/kernel/module-sections.c b/arch/loongarch/kernel/module-sections.c
-> index 36a77771d18c..8c0e4ad048cc 100644
-> --- a/arch/loongarch/kernel/module-sections.c
-> +++ b/arch/loongarch/kernel/module-sections.c
-> @@ -76,12 +76,20 @@ static void count_max_entries(Elf_Rela *relas, int num,
->
->  	for (i = 0; i < num; i++) {
->  		type = ELF_R_TYPE(relas[i].r_info);
-> -		if (type == R_LARCH_SOP_PUSH_PLT_PCREL) {
-> +		switch (type) {
-> +		case R_LARCH_SOP_PUSH_PLT_PCREL:
-> +		case R_LARCH_B26:
->  			if (!duplicate_rela(relas, i))
->  				(*plts)++;
-> -		} else if (type == R_LARCH_SOP_PUSH_GPREL)
-> +			break;
-> +		case R_LARCH_SOP_PUSH_GPREL:
-> +		case R_LARCH_GOT_PC_HI20:
->  			if (!duplicate_rela(relas, i))
->  				(*gots)++;
-> +			break;
-> +		default:
-> +			/* Do nothing. */
-> +		}
->  	}
->  }
->
-> diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/module.c
-> index 3ac4fbb5f109..c7b40150e1f0 100644
-> --- a/arch/loongarch/kernel/module.c
-> +++ b/arch/loongarch/kernel/module.c
-> @@ -291,6 +291,86 @@ static int apply_r_larch_add_sub(struct module *mod, u32 *location, Elf_Addr v,
->  	}
->  }
->
-> +static int apply_r_larch_b26(struct module *mod, u32 *location, Elf_Addr v,
-> +			s64 *rela_stack, size_t *rela_stack_top, unsigned int type)
-> +{
-> +	ptrdiff_t offset = (void *)v - (void *)location;
-> +	union loongarch_instruction *insn = (union loongarch_instruction *)location;
-> +
-> +	if (offset >= SZ_128M)
-> +		v = module_emit_plt_entry(mod, v);
-> +
-> +	if (offset < -SZ_128M)
-> +		v = module_emit_plt_entry(mod, v);
-> +
-> +	offset = (void *)v - (void *)location;
-> +
-> +	if (offset & 3) {
-> +		pr_err("module %s: jump offset = 0x%llx unaligned! dangerous R_LARCH_B26 (%u) relocation\n",
-> +				mod->name, (long long)offset, type);
-> +		return -ENOEXEC;
-> +	}
-> +
-> +	if (!signed_imm_check(offset, 28)) {
-> +		pr_err("module %s: jump offset = 0x%llx overflow! dangerous R_LARCH_B26 (%u) relocation\n",
-> +				mod->name, (long long)offset, type);
-> +		return -ENOEXEC;
-> +	}
-> +
-> +	offset >>= 2;
-> +	insn->reg0i26_format.immediate_l = offset & 0xffff;
-> +	insn->reg0i26_format.immediate_h = (offset >> 16) & 0x3ff;
-> +	return 0;
-> +}
-> +
-> +static int apply_r_larch_pcala_hi20(struct module *mod, u32 *location,
-> +		Elf_Addr v, s64 *rela_stack, size_t *rela_stack_top,
-> +		unsigned int type)
-> +{
-> +	ptrdiff_t offset = (void *)((v + 0x800) & ~0xfff) -
-> +		(void *)((Elf_Addr)location & ~0xfff);
-> +	union loongarch_instruction *insn = (union loongarch_instruction *)location;
-> +
-> +	if (!signed_imm_check(offset, 32)) {
-> +		pr_err("module %s: PCALA offset = 0x%llx does not fit in 32-bit signed and is unsupported by kernel! dangerous %s (%u) relocation\n",
-> +				mod->name, (long long)offset, __func__, type);
-> +		return -ENOEXEC;
-> +	}
-> +
-> +	insn->reg1i20_format.immediate = (offset >> 12) & 0xfffff;
-> +	return 0;
-> +}
-> +
-> +static int apply_r_larch_got_pc_hi20(struct module *mod, u32 *location,
-> +		Elf_Addr v, s64 *rela_stack, size_t *rela_stack_top,
-> +		unsigned int type)
-> +{
-> +	Elf_Addr got = module_emit_got_entry(mod, v);
-> +
-> +	return apply_r_larch_pcala_hi20(mod, location, got, rela_stack,
-> +			rela_stack_top, type);
-> +}
-> +
-> +static int apply_r_larch_pcala_lo12(struct module *mod, u32 *location,
-> +		Elf_Addr v, s64 *rela_stack, size_t *rela_stack_top,
-> +		unsigned int type)
-> +{
-> +	union loongarch_instruction *insn = (union loongarch_instruction *)location;
-> +
-> +	insn->reg2i12_format.immediate = v & 0xfff;
-> +	return 0;
-> +}
-> +
-> +static int apply_r_larch_got_pc_lo12(struct module *mod, u32 *location,
-> +		Elf_Addr v, s64 *rela_stack, size_t *rela_stack_top,
-> +		unsigned int type)
-> +{
-> +	Elf_Addr got = module_emit_got_entry(mod, v);
-> +
-> +	return apply_r_larch_pcala_lo12(mod, location, got, rela_stack,
-> +			rela_stack_top, type);
-> +}
-> +
->  /*
->   * reloc_handlers_rela() - Apply a particular relocation to a module
->   * @mod: the module to apply the reloc to
-> @@ -321,6 +401,11 @@ static reloc_rela_handler reloc_rela_handlers[] = {
->  	[R_LARCH_SOP_SUB ... R_LARCH_SOP_IF_ELSE] 	     = apply_r_larch_sop,
->  	[R_LARCH_SOP_POP_32_S_10_5 ... R_LARCH_SOP_POP_32_U] = apply_r_larch_sop_imm_field,
->  	[R_LARCH_ADD32 ... R_LARCH_SUB64]		     = apply_r_larch_add_sub,
-> +	[R_LARCH_B26]					     = apply_r_larch_b26,
-> +	[R_LARCH_PCALA_HI20]				     = apply_r_larch_pcala_hi20,
-> +	[R_LARCH_PCALA_LO12]				     = apply_r_larch_pcala_lo12,
-> +	[R_LARCH_GOT_PC_HI20]				     = apply_r_larch_got_pc_hi20,
-> +	[R_LARCH_GOT_PC_LO12]				     = apply_r_larch_got_pc_lo12,
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+> index 7b07cbb..ff51481 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -53,35 +53,35 @@ enum reg2i16_op {
 >  };
 >
->  int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+>  struct reg0i26_format {
+> -	unsigned int immediate_h : 10;
+> -	unsigned int immediate_l : 16;
+> +	signed int immediate_h : 10;
+> +	signed int immediate_l : 16;
+>  	unsigned int opcode : 6;
+>  };
+>
+>  struct reg1i20_format {
+>  	unsigned int rd : 5;
+> -	unsigned int immediate : 20;
+> +	signed int immediate : 20;
+>  	unsigned int opcode : 7;
+>  };
+>
+>  struct reg1i21_format {
+> -	unsigned int immediate_h  : 5;
+> +	signed int immediate_h  : 5;
+>  	unsigned int rj : 5;
+> -	unsigned int immediate_l : 16;
+> +	signed int immediate_l : 16;
+>  	unsigned int opcode : 6;
+>  };
+>
+>  struct reg2i12_format {
+>  	unsigned int rd : 5;
+>  	unsigned int rj : 5;
+> -	unsigned int immediate : 12;
+> +	signed int immediate : 12;
+>  	unsigned int opcode : 10;
+>  };
+>
+>  struct reg2i16_format {
+>  	unsigned int rd : 5;
+>  	unsigned int rj : 5;
+> -	unsigned int immediate : 16;
+> +	signed int immediate : 16;
+>  	unsigned int opcode : 6;
+>  };
+>
 >
 
