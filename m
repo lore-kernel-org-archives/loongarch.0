@@ -1,21 +1,21 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9DF115A3
-	for <loongarch@lists.linux.dev>; Tue,  9 Aug 2022 03:56:37 +0000 (UTC)
-Received: from localhost.localdomain (unknown [111.9.175.10])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Ax+szx2vFi5rgKAA--.18728S3;
-	Tue, 09 Aug 2022 11:56:34 +0800 (CST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 541937A
+	for <loongarch@lists.linux.dev>; Tue,  9 Aug 2022 04:55:29 +0000 (UTC)
+Received: from [10.130.0.63] (unknown [113.200.148.30])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxIM+_6PFi3cUKAA--.34602S3;
+	Tue, 09 Aug 2022 12:55:28 +0800 (CST)
 Subject: Re: [RFC PATCH 3/5] LoongArch: Add BPF JIT support
 To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
  <chenhuacai@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
  Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev
 References: <1660013580-19053-1-git-send-email-yangtiezhu@loongson.cn>
  <1660013580-19053-4-git-send-email-yangtiezhu@loongson.cn>
-Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <2d5a385e-b126-34d7-bf5b-ce8f13e9501b@loongson.cn>
-Date: Tue, 9 Aug 2022 11:56:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+From: Qing Zhang <zhangqing@loongson.cn>
+Message-ID: <ab694f5c-10df-8c90-b8e5-a20368fb9b7d@loongson.cn>
+Date: Tue, 9 Aug 2022 12:55:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -23,33 +23,37 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 In-Reply-To: <1660013580-19053-4-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf9Ax+szx2vFi5rgKAA--.18728S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7uF4xZFyDKF43Wr13Wr18AFb_yoW8uw4xpF
-	4jyrn3Kr48Jr93JF93t3y5ur13Jrs3WrZagF1ayrZ7Ga15X3s5C34rKw1vyFWxGw18GF4v
-	q3Zayw1xW3Z8GaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkmb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
-	vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
-	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG
-	8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2rcTDUUUU
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf9DxIM+_6PFi3cUKAA--.34602S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxZr4UWFW8Wr1DJF1fCw4xCrg_yoWrCF4kp3
+	ZxKF4fGFyjq3W7tFn3Xryjvr98GwsagF4DWry7Jr48GryDZa4rGF1UKF1fGayDJrWkJr18
+	Zrn0krnFkr1Dt37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
+	bIxvr21lc2xSY4AK67AK6r45MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvj
+	DU0xZFpf9x0JUfcTPUUUUU=
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
-On 08/09/2022 10:52 AM, Tiezhu Yang wrote:
+Hi,
+Tiezhu
 
+On 2022/8/9 上午10:52, Tiezhu Yang wrote:
 > BPF programs are normally handled by a BPF interpreter, add BPF JIT
 > support for LoongArch to allow the kernel to generate native code
 > when a program is loaded into the kernel, this will significantly
 > speed-up processing of BPF programs.
->
+> 
 > Co-developed-by: Youling Tang <tangyouling@loongson.cn>
 > Signed-off-by: Youling Tang <tangyouling@loongson.cn>
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
@@ -63,47 +67,104 @@ On 08/09/2022 10:52 AM, Tiezhu Yang wrote:
 >   create mode 100644 arch/loongarch/net/Makefile
 >   create mode 100644 arch/loongarch/net/bpf_jit.c
 >   create mode 100644 arch/loongarch/net/bpf_jit.h
-[...]
-> +static inline void emit_ldbu(union loongarch_instruction *insn,
-> +			     enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
-> +{
-> +	insn->reg2i12_format.opcode = ldbu_op;
-> +	insn->reg2i12_format.immediate = imm;
-> +	insn->reg2i12_format.rd = rd;
-> +	insn->reg2i12_format.rj = rj;
-> +}
+> 
+> diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
 > +
-> +static inline void emit_ldhu(union loongarch_instruction *insn,
-> +			     enum loongarch_gpr rd, enum loongarch_gpr rj, int imm)
-> +{
-> +	insn->reg2i12_format.opcode = ldhu_op;
-> +	insn->reg2i12_format.immediate = imm;
-> +	insn->reg2i12_format.rd = rd;
-> +	insn->reg2i12_format.rj = rj;
-> +}
-> +
-Hi, Tiezhu,
-
-These emit_* functions are similar to each other. I'd suggest that
-using macro warpper them and keep them in 'inst.h'.
-
-One of ways like follows,
-
-#define DEF_EMIT_REG2I12_FORMAT(NAME,OP) \
-static inline void emit_##NAME(union loongarch_instruction *insn, \
-                  enum loongarch_gpr rd, enum loongarch_gpr rj, int imm) \
-{ \
-     insn->reg2i12_format.opcode = OP; \
-     insn->reg2i12_format.immediate = imm; \
-     insn->reg2i12_format.rd = rd; \
-     insn->reg2i12_format.rj = rj; \
-}
-
-DEF_EMIT_REG2I12_FORMAT(ldbu, ldbu_op)
-DEF_EMIT_REG2I12_FORMAT(ldhu, ldhu_op)
-...
 [...]
+> +/*
+> + * eBPF prog stack layout:
+> + *
+> + *                                        high
+> + * original $sp ------------> +-------------------------+ <--LOONGARCH_GPR_FP
+> + *                            |           $ra           |
+> + *                            +-------------------------+
+> + *                            |           $fp           |
+> + *                            +-------------------------+
+> + *                            |           $s0           |
+> + *                            +-------------------------+
+> + *                            |           $s1           |
+> + *                            +-------------------------+
+> + *                            |           $s2           |
+> + *                            +-------------------------+
+> + *                            |           $s3           |
+> + *                            +-------------------------+
+> + *                            |           $s4           |
+> + *                            +-------------------------+
+> + *                            |           $s5           |
+> + *                            +-------------------------+ <--BPF_REG_FP
+> + *                            |  prog->aux->stack_depth |
+> + *                            |        (optional)       |
+> + * current $sp -------------> +-------------------------+
+> + *                                        low
+> + */
+> +static void build_prologue(struct jit_ctx *ctx)
+> +{
+> +	int stack_adjust = 0, store_offset, bpf_stack_adjust;
+> +
+> +	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
+> +
+> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_RA */
+> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_FP */
+> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_S0 */
+> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_S1 */
+> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_S2 */
+> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_S3 */
+> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_S4 */
+> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_S5 */
+> +
+> +	stack_adjust = round_up(stack_adjust, 16);
+> +	stack_adjust += bpf_stack_adjust;
+
+Maybe get the size of stack_adjust can be combined together, and only 
+need one comment.
 
 Thanks,
-Jinyang
+Qing
+> +	/*
+> +	 * First instruction initializes the tail call count (TCC).
+> +	 * On tail call we skip this instruction, and the TCC is
+> +	 * passed in REG_TCC from the caller.
+> +	 */
+> +	emit_insn(ctx, addid, REG_TCC, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
+> +
+> +	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_adjust);
+> +
+> +	store_offset = stack_adjust - sizeof(long);
+> +	emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, store_offset);
+> +
+> +	store_offset -= sizeof(long);
+> +	emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, store_offset);
+> +
+> +	store_offset -= sizeof(long);
+> +	emit_insn(ctx, std, LOONGARCH_GPR_S0, LOONGARCH_GPR_SP, store_offset);
+> +
+> +	store_offset -= sizeof(long);
+> +	emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_SP, store_offset);
+> +
+> +	store_offset -= sizeof(long);
+> +	emit_insn(ctx, std, LOONGARCH_GPR_S2, LOONGARCH_GPR_SP, store_offset);
+> +
+> +	store_offset -= sizeof(long);
+> +	emit_insn(ctx, std, LOONGARCH_GPR_S3, LOONGARCH_GPR_SP, store_offset);
+> +
+> +	store_offset -= sizeof(long);
+> +	emit_insn(ctx, std, LOONGARCH_GPR_S4, LOONGARCH_GPR_SP, store_offset);
+> +
+> +	store_offset -= sizeof(long);
+> +	emit_insn(ctx, std, LOONGARCH_GPR_S5, LOONGARCH_GPR_SP, store_offset);
+> +
+> +	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_adjust);
+> +
+> +	if (bpf_stack_adjust)
+> +		emit_insn(ctx, addid, regmap[BPF_REG_FP], LOONGARCH_GPR_SP, bpf_stack_adjust);
+> +
+> +	/*
+> +	 * Program contains calls and tail calls, so REG_TCC need
+> +	 * to be saved across calls.
+> +	 */
+> +	if (seen_tail_call(ctx) && seen_call(ctx))
+> +		move_reg(ctx, TCC_SAVED, REG_TCC);
+> +
+> +	ctx->stack_size = stack_adjust;
+> +}
 
