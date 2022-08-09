@@ -1,170 +1,109 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 541937A
-	for <loongarch@lists.linux.dev>; Tue,  9 Aug 2022 04:55:29 +0000 (UTC)
-Received: from [10.130.0.63] (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxIM+_6PFi3cUKAA--.34602S3;
-	Tue, 09 Aug 2022 12:55:28 +0800 (CST)
-Subject: Re: [RFC PATCH 3/5] LoongArch: Add BPF JIT support
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev
-References: <1660013580-19053-1-git-send-email-yangtiezhu@loongson.cn>
- <1660013580-19053-4-git-send-email-yangtiezhu@loongson.cn>
-From: Qing Zhang <zhangqing@loongson.cn>
-Message-ID: <ab694f5c-10df-8c90-b8e5-a20368fb9b7d@loongson.cn>
-Date: Tue, 9 Aug 2022 12:55:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD37B23D0
+	for <loongarch@lists.linux.dev>; Tue,  9 Aug 2022 08:53:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD84C433C1;
+	Tue,  9 Aug 2022 08:53:03 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Dinh Nguyen <dinguyen@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Feiyang Chen <chenfeiyang@loongson.cn>
+Subject: [PATCH V9 0/4] mm/sparse-vmemmap: Generalise helpers and enable for LoongArch
+Date: Tue,  9 Aug 2022 16:52:49 +0800
+Message-Id: <20220809085253.2916982-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1660013580-19053-4-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf9DxIM+_6PFi3cUKAA--.34602S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZr4UWFW8Wr1DJF1fCw4xCrg_yoWrCF4kp3
-	ZxKF4fGFyjq3W7tFn3Xryjvr98GwsagF4DWry7Jr48GryDZa4rGF1UKF1fGayDJrWkJr18
-	Zrn0krnFkr1Dt37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
-	bIxvr21lc2xSY4AK67AK6r45MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
-	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvj
-	DU0xZFpf9x0JUfcTPUUUUU=
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
-Hi,
-Tiezhu
+This series is in order to enable sparse-vmemmap for LoongArch. But
+LoongArch cannot use generic helpers directly because MIPS&LoongArch
+need to call pgd_init()/pud_init()/pmd_init() when populating page
+tables. So we adjust the prototypes of p?d_init() to make generic
+helpers can call them, then enable sparse-vmemmap with generic helpers,
+and to be further, generalise vmemmap_populate_hugepages() for ARM64,
+X86 and LoongArch.
 
-On 2022/8/9 上午10:52, Tiezhu Yang wrote:
-> BPF programs are normally handled by a BPF interpreter, add BPF JIT
-> support for LoongArch to allow the kernel to generate native code
-> when a program is loaded into the kernel, this will significantly
-> speed-up processing of BPF programs.
-> 
-> Co-developed-by: Youling Tang <tangyouling@loongson.cn>
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->   arch/loongarch/Kbuild        |    1 +
->   arch/loongarch/Kconfig       |    1 +
->   arch/loongarch/net/Makefile  |    7 +
->   arch/loongarch/net/bpf_jit.c | 1119 ++++++++++++++++++++++++++++++++++++++++++
->   arch/loongarch/net/bpf_jit.h |  946 +++++++++++++++++++++++++++++++++++
->   5 files changed, 2074 insertions(+)
->   create mode 100644 arch/loongarch/net/Makefile
->   create mode 100644 arch/loongarch/net/bpf_jit.c
->   create mode 100644 arch/loongarch/net/bpf_jit.h
-> 
-> diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
-> +
-[...]
-> +/*
-> + * eBPF prog stack layout:
-> + *
-> + *                                        high
-> + * original $sp ------------> +-------------------------+ <--LOONGARCH_GPR_FP
-> + *                            |           $ra           |
-> + *                            +-------------------------+
-> + *                            |           $fp           |
-> + *                            +-------------------------+
-> + *                            |           $s0           |
-> + *                            +-------------------------+
-> + *                            |           $s1           |
-> + *                            +-------------------------+
-> + *                            |           $s2           |
-> + *                            +-------------------------+
-> + *                            |           $s3           |
-> + *                            +-------------------------+
-> + *                            |           $s4           |
-> + *                            +-------------------------+
-> + *                            |           $s5           |
-> + *                            +-------------------------+ <--BPF_REG_FP
-> + *                            |  prog->aux->stack_depth |
-> + *                            |        (optional)       |
-> + * current $sp -------------> +-------------------------+
-> + *                                        low
-> + */
-> +static void build_prologue(struct jit_ctx *ctx)
-> +{
-> +	int stack_adjust = 0, store_offset, bpf_stack_adjust;
-> +
-> +	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
-> +
-> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_RA */
-> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_FP */
-> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_S0 */
-> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_S1 */
-> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_S2 */
-> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_S3 */
-> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_S4 */
-> +	stack_adjust += sizeof(long); /* LOONGARCH_GPR_S5 */
-> +
-> +	stack_adjust = round_up(stack_adjust, 16);
-> +	stack_adjust += bpf_stack_adjust;
+V1 -> V2:
+Split ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP to a separate patch.
 
-Maybe get the size of stack_adjust can be combined together, and only 
-need one comment.
+V2 -> V3:
+1, Change the Signed-off-by order of author and committer;
+2, Update commit message about the build error on LoongArch.
 
-Thanks,
-Qing
-> +	/*
-> +	 * First instruction initializes the tail call count (TCC).
-> +	 * On tail call we skip this instruction, and the TCC is
-> +	 * passed in REG_TCC from the caller.
-> +	 */
-> +	emit_insn(ctx, addid, REG_TCC, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
-> +
-> +	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_adjust);
-> +
-> +	store_offset = stack_adjust - sizeof(long);
-> +	emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, store_offset);
-> +
-> +	store_offset -= sizeof(long);
-> +	emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, store_offset);
-> +
-> +	store_offset -= sizeof(long);
-> +	emit_insn(ctx, std, LOONGARCH_GPR_S0, LOONGARCH_GPR_SP, store_offset);
-> +
-> +	store_offset -= sizeof(long);
-> +	emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_SP, store_offset);
-> +
-> +	store_offset -= sizeof(long);
-> +	emit_insn(ctx, std, LOONGARCH_GPR_S2, LOONGARCH_GPR_SP, store_offset);
-> +
-> +	store_offset -= sizeof(long);
-> +	emit_insn(ctx, std, LOONGARCH_GPR_S3, LOONGARCH_GPR_SP, store_offset);
-> +
-> +	store_offset -= sizeof(long);
-> +	emit_insn(ctx, std, LOONGARCH_GPR_S4, LOONGARCH_GPR_SP, store_offset);
-> +
-> +	store_offset -= sizeof(long);
-> +	emit_insn(ctx, std, LOONGARCH_GPR_S5, LOONGARCH_GPR_SP, store_offset);
-> +
-> +	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_adjust);
-> +
-> +	if (bpf_stack_adjust)
-> +		emit_insn(ctx, addid, regmap[BPF_REG_FP], LOONGARCH_GPR_SP, bpf_stack_adjust);
-> +
-> +	/*
-> +	 * Program contains calls and tail calls, so REG_TCC need
-> +	 * to be saved across calls.
-> +	 */
-> +	if (seen_tail_call(ctx) && seen_call(ctx))
-> +		move_reg(ctx, TCC_SAVED, REG_TCC);
-> +
-> +	ctx->stack_size = stack_adjust;
-> +}
+V3 -> V4:
+Change pmd to pmdp for ARM64 for consistency.
+
+V4 -> V5:
+Add a detailed comment for no-fallback in the altmap case.
+
+V5 -> V6:
+1, Fix build error for NIOS2;
+2, Fix build error for allnoconfig;
+3, Update comment for no-fallback in the altmap case.
+
+V6 -> V7:
+Fix build warnings of "no previous prototype".
+
+V7 -> V8:
+Fix build error for MIPS pud_init().
+
+V8 -> V9:
+Remove redundant #include to avoid build error with latest upstream
+kernel.
+
+Huacai Chen and Feiyang Chen(4):
+ MIPS&LoongArch&NIOS2: Adjust prototypes of p?d_init().
+ LoongArch: Add sparse memory vmemmap support.
+ mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages().
+ LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP.
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn> 
+---
+ arch/arm64/mm/mmu.c                    | 53 ++++++--------------
+ arch/loongarch/Kconfig                 |  2 +
+ arch/loongarch/include/asm/pgalloc.h   | 13 +----
+ arch/loongarch/include/asm/pgtable.h   | 13 +++--
+ arch/loongarch/include/asm/sparsemem.h |  8 +++
+ arch/loongarch/kernel/numa.c           |  4 +-
+ arch/loongarch/mm/init.c               | 44 +++++++++++++++-
+ arch/loongarch/mm/pgtable.c            | 23 +++++----
+ arch/mips/include/asm/pgalloc.h        |  8 +--
+ arch/mips/include/asm/pgtable-64.h     |  8 +--
+ arch/mips/kvm/mmu.c                    |  3 +-
+ arch/mips/mm/pgtable-32.c              | 10 ++--
+ arch/mips/mm/pgtable-64.c              | 18 ++++---
+ arch/mips/mm/pgtable.c                 |  2 +-
+ arch/x86/mm/init_64.c                  | 92 ++++++++++++----------------------
+ include/linux/mm.h                     |  8 +++
+ include/linux/page-flags.h             |  1 +
+ mm/sparse-vmemmap.c                    | 64 +++++++++++++++++++++++
+ 18 files changed, 222 insertions(+), 152 deletions(-)
+--
+2.27.0
 
