@@ -1,64 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455FA5CBC
-	for <loongarch@lists.linux.dev>; Wed, 10 Aug 2022 10:03:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE708C43470
-	for <loongarch@lists.linux.dev>; Wed, 10 Aug 2022 10:03:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1660125836;
-	bh=dg9tOiy7zdVcMZUUUjXEjvecZdLTu1yBVce8bK+j3SE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nmqEXvDLaibuuW7LgUYyLhmlyjJt42NzS2xt+AhOgjhSoFmUUkrkuA1ZMe3ET2g3N
-	 0yEAOX0tCcEHwuCrnmgFtUVFk04LyfXaCRXBg3THryITi3UluEUiZXgWvvvVTC+s3t
-	 KooiR8x1RD71HzWJvfnCizfdDf0xcmYkZdxPYmhJIACYys0Z23GZiplXtT/w+8D1oJ
-	 appfmc1OM1AqwCh0QJumHTx4t4wci6XYhq32lRRbOGSsZkBedjCbHMQSou18NYfThf
-	 oop2r3SiTjXf0jUTubqYj4MxqzjbO1tbHHT3tiBwYLRdHLG0oZGdJ8PwU3W/AtY5HB
-	 6OPcUZ1u5bf6g==
-Received: by mail-vs1-f53.google.com with SMTP id v128so14575958vsb.10
-        for <loongarch@lists.linux.dev>; Wed, 10 Aug 2022 03:03:55 -0700 (PDT)
-X-Gm-Message-State: ACgBeo1vsiA6K2pyjkyfP87utm3OcqemPiVLHUz2/C/cXPb6gvqMf9Dr
-	Qu3ElH4KSMvXwHGsygD5waZMa8I3YpTbHJydjbs=
-X-Google-Smtp-Source: AA6agR5ILJMqDCXhymJ1EInz17uhJo8/SdfaZV/kiRbKKE4Db/XF0BzNbmmuvKcZfKgQPcc/Z63sdPu+G8DedD8Mkuc=
-X-Received: by 2002:a05:6102:390d:b0:387:78b9:bf9c with SMTP id
- e13-20020a056102390d00b0038778b9bf9cmr11373977vsu.43.1660125834950; Wed, 10
- Aug 2022 03:03:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F825C92
+	for <loongarch@lists.linux.dev>; Wed, 10 Aug 2022 10:31:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3A9CC433D7;
+	Wed, 10 Aug 2022 10:31:49 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Fix the !CONFIG_SMP build for irqchip drivers
+Date: Wed, 10 Aug 2022 18:31:56 +0800
+Message-Id: <20220810103156.1214996-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1660117275-576-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1660117275-576-1-git-send-email-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 10 Aug 2022 18:03:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H46c+6+Fg7kGzUHJs4D02N3BRD7n1TwvNMae0aN++QX3Q@mail.gmail.com>
-Message-ID: <CAAhV-H46c+6+Fg7kGzUHJs4D02N3BRD7n1TwvNMae0aN++QX3Q@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] LoongArch: Add I14 description in documentation
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, 
-	Yanteng Si <siyanteng@loongson.cn>, loongarch@lists.linux.dev, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Queued for loongarch-next, thanks.
+1, Guard get_ipi_irq() in CONFIG_SMP;
+2, Define cpu_logical_map() for the EIOINTC driver;
+3, Make eiointc_set_irq_affinity() return early for !CONFIG_SMP.
 
-Huacai
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/smp.h       | 8 ++++++++
+ arch/loongarch/kernel/irq.c            | 2 ++
+ drivers/irqchip/irq-loongson-eiointc.c | 5 +++++
+ 3 files changed, 15 insertions(+)
 
-On Wed, Aug 10, 2022 at 3:41 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> v3: Split into two patches suggested by Yanteng, thank you.
->
-> Tiezhu Yang (2):
->   docs/LoongArch: Add I14 description
->   docs/zh_CN/LoongArch: Add I14 description
->
->  Documentation/loongarch/introduction.rst                    | 2 +-
->  Documentation/translations/zh_CN/loongarch/introduction.rst | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> --
-> 2.1.0
->
->
+diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
+index 71189b28bfb2..9ee5a309df5b 100644
+--- a/arch/loongarch/include/asm/smp.h
++++ b/arch/loongarch/include/asm/smp.h
+@@ -12,6 +12,8 @@
+ #include <linux/threads.h>
+ #include <linux/cpumask.h>
+ 
++#ifdef CONFIG_SMP
++
+ extern int smp_num_siblings;
+ extern int num_processors;
+ extern int disabled_cpus;
+@@ -112,4 +114,10 @@ static inline void __cpu_die(unsigned int cpu)
+ extern void play_dead(void);
+ #endif
+ 
++#else /* !CONFIG_SMP */
++
++#define cpu_logical_map(cpu)  0
++
++#endif
++
+ #endif /* __ASM_SMP_H */
+diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
+index 1ba19c76563e..d83623bc59fa 100644
+--- a/arch/loongarch/kernel/irq.c
++++ b/arch/loongarch/kernel/irq.c
+@@ -87,6 +87,7 @@ static void __init init_vec_parent_group(void)
+ 	acpi_table_parse(ACPI_SIG_MCFG, early_pci_mcfg_parse);
+ }
+ 
++#ifdef CONFIG_SMP
+ static int __init get_ipi_irq(void)
+ {
+ 	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
+@@ -96,6 +97,7 @@ static int __init get_ipi_irq(void)
+ 
+ 	return -EINVAL;
+ }
++#endif
+ 
+ void __init init_IRQ(void)
+ {
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index 80d8ca6f2d46..17f94f3c11af 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -18,6 +18,8 @@
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ 
++#include <asm/smp.h>
++
+ #define EIOINTC_REG_NODEMAP	0x14a0
+ #define EIOINTC_REG_IPMAP	0x14c0
+ #define EIOINTC_REG_ENABLE	0x1600
+@@ -96,6 +98,9 @@ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *af
+ 	struct cpumask intersect_affinity;
+ 	struct eiointc_priv *priv = d->domain->host_data;
+ 
++	if (!IS_ENABLED(CONFIG_SMP))
++		return -EPERM;
++
+ 	raw_spin_lock_irqsave(&affinity_lock, flags);
+ 
+ 	cpumask_and(&intersect_affinity, affinity, cpu_online_mask);
+-- 
+2.31.1
+
