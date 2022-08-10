@@ -1,68 +1,64 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B988A17CE
-	for <loongarch@lists.linux.dev>; Wed, 10 Aug 2022 07:41:19 +0000 (UTC)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxryMbYfNi4A8MAA--.6843S3;
-	Wed, 10 Aug 2022 15:41:16 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Alex Shi <alexs@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>
-Cc: loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org
-Subject: [PATCH v3 1/2] docs/LoongArch: Add I14 description
-Date: Wed, 10 Aug 2022 15:41:14 +0800
-Message-Id: <1660117275-576-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1660117275-576-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1660117275-576-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf9DxryMbYfNi4A8MAA--.6843S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw4xJw1DCr45Cr4xJr1xAFb_yoWDWwcE9w
-	1aqFs8Ww1aqr409w4jgF18uFyUJF4FkF1xAr4DJr1fGa43K39rAF4qgrnxZr18GrZrurn8
-	GFyUXryUAF92kjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbh8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
-	0Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF4l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
-	IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
-	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
-	Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUesqWUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455FA5CBC
+	for <loongarch@lists.linux.dev>; Wed, 10 Aug 2022 10:03:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE708C43470
+	for <loongarch@lists.linux.dev>; Wed, 10 Aug 2022 10:03:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1660125836;
+	bh=dg9tOiy7zdVcMZUUUjXEjvecZdLTu1yBVce8bK+j3SE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nmqEXvDLaibuuW7LgUYyLhmlyjJt42NzS2xt+AhOgjhSoFmUUkrkuA1ZMe3ET2g3N
+	 0yEAOX0tCcEHwuCrnmgFtUVFk04LyfXaCRXBg3THryITi3UluEUiZXgWvvvVTC+s3t
+	 KooiR8x1RD71HzWJvfnCizfdDf0xcmYkZdxPYmhJIACYys0Z23GZiplXtT/w+8D1oJ
+	 appfmc1OM1AqwCh0QJumHTx4t4wci6XYhq32lRRbOGSsZkBedjCbHMQSou18NYfThf
+	 oop2r3SiTjXf0jUTubqYj4MxqzjbO1tbHHT3tiBwYLRdHLG0oZGdJ8PwU3W/AtY5HB
+	 6OPcUZ1u5bf6g==
+Received: by mail-vs1-f53.google.com with SMTP id v128so14575958vsb.10
+        for <loongarch@lists.linux.dev>; Wed, 10 Aug 2022 03:03:55 -0700 (PDT)
+X-Gm-Message-State: ACgBeo1vsiA6K2pyjkyfP87utm3OcqemPiVLHUz2/C/cXPb6gvqMf9Dr
+	Qu3ElH4KSMvXwHGsygD5waZMa8I3YpTbHJydjbs=
+X-Google-Smtp-Source: AA6agR5ILJMqDCXhymJ1EInz17uhJo8/SdfaZV/kiRbKKE4Db/XF0BzNbmmuvKcZfKgQPcc/Z63sdPu+G8DedD8Mkuc=
+X-Received: by 2002:a05:6102:390d:b0:387:78b9:bf9c with SMTP id
+ e13-20020a056102390d00b0038778b9bf9cmr11373977vsu.43.1660125834950; Wed, 10
+ Aug 2022 03:03:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <1660117275-576-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1660117275-576-1-git-send-email-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 10 Aug 2022 18:03:42 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H46c+6+Fg7kGzUHJs4D02N3BRD7n1TwvNMae0aN++QX3Q@mail.gmail.com>
+Message-ID: <CAAhV-H46c+6+Fg7kGzUHJs4D02N3BRD7n1TwvNMae0aN++QX3Q@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] LoongArch: Add I14 description in documentation
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, 
+	Yanteng Si <siyanteng@loongson.cn>, loongarch@lists.linux.dev, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-I14 is also immediate operand, like I8/I12/I16/I21/I26,
-add it in the English documentation.
+Queued for loongarch-next, thanks.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- Documentation/loongarch/introduction.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Huacai
 
-diff --git a/Documentation/loongarch/introduction.rst b/Documentation/loongarch/introduction.rst
-index 216b3f3..6c9160c 100644
---- a/Documentation/loongarch/introduction.rst
-+++ b/Documentation/loongarch/introduction.rst
-@@ -221,7 +221,7 @@ I26         Opcode + I26L + I26H
- =========== ==========================
- 
- Rd is the destination register operand, while Rj, Rk and Ra ("a" stands for
--"additional") are the source register operands. I8/I12/I16/I21/I26 are
-+"additional") are the source register operands. I8/I12/I14/I16/I21/I26 are
- immediate operands of respective width. The longer I21 and I26 are stored
- in separate higher and lower parts in the instruction word, denoted by the "L"
- and "H" suffixes.
--- 
-2.1.0
-
+On Wed, Aug 10, 2022 at 3:41 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+> v3: Split into two patches suggested by Yanteng, thank you.
+>
+> Tiezhu Yang (2):
+>   docs/LoongArch: Add I14 description
+>   docs/zh_CN/LoongArch: Add I14 description
+>
+>  Documentation/loongarch/introduction.rst                    | 2 +-
+>  Documentation/translations/zh_CN/loongarch/introduction.rst | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> --
+> 2.1.0
+>
+>
