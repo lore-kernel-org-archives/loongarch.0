@@ -1,111 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F825C92
-	for <loongarch@lists.linux.dev>; Wed, 10 Aug 2022 10:31:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3A9CC433D7;
-	Wed, 10 Aug 2022 10:31:49 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Marc Zyngier <maz@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Fix the !CONFIG_SMP build for irqchip drivers
-Date: Wed, 10 Aug 2022 18:31:56 +0800
-Message-Id: <20220810103156.1214996-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A346517D3
+	for <loongarch@lists.linux.dev>; Wed, 10 Aug 2022 11:01:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E761C433C1;
+	Wed, 10 Aug 2022 11:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1660129277;
+	bh=ftGtdYTnbszhVMwv2b+bcQbGmM5dxZNBf1hKIGP5B4o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=E4JevIsueSKK+QyR4BaGulFtqyzT2F5U4Qz6DbxV8BED5dlCQoYG2yk/RuxEOGVB1
+	 HtC6vCMpUNGAIn8v4hsrHq3HWaDWqFUbh9owzMP2YQPDQu61raN5ZnImwbaLzYo9bh
+	 K5Lcg7294Sq2E4C2Zg+Jax1vUcUqnHO3x6DKgm8AluC3CEoOrX+8rvrKA7rJlRmZD0
+	 qO6eFY59xIQwObf9nzRDNZEdEOc2ma/Y8f7q1KMObyN5aSBMVet4s1WuR46uXbgPzp
+	 Mzt8QTzeMZCw6H6WxcOypsDI46Kr5rqVDfjosxQnmKVFl5aVGHfAHrINvvaMiEqb0y
+	 uqebiUbG4jQCw==
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1oLjSc-00273X-UW;
+	Wed, 10 Aug 2022 12:01:15 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Wed, 10 Aug 2022 12:01:14 +0100
+From: Marc Zyngier <maz@kernel.org>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>, loongarch@lists.linux.dev, Xuefeng Li
+ <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, Xuerui Wang
+ <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] LoongArch: Fix the !CONFIG_SMP build for irqchip drivers
+In-Reply-To: <20220810103156.1214996-1-chenhuacai@loongson.cn>
+References: <20220810103156.1214996-1-chenhuacai@loongson.cn>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <f92fc4f34784217206b53a3709538d5c@kernel.org>
+X-Sender: maz@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: chenhuacai@loongson.cn, chenhuacai@kernel.org, tglx@linutronix.de, loongarch@lists.linux.dev, lixuefeng@loongson.cn, guoren@kernel.org, kernel@xen0n.name, jiaxun.yang@flygoat.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-1, Guard get_ipi_irq() in CONFIG_SMP;
-2, Define cpu_logical_map() for the EIOINTC driver;
-3, Make eiointc_set_irq_affinity() return early for !CONFIG_SMP.
+On 2022-08-10 11:31, Huacai Chen wrote:
+> 1, Guard get_ipi_irq() in CONFIG_SMP;
+> 2, Define cpu_logical_map() for the EIOINTC driver;
+> 3, Make eiointc_set_irq_affinity() return early for !CONFIG_SMP.
+> 
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/smp.h       | 8 ++++++++
- arch/loongarch/kernel/irq.c            | 2 ++
- drivers/irqchip/irq-loongson-eiointc.c | 5 +++++
- 3 files changed, 15 insertions(+)
+Frankly, the real question is why do you even bother? As far as
+I can tell, LoongArch has no UP system.
 
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index 71189b28bfb2..9ee5a309df5b 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -12,6 +12,8 @@
- #include <linux/threads.h>
- #include <linux/cpumask.h>
- 
-+#ifdef CONFIG_SMP
-+
- extern int smp_num_siblings;
- extern int num_processors;
- extern int disabled_cpus;
-@@ -112,4 +114,10 @@ static inline void __cpu_die(unsigned int cpu)
- extern void play_dead(void);
- #endif
- 
-+#else /* !CONFIG_SMP */
-+
-+#define cpu_logical_map(cpu)  0
-+
-+#endif
-+
- #endif /* __ASM_SMP_H */
-diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
-index 1ba19c76563e..d83623bc59fa 100644
---- a/arch/loongarch/kernel/irq.c
-+++ b/arch/loongarch/kernel/irq.c
-@@ -87,6 +87,7 @@ static void __init init_vec_parent_group(void)
- 	acpi_table_parse(ACPI_SIG_MCFG, early_pci_mcfg_parse);
- }
- 
-+#ifdef CONFIG_SMP
- static int __init get_ipi_irq(void)
- {
- 	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
-@@ -96,6 +97,7 @@ static int __init get_ipi_irq(void)
- 
- 	return -EINVAL;
- }
-+#endif
- 
- void __init init_IRQ(void)
- {
-diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index 80d8ca6f2d46..17f94f3c11af 100644
---- a/drivers/irqchip/irq-loongson-eiointc.c
-+++ b/drivers/irqchip/irq-loongson-eiointc.c
-@@ -18,6 +18,8 @@
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
- 
-+#include <asm/smp.h>
-+
- #define EIOINTC_REG_NODEMAP	0x14a0
- #define EIOINTC_REG_IPMAP	0x14c0
- #define EIOINTC_REG_ENABLE	0x1600
-@@ -96,6 +98,9 @@ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *af
- 	struct cpumask intersect_affinity;
- 	struct eiointc_priv *priv = d->domain->host_data;
- 
-+	if (!IS_ENABLED(CONFIG_SMP))
-+		return -EPERM;
-+
- 	raw_spin_lock_irqsave(&affinity_lock, flags);
- 
- 	cpumask_and(&intersect_affinity, affinity, cpu_online_mask);
+arm64 crossed that bridge a long time ago, and we never looked
+back, because these systems hardly exist.
+
+I'd rather you simply have a CONFIG_SMP always set to 'y', and
+be done with it forever.
+
+         M.
 -- 
-2.31.1
-
+Jazz is not dead. It just smells funny...
