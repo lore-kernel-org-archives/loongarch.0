@@ -1,193 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E3B399
-	for <loongarch@lists.linux.dev>; Fri, 12 Aug 2022 07:24:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E167C433D7;
-	Fri, 12 Aug 2022 07:24:39 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v5.20
-Date: Fri, 12 Aug 2022 15:24:03 +0800
-Message-Id: <20220812072403.3075518-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9E2B62E
+	for <loongarch@lists.linux.dev>; Fri, 12 Aug 2022 08:24:32 +0000 (UTC)
+Received: from localhost.localdomain (unknown [111.9.175.10])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxOsw1DvZiYhcPAA--.11643S3;
+	Fri, 12 Aug 2022 16:24:23 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Jump to the link address before enable PG
+To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+References: <20220811130301.2431582-1-chenhuacai@loongson.cn>
+Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
+ Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <bc52a604-828b-6d19-4f9c-df17cd180f34@loongson.cn>
+Date: Fri, 12 Aug 2022 16:24:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220811130301.2431582-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf9AxOsw1DvZiYhcPAA--.11643S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7KrW8Ar1kZF1UKry5Ar1DKFg_yoW8Zryfpr
+	Z8Gw4kWw4kGF9rJ3W3Aw1j9rWrZan2y3Z8WFsrtrWfCws0qFnIy340vwnxXF9xt3yfKr42
+	9F1qqFWIka1UA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+	42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+	4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU56c_DUUUUU==
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-The following changes since commit 3d7cb6b04c3f3115719235cc6866b10326de34cd:
+On 08/11/2022 09:03 PM, Huacai Chen wrote:
 
-  Linux 5.19 (2022-07-31 14:03:01 -0700)
+> The kernel entry point of both boot-cpu and nonboot-cpu may be physical
+> address from BootLoader (in DA mode or identity-mapping PG mode). So we
+> should jump to the link address before PG enabled (DA is disabled at the
+> same time) and just after DMW configured.
+>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>   arch/loongarch/kernel/head.S | 19 +++++++++++--------
+>   1 file changed, 11 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> index 7062cdf0e33e..c60eb66793e3 100644
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -21,6 +21,12 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
+>   	csrwr		t0, LOONGARCH_CSR_DMWIN0
+>   	li.d		t0, CSR_DMW1_INIT	# CA, PLV0, 0x9000 xxxx xxxx xxxx
+>   	csrwr		t0, LOONGARCH_CSR_DMWIN1
+> +
+> +	/* We might not get launched at the address the kernel is linked to,
+> +	   so we jump there.  */
+> +	la.abs		t0, 0f
+> +	jr		t0
+> +0:
+Hi, Huacai,
 
-are available in the Git repository at:
+I care about the real address these codes is running.  We know that the
+kernel codes is placed at the location 0x9000000000200000 because the
+firmware, or the compressed kernel puts it in this location. However,
+there are other ways to put it to others location. E.g. during kdump,
+when the capture kernel reboot, (here the capture kernel is the same
+as the standard kernel), its address may be 0x9000000004200000, and
+the physical address is 0x4200000. If only using la.abs which is a constant
+after compiled is unreliable. The real address might look like as follows
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-5.20
+   /* Get High */
+   csrrd $t0,LOONGARCH_CSR_DMWIN1
+   srli.d t0, t0, 59
+   slli.d t0, t0, 59
+   /* Get Low */
+0:
+   pcaddi t1, (1f-0b)/4
+   srli.d t1, t1, 48
+   slli.d t1, t1, 48
+   /* Combine */
+   or t0, t0, t1
+   /* Jump */
+   jr t0
+1:
 
-for you to fetch changes up to 715355922212a3be8bfe5a94b5707a045ac6bf00:
+I admit that this thoughts may seem a little strange. It is not fully
+considered, so if wrong, or should not be considered at present,
+please ignore.
 
-  docs/zh_CN/LoongArch: Add I14 description (2022-08-12 13:10:11 +0800)
+Thanks,
+Jinyang
 
-----------------------------------------------------------------
-LoongArch changes for v5.20
-
-1, Optimise getcpu() with vDSO;
-2, PCI enablement on top of pci & irqchip changes;
-3, Stack unwinder and stack trace support;
-4, Some bug fixes and build error fixes;
-5, Update the default config file.
-
-Note: There is a conflict in arch/loongarch/include/asm/irq.h but can
-be fixed simply (just remove both lines from the irqchip tree and the
-loongarch tree).
-----------------------------------------------------------------
-Huacai Chen (8):
-      Merge 'irq/loongarch', 'pci/ctrl/loongson' and 'pci/header-cleanup-immutable'
-      LoongArch: cpuinfo: Fix a warning for CONFIG_CPUMASK_OFFSTACK
-      LoongArch: Adjust arch/loongarch/Kconfig
-      LoongArch: Jump to the link address before enable PG
-      LoongArch: Parse MADT to get multi-processor information
-      LoongArch: Add PCI controller support
-      LoongArch: Add vDSO syscall __vdso_getcpu()
-      LoongArch: Update Loongson-3 default config file
-
-Qing Zhang (5):
-      LoongArch: Requires __force attributes for any casts
-      LoongArch: Add guess unwinder support
-      LoongArch: Add prologue unwinder support
-      LoongArch: Add STACKTRACE support
-      LoongArch: Add USER_STACKTRACE support
-
-Tiezhu Yang (2):
-      docs/LoongArch: Add I14 description
-      docs/zh_CN/LoongArch: Add I14 description
-
-Yang Li (1):
-      LoongArch: Fix unsigned comparison with less than zero
-
- Documentation/loongarch/introduction.rst           |   2 +-
- .../translations/zh_CN/loongarch/introduction.rst  |   4 +-
- arch/alpha/include/asm/dma.h                       |   9 -
- arch/alpha/include/asm/pci.h                       |   6 -
- arch/arc/include/asm/dma.h                         |   5 -
- arch/arm/include/asm/dma.h                         |   6 -
- arch/arm/include/asm/pci.h                         |   5 -
- arch/arm64/include/asm/pci.h                       |  18 +-
- arch/csky/include/asm/pci.h                        |  23 +-
- arch/ia64/include/asm/dma.h                        |   2 -
- arch/ia64/include/asm/pci.h                        |   6 -
- arch/loongarch/Kconfig                             |  19 +-
- arch/loongarch/Kconfig.debug                       |  29 ++
- arch/loongarch/Makefile                            |   2 +
- arch/loongarch/configs/loongson3_defconfig         |  34 +-
- arch/loongarch/include/asm/acpi.h                  | 142 ++++++++
- arch/loongarch/include/asm/bootinfo.h              |   2 +-
- arch/loongarch/include/asm/dma.h                   |  11 +
- arch/loongarch/include/asm/inst.h                  |  52 +++
- arch/loongarch/include/asm/irq.h                   |  45 +--
- arch/loongarch/include/asm/page.h                  |   2 -
- arch/loongarch/include/asm/pci.h                   |  25 ++
- arch/loongarch/include/asm/processor.h             |   9 +
- arch/loongarch/include/asm/stacktrace.h            |  20 ++
- arch/loongarch/include/asm/switch_to.h             |  14 +-
- arch/loongarch/include/asm/uaccess.h               |   4 +-
- arch/loongarch/include/asm/unwind.h                |  42 +++
- arch/loongarch/include/asm/vdso.h                  |   1 +
- arch/loongarch/include/asm/vdso/vdso.h             |  15 +-
- arch/loongarch/kernel/Makefile                     |   4 +
- arch/loongarch/kernel/acpi.c                       | 103 ++----
- arch/loongarch/kernel/asm-offsets.c                |   2 +
- arch/loongarch/kernel/head.S                       |  19 +-
- arch/loongarch/kernel/irq.c                        |  58 ++-
- arch/loongarch/kernel/proc.c                       |   2 +-
- arch/loongarch/kernel/process.c                    |  90 ++++-
- arch/loongarch/kernel/smp.c                        |   5 +-
- arch/loongarch/kernel/stacktrace.c                 |  78 ++++
- arch/loongarch/kernel/switch.S                     |   2 +
- arch/loongarch/kernel/time.c                       |  16 +-
- arch/loongarch/kernel/traps.c                      |  24 +-
- arch/loongarch/kernel/unwind_guess.c               |  67 ++++
- arch/loongarch/kernel/unwind_prologue.c            | 176 +++++++++
- arch/loongarch/kernel/vdso.c                       |  25 +-
- arch/loongarch/pci/acpi.c                          | 175 +++++++++
- arch/loongarch/pci/pci.c                           | 101 ++++++
- arch/loongarch/vdso/Makefile                       |   2 +-
- arch/loongarch/vdso/vdso.lds.S                     |   1 +
- arch/loongarch/vdso/vgetcpu.c                      |  43 +++
- arch/m68k/include/asm/dma.h                        |   6 -
- arch/m68k/include/asm/pci.h                        |   2 -
- arch/microblaze/include/asm/dma.h                  |   6 -
- arch/mips/include/asm/dma.h                        |   8 -
- arch/mips/include/asm/mach-loongson64/irq.h        |   3 +-
- arch/mips/include/asm/pci.h                        |   6 -
- arch/parisc/include/asm/dma.h                      |   6 -
- arch/parisc/include/asm/pci.h                      |   5 -
- arch/powerpc/include/asm/dma.h                     |   6 -
- arch/powerpc/include/asm/pci.h                     |   1 -
- arch/riscv/include/asm/pci.h                       |  31 +-
- arch/s390/include/asm/dma.h                        |   6 -
- arch/s390/include/asm/pci.h                        |   1 -
- arch/sh/include/asm/dma.h                          |   6 -
- arch/sh/include/asm/pci.h                          |   6 -
- arch/sparc/include/asm/dma.h                       |   8 -
- arch/sparc/include/asm/pci.h                       |   9 -
- arch/um/include/asm/pci.h                          |  24 +-
- arch/x86/include/asm/dma.h                         |   8 -
- arch/x86/include/asm/pci.h                         |   3 -
- arch/x86/kernel/cpu/cyrix.c                        |   1 +
- arch/xtensa/include/asm/dma.h                      |   7 -
- arch/xtensa/include/asm/pci.h                      |   3 -
- drivers/acpi/bus.c                                 |   3 +
- drivers/acpi/irq.c                                 |  58 ++-
- drivers/acpi/pci_mcfg.c                            |  13 +
- drivers/comedi/drivers/comedi_isadma.c             |   2 +-
- drivers/irqchip/Kconfig                            |  32 +-
- drivers/irqchip/Makefile                           |   3 +
- drivers/irqchip/irq-gic-v3.c                       |  18 +-
- drivers/irqchip/irq-gic.c                          |  18 +-
- drivers/irqchip/irq-loongarch-cpu.c                | 148 ++++++++
- drivers/irqchip/irq-loongson-eiointc.c             | 395 +++++++++++++++++++++
- drivers/irqchip/irq-loongson-liointc.c             | 203 +++++++----
- drivers/irqchip/irq-loongson-pch-lpc.c             | 205 +++++++++++
- drivers/irqchip/irq-loongson-pch-msi.c             | 127 ++++---
- drivers/irqchip/irq-loongson-pch-pic.c             | 177 +++++++--
- drivers/pci/controller/Kconfig                     |   2 +-
- drivers/pci/controller/pci-loongson.c              | 206 ++++++++---
- drivers/pci/pci.c                                  |   2 +
- drivers/pci/quirks.c                               |   4 +-
- drivers/pnp/resource.c                             |   5 +-
- include/asm-generic/pci.h                          |  39 +-
- include/asm-generic/pci_iomap.h                    |   2 +
- include/linux/acpi.h                               |   4 +-
- include/linux/cpuhotplug.h                         |   1 +
- include/linux/irq.h                                |   1 +
- include/linux/isa-dma.h                            |  14 +
- include/linux/pci-ecam.h                           |   1 +
- kernel/irq/generic-chip.c                          |   2 +-
- sound/core/isadma.c                                |   2 +-
- 100 files changed, 2775 insertions(+), 621 deletions(-)
- create mode 100644 arch/loongarch/include/asm/dma.h
- create mode 100644 arch/loongarch/include/asm/pci.h
- create mode 100644 arch/loongarch/include/asm/unwind.h
- create mode 100644 arch/loongarch/kernel/stacktrace.c
- create mode 100644 arch/loongarch/kernel/unwind_guess.c
- create mode 100644 arch/loongarch/kernel/unwind_prologue.c
- create mode 100644 arch/loongarch/pci/acpi.c
- create mode 100644 arch/loongarch/pci/pci.c
- create mode 100644 arch/loongarch/vdso/vgetcpu.c
- create mode 100644 drivers/irqchip/irq-loongarch-cpu.c
- create mode 100644 drivers/irqchip/irq-loongson-eiointc.c
- create mode 100644 drivers/irqchip/irq-loongson-pch-lpc.c
- create mode 100644 include/linux/isa-dma.h
