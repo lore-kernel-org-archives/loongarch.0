@@ -1,53 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0852597
-	for <loongarch@lists.linux.dev>; Fri, 12 Aug 2022 16:59:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2707CC433C1;
-	Fri, 12 Aug 2022 16:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C047363
+	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 02:58:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2805C433C1
+	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 02:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1660323568;
-	bh=/NbibNSjBiaNNE/GRC4vNh2B7UucCEwDLgHVEeyPnk0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=rREFGGC59XPoE602SOSfiudmVGO2DVBY1fKEOW642+pP9e72DzmWxETPrH2JRgbTr
-	 R5efR+ftQxaZ5pAosUrcIgZqEQODKo6YAG03YQSYuingeX9h//T3itH9o99W8qTDUX
-	 RoMwkXjLIt3SANRuAb8/nnhTsOsFc+/4bSCm+Tq2t6ezBFqL+9FEw+bZbPJn2zzWTi
-	 MHxrnWfjviOXmWfYKrNrmi/RQHUvJF/FQLNVnImENjpGk7FbuW/74iOgPGf96dzoj2
-	 dshj4hyYNZOuVtyzi/uuSPK9AudJyzvbLwIWLxiQVK+ukbypwDiJcCtDr18Zlops55
-	 LUY908bIqCQpw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 14A4AC43141;
-	Fri, 12 Aug 2022 16:59:28 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch changes for v5.20
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20220812072403.3075518-1-chenhuacai@loongson.cn>
-References: <20220812072403.3075518-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-arch.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220812072403.3075518-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-5.20
-X-PR-Tracked-Commit-Id: 715355922212a3be8bfe5a94b5707a045ac6bf00
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 999324f58c41262f5b64d04b7ac54e8f79b019fd
-Message-Id: <166032356807.14629.13071109960950383291.pr-tracker-bot@kernel.org>
-Date: Fri, 12 Aug 2022 16:59:28 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	s=k20201202; t=1660359501;
+	bh=S+ptBClyQvqTPLvZgFl34sQO5hs8nfDxmaVbp3iNtt4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=t6U8vYJgigU1+NGns1yuARmMiNXoz6yZtGEGP4mIeLgRgbvnzEQzPzx8BjVg28RV+
+	 qRlAdCx+vhUq1TFEgGpfD0fsOYq+cZKH7AUmnZAfmrukOuzyTM7R5A/9C03t5AUDs0
+	 EnJl3K7THiQ12KGeEYUJaXQyRw/bqnyTz2SySQmX7D5BEbDvTOQG+wH708ZnbCe6yR
+	 eYkjTCkcjoPqxUGiCFNHz1j+h0/YLQ/p7tFI1jMk0V4lnT//Xx48FYSBfX+sat7mwi
+	 1XwLKea28vJtOCyPwqBL8eSE5UTixonnKBpmaOAlo3/v4swrxp5KX/Wds34jipjeNY
+	 +roDmhKgNcSfw==
+Received: by mail-vs1-f54.google.com with SMTP id s129so2505149vsb.11
+        for <loongarch@lists.linux.dev>; Fri, 12 Aug 2022 19:58:20 -0700 (PDT)
+X-Gm-Message-State: ACgBeo3b7pDs9KN1C0RW/CAVhBAXdygHwdnoKJc56DR7Z+xDGd3XUR+h
+	UoiBbZyULAITJMpE+iqxFSLkLhHrR4B8AIPAhro=
+X-Google-Smtp-Source: AA6agR621z8UmCKNvKEH07aD82KjSz+RoZz5UfOHXhJ6RkIgDmig1UHkK8QImoc4Y3clYfyPqUPL5qq5HxlH25yg1Jk=
+X-Received: by 2002:a67:e288:0:b0:388:b41d:1654 with SMTP id
+ g8-20020a67e288000000b00388b41d1654mr3044272vsf.70.1660359499868; Fri, 12 Aug
+ 2022 19:58:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <20220812072403.3075518-1-chenhuacai@loongson.cn> <CAHk-=wgopYkkZxSTCZGP783868VjoyGALMRst_nceA3aH-TW6Q@mail.gmail.com>
+In-Reply-To: <CAHk-=wgopYkkZxSTCZGP783868VjoyGALMRst_nceA3aH-TW6Q@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 13 Aug 2022 10:58:07 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5k-9L1tM4yu4uoNAEB=cadWw3x4OqnJ1eVbncAkMDjfw@mail.gmail.com>
+Message-ID: <CAAhV-H5k-9L1tM4yu4uoNAEB=cadWw3x4OqnJ1eVbncAkMDjfw@mail.gmail.com>
+Subject: Re: [GIT PULL] LoongArch changes for v5.20
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
+	linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Fri, 12 Aug 2022 15:24:03 +0800:
+Hi, Linus,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-5.20
+On Sat, Aug 13, 2022 at 12:47 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Fri, Aug 12, 2022 at 12:24 AM Huacai Chen <chenhuacai@loongson.cn> wrote:
+> >
+> > Note: There is a conflict in arch/loongarch/include/asm/irq.h but can
+> > be fixed simply (just remove both lines from the irqchip tree and the
+> > loongarch tree).
+>
+> Hmm. I don't see any conflict, so I assume there is something else in
+> linux-next that I haven't yet gotten.
+Yes, the conflict will happen when merge the irqchip-fixes tree.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/999324f58c41262f5b64d04b7ac54e8f79b019fd
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Huacai
+>
+>              Linus
+>
