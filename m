@@ -1,113 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1956B7EC
-	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 09:06:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA5B4C43142
-	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 09:06:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0188F7EC
+	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 10:10:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3D13C43470
+	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 10:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1660381611;
-	bh=IE71pC3gJVMYiIDCJlQv5lk5MCb5GFtiPfcKFxGxJCA=;
+	s=k20201202; t=1660385425;
+	bh=yb/5LXqoZZzmpGNBqhIVKpHwuwqwgIA2gf1bBZJGznY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Igg7WX9TFQbWMKTIXdog9DeE8Lh4G0chFA+s5gsR3wCiixdtiCavfPTWoJBC69CdG
-	 hmAYvi+xngkR0IWzaqKd2rJEX+TAHLbDlEGaQvAOe8M0jzmvPsV7ONxp48nt00x7Q+
-	 /jg12h9qopKoqpXn+I6QJzneoiJCtR+d7upX8CG3wPtVnixxbQvVXRT0mEDJCkbm64
-	 hRoLjrE69l3HPWjZOdQH2Ggcn+T59u+JeBDoL5jcrH01F2LxPjK4bgNKlaQOvcU6Oo
-	 Lgb25wY6wKxZvwJA/E+GDq2jGUL6T9LH8Japu589nNs1ZKE3NmM7BS5HgLJMybVLbH
-	 LKBuLcy7+fkXw==
-Received: by mail-oi1-f175.google.com with SMTP id w197so3601337oie.5
-        for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 02:06:51 -0700 (PDT)
-X-Gm-Message-State: ACgBeo3zNLw2sz90tkmU13VPTDS7eHDr3JBgThZ7lV8+UuWqDowL+m6q
-	QNwEKqoRfTlR7C887NNC3k6Ue79U0h4l6jS2pdo=
-X-Google-Smtp-Source: AA6agR5OYg7fwlhu7JgYZ/mi/oE1LdDX1hVxq6qSWkkpHJmVRIpAgnyBXIoROAz8FlxXqZz4JnQlfDYTUYh8X0INdg4=
-X-Received: by 2002:a05:6808:2028:b0:344:246d:2bed with SMTP id
- q40-20020a056808202800b00344246d2bedmr938060oiw.19.1660381610789; Sat, 13 Aug
- 2022 02:06:50 -0700 (PDT)
+	b=T4MFOl75LMqEPDWISWvdFNKnGWjGBWDPXGzoIZZk9SjG03XpYPavWrgLeIWyQSWf2
+	 jehy4oQ9DgxxrrEUQiYsQ3stQ28keaujjWs7vLhFl5aR198BZORUcUqrdUE6cSlwuj
+	 d3k8ZUlvc5j2VrE4L5IJeq4dC7+C4VlKT2r/maEjiJuaSS3KYzAgzvHV0EEPtXxQPm
+	 RJZzsOpf3jCZ03SdpcJ5sBoMbiTjIh2kDhbpnBoL+YbmyUA5rpNKufSgAzlMhqJogo
+	 LRu/ZkmB7c8ufnxJFEES12Ci5nijsLZPyKK6PC300oYcl3BOIknbw9sxPoc8aN3q/N
+	 Rg8VxpHxagOWA==
+Received: by mail-vs1-f42.google.com with SMTP id o123so3006401vsc.3
+        for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 03:10:25 -0700 (PDT)
+X-Gm-Message-State: ACgBeo0wohXqH+7aVjbFsr1Anmho8jIYB1/uHhYQszlRYMX9G5UQKejP
+	wQNpwnEgKvl/0WuhlJDejlSiKwXw5Qn0QPlctOA=
+X-Google-Smtp-Source: AA6agR7+LEMn1J84OUXieECx/ogKyxqW2FxhQeGmUvpommgInAwOZ86WyoSkEUZq/+hgFcgp7t9E32RPMbqHwAAmh0U=
+X-Received: by 2002:a05:6102:390d:b0:387:78b9:bf9c with SMTP id
+ e13-20020a056102390d00b0038778b9bf9cmr3412044vsu.43.1660385424543; Sat, 13
+ Aug 2022 03:10:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220813085839.58414-1-guoren@kernel.org>
-In-Reply-To: <20220813085839.58414-1-guoren@kernel.org>
-From: Guo Ren <guoren@kernel.org>
-Date: Sat, 13 Aug 2022 17:06:38 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTR61ojv4wmZUxZ_Kv+uKN+FjnKjBrwWL_sFVzH_Fe+W8g@mail.gmail.com>
-Message-ID: <CAJF2gTR61ojv4wmZUxZ_Kv+uKN+FjnKjBrwWL_sFVzH_Fe+W8g@mail.gmail.com>
+References: <20220813085839.58414-1-guoren@kernel.org> <CAJF2gTR61ojv4wmZUxZ_Kv+uKN+FjnKjBrwWL_sFVzH_Fe+W8g@mail.gmail.com>
+In-Reply-To: <CAJF2gTR61ojv4wmZUxZ_Kv+uKN+FjnKjBrwWL_sFVzH_Fe+W8g@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 13 Aug 2022 18:10:11 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5cQFasHe7K9_tk2y_te4w1uJgfMNoMRv3RrL+yZkG20g@mail.gmail.com>
+Message-ID: <CAAhV-H5cQFasHe7K9_tk2y_te4w1uJgfMNoMRv3RrL+yZkG20g@mail.gmail.com>
 Subject: Re: [PATCH] loongarch: irq: Move to generic_handle_arch_irq
-To: chenhuacai@kernel.org, kernel@xen0n.name, zhangqing@loongson.cn, 
-	arnd@arndb.de, linux-arch@vger.kernel.org, mark.rutland@arm.com, 
-	frederic@kernel.org
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	jiaxun.yang@flygoat.com, yangtiezhu@loongson.cn, 
-	Guo Ren <guoren@linux.alibaba.com>
+To: Guo Ren <guoren@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Qing Zhang <zhangqing@loongson.cn>, 
+	Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, frederic@kernel.org, loongarch@lists.linux.dev, 
+	LKML <linux-kernel@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Guo Ren <guoren@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Abandon this patch because of the wrong commit log. Please see
-"[RESEND PATCH] loongarch: irq: Move to generic_handle_arch_irq".
+Hi, Ren,
 
-On Sat, Aug 13, 2022 at 4:58 PM <guoren@kernel.org> wrote:
+Thank you for your patch, but it seems wrong to me.
+
+Please see c9b12b59e2ea4c3c7cedec7efb071b6 ("s390/entry: fix duplicate
+tracking of irq nesting level"). ct_irq_enter() is named
+rcu_irq_enter() in older kernels. And irq_enter = rcu_irq_enter +
+irq_enter_rcu  (for the latest kernel, irq_enter = ct_irq_enter +
+irq_enter_rcu). If we use generic entry, irqentry_enter() has already
+call rcu_irq_enter (or ct_irq_enter in the latest kernel), so the arch
+code doesn't need to call it again. This has nothing to do with
+HAVE_CONTEXT_TRACKING_USER, just avoid duplicated calls to
+ct_irq_enter.
+
+Huacai
+
+On Sat, Aug 13, 2022 at 5:06 PM Guo Ren <guoren@kernel.org> wrote:
 >
-> From: Guo Ren <guoren@linux.alibaba.com>
+> Abandon this patch because of the wrong commit log. Please see
+> "[RESEND PATCH] loongarch: irq: Move to generic_handle_arch_irq".
 >
-> No reason to keep custom handle_loongarch_irq, and move to the generic
-> one. No reason to keep custom handle_loongarch_irq, and move to the
-> generic one. The patch also the fixup HAVE_CONTEXT_TRACKING_USER
-> feature, because handle_loongarch_irq missed ct_irq_enter/exit.
+> On Sat, Aug 13, 2022 at 4:58 PM <guoren@kernel.org> wrote:
+> >
+> > From: Guo Ren <guoren@linux.alibaba.com>
+> >
+> > No reason to keep custom handle_loongarch_irq, and move to the generic
+> > one. No reason to keep custom handle_loongarch_irq, and move to the
+> > generic one. The patch also the fixup HAVE_CONTEXT_TRACKING_USER
+> > feature, because handle_loongarch_irq missed ct_irq_enter/exit.
+> >
+> > Fixes: 0603839b18f4 ("LoongArch: Add exception/interrupt handling")
+> > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> > Signed-off-by: Guo Ren <guoren@kernel.org>
+> > ---
+> >  arch/loongarch/kernel/traps.c | 15 ++-------------
+> >  1 file changed, 2 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+> > index aa1c95aaf595..06211640ba1f 100644
+> > --- a/arch/loongarch/kernel/traps.c
+> > +++ b/arch/loongarch/kernel/traps.c
+> > @@ -588,17 +588,6 @@ asmlinkage void cache_parity_error(void)
+> >         panic("Can't handle the cache error!");
+> >  }
+> >
+> > -asmlinkage void noinstr handle_loongarch_irq(struct pt_regs *regs)
+> > -{
+> > -       struct pt_regs *old_regs;
+> > -
+> > -       irq_enter_rcu();
+> > -       old_regs = set_irq_regs(regs);
+> > -       handle_arch_irq(regs);
+> > -       set_irq_regs(old_regs);
+> > -       irq_exit_rcu();
+> > -}
+> > -
+> >  asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
+> >  {
+> >         register int cpu;
+> > @@ -608,7 +597,7 @@ asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
+> >         cpu = smp_processor_id();
+> >
+> >         if (on_irq_stack(cpu, sp))
+> > -               handle_loongarch_irq(regs);
+> > +               generic_handle_arch_irq(regs);
+> >         else {
+> >                 stack = per_cpu(irq_stack, cpu) + IRQ_STACK_START;
+> >
+> > @@ -619,7 +608,7 @@ asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
+> >                 "move   $s0, $sp                \n" /* Preserve sp */
+> >                 "move   $sp, %[stk]             \n" /* Switch stack */
+> >                 "move   $a0, %[regs]            \n"
+> > -               "bl     handle_loongarch_irq    \n"
+> > +               "bl     generic_handle_arch_irq \n"
+> >                 "move   $sp, $s0                \n" /* Restore sp */
+> >                 : /* No outputs */
+> >                 : [stk] "r" (stack), [regs] "r" (regs)
+> > --
+> > 2.36.1
+> >
 >
-> Fixes: 0603839b18f4 ("LoongArch: Add exception/interrupt handling")
-> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> Signed-off-by: Guo Ren <guoren@kernel.org>
-> ---
->  arch/loongarch/kernel/traps.c | 15 ++-------------
->  1 file changed, 2 insertions(+), 13 deletions(-)
 >
-> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-> index aa1c95aaf595..06211640ba1f 100644
-> --- a/arch/loongarch/kernel/traps.c
-> +++ b/arch/loongarch/kernel/traps.c
-> @@ -588,17 +588,6 @@ asmlinkage void cache_parity_error(void)
->         panic("Can't handle the cache error!");
->  }
->
-> -asmlinkage void noinstr handle_loongarch_irq(struct pt_regs *regs)
-> -{
-> -       struct pt_regs *old_regs;
-> -
-> -       irq_enter_rcu();
-> -       old_regs = set_irq_regs(regs);
-> -       handle_arch_irq(regs);
-> -       set_irq_regs(old_regs);
-> -       irq_exit_rcu();
-> -}
-> -
->  asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
->  {
->         register int cpu;
-> @@ -608,7 +597,7 @@ asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
->         cpu = smp_processor_id();
->
->         if (on_irq_stack(cpu, sp))
-> -               handle_loongarch_irq(regs);
-> +               generic_handle_arch_irq(regs);
->         else {
->                 stack = per_cpu(irq_stack, cpu) + IRQ_STACK_START;
->
-> @@ -619,7 +608,7 @@ asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
->                 "move   $s0, $sp                \n" /* Preserve sp */
->                 "move   $sp, %[stk]             \n" /* Switch stack */
->                 "move   $a0, %[regs]            \n"
-> -               "bl     handle_loongarch_irq    \n"
-> +               "bl     generic_handle_arch_irq \n"
->                 "move   $sp, $s0                \n" /* Restore sp */
->                 : /* No outputs */
->                 : [stk] "r" (stack), [regs] "r" (regs)
 > --
-> 2.36.1
+> Best Regards
+>  Guo Ren
 >
-
-
--- 
-Best Regards
- Guo Ren
