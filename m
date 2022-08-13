@@ -1,127 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45A87EC
-	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 10:21:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A7F9C433B5
-	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 10:21:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1660386114;
-	bh=8Mk3RJjjnai4xEyfOPqUx8aeaeCw+jfczPmniW6YVEk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=G2FcdVmTNxJw6HPn+2yTz+T90K8KtXGHsZGeDviC8yFLrUw+IGuamj5h7xCzHsJwg
-	 zzLNjxrJowYoRF+0R+uHW02CsNgO9oMwLNGnHvTJbOurmtkPvxgb2pzo8UR3HVqRy1
-	 lWSIAbLlycpiC2Mm1PA6tOS+e5LExZVUhpZEkjFLacLqTK5HFtTTDb1eClfx/kLxjE
-	 /YY3P31U4f9l+MJkDfT6ww1MUT6r0lGXFXHHPcYlfG5zJ0chENsTPXG3FSxdoN+AnK
-	 NDGzWUPCI4N1MR+IG1r67qP43J6ZX2dcrnNPehAiH2s86VanCeAvnYBOSsriC2lz7W
-	 nQ1c+7Zea1/ow==
-Received: by mail-oo1-f43.google.com with SMTP id r22-20020a4abf16000000b00448a8a2044aso542588oop.12
-        for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 03:21:54 -0700 (PDT)
-X-Gm-Message-State: ACgBeo3N0Up+mdIs50Scsc8cbnpKeywHw7+zCZpA8ysmrX41v1n2uICA
-	r5SUkveRPfHON9CQe8GIOPJ4lgFsBms5obuWIIo=
-X-Google-Smtp-Source: AA6agR7DUluguBPJMq34KI5ruUq1/ZCwetUZsAXeP9n6UFtG2hCguSEVgMQvRB7a937yJ4+SvWPauygFkFWYNNnhVdQ=
-X-Received: by 2002:a4a:3c7:0:b0:440:aef9:639d with SMTP id
- 190-20020a4a03c7000000b00440aef9639dmr2403950ooi.48.1660386113546; Sat, 13
- Aug 2022 03:21:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6F928F5;
+	Sat, 13 Aug 2022 22:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660428042; x=1691964042;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=J2stkkYmPik2bQMds1PPTKQFWYY4K6w3/+pjsawBn4I=;
+  b=HJqLse1iEyD+5ycn8xeBxUfR3BBfNyCk6Xh7fHhgFL1iIplNCsxI6FZo
+   Fj1sNlfHXvd0fivsBEeIDGDpRyUpocibZ0UdSTHNmy4oyRBadNISbeboY
+   nPzfoG0zOcSUn3/n+StXVaXEb0RzwGCs23jgzzsaQqHqC7ChEgHW9qq4r
+   RJ05ApwRCbTPIgwiYukZhXIm2Z9INJEvXDJ5uL/VvpZ5EzvyyxKjAoWN7
+   BTSDE7fyHRDiSOo544h5bB6M7OvgH9gH5hjCrJdOz9HubEhrhzRBCayVd
+   MJhNAe36NHXfCZw5EQf1vZjbtmzJKJbghjdcZVZ0DV0ul/Ot5tah1ocYn
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10437"; a="292575221"
+X-IronPort-AV: E=Sophos;i="5.93,236,1654585200"; 
+   d="scan'208";a="292575221"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2022 15:00:42 -0700
+X-IronPort-AV: E=Sophos;i="5.93,236,1654585200"; 
+   d="scan'208";a="635047705"
+Received: from tsaiyinl-mobl1.amr.corp.intel.com (HELO localhost) ([10.209.125.19])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2022 15:00:40 -0700
+From: ira.weiny@intel.com
+To: Andy Whitcroft <apw@canonical.com>,
+	Joe Perches <joe@perches.com>
+Cc: Ira Weiny <ira.weiny@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Fabio M . De Francesco" <fmdefrancesco@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	x86@kernel.org,
+	linux-xtensa@linux-xtensa.org,
+	keyrings@vger.kernel.org,
+	linux-ide@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux1394-devel@lists.sourceforge.net,
+	dri-devel@lists.freedesktop.org,
+	dm-devel@redhat.com,
+	linux-raid@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	netdev@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-scsi@vger.kernel.org,
+	virtualization@lists.linux-foundation.org,
+	linux-fsdevel@vger.kernel.org,
+	kgdb-bugreport@lists.sourceforge.net,
+	iommu@lists.linux.dev,
+	bpf@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [PATCH] checkpatch: Add kmap and kmap_atomic to the deprecated list
+Date: Sat, 13 Aug 2022 15:00:34 -0700
+Message-Id: <20220813220034.806698-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220813085839.58414-1-guoren@kernel.org> <CAJF2gTR61ojv4wmZUxZ_Kv+uKN+FjnKjBrwWL_sFVzH_Fe+W8g@mail.gmail.com>
-In-Reply-To: <CAJF2gTR61ojv4wmZUxZ_Kv+uKN+FjnKjBrwWL_sFVzH_Fe+W8g@mail.gmail.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Sat, 13 Aug 2022 18:21:40 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTT5n=YdNVHfgr3JqW_pyNJ+4-5uw0i9AMT0DLU2CzBjtg@mail.gmail.com>
-Message-ID: <CAJF2gTT5n=YdNVHfgr3JqW_pyNJ+4-5uw0i9AMT0DLU2CzBjtg@mail.gmail.com>
-Subject: Re: [PATCH] loongarch: irq: Move to generic_handle_arch_irq
-To: chenhuacai@kernel.org, kernel@xen0n.name, zhangqing@loongson.cn, 
-	arnd@arndb.de, linux-arch@vger.kernel.org, mark.rutland@arm.com, 
-	frederic@kernel.org
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	jiaxun.yang@flygoat.com, yangtiezhu@loongson.cn, 
-	Guo Ren <guoren@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Sorry for the noise, loongarch selects GENERIC_ENTRY, and it has
-called irqentry_enter(). So calling generic_handle_arch_irq would
-cause duplicate ct_irq_enter calling.
+From: Ira Weiny <ira.weiny@intel.com>
 
-All abandoned, and I would have a look at generic_handle_arch_irq.
+kmap() and kmap_atomic() are being deprecated in favor of
+kmap_local_page().
 
-On Sat, Aug 13, 2022 at 5:06 PM Guo Ren <guoren@kernel.org> wrote:
->
-> Abandon this patch because of the wrong commit log. Please see
-> "[RESEND PATCH] loongarch: irq: Move to generic_handle_arch_irq".
->
-> On Sat, Aug 13, 2022 at 4:58 PM <guoren@kernel.org> wrote:
-> >
-> > From: Guo Ren <guoren@linux.alibaba.com>
-> >
-> > No reason to keep custom handle_loongarch_irq, and move to the generic
-> > one. No reason to keep custom handle_loongarch_irq, and move to the
-> > generic one. The patch also the fixup HAVE_CONTEXT_TRACKING_USER
-> > feature, because handle_loongarch_irq missed ct_irq_enter/exit.
-> >
-> > Fixes: 0603839b18f4 ("LoongArch: Add exception/interrupt handling")
-> > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> > Signed-off-by: Guo Ren <guoren@kernel.org>
-> > ---
-> >  arch/loongarch/kernel/traps.c | 15 ++-------------
-> >  1 file changed, 2 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-> > index aa1c95aaf595..06211640ba1f 100644
-> > --- a/arch/loongarch/kernel/traps.c
-> > +++ b/arch/loongarch/kernel/traps.c
-> > @@ -588,17 +588,6 @@ asmlinkage void cache_parity_error(void)
-> >         panic("Can't handle the cache error!");
-> >  }
-> >
-> > -asmlinkage void noinstr handle_loongarch_irq(struct pt_regs *regs)
-> > -{
-> > -       struct pt_regs *old_regs;
-> > -
-> > -       irq_enter_rcu();
-> > -       old_regs = set_irq_regs(regs);
-> > -       handle_arch_irq(regs);
-> > -       set_irq_regs(old_regs);
-> > -       irq_exit_rcu();
-> > -}
-> > -
-> >  asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
-> >  {
-> >         register int cpu;
-> > @@ -608,7 +597,7 @@ asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
-> >         cpu = smp_processor_id();
-> >
-> >         if (on_irq_stack(cpu, sp))
-> > -               handle_loongarch_irq(regs);
-> > +               generic_handle_arch_irq(regs);
-> >         else {
-> >                 stack = per_cpu(irq_stack, cpu) + IRQ_STACK_START;
-> >
-> > @@ -619,7 +608,7 @@ asmlinkage void noinstr do_vint(struct pt_regs *regs, unsigned long sp)
-> >                 "move   $s0, $sp                \n" /* Preserve sp */
-> >                 "move   $sp, %[stk]             \n" /* Switch stack */
-> >                 "move   $a0, %[regs]            \n"
-> > -               "bl     handle_loongarch_irq    \n"
-> > +               "bl     generic_handle_arch_irq \n"
-> >                 "move   $sp, $s0                \n" /* Restore sp */
-> >                 : /* No outputs */
-> >                 : [stk] "r" (stack), [regs] "r" (regs)
-> > --
-> > 2.36.1
-> >
->
->
-> --
-> Best Regards
->  Guo Ren
+There are two main problems with kmap(): (1) It comes with an overhead
+as mapping space is restricted and protected by a global lock for
+synchronization and (2) it also requires global TLB invalidation when
+the kmap’s pool wraps and it might block when the mapping space is fully
+utilized until a slot becomes available.
 
+kmap_local_page() is safe from any context and is therefore redundant
+with kmap_atomic() with the exception of any pagefault or preemption
+disable requirements.  However, using kmap_atomic() for these side
+effects makes the code less clear.  So any requirement for pagefault or
+preemption disable should be made explicitly.
 
+With kmap_local_page() the mappings are per thread, CPU local, can take
+page faults, and can be called from any context (including interrupts).
+It is faster than kmap() in kernels with HIGHMEM enabled. Furthermore,
+the tasks can be preempted and, when they are scheduled to run again,
+the kernel virtual addresses are restored.
 
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Suggested-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+---
+Suggested by credits.
+	Thomas: Idea to keep from growing more kmap/kmap_atomic calls.
+	Fabio: Stole some of his boiler plate commit message.
+
+Notes on tree-wide conversions:
+
+I've cc'ed mailing lists for subsystems which currently contains either kmap()
+or kmap_atomic() calls.  As some of you already know Fabio and I have been
+working through converting kmap() calls to kmap_local_page().  But there is a
+lot more work to be done.  Help from the community is always welcome,
+especially with kmap_atomic() conversions.  To keep from stepping on each
+others toes I've created a spreadsheet of the current calls[1].  Please let me
+or Fabio know if you plan on tacking one of the conversions so we can mark it
+off the list.
+
+[1] https://docs.google.com/spreadsheets/d/1i_ckZ10p90bH_CkxD2bYNi05S2Qz84E2OFPv8zq__0w/edit#gid=1679714357
+
+---
+ scripts/checkpatch.pl | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 79e759aac543..9ff219e0a9d5 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -807,6 +807,8 @@ our %deprecated_apis = (
+ 	"rcu_barrier_sched"			=> "rcu_barrier",
+ 	"get_state_synchronize_sched"		=> "get_state_synchronize_rcu",
+ 	"cond_synchronize_sched"		=> "cond_synchronize_rcu",
++	"kmap"					=> "kmap_local_page",
++	"kmap_atomic"				=> "kmap_local_page",
+ );
+ 
+ #Create a search pattern for all these strings to speed up a loop below
+
+base-commit: 4a9350597aff50bbd0f4b80ccf49d2e02d1111f5
 -- 
-Best Regards
- Guo Ren
+2.35.3
+
