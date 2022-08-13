@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237797EC
-	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 08:58:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1197EC433C1;
-	Sat, 13 Aug 2022 08:58:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FD67EC
+	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 09:02:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAC33C433C1;
+	Sat, 13 Aug 2022 09:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1660381128;
-	bh=7UQQ3CRY5Ej+wdDOB0JwjVu6I3EZNoWfRdUeeh+Jvos=;
+	s=k20201202; t=1660381367;
+	bh=7e+kgiDyQchI7IpfFU7s3X+s8cbbMe7jVfntxFeG6MQ=;
 	h=From:To:Cc:Subject:Date:From;
-	b=X+OcXN67jb+I/QpuZvo990SEfLdki8jmGOTQX9BYp+SqzRr+xeKc95AldemZ/1dvr
-	 nkFks85SnN1gp+Zj3kUtmqQvHr1a7ESKP8ZZBrPuORaNfXNL3W9KjZHJjOwsQruTtP
-	 OcpqYaXZNNlJRnM9Pbq1Ed7Z7OLW7oiidVQ+nqD3peLPabHPmlUVqYnkZB6WEtW5Lh
-	 wPtSTTvVNNcbbLYf2VVVnX0M6d/5+QDZWW0v1foPO4EvXJ9H9hh7wvlejbWv/goOh6
-	 T6dFc5gh0i8scDYo2MXJKtZL/VSKAwLFEp2enS6pWWqBDDBnD0J1ciutji5gdQ8LlE
-	 mHjxoR8UTVc2Q==
+	b=jJDCTHqWkCuMtmBQT9h4NXMhtKNslfQ6xRe7zU0Zzbf94eh7cya1UFZlS4hLlm0F2
+	 VUfbvyDRwV4eIRCWG6Ei20KFFOvJgDVYzP+dcfOFh0WS7KNqPCeRWG/LgoF/KKX5fB
+	 nHibwzTDP10mWv2vckVdN5fIYQUq7WnOyDWdlT9l9Be8APQ2oBiJJPAt2gtacr38NB
+	 T+TgLctblduU/UAmIFSwzlz+m0XHZAWdk77lhQe/oqfwjr6AHf8MxZ+5LJjt3ik5ie
+	 bSc4UJT7cLCW45lZ2uh8ksk/G8DboEFfwKR8V0y8vtR+JYPhzBVsLPZQtl+9+vujCe
+	 KJNfgoyCKTU6w==
 From: guoren@kernel.org
 To: chenhuacai@kernel.org,
 	kernel@xen0n.name,
@@ -29,9 +29,9 @@ Cc: loongarch@lists.linux.dev,
 	yangtiezhu@loongson.cn,
 	Guo Ren <guoren@linux.alibaba.com>,
 	Guo Ren <guoren@kernel.org>
-Subject: [PATCH] loongarch: irq: Move to generic_handle_arch_irq
-Date: Sat, 13 Aug 2022 04:58:39 -0400
-Message-Id: <20220813085839.58414-1-guoren@kernel.org>
+Subject: [RESEND PATCH] loongarch: irq: Move to generic_handle_arch_irq
+Date: Sat, 13 Aug 2022 05:02:40 -0400
+Message-Id: <20220813090240.60481-1-guoren@kernel.org>
 X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -43,10 +43,9 @@ Content-Transfer-Encoding: 8bit
 
 From: Guo Ren <guoren@linux.alibaba.com>
 
-No reason to keep custom handle_loongarch_irq, and move to the generic
-one. No reason to keep custom handle_loongarch_irq, and move to the
-generic one. The patch also the fixup HAVE_CONTEXT_TRACKING_USER
-feature, because handle_loongarch_irq missed ct_irq_enter/exit.
+No reason to keep handle_loongarch_irq, and move to the generic one. The
+patch also fixup HAVE_CONTEXT_TRACKING_USER feature because
+handle_loongarch_irq missed ct_irq_enter/exit.
 
 Fixes: 0603839b18f4 ("LoongArch: Add exception/interrupt handling")
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
