@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0188F7EC
-	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 10:10:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3D13C43470
-	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 10:10:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45A87EC
+	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 10:21:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A7F9C433B5
+	for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 10:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1660385425;
-	bh=yb/5LXqoZZzmpGNBqhIVKpHwuwqwgIA2gf1bBZJGznY=;
+	s=k20201202; t=1660386114;
+	bh=8Mk3RJjjnai4xEyfOPqUx8aeaeCw+jfczPmniW6YVEk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=T4MFOl75LMqEPDWISWvdFNKnGWjGBWDPXGzoIZZk9SjG03XpYPavWrgLeIWyQSWf2
-	 jehy4oQ9DgxxrrEUQiYsQ3stQ28keaujjWs7vLhFl5aR198BZORUcUqrdUE6cSlwuj
-	 d3k8ZUlvc5j2VrE4L5IJeq4dC7+C4VlKT2r/maEjiJuaSS3KYzAgzvHV0EEPtXxQPm
-	 RJZzsOpf3jCZ03SdpcJ5sBoMbiTjIh2kDhbpnBoL+YbmyUA5rpNKufSgAzlMhqJogo
-	 LRu/ZkmB7c8ufnxJFEES12Ci5nijsLZPyKK6PC300oYcl3BOIknbw9sxPoc8aN3q/N
-	 Rg8VxpHxagOWA==
-Received: by mail-vs1-f42.google.com with SMTP id o123so3006401vsc.3
-        for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 03:10:25 -0700 (PDT)
-X-Gm-Message-State: ACgBeo0wohXqH+7aVjbFsr1Anmho8jIYB1/uHhYQszlRYMX9G5UQKejP
-	wQNpwnEgKvl/0WuhlJDejlSiKwXw5Qn0QPlctOA=
-X-Google-Smtp-Source: AA6agR7+LEMn1J84OUXieECx/ogKyxqW2FxhQeGmUvpommgInAwOZ86WyoSkEUZq/+hgFcgp7t9E32RPMbqHwAAmh0U=
-X-Received: by 2002:a05:6102:390d:b0:387:78b9:bf9c with SMTP id
- e13-20020a056102390d00b0038778b9bf9cmr3412044vsu.43.1660385424543; Sat, 13
- Aug 2022 03:10:24 -0700 (PDT)
+	b=G2FcdVmTNxJw6HPn+2yTz+T90K8KtXGHsZGeDviC8yFLrUw+IGuamj5h7xCzHsJwg
+	 zzLNjxrJowYoRF+0R+uHW02CsNgO9oMwLNGnHvTJbOurmtkPvxgb2pzo8UR3HVqRy1
+	 lWSIAbLlycpiC2Mm1PA6tOS+e5LExZVUhpZEkjFLacLqTK5HFtTTDb1eClfx/kLxjE
+	 /YY3P31U4f9l+MJkDfT6ww1MUT6r0lGXFXHHPcYlfG5zJ0chENsTPXG3FSxdoN+AnK
+	 NDGzWUPCI4N1MR+IG1r67qP43J6ZX2dcrnNPehAiH2s86VanCeAvnYBOSsriC2lz7W
+	 nQ1c+7Zea1/ow==
+Received: by mail-oo1-f43.google.com with SMTP id r22-20020a4abf16000000b00448a8a2044aso542588oop.12
+        for <loongarch@lists.linux.dev>; Sat, 13 Aug 2022 03:21:54 -0700 (PDT)
+X-Gm-Message-State: ACgBeo3N0Up+mdIs50Scsc8cbnpKeywHw7+zCZpA8ysmrX41v1n2uICA
+	r5SUkveRPfHON9CQe8GIOPJ4lgFsBms5obuWIIo=
+X-Google-Smtp-Source: AA6agR7DUluguBPJMq34KI5ruUq1/ZCwetUZsAXeP9n6UFtG2hCguSEVgMQvRB7a937yJ4+SvWPauygFkFWYNNnhVdQ=
+X-Received: by 2002:a4a:3c7:0:b0:440:aef9:639d with SMTP id
+ 190-20020a4a03c7000000b00440aef9639dmr2403950ooi.48.1660386113546; Sat, 13
+ Aug 2022 03:21:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -31,34 +31,24 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20220813085839.58414-1-guoren@kernel.org> <CAJF2gTR61ojv4wmZUxZ_Kv+uKN+FjnKjBrwWL_sFVzH_Fe+W8g@mail.gmail.com>
 In-Reply-To: <CAJF2gTR61ojv4wmZUxZ_Kv+uKN+FjnKjBrwWL_sFVzH_Fe+W8g@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 13 Aug 2022 18:10:11 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5cQFasHe7K9_tk2y_te4w1uJgfMNoMRv3RrL+yZkG20g@mail.gmail.com>
-Message-ID: <CAAhV-H5cQFasHe7K9_tk2y_te4w1uJgfMNoMRv3RrL+yZkG20g@mail.gmail.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Sat, 13 Aug 2022 18:21:40 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTT5n=YdNVHfgr3JqW_pyNJ+4-5uw0i9AMT0DLU2CzBjtg@mail.gmail.com>
+Message-ID: <CAJF2gTT5n=YdNVHfgr3JqW_pyNJ+4-5uw0i9AMT0DLU2CzBjtg@mail.gmail.com>
 Subject: Re: [PATCH] loongarch: irq: Move to generic_handle_arch_irq
-To: Guo Ren <guoren@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Qing Zhang <zhangqing@loongson.cn>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, frederic@kernel.org, loongarch@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Guo Ren <guoren@linux.alibaba.com>
+To: chenhuacai@kernel.org, kernel@xen0n.name, zhangqing@loongson.cn, 
+	arnd@arndb.de, linux-arch@vger.kernel.org, mark.rutland@arm.com, 
+	frederic@kernel.org
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	jiaxun.yang@flygoat.com, yangtiezhu@loongson.cn, 
+	Guo Ren <guoren@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi, Ren,
+Sorry for the noise, loongarch selects GENERIC_ENTRY, and it has
+called irqentry_enter(). So calling generic_handle_arch_irq would
+cause duplicate ct_irq_enter calling.
 
-Thank you for your patch, but it seems wrong to me.
-
-Please see c9b12b59e2ea4c3c7cedec7efb071b6 ("s390/entry: fix duplicate
-tracking of irq nesting level"). ct_irq_enter() is named
-rcu_irq_enter() in older kernels. And irq_enter = rcu_irq_enter +
-irq_enter_rcu  (for the latest kernel, irq_enter = ct_irq_enter +
-irq_enter_rcu). If we use generic entry, irqentry_enter() has already
-call rcu_irq_enter (or ct_irq_enter in the latest kernel), so the arch
-code doesn't need to call it again. This has nothing to do with
-HAVE_CONTEXT_TRACKING_USER, just avoid duplicated calls to
-ct_irq_enter.
-
-Huacai
+All abandoned, and I would have a look at generic_handle_arch_irq.
 
 On Sat, Aug 13, 2022 at 5:06 PM Guo Ren <guoren@kernel.org> wrote:
 >
@@ -129,4 +119,9 @@ On Sat, Aug 13, 2022 at 5:06 PM Guo Ren <guoren@kernel.org> wrote:
 > --
 > Best Regards
 >  Guo Ren
->
+
+
+
+-- 
+Best Regards
+ Guo Ren
