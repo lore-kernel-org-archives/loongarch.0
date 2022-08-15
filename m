@@ -1,103 +1,109 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DEE1C38
-	for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 15:53:51 +0000 (UTC)
-Received: from mail-lj1-f176.google.com ([209.85.208.176]) by
- mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1Mc02Z-1nnArS0rqZ-00dVTy for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022
- 17:53:49 +0200
-Received: by mail-lj1-f176.google.com with SMTP id l10so8016774lje.7
-        for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 08:53:49 -0700 (PDT)
-X-Gm-Message-State: ACgBeo3wVykjgvneDhyJep2jPt541LXwCfLsaD2fS//wy65aK3JAWjeI
-	HUgBVIpRzr3tGlIA+Dz5LjrfuYtjBbnJuZv2ij4=
-X-Google-Smtp-Source: AA6agR4kQH9OPkAoSzw4z/FBPTVCt5TcLJ18r0latd6JdISl5KaD+R3rrNlWHfqDqar+qTRK7WgfYWLgQGqiKgJkzhc=
-X-Received: by 2002:a17:907:7609:b0:730:d70a:1efc with SMTP id
- jx9-20020a170907760900b00730d70a1efcmr10863122ejc.766.1660578818066; Mon, 15
- Aug 2022 08:53:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC427E
+	for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 17:58:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660586330; x=1692122330;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GoWX3NVW176iA4DRV5DnnuWj5qZvqeRzOQoj6JSiaI4=;
+  b=I8trxM/3j8dTeVxjpCf6TLl+UA+fdTW39q2CLGl4ZMv6JVs4+jQq4fvp
+   N4X9JJRZIgyGRXrzGD/g+FJLh6tMF2mGvJ4smVnAb7vnL7WsR+JUH4GFK
+   zMqMctqF3WfKLO0Y2/cY9H+KGK4t+g41HxFxujSO2m7w1hLeuTaDvTHDD
+   oRAx4ZWnqF+sBw8yh8AzaP7bOw7Mu2xBfm1h0i5urdT1pAd7dLLTPEBqd
+   SW7huwlqkB28+NSCw49T+MEtydYzW8c1Is7am78Muy2y2EUlhsd9IuGJu
+   VkcHCIN7QaGjsk/mQ2pKqWJ/bm28Jr4cHkbUcELerwjaQwY6mqzEfxH8g
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="356029381"
+X-IronPort-AV: E=Sophos;i="5.93,238,1654585200"; 
+   d="scan'208";a="356029381"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 10:58:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,238,1654585200"; 
+   d="scan'208";a="749015252"
+Received: from lkp-server02.sh.intel.com (HELO 3d2a4d02a2a9) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Aug 2022 10:58:38 -0700
+Received: from kbuild by 3d2a4d02a2a9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1oNeMH-00019B-1p;
+	Mon, 15 Aug 2022 17:58:37 +0000
+Date: Tue, 16 Aug 2022 01:58:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	"Rafael J . Wysocki" <rjw@rjwysocki.net>,
+	Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>,
+	Erik Kaneda <erik.kaneda@intel.com>
+Cc: kbuild-all@lists.01.org, loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH 1/2] LoongArch: Add CPU HWMon platform driver
+Message-ID: <202208160121.FAZ06e7K-lkp@intel.com>
+References: <20220815124803.3332991-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220815143959.1511278-1-zi.yan@sent.com>
-In-Reply-To: <20220815143959.1511278-1-zi.yan@sent.com>
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Mon, 15 Aug 2022 17:53:22 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0TcnXHVsxBkpqLi63XC62Jkg3HChtK4RgB6-giYb+hnw@mail.gmail.com>
-Message-ID: <CAK8P3a0TcnXHVsxBkpqLi63XC62Jkg3HChtK4RgB6-giYb+hnw@mail.gmail.com>
-Subject: Re: [PATCH] arch: mm: rename FORCE_MAX_ZONEORDER to ARCH_FORCE_MAX_ORDER
-To: Zi Yan <ziy@nvidia.com>
-Cc: linux-mm@kvack.org, David Hildenbrand <david@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, 
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Mike Kravetz <mike.kravetz@oracle.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Yang Shi <shy828301@gmail.com>, 
-	David Rientjes <rientjes@google.com>, James Houghton <jthoughton@google.com>, 
-	Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org, 
-	Mike Rapoport <rppt@linux.ibm.com>, Vineet Gupta <vgupta@synopsys.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Taichi Sugaya <sugaya.taichi@socionext.com>, 
-	Neil Armstrong <narmstrong@baylibre.com>, Qin Jian <qinjian@cqplus1.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	"David S. Miller" <davem@davemloft.net>, Chris Zankel <chris@zankel.net>, Arnd Bergmann <arnd@arndb.de>, 
-	Ley Foon Tan <ley.foon.tan@intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	NXP Linux Team <linux-imx@nxp.com>, linux-snps-arc@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-oxnas@groups.io, 
-	linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-xtensa@linux-xtensa.org
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:MJ4KS1Fn6h56IY5s3qPcF0eIvUqSfMISEX7c9lo7QBGUnoLY9Wm
- IKYrAOtalR45wsvjm4WP9A93bvpQsmD/cOplqAgRlKqjZUQ69cHvTtSDTpe1bUSae/jZRTl
- n3WBLm4cekG3r3VtFM8SjbJsTVxokW1HBj4EBrh65Zi6a7zeUhQZejG1uOk3SuN9KmVI5KR
- Hz0BDCjQw1pq0H0z114aw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Itpo7bOYQ0g=:SmDXGCXyHl6NXHEEEWcASb
- BR7oM7xiZ4oGcAjP4Uh0RRL58rtRhV3+oAWyKB1RNM2wvUhAQowN6duRKgcw8E6No+PapZpaO
- BCTnM8m3+l/qmlSc4PHeJTqtaZd06n6hVZkQ/PFe+PbfuLfiPY6pSjnyNHwDnc10UJwqfcecz
- p1Ef1KJo72UEDIUzJypZmsc9hRomtJwRVcr4LHd2VNKipTky13nkWOYDvo0Bfu7dqt91GUPKf
- Y03zr6iHZDctqXRLmt1Znazq8gpdQspAi+GUBxUhYJtMho+foYa257RXnb4P59T2XElaHkfMs
- yFudUBe5BOAHCsupCSN6Fd36hxB6OuhTuLgL5+LXlpiEPFpcVhe60oar+Yd2GvQwUHThmCJZC
- Q2Aw1XHayOGdowKfOt1d8/Rcwc2FEJUC9WMdd11uRU4v/MtPawTbyO2u1kkNubf206pK8CJSe
- +Cz+tZ1QTSemw78ve5BlyYoun9lQ9EdZGt4wui35eRgkgX0S0ugJvGEOJ/sqjKtqAnFpScX3f
- yRM/sBSnclDDrrQX0t8SCjFsiqHzqmD1As4am3V5SVzB6RPWI4803UzWH4bGRr4DQnW2s5I8N
- dbYlBq/PKbGyaHoxpNNBpZlMURYbrEvb5Drf8Ja9ekIf1OZdn5R9+6Q4MYQh6MfAtv43GAGXd
- QqbOKDeJomGB6NG3DAKLuakbeo98ZC0d9v8P+MsgFX/9BiFQl2+OZDynLFKoWlYvAkykUrrGM
- 3CDojnksMU4F0JgTd+ouoR7gq3Kl1nEKVocVsIlHt7wJWC90gme6HUZo8yQ0Ne4FYzg8ypbRb
- FaXOb9fdXMA3lt1U6nXKNQdyLJa2ooO6tYVrQTu2K6kuDWBIcspn3MwQFNDf8YzaT2FSZjEN6
- bFvcCQ9TPBFCwKyD0fzfV2GXBXHvQFJKOUMROLNa0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220815124803.3332991-1-chenhuacai@loongson.cn>
 
-On Mon, Aug 15, 2022 at 4:39 PM Zi Yan <zi.yan@sent.com> wrote:
->
-> ---
->  arch/arc/Kconfig                             | 2 +-
->  arch/arm/Kconfig                             | 2 +-
->  arch/arm/configs/imx_v6_v7_defconfig         | 2 +-
->  arch/arm/configs/milbeaut_m10v_defconfig     | 2 +-
->  arch/arm/configs/oxnas_v6_defconfig          | 2 +-
->  arch/arm/configs/pxa_defconfig               | 2 +-
->  arch/arm/configs/sama7_defconfig             | 2 +-
->  arch/arm/configs/sp7021_defconfig            | 2 +-
->  arch/arm64/Kconfig                           | 2 +-
->  arch/csky/Kconfig                            | 2 +-
->  arch/ia64/Kconfig                            | 2 +-
->  arch/ia64/include/asm/sparsemem.h            | 6 +++---
->  arch/loongarch/Kconfig                       | 2 +-
->  arch/m68k/Kconfig.cpu                        | 2 +-
->  arch/mips/Kconfig                            | 2 +-
->  arch/nios2/Kconfig                           | 2 +-
->  arch/powerpc/Kconfig                         | 2 +-
->  arch/powerpc/configs/85xx/ge_imp3a_defconfig | 2 +-
->  arch/powerpc/configs/fsl-emb-nonhw.config    | 2 +-
->  arch/sh/configs/ecovec24_defconfig           | 2 +-
->  arch/sh/mm/Kconfig                           | 2 +-
->  arch/sparc/Kconfig                           | 2 +-
->  arch/xtensa/Kconfig                          | 2 +-
->  include/linux/mmzone.h                       | 4 ++--
+Hi Huacai,
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on soc/for-next]
+[also build test WARNING on linus/master v6.0-rc1 next-20220815]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Huacai-Chen/LoongArch-Add-CPU-HWMon-platform-driver/20220815-205142
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20220816/202208160121.FAZ06e7K-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/159dd6fa1dd6a1f121ca589031959f9ef7db640d
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Huacai-Chen/LoongArch-Add-CPU-HWMon-platform-driver/20220815-205142
+        git checkout 159dd6fa1dd6a1f121ca589031959f9ef7db640d
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash drivers/platform/loongarch/
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/platform/loongarch/cpu_hwmon.c:13:5: warning: no previous prototype for 'loongson3_cpu_temp' [-Wmissing-prototypes]
+      13 | int loongson3_cpu_temp(int cpu)
+         |     ^~~~~~~~~~~~~~~~~~
+
+
+vim +/loongson3_cpu_temp +13 drivers/platform/loongarch/cpu_hwmon.c
+
+    12	
+  > 13	int loongson3_cpu_temp(int cpu)
+    14	{
+    15		u32 reg;
+    16	
+    17		reg = iocsr_read32(LOONGARCH_IOCSR_CPUTEMP) & 0xff;
+    18	
+    19		return (int)((s8)reg) * 1000;
+    20	}
+    21	EXPORT_SYMBOL(loongson3_cpu_temp);
+    22	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
