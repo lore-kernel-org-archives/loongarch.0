@@ -1,713 +1,464 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357B510E8
-	for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 14:53:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B111AC433D6
-	for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 14:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2931C38
+	for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 15:33:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37A3CC433C1
+	for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 15:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1660575209;
-	bh=0z3EsZEtcq2vbhEomETcxut+71+v6cY84MiyFnZWAv8=;
+	s=k20201202; t=1660577605;
+	bh=eg6Mjuv+GvBECgFNV3pn4xr0PACvd5NzIIajYUixH0o=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=d5nZTYYFZxD/PY7JuTs4Mujq9ZnvAhTm9boA+ZcOHimgKmmNOTWuKLNbr7fOhBQZB
-	 m2zynmXg3LYPQtkOZkVb5+s8h3fZFNutb80U4YQnFpK/v6K2l7pdASNnuxJqL2wODK
-	 zIAPt37Tl9SLatLsFv2pE7/z+YSXc01hm2TKyRv45te6yAymyapBY/VOyav4pCxauH
-	 ogpUQfe20ZiSwCjfuYJj7s6pIAAVLT1SqeVJXlUTpbNjvlRjC8Lhbzm552d4rM0CwO
-	 3gzhlf1o+ua9Ra2dt8ah50Nx8AaVR6TShhBeBpwT6ysTDxwp2T/ir11sJUU2rPxv9X
-	 eng2hfWlTIhRQ==
-Received: by mail-wr1-f54.google.com with SMTP id p10so9351209wru.8
-        for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 07:53:29 -0700 (PDT)
-X-Gm-Message-State: ACgBeo113lqVzS1UIyVyquh4c54KXM/iZyQUtX6WQUI9UBOP4vBkFK64
-	ELGjJkT61boP/z3F745n6VfnAMwx7Og/MbeVjCs=
-X-Google-Smtp-Source: AA6agR7tdceA6hDZe5Pan7DTv+6eeknISMjkRbXwq0uBNfy7cY4WGdnKm5toWFTh5bSmEI5Bl+09pAbEXyhKNWec6MY=
-X-Received: by 2002:adf:d238:0:b0:21e:c972:7505 with SMTP id
- k24-20020adfd238000000b0021ec9727505mr9210933wrh.536.1660575207821; Mon, 15
- Aug 2022 07:53:27 -0700 (PDT)
+	b=RMNhZ+bZxwO40ELvgpo/JZCLlHAaYFVQZ7t/9N0SI8SUNk3LvrB64d1EY5Qlyt1FF
+	 m3+wNET/yihu2hydsi3AvV7Yo1e2R4bhxWi63Vv7YRA5k6/8uzAOuu3Vvs9CSlydWg
+	 5h5sKyU/9zL9Orr9FQ9Z8IYzkW3FlnmfBvhyofJRV3jK8c76lr/+hOdDKbPRG7X1By
+	 0Xhp1pOrtmLZVbMNwdjK8G1b/o+JAFiYnlFPoJzocENwUYvxjjKKuB391d2s/WOtgZ
+	 MMTw2suISwq3LO0KEUVaXa4seAxWYdnSm1KKS+O39o6tVZVYaau6Ot8p9uFahQOoD2
+	 Ok9ZCe/aMXy3g==
+Received: by mail-oi1-f177.google.com with SMTP id p132so8918470oif.9
+        for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 08:33:25 -0700 (PDT)
+X-Gm-Message-State: ACgBeo0FZentvKiXhtpTD5eB873/bY6ukN4oGeaVyRueEEqB5GsAcgo8
+	uRmSE+YU6xmf1mgjqBHvVEPKAs8Z1jh6mMWhSpQ=
+X-Google-Smtp-Source: AA6agR5f3AlJjuJ0QakW8cqmd+7bOFPEh3ZbYFBJe7kH/N+2/ZG4CpmG1iG+6Ae2bTU0A0WQUQLgh9tCfo3bJiv88cs=
+X-Received: by 2002:a05:6808:2028:b0:344:246d:2bed with SMTP id
+ q40-20020a056808202800b00344246d2bedmr4523306oiw.19.1660577594163; Mon, 15
+ Aug 2022 08:33:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220617145754.582056-1-chenhuacai@loongson.cn> <CAAhV-H7N7-XH79=N5tTtphZ_EHygPSANjHcBTZ37zWSd2sy7AA@mail.gmail.com>
-In-Reply-To: <CAAhV-H7N7-XH79=N5tTtphZ_EHygPSANjHcBTZ37zWSd2sy7AA@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 15 Aug 2022 16:53:16 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE4DDAEn1GYk7Q8XKdsNOXJ2ah=FJKE1HRjC0J_VFy60A@mail.gmail.com>
-Message-ID: <CAMj1kXE4DDAEn1GYk7Q8XKdsNOXJ2ah=FJKE1HRjC0J_VFy60A@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add efistub booting support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-efi <linux-efi@vger.kernel.org>
+References: <20220815143959.1511278-1-zi.yan@sent.com>
+In-Reply-To: <20220815143959.1511278-1-zi.yan@sent.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Mon, 15 Aug 2022 23:33:02 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTRm38LEZVVu9VgfHiD-QL85zA7GO4SkVZULBWPgE5TnDA@mail.gmail.com>
+Message-ID: <CAJF2gTRm38LEZVVu9VgfHiD-QL85zA7GO4SkVZULBWPgE5TnDA@mail.gmail.com>
+Subject: Re: [PATCH] arch: mm: rename FORCE_MAX_ZONEORDER to ARCH_FORCE_MAX_ORDER
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-mm@kvack.org, David Hildenbrand <david@redhat.com>, 
+	Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Mike Kravetz <mike.kravetz@oracle.com>, 
+	John Hubbard <jhubbard@nvidia.com>, Yang Shi <shy828301@gmail.com>, 
+	David Rientjes <rientjes@google.com>, James Houghton <jthoughton@google.com>, 
+	Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org, 
+	Mike Rapoport <rppt@linux.ibm.com>, Vineet Gupta <vgupta@synopsys.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Taichi Sugaya <sugaya.taichi@socionext.com>, 
+	Neil Armstrong <narmstrong@baylibre.com>, Qin Jian <qinjian@cqplus1.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, "David S. Miller" <davem@davemloft.net>, 
+	Chris Zankel <chris@zankel.net>, Arnd Bergmann <arnd@arndb.de>, Ley Foon Tan <ley.foon.tan@intel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, NXP Linux Team <linux-imx@nxp.com>, 
+	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-oxnas@groups.io, linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-xtensa@linux-xtensa.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 5 Aug 2022 at 15:45, Huacai Chen <chenhuacai@kernel.org> wrote:
+For csky part
+
+Acked-by: Guo Ren <guoren@kernel.org>
+
+On Mon, Aug 15, 2022 at 10:40 PM Zi Yan <zi.yan@sent.com> wrote:
 >
-> Hi, Ard,
+> From: Zi Yan <ziy@nvidia.com>
 >
-> Friendly ping: is there anything remaining for this patch to get
-> mainlined in this cycle?
+> This Kconfig option is used by individual arch to set its desired
+> MAX_ORDER. Rename it to reflect its actual use.
+>
+> Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> Cc: Vineet Gupta <vgupta@synopsys.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Taichi Sugaya <sugaya.taichi@socionext.com>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Qin Jian <qinjian@cqplus1.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Guo Ren <guoren@kernel.org>
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Dinh Nguyen <dinguyen@kernel.org>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Chris Zankel <chris@zankel.net>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Ley Foon Tan <ley.foon.tan@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: NXP Linux Team <linux-imx@nxp.com>
+> Cc: linux-snps-arc@lists.infradead.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-oxnas@groups.io
+> Cc: linux-csky@vger.kernel.org
+> Cc: linux-ia64@vger.kernel.org
+> Cc: loongarch@lists.linux.dev
+> Cc: linux-m68k@lists.linux-m68k.org
+> Cc: linux-mips@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-sh@vger.kernel.org
+> Cc: sparclinux@vger.kernel.org
+> Cc: linux-xtensa@linux-xtensa.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  arch/arc/Kconfig                             | 2 +-
+>  arch/arm/Kconfig                             | 2 +-
+>  arch/arm/configs/imx_v6_v7_defconfig         | 2 +-
+>  arch/arm/configs/milbeaut_m10v_defconfig     | 2 +-
+>  arch/arm/configs/oxnas_v6_defconfig          | 2 +-
+>  arch/arm/configs/pxa_defconfig               | 2 +-
+>  arch/arm/configs/sama7_defconfig             | 2 +-
+>  arch/arm/configs/sp7021_defconfig            | 2 +-
+>  arch/arm64/Kconfig                           | 2 +-
+>  arch/csky/Kconfig                            | 2 +-
+>  arch/ia64/Kconfig                            | 2 +-
+>  arch/ia64/include/asm/sparsemem.h            | 6 +++---
+>  arch/loongarch/Kconfig                       | 2 +-
+>  arch/m68k/Kconfig.cpu                        | 2 +-
+>  arch/mips/Kconfig                            | 2 +-
+>  arch/nios2/Kconfig                           | 2 +-
+>  arch/powerpc/Kconfig                         | 2 +-
+>  arch/powerpc/configs/85xx/ge_imp3a_defconfig | 2 +-
+>  arch/powerpc/configs/fsl-emb-nonhw.config    | 2 +-
+>  arch/sh/configs/ecovec24_defconfig           | 2 +-
+>  arch/sh/mm/Kconfig                           | 2 +-
+>  arch/sparc/Kconfig                           | 2 +-
+>  arch/xtensa/Kconfig                          | 2 +-
+>  include/linux/mmzone.h                       | 4 ++--
+>  24 files changed, 27 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
+> index 9e3653253ef2..d9a13ccf89a3 100644
+> --- a/arch/arc/Kconfig
+> +++ b/arch/arc/Kconfig
+> @@ -554,7 +554,7 @@ config ARC_BUILTIN_DTB_NAME
+>
+>  endmenu         # "ARC Architecture Configuration"
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int "Maximum zone order"
+>         default "12" if ARC_HUGEPAGE_16M
+>         default "11"
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 87badeae3181..e6c8ee56ac52 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -1434,7 +1434,7 @@ config ARM_MODULE_PLTS
+>           Disabling this is usually safe for small single-platform
+>           configurations. If unsure, say y.
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int "Maximum zone order"
+>         default "12" if SOC_AM33XX
+>         default "9" if SA1111
+> diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+> index 01012537a9b9..fb283059daa0 100644
+> --- a/arch/arm/configs/imx_v6_v7_defconfig
+> +++ b/arch/arm/configs/imx_v6_v7_defconfig
+> @@ -31,7 +31,7 @@ CONFIG_SOC_VF610=y
+>  CONFIG_SMP=y
+>  CONFIG_ARM_PSCI=y
+>  CONFIG_HIGHMEM=y
+> -CONFIG_FORCE_MAX_ZONEORDER=14
+> +CONFIG_ARCH_FORCE_MAX_ORDER=14
+>  CONFIG_CMDLINE="noinitrd console=ttymxc0,115200"
+>  CONFIG_KEXEC=y
+>  CONFIG_CPU_FREQ=y
+> diff --git a/arch/arm/configs/milbeaut_m10v_defconfig b/arch/arm/configs/milbeaut_m10v_defconfig
+> index 58810e98de3d..8620061e19a8 100644
+> --- a/arch/arm/configs/milbeaut_m10v_defconfig
+> +++ b/arch/arm/configs/milbeaut_m10v_defconfig
+> @@ -26,7 +26,7 @@ CONFIG_THUMB2_KERNEL=y
+>  # CONFIG_THUMB2_AVOID_R_ARM_THM_JUMP11 is not set
+>  # CONFIG_ARM_PATCH_IDIV is not set
+>  CONFIG_HIGHMEM=y
+> -CONFIG_FORCE_MAX_ZONEORDER=12
+> +CONFIG_ARCH_FORCE_MAX_ORDER=12
+>  CONFIG_SECCOMP=y
+>  CONFIG_KEXEC=y
+>  CONFIG_EFI=y
+> diff --git a/arch/arm/configs/oxnas_v6_defconfig b/arch/arm/configs/oxnas_v6_defconfig
+> index 600f78b363dd..5c163a9d1429 100644
+> --- a/arch/arm/configs/oxnas_v6_defconfig
+> +++ b/arch/arm/configs/oxnas_v6_defconfig
+> @@ -12,7 +12,7 @@ CONFIG_ARCH_OXNAS=y
+>  CONFIG_MACH_OX820=y
+>  CONFIG_SMP=y
+>  CONFIG_NR_CPUS=16
+> -CONFIG_FORCE_MAX_ZONEORDER=12
+> +CONFIG_ARCH_FORCE_MAX_ORDER=12
+>  CONFIG_SECCOMP=y
+>  CONFIG_ARM_APPENDED_DTB=y
+>  CONFIG_ARM_ATAG_DTB_COMPAT=y
+> diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
+> index 104a45722799..ce3f4ed50498 100644
+> --- a/arch/arm/configs/pxa_defconfig
+> +++ b/arch/arm/configs/pxa_defconfig
+> @@ -21,7 +21,7 @@ CONFIG_MACH_AKITA=y
+>  CONFIG_MACH_BORZOI=y
+>  CONFIG_PXA_SYSTEMS_CPLDS=y
+>  CONFIG_AEABI=y
+> -CONFIG_FORCE_MAX_ZONEORDER=9
+> +CONFIG_ARCH_FORCE_MAX_ORDER=9
+>  CONFIG_CMDLINE="root=/dev/ram0 ro"
+>  CONFIG_KEXEC=y
+>  CONFIG_CPU_FREQ=y
+> diff --git a/arch/arm/configs/sama7_defconfig b/arch/arm/configs/sama7_defconfig
+> index 0384030d8b25..8b2cf6ddd568 100644
+> --- a/arch/arm/configs/sama7_defconfig
+> +++ b/arch/arm/configs/sama7_defconfig
+> @@ -19,7 +19,7 @@ CONFIG_ATMEL_CLOCKSOURCE_TCB=y
+>  # CONFIG_CACHE_L2X0 is not set
+>  # CONFIG_ARM_PATCH_IDIV is not set
+>  # CONFIG_CPU_SW_DOMAIN_PAN is not set
+> -CONFIG_FORCE_MAX_ZONEORDER=15
+> +CONFIG_ARCH_FORCE_MAX_ORDER=15
+>  CONFIG_UACCESS_WITH_MEMCPY=y
+>  # CONFIG_ATAGS is not set
+>  CONFIG_CMDLINE="console=ttyS0,115200 earlyprintk ignore_loglevel"
+> diff --git a/arch/arm/configs/sp7021_defconfig b/arch/arm/configs/sp7021_defconfig
+> index 703b9aaa40f0..151ca8c47373 100644
+> --- a/arch/arm/configs/sp7021_defconfig
+> +++ b/arch/arm/configs/sp7021_defconfig
+> @@ -18,7 +18,7 @@ CONFIG_ARCH_SUNPLUS=y
+>  # CONFIG_VDSO is not set
+>  CONFIG_SMP=y
+>  CONFIG_THUMB2_KERNEL=y
+> -CONFIG_FORCE_MAX_ZONEORDER=12
+> +CONFIG_ARCH_FORCE_MAX_ORDER=12
+>  CONFIG_VFP=y
+>  CONFIG_NEON=y
+>  CONFIG_MODULES=y
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 571cc234d0b3..c6fcd8746f60 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1401,7 +1401,7 @@ config XEN
+>         help
+>           Say Y if you want to run Linux in a Virtual Machine on Xen on ARM64.
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int
+>         default "14" if ARM64_64K_PAGES
+>         default "12" if ARM64_16K_PAGES
+> diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
+> index 3cbc2dc62baf..adee6ab36862 100644
+> --- a/arch/csky/Kconfig
+> +++ b/arch/csky/Kconfig
+> @@ -332,7 +332,7 @@ config HIGHMEM
+>         select KMAP_LOCAL
+>         default y
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int "Maximum zone order"
+>         default "11"
+>
+> diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
+> index 26ac8ea15a9e..c6e06cdc738f 100644
+> --- a/arch/ia64/Kconfig
+> +++ b/arch/ia64/Kconfig
+> @@ -200,7 +200,7 @@ config IA64_CYCLONE
+>           Say Y here to enable support for IBM EXA Cyclone time source.
+>           If you're unsure, answer N.
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int "MAX_ORDER (11 - 17)"  if !HUGETLB_PAGE
+>         range 11 17  if !HUGETLB_PAGE
+>         default "17" if HUGETLB_PAGE
+> diff --git a/arch/ia64/include/asm/sparsemem.h b/arch/ia64/include/asm/sparsemem.h
+> index 42ed5248fae9..84e8ce387b69 100644
+> --- a/arch/ia64/include/asm/sparsemem.h
+> +++ b/arch/ia64/include/asm/sparsemem.h
+> @@ -11,10 +11,10 @@
+>
+>  #define SECTION_SIZE_BITS      (30)
+>  #define MAX_PHYSMEM_BITS       (50)
+> -#ifdef CONFIG_FORCE_MAX_ZONEORDER
+> -#if ((CONFIG_FORCE_MAX_ZONEORDER - 1 + PAGE_SHIFT) > SECTION_SIZE_BITS)
+> +#ifdef CONFIG_ARCH_FORCE_MAX_ORDER
+> +#if ((CONFIG_ARCH_FORCE_MAX_ORDER - 1 + PAGE_SHIFT) > SECTION_SIZE_BITS)
+>  #undef SECTION_SIZE_BITS
+> -#define SECTION_SIZE_BITS (CONFIG_FORCE_MAX_ZONEORDER - 1 + PAGE_SHIFT)
+> +#define SECTION_SIZE_BITS (CONFIG_ARCH_FORCE_MAX_ORDER - 1 + PAGE_SHIFT)
+>  #endif
+>  #endif
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 4abc9a28aba4..b5b19eea0e3e 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -369,7 +369,7 @@ config NODES_SHIFT
+>         default "6"
+>         depends on NUMA
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int "Maximum zone order"
+>         range 14 64 if PAGE_SIZE_64KB
+>         default "14" if PAGE_SIZE_64KB
+> diff --git a/arch/m68k/Kconfig.cpu b/arch/m68k/Kconfig.cpu
+> index e0e9e31339c1..3b2f39508524 100644
+> --- a/arch/m68k/Kconfig.cpu
+> +++ b/arch/m68k/Kconfig.cpu
+> @@ -399,7 +399,7 @@ config SINGLE_MEMORY_CHUNK
+>           order" to save memory that could be wasted for unused memory map.
+>           Say N if not sure.
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int "Maximum zone order" if ADVANCED
+>         depends on !SINGLE_MEMORY_CHUNK
+>         default "11"
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index ec21f8999249..70d28976a40d 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -2140,7 +2140,7 @@ config PAGE_SIZE_64KB
+>
+>  endchoice
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int "Maximum zone order"
+>         range 14 64 if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_64KB
+>         default "14" if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_64KB
+> diff --git a/arch/nios2/Kconfig b/arch/nios2/Kconfig
+> index 4167f1eb4cd8..a582f72104f3 100644
+> --- a/arch/nios2/Kconfig
+> +++ b/arch/nios2/Kconfig
+> @@ -44,7 +44,7 @@ menu "Kernel features"
+>
+>  source "kernel/Kconfig.hz"
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int "Maximum zone order"
+>         range 9 20
+>         default "11"
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 4c466acdc70d..39d71d7701bd 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -845,7 +845,7 @@ config DATA_SHIFT
+>           in that case. If PIN_TLB is selected, it must be aligned to 8M as
+>           8M pages will be pinned.
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int "Maximum zone order"
+>         range 8 9 if PPC64 && PPC_64K_PAGES
+>         default "9" if PPC64 && PPC_64K_PAGES
+> diff --git a/arch/powerpc/configs/85xx/ge_imp3a_defconfig b/arch/powerpc/configs/85xx/ge_imp3a_defconfig
+> index f29c166998af..e7672c186325 100644
+> --- a/arch/powerpc/configs/85xx/ge_imp3a_defconfig
+> +++ b/arch/powerpc/configs/85xx/ge_imp3a_defconfig
+> @@ -30,7 +30,7 @@ CONFIG_PREEMPT=y
+>  # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+>  CONFIG_BINFMT_MISC=m
+>  CONFIG_MATH_EMULATION=y
+> -CONFIG_FORCE_MAX_ZONEORDER=17
+> +CONFIG_ARCH_FORCE_MAX_ORDER=17
+>  CONFIG_PCI=y
+>  CONFIG_PCIEPORTBUS=y
+>  CONFIG_PCI_MSI=y
+> diff --git a/arch/powerpc/configs/fsl-emb-nonhw.config b/arch/powerpc/configs/fsl-emb-nonhw.config
+> index f14c6dbd7346..ab8a8c4530d9 100644
+> --- a/arch/powerpc/configs/fsl-emb-nonhw.config
+> +++ b/arch/powerpc/configs/fsl-emb-nonhw.config
+> @@ -41,7 +41,7 @@ CONFIG_FIXED_PHY=y
+>  CONFIG_FONT_8x16=y
+>  CONFIG_FONT_8x8=y
+>  CONFIG_FONTS=y
+> -CONFIG_FORCE_MAX_ZONEORDER=13
+> +CONFIG_ARCH_FORCE_MAX_ORDER=13
+>  CONFIG_FRAMEBUFFER_CONSOLE=y
+>  CONFIG_FRAME_WARN=1024
+>  CONFIG_FTL=y
+> diff --git a/arch/sh/configs/ecovec24_defconfig b/arch/sh/configs/ecovec24_defconfig
+> index e699e2e04128..b52e14ccb450 100644
+> --- a/arch/sh/configs/ecovec24_defconfig
+> +++ b/arch/sh/configs/ecovec24_defconfig
+> @@ -8,7 +8,7 @@ CONFIG_MODULES=y
+>  CONFIG_MODULE_UNLOAD=y
+>  # CONFIG_BLK_DEV_BSG is not set
+>  CONFIG_CPU_SUBTYPE_SH7724=y
+> -CONFIG_FORCE_MAX_ZONEORDER=12
+> +CONFIG_ARCH_FORCE_MAX_ORDER=12
+>  CONFIG_MEMORY_SIZE=0x10000000
+>  CONFIG_FLATMEM_MANUAL=y
+>  CONFIG_SH_ECOVEC=y
+> diff --git a/arch/sh/mm/Kconfig b/arch/sh/mm/Kconfig
+> index ba569cfb4368..411fdc0901f7 100644
+> --- a/arch/sh/mm/Kconfig
+> +++ b/arch/sh/mm/Kconfig
+> @@ -18,7 +18,7 @@ config PAGE_OFFSET
+>         default "0x80000000" if MMU
+>         default "0x00000000"
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int "Maximum zone order"
+>         range 9 64 if PAGE_SIZE_16KB
+>         default "9" if PAGE_SIZE_16KB
+> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+> index 1c852bb530ec..4d3d1af90d52 100644
+> --- a/arch/sparc/Kconfig
+> +++ b/arch/sparc/Kconfig
+> @@ -269,7 +269,7 @@ config ARCH_SPARSEMEM_ENABLE
+>  config ARCH_SPARSEMEM_DEFAULT
+>         def_bool y if SPARC64
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int "Maximum zone order"
+>         default "13"
+>         help
+> diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
+> index 12ac277282ba..bcb0c5d2abc2 100644
+> --- a/arch/xtensa/Kconfig
+> +++ b/arch/xtensa/Kconfig
+> @@ -771,7 +771,7 @@ config HIGHMEM
+>
+>           If unsure, say Y.
+>
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>         int "Maximum zone order"
+>         default "11"
+>         help
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 025754b0bc09..fd61347b4b1f 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -24,10 +24,10 @@
+>  #include <asm/page.h>
+>
+>  /* Free memory management - zoned buddy allocator.  */
+> -#ifndef CONFIG_FORCE_MAX_ZONEORDER
+> +#ifndef CONFIG_ARCH_FORCE_MAX_ORDER
+>  #define MAX_ORDER 11
+>  #else
+> -#define MAX_ORDER CONFIG_FORCE_MAX_ZONEORDER
+> +#define MAX_ORDER CONFIG_ARCH_FORCE_MAX_ORDER
+>  #endif
+>  #define MAX_ORDER_NR_PAGES (1 << (MAX_ORDER - 1))
+>
+> --
+> 2.35.1
 >
 
-Hello,
-
-I'll look at it again asap. We should be able to sort this out for v6.1
 
 -- 
-Ard.
-
-
->
-> On Fri, Jun 17, 2022 at 10:56 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> >
-> > This patch adds efistub booting support, which is the standard UEFI boot
-> > protocol for us to use.
-> >
-> > We use generic efistub, which means we can pass boot information (i.e.,
-> > system table, memory map, kernel command line, initrd) via a light FDT
-> > and drop a lot of non-standard code.
-> >
-> > We use a flat mapping to map the efi runtime in the kernel's address
-> > space. In efi, VA = PA; in kernel, VA = PA + PAGE_OFFSET. As a result,
-> > flat mapping is not identity mapping, SetVirtualAddressMap() is still
-> > needed for the efi runtime.
-> >
-> > Currently, generic efistub doesn't support mapping efi runtime in the
-> > kernel. So we set efi_novamap to not call SetVirtualAddressMap() in the
-> > stub. Instead, we call it in the core kernel. This also makes the raw
-> > elf kernel booting be possible, which is needed by non-UEFI firmware
-> > (e.g., PMON which is widely used by Loongson for historic reasons).
-> >
-> > Then how the elf kernel and the efi kernel co-exist? When building, the
-> > raw vmlinux is naturally in elf format, the efi kernel is generated from
-> > vmlinux by objcopy via removing the elf header.
-> >
-> > Note: The magic number in MSDOS header is used by Grub [1], which is the
-> > same as RISC-V and ARM64.
-> >
-> > [1] https://lists.gnu.org/archive/html/grub-devel/2021-10/msg00215.html
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  arch/loongarch/Kconfig                        |   9 ++
-> >  arch/loongarch/Makefile                       |   5 +
-> >  arch/loongarch/boot/Makefile                  |   4 +
-> >  arch/loongarch/kernel/efi-header.S            | 101 ++++++++++++++
-> >  arch/loongarch/kernel/efi.c                   | 126 +++++++++++++++++-
-> >  arch/loongarch/kernel/head.S                  |  26 ++++
-> >  arch/loongarch/kernel/image-vars.h            |  29 ++++
-> >  arch/loongarch/kernel/vmlinux.lds.S           |   1 +
-> >  drivers/firmware/efi/Kconfig                  |   2 +-
-> >  drivers/firmware/efi/libstub/Makefile         |  10 ++
-> >  .../firmware/efi/libstub/efi-stub-helper.c    |   2 +-
-> >  drivers/firmware/efi/libstub/efi-stub.c       |   4 +-
-> >  drivers/firmware/efi/libstub/loongarch-stub.c |  88 ++++++++++++
-> >  include/linux/efi.h                           |   1 +
-> >  include/linux/pe.h                            |   2 +
-> >  15 files changed, 405 insertions(+), 5 deletions(-)
-> >  create mode 100644 arch/loongarch/kernel/efi-header.S
-> >  create mode 100644 arch/loongarch/kernel/image-vars.h
-> >  create mode 100644 drivers/firmware/efi/libstub/loongarch-stub.c
-> >
-> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > index 1ec220df751d..faee7fa4c004 100644
-> > --- a/arch/loongarch/Kconfig
-> > +++ b/arch/loongarch/Kconfig
-> > @@ -305,6 +305,15 @@ config EFI
-> >           This enables the kernel to use EFI runtime services that are
-> >           available (such as the EFI variable services).
-> >
-> > +config EFI_STUB
-> > +       bool "EFI boot stub support"
-> > +       default y
-> > +       depends on EFI
-> > +       select EFI_GENERIC_STUB
-> > +       help
-> > +         This kernel feature allows the kernel to be loaded directly by
-> > +         EFI firmware without the use of a bootloader.
-> > +
-> >  config SMP
-> >         bool "Multi-Processing support"
-> >         help
-> > diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> > index fbe4277e6404..c1bda54893ec 100644
-> > --- a/arch/loongarch/Makefile
-> > +++ b/arch/loongarch/Makefile
-> > @@ -7,7 +7,11 @@ boot   := arch/loongarch/boot
-> >
-> >  KBUILD_DEFCONFIG := loongson3_defconfig
-> >
-> > +ifndef CONFIG_EFI_STUB
-> >  KBUILD_IMAGE   = $(boot)/vmlinux
-> > +else
-> > +KBUILD_IMAGE   = $(boot)/vmlinux.efi
-> > +endif
-> >
-> >  #
-> >  # Select the object file format to substitute into the linker script.
-> > @@ -73,6 +77,7 @@ endif
-> >  head-y := arch/loongarch/kernel/head.o
-> >
-> >  libs-y += arch/loongarch/lib/
-> > +libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
-> >
-> >  ifeq ($(KBUILD_EXTMOD),)
-> >  prepare: vdso_prepare
-> > diff --git a/arch/loongarch/boot/Makefile b/arch/loongarch/boot/Makefile
-> > index 0125b17edc98..b39d50a7a3df 100644
-> > --- a/arch/loongarch/boot/Makefile
-> > +++ b/arch/loongarch/boot/Makefile
-> > @@ -14,3 +14,7 @@ quiet_cmd_strip = STRIP         $@
-> >
-> >  $(obj)/vmlinux: vmlinux FORCE
-> >         $(call if_changed,strip)
-> > +
-> > +targets += vmlinux.efi
-> > +$(obj)/vmlinux.efi: $(obj)/vmlinux FORCE
-> > +       $(call if_changed,objcopy)
-> > diff --git a/arch/loongarch/kernel/efi-header.S b/arch/loongarch/kernel/efi-header.S
-> > new file mode 100644
-> > index 000000000000..ef48dc72455b
-> > --- /dev/null
-> > +++ b/arch/loongarch/kernel/efi-header.S
-> > @@ -0,0 +1,101 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-> > + */
-> > +
-> > +#include <linux/pe.h>
-> > +#include <linux/sizes.h>
-> > +
-> > +       .macro  __EFI_PE_HEADER
-> > +       .long   PE_MAGIC
-> > +.Lcoff_header:
-> > +#ifdef CONFIG_32BIT
-> > +       .short  IMAGE_FILE_MACHINE_LOONGARCH32          /* Machine */
-> > +#else
-> > +       .short  IMAGE_FILE_MACHINE_LOONGARCH64          /* Machine */
-> > +#endif
-> > +       .short  .Lsection_count                         /* NumberOfSections */
-> > +       .long   0                                       /* TimeDateStamp */
-> > +       .long   0                                       /* PointerToSymbolTable */
-> > +       .long   0                                       /* NumberOfSymbols */
-> > +       .short  .Lsection_table - .Loptional_header     /* SizeOfOptionalHeader */
-> > +       .short  IMAGE_FILE_DEBUG_STRIPPED | \
-> > +               IMAGE_FILE_EXECUTABLE_IMAGE | \
-> > +               IMAGE_FILE_LINE_NUMS_STRIPPED           /* Characteristics */
-> > +
-> > +.Loptional_header:
-> > +       .short  PE_OPT_MAGIC_PE32PLUS                   /* PE32+ format */
-> > +       .byte   0x02                                    /* MajorLinkerVersion */
-> > +       .byte   0x14                                    /* MinorLinkerVersion */
-> > +       .long   __inittext_end - .Lefi_header_end       /* SizeOfCode */
-> > +       .long   _end - __initdata_begin                 /* SizeOfInitializedData */
-> > +       .long   0                                       /* SizeOfUninitializedData */
-> > +       .long   __efistub_efi_pe_entry - _head          /* AddressOfEntryPoint */
-> > +       .long   .Lefi_header_end - _head                /* BaseOfCode */
-> > +
-> > +.Lextra_header_fields:
-> > +       .quad   0                                       /* ImageBase */
-> > +       .long   PECOFF_SEGMENT_ALIGN                    /* SectionAlignment */
-> > +       .long   PECOFF_FILE_ALIGN                       /* FileAlignment */
-> > +       .short  0                                       /* MajorOperatingSystemVersion */
-> > +       .short  0                                       /* MinorOperatingSystemVersion */
-> > +       .short  LINUX_EFISTUB_MAJOR_VERSION             /* MajorImageVersion */
-> > +       .short  LINUX_EFISTUB_MINOR_VERSION             /* MinorImageVersion */
-> > +       .short  0                                       /* MajorSubsystemVersion */
-> > +       .short  0                                       /* MinorSubsystemVersion */
-> > +       .long   0                                       /* Win32VersionValue */
-> > +
-> > +       .long   _end - _head                            /* SizeOfImage */
-> > +
-> > +       /* Everything before the kernel image is considered part of the header */
-> > +       .long   .Lefi_header_end - _head                /* SizeOfHeaders */
-> > +       .long   0                                       /* CheckSum */
-> > +       .short  IMAGE_SUBSYSTEM_EFI_APPLICATION         /* Subsystem */
-> > +       .short  0                                       /* DllCharacteristics */
-> > +       .quad   0                                       /* SizeOfStackReserve */
-> > +       .quad   0                                       /* SizeOfStackCommit */
-> > +       .quad   0                                       /* SizeOfHeapReserve */
-> > +       .quad   0                                       /* SizeOfHeapCommit */
-> > +       .long   0                                       /* LoaderFlags */
-> > +       .long   (.Lsection_table - .) / 8               /* NumberOfRvaAndSizes */
-> > +
-> > +       .quad   0                                       /* ExportTable */
-> > +       .quad   0                                       /* ImportTable */
-> > +       .quad   0                                       /* ResourceTable */
-> > +       .quad   0                                       /* ExceptionTable */
-> > +       .quad   0                                       /* CertificationTable */
-> > +       .quad   0                                       /* BaseRelocationTable */
-> > +
-> > +       /* Section table */
-> > +.Lsection_table:
-> > +       .ascii  ".text\0\0\0"
-> > +       .long   __inittext_end - .Lefi_header_end       /* VirtualSize */
-> > +       .long   .Lefi_header_end - _head                /* VirtualAddress */
-> > +       .long   __inittext_end - .Lefi_header_end       /* SizeOfRawData */
-> > +       .long   .Lefi_header_end - _head                /* PointerToRawData */
-> > +
-> > +       .long   0                                       /* PointerToRelocations */
-> > +       .long   0                                       /* PointerToLineNumbers */
-> > +       .short  0                                       /* NumberOfRelocations */
-> > +       .short  0                                       /* NumberOfLineNumbers */
-> > +       .long   IMAGE_SCN_CNT_CODE | \
-> > +               IMAGE_SCN_MEM_READ | \
-> > +               IMAGE_SCN_MEM_EXECUTE                   /* Characteristics */
-> > +
-> > +       .ascii  ".data\0\0\0"
-> > +       .long   _end - __initdata_begin                 /* VirtualSize */
-> > +       .long   __initdata_begin - _head                /* VirtualAddress */
-> > +       .long   _edata - __initdata_begin               /* SizeOfRawData */
-> > +       .long   __initdata_begin - _head                /* PointerToRawData */
-> > +
-> > +       .long   0                                       /* PointerToRelocations */
-> > +       .long   0                                       /* PointerToLineNumbers */
-> > +       .short  0                                       /* NumberOfRelocations */
-> > +       .short  0                                       /* NumberOfLineNumbers */
-> > +       .long   IMAGE_SCN_CNT_INITIALIZED_DATA | \
-> > +               IMAGE_SCN_MEM_READ | \
-> > +               IMAGE_SCN_MEM_WRITE                     /* Characteristics */
-> > +
-> > +       .set    .Lsection_count, (. - .Lsection_table) / 40
-> > +.Lefi_header_end:
-> > +       .endm
-> > diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
-> > index a50b60c587fa..42f7cfe9ab03 100644
-> > --- a/arch/loongarch/kernel/efi.c
-> > +++ b/arch/loongarch/kernel/efi.c
-> > @@ -22,19 +22,141 @@
-> >
-> >  #include <asm/early_ioremap.h>
-> >  #include <asm/efi.h>
-> > +#include <asm/tlb.h>
-> >  #include <asm/loongson.h>
-> >
-> >  static unsigned long efi_nr_tables;
-> >  static unsigned long efi_config_table;
-> > +static unsigned long screen_info_table __initdata = EFI_INVALID_TABLE_ADDR;
-> >
-> >  static efi_system_table_t *efi_systab;
-> > -static efi_config_table_type_t arch_tables[] __initdata = {{},};
-> > +static efi_config_table_type_t arch_tables[] __initdata = {
-> > +       {LINUX_EFI_LARCH_SCREEN_INFO_TABLE_GUID, &screen_info_table, "SINFO"},
-> > +       {},
-> > +};
-> > +
-> > +static void __init init_screen_info(void)
-> > +{
-> > +       struct screen_info *si;
-> > +
-> > +       if (screen_info_table == EFI_INVALID_TABLE_ADDR)
-> > +               return;
-> > +
-> > +       si = early_memremap_ro(screen_info_table, sizeof(*si));
-> > +       if (!si) {
-> > +               pr_err("Could not map screen_info config table\n");
-> > +               return;
-> > +       }
-> > +       screen_info = *si;
-> > +       early_memunmap(si, sizeof(*si));
-> > +
-> > +       if (screen_info.orig_video_isVGA == VIDEO_TYPE_EFI)
-> > +               memblock_reserve(screen_info.lfb_base, screen_info.lfb_size);
-> > +}
-> > +
-> > +static void __init create_tlb(u32 index, u64 vppn, u32 ps, u32 mat)
-> > +{
-> > +       unsigned long tlblo0, tlblo1;
-> > +
-> > +       write_csr_pagesize(ps);
-> > +
-> > +       tlblo0 = vppn | CSR_TLBLO0_V | CSR_TLBLO0_WE |
-> > +               CSR_TLBLO0_GLOBAL | (mat << CSR_TLBLO0_CCA_SHIFT);
-> > +       tlblo1 = tlblo0 + (1 << ps);
-> > +
-> > +       csr_write64(vppn, LOONGARCH_CSR_TLBEHI);
-> > +       csr_write64(tlblo0, LOONGARCH_CSR_TLBELO0);
-> > +       csr_write64(tlblo1, LOONGARCH_CSR_TLBELO1);
-> > +       csr_xchg32(0, CSR_TLBIDX_EHINV, LOONGARCH_CSR_TLBIDX);
-> > +       csr_xchg32(index, CSR_TLBIDX_IDX, LOONGARCH_CSR_TLBIDX);
-> > +
-> > +       tlb_write_indexed();
-> > +}
-> > +
-> > +#define MTLB_ENTRY_INDEX       0x800
-> > +
-> > +/* Create VA == PA mapping as UEFI */
-> > +static void __init fix_efi_mapping(void)
-> > +{
-> > +       unsigned int index = MTLB_ENTRY_INDEX;
-> > +       unsigned int tlbnr = boot_cpu_data.tlbsizemtlb - 2;
-> > +       unsigned long i, vppn;
-> > +
-> > +       /* Low Memory, Cached */
-> > +       create_tlb(index++, 0x00000000, PS_128M, 1);
-> > +       /* MMIO Registers, Uncached */
-> > +       create_tlb(index++, 0x10000000, PS_128M, 0);
-> > +
-> > +       /* High Memory, Cached */
-> > +       for (i = 0; i < tlbnr; i++) {
-> > +               vppn = 0x80000000ULL + (i * SZ_2G);
-> > +               create_tlb(index++, vppn, PS_1G, 1);
-> > +       }
-> > +}
-> > +
-> > +/*
-> > + * set_virtual_map() - create a virtual mapping for the EFI memory map and call
-> > + * efi_set_virtual_address_map enter virtual for runtime service
-> > + *
-> > + * This function populates the virt_addr fields of all memory region descriptors
-> > + * in @memory_map whose EFI_MEMORY_RUNTIME attribute is set. Those descriptors
-> > + * are also copied to @runtime_map, and their total count is returned in @count.
-> > + */
-> > +static int __init set_virtual_map(void)
-> > +{
-> > +       int count = 0;
-> > +       unsigned int size;
-> > +       unsigned long attr;
-> > +       efi_status_t status;
-> > +       efi_runtime_services_t *rt;
-> > +       efi_set_virtual_address_map_t *svam;
-> > +       efi_memory_desc_t *in, runtime_map[32];
-> > +
-> > +       size = sizeof(efi_memory_desc_t);
-> > +
-> > +       for_each_efi_memory_desc(in) {
-> > +               attr = in->attribute;
-> > +               if (!(attr & EFI_MEMORY_RUNTIME))
-> > +                       continue;
-> > +
-> > +               if (attr & (EFI_MEMORY_WB | EFI_MEMORY_WT))
-> > +                       in->virt_addr = TO_CACHE(in->phys_addr);
-> > +               else
-> > +                       in->virt_addr = TO_UNCACHE(in->phys_addr);
-> > +
-> > +               memcpy(&runtime_map[count++], in, size);
-> > +       }
-> > +
-> > +       rt = early_memremap_ro((unsigned long)efi_systab->runtime, sizeof(*rt));
-> > +
-> > +       /* Install the new virtual address map */
-> > +       svam = rt->set_virtual_address_map;
-> > +
-> > +       fix_efi_mapping();
-> > +
-> > +       status = svam(size * count, size, efi.memmap.desc_version,
-> > +                       (efi_memory_desc_t *)TO_PHYS((unsigned long)runtime_map));
-> > +
-> > +       local_flush_tlb_all();
-> > +       write_csr_pagesize(PS_DEFAULT_SIZE);
-> > +
-> > +       return 0;
-> > +}
-> >
-> >  void __init efi_runtime_init(void)
-> >  {
-> > +       int status;
-> > +
-> >         if (!efi_enabled(EFI_BOOT))
-> >                 return;
-> >
-> > +       if (!efi_systab->runtime)
-> > +               return;
-> > +
-> > +       status = set_virtual_map();
-> > +       if (status < 0)
-> > +               return;
-> > +
-> >         if (efi_runtime_disabled()) {
-> >                 pr_info("EFI runtime services will be disabled.\n");
-> >                 return;
-> > @@ -69,4 +191,6 @@ void __init efi_init(void)
-> >         config_tables = early_memremap(efi_config_table, efi_nr_tables * size);
-> >         efi_config_parse_tables(config_tables, efi_systab->nr_tables, arch_tables);
-> >         early_memunmap(config_tables, efi_nr_tables * size);
-> > +
-> > +       init_screen_info();
-> >  }
-> > diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> > index e596dfcd924b..ccc425027553 100644
-> > --- a/arch/loongarch/kernel/head.S
-> > +++ b/arch/loongarch/kernel/head.S
-> > @@ -12,6 +12,32 @@
-> >  #include <asm/loongarch.h>
-> >  #include <asm/stackframe.h>
-> >
-> > +#ifdef CONFIG_EFI_STUB
-> > +
-> > +#include "efi-header.S"
-> > +
-> > +       __HEAD
-> > +
-> > +_head:
-> > +       .word   MZ_MAGIC                /* "MZ", MS-DOS header */
-> > +       .org    0x38
-> > +#ifdef CONFIG_32BIT
-> > +       .ascii  "LA32"                  /* Magic number for BootLoader */
-> > +#else
-> > +       .ascii  "LA64"                  /* Magic number for BootLoader */
-> > +#endif
-> > +       .org    0x3c
-> > +       .long   pe_header - _head       /* Offset to the PE header */
-> > +
-> > +pe_header:
-> > +       __EFI_PE_HEADER
-> > +
-> > +SYM_DATA(kernel_asize, .long _end - _text);
-> > +SYM_DATA(kernel_fsize, .long _edata - _text);
-> > +SYM_DATA(kernel_offset, .long kernel_offset - _text);
-> > +
-> > +#endif
-> > +
-> >         __REF
-> >
-> >  SYM_ENTRY(_stext, SYM_L_GLOBAL, SYM_A_NONE)
-> > diff --git a/arch/loongarch/kernel/image-vars.h b/arch/loongarch/kernel/image-vars.h
-> > new file mode 100644
-> > index 000000000000..104e9f0e97fe
-> > --- /dev/null
-> > +++ b/arch/loongarch/kernel/image-vars.h
-> > @@ -0,0 +1,29 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-> > + */
-> > +#ifndef __LOONGARCH_KERNEL_IMAGE_VARS_H
-> > +#define __LOONGARCH_KERNEL_IMAGE_VARS_H
-> > +
-> > +#ifdef CONFIG_EFI_STUB
-> > +
-> > +__efistub_memcmp               = memcmp;
-> > +__efistub_memchr               = memchr;
-> > +__efistub_memcpy               = memcpy;
-> > +__efistub_memmove              = memmove;
-> > +__efistub_memset               = memset;
-> > +__efistub_strcat               = strcat;
-> > +__efistub_strcmp               = strcmp;
-> > +__efistub_strlen               = strlen;
-> > +__efistub_strncat              = strncat;
-> > +__efistub_strnstr              = strnstr;
-> > +__efistub_strnlen              = strnlen;
-> > +__efistub_strrchr              = strrchr;
-> > +__efistub_kernel_entry         = kernel_entry;
-> > +__efistub_kernel_asize         = kernel_asize;
-> > +__efistub_kernel_fsize         = kernel_fsize;
-> > +__efistub_kernel_offset                = kernel_offset;
-> > +
-> > +#endif
-> > +
-> > +#endif /* __LOONGARCH_KERNEL_IMAGE_VARS_H */
-> > diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-> > index 78311a6101a3..9dfa5b886c09 100644
-> > --- a/arch/loongarch/kernel/vmlinux.lds.S
-> > +++ b/arch/loongarch/kernel/vmlinux.lds.S
-> > @@ -12,6 +12,7 @@
-> >  #define BSS_FIRST_SECTIONS *(.bss..swapper_pg_dir)
-> >
-> >  #include <asm-generic/vmlinux.lds.h>
-> > +#include "image-vars.h"
-> >
-> >  /*
-> >   * Max avaliable Page Size is 64K, so we set SectionAlignment
-> > diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> > index 7aa4717cdcac..9e4645e5a5c0 100644
-> > --- a/drivers/firmware/efi/Kconfig
-> > +++ b/drivers/firmware/efi/Kconfig
-> > @@ -118,7 +118,7 @@ config EFI_GENERIC_STUB
-> >
-> >  config EFI_ARMSTUB_DTB_LOADER
-> >         bool "Enable the DTB loader"
-> > -       depends on EFI_GENERIC_STUB && !RISCV
-> > +       depends on EFI_GENERIC_STUB && !RISCV && !LOONGARCH
-> >         default y
-> >         help
-> >           Select this config option to add support for the dtb= command
-> > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> > index d0537573501e..1588c61939e7 100644
-> > --- a/drivers/firmware/efi/libstub/Makefile
-> > +++ b/drivers/firmware/efi/libstub/Makefile
-> > @@ -26,6 +26,8 @@ cflags-$(CONFIG_ARM)          := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> >                                    $(call cc-option,-mno-single-pic-base)
-> >  cflags-$(CONFIG_RISCV)         := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> >                                    -fpic
-> > +cflags-$(CONFIG_LOONGARCH)     := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> > +                                  -fpic
-> >
-> >  cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
-> >
-> > @@ -70,6 +72,8 @@ lib-$(CONFIG_ARM)             += arm32-stub.o
-> >  lib-$(CONFIG_ARM64)            += arm64-stub.o
-> >  lib-$(CONFIG_X86)              += x86-stub.o
-> >  lib-$(CONFIG_RISCV)            += riscv-stub.o
-> > +lib-$(CONFIG_LOONGARCH)                += loongarch-stub.o
-> > +
-> >  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
-> >
-> >  # Even when -mbranch-protection=none is set, Clang will generate a
-> > @@ -125,6 +129,12 @@ STUBCOPY_FLAGS-$(CONFIG_RISCV)     += --prefix-alloc-sections=.init \
-> >                                    --prefix-symbols=__efistub_
-> >  STUBCOPY_RELOC-$(CONFIG_RISCV) := R_RISCV_HI20
-> >
-> > +# For LoongArch, keep all the symbols in .init section and make sure that no
-> > +# absolute symbols references doesn't exist.
-> > +STUBCOPY_FLAGS-$(CONFIG_LOONGARCH)     += --prefix-alloc-sections=.init \
-> > +                                          --prefix-symbols=__efistub_
-> > +STUBCOPY_RELOC-$(CONFIG_LOONGARCH)     := R_LARCH_MARK_LA
-> > +
-> >  $(obj)/%.stub.o: $(obj)/%.o FORCE
-> >         $(call if_changed,stubcopy)
-> >
-> > diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> > index 3d972061c1b0..f612cfceda22 100644
-> > --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-> > +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> > @@ -21,7 +21,7 @@
-> >  bool efi_nochunk;
-> >  bool efi_nokaslr = !IS_ENABLED(CONFIG_RANDOMIZE_BASE);
-> >  int efi_loglevel = CONSOLE_LOGLEVEL_DEFAULT;
-> > -bool efi_novamap;
-> > +bool efi_novamap = IS_ENABLED(CONFIG_LOONGARCH); /* LoongArch call svam() in kernel */
-> >
-> >  static bool efi_noinitrd;
-> >  static bool efi_nosoftreserve;
-> > diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-> > index f515394cce6e..730b7bd21776 100644
-> > --- a/drivers/firmware/efi/libstub/efi-stub.c
-> > +++ b/drivers/firmware/efi/libstub/efi-stub.c
-> > @@ -40,9 +40,9 @@
-> >
-> >  #ifdef CONFIG_ARM64
-> >  # define EFI_RT_VIRTUAL_LIMIT  DEFAULT_MAP_WINDOW_64
-> > -#elif defined(CONFIG_RISCV)
-> > +#elif defined(CONFIG_RISCV) || defined(CONFIG_LOONGARCH)
-> >  # define EFI_RT_VIRTUAL_LIMIT  TASK_SIZE_MIN
-> > -#else
-> > +#else /* Only if TASK_SIZE is a constant */
-> >  # define EFI_RT_VIRTUAL_LIMIT  TASK_SIZE
-> >  #endif
-> >
-> > diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/drivers/firmware/efi/libstub/loongarch-stub.c
-> > new file mode 100644
-> > index 000000000000..beee086d9950
-> > --- /dev/null
-> > +++ b/drivers/firmware/efi/libstub/loongarch-stub.c
-> > @@ -0,0 +1,88 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Author: Yun Liu <liuyun@loongson.cn>
-> > + *         Huacai Chen <chenhuacai@loongson.cn>
-> > + * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-> > + */
-> > +
-> > +#include <linux/efi.h>
-> > +#include <asm/efi.h>
-> > +#include <asm/addrspace.h>
-> > +#include "efistub.h"
-> > +
-> > +typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long fdt);
-> > +
-> > +extern int kernel_asize;
-> > +extern int kernel_fsize;
-> > +extern int kernel_offset;
-> > +extern kernel_entry_t kernel_entry;
-> > +
-> > +static efi_guid_t screen_info_guid = LINUX_EFI_LARCH_SCREEN_INFO_TABLE_GUID;
-> > +
-> > +struct screen_info *alloc_screen_info(void)
-> > +{
-> > +       efi_status_t status;
-> > +       struct screen_info *si;
-> > +
-> > +       status = efi_bs_call(allocate_pool,
-> > +                       EFI_RUNTIME_SERVICES_DATA, sizeof(*si), (void **)&si);
-> > +       if (status != EFI_SUCCESS)
-> > +               return NULL;
-> > +
-> > +       status = efi_bs_call(install_configuration_table, &screen_info_guid, si);
-> > +       if (status == EFI_SUCCESS)
-> > +               return si;
-> > +
-> > +       efi_bs_call(free_pool, si);
-> > +
-> > +       return NULL;
-> > +}
-> > +
-> > +void free_screen_info(struct screen_info *si)
-> > +{
-> > +       if (!si)
-> > +               return;
-> > +
-> > +       efi_bs_call(install_configuration_table, &screen_info_guid, NULL);
-> > +       efi_bs_call(free_pool, si);
-> > +}
-> > +
-> > +efi_status_t check_platform_features(void)
-> > +{
-> > +       /* Config Direct Mapping */
-> > +       csr_write64(CSR_DMW0_INIT, LOONGARCH_CSR_DMWIN0);
-> > +       csr_write64(CSR_DMW1_INIT, LOONGARCH_CSR_DMWIN1);
-> > +
-> > +       return EFI_SUCCESS;
-> > +}
-> > +
-> > +efi_status_t handle_kernel_image(unsigned long *image_addr,
-> > +                                unsigned long *image_size,
-> > +                                unsigned long *reserve_addr,
-> > +                                unsigned long *reserve_size,
-> > +                                efi_loaded_image_t *image,
-> > +                                efi_handle_t image_handle)
-> > +{
-> > +       efi_status_t status;
-> > +       unsigned long kernel_addr = 0;
-> > +
-> > +       kernel_addr = (unsigned long)&kernel_offset - kernel_offset;
-> > +
-> > +       status = efi_relocate_kernel(&kernel_addr, kernel_fsize, kernel_asize,
-> > +                                    PHYSADDR(VMLINUX_LOAD_ADDRESS), SZ_2M, 0x0);
-> > +
-> > +       *image_addr = kernel_addr;
-> > +       *image_size = kernel_asize;
-> > +
-> > +       return status;
-> > +}
-> > +
-> > +void __noreturn efi_enter_kernel(unsigned long entrypoint, unsigned long fdt, unsigned long fdt_size)
-> > +{
-> > +       kernel_entry_t real_kernel_entry;
-> > +
-> > +       real_kernel_entry = (kernel_entry_t)
-> > +               ((unsigned long)&kernel_entry - entrypoint + VMLINUX_LOAD_ADDRESS);
-> > +
-> > +       real_kernel_entry(true, fdt);
-> > +}
-> > diff --git a/include/linux/efi.h b/include/linux/efi.h
-> > index 7d9b0bb47eb3..adc43641ef8c 100644
-> > --- a/include/linux/efi.h
-> > +++ b/include/linux/efi.h
-> > @@ -401,6 +401,7 @@ void efi_native_runtime_setup(void);
-> >   * associated with ConOut
-> >   */
-> >  #define LINUX_EFI_ARM_SCREEN_INFO_TABLE_GUID   EFI_GUID(0xe03fc20a, 0x85dc, 0x406e,  0xb9, 0x0e, 0x4a, 0xb5, 0x02, 0x37, 0x1d, 0x95)
-> > +#define LINUX_EFI_LARCH_SCREEN_INFO_TABLE_GUID EFI_GUID(0x07fd51a6, 0x9532, 0x926f,  0x51, 0xdc, 0x6a, 0x63, 0x60, 0x2f, 0x84, 0xb4)
-> >  #define LINUX_EFI_ARM_CPU_STATE_TABLE_GUID     EFI_GUID(0xef79e4aa, 0x3c3d, 0x4989,  0xb9, 0x02, 0x07, 0xa9, 0x43, 0xe5, 0x50, 0xd2)
-> >  #define LINUX_EFI_LOADER_ENTRY_GUID            EFI_GUID(0x4a67b082, 0x0a4c, 0x41cf,  0xb6, 0xc7, 0x44, 0x0b, 0x29, 0xbb, 0x8c, 0x4f)
-> >  #define LINUX_EFI_RANDOM_SEED_TABLE_GUID       EFI_GUID(0x1ce1e5bc, 0x7ceb, 0x42f2,  0x81, 0xe5, 0x8a, 0xad, 0xf1, 0x80, 0xf5, 0x7b)
-> > diff --git a/include/linux/pe.h b/include/linux/pe.h
-> > index daf09ffffe38..1d3836ef9d92 100644
-> > --- a/include/linux/pe.h
-> > +++ b/include/linux/pe.h
-> > @@ -65,6 +65,8 @@
-> >  #define        IMAGE_FILE_MACHINE_SH5          0x01a8
-> >  #define        IMAGE_FILE_MACHINE_THUMB        0x01c2
-> >  #define        IMAGE_FILE_MACHINE_WCEMIPSV2    0x0169
-> > +#define        IMAGE_FILE_MACHINE_LOONGARCH32  0x6232
-> > +#define        IMAGE_FILE_MACHINE_LOONGARCH64  0x6264
-> >
-> >  /* flags */
-> >  #define IMAGE_FILE_RELOCS_STRIPPED           0x0001
-> > --
-> > 2.27.0
-> >
+Best Regards
+ Guo Ren
