@@ -1,246 +1,284 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4CF1103
-	for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 18:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660588842; x=1692124842;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JwR4es3LnXoymy7KB2tbTz0AcwsTWoHfR9MBghCZy/0=;
-  b=B/rkuFiA1o6yWVU2Tqk/NqqFxYWuLXp/Cmwf58UGtdGZ7tlQVbaMAEkT
-   9+tOK8Vv96khHv03HCE0Kul+VZdwyR/K+FsO7IMs2S7N5nwWnxdCRV0aL
-   LL4E04EelX8ej0l7WWdU9DyrpNMzZ3D9O0mpYMd/dvP3UDt3kPr9aac5g
-   7xIbM9OyNWKvQo7mD6KBPNssA6IZQr1BNFSyljJc/+DcVtbMyLa1t3BJS
-   QKsmCEJvWXlGcqz7bq6r/KC4kkLGhmPR+bW9VCMnvXyQmpHOiEbXCNINO
-   T4hf+GBpTy75WgR+PMeW+1z2YONGPt2DDhXg0V4H3wmNA+Ra8qC96Ew97
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="275086818"
-X-IronPort-AV: E=Sophos;i="5.93,238,1654585200"; 
-   d="scan'208";a="275086818"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 11:40:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,238,1654585200"; 
-   d="scan'208";a="639741479"
-Received: from lkp-server02.sh.intel.com (HELO 3d2a4d02a2a9) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 15 Aug 2022 11:40:38 -0700
-Received: from kbuild by 3d2a4d02a2a9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1oNf0w-0001An-0R;
-	Mon, 15 Aug 2022 18:40:38 +0000
-Date: Tue, 16 Aug 2022 02:40:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	"Rafael J . Wysocki" <rjw@rjwysocki.net>,
-	Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>,
-	Erik Kaneda <erik.kaneda@intel.com>
-Cc: kbuild-all@lists.01.org, loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH 2/2] LoongArch: Add ACPI-based generic laptop driver
-Message-ID: <202208160225.IH6Wo0jU-lkp@intel.com>
-References: <20220815124803.3332991-2-chenhuacai@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69671103
+	for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 19:11:32 +0000 (UTC)
+Received: from mail-ej1-f51.google.com ([209.85.218.51]) by
+ mrelayeu.kundenserver.de (mreue109 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1M5Q6l-1oP34S0u0b-001TxW for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022
+ 21:11:25 +0200
+Received: by mail-ej1-f51.google.com with SMTP id i14so15075341ejg.6
+        for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 12:11:25 -0700 (PDT)
+X-Gm-Message-State: ACgBeo16v1o7HMxADcRG4OUOOdKS5W8NqrS2F1NI4mPZWV+YTZVdCX7D
+	H4+EB0/Lku44NCFK6bsp+NSAy1V4FBBz+K+nwPo=
+X-Google-Smtp-Source: AA6agR4JuiQKPqjpyvBzGbvr5VKRMH2RGu991D7gP5wwEtHkuPtwIFkYm248LOmAveMDVMtCW9KS23hCkpF4P8janIg=
+X-Received: by 2002:a17:907:7609:b0:730:d70a:1efc with SMTP id
+ jx9-20020a170907760900b00730d70a1efcmr11292737ejc.766.1660590684735; Mon, 15
+ Aug 2022 12:11:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20220815124803.3332991-1-chenhuacai@loongson.cn> <20220815124803.3332991-2-chenhuacai@loongson.cn>
 In-Reply-To: <20220815124803.3332991-2-chenhuacai@loongson.cn>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Mon, 15 Aug 2022 21:11:08 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2P=XSM1_eD-UkvHaQ8Y4ak4BPAAABg2LxNBhyWhhO4uA@mail.gmail.com>
+Message-ID: <CAK8P3a2P=XSM1_eD-UkvHaQ8Y4ak4BPAAABg2LxNBhyWhhO4uA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] LoongArch: Add ACPI-based generic laptop driver
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	"Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, 
+	Robert Moore <robert.moore@intel.com>, Erik Kaneda <erik.kaneda@intel.com>, 
+	loongarch@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jianmin Lv <lvjianmin@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:mid5pFEGls0m/+zbH5F45cnLZR4yEpljVUc/zA5ikM4HkG8/LSS
+ l8qFzZnuWvYnmf/SoUGjYmMrmuvQRQ8dsyDGty7MQNHfW0df812DTSzGBaiPLRYsscv+vgO
+ +iz8BgR2vWbIBCDim4xsmExA4BlZDFEl6ljU1Tytk6R2+MEDm4JLPW6RpQDwgjYGQp7eAUW
+ Xlny/fU0Ej12fhJDWbSJA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kig+Z++GMlY=:04tQajSBIc/W8JSJGGLVHZ
+ psrE4mu+W7s0Afz4h+x/ezroxM6qCXwKWYKIXBVc4QekAfjOx3K0WnxXyQvEgRyMbYQh6N6mu
+ TQTM7TV2bARIncRuq8EG5ONYTeTfCB4z/9Tebu+KdT47UB+LK/lE38SJDJ73BtqSTQfRiIevq
+ Wxnaxa/KyMPHpPH9l2DWZoRpsRUGBREsKoAEfxjNtCqz8wlkD0i/sHzObKpUuDFuuDICUn2Wn
+ OBFDL8HBqnEqxRsXfu2R6vs4bOZy6A1axnbdvkqMcU/3n5exuPuYtVGJE025hif7fMWwgIGQC
+ dqv1jwas/nyAOYJs5EUOBxxWK6SiklfOEdDxRQtwYmENJimpfc4sm1fYgmHtNW6IEqFX+Dl//
+ +3STW6oDoXf25YbXU47NG7YmmI3JE4q67ST68eTYHIuI1slOFgM6nPATLcCFhUSgT+auilk1X
+ zlIJLReN5c41hVNaKQykPCk8Bv54UYRrtmO9zKPyU8Inz+HunOTXwQCCbBMTbbz5UsKoj1yuY
+ ojPoIBAKaTmhCLjDg0BsofHr+dVEy0a7maSx/cFO8s7mOyW+arbTKa7o9fkmjNIQmori3UUkN
+ kgfBoKb16OHnbtasSbA1OvIDtvK60eUeF/OB4yJdI4fYz2Pg9yozhsRZa5AFR+JkUv1DlCeE2
+ D5xW0EcyoIAuVlM7o1RUU3tDb/1NAmOdtHcDdSmqr0L+reQ/vFo/Qpykx3GcKJWFNr+mepg0V
+ Z0UbD+uyJtxhf4byL+E7g+tC3kBlrrT/4yMPmakdFEuML+lZHdhThFLPx+WnjYujK1pz/SdWj
+ gOya6Dym262k24Y6YAEPXdxXB9Yc+peg+QO0Pt9fftIM7eNhcfwsjVNEd+78bfnTIP7JP+zWi
+ 4NC1zt2WfPciJwakLKgw==
 
-Hi Huacai,
+On Mon, Aug 15, 2022 at 2:48 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
+>
+> From: Jianmin Lv <lvjianmin@loongson.cn>
+>
+> This add ACPI-based generic laptop driver for Loongson-3. Some of the
+> codes are derived from drivers/platform/x86/thinkpad_acpi.c.
+>
+> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  drivers/platform/loongarch/Kconfig          |  18 +
+>  drivers/platform/loongarch/Makefile         |   1 +
+>  drivers/platform/loongarch/generic-laptop.c | 775 ++++++++++++++++++++
+>  3 files changed, 794 insertions(+)
+>  create mode 100644 drivers/platform/loongarch/generic-laptop.c
+>
+> diff --git a/drivers/platform/loongarch/Kconfig b/drivers/platform/loonga=
+rch/Kconfig
+> index a1542843b0ad..086212d57251 100644
+> --- a/drivers/platform/loongarch/Kconfig
+> +++ b/drivers/platform/loongarch/Kconfig
+> @@ -23,4 +23,22 @@ config CPU_HWMON
+>         help
+>           Loongson-3A/3B/3C CPU HWMon (temperature sensor) driver.
+>
+> +config GENERIC_LAPTOP
+> +       tristate "Generic Loongson-3A Laptop Driver"
+> +       depends on MACH_LOONGSON64
+> +       depends on ACPI
+> +       depends on INPUT
+> +       select BACKLIGHT_CLASS_DEVICE
+> +       select BACKLIGHT_LCD_SUPPORT
+> +       select HWMON
+> +       select INPUT_EVDEV
+> +       select INPUT_SPARSEKMAP
+> +       select LCD_CLASS_DEVICE
+> +       select LEDS_CLASS
+> +       select POWER_SUPPLY
+> +       select VIDEO_OUTPUT_CONTROL
+> +       default y
+> +       help
+> +         ACPI-based Loongson-3 family laptops generic driver.
 
-Thank you for the patch! Perhaps something to improve:
+It's rather bad style to 'select' entire subsystems from a device
+driver. This may be
+unavoidable in some cases, but please try to make it possible to build the
+driver when some or all of the other subsystems are disabled. In a lot
+of subsystems,
+there is an API stub like
 
-[auto build test WARNING on soc/for-next]
-[also build test WARNING on linus/master v6.0-rc1 next-20220815]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> +/***********************************************************************=
+*****
+> + ***********************************************************************=
+*****
+> + *
+> + * ACPI Helpers and device model
+> + *
+> + ***********************************************************************=
+*****
+> + ***********************************************************************=
+*****/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Huacai-Chen/LoongArch-Add-CPU-HWMon-platform-driver/20220815-205142
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
-config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20220816/202208160225.IH6Wo0jU-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/a1d11c660bcd67e4483546b5b59b6cbe5c2a882f
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Huacai-Chen/LoongArch-Add-CPU-HWMon-platform-driver/20220815-205142
-        git checkout a1d11c660bcd67e4483546b5b59b6cbe5c2a882f
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash drivers/platform/
+Try to follow the normal commenting style
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+> +/* ACPI basic handles */
+> +
+> +static int acpi_evalf(acpi_handle handle,
+> +                     int *res, char *method, char *fmt, ...);
+> +static acpi_handle ec_handle;
 
-All warnings (new ones prefixed by >>):
+Instead of forward function declarations, try sorting the functions in
+call order,
+which has the benefit of making more sense to most readers.
 
->> drivers/platform/loongarch/generic-laptop.c:443:5: warning: no previous prototype for 'ec_get_brightness' [-Wmissing-prototypes]
-     443 | int ec_get_brightness(void)
-         |     ^~~~~~~~~~~~~~~~~
->> drivers/platform/loongarch/generic-laptop.c:460:5: warning: no previous prototype for 'ec_set_brightness' [-Wmissing-prototypes]
-     460 | int ec_set_brightness(int level)
-         |     ^~~~~~~~~~~~~~~~~
->> drivers/platform/loongarch/generic-laptop.c:475:5: warning: no previous prototype for 'ec_backlight_level' [-Wmissing-prototypes]
-     475 | int ec_backlight_level(u8 level)
-         |     ^~~~~~~~~~~~~~~~~~
->> drivers/platform/loongarch/generic-laptop.c:546:5: warning: no previous prototype for 'turn_on_backlight' [-Wmissing-prototypes]
-     546 | int turn_on_backlight(void)
-         |     ^~~~~~~~~~~~~~~~~
->> drivers/platform/loongarch/generic-laptop.c:562:5: warning: no previous prototype for 'turn_off_backlight' [-Wmissing-prototypes]
-     562 | int turn_off_backlight(void)
-         |     ^~~~~~~~~~~~~~~~~~
+> +#ifdef CONFIG_PM
+> +static int loongson_generic_suspend(struct device *dev)
+> +{
+> +       return 0;
+> +}
+> +static int loongson_generic_resume(struct device *dev)
+> +{
+> +       int status =3D 0;
+> +       struct key_entry ke;
+> +       struct backlight_device *bd;
+> +
+> +       /*
+> +        * Only if the firmware supports SW_LID event model, we can handl=
+e the
+> +        * event. This is for the consideration of development board with=
+out
+> +        * EC.
+> +        */
+> +       if (test_bit(SW_LID, generic_inputdev->swbit)) {
+> +               if (hotkey_status_get(&status))
+> +                       return -EIO;
+> +               /*
+> +                * The input device sw element records the last lid statu=
+s.
+> +                * When the system is awakened by other wake-up sources,
+> +                * the lid event will also be reported. The judgment of
+> +                * adding SW_LID bit which in sw element can avoid this
+> +                * case.
+> +                *
+> +                * input system will drop lid event when current lid even=
+t
+> +                * value and last lid status in the same data set=EF=BC=
+=8Cwhich
+> +                * data set inclue zero set and no zero set. so laptop
+> +                * driver doesn't report repeated events.
+> +                *
+> +                * Lid status is generally 0, but hardware exception is
+> +                * considered. So add lid status confirmation.
+> +                */
+> +               if (test_bit(SW_LID, generic_inputdev->sw) && !(status & =
+(1 << SW_LID))) {
+> +                       ke.type =3D KE_SW;
+> +                       ke.sw.value =3D (u8)status;
+> +                       ke.sw.code =3D SW_LID;
+> +                       sparse_keymap_report_entry(generic_inputdev, &ke,
+> +                                       1, true);
+> +               }
+> +       }
+> +
+> +       bd =3D backlight_device_get_by_type(BACKLIGHT_PLATFORM);
+> +       if (bd) {
+> +               loongson_laptop_backlight_update(bd) ?
+> +               pr_warn("Loongson_backlight:resume brightness failed") :
+> +               pr_info("Loongson_backlight:resume brightness %d\n", bd->=
+props.brightness);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(loongson_generic_pm,
+> +               loongson_generic_suspend, loongson_generic_resume);
+> +#endif
 
 
-vim +/ec_get_brightness +443 drivers/platform/loongarch/generic-laptop.c
+Instead of the #ifdef, use the newer DEFINE_SIMPLE_DEV_PM_OPS() in place
+of SIMPLE_DEV_PM_OPS() so the code will always be parsed but left out
+when CONFIG_PM is disabled.
 
-   442	
- > 443	int ec_get_brightness(void)
-   444	{
-   445		int status = 0;
-   446	
-   447		if (!hkey_handle)
-   448			return -ENXIO;
-   449	
-   450		if (!acpi_evalf(hkey_handle, &status, "ECBG", "d"))
-   451			return -EIO;
-   452	
-   453		if (status < 0)
-   454			return status;
-   455	
-   456		return status;
-   457	}
-   458	EXPORT_SYMBOL(ec_get_brightness);
-   459	
- > 460	int ec_set_brightness(int level)
-   461	{
-   462	
-   463		int ret = 0;
-   464	
-   465		if (!hkey_handle)
-   466			return -ENXIO;
-   467	
-   468		if (!acpi_evalf(hkey_handle, NULL, "ECBS", "vd", level))
-   469			ret = -EIO;
-   470	
-   471		return ret;
-   472	}
-   473	EXPORT_SYMBOL(ec_set_brightness);
-   474	
- > 475	int ec_backlight_level(u8 level)
-   476	{
-   477		int status = 0;
-   478	
-   479		if (!hkey_handle)
-   480			return -ENXIO;
-   481	
-   482		if (!acpi_evalf(hkey_handle, &status, "ECLL", "d"))
-   483			return -EIO;
-   484	
-   485		if ((status < 0) || (level > status))
-   486			return status;
-   487	
-   488		if (!acpi_evalf(hkey_handle, &status, "ECSL", "d"))
-   489			return -EIO;
-   490	
-   491		if ((status < 0) || (level < status))
-   492			return status;
-   493	
-   494		return level;
-   495	}
-   496	EXPORT_SYMBOL(ec_backlight_level);
-   497	
-   498	static int loongson_laptop_backlight_update(struct backlight_device *bd)
-   499	{
-   500		int lvl = ec_backlight_level(bd->props.brightness);
-   501	
-   502		if (lvl < 0)
-   503			return -EIO;
-   504		if (ec_set_brightness(lvl))
-   505			return -EIO;
-   506	
-   507		return 0;
-   508	}
-   509	
-   510	static int loongson_laptop_get_brightness(struct backlight_device *bd)
-   511	{
-   512		u8 level;
-   513	
-   514		level = ec_get_brightness();
-   515		if (level < 0)
-   516			return -EIO;
-   517	
-   518		return level;
-   519	}
-   520	
-   521	static const struct backlight_ops backlight_laptop_ops = {
-   522		.update_status = loongson_laptop_backlight_update,
-   523		.get_brightness = loongson_laptop_get_brightness,
-   524	};
-   525	
-   526	static int laptop_backlight_register(void)
-   527	{
-   528		int status = 0;
-   529		struct backlight_properties props;
-   530	
-   531		memset(&props, 0, sizeof(props));
-   532		props.type = BACKLIGHT_PLATFORM;
-   533	
-   534		if (!acpi_evalf(hkey_handle, &status, "ECLL", "d"))
-   535			return -EIO;
-   536	
-   537		props.brightness = 1;
-   538		props.max_brightness = status;
-   539	
-   540		backlight_device_register("loongson_laptop",
-   541					NULL, NULL, &backlight_laptop_ops, &props);
-   542	
-   543		return 0;
-   544	}
-   545	
- > 546	int turn_on_backlight(void)
-   547	{
-   548		int status;
-   549		union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-   550		struct acpi_object_list args = { 1, &arg0 };
-   551	
-   552		arg0.integer.value = 1;
-   553		status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-   554		if (ACPI_FAILURE(status)) {
-   555			pr_info("Loongson lvds error: 0x%x\n", status);
-   556			return -ENODEV;
-   557		}
-   558	
-   559		return 0;
-   560	}
-   561	
- > 562	int turn_off_backlight(void)
-   563	{
-   564		int status;
-   565		union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-   566		struct acpi_object_list args = { 1, &arg0 };
-   567	
-   568		arg0.integer.value = 0;
-   569		status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-   570		if (ACPI_FAILURE(status)) {
-   571			pr_info("Loongson lvds error: 0x%x\n", status);
-   572			return -ENODEV;
-   573		}
-   574	
-   575		return 0;
-   576	}
-   577	
+> +
+> +static int __init register_generic_subdriver(struct generic_struct *sub_=
+driver)
+> +{
+> +       int rc;
+> +
+> +       BUG_ON(!sub_driver->acpi);
+> +
+> +       sub_driver->acpi->driver =3D kzalloc(sizeof(struct acpi_driver), =
+GFP_KERNEL);
+> +       if (!sub_driver->acpi->driver) {
+> +               pr_err("failed to allocate memory for ibm->acpi->driver\n=
+");
+> +               return -ENOMEM;
+> +       }
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Drivers should be statically allocated. Usually you want one 'struct
+acpi_driver' or
+'struct platform_driver' per file, so you can just use 'module_acpi_driver(=
+)'.
+
+> +int ec_get_brightness(void)
+> +{
+> +       int status =3D 0;
+> +
+> +       if (!hkey_handle)
+> +               return -ENXIO;
+> +
+> +       if (!acpi_evalf(hkey_handle, &status, "ECBG", "d"))
+> +               return -EIO;
+> +
+> +       if (status < 0)
+> +               return status;
+> +
+> +       return status;
+> +}
+> +EXPORT_SYMBOL(ec_get_brightness);
+
+The name is too generic to have it in the global namespace for a platform
+specific driver. Use a prefix to make it clear which driver this belongs to=
+.
+
+Not sure this function warrants an export though, it looks like you could
+just have it in the caller module.
+
+> +
+> +int turn_off_backlight(void)
+> +{
+> +       int status;
+> +       union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
+> +       struct acpi_object_list args =3D { 1, &arg0 };
+> +
+> +       arg0.integer.value =3D 0;
+> +       status =3D acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
+> +       if (ACPI_FAILURE(status)) {
+> +               pr_info("Loongson lvds error: 0x%x\n", status);
+> +               return -ENODEV;
+> +       }
+> +
+> +       return 0;
+> +}
+
+Again, the name is too generic for a global function.
+
+I suspect that if you split out the backlight handling into a separate
+driver, you can avoid
+the 'select' statements completely and make that driver 'depends on
+BACKLIGHT_CLASS_DEVICE'
+or move it within the 'if BACKLIGHT_CLASS_DEVICE' section of
+drivers/video/backlight/Kconfig.
+
+
+> +static struct generic_acpi_drv_struct ec_event_acpidriver =3D {
+> +       .hid =3D loongson_htk_device_ids,
+> +       .notify =3D event_notify,
+> +       .handle =3D &hkey_handle,
+> +       .type =3D ACPI_DEVICE_NOTIFY,
+> +};
+
+Same here, this can probably just be an input driver in drivers/input.
+
+       Arnd
