@@ -1,868 +1,494 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D95EBC
-	for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 12:49:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37EBCC433C1;
-	Mon, 15 Aug 2022 12:49:52 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8551C2B
+	for <loongarch@lists.linux.dev>; Mon, 15 Aug 2022 14:40:29 +0000 (UTC)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailnew.nyi.internal (Postfix) with ESMTP id DF5B65801BD;
+	Mon, 15 Aug 2022 10:40:28 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Mon, 15 Aug 2022 10:40:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
+	:cc:content-transfer-encoding:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:reply-to:sender:subject
+	:subject:to:to; s=fm1; t=1660574428; x=1660581628; bh=DGtBzB5gvV
+	/bg6WJhVaceXEXR9j/HiUey3LRQ9aMkpc=; b=y/bOxu6gLP4GvrPWXMY27weFun
+	c1ncX3L4wvaa9IUjoTYgdrlRYy8ylM94pZvP6iDQmLe4esMVZBBWA2vaVkRVNnqe
+	rNTy9eqQX789s5OZl/0VSiFEleOizu220mkbcf1xv49tiUjQrOeXETMbK71FixbU
+	+Z639NZx8LY5/xQLY7y7f+1LNKLtF9KTuhJ2kc00t2+Aq4XKS0Sr+9hMAHBJ5LFN
+	xIz1G7hSqpta6DirFoyRxmnrlmla8uVN/AZ8vvZ8leK4mFzKEQkeFtw/663rN7hR
+	vpHpdYdGPhjwkeDh5yZY6zDTt51EkD3g7gl3DTux+7ofqUyfwri/muCys3Rw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1660574428; x=1660581628; bh=DGtBzB5gvV/bg6WJhVaceXEXR9j/
+	HiUey3LRQ9aMkpc=; b=MzzWgt6WOwywKO6TLP+bUkIBGi3rW3WFiCmM8uBSTY8C
+	kekFTJOApWn07sGE4/nCPmVGC9XUfMTvT42w0evi8E5hwKXu6EiqtsQOgYZTMBuc
+	zfo/i1nDXhFhxQEW3mlNoQzc2Ki24KY7c+MWcaytyzhRQCKev9eW82LmS4cnumCM
+	T34uIhx63m/mBWeaPsa+CvZZHENMV2sPGhvjFfPkZyPmPa2ypdU1nlpS3pxqybuA
+	vQVw16JK4LXWosbIOy59orzDTASR+0jC96BC/UCLn79DbLdYkZSj0suCMKmwzhbx
+	59ZMeymfudYzSGOLXtdkmZqcPICyMO5HISTsx1IyNA==
+X-ME-Sender: <xms:2lr6YkIcP_YlnPjg2EHTks4ozpYG-In4ywPEJHiSrLNtJNI65CGKnQ>
+    <xme:2lr6YkJwEB05mX9iFjp_F6MProO0o089Q096PAKfB0PguXbfPMqI0lsIr525I7kMN
+    GRVK7ggilWU9XPmPA>
+X-ME-Received: <xmr:2lr6YktwE9V_roIVCiKCMVxOo-flSa9M5tCtt0Xo8AN3gZZYryst2ROnh2kxX-Xr_E-OSrW538ZTUYkM9g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehvddgkedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvvefufffkofhrggfgsedtqhertdertddtnecuhfhrohhmpegkihcujggr
+    nhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrhhnpedtgffhtd
+    etledtkeeihfefueeuhedvudfhvdeifeevtdektdetgfeiieejuefhtdenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiiihdrhigrnhesshgvnh
+    htrdgtohhm
+X-ME-Proxy: <xmx:2lr6YhaeMQSXAQX8EO-vC4kShr5WLRZazbJjh91tcmYqs4TTsW2zZw>
+    <xmx:2lr6YrbXs2m9GrdadKv7UX5V2cu7Mzi58CXIpZfJsxJW28M4JOhK-w>
+    <xmx:2lr6YtD4DsYFSxGoz8s8EsYu6nD6FaT1ZOnJaauMLRBdApD4J9a3UA>
+    <xmx:3Fr6YomysOdJJhveVAcOV7Y1crZ80LlfrgIlStNgo8i7ZKk8FYqAfg>
+Feedback-ID: iccd040f4:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 15 Aug 2022 10:40:25 -0400 (EDT)
+From: Zi Yan <zi.yan@sent.com>
+To: linux-mm@kvack.org
+Cc: Zi Yan <ziy@nvidia.com>,	David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,	Vlastimil Babka <vbabka@suse.cz>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	John Hubbard <jhubbard@nvidia.com>,	Yang Shi <shy828301@gmail.com>,
+	David Rientjes <rientjes@google.com>,
+	James Houghton <jthoughton@google.com>,	Mike Rapoport <rppt@kernel.org>,
+	linux-kernel@vger.kernel.org,	Mike Rapoport <rppt@linux.ibm.com>,
+	Vineet Gupta <vgupta@synopsys.com>,	Shawn Guo <shawnguo@kernel.org>,
+	Taichi Sugaya <sugaya.taichi@socionext.com>,
+	Neil Armstrong <narmstrong@baylibre.com>,	Qin Jian <qinjian@cqplus1.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,	Guo Ren <guoren@kernel.org>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	"Rafael J . Wysocki" <rjw@rjwysocki.net>,
-	Len Brown <lenb@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Erik Kaneda <erik.kaneda@intel.com>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH 2/2] LoongArch: Add ACPI-based generic laptop driver
-Date: Mon, 15 Aug 2022 20:48:03 +0800
-Message-Id: <20220815124803.3332991-2-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220815124803.3332991-1-chenhuacai@loongson.cn>
-References: <20220815124803.3332991-1-chenhuacai@loongson.cn>
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	"David S. Miller" <davem@davemloft.net>,	Chris Zankel <chris@zankel.net>,
+	Arnd Bergmann <arnd@arndb.de>,	Ley Foon Tan <ley.foon.tan@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	NXP Linux Team <linux-imx@nxp.com>,	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,	linux-oxnas@groups.io,
+	linux-csky@vger.kernel.org,	linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev,	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,	linuxppc-dev@lists.ozlabs.org,
+	linux-sh@vger.kernel.org,	sparclinux@vger.kernel.org,
+	linux-xtensa@linux-xtensa.org
+Subject: [PATCH] arch: mm: rename FORCE_MAX_ZONEORDER to ARCH_FORCE_MAX_ORDER
+Date: Mon, 15 Aug 2022 10:39:59 -0400
+Message-Id: <20220815143959.1511278-1-zi.yan@sent.com>
+X-Mailer: git-send-email 2.35.1
+Reply-To: Zi Yan <ziy@nvidia.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-From: Jianmin Lv <lvjianmin@loongson.cn>
+From: Zi Yan <ziy@nvidia.com>
 
-This add ACPI-based generic laptop driver for Loongson-3. Some of the
-codes are derived from drivers/platform/x86/thinkpad_acpi.c.
+This Kconfig option is used by individual arch to set its desired
+MAX_ORDER. Rename it to reflect its actual use.
 
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Taichi Sugaya <sugaya.taichi@socionext.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Qin Jian <qinjian@cqplus1.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Chris Zankel <chris@zankel.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Ley Foon Tan <ley.foon.tan@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-oxnas@groups.io
+Cc: linux-csky@vger.kernel.org
+Cc: linux-ia64@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: linux-mips@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-xtensa@linux-xtensa.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/platform/loongarch/Kconfig          |  18 +
- drivers/platform/loongarch/Makefile         |   1 +
- drivers/platform/loongarch/generic-laptop.c | 775 ++++++++++++++++++++
- 3 files changed, 794 insertions(+)
- create mode 100644 drivers/platform/loongarch/generic-laptop.c
+ arch/arc/Kconfig                             | 2 +-
+ arch/arm/Kconfig                             | 2 +-
+ arch/arm/configs/imx_v6_v7_defconfig         | 2 +-
+ arch/arm/configs/milbeaut_m10v_defconfig     | 2 +-
+ arch/arm/configs/oxnas_v6_defconfig          | 2 +-
+ arch/arm/configs/pxa_defconfig               | 2 +-
+ arch/arm/configs/sama7_defconfig             | 2 +-
+ arch/arm/configs/sp7021_defconfig            | 2 +-
+ arch/arm64/Kconfig                           | 2 +-
+ arch/csky/Kconfig                            | 2 +-
+ arch/ia64/Kconfig                            | 2 +-
+ arch/ia64/include/asm/sparsemem.h            | 6 +++---
+ arch/loongarch/Kconfig                       | 2 +-
+ arch/m68k/Kconfig.cpu                        | 2 +-
+ arch/mips/Kconfig                            | 2 +-
+ arch/nios2/Kconfig                           | 2 +-
+ arch/powerpc/Kconfig                         | 2 +-
+ arch/powerpc/configs/85xx/ge_imp3a_defconfig | 2 +-
+ arch/powerpc/configs/fsl-emb-nonhw.config    | 2 +-
+ arch/sh/configs/ecovec24_defconfig           | 2 +-
+ arch/sh/mm/Kconfig                           | 2 +-
+ arch/sparc/Kconfig                           | 2 +-
+ arch/xtensa/Kconfig                          | 2 +-
+ include/linux/mmzone.h                       | 4 ++--
+ 24 files changed, 27 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/platform/loongarch/Kconfig b/drivers/platform/loongarch/Kconfig
-index a1542843b0ad..086212d57251 100644
---- a/drivers/platform/loongarch/Kconfig
-+++ b/drivers/platform/loongarch/Kconfig
-@@ -23,4 +23,22 @@ config CPU_HWMON
+diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
+index 9e3653253ef2..d9a13ccf89a3 100644
+--- a/arch/arc/Kconfig
++++ b/arch/arc/Kconfig
+@@ -554,7 +554,7 @@ config ARC_BUILTIN_DTB_NAME
+=20
+ endmenu	 # "ARC Architecture Configuration"
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int "Maximum zone order"
+ 	default "12" if ARC_HUGEPAGE_16M
+ 	default "11"
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 87badeae3181..e6c8ee56ac52 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1434,7 +1434,7 @@ config ARM_MODULE_PLTS
+ 	  Disabling this is usually safe for small single-platform
+ 	  configurations. If unsure, say y.
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int "Maximum zone order"
+ 	default "12" if SOC_AM33XX
+ 	default "9" if SA1111
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6=
+_v7_defconfig
+index 01012537a9b9..fb283059daa0 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -31,7 +31,7 @@ CONFIG_SOC_VF610=3Dy
+ CONFIG_SMP=3Dy
+ CONFIG_ARM_PSCI=3Dy
+ CONFIG_HIGHMEM=3Dy
+-CONFIG_FORCE_MAX_ZONEORDER=3D14
++CONFIG_ARCH_FORCE_MAX_ORDER=3D14
+ CONFIG_CMDLINE=3D"noinitrd console=3Dttymxc0,115200"
+ CONFIG_KEXEC=3Dy
+ CONFIG_CPU_FREQ=3Dy
+diff --git a/arch/arm/configs/milbeaut_m10v_defconfig b/arch/arm/configs/mi=
+lbeaut_m10v_defconfig
+index 58810e98de3d..8620061e19a8 100644
+--- a/arch/arm/configs/milbeaut_m10v_defconfig
++++ b/arch/arm/configs/milbeaut_m10v_defconfig
+@@ -26,7 +26,7 @@ CONFIG_THUMB2_KERNEL=3Dy
+ # CONFIG_THUMB2_AVOID_R_ARM_THM_JUMP11 is not set
+ # CONFIG_ARM_PATCH_IDIV is not set
+ CONFIG_HIGHMEM=3Dy
+-CONFIG_FORCE_MAX_ZONEORDER=3D12
++CONFIG_ARCH_FORCE_MAX_ORDER=3D12
+ CONFIG_SECCOMP=3Dy
+ CONFIG_KEXEC=3Dy
+ CONFIG_EFI=3Dy
+diff --git a/arch/arm/configs/oxnas_v6_defconfig b/arch/arm/configs/oxnas_v=
+6_defconfig
+index 600f78b363dd..5c163a9d1429 100644
+--- a/arch/arm/configs/oxnas_v6_defconfig
++++ b/arch/arm/configs/oxnas_v6_defconfig
+@@ -12,7 +12,7 @@ CONFIG_ARCH_OXNAS=3Dy
+ CONFIG_MACH_OX820=3Dy
+ CONFIG_SMP=3Dy
+ CONFIG_NR_CPUS=3D16
+-CONFIG_FORCE_MAX_ZONEORDER=3D12
++CONFIG_ARCH_FORCE_MAX_ORDER=3D12
+ CONFIG_SECCOMP=3Dy
+ CONFIG_ARM_APPENDED_DTB=3Dy
+ CONFIG_ARM_ATAG_DTB_COMPAT=3Dy
+diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
+index 104a45722799..ce3f4ed50498 100644
+--- a/arch/arm/configs/pxa_defconfig
++++ b/arch/arm/configs/pxa_defconfig
+@@ -21,7 +21,7 @@ CONFIG_MACH_AKITA=3Dy
+ CONFIG_MACH_BORZOI=3Dy
+ CONFIG_PXA_SYSTEMS_CPLDS=3Dy
+ CONFIG_AEABI=3Dy
+-CONFIG_FORCE_MAX_ZONEORDER=3D9
++CONFIG_ARCH_FORCE_MAX_ORDER=3D9
+ CONFIG_CMDLINE=3D"root=3D/dev/ram0 ro"
+ CONFIG_KEXEC=3Dy
+ CONFIG_CPU_FREQ=3Dy
+diff --git a/arch/arm/configs/sama7_defconfig b/arch/arm/configs/sama7_defc=
+onfig
+index 0384030d8b25..8b2cf6ddd568 100644
+--- a/arch/arm/configs/sama7_defconfig
++++ b/arch/arm/configs/sama7_defconfig
+@@ -19,7 +19,7 @@ CONFIG_ATMEL_CLOCKSOURCE_TCB=3Dy
+ # CONFIG_CACHE_L2X0 is not set
+ # CONFIG_ARM_PATCH_IDIV is not set
+ # CONFIG_CPU_SW_DOMAIN_PAN is not set
+-CONFIG_FORCE_MAX_ZONEORDER=3D15
++CONFIG_ARCH_FORCE_MAX_ORDER=3D15
+ CONFIG_UACCESS_WITH_MEMCPY=3Dy
+ # CONFIG_ATAGS is not set
+ CONFIG_CMDLINE=3D"console=3DttyS0,115200 earlyprintk ignore_loglevel"
+diff --git a/arch/arm/configs/sp7021_defconfig b/arch/arm/configs/sp7021_de=
+fconfig
+index 703b9aaa40f0..151ca8c47373 100644
+--- a/arch/arm/configs/sp7021_defconfig
++++ b/arch/arm/configs/sp7021_defconfig
+@@ -18,7 +18,7 @@ CONFIG_ARCH_SUNPLUS=3Dy
+ # CONFIG_VDSO is not set
+ CONFIG_SMP=3Dy
+ CONFIG_THUMB2_KERNEL=3Dy
+-CONFIG_FORCE_MAX_ZONEORDER=3D12
++CONFIG_ARCH_FORCE_MAX_ORDER=3D12
+ CONFIG_VFP=3Dy
+ CONFIG_NEON=3Dy
+ CONFIG_MODULES=3Dy
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 571cc234d0b3..c6fcd8746f60 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1401,7 +1401,7 @@ config XEN
  	help
- 	  Loongson-3A/3B/3C CPU HWMon (temperature sensor) driver.
- 
-+config GENERIC_LAPTOP
-+	tristate "Generic Loongson-3A Laptop Driver"
-+	depends on MACH_LOONGSON64
-+	depends on ACPI
-+	depends on INPUT
-+	select BACKLIGHT_CLASS_DEVICE
-+	select BACKLIGHT_LCD_SUPPORT
-+	select HWMON
-+	select INPUT_EVDEV
-+	select INPUT_SPARSEKMAP
-+	select LCD_CLASS_DEVICE
-+	select LEDS_CLASS
-+	select POWER_SUPPLY
-+	select VIDEO_OUTPUT_CONTROL
-+	default y
-+	help
-+	  ACPI-based Loongson-3 family laptops generic driver.
-+
- endif # LOONGARCH_PLATFORM_DEVICES
-diff --git a/drivers/platform/loongarch/Makefile b/drivers/platform/loongarch/Makefile
-index 8dfd03924c37..9d6f69f2319d 100644
---- a/drivers/platform/loongarch/Makefile
-+++ b/drivers/platform/loongarch/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_CPU_HWMON) += cpu_hwmon.o
-+obj-$(CONFIG_GENERIC_LAPTOP) += generic-laptop.o
-diff --git a/drivers/platform/loongarch/generic-laptop.c b/drivers/platform/loongarch/generic-laptop.c
-new file mode 100644
-index 000000000000..90e37a02511d
---- /dev/null
-+++ b/drivers/platform/loongarch/generic-laptop.c
-@@ -0,0 +1,775 @@
-+/*
-+ *  Generic Loongson processor based LAPTOP/ALL-IN-ONE driver
-+ *
-+ *  Jianmin Lv <lvjianmin@loongson.cn>
-+ *  Huacai Chen <chenhuacai@loongson.cn>
-+ *
-+ * Copyright (C) 2022 Loongson Technology Corporation Limited
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/types.h>
-+#include <linux/string.h>
-+#include <linux/platform_device.h>
-+#include <linux/input.h>
-+#include <linux/acpi.h>
-+#include <linux/uaccess.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/device.h>
-+#include <linux/backlight.h>
-+#include <acpi/video.h>
-+
-+/* ACPI HIDs */
-+#define LOONGSON_ACPI_HKEY_HID	"LOON0000"
-+#define LOONGSON_ACPI_EC_HID	"PNP0C09"
-+
-+/****************************************************************************
-+ * Main driver
-+ */
-+
-+#define ACPI_LAPTOP_VERSION "1.0"
-+#define ACPI_LAPTOP_NAME "loongson-laptop"
-+#define ACPI_LAPTOP_DESC "Loongson Laptop/all-in-one ACPI Driver"
-+#define ACPI_LAPTOP_FILE ACPI_LAPTOP_NAME "_acpi"
-+#define ACPI_LAPTOP_DRVR_NAME ACPI_LAPTOP_FILE
-+#define ACPI_LAPTOP_ACPI_EVENT_PREFIX "loongson"
-+/****************************************************************************
-+ * Driver-wide structs and misc. variables
-+ */
-+
-+struct generic_struct;
-+
-+struct generic_acpi_drv_struct {
-+	u32 type;
-+	acpi_handle *handle;
-+	const struct acpi_device_id *hid;
-+	struct acpi_device *device;
-+	struct acpi_driver *driver;
-+	void (*notify)(struct generic_struct *, u32);
-+};
-+
-+struct generic_struct {
-+	char *name;
-+
-+	int (*init)(struct generic_struct *);
-+
-+	struct generic_acpi_drv_struct *acpi;
-+
-+	struct {
-+		u8 acpi_driver_registered;
-+		u8 acpi_notify_installed;
-+	} flags;
-+};
-+
-+
-+static struct {
-+	u32 input_device_registered:1;
-+} generic_features;
-+
-+static int hotkey_status_get(int *status);
-+static int loongson_laptop_backlight_update(struct backlight_device *bd);
-+
-+/****************************************************************************
-+ ****************************************************************************
-+ *
-+ * ACPI Helpers and device model
-+ *
-+ ****************************************************************************
-+ ****************************************************************************/
-+
-+/* ACPI basic handles */
-+
-+static int acpi_evalf(acpi_handle handle,
-+		      int *res, char *method, char *fmt, ...);
-+static acpi_handle ec_handle;
-+
-+#define GENERIC_HANDLE(object, parent, paths...)			\
-+	static acpi_handle  object##_handle;			\
-+	static const acpi_handle * const object##_parent __initconst =	\
-+						&parent##_handle; \
-+	static char *object##_paths[] __initdata = { paths }
-+
-+GENERIC_HANDLE(hkey, ec, "\\_SB.HKEY", "^HKEY", "HKEY",);
-+
-+/* ACPI device model */
-+
-+#define GENERIC_ACPIHANDLE_INIT(object) \
-+	drv_acpi_handle_init(#object, &object##_handle, *object##_parent, \
-+		object##_paths, ARRAY_SIZE(object##_paths))
-+
-+static void __init drv_acpi_handle_init(const char *name,
-+			   acpi_handle *handle, const acpi_handle parent,
-+			   char **paths, const int num_paths)
-+{
-+	int i;
-+	acpi_status status;
-+
-+	for (i = 0; i < num_paths; i++) {
-+		status = acpi_get_handle(parent, paths[i], handle);
-+		if (ACPI_SUCCESS(status))
-+			return;
-+	}
-+
-+	*handle = NULL;
-+}
-+static acpi_status __init generic_acpi_handle_locate_callback(acpi_handle handle,
-+					u32 level, void *context, void **return_value)
-+{
-+	*(acpi_handle *)return_value = handle;
-+
-+	return AE_CTRL_TERMINATE;
-+}
-+
-+static void __init generic_acpi_handle_locate(const char *name,
-+		const char *hid, acpi_handle *handle)
-+{
-+	acpi_status status;
-+	acpi_handle device_found;
-+
-+	BUG_ON(!name || !hid || !handle);
-+
-+	*handle = NULL;
-+
-+	memset(&device_found, 0, sizeof(device_found));
-+	status = acpi_get_devices(hid, generic_acpi_handle_locate_callback,
-+				  (void *)name, &device_found);
-+
-+	if (ACPI_SUCCESS(status))
-+		*handle = device_found;
-+}
-+
-+static void dispatch_acpi_notify(acpi_handle handle, u32 event, void *data)
-+{
-+	struct generic_struct *sub_driver = data;
-+
-+	if (!sub_driver || !sub_driver->acpi || !sub_driver->acpi->notify)
-+		return;
-+	sub_driver->acpi->notify(sub_driver, event);
-+}
-+
-+static int __init setup_acpi_notify(struct generic_struct *sub_driver)
-+{
-+	acpi_status status;
-+
-+	BUG_ON(!sub_driver->acpi);
-+
-+	if (!*sub_driver->acpi->handle)
-+		return 0;
-+
-+	sub_driver->acpi->device = acpi_fetch_acpi_dev(*sub_driver->acpi->handle);
-+	if (!sub_driver->acpi->device) {
-+		pr_err("acpi_fetch_acpi_dev(%s) failed\n", sub_driver->name);
-+		return -ENODEV;
-+	}
-+
-+	sub_driver->acpi->device->driver_data = sub_driver;
-+	sprintf(acpi_device_class(sub_driver->acpi->device), "%s/%s",
-+		ACPI_LAPTOP_ACPI_EVENT_PREFIX,
-+		sub_driver->name);
-+
-+	status = acpi_install_notify_handler(*sub_driver->acpi->handle,
-+			sub_driver->acpi->type, dispatch_acpi_notify, sub_driver);
-+	if (ACPI_FAILURE(status)) {
-+		if (status == AE_ALREADY_EXISTS) {
-+			pr_notice("another device driver is already "
-+				  "handling %s events\n", sub_driver->name);
-+		} else {
-+			pr_err("acpi_install_notify_handler(%s) failed: %s\n",
-+			       sub_driver->name, acpi_format_exception(status));
-+		}
-+		return -ENODEV;
-+	}
-+	sub_driver->flags.acpi_notify_installed = 1;
-+	return 0;
-+}
-+
-+static int __init tpacpi_device_add(struct acpi_device *device)
-+{
-+	return 0;
-+}
-+
-+static struct input_dev *generic_inputdev;
-+
-+#ifdef CONFIG_PM
-+static int loongson_generic_suspend(struct device *dev)
-+{
-+	return 0;
-+}
-+static int loongson_generic_resume(struct device *dev)
-+{
-+	int status = 0;
-+	struct key_entry ke;
-+	struct backlight_device *bd;
-+
-+	/*
-+	 * Only if the firmware supports SW_LID event model, we can handle the
-+	 * event. This is for the consideration of development board without
-+	 * EC.
-+	 */
-+	if (test_bit(SW_LID, generic_inputdev->swbit)) {
-+		if (hotkey_status_get(&status))
-+			return -EIO;
-+		/*
-+		 * The input device sw element records the last lid status.
-+		 * When the system is awakened by other wake-up sources,
-+		 * the lid event will also be reported. The judgment of
-+		 * adding SW_LID bit which in sw element can avoid this
-+		 * case.
-+		 *
-+		 * input system will drop lid event when current lid event
-+		 * value and last lid status in the same data set，which
-+		 * data set inclue zero set and no zero set. so laptop
-+		 * driver doesn't report repeated events.
-+		 *
-+		 * Lid status is generally 0, but hardware exception is
-+		 * considered. So add lid status confirmation.
-+		 */
-+		if (test_bit(SW_LID, generic_inputdev->sw) && !(status & (1 << SW_LID))) {
-+			ke.type = KE_SW;
-+			ke.sw.value = (u8)status;
-+			ke.sw.code = SW_LID;
-+			sparse_keymap_report_entry(generic_inputdev, &ke,
-+					1, true);
-+		}
-+	}
-+
-+	bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
-+	if (bd) {
-+		loongson_laptop_backlight_update(bd) ?
-+		pr_warn("Loongson_backlight:resume brightness failed") :
-+		pr_info("Loongson_backlight:resume brightness %d\n", bd->props.brightness);
-+	}
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(loongson_generic_pm,
-+		loongson_generic_suspend, loongson_generic_resume);
-+#endif
-+
-+static int __init register_generic_subdriver(struct generic_struct *sub_driver)
-+{
-+	int rc;
-+
-+	BUG_ON(!sub_driver->acpi);
-+
-+	sub_driver->acpi->driver = kzalloc(sizeof(struct acpi_driver), GFP_KERNEL);
-+	if (!sub_driver->acpi->driver) {
-+		pr_err("failed to allocate memory for ibm->acpi->driver\n");
-+		return -ENOMEM;
-+	}
-+
-+	sprintf(sub_driver->acpi->driver->name, "%s_%s", ACPI_LAPTOP_NAME, sub_driver->name);
-+	sub_driver->acpi->driver->ids = sub_driver->acpi->hid;
-+	sub_driver->acpi->driver->ops.add = &tpacpi_device_add;
-+#ifdef CONFIG_PM
-+	sub_driver->acpi->driver->drv.pm = &loongson_generic_pm;
-+#endif
-+	rc = acpi_bus_register_driver(sub_driver->acpi->driver);
-+	if (rc < 0) {
-+		pr_err("acpi_bus_register_driver(%s) failed: %d\n",
-+		       sub_driver->name, rc);
-+		kfree(sub_driver->acpi->driver);
-+		sub_driver->acpi->driver = NULL;
-+	} else if (!rc)
-+		sub_driver->flags.acpi_driver_registered = 1;
-+
-+	return rc;
-+}
-+
-+/* Loongson generic laptop firmware event model */
-+
-+#define GENERIC_HOTKEY_MAP_MAX	64
-+#define METHOD_NAME__KMAP	"KMAP"
-+static struct key_entry hotkey_keycode_map[GENERIC_HOTKEY_MAP_MAX];
-+
-+static int hkey_map(void)
-+{
-+	u32 index;
-+	acpi_status status;
-+	struct acpi_buffer buf;
-+	union acpi_object *pack;
-+
-+	buf.length = ACPI_ALLOCATE_BUFFER;
-+	status = acpi_evaluate_object_typed(hkey_handle, METHOD_NAME__KMAP, NULL, &buf, ACPI_TYPE_PACKAGE);
-+	if (status != AE_OK) {
-+		printk(KERN_ERR ": ACPI exception: %s\n",
-+				acpi_format_exception(status));
-+		return -1;
-+	}
-+	pack = buf.pointer;
-+	for (index = 0; index < pack->package.count; index++) {
-+		union acpi_object *sub_pack = &pack->package.elements[index];
-+		union acpi_object *element = &sub_pack->package.elements[0];
-+
-+		hotkey_keycode_map[index].type = element->integer.value;
-+		element = &sub_pack->package.elements[1];
-+		hotkey_keycode_map[index].code = element->integer.value;
-+		element = &sub_pack->package.elements[2];
-+		hotkey_keycode_map[index].keycode = element->integer.value;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hotkey_backlight_set(bool enable)
-+{
-+	if (!acpi_evalf(hkey_handle, NULL, "VCBL", "vd", enable ? 1 : 0))
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int __init event_init(struct generic_struct *sub_driver)
-+{
-+	int ret;
-+
-+	GENERIC_ACPIHANDLE_INIT(hkey);
-+	ret = hkey_map();
-+	if (ret) {
-+		printk(KERN_ERR "Fail to parse keymap from DSDT.\n");
-+		return ret;
-+	}
-+
-+	ret = sparse_keymap_setup(generic_inputdev, hotkey_keycode_map, NULL);
-+	if (ret) {
-+		printk(KERN_ERR "Fail to setup input device keymap\n");
-+		input_free_device(generic_inputdev);
-+
-+		return ret;
-+	}
-+
-+	/*
-+	 * This hotkey driver handle backlight event when
-+	 * acpi_video_get_backlight_type() gets acpi_backlight_vendor
-+	 */
-+	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
-+		hotkey_backlight_set(false);
-+	else
-+		hotkey_backlight_set(true);
-+
-+	printk("ACPI:enabling firmware HKEY event interface...\n");
-+
-+	return ret;
-+}
-+
-+#define GENERIC_EVENT_TYPE_OFF		12
-+#define GENERIC_EVENT_MASK		0xFFF
-+#define TPACPI_MAX_ACPI_ARGS 3
-+
-+static int acpi_evalf(acpi_handle handle,
-+		      int *res, char *method, char *fmt, ...)
-+{
-+	char res_type;
-+	char *fmt0 = fmt;
-+	va_list ap;
-+	int success, quiet;
-+	acpi_status status;
-+	struct acpi_object_list params;
-+	struct acpi_buffer result, *resultp;
-+	union acpi_object in_objs[TPACPI_MAX_ACPI_ARGS], out_obj;
-+
-+	if (!*fmt) {
-+		pr_err("acpi_evalf() called with empty format\n");
-+		return 0;
-+	}
-+
-+	if (*fmt == 'q') {
-+		quiet = 1;
-+		fmt++;
-+	} else
-+		quiet = 0;
-+
-+	res_type = *(fmt++);
-+
-+	params.count = 0;
-+	params.pointer = &in_objs[0];
-+
-+	va_start(ap, fmt);
-+	while (*fmt) {
-+		char c = *(fmt++);
-+		switch (c) {
-+		case 'd':	/* int */
-+			in_objs[params.count].integer.value = va_arg(ap, int);
-+			in_objs[params.count++].type = ACPI_TYPE_INTEGER;
-+			break;
-+			/* add more types as needed */
-+		default:
-+			pr_err("acpi_evalf() called with invalid format character '%c'\n",
-+			       c);
-+			va_end(ap);
-+			return 0;
-+		}
-+	}
-+	va_end(ap);
-+
-+	if (res_type != 'v') {
-+		result.length = sizeof(out_obj);
-+		result.pointer = &out_obj;
-+		resultp = &result;
-+	} else
-+		resultp = NULL;
-+
-+	status = acpi_evaluate_object(handle, method, &params, resultp);
-+
-+	switch (res_type) {
-+	case 'd':		/* int */
-+		success = (status == AE_OK &&
-+			   out_obj.type == ACPI_TYPE_INTEGER);
-+		if (success && res)
-+			*res = out_obj.integer.value;
-+		break;
-+	case 'v':		/* void */
-+		success = status == AE_OK;
-+		break;
-+		/* add more types as needed */
-+	default:
-+		pr_err("acpi_evalf() called with invalid format character '%c'\n",
-+		       res_type);
-+		return 0;
-+	}
-+
-+	if (!success && !quiet)
-+		pr_err("acpi_evalf(%s, %s, ...) failed: %s\n",
-+		       method, fmt0, acpi_format_exception(status));
-+
-+	return success;
-+}
-+
-+int ec_get_brightness(void)
-+{
-+	int status = 0;
-+
-+	if (!hkey_handle)
-+		return -ENXIO;
-+
-+	if (!acpi_evalf(hkey_handle, &status, "ECBG", "d"))
-+		return -EIO;
-+
-+	if (status < 0)
-+		return status;
-+
-+	return status;
-+}
-+EXPORT_SYMBOL(ec_get_brightness);
-+
-+int ec_set_brightness(int level)
-+{
-+
-+	int ret = 0;
-+
-+	if (!hkey_handle)
-+		return -ENXIO;
-+
-+	if (!acpi_evalf(hkey_handle, NULL, "ECBS", "vd", level))
-+		ret = -EIO;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(ec_set_brightness);
-+
-+int ec_backlight_level(u8 level)
-+{
-+	int status = 0;
-+
-+	if (!hkey_handle)
-+		return -ENXIO;
-+
-+	if (!acpi_evalf(hkey_handle, &status, "ECLL", "d"))
-+		return -EIO;
-+
-+	if ((status < 0) || (level > status))
-+		return status;
-+
-+	if (!acpi_evalf(hkey_handle, &status, "ECSL", "d"))
-+		return -EIO;
-+
-+	if ((status < 0) || (level < status))
-+		return status;
-+
-+	return level;
-+}
-+EXPORT_SYMBOL(ec_backlight_level);
-+
-+static int loongson_laptop_backlight_update(struct backlight_device *bd)
-+{
-+	int lvl = ec_backlight_level(bd->props.brightness);
-+
-+	if (lvl < 0)
-+		return -EIO;
-+	if (ec_set_brightness(lvl))
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int loongson_laptop_get_brightness(struct backlight_device *bd)
-+{
-+	u8 level;
-+
-+	level = ec_get_brightness();
-+	if (level < 0)
-+		return -EIO;
-+
-+	return level;
-+}
-+
-+static const struct backlight_ops backlight_laptop_ops = {
-+	.update_status = loongson_laptop_backlight_update,
-+	.get_brightness = loongson_laptop_get_brightness,
-+};
-+
-+static int laptop_backlight_register(void)
-+{
-+	int status = 0;
-+	struct backlight_properties props;
-+
-+	memset(&props, 0, sizeof(props));
-+	props.type = BACKLIGHT_PLATFORM;
-+
-+	if (!acpi_evalf(hkey_handle, &status, "ECLL", "d"))
-+		return -EIO;
-+
-+	props.brightness = 1;
-+	props.max_brightness = status;
-+
-+	backlight_device_register("loongson_laptop",
-+				NULL, NULL, &backlight_laptop_ops, &props);
-+
-+	return 0;
-+}
-+
-+int turn_on_backlight(void)
-+{
-+	int status;
-+	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-+	struct acpi_object_list args = { 1, &arg0 };
-+
-+	arg0.integer.value = 1;
-+	status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-+	if (ACPI_FAILURE(status)) {
-+		pr_info("Loongson lvds error: 0x%x\n", status);
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+int turn_off_backlight(void)
-+{
-+	int status;
-+	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-+	struct acpi_object_list args = { 1, &arg0 };
-+
-+	arg0.integer.value = 0;
-+	status = acpi_evaluate_object(NULL, "\\BLSW", &args, NULL);
-+	if (ACPI_FAILURE(status)) {
-+		pr_info("Loongson lvds error: 0x%x\n", status);
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hotkey_status_get(int *status)
-+{
-+	if (!acpi_evalf(hkey_handle, status, "GSWS", "d"))
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static void event_notify(struct generic_struct *sub_driver, u32 event)
-+{
-+	struct key_entry *ke = NULL;
-+	int scan_code = event & GENERIC_EVENT_MASK;
-+	int type = (event >> GENERIC_EVENT_TYPE_OFF) & 0xF;
-+
-+	ke = sparse_keymap_entry_from_scancode(generic_inputdev, scan_code);
-+	if (ke) {
-+		if (type == KE_SW) {
-+			int status = 0;
-+
-+			if (hotkey_status_get(&status))
-+				return;
-+
-+			ke->sw.value = !!(status & (1 << ke->sw.code));
-+		}
-+		sparse_keymap_report_entry(generic_inputdev, ke, 1, true);
-+	}
-+}
-+
-+static const struct acpi_device_id loongson_htk_device_ids[] = {
-+	{LOONGSON_ACPI_HKEY_HID, 0},
-+	{"", 0},
-+};
-+
-+static struct generic_acpi_drv_struct ec_event_acpidriver = {
-+	.hid = loongson_htk_device_ids,
-+	.notify = event_notify,
-+	.handle = &hkey_handle,
-+	.type = ACPI_DEVICE_NOTIFY,
-+};
-+
-+/****************************************************************************
-+ ****************************************************************************
-+ *
-+ * Infrastructure
-+ *
-+ ****************************************************************************
-+ ****************************************************************************/
-+static int __init probe_for_generic(void)
-+{
-+	if (acpi_disabled)
-+		return -ENODEV;
-+
-+	/* The EC handler is required */
-+	generic_acpi_handle_locate("ec", LOONGSON_ACPI_EC_HID, &ec_handle);
-+	if (!ec_handle) {
-+		pr_err("Not yet supported Loongson Generic Laptop/All-in-one detected!\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static void generic_exit(struct generic_struct *sub_driver)
-+{
-+
-+	if (sub_driver->flags.acpi_notify_installed) {
-+		BUG_ON(!sub_driver->acpi);
-+		acpi_remove_notify_handler(*sub_driver->acpi->handle,
-+					   sub_driver->acpi->type,
-+					   dispatch_acpi_notify);
-+		sub_driver->flags.acpi_notify_installed = 0;
-+	}
-+
-+	if (sub_driver->flags.acpi_driver_registered) {
-+		BUG_ON(!sub_driver->acpi);
-+		acpi_bus_unregister_driver(sub_driver->acpi->driver);
-+		kfree(sub_driver->acpi->driver);
-+		sub_driver->acpi->driver = NULL;
-+		sub_driver->flags.acpi_driver_registered = 0;
-+	}
-+
-+}
-+
-+static int __init generic_subdriver_init(struct generic_struct *sub_driver)
-+{
-+	int ret;
-+
-+	BUG_ON(sub_driver == NULL);
-+
-+	if (sub_driver->init)
-+		sub_driver->init(sub_driver);
-+
-+	if (sub_driver->acpi) {
-+		if (sub_driver->acpi->hid) {
-+			ret = register_generic_subdriver(sub_driver);
-+			if (ret)
-+				goto err_out;
-+		}
-+
-+		if (sub_driver->acpi->notify) {
-+			ret = setup_acpi_notify(sub_driver);
-+			if (ret == -ENODEV) {
-+				ret = 0;
-+				goto err_out;
-+			}
-+			if (ret < 0)
-+				goto err_out;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_out:
-+	generic_exit(sub_driver);
-+	return (ret < 0) ? ret : 0;
-+}
-+
-+/* Module init, exit, parameters */
-+static struct generic_struct generic_sub_drivers[] __initdata = {
-+	{
-+		.name = "EC Event",
-+		.init = event_init,
-+		.acpi = &ec_event_acpidriver,
-+	},
-+};
-+
-+static void generic_acpi_laptop_exit(void);
-+
-+static int __init generic_acpi_laptop_init(void)
-+{
-+	int i, ret, status;
-+
-+	ret = probe_for_generic();
-+	if (ret) {
-+		generic_acpi_laptop_exit();
-+		return ret;
-+	}
-+	generic_inputdev = input_allocate_device();
-+	if (!generic_inputdev) {
-+		pr_err("unable to allocate input device\n");
-+		generic_acpi_laptop_exit();
-+		return -ENOMEM;
-+	}
-+
-+	/* Prepare input device, but don't register */
-+	generic_inputdev->name =
-+		"Loongson Generic Laptop/All-in-one Extra Buttons";
-+	generic_inputdev->phys = ACPI_LAPTOP_DRVR_NAME "/input0";
-+	generic_inputdev->id.bustype = BUS_HOST;
-+	generic_inputdev->dev.parent = NULL;
-+
-+	/* Init subdrivers */
-+	for (i = 0; i < ARRAY_SIZE(generic_sub_drivers); i++) {
-+		ret = generic_subdriver_init(&generic_sub_drivers[i]);
-+		if (ret < 0) {
-+			generic_acpi_laptop_exit();
-+			return ret;
-+		}
-+	}
-+
-+	ret = input_register_device(generic_inputdev);
-+	if (ret < 0) {
-+		pr_err("unable to register input device\n");
-+		generic_acpi_laptop_exit();
-+		return ret;
-+	}
-+
-+	generic_features.input_device_registered = 1;
-+
-+	if (acpi_evalf(hkey_handle, &status, "ECBG", "d")) {
-+		pr_info("Loongson Laptop used, init brightness is 0x%x\n", status);
-+		ret = laptop_backlight_register();
-+		if (ret < 0)
-+			pr_err("Loongson Laptop: laptop-backlight device register failed\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit generic_acpi_laptop_exit(void)
-+{
-+	if (generic_inputdev) {
-+		if (generic_features.input_device_registered)
-+			input_unregister_device(generic_inputdev);
-+		else
-+			input_free_device(generic_inputdev);
-+	}
-+}
-+
-+module_init(generic_acpi_laptop_init);
-+module_exit(generic_acpi_laptop_exit);
-+
-+MODULE_ALIAS("platform:acpi-laptop");
-+MODULE_AUTHOR("Jianmin Lv <lvjianmin@loongson.cn>");
-+MODULE_AUTHOR("Huacai Chen <chenhuacai@loongson.cn>");
-+MODULE_DESCRIPTION(ACPI_LAPTOP_DESC);
-+MODULE_VERSION(ACPI_LAPTOP_VERSION);
-+MODULE_LICENSE("GPL");
--- 
-2.31.1
+ 	  Say Y if you want to run Linux in a Virtual Machine on Xen on ARM64.
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int
+ 	default "14" if ARM64_64K_PAGES
+ 	default "12" if ARM64_16K_PAGES
+diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
+index 3cbc2dc62baf..adee6ab36862 100644
+--- a/arch/csky/Kconfig
++++ b/arch/csky/Kconfig
+@@ -332,7 +332,7 @@ config HIGHMEM
+ 	select KMAP_LOCAL
+ 	default y
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int "Maximum zone order"
+ 	default "11"
+=20
+diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
+index 26ac8ea15a9e..c6e06cdc738f 100644
+--- a/arch/ia64/Kconfig
++++ b/arch/ia64/Kconfig
+@@ -200,7 +200,7 @@ config IA64_CYCLONE
+ 	  Say Y here to enable support for IBM EXA Cyclone time source.
+ 	  If you're unsure, answer N.
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int "MAX_ORDER (11 - 17)"  if !HUGETLB_PAGE
+ 	range 11 17  if !HUGETLB_PAGE
+ 	default "17" if HUGETLB_PAGE
+diff --git a/arch/ia64/include/asm/sparsemem.h b/arch/ia64/include/asm/spar=
+semem.h
+index 42ed5248fae9..84e8ce387b69 100644
+--- a/arch/ia64/include/asm/sparsemem.h
++++ b/arch/ia64/include/asm/sparsemem.h
+@@ -11,10 +11,10 @@
+=20
+ #define SECTION_SIZE_BITS	(30)
+ #define MAX_PHYSMEM_BITS	(50)
+-#ifdef CONFIG_FORCE_MAX_ZONEORDER
+-#if ((CONFIG_FORCE_MAX_ZONEORDER - 1 + PAGE_SHIFT) > SECTION_SIZE_BITS)
++#ifdef CONFIG_ARCH_FORCE_MAX_ORDER
++#if ((CONFIG_ARCH_FORCE_MAX_ORDER - 1 + PAGE_SHIFT) > SECTION_SIZE_BITS)
+ #undef SECTION_SIZE_BITS
+-#define SECTION_SIZE_BITS (CONFIG_FORCE_MAX_ZONEORDER - 1 + PAGE_SHIFT)
++#define SECTION_SIZE_BITS (CONFIG_ARCH_FORCE_MAX_ORDER - 1 + PAGE_SHIFT)
+ #endif
+ #endif
+=20
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 4abc9a28aba4..b5b19eea0e3e 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -369,7 +369,7 @@ config NODES_SHIFT
+ 	default "6"
+ 	depends on NUMA
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int "Maximum zone order"
+ 	range 14 64 if PAGE_SIZE_64KB
+ 	default "14" if PAGE_SIZE_64KB
+diff --git a/arch/m68k/Kconfig.cpu b/arch/m68k/Kconfig.cpu
+index e0e9e31339c1..3b2f39508524 100644
+--- a/arch/m68k/Kconfig.cpu
++++ b/arch/m68k/Kconfig.cpu
+@@ -399,7 +399,7 @@ config SINGLE_MEMORY_CHUNK
+ 	  order" to save memory that could be wasted for unused memory map.
+ 	  Say N if not sure.
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int "Maximum zone order" if ADVANCED
+ 	depends on !SINGLE_MEMORY_CHUNK
+ 	default "11"
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index ec21f8999249..70d28976a40d 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -2140,7 +2140,7 @@ config PAGE_SIZE_64KB
+=20
+ endchoice
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int "Maximum zone order"
+ 	range 14 64 if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_64KB
+ 	default "14" if MIPS_HUGE_TLB_SUPPORT && PAGE_SIZE_64KB
+diff --git a/arch/nios2/Kconfig b/arch/nios2/Kconfig
+index 4167f1eb4cd8..a582f72104f3 100644
+--- a/arch/nios2/Kconfig
++++ b/arch/nios2/Kconfig
+@@ -44,7 +44,7 @@ menu "Kernel features"
+=20
+ source "kernel/Kconfig.hz"
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int "Maximum zone order"
+ 	range 9 20
+ 	default "11"
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 4c466acdc70d..39d71d7701bd 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -845,7 +845,7 @@ config DATA_SHIFT
+ 	  in that case. If PIN_TLB is selected, it must be aligned to 8M as
+ 	  8M pages will be pinned.
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int "Maximum zone order"
+ 	range 8 9 if PPC64 && PPC_64K_PAGES
+ 	default "9" if PPC64 && PPC_64K_PAGES
+diff --git a/arch/powerpc/configs/85xx/ge_imp3a_defconfig b/arch/powerpc/co=
+nfigs/85xx/ge_imp3a_defconfig
+index f29c166998af..e7672c186325 100644
+--- a/arch/powerpc/configs/85xx/ge_imp3a_defconfig
++++ b/arch/powerpc/configs/85xx/ge_imp3a_defconfig
+@@ -30,7 +30,7 @@ CONFIG_PREEMPT=3Dy
+ # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+ CONFIG_BINFMT_MISC=3Dm
+ CONFIG_MATH_EMULATION=3Dy
+-CONFIG_FORCE_MAX_ZONEORDER=3D17
++CONFIG_ARCH_FORCE_MAX_ORDER=3D17
+ CONFIG_PCI=3Dy
+ CONFIG_PCIEPORTBUS=3Dy
+ CONFIG_PCI_MSI=3Dy
+diff --git a/arch/powerpc/configs/fsl-emb-nonhw.config b/arch/powerpc/confi=
+gs/fsl-emb-nonhw.config
+index f14c6dbd7346..ab8a8c4530d9 100644
+--- a/arch/powerpc/configs/fsl-emb-nonhw.config
++++ b/arch/powerpc/configs/fsl-emb-nonhw.config
+@@ -41,7 +41,7 @@ CONFIG_FIXED_PHY=3Dy
+ CONFIG_FONT_8x16=3Dy
+ CONFIG_FONT_8x8=3Dy
+ CONFIG_FONTS=3Dy
+-CONFIG_FORCE_MAX_ZONEORDER=3D13
++CONFIG_ARCH_FORCE_MAX_ORDER=3D13
+ CONFIG_FRAMEBUFFER_CONSOLE=3Dy
+ CONFIG_FRAME_WARN=3D1024
+ CONFIG_FTL=3Dy
+diff --git a/arch/sh/configs/ecovec24_defconfig b/arch/sh/configs/ecovec24_=
+defconfig
+index e699e2e04128..b52e14ccb450 100644
+--- a/arch/sh/configs/ecovec24_defconfig
++++ b/arch/sh/configs/ecovec24_defconfig
+@@ -8,7 +8,7 @@ CONFIG_MODULES=3Dy
+ CONFIG_MODULE_UNLOAD=3Dy
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_CPU_SUBTYPE_SH7724=3Dy
+-CONFIG_FORCE_MAX_ZONEORDER=3D12
++CONFIG_ARCH_FORCE_MAX_ORDER=3D12
+ CONFIG_MEMORY_SIZE=3D0x10000000
+ CONFIG_FLATMEM_MANUAL=3Dy
+ CONFIG_SH_ECOVEC=3Dy
+diff --git a/arch/sh/mm/Kconfig b/arch/sh/mm/Kconfig
+index ba569cfb4368..411fdc0901f7 100644
+--- a/arch/sh/mm/Kconfig
++++ b/arch/sh/mm/Kconfig
+@@ -18,7 +18,7 @@ config PAGE_OFFSET
+ 	default "0x80000000" if MMU
+ 	default "0x00000000"
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int "Maximum zone order"
+ 	range 9 64 if PAGE_SIZE_16KB
+ 	default "9" if PAGE_SIZE_16KB
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index 1c852bb530ec..4d3d1af90d52 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -269,7 +269,7 @@ config ARCH_SPARSEMEM_ENABLE
+ config ARCH_SPARSEMEM_DEFAULT
+ 	def_bool y if SPARC64
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int "Maximum zone order"
+ 	default "13"
+ 	help
+diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
+index 12ac277282ba..bcb0c5d2abc2 100644
+--- a/arch/xtensa/Kconfig
++++ b/arch/xtensa/Kconfig
+@@ -771,7 +771,7 @@ config HIGHMEM
+=20
+ 	  If unsure, say Y.
+=20
+-config FORCE_MAX_ZONEORDER
++config ARCH_FORCE_MAX_ORDER
+ 	int "Maximum zone order"
+ 	default "11"
+ 	help
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 025754b0bc09..fd61347b4b1f 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -24,10 +24,10 @@
+ #include <asm/page.h>
+=20
+ /* Free memory management - zoned buddy allocator.  */
+-#ifndef CONFIG_FORCE_MAX_ZONEORDER
++#ifndef CONFIG_ARCH_FORCE_MAX_ORDER
+ #define MAX_ORDER 11
+ #else
+-#define MAX_ORDER CONFIG_FORCE_MAX_ZONEORDER
++#define MAX_ORDER CONFIG_ARCH_FORCE_MAX_ORDER
+ #endif
+ #define MAX_ORDER_NR_PAGES (1 << (MAX_ORDER - 1))
+=20
+--=20
+2.35.1
 
