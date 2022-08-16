@@ -1,315 +1,74 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC6633CC
-	for <loongarch@lists.linux.dev>; Tue, 16 Aug 2022 10:25:55 +0000 (UTC)
-Received: by mail-pf1-f173.google.com with SMTP id z187so8953956pfb.12
-        for <loongarch@lists.linux.dev>; Tue, 16 Aug 2022 03:25:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc;
-        bh=fEF3CoPccl6JZpix3E/BpqJEe2QlOtaidHJ+wFl8pX8=;
-        b=Dok+No4WYfsDSuVUovQasZ39mvwZxZZmUZKkmkW8za4WmIj6vUOwHgU/2K+3ElsiYR
-         26wd+auNPq6NEOerc+HsJSOZ3kCk1Tlv315OkwJoxx7/FGPec40CchljiGRHT53kNPQK
-         YEAbM5/P/h/Fdd1EDX6XGvDgHa21NLdIsgpdjp81DZc8yFKHRyLgXq+OhoMEVKSjCPkY
-         xHcdQmiY1TbDa3Z0qoF8PuzunUxM59GkRmKPoOBp8qPzfmMZJ4y7nEMoCw5xXT8d/zH8
-         bBupZwA4A4q2DYCjJ6KdU6J8XjFCeP8MrRHmB77Rc+Rowp6n9mnVq+pcXvdTi4Qo7cHe
-         oC2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc;
-        bh=fEF3CoPccl6JZpix3E/BpqJEe2QlOtaidHJ+wFl8pX8=;
-        b=pU1THmnOgQYEt0J0pZwdcHH+1SKRMDiQvURX4dhvazLPStFdaYfk3dz/Xo+BXE3Wwo
-         U6ZW4v2H5e5hXxK7coo6Zh0T6PWaoQVaxol5T4woje74BYzdyZ3oMl17OxFPut8r4bnG
-         TPrHRu1OudHJKPZSBNaaH8Bhv/p8MJCpsl8jWJUNZCjEkIfbX5eO1g4ip+msM1DEWI7g
-         oQ640C9nOHInB2Ip0hYA1bZobUIoYr3ZbDcBjSWT6L2b38/1W2Gmb4ZfxdqcBUlj+evN
-         k5tLo8GylOREFcH6HBdSimk15z62kuwgjQIpYbHYWh8g7Z3MUxGssHqW3nx7N7+++vpw
-         msEw==
-X-Gm-Message-State: ACgBeo29en6BBFUe8FJaCM/+o9dUcPhXSR9GlQi6QZqRVqyEYio1X/1d
-	DeWmPCq9UzpG9GzYOtX7JJc=
-X-Google-Smtp-Source: AA6agR6X9tJv/8xFmf9q7oYb7/7Ecimcx/1ugpH73ZVFygTg2Vjx1wn8vSlMMsi8MjuCxpeKdHtraA==
-X-Received: by 2002:a63:3303:0:b0:41c:863:aa5f with SMTP id z3-20020a633303000000b0041c0863aa5fmr17634462pgz.138.1660645555220;
-        Tue, 16 Aug 2022 03:25:55 -0700 (PDT)
-Received: from localhost.localdomain ([112.20.110.237])
-        by smtp.gmail.com with ESMTPSA id l2-20020a17090af8c200b001f333fab3d6sm6133717pjd.18.2022.08.16.03.25.49
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 16 Aug 2022 03:25:54 -0700 (PDT)
-From: Feiyang Chen <chris.chenfeiyang@gmail.com>
-X-Google-Original-From: Feiyang Chen <chenfeiyang@loongson.cn>
-To: peppe.cavallaro@st.com,
-	alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com
-Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
-	zhangqing@loongson.cn,
-	chenhuacai@loongson.cn,
-	chris.chenfeiyang@gmail.com,
-	netdev@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH] stmmac: pci: Add LS7A support for dwmac-loongson
-Date: Tue, 16 Aug 2022 18:25:37 +0800
-Message-Id: <20220816102537.33986-1-chenfeiyang@loongson.cn>
-X-Mailer: git-send-email 2.37.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889D61366
+	for <loongarch@lists.linux.dev>; Tue, 16 Aug 2022 10:30:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB9BDC433C1;
+	Tue, 16 Aug 2022 10:30:27 +0000 (UTC)
+Date: Tue, 16 Aug 2022 11:30:23 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	John Hubbard <jhubbard@nvidia.com>, Yang Shi <shy828301@gmail.com>,
+	David Rientjes <rientjes@google.com>,
+	James Houghton <jthoughton@google.com>,
+	Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+	Mike Rapoport <rppt@linux.ibm.com>,
+	Vineet Gupta <vgupta@synopsys.com>, Shawn Guo <shawnguo@kernel.org>,
+	Taichi Sugaya <sugaya.taichi@socionext.com>,
+	Neil Armstrong <narmstrong@baylibre.com>,
+	Qin Jian <qinjian@cqplus1.com>, Guo Ren <guoren@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	"David S. Miller" <davem@davemloft.net>,
+	Chris Zankel <chris@zankel.net>, Arnd Bergmann <arnd@arndb.de>,
+	Ley Foon Tan <ley.foon.tan@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-oxnas@groups.io,
+	linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-xtensa@linux-xtensa.org
+Subject: Re: [PATCH] arch: mm: rename FORCE_MAX_ZONEORDER to
+ ARCH_FORCE_MAX_ORDER
+Message-ID: <Yvtxv2jywm3+Q3ut@arm.com>
+References: <20220815143959.1511278-1-zi.yan@sent.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220815143959.1511278-1-zi.yan@sent.com>
 
-Current dwmac-loongson only support LS2K in the "probed with PCI and
-configured with DT" manner. We add LS7A support on which the devices
-are fully PCI (non-DT).
+On Mon, Aug 15, 2022 at 10:39:59AM -0400, Zi Yan wrote:
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 571cc234d0b3..c6fcd8746f60 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1401,7 +1401,7 @@ config XEN
+>  	help
+>  	  Say Y if you want to run Linux in a Virtual Machine on Xen on ARM64.
+>  
+> -config FORCE_MAX_ZONEORDER
+> +config ARCH_FORCE_MAX_ORDER
+>  	int
+>  	default "14" if ARM64_64K_PAGES
+>  	default "12" if ARM64_16K_PAGES
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
----
- .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 175 ++++++++++++------
- 1 file changed, 122 insertions(+), 53 deletions(-)
+For arm64:
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-index 017dbbda0c1c..50748f047e85 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -9,14 +9,22 @@
- #include <linux/of_irq.h>
- #include "stmmac.h"
- 
--static int loongson_default_data(struct plat_stmmacenet_data *plat)
-+struct stmmac_pci_info {
-+	int (*setup)(struct pci_dev *pdev, struct plat_stmmacenet_data *plat);
-+};
-+
-+static void common_default_data(struct pci_dev *pdev,
-+				struct plat_stmmacenet_data *plat)
- {
-+	plat->bus_id = PCI_DEVID(pdev->bus->number, pdev->devfn);
-+	plat->interface = PHY_INTERFACE_MODE_GMII;
-+
- 	plat->clk_csr = 2;	/* clk_csr_i = 20-35MHz & MDC = clk_csr_i/16 */
- 	plat->has_gmac = 1;
- 	plat->force_sf_dma_mode = 1;
- 
- 	/* Set default value for multicast hash bins */
--	plat->multicast_filter_bins = HASH_TABLE_SIZE;
-+	plat->multicast_filter_bins = 256;
- 
- 	/* Set default value for unicast filter entries */
- 	plat->unicast_filter_entries = 1;
-@@ -35,32 +43,79 @@ static int loongson_default_data(struct plat_stmmacenet_data *plat)
- 	/* Disable RX queues routing by default */
- 	plat->rx_queues_cfg[0].pkt_route = 0x0;
- 
--	/* Default to phy auto-detection */
--	plat->phy_addr = -1;
--
- 	plat->dma_cfg->pbl = 32;
- 	plat->dma_cfg->pblx8 = true;
- 
--	plat->multicast_filter_bins = 256;
-+	plat->clk_ref_rate = 125000000;
-+	plat->clk_ptp_rate = 125000000;
-+}
-+
-+static int loongson_gmac_data(struct pci_dev *pdev,
-+			      struct plat_stmmacenet_data *plat)
-+{
-+	common_default_data(pdev, plat);
-+
-+	plat->mdio_bus_data->phy_mask = 0;
-+
-+	plat->phy_addr = -1;
-+	plat->phy_interface = PHY_INTERFACE_MODE_RGMII_ID;
-+
-+	return 0;
-+}
-+
-+static struct stmmac_pci_info loongson_gmac_pci_info = {
-+	.setup = loongson_gmac_data,
-+};
-+
-+static void loongson_gnet_fix_speed(void *priv, unsigned int speed)
-+{
-+	struct net_device *ndev = (struct net_device *)(*(unsigned long *)priv);
-+	struct stmmac_priv *ptr = netdev_priv(ndev);
-+
-+	if (speed == SPEED_1000) {
-+		if (readl(ptr->ioaddr + MAC_CTRL_REG) & (1 << 15) /* PS */) {
-+			/* reset phy */
-+			phy_set_bits(ndev->phydev, 0 /*MII_BMCR*/,
-+				     0x200 /*BMCR_ANRESTART*/);
-+		}
-+	}
-+}
-+
-+static int loongson_gnet_data(struct pci_dev *pdev,
-+			      struct plat_stmmacenet_data *plat)
-+{
-+	common_default_data(pdev, plat);
-+
-+	plat->mdio_bus_data->phy_mask = 0xfffffffb;
-+
-+	plat->phy_addr = 2;
-+	plat->phy_interface = PHY_INTERFACE_MODE_GMII;
-+
-+	/* GNET 1000M speed need workaround */
-+	plat->fix_mac_speed = loongson_gnet_fix_speed;
-+
-+	/* Get netdev pointer address */
-+	plat->bsp_priv = &(pdev->dev.driver_data);
-+
- 	return 0;
- }
- 
--static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+static struct stmmac_pci_info loongson_gnet_pci_info = {
-+	.setup = loongson_gnet_data,
-+};
-+
-+static int loongson_dwmac_probe(struct pci_dev *pdev,
-+				const struct pci_device_id *id)
- {
- 	struct plat_stmmacenet_data *plat;
-+	struct stmmac_pci_info *info;
- 	struct stmmac_resources res;
- 	struct device_node *np;
--	int ret, i, phy_mode;
-+	int ret, i, bus_id, phy_mode;
- 	bool mdio = false;
- 
- 	np = dev_of_node(&pdev->dev);
--
--	if (!np) {
--		pr_info("dwmac_loongson_pci: No OF node\n");
--		return -ENODEV;
--	}
--
--	if (!of_device_is_compatible(np, "loongson, pci-gmac")) {
-+	if (np && !of_device_is_compatible(np, "loongson, pci-gmac")) {
- 		pr_info("dwmac_loongson_pci: Incompatible OF node\n");
- 		return -ENODEV;
- 	}
-@@ -74,14 +129,14 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
- 		mdio = true;
- 	}
- 
--	if (mdio) {
--		plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
--						   sizeof(*plat->mdio_bus_data),
--						   GFP_KERNEL);
--		if (!plat->mdio_bus_data)
--			return -ENOMEM;
-+	plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
-+					   sizeof(*plat->mdio_bus_data),
-+					   GFP_KERNEL);
-+	if (!plat->mdio_bus_data)
-+		return -ENOMEM;
-+
-+	if (mdio)
- 		plat->mdio_bus_data->needs_reset = true;
--	}
- 
- 	plat->dma_cfg = devm_kzalloc(&pdev->dev, sizeof(*plat->dma_cfg), GFP_KERNEL);
- 	if (!plat->dma_cfg)
-@@ -104,42 +159,52 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
- 		break;
- 	}
- 
--	plat->bus_id = of_alias_get_id(np, "ethernet");
--	if (plat->bus_id < 0)
--		plat->bus_id = pci_dev_id(pdev);
--
--	phy_mode = device_get_phy_mode(&pdev->dev);
--	if (phy_mode < 0) {
--		dev_err(&pdev->dev, "phy_mode not found\n");
--		return phy_mode;
--	}
--
--	plat->phy_interface = phy_mode;
--	plat->interface = PHY_INTERFACE_MODE_GMII;
--
- 	pci_set_master(pdev);
- 
--	loongson_default_data(plat);
--	pci_enable_msi(pdev);
--	memset(&res, 0, sizeof(res));
--	res.addr = pcim_iomap_table(pdev)[0];
-+	info = (struct stmmac_pci_info *)id->driver_data;
-+	ret = info->setup(pdev, plat);
-+	if (ret)
-+		return ret;
- 
--	res.irq = of_irq_get_byname(np, "macirq");
--	if (res.irq < 0) {
--		dev_err(&pdev->dev, "IRQ macirq not found\n");
--		ret = -ENODEV;
-+	if (np) {
-+		bus_id = of_alias_get_id(np, "ethernet");
-+		if (bus_id >= 0)
-+			plat->bus_id = bus_id;
-+
-+		phy_mode = device_get_phy_mode(&pdev->dev);
-+		if (phy_mode < 0) {
-+			dev_err(&pdev->dev, "phy_mode not found\n");
-+			return phy_mode;
-+		}
-+		plat->phy_interface = phy_mode;
- 	}
- 
--	res.wol_irq = of_irq_get_byname(np, "eth_wake_irq");
--	if (res.wol_irq < 0) {
--		dev_info(&pdev->dev, "IRQ eth_wake_irq not found, using macirq\n");
--		res.wol_irq = res.irq;
--	}
-+	pci_enable_msi(pdev);
- 
--	res.lpi_irq = of_irq_get_byname(np, "eth_lpi");
--	if (res.lpi_irq < 0) {
--		dev_err(&pdev->dev, "IRQ eth_lpi not found\n");
--		ret = -ENODEV;
-+	memset(&res, 0, sizeof(res));
-+	res.addr = pcim_iomap_table(pdev)[0];
-+	if (np) {
-+		res.irq = of_irq_get_byname(np, "macirq");
-+		if (res.irq < 0) {
-+			dev_err(&pdev->dev, "IRQ macirq not found\n");
-+			ret = -ENODEV;
-+		}
-+
-+		res.wol_irq = of_irq_get_byname(np, "eth_wake_irq");
-+		if (res.wol_irq < 0) {
-+			dev_info(&pdev->dev,
-+				 "IRQ eth_wake_irq not found, using macirq\n");
-+			res.wol_irq = res.irq;
-+		}
-+
-+		res.lpi_irq = of_irq_get_byname(np, "eth_lpi");
-+		if (res.lpi_irq < 0) {
-+			dev_err(&pdev->dev, "IRQ eth_lpi not found\n");
-+			ret = -ENODEV;
-+		}
-+	} else {
-+		res.irq = pdev->irq;
-+		res.wol_irq = pdev->irq;
- 	}
- 
- 	return stmmac_dvr_probe(&pdev->dev, plat, &res);
-@@ -199,8 +264,12 @@ static int __maybe_unused loongson_dwmac_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(loongson_dwmac_pm_ops, loongson_dwmac_suspend,
- 			 loongson_dwmac_resume);
- 
-+#define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
-+#define PCI_DEVICE_ID_LOONGSON_GNET	0x7a13
-+
- static const struct pci_device_id loongson_dwmac_id_table[] = {
--	{ PCI_VDEVICE(LOONGSON, 0x7a03) },
-+	{ PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_gmac_pci_info) },
-+	{ PCI_DEVICE_DATA(LOONGSON, GNET, &loongson_gnet_pci_info) },
- 	{}
- };
- MODULE_DEVICE_TABLE(pci, loongson_dwmac_id_table);
--- 
-2.31.1
-
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
