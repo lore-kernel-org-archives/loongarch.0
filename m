@@ -1,148 +1,117 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3902F26
-	for <loongarch@lists.linux.dev>; Tue, 16 Aug 2022 08:59:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660640396; x=1692176396;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Fsbw9VD64WNebEA9SmUmkH3lTdV9uckYpcgbPhxuwEE=;
-  b=ZiN6lPqq8e775Jr/8XP9bUPRB6cM/CThHTTpxmub4ovoa9hrEpFkFX3c
-   vEKm0rF191zX7E7rCPIV0a7uq+cfCem7x8eRs/JFXw2HhTSt6F/xPYp76
-   +K2N/0/b32pxlKYpHUE/i9m/SEA2EE0es8UFhtpRTAbOcFlU8HG/F0Sd1
-   QUSf0fV06f6JG1yniGlJJF6O9xbdD2n4TOLZIa04ab/4DfzQeLsWw16m3
-   BpExLbRULOgEI2yKwAJD3AjfKnf6LRb4yYgewlEipFvLhTMzfGD8fuRhr
-   TmsQY0nQbrhI8+KgEYx1Lo3ERCi3JJOAuxesHLnjW+QgiTgXfWt+ERGOk
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="279127693"
-X-IronPort-AV: E=Sophos;i="5.93,240,1654585200"; 
-   d="scan'208";a="279127693"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2022 01:59:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,240,1654585200"; 
-   d="scan'208";a="733222124"
-Received: from lkp-server02.sh.intel.com (HELO 3d2a4d02a2a9) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 16 Aug 2022 01:59:51 -0700
-Received: from kbuild by 3d2a4d02a2a9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1oNsQR-0001f6-0Z;
-	Tue, 16 Aug 2022 08:59:51 +0000
-Date: Tue, 16 Aug 2022 16:59:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: kbuild-all@lists.01.org, loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Add perf events support
-Message-ID: <202208161648.zq48ilEV-lkp@intel.com>
-References: <20220815124702.3330803-1-chenhuacai@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DED32F26
+	for <loongarch@lists.linux.dev>; Tue, 16 Aug 2022 09:06:15 +0000 (UTC)
+Received: from mail-ej1-f43.google.com ([209.85.218.43]) by
+ mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MIyiY-1o3Rzr1bqc-00KPD8 for <loongarch@lists.linux.dev>; Tue, 16 Aug 2022
+ 11:06:13 +0200
+Received: by mail-ej1-f43.google.com with SMTP id dc19so17710456ejb.12
+        for <loongarch@lists.linux.dev>; Tue, 16 Aug 2022 02:06:13 -0700 (PDT)
+X-Gm-Message-State: ACgBeo0FGtAmobJi4Z4oXj8jXXjq7FXdIL2W95k/Smrw2UCQARXX1G82
+	eeksDUWQ72Wff1a3REzhch+KYecQVgnnHsa5XdM=
+X-Google-Smtp-Source: AA6agR7/XFetlBcIi1yiDJejGlDn9WbspN+S3R/Ls0zoxtqtIXYbt5mp8yD7AQyB0r181eqAYOXzNBUZ7EBSTS4h/MQ=
+X-Received: by 2002:a17:906:8a67:b0:738:7bcd:dca1 with SMTP id
+ hy7-20020a1709068a6700b007387bcddca1mr2028088ejc.547.1660640773013; Tue, 16
+ Aug 2022 02:06:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220815124702.3330803-1-chenhuacai@loongson.cn>
+References: <20220815124803.3332991-1-chenhuacai@loongson.cn>
+ <20220815124803.3332991-2-chenhuacai@loongson.cn> <CAK8P3a2P=XSM1_eD-UkvHaQ8Y4ak4BPAAABg2LxNBhyWhhO4uA@mail.gmail.com>
+ <CAAhV-H6ow1WwVdwk4ekQU_aA+dFrUoL3SBrL9Esn9Td-rJKJcg@mail.gmail.com>
+In-Reply-To: <CAAhV-H6ow1WwVdwk4ekQU_aA+dFrUoL3SBrL9Esn9Td-rJKJcg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Tue, 16 Aug 2022 11:05:57 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1bmjckVJnnM=h4p8jJ9ZyYZNj2FOusz5N5s3HkWYy2ow@mail.gmail.com>
+Message-ID: <CAK8P3a1bmjckVJnnM=h4p8jJ9ZyYZNj2FOusz5N5s3HkWYy2ow@mail.gmail.com>
+Subject: Re: [PATCH 2/2] LoongArch: Add ACPI-based generic laptop driver
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@loongson.cn>, 
+	"Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, 
+	Robert Moore <robert.moore@intel.com>, Erik Kaneda <erik.kaneda@intel.com>, 
+	loongarch@lists.linux.dev, linux-arch <linux-arch@vger.kernel.org>, 
+	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jianmin Lv <lvjianmin@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:zdQxPwdB9IMEW1+9HVk42UyhESDWhjVDE0oL8K3dG2GzDR4Ckln
+ gN7+Uz4LUNp2O5GtOyC/6cve61IJq7bZikGsw9o913GpKpoiqcZbJqGZQNu9K9QRX4/AD2G
+ +mjhh4qrKGp8K5GAp+TzkSjppExm37unsqkyaQ9bmFGaYvjo7xoTaKCNF8wP6VURic//9Yn
+ rlhPmi5rgTdqauYlokfbw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bOJHOQ7j6/8=:KTZb9y7ZHE1BX0pHb+Ieqt
+ T8HRaPMcTbtoXungTA8+DAIQpBHX0cEPBEW7Vkyc+Q9PsC8su1+5m+u5jPTySVt8dvHrLW4TB
+ WYCt7CRJsGnq65VqBU6oFmH8nnjpxcd6K9QfcVSH/6Zt5EQAvUtMv9e7MciKi9XBVVadb0J7W
+ G32A3syL7YUN0JJxwIKIcvnGq7Pc5j9/eUPu99W8RdfzJYinLgZnynkqzQ8oAWPUmANpXFA+l
+ bcxNvooN+Q3MggB5kSuFg9FMdWkCUhSV5wnQ5VunQszW11KvOPFXj6mBGvhCAfW+7uwAPzQzJ
+ Evb/HfwogPrzKlH0ioJsGa7/RZisI9FiT6wA0FxiT3rj9s6YLSZI7+mnKZ7xg6AseE61gu1Pe
+ SVvAYtSWEwibkWLTl25/Mx9z1CC9eYEoNrQtYKmr3W8fVNEf0WxS4m5Af1Zzy5F7+tFTMqbhY
+ t/IF3qtn05T17i1F0hII/ZLUabDCyctfvejLNdUipHLI59XBGbFLaQrLArD0wbnxhGk4uLhl1
+ +lwUF40X3MjbpOVepoqdFFgHAAjYmUArfd/VoVp74gUSlS+RzRwB4NfSTNO5khURCnc7iMgyB
+ yCQUAP9qidGJm7kJUXSY7N+kim0Ggtb8WtutqKgfOsDuvKBDjd5nocLdNwYrg1yu6XsNZcqI1
+ U+0NN/Zz6rBZn4CW5eoCqAc8gLeBUBFvS0WlCkvo9eSoiCEivP/3X1zjzz5KVB20BdXH8oz/x
+ wGExt6q5M6hPr1C8bCk+2zxo+iuCwPvQv0VTQy33+4/eHs7VrmH80xwMFPOAVyqY+qQ69zLlJ
+ yuC+Q/OTnGsEx/vem3Nz6dLBbp//UZ5lD4iVWKSbMVeYEUCAiGE6V12B11ozAts3/E0+YA4Bo
+ kLu/TowHGHMj37fWaP4w==
 
-Hi Huacai,
+On Tue, Aug 16, 2022 at 10:55 AM Huacai Chen <chenhuacai@kernel.org> wrote:
+> On Tue, Aug 16, 2022 at 3:11 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Mon, Aug 15, 2022 at 2:48 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
+> > > +
+> > > +static int __init register_generic_subdriver(struct generic_struct *sub_driver)
+> > > +{
+> > > +       int rc;
+> > > +
+> > > +       BUG_ON(!sub_driver->acpi);
+> > > +
+> > > +       sub_driver->acpi->driver = kzalloc(sizeof(struct acpi_driver), GFP_KERNEL);
+> > > +       if (!sub_driver->acpi->driver) {
+> > > +               pr_err("failed to allocate memory for ibm->acpi->driver\n");
+> > > +               return -ENOMEM;
+> > > +       }
+> >
+> > Drivers should be statically allocated. Usually you want one 'struct
+> > acpi_driver' or
+> > 'struct platform_driver' per file, so you can just use 'module_acpi_driver()'.
+> I found that "subdriver" in other laptop drivers also uses dynamical
+> allocation, because there may be various numbers of subdrivers. I want
+> to keep it, at least in the next version for review.
 
-I love your patch! Perhaps something to improve:
+Fair enough, I'm not that familiar with drivers/platform/ conventions,
+so this is
+probably fine.  Adding the drivers/platform/x86 maintainers for clarification,
+since your driver probably fits best into that general class regardless of the
+CPU instruction set.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.0-rc1 next-20220816]
-[cannot apply to soc/for-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > > +static struct generic_acpi_drv_struct ec_event_acpidriver = {
+> > > +       .hid = loongson_htk_device_ids,
+> > > +       .notify = event_notify,
+> > > +       .handle = &hkey_handle,
+> > > +       .type = ACPI_DEVICE_NOTIFY,
+> > > +};
+> >
+> > Same here, this can probably just be an input driver in drivers/input.
+>
+> It seems the existing "laptop drivers" are also complex drivers to
+> bind several "subdrivers" together.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Huacai-Chen/LoongArch-Add-perf-events-support/20220815-204852
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
-config: loongarch-randconfig-s051-20220815 (https://download.01.org/0day-ci/archive/20220816/202208161648.zq48ilEV-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 12.1.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # apt-get install sparse
-        # sparse version: v0.6.4-39-gce1a6720-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/0e6d9490ff3f6129799675b9288135022a0908e2
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Huacai-Chen/LoongArch-Add-perf-events-support/20220815-204852
-        git checkout 0e6d9490ff3f6129799675b9288135022a0908e2
-        # save the config file
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=loongarch 
+Let's see what Hans and Mark think here as well. My feeling is that this
+might be a little different. In the other laptop drivers you'd load a
+module for a Dell/HP/Lenovo/Asus/Acer/... model and that has all the
+bits that this vendor uses across the system, so a single driver makes
+sense.
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+In embedded systems, you'd have SoC specific drivers that we tend
+to put into the respective subsystems (backlight, led, input, ...) and
+then users pick the drivers they want.
 
-sparse warnings: (new ones prefixed by >>)
->> arch/loongarch/kernel/perf_event.c:30:50: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long [noderef] __user *user_frame_tail @@     got unsigned long * @@
-   arch/loongarch/kernel/perf_event.c:30:50: sparse:     expected unsigned long [noderef] __user *user_frame_tail
-   arch/loongarch/kernel/perf_event.c:30:50: sparse:     got unsigned long *
-   arch/loongarch/kernel/perf_event.c: note: in included file (through arch/loongarch/include/asm/cpu-info.h, arch/loongarch/include/asm/processor.h, ...):
-   arch/loongarch/include/asm/loongarch.h:237:16: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_d'
-   arch/loongarch/include/asm/loongarch.h:237:16: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:237:16: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:237:16: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:237:16: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:247:9: sparse: sparse: undefined identifier '__builtin_loongarch_csrwr_d'
-   arch/loongarch/include/asm/loongarch.h:247:9: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:247:9: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:247:9: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:247:9: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:237:16: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:237:16: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:237:16: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:237:16: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:247:9: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:247:9: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:247:9: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:247:9: sparse: sparse: cast from unknown type
+Loongarch is probably somewhere inbetween, since this is a chip
+vendor rather than a laptop vendor, but you have all the same bits
+here. The question is more about where we put it.
 
-vim +30 arch/loongarch/kernel/perf_event.c
-
-    20	
-    21	/*
-    22	 * Get the return address for a single stackframe and return a pointer to the
-    23	 * next frame tail.
-    24	 */
-    25	static unsigned long
-    26	user_backtrace(struct perf_callchain_entry_ctx *entry, unsigned long fp)
-    27	{
-    28		struct stack_frame buftail;
-    29		unsigned long err;
-  > 30		unsigned long __user *user_frame_tail = (unsigned long *)(fp - sizeof(struct stack_frame));
-    31	
-    32		/* Also check accessibility of one struct frame_tail beyond */
-    33		if (!access_ok(user_frame_tail, sizeof(buftail)))
-    34			return 0;
-    35	
-    36		pagefault_disable();
-    37		err = __copy_from_user_inatomic(&buftail, user_frame_tail, sizeof(buftail));
-    38		pagefault_enable();
-    39	
-    40		if (err || (unsigned long)user_frame_tail >= buftail.fp)
-    41			return 0;
-    42	
-    43		perf_callchain_store(entry, buftail.ra);
-    44	
-    45		return buftail.fp;
-    46	}
-    47	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+       Arnd
