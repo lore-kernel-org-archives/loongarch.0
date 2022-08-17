@@ -1,114 +1,377 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C647C
-	for <loongarch@lists.linux.dev>; Wed, 17 Aug 2022 07:18:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3448C43470
-	for <loongarch@lists.linux.dev>; Wed, 17 Aug 2022 07:18:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1660720735;
-	bh=NOwkOziwZGr8EGipTxgGJCUnEbG0oR9cE5ZYhdP60BM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HA1m/NKkRVLQqXFHzhPlsX4MgzEajDLVXbVejWjNceq1sCeNBaa2uWNSjQ9P5cvwe
-	 xbnq0pMLUFvXSNTDFlR0IjOmoMfJ66/08FNQ00HPslF9aIr12QmlsS8orWFkoF0iHl
-	 PUcml3DWAfQ2JNgyJwZYGkiNDSD3Vg+ioxHrDrWa9T+bTrptjSFirwtj9+WMTZPvEH
-	 t5RUTpIP17QTIWKBxGFkY1VMh2QHYm0UTF7x5VCI+7GVueNo01MUXhnhq8P1QwlkOQ
-	 Rr6qic/0rji+GPFsbAoYyuIxsA22Srsr1C+GwDy9MlmFMcZAIvjQ1hffenjQ9wkSMa
-	 8HSkySteaG3SA==
-Received: by mail-wm1-f50.google.com with SMTP id k17so6282699wmr.2
-        for <loongarch@lists.linux.dev>; Wed, 17 Aug 2022 00:18:55 -0700 (PDT)
-X-Gm-Message-State: ACgBeo1Kz/G1ec0PU5GVyQDOFpKP+Lkg3Zsy8h1TwMEsT2KCvF6q1EYV
-	6/gKSXT75e1lRiLSVoatofrsRUqpDGk58NZYmWI=
-X-Google-Smtp-Source: AA6agR4+cY2jPhbCRQzBvm5jD59KKvO56VqpbEkJ7Ko92JyI8Ftn1uzpLyDoJuChItHW1Z9+9PVnZ1VaP/d0bkqgaI8=
-X-Received: by 2002:a05:600c:3d88:b0:3a6:a5:19eb with SMTP id
- bi8-20020a05600c3d8800b003a600a519ebmr1188206wmb.163.1660720734190; Wed, 17
- Aug 2022 00:18:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638317C
+	for <loongarch@lists.linux.dev>; Wed, 17 Aug 2022 07:29:42 +0000 (UTC)
+Received: by mail-pj1-f49.google.com with SMTP id e8-20020a17090a280800b001f2fef7886eso1073464pjd.3
+        for <loongarch@lists.linux.dev>; Wed, 17 Aug 2022 00:29:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc;
+        bh=aD2cHpJkUAZ+6bzE300kLIZZ9k/tT8ByI9TUykR0D6Y=;
+        b=TqfFOpeLf+m9A05oZpaW8OLZYtQVVrnOSpcE8nfsc4ZPNhs9+Mq9yhDMhNy+cR0ASE
+         XuuINMTHvYjo7y1aAFDb4XKsQmYf54qieG/BLBQ1csFDd9LveijeXBWSi3mKj8V4tpAF
+         s3c8bJJzEtbTHPICweuDHTFgpYoGDTiL9xIVoxMm7kAh7hqbFK/x6np6QW9Dw3sFOtu2
+         ASXnfaBDqdk2nF4XKjK12Jc1XnT01jD/Cv8W/gSl0hT6Vdtuh1ADpkPdlTYDVwel9UQY
+         RlVO/m9rwcZ5/WqDCHXmVgS+I4gLUn5eCyfPoZmrpf4mVE0baB4J9r1KF2pt3nDxeQ8E
+         DcjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
+        bh=aD2cHpJkUAZ+6bzE300kLIZZ9k/tT8ByI9TUykR0D6Y=;
+        b=nUSOfUPMdbQK5QMk4UDc2pwkyJR0QLowdw5ZYAMPMSwp+qgDJAuwcHkPHnEkNijaVR
+         1HJ3xbgMZMn54p1PdSQvfFK5WOz1wZMHyQPFiZA/B7jCCXFXhph25ruu/C5WSL0inTPi
+         vORKj8PDi5IlVE87R6fYveLdhc39/2Rs+/7tLLjdtFYQXu6OFEP4uPwuJmeXeoFVbbvh
+         A8M7oeGiZSzjl8Ia5fSdCiMwdrgf97AyHkWQ0GCLYivl8MDPpeBwSGKCKGVIQ2Y/u9QS
+         8YbGBzGAxfVI/l8V0nzGtp2S/XA7IYvIyY1UdjFBIITQ6kxF0jft170FR/fIVkfTuA/1
+         pECA==
+X-Gm-Message-State: ACgBeo1IGUfEwxNxoEMV1huqCwCAz3a0hyIsU9l7/D7m/zmAK+RxKBN4
+	yLTpLff+Hc6OQagcXMAeLbA=
+X-Google-Smtp-Source: AA6agR6EAiieeajF88tVhgBSgRISNOWqa0kQ6JXEThU0OwkwmVocxjf3lzaB6BzaWw6b1mVtx3994g==
+X-Received: by 2002:a17:902:f54a:b0:16f:16bb:778e with SMTP id h10-20020a170902f54a00b0016f16bb778emr24816231plf.37.1660721381711;
+        Wed, 17 Aug 2022 00:29:41 -0700 (PDT)
+Received: from localhost.localdomain ([112.20.110.237])
+        by smtp.gmail.com with ESMTPSA id l2-20020a17090af8c200b001f3076970besm819327pjd.26.2022.08.17.00.29.37
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 17 Aug 2022 00:29:41 -0700 (PDT)
+From: chris.chenfeiyang@gmail.com
+X-Google-Original-From: chenfeiyang@loongson.cn
+To: peppe.cavallaro@st.com,
+	alexandre.torgue@foss.st.com,
+	joabreu@synopsys.com
+Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
+	zhangqing@loongson.cn,
+	chenhuacai@loongson.cn,
+	chris.chenfeiyang@gmail.com,
+	netdev@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH v2 1/2] stmmac: Expose module parameters
+Date: Wed, 17 Aug 2022 15:29:18 +0800
+Message-Id: <5bf66e7d30d909cdaad46557d800d33118404e4d.1660720671.git.chenfeiyang@loongson.cn>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <cover.1660720671.git.chenfeiyang@loongson.cn>
+References: <cover.1660720671.git.chenfeiyang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220617145754.582056-1-chenhuacai@loongson.cn>
- <CAMj1kXERN209b7dbVs_hy4BeUwrmk2p9_vF+Wq2W8PUeHOQTkg@mail.gmail.com>
- <CAAhV-H60CJDRY4c+Eu+L=rNgHsXQqx=HK9nNSqg69WVV+Bm3SQ@mail.gmail.com>
- <CAMj1kXE1MijqonkPeH+Ydg8ti4_4YFXxBKK6Wztb=HtSY5EAgQ@mail.gmail.com>
- <CAAhV-H503hgyUZND2MmZ2h3qVb3SRt79HcQy7HrFmfGBci-QMA@mail.gmail.com>
- <CAMj1kXEzzAXYP3nXo8-Ny+iwuDorrO-JqoKjg3R+4kmhV_v_KQ@mail.gmail.com> <CAAhV-H60mSKx3k1CwBCdubswosgqe+NuVaMtKA=hpjBhq5w5wA@mail.gmail.com>
-In-Reply-To: <CAAhV-H60mSKx3k1CwBCdubswosgqe+NuVaMtKA=hpjBhq5w5wA@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 17 Aug 2022 09:18:42 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFi0o3dOmpW9qarJPH2L2EWKCPKE--3z=jsGjaYh1JrTQ@mail.gmail.com>
-Message-ID: <CAMj1kXFi0o3dOmpW9qarJPH2L2EWKCPKE--3z=jsGjaYh1JrTQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add efistub booting support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 17 Aug 2022 at 09:17, Huacai Chen <chenhuacai@kernel.org> wrote:
->
-> Hi, Ard,
->
-> On Wed, Aug 17, 2022 at 3:00 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Wed, 17 Aug 2022 at 08:43, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > >
-> > > Hi, Ard,
-> > >
-> > > On Tue, Aug 16, 2022 at 11:32 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > >
-> > > > On Tue, 16 Aug 2022 at 17:23, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > >
-> > ...
-> > > > >
-> > > >
-> > > > No that makes no difference. The point is that the EFI stub and the
-> > > > core kernel are the same image, so when the stub runs, the core
-> > > > kernel's screen_info already exists in memory - the only thing you
-> > > > need to do is make it accessible by adding it to image-vars.h
-> > > Emm,  in ARM64,
-> > > #define alloc_screen_info(x...)         &screen_info
-> > >
-> > > So screen_info is a global variable in the core kernel. For the zboot
-> > > case (our own implementation, not sure about the proposing new
-> > > method), efistub may be able to fill this info, but while
-> > > decompressing, screen_info will be overwritten. I think.
-> > >
-> >
-> > Right. So you can drop it then.
-> OK, then can we rename LINUX_EFI_ARM_SCREEN_INFO_TABLE_GUID to
-> LINUX_EFI_SCREEN_INFO_TABLE_GUID and avoid define a dedicated GUID for
-> each arch?
->
+From: Feiyang Chen <chenfeiyang@loongson.cn>
 
-If you use the arm64 approach, you don't need a GUID at all.
+Expose module parameters so that we can use them in specific device
+configurations. Add the 'stmmac_' prefix for them to avoid conflicts.
 
-...
+Meanwhile, there was a 'buf_sz' local variable in stmmac_rx() with the
+same name as the global variable, and now we can distinguish them.
 
-> > > > > > This code is not checking a platform feature so it does not belong here.
-> > > > > >
-> > > > > > The EFI stub code is an ordinary EFI app, and it runs in the execution
-> > > > > > context provided by EFI. So why is this needed so early? Can you move
-> > > > > > it into the kernel entry routine instead?
-> > > > > This is useful once we use our own zboot implementation, maybe we
-> > > > > don't need it with the new method you are proposing.
-> > > > >
-> > > >
-> > > > If this is part of your zboot implementation, please drop it for now.
-> > > > Let's try using the generic EFI zboot instead - if we need to, we can
-> > > > find a way to add it there.
-> > > >
-> > > > But out of curiosity, why is this needed at all?
-> > > My mistake, the real reason of configuring DMW in stub is that the
-> > > address of real_kernel_entry() is a kernel va, not a efi va (which is
-> > > the same as pa).
-> > >
-> >
-> > That means you can move this code to efi_enter_kernel(), no?
-> Yes, we can move to efi_enter_kernel(), thank you.
->
+Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h  |  11 ++
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c | 117 +++++++++---------
+ 2 files changed, 70 insertions(+), 58 deletions(-)
 
-OK
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index bdbf86cb102a..e5395ed96817 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -332,6 +332,17 @@ enum stmmac_state {
+ 	STMMAC_SERVICE_SCHED,
+ };
+ 
++/* Module parameters */
++extern int stmmac_watchdog;
++extern int stmmac_debug;
++extern int stmmac_phyaddr;
++extern int stmmac_flow_ctrl;
++extern int stmmac_pause;
++extern int stmmac_tc;
++extern int stmmac_buf_sz;
++extern int stmmac_eee_timer;
++extern unsigned int stmmac_chain_mode;
++
+ int stmmac_mdio_unregister(struct net_device *ndev);
+ int stmmac_mdio_register(struct net_device *ndev);
+ int stmmac_mdio_reset(struct mii_bus *mii);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 070b5ef165eb..1a40dc88148e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -62,16 +62,16 @@
+ 
+ /* Module parameters */
+ #define TX_TIMEO	5000
+-static int watchdog = TX_TIMEO;
+-module_param(watchdog, int, 0644);
++int stmmac_watchdog = TX_TIMEO;
++module_param_named(watchdog, stmmac_watchdog, int, 0644);
+ MODULE_PARM_DESC(watchdog, "Transmit timeout in milliseconds (default 5s)");
+ 
+-static int debug = -1;
+-module_param(debug, int, 0644);
++int stmmac_debug = -1;
++module_param_named(debug, stmmac_debug, int, 0644);
+ MODULE_PARM_DESC(debug, "Message Level (-1: default, 0: no output, 16: all)");
+ 
+-static int phyaddr = -1;
+-module_param(phyaddr, int, 0444);
++int stmmac_phyaddr = -1;
++module_param_named(phyaddr, stmmac_phyaddr, int, 0444);
+ MODULE_PARM_DESC(phyaddr, "Physical device address");
+ 
+ #define STMMAC_TX_THRESH(x)	((x)->dma_conf.dma_tx_size / 4)
+@@ -87,22 +87,22 @@ MODULE_PARM_DESC(phyaddr, "Physical device address");
+ #define STMMAC_XDP_TX		BIT(1)
+ #define STMMAC_XDP_REDIRECT	BIT(2)
+ 
+-static int flow_ctrl = FLOW_AUTO;
+-module_param(flow_ctrl, int, 0644);
++int stmmac_flow_ctrl = FLOW_AUTO;
++module_param_named(flow_ctrl, stmmac_flow_ctrl, int, 0644);
+ MODULE_PARM_DESC(flow_ctrl, "Flow control ability [on/off]");
+ 
+-static int pause = PAUSE_TIME;
+-module_param(pause, int, 0644);
++int stmmac_pause = PAUSE_TIME;
++module_param_named(pause, stmmac_pause, int, 0644);
+ MODULE_PARM_DESC(pause, "Flow Control Pause Time");
+ 
+ #define TC_DEFAULT 64
+-static int tc = TC_DEFAULT;
+-module_param(tc, int, 0644);
++int stmmac_tc = TC_DEFAULT;
++module_param_named(tc, stmmac_tc, int, 0644);
+ MODULE_PARM_DESC(tc, "DMA threshold control value");
+ 
+ #define	DEFAULT_BUFSIZE	1536
+-static int buf_sz = DEFAULT_BUFSIZE;
+-module_param(buf_sz, int, 0644);
++int stmmac_buf_sz = DEFAULT_BUFSIZE;
++module_param_named(buf_sz, stmmac_buf_sz, int, 0644);
+ MODULE_PARM_DESC(buf_sz, "DMA buffer size");
+ 
+ #define	STMMAC_RX_COPYBREAK	256
+@@ -112,16 +112,16 @@ static const u32 default_msg_level = (NETIF_MSG_DRV | NETIF_MSG_PROBE |
+ 				      NETIF_MSG_IFDOWN | NETIF_MSG_TIMER);
+ 
+ #define STMMAC_DEFAULT_LPI_TIMER	1000
+-static int eee_timer = STMMAC_DEFAULT_LPI_TIMER;
+-module_param(eee_timer, int, 0644);
++int stmmac_eee_timer = STMMAC_DEFAULT_LPI_TIMER;
++module_param_named(eee_timer, stmmac_eee_timer, int, 0644);
+ MODULE_PARM_DESC(eee_timer, "LPI tx expiration time in msec");
+ #define STMMAC_LPI_T(x) (jiffies + usecs_to_jiffies(x))
+ 
+ /* By default the driver will use the ring mode to manage tx and rx descriptors,
+  * but allow user to force to use the chain instead of the ring
+  */
+-static unsigned int chain_mode;
+-module_param(chain_mode, int, 0444);
++unsigned int stmmac_chain_mode;
++module_param_named(chain_mode, stmmac_chain_mode, int, 0444);
+ MODULE_PARM_DESC(chain_mode, "To use chain instead of ring mode");
+ 
+ static irqreturn_t stmmac_interrupt(int irq, void *dev_id);
+@@ -185,18 +185,19 @@ EXPORT_SYMBOL_GPL(stmmac_bus_clks_config);
+  */
+ static void stmmac_verify_args(void)
+ {
+-	if (unlikely(watchdog < 0))
+-		watchdog = TX_TIMEO;
+-	if (unlikely((buf_sz < DEFAULT_BUFSIZE) || (buf_sz > BUF_SIZE_16KiB)))
+-		buf_sz = DEFAULT_BUFSIZE;
+-	if (unlikely(flow_ctrl > 1))
+-		flow_ctrl = FLOW_AUTO;
+-	else if (likely(flow_ctrl < 0))
+-		flow_ctrl = FLOW_OFF;
+-	if (unlikely((pause < 0) || (pause > 0xffff)))
+-		pause = PAUSE_TIME;
+-	if (eee_timer < 0)
+-		eee_timer = STMMAC_DEFAULT_LPI_TIMER;
++	if (unlikely(stmmac_watchdog < 0))
++		stmmac_watchdog = TX_TIMEO;
++	if (unlikely((stmmac_buf_sz < DEFAULT_BUFSIZE) ||
++	    (stmmac_buf_sz > BUF_SIZE_16KiB)))
++		stmmac_buf_sz = DEFAULT_BUFSIZE;
++	if (unlikely(stmmac_flow_ctrl > 1))
++		stmmac_flow_ctrl = FLOW_AUTO;
++	else if (likely(stmmac_flow_ctrl < 0))
++		stmmac_flow_ctrl = FLOW_OFF;
++	if (unlikely((stmmac_pause < 0) || (stmmac_pause > 0xffff)))
++		stmmac_pause = PAUSE_TIME;
++	if (stmmac_eee_timer < 0)
++		stmmac_eee_timer = STMMAC_DEFAULT_LPI_TIMER;
+ }
+ 
+ static void __stmmac_disable_all_queues(struct stmmac_priv *priv)
+@@ -2338,8 +2339,8 @@ static void stmmac_dma_operation_mode(struct stmmac_priv *priv)
+ 	txfifosz /= tx_channels_count;
+ 
+ 	if (priv->plat->force_thresh_dma_mode) {
+-		txmode = tc;
+-		rxmode = tc;
++		txmode = stmmac_tc;
++		rxmode = stmmac_tc;
+ 	} else if (priv->plat->force_sf_dma_mode || priv->plat->tx_coe) {
+ 		/*
+ 		 * In case of GMAC, SF mode can be enabled
+@@ -2352,7 +2353,7 @@ static void stmmac_dma_operation_mode(struct stmmac_priv *priv)
+ 		rxmode = SF_DMA_MODE;
+ 		priv->xstats.threshold = SF_DMA_MODE;
+ 	} else {
+-		txmode = tc;
++		txmode = stmmac_tc;
+ 		rxmode = SF_DMA_MODE;
+ 	}
+ 
+@@ -2483,16 +2484,16 @@ static bool stmmac_xdp_xmit_zc(struct stmmac_priv *priv, u32 queue, u32 budget)
+ 
+ static void stmmac_bump_dma_threshold(struct stmmac_priv *priv, u32 chan)
+ {
+-	if (unlikely(priv->xstats.threshold != SF_DMA_MODE) && tc <= 256) {
+-		tc += 64;
++	if (unlikely(priv->xstats.threshold != SF_DMA_MODE) && stmmac_tc <= 256) {
++		stmmac_tc += 64;
+ 
+ 		if (priv->plat->force_thresh_dma_mode)
+-			stmmac_set_dma_operation_mode(priv, tc, tc, chan);
++			stmmac_set_dma_operation_mode(priv, stmmac_tc, stmmac_tc, chan);
+ 		else
+-			stmmac_set_dma_operation_mode(priv, tc, SF_DMA_MODE,
++			stmmac_set_dma_operation_mode(priv, stmmac_tc, SF_DMA_MODE,
+ 						      chan);
+ 
+-		priv->xstats.threshold = tc;
++		priv->xstats.threshold = stmmac_tc;
+ 	}
+ }
+ 
+@@ -3337,7 +3338,7 @@ static int stmmac_hw_setup(struct net_device *dev, bool ptp_register)
+ 
+ 	/* Convert the timer from msec to usec */
+ 	if (!priv->tx_lpi_timer)
+-		priv->tx_lpi_timer = eee_timer * 1000;
++		priv->tx_lpi_timer = stmmac_eee_timer * 1000;
+ 
+ 	if (priv->use_riwt) {
+ 		u32 queue;
+@@ -3791,11 +3792,11 @@ static int __stmmac_open(struct net_device *dev,
+ 
+ 	/* Extra statistics */
+ 	memset(&priv->xstats, 0, sizeof(struct stmmac_extra_stats));
+-	priv->xstats.threshold = tc;
++	priv->xstats.threshold = stmmac_tc;
+ 
+ 	priv->rx_copybreak = STMMAC_RX_COPYBREAK;
+ 
+-	buf_sz = dma_conf->dma_buf_sz;
++	stmmac_buf_sz = dma_conf->dma_buf_sz;
+ 	memcpy(&priv->dma_conf, dma_conf, sizeof(*dma_conf));
+ 
+ 	stmmac_reset_queues_param(priv);
+@@ -6785,8 +6786,8 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
+ 
+ 	/* dwmac-sun8i only work in chain mode */
+ 	if (priv->plat->has_sun8i)
+-		chain_mode = 1;
+-	priv->chain_mode = chain_mode;
++		stmmac_chain_mode = 1;
++	priv->chain_mode = stmmac_chain_mode;
+ 
+ 	/* Initialize HW Interface */
+ 	ret = stmmac_hwif_init(priv);
+@@ -7057,7 +7058,7 @@ int stmmac_dvr_probe(struct device *device,
+ 	priv->dev = ndev;
+ 
+ 	stmmac_set_ethtool_ops(ndev);
+-	priv->pause = pause;
++	priv->pause = stmmac_pause;
+ 	priv->plat = plat_dat;
+ 	priv->ioaddr = res->addr;
+ 	priv->dev->base_addr = (unsigned long)res->addr;
+@@ -7100,8 +7101,8 @@ int stmmac_dvr_probe(struct device *device,
+ 	/* Override with kernel parameters if supplied XXX CRS XXX
+ 	 * this needs to have multiple instances
+ 	 */
+-	if ((phyaddr >= 0) && (phyaddr <= 31))
+-		priv->plat->phy_addr = phyaddr;
++	if ((stmmac_phyaddr >= 0) && (stmmac_phyaddr <= 31))
++		priv->plat->phy_addr = stmmac_phyaddr;
+ 
+ 	if (priv->plat->stmmac_rst) {
+ 		ret = reset_control_assert(priv->plat->stmmac_rst);
+@@ -7188,7 +7189,7 @@ int stmmac_dvr_probe(struct device *device,
+ 	}
+ 
+ 	ndev->features |= ndev->hw_features | NETIF_F_HIGHDMA;
+-	ndev->watchdog_timeo = msecs_to_jiffies(watchdog);
++	ndev->watchdog_timeo = msecs_to_jiffies(stmmac_watchdog);
+ #ifdef STMMAC_VLAN_TAG_USED
+ 	/* Both mac100 and gmac support receive VLAN tag detection */
+ 	ndev->features |= NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX;
+@@ -7202,7 +7203,7 @@ int stmmac_dvr_probe(struct device *device,
+ 			ndev->features |= NETIF_F_HW_VLAN_STAG_TX;
+ 	}
+ #endif
+-	priv->msg_enable = netif_msg_init(debug, default_msg_level);
++	priv->msg_enable = netif_msg_init(stmmac_debug, default_msg_level);
+ 
+ 	/* Initialize RSS */
+ 	rxq = priv->plat->rx_queues_to_use;
+@@ -7232,7 +7233,7 @@ int stmmac_dvr_probe(struct device *device,
+ 			 "%s: warning: maxmtu having invalid value (%d)\n",
+ 			 __func__, priv->plat->maxmtu);
+ 
+-	if (flow_ctrl)
++	if (stmmac_flow_ctrl)
+ 		priv->flow_ctrl = FLOW_AUTO;	/* RX/TX pause on */
+ 
+ 	/* Setup channels NAPI */
+@@ -7574,31 +7575,31 @@ static int __init stmmac_cmdline_opt(char *str)
+ 		return 1;
+ 	while ((opt = strsep(&str, ",")) != NULL) {
+ 		if (!strncmp(opt, "debug:", 6)) {
+-			if (kstrtoint(opt + 6, 0, &debug))
++			if (kstrtoint(opt + 6, 0, &stmmac_debug))
+ 				goto err;
+ 		} else if (!strncmp(opt, "phyaddr:", 8)) {
+-			if (kstrtoint(opt + 8, 0, &phyaddr))
++			if (kstrtoint(opt + 8, 0, &stmmac_phyaddr))
+ 				goto err;
+ 		} else if (!strncmp(opt, "buf_sz:", 7)) {
+-			if (kstrtoint(opt + 7, 0, &buf_sz))
++			if (kstrtoint(opt + 7, 0, &stmmac_buf_sz))
+ 				goto err;
+ 		} else if (!strncmp(opt, "tc:", 3)) {
+-			if (kstrtoint(opt + 3, 0, &tc))
++			if (kstrtoint(opt + 3, 0, &stmmac_tc))
+ 				goto err;
+ 		} else if (!strncmp(opt, "watchdog:", 9)) {
+-			if (kstrtoint(opt + 9, 0, &watchdog))
++			if (kstrtoint(opt + 9, 0, &stmmac_watchdog))
+ 				goto err;
+ 		} else if (!strncmp(opt, "flow_ctrl:", 10)) {
+-			if (kstrtoint(opt + 10, 0, &flow_ctrl))
++			if (kstrtoint(opt + 10, 0, &stmmac_flow_ctrl))
+ 				goto err;
+ 		} else if (!strncmp(opt, "pause:", 6)) {
+-			if (kstrtoint(opt + 6, 0, &pause))
++			if (kstrtoint(opt + 6, 0, &stmmac_pause))
+ 				goto err;
+ 		} else if (!strncmp(opt, "eee_timer:", 10)) {
+-			if (kstrtoint(opt + 10, 0, &eee_timer))
++			if (kstrtoint(opt + 10, 0, &stmmac_eee_timer))
+ 				goto err;
+ 		} else if (!strncmp(opt, "chain_mode:", 11)) {
+-			if (kstrtoint(opt + 11, 0, &chain_mode))
++			if (kstrtoint(opt + 11, 0, &stmmac_chain_mode))
+ 				goto err;
+ 		}
+ 	}
+-- 
+2.31.1
+
