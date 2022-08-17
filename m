@@ -1,41 +1,41 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638317C
-	for <loongarch@lists.linux.dev>; Wed, 17 Aug 2022 07:29:42 +0000 (UTC)
-Received: by mail-pj1-f49.google.com with SMTP id e8-20020a17090a280800b001f2fef7886eso1073464pjd.3
-        for <loongarch@lists.linux.dev>; Wed, 17 Aug 2022 00:29:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188077C
+	for <loongarch@lists.linux.dev>; Wed, 17 Aug 2022 07:29:47 +0000 (UTC)
+Received: by mail-pl1-f178.google.com with SMTP id t3so3433672ply.2
+        for <loongarch@lists.linux.dev>; Wed, 17 Aug 2022 00:29:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=aD2cHpJkUAZ+6bzE300kLIZZ9k/tT8ByI9TUykR0D6Y=;
-        b=TqfFOpeLf+m9A05oZpaW8OLZYtQVVrnOSpcE8nfsc4ZPNhs9+Mq9yhDMhNy+cR0ASE
-         XuuINMTHvYjo7y1aAFDb4XKsQmYf54qieG/BLBQ1csFDd9LveijeXBWSi3mKj8V4tpAF
-         s3c8bJJzEtbTHPICweuDHTFgpYoGDTiL9xIVoxMm7kAh7hqbFK/x6np6QW9Dw3sFOtu2
-         ASXnfaBDqdk2nF4XKjK12Jc1XnT01jD/Cv8W/gSl0hT6Vdtuh1ADpkPdlTYDVwel9UQY
-         RlVO/m9rwcZ5/WqDCHXmVgS+I4gLUn5eCyfPoZmrpf4mVE0baB4J9r1KF2pt3nDxeQ8E
-         DcjA==
+        bh=bgttJYEOERx5qc8Fss9yIg6f5GDvQ+wYZ203XEFeUg0=;
+        b=XC9XZxtdG6LJ6tSyJrFtyQ3H7ogFrNlILsILo2+EsIcuxU6Y01nCFe2EoEccCDe9kB
+         h8N0VkUMCNVgVIKzN4iasFKBZbg67NW7uYxN4uhpYu/x8oJBV4vf5Ykd/km8f4CMxIL+
+         MXL+G4Jg1uhe28eYs02p7qXbeaAwUHhfr1BsLmkyCjeurW4gIEnD+RXlhCcZ+dmBtmUF
+         d9ICQ8jYXX3YIyHfLD66rScfQlvHCfHZFqGbt52scO8rSQx2+/vuTUm6D4Fw82WQk+yo
+         7Jbiwk1AhZ+z/6WxevMSbQw2TB/bvlbyRz1VrUlWGynyOQ2UGGT0sm/OiJ9SgZmdkhMB
+         ntWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=aD2cHpJkUAZ+6bzE300kLIZZ9k/tT8ByI9TUykR0D6Y=;
-        b=nUSOfUPMdbQK5QMk4UDc2pwkyJR0QLowdw5ZYAMPMSwp+qgDJAuwcHkPHnEkNijaVR
-         1HJ3xbgMZMn54p1PdSQvfFK5WOz1wZMHyQPFiZA/B7jCCXFXhph25ruu/C5WSL0inTPi
-         vORKj8PDi5IlVE87R6fYveLdhc39/2Rs+/7tLLjdtFYQXu6OFEP4uPwuJmeXeoFVbbvh
-         A8M7oeGiZSzjl8Ia5fSdCiMwdrgf97AyHkWQ0GCLYivl8MDPpeBwSGKCKGVIQ2Y/u9QS
-         8YbGBzGAxfVI/l8V0nzGtp2S/XA7IYvIyY1UdjFBIITQ6kxF0jft170FR/fIVkfTuA/1
-         pECA==
-X-Gm-Message-State: ACgBeo1IGUfEwxNxoEMV1huqCwCAz3a0hyIsU9l7/D7m/zmAK+RxKBN4
-	yLTpLff+Hc6OQagcXMAeLbA=
-X-Google-Smtp-Source: AA6agR6EAiieeajF88tVhgBSgRISNOWqa0kQ6JXEThU0OwkwmVocxjf3lzaB6BzaWw6b1mVtx3994g==
-X-Received: by 2002:a17:902:f54a:b0:16f:16bb:778e with SMTP id h10-20020a170902f54a00b0016f16bb778emr24816231plf.37.1660721381711;
-        Wed, 17 Aug 2022 00:29:41 -0700 (PDT)
+        bh=bgttJYEOERx5qc8Fss9yIg6f5GDvQ+wYZ203XEFeUg0=;
+        b=oSJwfFEfqHNUnRCQul3NQ6YIXSWBkryWq7VkwaQ+KHzm+ulsV7JtRHpwRaS6qlBPRr
+         zOtn/ElNv8GwCSc5fvm4EAo+C6o7Lmsxu8BJtgBn8FW9OomB/OqHamFKnQ00YTKiFXjA
+         noJNJObdRuUe8hYTGp/YKYjF6J/4ilQ0srIruVO+93+OF4b5SwTmhke+6XU/1HD4FyIY
+         eZV2jQ5fXd/+rLU+nuN38mygLvH3PRVaxcFZ5PDo1VavI7aM2syzecaSeBTwbMmJfB7H
+         WIzxbZr5Y0Ak/ZZv5b8sTLL4FcGyXvIvdDCBplS+bsPS1p18tBrnHNI5Grr/2J2l+Cww
+         4Wrw==
+X-Gm-Message-State: ACgBeo3cpGwqEOu4sAjMCpOhUqIAq5UNBgLSoikBdS4iK5CSzhq64UlD
+	rEPu6qxy/VdldDyIo9Q44Sw=
+X-Google-Smtp-Source: AA6agR7F4CqGTk6G08JMytb3ps+ebcmG0kGxR/SWJGxKZxC9+qGW3yi+/UF58XrqWTZ0iqRznnn8Zg==
+X-Received: by 2002:a17:902:f711:b0:170:9e3c:1540 with SMTP id h17-20020a170902f71100b001709e3c1540mr24632396plo.22.1660721386582;
+        Wed, 17 Aug 2022 00:29:46 -0700 (PDT)
 Received: from localhost.localdomain ([112.20.110.237])
-        by smtp.gmail.com with ESMTPSA id l2-20020a17090af8c200b001f3076970besm819327pjd.26.2022.08.17.00.29.37
+        by smtp.gmail.com with ESMTPSA id l2-20020a17090af8c200b001f3076970besm819327pjd.26.2022.08.17.00.29.42
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 17 Aug 2022 00:29:41 -0700 (PDT)
+        Wed, 17 Aug 2022 00:29:46 -0700 (PDT)
 From: chris.chenfeiyang@gmail.com
 X-Google-Original-From: chenfeiyang@loongson.cn
 To: peppe.cavallaro@st.com,
@@ -47,9 +47,9 @@ Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
 	chris.chenfeiyang@gmail.com,
 	netdev@vger.kernel.org,
 	loongarch@lists.linux.dev
-Subject: [PATCH v2 1/2] stmmac: Expose module parameters
-Date: Wed, 17 Aug 2022 15:29:18 +0800
-Message-Id: <5bf66e7d30d909cdaad46557d800d33118404e4d.1660720671.git.chenfeiyang@loongson.cn>
+Subject: [PATCH v2 2/2] stmmac: pci: Add LS7A support for dwmac-loongson
+Date: Wed, 17 Aug 2022 15:29:19 +0800
+Message-Id: <b530f9b0406b3e6411c193f6f1937416021465c5.1660720671.git.chenfeiyang@loongson.cn>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <cover.1660720671.git.chenfeiyang@loongson.cn>
 References: <cover.1660720671.git.chenfeiyang@loongson.cn>
@@ -63,315 +63,259 @@ Content-Transfer-Encoding: 8bit
 
 From: Feiyang Chen <chenfeiyang@loongson.cn>
 
-Expose module parameters so that we can use them in specific device
-configurations. Add the 'stmmac_' prefix for them to avoid conflicts.
+Current dwmac-loongson only support LS2K in the "probed with PCI and
+configured with DT" manner. We add LS7A support on which the devices
+are fully PCI (non-DT).
 
-Meanwhile, there was a 'buf_sz' local variable in stmmac_rx() with the
-same name as the global variable, and now we can distinguish them.
-
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac.h  |  11 ++
- .../net/ethernet/stmicro/stmmac/stmmac_main.c | 117 +++++++++---------
- 2 files changed, 70 insertions(+), 58 deletions(-)
+ .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 177 ++++++++++++------
+ 1 file changed, 124 insertions(+), 53 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index bdbf86cb102a..e5395ed96817 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-@@ -332,6 +332,17 @@ enum stmmac_state {
- 	STMMAC_SERVICE_SCHED,
- };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+index 017dbbda0c1c..3cf1ae49206b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+@@ -9,14 +9,22 @@
+ #include <linux/of_irq.h>
+ #include "stmmac.h"
  
-+/* Module parameters */
-+extern int stmmac_watchdog;
-+extern int stmmac_debug;
-+extern int stmmac_phyaddr;
-+extern int stmmac_flow_ctrl;
-+extern int stmmac_pause;
-+extern int stmmac_tc;
-+extern int stmmac_buf_sz;
-+extern int stmmac_eee_timer;
-+extern unsigned int stmmac_chain_mode;
+-static int loongson_default_data(struct plat_stmmacenet_data *plat)
++struct stmmac_pci_info {
++	int (*setup)(struct pci_dev *pdev, struct plat_stmmacenet_data *plat);
++};
 +
- int stmmac_mdio_unregister(struct net_device *ndev);
- int stmmac_mdio_register(struct net_device *ndev);
- int stmmac_mdio_reset(struct mii_bus *mii);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 070b5ef165eb..1a40dc88148e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -62,16 +62,16 @@
- 
- /* Module parameters */
- #define TX_TIMEO	5000
--static int watchdog = TX_TIMEO;
--module_param(watchdog, int, 0644);
-+int stmmac_watchdog = TX_TIMEO;
-+module_param_named(watchdog, stmmac_watchdog, int, 0644);
- MODULE_PARM_DESC(watchdog, "Transmit timeout in milliseconds (default 5s)");
- 
--static int debug = -1;
--module_param(debug, int, 0644);
-+int stmmac_debug = -1;
-+module_param_named(debug, stmmac_debug, int, 0644);
- MODULE_PARM_DESC(debug, "Message Level (-1: default, 0: no output, 16: all)");
- 
--static int phyaddr = -1;
--module_param(phyaddr, int, 0444);
-+int stmmac_phyaddr = -1;
-+module_param_named(phyaddr, stmmac_phyaddr, int, 0444);
- MODULE_PARM_DESC(phyaddr, "Physical device address");
- 
- #define STMMAC_TX_THRESH(x)	((x)->dma_conf.dma_tx_size / 4)
-@@ -87,22 +87,22 @@ MODULE_PARM_DESC(phyaddr, "Physical device address");
- #define STMMAC_XDP_TX		BIT(1)
- #define STMMAC_XDP_REDIRECT	BIT(2)
- 
--static int flow_ctrl = FLOW_AUTO;
--module_param(flow_ctrl, int, 0644);
-+int stmmac_flow_ctrl = FLOW_AUTO;
-+module_param_named(flow_ctrl, stmmac_flow_ctrl, int, 0644);
- MODULE_PARM_DESC(flow_ctrl, "Flow control ability [on/off]");
- 
--static int pause = PAUSE_TIME;
--module_param(pause, int, 0644);
-+int stmmac_pause = PAUSE_TIME;
-+module_param_named(pause, stmmac_pause, int, 0644);
- MODULE_PARM_DESC(pause, "Flow Control Pause Time");
- 
- #define TC_DEFAULT 64
--static int tc = TC_DEFAULT;
--module_param(tc, int, 0644);
-+int stmmac_tc = TC_DEFAULT;
-+module_param_named(tc, stmmac_tc, int, 0644);
- MODULE_PARM_DESC(tc, "DMA threshold control value");
- 
- #define	DEFAULT_BUFSIZE	1536
--static int buf_sz = DEFAULT_BUFSIZE;
--module_param(buf_sz, int, 0644);
-+int stmmac_buf_sz = DEFAULT_BUFSIZE;
-+module_param_named(buf_sz, stmmac_buf_sz, int, 0644);
- MODULE_PARM_DESC(buf_sz, "DMA buffer size");
- 
- #define	STMMAC_RX_COPYBREAK	256
-@@ -112,16 +112,16 @@ static const u32 default_msg_level = (NETIF_MSG_DRV | NETIF_MSG_PROBE |
- 				      NETIF_MSG_IFDOWN | NETIF_MSG_TIMER);
- 
- #define STMMAC_DEFAULT_LPI_TIMER	1000
--static int eee_timer = STMMAC_DEFAULT_LPI_TIMER;
--module_param(eee_timer, int, 0644);
-+int stmmac_eee_timer = STMMAC_DEFAULT_LPI_TIMER;
-+module_param_named(eee_timer, stmmac_eee_timer, int, 0644);
- MODULE_PARM_DESC(eee_timer, "LPI tx expiration time in msec");
- #define STMMAC_LPI_T(x) (jiffies + usecs_to_jiffies(x))
- 
- /* By default the driver will use the ring mode to manage tx and rx descriptors,
-  * but allow user to force to use the chain instead of the ring
-  */
--static unsigned int chain_mode;
--module_param(chain_mode, int, 0444);
-+unsigned int stmmac_chain_mode;
-+module_param_named(chain_mode, stmmac_chain_mode, int, 0444);
- MODULE_PARM_DESC(chain_mode, "To use chain instead of ring mode");
- 
- static irqreturn_t stmmac_interrupt(int irq, void *dev_id);
-@@ -185,18 +185,19 @@ EXPORT_SYMBOL_GPL(stmmac_bus_clks_config);
-  */
- static void stmmac_verify_args(void)
++static void common_default_data(struct pci_dev *pdev,
++				struct plat_stmmacenet_data *plat)
  {
--	if (unlikely(watchdog < 0))
--		watchdog = TX_TIMEO;
--	if (unlikely((buf_sz < DEFAULT_BUFSIZE) || (buf_sz > BUF_SIZE_16KiB)))
--		buf_sz = DEFAULT_BUFSIZE;
--	if (unlikely(flow_ctrl > 1))
--		flow_ctrl = FLOW_AUTO;
--	else if (likely(flow_ctrl < 0))
--		flow_ctrl = FLOW_OFF;
--	if (unlikely((pause < 0) || (pause > 0xffff)))
--		pause = PAUSE_TIME;
--	if (eee_timer < 0)
--		eee_timer = STMMAC_DEFAULT_LPI_TIMER;
-+	if (unlikely(stmmac_watchdog < 0))
-+		stmmac_watchdog = TX_TIMEO;
-+	if (unlikely((stmmac_buf_sz < DEFAULT_BUFSIZE) ||
-+	    (stmmac_buf_sz > BUF_SIZE_16KiB)))
-+		stmmac_buf_sz = DEFAULT_BUFSIZE;
-+	if (unlikely(stmmac_flow_ctrl > 1))
-+		stmmac_flow_ctrl = FLOW_AUTO;
-+	else if (likely(stmmac_flow_ctrl < 0))
-+		stmmac_flow_ctrl = FLOW_OFF;
-+	if (unlikely((stmmac_pause < 0) || (stmmac_pause > 0xffff)))
-+		stmmac_pause = PAUSE_TIME;
-+	if (stmmac_eee_timer < 0)
-+		stmmac_eee_timer = STMMAC_DEFAULT_LPI_TIMER;
++	plat->bus_id = PCI_DEVID(pdev->bus->number, pdev->devfn);
++	plat->interface = PHY_INTERFACE_MODE_GMII;
++
+ 	plat->clk_csr = 2;	/* clk_csr_i = 20-35MHz & MDC = clk_csr_i/16 */
+ 	plat->has_gmac = 1;
+ 	plat->force_sf_dma_mode = 1;
+ 
+ 	/* Set default value for multicast hash bins */
+-	plat->multicast_filter_bins = HASH_TABLE_SIZE;
++	plat->multicast_filter_bins = 256;
+ 
+ 	/* Set default value for unicast filter entries */
+ 	plat->unicast_filter_entries = 1;
+@@ -35,32 +43,81 @@ static int loongson_default_data(struct plat_stmmacenet_data *plat)
+ 	/* Disable RX queues routing by default */
+ 	plat->rx_queues_cfg[0].pkt_route = 0x0;
+ 
+-	/* Default to phy auto-detection */
+-	plat->phy_addr = -1;
+-
+ 	plat->dma_cfg->pbl = 32;
+ 	plat->dma_cfg->pblx8 = true;
+ 
+-	plat->multicast_filter_bins = 256;
++	plat->clk_ref_rate = 125000000;
++	plat->clk_ptp_rate = 125000000;
++}
++
++static int loongson_gmac_data(struct pci_dev *pdev,
++			      struct plat_stmmacenet_data *plat)
++{
++	common_default_data(pdev, plat);
++
++	plat->mdio_bus_data->phy_mask = 0;
++
++	plat->phy_addr = -1;
++	plat->phy_interface = PHY_INTERFACE_MODE_RGMII_ID;
++
++	stmmac_flow_ctrl = FLOW_OFF;
++
+ 	return 0;
  }
  
- static void __stmmac_disable_all_queues(struct stmmac_priv *priv)
-@@ -2338,8 +2339,8 @@ static void stmmac_dma_operation_mode(struct stmmac_priv *priv)
- 	txfifosz /= tx_channels_count;
- 
- 	if (priv->plat->force_thresh_dma_mode) {
--		txmode = tc;
--		rxmode = tc;
-+		txmode = stmmac_tc;
-+		rxmode = stmmac_tc;
- 	} else if (priv->plat->force_sf_dma_mode || priv->plat->tx_coe) {
- 		/*
- 		 * In case of GMAC, SF mode can be enabled
-@@ -2352,7 +2353,7 @@ static void stmmac_dma_operation_mode(struct stmmac_priv *priv)
- 		rxmode = SF_DMA_MODE;
- 		priv->xstats.threshold = SF_DMA_MODE;
- 	} else {
--		txmode = tc;
-+		txmode = stmmac_tc;
- 		rxmode = SF_DMA_MODE;
- 	}
- 
-@@ -2483,16 +2484,16 @@ static bool stmmac_xdp_xmit_zc(struct stmmac_priv *priv, u32 queue, u32 budget)
- 
- static void stmmac_bump_dma_threshold(struct stmmac_priv *priv, u32 chan)
+-static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++static struct stmmac_pci_info loongson_gmac_pci_info = {
++	.setup = loongson_gmac_data,
++};
++
++static void loongson_gnet_fix_speed(void *priv, unsigned int speed)
++{
++	struct net_device *ndev = (struct net_device *)(*(unsigned long *)priv);
++	struct stmmac_priv *ptr = netdev_priv(ndev);
++
++	if (speed == SPEED_1000) {
++		if (readl(ptr->ioaddr + MAC_CTRL_REG) & (1 << 15) /* PS */) {
++			/* reset phy */
++			phy_set_bits(ndev->phydev, 0 /*MII_BMCR*/,
++				     0x200 /*BMCR_ANRESTART*/);
++		}
++	}
++}
++
++static int loongson_gnet_data(struct pci_dev *pdev,
++			      struct plat_stmmacenet_data *plat)
++{
++	common_default_data(pdev, plat);
++
++	plat->mdio_bus_data->phy_mask = 0xfffffffb;
++
++	plat->phy_addr = 2;
++	plat->phy_interface = PHY_INTERFACE_MODE_GMII;
++
++	/* GNET 1000M speed need workaround */
++	plat->fix_mac_speed = loongson_gnet_fix_speed;
++
++	/* Get netdev pointer address */
++	plat->bsp_priv = &(pdev->dev.driver_data);
++
++	return 0;
++}
++
++static struct stmmac_pci_info loongson_gnet_pci_info = {
++	.setup = loongson_gnet_data,
++};
++
++static int loongson_dwmac_probe(struct pci_dev *pdev,
++				const struct pci_device_id *id)
  {
--	if (unlikely(priv->xstats.threshold != SF_DMA_MODE) && tc <= 256) {
--		tc += 64;
-+	if (unlikely(priv->xstats.threshold != SF_DMA_MODE) && stmmac_tc <= 256) {
-+		stmmac_tc += 64;
+ 	struct plat_stmmacenet_data *plat;
++	struct stmmac_pci_info *info;
+ 	struct stmmac_resources res;
+ 	struct device_node *np;
+-	int ret, i, phy_mode;
++	int ret, i, bus_id, phy_mode;
+ 	bool mdio = false;
  
- 		if (priv->plat->force_thresh_dma_mode)
--			stmmac_set_dma_operation_mode(priv, tc, tc, chan);
-+			stmmac_set_dma_operation_mode(priv, stmmac_tc, stmmac_tc, chan);
- 		else
--			stmmac_set_dma_operation_mode(priv, tc, SF_DMA_MODE,
-+			stmmac_set_dma_operation_mode(priv, stmmac_tc, SF_DMA_MODE,
- 						      chan);
- 
--		priv->xstats.threshold = tc;
-+		priv->xstats.threshold = stmmac_tc;
+ 	np = dev_of_node(&pdev->dev);
+-
+-	if (!np) {
+-		pr_info("dwmac_loongson_pci: No OF node\n");
+-		return -ENODEV;
+-	}
+-
+-	if (!of_device_is_compatible(np, "loongson, pci-gmac")) {
++	if (np && !of_device_is_compatible(np, "loongson, pci-gmac")) {
+ 		pr_info("dwmac_loongson_pci: Incompatible OF node\n");
+ 		return -ENODEV;
  	}
- }
- 
-@@ -3337,7 +3338,7 @@ static int stmmac_hw_setup(struct net_device *dev, bool ptp_register)
- 
- 	/* Convert the timer from msec to usec */
- 	if (!priv->tx_lpi_timer)
--		priv->tx_lpi_timer = eee_timer * 1000;
-+		priv->tx_lpi_timer = stmmac_eee_timer * 1000;
- 
- 	if (priv->use_riwt) {
- 		u32 queue;
-@@ -3791,11 +3792,11 @@ static int __stmmac_open(struct net_device *dev,
- 
- 	/* Extra statistics */
- 	memset(&priv->xstats, 0, sizeof(struct stmmac_extra_stats));
--	priv->xstats.threshold = tc;
-+	priv->xstats.threshold = stmmac_tc;
- 
- 	priv->rx_copybreak = STMMAC_RX_COPYBREAK;
- 
--	buf_sz = dma_conf->dma_buf_sz;
-+	stmmac_buf_sz = dma_conf->dma_buf_sz;
- 	memcpy(&priv->dma_conf, dma_conf, sizeof(*dma_conf));
- 
- 	stmmac_reset_queues_param(priv);
-@@ -6785,8 +6786,8 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
- 
- 	/* dwmac-sun8i only work in chain mode */
- 	if (priv->plat->has_sun8i)
--		chain_mode = 1;
--	priv->chain_mode = chain_mode;
-+		stmmac_chain_mode = 1;
-+	priv->chain_mode = stmmac_chain_mode;
- 
- 	/* Initialize HW Interface */
- 	ret = stmmac_hwif_init(priv);
-@@ -7057,7 +7058,7 @@ int stmmac_dvr_probe(struct device *device,
- 	priv->dev = ndev;
- 
- 	stmmac_set_ethtool_ops(ndev);
--	priv->pause = pause;
-+	priv->pause = stmmac_pause;
- 	priv->plat = plat_dat;
- 	priv->ioaddr = res->addr;
- 	priv->dev->base_addr = (unsigned long)res->addr;
-@@ -7100,8 +7101,8 @@ int stmmac_dvr_probe(struct device *device,
- 	/* Override with kernel parameters if supplied XXX CRS XXX
- 	 * this needs to have multiple instances
- 	 */
--	if ((phyaddr >= 0) && (phyaddr <= 31))
--		priv->plat->phy_addr = phyaddr;
-+	if ((stmmac_phyaddr >= 0) && (stmmac_phyaddr <= 31))
-+		priv->plat->phy_addr = stmmac_phyaddr;
- 
- 	if (priv->plat->stmmac_rst) {
- 		ret = reset_control_assert(priv->plat->stmmac_rst);
-@@ -7188,7 +7189,7 @@ int stmmac_dvr_probe(struct device *device,
+@@ -74,14 +131,14 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+ 		mdio = true;
  	}
  
- 	ndev->features |= ndev->hw_features | NETIF_F_HIGHDMA;
--	ndev->watchdog_timeo = msecs_to_jiffies(watchdog);
-+	ndev->watchdog_timeo = msecs_to_jiffies(stmmac_watchdog);
- #ifdef STMMAC_VLAN_TAG_USED
- 	/* Both mac100 and gmac support receive VLAN tag detection */
- 	ndev->features |= NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX;
-@@ -7202,7 +7203,7 @@ int stmmac_dvr_probe(struct device *device,
- 			ndev->features |= NETIF_F_HW_VLAN_STAG_TX;
+-	if (mdio) {
+-		plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
+-						   sizeof(*plat->mdio_bus_data),
+-						   GFP_KERNEL);
+-		if (!plat->mdio_bus_data)
+-			return -ENOMEM;
++	plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
++					   sizeof(*plat->mdio_bus_data),
++					   GFP_KERNEL);
++	if (!plat->mdio_bus_data)
++		return -ENOMEM;
++
++	if (mdio)
+ 		plat->mdio_bus_data->needs_reset = true;
+-	}
+ 
+ 	plat->dma_cfg = devm_kzalloc(&pdev->dev, sizeof(*plat->dma_cfg), GFP_KERNEL);
+ 	if (!plat->dma_cfg)
+@@ -104,42 +161,52 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+ 		break;
  	}
- #endif
--	priv->msg_enable = netif_msg_init(debug, default_msg_level);
-+	priv->msg_enable = netif_msg_init(stmmac_debug, default_msg_level);
  
- 	/* Initialize RSS */
- 	rxq = priv->plat->rx_queues_to_use;
-@@ -7232,7 +7233,7 @@ int stmmac_dvr_probe(struct device *device,
- 			 "%s: warning: maxmtu having invalid value (%d)\n",
- 			 __func__, priv->plat->maxmtu);
+-	plat->bus_id = of_alias_get_id(np, "ethernet");
+-	if (plat->bus_id < 0)
+-		plat->bus_id = pci_dev_id(pdev);
+-
+-	phy_mode = device_get_phy_mode(&pdev->dev);
+-	if (phy_mode < 0) {
+-		dev_err(&pdev->dev, "phy_mode not found\n");
+-		return phy_mode;
+-	}
+-
+-	plat->phy_interface = phy_mode;
+-	plat->interface = PHY_INTERFACE_MODE_GMII;
+-
+ 	pci_set_master(pdev);
  
--	if (flow_ctrl)
-+	if (stmmac_flow_ctrl)
- 		priv->flow_ctrl = FLOW_AUTO;	/* RX/TX pause on */
+-	loongson_default_data(plat);
+-	pci_enable_msi(pdev);
+-	memset(&res, 0, sizeof(res));
+-	res.addr = pcim_iomap_table(pdev)[0];
++	info = (struct stmmac_pci_info *)id->driver_data;
++	ret = info->setup(pdev, plat);
++	if (ret)
++		return ret;
  
- 	/* Setup channels NAPI */
-@@ -7574,31 +7575,31 @@ static int __init stmmac_cmdline_opt(char *str)
- 		return 1;
- 	while ((opt = strsep(&str, ",")) != NULL) {
- 		if (!strncmp(opt, "debug:", 6)) {
--			if (kstrtoint(opt + 6, 0, &debug))
-+			if (kstrtoint(opt + 6, 0, &stmmac_debug))
- 				goto err;
- 		} else if (!strncmp(opt, "phyaddr:", 8)) {
--			if (kstrtoint(opt + 8, 0, &phyaddr))
-+			if (kstrtoint(opt + 8, 0, &stmmac_phyaddr))
- 				goto err;
- 		} else if (!strncmp(opt, "buf_sz:", 7)) {
--			if (kstrtoint(opt + 7, 0, &buf_sz))
-+			if (kstrtoint(opt + 7, 0, &stmmac_buf_sz))
- 				goto err;
- 		} else if (!strncmp(opt, "tc:", 3)) {
--			if (kstrtoint(opt + 3, 0, &tc))
-+			if (kstrtoint(opt + 3, 0, &stmmac_tc))
- 				goto err;
- 		} else if (!strncmp(opt, "watchdog:", 9)) {
--			if (kstrtoint(opt + 9, 0, &watchdog))
-+			if (kstrtoint(opt + 9, 0, &stmmac_watchdog))
- 				goto err;
- 		} else if (!strncmp(opt, "flow_ctrl:", 10)) {
--			if (kstrtoint(opt + 10, 0, &flow_ctrl))
-+			if (kstrtoint(opt + 10, 0, &stmmac_flow_ctrl))
- 				goto err;
- 		} else if (!strncmp(opt, "pause:", 6)) {
--			if (kstrtoint(opt + 6, 0, &pause))
-+			if (kstrtoint(opt + 6, 0, &stmmac_pause))
- 				goto err;
- 		} else if (!strncmp(opt, "eee_timer:", 10)) {
--			if (kstrtoint(opt + 10, 0, &eee_timer))
-+			if (kstrtoint(opt + 10, 0, &stmmac_eee_timer))
- 				goto err;
- 		} else if (!strncmp(opt, "chain_mode:", 11)) {
--			if (kstrtoint(opt + 11, 0, &chain_mode))
-+			if (kstrtoint(opt + 11, 0, &stmmac_chain_mode))
- 				goto err;
- 		}
+-	res.irq = of_irq_get_byname(np, "macirq");
+-	if (res.irq < 0) {
+-		dev_err(&pdev->dev, "IRQ macirq not found\n");
+-		ret = -ENODEV;
++	if (np) {
++		bus_id = of_alias_get_id(np, "ethernet");
++		if (bus_id >= 0)
++			plat->bus_id = bus_id;
++
++		phy_mode = device_get_phy_mode(&pdev->dev);
++		if (phy_mode < 0) {
++			dev_err(&pdev->dev, "phy_mode not found\n");
++			return phy_mode;
++		}
++		plat->phy_interface = phy_mode;
  	}
+ 
+-	res.wol_irq = of_irq_get_byname(np, "eth_wake_irq");
+-	if (res.wol_irq < 0) {
+-		dev_info(&pdev->dev, "IRQ eth_wake_irq not found, using macirq\n");
+-		res.wol_irq = res.irq;
+-	}
++	pci_enable_msi(pdev);
+ 
+-	res.lpi_irq = of_irq_get_byname(np, "eth_lpi");
+-	if (res.lpi_irq < 0) {
+-		dev_err(&pdev->dev, "IRQ eth_lpi not found\n");
+-		ret = -ENODEV;
++	memset(&res, 0, sizeof(res));
++	res.addr = pcim_iomap_table(pdev)[0];
++	if (np) {
++		res.irq = of_irq_get_byname(np, "macirq");
++		if (res.irq < 0) {
++			dev_err(&pdev->dev, "IRQ macirq not found\n");
++			ret = -ENODEV;
++		}
++
++		res.wol_irq = of_irq_get_byname(np, "eth_wake_irq");
++		if (res.wol_irq < 0) {
++			dev_info(&pdev->dev,
++				 "IRQ eth_wake_irq not found, using macirq\n");
++			res.wol_irq = res.irq;
++		}
++
++		res.lpi_irq = of_irq_get_byname(np, "eth_lpi");
++		if (res.lpi_irq < 0) {
++			dev_err(&pdev->dev, "IRQ eth_lpi not found\n");
++			ret = -ENODEV;
++		}
++	} else {
++		res.irq = pdev->irq;
++		res.wol_irq = pdev->irq;
+ 	}
+ 
+ 	return stmmac_dvr_probe(&pdev->dev, plat, &res);
+@@ -199,8 +266,12 @@ static int __maybe_unused loongson_dwmac_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(loongson_dwmac_pm_ops, loongson_dwmac_suspend,
+ 			 loongson_dwmac_resume);
+ 
++#define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
++#define PCI_DEVICE_ID_LOONGSON_GNET	0x7a13
++
+ static const struct pci_device_id loongson_dwmac_id_table[] = {
+-	{ PCI_VDEVICE(LOONGSON, 0x7a03) },
++	{ PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_gmac_pci_info) },
++	{ PCI_DEVICE_DATA(LOONGSON, GNET, &loongson_gnet_pci_info) },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(pci, loongson_dwmac_id_table);
 -- 
 2.31.1
 
