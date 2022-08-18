@@ -1,74 +1,341 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC1F15AC
-	for <loongarch@lists.linux.dev>; Thu, 18 Aug 2022 06:41:25 +0000 (UTC)
-Received: by mail-lf1-f53.google.com with SMTP id l1so407564lfk.8
-        for <loongarch@lists.linux.dev>; Wed, 17 Aug 2022 23:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=kjPTotdKjvEDDAHNy6fKqwSVnrlA5hvU4qORmBZM7/M=;
-        b=NixcghVgXXFL+gHEMQkFJ8FdBomoNLONh7drv5JhIbUfcVoiqnKvVspH5NBtlZfzeL
-         p0Z18hgEwbx9W/qaBFxFYmnsXObdHegimcGoCAj2Th4S/riM1mzB9MjtpTTbZNXttrBH
-         /aMbfMSA8qUGQGuCXhzKHamnftQSFqLhuu6xOpeiR4SnWhtFwuBLUvCehmiK/Im6+o8U
-         vArmeqa20gHo/ROKc/AWL4V4YQA9xTwbO+9fCVnf+vQ6ktx3a8K4MAM/LhW1HJxbx+Fw
-         0XsU3qFTLrMdatcP4hm8LUZnoqU90mXY0Do48oAJcj3/K6vY10sJHdQO+7YGUb+zrzp1
-         L/8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=kjPTotdKjvEDDAHNy6fKqwSVnrlA5hvU4qORmBZM7/M=;
-        b=hUEKf3W81PTJx1VaopiWU7xvGauC54TRQ1XO8p0FRYJ0Io8MbwuRk45YQfUCXcu9bW
-         XUh5ZV/oZpGKRR75OWObJ+kUhtDIUeVikIok1fwLKF5Tp+Nh1VxBEWqopNgY/NC+3f6H
-         RxJ05ewKvQ/k1dIgma4Q9anY9N+S4mTR36SaaBHAHItbbN1WmN/ww+XM/3PiEdn8fqD3
-         Rsq8Fp40wzV4/ZoCOToNnCBIVsGJn6g5rH7EXi9DGa69ka8jsk8xrCSzd3xbBodpsh6I
-         dssMZv9PVRIzKfOi3KsKLtzKVzLpXn0IBQFhGpSVCkZD6AAn3xiFpqRQ7QnTvUxjHAza
-         5pDQ==
-X-Gm-Message-State: ACgBeo0WQZm8MvBagohgZ2rop4FXvWLuyJrnix/raL5JHA79uKnEdwrf
-	WWIRKNq0qq5BxbDmUB/fO9c7sNsgMpCwtejY8gg=
-X-Google-Smtp-Source: AA6agR5/XvyeJiZt0dqbaxscqbS2XOsF8aYUMnZI1ZkN8wr4S3Blnre0OtIFc32aCUlHAQWxVVlRXUBrGD4GJk/PrfE=
-X-Received: by 2002:a05:6512:3d8e:b0:48a:eff4:6b03 with SMTP id
- k14-20020a0565123d8e00b0048aeff46b03mr481285lfv.49.1660804883384; Wed, 17 Aug
- 2022 23:41:23 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A26E23C8
+	for <loongarch@lists.linux.dev>; Thu, 18 Aug 2022 07:09:01 +0000 (UTC)
+Received: from [10.20.42.22] (unknown [10.20.42.22])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx32t05f1iUK4DAA--.14351S3;
+	Thu, 18 Aug 2022 15:08:37 +0800 (CST)
+Subject: Re: [PATCH V2 1/2] LoongArch: Add CPU HWMon platform driver
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Huacai Chen <chenhuacai@kernel.org>, "Rafael J . Wysocki"
+ <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>,
+ Robert Moore <robert.moore@intel.com>, Erik Kaneda <erik.kaneda@intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, Mark Gross <mgross@linux.intel.com>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+ linux-acpi@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Xi Ruoyao <xry111@xry111.site>
+References: <20220818042208.2896457-1-chenhuacai@loongson.cn>
+From: Jianmin Lv <lvjianmin@loongson.cn>
+Message-ID: <98d716a4-04de-ff32-1bbc-cac576989a87@loongson.cn>
+Date: Thu, 18 Aug 2022 15:08:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1660720671.git.chenfeiyang@loongson.cn> <5bf66e7d30d909cdaad46557d800d33118404e4d.1660720671.git.chenfeiyang@loongson.cn>
- <20220817200549.392b5891@kernel.org>
-In-Reply-To: <20220817200549.392b5891@kernel.org>
-From: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Date: Thu, 18 Aug 2022 14:41:11 +0800
-Message-ID: <CACWXhKkJGO5PV8kBurR5Urf7XAiDKgX3b6epn0SPMkZdBH6iUA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] stmmac: Expose module parameters
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: peppe.cavallaro@st.com, alexandre.torgue@foss.st.com, joabreu@synopsys.com, 
-	Feiyang Chen <chenfeiyang@loongson.cn>, zhangqing@loongson.cn, 
-	Huacai Chen <chenhuacai@loongson.cn>, netdev@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20220818042208.2896457-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bx32t05f1iUK4DAA--.14351S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3CF47KF47try7WFy7Xr43Wrg_yoWkWr1Upr
+	W5JFWfCF4UW3Z7tw1qva17u3yYvrs0kay7WF9ru34rAFsxXry7GF97A3y5ZrnakFW5XrWa
+	qF15WF4DCa90qaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB0b7Iv0xC_Kw4lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+	cIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2
+	AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v2
+	6r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14
+	v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xf
+	McIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7
+	v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS07Al
+	zVAYIcxG8wCY02Avz4vE-syl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW5Wr
+	1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUqEoXUUUUU
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 
-On Thu, 18 Aug 2022 at 11:05, Jakub Kicinski <kuba@kernel.org> wrote:
->
-> On Wed, 17 Aug 2022 15:29:18 +0800 chris.chenfeiyang@gmail.com wrote:
-> > Expose module parameters so that we can use them in specific device
-> > configurations. Add the 'stmmac_' prefix for them to avoid conflicts.
-> >
-> > Meanwhile, there was a 'buf_sz' local variable in stmmac_rx() with the
-> > same name as the global variable, and now we can distinguish them.
->
-> Can you provide more information on the 'why'?
+I don't think we need the driver any more, we have thermal zone based 
+acpi which implemented more functions include the function here.
 
-Hi, Jakub,
+And, the driver will conflict with acpi thermal 
+driver(drivers/acpi/thermal.c), which leads to confusion with users.
 
-We would like to be able to change these properties when configuring
-the device data. For example, Loongson GMAC does not support Flow
-Control feature, and exposing these parameters allows us to ensure
-that flow control is off in the Loongson GMAC device.
+On 2022/8/18 下午12:22, Huacai Chen wrote:
+> This add CPU HWMon (temperature sensor) platform driver for Loongson-3.
+> 
+> Tested-by: Xi Ruoyao <xry111@xry111.site>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+> V2: Fix build warning reported by lkp.
+> 
+>   drivers/platform/Kconfig               |   3 +
+>   drivers/platform/Makefile              |   1 +
+>   drivers/platform/loongarch/Kconfig     |  26 ++++
+>   drivers/platform/loongarch/Makefile    |   1 +
+>   drivers/platform/loongarch/cpu_hwmon.c | 194 +++++++++++++++++++++++++
+>   5 files changed, 225 insertions(+)
+>   create mode 100644 drivers/platform/loongarch/Kconfig
+>   create mode 100644 drivers/platform/loongarch/Makefile
+>   create mode 100644 drivers/platform/loongarch/cpu_hwmon.c
+> 
+> diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
+> index b437847b6237..9c68e2def2cb 100644
+> --- a/drivers/platform/Kconfig
+> +++ b/drivers/platform/Kconfig
+> @@ -2,6 +2,9 @@
+>   if MIPS
+>   source "drivers/platform/mips/Kconfig"
+>   endif
+> +if LOONGARCH
+> +source "drivers/platform/loongarch/Kconfig"
+> +endif
+>   
+>   source "drivers/platform/goldfish/Kconfig"
+>   
+> diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
+> index 4de08ef4ec9d..41640172975a 100644
+> --- a/drivers/platform/Makefile
+> +++ b/drivers/platform/Makefile
+> @@ -4,6 +4,7 @@
+>   #
+>   
+>   obj-$(CONFIG_X86)		+= x86/
+> +obj-$(CONFIG_LOONGARCH)		+= loongarch/
+>   obj-$(CONFIG_MELLANOX_PLATFORM)	+= mellanox/
+>   obj-$(CONFIG_MIPS)		+= mips/
+>   obj-$(CONFIG_OLPC_EC)		+= olpc/
+> diff --git a/drivers/platform/loongarch/Kconfig b/drivers/platform/loongarch/Kconfig
+> new file mode 100644
+> index 000000000000..a1542843b0ad
+> --- /dev/null
+> +++ b/drivers/platform/loongarch/Kconfig
+> @@ -0,0 +1,26 @@
+> +#
+> +# LoongArch Platform Specific Drivers
+> +#
+> +
+> +menuconfig LOONGARCH_PLATFORM_DEVICES
+> +	bool "LoongArch Platform Specific Device Drivers"
+> +	default LOONGARCH
+> +	help
+> +	  Say Y here to get to see options for device drivers of various
+> +	  LoongArch platforms, including vendor-specific laptop/desktop
+> +	  extension and hardware monitor drivers. This option itself does
+> +	  not add any kernel code.
+> +
+> +	  If you say N, all options in this submenu will be skipped and disabled.
+> +
+> +if LOONGARCH_PLATFORM_DEVICES
+> +
+> +config CPU_HWMON
+> +	bool "Loongson CPU HWMon Driver"
+> +	depends on MACH_LOONGSON64
+> +	select HWMON
+> +	default y
+> +	help
+> +	  Loongson-3A/3B/3C CPU HWMon (temperature sensor) driver.
+> +
+> +endif # LOONGARCH_PLATFORM_DEVICES
+> diff --git a/drivers/platform/loongarch/Makefile b/drivers/platform/loongarch/Makefile
+> new file mode 100644
+> index 000000000000..8dfd03924c37
+> --- /dev/null
+> +++ b/drivers/platform/loongarch/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_CPU_HWMON) += cpu_hwmon.o
+> diff --git a/drivers/platform/loongarch/cpu_hwmon.c b/drivers/platform/loongarch/cpu_hwmon.c
+> new file mode 100644
+> index 000000000000..71a462426397
+> --- /dev/null
+> +++ b/drivers/platform/loongarch/cpu_hwmon.c
+> @@ -0,0 +1,194 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2022 Loongson Technology Corporation Limited
+> + */
+> +#include <linux/module.h>
+> +#include <linux/reboot.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/hwmon-sysfs.h>
+> +
+> +#include <asm/loongson.h>
+> +
+> +static int nr_packages;
+> +static struct device *cpu_hwmon_dev;
+> +
+> +static int loongson3_cpu_temp(int cpu)
+> +{
+> +	u32 reg;
+> +
+> +	reg = iocsr_read32(LOONGARCH_IOCSR_CPUTEMP) & 0xff;
+> +
+> +	return (int)((s8)reg) * 1000;
+> +}
+> +
+> +static ssize_t cpu_temp_label(struct device *dev,
+> +			struct device_attribute *attr, char *buf)
+> +{
+> +	int id = (to_sensor_dev_attr(attr))->index - 1;
+> +	return sprintf(buf, "CPU %d Temperature\n", id);
+> +}
+> +
+> +static ssize_t get_cpu_temp(struct device *dev,
+> +			struct device_attribute *attr, char *buf)
+> +{
+> +	int id = (to_sensor_dev_attr(attr))->index - 1;
+> +	int value = loongson3_cpu_temp(id);
+> +	return sprintf(buf, "%d\n", value);
+> +}
+> +
+> +static SENSOR_DEVICE_ATTR(temp1_input, 0444, get_cpu_temp, NULL, 1);
+> +static SENSOR_DEVICE_ATTR(temp1_label, 0444, cpu_temp_label, NULL, 1);
+> +static SENSOR_DEVICE_ATTR(temp2_input, 0444, get_cpu_temp, NULL, 2);
+> +static SENSOR_DEVICE_ATTR(temp2_label, 0444, cpu_temp_label, NULL, 2);
+> +static SENSOR_DEVICE_ATTR(temp3_input, 0444, get_cpu_temp, NULL, 3);
+> +static SENSOR_DEVICE_ATTR(temp3_label, 0444, cpu_temp_label, NULL, 3);
+> +static SENSOR_DEVICE_ATTR(temp4_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp4_label, 0444, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp5_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp5_label, 0444, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp6_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp6_label, 0444, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp7_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp7_label, 0444, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp8_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp8_label, 0444, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp9_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp9_label, 0444, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp10_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp10_label, 0444, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp11_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp11_label, 0444, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp12_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp12_label, 0444, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp13_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp13_label, 0444, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp14_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp14_label, 0444, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp15_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp15_label, 0444, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp16_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp16_label, 0444, cpu_temp_label, NULL, 4);
+> +
+> +static struct attribute *cpu_hwmon_attributes[] = {
+> +	&sensor_dev_attr_temp1_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp1_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp2_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp2_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp3_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp3_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp4_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp4_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp5_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp5_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp6_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp6_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp7_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp7_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp8_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp8_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp9_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp9_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp10_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp10_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp11_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp11_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp12_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp12_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp13_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp13_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp14_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp14_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp15_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp15_label.dev_attr.attr,
+> +	&sensor_dev_attr_temp16_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp16_label.dev_attr.attr,
+> +	NULL
+> +};
+> +static umode_t cpu_hwmon_is_visible(struct kobject *kobj,
+> +				    struct attribute *attr, int i)
+> +{
+> +	int id = i / 2;
+> +
+> +	if (id < nr_packages)
+> +		return attr->mode;
+> +	return 0;
+> +}
+> +
+> +static struct attribute_group cpu_hwmon_group = {
+> +	.attrs = cpu_hwmon_attributes,
+> +	.is_visible = cpu_hwmon_is_visible,
+> +};
+> +
+> +static const struct attribute_group *cpu_hwmon_groups[] = {
+> +	&cpu_hwmon_group,
+> +	NULL
+> +};
+> +
+> +static int cpu_initial_threshold = 72000;
+> +static int cpu_thermal_threshold = 96000;
+> +module_param(cpu_thermal_threshold, int, 0644);
+> +MODULE_PARM_DESC(cpu_thermal_threshold, "cpu thermal threshold (96000 (default))");
+> +
+> +static struct delayed_work thermal_work;
+> +
+> +static void do_thermal_timer(struct work_struct *work)
+> +{
+> +	int i, value, temp_max = 0;
+> +
+> +	for (i=0; i<nr_packages; i++) {
+> +		value = loongson3_cpu_temp(i);
+> +		if (value > temp_max)
+> +			temp_max = value;
+> +	}
+> +
+> +	if (temp_max <= cpu_thermal_threshold)
+> +		schedule_delayed_work(&thermal_work, msecs_to_jiffies(5000));
+> +	else
+> +		orderly_poweroff(true);
+> +}
+> +
+> +static int __init loongson_hwmon_init(void)
+> +{
+> +	int i, value, temp_max = 0;
+> +
+> +	pr_info("Loongson Hwmon Enter...\n");
+> +
+> +	nr_packages = loongson_sysconf.nr_cpus /
+> +		loongson_sysconf.cores_per_package;
+> +
+> +	cpu_hwmon_dev = hwmon_device_register_with_groups(NULL, "cpu_hwmon",
+> +							  NULL, cpu_hwmon_groups);
+> +	if (IS_ERR(cpu_hwmon_dev)) {
+> +		pr_err("hwmon_device_register fail!\n");
+> +		return PTR_ERR(cpu_hwmon_dev);
+> +	}
+> +
+> +	for (i = 0; i < nr_packages; i++) {
+> +		value = loongson3_cpu_temp(i);
+> +		if (value > temp_max)
+> +			temp_max = value;
+> +	}
+> +
+> +	pr_info("Initial CPU temperature is %d (highest).\n", temp_max);
+> +	if (temp_max > cpu_initial_threshold)
+> +		cpu_thermal_threshold += temp_max - cpu_initial_threshold;
+> +
+> +	INIT_DEFERRABLE_WORK(&thermal_work, do_thermal_timer);
+> +	schedule_delayed_work(&thermal_work, msecs_to_jiffies(20000));
+> +
+> +	return 0;
+> +}
+> +
+> +static void __exit loongson_hwmon_exit(void)
+> +{
+> +	cancel_delayed_work_sync(&thermal_work);
+> +	hwmon_device_unregister(cpu_hwmon_dev);
+> +}
+> +
+> +module_init(loongson_hwmon_init);
+> +module_exit(loongson_hwmon_exit);
+> +
+> +MODULE_AUTHOR("Huacai Chen <chenhuacai@loongson.cn>");
+> +MODULE_DESCRIPTION("Loongson CPU Hwmon driver");
+> +MODULE_LICENSE("GPL");
+> 
 
-Thanks,
-Feiyang
