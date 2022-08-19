@@ -1,298 +1,159 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DDE617EE
-	for <loongarch@lists.linux.dev>; Fri, 19 Aug 2022 08:17:02 +0000 (UTC)
-Received: from localhost.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx32v5Rv9isI4EAA--.18159S5;
-	Fri, 19 Aug 2022 16:16:59 +0800 (CST)
-From: Qing Zhang <zhangqing@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@redhat.com>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	hejinyang@loongson.cn,
-	zhangqing@loongson.cn
-Subject: [PATCH 9/9] LoongArch: Enable CONFIG_KALLSYMS_ALL and CONFIG_DEBUG_FS
-Date: Fri, 19 Aug 2022 16:16:57 +0800
-Message-Id: <20220819081657.7254-4-zhangqing@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220819081657.7254-1-zhangqing@loongson.cn>
-References: <20220819081657.7254-1-zhangqing@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB8717EE
+	for <loongarch@lists.linux.dev>; Fri, 19 Aug 2022 08:40:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA96FC433D7
+	for <loongarch@lists.linux.dev>; Fri, 19 Aug 2022 08:40:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1660898410;
+	bh=pbPOH8lcJsczbtzTQ81SaxpugXuzQ8vfVpiBgdOWZos=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pfMxvGTPU3pVuiuDYLLA5c5ZmV/YXIGkwKZ9Ys18RSjydBMQuyfcOLtXjrE4unJLq
+	 qE6xKMBlPSil3Qbi3X7f9kuYCMKPxEAlqEt6PufFhEl9JysdYzK6bWd/XXc3myVXkI
+	 qnCPkAOJomDteQMMFVRZaOkX/GMUXyAUHbkxNPuSjHDkU9uym8KE+Ce85RawFFBxec
+	 7w/2v/cBhUUC8saEsIwZXTUOpCqT7GWOJEz7x8+ZLGMuVGjB0RmPeZRnVlS7OMoRRo
+	 8BaymNtzSmuFj/W/ai+JfvYMEXCkgRCrR+XU4qd6Vap3KzxlAqMGSnRNlUBVUsfkap
+	 G5Ygth0XHctcw==
+Received: by mail-vs1-f52.google.com with SMTP id o123so3829359vsc.3
+        for <loongarch@lists.linux.dev>; Fri, 19 Aug 2022 01:40:10 -0700 (PDT)
+X-Gm-Message-State: ACgBeo3IQX0KrpD7srWpQD8XsWLqio+sR4MonYSKhlOlrdAlqr/x8t1S
+	Yq3meJ+Hbei4fwyEdMk7Y8xX5mflCvZPV3bmB0E=
+X-Google-Smtp-Source: AA6agR6rQK+fyBXvNJhcWl+WEfRCdo2v3o22mYmBhfqQ5UR5TbIn9ARpfFOQv7GnOVZtfy5tvmtzWfHjEnZqtj4WVbk=
+X-Received: by 2002:a67:d483:0:b0:38f:4981:c4f3 with SMTP id
+ g3-20020a67d483000000b0038f4981c4f3mr2113563vsj.59.1660898409777; Fri, 19 Aug
+ 2022 01:40:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx32v5Rv9isI4EAA--.18159S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxtF4kZF4fJw1DAFyrZFWfAFb_yoWxKF47pF
-	n3GrWxJa18Ar1jyrW2kr4DGrZ5tF1DJa47Cr17Ar1Duw18Jw4UXrnFgr1UGr4DXa9rXr4r
-	XFn3Kw1fZay5J37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmj14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
-	8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
-	jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0x
-	kIwI1lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
-	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
-	AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0
-	cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
-	8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7VUjsa93UUUUU==
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+References: <20220819072239.60378-1-liyupeng@zbhlos.com>
+In-Reply-To: <20220819072239.60378-1-liyupeng@zbhlos.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 19 Aug 2022 16:39:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4m+Wzc-E=owWo34hYBa8fHKQG_uBAw4y4mCFUXEfge0g@mail.gmail.com>
+Message-ID: <CAAhV-H4m+Wzc-E=owWo34hYBa8fHKQG_uBAw4y4mCFUXEfge0g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] irqchip: Fixed LoongArch CPU interrupt types defined.
+To: Yupeng Li <liyupeng@zbhlos.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>, 
+	loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	Caicai <caizp2008@163.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Defaults enable CONFIG_KALLSYMS_ALL and CONFIG_DEBUG_FS to convenient
-ftrace tests.
+Hi, Yupeng,
 
-Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
----
- arch/loongarch/configs/loongson3_defconfig | 60 +++++-----------------
- 1 file changed, 13 insertions(+), 47 deletions(-)
+This errors can be fixed once this patch be merged:
+https://lore.kernel.org/lkml/20220808085319.3350111-1-chenhuacai@loongson.c=
+n/
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index 3712552e18d3..c48c31a7286a 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -33,29 +33,15 @@ CONFIG_SYSFS_DEPRECATED=y
- CONFIG_RELAY=y
- CONFIG_BLK_DEV_INITRD=y
- CONFIG_EXPERT=y
--CONFIG_USERFAULTFD=y
-+CONFIG_KALLSYMS_ALL=y
- CONFIG_PERF_EVENTS=y
--# CONFIG_COMPAT_BRK is not set
--CONFIG_LOONGARCH=y
--CONFIG_64BIT=y
--CONFIG_MACH_LOONGSON64=y
--CONFIG_DMI=y
--CONFIG_EFI=y
--CONFIG_SMP=y
- CONFIG_HOTPLUG_CPU=y
--CONFIG_NR_CPUS=64
- CONFIG_NUMA=y
--CONFIG_PAGE_SIZE_16KB=y
--CONFIG_HZ_250=y
--CONFIG_ACPI=y
- CONFIG_ACPI_SPCR_TABLE=y
--CONFIG_ACPI_HOTPLUG_CPU=y
--CONFIG_ACPI_TAD=y
- CONFIG_ACPI_DOCK=y
- CONFIG_ACPI_IPMI=m
- CONFIG_ACPI_PCI_SLOT=y
- CONFIG_ACPI_HOTPLUG_MEMORY=y
--CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
- CONFIG_EFI_CAPSULE_LOADER=m
- CONFIG_EFI_TEST=m
- CONFIG_MODULES=y
-@@ -68,17 +54,16 @@ CONFIG_PARTITION_ADVANCED=y
- CONFIG_IOSCHED_BFQ=y
- CONFIG_BFQ_GROUP_IOSCHED=y
- CONFIG_BINFMT_MISC=m
-+CONFIG_ZSWAP=y
-+CONFIG_ZSWAP_COMPRESSOR_DEFAULT_ZSTD=y
-+CONFIG_Z3FOLD=y
-+# CONFIG_COMPAT_BRK is not set
- CONFIG_MEMORY_HOTPLUG=y
- CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE=y
- CONFIG_MEMORY_HOTREMOVE=y
- CONFIG_KSM=y
- CONFIG_TRANSPARENT_HUGEPAGE=y
--CONFIG_ZSWAP=y
--CONFIG_ZSWAP_COMPRESSOR_DEFAULT_ZSTD=y
--CONFIG_ZPOOL=y
--CONFIG_ZBUD=y
--CONFIG_Z3FOLD=y
--CONFIG_ZSMALLOC=m
-+CONFIG_USERFAULTFD=y
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_UNIX=y
-@@ -108,14 +93,12 @@ CONFIG_NETFILTER=y
- CONFIG_BRIDGE_NETFILTER=m
- CONFIG_NETFILTER_NETLINK_LOG=m
- CONFIG_NF_CONNTRACK=m
--CONFIG_NF_LOG_NETDEV=m
- CONFIG_NF_CONNTRACK_AMANDA=m
- CONFIG_NF_CONNTRACK_FTP=m
- CONFIG_NF_CONNTRACK_NETBIOS_NS=m
- CONFIG_NF_CONNTRACK_TFTP=m
- CONFIG_NF_CT_NETLINK=m
- CONFIG_NF_TABLES=m
--CONFIG_NFT_COUNTER=m
- CONFIG_NFT_CONNLIMIT=m
- CONFIG_NFT_LOG=m
- CONFIG_NFT_LIMIT=m
-@@ -292,7 +275,6 @@ CONFIG_RFKILL=m
- CONFIG_RFKILL_INPUT=y
- CONFIG_NET_9P=y
- CONFIG_NET_9P_VIRTIO=y
--CONFIG_CEPH_LIB=m
- CONFIG_PCIEPORTBUS=y
- CONFIG_HOTPLUG_PCI_PCIE=y
- CONFIG_PCIEAER=y
-@@ -329,7 +311,6 @@ CONFIG_PARPORT_PC_FIFO=y
- CONFIG_ZRAM=m
- CONFIG_ZRAM_DEF_COMP_ZSTD=y
- CONFIG_BLK_DEV_LOOP=y
--CONFIG_BLK_DEV_CRYPTOLOOP=y
- CONFIG_BLK_DEV_NBD=m
- CONFIG_BLK_DEV_RAM=y
- CONFIG_BLK_DEV_RAM_SIZE=8192
-@@ -374,7 +355,6 @@ CONFIG_SCSI_QLOGIC_1280=m
- CONFIG_SCSI_QLA_FC=m
- CONFIG_TCM_QLA2XXX=m
- CONFIG_SCSI_QLA_ISCSI=m
--CONFIG_SCSI_LPFC=m
- CONFIG_SCSI_VIRTIO=m
- CONFIG_ATA=y
- CONFIG_SATA_AHCI=y
-@@ -382,12 +362,7 @@ CONFIG_SATA_AHCI_PLATFORM=y
- CONFIG_PATA_ATIIXP=y
- CONFIG_PATA_PCMCIA=m
- CONFIG_MD=y
--CONFIG_BLK_DEV_MD=m
- CONFIG_MD_LINEAR=m
--CONFIG_MD_RAID0=m
--CONFIG_MD_RAID1=m
--CONFIG_MD_RAID10=m
--CONFIG_MD_RAID456=m
- CONFIG_MD_MULTIPATH=m
- CONFIG_BCACHE=m
- CONFIG_BLK_DEV_DM=y
-@@ -432,13 +407,11 @@ CONFIG_VIRTIO_NET=m
- # CONFIG_NET_VENDOR_ARC is not set
- # CONFIG_NET_VENDOR_ATHEROS is not set
- CONFIG_BNX2=y
--# CONFIG_NET_VENDOR_BROCADE is not set
- # CONFIG_NET_VENDOR_CAVIUM is not set
- CONFIG_CHELSIO_T1=m
- CONFIG_CHELSIO_T1_1G=y
- CONFIG_CHELSIO_T3=m
- CONFIG_CHELSIO_T4=m
--# CONFIG_NET_VENDOR_CIRRUS is not set
- # CONFIG_NET_VENDOR_CISCO is not set
- # CONFIG_NET_VENDOR_DEC is not set
- # CONFIG_NET_VENDOR_DLINK is not set
-@@ -459,6 +432,7 @@ CONFIG_IXGBE=y
- # CONFIG_NET_VENDOR_NVIDIA is not set
- # CONFIG_NET_VENDOR_OKI is not set
- # CONFIG_NET_VENDOR_QLOGIC is not set
-+# CONFIG_NET_VENDOR_BROCADE is not set
- # CONFIG_NET_VENDOR_QUALCOMM is not set
- # CONFIG_NET_VENDOR_RDC is not set
- CONFIG_8139CP=m
-@@ -468,9 +442,9 @@ CONFIG_R8169=y
- # CONFIG_NET_VENDOR_ROCKER is not set
- # CONFIG_NET_VENDOR_SAMSUNG is not set
- # CONFIG_NET_VENDOR_SEEQ is not set
--# CONFIG_NET_VENDOR_SOLARFLARE is not set
- # CONFIG_NET_VENDOR_SILAN is not set
- # CONFIG_NET_VENDOR_SIS is not set
-+# CONFIG_NET_VENDOR_SOLARFLARE is not set
- # CONFIG_NET_VENDOR_SMSC is not set
- CONFIG_STMMAC_ETH=y
- # CONFIG_NET_VENDOR_SUN is not set
-@@ -505,7 +479,6 @@ CONFIG_ATH9K_HTC=m
- CONFIG_IWLWIFI=m
- CONFIG_IWLDVM=m
- CONFIG_IWLMVM=m
--CONFIG_IWLWIFI_BCAST_FILTERING=y
- CONFIG_HOSTAP=m
- CONFIG_MT7601U=m
- CONFIG_RT2X00=m
-@@ -556,7 +529,6 @@ CONFIG_I2C_PIIX4=y
- CONFIG_I2C_GPIO=y
- CONFIG_SPI=y
- CONFIG_GPIO_SYSFS=y
--CONFIG_GPIO_LOONGSON=y
- CONFIG_SENSORS_LM75=m
- CONFIG_SENSORS_LM93=m
- CONFIG_SENSORS_W83795=m
-@@ -564,16 +536,16 @@ CONFIG_SENSORS_W83627HF=m
- CONFIG_RC_CORE=m
- CONFIG_LIRC=y
- CONFIG_RC_DECODERS=y
-+CONFIG_IR_IMON_DECODER=m
-+CONFIG_IR_JVC_DECODER=m
-+CONFIG_IR_MCE_KBD_DECODER=m
- CONFIG_IR_NEC_DECODER=m
- CONFIG_IR_RC5_DECODER=m
- CONFIG_IR_RC6_DECODER=m
--CONFIG_IR_JVC_DECODER=m
--CONFIG_IR_SONY_DECODER=m
- CONFIG_IR_SANYO_DECODER=m
- CONFIG_IR_SHARP_DECODER=m
--CONFIG_IR_MCE_KBD_DECODER=m
-+CONFIG_IR_SONY_DECODER=m
- CONFIG_IR_XMP_DECODER=m
--CONFIG_IR_IMON_DECODER=m
- CONFIG_MEDIA_SUPPORT=m
- CONFIG_MEDIA_USB_SUPPORT=y
- CONFIG_USB_VIDEO_CLASS=m
-@@ -593,7 +565,6 @@ CONFIG_DRM_VIRTIO_GPU=m
- CONFIG_FB=y
- CONFIG_FB_EFI=y
- CONFIG_FB_RADEON=y
--CONFIG_LCD_PLATFORM=m
- # CONFIG_VGA_CONSOLE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
-@@ -602,7 +573,6 @@ CONFIG_SOUND=y
- CONFIG_SND=y
- CONFIG_SND_SEQUENCER=m
- CONFIG_SND_SEQ_DUMMY=m
--# CONFIG_SND_ISA is not set
- CONFIG_SND_BT87X=m
- CONFIG_SND_BT87X_OVERCLOCK=y
- CONFIG_SND_HDA_INTEL=y
-@@ -628,7 +598,6 @@ CONFIG_HID_MULTITOUCH=m
- CONFIG_HID_SUNPLUS=m
- CONFIG_USB_HIDDEV=y
- CONFIG_USB=y
--CONFIG_USB_OTG=y
- CONFIG_USB_MON=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_EHCI_HCD=y
-@@ -688,7 +657,6 @@ CONFIG_COMEDI_NI_PCIDIO=m
- CONFIG_COMEDI_NI_PCIMIO=m
- CONFIG_STAGING=y
- CONFIG_R8188EU=m
--# CONFIG_88EU_AP_MODE is not set
- CONFIG_PM_DEVFREQ=y
- CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND=y
- CONFIG_DEVFREQ_GOV_PERFORMANCE=y
-@@ -770,16 +738,13 @@ CONFIG_CRYPTO_USER=m
- CONFIG_CRYPTO_PCRYPT=m
- CONFIG_CRYPTO_CRYPTD=m
- CONFIG_CRYPTO_CHACHA20POLY1305=m
--CONFIG_CRYPTO_HMAC=y
- CONFIG_CRYPTO_VMAC=m
--CONFIG_CRYPTO_TGR192=m
- CONFIG_CRYPTO_WP512=m
- CONFIG_CRYPTO_ANUBIS=m
- CONFIG_CRYPTO_BLOWFISH=m
- CONFIG_CRYPTO_CAST5=m
- CONFIG_CRYPTO_CAST6=m
- CONFIG_CRYPTO_KHAZAD=m
--CONFIG_CRYPTO_SALSA20=m
- CONFIG_CRYPTO_SEED=m
- CONFIG_CRYPTO_SERPENT=m
- CONFIG_CRYPTO_TEA=m
-@@ -797,6 +762,7 @@ CONFIG_CRYPTO_DEV_VIRTIO=m
- CONFIG_PRINTK_TIME=y
- CONFIG_STRIP_ASM_SYMS=y
- CONFIG_MAGIC_SYSRQ=y
-+CONFIG_DEBUG_FS=y
- # CONFIG_SCHED_DEBUG is not set
- CONFIG_SCHEDSTATS=y
- # CONFIG_DEBUG_PREEMPT is not set
--- 
-2.36.1
+Huacai
 
+On Fri, Aug 19, 2022 at 3:23 PM Yupeng Li <liyupeng@zbhlos.com> wrote:
+>
+> When CONFIG_LOONGSON_LIOINTC,CONFIG_LOONGSON_EIOINTC,
+> CONFIG_LOONGSON_PCH_LPC,CONFIG_LOONGSON_PCH_PIC was disabled,
+> build kernel with errors like:
+>
+> MODPOST vmlinux.symvers
+> MODINFO modules.builtin.modinfo
+> GEN     modules.builtin
+> LD      .tmp_vmlinux.kallsyms1
+> loongarch64-linux-gnu-ld: drivers/irqchip/irq-loongarch-cpu.o: in functio=
+n `lpic_get_gsi_domain_id':
+> irq-loongarch-cpu.c:(.text+0x8): undefined reference to `pch_lpc_handle'
+> loongarch64-linux-gnu-ld: irq-loongarch-cpu.c:(.text+0xc): undefined refe=
+rence to `pch_lpc_handle'
+> loongarch64-linux-gnu-ld: irq-loongarch-cpu.c:(.text+0xc): undefined refe=
+rence to `pch_lpc_handle'
+> make: *** [Makefile:1171=EF=BC=9Avmlinux] =E9=94=99=E8=AF=AF 1
+>
+> Reviewed-by: Caicai <caizp2008@163.com>
+> Signed-off-by: Yupeng Li <liyupeng@zbhlos.com>
+> ---
+>  drivers/irqchip/irq-loongarch-cpu.c | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-lo=
+ongarch-cpu.c
+> index 327f3ab62c03..d296f704cbb6 100644
+> --- a/drivers/irqchip/irq-loongarch-cpu.c
+> +++ b/drivers/irqchip/irq-loongarch-cpu.c
+> @@ -27,24 +27,30 @@ static u32 lpic_gsi_to_irq(u32 gsi)
+>
+>  static struct fwnode_handle *lpic_get_gsi_domain_id(u32 gsi)
+>  {
+> +#ifdef CONFIG_LOONGSON_PCH_PIC
+>         int id;
+> +#endif
+>         struct fwnode_handle *domain_handle =3D NULL;
+>
+>         switch (gsi) {
+>         case GSI_MIN_CPU_IRQ ... GSI_MAX_CPU_IRQ:
+> +#ifdef CONFIG_LOONGSON_LIOINTC
+>                 if (liointc_handle)
+>                         domain_handle =3D liointc_handle;
+> +#endif
+>                 break;
+> -
+>         case GSI_MIN_LPC_IRQ ... GSI_MAX_LPC_IRQ:
+> +#ifdef CONFIG_LOONGSON_PCH_LPC
+>                 if (pch_lpc_handle)
+>                         domain_handle =3D pch_lpc_handle;
+> +#endif
+>                 break;
+> -
+>         case GSI_MIN_PCH_IRQ ... GSI_MAX_PCH_IRQ:
+> +#ifdef CONFIG_LOONGSON_PCH_PIC
+>                 id =3D find_pch_pic(gsi);
+>                 if (id >=3D 0 && pch_pic_handle[id])
+>                         domain_handle =3D pch_pic_handle[id];
+> +#endif
+>                 break;
+>         }
+>
+> @@ -92,6 +98,7 @@ static const struct irq_domain_ops loongarch_cpu_intc_i=
+rq_domain_ops =3D {
+>         .xlate =3D irq_domain_xlate_onecell,
+>  };
+>
+> +#ifdef CONFIG_LOONGSON_LIOINTC
+>  static int __init
+>  liointc_parse_madt(union acpi_subtable_headers *header,
+>                        const unsigned long end)
+> @@ -100,7 +107,8 @@ liointc_parse_madt(union acpi_subtable_headers *heade=
+r,
+>
+>         return liointc_acpi_init(irq_domain, liointc_entry);
+>  }
+> -
+> +#endif
+> +#ifdef CONFIG_LOONGSON_EIOINTC
+>  static int __init
+>  eiointc_parse_madt(union acpi_subtable_headers *header,
+>                        const unsigned long end)
+> @@ -109,13 +117,17 @@ eiointc_parse_madt(union acpi_subtable_headers *hea=
+der,
+>
+>         return eiointc_acpi_init(irq_domain, eiointc_entry);
+>  }
+> -
+> +#endif
+>  static int __init acpi_cascade_irqdomain_init(void)
+>  {
+> +#ifdef CONFIG_LOONGSON_LIOINTC
+>         acpi_table_parse_madt(ACPI_MADT_TYPE_LIO_PIC,
+>                               liointc_parse_madt, 0);
+> +#endif
+> +#ifdef CONFIG_LOONGSON_EIOINTC
+>         acpi_table_parse_madt(ACPI_MADT_TYPE_EIO_PIC,
+>                               eiointc_parse_madt, 0);
+> +#endif
+>         return 0;
+>  }
+>
+> --
+> 2.34.1
+>
