@@ -1,137 +1,104 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADB395CB6
-	for <loongarch@lists.linux.dev>; Fri, 19 Aug 2022 10:43:35 +0000 (UTC)
-Received: from [192.168.20.136] (unknown [171.223.98.240])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxT+BRaf9iFrEEAA--.23173S3;
-	Fri, 19 Aug 2022 18:43:30 +0800 (CST)
-Message-ID: <6fad1ac6-b5ee-39a6-4a7d-2ed2f7efa198@loongson.cn>
-Date: Fri, 19 Aug 2022 18:43:29 +0800
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16A83C13
+	for <loongarch@lists.linux.dev>; Fri, 19 Aug 2022 15:07:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=SYqd0jVvSqn0LYdbb0mNobM+NLD0i8990uNItjrpJW0=; b=p8X1gMssAFqz7Cj5E1IU3EN3xz
+	t/snbLEyJv1XAdu4J+MpAgDpW86NPkUeqqsmS64YxuYIDoz1/0nSwGnJ4A7MRHs6v4/DfY13yylRH
+	yTpJ3gDO1i4G6ew5SrDgljBdNE61ShqeAK0joibG/N9CQrD4C5DO+D+oHobsM0kWRo/T88yRl68DM
+	ivZpQK7KoicNncKbbL3cMwzclIbdo4NBfFt8WVkYbV7Yt9Ti+iBnKi0iAa3qakANtULKlnjVs0VPW
+	qMm4R7XYp2iFBesGctz7KWjgzPu53WYvs3CSQtaYwSCE20OErGTcffzJDbyUtNOmEl2QCsbCVzRVd
+	fg0lrl+g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33852)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1oP3PW-0007vG-Sl; Fri, 19 Aug 2022 15:55:47 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1oP3PE-0007s8-Jr; Fri, 19 Aug 2022 15:55:28 +0100
+Date: Fri, 19 Aug 2022 15:55:28 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+	akpm@linux-foundation.org
+Subject: Re: [PATCH] kernel: exit: cleanup release_thread()
+Message-ID: <Yv+kYPnf8c6rLXgN@shell.armlinux.org.uk>
+References: <20220819014406.32266-1-wangkefeng.wang@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 6/9] LoongArch: modules/ftrace: Initialize PLT at load
- time
-Content-Language: en-US
-To: Qing Zhang <zhangqing@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <20220819081657.7254-1-zhangqing@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-In-Reply-To: <20220819081657.7254-1-zhangqing@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8CxT+BRaf9iFrEEAA--.23173S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF1rWw45Zw48XryxtryftFb_yoW5Aw13pF
-	y29Fn5Gr4UGr43WF43ur1Dur15uFWxC3y2gFZxG34ayrWkXFyUAF4Iyrn0kFyrtw1DWFyS
-	9ayrur4jkFWUZrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-	Y487MxkIecxEwVAFwVW8twCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-	ZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220819014406.32266-1-wangkefeng.wang@huawei.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 2022/8/19 16:16, Qing Zhang wrote:
+On Fri, Aug 19, 2022 at 09:44:06AM +0800, Kefeng Wang wrote:
+> Only x86 has own release_thread(), introduce a new weak
+> release_thread() function to clean empty definitions in
+> other ARCHs.
+> 
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+...
+>  arch/arm/include/asm/processor.h        | 3 ---
+>  arch/arm/kernel/process.c               | 4 ----
 
-> To Implement ftrace trampiones through plt entry.
->
-> Tested by forcing ftrace_make_call() to use the module PLT, and then
-> loading up a module after setting up ftrace with:
->
-> | echo ":mod:<module-name>" > set_ftrace_filter;
-> | echo function > current_tracer;
-> | modprobe <module-name>
->
-> Since FTRACE_ADDR/FTRACE_REGS_ADDR is only defined when CONFIG_DYNAMIC_FTRACE
-> is selected, we wrap its use along with most of module_init_ftrace_plt() with
-> ifdeffery rather than using IS_ENABLED().
->
-> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
-> ---
->   arch/loongarch/include/asm/ftrace.h     |  4 ++
->   arch/loongarch/include/asm/inst.h       |  2 +
->   arch/loongarch/include/asm/module.h     | 14 +++--
->   arch/loongarch/include/asm/module.lds.h |  1 +
->   arch/loongarch/kernel/ftrace_dyn.c      | 79 +++++++++++++++++++++++++
->   arch/loongarch/kernel/inst.c            | 12 ++++
->   arch/loongarch/kernel/module-sections.c | 11 ++++
->   arch/loongarch/kernel/module.c          | 48 +++++++++++++++
->   8 files changed, 166 insertions(+), 5 deletions(-)
-[...]
-> @@ -36,14 +39,15 @@ Elf_Addr module_emit_plt_entry(struct module *mod, unsigned long val);
->   
->   static inline struct plt_entry emit_plt_entry(unsigned long val)
->   {
-> -	u32 lu12iw, lu32id, lu52id, jirl;
-> +	u32 addu16id, lu32id, lu52id, jirl;
->   
-> -	lu12iw = (lu12iw_op << 25 | (((val >> 12) & 0xfffff) << 5) | LOONGARCH_GPR_T1);
-> +	addu16id = larch_insn_gen_addu16id(LOONGARCH_GPR_T1, LOONGARCH_GPR_ZERO,
-> +		ADDR_IMM(val, ADDU16ID));
+Acked-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-Hi, Qing,
+Thanks!
 
-Why change lu12iw to addu16id? They have same effect here.
-
-
->   	lu32id = larch_insn_gen_lu32id(LOONGARCH_GPR_T1, ADDR_IMM(val, LU32ID));
->   	lu52id = larch_insn_gen_lu52id(LOONGARCH_GPR_T1, LOONGARCH_GPR_T1, ADDR_IMM(val, LU52ID));
-> -	jirl = larch_insn_gen_jirl(0, LOONGARCH_GPR_T1, 0, (val & 0xfff));
-> +	jirl = larch_insn_gen_jirl(0, LOONGARCH_GPR_T1, 0, (val & 0xffff));
->   
-> -	return (struct plt_entry) { lu12iw, lu32id, lu52id, jirl };
-> +	return (struct plt_entry) { addu16id, lu32id, lu52id, jirl };
->   }
-[...]
-> +static int module_init_ftrace_plt(const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs,
-> +				  struct module *mod)
-> +{
-> +#ifdef CONFIG_DYNAMIC_FTRACE
-> +	const Elf_Shdr *s;
-> +	struct plt_entry *ftrace_plts;
-> +
-> +	s = find_section(hdr, sechdrs, ".ftrace_trampoline");
-> +	if (!s)
-> +		return -ENOEXEC;
-
-Return value is not used later, may we do something or drop returning value.
-
-Thanks,
-
-Jinyang
-
-> +
-> +	ftrace_plts = (void *)s->sh_addr;
-> +
-> +	ftrace_plts[FTRACE_PLT_IDX] = emit_plt_entry(FTRACE_ADDR);
-> +
-> +	if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_REGS))
-> +		ftrace_plts[FTRACE_REGS_PLT_IDX] = emit_plt_entry(FTRACE_REGS_ADDR);
-> +
-> +	mod->arch.ftrace_trampolines = ftrace_plts;
-> +#endif
-> +	return 0;
-> +}
-> +
-> +int module_finalize(const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs, struct module *mod)
-> +{
-> +	module_init_ftrace_plt(hdr, sechdrs, mod);
-> +
-> +	return 0;
-> +}
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
