@@ -1,358 +1,124 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9048E17EE
-	for <loongarch@lists.linux.dev>; Fri, 19 Aug 2022 09:30:50 +0000 (UTC)
-Received: from [192.168.20.136] (unknown [171.223.98.240])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_2v7V_9iCKAEAA--.20556S3;
-	Fri, 19 Aug 2022 17:29:31 +0800 (CST)
-Message-ID: <f9b12eed-a7a0-0f2b-4679-1f465e22cad6@loongson.cn>
-Date: Fri, 19 Aug 2022 17:29:29 +0800
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18B017EE
+	for <loongarch@lists.linux.dev>; Fri, 19 Aug 2022 09:40:38 +0000 (UTC)
+Received: by mail-qv1-f53.google.com with SMTP id d1so3006759qvs.0
+        for <loongarch@lists.linux.dev>; Fri, 19 Aug 2022 02:40:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=bRymBzdXlfqAZ/An0FhEAiaTJ5r51uvoXyU3bQ2b9Zs=;
+        b=URl40V3Gb29RXVwGpgiVNQTH5uivrloVk1cHjELtfsyLSMEMVQ99rs4I0uiN4k+udz
+         s2v3MzA2tcf24wvlZOMPaFTWEigN3j/5Vvi9htI2ekyHXoIn+aKK4JrfIggD97rvUBHZ
+         /KdGMAUzNb9RZLoAQeBEMam2TJ7Z21UZPpTWU3rmxHAOAlu4N07i17r7J5iSSHUk/Qg2
+         EClRESGBbKn0GWjNLbjheUHRUfHWQru8lHVBrxHMElA9GgJPjkalA6CH/Wrr48LnN9Ls
+         dK/SVEEJu73kG796hvSVUkVhUDQpSgC07Gxsa3D7OYg0U7DEa9XxkFiahztTrbEriEvN
+         DpkA==
+X-Gm-Message-State: ACgBeo2GZPlPrVGG7+lV1hDNla+r6QmphLWfptml4A1sugu3nU9DRtqn
+	Rw1aR6BrmQg0k+ksncTTNpm8k82lGUcN5Z8y
+X-Google-Smtp-Source: AA6agR6LQixIPMO257L7CJMGrwjUyBTKNVXdrxPnaHvfLM1pQrR3R19DIhbYtuWfvprrwpdhygfYSQ==
+X-Received: by 2002:a05:6214:509e:b0:496:a98a:fd5 with SMTP id kk30-20020a056214509e00b00496a98a0fd5mr5648704qvb.2.1660902037623;
+        Fri, 19 Aug 2022 02:40:37 -0700 (PDT)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id v9-20020a05622a014900b00342f8d4d0basm2955320qtw.43.2022.08.19.02.40.36
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Aug 2022 02:40:36 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-3378303138bso67170087b3.9
+        for <loongarch@lists.linux.dev>; Fri, 19 Aug 2022 02:40:36 -0700 (PDT)
+X-Received: by 2002:a25:250b:0:b0:68f:425b:3ee0 with SMTP id
+ l11-20020a25250b000000b0068f425b3ee0mr6898469ybl.89.1660902025045; Fri, 19
+ Aug 2022 02:40:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 1/9] LoongArch/ftrace: Add basic support
-Content-Language: en-US
-To: Qing Zhang <zhangqing@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <20220819081403.7143-1-zhangqing@loongson.cn>
- <20220819081403.7143-2-zhangqing@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-In-Reply-To: <20220819081403.7143-2-zhangqing@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Dx_2v7V_9iCKAEAA--.20556S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3JFyDWr1xCryfJF4fWw4fuFg_yoWfWFy8pF
-	9ayFs7Gr4xGF4fKryS9r15Zrn8Ars3Wry2ga90qryFyFnFqrsxuw1IyryqqFZ7t3ykG3yI
-	gFyfWr4akF4Yq37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-	IcxG8wCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjfUeLvtDUUUU
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+References: <20220819014406.32266-1-wangkefeng.wang@huawei.com>
+In-Reply-To: <20220819014406.32266-1-wangkefeng.wang@huawei.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 19 Aug 2022 11:40:14 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUd5Ww-mtpymykuahHWD+S62Z8qiBMVx8y4okouuzTCAg@mail.gmail.com>
+Message-ID: <CAMuHMdUd5Ww-mtpymykuahHWD+S62Z8qiBMVx8y4okouuzTCAg@mail.gmail.com>
+Subject: Re: [PATCH] kernel: exit: cleanup release_thread()
+To: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, 
+	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Michal Simek <monstr@monstr.eu>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Jonas Bonn <jonas@southpole.se>, 
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+	"David S . Miller" <davem@davemloft.net>, Richard Weinberger <richard@nod.at>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "the arch/x86 maintainers" <x86@kernel.org>, 
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
+	alpha <linux-alpha@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arcml <linux-snps-arc@lists.infradead.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-csky@vger.kernel.org, 
+	"open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>, 
+	"linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, loongarch@lists.linux.dev, 
+	linux-m68k <linux-m68k@lists.linux-m68k.org>, 
+	"open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, Openrisc <openrisc@lists.librecores.org>, 
+	Parisc List <linux-parisc@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
+	Linux-sh list <linux-sh@vger.kernel.org>, sparclinux <sparclinux@vger.kernel.org>, 
+	linux-um <linux-um@lists.infradead.org>, 
+	"open list:TENSILICA XTENSA PORT (xtensa)" <linux-xtensa@linux-xtensa.org>, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Qing
+Hi Kefeng,
 
-On 2022/8/19 16:13, Qing Zhang wrote:
-
-> This patch contains basic ftrace support for LoongArch.
-> Specifically, function tracer (HAVE_FUNCTION_TRACER), function graph
-> tracer (HAVE_FUNCTION_GRAPH_TRACER) are implemented following the
-> instructions in Documentation/trace/ftrace-design.txt.
+On Fri, Aug 19, 2022 at 3:39 AM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+> Only x86 has own release_thread(), introduce a new weak
+> release_thread() function to clean empty definitions in
+> other ARCHs.
 >
-> Use `-pg` makes stub like a child function `void _mcount(void *ra)`.
-> Thus, it can be seen store RA and open stack before `call _mcount`.
-> Find `open stack` at first, and then find `store RA`
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+
+>  arch/m68k/include/asm/processor.h       | 5 -----
+
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -183,6 +183,10 @@ void put_task_struct_rcu_user(struct task_struct *task)
+>                 call_rcu(&task->rcu, delayed_put_task_struct);
+>  }
 >
-> Note that the functions in both inst.c and time.c should not be
-> hooked with the compiler's -pg option: to prevent infinite self-
-> referencing for the former, and to ignore early setup stuff for the
-> latter.
->
-> Co-developed-by: Jinyang He <hejinyang@loongson.cn>
-> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
-> ---
->   arch/loongarch/Kconfig              |  2 +
->   arch/loongarch/Makefile             |  5 ++
->   arch/loongarch/include/asm/ftrace.h | 18 ++++++
->   arch/loongarch/kernel/Makefile      |  8 +++
->   arch/loongarch/kernel/ftrace.c      | 74 +++++++++++++++++++++++
->   arch/loongarch/kernel/mcount.S      | 94 +++++++++++++++++++++++++++++
->   6 files changed, 201 insertions(+)
->   create mode 100644 arch/loongarch/include/asm/ftrace.h
->   create mode 100644 arch/loongarch/kernel/ftrace.c
->   create mode 100644 arch/loongarch/kernel/mcount.S
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 4abc9a28aba4..703a2c3a8e0d 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -84,6 +84,8 @@ config LOONGARCH
->   	select HAVE_DMA_CONTIGUOUS
->   	select HAVE_EXIT_THREAD
->   	select HAVE_FAST_GUP
-> +        select HAVE_FUNCTION_GRAPH_TRACER
-> +        select HAVE_FUNCTION_TRACER
->   	select HAVE_GENERIC_VDSO
->   	select HAVE_IOREMAP_PROT
->   	select HAVE_IRQ_EXIT_ON_IRQ_STACK
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index ec3de6191276..44f11a2937e9 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -29,6 +29,11 @@ ifneq ($(SUBARCH),$(ARCH))
->     endif
->   endif
->   
-> +ifdef CONFIG_DYNAMIC_FTRACE
-> +  KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
-> +  CC_FLAGS_FTRACE := -fpatchable-function-entry=2
-> +endif
-> +
-
-It seems this patch adds non-dynamic ftrace, this code should not
-appear here.
-BTW is it really necessary for non-dynamic ftrace? I do not use it
-directly and frequently, IMHO, non-dynamic can be completely
-
-replaced dynamic?
-
-
->   ifdef CONFIG_64BIT
->   ld-emul			= $(64bit-emul)
->   cflags-y		+= -mabi=lp64s
-> diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-> new file mode 100644
-> index 000000000000..6a3e76234618
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/ftrace.h
-> @@ -0,0 +1,18 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2022 Loongson Technology Corporation Limited
-> + */
-> +
-> +#ifndef _ASM_LOONGARCH_FTRACE_H
-> +#define _ASM_LOONGARCH_FTRACE_H
-> +
-> +#ifdef CONFIG_FUNCTION_TRACER
-> +#define MCOUNT_INSN_SIZE 4		/* sizeof mcount call */
-> +
-> +#ifndef __ASSEMBLY__
-> +extern void _mcount(void);
-> +#define mcount _mcount
-> +
-> +#endif /* __ASSEMBLY__ */
-> +#endif /* CONFIG_FUNCTION_TRACER */
-> +#endif /* _ASM_LOONGARCH_FTRACE_H */
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-> index e5be17009fe8..0a745d24d3e5 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -14,6 +14,14 @@ obj-$(CONFIG_EFI) 		+= efi.o
->   
->   obj-$(CONFIG_CPU_HAS_FPU)	+= fpu.o
->   
-> +ifdef CONFIG_FUNCTION_TRACER
-> +    obj-y += mcount.o ftrace.o
-> +    CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
-> +  CFLAGS_REMOVE_inst.o = $(CC_FLAGS_FTRACE)
-> +  CFLAGS_REMOVE_time.o = $(CC_FLAGS_FTRACE)
-> +  CFLAGS_REMOVE_perf_event.o = $(CC_FLAGS_FTRACE)
-> +endif
-> +
->   obj-$(CONFIG_MODULES)		+= module.o module-sections.o
->   obj-$(CONFIG_STACKTRACE)	+= stacktrace.o
->   
-> diff --git a/arch/loongarch/kernel/ftrace.c b/arch/loongarch/kernel/ftrace.c
-> new file mode 100644
-> index 000000000000..c8ddc5f11f32
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/ftrace.c
-> @@ -0,0 +1,74 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2022 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <linux/uaccess.h>
-> +#include <linux/init.h>
-> +#include <linux/ftrace.h>
-> +#include <linux/syscalls.h>
-> +
-> +#include <asm/asm.h>
-> +#include <asm/asm-offsets.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/inst.h>
-> +#include <asm/loongarch.h>
-> +#include <asm/syscall.h>
-> +#include <asm/unistd.h>
-> +
-> +#include <asm-generic/sections.h>
-> +
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +
-> +/*
-> + * As `call _mcount` follows LoongArch psABI, ra-saved operation and
-> + * stack operation can be found before this insn.
-> + */
-> +
-> +static int ftrace_get_parent_ra_addr(unsigned long insn_addr, int *ra_off)
+> +void __weak release_thread(struct task_struct *dead_task)
 > +{
-> +	union loongarch_instruction *insn;
-> +	int limit = 32;
-> +
-> +	insn = (union loongarch_instruction *)insn_addr;
-> +
-> +	do {
-> +		insn--;
-> +		limit--;
-> +
-> +		if (is_ra_save_ins(insn))
-> +			*ra_off = -((1 << 12) - insn->reg2i12_format.immediate);
-> +
-> +	} while (!is_stack_alloc_ins(insn) && limit);
-> +
-> +	if (!limit)
-> +		return -EINVAL;
-> +
-> +	return 0;
 > +}
-> +
-> +void prepare_ftrace_return(unsigned long self_addr,
-> +		unsigned long callsite_sp, unsigned long old)
-> +{
-> +	int ra_off;
-> +	unsigned long return_hooker = (unsigned long)&return_to_handler;
-> +
-> +	if (unlikely(ftrace_graph_is_dead()))
-> +		return;
-> +
-> +	if (unlikely(atomic_read(&current->tracing_graph_pause)))
-> +		return;
-> +
-> +	if (ftrace_get_parent_ra_addr(self_addr, &ra_off))
-> +		goto out;
-> +
-> +	if (!function_graph_enter(old, self_addr, 0, NULL))
-> +		*(unsigned long *)(callsite_sp + ra_off) = return_hooker;
-> +
-> +	return;
-> +
-> +out:
-> +	ftrace_graph_stop();
-> +	WARN_ON(1);
-> +}
-> +#endif	/* CONFIG_FUNCTION_GRAPH_TRACER */
-> diff --git a/arch/loongarch/kernel/mcount.S b/arch/loongarch/kernel/mcount.S
-> new file mode 100644
-> index 000000000000..f1c1cc1a629e
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/mcount.S
-> @@ -0,0 +1,94 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * LoongArch specific _mcount support
-> + *
-> + * Copyright (C) 2022 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <asm/export.h>
-> +#include <asm/regdef.h>
-> +#include <asm/stackframe.h>
-> +#include <asm/ftrace.h>
-> +
-> +	.text
-> +
-> +#define MCOUNT_STACK_SIZE	(2 * SZREG)
-> +#define MCOUNT_S0_OFFSET	(0)
-> +#define MCOUNT_RA_OFFSET	(SZREG)
-> +
-> +	.macro MCOUNT_SAVE_REGS
-> +	PTR_ADDI sp, sp, -MCOUNT_STACK_SIZE
-> +	PTR_S	s0, sp, MCOUNT_S0_OFFSET
-> +	PTR_S	ra, sp, MCOUNT_RA_OFFSET
-> +	move	s0, a0
-> +	.endm
-> +
-> +	.macro MCOUNT_RESTORE_REGS
-> +	move	a0, s0
-> +	PTR_L	ra, sp, MCOUNT_RA_OFFSET
-> +	PTR_L	s0, sp, MCOUNT_S0_OFFSET
-> +	PTR_ADDI sp, sp, MCOUNT_STACK_SIZE
-> +	.endm
-> +
-> +
-> +SYM_FUNC_START(_mcount)
-> +	la	t1, ftrace_stub
-> +	la	t2, ftrace_trace_function	/* Prepare t2 for (1) */
 
-'la.pcrel' is preferred here while 'la' should be deprecated.
+As the default implementation is empty, it might be better to keep
+this as a static inline function, protected by #ifndef release_thread,
+and let x86 #define release_thread.
 
+> +
+>  void release_task(struct task_struct *p)
+>  {
+>         struct task_struct *leader;
 
-> +	PTR_L	t2, t2, 0
-> +	beq	t1, t2, fgraph_trace
-> +
-> +	MCOUNT_SAVE_REGS
-> +
-> +	move	a0, ra				/* arg0: self return address */
-> +	move	a1, s0				/* arg1: parent's return address */
-> +	jirl	ra, t2, 0			/* (1) call *ftrace_trace_function */
-> +
-> +	MCOUNT_RESTORE_REGS
-> +
-> +fgraph_trace:
-> +#ifdef	CONFIG_FUNCTION_GRAPH_TRACER
-> +	la	t1, ftrace_stub
-> +	la	t3, ftrace_graph_return
-> +	PTR_L	t3, t3, 0
-> +	bne	t1, t3, ftrace_graph_caller
-> +	la	t1, ftrace_graph_entry_stub
-> +	la	t3, ftrace_graph_entry
-> +	PTR_L	t3, t3, 0
-> +	bne	t1, t3, ftrace_graph_caller
-> +#endif
-> +
-> +	.globl ftrace_stub
-> +ftrace_stub:
-> +	jirl	zero, ra, 0
-> +SYM_FUNC_END(_mcount)
-> +EXPORT_SYMBOL(_mcount)
-> +
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +SYM_FUNC_START(ftrace_graph_caller)
-> +	MCOUNT_SAVE_REGS
-> +
-> +	PTR_ADDI	a0, ra, -4			/* arg0: Callsite self return addr */
-> +	PTR_ADDI	a1, sp, MCOUNT_STACK_SIZE	/* arg1: Callsite sp */
-> +	move	a2, s0					/* arg2: Callsite parent ra */
-> +	bl	prepare_ftrace_return
-> +
-> +	MCOUNT_RESTORE_REGS
-> +	jirl	zero, ra, 0
-We know Xuerui had done a lot works to keep asm code normalize.
-So I think we should replace 'jirl zero,ra,0' with 'jr ra'. The basic
+Gr{oetje,eeting}s,
 
-rule is use assembly macro as possible, I think.
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Thanks,
-
-Jinyang
-
-
-> +SYM_FUNC_END(ftrace_graph_caller)
-> +
-> +SYM_FUNC_START(return_to_handler)
-> +	PTR_ADDI sp, sp, -2 * SZREG
-> +	PTR_S	a0, sp, 0
-> +	PTR_S	a1, sp, SZREG
-> +
-> +	bl	ftrace_return_to_handler
-> +
-> +	/* restore the real parent address: a0 -> ra */
-> +	move	ra, a0
-> +
-> +	PTR_L	a0, sp, 0
-> +	PTR_L	a1, sp, SZREG
-> +	PTR_ADDI	sp, sp, 2 * SZREG
-> +	jirl	zero, ra, 0
-> +SYM_FUNC_END(return_to_handler)
-> +#endif /* CONFIG_FUNCTION_GRAPH_TRACER */
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
