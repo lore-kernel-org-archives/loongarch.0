@@ -1,63 +1,112 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0F220EE
-	for <loongarch@lists.linux.dev>; Sat, 20 Aug 2022 09:37:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1660988244;
-	bh=NbS47qUpS5b3B94luHG1GnOEBxFKcFZNFyfnGjSxWwE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ghGjnt7GlseJs/DuNwSCDVrTcnlKG4vJ9xgTQAk9sv2pBoVdBUTcOic0y1dOOSJH8
-	 b0VFVSruf2uzUS62RNw3yxgvzjAxHueBPqJDB7ut953GRdeF00IGq9pHHX2zrNbsyE
-	 nELEYKwRUYLpwStXmjmP4Qv8GnaTZzjWbg5KzhDo=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id A41F6669F1;
-	Sat, 20 Aug 2022 05:37:20 -0400 (EDT)
-Message-ID: <27081961433ca26e01af8709fa04e4a6ee755690.camel@xry111.site>
-Subject: Re: [PATCH V2 1/2] LoongArch: Add CPU HWMon platform driver
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
- "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>,
- Robert Moore <robert.moore@intel.com>, Erik Kaneda <erik.kaneda@intel.com>,
- Hans de Goede <hdegoede@redhat.com>, Mark Gross <mgross@linux.intel.com>, 
- loongarch@lists.linux.dev, linux-arch <linux-arch@vger.kernel.org>, ACPI
- Devel Maling List <linux-acpi@vger.kernel.org>, Xuefeng Li
- <lixuefeng@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Sat, 20 Aug 2022 17:37:18 +0800
-In-Reply-To: <CAAhV-H6OaMOnhddiY2WSjiag5sFwAG6gab2m22nZonjnUbCN9w@mail.gmail.com>
-References: <20220818042208.2896457-1-chenhuacai@loongson.cn>
-	 <98d716a4-04de-ff32-1bbc-cac576989a87@loongson.cn>
-	 <ce96bcc9bf0aa24d1be5a91d07e6e7515c4d0c33.camel@xry111.site>
-	 <5d338fcd-d225-6fe1-1b94-0fce94a3fb0f@loongson.cn>
-	 <CAAhV-H6OaMOnhddiY2WSjiag5sFwAG6gab2m22nZonjnUbCN9w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.45.2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099A520EE
+	for <loongarch@lists.linux.dev>; Sat, 20 Aug 2022 09:56:57 +0000 (UTC)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailout.nyi.internal (Postfix) with ESMTP id BB5B45C023C;
+	Sat, 20 Aug 2022 05:56:55 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute4.internal (MEProxy); Sat, 20 Aug 2022 05:56:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to; s=fm2; t=1660989415; x=
+	1661075815; bh=kdaAC0zun6WCRzZrFQuABIy5yngIWQJVDLY5tm6Rge8=; b=z
+	+knXgqPKnfrkEtJt3sGcxBJkZpKqAlhwMj+QqtV7NIKmudXW+xI43CKG8YgL6vZJ
+	S+9KJcginCH7pEYuufb333TcRdVsfDNn8XqVJi4E3PFturGyyJeJ4SA6lCpWzrkj
+	OFsmmRRWRejokK5VnAcXed2s0S7ewXFOJB+oT1bApLYbjU9l3Ar3VDQK7Ku9KrYP
+	50dOcrqVczXe7f5tA8Qqh/rqmIOlFfVY2nSUiaD0ddrGRSqkIphY+PJs3428Eu0x
+	cZMmVloz03jtv4jKfTtffmIQb8X7pPIxr2tYJ+GLITRmrRH2yw4pxlbdgCltN48a
+	F0SNp4PMdf0hwXu7pJR5g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1660989415; x=
+	1661075815; bh=kdaAC0zun6WCRzZrFQuABIy5yngIWQJVDLY5tm6Rge8=; b=c
+	b03vsUwSOrJyZsHaoz64PZG/b8vT8PvoGFWTRs/ouxm9HQ8DjeDVuSLWMYH4tiyu
+	Bh0G192rNDe0HBf/yO3jontQ6iNfxBaMZxcMQYY3Vv+I7PFOup3dOndJFN9rWPSu
+	vl21m2PTkj4Pjro9EyHZYvxqNLn4UbwnsBrQOzMZaXwb4wRPcnvyg6BpFQnBRV08
+	voTuPfI36Cmj8C5kx4C9axXWX6ctW1lYapZwCwtOCokMakGYZ5/TpW0jq+JX3Qn8
+	exTFGkJnOrMXaVWbIWQEEGDQiE4tYT7b9yrdyjmm6QsDgfAVMATg08N9Tn6NGKnb
+	BXXlzfbhYMU3aIoMCMp6Q==
+X-ME-Sender: <xms:5a8AY1AzzlEH9iwpT8crJF6DyqJULOrHkYz06MJuHNatB-PbJSoe-g>
+    <xme:5a8AYzjVmwzJ2C062nhWTmuf5vSIvAuUCbn2bF6LjMq1yptC4veXiZSqjjmVLptHN
+    jp8hPJKvBmVE96vg8I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeifedgvdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
+    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
+    hmqeenucggtffrrghtthgvrhhnpedufeegfeetudeghefftdehfefgveffleefgfehhfej
+    ueegveethfduuddvieehgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:5a8AYwlx6nZMkS1JUqQJS2qoJb8Qie8GNWpawDqUswLRUpqZXBdTrA>
+    <xmx:5a8AY_yij4oOSG2Nn4RcHKOGWp172zizxkky_Yur4fWl2oUoCRWkQQ>
+    <xmx:5a8AY6SRKhAf3bEvX3gcm0w1uo5IFg15BiBUEjOJt19bYDYP1wZi_w>
+    <xmx:568AY7KyxKX9cjDCuErqlHbJpvGzP-mmysuIGhLzHeFF-Zl7c-Ielw>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id C18AF36A0071; Sat, 20 Aug 2022 05:56:53 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-841-g7899e99a45-fm-20220811.002-g7899e99a
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Message-Id: <d91451dc-b9a2-4f10-b908-687cbb94bd73@www.fastmail.com>
+In-Reply-To: <20220815123613.3291770-2-chenhuacai@loongson.cn>
+References: <20220815123613.3291770-1-chenhuacai@loongson.cn>
+ <20220815123613.3291770-2-chenhuacai@loongson.cn>
+Date: Sat, 20 Aug 2022 10:56:33 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Huacai Chen" <chenhuacai@loongson.cn>, "Arnd Bergmann" <arnd@arndb.de>,
+ "Huacai Chen" <chenhuacai@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "Andy Lutomirski" <luto@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Dinh Nguyen" <dinguyen@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+ "Xuefeng Li" <lixuefeng@loongson.cn>, "Guo Ren" <guoren@kernel.org>,
+ "Xuerui Wang" <kernel@xen0n.name>,
+ "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ "Feiyang Chen" <chenfeiyang@loongson.cn>
+Subject: Re: [PATCH V10 1/4] MIPS&LoongArch&NIOS2: Adjust prototypes of p?d_init()
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2022-08-19 at 18:12 +0800, Huacai Chen wrote:
-> Hi, all,
->=20
-> If ACPI TZ is widely configured, this patch can be dropped, but I
-> found most users don't have ACPI TZ in their machines.
-
-I know almost nothing about ACPI.  Can ACPI TZ be provided by a firmware
-update, or it needs a hardware modification (rewire the PCB or replace
-some chip)?  If only a firmware change is needed we can inform the
-firmware team to implement it (currently UEFI-compliant firmware is
-still at beta stage anyway).
 
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+=E5=9C=A82022=E5=B9=B48=E6=9C=8815=E6=97=A5=E5=85=AB=E6=9C=88 =E4=B8=8B=E5=
+=8D=881:36=EF=BC=8CHuacai Chen=E5=86=99=E9=81=93=EF=BC=9A
+> From: Feiyang Chen <chenfeiyang@loongson.cn>
+>
+> We are preparing to add sparse vmemmap support to LoongArch. MIPS and
+> LoongArch need to call pgd_init()/pud_init()/pmd_init() when populating
+> page tables, so adjust their prototypes to make generic helpers can ca=
+ll
+> them.
+>
+> NIOS2 declares pmd_init() but doesn't use, just remove it to avoid bui=
+ld
+> errors.
+>
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+
+For MIPS part :-)
+
+[...]
+
+Thanks
+- Jiaxun
+
