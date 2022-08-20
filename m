@@ -1,84 +1,63 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C6C17B
-	for <loongarch@lists.linux.dev>; Sat, 20 Aug 2022 03:16:10 +0000 (UTC)
-Received: from localhost.localdomain (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxrmvzUQBjXo4FAA--.13173S3;
-	Sat, 20 Aug 2022 11:16:05 +0800 (CST)
-Subject: Re: [PATCH 1/9] LoongArch/ftrace: Add basic support
-To: Steven Rostedt <rostedt@goodmis.org>
-References: <20220819081403.7143-1-zhangqing@loongson.cn>
- <20220819081403.7143-2-zhangqing@loongson.cn>
- <20220819132509.127a1353@gandalf.local.home>
- <246779c0-b834-16a6-ec68-c06d8f9a375d@loongson.cn>
- <20220819215240.3caf89e2@gandalf.local.home>
-Cc: Qing Zhang <zhangqing@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <de7584d4-56ff-aafe-42ec-702924fbcf64@loongson.cn>
-Date: Sat, 20 Aug 2022 11:16:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0F220EE
+	for <loongarch@lists.linux.dev>; Sat, 20 Aug 2022 09:37:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1660988244;
+	bh=NbS47qUpS5b3B94luHG1GnOEBxFKcFZNFyfnGjSxWwE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ghGjnt7GlseJs/DuNwSCDVrTcnlKG4vJ9xgTQAk9sv2pBoVdBUTcOic0y1dOOSJH8
+	 b0VFVSruf2uzUS62RNw3yxgvzjAxHueBPqJDB7ut953GRdeF00IGq9pHHX2zrNbsyE
+	 nELEYKwRUYLpwStXmjmP4Qv8GnaTZzjWbg5KzhDo=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id A41F6669F1;
+	Sat, 20 Aug 2022 05:37:20 -0400 (EDT)
+Message-ID: <27081961433ca26e01af8709fa04e4a6ee755690.camel@xry111.site>
+Subject: Re: [PATCH V2 1/2] LoongArch: Add CPU HWMon platform driver
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
+ "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>,
+ Robert Moore <robert.moore@intel.com>, Erik Kaneda <erik.kaneda@intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, Mark Gross <mgross@linux.intel.com>, 
+ loongarch@lists.linux.dev, linux-arch <linux-arch@vger.kernel.org>, ACPI
+ Devel Maling List <linux-acpi@vger.kernel.org>, Xuefeng Li
+ <lixuefeng@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Date: Sat, 20 Aug 2022 17:37:18 +0800
+In-Reply-To: <CAAhV-H6OaMOnhddiY2WSjiag5sFwAG6gab2m22nZonjnUbCN9w@mail.gmail.com>
+References: <20220818042208.2896457-1-chenhuacai@loongson.cn>
+	 <98d716a4-04de-ff32-1bbc-cac576989a87@loongson.cn>
+	 <ce96bcc9bf0aa24d1be5a91d07e6e7515c4d0c33.camel@xry111.site>
+	 <5d338fcd-d225-6fe1-1b94-0fce94a3fb0f@loongson.cn>
+	 <CAAhV-H6OaMOnhddiY2WSjiag5sFwAG6gab2m22nZonjnUbCN9w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.45.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20220819215240.3caf89e2@gandalf.local.home>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8CxrmvzUQBjXo4FAA--.13173S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Gr45WrWkZr4DJry3AF15XFb_yoW8Jr4xpF
-	yFg3yxCFZ7tFWavan2vw17Wr13uFn5AFZ3tr1rKry8Aryrur1avw4avrnFqryvyw1kGrW2
-	qr4DK3yUCFn8C37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE
-	67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14
-	v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-	C2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-On 08/20/2022 09:52 AM, Steven Rostedt wrote:
+On Fri, 2022-08-19 at 18:12 +0800, Huacai Chen wrote:
+> Hi, all,
+>=20
+> If ACPI TZ is widely configured, this patch can be dropped, but I
+> found most users don't have ACPI TZ in their machines.
 
-> On Sat, 20 Aug 2022 09:38:21 +0800
-> Jinyang He <hejinyang@loongson.cn> wrote:
->
->> I think we have implemented CONFIG_FTRACE_WITH_ARGS in dynamic ftrace
->> in the [Patch3/9].
-> Sorry, I must have missed it.
-And there is still something left to do, Qing will do that.
+I know almost nothing about ACPI.  Can ACPI TZ be provided by a firmware
+update, or it needs a hardware modification (rewire the PCB or replace
+some chip)?  If only a firmware change is needed we can inform the
+firmware team to implement it (currently UEFI-compliant firmware is
+still at beta stage anyway).
 
->
->> But, for non dynamic ftrace, it is hardly to
->> implement it. Because the LoongArch compiler gcc treats mount as a
-> Don't bother implementing it for non-dynamic. I would just add a:
->
-> config HAVE_FTRACE_WITH_ARGS if DYNAMIC_FTRACE
->
-> and be done with it.
-Yes, it is clear.
 
->
->> really call, like 'call _mcount(__builtin_return_address(0))'. That
->> means, they decrease stack, save args to callee saved regs and may
->> do some optimization before calling mcount. It is difficult to find the
->> original args and apply changes from tracers.
-> Right, there's no point in implementing it for non dynamic. Like I said,
-> non-dynamic is just a stepping stone for getting dynamic working. Once you
-> have dynamic working, it's up to you to throw out the non-dynamic. It's not
-> useful for anything other than porting to a new architecture or for
-> academic purposes.
->
-Thanks for your detail answers.
-Jinyang
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
