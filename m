@@ -1,10 +1,10 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE0A2917
-	for <loongarch@lists.linux.dev>; Sat, 20 Aug 2022 14:48:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C8CBC433C1;
-	Sat, 20 Aug 2022 14:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34FBB2CA7
+	for <loongarch@lists.linux.dev>; Sat, 20 Aug 2022 15:35:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73429C433C1;
+	Sat, 20 Aug 2022 15:35:18 +0000 (UTC)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
@@ -13,10 +13,11 @@ Cc: loongarch@lists.linux.dev,
 	Xuerui Wang <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Cleanup reset routines with new API
-Date: Sat, 20 Aug 2022 22:48:42 +0800
-Message-Id: <20220820144842.531266-1-chenhuacai@loongson.cn>
+	Huacai Chen <chenhuacai@loongson.cn>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] LoongArch: Fix build warnings in VDSO
+Date: Sat, 20 Aug 2022 23:35:06 +0800
+Message-Id: <20220820153506.607928-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -26,137 +27,74 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Cleanup reset routines by using new do_kernel_power_off() instead of old
-pm_power_off(), and then simplify the whole file (reset.c) organization
-by inlining some functions. This cleanup also fix a poweroff error if EFI
-runtime is disabled.
+Fix build warnings in VDSO as below:
 
+arch/loongarch/vdso/vgettimeofday.c:9:5: warning: no previous prototype for '__vdso_clock_gettime' [-Wmissing-prototypes]
+    9 | int __vdso_clock_gettime(clockid_t clock,
+      |     ^~~~~~~~~~~~~~~~~~~~
+arch/loongarch/vdso/vgettimeofday.c:15:5: warning: no previous prototype for '__vdso_gettimeofday' [-Wmissing-prototypes]
+   15 | int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
+      |     ^~~~~~~~~~~~~~~~~~~
+arch/loongarch/vdso/vgettimeofday.c:21:5: warning: no previous prototype for '__vdso_clock_getres' [-Wmissing-prototypes]
+   21 | int __vdso_clock_getres(clockid_t clock_id,
+      |     ^~~~~~~~~~~~~~~~~~~
+arch/loongarch/vdso/vgetcpu.c:27:5: warning: no previous prototype for '__vdso_getcpu' [-Wmissing-prototypes]
+   27 | int __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused)
+
+Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/include/asm/reboot.h | 10 -----
- arch/loongarch/kernel/reset.c       | 69 +++++++++--------------------
- 2 files changed, 21 insertions(+), 58 deletions(-)
- delete mode 100644 arch/loongarch/include/asm/reboot.h
+ arch/loongarch/vdso/vgetcpu.c       |  2 ++
+ arch/loongarch/vdso/vgettimeofday.c | 15 +++++++++------
+ 2 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/reboot.h b/arch/loongarch/include/asm/reboot.h
-deleted file mode 100644
-index 51151749d8f0..000000000000
---- a/arch/loongarch/include/asm/reboot.h
-+++ /dev/null
-@@ -1,10 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-- */
--#ifndef _ASM_REBOOT_H
--#define _ASM_REBOOT_H
--
--extern void (*pm_restart)(void);
--
--#endif /* _ASM_REBOOT_H */
-diff --git a/arch/loongarch/kernel/reset.c b/arch/loongarch/kernel/reset.c
-index 800c965a17ea..8c82021eb2f4 100644
---- a/arch/loongarch/kernel/reset.c
-+++ b/arch/loongarch/kernel/reset.c
-@@ -15,10 +15,16 @@
- #include <acpi/reboot.h>
- #include <asm/idle.h>
- #include <asm/loongarch.h>
--#include <asm/reboot.h>
- 
--static void default_halt(void)
-+void (*pm_power_off)(void);
-+EXPORT_SYMBOL(pm_power_off);
-+
-+void machine_halt(void)
- {
-+#ifdef CONFIG_SMP
-+	preempt_disable();
-+	smp_send_stop();
-+#endif
- 	local_irq_disable();
- 	clear_csr_ecfg(ECFG0_IM);
- 
-@@ -30,18 +36,29 @@ static void default_halt(void)
- 	}
+diff --git a/arch/loongarch/vdso/vgetcpu.c b/arch/loongarch/vdso/vgetcpu.c
+index 43a0078e4418..e02e775f5360 100644
+--- a/arch/loongarch/vdso/vgetcpu.c
++++ b/arch/loongarch/vdso/vgetcpu.c
+@@ -24,6 +24,8 @@ static __always_inline const struct vdso_pcpu_data *get_pcpu_data(void)
+ 	return (struct vdso_pcpu_data *)(get_vdso_base() - VDSO_DATA_SIZE);
  }
  
--static void default_poweroff(void)
-+void machine_power_off(void)
++extern
++int __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused);
+ int __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused)
  {
-+#ifdef CONFIG_SMP
-+	preempt_disable();
-+	smp_send_stop();
-+#endif
-+	do_kernel_power_off();
- #ifdef CONFIG_EFI
- 	efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);
- #endif
-+
- 	while (true) {
- 		__arch_cpu_idle();
- 	}
+ 	int cpu_id;
+diff --git a/arch/loongarch/vdso/vgettimeofday.c b/arch/loongarch/vdso/vgettimeofday.c
+index b1f4548dae92..8f22863bd7ea 100644
+--- a/arch/loongarch/vdso/vgettimeofday.c
++++ b/arch/loongarch/vdso/vgettimeofday.c
+@@ -6,20 +6,23 @@
+  */
+ #include <linux/types.h>
+ 
+-int __vdso_clock_gettime(clockid_t clock,
+-			 struct __kernel_timespec *ts)
++extern
++int __vdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts);
++int __vdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
+ {
+ 	return __cvdso_clock_gettime(clock, ts);
  }
  
--static void default_restart(void)
-+void machine_restart(char *command)
+-int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
+-			struct timezone *tz)
++extern
++int __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz);
++int __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
  {
-+#ifdef CONFIG_SMP
-+	preempt_disable();
-+	smp_send_stop();
-+#endif
-+	do_kernel_restart(command);
- #ifdef CONFIG_EFI
- 	if (efi_capsule_pending(NULL))
- 		efi_reboot(REBOOT_WARM, NULL);
-@@ -55,47 +72,3 @@ static void default_restart(void)
- 		__arch_cpu_idle();
- 	}
+ 	return __cvdso_gettimeofday(tv, tz);
  }
--
--void (*pm_restart)(void);
--EXPORT_SYMBOL(pm_restart);
--
--void (*pm_power_off)(void);
--EXPORT_SYMBOL(pm_power_off);
--
--void machine_halt(void)
--{
--#ifdef CONFIG_SMP
--	preempt_disable();
--	smp_send_stop();
--#endif
--	default_halt();
--}
--
--void machine_power_off(void)
--{
--#ifdef CONFIG_SMP
--	preempt_disable();
--	smp_send_stop();
--#endif
--	pm_power_off();
--}
--
--void machine_restart(char *command)
--{
--#ifdef CONFIG_SMP
--	preempt_disable();
--	smp_send_stop();
--#endif
--	do_kernel_restart(command);
--	pm_restart();
--}
--
--static int __init loongarch_reboot_setup(void)
--{
--	pm_restart = default_restart;
--	pm_power_off = default_poweroff;
--
--	return 0;
--}
--
--arch_initcall(loongarch_reboot_setup);
+ 
+-int __vdso_clock_getres(clockid_t clock_id,
+-			struct __kernel_timespec *res)
++extern
++int __vdso_clock_getres(clockid_t clock_id, struct __kernel_timespec *res);
++int __vdso_clock_getres(clockid_t clock_id, struct __kernel_timespec *res)
+ {
+ 	return __cvdso_clock_getres(clock_id, res);
+ }
 -- 
 2.31.1
 
