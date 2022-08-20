@@ -1,101 +1,162 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F16C257B
-	for <loongarch@lists.linux.dev>; Sat, 20 Aug 2022 13:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661002961; x=1692538961;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=iexoknRdZO8MIYIKYXuEtw0U6bQsXW3zlgVWn9jTCco=;
-  b=f9Ni/sR1cjCJjlbaWyBJoZUzJDoIpIsL2/CphIFPhXjErPX/YG/TBAHt
-   bVIeylF3YUNe6GLr3Lm2+PT3nlUZIN7uBAvli+GBffq+aiEZ3uGk/+8WZ
-   Z7x1UfWHXZe5mKXMQMeG7UZfc6c+ga5+vUGQLpt3HI42vTfGt7RygPLS3
-   kRECjH2LaG7iT7+qpMyTXkLbFPRNFJaMC2OzKC3xqgrojUUZZJ0L1cpwk
-   IjMcoSEjw3AQR8oLbaITUy1zxSRuYG29Pi1x3J+toCSjQYWoeBeYi5Ag3
-   wdo6mtBiZOA2Ni4Mznlea4ogVbth2/dbWfMopNhF6bwVhGM1vs122k1UU
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10445"; a="272935007"
-X-IronPort-AV: E=Sophos;i="5.93,251,1654585200"; 
-   d="scan'208";a="272935007"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2022 06:42:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,251,1654585200"; 
-   d="scan'208";a="676731705"
-Received: from lkp-server01.sh.intel.com (HELO 44b6dac04a33) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Aug 2022 06:42:30 -0700
-Received: from kbuild by 44b6dac04a33 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1oPOk9-0002jR-1o;
-	Sat, 20 Aug 2022 13:42:29 +0000
-Date: Sat, 20 Aug 2022 21:41:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: kbuild-all@lists.01.org, bpf@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH bpf-next v1 3/4] LoongArch: Add BPF JIT support
-Message-ID: <202208202131.KsF0Aoos-lkp@intel.com>
-References: <1660996260-11337-4-git-send-email-yangtiezhu@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE0A2917
+	for <loongarch@lists.linux.dev>; Sat, 20 Aug 2022 14:48:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C8CBC433C1;
+	Sat, 20 Aug 2022 14:48:50 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Cleanup reset routines with new API
+Date: Sat, 20 Aug 2022 22:48:42 +0800
+Message-Id: <20220820144842.531266-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1660996260-11337-4-git-send-email-yangtiezhu@loongson.cn>
+Content-Transfer-Encoding: 8bit
 
-Hi Tiezhu,
+Cleanup reset routines by using new do_kernel_power_off() instead of old
+pm_power_off(), and then simplify the whole file (reset.c) organization
+by inlining some functions. This cleanup also fix a poweroff error if EFI
+runtime is disabled.
 
-Thank you for the patch! Perhaps something to improve:
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/reboot.h | 10 -----
+ arch/loongarch/kernel/reset.c       | 69 +++++++++--------------------
+ 2 files changed, 21 insertions(+), 58 deletions(-)
+ delete mode 100644 arch/loongarch/include/asm/reboot.h
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.0-rc1 next-20220819]
-[cannot apply to bpf-next/master bpf/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Tiezhu-Yang/Add-BPF-JIT-support-for-LoongArch/20220820-195351
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 50cd95ac46548429e5bba7ca75cc97d11a697947
-config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20220820/202208202131.KsF0Aoos-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/ebe9a0ace4f1fb110c43c347808c81cb07dfeb9b
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Tiezhu-Yang/Add-BPF-JIT-support-for-LoongArch/20220820-195351
-        git checkout ebe9a0ace4f1fb110c43c347808c81cb07dfeb9b
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash arch/loongarch/net/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> arch/loongarch/net/bpf_jit.c:194:6: warning: no previous prototype for 'build_epilogue' [-Wmissing-prototypes]
-     194 | void build_epilogue(struct jit_ctx *ctx)
-         |      ^~~~~~~~~~~~~~
-
-
-vim +/build_epilogue +194 arch/loongarch/net/bpf_jit.c
-
-   193	
- > 194	void build_epilogue(struct jit_ctx *ctx)
-   195	{
-   196		__build_epilogue(ctx, false);
-   197	}
-   198	
-
+diff --git a/arch/loongarch/include/asm/reboot.h b/arch/loongarch/include/asm/reboot.h
+deleted file mode 100644
+index 51151749d8f0..000000000000
+--- a/arch/loongarch/include/asm/reboot.h
++++ /dev/null
+@@ -1,10 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+- */
+-#ifndef _ASM_REBOOT_H
+-#define _ASM_REBOOT_H
+-
+-extern void (*pm_restart)(void);
+-
+-#endif /* _ASM_REBOOT_H */
+diff --git a/arch/loongarch/kernel/reset.c b/arch/loongarch/kernel/reset.c
+index 800c965a17ea..8c82021eb2f4 100644
+--- a/arch/loongarch/kernel/reset.c
++++ b/arch/loongarch/kernel/reset.c
+@@ -15,10 +15,16 @@
+ #include <acpi/reboot.h>
+ #include <asm/idle.h>
+ #include <asm/loongarch.h>
+-#include <asm/reboot.h>
+ 
+-static void default_halt(void)
++void (*pm_power_off)(void);
++EXPORT_SYMBOL(pm_power_off);
++
++void machine_halt(void)
+ {
++#ifdef CONFIG_SMP
++	preempt_disable();
++	smp_send_stop();
++#endif
+ 	local_irq_disable();
+ 	clear_csr_ecfg(ECFG0_IM);
+ 
+@@ -30,18 +36,29 @@ static void default_halt(void)
+ 	}
+ }
+ 
+-static void default_poweroff(void)
++void machine_power_off(void)
+ {
++#ifdef CONFIG_SMP
++	preempt_disable();
++	smp_send_stop();
++#endif
++	do_kernel_power_off();
+ #ifdef CONFIG_EFI
+ 	efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);
+ #endif
++
+ 	while (true) {
+ 		__arch_cpu_idle();
+ 	}
+ }
+ 
+-static void default_restart(void)
++void machine_restart(char *command)
+ {
++#ifdef CONFIG_SMP
++	preempt_disable();
++	smp_send_stop();
++#endif
++	do_kernel_restart(command);
+ #ifdef CONFIG_EFI
+ 	if (efi_capsule_pending(NULL))
+ 		efi_reboot(REBOOT_WARM, NULL);
+@@ -55,47 +72,3 @@ static void default_restart(void)
+ 		__arch_cpu_idle();
+ 	}
+ }
+-
+-void (*pm_restart)(void);
+-EXPORT_SYMBOL(pm_restart);
+-
+-void (*pm_power_off)(void);
+-EXPORT_SYMBOL(pm_power_off);
+-
+-void machine_halt(void)
+-{
+-#ifdef CONFIG_SMP
+-	preempt_disable();
+-	smp_send_stop();
+-#endif
+-	default_halt();
+-}
+-
+-void machine_power_off(void)
+-{
+-#ifdef CONFIG_SMP
+-	preempt_disable();
+-	smp_send_stop();
+-#endif
+-	pm_power_off();
+-}
+-
+-void machine_restart(char *command)
+-{
+-#ifdef CONFIG_SMP
+-	preempt_disable();
+-	smp_send_stop();
+-#endif
+-	do_kernel_restart(command);
+-	pm_restart();
+-}
+-
+-static int __init loongarch_reboot_setup(void)
+-{
+-	pm_restart = default_restart;
+-	pm_power_off = default_poweroff;
+-
+-	return 0;
+-}
+-
+-arch_initcall(loongarch_reboot_setup);
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.31.1
+
