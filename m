@@ -1,89 +1,79 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3AE2F56
-	for <loongarch@lists.linux.dev>; Sat, 20 Aug 2022 18:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=2/0qrxj7HSrJO5jwPWZjY59WQuXjOzJXYQ9uh9ZAsQo=; b=zmQffzGzFl5ibBw5on7lF8ST1v
-	2o8nfgwHpCqaIHaIow+FY5OgF7ODiRRxBUwMZh2HrdmzQrbI0tgRn4GoIILjzvKQ87Ng7FaLoFBYk
-	wxHCYq6jZFKxytonwb4AVGxCvPy+WLCw9cbIGg36RhAI8PFhcUUqmUq3GLJSv33x18AWydnCSmOKv
-	kucLwxAHvjn8l96dQWFt2Z1A5Y8DzFMxv6eklTyl1EfncL9iK+jk7VphMvoRVRf2fxzn15jxhwpRk
-	CKqaW1FxWkboflAfYes1BDBePhfPJOY0w+tfwhgHmkWvvLYQM5zn3sRoSKbLf0jtiEun6R1aG8e34
-	EzLJeo6w==;
-Received: from [2601:1c0:6280:3f0:e65e:37ff:febd:ee53]
-	by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oPSqm-00BOEc-1k; Sat, 20 Aug 2022 18:05:36 +0000
-Message-ID: <b2e77db8-0037-e890-cdda-8bbce1786fa9@infradead.org>
-Date: Sat, 20 Aug 2022 11:05:35 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23851136A
+	for <loongarch@lists.linux.dev>; Sun, 21 Aug 2022 11:54:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D09E1C433B5;
+	Sun, 21 Aug 2022 11:54:30 +0000 (UTC)
+Date: Sun, 21 Aug 2022 12:54:22 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
+	Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+	akpm@linux-foundation.org
+Subject: Re: [PATCH] kernel: exit: cleanup release_thread()
+Message-ID: <YwIc7qbCWpIVKR2j@arm.com>
+References: <20220819014406.32266-1-wangkefeng.wang@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH] LoongArch: Select PCI_QUIRKS to avoid build error
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-References: <20220820025755.3110083-1-chenhuacai@loongson.cn>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20220820025755.3110083-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220819014406.32266-1-wangkefeng.wang@huawei.com>
 
-
-
-On 8/19/22 19:57, Huacai Chen wrote:
-> PCI_LOONGSON is a mandatory for LoongArch and it is selected in Kconfig
-> unconditionally, but its dependency PCI_QUIRKS is missing and may cause
-> a build error when "make randconfig":
+On Fri, Aug 19, 2022 at 09:44:06AM +0800, Kefeng Wang wrote:
+> Only x86 has own release_thread(), introduce a new weak
+> release_thread() function to clean empty definitions in
+> other ARCHs.
 > 
->    arch/loongarch/pci/acpi.c: In function 'pci_acpi_setup_ecam_mapping':
->>> arch/loongarch/pci/acpi.c:103:29: error: 'loongson_pci_ecam_ops' undeclared (first use in this function)
->      103 |                 ecam_ops = &loongson_pci_ecam_ops;
->          |                             ^~~~~~~~~~~~~~~~~~~~~
->    arch/loongarch/pci/acpi.c:103:29: note: each undeclared identifier is reported only once for each function it appears in
-> 
-> Kconfig warnings: (for reference only)
->    WARNING: unmet direct dependencies detected for PCI_LOONGSON
->    Depends on [n]: PCI [=y] && (MACH_LOONGSON64 [=y] || COMPILE_TEST [=y]) && (OF [=y] || ACPI [=y]) && PCI_QUIRKS [=n]
->    Selected by [y]:
->    - LOONGARCH [=y]
-> 
-> Fix it by selecting PCI_QUIRKS unconditionally, too.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+[...]
+>  arch/arm64/include/asm/processor.h      | 3 ---
+>  arch/arm64/kernel/process.c             | 4 ----
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-Thanks.
-
-> ---
->  arch/loongarch/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 4abc9a28aba4..26aeb1408e56 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -111,6 +111,7 @@ config LOONGARCH
->  	select PCI_ECAM if ACPI
->  	select PCI_LOONGSON
->  	select PCI_MSI_ARCH_FALLBACKS
-> +	select PCI_QUIRKS
->  	select PERF_USE_VMALLOC
->  	select RTC_LIB
->  	select SMP
-
--- 
-~Randy
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
