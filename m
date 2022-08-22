@@ -1,60 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4181B621
-	for <loongarch@lists.linux.dev>; Mon, 22 Aug 2022 02:19:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB906C433D6
-	for <loongarch@lists.linux.dev>; Mon, 22 Aug 2022 02:19:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1661134775;
-	bh=Zpk6Rxu700+dm/MkUInp0fC7Hlw+3o59RXo2zuERj0U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FfVMuzxfJNd6CSHWL3L6vvyrG29BhL3D6t0S/y6HBR97Rb4ybt4WaFhjqcabUYb9k
-	 7mEeojBh8JIhCkTYbSqMa1nfjg7XK+zfrxtWcz3FtGUipAFc8zIWi3BOd+e/BYi4Ii
-	 ILc9pybHjCPZvy+jXwdk0Ww0GLM+8CRNrgrhvMa9eV4Fn8ELa7/8HqlClBBB2NDD+L
-	 hNP/LlGvSo1nV97qwTvdCQDkWs5loZhSxPtJogaP06zZzaZgatb6fABLRqX8KtWKea
-	 ubAE5pbrW10jIig9wDF9uftLq71Uyy8sB5oKz60WW0whLCUXvbjim5r/v6uvMi2Ho9
-	 +oyOUKrqbu/6w==
-Received: by mail-vk1-f170.google.com with SMTP id q14so4865192vke.9
-        for <loongarch@lists.linux.dev>; Sun, 21 Aug 2022 19:19:35 -0700 (PDT)
-X-Gm-Message-State: ACgBeo2o9iuroxqJ6wUUaj49fDvrIAftI06zAplBdIJgI6PH81oIJFPB
-	mnVjRLBcl0fUHUVRACW/Xd/b2erQJkf27NFqfeg=
-X-Google-Smtp-Source: AA6agR4RYFMtiBixf/mGUUCq8XBHJ3fm93bGawjKI/ZbmnXS+gWhgGjlNeQ3cTucBf/w6/xwzQdtC+IOuaD07o1+1Go=
-X-Received: by 2002:a1f:9b90:0:b0:374:f09c:876f with SMTP id
- d138-20020a1f9b90000000b00374f09c876fmr6652088vke.12.1661134774631; Sun, 21
- Aug 2022 19:19:34 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF346369
+	for <loongarch@lists.linux.dev>; Mon, 22 Aug 2022 02:49:49 +0000 (UTC)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxYOLK7gJjViYHAA--.31929S3;
+	Mon, 22 Aug 2022 10:49:47 +0800 (CST)
+Subject: Re: [PATCH bpf-next v1 3/4] LoongArch: Add BPF JIT support
+To: Youling Tang <tangyouling@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
+References: <1660996260-11337-1-git-send-email-yangtiezhu@loongson.cn>
+ <1660996260-11337-4-git-send-email-yangtiezhu@loongson.cn>
+ <1a68f4f3-7a9e-6cf9-c4d5-98b8b874de31@loongson.cn>
+Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <9db12c0b-6cb0-c1e9-0c1b-4d60cc4a10ab@loongson.cn>
+Date: Mon, 22 Aug 2022 10:49:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220815124612.3328670-1-chenhuacai@loongson.cn> <YwIx1xoAmsp8cHMN@infradead.org>
-In-Reply-To: <YwIx1xoAmsp8cHMN@infradead.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 22 Aug 2022 10:19:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5_bZa2oi6ZSvoMwz8FmJGL8+pg7iYjkT90YT6XTCNb5Q@mail.gmail.com>
-Message-ID: <CAAhV-H5_bZa2oi6ZSvoMwz8FmJGL8+pg7iYjkT90YT6XTCNb5Q@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Use TLB for ioremap()
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1a68f4f3-7a9e-6cf9-c4d5-98b8b874de31@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8CxYOLK7gJjViYHAA--.31929S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7ArWfurWrAw1fCw48JrW7twb_yoW8CF1xpF
+	y293y8Gr48Jr9rWFyDXw45Zr1fZrs3W3yq9F1Dtw4Sya1DXFy8GFyxK3yYkFyqkw4DuF4I
+	gw1jyw18uF45ArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
+	bIxvr21lc2xSY4AK67AK6r4UMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
+	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v2
+	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbPEf7UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 
-Hi, Christoph
 
-On Sun, Aug 21, 2022 at 9:23 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Mon, Aug 15, 2022 at 08:46:12PM +0800, Huacai Chen wrote:
-> > We can support more cache attributes (CC, SUC and WUC) and page
-> > protection when we use TLB for ioremap().
->
-> Please build this on top of the series that extents the generic ioremap
-> code for these use cases instead of duplicating the generic ioremap
-> code.
-OK, let me try, thanks.
 
-Huacai
+On 08/22/2022 09:58 AM, Youling Tang wrote:
+> On 08/20/2022 07:50 PM, Tiezhu Yang wrote:
+>> BPF programs are normally handled by a BPF interpreter, add BPF JIT
+>> support for LoongArch to allow the kernel to generate native code
+>> when a program is loaded into the kernel, this will significantly
+>> speed-up processing of BPF programs.
+
+[...]
+
+>> +#define DEF_EMIT_REG1I20_FORMAT(NAME, OP)                \
+>> +static inline void emit_##NAME(union loongarch_instruction *insn,    \
+>> +                   enum loongarch_gpr rd, int imm)        \
+>> +{                                    \
+>> +    insn->reg1i20_format.opcode = OP;                \
+>> +    insn->reg1i20_format.immediate = imm;                \
+>> +    insn->reg1i20_format.rd = rd;                    \
+>> +}
+>> +
+>> +DEF_EMIT_REG1I20_FORMAT(lu12iw, lu12iw_op)
+>> +DEF_EMIT_REG1I20_FORMAT(lu32id, lu32id_op)
 >
+> We can delete the larch_insn_gen_{lu32id, lu52id, jirl} functions in
+> inst.c and use emit_xxx.
+>
+> The implementation of emit_plt_entry() is similarly modified as follows:
+> struct plt_entry {
+>         union loongarch_instruction lu12iw;
+>         union loongarch_instruction lu32id;
+>         union loongarch_instruction lu52id;
+>         union loongarch_instruction jirl;
+> };
+>
+> static inline struct plt_entry emit_plt_entry(unsigned long val)
+> {
+>         union loongarch_instruction *lu12iw, *lu32id, *lu52id, *jirl;
+>
+>         emit_lu32id(lu12iw, LOONGARCH_GPR_T1, ADDR_IMM(val, LU12IW));
+>         emit_lu32id(lu32id, LOONGARCH_GPR_T1, ADDR_IMM(val, LU32ID));
+>         emit_lu52id(lu52id, LOONGARCH_GPR_T1, LOONGARCH_GPR_T1,
+> ADDR_IMM(val, LU52ID));
+>         emit_jirl(jirl, LOONGARCH_GPR_T1, 0, (val & 0xfff) >> 2);
+>
+>         return (struct plt_entry) { *lu12iw, *lu32id, *lu52id, *jirl };
+> }
+>
+> Thanks,
+> Youling
+
+Hi Youling,
+
+Yes, this is the benefit we define the instructions in inst.h,
+but these changes are not much related with this patch series,
+I think we can do it after this patch series is merged.
+
+Thanks,
+Tiezhu
+
