@@ -1,89 +1,115 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941827F
-	for <loongarch@lists.linux.dev>; Tue, 23 Aug 2022 00:46:16 +0000 (UTC)
-Received: by mail-ej1-f53.google.com with SMTP id ce26so8746313ejb.11
-        for <loongarch@lists.linux.dev>; Mon, 22 Aug 2022 17:46:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=mx6iH25MqAk0QMxhP/iujeqf4cbBmojIAuHogERGzHI=;
-        b=G58MsPpT2IOBhBXfItNJ3DXENcYBd9TCyC1iO+Cg3M6qAR+RLmhocIiQFJqP929sBq
-         W5p5zZYgm03MNASeydGCZi+irCf/Coii3vVDOvRrlhSxOmTaGFKUPkEqwSVFFgpxhWtc
-         3sR00Ufs33cgZMUMOWzTrKX5Iu0wSxtw7FpnKZivKBNi4lbFW/vjlH5diCJdyHKP8Py5
-         rF8rw8GDHfb68kYofyOjpbQ8tMClnDSkFr3f1KSKLsCNftYZtFa9msQb6Q2pcjfU7Eqm
-         SKPrX/grXzFrm6oF+0YwK8qgNXszMrY+EZPXOmHnvffI34Fbe8/J2JTEfIO8FDjnzPm/
-         ZicQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=mx6iH25MqAk0QMxhP/iujeqf4cbBmojIAuHogERGzHI=;
-        b=Usoxc2ttdmoftdqW1NxIgSfrsGOgnKSKq6roOSWB6O1dKsCDNEmuvaHw8brvCR1b0L
-         tpeknY7BF9IJI5eeI4tgyphaa11v7BFM9/Fw5MeBFx7Le2dURIlTC2Ui2UBCnLOA/O/+
-         f4ayCYatjJWNlYbJ04L0jMDpiqEsF9jhi0vtTkv/mxrzjUtfuRMKzlYoKh82D15B0Rom
-         Cq2oDR+SA4ICnHAIpJ3TMNwc0n0bTj7IKPWeZqKjmSlLZnBmpH5MsAPwmyVA2SqJ5Xon
-         WWIxMAch7Kopr2HfqhRYP15AgakVDM5HP+2zwlbZkPBYsAhUmJjzICePMNFiPbPXCsZY
-         hzwA==
-X-Gm-Message-State: ACgBeo0C+wuCplX1FiM4GRhh79O62HsVnxTl8vvKmIO+bMPCDmlzNm5C
-	PjbG85NJyPBDP2xEEBwahxomA4wwPBZvFgyYSbA=
-X-Google-Smtp-Source: AA6agR7dRV5U3KpYlRSuKaXhGaqBP7AHE4avMkDS00GOVn9+YIQXqnJ7XlPdFRR39bpPaDVfkk9twHMnz7xEaq/1Iic=
-X-Received: by 2002:a17:907:e8d:b0:730:a4e8:27ed with SMTP id
- ho13-20020a1709070e8d00b00730a4e827edmr14073219ejc.58.1661215574661; Mon, 22
- Aug 2022 17:46:14 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5935F7F
+	for <loongarch@lists.linux.dev>; Tue, 23 Aug 2022 02:04:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E711C43140
+	for <loongarch@lists.linux.dev>; Tue, 23 Aug 2022 02:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1661220281;
+	bh=g3jkvWJUGf3Fr73puF5aA7xyLqZ7AuXaOV6pbL558IE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iXVJDGu8tekZUrtUzivDAW7rGl14rRMietxm40QK6v86UEmeeKvIMrKY4lW8hhgTf
+	 nFmw5sRfIrsuRPGUOzyeSgAUYNss7zKMoDsqgMk30oFOEH9TbtY30bnPwKRTS9j2/J
+	 oePVa73fc/oO0tsnnKZm1t1c3Jjv3QXIXA6HT5P6vDfqhpfiADgDo/FkQvSiW/0ds5
+	 K8gqFsFraqUUKpEph/2GZIuIKNrCe4QC7EPayLY1btgcehmxYn04INpAE8Ne7lNTiZ
+	 rmEmBh7ieiGPl6IddKYbMIwF3d07cymY0YRQyjLxvkAHsHOkeVS8D/QcpaELr0h7FH
+	 h/xKiTWrCyTVw==
+Received: by mail-vs1-f43.google.com with SMTP id d126so13101115vsd.13
+        for <loongarch@lists.linux.dev>; Mon, 22 Aug 2022 19:04:41 -0700 (PDT)
+X-Gm-Message-State: ACgBeo2SyWHkYJZN9/aT40Fc+3zdGHksVpVM6AQWqCTFokoQpzjfe4ZX
+	ol39GJ3QYMgRjO+bfoShMlGo0AA58jbS2rdD1yU=
+X-Google-Smtp-Source: AA6agR4q6W5H+dBbZkGns1omYkaGFVWsPTIWGdbHUaYCr3kxDnv97+M/rkcuACDpEqiLWDpYXqOv3czA3gIIw0vVSCI=
+X-Received: by 2002:a05:6102:390d:b0:387:78b9:bf9c with SMTP id
+ e13-20020a056102390d00b0038778b9bf9cmr8686004vsu.43.1661220279942; Mon, 22
+ Aug 2022 19:04:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1660996260-11337-1-git-send-email-yangtiezhu@loongson.cn> <7af3c82c-220b-1e9c-765f-105480264ae6@loongson.cn>
-In-Reply-To: <7af3c82c-220b-1e9c-765f-105480264ae6@loongson.cn>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 22 Aug 2022 17:46:03 -0700
-Message-ID: <CAADnVQLx=V05UuyF2U5Scf=LUO9EtCCB=MkgWr_ycV9R0dgZQA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 0/4] Add BPF JIT support for LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	loongarch@lists.linux.dev
+References: <20220819102037.2697798-1-chenhuacai@loongson.cn> <CAMj1kXGrWqaTeiSeK1vG=escABZg16cpekzzTTp5WaTwi3iUYg@mail.gmail.com>
+In-Reply-To: <CAMj1kXGrWqaTeiSeK1vG=escABZg16cpekzzTTp5WaTwi3iUYg@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 23 Aug 2022 10:04:28 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5Whp0VjSfHgHV-F1Ln3-2jMM8Znzs_ehq9x0MYybd_yw@mail.gmail.com>
+Message-ID: <CAAhV-H5Whp0VjSfHgHV-F1Ln3-2jMM8Znzs_ehq9x0MYybd_yw@mail.gmail.com>
+Subject: Re: [PATCH V3] LoongArch: Add efistub booting support
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
+	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-efi <linux-efi@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Xi Ruoyao <xry111@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Aug 21, 2022 at 6:36 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
->
->
-> On 08/20/2022 07:50 PM, Tiezhu Yang wrote:
-> > The basic support for LoongArch has been merged into the upstream Linux
-> > kernel since 5.19-rc1 on June 5, 2022, this patch series adds BPF JIT
-> > support for LoongArch.
-> >
-> > Here is the LoongArch documention:
-> > https://www.kernel.org/doc/html/latest/loongarch/index.html
-> >
-> > With this patch series, the test cases in lib/test_bpf.ko have passed
-> > on LoongArch.
-> >
-> >   # echo 1 > /proc/sys/net/core/bpf_jit_enable
-> >   # modprobe test_bpf
-> >   # dmesg | grep Summary
-> >   test_bpf: Summary: 1026 PASSED, 0 FAILED, [1014/1014 JIT'ed]
-> >   test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [10/10 JIT'ed]
-> >   test_bpf: test_skb_segment: Summary: 2 PASSED, 0 FAILED
-> >
-> > It seems that this patch series can not be applied cleanly to bpf-next
-> > which is not synced to v6.0-rc1.
->
->
-> Hi Alexei, Daniel, Andrii,
->
-> Do you know which tree this patch series will go through?
-> bpf-next or loongarch-next?
+Hi, Ard,
 
-Whichever way is easier.
-Looks like all changes are contained within arch/loongarch,
-so there should be no conflicts with generic JIT infra.
-In that sense it's fine to carry it in loongarch-next.
-We can take it through bpf-next too with arch maintainers acks.
+On Mon, Aug 22, 2022 at 6:44 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Fri, 19 Aug 2022 at 12:20, Huacai Chen <chenhuacai@loongson.cn> wrote:
+> >
+> > This patch adds efistub booting support, which is the standard UEFI boot
+> > protocol for us to use.
+> >
+> > We use generic efistub, which means we can pass boot information (i.e.,
+> > system table, memory map, kernel command line, initrd) via a light FDT
+> > and drop a lot of non-standard code.
+> >
+> > We use a flat mapping to map the efi runtime in the kernel's address
+> > space. In efi, VA = PA; in kernel, VA = PA + PAGE_OFFSET. As a result,
+> > flat mapping is not identity mapping, SetVirtualAddressMap() is still
+> > needed for the efi runtime.
+> >
+> > Tested-by: Xi Ruoyao <xry111@xry111.site>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> > V1 --> V2:
+> > 1, Call SetVirtualAddressMap() in stub;
+> > 2, Use core kernel data directly in alloc_screen_info();
+> > 3, Remove the magic number in MS-DOS header;
+> > 4, Disable EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER;
+> > 5, Some other small changes suggested by Ard Biesheuvel.
+> >
+> > V2 --> V3:
+> > 1, Adjust Makefile to adapt zboot;
+> > 2, Introduce EFI_RT_VIRTUAL_OFFSET instead of changing flat_va_mapping.
+> >
+>
+> Thanks for the update.
+>
+> I am going to queue this up in the efi/next tree. However, due to the
+> many changes to arch/loongarch in this patch, conflicts are not
+> unlikely, so I created a signed stable tag for the patch that you can
+> merge into the loongarch arch tree if you want.
+>
+> *However*, you must *not* rebase your tree after merging this tag.
+> Therefore, it is probably best that the merge of this tag appears as
+> the very first change on your PR to Linus for v6.1. Everything after
+> can be rebased at will (assuming there are no other impediments to
+> doing so)
+>
+> You can fetch it and merge it like so:
+>
+> git fetch -t git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
+> git verify-tag efi-loongarch-for-v6.1 # if you like
+> git merge efi-loongarch-for-v6.1
+>
+> and all your other v6.1 changes can go on top.
+>
+> This way, you can resolve conflicts locally without affecting the EFI
+> changes going via the other tree. The EFI stub for LoongArch change
+> will arrive into Linus's tree via whichever tree he pulls first: the
+> LoongArch one or the EFI one.
+>
+> I will rebase my zboot decompressor changes on top of this - I will cc
+> you again, as the LoongArch builds ok but still does not boot.
+Thank you very much. There are several bugs that need to be fixed
+first for the 6.0 cycle, I will merge the efi-loongarch-for-v6.1 tag
+after that.
+
+Huacai
+>
+> Thanks,
+> Ard.
