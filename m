@@ -1,115 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5935F7F
-	for <loongarch@lists.linux.dev>; Tue, 23 Aug 2022 02:04:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E711C43140
-	for <loongarch@lists.linux.dev>; Tue, 23 Aug 2022 02:04:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1661220281;
-	bh=g3jkvWJUGf3Fr73puF5aA7xyLqZ7AuXaOV6pbL558IE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=iXVJDGu8tekZUrtUzivDAW7rGl14rRMietxm40QK6v86UEmeeKvIMrKY4lW8hhgTf
-	 nFmw5sRfIrsuRPGUOzyeSgAUYNss7zKMoDsqgMk30oFOEH9TbtY30bnPwKRTS9j2/J
-	 oePVa73fc/oO0tsnnKZm1t1c3Jjv3QXIXA6HT5P6vDfqhpfiADgDo/FkQvSiW/0ds5
-	 K8gqFsFraqUUKpEph/2GZIuIKNrCe4QC7EPayLY1btgcehmxYn04INpAE8Ne7lNTiZ
-	 rmEmBh7ieiGPl6IddKYbMIwF3d07cymY0YRQyjLxvkAHsHOkeVS8D/QcpaELr0h7FH
-	 h/xKiTWrCyTVw==
-Received: by mail-vs1-f43.google.com with SMTP id d126so13101115vsd.13
-        for <loongarch@lists.linux.dev>; Mon, 22 Aug 2022 19:04:41 -0700 (PDT)
-X-Gm-Message-State: ACgBeo2SyWHkYJZN9/aT40Fc+3zdGHksVpVM6AQWqCTFokoQpzjfe4ZX
-	ol39GJ3QYMgRjO+bfoShMlGo0AA58jbS2rdD1yU=
-X-Google-Smtp-Source: AA6agR4q6W5H+dBbZkGns1omYkaGFVWsPTIWGdbHUaYCr3kxDnv97+M/rkcuACDpEqiLWDpYXqOv3czA3gIIw0vVSCI=
-X-Received: by 2002:a05:6102:390d:b0:387:78b9:bf9c with SMTP id
- e13-20020a056102390d00b0038778b9bf9cmr8686004vsu.43.1661220279942; Mon, 22
- Aug 2022 19:04:39 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418DE7EE
+	for <loongarch@lists.linux.dev>; Tue, 23 Aug 2022 02:50:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C31C433D6;
+	Tue, 23 Aug 2022 02:50:23 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Cleanup headers to avoid circular dependency
+Date: Tue, 23 Aug 2022 10:50:10 +0800
+Message-Id: <20220823025010.3826452-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220819102037.2697798-1-chenhuacai@loongson.cn> <CAMj1kXGrWqaTeiSeK1vG=escABZg16cpekzzTTp5WaTwi3iUYg@mail.gmail.com>
-In-Reply-To: <CAMj1kXGrWqaTeiSeK1vG=escABZg16cpekzzTTp5WaTwi3iUYg@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 23 Aug 2022 10:04:28 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Whp0VjSfHgHV-F1Ln3-2jMM8Znzs_ehq9x0MYybd_yw@mail.gmail.com>
-Message-ID: <CAAhV-H5Whp0VjSfHgHV-F1Ln3-2jMM8Znzs_ehq9x0MYybd_yw@mail.gmail.com>
-Subject: Re: [PATCH V3] LoongArch: Add efistub booting support
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
-	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-efi <linux-efi@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Xi Ruoyao <xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi, Ard,
+When enable GENERIC_IOREMAP, there will be circular dependency to cause
+build errors. The root cause is that pgtable.h shouldn't include io.h
+but pgtable.h need some macros defined in io.h. So cleanup those macros
+and remove the unnecessary inclusions, as other architectures do.
 
-On Mon, Aug 22, 2022 at 6:44 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Fri, 19 Aug 2022 at 12:20, Huacai Chen <chenhuacai@loongson.cn> wrote:
-> >
-> > This patch adds efistub booting support, which is the standard UEFI boot
-> > protocol for us to use.
-> >
-> > We use generic efistub, which means we can pass boot information (i.e.,
-> > system table, memory map, kernel command line, initrd) via a light FDT
-> > and drop a lot of non-standard code.
-> >
-> > We use a flat mapping to map the efi runtime in the kernel's address
-> > space. In efi, VA = PA; in kernel, VA = PA + PAGE_OFFSET. As a result,
-> > flat mapping is not identity mapping, SetVirtualAddressMap() is still
-> > needed for the efi runtime.
-> >
-> > Tested-by: Xi Ruoyao <xry111@xry111.site>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> > V1 --> V2:
-> > 1, Call SetVirtualAddressMap() in stub;
-> > 2, Use core kernel data directly in alloc_screen_info();
-> > 3, Remove the magic number in MS-DOS header;
-> > 4, Disable EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER;
-> > 5, Some other small changes suggested by Ard Biesheuvel.
-> >
-> > V2 --> V3:
-> > 1, Adjust Makefile to adapt zboot;
-> > 2, Introduce EFI_RT_VIRTUAL_OFFSET instead of changing flat_va_mapping.
-> >
->
-> Thanks for the update.
->
-> I am going to queue this up in the efi/next tree. However, due to the
-> many changes to arch/loongarch in this patch, conflicts are not
-> unlikely, so I created a signed stable tag for the patch that you can
-> merge into the loongarch arch tree if you want.
->
-> *However*, you must *not* rebase your tree after merging this tag.
-> Therefore, it is probably best that the merge of this tag appears as
-> the very first change on your PR to Linus for v6.1. Everything after
-> can be rebased at will (assuming there are no other impediments to
-> doing so)
->
-> You can fetch it and merge it like so:
->
-> git fetch -t git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
-> git verify-tag efi-loongarch-for-v6.1 # if you like
-> git merge efi-loongarch-for-v6.1
->
-> and all your other v6.1 changes can go on top.
->
-> This way, you can resolve conflicts locally without affecting the EFI
-> changes going via the other tree. The EFI stub for LoongArch change
-> will arrive into Linus's tree via whichever tree he pulls first: the
-> LoongArch one or the EFI one.
->
-> I will rebase my zboot decompressor changes on top of this - I will cc
-> you again, as the LoongArch builds ok but still does not boot.
-Thank you very much. There are several bugs that need to be fixed
-first for the 6.0 cycle, I will merge the efi-loongarch-for-v6.1 tag
-after that.
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/addrspace.h | 16 ++++++++++++++++
+ arch/loongarch/include/asm/io.h        | 19 -------------------
+ arch/loongarch/include/asm/page.h      |  2 +-
+ arch/loongarch/include/asm/pgtable.h   |  7 +++----
+ arch/loongarch/mm/mmap.c               | 11 ++---------
+ 5 files changed, 22 insertions(+), 33 deletions(-)
 
-Huacai
->
-> Thanks,
-> Ard.
+diff --git a/arch/loongarch/include/asm/addrspace.h b/arch/loongarch/include/asm/addrspace.h
+index b91e0733b2e5..d342935e5a72 100644
+--- a/arch/loongarch/include/asm/addrspace.h
++++ b/arch/loongarch/include/asm/addrspace.h
+@@ -109,4 +109,20 @@ extern unsigned long vm_map_base;
+  */
+ #define PHYSADDR(a)		((_ACAST64_(a)) & TO_PHYS_MASK)
+ 
++/*
++ * On LoongArch, I/O ports mappring is following:
++ *
++ *              |         ....          |
++ *              |-----------------------|
++ *              | pci io ports(16K~32M) |
++ *              |-----------------------|
++ *              | isa io ports(0  ~16K) |
++ * PCI_IOBASE ->|-----------------------|
++ *              |         ....          |
++ */
++#define PCI_IOBASE	((void __iomem *)(vm_map_base + (2 * PAGE_SIZE)))
++#define PCI_IOSIZE	SZ_32M
++#define ISA_IOSIZE	SZ_16K
++#define IO_SPACE_LIMIT	(PCI_IOSIZE - 1)
++
+ #endif /* _ASM_ADDRSPACE_H */
+diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
+index 884599739b36..999944ea1cea 100644
+--- a/arch/loongarch/include/asm/io.h
++++ b/arch/loongarch/include/asm/io.h
+@@ -7,34 +7,15 @@
+ 
+ #define ARCH_HAS_IOREMAP_WC
+ 
+-#include <linux/compiler.h>
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+ 
+ #include <asm/addrspace.h>
+-#include <asm/bug.h>
+-#include <asm/byteorder.h>
+ #include <asm/cpu.h>
+ #include <asm/page.h>
+ #include <asm/pgtable-bits.h>
+ #include <asm/string.h>
+ 
+-/*
+- * On LoongArch, I/O ports mappring is following:
+- *
+- *              |         ....          |
+- *              |-----------------------|
+- *              | pci io ports(64K~32M) |
+- *              |-----------------------|
+- *              | isa io ports(0  ~16K) |
+- * PCI_IOBASE ->|-----------------------|
+- *              |         ....          |
+- */
+-#define PCI_IOBASE	((void __iomem *)(vm_map_base + (2 * PAGE_SIZE)))
+-#define PCI_IOSIZE	SZ_32M
+-#define ISA_IOSIZE	SZ_16K
+-#define IO_SPACE_LIMIT	(PCI_IOSIZE - 1)
+-
+ /*
+  * Change "struct page" to physical address.
+  */
+diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/asm/page.h
+index a37324ac460b..53f284a96182 100644
+--- a/arch/loongarch/include/asm/page.h
++++ b/arch/loongarch/include/asm/page.h
+@@ -95,7 +95,7 @@ static inline int pfn_valid(unsigned long pfn)
+ 
+ #endif
+ 
+-#define virt_to_pfn(kaddr)	PFN_DOWN(virt_to_phys((void *)(kaddr)))
++#define virt_to_pfn(kaddr)	PFN_DOWN(PHYSADDR(kaddr))
+ #define virt_to_page(kaddr)	pfn_to_page(virt_to_pfn(kaddr))
+ 
+ extern int __virt_addr_valid(volatile void *kaddr);
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index e03443abaf7d..8ea57e2f0e04 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -59,7 +59,6 @@
+ #include <linux/mm_types.h>
+ #include <linux/mmzone.h>
+ #include <asm/fixmap.h>
+-#include <asm/io.h>
+ 
+ struct mm_struct;
+ struct vm_area_struct;
+@@ -145,7 +144,7 @@ static inline void set_p4d(p4d_t *p4d, p4d_t p4dval)
+ 	*p4d = p4dval;
+ }
+ 
+-#define p4d_phys(p4d)		virt_to_phys((void *)p4d_val(p4d))
++#define p4d_phys(p4d)		PHYSADDR(p4d_val(p4d))
+ #define p4d_page(p4d)		(pfn_to_page(p4d_phys(p4d) >> PAGE_SHIFT))
+ 
+ #endif
+@@ -188,7 +187,7 @@ static inline pmd_t *pud_pgtable(pud_t pud)
+ 
+ #define set_pud(pudptr, pudval) do { *(pudptr) = (pudval); } while (0)
+ 
+-#define pud_phys(pud)		virt_to_phys((void *)pud_val(pud))
++#define pud_phys(pud)		PHYSADDR(pud_val(pud))
+ #define pud_page(pud)		(pfn_to_page(pud_phys(pud) >> PAGE_SHIFT))
+ 
+ #endif
+@@ -221,7 +220,7 @@ static inline void pmd_clear(pmd_t *pmdp)
+ 
+ #define set_pmd(pmdptr, pmdval) do { *(pmdptr) = (pmdval); } while (0)
+ 
+-#define pmd_phys(pmd)		virt_to_phys((void *)pmd_val(pmd))
++#define pmd_phys(pmd)		PHYSADDR(pmd_val(pmd))
+ 
+ #ifndef CONFIG_TRANSPARENT_HUGEPAGE
+ #define pmd_page(pmd)		(pfn_to_page(pmd_phys(pmd) >> PAGE_SHIFT))
+diff --git a/arch/loongarch/mm/mmap.c b/arch/loongarch/mm/mmap.c
+index 52e40f0ba732..381a569635a9 100644
+--- a/arch/loongarch/mm/mmap.c
++++ b/arch/loongarch/mm/mmap.c
+@@ -2,16 +2,9 @@
+ /*
+  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+  */
+-#include <linux/compiler.h>
+-#include <linux/elf-randomize.h>
+-#include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/mm.h>
+ #include <linux/mman.h>
+-#include <linux/export.h>
+-#include <linux/personality.h>
+-#include <linux/random.h>
+-#include <linux/sched/signal.h>
+-#include <linux/sched/mm.h>
+ 
+ unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
+ EXPORT_SYMBOL(shm_align_mask);
+@@ -120,6 +113,6 @@ int __virt_addr_valid(volatile void *kaddr)
+ 	if ((vaddr < PAGE_OFFSET) || (vaddr >= vm_map_base))
+ 		return 0;
+ 
+-	return pfn_valid(PFN_DOWN(virt_to_phys(kaddr)));
++	return pfn_valid(PFN_DOWN(PHYSADDR(kaddr)));
+ }
+ EXPORT_SYMBOL_GPL(__virt_addr_valid);
+-- 
+2.31.1
+
