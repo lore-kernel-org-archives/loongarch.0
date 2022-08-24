@@ -1,91 +1,458 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1D64A32
-	for <loongarch@lists.linux.dev>; Tue, 23 Aug 2022 18:09:43 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id r4so19054337edi.8
-        for <loongarch@lists.linux.dev>; Tue, 23 Aug 2022 11:09:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=z1E8GnokuPUf7Vf8jyRFI0tVUIIyZ4+J29LO62NqtGs=;
-        b=f7YWVinSY8ScIRzGU6IKFd1NVHvyN+OHFUCMQySl/7XI8jTIEO/r5Oc2amLrrPyIkb
-         Yq9Lodmd2qHYkOGWQqVBFQjnzkuEXv8IPwvbOGA62FnA7BVt9ACIGyIOBNMA6u9tDI+A
-         VgeBPNnVKcOJxRAdEckzFxiEJNdYLTy0qPiT4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=z1E8GnokuPUf7Vf8jyRFI0tVUIIyZ4+J29LO62NqtGs=;
-        b=MetfiwqpX1Q2VVXG0sx8AqoFwZM1swp9hcDdfrjJknsnOBvqrDMoFc4rQoI1F+AJhO
-         rI6Nqnpr7qSHV7fVPwcOU1Tja/lYNsNJuI1oVz7vTt1DX3wkt8Jn0MSl19P7wPXFJS7f
-         7WF03R5kg/BgUDMUdILmWClLBAZGzjGpaZG+AmC+wwis3NaX0Wev7zuMeeh114ZMNp97
-         CUQUOV5H24kEhGdGQXO72Bb0Ilj7GDU/gYiAbocfrmTLnm1y225qmEYNjAJgbiLSxR5A
-         32Tv2sTCZfiKozzhUZSmfW88d1B/6EsGutCJWlAPNukEFXOO80WYKVABw2sqJq4cixHI
-         m2cA==
-X-Gm-Message-State: ACgBeo1xppXZSjbEWI1pPio0Z+iziPsNJTYUNIoPaYP512i2chtnfLdV
-	lsM8Y+XwOHcwdgABzXl0S4HxffJtLE3erh9J
-X-Google-Smtp-Source: AA6agR5pL4GUPKcwz4+45BNtQmBpqcJpnRAsj0cZMM6Vtx77gMNcTkmxAnsWa/4VpMktY6jdD84aKg==
-X-Received: by 2002:a05:6402:240d:b0:442:b0c4:9e02 with SMTP id t13-20020a056402240d00b00442b0c49e02mr4694667eda.210.1661278181964;
-        Tue, 23 Aug 2022 11:09:41 -0700 (PDT)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
-        by smtp.gmail.com with ESMTPSA id g24-20020a170906539800b0072ae174cdd4sm157507ejo.111.2022.08.23.11.09.38
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Aug 2022 11:09:39 -0700 (PDT)
-Received: by mail-wr1-f46.google.com with SMTP id bq11so11380872wrb.12
-        for <loongarch@lists.linux.dev>; Tue, 23 Aug 2022 11:09:38 -0700 (PDT)
-X-Received: by 2002:adf:b343:0:b0:225:1a75:2a9a with SMTP id
- k3-20020adfb343000000b002251a752a9amr13812698wrd.281.1661278178479; Tue, 23
- Aug 2022 11:09:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631D3A55
+	for <loongarch@lists.linux.dev>; Wed, 24 Aug 2022 00:14:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661300055; x=1692836055;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=i3M+r0vqX2r/Wry6UGrPxk6dMbhbJTmexTELkr22rbM=;
+  b=AfIN7FAv6GOBtdj1rSrfHvPosYnOS8PBhDAcyhfgkh5KZAWlRHuAqMwg
+   +KWb17QrcX25uzuSrvitWUtJwdWg8Wk5961bUWRtadLzIhqFT5PPv9pDZ
+   23nJUAuRkA/AU4mRDw1Wt2GwkazTEnOURYADhj1DVqP4Cl8bHHeU+2R59
+   pmZJukaIBDaBa3SbJshd5S4sqH7owHHWfYFLdm/y4vfIABfOpa6qbhw3O
+   Prxh+UQGGQwvnNm6tA+cHUFNs7EymEe2AXWMS7tub2VQXb0qW6K0NMti1
+   BBMHMt1hP4I9Lh06um5Qr7q4BMjbyM2M6IAdRLIfkywsL4+bUurz9UXsL
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10448"; a="319880989"
+X-IronPort-AV: E=Sophos;i="5.93,259,1654585200"; 
+   d="scan'208";a="319880989"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2022 17:14:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,259,1654585200"; 
+   d="scan'208";a="751873229"
+Received: from lkp-server02.sh.intel.com (HELO 9bbcefcddf9f) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Aug 2022 17:14:11 -0700
+Received: from kbuild by 9bbcefcddf9f with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1oQe27-0000kH-0e;
+	Wed, 24 Aug 2022 00:14:11 +0000
+Date: Wed, 24 Aug 2022 08:13:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: kbuild-all@lists.01.org, loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] LoongArch: Use TLB for ioremap()
+Message-ID: <202208240804.stCUUthX-lkp@intel.com>
+References: <20220823030319.3872957-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <YwSRFzQQKAXP2ncp@debian>
-In-Reply-To: <YwSRFzQQKAXP2ncp@debian>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 23 Aug 2022 11:09:22 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjn1=Gyi3Jxw4V0A=fXpOu5e1StPoyu52A6DHmbT+auzA@mail.gmail.com>
-Message-ID: <CAHk-=wjn1=Gyi3Jxw4V0A=fXpOu5e1StPoyu52A6DHmbT+auzA@mail.gmail.com>
-Subject: Re: mainline build failure for loongarch allmodconfig with gcc-12
-To: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Tom Rix <trix@redhat.com>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220823030319.3872957-1-chenhuacai@loongson.cn>
 
-On Tue, Aug 23, 2022 at 1:34 AM Sudip Mukherjee (Codethink)
-<sudipm.mukherjee@gmail.com> wrote:
->
-> I have been trying to build loongarch as part of my nightly builds, and
-> I can build loongson3_defconfig without any error. But allmodconfig fails
-> with the error:
->
-> In function '__cmpxchg',
->     inlined from 'ssh_seq_next' at drivers/platform/surface/aggregator/controller.c:61:9,
+Hi Huacai,
 
-Looks like ssh_seq_next() wants to do an atomic cmpxchg() on a single
-byte value, and the Loongarch implementation only does 4- and 8-byte
-versions.
+I love your patch! Perhaps something to improve:
 
-It looks like loongarch - from its MIPS heritage - inherited the "we
-can't do atomics on byte variables", so that it needs the same strange
-"do bytes as word accesses with mask-and-shifts".
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.0-rc2 next-20220823]
+[cannot apply to soc/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-For MIPS, the code is in __xchg_small() in arch/mips/kernel/cmpxchg.c.
+url:    https://github.com/intel-lab-lkp/linux/commits/Huacai-Chen/LoongArch-Use-TLB-for-ioremap/20220823-110829
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 072e51356cd5a4a1c12c1020bc054c99b98333df
+config: loongarch-buildonly-randconfig-r001-20220823 (https://download.01.org/0day-ci/archive/20220824/202208240804.stCUUthX-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/80f55a8feb23743d963d113c803bf54b1287244d
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Huacai-Chen/LoongArch-Use-TLB-for-ioremap/20220823-110829
+        git checkout 80f55a8feb23743d963d113c803bf54b1287244d
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash arch/loongarch/kernel/
 
-Alpha has something similar, except it's all done in inline asm in
-arch/alpha/include/asm/xchg.h (look for "____cmpxchg(_u8," in there.
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-Of course, we could just add a Kconfig variable like
-"ARCH_LACKS_BYTE_ATOMICS" and make that driver depend on it not being
-true, and just have Loongarch set it.
+All warnings (new ones prefixed by >>):
 
-But I think loongarch should just implement the byte masking stuff.
-Particularly since I suspect it can just copy the MIPS code as-is.
+   In file included from include/asm-generic/io.h:1048,
+                    from arch/loongarch/include/asm/io.h:94,
+                    from arch/loongarch/include/asm/pgtable.h:62,
+                    from arch/loongarch/include/asm/uaccess.h:17,
+                    from include/linux/uaccess.h:11,
+                    from include/linux/sched/task.h:11,
+                    from include/linux/sched/signal.h:9,
+                    from include/linux/ptrace.h:7,
+                    from arch/loongarch/kernel/cpu-probe.c:9:
+   include/linux/pgtable.h: In function 'pte_offset_kernel':
+   include/linux/pgtable.h:92:25: error: implicit declaration of function 'pmd_page_vaddr'; did you mean 'pgd_page_vaddr'? [-Werror=implicit-function-declaration]
+      92 |         return (pte_t *)pmd_page_vaddr(*pmd) + pte_index(address);
+         |                         ^~~~~~~~~~~~~~
+         |                         pgd_page_vaddr
+>> include/linux/pgtable.h:92:16: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+      92 |         return (pte_t *)pmd_page_vaddr(*pmd) + pte_index(address);
+         |                ^
+   include/linux/pgtable.h: In function 'virt_to_kpte':
+   include/linux/pgtable.h:165:16: error: implicit declaration of function 'pmd_none'; did you mean 'pud_none'? [-Werror=implicit-function-declaration]
+     165 |         return pmd_none(*pmd) ? NULL : pte_offset_kernel(pmd, vaddr);
+         |                ^~~~~~~~
+         |                pud_none
+   include/linux/pgtable.h: In function 'ptep_test_and_clear_young':
+   include/linux/pgtable.h:207:14: error: implicit declaration of function 'pte_young' [-Werror=implicit-function-declaration]
+     207 |         if (!pte_young(pte))
+         |              ^~~~~~~~~
+   include/linux/pgtable.h:210:17: error: implicit declaration of function 'set_pte_at' [-Werror=implicit-function-declaration]
+     210 |                 set_pte_at(vma->vm_mm, address, ptep, pte_mkold(pte));
+         |                 ^~~~~~~~~~
+   include/linux/pgtable.h:210:55: error: implicit declaration of function 'pte_mkold' [-Werror=implicit-function-declaration]
+     210 |                 set_pte_at(vma->vm_mm, address, ptep, pte_mkold(pte));
+         |                                                       ^~~~~~~~~
+   include/linux/pgtable.h: In function 'ptep_get_and_clear':
+   include/linux/pgtable.h:269:9: error: implicit declaration of function 'pte_clear'; did you mean 'pud_clear'? [-Werror=implicit-function-declaration]
+     269 |         pte_clear(mm, address, ptep);
+         |         ^~~~~~~~~
+         |         pud_clear
+   include/linux/pgtable.h: In function 'ptep_set_wrprotect':
+   include/linux/pgtable.h:455:39: error: implicit declaration of function 'pte_wrprotect'; did you mean 'ptep_set_wrprotect'? [-Werror=implicit-function-declaration]
+     455 |         set_pte_at(mm, address, ptep, pte_wrprotect(old_pte));
+         |                                       ^~~~~~~~~~~~~
+         |                                       ptep_set_wrprotect
+   In file included from include/linux/init.h:5,
+                    from arch/loongarch/kernel/cpu-probe.c:7:
+   include/linux/pgtable.h: In function 'pmd_none_or_clear_bad':
+   include/linux/pgtable.h:877:22: error: implicit declaration of function 'pmd_bad'; did you mean 'pud_bad'? [-Werror=implicit-function-declaration]
+     877 |         if (unlikely(pmd_bad(*pmd))) {
+         |                      ^~~~~~~
+   include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
+      78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+         |                                             ^
+   include/linux/pgtable.h: In function 'pmd_none_or_trans_huge_or_clear_bad':
+   include/linux/pgtable.h:1384:67: error: implicit declaration of function 'pmd_present'; did you mean 'pud_present'? [-Werror=implicit-function-declaration]
+    1384 |                 (IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION) && !pmd_present(pmdval)))
+         |                                                                   ^~~~~~~~~~~
+         |                                                                   pud_present
+   arch/loongarch/include/asm/pgtable.h: At top level:
+   arch/loongarch/include/asm/pgtable.h:199:19: error: static declaration of 'pmd_none' follows non-static declaration
+     199 | static inline int pmd_none(pmd_t pmd)
+         |                   ^~~~~~~~
+   include/linux/pgtable.h:165:16: note: previous implicit declaration of 'pmd_none' with type 'int()'
+     165 |         return pmd_none(*pmd) ? NULL : pte_offset_kernel(pmd, vaddr);
+         |                ^~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:204:19: error: static declaration of 'pmd_bad' follows non-static declaration
+     204 | static inline int pmd_bad(pmd_t pmd)
+         |                   ^~~~~~~
+   include/linux/pgtable.h:877:22: note: previous implicit declaration of 'pmd_bad' with type 'int()'
+     877 |         if (unlikely(pmd_bad(*pmd))) {
+         |                      ^~~~~~~
+   include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
+      78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+         |                                             ^
+   arch/loongarch/include/asm/pgtable.h:209:19: error: static declaration of 'pmd_present' follows non-static declaration
+     209 | static inline int pmd_present(pmd_t pmd)
+         |                   ^~~~~~~~~~~
+   include/linux/pgtable.h:1384:67: note: previous implicit declaration of 'pmd_present' with type 'int()'
+    1384 |                 (IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION) && !pmd_present(pmdval)))
+         |                                                                   ^~~~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:303:20: warning: conflicting types for 'set_pte_at'; have 'void(struct mm_struct *, long unsigned int,  pte_t *, pte_t)'
+     303 | static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+         |                    ^~~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:303:20: error: static declaration of 'set_pte_at' follows non-static declaration
+   include/linux/pgtable.h:210:17: note: previous implicit declaration of 'set_pte_at' with type 'void(struct mm_struct *, long unsigned int,  pte_t *, pte_t)'
+     210 |                 set_pte_at(vma->vm_mm, address, ptep, pte_mkold(pte));
+         |                 ^~~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:309:20: warning: conflicting types for 'pte_clear'; have 'void(struct mm_struct *, long unsigned int,  pte_t *)'
+     309 | static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+         |                    ^~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:309:20: error: static declaration of 'pte_clear' follows non-static declaration
+   include/linux/pgtable.h:269:9: note: previous implicit declaration of 'pte_clear' with type 'void(struct mm_struct *, long unsigned int,  pte_t *)'
+     269 |         pte_clear(mm, address, ptep);
+         |         ^~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:330:19: error: static declaration of 'pte_young' follows non-static declaration
+     330 | static inline int pte_young(pte_t pte)  { return pte_val(pte) & _PAGE_ACCESSED; }
+         |                   ^~~~~~~~~
+   include/linux/pgtable.h:207:14: note: previous implicit declaration of 'pte_young' with type 'int()'
+     207 |         if (!pte_young(pte))
+         |              ^~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:333:21: error: conflicting types for 'pte_mkold'; have 'pte_t(pte_t)'
+     333 | static inline pte_t pte_mkold(pte_t pte)
+         |                     ^~~~~~~~~
+   include/linux/pgtable.h:210:55: note: previous implicit declaration of 'pte_mkold' with type 'int()'
+     210 |                 set_pte_at(vma->vm_mm, address, ptep, pte_mkold(pte));
+         |                                                       ^~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:363:21: error: conflicting types for 'pte_wrprotect'; have 'pte_t(pte_t)'
+     363 | static inline pte_t pte_wrprotect(pte_t pte)
+         |                     ^~~~~~~~~~~~~
+   include/linux/pgtable.h:455:39: note: previous implicit declaration of 'pte_wrprotect' with type 'int()'
+     455 |         set_pte_at(mm, address, ptep, pte_wrprotect(old_pte));
+         |                                       ^~~~~~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:382: warning: "pte_accessible" redefined
+     382 | #define pte_accessible pte_accessible
+         | 
+   include/linux/pgtable.h:780: note: this is the location of the previous definition
+     780 | # define pte_accessible(mm, pte)        ((void)(pte), 1)
+--
+   In file included from include/asm-generic/io.h:1048,
+                    from arch/loongarch/include/asm/io.h:94,
+                    from arch/loongarch/include/asm/pgtable.h:62,
+                    from arch/loongarch/include/asm/uaccess.h:17,
+                    from include/linux/uaccess.h:11,
+                    from include/linux/sched/task.h:11,
+                    from include/linux/sched/signal.h:9,
+                    from include/linux/ptrace.h:7,
+                    from include/linux/entry-common.h:6,
+                    from arch/loongarch/kernel/traps.c:10:
+   include/linux/pgtable.h: In function 'pte_offset_kernel':
+   include/linux/pgtable.h:92:25: error: implicit declaration of function 'pmd_page_vaddr'; did you mean 'pgd_page_vaddr'? [-Werror=implicit-function-declaration]
+      92 |         return (pte_t *)pmd_page_vaddr(*pmd) + pte_index(address);
+         |                         ^~~~~~~~~~~~~~
+         |                         pgd_page_vaddr
+>> include/linux/pgtable.h:92:16: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+      92 |         return (pte_t *)pmd_page_vaddr(*pmd) + pte_index(address);
+         |                ^
+   include/linux/pgtable.h: In function 'virt_to_kpte':
+   include/linux/pgtable.h:165:16: error: implicit declaration of function 'pmd_none'; did you mean 'pud_none'? [-Werror=implicit-function-declaration]
+     165 |         return pmd_none(*pmd) ? NULL : pte_offset_kernel(pmd, vaddr);
+         |                ^~~~~~~~
+         |                pud_none
+   include/linux/pgtable.h: In function 'ptep_test_and_clear_young':
+   include/linux/pgtable.h:207:14: error: implicit declaration of function 'pte_young' [-Werror=implicit-function-declaration]
+     207 |         if (!pte_young(pte))
+         |              ^~~~~~~~~
+   include/linux/pgtable.h:210:17: error: implicit declaration of function 'set_pte_at' [-Werror=implicit-function-declaration]
+     210 |                 set_pte_at(vma->vm_mm, address, ptep, pte_mkold(pte));
+         |                 ^~~~~~~~~~
+   include/linux/pgtable.h:210:55: error: implicit declaration of function 'pte_mkold' [-Werror=implicit-function-declaration]
+     210 |                 set_pte_at(vma->vm_mm, address, ptep, pte_mkold(pte));
+         |                                                       ^~~~~~~~~
+   include/linux/pgtable.h: In function 'ptep_get_and_clear':
+   include/linux/pgtable.h:269:9: error: implicit declaration of function 'pte_clear'; did you mean 'pud_clear'? [-Werror=implicit-function-declaration]
+     269 |         pte_clear(mm, address, ptep);
+         |         ^~~~~~~~~
+         |         pud_clear
+   include/linux/pgtable.h: In function 'ptep_set_wrprotect':
+   include/linux/pgtable.h:455:39: error: implicit declaration of function 'pte_wrprotect'; did you mean 'ptep_set_wrprotect'? [-Werror=implicit-function-declaration]
+     455 |         set_pte_at(mm, address, ptep, pte_wrprotect(old_pte));
+         |                                       ^~~~~~~~~~~~~
+         |                                       ptep_set_wrprotect
+   In file included from include/linux/build_bug.h:5,
+                    from include/linux/bits.h:22,
+                    from include/linux/bitops.h:6,
+                    from arch/loongarch/kernel/traps.c:6:
+   include/linux/pgtable.h: In function 'pmd_none_or_clear_bad':
+   include/linux/pgtable.h:877:22: error: implicit declaration of function 'pmd_bad'; did you mean 'pud_bad'? [-Werror=implicit-function-declaration]
+     877 |         if (unlikely(pmd_bad(*pmd))) {
+         |                      ^~~~~~~
+   include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
+      78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+         |                                             ^
+   include/linux/pgtable.h: In function 'pmd_none_or_trans_huge_or_clear_bad':
+   include/linux/pgtable.h:1384:67: error: implicit declaration of function 'pmd_present'; did you mean 'pud_present'? [-Werror=implicit-function-declaration]
+    1384 |                 (IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION) && !pmd_present(pmdval)))
+         |                                                                   ^~~~~~~~~~~
+         |                                                                   pud_present
+   arch/loongarch/include/asm/pgtable.h: At top level:
+   arch/loongarch/include/asm/pgtable.h:199:19: error: static declaration of 'pmd_none' follows non-static declaration
+     199 | static inline int pmd_none(pmd_t pmd)
+         |                   ^~~~~~~~
+   include/linux/pgtable.h:165:16: note: previous implicit declaration of 'pmd_none' with type 'int()'
+     165 |         return pmd_none(*pmd) ? NULL : pte_offset_kernel(pmd, vaddr);
+         |                ^~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:204:19: error: static declaration of 'pmd_bad' follows non-static declaration
+     204 | static inline int pmd_bad(pmd_t pmd)
+         |                   ^~~~~~~
+   include/linux/pgtable.h:877:22: note: previous implicit declaration of 'pmd_bad' with type 'int()'
+     877 |         if (unlikely(pmd_bad(*pmd))) {
+         |                      ^~~~~~~
+   include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
+      78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+         |                                             ^
+   arch/loongarch/include/asm/pgtable.h:209:19: error: static declaration of 'pmd_present' follows non-static declaration
+     209 | static inline int pmd_present(pmd_t pmd)
+         |                   ^~~~~~~~~~~
+   include/linux/pgtable.h:1384:67: note: previous implicit declaration of 'pmd_present' with type 'int()'
+    1384 |                 (IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION) && !pmd_present(pmdval)))
+         |                                                                   ^~~~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:303:20: warning: conflicting types for 'set_pte_at'; have 'void(struct mm_struct *, long unsigned int,  pte_t *, pte_t)'
+     303 | static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+         |                    ^~~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:303:20: error: static declaration of 'set_pte_at' follows non-static declaration
+   include/linux/pgtable.h:210:17: note: previous implicit declaration of 'set_pte_at' with type 'void(struct mm_struct *, long unsigned int,  pte_t *, pte_t)'
+     210 |                 set_pte_at(vma->vm_mm, address, ptep, pte_mkold(pte));
+         |                 ^~~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:309:20: warning: conflicting types for 'pte_clear'; have 'void(struct mm_struct *, long unsigned int,  pte_t *)'
+     309 | static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+         |                    ^~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:309:20: error: static declaration of 'pte_clear' follows non-static declaration
+   include/linux/pgtable.h:269:9: note: previous implicit declaration of 'pte_clear' with type 'void(struct mm_struct *, long unsigned int,  pte_t *)'
+     269 |         pte_clear(mm, address, ptep);
+         |         ^~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:330:19: error: static declaration of 'pte_young' follows non-static declaration
+     330 | static inline int pte_young(pte_t pte)  { return pte_val(pte) & _PAGE_ACCESSED; }
+         |                   ^~~~~~~~~
+   include/linux/pgtable.h:207:14: note: previous implicit declaration of 'pte_young' with type 'int()'
+     207 |         if (!pte_young(pte))
+         |              ^~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:333:21: error: conflicting types for 'pte_mkold'; have 'pte_t(pte_t)'
+     333 | static inline pte_t pte_mkold(pte_t pte)
+         |                     ^~~~~~~~~
+   include/linux/pgtable.h:210:55: note: previous implicit declaration of 'pte_mkold' with type 'int()'
+     210 |                 set_pte_at(vma->vm_mm, address, ptep, pte_mkold(pte));
+         |                                                       ^~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:363:21: error: conflicting types for 'pte_wrprotect'; have 'pte_t(pte_t)'
+     363 | static inline pte_t pte_wrprotect(pte_t pte)
+         |                     ^~~~~~~~~~~~~
+   include/linux/pgtable.h:455:39: note: previous implicit declaration of 'pte_wrprotect' with type 'int()'
+     455 |         set_pte_at(mm, address, ptep, pte_wrprotect(old_pte));
+         |                                       ^~~~~~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:382: warning: "pte_accessible" redefined
+     382 | #define pte_accessible pte_accessible
+         | 
+--
+   In file included from include/asm-generic/io.h:1048,
+                    from arch/loongarch/include/asm/io.h:94,
+                    from arch/loongarch/include/asm/pgtable.h:62,
+                    from arch/loongarch/include/asm/uaccess.h:17,
+                    from include/linux/uaccess.h:11,
+                    from include/linux/sched/task.h:11,
+                    from include/linux/sched/signal.h:9,
+                    from include/linux/rcuwait.h:6,
+                    from include/linux/percpu-rwsem.h:7,
+                    from include/linux/fs.h:33,
+                    from arch/loongarch/include/asm/elf.h:9,
+                    from include/linux/elf.h:6,
+                    from include/linux/module.h:19,
+                    from include/linux/device/driver.h:21,
+                    from include/linux/device.h:32,
+                    from include/linux/acpi.h:15,
+                    from arch/loongarch/kernel/irq.c:6:
+   include/linux/pgtable.h: In function 'pte_offset_kernel':
+   include/linux/pgtable.h:92:25: error: implicit declaration of function 'pmd_page_vaddr'; did you mean 'pgd_page_vaddr'? [-Werror=implicit-function-declaration]
+      92 |         return (pte_t *)pmd_page_vaddr(*pmd) + pte_index(address);
+         |                         ^~~~~~~~~~~~~~
+         |                         pgd_page_vaddr
+>> include/linux/pgtable.h:92:16: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+      92 |         return (pte_t *)pmd_page_vaddr(*pmd) + pte_index(address);
+         |                ^
+   include/linux/pgtable.h: In function 'virt_to_kpte':
+   include/linux/pgtable.h:165:16: error: implicit declaration of function 'pmd_none'; did you mean 'pud_none'? [-Werror=implicit-function-declaration]
+     165 |         return pmd_none(*pmd) ? NULL : pte_offset_kernel(pmd, vaddr);
+         |                ^~~~~~~~
+         |                pud_none
+   include/linux/pgtable.h: In function 'ptep_test_and_clear_young':
+   include/linux/pgtable.h:207:14: error: implicit declaration of function 'pte_young' [-Werror=implicit-function-declaration]
+     207 |         if (!pte_young(pte))
+         |              ^~~~~~~~~
+   include/linux/pgtable.h:210:17: error: implicit declaration of function 'set_pte_at' [-Werror=implicit-function-declaration]
+     210 |                 set_pte_at(vma->vm_mm, address, ptep, pte_mkold(pte));
+         |                 ^~~~~~~~~~
+   include/linux/pgtable.h:210:55: error: implicit declaration of function 'pte_mkold' [-Werror=implicit-function-declaration]
+     210 |                 set_pte_at(vma->vm_mm, address, ptep, pte_mkold(pte));
+         |                                                       ^~~~~~~~~
+   include/linux/pgtable.h: In function 'ptep_get_and_clear':
+   include/linux/pgtable.h:269:9: error: implicit declaration of function 'pte_clear'; did you mean 'pud_clear'? [-Werror=implicit-function-declaration]
+     269 |         pte_clear(mm, address, ptep);
+         |         ^~~~~~~~~
+         |         pud_clear
+   include/linux/pgtable.h: In function 'ptep_set_wrprotect':
+   include/linux/pgtable.h:455:39: error: implicit declaration of function 'pte_wrprotect'; did you mean 'ptep_set_wrprotect'? [-Werror=implicit-function-declaration]
+     455 |         set_pte_at(mm, address, ptep, pte_wrprotect(old_pte));
+         |                                       ^~~~~~~~~~~~~
+         |                                       ptep_set_wrprotect
+   In file included from include/linux/kernel.h:20,
+                    from arch/loongarch/kernel/irq.c:5:
+   include/linux/pgtable.h: In function 'pmd_none_or_clear_bad':
+   include/linux/pgtable.h:877:22: error: implicit declaration of function 'pmd_bad'; did you mean 'pud_bad'? [-Werror=implicit-function-declaration]
+     877 |         if (unlikely(pmd_bad(*pmd))) {
+         |                      ^~~~~~~
+   include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
+      78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+         |                                             ^
+   include/linux/pgtable.h: In function 'pmd_none_or_trans_huge_or_clear_bad':
+   include/linux/pgtable.h:1384:67: error: implicit declaration of function 'pmd_present'; did you mean 'pud_present'? [-Werror=implicit-function-declaration]
+    1384 |                 (IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION) && !pmd_present(pmdval)))
+         |                                                                   ^~~~~~~~~~~
+         |                                                                   pud_present
+   arch/loongarch/include/asm/pgtable.h: At top level:
+   arch/loongarch/include/asm/pgtable.h:199:19: error: static declaration of 'pmd_none' follows non-static declaration
+     199 | static inline int pmd_none(pmd_t pmd)
+         |                   ^~~~~~~~
+   include/linux/pgtable.h:165:16: note: previous implicit declaration of 'pmd_none' with type 'int()'
+     165 |         return pmd_none(*pmd) ? NULL : pte_offset_kernel(pmd, vaddr);
+         |                ^~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:204:19: error: static declaration of 'pmd_bad' follows non-static declaration
+     204 | static inline int pmd_bad(pmd_t pmd)
+         |                   ^~~~~~~
+   include/linux/pgtable.h:877:22: note: previous implicit declaration of 'pmd_bad' with type 'int()'
+     877 |         if (unlikely(pmd_bad(*pmd))) {
+         |                      ^~~~~~~
+   include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
+      78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+         |                                             ^
+   arch/loongarch/include/asm/pgtable.h:209:19: error: static declaration of 'pmd_present' follows non-static declaration
+     209 | static inline int pmd_present(pmd_t pmd)
+         |                   ^~~~~~~~~~~
+   include/linux/pgtable.h:1384:67: note: previous implicit declaration of 'pmd_present' with type 'int()'
+    1384 |                 (IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION) && !pmd_present(pmdval)))
+         |                                                                   ^~~~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:303:20: warning: conflicting types for 'set_pte_at'; have 'void(struct mm_struct *, long unsigned int,  pte_t *, pte_t)'
+     303 | static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+         |                    ^~~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:303:20: error: static declaration of 'set_pte_at' follows non-static declaration
+   include/linux/pgtable.h:210:17: note: previous implicit declaration of 'set_pte_at' with type 'void(struct mm_struct *, long unsigned int,  pte_t *, pte_t)'
+     210 |                 set_pte_at(vma->vm_mm, address, ptep, pte_mkold(pte));
+         |                 ^~~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:309:20: warning: conflicting types for 'pte_clear'; have 'void(struct mm_struct *, long unsigned int,  pte_t *)'
+     309 | static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+         |                    ^~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:309:20: error: static declaration of 'pte_clear' follows non-static declaration
+   include/linux/pgtable.h:269:9: note: previous implicit declaration of 'pte_clear' with type 'void(struct mm_struct *, long unsigned int,  pte_t *)'
+     269 |         pte_clear(mm, address, ptep);
+         |         ^~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:330:19: error: static declaration of 'pte_young' follows non-static declaration
+     330 | static inline int pte_young(pte_t pte)  { return pte_val(pte) & _PAGE_ACCESSED; }
+         |                   ^~~~~~~~~
+   include/linux/pgtable.h:207:14: note: previous implicit declaration of 'pte_young' with type 'int()'
+     207 |         if (!pte_young(pte))
+         |              ^~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:333:21: error: conflicting types for 'pte_mkold'; have 'pte_t(pte_t)'
+     333 | static inline pte_t pte_mkold(pte_t pte)
+         |                     ^~~~~~~~~
+   include/linux/pgtable.h:210:55: note: previous implicit declaration of 'pte_mkold' with type 'int()'
+     210 |                 set_pte_at(vma->vm_mm, address, ptep, pte_mkold(pte));
+         |                                                       ^~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:363:21: error: conflicting types for 'pte_wrprotect'; have 'pte_t(pte_t)'
+     363 | static inline pte_t pte_wrprotect(pte_t pte)
+         |                     ^~~~~~~~~~~~~
+   include/linux/pgtable.h:455:39: note: previous implicit declaration of 'pte_wrprotect' with type 'int()'
+     455 |         set_pte_at(mm, address, ptep, pte_wrprotect(old_pte));
+         |                                       ^~~~~~~~~~~~~
+   arch/loongarch/include/asm/pgtable.h:382: warning: "pte_accessible" redefined
+     382 | #define pte_accessible pte_accessible
+         | 
+   include/linux/pgtable.h:780: note: this is the location of the previous definition
+     780 | # define pte_accessible(mm, pte)        ((void)(pte), 1)
+..
 
-                  Linus
+
+vim +92 include/linux/pgtable.h
+
+974b9b2c68f3d3 Mike Rapoport 2020-06-08  88  
+974b9b2c68f3d3 Mike Rapoport 2020-06-08  89  #ifndef pte_offset_kernel
+974b9b2c68f3d3 Mike Rapoport 2020-06-08  90  static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long address)
+974b9b2c68f3d3 Mike Rapoport 2020-06-08  91  {
+974b9b2c68f3d3 Mike Rapoport 2020-06-08 @92  	return (pte_t *)pmd_page_vaddr(*pmd) + pte_index(address);
+974b9b2c68f3d3 Mike Rapoport 2020-06-08  93  }
+974b9b2c68f3d3 Mike Rapoport 2020-06-08  94  #define pte_offset_kernel pte_offset_kernel
+974b9b2c68f3d3 Mike Rapoport 2020-06-08  95  #endif
+974b9b2c68f3d3 Mike Rapoport 2020-06-08  96  
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
