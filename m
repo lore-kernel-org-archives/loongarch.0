@@ -1,78 +1,53 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C8CA23DB
-	for <loongarch@lists.linux.dev>; Fri, 26 Aug 2022 07:36:32 +0000 (UTC)
-Received: from localhost.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxX+D6dwhjNj0KAA--.45610S4;
-	Fri, 26 Aug 2022 15:36:28 +0800 (CST)
-From: Qing Zhang <zhangqing@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@redhat.com>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	hejinyang@loongson.cn
-Subject: [PATCH v2 9/9] LoongArch: Enable CONFIG_KALLSYMS_ALL and CONFIG_DEBUG_FS
-Date: Fri, 26 Aug 2022 15:36:26 +0800
-Message-Id: <20220826073626.1716-3-zhangqing@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220826073626.1716-1-zhangqing@loongson.cn>
-References: <20220826073626.1716-1-zhangqing@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FB1441B
+	for <loongarch@lists.linux.dev>; Fri, 26 Aug 2022 19:09:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 14AFFC433D6;
+	Fri, 26 Aug 2022 19:09:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1661540965;
+	bh=rSRkJR8vUcVOHBkUuZj2hk/lqrI/ViP1vA36D61q4bQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=nzEKHal1i+p7Kyz0uI09W7qqzI6awKmPhR/fCjvFvZGY/akTq/GCsluW0xci23eFp
+	 bPUzqspnSSO9oCVfn1u/Rf/4QoLmPtF3dKCqu2MK25xYdf1ZDrwq+zfredAZzUNxnK
+	 XCl9DrZbJkREKNF1QC9pklqLD9fPXT+eAn3MXq5J4HUAFx+OJTnX35oxUAdkwr4XlR
+	 OL99DOzONgCEG3FQ91qgTjq3fSkg3dlEssVVFLE2U0knujjdUhCibS9gw73LG+hW2j
+	 GhYGZ1kOTfIU1pfK50lJTLx6hQvAP/zgNbeZiFkxXFb7d9eaxflX+S66DHnS1slEiD
+	 2yQikG5KFs8Xg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 02A8BE2A03B;
+	Fri, 26 Aug 2022 19:09:25 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v6.0-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20220825131021.3671756-1-chenhuacai@loongson.cn>
+References: <20220825131021.3671756-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220825131021.3671756-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.0-1
+X-PR-Tracked-Commit-Id: b83699ea1e62951857c2d8648bd93a4744899eb7
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c23f864dc7ef37655021c43beae98321436cbd9a
+Message-Id: <166154096500.10698.14010956901883427856.pr-tracker-bot@kernel.org>
+Date: Fri, 26 Aug 2022 19:09:25 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxX+D6dwhjNj0KAA--.45610S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7JryrGFW5Gw1kGF15WF1Dtrb_yoWDGrb_Ja
-	13Ww1Uur48A397uF1xXw48W3yDA3WDZF1FyFnrJryxXa17Kr13GrWDJw1UC3WY9ayUWrW5
-	ZaykAasxCr18tjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbhkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
-	0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF4l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMI
-	IF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI
-	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z2
-	80aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUoRRiUUUUU=
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
-Defaults enable CONFIG_KALLSYMS_ALL and CONFIG_DEBUG_FS to convenient
-ftrace tests.
+The pull request you sent on Thu, 25 Aug 2022 21:10:21 +0800:
 
-Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
----
- arch/loongarch/configs/loongson3_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.0-1
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index 3712552e18d3..cbc1ad4c704b 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -33,6 +33,7 @@ CONFIG_SYSFS_DEPRECATED=y
- CONFIG_RELAY=y
- CONFIG_BLK_DEV_INITRD=y
- CONFIG_EXPERT=y
-+CONFIG_KALLSYMS_ALL=y
- CONFIG_USERFAULTFD=y
- CONFIG_PERF_EVENTS=y
- # CONFIG_COMPAT_BRK is not set
-@@ -797,6 +798,7 @@ CONFIG_CRYPTO_DEV_VIRTIO=m
- CONFIG_PRINTK_TIME=y
- CONFIG_STRIP_ASM_SYMS=y
- CONFIG_MAGIC_SYSRQ=y
-+CONFIG_DEBUG_FS=y
- # CONFIG_SCHED_DEBUG is not set
- CONFIG_SCHEDSTATS=y
- # CONFIG_DEBUG_PREEMPT is not set
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c23f864dc7ef37655021c43beae98321436cbd9a
+
+Thank you!
+
 -- 
-2.20.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
