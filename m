@@ -1,101 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9053214
-	for <loongarch@lists.linux.dev>; Sun, 28 Aug 2022 14:16:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D1E5C433D7
-	for <loongarch@lists.linux.dev>; Sun, 28 Aug 2022 14:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1661696168;
-	bh=kkPmcOGGsxCCHFReaCtdObyszK/ELS4wEedQBkUVZ4I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jw8fk7eFoIBPjIacZtx3OYLYFkp+s3Cn1IYi5N+i6hzuxuj2p7vsj9t/tpbnk/ofV
-	 gkxoF1IXJHltRPzBI0AH3N4DGJhBh4JT1tEeas8cshUA4C+eF+BbdoOyNePfk6jPXK
-	 eM2DwVyhn8lseW5Wf4/mZ/SrRM8jlvk8M8YaCncNMl3mtZe1mW1PMM1j5cSGHimsT1
-	 8lhWM6WxxbiG2YCgszuSmSRjgkPiIWrSevJq0fItNSBvgNbtxVke11lCllqd1AkC7J
-	 SamO5kyjmHL5zkQzdlgrBzmysgrjy+E8XsvLISnSebK7A27/JDeKk6gqSyq/NuPCG8
-	 HAFBCbgRfFTnw==
-Received: by mail-vk1-f175.google.com with SMTP id o17so1074456vkn.7
-        for <loongarch@lists.linux.dev>; Sun, 28 Aug 2022 07:16:08 -0700 (PDT)
-X-Gm-Message-State: ACgBeo3aEtJTvBT5neowKbVs1TzjkAnCicGMrBZpKXBytRthvS82IqYc
-	DERaWKfq5G9GoDx01OMeIiWGGqrVlbQ+wr/m8yk=
-X-Google-Smtp-Source: AA6agR5h2iG2ixSMVSyapvLRPSHfm146j5ZVosXd1SvXe97qVJ2OyiFXNcZFh8J615F3WMKVM9LNR2xKZ33tCDlxMqs=
-X-Received: by 2002:a1f:9b90:0:b0:374:f09c:876f with SMTP id
- d138-20020a1f9b90000000b00374f09c876fmr2167421vke.12.1661696167088; Sun, 28
- Aug 2022 07:16:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91906443A
+	for <loongarch@lists.linux.dev>; Sun, 28 Aug 2022 16:17:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1661703463;
+	bh=pAB12YlbwUUdUtoU8ZK6L+lwjyTWFJNA7PB9OW17gCQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=d221tSrkumUHAL6lpxcBeqotrtTPZhYE7abQMGQFbqKPonvgRMTNJAhVJNOuScZrZ
+	 0K/q4izW8hvYG/ORhhjTahKk4oKsfrJyaz1xkH3ewdGyKewa10T5Ybrj4EWR9ZGWrl
+	 9xid0cKCGLpbqh5Pf//gnZhTImqeZ6htkLXv6nEQ=
+Received: from [IPv6:240e:358:111c:cf00:dc73:854d:832e:4] (unknown [IPv6:240e:358:111c:cf00:dc73:854d:832e:4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 4C48B65AA3;
+	Sun, 28 Aug 2022 12:17:39 -0400 (EDT)
+Message-ID: <b681993ca92d5243a73e23303ff9386ad03cf05a.camel@xry111.site>
+Subject: Re: [PATCH 0/8] LoongArch: Support toolchain with new relocation
+ types
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, WANG
+ Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>, Jinyang
+ He <hejinyang@loongson.cn>
+Date: Mon, 29 Aug 2022 00:17:32 +0800
+In-Reply-To: <CAAhV-H4+=CqeRUUt+XPZ2Nf=1GRgHtTFyMuVu-y6QdgQgD4mog@mail.gmail.com>
+References: <20220827175436.156464-1-xry111@xry111.site>
+	 <CAAhV-H4+=CqeRUUt+XPZ2Nf=1GRgHtTFyMuVu-y6QdgQgD4mog@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.45.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220827175436.156464-1-xry111@xry111.site> <20220827175436.156464-7-xry111@xry111.site>
-In-Reply-To: <20220827175436.156464-7-xry111@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 28 Aug 2022 22:15:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H76ty7nkMffbgTgH-ByBdVc-HsST87ghubTDEWZUhmLuQ@mail.gmail.com>
-Message-ID: <CAAhV-H76ty7nkMffbgTgH-ByBdVc-HsST87ghubTDEWZUhmLuQ@mail.gmail.com>
-Subject: Re: [PATCH 6/8] LoongArch: Use model("extreme") attribute for per-CPU
- variables in module if CONFIG_CC_HAS_EXPLICIT_RELOCS
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>, 
-	Jinyang He <hejinyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
 
-Hi, Ruoyao,
+On Sun, 2022-08-28 at 22:15 +0800, Huacai Chen wrote:
+> 1, You can still call it v5, even if it has changed a lot;
 
-On Sun, Aug 28, 2022 at 1:56 AM Xi Ruoyao <xry111@xry111.site> wrote:
->
-> On LoongArch, The "address" of a per-CPU variable symbol is actually an
-> offset from $r21.  The value is nearing the loading address of main
-> kernel image, but far from the address of modules.  We need to tell the
-> compiler that a PC-relative addressing with 32-bit offset is not
-> sufficient for local per-CPU variables.
->
-> After some discussion with GCC maintainers, we implemented this
-> attribute to indicate that a PC-relative addressing with 64-bit offset
-> should be used.
->
-> This attribute should be available in GCC 13 release.  Some early GCC 13
-> snapshots may support -mexplicit-relocs but lack this attribute, we
-> simply reject them.
->
-> Link: https://gcc.gnu.org/r13-2199
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->  arch/loongarch/include/asm/percpu.h | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/arch/loongarch/include/asm/percpu.h b/arch/loongarch/include/asm/percpu.h
-> index 0bd6b0110198..91d4026b074e 100644
-> --- a/arch/loongarch/include/asm/percpu.h
-> +++ b/arch/loongarch/include/asm/percpu.h
-> @@ -8,6 +8,19 @@
->  #include <asm/cmpxchg.h>
->  #include <asm/loongarch.h>
->
-> +#if defined(MODULE) && defined(CONFIG_CC_HAS_EXPLICIT_RELOCS)
-> +# if __has_attribute(model)
-> +/* The "address" (in fact, offset from $r21) of a per-CPU variable is close
-> + * to the load address of main kernel image, but far from where the modules are
-> + * loaded.  Tell the compiler this fact.
-> + */
-> +#  define PER_CPU_ATTRIBUTES __attribute__((model("extreme")))
-> +# else /* __has_attribute(model) */
-> +/* This should only happen with early GCC 13 snapshots. */
-Can we judge this case in Makefile to quit earlier and make code simpler here?
+Ok, so should I call the next version v2 or v6?
 
+Sorry for introducing such a mess :(.
 
-Huacai
+> 2, In my opinion, patch 4,5,7,8 can be combined, but I don't insist if
+> you have a good reason to separate.
 
-> +#  error "Compiler with explicit relocs but no model attribute is not supported"
-> +# endif /* __has_attribute(model) */
-> +#endif
-> +
->  /* Use r21 for fast access */
->  register unsigned long __my_cpu_offset __asm__("$r21");
->
-> --
-> 2.37.0
->
+If we'll drop support for old GCC/Binutils, we can drop patch 5 (it's
+only needed for the combination of old GCC and new Binutils).  Then
+squash 4 and 7.  8 should still be standalone IMO.
+
+> 3, If possible, I still prefer to remove old relocation types support,
+> in order to make life easier, especially for objtool that is queued
+> for upstream.
+
+How about this?  I'm not sure if it's proper to invoke "error" in
+Makefile.
+
+ifneq ($(shell $(CC) $(srctree)/arch/loongarch/scripts/toolchain-check.c &>=
+ /dev/null -o /dev/null && echo "ok"), ok)
+  ifdef CONFIG_MODULES
+    $(error "toolchain is too old for LoongArch modular kernel")
+  endif
+endif
+
+toolchain-check.c:
+
+#if !__has_attribute(model)
+#error no model attribute
+#endif
+
+int main()
+{
+	__asm__("x:pcalau12i $t0,%pc_hi20(x)");
+}
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
