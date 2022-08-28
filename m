@@ -1,281 +1,113 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320807C
-	for <loongarch@lists.linux.dev>; Sat, 27 Aug 2022 17:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1661622981;
-	bh=8mrWmTXV6n9Id+Gx7iWuD5ZGJlt9LxLt/SRZ0QpLHXY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hIMPfb6iKAdsMlF+rtszgI7TX+dLdaGykxYv/yXmRXb6IICGU+B5gzbdeaR3eA002
-	 5oUUUX2ODLu3VA45KJIsSkixaujXJkoRxEGrsFYwAm3UZThh+BoHYSc7szuRL9y1Rv
-	 +txeQYLKou0PLEtQOpdkbYvJeowQtLVd03iqteY4=
-Received: from xry111-x57s1.. (unknown [IPv6:240e:358:1157:dc00:dc73:854d:832e:4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 5247166804;
-	Sat, 27 Aug 2022 13:56:14 -0400 (EDT)
-From: Xi Ruoyao <xry111@xry111.site>
-To: loongarch@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	WANG Xuerui <kernel@xen0n.name>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Youling Tang <tangyouling@loongson.cn>,
-	Jinyang He <hejinyang@loongson.cn>,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH 8/8] LoongArch: Support R_LARCH_GOT_PC* in modules
-Date: Sun, 28 Aug 2022 01:54:36 +0800
-Message-Id: <20220827175436.156464-9-xry111@xry111.site>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220827175436.156464-1-xry111@xry111.site>
-References: <20220827175436.156464-1-xry111@xry111.site>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0782C3214
+	for <loongarch@lists.linux.dev>; Sun, 28 Aug 2022 14:15:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D5B5C43470
+	for <loongarch@lists.linux.dev>; Sun, 28 Aug 2022 14:15:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1661696138;
+	bh=99ZcCIurvZTW9PcpZnQL4kXGr8fFd022xLQ96/T+S0U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZANWoDpM44tfTY87bjDQiWJEtSRR2yTxj2xIlPdkzTw6IvTU/fRUgwC5hfiZmqsAj
+	 SJ9KBkfV85esc8R5J71arTE/arip6NwyCVUr0P5g1ZIxBNRLqc6WEkVt3R80gXX1Z1
+	 UVVAwrf8npE54J33z6LHVwGBsu2z/zB7bxKr/ZGd8pBCZhR6lq1zYiw5Lyc5S6FxeR
+	 NU99BcRk6JaNa47NuoqnT+lL76OuGYN/g0fmYZkbYsc4ppWqaD4w0w/S0M7IwwxJkX
+	 9Hmr+MOSGLd1l83FcmcJlMG+x6aiXp9Y/hHwh07X6Fny7fgVTqOg+1LPQx8HaxR7dV
+	 HBNFq6wYnh6GQ==
+Received: by mail-vk1-f181.google.com with SMTP id b81so2706575vkf.1
+        for <loongarch@lists.linux.dev>; Sun, 28 Aug 2022 07:15:38 -0700 (PDT)
+X-Gm-Message-State: ACgBeo30QdAcJe/gnMbOQOL17sThQNiR6W6lfbtuPQpv26sYeiFSz6OD
+	9ZoQ3Wr+u0IgiInDE2AjVa+mROkUAQ39Rp45fZg=
+X-Google-Smtp-Source: AA6agR5kos12SinkdJRmGfRcKjpnuqh5Dizap/pwmR9zBct2kTeSPZNilj8KD5ibGl1tyTkZirY3QcMa4Bd8yZ1c+/w=
+X-Received: by 2002:a1f:b248:0:b0:377:aa0c:941 with SMTP id
+ b69-20020a1fb248000000b00377aa0c0941mr2104203vkf.37.1661696137497; Sun, 28
+ Aug 2022 07:15:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220827175436.156464-1-xry111@xry111.site>
+In-Reply-To: <20220827175436.156464-1-xry111@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 28 Aug 2022 22:15:24 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4+=CqeRUUt+XPZ2Nf=1GRgHtTFyMuVu-y6QdgQgD4mog@mail.gmail.com>
+Message-ID: <CAAhV-H4+=CqeRUUt+XPZ2Nf=1GRgHtTFyMuVu-y6QdgQgD4mog@mail.gmail.com>
+Subject: Re: [PATCH 0/8] LoongArch: Support toolchain with new relocation types
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>, 
+	Jinyang He <hejinyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-GCC >= 13 and GNU assembler >= 2.40 use these relocations to address
-external symbols, so we need to add them.
+Hi, Ruoyao,
 
-Let the module loader emit GOT entries for data symbols so we would be
-able to handle GOT relocations.  The GOT entry is just the data symbol
-address.
+On Sun, Aug 28, 2022 at 1:55 AM Xi Ruoyao <xry111@xry111.site> wrote:
+>
+> The version 2.00 of LoongArch ELF ABI specification introduced new
+> relocation types, and the development tree of Binutils and GCC has
+> started to use them.  If the kernel is built with the latest snapshot of
+> Binutils or GCC, it will fail to load the modules because of unrecognized
+> relocation types in modules.
+>
+> Add support for GOT and new relocation types for the module loader, so
+> the kernel (with modules) can be built with the "normal" code model and
+> function properly.
+>
+> This series does not break the compatibility with old toolchain using
+> stack-based relocation types, so with the patches applied the kernel can
+> be be built with both old and new toolchains.
+>
+> Tested by building the kernel with the following combinations:
+>
+> - GCC 12 and Binutils 2.39
+> - GCC 12 and Binutils trunk
+> - GCC trunk and Binutils trunk
+>
+> and running the builds with 35 in-tree modules loaded, and loading one
+> module with 20 GOT loads and a per-CPU variable (loaded addresses
+> verified by comparing with /proc/kallsyms).
+>
+> This superseds "LoongArch: Support new relocation types" series.  I
+> don't make it a "v5" because too much things have changed so it's better
+> to treat this as a new series.
+1, You can still call it v5, even if it has changed a lot;
+2, In my opinion, patch 4,5,7,8 can be combined, but I don't insist if
+you have a good reason to separate.
+3, If possible, I still prefer to remove old relocation types support,
+in order to make life easier, especially for objtool that is queued
+for upstream.
 
-In module.lds, emit a stub .got section for a section header entry.
-The actual content of the entry will be filled at runtime by
-module_frob_arch_sections.
 
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
- arch/loongarch/include/asm/module.h     | 23 ++++++++++++
- arch/loongarch/include/asm/module.lds.h |  1 +
- arch/loongarch/kernel/module-sections.c | 49 +++++++++++++++++++++++--
- arch/loongarch/kernel/module.c          | 24 ++++++++++++
- 4 files changed, 94 insertions(+), 3 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/module.h b/arch/loongarch/include/asm/module.h
-index 9f6718df1854..76a98a0ab8a0 100644
---- a/arch/loongarch/include/asm/module.h
-+++ b/arch/loongarch/include/asm/module.h
-@@ -19,6 +19,7 @@ struct mod_section {
- struct mod_arch_specific {
- 	struct mod_section plt;
- 	struct mod_section plt_idx;
-+	struct mod_section got;
- };
- 
- struct plt_entry {
-@@ -28,11 +29,16 @@ struct plt_entry {
- 	u32 inst_jirl;
- };
- 
-+struct got_entry {
-+	Elf_Addr symbol_addr;
-+};
-+
- struct plt_idx_entry {
- 	unsigned long symbol_addr;
- };
- 
- Elf_Addr module_emit_plt_entry(struct module *mod, unsigned long val);
-+Elf_Addr module_emit_got_entry(struct module *mod, Elf_Addr val);
- 
- static inline struct plt_entry emit_plt_entry(unsigned long val)
- {
-@@ -51,6 +57,11 @@ static inline struct plt_idx_entry emit_plt_idx_entry(unsigned long val)
- 	return (struct plt_idx_entry) { val };
- }
- 
-+static inline struct got_entry emit_got_entry(Elf_Addr val)
-+{
-+	return (struct got_entry) { val };
-+}
-+
- static inline int get_plt_idx(unsigned long val, const struct mod_section *sec)
- {
- 	int i;
-@@ -77,4 +88,16 @@ static inline struct plt_entry *get_plt_entry(unsigned long val,
- 	return plt + plt_idx;
- }
- 
-+static inline struct got_entry *get_got_entry(Elf_Addr val,
-+					      const struct mod_section *sec)
-+{
-+	struct got_entry *got = (struct got_entry *)sec->shdr->sh_addr;
-+	int i;
-+
-+	for (i = 0; i < sec->num_entries; i++)
-+		if (got[i].symbol_addr == val)
-+			return &got[i];
-+	return NULL;
-+}
-+
- #endif /* _ASM_MODULE_H */
-diff --git a/arch/loongarch/include/asm/module.lds.h b/arch/loongarch/include/asm/module.lds.h
-index 31c1c0db11a3..57bbd0cedd26 100644
---- a/arch/loongarch/include/asm/module.lds.h
-+++ b/arch/loongarch/include/asm/module.lds.h
-@@ -4,4 +4,5 @@ SECTIONS {
- 	. = ALIGN(4);
- 	.plt : { BYTE(0) }
- 	.plt.idx : { BYTE(0) }
-+	.got : { BYTE(0) }
- }
-diff --git a/arch/loongarch/kernel/module-sections.c b/arch/loongarch/kernel/module-sections.c
-index c67b9cb220eb..4c99737cd8dc 100644
---- a/arch/loongarch/kernel/module-sections.c
-+++ b/arch/loongarch/kernel/module-sections.c
-@@ -33,6 +33,31 @@ Elf_Addr module_emit_plt_entry(struct module *mod, unsigned long val)
- 	return (Elf_Addr)&plt[nr];
- }
- 
-+Elf_Addr module_emit_got_entry(struct module *mod, Elf_Addr val)
-+{
-+	struct mod_section *got_sec = &mod->arch.got;
-+	int i = got_sec->num_entries;
-+	struct got_entry *got = get_got_entry(val, got_sec);
-+
-+	if (got)
-+		return (Elf_Addr)got;
-+
-+	/* There is no GOT entry existing for val yet.  Create a new one.  */
-+	got = (struct got_entry *)got_sec->shdr->sh_addr;
-+	got[i] = emit_got_entry(val);
-+
-+	got_sec->num_entries++;
-+	if (got_sec->num_entries > got_sec->max_entries) {
-+		/* This may happen when the module contains a GOT_HI20 without
-+		 * a paired GOT_LO12.  Such a module is broken, reject it.
-+		 */
-+		pr_err("%s: module contains bad GOT relocation\n", mod->name);
-+		return 0;
-+	}
-+
-+	return (Elf_Addr)&got[i];
-+}
-+
- static int is_rela_equal(const Elf_Rela *x, const Elf_Rela *y)
- {
- 	return x->r_info == y->r_info && x->r_addend == y->r_addend;
-@@ -50,7 +75,8 @@ static bool duplicate_rela(const Elf_Rela *rela, int idx)
- 	return false;
- }
- 
--static void count_max_entries(Elf_Rela *relas, int num, unsigned int *plts)
-+static void count_max_entries(Elf_Rela *relas, int num,
-+			      unsigned int *plts, unsigned int *gots)
- {
- 	unsigned int i, type;
- 
-@@ -62,6 +88,10 @@ static void count_max_entries(Elf_Rela *relas, int num, unsigned int *plts)
- 			if (!duplicate_rela(relas, i))
- 				(*plts)++;
- 			break;
-+		case R_LARCH_GOT_PC_HI20:
-+			if (!duplicate_rela(relas, i))
-+				(*gots)++;
-+			break;
- 		default:
- 			/* Do nothing. */
- 		}
-@@ -71,7 +101,7 @@ static void count_max_entries(Elf_Rela *relas, int num, unsigned int *plts)
- int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
- 			      char *secstrings, struct module *mod)
- {
--	unsigned int i, num_plts = 0;
-+	unsigned int i, num_plts = 0, num_gots = 0;
- 
- 	/*
- 	 * Find the empty .plt sections.
-@@ -81,6 +111,8 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
- 			mod->arch.plt.shdr = sechdrs + i;
- 		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".plt.idx"))
- 			mod->arch.plt_idx.shdr = sechdrs + i;
-+		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".got"))
-+			mod->arch.got.shdr = sechdrs + i;
- 	}
- 
- 	if (!mod->arch.plt.shdr) {
-@@ -91,6 +123,10 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
- 		pr_err("%s: module PLT.IDX section(s) missing\n", mod->name);
- 		return -ENOEXEC;
- 	}
-+	if (!mod->arch.got.shdr) {
-+		pr_err("%s: module GOT section(s) missing\n", mod->name);
-+		return -ENOEXEC;
-+	}
- 
- 	/* Calculate the maxinum number of entries */
- 	for (i = 0; i < ehdr->e_shnum; i++) {
-@@ -105,7 +141,7 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
- 		if (!(dst_sec->sh_flags & SHF_EXECINSTR))
- 			continue;
- 
--		count_max_entries(relas, num_rela, &num_plts);
-+		count_max_entries(relas, num_rela, &num_plts, &num_gots);
- 	}
- 
- 	mod->arch.plt.shdr->sh_type = SHT_NOBITS;
-@@ -122,5 +158,12 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
- 	mod->arch.plt_idx.num_entries = 0;
- 	mod->arch.plt_idx.max_entries = num_plts;
- 
-+	mod->arch.got.shdr->sh_type = SHT_NOBITS;
-+	mod->arch.got.shdr->sh_flags = SHF_ALLOC;
-+	mod->arch.got.shdr->sh_addralign = L1_CACHE_BYTES;
-+	mod->arch.got.shdr->sh_size = (num_gots + 1) * sizeof(struct got_entry);
-+	mod->arch.got.num_entries = 0;
-+	mod->arch.got.max_entries = num_gots;
-+
- 	return 0;
- }
-diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/module.c
-index 61ecd174dd03..2f7f516522a9 100644
---- a/arch/loongarch/kernel/module.c
-+++ b/arch/loongarch/kernel/module.c
-@@ -390,6 +390,29 @@ static int apply_r_larch_pcala(struct module *mod, u32 *location, Elf_Addr v,
- 	return 0;
- }
- 
-+static int apply_r_larch_got_pc(struct module *mod, u32 *location, Elf_Addr v,
-+			s64 *rela_stack, size_t *rela_stack_top, unsigned int type)
-+{
-+	Elf_Addr got = module_emit_got_entry(mod, v);
-+
-+	if (!got)
-+		return -EINVAL;
-+
-+	switch (type) {
-+	case R_LARCH_GOT_PC_LO12:
-+		type = R_LARCH_PCALA_LO12;
-+		break;
-+	case R_LARCH_GOT_PC_HI20:
-+		type = R_LARCH_PCALA_HI20;
-+		break;
-+	default:
-+		pr_err("%s: Unsupport relocation type %u\n", mod->name, type);
-+		return -EINVAL;
-+	}
-+
-+	return apply_r_larch_pcala(mod, location, got, rela_stack, rela_stack_top, type);
-+}
-+
- /*
-  * reloc_handlers_rela() - Apply a particular relocation to a module
-  * @mod: the module to apply the reloc to
-@@ -422,6 +445,7 @@ static reloc_rela_handler reloc_rela_handlers[] = {
- 	[R_LARCH_B26]					     = apply_r_larch_b26,
- 	[R_LARCH_ABS_HI20...R_LARCH_ABS64_HI12]		     = apply_r_larch_abs,
- 	[R_LARCH_PCALA_HI20...R_LARCH_PCALA64_HI12]	     = apply_r_larch_pcala,
-+	[R_LARCH_GOT_PC_HI20...R_LARCH_GOT_PC_LO12]	     = apply_r_larch_got_pc,
- };
- 
- int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
--- 
-2.37.0
+Huacai
 
+>
+> Xi Ruoyao (8):
+>   LoongArch: Add CONFIG_CC_HAS_EXPLICIT_RELOCS
+>   LoongArch: Only use -Wa,-mla-* options for
+>     !CONFIG_CC_HAS_EXPLICIT_RELOCS
+>   LoongArch: Define ELF relocation types added in v2.00 ABI
+>   LoongArch: Support R_LARCH_B26 in modules
+>   LoongArch: Support R_LARCH_ABS* in modules
+>   LoongArch: Use model("extreme") attribute for per-CPU variables in
+>     module if CONFIG_CC_HAS_EXPLICIT_RELOCS
+>   LoongArch: Support R_LARCH_PCALA* in modules
+>   LoongArch: Support R_LARCH_GOT_PC* in modules
+>
+>  arch/loongarch/Kconfig                  |   3 +
+>  arch/loongarch/Makefile                 |  15 ++-
+>  arch/loongarch/include/asm/elf.h        |  37 +++++++
+>  arch/loongarch/include/asm/module.h     |  23 ++++
+>  arch/loongarch/include/asm/module.lds.h |   1 +
+>  arch/loongarch/include/asm/percpu.h     |  13 +++
+>  arch/loongarch/kernel/head.S            |  10 +-
+>  arch/loongarch/kernel/module-sections.c |  56 +++++++++-
+>  arch/loongarch/kernel/module.c          | 138 +++++++++++++++++++++++-
+>  9 files changed, 285 insertions(+), 11 deletions(-)
+>
+> --
+> 2.37.0
+>
