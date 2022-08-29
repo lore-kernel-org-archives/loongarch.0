@@ -1,84 +1,143 @@
-Received: from wnew2-smtp.messagingengine.com (wnew2-smtp.messagingengine.com [64.147.123.27])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A15F7C
-	for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 11:37:22 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailnew.west.internal (Postfix) with ESMTP id 1527F2B05EEF;
-	Mon, 29 Aug 2022 07:37:20 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Mon, 29 Aug 2022 07:37:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm1; t=1661773040; x=1661773640; bh=OMyRTkiqC7
-	19sf4sZbkRI86tZB1Sd8j4wBhlvt4F4SI=; b=djdXAjrf2FDh2lMocp0uzSwn0k
-	vv3WIr66kctkK7I7YsnCXg6NOqSPzcesj+fUCR3kqqYLYL/8HSThBQyOCvdc6TX8
-	8tfLuqAzcAiSXp6LbcfSAga8AbLg/bemzQHVa4OZj50GmrlYuxY78WfShJhhB6KO
-	vOMIkcHLgkye10U16kGHKQz5XlSu1pNyiQaaXfxzlpwpvJQ/SDH0CV9/Bb+PuqF5
-	frVdyDON+pNT7ibK1HpQGlogkMeqeDD+ph1k+JYy4u8o/IzVmQ06Gz5GZG/3TV++
-	d1uKtQLnMpWgGVusqGpScyRwF/pcHMtTJ+mrNmCHydrlmxVsMZ5UhwDvX8Mg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	i56a14606.fm1; t=1661773040; x=1661773640; bh=OMyRTkiqC719sf4sZb
-	kRI86tZB1Sd8j4wBhlvt4F4SI=; b=MQ5q7kZKw3xR/ZW2MdtR7eRZrpjpkg6c6g
-	28o85Nsq9TApie72c9Xg6wIKg7nloQcEZ+flto5/fPgvYxqOYkyaw1yMjVLzIviV
-	tpOU1QT4tcRStfoz8nRI+YySPVmdTARUyxioWiV6c7sqcNhUTRxh5xTN1mvRwmGW
-	2z3gc7V4nm6X9c4dKynDg9W8g7dHf7gTfsfOz8e6qX2bd/QAXqBrHhjOZZGDdQCa
-	Xmj7X3HrWuc53diaNlgVqXQ6PmO6qb1eaKq7T+y0aFeCqLCIWTLX0nlvGFgal1ph
-	w1rH7ibX2eyUB7c+sWaC8hTxvg7EkwFQBszW5e5fd/HZhGyo/3Dw==
-X-ME-Sender: <xms:76QMY_8UN2lz6HwJX2osTRGAXHDbk5a-zdlpsrjX0f96BYRNlW-PHA>
-    <xme:76QMY7smWw76c8GN_2-yCOizQDZV5oUtItIw7Relnw8wMSYSONOwc9PZ2ziXZmMS1
-    iuVIIyg7N7WQKHwKF8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdekuddggeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:76QMY9DXX9cvJVzlbq0mfgO3T6oE4ZtURNNIG_wrBLI0RDUPO3A3ww>
-    <xmx:76QMY7cvV2jvn17Xe8f8PH-SU-HaHgtzOF4onBmDGvwISWN5sROfxg>
-    <xmx:76QMY0N_9aycWLGk7WV_lZBCDZxow1cCBSKERH-DT5DLpMETZyXBNg>
-    <xmx:8KQMY9YRKoRFNz8MWv5d5vLjqVkKEGRxT4pLEGlBALtESjMHd2h0oSlgHKGmw9l4>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 45828B60083; Mon, 29 Aug 2022 07:37:19 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-841-g7899e99a45-fm-20220811.002-g7899e99a
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A2E3D65
+	for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 13:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1661780002;
+	bh=+JtPz+QbXy17iHd2rQKScE85EOhFTM5MQmyitEi64FQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kQcHxJ9R3q/qAOs6rYI2NCzmtBfaoubuZs8Ko29SqZRSYxgooZ3GRr/U7OlHjZaX7
+	 VglnXHs+rZ3P/g2VRik/HB0Gc2CgGaNZMjVOdfbT5YTCF4whR+nNHb3unBwd7qv28f
+	 H7Yf9+jzzZGVUJ0cTpXPfWOQ+X5d0ArvEr01rIsw=
+Received: from xry111-x57s1.. (unknown [IPv6:240e:358:11dd:1900:dc73:854d:832e:5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 3D34966901;
+	Mon, 29 Aug 2022 09:33:16 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org,
+	WANG Xuerui <kernel@xen0n.name>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Youling Tang <tangyouling@loongson.cn>,
+	Jinyang He <hejinyang@loongson.cn>,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH v6 0/6] LoongArch: Support toolchain with new relocation types
+Date: Mon, 29 Aug 2022 21:31:40 +0800
+Message-Id: <20220829133146.15236-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <d1a52fa2-380a-421b-8c46-5150a39be484@www.fastmail.com>
-In-Reply-To: <1661766931-7277-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1661766931-7277-1-git-send-email-yangtiezhu@loongson.cn>
-Date: Mon, 29 Aug 2022 13:36:46 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>,
- "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Fix warning: #warning syscall fstat not implemented
-Content-Type: text/plain
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 29, 2022, at 11:55 AM, Tiezhu Yang wrote:
+The version 2.00 of LoongArch ELF ABI specification introduced new
+relocation types, and the development tree of Binutils and GCC has
+started to use them.  If the kernel is built with the latest snapshot of
+Binutils or GCC, it will fail to load the modules because of unrecognized
+relocation types in modules.
 
->   CALL    scripts/checksyscalls.sh
-> <stdin>:569:2: warning: #warning syscall fstat not implemented [-Wcpp]
+Add support for GOT and new relocation types for the module loader, so
+the kernel (with modules) can be built with the "normal" code model and
+function properly.
 
-> @@ -1,4 +1,5 @@
-> /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#define __ARCH_WANT_NEW_STAT
-> #define __ARCH_WANT_SYS_CLONE
-> #define __ARCH_WANT_SYS_CLONE3
+This series does not break the compatibility with old toolchain using
+stack-based relocation types, so with the patches applied the kernel can
+be be built with both old and new toolchains.  But, the combination of
+"new" Binutils and "old" GCC is not supported.
 
-The correct fix is to change scripts/checksyscalls.sh,
-making it always define __IGNORE_fstat
+Tested by building the kernel with the following combinations:
 
-        Arnd
+- GCC 12 and Binutils 2.39
+- GCC trunk and Binutils trunk
+
+and running the builds with 35 in-tree modules loaded, and loading one
+module with 20 GOT loads and a per-CPU variable (loaded addresses
+verified by comparing with /proc/kallsyms).
+
+Changes from v5 to v6:
+
+- Restore version number.
+- Rename CONFIG_CC_HAS_EXPLICIT_RELOCS to CONFIG_AS_HAS_EXPLICIT_RELOCS.
+  It now only checks assembler.
+- No longer support "old GCC with new Binutils", so R_LARCH_ABS* is
+  dropped.
+  - "Old GCC with old Binutils" is still supported until Arnd ack.
+    longer support it.
+  - "New GCC with old Binutils" is still supported as it does not
+    require additional code.
+- Remove "cc-option" around "-mexplicit-relocs".  For unsupported
+  "old GCC with new Binutils" combination, forcing -mexplicit-relocs
+  makes assembling fail, instead of silently producing unloadable
+  modules.
+- Move the error report for "lacking model attribute" into Makefile.
+- Squash the two patches for R_LARCH_B26 and R_LARCH_PCALA* into one.
+
+Changes from v4 to v5 ("v5" missed in the subject):
+
+- Change subject.
+- Introduce CONFIG_CC_HAS_EXPLICIT_RELOCS.
+- Retain -Wa,-mla-* options for old toolchains
+  (!CONFIG_CC_HAS_EXPLICIT_RELOCS).
+- Use __attribute__((model("extreme"))) in PER_CPU_ATTRIBUTES, to fix
+  a breakage with per-CPU variables defined in modules.
+- Handle R_LARCH_PCALA64_{HI12,LO12} for extreme model.
+- Handle R_LARCH_ABS* for "old GCC with new Binutils".
+- Separate the last patch into more small patches.
+- Avoid BUG_ON() for the handling of GOT.
+
+Changes from v3 to v4:
+
+- No code change.  Reword the commit message of the 3rd patch again
+  based on suggestion from Huacai.
+
+Changes from v2 to v3:
+
+- Use `union loongarch_instruction` instead of explicit bit shifts
+  applying the relocation.  Suggested by Youling.
+- For R_LARCH_B26, move the alignment check before the range check to be
+  consistent with stack pop relocations.  Suggested by Youling.
+- Reword the commit message of the 3rd patch.  Suggested by Huacai.
+
+Changes from v1 to v2:
+
+- Fix a stupid programming error (confusion between the number of PLT
+  entries and the number of GOT entries).  (Bug spotted by Youling).
+- Synthesize the _GLOBAL_OFFSET_TABLE_ symbol with module.lds, instead
+  of faking it at runtime.  The 3rd patch from V1 is now merged into
+  the 1st patch because it would be a one-line change.  (Suggested by
+  Jinyang).
+- Keep reloc_rela_handlers[] ordered by the relocation type ID.
+  (Suggested by Youling).
+- Remove -fplt along with -Wa,-mla-* options because it's the default.
+  (Suggested by Youling).
+
+Xi Ruoyao (6):
+  LoongArch: Add CONFIG_AS_HAS_EXPLICIT_RELOCS
+  LoongArch: Adjust CFLAGS for CONFIG_AS_HAS_EXPLICIT_RELOCS
+  LoongArch: Use model("extreme") attribute for per-CPU variables in
+    module if CONFIG_AS_HAS_EXPLICIT_RELOCS
+  LoongArch: Define ELF relocation types added in v2.00 ABI
+  LoongArch: Support PC-relative relocations in modules
+  LoongArch: Support R_LARCH_GOT_PC* in modules
+
+ arch/loongarch/Kconfig                  |   3 +
+ arch/loongarch/Makefile                 |  22 +++++-
+ arch/loongarch/include/asm/elf.h        |  37 +++++++++
+ arch/loongarch/include/asm/module.h     |  23 ++++++
+ arch/loongarch/include/asm/module.lds.h |   1 +
+ arch/loongarch/include/asm/percpu.h     |   8 ++
+ arch/loongarch/kernel/head.S            |  10 +--
+ arch/loongarch/kernel/module-sections.c |  56 ++++++++++++-
+ arch/loongarch/kernel/module.c          | 101 +++++++++++++++++++++++-
+ 9 files changed, 250 insertions(+), 11 deletions(-)
+
+-- 
+2.37.0
+
