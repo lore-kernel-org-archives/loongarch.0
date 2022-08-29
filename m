@@ -1,67 +1,142 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9523D181
-	for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 05:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1661749441;
-	bh=Y2IBo/yl2C21cbNjWkR6HnBtpOv/rW+e5okc63SzE28=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=P3sv8B03EouV3Ol4B/8SyCFj9bDuGenC3FLHapba4ePX9gDXNlKUXa1RIxoS7cutG
-	 np8fe//5yYYP/nuXnDl8V/knGoy6Q+puDybEF9QznTZhTNAC9AJIWxJgc49hM6QN/H
-	 EiJDe8tPTYijqqqGrcdLlfw6R8On7gRaaQimjiok=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 4863A66817;
-	Mon, 29 Aug 2022 01:04:00 -0400 (EDT)
-Message-ID: <927f85844e31f0563523622134b5d01af6991e60.camel@xry111.site>
-Subject: Re: [PATCH 0/8] LoongArch: Support toolchain with new relocation
- types
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, WANG
- Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>, Jinyang
- He <hejinyang@loongson.cn>
-Date: Mon, 29 Aug 2022 13:03:58 +0800
-In-Reply-To: <CAAhV-H5tB9nvD8Uufn5SQ1s0hzob4TuxRTaSri-cxHVqtRH6uw@mail.gmail.com>
-References: <20220827175436.156464-1-xry111@xry111.site>
-	 <CAAhV-H4+=CqeRUUt+XPZ2Nf=1GRgHtTFyMuVu-y6QdgQgD4mog@mail.gmail.com>
-	 <b681993ca92d5243a73e23303ff9386ad03cf05a.camel@xry111.site>
-	 <CAAhV-H5tB9nvD8Uufn5SQ1s0hzob4TuxRTaSri-cxHVqtRH6uw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.45.2 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4199C211A
+	for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 08:42:58 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.2.9.158])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvmsQfAxjg8cLAA--.40214S2;
+	Mon, 29 Aug 2022 16:42:56 +0800 (CST)
+From: Mao Bibo <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Add safer signal handler for TLS access
+Date: Mon, 29 Aug 2022 16:42:56 +0800
+Message-Id: <20220829084256.3453391-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxvmsQfAxjg8cLAA--.40214S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCryxKFW5Xw1fZryfGr4xCrg_yoWrXrWDpF
+	9rAw1DJrWUWr1kZryqva4DurykJ3s7Cw429ayaka4fAa1Iq3WrXr1vqFyDZF1Yya1kGFW0
+	qasYg3sxta1jqaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkjb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4
+	vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK82IY
+	c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
+	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
+	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
+	6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07beJ5wUUUUU=
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 
-On Mon, 2022-08-29 at 12:33 +0800, Huacai Chen wrote:
-> > If we'll drop support for old GCC/Binutils, we can drop patch 5 (it's
-> > only needed for the combination of old GCC and new Binutils).=C2=A0 The=
-n
-> > squash 4 and 7.=C2=A0 8 should still be standalone IMO.
+LoongArch uses general purpose register R2 as thread pointer(TP)
+register, signal hanlder also uses TP register to access variables
+in TLS area, such as errno and variable in TLS.
 
-> Whether we can drop old toolchains depends on Arnd. :)
+If GPR R2 is modified with wrong value, signal handler still uses
+the wrong TP register, so signal hanlder is insafe to access TLS
+variable.
 
-I'd like to prepare V6 after we can make a final decision.
+This patch adds one arch specific syscall set_thread_area, and
+restore previoud TP value before signal handler, so that signal
+handler is safe to access TLS variable.
 
-> But even if we should support old toolchains, I think we only need to
-> consider new binutils + new gcc and old binutils + old gcc, I don't
-> think new binutils + old gcc and old binutils + new gcc can exist in
-> the real world.
+Signed-off-by: Mao Bibo <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/unistd.h      |  1 +
+ arch/loongarch/include/uapi/asm/unistd.h |  2 ++
+ arch/loongarch/kernel/process.c          |  5 ++++-
+ arch/loongarch/kernel/signal.c           |  2 ++
+ arch/loongarch/kernel/syscall.c          | 10 ++++++++++
+ 5 files changed, 19 insertions(+), 1 deletion(-)
 
-Generally, how do we report an unsupported configuration in kernel
-building system?  With a $(error, "message") in the Makefile, or in some
-header with a #error?  I don't want to leave an unsupported
-configuration silently generating modules which can't be loaded by the
-kernel.
+diff --git a/arch/loongarch/include/asm/unistd.h b/arch/loongarch/include/asm/unistd.h
+index cfddb0116a8c..1581624f0115 100644
+--- a/arch/loongarch/include/asm/unistd.h
++++ b/arch/loongarch/include/asm/unistd.h
+@@ -9,3 +9,4 @@
+ #include <uapi/asm/unistd.h>
+ 
+ #define NR_syscalls (__NR_syscalls)
++__SYSCALL(__NR_set_thread_area, sys_set_thread_area)
+diff --git a/arch/loongarch/include/uapi/asm/unistd.h b/arch/loongarch/include/uapi/asm/unistd.h
+index fcb668984f03..b47f26b5307b 100644
+--- a/arch/loongarch/include/uapi/asm/unistd.h
++++ b/arch/loongarch/include/uapi/asm/unistd.h
+@@ -3,3 +3,5 @@
+ #define __ARCH_WANT_SYS_CLONE3
+ 
+ #include <asm-generic/unistd.h>
++
++#define __NR_set_thread_area	(__NR_arch_specific_syscall + 0)
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index 660492f064e7..9f512c91320e 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -88,6 +88,7 @@ void start_thread(struct pt_regs *regs, unsigned long pc, unsigned long sp)
+ 	clear_used_math();
+ 	regs->csr_era = pc;
+ 	regs->regs[3] = sp;
++	task_thread_info(current)->tp_value = 0;
+ }
+ 
+ void exit_thread(struct task_struct *tsk)
+@@ -176,8 +177,10 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 	clear_tsk_thread_flag(p, TIF_LSX_CTX_LIVE);
+ 	clear_tsk_thread_flag(p, TIF_LASX_CTX_LIVE);
+ 
+-	if (clone_flags & CLONE_SETTLS)
++	if (clone_flags & CLONE_SETTLS) {
+ 		childregs->regs[2] = tls;
++		task_thread_info(p)->tp_value = tls;
++	}
+ 
+ 	return 0;
+ }
+diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
+index 7f4889df4a17..2eca555fd4a6 100644
+--- a/arch/loongarch/kernel/signal.c
++++ b/arch/loongarch/kernel/signal.c
+@@ -487,6 +487,8 @@ static int setup_rt_frame(void *sig_return, struct ksignal *ksig,
+ 	regs->regs[3] = (unsigned long) frame;
+ 	regs->regs[1] = (unsigned long) sig_return;
+ 	regs->csr_era = (unsigned long) ksig->ka.sa.sa_handler;
++	if (task_thread_info(current)->tp_value)
++		regs->regs[2] = task_thread_info(current)->tp_value;
+ 
+ 	DEBUGP("SIG deliver (%s:%d): sp=0x%p pc=0x%lx ra=0x%lx\n",
+ 	       current->comm, current->pid,
+diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/syscall.c
+index 3fc4211db989..b62560d8fe24 100644
+--- a/arch/loongarch/kernel/syscall.c
++++ b/arch/loongarch/kernel/syscall.c
+@@ -29,6 +29,16 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len, unsigned long,
+ 	return ksys_mmap_pgoff(addr, len, prot, flags, fd, offset >> PAGE_SHIFT);
+ }
+ 
++SYSCALL_DEFINE1(set_thread_area, unsigned long, addr)
++{
++	struct thread_info *ti   = task_thread_info(current);
++	struct pt_regs     *regs = current_pt_regs();
++
++	regs->regs[2] = addr;
++	ti->tp_value  = addr;
++	return 0;
++}
++
+ void *sys_call_table[__NR_syscalls] = {
+ 	[0 ... __NR_syscalls - 1] = sys_ni_syscall,
+ #include <asm/unistd.h>
+-- 
+2.27.0
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
