@@ -1,83 +1,157 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1382953A4
-	for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 15:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1661785363;
-	bh=P0So/d1QHvZh/G4+ijTFNIkaXwtW+51RX8yFY1F9e6Y=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SNXxaCpVH8BLpiKMYNfVMPX5HvyElAUAwMtcmZu+HwbE9GvPxhY4zfKNj8bUsS1mp
-	 wcaJ9lbFKot2YOykwAPcPcp9EsvTkJnNAXPmsp5bmPbjNNfFohHlF4ZpHESvi2IH8e
-	 B6ZK9xOP0qQ5U4biZl12cXlO6f9kHChQInPCLmww=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 34143667AA;
-	Mon, 29 Aug 2022 11:02:42 -0400 (EDT)
-Message-ID: <5f9d3aa5fad957dae2f14e483b3b79dbcf9e794d.camel@xry111.site>
-Subject: Re: [PATCH v6 3/6] LoongArch: Use model("extreme") attribute for
- per-CPU variables in module if CONFIG_AS_HAS_EXPLICIT_RELOCS
-From: Xi Ruoyao <xry111@xry111.site>
-To: loongarch@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, Huacai
- Chen <chenhuacai@kernel.org>, Youling Tang <tangyouling@loongson.cn>,
- Jinyang He <hejinyang@loongson.cn>
-Date: Mon, 29 Aug 2022 23:02:40 +0800
-In-Reply-To: <20220829133146.15236-4-xry111@xry111.site>
-References: <20220829133146.15236-1-xry111@xry111.site>
-	 <20220829133146.15236-4-xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.45.2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8D253A4
+	for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 15:04:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6689AC43140
+	for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 15:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1661785446;
+	bh=8eJuDB16eU5LU6ppquAMaWG5LuqKScHnNNnD8rj7QnQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=d6USsR6Gh8cg6sOFS0+b4JJfar1vV4T70orRmGfQTmfJe/gNOf4zByaRKAHSjUqMu
+	 B8F4PukRkklZcbNa2AK/Kx2Un2HrUatGZa7Bp6c8ohqH3dtqik+XNVgXcnomKCkK77
+	 2x9S/1fvJbryGS8x2CPnvsMdvZ3tIenCtnlbHuOh1t4UiWpgOd5zJE6CeNmR+Ee/59
+	 g80C+NizjpBhpPRHixvkyBx4lzwNVpNzWu3Kyqs46c1liGQGu6/CxrLd3qs+gKrgrZ
+	 EO3aTV1FJCAUKmazF7BCL7SuWA27wng3KUdFWCPsLxCAadGc1CMtOOa7KVbHryUgIh
+	 YOdq3oO5numbA==
+Received: by mail-ua1-f43.google.com with SMTP id a18so3006746uat.11
+        for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 08:04:06 -0700 (PDT)
+X-Gm-Message-State: ACgBeo3B805tDcgykpP8VV9aS3hu1S96dWfavH2DnFri8v8DeN/hOTn1
+	v3SkavswZgmtxsHAoRYCbx8ztX1Lul6RrtzBzGw=
+X-Google-Smtp-Source: AA6agR5/eepFMoWVz2guDngMAWQmbG0so8ekrWz0Sbei/pkHEOeCwYpumRhlxi/cGs6K4I5qoW+oCD1FyTydBk7AuC8=
+X-Received: by 2002:a05:6130:c13:b0:39f:58bb:d51c with SMTP id
+ cg19-20020a0561300c1300b0039f58bbd51cmr3700437uab.104.1661785445212; Mon, 29
+ Aug 2022 08:04:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20220829133146.15236-1-xry111@xry111.site> <20220829133146.15236-3-xry111@xry111.site>
+In-Reply-To: <20220829133146.15236-3-xry111@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 29 Aug 2022 23:03:51 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7V-gK+RQYKdhiukQ9BT0Yw5dDy9KEAqb5hWSjMfquQJQ@mail.gmail.com>
+Message-ID: <CAAhV-H7V-gK+RQYKdhiukQ9BT0Yw5dDy9KEAqb5hWSjMfquQJQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/6] LoongArch: Adjust CFLAGS for CONFIG_AS_HAS_EXPLICIT_RELOCS
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>, 
+	Jinyang He <hejinyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 2022-08-29 at 21:31 +0800, Xi Ruoyao wrote:
+Hi, Ruoyao,
+
+On Mon, Aug 29, 2022 at 9:35 PM Xi Ruoyao <xry111@xry111.site> wrote:
+>
+> If explicit relocation hints is used by the toolchain, -Wa,-mla-*
+> options will be useless for C code.  Only use them for
+> !CONFIG_AS_HAS_EXPLICIT_RELOCS.
+>
+> Replace "la" with "la.pcrel" in head.S to keep the semantic consistent
+> with new and old toolchains for the low level startup code.
+>
+> Remove -fplt because it's the default for all known LoongArch C
+> compilers.
+>
+> The behavior with different assemblers and compilers are summarized in
+> the following table:
+>
+> AS has            CC has
+> explicit reloc    explicit reloc    Behavior
+> ==============================================================
+> No                No                Use la.* macros.
+>                                     No change from Linux 6.0.
+> --------------------------------------------------------------
+> No                Yes               Disable explicit reloc.
+>                                     No change from Linux 6.0.
+> --------------------------------------------------------------
+> Yes               No                Not supported.
+> --------------------------------------------------------------
+> Yes               Yes               Use explicit relocs.
+>                                     No -Wa,-mla* options.
+> ==============================================================
+>
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+>  arch/loongarch/Makefile      | 19 ++++++++++++++++++-
+>  arch/loongarch/kernel/head.S | 10 +++++-----
+>  2 files changed, 23 insertions(+), 6 deletions(-)
+>
 > diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index 1563747c4fa8..593818a61741 100644
+> index 7051a95f7f31..1563747c4fa8 100644
 > --- a/arch/loongarch/Makefile
 > +++ b/arch/loongarch/Makefile
-> @@ -53,6 +53,9 @@ LDFLAGS_vmlinux=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0+=3D -G0 -static -n -nostdlib
-> =C2=A0# combination of a "new" assembler and "old" compiler is not suppor=
-ted.=C2=A0 Either
-> =C2=A0# upgrade the compiler or downgrade the assembler.
-> =C2=A0ifdef CONFIG_AS_HAS_EXPLICIT_RELOCS
-> +ifeq ($(shell echo '__has_attribute(model)' | $(CC) -E -P - 2> /dev/null=
-), 0)
-> +$(error "C compiler must support model attribute if using explicit reloc=
-s")
+> @@ -40,10 +40,27 @@ endif
+>
+>  cflags-y                       += -G0 -pipe -msoft-float
+>  LDFLAGS_vmlinux                        += -G0 -static -n -nostdlib
+> +
+> +# When the assembler supports explicit relocation hint, we must use it.
+> +# GCC may have -mexplicit-relocs off by default if it was built with an old
+> +# assembler, so we force it via an option.
+> +#
+> +# When the assembler does not supports explicit relocation hint, we can't use
+> +# it.  Disable it if the compiler supports it.
+> +#
+> +# If you've seen "unknown reloc hint" message building the kernel and you are
+> +# now wondering why "-mexplicit-relocs" is not wrapped with cc-option: the
+> +# combination of a "new" assembler and "old" compiler is not supported.  Either
+> +# upgrade the compiler or downgrade the assembler.
+> +ifdef CONFIG_AS_HAS_EXPLICIT_RELOCS
+> +cflags-y                       += -mexplicit-relocs
+> +else
+> +cflags-y                       += $(call cc-option,-mno-explicit-relocs)
+>  KBUILD_AFLAGS_KERNEL           += -Wa,-mla-global-with-pcrel
+>  KBUILD_CFLAGS_KERNEL           += -Wa,-mla-global-with-pcrel
+>  KBUILD_AFLAGS_MODULE           += -Wa,-mla-global-with-abs
+> -KBUILD_CFLAGS_MODULE           += -fplt -Wa,-mla-global-with-abs,-mla-local-with-abs
+> +KBUILD_CFLAGS_MODULE           += -Wa,-mla-global-with-abs,-mla-local-with-abs
+Though -fplt is the default, keep it can make code clearer.
+
+Huacai
 > +endif
-
-Self review:
-
-I'm wondering if we really need this thing...  There won't be a GCC
-version released with explicit relocation but without model attribute
-(GCC 13 starts to support them both).
-
-But without a check, if someone uses an early GCC 13 snapshot and
-ignores the -Wattributes warning, the system will suddenly blow up
-loading a module with per-CPU variable defined.
-
-Maybe "-Werror=3Dattributes" is better, but is it OK to add a -Werror=3D
-option for entire Linux tree?
-
-> =C2=A0cflags-y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0+=3D -mexplicit-relocs
-> =C2=A0else
-> =C2=A0cflags-y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0+=3D $(call cc-option,-mno-explicit-relocs)
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+>
+>  cflags-y += -ffreestanding
+>  cflags-y += $(call cc-option, -mno-check-zero-division)
+> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> index 01bac62a6442..eb3f641d5915 100644
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -55,17 +55,17 @@ SYM_CODE_START(kernel_entry)                        # kernel entry point
+>         li.w            t0, 0x00                # FPE=0, SXE=0, ASXE=0, BTE=0
+>         csrwr           t0, LOONGARCH_CSR_EUEN
+>
+> -       la              t0, __bss_start         # clear .bss
+> +       la.pcrel        t0, __bss_start         # clear .bss
+>         st.d            zero, t0, 0
+> -       la              t1, __bss_stop - LONGSIZE
+> +       la.pcrel        t1, __bss_stop - LONGSIZE
+>  1:
+>         addi.d          t0, t0, LONGSIZE
+>         st.d            zero, t0, 0
+>         bne             t0, t1, 1b
+>
+> -       la              t0, fw_arg0
+> +       la.pcrel        t0, fw_arg0
+>         st.d            a0, t0, 0               # firmware arguments
+> -       la              t0, fw_arg1
+> +       la.pcrel        t0, fw_arg1
+>         st.d            a1, t0, 0
+>
+>         /* KSave3 used for percpu base, initialized as 0 */
+> @@ -73,7 +73,7 @@ SYM_CODE_START(kernel_entry)                  # kernel entry point
+>         /* GPR21 used for percpu base (runtime), initialized as 0 */
+>         move            u0, zero
+>
+> -       la              tp, init_thread_union
+> +       la.pcrel        tp, init_thread_union
+>         /* Set the SP after an empty pt_regs.  */
+>         PTR_LI          sp, (_THREAD_SIZE - 32 - PT_SIZE)
+>         PTR_ADD         sp, sp, tp
+> --
+> 2.37.0
+>
+>
