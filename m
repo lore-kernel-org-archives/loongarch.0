@@ -1,142 +1,61 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4199C211A
-	for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 08:42:58 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.2.9.158])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvmsQfAxjg8cLAA--.40214S2;
-	Mon, 29 Aug 2022 16:42:56 +0800 (CST)
-From: Mao Bibo <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	loongarch@lists.linux.dev,
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AE582C9E
+	for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 09:55:35 +0000 (UTC)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxT+ATjQxjh88LAA--.52227S2;
+	Mon, 29 Aug 2022 17:55:32 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Add safer signal handler for TLS access
-Date: Mon, 29 Aug 2022 16:42:56 +0800
-Message-Id: <20220829084256.3453391-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.27.0
+Subject: [PATCH] LoongArch: Fix warning: #warning syscall fstat not implemented
+Date: Mon, 29 Aug 2022 17:55:31 +0800
+Message-Id: <1661766931-7277-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8CxT+ATjQxjh88LAA--.52227S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xr4rAw1xWw4xCF1fAF1rXrb_yoW3Wwb_Aa
+	47Kw47Ww1kJr4xA39IvF93Jw10ga18WFn09r1fZr47uan8KwsxGw48X3srZF1qkr4vvr4F
+	vay8tF1Y9w15tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb7AYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+	8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+	cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+	8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r4fMxAIw28I
+	cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI
+	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+	IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
+	aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0cTm3UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxvmsQfAxjg8cLAA--.40214S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCryxKFW5Xw1fZryfGr4xCrg_yoWrXrWDpF
-	9rAw1DJrWUWr1kZryqva4DurykJ3s7Cw429ayaka4fAa1Iq3WrXr1vqFyDZF1Yya1kGFW0
-	qasYg3sxta1jqaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkjb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4
-	vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK82IY
-	c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-	6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07beJ5wUUUUU=
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 
-LoongArch uses general purpose register R2 as thread pointer(TP)
-register, signal hanlder also uses TP register to access variables
-in TLS area, such as errno and variable in TLS.
+Define __ARCH_WANT_NEW_STAT to fix the following build warning:
 
-If GPR R2 is modified with wrong value, signal handler still uses
-the wrong TP register, so signal hanlder is insafe to access TLS
-variable.
+  CALL    scripts/checksyscalls.sh
+<stdin>:569:2: warning: #warning syscall fstat not implemented [-Wcpp]
 
-This patch adds one arch specific syscall set_thread_area, and
-restore previoud TP value before signal handler, so that signal
-handler is safe to access TLS variable.
-
-Signed-off-by: Mao Bibo <maobibo@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/include/asm/unistd.h      |  1 +
- arch/loongarch/include/uapi/asm/unistd.h |  2 ++
- arch/loongarch/kernel/process.c          |  5 ++++-
- arch/loongarch/kernel/signal.c           |  2 ++
- arch/loongarch/kernel/syscall.c          | 10 ++++++++++
- 5 files changed, 19 insertions(+), 1 deletion(-)
+ arch/loongarch/include/uapi/asm/unistd.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/loongarch/include/asm/unistd.h b/arch/loongarch/include/asm/unistd.h
-index cfddb0116a8c..1581624f0115 100644
---- a/arch/loongarch/include/asm/unistd.h
-+++ b/arch/loongarch/include/asm/unistd.h
-@@ -9,3 +9,4 @@
- #include <uapi/asm/unistd.h>
- 
- #define NR_syscalls (__NR_syscalls)
-+__SYSCALL(__NR_set_thread_area, sys_set_thread_area)
 diff --git a/arch/loongarch/include/uapi/asm/unistd.h b/arch/loongarch/include/uapi/asm/unistd.h
-index fcb668984f03..b47f26b5307b 100644
+index fcb6689..b344b1f 100644
 --- a/arch/loongarch/include/uapi/asm/unistd.h
 +++ b/arch/loongarch/include/uapi/asm/unistd.h
-@@ -3,3 +3,5 @@
+@@ -1,4 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#define __ARCH_WANT_NEW_STAT
+ #define __ARCH_WANT_SYS_CLONE
  #define __ARCH_WANT_SYS_CLONE3
  
- #include <asm-generic/unistd.h>
-+
-+#define __NR_set_thread_area	(__NR_arch_specific_syscall + 0)
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index 660492f064e7..9f512c91320e 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -88,6 +88,7 @@ void start_thread(struct pt_regs *regs, unsigned long pc, unsigned long sp)
- 	clear_used_math();
- 	regs->csr_era = pc;
- 	regs->regs[3] = sp;
-+	task_thread_info(current)->tp_value = 0;
- }
- 
- void exit_thread(struct task_struct *tsk)
-@@ -176,8 +177,10 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
- 	clear_tsk_thread_flag(p, TIF_LSX_CTX_LIVE);
- 	clear_tsk_thread_flag(p, TIF_LASX_CTX_LIVE);
- 
--	if (clone_flags & CLONE_SETTLS)
-+	if (clone_flags & CLONE_SETTLS) {
- 		childregs->regs[2] = tls;
-+		task_thread_info(p)->tp_value = tls;
-+	}
- 
- 	return 0;
- }
-diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
-index 7f4889df4a17..2eca555fd4a6 100644
---- a/arch/loongarch/kernel/signal.c
-+++ b/arch/loongarch/kernel/signal.c
-@@ -487,6 +487,8 @@ static int setup_rt_frame(void *sig_return, struct ksignal *ksig,
- 	regs->regs[3] = (unsigned long) frame;
- 	regs->regs[1] = (unsigned long) sig_return;
- 	regs->csr_era = (unsigned long) ksig->ka.sa.sa_handler;
-+	if (task_thread_info(current)->tp_value)
-+		regs->regs[2] = task_thread_info(current)->tp_value;
- 
- 	DEBUGP("SIG deliver (%s:%d): sp=0x%p pc=0x%lx ra=0x%lx\n",
- 	       current->comm, current->pid,
-diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/syscall.c
-index 3fc4211db989..b62560d8fe24 100644
---- a/arch/loongarch/kernel/syscall.c
-+++ b/arch/loongarch/kernel/syscall.c
-@@ -29,6 +29,16 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len, unsigned long,
- 	return ksys_mmap_pgoff(addr, len, prot, flags, fd, offset >> PAGE_SHIFT);
- }
- 
-+SYSCALL_DEFINE1(set_thread_area, unsigned long, addr)
-+{
-+	struct thread_info *ti   = task_thread_info(current);
-+	struct pt_regs     *regs = current_pt_regs();
-+
-+	regs->regs[2] = addr;
-+	ti->tp_value  = addr;
-+	return 0;
-+}
-+
- void *sys_call_table[__NR_syscalls] = {
- 	[0 ... __NR_syscalls - 1] = sys_ni_syscall,
- #include <asm/unistd.h>
 -- 
-2.27.0
+2.1.0
 
