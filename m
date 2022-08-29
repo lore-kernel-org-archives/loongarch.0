@@ -1,104 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FF220F8
-	for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 04:33:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95F63C433D6
-	for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 04:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1661747594;
-	bh=FZIj8P9sqaU3saI0TjpqLdjlB7rVqC9somVTZ/+UVes=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ARXhfbG9u/BL4VG+54Vxe8uP78eIBgkUZKo0rD1sP/uNSzbSWYQls7foWLX/Da6vA
-	 bf0JAVknt40n5eUs25mih49FgJjWM7rovKNhVWr7yaM7o4UcKJVAptL9rOSs1blWpc
-	 9l9QidyIJ2hQFKrLXuhBx7Sdl28rMP24zq3BsKEWTbmObsnclZ6wCHdoppTZnb5wZb
-	 KWmXeCNUYDCr+12AVv4neIQgvPS8AvnC2cfWyQBGoMfoA0eHmqHyro06ibPlj66nen
-	 ktosurthPE1fIjX6/+4+OI2wBQABOyTSQQzpy638p2/44IkUn/nVC81Jcw6xrBSQCV
-	 8hU/tiTrEjdGg==
-Received: by mail-ua1-f53.google.com with SMTP id d14so2671177ual.9
-        for <loongarch@lists.linux.dev>; Sun, 28 Aug 2022 21:33:14 -0700 (PDT)
-X-Gm-Message-State: ACgBeo07zKOPSu/zNF0MpinIjuwdCGrFLZ3vUO7Bo0zRldylVfQO2Irq
-	Kw2lDgFcxwEaxC/jQt3CXflcy/C7dstuunjkpcY=
-X-Google-Smtp-Source: AA6agR5nj5071CokDeGSMkEclFusZJ8UcJyUoNE//3Dz+nMZr2bpvAKxv6yDdm/ja+FraUobdgejdQir2brItPsSt68=
-X-Received: by 2002:ab0:2095:0:b0:39f:881e:51b6 with SMTP id
- r21-20020ab02095000000b0039f881e51b6mr1195184uak.23.1661747593553; Sun, 28
- Aug 2022 21:33:13 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6E54181
+	for <loongarch@lists.linux.dev>; Mon, 29 Aug 2022 04:37:18 +0000 (UTC)
+Received: from bogon.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvmtvQgxjO6YLAA--.39821S2;
+	Mon, 29 Aug 2022 12:37:04 +0800 (CST)
+From: Youling Tang <tangyouling@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Baoquan He <bhe@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	kexec@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] LoongArch: Add kexec/kdump support
+Date: Mon, 29 Aug 2022 12:37:00 +0800
+Message-Id: <1661747823-23745-1-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8DxvmtvQgxjO6YLAA--.39821S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw1xGFy7tF1rWw4ruFy8Xwb_yoW8uw1kpF
+	4Uurn8Kr48GFn3Jwnxtw1DuryrJ3s7Gw1ag3ZIy34rZFW2qF1UZrnYqF9rXF15tw4fKrW0
+	qFnYg3y2g3WUJa7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvqb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY
+	04v7MxkIecxEwVAFwVW8XwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+	wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+	v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
+	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
+	ZFpf9x07br4EiUUUUU=
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20220827175436.156464-1-xry111@xry111.site> <CAAhV-H4+=CqeRUUt+XPZ2Nf=1GRgHtTFyMuVu-y6QdgQgD4mog@mail.gmail.com>
- <b681993ca92d5243a73e23303ff9386ad03cf05a.camel@xry111.site>
-In-Reply-To: <b681993ca92d5243a73e23303ff9386ad03cf05a.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 29 Aug 2022 12:33:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5tB9nvD8Uufn5SQ1s0hzob4TuxRTaSri-cxHVqtRH6uw@mail.gmail.com>
-Message-ID: <CAAhV-H5tB9nvD8Uufn5SQ1s0hzob4TuxRTaSri-cxHVqtRH6uw@mail.gmail.com>
-Subject: Re: [PATCH 0/8] LoongArch: Support toolchain with new relocation types
-To: Xi Ruoyao <xry111@xry111.site>, Arnd Bergmann <arnd@arndb.de>
-Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>, 
-	Jinyang He <hejinyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
 
-Hi, Ruoyao,
+This patch series to support kexec/kdump (only 64bit).
 
-On Mon, Aug 29, 2022 at 12:17 AM Xi Ruoyao <xry111@xry111.site> wrote:
->
-> On Sun, 2022-08-28 at 22:15 +0800, Huacai Chen wrote:
-> > 1, You can still call it v5, even if it has changed a lot;
->
-> Ok, so should I call the next version v2 or v6?
-V6 is reasonable to me.
+Kexec is a system call that enables you to load and boot into another kernel
+from the currently running kernel. This is useful for kernel developers or
+other people who need to reboot very quickly without waiting for the whole
+BIOS boot process to finish. 
 
->
-> Sorry for introducing such a mess :(.
->
-> > 2, In my opinion, patch 4,5,7,8 can be combined, but I don't insist if
-> > you have a good reason to separate.
->
-> If we'll drop support for old GCC/Binutils, we can drop patch 5 (it's
-> only needed for the combination of old GCC and new Binutils).  Then
-> squash 4 and 7.  8 should still be standalone IMO.
-Whether we can drop old toolchains depends on Arnd. :)
-But even if we should support old toolchains, I think we only need to
-consider new binutils + new gcc and old binutils + old gcc, I don't
-think new binutils + old gcc and old binutils + new gcc can exist in
-the real world.
+Kdump uses kexec to quickly boot to a dump-capture kernel whenever a
+dump of the system kernel's memory needs to be taken (for example, when
+the system panics). The system kernel's memory image is preserved across
+the reboot and is accessible to the dump-capture kernel.
 
->
-> > 3, If possible, I still prefer to remove old relocation types support,
-> > in order to make life easier, especially for objtool that is queued
-> > for upstream.
->
-> How about this?  I'm not sure if it's proper to invoke "error" in
-> Makefile.
->
-> ifneq ($(shell $(CC) $(srctree)/arch/loongarch/scripts/toolchain-check.c &> /dev/null -o /dev/null && echo "ok"), ok)
->   ifdef CONFIG_MODULES
->     $(error "toolchain is too old for LoongArch modular kernel")
->   endif
-> endif
->
-> toolchain-check.c:
->
-> #if !__has_attribute(model)
-> #error no model attribute
-> #endif
->
-> int main()
-> {
->         __asm__("x:pcalau12i $t0,%pc_hi20(x)");
-> }
-Compared to toolchain-check.c, I prefer to change Kconfig, so please
-keep the old way. But since new binutils + old gcc and old binutils +
-new gcc can hardly exist, can we only check the gcc features
-(explicit-relocs and has_attribute)?
+For details, see Documentation/admin-guide/kdump/kdump.rst.
+
+User tools kexec-tools see link [1].
+
+TODO:
+Currently kdump does not support the same binary image, the production kernel
+and the capture kernel will be generated with different configurations. I will
+support kernel relocation support in the near future. Then will go to implement
+the same binary support based on kernel relocation support.
+
+[1] Link: https://github.com/tangyouling/kexec-tools
 
 
-Huacai
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
+Youling Tang (3):
+  LoongArch: Add kexec support
+  LoongArch: Add kdump support
+  LoongArch: Enable CONFIG_KEXEC
+
+ arch/loongarch/Kconfig                     |  33 ++++
+ arch/loongarch/Makefile                    |   4 +
+ arch/loongarch/configs/loongson3_defconfig |   1 +
+ arch/loongarch/include/asm/kexec.h         |  58 +++++++
+ arch/loongarch/kernel/Makefile             |   3 +
+ arch/loongarch/kernel/crash.c              | 100 ++++++++++++
+ arch/loongarch/kernel/crash_dump.c         |  19 +++
+ arch/loongarch/kernel/head.S               |   7 +-
+ arch/loongarch/kernel/machine_kexec.c      | 176 +++++++++++++++++++++
+ arch/loongarch/kernel/mem.c                |   6 +
+ arch/loongarch/kernel/relocate_kernel.S    | 131 +++++++++++++++
+ arch/loongarch/kernel/setup.c              |  49 ++++++
+ arch/loongarch/kernel/traps.c              |   4 +
+ 13 files changed, 590 insertions(+), 1 deletion(-)
+ create mode 100644 arch/loongarch/include/asm/kexec.h
+ create mode 100644 arch/loongarch/kernel/crash.c
+ create mode 100644 arch/loongarch/kernel/crash_dump.c
+ create mode 100644 arch/loongarch/kernel/machine_kexec.c
+ create mode 100644 arch/loongarch/kernel/relocate_kernel.S
+
+-- 
+2.36.0
+
