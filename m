@@ -1,81 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1289D374
-	for <loongarch@lists.linux.dev>; Tue, 30 Aug 2022 14:46:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB3E3C43143
-	for <loongarch@lists.linux.dev>; Tue, 30 Aug 2022 14:46:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1661870809;
-	bh=N2Kd4RIu5KJsSz3YgD3aAOyOltYesRLjncK1uecGVQk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FWel4NULvqsDD1ERRvcl1+CjG4s+kW7CJB1SgryQwZ4PA9ftQ7xFZQpwU/g98qbDt
-	 ZiQ0h+ZtdR9P/PxPzUWNIxo3OuYy2A904RCbMqKM1AIGziU0QtNrp0WtGgsUoDmw7f
-	 s46xUafL/x9robtyPBHbAUUmJtLSYIwmfeppadtZ1iXWpGGX0mjbUqRWxeMxGj/CmK
-	 0O2TiE4NtexQNw8RJeC9vM0uD9dPyqm0DpPI7op4xpZ+2kfNYqiMOQZ2usz7tygcWv
-	 nP24B39Hu/EJ48k3XzR5uTHpAQyEYKBWrhJi6Z28z2oaI68Eibh2fB4aT2VrvnxDcO
-	 MfvOJqnA4hnNQ==
-Received: by mail-vk1-f182.google.com with SMTP id b63so1830371vkh.5
-        for <loongarch@lists.linux.dev>; Tue, 30 Aug 2022 07:46:49 -0700 (PDT)
-X-Gm-Message-State: ACgBeo0/waeBfBpwaEGEfA6QRjFXAAaiUxOBYYjq22d5WccOGBvXDGj0
-	Sj4WUGDBGwMq4QKV1QTLjzVjO5DgaAkuc1U2hM0=
-X-Google-Smtp-Source: AA6agR6oM7G1MLmcYASfcAuFn7liigOP7I4nrX6IQ9x9bzVgCGvWfPevTXzq95IHagahQP0fQ5nI311cq0tIuYwSQZY=
-X-Received: by 2002:a1f:b248:0:b0:377:aa0c:941 with SMTP id
- b69-20020a1fb248000000b00377aa0c0941mr5230063vkf.37.1661870808667; Tue, 30
- Aug 2022 07:46:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A899374
+	for <loongarch@lists.linux.dev>; Tue, 30 Aug 2022 14:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1661870929;
+	bh=plnJi1158so8FnpKmu07i/6iZtvFF/Jkr8UGSu1UjGY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Hh34hpJ4f1vhjFKKCRmY56KAUnElHyO0VPczWr+lEdBGu26kZhEpmDEqonv5jfufB
+	 Lfy1mYsXzgINAN2bZeHXVUfvlGNPeffzg9KpzjH1IuY3sB5HJ4XWrxcA5jmlhinVVN
+	 qmkb/yIWPoNpkq7ciC1YZ35qn5WnzrixAKL7ENrM=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id EF6D866795;
+	Tue, 30 Aug 2022 10:48:47 -0400 (EDT)
+Message-ID: <d5eaffd85b38fe491a4df8cd560fa0cfa3d00d87.camel@xry111.site>
+Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation
+ types
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, WANG
+ Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>, Jinyang
+ He <hejinyang@loongson.cn>
+Date: Tue, 30 Aug 2022 22:48:46 +0800
+In-Reply-To: <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
+References: <20220830104806.128365-1-xry111@xry111.site>
+	 <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.45.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1661857809-10828-1-git-send-email-yangtiezhu@loongson.cn> <1661857809-10828-5-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1661857809-10828-5-git-send-email-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 30 Aug 2022 22:46:00 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Dq+Z_kS0LcM=QGF1h=k2i0hR7fYZdXgU2kXAfm1VPLw@mail.gmail.com>
-Message-ID: <CAAhV-H6Dq+Z_kS0LcM=QGF1h=k2i0hR7fYZdXgU2kXAfm1VPLw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 4/4] LoongArch: Enable BPF_JIT and TEST_BPF in
- default config
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
 
-Hi, Tiezhu,
+On Tue, 2022-08-30 at 21:05 +0800, Huacai Chen wrote:
+> Hi, Ruoyao,
+>=20
+> Thank you for your contribution, this whole series will be queued for
+> 6.1. Though lkp reported some warnings, I will fix them myself.
 
-On Tue, Aug 30, 2022 at 7:10 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> For now, BPF JIT for LoongArch is supported, update loongson3_defconfig to
-> enable BPF_JIT to allow the kernel to generate native code when a program
-> is loaded into the kernel, and also enable TEST_BPF to test BPF JIT.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/configs/loongson3_defconfig | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-> index 3712552..93dc072 100644
-> --- a/arch/loongarch/configs/loongson3_defconfig
-> +++ b/arch/loongarch/configs/loongson3_defconfig
-> @@ -4,6 +4,7 @@ CONFIG_POSIX_MQUEUE=y
->  CONFIG_NO_HZ=y
->  CONFIG_HIGH_RES_TIMERS=y
->  CONFIG_BPF_SYSCALL=y
-> +CONFIG_BPF_JIT=y
->  CONFIG_PREEMPT=y
->  CONFIG_BSD_PROCESS_ACCT=y
->  CONFIG_BSD_PROCESS_ACCT_V3=y
-> @@ -801,3 +802,4 @@ CONFIG_MAGIC_SYSRQ=y
->  CONFIG_SCHEDSTATS=y
->  # CONFIG_DEBUG_PREEMPT is not set
->  # CONFIG_FTRACE is not set
-> +CONFIG_TEST_BPF=m
-I don't want the test module be built by default, but I don't insist
-if you have a strong requirement.
-
-Huacai
-> --
-> 2.1.0
->
+Hmm, we are using -Wimplicit-fallthrough=3D5 so "fallthrough;" (which
+expands into some magic) should be used instead of "/* fallthrough */".
+=C2=A0
+For -Woverride-init I'm not sure how to fix it properly.
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
