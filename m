@@ -1,87 +1,232 @@
-Received: from new1-smtp.messagingengine.com (new1-smtp.messagingengine.com [66.111.4.221])
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32832119
-	for <loongarch@lists.linux.dev>; Tue, 30 Aug 2022 11:37:27 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailnew.nyi.internal (Postfix) with ESMTP id E17505801D8;
-	Tue, 30 Aug 2022 07:37:26 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Tue, 30 Aug 2022 07:37:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm1; t=1661859446; x=1661860046; bh=Oupn4eihBs
-	i0MiLn85P4dhLgR7rqSv7zUgSdpKnmCGk=; b=k6PVLwqikiKnbm9KWzOSLRNMuO
-	ipubifHhHOySC975owsKGRAvLAJ8UIDt8zBiP0ipjOePPcitcsWiUXqFwe697nTV
-	/ybV4l7AtnADfW4mDMt4vPZuM/w6V5poMXqFYQgPWWQ6YiVChVKLtAbzNntCwKP0
-	4rsipZ4rRLX6HVYbFGl7lUDkmTItHrAf6MiUrPy/bhDYvq76vo4DEllCHyiBR+a4
-	kqSIK8pfN9y7aSZWDa4Jpspq9cFkSHBS9uGLXxBgCyUINMnApo1E0qvepfKwR+9W
-	8/TObG4yD0UHKuwvKQtQ7yemnuRP1uJG4KiqEx2vLgJcR890l7xEJry9lrGg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	i56a14606.fm1; t=1661859446; x=1661860046; bh=Oupn4eihBsi0MiLn85
-	P4dhLgR7rqSv7zUgSdpKnmCGk=; b=LF4CCGJe/E9AAzS3vhlzL3gPRaFjg0od9b
-	QCu2/es7f4b0wxDSGar9ChqSa1o6s6j+5hzvt53D+ejZO2NxcWI3fk4sUzs6d7ye
-	dM15mQMIO+4J6vqczxGrjgSH4ZFbzlqNjrMySYysqc2T2aztEp8gXjgL8tL9tpey
-	//vy05ZhUBO8+5o+/grrfaDMeo4wcF5lF5/+Rew4VVoRKVGh6po7oHKh262uiLpR
-	zILRqhRirH6cGEt8Krb6Op+/GuE003fKQyqGCjnzaDe8gCnM1/Wcw7bFBML/PEUt
-	bZ15Q7QLSJWJrFWrhtuT9zM3ByolA6e5U98F4H9SfPb45MBDQdjA==
-X-ME-Sender: <xms:dfYNY4ftYDUwhy1k6OjYWVhivaQSvhKknnX1kKYtHqsxQlJASsEAPw>
-    <xme:dfYNY6OIFiJYyLNwmwBFs7BeAGTzKEm3mDXqe60IVTVXMNE3GX4b_oTYrkoPZ8Hqm
-    5MDVijlpCDD_WRWhY8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdekfedggeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:dfYNY5j3_glt5-JETShyH_6WgIV1Rvyuxo97PliiyuSpORA7152kXA>
-    <xmx:dfYNY99nBaln0tKxJohbZPmXWQBBrFhwfoiT-96n4NgTtj7-Oto0Hg>
-    <xmx:dfYNY0tYdzKKt_ezne9MXT0Xz19sFm7jdLLVdlTaKHdDo3TWbUETwQ>
-    <xmx:dvYNY94D27W0abX1AuoxDehA_WxBzsPjs0nPZWA5bIIx5cbzhZhbtPwMONQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id ABADBB60083; Tue, 30 Aug 2022 07:37:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-841-g7899e99a45-fm-20220811.002-g7899e99a
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8393200
+	for <loongarch@lists.linux.dev>; Tue, 30 Aug 2022 13:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661864421; x=1693400421;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VJbUViv/fpcb8U0S1EuGwTwpX/YsYkFt89M/WPBl20A=;
+  b=gYwIbuWQW/uz9Xpkcc+0wlC9LaJ6tbqXT6u9GSnwVJ273bi5ibCpKrSG
+   BfEcdfWH2DpK+t6OhMQTMVrZsR+G84CO1eypbCaG2ny0FfOqCQru35y9h
+   dyxfDVIV+68Bx3RjniaxODbD6V6n2BZ3ocmObbt+b4fKuJ2yOy55yQbz0
+   c/2iq6dvhmGc2pu0hhRAIVWeihIg7eZ/TQ4bIE/B+QG/LZOmz/3dCGiFQ
+   Y4RXUp6BNLX7nta6U0oLn3LIGznM1oxW+Vn93eB30BOiLqglGUZ3b+wY4
+   skqBvG4TpcZYFqpinGdxIxe2DCKg2VSJomPoeh9lpGd66FcmgM9GHjUyk
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10454"; a="356882946"
+X-IronPort-AV: E=Sophos;i="5.93,275,1654585200"; 
+   d="scan'208";a="356882946"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2022 06:00:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,275,1654585200"; 
+   d="scan'208";a="562634564"
+Received: from lkp-server02.sh.intel.com (HELO 77b6d4e16fc5) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 30 Aug 2022 06:00:19 -0700
+Received: from kbuild by 77b6d4e16fc5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1oT0qo-0000Hb-1l;
+	Tue, 30 Aug 2022 13:00:18 +0000
+Date: Tue, 30 Aug 2022 20:59:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
+Cc: kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+	WANG Xuerui <kernel@xen0n.name>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Youling Tang <tangyouling@loongson.cn>,
+	Jinyang He <hejinyang@loongson.cn>, Xi Ruoyao <xry111@xry111.site>
+Subject: Re: [PATCH v7 4/5] LoongArch: Support PC-relative relocations in
+ modules
+Message-ID: <202208302041.ANqQ0hQd-lkp@intel.com>
+References: <20220830104806.128365-5-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <78451bb1-e4d2-457a-adf7-8fb61be0fb3e@www.fastmail.com>
-In-Reply-To: <4ff2a310-c8ba-ccf2-8d51-5181b83685c7@loongson.cn>
-References: <1661766931-7277-1-git-send-email-yangtiezhu@loongson.cn>
- <d1a52fa2-380a-421b-8c46-5150a39be484@www.fastmail.com>
- <4ff2a310-c8ba-ccf2-8d51-5181b83685c7@loongson.cn>
-Date: Tue, 30 Aug 2022 13:37:05 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>,
- "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Fix warning: #warning syscall fstat not implemented
-Content-Type: text/plain
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220830104806.128365-5-xry111@xry111.site>
 
-On Mon, Aug 29, 2022, at 4:34 PM, Tiezhu Yang wrote:
->
-> I read the commit message in the commit 82b355d161c9 ("y2038: Remove
-> newstat family from default syscall set"), I am not quite sure whether
-> we should check __ARCH_WANT_NEW_STAT first, like this:
->
->    #ifndef __ARCH_WANT_NEW_STAT
->    #define __IGNORE_fstat
->    #endif
+Hi Xi,
 
-No, the #ifdef is not needed here, the entry just means we
-no longer warn about the missing syscall because it has
-been replaced by statx and this is true regardless of
-__ARCH_WANT_NEW_STAT.
+Thank you for the patch! Perhaps something to improve:
 
-       Arnd
+[auto build test WARNING on kees/for-next/execve]
+[also build test WARNING on linus/master v6.0-rc3 next-20220830]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Xi-Ruoyao/LoongArch-Support-toolchain-with-new-relocation-types/20220830-185350
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/execve
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20220830/202208302041.ANqQ0hQd-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/529c0f36d2dad7dd4bcec3815f821547d9e9643c
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Xi-Ruoyao/LoongArch-Support-toolchain-with-new-relocation-types/20220830-185350
+        git checkout 529c0f36d2dad7dd4bcec3815f821547d9e9643c
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash arch/loongarch/kernel/
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+     366 |         [R_LARCH_NONE]                                       = apply_r_larch_none,
+         |                                                                ^~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:366:64: note: (near initialization for 'reloc_rela_handlers[0]')
+   arch/loongarch/kernel/module.c:367:64: warning: initialized field overwritten [-Woverride-init]
+     367 |         [R_LARCH_32]                                         = apply_r_larch_32,
+         |                                                                ^~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:367:64: note: (near initialization for 'reloc_rela_handlers[1]')
+   arch/loongarch/kernel/module.c:368:64: warning: initialized field overwritten [-Woverride-init]
+     368 |         [R_LARCH_64]                                         = apply_r_larch_64,
+         |                                                                ^~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:368:64: note: (near initialization for 'reloc_rela_handlers[2]')
+   arch/loongarch/kernel/module.c:369:64: warning: initialized field overwritten [-Woverride-init]
+     369 |         [R_LARCH_MARK_LA]                                    = apply_r_larch_none,
+         |                                                                ^~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:369:64: note: (near initialization for 'reloc_rela_handlers[20]')
+   arch/loongarch/kernel/module.c:370:64: warning: initialized field overwritten [-Woverride-init]
+     370 |         [R_LARCH_MARK_PCREL]                                 = apply_r_larch_none,
+         |                                                                ^~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:370:64: note: (near initialization for 'reloc_rela_handlers[21]')
+   arch/loongarch/kernel/module.c:371:64: warning: initialized field overwritten [-Woverride-init]
+     371 |         [R_LARCH_SOP_PUSH_PCREL]                             = apply_r_larch_sop_push_pcrel,
+         |                                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:371:64: note: (near initialization for 'reloc_rela_handlers[22]')
+   arch/loongarch/kernel/module.c:372:64: warning: initialized field overwritten [-Woverride-init]
+     372 |         [R_LARCH_SOP_PUSH_ABSOLUTE]                          = apply_r_larch_sop_push_absolute,
+         |                                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:372:64: note: (near initialization for 'reloc_rela_handlers[23]')
+   arch/loongarch/kernel/module.c:373:64: warning: initialized field overwritten [-Woverride-init]
+     373 |         [R_LARCH_SOP_PUSH_DUP]                               = apply_r_larch_sop_push_dup,
+         |                                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:373:64: note: (near initialization for 'reloc_rela_handlers[24]')
+   arch/loongarch/kernel/module.c:374:64: warning: initialized field overwritten [-Woverride-init]
+     374 |         [R_LARCH_SOP_PUSH_PLT_PCREL]                         = apply_r_larch_sop_push_plt_pcrel,
+         |                                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:374:64: note: (near initialization for 'reloc_rela_handlers[29]')
+   arch/loongarch/kernel/module.c:375:64: warning: initialized field overwritten [-Woverride-init]
+     375 |         [R_LARCH_SOP_SUB ... R_LARCH_SOP_IF_ELSE]            = apply_r_larch_sop,
+         |                                                                ^~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:375:64: note: (near initialization for 'reloc_rela_handlers[32]')
+   arch/loongarch/kernel/module.c:375:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:375:64: note: (near initialization for 'reloc_rela_handlers[33]')
+   arch/loongarch/kernel/module.c:375:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:375:64: note: (near initialization for 'reloc_rela_handlers[34]')
+   arch/loongarch/kernel/module.c:375:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:375:64: note: (near initialization for 'reloc_rela_handlers[35]')
+   arch/loongarch/kernel/module.c:375:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:375:64: note: (near initialization for 'reloc_rela_handlers[36]')
+   arch/loongarch/kernel/module.c:375:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:375:64: note: (near initialization for 'reloc_rela_handlers[37]')
+   arch/loongarch/kernel/module.c:376:64: warning: initialized field overwritten [-Woverride-init]
+     376 |         [R_LARCH_SOP_POP_32_S_10_5 ... R_LARCH_SOP_POP_32_U] = apply_r_larch_sop_imm_field,
+         |                                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:376:64: note: (near initialization for 'reloc_rela_handlers[38]')
+   arch/loongarch/kernel/module.c:376:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:376:64: note: (near initialization for 'reloc_rela_handlers[39]')
+   arch/loongarch/kernel/module.c:376:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:376:64: note: (near initialization for 'reloc_rela_handlers[40]')
+   arch/loongarch/kernel/module.c:376:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:376:64: note: (near initialization for 'reloc_rela_handlers[41]')
+   arch/loongarch/kernel/module.c:376:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:376:64: note: (near initialization for 'reloc_rela_handlers[42]')
+   arch/loongarch/kernel/module.c:376:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:376:64: note: (near initialization for 'reloc_rela_handlers[43]')
+   arch/loongarch/kernel/module.c:376:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:376:64: note: (near initialization for 'reloc_rela_handlers[44]')
+   arch/loongarch/kernel/module.c:376:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:376:64: note: (near initialization for 'reloc_rela_handlers[45]')
+   arch/loongarch/kernel/module.c:376:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:376:64: note: (near initialization for 'reloc_rela_handlers[46]')
+   arch/loongarch/kernel/module.c:377:64: warning: initialized field overwritten [-Woverride-init]
+     377 |         [R_LARCH_ADD32 ... R_LARCH_SUB64]                    = apply_r_larch_add_sub,
+         |                                                                ^~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:377:64: note: (near initialization for 'reloc_rela_handlers[50]')
+   arch/loongarch/kernel/module.c:377:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:377:64: note: (near initialization for 'reloc_rela_handlers[51]')
+   arch/loongarch/kernel/module.c:377:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:377:64: note: (near initialization for 'reloc_rela_handlers[52]')
+   arch/loongarch/kernel/module.c:377:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:377:64: note: (near initialization for 'reloc_rela_handlers[53]')
+   arch/loongarch/kernel/module.c:377:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:377:64: note: (near initialization for 'reloc_rela_handlers[54]')
+   arch/loongarch/kernel/module.c:377:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:377:64: note: (near initialization for 'reloc_rela_handlers[55]')
+   arch/loongarch/kernel/module.c:377:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:377:64: note: (near initialization for 'reloc_rela_handlers[56]')
+   arch/loongarch/kernel/module.c:378:64: warning: initialized field overwritten [-Woverride-init]
+     378 |         [R_LARCH_B26]                                        = apply_r_larch_b26,
+         |                                                                ^~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:378:64: note: (near initialization for 'reloc_rela_handlers[66]')
+   arch/loongarch/kernel/module.c:379:64: warning: initialized field overwritten [-Woverride-init]
+     379 |         [R_LARCH_PCALA_HI20...R_LARCH_PCALA64_HI12]          = apply_r_larch_pcala,
+         |                                                                ^~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:379:64: note: (near initialization for 'reloc_rela_handlers[71]')
+   arch/loongarch/kernel/module.c:379:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:379:64: note: (near initialization for 'reloc_rela_handlers[72]')
+   arch/loongarch/kernel/module.c:379:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:379:64: note: (near initialization for 'reloc_rela_handlers[73]')
+   arch/loongarch/kernel/module.c:379:64: warning: initialized field overwritten [-Woverride-init]
+   arch/loongarch/kernel/module.c:379:64: note: (near initialization for 'reloc_rela_handlers[74]')
+   arch/loongarch/kernel/module.c: In function 'apply_r_larch_pcala':
+>> arch/loongarch/kernel/module.c:336:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     336 |                 v = offset_rem >> 52;
+         |                 ~~^~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/module.c:338:9: note: here
+     338 |         case R_LARCH_PCALA_LO12:
+         |         ^~~~
+
+
+vim +336 arch/loongarch/kernel/module.c
+
+   315	
+   316	static int apply_r_larch_pcala(struct module *mod, u32 *location, Elf_Addr v,
+   317				s64 *rela_stack, size_t *rela_stack_top, unsigned int type)
+   318	{
+   319		union loongarch_instruction *insn = (union loongarch_instruction *)location;
+   320		/* Use s32 for a sign-extension deliberately. */
+   321		s32 offset_hi20 = (void *)((v + 0x800) & ~0xfff) -
+   322			(void *)((Elf_Addr)location & ~0xfff);
+   323		Elf_Addr anchor = (((Elf_Addr)location) & ~0xfff) + offset_hi20;
+   324		ptrdiff_t offset_rem = (void *)v - (void *)anchor;
+   325	
+   326		switch (type) {
+   327		case R_LARCH_PCALA_HI20:
+   328			v = offset_hi20 >> 12;
+   329			insn->reg1i20_format.immediate = v & 0xfffff;
+   330			break;
+   331		case R_LARCH_PCALA64_LO20:
+   332			v = offset_rem >> 32;
+   333			insn->reg1i20_format.immediate = v & 0xfffff;
+   334			break;
+   335		case R_LARCH_PCALA64_HI12:
+ > 336			v = offset_rem >> 52;
+   337			/* fall through */
+   338		case R_LARCH_PCALA_LO12:
+   339			insn->reg2i12_format.immediate = v & 0xfff;
+   340			break;
+   341		default:
+   342			pr_err("%s: Unsupport relocation type %u\n", mod->name, type);
+   343			return -EINVAL;
+   344		}
+   345	
+   346		return 0;
+   347	}
+   348	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
