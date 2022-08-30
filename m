@@ -1,54 +1,58 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A899374
-	for <loongarch@lists.linux.dev>; Tue, 30 Aug 2022 14:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1661870929;
-	bh=plnJi1158so8FnpKmu07i/6iZtvFF/Jkr8UGSu1UjGY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Hh34hpJ4f1vhjFKKCRmY56KAUnElHyO0VPczWr+lEdBGu26kZhEpmDEqonv5jfufB
-	 Lfy1mYsXzgINAN2bZeHXVUfvlGNPeffzg9KpzjH1IuY3sB5HJ4XWrxcA5jmlhinVVN
-	 qmkb/yIWPoNpkq7ciC1YZ35qn5WnzrixAKL7ENrM=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id EF6D866795;
-	Tue, 30 Aug 2022 10:48:47 -0400 (EDT)
-Message-ID: <d5eaffd85b38fe491a4df8cd560fa0cfa3d00d87.camel@xry111.site>
-Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation
- types
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, WANG
- Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>, Jinyang
- He <hejinyang@loongson.cn>
-Date: Tue, 30 Aug 2022 22:48:46 +0800
-In-Reply-To: <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
-References: <20220830104806.128365-1-xry111@xry111.site>
-	 <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.45.2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C5D399
+	for <loongarch@lists.linux.dev>; Tue, 30 Aug 2022 16:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1661877477; bh=3tCvRvddQpP82lIcaHbRu8fAaq17w4nPzNxY0aFUxZE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=E2sgRNYW70PndjaaibTGBxyugpL+RC0LcAJRlOEvREvBMFcAHf/8fYYgLOT1a5UPl
+	 Nw+B5HtEq5axBTLVO3Z+XWQKRohnXVLqDjiENKvI6+GrRuqzy42ag5k04lQmAf+eRA
+	 jMIzUT7uXg5zWf2QUbdQM7yqJHIYc07tLOlVW37I=
+Received: from [192.168.9.172] (unknown [101.88.26.24])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id C40D160087;
+	Wed, 31 Aug 2022 00:37:57 +0800 (CST)
+Message-ID: <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name>
+Date: Wed, 31 Aug 2022 00:37:56 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:106.0) Gecko/20100101
+ Thunderbird/106.0a1
+Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation
+ types
+To: Huacai Chen <chenhuacai@kernel.org>, Xi Ruoyao <xry111@xry111.site>
+Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+ Youling Tang <tangyouling@loongson.cn>, Jinyang He <hejinyang@loongson.cn>
+References: <20220830104806.128365-1-xry111@xry111.site>
+ <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
+Content-Language: en-US
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2022-08-30 at 21:05 +0800, Huacai Chen wrote:
+On 8/30/22 21:05, Huacai Chen wrote:
 > Hi, Ruoyao,
->=20
+>
 > Thank you for your contribution, this whole series will be queued for
 > 6.1. Though lkp reported some warnings, I will fix them myself.
 
-Hmm, we are using -Wimplicit-fallthrough=3D5 so "fallthrough;" (which
-expands into some magic) should be used instead of "/* fallthrough */".
-=C2=A0
-For -Woverride-init I'm not sure how to fix it properly.
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+And of course add my Tested-by:
+
+Tested-by: WANG Xuerui <git@xen0n.name>
+
+(I've run the v6 actually, but there is not substantial change from v6 
+to v7 so the status should stay good.)
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
