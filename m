@@ -1,90 +1,99 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB1364C
-	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 06:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1661928611;
-	bh=70USwLN0cVzP/zKh6wgTroCrDHnsKsgsZzrBU5FMj9c=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=J8M9dW33G6NpWL38Dakdfk1FaAds7+8jwYyCzXG0EI25qQar3AXtJPqjoy+a6Uzq0
-	 3AXlxLTYRCeYDuKPcLAYPyg2q/pHKrsoDzM38IsEU0a0mF0FLyFc/r+Zjy+3Z3c8Y8
-	 pmd3z8ZIJrgVa+b1dm+czrc8EyIBRystlOC7LL8M=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 9C078667E8;
-	Wed, 31 Aug 2022 02:50:09 -0400 (EDT)
-Message-ID: <feb773a8df5d30b8d9347d1c922997c9da1fd06a.camel@xry111.site>
-Subject: Re: [PATCH 1/1] LoongArch: Fixed loongarch kernel csr_xxx implicit
- declaration.
-From: Xi Ruoyao <xry111@xry111.site>
-To: Yupeng Li <liyupeng@zbhlos.com>, chenhuacai@kernel.org,
- kernel@xen0n.name,  jiaxun.yang@flygoat.com
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- caizp2008@163.com
-Date: Wed, 31 Aug 2022 14:50:07 +0800
-In-Reply-To: <20220831061406.431027-1-liyupeng@zbhlos.com>
-References: <20220831061406.431027-1-liyupeng@zbhlos.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.45.2 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE48164C
+	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 06:58:24 +0000 (UTC)
+Received: from localhost.localdomain (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxT+CLBg9jHoYNAA--.60052S3;
+	Wed, 31 Aug 2022 14:58:21 +0800 (CST)
+Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation
+ types
+To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>
+References: <20220830104806.128365-1-xry111@xry111.site>
+ <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
+ <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name>
+ <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
+ <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
+Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+ Youling Tang <tangyouling@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn>
+Date: Wed, 31 Aug 2022 14:58:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8CxT+CLBg9jHoYNAA--.60052S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4kKF4DAFWfuF43tw17Awb_yoW8ury8pF
+	W5Kr95tF4UuFW8A3Z7tF1Iva4fXw1kA34agFy5Ka48Aan8uasaqrZYva17ZFyqywn5ur40
+	gryrtry0kF18ZFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+	IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUU
+	U==
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-On Wed, 2022-08-31 at 14:14 +0800, Yupeng Li wrote:
-> Loongarch CSR register operation related interface, use the
-> interface defined=C2=A0 __builtin_loongarch_xxx instead.
-> Build kernel error messages like:
+On 08/31/2022 02:10 PM, Xi Ruoyao wrote:
 
-It's likely because you are using a draft version of LoongArch GCC port.
-Wrapper functions like __csrrd_w has been there in larchintrin.h since
-the first day GCC port was merged upstream
-(https://gcc.gnu.org/r12-7881).
+> On Wed, 2022-08-31 at 13:44 +0800, Huacai Chen wrote:
+>
+>> With this series applied and ARCH_WANT_LD_ORPHAN_WARN enabled, we get
+>> loongarch64-unknown-linux-gnu-ld: warning: orphan section `.got' from
+>> `arch/loongarch/kernel/head.o' being placed in section `.got'
+>> loongarch64-unknown-linux-gnu-ld: warning: orphan section `.got.plt'
+>> from `arch/loongarch/kernel/head.o' being placed in section `.got.plt'
+>>
+>> I think we should add this lines in vmlinux.lds.S
+>>          .got : { *(.got) }
+>>          .got.plt : { *(.got.plt) }
+>>
+>> But put them to which patch? Patch 2 or Patch 5?
+> In patch 2 IMO.  Because in patch 2 we already know "-Wa,-mla-global-
+> with-pcrel" does not prevent the generation of GOT with new toolchain.
+>
+> If you need a v8 please tell me to send it, but I don't know how to
+> handle -Woverride-init warnings (IMO the fix for this warning should be
+> a standalone patch outside of the series).
+>
+> P. S. The ld warning message seems a little strange because "head.o"
+> does not contain .got or .got.plt sections...  I guess there is a linker
+> bug causing it outputs the very first input file in the message, instead
+> of the first input file really containing an orphaned section.
+>
+> Another P. S.: the use of GOT is actually unneeded in main kernel image
+> but we don't have something equivalent to "-Wa,-mla-global-with-pcrel"
+> in the new toolchain.  Perhaps we can add this feature to GCC later.
+>
+That's right. Also I am wondering why new toolchain produce .got* in
+kernel. It's unneeded. In the past, gcc create la.global and parsed
+to la.pcrel by gas, and kernel works well. Now it seems we lost this
+feature in gcc. I checked the x86 asm code just now. And some info
+follows,
 
-A quick search shows IA64 and PowerPC also use GCC ia64intrin.h and
-spu_intrinsics.h, so the use of these wrappers are not forbidden in
-kernel source.
+LoongArch64, ./net/ipv4/udp_diag.s, *have reloc hint*
+         pcalau12i       $r4,%got_pc_hi20(udplite_table)
+         ld.d    $r4,$r4,%got_pc_lo12(udplite_table)
+         b       udp_dump
 
-Unless there is some new good reason for the change,
+x86_64, ./net/ipv4/udp_diag.s
+         movq    $udplite_table, %rdi
+         jmp     udp_dump
 
-Nacked-by: Xi Ruoyao <xry111@xry111.site>
+It seems related to -fno-PIE and -cmodel=kernel on x86_64.
+Hope new gcc with this feature now.
 
->=20
-> =C2=A0 CALL=C2=A0=C2=A0=C2=A0 scripts/atomic/check-atomics.sh
-> =C2=A0 CC=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arch/loongarch/kernel/asm-offsets=
-.s
-> In file included from ./arch/loongarch/include/asm/cpu-info.h:11,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./arch/loongarch/include/asm/processor.h:13,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./arch/loongarch/include/asm/thread_info.h:15=
-,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/thread_info.h:60,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/asm-generic/current.h:5,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from
-> ./arch/loongarch/include/generated/asm/current.h:1,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/sched.h:12,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from arch/loongarch/kernel/asm-offsets.c:8:
-> ./arch/loongarch/include/asm/loongarch.h: In function 'csr_read32':
-> ./arch/loongarch/include/asm/loongarch.h:232:9: error: implicit
-> declaration of function '__csrrd_w'; did you mean '__iocsrrd_w'? [-
-> Werror=3Dimplicit-function-declaration]
-> =C2=A0 return __csrrd_w(reg);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __iocsrrd_w
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
