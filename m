@@ -1,37 +1,35 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4157E7
-	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 09:02:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85ED7804
+	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 11:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1661936552;
-	bh=ECqsVjBTRWNtq87Rj1rE7CyanoR0fzh8v6Jx+yreDLE=;
+	s=default; t=1661944191;
+	bh=8XbdqaONtZ7pmuAJ5DQX8N6I8PArVUZF81z1ZRwruLg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=M4WDTBDs0+mXFJZpVCOe67+s1EQwPozaVwWJJBQGwmxtPWVoQSrhPveMxhBuASrCj
-	 cFHwXTjrxUKuYghhs0A7OVOnsXn2+VlLpi4IEl3NpdhJshuwmB4SLqir7JtuTjZqWw
-	 Npm8lmwjjUBOfuyBafuGSWydjVRGV+Hie2puUGKc=
-Received: from [IPv6:240e:358:118a:f800:dc73:854d:832e:4] (unknown [IPv6:240e:358:118a:f800:dc73:854d:832e:4])
+	b=eFRdaJVMKl8xAVHztJPif52LbxIx1i2fOFYxYXqKWIUc83IH/cQAlxpsVhJvrBuP9
+	 G4nvJxSj2uorsllgHVjC2mmEU7RSZVIqtMWGsm+RQYYoXXzJ2l4J5ZZp0l/3IJ/yAj
+	 rvtQrHZXd4UjqWnf0g6hL/riObYm6p5JVSkytoOk=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 760C566819;
-	Wed, 31 Aug 2022 05:02:28 -0400 (EDT)
-Message-ID: <e477e042aee090d6c3cf7ebeabed25df5b0fa07e.camel@xry111.site>
-Subject: Re: [PATCH bpf-next v2 4/4] LoongArch: Enable BPF_JIT and TEST_BPF
- in default config
+	by xry111.site (Postfix) with ESMTPSA id C6D8766841;
+	Wed, 31 Aug 2022 07:09:49 -0400 (EDT)
+Message-ID: <eb77b42f8ec4b67c1554dfac4a8efdfd8a4168c6.camel@xry111.site>
+Subject: Re: [PATCH 1/1] LoongArch: Fixed loongarch kernel csr_xxx implicit
+ declaration.
 From: Xi Ruoyao <xry111@xry111.site>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>,  Andrii Nakryiko <andrii@kernel.org>, bpf
- <bpf@vger.kernel.org>, loongarch@lists.linux.dev
-Date: Wed, 31 Aug 2022 17:02:18 +0800
-In-Reply-To: <75b27dacb8b4d779c6b2c0e46871baf404a32b6b.camel@xry111.site>
-References: <1661857809-10828-1-git-send-email-yangtiezhu@loongson.cn>
-	 <1661857809-10828-5-git-send-email-yangtiezhu@loongson.cn>
-	 <CAAhV-H6Dq+Z_kS0LcM=QGF1h=k2i0hR7fYZdXgU2kXAfm1VPLw@mail.gmail.com>
-	 <6bc9bd64-1ba9-a35f-c0b7-480429b26b9f@loongson.cn>
-	 <75b27dacb8b4d779c6b2c0e46871baf404a32b6b.camel@xry111.site>
+To: =?gb2312?Q?=C0=EE=D3=EE=C5=F4?= <liyupeng@zbhlos.com>
+Cc: chenhuacai <chenhuacai@kernel.org>, kernel <kernel@xen0n.name>, 
+ "jiaxun.yang" <jiaxun.yang@flygoat.com>, loongarch
+ <loongarch@lists.linux.dev>, linux-kernel <linux-kernel@vger.kernel.org>,
+ caizp2008 <caizp2008@163.com>
+Date: Wed, 31 Aug 2022 19:09:47 +0800
+In-Reply-To: <AGcAvgDYFKf5CnvlznsCy4ok.3.1661932466929.Hmail.liyupeng@zbhlos.com>
+References: <feb773a8df5d30b8d9347d1c922997c9da1fd06a.camel@xry111.site>
+	 <AGcAvgDYFKf5CnvlznsCy4ok.3.1661932466929.Hmail.liyupeng@zbhlos.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.45.2 
@@ -42,66 +40,31 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Wed, 2022-08-31 at 12:12 +0800, Xi Ruoyao wrote:
-> On Wed, 2022-08-31 at 09:23 +0800, Tiezhu Yang wrote:
-> >=20
-> >=20
-> > On 08/30/2022 10:46 PM, Huacai Chen wrote:
-> > > Hi, Tiezhu,
-> > >=20
-> > > On Tue, Aug 30, 2022 at 7:10 PM Tiezhu Yang
-> > > <yangtiezhu@loongson.cn> wrote:
-> > > >=20
-> > > > For now, BPF JIT for LoongArch is supported, update
-> > > > loongson3_defconfig to
-> > > > enable BPF_JIT to allow the kernel to generate native code when
-> > > > a program
-> > > > is loaded into the kernel, and also enable TEST_BPF to test BPF
-> > > > JIT.
-> > > >=20
-> > > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > > > ---
-> > > > =C2=A0arch/loongarch/configs/loongson3_defconfig | 2 ++
-> > > > =C2=A01 file changed, 2 insertions(+)
-> > > >=20
-> > > > diff --git a/arch/loongarch/configs/loongson3_defconfig
-> > > > b/arch/loongarch/configs/loongson3_defconfig
-> > > > index 3712552..93dc072 100644
-> > > > --- a/arch/loongarch/configs/loongson3_defconfig
-> > > > +++ b/arch/loongarch/configs/loongson3_defconfig
-> > > > @@ -4,6 +4,7 @@ CONFIG_POSIX_MQUEUE=3Dy
-> > > > =C2=A0CONFIG_NO_HZ=3Dy
-> > > > =C2=A0CONFIG_HIGH_RES_TIMERS=3Dy
-> > > > =C2=A0CONFIG_BPF_SYSCALL=3Dy
-> > > > +CONFIG_BPF_JIT=3Dy
-> > > > =C2=A0CONFIG_PREEMPT=3Dy
-> > > > =C2=A0CONFIG_BSD_PROCESS_ACCT=3Dy
-> > > > =C2=A0CONFIG_BSD_PROCESS_ACCT_V3=3Dy
-> > > > @@ -801,3 +802,4 @@ CONFIG_MAGIC_SYSRQ=3Dy
-> > > > =C2=A0CONFIG_SCHEDSTATS=3Dy
-> > > > =C2=A0# CONFIG_DEBUG_PREEMPT is not set
-> > > > =C2=A0# CONFIG_FTRACE is not set
-> > > > +CONFIG_TEST_BPF=3Dm
-> > > I don't want the test module be built by default, but I don't
-> > > insist
-> > > if you have a strong requirement.
-> > >=20
-> >=20
-> > Hi Huacai,
-> >=20
-> > It is useful to enable TEST_BPF in default config, otherwise we
-> > need to use "make menuconfig" to select it manually if we want
-> > to test bpf jit, and build it as a module by default has no side
-> > effect, so I prefer to enable TEST_BPF in default config.
+On Wed, 2022-08-31 at 15:54 +0800, =E6=9D=8E=E5=AE=87=E9=B9=8F wrote:
 >=20
-> IMO we shouldn't enable a test feature which is never used by 99% of
-> users in the default.
+> thank you for your reply=E3=80=82
+> I used the latest gcc tool on the official website of loongson,gcc-
+> 8.3.0.
+> http://www.loongnix.cn/zh/toolchain/GNU/
 
-P. S. this is not a strong option.  CONFIG_TEST_BPF seems enabled by
-default for S390, and I'm not sure if defconfig is designed for "kernel
-developers" or "distro builders", or even "normal users".
+Vanilla kernel cannot work with Loongnix:
 
+1. In Loongnix, GRUB loads pass the essential information to the kernel
+following "Loongson Firmware-Kernel Interface Specification".  Vanilla
+kernel does not support it and will never support it.
+2. In Loongnix, the syscall numbers are different and the layout of some
+data structures used in kernel UAPI is different.  Any Loongnix
+application invoking a syscall will likely blow up immediately on a
+vanilla kernel.
 
+These two problems are very difficult.  There is some plan to insert
+compatibility layers to work around them, but not even one line of code
+has been written AFAIK.
+
+So if you want to build a kernel for Loongnix, don't use the vanilla
+kernel.  If you just want to build a vanilla kernel with a pre-built
+cross toolchain, use the toolchain from
+https://kernel.org/pub/tools/crosstool/.
 --=20
 Xi Ruoyao <xry111@xry111.site>
 School of Aerospace Science and Technology, Xidian University
