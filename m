@@ -1,98 +1,81 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62FA635
-	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 04:12:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1661919133;
-	bh=pzNye2XBDt4NiEtfnZRNvN6qLjvjcmj+9QQheAr/AuI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Gr+E6gBiTpyvMfZhK4bFOaGlS7G+0lXaDxZUMQdh8cjWrPTgQs3pL0nwRmtIrh+g0
-	 DCyARycW9DvjN0Nfu3VSPUsoUXNTsrfsVO7AMFeFbGE+FKBX2BnaKJNWJqndJhDD7f
-	 EJWEs2flJZc5rVg01wy13OOzdnERYP+mqmQU5THI=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 5387E66220;
-	Wed, 31 Aug 2022 00:12:12 -0400 (EDT)
-Message-ID: <75b27dacb8b4d779c6b2c0e46871baf404a32b6b.camel@xry111.site>
-Subject: Re: [PATCH bpf-next v2 4/4] LoongArch: Enable BPF_JIT and TEST_BPF
- in default config
-From: Xi Ruoyao <xry111@xry111.site>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>,  Andrii Nakryiko <andrii@kernel.org>, bpf
- <bpf@vger.kernel.org>, loongarch@lists.linux.dev
-Date: Wed, 31 Aug 2022 12:12:10 +0800
-In-Reply-To: <6bc9bd64-1ba9-a35f-c0b7-480429b26b9f@loongson.cn>
-References: <1661857809-10828-1-git-send-email-yangtiezhu@loongson.cn>
-	 <1661857809-10828-5-git-send-email-yangtiezhu@loongson.cn>
-	 <CAAhV-H6Dq+Z_kS0LcM=QGF1h=k2i0hR7fYZdXgU2kXAfm1VPLw@mail.gmail.com>
-	 <6bc9bd64-1ba9-a35f-c0b7-480429b26b9f@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.45.2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FF9652
+	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 05:44:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEB79C433D7
+	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 05:44:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1661924694;
+	bh=X4PxFntXm9Nca5RV5Kx6R9cYdqAMo4VWRPIFXi/6A9U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AId5APbpWjvsqGbHljWBuKPy3aCwhBvRXYYxxVwOmh7JNTGGPVXpAnGAhGjBhcgBE
+	 OZcwa/vTp1opRyIsHkLgf+9FCFc3yhXXV9m1pqypG9Hyo3cJWGGzMcPWvvuTqGmoi/
+	 AU6HcvfEH0OQR3XiddD+vpd1Wf0rWFYn1nki1GGHaagxoRgWC9lj6+ajWannPohsrf
+	 mIEvNpwVjTm23XL9cnvEUeG1Ra7knOt4R6XarUHBrv/LPIEQC/q/Z8RqFvT6vBJ8gK
+	 eeuqW/QuIztJh6WaAlUBogvf8lTYRMg87TWSr3dlrqHx9Et11v16aehQlwGrQjZQ9n
+	 x40V9mDJzic7A==
+Received: by mail-ua1-f51.google.com with SMTP id q21so5064156uam.13
+        for <loongarch@lists.linux.dev>; Tue, 30 Aug 2022 22:44:54 -0700 (PDT)
+X-Gm-Message-State: ACgBeo3m5mbC+u9N3b1aBUZ3KMLVt7LLDAampgmOi1DJwdpwHnrF4pgi
+	OEvJDs0Y0FFEppxPg4tCCsVZccuErcsQO/osRJ4=
+X-Google-Smtp-Source: AA6agR4CUWBBgX1i1ccifEvmTEI5b+tzXxFJ6cRSh8wIAakBnT/ciBFH8W1og/QTWRuqiwczjZ5vIGXyEP5BDziULXg=
+X-Received: by 2002:ab0:2095:0:b0:39f:881e:51b6 with SMTP id
+ r21-20020ab02095000000b0039f881e51b6mr4786047uak.23.1661924693646; Tue, 30
+ Aug 2022 22:44:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20220830104806.128365-1-xry111@xry111.site> <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
+ <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name>
+In-Reply-To: <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 31 Aug 2022 13:44:42 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
+Message-ID: <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
+Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation types
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
+	LKML <linux-kernel@vger.kernel.org>, Youling Tang <tangyouling@loongson.cn>, 
+	Jinyang He <hejinyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2022-08-31 at 09:23 +0800, Tiezhu Yang wrote:
->=20
->=20
-> On 08/30/2022 10:46 PM, Huacai Chen wrote:
-> > Hi, Tiezhu,
-> >=20
-> > On Tue, Aug 30, 2022 at 7:10 PM Tiezhu Yang <yangtiezhu@loongson.cn> wr=
-ote:
-> > >=20
-> > > For now, BPF JIT for LoongArch is supported, update loongson3_defconf=
-ig to
-> > > enable BPF_JIT to allow the kernel to generate native code when a pro=
-gram
-> > > is loaded into the kernel, and also enable TEST_BPF to test BPF JIT.
-> > >=20
-> > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > > ---
-> > > =C2=A0arch/loongarch/configs/loongson3_defconfig | 2 ++
-> > > =C2=A01 file changed, 2 insertions(+)
-> > >=20
-> > > diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loonga=
-rch/configs/loongson3_defconfig
-> > > index 3712552..93dc072 100644
-> > > --- a/arch/loongarch/configs/loongson3_defconfig
-> > > +++ b/arch/loongarch/configs/loongson3_defconfig
-> > > @@ -4,6 +4,7 @@ CONFIG_POSIX_MQUEUE=3Dy
-> > > =C2=A0CONFIG_NO_HZ=3Dy
-> > > =C2=A0CONFIG_HIGH_RES_TIMERS=3Dy
-> > > =C2=A0CONFIG_BPF_SYSCALL=3Dy
-> > > +CONFIG_BPF_JIT=3Dy
-> > > =C2=A0CONFIG_PREEMPT=3Dy
-> > > =C2=A0CONFIG_BSD_PROCESS_ACCT=3Dy
-> > > =C2=A0CONFIG_BSD_PROCESS_ACCT_V3=3Dy
-> > > @@ -801,3 +802,4 @@ CONFIG_MAGIC_SYSRQ=3Dy
-> > > =C2=A0CONFIG_SCHEDSTATS=3Dy
-> > > =C2=A0# CONFIG_DEBUG_PREEMPT is not set
-> > > =C2=A0# CONFIG_FTRACE is not set
-> > > +CONFIG_TEST_BPF=3Dm
-> > I don't want the test module be built by default, but I don't insist
-> > if you have a strong requirement.
-> >=20
->=20
-> Hi Huacai,
->=20
-> It is useful to enable TEST_BPF in default config, otherwise we
-> need to use "make menuconfig" to select it manually if we want
-> to test bpf jit, and build it as a module by default has no side
-> effect, so I prefer to enable TEST_BPF in default config.
+Hi, Ruoyao and Xuerui,
 
-IMO we shouldn't enable a test feature which is never used by 99% of
-users in the default.
+On Wed, Aug 31, 2022 at 12:38 AM WANG Xuerui <kernel@xen0n.name> wrote:
+>
+> On 8/30/22 21:05, Huacai Chen wrote:
+> > Hi, Ruoyao,
+> >
+> > Thank you for your contribution, this whole series will be queued for
+> > 6.1. Though lkp reported some warnings, I will fix them myself.
+>
+> And of course add my Tested-by:
+>
+> Tested-by: WANG Xuerui <git@xen0n.name>
+>
+> (I've run the v6 actually, but there is not substantial change from v6
+> to v7 so the status should stay good.)
+With this series applied and ARCH_WANT_LD_ORPHAN_WARN enabled, we get
+loongarch64-unknown-linux-gnu-ld: warning: orphan section `.got' from
+`arch/loongarch/kernel/head.o' being placed in section `.got'
+loongarch64-unknown-linux-gnu-ld: warning: orphan section `.got.plt'
+from `arch/loongarch/kernel/head.o' being placed in section `.got.plt'
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+I think we should add this lines in vmlinux.lds.S
+        .got : { *(.got) }
+        .got.plt : { *(.got.plt) }
+
+But put them to which patch? Patch 2 or Patch 5?
+
+Huacai
+
+>
+> --
+> WANG "xen0n" Xuerui
+>
+> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+>
