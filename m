@@ -1,21 +1,23 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7480C620
-	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 01:23:41 +0000 (UTC)
-Received: from [10.130.0.135] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxT+AZuA5jsikNAA--.58516S3;
-	Wed, 31 Aug 2022 09:23:38 +0800 (CST)
-Subject: Re: [PATCH bpf-next v2 4/4] LoongArch: Enable BPF_JIT and TEST_BPF in
- default config
-To: Huacai Chen <chenhuacai@kernel.org>
-References: <1661857809-10828-1-git-send-email-yangtiezhu@loongson.cn>
- <1661857809-10828-5-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H6Dq+Z_kS0LcM=QGF1h=k2i0hR7fYZdXgU2kXAfm1VPLw@mail.gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <6bc9bd64-1ba9-a35f-c0b7-480429b26b9f@loongson.cn>
-Date: Wed, 31 Aug 2022 09:23:37 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16618635
+	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 03:38:34 +0000 (UTC)
+Received: from [10.130.0.193] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxnmuv1w5jT08NAA--.45230S3;
+	Wed, 31 Aug 2022 11:38:25 +0800 (CST)
+Subject: Re: [PATCH 1/3] LoongArch: Add kexec support
+To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+References: <1661747823-23745-1-git-send-email-tangyouling@loongson.cn>
+ <1661747823-23745-2-git-send-email-tangyouling@loongson.cn>
+ <e981e841-c43c-bbc5-a0f9-1077be9811cb@loongson.cn>
+ <19b78960-8c5e-fc5f-c102-12db7aedb548@loongson.cn>
+Cc: Baoquan He <bhe@redhat.com>, Eric Biederman <ebiederm@xmission.com>,
+ WANG Xuerui <kernel@xen0n.name>, Vivek Goyal <vgoyal@redhat.com>,
+ Dave Young <dyoung@redhat.com>, Guo Ren <guoren@kernel.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, kexec@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <11193a49-c1eb-892b-48cb-1c928e179dbb@loongson.cn>
+Date: Wed, 31 Aug 2022 11:38:23 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -24,72 +26,571 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H6Dq+Z_kS0LcM=QGF1h=k2i0hR7fYZdXgU2kXAfm1VPLw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <19b78960-8c5e-fc5f-c102-12db7aedb548@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8CxT+AZuA5jsikNAA--.58516S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7CFyfGr1DGFy5Ww1kJF4rAFb_yoW8Wr18pw
-	1rAa1DtF4kGrnYkrWjy3s7WFWDJrsrJFZrWF4UA3WrC39ru348Zw1ktw1qvF42qa90qr48
-	Zas3KFnIva1UGa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvFb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I
-	8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487
-	MxkIecxEwVAFwVWkMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
-	AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
-	CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
-	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvj
-	xU7Q6pUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-CM-TRANSID:AQAAf8Bxnmuv1w5jT08NAA--.45230S3
+X-Coremail-Antispam: 1UD129KBjvAXoW3uF48CF4UJrW3JF4xZr4rAFb_yoW8WFy5Jo
+	W5JF4xJw48KryUJw15G3srXFWDX3s0gry5ZrWUAwsxWr12ya4jvr45Wry5tay3Kw18Ww4r
+	Ga47Xwsa9ayxXrn5n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUYG7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xva
+	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
+	x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
+	Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI
+	0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xf
+	McIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7
+	v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK67AK6r48MxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUj5l1PUUUUU==
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 
 
 
-On 08/30/2022 10:46 PM, Huacai Chen wrote:
-> Hi, Tiezhu,
+On 08/30/2022 11:25 AM, Youling Tang wrote:
+> Hi, Jinyang
 >
-> On Tue, Aug 30, 2022 at 7:10 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> On 08/30/2022 09:53 AM, Jinyang He wrote:
+>> Hi, Youling,
 >>
->> For now, BPF JIT for LoongArch is supported, update loongson3_defconfig to
->> enable BPF_JIT to allow the kernel to generate native code when a program
->> is loaded into the kernel, and also enable TEST_BPF to test BPF JIT.
 >>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>  arch/loongarch/configs/loongson3_defconfig | 2 ++
->>  1 file changed, 2 insertions(+)
+>> On 08/29/2022 12:37 PM, Youling Tang wrote:
+>>> Add three new files, kexec.h, machine_kexec.c and relocate_kernel.S to
+>>> the
+>>> LoongArch architecture that add support for the kexec re-boot mechanis
+>>> (CONFIG_KEXEC) on LoongArch platforms.
+>>>
+>>> Supports loading vmlinux (vmlinux.elf) in ELF format and vmlinux.efi in
+>>> PE format.
+>>>
+>>> I tested this on  LoongArch 3A5000 machine and works as expected,
+>>>
+>>>   $ sudo kexec -l /boot/vmlinux.efi --reuse-cmdline
+>>>   $ sudo kexec -e
+>>>
+>>> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+>>> ---
+>>>   arch/loongarch/Kconfig                  |  11 ++
+>>>   arch/loongarch/include/asm/kexec.h      |  58 ++++++++
+>>>   arch/loongarch/kernel/Makefile          |   2 +
+>>>   arch/loongarch/kernel/head.S            |   7 +-
+>>>   arch/loongarch/kernel/machine_kexec.c   | 178 ++++++++++++++++++++++++
+>>>   arch/loongarch/kernel/relocate_kernel.S | 125 +++++++++++++++++
+>>>   6 files changed, 380 insertions(+), 1 deletion(-)
+>>>   create mode 100644 arch/loongarch/include/asm/kexec.h
+>>>   create mode 100644 arch/loongarch/kernel/machine_kexec.c
+>>>   create mode 100644 arch/loongarch/kernel/relocate_kernel.S
+>>>
+>>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>>> index 45364cffc793..903c82fa958d 100644
+>>> --- a/arch/loongarch/Kconfig
+>>> +++ b/arch/loongarch/Kconfig
+>>> @@ -409,6 +409,17 @@ config FORCE_MAX_ZONEORDER
+>>>         The page size is not necessarily 4KB.  Keep this in mind
+>>>         when choosing a value for this option.
+>>>   +config KEXEC
+>>> +    bool "Kexec system call"
+>>> +    select KEXEC_CORE
+>>> +    help
+>>> +      kexec is a system call that implements the ability to shutdown
+>>> your
+>>> +      current kernel, and to start another kernel.  It is like a reboot
+>>> +      but it is independent of the system firmware.   And like a reboot
+>>> +      you can start any kernel with it, not just Linux.
+>>> +
+>>> +      The name comes from the similarity to the exec system call.
+>>> +
+>>>   config SECCOMP
+>>>       bool "Enable seccomp to safely compute untrusted bytecode"
+>>>       depends on PROC_FS
+>>> diff --git a/arch/loongarch/include/asm/kexec.h
+>>> b/arch/loongarch/include/asm/kexec.h
+>>> new file mode 100644
+>>> index 000000000000..5c9e7b5eccb8
+>>> --- /dev/null
+>>> +++ b/arch/loongarch/include/asm/kexec.h
+>>> @@ -0,0 +1,58 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +/*
+>>> + * kexec.h for kexec
+>>> + *
+>>> + * Copyright (C) 2022 Loongson Technology Corporation Limited
+>>> + */
+>>> +
+>>> +#ifndef _ASM_KEXEC_H
+>>> +#define _ASM_KEXEC_H
+>>> +
+>>> +#include <asm/stacktrace.h>
+>>> +#include <asm/page.h>
+>>> +
+>>> +/* Maximum physical address we can use pages from */
+>>> +#define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
+>>> +/* Maximum address we can reach in physical address mode */
+>>> +#define KEXEC_DESTINATION_MEMORY_LIMIT (-1UL)
+>>> + /* Maximum address we can use for the control code buffer */
+>>> +#define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
+>>> +
+>>> +/* Reserve a page for the control code buffer */
+>>> +#define KEXEC_CONTROL_PAGE_SIZE PAGE_SIZE
+>>> +
+>>> +/* The native architecture */
+>>> +#define KEXEC_ARCH KEXEC_ARCH_LOONGARCH
+>>> +
+>>> +static inline void crash_setup_regs(struct pt_regs *newregs,
+>>> +                    struct pt_regs *oldregs)
+>>> +{
+>>> +    if (oldregs)
+>>> +        memcpy(newregs, oldregs, sizeof(*newregs));
+>>> +    else
+>>> +        prepare_frametrace(newregs);
+>>> +}
+>>> +
+>>> +#define ARCH_HAS_KIMAGE_ARCH
+>>> +
+>>> +struct kimage_arch {
+>>> +    unsigned long boot_flag;
+>>> +    unsigned long fdt_addr;
+>>> +};
+>>> +
+>>> +typedef void (*do_kexec_t)(unsigned long boot_flag,
+>>> +               unsigned long fdt_addr,
+>>> +               unsigned long first_ind_entry,
+>>> +               unsigned long jump_addr);
+>>> +
+>>> +struct kimage;
+>>> +extern const unsigned char relocate_new_kernel[];
+>>> +extern const size_t relocate_new_kernel_size;
+>>> +
+>>> +#ifdef CONFIG_SMP
+>>> +extern atomic_t kexec_ready_to_reboot;
+>>> +extern const unsigned char kexec_smp_wait[];
+>>> +extern void kexec_reboot(void);
+>>> +#endif
+>>> +
+>>> +#endif /* !_ASM_KEXEC_H */
+>>> diff --git a/arch/loongarch/kernel/Makefile
+>>> b/arch/loongarch/kernel/Makefile
+>>> index a213e994db68..20b64ac3f128 100644
+>>> --- a/arch/loongarch/kernel/Makefile
+>>> +++ b/arch/loongarch/kernel/Makefile
+>>> @@ -17,6 +17,8 @@ obj-$(CONFIG_CPU_HAS_FPU)    += fpu.o
+>>>   obj-$(CONFIG_MODULES)        += module.o module-sections.o
+>>>   obj-$(CONFIG_STACKTRACE)    += stacktrace.o
+>>>   +obj-$(CONFIG_KEXEC)             += machine_kexec.o relocate_kernel.o
+>>> +
+>>>   obj-$(CONFIG_PROC_FS)        += proc.o
+>>>     obj-$(CONFIG_SMP)        += smp.o
+>>> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+>>> index 01bac62a6442..22bdf4928325 100644
+>>> --- a/arch/loongarch/kernel/head.S
+>>> +++ b/arch/loongarch/kernel/head.S
+>>> @@ -20,7 +20,12 @@
+>>>     _head:
+>>>       .word    MZ_MAGIC        /* "MZ", MS-DOS header */
+>>> -    .org    0x3c            /* 0x04 ~ 0x3b reserved */
+>>> +    .org    0x8
+>>> +    .quad    0            /* Image load offset from start of RAM */
+>>> +    .dword    _end - _text        /* Effective size of kernel image */
+>>> +    .quad    0
+>>> +    .dword    kernel_entry        /* Kernel entry point */
+>>> +    .org    0x3c            /* 0x28 ~ 0x3b reserved */
+>>>       .long    pe_header - _head    /* Offset to the PE header */
+>>>     pe_header:
+>>> diff --git a/arch/loongarch/kernel/machine_kexec.c
+>>> b/arch/loongarch/kernel/machine_kexec.c
+>>> new file mode 100644
+>>> index 000000000000..4ffcd4cd9c8c
+>>> --- /dev/null
+>>> +++ b/arch/loongarch/kernel/machine_kexec.c
+>>> @@ -0,0 +1,178 @@
+>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>> +/*
+>>> + * machine_kexec.c for kexec
+>>> + *
+>>> + * Copyright (C) 2022 Loongson Technology Corporation Limited
+>>> + */
+>>> +#include <linux/compiler.h>
+>>> +#include <linux/cpu.h>
+>>> +#include <linux/kexec.h>
+>>> +#include <linux/mm.h>
+>>> +#include <linux/delay.h>
+>>> +#include <linux/libfdt.h>
+>>> +#include <linux/of_fdt.h>
+>>> +
+>>> +#include <asm/bootinfo.h>
+>>> +#include <asm/cacheflush.h>
+>>> +#include <asm/page.h>
+>>> +
+>>> +/* 0x100000 ~ 0x200000 is safe */
+>>> +#define KEXEC_CTRL_CODE    TO_CACHE(0x100000UL)
+>>> +#define KEXEC_BLOB_ADDR    TO_CACHE(0x108000UL)
+>>> +
+>>> +static unsigned long reboot_code_buffer;
+>>> +#ifdef CONFIG_SMP
+>>> +void (*relocated_kexec_smp_wait)(void *);
+>>> +atomic_t kexec_ready_to_reboot = ATOMIC_INIT(0);
+>>> +#endif
+>>> +
+>>> +static unsigned long jump_addr;
+>>> +static unsigned long first_ind_entry;
+>>> +static unsigned long boot_flag;
+>>> +static unsigned long fdt_addr;
+>>> +
+>>> +static void kexec_image_info(const struct kimage *kimage)
+>>> +{
+>>> +    unsigned long i;
+>>> +
+>>> +    pr_debug("kexec kimage info:\n");
+>>> +    pr_debug("\ttype:        %d\n", kimage->type);
+>>> +    pr_debug("\tstart:       %lx\n", kimage->start);
+>>> +    pr_debug("\thead:        %lx\n", kimage->head);
+>>> +    pr_debug("\tnr_segments: %lu\n", kimage->nr_segments);
+>>> +
+>>> +    for (i = 0; i < kimage->nr_segments; i++) {
+>>> +        pr_debug("\t    segment[%lu]: %016lx - %016lx", i,
+>>> +            kimage->segment[i].mem,
+>>> +            kimage->segment[i].mem + kimage->segment[i].memsz);
+>>> +        pr_debug("\t\t0x%lx bytes, %lu pages\n",
+>>> +            (unsigned long)kimage->segment[i].memsz,
+>>> +            (unsigned long)kimage->segment[i].memsz /  PAGE_SIZE);
+>>> +    }
+>>> +}
+>>> +
+>>> +int machine_kexec_prepare(struct kimage *kimage)
+>>> +{
+>>> +    int i;
+>>> +    void *dtb = (void *)KEXEC_BLOB_ADDR;
+>>> +
+>>> +    kexec_image_info(kimage);
+>>> +
+>>> +    /* Find the Flattened Device Tree */
+>>> +    for (i = 0; i < kimage->nr_segments; i++) {
+>>> +        if (!fdt_check_header(kimage->segment[i].buf)) {
+>>> +            memcpy(dtb, kimage->segment[i].buf, SZ_64K);
+>>> +            kimage->arch.boot_flag = fw_arg0;
+>>> +            kimage->arch.fdt_addr = (unsigned long) dtb;
+>>> +            break;
+>>> +        }
+>>> +        continue;
+>>> +    }
+>>> +
+>>> +    /* kexec need a safe page to save reboot_code_buffer */
+>>> +    kimage->control_code_page = virt_to_page((void *)KEXEC_CTRL_CODE);
+>>> +
+>>> +    reboot_code_buffer =
+>>> +      (unsigned long)page_address(kimage->control_code_page);
+>>> +    memcpy((void *)reboot_code_buffer, relocate_new_kernel,
+>>> +           relocate_new_kernel_size);
+>> It copys same content to KEXEC_CTRL_CODE each time, could we do this at
+>> boot time?
+> I think it's possible to have the copy action happen at boot-time or
+> during the prepare phase. (RISCV in prepare, MIPS in boot-time)
+>
 >>
->> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
->> index 3712552..93dc072 100644
->> --- a/arch/loongarch/configs/loongson3_defconfig
->> +++ b/arch/loongarch/configs/loongson3_defconfig
->> @@ -4,6 +4,7 @@ CONFIG_POSIX_MQUEUE=y
->>  CONFIG_NO_HZ=y
->>  CONFIG_HIGH_RES_TIMERS=y
->>  CONFIG_BPF_SYSCALL=y
->> +CONFIG_BPF_JIT=y
->>  CONFIG_PREEMPT=y
->>  CONFIG_BSD_PROCESS_ACCT=y
->>  CONFIG_BSD_PROCESS_ACCT_V3=y
->> @@ -801,3 +802,4 @@ CONFIG_MAGIC_SYSRQ=y
->>  CONFIG_SCHEDSTATS=y
->>  # CONFIG_DEBUG_PREEMPT is not set
->>  # CONFIG_FTRACE is not set
->> +CONFIG_TEST_BPF=m
-> I don't want the test module be built by default, but I don't insist
-> if you have a strong requirement.
+>> BTW, our system always keep the low-2MB no used, on mips-loongson or
+>> LoongArch. Is that necessary on LoongArch? We cannot use parameter
+>> 'mem=YYM' normally but 'mem=YYM@2M' is ok. And the low-2MB is not
+>> in virtual memory management, although we can get it in kernel.
+> For existing kernels, the low 2M has been reserved by
+> memblock_reserve(PHYS_OFFSET, 0x200000), maybe it is acceptable to keep
+> the low 2M behavior.
+>
+> Yes, we need to use "mem=YM@2M" if the low 2M is reserved.
+>
+>>
+>> In kexec/kdump process, we can follows kimage_alloc_control_pages().
+>> When the boot cpu copy complete the second-kernels, all cpus can jump
+>> to a kernel-entry-trampoline which is in kernel image. Then we don't
+>> worry about the code can be destroyed. The kernel-entry-trampoline
+>> get its cpuid, keep non-boot cpus do as kexec_smp_wait and let boot
+>> cpu go kernel-entry. In this way we can drop the low-2MB IMO.
+>
+> It is also feasible to dynamically allocate control pages, but it is
+> easier to use a low 2M approach. What do you think, Huacai?
+>
+>>
+>>> +
+>>> +    /* All secondary cpus now may jump to kexec_smp_wait cycle */
+>>> +    relocated_kexec_smp_wait = reboot_code_buffer +
+>>> +        (void *)(kexec_smp_wait - relocate_new_kernel);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +void machine_kexec_cleanup(struct kimage *kimage)
+>>> +{
+>>> +}
+>>> +
+>>> +#ifdef CONFIG_SMP
+>>> +void kexec_reboot(void)
+>>> +{
+>>> +    do_kexec_t do_kexec = NULL;
+>>> +
+>>> +    /* All secondary cpus go to kexec_smp_wait */
+>>> +    if (smp_processor_id() > 0) {
+>>> +        relocated_kexec_smp_wait(NULL);
+>>> +        unreachable();
+>>> +    }
+>>> +
+>>> +    do_kexec = (void *)reboot_code_buffer;
+>>> +    do_kexec(boot_flag, fdt_addr, first_ind_entry, jump_addr);
+>>> +
+>>> +    unreachable();
+>>> +}
+>>> +
+>>> +static void kexec_shutdown_secondary(void *)
+>>> +{
+>>> +    local_irq_disable();
+>>> +    while (!atomic_read(&kexec_ready_to_reboot))
+>>> +        cpu_relax();
+>>> +
+>>> +    kexec_reboot();
+>>> +}
+>>> +
+>>> +void machine_crash_shutdown(struct pt_regs *regs)
+>>> +{
+>>> +}
+>>> +#endif
+>>> +
+>>> +void machine_shutdown(void)
+>>> +{
+>>> +    smp_call_function(kexec_shutdown_secondary, NULL, 0);
+>>> +}
+>>> +
+>>> +void machine_kexec(struct kimage *image)
+>>> +{
+>>> +    unsigned long entry;
+>>> +    unsigned long *ptr;
+>>> +    struct kimage_arch *internal = &image->arch;
+>>> +
+>>> +    boot_flag = internal->boot_flag;
+>>> +    fdt_addr = internal->fdt_addr;
+>>> +
+>>> +    jump_addr = (unsigned long)phys_to_virt(image->start);
+>>> +
+>>> +    first_ind_entry = (unsigned long)phys_to_virt(image->head &
+>>> PAGE_MASK);
+>>> +
+>>> +    /*
+>>> +     * The generic kexec code builds a page list with physical
+>>> +     * addresses. they are directly accessible through XKPRANGE
+>>> +     * hence the phys_to_virt() call.
+>>> +     */
+>>> +    for (ptr = &image->head; (entry = *ptr) && !(entry & IND_DONE);
+>>> +         ptr = (entry & IND_INDIRECTION) ?
+>>> +           phys_to_virt(entry & PAGE_MASK) : ptr + 1) {
+>>> +        if (*ptr & IND_SOURCE || *ptr & IND_INDIRECTION ||
+>>> +            *ptr & IND_DESTINATION)
+>>> +            *ptr = (unsigned long) phys_to_virt(*ptr);
+>>> +    }
+>>> +
+>>> +    /* Mark offline before disabling local irq. */
+>>> +    set_cpu_online(smp_processor_id(), false);
+>>> +
+>>> +    /* we do not want to be bothered. */
+>>> +    local_irq_disable();
+>>> +
+>>> +    pr_notice("Will call new kernel at %lx\n", jump_addr);
+>>> +    pr_notice("FDT image at %lx\n", fdt_addr);
+>>> +    pr_notice("Bye ...\n");
+>>> +
+>>> +    /* Make reboot code buffer available to the boot CPU. */
+>>> +    flush_cache_all();
+>>> +
+>>> +    atomic_set(&kexec_ready_to_reboot, 1);
+>>> +
+>>> +    /*
+>>> +     * We know we were online, and there will be no incoming IPIs at
+>>> +     * this point.
+>>> +     */
+>>> +    set_cpu_online(smp_processor_id(), true);
+>>> +
+>>> +    /* Ensure remote CPUs observe that we're online before
+>>> rebooting. */
+>>> +    smp_mb__after_atomic();
+>>> +
+>>> +    kexec_reboot();
+>>> +}
+>>> diff --git a/arch/loongarch/kernel/relocate_kernel.S
+>>> b/arch/loongarch/kernel/relocate_kernel.S
+>>> new file mode 100644
+>>> index 000000000000..d1f242f74ea8
+>>> --- /dev/null
+>>> +++ b/arch/loongarch/kernel/relocate_kernel.S
+>>> @@ -0,0 +1,125 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +/*
+>>> + * relocate_kernel.S for kexec
+>>> + *
+>>> + * Copyright (C) 2022 Loongson Technology Corporation Limited
+>>> + */
+>>> +
+>>> +#include <linux/kexec.h>
+>>> +
+>>> +#include <asm/asm.h>
+>>> +#include <asm/asmmacro.h>
+>>> +#include <asm/regdef.h>
+>>> +#include <asm/loongarch.h>
+>>> +#include <asm/stackframe.h>
+>>> +#include <asm/addrspace.h>
+>>> +
+>>> +#define IPI_REG_BASE 0x1fe01000
+>>> +
+>>> +SYM_CODE_START(relocate_new_kernel)
+>>> +    /*
+>>> +     * s0: Boot flag passed to the new kernel
+>>> +     * s1: Virt address of the FDT image
+>>> +     * s2: Pointer to the current entry
+>>> +     * s3: Virt address to jump to after relocation
+>>> +     */
+>>> +    move        s0, a0
+>>> +    move        s1, a1
+>>> +    move        s2, a2
+>>> +    move        s3, a3
+>>> +
+>>> +process_entry:
+>>> +    PTR_L        s4, s2, 0
+>>> +    PTR_ADDI    s2, s2, SZREG
+>>> +
+>>> +    /* destination page */
+>>> +    andi        s5, s4, IND_DESTINATION
+>>> +    beqz        s5, 1f
+>>> +    li.w        t0, ~0x1
+>>> +    and        s6, s4, t0    /* store destination addr in s6 */
+>>> +    b        process_entry
+>>> +
+>>> +1:
+>>> +    /* indirection page, update s2    */
+>>> +    andi        s5, s4, IND_INDIRECTION
+>>> +    beqz        s5, 1f
+>>> +    li.w        t0, ~0x2
+>>> +    and        s2, s4, t0
+>>> +    b        process_entry
+>>> +
+>>> +1:
+>>> +    /* done page */
+>>> +    andi        s5, s4, IND_DONE
+>>> +    beqz        s5, 1f
+>>> +    b        done
+>>> +1:
+>>> +    /* source page */
+>>> +    andi        s5, s4, IND_SOURCE
+>>> +    beqz        s5, process_entry
+>>> +    li.w        t0, ~0x8
+>>> +    and        s4, s4, t0
+>>> +    li.w        s8, (1 << _PAGE_SHIFT) / SZREG
+>>> +
+>>> +copy_word:
+>>> +    /* copy page word by word */
+>>> +    REG_L        s7, s4, 0
+>>> +    REG_S        s7, s6, 0
+>>> +    PTR_ADDI    s6, s6, SZREG
+>>> +    PTR_ADDI    s4, s4, SZREG
+>>> +    LONG_ADDI    s8, s8, -1
+>>> +    beqz        s8, process_entry
+>>> +    b        copy_word
+>>> +    b        process_entry
+>>> +
+>>> +done:
+>>> +    dbar        0
+>> ibar, too?
+>
+> Will add ibar 0.
+>
+>>> +
+>>> +    move        a0, s0
+>>> +    move        a1, s1
+>>> +    /* jump to the new kernel */
+>>> +    jr        s3
+>>> +SYM_CODE_END(relocate_new_kernel)
+>>> +
+>>> +#ifdef CONFIG_SMP
+>>> +/*
+>>> + * Other CPUs should wait until code is relocated and
+>>> + * then start at entry (?) point.
+>>> + */
+>>> +SYM_CODE_START(kexec_smp_wait)
+>>> +    li.d        t0, IPI_REG_BASE
+>>> +    li.d        t1, UNCACHE_BASE
+>>> +    or        t0, t0, t1
+>>> +
+>>> +    /*
+>>> +     * s1:initfn
+>>> +     * t0:base t1:cpuid t2:node t3:core t4:count
+>>> +     */
+>>> +    csrrd        t1, LOONGARCH_CSR_CPUID
+>>> +    andi        t1, t1, CSR_CPUID_COREID
+>>> +    andi        t3, t1, 0x3
+>>> +    slli.w        t3, t3, 8              /* get core id */
+>>> +    or        t0, t0, t3
+>>> +    andi        t2, t1, 0x3c
+>>> +    slli.d        t2, t2, 42             /* get node id */
+>>> +    or        t0, t0, t2
+>>> +
+>>> +1:    li.w        t4, 0x100              /* wait for init loop */
+>>> +2:    addi.w        t4, t4, -1             /* limit mailbox access */
+>>> +    bnez        t4, 2b
+>>> +    ld.w        s1, t0, 0x20           /* check PC as an indicator */
+>> Can we do this with iocsr*?
+>
+> OK, I will consider the implementation in the iocsr way.
 >
 
-Hi Huacai,
+The kexec_smp_wait implementation will be modified in the next release
+as follows：
 
-It is useful to enable TEST_BPF in default config, otherwise we
-need to use "make menuconfig" to select it manually if we want
-to test bpf jit, and build it as a module by default has no side
-effect, so I prefer to enable TEST_BPF in default config.
+SYM_CODE_START(kexec_smp_wait)
+1:      li.w            t0, 0x100                       /* wait for init 
+loop */
+2:      addi.w          t0, t0, -1                      /* limit mailbox 
+access */
+         bnez            t0, 2b
+         li.w            t1, LOONGARCH_IOCSR_MBUF0
+         iocsrrd.w       s1, t1                          /* check PC as 
+an indicator */
+         beqz            s1, 1b
+         iocsrrd.d       s1, t1                          /* get PC via 
+mailbox */
 
-Thanks,
-Tiezhu
+         li.d            t0, CACHE_BASE
+         or              s1, s1, t0
+         jr              s1                              /* jump to 
+initial PC */
+SYM_CODE_END(kexec_smp_wait)
+
+1) Using the iocsr method
+2) Remove sp, tp settings. sp, tp will be obtained from cpuboot_data in
+smpboot_entry.
+
+Thanks again Jinyang for the suggestion.
+
+
+Youling.
+
+> Thanks,
+> Youling
+>>
+>> Thanks,
+>> Jinyang
+>>> +    beqz        s1, 1b
+>>> +    ld.d        s1, t0, 0x20           /* get PC via mailbox */
+>>> +    ld.d        sp, t0, 0x28           /* get SP via mailbox */
+>>> +    ld.d        tp, t0, 0x30           /* get TP via mailbox */
+>>> +
+>>> +    li.d        t0, CACHE_BASE
+>>> +    or        s1, s1, t0
+>>> +    jr        s1                     /* jump to initial PC */
+>>> +SYM_CODE_END(kexec_smp_wait)
+>>> +#endif
+>>> +
+>>> +relocate_new_kernel_end:
+>>> +
+>>> +SYM_DATA_START(relocate_new_kernel_size)
+>>> +    PTR        relocate_new_kernel_end - relocate_new_kernel
+>>> +SYM_DATA_END(relocate_new_kernel_size)
+>>
+>
 
