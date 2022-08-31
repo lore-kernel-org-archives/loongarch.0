@@ -1,70 +1,89 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85ED7804
-	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 11:09:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1661944191;
-	bh=8XbdqaONtZ7pmuAJ5DQX8N6I8PArVUZF81z1ZRwruLg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=eFRdaJVMKl8xAVHztJPif52LbxIx1i2fOFYxYXqKWIUc83IH/cQAlxpsVhJvrBuP9
-	 G4nvJxSj2uorsllgHVjC2mmEU7RSZVIqtMWGsm+RQYYoXXzJ2l4J5ZZp0l/3IJ/yAj
-	 rvtQrHZXd4UjqWnf0g6hL/riObYm6p5JVSkytoOk=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id C6D8766841;
-	Wed, 31 Aug 2022 07:09:49 -0400 (EDT)
-Message-ID: <eb77b42f8ec4b67c1554dfac4a8efdfd8a4168c6.camel@xry111.site>
-Subject: Re: [PATCH 1/1] LoongArch: Fixed loongarch kernel csr_xxx implicit
- declaration.
-From: Xi Ruoyao <xry111@xry111.site>
-To: =?gb2312?Q?=C0=EE=D3=EE=C5=F4?= <liyupeng@zbhlos.com>
-Cc: chenhuacai <chenhuacai@kernel.org>, kernel <kernel@xen0n.name>, 
- "jiaxun.yang" <jiaxun.yang@flygoat.com>, loongarch
- <loongarch@lists.linux.dev>, linux-kernel <linux-kernel@vger.kernel.org>,
- caizp2008 <caizp2008@163.com>
-Date: Wed, 31 Aug 2022 19:09:47 +0800
-In-Reply-To: <AGcAvgDYFKf5CnvlznsCy4ok.3.1661932466929.Hmail.liyupeng@zbhlos.com>
-References: <feb773a8df5d30b8d9347d1c922997c9da1fd06a.camel@xry111.site>
-	 <AGcAvgDYFKf5CnvlznsCy4ok.3.1661932466929.Hmail.liyupeng@zbhlos.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.45.2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C4F7E1
+	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 14:40:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3826C433C1
+	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 14:40:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1661956813;
+	bh=7jiGa1vBE/j5RxUt8dEuAHBImCYY5aG0SR6VMryy7RA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sywG8ky5a1E6nzoaTfZ7won2Dl0eGn49RgyuvDlqn+YnIOEXoYugOxf50smACuyqe
+	 kum0gXmFppTJZ1hvnD5v7oNn89ohNBsHbovxOIlXp/yitXUDsYMmTonFMpv0Vkr1qx
+	 1lFk5NG0LJjqSQq3FtKkF3xdme77i/2vXaKECME4Ce8CMwseLs56So6itrdTHP5SjD
+	 HwH4cz/eaMmpLDFOYufrcs2PgfmLEUk+1OcpEapSA3wRoUT1aSvuYucQMNGNaileDC
+	 xwaSbmGgUPU+LOlZIioWI6lbyAJYe0xGC2v42dpQpHyt34NTZvcLRTTtJR+zZ6rU9+
+	 FqxLzKwLKjEjg==
+Received: by mail-vs1-f42.google.com with SMTP id i1so4610782vsc.9
+        for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 07:40:13 -0700 (PDT)
+X-Gm-Message-State: ACgBeo18R8VNn8Fh9OIpmGr/fAgzAYBG94f28Fk4XmgHQ065CT8vQR80
+	3J+wMFT9cMok6b7sngCOHmCKmo5E8Rw9MeDGKyM=
+X-Google-Smtp-Source: AA6agR6mIs5k1530qHJ6X9j9riGYENv1FmtGBR9gVZ7pjCtirFBWFE7zhnRTsMvY/P7nFTzqY8XSnjG5YJ7vu9sznlg=
+X-Received: by 2002:a05:6102:30bc:b0:390:da09:3a8c with SMTP id
+ y28-20020a05610230bc00b00390da093a8cmr5302064vsd.84.1661956812672; Wed, 31
+ Aug 2022 07:40:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20220830104806.128365-1-xry111@xry111.site> <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
+ <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name> <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
+ <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
+ <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn> <bc323d8578d2f6ec580066bab181788b305ae3c3.camel@xry111.site>
+In-Reply-To: <bc323d8578d2f6ec580066bab181788b305ae3c3.camel@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 31 Aug 2022 22:40:00 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4N_XvmP9KA1M5crU44kHr33MZUVSsMY4Ugu5wQSv_LOQ@mail.gmail.com>
+Message-ID: <CAAhV-H4N_XvmP9KA1M5crU44kHr33MZUVSsMY4Ugu5wQSv_LOQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation types
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Jinyang He <hejinyang@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	LKML <linux-kernel@vger.kernel.org>, Youling Tang <tangyouling@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2022-08-31 at 15:54 +0800, =E6=9D=8E=E5=AE=87=E9=B9=8F wrote:
->=20
-> thank you for your reply=E3=80=82
-> I used the latest gcc tool on the official website of loongson,gcc-
-> 8.3.0.
-> http://www.loongnix.cn/zh/toolchain/GNU/
+On Wed, Aug 31, 2022 at 4:09 PM Xi Ruoyao <xry111@xry111.site> wrote:
+>
+> On Wed, 2022-08-31 at 14:58 +0800, Jinyang He wrote:
+> > That's right. Also I am wondering why new toolchain produce .got* in
+> > kernel. It's unneeded. In the past, gcc create la.global and parsed
+> > to la.pcrel by gas, and kernel works well. Now it seems we lost this
+> > feature in gcc. I checked the x86 asm code just now. And some info
+> > follows,
+> >
+> > LoongArch64, ./net/ipv4/udp_diag.s, *have reloc hint*
+> >          pcalau12i       $r4,%got_pc_hi20(udplite_table)
+> >          ld.d    $r4,$r4,%got_pc_lo12(udplite_table)
+> >          b       udp_dump
+> >
+> > x86_64, ./net/ipv4/udp_diag.s
+> >          movq    $udplite_table, %rdi
+> >          jmp     udp_dump
+> >
+> > It seems related to -fno-PIE and -cmodel=kernel on x86_64.
+> > Hope new gcc with this feature now.
+>
+> On x86_64 -mcmodel=kernel means "all code and data are located in [-
+> 2GiB, 0) range.  We actually don't strictly require a "high" range as
+> we're mostly a PIC-friendly architecture: note that we use a
+> pcalau12i/addi.d pair for PIC addressing in [PC-2GiB, PC+2GiB, and a
+> lu12i.w/addi.d pair for "non-PIC" addressing in [-2GiB, 2GiB), both are
+> 2-insn sequence.
+>
+> If we can put the main kernel image and the modules in one 2GiB VA
+> range, we can avoid GOT completely.  But it's not possible for now
+> because main kernel image is loaded in XKPRANGE but the modules are in
+> XKVRANGE.  So the best we can achieve before implementing
+> CONFIG_RELOCATION is using GOT in modules, and avoid GOT in the main
+> kernel image (with a new code model in GCC, which will benefit both the
+> kernel and statically linked executables).
+Emmm, can you implement this new code model in the near future?
 
-Vanilla kernel cannot work with Loongnix:
-
-1. In Loongnix, GRUB loads pass the essential information to the kernel
-following "Loongson Firmware-Kernel Interface Specification".  Vanilla
-kernel does not support it and will never support it.
-2. In Loongnix, the syscall numbers are different and the layout of some
-data structures used in kernel UAPI is different.  Any Loongnix
-application invoking a syscall will likely blow up immediately on a
-vanilla kernel.
-
-These two problems are very difficult.  There is some plan to insert
-compatibility layers to work around them, but not even one line of code
-has been written AFAIK.
-
-So if you want to build a kernel for Loongnix, don't use the vanilla
-kernel.  If you just want to build a vanilla kernel with a pre-built
-cross toolchain, use the toolchain from
-https://kernel.org/pub/tools/crosstool/.
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Huacai
+>
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
+>
