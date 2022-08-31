@@ -1,38 +1,37 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FFB7E1
-	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 08:09:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4157E7
+	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 09:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1661933340;
-	bh=dYM2ABHuBdNpbMeDD+pD09EJ4JGxsgtH346VLGYcKyI=;
+	s=default; t=1661936552;
+	bh=ECqsVjBTRWNtq87Rj1rE7CyanoR0fzh8v6Jx+yreDLE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=S2xBrLTQ52BqHdMDrb/+Rj1dLynVRoX5yR9uxfrtB1v84BvZFdzMeRLSIl2VC6Rar
-	 U8Z9PHDsL9MM1UxWmrkaSXy/2cnfKDYDfH3UHcpJ+ttIoBP3WXLIObH3WUK6xxOa+H
-	 Ep2AfDsZ4MhNl687mOXXLSqvyBEBUPOyTeRlIotY=
+	b=M4WDTBDs0+mXFJZpVCOe67+s1EQwPozaVwWJJBQGwmxtPWVoQSrhPveMxhBuASrCj
+	 cFHwXTjrxUKuYghhs0A7OVOnsXn2+VlLpi4IEl3NpdhJshuwmB4SLqir7JtuTjZqWw
+	 Npm8lmwjjUBOfuyBafuGSWydjVRGV+Hie2puUGKc=
 Received: from [IPv6:240e:358:118a:f800:dc73:854d:832e:4] (unknown [IPv6:240e:358:118a:f800:dc73:854d:832e:4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 0702F66809;
-	Wed, 31 Aug 2022 04:08:53 -0400 (EDT)
-Message-ID: <bc323d8578d2f6ec580066bab181788b305ae3c3.camel@xry111.site>
-Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation
- types
+	by xry111.site (Postfix) with ESMTPSA id 760C566819;
+	Wed, 31 Aug 2022 05:02:28 -0400 (EDT)
+Message-ID: <e477e042aee090d6c3cf7ebeabed25df5b0fa07e.camel@xry111.site>
+Subject: Re: [PATCH bpf-next v2 4/4] LoongArch: Enable BPF_JIT and TEST_BPF
+ in default config
 From: Xi Ruoyao <xry111@xry111.site>
-To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-  WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, Youling
-	Tang <tangyouling@loongson.cn>
-Date: Wed, 31 Aug 2022 16:08:39 +0800
-In-Reply-To: <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn>
-References: <20220830104806.128365-1-xry111@xry111.site>
-	 <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
-	 <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name>
-	 <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
-	 <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
-	 <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>,  Andrii Nakryiko <andrii@kernel.org>, bpf
+ <bpf@vger.kernel.org>, loongarch@lists.linux.dev
+Date: Wed, 31 Aug 2022 17:02:18 +0800
+In-Reply-To: <75b27dacb8b4d779c6b2c0e46871baf404a32b6b.camel@xry111.site>
+References: <1661857809-10828-1-git-send-email-yangtiezhu@loongson.cn>
+	 <1661857809-10828-5-git-send-email-yangtiezhu@loongson.cn>
+	 <CAAhV-H6Dq+Z_kS0LcM=QGF1h=k2i0hR7fYZdXgU2kXAfm1VPLw@mail.gmail.com>
+	 <6bc9bd64-1ba9-a35f-c0b7-480429b26b9f@loongson.cn>
+	 <75b27dacb8b4d779c6b2c0e46871baf404a32b6b.camel@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.45.2 
@@ -43,44 +42,65 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Wed, 2022-08-31 at 14:58 +0800, Jinyang He wrote:
-> That's right. Also I am wondering why new toolchain produce .got* in
-> kernel. It's unneeded. In the past, gcc create la.global and parsed
-> to la.pcrel by gas, and kernel works well. Now it seems we lost this
-> feature in gcc. I checked the x86 asm code just now. And some info
-> follows,
+On Wed, 2022-08-31 at 12:12 +0800, Xi Ruoyao wrote:
+> On Wed, 2022-08-31 at 09:23 +0800, Tiezhu Yang wrote:
+> >=20
+> >=20
+> > On 08/30/2022 10:46 PM, Huacai Chen wrote:
+> > > Hi, Tiezhu,
+> > >=20
+> > > On Tue, Aug 30, 2022 at 7:10 PM Tiezhu Yang
+> > > <yangtiezhu@loongson.cn> wrote:
+> > > >=20
+> > > > For now, BPF JIT for LoongArch is supported, update
+> > > > loongson3_defconfig to
+> > > > enable BPF_JIT to allow the kernel to generate native code when
+> > > > a program
+> > > > is loaded into the kernel, and also enable TEST_BPF to test BPF
+> > > > JIT.
+> > > >=20
+> > > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > > > ---
+> > > > =C2=A0arch/loongarch/configs/loongson3_defconfig | 2 ++
+> > > > =C2=A01 file changed, 2 insertions(+)
+> > > >=20
+> > > > diff --git a/arch/loongarch/configs/loongson3_defconfig
+> > > > b/arch/loongarch/configs/loongson3_defconfig
+> > > > index 3712552..93dc072 100644
+> > > > --- a/arch/loongarch/configs/loongson3_defconfig
+> > > > +++ b/arch/loongarch/configs/loongson3_defconfig
+> > > > @@ -4,6 +4,7 @@ CONFIG_POSIX_MQUEUE=3Dy
+> > > > =C2=A0CONFIG_NO_HZ=3Dy
+> > > > =C2=A0CONFIG_HIGH_RES_TIMERS=3Dy
+> > > > =C2=A0CONFIG_BPF_SYSCALL=3Dy
+> > > > +CONFIG_BPF_JIT=3Dy
+> > > > =C2=A0CONFIG_PREEMPT=3Dy
+> > > > =C2=A0CONFIG_BSD_PROCESS_ACCT=3Dy
+> > > > =C2=A0CONFIG_BSD_PROCESS_ACCT_V3=3Dy
+> > > > @@ -801,3 +802,4 @@ CONFIG_MAGIC_SYSRQ=3Dy
+> > > > =C2=A0CONFIG_SCHEDSTATS=3Dy
+> > > > =C2=A0# CONFIG_DEBUG_PREEMPT is not set
+> > > > =C2=A0# CONFIG_FTRACE is not set
+> > > > +CONFIG_TEST_BPF=3Dm
+> > > I don't want the test module be built by default, but I don't
+> > > insist
+> > > if you have a strong requirement.
+> > >=20
+> >=20
+> > Hi Huacai,
+> >=20
+> > It is useful to enable TEST_BPF in default config, otherwise we
+> > need to use "make menuconfig" to select it manually if we want
+> > to test bpf jit, and build it as a module by default has no side
+> > effect, so I prefer to enable TEST_BPF in default config.
 >=20
-> LoongArch64, ./net/ipv4/udp_diag.s, *have reloc hint*
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pcalau12i=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 $r4,%got_pc_hi20(udplite_table)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ld.d=C2=A0=C2=A0=C2=A0 $=
-r4,$r4,%got_pc_lo12(udplite_table)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 b=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 udp_dump
->=20
-> x86_64, ./net/ipv4/udp_diag.s
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 movq=C2=A0=C2=A0=C2=A0 $=
-udplite_table, %rdi
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 jmp=C2=A0=C2=A0=C2=A0=C2=
-=A0 udp_dump
->=20
-> It seems related to -fno-PIE and -cmodel=3Dkernel on x86_64.
-> Hope new gcc with this feature now.
+> IMO we shouldn't enable a test feature which is never used by 99% of
+> users in the default.
 
-On x86_64 -mcmodel=3Dkernel means "all code and data are located in [-
-2GiB, 0) range.  We actually don't strictly require a "high" range as
-we're mostly a PIC-friendly architecture: note that we use a
-pcalau12i/addi.d pair for PIC addressing in [PC-2GiB, PC+2GiB, and a
-lu12i.w/addi.d pair for "non-PIC" addressing in [-2GiB, 2GiB), both are
-2-insn sequence.
+P. S. this is not a strong option.  CONFIG_TEST_BPF seems enabled by
+default for S390, and I'm not sure if defconfig is designed for "kernel
+developers" or "distro builders", or even "normal users".
 
-If we can put the main kernel image and the modules in one 2GiB VA
-range, we can avoid GOT completely.  But it's not possible for now
-because main kernel image is loaded in XKPRANGE but the modules are in
-XKVRANGE.  So the best we can achieve before implementing
-CONFIG_RELOCATION is using GOT in modules, and avoid GOT in the main
-kernel image (with a new code model in GCC, which will benefit both the
-kernel and statically linked executables).
 
 --=20
 Xi Ruoyao <xry111@xry111.site>
