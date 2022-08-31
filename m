@@ -1,99 +1,258 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE48164C
-	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 06:58:24 +0000 (UTC)
-Received: from localhost.localdomain (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxT+CLBg9jHoYNAA--.60052S3;
-	Wed, 31 Aug 2022 14:58:21 +0800 (CST)
-Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation
- types
-To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>
-References: <20220830104806.128365-1-xry111@xry111.site>
- <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
- <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name>
- <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
- <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
-Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
- Youling Tang <tangyouling@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn>
-Date: Wed, 31 Aug 2022 14:58:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD9A865B
+	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 07:48:53 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.2.9.158])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx9OFeEg9jNZINAA--.59415S2;
+	Wed, 31 Aug 2022 15:48:46 +0800 (CST)
+From: Mao Bibo <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: Add safer signal handler for TLS access
+Date: Wed, 31 Aug 2022 15:48:46 +0800
+Message-Id: <20220831074846.3565542-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8CxT+CLBg9jHoYNAA--.60052S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4kKF4DAFWfuF43tw17Awb_yoW8ury8pF
-	W5Kr95tF4UuFW8A3Z7tF1Iva4fXw1kA34agFy5Ka48Aan8uasaqrZYva17ZFyqywn5ur40
-	gryrtry0kF18ZFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-	IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUU
-	U==
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cx9OFeEg9jNZINAA--.59415S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxtF1ruw18Ww4ftr4UuryrtFb_yoWxWF4rpF
+	9xAw1kArZ0kw1kAr9Fva4Dury8Gwn7Gw47uFZIka45Aa12qa1rXryv9a4DZF4Yyw4ku3W0
+	qFZ0grnxta1qqaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyKb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+	8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8Jw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK6svPMxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7eOJUUUUU
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 
-On 08/31/2022 02:10 PM, Xi Ruoyao wrote:
+LoongArch uses general purpose register R2 as thread pointer(TP)
+register, signal hanlder also uses TP register to access variables
+in TLS area, such as errno and variable in TLS.
 
-> On Wed, 2022-08-31 at 13:44 +0800, Huacai Chen wrote:
->
->> With this series applied and ARCH_WANT_LD_ORPHAN_WARN enabled, we get
->> loongarch64-unknown-linux-gnu-ld: warning: orphan section `.got' from
->> `arch/loongarch/kernel/head.o' being placed in section `.got'
->> loongarch64-unknown-linux-gnu-ld: warning: orphan section `.got.plt'
->> from `arch/loongarch/kernel/head.o' being placed in section `.got.plt'
->>
->> I think we should add this lines in vmlinux.lds.S
->>          .got : { *(.got) }
->>          .got.plt : { *(.got.plt) }
->>
->> But put them to which patch? Patch 2 or Patch 5?
-> In patch 2 IMO.  Because in patch 2 we already know "-Wa,-mla-global-
-> with-pcrel" does not prevent the generation of GOT with new toolchain.
->
-> If you need a v8 please tell me to send it, but I don't know how to
-> handle -Woverride-init warnings (IMO the fix for this warning should be
-> a standalone patch outside of the series).
->
-> P. S. The ld warning message seems a little strange because "head.o"
-> does not contain .got or .got.plt sections...  I guess there is a linker
-> bug causing it outputs the very first input file in the message, instead
-> of the first input file really containing an orphaned section.
->
-> Another P. S.: the use of GOT is actually unneeded in main kernel image
-> but we don't have something equivalent to "-Wa,-mla-global-with-pcrel"
-> in the new toolchain.  Perhaps we can add this feature to GCC later.
->
-That's right. Also I am wondering why new toolchain produce .got* in
-kernel. It's unneeded. In the past, gcc create la.global and parsed
-to la.pcrel by gas, and kernel works well. Now it seems we lost this
-feature in gcc. I checked the x86 asm code just now. And some info
-follows,
+If GPR R2 is modified with wrong value, signal handler still uses
+the wrong TP register, so signal hanlder is insafe to access TLS
+variable.
 
-LoongArch64, ./net/ipv4/udp_diag.s, *have reloc hint*
-         pcalau12i       $r4,%got_pc_hi20(udplite_table)
-         ld.d    $r4,$r4,%got_pc_lo12(udplite_table)
-         b       udp_dump
+This patch adds one arch specific syscall set_thread_area, and
+restore previoud TP value before signal handler, so that signal
+handler is safe to access TLS variable.
 
-x86_64, ./net/ipv4/udp_diag.s
-         movq    $udplite_table, %rdi
-         jmp     udp_dump
+It passes to run with the following test case.
+=======8<======
+ #define _GNU_SOURCE
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <unistd.h>
+ #include <string.h>
+ #include <sys/syscall.h>
+ #include <sys/types.h>
+ #include <signal.h>
+ #include <pthread.h>
+ #include <asm/ucontext.h>
+ #include <asm/sigcontext.h>
 
-It seems related to -fno-PIE and -cmodel=kernel on x86_64.
-Hope new gcc with this feature now.
+ #define ILL_INSN ".word 0x000001f0"
+static inline long test_sigill(unsigned long fid)
+{
+        register long ret __asm__("$r4");
+        register unsigned long fun __asm__("$r4") = fid;
+
+        __asm__ __volatile__("move $r2, $r0 \r\n");
+        __asm__ __volatile__(
+                        ILL_INSN
+                        : "=r" (ret)
+                        : "r" (fun)
+                        : "memory"
+                        );
+
+        return ret;
+}
+
+static void set_sigill_handler(void (*fn) (int, siginfo_t *, void *))
+{
+        struct sigaction sa;
+        memset(&sa, 0, sizeof(struct sigaction));
+
+        sa.sa_sigaction = fn;
+        sa.sa_flags = SA_SIGINFO;
+        sigemptyset(&sa.sa_mask);
+        if (sigaction(SIGILL, &sa, 0) != 0) {
+                perror("sigaction");
+        }
+}
+
+void catch_sig(int sig, siginfo_t *si, void *vuc)
+{
+        struct ucontext *uc = vuc;
+        register unsigned long tls  __asm__("$r2");
+
+        uc->uc_mcontext.sc_pc +=4;
+        uc->uc_mcontext.sc_regs[2] = tls;
+        printf("catched signal %d\n", sig);
+}
+
+void *print_message_function( void *ptr )
+{
+        char *message;
+        message = (char *) ptr;
+        printf("%s \n", message);
+        test_sigill(1);
+}
+
+void pthread_test(void)
+{
+        pthread_t thread1, thread2;
+        char *message1 = "Thread 1";
+        char *message2 = "Thread 2";
+        int  iret1, iret2;
+
+        iret1 = pthread_create( &thread1, NULL, print_message_function,
+				(void*) message1);
+        iret2 = pthread_create( &thread2, NULL, print_message_function,
+				(void*) message2);
+        pthread_join( thread1, NULL);
+        pthread_join( thread2, NULL);
+        printf("Thread 1 returns: %d\n",iret1);
+        printf("Thread 2 returns: %d\n",iret2);
+        exit(0);
+}
+
+void exec_test(void) {
+        test_sigill(1);
+}
+
+void main() {
+        register unsigned long tls  __asm__("$r2");
+        int val;
+
+        val = syscall(244, tls);
+        set_sigill_handler(&catch_sig);
+        pthread_test();
+        //exec_test();
+        return;
+}
+=======8<======
+
+Signed-off-by: Mao Bibo <maobibo@loongson.cn>
+---
+v1->v2:
+ - Clear TP value in clone function if CLONE_SETTLS is not set 
+---
+ arch/loongarch/include/asm/unistd.h      |  1 +
+ arch/loongarch/include/uapi/asm/unistd.h |  2 ++
+ arch/loongarch/kernel/process.c          | 10 +++++++++-
+ arch/loongarch/kernel/signal.c           |  5 +++++
+ arch/loongarch/kernel/syscall.c          | 10 ++++++++++
+ 5 files changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/include/asm/unistd.h b/arch/loongarch/include/asm/unistd.h
+index cfddb0116a8c..1581624f0115 100644
+--- a/arch/loongarch/include/asm/unistd.h
++++ b/arch/loongarch/include/asm/unistd.h
+@@ -9,3 +9,4 @@
+ #include <uapi/asm/unistd.h>
+ 
+ #define NR_syscalls (__NR_syscalls)
++__SYSCALL(__NR_set_thread_area, sys_set_thread_area)
+diff --git a/arch/loongarch/include/uapi/asm/unistd.h b/arch/loongarch/include/uapi/asm/unistd.h
+index fcb668984f03..b47f26b5307b 100644
+--- a/arch/loongarch/include/uapi/asm/unistd.h
++++ b/arch/loongarch/include/uapi/asm/unistd.h
+@@ -3,3 +3,5 @@
+ #define __ARCH_WANT_SYS_CLONE3
+ 
+ #include <asm-generic/unistd.h>
++
++#define __NR_set_thread_area	(__NR_arch_specific_syscall + 0)
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index 660492f064e7..f513b3d845b4 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -88,6 +88,7 @@ void start_thread(struct pt_regs *regs, unsigned long pc, unsigned long sp)
+ 	clear_used_math();
+ 	regs->csr_era = pc;
+ 	regs->regs[3] = sp;
++	task_thread_info(current)->tp_value = 0;
+ }
+ 
+ void exit_thread(struct task_struct *tsk)
+@@ -176,8 +177,15 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 	clear_tsk_thread_flag(p, TIF_LSX_CTX_LIVE);
+ 	clear_tsk_thread_flag(p, TIF_LASX_CTX_LIVE);
+ 
+-	if (clone_flags & CLONE_SETTLS)
++	/*
++	 * record tls val for cloned threads
++	 * clear it for forked process
++	 */
++	if (clone_flags & CLONE_SETTLS) {
+ 		childregs->regs[2] = tls;
++		task_thread_info(p)->tp_value = tls;
++	} else
++		task_thread_info(p)->tp_value = 0;
+ 
+ 	return 0;
+ }
+diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
+index 7f4889df4a17..9e0c9755e548 100644
+--- a/arch/loongarch/kernel/signal.c
++++ b/arch/loongarch/kernel/signal.c
+@@ -480,6 +480,9 @@ static int setup_rt_frame(void *sig_return, struct ksignal *ksig,
+ 	 *
+ 	 * c0_era point to the signal handler, $r3 (sp) points to
+ 	 * the struct rt_sigframe.
++	 *
++	 * Use recorded TP to signal handler if exists since $r2 may be
++	 * corrupted already.
+ 	 */
+ 	regs->regs[4] = ksig->sig;
+ 	regs->regs[5] = (unsigned long) &frame->rs_info;
+@@ -487,6 +490,8 @@ static int setup_rt_frame(void *sig_return, struct ksignal *ksig,
+ 	regs->regs[3] = (unsigned long) frame;
+ 	regs->regs[1] = (unsigned long) sig_return;
+ 	regs->csr_era = (unsigned long) ksig->ka.sa.sa_handler;
++	if (task_thread_info(current)->tp_value)
++		regs->regs[2] = task_thread_info(current)->tp_value;
+ 
+ 	DEBUGP("SIG deliver (%s:%d): sp=0x%p pc=0x%lx ra=0x%lx\n",
+ 	       current->comm, current->pid,
+diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/syscall.c
+index 3fc4211db989..b62560d8fe24 100644
+--- a/arch/loongarch/kernel/syscall.c
++++ b/arch/loongarch/kernel/syscall.c
+@@ -29,6 +29,16 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len, unsigned long,
+ 	return ksys_mmap_pgoff(addr, len, prot, flags, fd, offset >> PAGE_SHIFT);
+ }
+ 
++SYSCALL_DEFINE1(set_thread_area, unsigned long, addr)
++{
++	struct thread_info *ti   = task_thread_info(current);
++	struct pt_regs     *regs = current_pt_regs();
++
++	regs->regs[2] = addr;
++	ti->tp_value  = addr;
++	return 0;
++}
++
+ void *sys_call_table[__NR_syscalls] = {
+ 	[0 ... __NR_syscalls - 1] = sys_ni_syscall,
+ #include <asm/unistd.h>
+-- 
+2.27.0
 
