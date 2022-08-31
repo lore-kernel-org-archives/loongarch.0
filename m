@@ -1,179 +1,90 @@
-Received: from mail-m11877.qiye.163.com (mail-m11877.qiye.163.com [115.236.118.77])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28089652
-	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 06:14:14 +0000 (UTC)
-Received: from localhost.localdomain (unknown [IPV6:240e:36a:1401:7900:28fe:18b4:1216:17dd])
-	by mail-m11877.qiye.163.com (Hmail) with ESMTPA id 508564007A5;
-	Wed, 31 Aug 2022 14:14:12 +0800 (CST)
-From: Yupeng Li <liyupeng@zbhlos.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	jiaxun.yang@flygoat.com
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	caizp2008@163.com,
-	Yupeng Li <liyupeng@zbhlos.com>
-Subject: [PATCH 1/1] LoongArch: Fixed loongarch kernel csr_xxx implicit declaration.
-Date: Wed, 31 Aug 2022 14:14:06 +0800
-Message-Id: <20220831061406.431027-1-liyupeng@zbhlos.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB1364C
+	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 06:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1661928611;
+	bh=70USwLN0cVzP/zKh6wgTroCrDHnsKsgsZzrBU5FMj9c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=J8M9dW33G6NpWL38Dakdfk1FaAds7+8jwYyCzXG0EI25qQar3AXtJPqjoy+a6Uzq0
+	 3AXlxLTYRCeYDuKPcLAYPyg2q/pHKrsoDzM38IsEU0a0mF0FLyFc/r+Zjy+3Z3c8Y8
+	 pmd3z8ZIJrgVa+b1dm+czrc8EyIBRystlOC7LL8M=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 9C078667E8;
+	Wed, 31 Aug 2022 02:50:09 -0400 (EDT)
+Message-ID: <feb773a8df5d30b8d9347d1c922997c9da1fd06a.camel@xry111.site>
+Subject: Re: [PATCH 1/1] LoongArch: Fixed loongarch kernel csr_xxx implicit
+ declaration.
+From: Xi Ruoyao <xry111@xry111.site>
+To: Yupeng Li <liyupeng@zbhlos.com>, chenhuacai@kernel.org,
+ kernel@xen0n.name,  jiaxun.yang@flygoat.com
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ caizp2008@163.com
+Date: Wed, 31 Aug 2022 14:50:07 +0800
+In-Reply-To: <20220831061406.431027-1-liyupeng@zbhlos.com>
+References: <20220831061406.431027-1-liyupeng@zbhlos.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.45.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDTB4eVk1IGB8YTx0dHkMZGFUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUlPSx5BSE0aQUpPS0pBTEJLS0FJQx0eQUpDGU9BSklKTUFKTB8fWVdZFhoPEhUdFF
-	lBWU9LSFVKSktISkxVSktLWQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nwg6STo*Fz0#Tk41OE09GjQ*
-	CjUwC0pVSlVKTU1KQklNT05JQ0pOVTMWGhIXVRcSAg4LHhUcOwEZExcUCFUYFBZFWVdZEgtZQVlJ
-	T0seQUhNGkFKT0tKQUxCS0tBSUMdHkFKQxlPQUpJSk1BSkwfH1lXWQgBWUFNSklDNwY+
-X-HM-Tid: 0a82f2892cf02eb3kusn508564007a5
 
-Loongarch CSR register operation related interface, use the
-interface defined  __builtin_loongarch_xxx instead.
-Build kernel error messages like:
+On Wed, 2022-08-31 at 14:14 +0800, Yupeng Li wrote:
+> Loongarch CSR register operation related interface, use the
+> interface defined=C2=A0 __builtin_loongarch_xxx instead.
+> Build kernel error messages like:
 
-  CALL    scripts/atomic/check-atomics.sh
-  CC      arch/loongarch/kernel/asm-offsets.s
-In file included from ./arch/loongarch/include/asm/cpu-info.h:11,
-                 from ./arch/loongarch/include/asm/processor.h:13,
-                 from ./arch/loongarch/include/asm/thread_info.h:15,
-                 from ./include/linux/thread_info.h:60,
-                 from ./include/asm-generic/current.h:5,
-                 from ./arch/loongarch/include/generated/asm/current.h:1,
-                 from ./include/linux/sched.h:12,
-                 from arch/loongarch/kernel/asm-offsets.c:8:
-./arch/loongarch/include/asm/loongarch.h: In function 'csr_read32':
-./arch/loongarch/include/asm/loongarch.h:232:9: error: implicit declaration of function '__csrrd_w'; did you mean '__iocsrrd_w'? [-Werror=implicit-function-declaration]
-  return __csrrd_w(reg);
-         ^~~~~~~~~
-         __iocsrrd_w
-./arch/loongarch/include/asm/loongarch.h: In function 'csr_read64':
-./arch/loongarch/include/asm/loongarch.h:237:9: error: implicit declaration of function '__csrrd_d'; did you mean '__iocsrrd_d'? [-Werror=implicit-function-declaration]
-  return __csrrd_d(reg);
-         ^~~~~~~~~
-         __iocsrrd_d
-./arch/loongarch/include/asm/loongarch.h: In function 'csr_write32':
-./arch/loongarch/include/asm/loongarch.h:242:2: error: implicit declaration of function '__csrwr_w'; did you mean '__iocsrwr_w'? [-Werror=implicit-function-declaration]
-  __csrwr_w(val, reg);
-  ^~~~~~~~~
-  __iocsrwr_w
-./arch/loongarch/include/asm/loongarch.h: In function 'csr_write64':
-./arch/loongarch/include/asm/loongarch.h:247:2: error: implicit declaration of function '__csrwr_d'; did you mean '__iocsrwr_d'? [-Werror=implicit-function-declaration]
-  __csrwr_d(val, reg);
-  ^~~~~~~~~
-  __iocsrwr_d
-./arch/loongarch/include/asm/loongarch.h: In function 'csr_xchg32':
-./arch/loongarch/include/asm/loongarch.h:252:9: error: implicit declaration of function '__csrxchg_w'; did you mean '__cmpxchg'? [-Werror=implicit-function-declaration]
-  return __csrxchg_w(val, mask, reg);
-         ^~~~~~~~~~~
-         __cmpxchg
-./arch/loongarch/include/asm/loongarch.h: In function 'csr_xchg64':
-./arch/loongarch/include/asm/loongarch.h:257:9: error: implicit declaration of function '__csrxchg_d'; did you mean '__cmpxchg'? [-Werror=implicit-function-declaration]
-  return __csrxchg_d(val, mask, reg);
-         ^~~~~~~~~~~
-         __cmpxchg
-cc1: all warnings being treated as errors
-make[1]: *** [scripts/Makefile.build:117：arch/loongarch/kernel/asm-offsets.s] 错误 1
-make: *** [Makefile:1205：prepare0] 错误 2
+It's likely because you are using a draft version of LoongArch GCC port.
+Wrapper functions like __csrrd_w has been there in larchintrin.h since
+the first day GCC port was merged upstream
+(https://gcc.gnu.org/r12-7881).
 
-Signed-off-by: Yupeng Li <liyupeng@zbhlos.com>
-Signed-off-by: Caicai <caizp2008@163.com>
----
- arch/loongarch/include/asm/loongarch.h | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+A quick search shows IA64 and PowerPC also use GCC ia64intrin.h and
+spu_intrinsics.h, so the use of these wrappers are not forbidden in
+kernel source.
 
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 3ba4f7e87cd2..576ec266d9fc 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -10,7 +10,6 @@
- #include <linux/types.h>
- 
- #ifndef __ASSEMBLY__
--#include <larchintrin.h>
- 
- /*
-  * parse_r var, r - Helper assembler macro for parsing register names.
-@@ -58,7 +57,7 @@ __asm__(".macro	parse_r var r\n\t"
- /* CPUCFG */
- static inline u32 read_cpucfg(u32 reg)
- {
--	return __cpucfg(reg);
-+	return __builtin_loongarch_cpucfg(reg);
- }
- 
- #endif /* !__ASSEMBLY__ */
-@@ -229,53 +228,53 @@ static inline u32 read_cpucfg(u32 reg)
- /* CSR */
- static __always_inline u32 csr_read32(u32 reg)
- {
--	return __csrrd_w(reg);
-+	return __builtin_loongarch_csrrd(reg);
- }
- 
- static __always_inline u64 csr_read64(u32 reg)
- {
--	return __csrrd_d(reg);
-+	return __builtin_loongarch_csrrd(reg);
- }
- 
- static __always_inline void csr_write32(u32 val, u32 reg)
- {
--	__csrwr_w(val, reg);
-+	__builtin_loongarch_csrwr(val, reg);
- }
- 
- static __always_inline void csr_write64(u64 val, u32 reg)
- {
--	__csrwr_d(val, reg);
-+	__builtin_loongarch_csrwr(val, reg);
- }
- 
- static __always_inline u32 csr_xchg32(u32 val, u32 mask, u32 reg)
- {
--	return __csrxchg_w(val, mask, reg);
-+	return __builtin_loongarch_csrxchg(val, mask, reg);
- }
- 
- static __always_inline u64 csr_xchg64(u64 val, u64 mask, u32 reg)
- {
--	return __csrxchg_d(val, mask, reg);
-+	return __builtin_loongarch_csrxchg(val, mask, reg);
- }
- 
- /* IOCSR */
- static __always_inline u32 iocsr_read32(u32 reg)
- {
--	return __iocsrrd_w(reg);
-+	return __builtin_loongarch_iocsrrd_w(reg);
- }
- 
- static __always_inline u64 iocsr_read64(u32 reg)
- {
--	return __iocsrrd_d(reg);
-+	return __builtin_loongarch_iocsrrd_d(reg);
- }
- 
- static __always_inline void iocsr_write32(u32 val, u32 reg)
- {
--	__iocsrwr_w(val, reg);
-+	__builtin_loongarch_iocsrwr_w(val, reg);
- }
- 
- static __always_inline void iocsr_write64(u64 val, u32 reg)
- {
--	__iocsrwr_d(val, reg);
-+	__builtin_loongarch_iocsrwr_d(val, reg);
- }
- 
- #endif /* !__ASSEMBLY__ */
--- 
-2.34.1
+Unless there is some new good reason for the change,
 
+Nacked-by: Xi Ruoyao <xry111@xry111.site>
+
+>=20
+> =C2=A0 CALL=C2=A0=C2=A0=C2=A0 scripts/atomic/check-atomics.sh
+> =C2=A0 CC=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arch/loongarch/kernel/asm-offsets=
+.s
+> In file included from ./arch/loongarch/include/asm/cpu-info.h:11,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 from ./arch/loongarch/include/asm/processor.h:13,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 from ./arch/loongarch/include/asm/thread_info.h:15=
+,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/thread_info.h:60,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/asm-generic/current.h:5,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 from
+> ./arch/loongarch/include/generated/asm/current.h:1,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/sched.h:12,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 from arch/loongarch/kernel/asm-offsets.c:8:
+> ./arch/loongarch/include/asm/loongarch.h: In function 'csr_read32':
+> ./arch/loongarch/include/asm/loongarch.h:232:9: error: implicit
+> declaration of function '__csrrd_w'; did you mean '__iocsrrd_w'? [-
+> Werror=3Dimplicit-function-declaration]
+> =C2=A0 return __csrrd_w(reg);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __iocsrrd_w
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
