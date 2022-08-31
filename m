@@ -1,80 +1,75 @@
-Received: from mail-m11877.qiye.163.com (mail-m11877.qiye.163.com [115.236.118.77])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC008652
-	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 05:49:43 +0000 (UTC)
-Received: from localhost.localdomain (unknown [IPV6:240e:36a:1401:7900:28fe:18b4:1216:17dd])
-	by mail-m11877.qiye.163.com (Hmail) with ESMTPA id C93C74002C4;
-	Wed, 31 Aug 2022 13:40:25 +0800 (CST)
-From: Yupeng Li <liyupeng@zbhlos.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	jiaxun.yang@flygoat.com
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	caizp2008@163.com,
-	Yupeng Li <liyupeng@zbhlos.com>
-Subject: [PATCH 1/1] LoongArch: Fixed arch_remove_memory undefined build error.
-Date: Wed, 31 Aug 2022 13:40:17 +0800
-Message-Id: <20220831054017.382749-1-liyupeng@zbhlos.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2482F652
+	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 06:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1661926212;
+	bh=/TER4iJHDBefpw95HzCdjG3bDhB21B9H1g+yQMQEbes=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=h++eRIqWYr2VAslir2CMvR3E5V+NfSELO5/cM+dMXeXd3KHe10CzHfmOPssSjRU43
+	 yIrkZTb6e3aTQq46Bvbj/6l/+gZQP2a1bQI1OfJuNCejxEHibrMixx36mrCx1X+31H
+	 TZY0omxhkkjYZ3tVxwZiD73MLsTGQ7ULwt7BbJok=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 196BB667CA;
+	Wed, 31 Aug 2022 02:10:10 -0400 (EDT)
+Message-ID: <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
+Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation
+ types
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, Youling
+	Tang <tangyouling@loongson.cn>, Jinyang He <hejinyang@loongson.cn>
+Date: Wed, 31 Aug 2022 14:10:09 +0800
+In-Reply-To: <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
+References: <20220830104806.128365-1-xry111@xry111.site>
+	 <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
+	 <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name>
+	 <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.45.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZSkgaVklDTE8dHkpNTEJOTlUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUlPSx5BSE0aQUpPS0pBTEJLS0FJQx0eQUpDGU9BSklKTUFKTB8fWVdZFhoPEhUdFF
-	lBWU9LSFVKSktPSElVSktLWQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ny46FBw4Qj09Tk4YEx5OEkg9
-	NAFPCQ5VSlVKTU1KQklPT0lNTUhMVTMWGhIXVRcSAg4LHhUcOwEZExcUCFUYFBZFWVdZEgtZQVlJ
-	T0seQUhNGkFKT0tKQUxCS0tBSUMdHkFKQxlPQUpJSk1BSkwfH1lXWQgBWUFJT0lLNwY+
-X-HM-Tid: 0a82f26a41932eb3kusnc93c74002c4
 
-The kernel build error when unslected CONFIG_MEMORY_HOTREMOVE, the
-arch_remove_memory in mm/memory_hotplug.c was undefined.
-Removed CONFIG_MEMORY_HOTREMOVE requirement refer to the definitions
-of other platform architectures.Some build error messages like:
+On Wed, 2022-08-31 at 13:44 +0800, Huacai Chen wrote:
 
- LD      vmlinux.o
- MODPOST vmlinux.symvers
- MODINFO modules.builtin.modinfo
- GEN     modules.builtin
- LD      .tmp_vmlinux.kallsyms1
-loongarch64-linux-gnu-ld: mm/memory_hotplug.o: in function `.L242':
-memory_hotplug.c:(.ref.text+0x930): undefined reference to `arch_remove_memory'
-make: *** [Makefile:1169：vmlinux] 错误 1
+> With this series applied and ARCH_WANT_LD_ORPHAN_WARN enabled, we get
+> loongarch64-unknown-linux-gnu-ld: warning: orphan section `.got' from
+> `arch/loongarch/kernel/head.o' being placed in section `.got'
+> loongarch64-unknown-linux-gnu-ld: warning: orphan section `.got.plt'
+> from `arch/loongarch/kernel/head.o' being placed in section `.got.plt'
+>=20
+> I think we should add this lines in vmlinux.lds.S
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .got : { *(.got) }
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .got.plt : { *(.got.plt) }
+>=20
+> But put them to which patch? Patch 2 or Patch 5?
 
-Signed-off-by: Yupeng Li <liyupeng@zbhlos.com>
-Signed-off-by: Caicai <caizp2008@163.com>
----
- arch/loongarch/mm/init.c | 2 --
- 1 file changed, 2 deletions(-)
+In patch 2 IMO.  Because in patch 2 we already know "-Wa,-mla-global-
+with-pcrel" does not prevent the generation of GOT with new toolchain.
 
-diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-index 7094a68c9b83..191ed8e47895 100644
---- a/arch/loongarch/mm/init.c
-+++ b/arch/loongarch/mm/init.c
-@@ -142,7 +142,6 @@ int memory_add_physaddr_to_nid(u64 start)
- EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
- #endif
- 
--#ifdef CONFIG_MEMORY_HOTREMOVE
- void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
-@@ -155,7 +154,6 @@ void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
- 	__remove_pages(start_pfn, nr_pages, altmap);
- }
- #endif
--#endif
- 
- /*
-  * Align swapper_pg_dir in to 64K, allows its address to be loaded
--- 
-2.34.1
+If you need a v8 please tell me to send it, but I don't know how to
+handle -Woverride-init warnings (IMO the fix for this warning should be
+a standalone patch outside of the series).
 
+P. S. The ld warning message seems a little strange because "head.o"
+does not contain .got or .got.plt sections...  I guess there is a linker
+bug causing it outputs the very first input file in the message, instead
+of the first input file really containing an orphaned section.
+
+Another P. S.: the use of GOT is actually unneeded in main kernel image
+but we don't have something equivalent to "-Wa,-mla-global-with-pcrel"
+in the new toolchain.  Perhaps we can add this feature to GCC later.
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
