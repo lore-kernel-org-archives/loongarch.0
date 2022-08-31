@@ -1,81 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m11877.qiye.163.com (mail-m11877.qiye.163.com [115.236.118.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FF9652
-	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 05:44:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEB79C433D7
-	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 05:44:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1661924694;
-	bh=X4PxFntXm9Nca5RV5Kx6R9cYdqAMo4VWRPIFXi/6A9U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AId5APbpWjvsqGbHljWBuKPy3aCwhBvRXYYxxVwOmh7JNTGGPVXpAnGAhGjBhcgBE
-	 OZcwa/vTp1opRyIsHkLgf+9FCFc3yhXXV9m1pqypG9Hyo3cJWGGzMcPWvvuTqGmoi/
-	 AU6HcvfEH0OQR3XiddD+vpd1Wf0rWFYn1nki1GGHaagxoRgWC9lj6+ajWannPohsrf
-	 mIEvNpwVjTm23XL9cnvEUeG1Ra7knOt4R6XarUHBrv/LPIEQC/q/Z8RqFvT6vBJ8gK
-	 eeuqW/QuIztJh6WaAlUBogvf8lTYRMg87TWSr3dlrqHx9Et11v16aehQlwGrQjZQ9n
-	 x40V9mDJzic7A==
-Received: by mail-ua1-f51.google.com with SMTP id q21so5064156uam.13
-        for <loongarch@lists.linux.dev>; Tue, 30 Aug 2022 22:44:54 -0700 (PDT)
-X-Gm-Message-State: ACgBeo3m5mbC+u9N3b1aBUZ3KMLVt7LLDAampgmOi1DJwdpwHnrF4pgi
-	OEvJDs0Y0FFEppxPg4tCCsVZccuErcsQO/osRJ4=
-X-Google-Smtp-Source: AA6agR4CUWBBgX1i1ccifEvmTEI5b+tzXxFJ6cRSh8wIAakBnT/ciBFH8W1og/QTWRuqiwczjZ5vIGXyEP5BDziULXg=
-X-Received: by 2002:ab0:2095:0:b0:39f:881e:51b6 with SMTP id
- r21-20020ab02095000000b0039f881e51b6mr4786047uak.23.1661924693646; Tue, 30
- Aug 2022 22:44:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC008652
+	for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 05:49:43 +0000 (UTC)
+Received: from localhost.localdomain (unknown [IPV6:240e:36a:1401:7900:28fe:18b4:1216:17dd])
+	by mail-m11877.qiye.163.com (Hmail) with ESMTPA id C93C74002C4;
+	Wed, 31 Aug 2022 13:40:25 +0800 (CST)
+From: Yupeng Li <liyupeng@zbhlos.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	jiaxun.yang@flygoat.com
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	caizp2008@163.com,
+	Yupeng Li <liyupeng@zbhlos.com>
+Subject: [PATCH 1/1] LoongArch: Fixed arch_remove_memory undefined build error.
+Date: Wed, 31 Aug 2022 13:40:17 +0800
+Message-Id: <20220831054017.382749-1-liyupeng@zbhlos.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220830104806.128365-1-xry111@xry111.site> <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
- <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name>
-In-Reply-To: <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 31 Aug 2022 13:44:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
-Message-ID: <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
-Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation types
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, Youling Tang <tangyouling@loongson.cn>, 
-	Jinyang He <hejinyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZSkgaVklDTE8dHkpNTEJOTlUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUlPSx5BSE0aQUpPS0pBTEJLS0FJQx0eQUpDGU9BSklKTUFKTB8fWVdZFhoPEhUdFF
+	lBWU9LSFVKSktPSElVSktLWQY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ny46FBw4Qj09Tk4YEx5OEkg9
+	NAFPCQ5VSlVKTU1KQklPT0lNTUhMVTMWGhIXVRcSAg4LHhUcOwEZExcUCFUYFBZFWVdZEgtZQVlJ
+	T0seQUhNGkFKT0tKQUxCS0tBSUMdHkFKQxlPQUpJSk1BSkwfH1lXWQgBWUFJT0lLNwY+
+X-HM-Tid: 0a82f26a41932eb3kusnc93c74002c4
 
-Hi, Ruoyao and Xuerui,
+The kernel build error when unslected CONFIG_MEMORY_HOTREMOVE, the
+arch_remove_memory in mm/memory_hotplug.c was undefined.
+Removed CONFIG_MEMORY_HOTREMOVE requirement refer to the definitions
+of other platform architectures.Some build error messages like:
 
-On Wed, Aug 31, 2022 at 12:38 AM WANG Xuerui <kernel@xen0n.name> wrote:
->
-> On 8/30/22 21:05, Huacai Chen wrote:
-> > Hi, Ruoyao,
-> >
-> > Thank you for your contribution, this whole series will be queued for
-> > 6.1. Though lkp reported some warnings, I will fix them myself.
->
-> And of course add my Tested-by:
->
-> Tested-by: WANG Xuerui <git@xen0n.name>
->
-> (I've run the v6 actually, but there is not substantial change from v6
-> to v7 so the status should stay good.)
-With this series applied and ARCH_WANT_LD_ORPHAN_WARN enabled, we get
-loongarch64-unknown-linux-gnu-ld: warning: orphan section `.got' from
-`arch/loongarch/kernel/head.o' being placed in section `.got'
-loongarch64-unknown-linux-gnu-ld: warning: orphan section `.got.plt'
-from `arch/loongarch/kernel/head.o' being placed in section `.got.plt'
+ LD      vmlinux.o
+ MODPOST vmlinux.symvers
+ MODINFO modules.builtin.modinfo
+ GEN     modules.builtin
+ LD      .tmp_vmlinux.kallsyms1
+loongarch64-linux-gnu-ld: mm/memory_hotplug.o: in function `.L242':
+memory_hotplug.c:(.ref.text+0x930): undefined reference to `arch_remove_memory'
+make: *** [Makefile:1169：vmlinux] 错误 1
 
-I think we should add this lines in vmlinux.lds.S
-        .got : { *(.got) }
-        .got.plt : { *(.got.plt) }
+Signed-off-by: Yupeng Li <liyupeng@zbhlos.com>
+Signed-off-by: Caicai <caizp2008@163.com>
+---
+ arch/loongarch/mm/init.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-But put them to which patch? Patch 2 or Patch 5?
+diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+index 7094a68c9b83..191ed8e47895 100644
+--- a/arch/loongarch/mm/init.c
++++ b/arch/loongarch/mm/init.c
+@@ -142,7 +142,6 @@ int memory_add_physaddr_to_nid(u64 start)
+ EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+ #endif
+ 
+-#ifdef CONFIG_MEMORY_HOTREMOVE
+ void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+@@ -155,7 +154,6 @@ void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
+ 	__remove_pages(start_pfn, nr_pages, altmap);
+ }
+ #endif
+-#endif
+ 
+ /*
+  * Align swapper_pg_dir in to 64K, allows its address to be loaded
+-- 
+2.34.1
 
-Huacai
-
->
-> --
-> WANG "xen0n" Xuerui
->
-> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
->
