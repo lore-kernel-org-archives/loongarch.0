@@ -1,133 +1,129 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D3B77FA
-	for <loongarch@lists.linux.dev>; Thu,  1 Sep 2022 01:31:03 +0000 (UTC)
-Received: from [10.130.0.135] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvmtNCxBjvV4OAA--.51477S3;
-	Thu, 01 Sep 2022 09:30:53 +0800 (CST)
-Subject: Re: [PATCH bpf-next v2 4/4] LoongArch: Enable BPF_JIT and TEST_BPF in
- default config
-To: Daniel Borkmann <daniel@iogearbox.net>, Xi Ruoyao <xry111@xry111.site>,
- Huacai Chen <chenhuacai@kernel.org>
-References: <1661857809-10828-1-git-send-email-yangtiezhu@loongson.cn>
- <1661857809-10828-5-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H6Dq+Z_kS0LcM=QGF1h=k2i0hR7fYZdXgU2kXAfm1VPLw@mail.gmail.com>
- <6bc9bd64-1ba9-a35f-c0b7-480429b26b9f@loongson.cn>
- <75b27dacb8b4d779c6b2c0e46871baf404a32b6b.camel@xry111.site>
- <e477e042aee090d6c3cf7ebeabed25df5b0fa07e.camel@xry111.site>
- <d0188f86-33ba-50ce-3761-882528796057@iogearbox.net>
-Cc: Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <fc4216f3-e8ae-e2b8-22ef-5d6631f7598e@loongson.cn>
-Date: Thu, 1 Sep 2022 09:30:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856BD7FA
+	for <loongarch@lists.linux.dev>; Thu,  1 Sep 2022 02:17:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34559C433B5
+	for <loongarch@lists.linux.dev>; Thu,  1 Sep 2022 02:17:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1661998634;
+	bh=Nk27irCFVQ/B31eOpwb7cfZCo9RX5b6offw8YfVRSqw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dtev6JZbZWYnd1b81x0Di3kF4r40zTCj6UQbkVjfz13h6ODMRfToIeosgkuNHn99o
+	 Yyz8YxvWc+TEuz9wv5/eCdeaCpP/Ms62a8f0WmeUUmItQe8u95e+QzpEgmxn5Qtf4s
+	 xahDsjarVYHzXX0papdLOzcwAd3nh5Em6VTCzAJgjvEszS9sa1AcG/Bj9MN2AW6i92
+	 OvkgLcw6V2dt9bUMQCSScFNct3cGNAdqYRfLh2XZL+y1WmwKnsLZRHmruFFVUzlMdJ
+	 LnG0GEz99VirUVlGRPX1Z2zWvrm9XCsnwkA9DbQK0TEfFSdPyg+fzivddZCYDqAUP9
+	 5gjEVjgNYCHkQ==
+Received: by mail-vk1-f171.google.com with SMTP id w129so7625256vkg.10
+        for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 19:17:14 -0700 (PDT)
+X-Gm-Message-State: ACgBeo1q5slX52T1qWqszthAxdqqFb72lGMaqHz6e7J1OE0jK+X6kWgA
+	rc3zTBxGBLOuVx2fBBRdkEA4kfExjaCyyYJovIU=
+X-Google-Smtp-Source: AA6agR4lL0Odh3mHi3zFiNi1s4o/n89sqW4pL+sKCvo10g3/JzrqZ/VxD9qtYJhLb6wFZKkkkJrMjWMTdzwk14KjlgM=
+X-Received: by 2002:a1f:9d13:0:b0:376:7f81:9b85 with SMTP id
+ g19-20020a1f9d13000000b003767f819b85mr8039553vke.18.1661998633063; Wed, 31
+ Aug 2022 19:17:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <d0188f86-33ba-50ce-3761-882528796057@iogearbox.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8DxvmtNCxBjvV4OAA--.51477S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF1rZFW3ZrW5Zr18Zr4xWFg_yoW5Ar4rpr
-	yrAF4UtF4kJr1rArW2y34kWFyDtwsrJrnrWr4UJ34UAryq9w1UZw18tw1j9FsFqas2qr18
-	ZF93KF9I9F4UJ3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvIb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
-	vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
-	FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
-	0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxv
-	r21lc2xSY4AK67AK6w4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
-	IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
-	6r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
-	IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv
-	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf
-	9x07j0GQhUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+References: <20220830104806.128365-1-xry111@xry111.site> <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
+ <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name> <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
+ <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
+ <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn> <bc323d8578d2f6ec580066bab181788b305ae3c3.camel@xry111.site>
+ <CAAhV-H4N_XvmP9KA1M5crU44kHr33MZUVSsMY4Ugu5wQSv_LOQ@mail.gmail.com> <97291c0fe5a660c844475ff019c8db6af77ecf86.camel@xry111.site>
+In-Reply-To: <97291c0fe5a660c844475ff019c8db6af77ecf86.camel@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 1 Sep 2022 10:17:01 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6wzw-MV+h225rM4PfK_HY0tAdSXcUG-2Hx+_gfhzQ4_g@mail.gmail.com>
+Message-ID: <CAAhV-H6wzw-MV+h225rM4PfK_HY0tAdSXcUG-2Hx+_gfhzQ4_g@mail.gmail.com>
+Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation types
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Jinyang He <hejinyang@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	LKML <linux-kernel@vger.kernel.org>, Youling Tang <tangyouling@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi, Ruoyao,
 
-
-On 09/01/2022 03:31 AM, Daniel Borkmann wrote:
-> On 8/31/22 11:02 AM, Xi Ruoyao wrote:
->> On Wed, 2022-08-31 at 12:12 +0800, Xi Ruoyao wrote:
->>> On Wed, 2022-08-31 at 09:23 +0800, Tiezhu Yang wrote:
->>>>
->>>>
->>>> On 08/30/2022 10:46 PM, Huacai Chen wrote:
->>>>> Hi, Tiezhu,
->>>>>
->>>>> On Tue, Aug 30, 2022 at 7:10 PM Tiezhu Yang
->>>>> <yangtiezhu@loongson.cn> wrote:
->>>>>>
->>>>>> For now, BPF JIT for LoongArch is supported, update
->>>>>> loongson3_defconfig to
->>>>>> enable BPF_JIT to allow the kernel to generate native code when
->>>>>> a program
->>>>>> is loaded into the kernel, and also enable TEST_BPF to test BPF
->>>>>> JIT.
->>>>>>
->>>>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->>>>>> ---
->>>>>>   arch/loongarch/configs/loongson3_defconfig | 2 ++
->>>>>>   1 file changed, 2 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/loongarch/configs/loongson3_defconfig
->>>>>> b/arch/loongarch/configs/loongson3_defconfig
->>>>>> index 3712552..93dc072 100644
->>>>>> --- a/arch/loongarch/configs/loongson3_defconfig
->>>>>> +++ b/arch/loongarch/configs/loongson3_defconfig
->>>>>> @@ -4,6 +4,7 @@ CONFIG_POSIX_MQUEUE=y
->>>>>>   CONFIG_NO_HZ=y
->>>>>>   CONFIG_HIGH_RES_TIMERS=y
->>>>>>   CONFIG_BPF_SYSCALL=y
->>>>>> +CONFIG_BPF_JIT=y
->>>>>>   CONFIG_PREEMPT=y
->>>>>>   CONFIG_BSD_PROCESS_ACCT=y
->>>>>>   CONFIG_BSD_PROCESS_ACCT_V3=y
->>>>>> @@ -801,3 +802,4 @@ CONFIG_MAGIC_SYSRQ=y
->>>>>>   CONFIG_SCHEDSTATS=y
->>>>>>   # CONFIG_DEBUG_PREEMPT is not set
->>>>>>   # CONFIG_FTRACE is not set
->>>>>> +CONFIG_TEST_BPF=m
->>>>> I don't want the test module be built by default, but I don't
->>>>> insist
->>>>> if you have a strong requirement.
->>>>>
->>>>
->>>> Hi Huacai,
->>>>
->>>> It is useful to enable TEST_BPF in default config, otherwise we
->>>> need to use "make menuconfig" to select it manually if we want
->>>> to test bpf jit, and build it as a module by default has no side
->>>> effect, so I prefer to enable TEST_BPF in default config.
->>>
->>> IMO we shouldn't enable a test feature which is never used by 99% of
->>> users in the default.
->>
->> P. S. this is not a strong option.  CONFIG_TEST_BPF seems enabled by
->> default for S390, and I'm not sure if defconfig is designed for "kernel
->> developers" or "distro builders", or even "normal users".
+On Wed, Aug 31, 2022 at 11:15 PM Xi Ruoyao <xry111@xry111.site> wrote:
 >
-> Right now BPF CI [0] tests x86_64 and s390x archs, would be nice to also
-> add others in future to increase test coverage and then include test_bpf
-> as part of the executed test suites. If noone beats me to it, the latter
-> still sits in my bucket list. But either way, that would make more sense
-> than adding CONFIG_TEST_BPF to defconfig. Looks like for odd reasons m68k
-> and s390x has it, it shouldn't be there, really.
+> On Wed, 2022-08-31 at 22:40 +0800, Huacai Chen wrote:
+> > On Wed, Aug 31, 2022 at 4:09 PM Xi Ruoyao <xry111@xry111.site> wrote:
+> > >
+> > > On Wed, 2022-08-31 at 14:58 +0800, Jinyang He wrote:
+> > > > That's right. Also I am wondering why new toolchain produce .got* in
+> > > > kernel. It's unneeded. In the past, gcc create la.global and parsed
+> > > > to la.pcrel by gas, and kernel works well. Now it seems we lost this
+> > > > feature in gcc. I checked the x86 asm code just now. And some info
+> > > > follows,
+> > > >
+> > > > LoongArch64, ./net/ipv4/udp_diag.s, *have reloc hint*
+> > > >           pcalau12i       $r4,%got_pc_hi20(udplite_table)
+> > > >           ld.d    $r4,$r4,%got_pc_lo12(udplite_table)
+> > > >           b       udp_dump
+> > > >
+> > > > x86_64, ./net/ipv4/udp_diag.s
+> > > >           movq    $udplite_table, %rdi
+> > > >           jmp     udp_dump
+> > > >
+> > > > It seems related to -fno-PIE and -cmodel=kernel on x86_64.
+> > > > Hope new gcc with this feature now.
+> > >
+> > > On x86_64 -mcmodel=kernel means "all code and data are located in [-
+> > > 2GiB, 0) range.  We actually don't strictly require a "high" range as
+> > > we're mostly a PIC-friendly architecture: note that we use a
+> > > pcalau12i/addi.d pair for PIC addressing in [PC-2GiB, PC+2GiB, and a
+> > > lu12i.w/addi.d pair for "non-PIC" addressing in [-2GiB, 2GiB), both are
+> > > 2-insn sequence.
+> > >
+> > > If we can put the main kernel image and the modules in one 2GiB VA
+> > > range, we can avoid GOT completely.  But it's not possible for now
+> > > because main kernel image is loaded in XKPRANGE but the modules are in
+> > > XKVRANGE.  So the best we can achieve before implementing
+> > > CONFIG_RELOCATION is using GOT in modules, and avoid GOT in the main
+> > > kernel image (with a new code model in GCC, which will benefit both the
+> > > kernel and statically linked executables).
 >
-> Thanks,
-> Daniel
+> > Emmm, can you implement this new code model in the near future?
 >
->   [0] https://github.com/kernel-patches/bpf/pulls
+> I have a plan to make our toolchain addressing the symbols better:
+>
+> (1) https://sourceware.org/pipermail/binutils/2022-August/122682.html.
+> This change will allow the linker to link a main executable image
+> (dynamically linked or statically linked, PIE or non-PIE, kernel or
+> userspace) with R_LARCH_COPY instead of GOT.  (Note that R_LARCH_COPY
+> will not show up in the kernel because we don't link to shared objects,
+> but GOT will be gone.)
+>
+> (2) Change GCC to stop using GOT unless -fPIC.  (Technically it's a one-
+> line change.)
+>
+> (3) In kernel, for main kernel image the default of toolchain will be
+> good enough (no GOT).  For modules we have two options:
+>
+>   (a) get rid of XKPRANGE.
+>   (b) force -mcmodel=extreme globally.
+>   (c) use -Wl,nocopyreloc to produce GOT.
+>
+> (a) is the best, the performance of (b) and (c) will be worse than (a).
+> I'm not sure which one in (b) and (c) is better, but as (a) will be the
+> final solution we can just choose one in (b) and (c) "randomly" for now.
+>
+> I don't want to add a new code model now, because if (1) works fine
+> we'll not need a new code model.  (1) is also the most tricky step in
+> the plan (I've sent the patch but not sure if it's completely correct),
+> (2) and (3) should be trivial.
+Now all global variable accesses are via got, I think the performance
+may be much worse than before when we didn't use explicit-relocs.
+I don't know whether "a new code model" or your "(1)(2)(3)" is easier
+to implement, but I think it is better to solve the performance issue
+before 6.1-rc1.
 
-OK, it is clear now, let me remove CONFIG_TEST_BPF in
-loongson3_defconfig, thank you all.
+Huacai
 
-Thanks,
-Tiezhu
-
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
+>
