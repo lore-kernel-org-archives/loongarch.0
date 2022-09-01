@@ -1,129 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856BD7FA
-	for <loongarch@lists.linux.dev>; Thu,  1 Sep 2022 02:17:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34559C433B5
-	for <loongarch@lists.linux.dev>; Thu,  1 Sep 2022 02:17:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1661998634;
-	bh=Nk27irCFVQ/B31eOpwb7cfZCo9RX5b6offw8YfVRSqw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dtev6JZbZWYnd1b81x0Di3kF4r40zTCj6UQbkVjfz13h6ODMRfToIeosgkuNHn99o
-	 Yyz8YxvWc+TEuz9wv5/eCdeaCpP/Ms62a8f0WmeUUmItQe8u95e+QzpEgmxn5Qtf4s
-	 xahDsjarVYHzXX0papdLOzcwAd3nh5Em6VTCzAJgjvEszS9sa1AcG/Bj9MN2AW6i92
-	 OvkgLcw6V2dt9bUMQCSScFNct3cGNAdqYRfLh2XZL+y1WmwKnsLZRHmruFFVUzlMdJ
-	 LnG0GEz99VirUVlGRPX1Z2zWvrm9XCsnwkA9DbQK0TEfFSdPyg+fzivddZCYDqAUP9
-	 5gjEVjgNYCHkQ==
-Received: by mail-vk1-f171.google.com with SMTP id w129so7625256vkg.10
-        for <loongarch@lists.linux.dev>; Wed, 31 Aug 2022 19:17:14 -0700 (PDT)
-X-Gm-Message-State: ACgBeo1q5slX52T1qWqszthAxdqqFb72lGMaqHz6e7J1OE0jK+X6kWgA
-	rc3zTBxGBLOuVx2fBBRdkEA4kfExjaCyyYJovIU=
-X-Google-Smtp-Source: AA6agR4lL0Odh3mHi3zFiNi1s4o/n89sqW4pL+sKCvo10g3/JzrqZ/VxD9qtYJhLb6wFZKkkkJrMjWMTdzwk14KjlgM=
-X-Received: by 2002:a1f:9d13:0:b0:376:7f81:9b85 with SMTP id
- g19-20020a1f9d13000000b003767f819b85mr8039553vke.18.1661998633063; Wed, 31
- Aug 2022 19:17:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AF67FA
+	for <loongarch@lists.linux.dev>; Thu,  1 Sep 2022 02:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1661999205;
+	bh=4tHyvBECj9KBnHmTMw80sFhQIk4BzEPU0bsseW2OxL0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Q+jYiCiZzdqIQA19OYopCYX/sILRrghKyP8xbiqt0QET6D1c55byKRgJTKGu7D6yf
+	 3LBWB2vFdhm4Al6Qg7t/r++66XjY+fH1qtFQ7H9ozTSeKj4vKI2AsFlFMz/JKLTeHs
+	 /YKsFZifOF0/ddzMqIbvuzM6FfrnagZdO90yL0Qo=
+Received: from [IPv6:240e:358:118a:f800:dc73:854d:832e:4] (unknown [IPv6:240e:358:118a:f800:dc73:854d:832e:4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 33C3765DC8;
+	Wed, 31 Aug 2022 22:26:41 -0400 (EDT)
+Message-ID: <d2036602cfd927578272041823465e6c23e7240b.camel@xry111.site>
+Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation
+ types
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Jinyang He <hejinyang@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+ loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, Youling
+ Tang <tangyouling@loongson.cn>
+Date: Thu, 01 Sep 2022 10:26:38 +0800
+In-Reply-To: <CAAhV-H6wzw-MV+h225rM4PfK_HY0tAdSXcUG-2Hx+_gfhzQ4_g@mail.gmail.com>
+References: <20220830104806.128365-1-xry111@xry111.site>
+	 <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
+	 <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name>
+	 <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
+	 <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
+	 <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn>
+	 <bc323d8578d2f6ec580066bab181788b305ae3c3.camel@xry111.site>
+	 <CAAhV-H4N_XvmP9KA1M5crU44kHr33MZUVSsMY4Ugu5wQSv_LOQ@mail.gmail.com>
+	 <97291c0fe5a660c844475ff019c8db6af77ecf86.camel@xry111.site>
+	 <CAAhV-H6wzw-MV+h225rM4PfK_HY0tAdSXcUG-2Hx+_gfhzQ4_g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.45.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220830104806.128365-1-xry111@xry111.site> <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
- <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name> <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
- <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
- <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn> <bc323d8578d2f6ec580066bab181788b305ae3c3.camel@xry111.site>
- <CAAhV-H4N_XvmP9KA1M5crU44kHr33MZUVSsMY4Ugu5wQSv_LOQ@mail.gmail.com> <97291c0fe5a660c844475ff019c8db6af77ecf86.camel@xry111.site>
-In-Reply-To: <97291c0fe5a660c844475ff019c8db6af77ecf86.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 1 Sep 2022 10:17:01 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6wzw-MV+h225rM4PfK_HY0tAdSXcUG-2Hx+_gfhzQ4_g@mail.gmail.com>
-Message-ID: <CAAhV-H6wzw-MV+h225rM4PfK_HY0tAdSXcUG-2Hx+_gfhzQ4_g@mail.gmail.com>
-Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation types
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Jinyang He <hejinyang@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, Youling Tang <tangyouling@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
 
-Hi, Ruoyao,
+On Thu, 2022-09-01 at 10:17 +0800, Huacai Chen wrote:
 
-On Wed, Aug 31, 2022 at 11:15 PM Xi Ruoyao <xry111@xry111.site> wrote:
->
-> On Wed, 2022-08-31 at 22:40 +0800, Huacai Chen wrote:
-> > On Wed, Aug 31, 2022 at 4:09 PM Xi Ruoyao <xry111@xry111.site> wrote:
-> > >
-> > > On Wed, 2022-08-31 at 14:58 +0800, Jinyang He wrote:
-> > > > That's right. Also I am wondering why new toolchain produce .got* in
-> > > > kernel. It's unneeded. In the past, gcc create la.global and parsed
-> > > > to la.pcrel by gas, and kernel works well. Now it seems we lost this
-> > > > feature in gcc. I checked the x86 asm code just now. And some info
-> > > > follows,
-> > > >
-> > > > LoongArch64, ./net/ipv4/udp_diag.s, *have reloc hint*
-> > > >           pcalau12i       $r4,%got_pc_hi20(udplite_table)
-> > > >           ld.d    $r4,$r4,%got_pc_lo12(udplite_table)
-> > > >           b       udp_dump
-> > > >
-> > > > x86_64, ./net/ipv4/udp_diag.s
-> > > >           movq    $udplite_table, %rdi
-> > > >           jmp     udp_dump
-> > > >
-> > > > It seems related to -fno-PIE and -cmodel=kernel on x86_64.
-> > > > Hope new gcc with this feature now.
-> > >
-> > > On x86_64 -mcmodel=kernel means "all code and data are located in [-
-> > > 2GiB, 0) range.  We actually don't strictly require a "high" range as
-> > > we're mostly a PIC-friendly architecture: note that we use a
-> > > pcalau12i/addi.d pair for PIC addressing in [PC-2GiB, PC+2GiB, and a
-> > > lu12i.w/addi.d pair for "non-PIC" addressing in [-2GiB, 2GiB), both are
-> > > 2-insn sequence.
-> > >
-> > > If we can put the main kernel image and the modules in one 2GiB VA
-> > > range, we can avoid GOT completely.  But it's not possible for now
-> > > because main kernel image is loaded in XKPRANGE but the modules are in
-> > > XKVRANGE.  So the best we can achieve before implementing
-> > > CONFIG_RELOCATION is using GOT in modules, and avoid GOT in the main
-> > > kernel image (with a new code model in GCC, which will benefit both the
-> > > kernel and statically linked executables).
->
-> > Emmm, can you implement this new code model in the near future?
->
-> I have a plan to make our toolchain addressing the symbols better:
->
-> (1) https://sourceware.org/pipermail/binutils/2022-August/122682.html.
-> This change will allow the linker to link a main executable image
-> (dynamically linked or statically linked, PIE or non-PIE, kernel or
-> userspace) with R_LARCH_COPY instead of GOT.  (Note that R_LARCH_COPY
-> will not show up in the kernel because we don't link to shared objects,
-> but GOT will be gone.)
->
-> (2) Change GCC to stop using GOT unless -fPIC.  (Technically it's a one-
-> line change.)
->
-> (3) In kernel, for main kernel image the default of toolchain will be
-> good enough (no GOT).  For modules we have two options:
->
->   (a) get rid of XKPRANGE.
->   (b) force -mcmodel=extreme globally.
->   (c) use -Wl,nocopyreloc to produce GOT.
->
-> (a) is the best, the performance of (b) and (c) will be worse than (a).
-> I'm not sure which one in (b) and (c) is better, but as (a) will be the
-> final solution we can just choose one in (b) and (c) "randomly" for now.
->
-> I don't want to add a new code model now, because if (1) works fine
-> we'll not need a new code model.  (1) is also the most tricky step in
-> the plan (I've sent the patch but not sure if it's completely correct),
-> (2) and (3) should be trivial.
-Now all global variable accesses are via got, I think the performance
-may be much worse than before when we didn't use explicit-relocs.
-I don't know whether "a new code model" or your "(1)(2)(3)" is easier
-to implement, but I think it is better to solve the performance issue
-before 6.1-rc1.
+> Now all global variable accesses are via got, I think the performance
+> may be much worse than before when we didn't use explicit-relocs.
+> I don't know whether "a new code model" or your "(1)(2)(3)" is easier
+> to implement, but I think it is better to solve the performance issue
+> before 6.1-rc1.
 
-Huacai
+Both won't be too difficult, but I need to debate with toolchain
+developers :(.
 
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
->
+If we are running out of time:
+
+cflags-y +=3D $(cc-option -mno-explicit-relocs)
+
+This will at least make the new toolchain work, though we cannot be
+benefited from the optimizations allowed by explicit relocations.
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
