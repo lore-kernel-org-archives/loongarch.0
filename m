@@ -1,70 +1,104 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AF67FA
-	for <loongarch@lists.linux.dev>; Thu,  1 Sep 2022 02:26:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1661999205;
-	bh=4tHyvBECj9KBnHmTMw80sFhQIk4BzEPU0bsseW2OxL0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Q+jYiCiZzdqIQA19OYopCYX/sILRrghKyP8xbiqt0QET6D1c55byKRgJTKGu7D6yf
-	 3LBWB2vFdhm4Al6Qg7t/r++66XjY+fH1qtFQ7H9ozTSeKj4vKI2AsFlFMz/JKLTeHs
-	 /YKsFZifOF0/ddzMqIbvuzM6FfrnagZdO90yL0Qo=
-Received: from [IPv6:240e:358:118a:f800:dc73:854d:832e:4] (unknown [IPv6:240e:358:118a:f800:dc73:854d:832e:4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 33C3765DC8;
-	Wed, 31 Aug 2022 22:26:41 -0400 (EDT)
-Message-ID: <d2036602cfd927578272041823465e6c23e7240b.camel@xry111.site>
-Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation
- types
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jinyang He <hejinyang@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
- loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, Youling
- Tang <tangyouling@loongson.cn>
-Date: Thu, 01 Sep 2022 10:26:38 +0800
-In-Reply-To: <CAAhV-H6wzw-MV+h225rM4PfK_HY0tAdSXcUG-2Hx+_gfhzQ4_g@mail.gmail.com>
-References: <20220830104806.128365-1-xry111@xry111.site>
-	 <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
-	 <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name>
-	 <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
-	 <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
-	 <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn>
-	 <bc323d8578d2f6ec580066bab181788b305ae3c3.camel@xry111.site>
-	 <CAAhV-H4N_XvmP9KA1M5crU44kHr33MZUVSsMY4Ugu5wQSv_LOQ@mail.gmail.com>
-	 <97291c0fe5a660c844475ff019c8db6af77ecf86.camel@xry111.site>
-	 <CAAhV-H6wzw-MV+h225rM4PfK_HY0tAdSXcUG-2Hx+_gfhzQ4_g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.45.2 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F7297FA
+	for <loongarch@lists.linux.dev>; Thu,  1 Sep 2022 02:27:34 +0000 (UTC)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXWuSGBBjOGUOAA--.1806S2;
+	Thu, 01 Sep 2022 10:27:30 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH bpf-next v3 0/4] Add BPF JIT support for LoongArch
+Date: Thu,  1 Sep 2022 10:27:25 +0800
+Message-Id: <1661999249-10258-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8BxXWuSGBBjOGUOAA--.1806S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJrW7Zw4rur1kuw1DJrW7CFg_yoW5JFyxpa
+	17Crn8KrWDGr1fXr4ft3yDuFyYyr4fGrW7W3W7A343ArZ8Z3Wjqa4xK34DZFn0q39YgFy0
+	qr93Kw1jgF4UJa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUk2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+	C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_Gr1l42xK
+	82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
+	C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48J
+	MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
+	IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
+	87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUqR6zDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
 
-On Thu, 2022-09-01 at 10:17 +0800, Huacai Chen wrote:
+The basic support for LoongArch has been merged into the upstream Linux
+kernel since 5.19-rc1 on June 5, 2022, this patch series adds BPF JIT
+support for LoongArch.
 
-> Now all global variable accesses are via got, I think the performance
-> may be much worse than before when we didn't use explicit-relocs.
-> I don't know whether "a new code model" or your "(1)(2)(3)" is easier
-> to implement, but I think it is better to solve the performance issue
-> before 6.1-rc1.
+Here is the LoongArch documention:
+https://www.kernel.org/doc/html/latest/loongarch/index.html
 
-Both won't be too difficult, but I need to debate with toolchain
-developers :(.
+With this patch series, the test cases in lib/test_bpf.ko have passed
+on LoongArch.
 
-If we are running out of time:
+  # echo 1 > /proc/sys/net/core/bpf_jit_enable
+  # modprobe test_bpf
+  # dmesg | grep Summary
+  test_bpf: Summary: 1026 PASSED, 0 FAILED, [1014/1014 JIT'ed]
+  test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [10/10 JIT'ed]
+  test_bpf: test_skb_segment: Summary: 2 PASSED, 0 FAILED
 
-cflags-y +=3D $(cc-option -mno-explicit-relocs)
+It seems that this patch series can not be applied cleanly to bpf-next
+which is not synced to v6.0-rc3.
 
-This will at least make the new toolchain work, though we cannot be
-benefited from the optimizations allowed by explicit relocations.
+v3:
+  -- Remove CONFIG_TEST_BPF in loongson3_defconfig
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+v2:
+  -- Rebased series on v6.0-rc3
+  -- Make build_epilogue() static
+  -- Use alsl.d, bstrpick.d, [ld/st]ptr.[w/d] to save some instructions
+  -- Replace move_imm32() and move_imm64() with move_imm() and optimize it
+  -- Add code comments to explain the considerations of conditional jump
+  https://lore.kernel.org/bpf/1661857809-10828-1-git-send-email-yangtiezhu@loongson.cn/
+
+v1:
+  -- Rebased series on v6.0-rc1
+  -- Move {signed,unsigned}_imm_check() to inst.h
+  -- Define the imm field as "unsigned int" in the instruction format
+  -- Use DEF_EMIT_*_FORMAT to define the same kind of instructions
+  -- Use "stack_adjust += sizeof(long) * 8" in build_prologue()
+  https://lore.kernel.org/bpf/1660996260-11337-1-git-send-email-yangtiezhu@loongson.cn/
+
+RFC:
+  https://lore.kernel.org/bpf/1660013580-19053-1-git-send-email-yangtiezhu@loongson.cn/
+
+Tiezhu Yang (4):
+  LoongArch: Move {signed,unsigned}_imm_check() to inst.h
+  LoongArch: Add some instruction opcodes and formats
+  LoongArch: Add BPF JIT support
+  LoongArch: Enable BPF_JIT in default config
+
+ arch/loongarch/Kbuild                      |    1 +
+ arch/loongarch/Kconfig                     |    1 +
+ arch/loongarch/configs/loongson3_defconfig |    1 +
+ arch/loongarch/include/asm/inst.h          |  383 ++++++++-
+ arch/loongarch/kernel/module.c             |   10 -
+ arch/loongarch/net/Makefile                |    7 +
+ arch/loongarch/net/bpf_jit.c               | 1160 ++++++++++++++++++++++++++++
+ arch/loongarch/net/bpf_jit.h               |  282 +++++++
+ 8 files changed, 1830 insertions(+), 15 deletions(-)
+ create mode 100644 arch/loongarch/net/Makefile
+ create mode 100644 arch/loongarch/net/bpf_jit.c
+ create mode 100644 arch/loongarch/net/bpf_jit.h
+
+-- 
+2.1.0
+
