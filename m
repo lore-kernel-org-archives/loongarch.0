@@ -1,171 +1,85 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9C217EE
-	for <loongarch@lists.linux.dev>; Thu,  1 Sep 2022 03:04:10 +0000 (UTC)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPGvgIBBj0WkOAA--.1930S3;
-	Thu, 01 Sep 2022 11:02:57 +0800 (CST)
-Message-ID: <eba7bae5-8c9b-0b06-137b-4bcbbd9d8923@loongson.cn>
-Date: Thu, 1 Sep 2022 11:02:56 +0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97845ED6
+	for <loongarch@lists.linux.dev>; Thu,  1 Sep 2022 10:40:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D4ABC43470
+	for <loongarch@lists.linux.dev>; Thu,  1 Sep 2022 10:40:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1662028844;
+	bh=LBa14xoUN0fMhLzLC7wVPDFh9Iet5/+NLV5mMa9mn/o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sPAJY0gVqmkV7XMw/tcX9QW32uvxLniBcF9y2Lb1R3++Jt47suBJWhk3Zkgos6HAi
+	 0aVIxTO/4iELlWickg+kLbupXAN5gQf403M3WH8C923Wc/C7/wQkKDmmwbIwNkh2Yf
+	 Hf5+bfMETsCMHE6OOzNY+omspABTzKRWY7oXFFRYTsbUcXr4vP2dGCEWhbcqHFXIYi
+	 +JBVoVScCsl3WKaNqA3F0aJgIrhmGUuZB1XoI9o2vbSRrr+uSfPjIyp8bRl0rtdjiH
+	 iPenQcAjSVv6+iiQv4sokE//LOJKE+gsJ2MzVPKVwrfegfKfjxnSDnk6ir6ex1HIcO
+	 6tZSBcBqUsvxQ==
+Received: by mail-vs1-f48.google.com with SMTP id k66so11683393vsc.11
+        for <loongarch@lists.linux.dev>; Thu, 01 Sep 2022 03:40:44 -0700 (PDT)
+X-Gm-Message-State: ACgBeo1+6XgkFh6qRGbJHdNiGwSs2sLzvnzoUN1yam3OrfyDTL2w8g1t
+	Mj9d/IJ8ZyIj0PDuq2JiKbVmTQeXCMBWDzNVPzU=
+X-Google-Smtp-Source: AA6agR7dNMRQwlxYH+D7lL3BtG0CaeaIu0EOhQ46VtPMSzp62FZbuavPop3/iV8rHcRRV0arRmbJashjVsJasIKdqVo=
+X-Received: by 2002:a67:df81:0:b0:390:21a3:823a with SMTP id
+ x1-20020a67df81000000b0039021a3823amr8091257vsk.70.1662028843133; Thu, 01 Sep
+ 2022 03:40:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v2] LoongArch: Add safer signal handler for TLS access
-Content-Language: en-US
-To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20220831074846.3565542-1-maobibo@loongson.cn>
- <e805e3c4-ea66-a438-9def-bc90bbffa14e@xen0n.name>
-From: maobibo <maobibo@loongson.cn>
-In-Reply-To: <e805e3c4-ea66-a438-9def-bc90bbffa14e@xen0n.name>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxPGvgIBBj0WkOAA--.1930S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCryfGF1xAw4UtrWfCrWktFb_yoWrKF4Upr
-	1vyFyUGrWYkr1kJr1Utr1UXryUJr1UJ3WUJryUJa4UAw4UJr1Yqr4UXFyjgF1UJr4kJr1U
-	Jr1UJrnrZr47Jr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvYb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
-	vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
-	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG
-	8wCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
-	6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07
-	beAp5UUUUU=
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+References: <20220819102037.2697798-1-chenhuacai@loongson.cn>
+ <9b6f0aeaebbd36882b5b40d655f9ccd20c7be496.camel@xry111.site> <CAMj1kXFOd+gMHbi6MH0KHWkBEKN9V0LeZbyGRw8h630OxtMrdA@mail.gmail.com>
+In-Reply-To: <CAMj1kXFOd+gMHbi6MH0KHWkBEKN9V0LeZbyGRw8h630OxtMrdA@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 1 Sep 2022 18:40:31 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6MR=rWhecY_uuiXAysED-BBJhKhGHj2cCkefJiPOo-ZQ@mail.gmail.com>
+Message-ID: <CAAhV-H6MR=rWhecY_uuiXAysED-BBJhKhGHj2cCkefJiPOo-ZQ@mail.gmail.com>
+Subject: Re: [PATCH V3] LoongArch: Add efistub booting support
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
+	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-efi <linux-efi@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+
+Hi, Ard,
+
+On Sat, Aug 27, 2022 at 3:14 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Sat, 27 Aug 2022 at 06:41, Xi Ruoyao <xry111@xry111.site> wrote:
+> >
+> > Tested V3 with the magic number check manually removed in my GRUB build.
+> > The system boots successfully.  I've not tested Arnd's zBoot patch yet.
+>
+> I am Ard not Arnd :-)
+>
+> Please use this branch when testing the EFI decompressor:
+> https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-decompressor-v4
+The root cause of LoongArch zboot boot failure has been found, it is a
+binutils bug, latest toolchain with the below patch can solve the
+problem.
+
+diff --git a/bfd/elfnn-loongarch.c b/bfd/elfnn-loongarch.c
+index 5b44901b9e0..fafdc7c7458 100644
+--- a/bfd/elfnn-loongarch.c
++++ b/bfd/elfnn-loongarch.c
+@@ -2341,9 +2341,10 @@ loongarch_elf_relocate_section (bfd
+*output_bfd, struct bfd_link_info *info,
+     case R_LARCH_SOP_PUSH_PLT_PCREL:
+       unresolved_reloc = false;
+
+-      if (resolved_to_const)
++      if (!is_undefweak && resolved_to_const)
+         {
+           relocation += rel->r_addend;
++          relocation -= pc;
+           break;
+         }
+       else if (is_undefweak)
 
 
-
-在 2022/9/1 10:30, WANG Xuerui 写道:
-> On 2022/8/31 15:48, Mao Bibo wrote:
->> LoongArch uses general purpose register R2 as thread pointer(TP)
->> register, signal hanlder also uses TP register to access variables
->> in TLS area, such as errno and variable in TLS.
->>
->> If GPR R2 is modified with wrong value, signal handler still uses
->> the wrong TP register, so signal hanlder is insafe to access TLS
->> variable.
->>
->> This patch adds one arch specific syscall set_thread_area, and
->> restore previoud TP value before signal handler, so that signal
->> handler is safe to access TLS variable.
->>
->> It passes to run with the following test case.
->> =======8<======
->>   #define _GNU_SOURCE
->>   #include <stdio.h>
->>   #include <stdlib.h>
->>   #include <unistd.h>
->>   #include <string.h>
->>   #include <sys/syscall.h>
->>   #include <sys/types.h>
->>   #include <signal.h>
->>   #include <pthread.h>
->>   #include <asm/ucontext.h>
->>   #include <asm/sigcontext.h>
->>
->>   #define ILL_INSN ".word 0x000001f0"
->> static inline long test_sigill(unsigned long fid)
->> {
->>          register long ret __asm__("$r4");
->>          register unsigned long fun __asm__("$r4") = fid;
->>
->>          __asm__ __volatile__("move $r2, $r0 \r\n");
->>          __asm__ __volatile__(
->>                          ILL_INSN
->>                          : "=r" (ret)
->>                          : "r" (fun)
->>                          : "memory"
->>                          );
->>
->>          return ret;
->> }
->>
->> static void set_sigill_handler(void (*fn) (int, siginfo_t *, void *))
->> {
->>          struct sigaction sa;
->>          memset(&sa, 0, sizeof(struct sigaction));
->>
->>          sa.sa_sigaction = fn;
->>          sa.sa_flags = SA_SIGINFO;
->>          sigemptyset(&sa.sa_mask);
->>          if (sigaction(SIGILL, &sa, 0) != 0) {
->>                  perror("sigaction");
->>          }
->> }
->>
->> void catch_sig(int sig, siginfo_t *si, void *vuc)
->> {
->>          struct ucontext *uc = vuc;
->>          register unsigned long tls  __asm__("$r2");
->>
->>          uc->uc_mcontext.sc_pc +=4;
->>          uc->uc_mcontext.sc_regs[2] = tls;
->>          printf("catched signal %d\n", sig);
->> }
->>
->> void *print_message_function( void *ptr )
->> {
->>          char *message;
->>          message = (char *) ptr;
->>          printf("%s \n", message);
->>          test_sigill(1);
->> }
->>
->> void pthread_test(void)
->> {
->>          pthread_t thread1, thread2;
->>          char *message1 = "Thread 1";
->>          char *message2 = "Thread 2";
->>          int  iret1, iret2;
->>
->>          iret1 = pthread_create( &thread1, NULL, print_message_function,
->>                 (void*) message1);
->>          iret2 = pthread_create( &thread2, NULL, print_message_function,
->>                 (void*) message2);
->>          pthread_join( thread1, NULL);
->>          pthread_join( thread2, NULL);
->>          printf("Thread 1 returns: %d\n",iret1);
->>          printf("Thread 2 returns: %d\n",iret2);
->>          exit(0);
->> }
->>
->> void exec_test(void) {
->>          test_sigill(1);
->> }
->>
->> void main() {
->>          register unsigned long tls  __asm__("$r2");
->>          int val;
->>
->>          val = syscall(244, tls);
->>          set_sigill_handler(&catch_sig);
->>          pthread_test();
->>          //exec_test();
->>          return;
->> }
->> =======8<======
-> 
-> Sorry, but what is the concrete use case you have in mind? arch/riscv for example doesn't have set_thread_area but is apparently doing fine. I haven't studied their code in great detail to find out myself though.
-
-We prepare to add loongarch support to risu project, which injects random instructions in user space. The website is:
-   https://git.linaro.org/people/peter.maydell/risu.git
-
-After injected instruction is executed, there will be special illegal instruction where signal handler is used to control to capture the whole registers and continue to run. However if random injected instruction modify TP register, signal handler fails to run.
-
-I double that riscv has the same issue.
-
-regards
-bibo,mao
-
+Huacai
