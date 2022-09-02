@@ -1,71 +1,64 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7086366E7
-	for <loongarch@lists.linux.dev>; Thu,  1 Sep 2022 11:11:11 +0000 (UTC)
-Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx72tEkxBj+LgOAA--.61423S2;
-	Thu, 01 Sep 2022 19:11:02 +0800 (CST)
-From: Youling Tang <tangyouling@loongson.cn>
-To: Masahiro Yamada <masahiroy@kernel.org>,
-	Michal Marek <michal.lkml@markovi.net>,
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB11EA0
+	for <loongarch@lists.linux.dev>; Fri,  2 Sep 2022 02:29:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD502C433D6;
+	Fri,  2 Sep 2022 02:29:49 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
 	Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Nick Desaulniers <ndesaulniers@google.com>,
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
 	Xuerui Wang <kernel@xen0n.name>,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH] mksysmap: Fix the mismatch of 'L0' symbols in System.map
-Date: Thu,  1 Sep 2022 19:10:59 +0800
-Message-Id: <1662030659-21558-1-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8Cx72tEkxBj+LgOAA--.61423S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZF4fZw13KFW8Ar1rJF13Arb_yoWDJFbE9a
-	1IqFn5GrW8Zrn0yr18Zr4YvFykWayayayrAryxJr1Sqw1DGrWfGFyDKasYqFnxAF109r47
-	J39rZrnYkrn29jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbFxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-	8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
-	cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
-	A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMc
-	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2Iq
-	xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
-	106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
-	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7
-	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_
-	Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jO-B_UUUUU=
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Adjust arch_do_signal_or_restart() to adapt generic entry
+Date: Fri,  2 Sep 2022 10:29:18 +0800
+Message-Id: <20220902022918.169173-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-When System.map was generated, the kernel used mksysmap to filter the
-kernel symbols, we need to filter "L0" symbols in LoongArch architecture.
+Commit 8ba62d37949e248c69 ("task_work: Call tracehook_notify_signal from
+get_signal on all architectures") adjust arch_do_signal_or_restart() for
+all architectures. LoongArch hasn't been upstream yet at that time and
+can be still built successfully without adjustment because this function
+has a weak version with the correct prototype. It is obviously that we
+should convert LoongArch to use new API, otherwise some signal handlings
+will be lost.
 
-$ cat System.map | grep L0
-9000000000221540 t L0
-
-The L0 symbol exists in System.map, but not in .tmp_System.map. When
-"cmp -s System.map .tmp_System.map" will show "Inconsistent kallsyms
-data" error message in link-vmlinux.sh script.
-
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- scripts/mksysmap | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/loongarch/kernel/signal.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/mksysmap b/scripts/mksysmap
-index 9aa23d15862a..ad8bbc52267d 100755
---- a/scripts/mksysmap
-+++ b/scripts/mksysmap
-@@ -41,4 +41,4 @@
- # so we just ignore them to let readprofile continue to work.
- # (At least sparc64 has __crc_ in the middle).
+diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
+index 7f4889df4a17..8f5b7986374b 100644
+--- a/arch/loongarch/kernel/signal.c
++++ b/arch/loongarch/kernel/signal.c
+@@ -529,11 +529,11 @@ static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
+ 	signal_setup_done(ret, ksig, 0);
+ }
  
--$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( \.L\)' > $2
-+$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( \.L\)\|\( L0\)' > $2
+-void arch_do_signal_or_restart(struct pt_regs *regs, bool has_signal)
++void arch_do_signal_or_restart(struct pt_regs *regs)
+ {
+ 	struct ksignal ksig;
+ 
+-	if (has_signal && get_signal(&ksig)) {
++	if (get_signal(&ksig)) {
+ 		/* Whee!  Actually deliver the signal.	*/
+ 		handle_signal(&ksig, regs);
+ 		return;
 -- 
-2.36.1
+2.31.1
 
