@@ -1,117 +1,149 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF371869
-	for <loongarch@lists.linux.dev>; Fri,  2 Sep 2022 13:34:35 +0000 (UTC)
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-	by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92.3)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1oU6oR-00083j-0Y; Fri, 02 Sep 2022 15:34:23 +0200
-Received: from [85.1.206.226] (helo=linux-4.home)
-	by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1oU6oQ-000UG3-OA; Fri, 02 Sep 2022 15:34:22 +0200
-Subject: Re: [PATCH bpf-next v3 0/4] Add BPF JIT support for LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev
-References: <1661999249-10258-1-git-send-email-yangtiezhu@loongson.cn>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <2219694c-5e4c-2b81-ee39-367467ac0733@iogearbox.net>
-Date: Fri, 2 Sep 2022 15:34:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97529670A
+	for <loongarch@lists.linux.dev>; Fri,  2 Sep 2022 15:01:47 +0000 (UTC)
+Received: from localhost.localdomain.localdomain (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxReLRGhJjx_4PAA--.3305S2;
+	Fri, 02 Sep 2022 23:01:38 +0800 (CST)
+From: Jinyang He <hejinyang@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Oleg Nesterov <oleg@redhat.com>
+Cc: Jinyang He <hejinyang@loongson.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Mark kernel stack padding as TOP_OF_KERNEL_STACK_PADDING
+Date: Fri,  2 Sep 2022 23:01:37 +0800
+Message-Id: <1662130897-13156-1-git-send-email-hejinyang@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8DxReLRGhJjx_4PAA--.3305S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF17Wry7tr1xtw18Xw45trb_yoWrtw4kpF
+	9rAwn7GF4UGFnYyryUtrn8uFyDJwn7Kw12gayaya4rAFnFvr1rXryxAFyDZFyUta95Kw40
+	gFyfKwsIyan8Ja7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkI14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+	6r4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW5WwCF
+	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+	18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+	r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+	1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUjku4UUUUUU==
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <1661999249-10258-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.6/26646/Fri Sep  2 09:55:25 2022)
 
-On 9/1/22 4:27 AM, Tiezhu Yang wrote:
-> The basic support for LoongArch has been merged into the upstream Linux
-> kernel since 5.19-rc1 on June 5, 2022, this patch series adds BPF JIT
-> support for LoongArch.
-> 
-> Here is the LoongArch documention:
-> https://www.kernel.org/doc/html/latest/loongarch/index.html
-> 
-> With this patch series, the test cases in lib/test_bpf.ko have passed
-> on LoongArch.
-> 
->    # echo 1 > /proc/sys/net/core/bpf_jit_enable
->    # modprobe test_bpf
->    # dmesg | grep Summary
->    test_bpf: Summary: 1026 PASSED, 0 FAILED, [1014/1014 JIT'ed]
->    test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [10/10 JIT'ed]
->    test_bpf: test_skb_segment: Summary: 2 PASSED, 0 FAILED
-> 
-> It seems that this patch series can not be applied cleanly to bpf-next
-> which is not synced to v6.0-rc3.
+Mark the top reserved bytes of the kernel stack by a macro. It collects
+that info so that we can modify or discarded (let it be 0) this padding
+if needed. Its name is referenced from x86_64. It seems that x86_64
+think the padding as extension on top of the kernel stack in other mode
+(normally the top is only pt_regs). Although LoongArch not produce
+such an extension at present, collect them because of the uncertainty
+of the future. Note that this patch does not modify macro size. It
+requires another strict evaluation.
 
-For bpf-next tree this doesn't apply cleanly. Huacai, probably easier if you
-take it in. Otherwise this needs rebase (and your Ack as arch maintainer), but
-then there'll be merge conflict later anyway.
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+---
+ arch/loongarch/include/asm/processor.h  | 3 ++-
+ arch/loongarch/include/asm/ptrace.h     | 3 ++-
+ arch/loongarch/include/asm/stackframe.h | 1 +
+ arch/loongarch/kernel/head.S            | 2 +-
+ arch/loongarch/kernel/process.c         | 4 ++--
+ arch/loongarch/kernel/switch.S          | 2 +-
+ 6 files changed, 9 insertions(+), 6 deletions(-)
 
-[...]
-Applying: LoongArch: Move {signed,unsigned}_imm_check() to inst.h
-Applying: LoongArch: Add some instruction opcodes and formats
-error: patch failed: arch/loongarch/include/asm/inst.h:18
-error: arch/loongarch/include/asm/inst.h: patch does not apply
-Patch failed at 0002 LoongArch: Add some instruction opcodes and formats
-[...]
-
-Thanks,
-Daniel
-
-> v3:
->    -- Remove CONFIG_TEST_BPF in loongson3_defconfig
-> 
-> v2:
->    -- Rebased series on v6.0-rc3
->    -- Make build_epilogue() static
->    -- Use alsl.d, bstrpick.d, [ld/st]ptr.[w/d] to save some instructions
->    -- Replace move_imm32() and move_imm64() with move_imm() and optimize it
->    -- Add code comments to explain the considerations of conditional jump
->    https://lore.kernel.org/bpf/1661857809-10828-1-git-send-email-yangtiezhu@loongson.cn/
-> 
-> v1:
->    -- Rebased series on v6.0-rc1
->    -- Move {signed,unsigned}_imm_check() to inst.h
->    -- Define the imm field as "unsigned int" in the instruction format
->    -- Use DEF_EMIT_*_FORMAT to define the same kind of instructions
->    -- Use "stack_adjust += sizeof(long) * 8" in build_prologue()
->    https://lore.kernel.org/bpf/1660996260-11337-1-git-send-email-yangtiezhu@loongson.cn/
-> 
-> RFC:
->    https://lore.kernel.org/bpf/1660013580-19053-1-git-send-email-yangtiezhu@loongson.cn/
-> 
-> Tiezhu Yang (4):
->    LoongArch: Move {signed,unsigned}_imm_check() to inst.h
->    LoongArch: Add some instruction opcodes and formats
->    LoongArch: Add BPF JIT support
->    LoongArch: Enable BPF_JIT in default config
-> 
->   arch/loongarch/Kbuild                      |    1 +
->   arch/loongarch/Kconfig                     |    1 +
->   arch/loongarch/configs/loongson3_defconfig |    1 +
->   arch/loongarch/include/asm/inst.h          |  383 ++++++++-
->   arch/loongarch/kernel/module.c             |   10 -
->   arch/loongarch/net/Makefile                |    7 +
->   arch/loongarch/net/bpf_jit.c               | 1160 ++++++++++++++++++++++++++++
->   arch/loongarch/net/bpf_jit.h               |  282 +++++++
->   8 files changed, 1830 insertions(+), 15 deletions(-)
->   create mode 100644 arch/loongarch/net/Makefile
->   create mode 100644 arch/loongarch/net/bpf_jit.c
->   create mode 100644 arch/loongarch/net/bpf_jit.h
-> 
+diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+index 1c4b43083..6077fd8e3 100644
+--- a/arch/loongarch/include/asm/processor.h
++++ b/arch/loongarch/include/asm/processor.h
+@@ -193,8 +193,9 @@ static inline void flush_thread(void)
+ 
+ unsigned long __get_wchan(struct task_struct *p);
+ 
++#define TOP_OF_KERNEL_STACK_PADDING 32
+ #define __KSTK_TOS(tsk) ((unsigned long)task_stack_page(tsk) + \
+-			 THREAD_SIZE - 32 - sizeof(struct pt_regs))
++			 THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING - sizeof(struct pt_regs))
+ #define task_pt_regs(tsk) ((struct pt_regs *)__KSTK_TOS(tsk))
+ #define KSTK_EIP(tsk) (task_pt_regs(tsk)->csr_era)
+ #define KSTK_ESP(tsk) (task_pt_regs(tsk)->regs[3])
+diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+index 17838c6b7..cdceeaa60 100644
+--- a/arch/loongarch/include/asm/ptrace.h
++++ b/arch/loongarch/include/asm/ptrace.h
+@@ -133,7 +133,8 @@ static inline void die_if_kernel(const char *str, struct pt_regs *regs)
+ #define current_pt_regs()						\
+ ({									\
+ 	unsigned long sp = (unsigned long)__builtin_frame_address(0);	\
+-	(struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1 - 32) - 1;	\
++	(struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1 -		\
++			   TOP_OF_KERNEL_STACK_PADDING) - 1;		\
+ })
+ 
+ /* Helpers for working with the user stack pointer */
+diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
+index 4ca953062..e9f849b29 100644
+--- a/arch/loongarch/include/asm/stackframe.h
++++ b/arch/loongarch/include/asm/stackframe.h
+@@ -216,4 +216,5 @@
+ 	RESTORE_SP_AND_RET \docfi
+ 	.endm
+ 
++#define _TOP_OF_KERNEL_STACK_PADDING 32
+ #endif /* _ASM_STACKFRAME_H */
+diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+index eb3f641d5..290c53847 100644
+--- a/arch/loongarch/kernel/head.S
++++ b/arch/loongarch/kernel/head.S
+@@ -75,7 +75,7 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
+ 
+ 	la.pcrel	tp, init_thread_union
+ 	/* Set the SP after an empty pt_regs.  */
+-	PTR_LI		sp, (_THREAD_SIZE - 32 - PT_SIZE)
++	PTR_LI		sp, (_THREAD_SIZE - _TOP_OF_KERNEL_STACK_PADDING - PT_SIZE)
+ 	PTR_ADD		sp, sp, tp
+ 	set_saved_sp	sp, t0, t1
+ 	PTR_ADDI	sp, sp, -4 * SZREG	# init stack pointer
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index 660492f06..b51cf7975 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -129,7 +129,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 	unsigned long clone_flags = args->flags;
+ 	struct pt_regs *childregs, *regs = current_pt_regs();
+ 
+-	childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE - 32;
++	childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;
+ 
+ 	/* set up new TSS. */
+ 	childregs = (struct pt_regs *) childksp - 1;
+@@ -236,7 +236,7 @@ bool in_task_stack(unsigned long stack, struct task_struct *task,
+ 			struct stack_info *info)
+ {
+ 	unsigned long begin = (unsigned long)task_stack_page(task);
+-	unsigned long end = begin + THREAD_SIZE - 32;
++	unsigned long end = begin + THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;
+ 
+ 	if (stack < begin || stack >= end)
+ 		return false;
+diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
+index 43ebbc399..1797aceae 100644
+--- a/arch/loongarch/kernel/switch.S
++++ b/arch/loongarch/kernel/switch.S
+@@ -26,7 +26,7 @@ SYM_FUNC_START(__switch_to)
+ 	move	tp, a2
+ 	cpu_restore_nonscratch a1
+ 
+-	li.w		t0, _THREAD_SIZE - 32
++	li.w		t0, _THREAD_SIZE - _TOP_OF_KERNEL_STACK_PADDING
+ 	PTR_ADD		t0, t0, tp
+ 	set_saved_sp	t0, t1, t2
+ 
+-- 
+2.31.1
 
