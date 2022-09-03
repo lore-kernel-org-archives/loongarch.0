@@ -1,69 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358811C20
-	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 09:57:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 474B1C433D7;
-	Sat,  3 Sep 2022 09:57:21 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Shuah Khan <shuah@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Will Drewry <wad@chromium.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH 2/2] selftests/seccomp: Add LoongArch selftesting support
-Date: Sat,  3 Sep 2022 17:55:07 +0800
-Message-Id: <20220903095507.3425208-2-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220903095507.3425208-1-chenhuacai@loongson.cn>
-References: <20220903095507.3425208-1-chenhuacai@loongson.cn>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C6877D91
+	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 10:11:23 +0000 (UTC)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTWtEKBNjh2oQAA--.8249S3;
+	Sat, 03 Sep 2022 18:11:16 +0800 (CST)
+Subject: Re: [PATCH bpf-next v3 3/4] LoongArch: Add BPF JIT support
+To: Huacai Chen <chenhuacai@kernel.org>
+References: <1661999249-10258-1-git-send-email-yangtiezhu@loongson.cn>
+ <1661999249-10258-4-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H4yU2tp=DBGCkdSzp-9bAXXDM4+0iqDgOac+fbgQnsx2A@mail.gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev,
+ Li Xuefeng <lixuefeng@loongson.cn>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <1a740b5c-041c-85c6-f1d6-bb0b931c0c3e@loongson.cn>
+Date: Sat, 3 Sep 2022 18:11:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H4yU2tp=DBGCkdSzp-9bAXXDM4+0iqDgOac+fbgQnsx2A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8AxTWtEKBNjh2oQAA--.8249S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXrykXr15CFW8ur1DXFW5ZFb_yoW5CrW3pF
+	43KrZ8KF4fGFy3AFyDXr4UXa4akwsIgry7AF15KrykA3yYqryF9FWrK3ZYgas8Cas7Zwn0
+	9F4Fyrnru3W5GFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+	C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487
+	MxkIecxEwVAFwVW8twCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
+	026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
+	JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20x
+	vEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU5IAp7UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 
-BPF for LoongArch is supported now, add the selftesting support in
-seccomp_bpf.c.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- tools/testing/selftests/seccomp/seccomp_bpf.c | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 4ae6c8991307..e1c3b7d8ac39 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -128,6 +128,8 @@ struct seccomp_data {
- #  define __NR_seccomp 277
- # elif defined(__csky__)
- #  define __NR_seccomp 277
-+# elif defined(__loongarch__)
-+#  define __NR_seccomp 277
- # elif defined(__hppa__)
- #  define __NR_seccomp 338
- # elif defined(__powerpc__)
-@@ -1751,6 +1753,10 @@ TEST_F(TRACE_poke, getpid_runs_normally)
- 				    NT_ARM_SYSTEM_CALL, &__v));	\
- 	} while (0)
- # define SYSCALL_RET(_regs)	(_regs).regs[0]
-+#elif defined(__loongarch__)
-+# define ARCH_REGS		struct user_pt_regs
-+# define SYSCALL_NUM(_regs)	(_regs).regs[11]
-+# define SYSCALL_RET(_regs)	(_regs).regs[4]
- #elif defined(__riscv) && __riscv_xlen == 64
- # define ARCH_REGS		struct user_regs_struct
- # define SYSCALL_NUM(_regs)	(_regs).a7
--- 
-2.31.1
+On 09/03/2022 04:32 PM, Huacai Chen wrote:
+> On Thu, Sep 1, 2022 at 10:27 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> BPF programs are normally handled by a BPF interpreter, add BPF JIT
+>> support for LoongArch to allow the kernel to generate native code
+>> when a program is loaded into the kernel, this will significantly
+>> speed-up processing of BPF programs.
+
+[...]
+
+>> +
+>> +static inline int emit_cond_jmp(struct jit_ctx *ctx, u8 cond, enum loongarch_gpr rj,
+>> +                               enum loongarch_gpr rd, int jmp_offset)
+>> +{
+>> +       /*
+>> +        * A large PC-relative jump offset may overflow the immediate field of
+>> +        * the native conditional branch instruction, triggering a conversion
+>> +        * to use an absolute jump instead, this jump sequence is particularly
+>> +        * nasty. For now, use cond_jmp_offs26() directly to keep it simple.
+>> +        * In the future, maybe we can add support for far branching, the branch
+>> +        * relaxation requires more than two passes to converge, the code seems
+>> +        * too complex to understand, not quite sure whether it is necessary and
+>> +        * worth the extra pain. Anyway, just leave it as it is to enhance code
+>> +        * readability now.
+> Oh, no. I don't think this is a very difficult problem, because the
+> old version has already solved [1]. Please improve your code and send
+> V4.
+> BTW, I have committed V3 with some small modifications in
+> https://github.com/loongson/linux/commits/loongarch-next, please make
+> V4 based on that.
+>
+> [1] https://github.com/loongson/linux/commit/e20b2353f40cd13720996524e1df6d0ca086eeb8#diff-6d2f4f5a862a5dce12f8eb0feeca095825c4ed1c2e7151b0905fb8d03c98922e
+>
+> --------code in the old version--------
+> static inline void emit_cond_jump(struct jit_ctx *ctx, u8 cond, enum
+> loongarch_gpr rj,
+>                                   enum loongarch_gpr rd, int jmp_offset)
+> {
+>         if (is_signed_imm16(jmp_offset))
+>                 cond_jump_offs16(ctx, cond, rj, rd, jmp_offset);
+>         else if (is_signed_imm26(jmp_offset))
+>                 cond_jump_offs26(ctx, cond, rj, rd, jmp_offset);
+>         else
+>                 cond_jump_offs32(ctx, cond, rj, rd, jmp_offset);
+> }
+>
+> static inline void emit_uncond_jump(struct jit_ctx *ctx, int
+> jmp_offset, bool is_exit)
+> {
+>         if (is_signed_imm26(jmp_offset))
+>                 uncond_jump_offs26(ctx, jmp_offset);
+>         else
+>                 uncond_jump_offs32(ctx, jmp_offset, is_exit);
+> }
+> --------end of code--------
+>
+> Huacai
+>
+
+Hi Huacai,
+
+This change is to pass the special test cases:
+"a new type of jump test where the program jumps forwards
+and backwards with increasing offset. It mainly tests JITs where a
+relative jump may generate different JITed code depending on the offset
+size."
+
+They are introduced in commit a7d2e752e520 ("bpf/tests: Add staggered
+JMP and JMP32 tests") after the old internal version you mentioned.
+
+Here, we use the native instructions to enlarge the jump range to 26 bit
+directly rather than 16 bit first, and also take no account of more than
+26 bit case because there is no native instruction and it needs to emulate.
+
+As the code comment said, this is to enhance code readability now.
+
+Thanks,
+Tiezhu
 
