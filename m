@@ -1,34 +1,37 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BCB399
-	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 10:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A251C2B
+	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 10:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1662201937;
-	bh=NpdQCn4KmvmvSGsHfe8yzzWa+Ld9oIfoQgHzoFTZQdk=;
+	s=default; t=1662202165;
+	bh=8I2CCom6GzLdMkmqYuc6ZCbm5jRcJA32i6ToxSl5Zkg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=XtVwm3DmdJIuAhl9nNhc+5P9Xd9cDGFUSX17CTClO14WWZv36RoG347rydVcAu1t4
-	 06QImuBntf1os11mm61CnnaFqr8qxhF5XmlBD9ir9qTR3gjfBN8wbLyTA0wAXc+OZ8
-	 dt29W3c69LGyIxOZFkw67Ie5ltchQxK79+9j8euE=
+	b=g5DNxviT7XZuksCX+3hFQNGEDISb+9Nr+bXh2GWC+RI87IcV6c0kwnpV3xVnVeUcn
+	 K7NAxY9hGbkY/LEcEA+xeTma50VvqksF7tWiwIbnhm5KJge35asDjQMenIjmdoXVNt
+	 dywTOcPpJCZd6uf8GaBMTRUJQk2fdcfkwwVL5Pog=
 Received: from [IPv6:240e:358:1104:1500:dc73:854d:832e:4] (unknown [IPv6:240e:358:1104:1500:dc73:854d:832e:4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 0861D667F7;
-	Sat,  3 Sep 2022 06:45:30 -0400 (EDT)
-Message-ID: <bf3e7516c351f793de08d5311aff10c379720798.camel@xry111.site>
-Subject: Re: [PATCH 2/7] LoongArch: Enable LS2X RTC in loongson3_defconfig
+	by xry111.site (Postfix) with ESMTPSA id 10E1065907;
+	Sat,  3 Sep 2022 06:49:20 -0400 (EDT)
+Message-ID: <78a4a6b0970c309daa336a2329e69d28df486552.camel@xry111.site>
+Subject: Re: [PATCH 1/3] LoongArch: tools: Add relocs tool support
 From: Xi Ruoyao <xry111@xry111.site>
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Alessandro Zummo
-	 <a.zummo@towertech.it>, linux-rtc@vger.kernel.org
-Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, Huacai Chen
-	 <chenhuacai@kernel.org>, WANG Xuerui <git@xen0n.name>
-Date: Sat, 03 Sep 2022 18:45:22 +0800
-In-Reply-To: <6d01148014a62d8d412790dc8442af40368c6f8f.1662190009.git.zhoubinbin@loongson.cn>
-References: <cover.1662190009.git.zhoubinbin@loongson.cn>
-	 <6d01148014a62d8d412790dc8442af40368c6f8f.1662190009.git.zhoubinbin@loongson.cn>
+To: Youling Tang <tangyouling@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>
+Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, Xuerui Wang
+	 <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Jinyang He
+	 <hejinyang@loongson.cn>
+Date: Sat, 03 Sep 2022 18:49:14 +0800
+In-Reply-To: <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
+References: <1662113335-14282-1-git-send-email-tangyouling@loongson.cn>
+	 <1662113335-14282-2-git-send-email-tangyouling@loongson.cn>
+	 <c9880165f0355fc3be3ec23153b43ad33e558b5d.camel@xry111.site>
+	 <4df8a26c49a35c1fce36d80c370f738fa71a2bef.camel@xry111.site>
+	 <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.45.2 
@@ -39,33 +42,27 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Sat, 2022-09-03 at 17:34 +0800, Binbin Zhou wrote:
-> This is now supported, enable for Loongson-3 systems.
-> Other systems are unaffected.
+On Sat, 2022-09-03 at 09:57 +0800, Youling Tang wrote:
+> > > Unlike (pre-r6) MIPS, LoongArch has a complete support for PIC, and
+> > > currently LoongArch toolchain always produces PIC (except, if -Wa,-ml=
+a-
+> > > {local,global}-with-abs or la.abs macros are used explicitly).
+> > >=20
+> > > So would it be easier to review and correct the uses of "la.abs" in t=
+he
+> > > code, and make the main kernel image a real PIE?=C2=A0 Then we can lo=
+ad it
+> > > everywhere w/o any need to do relocation at load time.
 >=20
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: WANG Xuerui <git@xen0n.name>
-> Cc: loongarch@lists.linux.dev
-> ---
-> =C2=A0arch/loongarch/configs/loongson3_defconfig | 1 +
-> =C2=A01 file changed, 1 insertion(+)
->=20
-> diff --git a/arch/loongarch/configs/loongson3_defconfig
-> b/arch/loongarch/configs/loongson3_defconfig
-> index 4083d3051109..b240bc4e2021 100644
-> --- a/arch/loongarch/configs/loongson3_defconfig
-> +++ b/arch/loongarch/configs/loongson3_defconfig
-> @@ -660,6 +660,7 @@ CONFIG_USB_GADGET=3Dy
-> =C2=A0CONFIG_INFINIBAND=3Dm
-> =C2=A0CONFIG_RTC_CLASS=3Dy
-> =C2=A0CONFIG_RTC_DRV_EFI=3Dy
-> +CONFIG_RTC_DRV_LS2X=3Dy
+> At the beginning I also wanted to make the main kernel image a real PIE
+> and tried it, some of the "la.abs" can be modified, but I encountered
+> difficulties in modifying the=C2=A0 exception handling code part, the ker=
+nel
+> will not=C2=A0 boot after modification :(, I will continue to work hard t=
+ry.
 
-We already have RTC_DRV_EFI=3Dy, IIUC this means we leave LS7A RTC for the
-firmware to drive and operate it through EFI service.  So is this really
-needed for LoongArch systems?  And if we enable both RTC_DRV_EFI and
-RTC_DRV_LS2X, will some bad thing (a conflict) happen?
+I just tried the same thing and get the same result :(.  Will spend
+several hours reading the LoongArch manual about exception...
 
 --=20
 Xi Ruoyao <xry111@xry111.site>
