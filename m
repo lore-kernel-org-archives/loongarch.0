@@ -1,31 +1,25 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85845187E
-	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 09:36:36 +0000 (UTC)
-Received: from localhost.localdomain (unknown [112.20.110.237])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXWsgIBNjfGgQAA--.8093S2;
-	Sat, 03 Sep 2022 17:36:32 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Alessandro Zummo <a.zummo@towertech.it>,
-	linux-rtc@vger.kernel.org
-Cc: linux-mips@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	WANG Xuerui <git@xen0n.name>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Qing Zhang <zhangqing@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	zhaoxiao <zhaoxiao@uniontech.com>
-Subject: [PATCH 6/7] MIPS: Loongson64: DTS: Add RTC support to Loongson-2K
-Date: Sat,  3 Sep 2022 17:35:56 +0800
-Message-Id: <255ac36eed438ca8839a6fb2f4e1a5e8922a4bba.1662190009.git.zhoubinbin@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C06D7D8E
+	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 09:55:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 738F8C433D6;
+	Sat,  3 Sep 2022 09:55:36 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Shuah Khan <shuah@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Will Drewry <wad@chromium.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH 1/2] tools: Add LoongArch build infrastructure
+Date: Sat,  3 Sep 2022 17:55:06 +0800
+Message-Id: <20220903095507.3425208-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1662190009.git.zhoubinbin@loongson.cn>
-References: <cover.1662190009.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -33,63 +27,61 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXWsgIBNjfGgQAA--.8093S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4rGw15GFy5Ww4DCryUWrg_yoW8Gw1kpF
-	nI9a17Kr4fur1xZwn8GryUGry7ZF95ArsFgF47G3srW3sIq3Wqvr1fAFsYqr4UZFyfJay0
-	9r92grWxCFy3CaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
-	4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
-	628vn2kIc2xKxwCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIx
-	AIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-	C2KfnxnUUI43ZEXa7VUbgyCJUUUUU==
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
 
-From: WANG Xuerui <git@xen0n.name>
+We will add tools support for LoongArch (bpf, perf, objtool, etc.), add
+build infrastructure and common headers for preparation.
 
-The Loongson-2K RTC module is now supported, enable it.
-
-The MMIO address is unclear from the Loongson 2K1000 user manual, I took
-it from Loongson's out-of-tree fork of Linux 4.19.
-
-Signed-off-by: WANG Xuerui <git@xen0n.name>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: Qing Zhang <zhangqing@loongson.cn>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: zhaoxiao <zhaoxiao@uniontech.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-mips@vger.kernel.org
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/arch/loongarch/include/uapi/asm/bitsperlong.h |  9 +++++++++
+ tools/scripts/Makefile.arch                         | 11 ++++++++++-
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+ create mode 100644 tools/arch/loongarch/include/uapi/asm/bitsperlong.h
 
-diff --git a/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi b/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi
-index 8143a61111e3..811a5ab753a2 100644
---- a/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi
-+++ b/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi
-@@ -57,6 +57,11 @@ pm: reset-controller@1fe07000 {
- 			reg = <0 0x1fe07000 0 0x422>;
- 		};
- 
-+		rtc0: rtc@1fe07800 {
-+			compatible = "loongson,ls2x-rtc";
-+			reg = <0 0x1fe07800 0 0x78>;
-+		};
+diff --git a/tools/arch/loongarch/include/uapi/asm/bitsperlong.h b/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
+new file mode 100644
+index 000000000000..d4e32b3d4843
+--- /dev/null
++++ b/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef __ASM_LOONGARCH_BITSPERLONG_H
++#define __ASM_LOONGARCH_BITSPERLONG_H
 +
- 		liointc0: interrupt-controller@1fe11400 {
- 			compatible = "loongson,liointc-2.0";
- 			reg = <0 0x1fe11400 0 0x40>,
++#define __BITS_PER_LONG (__SIZEOF_POINTER__ * 8)
++
++#include <asm-generic/bitsperlong.h>
++
++#endif /* __ASM_LOONGARCH_BITSPERLONG_H */
+diff --git a/tools/scripts/Makefile.arch b/tools/scripts/Makefile.arch
+index 0c6c7f456887..1c72d07cb9fe 100644
+--- a/tools/scripts/Makefile.arch
++++ b/tools/scripts/Makefile.arch
+@@ -5,7 +5,7 @@ HOSTARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
+                                   -e s/s390x/s390/ -e s/parisc64/parisc/ \
+                                   -e s/ppc.*/powerpc/ -e s/mips.*/mips/ \
+                                   -e s/sh[234].*/sh/ -e s/aarch64.*/arm64/ \
+-                                  -e s/riscv.*/riscv/)
++                                  -e s/riscv.*/riscv/ -e s/loongarch.*/loongarch/)
+ 
+ ifndef ARCH
+ ARCH := $(HOSTARCH)
+@@ -34,6 +34,15 @@ ifeq ($(ARCH),sh64)
+        SRCARCH := sh
+ endif
+ 
++# Additional ARCH settings for loongarch
++ifeq ($(ARCH),loongarch32)
++       SRCARCH := loongarch
++endif
++
++ifeq ($(ARCH),loongarch64)
++       SRCARCH := loongarch
++endif
++
+ LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)
+ ifeq ($(LP64), 1)
+   IS_64_BIT := 1
 -- 
 2.31.1
 
