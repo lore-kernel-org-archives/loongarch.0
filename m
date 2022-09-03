@@ -1,9 +1,9 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B4521878
-	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 09:35:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D53191878
+	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 09:36:34 +0000 (UTC)
 Received: from localhost.localdomain (unknown [112.20.110.237])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxkODtHxNjJWgQAA--.4203S6;
-	Sat, 03 Sep 2022 17:35:46 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXWsgIBNjfGgQAA--.8093S3;
+	Sat, 03 Sep 2022 17:36:33 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Alessandro Zummo <a.zummo@towertech.it>,
 	linux-rtc@vger.kernel.org
@@ -14,14 +14,12 @@ Cc: linux-mips@vger.kernel.org,
 	WANG Xuerui <git@xen0n.name>,
 	Binbin Zhou <zhoubinbin@loongson.cn>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Qing Zhang <zhangqing@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
 	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	zhaoxiao <zhaoxiao@uniontech.com>
-Subject: [PATCH 4/7] MIPS: Loongson64: DTS: Add RTC support to LS7A
-Date: Sat,  3 Sep 2022 17:34:56 +0800
-Message-Id: <85358e3a19601d7d057baabaa1ca9fdc79ca2455.1662190009.git.zhoubinbin@loongson.cn>
+	Qing Zhang <zhangqing@loongson.cn>
+Subject: [PATCH 7/7] MIPS: Loongson: Enable LS2X RTC in loongson2k_defconfig
+Date: Sat,  3 Sep 2022 17:35:57 +0800
+Message-Id: <f9c9a777efe4766297a5b460fb9221624b879c6f.1662190009.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1662190009.git.zhoubinbin@loongson.cn>
 References: <cover.1662190009.git.zhoubinbin@loongson.cn>
@@ -32,59 +30,54 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxkODtHxNjJWgQAA--.4203S6
-X-Coremail-Antispam: 1UD129KBjvdXoW7GrWDGF17ZrWxtFyUXF4fXwb_yoWkCFbEy3
-	W7Kws3GFWfArnrt34kurykuFy7u34xu3Z5u3ZrXr15X3sIkrnxJFWUA3yDuF13ZrWavrsY
-	ganYqFn3Cr1akjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbkkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
-	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
-	F7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr
-	1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_
-	GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2I
-	x0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8
-	JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2
-	ka0xkIwI1lc2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x0JUfl19UUUUU=
+X-CM-TRANSID:AQAAf8BxXWsgIBNjfGgQAA--.8093S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrur4fZFykZr43Gry5ArWkZwb_yoWDArg_GF
+	y7Kw1kGr4rArWrCa4xXw1rWw1Uu34UWa1kCr17tw15X3y3Kr13Xa9rAr15GFn8u39rKr4Y
+	va95JFyxur17WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbyAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
+	0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
+	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWl
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
+	8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
+	jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0x
+	kIwI1lc2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+	AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0
+	cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4
+	A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU
+	0xZFpf9x0JUza0QUUUUU=
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
 
 From: WANG Xuerui <git@xen0n.name>
 
-The LS7A RTC module is now supported, enable it.
+This is now supported, enable for Loongson-2K systems.
+Other systems are unaffected.
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Acked-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Qing Zhang <zhangqing@loongson.cn>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
 Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: zhaoxiao <zhaoxiao@uniontech.com>
+Cc: Qing Zhang <zhangqing@loongson.cn>
 Cc: linux-mips@vger.kernel.org
 ---
- arch/mips/boot/dts/loongson/ls7a-pch.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/mips/configs/loongson2k_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-index 2f45fce2cdc4..82035de4774f 100644
---- a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-+++ b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-@@ -19,6 +19,11 @@ pic: interrupt-controller@10000000 {
- 			#interrupt-cells = <2>;
- 		};
- 
-+		rtc0: rtc@100d0100 {
-+			compatible = "loongson,ls2x-rtc";
-+			reg = <0 0x100d0100 0 0x78>;
-+		};
-+
- 		ls7a_uart0: serial@10080000 {
- 			compatible = "ns16550a";
- 			reg = <0 0x10080000 0 0x100>;
+diff --git a/arch/mips/configs/loongson2k_defconfig b/arch/mips/configs/loongson2k_defconfig
+index e948ca487e2d..e15f34857956 100644
+--- a/arch/mips/configs/loongson2k_defconfig
++++ b/arch/mips/configs/loongson2k_defconfig
+@@ -280,6 +280,7 @@ CONFIG_USB_SERIAL=m
+ CONFIG_USB_SERIAL_OPTION=m
+ CONFIG_RTC_CLASS=y
+ CONFIG_RTC_DRV_CMOS=y
++CONFIG_RTC_DRV_LS2X=y
+ CONFIG_DMADEVICES=y
+ # CONFIG_CPU_HWMON is not set
+ CONFIG_PM_DEVFREQ=y
 -- 
 2.31.1
 
