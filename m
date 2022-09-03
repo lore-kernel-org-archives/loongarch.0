@@ -1,69 +1,105 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A251C2B
-	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 10:49:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1662202165;
-	bh=8I2CCom6GzLdMkmqYuc6ZCbm5jRcJA32i6ToxSl5Zkg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=g5DNxviT7XZuksCX+3hFQNGEDISb+9Nr+bXh2GWC+RI87IcV6c0kwnpV3xVnVeUcn
-	 K7NAxY9hGbkY/LEcEA+xeTma50VvqksF7tWiwIbnhm5KJge35asDjQMenIjmdoXVNt
-	 dywTOcPpJCZd6uf8GaBMTRUJQk2fdcfkwwVL5Pog=
-Received: from [IPv6:240e:358:1104:1500:dc73:854d:832e:4] (unknown [IPv6:240e:358:1104:1500:dc73:854d:832e:4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 10E1065907;
-	Sat,  3 Sep 2022 06:49:20 -0400 (EDT)
-Message-ID: <78a4a6b0970c309daa336a2329e69d28df486552.camel@xry111.site>
-Subject: Re: [PATCH 1/3] LoongArch: tools: Add relocs tool support
-From: Xi Ruoyao <xry111@xry111.site>
-To: Youling Tang <tangyouling@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, Xuerui Wang
-	 <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Jinyang He
-	 <hejinyang@loongson.cn>
-Date: Sat, 03 Sep 2022 18:49:14 +0800
-In-Reply-To: <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
-References: <1662113335-14282-1-git-send-email-tangyouling@loongson.cn>
-	 <1662113335-14282-2-git-send-email-tangyouling@loongson.cn>
-	 <c9880165f0355fc3be3ec23153b43ad33e558b5d.camel@xry111.site>
-	 <4df8a26c49a35c1fce36d80c370f738fa71a2bef.camel@xry111.site>
-	 <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.45.2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B001C31
+	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 14:15:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F22AC433D6
+	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 14:15:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1662214546;
+	bh=/jP8MIyDHUYJ8U6z6dijSBnbvT/6bOxlL9l4q7SCjIE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Vmg6+/RGxAjjT8tBBM2A/0QujfJq9FLMt6fdyGlWDkUWHYVkpG7LwVZ8QHehi6LoP
+	 aTS/O3tzmjDp3TbqSfODHJWhpjrdAncizb/LVOB5DMHp52EfecJ+jNX8URczcjdw9L
+	 uzHjoVdR5AV0IJMyRmOlrVPDSw+YgdEqSdFUs3FI2Y4FK+nCyK3Sb7DGRGF5GVdK3M
+	 pRS+tGuCo0ai6ht/ZmNIQ2lkmayyG4DLFHN4zw8G0+ghGUp7ffxLPYF/wc+hZh/ocf
+	 qLQ7iK+Kb6hP6hG5BKI5d7LOZ6g+UN8iAsmATZkhyzcO0sAmHIr+MClg6pIo6fb2uQ
+	 b1cryDuUhoM+Q==
+Received: by mail-vs1-f45.google.com with SMTP id k2so4749228vsk.8
+        for <loongarch@lists.linux.dev>; Sat, 03 Sep 2022 07:15:46 -0700 (PDT)
+X-Gm-Message-State: ACgBeo1cNjiqRciytPXCXcTqI/MTTbUwEHhgpJo2Y4Lj9fwVN2dwd4Ti
+	WvTGIQhAsZXe18grHsR2v5GWizVDQgpe5EA61Ro=
+X-Google-Smtp-Source: AA6agR4Mm5CDbSVzGUuU9Le1jrraNppoFx9hZxmyR0Mx07jBrk3YAqwYjgTaCXwombY3RjovNF6IxEXvdbwQRT1wnl0=
+X-Received: by 2002:a05:6102:390d:b0:387:78b9:bf9c with SMTP id
+ e13-20020a056102390d00b0038778b9bf9cmr12500187vsu.43.1662214545467; Sat, 03
+ Sep 2022 07:15:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <cover.1662190009.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1662190009.git.zhoubinbin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 3 Sep 2022 22:15:33 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5+7_o1znvnOdbASwxL09NxSr6vAFpiZZC16DHGtt5f9w@mail.gmail.com>
+Message-ID: <CAAhV-H5+7_o1znvnOdbASwxL09NxSr6vAFpiZZC16DHGtt5f9w@mail.gmail.com>
+Subject: Re: [PATCH 0/7] rtc: ls2x: Add support for the Loongson-2K/LS7A RTC
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org, 
+	"open list:MIPS" <linux-mips@vger.kernel.org>, devicetree@vger.kernel.org, 
+	loongarch@lists.linux.dev, 
+	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Qing Zhang <zhangqing@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 2022-09-03 at 09:57 +0800, Youling Tang wrote:
-> > > Unlike (pre-r6) MIPS, LoongArch has a complete support for PIC, and
-> > > currently LoongArch toolchain always produces PIC (except, if -Wa,-ml=
-a-
-> > > {local,global}-with-abs or la.abs macros are used explicitly).
-> > >=20
-> > > So would it be easier to review and correct the uses of "la.abs" in t=
-he
-> > > code, and make the main kernel image a real PIE?=C2=A0 Then we can lo=
-ad it
-> > > everywhere w/o any need to do relocation at load time.
->=20
-> At the beginning I also wanted to make the main kernel image a real PIE
-> and tried it, some of the "la.abs" can be modified, but I encountered
-> difficulties in modifying the=C2=A0 exception handling code part, the ker=
-nel
-> will not=C2=A0 boot after modification :(, I will continue to work hard t=
-ry.
+Hi, Binbin,
 
-I just tried the same thing and get the same result :(.  Will spend
-several hours reading the LoongArch manual about exception...
+On Sat, Sep 3, 2022 at 5:35 PM Binbin Zhou <zhoubinbin@loongson.cn> wrote:
+>
+> Hi all:
+>
+> The initial DT-base ls2x rtc driver was written by Wang Xuerui, he has
+> released five versions of patchset before, and all related mail records
+> are shown below if you are interested:
+>
+> https://lore.kernel.org/all/?q=ls2x-rtc
+>
+> In this series of patches, based on the code above, I have added the
+> following support:
+>
+> 1. Add ACPI-related support, as Loongson-3 + LS7A is now ACPI-base
+>    by default on LoonArch;
+> 2. Add rtc alarm/walarm related functions.
+>
+> Unfortunately, I have only tested the Loongson-3A4000+LS7A1000/LS7A2000
+> under LoongArch architecture.
+I think Loongson-3A4000 should be Loongson-3A5000 here. And I think
+Qing Zhang can help us to test on Loongson-2K platform.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Huacai
+>
+> NOTE:
+> The related functions of rtc alarm/walarm depend on ACPI registers, so rtc
+> alarm may not be available on the DT-base environment. Such as Loongson-2k/3
+> under MIPS.
+>
+> Thanks.
+>
+> Binbin Zhou (2):
+>   rtc: ls2x: Add support for the Loongson-2K/LS7A RTC
+>   LoongArch: Enable LS2X RTC in loongson3_defconfig
+>
+> WANG Xuerui (5):
+>   dt-bindings: rtc: Add bindings for LS2X RTC
+>   MIPS: Loongson64: DTS: Add RTC support to LS7A
+>   MIPS: Loongson: Enable LS2X RTC in loongson3_defconfig
+>   MIPS: Loongson64: DTS: Add RTC support to Loongson-2K
+>   MIPS: Loongson: Enable LS2X RTC in loongson2k_defconfig
+>
+>  .../devicetree/bindings/rtc/trivial-rtc.yaml  |   2 +
+>  arch/loongarch/configs/loongson3_defconfig    |   1 +
+>  .../boot/dts/loongson/loongson64-2k1000.dtsi  |   5 +
+>  arch/mips/boot/dts/loongson/ls7a-pch.dtsi     |   5 +
+>  arch/mips/configs/loongson2k_defconfig        |   1 +
+>  arch/mips/configs/loongson3_defconfig         |   1 +
+>  drivers/rtc/Kconfig                           |  11 +
+>  drivers/rtc/Makefile                          |   1 +
+>  drivers/rtc/rtc-ls2x.c                        | 366 ++++++++++++++++++
+>  9 files changed, 393 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-ls2x.c
+>
+> --
+> 2.31.1
+>
+>
