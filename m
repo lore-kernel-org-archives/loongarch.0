@@ -1,129 +1,72 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C6877D91
-	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 10:11:23 +0000 (UTC)
-Received: from [10.130.0.135] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTWtEKBNjh2oQAA--.8249S3;
-	Sat, 03 Sep 2022 18:11:16 +0800 (CST)
-Subject: Re: [PATCH bpf-next v3 3/4] LoongArch: Add BPF JIT support
-To: Huacai Chen <chenhuacai@kernel.org>
-References: <1661999249-10258-1-git-send-email-yangtiezhu@loongson.cn>
- <1661999249-10258-4-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H4yU2tp=DBGCkdSzp-9bAXXDM4+0iqDgOac+fbgQnsx2A@mail.gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev,
- Li Xuefeng <lixuefeng@loongson.cn>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <1a740b5c-041c-85c6-f1d6-bb0b931c0c3e@loongson.cn>
-Date: Sat, 3 Sep 2022 18:11:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BCB399
+	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 10:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1662201937;
+	bh=NpdQCn4KmvmvSGsHfe8yzzWa+Ld9oIfoQgHzoFTZQdk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=XtVwm3DmdJIuAhl9nNhc+5P9Xd9cDGFUSX17CTClO14WWZv36RoG347rydVcAu1t4
+	 06QImuBntf1os11mm61CnnaFqr8qxhF5XmlBD9ir9qTR3gjfBN8wbLyTA0wAXc+OZ8
+	 dt29W3c69LGyIxOZFkw67Ie5ltchQxK79+9j8euE=
+Received: from [IPv6:240e:358:1104:1500:dc73:854d:832e:4] (unknown [IPv6:240e:358:1104:1500:dc73:854d:832e:4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 0861D667F7;
+	Sat,  3 Sep 2022 06:45:30 -0400 (EDT)
+Message-ID: <bf3e7516c351f793de08d5311aff10c379720798.camel@xry111.site>
+Subject: Re: [PATCH 2/7] LoongArch: Enable LS2X RTC in loongson3_defconfig
+From: Xi Ruoyao <xry111@xry111.site>
+To: Binbin Zhou <zhoubinbin@loongson.cn>, Alessandro Zummo
+	 <a.zummo@towertech.it>, linux-rtc@vger.kernel.org
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, Huacai Chen
+	 <chenhuacai@kernel.org>, WANG Xuerui <git@xen0n.name>
+Date: Sat, 03 Sep 2022 18:45:22 +0800
+In-Reply-To: <6d01148014a62d8d412790dc8442af40368c6f8f.1662190009.git.zhoubinbin@loongson.cn>
+References: <cover.1662190009.git.zhoubinbin@loongson.cn>
+	 <6d01148014a62d8d412790dc8442af40368c6f8f.1662190009.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.45.2 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4yU2tp=DBGCkdSzp-9bAXXDM4+0iqDgOac+fbgQnsx2A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8AxTWtEKBNjh2oQAA--.8249S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxXrykXr15CFW8ur1DXFW5ZFb_yoW5CrW3pF
-	43KrZ8KF4fGFy3AFyDXr4UXa4akwsIgry7AF15KrykA3yYqryF9FWrK3ZYgas8Cas7Zwn0
-	9F4Fyrnru3W5GFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-	C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487
-	MxkIecxEwVAFwVW8twCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
-	026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
-	JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20x
-	vEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE
-	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa
-	7IU5IAp7UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 
+On Sat, 2022-09-03 at 17:34 +0800, Binbin Zhou wrote:
+> This is now supported, enable for Loongson-3 systems.
+> Other systems are unaffected.
+>=20
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: WANG Xuerui <git@xen0n.name>
+> Cc: loongarch@lists.linux.dev
+> ---
+> =C2=A0arch/loongarch/configs/loongson3_defconfig | 1 +
+> =C2=A01 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/loongarch/configs/loongson3_defconfig
+> b/arch/loongarch/configs/loongson3_defconfig
+> index 4083d3051109..b240bc4e2021 100644
+> --- a/arch/loongarch/configs/loongson3_defconfig
+> +++ b/arch/loongarch/configs/loongson3_defconfig
+> @@ -660,6 +660,7 @@ CONFIG_USB_GADGET=3Dy
+> =C2=A0CONFIG_INFINIBAND=3Dm
+> =C2=A0CONFIG_RTC_CLASS=3Dy
+> =C2=A0CONFIG_RTC_DRV_EFI=3Dy
+> +CONFIG_RTC_DRV_LS2X=3Dy
 
+We already have RTC_DRV_EFI=3Dy, IIUC this means we leave LS7A RTC for the
+firmware to drive and operate it through EFI service.  So is this really
+needed for LoongArch systems?  And if we enable both RTC_DRV_EFI and
+RTC_DRV_LS2X, will some bad thing (a conflict) happen?
 
-On 09/03/2022 04:32 PM, Huacai Chen wrote:
-> On Thu, Sep 1, 2022 at 10:27 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->> BPF programs are normally handled by a BPF interpreter, add BPF JIT
->> support for LoongArch to allow the kernel to generate native code
->> when a program is loaded into the kernel, this will significantly
->> speed-up processing of BPF programs.
-
-[...]
-
->> +
->> +static inline int emit_cond_jmp(struct jit_ctx *ctx, u8 cond, enum loongarch_gpr rj,
->> +                               enum loongarch_gpr rd, int jmp_offset)
->> +{
->> +       /*
->> +        * A large PC-relative jump offset may overflow the immediate field of
->> +        * the native conditional branch instruction, triggering a conversion
->> +        * to use an absolute jump instead, this jump sequence is particularly
->> +        * nasty. For now, use cond_jmp_offs26() directly to keep it simple.
->> +        * In the future, maybe we can add support for far branching, the branch
->> +        * relaxation requires more than two passes to converge, the code seems
->> +        * too complex to understand, not quite sure whether it is necessary and
->> +        * worth the extra pain. Anyway, just leave it as it is to enhance code
->> +        * readability now.
-> Oh, no. I don't think this is a very difficult problem, because the
-> old version has already solved [1]. Please improve your code and send
-> V4.
-> BTW, I have committed V3 with some small modifications in
-> https://github.com/loongson/linux/commits/loongarch-next, please make
-> V4 based on that.
->
-> [1] https://github.com/loongson/linux/commit/e20b2353f40cd13720996524e1df6d0ca086eeb8#diff-6d2f4f5a862a5dce12f8eb0feeca095825c4ed1c2e7151b0905fb8d03c98922e
->
-> --------code in the old version--------
-> static inline void emit_cond_jump(struct jit_ctx *ctx, u8 cond, enum
-> loongarch_gpr rj,
->                                   enum loongarch_gpr rd, int jmp_offset)
-> {
->         if (is_signed_imm16(jmp_offset))
->                 cond_jump_offs16(ctx, cond, rj, rd, jmp_offset);
->         else if (is_signed_imm26(jmp_offset))
->                 cond_jump_offs26(ctx, cond, rj, rd, jmp_offset);
->         else
->                 cond_jump_offs32(ctx, cond, rj, rd, jmp_offset);
-> }
->
-> static inline void emit_uncond_jump(struct jit_ctx *ctx, int
-> jmp_offset, bool is_exit)
-> {
->         if (is_signed_imm26(jmp_offset))
->                 uncond_jump_offs26(ctx, jmp_offset);
->         else
->                 uncond_jump_offs32(ctx, jmp_offset, is_exit);
-> }
-> --------end of code--------
->
-> Huacai
->
-
-Hi Huacai,
-
-This change is to pass the special test cases:
-"a new type of jump test where the program jumps forwards
-and backwards with increasing offset. It mainly tests JITs where a
-relative jump may generate different JITed code depending on the offset
-size."
-
-They are introduced in commit a7d2e752e520 ("bpf/tests: Add staggered
-JMP and JMP32 tests") after the old internal version you mentioned.
-
-Here, we use the native instructions to enlarge the jump range to 26 bit
-directly rather than 16 bit first, and also take no account of more than
-26 bit case because there is no native instruction and it needs to emulate.
-
-As the code comment said, this is to enhance code readability now.
-
-Thanks,
-Tiezhu
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
