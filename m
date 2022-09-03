@@ -1,70 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9977E1FA3
-	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 14:29:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5A88C433C1;
-	Sat,  3 Sep 2022 14:29:00 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.0-rc4
-Date: Sat,  3 Sep 2022 22:28:23 +0800
-Message-Id: <20220903142823.3436925-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 560D57E
+	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 16:24:30 +0000 (UTC)
+Received: from [192.168.100.107] (unknown [171.223.97.96])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx9OGHfxNjBIUQAA--.3628S3;
+	Sun, 04 Sep 2022 00:23:36 +0800 (CST)
+Message-ID: <fffdd2ac-4ba6-8eb3-f269-b22a3d9c32f6@loongson.cn>
+Date: Sun, 4 Sep 2022 00:23:04 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH 1/3] LoongArch: tools: Add relocs tool support
+Content-Language: en-US
+To: Xi Ruoyao <xry111@xry111.site>, Youling Tang <tangyouling@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <1662113335-14282-1-git-send-email-tangyouling@loongson.cn>
+ <1662113335-14282-2-git-send-email-tangyouling@loongson.cn>
+ <c9880165f0355fc3be3ec23153b43ad33e558b5d.camel@xry111.site>
+ <4df8a26c49a35c1fce36d80c370f738fa71a2bef.camel@xry111.site>
+ <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
+ <78a4a6b0970c309daa336a2329e69d28df486552.camel@xry111.site>
+From: Jinyang He <hejinyang@loongson.cn>
+In-Reply-To: <78a4a6b0970c309daa336a2329e69d28df486552.camel@xry111.site>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cx9OGHfxNjBIUQAA--.3628S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXrW8Xr4UZry5Ww4ruFWkXrb_yoW5CFW8pr
+	W8GF1UK3ykGr1xXw4jqw1UWryrW3y8W343GFW5tFyFv3WY9F1qqr10qF4j9ryUJr4kJr4Y
+	qr1aqr18Zrn8Ar7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+	6r4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r1j6r
+	4UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CEbIxv
+	r21lc2xSY4AK67AK6r1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
+	IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
+	6r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
+	IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv
+	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf
+	9x0JUeGQDUUUUU=
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-The following changes since commit b90cb1053190353cc30f0fef0ef1f378ccc063c5:
+On 2022/9/3 18:49, Xi Ruoyao wrote:
 
-  Linux 6.0-rc3 (2022-08-28 15:05:29 -0700)
+> On Sat, 2022-09-03 at 09:57 +0800, Youling Tang wrote:
+>>>> Unlike (pre-r6) MIPS, LoongArch has a complete support for PIC, and
+>>>> currently LoongArch toolchain always produces PIC (except, if -Wa,-mla-
+>>>> {local,global}-with-abs or la.abs macros are used explicitly).
+>>>>
+>>>> So would it be easier to review and correct the uses of "la.abs" in the
+>>>> code, and make the main kernel image a real PIE?  Then we can load it
+>>>> everywhere w/o any need to do relocation at load time.
+>> At the beginning I also wanted to make the main kernel image a real PIE
+>> and tried it, some of the "la.abs" can be modified, but I encountered
+>> difficulties in modifying the  exception handling code part, the kernel
+>> will not  boot after modification :(, I will continue to work hard try.
+> I just tried the same thing and get the same result :(.  Will spend
+> several hours reading the LoongArch manual about exception...
+>
+Hi,
 
-are available in the Git repository at:
+The following ideas are based on experience, without validation. Patches
+show that three types of relocation are needed to be done.
+1, GOT is generated by toolchain, so  I think eliminating them by 
+toolchain is better.
+2, Ex_table is generated but striped relocation info. We can plays pcrel
+way to resolve this problem. One of ways like follows, (pseudo-code)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.0-2
+arch/loongarch/copy_user.S
+...
+.macro fixup_ex from, to, offset, fix
+.if \fix
+         .section .fixup, "ax"
+\to:    addi.d  a0, a2, \offset
+         jr      ra
+         .previous
+.endif
+         .section __ex_table, "a"
+         PTR     \from\()b, \to\()b - \from\()b   # fixup use pcrel
+         .previous
+.endm
+...
+...
 
-for you to fetch changes up to ac9284db6b7b4af150940186b633a233d4ca2bed:
+arch/loongarch/mm/extable.c
+         ...
+         unsigned long era = exception_era(regs);
+         fixup = search_exception_tables(era - relocate_offset); // 
+Search by orig value
+         if (fixup) {
+                 regs->csr_era = fixup->fixup + era; // Fixup fixup address.
+                 return 1;
+         }
 
-  LoongArch: mm: Remove the unneeded result variable (2022-09-03 18:01:27 +0800)
+         ...
 
-----------------------------------------------------------------
-LoongArch fixes for v6.0-rc4
+3, The left is the processed relocation table. It collect the relocation
+type R_LARCH_ABS* (R_LARCH_MARK_LA?) and R_LARCH_64. Just do
+as this patch does. The la.abs is used because of the different exception
+entry on each CPUs and better NUMA performance IMHO. We can
+do follows way to avoid R_LARCH_ABS* and produce R_LARCH_64, (data in text)
 
-Fix several build errors or warnings, cleanup some code, and adjust
-arch_do_signal_or_restart() to adapt generic entry.
-----------------------------------------------------------------
-Ard Biesheuvel (1):
-      LoongArch: Avoid orphan input sections
+.text
+la.pcrel t0,999f
+ld.d t0,t0,0
+...
+PTR do_vint
+...
 
-Huacai Chen (3):
-      LoongArch: Adjust arch_do_signal_or_restart() to adapt generic entry
-      LoongArch: Improve dump_tlb() output messages
-      LoongArch: Fix section mismatch due to acpi_os_ioremap()
+*Not* important. For me, I really wish a bootstrap relocation while this
+patch is KALSR. The bootstrap relocation meaning is the boot cpu enter
+kernel_entry, check the real address itself, parse the cmdline whether
+do kaslr, and then relocate itself. Then kdump capture process is easier.
+Some past info links,
+https://lore.kernel.org/loongarch/3002b2b3-2c2c-e32e-c474-d3876d3ef9b7@loongson.cn/
+https://patchwork.kernel.org/project/linux-mips/patch/1618230494-6207-6-git-send-email-hejinyang@loongson.cn/
 
-Yupeng Li (1):
-      LoongArch: Fix arch_remove_memory() undefined build error
 
-ye xingchen (1):
-      LoongArch: mm: Remove the unneeded result variable
-
- arch/loongarch/Kconfig              |  2 ++
- arch/loongarch/include/asm/acpi.h   |  2 +-
- arch/loongarch/kernel/acpi.c        |  2 +-
- arch/loongarch/kernel/signal.c      |  4 ++--
- arch/loongarch/kernel/vmlinux.lds.S |  2 ++
- arch/loongarch/lib/dump_tlb.c       | 26 +++++++++++++-------------
- arch/loongarch/mm/init.c            | 19 +++++++------------
- 7 files changed, 28 insertions(+), 29 deletions(-)
