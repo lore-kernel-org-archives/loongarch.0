@@ -1,133 +1,90 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8C671111
-	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 00:39:07 +0000 (UTC)
-Received: from [10.130.0.63] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxrmsjohJjGj8QAA--.55594S3;
-	Sat, 03 Sep 2022 08:39:00 +0800 (CST)
-Subject: Re: [PATCH v2 3/9] LoongArch/ftrace: Add dynamic function tracer
- support
-To: Jeff Xie <xiehuan09@gmail.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>,
- WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- hejinyang@loongson.cn
-References: <20220826073114.1515-1-zhangqing@loongson.cn>
- <20220826073114.1515-4-zhangqing@loongson.cn>
- <CAEr6+EC9vtsPmj5f+b5iqJWOGyC7D5g+mpv01_ekzA9gQjgeAg@mail.gmail.com>
-From: Qing Zhang <zhangqing@loongson.cn>
-Message-ID: <374ddd54-4c04-65cc-4097-c7a145c2c029@loongson.cn>
-Date: Sat, 3 Sep 2022 08:38:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1291363
+	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 01:42:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2598AC433D6;
+	Sat,  3 Sep 2022 01:42:40 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Fix section mismatch due to acpi_os_ioremap()
+Date: Sat,  3 Sep 2022 09:42:07 +0800
+Message-Id: <20220903014207.2312965-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAEr6+EC9vtsPmj5f+b5iqJWOGyC7D5g+mpv01_ekzA9gQjgeAg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxrmsjohJjGj8QAA--.55594S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ar17Xr18ZrW3tF1xuF4fAFb_yoW5JrW8pa
-	93CanFkr1UZF4jyw10gr48Ary3ArWFyry5GFs8JryrCr9rCw1Fgr12qr1rCa9rA345GryI
-	va4UZw1DXrn0va7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-	6r4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
-	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
-	bIxvr21lc2xSY4AK67AK6w1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0x
-	ZFpf9x0JU3DG5UUUUU=
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
+Now acpi_os_ioremap() is marked with __init because it calls memblock_
+is_memory() which is also marked with __init in the !ARCH_KEEP_MEMBLOCK
+case. However, acpi_os_ioremap() is called by ordinary functions such
+as acpi_os_{read, write}_memory() and causes section mismatch warnings:
 
+WARNING: modpost: vmlinux.o: section mismatch in reference: acpi_os_read_memory (section: .text) -> acpi_os_ioremap (section: .init.text)
+WARNING: modpost: vmlinux.o: section mismatch in reference: acpi_os_write_memory (section: .text) -> acpi_os_ioremap (section: .init.text)
 
-On 2022/9/1 上午10:59, Jeff Xie wrote:
-> On Fri, Aug 26, 2022 at 4:24 PM Qing Zhang <zhangqing@loongson.cn> wrote:
->>
->> The compiler has inserted 2 NOPs before the regular function prologue.
->> T series registers are available and safe because of LoongArch psABI.
->>
->> At runtime, replace nop with bl to enable ftrace call and replace bl with
->> nop to disable ftrace call. The bl requires us to save the original RA value,
->> so here it saves RA at t0.
->> details are:
->>
->> | Compiled   |       Disabled         |        Enabled         |
->> +------------+------------------------+------------------------+
->> | nop        | move     t0, ra        | move     t0, ra        |
->> | nop        | nop                    | bl      ftrace_caller  |
->> | func_body  | func_body              | func_body              |
->>
->> The RA value will be recovered by ftrace_regs_entry, and restored into RA
->> before returning to the regular function prologue. When a function is not
->> being traced, the move t0, ra is not harmful.
->>
->> 1) ftrace_make_call, ftrace_make_nop (in kernel/ftrace.c)
->>     The two functions turn each recorded call site of filtered functions
->>     into a call to ftrace_caller or nops.
->>
->> 2) ftracce_update_ftrace_func (in kernel/ftrace.c)
->>     turns the nops at ftrace_call into a call to a generic entry for
->>     function tracers.
->>
->> 3) ftrace_caller (in kernel/mcount-dyn.S)
->>     The entry where each _mcount call sites calls to once they are
->>     filtered to be traced.
->>
-[...]
->>
-> 
-> When use the option func_stack_trace for the function tracer, I found a issue:
-> 
-> Steps:
-> 1. Enable the function tracer and the option func_stack_trace:
-> 
-> /sys/kernel/tracing # echo blk_update_request > ./set_ftrace_filter
-> /sys/kernel/tracing # echo 1 > ./options/func_stack_trace
-> /sys/kernel/tracing # echo function > ./current_tracer
-> 
-> 2. Let the blk_update_request() be called.
-> 
->   # mount /dev/vda /tmp
-> 
-> 
-> 3. cat ./trace
->            <idle>-0       [000] ..s1.   126.016445: blk_update_request
-> <-blk_mq_end_request
->            <idle>-0       [000] ..s1.   126.017937: <stack trace>
->   => blk_mq_end_request
-> 
-> We can see only one stack trace.
-> 
-> 
-> I found the default unwinder(for loongson3_defconfig) is
-> CONFIG_UNWINDER_PROLOGUE, if switch it to CONFIG_UNWINDER_GUESS
-> it works well:
-> 
-[...]
-> 
-> Maybe the issue happened on the CONFIG_UNWINDER_PROLOGUE,  but I
-> haven't dug deep into it ;)
+Fix these warnings by selecting ARCH_KEEP_MEMBLOCK unconditionally and
+removing the __init modifier of acpi_os_ioremap(). This can also give a
+chance to track "memory" and "reserved" memblocks after early boot.
 
-Hi, Jeff
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/Kconfig            | 1 +
+ arch/loongarch/include/asm/acpi.h | 2 +-
+ arch/loongarch/kernel/acpi.c      | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
 
-Thanks a lot for your feedback!
-
-I fixed it in v3, which was caused by the ftrace_regs_entry assembly not 
-being considered by the prologue analyze method. :)
-
-regards
--Qing
-
-> 
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 3bc5b911ae1a..c7dd6ad779af 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -39,6 +39,7 @@ config LOONGARCH
+ 	select ARCH_INLINE_SPIN_UNLOCK_BH if !PREEMPTION
+ 	select ARCH_INLINE_SPIN_UNLOCK_IRQ if !PREEMPTION
+ 	select ARCH_INLINE_SPIN_UNLOCK_IRQRESTORE if !PREEMPTION
++	select ARCH_KEEP_MEMBLOCK
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+ 	select ARCH_MIGHT_HAVE_PC_SERIO
+ 	select ARCH_SPARSEMEM_ENABLE
+diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
+index c5108213876c..17162f494b9b 100644
+--- a/arch/loongarch/include/asm/acpi.h
++++ b/arch/loongarch/include/asm/acpi.h
+@@ -15,7 +15,7 @@ extern int acpi_pci_disabled;
+ extern int acpi_noirq;
+ 
+ #define acpi_os_ioremap acpi_os_ioremap
+-void __init __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size);
++void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size);
+ 
+ static inline void disable_acpi(void)
+ {
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index f1c928648a4a..335398482038 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -48,7 +48,7 @@ void __init __acpi_unmap_table(void __iomem *map, unsigned long size)
+ 	early_memunmap(map, size);
+ }
+ 
+-void __init __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
++void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
+ {
+ 	if (!memblock_is_memory(phys))
+ 		return ioremap(phys, size);
+-- 
+2.31.1
 
