@@ -1,105 +1,53 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F17A1FC9
-	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 16:53:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1662224018;
-	bh=t52IjX6+hBLIxyQMJHaMiz0wEz1Uswpk4fyzMkyIEAw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=JETq2/CbFjHgWSfUSgGE/9SA/kHRz+tdtSQ7zd+KIjqlcevtKyCZ7MBMrkaA9lU8o
-	 GZ6z35DI4ESFeMUlcHz+BP5CyjEaXPhkhYt73hKKS+yJv7iywDVg+3A7BCQmohO11G
-	 jafxS/mtZQmRXqoJrBVND2Kd1OM6o4P91jdJjBuE=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id DC7C366783;
-	Sat,  3 Sep 2022 12:53:36 -0400 (EDT)
-Message-ID: <0b2d115c42ff6cb9b8c65d852ec2f0746ca6e8d9.camel@xry111.site>
-Subject: Re: [PATCH 1/3] LoongArch: tools: Add relocs tool support
-From: Xi Ruoyao <xry111@xry111.site>
-To: Jinyang He <hejinyang@loongson.cn>, Youling Tang
- <tangyouling@loongson.cn>,  Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, Xuerui Wang
-	 <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Sun, 04 Sep 2022 00:53:34 +0800
-In-Reply-To: <fffdd2ac-4ba6-8eb3-f269-b22a3d9c32f6@loongson.cn>
-References: <1662113335-14282-1-git-send-email-tangyouling@loongson.cn>
-	 <1662113335-14282-2-git-send-email-tangyouling@loongson.cn>
-	 <c9880165f0355fc3be3ec23153b43ad33e558b5d.camel@xry111.site>
-	 <4df8a26c49a35c1fce36d80c370f738fa71a2bef.camel@xry111.site>
-	 <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
-	 <78a4a6b0970c309daa336a2329e69d28df486552.camel@xry111.site>
-	 <fffdd2ac-4ba6-8eb3-f269-b22a3d9c32f6@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.45.2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D4129A9
+	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 20:29:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 18A39C433D7;
+	Sat,  3 Sep 2022 20:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1662236951;
+	bh=M7QpgVO5KP1FoCxkFsp6o06tH6aumSa+3QenVb6HTYw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=cnrBhT5FRJbr8E9anolRMULu9LJIQXdWs12AiiMC3xTz+L253VKd3iEgdj4tE+p5m
+	 ZhZVoo+0G6y1kbNOtUHLNqzStNhKeIQPiB3vNlUOyMORPEQhbNE6RNCpA/x25rJzUe
+	 2pYaD2P8CEMaJ1ZutEHsF01PaefhgOJ8KoobgqR5zTsaopmGmeRJDizKw15XZcvEYs
+	 ObtklQ4beYLPATO1HTFrLRnC0DcV5cpBeogT8accu7A75RkfEQ9WAjUuFKb/v72L92
+	 VkJU4qy6kWg6N/bzLUx2J7o07j44Zu8UtbcVo+xztwe7FVX6QD+OhQT3JJRVxlcMUM
+	 v4UDWI+XmMAtQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0506FC4166E;
+	Sat,  3 Sep 2022 20:29:11 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v6.0-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20220903142823.3436925-1-chenhuacai@loongson.cn>
+References: <20220903142823.3436925-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20220903142823.3436925-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.0-2
+X-PR-Tracked-Commit-Id: ac9284db6b7b4af150940186b633a233d4ca2bed
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f0c5f7ea81202e997f321d59bdd0c3f5c12ddea7
+Message-Id: <166223695101.8828.14070900267849576734.pr-tracker-bot@kernel.org>
+Date: Sat, 03 Sep 2022 20:29:11 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
 
-On Sun, 2022-09-04 at 00:23 +0800, Jinyang He wrote:
-> On 2022/9/3 18:49, Xi Ruoyao wrote:
->=20
-> > On Sat, 2022-09-03 at 09:57 +0800, Youling Tang wrote:
-> > > > > Unlike (pre-r6) MIPS, LoongArch has a complete support for PIC, a=
-nd
-> > > > > currently LoongArch toolchain always produces PIC (except, if -Wa=
-,-mla-
-> > > > > {local,global}-with-abs or la.abs macros are used explicitly).
-> > > > >=20
-> > > > > So would it be easier to review and correct the uses of "la.abs" =
-in the
-> > > > > code, and make the main kernel image a real PIE?=C2=A0 Then we ca=
-n load it
-> > > > > everywhere w/o any need to do relocation at load time.
-> > > At the beginning I also wanted to make the main kernel image a real P=
-IE
-> > > and tried it, some of the "la.abs" can be modified, but I encountered
-> > > difficulties in modifying the=C2=A0 exception handling code part, the=
- kernel
-> > > will not=C2=A0 boot after modification :(, I will continue to work ha=
-rd try.
+The pull request you sent on Sat,  3 Sep 2022 22:28:23 +0800:
 
-> > I just tried the same thing and get the same result :(.=C2=A0 Will spen=
-d
-> > several hours reading the LoongArch manual about exception...
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.0-2
 
-The reason is the handler code is not executed in linker address, but
-copied elsewhere.  Then PC-relative offset is broken.  I managed to work
-around it by creating a trampoline and jump into the handler, instead of
-copy the handler code.  Then I could remove most "la.abs" occurrence
-(except two in kernel entry point, which seem deliberately used):
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f0c5f7ea81202e997f321d59bdd0c3f5c12ddea7
 
-- https://github.com/xry111/linux/commit/56a433f
-- https://github.com/xry111/linux/commit/48203e6
+Thank you!
 
-Using the trampoline in handler table will definitely lead to sub-
-optimal performance. I just use it as a proof-of-concept. Later we may
-use some assembler trick to generate hard-coded handler table with
-correct PC-relative offsets.
-
-> The following ideas are based on experience, without validation. Patches
-> show that three types of relocation are needed to be done.
-> 1, GOT is generated by toolchain, so=C2=A0 I think eliminating them by=
-=20
-> toolchain is better.
-
-https://gcc.gnu.org/pipermail/gcc-patches/2022-September/600797.html
-
-I stop to read the mail here because it's 00:52 AM now :).
-
-> 2, Ex_table is generated but striped relocation info. We can plays pcrel
-> way to resolve this problem. One of ways like follows, (pseudo-code)
-
-/* snip */
-
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
