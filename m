@@ -1,53 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D4129A9
-	for <loongarch@lists.linux.dev>; Sat,  3 Sep 2022 20:29:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 18A39C433D7;
-	Sat,  3 Sep 2022 20:29:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804767E
+	for <loongarch@lists.linux.dev>; Sun,  4 Sep 2022 09:04:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37F95C433C1
+	for <loongarch@lists.linux.dev>; Sun,  4 Sep 2022 09:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1662236951;
-	bh=M7QpgVO5KP1FoCxkFsp6o06tH6aumSa+3QenVb6HTYw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=cnrBhT5FRJbr8E9anolRMULu9LJIQXdWs12AiiMC3xTz+L253VKd3iEgdj4tE+p5m
-	 ZhZVoo+0G6y1kbNOtUHLNqzStNhKeIQPiB3vNlUOyMORPEQhbNE6RNCpA/x25rJzUe
-	 2pYaD2P8CEMaJ1ZutEHsF01PaefhgOJ8KoobgqR5zTsaopmGmeRJDizKw15XZcvEYs
-	 ObtklQ4beYLPATO1HTFrLRnC0DcV5cpBeogT8accu7A75RkfEQ9WAjUuFKb/v72L92
-	 VkJU4qy6kWg6N/bzLUx2J7o07j44Zu8UtbcVo+xztwe7FVX6QD+OhQT3JJRVxlcMUM
-	 v4UDWI+XmMAtQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0506FC4166E;
-	Sat,  3 Sep 2022 20:29:11 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.0-rc4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20220903142823.3436925-1-chenhuacai@loongson.cn>
-References: <20220903142823.3436925-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20220903142823.3436925-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.0-2
-X-PR-Tracked-Commit-Id: ac9284db6b7b4af150940186b633a233d4ca2bed
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f0c5f7ea81202e997f321d59bdd0c3f5c12ddea7
-Message-Id: <166223695101.8828.14070900267849576734.pr-tracker-bot@kernel.org>
-Date: Sat, 03 Sep 2022 20:29:11 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	s=k20201202; t=1662282297;
+	bh=kfKDkyIqU01AYkJiX6BidqnWA1Al77SJE63rtEC73q4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Qfavo3H0eYtuE43iUF5ON8dpnAXe2PzN+wRzB9DKkVhnZ5+KP3XaivqXKeUecXhq6
+	 r8tzM+4y5pgzbVX7VUKr7W21VQ0YuOKBH6/QocmTpw1gVKy2SP3zxhDR+cI4ACrppA
+	 kuU5JiferoHUJx60Ao4xfZah3NO3QfIVkkNaxuDpZA9961QdXKaCdpx/nXXcnYs09U
+	 NqUjQcqf3TSabYYc+lxebQZ1jsAUGmuz3/jqh2llzCPj/BiNTjzA+suGU4ObphlhcJ
+	 MkQ/pBUkWEhd3tGEHP1FT3JRhM4BeXvInWJocQCXoK7LZ6n5UGVLvzUDIEEotD1lpD
+	 i8yWVvmqciBwg==
+Received: by mail-vs1-f41.google.com with SMTP id k66so6181125vsc.11
+        for <loongarch@lists.linux.dev>; Sun, 04 Sep 2022 02:04:57 -0700 (PDT)
+X-Gm-Message-State: ACgBeo1SFjsiuhsXPKQV+5HA5yTyJrR0uIgTh+AJaYCFS+iQOL3Lfmuv
+	Ms3baM3XWircesemHK5RLqbEecqvSndO1g8Knyg=
+X-Google-Smtp-Source: AA6agR6am6jCJc6e+LkTa+XZhl7ngd056Z2/EOzAxuBwiXpSx7gfqNbmoIH1kBrtm8PCGUcs347WZe5GQMq9/cDbKgI=
+X-Received: by 2002:a05:6102:390d:b0:387:78b9:bf9c with SMTP id
+ e13-20020a056102390d00b0038778b9bf9cmr13238356vsu.43.1662282296178; Sun, 04
+ Sep 2022 02:04:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <1661999249-10258-1-git-send-email-yangtiezhu@loongson.cn>
+ <1661999249-10258-4-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H4yU2tp=DBGCkdSzp-9bAXXDM4+0iqDgOac+fbgQnsx2A@mail.gmail.com> <1a740b5c-041c-85c6-f1d6-bb0b931c0c3e@loongson.cn>
+In-Reply-To: <1a740b5c-041c-85c6-f1d6-bb0b931c0c3e@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 4 Sep 2022 17:04:44 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5vfw+Mv=LbQfa4sPHW91Z+ij3R8+LsHZOAiR+u7pJONw@mail.gmail.com>
+Message-ID: <CAAhV-H5vfw+Mv=LbQfa4sPHW91Z+ij3R8+LsHZOAiR+u7pJONw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 3/4] LoongArch: Add BPF JIT support
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, WANG Xuerui <git@xen0n.name>, 
+	Xi Ruoyao <xry111@xry111.site>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev, 
+	Li Xuefeng <lixuefeng@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Sat,  3 Sep 2022 22:28:23 +0800:
+On Sat, Sep 3, 2022 at 6:11 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+>
+>
+> On 09/03/2022 04:32 PM, Huacai Chen wrote:
+> > On Thu, Sep 1, 2022 at 10:27 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> >>
+> >> BPF programs are normally handled by a BPF interpreter, add BPF JIT
+> >> support for LoongArch to allow the kernel to generate native code
+> >> when a program is loaded into the kernel, this will significantly
+> >> speed-up processing of BPF programs.
+>
+> [...]
+>
+> >> +
+> >> +static inline int emit_cond_jmp(struct jit_ctx *ctx, u8 cond, enum loongarch_gpr rj,
+> >> +                               enum loongarch_gpr rd, int jmp_offset)
+> >> +{
+> >> +       /*
+> >> +        * A large PC-relative jump offset may overflow the immediate field of
+> >> +        * the native conditional branch instruction, triggering a conversion
+> >> +        * to use an absolute jump instead, this jump sequence is particularly
+> >> +        * nasty. For now, use cond_jmp_offs26() directly to keep it simple.
+> >> +        * In the future, maybe we can add support for far branching, the branch
+> >> +        * relaxation requires more than two passes to converge, the code seems
+> >> +        * too complex to understand, not quite sure whether it is necessary and
+> >> +        * worth the extra pain. Anyway, just leave it as it is to enhance code
+> >> +        * readability now.
+> > Oh, no. I don't think this is a very difficult problem, because the
+> > old version has already solved [1]. Please improve your code and send
+> > V4.
+> > BTW, I have committed V3 with some small modifications in
+> > https://github.com/loongson/linux/commits/loongarch-next, please make
+> > V4 based on that.
+> >
+> > [1] https://github.com/loongson/linux/commit/e20b2353f40cd13720996524e1df6d0ca086eeb8#diff-6d2f4f5a862a5dce12f8eb0feeca095825c4ed1c2e7151b0905fb8d03c98922e
+> >
+> > --------code in the old version--------
+> > static inline void emit_cond_jump(struct jit_ctx *ctx, u8 cond, enum
+> > loongarch_gpr rj,
+> >                                   enum loongarch_gpr rd, int jmp_offset)
+> > {
+> >         if (is_signed_imm16(jmp_offset))
+> >                 cond_jump_offs16(ctx, cond, rj, rd, jmp_offset);
+> >         else if (is_signed_imm26(jmp_offset))
+> >                 cond_jump_offs26(ctx, cond, rj, rd, jmp_offset);
+> >         else
+> >                 cond_jump_offs32(ctx, cond, rj, rd, jmp_offset);
+> > }
+> >
+> > static inline void emit_uncond_jump(struct jit_ctx *ctx, int
+> > jmp_offset, bool is_exit)
+> > {
+> >         if (is_signed_imm26(jmp_offset))
+> >                 uncond_jump_offs26(ctx, jmp_offset);
+> >         else
+> >                 uncond_jump_offs32(ctx, jmp_offset, is_exit);
+> > }
+> > --------end of code--------
+> >
+> > Huacai
+> >
+>
+> Hi Huacai,
+>
+> This change is to pass the special test cases:
+> "a new type of jump test where the program jumps forwards
+> and backwards with increasing offset. It mainly tests JITs where a
+> relative jump may generate different JITed code depending on the offset
+> size."
+>
+> They are introduced in commit a7d2e752e520 ("bpf/tests: Add staggered
+> JMP and JMP32 tests") after the old internal version you mentioned.
+>
+> Here, we use the native instructions to enlarge the jump range to 26 bit
+> directly rather than 16 bit first, and also take no account of more than
+> 26 bit case because there is no native instruction and it needs to emulate.
+>
+> As the code comment said, this is to enhance code readability now.
+I'm not familiar with bpf, Daniel, Ruoyao and Xuerui, what do you
+think about it?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.0-2
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f0c5f7ea81202e997f321d59bdd0c3f5c12ddea7
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Huacai
+>
+> Thanks,
+> Tiezhu
+>
