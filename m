@@ -1,134 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804767E
-	for <loongarch@lists.linux.dev>; Sun,  4 Sep 2022 09:04:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37F95C433C1
-	for <loongarch@lists.linux.dev>; Sun,  4 Sep 2022 09:04:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664D428E8
+	for <loongarch@lists.linux.dev>; Sun,  4 Sep 2022 12:12:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31515C433D6
+	for <loongarch@lists.linux.dev>; Sun,  4 Sep 2022 12:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1662282297;
-	bh=kfKDkyIqU01AYkJiX6BidqnWA1Al77SJE63rtEC73q4=;
+	s=k20201202; t=1662293534;
+	bh=bYlOQ+oznEYSMgYdAFC3p4z/L5HIm6vFaZHKk80eJDE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Qfavo3H0eYtuE43iUF5ON8dpnAXe2PzN+wRzB9DKkVhnZ5+KP3XaivqXKeUecXhq6
-	 r8tzM+4y5pgzbVX7VUKr7W21VQ0YuOKBH6/QocmTpw1gVKy2SP3zxhDR+cI4ACrppA
-	 kuU5JiferoHUJx60Ao4xfZah3NO3QfIVkkNaxuDpZA9961QdXKaCdpx/nXXcnYs09U
-	 NqUjQcqf3TSabYYc+lxebQZ1jsAUGmuz3/jqh2llzCPj/BiNTjzA+suGU4ObphlhcJ
-	 MkQ/pBUkWEhd3tGEHP1FT3JRhM4BeXvInWJocQCXoK7LZ6n5UGVLvzUDIEEotD1lpD
-	 i8yWVvmqciBwg==
-Received: by mail-vs1-f41.google.com with SMTP id k66so6181125vsc.11
-        for <loongarch@lists.linux.dev>; Sun, 04 Sep 2022 02:04:57 -0700 (PDT)
-X-Gm-Message-State: ACgBeo1SFjsiuhsXPKQV+5HA5yTyJrR0uIgTh+AJaYCFS+iQOL3Lfmuv
-	Ms3baM3XWircesemHK5RLqbEecqvSndO1g8Knyg=
-X-Google-Smtp-Source: AA6agR6am6jCJc6e+LkTa+XZhl7ngd056Z2/EOzAxuBwiXpSx7gfqNbmoIH1kBrtm8PCGUcs347WZe5GQMq9/cDbKgI=
-X-Received: by 2002:a05:6102:390d:b0:387:78b9:bf9c with SMTP id
- e13-20020a056102390d00b0038778b9bf9cmr13238356vsu.43.1662282296178; Sun, 04
- Sep 2022 02:04:56 -0700 (PDT)
+	b=Ey1Mprimt9ZJAqPmkd3q9gGWCpJ3cL+sEdivcWOq+Tb+4F/fwaXYglnO+mlR4/ief
+	 5xDtD9WsNAac7eTLrIAE4kyIXHQijh6oKjoJWgMBTXdc28c/YJCwkHHhNAhROuhUgI
+	 Iei+WxkYs/cwUUZHBnksYIziS4JXJtpd9NR3+hCu7aC+Z2Oej1rT9lWbcmC9dOFOaE
+	 PQoCCopLaccX4Zj/geviwKIh35rI2qebsVhgaiRuJot34WjGaO4VTBI2dB30U0AK9c
+	 ZQBNoc2RcLsw90/GhZ5oz8BGj7CAFf0xh3C16YZdsALs62q6ySOtEB9Q3RMyaj+ztC
+	 jIAgfpfFVQ2tQ==
+Received: by mail-ua1-f46.google.com with SMTP id q21so2413767uam.13
+        for <loongarch@lists.linux.dev>; Sun, 04 Sep 2022 05:12:14 -0700 (PDT)
+X-Gm-Message-State: ACgBeo3fqsemvy8XVLviCA59kvVQMEFzzYa/kxNuK7F+RbhZKF6u8YbA
+	jpxi8n9gL/311A02f3Eed9iGpgUMTIx4zpTjUV4=
+X-Google-Smtp-Source: AA6agR42lQq7ZWXBjF8r7BmXSYzuWcDRPqbp2Q/KMnQF1bRLALDcwFBirb/6EagY69gm5TNtQLU7yEImdLE/DLenO6g=
+X-Received: by 2002:ab0:25d3:0:b0:3ae:6580:2adc with SMTP id
+ y19-20020ab025d3000000b003ae65802adcmr681840uan.23.1662293533162; Sun, 04 Sep
+ 2022 05:12:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1661999249-10258-1-git-send-email-yangtiezhu@loongson.cn>
- <1661999249-10258-4-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H4yU2tp=DBGCkdSzp-9bAXXDM4+0iqDgOac+fbgQnsx2A@mail.gmail.com> <1a740b5c-041c-85c6-f1d6-bb0b931c0c3e@loongson.cn>
-In-Reply-To: <1a740b5c-041c-85c6-f1d6-bb0b931c0c3e@loongson.cn>
+References: <20220831054017.382749-1-liyupeng@zbhlos.com>
+In-Reply-To: <20220831054017.382749-1-liyupeng@zbhlos.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 4 Sep 2022 17:04:44 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5vfw+Mv=LbQfa4sPHW91Z+ij3R8+LsHZOAiR+u7pJONw@mail.gmail.com>
-Message-ID: <CAAhV-H5vfw+Mv=LbQfa4sPHW91Z+ij3R8+LsHZOAiR+u7pJONw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 3/4] LoongArch: Add BPF JIT support
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, WANG Xuerui <git@xen0n.name>, 
-	Xi Ruoyao <xry111@xry111.site>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev, 
-	Li Xuefeng <lixuefeng@loongson.cn>
+Date: Sun, 4 Sep 2022 20:12:01 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6p44E8KuQZz31jX+Yd0qgvqGRaR2vfwdTZLBxg6bKeFQ@mail.gmail.com>
+Message-ID: <CAAhV-H6p44E8KuQZz31jX+Yd0qgvqGRaR2vfwdTZLBxg6bKeFQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] LoongArch: Fixed arch_remove_memory undefined build error.
+To: Yupeng Li <liyupeng@zbhlos.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	Caicai <caizp2008@163.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 3, 2022 at 6:11 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
->
->
-> On 09/03/2022 04:32 PM, Huacai Chen wrote:
-> > On Thu, Sep 1, 2022 at 10:27 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> >>
-> >> BPF programs are normally handled by a BPF interpreter, add BPF JIT
-> >> support for LoongArch to allow the kernel to generate native code
-> >> when a program is loaded into the kernel, this will significantly
-> >> speed-up processing of BPF programs.
->
-> [...]
->
-> >> +
-> >> +static inline int emit_cond_jmp(struct jit_ctx *ctx, u8 cond, enum loongarch_gpr rj,
-> >> +                               enum loongarch_gpr rd, int jmp_offset)
-> >> +{
-> >> +       /*
-> >> +        * A large PC-relative jump offset may overflow the immediate field of
-> >> +        * the native conditional branch instruction, triggering a conversion
-> >> +        * to use an absolute jump instead, this jump sequence is particularly
-> >> +        * nasty. For now, use cond_jmp_offs26() directly to keep it simple.
-> >> +        * In the future, maybe we can add support for far branching, the branch
-> >> +        * relaxation requires more than two passes to converge, the code seems
-> >> +        * too complex to understand, not quite sure whether it is necessary and
-> >> +        * worth the extra pain. Anyway, just leave it as it is to enhance code
-> >> +        * readability now.
-> > Oh, no. I don't think this is a very difficult problem, because the
-> > old version has already solved [1]. Please improve your code and send
-> > V4.
-> > BTW, I have committed V3 with some small modifications in
-> > https://github.com/loongson/linux/commits/loongarch-next, please make
-> > V4 based on that.
-> >
-> > [1] https://github.com/loongson/linux/commit/e20b2353f40cd13720996524e1df6d0ca086eeb8#diff-6d2f4f5a862a5dce12f8eb0feeca095825c4ed1c2e7151b0905fb8d03c98922e
-> >
-> > --------code in the old version--------
-> > static inline void emit_cond_jump(struct jit_ctx *ctx, u8 cond, enum
-> > loongarch_gpr rj,
-> >                                   enum loongarch_gpr rd, int jmp_offset)
-> > {
-> >         if (is_signed_imm16(jmp_offset))
-> >                 cond_jump_offs16(ctx, cond, rj, rd, jmp_offset);
-> >         else if (is_signed_imm26(jmp_offset))
-> >                 cond_jump_offs26(ctx, cond, rj, rd, jmp_offset);
-> >         else
-> >                 cond_jump_offs32(ctx, cond, rj, rd, jmp_offset);
-> > }
-> >
-> > static inline void emit_uncond_jump(struct jit_ctx *ctx, int
-> > jmp_offset, bool is_exit)
-> > {
-> >         if (is_signed_imm26(jmp_offset))
-> >                 uncond_jump_offs26(ctx, jmp_offset);
-> >         else
-> >                 uncond_jump_offs32(ctx, jmp_offset, is_exit);
-> > }
-> > --------end of code--------
-> >
-> > Huacai
-> >
->
-> Hi Huacai,
->
-> This change is to pass the special test cases:
-> "a new type of jump test where the program jumps forwards
-> and backwards with increasing offset. It mainly tests JITs where a
-> relative jump may generate different JITed code depending on the offset
-> size."
->
-> They are introduced in commit a7d2e752e520 ("bpf/tests: Add staggered
-> JMP and JMP32 tests") after the old internal version you mentioned.
->
-> Here, we use the native instructions to enlarge the jump range to 26 bit
-> directly rather than 16 bit first, and also take no account of more than
-> 26 bit case because there is no native instruction and it needs to emulate.
->
-> As the code comment said, this is to enhance code readability now.
-I'm not familiar with bpf, Daniel, Ruoyao and Xuerui, what do you
-think about it?
+Applied to loongarch-fixes, thanks.
 
 Huacai
+
+On Wed, Aug 31, 2022 at 1:49 PM Yupeng Li <liyupeng@zbhlos.com> wrote:
 >
-> Thanks,
-> Tiezhu
+> The kernel build error when unslected CONFIG_MEMORY_HOTREMOVE, the
+> arch_remove_memory in mm/memory_hotplug.c was undefined.
+> Removed CONFIG_MEMORY_HOTREMOVE requirement refer to the definitions
+> of other platform architectures.Some build error messages like:
+>
+>  LD      vmlinux.o
+>  MODPOST vmlinux.symvers
+>  MODINFO modules.builtin.modinfo
+>  GEN     modules.builtin
+>  LD      .tmp_vmlinux.kallsyms1
+> loongarch64-linux-gnu-ld: mm/memory_hotplug.o: in function `.L242':
+> memory_hotplug.c:(.ref.text+0x930): undefined reference to `arch_remove_m=
+emory'
+> make: *** [Makefile:1169=EF=BC=9Avmlinux] =E9=94=99=E8=AF=AF 1
+>
+> Signed-off-by: Yupeng Li <liyupeng@zbhlos.com>
+> Signed-off-by: Caicai <caizp2008@163.com>
+> ---
+>  arch/loongarch/mm/init.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+> index 7094a68c9b83..191ed8e47895 100644
+> --- a/arch/loongarch/mm/init.c
+> +++ b/arch/loongarch/mm/init.c
+> @@ -142,7 +142,6 @@ int memory_add_physaddr_to_nid(u64 start)
+>  EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+>  #endif
+>
+> -#ifdef CONFIG_MEMORY_HOTREMOVE
+>  void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
+>  {
+>         unsigned long start_pfn =3D start >> PAGE_SHIFT;
+> @@ -155,7 +154,6 @@ void arch_remove_memory(u64 start, u64 size, struct v=
+mem_altmap *altmap)
+>         __remove_pages(start_pfn, nr_pages, altmap);
+>  }
+>  #endif
+> -#endif
+>
+>  /*
+>   * Align swapper_pg_dir in to 64K, allows its address to be loaded
+> --
+> 2.34.1
+>
 >
