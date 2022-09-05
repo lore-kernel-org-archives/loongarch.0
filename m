@@ -1,584 +1,232 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EE0E7E
-	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 13:07:45 +0000 (UTC)
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPGuP9BVjbs4RAA--.12056S3;
-	Mon, 05 Sep 2022 21:07:29 +0800 (CST)
-Subject: Re: [PATCH 2/3] LoongArch: Add kdump support
-To: Huacai Chen <chenhuacai@kernel.org>
-References: <1661747823-23745-1-git-send-email-tangyouling@loongson.cn>
- <1661747823-23745-3-git-send-email-tangyouling@loongson.cn>
- <CAAhV-H6LkcnS4Z7YP=kfAkuDzKys57=6frsY0+T11ucKrWPuPw@mail.gmail.com>
- <ec447291-078f-d1ea-6c5a-21b092965e81@loongson.cn>
- <CAAhV-H4D60bGk7wr0oSw-5oJqTv_ntLtifHfdxLUdVA7ExDiLg@mail.gmail.com>
- <e76bcf5d-08c9-1d2f-8c04-149b17236929@loongson.cn>
- <CAAhV-H6fjumQesirDnOJYBMZoCQyK60WvviEw+QNnkd2wDJqdA@mail.gmail.com>
- <0e2640b5-58dc-f084-f0ff-ba277de8bd46@loongson.cn>
- <CAAhV-H68YjROzVWdECkSmMY7g_6ZrFSKJGV5RxJvFMw-5SX_PQ@mail.gmail.com>
- <c4a222a6-2da0-5c9b-fa05-b572e08e1e14@loongson.cn>
- <CAAhV-H608bnny6WYTESQPB+jNDViCa7YC1Ppf=fp76C2C+=uFg@mail.gmail.com>
-Cc: Baoquan He <bhe@redhat.com>, Eric Biederman <ebiederm@xmission.com>,
- WANG Xuerui <kernel@xen0n.name>, Vivek Goyal <vgoyal@redhat.com>,
- Dave Young <dyoung@redhat.com>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, kexec@lists.infradead.org,
- loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <ee8da2cb-eb00-b7d1-968b-62c552e7ac74@loongson.cn>
-Date: Mon, 5 Sep 2022 21:07:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C1D2561
+	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 14:42:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 775BCC433C1
+	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 14:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1662388943;
+	bh=NlStXV7wed6wVtep3wZsd1cQTElbxZKc0QNhM8aDIIc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uvG1+XkIDZiThWQpsvnEX5k7bxs9uQACJiHfklgXMBg2ORQYwHVNChUmJM5Cz+UWk
+	 Re82+7o7zJIE+aXzZk4Taax4nFYPEQuEJSRIQu71sIHzp+Kn+POsN10dKFJ/393d3I
+	 lswwdEUGQADCeSeclJrLsodf0EIrAX+WfItAu5+HLBb9ZuVPAKbASMQ/nb8gYSlkbq
+	 dKMtrKrGSriNmPQddIaz/AJC9hDYQ3amEpR/AJrn5cAAuwCZ2/tdTH69+N5lmoTQEv
+	 8tXFu3G3TDyTOl2E5OtPXmJyy18qqucVBINYg/Ao5RvGG5icJvwp2R5QdWSy1DkANh
+	 gK5Xevt92mNqQ==
+Received: by mail-vs1-f46.google.com with SMTP id 67so9036995vsv.2
+        for <loongarch@lists.linux.dev>; Mon, 05 Sep 2022 07:42:23 -0700 (PDT)
+X-Gm-Message-State: ACgBeo18haf6UuZB6c4glHgpbMpJ9+EclP3X8gAkWSRkPVBydMaqcYnM
+	3m/GBEAJ5GWm5JqkE9iuufszN0Kr1hcm0b5hkfE=
+X-Google-Smtp-Source: AA6agR7sqaivV1IawE/7cTWY9j7vY23902xeea9967TaCk0gJUQNpNzQlk3v8WRDNV+1c2oX7k52hU/kKvkvQ1PUAGc=
+X-Received: by 2002:a67:d582:0:b0:390:d6dd:5612 with SMTP id
+ m2-20020a67d582000000b00390d6dd5612mr13853625vsj.78.1662388942430; Mon, 05
+ Sep 2022 07:42:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H608bnny6WYTESQPB+jNDViCa7YC1Ppf=fp76C2C+=uFg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8DxPGuP9BVjbs4RAA--.12056S3
-X-Coremail-Antispam: 1UD129KBjvAXoWfXFW8uFykJF1rCw4DAF1UKFg_yoW8uF4kGo
-	WUJF1xJr18Gr1UJr1UJ34DJryjkw1DJr17AryUJr4UJr1Utw1UAr1UJr1UJrW7Gr1UJr4U
-	GryUJr1jy3y7Xrn5n29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYP7k0a2IF6w4kM7kC6x804xWl14x267AKxVW8JVW5JwAFc2x0
-	x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj4
-	1l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0
-	I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-	8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
-	c7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_Xr4l42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJV
-	WxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU5_xhJUUUUU==
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+References: <20220830030139.29899-1-lvjianmin@loongson.cn> <20220830030139.29899-3-lvjianmin@loongson.cn>
+In-Reply-To: <20220830030139.29899-3-lvjianmin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 5 Sep 2022 22:42:09 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4P=MsH2B29U+x4TWJpN4s_2ZYLsX5_rfaapPxx9+UmPQ@mail.gmail.com>
+Message-ID: <CAAhV-H4P=MsH2B29U+x4TWJpN4s_2ZYLsX5_rfaapPxx9+UmPQ@mail.gmail.com>
+Subject: Re: [PATCH V3 2/2] LoongArch: Remove ARCH_HAS_PHYS_TO_DMA
+To: Jianmin Lv <lvjianmin@loongson.cn>
+Cc: lpieralisi@kernel.org, Robin Murphy <robin.murphy@arm.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Hanjun Guo <guohanjun@huawei.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Robert Moore <robert.moore@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Huacai
+Hi, Jianmin,
 
-On 09/05/2022 09:01 PM, Huacai Chen wrote:
-> Hi, Youling,
+The title can be "LoongArch: Use acpi_arch_dma_setup() and remove
+ARCH_HAS_PHYS_TO_DMA", and please use resource_size() as arm64.
+
+Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+
+
+Huacai
+
+
+On Tue, Aug 30, 2022 at 11:01 AM Jianmin Lv <lvjianmin@loongson.cn> wrote:
 >
-> On Mon, Sep 5, 2022 at 3:45 PM Youling Tang <tangyouling@loongson.cn> wrote:
->>
->> Hi, Huacai
->>
->> On 09/05/2022 03:32 PM, Huacai Chen wrote:
->>> Hi, Youling,
->>>
->>> On Mon, Sep 5, 2022 at 10:22 AM Youling Tang <tangyouling@loongson.cn> wrote:
->>>>
->>>>
->>>>
->>>> On 09/05/2022 10:14 AM, Huacai Chen wrote:
->>>>> On Mon, Sep 5, 2022 at 10:04 AM Youling Tang <tangyouling@loongson.cn> wrote:
->>>>>>
->>>>>> Hi, Huacai
->>>>>>
->>>>>> On 09/05/2022 09:38 AM, Huacai Chen wrote:
->>>>>>> Hi, Youling,
->>>>>>>
->>>>>>> On Mon, Sep 5, 2022 at 8:54 AM Youling Tang <tangyouling@loongson.cn> wrote:
->>>>>>>>
->>>>>>>> Hi, Huacai
->>>>>>>>
->>>>>>>> On 09/04/2022 08:21 PM, Huacai Chen wrote:
->>>>>>>>> Hi, Youling,
->>>>>>>>>
->>>>>>>>> I think crash.c can be merged into crash_dump.c
->>>>>>>>
->>>>>>>> Most architectures only implement copy_oldmem_page() in crash_dump.c,
->>>>>>>> I'm not sure if merging crash.c into crash_dump.c will break its
->>>>>>>> consistency?
->>>>>>>>
->>>>>>>> Thanks,
->>>>>>>> Youling
->>>>>>> Yes, you are right, crash.c cannot be merged into crash_dump.c, but it
->>>>>>> can be merged into machine_kexec.c, as arm64 and riscv do.
->>>>>>
->>>>>> For arm64, machine_crash_shutdown() is placed in machine_kexec.c, and
->>>>>> crash_smp_send_stop is placed in smp.c. If crash.c needs to be merged
->>>>>> into machine_kexec.c, should crash_shutdown_secondary and
->>>>>> crash_smp_send_stop be placed in smp.c?
->>>>> I don't want to touch smp.c, all merged into machine_kexec.c seems reasonable.
->>>>
->>>> Ok, I'll merge all into machine_kexec.c.
->>>>
->>>> Youling.
->>> Another problem, 0x9000000091000000 for PHYSICAL_START is too tricky.
->>> If you want to skip the "low memory", maybe we can use
->>> 0x9000000090000000 or 0x90000000a0000000?
->>
->> Because there are many holes in our memory layout, if PHYSICAL_START is
->> set to 0x90000000a0000000, the largest reserved area of the crashkernel
->> will be 512M, beyond which it will fail.
-> Then 0x9000000090000000 is not suitable, but I think 512M is enough?
-> If so, let's use 0x90000000a0000000.
-
-I'm not sure if it's enough for the server machine?
-I will change to 0x90000000a0000000.
-
-Youling.
+> Use _DMA defined in ACPI spec for translation between
+> DMA address and CPU address, and implement acpi_arch_dma_setup
+> for initializing dev->dma_range_map, where acpi_dma_get_range
+> is called for parsing _DMA.
 >
-> Huacai
+> e.g.
+> If we have two dma ranges:
+> cpu address      dma address    size         offset
+> 0x200080000000   0x2080000000   0x400000000  0x1fe000000000
+> 0x400080000000   0x4080000000   0x400000000  0x3fc000000000
 >
-> Huacai
->>
->> # cat /proc/iomem
->> 90400000-bfffffff : System RAM
->> c0020000-f9efffff : System RAM
->>    f6810000-f6813fff : Reserved
->>
->> The second System RAM starts at 0x90400000, so 0x9000000090000000 will
->> be too small.
->>
->> Youling.
->>
->>>
->>> Huacai
->>>>
->>>>>
->>>>> Huacai
->>>>>>
->>>>>> Youling.
->>>>>>>
->>>>>>> Huacai
->>>>>>>>
->>>>>>>>>
->>>>>>>>> Huacai
->>>>>>>>>
->>>>>>>>> On Mon, Aug 29, 2022 at 12:37 PM Youling Tang <tangyouling@loongson.cn> wrote:
->>>>>>>>>>
->>>>>>>>>> This patch adds support for kdump, the kernel will reserve a region
->>>>>>>>>> for the crash kernel and jump there on panic.
->>>>>>>>>>
->>>>>>>>>> Arch-specific functions are added to allow for implementing a crash
->>>>>>>>>> dump file interface, /proc/vmcore, which can be viewed as a ELF file.
->>>>>>>>>>
->>>>>>>>>> A user space tool, like kexec-tools, is responsible for allocating a
->>>>>>>>>> separate region for the core's ELF header within crash kdump kernel
->>>>>>>>>> memory and filling it in when executing kexec_load().
->>>>>>>>>>
->>>>>>>>>> Then, its location will be advertised to crash dump kernel via a new
->>>>>>>>>> device-tree property, "linux,elfcorehdr", and crash dump kernel preserves
->>>>>>>>>> the region for later use with fdt_reserve_elfcorehdr() at boot time.
->>>>>>>>>>
->>>>>>>>>> At the same time, it will also limit the crash kdump kernel to the
->>>>>>>>>> crashkernel area via a new device-tree property, "linux, usable-memory-range",
->>>>>>>>>> so as not to destroy the original kernel dump data.
->>>>>>>>>>
->>>>>>>>>> On crash dump kernel, /proc/vmcore will access the primary kernel's memory
->>>>>>>>>> with copy_oldmem_page().
->>>>>>>>>>
->>>>>>>>>> I tested this on  LoongArch 3A5000 machine and works as expected (Suggest
->>>>>>>>>> crashkernel parameter is "crashkernel=512M@2320M"), you may test it by
->>>>>>>>>> triggering a crash through /proc/sysrq_trigger:
->>>>>>>>>>
->>>>>>>>>>  $ sudo kexec -p /boot/vmlinux-kdump --reuse-cmdline --append="nr_cpus=1"
->>>>>>>>>>  # echo c > /proc/sysrq_trigger
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
->>>>>>>>>> ---
->>>>>>>>>>  arch/loongarch/Kconfig                  |  22 ++++++
->>>>>>>>>>  arch/loongarch/Makefile                 |   4 +
->>>>>>>>>>  arch/loongarch/kernel/Makefile          |   3 +-
->>>>>>>>>>  arch/loongarch/kernel/crash.c           | 100 ++++++++++++++++++++++++
->>>>>>>>>>  arch/loongarch/kernel/crash_dump.c      |  19 +++++
->>>>>>>>>>  arch/loongarch/kernel/machine_kexec.c   |  12 ++-
->>>>>>>>>>  arch/loongarch/kernel/mem.c             |   6 ++
->>>>>>>>>>  arch/loongarch/kernel/relocate_kernel.S |   6 ++
->>>>>>>>>>  arch/loongarch/kernel/setup.c           |  49 ++++++++++++
->>>>>>>>>>  arch/loongarch/kernel/traps.c           |   4 +
->>>>>>>>>>  10 files changed, 217 insertions(+), 8 deletions(-)
->>>>>>>>>>  create mode 100644 arch/loongarch/kernel/crash.c
->>>>>>>>>>  create mode 100644 arch/loongarch/kernel/crash_dump.c
->>>>>>>>>>
->>>>>>>>>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->>>>>>>>>> index 903c82fa958d..7c1b07a5b5bd 100644
->>>>>>>>>> --- a/arch/loongarch/Kconfig
->>>>>>>>>> +++ b/arch/loongarch/Kconfig
->>>>>>>>>> @@ -420,6 +420,28 @@ config KEXEC
->>>>>>>>>>
->>>>>>>>>>           The name comes from the similarity to the exec system call.
->>>>>>>>>>
->>>>>>>>>> +config CRASH_DUMP
->>>>>>>>>> +       bool "Build kdump crash kernel"
->>>>>>>>>> +       help
->>>>>>>>>> +         Generate crash dump after being started by kexec. This should
->>>>>>>>>> +         be normally only set in special crash dump kernels which are
->>>>>>>>>> +         loaded in the main kernel with kexec-tools into a specially
->>>>>>>>>> +         reserved region and then later executed after a crash by
->>>>>>>>>> +         kdump/kexec.
->>>>>>>>>> +
->>>>>>>>>> +         For more details see Documentation/admin-guide/kdump/kdump.rst
->>>>>>>>>> +
->>>>>>>>>> +config PHYSICAL_START
->>>>>>>>>> +       hex "Physical address where the kernel is loaded"
->>>>>>>>>> +       default "0x9000000091000000" if 64BIT
->>>>>>>>>> +       depends on CRASH_DUMP
->>>>>>>>>> +       help
->>>>>>>>>> +         This gives the XKPRANGE address where the kernel is loaded.
->>>>>>>>>> +         If you plan to use kernel for capturing the crash dump change
->>>>>>>>>> +         this value to start of the reserved region (the "X" value as
->>>>>>>>>> +         specified in the "crashkernel=YM@XM" command line boot parameter
->>>>>>>>>> +         passed to the panic-ed kernel).
->>>>>>>>>> +
->>>>>>>>>>  config SECCOMP
->>>>>>>>>>         bool "Enable seccomp to safely compute untrusted bytecode"
->>>>>>>>>>         depends on PROC_FS
->>>>>>>>>> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
->>>>>>>>>> index 4bc47f47cfd8..7dabd580426d 100644
->>>>>>>>>> --- a/arch/loongarch/Makefile
->>>>>>>>>> +++ b/arch/loongarch/Makefile
->>>>>>>>>> @@ -48,7 +48,11 @@ KBUILD_CFLAGS_MODULE         += -fplt -Wa,-mla-global-with-abs,-mla-local-with-abs
->>>>>>>>>>  cflags-y += -ffreestanding
->>>>>>>>>>  cflags-y += $(call cc-option, -mno-check-zero-division)
->>>>>>>>>>
->>>>>>>>>> +ifdef CONFIG_PHYSICAL_START
->>>>>>>>>> +load-y         = $(CONFIG_PHYSICAL_START)
->>>>>>>>>> +else
->>>>>>>>>>  load-y         = 0x9000000000200000
->>>>>>>>>> +endif
->>>>>>>>>>  bootvars-y     = VMLINUX_LOAD_ADDRESS=$(load-y)
->>>>>>>>>>
->>>>>>>>>>  drivers-$(CONFIG_PCI)          += arch/loongarch/pci/
->>>>>>>>>> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
->>>>>>>>>> index 20b64ac3f128..df5aea129364 100644
->>>>>>>>>> --- a/arch/loongarch/kernel/Makefile
->>>>>>>>>> +++ b/arch/loongarch/kernel/Makefile
->>>>>>>>>> @@ -17,7 +17,8 @@ obj-$(CONFIG_CPU_HAS_FPU)     += fpu.o
->>>>>>>>>>  obj-$(CONFIG_MODULES)          += module.o module-sections.o
->>>>>>>>>>  obj-$(CONFIG_STACKTRACE)       += stacktrace.o
->>>>>>>>>>
->>>>>>>>>> -obj-$(CONFIG_KEXEC)             += machine_kexec.o relocate_kernel.o
->>>>>>>>>> +obj-$(CONFIG_KEXEC)             += machine_kexec.o relocate_kernel.o crash.o
->>>>>>>>>> +obj-$(CONFIG_CRASH_DUMP)        += crash_dump.o
->>>>>>>>>>
->>>>>>>>>>  obj-$(CONFIG_PROC_FS)          += proc.o
->>>>>>>>>>
->>>>>>>>>> diff --git a/arch/loongarch/kernel/crash.c b/arch/loongarch/kernel/crash.c
->>>>>>>>>> new file mode 100644
->>>>>>>>>> index 000000000000..b4f249ec6301
->>>>>>>>>> --- /dev/null
->>>>>>>>>> +++ b/arch/loongarch/kernel/crash.c
->>>>>>>>>> @@ -0,0 +1,100 @@
->>>>>>>>>> +// SPDX-License-Identifier: GPL-2.0
->>>>>>>>>> +/*
->>>>>>>>>> + * Copyright (C) 2022 Loongson Technology Corporation Limited
->>>>>>>>>> + *
->>>>>>>>>> + * Derived from MIPS
->>>>>>>>>> + */
->>>>>>>>>> +#include <linux/kernel.h>
->>>>>>>>>> +#include <linux/smp.h>
->>>>>>>>>> +#include <linux/reboot.h>
->>>>>>>>>> +#include <linux/crash_dump.h>
->>>>>>>>>> +#include <linux/delay.h>
->>>>>>>>>> +#include <linux/irq.h>
->>>>>>>>>> +#include <linux/types.h>
->>>>>>>>>> +#include <linux/sched.h>
->>>>>>>>>> +#include <linux/sched/task_stack.h>
->>>>>>>>>> +#include <asm/cacheflush.h>
->>>>>>>>>> +#include <asm/kexec.h>
->>>>>>>>>> +
->>>>>>>>>> +static cpumask_t cpus_in_crash = CPU_MASK_NONE;
->>>>>>>>>> +
->>>>>>>>>> +#ifdef CONFIG_SMP
->>>>>>>>>> +static void crash_shutdown_secondary(void *passed_regs)
->>>>>>>>>> +{
->>>>>>>>>> +       struct pt_regs *regs = passed_regs;
->>>>>>>>>> +       int cpu = smp_processor_id();
->>>>>>>>>> +
->>>>>>>>>> +       /*
->>>>>>>>>> +        * If we are passed registers, use those.  Otherwise get the
->>>>>>>>>> +        * regs from the last interrupt, which should be correct, as
->>>>>>>>>> +        * we are in an interrupt.  But if the regs are not there,
->>>>>>>>>> +        * pull them from the top of the stack.  They are probably
->>>>>>>>>> +        * wrong, but we need something to keep from crashing again.
->>>>>>>>>> +        */
->>>>>>>>>> +       if (!regs)
->>>>>>>>>> +               regs = get_irq_regs();
->>>>>>>>>> +       if (!regs)
->>>>>>>>>> +               regs = task_pt_regs(current);
->>>>>>>>>> +
->>>>>>>>>> +       local_irq_disable();
->>>>>>>>>> +       if (!cpumask_test_cpu(cpu, &cpus_in_crash))
->>>>>>>>>> +               crash_save_cpu(regs, cpu);
->>>>>>>>>> +       cpumask_set_cpu(cpu, &cpus_in_crash);
->>>>>>>>>> +
->>>>>>>>>> +       while (!atomic_read(&kexec_ready_to_reboot))
->>>>>>>>>> +               cpu_relax();
->>>>>>>>>> +
->>>>>>>>>> +       kexec_reboot();
->>>>>>>>>> +}
->>>>>>>>>> +
->>>>>>>>>> +/* Override the weak function in kernel/panic.c */
->>>>>>>>>> +void crash_smp_send_stop(void)
->>>>>>>>>> +{
->>>>>>>>>> +       static int cpus_stopped;
->>>>>>>>>> +       unsigned long timeout;
->>>>>>>>>> +       unsigned int ncpus;
->>>>>>>>>> +
->>>>>>>>>> +       /*
->>>>>>>>>> +        * This function can be called twice in panic path, but obviously
->>>>>>>>>> +        * we execute this only once.
->>>>>>>>>> +        */
->>>>>>>>>> +       if (cpus_stopped)
->>>>>>>>>> +               return;
->>>>>>>>>> +
->>>>>>>>>> +       cpus_stopped = 1;
->>>>>>>>>> +
->>>>>>>>>> +        /* Excluding the panic cpu */
->>>>>>>>>> +       ncpus = num_online_cpus() - 1;
->>>>>>>>>> +
->>>>>>>>>> +       smp_call_function(crash_shutdown_secondary, NULL, 0);
->>>>>>>>>> +       smp_wmb();
->>>>>>>>>> +
->>>>>>>>>> +       /*
->>>>>>>>>> +        * The crash CPU sends an IPI and wait for other CPUs to
->>>>>>>>>> +        * respond. Delay of at least 10 seconds.
->>>>>>>>>> +        */
->>>>>>>>>> +       pr_emerg("Sending IPI to other cpus...\n");
->>>>>>>>>> +       timeout = USEC_PER_SEC * 10;
->>>>>>>>>> +       while ((cpumask_weight(&cpus_in_crash) < ncpus) && timeout--) {
->>>>>>>>>> +               cpu_relax();
->>>>>>>>>> +               udelay(1);
->>>>>>>>>> +       }
->>>>>>>>>> +}
->>>>>>>>>> +
->>>>>>>>>> +#endif
->>>>>>>>>> +
->>>>>>>>>> +void machine_crash_shutdown(struct pt_regs *regs)
->>>>>>>>>> +{
->>>>>>>>>> +       int crashing_cpu;
->>>>>>>>>> +
->>>>>>>>>> +       local_irq_disable();
->>>>>>>>>> +
->>>>>>>>>> +       crashing_cpu = smp_processor_id();
->>>>>>>>>> +       crash_save_cpu(regs, crashing_cpu);
->>>>>>>>>> +
->>>>>>>>>> +       /* shutdown non-crashing cpus */
->>>>>>>>>> +       crash_smp_send_stop();
->>>>>>>>>> +       cpumask_set_cpu(crashing_cpu, &cpus_in_crash);
->>>>>>>>>> +
->>>>>>>>>> +       pr_info("Starting crashdump kernel...\n");
->>>>>>>>>> +}
->>>>>>>>>> diff --git a/arch/loongarch/kernel/crash_dump.c b/arch/loongarch/kernel/crash_dump.c
->>>>>>>>>> new file mode 100644
->>>>>>>>>> index 000000000000..13e5d2f7870d
->>>>>>>>>> --- /dev/null
->>>>>>>>>> +++ b/arch/loongarch/kernel/crash_dump.c
->>>>>>>>>> @@ -0,0 +1,19 @@
->>>>>>>>>> +// SPDX-License-Identifier: GPL-2.0
->>>>>>>>>> +#include <linux/highmem.h>
->>>>>>>>>> +#include <linux/crash_dump.h>
->>>>>>>>>> +#include <linux/io.h>
->>>>>>>>>> +
->>>>>>>>>> +ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
->>>>>>>>>> +                        size_t csize, unsigned long offset)
->>>>>>>>>> +{
->>>>>>>>>> +       void  *vaddr;
->>>>>>>>>> +
->>>>>>>>>> +       if (!csize)
->>>>>>>>>> +               return 0;
->>>>>>>>>> +
->>>>>>>>>> +       vaddr = kmap_local_pfn(pfn);
->>>>>>>>>> +       csize = copy_to_iter(vaddr + offset, csize, iter);
->>>>>>>>>> +       kunmap_local(vaddr);
->>>>>>>>>> +
->>>>>>>>>> +       return csize;
->>>>>>>>>> +}
->>>>>>>>>> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
->>>>>>>>>> index 4ffcd4cd9c8c..f793a3ff09a3 100644
->>>>>>>>>> --- a/arch/loongarch/kernel/machine_kexec.c
->>>>>>>>>> +++ b/arch/loongarch/kernel/machine_kexec.c
->>>>>>>>>> @@ -69,7 +69,7 @@ int machine_kexec_prepare(struct kimage *kimage)
->>>>>>>>>>                 continue;
->>>>>>>>>>         }
->>>>>>>>>>
->>>>>>>>>> -       /* kexec need a safe page to save reboot_code_buffer */
->>>>>>>>>> +       /* kexec/kdump need a safe page to save reboot_code_buffer */
->>>>>>>>>>         kimage->control_code_page = virt_to_page((void *)KEXEC_CTRL_CODE);
->>>>>>>>>>
->>>>>>>>>>         reboot_code_buffer =
->>>>>>>>>> @@ -113,10 +113,6 @@ static void kexec_shutdown_secondary(void *)
->>>>>>>>>>
->>>>>>>>>>         kexec_reboot();
->>>>>>>>>>  }
->>>>>>>>>> -
->>>>>>>>>> -void machine_crash_shutdown(struct pt_regs *regs)
->>>>>>>>>> -{
->>>>>>>>>> -}
->>>>>>>>>>  #endif
->>>>>>>>>>
->>>>>>>>>>  void machine_shutdown(void)
->>>>>>>>>> @@ -135,7 +131,8 @@ void machine_kexec(struct kimage *image)
->>>>>>>>>>
->>>>>>>>>>         jump_addr = (unsigned long)phys_to_virt(image->start);
->>>>>>>>>>
->>>>>>>>>> -       first_ind_entry = (unsigned long)phys_to_virt(image->head & PAGE_MASK);
->>>>>>>>>> +       if (image->type == KEXEC_TYPE_DEFAULT)
->>>>>>>>>> +               first_ind_entry = (unsigned long)phys_to_virt(image->head & PAGE_MASK);
->>>>>>>>>>
->>>>>>>>>>         /*
->>>>>>>>>>          * The generic kexec code builds a page list with physical
->>>>>>>>>> @@ -167,7 +164,8 @@ void machine_kexec(struct kimage *image)
->>>>>>>>>>
->>>>>>>>>>         /*
->>>>>>>>>>          * We know we were online, and there will be no incoming IPIs at
->>>>>>>>>> -        * this point.
->>>>>>>>>> +        * this point. Mark online again before rebooting so that the crash
->>>>>>>>>> +        * analysis tool will see us correctly.
->>>>>>>>>>          */
->>>>>>>>>>         set_cpu_online(smp_processor_id(), true);
->>>>>>>>>>
->>>>>>>>>> diff --git a/arch/loongarch/kernel/mem.c b/arch/loongarch/kernel/mem.c
->>>>>>>>>> index 7423361b0ebc..c6def6ff81c8 100644
->>>>>>>>>> --- a/arch/loongarch/kernel/mem.c
->>>>>>>>>> +++ b/arch/loongarch/kernel/mem.c
->>>>>>>>>> @@ -5,6 +5,7 @@
->>>>>>>>>>  #include <linux/efi.h>
->>>>>>>>>>  #include <linux/initrd.h>
->>>>>>>>>>  #include <linux/memblock.h>
->>>>>>>>>> +#include <linux/of_fdt.h>
->>>>>>>>>>
->>>>>>>>>>  #include <asm/bootinfo.h>
->>>>>>>>>>  #include <asm/loongson.h>
->>>>>>>>>> @@ -61,4 +62,9 @@ void __init memblock_init(void)
->>>>>>>>>>
->>>>>>>>>>         /* Reserve the initrd */
->>>>>>>>>>         reserve_initrd_mem();
->>>>>>>>>> +
->>>>>>>>>> +       /* Mainly reserved memory for the elf core head */
->>>>>>>>>> +       early_init_fdt_scan_reserved_mem();
->>>>>>>>>> +       /* Parse linux,usable-memory-range is for crash dump kernel */
->>>>>>>>>> +       early_init_dt_check_for_usable_mem_range();
->>>>>>>>>>  }
->>>>>>>>>> diff --git a/arch/loongarch/kernel/relocate_kernel.S b/arch/loongarch/kernel/relocate_kernel.S
->>>>>>>>>> index d1f242f74ea8..4ee5ac4ac2d7 100644
->>>>>>>>>> --- a/arch/loongarch/kernel/relocate_kernel.S
->>>>>>>>>> +++ b/arch/loongarch/kernel/relocate_kernel.S
->>>>>>>>>> @@ -28,6 +28,12 @@ SYM_CODE_START(relocate_new_kernel)
->>>>>>>>>>         move            s2, a2
->>>>>>>>>>         move            s3, a3
->>>>>>>>>>
->>>>>>>>>> +       /*
->>>>>>>>>> +        * In case of a kdump/crash kernel, the indirection page is not
->>>>>>>>>> +        * populated as the kernel is directly copied to a reserved location
->>>>>>>>>> +        */
->>>>>>>>>> +       beqz            s2, done
->>>>>>>>>> +
->>>>>>>>>>  process_entry:
->>>>>>>>>>         PTR_L           s4, s2, 0
->>>>>>>>>>         PTR_ADDI        s2, s2, SZREG
->>>>>>>>>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
->>>>>>>>>> index f938aae3e92c..ea34b77e402f 100644
->>>>>>>>>> --- a/arch/loongarch/kernel/setup.c
->>>>>>>>>> +++ b/arch/loongarch/kernel/setup.c
->>>>>>>>>> @@ -19,6 +19,8 @@
->>>>>>>>>>  #include <linux/memblock.h>
->>>>>>>>>>  #include <linux/initrd.h>
->>>>>>>>>>  #include <linux/ioport.h>
->>>>>>>>>> +#include <linux/kexec.h>
->>>>>>>>>> +#include <linux/crash_dump.h>
->>>>>>>>>>  #include <linux/root_dev.h>
->>>>>>>>>>  #include <linux/console.h>
->>>>>>>>>>  #include <linux/pfn.h>
->>>>>>>>>> @@ -186,6 +188,50 @@ static int __init early_parse_mem(char *p)
->>>>>>>>>>  }
->>>>>>>>>>  early_param("mem", early_parse_mem);
->>>>>>>>>>
->>>>>>>>>> +static void __init loongarch_parse_crashkernel(void)
->>>>>>>>>> +{
->>>>>>>>>> +#ifdef CONFIG_KEXEC
->>>>>>>>>> +       unsigned long long start;
->>>>>>>>>> +       unsigned long long total_mem;
->>>>>>>>>> +       unsigned long long crash_size, crash_base;
->>>>>>>>>> +       int ret;
->>>>>>>>>> +
->>>>>>>>>> +       total_mem = memblock_phys_mem_size();
->>>>>>>>>> +       ret = parse_crashkernel(boot_command_line, total_mem,
->>>>>>>>>> +                               &crash_size, &crash_base);
->>>>>>>>>> +       if (ret != 0 || crash_size <= 0)
->>>>>>>>>> +               return;
->>>>>>>>>> +
->>>>>>>>>> +
->>>>>>>>>> +       start = memblock_phys_alloc_range(crash_size, 1, crash_base,
->>>>>>>>>> +                                       crash_base + crash_size);
->>>>>>>>>> +       if (start != crash_base) {
->>>>>>>>>> +               pr_warn("Invalid memory region reserved for crash kernel\n");
->>>>>>>>>> +               return;
->>>>>>>>>> +       }
->>>>>>>>>> +
->>>>>>>>>> +       crashk_res.start = crash_base;
->>>>>>>>>> +       crashk_res.end   = crash_base + crash_size - 1;
->>>>>>>>>> +#endif
->>>>>>>>>> +}
->>>>>>>>>> +
->>>>>>>>>> +static void __init request_crashkernel(struct resource *res)
->>>>>>>>>> +{
->>>>>>>>>> +#ifdef CONFIG_KEXEC
->>>>>>>>>> +       int ret;
->>>>>>>>>> +
->>>>>>>>>> +       if (crashk_res.start == crashk_res.end)
->>>>>>>>>> +               return;
->>>>>>>>>> +
->>>>>>>>>> +       ret = request_resource(res, &crashk_res);
->>>>>>>>>> +       if (!ret)
->>>>>>>>>> +               pr_info("Reserving %ldMB of memory at %ldMB for crashkernel\n",
->>>>>>>>>> +                       (unsigned long)((crashk_res.end -
->>>>>>>>>> +                                        crashk_res.start + 1) >> 20),
->>>>>>>>>> +                       (unsigned long)(crashk_res.start  >> 20));
->>>>>>>>>> +#endif
->>>>>>>>>> +}
->>>>>>>>>> +
->>>>>>>>>>  void __init platform_init(void)
->>>>>>>>>>  {
->>>>>>>>>>         efi_init();
->>>>>>>>>> @@ -229,6 +275,8 @@ static void __init arch_mem_init(char **cmdline_p)
->>>>>>>>>>
->>>>>>>>>>         check_kernel_sections_mem();
->>>>>>>>>>
->>>>>>>>>> +       loongarch_parse_crashkernel();
->>>>>>>>>> +
->>>>>>>>>>         /*
->>>>>>>>>>          * In order to reduce the possibility of kernel panic when failed to
->>>>>>>>>>          * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
->>>>>>>>>> @@ -290,6 +338,7 @@ static void __init resource_init(void)
->>>>>>>>>>                 request_resource(res, &code_resource);
->>>>>>>>>>                 request_resource(res, &data_resource);
->>>>>>>>>>                 request_resource(res, &bss_resource);
->>>>>>>>>> +               request_crashkernel(res);
->>>>>>>>>>         }
->>>>>>>>>>  }
->>>>>>>>>>
->>>>>>>>>> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
->>>>>>>>>> index aa1c95aaf595..0e610872f3f4 100644
->>>>>>>>>> --- a/arch/loongarch/kernel/traps.c
->>>>>>>>>> +++ b/arch/loongarch/kernel/traps.c
->>>>>>>>>> @@ -10,6 +10,7 @@
->>>>>>>>>>  #include <linux/entry-common.h>
->>>>>>>>>>  #include <linux/init.h>
->>>>>>>>>>  #include <linux/kernel.h>
->>>>>>>>>> +#include <linux/kexec.h>
->>>>>>>>>>  #include <linux/module.h>
->>>>>>>>>>  #include <linux/extable.h>
->>>>>>>>>>  #include <linux/mm.h>
->>>>>>>>>> @@ -246,6 +247,9 @@ void __noreturn die(const char *str, struct pt_regs *regs)
->>>>>>>>>>
->>>>>>>>>>         oops_exit();
->>>>>>>>>>
->>>>>>>>>> +       if (regs && kexec_should_crash(current))
->>>>>>>>>> +               crash_kexec(regs);
->>>>>>>>>> +
->>>>>>>>>>         if (in_interrupt())
->>>>>>>>>>                 panic("Fatal exception in interrupt");
->>>>>>>>>>
->>>>>>>>>> --
->>>>>>>>>> 2.36.0
->>>>>>>>>>
->>>>>>>>
->>>>>>
->>>>
->>
-
+> _DMA for pci devices should be declared in host bridge as
+> flowing:
+>
+> Name (_DMA, ResourceTemplate() {
+>         QWordMemory (ResourceProducer,
+>             PosDecode,
+>             MinFixed,
+>             MaxFixed,
+>             NonCacheable,
+>             ReadWrite,
+>             0x0,
+>             0x4080000000,
+>             0x447fffffff,
+>             0x3fc000000000,
+>             0x400000000,
+>             ,
+>             ,
+>             )
+>
+>         QWordMemory (ResourceProducer,
+>             PosDecode,
+>             MinFixed,
+>             MaxFixed,
+>             NonCacheable,
+>             ReadWrite,
+>             0x0,
+>             0x2080000000,
+>             0x247fffffff,
+>             0x1fe000000000,
+>             0x400000000,
+>             ,
+>             ,
+>             )
+>     })
+>
+> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> ---
+>  arch/loongarch/Kconfig        |  1 -
+>  arch/loongarch/kernel/dma.c   | 52 +++++++++++++++++--------------------------
+>  arch/loongarch/kernel/setup.c |  2 +-
+>  include/linux/acpi.h          |  9 +++++---
+>  4 files changed, 28 insertions(+), 36 deletions(-)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index b57daee..9dedcf9 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -7,7 +7,6 @@ config LOONGARCH
+>         select ARCH_ENABLE_MEMORY_HOTPLUG
+>         select ARCH_ENABLE_MEMORY_HOTREMOVE
+>         select ARCH_HAS_ACPI_TABLE_UPGRADE      if ACPI
+> -       select ARCH_HAS_PHYS_TO_DMA
+>         select ARCH_HAS_PTE_SPECIAL
+>         select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+>         select ARCH_INLINE_READ_LOCK if !PREEMPTION
+> diff --git a/arch/loongarch/kernel/dma.c b/arch/loongarch/kernel/dma.c
+> index 8c9b531..7a9c6a9 100644
+> --- a/arch/loongarch/kernel/dma.c
+> +++ b/arch/loongarch/kernel/dma.c
+> @@ -2,39 +2,29 @@
+>  /*
+>   * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+>   */
+> -#include <linux/init.h>
+> +#include <linux/acpi.h>
+>  #include <linux/dma-direct.h>
+> -#include <linux/dma-mapping.h>
+> -#include <linux/dma-map-ops.h>
+> -#include <linux/swiotlb.h>
+>
+> -#include <asm/bootinfo.h>
+> -#include <asm/dma.h>
+> -#include <asm/loongson.h>
+> -
+> -/*
+> - * We extract 4bit node id (bit 44~47) from Loongson-3's
+> - * 48bit physical address space and embed it into 40bit.
+> - */
+> -
+> -static int node_id_offset;
+> -
+> -dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+> -{
+> -       long nid = (paddr >> 44) & 0xf;
+> -
+> -       return ((nid << 44) ^ paddr) | (nid << node_id_offset);
+> -}
+> -
+> -phys_addr_t dma_to_phys(struct device *dev, dma_addr_t daddr)
+> +void acpi_arch_dma_setup(struct device *dev)
+>  {
+> -       long nid = (daddr >> node_id_offset) & 0xf;
+> +       int ret;
+> +       u64 mask, end = 0;
+> +       const struct bus_dma_region *map = NULL;
+> +
+> +       ret = acpi_dma_get_range(dev, &map);
+> +       if (!ret && map) {
+> +               const struct bus_dma_region *r = map;
+> +
+> +               for (end = 0; r->size; r++) {
+> +                       if (r->dma_start + r->size - 1 > end)
+> +                               end = r->dma_start + r->size - 1;
+> +               }
+> +
+> +               mask = DMA_BIT_MASK(ilog2(end) + 1);
+> +               dev->bus_dma_limit = end;
+> +               dev->dma_range_map = map;
+> +               dev->coherent_dma_mask = min(dev->coherent_dma_mask, mask);
+> +               *dev->dma_mask = min(*dev->dma_mask, mask);
+> +       }
+>
+> -       return ((nid << node_id_offset) ^ daddr) | (nid << 44);
+> -}
+> -
+> -void __init plat_swiotlb_setup(void)
+> -{
+> -       swiotlb_init(true, SWIOTLB_VERBOSE);
+> -       node_id_offset = ((readl(LS7A_DMA_CFG) & LS7A_DMA_NODE_MASK) >> LS7A_DMA_NODE_SHF) + 36;
+>  }
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+> index c74860b..974f085 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -247,7 +247,7 @@ static void __init arch_mem_init(char **cmdline_p)
+>         sparse_init();
+>         memblock_set_bottom_up(true);
+>
+> -       plat_swiotlb_setup();
+> +       swiotlb_init(true, SWIOTLB_VERBOSE);
+>
+>         dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
+>
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 34e0545..33977b87 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -278,14 +278,17 @@ int acpi_table_parse_madt(enum acpi_madt_type id,
+>
+>  void acpi_numa_x2apic_affinity_init(struct acpi_srat_x2apic_cpu_affinity *pa);
+>
+> +#if defined(CONFIG_ARM64) || defined(CONFIG_LOONGARCH)
+> +void acpi_arch_dma_setup(struct device *dev);
+> +#else
+> +static inline void acpi_arch_dma_setup(struct device *dev) { }
+> +#endif
+> +
+>  #ifdef CONFIG_ARM64
+>  void acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa);
+> -void acpi_arch_dma_setup(struct device *dev);
+>  #else
+>  static inline void
+>  acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa) { }
+> -static inline void
+> -acpi_arch_dma_setup(struct device *dev) { }
+>  #endif
+>
+>  int acpi_numa_memory_affinity_init (struct acpi_srat_mem_affinity *ma);
+> --
+> 1.8.3.1
+>
+>
