@@ -1,164 +1,179 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 242D315A6
-	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 04:34:48 +0000 (UTC)
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx32tVfBVjyHYRAA--.1094S3;
-	Mon, 05 Sep 2022 12:34:31 +0800 (CST)
-Subject: Re: [PATCH V3] LoongArch: Add efistub booting support
-To: Huacai Chen <chenhuacai@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
-References: <20220819102037.2697798-1-chenhuacai@loongson.cn>
- <9b6f0aeaebbd36882b5b40d655f9ccd20c7be496.camel@xry111.site>
- <CAMj1kXFOd+gMHbi6MH0KHWkBEKN9V0LeZbyGRw8h630OxtMrdA@mail.gmail.com>
- <CAAhV-H6MR=rWhecY_uuiXAysED-BBJhKhGHj2cCkefJiPOo-ZQ@mail.gmail.com>
- <CAAhV-H4KXVUBgNoQxOFiEj2AH-ojhnrEJ8QLvNrALY69MhXF3w@mail.gmail.com>
- <CAMj1kXHJv_6mLhMikg+ic7=EUABLdrX3f__eBbHntrpGHjRfXg@mail.gmail.com>
- <CAAhV-H4WTCRU9qShDp57AZ2DG1uz+=GTz14zyAUaqVDjXrNABA@mail.gmail.com>
-Cc: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@loongson.cn>,
- Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev,
- linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>,
- Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-efi
- <linux-efi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <8319b9d4-960c-e706-468a-cb58bef6df8c@loongson.cn>
-Date: Mon, 5 Sep 2022 12:34:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D775B23AA
+	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 05:40:28 +0000 (UTC)
+Received: from [192.168.100.105] (unknown [171.223.99.244])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPGuSixVj44ARAA--.11094S3;
+	Mon, 05 Sep 2022 13:39:31 +0800 (CST)
+Message-ID: <b3040de0-9c89-a6ff-517e-6ebec71faaf7@loongson.cn>
+Date: Mon, 5 Sep 2022 13:39:30 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4WTCRU9qShDp57AZ2DG1uz+=GTz14zyAUaqVDjXrNABA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Bx32tVfBVjyHYRAA--.1094S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF1UKw1fur1fArWxWw47CFg_yoWrCrW7pa
-	yxGFW8KF4kJF1xJwn2q3Wj9a4aq34fAr12qrn8tw18Arn0vrnIqr1Iqr45WFyUZrnYkr42
-	vF42q34xu3Z8ArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_Gryl42xK82IYc2Ij64vIr4
-	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU8zuWDUUUU
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH] LoongArch: Mark kernel stack padding as
+ TOP_OF_KERNEL_STACK_PADDING
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Oleg Nesterov <oleg@redhat.com>,
+ loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+References: <1662130897-13156-1-git-send-email-hejinyang@loongson.cn>
+ <CAAhV-H4vNpbHbT55z8_ub3q=Kv7eVb--7Q3pXz2te-1DVWhTWA@mail.gmail.com>
+From: Jinyang He <hejinyang@loongson.cn>
+In-Reply-To: <CAAhV-H4vNpbHbT55z8_ub3q=Kv7eVb--7Q3pXz2te-1DVWhTWA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxPGuSixVj44ARAA--.11094S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3JFWfCw17ur4UJF1fAw4xZwb_yoW7uF43pF
+	9rA3Z7GF48GF9YyryUtwn8ZFyDJws7Kw129F13KFyrArnFvr1UWr18AFZ8ZF4jqan5Kw40
+	gF1SgwnIyay5Ja7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+	c2xSY4AK67AK6r4rMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU5l2MUUUUUU==
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-Hi, Ard & Huacai
+On 2022/9/4 20:19, Huacai Chen wrote:
 
-On 09/05/2022 11:50 AM, Huacai Chen wrote:
-> Hi, Ard,
+> Hi, Jinyang,
 >
-> On Mon, Sep 5, 2022 at 5:59 AM Ard Biesheuvel <ardb@kernel.org> wrote:
->>
->> On Sun, 4 Sept 2022 at 15:24, Huacai Chen <chenhuacai@kernel.org> wrote:
->>>
->>> Hi, Ard,
->>>
->>> On Thu, Sep 1, 2022 at 6:40 PM Huacai Chen <chenhuacai@kernel.org> wrote:
->>>>
->>>> Hi, Ard,
->>>>
->>>> On Sat, Aug 27, 2022 at 3:14 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->>>>>
->>>>> On Sat, 27 Aug 2022 at 06:41, Xi Ruoyao <xry111@xry111.site> wrote:
->>>>>>
->>>>>> Tested V3 with the magic number check manually removed in my GRUB build.
->>>>>> The system boots successfully.  I've not tested Arnd's zBoot patch yet.
->>>>>
->>>>> I am Ard not Arnd :-)
->>>>>
->>>>> Please use this branch when testing the EFI decompressor:
->>>>> https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-decompressor-v4
->>>> The root cause of LoongArch zboot boot failure has been found, it is a
->>>> binutils bug, latest toolchain with the below patch can solve the
->>>> problem.
->>>>
->>>> diff --git a/bfd/elfnn-loongarch.c b/bfd/elfnn-loongarch.c
->>>> index 5b44901b9e0..fafdc7c7458 100644
->>>> --- a/bfd/elfnn-loongarch.c
->>>> +++ b/bfd/elfnn-loongarch.c
->>>> @@ -2341,9 +2341,10 @@ loongarch_elf_relocate_section (bfd
->>>> *output_bfd, struct bfd_link_info *info,
->>>>      case R_LARCH_SOP_PUSH_PLT_PCREL:
->>>>        unresolved_reloc = false;
->>>>
->>>> -      if (resolved_to_const)
->>>> +      if (!is_undefweak && resolved_to_const)
->>>>          {
->>>>            relocation += rel->r_addend;
->>>> +          relocation -= pc;
->>>>            break;
->>>>          }
->>>>        else if (is_undefweak)
->>>>
->>>>
->>>> Huacai
->>> Now the patch is submitted here:
->>> https://sourceware.org/pipermail/binutils/2022-September/122713.html
->>>
->>
->> Great. Given the severity of this bug, I imagine that building the
->> LoongArch kernel will require a version of binutils that carries this
->> fix.
->>
->> Therefore, i will revert back to the original approach for accessing
->> uncompressed_size, using an extern declaration with an __aligned(1)
->> attribute.
->>
->>> And I have some other questions about kexec: kexec should jump to the
->>> elf entry or the pe entry? I think is the elf entry, because if we
->>> jump to the pe entry, then SVAM will be executed twice (but it should
->>> be executed only once). However, how can we jump to the elf entry if
->>> we use zboot? Maybe it is kexec-tool's responsibility to decompress
->>> the zboot kernel image?
->>>
->>
->> Yes, very good point. Kexec kernels cannot boot via the EFI entry
->> point, as the boot services will already be shutdown. So the kexec
->> kernel needs to boot via the same entrypoint in the core kernel that
->> the EFI stub calls when it hands over.
->>
->> For the EFI zboot image in particular, we will need to teach kexec how
->> to decompress them. The zboot image has a header that
->> a) describes it as a EFI linux zimg
->> b) describes the start and end offset of the compressed payload
->> c) describes which compression algorithm was used.
->>
->> This means that any non-EFI loader (including kexec) should be able to
->> extract the inner PE/COFF image and decompress it. For arm64 and
->> RISC-V, this is sufficient as the EFI and raw images are the same. For
->> LoongArch, I suppose it means we need a way to enter the core kernel
->> directly via the entrypoint that the EFI stub uses when handing over
->> (and pass the original DT argument so the kexec kernel has access to
->> the EFI and ACPI firmware tables)
-> OK, then is this implementation [1] acceptable? I remember that you
-> said the MS-DOS header shouldn't contain other information, so I guess
-> this is unacceptable?
->
-> [1] https://lore.kernel.org/loongarch/c4dbb14a-5580-1e47-3d15-5d2079e88404@loongson.cn/T/#mb8c1dc44f7fa2d3ef638877f0cd3f958f0be96ad
+> I don't know what scenarios this padding is used and how to use.
 
-Modifications to the MS-DOS header refer to the arm64 and riscv
-implementations [1], and to provide the necessary information to
-kexec-tools[2] when loading uncompressed efi images.
+To be frankly, I don't know its scenarios on LoongArch. It looks like
+the MIPS legacy. This patch only keep this padding, which can be
+easily modified if needed in the future. Now we can completely
+set it to 0 or remove it.  Actually, it can be thought of as another
+buffer for thread_info, while thread_info usually limit to one cache line.
 
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0f327f2aaad6a87356cbccfa390d4d3b64d0d3b6
-[2] 
-https://github.com/horms/kexec-tools/blob/main/kexec/arch/arm64/image-header.h
+> And
+> in x86 there is only TOP_OF_KERNEL_STACK_PADDING but we need
+> TOP_OF_KERNEL_STACK_PADDING and _TOP_OF_KERNEL_STACK_PADDING. Two
+> macros are hard to maintain.
 
-Thanks,
-Youling
+How about put it into loongarch.h if we need this macro?
 
->
-> Huacai
->
+Thanks
+
+> On Fri, Sep 2, 2022 at 11:01 PM Jinyang He <hejinyang@loongson.cn> wrote:
+>> Mark the top reserved bytes of the kernel stack by a macro. It collects
+>> that info so that we can modify or discarded (let it be 0) this padding
+>> if needed. Its name is referenced from x86_64. It seems that x86_64
+>> think the padding as extension on top of the kernel stack in other mode
+>> (normally the top is only pt_regs). Although LoongArch not produce
+>> such an extension at present, collect them because of the uncertainty
+>> of the future. Note that this patch does not modify macro size. It
+>> requires another strict evaluation.
+>>
+>> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+>> ---
+>>   arch/loongarch/include/asm/processor.h  | 3 ++-
+>>   arch/loongarch/include/asm/ptrace.h     | 3 ++-
+>>   arch/loongarch/include/asm/stackframe.h | 1 +
+>>   arch/loongarch/kernel/head.S            | 2 +-
+>>   arch/loongarch/kernel/process.c         | 4 ++--
+>>   arch/loongarch/kernel/switch.S          | 2 +-
+>>   6 files changed, 9 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+>> index 1c4b43083..6077fd8e3 100644
+>> --- a/arch/loongarch/include/asm/processor.h
+>> +++ b/arch/loongarch/include/asm/processor.h
+>> @@ -193,8 +193,9 @@ static inline void flush_thread(void)
+>>
+>>   unsigned long __get_wchan(struct task_struct *p);
+>>
+>> +#define TOP_OF_KERNEL_STACK_PADDING 32
+>>   #define __KSTK_TOS(tsk) ((unsigned long)task_stack_page(tsk) + \
+>> -                        THREAD_SIZE - 32 - sizeof(struct pt_regs))
+>> +                        THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING - sizeof(struct pt_regs))
+>>   #define task_pt_regs(tsk) ((struct pt_regs *)__KSTK_TOS(tsk))
+>>   #define KSTK_EIP(tsk) (task_pt_regs(tsk)->csr_era)
+>>   #define KSTK_ESP(tsk) (task_pt_regs(tsk)->regs[3])
+>> diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+>> index 17838c6b7..cdceeaa60 100644
+>> --- a/arch/loongarch/include/asm/ptrace.h
+>> +++ b/arch/loongarch/include/asm/ptrace.h
+>> @@ -133,7 +133,8 @@ static inline void die_if_kernel(const char *str, struct pt_regs *regs)
+>>   #define current_pt_regs()                                              \
+>>   ({                                                                     \
+>>          unsigned long sp = (unsigned long)__builtin_frame_address(0);   \
+>> -       (struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1 - 32) - 1;      \
+>> +       (struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1 -               \
+>> +                          TOP_OF_KERNEL_STACK_PADDING) - 1;            \
+>>   })
+>>
+>>   /* Helpers for working with the user stack pointer */
+>> diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
+>> index 4ca953062..e9f849b29 100644
+>> --- a/arch/loongarch/include/asm/stackframe.h
+>> +++ b/arch/loongarch/include/asm/stackframe.h
+>> @@ -216,4 +216,5 @@
+>>          RESTORE_SP_AND_RET \docfi
+>>          .endm
+>>
+>> +#define _TOP_OF_KERNEL_STACK_PADDING 32
+>>   #endif /* _ASM_STACKFRAME_H */
+>> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+>> index eb3f641d5..290c53847 100644
+>> --- a/arch/loongarch/kernel/head.S
+>> +++ b/arch/loongarch/kernel/head.S
+>> @@ -75,7 +75,7 @@ SYM_CODE_START(kernel_entry)                  # kernel entry point
+>>
+>>          la.pcrel        tp, init_thread_union
+>>          /* Set the SP after an empty pt_regs.  */
+>> -       PTR_LI          sp, (_THREAD_SIZE - 32 - PT_SIZE)
+>> +       PTR_LI          sp, (_THREAD_SIZE - _TOP_OF_KERNEL_STACK_PADDING - PT_SIZE)
+>>          PTR_ADD         sp, sp, tp
+>>          set_saved_sp    sp, t0, t1
+>>          PTR_ADDI        sp, sp, -4 * SZREG      # init stack pointer
+>> diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+>> index 660492f06..b51cf7975 100644
+>> --- a/arch/loongarch/kernel/process.c
+>> +++ b/arch/loongarch/kernel/process.c
+>> @@ -129,7 +129,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+>>          unsigned long clone_flags = args->flags;
+>>          struct pt_regs *childregs, *regs = current_pt_regs();
+>>
+>> -       childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE - 32;
+>> +       childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;
+>>
+>>          /* set up new TSS. */
+>>          childregs = (struct pt_regs *) childksp - 1;
+>> @@ -236,7 +236,7 @@ bool in_task_stack(unsigned long stack, struct task_struct *task,
+>>                          struct stack_info *info)
+>>   {
+>>          unsigned long begin = (unsigned long)task_stack_page(task);
+>> -       unsigned long end = begin + THREAD_SIZE - 32;
+>> +       unsigned long end = begin + THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;
+>>
+>>          if (stack < begin || stack >= end)
+>>                  return false;
+>> diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
+>> index 43ebbc399..1797aceae 100644
+>> --- a/arch/loongarch/kernel/switch.S
+>> +++ b/arch/loongarch/kernel/switch.S
+>> @@ -26,7 +26,7 @@ SYM_FUNC_START(__switch_to)
+>>          move    tp, a2
+>>          cpu_restore_nonscratch a1
+>>
+>> -       li.w            t0, _THREAD_SIZE - 32
+>> +       li.w            t0, _THREAD_SIZE - _TOP_OF_KERNEL_STACK_PADDING
+>>          PTR_ADD         t0, t0, tp
+>>          set_saved_sp    t0, t1, t2
+>>
+>> --
+>> 2.31.1
+>>
 
