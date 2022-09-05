@@ -1,232 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C1D2561
-	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 14:42:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 775BCC433C1
-	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 14:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1662388943;
-	bh=NlStXV7wed6wVtep3wZsd1cQTElbxZKc0QNhM8aDIIc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uvG1+XkIDZiThWQpsvnEX5k7bxs9uQACJiHfklgXMBg2ORQYwHVNChUmJM5Cz+UWk
-	 Re82+7o7zJIE+aXzZk4Taax4nFYPEQuEJSRIQu71sIHzp+Kn+POsN10dKFJ/393d3I
-	 lswwdEUGQADCeSeclJrLsodf0EIrAX+WfItAu5+HLBb9ZuVPAKbASMQ/nb8gYSlkbq
-	 dKMtrKrGSriNmPQddIaz/AJC9hDYQ3amEpR/AJrn5cAAuwCZ2/tdTH69+N5lmoTQEv
-	 8tXFu3G3TDyTOl2E5OtPXmJyy18qqucVBINYg/Ao5RvGG5icJvwp2R5QdWSy1DkANh
-	 gK5Xevt92mNqQ==
-Received: by mail-vs1-f46.google.com with SMTP id 67so9036995vsv.2
-        for <loongarch@lists.linux.dev>; Mon, 05 Sep 2022 07:42:23 -0700 (PDT)
-X-Gm-Message-State: ACgBeo18haf6UuZB6c4glHgpbMpJ9+EclP3X8gAkWSRkPVBydMaqcYnM
-	3m/GBEAJ5GWm5JqkE9iuufszN0Kr1hcm0b5hkfE=
-X-Google-Smtp-Source: AA6agR7sqaivV1IawE/7cTWY9j7vY23902xeea9967TaCk0gJUQNpNzQlk3v8WRDNV+1c2oX7k52hU/kKvkvQ1PUAGc=
-X-Received: by 2002:a67:d582:0:b0:390:d6dd:5612 with SMTP id
- m2-20020a67d582000000b00390d6dd5612mr13853625vsj.78.1662388942430; Mon, 05
- Sep 2022 07:42:22 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85F3468E
+	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 18:14:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1662401271; bh=5+fBIDj/plLFKdhPodt2PuIY5OBgWlvoqpWtbGLNoXM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=puIOOBlNKkdEH2NfqMZ6Dv+IlrIPGhmqaDgp7h/qM2meKfWQ7SIwqeYUkn6dYgczL
+	 Q/Iv3vTQglESUW6b+rP5yhnh5leHyveimiFrvxIFlRbpSEDFd6iih6c11OjY3WYVu3
+	 iILqoc9d48XIgD/SbgOagG4+sAU36CsE9BVH2uJ8=
+Received: from [192.168.9.172] (unknown [101.88.26.24])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id C40CA6006F;
+	Tue,  6 Sep 2022 02:07:50 +0800 (CST)
+Message-ID: <3591e532-a6ed-01f1-88fc-77b8637abced@xen0n.name>
+Date: Tue, 6 Sep 2022 02:07:49 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220830030139.29899-1-lvjianmin@loongson.cn> <20220830030139.29899-3-lvjianmin@loongson.cn>
-In-Reply-To: <20220830030139.29899-3-lvjianmin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 5 Sep 2022 22:42:09 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4P=MsH2B29U+x4TWJpN4s_2ZYLsX5_rfaapPxx9+UmPQ@mail.gmail.com>
-Message-ID: <CAAhV-H4P=MsH2B29U+x4TWJpN4s_2ZYLsX5_rfaapPxx9+UmPQ@mail.gmail.com>
-Subject: Re: [PATCH V3 2/2] LoongArch: Remove ARCH_HAS_PHYS_TO_DMA
-To: Jianmin Lv <lvjianmin@loongson.cn>
-Cc: lpieralisi@kernel.org, Robin Murphy <robin.murphy@arm.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Hanjun Guo <guohanjun@huawei.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Robert Moore <robert.moore@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:106.0) Gecko/20100101
+ Thunderbird/106.0a1
+Subject: Re: [PATCH V3] LoongArch: Add efistub booting support
+To: Ard Biesheuvel <ardb@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@loongson.cn>,
+ Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev,
+ linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>,
+ Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ linux-efi <linux-efi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20220819102037.2697798-1-chenhuacai@loongson.cn>
+ <9b6f0aeaebbd36882b5b40d655f9ccd20c7be496.camel@xry111.site>
+ <CAMj1kXFOd+gMHbi6MH0KHWkBEKN9V0LeZbyGRw8h630OxtMrdA@mail.gmail.com>
+ <CAAhV-H6MR=rWhecY_uuiXAysED-BBJhKhGHj2cCkefJiPOo-ZQ@mail.gmail.com>
+ <CAAhV-H4KXVUBgNoQxOFiEj2AH-ojhnrEJ8QLvNrALY69MhXF3w@mail.gmail.com>
+ <CAMj1kXHJv_6mLhMikg+ic7=EUABLdrX3f__eBbHntrpGHjRfXg@mail.gmail.com>
+ <CAAhV-H4WTCRU9qShDp57AZ2DG1uz+=GTz14zyAUaqVDjXrNABA@mail.gmail.com>
+ <CAMj1kXFRsEJOS2Kim8T64rYF85_bmmZ5gW7kjb8eDXry5SA+cg@mail.gmail.com>
+ <CAAhV-H4xDB6JPCEZqQ6+VadOPnzA3beguiuTRS-Ub=Ci5FgpPw@mail.gmail.com>
+ <CAMj1kXEPpCPHe8ghOKcaGvuLjetP9WJbrMkLcqv_V+oRWeyLmw@mail.gmail.com>
+Content-Language: en-US
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <CAMj1kXEPpCPHe8ghOKcaGvuLjetP9WJbrMkLcqv_V+oRWeyLmw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi, Jianmin,
+On 9/5/22 15:28, Ard Biesheuvel wrote:
+> [snip]
+>>>>>> And I have some other questions about kexec: kexec should jump to the
+>>>>>> elf entry or the pe entry? I think is the elf entry, because if we
+>>>>>> jump to the pe entry, then SVAM will be executed twice (but it should
+>>>>>> be executed only once). However, how can we jump to the elf entry if
+>>>>>> we use zboot? Maybe it is kexec-tool's responsibility to decompress
+>>>>>> the zboot kernel image?
+>>>>>>
+>>>>> Yes, very good point. Kexec kernels cannot boot via the EFI entry
+>>>>> point, as the boot services will already be shutdown. So the kexec
+>>>>> kernel needs to boot via the same entrypoint in the core kernel that
+>>>>> the EFI stub calls when it hands over.
+>>>>>
+>>>>> For the EFI zboot image in particular, we will need to teach kexec how
+>>>>> to decompress them. The zboot image has a header that
+>>>>> a) describes it as a EFI linux zimg
+>>>>> b) describes the start and end offset of the compressed payload
+>>>>> c) describes which compression algorithm was used.
+>>>>>
+>>>>> This means that any non-EFI loader (including kexec) should be able to
+>>>>> extract the inner PE/COFF image and decompress it. For arm64 and
+>>>>> RISC-V, this is sufficient as the EFI and raw images are the same. For
+>>>>> LoongArch, I suppose it means we need a way to enter the core kernel
+>>>>> directly via the entrypoint that the EFI stub uses when handing over
+>>>>> (and pass the original DT argument so the kexec kernel has access to
+>>>>> the EFI and ACPI firmware tables)
+>>>> OK, then is this implementation [1] acceptable? I remember that you
+>>>> said the MS-DOS header shouldn't contain other information, so I guess
+>>>> this is unacceptable?
+>>>>
+>>> No, this looks reasonable to me. I objected to using magic numbers in
+>>> the 'pure PE' view of the image, as it does not make sense for a pure
+>>> PE loader such as GRUB to rely on such metadata.
+>>>
+>>> In this case (like on arm64), we are dealing with something else: we
+>>> need to identify the image to the kernel itself, and here, using the
+>>> unused space in the MS-DOS header is fine.
+>>>
+>>>> [1] https://lore.kernel.org/loongarch/c4dbb14a-5580-1e47-3d15-5d2079e88404@loongson.cn/T/#mb8c1dc44f7fa2d3ef638877f0cd3f958f0be96ad
+>> OK, then there is no big problem here. And I found that arm64/riscv
+>> don't need the kernel entry point in the header. I don't know why, but
+>> I think it implies that a unified layout across architectures is
+>> unnecessary, and I prefer to put the kernel entry point before
+>> effective kernel size. :)
+>>
+> It is fine to put the entry point offset in the header. arm64 and
+> RISC-V don't need this because the first instructions are a pseudo-NOP
+> (an instruction that does nothing but its binary encoding looks like
+> 'MZ..') and a jump to the actual entry point.
 
-The title can be "LoongArch: Use acpi_arch_dma_setup() and remove
-ARCH_HAS_PHYS_TO_DMA", and please use resource_size() as arm64.
+FYI the same trick also works for LoongArch: the code "MZ\x00\x00" i.e. 
+00005a4d is in fact "ext.w.h $t1, $t6", which is going to simply trash 
+one temporary register without any other effect, so a similar jump to 
+the actual entrypoint could follow.
 
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+This instruction is available for both LA32 and LA64. The only subset 
+without it is the LA32 Primary, which is meant for university courses 
+and probably would never run UEFI, so the instruction is safe to use.
 
+P.S. If we'd go the extra mile just for ensuring the instruction works 
+on every possible LoongArch core, due to the prefix construction of 
+LoongArch encoding, we could just change the bytes toward the MSB (so we 
+keep the "MZ" with ease) and still only trash $t1. For example 
+"MZ\x10\x00" or 00105a4d is "add.w $t1, $t6, $fp", which is similarly 
+harmless, but this time it works on even coursework cores!
 
-Huacai
+-- 
+WANG "xen0n" Xuerui
 
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
-On Tue, Aug 30, 2022 at 11:01 AM Jianmin Lv <lvjianmin@loongson.cn> wrote:
->
-> Use _DMA defined in ACPI spec for translation between
-> DMA address and CPU address, and implement acpi_arch_dma_setup
-> for initializing dev->dma_range_map, where acpi_dma_get_range
-> is called for parsing _DMA.
->
-> e.g.
-> If we have two dma ranges:
-> cpu address      dma address    size         offset
-> 0x200080000000   0x2080000000   0x400000000  0x1fe000000000
-> 0x400080000000   0x4080000000   0x400000000  0x3fc000000000
->
-> _DMA for pci devices should be declared in host bridge as
-> flowing:
->
-> Name (_DMA, ResourceTemplate() {
->         QWordMemory (ResourceProducer,
->             PosDecode,
->             MinFixed,
->             MaxFixed,
->             NonCacheable,
->             ReadWrite,
->             0x0,
->             0x4080000000,
->             0x447fffffff,
->             0x3fc000000000,
->             0x400000000,
->             ,
->             ,
->             )
->
->         QWordMemory (ResourceProducer,
->             PosDecode,
->             MinFixed,
->             MaxFixed,
->             NonCacheable,
->             ReadWrite,
->             0x0,
->             0x2080000000,
->             0x247fffffff,
->             0x1fe000000000,
->             0x400000000,
->             ,
->             ,
->             )
->     })
->
-> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-> ---
->  arch/loongarch/Kconfig        |  1 -
->  arch/loongarch/kernel/dma.c   | 52 +++++++++++++++++--------------------------
->  arch/loongarch/kernel/setup.c |  2 +-
->  include/linux/acpi.h          |  9 +++++---
->  4 files changed, 28 insertions(+), 36 deletions(-)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index b57daee..9dedcf9 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -7,7 +7,6 @@ config LOONGARCH
->         select ARCH_ENABLE_MEMORY_HOTPLUG
->         select ARCH_ENABLE_MEMORY_HOTREMOVE
->         select ARCH_HAS_ACPI_TABLE_UPGRADE      if ACPI
-> -       select ARCH_HAS_PHYS_TO_DMA
->         select ARCH_HAS_PTE_SPECIAL
->         select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
->         select ARCH_INLINE_READ_LOCK if !PREEMPTION
-> diff --git a/arch/loongarch/kernel/dma.c b/arch/loongarch/kernel/dma.c
-> index 8c9b531..7a9c6a9 100644
-> --- a/arch/loongarch/kernel/dma.c
-> +++ b/arch/loongarch/kernel/dma.c
-> @@ -2,39 +2,29 @@
->  /*
->   * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
->   */
-> -#include <linux/init.h>
-> +#include <linux/acpi.h>
->  #include <linux/dma-direct.h>
-> -#include <linux/dma-mapping.h>
-> -#include <linux/dma-map-ops.h>
-> -#include <linux/swiotlb.h>
->
-> -#include <asm/bootinfo.h>
-> -#include <asm/dma.h>
-> -#include <asm/loongson.h>
-> -
-> -/*
-> - * We extract 4bit node id (bit 44~47) from Loongson-3's
-> - * 48bit physical address space and embed it into 40bit.
-> - */
-> -
-> -static int node_id_offset;
-> -
-> -dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
-> -{
-> -       long nid = (paddr >> 44) & 0xf;
-> -
-> -       return ((nid << 44) ^ paddr) | (nid << node_id_offset);
-> -}
-> -
-> -phys_addr_t dma_to_phys(struct device *dev, dma_addr_t daddr)
-> +void acpi_arch_dma_setup(struct device *dev)
->  {
-> -       long nid = (daddr >> node_id_offset) & 0xf;
-> +       int ret;
-> +       u64 mask, end = 0;
-> +       const struct bus_dma_region *map = NULL;
-> +
-> +       ret = acpi_dma_get_range(dev, &map);
-> +       if (!ret && map) {
-> +               const struct bus_dma_region *r = map;
-> +
-> +               for (end = 0; r->size; r++) {
-> +                       if (r->dma_start + r->size - 1 > end)
-> +                               end = r->dma_start + r->size - 1;
-> +               }
-> +
-> +               mask = DMA_BIT_MASK(ilog2(end) + 1);
-> +               dev->bus_dma_limit = end;
-> +               dev->dma_range_map = map;
-> +               dev->coherent_dma_mask = min(dev->coherent_dma_mask, mask);
-> +               *dev->dma_mask = min(*dev->dma_mask, mask);
-> +       }
->
-> -       return ((nid << node_id_offset) ^ daddr) | (nid << 44);
-> -}
-> -
-> -void __init plat_swiotlb_setup(void)
-> -{
-> -       swiotlb_init(true, SWIOTLB_VERBOSE);
-> -       node_id_offset = ((readl(LS7A_DMA_CFG) & LS7A_DMA_NODE_MASK) >> LS7A_DMA_NODE_SHF) + 36;
->  }
-> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-> index c74860b..974f085 100644
-> --- a/arch/loongarch/kernel/setup.c
-> +++ b/arch/loongarch/kernel/setup.c
-> @@ -247,7 +247,7 @@ static void __init arch_mem_init(char **cmdline_p)
->         sparse_init();
->         memblock_set_bottom_up(true);
->
-> -       plat_swiotlb_setup();
-> +       swiotlb_init(true, SWIOTLB_VERBOSE);
->
->         dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
->
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 34e0545..33977b87 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -278,14 +278,17 @@ int acpi_table_parse_madt(enum acpi_madt_type id,
->
->  void acpi_numa_x2apic_affinity_init(struct acpi_srat_x2apic_cpu_affinity *pa);
->
-> +#if defined(CONFIG_ARM64) || defined(CONFIG_LOONGARCH)
-> +void acpi_arch_dma_setup(struct device *dev);
-> +#else
-> +static inline void acpi_arch_dma_setup(struct device *dev) { }
-> +#endif
-> +
->  #ifdef CONFIG_ARM64
->  void acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa);
-> -void acpi_arch_dma_setup(struct device *dev);
->  #else
->  static inline void
->  acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa) { }
-> -static inline void
-> -acpi_arch_dma_setup(struct device *dev) { }
->  #endif
->
->  int acpi_numa_memory_affinity_init (struct acpi_srat_mem_affinity *ma);
-> --
-> 1.8.3.1
->
->
