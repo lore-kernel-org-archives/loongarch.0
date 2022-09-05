@@ -1,128 +1,89 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88AAF7E
-	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 02:52:49 +0000 (UTC)
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxkOB6ZBVj72YRAA--.6983S3;
-	Mon, 05 Sep 2022 10:52:43 +0800 (CST)
-Subject: Re: [PATCH 1/3] LoongArch: tools: Add relocs tool support
-To: Xi Ruoyao <xry111@xry111.site>, Jinyang He <hejinyang@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>
-References: <1662113335-14282-1-git-send-email-tangyouling@loongson.cn>
- <1662113335-14282-2-git-send-email-tangyouling@loongson.cn>
- <c9880165f0355fc3be3ec23153b43ad33e558b5d.camel@xry111.site>
- <4df8a26c49a35c1fce36d80c370f738fa71a2bef.camel@xry111.site>
- <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
- <78a4a6b0970c309daa336a2329e69d28df486552.camel@xry111.site>
- <fffdd2ac-4ba6-8eb3-f269-b22a3d9c32f6@loongson.cn>
- <0b2d115c42ff6cb9b8c65d852ec2f0746ca6e8d9.camel@xry111.site>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <d852f590-95b4-3fd1-924a-68c0a6bb1b1b@loongson.cn>
-Date: Mon, 5 Sep 2022 10:52:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1618E7E
+	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 02:56:00 +0000 (UTC)
+Received: from [10.20.42.105] (unknown [10.20.42.105])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxvms6ZRVj2GcRAA--.60790S3;
+	Mon, 05 Sep 2022 10:55:54 +0800 (CST)
+Subject: Re: [PATCH V3 0/2] DMA: update acpi_dma_get_range to return dma map
+ regions
+From: Jianmin Lv <lvjianmin@loongson.cn>
+To: lpieralisi@kernel.org, robin.murphy@arm.com, chenhuacai@loongson.cn
+Cc: guohanjun@huawei.com, sudeep.holla@arm.com, rafael@kernel.org,
+ lenb@kernel.org, robert.moore@intel.com, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, loongarch@lists.linux.dev
+References: <20220830030139.29899-1-lvjianmin@loongson.cn>
+Message-ID: <7ef64254-ed0f-be33-71c1-3f78bdf31238@loongson.cn>
+Date: Mon, 5 Sep 2022 10:55:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <0b2d115c42ff6cb9b8c65d852ec2f0746ca6e8d9.camel@xry111.site>
+In-Reply-To: <20220830030139.29899-1-lvjianmin@loongson.cn>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8CxkOB6ZBVj72YRAA--.6983S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxXrW8Cw18tw4kCr17WrWfKrg_yoW5Ar45pr
-	W5Ka1qqws7GF17ZF10vw1I9FW3K3ykG3W3Wan8trWFy3ZIvr93tw1UKa13WFy2krn3tF4j
-	vrWYq3WxWF1YyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
-	WxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
-	zVAYIcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjfUO_MaUUUUU
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dxvms6ZRVj2GcRAA--.60790S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrW7Gr1kZFWkuFyDCryfWFg_yoW8GrWrpF
+	yfCrsxGr1UKrWfJry3Aw1Uur1Yqw1fA34xJFZrtrykJF1jvr17JryUJ3WxZFyUAFy7Wr40
+	qF98Ja4rGF1UAw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBS1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+	z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4
+	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+	xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY
+	0VAS07AlzVAYIcxG8wCY02Avz4vE-syl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaV
+	Av8VW5Wr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMI
+	IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
+	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+	Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 
-Hi, Ruoyao
+Hi, all,
 
-On 09/04/2022 12:53 AM, Xi Ruoyao wrote:
-> On Sun, 2022-09-04 at 00:23 +0800, Jinyang He wrote:
->> On 2022/9/3 18:49, Xi Ruoyao wrote:
->>
->>> On Sat, 2022-09-03 at 09:57 +0800, Youling Tang wrote:
->>>>>> Unlike (pre-r6) MIPS, LoongArch has a complete support for PIC, and
->>>>>> currently LoongArch toolchain always produces PIC (except, if -Wa,-mla-
->>>>>> {local,global}-with-abs or la.abs macros are used explicitly).
->>>>>>
->>>>>> So would it be easier to review and correct the uses of "la.abs" in the
->>>>>> code, and make the main kernel image a real PIE?  Then we can load it
->>>>>> everywhere w/o any need to do relocation at load time.
->>>> At the beginning I also wanted to make the main kernel image a real PIE
->>>> and tried it, some of the "la.abs" can be modified, but I encountered
->>>> difficulties in modifying the  exception handling code part, the kernel
->>>> will not  boot after modification :(, I will continue to work hard try.
->
->>> I just tried the same thing and get the same result :(.  Will spend
->>> several hours reading the LoongArch manual about exception...
->
-> The reason is the handler code is not executed in linker address, but
-> copied elsewhere.  Then PC-relative offset is broken.  I managed to work
-> around it by creating a trampoline and jump into the handler, instead of
-> copy the handler code.  Then I could remove most "la.abs" occurrence
-> (except two in kernel entry point, which seem deliberately used):
->
-> - https://github.com/xry111/linux/commit/56a433f
-> - https://github.com/xry111/linux/commit/48203e6
->
+Is there anything else in this patch series that needs to be modified?
 
-Thank you very much.
+Thanks.
+Jianmin.
 
-After applying the above two patches and the following modifications,
-the relocation can be successful after removing the
-apply_r_loongarch_la_rel (for la.abs relocation) implementation. I
-tested it in the qemu environment.
 
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -113,9 +113,11 @@ SYM_CODE_START(smpboot_entry)
-         li.d            t0, CSR_DMW1_INIT       # CA, PLV0
-         csrwr           t0, LOONGARCH_CSR_DMWIN1
-
--       la.abs          t0, 0f
--       jr              t0
--0:
-+       li.d            t0, CACHE_BASE
-+       pcaddi          t1, 0
-+       or              t0, t0, t1
-+       jirl            zero, t0, 0xc
-
-Youling.
-
-> Using the trampoline in handler table will definitely lead to sub-
-> optimal performance. I just use it as a proof-of-concept. Later we may
-> use some assembler trick to generate hard-coded handler table with
-> correct PC-relative offsets.
->
->> The following ideas are based on experience, without validation. Patches
->> show that three types of relocation are needed to be done.
->> 1, GOT is generated by toolchain, so  I think eliminating them by
->> toolchain is better.
->
-> https://gcc.gnu.org/pipermail/gcc-patches/2022-September/600797.html
->
-> I stop to read the mail here because it's 00:52 AM now :).
->
->> 2, Ex_table is generated but striped relocation info. We can plays pcrel
->> way to resolve this problem. One of ways like follows, (pseudo-code)
->
-> /* snip */
->
->
+On 2022/8/30 上午11:01, Jianmin Lv wrote:
+> The patch series changed acpi_dma_get_range to return dma regions
+> as of_dma_get_range, so that dev->dma_range_map can be initialized
+> conveniently.
+> 
+> And acpi_arch_dma_setup for ARM64 is changed wih removing dma_base
+> and size from it's parameters.
+> 
+> Remove ARCH_HAS_PHYS_TO_DMA for LoongArch and use generic
+> phys_to_dma/dma_to_phys in include/linux/dma-direct.h.
+> 
+> V1 -> V2
+> - Removed dma_base and size from acpi_arch_dma_setup' parameters
+> - Add patch to remove ARCH_HAS_PHYS_TO_DMA for LoongArch
+> 
+> V2 -> V3
+> - Add kerneldoc for acpi_dma_get_range changing
+> - Remove redundant code in acpi_arch_dma_setup, and check map
+> 
+> 
+> Jianmin Lv (2):
+>    ACPI / scan: Support multiple dma windows with different offsets
+>    LoongArch: Remove ARCH_HAS_PHYS_TO_DMA
+> 
+>   arch/loongarch/Kconfig        |  1 -
+>   arch/loongarch/kernel/dma.c   | 52 +++++++++++++++++-------------------------
+>   arch/loongarch/kernel/setup.c |  2 +-
+>   drivers/acpi/arm64/dma.c      | 29 ++++++++++++++---------
+>   drivers/acpi/scan.c           | 53 +++++++++++++++++++------------------------
+>   include/acpi/acpi_bus.h       |  3 +--
+>   include/linux/acpi.h          | 12 ++++++----
+>   7 files changed, 71 insertions(+), 81 deletions(-)
+> 
 
