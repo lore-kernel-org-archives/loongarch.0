@@ -1,66 +1,143 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BEDF7E
-	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 03:01:36 +0000 (UTC)
-Received: from [10.20.42.105] (unknown [10.20.42.105])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXWuIZhVjvmgRAA--.10740S3;
-	Mon, 05 Sep 2022 11:01:29 +0800 (CST)
-Subject: Re: [PATCH V1 0/2] irqchip: Support to set irq type for ACPI path
-From: Jianmin Lv <lvjianmin@loongson.cn>
-To: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
-References: <1660615291-35409-1-git-send-email-lvjianmin@loongson.cn>
-Message-ID: <7c7c8607-fe35-cd56-519a-d770c1713931@loongson.cn>
-Date: Mon, 5 Sep 2022 11:01:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9B67E
+	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 03:50:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC209C43140
+	for <loongarch@lists.linux.dev>; Mon,  5 Sep 2022 03:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1662349856;
+	bh=FFIFXKojIan6aTT8m9sEDD6GLCh66+aG+1K1XpN+gFY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ImVmfgx0eoogiDhG1UlcauHa9Miyzn9oijzfritB+8j9K82LFh5svLKJQMYpjNv/M
+	 DBzxO0IGOIhDzrvR9MH4fWip4VXYk5xl5Kr3Vuhx5aZmXp4t5FJ+3i2nXRcDlDuP/+
+	 WKsrhBoLJp3slm06IXdMysAL+/Pyn/NrIXm1DvvUEjAIFADd2IxzN08GJM3KpjviSL
+	 LCUvVeCgJenrERUufSHRLzkPUom85AuI72Qf2TJeZAmUWcilHIBQ/QLdYgRnOOimRU
+	 /kWTcTf6oVcYdqLL+6eU5KtuKU/M/odLJtt2R166r6RKRzNXfKrJ/wJXHzLNUf+1yj
+	 dKtBEE6q6i3VA==
+Received: by mail-vs1-f48.google.com with SMTP id v2so4122838vsb.4
+        for <loongarch@lists.linux.dev>; Sun, 04 Sep 2022 20:50:56 -0700 (PDT)
+X-Gm-Message-State: ACgBeo35dHC7gA5rqA0SdAZZ6V8yRqN3TWDyNsRpuKVVC/vwY6frnlhx
+	ZaN0nRXbiPmlu7UZDxU+anTVQvcB0ejh34i3sKk=
+X-Google-Smtp-Source: AA6agR5XncrweG+t391bUB1ly+B9VrfB6NbqI9jaTSE1sk7hSrSx+OY2fOEyga32rp6hoqvWxLI6T5lWjcsnxTvbhdM=
+X-Received: by 2002:a67:d49e:0:b0:390:dccf:23c8 with SMTP id
+ g30-20020a67d49e000000b00390dccf23c8mr11802078vsj.59.1662349855744; Sun, 04
+ Sep 2022 20:50:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1660615291-35409-1-git-send-email-lvjianmin@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXWuIZhVjvmgRAA--.10740S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYg7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
-	bIxvr21lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_XrWUJr
-	1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU1a9aPUUUUU==
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+References: <20220819102037.2697798-1-chenhuacai@loongson.cn>
+ <9b6f0aeaebbd36882b5b40d655f9ccd20c7be496.camel@xry111.site>
+ <CAMj1kXFOd+gMHbi6MH0KHWkBEKN9V0LeZbyGRw8h630OxtMrdA@mail.gmail.com>
+ <CAAhV-H6MR=rWhecY_uuiXAysED-BBJhKhGHj2cCkefJiPOo-ZQ@mail.gmail.com>
+ <CAAhV-H4KXVUBgNoQxOFiEj2AH-ojhnrEJ8QLvNrALY69MhXF3w@mail.gmail.com> <CAMj1kXHJv_6mLhMikg+ic7=EUABLdrX3f__eBbHntrpGHjRfXg@mail.gmail.com>
+In-Reply-To: <CAMj1kXHJv_6mLhMikg+ic7=EUABLdrX3f__eBbHntrpGHjRfXg@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 5 Sep 2022 11:50:44 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4WTCRU9qShDp57AZ2DG1uz+=GTz14zyAUaqVDjXrNABA@mail.gmail.com>
+Message-ID: <CAAhV-H4WTCRU9qShDp57AZ2DG1uz+=GTz14zyAUaqVDjXrNABA@mail.gmail.com>
+Subject: Re: [PATCH V3] LoongArch: Add efistub booting support
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
+	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-efi <linux-efi@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Marc,
+Hi, Ard,
 
-Is there anything in this patch series that needs to be changed?
+On Mon, Sep 5, 2022 at 5:59 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Sun, 4 Sept 2022 at 15:24, Huacai Chen <chenhuacai@kernel.org> wrote:
+> >
+> > Hi, Ard,
+> >
+> > On Thu, Sep 1, 2022 at 6:40 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+> > >
+> > > Hi, Ard,
+> > >
+> > > On Sat, Aug 27, 2022 at 3:14 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > >
+> > > > On Sat, 27 Aug 2022 at 06:41, Xi Ruoyao <xry111@xry111.site> wrote:
+> > > > >
+> > > > > Tested V3 with the magic number check manually removed in my GRUB build.
+> > > > > The system boots successfully.  I've not tested Arnd's zBoot patch yet.
+> > > >
+> > > > I am Ard not Arnd :-)
+> > > >
+> > > > Please use this branch when testing the EFI decompressor:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-decompressor-v4
+> > > The root cause of LoongArch zboot boot failure has been found, it is a
+> > > binutils bug, latest toolchain with the below patch can solve the
+> > > problem.
+> > >
+> > > diff --git a/bfd/elfnn-loongarch.c b/bfd/elfnn-loongarch.c
+> > > index 5b44901b9e0..fafdc7c7458 100644
+> > > --- a/bfd/elfnn-loongarch.c
+> > > +++ b/bfd/elfnn-loongarch.c
+> > > @@ -2341,9 +2341,10 @@ loongarch_elf_relocate_section (bfd
+> > > *output_bfd, struct bfd_link_info *info,
+> > >      case R_LARCH_SOP_PUSH_PLT_PCREL:
+> > >        unresolved_reloc = false;
+> > >
+> > > -      if (resolved_to_const)
+> > > +      if (!is_undefweak && resolved_to_const)
+> > >          {
+> > >            relocation += rel->r_addend;
+> > > +          relocation -= pc;
+> > >            break;
+> > >          }
+> > >        else if (is_undefweak)
+> > >
+> > >
+> > > Huacai
+> > Now the patch is submitted here:
+> > https://sourceware.org/pipermail/binutils/2022-September/122713.html
+> >
+>
+> Great. Given the severity of this bug, I imagine that building the
+> LoongArch kernel will require a version of binutils that carries this
+> fix.
+>
+> Therefore, i will revert back to the original approach for accessing
+> uncompressed_size, using an extern declaration with an __aligned(1)
+> attribute.
+>
+> > And I have some other questions about kexec: kexec should jump to the
+> > elf entry or the pe entry? I think is the elf entry, because if we
+> > jump to the pe entry, then SVAM will be executed twice (but it should
+> > be executed only once). However, how can we jump to the elf entry if
+> > we use zboot? Maybe it is kexec-tool's responsibility to decompress
+> > the zboot kernel image?
+> >
+>
+> Yes, very good point. Kexec kernels cannot boot via the EFI entry
+> point, as the boot services will already be shutdown. So the kexec
+> kernel needs to boot via the same entrypoint in the core kernel that
+> the EFI stub calls when it hands over.
+>
+> For the EFI zboot image in particular, we will need to teach kexec how
+> to decompress them. The zboot image has a header that
+> a) describes it as a EFI linux zimg
+> b) describes the start and end offset of the compressed payload
+> c) describes which compression algorithm was used.
+>
+> This means that any non-EFI loader (including kexec) should be able to
+> extract the inner PE/COFF image and decompress it. For arm64 and
+> RISC-V, this is sufficient as the EFI and raw images are the same. For
+> LoongArch, I suppose it means we need a way to enter the core kernel
+> directly via the entrypoint that the EFI stub uses when handing over
+> (and pass the original DT argument so the kexec kernel has access to
+> the EFI and ACPI firmware tables)
+OK, then is this implementation [1] acceptable? I remember that you
+said the MS-DOS header shouldn't contain other information, so I guess
+this is unacceptable?
 
-Thanks.
-Jianmin.
+[1] https://lore.kernel.org/loongarch/c4dbb14a-5580-1e47-3d15-5d2079e88404@loongson.cn/T/#mb8c1dc44f7fa2d3ef638877f0cd3f958f0be96ad
 
-
-On 2022/8/16 上午10:01, Jianmin Lv wrote:
-> For ACPI path of pch-pic and liointc driver, setting irq
-> type is not supported yet, so the patch series add code
-> to implement it.
-> 
-> Jianmin Lv (2):
->    irqchip/loongson-pch-pic: Support to set irq type for ACPI path
->    LoongArch: Support to set irq type for liointc
-> 
->   drivers/acpi/pci_irq.c                 |  3 ++-
->   drivers/irqchip/irq-loongson-liointc.c |  7 ++++++-
->   drivers/irqchip/irq-loongson-pch-pic.c | 10 ++++++----
->   3 files changed, 14 insertions(+), 6 deletions(-)
-> 
-
+Huacai
