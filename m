@@ -1,84 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83F417D1
-	for <loongarch@lists.linux.dev>; Tue,  6 Sep 2022 05:57:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F06BC433D7
-	for <loongarch@lists.linux.dev>; Tue,  6 Sep 2022 05:57:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1662443863;
-	bh=hQca5NtX2FBlPGk+GSQpzGG+VRJ3Z904jrv6Nzdt/3E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SFtooTkiyMSeuxJ7f1gN9skE0ZcbsMoAdEObqRVlAgE+qqRi8+Y7L0MkEdLz7yImw
-	 DPpisMT4vQUEgLG3x7UMXLspTdF07jST7y2Q+YdRl9WmK5tEa/MtkH+ta9IKcA4Ufg
-	 W+UdliA3eRypOxqgRsfxVSUhgjl5jLmVXNw6fsptfMbgUdYS/p484p7gwivWNQn9dX
-	 RYqjSNNEQ89o6JQ9w06jSUhUHv7qwIca/JJAz4mSaUZGC4tN31EJrFuZXf/NTADuCT
-	 muNViFtcn93xCWQ86S9Ixuzo0nofaDg1rWHwkY8GBuIK+dMHWHYflVChAbqxlf6Vih
-	 3N5uKlAFWLm1g==
-Received: by mail-ua1-f46.google.com with SMTP id p17so3221783uao.11
-        for <loongarch@lists.linux.dev>; Mon, 05 Sep 2022 22:57:43 -0700 (PDT)
-X-Gm-Message-State: ACgBeo0EJPScLSvW8WHJtYWMw/DCI6C+y01FKH6ehKc/jrTO6WSaXa4L
-	TZPFe6FjPQ3Z/JorlYZ2rJJW1GJ6WtwFgf1GrBo=
-X-Google-Smtp-Source: AA6agR7Qo1zXs+K6mR1O8A31AAZ4nJZysXhwJLbVHgukToP4OsQw3zKXMyPs74Vq8WWlLFPb/sc7svi8F6oSnwLSXzI=
-X-Received: by 2002:ab0:d82:0:b0:39e:db4c:c80c with SMTP id
- i2-20020ab00d82000000b0039edb4cc80cmr15008458uak.22.1662443862305; Mon, 05
- Sep 2022 22:57:42 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6207B17D1
+	for <loongarch@lists.linux.dev>; Tue,  6 Sep 2022 06:09:17 +0000 (UTC)
+Received: from [192.168.100.101] (unknown [171.223.99.244])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxX+Bh4xZjO3sSAA--.10300S3;
+	Tue, 06 Sep 2022 14:06:25 +0800 (CST)
+Message-ID: <4b001fde-6442-525e-4d8e-0ba7a85dccc5@loongson.cn>
+Date: Tue, 6 Sep 2022 14:06:10 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220830104806.128365-1-xry111@xry111.site> <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
- <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name> <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
- <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
- <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn> <bc323d8578d2f6ec580066bab181788b305ae3c3.camel@xry111.site>
- <CAAhV-H4N_XvmP9KA1M5crU44kHr33MZUVSsMY4Ugu5wQSv_LOQ@mail.gmail.com>
- <97291c0fe5a660c844475ff019c8db6af77ecf86.camel@xry111.site>
- <CAAhV-H6wzw-MV+h225rM4PfK_HY0tAdSXcUG-2Hx+_gfhzQ4_g@mail.gmail.com>
- <ae2652c5e140d407d523d7f35bee672cebe1b7a2.camel@xry111.site>
- <CAAhV-H56TQeU54JjvNQg2qZ6L1aSbzbaM2a=VQr9ZcAn4uthyg@mail.gmail.com>
- <8d0f96e2977c5c78f17bb410087f2aad986ef5a4.camel@xry111.site>
- <CAAhV-H7LjkY+XAzGs2K3544+CGOztCd4V8BuSjMJwZCgfBLDow@mail.gmail.com> <6a3e185eaaac4a1397abe43026004548d47ee305.camel@xry111.site>
-In-Reply-To: <6a3e185eaaac4a1397abe43026004548d47ee305.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 6 Sep 2022 13:57:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7wpyxeSDtBhxwRSJ+cenFkSRkvCLvajCXh6jwBB7JaQQ@mail.gmail.com>
-Message-ID: <CAAhV-H7wpyxeSDtBhxwRSJ+cenFkSRkvCLvajCXh6jwBB7JaQQ@mail.gmail.com>
-Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation types
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Jinyang He <hejinyang@loongson.cn>, 
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, Youling Tang <tangyouling@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH] LoongArch: Mark kernel stack padding as
+ TOP_OF_KERNEL_STACK_PADDING
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Oleg Nesterov <oleg@redhat.com>,
+ loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+References: <1662130897-13156-1-git-send-email-hejinyang@loongson.cn>
+ <CAAhV-H4vNpbHbT55z8_ub3q=Kv7eVb--7Q3pXz2te-1DVWhTWA@mail.gmail.com>
+ <b3040de0-9c89-a6ff-517e-6ebec71faaf7@loongson.cn>
+ <CAAhV-H5PA6n9a8A9unEitXEowUMEkrrHQoJXdBoOLZJ559-UDg@mail.gmail.com>
+From: Jinyang He <hejinyang@loongson.cn>
+In-Reply-To: <CAAhV-H5PA6n9a8A9unEitXEowUMEkrrHQoJXdBoOLZJ559-UDg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8DxX+Bh4xZjO3sSAA--.10300S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3Jw47Jw48KFW8tr4xGFWrGrg_yoW3GF15pF
+	9rA3ZrGF4UWF1Fyryjqwn8ZFyDtwsrKw12g3W3K34SyrnFvF1UWr10yFWDuF1jqw1kKF40
+	gF1Fqwsavay5Ja7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+	c2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvj
+	xUyQB_DUUUU
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-Hi, Ruoyao,
+Hi, Huacai,
 
-On Tue, Sep 6, 2022 at 1:01 PM Xi Ruoyao <xry111@xry111.site> wrote:
+On 2022/9/5 14:21, Huacai Chen wrote:
+> Hi, Jinyang,
 >
-> On Tue, 2022-09-06 at 12:43 +0800, Huacai Chen wrote:
-> > > Note that -fpic/-fPIC is "position-independent code *suitable for
-> > > use in a shared library*", while -fpie/-fPIE is more like just
-> > > "position-independent code".  The names of those options are confusing.
-> > > (When -fpic was invented first time, people mostly believed "PIC had
-> > > been only for shared libraries", so it's named -fpic instead of -shlib
-> > > or something.)  IMO in the EFI stub for other ports, -fpie should be
-> > > used instead of -fpic as well because the EFI stub is not similar to a
-> > > shared library in any means.
->
-> > You are right, but I guess that Ard doesn't want to squash the efistub
-> > change into the LoongArch efistub support patch. :)
->
-> It only changes cflags-$(CONFIG_LOONGARCH), which is LoongArch specific.
-> And arm64 is also using -fpie.
->
-> Should I send the one-line EFI stub change to linux-efi first?
-I know that should be changed. I just don't like the one-line patch
-and hope it can be squashed to the original patch. Of course Ard is
-free to decide how to handle it.
+> On Mon, Sep 5, 2022 at 1:39 PM Jinyang He <hejinyang@loongson.cn> wrote:
+>> On 2022/9/4 20:19, Huacai Chen wrote:
+>>
+>>> Hi, Jinyang,
+>>>
+>>> I don't know what scenarios this padding is used and how to use.
+>> To be frankly, I don't know its scenarios on LoongArch. It looks like
+>> the MIPS legacy. This patch only keep this padding, which can be
+>> easily modified if needed in the future. Now we can completely
+>> set it to 0 or remove it.  Actually, it can be thought of as another
+>> buffer for thread_info, while thread_info usually limit to one cache line.
+> We should make it clear how MIPS use it at least, then we can make a
+> decision whether to remove it or not, otherwise it may break
+> something.
+I think it is related to shadow parameters area of MIPS o32 Calling 
+Convention.
+This happened a long time ago, starting is 24, then 4*SZREG, and now 32.
+But there are few commit-logs I can find. See links. I guess these changes
+are due to the ABI, the macro SZREG in [2] is referenced to check stack
+alignment. And pt_regs and sigframe also have padding. If we can't find
+what will be broken, then we should cancel it rather than keeping it.
+We wouldn't have these paddings if we weren't inspired by MIPS.
 
-Huacai
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
+[1] https://elixir.bootlin.com/linux/1.1.82/source/arch/mips/kernel/head.S
+[2] https://elixir.bootlin.com/linux/2.1.44/source/arch/mips/kernel/head.S
+[3] https://elixir.bootlin.com/linux/2.1.73/source/arch/mips/kernel/head.S
+[4] 
+https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit?id=484889fc85a223ef56edc31828b86751b2296b7c
+>>> And
+>>> in x86 there is only TOP_OF_KERNEL_STACK_PADDING but we need
+>>> TOP_OF_KERNEL_STACK_PADDING and _TOP_OF_KERNEL_STACK_PADDING. Two
+>>> macros are hard to maintain.
+>> How about put it into loongarch.h if we need this macro?
+> That is good because we only need one macro, but you can research
+> whether there is a better place.
+
+As asm and C code need it, how about put it in output_thread_info_defines?
+
+Thanks,
+
+Jinyang
+
+>>> On Fri, Sep 2, 2022 at 11:01 PM Jinyang He <hejinyang@loongson.cn> wrote:
+>>>> Mark the top reserved bytes of the kernel stack by a macro. It collects
+>>>> that info so that we can modify or discarded (let it be 0) this padding
+>>>> if needed. Its name is referenced from x86_64. It seems that x86_64
+>>>> think the padding as extension on top of the kernel stack in other mode
+>>>> (normally the top is only pt_regs). Although LoongArch not produce
+>>>> such an extension at present, collect them because of the uncertainty
+>>>> of the future. Note that this patch does not modify macro size. It
+>>>> requires another strict evaluation.
+>>>>
+>>>> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/include/asm/processor.h  | 3 ++-
+>>>>    arch/loongarch/include/asm/ptrace.h     | 3 ++-
+>>>>    arch/loongarch/include/asm/stackframe.h | 1 +
+>>>>    arch/loongarch/kernel/head.S            | 2 +-
+>>>>    arch/loongarch/kernel/process.c         | 4 ++--
+>>>>    arch/loongarch/kernel/switch.S          | 2 +-
+>>>>    6 files changed, 9 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+>>>> index 1c4b43083..6077fd8e3 100644
+>>>> --- a/arch/loongarch/include/asm/processor.h
+>>>> +++ b/arch/loongarch/include/asm/processor.h
+>>>> @@ -193,8 +193,9 @@ static inline void flush_thread(void)
+>>>>
+>>>>    unsigned long __get_wchan(struct task_struct *p);
+>>>>
+>>>> +#define TOP_OF_KERNEL_STACK_PADDING 32
+>>>>    #define __KSTK_TOS(tsk) ((unsigned long)task_stack_page(tsk) + \
+>>>> -                        THREAD_SIZE - 32 - sizeof(struct pt_regs))
+>>>> +                        THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING - sizeof(struct pt_regs))
+>>>>    #define task_pt_regs(tsk) ((struct pt_regs *)__KSTK_TOS(tsk))
+>>>>    #define KSTK_EIP(tsk) (task_pt_regs(tsk)->csr_era)
+>>>>    #define KSTK_ESP(tsk) (task_pt_regs(tsk)->regs[3])
+>>>> diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+>>>> index 17838c6b7..cdceeaa60 100644
+>>>> --- a/arch/loongarch/include/asm/ptrace.h
+>>>> +++ b/arch/loongarch/include/asm/ptrace.h
+>>>> @@ -133,7 +133,8 @@ static inline void die_if_kernel(const char *str, struct pt_regs *regs)
+>>>>    #define current_pt_regs()                                              \
+>>>>    ({                                                                     \
+>>>>           unsigned long sp = (unsigned long)__builtin_frame_address(0);   \
+>>>> -       (struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1 - 32) - 1;      \
+>>>> +       (struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1 -               \
+>>>> +                          TOP_OF_KERNEL_STACK_PADDING) - 1;            \
+>>>>    })
+>>>>
+>>>>    /* Helpers for working with the user stack pointer */
+>>>> diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
+>>>> index 4ca953062..e9f849b29 100644
+>>>> --- a/arch/loongarch/include/asm/stackframe.h
+>>>> +++ b/arch/loongarch/include/asm/stackframe.h
+>>>> @@ -216,4 +216,5 @@
+>>>>           RESTORE_SP_AND_RET \docfi
+>>>>           .endm
+>>>>
+>>>> +#define _TOP_OF_KERNEL_STACK_PADDING 32
+>>>>    #endif /* _ASM_STACKFRAME_H */
+>>>> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+>>>> index eb3f641d5..290c53847 100644
+>>>> --- a/arch/loongarch/kernel/head.S
+>>>> +++ b/arch/loongarch/kernel/head.S
+>>>> @@ -75,7 +75,7 @@ SYM_CODE_START(kernel_entry)                  # kernel entry point
+>>>>
+>>>>           la.pcrel        tp, init_thread_union
+>>>>           /* Set the SP after an empty pt_regs.  */
+>>>> -       PTR_LI          sp, (_THREAD_SIZE - 32 - PT_SIZE)
+>>>> +       PTR_LI          sp, (_THREAD_SIZE - _TOP_OF_KERNEL_STACK_PADDING - PT_SIZE)
+>>>>           PTR_ADD         sp, sp, tp
+>>>>           set_saved_sp    sp, t0, t1
+>>>>           PTR_ADDI        sp, sp, -4 * SZREG      # init stack pointer
+>>>> diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+>>>> index 660492f06..b51cf7975 100644
+>>>> --- a/arch/loongarch/kernel/process.c
+>>>> +++ b/arch/loongarch/kernel/process.c
+>>>> @@ -129,7 +129,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+>>>>           unsigned long clone_flags = args->flags;
+>>>>           struct pt_regs *childregs, *regs = current_pt_regs();
+>>>>
+>>>> -       childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE - 32;
+>>>> +       childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;
+>>>>
+>>>>           /* set up new TSS. */
+>>>>           childregs = (struct pt_regs *) childksp - 1;
+>>>> @@ -236,7 +236,7 @@ bool in_task_stack(unsigned long stack, struct task_struct *task,
+>>>>                           struct stack_info *info)
+>>>>    {
+>>>>           unsigned long begin = (unsigned long)task_stack_page(task);
+>>>> -       unsigned long end = begin + THREAD_SIZE - 32;
+>>>> +       unsigned long end = begin + THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;
+>>>>
+>>>>           if (stack < begin || stack >= end)
+>>>>                   return false;
+>>>> diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
+>>>> index 43ebbc399..1797aceae 100644
+>>>> --- a/arch/loongarch/kernel/switch.S
+>>>> +++ b/arch/loongarch/kernel/switch.S
+>>>> @@ -26,7 +26,7 @@ SYM_FUNC_START(__switch_to)
+>>>>           move    tp, a2
+>>>>           cpu_restore_nonscratch a1
+>>>>
+>>>> -       li.w            t0, _THREAD_SIZE - 32
+>>>> +       li.w            t0, _THREAD_SIZE - _TOP_OF_KERNEL_STACK_PADDING
+>>>>           PTR_ADD         t0, t0, tp
+>>>>           set_saved_sp    t0, t1, t2
+>>>>
+>>>> --
+>>>> 2.31.1
+>>>>
+
