@@ -1,156 +1,96 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF466173
-	for <loongarch@lists.linux.dev>; Tue,  6 Sep 2022 02:21:15 +0000 (UTC)
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxBOKArRZjpVISAA--.9201S3;
-	Tue, 06 Sep 2022 10:16:33 +0800 (CST)
-Subject: Re: [PATCH 1/3] LoongArch: tools: Add relocs tool support
-To: Xi Ruoyao <xry111@xry111.site>, Jinyang He <hejinyang@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>
-References: <1662113335-14282-1-git-send-email-tangyouling@loongson.cn>
- <1662113335-14282-2-git-send-email-tangyouling@loongson.cn>
- <c9880165f0355fc3be3ec23153b43ad33e558b5d.camel@xry111.site>
- <4df8a26c49a35c1fce36d80c370f738fa71a2bef.camel@xry111.site>
- <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
- <78a4a6b0970c309daa336a2329e69d28df486552.camel@xry111.site>
- <fffdd2ac-4ba6-8eb3-f269-b22a3d9c32f6@loongson.cn>
- <0b2d115c42ff6cb9b8c65d852ec2f0746ca6e8d9.camel@xry111.site>
- <d852f590-95b4-3fd1-924a-68c0a6bb1b1b@loongson.cn>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <29cd929b-185b-1c4b-f200-08f2a724b59d@loongson.cn>
-Date: Tue, 6 Sep 2022 10:16:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDAB15CE
+	for <loongarch@lists.linux.dev>; Tue,  6 Sep 2022 04:27:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1662438428;
+	bh=0cI1Rk0Un9o1Oj+XrrEKadSkkh9tk38OEijCtoyUORY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=L3SS+6vzjxpAfuWaGy8T+L2LY/1t3nD6hbtrRRl0JyDEwty7AROoGIZCQunSQanUF
+	 6d8QrqDI9jG93ZX0E9CwwDGIKfktQqEokFCabb8YggjAWAzAZ0UNeonF0LLOEc0vrQ
+	 t6CoVqBp6DkGZs5nMYA3K2A8Ka4bj25oDCXK6AD0=
+Received: from [IPv6:240e:358:116c:5200:dc73:854d:832e:4] (unknown [IPv6:240e:358:116c:5200:dc73:854d:832e:4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 53EE466857;
+	Tue,  6 Sep 2022 00:27:03 -0400 (EDT)
+Message-ID: <8d0f96e2977c5c78f17bb410087f2aad986ef5a4.camel@xry111.site>
+Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation
+ types
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Jinyang He <hejinyang@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+ loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, Youling
+ Tang <tangyouling@loongson.cn>
+Date: Tue, 06 Sep 2022 12:26:56 +0800
+In-Reply-To: <CAAhV-H56TQeU54JjvNQg2qZ6L1aSbzbaM2a=VQr9ZcAn4uthyg@mail.gmail.com>
+References: <20220830104806.128365-1-xry111@xry111.site>
+	 <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
+	 <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name>
+	 <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
+	 <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
+	 <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn>
+	 <bc323d8578d2f6ec580066bab181788b305ae3c3.camel@xry111.site>
+	 <CAAhV-H4N_XvmP9KA1M5crU44kHr33MZUVSsMY4Ugu5wQSv_LOQ@mail.gmail.com>
+	 <97291c0fe5a660c844475ff019c8db6af77ecf86.camel@xry111.site>
+	 <CAAhV-H6wzw-MV+h225rM4PfK_HY0tAdSXcUG-2Hx+_gfhzQ4_g@mail.gmail.com>
+	 <ae2652c5e140d407d523d7f35bee672cebe1b7a2.camel@xry111.site>
+	 <CAAhV-H56TQeU54JjvNQg2qZ6L1aSbzbaM2a=VQr9ZcAn4uthyg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.45.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <d852f590-95b4-3fd1-924a-68c0a6bb1b1b@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8DxBOKArRZjpVISAA--.9201S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxXrW8GFWxAr15AF4rur4rKrg_yoWrJry5pr
-	W5GayUKFsrJF17ZFW0vw10qFWSg3ykGr13Wa1rtry0yF9IvF93tw4Utr43CFy29r1ktF4j
-	vrWYqa4I9r1rAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
-	WxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
-	zVAYIcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvj
-	DU0xZFpf9x0JUHWlkUUUUU=
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 
-Hi, Ruoyao & Jinyang
+On Tue, 2022-09-06 at 09:52 +0800, Huacai Chen wrote:
+> > =C2=A0 cflags-$(CONFIG_LOONGARCH)=C2=A0=C2=A0=C2=A0=C2=A0 :=3D $(subst =
+$(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -fpic
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -fpie
+> >=20
+> > =C2=A0 cflags-$(CONFIG_EFI_GENERIC_STUB) +=3D -I$(srctree)/scripts/dtc/=
+libfdt
+> >=20
+> > (Some explanation: -fpic does not only mean "generate position-
+> > independent code", but "generate position-independent code *suitable fo=
+r
+> > use in a shared library*".=C2=A0 On LoongArch -mdirect-extern-access ca=
+nnot
+> > work for a shared library so the "-fpic -mdirect-extern-access"
+> > combination is rejected deliberately.)
+> >=20
+> > Not sure how to submit these changes properly...=C2=A0 Do you prefer me=
+ to
+> > send V8 of this series or a single patch on top of your tree on GitHub?
 
-On 09/05/2022 10:52 AM, Youling Tang wrote:
-> Hi, Ruoyao
->
-> On 09/04/2022 12:53 AM, Xi Ruoyao wrote:
->> On Sun, 2022-09-04 at 00:23 +0800, Jinyang He wrote:
->>> On 2022/9/3 18:49, Xi Ruoyao wrote:
->>>
->>>> On Sat, 2022-09-03 at 09:57 +0800, Youling Tang wrote:
->>>>>>> Unlike (pre-r6) MIPS, LoongArch has a complete support for PIC, and
->>>>>>> currently LoongArch toolchain always produces PIC (except, if
->>>>>>> -Wa,-mla-
->>>>>>> {local,global}-with-abs or la.abs macros are used explicitly).
->>>>>>>
->>>>>>> So would it be easier to review and correct the uses of "la.abs"
->>>>>>> in the
->>>>>>> code, and make the main kernel image a real PIE?  Then we can
->>>>>>> load it
->>>>>>> everywhere w/o any need to do relocation at load time.
->>>>> At the beginning I also wanted to make the main kernel image a real
->>>>> PIE
->>>>> and tried it, some of the "la.abs" can be modified, but I encountered
->>>>> difficulties in modifying the  exception handling code part, the
->>>>> kernel
->>>>> will not  boot after modification :(, I will continue to work hard
->>>>> try.
->>
->>>> I just tried the same thing and get the same result :(.  Will spend
->>>> several hours reading the LoongArch manual about exception...
->>
->> The reason is the handler code is not executed in linker address, but
->> copied elsewhere.  Then PC-relative offset is broken.  I managed to work
->> around it by creating a trampoline and jump into the handler, instead of
->> copy the handler code.  Then I could remove most "la.abs" occurrence
->> (except two in kernel entry point, which seem deliberately used):
->>
->> - https://github.com/xry111/linux/commit/56a433f
->> - https://github.com/xry111/linux/commit/48203e6
->>
->
-> Thank you very much.
->
-> After applying the above two patches and the following modifications,
-> the relocation can be successful after removing the
-> apply_r_loongarch_la_rel (for la.abs relocation) implementation. I
-> tested it in the qemu environment.
->
-> --- a/arch/loongarch/kernel/head.S
-> +++ b/arch/loongarch/kernel/head.S
-> @@ -113,9 +113,11 @@ SYM_CODE_START(smpboot_entry)
->         li.d            t0, CSR_DMW1_INIT       # CA, PLV0
->         csrwr           t0, LOONGARCH_CSR_DMWIN1
->
-> -       la.abs          t0, 0f
-> -       jr              t0
-> -0:
-> +       li.d            t0, CACHE_BASE
-> +       pcaddi          t1, 0
-> +       or              t0, t0, t1
-> +       jirl            zero, t0, 0xc
->
-> Youling.
->
->> Using the trampoline in handler table will definitely lead to sub-
->> optimal performance. I just use it as a proof-of-concept. Later we may
->> use some assembler trick to generate hard-coded handler table with
->> correct PC-relative offsets.
->>
->>> The following ideas are based on experience, without validation. Patches
->>> show that three types of relocation are needed to be done.
->>> 1, GOT is generated by toolchain, so  I think eliminating them by
->>> toolchain is better.
->>
->> https://gcc.gnu.org/pipermail/gcc-patches/2022-September/600797.html
->>
->> I stop to read the mail here because it's 00:52 AM now :).
->>
->>> 2, Ex_table is generated but striped relocation info. We can plays pcrel
->>> way to resolve this problem. One of ways like follows, (pseudo-code)
+> Don't need V8, I will squash it into the previous patch myself. But
+> can we keep efistub as is?
 
-Switch to relative exception tables:
+No, we can't allow -mdirect-extern-access -fpic on LoongArch because
+without copy relocation such a combination just does not make sense (i.
+e. we cannot find a sensible way to handle such a combination in GCC).=20
+So such a combination will cause GCC refuse to run.
 
-https://github.com/tangyouling/linux/commit/6525b8da
-https://github.com/tangyouling/linux/commit/b6ac0827
+Note that -fpic/-fPIC is "position-independent code *suitable for
+use in a shared library*", while -fpie/-fPIE is more like just
+"position-independent code".  The names of those options are confusing.
+(When -fpic was invented first time, people mostly believed "PIC had
+been only for shared libraries", so it's named -fpic instead of -shlib
+or something.)  IMO in the EFI stub for other ports, -fpie should be
+used instead of -fpic as well because the EFI stub is not similar to a
+shared library in any means.
 
-Will switch to the relative exception tables after applying the above
-two patches. So there is no need to relocate the exception table
-(remove relocate_exception_table).
-
-Now we can remove the relocation of la.abs , got and ex_table, but
-still need to relocate LARCH_64. Is there anything else that needs to
-be modified to eliminate this relocation?
-
-Thanks,
-Youling.
-
->>
->> /* snip */
->>
->>
->
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
