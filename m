@@ -1,111 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69EA173
-	for <loongarch@lists.linux.dev>; Tue,  6 Sep 2022 01:52:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EF12C433B5
-	for <loongarch@lists.linux.dev>; Tue,  6 Sep 2022 01:52:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1662429175;
-	bh=/noFKegj2r7vzm3Cg/KG54hJDZiJWhqqG0lF37CpoU8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=q/92qHk0oVRlpjP2Au9ov80Tlk8wWKVKuyenSnL4KtqEZ7P/MY2SSnm4GQ6WqvF/A
-	 BxrJHHTSz9eB7NvKGsuYicts7R4hFLe05iK3xoV5R5WNPizITp/IwKDEa8IRj5fBYY
-	 DQ4A3p67FwKq83XrXfHx15REYj7E3IEJd/LX3mrKwnGtAW99f3eSqzHW1+f3OfYWct
-	 +yU0ApiM3TMQ+21XgHrcYFJQwZYjvUiK1HSMNl7HT6P6Too6wZgoyVBqvZnJ6QkZhm
-	 +EaExevflgWoZl7uxO97QUyb/Mq2cPjvM0xtqLsKz+ZZDY/2ZVdrq0hFP1u4W4BTJn
-	 BQ4SM5c1uGA9w==
-Received: by mail-vs1-f43.google.com with SMTP id d126so10253617vsd.13
-        for <loongarch@lists.linux.dev>; Mon, 05 Sep 2022 18:52:55 -0700 (PDT)
-X-Gm-Message-State: ACgBeo1yaqtMK4MLl1y5KjioPNTV8O7QHWXl9HL+Dfn1TCFpMq9Tq/g0
-	8AhlPdFQEdf/DnN7Q9FXnqMOeA5KnJLZczVOThU=
-X-Google-Smtp-Source: AA6agR7qeY/5HvBKtkZKMekX+Bp/6eEv4hf6LFfnhf0LudEX5g+8uklAK/Uv3inYSIJmhftVARYp389xQ/7Jx6BxvyY=
-X-Received: by 2002:a05:6102:30bc:b0:390:da09:3a8c with SMTP id
- y28-20020a05610230bc00b00390da093a8cmr13529685vsd.84.1662429174591; Mon, 05
- Sep 2022 18:52:54 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF466173
+	for <loongarch@lists.linux.dev>; Tue,  6 Sep 2022 02:21:15 +0000 (UTC)
+Received: from [10.130.0.193] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxBOKArRZjpVISAA--.9201S3;
+	Tue, 06 Sep 2022 10:16:33 +0800 (CST)
+Subject: Re: [PATCH 1/3] LoongArch: tools: Add relocs tool support
+To: Xi Ruoyao <xry111@xry111.site>, Jinyang He <hejinyang@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>
+References: <1662113335-14282-1-git-send-email-tangyouling@loongson.cn>
+ <1662113335-14282-2-git-send-email-tangyouling@loongson.cn>
+ <c9880165f0355fc3be3ec23153b43ad33e558b5d.camel@xry111.site>
+ <4df8a26c49a35c1fce36d80c370f738fa71a2bef.camel@xry111.site>
+ <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
+ <78a4a6b0970c309daa336a2329e69d28df486552.camel@xry111.site>
+ <fffdd2ac-4ba6-8eb3-f269-b22a3d9c32f6@loongson.cn>
+ <0b2d115c42ff6cb9b8c65d852ec2f0746ca6e8d9.camel@xry111.site>
+ <d852f590-95b4-3fd1-924a-68c0a6bb1b1b@loongson.cn>
+Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <29cd929b-185b-1c4b-f200-08f2a724b59d@loongson.cn>
+Date: Tue, 6 Sep 2022 10:16:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220830104806.128365-1-xry111@xry111.site> <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
- <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name> <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
- <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
- <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn> <bc323d8578d2f6ec580066bab181788b305ae3c3.camel@xry111.site>
- <CAAhV-H4N_XvmP9KA1M5crU44kHr33MZUVSsMY4Ugu5wQSv_LOQ@mail.gmail.com>
- <97291c0fe5a660c844475ff019c8db6af77ecf86.camel@xry111.site>
- <CAAhV-H6wzw-MV+h225rM4PfK_HY0tAdSXcUG-2Hx+_gfhzQ4_g@mail.gmail.com> <ae2652c5e140d407d523d7f35bee672cebe1b7a2.camel@xry111.site>
-In-Reply-To: <ae2652c5e140d407d523d7f35bee672cebe1b7a2.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 6 Sep 2022 09:52:43 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H56TQeU54JjvNQg2qZ6L1aSbzbaM2a=VQr9ZcAn4uthyg@mail.gmail.com>
-Message-ID: <CAAhV-H56TQeU54JjvNQg2qZ6L1aSbzbaM2a=VQr9ZcAn4uthyg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation types
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Jinyang He <hejinyang@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, Youling Tang <tangyouling@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d852f590-95b4-3fd1-924a-68c0a6bb1b1b@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8DxBOKArRZjpVISAA--.9201S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXrW8GFWxAr15AF4rur4rKrg_yoWrJry5pr
+	W5GayUKFsrJF17ZFW0vw10qFWSg3ykGr13Wa1rtry0yF9IvF93tw4Utr43CFy29r1ktF4j
+	vrWYqa4I9r1rAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
+	WxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
+	zVAYIcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvj
+	DU0xZFpf9x0JUHWlkUUUUU=
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 
-Hi, Ruoyao,
+Hi, Ruoyao & Jinyang
 
-On Tue, Sep 6, 2022 at 8:32 AM Xi Ruoyao <xry111@xry111.site> wrote:
+On 09/05/2022 10:52 AM, Youling Tang wrote:
+> Hi, Ruoyao
 >
-> On Thu, 2022-09-01 at 10:17 +0800, Huacai Chen wrote:
+> On 09/04/2022 12:53 AM, Xi Ruoyao wrote:
+>> On Sun, 2022-09-04 at 00:23 +0800, Jinyang He wrote:
+>>> On 2022/9/3 18:49, Xi Ruoyao wrote:
+>>>
+>>>> On Sat, 2022-09-03 at 09:57 +0800, Youling Tang wrote:
+>>>>>>> Unlike (pre-r6) MIPS, LoongArch has a complete support for PIC, and
+>>>>>>> currently LoongArch toolchain always produces PIC (except, if
+>>>>>>> -Wa,-mla-
+>>>>>>> {local,global}-with-abs or la.abs macros are used explicitly).
+>>>>>>>
+>>>>>>> So would it be easier to review and correct the uses of "la.abs"
+>>>>>>> in the
+>>>>>>> code, and make the main kernel image a real PIE?  Then we can
+>>>>>>> load it
+>>>>>>> everywhere w/o any need to do relocation at load time.
+>>>>> At the beginning I also wanted to make the main kernel image a real
+>>>>> PIE
+>>>>> and tried it, some of the "la.abs" can be modified, but I encountered
+>>>>> difficulties in modifying the  exception handling code part, the
+>>>>> kernel
+>>>>> will not  boot after modification :(, I will continue to work hard
+>>>>> try.
+>>
+>>>> I just tried the same thing and get the same result :(.  Will spend
+>>>> several hours reading the LoongArch manual about exception...
+>>
+>> The reason is the handler code is not executed in linker address, but
+>> copied elsewhere.  Then PC-relative offset is broken.  I managed to work
+>> around it by creating a trampoline and jump into the handler, instead of
+>> copy the handler code.  Then I could remove most "la.abs" occurrence
+>> (except two in kernel entry point, which seem deliberately used):
+>>
+>> - https://github.com/xry111/linux/commit/56a433f
+>> - https://github.com/xry111/linux/commit/48203e6
+>>
 >
-> > Now all global variable accesses are via got, I think the performance
-> > may be much worse than before when we didn't use explicit-relocs.
-> > I don't know whether "a new code model" or your "(1)(2)(3)" is easier
-> > to implement, but I think it is better to solve the performance issue
-> > before 6.1-rc1.
+> Thank you very much.
 >
-> Hi Huacai,
+> After applying the above two patches and the following modifications,
+> the relocation can be successful after removing the
+> apply_r_loongarch_la_rel (for la.abs relocation) implementation. I
+> tested it in the qemu environment.
 >
-> We've added a GCC option for this at https://gcc.gnu.org/r13-2433.  On
-> the kernel side we need a one-line change:
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -113,9 +113,11 @@ SYM_CODE_START(smpboot_entry)
+>         li.d            t0, CSR_DMW1_INIT       # CA, PLV0
+>         csrwr           t0, LOONGARCH_CSR_DMWIN1
 >
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index 92c4a52c4c3e..69b39ba3a09d 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -54,6 +54,7 @@ LDFLAGS_vmlinux                       += -G0 -static -n -nostdlib
->  # upgrade the compiler or downgrade the assembler.
->  ifdef CONFIG_AS_HAS_EXPLICIT_RELOCS
->  cflags-y                       += -mexplicit-relocs
-> +KBUILD_CFLAGS_KERNEL           += -mdirect-extern-access
->  else
->  cflags-y                       += $(call cc-option,-mno-explicit-relocs)
->  KBUILD_AFLAGS_KERNEL           += -Wa,-mla-global-with-pcrel
+> -       la.abs          t0, 0f
+> -       jr              t0
+> -0:
+> +       li.d            t0, CACHE_BASE
+> +       pcaddi          t1, 0
+> +       or              t0, t0, t1
+> +       jirl            zero, t0, 0xc
 >
-> And we also need a one-line change in the EFI stub patch (under review):
+> Youling.
 >
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index 8931ed24379e..8c1225b92492 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -27,7 +27,7 @@ cflags-$(CONFIG_ARM)          := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->  cflags-$(CONFIG_RISCV)         := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->                                    -fpic
->  cflags-$(CONFIG_LOONGARCH)     := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> -                                  -fpic
-> +                                  -fpie
->
->  cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
->
-> (Some explanation: -fpic does not only mean "generate position-
-> independent code", but "generate position-independent code *suitable for
-> use in a shared library*".  On LoongArch -mdirect-extern-access cannot
-> work for a shared library so the "-fpic -mdirect-extern-access"
-> combination is rejected deliberately.)
->
-> Not sure how to submit these changes properly...  Do you prefer me to
-> send V8 of this series or a single patch on top of your tree on GitHub?
-Don't need V8, I will squash it into the previous patch myself. But
-can we keep efistub as is?
+>> Using the trampoline in handler table will definitely lead to sub-
+>> optimal performance. I just use it as a proof-of-concept. Later we may
+>> use some assembler trick to generate hard-coded handler table with
+>> correct PC-relative offsets.
+>>
+>>> The following ideas are based on experience, without validation. Patches
+>>> show that three types of relocation are needed to be done.
+>>> 1, GOT is generated by toolchain, so  I think eliminating them by
+>>> toolchain is better.
+>>
+>> https://gcc.gnu.org/pipermail/gcc-patches/2022-September/600797.html
+>>
+>> I stop to read the mail here because it's 00:52 AM now :).
+>>
+>>> 2, Ex_table is generated but striped relocation info. We can plays pcrel
+>>> way to resolve this problem. One of ways like follows, (pseudo-code)
 
-Huacai
+Switch to relative exception tables:
+
+https://github.com/tangyouling/linux/commit/6525b8da
+https://github.com/tangyouling/linux/commit/b6ac0827
+
+Will switch to the relative exception tables after applying the above
+two patches. So there is no need to relocate the exception table
+(remove relocate_exception_table).
+
+Now we can remove the relocation of la.abs , got and ex_table, but
+still need to relocate LARCH_64. Is there anything else that needs to
+be modified to eliminate this relocation?
+
+Thanks,
+Youling.
+
+>>
+>> /* snip */
+>>
+>>
 >
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
->
+
