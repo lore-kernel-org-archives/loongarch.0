@@ -1,138 +1,246 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315B62F2F
-	for <loongarch@lists.linux.dev>; Tue,  6 Sep 2022 10:16:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAD0FC433C1
-	for <loongarch@lists.linux.dev>; Tue,  6 Sep 2022 10:16:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1662459400;
-	bh=9/OqEY1AdGlYqFrskuBnDyzAXAsqqGEVaUN/RRhe4Ck=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WymsisIaz3vz6LLmtOOC+6uvrRVt/GXWVbZSpnpZSoDmvyfqWsVxCkdE31gaYzac9
-	 o2EEnu+x5hVNwqHY1f6wcX80IUKdyDUYFZFnuH1dafiI2RkqRYLWsXlXiySwnErflw
-	 saNrVf+hNX6PoZFNlDw8+lpqVYr1S/S9XCf9k84sT7ya7GWmXH/kUynUiPdiewtQ1W
-	 biHvU9MKULbLxegUO22LJ1Y90ZJIxxLv4Mjev+7dEirObDHpyEBELbaqUBXNT/m2cH
-	 mnRp/BPuFoDFJzqSN8MqeChSdC+5ppDIAfTlZZOLtk/0tBDCQGttx8kqefBjg5n6Mr
-	 9kPzLAsp5eBeg==
-Received: by mail-lj1-f171.google.com with SMTP id b26so11696513ljk.12
-        for <loongarch@lists.linux.dev>; Tue, 06 Sep 2022 03:16:40 -0700 (PDT)
-X-Gm-Message-State: ACgBeo3m8xrekSXci6hLCixC1wHpQ5YIyRpbXb1y8wYtFbRkFFxWMEim
-	i7FojT1mRL4fARDv8+UibcQaTwCHeBZBeY+nKcQ=
-X-Google-Smtp-Source: AA6agR7bCqtA9wfF/56sHk4Ok8Qx0P49OGcib8dcCcQP+4sW8tVKtZCBaiELe69/YxRifVz8zNZDbFKCayASELZEYKw=
-X-Received: by 2002:a2e:9b0e:0:b0:268:cb68:575b with SMTP id
- u14-20020a2e9b0e000000b00268cb68575bmr7059563lji.152.1662459398847; Tue, 06
- Sep 2022 03:16:38 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D84462F24
+	for <loongarch@lists.linux.dev>; Tue,  6 Sep 2022 12:34:34 +0000 (UTC)
+Received: from [10.20.42.105] (unknown [10.20.42.105])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx5OFRPhdj8bsSAA--.11067S3;
+	Tue, 06 Sep 2022 20:34:25 +0800 (CST)
+Subject: Re: [PATCH V3 2/2] LoongArch: Remove ARCH_HAS_PHYS_TO_DMA
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: lpieralisi@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+ Huacai Chen <chenhuacai@loongson.cn>, Hanjun Guo <guohanjun@huawei.com>,
+ Sudeep Holla <sudeep.holla@arm.com>, "Rafael J . Wysocki"
+ <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Robert Moore <robert.moore@intel.com>, LKML <linux-kernel@vger.kernel.org>,
+ ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+ loongarch@lists.linux.dev
+References: <20220830030139.29899-1-lvjianmin@loongson.cn>
+ <20220830030139.29899-3-lvjianmin@loongson.cn>
+ <CAAhV-H4P=MsH2B29U+x4TWJpN4s_2ZYLsX5_rfaapPxx9+UmPQ@mail.gmail.com>
+From: Jianmin Lv <lvjianmin@loongson.cn>
+Message-ID: <36d0a38f-86ce-9a7d-8b83-aa7342146ebb@loongson.cn>
+Date: Tue, 6 Sep 2022 20:34:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220830104806.128365-1-xry111@xry111.site> <CAAhV-H5bH7xZTWLhqcZ_Bmh=RNaEVBy9523hmj-gTmitqqc8ag@mail.gmail.com>
- <c0ba2e23-5be3-924d-554a-2f10272c05bc@xen0n.name> <CAAhV-H7Dz21qRgwkMcJ0SnA9FNDN19E6mpa7C25LUitrO9LGeA@mail.gmail.com>
- <5b87173faeef587a2ffaaa6f58d34e0940231067.camel@xry111.site>
- <c53303bf-a5d2-098f-8975-efadbe0b2f2e@loongson.cn> <bc323d8578d2f6ec580066bab181788b305ae3c3.camel@xry111.site>
- <CAAhV-H4N_XvmP9KA1M5crU44kHr33MZUVSsMY4Ugu5wQSv_LOQ@mail.gmail.com>
- <97291c0fe5a660c844475ff019c8db6af77ecf86.camel@xry111.site>
- <CAAhV-H6wzw-MV+h225rM4PfK_HY0tAdSXcUG-2Hx+_gfhzQ4_g@mail.gmail.com>
- <ae2652c5e140d407d523d7f35bee672cebe1b7a2.camel@xry111.site>
- <CAAhV-H56TQeU54JjvNQg2qZ6L1aSbzbaM2a=VQr9ZcAn4uthyg@mail.gmail.com>
- <8d0f96e2977c5c78f17bb410087f2aad986ef5a4.camel@xry111.site>
- <CAAhV-H7LjkY+XAzGs2K3544+CGOztCd4V8BuSjMJwZCgfBLDow@mail.gmail.com>
- <CAMj1kXE6YHCVj9DDbxLEZnS-ceZT__xe1XAcUcpXcd6eYb=UEw@mail.gmail.com>
- <CAAhV-H5NT-bq2jb3Kh-5wyCwVeG6t6pkLkPSRRC5XKrC33j1Nw@mail.gmail.com> <CAAhV-H6RqKT0OiVhZqJr9Tts-4JuH-oPNAc66q6fTcqdi7jAQw@mail.gmail.com>
-In-Reply-To: <CAAhV-H6RqKT0OiVhZqJr9Tts-4JuH-oPNAc66q6fTcqdi7jAQw@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 6 Sep 2022 12:16:27 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGBevDYDxyb9_gDHLaQneydnXvGkAsPXD3o9kf0-BrNMQ@mail.gmail.com>
-Message-ID: <CAMj1kXGBevDYDxyb9_gDHLaQneydnXvGkAsPXD3o9kf0-BrNMQ@mail.gmail.com>
-Subject: Re: [PATCH v7 0/5] LoongArch: Support toolchain with new relocation types
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Xi Ruoyao <xry111@xry111.site>, Jinyang He <hejinyang@loongson.cn>, 
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, Youling Tang <tangyouling@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAAhV-H4P=MsH2B29U+x4TWJpN4s_2ZYLsX5_rfaapPxx9+UmPQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bx5OFRPhdj8bsSAA--.11067S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxuFW7Ww4xtFy7uF4ftr1DZFb_yoW7uw4xpF
+	9rCFs8Gr4xGrn7WrWvyw1rZFn8X34vka42qFWxK34kCrnF9r1DXr1kArykuFyYyFZrKF4I
+	vF95WFyavF4UC3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+	x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4
+	x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCYjI0SjxkI62AI
+	1cAE67vIY487MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r
+	yrJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 
-On Tue, 6 Sept 2022 at 10:59, Huacai Chen <chenhuacai@kernel.org> wrote:
->
-> On Tue, Sep 6, 2022 at 4:20 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> >
-> > On Tue, Sep 6, 2022 at 3:18 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > On Tue, 6 Sept 2022 at 06:43, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > >
-> > > > Hi, Ruoyao,
-> > > >
-> > > > On Tue, Sep 6, 2022 at 12:27 PM Xi Ruoyao <xry111@xry111.site> wrote:
-> > > > >
-> > > > > On Tue, 2022-09-06 at 09:52 +0800, Huacai Chen wrote:
-> > > > > > >   cflags-$(CONFIG_LOONGARCH)     := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> > > > > > > -                                  -fpic
-> > > > > > > +                                  -fpie
-> > > > > > >
-> > > > > > >   cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
-> > > > > > >
-> > > > > > > (Some explanation: -fpic does not only mean "generate position-
-> > > > > > > independent code", but "generate position-independent code *suitable for
-> > > > > > > use in a shared library*".  On LoongArch -mdirect-extern-access cannot
-> > > > > > > work for a shared library so the "-fpic -mdirect-extern-access"
-> > > > > > > combination is rejected deliberately.)
-> > > > > > >
-> > > > > > > Not sure how to submit these changes properly...  Do you prefer me to
-> > > > > > > send V8 of this series or a single patch on top of your tree on GitHub?
-> > > > >
-> > > > > > Don't need V8, I will squash it into the previous patch myself. But
-> > > > > > can we keep efistub as is?
-> > > > >
-> > > > > No, we can't allow -mdirect-extern-access -fpic on LoongArch because
-> > > > > without copy relocation such a combination just does not make sense (i.
-> > > > > e. we cannot find a sensible way to handle such a combination in GCC).
-> > > > > So such a combination will cause GCC refuse to run.
-> > > > >
-> > > > > Note that -fpic/-fPIC is "position-independent code *suitable for
-> > > > > use in a shared library*", while -fpie/-fPIE is more like just
-> > > > > "position-independent code".  The names of those options are confusing.
-> > > > > (When -fpic was invented first time, people mostly believed "PIC had
-> > > > > been only for shared libraries", so it's named -fpic instead of -shlib
-> > > > > or something.)  IMO in the EFI stub for other ports, -fpie should be
-> > > > > used instead of -fpic as well because the EFI stub is not similar to a
-> > > > > shared library in any means.
-> > > > You are right, but I guess that Ard doesn't want to squash the efistub
-> > > > change into the LoongArch efistub support patch. :)
-> > > >
-> > >
-> > > I don't mind changing the stable tag at this point - I don't have
-> > > anything queued up on top of it at the moment.
-> > >
-> > > But I don't see the actual patch: please send me the delta patch that
-> > > you want to apply, and I will update it. Then, you can rebase your
-> > > v6.1 tree on top of it.
-> > OK, Ruoyao, please send a patch to change the efistub cflags. Thank you.
-> Oh, I think you needn't send, just showing the diff to Ard is OK. :)
->
-> diff --git a/drivers/firmware/efi/libstub/Makefile
-> b/drivers/firmware/efi/libstub/Makefile
-> index 8931ed24379e..8c1225b92492 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -27,7 +27,7 @@ cflags-$(CONFIG_ARM)          := $(subst
-> $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->  cflags-$(CONFIG_RISCV)         := $(subst
-> $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->                                    -fpic
->  cflags-$(CONFIG_LOONGARCH)     := $(subst
-> $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> -                                  -fpic
-> +                                  -fpie
->
->  cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
->
+Hi, Huacai
 
-I have merged this into the patch, and updated the tag
+Ok, thanks, I'll change title in V4. There is *not* size calculation in
+this patch, so the patch does not need resource_size() as in 
+acpi_dma_get_range().
 
-efi-loongarch-for-v6.1
-ead384d956345681e1ddf97890d5e15ded015f07
+On 2022/9/5 下午10:42, Huacai Chen wrote:
+> Hi, Jianmin,
+> 
+> The title can be "LoongArch: Use acpi_arch_dma_setup() and remove
+> ARCH_HAS_PHYS_TO_DMA", and please use resource_size() as arm64.
+> 
+> Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+> 
+> 
+> Huacai
+> 
+> 
+> On Tue, Aug 30, 2022 at 11:01 AM Jianmin Lv <lvjianmin@loongson.cn> wrote:
+>>
+>> Use _DMA defined in ACPI spec for translation between
+>> DMA address and CPU address, and implement acpi_arch_dma_setup
+>> for initializing dev->dma_range_map, where acpi_dma_get_range
+>> is called for parsing _DMA.
+>>
+>> e.g.
+>> If we have two dma ranges:
+>> cpu address      dma address    size         offset
+>> 0x200080000000   0x2080000000   0x400000000  0x1fe000000000
+>> 0x400080000000   0x4080000000   0x400000000  0x3fc000000000
+>>
+>> _DMA for pci devices should be declared in host bridge as
+>> flowing:
+>>
+>> Name (_DMA, ResourceTemplate() {
+>>          QWordMemory (ResourceProducer,
+>>              PosDecode,
+>>              MinFixed,
+>>              MaxFixed,
+>>              NonCacheable,
+>>              ReadWrite,
+>>              0x0,
+>>              0x4080000000,
+>>              0x447fffffff,
+>>              0x3fc000000000,
+>>              0x400000000,
+>>              ,
+>>              ,
+>>              )
+>>
+>>          QWordMemory (ResourceProducer,
+>>              PosDecode,
+>>              MinFixed,
+>>              MaxFixed,
+>>              NonCacheable,
+>>              ReadWrite,
+>>              0x0,
+>>              0x2080000000,
+>>              0x247fffffff,
+>>              0x1fe000000000,
+>>              0x400000000,
+>>              ,
+>>              ,
+>>              )
+>>      })
+>>
+>> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+>> ---
+>>   arch/loongarch/Kconfig        |  1 -
+>>   arch/loongarch/kernel/dma.c   | 52 +++++++++++++++++--------------------------
+>>   arch/loongarch/kernel/setup.c |  2 +-
+>>   include/linux/acpi.h          |  9 +++++---
+>>   4 files changed, 28 insertions(+), 36 deletions(-)
+>>
+>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>> index b57daee..9dedcf9 100644
+>> --- a/arch/loongarch/Kconfig
+>> +++ b/arch/loongarch/Kconfig
+>> @@ -7,7 +7,6 @@ config LOONGARCH
+>>          select ARCH_ENABLE_MEMORY_HOTPLUG
+>>          select ARCH_ENABLE_MEMORY_HOTREMOVE
+>>          select ARCH_HAS_ACPI_TABLE_UPGRADE      if ACPI
+>> -       select ARCH_HAS_PHYS_TO_DMA
+>>          select ARCH_HAS_PTE_SPECIAL
+>>          select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+>>          select ARCH_INLINE_READ_LOCK if !PREEMPTION
+>> diff --git a/arch/loongarch/kernel/dma.c b/arch/loongarch/kernel/dma.c
+>> index 8c9b531..7a9c6a9 100644
+>> --- a/arch/loongarch/kernel/dma.c
+>> +++ b/arch/loongarch/kernel/dma.c
+>> @@ -2,39 +2,29 @@
+>>   /*
+>>    * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+>>    */
+>> -#include <linux/init.h>
+>> +#include <linux/acpi.h>
+>>   #include <linux/dma-direct.h>
+>> -#include <linux/dma-mapping.h>
+>> -#include <linux/dma-map-ops.h>
+>> -#include <linux/swiotlb.h>
+>>
+>> -#include <asm/bootinfo.h>
+>> -#include <asm/dma.h>
+>> -#include <asm/loongson.h>
+>> -
+>> -/*
+>> - * We extract 4bit node id (bit 44~47) from Loongson-3's
+>> - * 48bit physical address space and embed it into 40bit.
+>> - */
+>> -
+>> -static int node_id_offset;
+>> -
+>> -dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+>> -{
+>> -       long nid = (paddr >> 44) & 0xf;
+>> -
+>> -       return ((nid << 44) ^ paddr) | (nid << node_id_offset);
+>> -}
+>> -
+>> -phys_addr_t dma_to_phys(struct device *dev, dma_addr_t daddr)
+>> +void acpi_arch_dma_setup(struct device *dev)
+>>   {
+>> -       long nid = (daddr >> node_id_offset) & 0xf;
+>> +       int ret;
+>> +       u64 mask, end = 0;
+>> +       const struct bus_dma_region *map = NULL;
+>> +
+>> +       ret = acpi_dma_get_range(dev, &map);
+>> +       if (!ret && map) {
+>> +               const struct bus_dma_region *r = map;
+>> +
+>> +               for (end = 0; r->size; r++) {
+>> +                       if (r->dma_start + r->size - 1 > end)
+>> +                               end = r->dma_start + r->size - 1;
+>> +               }
+>> +
+>> +               mask = DMA_BIT_MASK(ilog2(end) + 1);
+>> +               dev->bus_dma_limit = end;
+>> +               dev->dma_range_map = map;
+>> +               dev->coherent_dma_mask = min(dev->coherent_dma_mask, mask);
+>> +               *dev->dma_mask = min(*dev->dma_mask, mask);
+>> +       }
+>>
+>> -       return ((nid << node_id_offset) ^ daddr) | (nid << 44);
+>> -}
+>> -
+>> -void __init plat_swiotlb_setup(void)
+>> -{
+>> -       swiotlb_init(true, SWIOTLB_VERBOSE);
+>> -       node_id_offset = ((readl(LS7A_DMA_CFG) & LS7A_DMA_NODE_MASK) >> LS7A_DMA_NODE_SHF) + 36;
+>>   }
+>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+>> index c74860b..974f085 100644
+>> --- a/arch/loongarch/kernel/setup.c
+>> +++ b/arch/loongarch/kernel/setup.c
+>> @@ -247,7 +247,7 @@ static void __init arch_mem_init(char **cmdline_p)
+>>          sparse_init();
+>>          memblock_set_bottom_up(true);
+>>
+>> -       plat_swiotlb_setup();
+>> +       swiotlb_init(true, SWIOTLB_VERBOSE);
+>>
+>>          dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
+>>
+>> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+>> index 34e0545..33977b87 100644
+>> --- a/include/linux/acpi.h
+>> +++ b/include/linux/acpi.h
+>> @@ -278,14 +278,17 @@ int acpi_table_parse_madt(enum acpi_madt_type id,
+>>
+>>   void acpi_numa_x2apic_affinity_init(struct acpi_srat_x2apic_cpu_affinity *pa);
+>>
+>> +#if defined(CONFIG_ARM64) || defined(CONFIG_LOONGARCH)
+>> +void acpi_arch_dma_setup(struct device *dev);
+>> +#else
+>> +static inline void acpi_arch_dma_setup(struct device *dev) { }
+>> +#endif
+>> +
+>>   #ifdef CONFIG_ARM64
+>>   void acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa);
+>> -void acpi_arch_dma_setup(struct device *dev);
+>>   #else
+>>   static inline void
+>>   acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa) { }
+>> -static inline void
+>> -acpi_arch_dma_setup(struct device *dev) { }
+>>   #endif
+>>
+>>   int acpi_numa_memory_affinity_init (struct acpi_srat_mem_affinity *ma);
+>> --
+>> 1.8.3.1
+>>
+>>
 
-It should be in linux-next tomorrow, you can merge the tag now from
-git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git
