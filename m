@@ -1,94 +1,134 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2927E2F24
-	for <loongarch@lists.linux.dev>; Tue,  6 Sep 2022 12:40:55 +0000 (UTC)
-Received: from [10.20.42.105] (unknown [10.20.42.105])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_2vQPxdj5rwSAA--.8995S3;
-	Tue, 06 Sep 2022 20:40:49 +0800 (CST)
-Subject: Re: [PATCH V3 1/2] ACPI / scan: Support multiple dma windows with
- different offsets
-To: Robin Murphy <robin.murphy@arm.com>, lpieralisi@kernel.org,
- chenhuacai@loongson.cn
-Cc: guohanjun@huawei.com, sudeep.holla@arm.com, rafael@kernel.org,
- lenb@kernel.org, robert.moore@intel.com, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, loongarch@lists.linux.dev
-References: <20220830030139.29899-1-lvjianmin@loongson.cn>
- <20220830030139.29899-2-lvjianmin@loongson.cn>
- <435e1283-9ff6-f089-6436-3c31a178fd60@arm.com>
-From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <66baf6f8-0f18-e0a6-4ed4-e2f783497d2d@loongson.cn>
-Date: Tue, 6 Sep 2022 20:40:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7EE933ED
+	for <loongarch@lists.linux.dev>; Wed,  7 Sep 2022 10:05:05 +0000 (UTC)
+Received: from localhost.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx5OGGbBhjIJkTAA--.14371S8;
+	Wed, 07 Sep 2022 18:04:07 +0800 (CST)
+From: Qing Zhang <zhangqing@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	hejinyang@loongson.cn
+Subject: [PATCH v3 06/10] LoongArch/ftrace: Add HAVE_DYNAMIC_FTRACE_WITH_ARGS support
+Date: Wed,  7 Sep 2022 18:03:47 +0800
+Message-Id: <20220907100350.32576-7-zhangqing@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220907100350.32576-1-zhangqing@loongson.cn>
+References: <20220907100350.32576-1-zhangqing@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <435e1283-9ff6-f089-6436-3c31a178fd60@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dx_2vQPxdj5rwSAA--.8995S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7KF1fWryfGF4UXw45Xr4Dtwb_yoW8Xr13pa
-	48Gr43JrsrtFZ5ur4kXw4UZryrZFW3ur4FqFW8Cwn3CF45WF1Svr4xG3sYkFZYka47Gw10
-	9Fs0qF95uF1YywUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB21xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-	IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
-	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
-	JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	ACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
-	07AlzVAYIcxG8wCY02Avz4vE-syl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8V
-	W5Wr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUF9a9DUUUU
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-CM-TRANSID:AQAAf8Bx5OGGbBhjIJkTAA--.14371S8
+X-Coremail-Antispam: 1UD129KBjvJXoWxZrW3XFW3WrykGFWrWw13XFb_yoW5Aw4fpF
+	yIywn8GF47uFsa9a9I9FyUWrs8ArykC34avayxJa4rAryqqa4UZr1xAr4DZFyUt397GrWS
+	vFyrK345CFs8X3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBG14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+	4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE
+	3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2I
+	x0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8
+	JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4DMx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8
+	Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
+	vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUPPEhUUUUU=
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
+Allow for arguments to be passed in to ftrace_regs by default,
+If this is set, then arguments and stack can be found from
+the pt_regs.
 
+1. HAVE_DYNAMIC_FTRACE_WITH_ARGS don't need special hook for graph
+tracer entry point, but instead we can use graph_ops::func function
+to install the return_hooker.
+2. Livepatch requires this option in the future.
 
-On 2022/9/5 下午8:20, Robin Murphy wrote:
-> On 2022-08-30 04:01, Jianmin Lv wrote:
->> For DT, of_dma_get_range returns bus_dma_region typed dma regions,
->> which makes multiple dma windows with different offset available
->> for translation between dma address and cpu address.
->>
->> But for ACPI, acpi_dma_get_range doesn't return similar dma regions,
->> causing no path for setting dev->dma_range_map conveniently. So the
->> patch changes acpi_dma_get_range and returns bus_dma_region typed
->> dma regions according to of_dma_get_range.
->>
->> After changing acpi_dma_get_range, acpi_arch_dma_setup is changed for
->> ARM64, where original dma_addr and size are removed as these
->> arguments are now redundant, and pass 0 and U64_MAX for dma_base
->> and size of arch_setup_dma_ops, so this is a simplification consistent
->> with what other ACPI architectures also pass to iommu_setup_dma_ops().
-> 
-> Other than a micro-nit that acpi_dma_get_range() could probably use 
-> resource_size(),
-> 
+Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+---
+ arch/loongarch/Kconfig              |  1 +
+ arch/loongarch/include/asm/ftrace.h | 17 +++++++++++++++++
+ arch/loongarch/kernel/ftrace_dyn.c  | 12 ++++++++++++
+ 3 files changed, 30 insertions(+)
 
-Ok, thanks, I'll use resource_size() in acpi_dma_get_range().
-
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> 
-> It took me longer than I care to admit to figure out where the implicit 
-> declaration of struct bus_dma_region in the scope of acpi.h and 
-> acpi_bus.h comes from, but in the end I guess it's sufficiently 
-> well-defined by the C spec to be reliable.
-> 
-> Thanks for getting this done!
-> 
-
-It's a pleasure!
-
-
-> Robin.
-> 
-
-[...]
-
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 95ce8ef91967..789fff92c115 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -86,6 +86,7 @@ config LOONGARCH
+ 	select HAVE_DEBUG_STACKOVERFLOW
+ 	select HAVE_DMA_CONTIGUOUS
+         select HAVE_DYNAMIC_FTRACE
++	select HAVE_DYNAMIC_FTRACE_WITH_ARGS
+         select HAVE_DYNAMIC_FTRACE_WITH_REGS
+ 	select HAVE_EXIT_THREAD
+ 	select HAVE_FAST_GUP
+diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
+index a3f974a7a5ce..4a9db84f8264 100644
+--- a/arch/loongarch/include/asm/ftrace.h
++++ b/arch/loongarch/include/asm/ftrace.h
+@@ -28,6 +28,23 @@ struct dyn_ftrace;
+ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
+ #define ftrace_init_nop ftrace_init_nop
+ 
++#ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
++struct ftrace_ops;
++
++struct ftrace_regs {
++	struct pt_regs regs;
++};
++
++static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *fregs)
++{
++	return &fregs->regs;
++}
++
++void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
++		       struct ftrace_ops *op, struct ftrace_regs *fregs);
++#define ftrace_graph_func ftrace_graph_func
++#endif
++
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+ #define ARCH_SUPPORTS_FTRACE_OPS 1
+ #endif
+diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
+index ec3d951be50c..f538829312d7 100644
+--- a/arch/loongarch/kernel/ftrace_dyn.c
++++ b/arch/loongarch/kernel/ftrace_dyn.c
+@@ -144,6 +144,17 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent)
+ 		*parent = return_hooker;
+ }
+ 
++#ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
++void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
++		       struct ftrace_ops *op, struct ftrace_regs *fregs)
++{
++	struct pt_regs *regs = &fregs->regs;
++	unsigned long *parent = (unsigned long *)&regs->regs[1];
++
++	prepare_ftrace_return(ip, (unsigned long *)parent);
++}
++#else
++
+ static int ftrace_modify_graph_caller(bool enable)
+ {
+ 	unsigned long pc, func;
+@@ -170,4 +181,5 @@ int ftrace_disable_ftrace_graph_caller(void)
+ {
+ 	return ftrace_modify_graph_caller(false);
+ }
++#endif /* CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS */
+ #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+-- 
+2.20.1
 
