@@ -1,22 +1,22 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249CE3D65
-	for <loongarch@lists.linux.dev>; Thu,  8 Sep 2022 16:17:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6885646B4
+	for <loongarch@lists.linux.dev>; Thu,  8 Sep 2022 16:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1662653826; bh=ahOA21ACEb2cg2T2lerUldLTXTolLkoN5mANWRtuYI8=;
+	t=1662655872; bh=6rntCE9dXBNSFS5I+DqUbsib3Q8FiCqlcnV09DyYO8k=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XJQuLPQ5RIPqOtFsqdS+VFEqB1aM2vt5shRNOEiipz1q3VwxpSV6kMAu/3wS6Ab88
-	 MTz/QSJHGkFX5+5m4rJe9Uyw8qvkO57J6L82ADoOQ+K9tGjutpiWLcNDZUV+5ueJdy
-	 Emi9dqhOZ6Fj2WWKSDqcqK6kcBEqpz77ryVJn+hE=
+	b=QqmkQIoKV27YBXmyYvx1s7Qwjy2qL/PRqcK3qzYXqVKJpGH7ujt17XTyNl5INihOv
+	 XBrtBEGTa9cySF8l72gVttG+EVlX52dBiLRHr79JGLveT0RPlqCXSBjnYQNgQuweJf
+	 iDvnNwstIkzN04o8H+UIQwcgFQBpoNiNIL2hTSvk=
 Received: from [192.168.9.172] (unknown [101.88.26.24])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id EAD11600BD;
-	Fri,  9 Sep 2022 00:17:05 +0800 (CST)
-Message-ID: <d70a92e6-95db-469b-841c-56f4f3564843@xen0n.name>
-Date: Fri, 9 Sep 2022 00:17:05 +0800
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id BAE55600BD;
+	Fri,  9 Sep 2022 00:51:11 +0800 (CST)
+Message-ID: <cfc4c2e5-34af-b968-9c44-28e71731bb75@xen0n.name>
+Date: Fri, 9 Sep 2022 00:51:11 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -25,163 +25,116 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:106.0) Gecko/20100101
  Thunderbird/106.0a1
-Subject: Re: [PATCH v3] LoongArch: Add safer signal handler for TLS access
+Subject: Re: [PATCH bpf-next v3 3/4] LoongArch: Add BPF JIT support
 Content-Language: en-US
-To: Mao Bibo <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20220902095958.3875126-1-maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>, Tiezhu Yang
+ <yangtiezhu@loongson.cn>, WANG Xuerui <git@xen0n.name>,
+ Xi Ruoyao <xry111@xry111.site>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev,
+ Li Xuefeng <lixuefeng@loongson.cn>
+References: <1661999249-10258-1-git-send-email-yangtiezhu@loongson.cn>
+ <1661999249-10258-4-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H4yU2tp=DBGCkdSzp-9bAXXDM4+0iqDgOac+fbgQnsx2A@mail.gmail.com>
+ <1a740b5c-041c-85c6-f1d6-bb0b931c0c3e@loongson.cn>
+ <CAAhV-H5vfw+Mv=LbQfa4sPHW91Z+ij3R8+LsHZOAiR+u7pJONw@mail.gmail.com>
 From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20220902095958.3875126-1-maobibo@loongson.cn>
+In-Reply-To: <CAAhV-H5vfw+Mv=LbQfa4sPHW91Z+ij3R8+LsHZOAiR+u7pJONw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 9/2/22 17:59, Mao Bibo wrote:
-> LoongArch uses general purpose register R2 as thread pointer(TP)
-> register, signal hanlder also uses TP register to access variables
-> in TLS area, such as errno and variable in TLS.
->
-> If GPR R2 is modified with wrong value, signal handler still uses
-> the wrong TP register, so signal hanlder is insafe to access TLS
-> variable.
->
-> This patch adds one arch specific syscall set_thread_area, and
-> restore previoud TP value before signal handler, so that signal
-> handler is safe to access TLS variable.
->
-> It passes to run with the following test case.
-> =======8<======
->   #define _GNU_SOURCE
->   #include <stdio.h>
->   #include <stdlib.h>
->   #include <unistd.h>
->   #include <string.h>
->   #include <sys/syscall.h>
->   #include <sys/types.h>
->   #include <signal.h>
->   #include <pthread.h>
->   #include <asm/ucontext.h>
->   #include <asm/sigcontext.h>
->
->   #define ILL_INSN ".word 0x000001f0"
-> static inline long test_sigill(unsigned long fid)
-> {
->          register long ret __asm__("$r4");
->          register unsigned long fun __asm__("$r4") = fid;
->
->          __asm__ __volatile__("move $r2, $r0 \r\n");
->          __asm__ __volatile__(
->                          ILL_INSN
->                          : "=r" (ret)
->                          : "r" (fun)
->                          : "memory"
->                          );
->
->          return ret;
-> }
->
-> static void set_sigill_handler(void (*fn) (int, siginfo_t *, void *))
-> {
->          struct sigaction sa;
->          memset(&sa, 0, sizeof(struct sigaction));
->
->          sa.sa_sigaction = fn;
->          sa.sa_flags = SA_SIGINFO;
->          sigemptyset(&sa.sa_mask);
->          if (sigaction(SIGILL, &sa, 0) != 0) {
->                  perror("sigaction");
->          }
-> }
->
-> void catch_sig(int sig, siginfo_t *si, void *vuc)
-> {
->          struct ucontext *uc = vuc;
->          register unsigned long tls  __asm__("$r2");
->
->          uc->uc_mcontext.sc_pc +=4;
->          uc->uc_mcontext.sc_regs[2] = tls;
->          printf("catched signal %d\n", sig);
-> }
->
-> void *print_message_function( void *ptr )
-> {
->          char *message;
->          message = (char *) ptr;
->          printf("%s \n", message);
->          test_sigill(1);
-> }
->
-> void pthread_test(void)
-> {
->          pthread_t thread1, thread2;
->          char *message1 = "Thread 1";
->          char *message2 = "Thread 2";
->          int  iret1, iret2;
->
->          iret1 = pthread_create( &thread1, NULL, print_message_function,
-> 				(void*) message1);
->          iret2 = pthread_create( &thread2, NULL, print_message_function,
-> 				(void*) message2);
->          pthread_join( thread1, NULL);
->          pthread_join( thread2, NULL);
->          printf("Thread 1 returns: %d\n",iret1);
->          printf("Thread 2 returns: %d\n",iret2);
->          exit(0);
-> }
->
-> void exec_test(void) {
->          test_sigill(1);
-> }
->
-> void main() {
->          register unsigned long tls  __asm__("$r2");
->          int val;
->
->          val = syscall(244, tls);
->          set_sigill_handler(&catch_sig);
->          pthread_test();
->          //exec_test();
->          return;
-> }
-> =======8<======
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
-> v2->v3:
->   - Use current_thread_info rather than task_thread_info(current)
-> v1->v2:
->   - Clear TP value in clone function if CLONE_SETTLS is not set
-> ---
->   arch/loongarch/include/asm/unistd.h      |  1 +
->   arch/loongarch/include/uapi/asm/unistd.h |  2 ++
->   arch/loongarch/kernel/process.c          | 10 +++++++++-
->   arch/loongarch/kernel/signal.c           |  5 +++++
->   arch/loongarch/kernel/syscall.c          |  9 +++++++++
->   5 files changed, 26 insertions(+), 1 deletion(-)
+On 9/4/22 17:04, Huacai Chen wrote:
+> On Sat, Sep 3, 2022 at 6:11 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>>
+>> On 09/03/2022 04:32 PM, Huacai Chen wrote:
+>>> On Thu, Sep 1, 2022 at 10:27 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>>> BPF programs are normally handled by a BPF interpreter, add BPF JIT
+>>>> support for LoongArch to allow the kernel to generate native code
+>>>> when a program is loaded into the kernel, this will significantly
+>>>> speed-up processing of BPF programs.
+>> [...]
+>>
+>>>> +
+>>>> +static inline int emit_cond_jmp(struct jit_ctx *ctx, u8 cond, enum loongarch_gpr rj,
+>>>> +                               enum loongarch_gpr rd, int jmp_offset)
+>>>> +{
+>>>> +       /*
+>>>> +        * A large PC-relative jump offset may overflow the immediate field of
+>>>> +        * the native conditional branch instruction, triggering a conversion
+>>>> +        * to use an absolute jump instead, this jump sequence is particularly
+>>>> +        * nasty. For now, use cond_jmp_offs26() directly to keep it simple.
+>>>> +        * In the future, maybe we can add support for far branching, the branch
+>>>> +        * relaxation requires more than two passes to converge, the code seems
+>>>> +        * too complex to understand, not quite sure whether it is necessary and
+>>>> +        * worth the extra pain. Anyway, just leave it as it is to enhance code
+>>>> +        * readability now.
+>>> Oh, no. I don't think this is a very difficult problem, because the
+>>> old version has already solved [1]. Please improve your code and send
+>>> V4.
+>>> BTW, I have committed V3 with some small modifications in
+>>> https://github.com/loongson/linux/commits/loongarch-next, please make
+>>> V4 based on that.
+>>>
+>>> [1] https://github.com/loongson/linux/commit/e20b2353f40cd13720996524e1df6d0ca086eeb8#diff-6d2f4f5a862a5dce12f8eb0feeca095825c4ed1c2e7151b0905fb8d03c98922e
+>>>
+>>> --------code in the old version--------
+>>> static inline void emit_cond_jump(struct jit_ctx *ctx, u8 cond, enum
+>>> loongarch_gpr rj,
+>>>                                    enum loongarch_gpr rd, int jmp_offset)
+>>> {
+>>>          if (is_signed_imm16(jmp_offset))
+>>>                  cond_jump_offs16(ctx, cond, rj, rd, jmp_offset);
+>>>          else if (is_signed_imm26(jmp_offset))
+>>>                  cond_jump_offs26(ctx, cond, rj, rd, jmp_offset);
+>>>          else
+>>>                  cond_jump_offs32(ctx, cond, rj, rd, jmp_offset);
+>>> }
+>>>
+>>> static inline void emit_uncond_jump(struct jit_ctx *ctx, int
+>>> jmp_offset, bool is_exit)
+>>> {
+>>>          if (is_signed_imm26(jmp_offset))
+>>>                  uncond_jump_offs26(ctx, jmp_offset);
+>>>          else
+>>>                  uncond_jump_offs32(ctx, jmp_offset, is_exit);
+>>> }
+>>> --------end of code--------
+>>>
+>>> Huacai
+>>>
+>> Hi Huacai,
+>>
+>> This change is to pass the special test cases:
+>> "a new type of jump test where the program jumps forwards
+>> and backwards with increasing offset. It mainly tests JITs where a
+>> relative jump may generate different JITed code depending on the offset
+>> size."
+>>
+>> They are introduced in commit a7d2e752e520 ("bpf/tests: Add staggered
+>> JMP and JMP32 tests") after the old internal version you mentioned.
+>>
+>> Here, we use the native instructions to enlarge the jump range to 26 bit
+>> directly rather than 16 bit first, and also take no account of more than
+>> 26 bit case because there is no native instruction and it needs to emulate.
+>>
+>> As the code comment said, this is to enhance code readability now.
+> I'm not familiar with bpf, Daniel, Ruoyao and Xuerui, what do you
+> think about it?
 
-So here we're trying to accommodate for ABI violations from user-mode 
-programs, no matter whether they come from fuzzing, or any other black 
-magic; but being user-space, theoretically set_thread_area could also be 
-fuzzed, and this "additional" layer of defense then breaks down. And if 
-this theoretical case is deemed uninteresting, remember the case you're 
-demonstrating is also found by fuzzing and not found in normal working 
-user programs, then the whole scenario should be theoretical and 
-uninteresting as well...
+I'm not familiar with eBPF JITs either, but from a cursory look it seems 
+the readability isn't that bad even for the original version? It is 
+clear that the appropriate instructions are selected according to size 
+of the immediate. And the current way of doing things doesn't really fix 
+the problem, it relies on the fact that *normally* the negative branch 
+offset is expressible in 16 bits (actually 18 bits).
 
-BTW I've also thrown this problem into a riscv discussion group, and 
-they pointed out that e.g. sigaltstack is already available for 
-guaranteeing at least some working state when a signal comes. And riscv 
-also doesn't have set_thread_area which is most likely why loongarch 
-isn't getting one; further, looking at manpages of 
-{get,set}_thread_area, it may be the case that both riscv and loongarch 
-have the TP in user-visible ISA state, so a syscall is not needed for 
-manipulating it anyway. Again it's equally easy to mess the hidden state 
-of set_thread_area as $tp itself. Or put it differently, if 
-set_thread_area is necessary/good for loongarch, you should probably add 
-it to riscv as well -- both will benefit.
+So, at the very least, you should keep the fallback logic towards 
+cond_jump_offs32. At which point adding back enough code so you're back 
+to the original version doesn't sound like it's too much anyway...
 
 -- 
 WANG "xen0n" Xuerui
