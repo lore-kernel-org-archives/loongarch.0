@@ -1,181 +1,316 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF9407E3
-	for <loongarch@lists.linux.dev>; Fri,  9 Sep 2022 09:47:05 +0000 (UTC)
-Received: from [10.130.0.135] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxkOCXCxtjqlIVAA--.20658S3;
-	Fri, 09 Sep 2022 17:47:04 +0800 (CST)
-Subject: Re: [PATCH bpf-next v3 3/4] LoongArch: Add BPF JIT support
-To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <git@xen0n.name>, Xi Ruoyao <xry111@xry111.site>
-References: <1661999249-10258-1-git-send-email-yangtiezhu@loongson.cn>
- <1661999249-10258-4-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H4yU2tp=DBGCkdSzp-9bAXXDM4+0iqDgOac+fbgQnsx2A@mail.gmail.com>
- <1a740b5c-041c-85c6-f1d6-bb0b931c0c3e@loongson.cn>
- <CAAhV-H5vfw+Mv=LbQfa4sPHW91Z+ij3R8+LsHZOAiR+u7pJONw@mail.gmail.com>
- <cfc4c2e5-34af-b968-9c44-28e71731bb75@xen0n.name>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev,
- Li Xuefeng <lixuefeng@loongson.cn>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <16f24d7c-39c5-8dfa-a45f-61cd7f0e8b5f@loongson.cn>
-Date: Fri, 9 Sep 2022 17:47:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8398636B
+	for <loongarch@lists.linux.dev>; Fri,  9 Sep 2022 11:19:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 700D2C433D6;
+	Fri,  9 Sep 2022 11:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1662722379;
+	bh=JP/C2bwG81P4ATbA79/RtaKh8lgD5pcwR33D+22A6eg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CCoQBRgxF/2IzStY2FXOiUkdnfhhaih9qb5mgD5wBifrMi6cyFiws1j8e0/q0+M2f
+	 WiNSYzgGV+5VjwkJbCf0t8oYcszbdkq+J7AYrOnZHjAnZrhUkhIJQ4t3jEBeDHT98m
+	 RC+fX/8yQBAVGqlbxe1jBP9ub7IUm2H+ZAJqmH+n8m3/nLWLdoe6PE3CvwfwiO/mSQ
+	 fSI101/jMcueSP+Adjl44jXwgmYlQiUi6xoBTUcrGb3WaN0O6iBSrwkQSB08CUeDOK
+	 eIEp5ThqHIbmWvhzCmuW/9xhw9jWk/j8XdHM/xvzApbnoiqfEbFvx2tTof0U2JlWKg
+	 fXzHqv5F/em+A==
+Date: Fri, 9 Sep 2022 13:19:31 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Jianmin Lv <lvjianmin@loongson.cn>
+Cc: robin.murphy@arm.com, chenhuacai@loongson.cn, guohanjun@huawei.com,
+	sudeep.holla@arm.com, rafael@kernel.org, lenb@kernel.org,
+	robert.moore@intel.com, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH V4 1/2] ACPI / scan: Support multiple dma windows with
+ different offsets
+Message-ID: <YxshQ7IR1vtnimbh@lpieralisi>
+References: <20220909092811.22627-1-lvjianmin@loongson.cn>
+ <20220909092811.22627-2-lvjianmin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <cfc4c2e5-34af-b968-9c44-28e71731bb75@xen0n.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8CxkOCXCxtjqlIVAA--.20658S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxZr4UKF1DAr4kZry8Jw13urg_yoW7JrWUpF
-	W3KFZ8KFs3JFy3AF9Fqw45Xa4ay39xKr13XF15Kry8A3s0qr1FgFWrGr1Y9a4DC34xZr1q
-	9F48try3Z3W5AFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9qb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-	8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
-	c7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJbIYCTnIWIevJa73UjIFyTuYvjxUgN6JUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220909092811.22627-2-lvjianmin@loongson.cn>
 
+On Fri, Sep 09, 2022 at 05:28:10PM +0800, Jianmin Lv wrote:
+> For DT, of_dma_get_range returns bus_dma_region typed dma regions,
+> which makes multiple dma windows with different offset available
+> for translation between dma address and cpu address.
+> 
+> But for ACPI, acpi_dma_get_range doesn't return similar dma regions,
+> causing no path for setting dev->dma_range_map conveniently. So the
+> patch changes acpi_dma_get_range and returns bus_dma_region typed
+> dma regions according to of_dma_get_range.
+> 
+> After changing acpi_dma_get_range, acpi_arch_dma_setup is changed for
+> ARM64, where original dma_addr and size are removed as these
+> arguments are now redundant, and pass 0 and U64_MAX for dma_base
+> and size of arch_setup_dma_ops, so this is a simplification consistent
+> with what other ACPI architectures also pass to iommu_setup_dma_ops().
 
+How about this commit log:
 
-On 09/09/2022 12:51 AM, WANG Xuerui wrote:
-> Hi,
->
-> On 9/4/22 17:04, Huacai Chen wrote:
->> On Sat, Sep 3, 2022 at 6:11 PM Tiezhu Yang <yangtiezhu@loongson.cn>
->> wrote:
->>>
->>>
->>> On 09/03/2022 04:32 PM, Huacai Chen wrote:
->>>> On Thu, Sep 1, 2022 at 10:27 AM Tiezhu Yang <yangtiezhu@loongson.cn>
->>>> wrote:
->>>>> BPF programs are normally handled by a BPF interpreter, add BPF JIT
->>>>> support for LoongArch to allow the kernel to generate native code
->>>>> when a program is loaded into the kernel, this will significantly
->>>>> speed-up processing of BPF programs.
->>> [...]
->>>
->>>>> +
->>>>> +static inline int emit_cond_jmp(struct jit_ctx *ctx, u8 cond, enum
->>>>> loongarch_gpr rj,
->>>>> +                               enum loongarch_gpr rd, int jmp_offset)
->>>>> +{
->>>>> +       /*
->>>>> +        * A large PC-relative jump offset may overflow the
->>>>> immediate field of
->>>>> +        * the native conditional branch instruction, triggering a
->>>>> conversion
->>>>> +        * to use an absolute jump instead, this jump sequence is
->>>>> particularly
->>>>> +        * nasty. For now, use cond_jmp_offs26() directly to keep
->>>>> it simple.
->>>>> +        * In the future, maybe we can add support for far
->>>>> branching, the branch
->>>>> +        * relaxation requires more than two passes to converge,
->>>>> the code seems
->>>>> +        * too complex to understand, not quite sure whether it is
->>>>> necessary and
->>>>> +        * worth the extra pain. Anyway, just leave it as it is to
->>>>> enhance code
->>>>> +        * readability now.
->>>> Oh, no. I don't think this is a very difficult problem, because the
->>>> old version has already solved [1]. Please improve your code and send
->>>> V4.
->>>> BTW, I have committed V3 with some small modifications in
->>>> https://github.com/loongson/linux/commits/loongarch-next, please make
->>>> V4 based on that.
->>>>
->>>> [1]
->>>> https://github.com/loongson/linux/commit/e20b2353f40cd13720996524e1df6d0ca086eeb8#diff-6d2f4f5a862a5dce12f8eb0feeca095825c4ed1c2e7151b0905fb8d03c98922e
->>>>
->>>>
->>>> --------code in the old version--------
->>>> static inline void emit_cond_jump(struct jit_ctx *ctx, u8 cond, enum
->>>> loongarch_gpr rj,
->>>>                                    enum loongarch_gpr rd, int
->>>> jmp_offset)
->>>> {
->>>>          if (is_signed_imm16(jmp_offset))
->>>>                  cond_jump_offs16(ctx, cond, rj, rd, jmp_offset);
->>>>          else if (is_signed_imm26(jmp_offset))
->>>>                  cond_jump_offs26(ctx, cond, rj, rd, jmp_offset);
->>>>          else
->>>>                  cond_jump_offs32(ctx, cond, rj, rd, jmp_offset);
->>>> }
->>>>
->>>> static inline void emit_uncond_jump(struct jit_ctx *ctx, int
->>>> jmp_offset, bool is_exit)
->>>> {
->>>>          if (is_signed_imm26(jmp_offset))
->>>>                  uncond_jump_offs26(ctx, jmp_offset);
->>>>          else
->>>>                  uncond_jump_offs32(ctx, jmp_offset, is_exit);
->>>> }
->>>> --------end of code--------
->>>>
->>>> Huacai
->>>>
->>> Hi Huacai,
->>>
->>> This change is to pass the special test cases:
->>> "a new type of jump test where the program jumps forwards
->>> and backwards with increasing offset. It mainly tests JITs where a
->>> relative jump may generate different JITed code depending on the offset
->>> size."
->>>
->>> They are introduced in commit a7d2e752e520 ("bpf/tests: Add staggered
->>> JMP and JMP32 tests") after the old internal version you mentioned.
->>>
->>> Here, we use the native instructions to enlarge the jump range to 26 bit
->>> directly rather than 16 bit first, and also take no account of more than
->>> 26 bit case because there is no native instruction and it needs to
->>> emulate.
->>>
->>> As the code comment said, this is to enhance code readability now.
->> I'm not familiar with bpf, Daniel, Ruoyao and Xuerui, what do you
->> think about it?
->
-> I'm not familiar with eBPF JITs either, but from a cursory look it seems
-> the readability isn't that bad even for the original version? It is
-> clear that the appropriate instructions are selected according to size
-> of the immediate. And the current way of doing things doesn't really fix
-> the problem, it relies on the fact that *normally* the negative branch
-> offset is expressible in 16 bits (actually 18 bits).
->
-> So, at the very least, you should keep the fallback logic towards
-> cond_jump_offs32. At which point adding back enough code so you're back
-> to the original version doesn't sound like it's too much anyway...
->
+"In DT systems configurations, of_dma_get_range() returns struct
+bus_dma_region DMA regions; they are used to set-up devices
+DMA windows with different offset available for translation between DMA
+address and CPU address.
 
-Hi Huacai and Xuerui,
+In ACPI systems configuration, acpi_dma_get_range() does not return
+DMA regions yet and that precludes setting up the dev->dma_range_map
+pointer and therefore DMA regions with multiple offsets.
 
-cond_jump_offs26() has the ability to handle the offs16 range, this
-is intended to pass a new type of jump test where the program jumps
-forwards and backwards with increasing offset.
+Update acpi_dma_get_range() to return struct bus_dma_region
+DMA regions like of_dma_get_range() does.
 
-The case with larger jump offset is rare, it can fall back to the
-interpreter if jit failed.
+After updating acpi_dma_get_range(), acpi_arch_dma_setup() is changed for
+ARM64, where the original dma_addr and size are removed as these
+arguments are now redundant, and pass 0 and U64_MAX for dma_base
+and size of arch_setup_dma_ops; this is a simplification consistent
+with what other ACPI architectures also pass to iommu_setup_dma_ops()."
 
-As we discussed offline, the current implementation is OK,
-the committed v3 with some small modifications by Huacai in
-https://github.com/loongson/linux/commits/loongarch-next
-looks good and works well, no need to do more modifications,
-thank you all for your reviews.
+> 
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> ---
+>  drivers/acpi/arm64/dma.c | 29 +++++++++++++---------
+>  drivers/acpi/scan.c      | 53 +++++++++++++++++-----------------------
+>  include/acpi/acpi_bus.h  |  3 +--
+>  include/linux/acpi.h     |  7 +++---
+>  4 files changed, 45 insertions(+), 47 deletions(-)
+> 
+> diff --git a/drivers/acpi/arm64/dma.c b/drivers/acpi/arm64/dma.c
+> index f16739ad3cc0..1ef8e7ded4cd 100644
+> --- a/drivers/acpi/arm64/dma.c
+> +++ b/drivers/acpi/arm64/dma.c
+> @@ -4,11 +4,12 @@
+>  #include <linux/device.h>
+>  #include <linux/dma-direct.h>
+>  
+> -void acpi_arch_dma_setup(struct device *dev, u64 *dma_addr, u64 *dma_size)
+> +void acpi_arch_dma_setup(struct device *dev)
+>  {
+>  	int ret;
+>  	u64 end, mask;
+> -	u64 dmaaddr = 0, size = 0, offset = 0;
+> +	u64 size = 0;
+> +	const struct bus_dma_region *map = NULL;
+>  
+>  	/*
+>  	 * If @dev is expected to be DMA-capable then the bus code that created
+> @@ -26,25 +27,31 @@ void acpi_arch_dma_setup(struct device *dev, u64 *dma_addr, u64 *dma_size)
+>  	else
+>  		size = 1ULL << 32;
+>  
+> -	ret = acpi_dma_get_range(dev, &dmaaddr, &offset, &size);
+> +	ret = acpi_dma_get_range(dev, &map);
+> +	if (!ret && map) {
+> +		const struct bus_dma_region *r = map;
+> +
+> +		for (end = 0; r->size; r++) {
+> +			if (r->dma_start + r->size - 1 > end)
+> +				end = r->dma_start + r->size - 1;
+> +		}
+> +
+> +		size = end + 1;
+> +		dev->dma_range_map = map;
+> +	}
+> +
+>  	if (ret == -ENODEV)
+>  		ret = iort_dma_get_ranges(dev, &size);
+> +
 
-Thanks,
-Tiezhu
+Nit: this is a spurious line change.
 
+>  	if (!ret) {
+>  		/*
+>  		 * Limit coherent and dma mask based on size retrieved from
+>  		 * firmware.
+>  		 */
+> -		end = dmaaddr + size - 1;
+> +		end = size - 1;
+>  		mask = DMA_BIT_MASK(ilog2(end) + 1);
+>  		dev->bus_dma_limit = end;
+>  		dev->coherent_dma_mask = min(dev->coherent_dma_mask, mask);
+>  		*dev->dma_mask = min(*dev->dma_mask, mask);
+>  	}
+> -
+> -	*dma_addr = dmaaddr;
+> -	*dma_size = size;
+> -
+> -	ret = dma_direct_set_offset(dev, dmaaddr + offset, dmaaddr, size);
+> -
+> -	dev_dbg(dev, "dma_offset(%#08llx)%s\n", offset, ret ? " failed!" : "");
+>  }
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 42cec8120f18..b4505ec467fe 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/platform_data/x86/apple.h>
+>  #include <linux/pgtable.h>
+>  #include <linux/crc32.h>
+> +#include <linux/dma-direct.h>
+>  
+>  #include "internal.h"
+>  
+> @@ -1467,25 +1468,21 @@ enum dev_dma_attr acpi_get_dma_attr(struct acpi_device *adev)
+>   * acpi_dma_get_range() - Get device DMA parameters.
+>   *
+>   * @dev: device to configure
+> - * @dma_addr: pointer device DMA address result
+> - * @offset: pointer to the DMA offset result
+> - * @size: pointer to DMA range size result
+> + * @map: pointer to DMA ranges result
+>   *
+> - * Evaluate DMA regions and return respectively DMA region start, offset
+> - * and size in dma_addr, offset and size on parsing success; it does not
+> - * update the passed in values on failure.
+> + * Evaluate DMA regions and return pointer to DMA regions on
+> + * parsing success; it does not update the passed in values on failure.
+>   *
+>   * Return 0 on success, < 0 on failure.
+>   */
+> -int acpi_dma_get_range(struct device *dev, u64 *dma_addr, u64 *offset,
+> -		       u64 *size)
+> +int acpi_dma_get_range(struct device *dev, const struct bus_dma_region **map)
+>  {
+>  	struct acpi_device *adev;
+>  	LIST_HEAD(list);
+>  	struct resource_entry *rentry;
+>  	int ret;
+>  	struct device *dma_dev = dev;
+> -	u64 len, dma_start = U64_MAX, dma_end = 0, dma_offset = 0;
+> +	struct bus_dma_region *r;
+>  
+>  	/*
+>  	 * Walk the device tree chasing an ACPI companion with a _DMA
+> @@ -1510,31 +1507,28 @@ int acpi_dma_get_range(struct device *dev, u64 *dma_addr, u64 *offset,
+>  
+>  	ret = acpi_dev_get_dma_resources(adev, &list);
+>  	if (ret > 0) {
+> +		r = kcalloc(ret + 1, sizeof(*r), GFP_KERNEL);
+
+Why (ret + 1) ?
+
+> +		if (!r) {
+> +			ret = -ENOMEM;
+> +			goto out;
+> +		}
+> +
+> +		*map = r;
+
+I don't think that's right. This function can still fail at this stage,
+we should not update the *map value yet.
+
+Lorenzo
+
+> +
+>  		list_for_each_entry(rentry, &list, node) {
+> -			if (dma_offset && rentry->offset != dma_offset) {
+> +			if (rentry->res->start >= rentry->res->end) {
+>  				ret = -EINVAL;
+> -				dev_warn(dma_dev, "Can't handle multiple windows with different offsets\n");
+> +				dev_dbg(dma_dev, "Invalid DMA regions configuration\n");
+>  				goto out;
+>  			}
+> -			dma_offset = rentry->offset;
+>  
+> -			/* Take lower and upper limits */
+> -			if (rentry->res->start < dma_start)
+> -				dma_start = rentry->res->start;
+> -			if (rentry->res->end > dma_end)
+> -				dma_end = rentry->res->end;
+> -		}
+> -
+> -		if (dma_start >= dma_end) {
+> -			ret = -EINVAL;
+> -			dev_dbg(dma_dev, "Invalid DMA regions configuration\n");
+> -			goto out;
+> +			r->cpu_start = rentry->res->start;
+> +			r->dma_start = rentry->res->start - rentry->offset;
+> +			r->size = resource_size(rentry->res);
+> +			r->offset = rentry->offset;
+> +			r++;
+>  		}
+>  
+> -		*dma_addr = dma_start - dma_offset;
+> -		len = dma_end - dma_start;
+> -		*size = max(len, len + 1);
+> -		*offset = dma_offset;
+>  	}
+>   out:
+>  	acpi_dev_free_resource_list(&list);
+> @@ -1624,20 +1618,19 @@ int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
+>  			  const u32 *input_id)
+>  {
+>  	const struct iommu_ops *iommu;
+> -	u64 dma_addr = 0, size = 0;
+>  
+>  	if (attr == DEV_DMA_NOT_SUPPORTED) {
+>  		set_dma_ops(dev, &dma_dummy_ops);
+>  		return 0;
+>  	}
+>  
+> -	acpi_arch_dma_setup(dev, &dma_addr, &size);
+> +	acpi_arch_dma_setup(dev);
+>  
+>  	iommu = acpi_iommu_configure_id(dev, input_id);
+>  	if (PTR_ERR(iommu) == -EPROBE_DEFER)
+>  		return -EPROBE_DEFER;
+>  
+> -	arch_setup_dma_ops(dev, dma_addr, size,
+> +	arch_setup_dma_ops(dev, 0, U64_MAX,
+>  				iommu, attr == DEV_DMA_COHERENT);
+>  
+>  	return 0;
+> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> index e7d27373ff71..73ac4a1d6947 100644
+> --- a/include/acpi/acpi_bus.h
+> +++ b/include/acpi/acpi_bus.h
+> @@ -613,8 +613,7 @@ enum dev_dma_attr acpi_get_dma_attr(struct acpi_device *adev);
+>  int acpi_iommu_fwspec_init(struct device *dev, u32 id,
+>  			   struct fwnode_handle *fwnode,
+>  			   const struct iommu_ops *ops);
+> -int acpi_dma_get_range(struct device *dev, u64 *dma_addr, u64 *offset,
+> -		       u64 *size);
+> +int acpi_dma_get_range(struct device *dev, const struct bus_dma_region **map);
+>  int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
+>  			   const u32 *input_id);
+>  static inline int acpi_dma_configure(struct device *dev,
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 6f64b2f3dc54..bb41623dab77 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -281,12 +281,12 @@ void acpi_numa_x2apic_affinity_init(struct acpi_srat_x2apic_cpu_affinity *pa);
+>  
+>  #ifdef CONFIG_ARM64
+>  void acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa);
+> -void acpi_arch_dma_setup(struct device *dev, u64 *dma_addr, u64 *dma_size);
+> +void acpi_arch_dma_setup(struct device *dev);
+>  #else
+>  static inline void
+>  acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa) { }
+>  static inline void
+> -acpi_arch_dma_setup(struct device *dev, u64 *dma_addr, u64 *dma_size) { }
+> +acpi_arch_dma_setup(struct device *dev) { }
+>  #endif
+>  
+>  int acpi_numa_memory_affinity_init (struct acpi_srat_mem_affinity *ma);
+> @@ -977,8 +977,7 @@ static inline enum dev_dma_attr acpi_get_dma_attr(struct acpi_device *adev)
+>  	return DEV_DMA_NOT_SUPPORTED;
+>  }
+>  
+> -static inline int acpi_dma_get_range(struct device *dev, u64 *dma_addr,
+> -				     u64 *offset, u64 *size)
+> +static inline int acpi_dma_get_range(struct device *dev, const struct bus_dma_region **map)
+>  {
+>  	return -ENODEV;
+>  }
+> -- 
+> 2.31.1
+> 
