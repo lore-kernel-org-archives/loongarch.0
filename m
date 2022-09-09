@@ -1,143 +1,107 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6885646B4
-	for <loongarch@lists.linux.dev>; Thu,  8 Sep 2022 16:51:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1662655872; bh=6rntCE9dXBNSFS5I+DqUbsib3Q8FiCqlcnV09DyYO8k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QqmkQIoKV27YBXmyYvx1s7Qwjy2qL/PRqcK3qzYXqVKJpGH7ujt17XTyNl5INihOv
-	 XBrtBEGTa9cySF8l72gVttG+EVlX52dBiLRHr79JGLveT0RPlqCXSBjnYQNgQuweJf
-	 iDvnNwstIkzN04o8H+UIQwcgFQBpoNiNIL2hTSvk=
-Received: from [192.168.9.172] (unknown [101.88.26.24])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id BAE55600BD;
-	Fri,  9 Sep 2022 00:51:11 +0800 (CST)
-Message-ID: <cfc4c2e5-34af-b968-9c44-28e71731bb75@xen0n.name>
-Date: Fri, 9 Sep 2022 00:51:11 +0800
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F93A622
+	for <loongarch@lists.linux.dev>; Fri,  9 Sep 2022 03:20:40 +0000 (UTC)
+Received: from bogon.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxkOD1sBpjCwEVAA--.19681S2;
+	Fri, 09 Sep 2022 11:20:22 +0800 (CST)
+From: Youling Tang <tangyouling@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Baoquan He <bhe@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Jinyang He <hejinyang@loongson.cn>,
+	kexec@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] LoongArch: Add kexec/kdump support
+Date: Fri,  9 Sep 2022 11:20:18 +0800
+Message-Id: <1662693621-31053-1-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8CxkOD1sBpjCwEVAA--.19681S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw1xGFy7tF1rWw4ruFy8Xwb_yoW8KFW7pF
+	17urn8Kr4kGFn3Jws3tw1DuryrJwn7Gw13W3ZFy34rZF42qF1UZrnYqFnrXFn8tws3Kr40
+	qFnYgw4293WUJaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
+	WxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7Cj
+	xVA2Y2ka0xkIwI1lc2xSY4AK67AK6r48MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
+	C2KfnxnUUI43ZEXa7VUj5l1PUUUUU==
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:106.0) Gecko/20100101
- Thunderbird/106.0a1
-Subject: Re: [PATCH bpf-next v3 3/4] LoongArch: Add BPF JIT support
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@kernel.org>, Tiezhu Yang
- <yangtiezhu@loongson.cn>, WANG Xuerui <git@xen0n.name>,
- Xi Ruoyao <xry111@xry111.site>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev,
- Li Xuefeng <lixuefeng@loongson.cn>
-References: <1661999249-10258-1-git-send-email-yangtiezhu@loongson.cn>
- <1661999249-10258-4-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H4yU2tp=DBGCkdSzp-9bAXXDM4+0iqDgOac+fbgQnsx2A@mail.gmail.com>
- <1a740b5c-041c-85c6-f1d6-bb0b931c0c3e@loongson.cn>
- <CAAhV-H5vfw+Mv=LbQfa4sPHW91Z+ij3R8+LsHZOAiR+u7pJONw@mail.gmail.com>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <CAAhV-H5vfw+Mv=LbQfa4sPHW91Z+ij3R8+LsHZOAiR+u7pJONw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Hi,
+This patch series to support kexec/kdump (only 64bit).
 
-On 9/4/22 17:04, Huacai Chen wrote:
-> On Sat, Sep 3, 2022 at 6:11 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->>
->> On 09/03/2022 04:32 PM, Huacai Chen wrote:
->>> On Thu, Sep 1, 2022 at 10:27 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>>> BPF programs are normally handled by a BPF interpreter, add BPF JIT
->>>> support for LoongArch to allow the kernel to generate native code
->>>> when a program is loaded into the kernel, this will significantly
->>>> speed-up processing of BPF programs.
->> [...]
->>
->>>> +
->>>> +static inline int emit_cond_jmp(struct jit_ctx *ctx, u8 cond, enum loongarch_gpr rj,
->>>> +                               enum loongarch_gpr rd, int jmp_offset)
->>>> +{
->>>> +       /*
->>>> +        * A large PC-relative jump offset may overflow the immediate field of
->>>> +        * the native conditional branch instruction, triggering a conversion
->>>> +        * to use an absolute jump instead, this jump sequence is particularly
->>>> +        * nasty. For now, use cond_jmp_offs26() directly to keep it simple.
->>>> +        * In the future, maybe we can add support for far branching, the branch
->>>> +        * relaxation requires more than two passes to converge, the code seems
->>>> +        * too complex to understand, not quite sure whether it is necessary and
->>>> +        * worth the extra pain. Anyway, just leave it as it is to enhance code
->>>> +        * readability now.
->>> Oh, no. I don't think this is a very difficult problem, because the
->>> old version has already solved [1]. Please improve your code and send
->>> V4.
->>> BTW, I have committed V3 with some small modifications in
->>> https://github.com/loongson/linux/commits/loongarch-next, please make
->>> V4 based on that.
->>>
->>> [1] https://github.com/loongson/linux/commit/e20b2353f40cd13720996524e1df6d0ca086eeb8#diff-6d2f4f5a862a5dce12f8eb0feeca095825c4ed1c2e7151b0905fb8d03c98922e
->>>
->>> --------code in the old version--------
->>> static inline void emit_cond_jump(struct jit_ctx *ctx, u8 cond, enum
->>> loongarch_gpr rj,
->>>                                    enum loongarch_gpr rd, int jmp_offset)
->>> {
->>>          if (is_signed_imm16(jmp_offset))
->>>                  cond_jump_offs16(ctx, cond, rj, rd, jmp_offset);
->>>          else if (is_signed_imm26(jmp_offset))
->>>                  cond_jump_offs26(ctx, cond, rj, rd, jmp_offset);
->>>          else
->>>                  cond_jump_offs32(ctx, cond, rj, rd, jmp_offset);
->>> }
->>>
->>> static inline void emit_uncond_jump(struct jit_ctx *ctx, int
->>> jmp_offset, bool is_exit)
->>> {
->>>          if (is_signed_imm26(jmp_offset))
->>>                  uncond_jump_offs26(ctx, jmp_offset);
->>>          else
->>>                  uncond_jump_offs32(ctx, jmp_offset, is_exit);
->>> }
->>> --------end of code--------
->>>
->>> Huacai
->>>
->> Hi Huacai,
->>
->> This change is to pass the special test cases:
->> "a new type of jump test where the program jumps forwards
->> and backwards with increasing offset. It mainly tests JITs where a
->> relative jump may generate different JITed code depending on the offset
->> size."
->>
->> They are introduced in commit a7d2e752e520 ("bpf/tests: Add staggered
->> JMP and JMP32 tests") after the old internal version you mentioned.
->>
->> Here, we use the native instructions to enlarge the jump range to 26 bit
->> directly rather than 16 bit first, and also take no account of more than
->> 26 bit case because there is no native instruction and it needs to emulate.
->>
->> As the code comment said, this is to enhance code readability now.
-> I'm not familiar with bpf, Daniel, Ruoyao and Xuerui, what do you
-> think about it?
+Kexec is a system call that enables you to load and boot into another kernel
+from the currently running kernel. This is useful for kernel developers or
+other people who need to reboot very quickly without waiting for the whole
+BIOS boot process to finish. 
 
-I'm not familiar with eBPF JITs either, but from a cursory look it seems 
-the readability isn't that bad even for the original version? It is 
-clear that the appropriate instructions are selected according to size 
-of the immediate. And the current way of doing things doesn't really fix 
-the problem, it relies on the fact that *normally* the negative branch 
-offset is expressible in 16 bits (actually 18 bits).
+Kdump uses kexec to quickly boot to a dump-capture kernel whenever a
+dump of the system kernel's memory needs to be taken (for example, when
+the system panics). The system kernel's memory image is preserved across
+the reboot and is accessible to the dump-capture kernel.
 
-So, at the very least, you should keep the fallback logic towards 
-cond_jump_offs32. At which point adding back enough code so you're back 
-to the original version doesn't sound like it's too much anyway...
+For details, see Documentation/admin-guide/kdump/kdump.rst.
+
+User tools kexec-tools see link [1].
+
+TODO:
+Currently kdump does not support the same binary image, the production kernel
+and the capture kernel will be generated with different configurations. I will
+support kernel relocation support in the near future. Then will go to implement
+the same binary support based on kernel relocation support.
+
+[1] Link: https://github.com/tangyouling/kexec-tools
+
+Changes in v2:
+ - Add ibar.
+ - Access via IOCSR.
+ - Remove the settings of the tp, sp registers.
+ - Remove the crash.c file and merge the relevant code into machine_kexec.c.
+ - Adjust the use of CONFIG_SMP macro to avoid build errors under !SMP
+   configuration.
+ - Change the default value of PHYSICAL_START of the capture kernel to
+   0x90000000a0000000.
+
+Youling Tang (3):
+  LoongArch: Add kexec support
+  LoongArch: Add kdump support
+  LoongArch: Enable CONFIG_KEXEC
+
+ arch/loongarch/Kconfig                     |  33 +++
+ arch/loongarch/Makefile                    |   4 +
+ arch/loongarch/configs/loongson3_defconfig |   1 +
+ arch/loongarch/include/asm/kexec.h         |  58 +++++
+ arch/loongarch/kernel/Makefile             |   3 +
+ arch/loongarch/kernel/crash_dump.c         |  19 ++
+ arch/loongarch/kernel/head.S               |   7 +-
+ arch/loongarch/kernel/machine_kexec.c      | 271 +++++++++++++++++++++
+ arch/loongarch/kernel/mem.c                |   6 +
+ arch/loongarch/kernel/relocate_kernel.S    | 112 +++++++++
+ arch/loongarch/kernel/setup.c              |  49 ++++
+ arch/loongarch/kernel/traps.c              |   4 +
+ 12 files changed, 566 insertions(+), 1 deletion(-)
+ create mode 100644 arch/loongarch/include/asm/kexec.h
+ create mode 100644 arch/loongarch/kernel/crash_dump.c
+ create mode 100644 arch/loongarch/kernel/machine_kexec.c
+ create mode 100644 arch/loongarch/kernel/relocate_kernel.S
 
 -- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+2.36.0
 
