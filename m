@@ -1,82 +1,109 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6F9A40
-	for <loongarch@lists.linux.dev>; Sat, 10 Sep 2022 07:53:23 +0000 (UTC)
-Received: by mail-pl1-f171.google.com with SMTP id v1so3812647plo.9
-        for <loongarch@lists.linux.dev>; Sat, 10 Sep 2022 00:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date;
-        bh=JE+O0JjBaUaKaVbXBPjztEKOPO7pJKl9qx1EvIyCmeg=;
-        b=cvZJIBqGw+0ibOxmX+2fb/j2Y70TPEysHn1ZyDWt4NtukFlD84lWxjHmLm+5vXJ+VJ
-         KXVReY8lhuzBkeoQdI7cqq4CEGfH6ZTdjzNeF13E1LDMcxz87nP6HidR7yqXFQU1vbnh
-         AFBCIQriexf4bFS7x6XlHr4yXe5h214hVucA3T2xooH1iY/urtq9/xFfF+fNYNhSazGp
-         s44Y7FJm+0cx4aAai0rYk6VbcIjmSTh5h7jqgPsI7/RNW8pRFTd8/HnYFNpqYW6qV08Q
-         u4byXDmpYkU4fdgZVV/tCI7UrKUMeRH8yPvPvt+aTkXy8pnKHYljhWXg0m7Nm+SlAE88
-         zgbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=JE+O0JjBaUaKaVbXBPjztEKOPO7pJKl9qx1EvIyCmeg=;
-        b=rZ9C8H7M2g+vHdeLSD5awXCngKgLDV9J3Z8WcVHtCWfwJOqcSGgL1tSbVX5EMbkAKT
-         AxmCdHzI8WvNub/jnCIW1sd3wkH+r+3xVKYLtfYinEiT84HgR5eUNl9opYYYyS8d03gw
-         UjOdxZBB7lnNou+rXKgMop7Rnpe+1+EE/QfF/TxTUJc4Q5+I90EIq0GwJDPqKWP6431g
-         L2zuJRxz3Lq6VKYDPHuNiiEv6HR2sPaz7wScJW+hAf9J7dT3wl+vJWn/lefwE8fhA0BZ
-         EXX9iUAu6PP0T3jseo4xyjnnNsMIq0brCdMnHsAzcL/uWlN3a0OIPD0VPiIP9uKQQVL6
-         NRbw==
-X-Gm-Message-State: ACgBeo0HTbMtI+lWYIboDjLcol87CXzqre2VOj7h3DOaHguElQSffnqz
-	KB21/Mb6PDA0V5FCR0lOVP4UrQ==
-X-Google-Smtp-Source: AA6agR5WNWyuopz0i+tWtj4d6z/9P1Jiwgf7f0mslhclROc9ftNMoa4vQmNLf5f/958mh31IrCT/nw==
-X-Received: by 2002:a17:90b:1d02:b0:1fe:36a:6e01 with SMTP id on2-20020a17090b1d0200b001fe036a6e01mr13521195pjb.102.1662796402707;
-        Sat, 10 Sep 2022 00:53:22 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:200:3bf1:3d60:1b12:a903])
-        by smtp.gmail.com with ESMTPSA id z12-20020a170903018c00b00176d4b093e1sm1717555plg.16.2022.09.10.00.53.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Sep 2022 00:53:21 -0700 (PDT)
-Date: Sat, 10 Sep 2022 00:53:16 -0700
-From: Fangrui Song <maskray@google.com>
-To: Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH] vdso: Improve cmd_vdso_check to check all dynamic
- relocations
-Message-ID: <20220910075316.no72fdyqjvunomwm@google.com>
-References: <20220830193701.1702962-1-maskray@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9D2A5F
+	for <loongarch@lists.linux.dev>; Sat, 10 Sep 2022 21:17:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7671FC433D7;
+	Sat, 10 Sep 2022 21:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1662844664;
+	bh=Zk/Ie0S+4bGfBwclpLt46krqKDXNjId4eAEIiY0EuCI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Uep0H1YM1vfkXScWVfmbNJu8oHDhyThz5v1HGjuSx4mK6rdUXM2l+xp0yq4KU4cAH
+	 +B/i+9VGmho2TiveCJ8DNerTTPWSl0IPdSmFmDn6vBpbAXedItwsW3NY0ywrrQfl7K
+	 iCM2zADg7AfGrUIInOcIUk+lEug7WnkODPtN2GdxdTKgx1sK6k+ZuWEmfX7llTaQLo
+	 j1xu0oq8xFOP3bpXboBtt4O12t3dGgjq7gB6mcrupFT8EmD1n83KviMq4ASYk43+ID
+	 HES8RMUPBOifcjSNFv3pCDSFeOTtR1+40/QX4pW+9iY2XX3pojxw4ZjyekdUMjIRGF
+	 wbhBHV8zBTpHQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	Sasha Levin <sashal@kernel.org>,
+	chenhuacai@kernel.org,
+	lvjianmin@loongson.cn,
+	git@xen0n.name,
+	maz@kernel.org,
+	jiaxun.yang@flygoat.com,
+	loongarch@lists.linux.dev
+Subject: [PATCH AUTOSEL 5.19 35/38] LoongArch: Fix section mismatch due to acpi_os_ioremap()
+Date: Sat, 10 Sep 2022 17:16:20 -0400
+Message-Id: <20220910211623.69825-35-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220910211623.69825-1-sashal@kernel.org>
+References: <20220910211623.69825-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20220830193701.1702962-1-maskray@google.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-On 2022-08-30, Fangrui Song wrote:
->The actual intention is that no dynamic relocation exists. However, some
->GNU ld ports produce unneeded R_*_NONE. (If a port is not care enough to
->determine the exact .rel[a].dyn size, the trailing zeros become R_*_NONE
->relocations. E.g. powerpc64le ld as of 2.38 has the issue with
->defconfig.) R_*_NONE are generally no-op in the dynamic loaders. So just
->ignore them.
->
->With the change, we can remove ARCH_REL_TYPE_ABS. ARCH_REL_TYPE_ABS is a
->bit misnomer as ports may check RELAVETIVE/GLOB_DAT/JUMP_SLOT which are
->not called "absolute relocations". (The patch is motivated by the arm64
->port missing R_AARCH64_RELATIVE.)
->
->While here, replace "egrep" with "grep" as "egrep" is deprecated in GNU
->grep 3.7.
->
->Signed-off-by: Fangrui Song <maskray@google.com>
->---
->[...]
->
+From: Huacai Chen <chenhuacai@loongson.cn>
 
-Ping.
+[ Upstream commit e0fba87c854347007fb9fc873e890b686cc61302 ]
+
+Now acpi_os_ioremap() is marked with __init because it calls memblock_
+is_memory() which is also marked with __init in the !ARCH_KEEP_MEMBLOCK
+case. However, acpi_os_ioremap() is called by ordinary functions such
+as acpi_os_{read, write}_memory() and causes section mismatch warnings:
+
+WARNING: modpost: vmlinux.o: section mismatch in reference: acpi_os_read_memory (section: .text) -> acpi_os_ioremap (section: .init.text)
+WARNING: modpost: vmlinux.o: section mismatch in reference: acpi_os_write_memory (section: .text) -> acpi_os_ioremap (section: .init.text)
+
+Fix these warnings by selecting ARCH_KEEP_MEMBLOCK unconditionally and
+removing the __init modifier of acpi_os_ioremap(). This can also give a
+chance to track "memory" and "reserved" memblocks after early boot.
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/loongarch/Kconfig            | 1 +
+ arch/loongarch/include/asm/acpi.h | 2 +-
+ arch/loongarch/kernel/acpi.c      | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 62b5b07fa4e1c..ca64bf5f5b038 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -36,6 +36,7 @@ config LOONGARCH
+ 	select ARCH_INLINE_SPIN_UNLOCK_BH if !PREEMPTION
+ 	select ARCH_INLINE_SPIN_UNLOCK_IRQ if !PREEMPTION
+ 	select ARCH_INLINE_SPIN_UNLOCK_IRQRESTORE if !PREEMPTION
++	select ARCH_KEEP_MEMBLOCK
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+ 	select ARCH_MIGHT_HAVE_PC_SERIO
+ 	select ARCH_SPARSEMEM_ENABLE
+diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
+index 62044cd5b7bc5..825c2519b9d1f 100644
+--- a/arch/loongarch/include/asm/acpi.h
++++ b/arch/loongarch/include/asm/acpi.h
+@@ -15,7 +15,7 @@ extern int acpi_pci_disabled;
+ extern int acpi_noirq;
+ 
+ #define acpi_os_ioremap acpi_os_ioremap
+-void __init __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size);
++void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size);
+ 
+ static inline void disable_acpi(void)
+ {
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index bb729ee8a2370..796a24055a942 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -113,7 +113,7 @@ void __init __acpi_unmap_table(void __iomem *map, unsigned long size)
+ 	early_memunmap(map, size);
+ }
+ 
+-void __init __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
++void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
+ {
+ 	if (!memblock_is_memory(phys))
+ 		return ioremap(phys, size);
+-- 
+2.35.1
+
