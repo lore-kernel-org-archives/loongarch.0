@@ -1,90 +1,82 @@
-Received: from conssluserg-01.nifty.com (conssluserg-01.nifty.com [210.131.2.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD63F658
-	for <loongarch@lists.linux.dev>; Fri,  9 Sep 2022 20:35:28 +0000 (UTC)
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49]) (authenticated)
-	by conssluserg-01.nifty.com with ESMTP id 289KZ9tk024147
-	for <loongarch@lists.linux.dev>; Sat, 10 Sep 2022 05:35:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 289KZ9tk024147
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-	s=dec2015msa; t=1662755709;
-	bh=rH1NP6uWb5FT/e2uz2unz8AGL349fphr8MvxQi9NiSs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VDA1FxXrDxd7dgHP4xK+4mvQiage/NY4J2C9vRyxdTbN2ZKC4lZP5SIi64rdLncc1
-	 5428ez4kDdUQCfFIVQ2vxwCv8MO4WOHjQhzxIMc2KFP+x1nZmtMUXRfcru4rTZe5DY
-	 Nj1Do/xgz0xEoLP2ISmUP3Du/tG7bSrMCASJM3YQuDzFKW1ermJbqHpkUptLVZY17J
-	 yxU1n5q60KIgbTyFQRS2NI1AwrjTgi9IJw1A8ogQ9kXiuoTAwvH0pHxXqH2/o4xaeK
-	 G4qpKHaH5VLuVu5q9/5hXyr+E61jASe/kXFeV6PiIUBdhWfVkOonE2xmTPgiEFgqe6
-	 W095btzBJFPBA==
-X-Nifty-SrcIP: [209.85.160.49]
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-11e9a7135easo6932440fac.6
-        for <loongarch@lists.linux.dev>; Fri, 09 Sep 2022 13:35:09 -0700 (PDT)
-X-Gm-Message-State: ACgBeo137bNhrnLDEdLBbQnDB/MM17zvVuRqgozllVmIfw/Ixu0oPKIK
-	Lsb0oo0/wrlvhLgXihJCpJMvDd5q9zEiH28Xnlk=
-X-Google-Smtp-Source: AA6agR6dL09UltxzlxRkGBfGKrUUYZ2bafO2jfFPKuEOiCf04AJFdBbWcLrwkKb2VeRhUwPR42iE5Q+EoGneHl3m+O8=
-X-Received: by 2002:a05:6870:c58b:b0:10b:d21d:ad5e with SMTP id
- ba11-20020a056870c58b00b0010bd21dad5emr5903018oab.287.1662755708354; Fri, 09
- Sep 2022 13:35:08 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6F9A40
+	for <loongarch@lists.linux.dev>; Sat, 10 Sep 2022 07:53:23 +0000 (UTC)
+Received: by mail-pl1-f171.google.com with SMTP id v1so3812647plo.9
+        for <loongarch@lists.linux.dev>; Sat, 10 Sep 2022 00:53:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date;
+        bh=JE+O0JjBaUaKaVbXBPjztEKOPO7pJKl9qx1EvIyCmeg=;
+        b=cvZJIBqGw+0ibOxmX+2fb/j2Y70TPEysHn1ZyDWt4NtukFlD84lWxjHmLm+5vXJ+VJ
+         KXVReY8lhuzBkeoQdI7cqq4CEGfH6ZTdjzNeF13E1LDMcxz87nP6HidR7yqXFQU1vbnh
+         AFBCIQriexf4bFS7x6XlHr4yXe5h214hVucA3T2xooH1iY/urtq9/xFfF+fNYNhSazGp
+         s44Y7FJm+0cx4aAai0rYk6VbcIjmSTh5h7jqgPsI7/RNW8pRFTd8/HnYFNpqYW6qV08Q
+         u4byXDmpYkU4fdgZVV/tCI7UrKUMeRH8yPvPvt+aTkXy8pnKHYljhWXg0m7Nm+SlAE88
+         zgbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=JE+O0JjBaUaKaVbXBPjztEKOPO7pJKl9qx1EvIyCmeg=;
+        b=rZ9C8H7M2g+vHdeLSD5awXCngKgLDV9J3Z8WcVHtCWfwJOqcSGgL1tSbVX5EMbkAKT
+         AxmCdHzI8WvNub/jnCIW1sd3wkH+r+3xVKYLtfYinEiT84HgR5eUNl9opYYYyS8d03gw
+         UjOdxZBB7lnNou+rXKgMop7Rnpe+1+EE/QfF/TxTUJc4Q5+I90EIq0GwJDPqKWP6431g
+         L2zuJRxz3Lq6VKYDPHuNiiEv6HR2sPaz7wScJW+hAf9J7dT3wl+vJWn/lefwE8fhA0BZ
+         EXX9iUAu6PP0T3jseo4xyjnnNsMIq0brCdMnHsAzcL/uWlN3a0OIPD0VPiIP9uKQQVL6
+         NRbw==
+X-Gm-Message-State: ACgBeo0HTbMtI+lWYIboDjLcol87CXzqre2VOj7h3DOaHguElQSffnqz
+	KB21/Mb6PDA0V5FCR0lOVP4UrQ==
+X-Google-Smtp-Source: AA6agR5WNWyuopz0i+tWtj4d6z/9P1Jiwgf7f0mslhclROc9ftNMoa4vQmNLf5f/958mh31IrCT/nw==
+X-Received: by 2002:a17:90b:1d02:b0:1fe:36a:6e01 with SMTP id on2-20020a17090b1d0200b001fe036a6e01mr13521195pjb.102.1662796402707;
+        Sat, 10 Sep 2022 00:53:22 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:200:3bf1:3d60:1b12:a903])
+        by smtp.gmail.com with ESMTPSA id z12-20020a170903018c00b00176d4b093e1sm1717555plg.16.2022.09.10.00.53.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Sep 2022 00:53:21 -0700 (PDT)
+Date: Sat, 10 Sep 2022 00:53:16 -0700
+From: Fangrui Song <maskray@google.com>
+To: Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH] vdso: Improve cmd_vdso_check to check all dynamic
+ relocations
+Message-ID: <20220910075316.no72fdyqjvunomwm@google.com>
+References: <20220830193701.1702962-1-maskray@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1662030659-21558-1-git-send-email-tangyouling@loongson.cn>
-In-Reply-To: <1662030659-21558-1-git-send-email-tangyouling@loongson.cn>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 10 Sep 2022 05:34:32 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARn=v=ugnvYAeq2rfWyStZKkWQcbaaxSJdxrdHE20X31w@mail.gmail.com>
-Message-ID: <CAK7LNARn=v=ugnvYAeq2rfWyStZKkWQcbaaxSJdxrdHE20X31w@mail.gmail.com>
-Subject: Re: [PATCH] mksysmap: Fix the mismatch of 'L0' symbols in System.map
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: Michal Marek <michal.lkml@markovi.net>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        loongarch@lists.linux.dev, Nick Desaulniers <ndesaulniers@google.com>,
-        Xuerui Wang <kernel@xen0n.name>, Xi Ruoyao <xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20220830193701.1702962-1-maskray@google.com>
 
-On Thu, Sep 1, 2022 at 8:11 PM Youling Tang <tangyouling@loongson.cn> wrote:
+On 2022-08-30, Fangrui Song wrote:
+>The actual intention is that no dynamic relocation exists. However, some
+>GNU ld ports produce unneeded R_*_NONE. (If a port is not care enough to
+>determine the exact .rel[a].dyn size, the trailing zeros become R_*_NONE
+>relocations. E.g. powerpc64le ld as of 2.38 has the issue with
+>defconfig.) R_*_NONE are generally no-op in the dynamic loaders. So just
+>ignore them.
 >
-> When System.map was generated, the kernel used mksysmap to filter the
-> kernel symbols, we need to filter "L0" symbols in LoongArch architecture.
+>With the change, we can remove ARCH_REL_TYPE_ABS. ARCH_REL_TYPE_ABS is a
+>bit misnomer as ports may check RELAVETIVE/GLOB_DAT/JUMP_SLOT which are
+>not called "absolute relocations". (The patch is motivated by the arm64
+>port missing R_AARCH64_RELATIVE.)
 >
-> $ cat System.map | grep L0
-> 9000000000221540 t L0
+>While here, replace "egrep" with "grep" as "egrep" is deprecated in GNU
+>grep 3.7.
 >
-> The L0 symbol exists in System.map, but not in .tmp_System.map. When
-> "cmp -s System.map .tmp_System.map" will show "Inconsistent kallsyms
-> data" error message in link-vmlinux.sh script.
->
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> ---
->  scripts/mksysmap | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/mksysmap b/scripts/mksysmap
-> index 9aa23d15862a..ad8bbc52267d 100755
-> --- a/scripts/mksysmap
-> +++ b/scripts/mksysmap
-> @@ -41,4 +41,4 @@
->  # so we just ignore them to let readprofile continue to work.
->  # (At least sparc64 has __crc_ in the middle).
->
-> -$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( \.L\)' > $2
-> +$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( \.L\)\|\( L0\)' > $2
-> --
-> 2.36.1
+>Signed-off-by: Fangrui Song <maskray@google.com>
+>---
+>[...]
 >
 
-
-Applied to linux-kbuild/fixes.
-Thanks.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Ping.
