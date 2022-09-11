@@ -1,118 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C895F1C01
-	for <loongarch@lists.linux.dev>; Sat, 10 Sep 2022 21:17:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F78BC433D7;
-	Sat, 10 Sep 2022 21:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1662844669;
-	bh=C/uLCVTsYiMRoMsNycUwdSTE8dIo1zbVElHnME0DYIo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DgHNorUce30ncQ7YtYxGRI3nvBTXWuu4GAI0xfz1W/VwI9dzKKdOmPan01oD9mgAy
-	 gMTNyo9JHj2+MuUXcNtjRt7ehpCcbHO1kJBPvAFE08Dr2Gp+1IedP3IqiwUm8+rNrf
-	 gbsnGXkmOL/yJjEDAJdc9ty6Nm2EkDwQfq/1VURBVw/DJBwmg3d78Gs/bulG46FFll
-	 xdk6UeAnyv9bfTek4LDUxO5foXDEMP/j8pXVqS3RvIrdCB5IKGgZN4agcIMdXnI7A2
-	 ujewQ65Bk+RgYpgVoCVSV74j9CftYjbZM8aKMKyZ+VP7TSG4Vceg4jwotD48K6SP0I
-	 e7CywwI9ob2mA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Yupeng Li <liyupeng@zbhlos.com>,
-	Caicai <caizp2008@163.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>,
-	chenhuacai@kernel.org,
-	jiaxun.yang@flygoat.com,
-	git@xen0n.name,
-	ye.xingchen@zte.com.cn,
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB0C97F
+	for <loongarch@lists.linux.dev>; Sun, 11 Sep 2022 09:06:51 +0000 (UTC)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.105])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_2sbpR1jFrsWAA--.22738S4;
+	Sun, 11 Sep 2022 17:06:38 +0800 (CST)
+From: Jianmin Lv <lvjianmin@loongson.cn>
+To: lpieralisi@kernel.org,
+	robin.murphy@arm.com,
+	chenhuacai@loongson.cn
+Cc: guohanjun@huawei.com,
+	sudeep.holla@arm.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	robert.moore@intel.com,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
 	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 5.19 36/38] LoongArch: Fix arch_remove_memory() undefined build error
-Date: Sat, 10 Sep 2022 17:16:21 -0400
-Message-Id: <20220910211623.69825-36-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220910211623.69825-1-sashal@kernel.org>
-References: <20220910211623.69825-1-sashal@kernel.org>
+Subject: [PATCH V5 2/2] LoongArch: Use acpi_arch_dma_setup() and remove ARCH_HAS_PHYS_TO_DMA
+Date: Sun, 11 Sep 2022 17:06:35 +0800
+Message-Id: <20220911090635.5559-3-lvjianmin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220911090635.5559-1-lvjianmin@loongson.cn>
+References: <20220911090635.5559-1-lvjianmin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dx_2sbpR1jFrsWAA--.22738S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxWw47XF4rAF45CryDXF1UZFb_yoW7Gr43pa
+	srCrs8Gr4xKrs7XrykCw18Zr15X3s2kay7XFW7K3sakFnFqr1UXr1vyF9rZF1YqrZrKF4I
+	qF95CFyYqF4UWw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU921xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+	IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2
+	jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+	6r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
+	wVCm-wCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26ryrJr1UJwCFx2IqxVCFs4
+	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+	MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
+	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
+	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x0JUZa9-UUUUU=
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 
-From: Yupeng Li <liyupeng@zbhlos.com>
+Use _DMA defined in ACPI spec for translation between
+DMA address and CPU address, and implement acpi_arch_dma_setup
+for initializing dev->dma_range_map, where acpi_dma_get_range
+is called for parsing _DMA.
 
-[ Upstream commit 1a470ce4e9106cc4c3c0edfb2e213dcbb7224dc4 ]
+e.g.
+If we have two dma ranges:
+cpu address      dma address    size         offset
+0x200080000000   0x2080000000   0x400000000  0x1fe000000000
+0x400080000000   0x4080000000   0x400000000  0x3fc000000000
 
-The kernel build error when unslected CONFIG_MEMORY_HOTREMOVE because
-arch_remove_memory() is needed by mm/memory_hotplug.c but undefined.
+_DMA for pci devices should be declared in host bridge as
+flowing:
 
-Some build error messages like:
+Name (_DMA, ResourceTemplate() {
+        QWordMemory (ResourceProducer,
+            PosDecode,
+            MinFixed,
+            MaxFixed,
+            NonCacheable,
+            ReadWrite,
+            0x0,
+            0x4080000000,
+            0x447fffffff,
+            0x3fc000000000,
+            0x400000000,
+            ,
+            ,
+            )
 
- LD      vmlinux.o
- MODPOST vmlinux.symvers
- MODINFO modules.builtin.modinfo
- GEN     modules.builtin
- LD      .tmp_vmlinux.kallsyms1
-loongarch64-linux-gnu-ld: mm/memory_hotplug.o: in function `.L242':
-memory_hotplug.c:(.ref.text+0x930): undefined reference to `arch_remove_memory'
-make: *** [Makefile:1169：vmlinux] 错误 1
+        QWordMemory (ResourceProducer,
+            PosDecode,
+            MinFixed,
+            MaxFixed,
+            NonCacheable,
+            ReadWrite,
+            0x0,
+            0x2080000000,
+            0x247fffffff,
+            0x1fe000000000,
+            0x400000000,
+            ,
+            ,
+            )
+    })
 
-Removed CONFIG_MEMORY_HOTREMOVE requirement and rearrange the file refer
-to the definitions of other platform architectures.
-
-Signed-off-by: Yupeng Li <liyupeng@zbhlos.com>
-Signed-off-by: Caicai <caizp2008@163.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 ---
- arch/loongarch/mm/init.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ arch/loongarch/Kconfig        |  1 -
+ arch/loongarch/kernel/dma.c   | 52 ++++++++++++++---------------------
+ arch/loongarch/kernel/setup.c |  2 +-
+ include/linux/acpi.h          |  9 ++++--
+ 4 files changed, 28 insertions(+), 36 deletions(-)
 
-diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-index 7094a68c9b832..3c3fbff0b8f86 100644
---- a/arch/loongarch/mm/init.c
-+++ b/arch/loongarch/mm/init.c
-@@ -131,18 +131,6 @@ int arch_add_memory(int nid, u64 start, u64 size, struct mhp_params *params)
- 	return ret;
- }
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index c7dd6ad779af..551dd99e98b8 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -10,7 +10,6 @@ config LOONGARCH
+ 	select ARCH_ENABLE_MEMORY_HOTPLUG
+ 	select ARCH_ENABLE_MEMORY_HOTREMOVE
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+-	select ARCH_HAS_PHYS_TO_DMA
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_INLINE_READ_LOCK if !PREEMPTION
+diff --git a/arch/loongarch/kernel/dma.c b/arch/loongarch/kernel/dma.c
+index 8c9b5314a13e..7a9c6a9dd2d0 100644
+--- a/arch/loongarch/kernel/dma.c
++++ b/arch/loongarch/kernel/dma.c
+@@ -2,39 +2,29 @@
+ /*
+  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+  */
+-#include <linux/init.h>
++#include <linux/acpi.h>
+ #include <linux/dma-direct.h>
+-#include <linux/dma-mapping.h>
+-#include <linux/dma-map-ops.h>
+-#include <linux/swiotlb.h>
  
--#ifdef CONFIG_NUMA
--int memory_add_physaddr_to_nid(u64 start)
+-#include <asm/bootinfo.h>
+-#include <asm/dma.h>
+-#include <asm/loongson.h>
+-
+-/*
+- * We extract 4bit node id (bit 44~47) from Loongson-3's
+- * 48bit physical address space and embed it into 40bit.
+- */
+-
+-static int node_id_offset;
+-
+-dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
 -{
--	int nid;
+-	long nid = (paddr >> 44) & 0xf;
 -
--	nid = pa_to_nid(start);
--	return nid;
+-	return ((nid << 44) ^ paddr) | (nid << node_id_offset);
 -}
--EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
--#endif
 -
--#ifdef CONFIG_MEMORY_HOTREMOVE
- void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
+-phys_addr_t dma_to_phys(struct device *dev, dma_addr_t daddr)
++void acpi_arch_dma_setup(struct device *dev)
  {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
-@@ -154,6 +142,16 @@ void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
- 		page += vmem_altmap_offset(altmap);
- 	__remove_pages(start_pfn, nr_pages, altmap);
+-	long nid = (daddr >> node_id_offset) & 0xf;
++	int ret;
++	u64 mask, end = 0;
++	const struct bus_dma_region *map = NULL;
++
++	ret = acpi_dma_get_range(dev, &map);
++	if (!ret && map) {
++		const struct bus_dma_region *r = map;
++
++		for (end = 0; r->size; r++) {
++			if (r->dma_start + r->size - 1 > end)
++				end = r->dma_start + r->size - 1;
++		}
++
++		mask = DMA_BIT_MASK(ilog2(end) + 1);
++		dev->bus_dma_limit = end;
++		dev->dma_range_map = map;
++		dev->coherent_dma_mask = min(dev->coherent_dma_mask, mask);
++		*dev->dma_mask = min(*dev->dma_mask, mask);
++	}
+ 
+-	return ((nid << node_id_offset) ^ daddr) | (nid << 44);
+-}
+-
+-void __init plat_swiotlb_setup(void)
+-{
+-	swiotlb_init(true, SWIOTLB_VERBOSE);
+-	node_id_offset = ((readl(LS7A_DMA_CFG) & LS7A_DMA_NODE_MASK) >> LS7A_DMA_NODE_SHF) + 36;
  }
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 8f5c2f9a1a83..d97c69dbe553 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -247,7 +247,7 @@ static void __init arch_mem_init(char **cmdline_p)
+ 	sparse_init();
+ 	memblock_set_bottom_up(true);
+ 
+-	plat_swiotlb_setup();
++	swiotlb_init(true, SWIOTLB_VERBOSE);
+ 
+ 	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
+ 
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index bb41623dab77..a71d73a0d43e 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -279,14 +279,17 @@ acpi_numa_processor_affinity_init(struct acpi_srat_cpu_affinity *pa) { }
+ 
+ void acpi_numa_x2apic_affinity_init(struct acpi_srat_x2apic_cpu_affinity *pa);
+ 
++#if defined(CONFIG_ARM64) || defined(CONFIG_LOONGARCH)
++void acpi_arch_dma_setup(struct device *dev);
++#else
++static inline void acpi_arch_dma_setup(struct device *dev) { }
++#endif
 +
-+#ifdef CONFIG_NUMA
-+int memory_add_physaddr_to_nid(u64 start)
-+{
-+	int nid;
-+
-+	nid = pa_to_nid(start);
-+	return nid;
-+}
-+EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
- #endif
+ #ifdef CONFIG_ARM64
+ void acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa);
+-void acpi_arch_dma_setup(struct device *dev);
+ #else
+ static inline void
+ acpi_numa_gicc_affinity_init(struct acpi_srat_gicc_affinity *pa) { }
+-static inline void
+-acpi_arch_dma_setup(struct device *dev) { }
  #endif
  
+ int acpi_numa_memory_affinity_init (struct acpi_srat_mem_affinity *ma);
 -- 
-2.35.1
+2.31.1
 
