@@ -1,70 +1,415 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E2322904
-	for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 07:20:44 +0000 (UTC)
-Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxbWuKIyRj8fAaAA--.56566S2;
-	Fri, 16 Sep 2022 15:19:38 +0800 (CST)
-From: Jianmin Lv <lvjianmin@loongson.cn>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] irqchip/loongson-pch-lpc: Add dependence on LoongArch
-Date: Fri, 16 Sep 2022 15:19:26 +0800
-Message-Id: <20220916071926.28368-1-lvjianmin@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2863933CA
+	for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 09:53:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB922C43141
+	for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 09:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1663322035;
+	bh=qFPNvyHhB2r/skNQfxfx2JMHndYiHi2MRfUe73aWbiM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RsDD13ai0f1QCnA23L2VDi0Ie696D09vogDcR9mSab0sry4gymw6zHE8J8PQTYSss
+	 v2yjh1Mwx/1M4Xrx5rT+tLzYWpU/8443c0/JB0qRoWRY5Yp8HqXPIzERt3hBaVEGMd
+	 u1J9+PScBuBNCVgDP1WRJYUou2DabT8uZpSoYCGQs9SvV9KSmvZhqbPFOMEfd/EMUy
+	 zRMaPduT9DEx0aDTapi4gMxDJVzFGinj6QRTs6XtgDSDtq3XqQepOl/9yz7KhpzQbZ
+	 jGQ5txBwPozVbeH8gM8aQ4S52kxDzTZjRSaUZBGUsgkDVKh7mbAdJzXgIWKoh1S5sK
+	 6egsc52A3o8Mw==
+Received: by mail-ua1-f44.google.com with SMTP id y20so3889339uao.8
+        for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 02:53:55 -0700 (PDT)
+X-Gm-Message-State: ACrzQf3PM1H6yrzbPVf5aPb2WCrVEgW/PRVJY41cVBDCDfLa508YkA+J
+	kVc1bs1pPYQelHTtUfH7r72ybuj6eNL3a/zq00k=
+X-Google-Smtp-Source: AMsMyM5nRkPsAtjryOFzobmnOnzjWzAZpksURPSIuN4BEDidMOSDOxDtOT4oL2oqXqlPu0bnMQFb0VsMeEs33iHi/5c=
+X-Received: by 2002:a05:6130:c13:b0:39f:58bb:d51c with SMTP id
+ cg19-20020a0561300c1300b0039f58bbd51cmr1613949uab.104.1663322034565; Fri, 16
+ Sep 2022 02:53:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxbWuKIyRj8fAaAA--.56566S2
-X-Coremail-Antispam: 1UD129KBjvdXoWruw4xAw43XF4rKryUWFWruFg_yoWfJrXEka
-	4Y9F4vyFnxCryUWryjqr4fWryUKayqgws2kw4jqr1fX3WIqw1xK3ZxZa15Kr47JFWqgFsI
-	93yfCrs2kw1UXjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb4kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-	wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-	vE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2
-	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
-	JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxAI
-	w28IcVCjz48v1sIEY20_XrWUJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
-	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCI
-	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
-	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
-	Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUF9a9DU
-	UUU
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+References: <20220818040413.2865849-1-chenhuacai@loongson.cn>
+In-Reply-To: <20220818040413.2865849-1-chenhuacai@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 16 Sep 2022 17:53:30 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7fiyq7tKJw3CsYDBWjJu89oBJqgNZLxgd+UQE=+X6Czw@mail.gmail.com>
+Message-ID: <CAAhV-H7fiyq7tKJw3CsYDBWjJu89oBJqgNZLxgd+UQE=+X6Czw@mail.gmail.com>
+Subject: Re: [PATCH] Input: i8042 - Add PNP checking hook for Loongson
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Arnd Bergmann <arnd@arndb.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, loongarch@lists.linux.dev, 
+	linux-arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-input@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-The loongson-pch-lpc driver may be selected in a random
-configuration, but it is only supported for LoongArch, So,
-the dependence on LoongArch is added for it to avoid compile
-error for a random configuration of other architetures.
+Ping?
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 66b9fa408bf2..70fbc5a3f644 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -623,8 +623,9 @@ config LOONGSON_PCH_MSI
- 
- config LOONGSON_PCH_LPC
- 	bool "Loongson PCH LPC Controller"
-+	depends on LOONGARCH
- 	depends on MACH_LOONGSON64
--	default (MACH_LOONGSON64 && LOONGARCH)
-+	default MACH_LOONGSON64
- 	select IRQ_DOMAIN_HIERARCHY
- 	help
- 	  Support for the Loongson PCH LPC Controller.
--- 
-2.31.1
-
+On Thu, Aug 18, 2022 at 12:04 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
+>
+> Add PNP checking related functions for Loongson, so that i8042 driver
+> can work well under the ACPI firmware with PNP typed keyboard and mouse
+> configured in DSDT.
+>
+> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  drivers/input/serio/i8042-loongsonio.h | 330 +++++++++++++++++++++++++
+>  drivers/input/serio/i8042.h            |   2 +
+>  2 files changed, 332 insertions(+)
+>  create mode 100644 drivers/input/serio/i8042-loongsonio.h
+>
+> diff --git a/drivers/input/serio/i8042-loongsonio.h b/drivers/input/serio/i8042-loongsonio.h
+> new file mode 100644
+> index 000000000000..2ea83b14f13d
+> --- /dev/null
+> +++ b/drivers/input/serio/i8042-loongsonio.h
+> @@ -0,0 +1,330 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * i8042-loongsonio.h
+> + *
+> + * Copyright (C) 2020 Loongson Technology Corporation Limited
+> + * Author: Jianmin Lv <lvjianmin@loongson.cn>
+> + *         Huacai Chen <chenhuacai@loongson.cn>
+> + */
+> +
+> +#ifndef _I8042_LOONGSONIO_H
+> +#define _I8042_LOONGSONIO_H
+> +
+> +/*
+> + * Names.
+> + */
+> +
+> +#define I8042_KBD_PHYS_DESC "isa0060/serio0"
+> +#define I8042_AUX_PHYS_DESC "isa0060/serio1"
+> +#define I8042_MUX_PHYS_DESC "isa0060/serio%d"
+> +
+> +/*
+> + * IRQs.
+> + */
+> +#define I8042_MAP_IRQ(x)       (x)
+> +
+> +#define I8042_KBD_IRQ  i8042_kbd_irq
+> +#define I8042_AUX_IRQ  i8042_aux_irq
+> +
+> +static int i8042_kbd_irq;
+> +static int i8042_aux_irq;
+> +
+> +/*
+> + * Register numbers.
+> + */
+> +
+> +#define I8042_COMMAND_REG      i8042_command_reg
+> +#define I8042_STATUS_REG       i8042_command_reg
+> +#define I8042_DATA_REG         i8042_data_reg
+> +
+> +static int i8042_command_reg = 0x64;
+> +static int i8042_data_reg = 0x60;
+> +
+> +
+> +static inline int i8042_read_data(void)
+> +{
+> +       return inb(I8042_DATA_REG);
+> +}
+> +
+> +static inline int i8042_read_status(void)
+> +{
+> +       return inb(I8042_STATUS_REG);
+> +}
+> +
+> +static inline void i8042_write_data(int val)
+> +{
+> +       outb(val, I8042_DATA_REG);
+> +}
+> +
+> +static inline void i8042_write_command(int val)
+> +{
+> +       outb(val, I8042_COMMAND_REG);
+> +}
+> +
+> +#ifdef CONFIG_PNP
+> +#include <linux/pnp.h>
+> +
+> +static bool i8042_pnp_kbd_registered;
+> +static unsigned int i8042_pnp_kbd_devices;
+> +static bool i8042_pnp_aux_registered;
+> +static unsigned int i8042_pnp_aux_devices;
+> +
+> +static int i8042_pnp_command_reg;
+> +static int i8042_pnp_data_reg;
+> +static int i8042_pnp_kbd_irq;
+> +static int i8042_pnp_aux_irq;
+> +
+> +static char i8042_pnp_kbd_name[32];
+> +static char i8042_pnp_aux_name[32];
+> +
+> +static void i8042_pnp_id_to_string(struct pnp_id *id, char *dst, int dst_size)
+> +{
+> +       strlcpy(dst, "PNP:", dst_size);
+> +
+> +       while (id) {
+> +               strlcat(dst, " ", dst_size);
+> +               strlcat(dst, id->id, dst_size);
+> +               id = id->next;
+> +       }
+> +}
+> +
+> +static int i8042_pnp_kbd_probe(struct pnp_dev *dev,
+> +               const struct pnp_device_id *did)
+> +{
+> +       if (pnp_port_valid(dev, 0) && pnp_port_len(dev, 0) == 1)
+> +               i8042_pnp_data_reg = pnp_port_start(dev, 0);
+> +
+> +       if (pnp_port_valid(dev, 1) && pnp_port_len(dev, 1) == 1)
+> +               i8042_pnp_command_reg = pnp_port_start(dev, 1);
+> +
+> +       if (pnp_irq_valid(dev, 0))
+> +               i8042_pnp_kbd_irq = pnp_irq(dev, 0);
+> +
+> +       strlcpy(i8042_pnp_kbd_name, did->id, sizeof(i8042_pnp_kbd_name));
+> +       if (strlen(pnp_dev_name(dev))) {
+> +               strlcat(i8042_pnp_kbd_name, ":", sizeof(i8042_pnp_kbd_name));
+> +               strlcat(i8042_pnp_kbd_name, pnp_dev_name(dev),
+> +                               sizeof(i8042_pnp_kbd_name));
+> +       }
+> +       i8042_pnp_id_to_string(dev->id, i8042_kbd_firmware_id,
+> +                              sizeof(i8042_kbd_firmware_id));
+> +
+> +       /* Keyboard ports are always supposed to be wakeup-enabled */
+> +       device_set_wakeup_enable(&dev->dev, true);
+> +
+> +       i8042_pnp_kbd_devices++;
+> +       return 0;
+> +}
+> +
+> +static int i8042_pnp_aux_probe(struct pnp_dev *dev,
+> +               const struct pnp_device_id *did)
+> +{
+> +       if (pnp_port_valid(dev, 0) && pnp_port_len(dev, 0) == 1)
+> +               i8042_pnp_data_reg = pnp_port_start(dev, 0);
+> +
+> +       if (pnp_port_valid(dev, 1) && pnp_port_len(dev, 1) == 1)
+> +               i8042_pnp_command_reg = pnp_port_start(dev, 1);
+> +
+> +       if (pnp_irq_valid(dev, 0))
+> +               i8042_pnp_aux_irq = pnp_irq(dev, 0);
+> +
+> +       strlcpy(i8042_pnp_aux_name, did->id, sizeof(i8042_pnp_aux_name));
+> +       if (strlen(pnp_dev_name(dev))) {
+> +               strlcat(i8042_pnp_aux_name, ":", sizeof(i8042_pnp_aux_name));
+> +               strlcat(i8042_pnp_aux_name, pnp_dev_name(dev),
+> +                               sizeof(i8042_pnp_aux_name));
+> +       }
+> +       i8042_pnp_id_to_string(dev->id, i8042_aux_firmware_id,
+> +                              sizeof(i8042_aux_firmware_id));
+> +
+> +       i8042_pnp_aux_devices++;
+> +       return 0;
+> +}
+> +
+> +static const struct pnp_device_id pnp_kbd_devids[] = {
+> +       { .id = "PNP0300", .driver_data = 0 },
+> +       { .id = "PNP0301", .driver_data = 0 },
+> +       { .id = "PNP0302", .driver_data = 0 },
+> +       { .id = "PNP0303", .driver_data = 0 },
+> +       { .id = "PNP0304", .driver_data = 0 },
+> +       { .id = "PNP0305", .driver_data = 0 },
+> +       { .id = "PNP0306", .driver_data = 0 },
+> +       { .id = "PNP0309", .driver_data = 0 },
+> +       { .id = "PNP030a", .driver_data = 0 },
+> +       { .id = "PNP030b", .driver_data = 0 },
+> +       { .id = "PNP0320", .driver_data = 0 },
+> +       { .id = "PNP0343", .driver_data = 0 },
+> +       { .id = "PNP0344", .driver_data = 0 },
+> +       { .id = "PNP0345", .driver_data = 0 },
+> +       { .id = "CPQA0D7", .driver_data = 0 },
+> +       { .id = "", },
+> +};
+> +MODULE_DEVICE_TABLE(pnp, pnp_kbd_devids);
+> +
+> +static struct pnp_driver i8042_pnp_kbd_driver = {
+> +       .name           = "i8042 kbd",
+> +       .id_table       = pnp_kbd_devids,
+> +       .probe          = i8042_pnp_kbd_probe,
+> +       .driver         = {
+> +               .probe_type = PROBE_FORCE_SYNCHRONOUS,
+> +               .suppress_bind_attrs = true,
+> +       },
+> +};
+> +
+> +static const struct pnp_device_id pnp_aux_devids[] = {
+> +       { .id = "AUI0200", .driver_data = 0 },
+> +       { .id = "FJC6000", .driver_data = 0 },
+> +       { .id = "FJC6001", .driver_data = 0 },
+> +       { .id = "PNP0f03", .driver_data = 0 },
+> +       { .id = "PNP0f0b", .driver_data = 0 },
+> +       { .id = "PNP0f0e", .driver_data = 0 },
+> +       { .id = "PNP0f12", .driver_data = 0 },
+> +       { .id = "PNP0f13", .driver_data = 0 },
+> +       { .id = "PNP0f19", .driver_data = 0 },
+> +       { .id = "PNP0f1c", .driver_data = 0 },
+> +       { .id = "SYN0801", .driver_data = 0 },
+> +       { .id = "", },
+> +};
+> +MODULE_DEVICE_TABLE(pnp, pnp_aux_devids);
+> +
+> +static struct pnp_driver i8042_pnp_aux_driver = {
+> +       .name           = "i8042 aux",
+> +       .id_table       = pnp_aux_devids,
+> +       .probe          = i8042_pnp_aux_probe,
+> +       .driver         = {
+> +               .probe_type = PROBE_FORCE_SYNCHRONOUS,
+> +               .suppress_bind_attrs = true,
+> +       },
+> +};
+> +
+> +static void i8042_pnp_exit(void)
+> +{
+> +       if (i8042_pnp_kbd_registered) {
+> +               i8042_pnp_kbd_registered = false;
+> +               pnp_unregister_driver(&i8042_pnp_kbd_driver);
+> +       }
+> +
+> +       if (i8042_pnp_aux_registered) {
+> +               i8042_pnp_aux_registered = false;
+> +               pnp_unregister_driver(&i8042_pnp_aux_driver);
+> +       }
+> +}
+> +#ifdef CONFIG_ACPI
+> +#include <linux/acpi.h>
+> +#endif
+> +static int __init i8042_pnp_init(void)
+> +{
+> +       char kbd_irq_str[4] = { 0 }, aux_irq_str[4] = { 0 };
+> +       bool pnp_data_busted = false;
+> +       int err;
+> +
+> +       if (i8042_nopnp) {
+> +               pr_info("PNP detection disabled\n");
+> +               return 0;
+> +       }
+> +
+> +       err = pnp_register_driver(&i8042_pnp_kbd_driver);
+> +       if (!err)
+> +               i8042_pnp_kbd_registered = true;
+> +
+> +       err = pnp_register_driver(&i8042_pnp_aux_driver);
+> +       if (!err)
+> +               i8042_pnp_aux_registered = true;
+> +
+> +       if (!i8042_pnp_kbd_devices && !i8042_pnp_aux_devices) {
+> +               i8042_pnp_exit();
+> +               pr_info("PNP: No PS/2 controller found.\n");
+> +#ifdef CONFIG_ACPI
+> +               if (acpi_disabled == 0)
+> +                       return -ENODEV;
+> +#endif
+> +               pr_info("Probing ports directly.\n");
+> +               return 0;
+> +       }
+> +
+> +       if (i8042_pnp_kbd_devices)
+> +               snprintf(kbd_irq_str, sizeof(kbd_irq_str),
+> +                       "%d", i8042_pnp_kbd_irq);
+> +       if (i8042_pnp_aux_devices)
+> +               snprintf(aux_irq_str, sizeof(aux_irq_str),
+> +                       "%d", i8042_pnp_aux_irq);
+> +
+> +       pr_info("PNP: PS/2 Controller [%s%s%s] at %#x,%#x irq %s%s%s\n",
+> +               i8042_pnp_kbd_name,
+> +               (i8042_pnp_kbd_devices && i8042_pnp_aux_devices) ? "," : "",
+> +               i8042_pnp_aux_name,
+> +               i8042_pnp_data_reg, i8042_pnp_command_reg,
+> +               kbd_irq_str,
+> +               (i8042_pnp_kbd_devices && i8042_pnp_aux_devices) ? "," : "",
+> +               aux_irq_str);
+> +
+> +       if (((i8042_pnp_data_reg & ~0xf) == (i8042_data_reg & ~0xf) &&
+> +             i8042_pnp_data_reg != i8042_data_reg) ||
+> +           !i8042_pnp_data_reg) {
+> +               pr_warn("PNP: PS/2 controller has invalid data port %#x; using default %#x\n",
+> +                       i8042_pnp_data_reg, i8042_data_reg);
+> +               i8042_pnp_data_reg = i8042_data_reg;
+> +               pnp_data_busted = true;
+> +       }
+> +
+> +       if (((i8042_pnp_command_reg & ~0xf) == (i8042_command_reg & ~0xf) &&
+> +             i8042_pnp_command_reg != i8042_command_reg) ||
+> +           !i8042_pnp_command_reg) {
+> +               pr_warn("PNP: PS/2 controller has invalid command port %#x; using default %#x\n",
+> +                       i8042_pnp_command_reg, i8042_command_reg);
+> +               i8042_pnp_command_reg = i8042_command_reg;
+> +               pnp_data_busted = true;
+> +       }
+> +
+> +       if (!i8042_nokbd && !i8042_pnp_kbd_irq) {
+> +               pr_warn("PNP: PS/2 controller doesn't have KBD irq; using default %d\n",
+> +                       i8042_kbd_irq);
+> +               i8042_pnp_kbd_irq = i8042_kbd_irq;
+> +               pnp_data_busted = true;
+> +       }
+> +
+> +       if (!i8042_noaux && !i8042_pnp_aux_irq) {
+> +               if (!pnp_data_busted && i8042_pnp_kbd_irq) {
+> +                       pr_warn("PNP: PS/2 appears to have AUX port disabled, "
+> +                               "if this is incorrect please boot with i8042.nopnp\n");
+> +                       i8042_noaux = true;
+> +               } else {
+> +                       pr_warn("PNP: PS/2 controller doesn't have AUX irq; using default %d\n",
+> +                               i8042_aux_irq);
+> +                       i8042_pnp_aux_irq = i8042_aux_irq;
+> +               }
+> +       }
+> +
+> +       i8042_data_reg = i8042_pnp_data_reg;
+> +       i8042_command_reg = i8042_pnp_command_reg;
+> +       i8042_kbd_irq = i8042_pnp_kbd_irq;
+> +       i8042_aux_irq = i8042_pnp_aux_irq;
+> +
+> +       return 0;
+> +}
+> +
+> +#else  /* !CONFIG_PNP */
+> +static inline int i8042_pnp_init(void) { return 0; }
+> +static inline void i8042_pnp_exit(void) { }
+> +#endif /* CONFIG_PNP */
+> +
+> +static int __init i8042_platform_init(void)
+> +{
+> +       int retval;
+> +
+> +       i8042_kbd_irq = I8042_MAP_IRQ(1);
+> +       i8042_aux_irq = I8042_MAP_IRQ(12);
+> +
+> +       retval = i8042_pnp_init();
+> +       if (retval)
+> +               return retval;
+> +
+> +       return retval;
+> +}
+> +
+> +static inline void i8042_platform_exit(void)
+> +{
+> +       i8042_pnp_exit();
+> +}
+> +
+> +#endif /* _I8042_LOONGSONIO_H */
+> diff --git a/drivers/input/serio/i8042.h b/drivers/input/serio/i8042.h
+> index 55381783dc82..166bd69841cf 100644
+> --- a/drivers/input/serio/i8042.h
+> +++ b/drivers/input/serio/i8042.h
+> @@ -19,6 +19,8 @@
+>  #include "i8042-snirm.h"
+>  #elif defined(CONFIG_SPARC)
+>  #include "i8042-sparcio.h"
+> +#elif defined(CONFIG_MACH_LOONGSON64)
+> +#include "i8042-loongsonio.h"
+>  #elif defined(CONFIG_X86) || defined(CONFIG_IA64)
+>  #include "i8042-x86ia64io.h"
+>  #else
+> --
+> 2.31.1
+>
+>
