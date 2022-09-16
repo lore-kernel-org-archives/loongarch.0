@@ -1,24 +1,21 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2C1D20EA
-	for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 02:57:28 +0000 (UTC)
-Received: from localhost.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXWsM5iNjV8kaAA--.41570S3;
-	Fri, 16 Sep 2022 10:57:27 +0800 (CST)
-From: Qing Zhang <zhangqing@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@redhat.com>
-Cc: WANG Xuerui <kernel@xen0n.name>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E2322904
+	for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 07:20:44 +0000 (UTC)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxbWuKIyRj8fAaAA--.56566S2;
+	Fri, 16 Sep 2022 15:19:38 +0800 (CST)
+From: Jianmin Lv <lvjianmin@loongson.cn>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Jeff Xie <xiehuan09@gmail.com>,
-	Jinyang He <hejinyang@loongson.cn>
-Subject: [PATCH v4 10/10] LoongArch/ftrace: Fix unwind state when option func_stack_trace
-Date: Fri, 16 Sep 2022 10:57:16 +0800
-Message-Id: <20220916025716.18864-2-zhangqing@loongson.cn>
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] irqchip/loongson-pch-lpc: Add dependence on LoongArch
+Date: Fri, 16 Sep 2022 15:19:26 +0800
+Message-Id: <20220916071926.28368-1-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220916025716.18864-1-zhangqing@loongson.cn>
-References: <20220916025716.18864-1-zhangqing@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -26,142 +23,48 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXWsM5iNjV8kaAA--.41570S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWFyUtFWxKF4kGFWDXrW5Wrg_yoWrXrykpF
-	95CF95Wr4Fgr97WrnrXr1j9rn5GrZayr17KF9rJw1rCFnFqryfXrnYya4DZFs8J3ykG3Wx
-	XFsYkrya9w4UJaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-	M2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4
-	xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCa
-	FVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x
-	0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC
-	6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42
-	IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2
-	jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfU8xhpUUUUU
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+X-CM-TRANSID:AQAAf8CxbWuKIyRj8fAaAA--.56566S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruw4xAw43XF4rKryUWFWruFg_yoWfJrXEka
+	4Y9F4vyFnxCryUWryjqr4fWryUKayqgws2kw4jqr1fX3WIqw1xK3ZxZa15Kr47JFWqgFsI
+	93yfCrs2kw1UXjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb4kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+	wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+	vE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2
+	jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+	8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+	JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxAI
+	w28IcVCjz48v1sIEY20_XrWUJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
+	Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUF9a9DU
+	UUU
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 
-Ftrace plays like function head exception, prologue analysis will stop soon
-because PC is at entry.
+The loongson-pch-lpc driver may be selected in a random
+configuration, but it is only supported for LoongArch, So,
+the dependence on LoongArch is added for it to avoid compile
+error for a random configuration of other architetures.
 
-   90000000004c5a54 <callee>:
-   90000000004c5a54:	03400000  andi   $zero, $zero, 0x0   ==>move  t0, ra
-   90000000004c5a58:	03400000  andi   $zero, $zero, 0x0   ==>bl callsite
-==>90000000004c5a5c:	02fcc063  addi.d $sp, $sp, -208(0xf30)
-   ...
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 
-When encountering ftrace_call, save trace function ra at PT_ERA, save parent ra
-at PT_R1, At this time, pc is the position after the two nops of callee. There is
-no conventional prologue operation between this position and the function entry,
-so we need to reset the first flag to make the caller continue to unwind.
-
-testing method:
-  echo path_openat > ./set_ftrace_filter
-  echo 1 > ./options/func_stack_trace
-  echo function > ./current_tracer
-
-Reported-by: Jeff Xie <xiehuan09@gmail.com>
-Tested-by: Jinyang He <hejinyang@loongson.cn>
-Tested-by: Jeff Xie <xiehuan09@gmail.com>
-Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
----
- arch/loongarch/include/asm/unwind.h     |  2 +-
- arch/loongarch/kernel/unwind_prologue.c | 33 +++++++++++++++++++++----
- 2 files changed, 29 insertions(+), 6 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/unwind.h b/arch/loongarch/include/asm/unwind.h
-index f66b07c3e6a1..f2b52b9ea93d 100644
---- a/arch/loongarch/include/asm/unwind.h
-+++ b/arch/loongarch/include/asm/unwind.h
-@@ -20,7 +20,7 @@ struct unwind_state {
- 	char type; /* UNWINDER_XXX */
- 	struct stack_info stack_info;
- 	struct task_struct *task;
--	bool first, error;
-+	bool first, error, is_ftrace;
- 	int graph_idx;
- 	unsigned long sp, pc, ra;
- };
-diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
-index f77f3b6f3f06..996ac9239caf 100644
---- a/arch/loongarch/kernel/unwind_prologue.c
-+++ b/arch/loongarch/kernel/unwind_prologue.c
-@@ -14,9 +14,7 @@ unsigned long unwind_get_return_address(struct unwind_state *state)
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 66b9fa408bf2..70fbc5a3f644 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -623,8 +623,9 @@ config LOONGSON_PCH_MSI
  
- 	if (unwind_done(state))
- 		return 0;
--	else if (state->type)
--		return state->pc;
--	else if (state->first)
-+	else if (state->type || state->first)
- 		return state->pc;
- 
- 	return *(unsigned long *)(state->sp);
-@@ -42,16 +40,39 @@ static bool unwind_by_guess(struct unwind_state *state)
- 	return false;
- }
- 
-+static void unwind_state_fixup(struct unwind_state *state)
-+{
-+	static unsigned long ftrace_case = (unsigned long)ftrace_call + 4;
-+
-+	if (state->pc == ftrace_case)
-+		state->is_ftrace = true;
-+}
-+
- static bool unwind_by_prologue(struct unwind_state *state)
- {
- 	struct stack_info *info = &state->stack_info;
- 	union loongarch_instruction *ip, *ip_end;
- 	unsigned long frame_size = 0, frame_ra = -1;
- 	unsigned long size, offset, pc = state->pc;
-+	struct pt_regs *regs;
- 
- 	if (state->sp >= info->end || state->sp < info->begin)
- 		return false;
- 
-+	if (state->is_ftrace) {
-+		/*
-+		 * As we meet ftrace_regs_entry, reset first flag like first doing
-+		 * tracing, Prologue analysis will stop soon because PC is at entry.
-+		 */
-+		regs = (struct pt_regs *)state->sp;
-+		state->pc = regs->csr_era;
-+		state->ra = regs->regs[1];
-+		state->sp = regs->regs[3];
-+		state->first = true;
-+		state->is_ftrace = false;
-+		return true;
-+	}
-+
- 	if (!kallsyms_lookup_size_offset(pc, &size, &offset))
- 		return false;
- 
-@@ -97,7 +118,7 @@ static bool unwind_by_prologue(struct unwind_state *state)
- 
- 	state->pc = *(unsigned long *)(state->sp + frame_ra);
- 	state->sp = state->sp + frame_size;
--	return !!__kernel_text_address(state->pc);
-+	goto out;
- 
- first:
- 	state->first = false;
-@@ -106,7 +127,9 @@ static bool unwind_by_prologue(struct unwind_state *state)
- 
- 	state->pc = state->ra;
- 
--	return !!__kernel_text_address(state->ra);
-+out:
-+	unwind_state_fixup(state);
-+	return !!__kernel_text_address(state->pc);
- }
- 
- void unwind_start(struct unwind_state *state, struct task_struct *task,
+ config LOONGSON_PCH_LPC
+ 	bool "Loongson PCH LPC Controller"
++	depends on LOONGARCH
+ 	depends on MACH_LOONGSON64
+-	default (MACH_LOONGSON64 && LOONGARCH)
++	default MACH_LOONGSON64
+ 	select IRQ_DOMAIN_HIERARCHY
+ 	help
+ 	  Support for the Loongson PCH LPC Controller.
 -- 
-2.36.1
+2.31.1
 
