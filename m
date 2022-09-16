@@ -1,97 +1,75 @@
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE91433CA
-	for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 10:16:47 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailnew.nyi.internal (Postfix) with ESMTP id B34DB580F46;
-	Fri, 16 Sep 2022 06:16:46 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Fri, 16 Sep 2022 06:16:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm1; t=1663323406; x=1663327006; bh=dYvenO6eXv
-	Bq73VVEqDVoQq9L+xnxo4snht2mJIMSPU=; b=oOKD5VOsSUwrEVicIlM7sF16nO
-	4AMrRy8avO8Y/atfhdy1sNwDZMmksKMjThncm/XsqZgDarqcTOulb2NeN6wiATkC
-	60oITWKPoowLu6Pik7dcjUTt//ejrceRgq1BKL8bV74Ju2scScI4IdFU5lTv0Lxq
-	yVl+p5vpEqaTxEXEhwTBq455ZviGEaYro+p0Sgo4o99TvuIi+WNtxSzlnwoLJ6CP
-	I18BvmfGIu+IbXEFMuV7VJP4nWRJgs/tbUUSQGq6IZ2PCSCF4RNuzeie+bf02qup
-	6v7f8vQ3R5kd5r6rQCqbidyXa4e1WMkcEI0U7TJqDOmlqm1tE9fzdoK/c5UQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1663323406; x=1663327006; bh=dYvenO6eXvBq73VVEqDVoQq9L+xn
-	xo4snht2mJIMSPU=; b=nxekw7mZItQ0orKllF9S6LPYMGcnMTeHoE+yO7ydYMBP
-	Tnx4jK5Ok2569UUXgo9/84bMLMB10SiZf5XzxEZTqIey6jeRmdf9Yi39v0lD76AG
-	Y53SjICLCzcq2wOnXB3EprPRmmVj/VmM5iHkpIdlM3vzhBV7youibT0yjN/Je9OK
-	vitS6zb5hSaNnJIO0/gOnwc4Alt9d5kvR1XXdOn7Vyh1PlYmTWoO+qKsXCj1fYSu
-	qBQV3NnXP37otn9cqxp6P1dLP1tm1ahc6hyzyqRS8GGc3kyXIVZ3s+Ph3aeN4hT7
-	XXM0yR+7om4L7FonuXx5wA2v3wLGkb1eBz5kV6H90g==
-X-ME-Sender: <xms:DU0kY_1vOOrZJWaAoTi3cJ29riwwJay_VlGpfTOXMjaaz_8E1h3ysg>
-    <xme:DU0kY-EY11nQu20uqKMM_6zZmSQEnFpyH2lnvRmdbzCVswa-E83kxPYC7xC1dRpDt
-    QXT9GdIUBcOFPaLAis>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfedvtddgvdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:DU0kY_4VvIXukk5YIvnF4Pytas3ckfdllPQahYjMT9o7ucssXARlPg>
-    <xmx:DU0kY0394rtmtk6VV_pC0QypU3SuBTu_IVgDN-aLAX7FL_AoS7M48Q>
-    <xmx:DU0kYyHMeHRMZj7vQwPrZFvhudB6J8zP7T55VfCGE6Axg5ruFDyFNQ>
-    <xmx:Dk0kY1ALlj5hOGLM3kQpvzcvDFSAjDmHex2EddaOEG6LId0lCzQ-lA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 67159B60086; Fri, 16 Sep 2022 06:16:45 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-935-ge4ccd4c47b-fm-20220914.001-ge4ccd4c4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77F05C81
+	for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 15:04:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61B36C43141
+	for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 15:04:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1663340690;
+	bh=M+DmXxb8Nav4aJ99WqznXuiR7oCNvzYJ85lQmDQ9Izg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XpPP02ruXeMlyDqw9AU8lVSQByUbs6eMh26MJMnFahTJwObYyJr4/wuQongHFtH68
+	 kY1PB9jQ4p8YUKFug0YwKGd0Nq49sgRYHutVZlV6WhV9hmfNSQgkAfGW3OkeW1YL1S
+	 LPXbCmo6iYjLlnLcxqZicdiT6SvqQX4xlDRvHL5OufpTXHJtDEL17fIsM29fRhHWib
+	 3giP4eSFRmfmNCOl7aeZAZwJsv3xduvoCB56kQLsPx3g39oXiAHAqLqu4Py2DAZh+k
+	 l6TPHkf4SrjQUSHLUishzlJ6fUJYW+3fY2dNgqjGBFZF4kHNscazVjfQBhLB8p3xj7
+	 yuv1p3lZXn1Sw==
+Received: by mail-vs1-f51.google.com with SMTP id 67so23010640vsv.2
+        for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 08:04:50 -0700 (PDT)
+X-Gm-Message-State: ACrzQf2nqFf3d7X/1kkaYcrFqqpKZUXCfc2SjM5ZG2f4iIrr6VNxmpXm
+	PND7P7Ktyqh8M3Tr2OdePaPkVS3/Lmaf5XeT42w=
+X-Google-Smtp-Source: AMsMyM4faniycC3kJf+HRla45fniBnoEma4pmEUEn4z1nLlUd+7aVGjIUb5s2RMrkSft1plARpEZRbhzST5q09/ceFQ=
+X-Received: by 2002:a05:6102:2755:b0:398:4f71:86e with SMTP id
+ p21-20020a056102275500b003984f71086emr2486151vsu.84.1663340689313; Fri, 16
+ Sep 2022 08:04:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <e5433179-c300-482e-9dad-b1b15c56970a@www.fastmail.com>
-In-Reply-To: 
- <CAAhV-H7fiyq7tKJw3CsYDBWjJu89oBJqgNZLxgd+UQE=+X6Czw@mail.gmail.com>
+MIME-Version: 1.0
 References: <20220818040413.2865849-1-chenhuacai@loongson.cn>
- <CAAhV-H7fiyq7tKJw3CsYDBWjJu89oBJqgNZLxgd+UQE=+X6Czw@mail.gmail.com>
-Date: Fri, 16 Sep 2022 12:16:25 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Huacai Chen" <chenhuacai@kernel.org>,
- "Huacai Chen" <chenhuacai@loongson.cn>
-Cc: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, loongarch@lists.linux.dev,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "Xuefeng Li" <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- "Jianmin Lv" <lvjianmin@loongson.cn>
+ <CAAhV-H7fiyq7tKJw3CsYDBWjJu89oBJqgNZLxgd+UQE=+X6Czw@mail.gmail.com> <e5433179-c300-482e-9dad-b1b15c56970a@www.fastmail.com>
+In-Reply-To: <e5433179-c300-482e-9dad-b1b15c56970a@www.fastmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 16 Sep 2022 23:04:37 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4POp1tgDXOck5nLoi7oQ5hAU8jwHg+AbUdX0zUhjqsoQ@mail.gmail.com>
+Message-ID: <CAAhV-H4POp1tgDXOck5nLoi7oQ5hAU8jwHg+AbUdX0zUhjqsoQ@mail.gmail.com>
 Subject: Re: [PATCH] Input: i8042 - Add PNP checking hook for Loongson
-Content-Type: text/plain
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>, 
+	Xuefeng Li <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-input@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Sep 16, 2022, at 11:53 AM, Huacai Chen wrote:
-> Ping?
+Hi, Arnd,
+
+On Fri, Sep 16, 2022 at 6:16 PM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> On Thu, Aug 18, 2022 at 12:04 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
->>
->> Add PNP checking related functions for Loongson, so that i8042 driver
->> can work well under the ACPI firmware with PNP typed keyboard and mouse
->> configured in DSDT.
->>
->> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
->> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->> ---
->>  drivers/input/serio/i8042-loongsonio.h | 330 +++++++++++++++++++++++++
->>  drivers/input/serio/i8042.h            |   2 +
->>  2 files changed, 332 insertions(+)
+> On Fri, Sep 16, 2022, at 11:53 AM, Huacai Chen wrote:
+> > Ping?
+> >
+> > On Thu, Aug 18, 2022 at 12:04 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
+> >>
+> >> Add PNP checking related functions for Loongson, so that i8042 driver
+> >> can work well under the ACPI firmware with PNP typed keyboard and mouse
+> >> configured in DSDT.
+> >>
+> >> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> >> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> >> ---
+> >>  drivers/input/serio/i8042-loongsonio.h | 330 +++++++++++++++++++++++++
+> >>  drivers/input/serio/i8042.h            |   2 +
+> >>  2 files changed, 332 insertions(+)
+>
+> This looks like you are just duplicating code from
+> i8042-x86ia64io.h. Can't you just use that version
+> directly?
+OK, I will rename i8042-x86ia64io.h to i8042-acpiio.h and use it for LoongArch.
 
-This looks like you are just duplicating code from
-i8042-x86ia64io.h. Can't you just use that version
-directly?
-
-      Arnd
+Huacai
+>
+>       Arnd
