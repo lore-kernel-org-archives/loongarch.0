@@ -1,75 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77F05C81
-	for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 15:04:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61B36C43141
-	for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 15:04:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697DC2F59
+	for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 18:37:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D29BC433C1
+	for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 18:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663340690;
-	bh=M+DmXxb8Nav4aJ99WqznXuiR7oCNvzYJ85lQmDQ9Izg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XpPP02ruXeMlyDqw9AU8lVSQByUbs6eMh26MJMnFahTJwObYyJr4/wuQongHFtH68
-	 kY1PB9jQ4p8YUKFug0YwKGd0Nq49sgRYHutVZlV6WhV9hmfNSQgkAfGW3OkeW1YL1S
-	 LPXbCmo6iYjLlnLcxqZicdiT6SvqQX4xlDRvHL5OufpTXHJtDEL17fIsM29fRhHWib
-	 3giP4eSFRmfmNCOl7aeZAZwJsv3xduvoCB56kQLsPx3g39oXiAHAqLqu4Py2DAZh+k
-	 l6TPHkf4SrjQUSHLUishzlJ6fUJYW+3fY2dNgqjGBFZF4kHNscazVjfQBhLB8p3xj7
-	 yuv1p3lZXn1Sw==
-Received: by mail-vs1-f51.google.com with SMTP id 67so23010640vsv.2
-        for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 08:04:50 -0700 (PDT)
-X-Gm-Message-State: ACrzQf2nqFf3d7X/1kkaYcrFqqpKZUXCfc2SjM5ZG2f4iIrr6VNxmpXm
-	PND7P7Ktyqh8M3Tr2OdePaPkVS3/Lmaf5XeT42w=
-X-Google-Smtp-Source: AMsMyM4faniycC3kJf+HRla45fniBnoEma4pmEUEn4z1nLlUd+7aVGjIUb5s2RMrkSft1plARpEZRbhzST5q09/ceFQ=
-X-Received: by 2002:a05:6102:2755:b0:398:4f71:86e with SMTP id
- p21-20020a056102275500b003984f71086emr2486151vsu.84.1663340689313; Fri, 16
- Sep 2022 08:04:49 -0700 (PDT)
+	s=k20201202; t=1663353453;
+	bh=macHYw5z0ez1mkfuxXlyjzQ83GJ/wDauwItDipbke9c=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Nx0CznjhziQNWjeq1FZ5ZqqOMZn/1AreraoMGX1cqKuPIsB6xRh7yut/jMNYh1rQ7
+	 RtCxg7VtXnNMZR9LQoGFghPGAeG1NXzxLTyY+1zI41nwWZ+6DyLpsTNA4tt9z3T/8g
+	 jIiwJYU6k3ovS0ZbC6/NAkURgTlTeDzdtBWb9gAIEDoLBFBBrDF0OTAKszMlB55RdR
+	 SAhLs20pCWgXaeFu89K4uZFa3eT+ALNQAcYcMm5XFOgaS9mfucZIjBswcIPDNIcMel
+	 fQ1ulqAqo8G1MY1PJlSQJprVuo/CQ74lj0CMj8QjKzZyAOv4/xTDYI9uAsjM/VmtYS
+	 GWSH2NXe9Jjog==
+Received: by mail-lj1-f171.google.com with SMTP id l12so26962500ljg.9
+        for <loongarch@lists.linux.dev>; Fri, 16 Sep 2022 11:37:32 -0700 (PDT)
+X-Gm-Message-State: ACrzQf3bHk3fHMFG5MvItbPjCe0t+pgnNLonWHsA5F1md1Eqa7DDvCGm
+	P4+bGVLa4J0OhtnOvS5YFAjtwRx9v0a42B2hbGg=
+X-Google-Smtp-Source: AMsMyM73lJrGRaV9MwfEV8KiASlsJLCDMD/HmPsY2EMfjfiRHVjwb6CLeGIbhljiKNTl/TU/z6WV5VghKt+zKriE3Lg=
+X-Received: by 2002:a2e:2d0a:0:b0:26c:a1c:cdf with SMTP id t10-20020a2e2d0a000000b0026c0a1c0cdfmr1989814ljt.352.1663353451049;
+ Fri, 16 Sep 2022 11:37:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220818040413.2865849-1-chenhuacai@loongson.cn>
- <CAAhV-H7fiyq7tKJw3CsYDBWjJu89oBJqgNZLxgd+UQE=+X6Czw@mail.gmail.com> <e5433179-c300-482e-9dad-b1b15c56970a@www.fastmail.com>
-In-Reply-To: <e5433179-c300-482e-9dad-b1b15c56970a@www.fastmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 16 Sep 2022 23:04:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4POp1tgDXOck5nLoi7oQ5hAU8jwHg+AbUdX0zUhjqsoQ@mail.gmail.com>
-Message-ID: <CAAhV-H4POp1tgDXOck5nLoi7oQ5hAU8jwHg+AbUdX0zUhjqsoQ@mail.gmail.com>
-Subject: Re: [PATCH] Input: i8042 - Add PNP checking hook for Loongson
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>, 
-	Xuefeng Li <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-input@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 16 Sep 2022 20:37:19 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHk2o2g2t34-iMawUjfJd1uCZc1QaXH90TpS54Sg6PiCQ@mail.gmail.com>
+Message-ID: <CAMj1kXHk2o2g2t34-iMawUjfJd1uCZc1QaXH90TpS54Sg6PiCQ@mail.gmail.com>
+Subject: Removing DT dependency from LoongArch EFI stub
+To: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>
+Cc: linux-efi <linux-efi@vger.kernel.org>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Hi, Arnd,
+Hello,
 
-On Fri, Sep 16, 2022 at 6:16 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Fri, Sep 16, 2022, at 11:53 AM, Huacai Chen wrote:
-> > Ping?
-> >
-> > On Thu, Aug 18, 2022 at 12:04 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> >>
-> >> Add PNP checking related functions for Loongson, so that i8042 driver
-> >> can work well under the ACPI firmware with PNP typed keyboard and mouse
-> >> configured in DSDT.
-> >>
-> >> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-> >> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> >> ---
-> >>  drivers/input/serio/i8042-loongsonio.h | 330 +++++++++++++++++++++++++
-> >>  drivers/input/serio/i8042.h            |   2 +
-> >>  2 files changed, 332 insertions(+)
->
-> This looks like you are just duplicating code from
-> i8042-x86ia64io.h. Can't you just use that version
-> directly?
-OK, I will rename i8042-x86ia64io.h to i8042-acpiio.h and use it for LoongArch.
+One of the things I didn't quite like was that LoongArch now uses
+libfdt only because our EFI stub code depends on it. I would like to
+fix this.
 
-Huacai
->
->       Arnd
+I have pushed a branch here that implements this. Unfortunately, it
+doesn't proceed beyond
+
+and I need some help debugging the error.
+
+EFI stub: Booting Linux Kernel...
+EFI stub: Loaded initrd from LINUX_EFI_INITRD_MEDIA_GUID device path
+EFI stub: Exiting boot services ...
+
+https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/commit/?h=efi-cleanups-for-v6.1
+
+The idea is to pass the EFI system table pointer and the command line
+pointer directly. In previous patches, the initrd and memmap code is
+updated so it exposes the information via configuration tables that
+the generic code can parse.
+
+Any help is greatly appreciated.
+
+Thanks,
+Ard.
