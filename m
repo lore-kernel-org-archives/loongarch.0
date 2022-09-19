@@ -1,32 +1,32 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2A2256A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB0633C2
 	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 10:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=d1PXrA0ji5y7WX9aOTLSAuRcBGPwqyEk8vh/reRf4ZE=; b=LWO0au/rvI8XBtiLpmPp+Hj6ty
-	aVN9bB7ygtes6LLRtSeEdagzQF9hUqR0AP2Xlew8lTJ1+l9gYN1fheWby45WO7HUyga7mVz9FhOWt
-	eiKINrvkyp9Bqyk9kjLcHDbPWOp25a01H/raJMCYIgNb4IrTiq9QT/AhVOBh+cjOloRDnZxT+XWaF
-	yLrkkOPgJrBGclK4tPXgrx0gLmayYBzdMjZH7m6HBUXtMXqr3Kpvk05mGoh2fnRJUMQaUjvpUM+T/
-	ddTH7+6dZSJ3yLO+E1HwSdjEk51sYXwh0pWg9z+JrKcWs/qshJKYcJvb6hFkNZVoCc5bOF2D+D9a1
-	zFoJmGCw==;
+	bh=lz2MUgDITA4yYb0U+PMz5bsqmEWyVbYbLXt1grP5wdc=; b=Ar3SSe6jGzhlo51swtos76SPi5
+	KuXiRdUWOAjPO/7yHktzfu7OKsDupFAe1VyTEvf67R959dkaj3lnutywtrGNQ0FzD/kNFsrr509Ol
+	zCeztFFINukgQV77MStFwTBM6NB5gODfSAMQV0ab4J8PYg50wlMVVWpd1kiGu7U8DRaIp+zHcs+RC
+	PjkRcfkfDYWB0AK6OHFlYRr5i/D8rJ2O9Fn8FR5c9e91JSkQQbvYD04el9uJ6G/zT187YlaZEV6+6
+	ydgW5aWT5A6QsIVhzK5tAMASoG08AhjIZeNftBw/Sz9H57WdXd5ra4ngtoCCTH6Mr/DQhofJt1LqB
+	c7+wxSkw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oaDq8-004bAC-FV; Mon, 19 Sep 2022 10:17:24 +0000
+	id 1oaDq9-004bCZ-RO; Mon, 19 Sep 2022 10:17:26 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 65EBF302F53;
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 80174302F6C;
 	Mon, 19 Sep 2022 12:16:25 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id 77FE22BAC75AE; Mon, 19 Sep 2022 12:16:22 +0200 (CEST)
-Message-ID: <20220919101522.573936213@infradead.org>
+	id 96B742BA49032; Mon, 19 Sep 2022 12:16:22 +0200 (CEST)
+Message-ID: <20220919101522.975285117@infradead.org>
 User-Agent: quilt/0.66
-Date: Mon, 19 Sep 2022 12:00:12 +0200
+Date: Mon, 19 Sep 2022 12:00:18 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: peterz@infradead.org
 Cc: richard.henderson@linaro.org,
@@ -165,7 +165,7 @@ Cc: richard.henderson@linaro.org,
  linux-tegra@vger.kernel.org,
  linux-arch@vger.kernel.org,
  kasan-dev@googlegroups.com
-Subject: [PATCH v2 33/44] ftrace: WARN on rcuidle
+Subject: [PATCH v2 39/44] cpuidle,clk: Remove trace_.*_rcuidle()
 References: <20220919095939.761690562@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -175,59 +175,44 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-CONFIG_GENERIC_ENTRY disallows any and all tracing when RCU isn't
-enabled.
-
-XXX if s390 (the only other GENERIC_ENTRY user as of this writing)
-isn't comfortable with this, we could switch to
-HAVE_NOINSTR_VALIDATION which is x86_64 only atm.
+OMAP was the one and only user.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/linux/tracepoint.h |   13 ++++++++++++-
- kernel/trace/trace.c       |    3 +++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ drivers/clk/clk.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -178,6 +178,16 @@ static inline struct tracepoint *tracepo
- #endif /* CONFIG_HAVE_STATIC_CALL */
- 
- /*
-+ * CONFIG_GENERIC_ENTRY archs are expected to have sanitized entry and idle
-+ * code that disallow any/all tracing/instrumentation when RCU isn't watching.
-+ */
-+#ifdef CONFIG_GENERIC_ENTRY
-+#define RCUIDLE_COND(rcuidle)	(rcuidle)
-+#else
-+#define RCUIDLE_COND(rcuidle)	(rcuidle && in_nmi())
-+#endif
-+
-+/*
-  * it_func[0] is never NULL because there is at least one element in the array
-  * when the array itself is non NULL.
-  */
-@@ -189,7 +199,8 @@ static inline struct tracepoint *tracepo
- 			return;						\
- 									\
- 		/* srcu can't be used from NMI */			\
--		WARN_ON_ONCE(rcuidle && in_nmi());			\
-+		if (WARN_ON_ONCE(RCUIDLE_COND(rcuidle)))		\
-+			return;						\
- 									\
- 		/* keep srcu and sched-rcu usage consistent */		\
- 		preempt_disable_notrace();				\
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3104,6 +3104,9 @@ void __trace_stack(struct trace_array *t
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -978,12 +978,12 @@ static void clk_core_disable(struct clk_
+ 	if (--core->enable_count > 0)
  		return;
- 	}
  
-+	if (WARN_ON_ONCE(IS_ENABLED(CONFIG_GENERIC_ENTRY)))
-+		return;
-+
- 	/*
- 	 * When an NMI triggers, RCU is enabled via ct_nmi_enter(),
- 	 * but if the above rcu_is_watching() failed, then the NMI
+-	trace_clk_disable_rcuidle(core);
++	trace_clk_disable(core);
+ 
+ 	if (core->ops->disable)
+ 		core->ops->disable(core->hw);
+ 
+-	trace_clk_disable_complete_rcuidle(core);
++	trace_clk_disable_complete(core);
+ 
+ 	clk_core_disable(core->parent);
+ }
+@@ -1037,12 +1037,12 @@ static int clk_core_enable(struct clk_co
+ 		if (ret)
+ 			return ret;
+ 
+-		trace_clk_enable_rcuidle(core);
++		trace_clk_enable(core);
+ 
+ 		if (core->ops->enable)
+ 			ret = core->ops->enable(core->hw);
+ 
+-		trace_clk_enable_complete_rcuidle(core);
++		trace_clk_enable_complete(core);
+ 
+ 		if (ret) {
+ 			clk_core_disable(core->parent);
 
 
