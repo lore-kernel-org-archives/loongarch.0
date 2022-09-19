@@ -1,19 +1,18 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0918C81C
-	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 03:16:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935EBA23
+	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 03:16:44 +0000 (UTC)
 Received: from localhost.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvmsQ3ydjUW4dAA--.34031S7;
-	Mon, 19 Sep 2022 11:16:41 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvmsQ3ydjUW4dAA--.34031S10;
+	Mon, 19 Sep 2022 11:16:43 +0800 (CST)
 From: Qing Zhang <zhangqing@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Ingo Molnar <mingo@redhat.com>
 Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Jinyang He <hejinyang@loongson.cn>
-Subject: [PATCH v5 05/10] LoongArch/ftrace: Add DYNAMIC_FTRACE_WITH_REGS support
-Date: Mon, 19 Sep 2022 11:16:27 +0800
-Message-Id: <20220919031632.15374-6-zhangqing@loongson.cn>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 08/10] LoongArch/ftrace: Add HAVE_FUNCTION_GRAPH_RET_ADDR_PTR support
+Date: Mon, 19 Sep 2022 11:16:30 +0800
+Message-Id: <20220919031632.15374-9-zhangqing@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20220919031632.15374-1-zhangqing@loongson.cn>
 References: <20220919031632.15374-1-zhangqing@loongson.cn>
@@ -24,156 +23,152 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxvmsQ3ydjUW4dAA--.34031S7
-X-Coremail-Antispam: 1UD129KBjvJXoWxCF43Gry5Zr1ktr17ZF48Crg_yoWrWw1rpr
-	9Fyrn5GFWj9Fs3WrWfKr95WrZ8XrWvg342vay7CFyrJr4qqF15Z3y0kr1DZFyIqw4xG3yx
-	XF1fCr4Yya17XwUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBC14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4U
-	JVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7V
-	C0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j
-	6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gr
-	4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
-	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7V
-	AKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42
-	IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUneOJDUUUU
+X-CM-TRANSID:AQAAf8DxvmsQ3ydjUW4dAA--.34031S10
+X-Coremail-Antispam: 1UD129KBjvJXoWxAr43CF45Zr4xCr1fZr4ktFb_yoWrKF18pF
+	9rCas5GrWxWF9agrnFqr1Uur4kGr9rCw12ga9Fy34FkFsFqF13WrnFvryDXFWkt3ykW3yI
+	q3Z5GrZ0ka1UX3JanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBqb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
+	8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28C
+	jxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI
+	8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vE
+	x4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4
+	xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8
+	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r48MxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z2
+	80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8EdgtUUUUU==
 X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
 
-This patch implements DYNAMIC_FTRACE_WITH_REGS on LoongArch, which allows
-a traced function's arguments (and some other registers) to be captured
-into a struct pt_regs, allowing these to be inspected and modified.
+Ftrace_graph_ret_addr can be called by stack unwinding code to convert
+a found stack return address ('ret') to its original value, in case the
+function graph tracer has modified it to be 'return_to_handler',If the
+hasn't been modified, the unchanged value of 'ret' is returned.
 
-Co-developed-by: Jinyang He <hejinyang@loongson.cn>
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
 Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
 ---
- arch/loongarch/Kconfig              |  1 +
- arch/loongarch/include/asm/ftrace.h |  3 +++
- arch/loongarch/kernel/entry_dyn.S   | 36 +++++++++++++++++++++++++++--
- arch/loongarch/kernel/ftrace_dyn.c  | 17 ++++++++++++++
- 4 files changed, 55 insertions(+), 2 deletions(-)
+ arch/loongarch/include/asm/ftrace.h     |  3 +++
+ arch/loongarch/include/asm/unwind.h     |  1 +
+ arch/loongarch/kernel/ftrace_dyn.c      |  2 +-
+ arch/loongarch/kernel/unwind_guess.c    |  4 +++-
+ arch/loongarch/kernel/unwind_prologue.c | 11 +++++++++--
+ 5 files changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 60bbb3db81ab..9b701784f7a9 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -89,6 +89,7 @@ config LOONGARCH
- 	select HAVE_DEBUG_STACKOVERFLOW
- 	select HAVE_DMA_CONTIGUOUS
- 	select HAVE_DYNAMIC_FTRACE
-+	select HAVE_DYNAMIC_FTRACE_WITH_REGS
- 	select HAVE_EBPF_JIT
- 	select HAVE_EXIT_THREAD
- 	select HAVE_FAST_GUP
 diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-index 76ca58767f4d..a3f974a7a5ce 100644
+index 807226aad1c0..2a676ece4857 100644
 --- a/arch/loongarch/include/asm/ftrace.h
 +++ b/arch/loongarch/include/asm/ftrace.h
-@@ -28,6 +28,9 @@ struct dyn_ftrace;
- int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
- #define ftrace_init_nop ftrace_init_nop
+@@ -10,6 +10,8 @@
+ #define FTRACE_REGS_PLT_IDX	1
+ #define NR_FTRACE_PLTS		2
  
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+#define ARCH_SUPPORTS_FTRACE_OPS 1
-+#endif
- #endif /* CONFIG_DYNAMIC_FTRACE */
- #endif /* __ASSEMBLY__ */
- #endif /* CONFIG_FUNCTION_TRACER */
-diff --git a/arch/loongarch/kernel/entry_dyn.S b/arch/loongarch/kernel/entry_dyn.S
-index 0c12cc108e6f..02835186b463 100644
---- a/arch/loongarch/kernel/entry_dyn.S
-+++ b/arch/loongarch/kernel/entry_dyn.S
-@@ -27,7 +27,7 @@
-  * follows the LoongArch psABI well.
-  */
- 
--	.macro  ftrace_regs_entry
-+	.macro  ftrace_regs_entry allregs=0
- 	PTR_ADDI sp, sp, -PT_SIZE
- 	/* Save trace function ra at PT_ERA */
- 	PTR_S	ra, sp, PT_ERA
-@@ -43,16 +43,48 @@
- 	PTR_S	a7, sp, PT_R11
- 	PTR_S	fp, sp, PT_R22
- 
-+	.if \allregs
-+	PTR_S	t0, sp, PT_R12
-+	PTR_S	t1, sp, PT_R13
-+	PTR_S	t2, sp, PT_R14
-+	PTR_S	t3, sp, PT_R15
-+	PTR_S	t4, sp, PT_R16
-+	PTR_S	t5, sp, PT_R17
-+	PTR_S	t6, sp, PT_R18
-+	PTR_S	t7, sp, PT_R19
-+	PTR_S	t8, sp, PT_R20
-+	PTR_S	s0, sp, PT_R23
-+	PTR_S	s1, sp, PT_R24
-+	PTR_S	s2, sp, PT_R25
-+	PTR_S	s3, sp, PT_R26
-+	PTR_S	s4, sp, PT_R27
-+	PTR_S	s5, sp, PT_R28
-+	PTR_S	s6, sp, PT_R29
-+	PTR_S	s7, sp, PT_R30
-+	PTR_S	s8, sp, PT_R31
-+	PTR_S	tp, sp, PT_R2
-+	/* Clear it for later use as a flag sometimes. */
-+	PTR_S	zero, sp, PT_R0
-+	PTR_S	$r21, sp, PT_R21
-+	.endif
++#define GRAPH_FAKE_OFFSET (sizeof(struct pt_regs) - offsetof(struct pt_regs, regs[1]))
 +
- 	PTR_ADDI t8, sp, PT_SIZE
- 	PTR_S   t8, sp, PT_R3
+ #ifdef CONFIG_FUNCTION_TRACER
+ #define MCOUNT_INSN_SIZE 4		/* sizeof mcount call */
  
- 	.endm
+@@ -37,6 +39,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+ #endif
  
- SYM_CODE_START(ftrace_caller)
--	ftrace_regs_entry
-+	ftrace_regs_entry allregs=0
- 	b	ftrace_common
- SYM_CODE_END(ftrace_caller)
+ #ifdef CONFIG_DYNAMIC_FTRACE
++#define HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
+ static inline unsigned long ftrace_call_adjust(unsigned long addr)
+ {
+ 	return addr;
+diff --git a/arch/loongarch/include/asm/unwind.h b/arch/loongarch/include/asm/unwind.h
+index 6af4718bdf01..f66b07c3e6a1 100644
+--- a/arch/loongarch/include/asm/unwind.h
++++ b/arch/loongarch/include/asm/unwind.h
+@@ -21,6 +21,7 @@ struct unwind_state {
+ 	struct stack_info stack_info;
+ 	struct task_struct *task;
+ 	bool first, error;
++	int graph_idx;
+ 	unsigned long sp, pc, ra;
+ };
  
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+SYM_CODE_START(ftrace_regs_caller)
-+	ftrace_regs_entry allregs=1
-+	b	ftrace_common
-+SYM_CODE_END(ftrace_regs_caller)
-+#endif
-+
- SYM_CODE_START(ftrace_common)
- 	PTR_ADDI	a0, ra, -8	/* arg0: ip */
- 	move		a1, t0		/* arg1: parent_ip */
 diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
-index 3fe791b6783e..ec3d951be50c 100644
+index dd37185d446e..b070ce225989 100644
 --- a/arch/loongarch/kernel/ftrace_dyn.c
 +++ b/arch/loongarch/kernel/ftrace_dyn.c
-@@ -99,6 +99,23 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
- 	return ftrace_modify_code(pc, old, new, true);
+@@ -219,7 +219,7 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent)
+ 
+ 	old = *parent;
+ 
+-	if (!function_graph_enter(old, self_addr, 0, NULL))
++	if (!function_graph_enter(old, self_addr, 0, parent))
+ 		*parent = return_hooker;
  }
  
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
-+			unsigned long addr)
-+{
-+	unsigned long pc;
-+	long offset;
-+	u32 old, new;
-+
-+	pc = rec->ip + LOONGARCH_INSN_SIZE;
-+
-+	old = larch_insn_gen_bl(pc, old_addr);
-+	new = larch_insn_gen_bl(pc, addr);
-+
-+	return ftrace_modify_code(pc, old, new, true);
-+}
-+#endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-+
- void arch_ftrace_update_code(int command)
- {
- 	command |= FTRACE_MAY_SLEEP;
+diff --git a/arch/loongarch/kernel/unwind_guess.c b/arch/loongarch/kernel/unwind_guess.c
+index 5afa6064d73e..229ba014cea0 100644
+--- a/arch/loongarch/kernel/unwind_guess.c
++++ b/arch/loongarch/kernel/unwind_guess.c
+@@ -2,6 +2,7 @@
+ /*
+  * Copyright (C) 2022 Loongson Technology Corporation Limited
+  */
++#include <linux/ftrace.h>
+ #include <linux/kernel.h>
+ 
+ #include <asm/unwind.h>
+@@ -53,7 +54,8 @@ bool unwind_next_frame(struct unwind_state *state)
+ 		     state->sp < info->end;
+ 		     state->sp += sizeof(unsigned long)) {
+ 			addr = *(unsigned long *)(state->sp);
+-
++			state->pc = ftrace_graph_ret_addr(state->task, &state->graph_idx,
++				addr, (unsigned long *)(state->sp - GRAPH_FAKE_OFFSET));
+ 			if (__kernel_text_address(addr))
+ 				return true;
+ 		}
+diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
+index b206d9159205..f77f3b6f3f06 100644
+--- a/arch/loongarch/kernel/unwind_prologue.c
++++ b/arch/loongarch/kernel/unwind_prologue.c
+@@ -2,6 +2,7 @@
+ /*
+  * Copyright (C) 2022 Loongson Technology Corporation Limited
+  */
++#include <linux/ftrace.h>
+ #include <linux/kallsyms.h>
+ 
+ #include <asm/inst.h>
+@@ -32,6 +33,8 @@ static bool unwind_by_guess(struct unwind_state *state)
+ 	     state->sp < info->end;
+ 	     state->sp += sizeof(unsigned long)) {
+ 		addr = *(unsigned long *)(state->sp);
++		state->pc = ftrace_graph_ret_addr(state->task, &state->graph_idx,
++			addr, (unsigned long *)(state->sp - GRAPH_FAKE_OFFSET));
+ 		if (__kernel_text_address(addr))
+ 			return true;
+ 	}
+@@ -146,8 +149,11 @@ bool unwind_next_frame(struct unwind_state *state)
+ 			break;
+ 
+ 		case UNWINDER_PROLOGUE:
+-			if (unwind_by_prologue(state))
++			if (unwind_by_prologue(state)) {
++				state->pc = ftrace_graph_ret_addr(state->task, &state->graph_idx,
++					state->pc, (unsigned long *)(state->sp - GRAPH_FAKE_OFFSET));
+ 				return true;
++			}
+ 
+ 			if (info->type == STACK_TYPE_IRQ &&
+ 				info->end == state->sp) {
+@@ -157,8 +163,9 @@ bool unwind_next_frame(struct unwind_state *state)
+ 				if (user_mode(regs) || !__kernel_text_address(pc))
+ 					return false;
+ 
+-				state->pc = pc;
+ 				state->sp = regs->regs[3];
++				state->pc = ftrace_graph_ret_addr(state->task, &state->graph_idx,
++					pc, (unsigned long *)(state->sp - GRAPH_FAKE_OFFSET));
+ 				state->ra = regs->regs[1];
+ 				state->first = true;
+ 				get_stack_info(state->sp, state->task, info);
 -- 
 2.36.1
 
