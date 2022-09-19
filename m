@@ -1,143 +1,263 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F82B3D74
-	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 10:49:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30858C433C1
-	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 10:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663584572;
-	bh=lbBrv0k13TXZ8dCpBjhgyyaDCvg78wbqezlQ21FsTzo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=M8tPz8cqe+ehXSU5Bivr/MUIp6hAO6SBGK/l8Coy7vKlm4lTXWqEbBL56NqUf/81K
-	 1zpvw+W2HPHCGhdBkVHZUthb8jLjTgdnTXUsV9jDiIhshSS6iG/I4ITAsbnd/5Ttzb
-	 s1VzawTJE1VKptb62bZVY5FzCw1mnkbM2PKHlvJYfMDFmUGxPDVl4f41BB6Vz8JEF3
-	 skfK56k0WfTfwybif/ISh9/4o3noYDqcW+jyzzlOTEwdRAEcRQHrZMY27INpCGCXS2
-	 X3XH16j+GLQtEZjaY/XweGA7+5LrGZZ0XUtnsbMCHshknTFugRHzJ5CNzrskdyM/IN
-	 uj7jHKKCCnlVA==
-Received: by mail-lj1-f171.google.com with SMTP id a14so31215200ljj.8
-        for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 03:49:32 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0rfywMA9KjWx+tzhENFAbXX+YRdROw0twpuXTDNed70N0KKRnp
-	ecSKjc5VXATCDG3ymv3mEF48pjjF+sUt2ljsxWU=
-X-Google-Smtp-Source: AMsMyM6R3dxVF33movYISi+6hpnApnSXcHMMqo5meV6GxFrhIuZoCN2NhUzlzB3VXJio/+e9jv3gZc2WhthlkET1AJA=
-X-Received: by 2002:a05:651c:b0f:b0:26c:4e8a:5e61 with SMTP id
- b15-20020a05651c0b0f00b0026c4e8a5e61mr1684316ljr.516.1663584570181; Mon, 19
- Sep 2022 03:49:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618883D74
+	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 10:54:25 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 41D951F897;
+	Mon, 19 Sep 2022 10:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1663584353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TPY7EEFMWVrZdYCxqqnTs3va11awHySIxzPGii1FR0M=;
+	b=pcs8WC6C8N5NT2mpr02B5yJH+LTCvsIeYhCodeQGG/gLeD9Ve1ZmOFpkpwgw4V+wtja7aY
+	RddPku1MGLIpjFQcO9qKlpCVJhYCWu9Pg3CcPENFblbq3F4iOpEH9QM9LSmS5Ghy2jXKlf
+	wzEuCcR+PKVNegczAeY+9+l4n3MbDsI=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 85A4E13A96;
+	Mon, 19 Sep 2022 10:45:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id T0GyHlxIKGNkeAAAMHmgww
+	(envelope-from <jgross@suse.com>); Mon, 19 Sep 2022 10:45:48 +0000
+Message-ID: <41916640-cf05-c00d-95fa-1e0099741f4c@suse.com>
+Date: Mon, 19 Sep 2022 12:45:47 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220918213544.2176249-1-ardb@kernel.org> <20220918213544.2176249-12-ardb@kernel.org>
- <CAAhV-H6Ke88sirvX9ut7JLWy+xaERZ7BeMEf97WHRWbsLqZC0A@mail.gmail.com>
- <CAMj1kXHuQHuCt9Z=qWRH_aZY5_+LzpicyE=agMyAX+O14khL_g@mail.gmail.com>
- <CAAhV-H7-JFwcwz5pBt7WZxJ2CkeUvc07OLgWxB9z-QTkr=njWw@mail.gmail.com>
- <CAMj1kXFKmvSt1092xBUHVXf9NxDFDSDyPDNpwfGUKWGWAPAE9Q@mail.gmail.com>
- <CAAhV-H7-9yx4EmtLrvE6arVahsT7AySLyyxk0yXUWPicWfgRjQ@mail.gmail.com>
- <CAMj1kXFuKo=SGGycD8E-FjN9kHsJ45ZCHaRdqgX3bT6XRG418A@mail.gmail.com> <CAAhV-H5PbYA+FL6KUVHVGkgC9R_4aNG02d78bTF7senikFPJLw@mail.gmail.com>
-In-Reply-To: <CAAhV-H5PbYA+FL6KUVHVGkgC9R_4aNG02d78bTF7senikFPJLw@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 19 Sep 2022 12:49:19 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHDo26TsVmQATagru6gqo+U8a0k-3uf2Di9JLLDVoGoSg@mail.gmail.com>
-Message-ID: <CAMj1kXHDo26TsVmQATagru6gqo+U8a0k-3uf2Di9JLLDVoGoSg@mail.gmail.com>
-Subject: Re: [PATCH 11/12] efi/loongarch: libstub: remove dependency on
- flattened DT
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-efi <linux-efi@vger.kernel.org>, loongarch@lists.linux.dev, 
-	"Russell King (Oracle)" <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Xi Ruoyao <xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v2 30/44] cpuidle,xenpv: Make more PARAVIRT_XXL noinstr
+ clean
+Content-Language: en-US
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+ mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
+ ulli.kroll@googlemail.com, linus.walleij@linaro.org, shawnguo@kernel.org,
+ Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+ festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com, khilman@kernel.org,
+ catalin.marinas@arm.com, will@kernel.org, guoren@kernel.org,
+ bcain@quicinc.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ geert@linux-m68k.org, sammy@sammy.net, monstr@monstr.eu,
+ tsbogend@alpha.franken.de, dinguyen@kernel.org, jonas@southpole.se,
+ stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+ James.Bottomley@HansenPartnership.com, deller@gmx.de, mpe@ellerman.id.au,
+ npiggin@gmail.com, christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
+ gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+ svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+ davem@davemloft.net, richard@nod.at, anton.ivanov@cambridgegreys.com,
+ johannes@sipsolutions.net, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org, namhyung@kernel.org, srivatsa@csail.mit.edu,
+ amakhalov@vmware.com, pv-drivers@vmware.com, boris.ostrovsky@oracle.com,
+ chris@zankel.net, jcmvbkbc@gmail.com, rafael@kernel.org, lenb@kernel.org,
+ pavel@ucw.cz, gregkh@linuxfoundation.org, mturquette@baylibre.com,
+ sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+ sudeep.holla@arm.com, agross@kernel.org, bjorn.andersson@linaro.org,
+ konrad.dybcio@somainline.org, anup@brainfault.org, thierry.reding@gmail.com,
+ jonathanh@nvidia.com, jacob.jun.pan@linux.intel.com, atishp@atishpatra.org,
+ Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com,
+ andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+ dennis@kernel.org, tj@kernel.org, cl@linux.com, rostedt@goodmis.org,
+ pmladek@suse.com, senozhatsky@chromium.org, john.ogness@linutronix.de,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+ vschneid@redhat.com, fweisbec@gmail.com, ryabinin.a.a@gmail.com,
+ glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
+ vincenzo.frascino@arm.com, Andrew Morton <akpm@linux-foundation.org>,
+ jpoimboe@kernel.org, linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-omap@vger.kernel.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ virtualization@lists.linux-foundation.org, linux-xtensa@linux-xtensa.org,
+ linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
+ kasan-dev@googlegroups.com
+References: <20220919095939.761690562@infradead.org>
+ <20220919101522.358582588@infradead.org>
+From: Juergen Gross <jgross@suse.com>
+In-Reply-To: <20220919101522.358582588@infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------uN7TNqTnDntgyCDMTfJPdXrr"
 
-On Mon, 19 Sept 2022 at 12:47, Huacai Chen <chenhuacai@kernel.org> wrote:
->
-> On Mon, Sep 19, 2022 at 6:37 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Mon, 19 Sept 2022 at 12:33, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > >
-> > > Hi, Ard,
-> > >
-> > > On Mon, Sep 19, 2022 at 2:22 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > >
-> > > > On Mon, 19 Sept 2022 at 08:06, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > >
-> > > > >  Hi, Ard,
-> > > > >
-> > > > > On Mon, Sep 19, 2022 at 1:15 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > > >
-> > > > > > On Mon, 19 Sept 2022 at 03:58, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > > > >
-> > > > > > > Hi, Ard,
-> > > > > > >
-> > > > > > > I think the parameters passed to the core kernel need to be discussed.
-> > > > > > > The old way (so-called old world):
-> > > > > > > a0=argc, a1=argv, a1=bpi
-> > > > > > >
-> > > > > > > The current way (so-called new world):
-> > > > > > > a0=efi boot flag, a1=fdt pointer
-> > > > > > >
-> > > > > > > The new way (in this patchset):
-> > > > > > > a0=efi boot flag, a1=systemtable, a2=cmdline
-> > > > > > >
-> > > > > > > I prefer to use the current way, there are 3 reasons:
-> > > > > > > 1, both acpi system and dt system can use the same parameters passing method;
-> > > > > >
-> > > > > > DT systems will use this too. The distinction is between EFI boot and
-> > > > > > non-EFI boot. We *really* should keep these separate, given the
-> > > > > > experience on ARM, where other projects invent ways to pass those
-> > > > > > values to the kernel without going through the stub.
-> > > > > In the last patch I see:
-> > > > > +               void *fdt_ptr = early_memremap_ro(fw_arg1, SZ_64K);
-> > > > > +
-> > > > > +               early_init_dt_scan(fdt_ptr);
-> > > > > +               early_init_fdt_reserve_self();
-> > > > > +
-> > > > >                 clear_bit(EFI_BOOT, &efi.flags);
-> > > > > So I suppose for the DT system that means a0=efi boot flag, a1=fdt
-> > > > > pointer, a2=cmdline? Then it is not exactly the same as the ACPI
-> > > > > system, but similar.
-> > > > >
-> > > >
-> > > > No, for non-EFI DT boot, the command line is passed via the DT, so
-> > > > a0=0x0 (non-efi), a1=DT, a2=0x0
-> > > >
-> > > > Do you intend to support non-EFI DT boot by the way?
-> > > I think we needn't support non-EFI DT boot, so a0=efi boot flag,
-> > > a1=systemtable, a2=cmdline is just OK (or maybe we can exchange a1/a2,
-> > > which looks similar to the old-world).
-> >
-> > Excellent. If non-EFI boot is not supported, we can drop the code that
-> > deals with that.
-> >
-> > > But I have another question: is
-> > > it early enough to get DT from systemtable for DT boot (in the current
-> > > way DT is the earliest thing)?
-> > >
-> >
-> > If you rely on DT only for the hardware description, then loading it
-> > from efi_init() should be fine.
-> OK, then please drop patch #12 at this time. It can be added when we
-> add Loongson-2K support.
->
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------uN7TNqTnDntgyCDMTfJPdXrr
+Content-Type: multipart/mixed; boundary="------------bVxl0sFTg1HlWc0dYJ02yXYs";
+ protected-headers="v1"
+From: Juergen Gross <jgross@suse.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+ mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
+ ulli.kroll@googlemail.com, linus.walleij@linaro.org, shawnguo@kernel.org,
+ Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+ festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com, khilman@kernel.org,
+ catalin.marinas@arm.com, will@kernel.org, guoren@kernel.org,
+ bcain@quicinc.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ geert@linux-m68k.org, sammy@sammy.net, monstr@monstr.eu,
+ tsbogend@alpha.franken.de, dinguyen@kernel.org, jonas@southpole.se,
+ stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+ James.Bottomley@HansenPartnership.com, deller@gmx.de, mpe@ellerman.id.au,
+ npiggin@gmail.com, christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
+ gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+ svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+ davem@davemloft.net, richard@nod.at, anton.ivanov@cambridgegreys.com,
+ johannes@sipsolutions.net, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org, namhyung@kernel.org, srivatsa@csail.mit.edu,
+ amakhalov@vmware.com, pv-drivers@vmware.com, boris.ostrovsky@oracle.com,
+ chris@zankel.net, jcmvbkbc@gmail.com, rafael@kernel.org, lenb@kernel.org,
+ pavel@ucw.cz, gregkh@linuxfoundation.org, mturquette@baylibre.com,
+ sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+ sudeep.holla@arm.com, agross@kernel.org, bjorn.andersson@linaro.org,
+ konrad.dybcio@somainline.org, anup@brainfault.org, thierry.reding@gmail.com,
+ jonathanh@nvidia.com, jacob.jun.pan@linux.intel.com, atishp@atishpatra.org,
+ Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com,
+ andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+ dennis@kernel.org, tj@kernel.org, cl@linux.com, rostedt@goodmis.org,
+ pmladek@suse.com, senozhatsky@chromium.org, john.ogness@linutronix.de,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+ vschneid@redhat.com, fweisbec@gmail.com, ryabinin.a.a@gmail.com,
+ glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
+ vincenzo.frascino@arm.com, Andrew Morton <akpm@linux-foundation.org>,
+ jpoimboe@kernel.org, linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-omap@vger.kernel.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ virtualization@lists.linux-foundation.org, linux-xtensa@linux-xtensa.org,
+ linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
+ kasan-dev@googlegroups.com
+Message-ID: <41916640-cf05-c00d-95fa-1e0099741f4c@suse.com>
+Subject: Re: [PATCH v2 30/44] cpuidle,xenpv: Make more PARAVIRT_XXL noinstr
+ clean
+References: <20220919095939.761690562@infradead.org>
+ <20220919101522.358582588@infradead.org>
+In-Reply-To: <20220919101522.358582588@infradead.org>
 
-OK
+--------------bVxl0sFTg1HlWc0dYJ02yXYs
+Content-Type: multipart/mixed; boundary="------------DqMcUwZmmixeMRf078SIWWNm"
 
-> > > > I don't think it makes sense to allow efi=novamap on LoongArch, given
-> > > > that we cannot make use of the runtime services that way. So in my
-> > > > code, efi_novamap is set to false unconditionally.
-> > > Emm, I prefer to support "efi=novamap", the core kernel has already
-> > > supported "noefi" to disable runtime, I don't want to hack
-> > > efi_novamap. So please keep the efi boot flag, thanks.
-> > >
-> >
-> > Fair enough. Do you have any uses for efi_novamap in mind?
-> I usually use "efi=novamap" in EFI shell to see whether it can work
-> well without runtime. And I think I will modify this patch these days
-> because in another thread you said that this series cannot boot.
+--------------DqMcUwZmmixeMRf078SIWWNm
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-It works fine now.
+T24gMTkuMDkuMjIgMTI6MDAsIFBldGVyIFppamxzdHJhIHdyb3RlOg0KPiB2bWxpbnV4Lm86
+IHdhcm5pbmc6IG9ianRvb2w6IGFjcGlfaWRsZV9lbnRlcl9zMmlkbGUrMHhkZTogY2FsbCB0
+byB3YmludmQoKSBsZWF2ZXMgLm5vaW5zdHIudGV4dCBzZWN0aW9uDQo+IHZtbGludXgubzog
+d2FybmluZzogb2JqdG9vbDogZGVmYXVsdF9pZGxlKzB4NDogY2FsbCB0byBhcmNoX3NhZmVf
+aGFsdCgpIGxlYXZlcyAubm9pbnN0ci50ZXh0IHNlY3Rpb24NCj4gdm1saW51eC5vOiB3YXJu
+aW5nOiBvYmp0b29sOiB4ZW5fc2FmZV9oYWx0KzB4YTogY2FsbCB0byBIWVBFUlZJU09SX3Nj
+aGVkX29wLmNvbnN0cHJvcC4wKCkgbGVhdmVzIC5ub2luc3RyLnRleHQgc2VjdGlvbg0KPiAN
+Cj4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgWmlqbHN0cmEgKEludGVsKSA8cGV0ZXJ6QGluZnJh
+ZGVhZC5vcmc+DQo+IFJldmlld2VkLWJ5OiBTcml2YXRzYSBTLiBCaGF0IChWTXdhcmUpIDxz
+cml2YXRzYUBjc2FpbC5taXQuZWR1Pg0KDQpSZXZpZXdlZC1ieTogSnVlcmdlbiBHcm9zcyA8
+amdyb3NzQHN1c2UuY29tPg0KDQoNCkp1ZXJnZW4NCg0K
+--------------DqMcUwZmmixeMRf078SIWWNm
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-However, clearing the EFI_BOOT flag is not the correct way to disable
-runtime services only. And note that we also have efi=noruntime - does
-that currently work on LoongArch?
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+jR/i1DG86lem3iBDXzXsZDn8R38=3D
+=3D2wuH
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------DqMcUwZmmixeMRf078SIWWNm--
+
+--------------bVxl0sFTg1HlWc0dYJ02yXYs--
+
+--------------uN7TNqTnDntgyCDMTfJPdXrr
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmMoSFwFAwAAAAAACgkQsN6d1ii/Ey/T
+hwf/eGOkDCDy7F9Ra0L0GOLdv4GeCljWmcvbdITwnsuB7hQz/+M0V2k7PvSN/ISQ4Vf6Jn+jdWqe
+BIXXQbgSPEGvf145/zXXKI4Z/CR603o4j00ul4vrymonw4oMQfSU6XSgHQPxxoPF3hdqavHf2w48
+1DJPJ8whPxq8qCNOIZt3O0NWTtIKi2fdc7Gpw4aouzNtdCNdCQKzLjhN1LpTcokA22BVdYBG2wMF
+ZkBuZgDmH0auDXsstAEU8aSublQibxzVadACIUCRvtXxxTSXCujB3IoT9CgcYyav5uxi9nNvOEsp
+f9YTwuEzNv1IhRffytywrjyBDZdbHXFDZM0kU7zKkA==
+=9mzX
+-----END PGP SIGNATURE-----
+
+--------------uN7TNqTnDntgyCDMTfJPdXrr--
