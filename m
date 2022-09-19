@@ -1,104 +1,232 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4BD7E4
-	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 06:33:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27CE5C43140
-	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 06:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663569231;
-	bh=qHWL4WdATNWAwk72mOr/16q6SJQs7sObRP3fl7UD6ig=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GQ+RjgNs2DAFl7f7Pjr8b3giPjbus1Cx0XX+FkvZWiW+LoByaRZOtf42S7zLT3+5t
-	 UTaH/HPHKhcZ7EsZKzBakpre4/+J3mcPlZCrvxv+A89N3CVAymtJ40guD0CUalrPHF
-	 H17yVbxKtjEkdYq4WQs/SGtnC9j5fBz+Vrhn2mxKyK3tREDlWDZhuaQDLep6b2k5rv
-	 vGPBsrqioS1o1cBKWGyACecVuH/vATTM7Znl4gPIMRnWiXPNNrMcbBcunos1+IfqfV
-	 5GEuLGO6sj7oi8nXRwJa7E3e3gvovhx2ozmEt4dV2lGHtspG4SBe19CuL+zLUnt4xS
-	 Mwxv2FnPwQ1Zw==
-Received: by mail-lf1-f50.google.com with SMTP id i26so45335064lfp.11
-        for <loongarch@lists.linux.dev>; Sun, 18 Sep 2022 23:33:51 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0aBmpSab1ZpPefUTkPqtXR2mPhU6mN9waTzKCRiNSyE4H40O6m
-	HbA5Ur1eo3KVCFFKz5sxtz1qjxjVLbpZyPVNj5c=
-X-Google-Smtp-Source: AMsMyM52yUt+ycJ0Ymsf2uNStsk+t/EEB9h3cAygM0MYTXeJ23B5gqMk5C8dokb4SG12lH2g7tY3h4LDMo26bOydXnM=
-X-Received: by 2002:a05:6512:150e:b0:492:d9fd:9bdf with SMTP id
- bq14-20020a056512150e00b00492d9fd9bdfmr5398289lfb.583.1663569229022; Sun, 18
- Sep 2022 23:33:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0AA23AF
+	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 10:17:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To;
+	bh=opcA1/Y+HqbqHoKXfaoCivp+Xr552TiTgo8o6IEPi68=; b=o0s60Tz10WjGmxt2O9IlKD2zW6
+	PuCx0cTX9J/pibDE6x/EeKWJVUSqibWnPXpJa+q9d460/syW7hiAGHgu4cr1HLa6E5A6RLWWAQF7N
+	BU0wDqaPgn13oGAzZQILZR0of4SZi/+faIYwlAxDrra9kJBHvPvKLs2TKLExGtcT0Nd5/UVeZ64Mz
+	BRjiE+oPUuXTv9zpZEKI0TwyyXQOrtbtPnfJfXrlZuizWXUj8Lhhk2NEczdkAKK26JfX/b2u7H1Zg
+	09mgch7LP0jTa9JSOBgRRCDBiftmu3A5DtJCHHaYXwNFgsZWCFQjIdoiHWd35lXf31xAruQSJUZTM
+	GsF8b/8A==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1oaDpH-004aiI-6r; Mon, 19 Sep 2022 10:16:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(Client did not present a certificate)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D508A302E9F;
+	Mon, 19 Sep 2022 12:16:24 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+	id F01612BA4903F; Mon, 19 Sep 2022 12:16:21 +0200 (CEST)
+Message-ID: <20220919101521.004425686@infradead.org>
+User-Agent: quilt/0.66
+Date: Mon, 19 Sep 2022 11:59:49 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: peterz@infradead.org
+Cc: richard.henderson@linaro.org,
+ ink@jurassic.park.msu.ru,
+ mattst88@gmail.com,
+ vgupta@kernel.org,
+ linux@armlinux.org.uk,
+ ulli.kroll@googlemail.com,
+ linus.walleij@linaro.org,
+ shawnguo@kernel.org,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ kernel@pengutronix.de,
+ festevam@gmail.com,
+ linux-imx@nxp.com,
+ tony@atomide.com,
+ khilman@kernel.org,
+ catalin.marinas@arm.com,
+ will@kernel.org,
+ guoren@kernel.org,
+ bcain@quicinc.com,
+ chenhuacai@kernel.org,
+ kernel@xen0n.name,
+ geert@linux-m68k.org,
+ sammy@sammy.net,
+ monstr@monstr.eu,
+ tsbogend@alpha.franken.de,
+ dinguyen@kernel.org,
+ jonas@southpole.se,
+ stefan.kristiansson@saunalahti.fi,
+ shorne@gmail.com,
+ James.Bottomley@HansenPartnership.com,
+ deller@gmx.de,
+ mpe@ellerman.id.au,
+ npiggin@gmail.com,
+ christophe.leroy@csgroup.eu,
+ paul.walmsley@sifive.com,
+ palmer@dabbelt.com,
+ aou@eecs.berkeley.edu,
+ hca@linux.ibm.com,
+ gor@linux.ibm.com,
+ agordeev@linux.ibm.com,
+ borntraeger@linux.ibm.com,
+ svens@linux.ibm.com,
+ ysato@users.sourceforge.jp,
+ dalias@libc.org,
+ davem@davemloft.net,
+ richard@nod.at,
+ anton.ivanov@cambridgegreys.com,
+ johannes@sipsolutions.net,
+ tglx@linutronix.de,
+ mingo@redhat.com,
+ bp@alien8.de,
+ dave.hansen@linux.intel.com,
+ x86@kernel.org,
+ hpa@zytor.com,
+ acme@kernel.org,
+ mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org,
+ namhyung@kernel.org,
+ jgross@suse.com,
+ srivatsa@csail.mit.edu,
+ amakhalov@vmware.com,
+ pv-drivers@vmware.com,
+ boris.ostrovsky@oracle.com,
+ chris@zankel.net,
+ jcmvbkbc@gmail.com,
+ rafael@kernel.org,
+ lenb@kernel.org,
+ pavel@ucw.cz,
+ gregkh@linuxfoundation.org,
+ mturquette@baylibre.com,
+ sboyd@kernel.org,
+ daniel.lezcano@linaro.org,
+ lpieralisi@kernel.org,
+ sudeep.holla@arm.com,
+ agross@kernel.org,
+ bjorn.andersson@linaro.org,
+ konrad.dybcio@somainline.org,
+ anup@brainfault.org,
+ thierry.reding@gmail.com,
+ jonathanh@nvidia.com,
+ jacob.jun.pan@linux.intel.com,
+ atishp@atishpatra.org,
+ Arnd Bergmann <arnd@arndb.de>,
+ yury.norov@gmail.com,
+ andriy.shevchenko@linux.intel.com,
+ linux@rasmusvillemoes.dk,
+ dennis@kernel.org,
+ tj@kernel.org,
+ cl@linux.com,
+ rostedt@goodmis.org,
+ pmladek@suse.com,
+ senozhatsky@chromium.org,
+ john.ogness@linutronix.de,
+ juri.lelli@redhat.com,
+ vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com,
+ bsegall@google.com,
+ mgorman@suse.de,
+ bristot@redhat.com,
+ vschneid@redhat.com,
+ fweisbec@gmail.com,
+ ryabinin.a.a@gmail.com,
+ glider@google.com,
+ andreyknvl@gmail.com,
+ dvyukov@google.com,
+ vincenzo.frascino@arm.com,
+ Andrew Morton <akpm@linux-foundation.org>,
+ jpoimboe@kernel.org,
+ linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org,
+ linux-omap@vger.kernel.org,
+ linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org,
+ linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org,
+ openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org,
+ linux-perf-users@vger.kernel.org,
+ virtualization@lists.linux-foundation.org,
+ linux-xtensa@linux-xtensa.org,
+ linux-acpi@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ linux-clk@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org,
+ linux-tegra@vger.kernel.org,
+ linux-arch@vger.kernel.org,
+ kasan-dev@googlegroups.com
+Subject: [PATCH v2 10/44] cpuidle,armada: Push RCU-idle into driver
+References: <20220919095939.761690562@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220918213544.2176249-1-ardb@kernel.org> <20220918213544.2176249-12-ardb@kernel.org>
- <CAAhV-H6Ke88sirvX9ut7JLWy+xaERZ7BeMEf97WHRWbsLqZC0A@mail.gmail.com>
- <CAMj1kXHuQHuCt9Z=qWRH_aZY5_+LzpicyE=agMyAX+O14khL_g@mail.gmail.com>
- <CAAhV-H7-JFwcwz5pBt7WZxJ2CkeUvc07OLgWxB9z-QTkr=njWw@mail.gmail.com> <CAMj1kXFKmvSt1092xBUHVXf9NxDFDSDyPDNpwfGUKWGWAPAE9Q@mail.gmail.com>
-In-Reply-To: <CAMj1kXFKmvSt1092xBUHVXf9NxDFDSDyPDNpwfGUKWGWAPAE9Q@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 19 Sep 2022 08:33:37 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHvAahn9kMvazoA=Zn6c7047zUP7zju6BEeMeATFORXEA@mail.gmail.com>
-Message-ID: <CAMj1kXHvAahn9kMvazoA=Zn6c7047zUP7zju6BEeMeATFORXEA@mail.gmail.com>
-Subject: Re: [PATCH 11/12] efi/loongarch: libstub: remove dependency on
- flattened DT
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-efi <linux-efi@vger.kernel.org>, loongarch@lists.linux.dev, 
-	"Russell King (Oracle)" <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Xi Ruoyao <xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 
-On Mon, 19 Sept 2022 at 08:22, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Mon, 19 Sept 2022 at 08:06, Huacai Chen <chenhuacai@kernel.org> wrote:
-> >
-> >  Hi, Ard,
-> >
-> > On Mon, Sep 19, 2022 at 1:15 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > On Mon, 19 Sept 2022 at 03:58, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > >
-> > > > Hi, Ard,
-> > > >
-> > > > I think the parameters passed to the core kernel need to be discussed.
-> > > > The old way (so-called old world):
-> > > > a0=argc, a1=argv, a1=bpi
-> > > >
-> > > > The current way (so-called new world):
-> > > > a0=efi boot flag, a1=fdt pointer
-> > > >
-> > > > The new way (in this patchset):
-> > > > a0=efi boot flag, a1=systemtable, a2=cmdline
-> > > >
-> > > > I prefer to use the current way, there are 3 reasons:
-> > > > 1, both acpi system and dt system can use the same parameters passing method;
-> > >
-> > > DT systems will use this too. The distinction is between EFI boot and
-> > > non-EFI boot. We *really* should keep these separate, given the
-> > > experience on ARM, where other projects invent ways to pass those
-> > > values to the kernel without going through the stub.
-> > In the last patch I see:
-> > +               void *fdt_ptr = early_memremap_ro(fw_arg1, SZ_64K);
-> > +
-> > +               early_init_dt_scan(fdt_ptr);
-> > +               early_init_fdt_reserve_self();
-> > +
-> >                 clear_bit(EFI_BOOT, &efi.flags);
-> > So I suppose for the DT system that means a0=efi boot flag, a1=fdt
-> > pointer, a2=cmdline? Then it is not exactly the same as the ACPI
-> > system, but similar.
-> >
->
-> No, for non-EFI DT boot, the command line is passed via the DT, so
-> a0=0x0 (non-efi), a1=DT, a2=0x0
->
-> Do you intend to support non-EFI DT boot by the way?
->
-> So
->
-> a2  != 0x0 means old world
-> a0 != 0x0 means EFI boot, a1 is the command line
-> a0 == 0x0 means !EFI boot, a1 is the DT
->
+Doing RCU-idle outside the driver, only to then temporarily enable it
+again before going idle is daft.
 
-Note: the above applies if we decide to merge the EFI boolean and the
-system table pointer into register #0.
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ drivers/cpuidle/cpuidle-mvebu-v7.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/drivers/cpuidle/cpuidle-mvebu-v7.c
++++ b/drivers/cpuidle/cpuidle-mvebu-v7.c
+@@ -36,7 +36,10 @@ static int mvebu_v7_enter_idle(struct cp
+ 	if (drv->states[index].flags & MVEBU_V7_FLAG_DEEP_IDLE)
+ 		deepidle = true;
+ 
++	ct_idle_enter();
+ 	ret = mvebu_v7_cpu_suspend(deepidle);
++	ct_idle_exit();
++
+ 	cpu_pm_exit();
+ 
+ 	if (ret)
+@@ -49,6 +52,7 @@ static struct cpuidle_driver armadaxp_id
+ 	.name			= "armada_xp_idle",
+ 	.states[0]		= ARM_CPUIDLE_WFI_STATE,
+ 	.states[1]		= {
++		.flags			= CPUIDLE_FLAG_RCU_IDLE,
+ 		.enter			= mvebu_v7_enter_idle,
+ 		.exit_latency		= 100,
+ 		.power_usage		= 50,
+@@ -57,6 +61,7 @@ static struct cpuidle_driver armadaxp_id
+ 		.desc			= "CPU power down",
+ 	},
+ 	.states[2]		= {
++		.flags			= CPUIDLE_FLAG_RCU_IDLE,
+ 		.enter			= mvebu_v7_enter_idle,
+ 		.exit_latency		= 1000,
+ 		.power_usage		= 5,
+@@ -72,6 +77,7 @@ static struct cpuidle_driver armada370_i
+ 	.name			= "armada_370_idle",
+ 	.states[0]		= ARM_CPUIDLE_WFI_STATE,
+ 	.states[1]		= {
++		.flags			= CPUIDLE_FLAG_RCU_IDLE,
+ 		.enter			= mvebu_v7_enter_idle,
+ 		.exit_latency		= 100,
+ 		.power_usage		= 5,
+@@ -87,6 +93,7 @@ static struct cpuidle_driver armada38x_i
+ 	.name			= "armada_38x_idle",
+ 	.states[0]		= ARM_CPUIDLE_WFI_STATE,
+ 	.states[1]		= {
++		.flags			= CPUIDLE_FLAG_RCU_IDLE,
+ 		.enter			= mvebu_v7_enter_idle,
+ 		.exit_latency		= 10,
+ 		.power_usage		= 5,
+
+
