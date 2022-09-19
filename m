@@ -1,275 +1,307 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14E47C
-	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 15:21:26 +0000 (UTC)
-Received: by mail-qk1-f180.google.com with SMTP id h28so20722886qka.0
-        for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 08:21:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=zwk8/QhMZpatQGQHcLa6CxC1A70tMAO9HDHY25D5feE=;
-        b=rpt0vaS91HEYFzs1qB5id8zAQyO5blzjZE3a/uXR9syReuHjl9wuqGUDZaAOz4vSdi
-         +FFpdaNWUQvL4TZAG1HlcVkYcNPsUeYOKIiXQ6sO6Thq+aTU3qphwAvUA8314QIwcjDC
-         z3RdLpl4+Ta/9Lu187KGDq74V+1KqhuCIxIe+oXjkOht4JUyMK9KM1nbm/1sQUp3Cj6i
-         YVFcgzkigRK2ztYTy4SF3fXT9USFyZvgVSY+Uey/1iTrVfu63QtSfoiRqh7DW7f04brB
-         EXTlNTYRWrZSsVVIpxqoeLHqhafWeRcYixGsY5IxPsIkKlmwkTo4glhbBFJ8gFGiPilx
-         SDlQ==
-X-Gm-Message-State: ACrzQf3sps1RLID/+xUgteh7I4NaSNNdo9U3+iz1bpmJjPQzAm47zgRP
-	kFcgcm7QsRGdHOO6ID/Xqy0zxXo5fjUcOproj7A=
-X-Google-Smtp-Source: AMsMyM5cgrHdHMwYAR2D2ZjqABuHY9UEfVqKvTwIhmR6+N901HRJWzEi9ZfhaQwzx+J2b350jxNOS+DoidFDWdYllGY=
-X-Received: by 2002:a05:620a:46ac:b0:6ce:3e55:fc21 with SMTP id
- bq44-20020a05620a46ac00b006ce3e55fc21mr12973834qkb.285.1663600885830; Mon, 19
- Sep 2022 08:21:25 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C967C
+	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 15:50:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD4C4C43470
+	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 15:50:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1663602615;
+	bh=I2LiilqMVaMEi5KObT6Ef6Vx32yzTAuoYDNeM+xb3vY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=buxG8lkVruvs771EXI496frDHQwiMbYZ/mHhnKLd13tpepU7Mp4MGAL4zyiwLdhCU
+	 svU7Gad1Dv7RvNdtvXKWxFqtjsmwEqb0cRgSoHiNwMw4zLITYumU4tak5XUAsQ7QH7
+	 LEy0own7jPYc0vxlY6Qf5yiEGDR2LmlX+wMYvpGBjDUR6+yFHgUEd4a1H15pWn8ngQ
+	 bj5ahzpdhlvszHZu3AnMpMCVGdEAUNTfbiKJvtRnrny/u6lE2m47TF4Cws58M8cyld
+	 6hzWMW+3eCneagY8CmlXDh9e8q0FzmnnFMv4PQz+92oLWHZeYXoI8CH+aytpXna1Zh
+	 2T3Fx134zMMWg==
+Received: by mail-lf1-f42.google.com with SMTP id f14so46676349lfg.5
+        for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 08:50:15 -0700 (PDT)
+X-Gm-Message-State: ACrzQf1bNxrzbqcMtvItZiACtZIQHdlxiwHPtw4PAeZhm0ISEldye+T3
+	mf4MQ4fqzmOCnBDLbvVFf76s80f7fPRuSwmfUKg=
+X-Google-Smtp-Source: AMsMyM6pZXzNiZvpK25oSsxGV9X77ICbZrgEMDTbncroPMx1UIXk5+Pn7wizMIhK7l/69GLneUhaM+6CqSd6dd0IAu8=
+X-Received: by 2002:a05:6512:3d09:b0:497:ab35:fd12 with SMTP id
+ d9-20020a0565123d0900b00497ab35fd12mr6602185lfv.539.1663602613585; Mon, 19
+ Sep 2022 08:50:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220919095939.761690562@infradead.org>
-In-Reply-To: <20220919095939.761690562@infradead.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 19 Sep 2022 17:21:12 +0200
-Message-ID: <CAJZ5v0h3y-MRzHmbzrr6B4vBxkkw07LOdCVmBqSS4JDhtGSKXg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/44] cpuidle,rcu: Clean up the mess
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: richard.henderson@linaro.org, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, vgupta@kernel.org, 
-	Russell King - ARM Linux <linux@armlinux.org.uk>, ulli.kroll@googlemail.com, 
-	Linus Walleij <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Tony Lindgren <tony@atomide.com>, 
-	Kevin Hilman <khilman@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, bcain@quicinc.com, 
-	Huacai Chen <chenhuacai@kernel.org>, kernel@xen0n.name, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, sammy@sammy.net, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, dinguyen@kernel.org, jonas@southpole.se, 
-	stefan.kristiansson@saunalahti.fi, Stafford Horne <shorne@gmail.com>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, David Miller <davem@davemloft.net>, 
-	Richard Weinberger <richard@nod.at>, anton.ivanov@cambridgegreys.com, 
-	Johannes Berg <johannes@sipsolutions.net>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "the arch/x86 maintainers" <x86@kernel.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>, acme@kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, jolsa@kernel.org, namhyung@kernel.org, 
-	Juergen Gross <jgross@suse.com>, srivatsa@csail.mit.edu, amakhalov@vmware.com, 
-	pv-drivers@vmware.com, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, 
-	Konrad Dybcio <konrad.dybcio@somainline.org>, Anup Patel <anup@brainfault.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, 
-	Jacob Pan <jacob.jun.pan@linux.intel.com>, Atish Patra <atishp@atishpatra.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Yury Norov <yury.norov@gmail.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Christoph Lameter <cl@linux.com>, Steven Rostedt <rostedt@goodmis.org>, Petr Mladek <pmladek@suse.com>, 
-	senozhatsky@chromium.org, John Ogness <john.ogness@linutronix.de>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Benjamin Segall <bsegall@google.com>, 
-	Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, vschneid@redhat.com, 
-	Frederic Weisbecker <fweisbec@gmail.com>, ryabinin.a.a@gmail.com, 
-	Alexander Potapenko <glider@google.com>, andreyknvl@gmail.com, 
-	Dmitry Vyukov <dvyukov@google.com>, vincenzo.frascino@arm.com, 
-	Andrew Morton <akpm@linux-foundation.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	linux-alpha@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-snps-arc@lists.infradead.org, 
-	Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-csky@vger.kernel.org, 
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k <linux-m68k@lists.linux-m68k.org>, 
-	"open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, openrisc@lists.librecores.org, 
-	Parisc List <linux-parisc@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390@vger.kernel.org, 
-	Linux-sh list <linux-sh@vger.kernel.org>, sparclinux@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, linux-xtensa@linux-xtensa.org, 
-	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
-	linux-clk <linux-clk@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, 
-	linux-tegra <linux-tegra@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, 
-	kasan-dev@googlegroups.com
+References: <20220918213544.2176249-1-ardb@kernel.org> <20220918213544.2176249-12-ardb@kernel.org>
+ <CAAhV-H6Ke88sirvX9ut7JLWy+xaERZ7BeMEf97WHRWbsLqZC0A@mail.gmail.com>
+ <CAMj1kXHuQHuCt9Z=qWRH_aZY5_+LzpicyE=agMyAX+O14khL_g@mail.gmail.com>
+ <CAAhV-H7-JFwcwz5pBt7WZxJ2CkeUvc07OLgWxB9z-QTkr=njWw@mail.gmail.com>
+ <CAMj1kXFKmvSt1092xBUHVXf9NxDFDSDyPDNpwfGUKWGWAPAE9Q@mail.gmail.com>
+ <CAAhV-H7-9yx4EmtLrvE6arVahsT7AySLyyxk0yXUWPicWfgRjQ@mail.gmail.com>
+ <CAMj1kXFuKo=SGGycD8E-FjN9kHsJ45ZCHaRdqgX3bT6XRG418A@mail.gmail.com>
+ <CAAhV-H5PbYA+FL6KUVHVGkgC9R_4aNG02d78bTF7senikFPJLw@mail.gmail.com>
+ <CAMj1kXHDo26TsVmQATagru6gqo+U8a0k-3uf2Di9JLLDVoGoSg@mail.gmail.com>
+ <CAAhV-H78ErUvzKK-+tcjYq6YKT8G4gtV5VhzsGg-yZYQPRR+bA@mail.gmail.com>
+ <CAMj1kXEG7=HWMmu-=_=CjG1gSgz6Q_eTsUjob7sP2uxt5q1_Eg@mail.gmail.com>
+ <CAAhV-H67dgV_M2RW37wh_=aA8dr=f_nSbdab3sQPKUvDKws+xQ@mail.gmail.com>
+ <CAMj1kXEWJ9TbhWRTiqFDtHr36dhkc1RfyL8ft06uDsN08x6eYA@mail.gmail.com>
+ <CAAhV-H5BQAWFAT2vRZxO8L=pU0X5hGD-vHpyRVK0k7UKaLJJpQ@mail.gmail.com>
+ <CAMj1kXEpFiRORzz=qQ5oCAUAgSDyCnf8p5Hb=NuMYMVcKfNYqw@mail.gmail.com>
+ <CAAhV-H584umex2jcSBju3ZjqDELBQWpna8A6QxRYBDvvvueHGw@mail.gmail.com>
+ <CAMj1kXGgV+Ucb=0076-9PBFWeL-1W6-XAFD3BK=miiZK6ddwPg@mail.gmail.com>
+ <CAAhV-H5gtw1tb040mV8o=P=5onfTZwDEVm1tTooWLOW-kyHAMw@mail.gmail.com>
+ <CAMj1kXGWLAJqf3fmqPm9JWTC06i=t2fhZi2_Tfjh40rtUQLwXg@mail.gmail.com> <CAAhV-H5iy1GC+JXGeSh0EPQ=TT9m_oFKMknk-7JSpQ-0HdK9Rw@mail.gmail.com>
+In-Reply-To: <CAAhV-H5iy1GC+JXGeSh0EPQ=TT9m_oFKMknk-7JSpQ-0HdK9Rw@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 19 Sep 2022 17:50:02 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXF=aGFktg1jGq4mN_73ko3j-jt4=Xc1xAR0jWx_OT0tVw@mail.gmail.com>
+Message-ID: <CAMj1kXF=aGFktg1jGq4mN_73ko3j-jt4=Xc1xAR0jWx_OT0tVw@mail.gmail.com>
+Subject: Re: [PATCH 11/12] efi/loongarch: libstub: remove dependency on
+ flattened DT
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-efi <linux-efi@vger.kernel.org>, loongarch@lists.linux.dev, 
+	"Russell King (Oracle)" <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Xi Ruoyao <xry111@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Sep 19, 2022 at 12:17 PM Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, 19 Sept 2022 at 17:09, Huacai Chen <chenhuacai@kernel.org> wrote:
 >
-> Hi All!
+> On Mon, Sep 19, 2022 at 10:44 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > On Mon, 19 Sept 2022 at 16:43, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > >
+> > > On Mon, Sep 19, 2022 at 10:32 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > >
+> > > > On Mon, 19 Sept 2022 at 16:25, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > >
+> > > > > Hi, Ard,
+> > > > >
+> > > > > On Mon, Sep 19, 2022 at 8:27 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > >
+> > > > > > On Mon, 19 Sept 2022 at 14:15, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Mon, Sep 19, 2022 at 8:11 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > > > >
+> > > > > > > > On Mon, 19 Sept 2022 at 13:58, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > > > >
+> > > > > > > > > On Mon, Sep 19, 2022 at 7:21 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > > > > > >
+> > > > > > > > > > On Mon, 19 Sept 2022 at 13:15, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > > > > > >
+> > > > > > > > > > > On Mon, Sep 19, 2022 at 6:49 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Mon, 19 Sept 2022 at 12:47, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > On Mon, Sep 19, 2022 at 6:37 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > On Mon, 19 Sept 2022 at 12:33, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > Hi, Ard,
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > On Mon, Sep 19, 2022 at 2:22 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > On Mon, 19 Sept 2022 at 08:06, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > >  Hi, Ard,
+> > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > On Mon, Sep 19, 2022 at 1:15 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > On Mon, 19 Sept 2022 at 03:58, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > Hi, Ard,
+> > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > I think the parameters passed to the core kernel need to be discussed.
+> > > > > > > > > > > > > > > > > > > The old way (so-called old world):
+> > > > > > > > > > > > > > > > > > > a0=argc, a1=argv, a1=bpi
+> > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > The current way (so-called new world):
+> > > > > > > > > > > > > > > > > > > a0=efi boot flag, a1=fdt pointer
+> > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > The new way (in this patchset):
+> > > > > > > > > > > > > > > > > > > a0=efi boot flag, a1=systemtable, a2=cmdline
+> > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > I prefer to use the current way, there are 3 reasons:
+> > > > > > > > > > > > > > > > > > > 1, both acpi system and dt system can use the same parameters passing method;
+> > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > DT systems will use this too. The distinction is between EFI boot and
+> > > > > > > > > > > > > > > > > > non-EFI boot. We *really* should keep these separate, given the
+> > > > > > > > > > > > > > > > > > experience on ARM, where other projects invent ways to pass those
+> > > > > > > > > > > > > > > > > > values to the kernel without going through the stub.
+> > > > > > > > > > > > > > > > > In the last patch I see:
+> > > > > > > > > > > > > > > > > +               void *fdt_ptr = early_memremap_ro(fw_arg1, SZ_64K);
+> > > > > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > > > > +               early_init_dt_scan(fdt_ptr);
+> > > > > > > > > > > > > > > > > +               early_init_fdt_reserve_self();
+> > > > > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > > > >                 clear_bit(EFI_BOOT, &efi.flags);
+> > > > > > > > > > > > > > > > > So I suppose for the DT system that means a0=efi boot flag, a1=fdt
+> > > > > > > > > > > > > > > > > pointer, a2=cmdline? Then it is not exactly the same as the ACPI
+> > > > > > > > > > > > > > > > > system, but similar.
+> > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > No, for non-EFI DT boot, the command line is passed via the DT, so
+> > > > > > > > > > > > > > > > a0=0x0 (non-efi), a1=DT, a2=0x0
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > Do you intend to support non-EFI DT boot by the way?
+> > > > > > > > > > > > > > > I think we needn't support non-EFI DT boot, so a0=efi boot flag,
+> > > > > > > > > > > > > > > a1=systemtable, a2=cmdline is just OK (or maybe we can exchange a1/a2,
+> > > > > > > > > > > > > > > which looks similar to the old-world).
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Excellent. If non-EFI boot is not supported, we can drop the code that
+> > > > > > > > > > > > > > deals with that.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > But I have another question: is
+> > > > > > > > > > > > > > > it early enough to get DT from systemtable for DT boot (in the current
+> > > > > > > > > > > > > > > way DT is the earliest thing)?
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > If you rely on DT only for the hardware description, then loading it
+> > > > > > > > > > > > > > from efi_init() should be fine.
+> > > > > > > > > > > > > OK, then please drop patch #12 at this time. It can be added when we
+> > > > > > > > > > > > > add Loongson-2K support.
+> > > > > > > > > > > > >
+> > > > > > > > > > > >
+> > > > > > > > > > > > OK
+> > > > > > > > > > > >
+> > > > > > > > > > > > > > > > I don't think it makes sense to allow efi=novamap on LoongArch, given
+> > > > > > > > > > > > > > > > that we cannot make use of the runtime services that way. So in my
+> > > > > > > > > > > > > > > > code, efi_novamap is set to false unconditionally.
+> > > > > > > > > > > > > > > Emm, I prefer to support "efi=novamap", the core kernel has already
+> > > > > > > > > > > > > > > supported "noefi" to disable runtime, I don't want to hack
+> > > > > > > > > > > > > > > efi_novamap. So please keep the efi boot flag, thanks.
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Fair enough. Do you have any uses for efi_novamap in mind?
+> > > > > > > > > > > > > I usually use "efi=novamap" in EFI shell to see whether it can work
+> > > > > > > > > > > > > well without runtime. And I think I will modify this patch these days
+> > > > > > > > > > > > > because in another thread you said that this series cannot boot.
+> > > > > > > > > > > >
+> > > > > > > > > > > > It works fine now.
+> > > > > > > > > > > >
+> > > > > > > > > > > > However, clearing the EFI_BOOT flag is not the correct way to disable
+> > > > > > > > > > > > runtime services only. And note that we also have efi=noruntime - does
+> > > > > > > > > > > > that currently work on LoongArch?
+> > > > > > > > > > > OK, but we don't need to add a new "efi=noruntime" parameter, I can
+> > > > > > > > > > > use "noefi" instead.
+> > > > > > > > > >
+> > > > > > > > > > OK
+> > > > > > > > > >
+> > > > > > > > > > > But I think support "efi=novamap" is not a bad
+> > > > > > > > > > > idea (maybe I misunderstood its usage).
+> > > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > It basically exists to deal with broken EFI firmware on ARM laptops
+> > > > > > > > > > that were only intended to run Windows. Windows calls
+> > > > > > > > > > SetVirtualAddressMap() *after* creating the new mappings, and some
+> > > > > > > > > > broken firmware drivers will access those regions too early.
+> > > > > > > > > >
+> > > > > > > > > > On Linux, we install the mapping first, and then much later, we
+> > > > > > > > > > actually create the mappings and only activate them on a single CPU
+> > > > > > > > > > while the EFI runtime service call is in progress.
+> > > > > > > > > >
+> > > > > > > > > > In any case, I will reinstate the efi_novamap logic for now - we can
+> > > > > > > > > > always revisit it later.
+> > > > > > > > > OK, now I think there are no big problems. Only some bikesheddings:
+> > > > > > > > > 1, Please use "a0=efi boot flag, a1=cmdline a2=systemtable" to pass
+> > > > > > > > > boot information, it looks most similar to the old-world, and we can
+> > > > > > > > > distinguish old-world/new-world by judging whether a0 is greater than
+> > > > > > > > > 1.
+> > > > > > > > > 2, I prefer "early return" in efi_init, i.e., if (boot_memmap ==
+> > > > > > > > > EFI_INVALID_TABLE_ADDR) then return immediately, this makes
+> > > > > > > > > indentation look better.
+> > > > > > > > > 3, Declare "cmdline" out of the if() condition in init_environ() looks better.
+> > > > > > > > > 4, I prefer "kernel_addr" rather than "image_addr" in efi_boot_kernel().
+> > > > > > > > > 5, It seems that one line is enough for the last statement in efi_boot_kernel().
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > OK
+> > > > > > > >
+> > > > > > > > > Hope this series will be stable as soon as possible, our kexec/kdump
+> > > > > > > > > work needs to adjust because of this change. :)
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > Do you have a link to those patches?
+> > > > > > > There is a snapshot for patches pending for 6.1:
+> > > > > > > https://github.com/loongson/linux/commits/loongarch-next
+> > > > > >
+> > > > > > Thanks. I already spotted an issue there which is exactly the kind of
+> > > > > > thing I am trying to avoid with this series.
+> > > > > >
+> > > > > > diff --git a/arch/loongarch/kernel/mem.c b/arch/loongarch/kernel/mem.c
+> > > > > > index 7423361b0ebc9b..c68c88e40cc0b9 100644
+> > > > > > --- a/arch/loongarch/kernel/mem.c
+> > > > > > +++ b/arch/loongarch/kernel/mem.c
+> > > > > > @@ -61,4 +62,9 @@ void __init memblock_init(void)
+> > > > > >
+> > > > > >   /* Reserve the initrd */
+> > > > > >   reserve_initrd_mem();
+> > > > > > +
+> > > > > > + /* Main reserved memory for the elf core head */
+> > > > > > + early_init_fdt_scan_reserved_mem();
+> > > > > > + /* Parse linux,usable-memory-range for crash dump kernel */
+> > > > > > + early_init_dt_check_for_usable_mem_range();
+> > > > > >  }
+> > > > > >
+> > > > > > So here, we are adding support for DT memory reservations, which kdump
+> > > > > > apparently needs.
+> > > > > >
+> > > > > > However, this parsing of the DT not only happens on kexec boot: all
+> > > > > > ACPI and DT kernels will now honour FDT memory reservations passed in
+> > > > > > via a DT when booting the first kernel, and external projects may use
+> > > > > > this and start to depend on this.
+> > > > > >
+> > > > > > Once something like this hits the upstream kernel, it is *very*
+> > > > > > difficult to change or remove.
+> > > > > >
+> > > > > > If you only need to pass the usable memory range for kcrash/kdump,
+> > > > > > it's probably better to use a command line option for that, instead of
+> > > > > > relying on DT memory reservations.
+> > > > > Thank you for your suggestion, but we found some trouble when handle
+> > > > > initrd in kexec.
+> > > > > In current implementation, we generate a fdt in kexec-tools, then fill
+> > > > > "linux,usable-memory-range", "linux,elfcorehdr" and initrd information
+> > > > > in it. After this series, we can use "mem=xxx" "elfcorehdr=" in
+> > > > > cmdline, but how to handle initrd information which is stored in a
+> > > > > system table?
+> > > > >
+> > > >
+> > > > There are two options:
+> > > > - use initrdmem= on the command line
+> > > This is not a good way, even if the second kernel handle "initrdmem=",
+> > > it will conflict with the config table.
+> > >
+> >
+> > It will not conflict - initrdmem= supersedes the INITRD table because
+> > early param passing happens after efi_init().
+> >
+> > > > - update the INITRD config table in memory (i.e., update the base and
+> > > > size to refer to the new initrd image)
+> > > This way seems practicable, but we don't know how to handle it in
+> > > kexec-tools. :(
+> > >
+> >
+> > Good point. Let me think a bit about this.
+> OK, then let's go back to this series itself. :)
 >
-> At long last, a respin of the cpuidle vs rcu cleanup patches.
+> I have seen the latest code in your git repo, I don't think we need
+> efi_disable_rt. Instead, setting/clearing EFI_BOOT according to a0 as
+> before seems reasonable.
 >
-> v1: https://lkml.kernel.org/r/20220608142723.103523089@infradead.org
->
-> These here patches clean up the mess that is cpuidle vs rcuidle.
->
-> At the end of the ride there's only on RCU_NONIDLE user left:
->
->   arch/arm64/kernel/suspend.c:            RCU_NONIDLE(__cpu_suspend_exit());
->
-> and 'one' trace_*_rcuidle() user:
->
->   kernel/trace/trace_preemptirq.c:                        trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
->   kernel/trace/trace_preemptirq.c:                        trace_irq_disable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
->   kernel/trace/trace_preemptirq.c:                        trace_irq_enable_rcuidle(CALLER_ADDR0, caller_addr);
->   kernel/trace/trace_preemptirq.c:                        trace_irq_disable_rcuidle(CALLER_ADDR0, caller_addr);
->   kernel/trace/trace_preemptirq.c:                trace_preempt_enable_rcuidle(a0, a1);
->   kernel/trace/trace_preemptirq.c:                trace_preempt_disable_rcuidle(a0, a1);
->
-> However this last is all in deprecated code that should be unused for GENERIC_ENTRY.
->
-> I've touched a lot of code that I can't test and I might've broken something by
-> accident. In particular the whole ARM cpuidle stuff was quite involved.
->
-> Please all; have a look where you haven't already.
->
->
-> New since v1:
->
->  - rebase on top of Frederic's rcu-context-tracking rename fest
->  - more omap goodness as per the last discusion (thanks Tony!)
->  - removed one more RCU_NONIDLE() from arm64/risc-v perf code
->  - ubsan/kasan fixes
->  - intel_idle module-param for testing
->  - a bunch of extra __always_inline, because compilers are silly.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+No, not really. EFI_BOOT basically means 'did I boot via EFI?' and
+strictly, you should not be attempting to access the EFI system table
+or parse EFI config tables unless EFI_BOOT is true.
 
-for the whole set and let me know if you want me to merge any of these
-through cpuidle.
+Deviating from this makes it more difficult for generic code to reason
+about what parts of EFI are active on a given system.
 
-Thanks!
-
+> If efi_novamap breaks something, I can accept "set efi_novamap to
+> false" in the previous version, or just ignore its value in the
+> efistub, but a0 should clearly be the indicator of EFI_BOOT.
 >
-> ---
->  arch/alpha/kernel/process.c               |  1 -
->  arch/alpha/kernel/vmlinux.lds.S           |  1 -
->  arch/arc/kernel/process.c                 |  3 ++
->  arch/arc/kernel/vmlinux.lds.S             |  1 -
->  arch/arm/include/asm/vmlinux.lds.h        |  1 -
->  arch/arm/kernel/process.c                 |  1 -
->  arch/arm/kernel/smp.c                     |  6 +--
->  arch/arm/mach-gemini/board-dt.c           |  3 +-
->  arch/arm/mach-imx/cpuidle-imx6q.c         |  4 +-
->  arch/arm/mach-imx/cpuidle-imx6sx.c        |  5 ++-
->  arch/arm/mach-omap2/common.h              |  6 ++-
->  arch/arm/mach-omap2/cpuidle34xx.c         | 16 +++++++-
->  arch/arm/mach-omap2/cpuidle44xx.c         | 29 +++++++-------
->  arch/arm/mach-omap2/omap-mpuss-lowpower.c | 12 +++++-
->  arch/arm/mach-omap2/pm.h                  |  2 +-
->  arch/arm/mach-omap2/pm24xx.c              | 51 +-----------------------
->  arch/arm/mach-omap2/pm34xx.c              | 14 +++++--
->  arch/arm/mach-omap2/pm44xx.c              |  2 +-
->  arch/arm/mach-omap2/powerdomain.c         | 10 ++---
->  arch/arm64/kernel/idle.c                  |  1 -
->  arch/arm64/kernel/smp.c                   |  4 +-
->  arch/arm64/kernel/vmlinux.lds.S           |  1 -
->  arch/csky/kernel/process.c                |  1 -
->  arch/csky/kernel/smp.c                    |  2 +-
->  arch/csky/kernel/vmlinux.lds.S            |  1 -
->  arch/hexagon/kernel/process.c             |  1 -
->  arch/hexagon/kernel/vmlinux.lds.S         |  1 -
->  arch/ia64/kernel/process.c                |  1 +
->  arch/ia64/kernel/vmlinux.lds.S            |  1 -
->  arch/loongarch/kernel/idle.c              |  1 +
->  arch/loongarch/kernel/vmlinux.lds.S       |  1 -
->  arch/m68k/kernel/vmlinux-nommu.lds        |  1 -
->  arch/m68k/kernel/vmlinux-std.lds          |  1 -
->  arch/m68k/kernel/vmlinux-sun3.lds         |  1 -
->  arch/microblaze/kernel/process.c          |  1 -
->  arch/microblaze/kernel/vmlinux.lds.S      |  1 -
->  arch/mips/kernel/idle.c                   |  8 ++--
->  arch/mips/kernel/vmlinux.lds.S            |  1 -
->  arch/nios2/kernel/process.c               |  1 -
->  arch/nios2/kernel/vmlinux.lds.S           |  1 -
->  arch/openrisc/kernel/process.c            |  1 +
->  arch/openrisc/kernel/vmlinux.lds.S        |  1 -
->  arch/parisc/kernel/process.c              |  2 -
->  arch/parisc/kernel/vmlinux.lds.S          |  1 -
->  arch/powerpc/kernel/idle.c                |  5 +--
->  arch/powerpc/kernel/vmlinux.lds.S         |  1 -
->  arch/riscv/kernel/process.c               |  1 -
->  arch/riscv/kernel/vmlinux-xip.lds.S       |  1 -
->  arch/riscv/kernel/vmlinux.lds.S           |  1 -
->  arch/s390/kernel/idle.c                   |  1 -
->  arch/s390/kernel/vmlinux.lds.S            |  1 -
->  arch/sh/kernel/idle.c                     |  1 +
->  arch/sh/kernel/vmlinux.lds.S              |  1 -
->  arch/sparc/kernel/leon_pmc.c              |  4 ++
->  arch/sparc/kernel/process_32.c            |  1 -
->  arch/sparc/kernel/process_64.c            |  3 +-
->  arch/sparc/kernel/vmlinux.lds.S           |  1 -
->  arch/um/kernel/dyn.lds.S                  |  1 -
->  arch/um/kernel/process.c                  |  1 -
->  arch/um/kernel/uml.lds.S                  |  1 -
->  arch/x86/boot/compressed/vmlinux.lds.S    |  1 +
->  arch/x86/coco/tdx/tdcall.S                | 15 +------
->  arch/x86/coco/tdx/tdx.c                   | 25 ++++--------
->  arch/x86/events/amd/brs.c                 | 13 +++----
->  arch/x86/include/asm/fpu/xcr.h            |  4 +-
->  arch/x86/include/asm/irqflags.h           | 11 ++----
->  arch/x86/include/asm/mwait.h              | 14 +++----
->  arch/x86/include/asm/nospec-branch.h      |  2 +-
->  arch/x86/include/asm/paravirt.h           |  6 ++-
->  arch/x86/include/asm/perf_event.h         |  2 +-
->  arch/x86/include/asm/shared/io.h          |  4 +-
->  arch/x86/include/asm/shared/tdx.h         |  1 -
->  arch/x86/include/asm/special_insns.h      |  8 ++--
->  arch/x86/include/asm/xen/hypercall.h      |  2 +-
->  arch/x86/kernel/cpu/bugs.c                |  2 +-
->  arch/x86/kernel/fpu/core.c                |  4 +-
->  arch/x86/kernel/paravirt.c                | 14 ++++++-
->  arch/x86/kernel/process.c                 | 65 +++++++++++++++----------------
->  arch/x86/kernel/vmlinux.lds.S             |  1 -
->  arch/x86/lib/memcpy_64.S                  |  5 +--
->  arch/x86/lib/memmove_64.S                 |  4 +-
->  arch/x86/lib/memset_64.S                  |  4 +-
->  arch/x86/xen/enlighten_pv.c               |  2 +-
->  arch/x86/xen/irq.c                        |  2 +-
->  arch/xtensa/kernel/process.c              |  1 +
->  arch/xtensa/kernel/vmlinux.lds.S          |  1 -
->  drivers/acpi/processor_idle.c             | 36 ++++++++++-------
->  drivers/base/power/runtime.c              | 24 ++++++------
->  drivers/clk/clk.c                         |  8 ++--
->  drivers/cpuidle/cpuidle-arm.c             |  1 +
->  drivers/cpuidle/cpuidle-big_little.c      |  8 +++-
->  drivers/cpuidle/cpuidle-mvebu-v7.c        |  7 ++++
->  drivers/cpuidle/cpuidle-psci.c            | 10 +++--
->  drivers/cpuidle/cpuidle-qcom-spm.c        |  1 +
->  drivers/cpuidle/cpuidle-riscv-sbi.c       | 10 +++--
->  drivers/cpuidle/cpuidle-tegra.c           | 21 +++++++---
->  drivers/cpuidle/cpuidle.c                 | 21 +++++-----
->  drivers/cpuidle/dt_idle_states.c          |  2 +-
->  drivers/cpuidle/poll_state.c              | 10 ++++-
->  drivers/idle/intel_idle.c                 | 19 +++++----
->  drivers/perf/arm_pmu.c                    | 11 +-----
->  drivers/perf/riscv_pmu_sbi.c              |  8 +---
->  include/asm-generic/vmlinux.lds.h         |  9 ++---
->  include/linux/compiler_types.h            |  8 +++-
->  include/linux/cpu.h                       |  3 --
->  include/linux/cpuidle.h                   | 34 ++++++++++++++++
->  include/linux/cpumask.h                   |  4 +-
->  include/linux/percpu-defs.h               |  2 +-
->  include/linux/sched/idle.h                | 40 ++++++++++++++-----
->  include/linux/thread_info.h               | 18 ++++++++-
->  include/linux/tracepoint.h                | 13 ++++++-
->  kernel/cpu_pm.c                           |  9 -----
->  kernel/printk/printk.c                    |  2 +-
->  kernel/sched/idle.c                       | 47 +++++++---------------
->  kernel/time/tick-broadcast-hrtimer.c      | 29 ++++++--------
->  kernel/time/tick-broadcast.c              |  6 ++-
->  kernel/trace/trace.c                      |  3 ++
->  lib/ubsan.c                               |  5 ++-
->  mm/kasan/kasan.h                          |  4 ++
->  mm/kasan/shadow.c                         | 38 ++++++++++++++++++
->  tools/objtool/check.c                     | 17 ++++++++
->  121 files changed, 511 insertions(+), 420 deletions(-)
->
+
+I'm fine with keeping efi_novamap if you think it has a value. To me,
+it seems rather pointless, because it prevents you from using the
+runtime services.
+
+If you want a0 to control the EFI boot flag, you should find another
+way to control whether runtime services can be used, because they are
+really two different things.
