@@ -1,32 +1,32 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593465A67
-	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 10:17:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6E723B1
+	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 10:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=oZwbrkDz2YxQ2tCMIP+SsyU178fWwXoNNNkzTKP67NE=; b=KweB4P8d5D7zkwnL4EDlpnZYcN
-	a9E5xKCTRFYcTufTdlClTGA3iDArhS2rXRQxTKlrXXlrj0UpFCMBatcGTn5dPeA+O4C2MMnypMOxO
-	5v2si5huymLU8WeP2fVE7BDJzihOP+9J3kc2xjZv42l6rH6S36237oq0Fd+r9PUqoyjp+xxFFpIHO
-	+0LT+KJAgXQRKmewdBNUpCB6GardBaz99pO4SDUmqaat0xpyL/RD1zXk0smpZADkhrnDQ8EGTDY6w
-	VPHghONnzwfMVAWRBRjATrTLZKECEJxso7CGz23vtaOidDm2gFnFt6vHX8G+IsOsJbZb9RAt1bDBu
-	aILnL3hQ==;
+	bh=nefRY1zld6SB6gly/BgzrvcXEKwr/pOkUZl11QGpgL8=; b=A9Y5adyud1/mM3xreS5eUrJvnd
+	FvUqFIv3nlupLbTdeI33lEpY/zFLIe19vxpCf8VQNlb07A5YwXLCUo0YY6Nuqzs/xjWg+Sj2Wqxqx
+	RAKsZxGa5p4Dkxg5ntJ8XtfvkMD+8w17RzWJpVa5IW9NqPm9m4txBnQGDoVesEU79pfxKNmKTjAHM
+	QmPWfVUPI0jr1ypsV5iZbItClD0P2Di/q7Z5RllXZy5ZJH2hOmD80dPHf6vt8aFDpFVRstMV7z9qd
+	FPTHr06kvgBzpugI2hUMZPsElk/ZqCI0u/yXhF3TnRjADu3s+L6sywGDm998dkamTun6T/pertQtI
+	8lYuUinw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oaDpF-004ahl-E9; Mon, 19 Sep 2022 10:16:29 +0000
+	id 1oaDpG-004ahu-0p; Mon, 19 Sep 2022 10:16:30 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A301A302D54;
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BC39D302DDD;
 	Mon, 19 Sep 2022 12:16:24 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id D7B952BA4903A; Mon, 19 Sep 2022 12:16:21 +0200 (CEST)
-Message-ID: <20220919101520.669962810@infradead.org>
+	id E23492BA4903C; Mon, 19 Sep 2022 12:16:21 +0200 (CEST)
+Message-ID: <20220919101520.802976773@infradead.org>
 User-Agent: quilt/0.66
-Date: Mon, 19 Sep 2022 11:59:44 +0200
+Date: Mon, 19 Sep 2022 11:59:46 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: peterz@infradead.org
 Cc: richard.henderson@linaro.org,
@@ -165,7 +165,7 @@ Cc: richard.henderson@linaro.org,
  linux-tegra@vger.kernel.org,
  linux-arch@vger.kernel.org,
  kasan-dev@googlegroups.com
-Subject: [PATCH v2 05/44] cpuidle,riscv: Push RCU-idle into driver
+Subject: [PATCH v2 07/44] cpuidle,psci: Push RCU-idle into driver
 References: <20220919095939.761690562@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -180,12 +180,12 @@ again, at least twice, before going idle is daft.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- drivers/cpuidle/cpuidle-riscv-sbi.c |    9 +++++----
+ drivers/cpuidle/cpuidle-psci.c |    9 +++++----
  1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/cpuidle/cpuidle-riscv-sbi.c
-+++ b/drivers/cpuidle/cpuidle-riscv-sbi.c
-@@ -116,12 +116,12 @@ static int __sbi_enter_domain_idle_state
+--- a/drivers/cpuidle/cpuidle-psci.c
++++ b/drivers/cpuidle/cpuidle-psci.c
+@@ -69,12 +69,12 @@ static int __psci_enter_domain_idle_stat
  		return -1;
  
  	/* Do runtime PM to manage a hierarchical CPU toplogy. */
@@ -198,11 +198,11 @@ Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 +
 +	ct_idle_enter();
  
- 	if (sbi_is_domain_state_available())
- 		state = sbi_get_domain_state();
-@@ -130,12 +130,12 @@ static int __sbi_enter_domain_idle_state
+ 	state = psci_get_domain_state();
+ 	if (!state)
+@@ -82,12 +82,12 @@ static int __psci_enter_domain_idle_stat
  
- 	ret = sbi_suspend(state) ? -1 : idx;
+ 	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
  
 -	ct_irq_enter_irqson();
 +	ct_idle_exit();
@@ -215,13 +215,13 @@ Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
  
  	cpu_pm_exit();
  
-@@ -246,6 +246,7 @@ static int sbi_dt_cpu_init_topology(stru
+@@ -240,6 +240,7 @@ static int psci_dt_cpu_init_topology(str
  	 * of a shared state for the domain, assumes the domain states are all
  	 * deeper states.
  	 */
 +	drv->states[state_count - 1].flags |= CPUIDLE_FLAG_RCU_IDLE;
- 	drv->states[state_count - 1].enter = sbi_enter_domain_idle_state;
- 	drv->states[state_count - 1].enter_s2idle =
- 					sbi_enter_s2idle_domain_idle_state;
+ 	drv->states[state_count - 1].enter = psci_enter_domain_idle_state;
+ 	drv->states[state_count - 1].enter_s2idle = psci_enter_s2idle_domain_idle_state;
+ 	psci_cpuidle_use_cpuhp = true;
 
 
