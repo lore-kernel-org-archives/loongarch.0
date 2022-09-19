@@ -1,32 +1,32 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0AA23AF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593465A67
 	for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 10:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=opcA1/Y+HqbqHoKXfaoCivp+Xr552TiTgo8o6IEPi68=; b=o0s60Tz10WjGmxt2O9IlKD2zW6
-	PuCx0cTX9J/pibDE6x/EeKWJVUSqibWnPXpJa+q9d460/syW7hiAGHgu4cr1HLa6E5A6RLWWAQF7N
-	BU0wDqaPgn13oGAzZQILZR0of4SZi/+faIYwlAxDrra9kJBHvPvKLs2TKLExGtcT0Nd5/UVeZ64Mz
-	BRjiE+oPUuXTv9zpZEKI0TwyyXQOrtbtPnfJfXrlZuizWXUj8Lhhk2NEczdkAKK26JfX/b2u7H1Zg
-	09mgch7LP0jTa9JSOBgRRCDBiftmu3A5DtJCHHaYXwNFgsZWCFQjIdoiHWd35lXf31xAruQSJUZTM
-	GsF8b/8A==;
+	bh=oZwbrkDz2YxQ2tCMIP+SsyU178fWwXoNNNkzTKP67NE=; b=KweB4P8d5D7zkwnL4EDlpnZYcN
+	a9E5xKCTRFYcTufTdlClTGA3iDArhS2rXRQxTKlrXXlrj0UpFCMBatcGTn5dPeA+O4C2MMnypMOxO
+	5v2si5huymLU8WeP2fVE7BDJzihOP+9J3kc2xjZv42l6rH6S36237oq0Fd+r9PUqoyjp+xxFFpIHO
+	+0LT+KJAgXQRKmewdBNUpCB6GardBaz99pO4SDUmqaat0xpyL/RD1zXk0smpZADkhrnDQ8EGTDY6w
+	VPHghONnzwfMVAWRBRjATrTLZKECEJxso7CGz23vtaOidDm2gFnFt6vHX8G+IsOsJbZb9RAt1bDBu
+	aILnL3hQ==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oaDpH-004aiI-6r; Mon, 19 Sep 2022 10:16:31 +0000
+	id 1oaDpF-004ahl-E9; Mon, 19 Sep 2022 10:16:29 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D508A302E9F;
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A301A302D54;
 	Mon, 19 Sep 2022 12:16:24 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id F01612BA4903F; Mon, 19 Sep 2022 12:16:21 +0200 (CEST)
-Message-ID: <20220919101521.004425686@infradead.org>
+	id D7B952BA4903A; Mon, 19 Sep 2022 12:16:21 +0200 (CEST)
+Message-ID: <20220919101520.669962810@infradead.org>
 User-Agent: quilt/0.66
-Date: Mon, 19 Sep 2022 11:59:49 +0200
+Date: Mon, 19 Sep 2022 11:59:44 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: peterz@infradead.org
 Cc: richard.henderson@linaro.org,
@@ -165,7 +165,7 @@ Cc: richard.henderson@linaro.org,
  linux-tegra@vger.kernel.org,
  linux-arch@vger.kernel.org,
  kasan-dev@googlegroups.com
-Subject: [PATCH v2 10/44] cpuidle,armada: Push RCU-idle into driver
+Subject: [PATCH v2 05/44] cpuidle,riscv: Push RCU-idle into driver
 References: <20220919095939.761690562@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -176,57 +176,52 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
 Doing RCU-idle outside the driver, only to then temporarily enable it
-again before going idle is daft.
+again, at least twice, before going idle is daft.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- drivers/cpuidle/cpuidle-mvebu-v7.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/cpuidle/cpuidle-riscv-sbi.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/cpuidle/cpuidle-mvebu-v7.c
-+++ b/drivers/cpuidle/cpuidle-mvebu-v7.c
-@@ -36,7 +36,10 @@ static int mvebu_v7_enter_idle(struct cp
- 	if (drv->states[index].flags & MVEBU_V7_FLAG_DEEP_IDLE)
- 		deepidle = true;
+--- a/drivers/cpuidle/cpuidle-riscv-sbi.c
++++ b/drivers/cpuidle/cpuidle-riscv-sbi.c
+@@ -116,12 +116,12 @@ static int __sbi_enter_domain_idle_state
+ 		return -1;
  
+ 	/* Do runtime PM to manage a hierarchical CPU toplogy. */
+-	ct_irq_enter_irqson();
+ 	if (s2idle)
+ 		dev_pm_genpd_suspend(pd_dev);
+ 	else
+ 		pm_runtime_put_sync_suspend(pd_dev);
+-	ct_irq_exit_irqson();
++
 +	ct_idle_enter();
- 	ret = mvebu_v7_cpu_suspend(deepidle);
+ 
+ 	if (sbi_is_domain_state_available())
+ 		state = sbi_get_domain_state();
+@@ -130,12 +130,12 @@ static int __sbi_enter_domain_idle_state
+ 
+ 	ret = sbi_suspend(state) ? -1 : idx;
+ 
+-	ct_irq_enter_irqson();
 +	ct_idle_exit();
 +
+ 	if (s2idle)
+ 		dev_pm_genpd_resume(pd_dev);
+ 	else
+ 		pm_runtime_get_sync(pd_dev);
+-	ct_irq_exit_irqson();
+ 
  	cpu_pm_exit();
  
- 	if (ret)
-@@ -49,6 +52,7 @@ static struct cpuidle_driver armadaxp_id
- 	.name			= "armada_xp_idle",
- 	.states[0]		= ARM_CPUIDLE_WFI_STATE,
- 	.states[1]		= {
-+		.flags			= CPUIDLE_FLAG_RCU_IDLE,
- 		.enter			= mvebu_v7_enter_idle,
- 		.exit_latency		= 100,
- 		.power_usage		= 50,
-@@ -57,6 +61,7 @@ static struct cpuidle_driver armadaxp_id
- 		.desc			= "CPU power down",
- 	},
- 	.states[2]		= {
-+		.flags			= CPUIDLE_FLAG_RCU_IDLE,
- 		.enter			= mvebu_v7_enter_idle,
- 		.exit_latency		= 1000,
- 		.power_usage		= 5,
-@@ -72,6 +77,7 @@ static struct cpuidle_driver armada370_i
- 	.name			= "armada_370_idle",
- 	.states[0]		= ARM_CPUIDLE_WFI_STATE,
- 	.states[1]		= {
-+		.flags			= CPUIDLE_FLAG_RCU_IDLE,
- 		.enter			= mvebu_v7_enter_idle,
- 		.exit_latency		= 100,
- 		.power_usage		= 5,
-@@ -87,6 +93,7 @@ static struct cpuidle_driver armada38x_i
- 	.name			= "armada_38x_idle",
- 	.states[0]		= ARM_CPUIDLE_WFI_STATE,
- 	.states[1]		= {
-+		.flags			= CPUIDLE_FLAG_RCU_IDLE,
- 		.enter			= mvebu_v7_enter_idle,
- 		.exit_latency		= 10,
- 		.power_usage		= 5,
+@@ -246,6 +246,7 @@ static int sbi_dt_cpu_init_topology(stru
+ 	 * of a shared state for the domain, assumes the domain states are all
+ 	 * deeper states.
+ 	 */
++	drv->states[state_count - 1].flags |= CPUIDLE_FLAG_RCU_IDLE;
+ 	drv->states[state_count - 1].enter = sbi_enter_domain_idle_state;
+ 	drv->states[state_count - 1].enter_s2idle =
+ 					sbi_enter_s2idle_domain_idle_state;
 
 
