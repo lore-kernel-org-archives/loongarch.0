@@ -1,104 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB117462
-	for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 14:54:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77B9CC43142
-	for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 14:54:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA037C
+	for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 18:36:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 294B8C433C1;
+	Tue, 20 Sep 2022 18:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663685650;
-	bh=CaM7s7Djov6G3qBXIFRlh7mvT4+isDDpGNm0u28qY9g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=toqFeBOQM0HvyEP+jvIiiKU5kHE2TVz2kzCTwTeAtmEd/OJ2GNULC32VLnoZ7TX0Q
-	 X9o0475d2NVhtiivfmSCnCLiDLB69Qs5MFLgFh2kIBj/ouzI1C5/mUfktORXJUyC3F
-	 QFrvm80kyxuLMAF5Hho3XFuvPXeVXZlctwJGB5HTfe8JRJRHxi8Ah9PvEB3GCws8Yt
-	 kGFGmxK/VEf+uL0Q8QDOFnY1SygJsqBTXMFMPpB+cbnwzi0LT3f7ACqVT0HKsYXWFc
-	 zu/PZKJ0EX2nokD1KiTTsJt7aQZqQWo/XIpHdIBJDIYLWwcAKJMszXxtQtavqH7D8J
-	 oV2ejtxQ2FmEg==
-Received: by mail-lf1-f50.google.com with SMTP id x27so4314128lfu.0
-        for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 07:54:10 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0Q88xOP87TjE87TJRIg3ygkIzhOpMd9s5z5tvpRpwBHp5VDw1I
-	KB3ehTJqg1wHMZzpIdjO4p+GFyY+0Po8JKSeeUA=
-X-Google-Smtp-Source: AMsMyM6CLpSd6Zxv69dKhdFodSrz06aukD3OG5n1an7+70s/lN+D0T9ucERS/QQiUm1N4IY+Zh5HSArxvjcdQbTZTfE=
-X-Received: by 2002:ac2:4431:0:b0:497:aaf5:83eb with SMTP id
- w17-20020ac24431000000b00497aaf583ebmr8148815lfl.228.1663685648461; Tue, 20
- Sep 2022 07:54:08 -0700 (PDT)
+	s=k20201202; t=1663698963;
+	bh=ivCPc2oHxWWAe6CNvYUP2QQtDZ8+uBcU6Jmrj8llr00=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BiGUNS9DJewIPpDFa34XrUXARiBY/iCXbKrBGn9XyTYdgJHUvBud1K4RF/9Yta3zD
+	 cboFwUFqyWXuTC7Jxc8lSTpcDXtWhyfk6E5wJAaSVGWoYGb6ytVWCra0kg/xOnYK/y
+	 H0GCUh3FpKG70C7rXFnEkfzKdXv1EO/26FxmSr6rKFBrixDvqAkRMFOzCvygvzrXEJ
+	 tBQOckxnn8bi7tHvvnH6fsgYE7HGkS/aTqMLftoCl4CDMTXOpNWE7vFy1iog0gU+Fm
+	 By2B6rfR+YQPeOv2vqFO+/E7iWXLQkFZwsPYsAA+UQGbPrOHMg4FaRttIEdWXEcPGc
+	 B0NOUES+DdGeA==
+From: Ard Biesheuvel <ardb@kernel.org>
+To: linux-efi@vger.kernel.org
+Cc: loongarch@lists.linux.dev,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH v2 0/8] efi: disentangle the generic EFI stub from FDT
+Date: Tue, 20 Sep 2022 20:35:46 +0200
+Message-Id: <20220920183554.3870247-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220918213544.2176249-1-ardb@kernel.org> <20220918213544.2176249-12-ardb@kernel.org>
- <CAAhV-H6Ke88sirvX9ut7JLWy+xaERZ7BeMEf97WHRWbsLqZC0A@mail.gmail.com>
- <CAMj1kXHuQHuCt9Z=qWRH_aZY5_+LzpicyE=agMyAX+O14khL_g@mail.gmail.com>
- <CAAhV-H7-JFwcwz5pBt7WZxJ2CkeUvc07OLgWxB9z-QTkr=njWw@mail.gmail.com>
- <CAMj1kXFKmvSt1092xBUHVXf9NxDFDSDyPDNpwfGUKWGWAPAE9Q@mail.gmail.com>
- <CAAhV-H7-9yx4EmtLrvE6arVahsT7AySLyyxk0yXUWPicWfgRjQ@mail.gmail.com>
- <CAMj1kXFuKo=SGGycD8E-FjN9kHsJ45ZCHaRdqgX3bT6XRG418A@mail.gmail.com>
- <CAAhV-H5PbYA+FL6KUVHVGkgC9R_4aNG02d78bTF7senikFPJLw@mail.gmail.com>
- <CAMj1kXHDo26TsVmQATagru6gqo+U8a0k-3uf2Di9JLLDVoGoSg@mail.gmail.com>
- <CAAhV-H78ErUvzKK-+tcjYq6YKT8G4gtV5VhzsGg-yZYQPRR+bA@mail.gmail.com>
- <CAMj1kXEG7=HWMmu-=_=CjG1gSgz6Q_eTsUjob7sP2uxt5q1_Eg@mail.gmail.com>
- <CAAhV-H67dgV_M2RW37wh_=aA8dr=f_nSbdab3sQPKUvDKws+xQ@mail.gmail.com>
- <CAMj1kXEWJ9TbhWRTiqFDtHr36dhkc1RfyL8ft06uDsN08x6eYA@mail.gmail.com>
- <CAAhV-H5BQAWFAT2vRZxO8L=pU0X5hGD-vHpyRVK0k7UKaLJJpQ@mail.gmail.com>
- <CAMj1kXEpFiRORzz=qQ5oCAUAgSDyCnf8p5Hb=NuMYMVcKfNYqw@mail.gmail.com>
- <CAAhV-H584umex2jcSBju3ZjqDELBQWpna8A6QxRYBDvvvueHGw@mail.gmail.com>
- <CAMj1kXGgV+Ucb=0076-9PBFWeL-1W6-XAFD3BK=miiZK6ddwPg@mail.gmail.com>
- <CAAhV-H5gtw1tb040mV8o=P=5onfTZwDEVm1tTooWLOW-kyHAMw@mail.gmail.com>
- <CAMj1kXGWLAJqf3fmqPm9JWTC06i=t2fhZi2_Tfjh40rtUQLwXg@mail.gmail.com>
- <CAAhV-H5iy1GC+JXGeSh0EPQ=TT9m_oFKMknk-7JSpQ-0HdK9Rw@mail.gmail.com>
- <CAMj1kXF=aGFktg1jGq4mN_73ko3j-jt4=Xc1xAR0jWx_OT0tVw@mail.gmail.com>
- <CAAhV-H5SVOwz9uM-SC_iDH2juGMhNEGMxd6j6itDsQhRENoBCw@mail.gmail.com>
- <CAMj1kXFVMtqRgiMQ0+ALVsRAmiBDtYZ8SGkqqtVYDLABm2HDoA@mail.gmail.com> <CAAhV-H5FPNaD532ZbgjV_SiH8-YaLsLNPvPttAm-a1T+9eW4EQ@mail.gmail.com>
-In-Reply-To: <CAAhV-H5FPNaD532ZbgjV_SiH8-YaLsLNPvPttAm-a1T+9eW4EQ@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 20 Sep 2022 16:53:57 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH-LPThkCPPPK4Vgxk_Y-UtQLAa0=FMYqztNO3POvo83A@mail.gmail.com>
-Message-ID: <CAMj1kXH-LPThkCPPPK4Vgxk_Y-UtQLAa0=FMYqztNO3POvo83A@mail.gmail.com>
-Subject: Re: [PATCH 11/12] efi/loongarch: libstub: remove dependency on
- flattened DT
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-efi <linux-efi@vger.kernel.org>, loongarch@lists.linux.dev, 
-	"Russell King (Oracle)" <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Xi Ruoyao <xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4108; i=ardb@kernel.org; h=from:subject; bh=ivCPc2oHxWWAe6CNvYUP2QQtDZ8+uBcU6Jmrj8llr00=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBjKgf7CM7UM1z6wd5d+o/ryMIH+A2JYPPINfGBa3QA KwEXhZ2JAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYyoH+wAKCRDDTyI5ktmPJECyC/ 940HrvVelLQEfMobP99d/5GHD+jUX9KAbZhZ/fZrf3wvbUFsjN/vjAGsK/MlUW9XB0kbYRN7ViEeVh rv2wcJSN1pO5ClbRb7ySk+DWj45CP0OqbMhW5wEmQd8nBOG5Xy8bYrEHoIRVJ1mhcLD/nPOpUN2eAU 0dKgMVwHzo5SbI/XUaBzE3WQsiZdCEY/42HIeRRMHh548UM5F3X7RNBD9wactIbbsUoThd0SPL8vFk xNhFF+LqtPI+TBg9b7IKD8B6x9uG5GtVqAqV3sw+qx1sdU0Inyb6XtDC2hS4AnFJxJL0wOPx+cTuW6 dWlUhPFAs0WplUhIhto3bvBpTquiCxpzFPBdfgZILF4k/du0DKT0UAAYhGIjPm1r4bwf7OLagvqWgU yNrPLtoMOo/sOpQvpcopxGznG3JipgoKakTwLb72mDoK6tnytqIS3O4FNdl2NWSiYr3RuwEdPYrsI9 81iFAdn53jWrl53pzF9lH9zw5ItiajE4TPped14PRCtfQ=
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+Content-Transfer-Encoding: 8bit
 
-On Tue, 20 Sept 2022 at 15:12, Huacai Chen <chenhuacai@kernel.org> wrote:
->
-> Hi, Ard,
->
-> On Tue, Sep 20, 2022 at 4:04 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Tue, 20 Sept 2022 at 03:45, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > >
-> > > Hi, Ard,
-> > >
-> > ...
-> > > I'm very sorry, after an offline discussion with my colleagues,
-> > > non-EFI DT boot is still needed (very sadly, we want to drop non-EFI
-> > > firmware but we can't do that). However, for non-EFI DT boot we will
-> > > use the same parameter passing method (a0=efi boot flag, a1=cmdline,
-> > > a2=systemtable), firmware will generate a simple systemtable only for
-> > > DT. In this way all boot methods share the same logic, and also make
-> > > kexec easy to implement.
-> > >
-> >
-> > OK, that should work. So I suppose you create a EFI system table along
-> > with EFI configuration tables for DT, SMBIOS, etc? In this case, I
-> > suggest you omit the MEMMAP config table that I am adding here, so
-> > that there is no ambiguity between the EFI provided memory map and the
-> > one provided by DT.
-> >
-> > I think that should be a clean way to implement this.
-> OK, thanks.
->
-> I have merged efi-cleanups-for-v6.1-v2 to
-> https://github.com/loongson/linux/commits/loongarch-next. It seems
-> everything work well except kexec.
->
+EFI architectures other than x86 rely on FDT to pass information between
+the stub and the core kernel. In hindsight, this is probably a mistake,
+given the issues around abuse of the internal ABI, and potential
+inconsistencies between two sources of information that both originate
+in the firmware (memory map, command line, etc)
 
-OK thanks for testing. I will send out a v2 today and merge the
-changes into efi/next tomorrow.
+Another reason for avoiding updates to the DT is the fact that it
+interferes with secure boot and measured boot. Even if we measure the
+original firmware provided DT into the TPM, the DT that the kernel
+receives is a completely different blob, and verifying it against the
+TPM event log is currently impossible.
+
+So let's start hacking away at this, and refactor the generic stub so
+that all the FDT pieces are isolated in a singe source file, and rely on
+generic EFI config tables for passing the initrd base and size.
+Ultimately, this should permit all EFI architectures doing DT boot to
+perform the handover to the core kernel in a different way, and pass on
+the firmware provided DT unmodified, but this requires some future work
+for ARM/arm64 and RISC-V.
+
+However, we can easily convert the newly added LoongArch code to adopt
+this approach, and to consume the DT strictly for hardware descriptions
+(if not doing ACPI boot), and pass the initrd, memory map and everything
+else via EFI config tables. Generating empty DTBs on ACPI platforms will
+no longer be needed.
+
+The first six patches as well as patch #10 are general cleanup, and can
+be merged separately. The remaining patches refactor the FDT code in the
+EFI stub so that we can avoid it on platforms that don't need it for
+other reasons. Finally, LoongArch is updated to use DT only for hardware
+descriptions when doing EFI boot.
+
+Changes since v1:
+- to ease merging this with the loongarch tree, drop unrelated cleanup
+  changes, which will be merged separately;
+- drop the patch to enable DT for hw descriptions - it will be picked up
+  again later
+- avoid creating the INITRD table if no initrd was actually loaded;
+- incorporate feedback from Huacai on the arch/loongarch changes;
+- other minor tweaks.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Xi Ruoyao <xry111@xry111.site>
+
+Ard Biesheuvel (8):
+  efi: libstub: drop pointless get_memory_map() call
+  efi: libstub: avoid efi_get_memory_map() for allocating the virt map
+  efi: libstub: simplify efi_get_memory_map() and struct efi_boot_memmap
+  efi: libstub: remove pointless goto kludge
+  efi: libstub: unify initrd loading between architectures
+  efi: libstub: remove DT dependency from generic stub
+  efi: libstub: install boot-time memory map as config table
+  efi/loongarch: libstub: remove dependency on flattened DT
+
+ Documentation/arm/uefi.rst                     |   4 -
+ arch/loongarch/Kconfig                         |   3 -
+ arch/loongarch/include/asm/bootinfo.h          |   2 +-
+ arch/loongarch/kernel/efi.c                    |  30 +++-
+ arch/loongarch/kernel/env.c                    |  13 +-
+ arch/loongarch/kernel/head.S                   |   2 +
+ arch/loongarch/kernel/setup.c                  |   4 +-
+ drivers/firmware/efi/efi.c                     |  15 ++
+ drivers/firmware/efi/libstub/Makefile          |  13 +-
+ drivers/firmware/efi/libstub/arm64-stub.c      |  19 +--
+ drivers/firmware/efi/libstub/efi-stub-helper.c | 139 ++++++++--------
+ drivers/firmware/efi/libstub/efi-stub.c        |  90 ++++------
+ drivers/firmware/efi/libstub/efistub.h         |  28 +---
+ drivers/firmware/efi/libstub/fdt.c             | 176 +++++++++++---------
+ drivers/firmware/efi/libstub/loongarch-stub.c  |  56 ++++++-
+ drivers/firmware/efi/libstub/mem.c             |  93 +++++------
+ drivers/firmware/efi/libstub/randomalloc.c     |  25 +--
+ drivers/firmware/efi/libstub/relocate.c        |  21 +--
+ drivers/firmware/efi/libstub/x86-stub.c        |  30 +---
+ include/linux/efi.h                            |  15 ++
+ 20 files changed, 395 insertions(+), 383 deletions(-)
+
+-- 
+2.35.1
+
