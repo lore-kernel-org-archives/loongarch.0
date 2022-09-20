@@ -1,667 +1,540 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04EF210E8
-	for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 03:37:23 +0000 (UTC)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxReJqNSlj7FseAA--.48978S3;
-	Tue, 20 Sep 2022 11:37:15 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] LoongArch: Add kprobe support
-Date: Tue, 20 Sep 2022 11:37:11 +0800
-Message-Id: <1663645034-967-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1663645034-967-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1663645034-967-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8DxReJqNSlj7FseAA--.48978S3
-X-Coremail-Antispam: 1UD129KBjvAXoW3KryUtF43CF13GrWrGrW5trb_yoW8ArW8Zo
-	WSvF4qgr48KrW5WF4rJr1qqFyUW3W8WFWrAFWavFs8uF17Ar15Xr4jkrW8Ja4aqF4Fg3yf
-	C39xua4fAayxuFn3n29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYX7k0a2IF6w4kM7kC6x804xWl14x267AKxVW8JVW5JwAFc2x0
-	x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87
-	I2jVAFwI0_Jr4l82xGYIkIc2x26xkF7I0E14v26r1Y6r1xM28lY4IEw2IIxxk0rwA2F7IY
-	1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20x
-	vEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280
-	aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4
-	CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvj
-	eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_Gr4l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07bOYFAUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B5A10EB
+	for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 05:08:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20346C433B5
+	for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 05:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1663650538;
+	bh=I+RnWHH5ZMUm8lLirEs4KIhudA0K5bYnUyRVcW4MXAw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=W1j9PLrS3BP27ieRFM/3AKeWmnUwx0c7vKS6OLIuQjiS1eyvLKyj5eQXw5JtWZdlt
+	 DwVnqhZLA5NIwOoJNS1cGKqwL+fcaAdHCLS551LzNcVx5tRPUvprIZLKi5PRUYkTeJ
+	 NaHDAHrBVwgTSiiOD9TBcMAy5Bn7PC4ZBvWhu6dUkMIbGTNaxYAQiNyhStdB0HyCof
+	 7GlKb16Gj5gf+OoooUsRwooR9W03LWojzFid9C0+mCQgJmdLmjmqj2MXoAtGEx0E0c
+	 RnYu8vKRn0X+I1G/21j8j32z3dfsKG1WoOmGG92wUbspDuFzgeGs87hE8TbdbH++TN
+	 Khw49jwX7vs8g==
+Received: by mail-yb1-f181.google.com with SMTP id s14so1749087ybe.7
+        for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 22:08:58 -0700 (PDT)
+X-Gm-Message-State: ACrzQf2EDgoh+Gj4gVjpCdYE6kc+SUCDE0UC8XcIkpK82Td1cTsNXrz+
+	eT2a0UXsLeHztS9WQzqNP3K0Jr1BKvBOFX+hf/M=
+X-Google-Smtp-Source: AMsMyM5W/L1jupqbxZvtk+3TdxvlgVkz3e9aSy3ggvWa6xg2N7DySripBBlODLF33vBK+qv2U1Ltq+vmgK0dDKFmchI=
+X-Received: by 2002:a05:6830:1213:b0:65a:9a2:daf3 with SMTP id
+ r19-20020a056830121300b0065a09a2daf3mr3825507otp.308.1663650526863; Mon, 19
+ Sep 2022 22:08:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <20220919095939.761690562@infradead.org> <20220919101521.743503410@infradead.org>
+In-Reply-To: <20220919101521.743503410@infradead.org>
+From: Guo Ren <guoren@kernel.org>
+Date: Tue, 20 Sep 2022 13:08:34 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTSjyDR5vK6ccFqC21T4-s5AQWOANfBoBRWHcU514As39Q@mail.gmail.com>
+Message-ID: <CAJF2gTSjyDR5vK6ccFqC21T4-s5AQWOANfBoBRWHcU514As39Q@mail.gmail.com>
+Subject: Re: [PATCH v2 21/44] arch/idle: Change arch_cpu_idle() IRQ behaviour
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: richard.henderson@linaro.org, ink@jurassic.park.msu.ru, mattst88@gmail.com, 
+	vgupta@kernel.org, linux@armlinux.org.uk, ulli.kroll@googlemail.com, 
+	linus.walleij@linaro.org, shawnguo@kernel.org, 
+	Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de, festevam@gmail.com, 
+	linux-imx@nxp.com, tony@atomide.com, khilman@kernel.org, 
+	catalin.marinas@arm.com, will@kernel.org, bcain@quicinc.com, 
+	chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org, 
+	sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de, 
+	dinguyen@kernel.org, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, 
+	shorne@gmail.com, James.Bottomley@hansenpartnership.com, deller@gmx.de, 
+	mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, 
+	borntraeger@linux.ibm.com, svens@linux.ibm.com, ysato@users.sourceforge.jp, 
+	dalias@libc.org, davem@davemloft.net, richard@nod.at, 
+	anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu, 
+	amakhalov@vmware.com, pv-drivers@vmware.com, boris.ostrovsky@oracle.com, 
+	chris@zankel.net, jcmvbkbc@gmail.com, rafael@kernel.org, lenb@kernel.org, 
+	pavel@ucw.cz, gregkh@linuxfoundation.org, mturquette@baylibre.com, 
+	sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org, 
+	sudeep.holla@arm.com, agross@kernel.org, bjorn.andersson@linaro.org, 
+	konrad.dybcio@somainline.org, anup@brainfault.org, thierry.reding@gmail.com, 
+	jonathanh@nvidia.com, jacob.jun.pan@linux.intel.com, atishp@atishpatra.org, 
+	Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com, andriy.shevchenko@linux.intel.com, 
+	linux@rasmusvillemoes.dk, dennis@kernel.org, tj@kernel.org, cl@linux.com, 
+	rostedt@goodmis.org, pmladek@suse.com, senozhatsky@chromium.org, 
+	john.ogness@linutronix.de, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de, 
+	bristot@redhat.com, vschneid@redhat.com, fweisbec@gmail.com, 
+	ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com, 
+	dvyukov@google.com, vincenzo.frascino@arm.com, 
+	Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org, 
+	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-arch@vger.kernel.org, kasan-dev@googlegroups.com, 
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Kprobes allows you to trap at almost any kernel address and
-execute a callback function, this commit adds kprobe support
-for LoongArch.
+On Mon, Sep 19, 2022 at 6:18 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> Current arch_cpu_idle() is called with IRQs disabled, but will return
+> with IRQs enabled.
+>
+> However, the very first thing the generic code does after calling
+> arch_cpu_idle() is raw_local_irq_disable(). This means that
+> architectures that can idle with IRQs disabled end up doing a
+> pointless 'enable-disable' dance.
+>
+> Therefore, push this IRQ disabling into the idle function, meaning
+> that those architectures can avoid the pointless IRQ state flipping.
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+> Acked-by: Mark Rutland <mark.rutland@arm.com> [arm64]
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  arch/alpha/kernel/process.c      |    1 -
+>  arch/arc/kernel/process.c        |    3 +++
+>  arch/arm/kernel/process.c        |    1 -
+>  arch/arm/mach-gemini/board-dt.c  |    3 ++-
+>  arch/arm64/kernel/idle.c         |    1 -
+>  arch/csky/kernel/process.c       |    1 -
+>  arch/csky/kernel/smp.c           |    2 +-
+>  arch/hexagon/kernel/process.c    |    1 -
+>  arch/ia64/kernel/process.c       |    1 +
+>  arch/loongarch/kernel/idle.c     |    1 +
+>  arch/microblaze/kernel/process.c |    1 -
+>  arch/mips/kernel/idle.c          |    8 +++-----
+>  arch/nios2/kernel/process.c      |    1 -
+>  arch/openrisc/kernel/process.c   |    1 +
+>  arch/parisc/kernel/process.c     |    2 --
+>  arch/powerpc/kernel/idle.c       |    5 ++---
+>  arch/riscv/kernel/process.c      |    1 -
+>  arch/s390/kernel/idle.c          |    1 -
+>  arch/sh/kernel/idle.c            |    1 +
+>  arch/sparc/kernel/leon_pmc.c     |    4 ++++
+>  arch/sparc/kernel/process_32.c   |    1 -
+>  arch/sparc/kernel/process_64.c   |    3 ++-
+>  arch/um/kernel/process.c         |    1 -
+>  arch/x86/coco/tdx/tdx.c          |    3 +++
+>  arch/x86/kernel/process.c        |   15 ++++-----------
+>  arch/xtensa/kernel/process.c     |    1 +
+>  kernel/sched/idle.c              |    2 --
+>  27 files changed, 29 insertions(+), 37 deletions(-)
+>
+> --- a/arch/alpha/kernel/process.c
+> +++ b/arch/alpha/kernel/process.c
+> @@ -57,7 +57,6 @@ EXPORT_SYMBOL(pm_power_off);
+>  void arch_cpu_idle(void)
+>  {
+>         wtint(0);
+> -       raw_local_irq_enable();
+>  }
+>
+>  void arch_cpu_idle_dead(void)
+> --- a/arch/arc/kernel/process.c
+> +++ b/arch/arc/kernel/process.c
+> @@ -114,6 +114,8 @@ void arch_cpu_idle(void)
+>                 "sleep %0       \n"
+>                 :
+>                 :"I"(arg)); /* can't be "r" has to be embedded const */
+> +
+> +       raw_local_irq_disable();
+>  }
+>
+>  #else  /* ARC700 */
+> @@ -122,6 +124,7 @@ void arch_cpu_idle(void)
+>  {
+>         /* sleep, but enable both set E1/E2 (levels of interrupts) before committing */
+>         __asm__ __volatile__("sleep 0x3 \n");
+> +       raw_local_irq_disable();
+>  }
+>
+>  #endif
+> --- a/arch/arm/kernel/process.c
+> +++ b/arch/arm/kernel/process.c
+> @@ -78,7 +78,6 @@ void arch_cpu_idle(void)
+>                 arm_pm_idle();
+>         else
+>                 cpu_do_idle();
+> -       raw_local_irq_enable();
+>  }
+>
+>  void arch_cpu_idle_prepare(void)
+> --- a/arch/arm/mach-gemini/board-dt.c
+> +++ b/arch/arm/mach-gemini/board-dt.c
+> @@ -42,8 +42,9 @@ static void gemini_idle(void)
+>          */
+>
+>         /* FIXME: Enabling interrupts here is racy! */
+> -       local_irq_enable();
+> +       raw_local_irq_enable();
+>         cpu_do_idle();
+> +       raw_local_irq_disable();
+>  }
+>
+>  static void __init gemini_init_machine(void)
+> --- a/arch/arm64/kernel/idle.c
+> +++ b/arch/arm64/kernel/idle.c
+> @@ -42,5 +42,4 @@ void noinstr arch_cpu_idle(void)
+>          * tricks
+>          */
+>         cpu_do_idle();
+> -       raw_local_irq_enable();
+>  }
+> --- a/arch/csky/kernel/process.c
+> +++ b/arch/csky/kernel/process.c
+> @@ -100,6 +100,5 @@ void arch_cpu_idle(void)
+>  #ifdef CONFIG_CPU_PM_STOP
+>         asm volatile("stop\n");
+>  #endif
+> -       raw_local_irq_enable();
+Acked-by: Guo Ren <guoren@kernel.org>
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/Kconfig               |   1 +
- arch/loongarch/include/asm/inst.h    |  31 ++++
- arch/loongarch/include/asm/kprobes.h |  44 +++++
- arch/loongarch/include/asm/ptrace.h  |   1 +
- arch/loongarch/kernel/Makefile       |   2 +
- arch/loongarch/kernel/inst.c         | 107 ++++++++++++
- arch/loongarch/kernel/kprobes.c      | 309 +++++++++++++++++++++++++++++++++++
- 7 files changed, 495 insertions(+)
- create mode 100644 arch/loongarch/include/asm/kprobes.h
- create mode 100644 arch/loongarch/kernel/kprobes.c
+>  }
+>  #endif
+> --- a/arch/csky/kernel/smp.c
+> +++ b/arch/csky/kernel/smp.c
+> @@ -309,7 +309,7 @@ void arch_cpu_idle_dead(void)
+>         while (!secondary_stack)
+>                 arch_cpu_idle();
+>
+> -       local_irq_disable();
+> +       raw_local_irq_disable();
+Acked-by ..., because:
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 5b5fc94..6b01073 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -94,6 +94,7 @@ config LOONGARCH
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_IRQ_EXIT_ON_IRQ_STACK
- 	select HAVE_IRQ_TIME_ACCOUNTING
-+	select HAVE_KPROBES
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
- 	select HAVE_PCI
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index fce1843..fc8879b 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -7,6 +7,7 @@
- 
- #include <linux/types.h>
- #include <asm/asm.h>
-+#include <asm/ptrace.h>
- 
- #define INSN_BREAK		0x002a0000
- 
-@@ -20,6 +21,10 @@
- 
- #define ADDR_IMM(addr, INSN)	((addr & ADDR_IMMMASK_##INSN) >> ADDR_IMMSHIFT_##INSN)
- 
-+enum reg0i15_op {
-+	break_op	= 0x54,
-+};
-+
- enum reg0i26_op {
- 	b_op		= 0x14,
- 	bl_op		= 0x15,
-@@ -28,6 +33,8 @@ enum reg0i26_op {
- enum reg1i20_op {
- 	lu12iw_op	= 0x0a,
- 	lu32id_op	= 0x0b,
-+	pcaddi_op	= 0x0c,
-+	pcalau12i_op	= 0x0d,
- 	pcaddu12i_op	= 0x0e,
- 	pcaddu18i_op	= 0x0f,
- };
-@@ -35,6 +42,8 @@ enum reg1i20_op {
- enum reg1i21_op {
- 	beqz_op		= 0x10,
- 	bnez_op		= 0x11,
-+	bceqz_op	= 0x48000000,
-+	bcnez_op	= 0x48000100,
- };
- 
- enum reg2_op {
-@@ -164,6 +173,11 @@ enum reg3sa2_op {
- 	alsld_op	= 0x16,
- };
- 
-+struct reg0i15_format {
-+	unsigned int immediate : 15;
-+	unsigned int opcode : 17;
-+};
-+
- struct reg0i26_format {
- 	unsigned int immediate_h : 10;
- 	unsigned int immediate_l : 16;
-@@ -249,6 +263,7 @@ struct reg3sa2_format {
- 
- union loongarch_instruction {
- 	unsigned int word;
-+	struct reg0i15_format	reg0i15_format;
- 	struct reg0i26_format	reg0i26_format;
- 	struct reg1i20_format	reg1i20_format;
- 	struct reg1i21_format	reg1i21_format;
-@@ -313,6 +328,12 @@ static inline bool is_branch_ins(union loongarch_instruction *ip)
- 		ip->reg1i21_format.opcode <= bgeu_op;
- }
- 
-+static inline bool is_pc_ins(union loongarch_instruction *ip)
-+{
-+	return ip->reg1i20_format.opcode >= pcaddi_op &&
-+		ip->reg1i20_format.opcode <= pcaddu18i_op;
-+}
-+
- static inline bool is_ra_save_ins(union loongarch_instruction *ip)
- {
- 	/* st.d $ra, $sp, offset */
-@@ -334,6 +355,16 @@ static inline bool is_stack_alloc_ins(union loongarch_instruction *ip)
- u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
- u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
- u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
-+void simu_branch(struct pt_regs *regs, union loongarch_instruction insn);
-+void simu_pc(struct pt_regs *regs, union loongarch_instruction insn);
-+
-+static inline unsigned long sign_extended(unsigned long val, unsigned int idx)
-+{
-+	if (val & (1UL << idx))
-+		return ~((1UL << (idx + 1)) - 1) | val;
-+	else
-+		return ((1UL << (idx + 1)) - 1) & val;
-+}
- 
- static inline bool signed_imm_check(long val, unsigned int bit)
- {
-diff --git a/arch/loongarch/include/asm/kprobes.h b/arch/loongarch/include/asm/kprobes.h
-new file mode 100644
-index 0000000..afcf254
---- /dev/null
-+++ b/arch/loongarch/include/asm/kprobes.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __ASM_LOONGARCH_KPROBES_H
-+#define __ASM_LOONGARCH_KPROBES_H
-+
-+#include <asm-generic/kprobes.h>
-+
-+#ifdef CONFIG_KPROBES
-+
-+#include <asm/inst.h>
-+
-+#define __ARCH_WANT_KPROBES_INSN_SLOT
-+#define MAX_INSN_SIZE			2
-+
-+#define flush_insn_slot(p)		do { } while (0)
-+#define kretprobe_blacklist_size	0
-+
-+typedef union loongarch_instruction kprobe_opcode_t;
-+
-+/* Architecture specific copy of original instruction */
-+struct arch_specific_insn {
-+	/* copy of the original instruction */
-+	kprobe_opcode_t *insn;
-+};
-+
-+struct prev_kprobe {
-+	struct kprobe *kp;
-+	unsigned long status;
-+	unsigned long saved_irq;
-+	unsigned long saved_era;
-+};
-+
-+/* per-cpu kprobe control block */
-+struct kprobe_ctlblk {
-+	unsigned long kprobe_status;
-+	unsigned long kprobe_saved_irq;
-+	unsigned long kprobe_saved_era;
-+	struct prev_kprobe prev_kprobe;
-+};
-+
-+void arch_remove_kprobe(struct kprobe *p);
-+bool kprobe_fault_handler(struct pt_regs *regs, int trapnr);
-+
-+#endif /* CONFIG_KPROBES */
-+#endif /* __ASM_LOONGARCH_KPROBES_H */
-diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
-index 17838c6..eb9538a 100644
---- a/arch/loongarch/include/asm/ptrace.h
-+++ b/arch/loongarch/include/asm/ptrace.h
-@@ -6,6 +6,7 @@
- #define _ASM_PTRACE_H
- 
- #include <asm/page.h>
-+#include <asm/irqflags.h>
- #include <asm/thread_info.h>
- #include <uapi/asm/ptrace.h>
- 
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index 5358144..ff98d8a 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -33,4 +33,6 @@ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
- 
- obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_regs.o
- 
-+obj-$(CONFIG_KPROBES)		+= kprobes.o
-+
- CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index b1df0ec..143acb6 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -38,3 +38,110 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned l
- 
- 	return insn.word;
- }
-+
-+void simu_branch(struct pt_regs *regs, union loongarch_instruction insn)
-+{
-+	unsigned int imm, imm_l, imm_h, rd, rj;
-+	unsigned long pc = regs->csr_era;
-+
-+	imm_l = insn.reg0i26_format.immediate_l;
-+	imm_h = insn.reg0i26_format.immediate_h;
-+	switch (insn.reg0i26_format.opcode) {
-+	case b_op:
-+		regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 27);
-+		return;
-+	case bl_op:
-+		regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 27);
-+		regs->regs[1] = pc + LOONGARCH_INSN_SIZE;
-+		return;
-+	}
-+
-+	imm_l = insn.reg1i21_format.immediate_l;
-+	imm_h = insn.reg1i21_format.immediate_h;
-+	rj = insn.reg1i21_format.rj;
-+	switch (insn.reg1i21_format.opcode) {
-+	case beqz_op:
-+		if (regs->regs[rj] == 0)
-+			regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 22);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		return;
-+	case bnez_op:
-+		if (regs->regs[rj] != 0)
-+			regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 22);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		return;
-+	}
-+
-+	imm = insn.reg2i16_format.immediate;
-+	rj = insn.reg2i16_format.rj;
-+	rd = insn.reg2i16_format.rd;
-+	switch (insn.reg2i16_format.opcode) {
-+	case beq_op:
-+		if (regs->regs[rj] == regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bne_op:
-+		if (regs->regs[rj] != regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case blt_op:
-+		if ((long)regs->regs[rj] < (long)regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bge_op:
-+		if ((long)regs->regs[rj] >= (long)regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bltu_op:
-+		if (regs->regs[rj] < regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bgeu_op:
-+		if (regs->regs[rj] >= regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case jirl_op:
-+		regs->csr_era = regs->regs[rj] + sign_extended(imm << 2, 17);
-+		regs->regs[rd] = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	}
-+}
-+
-+void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
-+{
-+	unsigned long pc = regs->csr_era;
-+	unsigned int rd = insn.reg1i20_format.rd;
-+	unsigned int imm = insn.reg1i20_format.immediate;
-+
-+	switch (insn.reg1i20_format.opcode) {
-+	case pcaddi_op:
-+		regs->regs[rd] = pc + sign_extended(imm << 2, 21);
-+		break;
-+	case pcaddu12i_op:
-+		regs->regs[rd] = pc + sign_extended(imm << 12, 31);
-+		break;
-+	case pcaddu18i_op:
-+		regs->regs[rd] = pc + sign_extended(imm << 18, 37);
-+		break;
-+	case pcalau12i_op:
-+		regs->regs[rd] = pc + sign_extended(imm << 12, 31);
-+		regs->regs[rd] &= ~((1 << 12) - 1);
-+		break;
-+	}
-+
-+	regs->csr_era += LOONGARCH_INSN_SIZE;
-+}
-diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
-new file mode 100644
-index 0000000..b2c73a5
---- /dev/null
-+++ b/arch/loongarch/kernel/kprobes.c
-@@ -0,0 +1,309 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/kprobes.h>
-+#include <linux/kdebug.h>
-+#include <asm/break.h>
-+
-+static const union loongarch_instruction breakpoint_insn = {
-+	.reg0i15_format = {
-+		.opcode = break_op,
-+		.immediate = BRK_KPROBE_BP,
-+	}
-+};
-+
-+static const union loongarch_instruction singlestep_insn = {
-+	.reg0i15_format = {
-+		.opcode = break_op,
-+		.immediate = BRK_KPROBE_SSTEPBP,
-+	}
-+};
-+
-+DEFINE_PER_CPU(struct kprobe *, current_kprobe);
-+DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
-+
-+static bool insns_are_not_supported(union loongarch_instruction insn)
-+{
-+	switch (insn.reg2i14_format.opcode) {
-+	case llw_op:
-+	case lld_op:
-+	case scw_op:
-+	case scd_op:
-+		pr_notice("kprobe: ll or sc instructions are not supported\n");
-+		return true;
-+	}
-+
-+	switch (insn.reg1i21_format.opcode) {
-+	case bceqz_op:
-+	case bcnez_op:
-+		pr_notice("kprobe: bceqz or bcnez instructions are not supported\n");
-+		return true;
-+	}
-+
-+	return false;
-+}
-+NOKPROBE_SYMBOL(insns_are_not_supported);
-+
-+int arch_prepare_kprobe(struct kprobe *p)
-+{
-+	union loongarch_instruction insn;
-+
-+	insn = p->addr[0];
-+	if (insns_are_not_supported(insn))
-+		return -EINVAL;
-+
-+	p->ainsn.insn = get_insn_slot();
-+	if (!p->ainsn.insn)
-+		return -ENOMEM;
-+
-+	p->ainsn.insn[0] = *p->addr;
-+	p->ainsn.insn[1] = singlestep_insn;
-+
-+	p->opcode = *p->addr;
-+
-+	return 0;
-+}
-+NOKPROBE_SYMBOL(arch_prepare_kprobe);
-+
-+/* Install breakpoint in text */
-+void arch_arm_kprobe(struct kprobe *p)
-+{
-+	*p->addr = breakpoint_insn;
-+}
-+NOKPROBE_SYMBOL(arch_arm_kprobe);
-+
-+/* Remove breakpoint from text */
-+void arch_disarm_kprobe(struct kprobe *p)
-+{
-+	*p->addr = p->opcode;
-+}
-+NOKPROBE_SYMBOL(arch_disarm_kprobe);
-+
-+void arch_remove_kprobe(struct kprobe *p)
-+{
-+	if (p->ainsn.insn) {
-+		free_insn_slot(p->ainsn.insn, 0);
-+		p->ainsn.insn = NULL;
-+	}
-+}
-+NOKPROBE_SYMBOL(arch_remove_kprobe);
-+
-+static void save_previous_kprobe(struct kprobe_ctlblk *kcb)
-+{
-+	kcb->prev_kprobe.kp = kprobe_running();
-+	kcb->prev_kprobe.status = kcb->kprobe_status;
-+	kcb->prev_kprobe.saved_irq = kcb->kprobe_saved_irq;
-+	kcb->prev_kprobe.saved_era = kcb->kprobe_saved_era;
-+}
-+NOKPROBE_SYMBOL(save_previous_kprobe);
-+
-+static void restore_previous_kprobe(struct kprobe_ctlblk *kcb)
-+{
-+	__this_cpu_write(current_kprobe, kcb->prev_kprobe.kp);
-+	kcb->kprobe_status = kcb->prev_kprobe.status;
-+	kcb->kprobe_saved_irq = kcb->prev_kprobe.saved_irq;
-+	kcb->kprobe_saved_era = kcb->prev_kprobe.saved_era;
-+}
-+NOKPROBE_SYMBOL(restore_previous_kprobe);
-+
-+static void set_current_kprobe(struct kprobe *p, struct pt_regs *regs,
-+			       struct kprobe_ctlblk *kcb)
-+{
-+	__this_cpu_write(current_kprobe, p);
-+	kcb->kprobe_saved_irq = regs->csr_prmd & CSR_PRMD_PIE;
-+	kcb->kprobe_saved_era = regs->csr_era;
-+}
-+NOKPROBE_SYMBOL(set_current_kprobe);
-+
-+static bool insns_are_not_simulated(struct kprobe *p, struct pt_regs *regs)
-+{
-+	if (is_branch_ins(&p->opcode)) {
-+		simu_branch(regs, p->opcode);
-+		return false;
-+	} else if (is_pc_ins(&p->opcode)) {
-+		simu_pc(regs, p->opcode);
-+		return false;
-+	} else {
-+		return true;
-+	}
-+}
-+NOKPROBE_SYMBOL(insns_are_not_simulated);
-+
-+static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
-+			     struct kprobe_ctlblk *kcb, int reenter)
-+{
-+	if (reenter) {
-+		save_previous_kprobe(kcb);
-+		set_current_kprobe(p, regs, kcb);
-+		kcb->kprobe_status = KPROBE_REENTER;
-+	} else {
-+		kcb->kprobe_status = KPROBE_HIT_SS;
-+	}
-+
-+	if (p->ainsn.insn->word == breakpoint_insn.word) {
-+		regs->csr_prmd &= ~CSR_PRMD_PIE;
-+		regs->csr_prmd |= kcb->kprobe_saved_irq;
-+		return;
-+	}
-+
-+	regs->csr_prmd &= ~CSR_PRMD_PIE;
-+
-+	if (insns_are_not_simulated(p, regs)) {
-+		kcb->kprobe_status = KPROBE_HIT_SS;
-+		regs->csr_era = (unsigned long)&p->ainsn.insn[0];
-+	} else {
-+		kcb->kprobe_status = KPROBE_HIT_SSDONE;
-+		if (p->post_handler)
-+			p->post_handler(p, regs, 0);
-+		reset_current_kprobe();
-+	}
-+}
-+NOKPROBE_SYMBOL(setup_singlestep);
-+
-+static bool reenter_kprobe(struct kprobe *p, struct pt_regs *regs,
-+			  struct kprobe_ctlblk *kcb)
-+{
-+	switch (kcb->kprobe_status) {
-+	case KPROBE_HIT_SSDONE:
-+	case KPROBE_HIT_ACTIVE:
-+		kprobes_inc_nmissed_count(p);
-+		setup_singlestep(p, regs, kcb, 1);
-+		break;
-+	case KPROBE_HIT_SS:
-+	case KPROBE_REENTER:
-+		pr_warn("Failed to recover from reentered kprobes.\n");
-+		dump_kprobe(p);
-+		BUG();
-+		break;
-+	default:
-+		WARN_ON(1);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+NOKPROBE_SYMBOL(reenter_kprobe);
-+
-+static bool kprobe_pre_handler(struct pt_regs *regs)
-+{
-+	struct kprobe *p, *cur_kprobe;
-+	struct kprobe_ctlblk *kcb;
-+	unsigned long addr = instruction_pointer(regs);
-+
-+	kcb = get_kprobe_ctlblk();
-+	cur_kprobe = kprobe_running();
-+
-+	p = get_kprobe((kprobe_opcode_t *) addr);
-+	if (p) {
-+		if (cur_kprobe) {
-+			if (reenter_kprobe(p, regs, kcb))
-+				return true;
-+		} else {
-+			/* Probe hit */
-+			set_current_kprobe(p, regs, kcb);
-+			kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-+
-+			/*
-+			 * If we have no pre-handler or it returned 0, we
-+			 * continue with normal processing.  If we have a
-+			 * pre-handler and it returned non-zero, it will
-+			 * modify the execution path and no need to single
-+			 * stepping. Let's just reset current kprobe and exit.
-+			 *
-+			 * pre_handler can hit a breakpoint and can step thru
-+			 * before return.
-+			 */
-+			if (!p->pre_handler || !p->pre_handler(p, regs))
-+				setup_singlestep(p, regs, kcb, 0);
-+			else
-+				reset_current_kprobe();
-+		}
-+		return true;
-+	}
-+
-+	/*
-+	 * The breakpoint instruction was removed right
-+	 * after we hit it.  Another cpu has removed
-+	 * either a probepoint or a debugger breakpoint
-+	 * at this address.  In either case, no further
-+	 * handling of this interrupt is appropriate.
-+	 * Return back to original instruction, and continue.
-+	 */
-+	return false;
-+}
-+NOKPROBE_SYMBOL(kprobe_pre_handler);
-+
-+static inline bool kprobe_post_handler(struct pt_regs *regs)
-+{
-+	struct kprobe *cur = kprobe_running();
-+	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
-+
-+	if (!cur)
-+		return false;
-+
-+	/* Restore back the original saved kprobes variables and continue */
-+	if (kcb->kprobe_status == KPROBE_REENTER) {
-+		restore_previous_kprobe(kcb);
-+		return true;
-+	}
-+
-+	/* Call post handler */
-+	kcb->kprobe_status = KPROBE_HIT_SSDONE;
-+	if (cur->post_handler)
-+		cur->post_handler(cur, regs, 0);
-+
-+	regs->csr_era = kcb->kprobe_saved_era + LOONGARCH_INSN_SIZE;
-+	regs->csr_prmd |= kcb->kprobe_saved_irq;
-+
-+	reset_current_kprobe();
-+
-+	return true;
-+}
-+NOKPROBE_SYMBOL(kprobe_post_handler);
-+
-+bool kprobe_fault_handler(struct pt_regs *regs, int trapnr)
-+{
-+	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
-+
-+	if (kcb->kprobe_status & KPROBE_HIT_SS) {
-+		regs->csr_era = kcb->kprobe_saved_era + LOONGARCH_INSN_SIZE;
-+		regs->csr_prmd |= kcb->kprobe_saved_irq;
-+		reset_current_kprobe();
-+	}
-+
-+	return false;
-+}
-+NOKPROBE_SYMBOL(kprobe_fault_handler);
-+
-+int kprobe_exceptions_notify(struct notifier_block *self,
-+			     unsigned long val, void *data)
-+{
-+	struct die_args *args = (struct die_args *)data;
-+	int ret = NOTIFY_DONE;
-+
-+	switch (val) {
-+	case DIE_BREAK:
-+		if (kprobe_pre_handler(args->regs))
-+			ret = NOTIFY_STOP;
-+		break;
-+	case DIE_SSTEPBP:
-+		if (kprobe_post_handler(args->regs))
-+			ret = NOTIFY_STOP;
-+		break;
-+	case DIE_PAGE_FAULT:
-+		preempt_disable();
-+		if (kprobe_running()
-+		    && kprobe_fault_handler(args->regs, args->trapnr))
-+			ret = NOTIFY_STOP;
-+		preempt_enable();
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return ret;
-+}
-+NOKPROBE_SYMBOL(kprobe_exceptions_notify);
-+
-+int __init arch_init_kprobes(void)
-+{
-+	return 0;
-+}
+                local_irq_disable();
+
+                if (cpu_is_offline(cpu)) {
+                        tick_nohz_idle_stop_tick();
+                        cpuhp_report_idle_dead();
+                        arch_cpu_idle_dead();
+                }
+
+>
+>         asm volatile(
+>                 "mov    sp, %0\n"
+> --- a/arch/hexagon/kernel/process.c
+> +++ b/arch/hexagon/kernel/process.c
+> @@ -44,7 +44,6 @@ void arch_cpu_idle(void)
+>  {
+>         __vmwait();
+>         /*  interrupts wake us up, but irqs are still disabled */
+> -       raw_local_irq_enable();
+>  }
+>
+>  /*
+> --- a/arch/ia64/kernel/process.c
+> +++ b/arch/ia64/kernel/process.c
+> @@ -242,6 +242,7 @@ void arch_cpu_idle(void)
+>                 (*mark_idle)(1);
+>
+>         raw_safe_halt();
+> +       raw_local_irq_disable();
+>
+>         if (mark_idle)
+>                 (*mark_idle)(0);
+> --- a/arch/loongarch/kernel/idle.c
+> +++ b/arch/loongarch/kernel/idle.c
+> @@ -13,4 +13,5 @@ void __cpuidle arch_cpu_idle(void)
+>  {
+>         raw_local_irq_enable();
+>         __arch_cpu_idle(); /* idle instruction needs irq enabled */
+> +       raw_local_irq_disable();
+>  }
+> --- a/arch/microblaze/kernel/process.c
+> +++ b/arch/microblaze/kernel/process.c
+> @@ -140,5 +140,4 @@ int dump_fpu(struct pt_regs *regs, elf_f
+>
+>  void arch_cpu_idle(void)
+>  {
+> -       raw_local_irq_enable();
+>  }
+> --- a/arch/mips/kernel/idle.c
+> +++ b/arch/mips/kernel/idle.c
+> @@ -33,13 +33,13 @@ static void __cpuidle r3081_wait(void)
+>  {
+>         unsigned long cfg = read_c0_conf();
+>         write_c0_conf(cfg | R30XX_CONF_HALT);
+> -       raw_local_irq_enable();
+>  }
+>
+>  void __cpuidle r4k_wait(void)
+>  {
+>         raw_local_irq_enable();
+>         __r4k_wait();
+> +       raw_local_irq_disable();
+>  }
+>
+>  /*
+> @@ -57,7 +57,6 @@ void __cpuidle r4k_wait_irqoff(void)
+>                 "       .set    arch=r4000      \n"
+>                 "       wait                    \n"
+>                 "       .set    pop             \n");
+> -       raw_local_irq_enable();
+>  }
+>
+>  /*
+> @@ -77,7 +76,6 @@ static void __cpuidle rm7k_wait_irqoff(v
+>                 "       wait                                            \n"
+>                 "       mtc0    $1, $12         # stalls until W stage  \n"
+>                 "       .set    pop                                     \n");
+> -       raw_local_irq_enable();
+>  }
+>
+>  /*
+> @@ -103,6 +101,8 @@ static void __cpuidle au1k_wait(void)
+>         "       nop                             \n"
+>         "       .set    pop                     \n"
+>         : : "r" (au1k_wait), "r" (c0status));
+> +
+> +       raw_local_irq_disable();
+>  }
+>
+>  static int __initdata nowait;
+> @@ -245,8 +245,6 @@ void arch_cpu_idle(void)
+>  {
+>         if (cpu_wait)
+>                 cpu_wait();
+> -       else
+> -               raw_local_irq_enable();
+>  }
+>
+>  #ifdef CONFIG_CPU_IDLE
+> --- a/arch/nios2/kernel/process.c
+> +++ b/arch/nios2/kernel/process.c
+> @@ -33,7 +33,6 @@ EXPORT_SYMBOL(pm_power_off);
+>
+>  void arch_cpu_idle(void)
+>  {
+> -       raw_local_irq_enable();
+>  }
+>
+>  /*
+> --- a/arch/openrisc/kernel/process.c
+> +++ b/arch/openrisc/kernel/process.c
+> @@ -102,6 +102,7 @@ void arch_cpu_idle(void)
+>         raw_local_irq_enable();
+>         if (mfspr(SPR_UPR) & SPR_UPR_PMP)
+>                 mtspr(SPR_PMR, mfspr(SPR_PMR) | SPR_PMR_DME);
+> +       raw_local_irq_disable();
+>  }
+>
+>  void (*pm_power_off)(void) = NULL;
+> --- a/arch/parisc/kernel/process.c
+> +++ b/arch/parisc/kernel/process.c
+> @@ -187,8 +187,6 @@ void arch_cpu_idle_dead(void)
+>
+>  void __cpuidle arch_cpu_idle(void)
+>  {
+> -       raw_local_irq_enable();
+> -
+>         /* nop on real hardware, qemu will idle sleep. */
+>         asm volatile("or %%r10,%%r10,%%r10\n":::);
+>  }
+> --- a/arch/powerpc/kernel/idle.c
+> +++ b/arch/powerpc/kernel/idle.c
+> @@ -51,10 +51,9 @@ void arch_cpu_idle(void)
+>                  * Some power_save functions return with
+>                  * interrupts enabled, some don't.
+>                  */
+> -               if (irqs_disabled())
+> -                       raw_local_irq_enable();
+> +               if (!irqs_disabled())
+> +                       raw_local_irq_disable();
+>         } else {
+> -               raw_local_irq_enable();
+>                 /*
+>                  * Go into low thread priority and possibly
+>                  * low power mode.
+> --- a/arch/riscv/kernel/process.c
+> +++ b/arch/riscv/kernel/process.c
+> @@ -39,7 +39,6 @@ extern asmlinkage void ret_from_kernel_t
+>  void arch_cpu_idle(void)
+>  {
+>         cpu_do_idle();
+> -       raw_local_irq_enable();
+>  }
+>
+>  void __show_regs(struct pt_regs *regs)
+> --- a/arch/s390/kernel/idle.c
+> +++ b/arch/s390/kernel/idle.c
+> @@ -66,7 +66,6 @@ void arch_cpu_idle(void)
+>         idle->idle_count++;
+>         account_idle_time(cputime_to_nsecs(idle_time));
+>         raw_write_seqcount_end(&idle->seqcount);
+> -       raw_local_irq_enable();
+>  }
+>
+>  static ssize_t show_idle_count(struct device *dev,
+> --- a/arch/sh/kernel/idle.c
+> +++ b/arch/sh/kernel/idle.c
+> @@ -25,6 +25,7 @@ void default_idle(void)
+>         raw_local_irq_enable();
+>         /* Isn't this racy ? */
+>         cpu_sleep();
+> +       raw_local_irq_disable();
+>         clear_bl_bit();
+>  }
+>
+> --- a/arch/sparc/kernel/leon_pmc.c
+> +++ b/arch/sparc/kernel/leon_pmc.c
+> @@ -57,6 +57,8 @@ static void pmc_leon_idle_fixup(void)
+>                 "lda    [%0] %1, %%g0\n"
+>                 :
+>                 : "r"(address), "i"(ASI_LEON_BYPASS));
+> +
+> +       raw_local_irq_disable();
+>  }
+>
+>  /*
+> @@ -70,6 +72,8 @@ static void pmc_leon_idle(void)
+>
+>         /* For systems without power-down, this will be no-op */
+>         __asm__ __volatile__ ("wr       %g0, %asr19\n\t");
+> +
+> +       raw_local_irq_disable();
+>  }
+>
+>  /* Install LEON Power Down function */
+> --- a/arch/sparc/kernel/process_32.c
+> +++ b/arch/sparc/kernel/process_32.c
+> @@ -71,7 +71,6 @@ void arch_cpu_idle(void)
+>  {
+>         if (sparc_idle)
+>                 (*sparc_idle)();
+> -       raw_local_irq_enable();
+>  }
+>
+>  /* XXX cli/sti -> local_irq_xxx here, check this works once SMP is fixed. */
+> --- a/arch/sparc/kernel/process_64.c
+> +++ b/arch/sparc/kernel/process_64.c
+> @@ -59,7 +59,6 @@ void arch_cpu_idle(void)
+>  {
+>         if (tlb_type != hypervisor) {
+>                 touch_nmi_watchdog();
+> -               raw_local_irq_enable();
+>         } else {
+>                 unsigned long pstate;
+>
+> @@ -90,6 +89,8 @@ void arch_cpu_idle(void)
+>                         "wrpr %0, %%g0, %%pstate"
+>                         : "=&r" (pstate)
+>                         : "i" (PSTATE_IE));
+> +
+> +               raw_local_irq_disable();
+>         }
+>  }
+>
+> --- a/arch/um/kernel/process.c
+> +++ b/arch/um/kernel/process.c
+> @@ -217,7 +217,6 @@ void arch_cpu_idle(void)
+>  {
+>         cpu_tasks[current_thread_info()->cpu].pid = os_getpid();
+>         um_idle_sleep();
+> -       raw_local_irq_enable();
+>  }
+>
+>  int __cant_sleep(void) {
+> --- a/arch/x86/coco/tdx/tdx.c
+> +++ b/arch/x86/coco/tdx/tdx.c
+> @@ -223,6 +223,9 @@ void __cpuidle tdx_safe_halt(void)
+>          */
+>         if (__halt(irq_disabled, do_sti))
+>                 WARN_ONCE(1, "HLT instruction emulation failed\n");
+> +
+> +       /* XXX I can't make sense of what @do_sti actually does */
+> +       raw_local_irq_disable();
+>  }
+>
+>  static int read_msr(struct pt_regs *regs, struct ve_info *ve)
+> --- a/arch/x86/kernel/process.c
+> +++ b/arch/x86/kernel/process.c
+> @@ -701,6 +701,7 @@ EXPORT_SYMBOL(boot_option_idle_override)
+>  void __cpuidle default_idle(void)
+>  {
+>         raw_safe_halt();
+> +       raw_local_irq_disable();
+>  }
+>  #if defined(CONFIG_APM_MODULE) || defined(CONFIG_HALTPOLL_CPUIDLE_MODULE)
+>  EXPORT_SYMBOL(default_idle);
+> @@ -806,13 +807,7 @@ static void amd_e400_idle(void)
+>
+>         default_idle();
+>
+> -       /*
+> -        * The switch back from broadcast mode needs to be called with
+> -        * interrupts disabled.
+> -        */
+> -       raw_local_irq_disable();
+>         tick_broadcast_exit();
+> -       raw_local_irq_enable();
+>  }
+>
+>  /*
+> @@ -870,12 +865,10 @@ static __cpuidle void mwait_idle(void)
+>                 }
+>
+>                 __monitor((void *)&current_thread_info()->flags, 0, 0);
+> -               if (!need_resched())
+> +               if (!need_resched()) {
+>                         __sti_mwait(0, 0);
+> -               else
+> -                       raw_local_irq_enable();
+> -       } else {
+> -               raw_local_irq_enable();
+> +                       raw_local_irq_disable();
+> +               }
+>         }
+>         __current_clr_polling();
+>  }
+> --- a/arch/xtensa/kernel/process.c
+> +++ b/arch/xtensa/kernel/process.c
+> @@ -183,6 +183,7 @@ void coprocessor_flush_release_all(struc
+>  void arch_cpu_idle(void)
+>  {
+>         platform_idle();
+> +       raw_local_irq_disable();
+>  }
+>
+>  /*
+> --- a/kernel/sched/idle.c
+> +++ b/kernel/sched/idle.c
+> @@ -79,7 +79,6 @@ void __weak arch_cpu_idle_dead(void) { }
+>  void __weak arch_cpu_idle(void)
+>  {
+>         cpu_idle_force_poll = 1;
+> -       raw_local_irq_enable();
+>  }
+>
+>  /**
+> @@ -96,7 +95,6 @@ void __cpuidle default_idle_call(void)
+>
+>                 ct_cpuidle_enter();
+>                 arch_cpu_idle();
+> -               raw_local_irq_disable();
+>                 ct_cpuidle_exit();
+>
+>                 start_critical_timings();
+>
+>
+
+
 -- 
-2.1.0
-
+Best Regards
+ Guo Ren
