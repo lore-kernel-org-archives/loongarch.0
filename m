@@ -1,154 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E385A9C
-	for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 11:37:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B9CFC433C1
-	for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 11:37:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D070EA55
+	for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 12:31:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74CCCC433D6;
+	Tue, 20 Sep 2022 12:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663673854;
-	bh=4HkJGI7vcp5NPe8wJTiLRo76AmE2ncCmwGpekpx0LZ8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WITgcroz+NPsWk+3BBOG235xev1pEv8RGAX0ZcKatjLL2HLyyfl5z19a/fVOZAgmP
-	 JRGUX4869w/PDN7VKMqpCkDBqQQy40F7CivLPzpPm/fS2JkTfW6KN6EP5/tHgOFcTY
-	 7ofuZDTczUaz19mt/6yhOO612V6qntoqwz7H1jgd3V3w0h1LFJAr8HcmS4iF+OqoMu
-	 csUaV9h65fyGaiKG9a6Tvegs2Q4p+/YLU8Wu8VxoWw1wgmbQquhSeSDjU6Mkdg51mR
-	 IUQjYGXx2BhSS0AaBwBu7PMC1ZEnmI65SE5iL3wweG/VkATac0hmk1jX+A1a7w4CCD
-	 /zB7AuqRamMTw==
-Received: by mail-lj1-f178.google.com with SMTP id c7so2584581ljm.12
-        for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 04:37:34 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0/Ca2XOOwevJ02mpOKOprotcTitnBaiV9V14m1teB9Op9zbZI8
-	U/mioxsQAabTmtKi5B6eoqINhg0ix6oVcWy+16k=
-X-Google-Smtp-Source: AMsMyM6qokKzH3/yI1xaa5nmQ8Kf6+qvx/rdx4eTcID0ek16JDS9JkiZHW358GeYhw6XqRuH+M2/c2OSalqiNMs2oAc=
-X-Received: by 2002:a2e:2d0a:0:b0:26c:a1c:cdf with SMTP id t10-20020a2e2d0a000000b0026c0a1c0cdfmr7464119ljt.352.1663673852081;
- Tue, 20 Sep 2022 04:37:32 -0700 (PDT)
+	s=k20201202; t=1663677108;
+	bh=i2971qM7wlevODiVHlQWVkeQKCoULSDtCivyYa6BY3w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q359WuuE7X8iHPUglRgZ6umBriKE4r+Hq60s0D7bZenVvQZ4nI53Q/0IHEDWUvL08
+	 uO1lUj+/+gsUuHABZ0IUgFE9VpucvwIQJdQ0+o+qLceGFQWOjTx274Wv0QgoQwQqDB
+	 Bq6B/yj6zX6+ne9r87JfQG1DqPPHAUwk/5wBhBEUUm5zmwQcKDqLTClYTCw1gL+EWj
+	 y+co7RjqxrjwqgzVQOyvkrVOgNfaKYqf/Dnk/7RydhOFfw29XBhF+VqBugULRYy6nW
+	 kGdHmx4EM6/oydyvS6EAGcuvFJCcs2df/Ji6kGzIJMqPXxrjzmWTkMGZJXBpD98pEC
+	 ZvljhnwREUPvw==
+Date: Tue, 20 Sep 2022 14:31:45 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+	mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
+	ulli.kroll@googlemail.com, linus.walleij@linaro.org,
+	shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+	tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
+	will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
+	chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
+	sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
+	dinguyen@kernel.org, jonas@southpole.se,
+	stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+	James.Bottomley@HansenPartnership.com, deller@gmx.de,
+	mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com, svens@linux.ibm.com,
+	ysato@users.sourceforge.jp, dalias@libc.org, davem@davemloft.net,
+	richard@nod.at, anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
+	amakhalov@vmware.com, pv-drivers@vmware.com,
+	boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
+	rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
+	gregkh@linuxfoundation.org, mturquette@baylibre.com,
+	sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+	sudeep.holla@arm.com, agross@kernel.org, bjorn.andersson@linaro.org,
+	konrad.dybcio@somainline.org, anup@brainfault.org,
+	thierry.reding@gmail.com, jonathanh@nvidia.com,
+	jacob.jun.pan@linux.intel.com, atishp@atishpatra.org,
+	Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com,
+	andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+	dennis@kernel.org, tj@kernel.org, cl@linux.com, rostedt@goodmis.org,
+	pmladek@suse.com, senozhatsky@chromium.org,
+	john.ogness@linutronix.de, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+	vschneid@redhat.com, fweisbec@gmail.com, ryabinin.a.a@gmail.com,
+	glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
+	vincenzo.frascino@arm.com,
+	Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
+	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	virtualization@lists.linux-foundation.org,
+	linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
+Subject: Re: [PATCH v2 00/44] cpuidle,rcu: Clean up the mess
+Message-ID: <20220920123145.GC72346@lothringen>
+References: <20220919095939.761690562@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220918213544.2176249-1-ardb@kernel.org> <20220918213544.2176249-10-ardb@kernel.org>
- <20220920104045.GA18686@e124191.cambridge.arm.com>
-In-Reply-To: <20220920104045.GA18686@e124191.cambridge.arm.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 20 Sep 2022 13:37:20 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGj3h8XyEKBN0NRpzYqs-F3PvSqHGH5dbJUZpmZOYWnmA@mail.gmail.com>
-Message-ID: <CAMj1kXGj3h8XyEKBN0NRpzYqs-F3PvSqHGH5dbJUZpmZOYWnmA@mail.gmail.com>
-Subject: Re: [PATCH 09/12] efi: libstub: install boot-time memory map as
- config table
-To: Joey Gouly <joey.gouly@arm.com>
-Cc: linux-efi@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux@armlinux.org.uk, Arnd Bergmann <arnd@arndb.de>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Xi Ruoyao <xry111@xry111.site>, nd@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220919095939.761690562@infradead.org>
 
-On Tue, 20 Sept 2022 at 12:41, Joey Gouly <joey.gouly@arm.com> wrote:
->
-> Hi Ard,
->
-> On Sun, Sep 18, 2022 at 11:35:41PM +0200, Ard Biesheuvel wrote:
-> > Expose the EFI boot time memory map to the kernel via a configuration
-> > table. This is arch agnostic and enables future changes that remove the
-> > dependency on DT on architectures that don't otherwise rely on it.
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  drivers/firmware/efi/libstub/arm64-stub.c      |  2 +-
-> >  drivers/firmware/efi/libstub/efi-stub-helper.c |  2 +-
-> >  drivers/firmware/efi/libstub/efistub.h         |  3 ++-
-> >  drivers/firmware/efi/libstub/mem.c             | 26 ++++++++++++++++++--
-> >  drivers/firmware/efi/libstub/randomalloc.c     |  2 +-
-> >  drivers/firmware/efi/libstub/relocate.c        |  2 +-
-> >  include/linux/efi.h                            |  1 +
-> >  7 files changed, 31 insertions(+), 7 deletions(-)
-> >
-> [..]
-> > diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
-> > index 40721573e494..ed4c145afe11 100644
-> > --- a/drivers/firmware/efi/libstub/mem.c
-> > +++ b/drivers/firmware/efi/libstub/mem.c
-> > @@ -9,14 +9,20 @@
-> >   * efi_get_memory_map() - get memory map
-> >   * @map:             pointer to memory map pointer to which to assign the
-> >   *                   newly allocated memory map
-> > + * @install_cfg_tbl: whether or not to install the boot memory map as a
-> > + *                   configuration table
-> >   *
-> >   * Retrieve the UEFI memory map. The allocated memory leaves room for
-> >   * up to EFI_MMAP_NR_SLACK_SLOTS additional memory map entries.
-> >   *
-> >   * Return:   status code
-> >   */
-> > -efi_status_t efi_get_memory_map(struct efi_boot_memmap **map)
-> > +efi_status_t efi_get_memory_map(struct efi_boot_memmap **map,
-> > +                             bool install_cfg_tbl)
-> >  {
-> > +     int memtype = install_cfg_tbl ? EFI_ACPI_RECLAIM_MEMORY
-> > +                                   : EFI_LOADER_DATA;
-> > +     efi_guid_t tbl_guid = LINUX_EFI_BOOT_MEMMAP_GUID;
-> >       struct efi_boot_memmap *m, tmp;
-> >       efi_status_t status;
-> >       unsigned long size;
-> > @@ -28,11 +34,23 @@ efi_status_t efi_get_memory_map(struct efi_boot_memmap **map)
-> >               return EFI_LOAD_ERROR;
-> >
-> >       size = tmp.map_size + tmp.desc_size * EFI_MMAP_NR_SLACK_SLOTS;
-> > -     status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, sizeof(*m) + size,
-> > +     status = efi_bs_call(allocate_pool, memtype, sizeof(*m) + size,
-> >                            (void **)&m);
-> >       if (status != EFI_SUCCESS)
-> >               return status;
-> >
-> > +     if (install_cfg_tbl) {
-> > +             /*
-> > +              * Installing a configuration table might allocate memory, and
-> > +              * this may modify the memory map. This means we should install
-> > +              * the configuration table first, and re-install or delete it
-> > +              * as needed.
-> > +              */
-> > +             status = efi_bs_call(install_configuration_table, &tbl_guid, m);
-> > +             if (status != EFI_SUCCESS)
-> > +                     goto free_map;
-> > +     }
-> > +
-> >       m->buff_size = m->map_size = size;
-> >       status = efi_bs_call(get_memory_map, &m->map_size, m->map, &m->map_key,
-> >                            &m->desc_size, &m->desc_ver);
-> > @@ -40,6 +58,10 @@ efi_status_t efi_get_memory_map(struct efi_boot_memmap **map)
-> >       if (status == EFI_SUCCESS) {
-> >               *map = m;
-> >       } else {
-> > +             if (install_cfg_tbl)
-> > +                     efi_bs_call(install_configuration_table, &tbl_guid,
-> > +                                 NULL);
-> > +free_map:
-> >               efi_bs_call(free_pool, m);
-> >       }
->
-> You have another commit about removing goto kludges, so maybe write this like the following,
-> rather than a goto into an 'else' statement?
->
-> diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
-> index feef8d4be113..2f22ef7c5232 100644
-> --- a/drivers/firmware/efi/libstub/mem.c
-> +++ b/drivers/firmware/efi/libstub/mem.c
-> @@ -64,10 +64,12 @@ efi_status_t efi_get_memory_map(struct efi_boot_memmap *map)
->                         *map->key_ptr = key;
->                 if (map->desc_ver)
->                         *map->desc_ver = desc_version;
-> -       } else {
-> -               efi_bs_call(free_pool, m);
->         }
->
-> +free_map:
-> +       if (status != EFI_SUCCESS)
-> +               efi_bs_call(free_pool, m);
-> +
->  fail:
->         *map->map = m;
->         return status;
->
+On Mon, Sep 19, 2022 at 11:59:39AM +0200, Peter Zijlstra wrote:
+> Hi All!
+> 
+> At long last, a respin of the cpuidle vs rcu cleanup patches.
+> 
+> v1: https://lkml.kernel.org/r/20220608142723.103523089@infradead.org
+> 
+> These here patches clean up the mess that is cpuidle vs rcuidle.
+> 
+> At the end of the ride there's only on RCU_NONIDLE user left:
+> 
+>   arch/arm64/kernel/suspend.c:            RCU_NONIDLE(__cpu_suspend_exit());
+> 
+> and 'one' trace_*_rcuidle() user:
+> 
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_disable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_enable_rcuidle(CALLER_ADDR0, caller_addr);
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_disable_rcuidle(CALLER_ADDR0, caller_addr);
+>   kernel/trace/trace_preemptirq.c:                trace_preempt_enable_rcuidle(a0, a1);
+>   kernel/trace/trace_preemptirq.c:                trace_preempt_disable_rcuidle(a0, a1);
+> 
+> However this last is all in deprecated code that should be unused for GENERIC_ENTRY.
+> 
+> I've touched a lot of code that I can't test and I might've broken something by
+> accident. In particular the whole ARM cpuidle stuff was quite involved.
+> 
+> Please all; have a look where you haven't already.
+> 
+> 
+> New since v1:
+> 
+>  - rebase on top of Frederic's rcu-context-tracking rename fest
+>  - more omap goodness as per the last discusion (thanks Tony!)
+>  - removed one more RCU_NONIDLE() from arm64/risc-v perf code
+>  - ubsan/kasan fixes
+>  - intel_idle module-param for testing
+>  - a bunch of extra __always_inline, because compilers are silly.
 
-Yeah that might be better. Thanks for the suggestion.
+Except for those I have already tagged as Reviewed:
+
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
+
+Thanks for the hard work!
