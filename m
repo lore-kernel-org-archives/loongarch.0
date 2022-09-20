@@ -1,84 +1,60 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BBAED3
-	for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 02:49:26 +0000 (UTC)
-Received: by mail-pj1-f53.google.com with SMTP id i15-20020a17090a4b8f00b0020073b4ac27so1072084pjh.3
-        for <loongarch@lists.linux.dev>; Mon, 19 Sep 2022 19:49:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=rI0IpfDVb05suW6mssP/QFC86Iigix9NLenW3JQ6Phs=;
-        b=lnIljFKp1ED3j5wPYTN7mdVUfk7FiKkjAkcUsYSYUMCZpdQ5U8vkDdIo4K0hiw1RH3
-         +GFslTzjK43l0+rnV0YItKzr73eqf7dBzWl3BzQNkwS39xy9TTbRZE0df01R7//5oEJr
-         gCiIxE6Vh5vvSGpkucOrRiDvI3G32scMCweV8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=rI0IpfDVb05suW6mssP/QFC86Iigix9NLenW3JQ6Phs=;
-        b=y06pPRIgCDHoMzbbBcnO6B0Dv8OV4jW17eQkDKyIXX1dYRXtk2CgMchiox+dY02R34
-         Umq1ha3AIzMHW87EQTygQDqkGvbXqCB+6ScLZbhurqsziWJnxh3DGsg7Q/pRS3NKcILV
-         Tjrgyg3I1UT1+mM7RMMzmqQ2DvWFz0v0EnWC+1ommbfIMzlkE0PnehRVl14s2v41YbxI
-         2IzurcmuQOc/JwZw5wqVRFiweRi198Y2nfRIzBpxQbsHWgdK3hriBqsF/niqWlWCIT+N
-         1we4AlTgpCebQNKwkqtMKC408n+TC9eedzBthkJf3PEZPP/79bvOyNVeLZTHVMZDlSM7
-         Th+w==
-X-Gm-Message-State: ACrzQf0LLnUBWRHz64ZbKB0U42uOmjfhJRASpGccWkNUV0UK//1Yd0dg
-	nYym1rV1NSnJMQz2gpl75wJpqg==
-X-Google-Smtp-Source: AMsMyM7S+Aze7xjQjfeMxV1IycjxiN9uStAZCOz26LYAWGHUeF519ICUTt9w2zkpb7un7hJ/v+di5Q==
-X-Received: by 2002:a17:902:8e84:b0:178:57e4:805b with SMTP id bg4-20020a1709028e8400b0017857e4805bmr2741327plb.144.1663642166279;
-        Mon, 19 Sep 2022 19:49:26 -0700 (PDT)
-Received: from google.com ([240f:75:7537:3187:5744:3726:1f8b:92ad])
-        by smtp.gmail.com with ESMTPSA id j6-20020a170903024600b00178a9b193cfsm119779plh.140.2022.09.19.19.49.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Sep 2022 19:49:25 -0700 (PDT)
-Date: Tue, 20 Sep 2022 11:49:14 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux@armlinux.org.uk, linux-imx@nxp.com, tglx@linutronix.de,
-	mingo@redhat.com, x86@kernel.org, rostedt@goodmis.org,
-	pmladek@suse.com, senozhatsky@chromium.org,
-	john.ogness@linutronix.de,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	virtualization@lists.linux-foundation.org,
-	linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
-Subject: Re: [PATCH v2 25/44] printk: Remove trace_.*_rcuidle() usage
-Message-ID: <YykqKm5j5q9DEKk7@google.com>
-References: <20220919095939.761690562@infradead.org>
- <20220919101522.021681292@infradead.org>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F27D910E5
+	for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 03:37:23 +0000 (UTC)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxReJqNSlj7FseAA--.48978S2;
+	Tue, 20 Sep 2022 11:37:14 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] Add kprobe and kretprobe support for LoongArch
+Date: Tue, 20 Sep 2022 11:37:10 +0800
+Message-Id: <1663645034-967-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8DxReJqNSlj7FseAA--.48978S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZw4DZr18ur4fAF13ur15Jwb_yoW3Arc_A3
+	W3t34rCrW8JayUXa4qq3yfJrWDta18GFn0kF9rXr4xWFnxAr17Ga1kXw1Yva9akayDWFZ8
+	JrW0gFykZr1jvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb7AYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+	8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+	cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
+	8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8GwCF04k2
+	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8RHq7UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220919101522.021681292@infradead.org>
 
-On (22/09/19 12:00), Peter Zijlstra wrote:
-> The problem, per commit fc98c3c8c9dc ("printk: use rcuidle console
-> tracepoint"), was printk usage from the cpuidle path where RCU was
-> already disabled.
-> 
-> Per the patches earlier in this series, this is no longer the case.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Acked-by: Petr Mladek <pmladek@suse.com>
+Tiezhu Yang (4):
+  LoongArch: Add kprobe support
+  LoongArch: Add kretprobe support
+  samples/kprobes: Add LoongArch support
+  LoongArch: Enable KPROBES in default config
 
-Acked-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+ arch/loongarch/Kconfig                     |   2 +
+ arch/loongarch/configs/loongson3_defconfig |   1 +
+ arch/loongarch/include/asm/inst.h          |  31 +++
+ arch/loongarch/include/asm/kprobes.h       |  44 ++++
+ arch/loongarch/include/asm/ptrace.h        |   1 +
+ arch/loongarch/kernel/Makefile             |   2 +
+ arch/loongarch/kernel/inst.c               | 107 +++++++++
+ arch/loongarch/kernel/kprobes.c            | 356 +++++++++++++++++++++++++++++
+ samples/kprobes/kprobe_example.c           |   8 +
+ 9 files changed, 552 insertions(+)
+ create mode 100644 arch/loongarch/include/asm/kprobes.h
+ create mode 100644 arch/loongarch/kernel/kprobes.c
+
+-- 
+2.1.0
+
