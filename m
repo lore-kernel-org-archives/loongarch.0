@@ -1,387 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE0A7C
-	for <loongarch@lists.linux.dev>; Wed, 21 Sep 2022 04:02:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD111C4347C
-	for <loongarch@lists.linux.dev>; Wed, 21 Sep 2022 04:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663732968;
-	bh=2FgRU/GDqLSj92CUVXcUMLuaZMfW0jENOszhzpS/NmM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rYSa1qt5CCxZ3WqdzB5oyYmX0d3582FJAzzjvuvASA/TVCMDMYCOMLsCSVnqdkvvN
-	 M3euPG84qp78MmW0UKX8wulrgsWWdiSnHt1YgIdOoxRXIWVw+d1wBe82sCvnlHMGoz
-	 FDuCy4tyyNGOjyj8QGxLn4PMEsamSa8NRQdqNUW6nRJUtgxJ+0xxKQGCAIpowbYzgC
-	 xNzfV1OcGmqYwKp9tBFsz5+nzXr7TqOnQ5mePaBCXtDJqe75sH8ou8mbvnEjOi0Sjk
-	 odFHarDfKQLq3cDc9D35ESAf2i9WnMG2L1h4ZBz9PFeEU9YNEFB/v8GjUlB9peprZ9
-	 9tZl9myZynHrg==
-Received: by mail-vk1-f182.google.com with SMTP id bi53so2499755vkb.12
-        for <loongarch@lists.linux.dev>; Tue, 20 Sep 2022 21:02:48 -0700 (PDT)
-X-Gm-Message-State: ACrzQf12270KXCDcHXghVOJi33CMXpF6sZQzGy84SZb/85Q4RqVXV+AH
-	VGtOfxEmaLxdw/3b7w0kI1aTJqZtkHUpDs4FUQA=
-X-Google-Smtp-Source: AMsMyM4B56yivjnvhTailiAwe3uMiKrwYXDv7qlFo9WUcWTihstVrskzGxEc0J5U3LwX/Iu0TEiLErHgA4ZzoGpgWX8=
-X-Received: by 2002:a1f:a90c:0:b0:3a2:ddcd:a0d5 with SMTP id
- s12-20020a1fa90c000000b003a2ddcda0d5mr9202969vke.19.1663732967487; Tue, 20
- Sep 2022 21:02:47 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D5E31FA2
+	for <loongarch@lists.linux.dev>; Wed, 21 Sep 2022 07:42:32 +0000 (UTC)
+Received: from localhost.localdomain.localdomain (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxT+AZwCpjyE0fAA--.52706S2;
+	Wed, 21 Sep 2022 15:41:15 +0800 (CST)
+From: Jinyang He <hejinyang@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Oleg Nesterov <oleg@redhat.com>
+Cc: Jinyang He <hejinyang@loongson.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: Remove unused kernel stack padding
+Date: Wed, 21 Sep 2022 15:41:13 +0800
+Message-Id: <1663746073-12584-1-git-send-email-hejinyang@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8CxT+AZwCpjyE0fAA--.52706S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxZF4DKw4DuF4Uur4UKF4UArb_yoWrXry7pF
+	9rAw1DGr4jkFnYyryDtrs8ZryDJwn7Kw1aga17ta4rArnFqF1rZryxAryDXFyYqa95Kay0
+	gFy3Kwsxta15X3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUym14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUywZ7UUUUU=
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20220920183554.3870247-1-ardb@kernel.org> <20220920183554.3870247-9-ardb@kernel.org>
-In-Reply-To: <20220920183554.3870247-9-ardb@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 21 Sep 2022 12:00:53 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4+Exqu6Z3G_hYmhz=Ccv_4EKLjQ5GVT8h3YsJy0FSpAg@mail.gmail.com>
-Message-ID: <CAAhV-H4+Exqu6Z3G_hYmhz=Ccv_4EKLjQ5GVT8h3YsJy0FSpAg@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] efi/loongarch: libstub: remove dependency on
- flattened DT
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi <linux-efi@vger.kernel.org>, loongarch@lists.linux.dev, 
-	Arnd Bergmann <arnd@arndb.de>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Xi Ruoyao <xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
 
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+Kernel stack padding looks like obey MIPS o32 Calling Convention, as
+LoongArch is inspired by MIPS and keep it. Remove it avoid not clear
+code.
 
-On Wed, Sep 21, 2022 at 2:36 AM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> LoongArch does not use FDT or DT natively [yet], and the only reason it
-> currently uses it is so that it can reuse the existing EFI stub code.
->
-> Overloading the DT with data passed between the EFI stub and the core
-> kernel has been a source of problems: there is the overlap between
-> information provided by EFI which DT can also provide (initrd base/size,
-> command line, memory descriptions), requiring us to reason about which
-> is which and what to prioritize. It has also resulted in ABI leaks,
-> i.e., internal ABI being promoted to external ABI inadvertently because
-> the bootloader can set the EFI stub's DT properties as well (e.g.,
-> "kaslr-seed"). This has become especially problematic with boot
-> environments that want to pretend that EFI boot is being done (to access
-> ACPI and SMBIOS tables, for instance) but have no ability to execute the
-> EFI stub, and so the environment that the EFI stub creates is emulated
-> [poorly, in some cases].
->
-> Another downside of treating DT like this is that the DT binary that the
-> kernel receives is different from the one created by the firmware, which
-> is undesirable in the context of secure and measured boot.
->
-> Given that LoongArch support in Linux is brand new, we can avoid these
-> pitfalls, and treat the DT strictly as a hardware description, and use a
-> separate handover method between the EFI stub and the kernel. Now that
-> initrd loading and passing the EFI memory map have been refactored into
-> pure EFI routines that use EFI configuration tables, the only thing we
-> need to pass directly is the kernel command line (even if we could pass
-> this via a config table as well, it is used extremely early, so passing
-> it directly is preferred in this case.)
->
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/loongarch/Kconfig                        |  3 --
->  arch/loongarch/include/asm/bootinfo.h         |  2 +-
->  arch/loongarch/kernel/efi.c                   | 30 ++++++++++-
->  arch/loongarch/kernel/env.c                   | 13 ++---
->  arch/loongarch/kernel/head.S                  |  2 +
->  arch/loongarch/kernel/setup.c                 |  4 +-
->  drivers/firmware/efi/libstub/Makefile         | 13 +++--
->  drivers/firmware/efi/libstub/loongarch-stub.c | 56 +++++++++++++++++---
->  8 files changed, 95 insertions(+), 28 deletions(-)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index fca106a8b8af..14a2a1ec8561 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -104,8 +104,6 @@ config LOONGARCH
->         select MODULES_USE_ELF_RELA if MODULES
->         select NEED_PER_CPU_EMBED_FIRST_CHUNK
->         select NEED_PER_CPU_PAGE_FIRST_CHUNK
-> -       select OF
-> -       select OF_EARLY_FLATTREE
->         select PCI
->         select PCI_DOMAINS_GENERIC
->         select PCI_ECAM if ACPI
-> @@ -311,7 +309,6 @@ config DMI
->  config EFI
->         bool "EFI runtime service support"
->         select UCS2_STRING
-> -       select EFI_PARAMS_FROM_FDT
->         select EFI_RUNTIME_WRAPPERS
->         help
->           This enables the kernel to use EFI runtime services that are
-> diff --git a/arch/loongarch/include/asm/bootinfo.h b/arch/loongarch/include/asm/bootinfo.h
-> index e02ac4af7f6e..8e5881bc5ad1 100644
-> --- a/arch/loongarch/include/asm/bootinfo.h
-> +++ b/arch/loongarch/include/asm/bootinfo.h
-> @@ -36,7 +36,7 @@ struct loongson_system_configuration {
->  };
->
->  extern u64 efi_system_table;
-> -extern unsigned long fw_arg0, fw_arg1;
-> +extern unsigned long fw_arg0, fw_arg1, fw_arg2;
->  extern struct loongson_board_info b_info;
->  extern struct loongson_system_configuration loongson_sysconf;
->
-> diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
-> index 1f1f755fb425..a31329971133 100644
-> --- a/arch/loongarch/kernel/efi.c
-> +++ b/arch/loongarch/kernel/efi.c
-> @@ -27,8 +27,13 @@
->  static unsigned long efi_nr_tables;
->  static unsigned long efi_config_table;
->
-> +static unsigned long __initdata boot_memmap = EFI_INVALID_TABLE_ADDR;
-> +
->  static efi_system_table_t *efi_systab;
-> -static efi_config_table_type_t arch_tables[] __initdata = {{},};
-> +static efi_config_table_type_t arch_tables[] __initdata = {
-> +       {LINUX_EFI_BOOT_MEMMAP_GUID,    &boot_memmap,   "MEMMAP" },
-> +       {},
-> +};
->
->  void __init efi_runtime_init(void)
->  {
-> @@ -51,6 +56,7 @@ void __init efi_init(void)
->  {
->         int size;
->         void *config_tables;
-> +       struct efi_boot_memmap *tbl;
->
->         if (!efi_system_table)
->                 return;
-> @@ -61,6 +67,8 @@ void __init efi_init(void)
->                 return;
->         }
->
-> +       efi_systab_report_header(&efi_systab->hdr, efi_systab->fw_vendor);
-> +
->         set_bit(EFI_64BIT, &efi.flags);
->         efi_nr_tables    = efi_systab->nr_tables;
->         efi_config_table = (unsigned long)efi_systab->tables;
-> @@ -70,6 +78,26 @@ void __init efi_init(void)
->         efi_config_parse_tables(config_tables, efi_systab->nr_tables, arch_tables);
->         early_memunmap(config_tables, efi_nr_tables * size);
->
-> +       set_bit(EFI_CONFIG_TABLES, &efi.flags);
-> +
->         if (screen_info.orig_video_isVGA == VIDEO_TYPE_EFI)
->                 memblock_reserve(screen_info.lfb_base, screen_info.lfb_size);
-> +
-> +       if (boot_memmap == EFI_INVALID_TABLE_ADDR)
-> +               return;
-> +
-> +       tbl = early_memremap_ro(boot_memmap, sizeof(*tbl));
-> +       if (tbl) {
-> +               struct efi_memory_map_data data;
-> +
-> +               data.phys_map           = boot_memmap + sizeof(*tbl);
-> +               data.size               = tbl->map_size;
-> +               data.desc_size          = tbl->desc_size;
-> +               data.desc_version       = tbl->desc_ver;
-> +
-> +               if (efi_memmap_init_early(&data) < 0)
-> +                       panic("Unable to map EFI memory map.\n");
-> +
-> +               early_memunmap(tbl, sizeof(*tbl));
-> +       }
->  }
-> diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-> index 82b478a5c665..6d56a463b091 100644
-> --- a/arch/loongarch/kernel/env.c
-> +++ b/arch/loongarch/kernel/env.c
-> @@ -8,7 +8,6 @@
->  #include <linux/efi.h>
->  #include <linux/export.h>
->  #include <linux/memblock.h>
-> -#include <linux/of_fdt.h>
->  #include <asm/early_ioremap.h>
->  #include <asm/bootinfo.h>
->  #include <asm/loongson.h>
-> @@ -20,21 +19,17 @@ EXPORT_SYMBOL(loongson_sysconf);
->  void __init init_environ(void)
->  {
->         int efi_boot = fw_arg0;
-> -       struct efi_memory_map_data data;
-> -       void *fdt_ptr = early_memremap_ro(fw_arg1, SZ_64K);
-> +       char *cmdline = early_memremap_ro(fw_arg1, COMMAND_LINE_SIZE);
->
->         if (efi_boot)
->                 set_bit(EFI_BOOT, &efi.flags);
->         else
->                 clear_bit(EFI_BOOT, &efi.flags);
->
-> -       early_init_dt_scan(fdt_ptr);
-> -       early_init_fdt_reserve_self();
-> -       efi_system_table = efi_get_fdt_params(&data);
-> +       strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
-> +       early_memunmap(cmdline, COMMAND_LINE_SIZE);
->
-> -       efi_memmap_init_early(&data);
-> -       memblock_reserve(data.phys_map & PAGE_MASK,
-> -                        PAGE_ALIGN(data.size + (data.phys_map & ~PAGE_MASK)));
-> +       efi_system_table = fw_arg2;
->  }
->
->  static int __init init_cpu_fullname(void)
-> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> index 01bac62a6442..8f89f39fd31b 100644
-> --- a/arch/loongarch/kernel/head.S
-> +++ b/arch/loongarch/kernel/head.S
-> @@ -67,6 +67,8 @@ SYM_CODE_START(kernel_entry)                  # kernel entry point
->         st.d            a0, t0, 0               # firmware arguments
->         la              t0, fw_arg1
->         st.d            a1, t0, 0
-> +       la              t0, fw_arg2
-> +       st.d            a2, t0, 0
->
->         /* KSave3 used for percpu base, initialized as 0 */
->         csrwr           zero, PERCPU_BASE_KS
-> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-> index e8714b1d94c8..7fabf2306e80 100644
-> --- a/arch/loongarch/kernel/setup.c
-> +++ b/arch/loongarch/kernel/setup.c
-> @@ -51,7 +51,7 @@
->
->  struct screen_info screen_info __section(".data");
->
-> -unsigned long fw_arg0, fw_arg1;
-> +unsigned long fw_arg0, fw_arg1, fw_arg2;
->  DEFINE_PER_CPU(unsigned long, kernelsp);
->  struct cpuinfo_loongarch cpu_data[NR_CPUS] __read_mostly;
->
-> @@ -187,7 +187,6 @@ early_param("mem", early_parse_mem);
->
->  void __init platform_init(void)
->  {
-> -       efi_init();
->  #ifdef CONFIG_ACPI_TABLE_UPGRADE
->         acpi_table_upgrade();
->  #endif
-> @@ -347,6 +346,7 @@ void __init setup_arch(char **cmdline_p)
->         *cmdline_p = boot_command_line;
->
->         init_environ();
-> +       efi_init();
->         memblock_init();
->         parse_early_param();
->
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index ec2a7ba9364f..6234edf3d827 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -29,7 +29,7 @@ cflags-$(CONFIG_RISCV)                := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->  cflags-$(CONFIG_LOONGARCH)     := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->                                    -fpie
->
-> -cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
-> +cflags-$(CONFIG_EFI_PARAMS_FROM_FDT)   += -I$(srctree)/scripts/dtc/libfdt
->
->  KBUILD_CFLAGS                  := $(cflags-y) -Os -DDISABLE_BRANCH_PROFILING \
->                                    -include $(srctree)/include/linux/hidden.h \
-> @@ -59,14 +59,17 @@ lib-y                               := efi-stub-helper.o gop.o secureboot.o tpm.o \
->                                    skip_spaces.o lib-cmdline.o lib-ctype.o \
->                                    alignedmem.o relocate.o vsprintf.o
->
-> -# include the stub's generic dependencies from lib/ when building for ARM/arm64
-> -efi-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
-> +# include the stub's libfdt dependencies from lib/ when needed
-> +libfdt-deps                    := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c \
-> +                                  fdt_empty_tree.c fdt_sw.c
-> +
-> +lib-$(CONFIG_EFI_PARAMS_FROM_FDT) += fdt.o \
-> +                                    $(patsubst %.c,lib-%.o,$(libfdt-deps))
->
->  $(obj)/lib-%.o: $(srctree)/lib/%.c FORCE
->         $(call if_changed_rule,cc_o_c)
->
-> -lib-$(CONFIG_EFI_GENERIC_STUB) += efi-stub.o fdt.o string.o \
-> -                                  $(patsubst %.c,lib-%.o,$(efi-deps-y))
-> +lib-$(CONFIG_EFI_GENERIC_STUB) += efi-stub.o string.o
->
->  lib-$(CONFIG_ARM)              += arm32-stub.o
->  lib-$(CONFIG_ARM64)            += arm64-stub.o
-> diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/drivers/firmware/efi/libstub/loongarch-stub.c
-> index b7ef8d2df59e..32329f2a92f9 100644
-> --- a/drivers/firmware/efi/libstub/loongarch-stub.c
-> +++ b/drivers/firmware/efi/libstub/loongarch-stub.c
-> @@ -9,7 +9,8 @@
->  #include <asm/addrspace.h>
->  #include "efistub.h"
->
-> -typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long fdt);
-> +typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdline,
-> +                                         unsigned long systab);
->
->  extern int kernel_asize;
->  extern int kernel_fsize;
-> @@ -42,19 +43,60 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
->         return status;
->  }
->
-> -void __noreturn efi_enter_kernel(unsigned long entrypoint, unsigned long fdt, unsigned long fdt_size)
-> +struct exit_boot_struct {
-> +       efi_memory_desc_t       *runtime_map;
-> +       int                     runtime_entry_count;
-> +};
-> +
-> +static efi_status_t exit_boot_func(struct efi_boot_memmap *map, void *priv)
-> +{
-> +       struct exit_boot_struct *p = priv;
-> +
-> +       /*
-> +        * Update the memory map with virtual addresses. The function will also
-> +        * populate @runtime_map with copies of just the EFI_MEMORY_RUNTIME
-> +        * entries so that we can pass it straight to SetVirtualAddressMap()
-> +        */
-> +       efi_get_virtmap(map->map, map->map_size, map->desc_size,
-> +                       p->runtime_map, &p->runtime_entry_count);
-> +
-> +       return EFI_SUCCESS;
-> +}
-> +
-> +efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
-> +                            unsigned long kernel_addr, char *cmdline_ptr)
->  {
->         kernel_entry_t real_kernel_entry;
-> +       struct exit_boot_struct priv;
-> +       unsigned long desc_size;
-> +       efi_status_t status;
-> +       u32 desc_ver;
-> +
-> +       status = efi_alloc_virtmap(&priv.runtime_map, &desc_size, &desc_ver);
-> +       if (status != EFI_SUCCESS) {
-> +               efi_err("Unable to retrieve UEFI memory map.\n");
-> +               return status;
-> +       }
-> +
-> +       efi_info("Exiting boot services\n");
-> +
-> +       efi_novamap = false;
-> +       status = efi_exit_boot_services(handle, &priv, exit_boot_func);
-> +       if (status != EFI_SUCCESS)
-> +               return status;
-> +
-> +       /* Install the new virtual address map */
-> +       efi_rt_call(set_virtual_address_map,
-> +                   priv.runtime_entry_count * desc_size, desc_size,
-> +                   desc_ver, priv.runtime_map);
->
->         /* Config Direct Mapping */
->         csr_write64(CSR_DMW0_INIT, LOONGARCH_CSR_DMWIN0);
->         csr_write64(CSR_DMW1_INIT, LOONGARCH_CSR_DMWIN1);
->
->         real_kernel_entry = (kernel_entry_t)
-> -               ((unsigned long)&kernel_entry - entrypoint + VMLINUX_LOAD_ADDRESS);
-> +               ((unsigned long)&kernel_entry - kernel_addr + VMLINUX_LOAD_ADDRESS);
->
-> -       if (!efi_novamap)
-> -               real_kernel_entry(true, fdt);
-> -       else
-> -               real_kernel_entry(false, fdt);
-> +       real_kernel_entry(true, (unsigned long)cmdline_ptr,
-> +                         (unsigned long)efi_system_table);
->  }
-> --
-> 2.35.1
->
->
+Link: https://lore.kernel.org/loongarch/1662130897-13156-1-git-send-email-hejinyang@loongson.cn/
+
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+---
+ v2: Remove TOP_OF_KERNEL_STACK_PADDING
+     Remove 'init stack pointer' in head.S
+
+ arch/loongarch/include/asm/processor.h | 2 +-
+ arch/loongarch/include/asm/ptrace.h    | 2 +-
+ arch/loongarch/kernel/head.S           | 3 +--
+ arch/loongarch/kernel/process.c        | 4 ++--
+ arch/loongarch/kernel/switch.S         | 2 +-
+ 5 files changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+index 1c4b4308378d..780e0d39f638 100644
+--- a/arch/loongarch/include/asm/processor.h
++++ b/arch/loongarch/include/asm/processor.h
+@@ -194,7 +194,7 @@ static inline void flush_thread(void)
+ unsigned long __get_wchan(struct task_struct *p);
+ 
+ #define __KSTK_TOS(tsk) ((unsigned long)task_stack_page(tsk) + \
+-			 THREAD_SIZE - 32 - sizeof(struct pt_regs))
++			 THREAD_SIZE - sizeof(struct pt_regs))
+ #define task_pt_regs(tsk) ((struct pt_regs *)__KSTK_TOS(tsk))
+ #define KSTK_EIP(tsk) (task_pt_regs(tsk)->csr_era)
+ #define KSTK_ESP(tsk) (task_pt_regs(tsk)->regs[3])
+diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+index 17838c6b7ccd..82649a78fec1 100644
+--- a/arch/loongarch/include/asm/ptrace.h
++++ b/arch/loongarch/include/asm/ptrace.h
+@@ -133,7 +133,7 @@ static inline void die_if_kernel(const char *str, struct pt_regs *regs)
+ #define current_pt_regs()						\
+ ({									\
+ 	unsigned long sp = (unsigned long)__builtin_frame_address(0);	\
+-	(struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1 - 32) - 1;	\
++	(struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1) - 1;		\
+ })
+ 
+ /* Helpers for working with the user stack pointer */
+diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+index 4d352230fbc3..0e1752fbc857 100644
+--- a/arch/loongarch/kernel/head.S
++++ b/arch/loongarch/kernel/head.S
+@@ -81,10 +81,9 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
+ 
+ 	la.pcrel	tp, init_thread_union
+ 	/* Set the SP after an empty pt_regs.  */
+-	PTR_LI		sp, (_THREAD_SIZE - 32 - PT_SIZE)
++	PTR_LI		sp, (_THREAD_SIZE - PT_SIZE)
+ 	PTR_ADD		sp, sp, tp
+ 	set_saved_sp	sp, t0, t1
+-	PTR_ADDI	sp, sp, -4 * SZREG	# init stack pointer
+ 
+ 	bl		start_kernel
+ 
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index 660492f064e7..dae087d6c458 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -129,7 +129,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 	unsigned long clone_flags = args->flags;
+ 	struct pt_regs *childregs, *regs = current_pt_regs();
+ 
+-	childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE - 32;
++	childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE;
+ 
+ 	/* set up new TSS. */
+ 	childregs = (struct pt_regs *) childksp - 1;
+@@ -236,7 +236,7 @@ bool in_task_stack(unsigned long stack, struct task_struct *task,
+ 			struct stack_info *info)
+ {
+ 	unsigned long begin = (unsigned long)task_stack_page(task);
+-	unsigned long end = begin + THREAD_SIZE - 32;
++	unsigned long end = begin + THREAD_SIZE;
+ 
+ 	if (stack < begin || stack >= end)
+ 		return false;
+diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
+index 43ebbc3990f7..202a163cb32f 100644
+--- a/arch/loongarch/kernel/switch.S
++++ b/arch/loongarch/kernel/switch.S
+@@ -26,7 +26,7 @@ SYM_FUNC_START(__switch_to)
+ 	move	tp, a2
+ 	cpu_restore_nonscratch a1
+ 
+-	li.w		t0, _THREAD_SIZE - 32
++	li.w		t0, _THREAD_SIZE
+ 	PTR_ADD		t0, t0, tp
+ 	set_saved_sp	t0, t1, t2
+ 
+-- 
+2.31.1
+
