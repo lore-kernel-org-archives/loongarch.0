@@ -1,71 +1,119 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764493229
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 11:41:26 +0000 (UTC)
-Received: from localhost.localdomain (unknown [112.20.112.163])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxFeLhSSxjyhYgAA--.56317S7;
-	Thu, 22 Sep 2022 19:41:25 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Wolfram Sang <wsa@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org
-Cc: loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 5/5] LoongArch: Enable LS2X I2C in loongson3_defconfig
-Date: Thu, 22 Sep 2022 19:39:58 +0800
-Message-Id: <24b28af969f43cb139e35775e3de2b7cf3b3249e.1663835855.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1663835855.git.zhoubinbin@loongson.cn>
-References: <cover.1663835855.git.zhoubinbin@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8D33229
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 12:08:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E160C433D6
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 12:08:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1663848484;
+	bh=mZtO78L7kUm4pLq8Iw70ss7GQPlynjH+x+7zIy2VvRw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=CCeLqhxXzkcEfRm6dn755WHy36BeFAtNiTBIH+gVSlNSl3nJLaFM+xCJNtGwBNuhd
+	 hzuABqlnlpqYaP2FYZP3uDuS47dqr0TP7w1TiQoV5CyZAdFP+/5b1gqANvgwdvtMGY
+	 rb+JQS1xpPm5UX2+sBKNnKcwVkXATVrWQjDFGCwpq3WQJvgrACheHwwhAoMJJIxWuB
+	 auZ6vD/FMGoPGzlaMYFr5DpK1dbyI1iccGRTgxvnlMULDQWct75zWPI/bda1ptZr2X
+	 K9AQ5b7CyPxUGfvUhko90r9uv9OIgOWAcwFeP04zSa2kVrbwO+W4Ml9cevarCmfsLF
+	 1cndDw7BzTyeg==
+Received: by mail-vs1-f48.google.com with SMTP id j7so9982386vsr.13
+        for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 05:08:04 -0700 (PDT)
+X-Gm-Message-State: ACrzQf3mCSx1ym5+JM4I9rKvz33Zp62bpWtowJl+TJSu5KT+DZLIJsL6
+	9CrTy2J5UtmN8ZCPc5ThTJfyn2SI2oC1xOU7llk=
+X-Google-Smtp-Source: AMsMyM6QIJF9P7etA/3bfW9xEi9a0pGf9L8/Yu4xO2EsSB2/QvgD68OrwjcUMrgGDe+rhTpuuTqNmNEyEAjKnOOvGoU=
+X-Received: by 2002:a05:6102:1481:b0:39a:67f5:3096 with SMTP id
+ d1-20020a056102148100b0039a67f53096mr936440vsv.70.1663848483545; Thu, 22 Sep
+ 2022 05:08:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxFeLhSSxjyhYgAA--.56317S7
-X-Coremail-Antispam: 1UD129KBjvdXoW7JF17Kr43Xr47Aw1UCr17Wrg_yoWxKFc_JF
-	y7Kw1kWr48JFZ7W3WIqw4rGw4DA3W7XF1SyFnrZw1xX3Wagr13trWDC3W3Cwn09ayDWr43
-	ZaykAF9F9r18tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbhAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
-	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
-	F7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
-	1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-	v20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8KwCF04
-	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
-	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
-	1lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1U
-	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
-	8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU00PSDUUUU
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+References: <20220920183554.3870247-1-ardb@kernel.org> <20220920183554.3870247-9-ardb@kernel.org>
+ <CAAhV-H4+Exqu6Z3G_hYmhz=Ccv_4EKLjQ5GVT8h3YsJy0FSpAg@mail.gmail.com>
+ <CAMj1kXG9HRn6iV5x-Q94xdOhNhiKMGiO6SkE3LMwzXPkXxen_Q@mail.gmail.com>
+ <CAAhV-H5AjwKd-ydZTA=vKCA+fe_gAVyhCM2s-Wm54AqWqpBF1A@mail.gmail.com>
+ <CAMj1kXFKfwvvidNPumQNzhHXSR4kHpTq-j4ygR=Jow7yySc44Q@mail.gmail.com>
+ <CAAhV-H6O+a57aZbYH0yiCgNp18=shFvGtAppXFNSWGPRs0Ng2g@mail.gmail.com>
+ <CAMj1kXF=ON-7GyHVvW8bMX1-5zreDUr7D_zNUs5PQdRW+uM+JQ@mail.gmail.com>
+ <CAAhV-H5LLFyQbzzZLUyY38kYU5LvOacXPfrL6zzbZFDvE7QBhw@mail.gmail.com> <CAMj1kXGYFD+_VZ51M4mu1OAjbkPQsPyE-iKviiUbb8ibLrNczQ@mail.gmail.com>
+In-Reply-To: <CAMj1kXGYFD+_VZ51M4mu1OAjbkPQsPyE-iKviiUbb8ibLrNczQ@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 22 Sep 2022 20:07:51 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7cp_ip9B4BD65CsCerjKtfaxcQqi1T3QB8VveRXLhY_w@mail.gmail.com>
+Message-ID: <CAAhV-H7cp_ip9B4BD65CsCerjKtfaxcQqi1T3QB8VveRXLhY_w@mail.gmail.com>
+Subject: Re: [PATCH v2 8/8] efi/loongarch: libstub: remove dependency on
+ flattened DT
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-efi <linux-efi@vger.kernel.org>, loongarch@lists.linux.dev, 
+	Arnd Bergmann <arnd@arndb.de>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Xi Ruoyao <xry111@xry111.site>
+Content-Type: text/plain; charset="UTF-8"
 
-This is now supported, enable for Loongson-3 systems. Other systems are
-affected.
+Hi, Ard,
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- arch/loongarch/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Thu, Sep 22, 2022 at 4:59 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Thu, 22 Sept 2022 at 09:42, Huacai Chen <chenhuacai@kernel.org> wrote:
+> >
+> > On Thu, Sep 22, 2022 at 3:25 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > >
+> > > On Thu, 22 Sept 2022 at 09:22, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > >
+> > > > On Thu, Sep 22, 2022 at 3:13 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > >
+> > > > > On Thu, 22 Sept 2022 at 04:15, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > >
+> > > > > > On Wed, Sep 21, 2022 at 4:15 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Wed, 21 Sept 2022 at 06:02, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > > >
+> > > > > > > > Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > > > >
+> > > > > > >
+> > > > > > > Thank you Huacai
+> > > > > > >
+> > > > > > > I have created a separate tag with these patches applied onto the
+> > > > > > > first loongarch efi enablement patch (see below)
+> > > > > > >
+> > > > > > > I would prefer to keep the loongarch trees separate for the next merge
+> > > > > > > window, but if needed to avoid massive conflicts, you could merge the
+> > > > > > > tag into the loongarch tree and rebase your changes on top. But please
+> > > > > > > take care not to rebase those patches themselves: the commit SHAs need
+> > > > > > > to remain the same.
+> > > > > > >
+> > > > > > > However, if the conflicts are only minor, you can just explain in your
+> > > > > > > PR to Linus what the resolution should look like.
+> > > > > > >
+> > > > > > > The tag can be found here:
+> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tag/?h=efi-loongarch-for-v6.1-2
+> > > > > > >
+> > > > > > > I have merged this into the EFI tree as well and pushed it out; it
+> > > > > > > should appear in -next tomorrow.
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > > b093dc55ba9a efi/loongarch: libstub: remove dependency on flattened DT
+> > > > > > > 102faf0747c2 efi: libstub: install boot-time memory map as config table
+> > > > > > > 7318926e7bc9 efi: libstub: remove DT dependency from generic stub
+> > > > > > > 7cb6671e3caa efi: libstub: unify initrd loading between architectures
+> > > > >
+> > > > > I will have to respin the initrd patch, unfortunately, as it breaks
+> > > > > x86. So the signed tag will be updated, and the SHAs above will change
+> > > > > as well.
+> > > > Emm, initrd is also broken on LoongArch, the core kernel gets an
+> > > > EFI_INVALID_TABLE_ADDR address.
+> > > >
+> > >
+> > > OK, I will investigate. This was working fine before so I'm not sure
+> > > what happened there.
+> > >
+>
+> I cannot reproduce this. Can you reproduce it with qemu? If so, can
+> you share your command line and .config etc?
+In qemu we also OK, but on a real machine efistub fails at
+efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle), maybe
+our UEFI BIOS has some problems? On a real machine we use grub and
+there is no "initrd" command in UEFI shell.
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index 4083d3051109..7910adf20887 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -558,6 +558,7 @@ CONFIG_HW_RANDOM_VIRTIO=m
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_PIIX4=y
- CONFIG_I2C_GPIO=y
-+CONFIG_I2C_LS2X=y
- CONFIG_SPI=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_LOONGSON=y
--- 
-2.31.1
-
+Huacai
