@@ -1,48 +1,48 @@
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0075E2CA2;
-	Thu, 22 Sep 2022 18:59:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510252CA2
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 19:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663873188; x=1695409188;
+  t=1663873326; x=1695409326;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=9hTR12KVYSG4WSUvy2XMfzfpJCVSwEHiEJ4NpOyo/so=;
-  b=PlJbaHRq3VOC5WZIGVdzPkd8dgO0WFH9pY0K6x35us+NDPkoWPQepQNX
-   kvHzqIKrMk5klrYIhoYVrCcbwEpaN8CgVZIG4iuq0GRQSCUHIDtzpVt3g
-   8n4X4102jGxDRRADvj+o1+jj2eg3DywEh/0ttOkaWjDrLzVJmRgghdI1q
-   Ygm3cZ5LU1aPRPHjnQcp6e5MTAkzx0dtRxsrSO/5z7UMHVWNZWQMMGfXl
-   +SLINNPma1vDr2O7WSne3CUMcSWITau6uerVpmj/DN7KSdDc2VMp40Owl
-   mZR93P5xYbeDAay08UzzlVYPzs0fYgTWHe27acHVgq4D8YTje+dxAM6dz
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10478"; a="386687387"
+  bh=K91cFaaVpeaE0ZmJxi/NGwqsumkKWIZFucMXaH09Bk4=;
+  b=hmpz841mHtE6/s0h+QqBS6Hq6J3AUvT8L0ztPd1nC0gQ9pNh4Y1frBl+
+   2pkn09QQJagZwru7fu7XRQsfovbhorZD42R1p5Hc1CbzU+TNPrY6YrpF6
+   lzHV3r7Y9qE4M8BHkOD102g24hs8KrfI5wnSm+2H4bWdVTOCbIRUx+Wwn
+   KwNPAa/QCJp1faUjV674/VjeTAPtwgZItGmjcCY6nPRswkejRU75sTk5Z
+   7h2AUnrarjLzhVm/M+w/pCyVbuGJE6KmvvOvU8ochW5PB/6UbHsMQ3pXP
+   gfg8jxiz8OgTE90/8WhxU9wDKPND6O5Wi7FglVigOrnNasGFWBADyJjna
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10478"; a="283484177"
 X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
-   d="scan'208";a="386687387"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 11:59:39 -0700
+   d="scan'208";a="283484177"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 11:49:39 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
-   d="scan'208";a="597568053"
+   d="scan'208";a="650651297"
 Received: from lkp-server01.sh.intel.com (HELO c0a60f19fe7e) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 22 Sep 2022 11:59:36 -0700
+  by orsmga008.jf.intel.com with ESMTP; 22 Sep 2022 11:49:36 -0700
 Received: from kbuild by c0a60f19fe7e with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1obRQ7-0004sq-2c;
-	Thu, 22 Sep 2022 18:59:35 +0000
-Date: Fri, 23 Sep 2022 02:58:59 +0800
+	id 1obRGR-0004sY-28;
+	Thu, 22 Sep 2022 18:49:35 +0000
+Date: Fri, 23 Sep 2022 02:48:37 +0800
 From: kernel test robot <lkp@intel.com>
 To: Binbin Zhou <zhoubinbin@loongson.cn>,
 	Wolfram Sang <wsa-dev@sang-engineering.com>,
 	Mika Westerberg <mika.westerberg@linux.intel.com>,
 	linux-i2c@vger.kernel.org
-Cc: llvm@lists.linux.dev, kbuild-all@lists.01.org,
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
-	WANG Xuerui <kernel@xen0n.name>, Jianmin Lv <lvjianmin@loongson.cn>,
+Cc: kbuild-all@lists.01.org, loongarch@lists.linux.dev,
+	linux-acpi@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
 	Binbin Zhou <zhoubinbin@loongson.cn>,
 	Huacai Chen <chenhuacai@loongson.cn>
 Subject: Re: [PATCH 1/5] i2c: core: Pick i2c bus number from ACPI if present
-Message-ID: <202209230228.LIiHRmuw-lkp@intel.com>
+Message-ID: <202209230216.faCwluIB-lkp@intel.com>
 References: <be5cd69c7c58d44ca119d4ca692d95a2ae924533.1663835855.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -66,8 +66,8 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/i2c-ls2x-Add-support-for-the-Loongson-2K-LS7A-I2C/20220922-194252
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
-config: hexagon-randconfig-r041-20220922 (https://download.01.org/0day-ci/archive/20220923/202209230228.LIiHRmuw-lkp@intel.com/config)
-compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 791a7ae1ba3efd6bca96338e10ffde557ba83920)
+config: arc-randconfig-r043-20220922 (https://download.01.org/0day-ci/archive/20220923/202209230216.faCwluIB-lkp@intel.com/config)
+compiler: arceb-elf-gcc (GCC) 12.1.0
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
@@ -77,27 +77,22 @@ reproduce (this is a W=1 build):
         git checkout 749fc796eb66dc42c209c6a5808c6b2a5e47fbb6
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash drivers/i2c/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash drivers/
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
 
 All errors (new ones prefixed by >>):
 
->> drivers/i2c/i2c-core-base.c:1568:12: error: call to undeclared function 'acpi_evaluate_integer'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-                   status = acpi_evaluate_integer(ACPI_HANDLE(dev->parent),
-                            ^
-   drivers/i2c/i2c-core-base.c:1568:12: note: did you mean 'acpi_evaluate_object'?
-   include/acpi/acpixf.h:550:8: note: 'acpi_evaluate_object' declared here
-                               acpi_evaluate_object(acpi_handle object,
-                               ^
-   include/acpi/platform/aclinux.h:93:21: note: expanded from macro 'ACPI_EXTERNAL_RETURN_STATUS'
-           static ACPI_INLINE prototype {return(AE_NOT_CONFIGURED);}
-                              ^
-   1 error generated.
+   drivers/i2c/i2c-core-base.c: In function 'i2c_add_adapter':
+>> drivers/i2c/i2c-core-base.c:1568:26: error: implicit declaration of function 'acpi_evaluate_integer'; did you mean 'acpi_evaluate_object'? [-Werror=implicit-function-declaration]
+    1568 |                 status = acpi_evaluate_integer(ACPI_HANDLE(dev->parent),
+         |                          ^~~~~~~~~~~~~~~~~~~~~
+         |                          acpi_evaluate_object
+   cc1: some warnings being treated as errors
 
 
-vim +/acpi_evaluate_integer +1568 drivers/i2c/i2c-core-base.c
+vim +1568 drivers/i2c/i2c-core-base.c
 
   1540	
   1541	/**
