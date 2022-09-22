@@ -1,181 +1,230 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8BC610D
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 14:48:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20387C433C1
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 14:48:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663858099;
-	bh=cMel3Eu2KXw20lTWdA6aCEa3jaT7myHDgNc9LdQVwEk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jonmxDaXcjAZ++2A/OzrcypmSfrOcelJ9nHLd9Knh70hE6/ZwVuBBrNVFMuZO1k0N
-	 Am+jjbJLcUWTncJ3sgdLkgmGotw7x8diiMuLerYx4g82Zq7lgEtDdpQtS5dVLl1dWt
-	 YQHfYlj92EDrFt3UlurUPdJqKIaIbjU8Ypt0t9ePd4dGp6M+JeSIEUjwZj8ATKl7ka
-	 J1ZBpad1l7DQtQtnOPdfCtoMR70uXsdHkr4L/SjauRCY7f59JMj30yHRisYEMeYaX3
-	 OmhVuz8onuo17W0Ps8Bp31ZLdU58z8T1v4Fx+lApwPw/k7xXqfRy1v0+RyYvoEknRB
-	 6wOacLv2l4jlQ==
-Received: by mail-vs1-f51.google.com with SMTP id 129so10531479vsi.10
-        for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 07:48:19 -0700 (PDT)
-X-Gm-Message-State: ACrzQf3sNXbDJn8IU4g3bfJuGYYY2ZsfI5beEnBuAzubf1r6af05DT2S
-	6ko68Oywcc0VoNHVH/QQ2MR1gfUd4wL5XahwNZk=
-X-Google-Smtp-Source: AMsMyM6orUn5WJdFVXsvByIj4xy5chSrK9frM43HHauQziF2lM+Ck7tTPZGVc7W2rgJItzUwD34QKyAKWa/JikG3SRg=
-X-Received: by 2002:a67:d59d:0:b0:398:211f:9a45 with SMTP id
- m29-20020a67d59d000000b00398211f9a45mr1660995vsj.78.1663858098049; Thu, 22
- Sep 2022 07:48:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91097C;
+	Thu, 22 Sep 2022 17:57:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663869458; x=1695405458;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=485OyumuNX48iEKd5J4Q9rucvLLSdnjT2jOcmtpuQRA=;
+  b=O2exgSAUb3YAwRUjLv7ph3Tvi8IInkmy0KM4/y/WfdynvAxvDz48hDLx
+   V2NHXxxXjWTXOtM1P2Ve9pCJJFdr5NynoosuzH2HXns2ntuzhZa3vci4P
+   ckG8Au+dPYi9ltgSYg0S1WPcv1XqMpIrNrOBQ39ePcnIw6uD3ij7DC5pK
+   0hr3iZv9/v6jIzSijEZ2ctJj+o7Wd6DfSiXjPtgxEiFiI4JZAG0JSUSZf
+   oXtBy+d6WhAjhM6deuvmMKiIXtVDgDmxTev3CY4geITn0hiMzseQW9grZ
+   YO8ZIMnmFd40+6ItEqxEaVBkZ0DHDNBn02LQqhJoXivu377uSZ//2qIdS
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10478"; a="362151565"
+X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
+   d="scan'208";a="362151565"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 10:57:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
+   d="scan'208";a="571065558"
+Received: from lkp-server01.sh.intel.com (HELO c0a60f19fe7e) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 22 Sep 2022 10:57:35 -0700
+Received: from kbuild by c0a60f19fe7e with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1obQS6-0004qm-22;
+	Thu, 22 Sep 2022 17:57:34 +0000
+Date: Fri, 23 Sep 2022 01:57:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Wolfram Sang <wsa-dev@sang-engineering.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org
+Cc: llvm@lists.linux.dev, kbuild-all@lists.01.org,
+	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
+	WANG Xuerui <kernel@xen0n.name>, Jianmin Lv <lvjianmin@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH 2/5] i2c: gpio: Add support on ACPI-based system
+Message-ID: <202209230137.EmkAkBHm-lkp@intel.com>
+References: <74988d34ceae9bf239c138a558778cd999beb77c.1663835855.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220920183554.3870247-1-ardb@kernel.org> <20220920183554.3870247-9-ardb@kernel.org>
- <CAAhV-H4+Exqu6Z3G_hYmhz=Ccv_4EKLjQ5GVT8h3YsJy0FSpAg@mail.gmail.com>
- <CAMj1kXG9HRn6iV5x-Q94xdOhNhiKMGiO6SkE3LMwzXPkXxen_Q@mail.gmail.com>
- <CAAhV-H5AjwKd-ydZTA=vKCA+fe_gAVyhCM2s-Wm54AqWqpBF1A@mail.gmail.com>
- <CAMj1kXFKfwvvidNPumQNzhHXSR4kHpTq-j4ygR=Jow7yySc44Q@mail.gmail.com>
- <CAAhV-H6O+a57aZbYH0yiCgNp18=shFvGtAppXFNSWGPRs0Ng2g@mail.gmail.com>
- <CAMj1kXF=ON-7GyHVvW8bMX1-5zreDUr7D_zNUs5PQdRW+uM+JQ@mail.gmail.com>
- <CAAhV-H5LLFyQbzzZLUyY38kYU5LvOacXPfrL6zzbZFDvE7QBhw@mail.gmail.com>
- <CAMj1kXGYFD+_VZ51M4mu1OAjbkPQsPyE-iKviiUbb8ibLrNczQ@mail.gmail.com>
- <CAAhV-H7cp_ip9B4BD65CsCerjKtfaxcQqi1T3QB8VveRXLhY_w@mail.gmail.com>
- <CAMj1kXG0nnB4qOyKp8-=ggxFYC_1ut6oHdkqX_mVqdZMadjb8g@mail.gmail.com>
- <CAAhV-H6botg=dVVQb1YiPnBHwxVuoyDo1CKd-HbrnhCztQiQZA@mail.gmail.com>
- <CAMj1kXHcbtjR=+==eBhxTRN=uUrvfBjYEpoLKkMQpbpqrxdN9A@mail.gmail.com>
- <CAAhV-H439XWK5ZRSw5w2zN-w8sNLMkR7VSFfxp04ud4C-gOLnA@mail.gmail.com>
- <CAMj1kXGoG8XDASsEEn3B8b0DvF37ryY5Do1iRdKHuouohsLN3g@mail.gmail.com>
- <CAMj1kXH_vWCxr1r1j7kJ43PcmgAUeuf=QdrbXU2fanEgeCTTgQ@mail.gmail.com> <CAMj1kXF8JOuTSZONzF20Qz6xhrou7puwjWMK8z7u7aDg1yGBkg@mail.gmail.com>
-In-Reply-To: <CAMj1kXF8JOuTSZONzF20Qz6xhrou7puwjWMK8z7u7aDg1yGBkg@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 22 Sep 2022 22:48:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4HLz7rjxrBb1QVGKBfVWC7RdmpL8rHdOSU0e2vtmG6BA@mail.gmail.com>
-Message-ID: <CAAhV-H4HLz7rjxrBb1QVGKBfVWC7RdmpL8rHdOSU0e2vtmG6BA@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] efi/loongarch: libstub: remove dependency on
- flattened DT
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi <linux-efi@vger.kernel.org>, loongarch@lists.linux.dev, 
-	Arnd Bergmann <arnd@arndb.de>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Xi Ruoyao <xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <74988d34ceae9bf239c138a558778cd999beb77c.1663835855.git.zhoubinbin@loongson.cn>
 
-On Thu, Sep 22, 2022 at 9:52 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Thu, 22 Sept 2022 at 15:19, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Thu, 22 Sept 2022 at 15:18, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > On Thu, 22 Sept 2022 at 15:12, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > >
-> > > > On Thu, Sep 22, 2022 at 9:10 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > >
-> > > > > On Thu, 22 Sept 2022 at 15:09, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > > >
-> > > > > > On Thu, Sep 22, 2022 at 8:50 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Thu, 22 Sept 2022 at 14:08, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > Hi, Ard,
-> > > > > > > >
-> > > > > > > > On Thu, Sep 22, 2022 at 4:59 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > > > > > >
-> > > > > > > > > On Thu, 22 Sept 2022 at 09:42, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > > > > > > >
-> > > > > > > > > > On Thu, Sep 22, 2022 at 3:25 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > On Thu, 22 Sept 2022 at 09:22, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > On Thu, Sep 22, 2022 at 3:13 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > On Thu, 22 Sept 2022 at 04:15, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > On Wed, Sep 21, 2022 at 4:15 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > On Wed, 21 Sept 2022 at 06:02, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > Acked-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > Thank you Huacai
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > I have created a separate tag with these patches applied onto the
-> > > > > > > > > > > > > > > first loongarch efi enablement patch (see below)
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > I would prefer to keep the loongarch trees separate for the next merge
-> > > > > > > > > > > > > > > window, but if needed to avoid massive conflicts, you could merge the
-> > > > > > > > > > > > > > > tag into the loongarch tree and rebase your changes on top. But please
-> > > > > > > > > > > > > > > take care not to rebase those patches themselves: the commit SHAs need
-> > > > > > > > > > > > > > > to remain the same.
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > However, if the conflicts are only minor, you can just explain in your
-> > > > > > > > > > > > > > > PR to Linus what the resolution should look like.
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > The tag can be found here:
-> > > > > > > > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tag/?h=efi-loongarch-for-v6.1-2
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > I have merged this into the EFI tree as well and pushed it out; it
-> > > > > > > > > > > > > > > should appear in -next tomorrow.
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > b093dc55ba9a efi/loongarch: libstub: remove dependency on flattened DT
-> > > > > > > > > > > > > > > 102faf0747c2 efi: libstub: install boot-time memory map as config table
-> > > > > > > > > > > > > > > 7318926e7bc9 efi: libstub: remove DT dependency from generic stub
-> > > > > > > > > > > > > > > 7cb6671e3caa efi: libstub: unify initrd loading between architectures
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > I will have to respin the initrd patch, unfortunately, as it breaks
-> > > > > > > > > > > > > x86. So the signed tag will be updated, and the SHAs above will change
-> > > > > > > > > > > > > as well.
-> > > > > > > > > > > > Emm, initrd is also broken on LoongArch, the core kernel gets an
-> > > > > > > > > > > > EFI_INVALID_TABLE_ADDR address.
-> > > > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > OK, I will investigate. This was working fine before so I'm not sure
-> > > > > > > > > > > what happened there.
-> > > > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > I cannot reproduce this. Can you reproduce it with qemu? If so, can
-> > > > > > > > > you share your command line and .config etc?
-> > > > > > > > In qemu we also OK, but on a real machine efistub fails at
-> > > > > > > > efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle), maybe
-> > > > > > > > our UEFI BIOS has some problems? On a real machine we use grub and
-> > > > > > > > there is no "initrd" command in UEFI shell.
-> > > > > > > >
-> > > > > > >
-> > > > > > > Ah ok, so i guess your GRUB lacks the LoadFile2 patches?
-> > > > > > >
-> > > > > > > https://lists.gnu.org/archive/html/grub-devel/2022-09/msg00057.html
-> > > > > > Maybe it is a GRUB problem (I'll discuss with GRUB team), but why
-> > > > > > without this series the GRUB can load initrd? Because in the old way
-> > > > > > UEFI BIOS fill initrd information to FDT?
-> > > > > >
-> > > > >
-> > > > > No GRUB loads the initrd and creates a DT with a /chosen node to
-> > > > > record the initrd base and size.
-> > > > Without this series, efistub also fails at
-> > > > efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle), but
-> > > > initrd works well, this makes me puzzled.
-> > > >
-> > >
-> > > That is because you don't have DTB support in the core kernel yet right?
-> >
-> > Never mind - what exact commit are you testing this with?
->
-> OK, so the existing code only does
->
-> early_init_dt_scan(fdt_ptr);
-> early_init_fdt_reserve_self();
-> efi_system_table = efi_get_fdt_params(&data);
->
-> so it never parses the /chosen node, and therefore does not discover the initrd.
->
-> I suppose you may have been running with the loongson-2k patches?
->
-> But actually, this describes exactly the problem that I am addressing
-> with this series: you have been inadvertently relying on DT hardware
-> support for initrd functionality ...
-Yes, the correct way is to update our grub. But for kexec, seems
-initrd over cmdline is the only way because we don't know how to
-handle systemtable and don't know how to work together with both
-ACPI/DT systems after efistub refactoring.
+Hi Binbin,
 
-Huacai
+Thank you for the patch! Yet something to improve:
+
+[auto build test ERROR on wsa/i2c/for-next]
+[also build test ERROR on linus/master v6.0-rc6 next-20220921]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/i2c-ls2x-Add-support-for-the-Loongson-2K-LS7A-I2C/20220922-194252
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
+config: hexagon-randconfig-r045-20220922 (https://download.01.org/0day-ci/archive/20220923/202209230137.EmkAkBHm-lkp@intel.com/config)
+compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 791a7ae1ba3efd6bca96338e10ffde557ba83920)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/90590b2a30c8afa5bb200812ffa52a3c5bb9da6a
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Binbin-Zhou/i2c-ls2x-Add-support-for-the-Loongson-2K-LS7A-I2C/20220922-194252
+        git checkout 90590b2a30c8afa5bb200812ffa52a3c5bb9da6a
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash drivers/i2c/busses/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> drivers/i2c/busses/i2c-gpio.c:472:12: error: call to undeclared function 'acpi_evaluate_integer'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+                   status = acpi_evaluate_integer(ACPI_HANDLE(dev),
+                            ^
+   drivers/i2c/busses/i2c-gpio.c:472:12: note: did you mean 'acpi_evaluate_object'?
+   include/acpi/acpixf.h:550:8: note: 'acpi_evaluate_object' declared here
+                               acpi_evaluate_object(acpi_handle object,
+                               ^
+   include/acpi/platform/aclinux.h:93:21: note: expanded from macro 'ACPI_EXTERNAL_RETURN_STATUS'
+           static ACPI_INLINE prototype {return(AE_NOT_CONFIGURED);}
+                              ^
+   1 error generated.
+
+
+vim +/acpi_evaluate_integer +472 drivers/i2c/busses/i2c-gpio.c
+
+   375	
+   376	static int i2c_gpio_probe(struct platform_device *pdev)
+   377	{
+   378		struct i2c_gpio_private_data *priv;
+   379		struct i2c_gpio_platform_data *pdata;
+   380		struct i2c_algo_bit_data *bit_data;
+   381		struct i2c_adapter *adap;
+   382		struct device *dev = &pdev->dev;
+   383		struct device_node *np = dev->of_node;
+   384		enum gpiod_flags gflags;
+   385		acpi_status status;
+   386		unsigned long long id;
+   387		int ret;
+   388	
+   389		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+   390		if (!priv)
+   391			return -ENOMEM;
+   392	
+   393		adap = &priv->adap;
+   394		bit_data = &priv->bit_data;
+   395		pdata = &priv->pdata;
+   396	
+   397		if (np) {
+   398			of_i2c_gpio_get_props(np, pdata);
+   399		} else if (ACPI_COMPANION(dev)) {
+   400			acpi_i2c_gpio_get_props(dev, pdata);
+   401		} else {
+   402			/*
+   403			 * If all platform data settings are zero it is OK
+   404			 * to not provide any platform data from the board.
+   405			 */
+   406			if (dev_get_platdata(dev))
+   407				memcpy(pdata, dev_get_platdata(dev), sizeof(*pdata));
+   408		}
+   409	
+   410		/*
+   411		 * First get the GPIO pins; if it fails, we'll defer the probe.
+   412		 * If the SCL/SDA lines are marked "open drain" by platform data or
+   413		 * device tree then this means that something outside of our control is
+   414		 * marking these lines to be handled as open drain, and we should just
+   415		 * handle them as we handle any other output. Else we enforce open
+   416		 * drain as this is required for an I2C bus.
+   417		 */
+   418		if (pdata->sda_is_open_drain)
+   419			gflags = GPIOD_OUT_HIGH;
+   420		else
+   421			gflags = GPIOD_OUT_HIGH_OPEN_DRAIN;
+   422		priv->sda = i2c_gpio_get_desc(dev, "sda", 0, gflags);
+   423		if (IS_ERR(priv->sda))
+   424			return PTR_ERR(priv->sda);
+   425	
+   426		if (pdata->scl_is_open_drain)
+   427			gflags = GPIOD_OUT_HIGH;
+   428		else
+   429			gflags = GPIOD_OUT_HIGH_OPEN_DRAIN;
+   430		priv->scl = i2c_gpio_get_desc(dev, "scl", 1, gflags);
+   431		if (IS_ERR(priv->scl))
+   432			return PTR_ERR(priv->scl);
+   433	
+   434		if (gpiod_cansleep(priv->sda) || gpiod_cansleep(priv->scl))
+   435			dev_warn(dev, "Slow GPIO pins might wreak havoc into I2C/SMBus bus timing");
+   436		else
+   437			bit_data->can_do_atomic = true;
+   438	
+   439		bit_data->setsda = i2c_gpio_setsda_val;
+   440		bit_data->setscl = i2c_gpio_setscl_val;
+   441	
+   442		if (!pdata->scl_is_output_only)
+   443			bit_data->getscl = i2c_gpio_getscl;
+   444		bit_data->getsda = i2c_gpio_getsda;
+   445	
+   446		if (pdata->udelay)
+   447			bit_data->udelay = pdata->udelay;
+   448		else if (pdata->scl_is_output_only)
+   449			bit_data->udelay = 50;			/* 10 kHz */
+   450		else
+   451			bit_data->udelay = 5;			/* 100 kHz */
+   452	
+   453		if (pdata->timeout)
+   454			bit_data->timeout = pdata->timeout;
+   455		else
+   456			bit_data->timeout = HZ / 10;		/* 100 ms */
+   457	
+   458		bit_data->data = priv;
+   459	
+   460		adap->owner = THIS_MODULE;
+   461		if (np)
+   462			strscpy(adap->name, dev_name(dev), sizeof(adap->name));
+   463		else
+   464			snprintf(adap->name, sizeof(adap->name), "i2c-gpio%d", pdev->id);
+   465	
+   466		adap->algo_data = bit_data;
+   467		adap->class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
+   468		adap->dev.parent = dev;
+   469		adap->dev.of_node = np;
+   470	
+   471		if (ACPI_COMPANION(dev)) {
+ > 472			status = acpi_evaluate_integer(ACPI_HANDLE(dev),
+   473							"_UID", NULL, &id);
+   474			if (ACPI_SUCCESS(status) && (id >= 0))
+   475				adap->nr = id;
+   476		} else
+   477			adap->nr = pdev->id;
+   478	
+   479		ret = i2c_bit_add_numbered_bus(adap);
+   480		if (ret)
+   481			return ret;
+   482	
+   483		platform_set_drvdata(pdev, priv);
+   484	
+   485		/*
+   486		 * FIXME: using global GPIO numbers is not helpful. If/when we
+   487		 * get accessors to get the actual name of the GPIO line,
+   488		 * from the descriptor, then provide that instead.
+   489		 */
+   490		dev_info(dev, "using lines %u (SDA) and %u (SCL%s)\n",
+   491			 desc_to_gpio(priv->sda), desc_to_gpio(priv->scl),
+   492			 pdata->scl_is_output_only
+   493			 ? ", no clock stretching" : "");
+   494	
+   495		i2c_gpio_fault_injector_init(pdev);
+   496	
+   497		return 0;
+   498	}
+   499	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
