@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CC51854
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 12:57:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1467CC4347C
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 12:57:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74751854
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 13:09:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83412C433D7
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 13:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663851474;
-	bh=B98kHnfo3so8V7OnVf1XjmEKZQD0tYrGbV+P+W2cLHI=;
+	s=k20201202; t=1663852140;
+	bh=fErL85+NMEfCsPP9BvmYbysQHHwcxsgk1JEXHPVVQjk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ebhXGgOYtu/n3E2CoFCPpqZnXUvxwe9FL1w5Pa2T1pepb+dyEDTH9ErvcRC/cZbyy
-	 5bmc+ZcTvmk0OSECUTvPOhzSRHZ36HbVlUhqpBTgITMEceyk5NvXCZ0CE8eJ4XMFZO
-	 pMI/Swb/bt5KyKVkh4xLUq/jx7WvyGKe5bxInw5aKZZ6D/cul3pFG1WKs/9cODVYo+
-	 GJkIoIHCrXoI3dOgJeg+DQ/m0mX5QUum5QFHrLisbv6h1TmPV2HwKgh52Ex2+2j6Qh
-	 XihCP+91jXGUP9GOg/i+kaV/zOjzXWwTyGo+U23VsIXNOU42hwGZBcRqh5izkwKl+E
-	 3CIQltqPK3u1w==
-Received: by mail-lf1-f48.google.com with SMTP id a8so14476504lff.13
-        for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 05:57:53 -0700 (PDT)
-X-Gm-Message-State: ACrzQf2zYs3oxiBFOeyGypRtG5P5W6JnBtbsnwLrlhRSEi7cZUv1yx7z
-	z8yiBpWJq26SWIS+q4bkSVfd5ltzVuC5wGTHAyw=
-X-Google-Smtp-Source: AMsMyM4titHzFAPYGFWEipNh4Qc8BF2xPHgafUlfsj3EYPlbqdQW/vXaVlruFHwB7D6ds3rIrk4An786hN0PyfM3BaQ=
-X-Received: by 2002:ac2:4431:0:b0:497:aaf5:83eb with SMTP id
- w17-20020ac24431000000b00497aaf583ebmr1184618lfl.228.1663851471998; Thu, 22
- Sep 2022 05:57:51 -0700 (PDT)
+	b=gc+/Quw9boyLQhP6W2r5Dt3V2RAg9i59lvurUexf+7T9fWGydp8Sezgjk+p25YS/b
+	 MVCpY55SXxWymP73UDvZ1Xgzq6HCyUhu59ZXGjZam+ptaPifuJiH7db5/rhSQ8ruuL
+	 gcnmrCJ6eiB/0i6Jsl+YqwTX4jOtdoLqJfdHxePNL9MocWUAC1Uf23XhFQvTWsJy8a
+	 fsKoDQdg9YhjwlLXiX139LEGCNcWPJwfhgkHW5K5LNZfiRxke4V9FscFxD870WvQ+S
+	 vW+fsTo5V9MwKHO6IetBAnD9SHFPCtmKr1rXdC8OBt4+mPwZ9tNEzUOt4StE/6pdNY
+	 1gikBVA+3QiiQ==
+Received: by mail-vk1-f179.google.com with SMTP id s192so4885223vkb.9
+        for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 06:09:00 -0700 (PDT)
+X-Gm-Message-State: ACrzQf1bo1U2OT9W/f/OI1girOFjHFPGniwmpp0sS0aUKBO9Rk4KdWXN
+	291JNXCAI+s4NYzDaJk1KQK5kI4l/FsQxIC6NBI=
+X-Google-Smtp-Source: AMsMyM7jYW3yDqgaZWmUdB21uncaTfzZwpNVTVKuHwdDPCsD+F+5mnHoGeoeyXFlrtZM0XQ98443nXIPpohFJonOlrY=
+X-Received: by 2002:a1f:9fc5:0:b0:3a3:44f1:be23 with SMTP id
+ i188-20020a1f9fc5000000b003a344f1be23mr1260616vke.35.1663852139424; Thu, 22
+ Sep 2022 06:08:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -40,19 +40,19 @@ References: <20220920183554.3870247-1-ardb@kernel.org> <20220920183554.3870247-9
  <CAMj1kXGYFD+_VZ51M4mu1OAjbkPQsPyE-iKviiUbb8ibLrNczQ@mail.gmail.com>
  <CAAhV-H7cp_ip9B4BD65CsCerjKtfaxcQqi1T3QB8VveRXLhY_w@mail.gmail.com> <CAMj1kXG0nnB4qOyKp8-=ggxFYC_1ut6oHdkqX_mVqdZMadjb8g@mail.gmail.com>
 In-Reply-To: <CAMj1kXG0nnB4qOyKp8-=ggxFYC_1ut6oHdkqX_mVqdZMadjb8g@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 22 Sep 2022 14:57:40 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHrogd9MBauePjx8+68V0N4XjkVs6RKATJn06itie_J-g@mail.gmail.com>
-Message-ID: <CAMj1kXHrogd9MBauePjx8+68V0N4XjkVs6RKATJn06itie_J-g@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 22 Sep 2022 21:08:47 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6botg=dVVQb1YiPnBHwxVuoyDo1CKd-HbrnhCztQiQZA@mail.gmail.com>
+Message-ID: <CAAhV-H6botg=dVVQb1YiPnBHwxVuoyDo1CKd-HbrnhCztQiQZA@mail.gmail.com>
 Subject: Re: [PATCH v2 8/8] efi/loongarch: libstub: remove dependency on
  flattened DT
-To: Huacai Chen <chenhuacai@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
 Cc: linux-efi <linux-efi@vger.kernel.org>, loongarch@lists.linux.dev, 
 	Arnd Bergmann <arnd@arndb.de>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
 	Huacai Chen <chenhuacai@loongson.cn>, Xi Ruoyao <xry111@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 22 Sept 2022 at 14:50, Ard Biesheuvel <ardb@kernel.org> wrote:
+On Thu, Sep 22, 2022 at 8:50 PM Ard Biesheuvel <ardb@kernel.org> wrote:
 >
 > On Thu, 22 Sept 2022 at 14:08, Huacai Chen <chenhuacai@kernel.org> wrote:
 > >
@@ -126,6 +126,11 @@ On Thu, 22 Sept 2022 at 14:50, Ard Biesheuvel <ardb@kernel.org> wrote:
 > Ah ok, so i guess your GRUB lacks the LoadFile2 patches?
 >
 > https://lists.gnu.org/archive/html/grub-devel/2022-09/msg00057.html
+Maybe it is a GRUB problem (I'll discuss with GRUB team), but why
+without this series the GRUB can load initrd? Because in the old way
+UEFI BIOS fill initrd information to FDT?
+
+Huacai
 >
 > Those have been blocked in review for almost 2 years. I cc'ed you on
 > the latest version. Without those patches, GRUB will generate a DT to
@@ -151,5 +156,3 @@ On Thu, 22 Sept 2022 at 14:50, Ard Biesheuvel <ardb@kernel.org> wrote:
 > else) if locating the LoadFile2 protocol fails and a DTB exists in the
 > config table array. I'd prefer to avoid that if we can, but at least
 > the initrd is always visible to the stub, for measurement etc.
-
-Are all DT properties you need for kexec/kdump under the /chosen node?
