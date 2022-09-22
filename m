@@ -1,9 +1,9 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 208E9320E
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 11:41:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764493229
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 11:41:26 +0000 (UTC)
 Received: from localhost.localdomain (unknown [112.20.112.163])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxFeLhSSxjyhYgAA--.56317S3;
-	Thu, 22 Sep 2022 19:41:22 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxFeLhSSxjyhYgAA--.56317S7;
+	Thu, 22 Sep 2022 19:41:25 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Wolfram Sang <wsa@kernel.org>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
@@ -13,11 +13,10 @@ Cc: loongarch@lists.linux.dev,
 	linux-acpi@vger.kernel.org,
 	WANG Xuerui <kernel@xen0n.name>,
 	Jianmin Lv <lvjianmin@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH 1/5] i2c: core: Pick i2c bus number from ACPI if present
-Date: Thu, 22 Sep 2022 19:39:54 +0800
-Message-Id: <be5cd69c7c58d44ca119d4ca692d95a2ae924533.1663835855.git.zhoubinbin@loongson.cn>
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH 5/5] LoongArch: Enable LS2X I2C in loongson3_defconfig
+Date: Thu, 22 Sep 2022 19:39:58 +0800
+Message-Id: <24b28af969f43cb139e35775e3de2b7cf3b3249e.1663835855.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1663835855.git.zhoubinbin@loongson.cn>
 References: <cover.1663835855.git.zhoubinbin@loongson.cn>
@@ -28,65 +27,45 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxFeLhSSxjyhYgAA--.56317S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw45GrWfGr1rZw1rZr4ktFb_yoW8Gr48pF
-	ZIkFsIkr4YvF4v9FZ0qr15ury5Ga95KFy2gFW2kw1F93ZrJrsrtFy3tFy2qFWrZ3yqqanr
-	ZrWvv34UCF4avrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPl14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7MxkIecxEwVAFwVW8KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC2
-	0s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI
-	0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv2
-	0xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2js
-	IE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZF
-	pf9x0JUolksUUUUU=
+X-CM-TRANSID:AQAAf8AxFeLhSSxjyhYgAA--.56317S7
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF17Kr43Xr47Aw1UCr17Wrg_yoWxKFc_JF
+	y7Kw1kWr48JFZ7W3WIqw4rGw4DA3W7XF1SyFnrZw1xX3Wagr13trWDC3W3Cwn09ayDWr43
+	ZaykAF9F9r18tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbhAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
+	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
+	F7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
+	1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
+	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
+	v20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
+	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8KwCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1U
+	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
+	8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU00PSDUUUU
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
 
-Under LoongARCH based on ACPI(such as Loongson-3A + LS7A), the ls2x i2c
-driver obtains the i2c bus number from ACPI table.
+This is now supported, enable for Loongson-3 systems. Other systems are
+affected.
 
-Similar to the DT-base system, this is also a static bus number.
-
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- drivers/i2c/i2c-core-base.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ arch/loongarch/configs/loongson3_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 91007558bcb2..ffab4cc2c6ba 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -1559,7 +1559,8 @@ static int __i2c_add_numbered_adapter(struct i2c_adapter *adap)
- int i2c_add_adapter(struct i2c_adapter *adapter)
- {
- 	struct device *dev = &adapter->dev;
--	int id;
-+	acpi_status status;
-+	unsigned long long id;
- 
- 	if (dev->of_node) {
- 		id = of_alias_get_id(dev->of_node, "i2c");
-@@ -1567,6 +1568,13 @@ int i2c_add_adapter(struct i2c_adapter *adapter)
- 			adapter->nr = id;
- 			return __i2c_add_numbered_adapter(adapter);
- 		}
-+	} else if (dev->parent->fwnode) {
-+		status = acpi_evaluate_integer(ACPI_HANDLE(dev->parent),
-+						"_UID", NULL, &id);
-+		if (ACPI_SUCCESS(status) && (id >= 0)) {
-+			adapter->nr = id;
-+			return __i2c_add_numbered_adapter(adapter);
-+		}
- 	}
- 
- 	mutex_lock(&core_lock);
+diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+index 4083d3051109..7910adf20887 100644
+--- a/arch/loongarch/configs/loongson3_defconfig
++++ b/arch/loongarch/configs/loongson3_defconfig
+@@ -558,6 +558,7 @@ CONFIG_HW_RANDOM_VIRTIO=m
+ CONFIG_I2C_CHARDEV=y
+ CONFIG_I2C_PIIX4=y
+ CONFIG_I2C_GPIO=y
++CONFIG_I2C_LS2X=y
+ CONFIG_SPI=y
+ CONFIG_GPIO_SYSFS=y
+ CONFIG_GPIO_LOONGSON=y
 -- 
 2.31.1
 
