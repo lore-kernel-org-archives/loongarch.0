@@ -1,108 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C3E2580
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 08:59:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C3CDC43149
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 08:59:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663837187;
-	bh=cTKpxLn33VhuW71GgnhPHCS9McDwUYGMSRoOmc+DgF8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=m22zaYAkdhKWl1Ro74IK5d++DJVlhXsBKm5bA8M3RMbWONuvo4r5sqwfNMBwt9N9+
-	 8rptN66cmMCAM5IvzctNmYHKX0JkyyirvczTyvo3YUo4G0l55pQmYG+QPFfDko1Swp
-	 hsZw9ytb1+yturFFkMKRG7wRJDfG+O5EIUFHBYcHve8fkUBP+QKb94hqY2SVXIPvHu
-	 jhoodK7yVFwyHvJbI5DbufD8rw7TUkJ26qgxS11jVFtRamSH4QjATVtKdWV7AZ8YBl
-	 2QuEt8RiHcrhs/SwRY5Mt2zlzVzOh4z2W+9S1zXOId6HyM9vrTvXMEG3OpQOXg+I82
-	 ezI8xaNMODlVQ==
-Received: by mail-lf1-f42.google.com with SMTP id u18so13527636lfo.8
-        for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 01:59:46 -0700 (PDT)
-X-Gm-Message-State: ACrzQf2UijvYP8JpPlJfoYh/TDqqGVQP1+qQu3smnOZlpKv/0f8MQoV0
-	MtJ1IWsDTprqlISmlbjxikIrBGu+FoNmGZA4WRM=
-X-Google-Smtp-Source: AMsMyM6CBTbv+7XvdIlW/OFjBl57r6K2tZmW5I9f8O82uiQn+RvDvTY7LCL/TcJG2OrsQj7fN6lDqz+Pg2+pBlAeRLo=
-X-Received: by 2002:a05:6512:4024:b0:497:4db:6ad0 with SMTP id
- br36-20020a056512402400b0049704db6ad0mr881759lfb.637.1663837185028; Thu, 22
- Sep 2022 01:59:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB1E2902
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 10:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1663840814;
+	bh=HzJofWRv3m8EQ51sdL5NafzdnVZUtZE+l9m+ZAeGom4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Z5nEy/vKt8gAgz6JoBehtSar2k4glFXZCou7F9WcsbGr9CeFepDFvW3C/O5u/1yn8
+	 PCUW7dvuMi17HHEdZJI+NDZGdCr7O1V5aPNt7TrZSHQ40AWKhk1zrexT1roBGU5k0/
+	 ysTbrt2RdgrPrs9a5lfjwnXAzvX2QzMH7um8osc0=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id DB81265EB4;
+	Thu, 22 Sep 2022 06:00:11 -0400 (EDT)
+Message-ID: <bfe4fed8b1da17561214cf9f2cf5acdf0e74d0ea.camel@xry111.site>
+Subject: Re: [PATCH v3 1/3] LoongArch: Add kexec support
+From: Xi Ruoyao <xry111@xry111.site>
+To: Youling Tang <tangyouling@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>,  Baoquan He <bhe@redhat.com>, Eric Biederman
+ <ebiederm@xmission.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, Vivek Goyal <vgoyal@redhat.com>, Dave
+ Young <dyoung@redhat.com>, Guo Ren <guoren@kernel.org>, Jiaxun Yang
+ <jiaxun.yang@flygoat.com>,  kexec@lists.infradead.org,
+ loongarch@lists.linux.dev,  linux-kernel@vger.kernel.org
+Date: Thu, 22 Sep 2022 18:00:09 +0800
+In-Reply-To: <1663210426-15446-2-git-send-email-tangyouling@loongson.cn>
+References: <1663210426-15446-1-git-send-email-tangyouling@loongson.cn>
+	 <1663210426-15446-2-git-send-email-tangyouling@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.0 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220920183554.3870247-1-ardb@kernel.org> <20220920183554.3870247-9-ardb@kernel.org>
- <CAAhV-H4+Exqu6Z3G_hYmhz=Ccv_4EKLjQ5GVT8h3YsJy0FSpAg@mail.gmail.com>
- <CAMj1kXG9HRn6iV5x-Q94xdOhNhiKMGiO6SkE3LMwzXPkXxen_Q@mail.gmail.com>
- <CAAhV-H5AjwKd-ydZTA=vKCA+fe_gAVyhCM2s-Wm54AqWqpBF1A@mail.gmail.com>
- <CAMj1kXFKfwvvidNPumQNzhHXSR4kHpTq-j4ygR=Jow7yySc44Q@mail.gmail.com>
- <CAAhV-H6O+a57aZbYH0yiCgNp18=shFvGtAppXFNSWGPRs0Ng2g@mail.gmail.com>
- <CAMj1kXF=ON-7GyHVvW8bMX1-5zreDUr7D_zNUs5PQdRW+uM+JQ@mail.gmail.com> <CAAhV-H5LLFyQbzzZLUyY38kYU5LvOacXPfrL6zzbZFDvE7QBhw@mail.gmail.com>
-In-Reply-To: <CAAhV-H5LLFyQbzzZLUyY38kYU5LvOacXPfrL6zzbZFDvE7QBhw@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 22 Sep 2022 10:59:33 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGYFD+_VZ51M4mu1OAjbkPQsPyE-iKviiUbb8ibLrNczQ@mail.gmail.com>
-Message-ID: <CAMj1kXGYFD+_VZ51M4mu1OAjbkPQsPyE-iKviiUbb8ibLrNczQ@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] efi/loongarch: libstub: remove dependency on
- flattened DT
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-efi <linux-efi@vger.kernel.org>, loongarch@lists.linux.dev, 
-	Arnd Bergmann <arnd@arndb.de>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Xi Ruoyao <xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 22 Sept 2022 at 09:42, Huacai Chen <chenhuacai@kernel.org> wrote:
->
-> On Thu, Sep 22, 2022 at 3:25 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Thu, 22 Sept 2022 at 09:22, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > >
-> > > On Thu, Sep 22, 2022 at 3:13 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > >
-> > > > On Thu, 22 Sept 2022 at 04:15, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > >
-> > > > > On Wed, Sep 21, 2022 at 4:15 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > > >
-> > > > > > On Wed, 21 Sept 2022 at 06:02, Huacai Chen <chenhuacai@kernel.org> wrote:
-> > > > > > >
-> > > > > > > Acked-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > > > >
-> > > > > >
-> > > > > > Thank you Huacai
-> > > > > >
-> > > > > > I have created a separate tag with these patches applied onto the
-> > > > > > first loongarch efi enablement patch (see below)
-> > > > > >
-> > > > > > I would prefer to keep the loongarch trees separate for the next merge
-> > > > > > window, but if needed to avoid massive conflicts, you could merge the
-> > > > > > tag into the loongarch tree and rebase your changes on top. But please
-> > > > > > take care not to rebase those patches themselves: the commit SHAs need
-> > > > > > to remain the same.
-> > > > > >
-> > > > > > However, if the conflicts are only minor, you can just explain in your
-> > > > > > PR to Linus what the resolution should look like.
-> > > > > >
-> > > > > > The tag can be found here:
-> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tag/?h=efi-loongarch-for-v6.1-2
-> > > > > >
-> > > > > > I have merged this into the EFI tree as well and pushed it out; it
-> > > > > > should appear in -next tomorrow.
-> > > > > >
-> > > > > >
-> > > > > >
-> > > > > > b093dc55ba9a efi/loongarch: libstub: remove dependency on flattened DT
-> > > > > > 102faf0747c2 efi: libstub: install boot-time memory map as config table
-> > > > > > 7318926e7bc9 efi: libstub: remove DT dependency from generic stub
-> > > > > > 7cb6671e3caa efi: libstub: unify initrd loading between architectures
-> > > >
-> > > > I will have to respin the initrd patch, unfortunately, as it breaks
-> > > > x86. So the signed tag will be updated, and the SHAs above will change
-> > > > as well.
-> > > Emm, initrd is also broken on LoongArch, the core kernel gets an
-> > > EFI_INVALID_TABLE_ADDR address.
-> > >
-> >
-> > OK, I will investigate. This was working fine before so I'm not sure
-> > what happened there.
-> >
+On Thu, 2022-09-15 at 10:53 +0800, Youling Tang wrote:
+> +int machine_kexec_prepare(struct kimage *kimage)
+> +{
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int i;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0void *dtb =3D (void *)KEXEC_BL=
+OB_ADDR;
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0kexec_image_info(kimage);
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Find the Flattened Device T=
+ree */
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0for (i =3D 0; i < kimage->nr_s=
+egments; i++) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0if (!fdt_check_header(kimage->segment[i].buf)) {
 
-I cannot reproduce this. Can you reproduce it with qemu? If so, can
-you share your command line and .config etc?
+Hi Youling,
+
+When I build Huacai's tree
+(https://github.com/loongson/linux/commits/loongarch-next), there is a
+strange error linking vmlinux:
+
+ld: arch/loongarch/kernel/machine_kexec.o: in function `machine_kexec_prepa=
+re':
+/home/xry111/git-repos/linux/arch/loongarch/kernel/machine_kexec.c:70: unde=
+fined reference to `fdt_check_header'
+
+Not sure why...
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
