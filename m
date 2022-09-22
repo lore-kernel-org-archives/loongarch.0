@@ -1,436 +1,688 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026E71FA0
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 02:15:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1E80C433D7
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 02:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663812957;
-	bh=72EtT7DVdJtR6f8pPhD2UhfqdA4IhH083aM09/LVVUM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Fk76D+7BuunWNKx23JyZFowPLamvSirCqIreki6EEKcnaIVObe91iH8AtYyT+PIZc
-	 ST3D/acdt/xyK4dGqaIsbOVqp0/NJuONH7Fw+P66Ymt5QyZkOKhzK0s0vHOwUUN8fu
-	 7E+G8bzxjrBV5virB+zvBjTYqgjR7U00HZz1aNJoF931qBiy3w9OJwbydCU5h6hYkg
-	 Capqw+wc2lRWvpwEwbPavXs+GM4vdY3mRsymvUTKx03eUKT861O5SRkRVgF1eyjfcK
-	 vYEmyrMAm+7HbcyodqnXIricknMk+cELh/AoA+6tiNJmvZyWBf2jHVSZArDlMi0PnW
-	 g4jfD75S7pBzQ==
-Received: by mail-ua1-f53.google.com with SMTP id z26so3149471uaq.0
-        for <loongarch@lists.linux.dev>; Wed, 21 Sep 2022 19:15:57 -0700 (PDT)
-X-Gm-Message-State: ACrzQf3Vvn4/ipFY1X9HF01mFE4obo9D1tcWMPAvPvMzPM0RZ0XA25i1
-	E82qclNqSP4LFsRQm/VO+QGfqrPIUhRgOcJxhdo=
-X-Google-Smtp-Source: AMsMyM6vtf75wTaQc6y8xEHE/mKArZoWgBOnTXAXRxRl9WjqWWbOX6+hW6M/7iJYwZv9z7GlsTcGKKzhPvxK0Y5LLD8=
-X-Received: by 2002:a05:6130:c13:b0:39f:58bb:d51c with SMTP id
- cg19-20020a0561300c1300b0039f58bbd51cmr457950uab.104.1663812956445; Wed, 21
- Sep 2022 19:15:56 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9161B1FA0
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 02:19:24 +0000 (UTC)
+Received: from localhost.localdomain (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_2snxitjj9cfAA--.52061S3;
+	Thu, 22 Sep 2022 10:19:21 +0800 (CST)
+Subject: Re: [PATCH 1/4] LoongArch: Add kprobe support
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>
+References: <1663645034-967-1-git-send-email-yangtiezhu@loongson.cn>
+ <1663645034-967-2-git-send-email-yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Jinyang He <hejinyang@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <8c54706f-4e5e-bab9-9382-f4195093996b@loongson.cn>
+Date: Thu, 22 Sep 2022 10:19:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220920183554.3870247-1-ardb@kernel.org> <20220920183554.3870247-9-ardb@kernel.org>
- <CAAhV-H4+Exqu6Z3G_hYmhz=Ccv_4EKLjQ5GVT8h3YsJy0FSpAg@mail.gmail.com> <CAMj1kXG9HRn6iV5x-Q94xdOhNhiKMGiO6SkE3LMwzXPkXxen_Q@mail.gmail.com>
-In-Reply-To: <CAMj1kXG9HRn6iV5x-Q94xdOhNhiKMGiO6SkE3LMwzXPkXxen_Q@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 22 Sep 2022 10:15:45 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5AjwKd-ydZTA=vKCA+fe_gAVyhCM2s-Wm54AqWqpBF1A@mail.gmail.com>
-Message-ID: <CAAhV-H5AjwKd-ydZTA=vKCA+fe_gAVyhCM2s-Wm54AqWqpBF1A@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] efi/loongarch: libstub: remove dependency on
- flattened DT
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi <linux-efi@vger.kernel.org>, loongarch@lists.linux.dev, 
-	Arnd Bergmann <arnd@arndb.de>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Xi Ruoyao <xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1663645034-967-2-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Dx_2snxitjj9cfAA--.52061S3
+X-Coremail-Antispam: 1UD129KBjvAXoW3uw1ruFyDJF4DAF13Kr47CFg_yoW8CF1Uuo
+	W3tF1q9r4rGry3CF45Jr9rXayUW3W0gFZ5AFWUZFs8Zr17Ar15Xr4UCr4kJ3WagF4ktw4x
+	Ca47ua4rAa1S93Z3n29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUYw7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xva
+	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
+	x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
+	Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI
+	0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xf
+	McIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7
+	v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xF
+	o4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHU
+	DUUUUU=
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-On Wed, Sep 21, 2022 at 4:15 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Wed, 21 Sept 2022 at 06:02, Huacai Chen <chenhuacai@kernel.org> wrote:
-> >
-> > Acked-by: Huacai Chen <chenhuacai@loongson.cn>
-> >
->
-> Thank you Huacai
->
-> I have created a separate tag with these patches applied onto the
-> first loongarch efi enablement patch (see below)
->
-> I would prefer to keep the loongarch trees separate for the next merge
-> window, but if needed to avoid massive conflicts, you could merge the
-> tag into the loongarch tree and rebase your changes on top. But please
-> take care not to rebase those patches themselves: the commit SHAs need
-> to remain the same.
->
-> However, if the conflicts are only minor, you can just explain in your
-> PR to Linus what the resolution should look like.
->
-> The tag can be found here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tag/?h=efi-loongarch-for-v6.1-2
->
-> I have merged this into the EFI tree as well and pushed it out; it
-> should appear in -next tomorrow.
->
->
->
-> b093dc55ba9a efi/loongarch: libstub: remove dependency on flattened DT
-> 102faf0747c2 efi: libstub: install boot-time memory map as config table
-> 7318926e7bc9 efi: libstub: remove DT dependency from generic stub
-> 7cb6671e3caa efi: libstub: unify initrd loading between architectures
-> 1add08ceb15b efi: libstub: remove pointless goto kludge
-> d2130a9cf0f7 efi: libstub: simplify efi_get_memory_map() and struct
-> efi_boot_memmap
-> bc5853aa56de efi: libstub: avoid efi_get_memory_map() for allocating
-> the virt map
-> d80ca810f096 efi: libstub: drop pointless get_memory_map() call
-> ead384d95634 (tag: efi-loongarch-for-v6.1) efi/loongarch: Add efistub
-> booting support
-> 568035b01cfb (tag: v6.0-rc1) Linux 6.0-rc1
-Hmmm, I want to also merge zboot support in the loongarch-next's base,
-is that possible?
+On 09/20/2022 11:37 AM, Tiezhu Yang wrote:
 
-Huacai
+> Kprobes allows you to trap at almost any kernel address and
+> execute a callback function, this commit adds kprobe support
+> for LoongArch.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   arch/loongarch/Kconfig               |   1 +
+>   arch/loongarch/include/asm/inst.h    |  31 ++++
+>   arch/loongarch/include/asm/kprobes.h |  44 +++++
+>   arch/loongarch/include/asm/ptrace.h  |   1 +
+>   arch/loongarch/kernel/Makefile       |   2 +
+>   arch/loongarch/kernel/inst.c         | 107 ++++++++++++
+>   arch/loongarch/kernel/kprobes.c      | 309 +++++++++++++++++++++++++++++++++++
+>   7 files changed, 495 insertions(+)
+>   create mode 100644 arch/loongarch/include/asm/kprobes.h
+>   create mode 100644 arch/loongarch/kernel/kprobes.c
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 5b5fc94..6b01073 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -94,6 +94,7 @@ config LOONGARCH
+>   	select HAVE_IOREMAP_PROT
+>   	select HAVE_IRQ_EXIT_ON_IRQ_STACK
+>   	select HAVE_IRQ_TIME_ACCOUNTING
+> +	select HAVE_KPROBES
+>   	select HAVE_MOD_ARCH_SPECIFIC
+>   	select HAVE_NMI
+>   	select HAVE_PCI
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+> index fce1843..fc8879b 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -7,6 +7,7 @@
+>   
+>   #include <linux/types.h>
+>   #include <asm/asm.h>
+> +#include <asm/ptrace.h>
+>   
+>   #define INSN_BREAK		0x002a0000
+>   
+> @@ -20,6 +21,10 @@
+>   
+>   #define ADDR_IMM(addr, INSN)	((addr & ADDR_IMMMASK_##INSN) >> ADDR_IMMSHIFT_##INSN)
+>   
+> +enum reg0i15_op {
+> +	break_op	= 0x54,
+> +};
+> +
+>   enum reg0i26_op {
+>   	b_op		= 0x14,
+>   	bl_op		= 0x15,
+> @@ -28,6 +33,8 @@ enum reg0i26_op {
+>   enum reg1i20_op {
+>   	lu12iw_op	= 0x0a,
+>   	lu32id_op	= 0x0b,
+> +	pcaddi_op	= 0x0c,
+> +	pcalau12i_op	= 0x0d,
+>   	pcaddu12i_op	= 0x0e,
+>   	pcaddu18i_op	= 0x0f,
+>   };
+> @@ -35,6 +42,8 @@ enum reg1i20_op {
+>   enum reg1i21_op {
+>   	beqz_op		= 0x10,
+>   	bnez_op		= 0x11,
+> +	bceqz_op	= 0x48000000,
+> +	bcnez_op	= 0x48000100,
+>   };
+>   
+>   enum reg2_op {
+> @@ -164,6 +173,11 @@ enum reg3sa2_op {
+>   	alsld_op	= 0x16,
+>   };
+>   
+> +struct reg0i15_format {
+> +	unsigned int immediate : 15;
+> +	unsigned int opcode : 17;
+> +};
+> +
+>   struct reg0i26_format {
+>   	unsigned int immediate_h : 10;
+>   	unsigned int immediate_l : 16;
+> @@ -249,6 +263,7 @@ struct reg3sa2_format {
+>   
+>   union loongarch_instruction {
+>   	unsigned int word;
+> +	struct reg0i15_format	reg0i15_format;
+>   	struct reg0i26_format	reg0i26_format;
+>   	struct reg1i20_format	reg1i20_format;
+>   	struct reg1i21_format	reg1i21_format;
+> @@ -313,6 +328,12 @@ static inline bool is_branch_ins(union loongarch_instruction *ip)
+>   		ip->reg1i21_format.opcode <= bgeu_op;
+>   }
+>   
+> +static inline bool is_pc_ins(union loongarch_instruction *ip)
+> +{
+> +	return ip->reg1i20_format.opcode >= pcaddi_op &&
+> +		ip->reg1i20_format.opcode <= pcaddu18i_op;
+> +}
+> +
+>   static inline bool is_ra_save_ins(union loongarch_instruction *ip)
+>   {
+>   	/* st.d $ra, $sp, offset */
+> @@ -334,6 +355,16 @@ static inline bool is_stack_alloc_ins(union loongarch_instruction *ip)
+>   u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
+>   u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
+>   u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
+> +void simu_branch(struct pt_regs *regs, union loongarch_instruction insn);
+> +void simu_pc(struct pt_regs *regs, union loongarch_instruction insn);
+> +
+> +static inline unsigned long sign_extended(unsigned long val, unsigned int idx)
+> +{
+> +	if (val & (1UL << idx))
+> +		return ~((1UL << (idx + 1)) - 1) | val;
+> +	else
+> +		return ((1UL << (idx + 1)) - 1) & val;
+> +}
+>   
+>   static inline bool signed_imm_check(long val, unsigned int bit)
+>   {
+> diff --git a/arch/loongarch/include/asm/kprobes.h b/arch/loongarch/include/asm/kprobes.h
+> new file mode 100644
+> index 0000000..afcf254
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/kprobes.h
+> @@ -0,0 +1,44 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef __ASM_LOONGARCH_KPROBES_H
+> +#define __ASM_LOONGARCH_KPROBES_H
+> +
+> +#include <asm-generic/kprobes.h>
+> +
+> +#ifdef CONFIG_KPROBES
+> +
+> +#include <asm/inst.h>
+> +
+> +#define __ARCH_WANT_KPROBES_INSN_SLOT
+> +#define MAX_INSN_SIZE			2
+> +
+> +#define flush_insn_slot(p)		do { } while (0)
+> +#define kretprobe_blacklist_size	0
+> +
+> +typedef union loongarch_instruction kprobe_opcode_t;
+> +
+> +/* Architecture specific copy of original instruction */
+> +struct arch_specific_insn {
+> +	/* copy of the original instruction */
+> +	kprobe_opcode_t *insn;
+> +};
+> +
+> +struct prev_kprobe {
+> +	struct kprobe *kp;
+> +	unsigned long status;
+> +	unsigned long saved_irq;
+> +	unsigned long saved_era;
+> +};
+> +
+> +/* per-cpu kprobe control block */
+> +struct kprobe_ctlblk {
+> +	unsigned long kprobe_status;
+> +	unsigned long kprobe_saved_irq;
+> +	unsigned long kprobe_saved_era;
+> +	struct prev_kprobe prev_kprobe;
+> +};
+> +
+> +void arch_remove_kprobe(struct kprobe *p);
+> +bool kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+> +
+> +#endif /* CONFIG_KPROBES */
+> +#endif /* __ASM_LOONGARCH_KPROBES_H */
+> diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+> index 17838c6..eb9538a 100644
+> --- a/arch/loongarch/include/asm/ptrace.h
+> +++ b/arch/loongarch/include/asm/ptrace.h
+> @@ -6,6 +6,7 @@
+>   #define _ASM_PTRACE_H
+>   
+>   #include <asm/page.h>
+> +#include <asm/irqflags.h>
+>   #include <asm/thread_info.h>
+>   #include <uapi/asm/ptrace.h>
+>   
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+> index 5358144..ff98d8a 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -33,4 +33,6 @@ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
+>   
+>   obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_regs.o
+>   
+> +obj-$(CONFIG_KPROBES)		+= kprobes.o
+> +
+>   CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
+> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> index b1df0ec..143acb6 100644
+> --- a/arch/loongarch/kernel/inst.c
+> +++ b/arch/loongarch/kernel/inst.c
+> @@ -38,3 +38,110 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned l
+>   
+>   	return insn.word;
+>   }
+> +
+> +void simu_branch(struct pt_regs *regs, union loongarch_instruction insn)
+> +{
+> +	unsigned int imm, imm_l, imm_h, rd, rj;
+> +	unsigned long pc = regs->csr_era;
+> +
+> +	imm_l = insn.reg0i26_format.immediate_l;
+> +	imm_h = insn.reg0i26_format.immediate_h;
+> +	switch (insn.reg0i26_format.opcode) {
+> +	case b_op:
+> +		regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 27);
+> +		return;
+> +	case bl_op:
+> +		regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 27);
+> +		regs->regs[1] = pc + LOONGARCH_INSN_SIZE;
+> +		return;
+> +	}
+> +
+> +	imm_l = insn.reg1i21_format.immediate_l;
+> +	imm_h = insn.reg1i21_format.immediate_h;
+> +	rj = insn.reg1i21_format.rj;
+> +	switch (insn.reg1i21_format.opcode) {
+> +	case beqz_op:
+> +		if (regs->regs[rj] == 0)
+> +			regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 22);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		return;
+> +	case bnez_op:
+> +		if (regs->regs[rj] != 0)
+> +			regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 22);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		return;
+> +	}
+> +
+> +	imm = insn.reg2i16_format.immediate;
+> +	rj = insn.reg2i16_format.rj;
+> +	rd = insn.reg2i16_format.rd;
+> +	switch (insn.reg2i16_format.opcode) {
+> +	case beq_op:
+> +		if (regs->regs[rj] == regs->regs[rd])
+> +			regs->csr_era = pc + sign_extended(imm << 2, 17);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	case bne_op:
+> +		if (regs->regs[rj] != regs->regs[rd])
+> +			regs->csr_era = pc + sign_extended(imm << 2, 17);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	case blt_op:
+> +		if ((long)regs->regs[rj] < (long)regs->regs[rd])
+> +			regs->csr_era = pc + sign_extended(imm << 2, 17);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	case bge_op:
+> +		if ((long)regs->regs[rj] >= (long)regs->regs[rd])
+> +			regs->csr_era = pc + sign_extended(imm << 2, 17);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	case bltu_op:
+> +		if (regs->regs[rj] < regs->regs[rd])
+> +			regs->csr_era = pc + sign_extended(imm << 2, 17);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	case bgeu_op:
+> +		if (regs->regs[rj] >= regs->regs[rd])
+> +			regs->csr_era = pc + sign_extended(imm << 2, 17);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	case jirl_op:
+> +		regs->csr_era = regs->regs[rj] + sign_extended(imm << 2, 17);
+> +		regs->regs[rd] = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	}
+> +}
+> +
+> +void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
+> +{
+> +	unsigned long pc = regs->csr_era;
+> +	unsigned int rd = insn.reg1i20_format.rd;
+> +	unsigned int imm = insn.reg1i20_format.immediate;
+> +
+> +	switch (insn.reg1i20_format.opcode) {
+> +	case pcaddi_op:
+> +		regs->regs[rd] = pc + sign_extended(imm << 2, 21);
+> +		break;
+> +	case pcaddu12i_op:
+> +		regs->regs[rd] = pc + sign_extended(imm << 12, 31);
+> +		break;
+> +	case pcaddu18i_op:
+> +		regs->regs[rd] = pc + sign_extended(imm << 18, 37);
+> +		break;
+> +	case pcalau12i_op:
+> +		regs->regs[rd] = pc + sign_extended(imm << 12, 31);
+> +		regs->regs[rd] &= ~((1 << 12) - 1);
+> +		break;
+> +	}
+> +
+> +	regs->csr_era += LOONGARCH_INSN_SIZE;
+> +}
+Hi, Tiezhu,
 
->
->
->
-> > On Wed, Sep 21, 2022 at 2:36 AM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > LoongArch does not use FDT or DT natively [yet], and the only reason it
-> > > currently uses it is so that it can reuse the existing EFI stub code.
-> > >
-> > > Overloading the DT with data passed between the EFI stub and the core
-> > > kernel has been a source of problems: there is the overlap between
-> > > information provided by EFI which DT can also provide (initrd base/size,
-> > > command line, memory descriptions), requiring us to reason about which
-> > > is which and what to prioritize. It has also resulted in ABI leaks,
-> > > i.e., internal ABI being promoted to external ABI inadvertently because
-> > > the bootloader can set the EFI stub's DT properties as well (e.g.,
-> > > "kaslr-seed"). This has become especially problematic with boot
-> > > environments that want to pretend that EFI boot is being done (to access
-> > > ACPI and SMBIOS tables, for instance) but have no ability to execute the
-> > > EFI stub, and so the environment that the EFI stub creates is emulated
-> > > [poorly, in some cases].
-> > >
-> > > Another downside of treating DT like this is that the DT binary that the
-> > > kernel receives is different from the one created by the firmware, which
-> > > is undesirable in the context of secure and measured boot.
-> > >
-> > > Given that LoongArch support in Linux is brand new, we can avoid these
-> > > pitfalls, and treat the DT strictly as a hardware description, and use a
-> > > separate handover method between the EFI stub and the kernel. Now that
-> > > initrd loading and passing the EFI memory map have been refactored into
-> > > pure EFI routines that use EFI configuration tables, the only thing we
-> > > need to pass directly is the kernel command line (even if we could pass
-> > > this via a config table as well, it is used extremely early, so passing
-> > > it directly is preferred in this case.)
-> > >
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > ---
-> > >  arch/loongarch/Kconfig                        |  3 --
-> > >  arch/loongarch/include/asm/bootinfo.h         |  2 +-
-> > >  arch/loongarch/kernel/efi.c                   | 30 ++++++++++-
-> > >  arch/loongarch/kernel/env.c                   | 13 ++---
-> > >  arch/loongarch/kernel/head.S                  |  2 +
-> > >  arch/loongarch/kernel/setup.c                 |  4 +-
-> > >  drivers/firmware/efi/libstub/Makefile         | 13 +++--
-> > >  drivers/firmware/efi/libstub/loongarch-stub.c | 56 +++++++++++++++++---
-> > >  8 files changed, 95 insertions(+), 28 deletions(-)
-> > >
-> > > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > > index fca106a8b8af..14a2a1ec8561 100644
-> > > --- a/arch/loongarch/Kconfig
-> > > +++ b/arch/loongarch/Kconfig
-> > > @@ -104,8 +104,6 @@ config LOONGARCH
-> > >         select MODULES_USE_ELF_RELA if MODULES
-> > >         select NEED_PER_CPU_EMBED_FIRST_CHUNK
-> > >         select NEED_PER_CPU_PAGE_FIRST_CHUNK
-> > > -       select OF
-> > > -       select OF_EARLY_FLATTREE
-> > >         select PCI
-> > >         select PCI_DOMAINS_GENERIC
-> > >         select PCI_ECAM if ACPI
-> > > @@ -311,7 +309,6 @@ config DMI
-> > >  config EFI
-> > >         bool "EFI runtime service support"
-> > >         select UCS2_STRING
-> > > -       select EFI_PARAMS_FROM_FDT
-> > >         select EFI_RUNTIME_WRAPPERS
-> > >         help
-> > >           This enables the kernel to use EFI runtime services that are
-> > > diff --git a/arch/loongarch/include/asm/bootinfo.h b/arch/loongarch/include/asm/bootinfo.h
-> > > index e02ac4af7f6e..8e5881bc5ad1 100644
-> > > --- a/arch/loongarch/include/asm/bootinfo.h
-> > > +++ b/arch/loongarch/include/asm/bootinfo.h
-> > > @@ -36,7 +36,7 @@ struct loongson_system_configuration {
-> > >  };
-> > >
-> > >  extern u64 efi_system_table;
-> > > -extern unsigned long fw_arg0, fw_arg1;
-> > > +extern unsigned long fw_arg0, fw_arg1, fw_arg2;
-> > >  extern struct loongson_board_info b_info;
-> > >  extern struct loongson_system_configuration loongson_sysconf;
-> > >
-> > > diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
-> > > index 1f1f755fb425..a31329971133 100644
-> > > --- a/arch/loongarch/kernel/efi.c
-> > > +++ b/arch/loongarch/kernel/efi.c
-> > > @@ -27,8 +27,13 @@
-> > >  static unsigned long efi_nr_tables;
-> > >  static unsigned long efi_config_table;
-> > >
-> > > +static unsigned long __initdata boot_memmap = EFI_INVALID_TABLE_ADDR;
-> > > +
-> > >  static efi_system_table_t *efi_systab;
-> > > -static efi_config_table_type_t arch_tables[] __initdata = {{},};
-> > > +static efi_config_table_type_t arch_tables[] __initdata = {
-> > > +       {LINUX_EFI_BOOT_MEMMAP_GUID,    &boot_memmap,   "MEMMAP" },
-> > > +       {},
-> > > +};
-> > >
-> > >  void __init efi_runtime_init(void)
-> > >  {
-> > > @@ -51,6 +56,7 @@ void __init efi_init(void)
-> > >  {
-> > >         int size;
-> > >         void *config_tables;
-> > > +       struct efi_boot_memmap *tbl;
-> > >
-> > >         if (!efi_system_table)
-> > >                 return;
-> > > @@ -61,6 +67,8 @@ void __init efi_init(void)
-> > >                 return;
-> > >         }
-> > >
-> > > +       efi_systab_report_header(&efi_systab->hdr, efi_systab->fw_vendor);
-> > > +
-> > >         set_bit(EFI_64BIT, &efi.flags);
-> > >         efi_nr_tables    = efi_systab->nr_tables;
-> > >         efi_config_table = (unsigned long)efi_systab->tables;
-> > > @@ -70,6 +78,26 @@ void __init efi_init(void)
-> > >         efi_config_parse_tables(config_tables, efi_systab->nr_tables, arch_tables);
-> > >         early_memunmap(config_tables, efi_nr_tables * size);
-> > >
-> > > +       set_bit(EFI_CONFIG_TABLES, &efi.flags);
-> > > +
-> > >         if (screen_info.orig_video_isVGA == VIDEO_TYPE_EFI)
-> > >                 memblock_reserve(screen_info.lfb_base, screen_info.lfb_size);
-> > > +
-> > > +       if (boot_memmap == EFI_INVALID_TABLE_ADDR)
-> > > +               return;
-> > > +
-> > > +       tbl = early_memremap_ro(boot_memmap, sizeof(*tbl));
-> > > +       if (tbl) {
-> > > +               struct efi_memory_map_data data;
-> > > +
-> > > +               data.phys_map           = boot_memmap + sizeof(*tbl);
-> > > +               data.size               = tbl->map_size;
-> > > +               data.desc_size          = tbl->desc_size;
-> > > +               data.desc_version       = tbl->desc_ver;
-> > > +
-> > > +               if (efi_memmap_init_early(&data) < 0)
-> > > +                       panic("Unable to map EFI memory map.\n");
-> > > +
-> > > +               early_memunmap(tbl, sizeof(*tbl));
-> > > +       }
-> > >  }
-> > > diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-> > > index 82b478a5c665..6d56a463b091 100644
-> > > --- a/arch/loongarch/kernel/env.c
-> > > +++ b/arch/loongarch/kernel/env.c
-> > > @@ -8,7 +8,6 @@
-> > >  #include <linux/efi.h>
-> > >  #include <linux/export.h>
-> > >  #include <linux/memblock.h>
-> > > -#include <linux/of_fdt.h>
-> > >  #include <asm/early_ioremap.h>
-> > >  #include <asm/bootinfo.h>
-> > >  #include <asm/loongson.h>
-> > > @@ -20,21 +19,17 @@ EXPORT_SYMBOL(loongson_sysconf);
-> > >  void __init init_environ(void)
-> > >  {
-> > >         int efi_boot = fw_arg0;
-> > > -       struct efi_memory_map_data data;
-> > > -       void *fdt_ptr = early_memremap_ro(fw_arg1, SZ_64K);
-> > > +       char *cmdline = early_memremap_ro(fw_arg1, COMMAND_LINE_SIZE);
-> > >
-> > >         if (efi_boot)
-> > >                 set_bit(EFI_BOOT, &efi.flags);
-> > >         else
-> > >                 clear_bit(EFI_BOOT, &efi.flags);
-> > >
-> > > -       early_init_dt_scan(fdt_ptr);
-> > > -       early_init_fdt_reserve_self();
-> > > -       efi_system_table = efi_get_fdt_params(&data);
-> > > +       strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
-> > > +       early_memunmap(cmdline, COMMAND_LINE_SIZE);
-> > >
-> > > -       efi_memmap_init_early(&data);
-> > > -       memblock_reserve(data.phys_map & PAGE_MASK,
-> > > -                        PAGE_ALIGN(data.size + (data.phys_map & ~PAGE_MASK)));
-> > > +       efi_system_table = fw_arg2;
-> > >  }
-> > >
-> > >  static int __init init_cpu_fullname(void)
-> > > diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> > > index 01bac62a6442..8f89f39fd31b 100644
-> > > --- a/arch/loongarch/kernel/head.S
-> > > +++ b/arch/loongarch/kernel/head.S
-> > > @@ -67,6 +67,8 @@ SYM_CODE_START(kernel_entry)                  # kernel entry point
-> > >         st.d            a0, t0, 0               # firmware arguments
-> > >         la              t0, fw_arg1
-> > >         st.d            a1, t0, 0
-> > > +       la              t0, fw_arg2
-> > > +       st.d            a2, t0, 0
-> > >
-> > >         /* KSave3 used for percpu base, initialized as 0 */
-> > >         csrwr           zero, PERCPU_BASE_KS
-> > > diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-> > > index e8714b1d94c8..7fabf2306e80 100644
-> > > --- a/arch/loongarch/kernel/setup.c
-> > > +++ b/arch/loongarch/kernel/setup.c
-> > > @@ -51,7 +51,7 @@
-> > >
-> > >  struct screen_info screen_info __section(".data");
-> > >
-> > > -unsigned long fw_arg0, fw_arg1;
-> > > +unsigned long fw_arg0, fw_arg1, fw_arg2;
-> > >  DEFINE_PER_CPU(unsigned long, kernelsp);
-> > >  struct cpuinfo_loongarch cpu_data[NR_CPUS] __read_mostly;
-> > >
-> > > @@ -187,7 +187,6 @@ early_param("mem", early_parse_mem);
-> > >
-> > >  void __init platform_init(void)
-> > >  {
-> > > -       efi_init();
-> > >  #ifdef CONFIG_ACPI_TABLE_UPGRADE
-> > >         acpi_table_upgrade();
-> > >  #endif
-> > > @@ -347,6 +346,7 @@ void __init setup_arch(char **cmdline_p)
-> > >         *cmdline_p = boot_command_line;
-> > >
-> > >         init_environ();
-> > > +       efi_init();
-> > >         memblock_init();
-> > >         parse_early_param();
-> > >
-> > > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> > > index ec2a7ba9364f..6234edf3d827 100644
-> > > --- a/drivers/firmware/efi/libstub/Makefile
-> > > +++ b/drivers/firmware/efi/libstub/Makefile
-> > > @@ -29,7 +29,7 @@ cflags-$(CONFIG_RISCV)                := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> > >  cflags-$(CONFIG_LOONGARCH)     := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> > >                                    -fpie
-> > >
-> > > -cflags-$(CONFIG_EFI_GENERIC_STUB) += -I$(srctree)/scripts/dtc/libfdt
-> > > +cflags-$(CONFIG_EFI_PARAMS_FROM_FDT)   += -I$(srctree)/scripts/dtc/libfdt
-> > >
-> > >  KBUILD_CFLAGS                  := $(cflags-y) -Os -DDISABLE_BRANCH_PROFILING \
-> > >                                    -include $(srctree)/include/linux/hidden.h \
-> > > @@ -59,14 +59,17 @@ lib-y                               := efi-stub-helper.o gop.o secureboot.o tpm.o \
-> > >                                    skip_spaces.o lib-cmdline.o lib-ctype.o \
-> > >                                    alignedmem.o relocate.o vsprintf.o
-> > >
-> > > -# include the stub's generic dependencies from lib/ when building for ARM/arm64
-> > > -efi-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
-> > > +# include the stub's libfdt dependencies from lib/ when needed
-> > > +libfdt-deps                    := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c \
-> > > +                                  fdt_empty_tree.c fdt_sw.c
-> > > +
-> > > +lib-$(CONFIG_EFI_PARAMS_FROM_FDT) += fdt.o \
-> > > +                                    $(patsubst %.c,lib-%.o,$(libfdt-deps))
-> > >
-> > >  $(obj)/lib-%.o: $(srctree)/lib/%.c FORCE
-> > >         $(call if_changed_rule,cc_o_c)
-> > >
-> > > -lib-$(CONFIG_EFI_GENERIC_STUB) += efi-stub.o fdt.o string.o \
-> > > -                                  $(patsubst %.c,lib-%.o,$(efi-deps-y))
-> > > +lib-$(CONFIG_EFI_GENERIC_STUB) += efi-stub.o string.o
-> > >
-> > >  lib-$(CONFIG_ARM)              += arm32-stub.o
-> > >  lib-$(CONFIG_ARM64)            += arm64-stub.o
-> > > diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/drivers/firmware/efi/libstub/loongarch-stub.c
-> > > index b7ef8d2df59e..32329f2a92f9 100644
-> > > --- a/drivers/firmware/efi/libstub/loongarch-stub.c
-> > > +++ b/drivers/firmware/efi/libstub/loongarch-stub.c
-> > > @@ -9,7 +9,8 @@
-> > >  #include <asm/addrspace.h>
-> > >  #include "efistub.h"
-> > >
-> > > -typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long fdt);
-> > > +typedef void __noreturn (*kernel_entry_t)(bool efi, unsigned long cmdline,
-> > > +                                         unsigned long systab);
-> > >
-> > >  extern int kernel_asize;
-> > >  extern int kernel_fsize;
-> > > @@ -42,19 +43,60 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
-> > >         return status;
-> > >  }
-> > >
-> > > -void __noreturn efi_enter_kernel(unsigned long entrypoint, unsigned long fdt, unsigned long fdt_size)
-> > > +struct exit_boot_struct {
-> > > +       efi_memory_desc_t       *runtime_map;
-> > > +       int                     runtime_entry_count;
-> > > +};
-> > > +
-> > > +static efi_status_t exit_boot_func(struct efi_boot_memmap *map, void *priv)
-> > > +{
-> > > +       struct exit_boot_struct *p = priv;
-> > > +
-> > > +       /*
-> > > +        * Update the memory map with virtual addresses. The function will also
-> > > +        * populate @runtime_map with copies of just the EFI_MEMORY_RUNTIME
-> > > +        * entries so that we can pass it straight to SetVirtualAddressMap()
-> > > +        */
-> > > +       efi_get_virtmap(map->map, map->map_size, map->desc_size,
-> > > +                       p->runtime_map, &p->runtime_entry_count);
-> > > +
-> > > +       return EFI_SUCCESS;
-> > > +}
-> > > +
-> > > +efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
-> > > +                            unsigned long kernel_addr, char *cmdline_ptr)
-> > >  {
-> > >         kernel_entry_t real_kernel_entry;
-> > > +       struct exit_boot_struct priv;
-> > > +       unsigned long desc_size;
-> > > +       efi_status_t status;
-> > > +       u32 desc_ver;
-> > > +
-> > > +       status = efi_alloc_virtmap(&priv.runtime_map, &desc_size, &desc_ver);
-> > > +       if (status != EFI_SUCCESS) {
-> > > +               efi_err("Unable to retrieve UEFI memory map.\n");
-> > > +               return status;
-> > > +       }
-> > > +
-> > > +       efi_info("Exiting boot services\n");
-> > > +
-> > > +       efi_novamap = false;
-> > > +       status = efi_exit_boot_services(handle, &priv, exit_boot_func);
-> > > +       if (status != EFI_SUCCESS)
-> > > +               return status;
-> > > +
-> > > +       /* Install the new virtual address map */
-> > > +       efi_rt_call(set_virtual_address_map,
-> > > +                   priv.runtime_entry_count * desc_size, desc_size,
-> > > +                   desc_ver, priv.runtime_map);
-> > >
-> > >         /* Config Direct Mapping */
-> > >         csr_write64(CSR_DMW0_INIT, LOONGARCH_CSR_DMWIN0);
-> > >         csr_write64(CSR_DMW1_INIT, LOONGARCH_CSR_DMWIN1);
-> > >
-> > >         real_kernel_entry = (kernel_entry_t)
-> > > -               ((unsigned long)&kernel_entry - entrypoint + VMLINUX_LOAD_ADDRESS);
-> > > +               ((unsigned long)&kernel_entry - kernel_addr + VMLINUX_LOAD_ADDRESS);
-> > >
-> > > -       if (!efi_novamap)
-> > > -               real_kernel_entry(true, fdt);
-> > > -       else
-> > > -               real_kernel_entry(false, fdt);
-> > > +       real_kernel_entry(true, (unsigned long)cmdline_ptr,
-> > > +                         (unsigned long)efi_system_table);
-> > >  }
-> > > --
-> > > 2.35.1
-> > >
-> > >
+The simu_pc and the simu_branch should make sure the instruction op is 
+excepted.
+I think returning with errno or adding notes to explain that is needed.
+
+BTW, I honored these arch-specific simulation work I used to contribute
+in the old world, although the codes has been optimized. Could you add
+my sign-off?
+
+> diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
+> new file mode 100644
+> index 0000000..b2c73a5
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/kprobes.c
+> @@ -0,0 +1,309 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <linux/kprobes.h>
+> +#include <linux/kdebug.h>
+> +#include <asm/break.h>
+> +
+> +static const union loongarch_instruction breakpoint_insn = {
+> +	.reg0i15_format = {
+> +		.opcode = break_op,
+> +		.immediate = BRK_KPROBE_BP,
+> +	}
+> +};
+> +
+> +static const union loongarch_instruction singlestep_insn = {
+> +	.reg0i15_format = {
+> +		.opcode = break_op,
+> +		.immediate = BRK_KPROBE_SSTEPBP,
+> +	}
+> +};
+> +
+> +DEFINE_PER_CPU(struct kprobe *, current_kprobe);
+> +DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
+> +
+> +static bool insns_are_not_supported(union loongarch_instruction insn)
+> +{
+> +	switch (insn.reg2i14_format.opcode) {
+> +	case llw_op:
+> +	case lld_op:
+> +	case scw_op:
+> +	case scd_op:
+> +		pr_notice("kprobe: ll or sc instructions are not supported\n");
+> +		return true;
+> +	}
+> +
+> +	switch (insn.reg1i21_format.opcode) {
+> +	case bceqz_op:
+> +	case bcnez_op:
+> +		pr_notice("kprobe: bceqz or bcnez instructions are not supported\n");
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +NOKPROBE_SYMBOL(insns_are_not_supported);
+> +
+> +int arch_prepare_kprobe(struct kprobe *p)
+> +{
+> +	union loongarch_instruction insn;
+> +
+> +	insn = p->addr[0];
+> +	if (insns_are_not_supported(insn))
+> +		return -EINVAL;
+> +
+> +	p->ainsn.insn = get_insn_slot();
+> +	if (!p->ainsn.insn)
+> +		return -ENOMEM;
+> +
+> +	p->ainsn.insn[0] = *p->addr;
+> +	p->ainsn.insn[1] = singlestep_insn;
+> +
+> +	p->opcode = *p->addr;
+> +
+> +	return 0;
+> +}
+> +NOKPROBE_SYMBOL(arch_prepare_kprobe);
+> +
+> +/* Install breakpoint in text */
+> +void arch_arm_kprobe(struct kprobe *p)
+> +{
+> +	*p->addr = breakpoint_insn;
+> +}
+> +NOKPROBE_SYMBOL(arch_arm_kprobe);
+> +
+> +/* Remove breakpoint from text */
+> +void arch_disarm_kprobe(struct kprobe *p)
+> +{
+> +	*p->addr = p->opcode;
+> +}
+> +NOKPROBE_SYMBOL(arch_disarm_kprobe);
+> +
+> +void arch_remove_kprobe(struct kprobe *p)
+> +{
+> +	if (p->ainsn.insn) {
+> +		free_insn_slot(p->ainsn.insn, 0);
+> +		p->ainsn.insn = NULL;
+> +	}
+> +}
+> +NOKPROBE_SYMBOL(arch_remove_kprobe);
+> +
+> +static void save_previous_kprobe(struct kprobe_ctlblk *kcb)
+> +{
+> +	kcb->prev_kprobe.kp = kprobe_running();
+> +	kcb->prev_kprobe.status = kcb->kprobe_status;
+> +	kcb->prev_kprobe.saved_irq = kcb->kprobe_saved_irq;
+> +	kcb->prev_kprobe.saved_era = kcb->kprobe_saved_era;
+> +}
+> +NOKPROBE_SYMBOL(save_previous_kprobe);
+> +
+> +static void restore_previous_kprobe(struct kprobe_ctlblk *kcb)
+> +{
+> +	__this_cpu_write(current_kprobe, kcb->prev_kprobe.kp);
+> +	kcb->kprobe_status = kcb->prev_kprobe.status;
+> +	kcb->kprobe_saved_irq = kcb->prev_kprobe.saved_irq;
+> +	kcb->kprobe_saved_era = kcb->prev_kprobe.saved_era;
+> +}
+> +NOKPROBE_SYMBOL(restore_previous_kprobe);
+> +
+> +static void set_current_kprobe(struct kprobe *p, struct pt_regs *regs,
+> +			       struct kprobe_ctlblk *kcb)
+> +{
+> +	__this_cpu_write(current_kprobe, p);
+> +	kcb->kprobe_saved_irq = regs->csr_prmd & CSR_PRMD_PIE;
+> +	kcb->kprobe_saved_era = regs->csr_era;
+> +}
+> +NOKPROBE_SYMBOL(set_current_kprobe);
+> +
+> +static bool insns_are_not_simulated(struct kprobe *p, struct pt_regs *regs)
+> +{
+> +	if (is_branch_ins(&p->opcode)) {
+> +		simu_branch(regs, p->opcode);
+> +		return false;
+> +	} else if (is_pc_ins(&p->opcode)) {
+> +		simu_pc(regs, p->opcode);
+> +		return false;
+> +	} else {
+> +		return true;
+> +	}
+> +}
+> +NOKPROBE_SYMBOL(insns_are_not_simulated);
+> +
+> +static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
+> +			     struct kprobe_ctlblk *kcb, int reenter)
+> +{
+> +	if (reenter) {
+> +		save_previous_kprobe(kcb);
+> +		set_current_kprobe(p, regs, kcb);
+> +		kcb->kprobe_status = KPROBE_REENTER;
+> +	} else {
+> +		kcb->kprobe_status = KPROBE_HIT_SS;
+> +	}
+> +
+> +	if (p->ainsn.insn->word == breakpoint_insn.word) {
+> +		regs->csr_prmd &= ~CSR_PRMD_PIE;
+> +		regs->csr_prmd |= kcb->kprobe_saved_irq;
+> +		return;
+> +	}
+> +
+> +	regs->csr_prmd &= ~CSR_PRMD_PIE;
+> +
+> +	if (insns_are_not_simulated(p, regs)) {
+> +		kcb->kprobe_status = KPROBE_HIT_SS;
+> +		regs->csr_era = (unsigned long)&p->ainsn.insn[0];
+> +	} else {
+> +		kcb->kprobe_status = KPROBE_HIT_SSDONE;
+> +		if (p->post_handler)
+> +			p->post_handler(p, regs, 0);
+> +		reset_current_kprobe();
+> +	}
+> +}
+> +NOKPROBE_SYMBOL(setup_singlestep);
+> +
+> +static bool reenter_kprobe(struct kprobe *p, struct pt_regs *regs,
+> +			  struct kprobe_ctlblk *kcb)
+> +{
+> +	switch (kcb->kprobe_status) {
+> +	case KPROBE_HIT_SSDONE:
+> +	case KPROBE_HIT_ACTIVE:
+> +		kprobes_inc_nmissed_count(p);
+> +		setup_singlestep(p, regs, kcb, 1);
+> +		break;
+> +	case KPROBE_HIT_SS:
+> +	case KPROBE_REENTER:
+> +		pr_warn("Failed to recover from reentered kprobes.\n");
+> +		dump_kprobe(p);
+> +		BUG();
+> +		break;
+> +	default:
+> +		WARN_ON(1);
+> +		return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +NOKPROBE_SYMBOL(reenter_kprobe);
+> +
+> +static bool kprobe_pre_handler(struct pt_regs *regs)
+> +{
+> +	struct kprobe *p, *cur_kprobe;
+> +	struct kprobe_ctlblk *kcb;
+> +	unsigned long addr = instruction_pointer(regs);
+> +
+> +	kcb = get_kprobe_ctlblk();
+> +	cur_kprobe = kprobe_running();
+> +
+> +	p = get_kprobe((kprobe_opcode_t *) addr);
+> +	if (p) {
+> +		if (cur_kprobe) {
+> +			if (reenter_kprobe(p, regs, kcb))
+> +				return true;
+> +		} else {
+> +			/* Probe hit */
+> +			set_current_kprobe(p, regs, kcb);
+> +			kcb->kprobe_status = KPROBE_HIT_ACTIVE;
+> +
+> +			/*
+> +			 * If we have no pre-handler or it returned 0, we
+> +			 * continue with normal processing.  If we have a
+> +			 * pre-handler and it returned non-zero, it will
+> +			 * modify the execution path and no need to single
+> +			 * stepping. Let's just reset current kprobe and exit.
+> +			 *
+> +			 * pre_handler can hit a breakpoint and can step thru
+> +			 * before return.
+> +			 */
+> +			if (!p->pre_handler || !p->pre_handler(p, regs))
+> +				setup_singlestep(p, regs, kcb, 0);
+> +			else
+> +				reset_current_kprobe();
+> +		}
+> +		return true;
+> +	}
+> +
+> +	/*
+> +	 * The breakpoint instruction was removed right
+> +	 * after we hit it.  Another cpu has removed
+> +	 * either a probepoint or a debugger breakpoint
+> +	 * at this address.  In either case, no further
+> +	 * handling of this interrupt is appropriate.
+> +	 * Return back to original instruction, and continue.
+> +	 */
+> +	return false;
+> +}
+> +NOKPROBE_SYMBOL(kprobe_pre_handler);
+> +
+> +static inline bool kprobe_post_handler(struct pt_regs *regs)
+> +{
+> +	struct kprobe *cur = kprobe_running();
+> +	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
+> +
+> +	if (!cur)
+> +		return false;
+> +
+> +	/* Restore back the original saved kprobes variables and continue */
+> +	if (kcb->kprobe_status == KPROBE_REENTER) {
+> +		restore_previous_kprobe(kcb);
+> +		return true;
+> +	}
+> +
+> +	/* Call post handler */
+> +	kcb->kprobe_status = KPROBE_HIT_SSDONE;
+> +	if (cur->post_handler)
+> +		cur->post_handler(cur, regs, 0);
+> +
+> +	regs->csr_era = kcb->kprobe_saved_era + LOONGARCH_INSN_SIZE;
+> +	regs->csr_prmd |= kcb->kprobe_saved_irq;
+> +
+> +	reset_current_kprobe();
+> +
+> +	return true;
+> +}
+> +NOKPROBE_SYMBOL(kprobe_post_handler);
+> +
+> +bool kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+> +{
+> +	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
+> +
+> +	if (kcb->kprobe_status & KPROBE_HIT_SS) {
+> +		regs->csr_era = kcb->kprobe_saved_era + LOONGARCH_INSN_SIZE;
+> +		regs->csr_prmd |= kcb->kprobe_saved_irq;
+> +		reset_current_kprobe();
+> +	}
+> +
+> +	return false;
+> +}
+> +NOKPROBE_SYMBOL(kprobe_fault_handler);
+> +
+> +int kprobe_exceptions_notify(struct notifier_block *self,
+> +			     unsigned long val, void *data)
+> +{
+> +	struct die_args *args = (struct die_args *)data;
+> +	int ret = NOTIFY_DONE;
+> +
+> +	switch (val) {
+> +	case DIE_BREAK:
+> +		if (kprobe_pre_handler(args->regs))
+> +			ret = NOTIFY_STOP;
+> +		break;
+> +	case DIE_SSTEPBP:
+> +		if (kprobe_post_handler(args->regs))
+> +			ret = NOTIFY_STOP;
+> +		break;
+> +	case DIE_PAGE_FAULT:
+> +		preempt_disable();
+> +		if (kprobe_running()
+> +		    && kprobe_fault_handler(args->regs, args->trapnr))
+> +			ret = NOTIFY_STOP;
+> +		preempt_enable();
+> +		break;
+The DIE_PAGE_FAULT not be notified in do_page_fault() now, and the newly
+version to call kprobe_fault_handler is do_page_fault()->kprobe_page_fault()
+->kprobe_fault_handler().
+
+Thanks,
+Jinyang
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +NOKPROBE_SYMBOL(kprobe_exceptions_notify);
+> +
+> +int __init arch_init_kprobes(void)
+> +{
+> +	return 0;
+> +}
+
