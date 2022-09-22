@@ -1,103 +1,144 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 943F21854
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 12:30:12 +0000 (UTC)
-Received: from [10.136.12.12] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx9OFRVSxjdB0gAA--.53947S3;
-	Thu, 22 Sep 2022 20:30:10 +0800 (CST)
-Subject: Re: [PATCH 1/5] i2c: core: Pick i2c bus number from ACPI if present
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Wolfram Sang <wsa@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org
-Cc: loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
- WANG Xuerui <kernel@xen0n.name>, Jianmin Lv <lvjianmin@loongson.cn>,
- Huacai Chen <chenhuacai@loongson.cn>
-References: <cover.1663835855.git.zhoubinbin@loongson.cn>
- <be5cd69c7c58d44ca119d4ca692d95a2ae924533.1663835855.git.zhoubinbin@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <b9d167bd-9899-e715-cd8a-a498d26653af@loongson.cn>
-Date: Thu, 22 Sep 2022 20:29:58 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08B801854
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 12:35:06 +0000 (UTC)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTWt4VixjZh4gAA--.58865S3;
+	Thu, 22 Sep 2022 20:35:05 +0800 (CST)
+Subject: Re: [PATCH 1/4] LoongArch: Add kprobe support
+To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+References: <1663645034-967-1-git-send-email-yangtiezhu@loongson.cn>
+ <1663645034-967-2-git-send-email-yangtiezhu@loongson.cn>
+ <8c54706f-4e5e-bab9-9382-f4195093996b@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <0196614f-27f0-1edd-ad23-a44eb3631c1d@loongson.cn>
+Date: Thu, 22 Sep 2022 20:35:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <be5cd69c7c58d44ca119d4ca692d95a2ae924533.1663835855.git.zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8Cx9OFRVSxjdB0gAA--.53947S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFWDtrykGFy7Wr15CF1rWFg_yoW8Xw13pF
-	Z8CFZIkr4jvF4v9FZxXr15ury5W395Kry2qFZFkw1UuFnxJrnrtFW5JFy2vFWrJ34qqws7
-	ZF4vv3yUCF4a9FUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9C14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+In-Reply-To: <8c54706f-4e5e-bab9-9382-f4195093996b@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8AxTWt4VixjZh4gAA--.58865S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXr4fCw17JFyxtF43JF4ruFg_yoW5WrWkpF
+	Z0yFsYkF4rJr93ury2vw4vgr18tw4rWr4fXF1aka43CFWqvr1Ik3y8GrWqyFyv9w4qkr1I
+	9F1ft342kF1SyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvv14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkIecxEwVAFwVW5JwCF04k20xvY0x0EwIxGrw
-	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-	14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxK
-	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
-	0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUDWrXUUUUU=
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+	IcxG8wCY02Avz4vE14v_Xr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
+	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+	IFyTuYvjfU1L0eDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 
-On 2022/9/22 下午7:39, Binbin Zhou wrote:
+Hi Jinyang,
 
-> Under LoongARCH based on ACPI(such as Loongson-3A + LS7A), the ls2x i2c
-> driver obtains the i2c bus number from ACPI table.
+On 09/22/2022 10:19 AM, Jinyang He wrote:
+> On 09/20/2022 11:37 AM, Tiezhu Yang wrote:
 >
-> Similar to the DT-base system, this is also a static bus number.
+>> Kprobes allows you to trap at almost any kernel address and
+>> execute a callback function, this commit adds kprobe support
+>> for LoongArch.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>   arch/loongarch/Kconfig               |   1 +
+>>   arch/loongarch/include/asm/inst.h    |  31 ++++
+>>   arch/loongarch/include/asm/kprobes.h |  44 +++++
+>>   arch/loongarch/include/asm/ptrace.h  |   1 +
+>>   arch/loongarch/kernel/Makefile       |   2 +
+>>   arch/loongarch/kernel/inst.c         | 107 ++++++++++++
+>>   arch/loongarch/kernel/kprobes.c      | 309
+
+...
+
+>> +void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
+>> +{
+>> +    unsigned long pc = regs->csr_era;
+>> +    unsigned int rd = insn.reg1i20_format.rd;
+>> +    unsigned int imm = insn.reg1i20_format.immediate;
+>> +
+>> +    switch (insn.reg1i20_format.opcode) {
+>> +    case pcaddi_op:
+>> +        regs->regs[rd] = pc + sign_extended(imm << 2, 21);
+>> +        break;
+>> +    case pcaddu12i_op:
+>> +        regs->regs[rd] = pc + sign_extended(imm << 12, 31);
+>> +        break;
+>> +    case pcaddu18i_op:
+>> +        regs->regs[rd] = pc + sign_extended(imm << 18, 37);
+>> +        break;
+>> +    case pcalau12i_op:
+>> +        regs->regs[rd] = pc + sign_extended(imm << 12, 31);
+>> +        regs->regs[rd] &= ~((1 << 12) - 1);
+>> +        break;
+>> +    }
+>> +
+>> +    regs->csr_era += LOONGARCH_INSN_SIZE;
+>> +}
+> Hi, Tiezhu,
 >
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->   drivers/i2c/i2c-core-base.c | 10 +++++++++-
->   1 file changed, 9 insertions(+), 1 deletion(-)
+> The simu_pc and the simu_branch should make sure the instruction op is
+> excepted.
+> I think returning with errno or adding notes to explain that is needed.
 >
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 91007558bcb2..ffab4cc2c6ba 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -1559,7 +1559,8 @@ static int __i2c_add_numbered_adapter(struct i2c_adapter *adap)
->   int i2c_add_adapter(struct i2c_adapter *adapter)
->   {
->   	struct device *dev = &adapter->dev;
-> -	int id;
-> +	acpi_status status;
-> +	unsigned long long id;
->   
->   	if (dev->of_node) {
->   		id = of_alias_get_id(dev->of_node, "i2c");
-> @@ -1567,6 +1568,13 @@ int i2c_add_adapter(struct i2c_adapter *adapter)
->   			adapter->nr = id;
->   			return __i2c_add_numbered_adapter(adapter);
->   		}
-> +	} else if (dev->parent->fwnode) {
-> +		status = acpi_evaluate_integer(ACPI_HANDLE(dev->parent),
-> +						"_UID", NULL, &id);
-> +		if (ACPI_SUCCESS(status) && (id >= 0)) {
 
-Hi, Binbin,
+OK, will do it in v2.
 
+> BTW, I honored these arch-specific simulation work I used to contribute
+> in the old world, although the codes has been optimized. Could you add
+> my sign-off?
 
-Emm, the id is unsigned and it always return true if (id>=0). And I think
+OK, no problem, as we discussed offline, I will split it into a
+single patch and add your credit, thanks for your work.
 
-you should check the other patches.
+>> diff --git a/arch/loongarch/kernel/kprobes.c
+>> b/arch/loongarch/kernel/kprobes.c
 
+...
 
-Jinyang
+>> +int kprobe_exceptions_notify(struct notifier_block *self,
+>> +                 unsigned long val, void *data)
+>> +{
+>> +    struct die_args *args = (struct die_args *)data;
+>> +    int ret = NOTIFY_DONE;
+>> +
+>> +    switch (val) {
+>> +    case DIE_BREAK:
+>> +        if (kprobe_pre_handler(args->regs))
+>> +            ret = NOTIFY_STOP;
+>> +        break;
+>> +    case DIE_SSTEPBP:
+>> +        if (kprobe_post_handler(args->regs))
+>> +            ret = NOTIFY_STOP;
+>> +        break;
+>> +    case DIE_PAGE_FAULT:
+>> +        preempt_disable();
+>> +        if (kprobe_running()
+>> +            && kprobe_fault_handler(args->regs, args->trapnr))
+>> +            ret = NOTIFY_STOP;
+>> +        preempt_enable();
+>> +        break;
+> The DIE_PAGE_FAULT not be notified in do_page_fault() now, and the newly
+> version to call kprobe_fault_handler is
+> do_page_fault()->kprobe_page_fault()
+> ->kprobe_fault_handler().
 
+OK, will modify it in v2, thanks for your review.
 
-> +			adapter->nr = id;
-> +			return __i2c_add_numbered_adapter(adapter);
-> +		}
->   	}
->   
->   	mutex_lock(&core_lock);
+Thanks,
+Tiezhu
 
