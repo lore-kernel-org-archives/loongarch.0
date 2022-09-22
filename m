@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4848E1854
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 13:18:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2462C4347C
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 13:18:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A0A1854
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 13:19:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A58AC433D6
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 13:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663852703;
-	bh=Zbggpd2JNHEX2Yc01QkFE91wHUsv2A59ImlXtIniys4=;
+	s=k20201202; t=1663852779;
+	bh=TCzD+QILP3Wnn2PhepH1fYbqUH8lLu86makf3hvnfXg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DxtX3gbdoDVhC1rnZkv0PJag6kgvm/JsYvsxxwoOSqNcB71LSIQEUvTFo7GROm9tB
-	 vM1ymuFSOhvnQHO9HByJcZvOmcqg1nQCflVwc4g7oIt6pfaV9CG/nALunalp8uDHeb
-	 QLcyB5ynXPCQjjlme88M17FS1Y5EQXCJmRNBCBZUW/P5VCJoKCXLVqSmjIAaLGGN6j
-	 jj7N5RUhMRz3p9ddrxPaJbrecfsGNeJ8EWZwS5DzRa5yMOpGlmOum6D7E2Yf7QyIhJ
-	 TGpoGRi2fD2zMvCjs6cHrCsNPiFcTdzogfEiMpyMvMDeNEh0m1yABCfDPIxF2x9OfT
-	 CQj6Nl+QxmZhw==
-Received: by mail-lf1-f45.google.com with SMTP id s6so14646029lfo.7
-        for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 06:18:22 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0Qbc/qAySmXEw+eJ9hwCuJLmvHqt4iVxQbTcXcz6IsN3dVxDD2
-	sbSbabPOrgwpbrrHb2Y4a5hPg97qLwMyA/8KlRQ=
-X-Google-Smtp-Source: AMsMyM5ZDrKqrRXpDXBGeJ+gbkvCBMZHFqxEXVfZxzyvWsBCHWaIm8UnpeKFBbxQX/PVWS4BGQg0yJszFAerOtwb/10=
-X-Received: by 2002:a05:6512:ba1:b0:498:9890:1bb4 with SMTP id
- b33-20020a0565120ba100b0049898901bb4mr1168517lfv.122.1663852701020; Thu, 22
- Sep 2022 06:18:21 -0700 (PDT)
+	b=CG1s2kX4pa8+T0NQ1XL2KHunbOVIjZRpXQfcFaC0TmDO9UuSbk/M1dmxdAZ5Ks30U
+	 e3xA2ZAuEG/ZDPWVyN89cPic2sHuBAaZwYsq+zP7fjHOwwk4G47xtPj0UNLEL0mNoP
+	 ff+apH1rLsVOM2duzU/5j+7n/ZEaL9Z4AACrjSZofvJe9BynpkQekdjKpGQpP8lRNf
+	 hBCoalJ/OElk2H33oNkVy4+LP4UIJw8W7CLBzlIz4MfVEx0AXxaehtMhqn5rbBmt3R
+	 pN7C8v6x5+OAYF3CkZDq1J11unIZIww6xNMPD7rVuR3uPGMzdhgqGankwvR8lz4YJm
+	 zENCH4mHUYHYw==
+Received: by mail-lf1-f52.google.com with SMTP id a3so14617775lfk.9
+        for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 06:19:38 -0700 (PDT)
+X-Gm-Message-State: ACrzQf3yem44OsgmZNvfxr2b8KDEcgbTx3+K3dyL57Afbl37xC9JQtEI
+	n95gZIZShpsmT+YEDqkGSQiJT5UNITPvROdFVY4=
+X-Google-Smtp-Source: AMsMyM7+/T2thoV7FMWkAW6JohciWcnXgAb9nqJ+veyoKfyHf8J2LldCPcbZHnPrv9EMfBpRNGKl6A3LPk+8gVi8Ntg=
+X-Received: by 2002:a05:6512:4024:b0:497:4db:6ad0 with SMTP id
+ br36-20020a056512402400b0049704db6ad0mr1307042lfb.637.1663852777085; Thu, 22
+ Sep 2022 06:19:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,12 +41,13 @@ References: <20220920183554.3870247-1-ardb@kernel.org> <20220920183554.3870247-9
  <CAAhV-H7cp_ip9B4BD65CsCerjKtfaxcQqi1T3QB8VveRXLhY_w@mail.gmail.com>
  <CAMj1kXG0nnB4qOyKp8-=ggxFYC_1ut6oHdkqX_mVqdZMadjb8g@mail.gmail.com>
  <CAAhV-H6botg=dVVQb1YiPnBHwxVuoyDo1CKd-HbrnhCztQiQZA@mail.gmail.com>
- <CAMj1kXHcbtjR=+==eBhxTRN=uUrvfBjYEpoLKkMQpbpqrxdN9A@mail.gmail.com> <CAAhV-H439XWK5ZRSw5w2zN-w8sNLMkR7VSFfxp04ud4C-gOLnA@mail.gmail.com>
-In-Reply-To: <CAAhV-H439XWK5ZRSw5w2zN-w8sNLMkR7VSFfxp04ud4C-gOLnA@mail.gmail.com>
+ <CAMj1kXHcbtjR=+==eBhxTRN=uUrvfBjYEpoLKkMQpbpqrxdN9A@mail.gmail.com>
+ <CAAhV-H439XWK5ZRSw5w2zN-w8sNLMkR7VSFfxp04ud4C-gOLnA@mail.gmail.com> <CAMj1kXGoG8XDASsEEn3B8b0DvF37ryY5Do1iRdKHuouohsLN3g@mail.gmail.com>
+In-Reply-To: <CAMj1kXGoG8XDASsEEn3B8b0DvF37ryY5Do1iRdKHuouohsLN3g@mail.gmail.com>
 From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 22 Sep 2022 15:18:09 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGoG8XDASsEEn3B8b0DvF37ryY5Do1iRdKHuouohsLN3g@mail.gmail.com>
-Message-ID: <CAMj1kXGoG8XDASsEEn3B8b0DvF37ryY5Do1iRdKHuouohsLN3g@mail.gmail.com>
+Date: Thu, 22 Sep 2022 15:19:25 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXH_vWCxr1r1j7kJ43PcmgAUeuf=QdrbXU2fanEgeCTTgQ@mail.gmail.com>
+Message-ID: <CAMj1kXH_vWCxr1r1j7kJ43PcmgAUeuf=QdrbXU2fanEgeCTTgQ@mail.gmail.com>
 Subject: Re: [PATCH v2 8/8] efi/loongarch: libstub: remove dependency on
  flattened DT
 To: Huacai Chen <chenhuacai@kernel.org>
@@ -55,96 +56,100 @@ Cc: linux-efi <linux-efi@vger.kernel.org>, loongarch@lists.linux.dev,
 	Huacai Chen <chenhuacai@loongson.cn>, Xi Ruoyao <xry111@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 22 Sept 2022 at 15:12, Huacai Chen <chenhuacai@kernel.org> wrote:
+On Thu, 22 Sept 2022 at 15:18, Ard Biesheuvel <ardb@kernel.org> wrote:
 >
-> On Thu, Sep 22, 2022 at 9:10 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> On Thu, 22 Sept 2022 at 15:12, Huacai Chen <chenhuacai@kernel.org> wrote:
 > >
-> > On Thu, 22 Sept 2022 at 15:09, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > On Thu, Sep 22, 2022 at 9:10 PM Ard Biesheuvel <ardb@kernel.org> wrote:
 > > >
-> > > On Thu, Sep 22, 2022 at 8:50 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > On Thu, 22 Sept 2022 at 15:09, Huacai Chen <chenhuacai@kernel.org> wrote:
 > > > >
-> > > > On Thu, 22 Sept 2022 at 14:08, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > On Thu, Sep 22, 2022 at 8:50 PM Ard Biesheuvel <ardb@kernel.org> wrote:
 > > > > >
-> > > > > Hi, Ard,
-> > > > >
-> > > > > On Thu, Sep 22, 2022 at 4:59 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > On Thu, 22 Sept 2022 at 14:08, Huacai Chen <chenhuacai@kernel.org> wrote:
 > > > > > >
-> > > > > > On Thu, 22 Sept 2022 at 09:42, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > Hi, Ard,
+> > > > > >
+> > > > > > On Thu, Sep 22, 2022 at 4:59 PM Ard Biesheuvel <ardb@kernel.org> wrote:
 > > > > > > >
-> > > > > > > On Thu, Sep 22, 2022 at 3:25 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > > > On Thu, 22 Sept 2022 at 09:42, Huacai Chen <chenhuacai@kernel.org> wrote:
 > > > > > > > >
-> > > > > > > > On Thu, 22 Sept 2022 at 09:22, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > > > On Thu, Sep 22, 2022 at 3:25 PM Ard Biesheuvel <ardb@kernel.org> wrote:
 > > > > > > > > >
-> > > > > > > > > On Thu, Sep 22, 2022 at 3:13 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > > > > > On Thu, 22 Sept 2022 at 09:22, Huacai Chen <chenhuacai@kernel.org> wrote:
 > > > > > > > > > >
-> > > > > > > > > > On Thu, 22 Sept 2022 at 04:15, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > > > > > On Thu, Sep 22, 2022 at 3:13 PM Ard Biesheuvel <ardb@kernel.org> wrote:
 > > > > > > > > > > >
-> > > > > > > > > > > On Wed, Sep 21, 2022 at 4:15 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > > > > > > > > On Thu, 22 Sept 2022 at 04:15, Huacai Chen <chenhuacai@kernel.org> wrote:
 > > > > > > > > > > > >
-> > > > > > > > > > > > On Wed, 21 Sept 2022 at 06:02, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > > > > > > > On Wed, Sep 21, 2022 at 4:15 PM Ard Biesheuvel <ardb@kernel.org> wrote:
 > > > > > > > > > > > > >
-> > > > > > > > > > > > > Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > > > > > > > > > On Wed, 21 Sept 2022 at 06:02, Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > > > > > > > > > >
 > > > > > > > > > > > > >
-> > > > > > > > > > > >
-> > > > > > > > > > > > Thank you Huacai
-> > > > > > > > > > > >
-> > > > > > > > > > > > I have created a separate tag with these patches applied onto the
-> > > > > > > > > > > > first loongarch efi enablement patch (see below)
-> > > > > > > > > > > >
-> > > > > > > > > > > > I would prefer to keep the loongarch trees separate for the next merge
-> > > > > > > > > > > > window, but if needed to avoid massive conflicts, you could merge the
-> > > > > > > > > > > > tag into the loongarch tree and rebase your changes on top. But please
-> > > > > > > > > > > > take care not to rebase those patches themselves: the commit SHAs need
-> > > > > > > > > > > > to remain the same.
-> > > > > > > > > > > >
-> > > > > > > > > > > > However, if the conflicts are only minor, you can just explain in your
-> > > > > > > > > > > > PR to Linus what the resolution should look like.
-> > > > > > > > > > > >
-> > > > > > > > > > > > The tag can be found here:
-> > > > > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tag/?h=efi-loongarch-for-v6.1-2
-> > > > > > > > > > > >
-> > > > > > > > > > > > I have merged this into the EFI tree as well and pushed it out; it
-> > > > > > > > > > > > should appear in -next tomorrow.
-> > > > > > > > > > > >
-> > > > > > > > > > > >
-> > > > > > > > > > > >
-> > > > > > > > > > > > b093dc55ba9a efi/loongarch: libstub: remove dependency on flattened DT
-> > > > > > > > > > > > 102faf0747c2 efi: libstub: install boot-time memory map as config table
-> > > > > > > > > > > > 7318926e7bc9 efi: libstub: remove DT dependency from generic stub
-> > > > > > > > > > > > 7cb6671e3caa efi: libstub: unify initrd loading between architectures
+> > > > > > > > > > > > > Thank you Huacai
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > I have created a separate tag with these patches applied onto the
+> > > > > > > > > > > > > first loongarch efi enablement patch (see below)
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > I would prefer to keep the loongarch trees separate for the next merge
+> > > > > > > > > > > > > window, but if needed to avoid massive conflicts, you could merge the
+> > > > > > > > > > > > > tag into the loongarch tree and rebase your changes on top. But please
+> > > > > > > > > > > > > take care not to rebase those patches themselves: the commit SHAs need
+> > > > > > > > > > > > > to remain the same.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > However, if the conflicts are only minor, you can just explain in your
+> > > > > > > > > > > > > PR to Linus what the resolution should look like.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > The tag can be found here:
+> > > > > > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tag/?h=efi-loongarch-for-v6.1-2
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > I have merged this into the EFI tree as well and pushed it out; it
+> > > > > > > > > > > > > should appear in -next tomorrow.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > >
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > b093dc55ba9a efi/loongarch: libstub: remove dependency on flattened DT
+> > > > > > > > > > > > > 102faf0747c2 efi: libstub: install boot-time memory map as config table
+> > > > > > > > > > > > > 7318926e7bc9 efi: libstub: remove DT dependency from generic stub
+> > > > > > > > > > > > > 7cb6671e3caa efi: libstub: unify initrd loading between architectures
+> > > > > > > > > > >
+> > > > > > > > > > > I will have to respin the initrd patch, unfortunately, as it breaks
+> > > > > > > > > > > x86. So the signed tag will be updated, and the SHAs above will change
+> > > > > > > > > > > as well.
+> > > > > > > > > > Emm, initrd is also broken on LoongArch, the core kernel gets an
+> > > > > > > > > > EFI_INVALID_TABLE_ADDR address.
 > > > > > > > > > >
-> > > > > > > > > > I will have to respin the initrd patch, unfortunately, as it breaks
-> > > > > > > > > > x86. So the signed tag will be updated, and the SHAs above will change
-> > > > > > > > > > as well.
-> > > > > > > > > Emm, initrd is also broken on LoongArch, the core kernel gets an
-> > > > > > > > > EFI_INVALID_TABLE_ADDR address.
 > > > > > > > > >
-> > > > > > > >
-> > > > > > > > OK, I will investigate. This was working fine before so I'm not sure
-> > > > > > > > what happened there.
-> > > > > > > >
+> > > > > > > > > OK, I will investigate. This was working fine before so I'm not sure
+> > > > > > > > > what happened there.
+> > > > > > > > >
+> > > > > > >
+> > > > > > > I cannot reproduce this. Can you reproduce it with qemu? If so, can
+> > > > > > > you share your command line and .config etc?
+> > > > > > In qemu we also OK, but on a real machine efistub fails at
+> > > > > > efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle), maybe
+> > > > > > our UEFI BIOS has some problems? On a real machine we use grub and
+> > > > > > there is no "initrd" command in UEFI shell.
 > > > > > >
-> > > > > > I cannot reproduce this. Can you reproduce it with qemu? If so, can
-> > > > > > you share your command line and .config etc?
-> > > > > In qemu we also OK, but on a real machine efistub fails at
-> > > > > efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle), maybe
-> > > > > our UEFI BIOS has some problems? On a real machine we use grub and
-> > > > > there is no "initrd" command in UEFI shell.
 > > > > >
+> > > > > Ah ok, so i guess your GRUB lacks the LoadFile2 patches?
+> > > > >
+> > > > > https://lists.gnu.org/archive/html/grub-devel/2022-09/msg00057.html
+> > > > Maybe it is a GRUB problem (I'll discuss with GRUB team), but why
+> > > > without this series the GRUB can load initrd? Because in the old way
+> > > > UEFI BIOS fill initrd information to FDT?
 > > > >
-> > > > Ah ok, so i guess your GRUB lacks the LoadFile2 patches?
-> > > >
-> > > > https://lists.gnu.org/archive/html/grub-devel/2022-09/msg00057.html
-> > > Maybe it is a GRUB problem (I'll discuss with GRUB team), but why
-> > > without this series the GRUB can load initrd? Because in the old way
-> > > UEFI BIOS fill initrd information to FDT?
 > > >
+> > > No GRUB loads the initrd and creates a DT with a /chosen node to
+> > > record the initrd base and size.
+> > Without this series, efistub also fails at
+> > efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle), but
+> > initrd works well, this makes me puzzled.
 > >
-> > No GRUB loads the initrd and creates a DT with a /chosen node to
-> > record the initrd base and size.
-> Without this series, efistub also fails at
-> efi_bs_call(locate_device_path, &lf2_proto_guid, &dp, &handle), but
-> initrd works well, this makes me puzzled.
 >
+> That is because you don't have DTB support in the core kernel yet right?
 
-That is because you don't have DTB support in the core kernel yet right?
+Never mind - what exact commit are you testing this with?
