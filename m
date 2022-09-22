@@ -1,268 +1,105 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 568FB2F33
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 11:08:13 +0000 (UTC)
-Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXWsbQixjVBIgAA--.58768S2;
-	Thu, 22 Sep 2022 19:08:11 +0800 (CST)
-From: Youling Tang <tangyouling@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Use generic BUG() handler
-Date: Thu, 22 Sep 2022 19:08:10 +0800
-Message-Id: <1663844890-10776-1-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8BxXWsbQixjVBIgAA--.58768S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3GFyruw4rJry7urykuryUWrg_yoWxWr18pF
-	Z3ZFn5JrWkWFn3Ja43JF109FWayws3Gr47WF17Wa4Fva42qr1kXr4vvrsxZFy0g39a9rW0
-	gF9YgFnIqF4UAw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
-	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8KwCF04k2
-	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
-	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
-	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-	jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07bF2NNUUUUU=
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD66D2F33
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 11:19:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1663845554;
+	bh=flyR88Jrejjr4Zl6iHpQU5Bfe821fViP66EMnFD03eo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=LzCfWXjfo+UUaLw6k8hFnsABgrQhNI3Cd8VL3M+rl1LBp3UwgjXbpOquHLmyWgGBC
+	 ZCBhIptwfmdqF99srcVL+qKO+deY6SeIevw+5SaX1GC/W6ptKbMVVo3YivJnQeoG8w
+	 vEWFp4HF4mKzg7OnsJx8kw6rj4bhGeHZdfSYEjM8=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 7791C66887;
+	Thu, 22 Sep 2022 07:19:12 -0400 (EDT)
+Message-ID: <5e12ab67701adf81834dfb88fc3cb6fdf55f676d.camel@xry111.site>
+Subject: Re: [PATCH 1/3] LoongArch: tools: Add relocs tool support
+From: Xi Ruoyao <xry111@xry111.site>
+To: Youling Tang <tangyouling@loongson.cn>, Jinyang He
+ <hejinyang@loongson.cn>,  Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, Xuerui Wang
+	 <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Date: Thu, 22 Sep 2022 19:19:10 +0800
+In-Reply-To: <750719dc-d481-6eba-05c6-50cfdceb871b@loongson.cn>
+References: <1662113335-14282-1-git-send-email-tangyouling@loongson.cn>
+	 <1662113335-14282-2-git-send-email-tangyouling@loongson.cn>
+	 <c9880165f0355fc3be3ec23153b43ad33e558b5d.camel@xry111.site>
+	 <4df8a26c49a35c1fce36d80c370f738fa71a2bef.camel@xry111.site>
+	 <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
+	 <78a4a6b0970c309daa336a2329e69d28df486552.camel@xry111.site>
+	 <fffdd2ac-4ba6-8eb3-f269-b22a3d9c32f6@loongson.cn>
+	 <0b2d115c42ff6cb9b8c65d852ec2f0746ca6e8d9.camel@xry111.site>
+	 <d852f590-95b4-3fd1-924a-68c0a6bb1b1b@loongson.cn>
+	 <29cd929b-185b-1c4b-f200-08f2a724b59d@loongson.cn>
+	 <a218373f773ef193903daa528291ec8bb384ddd2.camel@xry111.site>
+	 <83a7aad8-125b-29b5-715d-0061ce1b0647@loongson.cn>
+	 <011b5d39-e0cb-69cc-66fd-ed46afe7695e@loongson.cn>
+	 <750719dc-d481-6eba-05c6-50cfdceb871b@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.0 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
 
-Inspired by commit 9fb7410f955("arm64/BUG: Use BRK instruction for
-generic BUG traps"), do similar to LoongArch to use generic BUG()
-handler.
+On Thu, 2022-09-08 at 16:01 +0800, Youling Tang wrote:
+> After adding KBUILD_CFLAGS_KERNEL +=3D -mdirect-extern-access, the
+> kernel
+> will not generate .got, .plt and .got.plt sections (in the new
+> toolchain), we should unexpectedly detect that the kernel has these
+> sections, maybe add similar patch [1] to detect, x86_64 has the same
+> operation.
+>=20
+> But when adding LDFLAGS_vmlinux +=3D -pie (or -shared), there will be
+> .got, .plt and .got.plt sections generated, I don't know how the
+> toolchain handles it :(?
 
-This patch uses the BREAK software breakpoint instruction to generate
-a trap instead, similarly to most other arches, with the generic BUG
-code generating the dmesg boilerplate.
+Hi Youling,
 
-This allows bug metadata to be moved to a separate table and reduces
-the amount of inline code at BUG and WARN sites. This also avoids
-clobbering any registers before they can be dumped.
+I've pulled your code and make some adjustments for it:
 
-To mitigate the size of the bug table further, this patch makes use
-of the existing infrastructure for encoding addresses within the bug
-table as 32-bit relative pointers instead of absolute pointers. (Note
-that this limits the kernel size to 2GB.)
+https://github.com/xry111/linux/commits/xry111/la-dev/pie
 
-Before patch:
-[ 3018.338013] lkdtm: Performing direct entry BUG
-[ 3018.342445] Kernel bug detected[#5]:
-[ 3018.345992] CPU: 2 PID: 865 Comm: cat Tainted: G D 6.0.0-rc6+ #35
+One adjustment is for FDT removal, another uses a static-PIE style
+LDFLAGS as the kernel is more "similar" to a static PIE than a shared
+library. In userspace, a static PIE is linked with [1]:
 
-After patch:
-[  125.585985] lkdtm: Performing direct entry BUG
-[  125.590433] ------------[ cut here ]------------
-[  125.595020] kernel BUG at drivers/misc/lkdtm/bugs.c:78!
-[  125.600211] Oops - BUG[#1]:
-[  125.602980] CPU: 3 PID: 410 Comm: cat Not tainted 6.0.0-rc6+ #36
+ -static -pie --no-dynamic-linker -z text
 
-Out-of-line file/line data information obtained compared to before.
+[1]: https://gcc.gnu.org/r13-2728
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
+But we have to use "-z notext" for vmlinux. I'm not an expert on kernel
+hacking, and I guess it's because the kernel doesn't really care the RWX
+permission of itself (I heard this during some discussion about a W/X
+page warning added in Binutils-2.39 which is triggered for vmlinux).
 
-Note: The following modifications need to be made when adding objootl
-support later:
+With "-static -pie --no-dynamic-linker -z notext" (and GCC trunk &
+Binutils trunk), .plt and .got.plt are gone.
 
-WARN* and BUG* both use "break 0x1" opcodes and the distinction
-is provided by the contents of the bug table. This table is not
-accessible to objtool, so add an annotation to WARN* macros to
-let objtool know that break handler will return an resume the
-execution of the instructions following the WARN's break.
+.got is still there but it only contains one entry (8 bytes).  AFAIK
+this entry (`_GLOBAL_OFFSET_TABLE_[0]`) is set to the link-time address
+of _DYNAMIC for a userspace static PIE [2], but vmlinux does not need it
+at all.  We can tell the linker to discard it IIUC.
 
- #define __WARN_FLAGS(flags)                           \
- do {                                                  \
-         instrumentation_begin();                      \
-         __BUG_FLAGS(BUGFLAG_WARNING|(flags));         \
-         annotate_reachable();                         \
-         instrumentation_end();                        \
+[2]:
+https://maskray.me/blog/2021-08-29-all-about-global-offset-table#global_off=
+set_table_0
 
- } while (0)
+I've boot the kernel successfully and it seems KASLR is in-effect:
 
- arch/loongarch/Kconfig           |  8 +++++
- arch/loongarch/include/asm/bug.h | 60 ++++++++++++++++++++++++++------
- arch/loongarch/kernel/head.S     |  3 ++
- arch/loongarch/kernel/traps.c    | 26 ++++++++++++--
- 4 files changed, 84 insertions(+), 13 deletions(-)
+$ sudo cat /proc/kallsyms | grep ' _printk$'
+90000000023b28f4 T _printk
+$ grep ' _printk$' /boot/System.map-6.0.0-rc6-pie+=20
+90000000009828f4 T _printk
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index b2da0a6f844e..4184aa710375 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -160,6 +160,14 @@ config LOCKDEP_SUPPORT
- 	bool
- 	default y
- 
-+config GENERIC_BUG
-+	def_bool y
-+	depends on BUG
-+
-+config GENERIC_BUG_RELATIVE_POINTERS
-+	def_bool y
-+	depends on GENERIC_BUG
-+
- config STACKTRACE_SUPPORT
- 	bool
- 	default y
-diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/asm/bug.h
-index bda49108a76d..814d464ce9a5 100644
---- a/arch/loongarch/include/asm/bug.h
-+++ b/arch/loongarch/include/asm/bug.h
-@@ -1,23 +1,61 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+
- #ifndef __ASM_BUG_H
- #define __ASM_BUG_H
- 
--#include <linux/compiler.h>
-+#include <asm/break.h>
-+#include <linux/stringify.h>
-+
-+#ifdef CONFIG_DEBUG_BUGVERBOSE
-+#define _BUGVERBOSE_LOCATION(file, line) __BUGVERBOSE_LOCATION(file, line)
-+#define __BUGVERBOSE_LOCATION(file, line)			\
-+		.pushsection .rodata.str, "aMS", @progbits, 1;	\
-+	10002:	.string file;					\
-+		.popsection;					\
-+								\
-+		.long 10002b - .;				\
-+		.short line;
-+#else
-+#define _BUGVERBOSE_LOCATION(file, line)
-+#endif
- 
--#ifdef CONFIG_BUG
-+#ifdef CONFIG_GENERIC_BUG
-+
-+#define __BUG_ENTRY(flags) 					\
-+		.pushsection __bug_table, "aw";			\
-+		.align 2;					\
-+	10000:	.long 10001f - .;				\
-+_BUGVERBOSE_LOCATION(__FILE__, __LINE__)			\
-+		.short flags; 					\
-+		.popsection;					\
-+	10001:
-+#else
-+#define __BUG_ENTRY(flags)
-+#endif
- 
--#include <asm/break.h>
-+#define ASM_BUG_FLAGS(flags)					\
-+	__BUG_ENTRY(flags)					\
-+	break	BRK_BUG
- 
--static inline void __noreturn BUG(void)
--{
--	__asm__ __volatile__("break %0" : : "i" (BRK_BUG));
--	unreachable();
--}
-+#define ASM_BUG()	ASM_BUG_FLAGS(0)
- 
--#define HAVE_ARCH_BUG
-+#define __BUG_FLAGS(flags)					\
-+	asm_inline volatile (__stringify(ASM_BUG_FLAGS(flags)));
- 
--#endif
-+#define BUG() do {						\
-+	instrumentation_begin();				\
-+	__BUG_FLAGS(0);						\
-+	unreachable();						\
-+} while (0)
-+
-+#define __WARN_FLAGS(flags) do {				\
-+	instrumentation_begin();				\
-+	__BUG_FLAGS(BUGFLAG_WARNING|(flags));			\
-+	instrumentation_end();					\
-+} while (0)
-+
-+#define HAVE_ARCH_BUG
- 
- #include <asm-generic/bug.h>
- 
--#endif /* __ASM_BUG_H */
-+#endif /* ! __ASM_BUG_H */
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index 4d352230fbc3..2ab9b066ae6b 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -8,6 +8,7 @@
- #include <asm/addrspace.h>
- #include <asm/asm.h>
- #include <asm/asmmacro.h>
-+#include <asm/bug.h>
- #include <asm/regdef.h>
- #include <asm/loongarch.h>
- #include <asm/stackframe.h>
-@@ -87,6 +88,7 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
- 	PTR_ADDI	sp, sp, -4 * SZREG	# init stack pointer
- 
- 	bl		start_kernel
-+	ASM_BUG()
- 
- SYM_CODE_END(kernel_entry)
- 
-@@ -118,6 +120,7 @@ SYM_CODE_START(smpboot_entry)
- 	ld.d		tp, t0, CPU_BOOT_TINFO
- 
- 	bl		start_secondary
-+	ASM_BUG()
- SYM_CODE_END(smpboot_entry)
- 
- #endif /* CONFIG_SMP */
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index a692009fee31..dc05c6915b47 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -378,6 +378,29 @@ asmlinkage void noinstr do_ale(struct pt_regs *regs)
- 	irqentry_exit(regs, state);
- }
- 
-+/* GENERIC_BUG traps */
-+
-+int is_valid_bugaddr(unsigned long addr)
-+{
-+	return 1;
-+}
-+
-+static void bug_handler(struct pt_regs *regs)
-+{
-+	switch (report_bug(regs->csr_era, regs)) {
-+	case BUG_TRAP_TYPE_NONE:
-+	case BUG_TRAP_TYPE_BUG:
-+		die_if_kernel("Oops - BUG", regs);
-+		force_sig(SIGTRAP);
-+		break;
-+
-+	case BUG_TRAP_TYPE_WARN:
-+		/* Skip the BUG instruction and continue */
-+		regs->csr_era += LOONGARCH_INSN_SIZE;
-+		break;
-+	}
-+}
-+
- asmlinkage void noinstr do_bp(struct pt_regs *regs)
- {
- 	bool user = user_mode(regs);
-@@ -431,8 +454,7 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
- 
- 	switch (bcode) {
- 	case BRK_BUG:
--		die_if_kernel("Kernel bug detected", regs);
--		force_sig(SIGTRAP);
-+		bug_handler(regs);
- 		break;
- 	case BRK_DIVZERO:
- 		die_if_kernel("Break instruction in kernel code", regs);
--- 
-2.36.0
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
