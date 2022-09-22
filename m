@@ -1,105 +1,79 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD66D2F33
-	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 11:19:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1663845554;
-	bh=flyR88Jrejjr4Zl6iHpQU5Bfe821fViP66EMnFD03eo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=LzCfWXjfo+UUaLw6k8hFnsABgrQhNI3Cd8VL3M+rl1LBp3UwgjXbpOquHLmyWgGBC
-	 ZCBhIptwfmdqF99srcVL+qKO+deY6SeIevw+5SaX1GC/W6ptKbMVVo3YivJnQeoG8w
-	 vEWFp4HF4mKzg7OnsJx8kw6rj4bhGeHZdfSYEjM8=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 7791C66887;
-	Thu, 22 Sep 2022 07:19:12 -0400 (EDT)
-Message-ID: <5e12ab67701adf81834dfb88fc3cb6fdf55f676d.camel@xry111.site>
-Subject: Re: [PATCH 1/3] LoongArch: tools: Add relocs tool support
-From: Xi Ruoyao <xry111@xry111.site>
-To: Youling Tang <tangyouling@loongson.cn>, Jinyang He
- <hejinyang@loongson.cn>,  Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, Xuerui Wang
-	 <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Thu, 22 Sep 2022 19:19:10 +0800
-In-Reply-To: <750719dc-d481-6eba-05c6-50cfdceb871b@loongson.cn>
-References: <1662113335-14282-1-git-send-email-tangyouling@loongson.cn>
-	 <1662113335-14282-2-git-send-email-tangyouling@loongson.cn>
-	 <c9880165f0355fc3be3ec23153b43ad33e558b5d.camel@xry111.site>
-	 <4df8a26c49a35c1fce36d80c370f738fa71a2bef.camel@xry111.site>
-	 <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
-	 <78a4a6b0970c309daa336a2329e69d28df486552.camel@xry111.site>
-	 <fffdd2ac-4ba6-8eb3-f269-b22a3d9c32f6@loongson.cn>
-	 <0b2d115c42ff6cb9b8c65d852ec2f0746ca6e8d9.camel@xry111.site>
-	 <d852f590-95b4-3fd1-924a-68c0a6bb1b1b@loongson.cn>
-	 <29cd929b-185b-1c4b-f200-08f2a724b59d@loongson.cn>
-	 <a218373f773ef193903daa528291ec8bb384ddd2.camel@xry111.site>
-	 <83a7aad8-125b-29b5-715d-0061ce1b0647@loongson.cn>
-	 <011b5d39-e0cb-69cc-66fd-ed46afe7695e@loongson.cn>
-	 <750719dc-d481-6eba-05c6-50cfdceb871b@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.0 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DC103207
+	for <loongarch@lists.linux.dev>; Thu, 22 Sep 2022 11:41:24 +0000 (UTC)
+Received: from localhost.localdomain (unknown [112.20.112.163])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxFeLhSSxjyhYgAA--.56317S2;
+	Thu, 22 Sep 2022 19:41:22 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Wolfram Sang <wsa@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org
+Cc: loongarch@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH 0/5] i2c: ls2x: Add support for the Loongson-2K/LS7A I2C 
+Date: Thu, 22 Sep 2022 19:39:53 +0800
+Message-Id: <cover.1663835855.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxFeLhSSxjyhYgAA--.56317S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF1kWF1xAr1rZFWktw1fWFg_yoWkArgEkF
+	93XasrJF1DCF98GFyjvr4fZrWagayUW3WFk3Z7tr1fCry7Xw15KFyDZr9xGa1xXFWDWFn8
+	Xw4kuF1xZF1xXjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb2kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8KwCF
+	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+	18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vI
+	r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+	1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUj-zVUUUUUU==
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
 
-On Thu, 2022-09-08 at 16:01 +0800, Youling Tang wrote:
-> After adding KBUILD_CFLAGS_KERNEL +=3D -mdirect-extern-access, the
-> kernel
-> will not generate .got, .plt and .got.plt sections (in the new
-> toolchain), we should unexpectedly detect that the kernel has these
-> sections, maybe add similar patch [1] to detect, x86_64 has the same
-> operation.
->=20
-> But when adding LDFLAGS_vmlinux +=3D -pie (or -shared), there will be
-> .got, .plt and .got.plt sections generated, I don't know how the
-> toolchain handles it :(?
+Hi all:
 
-Hi Youling,
+This patch series adds support for the I2C module found on various
+Loongson systems with the Loongson-2K SoC or the Loongson LS7A bridge chip.
 
-I've pulled your code and make some adjustments for it:
+For now, the I2C driver is suitable for DT-based or ACPI-based systems.
 
-https://github.com/xry111/linux/commits/xry111/la-dev/pie
+BTW:
+I have only tested on the Loongson-3A5000+LS7A1000/LS7A2000 under LoongArch
+architecture.
 
-One adjustment is for FDT removal, another uses a static-PIE style
-LDFLAGS as the kernel is more "similar" to a static PIE than a shared
-library. In userspace, a static PIE is linked with [1]:
+Thanks.
 
- -static -pie --no-dynamic-linker -z text
+Binbin Zhou (5):
+  i2c: core: Pick i2c bus number from ACPI if present
+  i2c: gpio: Add support on ACPI-based system
+  dt-bindings: i2c: add bindings for Loongson LS2X I2C
+  i2c: Add driver for Loongson-2K/LS7A I2C controller
+  LoongArch: Enable LS2X I2C in loongson3_defconfig
 
-[1]: https://gcc.gnu.org/r13-2728
+ .../bindings/i2c/loongson,ls2x-i2c.yaml       |  48 +++
+ arch/loongarch/configs/loongson3_defconfig    |   1 +
+ drivers/i2c/busses/Kconfig                    |   7 +
+ drivers/i2c/busses/Makefile                   |   1 +
+ drivers/i2c/busses/i2c-gpio.c                 |  41 +-
+ drivers/i2c/busses/i2c-ls2x.c                 | 364 ++++++++++++++++++
+ drivers/i2c/i2c-core-base.c                   |  10 +-
+ 7 files changed, 470 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+ create mode 100644 drivers/i2c/busses/i2c-ls2x.c
 
-But we have to use "-z notext" for vmlinux. I'm not an expert on kernel
-hacking, and I guess it's because the kernel doesn't really care the RWX
-permission of itself (I heard this during some discussion about a W/X
-page warning added in Binutils-2.39 which is triggered for vmlinux).
+-- 
+2.31.1
 
-With "-static -pie --no-dynamic-linker -z notext" (and GCC trunk &
-Binutils trunk), .plt and .got.plt are gone.
-
-.got is still there but it only contains one entry (8 bytes).  AFAIK
-this entry (`_GLOBAL_OFFSET_TABLE_[0]`) is set to the link-time address
-of _DYNAMIC for a userspace static PIE [2], but vmlinux does not need it
-at all.  We can tell the linker to discard it IIUC.
-
-[2]:
-https://maskray.me/blog/2021-08-29-all-about-global-offset-table#global_off=
-set_table_0
-
-I've boot the kernel successfully and it seems KASLR is in-effect:
-
-$ sudo cat /proc/kallsyms | grep ' _printk$'
-90000000023b28f4 T _printk
-$ grep ' _printk$' /boot/System.map-6.0.0-rc6-pie+=20
-90000000009828f4 T _printk
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
