@@ -1,72 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A54423AA
-	for <loongarch@lists.linux.dev>; Fri, 23 Sep 2022 07:16:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB70C433D6
-	for <loongarch@lists.linux.dev>; Fri, 23 Sep 2022 07:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663917377;
-	bh=0tcsWPFJuJ+JlL9d8TQDqM0wY+okAAqCVZ/OiEHw45U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rJG+DfLqmZdouOHJ0mysxHFYu9iKaOMz+wi8FJ1+njiOCgY5Cu0YGiyZoyiB9QhtI
-	 HXg2Sp6wWoIiz6uMNMWPEg2SkCZOm+03bDA7NR823IlLzH0fEDmQIIdZ3GIe8dgzD3
-	 Z8kC66bDBhI8gPeXMzfDwGblQmk8WAWtAfhehVJaK/ViGXB7AarOoKGl5UqzcQd2SQ
-	 pf4iDM5wgW3AQJPqptysvxC45F8QTWmIxVTKvbi2KYfnVRStxUCtR1rzpy8u0YiGk7
-	 4JqRl2pMbn4DCfIXO/2PColmMmz9Jd69BxXm4OnBIiCmtlSbZcRkNEobUiiY09+b9P
-	 ce/cj+iA7JdEw==
-Received: by mail-vs1-f43.google.com with SMTP id q26so12777863vsr.7
-        for <loongarch@lists.linux.dev>; Fri, 23 Sep 2022 00:16:16 -0700 (PDT)
-X-Gm-Message-State: ACrzQf1qa0deqSZVaMakf/TIAPjOUzEbBKOmJFc6Mo1sgk6xhUTdsvKB
-	wfzJo1Q0Ukj8nNLgnIfbn1CdbhqElLVbrz6Uxpg=
-X-Google-Smtp-Source: AMsMyM5y4VoSXLt6JYBz789A2bqg2P0a6bGsOz1xz6qwcf9P77Rub6RQld7QuxGsmB/tk/HzZ5dgYTB4ePorEu2q/rM=
-X-Received: by 2002:a05:6102:1481:b0:39a:67f5:3096 with SMTP id
- d1-20020a056102148100b0039a67f53096mr2762228vsv.70.1663917375962; Fri, 23 Sep
- 2022 00:16:15 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C9CB23D8
+	for <loongarch@lists.linux.dev>; Fri, 23 Sep 2022 07:45:50 +0000 (UTC)
+Received: from bogon.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxT+DpYy1jsI4gAA--.57695S5;
+	Fri, 23 Sep 2022 15:44:44 +0800 (CST)
+From: Youling Tang <tangyouling@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Baoquan He <bhe@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	kexec@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 3/3] LoongArch: Enable CONFIG_KEXEC
+Date: Fri, 23 Sep 2022 15:44:33 +0800
+Message-Id: <1663919073-26849-4-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1663919073-26849-1-git-send-email-tangyouling@loongson.cn>
+References: <1663919073-26849-1-git-send-email-tangyouling@loongson.cn>
+X-CM-TRANSID:AQAAf8CxT+DpYy1jsI4gAA--.57695S5
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF48WFWUJr1xAw4rXr1fJFb_yoWxCFg_JF
+	y7Gw4Dur48Ja97uw4xXw4rGw4DA3W7ZF1FkF17Zr1xX3Wagr13tw4DJ3W7C3ZYgayDWrs3
+	ZaykAF9Fkr10yjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbg8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
+	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
+	IE14v26r1rM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CE
+	w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6x
+	kF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE
+	c7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I
+	8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCF
+	s4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY02
+	Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
+	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
+	0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U8t73DUUUUU==
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <cover.1663835855.git.zhoubinbin@loongson.cn> <be5cd69c7c58d44ca119d4ca692d95a2ae924533.1663835855.git.zhoubinbin@loongson.cn>
- <YyxTwl7mos/hARWm@black.fi.intel.com>
-In-Reply-To: <YyxTwl7mos/hARWm@black.fi.intel.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 23 Sep 2022 15:16:03 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4waMMDnctjkC61P6eurLuPfhs1+UP1vLc-XwHXieEhgQ@mail.gmail.com>
-Message-ID: <CAAhV-H4waMMDnctjkC61P6eurLuPfhs1+UP1vLc-XwHXieEhgQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] i2c: core: Pick i2c bus number from ACPI if present
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Wolfram Sang <wsa@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org, 
-	loongarch@lists.linux.dev, 
-	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
 
-Hi, Mika,
+Defaults enable CONFIG_KEXEC to convenient kexec operations.
 
-On Thu, Sep 22, 2022 at 8:23 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> Hi,
->
-> On Thu, Sep 22, 2022 at 07:39:54PM +0800, Binbin Zhou wrote:
-> > Under LoongARCH based on ACPI(such as Loongson-3A + LS7A), the ls2x i2c
-> > driver obtains the i2c bus number from ACPI table.
->
-> Why this is needed? The I2CSerialBusV2() resource should be enough to
-> identify the adapter, and I don't see why static number would be needed
-> for anything?
->
-In later patches we will add LS7A i2c driver, this driver is shared by
-MIPS-based Loongson-3A4000 system (use FDT) and LoongArch-based
-Loongson-3A5000 system (use ACPI).
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+---
+ arch/loongarch/configs/loongson3_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-FDT systems support static bus numbers, so we want to do the same
-thing on ACPI systems. I think keep this consistency can make user
-feel better
+diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+index f67127246aa8..c96ce646d84a 100644
+--- a/arch/loongarch/configs/loongson3_defconfig
++++ b/arch/loongarch/configs/loongson3_defconfig
+@@ -46,6 +46,7 @@ CONFIG_SMP=y
+ CONFIG_HOTPLUG_CPU=y
+ CONFIG_NR_CPUS=64
+ CONFIG_NUMA=y
++CONFIG_KEXEC=y
+ CONFIG_PAGE_SIZE_16KB=y
+ CONFIG_HZ_250=y
+ CONFIG_ACPI=y
+-- 
+2.36.0
 
-
-Huacai
