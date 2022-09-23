@@ -1,21 +1,32 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DCFA29AB
-	for <loongarch@lists.linux.dev>; Fri, 23 Sep 2022 09:16:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3FB52F25
+	for <loongarch@lists.linux.dev>; Fri, 23 Sep 2022 09:56:58 +0000 (UTC)
 Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXWteeS1jbpggAA--.60757S3;
-	Fri, 23 Sep 2022 17:16:18 +0800 (CST)
-Subject: Re: [PATCH v4 0/3] LoongArch: Add kexec/kdump support
-To: Huacai Chen <chenhuacai@kernel.org>,
- Eric Biederman <ebiederm@xmission.com>
-References: <1663919073-26849-1-git-send-email-tangyouling@loongson.cn>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
- WANG Xuerui <kernel@xen0n.name>, Vivek Goyal <vgoyal@redhat.com>,
- Dave Young <dyoung@redhat.com>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, kexec@lists.infradead.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxYOLjgi1jsZwgAA--.57742S3;
+	Fri, 23 Sep 2022 17:56:53 +0800 (CST)
+Subject: Re: [PATCH 1/3] LoongArch: tools: Add relocs tool support
+To: Xi Ruoyao <xry111@xry111.site>
+References: <1662113335-14282-1-git-send-email-tangyouling@loongson.cn>
+ <1662113335-14282-2-git-send-email-tangyouling@loongson.cn>
+ <c9880165f0355fc3be3ec23153b43ad33e558b5d.camel@xry111.site>
+ <4df8a26c49a35c1fce36d80c370f738fa71a2bef.camel@xry111.site>
+ <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
+ <78a4a6b0970c309daa336a2329e69d28df486552.camel@xry111.site>
+ <fffdd2ac-4ba6-8eb3-f269-b22a3d9c32f6@loongson.cn>
+ <0b2d115c42ff6cb9b8c65d852ec2f0746ca6e8d9.camel@xry111.site>
+ <d852f590-95b4-3fd1-924a-68c0a6bb1b1b@loongson.cn>
+ <29cd929b-185b-1c4b-f200-08f2a724b59d@loongson.cn>
+ <a218373f773ef193903daa528291ec8bb384ddd2.camel@xry111.site>
+ <83a7aad8-125b-29b5-715d-0061ce1b0647@loongson.cn>
+ <011b5d39-e0cb-69cc-66fd-ed46afe7695e@loongson.cn>
+ <750719dc-d481-6eba-05c6-50cfdceb871b@loongson.cn>
+ <5e12ab67701adf81834dfb88fc3cb6fdf55f676d.camel@xry111.site>
+Cc: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
 From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <711d53ae-197f-3c55-d09d-2f40e6886ad1@loongson.cn>
-Date: Fri, 23 Sep 2022 17:16:14 +0800
+Message-ID: <4c7beb51-869f-1e9e-7198-dba0f4455d91@loongson.cn>
+Date: Fri, 23 Sep 2022 17:56:51 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -24,125 +35,84 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1663919073-26849-1-git-send-email-tangyouling@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <5e12ab67701adf81834dfb88fc3cb6fdf55f676d.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8BxXWteeS1jbpggAA--.60757S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF13uFW3AFWUKr4Duw4kWFg_yoWrCrW3pF
-	4kCr1rKr4kGrn3J3Wxtr13uF95Zwn7Ga1ag3ZFy348ZFnFqr1UZrnYqF9rZF1qqw4fGr40
-	qFnYgw129a4DGaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9qb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-	8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
-	c7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJbIYCTnIWIevJa73UjIFyTuYvjxUyq-eDUUUU
+X-CM-TRANSID:AQAAf8CxYOLjgi1jsZwgAA--.57742S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw18tryUZrWDJw1DXrW5KFg_yoW8uFWkp3
+	yxGFy7Can5WFyxZa1kXF4jvayYvrn3CFW5Arn8Gw1kAa45XF1agFsFqF42qFyqkrZ7K3WY
+	qFWIq3sFgrs7ZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+	IcxG8wCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
+	87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+	IFyTuYvjfUeID7DUUUU
 X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 
+Hi, Ruoyao
 
+On 09/22/2022 07:19 PM, Xi Ruoyao wrote:
+> On Thu, 2022-09-08 at 16:01 +0800, Youling Tang wrote:
+>> After adding KBUILD_CFLAGS_KERNEL += -mdirect-extern-access, the
+>> kernel
+>> will not generate .got, .plt and .got.plt sections (in the new
+>> toolchain), we should unexpectedly detect that the kernel has these
+>> sections, maybe add similar patch [1] to detect, x86_64 has the same
+>> operation.
+>>
+>> But when adding LDFLAGS_vmlinux += -pie (or -shared), there will be
+>> .got, .plt and .got.plt sections generated, I don't know how the
+>> toolchain handles it :(?
+>
+> Hi Youling,
+>
+> I've pulled your code and make some adjustments for it:
+>
+> https://github.com/xry111/linux/commits/xry111/la-dev/pie
+>
+> One adjustment is for FDT removal, another uses a static-PIE style
+> LDFLAGS as the kernel is more "similar" to a static PIE than a shared
+> library. In userspace, a static PIE is linked with [1]:
+>
+>  -static -pie --no-dynamic-linker -z text
+>
+> [1]: https://gcc.gnu.org/r13-2728
+>
+> But we have to use "-z notext" for vmlinux. I'm not an expert on kernel
+> hacking, and I guess it's because the kernel doesn't really care the RWX
+> permission of itself (I heard this during some discussion about a W/X
+> page warning added in Binutils-2.39 which is triggered for vmlinux).
+>
+> With "-static -pie --no-dynamic-linker -z notext" (and GCC trunk &
+> Binutils trunk), .plt and .got.plt are gone.
+>
+> .got is still there but it only contains one entry (8 bytes).  AFAIK
+> this entry (`_GLOBAL_OFFSET_TABLE_[0]`) is set to the link-time address
+> of _DYNAMIC for a userspace static PIE [2], but vmlinux does not need it
+> at all.  We can tell the linker to discard it IIUC.
 
-On 09/23/2022 03:44 PM, Youling Tang wrote:
-> This patch series to support kexec/kdump (only 64bit).
->
-> Kexec is a system call that enables you to load and boot into another kernel
-> from the currently running kernel. This is useful for kernel developers or
-> other people who need to reboot very quickly without waiting for the whole
-> BIOS boot process to finish.
->
-> Kdump uses kexec to quickly boot to a dump-capture kernel whenever a
-> dump of the system kernel's memory needs to be taken (for example, when
-> the system panics). The system kernel's memory image is preserved across
-> the reboot and is accessible to the dump-capture kernel.
->
-> For details, see Documentation/admin-guide/kdump/kdump.rst.
->
-> User tools kexec-tools see link [1].
->
-> TODO:
-> Currently kdump does not support the same binary image, the production kernel
-> and the capture kernel will be generated with different configurations. I will
-> support kernel relocation support in the near future. Then will go to implement
-> the same binary support based on kernel relocation support.
->
-> [1] Link: https://github.com/tangyouling/kexec-tools
->
-> Changes in v4:
->  After applying the following series of patches [1], the following
->  modifications need to be made:
->  - Adjust the number of parameters and the content of the parameters passed.
->  - Removed build and processing of fdt.
->  - Add handling of command line segments.
->  - Use the command line argument "elfcorehdr=" instead of the "linux,elfcorehdr"
->    member in fdt.
->  - Use the command line argument "mem=" instead of the "linux, usable-memory-range"
->    member in fdt.
->  - Use the command line argument "initrd=" instead of the "linux,initrd-start" and
->    "linux,initrd-end" members of fdt.
-
-For the command line "initrd=start,size" method:
-We need to move the reserve_initrd_mem call after parse_early_param to
-make sure we can get the correct start and size.
+Yes, only .got contains one entry (8 bytes) after using LDFLAGS_vmlinux 
+as above, thanks for your help.
 
 Youling.
 
->  - Removed handling of "linux,elfcorehdr" and "linux, usable-memory-range".
->  - Add handling of "elfcorehdr=".
->  - Modify the handling of "mem=".
->  - Add implementation of reserve_oldmem_region.
->  - Reimplemented kexec-tools (note that kexec-tools needs to be updated).
 >
->    Link [1]: https://lore.kernel.org/loongarch/20220920183554.3870247-1-ardb@kernel.org/T/#md02ad4a1510586b2df177cbce4422434eff2d457
->    [PATCH v2 0/8] efi: disentangle the generic EFI stub from FDT
+> [2]:
+> https://maskray.me/blog/2021-08-29-all-about-global-offset-table#global_offset_table_0
 >
-> Changes in v3:
->  - Adjust the PE header (note that kexec-tools needs to be updated).
->  - Add ibar in kexec_reboot().
->  - boot_flag is replaced by efi_boot.
->  - Adjust do_kexec parameter passing order.
->  - Adjust the order of static variables to be consistent with do_kexec.
->  - Remove a-series register save.
->  - Some comments and register usage modification.
->  - Add the opening and closing of the cpu core state.
->  - Add a call to cpu_device_up to turn it on when the cpu core state is offline.
+> I've boot the kernel successfully and it seems KASLR is in-effect:
 >
-> Changes in v2:
->  - Add ibar.
->  - Access via IOCSR.
->  - Remove the settings of the tp, sp registers.
->  - Remove the crash.c file and merge the relevant code into machine_kexec.c.
->  - Adjust the use of CONFIG_SMP macro to avoid build errors under !SMP
->    configuration.
->  - Change the default value of PHYSICAL_START of the capture kernel to
->    0x90000000a0000000.
->
-> Youling Tang (3):
->   LoongArch: Add kexec support
->   LoongArch: Add kdump support
->   LoongArch: Enable CONFIG_KEXEC
->
->  arch/loongarch/Kconfig                     |  33 +++
->  arch/loongarch/Makefile                    |   4 +
->  arch/loongarch/configs/loongson3_defconfig |   1 +
->  arch/loongarch/include/asm/kexec.h         |  60 ++++
->  arch/loongarch/kernel/Makefile             |   3 +
->  arch/loongarch/kernel/crash_dump.c         |  19 ++
->  arch/loongarch/kernel/head.S               |   6 +-
->  arch/loongarch/kernel/machine_kexec.c      | 309 +++++++++++++++++++++
->  arch/loongarch/kernel/mem.c                |   1 +
->  arch/loongarch/kernel/relocate_kernel.S    | 112 ++++++++
->  arch/loongarch/kernel/setup.c              | 123 +++++++-
->  arch/loongarch/kernel/traps.c              |   4 +
->  12 files changed, 664 insertions(+), 11 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/kexec.h
->  create mode 100644 arch/loongarch/kernel/crash_dump.c
->  create mode 100644 arch/loongarch/kernel/machine_kexec.c
->  create mode 100644 arch/loongarch/kernel/relocate_kernel.S
+> $ sudo cat /proc/kallsyms | grep ' _printk$'
+> 90000000023b28f4 T _printk
+> $ grep ' _printk$' /boot/System.map-6.0.0-rc6-pie+
+> 90000000009828f4 T _printk
 >
 
