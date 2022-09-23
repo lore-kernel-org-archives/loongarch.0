@@ -1,118 +1,159 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3FB52F25
-	for <loongarch@lists.linux.dev>; Fri, 23 Sep 2022 09:56:58 +0000 (UTC)
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxYOLjgi1jsZwgAA--.57742S3;
-	Fri, 23 Sep 2022 17:56:53 +0800 (CST)
-Subject: Re: [PATCH 1/3] LoongArch: tools: Add relocs tool support
-To: Xi Ruoyao <xry111@xry111.site>
-References: <1662113335-14282-1-git-send-email-tangyouling@loongson.cn>
- <1662113335-14282-2-git-send-email-tangyouling@loongson.cn>
- <c9880165f0355fc3be3ec23153b43ad33e558b5d.camel@xry111.site>
- <4df8a26c49a35c1fce36d80c370f738fa71a2bef.camel@xry111.site>
- <f0e77716-9533-724a-2ea9-86bc5b52066c@loongson.cn>
- <78a4a6b0970c309daa336a2329e69d28df486552.camel@xry111.site>
- <fffdd2ac-4ba6-8eb3-f269-b22a3d9c32f6@loongson.cn>
- <0b2d115c42ff6cb9b8c65d852ec2f0746ca6e8d9.camel@xry111.site>
- <d852f590-95b4-3fd1-924a-68c0a6bb1b1b@loongson.cn>
- <29cd929b-185b-1c4b-f200-08f2a724b59d@loongson.cn>
- <a218373f773ef193903daa528291ec8bb384ddd2.camel@xry111.site>
- <83a7aad8-125b-29b5-715d-0061ce1b0647@loongson.cn>
- <011b5d39-e0cb-69cc-66fd-ed46afe7695e@loongson.cn>
- <750719dc-d481-6eba-05c6-50cfdceb871b@loongson.cn>
- <5e12ab67701adf81834dfb88fc3cb6fdf55f676d.camel@xry111.site>
-Cc: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <4c7beb51-869f-1e9e-7198-dba0f4455d91@loongson.cn>
-Date: Fri, 23 Sep 2022 17:56:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B690F2F25
+	for <loongarch@lists.linux.dev>; Fri, 23 Sep 2022 10:01:34 +0000 (UTC)
+Received: from [192.168.100.120] (unknown [112.20.112.163])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxvmv6gy1jSZ0gAA--.45506S3;
+	Fri, 23 Sep 2022 18:01:32 +0800 (CST)
+Message-ID: <73a11791-997b-c2d7-fa0c-3d0431293dae@loongson.cn>
+Date: Fri, 23 Sep 2022 18:01:30 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <5e12ab67701adf81834dfb88fc3cb6fdf55f676d.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8CxYOLjgi1jsZwgAA--.57742S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw18tryUZrWDJw1DXrW5KFg_yoW8uFWkp3
-	yxGFy7Can5WFyxZa1kXF4jvayYvrn3CFW5Arn8Gw1kAa45XF1agFsFqF42qFyqkrZ7K3WY
-	qFWIq3sFgrs7ZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-	IcxG8wCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjfUeID7DUUUU
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH 2/5] i2c: gpio: Add support on ACPI-based system
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Wolfram Sang <wsa@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
+ WANG Xuerui <kernel@xen0n.name>, Jianmin Lv <lvjianmin@loongson.cn>,
+ Huacai Chen <chenhuacai@loongson.cn>
+References: <cover.1663835855.git.zhoubinbin@loongson.cn>
+ <74988d34ceae9bf239c138a558778cd999beb77c.1663835855.git.zhoubinbin@loongson.cn>
+ <YyxUjuP1TxEzoxvG@black.fi.intel.com>
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+In-Reply-To: <YyxUjuP1TxEzoxvG@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dxvmv6gy1jSZ0gAA--.45506S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxCr48Ar15Kr4UXFyxZrWxtFb_yoW5KF4rpF
+	Z0kFZ8KF4DWF12gr12qr1kua4fKw4Iq3yxKr4xJ348uw1qqrn5ur1fGFyY9F1kAFy8CF1j
+	v3WUtrW3uFsrZrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvFb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+	c2xSY4AK67AK6r4DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvj
+	xU2X_-DUUUU
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
 
-Hi, Ruoyao
+Hi Mika：
 
-On 09/22/2022 07:19 PM, Xi Ruoyao wrote:
-> On Thu, 2022-09-08 at 16:01 +0800, Youling Tang wrote:
->> After adding KBUILD_CFLAGS_KERNEL += -mdirect-extern-access, the
->> kernel
->> will not generate .got, .plt and .got.plt sections (in the new
->> toolchain), we should unexpectedly detect that the kernel has these
->> sections, maybe add similar patch [1] to detect, x86_64 has the same
->> operation.
+在 2022/9/22 20:26, Mika Westerberg 写道:
+> Hi,
+> 
+> On Thu, Sep 22, 2022 at 07:39:55PM +0800, Binbin Zhou wrote:
+>> Add support for the ACPI-based device registration so that the driver
+>> can be also enabled through ACPI table.
 >>
->> But when adding LDFLAGS_vmlinux += -pie (or -shared), there will be
->> .got, .plt and .got.plt sections generated, I don't know how the
->> toolchain handles it :(?
->
-> Hi Youling,
->
-> I've pulled your code and make some adjustments for it:
->
-> https://github.com/xry111/linux/commits/xry111/la-dev/pie
->
-> One adjustment is for FDT removal, another uses a static-PIE style
-> LDFLAGS as the kernel is more "similar" to a static PIE than a shared
-> library. In userspace, a static PIE is linked with [1]:
->
->  -static -pie --no-dynamic-linker -z text
->
-> [1]: https://gcc.gnu.org/r13-2728
->
-> But we have to use "-z notext" for vmlinux. I'm not an expert on kernel
-> hacking, and I guess it's because the kernel doesn't really care the RWX
-> permission of itself (I heard this during some discussion about a W/X
-> page warning added in Binutils-2.39 which is triggered for vmlinux).
->
-> With "-static -pie --no-dynamic-linker -z notext" (and GCC trunk &
-> Binutils trunk), .plt and .got.plt are gone.
->
-> .got is still there but it only contains one entry (8 bytes).  AFAIK
-> this entry (`_GLOBAL_OFFSET_TABLE_[0]`) is set to the link-time address
-> of _DYNAMIC for a userspace static PIE [2], but vmlinux does not need it
-> at all.  We can tell the linker to discard it IIUC.
+>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+>> ---
+>>   drivers/i2c/busses/i2c-gpio.c | 41 ++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 40 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
+>> index b1985c1667e1..ccea37e755e6 100644
+>> --- a/drivers/i2c/busses/i2c-gpio.c
+>> +++ b/drivers/i2c/busses/i2c-gpio.c
+>> @@ -13,6 +13,7 @@
+>>   #include <linux/init.h>
+>>   #include <linux/interrupt.h>
+>>   #include <linux/module.h>
+>> +#include <linux/acpi.h>
+>>   #include <linux/of.h>
+>>   #include <linux/platform_data/i2c-gpio.h>
+>>   #include <linux/platform_device.h>
+>> @@ -318,6 +319,24 @@ static void of_i2c_gpio_get_props(struct device_node *np,
+>>   		of_property_read_bool(np, "i2c-gpio,scl-output-only");
+>>   }
+>>   
+>> +static void acpi_i2c_gpio_get_props(struct device *dev,
+>> +				  struct i2c_gpio_platform_data *pdata)
+>> +{
+>> +	u32 reg;
+>> +
+>> +	device_property_read_u32(dev, "delay-us", &pdata->udelay);
+>> +
+>> +	if (!device_property_read_u32(dev, "timeout-ms", &reg))
+>> +		pdata->timeout = msecs_to_jiffies(reg);
+>> +
+>> +	pdata->sda_is_open_drain =
+>> +		device_property_read_bool(dev, "sda-open-drain");
+>> +	pdata->scl_is_open_drain =
+>> +		device_property_read_bool(dev, "scl-open-drain");
+>> +	pdata->scl_is_output_only =
+>> +		device_property_read_bool(dev, "scl-output-only");
+>> +}
+> 
+> I think this would work with the DT description too as it is using
+> device_property_xxx() so I wonder if you can just do:
+> 
+> 	i2c_gpio_get_props(dev, pdata);
+> 
+> instead of
+> 
+>   	if (np) {
+>   		of_i2c_gpio_get_props(np, pdata);
+> 	} else if (ACPI_COMPANION(dev)) {
+> 		acpi_i2c_gpio_get_props(dev, pdata);
+> 
+Sorry, I don't quite understand how to do a unified api.
 
-Yes, only .got contains one entry (8 bytes) after using LDFLAGS_vmlinux 
-as above, thanks for your help.
+We get the corresponding value by matching the propname, but obviously 
+the propnames related in the two ways are different.
 
-Youling.
+e.g. "delay-us"(ACPI) vs "i2c-gpio, delay-us"(FDT)
 
->
-> [2]:
-> https://maskray.me/blog/2021-08-29-all-about-global-offset-table#global_offset_table_0
->
-> I've boot the kernel successfully and it seems KASLR is in-effect:
->
-> $ sudo cat /proc/kallsyms | grep ' _printk$'
-> 90000000023b28f4 T _printk
-> $ grep ' _printk$' /boot/System.map-6.0.0-rc6-pie+
-> 90000000009828f4 T _printk
->
+I think the judgment of "if..else.." is indispensable.
+
+thanks.
+
+Binbin
+
+>> +
+>>   static struct gpio_desc *i2c_gpio_get_desc(struct device *dev,
+>>   					   const char *con_id,
+>>   					   unsigned int index,
+>> @@ -363,6 +382,8 @@ static int i2c_gpio_probe(struct platform_device *pdev)
+>>   	struct device *dev = &pdev->dev;
+>>   	struct device_node *np = dev->of_node;
+>>   	enum gpiod_flags gflags;
+>> +	acpi_status status;
+>> +	unsigned long long id;
+>>   	int ret;
+>>   
+>>   	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> @@ -375,6 +396,8 @@ static int i2c_gpio_probe(struct platform_device *pdev)
+>>   
+>>   	if (np) {
+>>   		of_i2c_gpio_get_props(np, pdata);
+>> +	} else if (ACPI_COMPANION(dev)) {
+>> +		acpi_i2c_gpio_get_props(dev, pdata);
+>>   	} else {
+>>   		/*
+>>   		 * If all platform data settings are zero it is OK
+>> @@ -445,7 +468,14 @@ static int i2c_gpio_probe(struct platform_device *pdev)
+>>   	adap->dev.parent = dev;
+>>   	adap->dev.of_node = np;
+>>   
+>> -	adap->nr = pdev->id;
+>> +	if (ACPI_COMPANION(dev)) {
+>> +		status = acpi_evaluate_integer(ACPI_HANDLE(dev),
+>> +						"_UID", NULL, &id);
+>> +		if (ACPI_SUCCESS(status) && (id >= 0))
+>> +			adap->nr = id;
+> 
+> Unrelated change? And if not then same comment about why you need the
+> static number in the first place ;-)
 
