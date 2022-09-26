@@ -1,152 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA00468D
-	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 18:41:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8346C433D7;
-	Mon, 26 Sep 2022 18:40:49 +0000 (UTC)
-Date: Mon, 26 Sep 2022 14:41:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
- mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
- ulli.kroll@googlemail.com, linus.walleij@linaro.org, shawnguo@kernel.org,
- Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
- festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com,
- khilman@kernel.org, catalin.marinas@arm.com, will@kernel.org,
- guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
- kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net, monstr@monstr.eu,
- tsbogend@alpha.franken.de, dinguyen@kernel.org, jonas@southpole.se,
- stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
- James.Bottomley@HansenPartnership.com, deller@gmx.de, mpe@ellerman.id.au,
- npiggin@gmail.com, christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
- gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
- svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
- davem@davemloft.net, richard@nod.at, anton.ivanov@cambridgegreys.com,
- johannes@sipsolutions.net, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
- jolsa@kernel.org, namhyung@kernel.org, jgross@suse.com,
- srivatsa@csail.mit.edu, amakhalov@vmware.com, pv-drivers@vmware.com,
- boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
- rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
- gregkh@linuxfoundation.org, mturquette@baylibre.com, sboyd@kernel.org,
- daniel.lezcano@linaro.org, lpieralisi@kernel.org, sudeep.holla@arm.com,
- agross@kernel.org, bjorn.andersson@linaro.org,
- konrad.dybcio@somainline.org, anup@brainfault.org,
- thierry.reding@gmail.com, jonathanh@nvidia.com,
- jacob.jun.pan@linux.intel.com, atishp@atishpatra.org, Arnd Bergmann
- <arnd@arndb.de>, yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
- linux@rasmusvillemoes.dk, dennis@kernel.org, tj@kernel.org, cl@linux.com,
- pmladek@suse.com, senozhatsky@chromium.org, john.ogness@linutronix.de,
- juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
- bristot@redhat.com, vschneid@redhat.com, fweisbec@gmail.com,
- ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com,
- dvyukov@google.com, vincenzo.frascino@arm.com, Andrew Morton
- <akpm@linux-foundation.org>, jpoimboe@kernel.org,
- linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
- linux-perf-users@vger.kernel.org,
- virtualization@lists.linux-foundation.org, linux-xtensa@linux-xtensa.org,
- linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
- kasan-dev@googlegroups.com
-Subject: Re: [PATCH v2 33/44] ftrace: WARN on rcuidle
-Message-ID: <20220926144157.0406dfbb@gandalf.local.home>
-In-Reply-To: <20220919101522.573936213@infradead.org>
-References: <20220919095939.761690562@infradead.org>
-	<20220919101522.573936213@infradead.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D67C4A14
+	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 23:41:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45692C433D6
+	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 23:41:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1664235689;
+	bh=6wNqUX/iaj9uUsoDs1oH5DIKGHbHydMuzqQ6tFjrpzo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VRN5faFCTQRla4ho117TzoULktAE1emcXRD3+rTh9X8wHEA8ao+FkmkGcdhybEjab
+	 o5KJoO4BaUKaWZE3QN9YH7rIG1ZTOz8pUonYvn7fCvB/EYcs2WEGJfb3eYJ3KedoY3
+	 xdOJSFOnwCFz+dWbPrL/oFfm5e+mMU5DWRURd+48blW5hgG21mtRbRQIRAQ5/g2xWD
+	 YQIgpOCKBQXVXKPeMDRUxTtSUBOPpFRjW3D33Ak+GVYnArCmXDrinUxitD664wMSNO
+	 PBd0RdccXzbl1n9b1Ig05Tk2bklG5xdKEUOxh50q+MPG8+t0K/HQTsoDPpyWIiHhj2
+	 74x6rOaUom2jw==
+Received: by mail-ot1-f50.google.com with SMTP id cm7-20020a056830650700b006587fe87d1aso5416126otb.10
+        for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 16:41:29 -0700 (PDT)
+X-Gm-Message-State: ACrzQf0NInwm7bYc5iFaZiFoQCgimw1EMJTCQWRxUelsu/POIfK6x7qt
+	G29UnZ8+hR7jA4x/7xOcQ5/1R4BIhKn2l98OfGY=
+X-Google-Smtp-Source: AMsMyM6zFzxM3eN6t+1iO53bYPjOeh6NQ+Kjjm6uWtTDyY/6Beq6d0f5Vr/fEwB0lAQL9VRbhWTpDdJZfmUed7ItXL8=
+X-Received: by 2002:a05:6830:34a4:b0:65a:b03:54cc with SMTP id
+ c36-20020a05683034a400b0065a0b0354ccmr10832187otu.140.1664235688429; Mon, 26
+ Sep 2022 16:41:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20220926122727.2310118-1-yijun@loongson.cn>
+In-Reply-To: <20220926122727.2310118-1-yijun@loongson.cn>
+From: Guo Ren <guoren@kernel.org>
+Date: Tue, 27 Sep 2022 07:41:12 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQR804AwU0up2-FyTciQZJY2M9xQ7JbiqjwMbkD=aLhCQ@mail.gmail.com>
+Message-ID: <CAJF2gTQR804AwU0up2-FyTciQZJY2M9xQ7JbiqjwMbkD=aLhCQ@mail.gmail.com>
+Subject: Re: [PATCH v3] LoongArch: Fixup do_ri csr_era
+To: Jun Yi <yijun@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Qing Zhang <zhangqing@loongson.cn>, Mao Bibo <maobibo@loongson.cn>, 
+	Jianmin Lv <lvjianmin@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Mon, Sep 26, 2022 at 8:27 PM Jun Yi <yijun@loongson.cn> wrote:
+>
+> csr_era of pt_regs in do_ri should not add 4 to point to the
+> next instruction.
+The comment does not make sense. I think it wants to skip some
+instructions, but your patch broke that.
 
-Nit, the subject should have "tracing:" an not "ftrace:" as the former
-encompasses the tracing infrastructure and the latter is for the function
-hook part of that.
-
-On Mon, 19 Sep 2022 12:00:12 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> CONFIG_GENERIC_ENTRY disallows any and all tracing when RCU isn't
-> enabled.
-> 
-> XXX if s390 (the only other GENERIC_ENTRY user as of this writing)
-> isn't comfortable with this, we could switch to
-> HAVE_NOINSTR_VALIDATION which is x86_64 only atm.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>
+> Signed-off-by: Jun Yi <yijun@loongson.cn>
 > ---
->  include/linux/tracepoint.h |   13 ++++++++++++-
->  kernel/trace/trace.c       |    3 +++
->  2 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> --- a/include/linux/tracepoint.h
-> +++ b/include/linux/tracepoint.h
-> @@ -178,6 +178,16 @@ static inline struct tracepoint *tracepo
->  #endif /* CONFIG_HAVE_STATIC_CALL */
->  
->  /*
-> + * CONFIG_GENERIC_ENTRY archs are expected to have sanitized entry and idle
-> + * code that disallow any/all tracing/instrumentation when RCU isn't watching.
-> + */
-> +#ifdef CONFIG_GENERIC_ENTRY
-> +#define RCUIDLE_COND(rcuidle)	(rcuidle)
-> +#else
+>  arch/loongarch/kernel/traps.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+> index aa1c95aaf595..ec888eda3d45 100644
+> --- a/arch/loongarch/kernel/traps.c
+> +++ b/arch/loongarch/kernel/traps.c
+> @@ -477,8 +477,6 @@ asmlinkage void noinstr do_ri(struct pt_regs *regs)
+>
+>         die_if_kernel("Reserved instruction in kernel code", regs);
+>
+> -       compute_return_era(regs);
+> -
+>         if (unlikely(get_user(opcode, era) < 0)) {
+>                 status = SIGSEGV;
+>                 current->thread.error_code = 1;
+> --
+> 2.31.1
+>
 
-Should probably move the below comment to here:
 
- /* srcu can't be used from NMI */
-
-> +#define RCUIDLE_COND(rcuidle)	(rcuidle && in_nmi())
-> +#endif
-> +
-> +/*
->   * it_func[0] is never NULL because there is at least one element in the array
->   * when the array itself is non NULL.
->   */
-> @@ -189,7 +199,8 @@ static inline struct tracepoint *tracepo
->  			return;						\
->  									\
->  		/* srcu can't be used from NMI */			\
-
-And remove the above.
-
--- Steve
-
-> -		WARN_ON_ONCE(rcuidle && in_nmi());			\
-> +		if (WARN_ON_ONCE(RCUIDLE_COND(rcuidle)))		\
-> +			return;						\
->  									\
->  		/* keep srcu and sched-rcu usage consistent */		\
->  		preempt_disable_notrace();				\
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -3104,6 +3104,9 @@ void __trace_stack(struct trace_array *t
->  		return;
->  	}
->  
-> +	if (WARN_ON_ONCE(IS_ENABLED(CONFIG_GENERIC_ENTRY)))
-> +		return;
-> +
->  	/*
->  	 * When an NMI triggers, RCU is enabled via ct_nmi_enter(),
->  	 * but if the above rcu_is_watching() failed, then the NMI
-> 
-
+-- 
+Best Regards
+ Guo Ren
