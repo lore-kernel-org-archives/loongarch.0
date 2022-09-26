@@ -1,9 +1,9 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F29AA63A
-	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 10:01:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA59E7B
+	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 12:29:03 +0000 (UTC)
 Received: from 4.cn (unknown [10.20.4.148])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx9OF5eDFj4CoiAA--.60647S2;
-	Mon, 26 Sep 2022 18:01:29 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx72uvmjFjbDkiAA--.59138S2;
+	Mon, 26 Sep 2022 20:27:27 +0800 (CST)
 From: Jun Yi <yijun@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
@@ -15,9 +15,9 @@ To: Huacai Chen <chenhuacai@kernel.org>,
 	Jianmin Lv <lvjianmin@loongson.cn>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Remove useless header branch.h
-Date: Mon, 26 Sep 2022 18:01:29 +0800
-Message-Id: <20220926100129.1907890-1-yijun@loongson.cn>
+Subject: [PATCH v3] LoongArch: Fixup do_ri csr_era
+Date: Mon, 26 Sep 2022 20:27:27 +0800
+Message-Id: <20220926122727.2310118-1-yijun@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -26,28 +26,27 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx9OF5eDFj4CoiAA--.60647S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtF4DGr4rXw48WFW8tw48Xrb_yoW3Wwb_Z3
-	Wxuw1UWw4rA3yFvw1j9rW5G3WY9ay0vF1Fk3Z2vrZ3Cas8tw15trZ8J3Z8Arn0gFZ5Grs8
-	Z3yDKrn0kF15tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbskFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+X-CM-TRANSID:AQAAf8Cx72uvmjFjbDkiAA--.59138S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrury7ZrykZrWxZryxJF17Awb_yoWxurg_A3
+	W29w1UWa1rAw4Syw1Uur4fGFyqvay8KF1Fk3Z2vrWkCFn8Jw4Yy3y5A3Z8ArnIgFWrGrs8
+	Z39rJrn0kFy8tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbs8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
 	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: p1lm30o6or00hjvr0hdfq/1tbiAQABAWMwRN0RYAAAs6
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
+	1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
+	cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
+	ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
+	8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
+	xVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
+	8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280
+	aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43
+	ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: p1lm30o6or00hjvr0hdfq/1tbiAQABAWMxll4ANgABss
 
-The content of LoongArch's branch.h is porting from
-MIPS which includes some functions about delay slot,
-so inline the definitions and remove the header.
+csr_era of pt_regs in do_ri should not add 4 to point to the
+next instruction.
 
 Signed-off-by: Jun Yi <yijun@loongson.cn>
 ---
