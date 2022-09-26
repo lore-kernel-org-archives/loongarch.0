@@ -1,37 +1,37 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEF2396
-	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 06:02:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E965396
+	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 06:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664172158; x=1695708158;
+  t=1664172167; x=1695708167;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=JPIaJ8vjRXsnR6ehmxoCGwHfmOHncvoq3CUa2JWw7uU=;
-  b=YfF/UtPlEQPUAYlGP+DTZSiyUQgYmUxJgmVF5Ll/REFIQmi8QnVkMyYN
-   l4g00BlKgz1LY8l6/WxIM2u0ud9CGEccnEfcfsOZ9KpUAYgt9tjW3GVag
-   +mcky9RsjyvFMSqgPwTWzJ2637P5m436U1r9M5TRGPBHKQtlsdH3tbEv/
-   k18UKC2kb9bnySnAU+KKS5Lf8xwTSUk4cNhjwm8PotJuQBmdhm62mL4Ee
-   p+jS47Y+p1OXa7T5RR7AoowYLusaDqGz9x0bH+LGxHqXzdASdnAsfu7mh
-   GHLgIBS+tirc3eO/D302ks3pzSCOj1xAF+atrnkL5wWU93Cbmtdd4hnuI
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10481"; a="299669200"
+  bh=dXqZe5mVxTyX1sl8Dkn8RvKeWFxf3FJh7g31wRzGFNc=;
+  b=fnQUX4CiUAn/tvezJEV2GucGHV/biwO2hVKeZF5KQQw9UsXqYcY0sJrV
+   A6E/LrGe7t6I2napnOgMQnicZ2lD9ImS/5os9M8Nui+MUP5sWW+ZHVLz+
+   CKnBjbEXkjJpPrlRAwDoX5XvgJ1qm5dpm9YYYFH4mMxU0TGeoYOXzRD79
+   eYMKZJ/AEOCvn73Pp75JUU/I/2dbWckH4A9wMucwj/xaJJ45a0RQyjzQS
+   LVA43IwdzPTs6QmxYgxq/G2thBunAxkJSrpkYXy28zvX8ko0X0XQ5jAJW
+   UIBJVXqYXkqamSrUaUrJBLOJf7OZnVeBsjBwnr30THA+Etu71qQTY09h0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10481"; a="301845318"
 X-IronPort-AV: E=Sophos;i="5.93,345,1654585200"; 
-   d="scan'208";a="299669200"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2022 23:02:37 -0700
+   d="scan'208";a="301845318"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2022 23:02:36 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10481"; a="572087783"
+X-IronPort-AV: E=McAfee;i="6500,9779,10481"; a="623212896"
 X-IronPort-AV: E=Sophos;i="5.93,345,1654585200"; 
-   d="scan'208";a="572087783"
+   d="scan'208";a="623212896"
 Received: from lkp-server01.sh.intel.com (HELO c0a60f19fe7e) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 25 Sep 2022 23:02:33 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 25 Sep 2022 23:02:33 -0700
 Received: from kbuild by c0a60f19fe7e with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1ochCK-0008jY-2T;
+	id 1ochCK-0008jb-2Y;
 	Mon, 26 Sep 2022 06:02:32 +0000
-Date: Mon, 26 Sep 2022 14:02:01 +0800
+Date: Mon, 26 Sep 2022 14:02:06 +0800
 From: kernel test robot <lkp@intel.com>
 To: Binbin Zhou <zhoubinbin@loongson.cn>,
 	Wolfram Sang <wsa-dev@sang-engineering.com>,
@@ -42,21 +42,21 @@ Cc: kbuild-all@lists.01.org, loongarch@lists.linux.dev,
 	Jianmin Lv <lvjianmin@loongson.cn>,
 	Binbin Zhou <zhoubinbin@loongson.cn>,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH 1/5] i2c: core: Pick i2c bus number from ACPI if present
-Message-ID: <202209260915.lDk6t5ye-lkp@intel.com>
-References: <be5cd69c7c58d44ca119d4ca692d95a2ae924533.1663835855.git.zhoubinbin@loongson.cn>
+Subject: Re: [PATCH 2/5] i2c: gpio: Add support on ACPI-based system
+Message-ID: <202209261007.TukJu9wJ-lkp@intel.com>
+References: <74988d34ceae9bf239c138a558778cd999beb77c.1663835855.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="ImXX62VUPXxLAoi9"
+Content-Type: multipart/mixed; boundary="B1dwTE9p4YU035H+"
 Content-Disposition: inline
-In-Reply-To: <be5cd69c7c58d44ca119d4ca692d95a2ae924533.1663835855.git.zhoubinbin@loongson.cn>
+In-Reply-To: <74988d34ceae9bf239c138a558778cd999beb77c.1663835855.git.zhoubinbin@loongson.cn>
 
 
---ImXX62VUPXxLAoi9
+--B1dwTE9p4YU035H+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -78,69 +78,142 @@ compiler: gcc-11 (Debian 11.3.0-5) 11.3.0
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
 
-New smatch warnings:
-drivers/i2c/i2c-core-base.c:1563 i2c_add_adapter() warn: always true condition '(id >= 0) => (0-u64max >= 0)'
+smatch warnings:
+drivers/i2c/busses/i2c-gpio.c:474 i2c_gpio_probe() warn: always true condition '(id >= 0) => (0-u64max >= 0)'
 
-Old smatch warnings:
-drivers/i2c/i2c-core-base.c:1570 i2c_add_adapter() warn: always true condition '(id >= 0) => (0-u64max >= 0)'
+vim +474 drivers/i2c/busses/i2c-gpio.c
 
-vim +1563 drivers/i2c/i2c-core-base.c
-
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01  1540  
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1541  /**
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1542   * i2c_add_adapter - declare i2c adapter, use dynamic bus number
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1543   * @adapter: the adapter to add
-d64f73be1b59b9 drivers/i2c/i2c-core.c      David Brownell 2007-07-12  1544   * Context: can sleep
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1545   *
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1546   * This routine is used to declare an I2C adapter when its bus number
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01  1547   * doesn't matter or when its bus number is specified by an dt alias.
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01  1548   * Examples of bases when the bus number doesn't matter: I2C adapters
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01  1549   * dynamically added by USB links or PCI plugin cards.
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1550   *
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1551   * When this returns zero, a new bus number was allocated and stored
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1552   * in adap->nr, and the specified adapter became available for clients.
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1553   * Otherwise, a negative errno value is returned.
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1554   */
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1555  int i2c_add_adapter(struct i2c_adapter *adapter)
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1556  {
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01  1557  	struct device *dev = &adapter->dev;
-749fc796eb66dc drivers/i2c/i2c-core-base.c Binbin Zhou    2022-09-22  1558  	acpi_status status;
-749fc796eb66dc drivers/i2c/i2c-core-base.c Binbin Zhou    2022-09-22  1559  	unsigned long long id;
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1560  
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01  1561  	if (dev->of_node) {
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01  1562  		id = of_alias_get_id(dev->of_node, "i2c");
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01 @1563  		if (id >= 0) {
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01  1564  			adapter->nr = id;
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01  1565  			return __i2c_add_numbered_adapter(adapter);
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01  1566  		}
-749fc796eb66dc drivers/i2c/i2c-core-base.c Binbin Zhou    2022-09-22  1567  	} else if (dev->parent->fwnode) {
-749fc796eb66dc drivers/i2c/i2c-core-base.c Binbin Zhou    2022-09-22  1568  		status = acpi_evaluate_integer(ACPI_HANDLE(dev->parent),
-749fc796eb66dc drivers/i2c/i2c-core-base.c Binbin Zhou    2022-09-22  1569  						"_UID", NULL, &id);
-749fc796eb66dc drivers/i2c/i2c-core-base.c Binbin Zhou    2022-09-22  1570  		if (ACPI_SUCCESS(status) && (id >= 0)) {
-749fc796eb66dc drivers/i2c/i2c-core-base.c Binbin Zhou    2022-09-22  1571  			adapter->nr = id;
-749fc796eb66dc drivers/i2c/i2c-core-base.c Binbin Zhou    2022-09-22  1572  			return __i2c_add_numbered_adapter(adapter);
-749fc796eb66dc drivers/i2c/i2c-core-base.c Binbin Zhou    2022-09-22  1573  		}
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01  1574  	}
-ee5c27440cc24d drivers/i2c/i2c-core.c      Doug Anderson  2013-03-01  1575  
-caada32afe0d18 drivers/i2c/i2c-core.c      Jean Delvare   2008-01-27  1576  	mutex_lock(&core_lock);
-4ae42b0ff0f999 drivers/i2c/i2c-core.c      Tejun Heo      2013-02-27  1577  	id = idr_alloc(&i2c_adapter_idr, adapter,
-4ae42b0ff0f999 drivers/i2c/i2c-core.c      Tejun Heo      2013-02-27  1578  		       __i2c_first_dynamic_bus_num, 0, GFP_KERNEL);
-caada32afe0d18 drivers/i2c/i2c-core.c      Jean Delvare   2008-01-27  1579  	mutex_unlock(&core_lock);
-84d0b61773c7af drivers/i2c/i2c-core.c      Wolfram Sang   2016-07-09  1580  	if (WARN(id < 0, "couldn't get idr"))
-4ae42b0ff0f999 drivers/i2c/i2c-core.c      Tejun Heo      2013-02-27  1581  		return id;
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1582  
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1583  	adapter->nr = id;
-4ae42b0ff0f999 drivers/i2c/i2c-core.c      Tejun Heo      2013-02-27  1584  
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1585  	return i2c_register_adapter(adapter);
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1586  }
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1587  EXPORT_SYMBOL(i2c_add_adapter);
-6e13e641841833 drivers/i2c/i2c-core.c      David Brownell 2007-05-01  1588  
+   375	
+   376	static int i2c_gpio_probe(struct platform_device *pdev)
+   377	{
+   378		struct i2c_gpio_private_data *priv;
+   379		struct i2c_gpio_platform_data *pdata;
+   380		struct i2c_algo_bit_data *bit_data;
+   381		struct i2c_adapter *adap;
+   382		struct device *dev = &pdev->dev;
+   383		struct device_node *np = dev->of_node;
+   384		enum gpiod_flags gflags;
+   385		acpi_status status;
+   386		unsigned long long id;
+   387		int ret;
+   388	
+   389		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+   390		if (!priv)
+   391			return -ENOMEM;
+   392	
+   393		adap = &priv->adap;
+   394		bit_data = &priv->bit_data;
+   395		pdata = &priv->pdata;
+   396	
+   397		if (np) {
+   398			of_i2c_gpio_get_props(np, pdata);
+   399		} else if (ACPI_COMPANION(dev)) {
+   400			acpi_i2c_gpio_get_props(dev, pdata);
+   401		} else {
+   402			/*
+   403			 * If all platform data settings are zero it is OK
+   404			 * to not provide any platform data from the board.
+   405			 */
+   406			if (dev_get_platdata(dev))
+   407				memcpy(pdata, dev_get_platdata(dev), sizeof(*pdata));
+   408		}
+   409	
+   410		/*
+   411		 * First get the GPIO pins; if it fails, we'll defer the probe.
+   412		 * If the SCL/SDA lines are marked "open drain" by platform data or
+   413		 * device tree then this means that something outside of our control is
+   414		 * marking these lines to be handled as open drain, and we should just
+   415		 * handle them as we handle any other output. Else we enforce open
+   416		 * drain as this is required for an I2C bus.
+   417		 */
+   418		if (pdata->sda_is_open_drain)
+   419			gflags = GPIOD_OUT_HIGH;
+   420		else
+   421			gflags = GPIOD_OUT_HIGH_OPEN_DRAIN;
+   422		priv->sda = i2c_gpio_get_desc(dev, "sda", 0, gflags);
+   423		if (IS_ERR(priv->sda))
+   424			return PTR_ERR(priv->sda);
+   425	
+   426		if (pdata->scl_is_open_drain)
+   427			gflags = GPIOD_OUT_HIGH;
+   428		else
+   429			gflags = GPIOD_OUT_HIGH_OPEN_DRAIN;
+   430		priv->scl = i2c_gpio_get_desc(dev, "scl", 1, gflags);
+   431		if (IS_ERR(priv->scl))
+   432			return PTR_ERR(priv->scl);
+   433	
+   434		if (gpiod_cansleep(priv->sda) || gpiod_cansleep(priv->scl))
+   435			dev_warn(dev, "Slow GPIO pins might wreak havoc into I2C/SMBus bus timing");
+   436		else
+   437			bit_data->can_do_atomic = true;
+   438	
+   439		bit_data->setsda = i2c_gpio_setsda_val;
+   440		bit_data->setscl = i2c_gpio_setscl_val;
+   441	
+   442		if (!pdata->scl_is_output_only)
+   443			bit_data->getscl = i2c_gpio_getscl;
+   444		bit_data->getsda = i2c_gpio_getsda;
+   445	
+   446		if (pdata->udelay)
+   447			bit_data->udelay = pdata->udelay;
+   448		else if (pdata->scl_is_output_only)
+   449			bit_data->udelay = 50;			/* 10 kHz */
+   450		else
+   451			bit_data->udelay = 5;			/* 100 kHz */
+   452	
+   453		if (pdata->timeout)
+   454			bit_data->timeout = pdata->timeout;
+   455		else
+   456			bit_data->timeout = HZ / 10;		/* 100 ms */
+   457	
+   458		bit_data->data = priv;
+   459	
+   460		adap->owner = THIS_MODULE;
+   461		if (np)
+   462			strscpy(adap->name, dev_name(dev), sizeof(adap->name));
+   463		else
+   464			snprintf(adap->name, sizeof(adap->name), "i2c-gpio%d", pdev->id);
+   465	
+   466		adap->algo_data = bit_data;
+   467		adap->class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
+   468		adap->dev.parent = dev;
+   469		adap->dev.of_node = np;
+   470	
+   471		if (ACPI_COMPANION(dev)) {
+   472			status = acpi_evaluate_integer(ACPI_HANDLE(dev),
+   473							"_UID", NULL, &id);
+ > 474			if (ACPI_SUCCESS(status) && (id >= 0))
+   475				adap->nr = id;
+   476		} else
+   477			adap->nr = pdev->id;
+   478	
+   479		ret = i2c_bit_add_numbered_bus(adap);
+   480		if (ret)
+   481			return ret;
+   482	
+   483		platform_set_drvdata(pdev, priv);
+   484	
+   485		/*
+   486		 * FIXME: using global GPIO numbers is not helpful. If/when we
+   487		 * get accessors to get the actual name of the GPIO line,
+   488		 * from the descriptor, then provide that instead.
+   489		 */
+   490		dev_info(dev, "using lines %u (SDA) and %u (SCL%s)\n",
+   491			 desc_to_gpio(priv->sda), desc_to_gpio(priv->scl),
+   492			 pdata->scl_is_output_only
+   493			 ? ", no clock stretching" : "");
+   494	
+   495		i2c_gpio_fault_injector_init(pdev);
+   496	
+   497		return 0;
+   498	}
+   499	
 
 -- 
 0-DAY CI Kernel Test Service
 https://01.org/lkp
 
---ImXX62VUPXxLAoi9
+--B1dwTE9p4YU035H+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=config
 
@@ -5165,4 +5238,4 @@ CONFIG_MEMTEST=y
 # end of Kernel Testing and Coverage
 # end of Kernel hacking
 
---ImXX62VUPXxLAoi9--
+--B1dwTE9p4YU035H+--
