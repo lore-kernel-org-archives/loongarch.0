@@ -1,23 +1,22 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA59E7B
-	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 12:29:03 +0000 (UTC)
-Received: from 4.cn (unknown [10.20.4.148])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx72uvmjFjbDkiAA--.59138S2;
-	Mon, 26 Sep 2022 20:27:27 +0800 (CST)
-From: Jun Yi <yijun@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Qing Zhang <zhangqing@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Mao Bibo <maobibo@loongson.cn>,
-	Jianmin Lv <lvjianmin@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B88242F28
+	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 13:01:11 +0000 (UTC)
+Received: from localhost.localdomain (unknown [112.20.108.220])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx5OGUojFjdz4iAA--.62163S2;
+	Mon, 26 Sep 2022 21:01:09 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Wolfram Sang <wsa@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org
 Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] LoongArch: Fixup do_ri csr_era
-Date: Mon, 26 Sep 2022 20:27:27 +0800
-Message-Id: <20220926122727.2310118-1-yijun@loongson.cn>
+	linux-acpi@vger.kernel.org,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH V2 0/4] i2c: ls2x: Add support for the Loongson-2K/LS7A I2C 
+Date: Mon, 26 Sep 2022 21:00:03 +0800
+Message-Id: <cover.1664193316.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -26,46 +25,56 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx72uvmjFjbDkiAA--.59138S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrury7ZrykZrWxZryxJF17Awb_yoWxurg_A3
-	W29w1UWa1rAw4Syw1Uur4fGFyqvay8KF1Fk3Z2vrWkCFn8Jw4Yy3y5A3Z8ArnIgFWrGrs8
-	Z39rJrn0kFy8tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbs8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+X-CM-TRANSID:AQAAf8Bx5OGUojFjdz4iAA--.62163S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF1kWF1xAr1rZFWkKr1UGFg_yoWkZFbEkF
+	9ayas7Gr1DJFyDAa4jvr4fZrW3KayUW3WrKFn7t34fCr12qr15KFyDZr93tFyxX3yUWFnx
+	Xw4kuF1xZF1xtjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb2xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
 	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
 	Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
 	1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
 	cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
-	ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
-	8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
-	xVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
-	8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280
-	aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43
-	ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: p1lm30o6or00hjvr0hdfq/1tbiAQABAWMxll4ANgABss
+	ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ry8MxAI
+	w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
+	4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxG
+	rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8Jw
+	CI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
+	z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUnpnQUUUUU
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
 
-csr_era of pt_regs in do_ri should not add 4 to point to the
-next instruction.
+Hi all:
 
-Signed-off-by: Jun Yi <yijun@loongson.cn>
----
- arch/loongarch/kernel/traps.c | 2 --
- 1 file changed, 2 deletions(-)
+This patch series adds support for the I2C module found on various
+Loongson systems with the Loongson-2K SoC or the Loongson LS7A bridge chip.
 
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index aa1c95aaf595..ec888eda3d45 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -477,8 +477,6 @@ asmlinkage void noinstr do_ri(struct pt_regs *regs)
- 
- 	die_if_kernel("Reserved instruction in kernel code", regs);
- 
--	compute_return_era(regs);
--
- 	if (unlikely(get_user(opcode, era) < 0)) {
- 		status = SIGSEGV;
- 		current->thread.error_code = 1;
+For now, the I2C driver is suitable for DT-based or ACPI-based systems.
+
+I have only tested the Loongson-3A5000+LS7A1000/LS7A2000 under LoongArch
+architecture.
+
+Thanks.
+
+Changes since V1:
+1. Remove the function of getting the static i2c bus number from ACPI "_UID";
+2. Fix build warning from kernel test robot.
+
+Binbin Zhou (4):
+  i2c: gpio: Add support on ACPI-based system
+  dt-bindings: i2c: add bindings for Loongson LS2X I2C
+  i2c: Add driver for Loongson-2K/LS7A I2C controller
+  LoongArch: Enable LS2X I2C in loongson3_defconfig
+
+ .../bindings/i2c/loongson,ls2x-i2c.yaml       |  48 +++
+ arch/loongarch/configs/loongson3_defconfig    |   1 +
+ drivers/i2c/busses/Kconfig                    |   7 +
+ drivers/i2c/busses/Makefile                   |   1 +
+ drivers/i2c/busses/i2c-gpio.c                 |  30 ++
+ drivers/i2c/busses/i2c-ls2x.c                 | 365 ++++++++++++++++++
+ 6 files changed, 452 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+ create mode 100644 drivers/i2c/busses/i2c-ls2x.c
+
 -- 
 2.31.1
 
