@@ -1,9 +1,9 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B69902F24
-	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 13:01:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C27532F3F
+	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 13:01:12 +0000 (UTC)
 Received: from localhost.localdomain (unknown [112.20.108.220])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx5OGUojFjdz4iAA--.62163S3;
-	Mon, 26 Sep 2022 21:01:09 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx5OGUojFjdz4iAA--.62163S6;
+	Mon, 26 Sep 2022 21:01:11 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Wolfram Sang <wsa@kernel.org>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
@@ -13,11 +13,10 @@ Cc: loongarch@lists.linux.dev,
 	linux-acpi@vger.kernel.org,
 	WANG Xuerui <kernel@xen0n.name>,
 	Jianmin Lv <lvjianmin@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V2 1/4] i2c: gpio: Add support on ACPI-based system
-Date: Mon, 26 Sep 2022 21:00:04 +0800
-Message-Id: <f5df899e2218c0cd8cc8782b4a8f157ebb9726bc.1664193316.git.zhoubinbin@loongson.cn>
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH V2 4/4] LoongArch: Enable LS2X I2C in loongson3_defconfig
+Date: Mon, 26 Sep 2022 21:00:07 +0800
+Message-Id: <503ee2a1ded618e458a6e99a09fcada49df768c1.1664193316.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1664193316.git.zhoubinbin@loongson.cn>
 References: <cover.1664193316.git.zhoubinbin@loongson.cn>
@@ -28,101 +27,45 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx5OGUojFjdz4iAA--.62163S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZFW3Xr17Ww4ktw4rWrWxJFb_yoW5JFyfpF
-	s09FW5tr4UGF12gF17Xw1kua4Skws7X3yxKw47G3sF9an0qr98XryxKFya9F1rAFW5G3W7
-	Xa4DtFW7CFsrZF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPm14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
-	ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I2
-	62IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcV
-	AFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG
-	0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI
-	1lc2xSY4AK67AK6ry8MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I
-	3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxV
-	WUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8I
-	cVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aV
-	AFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZE
-	Xa7VUjU3vUUUUUU==
+X-CM-TRANSID:AQAAf8Bx5OGUojFjdz4iAA--.62163S6
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF17Kr43Xr47Aw1UCr17Wrg_yoWxKFc_JF
+	y7Kw1kWr48JFZ7W3WIqw4rGw4DA3W7XF1SyFnrZw1xX3Wagr13trWDC3W3Cwn09ayDWr43
+	ZaykAF9F9r18tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbhxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
+	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
+	F7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr
+	1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
+	8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
+	jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ry8MxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+	80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjg_-JUUUUU==
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
 
-Add support for the ACPI-based device registration so that the driver
-can be also enabled through ACPI table.
+This is now supported, enable for Loongson-3 systems. Other systems are
+affected.
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- drivers/i2c/busses/i2c-gpio.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/loongarch/configs/loongson3_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
-index b1985c1667e1..417eb31e0971 100644
---- a/drivers/i2c/busses/i2c-gpio.c
-+++ b/drivers/i2c/busses/i2c-gpio.c
-@@ -13,6 +13,7 @@
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-+#include <linux/acpi.h>
- #include <linux/of.h>
- #include <linux/platform_data/i2c-gpio.h>
- #include <linux/platform_device.h>
-@@ -318,6 +319,24 @@ static void of_i2c_gpio_get_props(struct device_node *np,
- 		of_property_read_bool(np, "i2c-gpio,scl-output-only");
- }
- 
-+static void acpi_i2c_gpio_get_props(struct device *dev,
-+				  struct i2c_gpio_platform_data *pdata)
-+{
-+	u32 reg;
-+
-+	device_property_read_u32(dev, "delay-us", &pdata->udelay);
-+
-+	if (!device_property_read_u32(dev, "timeout-ms", &reg))
-+		pdata->timeout = msecs_to_jiffies(reg);
-+
-+	pdata->sda_is_open_drain =
-+		device_property_read_bool(dev, "sda-open-drain");
-+	pdata->scl_is_open_drain =
-+		device_property_read_bool(dev, "scl-open-drain");
-+	pdata->scl_is_output_only =
-+		device_property_read_bool(dev, "scl-output-only");
-+}
-+
- static struct gpio_desc *i2c_gpio_get_desc(struct device *dev,
- 					   const char *con_id,
- 					   unsigned int index,
-@@ -375,6 +394,8 @@ static int i2c_gpio_probe(struct platform_device *pdev)
- 
- 	if (np) {
- 		of_i2c_gpio_get_props(np, pdata);
-+	} else if (ACPI_COMPANION(dev)) {
-+		acpi_i2c_gpio_get_props(dev, pdata);
- 	} else {
- 		/*
- 		 * If all platform data settings are zero it is OK
-@@ -491,10 +512,19 @@ static const struct of_device_id i2c_gpio_dt_ids[] = {
- MODULE_DEVICE_TABLE(of, i2c_gpio_dt_ids);
- #endif
- 
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id i2c_gpio_acpi_match[] = {
-+	{"LOON0005"}, /*LoongArch*/
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, i2c_gpio_acpi_match);
-+#endif
-+
- static struct platform_driver i2c_gpio_driver = {
- 	.driver		= {
- 		.name	= "i2c-gpio",
- 		.of_match_table	= of_match_ptr(i2c_gpio_dt_ids),
-+		.acpi_match_table = ACPI_PTR(i2c_gpio_acpi_match),
- 	},
- 	.probe		= i2c_gpio_probe,
- 	.remove		= i2c_gpio_remove,
+diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+index 4083d3051109..7910adf20887 100644
+--- a/arch/loongarch/configs/loongson3_defconfig
++++ b/arch/loongarch/configs/loongson3_defconfig
+@@ -558,6 +558,7 @@ CONFIG_HW_RANDOM_VIRTIO=m
+ CONFIG_I2C_CHARDEV=y
+ CONFIG_I2C_PIIX4=y
+ CONFIG_I2C_GPIO=y
++CONFIG_I2C_LS2X=y
+ CONFIG_SPI=y
+ CONFIG_GPIO_SYSFS=y
+ CONFIG_GPIO_LOONGSON=y
 -- 
 2.31.1
 
