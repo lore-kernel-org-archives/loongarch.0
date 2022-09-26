@@ -1,9 +1,9 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C27532F3F
-	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 13:01:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11C4228FA
+	for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 13:01:11 +0000 (UTC)
 Received: from localhost.localdomain (unknown [112.20.108.220])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx5OGUojFjdz4iAA--.62163S6;
-	Mon, 26 Sep 2022 21:01:11 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx5OGUojFjdz4iAA--.62163S4;
+	Mon, 26 Sep 2022 21:01:10 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Wolfram Sang <wsa@kernel.org>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
@@ -14,9 +14,9 @@ Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <kernel@xen0n.name>,
 	Jianmin Lv <lvjianmin@loongson.cn>,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH V2 4/4] LoongArch: Enable LS2X I2C in loongson3_defconfig
-Date: Mon, 26 Sep 2022 21:00:07 +0800
-Message-Id: <503ee2a1ded618e458a6e99a09fcada49df768c1.1664193316.git.zhoubinbin@loongson.cn>
+Subject: [PATCH V2 2/4] dt-bindings: i2c: add bindings for Loongson LS2X I2C
+Date: Mon, 26 Sep 2022 21:00:05 +0800
+Message-Id: <73bf41f681f94c9569a439a4ac33e6741bea2878.1664193316.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1664193316.git.zhoubinbin@loongson.cn>
 References: <cover.1664193316.git.zhoubinbin@loongson.cn>
@@ -27,45 +27,88 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx5OGUojFjdz4iAA--.62163S6
-X-Coremail-Antispam: 1UD129KBjvdXoW7JF17Kr43Xr47Aw1UCr17Wrg_yoWxKFc_JF
-	y7Kw1kWr48JFZ7W3WIqw4rGw4DA3W7XF1SyFnrZw1xX3Wagr13trWDC3W3Cwn09ayDWr43
-	ZaykAF9F9r18tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbhxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
-	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
-	F7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr
-	1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
-	8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
-	jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ry8MxAIw2
-	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
-	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
-	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI
-	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
-	80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjg_-JUUUUU==
+X-CM-TRANSID:AQAAf8Bx5OGUojFjdz4iAA--.62163S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFW5WFW8CFWxXF4xurW3Wrg_yoW8Wr4xp3
+	ZrCr9rGr40vF17u39xGFy8G3W3Zr95AasrGFZFyw1UKFyDG3Wqvw4akr15Xa13WFy0gFW7
+	XFZ29r4jkas7Cr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBa14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW5GwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIx
+	AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAI
+	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUUGYJUUUUU=
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
 
-This is now supported, enable for Loongson-3 systems. Other systems are
-affected.
+Add device tree bindings for the i2c controller on the Loongson-2K Soc
+or Loongosn LS7A bridge.
 
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- arch/loongarch/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/i2c/loongson,ls2x-i2c.yaml       | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index 4083d3051109..7910adf20887 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -558,6 +558,7 @@ CONFIG_HW_RANDOM_VIRTIO=m
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_PIIX4=y
- CONFIG_I2C_GPIO=y
-+CONFIG_I2C_LS2X=y
- CONFIG_SPI=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_LOONGSON=y
+diff --git a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+new file mode 100644
+index 000000000000..8c785f329d2f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/i2c/loongson,ls2x-i2c.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Loongson LS2X I2C Controller
++
++maintainers:
++  - Binbin Zhou <zhoubinbin@loongson.cn>
++
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++
++properties:
++  compatible:
++    enum:
++      - loongson,ls2k-i2c # Loongson-2K SoCs
++      - loongson,ls7a-i2c # Loongson LS7A Bridge
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c@1fe21000 {
++        compatible = "loongson,ls2k-i2c";
++        reg = <0 0x1fe21000 0 0x8>;
++        interrupts = <22>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        eeprom@57{
++            compatible = "atmel,24c16";
++            reg = <0x57>;
++            pagesize = <16>;
++        };
++    };
 -- 
 2.31.1
 
