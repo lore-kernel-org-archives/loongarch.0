@@ -1,39 +1,39 @@
 Received: from new1-smtp.messagingengine.com (new1-smtp.messagingengine.com [66.111.4.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C615D653
-	for <loongarch@lists.linux.dev>; Tue, 27 Sep 2022 07:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BE1653
+	for <loongarch@lists.linux.dev>; Tue, 27 Sep 2022 07:51:26 +0000 (UTC)
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailnew.nyi.internal (Postfix) with ESMTP id B93AB580763;
-	Tue, 27 Sep 2022 03:49:43 -0400 (EDT)
+	by mailnew.nyi.internal (Postfix) with ESMTP id AC59758055B;
+	Tue, 27 Sep 2022 03:51:25 -0400 (EDT)
 Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Tue, 27 Sep 2022 03:49:43 -0400
+  by compute3.internal (MEProxy); Tue, 27 Sep 2022 03:51:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
 	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm1; t=1664264983; x=1664268583; bh=YDujUhOswI
-	QM3ClSAwD1lSC2w9cFM+FJGSgX/v7CLGU=; b=RHmsHl/6GsrkVx+XhjAEA3zhaK
-	Xwo3uJJjfRMn5BX8uDfvmcxpWSdRC//n0rGrQeMO4Jknyfp+0KQVzj15nKCHmEyy
-	OSfk8RqOxRUa2a8DfaclsRvuueulJkesU7Zd5tM+xoAgaUuzUqpWXZE3V83XfZFM
-	mhCh2hO/xZSRC6BXrtcXY8nRM4gAiv8ATgnIiDjQrkic2p50p+2zt0idZ7TFzFuG
-	SLjwC/O4vo4/sziSkZbU5jLHRLBSrESK7/zeHMEBkfxR3kgtOD6bwdIDWUodTP45
-	Iw+NxXYjHwUw0+AySBIlxtdrlVYZW11uuovh63PTxW+ylKFjfNqaFpKmCi5A==
+	:subject:to:to; s=fm1; t=1664265085; x=1664268685; bh=hhJBZFDAuM
+	e9MRrygXN+gN6m3AyhwBPuDzBCskbFGDo=; b=gYEDmTELzHrP5CPkBsK38Zi6Hl
+	A60S9uIgc4ezMYC31OkJr5/3pioXY761DKLEsYCTR81WPFm/JDUxtlySs08ltxJO
+	I66N0tiGbk65ABUelzf9rt0klttNHv4QFbS8K+qVGolLA4/J+LxD6mugr61FY7+E
+	en2yY7Gu9HMbF1rRaBHxD8uMP6HGkotSSNmWe+iFx0x1dSGmrEOJagRh0onDxigp
+	xiYscY9tx6gmMFWXC+CNOIdSyR2wU+TDq4kxgiqvEpuzX6mUaRSnrt7c+Qcg0ItD
+	GM8+lyCabaeyNdu1RoHzcTwyu9mcl3HIDDwjsd3aiMHu8UmTpTsNBDqxLrUw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
 	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
 	:mime-version:references:reply-to:sender:subject:subject:to:to
 	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1664264983; x=1664268583; bh=YDujUhOswIQM3ClSAwD1lSC2w9cF
-	M+FJGSgX/v7CLGU=; b=qQjF0ERorHQ2+BYyjfbqv0euVO7j1ILs1Bi8KfSdicej
-	KKqVMwAgwhVO7vHTYfz9KSaPx9APFYLxgM/IJyilI4NfGfEyaC9/2mWxjc3kYXEk
-	h9ytGNMUuN0YsMUM58GrY/rC8Q4hi55QGZAZ3EU43hp4ZEwN2MoBSoiviwfVY4wo
-	U2xOR+t0x21teY1md2RvNcsScKB00FoqO+vkM68ad9AHICQRfYN/MxsrDbK12ILO
-	8LaLEat71wrGc60SseprDRHyDLtoif5a38y5L8OS4sNlOX3mFSYooLF505shxRZZ
-	toV1xwysZED9sgW/hTj7VSKg3H47XoMMcjMCOmseTg==
-X-ME-Sender: <xms:FasyY8oGUf3mlhRoxlN_JnPS5nXag8alcflKpE02bY5oVH0mdw2z5g>
-    <xme:FasyYyp8x117zWAh4YsfgVbSGesRlgbpvjzPTdBrZ3942QGsTfHJALTObzJwexm3Q
-    kbE8gIi3iM4jjvrXp0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeegfedguddvjecutefuodetggdotefrod
+	fm2; t=1664265085; x=1664268685; bh=hhJBZFDAuMe9MRrygXN+gN6m3Ayh
+	wBPuDzBCskbFGDo=; b=DST+9PV+3Kllyz+iJXk3P56OSqIUffN4Tga7IelqAtli
+	dUTjmP88+Qew4tRMLrEdIZyd5XUXBBLZeTHFwNGNuyaGUZyRCCEtC2rMLt48HxqH
+	pTnGbe/weDW3sK1KvVBp+x9FMiFqSVUiK96judw6cPk4LG622AmFfNreb2VyeKNk
+	ELWSMAxxAZsXNYJn5n6rx4F+lgViskYxg3cG1YbAcSG3VjnIb0Y/oevLWJ1VoqOw
+	D/VYZFRLmFWAxo/OsLfc4YX5F+NNdBOF6QalsfylTPPtmRmStUWZHJx/Pc48Yjv9
+	+kvQbus6xAIWLmogQAhGylTP22PoLO2ScO+exOTakg==
+X-ME-Sender: <xms:fasyY7WxXnWSOttQQs949b63fFFd5TndhfqPHUSvqYynFG735BSKLQ>
+    <xme:fasyYzlkzB0cgzRgPYWks_tWlUNKE8Dy_STOaJL2gltu2mG9YhkThazW7JIEJasJv
+    BEj91GAp17xx2DGuC4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeegfedguddvkecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
@@ -41,13 +41,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeegfedguddvjecutefuodetgg
     htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
     keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
     grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:FqsyYxPylQFcM2JOxQx3Z9ir8yfj25aLdTjKOD520D4tXa1-peDdJQ>
-    <xmx:FqsyYz6QvEzR9Av52ZnScvRxHr3N-TONbRZj1o4rHgDEg5VklV1O_g>
-    <xmx:FqsyY77iTA_fChm5OtnQ3eL7iE1QtlbySgLMJ6pZjc1UB3EDD3n0Eg>
-    <xmx:F6syY4E8Lq4on0PE_zX4XB010b5PAxRYBTTiDQEk9S7C-yuxyoqzZA>
+X-ME-Proxy: <xmx:fasyY3Y6_htBAKKlNd06KXJvbHSbKUjGSUQE2ErcVcQ68rXpdozE_A>
+    <xmx:fasyY2VUcNEvzgw_fQdFJUB7Dltx7OVsADmJyxl9ogZqQcJMcwXpLg>
+    <xmx:fasyY1lxBrgTENNyuh43EIXpe0DO1ohl5kdrPQjLDuWGGgM5BxZe1g>
+    <xmx:fasyY4uoweJQkYMMP4TvNAzoAWJMUZbmkdhcMClVFEpxKCNFI7mqrw>
 Feedback-ID: i56a14606:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id DA10DB60086; Tue, 27 Sep 2022 03:49:41 -0400 (EDT)
+	id 6003AB60086; Tue, 27 Sep 2022 03:51:25 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.7.0-alpha0-968-g04df58079d-fm-20220921.001-g04df5807
 Precedence: bulk
@@ -56,54 +56,32 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
-Message-Id: <ef6e1e54-5b8d-4a1a-85cb-7f9d3411a371@www.fastmail.com>
-In-Reply-To: <YzG+Pr+jNIWhWQnp@black.fi.intel.com>
-References: <cover.1664193316.git.zhoubinbin@loongson.cn>
- <f5df899e2218c0cd8cc8782b4a8f157ebb9726bc.1664193316.git.zhoubinbin@loongson.cn>
- <YzG+Pr+jNIWhWQnp@black.fi.intel.com>
-Date: Tue, 27 Sep 2022 09:49:21 +0200
+Message-Id: <e0efb8a9-b4b0-47bf-ab84-ea71c3630f9d@www.fastmail.com>
+In-Reply-To: <20220927045514.2762299-1-chenhuacai@loongson.cn>
+References: <20220927045514.2762299-1-chenhuacai@loongson.cn>
+Date: Tue, 27 Sep 2022 09:51:04 +0200
 From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Mika Westerberg" <mika.westerberg@linux.intel.com>,
- "Binbin Zhou" <zhoubinbin@loongson.cn>
-Cc: "Wolfram Sang" <wsa@kernel.org>,
- "Andy Shevchenko" <andriy.shevchenko@intel.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- "Wolfram Sang" <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org,
- loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
- "WANG Xuerui" <kernel@xen0n.name>, "Jianmin Lv" <lvjianmin@loongson.cn>,
- "Huacai Chen" <chenhuacai@loongson.cn>
-Subject: Re: [PATCH V2 1/4] i2c: gpio: Add support on ACPI-based system
+To: "Huacai Chen" <chenhuacai@loongson.cn>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Marc Zyngier" <maz@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ "Xuefeng Li" <lixuefeng@loongson.cn>, "Huacai Chen" <chenhuacai@gmail.com>,
+ "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH] irqchip: Make irqchip_init() usable on pure ACPI systems
 Content-Type: text/plain
 
-On Mon, Sep 26, 2022, at 4:59 PM, Mika Westerberg wrote:
+On Tue, Sep 27, 2022, at 6:55 AM, Huacai Chen wrote:
 
->> +static void acpi_i2c_gpio_get_props(struct device *dev,
->> +				  struct i2c_gpio_platform_data *pdata)
->> +{
->> +	u32 reg;
->> +
->> +	device_property_read_u32(dev, "delay-us", &pdata->udelay);
->> +
->> +	if (!device_property_read_u32(dev, "timeout-ms", &reg))
->> +		pdata->timeout = msecs_to_jiffies(reg);
->> +
->> +	pdata->sda_is_open_drain =
->> +		device_property_read_bool(dev, "sda-open-drain");
->> +	pdata->scl_is_open_drain =
->> +		device_property_read_bool(dev, "scl-open-drain");
->> +	pdata->scl_is_output_only =
->> +		device_property_read_bool(dev, "scl-output-only");
->> +}
->
-> Otherwise this patch looks good but I'm concerned because we have two
-> kinds of bindings now. The DT one above uses "i2c-gpio,..." and this
-> ACPI one uses just "..." so the question is where did these come from?
-> Is there already some existing system out there with these bindings or
-> they are documented somewhere?
+> @@ -28,7 +28,9 @@ extern struct of_device_id __irqchip_of_table[];
+> 
+>  void __init irqchip_init(void)
+>  {
+> +#ifdef CONFIG_OF_IRQ
+>  	of_irq_init(__irqchip_of_table);
+> +#endif
+>  	acpi_probe_device_table(irqchip);
+>  }
 
-I'm fairly sure it's just a mistake and it should use the regular
-binding. As far as I understand, there are still other incompatible
-changes being made to the firmware on these machines, so it's just
-a matter of updating this part as well.
+I think that #ifdef should be in the include/linux/of_irq.h
+header, with an empty inline function in the #else path.
 
-     Arnd
+   Arnd
