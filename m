@@ -1,87 +1,79 @@
-Received: from new1-smtp.messagingengine.com (new1-smtp.messagingengine.com [66.111.4.221])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BE1653
-	for <loongarch@lists.linux.dev>; Tue, 27 Sep 2022 07:51:26 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailnew.nyi.internal (Postfix) with ESMTP id AC59758055B;
-	Tue, 27 Sep 2022 03:51:25 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Tue, 27 Sep 2022 03:51:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm1; t=1664265085; x=1664268685; bh=hhJBZFDAuM
-	e9MRrygXN+gN6m3AyhwBPuDzBCskbFGDo=; b=gYEDmTELzHrP5CPkBsK38Zi6Hl
-	A60S9uIgc4ezMYC31OkJr5/3pioXY761DKLEsYCTR81WPFm/JDUxtlySs08ltxJO
-	I66N0tiGbk65ABUelzf9rt0klttNHv4QFbS8K+qVGolLA4/J+LxD6mugr61FY7+E
-	en2yY7Gu9HMbF1rRaBHxD8uMP6HGkotSSNmWe+iFx0x1dSGmrEOJagRh0onDxigp
-	xiYscY9tx6gmMFWXC+CNOIdSyR2wU+TDq4kxgiqvEpuzX6mUaRSnrt7c+Qcg0ItD
-	GM8+lyCabaeyNdu1RoHzcTwyu9mcl3HIDDwjsd3aiMHu8UmTpTsNBDqxLrUw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1664265085; x=1664268685; bh=hhJBZFDAuMe9MRrygXN+gN6m3Ayh
-	wBPuDzBCskbFGDo=; b=DST+9PV+3Kllyz+iJXk3P56OSqIUffN4Tga7IelqAtli
-	dUTjmP88+Qew4tRMLrEdIZyd5XUXBBLZeTHFwNGNuyaGUZyRCCEtC2rMLt48HxqH
-	pTnGbe/weDW3sK1KvVBp+x9FMiFqSVUiK96judw6cPk4LG622AmFfNreb2VyeKNk
-	ELWSMAxxAZsXNYJn5n6rx4F+lgViskYxg3cG1YbAcSG3VjnIb0Y/oevLWJ1VoqOw
-	D/VYZFRLmFWAxo/OsLfc4YX5F+NNdBOF6QalsfylTPPtmRmStUWZHJx/Pc48Yjv9
-	+kvQbus6xAIWLmogQAhGylTP22PoLO2ScO+exOTakg==
-X-ME-Sender: <xms:fasyY7WxXnWSOttQQs949b63fFFd5TndhfqPHUSvqYynFG735BSKLQ>
-    <xme:fasyYzlkzB0cgzRgPYWks_tWlUNKE8Dy_STOaJL2gltu2mG9YhkThazW7JIEJasJv
-    BEj91GAp17xx2DGuC4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeegfedguddvkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:fasyY3Y6_htBAKKlNd06KXJvbHSbKUjGSUQE2ErcVcQ68rXpdozE_A>
-    <xmx:fasyY2VUcNEvzgw_fQdFJUB7Dltx7OVsADmJyxl9ogZqQcJMcwXpLg>
-    <xmx:fasyY1lxBrgTENNyuh43EIXpe0DO1ohl5kdrPQjLDuWGGgM5BxZe1g>
-    <xmx:fasyY4uoweJQkYMMP4TvNAzoAWJMUZbmkdhcMClVFEpxKCNFI7mqrw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 6003AB60086; Tue, 27 Sep 2022 03:51:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-968-g04df58079d-fm-20220921.001-g04df5807
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779777F4
+	for <loongarch@lists.linux.dev>; Tue, 27 Sep 2022 11:37:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF0EC433D6;
+	Tue, 27 Sep 2022 11:37:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1664278630;
+	bh=3PBR6jtbh1qTflhCYVgBgGTgrWQZjL8THBuMEWqh6Ls=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=u9TwBkciHvLbhWtRjmeA9Gi9qYfDxSP8WqasYHlU6mxqB7RpbKwOIdpCu0NObXB7u
+	 VNJeLyZMUKsnu9kJUo0xkzCxkX/l3PWB/1EbU1qLbjwYmCDahHNjzyBwaAgBBiVt9V
+	 Mz0aedshjFhtf4dpFLEj2jzRso/96UNQ1LDaMYN/QGq+/YS92zDYyW3a0kN+koxuzl
+	 dJHvyKP09mcPtRFbwZduf+j0hgjEu9NbEYfueIpRidG/pwbmLKZTPNy3I055+ySzqh
+	 xATTTo0EqIlOt7eGM8o48R5Hz25WXtsZT0Q53FVRhO9Tpwh/HRIuqilCJAmASYsOQs
+	 +rwK4MujNu4/Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1od8tf-00Cy3R-TZ;
+	Tue, 27 Sep 2022 12:37:08 +0100
+Date: Tue, 27 Sep 2022 07:37:07 -0400
+Message-ID: <86tu4t6obg.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: "Arnd Bergmann" <arnd@arndb.de>
+Cc: "Huacai Chen" <chenhuacai@loongson.cn>,
+	"Thomas Gleixner" <tglx@linutronix.de>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	"Xuefeng Li" <lixuefeng@loongson.cn>,
+	"Huacai Chen" <chenhuacai@gmail.com>,
+	"Jiaxun Yang" <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH] irqchip: Make irqchip_init() usable on pure ACPI systems
+In-Reply-To: <e0efb8a9-b4b0-47bf-ab84-ea71c3630f9d@www.fastmail.com>
+References: <20220927045514.2762299-1-chenhuacai@loongson.cn>
+	<e0efb8a9-b4b0-47bf-ab84-ea71c3630f9d@www.fastmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <e0efb8a9-b4b0-47bf-ab84-ea71c3630f9d@www.fastmail.com>
-In-Reply-To: <20220927045514.2762299-1-chenhuacai@loongson.cn>
-References: <20220927045514.2762299-1-chenhuacai@loongson.cn>
-Date: Tue, 27 Sep 2022 09:51:04 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Huacai Chen" <chenhuacai@loongson.cn>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Marc Zyngier" <maz@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- "Xuefeng Li" <lixuefeng@loongson.cn>, "Huacai Chen" <chenhuacai@gmail.com>,
- "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH] irqchip: Make irqchip_init() usable on pure ACPI systems
-Content-Type: text/plain
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: arnd@arndb.de, chenhuacai@loongson.cn, tglx@linutronix.de, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, lixuefeng@loongson.cn, chenhuacai@gmail.com, jiaxun.yang@flygoat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, Sep 27, 2022, at 6:55 AM, Huacai Chen wrote:
-
-> @@ -28,7 +28,9 @@ extern struct of_device_id __irqchip_of_table[];
+On Tue, 27 Sep 2022 03:51:04 -0400,
+"Arnd Bergmann" <arnd@arndb.de> wrote:
 > 
->  void __init irqchip_init(void)
->  {
-> +#ifdef CONFIG_OF_IRQ
->  	of_irq_init(__irqchip_of_table);
-> +#endif
->  	acpi_probe_device_table(irqchip);
->  }
+> On Tue, Sep 27, 2022, at 6:55 AM, Huacai Chen wrote:
+> 
+> > @@ -28,7 +28,9 @@ extern struct of_device_id __irqchip_of_table[];
+> > 
+> >  void __init irqchip_init(void)
+> >  {
+> > +#ifdef CONFIG_OF_IRQ
+> >  	of_irq_init(__irqchip_of_table);
+> > +#endif
+> >  	acpi_probe_device_table(irqchip);
+> >  }
+> 
+> I think that #ifdef should be in the include/linux/of_irq.h
+> header, with an empty inline function in the #else path.
 
-I think that #ifdef should be in the include/linux/of_irq.h
-header, with an empty inline function in the #else path.
+Agreed. Please keep the C code free of #ifdefs if at all possible.
 
-   Arnd
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
