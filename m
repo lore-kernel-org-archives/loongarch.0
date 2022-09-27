@@ -1,95 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D1D645
-	for <loongarch@lists.linux.dev>; Tue, 27 Sep 2022 05:03:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C12BC433B5
-	for <loongarch@lists.linux.dev>; Tue, 27 Sep 2022 05:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1664254994;
-	bh=Jt1l+ur8owCZNiwKZzkzl+bfr1wPLucqAu5BcgfoKHg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VqooohJpWsmp9T0yAMgRfKNhQgNMildZLFNzSZBMp8sEoU/+P10eS8Z+WYpwOG6Xu
-	 lAYOt3ftHPLlTN1aF8Ja/ZBf5GXjnX9dV0JhA/RalpeoiFItESPgb13sbnvo0467C1
-	 Mhnkv7d+u8EOsTMIeg2bYRax0Qb5l3RXUHhzw044GxTomY8rGqvq7Z/seOEiaKDMN+
-	 5Vi5KN/8MuAxqWU0zRct+I2Ocyrq8r1KwBwGr4HKU0y9r4IPIgZvaafSaHDtpUbElu
-	 N8xSaXRtZyHe6/n+GTLaEe/NuN8/dlRVw+hrXSNeikoL/YTYa7/k4zkmw6FOol++R7
-	 KrDV0LggSs1kw==
-Received: by mail-vs1-f45.google.com with SMTP id a129so8690467vsc.0
-        for <loongarch@lists.linux.dev>; Mon, 26 Sep 2022 22:03:14 -0700 (PDT)
-X-Gm-Message-State: ACrzQf1z/riXEMqmNZ+w6s+/pgyxXBlDlLm7246OFNAvGFiTkGB+NNQr
-	zBzpPV385OIeyJQKI+UtBTgoUDneRSIMIHtks/8=
-X-Google-Smtp-Source: AMsMyM5z4O33bMpiughscS5oPJRSCkVN84Wq4J5UOo9i92KMKuSDDYODXKgEp4DQ3Y5fibeF3nGDbQ+54+F/JRh8t7I=
-X-Received: by 2002:a05:6102:1481:b0:39a:67f5:3096 with SMTP id
- d1-20020a056102148100b0039a67f53096mr9795505vsv.70.1664254993281; Mon, 26 Sep
- 2022 22:03:13 -0700 (PDT)
+Received: from muru.com (muru.com [72.249.23.125])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9337652
+	for <loongarch@lists.linux.dev>; Tue, 27 Sep 2022 06:30:52 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by muru.com (Postfix) with ESMTPS id E879B80E0;
+	Tue, 27 Sep 2022 06:13:36 +0000 (UTC)
+Date: Tue, 27 Sep 2022 09:21:54 +0300
+From: Tony Lindgren <tony@atomide.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+	mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
+	ulli.kroll@googlemail.com, linus.walleij@linaro.org,
+	shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+	khilman@kernel.org, catalin.marinas@arm.com, will@kernel.org,
+	guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
+	kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net,
+	monstr@monstr.eu, tsbogend@alpha.franken.de, dinguyen@kernel.org,
+	jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+	shorne@gmail.com, James.Bottomley@hansenpartnership.com,
+	deller@gmx.de, mpe@ellerman.id.au, npiggin@gmail.com,
+	christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
+	gor@linux.ibm.com, agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com, svens@linux.ibm.com,
+	ysato@users.sourceforge.jp, dalias@libc.org, davem@davemloft.net,
+	richard@nod.at, anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
+	amakhalov@vmware.com, pv-drivers@vmware.com,
+	boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
+	rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
+	gregkh@linuxfoundation.org, mturquette@baylibre.com,
+	sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+	sudeep.holla@arm.com, agross@kernel.org, bjorn.andersson@linaro.org,
+	konrad.dybcio@somainline.org, anup@brainfault.org,
+	thierry.reding@gmail.com, jonathanh@nvidia.com,
+	jacob.jun.pan@linux.intel.com, atishp@atishpatra.org,
+	Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com,
+	andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+	dennis@kernel.org, tj@kernel.org, cl@linux.com, rostedt@goodmis.org,
+	pmladek@suse.com, senozhatsky@chromium.org,
+	john.ogness@linutronix.de, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+	vschneid@redhat.com, fweisbec@gmail.com, ryabinin.a.a@gmail.com,
+	glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
+	vincenzo.frascino@arm.com,
+	Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
+	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	virtualization@lists.linux-foundation.org,
+	linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
+Subject: Re: [PATCH v2 37/44] arm,omap2: Use WFI for omap2_pm_idle()
+Message-ID: <YzKWgjNLWSmDss/h@atomide.com>
+References: <20220919095939.761690562@infradead.org>
+ <20220919101522.842219871@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220926122727.2310118-1-yijun@loongson.cn> <CAJF2gTQR804AwU0up2-FyTciQZJY2M9xQ7JbiqjwMbkD=aLhCQ@mail.gmail.com>
- <5bf565a4-5bc4-42f8-59c0-8b908a9c2ab6@loongson.cn>
-In-Reply-To: <5bf565a4-5bc4-42f8-59c0-8b908a9c2ab6@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 27 Sep 2022 13:03:01 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5oVTpGiW6T8dMSiGVe8KtAtUt2Q2sb5nEwc9PUJyqUnw@mail.gmail.com>
-Message-ID: <CAAhV-H5oVTpGiW6T8dMSiGVe8KtAtUt2Q2sb5nEwc9PUJyqUnw@mail.gmail.com>
-Subject: Re: [PATCH v3] LoongArch: Fixup do_ri csr_era
-To: Jun Yi <yijun@loongson.cn>
-Cc: Guo Ren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Qing Zhang <zhangqing@loongson.cn>, Mao Bibo <maobibo@loongson.cn>, 
-	Jianmin Lv <lvjianmin@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220919101522.842219871@infradead.org>
 
-Hi, all,
+* Peter Zijlstra <peterz@infradead.org> [220919 10:09]:
+> arch_cpu_idle() is a very simple idle interface and exposes only a
+> single idle state and is expected to not require RCU and not do any
+> tracing/instrumentation.
+> 
+> As such, omap2_pm_idle() is not a valid implementation. Replace it
+> with a simple (shallow) omap2_do_wfi() call.
+> 
+> Omap2 doesn't have a cpuidle driver; but adding one would be the
+> recourse to (re)gain the other idle states.
 
-I clean up do_ri() further based on this patch [1], thanks.
+Looks good to me thanks:
 
-[1] https://lore.kernel.org/loongarch/20220927045820.2770062-1-chenhuacai@loongson.cn/T/#u
-
-
-On Tue, Sep 27, 2022 at 11:10 AM Jun Yi <yijun@loongson.cn> wrote:
->
-> do_ri is porting from mips, mipsr6 use do_ri to emulate some fp
-> instructions, but Loongarch do not need to emulate these instructions.
->
-> And the regs->csr_era be always recovered to ths old_era =
-> regs->csr_era, so the compute_return_era is useless.
->
-> On 9/27/22 07:41, Guo Ren wrote:
-> > On Mon, Sep 26, 2022 at 8:27 PM Jun Yi <yijun@loongson.cn> wrote:
-> >>
-> >> csr_era of pt_regs in do_ri should not add 4 to point to the
-> >> next instruction.
-> > The comment does not make sense. I think it wants to skip some
-> > instructions, but your patch broke that.
-> >
-> >>
-> >> Signed-off-by: Jun Yi <yijun@loongson.cn>
-> >> ---
-> >>   arch/loongarch/kernel/traps.c | 2 --
-> >>   1 file changed, 2 deletions(-)
-> >>
-> >> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-> >> index aa1c95aaf595..ec888eda3d45 100644
-> >> --- a/arch/loongarch/kernel/traps.c
-> >> +++ b/arch/loongarch/kernel/traps.c
-> >> @@ -477,8 +477,6 @@ asmlinkage void noinstr do_ri(struct pt_regs *regs)
-> >>
-> >>          die_if_kernel("Reserved instruction in kernel code", regs);
-> >>
-> >> -       compute_return_era(regs);
-> >> -
-> >>          if (unlikely(get_user(opcode, era) < 0)) {
-> >>                  status = SIGSEGV;
-> >>                  current->thread.error_code = 1;
-> >> --
-> >> 2.31.1
-> >>
-> >
-> >
->
+Acked-by: Tony Lindgren <tony@atomide.com>
