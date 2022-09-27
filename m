@@ -1,10 +1,10 @@
 Received: from muru.com (muru.com [72.249.23.125])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9337652
-	for <loongarch@lists.linux.dev>; Tue, 27 Sep 2022 06:30:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A5DE36F
+	for <loongarch@lists.linux.dev>; Tue, 27 Sep 2022 06:31:14 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by muru.com (Postfix) with ESMTPS id E879B80E0;
-	Tue, 27 Sep 2022 06:13:36 +0000 (UTC)
-Date: Tue, 27 Sep 2022 09:21:54 +0300
+	by muru.com (Postfix) with ESMTPS id 5E7B081BD;
+	Tue, 27 Sep 2022 06:22:54 +0000 (UTC)
+Date: Tue, 27 Sep 2022 09:31:11 +0300
 From: Tony Lindgren <tony@atomide.com>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
@@ -65,10 +65,9 @@ Cc: richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
 	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
 	linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
-Subject: Re: [PATCH v2 37/44] arm,omap2: Use WFI for omap2_pm_idle()
-Message-ID: <YzKWgjNLWSmDss/h@atomide.com>
+Subject: Re: [PATCH v2 00/44] cpuidle,rcu: Clean up the mess
+Message-ID: <YzKYrx8Kd9SBYcUg@atomide.com>
 References: <20220919095939.761690562@infradead.org>
- <20220919101522.842219871@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -77,19 +76,23 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220919101522.842219871@infradead.org>
+In-Reply-To: <20220919095939.761690562@infradead.org>
 
-* Peter Zijlstra <peterz@infradead.org> [220919 10:09]:
-> arch_cpu_idle() is a very simple idle interface and exposes only a
-> single idle state and is expected to not require RCU and not do any
-> tracing/instrumentation.
+Hi,
+
+* Peter Zijlstra <peterz@infradead.org> [220919 10:08]:
+> Hi All!
 > 
-> As such, omap2_pm_idle() is not a valid implementation. Replace it
-> with a simple (shallow) omap2_do_wfi() call.
+> At long last, a respin of the cpuidle vs rcu cleanup patches.
 > 
-> Omap2 doesn't have a cpuidle driver; but adding one would be the
-> recourse to (re)gain the other idle states.
+> v1: https://lkml.kernel.org/r/20220608142723.103523089@infradead.org
+> 
+> These here patches clean up the mess that is cpuidle vs rcuidle.
 
-Looks good to me thanks:
+I just gave these a quick test and things still work for me. The old
+omap3 off mode during idle still works. No more need to play the
+whack the mole game with RCU-idle :) I did not test on x86, or on other
+ARMs, but considering the test pretty much covered the all the
+affected RCU-idle related paths, where suitable, feel free to add:
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+Tested-by: Tony Lindgren <tony@atomide.com>
