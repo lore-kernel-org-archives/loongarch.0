@@ -1,88 +1,67 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 963F97E
-	for <loongarch@lists.linux.dev>; Tue, 27 Sep 2022 03:10:39 +0000 (UTC)
-Received: from [10.20.42.28] (unknown [10.20.42.28])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx72umaTJj5ZEiAA--.60554S3;
-	Tue, 27 Sep 2022 11:10:31 +0800 (CST)
-Message-ID: <5bf565a4-5bc4-42f8-59c0-8b908a9c2ab6@loongson.cn>
-Date: Tue, 27 Sep 2022 11:10:30 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6838642
+	for <loongarch@lists.linux.dev>; Tue, 27 Sep 2022 04:36:04 +0000 (UTC)
+Received: from localhost.localdomain (unknown [112.20.108.220])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxrmuufTJjlJgiAA--.49192S2;
+	Tue, 27 Sep 2022 12:35:59 +0800 (CST)
+From: Yanteng Si <siyanteng@loongson.cn>
+To: chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	jiaxun.yang@flygoat.com,
+	maobibo@loongson.cn,
+	loongarch@lists.linux.dev,
+	Yanteng Si <siyanteng@loongson.cn>
+Subject: [PATCH] LoongArch: Clean up loongson3_smp_ops extern
+Date: Tue, 27 Sep 2022 12:34:56 +0800
+Message-Id: <20220927043456.2706194-1-siyanteng@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v3] LoongArch: Fixup do_ri csr_era
-Content-Language: en-US
-To: Guo Ren <guoren@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Tiezhu Yang <yangtiezhu@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Qing Zhang <zhangqing@loongson.cn>, Mao Bibo <maobibo@loongson.cn>,
- Jianmin Lv <lvjianmin@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20220926122727.2310118-1-yijun@loongson.cn>
- <CAJF2gTQR804AwU0up2-FyTciQZJY2M9xQ7JbiqjwMbkD=aLhCQ@mail.gmail.com>
-From: Jun Yi <yijun@loongson.cn>
-In-Reply-To: <CAJF2gTQR804AwU0up2-FyTciQZJY2M9xQ7JbiqjwMbkD=aLhCQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Cx72umaTJj5ZEiAA--.60554S3
-X-Coremail-Antispam: 1UD129KBjvJXoWrtw18JrWkGFW7ur15CF4rZrb_yoW8Jr1rpF
-	nrCa1DJF48XFnrCw1Dtr4jvry3tasxGr43uanrt34Sk3Wqqr9Yq3WvqF12vF1jv3y5Gr40
-	qFyFy3sFga13Aa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
-	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v2
-	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: p1lm30o6or00hjvr0hdfq/1tbiAQACAWMxll4P4AABs2
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxrmuufTJjlJgiAA--.49192S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrur4rJryxJr45ArW8KryrXrb_yoW3Arb_Aa
+	47tw48ury8JrW7Aw1DuF1fJF15W348JFnI9F1Svwn7J3Z8tr13X3yDAw1fZrs0ka9a9Fs5
+	uF4xtryrCry5KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb2kFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8XwCF
+	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+	18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+	r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+	1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUjoa0DUUUUU==
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
 
-do_ri is porting from mips, mipsr6 use do_ri to emulate some fp 
-instructions, but Loongarch do not need to emulate these instructions.
+loongson3_smp_ops is not used in LoongArch anymore,
+let's remove it.
 
-And the regs->csr_era be always recovered to ths old_era = 
-regs->csr_era, so the compute_return_era is useless.
+Fixes: f2ac457a6138 ("LoongArch: Add CPU definition headers")
+Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+---
+ arch/loongarch/include/asm/loongson.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-On 9/27/22 07:41, Guo Ren wrote:
-> On Mon, Sep 26, 2022 at 8:27 PM Jun Yi <yijun@loongson.cn> wrote:
->>
->> csr_era of pt_regs in do_ri should not add 4 to point to the
->> next instruction.
-> The comment does not make sense. I think it wants to skip some
-> instructions, but your patch broke that.
-> 
->>
->> Signed-off-by: Jun Yi <yijun@loongson.cn>
->> ---
->>   arch/loongarch/kernel/traps.c | 2 --
->>   1 file changed, 2 deletions(-)
->>
->> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
->> index aa1c95aaf595..ec888eda3d45 100644
->> --- a/arch/loongarch/kernel/traps.c
->> +++ b/arch/loongarch/kernel/traps.c
->> @@ -477,8 +477,6 @@ asmlinkage void noinstr do_ri(struct pt_regs *regs)
->>
->>          die_if_kernel("Reserved instruction in kernel code", regs);
->>
->> -       compute_return_era(regs);
->> -
->>          if (unlikely(get_user(opcode, era) < 0)) {
->>                  status = SIGSEGV;
->>                  current->thread.error_code = 1;
->> --
->> 2.31.1
->>
-> 
-> 
+diff --git a/arch/loongarch/include/asm/loongson.h b/arch/loongarch/include/asm/loongson.h
+index 6e8f6972ceb6..00db93edae1b 100644
+--- a/arch/loongarch/include/asm/loongson.h
++++ b/arch/loongarch/include/asm/loongson.h
+@@ -14,8 +14,6 @@
+ #include <asm/addrspace.h>
+ #include <asm/bootinfo.h>
+ 
+-extern const struct plat_smp_ops loongson3_smp_ops;
+-
+ #define LOONGSON_REG(x) \
+ 	(*(volatile u32 *)((char *)TO_UNCACHE(LOONGSON_REG_BASE) + (x)))
+ 
+-- 
+2.31.1
 
