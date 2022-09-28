@@ -1,89 +1,69 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BF487E4
-	for <loongarch@lists.linux.dev>; Wed, 28 Sep 2022 00:23:55 +0000 (UTC)
-Received: from [10.130.0.135] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxnmtpkzNj0_8iAA--.50977S3;
-	Wed, 28 Sep 2022 08:20:57 +0800 (CST)
-Subject: Re: [PATCH V2] irqchip: Make irqchip_init() usable on pure ACPI
- systems
-To: Huacai Chen <chenhuacai@loongson.cn>, Thomas Gleixner
- <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>
-References: <20220927124557.3246737-1-chenhuacai@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Huacai Chen <chenhuacai@gmail.com>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A59B57FA
+	for <loongarch@lists.linux.dev>; Wed, 28 Sep 2022 00:50:11 +0000 (UTC)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvmtBmjNjVwIjAA--.53900S2;
+	Wed, 28 Sep 2022 08:50:09 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <01b9d198-929a-45ea-2e94-3d0956aee2b7@loongson.cn>
-Date: Wed, 28 Sep 2022 08:20:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] Add kprobe and kretprobe support for LoongArch
+Date: Wed, 28 Sep 2022 08:50:04 +0800
+Message-Id: <1664326209-13995-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8DxvmtBmjNjVwIjAA--.53900S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7GFyUKF17KF17ArWfJrWxCrg_yoWkCFb_A3
+	W3t348CrW8JayUXa4qqw4fJrWqyr48KFnYkF9rXr4xuF15Xr17tw4kWa4Yva97Ka4DXFZ8
+	JrWFgr95uF1jvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb28YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+	8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0
+	cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
+	8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_twCF04k2
+	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jIZXrUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <20220927124557.3246737-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8BxnmtpkzNj0_8iAA--.50977S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ar4xtr18ZFyDJry5tFyrWFg_yoW8Kw17pF
-	yUXr10gr48Jr1UJr1UAF17Jr1DJw4DCF18Jr17Jr17Jw1UXr1DAr1UJr4UGFy5Aw45Jr1U
-	Jr48tr1Dtr15Jw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
-	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
-	bIxvr21lc2xSY4AK67AK6w1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0x
-	ZFpf9x0JUTxRDUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 
+v2:
+  -- Split simu_branch() and simu_pc() into a single patch
+  -- Call kprobe_page_fault() in do_page_fault()
+  -- Add kprobes_trampoline.S for kretprobe
 
+Tiezhu Yang (5):
+  LoongArch: Simulate branch and PC instructions
+  LoongArch: Add kprobe support
+  LoongArch: Add kretprobe support
+  samples/kprobes: Add LoongArch support
+  LoongArch: Enable KPROBES in default config
 
-On 09/27/2022 08:45 PM, Huacai Chen wrote:
-> Pure ACPI system (e.g., LoongArch) doesn't select OF and OF_IRQ, but it
-> still need a non-empty irqchip_init(). So, change the IRQCHIP dependency
-> from OF_IRQ to (OF_IRQ || ACPI_GENERIC_GSI), and then define an empty
-> inline of_irq_init() in the !CONFIG_OF_IRQ case, so as to make the non-
-> empty irqchip_init() be usable on pure ACPI systems.
->
-> Without this patch we get such errors:
->
-> [    0.000000] NR_IRQS: 576, nr_irqs: 576, preallocated irqs: 16
-> [    0.000000] Kernel panic - not syncing: IPI IRQ mapping failed
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.0.0-rc6+ #2189
-> [    0.000000] Hardware name: Loongson Loongson-3A5000-7A1000-1w-CRB/Loongson-LS3A5000-7A1000-1w-CRB, BIOS vUDK2018-LoongArch-V2.0.pre-beta8 08/18/2022
-> [    0.000000] Stack : 0000000000000000 9000000000fa4388 900000000140c000 900000000140fb70
-> [    0.000000]         0000000000000000 900000000140fb70 90000000012f4aa0 900000000140fa98
-> [    0.000000]         900000000140fa0c 900000008140f9ff 0000000000000030 0000000000000005
-> [    0.000000]         900000000578f708 0000000004750000 0000000000000000 00000000ffffdfff
-> [    0.000000]         0000000000000000 0000000000000000 0000000000000030 000000000000002f
-> [    0.000000]         900000000141f000 0000000004750000 9000000001427348 00000000000000b0
-> [    0.000000]         90000000012f4aa0 0000000000000004 0000000000000000 9000000001020000
-> [    0.000000]         9000000005781b80 9000000005781ba9 0000000000000000 9000000001315e30
-> [    0.000000]         900000000129a3b0 9000000000222b64 0000000000000000 00000000000000b0
-> [    0.000000]         0000000000000004 0000000000000000 0000000000070000 0000000000000800
-> [    0.000000]         ...
-> [    0.000000] Call Trace:
-> [    0.000000] [<9000000000222b64>] show_stack+0x24/0x124
-> [    0.000000] [<9000000000fa4388>] dump_stack_lvl+0x60/0x88
-> [    0.000000] [<9000000000f9965c>] panic+0x130/0x2f8
-> [    0.000000] [<9000000000fd4324>] init_IRQ+0xa8/0x240
-> [    0.000000] [<9000000000fd0b38>] start_kernel+0x488/0x5f0
-> [    0.000000] [<9000000000fb10c4>] kernel_entry+0xc4/0xc8
-> [    0.000000]
-> [    0.000000] ---[ end Kernel panic - not syncing: IPI IRQ mapping failed ]---
->
+ arch/loongarch/Kconfig                     |   2 +
+ arch/loongarch/configs/loongson3_defconfig |   1 +
+ arch/loongarch/include/asm/inst.h          |  31 +++
+ arch/loongarch/include/asm/kprobes.h       |  44 ++++
+ arch/loongarch/include/asm/ptrace.h        |   1 +
+ arch/loongarch/kernel/Makefile             |   2 +
+ arch/loongarch/kernel/inst.c               | 113 ++++++++++
+ arch/loongarch/kernel/kprobes.c            | 336 +++++++++++++++++++++++++++++
+ arch/loongarch/kernel/kprobes_trampoline.S |  97 +++++++++
+ arch/loongarch/mm/fault.c                  |   3 +
+ samples/kprobes/kprobe_example.c           |   8 +
+ 11 files changed, 638 insertions(+)
+ create mode 100644 arch/loongarch/include/asm/kprobes.h
+ create mode 100644 arch/loongarch/kernel/kprobes.c
+ create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
 
-I am also experiencing the same problem with the latest kernel
-on LoongArch, it works well with this patch.
-
-Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+-- 
+2.1.0
 
