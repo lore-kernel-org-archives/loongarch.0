@@ -1,37 +1,37 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC6A47FE
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D0F2800
 	for <loongarch@lists.linux.dev>; Wed, 28 Sep 2022 00:50:13 +0000 (UTC)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvmtBmjNjVwIjAA--.53900S5;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvmtBmjNjVwIjAA--.53900S7;
 	Wed, 28 Sep 2022 08:50:12 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/5] LoongArch: Add kretprobe support
-Date: Wed, 28 Sep 2022 08:50:07 +0800
-Message-Id: <1664326209-13995-4-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v2 5/5] LoongArch: Enable KPROBES in default config
+Date: Wed, 28 Sep 2022 08:50:09 +0800
+Message-Id: <1664326209-13995-6-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1664326209-13995-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1664326209-13995-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8DxvmtBmjNjVwIjAA--.53900S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxGFW7Kr18CrWkZF4UKrWruFg_yoWrtF1rpF
-	9rArn8Zr4I9rnavr93trWF9Fyjqr1kua12gFyxJrWrWF4UWryUXr1xGr9rZFW3Kws8Jr1S
-	qr1fGrW5tFW3J37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBFb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
-	8067AKxVWUWwA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF
-	64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcV
-	CY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv
-	6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4
-	CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvj
-	eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_twCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jfl19UUUUU=
+X-CM-TRANSID:AQAAf8DxvmtBmjNjVwIjAA--.53900S7
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw47JFykCFWDWFW7Jr1xuFg_yoW3WFg_JF
+	y7Kws5WrWxJa97u34Iqw4rGw4DA3WUZ3WYkFnrJr1xW3W3tw13Jr4Dtw13C3Z0gayq9rsx
+	XaykAF9I9F10yjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbSkYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
+	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
+	IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW8JVW5JwA2ocxC64kIII0Yj41l84x0
+	c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2
+	IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2
+	jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVWDMxAIw28Icx
+	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42
+	IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0QeOJUUUUU==
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -39,180 +39,26 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-Use the generic kretprobe trampoline handler to add kretprobe
-support for LoongArch.
+Kprobes for LoongArch is supported now, update loongson3_defconfig
+to enable KPROBES.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/Kconfig                     |  1 +
- arch/loongarch/kernel/Makefile             |  2 +-
- arch/loongarch/kernel/kprobes.c            | 24 ++++++++
- arch/loongarch/kernel/kprobes_trampoline.S | 97 ++++++++++++++++++++++++++++++
- 4 files changed, 123 insertions(+), 1 deletion(-)
- create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
+ arch/loongarch/configs/loongson3_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 8debd70..877be6a 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -95,6 +95,7 @@ config LOONGARCH
- 	select HAVE_IRQ_EXIT_ON_IRQ_STACK
- 	select HAVE_IRQ_TIME_ACCOUNTING
- 	select HAVE_KPROBES
-+	select HAVE_KRETPROBES
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
- 	select HAVE_PCI
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index ff98d8a..48f50607 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -33,6 +33,6 @@ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
- 
- obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_regs.o
- 
--obj-$(CONFIG_KPROBES)		+= kprobes.o
-+obj-$(CONFIG_KPROBES)		+= kprobes.o kprobes_trampoline.o
- 
- CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
-diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
-index c11f6e0..ca3f1dc 100644
---- a/arch/loongarch/kernel/kprobes.c
-+++ b/arch/loongarch/kernel/kprobes.c
-@@ -306,6 +306,30 @@ int __init arch_populate_kprobe_blacklist(void)
- 					 (unsigned long)__irqentry_text_end);
- }
- 
-+/* Called from __kretprobe_trampoline */
-+void __used *trampoline_probe_handler(struct pt_regs *regs)
-+{
-+	return (void *)kretprobe_trampoline_handler(regs, NULL);
-+}
-+NOKPROBE_SYMBOL(trampoline_probe_handler);
-+
-+void arch_prepare_kretprobe(struct kretprobe_instance *ri,
-+			    struct pt_regs *regs)
-+{
-+	ri->ret_addr = (kprobe_opcode_t *)regs->regs[1];
-+	ri->fp = NULL;
-+
-+	/* Replace the return addr with trampoline addr */
-+	regs->regs[1] = (unsigned long)&__kretprobe_trampoline;
-+}
-+NOKPROBE_SYMBOL(arch_prepare_kretprobe);
-+
-+int arch_trampoline_kprobe(struct kprobe *p)
-+{
-+	return 0;
-+}
-+NOKPROBE_SYMBOL(arch_trampoline_kprobe);
-+
- int __init arch_init_kprobes(void)
- {
- 	return 0;
-diff --git a/arch/loongarch/kernel/kprobes_trampoline.S b/arch/loongarch/kernel/kprobes_trampoline.S
-new file mode 100644
-index 0000000..9888ab8
---- /dev/null
-+++ b/arch/loongarch/kernel/kprobes_trampoline.S
-@@ -0,0 +1,97 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+#include <linux/linkage.h>
-+#include <asm/stackframe.h>
-+
-+	.text
-+
-+	.macro save_all_base_regs
-+	cfi_st	zero, PT_R0
-+	cfi_st	ra, PT_R1
-+	cfi_st	tp, PT_R2
-+	cfi_st	a0, PT_R4
-+	cfi_st	a1, PT_R5
-+	cfi_st	a2, PT_R6
-+	cfi_st	a3, PT_R7
-+	cfi_st	a4, PT_R8
-+	cfi_st	a5, PT_R9
-+	cfi_st	a6, PT_R10
-+	cfi_st	a7, PT_R11
-+	cfi_st	t0, PT_R12
-+	cfi_st	t1, PT_R13
-+	cfi_st	t2, PT_R14
-+	cfi_st	t3, PT_R15
-+	cfi_st	t4, PT_R16
-+	cfi_st	t5, PT_R17
-+	cfi_st	t6, PT_R18
-+	cfi_st	t7, PT_R19
-+	cfi_st	t8, PT_R20
-+	cfi_st	u0, PT_R21
-+	cfi_st	fp, PT_R22
-+	cfi_st	s0, PT_R23
-+	cfi_st	s1, PT_R24
-+	cfi_st	s2, PT_R25
-+	cfi_st	s3, PT_R26
-+	cfi_st	s4, PT_R27
-+	cfi_st	s5, PT_R28
-+	cfi_st	s6, PT_R29
-+	cfi_st	s7, PT_R30
-+	cfi_st	s8, PT_R31
-+	addi.d	t0, sp, PT_SIZE
-+	LONG_S	t0, sp, PT_R3
-+	csrrd	t0, LOONGARCH_CSR_CRMD
-+	andi	t0, t0, 0x7 /* extract bit[1:0] PLV, bit[2] IE */
-+	LONG_S	t0, sp, PT_PRMD
-+	.endm
-+
-+	.macro restore_all_base_regs
-+	cfi_ld	zero, PT_R0
-+	cfi_ld	tp, PT_R2
-+	cfi_ld	a0, PT_R4
-+	cfi_ld	a1, PT_R5
-+	cfi_ld	a2, PT_R6
-+	cfi_ld	a3, PT_R7
-+	cfi_ld	a4, PT_R8
-+	cfi_ld	a5, PT_R9
-+	cfi_ld	a6, PT_R10
-+	cfi_ld	a7, PT_R11
-+	cfi_ld	t0, PT_R12
-+	cfi_ld	t1, PT_R13
-+	cfi_ld	t2, PT_R14
-+	cfi_ld	t3, PT_R15
-+	cfi_ld	t4, PT_R16
-+	cfi_ld	t5, PT_R17
-+	cfi_ld	t6, PT_R18
-+	cfi_ld	t7, PT_R19
-+	cfi_ld	t8, PT_R20
-+	cfi_ld	u0, PT_R21
-+	cfi_ld	fp, PT_R22
-+	cfi_ld	s0, PT_R23
-+	cfi_ld	s1, PT_R24
-+	cfi_ld	s2, PT_R25
-+	cfi_ld	s3, PT_R26
-+	cfi_ld	s4, PT_R27
-+	cfi_ld	s5, PT_R28
-+	cfi_ld	s6, PT_R29
-+	cfi_ld	s7, PT_R30
-+	cfi_ld	s8, PT_R31
-+	LONG_L  t0, sp, PT_PRMD
-+	li.d	t1, 0x7 /* mask bit[1:0] PLV, bit[2] IE */
-+	csrxchg t0, t1, LOONGARCH_CSR_CRMD
-+	.endm
-+
-+SYM_CODE_START(__kretprobe_trampoline)
-+	addi.d	sp, sp, -PT_SIZE
-+	save_all_base_regs
-+
-+	move a0, sp /* pt_regs */
-+
-+	bl trampoline_probe_handler
-+
-+	/* use the result as the return-address */
-+	move ra, a0
-+
-+	restore_all_base_regs
-+	addi.d	sp, sp, PT_SIZE
-+
-+	jr ra
-+SYM_CODE_END(__kretprobe_trampoline)
+diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+index c96ce64..8c45043 100644
+--- a/arch/loongarch/configs/loongson3_defconfig
++++ b/arch/loongarch/configs/loongson3_defconfig
+@@ -60,6 +60,7 @@ CONFIG_ACPI_HOTPLUG_MEMORY=y
+ CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
+ CONFIG_EFI_CAPSULE_LOADER=m
+ CONFIG_EFI_TEST=m
++CONFIG_KPROBES=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_FORCE_LOAD=y
+ CONFIG_MODULE_UNLOAD=y
 -- 
 2.1.0
 
