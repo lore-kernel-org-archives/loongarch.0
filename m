@@ -1,80 +1,133 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA907F5
-	for <loongarch@lists.linux.dev>; Wed, 28 Sep 2022 05:25:49 +0000 (UTC)
-Received: by mail-lj1-f171.google.com with SMTP id s10so13138471ljp.5
-        for <loongarch@lists.linux.dev>; Tue, 27 Sep 2022 22:25:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=IPCLwIQ+UERHPm9w4nQGFYrwmlLzJ4AJ3JlVNkOLjfk=;
-        b=owmaWL8J0DjnByEMa+cLbTORIRrq8yp3lKV8crjvgMM/NkKnWeQIxzmI5VTzceEs3i
-         S3i46YmZL6hhUlOZgye5isjPYmsTL9s7ZQbh4KxfmQHhPEMfq8R8W01RbLcG9+VJVBK9
-         8fBxKiJNmH3HTgTCP9QbaG5As7Xex+3GS9vMzEkw0RXkyxtNit3zG4NH6cmFKNhRPLcJ
-         1wpCfkC3/obFIyVNyGRuEV+B6a4cqc/MfTeighQRcl1evlTq2RPNa22Fpm7esVybK8t9
-         XiN03BRQL3c+PNAEazrBabL0xPu6A+N1Pr1UnZe63PhoxCuf5jkappeLkxgBidmJu+mi
-         rgAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=IPCLwIQ+UERHPm9w4nQGFYrwmlLzJ4AJ3JlVNkOLjfk=;
-        b=E4MsRy3xf1PSw3eAn8thfvYBBRyhMV5ggC55BnE67fEjouhJxHWfDIMkS7fGT36/on
-         Pl/uGs73K+hXyjG8++67uw9bn5uQ6gZrm74ZpLlv5GGyYIjgvjornlnRGNkeYcRa8rHl
-         xpOrk98+cv8tAdqK/+iPNqVwcOYZU6BmGgvAg7krcKNwGuQJwunOEWgpCB6khGFHgZRO
-         5t+ygogw+RSPb9qYhAB60+Vxs9QaNZGeoDQEWmWKFVNBxTe7E4jpuJh0B1blnWVHjxhf
-         A6v3+7snWSRtUrfPtqyYyIpNG9cVnB05CIsvXruThQ42XzEhLgkZxp8h9Uvhz5HRxfAF
-         DNmw==
-X-Gm-Message-State: ACrzQf1ZhY8DeL18uKFtReRZQW0BPvIT2v6GOHyHzITQIFboU7ajTgSS
-	L2il+NsCaK0FN1CNxYoYwihNEYWdXUyq9zOGYsvt+w==
-X-Google-Smtp-Source: AMsMyM7wMhHzCDPMFbCTrNC4bpJlQfmpId5OarS9R/571Zfneoaf+BQ5BEj/3dPyNZFm2pWs5O4V9tiCRmerzE31Li4=
-X-Received: by 2002:a2e:3909:0:b0:26c:2ea4:1a79 with SMTP id
- g9-20020a2e3909000000b0026c2ea41a79mr10902755lja.401.1664342747490; Tue, 27
- Sep 2022 22:25:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F114682
+	for <loongarch@lists.linux.dev>; Wed, 28 Sep 2022 14:50:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2BDCC433D7;
+	Wed, 28 Sep 2022 14:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1664376601;
+	bh=1ApNXRAYpYsFNwE2ZXPPNcYpR2EmXWDzlK6PWb6HTxo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MEpBajuCUYk2zsQpE/PI6T8zCVUUahQ5yStyIEuRdaHkEpSP65qo0LH4cemxhsUg+
+	 zumrHPRqV+b6TIkNU0E5NfGR7THJdGICdwUk2Pih1cG0P9NH9v76csl04dMLcFUbDo
+	 bsWdUvgf3uj3kByiabdLNtA5OPzeod698Tlo7BdC5696AbY+UA4alBs16So3qSGXTV
+	 H5d6Dz8SNnNthhafUHJrxya/pIECWEDYrXGaCURaem23zKkcC+fM1KiKq95xu3+K1D
+	 Isy2DkJabfOtg7gs4JHVBf9oqpl/HUWg2rGjs1nqxrwtU+sE7uhym7CV7ZRCbUtHvJ
+	 DudNevhM9df6A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1odYNr-00DJCa-8U;
+	Wed, 28 Sep 2022 15:49:59 +0100
+Date: Wed, 28 Sep 2022 10:49:59 -0400
+Message-ID: <86leq37duw.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Jianmin Lv <lvjianmin@loongson.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH V1 1/2] irqchip/loongson-pch-pic: Support to set irq type for ACPI path
+In-Reply-To: <1660615291-35409-2-git-send-email-lvjianmin@loongson.cn>
+References: <1660615291-35409-1-git-send-email-lvjianmin@loongson.cn>
+	<1660615291-35409-2-git-send-email-lvjianmin@loongson.cn>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20220830193701.1702962-1-maskray@google.com> <20220910075316.no72fdyqjvunomwm@google.com>
-In-Reply-To: <20220910075316.no72fdyqjvunomwm@google.com>
-From: Fangrui Song <maskray@google.com>
-Date: Tue, 27 Sep 2022 22:25:35 -0700
-Message-ID: <CAFP8O3+OwanSJdzd5V3oGJ_MOJOSVdbn+4iBJJKm2LCR8mCA0Q@mail.gmail.com>
-Subject: Re: [PATCH] vdso: Improve cmd_vdso_check to check all dynamic relocations
-To: Vincenzo Frascino <vincenzo.frascino@arm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lvjianmin@loongson.cn, tglx@linutronix.de, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, jiaxun.yang@flygoat.com, chenhuacai@loongson.cn
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Sat, Sep 10, 2022 at 12:53 AM Fangrui Song <maskray@google.com> wrote:
->
-> On 2022-08-30, Fangrui Song wrote:
-> >The actual intention is that no dynamic relocation exists. However, some
-> >GNU ld ports produce unneeded R_*_NONE. (If a port is not care enough to
-> >determine the exact .rel[a].dyn size, the trailing zeros become R_*_NONE
-> >relocations. E.g. powerpc64le ld as of 2.38 has the issue with
-> >defconfig.) R_*_NONE are generally no-op in the dynamic loaders. So just
-> >ignore them.
-> >
-> >With the change, we can remove ARCH_REL_TYPE_ABS. ARCH_REL_TYPE_ABS is a
-> >bit misnomer as ports may check RELAVETIVE/GLOB_DAT/JUMP_SLOT which are
-> >not called "absolute relocations". (The patch is motivated by the arm64
-> >port missing R_AARCH64_RELATIVE.)
-> >
-> >While here, replace "egrep" with "grep" as "egrep" is deprecated in GNU
-> >grep 3.7.
-> >
-> >Signed-off-by: Fangrui Song <maskray@google.com>
-> >---
-> >[...]
-> >
->
-> Ping.
+On Mon, 15 Aug 2022 22:01:30 -0400,
+Jianmin Lv <lvjianmin@loongson.cn> wrote:
+> 
+> For ACPI path, the translate callback used IRQ_TYPE_NONE and ignored
+> the irq type in fwspec->param[1]. For supporting to set type for
+> irqs of the irqdomain, fwspec->param[1] should be used to get irq
+> type.
+> 
+> On Loongson platform, the irq trigger type of PCI devices is
+> high level, so high level triggered type is inputed to acpi_register_gsi
+> when create irq mapping for PCI devices.
+> 
+> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> ---
+>  drivers/acpi/pci_irq.c                 |  3 ++-
+>  drivers/irqchip/irq-loongson-pch-pic.c | 10 ++++++----
+>  2 files changed, 8 insertions(+), 5 deletions(-)
 
-Ping^2 :)
+$ ./scripts/get_maintainer.pl drivers/acpi/pci_irq.c 
+Bjorn Helgaas <bhelgaas@google.com> (supporter:PCI SUBSYSTEM)
+"Rafael J. Wysocki" <rafael@kernel.org> (supporter:ACPI)
+Len Brown <lenb@kernel.org> (reviewer:ACPI)
+linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM)
+linux-acpi@vger.kernel.org (open list:ACPI)
+linux-kernel@vger.kernel.org (open list)
+
+How about you start Cc-ing some of the relevant people?
+
+>
+> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+> index 08e1577..34483b3 100644
+> --- a/drivers/acpi/pci_irq.c
+> +++ b/drivers/acpi/pci_irq.c
+> @@ -393,7 +393,8 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+>  	 * controller and must therefore be considered active high
+>  	 * as default.
+>  	 */
+> -	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
+> +	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ||
+> +		       acpi_irq_model == ACPI_IRQ_MODEL_LPIC ?
+>  				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
+
+The comment just above this only talks about ARM. Should it be
+updated? Is this a limitation of the underlying interrupt controller?
+
+>  	char *link = NULL;
+>  	char link_desc[16];
+> diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+> index b6f1392..5067010 100644
+> --- a/drivers/irqchip/irq-loongson-pch-pic.c
+> +++ b/drivers/irqchip/irq-loongson-pch-pic.c
+> @@ -177,13 +177,15 @@ static int pch_pic_domain_translate(struct irq_domain *d,
+>  	if (fwspec->param_count < 1)
+>  		return -EINVAL;
+>  
+> -	if (of_node) {
+> +	if (of_node)
+>  		*hwirq = fwspec->param[0] + priv->ht_vec_base;
+> -		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+> -	} else {
+> +	else
+>  		*hwirq = fwspec->param[0] - priv->gsi_base;
+> +
+> +	if (fwspec->param_count > 1)
+> +		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+> +	else
+>  		*type = IRQ_TYPE_NONE;
+
+Isn't that a change in behaviour if of_node is non-NULL and
+param_count==1?
+
+> -	}
+>  
+>  	return 0;
+>  }
+
+This irqchip change should probably be a separate patch.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
