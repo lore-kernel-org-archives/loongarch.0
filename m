@@ -1,122 +1,117 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B826EA9
-	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 01:35:20 +0000 (UTC)
-Received: from [10.136.12.12] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXWtF9jRj+o0jAA--.5455S3;
-	Thu, 29 Sep 2022 09:35:03 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Remove some save operations in SAVE_SOME and
- handle_syscall
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <1664409543-31214-1-git-send-email-yangtiezhu@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <7fdca9ee-919b-2730-9574-5a1cf8b6b628@loongson.cn>
-Date: Thu, 29 Sep 2022 09:35:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A31EA9
+	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 02:13:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38951C433D7;
+	Thu, 29 Sep 2022 02:13:38 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Weihao Li <liweihao@loongson.cn>
+Subject: [PATCH] LoongArch: Support access filter to /dev/mem interface
+Date: Thu, 29 Sep 2022 10:12:26 +0800
+Message-Id: <20220929021226.318152-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1664409543-31214-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8BxXWtF9jRj+o0jAA--.5455S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7uF1kZrWrAFyxCw15trWxXrb_yoW5JFyxpF
-	nrCrs7KF409r1xZFyDA34Fgry5Aan7ua10q3W7ArW8trnxX34Yvw10yryDGF90g3yrWw4I
-	93WfAwnaqF4kJaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkK14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
-	zVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbrMaU
-	UUUUU==
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-On 2022/9/29 上午7:59, Tiezhu Yang wrote:
+Accidental access to /dev/mem is obviously disastrous, but specific
+access can be used by people debugging the kernel. So select GENERIC_
+LIB_DEVMEM_IS_ALLOWED, as well as define ARCH_HAS_VALID_PHYS_ADDR_RANGE
+and related helpers, to support access filter to /dev/mem interface.
 
-> No need to save the control and status registers CRMD, EUEN, ECFG
-> and ESTAT in SAVE_SOME and handle_syscall as they are not restored
-> later in RESTORE_SOME.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->   arch/loongarch/include/asm/stackframe.h | 9 ---------
->   arch/loongarch/kernel/entry.S           | 8 --------
->   2 files changed, 17 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
-> index 4ca9530..733dc9e 100644
-> --- a/arch/loongarch/include/asm/stackframe.h
-> +++ b/arch/loongarch/include/asm/stackframe.h
-> @@ -114,14 +114,6 @@
->   	LONG_S	zero, sp, PT_R0
->   	csrrd	t0, LOONGARCH_CSR_PRMD
->   	LONG_S	t0, sp, PT_PRMD
-> -	csrrd	t0, LOONGARCH_CSR_CRMD
-> -	LONG_S	t0, sp, PT_CRMD
-> -	csrrd	t0, LOONGARCH_CSR_EUEN
-> -	LONG_S  t0, sp, PT_EUEN
-> -	csrrd	t0, LOONGARCH_CSR_ECFG
-> -	LONG_S	t0, sp, PT_ECFG
-> -	csrrd	t0, LOONGARCH_CSR_ESTAT
-> -	PTR_S	t0, sp, PT_ESTAT
->   	cfi_st	ra, PT_R1, \docfi
->   	cfi_st	a0, PT_R4, \docfi
->   	cfi_st	a1, PT_R5, \docfi
-> @@ -140,7 +132,6 @@
->   	cfi_st	fp, PT_R22, \docfi
->   
->   	/* Set thread_info if we're coming from user mode */
-> -	csrrd	t0, LOONGARCH_CSR_PRMD
->   	andi	t0, t0, 0x3	/* extract pplv bit */
->   	beqz	t0, 9f
+Signed-off-by: Weihao Li <liweihao@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/Kconfig          |  1 +
+ arch/loongarch/include/asm/io.h |  4 ++++
+ arch/loongarch/mm/mmap.c        | 28 ++++++++++++++++++++++++++++
+ 3 files changed, 33 insertions(+)
 
-Hi, Tiezhu,
-
-
-Have u tested debug functions like __show_regs? We discussed offline
-about which registers should be saved in kretprobe lately. And I think
-users use kprobe should not care about exception infos, because the old
-way of kretprobe is the fixed break-insn-trigger. Then I suggested only
-save the CSR.PLV and CSR.PIE. But this is not similar to exception
-handler. Each exception occur we should save the current status in case
-exception nest. We may unwind and debug the previous exception. If we
-hadn't saved status at that time exception occured, we lost them.
-
-
-Thanks,
-
-Jinyang
-
->   
-> diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-> index d53b631..893e632 100644
-> --- a/arch/loongarch/kernel/entry.S
-> +++ b/arch/loongarch/kernel/entry.S
-> @@ -31,14 +31,6 @@ SYM_FUNC_START(handle_syscall)
->   	st.d	zero, sp, PT_R0
->   	csrrd	t2, LOONGARCH_CSR_PRMD
->   	st.d	t2, sp, PT_PRMD
-> -	csrrd	t2, LOONGARCH_CSR_CRMD
-> -	st.d	t2, sp, PT_CRMD
-> -	csrrd	t2, LOONGARCH_CSR_EUEN
-> -	st.d	t2, sp, PT_EUEN
-> -	csrrd	t2, LOONGARCH_CSR_ECFG
-> -	st.d	t2, sp, PT_ECFG
-> -	csrrd	t2, LOONGARCH_CSR_ESTAT
-> -	st.d	t2, sp, PT_ESTAT
->   	cfi_st	ra, PT_R1
->   	cfi_st	a0, PT_R4
->   	cfi_st	a1, PT_R5
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index fcb5f9489ffd..9c36eb29096a 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -70,6 +70,7 @@ config LOONGARCH
+ 	select GENERIC_LIB_CMPDI2
+ 	select GENERIC_LIB_LSHRDI3
+ 	select GENERIC_LIB_UCMPDI2
++	select GENERIC_LIB_DEVMEM_IS_ALLOWED
+ 	select GENERIC_PCI_IOMAP
+ 	select GENERIC_SCHED_CLOCK
+ 	select GENERIC_SMP_IDLE_THREAD
+diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
+index 999944ea1cea..398d1a7b3dd6 100644
+--- a/arch/loongarch/include/asm/io.h
++++ b/arch/loongarch/include/asm/io.h
+@@ -107,4 +107,8 @@ extern void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t
+ 
+ #include <asm-generic/io.h>
+ 
++#define ARCH_HAS_VALID_PHYS_ADDR_RANGE
++extern int valid_phys_addr_range(phys_addr_t addr, size_t size);
++extern int valid_mmap_phys_addr_range(unsigned long pfn, size_t size);
++
+ #endif /* _ASM_IO_H */
+diff --git a/arch/loongarch/mm/mmap.c b/arch/loongarch/mm/mmap.c
+index 381a569635a9..71d45bdffc9e 100644
+--- a/arch/loongarch/mm/mmap.c
++++ b/arch/loongarch/mm/mmap.c
+@@ -3,6 +3,7 @@
+  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+  */
+ #include <linux/export.h>
++#include <linux/memblock.h>
+ #include <linux/mm.h>
+ #include <linux/mman.h>
+ 
+@@ -116,3 +117,30 @@ int __virt_addr_valid(volatile void *kaddr)
+ 	return pfn_valid(PFN_DOWN(PHYSADDR(kaddr)));
+ }
+ EXPORT_SYMBOL_GPL(__virt_addr_valid);
++
++/*
++ * You really shouldn't be using read() or write() on /dev/mem.  This might go
++ * away in the future.
++ */
++int valid_phys_addr_range(phys_addr_t addr, size_t size)
++{
++	/*
++	 * Check whether addr is covered by a memory region without the
++	 * MEMBLOCK_NOMAP attribute, and whether that region covers the
++	 * entire range. In theory, this could lead to false negatives
++	 * if the range is covered by distinct but adjacent memory regions
++	 * that only differ in other attributes. However, few of such
++	 * attributes have been defined, and it is debatable whether it
++	 * follows that /dev/mem read() calls should be able traverse
++	 * such boundaries.
++	 */
++	return memblock_is_region_memory(addr, size) && memblock_is_map_memory(addr);
++}
++
++/*
++ * Do not allow /dev/mem mappings beyond the supported physical range.
++ */
++int valid_mmap_phys_addr_range(unsigned long pfn, size_t size)
++{
++	return !(((pfn << PAGE_SHIFT) + size) & ~(GENMASK_ULL(cpu_pabits, 0)));
++}
+-- 
+2.31.1
 
