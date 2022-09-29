@@ -1,65 +1,73 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D37E1107
-	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 09:17:01 +0000 (UTC)
-Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx72uMYjVjO7UjAA--.64660S2;
-	Thu, 29 Sep 2022 17:17:00 +0800 (CST)
-From: Jianmin Lv <lvjianmin@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH V5] LoongArch: Fix cpu name after s3/s4
-Date: Thu, 29 Sep 2022 17:16:54 +0800
-Message-Id: <20220929091655.9164-1-lvjianmin@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A800F1107
+	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 09:24:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F704C433D6
+	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 09:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1664443441;
+	bh=H7JHLr/93+ig4PwnmswWm6dCq0PZUVj12YMVzcMJZ40=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Bf79S/qdoPK8DOQALGvYyyVhkHX9BgO+z1kMoG7QInTG6pwB7Zf3Wk80ysWZJF3du
+	 xlXdbgRW9HsJX+KNqWSU277dtKStzkyUFc+FoaSd/1wokdNdhQ2mU1/I8w6hVQrgOj
+	 tCV4UJTOLxZd+AFoaXYmPYIElDPQ8n7Xx87Ii4/OMrSHKVKWuFcu8srHJdJOIQd9fH
+	 uOSC0+ji5gjytilEWOUFHr1znOTHoTZT43FgGeAYxQlWOvW0q7n2fhJ9p7yMH0/Kdh
+	 Inz8fqsPD8u2xRJ5f7EPfr4nVZkZKldDg/0S+qC9lQcPqtAOxHy5MSc90dFAJgvAtD
+	 FyL1vR4x63NeQ==
+Received: by mail-vs1-f49.google.com with SMTP id j123so882584vsc.3
+        for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 02:24:01 -0700 (PDT)
+X-Gm-Message-State: ACrzQf0McLq756kePRldSgMdcTIq6c+06YmqmGuXj1b2TgIunfaS7dyO
+	JRqH+6hTYVQMPvtLX/PXxxxsffXGqtw7aXxh0bQ=
+X-Google-Smtp-Source: AMsMyM5MRrfcLtRDsVAs50iJeh3d75Cba3VH4o+MGF65ldGmB4W51Q/mIbnr19z9jUHVyN45Q9UQW3P157izELNf/lo=
+X-Received: by 2002:a67:d491:0:b0:398:1bbc:bc85 with SMTP id
+ g17-20020a67d491000000b003981bbcbc85mr798429vsj.59.1664443440238; Thu, 29 Sep
+ 2022 02:24:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx72uMYjVjO7UjAA--.64660S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JrW8Gw45uFWUZw47Zw17GFg_yoWfAFc_G3
-	Z293srGFn3Ga40va4DXFy8Ww45Aa18XFyYv3y7ArZxCr13Cw15JrsrKw1UAryayF1rWrZ8
-	Cw4Iqa1DCF4YkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbcAYjsxI4VWkKwAYFVCjjxCrM7CY07I20VC2zVCF04k26cxKx2IY
-	s7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4
-	kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_
-	Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI
-	0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l42xK82IY
-	6x8ErcxFaVAv8VW5Wr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUg6nQUUUUU
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+References: <20220929091538.9104-1-lvjianmin@loongson.cn>
+In-Reply-To: <20220929091538.9104-1-lvjianmin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 29 Sep 2022 17:23:49 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6sxNEOd-gBBkoWrVaicSviz9Qm1Srez9Qg0RP75jHy5w@mail.gmail.com>
+Message-ID: <CAAhV-H6sxNEOd-gBBkoWrVaicSviz9Qm1Srez9Qg0RP75jHy5w@mail.gmail.com>
+Subject: Re: [PATCH V4] LoongArch: Fix cpu name after s3/s4
+To: Jianmin Lv <lvjianmin@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Don't overwrite the CPU name on coming back from S3/S4 if
-it is already initialized.
+Queued for loongarch-next since I have already sent the last PR for
+6.0-final, thanks.
 
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-Reviewed-by: WANG Xuerui <git@xen0n.name>
+Huacai
 
-diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index 529ab8f44ec6..255a09876ef2 100644
---- a/arch/loongarch/kernel/cpu-probe.c
-+++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -187,7 +187,9 @@ static inline void cpu_probe_loongson(struct cpuinfo_loongarch *c, unsigned int
- 	uint64_t *vendor = (void *)(&cpu_full_name[VENDOR_OFFSET]);
- 	uint64_t *cpuname = (void *)(&cpu_full_name[CPUNAME_OFFSET]);
- 
--	__cpu_full_name[cpu] = cpu_full_name;
-+	if (!__cpu_full_name[cpu])
-+		__cpu_full_name[cpu] = cpu_full_name;
-+
- 	*vendor = iocsr_read64(LOONGARCH_IOCSR_VENDOR);
- 	*cpuname = iocsr_read64(LOONGARCH_IOCSR_CPUNAME);
- 
--- 
-2.31.1
-
+On Thu, Sep 29, 2022 at 5:15 PM Jianmin Lv <lvjianmin@loongson.cn> wrote:
+>
+> Don't overwrite the CPU name on coming back from S3/S4 if
+> it is already initialized.
+>
+> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+>
+> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+> index 529ab8f44ec6..255a09876ef2 100644
+> --- a/arch/loongarch/kernel/cpu-probe.c
+> +++ b/arch/loongarch/kernel/cpu-probe.c
+> @@ -187,7 +187,9 @@ static inline void cpu_probe_loongson(struct cpuinfo_loongarch *c, unsigned int
+>         uint64_t *vendor = (void *)(&cpu_full_name[VENDOR_OFFSET]);
+>         uint64_t *cpuname = (void *)(&cpu_full_name[CPUNAME_OFFSET]);
+>
+> -       __cpu_full_name[cpu] = cpu_full_name;
+> +       if (!__cpu_full_name[cpu])
+> +               __cpu_full_name[cpu] = cpu_full_name;
+> +
+>         *vendor = iocsr_read64(LOONGARCH_IOCSR_VENDOR);
+>         *cpuname = iocsr_read64(LOONGARCH_IOCSR_CPUNAME);
+>
+> --
+> 2.31.1
+>
