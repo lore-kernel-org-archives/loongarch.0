@@ -1,28 +1,18 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FDE10F7
-	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 07:23:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80465C433D6;
-	Thu, 29 Sep 2022 07:23:47 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Weihao Li <liweihao@loongson.cn>
-Subject: [PATCH V2] LoongArch: Support access filter to /dev/mem interface
-Date: Thu, 29 Sep 2022 15:22:32 +0800
-Message-Id: <20220929072232.562727-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5161610F7
+	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 07:36:26 +0000 (UTC)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxT+D4SjVjDKwjAA--.3144S2;
+	Thu, 29 Sep 2022 15:36:24 +0800 (CST)
+From: Jianmin Lv <lvjianmin@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH] LoongArch: Fix cpu name after s3/s4
+Date: Thu, 29 Sep 2022 15:36:23 +0800
+Message-Id: <20220929073623.7604-1-lvjianmin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -30,91 +20,77 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxT+D4SjVjDKwjAA--.3144S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF1ktryDurWxKr1fGw17ZFb_yoW8tFykpF
+	s2kr4DAFZrWrn8K3s8try5WrWUZrnrGw12q3ZYkFWrZF4UXF1kXr48tr4DXF1UZa1kWrW0
+	qFZ3Wa9rtF47JwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkmb7Iv0xC_Kw4lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+	cIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2
+	AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v2
+	6F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI
+	0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l42xK82IY
+	6x8ErcxFaVAv8VW5Wr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUqEoXUUUUU
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 
-Accidental access to /dev/mem is obviously disastrous, but specific
-access can be used by people debugging the kernel. So select GENERIC_
-LIB_DEVMEM_IS_ALLOWED, as well as define ARCH_HAS_VALID_PHYS_ADDR_RANGE
-and related helpers, to support access filter to /dev/mem interface.
+On coming back from s3/s4, the cpu name will be overwritten
+in cpu_probe path of seconary cpu, so we adjust the postion
+of using cpu name existed in cpu hardware register, and only
+use it while failing to get cpu name from SMBIOS.
 
-Signed-off-by: Weihao Li <liweihao@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-V2: Fix build warnings reported by kernel test robot.
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 
- arch/loongarch/Kconfig          |  1 +
- arch/loongarch/include/asm/io.h |  4 ++++
- arch/loongarch/mm/mmap.c        | 29 +++++++++++++++++++++++++++++
- 3 files changed, 34 insertions(+)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index fcb5f9489ffd..9c36eb29096a 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -70,6 +70,7 @@ config LOONGARCH
- 	select GENERIC_LIB_CMPDI2
- 	select GENERIC_LIB_LSHRDI3
- 	select GENERIC_LIB_UCMPDI2
-+	select GENERIC_LIB_DEVMEM_IS_ALLOWED
- 	select GENERIC_PCI_IOMAP
- 	select GENERIC_SCHED_CLOCK
- 	select GENERIC_SMP_IDLE_THREAD
-diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
-index 999944ea1cea..398d1a7b3dd6 100644
---- a/arch/loongarch/include/asm/io.h
-+++ b/arch/loongarch/include/asm/io.h
-@@ -107,4 +107,8 @@ extern void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t
+diff --git a/arch/loongarch/include/asm/cpu-info.h b/arch/loongarch/include/asm/cpu-info.h
+index b6c4f96079df..937dce2a930a 100644
+--- a/arch/loongarch/include/asm/cpu-info.h
++++ b/arch/loongarch/include/asm/cpu-info.h
+@@ -64,6 +64,7 @@ extern void cpu_probe(void);
  
- #include <asm-generic/io.h>
+ extern const char *__cpu_family[];
+ extern const char *__cpu_full_name[];
++extern char cpu_full_name[];
+ #define cpu_family_string()	__cpu_family[raw_smp_processor_id()]
+ #define cpu_full_name_string()	__cpu_full_name[raw_smp_processor_id()]
  
-+#define ARCH_HAS_VALID_PHYS_ADDR_RANGE
-+extern int valid_phys_addr_range(phys_addr_t addr, size_t size);
-+extern int valid_mmap_phys_addr_range(unsigned long pfn, size_t size);
-+
- #endif /* _ASM_IO_H */
-diff --git a/arch/loongarch/mm/mmap.c b/arch/loongarch/mm/mmap.c
-index 381a569635a9..fbe1a4856fc4 100644
---- a/arch/loongarch/mm/mmap.c
-+++ b/arch/loongarch/mm/mmap.c
-@@ -3,6 +3,8 @@
-  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-  */
- #include <linux/export.h>
-+#include <linux/io.h>
-+#include <linux/memblock.h>
- #include <linux/mm.h>
- #include <linux/mman.h>
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index 529ab8f44ec6..a548b2197224 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -180,14 +180,13 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
+ #define VENDOR_OFFSET	0
+ #define CPUNAME_OFFSET	9
  
-@@ -116,3 +118,30 @@ int __virt_addr_valid(volatile void *kaddr)
- 	return pfn_valid(PFN_DOWN(PHYSADDR(kaddr)));
+-static char cpu_full_name[MAX_NAME_LEN] = "        -        ";
++char cpu_full_name[MAX_NAME_LEN] = "        -        ";
+ 
+ static inline void cpu_probe_loongson(struct cpuinfo_loongarch *c, unsigned int cpu)
+ {
+ 	uint64_t *vendor = (void *)(&cpu_full_name[VENDOR_OFFSET]);
+ 	uint64_t *cpuname = (void *)(&cpu_full_name[CPUNAME_OFFSET]);
+ 
+-	__cpu_full_name[cpu] = cpu_full_name;
+ 	*vendor = iocsr_read64(LOONGARCH_IOCSR_VENDOR);
+ 	*cpuname = iocsr_read64(LOONGARCH_IOCSR_CPUNAME);
+ 
+diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
+index 82b478a5c665..955d82aa298e 100644
+--- a/arch/loongarch/kernel/env.c
++++ b/arch/loongarch/kernel/env.c
+@@ -44,6 +44,9 @@ static int __init init_cpu_fullname(void)
+ 	if (loongson_sysconf.cpuname && !strncmp(loongson_sysconf.cpuname, "Loongson", 8)) {
+ 		for (cpu = 0; cpu < NR_CPUS; cpu++)
+ 			__cpu_full_name[cpu] = loongson_sysconf.cpuname;
++	} else {
++		for (cpu = 0; cpu < NR_CPUS; cpu++)
++			__cpu_full_name[cpu] = cpu_full_name;
+ 	}
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(__virt_addr_valid);
-+
-+/*
-+ * You really shouldn't be using read() or write() on /dev/mem.  This might go
-+ * away in the future.
-+ */
-+int valid_phys_addr_range(phys_addr_t addr, size_t size)
-+{
-+	/*
-+	 * Check whether addr is covered by a memory region without the
-+	 * MEMBLOCK_NOMAP attribute, and whether that region covers the
-+	 * entire range. In theory, this could lead to false negatives
-+	 * if the range is covered by distinct but adjacent memory regions
-+	 * that only differ in other attributes. However, few of such
-+	 * attributes have been defined, and it is debatable whether it
-+	 * follows that /dev/mem read() calls should be able traverse
-+	 * such boundaries.
-+	 */
-+	return memblock_is_region_memory(addr, size) && memblock_is_map_memory(addr);
-+}
-+
-+/*
-+ * Do not allow /dev/mem mappings beyond the supported physical range.
-+ */
-+int valid_mmap_phys_addr_range(unsigned long pfn, size_t size)
-+{
-+	return !(((pfn << PAGE_SHIFT) + size) & ~(GENMASK_ULL(cpu_pabits, 0)));
-+}
 -- 
 2.31.1
 
