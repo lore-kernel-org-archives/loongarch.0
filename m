@@ -1,96 +1,122 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8E5B7B
-	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 00:00:30 +0000 (UTC)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxFeLI3zRjToIjAA--.2987S2;
-	Thu, 29 Sep 2022 07:59:05 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Remove some save operations in SAVE_SOME and handle_syscall
-Date: Thu, 29 Sep 2022 07:59:03 +0800
-Message-Id: <1664409543-31214-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8AxFeLI3zRjToIjAA--.2987S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFWkGr1fuw1UCr4kAw15twb_yoW8Aw1fpF
-	1fArn2grW09ryxA3W8tr98uFyUAan7uw4aqa47JFWFyr43ZFyjvw18AFyDJFyYgw4rWw1I
-	93Z3AwnavF4rJ3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkjb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4
-	A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6FWl42xK82IY
-	c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-	6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j3_-PUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B826EA9
+	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 01:35:20 +0000 (UTC)
+Received: from [10.136.12.12] (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXWtF9jRj+o0jAA--.5455S3;
+	Thu, 29 Sep 2022 09:35:03 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Remove some save operations in SAVE_SOME and
+ handle_syscall
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <1664409543-31214-1-git-send-email-yangtiezhu@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <7fdca9ee-919b-2730-9574-5a1cf8b6b628@loongson.cn>
+Date: Thu, 29 Sep 2022 09:35:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+In-Reply-To: <1664409543-31214-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8BxXWtF9jRj+o0jAA--.5455S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF1kZrWrAFyxCw15trWxXrb_yoW5JFyxpF
+	nrCrs7KF409r1xZFyDA34Fgry5Aan7ua10q3W7ArW8trnxX34Yvw10yryDGF90g3yrWw4I
+	93WfAwnaqF4kJaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkK14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
+	zVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
+	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbrMaU
+	UUUUU==
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 
-No need to save the control and status registers CRMD, EUEN, ECFG
-and ESTAT in SAVE_SOME and handle_syscall as they are not restored
-later in RESTORE_SOME.
+On 2022/9/29 上午7:59, Tiezhu Yang wrote:
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/stackframe.h | 9 ---------
- arch/loongarch/kernel/entry.S           | 8 --------
- 2 files changed, 17 deletions(-)
+> No need to save the control and status registers CRMD, EUEN, ECFG
+> and ESTAT in SAVE_SOME and handle_syscall as they are not restored
+> later in RESTORE_SOME.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/stackframe.h | 9 ---------
+>   arch/loongarch/kernel/entry.S           | 8 --------
+>   2 files changed, 17 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
+> index 4ca9530..733dc9e 100644
+> --- a/arch/loongarch/include/asm/stackframe.h
+> +++ b/arch/loongarch/include/asm/stackframe.h
+> @@ -114,14 +114,6 @@
+>   	LONG_S	zero, sp, PT_R0
+>   	csrrd	t0, LOONGARCH_CSR_PRMD
+>   	LONG_S	t0, sp, PT_PRMD
+> -	csrrd	t0, LOONGARCH_CSR_CRMD
+> -	LONG_S	t0, sp, PT_CRMD
+> -	csrrd	t0, LOONGARCH_CSR_EUEN
+> -	LONG_S  t0, sp, PT_EUEN
+> -	csrrd	t0, LOONGARCH_CSR_ECFG
+> -	LONG_S	t0, sp, PT_ECFG
+> -	csrrd	t0, LOONGARCH_CSR_ESTAT
+> -	PTR_S	t0, sp, PT_ESTAT
+>   	cfi_st	ra, PT_R1, \docfi
+>   	cfi_st	a0, PT_R4, \docfi
+>   	cfi_st	a1, PT_R5, \docfi
+> @@ -140,7 +132,6 @@
+>   	cfi_st	fp, PT_R22, \docfi
+>   
+>   	/* Set thread_info if we're coming from user mode */
+> -	csrrd	t0, LOONGARCH_CSR_PRMD
+>   	andi	t0, t0, 0x3	/* extract pplv bit */
+>   	beqz	t0, 9f
 
-diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
-index 4ca9530..733dc9e 100644
---- a/arch/loongarch/include/asm/stackframe.h
-+++ b/arch/loongarch/include/asm/stackframe.h
-@@ -114,14 +114,6 @@
- 	LONG_S	zero, sp, PT_R0
- 	csrrd	t0, LOONGARCH_CSR_PRMD
- 	LONG_S	t0, sp, PT_PRMD
--	csrrd	t0, LOONGARCH_CSR_CRMD
--	LONG_S	t0, sp, PT_CRMD
--	csrrd	t0, LOONGARCH_CSR_EUEN
--	LONG_S  t0, sp, PT_EUEN
--	csrrd	t0, LOONGARCH_CSR_ECFG
--	LONG_S	t0, sp, PT_ECFG
--	csrrd	t0, LOONGARCH_CSR_ESTAT
--	PTR_S	t0, sp, PT_ESTAT
- 	cfi_st	ra, PT_R1, \docfi
- 	cfi_st	a0, PT_R4, \docfi
- 	cfi_st	a1, PT_R5, \docfi
-@@ -140,7 +132,6 @@
- 	cfi_st	fp, PT_R22, \docfi
- 
- 	/* Set thread_info if we're coming from user mode */
--	csrrd	t0, LOONGARCH_CSR_PRMD
- 	andi	t0, t0, 0x3	/* extract pplv bit */
- 	beqz	t0, 9f
- 
-diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-index d53b631..893e632 100644
---- a/arch/loongarch/kernel/entry.S
-+++ b/arch/loongarch/kernel/entry.S
-@@ -31,14 +31,6 @@ SYM_FUNC_START(handle_syscall)
- 	st.d	zero, sp, PT_R0
- 	csrrd	t2, LOONGARCH_CSR_PRMD
- 	st.d	t2, sp, PT_PRMD
--	csrrd	t2, LOONGARCH_CSR_CRMD
--	st.d	t2, sp, PT_CRMD
--	csrrd	t2, LOONGARCH_CSR_EUEN
--	st.d	t2, sp, PT_EUEN
--	csrrd	t2, LOONGARCH_CSR_ECFG
--	st.d	t2, sp, PT_ECFG
--	csrrd	t2, LOONGARCH_CSR_ESTAT
--	st.d	t2, sp, PT_ESTAT
- 	cfi_st	ra, PT_R1
- 	cfi_st	a0, PT_R4
- 	cfi_st	a1, PT_R5
--- 
-2.1.0
+Hi, Tiezhu,
+
+
+Have u tested debug functions like __show_regs? We discussed offline
+about which registers should be saved in kretprobe lately. And I think
+users use kprobe should not care about exception infos, because the old
+way of kretprobe is the fixed break-insn-trigger. Then I suggested only
+save the CSR.PLV and CSR.PIE. But this is not similar to exception
+handler. Each exception occur we should save the current status in case
+exception nest. We may unwind and debug the previous exception. If we
+hadn't saved status at that time exception occured, we lost them.
+
+
+Thanks,
+
+Jinyang
+
+>   
+> diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
+> index d53b631..893e632 100644
+> --- a/arch/loongarch/kernel/entry.S
+> +++ b/arch/loongarch/kernel/entry.S
+> @@ -31,14 +31,6 @@ SYM_FUNC_START(handle_syscall)
+>   	st.d	zero, sp, PT_R0
+>   	csrrd	t2, LOONGARCH_CSR_PRMD
+>   	st.d	t2, sp, PT_PRMD
+> -	csrrd	t2, LOONGARCH_CSR_CRMD
+> -	st.d	t2, sp, PT_CRMD
+> -	csrrd	t2, LOONGARCH_CSR_EUEN
+> -	st.d	t2, sp, PT_EUEN
+> -	csrrd	t2, LOONGARCH_CSR_ECFG
+> -	st.d	t2, sp, PT_ECFG
+> -	csrrd	t2, LOONGARCH_CSR_ESTAT
+> -	st.d	t2, sp, PT_ESTAT
+>   	cfi_st	ra, PT_R1
+>   	cfi_st	a0, PT_R4
+>   	cfi_st	a1, PT_R5
 
