@@ -1,87 +1,77 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3F371107
-	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 09:14:23 +0000 (UTC)
-Received: from [10.20.42.32] (unknown [10.20.42.32])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvmvtYTVjv7QjAA--.56279S3;
-	Thu, 29 Sep 2022 17:14:22 +0800 (CST)
-Subject: Re: [PATCH V3] LoongArch: Fix cpu name after s3/s4
-To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-References: <20220929085530.8742-1-lvjianmin@loongson.cn>
- <1776fe36-b954-b2c9-a2c1-157363f25ce2@xen0n.name>
-From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <05fcc572-8b58-629c-db9f-4c540c7b4f21@loongson.cn>
-Date: Thu, 29 Sep 2022 17:14:21 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF2B1107
+	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 09:14:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1664442370; bh=v4Nz7Jr2tjqnvU3MJV3TmU9VvLwxiiT/yn1JMflNNoE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vDUaD3Qlhrphs8xVf5FCF/IqXZGpL+GpDr6S7H3lKKalrf5tM21mLXVd/st+LyyQV
+	 rTxfuusunkxeLVAzGxppsJaJ3t0cf7C24e+ojO1HmXf23TFV29x8nH5qb+HPFqsQSj
+	 +cxYTzHbaWne1dw56EBX8UuELRG30JryTU9GBi5c=
+Received: from [192.168.9.172] (unknown [101.228.138.200])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 9A2FE60094;
+	Thu, 29 Sep 2022 17:06:10 +0800 (CST)
+Message-ID: <1776fe36-b954-b2c9-a2c1-157363f25ce2@xen0n.name>
+Date: Thu, 29 Sep 2022 17:06:09 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1776fe36-b954-b2c9-a2c1-157363f25ce2@xen0n.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101
+ Thunderbird/107.0a1
+Subject: Re: [PATCH V3] LoongArch: Fix cpu name after s3/s4
+To: Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+References: <20220929085530.8742-1-lvjianmin@loongson.cn>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxvmvtYTVjv7QjAA--.56279S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr15JFy7GFy3Xw1xKry8Xwb_yoW8XFW8pF
-	n2yan8CrZF9r95Gasxtr13JryUZrn7G347Xas5J3W8ZF4UZr1qgryUXw4qgF15Aa1xKr40
-	vF4Dua92vFW7XaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvGb7Iv0xC_Kw4lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-	cIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2
-	AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v2
-	6r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14
-	v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xf
-	McIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7
-	v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE-syl42xK
-	82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW5Wr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjxUqEoXUUUUU
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20220929085530.8742-1-lvjianmin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 9/29/22 16:55, Jianmin Lv wrote:
+> On coming back from s3/s4, the cpu name will be overwritten
+> in cpu_probe path of seconary cpu, so we don't overwrite it
+> if it has been initialized.
 
+The sentences are confusing, first "the CPU name will be overwritten" 
+then "don't overwrite it if initialized" -- seems the CPU name will get 
+overwritten despite the patch's clear intent.
 
-On 2022/9/29 下午5:06, WANG Xuerui wrote:
-> On 9/29/22 16:55, Jianmin Lv wrote:
->> On coming back from s3/s4, the cpu name will be overwritten
->> in cpu_probe path of seconary cpu, so we don't overwrite it
->> if it has been initialized.
-> 
-> The sentences are confusing, first "the CPU name will be overwritten" 
-> then "don't overwrite it if initialized" -- seems the CPU name will get 
-> overwritten despite the patch's clear intent.
-> 
-> Better to keep it simple: "Don't overwrite the CPU name on coming back 
-> from S3/S4 if it is already initialized."
-> 
+Better to keep it simple: "Don't overwrite the CPU name on coming back 
+from S3/S4 if it is already initialized."
 
-Thanks, Xuerui, let me change it.
+>
+> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+>
+> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+> index 529ab8f44ec6..255a09876ef2 100644
+> --- a/arch/loongarch/kernel/cpu-probe.c
+> +++ b/arch/loongarch/kernel/cpu-probe.c
+> @@ -187,7 +187,9 @@ static inline void cpu_probe_loongson(struct cpuinfo_loongarch *c, unsigned int
+>   	uint64_t *vendor = (void *)(&cpu_full_name[VENDOR_OFFSET]);
+>   	uint64_t *cpuname = (void *)(&cpu_full_name[CPUNAME_OFFSET]);
+>   
+> -	__cpu_full_name[cpu] = cpu_full_name;
+> +	if (!__cpu_full_name[cpu])
+> +		__cpu_full_name[cpu] = cpu_full_name;
+> +
+>   	*vendor = iocsr_read64(LOONGARCH_IOCSR_VENDOR);
+>   	*cpuname = iocsr_read64(LOONGARCH_IOCSR_CPUNAME);
+>   
 
->>
->> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
->>
->> diff --git a/arch/loongarch/kernel/cpu-probe.c 
->> b/arch/loongarch/kernel/cpu-probe.c
->> index 529ab8f44ec6..255a09876ef2 100644
->> --- a/arch/loongarch/kernel/cpu-probe.c
->> +++ b/arch/loongarch/kernel/cpu-probe.c
->> @@ -187,7 +187,9 @@ static inline void cpu_probe_loongson(struct 
->> cpuinfo_loongarch *c, unsigned int
->>       uint64_t *vendor = (void *)(&cpu_full_name[VENDOR_OFFSET]);
->>       uint64_t *cpuname = (void *)(&cpu_full_name[CPUNAME_OFFSET]);
->> -    __cpu_full_name[cpu] = cpu_full_name;
->> +    if (!__cpu_full_name[cpu])
->> +        __cpu_full_name[cpu] = cpu_full_name;
->> +
->>       *vendor = iocsr_read64(LOONGARCH_IOCSR_VENDOR);
->>       *cpuname = iocsr_read64(LOONGARCH_IOCSR_CPUNAME);
-> 
-> Otherwise LGTM.
-> 
-> Reviewed-by: WANG Xuerui <git@xen0n.name>
-> 
+Otherwise LGTM.
+
+Reviewed-by: WANG Xuerui <git@xen0n.name>
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
