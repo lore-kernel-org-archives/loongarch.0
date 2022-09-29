@@ -1,53 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151345395
-	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 15:38:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AC6CEC433C1;
-	Thu, 29 Sep 2022 15:38:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE6653A5
+	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 18:07:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58E0EC43143;
+	Thu, 29 Sep 2022 18:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1664465919;
-	bh=acgyhNSys2is9NlFNTNVZ0K6XqURLdltY6ge9xvy5ao=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=YY67izfAGqoU/bM6OQdwHjIM99T0Gno+/+KWo8U5pyVle2oeK3C0c1Z/52W6TCIMt
-	 3NX2sebH7SNAwMdIDAfVmZBaQqyMnu5WY7wU2vaj4K0j4CFkIoemRwbP1495Hc/G5M
-	 CRykoUFXcIFisyB5/veXjoRbZl14OKFZIyGOILXtwMyU0quy4CIYvfXmIuVcs5Gbdy
-	 q1mhHhBDjl1deN0oPo4tQf9RwrtsyCL7h+SnlEjffOS/2QAZsGxKyme44HaXwmiCbr
-	 0K5CSS4S4GNYU9kY8V9sp156aSA+spLnsuIvUDlytUzEKns2I8VYvIQdCZl3loIVUv
-	 dZ0IDDD4GwEyw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 99233C070C8;
-	Thu, 29 Sep 2022 15:38:39 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.0-final
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20220929024256.319721-1-chenhuacai@loongson.cn>
-References: <20220929024256.319721-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-arch.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220929024256.319721-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.0-3
-X-PR-Tracked-Commit-Id: 4f196cb64b693c64f8f981432b1ff326b7ea1c28
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 81bcd4b522cf1dc312385b79b144153aff0cf0c6
-Message-Id: <166446591962.14842.7614636797930881077.pr-tracker-bot@kernel.org>
-Date: Thu, 29 Sep 2022 15:38:39 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	s=k20201202; t=1664474853;
+	bh=tsNHIVz2bAykv1iQnDepJXwzecgKcOX8Fgq5w5CP064=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bJzKhQtLtpOeEj0ZAvRdcHmT4naJUMBbhcNQvTNnhYwc872HGpDqqLBKyGfIvBuz4
+	 DQnhGqzq8YSJ9Q91uvV/uNuf8V15AYJOwQszx6DfhmQfGXBA5cVXP7B09g1c6O44Rf
+	 gLxIGw15TPvh5GsHzbeZpuB8tvjgPiKA+usaLlAVbo8TX10v5Jm4EcZDStwQ2VdykC
+	 Kf0LGh1OS522Yr9zNKyKjrXjkqpVksONf3vYz2YWotRCOsE9MRaXr4s9wjd2t8xxQN
+	 NPAlLJBhEpCHJTk+im521Nzn4eq6n0q9N68dGWY2w6SblAup0wKfjagyyhvuE/KlRf
+	 7gzBxnZXIHNgg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id B6F0D5C0F30; Thu, 29 Sep 2022 11:07:32 -0700 (PDT)
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: rcu@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel-team@fb.com,
+	rostedt@goodmis.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Petr Mladek <pmladek@suse.com>,
+	loongarch@lists.linux.dev
+Subject: [PATCH RFC v2 rcu 7/8] arch/loongarch: Add ARCH_HAS_NMI_SAFE_THIS_CPU_OPS Kconfig option
+Date: Thu, 29 Sep 2022 11:07:30 -0700
+Message-Id: <20220929180731.2875722-7-paulmck@kernel.org>
+X-Mailer: git-send-email 2.31.1.189.g2e36527f23
+In-Reply-To: <20220929180714.GA2874192@paulmck-ThinkPad-P17-Gen-1>
+References: <20220929180714.GA2874192@paulmck-ThinkPad-P17-Gen-1>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Thu, 29 Sep 2022 10:42:56 +0800:
+The loongarch architecture uses the atomic read-modify-write amadd
+instruction to implement this_cpu_add(), which is NMI safe.  This means
+that the old and more-efficient srcu_read_lock() may be used in NMI
+context, without the need for srcu_read_lock_nmisafe().  Therefore, add
+the new Kconfig option ARCH_HAS_NMI_SAFE_THIS_CPU_OPS to arch/x86/Kconfig,
+which will cause NEED_SRCU_NMI_SAFE to be deselected, thus preserving
+the current srcu_read_lock() behavior.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.0-3
+Link: https://lore.kernel.org/all/20220910221947.171557773@linutronix.de/
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/81bcd4b522cf1dc312385b79b144153aff0cf0c6
+Suggested-by: Neeraj Upadhyay <quic_neeraju@quicinc.com>
+Suggested-by: Frederic Weisbecker <frederic@kernel.org>
+Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Ogness <john.ogness@linutronix.de>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: <loongarch@lists.linux.dev>
+---
+ arch/loongarch/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thank you!
-
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 4abc9a28aba4..c8864768dc4d 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -10,6 +10,7 @@ config LOONGARCH
+ 	select ARCH_ENABLE_MEMORY_HOTPLUG
+ 	select ARCH_ENABLE_MEMORY_HOTREMOVE
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
++	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+ 	select ARCH_HAS_PHYS_TO_DMA
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.31.1.189.g2e36527f23
+
