@@ -1,17 +1,17 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F1901107
-	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 08:51:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E331107
+	for <loongarch@lists.linux.dev>; Thu, 29 Sep 2022 08:55:32 +0000 (UTC)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXWt5XDVjObIjAA--.5864S2;
-	Thu, 29 Sep 2022 16:51:05 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxFeKCXTVjuLIjAA--.3552S2;
+	Thu, 29 Sep 2022 16:55:30 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>
 Cc: linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev
-Subject: [PATCH V2] LoongArch: Fix cpu name after s3/s4
-Date: Thu, 29 Sep 2022 16:51:05 +0800
-Message-Id: <20220929085105.8653-1-lvjianmin@loongson.cn>
+Subject: [PATCH V3] LoongArch: Fix cpu name after s3/s4
+Date: Thu, 29 Sep 2022 16:55:30 +0800
+Message-Id: <20220929085530.8742-1-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -20,28 +20,27 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXWt5XDVjObIjAA--.5864S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZF4xZr4rAF1rCrykZFykGrg_yoWDXFc_Ga
-	n293ZrGFn3Ga4vva4DWF18Wr43A3W8XFyYv3y2y3y3Cr13Aw45Jr1qkw13AryayF4rWrZ8
-	uw4S93Wq9F4jkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbckYjsxI4VWkKwAYFVCjjxCrM7CY07I20VC2zVCF04k26cxKx2IY
+X-CM-TRANSID:AQAAf8AxFeKCXTVjuLIjAA--.3552S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF4xZry8Zr47Ar13GFWfXwb_yoWfCwb_Ga
+	n29anrG3Z3Ga40va4DXF18Ww43J3W8XFyYv3y2y39xCr43Aw45Xr4DKw13AryayF1rWrZ8
+	uw4S9FnruF4YkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbcAYjsxI4VWkKwAYFVCjjxCrM7CY07I20VC2zVCF04k26cxKx2IY
 	s7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4
 	kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_
-	Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxV
-	W0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCF04k20xvE
-	74AGY7Cv6cx26ryrJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07b0a0QUUUUU=
+	Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI
+	0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l42xK82IY
+	6x8ErcxFaVAv8VW5Wr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUqs2-DUUUU
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 
 On coming back from s3/s4, the cpu name will be overwritten
-in cpu_probe path of seconary cpu, so we adjust the postion
-of using cpu name existed in cpu hardware register, and only
-use it while failing to get cpu name from SMBIOS.
+in cpu_probe path of seconary cpu, so we don't overwrite it
+if it has been initialized.
 
 Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 
