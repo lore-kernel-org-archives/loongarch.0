@@ -1,85 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE5A7B
-	for <loongarch@lists.linux.dev>; Fri, 30 Sep 2022 08:03:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84C73C433C1
-	for <loongarch@lists.linux.dev>; Fri, 30 Sep 2022 08:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1664525024;
-	bh=gcOUTgiHQKpl/JYONfzkMXDJJbeBVkcS2bX8718fyrY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=A2EVGkdJq6mLOEmq0BeaB+JjAEci9/bHEZtVrEK0Ri9a0n3JAdOoAawxzNTEt3MvO
-	 DJS+TocFCexLhpK+Kp/BM2A+mjNKWdw7fgLysSNC3BSVnuqjkQvx31uPITPmCFqq4G
-	 ecOkcKmMlsCcoz/FFNlYCO60cXt0twgJmSE+0wCP4hIdzX6QGnsqAMhT+fdUtP/Voc
-	 tRc/9x17oBk1WHPFO72O23li79G5EEhxwUvUuWQgFNYS7rEipfr+eS+xSYjS66420+
-	 UMCI9ZGWP4jwpY/y9vRQlAUbhUhJBRrWhbQBBiLnag+kC7Gu9Yak9XJljCKJf8Ncwb
-	 ftbdJYsEoEK0A==
-Received: by mail-vs1-f51.google.com with SMTP id 126so3971849vsi.10
-        for <loongarch@lists.linux.dev>; Fri, 30 Sep 2022 01:03:44 -0700 (PDT)
-X-Gm-Message-State: ACrzQf2mOGi193AxIfa7HmoPHmcMhdDGoW3HX/qTDHOBOo84470wEKMK
-	dzMJ0oDBnu2FfoL2eAfuvvbKCk4NjKibzgi0rG8=
-X-Google-Smtp-Source: AMsMyM7ZR61+OWq80j7WRQOHCCqaTWXzrOM+2VEzOyslVf03Wcxq7Rav4q6FzLGvJ3FxAGYPHky3V4VEeCjnit4pJNc=
-X-Received: by 2002:a05:6102:2755:b0:398:4f71:86e with SMTP id
- p21-20020a056102275500b003984f71086emr3804732vsu.84.1664525023562; Fri, 30
- Sep 2022 01:03:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDC81107
+	for <loongarch@lists.linux.dev>; Fri, 30 Sep 2022 08:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1664526644;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8CdgI6o1JPgGkTG2jpG4T+E2PTeCFnRXsC1gUO71n9I=;
+	b=dD7fr+tJnkexZPMtfY4/LScqcl1+FoheTFb2vNRDCa5oiztBSLlpvaAhlq7rR0xt3NGB/i
+	n7avFQBiHUZvX42Vrae+leBAJB99SyXR6rCx3eERgHQJlvKJvw9OCC1zSNTTYmKvMLk0zO
+	R2mQNx//W+VxWbUSEUxFNdG61mGpZUc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-103-QwNGo629N6OI4bMCdX6y6Q-1; Fri, 30 Sep 2022 04:30:41 -0400
+X-MC-Unique: QwNGo629N6OI4bMCdX6y6Q-1
+Received: by mail-wr1-f72.google.com with SMTP id r23-20020adfb1d7000000b002286358a916so1299410wra.3
+        for <loongarch@lists.linux.dev>; Fri, 30 Sep 2022 01:30:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:organization:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date;
+        bh=8CdgI6o1JPgGkTG2jpG4T+E2PTeCFnRXsC1gUO71n9I=;
+        b=SFbqe5NwXXzd4cYAQGeLIMGz0TCAf8PKLBW2pbcg+uTolZnQo68XFoQab7iShHFbYT
+         IhdkqLBR5r7NZajJCCTxj8D/nCcfVZNn32OBIJ6HRGJls56dyYRD7GIvELm+5Am/OrLZ
+         mNgHD94uZn0fw+wDwl+l7KCOTqVXA382wGpjDg55h4sfegOcJHNkuu2lolg9cn1Vk4+c
+         CTezfDcplBPWFH93wsoTuKNrlnXJgB3BTPSHRSEVwwwOPgiT1h2Iqp4X0KzHOblCpQI4
+         G5zmDoKvzPzQ2bjX6GS5eKl9Fxji5/nnI9Q1FNanZNWQQiUsjHQ/0UNhubkwl2c3EZ89
+         trcA==
+X-Gm-Message-State: ACrzQf3Tj5iUa1yIjHTAYbfyYwzRdMChOuNVss4yY4UPAfYc//aJ7fu4
+	s0B68KgXyis26aorF9weKIH5+P9S4oHuKit0D5/wCU4P7gqk9/+QLsLF/fXywtAzP5e1/ez5geo
+	F12sIs7eLrfNDNPL5XLR2
+X-Received: by 2002:a05:600c:4606:b0:3b4:62b3:150b with SMTP id m6-20020a05600c460600b003b462b3150bmr5203337wmo.3.1664526640614;
+        Fri, 30 Sep 2022 01:30:40 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4kmodJuSR/XONK5ttvI7YsCPMg21LO5DNNlzVaGbZhkWg+ApaqDuIWh4iZiTNEO8Ds1O8B1A==
+X-Received: by 2002:a05:600c:4606:b0:3b4:62b3:150b with SMTP id m6-20020a05600c460600b003b462b3150bmr5203316wmo.3.1664526640331;
+        Fri, 30 Sep 2022 01:30:40 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c70c:c00:48b:b68a:f9e0:ebce? (p200300cbc70c0c00048bb68af9e0ebce.dip0.t-ipconnect.de. [2003:cb:c70c:c00:48b:b68a:f9e0:ebce])
+        by smtp.gmail.com with ESMTPSA id u15-20020a05600c19cf00b003a2f2bb72d5sm8546677wmq.45.2022.09.30.01.30.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Sep 2022 01:30:39 -0700 (PDT)
+Message-ID: <0fecbcdc-7324-2d76-8452-b60b4638d074@redhat.com>
+Date: Fri, 30 Sep 2022 10:30:38 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220929101445.32124-1-lukas.bulwahn@gmail.com>
- <CAAhV-H6xe4o0upxcQTN=8BeDdcDipmoRp+QQNiakJJZ_eneTxg@mail.gmail.com>
- <CAKXUXMwhF4V1=oNq1XaTmQpk_Tt7ZXfZEmK_r_GT6wz7=vVx2g@mail.gmail.com>
- <CAAhV-H4dExTGW7=pSPmunFVBK6YYjj-wo0ZKgfi9A=yHf2qV9g@mail.gmail.com>
- <CAKXUXMw731xNrqUzrCE1jRd25vfWdYFf-donLosOYOTqcm9JiQ@mail.gmail.com> <c6f23ba9-b92f-a518-25ec-44f5f188b840@microchip.com>
-In-Reply-To: <c6f23ba9-b92f-a518-25ec-44f5f188b840@microchip.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 30 Sep 2022 16:03:32 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4ivkPPU2eQBSv1M8q0gT6M3X0po_9-yYGML7WfCVYBZg@mail.gmail.com>
-Message-ID: <CAAhV-H4ivkPPU2eQBSv1M8q0gT6M3X0po_9-yYGML7WfCVYBZg@mail.gmail.com>
-Subject: Re: [PATCH] loongarch: update config files
-To: Conor.Dooley@microchip.com
-Cc: lukas.bulwahn@gmail.com, kernel-janitors@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH v3 1/2] mm: use update_mmu_tlb() on the second thread
+To: Qi Zheng <zhengqi.arch@bytedance.com>, akpm@linux-foundation.org,
+ maobibo@loongson.cn, chenhuacai@loongson.cn, songmuchun@bytedance.com
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ loongarch@lists.linux.dev, chris@zankel.net, jcmvbkbc@gmail.com
+References: <20220929112318.32393-1-zhengqi.arch@bytedance.com>
+ <20220929112318.32393-2-zhengqi.arch@bytedance.com>
+From: David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+In-Reply-To: <20220929112318.32393-2-zhengqi.arch@bytedance.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 30, 2022 at 3:39 PM <Conor.Dooley@microchip.com> wrote:
->
-> On 30/09/2022 08:22, Lukas Bulwahn wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >
-> > On Fri, Sep 30, 2022 at 4:46 AM Huacai Chen <chenhuacai@kernel.org> wrote:
-> >>
-> >> On Thu, Sep 29, 2022 at 6:44 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-> >>>
-> >>> On Thu, Sep 29, 2022 at 12:42 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> >>>>
-> >>>> Hi, Lukas,
-> >>>>
-> >>>> Thank you for your patch, it is queued for loongarch-next, and may be
-> >>>> squashed to another patch with your S-o-B if you have no objections.
-> >>>>
-> >>>> Huacai
-> >>>>
-> >>>
-> >>> Feel free to squash as you see fit. I cannot recall sending something
-> >>> specific for loongarch-next, though.
-> >> Emmm, my meaning is squash your patch to mine and keep a S-o-B in that
-> >> patch [1]. :)
-> >>
-> >> [1] https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/commit/?h=loongarch-next
-> >>
-> >
-> > Process-wise that seems a bit strange (i.e., just mixing S-o-B by
-> > multiple people, how do you bisect which individual change broke
-> > something [you would need a second manual step of investigation],
-> > etc.), but sure go ahead.
->
-> Looks like each of yourself, Youling and Tiezhu should also have
-> Co-developed-by tags, no?
-Yes, that is needed.
+On 29.09.22 13:23, Qi Zheng wrote:
+> As message in commit 7df676974359 ("mm/memory.c: Update local TLB
+> if PTE entry exists") said, we should update local TLB only on the
+> second thread. So in the do_anonymous_page() here, we should use
+> update_mmu_tlb() instead of update_mmu_cache() on the second thread.
+> 
 
-Huacai
->
+Maybe mention here "This only affects performance, but not correctness."
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+> Reviewed-by: Muchun Song <songmuchun@bytedance.com>
+> ---
+>   mm/memory.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 118e5f023597..9e11c783ba0e 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -4122,7 +4122,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+>   	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
+>   			&vmf->ptl);
+>   	if (!pte_none(*vmf->pte)) {
+> -		update_mmu_cache(vma, vmf->address, vmf->pte);
+> +		update_mmu_tlb(vma, vmf->address, vmf->pte);
+>   		goto release;
+>   	}
+>   
+
+-- 
+Thanks,
+
+David / dhildenb
+
