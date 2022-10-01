@@ -1,125 +1,101 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED60E5C85
-	for <loongarch@lists.linux.dev>; Fri, 30 Sep 2022 23:09:58 +0000 (UTC)
-Received: by mail-pl1-f170.google.com with SMTP id c24so5158839plo.3
-        for <loongarch@lists.linux.dev>; Fri, 30 Sep 2022 16:09:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9B73211
+	for <loongarch@lists.linux.dev>; Sat,  1 Oct 2022 22:05:22 +0000 (UTC)
+Received: by mail-pl1-f181.google.com with SMTP id b2so1903685plc.7
+        for <loongarch@lists.linux.dev>; Sat, 01 Oct 2022 15:05:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=Z4pwa9gyuRqjS+eeSbjJShInrhr7/HchgUX3g2MI7Qo=;
-        b=01waiXwd4MZZ3LxATVL4IG9OwNkJnPrCk6JCJfUK6fYGRGtzxqTn80VoU4hkFv5Bvj
-         tSDZXiVqNe/DfdolbG41gqqxsKHSkdPeDtbNirtpDDbQBgewyvQyx/p8il0/gl6YLHV6
-         2P9sxjONLCnqVVU1NlApiEDi6364RosQmn+8cKQMnqHIOF0Vd+s/HGwmG9DAiuUq1G+z
-         K1Bj/0xD69fu+X+CnSbrhW/cKk1+t3KKs40AraRyErM/yQmcMHzdEOnkiGBTMYWc51h9
-         oMFtVbwqRzZre/YbhLC4lL5q3pZPgOCrOLcg9/diNqio32s3NwQ2n+wz6jf/C3N6/Zy5
-         kawA==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=I7JqWW70Kl7IEMXaO3wvfoltNONqFvJwW8PmLRCKkHM=;
+        b=ISESwcDmguedJbf16QBUBnjNWI4g9+oBk4jzQnhzPx9nIeMxhzCwF5v814Mnza1IrV
+         rtAJ3iHGMISOkOc58FvzUnt6eKjf2g7TshaaXaZBNikmwcBy04R9WWyVR49A1mpmcm9A
+         n0DW0xxrgn7/OQFW61stldmwwMOUg9Ubx/KY2wtpWlfNFVV0RyAi0/j0QyadmM/BbHgR
+         0MD/lO0+J+AICf0Di126i492UFl9Gk3tHmmZMaeVVnEX/EHcKY/84QhSit/oxiMfDj6Y
+         dpsK7mjr5SG0uvzA5mbRXBMXJMzW0cWxdjC8HZfyi5dQa1VsKeacDz2Sf8Z0alhb6/V4
+         AcGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=Z4pwa9gyuRqjS+eeSbjJShInrhr7/HchgUX3g2MI7Qo=;
-        b=uVt+iiDQQP+Nsnu/4g/0dSC5XOOpJGQvzwHxW19yvNCnwZpQxIEOf2OHYuCSw4kQIg
-         QS+skeGEWVEaxVsYGEMkxStkn++WyuEwxcIhOkRHGzlWe9G+kYwXzce6PpvmmMvd1dRt
-         sk0vNagb42i3heYM3de+J7nNHQK32xzJsU4mUKopqHTr3aiSoK7jXv6wiAy8srbidmW2
-         SQeNMfIU5hnTJuWB7980y+3vyY1YrQ9N8aXyAuNSwh15enUSrM2kj2vD3n2a3brp77jc
-         NQtdghmUP/XF7O6x9Kh0T95Q5RaSB3POvJAT8xYNcEpNgNQMx9KuOBto0a3gM3fbK5fP
-         Umgg==
-X-Gm-Message-State: ACrzQf0Jt4RbkWuzFdyfXHk8G1saRy4opVJAZHrR4zu5BqCJPgn7M3rm
-	EIe0ll9Jv0hPbLgA6ZlrpLY7Gw==
-X-Google-Smtp-Source: AMsMyM4TdHJBditr2nIJON4fzX9DhjVKj8xdWhyvXPRvQd0oWhWzm/OKUm1lhy3laeebjv0gu19+kw==
-X-Received: by 2002:a17:903:1c5:b0:178:44cd:e9c with SMTP id e5-20020a17090301c500b0017844cd0e9cmr11481864plh.132.1664579398319;
-        Fri, 30 Sep 2022 16:09:58 -0700 (PDT)
-Received: from [10.4.189.225] ([139.177.225.254])
-        by smtp.gmail.com with ESMTPSA id m13-20020a65564d000000b00442c70b659esm1261782pgs.91.2022.09.30.16.09.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Sep 2022 16:09:57 -0700 (PDT)
-Message-ID: <1a679784-542f-1ab7-7ba8-3d560c264479@bytedance.com>
-Date: Sat, 1 Oct 2022 07:09:50 +0800
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=I7JqWW70Kl7IEMXaO3wvfoltNONqFvJwW8PmLRCKkHM=;
+        b=1Bcr/1zG2mHst1tz/OZ2erw05ieoRyXjcuXM1NAkVUA2t+r7TgpnPqQFPu7URBFMiy
+         WZLjgTzixnqOJQl0OI5Nzp74cmdtB+JVlgwN2iGsPvVwoFNTkiX1OhT06D34NoEhcD1/
+         zoppSci0yuFDdr+ct0zOLJdp3/tyJqrbILtForxhXC/F7JPbTULex+nJO0ml0imKLc8v
+         OfPRc37u68KOGBtPU+KJxKnO+UdFf13vCRgNIOG/KePt9fBRiXvccfBUNMgkrfTiS1uJ
+         NgVZEhQ0CoiMYq/XsUVYqHFB/ITT3pjtCRDNYuYIirIsvIroDvIboFxD6mlun6BYHkMc
+         Hr5g==
+X-Gm-Message-State: ACrzQf26Z4l/AzuUKEMiRB0hZ2o7UVb+EdvzOO13FHmzLORvG2sPlO6T
+	W1aiBK8IEfpZLSatCgQ+IeA=
+X-Google-Smtp-Source: AMsMyM7edeL+zbuxo+AKakfLc2ZG2Nza6yyxoiNhQIWu3lVaW/UCq2b81Ui/vDRrch8MMXPzNiPWkg==
+X-Received: by 2002:a17:90b:3ec7:b0:202:b984:8436 with SMTP id rm7-20020a17090b3ec700b00202b9848436mr4957641pjb.4.1664661921681;
+        Sat, 01 Oct 2022 15:05:21 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:63e7:415:943b:4707])
+        by smtp.gmail.com with ESMTPSA id l12-20020a170903244c00b0016be596c8afsm4378055pls.282.2022.10.01.15.05.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Oct 2022 15:05:20 -0700 (PDT)
+Date: Sat, 1 Oct 2022 15:05:17 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Mattijs Korpershoek <mkorpershoek@baylibre.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+	loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Input: i8042: Add LoongArch support in
+ i8042-acpipnpio.h
+Message-ID: <Yzi5nWCeVYV37Htb@google.com>
+References: <20220917064020.1639709-1-chenhuacai@loongson.cn>
+ <20220917064020.1639709-2-chenhuacai@loongson.cn>
+ <87a66rhkri.fsf@baylibre.com>
+ <CAAhV-H6YLstS+GqaXv2Y9p_QVAU4x=nrunP_Hd2GeznOWG6q4g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.3.0
-Subject: Re: [PATCH v3 1/2] mm: use update_mmu_tlb() on the second thread
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>, maobibo@loongson.cn,
- chenhuacai@loongson.cn, songmuchun@bytedance.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, loongarch@lists.linux.dev,
- chris@zankel.net, jcmvbkbc@gmail.com
-References: <20220929112318.32393-1-zhengqi.arch@bytedance.com>
- <20220929112318.32393-2-zhengqi.arch@bytedance.com>
- <0fecbcdc-7324-2d76-8452-b60b4638d074@redhat.com>
- <32a53a8f-f6f8-6efc-a5f6-a004ffab8c99@bytedance.com>
- <673e494c-eb91-470a-026b-59e414d0916e@redhat.com>
- <20220930153135.164240eadc71ddf94d8200fb@linux-foundation.org>
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-In-Reply-To: <20220930153135.164240eadc71ddf94d8200fb@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAhV-H6YLstS+GqaXv2Y9p_QVAU4x=nrunP_Hd2GeznOWG6q4g@mail.gmail.com>
 
+On Fri, Sep 30, 2022 at 10:41:59AM +0800, Huacai Chen wrote:
+> Hi, Mattijs,
+> 
+> On Thu, Sep 22, 2022 at 4:32 PM Mattijs Korpershoek
+> <mkorpershoek@baylibre.com> wrote:
+> >
+> > On Sat, Sep 17, 2022 at 14:40, Huacai Chen <chenhuacai@loongson.cn> wrote:
+> >
+> > > LoongArch uses ACPI and nearly the same as X86/IA64 for 8042. So modify
+> > > i8042-acpipnpio.h slightly and enable it for LoongArch in i8042.h. Then
+> > > i8042 driver can work well under the ACPI firmware with PNP typed key-
+> > > board and mouse configured in DSDT.
+> > >
+> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> >
+> > I would have split the pr_info() move in its own patch since it seems
+> > like a "valid fix" on its own, but i'm probably too pedantic about this.
+> >
+> > So, please take my:
+> >
+> > Reviewed-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+> I think the pr_info is needed for all architectures, and the moving is
+> very simple so I haven't split it. But anyway, if Dmitry also thinks
+> this patch should be split, I will send a new version. :)
 
+The reason for ia64 not emitting this message is because we "trust" ia64
+firmware and it is quite normal for it not to have i8042 implementation,
+whereas there are a lot of legacy devices on x86 and not having PS/2
+keyboard is still not very common.
 
-On 2022/10/1 06:31, Andrew Morton wrote:
-> On Fri, 30 Sep 2022 10:44:21 +0200 David Hildenbrand <david@redhat.com> wrote:
-> 
->>> Oh, this is better. Hi Andrew, do I need to resend the v4?
->>>
->>
->> I assume he can squash it, most probably no need to resend. :)
-> 
-> 
-> From: Qi Zheng <zhengqi.arch@bytedance.com>
-> Subject: mm: use update_mmu_tlb() on the second thread
-> Date: Thu, 29 Sep 2022 19:23:17 +0800
-> 
-> As message in commit 7df676974359 ("mm/memory.c: Update local TLB if PTE
-> entry exists") said, we should update local TLB only on the second thread.
-> So in the do_anonymous_page() here, we should use update_mmu_tlb()
-> instead of update_mmu_cache() on the second thread.
-> 
-> As David pointed out, this is a performance improvement, not a
-> correctness fix.
-> 
-> Link: https://lkml.kernel.org/r/20220929112318.32393-2-zhengqi.arch@bytedance.com
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-> Reviewed-by: Muchun Song <songmuchun@bytedance.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Cc: Bibo Mao <maobibo@loongson.cn>
-> Cc: Chris Zankel <chris@zankel.net>
-> Cc: Huacai Chen <chenhuacai@loongson.cn>
-> Cc: Max Filippov <jcmvbkbc@gmail.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> ---
-> 
->   mm/memory.c |    2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- a/mm/memory.c~mm-use-update_mmu_tlb-on-the-second-thread
-> +++ a/mm/memory.c
-> @@ -4136,7 +4136,7 @@ static vm_fault_t do_anonymous_page(stru
->   	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
->   			&vmf->ptl);
->   	if (!pte_none(*vmf->pte)) {
-> -		update_mmu_cache(vma, vmf->address, vmf->pte);
-> +		update_mmu_tlb(vma, vmf->address, vmf->pte);
->   		goto release;
->   	}
->   
-> _
+I moved the pr_info() back into x86/loongarch branch and applied.
 
-Thank you very much! :)
-
-> 
+Thanks.
 
 -- 
-Thanks,
-Qi
+Dmitry
