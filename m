@@ -1,50 +1,50 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69647B
-	for <loongarch@lists.linux.dev>; Tue,  4 Oct 2022 11:09:58 +0000 (UTC)
-Received: by mail-pg1-f174.google.com with SMTP id b5so12424334pgb.6
-        for <loongarch@lists.linux.dev>; Tue, 04 Oct 2022 04:09:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E2C7B
+	for <loongarch@lists.linux.dev>; Tue,  4 Oct 2022 11:13:19 +0000 (UTC)
+Received: by mail-pl1-f182.google.com with SMTP id d11so12374191pll.8
+        for <loongarch@lists.linux.dev>; Tue, 04 Oct 2022 04:13:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=Z7fvRiwPcYU72K21mcsEeWsle1VHrp2FoZLK7rnaPdE=;
-        b=OhrgekEJA2e8cdAwMtySnzVGP1IXX7u0VkwcrOOu54GZ2JxdWY9lEfVkhASIMdH6iJ
-         3CS7i3bHpSnDattX7vdcbOy/0Ru61hlzqZKw12qszXyQ8c8k8+VbmoP3khJqXB2u34OK
-         r0R6w3Chhty48bs5fIPiEqpNsjqgSOd25DYZPmh/eJumMJEGGWz83W+3fdR0JwF+vFO5
-         mEEbHpfpQY24Mu19zAFZi2TsiyCRpZk9s0G1O2wNLxMVY3JMpx0s8hV3tsChMbk0eh7y
-         zwRqOOW8NupYp/v5bTpNygY4XFLMrr9CtK+i2O/hqSFWvl5B0S5XIVxlEXDh/AnokWSK
-         1UeA==
+        bh=UHE2x7YnT+avJBdJRK8fICu4tqbTB0zv1A8Jd5IOhrw=;
+        b=DQ7AqshQw7pAlndMjmyEf3HDNlexUBF+jB73J+4SoV4OjFHAeL9d93Pkb0EJq27wmV
+         fMsaB2Ugk2jANVVFsgCVCwsCPcqfEpNwL8Phil7GBZGqFbBPLY20X/vyyyMA3GQqxwqr
+         9GitSfUr/lUWnkoEFyKfW1UEPWDsM/lhvI/GgsbbZeTjM/BKXmE2CDDRkoVqqPha6oPu
+         qT7JzbFbc8JYxA1Hnfg8ebCiWushyc4cczI9HWkbShP/pG31SGJukNeZLdU4X/4Dr/J1
+         nBm7WS/ywrZAsUI2kefDBEEPXrA2HSCWcStoD/F24lMd+RQ2O+RyHYdGsKRKL5ywBm+U
+         IhvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Z7fvRiwPcYU72K21mcsEeWsle1VHrp2FoZLK7rnaPdE=;
-        b=2+GHsLEFOc+RIjSycxHDB8vqIg5h3XfnyBp8qcgm0yJbUbm68pbyl0zS5EvhtE6Nkb
-         uWM4qyKr0zdOl7PsIeAWrYc1nqo8CtygOZYhUs7ONCyk2hBzPkniI3WyFBqaBGY7Ogxq
-         lD9QBq+cys7AUgUcqd+/H4KRDpaEYIsOgD1UAszZeA1R5LABCiNzlsLw1DO/3R7MhSkS
-         l9j37IJeO4SE/qz1iGxVrMdnWEHM99I3Zx0DHD0s+gZHBGxMsWDbN/QMOIfk40gWaz3v
-         UzS6C5pthN1bKMdfsS3JdcY3IEa2SB0D34GKuegdzjjImy5zcCq4wP7aD1rAe0YuM4GB
-         q2kw==
-X-Gm-Message-State: ACrzQf1lo+RTdcmV+3E+Tp7sI2SCqlLr+1sK15sNV9F8w9GHAeT4O6IO
-	6GX/e4zMb4dRUZDEsXpHxCfBBUywinIrqDofzgURjA==
-X-Google-Smtp-Source: AMsMyM7VbOFlVrwp8sat5c2fOoVrC6O5AG2BNs0Q/N/ssPahKqJyAog1GJURpNPkzC/i2wh0dKpKol7XCM05LlISp3k=
-X-Received: by 2002:a63:464d:0:b0:441:5968:cd0e with SMTP id
- v13-20020a63464d000000b004415968cd0emr18985801pgk.595.1664881798027; Tue, 04
- Oct 2022 04:09:58 -0700 (PDT)
+        bh=UHE2x7YnT+avJBdJRK8fICu4tqbTB0zv1A8Jd5IOhrw=;
+        b=nvuE5NDgZ8pQIJGIjfOKgEvVGMhC6r/JgUJ2fbpTmE28bsWIrTYb0E6NbSxy9vG5jE
+         w2UBAqNY6v0npKh/yKitoV+YRhHaOnqhlxAEtBuIJsegzYhzbZfIvhp33U6qu8Ij6rKp
+         EhPZDqAG4RWMmOAT4hvUnY9gGuCGvBw7mklQJjNuEHab3wFSuKJdG/Is6jCqdC4ND2hZ
+         wyM7pDtSsuWKKAtNLIW9IiIQWAPv2+q9twmmrvUlo2IzTT5bXGANu0jTryHFEtnbOpUa
+         NHeLCUvFHIOwxa7SZnm3/YyK7mqo5rgqkOsH7scytW0Tcakj09HY6GDZZzr62k+gIABC
+         Fj+A==
+X-Gm-Message-State: ACrzQf2dGcPm4I1W43HXFWfElgF7DrnGyYVjXyGNrFo75ioRJERr5Rma
+	yk5maByybj1v8hTj9peypL1aBv+je6E5PQadaWa4fQ==
+X-Google-Smtp-Source: AMsMyM7BhQDEzGuMq6uijGe+375QPbx+j/BjXkPK0/Xp2Q5WyeWrXvzrh6ljkVul43PLHCDTtENmDZivDluO/kqNLsY=
+X-Received: by 2002:a17:90b:4d07:b0:1ef:521c:f051 with SMTP id
+ mw7-20020a17090b4d0700b001ef521cf051mr17237644pjb.164.1664881999182; Tue, 04
+ Oct 2022 04:13:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220919095939.761690562@infradead.org> <20220919101522.975285117@infradead.org>
-In-Reply-To: <20220919101522.975285117@infradead.org>
+References: <20220919095939.761690562@infradead.org> <20220919101522.908560022@infradead.org>
+In-Reply-To: <20220919101522.908560022@infradead.org>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 4 Oct 2022 13:09:21 +0200
-Message-ID: <CAPDyKFqoBJPgehVODY0DGuUcnqJE5rpZjRPfdMCzOP0=JrvKNw@mail.gmail.com>
-Subject: Re: [PATCH v2 39/44] cpuidle,clk: Remove trace_.*_rcuidle()
+Date: Tue, 4 Oct 2022 13:12:42 +0200
+Message-ID: <CAPDyKFqDiqXSi5Gn9eyvhHhqHxJAPAt-HzmEDwYWaGvso2yn=w@mail.gmail.com>
+Subject: Re: [PATCH v2 38/44] cpuidle,powerdomain: Remove trace_.*_rcuidle()
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: juri.lelli@redhat.com, rafael@kernel.org, catalin.marinas@arm.com, 
 	linus.walleij@linaro.org, bsegall@google.com, guoren@kernel.org, pavel@ucw.cz, 
@@ -99,11 +99,12 @@ Content-Type: text/plain; charset="UTF-8"
 On Mon, 19 Sept 2022 at 12:17, Peter Zijlstra <peterz@infradead.org> wrote:
 >
 > OMAP was the one and only user.
-
-OMAP? :-)
-
 >
 > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+There are changes to the runtime PM core as part of $subject patch.
+Perhaps move those parts into a separate patch? In any case, the code
+looks good to me.
 
 Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
@@ -111,41 +112,146 @@ Kind regards
 Uffe
 
 > ---
->  drivers/clk/clk.c |    8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  arch/arm/mach-omap2/powerdomain.c |   10 +++++-----
+>  drivers/base/power/runtime.c      |   24 ++++++++++++------------
+>  2 files changed, 17 insertions(+), 17 deletions(-)
 >
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -978,12 +978,12 @@ static void clk_core_disable(struct clk_
->         if (--core->enable_count > 0)
->                 return;
+> --- a/arch/arm/mach-omap2/powerdomain.c
+> +++ b/arch/arm/mach-omap2/powerdomain.c
+> @@ -187,9 +187,9 @@ static int _pwrdm_state_switch(struct po
+>                         trace_state = (PWRDM_TRACE_STATES_FLAG |
+>                                        ((next & OMAP_POWERSTATE_MASK) << 8) |
+>                                        ((prev & OMAP_POWERSTATE_MASK) << 0));
+> -                       trace_power_domain_target_rcuidle(pwrdm->name,
+> -                                                         trace_state,
+> -                                                         raw_smp_processor_id());
+> +                       trace_power_domain_target(pwrdm->name,
+> +                                                 trace_state,
+> +                                                 raw_smp_processor_id());
+>                 }
+>                 break;
+>         default:
+> @@ -541,8 +541,8 @@ int pwrdm_set_next_pwrst(struct powerdom
 >
-> -       trace_clk_disable_rcuidle(core);
-> +       trace_clk_disable(core);
+>         if (arch_pwrdm && arch_pwrdm->pwrdm_set_next_pwrst) {
+>                 /* Trace the pwrdm desired target state */
+> -               trace_power_domain_target_rcuidle(pwrdm->name, pwrst,
+> -                                                 raw_smp_processor_id());
+> +               trace_power_domain_target(pwrdm->name, pwrst,
+> +                                         raw_smp_processor_id());
+>                 /* Program the pwrdm desired target state */
+>                 ret = arch_pwrdm->pwrdm_set_next_pwrst(pwrdm, pwrst);
+>         }
+> --- a/drivers/base/power/runtime.c
+> +++ b/drivers/base/power/runtime.c
+> @@ -442,7 +442,7 @@ static int rpm_idle(struct device *dev,
+>         int (*callback)(struct device *);
+>         int retval;
 >
->         if (core->ops->disable)
->                 core->ops->disable(core->hw);
+> -       trace_rpm_idle_rcuidle(dev, rpmflags);
+> +       trace_rpm_idle(dev, rpmflags);
+>         retval = rpm_check_suspend_allowed(dev);
+>         if (retval < 0)
+>                 ;       /* Conditions are wrong. */
+> @@ -481,7 +481,7 @@ static int rpm_idle(struct device *dev,
+>                         dev->power.request_pending = true;
+>                         queue_work(pm_wq, &dev->power.work);
+>                 }
+> -               trace_rpm_return_int_rcuidle(dev, _THIS_IP_, 0);
+> +               trace_rpm_return_int(dev, _THIS_IP_, 0);
+>                 return 0;
+>         }
 >
-> -       trace_clk_disable_complete_rcuidle(core);
-> +       trace_clk_disable_complete(core);
+> @@ -493,7 +493,7 @@ static int rpm_idle(struct device *dev,
+>         wake_up_all(&dev->power.wait_queue);
 >
->         clk_core_disable(core->parent);
+>   out:
+> -       trace_rpm_return_int_rcuidle(dev, _THIS_IP_, retval);
+> +       trace_rpm_return_int(dev, _THIS_IP_, retval);
+>         return retval ? retval : rpm_suspend(dev, rpmflags | RPM_AUTO);
 >  }
-> @@ -1037,12 +1037,12 @@ static int clk_core_enable(struct clk_co
->                 if (ret)
->                         return ret;
 >
-> -               trace_clk_enable_rcuidle(core);
-> +               trace_clk_enable(core);
+> @@ -557,7 +557,7 @@ static int rpm_suspend(struct device *de
+>         struct device *parent = NULL;
+>         int retval;
 >
->                 if (core->ops->enable)
->                         ret = core->ops->enable(core->hw);
+> -       trace_rpm_suspend_rcuidle(dev, rpmflags);
+> +       trace_rpm_suspend(dev, rpmflags);
 >
-> -               trace_clk_enable_complete_rcuidle(core);
-> +               trace_clk_enable_complete(core);
+>   repeat:
+>         retval = rpm_check_suspend_allowed(dev);
+> @@ -708,7 +708,7 @@ static int rpm_suspend(struct device *de
+>         }
 >
->                 if (ret) {
->                         clk_core_disable(core->parent);
+>   out:
+> -       trace_rpm_return_int_rcuidle(dev, _THIS_IP_, retval);
+> +       trace_rpm_return_int(dev, _THIS_IP_, retval);
+>
+>         return retval;
+>
+> @@ -760,7 +760,7 @@ static int rpm_resume(struct device *dev
+>         struct device *parent = NULL;
+>         int retval = 0;
+>
+> -       trace_rpm_resume_rcuidle(dev, rpmflags);
+> +       trace_rpm_resume(dev, rpmflags);
+>
+>   repeat:
+>         if (dev->power.runtime_error) {
+> @@ -925,7 +925,7 @@ static int rpm_resume(struct device *dev
+>                 spin_lock_irq(&dev->power.lock);
+>         }
+>
+> -       trace_rpm_return_int_rcuidle(dev, _THIS_IP_, retval);
+> +       trace_rpm_return_int(dev, _THIS_IP_, retval);
+>
+>         return retval;
+>  }
+> @@ -1081,7 +1081,7 @@ int __pm_runtime_idle(struct device *dev
+>                 if (retval < 0) {
+>                         return retval;
+>                 } else if (retval > 0) {
+> -                       trace_rpm_usage_rcuidle(dev, rpmflags);
+> +                       trace_rpm_usage(dev, rpmflags);
+>                         return 0;
+>                 }
+>         }
+> @@ -1119,7 +1119,7 @@ int __pm_runtime_suspend(struct device *
+>                 if (retval < 0) {
+>                         return retval;
+>                 } else if (retval > 0) {
+> -                       trace_rpm_usage_rcuidle(dev, rpmflags);
+> +                       trace_rpm_usage(dev, rpmflags);
+>                         return 0;
+>                 }
+>         }
+> @@ -1202,7 +1202,7 @@ int pm_runtime_get_if_active(struct devi
+>         } else {
+>                 retval = atomic_inc_not_zero(&dev->power.usage_count);
+>         }
+> -       trace_rpm_usage_rcuidle(dev, 0);
+> +       trace_rpm_usage(dev, 0);
+>         spin_unlock_irqrestore(&dev->power.lock, flags);
+>
+>         return retval;
+> @@ -1566,7 +1566,7 @@ void pm_runtime_allow(struct device *dev
+>         if (ret == 0)
+>                 rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
+>         else if (ret > 0)
+> -               trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
+> +               trace_rpm_usage(dev, RPM_AUTO | RPM_ASYNC);
+>
+>   out:
+>         spin_unlock_irq(&dev->power.lock);
+> @@ -1635,7 +1635,7 @@ static void update_autosuspend(struct de
+>                         atomic_inc(&dev->power.usage_count);
+>                         rpm_resume(dev, 0);
+>                 } else {
+> -                       trace_rpm_usage_rcuidle(dev, 0);
+> +                       trace_rpm_usage(dev, 0);
+>                 }
+>         }
+>
 >
 >
 > _______________________________________________
