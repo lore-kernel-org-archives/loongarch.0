@@ -1,532 +1,273 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 275503C1C
-	for <loongarch@lists.linux.dev>; Tue,  4 Oct 2022 14:02:52 +0000 (UTC)
-Received: from localhost.localdomain (unknown [112.22.233.62])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxnmv6PDxjsOQlAA--.60093S2;
-	Tue, 04 Oct 2022 22:02:39 +0800 (CST)
-From: Rui Wang <wangrui@loongson.cn>
-To: loongarch@lists.linux.dev
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	linux-kernel@vger.kernel.org,
-	Rui Wang <wangrui@loongson.cn>
-Subject: [PATCH] LoongArch: mm: Refactor TLB handlers
-Date: Tue,  4 Oct 2022 22:02:30 +0800
-Message-Id: <20221004140230.748788-1-wangrui@loongson.cn>
-X-Mailer: git-send-email 2.37.3
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4AF3D80
+	for <loongarch@lists.linux.dev>; Tue,  4 Oct 2022 15:15:57 +0000 (UTC)
+Received: by mail-pl1-f177.google.com with SMTP id u24so5949883plq.12
+        for <loongarch@lists.linux.dev>; Tue, 04 Oct 2022 08:15:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=J2ppHC6gj92crGPpSrELKUpyhixWpF3W0/4C0ZdDtPI=;
+        b=UiXw6aHZigxzPRMUFzDILsNVsAdyFtr3B9KxKEI8m7E01CsajejevTYV7BdP2wsOm/
+         HvcPZBMM+TkW28eTt3F1DhxxBtezuv0XTDjtGYW8B2mbElhkTInGpM6vTu+4Ez1+Z4Zl
+         CSSAi6wcg4/gLFK0z0F/WRWRc047jLnY5XkW7fk/hHejtLeNbcKkU7CbDUwW9lkytUXr
+         cd/OQHjN7wB6eRDMRvJyzU3msr1RCb52XcEzMB0ZW808FTM1QI6i/jSUk70317I5p+kD
+         nFmZIjIA0zvgwBAFP/4LpKCKrT0ZRrqcJXuKYGFTLZWpkF7eqaysYMEZs2++diGTMeSz
+         qF/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=J2ppHC6gj92crGPpSrELKUpyhixWpF3W0/4C0ZdDtPI=;
+        b=lRqEsUvQx0df6cwtq/p/+VKkSLWI48wf+h5unpPoOmnI7aQm3Ykx6s4sn3qbNNa8VM
+         PYJpxomgtEr4OK1Erh9M6KtAsDqVSojjfzZNeOKGOciTs/QbqmfvDpNuBhH9J5Ytw1ho
+         w7d3s/SnxauMohKbxgVU3GKvCwezGdYPBAKmt6Ch+7xid+KWkRVBoF78lrOxFb8dVgxt
+         DoejTtfq6/OrM3iN/e3hxm8SotnfNUriCBS25oiuX7yhuhBbiP15S/HZ7+HGXwyz96x5
+         K9tydQ45kbRVnGTLa56vooTwDVs2rE3wF0PQfF36i4G878LmJZers2kPKWBnFnSymOXF
+         0Nug==
+X-Gm-Message-State: ACrzQf3+QFbFXn5deJK1bP1/IY7EvHc+S5qY5cvURarsJAkX4v5T6Msk
+	PlC3pU4oMM3HsOdSowGIinkluCFtnkuMmD2tDgsk7A==
+X-Google-Smtp-Source: AMsMyM7n+Vc130we6EQHET/igQcvZPTbfdglKFSS5m9j3dBgMdP/YI1FG0U2Mdd0MJ/1Rl84IgnhjST9lkox2h0baYs=
+X-Received: by 2002:a17:90b:1b06:b0:202:cce0:2148 with SMTP id
+ nu6-20020a17090b1b0600b00202cce02148mr262733pjb.84.1664896556863; Tue, 04 Oct
+ 2022 08:15:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxnmv6PDxjsOQlAA--.60093S2
-X-Coremail-Antispam: 1UD129KBjvAXoW3KFyrJFWkZF1xGryruF1ftFb_yoW8Jr1DCo
-	W8WF4UJ3Z7Ww1rurn8Za17AanrGF10y3saq34jyr1Fga4F93s8K3yDJa1j9FZ09r109F18
-	Zay7GFn5Zr47AFykn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYY7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
-	x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWU
-	JVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK
-	6ry5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUe_M3DUUUU
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+References: <20220919095939.761690562@infradead.org>
+In-Reply-To: <20220919095939.761690562@infradead.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 4 Oct 2022 17:15:20 +0200
+Message-ID: <CAPDyKFqwV27k5r8Pqo0bOqKQ2WKfcMdQoua665nA953U36+rXg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/44] cpuidle,rcu: Clean up the mess
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: juri.lelli@redhat.com, rafael@kernel.org, catalin.marinas@arm.com, 
+	linus.walleij@linaro.org, bsegall@google.com, guoren@kernel.org, pavel@ucw.cz, 
+	agordeev@linux.ibm.com, linux-arch@vger.kernel.org, 
+	vincent.guittot@linaro.org, mpe@ellerman.id.au, chenhuacai@kernel.org, 
+	christophe.leroy@csgroup.eu, linux-acpi@vger.kernel.org, agross@kernel.org, 
+	geert@linux-m68k.org, linux-imx@nxp.com, vgupta@kernel.org, 
+	mattst88@gmail.com, mturquette@baylibre.com, sammy@sammy.net, 
+	pmladek@suse.com, linux-pm@vger.kernel.org, 
+	Sascha Hauer <s.hauer@pengutronix.de>, linux-um@lists.infradead.org, npiggin@gmail.com, 
+	tglx@linutronix.de, linux-omap@vger.kernel.org, dietmar.eggemann@arm.com, 
+	andreyknvl@gmail.com, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	senozhatsky@chromium.org, svens@linux.ibm.com, jolsa@kernel.org, 
+	tj@kernel.org, Andrew Morton <akpm@linux-foundation.org>, mark.rutland@arm.com, 
+	linux-ia64@vger.kernel.org, dave.hansen@linux.intel.com, 
+	virtualization@lists.linux-foundation.org, 
+	James.Bottomley@hansenpartnership.com, jcmvbkbc@gmail.com, 
+	thierry.reding@gmail.com, kernel@xen0n.name, cl@linux.com, 
+	linux-s390@vger.kernel.org, vschneid@redhat.com, john.ogness@linutronix.de, 
+	ysato@users.sourceforge.jp, linux-sh@vger.kernel.org, festevam@gmail.com, 
+	deller@gmx.de, daniel.lezcano@linaro.org, jonathanh@nvidia.com, 
+	dennis@kernel.org, lenb@kernel.org, linux-xtensa@linux-xtensa.org, 
+	kernel@pengutronix.de, gor@linux.ibm.com, linux-arm-msm@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+	loongarch@lists.linux.dev, shorne@gmail.com, chris@zankel.net, 
+	sboyd@kernel.org, dinguyen@kernel.org, bristot@redhat.com, 
+	alexander.shishkin@linux.intel.com, fweisbec@gmail.com, lpieralisi@kernel.org, 
+	atishp@atishpatra.org, linux@rasmusvillemoes.dk, kasan-dev@googlegroups.com, 
+	will@kernel.org, boris.ostrovsky@oracle.com, khilman@kernel.org, 
+	linux-csky@vger.kernel.org, pv-drivers@vmware.com, 
+	linux-snps-arc@lists.infradead.org, mgorman@suse.de, 
+	jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>, ulli.kroll@googlemail.com, 
+	linux-clk@vger.kernel.org, rostedt@goodmis.org, ink@jurassic.park.msu.ru, 
+	bcain@quicinc.com, tsbogend@alpha.franken.de, linux-parisc@vger.kernel.org, 
+	ryabinin.a.a@gmail.com, sudeep.holla@arm.com, shawnguo@kernel.org, 
+	davem@davemloft.net, dalias@libc.org, tony@atomide.com, amakhalov@vmware.com, 
+	konrad.dybcio@somainline.org, bjorn.andersson@linaro.org, glider@google.com, 
+	hpa@zytor.com, sparclinux@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, vincenzo.frascino@arm.com, 
+	anton.ivanov@cambridgegreys.com, jonas@southpole.se, yury.norov@gmail.com, 
+	richard@nod.at, x86@kernel.org, linux@armlinux.org.uk, mingo@redhat.com, 
+	aou@eecs.berkeley.edu, hca@linux.ibm.com, richard.henderson@linaro.org, 
+	stefan.kristiansson@saunalahti.fi, openrisc@lists.librecores.org, 
+	acme@kernel.org, paul.walmsley@sifive.com, linux-tegra@vger.kernel.org, 
+	namhyung@kernel.org, andriy.shevchenko@linux.intel.com, jpoimboe@kernel.org, 
+	dvyukov@google.com, jgross@suse.com, monstr@monstr.eu, 
+	linux-mips@vger.kernel.org, palmer@dabbelt.com, anup@brainfault.org, 
+	bp@alien8.de, johannes@sipsolutions.net, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 
-This patch simplifies TLB load, store and modify exception handlers:
+On Mon, 19 Sept 2022 at 12:18, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> Hi All!
+>
+> At long last, a respin of the cpuidle vs rcu cleanup patches.
+>
+> v1: https://lkml.kernel.org/r/20220608142723.103523089@infradead.org
+>
+> These here patches clean up the mess that is cpuidle vs rcuidle.
+>
+> At the end of the ride there's only on RCU_NONIDLE user left:
+>
+>   arch/arm64/kernel/suspend.c:            RCU_NONIDLE(__cpu_suspend_exit());
+>
+> and 'one' trace_*_rcuidle() user:
+>
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_disable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_enable_rcuidle(CALLER_ADDR0, caller_addr);
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_disable_rcuidle(CALLER_ADDR0, caller_addr);
+>   kernel/trace/trace_preemptirq.c:                trace_preempt_enable_rcuidle(a0, a1);
+>   kernel/trace/trace_preemptirq.c:                trace_preempt_disable_rcuidle(a0, a1);
+>
+> However this last is all in deprecated code that should be unused for GENERIC_ENTRY.
+>
+> I've touched a lot of code that I can't test and I might've broken something by
+> accident. In particular the whole ARM cpuidle stuff was quite involved.
+>
+> Please all; have a look where you haven't already.
+>
+>
+> New since v1:
+>
+>  - rebase on top of Frederic's rcu-context-tracking rename fest
+>  - more omap goodness as per the last discusion (thanks Tony!)
+>  - removed one more RCU_NONIDLE() from arm64/risc-v perf code
+>  - ubsan/kasan fixes
+>  - intel_idle module-param for testing
+>  - a bunch of extra __always_inline, because compilers are silly.
+>
+> ---
+>  arch/alpha/kernel/process.c               |  1 -
+>  arch/alpha/kernel/vmlinux.lds.S           |  1 -
+>  arch/arc/kernel/process.c                 |  3 ++
+>  arch/arc/kernel/vmlinux.lds.S             |  1 -
+>  arch/arm/include/asm/vmlinux.lds.h        |  1 -
+>  arch/arm/kernel/process.c                 |  1 -
+>  arch/arm/kernel/smp.c                     |  6 +--
+>  arch/arm/mach-gemini/board-dt.c           |  3 +-
+>  arch/arm/mach-imx/cpuidle-imx6q.c         |  4 +-
+>  arch/arm/mach-imx/cpuidle-imx6sx.c        |  5 ++-
+>  arch/arm/mach-omap2/common.h              |  6 ++-
+>  arch/arm/mach-omap2/cpuidle34xx.c         | 16 +++++++-
+>  arch/arm/mach-omap2/cpuidle44xx.c         | 29 +++++++-------
+>  arch/arm/mach-omap2/omap-mpuss-lowpower.c | 12 +++++-
+>  arch/arm/mach-omap2/pm.h                  |  2 +-
+>  arch/arm/mach-omap2/pm24xx.c              | 51 +-----------------------
+>  arch/arm/mach-omap2/pm34xx.c              | 14 +++++--
+>  arch/arm/mach-omap2/pm44xx.c              |  2 +-
+>  arch/arm/mach-omap2/powerdomain.c         | 10 ++---
+>  arch/arm64/kernel/idle.c                  |  1 -
+>  arch/arm64/kernel/smp.c                   |  4 +-
+>  arch/arm64/kernel/vmlinux.lds.S           |  1 -
+>  arch/csky/kernel/process.c                |  1 -
+>  arch/csky/kernel/smp.c                    |  2 +-
+>  arch/csky/kernel/vmlinux.lds.S            |  1 -
+>  arch/hexagon/kernel/process.c             |  1 -
+>  arch/hexagon/kernel/vmlinux.lds.S         |  1 -
+>  arch/ia64/kernel/process.c                |  1 +
+>  arch/ia64/kernel/vmlinux.lds.S            |  1 -
+>  arch/loongarch/kernel/idle.c              |  1 +
+>  arch/loongarch/kernel/vmlinux.lds.S       |  1 -
+>  arch/m68k/kernel/vmlinux-nommu.lds        |  1 -
+>  arch/m68k/kernel/vmlinux-std.lds          |  1 -
+>  arch/m68k/kernel/vmlinux-sun3.lds         |  1 -
+>  arch/microblaze/kernel/process.c          |  1 -
+>  arch/microblaze/kernel/vmlinux.lds.S      |  1 -
+>  arch/mips/kernel/idle.c                   |  8 ++--
+>  arch/mips/kernel/vmlinux.lds.S            |  1 -
+>  arch/nios2/kernel/process.c               |  1 -
+>  arch/nios2/kernel/vmlinux.lds.S           |  1 -
+>  arch/openrisc/kernel/process.c            |  1 +
+>  arch/openrisc/kernel/vmlinux.lds.S        |  1 -
+>  arch/parisc/kernel/process.c              |  2 -
+>  arch/parisc/kernel/vmlinux.lds.S          |  1 -
+>  arch/powerpc/kernel/idle.c                |  5 +--
+>  arch/powerpc/kernel/vmlinux.lds.S         |  1 -
+>  arch/riscv/kernel/process.c               |  1 -
+>  arch/riscv/kernel/vmlinux-xip.lds.S       |  1 -
+>  arch/riscv/kernel/vmlinux.lds.S           |  1 -
+>  arch/s390/kernel/idle.c                   |  1 -
+>  arch/s390/kernel/vmlinux.lds.S            |  1 -
+>  arch/sh/kernel/idle.c                     |  1 +
+>  arch/sh/kernel/vmlinux.lds.S              |  1 -
+>  arch/sparc/kernel/leon_pmc.c              |  4 ++
+>  arch/sparc/kernel/process_32.c            |  1 -
+>  arch/sparc/kernel/process_64.c            |  3 +-
+>  arch/sparc/kernel/vmlinux.lds.S           |  1 -
+>  arch/um/kernel/dyn.lds.S                  |  1 -
+>  arch/um/kernel/process.c                  |  1 -
+>  arch/um/kernel/uml.lds.S                  |  1 -
+>  arch/x86/boot/compressed/vmlinux.lds.S    |  1 +
+>  arch/x86/coco/tdx/tdcall.S                | 15 +------
+>  arch/x86/coco/tdx/tdx.c                   | 25 ++++--------
+>  arch/x86/events/amd/brs.c                 | 13 +++----
+>  arch/x86/include/asm/fpu/xcr.h            |  4 +-
+>  arch/x86/include/asm/irqflags.h           | 11 ++----
+>  arch/x86/include/asm/mwait.h              | 14 +++----
+>  arch/x86/include/asm/nospec-branch.h      |  2 +-
+>  arch/x86/include/asm/paravirt.h           |  6 ++-
+>  arch/x86/include/asm/perf_event.h         |  2 +-
+>  arch/x86/include/asm/shared/io.h          |  4 +-
+>  arch/x86/include/asm/shared/tdx.h         |  1 -
+>  arch/x86/include/asm/special_insns.h      |  8 ++--
+>  arch/x86/include/asm/xen/hypercall.h      |  2 +-
+>  arch/x86/kernel/cpu/bugs.c                |  2 +-
+>  arch/x86/kernel/fpu/core.c                |  4 +-
+>  arch/x86/kernel/paravirt.c                | 14 ++++++-
+>  arch/x86/kernel/process.c                 | 65 +++++++++++++++----------------
+>  arch/x86/kernel/vmlinux.lds.S             |  1 -
+>  arch/x86/lib/memcpy_64.S                  |  5 +--
+>  arch/x86/lib/memmove_64.S                 |  4 +-
+>  arch/x86/lib/memset_64.S                  |  4 +-
+>  arch/x86/xen/enlighten_pv.c               |  2 +-
+>  arch/x86/xen/irq.c                        |  2 +-
+>  arch/xtensa/kernel/process.c              |  1 +
+>  arch/xtensa/kernel/vmlinux.lds.S          |  1 -
+>  drivers/acpi/processor_idle.c             | 36 ++++++++++-------
+>  drivers/base/power/runtime.c              | 24 ++++++------
+>  drivers/clk/clk.c                         |  8 ++--
+>  drivers/cpuidle/cpuidle-arm.c             |  1 +
+>  drivers/cpuidle/cpuidle-big_little.c      |  8 +++-
+>  drivers/cpuidle/cpuidle-mvebu-v7.c        |  7 ++++
+>  drivers/cpuidle/cpuidle-psci.c            | 10 +++--
+>  drivers/cpuidle/cpuidle-qcom-spm.c        |  1 +
+>  drivers/cpuidle/cpuidle-riscv-sbi.c       | 10 +++--
+>  drivers/cpuidle/cpuidle-tegra.c           | 21 +++++++---
+>  drivers/cpuidle/cpuidle.c                 | 21 +++++-----
+>  drivers/cpuidle/dt_idle_states.c          |  2 +-
+>  drivers/cpuidle/poll_state.c              | 10 ++++-
+>  drivers/idle/intel_idle.c                 | 19 +++++----
+>  drivers/perf/arm_pmu.c                    | 11 +-----
+>  drivers/perf/riscv_pmu_sbi.c              |  8 +---
+>  include/asm-generic/vmlinux.lds.h         |  9 ++---
+>  include/linux/compiler_types.h            |  8 +++-
+>  include/linux/cpu.h                       |  3 --
+>  include/linux/cpuidle.h                   | 34 ++++++++++++++++
+>  include/linux/cpumask.h                   |  4 +-
+>  include/linux/percpu-defs.h               |  2 +-
+>  include/linux/sched/idle.h                | 40 ++++++++++++++-----
+>  include/linux/thread_info.h               | 18 ++++++++-
+>  include/linux/tracepoint.h                | 13 ++++++-
+>  kernel/cpu_pm.c                           |  9 -----
+>  kernel/printk/printk.c                    |  2 +-
+>  kernel/sched/idle.c                       | 47 +++++++---------------
+>  kernel/time/tick-broadcast-hrtimer.c      | 29 ++++++--------
+>  kernel/time/tick-broadcast.c              |  6 ++-
+>  kernel/trace/trace.c                      |  3 ++
+>  lib/ubsan.c                               |  5 ++-
+>  mm/kasan/kasan.h                          |  4 ++
+>  mm/kasan/shadow.c                         | 38 ++++++++++++++++++
+>  tools/objtool/check.c                     | 17 ++++++++
+>  121 files changed, 511 insertions(+), 420 deletions(-)
 
-1. Reduce instructions. such as alu/csr and memory access
-2. Execute tlbsrch only in the fast path.
-3. Return directly from the fast path for huge pages.
+Thanks for cleaning up the situation!
 
-And fixes the concurrent modification issue of fast path for huge pages.
-This issue will occur in the following steps:
+I have applied this on a plain v6.0 (only one patch had a minor
+conflict) and tested this on an ARM64 Dragonboard 410c, which uses
+cpuidle-psci and the cpuidle-psci-domain. I didn't observe any
+problems, so feel free to add:
 
-   CPU-1 (In TLB exception)         CPU-2 (In THP)
-1: Load PMD entry (HUGE=1)
-2: Goto huge path
-3:                                  Store PMD entry (HUGE=0)
-4: Reload PMD entry (HUGE=0)
-5: Fill TLB entry (PA is incorrect)
+Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-This also slightly improves the TLB processing performance:
-
-* Normal pages: 2.15%
-* Huge pages:   1.70%
-
-  #include <stdio.h>
-  #include <stdlib.h>
-  #include <unistd.h>
-  #include <sys/mman.h>
-
-  int main(int argc, char *argv[])
-  {
-        size_t page_size;
-        size_t mem_size;
-        size_t off;
-        void *base;
-        int flags;
-        int i;
-
-        if (argc < 2) {
-                fprintf(stderr, "%s MEM_SIZE [HUGE]\n", argv[0]);
-                return -1;
-        }
-
-        page_size = sysconf(_SC_PAGESIZE);
-        flags = MAP_PRIVATE | MAP_ANONYMOUS;
-        mem_size = strtoul(argv[1], NULL, 10);
-        if (argc > 2)
-                flags |= MAP_HUGETLB;
-
-        for (i = 0; i < 10; i++) {
-                base = mmap(NULL, mem_size, PROT_READ, flags, -1, 0);
-                if (base == MAP_FAILED) {
-                        fprintf(stderr, "Map memory failed!\n");
-                        return -1;
-                }
-
-                for (off = 0; off < mem_size; off += page_size)
-                        *(volatile int *)(base + off);
-
-                munmap(base, mem_size);
-        }
-
-        return 0;
-  }
-
-Signed-off-by: Rui Wang <wangrui@loongson.cn>
----
- arch/loongarch/mm/tlbex.S | 223 ++++++++++++++++----------------------
- 1 file changed, 93 insertions(+), 130 deletions(-)
-
-diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
-index 39743337999e..c97bcaad2ff4 100644
---- a/arch/loongarch/mm/tlbex.S
-+++ b/arch/loongarch/mm/tlbex.S
-@@ -10,6 +10,11 @@
- #include <asm/regdef.h>
- #include <asm/stackframe.h>
- 
-+#define PTRS_PER_PGD_BITS	(PAGE_SHIFT - 3)
-+#define PTRS_PER_PUD_BITS	(PAGE_SHIFT - 3)
-+#define PTRS_PER_PMD_BITS	(PAGE_SHIFT - 3)
-+#define PTRS_PER_PTE_BITS	(PAGE_SHIFT - 3)
-+
- 	.macro tlb_do_page_fault, write
- 	SYM_FUNC_START(tlb_do_page_fault_\write)
- 	SAVE_ALL
-@@ -52,25 +57,17 @@ SYM_FUNC_START(handle_tlb_load)
- 
- vmalloc_done_load:
- 	/* Get PGD offset in bytes */
--	srli.d	t0, t0, PGDIR_SHIFT
--	andi	t0, t0, (PTRS_PER_PGD - 1)
--	slli.d	t0, t0, 3
--	add.d	t1, t1, t0
-+	bstrpick.d	ra, t0, PTRS_PER_PGD_BITS + PGDIR_SHIFT - 1, PGDIR_SHIFT
-+	alsl.d		t1, ra, t1, 3
- #if CONFIG_PGTABLE_LEVELS > 3
--	csrrd	t0, LOONGARCH_CSR_BADV
- 	ld.d	t1, t1, 0
--	srli.d	t0, t0, PUD_SHIFT
--	andi	t0, t0, (PTRS_PER_PUD - 1)
--	slli.d	t0, t0, 3
--	add.d	t1, t1, t0
-+	bstrpick.d	ra, t0, PTRS_PER_PUD_BITS + PUD_SHIFT - 1, PUD_SHIFT
-+	alsl.d		t1, ra, t1, 3
- #endif
- #if CONFIG_PGTABLE_LEVELS > 2
--	csrrd	t0, LOONGARCH_CSR_BADV
- 	ld.d	t1, t1, 0
--	srli.d	t0, t0, PMD_SHIFT
--	andi	t0, t0, (PTRS_PER_PMD - 1)
--	slli.d	t0, t0, 3
--	add.d	t1, t1, t0
-+	bstrpick.d	ra, t0, PTRS_PER_PMD_BITS + PMD_SHIFT - 1, PMD_SHIFT
-+	alsl.d		t1, ra, t1, 3
- #endif
- 	ld.d	ra, t1, 0
- 
-@@ -79,27 +76,20 @@ vmalloc_done_load:
- 	 * instead contains the tlb pte. Check the PAGE_HUGE bit and
- 	 * see if we need to jump to huge tlb processing.
- 	 */
--	andi	t0, ra, _PAGE_HUGE
--	bnez	t0, tlb_huge_update_load
-+	rotri.d	ra, ra, _PAGE_HUGE_SHIFT + 1
-+	bltz	ra, tlb_huge_update_load
- 
--	csrrd	t0, LOONGARCH_CSR_BADV
--	srli.d	t0, t0, PAGE_SHIFT
--	andi	t0, t0, (PTRS_PER_PTE - 1)
--	slli.d	t0, t0, _PTE_T_LOG2
--	add.d	t1, ra, t0
-+	rotri.d	ra, ra, 64 - (_PAGE_HUGE_SHIFT + 1)
-+	bstrpick.d	t0, t0, PTRS_PER_PTE_BITS + PAGE_SHIFT - 1, PAGE_SHIFT
-+	alsl.d	t1, t0, ra, _PTE_T_LOG2
- 
- #ifdef CONFIG_SMP
- smp_pgtable_change_load:
--#endif
--#ifdef CONFIG_SMP
- 	ll.d	t0, t1, 0
- #else
- 	ld.d	t0, t1, 0
- #endif
--	tlbsrch
--
--	srli.d	ra, t0, _PAGE_PRESENT_SHIFT
--	andi	ra, ra, 1
-+	andi	ra, t0, _PAGE_PRESENT
- 	beqz	ra, nopage_tlb_load
- 
- 	ori	t0, t0, _PAGE_VALID
-@@ -109,8 +99,8 @@ smp_pgtable_change_load:
- #else
- 	st.d	t0, t1, 0
- #endif
--	ori	t1, t1, 8
--	xori	t1, t1, 8
-+	tlbsrch
-+	bstrins.d	t1, zero, 3, 3
- 	ld.d	t0, t1, 0
- 	ld.d	t1, t1, 8
- 	csrwr	t0, LOONGARCH_CSR_TLBELO0
-@@ -133,23 +123,22 @@ vmalloc_load:
- 	 */
- tlb_huge_update_load:
- #ifdef CONFIG_SMP
--	ll.d	t0, t1, 0
--#else
--	ld.d	t0, t1, 0
-+	ll.d	ra, t1, 0
- #endif
--	srli.d	ra, t0, _PAGE_PRESENT_SHIFT
--	andi	ra, ra, 1
--	beqz	ra, nopage_tlb_load
--	tlbsrch
-+	andi	t0, ra, _PAGE_PRESENT
-+	beqz	t0, nopage_tlb_load
- 
--	ori	t0, t0, _PAGE_VALID
- #ifdef CONFIG_SMP
-+	ori	t0, ra, _PAGE_VALID
- 	sc.d	t0, t1, 0
- 	beqz	t0, tlb_huge_update_load
--	ld.d	t0, t1, 0
-+	ori	t0, ra, _PAGE_VALID
- #else
-+	rotri.d	ra, ra, 64 - (_PAGE_HUGE_SHIFT + 1)
-+	ori	t0, ra, _PAGE_VALID
- 	st.d	t0, t1, 0
- #endif
-+	tlbsrch
- 	addu16i.d	t1, zero, -(CSR_TLBIDX_EHINV >> 16)
- 	addi.d		ra, t1, 0
- 	csrxchg		ra, t1, LOONGARCH_CSR_TLBIDX
-@@ -173,9 +162,8 @@ tlb_huge_update_load:
- 	srli.d	t1, t1, (_PAGE_HGLOBAL_SHIFT - _PAGE_GLOBAL_SHIFT)
- 	or	t0, t0, t1
- 
--	addi.d	ra, t0, 0
--	csrwr	t0, LOONGARCH_CSR_TLBELO0
--	addi.d	t0, ra, 0
-+	move	ra, t0
-+	csrwr	ra, LOONGARCH_CSR_TLBELO0
- 
- 	/* Convert to entrylo1 */
- 	addi.d	t1, zero, 1
-@@ -193,6 +181,11 @@ tlb_huge_update_load:
- 	addu16i.d	t0, zero, (CSR_TLBIDX_PS >> 16)
- 	addu16i.d	t1, zero, (PS_DEFAULT_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
- 	csrxchg		t1, t0, LOONGARCH_CSR_TLBIDX
-+leave_huge_load:
-+	csrrd	t0, EXCEPTION_KS0
-+	csrrd	t1, EXCEPTION_KS1
-+	csrrd	ra, EXCEPTION_KS2
-+	ertn
- 
- nopage_tlb_load:
- 	dbar	0
-@@ -215,26 +208,17 @@ SYM_FUNC_START(handle_tlb_store)
- 
- vmalloc_done_store:
- 	/* Get PGD offset in bytes */
--	srli.d	t0, t0, PGDIR_SHIFT
--	andi	t0, t0, (PTRS_PER_PGD - 1)
--	slli.d	t0, t0, 3
--	add.d	t1, t1, t0
--
-+	bstrpick.d	ra, t0, PTRS_PER_PGD_BITS + PGDIR_SHIFT - 1, PGDIR_SHIFT
-+	alsl.d		t1, ra, t1, 3
- #if CONFIG_PGTABLE_LEVELS > 3
--	csrrd	t0, LOONGARCH_CSR_BADV
- 	ld.d	t1, t1, 0
--	srli.d	t0, t0, PUD_SHIFT
--	andi	t0, t0, (PTRS_PER_PUD - 1)
--	slli.d	t0, t0, 3
--	add.d	t1, t1, t0
-+	bstrpick.d	ra, t0, PTRS_PER_PUD_BITS + PUD_SHIFT - 1, PUD_SHIFT
-+	alsl.d		t1, ra, t1, 3
- #endif
- #if CONFIG_PGTABLE_LEVELS > 2
--	csrrd	t0, LOONGARCH_CSR_BADV
- 	ld.d	t1, t1, 0
--	srli.d	t0, t0, PMD_SHIFT
--	andi	t0, t0, (PTRS_PER_PMD - 1)
--	slli.d	t0, t0, 3
--	add.d	t1, t1, t0
-+	bstrpick.d	ra, t0, PTRS_PER_PMD_BITS + PMD_SHIFT - 1, PMD_SHIFT
-+	alsl.d		t1, ra, t1, 3
- #endif
- 	ld.d	ra, t1, 0
- 
-@@ -243,28 +227,21 @@ vmalloc_done_store:
- 	 * instead contains the tlb pte. Check the PAGE_HUGE bit and
- 	 * see if we need to jump to huge tlb processing.
- 	 */
--	andi	t0, ra, _PAGE_HUGE
--	bnez	t0, tlb_huge_update_store
-+	rotri.d	ra, ra, _PAGE_HUGE_SHIFT + 1
-+	bltz	ra, tlb_huge_update_store
- 
--	csrrd	t0, LOONGARCH_CSR_BADV
--	srli.d	t0, t0, PAGE_SHIFT
--	andi	t0, t0, (PTRS_PER_PTE - 1)
--	slli.d	t0, t0, _PTE_T_LOG2
--	add.d	t1, ra, t0
-+	rotri.d	ra, ra, 64 - (_PAGE_HUGE_SHIFT + 1)
-+	bstrpick.d	t0, t0, PTRS_PER_PTE_BITS + PAGE_SHIFT - 1, PAGE_SHIFT
-+	alsl.d	t1, t0, ra, _PTE_T_LOG2
- 
- #ifdef CONFIG_SMP
- smp_pgtable_change_store:
--#endif
--#ifdef CONFIG_SMP
- 	ll.d	t0, t1, 0
- #else
- 	ld.d	t0, t1, 0
- #endif
--	tlbsrch
--
--	srli.d	ra, t0, _PAGE_PRESENT_SHIFT
--	andi	ra, ra, ((_PAGE_PRESENT | _PAGE_WRITE) >> _PAGE_PRESENT_SHIFT)
--	xori	ra, ra, ((_PAGE_PRESENT | _PAGE_WRITE) >> _PAGE_PRESENT_SHIFT)
-+	andi	ra, t0, _PAGE_PRESENT | _PAGE_WRITE
-+	xori	ra, ra, _PAGE_PRESENT | _PAGE_WRITE
- 	bnez	ra, nopage_tlb_store
- 
- 	ori	t0, t0, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
-@@ -274,9 +251,8 @@ smp_pgtable_change_store:
- #else
- 	st.d	t0, t1, 0
- #endif
--
--	ori	t1, t1, 8
--	xori	t1, t1, 8
-+	tlbsrch
-+	bstrins.d	t1, zero, 3, 3
- 	ld.d	t0, t1, 0
- 	ld.d	t1, t1, 8
- 	csrwr	t0, LOONGARCH_CSR_TLBELO0
-@@ -299,25 +275,23 @@ vmalloc_store:
- 	 */
- tlb_huge_update_store:
- #ifdef CONFIG_SMP
--	ll.d	t0, t1, 0
--#else
--	ld.d	t0, t1, 0
-+	ll.d	ra, t1, 0
- #endif
--	srli.d	ra, t0, _PAGE_PRESENT_SHIFT
--	andi	ra, ra, ((_PAGE_PRESENT | _PAGE_WRITE) >> _PAGE_PRESENT_SHIFT)
--	xori	ra, ra, ((_PAGE_PRESENT | _PAGE_WRITE) >> _PAGE_PRESENT_SHIFT)
--	bnez	ra, nopage_tlb_store
--
--	tlbsrch
--	ori	t0, t0, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
-+	andi	t0, ra, _PAGE_PRESENT | _PAGE_WRITE
-+	xori	t0, t0, _PAGE_PRESENT | _PAGE_WRITE
-+	bnez	t0, nopage_tlb_store
- 
- #ifdef CONFIG_SMP
-+	ori	t0, ra, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
- 	sc.d	t0, t1, 0
- 	beqz	t0, tlb_huge_update_store
--	ld.d	t0, t1, 0
-+	ori	t0, ra, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
- #else
-+	rotri.d	ra, ra, 64 - (_PAGE_HUGE_SHIFT + 1)
-+	ori	t0, ra, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
- 	st.d	t0, t1, 0
- #endif
-+	tlbsrch
- 	addu16i.d	t1, zero, -(CSR_TLBIDX_EHINV >> 16)
- 	addi.d		ra, t1, 0
- 	csrxchg		ra, t1, LOONGARCH_CSR_TLBIDX
-@@ -340,9 +314,8 @@ tlb_huge_update_store:
- 	srli.d	t1, t1, (_PAGE_HGLOBAL_SHIFT - _PAGE_GLOBAL_SHIFT)
- 	or	t0, t0, t1
- 
--	addi.d	ra, t0, 0
--	csrwr	t0, LOONGARCH_CSR_TLBELO0
--	addi.d	t0, ra, 0
-+	move	ra, t0
-+	csrwr	ra, LOONGARCH_CSR_TLBELO0
- 
- 	/* Convert to entrylo1 */
- 	addi.d	t1, zero, 1
-@@ -361,6 +334,11 @@ tlb_huge_update_store:
- 	addu16i.d	t0, zero, (CSR_TLBIDX_PS >> 16)
- 	addu16i.d	t1, zero, (PS_DEFAULT_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
- 	csrxchg		t1, t0, LOONGARCH_CSR_TLBIDX
-+leave_huge_store:
-+	csrrd	t0, EXCEPTION_KS0
-+	csrrd	t1, EXCEPTION_KS1
-+	csrrd	ra, EXCEPTION_KS2
-+	ertn
- 
- nopage_tlb_store:
- 	dbar	0
-@@ -383,25 +361,17 @@ SYM_FUNC_START(handle_tlb_modify)
- 
- vmalloc_done_modify:
- 	/* Get PGD offset in bytes */
--	srli.d	t0, t0, PGDIR_SHIFT
--	andi	t0, t0, (PTRS_PER_PGD - 1)
--	slli.d	t0, t0, 3
--	add.d	t1, t1, t0
-+	bstrpick.d	ra, t0, PTRS_PER_PGD_BITS + PGDIR_SHIFT - 1, PGDIR_SHIFT
-+	alsl.d		t1, ra, t1, 3
- #if CONFIG_PGTABLE_LEVELS > 3
--	csrrd	t0, LOONGARCH_CSR_BADV
- 	ld.d	t1, t1, 0
--	srli.d	t0, t0, PUD_SHIFT
--	andi	t0, t0, (PTRS_PER_PUD - 1)
--	slli.d	t0, t0, 3
--	add.d	t1, t1, t0
-+	bstrpick.d	ra, t0, PTRS_PER_PUD_BITS + PUD_SHIFT - 1, PUD_SHIFT
-+	alsl.d		t1, ra, t1, 3
- #endif
- #if CONFIG_PGTABLE_LEVELS > 2
--	csrrd	t0, LOONGARCH_CSR_BADV
- 	ld.d	t1, t1, 0
--	srli.d	t0, t0, PMD_SHIFT
--	andi	t0, t0, (PTRS_PER_PMD - 1)
--	slli.d	t0, t0, 3
--	add.d	t1, t1, t0
-+	bstrpick.d	ra, t0, PTRS_PER_PMD_BITS + PMD_SHIFT - 1, PMD_SHIFT
-+	alsl.d		t1, ra, t1, 3
- #endif
- 	ld.d	ra, t1, 0
- 
-@@ -410,27 +380,20 @@ vmalloc_done_modify:
- 	 * instead contains the tlb pte. Check the PAGE_HUGE bit and
- 	 * see if we need to jump to huge tlb processing.
- 	 */
--	andi	t0, ra, _PAGE_HUGE
--	bnez	t0, tlb_huge_update_modify
-+	rotri.d	ra, ra, _PAGE_HUGE_SHIFT + 1
-+	bltz	ra, tlb_huge_update_modify
- 
--	csrrd	t0, LOONGARCH_CSR_BADV
--	srli.d	t0, t0, PAGE_SHIFT
--	andi	t0, t0, (PTRS_PER_PTE - 1)
--	slli.d	t0, t0, _PTE_T_LOG2
--	add.d	t1, ra, t0
-+	rotri.d	ra, ra, 64 - (_PAGE_HUGE_SHIFT + 1)
-+	bstrpick.d	t0, t0, PTRS_PER_PTE_BITS + PAGE_SHIFT - 1, PAGE_SHIFT
-+	alsl.d	t1, t0, ra, _PTE_T_LOG2
- 
- #ifdef CONFIG_SMP
- smp_pgtable_change_modify:
--#endif
--#ifdef CONFIG_SMP
- 	ll.d	t0, t1, 0
- #else
- 	ld.d	t0, t1, 0
- #endif
--	tlbsrch
--
--	srli.d	ra, t0, _PAGE_WRITE_SHIFT
--	andi	ra, ra, 1
-+	andi	ra, t0, _PAGE_WRITE
- 	beqz	ra, nopage_tlb_modify
- 
- 	ori	t0, t0, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
-@@ -440,8 +403,8 @@ smp_pgtable_change_modify:
- #else
- 	st.d	t0, t1, 0
- #endif
--	ori	t1, t1, 8
--	xori	t1, t1, 8
-+	tlbsrch
-+	bstrins.d	t1, zero, 3, 3
- 	ld.d	t0, t1, 0
- 	ld.d	t1, t1, 8
- 	csrwr	t0, LOONGARCH_CSR_TLBELO0
-@@ -464,23 +427,19 @@ vmalloc_modify:
- 	 */
- tlb_huge_update_modify:
- #ifdef CONFIG_SMP
--	ll.d	t0, t1, 0
--#else
--	ld.d	t0, t1, 0
-+	ll.d	ra, t1, 0
- #endif
--
--	srli.d	ra, t0, _PAGE_WRITE_SHIFT
--	andi	ra, ra, 1
--	beqz	ra, nopage_tlb_modify
--
--	tlbsrch
--	ori	t0, t0, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
-+	andi	t0, ra, _PAGE_WRITE
-+	beqz	t0, nopage_tlb_modify
- 
- #ifdef CONFIG_SMP
-+	ori	t0, ra, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
- 	sc.d	t0, t1, 0
- 	beqz	t0, tlb_huge_update_modify
--	ld.d	t0, t1, 0
-+	ori	t0, ra, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
- #else
-+	rotri.d	ra, ra, 64 - (_PAGE_HUGE_SHIFT + 1)
-+	ori	t0, ra, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
- 	st.d	t0, t1, 0
- #endif
- 	/*
-@@ -499,9 +458,8 @@ tlb_huge_update_modify:
- 	srli.d	t1, t1, (_PAGE_HGLOBAL_SHIFT - _PAGE_GLOBAL_SHIFT)
- 	or	t0, t0, t1
- 
--	addi.d	ra, t0, 0
--	csrwr	t0, LOONGARCH_CSR_TLBELO0
--	addi.d	t0, ra, 0
-+	move	ra, t0
-+	csrwr	ra, LOONGARCH_CSR_TLBELO0
- 
- 	/* Convert to entrylo1 */
- 	addi.d	t1, zero, 1
-@@ -520,6 +478,11 @@ tlb_huge_update_modify:
- 	addu16i.d	t0, zero, (CSR_TLBIDX_PS >> 16)
- 	addu16i.d	t1, zero, (PS_DEFAULT_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
- 	csrxchg		t1, t0, LOONGARCH_CSR_TLBIDX
-+leave_huge_modify:
-+	csrrd	t0, EXCEPTION_KS0
-+	csrrd	t1, EXCEPTION_KS1
-+	csrrd	ra, EXCEPTION_KS2
-+	ertn
- 
- nopage_tlb_modify:
- 	dbar	0
--- 
-2.37.3
-
+Kind regards
+Uffe
