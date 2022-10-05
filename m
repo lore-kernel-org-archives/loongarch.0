@@ -1,48 +1,49 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CA04685;
-	Tue,  4 Oct 2022 23:51:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664927507; x=1696463507;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=j5j93ep56qWM4Aggptg3rLl2Drpk5XL00qe9ecX3sk8=;
-  b=eWpD/MyhgO0bkOfyMjRS8Eega2+KEu8YAAP7cT/YoNfkqSTJg/8FB+XC
-   tVKyR0Iy8xBR4epOBAoJauXL5SfYh20NPK7NCAdJ3POB7gsRfdhpRw19u
-   k/wuuIeRB//iP6HDZQMfD1aLqS0HnTNIHkVtbgCXI3FbT8DwoXaFulOFh
-   KYABXaBEZVUMoKUx8pggkqyNTPRu+Vb3AxaP+rCGAJTvxMEIJG/5pnegH
-   uWK17q1p5UsdAg2iWvkAm6nPK0P3H9Ci8cvPIg5Ek7C3ZP0IAgmVjAPdD
-   qgT5OeoXoM74K8MmG//iluq206GPAp8nJgKhDvKKK9AtJsaJW8fjMZ7nG
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="304037328"
-X-IronPort-AV: E=Sophos;i="5.95,159,1661842800"; 
-   d="scan'208";a="304037328"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 16:51:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="713229064"
-X-IronPort-AV: E=Sophos;i="5.95,159,1661842800"; 
-   d="scan'208";a="713229064"
-Received: from lkp-server01.sh.intel.com (HELO d4f44333118a) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Oct 2022 16:51:42 -0700
-Received: from kbuild by d4f44333118a with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ofrhN-0000ft-1y;
-	Tue, 04 Oct 2022 23:51:41 +0000
-Date: Wed, 05 Oct 2022 07:51:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: netdev@vger.kernel.org, loongarch@lists.linux.dev,
- linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- bpf@vger.kernel.org, amd-gfx@lists.freedesktop.org,
- Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 4d80748d16c82a9c2c4ea5feea96e476de3cd876
-Message-ID: <633cc6f0.nUuOxmXokJvNe3YF%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198B1136B
+	for <loongarch@lists.linux.dev>; Wed,  5 Oct 2022 11:43:41 +0000 (UTC)
+Received: by mail-wm1-f44.google.com with SMTP id n40-20020a05600c3ba800b003b49aefc35fso848105wms.5
+        for <loongarch@lists.linux.dev>; Wed, 05 Oct 2022 04:43:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=I6JO1askOXv3fIRom3nLLKljILvMiIWCZXOL0gCR+zI=;
+        b=Wc8WRlG+WpW8mbJvGsJThiHj1HY0CcYuGKBnatg6+VXXQi3avdhmYgTfOe3XPQAcY7
+         I/JLrMiFquIOHeVyojQCB7iwK71vi1HkS7r2JM46K/HiaK0rYukCIhxzlO4R5sb0j/NB
+         cAQ1owdKdxK3SaU4jfpOkhuphZUT1GwKDK+j7jou0ujCPuSoxkr6wKBAak22bMFVHydB
+         asvpTNDz5gNPWcXeELDQV2bhdW3+FfJzQqOS+lLyu5Tp6+w0ne0v5XK0iipYT9cLSutr
+         xtAN7myNx3rNfc3gEK9iOWxyQjAoT2zw2XL661qkxCw8sFgab0k0FrBsgtbBQOTi4oh9
+         iC/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I6JO1askOXv3fIRom3nLLKljILvMiIWCZXOL0gCR+zI=;
+        b=4fpbL7EfCYN1yUDLxlsfINYNG+LBNRD8Q30LyORTgfXHCiJ/H/g9jq/5w0C1p1IAzv
+         Qjsk+NaJuiWD/zUUzza5QlZJ1RHib1qSkUgDAmYP7g7uR0s/J7Nd48mERGZXVVLRzRVv
+         6/l5mt+5QWLCsKHC+AW9nPe1rKhCnuEpEfS7RwVRcWGSiyxtTybQEgJf4T2v0gSHF2T7
+         bF2u8nKMh0dvZOYJvoPvgY0eeZ0UpuRXsPAeAUqgVJTcuKIyyp9epeTz57hFMynQXHo3
+         Wa6aY6BFqyMZo9Y+Twa1AcLqSXFmKrpMde2YWtDyymyhC8VF83OfbLh25OZAmEA/mchq
+         5YsQ==
+X-Gm-Message-State: ACrzQf019GxCWUcuwx6OJ3aBgyKzAS5D4/73Ef7i/UlSWPCWiVCP7us2
+	Ey/wqmfKAR2q6nTxd+N76Uw=
+X-Google-Smtp-Source: AMsMyM6kySg7JhOnbqTNzF3k0OyNUxybSz4HxCID9n6Z9GWv0v0/EuIV6zyBPaOH+zhl/XtyQ8wAPQ==
+X-Received: by 2002:a05:600c:1c84:b0:3b3:ef37:afd3 with SMTP id k4-20020a05600c1c8400b003b3ef37afd3mr2874007wms.155.1664970220260;
+        Wed, 05 Oct 2022 04:43:40 -0700 (PDT)
+Received: from debian (host-78-150-37-98.as13285.net. [78.150.37.98])
+        by smtp.gmail.com with ESMTPSA id z12-20020a05600c220c00b003a63a3b55c3sm1631689wml.14.2022.10.05.04.43.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Oct 2022 04:43:39 -0700 (PDT)
+Date: Wed, 5 Oct 2022 12:43:38 +0100
+From: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+Subject: build failure of next-20221005 due to 4078ec1ef5ed ("LoongArch: Use
+ TLB for ioremap()")
+Message-ID: <Yz1t6rPLOzKT8Id+@debian>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,172 +51,42 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 4d80748d16c82a9c2c4ea5feea96e476de3cd876  Add linux-next specific files for 20221004
+Hi All,
 
-Error/Warning reports:
+The builds of loongarch allmodconfig have failed to build next-20221005
+with errors
 
-https://lore.kernel.org/linux-mm/202209150141.WgbAKqmX-lkp@intel.com
-https://lore.kernel.org/linux-mm/202209251400.1TMn7RdE-lkp@intel.com
-https://lore.kernel.org/linux-mm/202210010718.2kaVANGb-lkp@intel.com
-https://lore.kernel.org/llvm/202209200834.EFwaTsIj-lkp@intel.com
-https://lore.kernel.org/llvm/202209220019.Yr2VuXhg-lkp@intel.com
+sound/soc/mediatek/common/mtk-btcvsd.c: In function 'mtk_btcvsd_snd_remove':
+sound/soc/mediatek/common/mtk-btcvsd.c:1394:32: error: unused variable 'btcvsd' [-Werror=unused-variable]
+ 1394 |         struct mtk_btcvsd_snd *btcvsd = dev_get_drvdata(&pdev->dev);
+      |                                ^~~~~~
 
-Error/Warning: (recently discovered and may have been fixed)
 
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/idma64.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/qcom/hdma.ko] undefined!
-ERROR: modpost: "devm_memremap" [drivers/misc/open-dice.ko] undefined!
-ERROR: modpost: "devm_memunmap" [drivers/misc/open-dice.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/char/xillybus/xillybus_of.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/clk/xilinx/clk-xlnx-clock-wizard.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/tty/ipwireless/ipwireless.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/net/ethernet/8390/pcnet_cs.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/tty/ipwireless/ipwireless.ko] undefined!
-arch/arm64/kernel/alternative.c:199:6: warning: no previous prototype for 'apply_alternatives_vdso' [-Wmissing-prototypes]
-arch/arm64/kernel/alternative.c:295:14: warning: no previous prototype for 'alt_cb_patch_nops' [-Wmissing-prototypes]
-arch/loongarch/kernel/traps.c:250 die() warn: variable dereferenced before check 'regs' (see line 244)
-arch/loongarch/mm/init.c:166:24: warning: variable 'new' set but not used [-Wunused-but-set-variable]
-drivers/platform/loongarch/loongson-laptop.c:377 loongson_laptop_get_brightness() warn: impossible condition '(level < 0) => (0-255 < 0)'
-drivers/spi/spi.c:4215:33: warning: use of uninitialized value '((int *)_38 = PHI <&x(2), _91(3)>)[11]' [CWE-457] [-Wanalyzer-use-of-uninitialized-value]
-include/linux/compiler_types.h:357:45: error: call to '__compiletime_assert_417' declared with attribute error: FIELD_GET: mask is not constant
-kernel/bpf/memalloc.c:500 bpf_mem_alloc_destroy() error: potentially dereferencing uninitialized 'c'.
-net/dsa/port.c:1684 dsa_port_phylink_create() warn: passing zero to 'PTR_ERR'
-pahole: .tmp_vmlinux.btf: No such file or directory
+sound/soc/sof/intel/hda.c: In function 'hda_dsp_remove':
+sound/soc/sof/intel/hda.c:1185:26: error: unused variable 'bus' [-Werror=unused-variable]
+ 1185 |         struct hdac_bus *bus = sof_to_bus(sdev);
+      |                          ^~~
 
-Error/Warning ids grouped by kconfigs:
 
-gcc_recent_errors
-|-- arm-randconfig-c002-20221002
-|   `-- drivers-spi-spi.c:warning:use-of-uninitialized-value-((int-)_38-PHI-x()-_91()-)-CWE
-|-- arm64-allyesconfig
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
-|   `-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
-|-- arm64-randconfig-r004-20221002
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
-|   `-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
-|-- arm64-randconfig-r016-20221003
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
-|   `-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
-|-- i386-randconfig-m021-20221003
-|   `-- net-dsa-port.c-dsa_port_phylink_create()-warn:passing-zero-to-PTR_ERR
-|-- loongarch-buildonly-randconfig-r006-20221003
-|   `-- arch-loongarch-mm-init.c:warning:variable-new-set-but-not-used
-|-- loongarch-randconfig-m031-20221002
-|   `-- arch-loongarch-mm-init.c:warning:variable-new-set-but-not-used
-|-- loongarch-randconfig-m041-20221002
-|   |-- arch-loongarch-kernel-traps.c-die()-warn:variable-dereferenced-before-check-regs-(see-line-)
-|   |-- arch-loongarch-mm-init.c:warning:variable-new-set-but-not-used
-|   |-- drivers-platform-loongarch-loongson-laptop.c-loongson_laptop_get_brightness()-warn:impossible-condition-(level-)-(-)
-|   `-- kernel-bpf-memalloc.c-bpf_mem_alloc_destroy()-error:potentially-dereferencing-uninitialized-c-.
-|-- loongarch-randconfig-r001-20221002
-|   `-- arch-loongarch-mm-init.c:warning:variable-new-set-but-not-used
-|-- m68k-randconfig-r004-20221003
-|   `-- pahole:.tmp_vmlinux.btf:No-such-file-or-directory
-|-- s390-allmodconfig
-|   |-- ERROR:devm_ioremap_resource-drivers-dma-fsl-edma.ko-undefined
-|   |-- ERROR:devm_ioremap_resource-drivers-dma-idma64.ko-undefined
-|   |-- ERROR:devm_ioremap_resource-drivers-dma-qcom-hdma.ko-undefined
-|   |-- ERROR:devm_memremap-drivers-misc-open-dice.ko-undefined
-|   |-- ERROR:devm_memunmap-drivers-misc-open-dice.ko-undefined
-|   |-- ERROR:devm_platform_ioremap_resource-drivers-char-xillybus-xillybus_of.ko-undefined
-|   |-- ERROR:devm_platform_ioremap_resource-drivers-clk-xilinx-clk-xlnx-clock-wizard.ko-undefined
-|   |-- ERROR:ioremap-drivers-tty-ipwireless-ipwireless.ko-undefined
-|   |-- ERROR:iounmap-drivers-net-ethernet-pcnet_cs.ko-undefined
-|   `-- ERROR:iounmap-drivers-tty-ipwireless-ipwireless.ko-undefined
-`-- x86_64-randconfig-a012-20221003
-    `-- include-linux-compiler_types.h:error:call-to-__compiletime_assert_NNN-declared-with-attribute-error:FIELD_GET:mask-is-not-constant
-clang_recent_errors
-|-- arm-randconfig-r022-20221003
-|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt2701.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
-|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
-|   |-- drivers-phy-mediatek-phy-mtk-mipi-dsi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:
-|   `-- drivers-phy-mediatek-phy-mtk-mipi-dsi-mt8183.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:
-|-- mips-randconfig-r003-20221002
-|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt2701.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
-|   `-- drivers-phy-mediatek-phy-mtk-hdmi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
-|-- s390-randconfig-r021-20221002
-|   |-- manage.c:(.text):undefined-reference-to-__tsan_memcpy
-|   |-- s39-linux-ld:setup.c:(.init.text):undefined-reference-to-__tsan_memcpy
-|   |-- s39-linux-ld:trace.c:(.init.text):undefined-reference-to-__tsan_memcpy
-|   |-- trace.c:(.init.text):undefined-reference-to-__tsan_memcpy
-|   `-- workqueue.c:(.init.text):undefined-reference-to-__tsan_memcpy
-|-- s390-randconfig-r026-20221002
-|   `-- ERROR:devm_ioremap_resource-drivers-dma-idma64.ko-undefined
-`-- x86_64-buildonly-randconfig-r005-20221003
-    |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-function-virtual_disable_link_output
-    `-- drivers-iommu-ipmmu-vmsa.c:warning:unused-variable-ipmmu_of_ids
+drivers/mfd/asic3.c: In function 'asic3_mfd_remove':
+drivers/mfd/asic3.c:940:23: error: unused variable 'asic' [-Werror=unused-variable]
+  940 |         struct asic3 *asic = platform_get_drvdata(pdev);
+      |                       ^~~~
 
-elapsed time: 726m
 
-configs tested: 58
-configs skipped: 3
+drivers/gpu/drm/exynos/exynos7_drm_decon.c: In function 'decon_remove':
+drivers/gpu/drm/exynos/exynos7_drm_decon.c:771:31: error: unused variable 'ctx' [-Werror=unused-variable]
+  771 |         struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
+      |               
 
-gcc tested configs:
-powerpc                           allnoconfig
-arc                                 defconfig
-alpha                               defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                          rhel-8.3-func
-x86_64                              defconfig
-x86_64                    rhel-8.3-kselftests
-sh                               allmodconfig
-s390                                defconfig
-s390                             allmodconfig
-riscv                randconfig-r042-20221003
-arc                  randconfig-r043-20221003
-x86_64                               rhel-8.3
-arc                              allyesconfig
-i386                                defconfig
-arm                                 defconfig
-alpha                            allyesconfig
-i386                 randconfig-a011-20221003
-x86_64                           rhel-8.3-syz
-i386                 randconfig-a012-20221003
-s390                 randconfig-r044-20221003
-mips                             allyesconfig
-s390                             allyesconfig
-m68k                             allmodconfig
-x86_64                         rhel-8.3-kunit
-powerpc                          allmodconfig
-i386                 randconfig-a013-20221003
-m68k                             allyesconfig
-i386                 randconfig-a015-20221003
-x86_64                           rhel-8.3-kvm
-i386                 randconfig-a014-20221003
-x86_64                           allyesconfig
-ia64                             allmodconfig
-x86_64               randconfig-a011-20221003
-arm                              allyesconfig
-x86_64               randconfig-a012-20221003
-arm64                            allyesconfig
-x86_64               randconfig-a013-20221003
-x86_64               randconfig-a015-20221003
-x86_64               randconfig-a014-20221003
-x86_64               randconfig-a016-20221003
-i386                             allyesconfig
 
-clang tested configs:
-hexagon              randconfig-r045-20221003
-i386                 randconfig-a004-20221003
-hexagon              randconfig-r041-20221003
-i386                 randconfig-a003-20221003
-i386                 randconfig-a002-20221003
-i386                 randconfig-a001-20221003
-i386                 randconfig-a006-20221003
-i386                 randconfig-a005-20221003
-x86_64               randconfig-a002-20221003
-x86_64               randconfig-a001-20221003
-x86_64               randconfig-a004-20221003
-x86_64               randconfig-a006-20221003
-x86_64               randconfig-a003-20221003
-x86_64               randconfig-a005-20221003
-x86_64                          rhel-8.3-rust
+git bisect pointed to 4078ec1ef5ed ("LoongArch: Use TLB for ioremap()")
+
+I will be happy to test any patch or provide any extra log if needed.
+
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Regards
+Sudip
