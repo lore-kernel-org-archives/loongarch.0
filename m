@@ -1,49 +1,50 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198B1136B
-	for <loongarch@lists.linux.dev>; Wed,  5 Oct 2022 11:43:41 +0000 (UTC)
-Received: by mail-wm1-f44.google.com with SMTP id n40-20020a05600c3ba800b003b49aefc35fso848105wms.5
-        for <loongarch@lists.linux.dev>; Wed, 05 Oct 2022 04:43:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A91136B
+	for <loongarch@lists.linux.dev>; Wed,  5 Oct 2022 11:54:09 +0000 (UTC)
+Received: by mail-wr1-f46.google.com with SMTP id a10so13261079wrm.12
+        for <loongarch@lists.linux.dev>; Wed, 05 Oct 2022 04:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=I6JO1askOXv3fIRom3nLLKljILvMiIWCZXOL0gCR+zI=;
-        b=Wc8WRlG+WpW8mbJvGsJThiHj1HY0CcYuGKBnatg6+VXXQi3avdhmYgTfOe3XPQAcY7
-         I/JLrMiFquIOHeVyojQCB7iwK71vi1HkS7r2JM46K/HiaK0rYukCIhxzlO4R5sb0j/NB
-         cAQ1owdKdxK3SaU4jfpOkhuphZUT1GwKDK+j7jou0ujCPuSoxkr6wKBAak22bMFVHydB
-         asvpTNDz5gNPWcXeELDQV2bhdW3+FfJzQqOS+lLyu5Tp6+w0ne0v5XK0iipYT9cLSutr
-         xtAN7myNx3rNfc3gEK9iOWxyQjAoT2zw2XL661qkxCw8sFgab0k0FrBsgtbBQOTi4oh9
-         iC/w==
+        bh=dCsoKpBjdli7iWIkHe29aBSIVoJwl8PXogMcBODUYio=;
+        b=Kg/L3CLDEZ/nyqsQOgq0igi4W4pMphRH+NiO7CgJY4d/sndcCHI9n7AJ4F5clP3MUP
+         nj9ZgYxi/0mOofynUPs2SqLciJEf9zMtOxFpN8PeZUIw4S2/dcoqgbsrjjXn3xpcqiZy
+         90lfF/Ua7V6ArPVKI0tC6s770FIiER25HS+4T/j4F1j3lYyYODZmraCc2MmLAjuYa/a9
+         m5vR9zlaGpynximenCOC6fhki1HW22hRxE9bRvEH+GuyS2zhr0r7RyBoLImL9xv1mGrL
+         lAFkVbyRUe4IQ3OGcwYoe29G0vwomRjfyJ7yZm0CVoHGEOer3cMa5cfFmUNkST9w2XbR
+         6muQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I6JO1askOXv3fIRom3nLLKljILvMiIWCZXOL0gCR+zI=;
-        b=4fpbL7EfCYN1yUDLxlsfINYNG+LBNRD8Q30LyORTgfXHCiJ/H/g9jq/5w0C1p1IAzv
-         Qjsk+NaJuiWD/zUUzza5QlZJ1RHib1qSkUgDAmYP7g7uR0s/J7Nd48mERGZXVVLRzRVv
-         6/l5mt+5QWLCsKHC+AW9nPe1rKhCnuEpEfS7RwVRcWGSiyxtTybQEgJf4T2v0gSHF2T7
-         bF2u8nKMh0dvZOYJvoPvgY0eeZ0UpuRXsPAeAUqgVJTcuKIyyp9epeTz57hFMynQXHo3
-         Wa6aY6BFqyMZo9Y+Twa1AcLqSXFmKrpMde2YWtDyymyhC8VF83OfbLh25OZAmEA/mchq
-         5YsQ==
-X-Gm-Message-State: ACrzQf019GxCWUcuwx6OJ3aBgyKzAS5D4/73Ef7i/UlSWPCWiVCP7us2
-	Ey/wqmfKAR2q6nTxd+N76Uw=
-X-Google-Smtp-Source: AMsMyM6kySg7JhOnbqTNzF3k0OyNUxybSz4HxCID9n6Z9GWv0v0/EuIV6zyBPaOH+zhl/XtyQ8wAPQ==
-X-Received: by 2002:a05:600c:1c84:b0:3b3:ef37:afd3 with SMTP id k4-20020a05600c1c8400b003b3ef37afd3mr2874007wms.155.1664970220260;
-        Wed, 05 Oct 2022 04:43:40 -0700 (PDT)
+        bh=dCsoKpBjdli7iWIkHe29aBSIVoJwl8PXogMcBODUYio=;
+        b=HNQu/jTTSDfc+xtar4pttyAww6WLUv2HE2cl3K5RaD00Jr+uFKcqxmyHLPd+3IjhaW
+         qcUN4iVOewsU2SvcDLgwyuHrOclq0555iCPHJEz94cw2cZdiEzbsJdj/YyO1RTwLT9k5
+         iCshlYgMVXyEhJd4kG4nc4xHFLRtRkVhJQiqH66JuPcml24PVVIzOxD6r05dR7TQGtY2
+         P2tA/2wqJO/m/2XJ/R1KjK7YmA/JBPJ7qM/MV+nJ/FVapgnxixuvXbn0YcCkRUD9LeC3
+         W0+f3H74V8n3gWZ81VhZOiSMCwQzBh/xeBtLyn161dBPX7PehIVWPHCAPq8D84GvoPzm
+         Olrw==
+X-Gm-Message-State: ACrzQf1hfVfTdFLIbHNRkltqSex4Xh6X/C0Xe/2GU7WGAaYX+liOls5d
+	mmAgH2Myc+D57+Wy7CdJzINMiB0nQYw=
+X-Google-Smtp-Source: AMsMyM5WMIt4f5MS393VOv9AjgI6yx4Irw8PmuCsNpz2bHT4wI962SVwH4/z5K+dcs6EdH0TqLNnVQ==
+X-Received: by 2002:a5d:4f12:0:b0:22e:3920:a09c with SMTP id c18-20020a5d4f12000000b0022e3920a09cmr9616073wru.95.1664970847532;
+        Wed, 05 Oct 2022 04:54:07 -0700 (PDT)
 Received: from debian (host-78-150-37-98.as13285.net. [78.150.37.98])
-        by smtp.gmail.com with ESMTPSA id z12-20020a05600c220c00b003a63a3b55c3sm1631689wml.14.2022.10.05.04.43.39
+        by smtp.gmail.com with ESMTPSA id l4-20020a7bc444000000b003a2e92edeccsm1806714wmi.46.2022.10.05.04.54.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Oct 2022 04:43:39 -0700 (PDT)
-Date: Wed, 5 Oct 2022 12:43:38 +0100
+        Wed, 05 Oct 2022 04:54:07 -0700 (PDT)
+Date: Wed, 5 Oct 2022 12:54:05 +0100
 From: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
-Subject: build failure of next-20221005 due to 4078ec1ef5ed ("LoongArch: Use
- TLB for ioremap()")
-Message-ID: <Yz1t6rPLOzKT8Id+@debian>
+To: Youling Tang <tangyouling@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-next@vger.kernel.org
+Subject: build failure of next-20221005 due to 9dcf746befa7 ("LoongArch: Use
+ generic BUG() handler")
+Message-ID: <Yz1wXUklaN66j8Lt@debian>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -56,33 +57,30 @@ Content-Disposition: inline
 Hi All,
 
 The builds of loongarch allmodconfig have failed to build next-20221005
-with errors
+with error:
 
-sound/soc/mediatek/common/mtk-btcvsd.c: In function 'mtk_btcvsd_snd_remove':
-sound/soc/mediatek/common/mtk-btcvsd.c:1394:32: error: unused variable 'btcvsd' [-Werror=unused-variable]
- 1394 |         struct mtk_btcvsd_snd *btcvsd = dev_get_drvdata(&pdev->dev);
-      |                                ^~~~~~
-
-
-sound/soc/sof/intel/hda.c: In function 'hda_dsp_remove':
-sound/soc/sof/intel/hda.c:1185:26: error: unused variable 'bus' [-Werror=unused-variable]
- 1185 |         struct hdac_bus *bus = sof_to_bus(sdev);
-      |                          ^~~
-
-
-drivers/mfd/asic3.c: In function 'asic3_mfd_remove':
-drivers/mfd/asic3.c:940:23: error: unused variable 'asic' [-Werror=unused-variable]
-  940 |         struct asic3 *asic = platform_get_drvdata(pdev);
-      |                       ^~~~
-
-
-drivers/gpu/drm/exynos/exynos7_drm_decon.c: In function 'decon_remove':
-drivers/gpu/drm/exynos/exynos7_drm_decon.c:771:31: error: unused variable 'ctx' [-Werror=unused-variable]
-  771 |         struct decon_context *ctx = dev_get_drvdata(&pdev->dev);
-      |               
+./arch/loongarch/include/asm/cmpxchg.h: In function '__cmpxchg':
+././include/linux/compiler_types.h:357:45: error: call to '__compiletime_assert_2' declared with attribute error: BUILD_BUG failed
+  357 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |                                             ^
+././include/linux/compiler_types.h:338:25: note: in definition of macro '__compiletime_assert'
+  338 |                         prefix ## suffix();                             \
+      |                         ^~~~~~
+././include/linux/compiler_types.h:357:9: note: in expansion of macro '_compiletime_assert'
+  357 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |         ^~~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+   59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
+      |                     ^~~~~~~~~~~~~~~~
+./arch/loongarch/include/asm/cmpxchg.h:179:17: note: in expansion of macro 'BUILD_BUG'
+  179 |                 BUILD_BUG();
+      |                 ^~~~~~~~~
 
 
-git bisect pointed to 4078ec1ef5ed ("LoongArch: Use TLB for ioremap()")
+git bisect pointed to 9dcf746befa7 ("LoongArch: Use generic BUG() handler")
 
 I will be happy to test any patch or provide any extra log if needed.
 
