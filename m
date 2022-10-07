@@ -1,48 +1,62 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6E54C80
-	for <loongarch@lists.linux.dev>; Fri,  7 Oct 2022 19:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1665172276; x=1696708276;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2mUVVnEhhVz5K6WJjVV+fjQCUzcnfkngvr4G4fFNzko=;
-  b=ASNabk2Yja38sU9TXaU7ToJKry9J0QCS/KyLczQBKj6EJDGLqa5+/qDp
-   //jYTt5Rz0H5yW7sWm2M8buUoYDR5Y63NfQ72rttRJirAcHIB/LM5ExcJ
-   3UQcJdXfV+55Azw2YwVUbZ9454jUhM/zThMlBjio/knrig7PDLqgKVbOe
-   1ieUNclzldJGqvblNvBTD4RfKuJueZipDtWGUvmOALwdne5o2fdP9t2ZK
-   WW3ZydDwwA+ntPPmIFu6JHkh7XtYh49+u5eeYgyxhgoqMu6unBZnC48a/
-   feb+K0vUHeDSP0+b8GN++8/vU2lEc/4svR7zRzxR0r27NKqBojVvgMYOD
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10493"; a="303802910"
-X-IronPort-AV: E=Sophos;i="5.95,167,1661842800"; 
-   d="scan'208";a="303802910"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2022 12:51:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10493"; a="767690832"
-X-IronPort-AV: E=Sophos;i="5.95,167,1661842800"; 
-   d="scan'208";a="767690832"
-Received: from lkp-server01.sh.intel.com (HELO 3c15167049b7) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Oct 2022 12:50:59 -0700
-Received: from kbuild by 3c15167049b7 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ogtN4-0001Sx-3A;
-	Fri, 07 Oct 2022 19:50:58 +0000
-Date: Sat, 08 Oct 2022 03:50:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: loongarch@lists.linux.dev, linux-nvme@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-iio@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
- Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 082fce125e57cff60687181c97f3a8ee620c38f5
-Message-ID: <63408321.qp0XTNE6XF5r/1+X%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8DC4C87
+	for <loongarch@lists.linux.dev>; Fri,  7 Oct 2022 20:03:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1665173019;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jaDcObpjcx0whPL96jk38beBrOuRKo+eqX0wqNpM3Cc=;
+	b=P+lIyk+e0CPKAEcXbbQsDGytM3pSE2HiXWeW7NP38w5yUSHLYGCuSuucP33CsCkagHA0Xl
+	151o2pP9yjDQ1PeDz0xhPVbLkmo8lCO3ZH7OMrITtTWxWfWY5mkXbEVSe9xPFuqCCFlhIl
+	3Pk9fHEL2zLDpOzOjIrrd39Z4gNTtAk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-264-kStNREYhN0OL2iSIbHz80Q-1; Fri, 07 Oct 2022 16:03:36 -0400
+X-MC-Unique: kStNREYhN0OL2iSIbHz80Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 67B08882826;
+	Fri,  7 Oct 2022 20:03:34 +0000 (UTC)
+Received: from fuller.cnet (ovpn-112-2.gru2.redhat.com [10.97.112.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 29A1A2166B4D;
+	Fri,  7 Oct 2022 20:03:32 +0000 (UTC)
+Received: by fuller.cnet (Postfix, from userid 1000)
+	id 258DA416CE48; Fri,  7 Oct 2022 17:01:33 -0300 (-03)
+Date: Fri, 7 Oct 2022 17:01:33 -0300
+From: Marcelo Tosatti <mtosatti@redhat.com>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+	x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Nicholas Piggin <npiggin@gmail.com>, Guo Ren <guoren@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: Re: [RFC PATCH 0/5] Generic IPI sending tracepoint
+Message-ID: <Y0CFnWDpMNGajIRD@fuller.cnet>
+References: <20221007154145.1877054-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,241 +64,168 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20221007154145.1877054-1-vschneid@redhat.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 082fce125e57cff60687181c97f3a8ee620c38f5  Add linux-next specific files for 20221007
+Hi Valentin,
 
-Error/Warning reports:
+On Fri, Oct 07, 2022 at 04:41:40PM +0100, Valentin Schneider wrote:
+> Background
+> ==========
+> 
+> Detecting IPI *reception* is relatively easy, e.g. using
+> trace_irq_handler_{entry,exit} or even just function-trace
+> flush_smp_call_function_queue() for SMP calls.  
+> 
+> Figuring out their *origin*, is trickier as there is no generic tracepoint tied
+> to e.g. smp_call_function():
+> 
+> o AFAIA x86 has no tracepoint tied to sending IPIs, only receiving them
+>   (cf. trace_call_function{_single}_entry()).
+> o arm/arm64 do have trace_ipi_raise(), which gives us the target cpus but also a
+>   mostly useless string (smp_calls will all be "Function call interrupts").
+> o Other architectures don't seem to have any IPI-sending related tracepoint.  
+> 
+> I believe one reason those tracepoints used by arm/arm64 ended up as they were
+> is because these archs used to handle IPIs differently from regular interrupts
+> (the IRQ driver would directly invoke an IPI-handling routine), which meant they 
+> never showed up in trace_irq_handler_{entry, exit}. The trace_ipi_{entry,exit}
+> tracepoints gave a way to trace IPI reception but those have become redundant as
+> of: 
+> 
+>       56afcd3dbd19 ("ARM: Allow IPIs to be handled as normal interrupts")
+>       d3afc7f12987 ("arm64: Allow IPIs to be handled as normal interrupts")
+> 
+> which gave IPIs a "proper" handler function used through
+> generic_handle_domain_irq(), which makes them show up via
+> trace_irq_handler_{entry, exit}.
+> 
+> Changing stuff up
+> =================
+> 
+> Per the above, it would make sense to reshuffle trace_ipi_raise() and move it
+> into generic code. This also came up during Daniel's talk on Osnoise at the CPU
+> isolation MC of LPC 2022 [1]. 
+> 
+> Now, to be useful, such a tracepoint needs to export:
+> o targeted CPU(s)
+> o calling context
+> 
+> The only way to get the calling context with trace_ipi_raise() is to trigger a
+> stack dump, e.g. $(trace-cmd -e ipi* -T echo 42).
+> 
+> As for the targeted CPUs, the existing tracepoint does export them, albeit in
+> cpumask form, which is quite inconvenient from a tooling perspective. For
+> instance, as far as I'm aware, it's not possible to do event filtering on a
+> cpumask via trace-cmd.
 
-https://lore.kernel.org/linux-doc/202209201326.sY9kHOLm-lkp@intel.com
-https://lore.kernel.org/linux-doc/202209231933.vcyETtUl-lkp@intel.com
-https://lore.kernel.org/linux-doc/202210070057.NpbaMyxB-lkp@intel.com
-https://lore.kernel.org/llvm/202209220019.Yr2VuXhg-lkp@intel.com
+https://man7.org/linux/man-pages/man1/trace-cmd-set.1.html
 
-Error/Warning: (recently discovered and may have been fixed)
+       -f filter
+           Specify a filter for the previous event. This must come after
+           a -e. This will filter what events get recorded based on the
+           content of the event. Filtering is passed to the kernel
+           directly so what filtering is allowed may depend on what
+           version of the kernel you have. Basically, it will let you
+           use C notation to check if an event should be processed or
+           not.
 
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/idma64.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/qcom/hdma.ko] undefined!
-ERROR: modpost: "devm_memremap" [drivers/misc/open-dice.ko] undefined!
-ERROR: modpost: "devm_memunmap" [drivers/misc/open-dice.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/char/xillybus/xillybus_of.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/net/ethernet/8390/pcnet_cs.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/tty/ipwireless/ipwireless.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/net/ethernet/8390/pcnet_cs.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/tty/ipwireless/ipwireless.ko] undefined!
-Warning: Documentation/translations/zh_CN/devicetree/kernel-api.rst references a file that doesn't exist: Documentation/Devicetree/kernel-api.rst
-Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/clock/microchip,mpfs.yaml
-Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-arch/arm64/kernel/alternative.c:199:6: warning: no previous prototype for 'apply_alternatives_vdso' [-Wmissing-prototypes]
-arch/arm64/kernel/alternative.c:295:14: warning: no previous prototype for 'alt_cb_patch_nops' [-Wmissing-prototypes]
-arch/loongarch/mm/init.c:166:24: warning: variable 'new' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/virtual/virtual_link_hwss.c:40:6: warning: no previous prototype for 'virtual_disable_link_output' [-Wmissing-prototypes]
-drivers/iio/adc/mcp3911.c:252 mcp3911_write_raw() error: buffer overflow 'mcp3911_osr_table' 8 <= 31
-drivers/iio/adc/mcp3911.c:441 mcp3911_probe() warn: passing zero to 'PTR_ERR'
-drivers/iio/adc/mcp3911.c:499 mcp3911_probe() warn: passing zero to 'PTR_ERR'
-drivers/nvme/target/loop.c:578 nvme_loop_create_ctrl() warn: 'opts->queue_size - 1' 4294967295 can't fit into 65535 'ctrl->ctrl.sqsize'
-fs/ext4/super.c:1744:19: warning: 'deprecated_msg' defined but not used [-Wunused-const-variable=]
-pahole: .tmp_vmlinux.btf: No such file or directory
+               ==, >=, <=, >, <, &, |, && and ||
 
-Error/Warning ids grouped by kconfigs:
+           The above are usually safe to use to compare fields.
 
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-virtual_disable_link_output
-|-- alpha-buildonly-randconfig-r003-20221003
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-virtual_disable_link_output
-|-- arc-allyesconfig
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-virtual_disable_link_output
-|-- arm-allyesconfig
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-virtual_disable_link_output
-|-- arm64-allyesconfig
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-virtual_disable_link_output
-|-- arm64-randconfig-r004-20221002
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-virtual_disable_link_output
-|-- arm64-randconfig-r014-20221003
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
-|   `-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
-|-- csky-randconfig-m041-20221002
-|   |-- drivers-iio-adc-mcp3911.c-mcp3911_probe()-warn:passing-zero-to-PTR_ERR
-|   |-- drivers-iio-adc-mcp3911.c-mcp3911_write_raw()-error:buffer-overflow-mcp3911_osr_table
-|   `-- drivers-nvme-target-loop.c-nvme_loop_create_ctrl()-warn:opts-queue_size-can-t-fit-into-ctrl-ctrl.sqsize
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-virtual_disable_link_output
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-defconfig
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a013-20221003
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a014-20221003
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a015-20221003
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-c001
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-c021
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- ia64-allmodconfig
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-virtual_disable_link_output
-|-- ia64-buildonly-randconfig-r003-20221002
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-virtual_disable_link_output
-|-- loongarch-randconfig-c024-20221002
-|   |-- arch-loongarch-mm-init.c:warning:variable-new-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-virtual_disable_link_output
-|-- loongarch-randconfig-m031-20221003
-|   |-- drivers-iio-adc-mcp3911.c-mcp3911_probe()-warn:passing-zero-to-PTR_ERR
-|   `-- drivers-iio-adc-mcp3911.c-mcp3911_write_raw()-error:buffer-overflow-mcp3911_osr_table
-|-- loongarch-randconfig-r001-20221002
-|   `-- arch-loongarch-mm-init.c:warning:variable-new-set-but-not-used
-clang_recent_errors
-|-- arm-buildonly-randconfig-r005-20221003
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- arm-randconfig-r016-20221003
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-function-virtual_disable_link_output
-|   |-- drivers-phy-mediatek-phy-mtk-mipi-dsi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:
-|   `-- drivers-phy-mediatek-phy-mtk-mipi-dsi-mt8183.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:
-|-- arm-randconfig-r022-20221003
-|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt2701.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
-|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
-|   |-- drivers-phy-mediatek-phy-mtk-mipi-dsi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:
-|   `-- drivers-phy-mediatek-phy-mtk-mipi-dsi-mt8183.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:
-|-- hexagon-randconfig-r005-20221002
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- hexagon-randconfig-r005-20221003
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- hexagon-randconfig-r013-20221002
-|   |-- ld.lld:error:vmlinux.a(arch-hexagon-kernel-head.o):(.init.text):relocation-R_HEX_B22_PCREL-out-of-range:is-not-in-references-__vmnewmap
-|   |-- ld.lld:error:vmlinux.a(arch-hexagon-kernel-head.o):(.init.text):relocation-R_HEX_B22_PCREL-out-of-range:is-not-in-references-__vmsetvec
-|   `-- ld.lld:error:vmlinux.a(arch-hexagon-kernel-head.o):(.init.text):relocation-R_HEX_B22_PCREL-out-of-range:is-not-in-references-memset
-|-- hexagon-randconfig-r041-20221003
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- hexagon-randconfig-r041-20221007
-|   `-- drivers-phy-mediatek-phy-mtk-tphy.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(unsigned-c
-|-- hexagon-randconfig-r045-20221002
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- i386-randconfig-a002-20221003
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- i386-randconfig-a005-20221003
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- i386-randconfig-a006-20221003
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- mips-cu1830-neo_defconfig
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- mips-mtx1_defconfig
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- mips-randconfig-r003-20221002
-|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt2701.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
-|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- mips-randconfig-r016-20221007
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- mips-randconfig-r031-20221002
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- riscv-randconfig-r042-20221002
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-virtual-virtual_link_hwss.c:warning:no-previous-prototype-for-function-virtual_disable_link_output
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- s390-randconfig-r026-20221002
-|   |-- ERROR:devm_ioremap_resource-drivers-dma-idma64.ko-undefined
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- x86_64-randconfig-a001-20221003
+This looks overkill to me (consider large number of bits set in mask).
 
-elapsed time: 724m
++#define trace_ipi_send_cpumask(callsite, mask) do {            \
++	if (static_key_false(&__tracepoint_ipi_send_cpu.key)) { \
++               int cpu;                                        \
++               for_each_cpu(cpu, mask)                         \
++                       trace_ipi_send_cpu(callsite, cpu);	\
++	}                                                       \
++} while (0)
 
-configs tested: 83
-configs skipped: 4
 
-gcc tested configs:
-um                             i386_defconfig
-arc                                 defconfig
-um                           x86_64_defconfig
-alpha                               defconfig
-powerpc                           allnoconfig
-s390                             allmodconfig
-i386                                defconfig
-s390                                defconfig
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-arm                                 defconfig
-i386                 randconfig-a014-20221003
-m68k                             allyesconfig
-x86_64                          rhel-8.3-func
-m68k                             allmodconfig
-x86_64                              defconfig
-i386                 randconfig-a011-20221003
-csky                              allnoconfig
-s390                             allyesconfig
-x86_64                    rhel-8.3-kselftests
-arc                              allyesconfig
-arc                               allnoconfig
-sh                               allmodconfig
-i386                 randconfig-a012-20221003
-mips                             allyesconfig
-i386                 randconfig-a013-20221003
-alpha                            allyesconfig
-i386                 randconfig-a015-20221003
-x86_64                           allyesconfig
-alpha                             allnoconfig
-powerpc                          allmodconfig
-riscv                             allnoconfig
-x86_64                               rhel-8.3
-arm64                            allyesconfig
-i386                 randconfig-a016-20221003
-i386                             allyesconfig
-arm                              allyesconfig
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-riscv                randconfig-r042-20221007
-arc                  randconfig-r043-20221007
-x86_64                        randconfig-a015
-riscv                randconfig-r042-20221003
-arc                  randconfig-r043-20221003
-arc                  randconfig-r043-20221002
-ia64                             allmodconfig
-s390                 randconfig-r044-20221007
-m68k                       m5249evb_defconfig
-s390                 randconfig-r044-20221003
-i386                          randconfig-c001
-mips                        bcm47xx_defconfig
-powerpc                 mpc85xx_cds_defconfig
-powerpc                      tqm8xx_defconfig
-nios2                            alldefconfig
-sh                            migor_defconfig
-powerpc                     tqm8555_defconfig
+> 
+> Because of the above points, this is introducing a new tracepoint.
+> 
+> Patches
+> =======
+> 
+> This results in having trace events for:
+> 
+> o smp_call_function*()
+> o smp_send_reschedule()
+> o irq_work_queue*()
+> 
+> This is incomplete, just looking at arm64 there's more IPI types that aren't covered:
+> 
+>   IPI_CPU_STOP,
+>   IPI_CPU_CRASH_STOP,
+>   IPI_TIMER,
+>   IPI_WAKEUP,
+> 
+> ... But it feels like a good starting point.
 
-clang tested configs:
-x86_64               randconfig-a003-20221003
-x86_64               randconfig-a005-20221003
-i386                 randconfig-a003-20221003
-x86_64                        randconfig-a014
-x86_64               randconfig-a002-20221003
-i386                 randconfig-a002-20221003
-x86_64               randconfig-a001-20221003
-hexagon              randconfig-r041-20221003
-x86_64               randconfig-a004-20221003
-riscv                randconfig-r042-20221002
-x86_64               randconfig-a006-20221003
-i386                 randconfig-a001-20221003
-x86_64                        randconfig-a012
-hexagon              randconfig-r041-20221002
-i386                 randconfig-a004-20221003
-s390                 randconfig-r044-20221002
-i386                 randconfig-a005-20221003
-i386                 randconfig-a006-20221003
-x86_64                        randconfig-a016
-hexagon              randconfig-r045-20221002
-hexagon              randconfig-r045-20221007
-hexagon              randconfig-r041-20221007
-hexagon              randconfig-r045-20221003
-mips                          ath79_defconfig
-mips                     cu1830-neo_defconfig
-mips                           mtx1_defconfig
+Can't you have a single tracepoint (or variant with cpumask) that would
+cover such cases as well?
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Maybe (as parameters for tracepoint):
+
+	* type (reschedule, smp_call_function, timer, wakeup, ...).
+
+	* function address: valid for smp_call_function, irq_work_queue
+	  types.
+
+> Another thing worth mentioning is that depending on the callsite, the _RET_IP_
+> fed to the tracepoint is not always useful - generic_exec_single() doesn't tell
+> you much about the actual callback being sent via IPI, so there might be value
+> in exploding the single tracepoint into at least one variant for smp_calls.
+
+Not sure i grasp what you mean by "exploding the single tracepoint...",
+but yes knowing the function or irq work function is very useful.
+
+> 
+> Links
+> =====
+> 
+> [1]: https://youtu.be/5gT57y4OzBM?t=14234
+> 
+> Valentin Schneider (5):
+>   trace: Add trace_ipi_send_{cpu, cpumask}
+>   sched, smp: Trace send_call_function_single_ipi()
+>   smp: Add a multi-CPU variant to send_call_function_single_ipi()
+>   irq_work: Trace calls to arch_irq_work_raise()
+>   treewide: Rename and trace arch-definitions of smp_send_reschedule()
+> 
+>  arch/alpha/kernel/smp.c          |  2 +-
+>  arch/arc/kernel/smp.c            |  2 +-
+>  arch/arm/kernel/smp.c            |  5 +----
+>  arch/arm64/kernel/smp.c          |  3 +--
+>  arch/csky/kernel/smp.c           |  2 +-
+>  arch/hexagon/kernel/smp.c        |  2 +-
+>  arch/ia64/kernel/smp.c           |  4 ++--
+>  arch/loongarch/include/asm/smp.h |  2 +-
+>  arch/mips/include/asm/smp.h      |  2 +-
+>  arch/openrisc/kernel/smp.c       |  2 +-
+>  arch/parisc/kernel/smp.c         |  4 ++--
+>  arch/powerpc/kernel/smp.c        |  4 ++--
+>  arch/riscv/kernel/smp.c          |  4 ++--
+>  arch/s390/kernel/smp.c           |  2 +-
+>  arch/sh/kernel/smp.c             |  2 +-
+>  arch/sparc/kernel/smp_32.c       |  2 +-
+>  arch/sparc/kernel/smp_64.c       |  2 +-
+>  arch/x86/include/asm/smp.h       |  2 +-
+>  arch/xtensa/kernel/smp.c         |  2 +-
+>  include/linux/smp.h              |  1 +
+>  include/trace/events/ipi.h       | 27 +++++++++++++++++++++++++++
+>  kernel/irq_work.c                | 12 +++++++++++-
+>  kernel/sched/core.c              |  7 +++++--
+>  kernel/smp.c                     | 18 +++++++++++++++++-
+>  24 files changed, 84 insertions(+), 31 deletions(-)
+> 
+> --
+> 2.31.1
+> 
+> 
+
