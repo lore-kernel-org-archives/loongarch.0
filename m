@@ -1,187 +1,227 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD62468F
-	for <loongarch@lists.linux.dev>; Fri,  7 Oct 2022 15:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1665157582;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jAXnJ0u7W03NIJPSLVmnFtjZEFHwdySA+neP8cndke0=;
-	b=ZgY2iUvz5b0kUB4P6aviwIOnXwbSs4nPYf4x0JPEjmERwoNxI9IQ6t26UHyEqd+03vgmoY
-	EzAEVYRbIDj7JTpftM8pX6E7mSsCV0xtqGVrg49t0XugSvo8nud6OPj8sUoVWAXNF6Pteg
-	m+pBbbd2u4ZxFJlHWfHf0bm6Q5v/+Fg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-398-Nv0kFtyhPMuXT5faX7iLcg-1; Fri, 07 Oct 2022 11:46:04 -0400
-X-MC-Unique: Nv0kFtyhPMuXT5faX7iLcg-1
-Received: by mail-wm1-f70.google.com with SMTP id bg21-20020a05600c3c9500b003c2acbff422so1183412wmb.0
-        for <loongarch@lists.linux.dev>; Fri, 07 Oct 2022 08:45:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D74F4A35
+	for <loongarch@lists.linux.dev>; Fri,  7 Oct 2022 17:12:45 +0000 (UTC)
+Received: by mail-pf1-f172.google.com with SMTP id 67so5406377pfz.12
+        for <loongarch@lists.linux.dev>; Fri, 07 Oct 2022 10:12:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=r+ar3rF5Nifj4ZH0w5BLPJvorwhCPz9FpYPvkQg1fFY=;
+        b=lnyLGuYmjS75CgXIYPygwDolRfcdA6yOcav2EBBasADUNmB+X4q/LGyG3GplPLKF4D
+         kbVVCg/8bBMxcfD9rLKmUEYYLhbyeB5zPm6ZDbYMckDnSVVJGqQeX6zA9l/IbMFC0x6e
+         tEj8qeloPyDPz0HyArmtPjFAzjrVIlk8ES+6Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jAXnJ0u7W03NIJPSLVmnFtjZEFHwdySA+neP8cndke0=;
-        b=lXcQzjc0zXILgvkeBW+B9gt/b6BFjIgNEWxZGSUTWKXaX4m3o/k/Va/JvUaqIhOwHp
-         eY3Ei0AL+6IHtWvQNSBidSs0O93dGSL/CjOj/C8ESOODxeOhOAIuCmm2Dhrco+TPzaRY
-         pyzF1fk9VcC+qTCIc2loR5TrJvy1RvUgAY5eKlIKPxnerFg1PHANGHI9MfJZLuDdKcHK
-         Zvvjx1NJ+k5EgffhEtUovClo6+lJXAZsE9SPRHhKkmIt3O2QPlKfOyL/fxKjFVPh3lhP
-         Zcz6T2kXDuw/euunndUvmRgZ8IIBkHUtdYAmj37oOR4QqbppS3hmRDEItvziHo0tWo88
-         znXw==
-X-Gm-Message-State: ACrzQf17Vhrhz4ILOmreozoPjKD0jcUdjX4pLgrkvNQm3D38gBfvBOMu
-	xLS9oBpSsxof4KRnT8tsZjZ10BoZU3/N7Y6AEKWIa0KBwKcUMiZqLClUwo0ccK7odK+hoc/Tn5S
-	bwAW+NMTEeq6qpYmJPxPx
-X-Received: by 2002:a05:600c:1d11:b0:3b4:7644:b788 with SMTP id l17-20020a05600c1d1100b003b47644b788mr4004370wms.114.1665157556408;
-        Fri, 07 Oct 2022 08:45:56 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM5EpDwoqxaA3kuqs1iO/JBIwLdmLfBJiR2SaBRc8PnLfbv3ObEmlrGj1DHjl4vmQIuUA923ig==
-X-Received: by 2002:a05:600c:1d11:b0:3b4:7644:b788 with SMTP id l17-20020a05600c1d1100b003b47644b788mr4004355wms.114.1665157556194;
-        Fri, 07 Oct 2022 08:45:56 -0700 (PDT)
-Received: from vschneid.remote.csb ([149.71.65.94])
-        by smtp.gmail.com with ESMTPSA id i18-20020adfb652000000b0022e38c93195sm2339428wre.34.2022.10.07.08.45.54
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=r+ar3rF5Nifj4ZH0w5BLPJvorwhCPz9FpYPvkQg1fFY=;
+        b=3YSSlYa2ukywIGqgNVHpM1Pw9ckTi7EfIM5YFnvA1LXglTowbupbd/u1lIz8QvevW7
+         STLAbb9F13a5dtY21olF5m5M83rDkd0vEk580T4/jAgq815nokVKH/eqKLdo7efu2u1z
+         pd/W2//78z5zBxNeqL2/gXtIdvBnVTH0HGSwAiY9A/gluwvZlmvdu9GfbQUkioIT4A8l
+         /G1ONQ5wicyrrPzvHkn2oZRgTqff7x16oiWgtChyo1PFur8qfiZ/pwGN5APOoeknwTG8
+         llfIUasEtCZ8KLllQ7zlXTv3EwPjwJZHIilRZGAMim+RfiIxCJt/+z3mei+QbL5v5He2
+         6dIw==
+X-Gm-Message-State: ACrzQf1ImVed7K7zVyKWw5ffwZXjRUhpSG86LElo+VedEccLHGY3PaOf
+	UntMzXQLNNiwZ7Bvd/vfU/AszQ==
+X-Google-Smtp-Source: AMsMyM6NgkBv0EiGuqEVmoxPIoEcqTWg64Tia/kXPXFAx+JliGbPe67OXQDl8cE35IpUxu9mDvbMUg==
+X-Received: by 2002:a63:8149:0:b0:459:4e80:56bc with SMTP id t70-20020a638149000000b004594e8056bcmr5537842pgd.538.1665162764512;
+        Fri, 07 Oct 2022 10:12:44 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o68-20020a62cd47000000b00540a8074c9dsm1849097pfg.166.2022.10.07.10.12.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Oct 2022 08:45:55 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	openrisc@lists.librecores.org,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-xtensa@linux-xtensa.org,
-	x86@kernel.org
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
+        Fri, 07 Oct 2022 10:12:43 -0700 (PDT)
+Date: Fri, 7 Oct 2022 10:12:42 -0700
+From: Kees Cook <keescook@chromium.org>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"patches@lists.linux.dev" <patches@lists.linux.dev>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Dave Airlie <airlied@redhat.com>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Guo Ren <guoren@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>
-Subject: [RFC PATCH 2/5] sched, smp: Trace send_call_function_single_ipi()
-Date: Fri,  7 Oct 2022 16:45:30 +0100
-Message-Id: <20221007154533.1878285-2-vschneid@redhat.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221007154145.1877054-1-vschneid@redhat.com>
-References: <20221007154145.1877054-1-vschneid@redhat.com>
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Florian Westphal <fw@strlen.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Hugh Dickins <hughd@google.com>, Jakub Kicinski <kuba@kernel.org>,
+	"James E . J . Bottomley" <jejb@linux.ibm.com>,
+	Jan Kara <jack@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	KP Singh <kpsingh@kernel.org>, Marco Elver <elver@google.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Theodore Ts'o <tytso@mit.edu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Thomas Graf <tgraf@suug.ch>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
+	"kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	"linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+	"linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@toke.dk>,
+	Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v3 3/5] treewide: use get_random_u32() when possible
+Message-ID: <202210071010.52C672FA9@keescook>
+References: <20221006165346.73159-1-Jason@zx2c4.com>
+ <20221006165346.73159-4-Jason@zx2c4.com>
+ <848ed24c-13ef-6c38-fd13-639b33809194@csgroup.eu>
+ <CAHmME9raQ4E00r9r8NyWJ17iSXE_KniTG0onCNAfMmfcGar1eg@mail.gmail.com>
+ <f10fcfbf-2da6-cf2d-6027-fbf8b52803e9@csgroup.eu>
+ <6396875c-146a-acf5-dd9e-7f93ba1b4bc3@csgroup.eu>
+ <CAHmME9pE4saqnwxhsAwt-xegYGjsavPOGnHCbZhUXD7kaJ+GAA@mail.gmail.com>
+ <501b0fc3-6c67-657f-781e-25ee0283bc2e@csgroup.eu>
+ <Y0Ayvov/KQmrIwTS@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+In-Reply-To: <Y0Ayvov/KQmrIwTS@zx2c4.com>
 
-send_call_function_single_ipi() is the thing that sends IPIs at the bottom
-of smp_call_function*() via either generic_exec_single() or
-smp_call_function_many_cond(). Give it an IPI-related tracepoint.
+On Fri, Oct 07, 2022 at 08:07:58AM -0600, Jason A. Donenfeld wrote:
+> On Fri, Oct 07, 2022 at 04:57:24AM +0000, Christophe Leroy wrote:
+> > 
+> > 
+> > Le 07/10/2022 à 01:36, Jason A. Donenfeld a écrit :
+> > > On 10/6/22, Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+> > >>
+> > >>
+> > >> Le 06/10/2022 à 19:31, Christophe Leroy a écrit :
+> > >>>
+> > >>>
+> > >>> Le 06/10/2022 à 19:24, Jason A. Donenfeld a écrit :
+> > >>>> Hi Christophe,
+> > >>>>
+> > >>>> On Thu, Oct 6, 2022 at 11:21 AM Christophe Leroy
+> > >>>> <christophe.leroy@csgroup.eu> wrote:
+> > >>>>> Le 06/10/2022 à 18:53, Jason A. Donenfeld a écrit :
+> > >>>>>> The prandom_u32() function has been a deprecated inline wrapper around
+> > >>>>>> get_random_u32() for several releases now, and compiles down to the
+> > >>>>>> exact same code. Replace the deprecated wrapper with a direct call to
+> > >>>>>> the real function. The same also applies to get_random_int(), which is
+> > >>>>>> just a wrapper around get_random_u32().
+> > >>>>>>
+> > >>>>>> Reviewed-by: Kees Cook <keescook@chromium.org>
+> > >>>>>> Acked-by: Toke Høiland-Jørgensen <toke@toke.dk> # for sch_cake
+> > >>>>>> Acked-by: Chuck Lever <chuck.lever@oracle.com> # for nfsd
+> > >>>>>> Reviewed-by: Jan Kara <jack@suse.cz> # for ext4
+> > >>>>>> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> > >>>>>> ---
+> > >>>>>
+> > >>>>>> diff --git a/arch/powerpc/kernel/process.c
+> > >>>>>> b/arch/powerpc/kernel/process.c
+> > >>>>>> index 0fbda89cd1bb..9c4c15afbbe8 100644
+> > >>>>>> --- a/arch/powerpc/kernel/process.c
+> > >>>>>> +++ b/arch/powerpc/kernel/process.c
+> > >>>>>> @@ -2308,6 +2308,6 @@ void notrace __ppc64_runlatch_off(void)
+> > >>>>>>     unsigned long arch_align_stack(unsigned long sp)
+> > >>>>>>     {
+> > >>>>>>         if (!(current->personality & ADDR_NO_RANDOMIZE) &&
+> > >>>>>> randomize_va_space)
+> > >>>>>> -             sp -= get_random_int() & ~PAGE_MASK;
+> > >>>>>> +             sp -= get_random_u32() & ~PAGE_MASK;
+> > >>>>>>         return sp & ~0xf;
+> > >>>>>
+> > >>>>> Isn't that a candidate for prandom_u32_max() ?
+> > >>>>>
+> > >>>>> Note that sp is deemed to be 16 bytes aligned at all time.
+> > >>>>
+> > >>>> Yes, probably. It seemed non-trivial to think about, so I didn't. But
+> > >>>> let's see here... maybe it's not too bad:
+> > >>>>
+> > >>>> If PAGE_MASK is always ~(PAGE_SIZE-1), then ~PAGE_MASK is
+> > >>>> (PAGE_SIZE-1), so prandom_u32_max(PAGE_SIZE) should yield the same
+> > >>>> thing? Is that accurate? And holds across platforms (this comes up a
+> > >>>> few places)? If so, I'll do that for a v4.
+> > >>>>
+> > >>>
+> > >>> On powerpc it is always (from arch/powerpc/include/asm/page.h) :
+> > >>>
+> > >>> /*
+> > >>>    * Subtle: (1 << PAGE_SHIFT) is an int, not an unsigned long. So if we
+> > >>>    * assign PAGE_MASK to a larger type it gets extended the way we want
+> > >>>    * (i.e. with 1s in the high bits)
+> > >>>    */
+> > >>> #define PAGE_MASK      (~((1 << PAGE_SHIFT) - 1))
+> > >>>
+> > >>> #define PAGE_SIZE        (1UL << PAGE_SHIFT)
+> > >>>
+> > >>>
+> > >>> So it would work I guess.
+> > >>
+> > >> But taking into account that sp must remain 16 bytes aligned, would it
+> > >> be better to do something like ?
+> > >>
+> > >> 	sp -= prandom_u32_max(PAGE_SIZE >> 4) << 4;
+> > >>
+> > >> 	return sp;
+> > > 
+> > > Does this assume that sp is already aligned at the beginning of the
+> > > function? I'd assume from the function's name that this isn't the
+> > > case?
+> > 
+> > Ah you are right, I overlooked it.
+> 
+> So I think to stay on the safe side, I'm going to go with
+> `prandom_u32_max(PAGE_SIZE)`. Sound good?
 
-Note that this ends up tracing any IPI sent via __smp_call_single_queue(),
-which covers __ttwu_queue_wakelist() and irq_work_queue_on() "for free".
+Given these kinds of less mechanical changes, it may make sense to split
+these from the "trivial" conversions in a treewide patch. The chance of
+needing a revert from the simple 1:1 conversions is much lower than the
+need to revert by-hand changes.
 
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
----
- arch/arm/kernel/smp.c   | 3 ---
- arch/arm64/kernel/smp.c | 1 -
- kernel/sched/core.c     | 7 +++++--
- kernel/smp.c            | 4 ++++
- 4 files changed, 9 insertions(+), 6 deletions(-)
+The Cocci script I suggested in my v1 review gets 80% of the first
+patch, for example.
 
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index 978db2d96b44..3b280d55c1c4 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -48,9 +48,6 @@
- #include <asm/mach/arch.h>
- #include <asm/mpu.h>
- 
--#define CREATE_TRACE_POINTS
--#include <trace/events/ipi.h>
--
- /*
-  * as from 2.5, kernels no longer have an init_tasks structure
-  * so we need some other way of telling a new secondary core
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index ffc5d76cf695..937d2623e06b 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -51,7 +51,6 @@
- #include <asm/ptrace.h>
- #include <asm/virt.h>
- 
--#define CREATE_TRACE_POINTS
- #include <trace/events/ipi.h>
- 
- DEFINE_PER_CPU_READ_MOSTLY(int, cpu_number);
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 60fdc0faf1c9..14e5e137172f 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -81,6 +81,7 @@
- #include <linux/sched/rseq_api.h>
- #include <trace/events/sched.h>
- #undef CREATE_TRACE_POINTS
-+#include <trace/events/ipi.h>
- 
- #include "sched.h"
- #include "stats.h"
-@@ -3753,10 +3754,12 @@ void send_call_function_single_ipi(int cpu)
- {
- 	struct rq *rq = cpu_rq(cpu);
- 
--	if (!set_nr_if_polling(rq->idle))
-+	if (!set_nr_if_polling(rq->idle)) {
-+		trace_ipi_send_cpu(_RET_IP_, cpu);
- 		arch_send_call_function_single_ipi(cpu);
--	else
-+	} else {
- 		trace_sched_wake_idle_without_ipi(cpu);
-+	}
- }
- 
- /*
-diff --git a/kernel/smp.c b/kernel/smp.c
-index e8cdc025a046..7a7a22d69972 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -26,6 +26,10 @@
- #include <linux/sched/debug.h>
- #include <linux/jump_label.h>
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/ipi.h>
-+#undef CREATE_TRACE_POINTS
-+
- #include "smpboot.h"
- #include "sched/smp.h"
- 
 -- 
-2.31.1
-
+Kees Cook
