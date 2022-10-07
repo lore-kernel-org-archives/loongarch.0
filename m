@@ -1,49 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D14468F
-	for <loongarch@lists.linux.dev>; Fri,  7 Oct 2022 15:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F6F468F
+	for <loongarch@lists.linux.dev>; Fri,  7 Oct 2022 15:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1665157554;
+	s=mimecast20190719; t=1665157565;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LMgaXogbXPhOabUcxt7UADYdICMU0udr545Ze04p+j4=;
-	b=Ccdd1y68C2ekmrFHqSG9jbEK3A1XBnnspQPMR5rK0O1F03ZbM5GN1PYYXtela+4BdUnNe+
-	+bCgOflR/x6wjJYj0OjU0B3tcU8Pdj0R6VB1IqMALJltYpm0cMk0ndshRHhjqzz5nCNJ3b
-	xF1+eZRVpEZdqMZu3ozwaqOUc1wYQOE=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=O4Pqcbma7I8CmezCzayfM2Dc1cTkJUS9uBKY5V7UMK0=;
+	b=hEpSQDSXTmU4TXzn3CobSSa19PwZL2DdvmXD7W1YhpLFdM83G7XIg5FQUNU5hBlh6iUST6
+	I2zkOmTKmDytC4KoDEEKUI78Vm0uQi7a6HXHSttIrwEJlokDRzLofkJn4+TkOX+UQ2R89M
+	7jT7pmuZ0vJqy2o2Tw7r0nRx+9+7cOA=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-47-WD5UmrzNO6GxH3CYMgVDYw-1; Fri, 07 Oct 2022 11:45:53 -0400
-X-MC-Unique: WD5UmrzNO6GxH3CYMgVDYw-1
-Received: by mail-wm1-f69.google.com with SMTP id b7-20020a05600c4e0700b003bde2d860d1so2841102wmq.8
-        for <loongarch@lists.linux.dev>; Fri, 07 Oct 2022 08:45:53 -0700 (PDT)
+ us-mta-642-oXCvh6akPwa29TUEQGHcqw-1; Fri, 07 Oct 2022 11:46:04 -0400
+X-MC-Unique: oXCvh6akPwa29TUEQGHcqw-1
+Received: by mail-wr1-f72.google.com with SMTP id s4-20020adfbc04000000b0022e03fc10a9so1567448wrg.15
+        for <loongarch@lists.linux.dev>; Fri, 07 Oct 2022 08:46:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LMgaXogbXPhOabUcxt7UADYdICMU0udr545Ze04p+j4=;
-        b=ts+D0SbW0YxUGDzmeARQcSY0sEm2Fg4Zo9FqaEaJmdu9O+oUOVDnxMzIaCJsIXTu/D
-         o/h5dRfUbWxmIwWThKjWKdCCgadu87oVLA9wnyuqo41+1y3d+xOmsxBrEFsETlBvj0RU
-         FNYy1vaziXAEurEvHgetB6oNhGnaGRHz5kIRcMWwYHCe7CqrYctoxBm5FMZyRZKRGb9n
-         V8VhC0ZsK3fpZcNc4luUSBvTksfNgoxtRl4s3FnSUDqWsP6nP+kjeJeCrHI6WQ7/jU8k
-         uHJRnKc7S2Rvbz2/Cp3N4VDoxUoJedLPNoK1ayE0PveRfbcr3rl++bB/a0kpUP6t4Kf5
-         PkNQ==
-X-Gm-Message-State: ACrzQf0aPFzg9zdZLChyVDoeku6xm2Ni4dhFsEhdfQXgerBWMrVQUCPj
-	7ga3akqJFjC/J+xScrNCQjVrTXcwBrmcsrXN43MFoVc2iiAjIeEqyPGcFL5Yy85NzCJ87q1TKR2
-	LZd1/uBMTlsv8CigawcC5
-X-Received: by 2002:a05:600c:458d:b0:3c3:bf4e:5c60 with SMTP id r13-20020a05600c458d00b003c3bf4e5c60mr1331386wmo.189.1665157552453;
-        Fri, 07 Oct 2022 08:45:52 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM53pm8pDMF8tAvcpsQYCd9DEpAeQROExvsQCCHMjVMrngwHmXq+ii3h5Ne2OaugbAyINh7v6Q==
-X-Received: by 2002:a05:600c:458d:b0:3c3:bf4e:5c60 with SMTP id r13-20020a05600c458d00b003c3bf4e5c60mr1331352wmo.189.1665157552172;
-        Fri, 07 Oct 2022 08:45:52 -0700 (PDT)
+        bh=O4Pqcbma7I8CmezCzayfM2Dc1cTkJUS9uBKY5V7UMK0=;
+        b=AFdEwF91tf5TK9nwg+thZ3I6qM2umGlZUgA9+5QASbLqwt3Zkwf/jnlZ6VnPIZoutV
+         +u5gzukt8lNBVGndGydEU7G3CjKAUDzpZ2znz/UvC8q40NAVD1jnHDAFy9H7hI6xJfjX
+         J2nKT9oGMp27CAWIOuaPQNykKY7/n/1JT1qHsL9moSbOJP9RYPEqox5+Tm4MqF0Js5yo
+         j9C+qOvcvifSH700SW8chqD8x9z1NQG3fahA3rhESgFFd+sxpNRGKt3cQTBKC9F4lCJa
+         g0kd/BkaqS4HgXp91f/jAOcY894GJZC1z8S1aPqnAshfoUTi5bTnbi+UxxloNqBOItxq
+         qr8A==
+X-Gm-Message-State: ACrzQf2QTUdx/tCy+5tXYjXhRcBegnkoow4QOQz8SEbqhLVJAzhfAlu2
+	P1Ux9T0asUJoH5yCpOkj9Mf4p39LmIgToVy9/IxY149nW31bvGRd5ykApAwKgs4z53ccJT5ONMz
+	QYkZMfHCYDt6dmeRKeTCp
+X-Received: by 2002:a05:600c:474c:b0:3b4:cbca:5677 with SMTP id w12-20020a05600c474c00b003b4cbca5677mr3615501wmo.76.1665157563629;
+        Fri, 07 Oct 2022 08:46:03 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM5BU2FP8ts0HH9McA8hGqt4EcEkhUio8tUw5hjcE8rRRaWGVB+HCzlKu55T50nu8VVd2MVS1w==
+X-Received: by 2002:a05:600c:474c:b0:3b4:cbca:5677 with SMTP id w12-20020a05600c474c00b003b4cbca5677mr3615475wmo.76.1665157563388;
+        Fri, 07 Oct 2022 08:46:03 -0700 (PDT)
 Received: from vschneid.remote.csb ([149.71.65.94])
-        by smtp.gmail.com with ESMTPSA id i18-20020adfb652000000b0022e38c93195sm2339428wre.34.2022.10.07.08.45.50
+        by smtp.gmail.com with ESMTPSA id i18-20020adfb652000000b0022e38c93195sm2339428wre.34.2022.10.07.08.45.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Oct 2022 08:45:51 -0700 (PDT)
+        Fri, 07 Oct 2022 08:46:01 -0700 (PDT)
 From: Valentin Schneider <vschneid@redhat.com>
 To: linux-alpha@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -82,9 +82,9 @@ Cc: "Paul E. McKenney" <paulmck@kernel.org>,
 	Nicholas Piggin <npiggin@gmail.com>,
 	Guo Ren <guoren@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>
-Subject: [RFC PATCH 1/5] trace: Add trace_ipi_send_{cpu, cpumask}
-Date: Fri,  7 Oct 2022 16:45:29 +0100
-Message-Id: <20221007154533.1878285-1-vschneid@redhat.com>
+Subject: [RFC PATCH 3/5] smp: Add a multi-CPU variant to send_call_function_single_ipi()
+Date: Fri,  7 Oct 2022 16:45:31 +0100
+Message-Id: <20221007154533.1878285-3-vschneid@redhat.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20221007154145.1877054-1-vschneid@redhat.com>
 References: <20221007154145.1877054-1-vschneid@redhat.com>
@@ -99,53 +99,40 @@ X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-trace_ipi_raise is unsuitable for generically tracing IPI sources; add a
-variant of it that takes a callsite and a CPU. Define a macro helper for
-handling IPIs sent to multiple CPUs.
+This simply wraps around the arch function and prepends it with a
+tracepoint, bringing parity with send_call_function_single_ipi().
 
 Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 ---
- include/trace/events/ipi.h | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ kernel/smp.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/include/trace/events/ipi.h b/include/trace/events/ipi.h
-index 0be71dad6ec0..fd2f2aeb36fe 100644
---- a/include/trace/events/ipi.h
-+++ b/include/trace/events/ipi.h
-@@ -35,6 +35,33 @@ TRACE_EVENT(ipi_raise,
- 	TP_printk("target_mask=%s (%s)", __get_bitmask(target_cpus), __entry->reason)
- );
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 7a7a22d69972..387735180aed 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -160,6 +160,12 @@ void __init call_function_init(void)
+ 	smpcfd_prepare_cpu(smp_processor_id());
+ }
  
-+TRACE_EVENT(ipi_send_cpu,
++static inline void send_call_function_ipi_mask(const struct cpumask *mask)
++{
++	trace_ipi_send_cpumask(_RET_IP_, mask);
++	arch_send_call_function_ipi_mask(mask);
++}
 +
-+	TP_PROTO(unsigned long callsite, unsigned int cpu),
-+
-+	TP_ARGS(callsite, cpu),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, callsite)
-+		__field(unsigned int, cpu)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->callsite = callsite;
-+		__entry->cpu      = cpu;
-+	),
-+
-+	TP_printk("callsite=%pS target_cpu=%d", (void *)__entry->callsite, __entry->cpu)
-+);
-+
-+#define trace_ipi_send_cpumask(callsite, mask) do {		\
-+	if (static_key_false(&__tracepoint_ipi_send_cpu.key)) { \
-+		int cpu;					\
-+		for_each_cpu(cpu, mask)				\
-+			trace_ipi_send_cpu(callsite, cpu);	\
-+	}							\
-+} while (0)
-+
- DECLARE_EVENT_CLASS(ipi_handler,
+ #ifdef CONFIG_CSD_LOCK_WAIT_DEBUG
  
- 	TP_PROTO(const char *reason),
+ static DEFINE_STATIC_KEY_FALSE(csdlock_debug_enabled);
+@@ -970,7 +976,7 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+ 		if (nr_cpus == 1)
+ 			send_call_function_single_ipi(last_cpu);
+ 		else if (likely(nr_cpus > 1))
+-			arch_send_call_function_ipi_mask(cfd->cpumask_ipi);
++			send_call_function_ipi_mask(cfd->cpumask_ipi);
+ 
+ 		cfd_seq_store(this_cpu_ptr(&cfd_seq_local)->pinged, this_cpu, CFD_SEQ_NOCPU, CFD_SEQ_PINGED);
+ 	}
 -- 
 2.31.1
 
