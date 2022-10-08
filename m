@@ -1,103 +1,115 @@
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A892410F3;
-	Sat,  8 Oct 2022 07:34:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=zZQ88pPgtouR86lBpg+x1aw/csf1v9uxp8peXKk1cb0=;
-  b=j3ST7SGnTYT/Y5wi6lWHZVyoTN6fTohW3n4oD0o9maLZmdhUccDAwXNB
-   CrIK4oBY5dqegOsWJRE3rrwkzrofbuFPsdX2RZ0LPGmouitc76P+QhHmS
-   HaFrH+aHq9cCtdo04t374NKt8+gA8QS7/hDJOozImMV5dxKm1CxmPsJ2W
-   U=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="5.95,169,1661810400"; 
-   d="scan'208";a="56593050"
-Received: from 51.123.68.85.rev.sfr.net (HELO hadrien) ([85.68.123.51])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2022 09:33:09 +0200
-Date: Sat, 8 Oct 2022 09:33:08 +0200 (CEST)
-From: Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To: Kees Cook <keescook@chromium.org>
-cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-kernel@vger.kernel.org, 
-    patches@lists.linux.dev, Andreas Noever <andreas.noever@gmail.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, 
-    =?ISO-8859-15?Q?Christoph_B=F6hmwalder?= <christoph.boehmwalder@linbit.com>, 
-    Christoph Hellwig <hch@lst.de>, 
-    Christophe Leroy <christophe.leroy@csgroup.eu>, 
-    Daniel Borkmann <daniel@iogearbox.net>, Dave Airlie <airlied@redhat.com>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Florian Westphal <fw@strlen.de>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    "H. Peter Anvin" <hpa@zytor.com>, Heiko Carstens <hca@linux.ibm.com>, 
-    Helge Deller <deller@gmx.de>, Herbert Xu <herbert@gondor.apana.org.au>, 
-    Huacai Chen <chenhuacai@kernel.org>, Hugh Dickins <hughd@google.com>, 
-    Jakub Kicinski <kuba@kernel.org>, 
-    "James E. J. Bottomley" <jejb@linux.ibm.com>, Jan Kara <jack@suse.com>, 
-    Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>, 
-    Johannes Berg <johannes@sipsolutions.net>, 
-    Jonathan Corbet <corbet@lwn.net>, Jozsef Kadlecsik <kadlec@netfilter.org>, 
-    KP Singh <kpsingh@kernel.org>, Marco Elver <elver@google.com>, 
-    Mauro Carvalho Chehab <mchehab@kernel.org>, 
-    Michael Ellerman <mpe@ellerman.id.au>, 
-    Pablo Neira Ayuso <pablo@netfilter.org>, Paolo Abeni <pabeni@redhat.com>, 
-    Peter Zijlstra <peterz@infradead.org>, Richard Weinberger <richard@nod.at>, 
-    Russell King <linux@armlinux.org.uk>, Theodore Ts'o <tytso@mit.edu>, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Thomas Gleixner <tglx@linutronix.de>, Thomas Graf <tgraf@suug.ch>, 
-    Ulf Hansson <ulf.hansson@linaro.org>, 
-    Vignesh Raghavendra <vigneshr@ti.com>, WANG Xuerui <kernel@xen0n.name>, 
-    Will Deacon <will@kernel.org>, Yury Norov <yury.norov@gmail.com>, 
-    dri-devel@lists.freedesktop.org, kasan-dev@googlegroups.com, 
-    kernel-janitors@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-    linux-block@vger.kernel.org, linux-crypto@vger.kernel.org, 
-    linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-    linux-media@vger.kernel.org, linux-mips@vger.kernel.org, 
-    linux-mm@kvack.org, linux-mmc@vger.kernel.org, 
-    linux-mtd@lists.infradead.org, linux-nvme@lists.infradead.org, 
-    linux-parisc@vger.kernel.org, linux-rdma@vger.kernel.org, 
-    linux-s390@vger.kernel.org, linux-um@lists.infradead.org, 
-    linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, 
-    linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-    netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org, 
-    Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v4 2/6] treewide: use prandom_u32_max() when possible
-In-Reply-To: <53DD0148-ED15-4294-8496-9E4B4C7AD061@chromium.org>
-Message-ID: <alpine.DEB.2.22.394.2210080925390.2928@hadrien>
-References: <53DD0148-ED15-4294-8496-9E4B4C7AD061@chromium.org>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEA55A20
+	for <loongarch@lists.linux.dev>; Sat,  8 Oct 2022 09:04:06 +0000 (UTC)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPGv7O0FjQlooAA--.21044S2;
+	Sat, 08 Oct 2022 16:59:39 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Do not create sysfs control file for io master CPUs
+Date: Sat,  8 Oct 2022 16:59:39 +0800
+Message-Id: <1665219579-2501-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8DxPGv7O0FjQlooAA--.21044S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr4kGFy5tw4DArWDurWxWFg_yoW8tr4fpr
+	yIkFyUKrWrWF1kJay0q34q9ryYy3srW347Za12kayrCa9rJrn8ZF1ktFn3XF15Jay0gFWF
+	vF95A3yS9F45Jw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8ZwCF04k2
+	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07bw89_UUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-> >> @minus_one@
-> >> expression FULL;
-> >> @@
-> >>
-> >> - (get_random_int() & ((FULL) - 1)
-> >> + prandom_u32_max(FULL)
-> >
-> >Ahh, well, okay, this is the example I mentioned above. Only works if
-> >FULL is saturated. Any clever way to get coccinelle to prove that? Can
-> >it look at the value of constants?
->
-> I'm not sure if Cocci will do that without a lot of work. The literals trick I used below would need a lot of fanciness. :)
+Now io master CPUs are not hotpluggable on LoongArch, in the current code,
+only /sys/devices/system/cpu/cpu0/online is not created, let us set the
+hotpluggable field of all the io master CPUs as 0, then prevent to create
+sysfs control file for the other io master CPUs which confuses some user
+space tools. This is similar with commit 9cce844abf07 ("MIPS: CPU#0 is not
+hotpluggable").
 
-If FULL is an arbitrary expression, it would not be easy to automate.  If
-it is a constant then you can use python/ocaml to analyze its value.  But
-if it's a #define constant then you would need a previous rule to match the
-#define and find that value.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/kernel/smp.c      |  8 --------
+ arch/loongarch/kernel/topology.c | 12 +++++++++++-
+ 2 files changed, 11 insertions(+), 9 deletions(-)
 
-For LITERAL, I think you could just do constant int LITERAL; for the
-metavariable declaration.
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index b5fab30..ef89292 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -240,19 +240,11 @@ void loongson3_smp_finish(void)
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+ 
+-static bool io_master(int cpu)
+-{
+-	return test_bit(cpu, &loongson_sysconf.cores_io_master);
+-}
+-
+ int loongson3_cpu_disable(void)
+ {
+ 	unsigned long flags;
+ 	unsigned int cpu = smp_processor_id();
+ 
+-	if (io_master(cpu))
+-		return -EBUSY;
+-
+ #ifdef CONFIG_NUMA
+ 	numa_remove_cpu(cpu);
+ #endif
+diff --git a/arch/loongarch/kernel/topology.c b/arch/loongarch/kernel/topology.c
+index ab1a75c..7e7a77f 100644
+--- a/arch/loongarch/kernel/topology.c
++++ b/arch/loongarch/kernel/topology.c
+@@ -5,6 +5,7 @@
+ #include <linux/node.h>
+ #include <linux/nodemask.h>
+ #include <linux/percpu.h>
++#include <asm/bootinfo.h>
+ 
+ static DEFINE_PER_CPU(struct cpu, cpu_devices);
+ 
+@@ -33,6 +34,11 @@ void arch_unregister_cpu(int cpu)
+ EXPORT_SYMBOL(arch_unregister_cpu);
+ #endif
+ 
++static bool io_master(int cpu)
++{
++	return test_bit(cpu, &loongson_sysconf.cores_io_master);
++}
++
+ static int __init topology_init(void)
+ {
+ 	int i, ret;
+@@ -40,7 +46,11 @@ static int __init topology_init(void)
+ 	for_each_present_cpu(i) {
+ 		struct cpu *c = &per_cpu(cpu_devices, i);
+ 
+-		c->hotpluggable = !!i;
++		if (io_master(i))
++			c->hotpluggable = 0;
++		else
++			c->hotpluggable = 1;
++
+ 		ret = register_cpu(c, i);
+ 		if (ret < 0)
+ 			pr_warn("topology_init: register_cpu %d failed (%d)\n", i, ret);
+-- 
+2.1.0
 
-julia
