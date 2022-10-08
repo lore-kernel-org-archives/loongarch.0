@@ -1,176 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63461C2A
-	for <loongarch@lists.linux.dev>; Sat,  8 Oct 2022 14:58:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA0A2C433B5
-	for <loongarch@lists.linux.dev>; Sat,  8 Oct 2022 14:58:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1665241124;
-	bh=mZREad85GFyRC2zuhjz6HgZ4PomVqyUIdo/Tef4rEYw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jsRh3im9Yy+zKWZsofNNV9RiKaIdInxL/4hhjV3t2cv6w7o4/qmuCBJuf1FWzzB6q
-	 PvpbrlKB5I0DE0oMtJ7KRhDV1mfVcuSAX8jSBtS+eF2wKGbkRvXGTURCM6nv6v0d2/
-	 gbYxuYDpseJkDyR2Bi7anLjsp52E2w1M0PTvBLoSxuBFFLC0YyjnQLb/XbqjdmRgHi
-	 w7eMDrBYpYGojJ8thrvAifGAZBCEhBvytUwv+hrtsKpxpeQi6zfKpP5o9bouZOWJq0
-	 xtDUQJ5IsUqAET1ziZIKu/k/26ntcjikmBdz5gRJ1dYg8raBIWr71DcLWzve7wEzyY
-	 xh9bJqbX7QzYw==
-Received: by mail-ej1-f43.google.com with SMTP id a26so16820407ejc.4
-        for <loongarch@lists.linux.dev>; Sat, 08 Oct 2022 07:58:44 -0700 (PDT)
-X-Gm-Message-State: ACrzQf1r+7YfZAcetbD/iHgNiUc0FWMorLJLW/5RiNwe/yrPa6wTTE3q
-	XB9iJARYvdtmhy76wPDR6gu2OD40Z7LzdoWe5BU=
-X-Google-Smtp-Source: AMsMyM7z83V/I+HAsI/rEZvezI0C+n0zjmsObD3snZ7UspkdC1pQaxLNVe+pPCiltXmNAPk4iDRUwri561fXSYRjN98=
-X-Received: by 2002:a17:906:fe45:b0:788:15a5:7495 with SMTP id
- wz5-20020a170906fe4500b0078815a57495mr8087425ejb.633.1665241122838; Sat, 08
- Oct 2022 07:58:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8521C33;
+	Sat,  8 Oct 2022 15:37:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6325DC433D6;
+	Sat,  8 Oct 2022 15:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1665243455;
+	bh=iZs4LS2c78mWTK7VP9rYv0Gd7Qjrrk7FRFLOtLI7jIE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lpPo/FwsRx8A1pEIFq0YgzBE1yJUA/ftclR7pjjmkm3BCTs9ykaCaGipjTgZ2RrqF
+	 G0/1Rl4a9+kU2ICW186Oe5J0xg7g1U3glZrfVWobe1UK+MUIqWbN273i1QVNGsmeQ9
+	 ddRoAQjkMz3vc5+dmmxBpuMuIV8SZkRQZD25nr8M=
+Date: Sat, 8 Oct 2022 17:38:15 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Dave Airlie <airlied@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Florian Westphal <fw@strlen.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Hugh Dickins <hughd@google.com>, Jakub Kicinski <kuba@kernel.org>,
+	"James E . J . Bottomley" <jejb@linux.ibm.com>,
+	Jan Kara <jack@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	KP Singh <kpsingh@kernel.org>, Kees Cook <keescook@chromium.org>,
+	Marco Elver <elver@google.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Theodore Ts'o <tytso@mit.edu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Thomas Graf <tgraf@suug.ch>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, dri-devel@lists.freedesktop.org,
+	kasan-dev@googlegroups.com, kernel-janitors@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-nvme@lists.infradead.org, linux-parisc@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-um@lists.infradead.org, linux-usb@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 0/7] treewide cleanup of random integer usage
+Message-ID: <Y0GZZ71Ugh9Ev99R@kroah.com>
+References: <20221008055359.286426-1-Jason@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1665219579-2501-1-git-send-email-yangtiezhu@loongson.cn>
- <922e6d73-78e5-8852-788b-017d0dbe4df5@xen0n.name> <75f1aa18-2e84-107a-f0b6-3e4b753ab8b1@loongson.cn>
- <b4803250-e66c-0c0e-15c9-35d8fdfb09ea@loongson.cn>
-In-Reply-To: <b4803250-e66c-0c0e-15c9-35d8fdfb09ea@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 8 Oct 2022 22:58:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H44XfSrqMHudkra_yup86B6OsTQQa9kQRvd=Xi6jTNy3Q@mail.gmail.com>
-Message-ID: <CAAhV-H44XfSrqMHudkra_yup86B6OsTQQa9kQRvd=Xi6jTNy3Q@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Do not create sysfs control file for io master CPUs
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221008055359.286426-1-Jason@zx2c4.com>
 
-On Sat, Oct 8, 2022 at 6:44 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
->
->
-> On 10/08/2022 05:51 PM, Tiezhu Yang wrote:
-> >
-> >
-> > On 10/08/2022 05:27 PM, WANG Xuerui wrote:
-> >> On 2022/10/8 16:59, Tiezhu Yang wrote:
-> >>> Now io master CPUs are not hotpluggable on LoongArch, in the current
-> >>> code,
-> >>> only /sys/devices/system/cpu/cpu0/online is not created, let us set the
-> >>> hotpluggable field of all the io master CPUs as 0, then prevent to
-> >>> create
-> >>> sysfs control file for the other io master CPUs which confuses some user
-> >>> space tools. This is similar with commit 9cce844abf07 ("MIPS: CPU#0 is
-> >>> not
-> >>> hotpluggable").
-> >>>
-> >>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> >>> ---
-> >>>   arch/loongarch/kernel/smp.c      |  8 --------
-> >>>   arch/loongarch/kernel/topology.c | 12 +++++++++++-
-> >>>   2 files changed, 11 insertions(+), 9 deletions(-)
-> >>>
-> >>> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> >>> index b5fab30..ef89292 100644
-> >>> --- a/arch/loongarch/kernel/smp.c
-> >>> +++ b/arch/loongarch/kernel/smp.c
-> >>> @@ -240,19 +240,11 @@ void loongson3_smp_finish(void)
-> >>>     #ifdef CONFIG_HOTPLUG_CPU
-> >>>   -static bool io_master(int cpu)
-> >>> -{
-> >>> -    return test_bit(cpu, &loongson_sysconf.cores_io_master);
-> >>> -}
-> >>> -
-> >>>   int loongson3_cpu_disable(void)
-> >>>   {
-> >>>       unsigned long flags;
-> >>>       unsigned int cpu = smp_processor_id();
-> >>>   -    if (io_master(cpu))
-> >>> -        return -EBUSY;
-> >>> -
-> >>
-> >> Could this get invoked from somewhere other than the sysfs entries that
-> >> "confuse user-space tools", e.g. from somewhere else in kernel land? If
-> >> so (or if we can't rule out the possibility) keeping the guard here
-> >> might prove more prudent.
-> >>
->
-> takedown_cpu()  kernel/cpu.c
-> take_cpu_down()  kernel/cpu.c
-> __cpu_disable()  arch/loongarch/include/asm/smp.h
-> loongson3_cpu_disable()  arch/loongarch/kernel/smp.c
->
-> So I think you are right, keeping the guard here might prove more
-> prudent, then it is better move io_master() to a header file that
-> can be used in smp.c and topology.c.
-Agree, please send V2, thanks.
+On Fri, Oct 07, 2022 at 11:53:52PM -0600, Jason A. Donenfeld wrote:
+> Changes v4->v5:
+> - Coccinelle is now used for as much mechanical aspects as possible,
+>   with mechanical parts split off from non-mechanical parts. This should
+>   drastically reduce the amount of code that needs to be reviewed
+>   carefully. Each commit mentions now if it was done by hand or is
+>   mechanical.
 
+All look good to me, thanks for the cleanups.
 
-Huacai
->
-> Let us wait for more review comments, thank you.
->
-> >
-> > If c->hotpluggable is 0, it will not generate a control file in sysfs
-> > for this CPU, for example:
-> >
-> > [root@linux loongson]# cat /sys/devices/system/cpu/cpu0/online
-> > cat: /sys/devices/system/cpu/cpu0/online: No such file or directory
-> > [root@linux loongson]# echo 0 > /sys/devices/system/cpu/cpu0/online
-> > bash: /sys/devices/system/cpu/cpu0/online: Permission denied
-> >
-> > So no need to check it here, just remove the code.
-> >
-> > This was done in commit cbab54d9c2b2 ("MIPS: No need to check CPU 0 in
-> > {loongson3,bmips,octeon}_cpu_disable()").
-> >
-> >>>   #ifdef CONFIG_NUMA
-> >>>       numa_remove_cpu(cpu);
-> >>>   #endif
-> >>> diff --git a/arch/loongarch/kernel/topology.c
-> >>> b/arch/loongarch/kernel/topology.c
-> >>> index ab1a75c..7e7a77f 100644
-> >>> --- a/arch/loongarch/kernel/topology.c
-> >>> +++ b/arch/loongarch/kernel/topology.c
-> >>> @@ -5,6 +5,7 @@
-> >>>   #include <linux/node.h>
-> >>>   #include <linux/nodemask.h>
-> >>>   #include <linux/percpu.h>
-> >>> +#include <asm/bootinfo.h>
-> >>>     static DEFINE_PER_CPU(struct cpu, cpu_devices);
-> >>>   @@ -33,6 +34,11 @@ void arch_unregister_cpu(int cpu)
-> >>>   EXPORT_SYMBOL(arch_unregister_cpu);
-> >>>   #endif
-> >>>   +static bool io_master(int cpu)
-> >>> +{
-> >>> +    return test_bit(cpu, &loongson_sysconf.cores_io_master);
-> >>> +}
-> >>> +
-> >>>   static int __init topology_init(void)
-> >>>   {
-> >>>       int i, ret;
-> >>> @@ -40,7 +46,11 @@ static int __init topology_init(void)
-> >>>       for_each_present_cpu(i) {
-> >>>           struct cpu *c = &per_cpu(cpu_devices, i);
-> >>>   -        c->hotpluggable = !!i;
-> >>> +        if (io_master(i))
-> >>> +            c->hotpluggable = 0;
-> >>> +        else
-> >>> +            c->hotpluggable = 1;
-> >>> +
-> >>
-> >> This is just "c->hotpluggable = !io_master(i);".
-> >>
-> >
-> > Yes, I am OK either way, if it is necessary to send v2,
-> > please let me know.
-> >
-> >>>           ret = register_cpu(c, i);
-> >>>           if (ret < 0)
-> >>>               pr_warn("topology_init: register_cpu %d failed (%d)\n",
-> >>> i, ret);
-> >> Other changes should be okay as they are in line with the previous MIPS
-> >> change you referenced, but let's see what Huacai thinks.
-> >>
-> >
-> > Thanks,
-> > Tiezhu
->
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
