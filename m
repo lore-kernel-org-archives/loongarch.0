@@ -1,81 +1,108 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4405AECA
-	for <loongarch@lists.linux.dev>; Sat,  8 Oct 2022 02:52:09 +0000 (UTC)
-Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTWvG5UBjIB8oAA--.19935S4;
-	Sat, 08 Oct 2022 10:51:51 +0800 (CST)
-From: Jianmin Lv <lvjianmin@loongson.cn>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Len Brown <lenb@kernel.org>,
-	rafael@kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: [PATCH V2 2/2] irqchip/loongson-liointc: Support to set irq type for ACPI path
-Date: Sat,  8 Oct 2022 10:51:50 +0800
-Message-Id: <20221008025150.10734-3-lvjianmin@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221008025150.10734-1-lvjianmin@loongson.cn>
-References: <20221008025150.10734-1-lvjianmin@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CD337E
+	for <loongarch@lists.linux.dev>; Sat,  8 Oct 2022 03:00:03 +0000 (UTC)
+Received: from [10.180.13.64] (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxTWus50BjQyEoAA--.19966S2;
+	Sat, 08 Oct 2022 10:59:56 +0800 (CST)
+Subject: Re: [PATCH v1 1/2] clocksource: loongson2_hpet: add hpet driver
+ support
+To: WANG Xuerui <kernel@xen0n.name>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Jianmin Lv <lvjianmin@loongson.cn>, Yun Liu <liuyun@loongson.cn>,
+ Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, loongarch@lists.linux.dev, zhuyinbo@loongson.cn
+References: <20220930093510.10781-1-zhuyinbo@loongson.cn>
+ <bc62d053-1e26-d7b7-3611-f0c9237d86f3@xen0n.name>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <1b1f167f-a9be-fc1c-ffe7-0fb1bdf7c429@loongson.cn>
+Date: Sat, 8 Oct 2022 10:59:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <bc62d053-1e26-d7b7-3611-f0c9237d86f3@xen0n.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxTWvG5UBjIB8oAA--.19935S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7JrWUCF17WFW5CFy5Zw4UCFg_yoWfKwc_u3
-	yIg3Z3Ga4rZF1xJr97uw1YvrWv9aykW3Wv9F45uasav3y8X343urW7Zw13Ga97Kr10vF97
-	AF1S9rySya47tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbaAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-	wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-	vE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-	87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4
-	CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
-	0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xS
-	Y4AK6svPMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_XrWUJr1UMxC20s026x
-	CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-	JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-	1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-	Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
-	UvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-CM-TRANSID:AQAAf8AxTWus50BjQyEoAA--.19966S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw1fJw4xXrW7GFWfAw15XFb_yoW8tFy3pF
+	4xG3Z8KrWDXr4fZwsxXryDCF98Cw1xJw15G3W7t3WkArykJF1jqr4jqa4Yg3W7Xr4rJ342
+	vFZYqr1UuFyDAF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
+	WxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE-syl42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
 
-For ACPI path, the xlate callback used IRQ_TYPE_NONE and ignored
-the irq type in intspec[1]. For supporting to set type for
-irqs of the irqdomain, intspec[1] should be used to get irq
-type.
 
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
----
- drivers/irqchip/irq-loongson-liointc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
-index 0da8716f8f24..838c8fa2d868 100644
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -167,7 +167,12 @@ static int liointc_domain_xlate(struct irq_domain *d, struct device_node *ctrlr,
- 	if (WARN_ON(intsize < 1))
- 		return -EINVAL;
- 	*out_hwirq = intspec[0] - GSI_MIN_CPU_IRQ;
--	*out_type = IRQ_TYPE_NONE;
-+
-+	if (intsize > 1)
-+		*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
-+	else
-+		*out_type = IRQ_TYPE_NONE;
-+
- 	return 0;
- }
- 
--- 
-2.31.1
+在 2022/9/30 下午10:43, WANG Xuerui 写道:
+> Hi,
+> 
+> On 9/30/22 17:35, Yinbo Zhu wrote:
+>> HPET (High Precision Event Timer) defines a new set of timers, which
+>> are used by the operating system to schedule threads, interrupt the
+>> kernel and interrupt the multimedia timer server. The operating
+>> system can assign different timers to different applications. By
+>> configuration, each timer can generate interrupt independently.
+>>
+>> The loongson2 HPET module includes a main count and three comparators
+>> , all of which are 32 bits wide. Among the three comparators, only
+>> one comparator supports periodic interrupt, all three comparators
+>> support non periodic interrupts.
+>>
+>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>> ---
+>>   MAINTAINERS                          |   6 +
+>>   arch/loongarch/kernel/time.c         |   3 +
+>>   drivers/clocksource/Kconfig          |   9 +
+>>   drivers/clocksource/Makefile         |   1 +
+>>   drivers/clocksource/loongson2_hpet.c | 332 +++++++++++++++++++++++++++
+>>   5 files changed, 351 insertions(+)
+>>   create mode 100644 drivers/clocksource/loongson2_hpet.c
+> 
+> Thanks for the contribution, but as HPET is a fairly common peripheral 
+> that have well standardized behavior, why not simply add DT support to 
+> the drivers/char/hpet.c and be done with it?
+At present, the drivers/char/hpet.c doesn't support DT(dts parse) and
+loongson2 soc wasn't belong to X86 or IA64 architecture, Although it is
+an option to add DT support for this driver, I consider that the hpet
+design of loongson2 series socs may not be universal. In addition, I
+notice that mips and x86 have their own hpet drivers. In order to reduce
+the impact on the public driver and make more flexible modifications to
+the loongson2 hpet driver under its own architecture, a separate
+loongson2 hpet driver was submitted.
+
+config HPET
+         bool "HPET - High Precision Event Timer" if (X86 || IA64)
+         default n
+         depends on ACPI
+         help
+           If you say Y here, you will have a miscdevice named 
+"/dev/hpet/".  Each
+           open selects one of the timers supported by the HPET.  The 
+timers are
+           non-periodic and/or periodic.
+
+
+BRs
+Yinbo Zhu.
+
+> 
 
