@@ -1,72 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF8FEDE
-	for <loongarch@lists.linux.dev>; Sat,  8 Oct 2022 14:58:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92011C433B5
-	for <loongarch@lists.linux.dev>; Sat,  8 Oct 2022 14:58:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63461C2A
+	for <loongarch@lists.linux.dev>; Sat,  8 Oct 2022 14:58:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA0A2C433B5
+	for <loongarch@lists.linux.dev>; Sat,  8 Oct 2022 14:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1665241104;
-	bh=aPQLhQqDhgqtTeKKu7I6BgunfElRN0VLe4/LVpiJj8Q=;
+	s=k20201202; t=1665241124;
+	bh=mZREad85GFyRC2zuhjz6HgZ4PomVqyUIdo/Tef4rEYw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SJ2U+BG/re37qpGCtt3ylT+on4KjrFXyfCEuFahc5V7IeLfifDA0XOELAlPeDySsJ
-	 3AsHED0Kcw3KLM0Ey2pDyesh5MYq1/DSgeMUceEf+7gi8InvmRem8uCuvT3yel+g+y
-	 X/ctAd9i3bWuByZjqvZMGibtLBNGuHOf512C/GGzlxbt1JbonmV3ik4f+6VWeTK9xu
-	 ORy8ieAJUrf5XMk9S07lgEzGb39APA3k1VAmNNoLaGpcIqGQnX3X6EKb5pM7As8vcG
-	 Q+dcRO8RIWq1knxSL2smEIUPSObaTJMjGyyQonuCTEmgy65yEks2BQXS2XY2nD3U3F
-	 m3zp/Q7kO6h0A==
-Received: by mail-ed1-f42.google.com with SMTP id w10so10551982edd.4
-        for <loongarch@lists.linux.dev>; Sat, 08 Oct 2022 07:58:24 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0QdMwqhaACzFHLXD7hrGyDGb7IBw9ZizRZRQ43a7z3fMC/cG9l
-	o9cVH/TZfNqmcQDUCvQ8b9f2pdYSVN5rGLXwDO0=
-X-Google-Smtp-Source: AMsMyM6tc39Kmj/GVcBx0J/xlI1xhKO7ntaFXB97jjzs9fTFqPC4XA07V2UJbpEf5LTfC+yYAolkU1xA83SO+5Ypajc=
-X-Received: by 2002:a05:6402:c81:b0:458:c428:173a with SMTP id
- cm1-20020a0564020c8100b00458c428173amr9336461edb.298.1665241102794; Sat, 08
- Oct 2022 07:58:22 -0700 (PDT)
+	b=jsRh3im9Yy+zKWZsofNNV9RiKaIdInxL/4hhjV3t2cv6w7o4/qmuCBJuf1FWzzB6q
+	 PvpbrlKB5I0DE0oMtJ7KRhDV1mfVcuSAX8jSBtS+eF2wKGbkRvXGTURCM6nv6v0d2/
+	 gbYxuYDpseJkDyR2Bi7anLjsp52E2w1M0PTvBLoSxuBFFLC0YyjnQLb/XbqjdmRgHi
+	 w7eMDrBYpYGojJ8thrvAifGAZBCEhBvytUwv+hrtsKpxpeQi6zfKpP5o9bouZOWJq0
+	 xtDUQJ5IsUqAET1ziZIKu/k/26ntcjikmBdz5gRJ1dYg8raBIWr71DcLWzve7wEzyY
+	 xh9bJqbX7QzYw==
+Received: by mail-ej1-f43.google.com with SMTP id a26so16820407ejc.4
+        for <loongarch@lists.linux.dev>; Sat, 08 Oct 2022 07:58:44 -0700 (PDT)
+X-Gm-Message-State: ACrzQf1r+7YfZAcetbD/iHgNiUc0FWMorLJLW/5RiNwe/yrPa6wTTE3q
+	XB9iJARYvdtmhy76wPDR6gu2OD40Z7LzdoWe5BU=
+X-Google-Smtp-Source: AMsMyM7z83V/I+HAsI/rEZvezI0C+n0zjmsObD3snZ7UspkdC1pQaxLNVe+pPCiltXmNAPk4iDRUwri561fXSYRjN98=
+X-Received: by 2002:a17:906:fe45:b0:788:15a5:7495 with SMTP id
+ wz5-20020a170906fe4500b0078815a57495mr8087425ejb.633.1665241122838; Sat, 08
+ Oct 2022 07:58:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221007201939.2755407-1-colin.i.king@gmail.com>
-In-Reply-To: <20221007201939.2755407-1-colin.i.king@gmail.com>
+References: <1665219579-2501-1-git-send-email-yangtiezhu@loongson.cn>
+ <922e6d73-78e5-8852-788b-017d0dbe4df5@xen0n.name> <75f1aa18-2e84-107a-f0b6-3e4b753ab8b1@loongson.cn>
+ <b4803250-e66c-0c0e-15c9-35d8fdfb09ea@loongson.cn>
+In-Reply-To: <b4803250-e66c-0c0e-15c9-35d8fdfb09ea@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 8 Oct 2022 22:58:10 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H721Wfkam+_+evNRXyuaio9oGqQQaDO6t-T31UdNp8gSQ@mail.gmail.com>
-Message-ID: <CAAhV-H721Wfkam+_+evNRXyuaio9oGqQQaDO6t-T31UdNp8gSQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Kconfig: Fix spelling mistake "delibrately" -> "deliberately"
-To: Colin Ian King <colin.i.king@gmail.com>
+Date: Sat, 8 Oct 2022 22:58:30 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H44XfSrqMHudkra_yup86B6OsTQQa9kQRvd=Xi6jTNy3Q@mail.gmail.com>
+Message-ID: <CAAhV-H44XfSrqMHudkra_yup86B6OsTQQa9kQRvd=Xi6jTNy3Q@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Do not create sysfs control file for io master CPUs
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Queued for loongarch-next, thank you.
+On Sat, Oct 8, 2022 at 6:44 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+>
+>
+> On 10/08/2022 05:51 PM, Tiezhu Yang wrote:
+> >
+> >
+> > On 10/08/2022 05:27 PM, WANG Xuerui wrote:
+> >> On 2022/10/8 16:59, Tiezhu Yang wrote:
+> >>> Now io master CPUs are not hotpluggable on LoongArch, in the current
+> >>> code,
+> >>> only /sys/devices/system/cpu/cpu0/online is not created, let us set the
+> >>> hotpluggable field of all the io master CPUs as 0, then prevent to
+> >>> create
+> >>> sysfs control file for the other io master CPUs which confuses some user
+> >>> space tools. This is similar with commit 9cce844abf07 ("MIPS: CPU#0 is
+> >>> not
+> >>> hotpluggable").
+> >>>
+> >>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> >>> ---
+> >>>   arch/loongarch/kernel/smp.c      |  8 --------
+> >>>   arch/loongarch/kernel/topology.c | 12 +++++++++++-
+> >>>   2 files changed, 11 insertions(+), 9 deletions(-)
+> >>>
+> >>> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+> >>> index b5fab30..ef89292 100644
+> >>> --- a/arch/loongarch/kernel/smp.c
+> >>> +++ b/arch/loongarch/kernel/smp.c
+> >>> @@ -240,19 +240,11 @@ void loongson3_smp_finish(void)
+> >>>     #ifdef CONFIG_HOTPLUG_CPU
+> >>>   -static bool io_master(int cpu)
+> >>> -{
+> >>> -    return test_bit(cpu, &loongson_sysconf.cores_io_master);
+> >>> -}
+> >>> -
+> >>>   int loongson3_cpu_disable(void)
+> >>>   {
+> >>>       unsigned long flags;
+> >>>       unsigned int cpu = smp_processor_id();
+> >>>   -    if (io_master(cpu))
+> >>> -        return -EBUSY;
+> >>> -
+> >>
+> >> Could this get invoked from somewhere other than the sysfs entries that
+> >> "confuse user-space tools", e.g. from somewhere else in kernel land? If
+> >> so (or if we can't rule out the possibility) keeping the guard here
+> >> might prove more prudent.
+> >>
+>
+> takedown_cpu()  kernel/cpu.c
+> take_cpu_down()  kernel/cpu.c
+> __cpu_disable()  arch/loongarch/include/asm/smp.h
+> loongson3_cpu_disable()  arch/loongarch/kernel/smp.c
+>
+> So I think you are right, keeping the guard here might prove more
+> prudent, then it is better move io_master() to a header file that
+> can be used in smp.c and topology.c.
+Agree, please send V2, thanks.
+
 
 Huacai
-
-On Sat, Oct 8, 2022 at 4:19 AM Colin Ian King <colin.i.king@gmail.com> wrote:
 >
-> There is a spelling mistake in a commented section. Fix it.
+> Let us wait for more review comments, thank you.
 >
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> ---
->  arch/loongarch/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 898263224bbc..903096bd87f8 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -171,7 +171,7 @@ config STACKTRACE_SUPPORT
->         bool
->         default y
->
-> -# MACH_LOONGSON32 and MACH_LOONGSON64 are delibrately carried over from the
-> +# MACH_LOONGSON32 and MACH_LOONGSON64 are deliberately carried over from the
->  # MIPS Loongson code, to preserve Loongson-specific code paths in drivers that
->  # are shared between architectures, and specifically expecting the symbols.
->  config MACH_LOONGSON32
-> --
-> 2.37.3
+> >
+> > If c->hotpluggable is 0, it will not generate a control file in sysfs
+> > for this CPU, for example:
+> >
+> > [root@linux loongson]# cat /sys/devices/system/cpu/cpu0/online
+> > cat: /sys/devices/system/cpu/cpu0/online: No such file or directory
+> > [root@linux loongson]# echo 0 > /sys/devices/system/cpu/cpu0/online
+> > bash: /sys/devices/system/cpu/cpu0/online: Permission denied
+> >
+> > So no need to check it here, just remove the code.
+> >
+> > This was done in commit cbab54d9c2b2 ("MIPS: No need to check CPU 0 in
+> > {loongson3,bmips,octeon}_cpu_disable()").
+> >
+> >>>   #ifdef CONFIG_NUMA
+> >>>       numa_remove_cpu(cpu);
+> >>>   #endif
+> >>> diff --git a/arch/loongarch/kernel/topology.c
+> >>> b/arch/loongarch/kernel/topology.c
+> >>> index ab1a75c..7e7a77f 100644
+> >>> --- a/arch/loongarch/kernel/topology.c
+> >>> +++ b/arch/loongarch/kernel/topology.c
+> >>> @@ -5,6 +5,7 @@
+> >>>   #include <linux/node.h>
+> >>>   #include <linux/nodemask.h>
+> >>>   #include <linux/percpu.h>
+> >>> +#include <asm/bootinfo.h>
+> >>>     static DEFINE_PER_CPU(struct cpu, cpu_devices);
+> >>>   @@ -33,6 +34,11 @@ void arch_unregister_cpu(int cpu)
+> >>>   EXPORT_SYMBOL(arch_unregister_cpu);
+> >>>   #endif
+> >>>   +static bool io_master(int cpu)
+> >>> +{
+> >>> +    return test_bit(cpu, &loongson_sysconf.cores_io_master);
+> >>> +}
+> >>> +
+> >>>   static int __init topology_init(void)
+> >>>   {
+> >>>       int i, ret;
+> >>> @@ -40,7 +46,11 @@ static int __init topology_init(void)
+> >>>       for_each_present_cpu(i) {
+> >>>           struct cpu *c = &per_cpu(cpu_devices, i);
+> >>>   -        c->hotpluggable = !!i;
+> >>> +        if (io_master(i))
+> >>> +            c->hotpluggable = 0;
+> >>> +        else
+> >>> +            c->hotpluggable = 1;
+> >>> +
+> >>
+> >> This is just "c->hotpluggable = !io_master(i);".
+> >>
+> >
+> > Yes, I am OK either way, if it is necessary to send v2,
+> > please let me know.
+> >
+> >>>           ret = register_cpu(c, i);
+> >>>           if (ret < 0)
+> >>>               pr_warn("topology_init: register_cpu %d failed (%d)\n",
+> >>> i, ret);
+> >> Other changes should be okay as they are in line with the previous MIPS
+> >> change you referenced, but let's see what Huacai thinks.
+> >>
+> >
+> > Thanks,
+> > Tiezhu
 >
