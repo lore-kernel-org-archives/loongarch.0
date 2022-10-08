@@ -1,130 +1,154 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED86710FF
-	for <loongarch@lists.linux.dev>; Sat,  8 Oct 2022 09:35:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1665221240; bh=4RXWvHOEFN+CAwbA4Tw1ZvFjHe9LQrVJ2duQJHKG17k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=q3mjswVrpBCbTNjcTk3Yd3hwbrYITzgEg53yTepRDEBTKw4FRC/Z9auWZC0lkwlAN
-	 2mU0wwLGUHrU6cRBBKXT9vOAynSizu62c9XRn0R3SHhngWk6B29Yh7Q7YXtdLQOOW5
-	 mPlghUjUCe6Rei+jwxYxD4HmC+Pij0gJbj+9/03E=
-Received: from [100.100.35.204] (unknown [58.34.185.106])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 9BA07600CE;
-	Sat,  8 Oct 2022 17:27:20 +0800 (CST)
-Message-ID: <922e6d73-78e5-8852-788b-017d0dbe4df5@xen0n.name>
-Date: Sat, 8 Oct 2022 17:27:20 +0800
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0689510FF
+	for <loongarch@lists.linux.dev>; Sat,  8 Oct 2022 09:51:37 +0000 (UTC)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxBOInSEFjNGYoAA--.16373S3;
+	Sat, 08 Oct 2022 17:51:36 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Do not create sysfs control file for io master
+ CPUs
+To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>
+References: <1665219579-2501-1-git-send-email-yangtiezhu@loongson.cn>
+ <922e6d73-78e5-8852-788b-017d0dbe4df5@xen0n.name>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <75f1aa18-2e84-107a-f0b6-3e4b753ab8b1@loongson.cn>
+Date: Sat, 8 Oct 2022 17:51:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:107.0)
- Gecko/20100101 Thunderbird/107.0a1
-Subject: Re: [PATCH] LoongArch: Do not create sysfs control file for io master
- CPUs
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <1665219579-2501-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Language: en-US
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <1665219579-2501-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <922e6d73-78e5-8852-788b-017d0dbe4df5@xen0n.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8DxBOInSEFjNGYoAA--.16373S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGr17Zry3WFW3XryfGw1kuFg_yoW5Kr1kpF
+	yIkF4UKr48WF1kGay0gw1jvryYv3sxG34SvFW2ka48Ca4DArn09F1ktrn5XF17AFWFkFWF
+	vr9Y9rWS9Fy5J3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+	c2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU5iiSJUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 
-On 2022/10/8 16:59, Tiezhu Yang wrote:
-> Now io master CPUs are not hotpluggable on LoongArch, in the current code,
-> only /sys/devices/system/cpu/cpu0/online is not created, let us set the
-> hotpluggable field of all the io master CPUs as 0, then prevent to create
-> sysfs control file for the other io master CPUs which confuses some user
-> space tools. This is similar with commit 9cce844abf07 ("MIPS: CPU#0 is not
-> hotpluggable").
-> 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->   arch/loongarch/kernel/smp.c      |  8 --------
->   arch/loongarch/kernel/topology.c | 12 +++++++++++-
->   2 files changed, 11 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index b5fab30..ef89292 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -240,19 +240,11 @@ void loongson3_smp_finish(void)
->   
->   #ifdef CONFIG_HOTPLUG_CPU
->   
-> -static bool io_master(int cpu)
-> -{
-> -	return test_bit(cpu, &loongson_sysconf.cores_io_master);
-> -}
-> -
->   int loongson3_cpu_disable(void)
->   {
->   	unsigned long flags;
->   	unsigned int cpu = smp_processor_id();
->   
-> -	if (io_master(cpu))
-> -		return -EBUSY;
-> -
 
-Could this get invoked from somewhere other than the sysfs entries that 
-"confuse user-space tools", e.g. from somewhere else in kernel land? If 
-so (or if we can't rule out the possibility) keeping the guard here 
-might prove more prudent.
 
->   #ifdef CONFIG_NUMA
->   	numa_remove_cpu(cpu);
->   #endif
-> diff --git a/arch/loongarch/kernel/topology.c b/arch/loongarch/kernel/topology.c
-> index ab1a75c..7e7a77f 100644
-> --- a/arch/loongarch/kernel/topology.c
-> +++ b/arch/loongarch/kernel/topology.c
-> @@ -5,6 +5,7 @@
->   #include <linux/node.h>
->   #include <linux/nodemask.h>
->   #include <linux/percpu.h>
-> +#include <asm/bootinfo.h>
->   
->   static DEFINE_PER_CPU(struct cpu, cpu_devices);
->   
-> @@ -33,6 +34,11 @@ void arch_unregister_cpu(int cpu)
->   EXPORT_SYMBOL(arch_unregister_cpu);
->   #endif
->   
-> +static bool io_master(int cpu)
-> +{
-> +	return test_bit(cpu, &loongson_sysconf.cores_io_master);
-> +}
-> +
->   static int __init topology_init(void)
->   {
->   	int i, ret;
-> @@ -40,7 +46,11 @@ static int __init topology_init(void)
->   	for_each_present_cpu(i) {
->   		struct cpu *c = &per_cpu(cpu_devices, i);
->   
-> -		c->hotpluggable = !!i;
-> +		if (io_master(i))
-> +			c->hotpluggable = 0;
-> +		else
-> +			c->hotpluggable = 1;
-> +
+On 10/08/2022 05:27 PM, WANG Xuerui wrote:
+> On 2022/10/8 16:59, Tiezhu Yang wrote:
+>> Now io master CPUs are not hotpluggable on LoongArch, in the current
+>> code,
+>> only /sys/devices/system/cpu/cpu0/online is not created, let us set the
+>> hotpluggable field of all the io master CPUs as 0, then prevent to create
+>> sysfs control file for the other io master CPUs which confuses some user
+>> space tools. This is similar with commit 9cce844abf07 ("MIPS: CPU#0 is
+>> not
+>> hotpluggable").
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>   arch/loongarch/kernel/smp.c      |  8 --------
+>>   arch/loongarch/kernel/topology.c | 12 +++++++++++-
+>>   2 files changed, 11 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+>> index b5fab30..ef89292 100644
+>> --- a/arch/loongarch/kernel/smp.c
+>> +++ b/arch/loongarch/kernel/smp.c
+>> @@ -240,19 +240,11 @@ void loongson3_smp_finish(void)
+>>     #ifdef CONFIG_HOTPLUG_CPU
+>>   -static bool io_master(int cpu)
+>> -{
+>> -    return test_bit(cpu, &loongson_sysconf.cores_io_master);
+>> -}
+>> -
+>>   int loongson3_cpu_disable(void)
+>>   {
+>>       unsigned long flags;
+>>       unsigned int cpu = smp_processor_id();
+>>   -    if (io_master(cpu))
+>> -        return -EBUSY;
+>> -
+>
+> Could this get invoked from somewhere other than the sysfs entries that
+> "confuse user-space tools", e.g. from somewhere else in kernel land? If
+> so (or if we can't rule out the possibility) keeping the guard here
+> might prove more prudent.
+>
 
-This is just "c->hotpluggable = !io_master(i);".
+If c->hotpluggable is 0, it will not generate a control file in sysfs
+for this CPU, for example:
 
->   		ret = register_cpu(c, i);
->   		if (ret < 0)
->   			pr_warn("topology_init: register_cpu %d failed (%d)\n", i, ret);
-Other changes should be okay as they are in line with the previous MIPS 
-change you referenced, but let's see what Huacai thinks.
+[root@linux loongson]# cat /sys/devices/system/cpu/cpu0/online
+cat: /sys/devices/system/cpu/cpu0/online: No such file or directory
+[root@linux loongson]# echo 0 > /sys/devices/system/cpu/cpu0/online
+bash: /sys/devices/system/cpu/cpu0/online: Permission denied
 
--- 
-WANG "xen0n" Xuerui
+So no need to check it here, just remove the code.
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+This was done in commit cbab54d9c2b2 ("MIPS: No need to check CPU 0 in
+{loongson3,bmips,octeon}_cpu_disable()").
+
+>>   #ifdef CONFIG_NUMA
+>>       numa_remove_cpu(cpu);
+>>   #endif
+>> diff --git a/arch/loongarch/kernel/topology.c
+>> b/arch/loongarch/kernel/topology.c
+>> index ab1a75c..7e7a77f 100644
+>> --- a/arch/loongarch/kernel/topology.c
+>> +++ b/arch/loongarch/kernel/topology.c
+>> @@ -5,6 +5,7 @@
+>>   #include <linux/node.h>
+>>   #include <linux/nodemask.h>
+>>   #include <linux/percpu.h>
+>> +#include <asm/bootinfo.h>
+>>     static DEFINE_PER_CPU(struct cpu, cpu_devices);
+>>   @@ -33,6 +34,11 @@ void arch_unregister_cpu(int cpu)
+>>   EXPORT_SYMBOL(arch_unregister_cpu);
+>>   #endif
+>>   +static bool io_master(int cpu)
+>> +{
+>> +    return test_bit(cpu, &loongson_sysconf.cores_io_master);
+>> +}
+>> +
+>>   static int __init topology_init(void)
+>>   {
+>>       int i, ret;
+>> @@ -40,7 +46,11 @@ static int __init topology_init(void)
+>>       for_each_present_cpu(i) {
+>>           struct cpu *c = &per_cpu(cpu_devices, i);
+>>   -        c->hotpluggable = !!i;
+>> +        if (io_master(i))
+>> +            c->hotpluggable = 0;
+>> +        else
+>> +            c->hotpluggable = 1;
+>> +
+>
+> This is just "c->hotpluggable = !io_master(i);".
+>
+
+Yes, I am OK either way, if it is necessary to send v2,
+please let me know.
+
+>>           ret = register_cpu(c, i);
+>>           if (ret < 0)
+>>               pr_warn("topology_init: register_cpu %d failed (%d)\n",
+>> i, ret);
+> Other changes should be okay as they are in line with the previous MIPS
+> change you referenced, but let's see what Huacai thinks.
+>
+
+Thanks,
+Tiezhu
 
