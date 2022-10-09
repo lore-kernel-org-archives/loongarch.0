@@ -1,8 +1,8 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17CE81C33
-	for <loongarch@lists.linux.dev>; Sun,  9 Oct 2022 06:44:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A93431C35
+	for <loongarch@lists.linux.dev>; Sun,  9 Oct 2022 06:44:48 +0000 (UTC)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxX+DPbUJjsykpAA--.19711S2;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxX+DPbUJjsykpAA--.19711S4;
 	Sun, 09 Oct 2022 14:44:31 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -16,10 +16,12 @@ Cc: linux-kernel@vger.kernel.org,
 	rafael@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-acpi@vger.kernel.org
-Subject: [PATCH V3 0/4] irqchip: Support to set irq type for ACPI path
-Date: Sun,  9 Oct 2022 14:44:27 +0800
-Message-Id: <20221009064431.18839-1-lvjianmin@loongson.cn>
+Subject: [PATCH V3 2/4] irqchip/loongson-pch-pic: fix translate callback for DT path
+Date: Sun,  9 Oct 2022 14:44:29 +0800
+Message-Id: <20221009064431.18839-3-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221009064431.18839-1-lvjianmin@loongson.cn>
+References: <20221009064431.18839-1-lvjianmin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -27,10 +29,10 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxX+DPbUJjsykpAA--.19711S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrKFWUur13CryDAFy3XrWfAFb_yoWkZrX_uF
-	4I934DZa4vqF1IvayxJry5XFyqyFWDWa1v9FWvyFn3W34rJws3Ar47uwnI934xKa4rXFn3
-	GrZ5Jr1Fk34I9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+X-CM-TRANSID:AQAAf8DxX+DPbUJjsykpAA--.19711S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xr15GF4rZr43JFyxZF1rCrg_yoWktrg_uF
+	1SqFn3Kw17Zr1Iq3y8Kr4rXFy7ta4Du3WvkFs5Aay5WayUXayxAr1Svw4fJa9rGFWUAF1f
+	C395ur1xZF4I9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
 	9fnUUIcSsGvfJTRUUUba8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
 	wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
 	vE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2
@@ -46,35 +48,35 @@ X-Coremail-Antispam: 1UD129KBjvdXoWrKFWUur13CryDAFy3XrWfAFb_yoWkZrX_uF
 	sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 
-For ACPI path of pch-pic and liointc driver, setting irq
-type is not supported yet, so the patch series add code
-to implement it.
+In DT path of translate callback, if fwspec->param_count==1
+and of_node is non-null, fwspec->param[1] will be accessed,
+which is introduced from previous commit bcdd75c596c8
+(irqchip/loongson-pch-pic: Add ACPI init support).
 
-And a bug in translate callback of irqchip/loongson-pch-pic, which
-is introduced by previous patch, is fixed.
+Before the patch, for non-null of_node, translate callback
+(use irq_domain_translate_twocell) will return -EINVAL if
+fwspec->param_count < 2, so the check in the patch is added.
 
-GSI for legacy irqs of PCI devices are mapped in pch-pic domain, after
-supporting setting_irq_type for pch-pic domain, we add the workaround
-for LoongArch based PCI controller with high-level trigger intterrupt
-so that the high-level trigger type is passed into acpi_register_gsi().
-  
-V1 -> V2
-- Change comment information and fix a bug for DT path in patch[1].
+Fixes: bcdd75c596c8 ("irqchip/loongson-pch-pic: Add ACPI init support")
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+---
+ drivers/irqchip/irq-loongson-pch-pic.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-V2 -> V3
-- Separate original patch[1] to three patches[1][2][3].
-
-Jianmin Lv (4):
-  ACPI / PCI: fix LPIC irq model default PCI IRQ polarity
-  irqchip/loongson-pch-pic: fix translate callback for DT path
-  irqchip/loongson-pch-pic: Support to set irq type for ACPI path
-  irqchip/loongson-liointc: Support to set irq type for ACPI path
-
- drivers/acpi/pci_irq.c                 |  6 ++++--
- drivers/irqchip/irq-loongson-liointc.c |  7 ++++++-
- drivers/irqchip/irq-loongson-pch-pic.c | 14 ++++++++++----
- 3 files changed, 20 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+index c01b9c257005..03493cda65a3 100644
+--- a/drivers/irqchip/irq-loongson-pch-pic.c
++++ b/drivers/irqchip/irq-loongson-pch-pic.c
+@@ -159,6 +159,9 @@ static int pch_pic_domain_translate(struct irq_domain *d,
+ 		return -EINVAL;
+ 
+ 	if (of_node) {
++		if (fwspec->param_count < 2)
++			return -EINVAL;
++
+ 		*hwirq = fwspec->param[0] + priv->ht_vec_base;
+ 		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+ 	} else {
 -- 
 2.31.1
 
