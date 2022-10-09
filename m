@@ -1,108 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BCC33D6;
-	Sun,  9 Oct 2022 14:18:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 659D2C433D6;
-	Sun,  9 Oct 2022 14:17:59 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="YgHbN0I0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1665325077;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oirLAgHKzqbm2tDuRRRruxvBPFu6OuA1m1Bdo0JewVo=;
-	b=YgHbN0I0lUsk61F/tkacjTtELz9m0jTOee92icnhvNyHJrs9iBf1nxk5rIk4LCzkioh8sG
-	190YFxxX+8obr4IDytSpJV/y+LGJPtZT2kSp6+N5MRfHp0a/WJLUeHRU53NaAsEmu2d/gM
-	WcwjBCYWAwT/EnbHfbZZP/9zFIVJmUM=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 76b4077f (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Sun, 9 Oct 2022 14:17:57 +0000 (UTC)
-Date: Sun, 9 Oct 2022 08:17:41 -0600
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph =?utf-8?Q?B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Dave Airlie <airlied@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Florian Westphal <fw@strlen.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Hugh Dickins <hughd@google.com>, Jakub Kicinski <kuba@kernel.org>,
-	"James E . J . Bottomley" <jejb@linux.ibm.com>,
-	Jan Kara <jack@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jens Axboe <axboe@kernel.dk>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	KP Singh <kpsingh@kernel.org>, Marco Elver <elver@google.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Theodore Ts'o <tytso@mit.edu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, Thomas Graf <tgraf@suug.ch>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, dri-devel@lists.freedesktop.org,
-	kasan-dev@googlegroups.com, kernel-janitors@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-nvme@lists.infradead.org, linux-parisc@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-um@lists.infradead.org, linux-usb@vger.kernel.org,
-	linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev, netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v5 0/7] treewide cleanup of random integer usage
-Message-ID: <Y0LYBaooZKDbL93G@zx2c4.com>
-References: <20221008055359.286426-1-Jason@zx2c4.com>
- <202210082028.692DFA21@keescook>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6402F56
+	for <loongarch@lists.linux.dev>; Sun,  9 Oct 2022 15:16:37 +0000 (UTC)
+Received: by mail-qk1-f175.google.com with SMTP id a22so5500963qkk.7
+        for <loongarch@lists.linux.dev>; Sun, 09 Oct 2022 08:16:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nMoVhDHOXbkfrQHXkDjBBWNzAhgx6kAOiO9M5hP5GW8=;
+        b=u3ZfctBM9b1dd8Z0PEQMKq5aDzD+Sngf7/9n36/FFKr9PxVJozWgk+Dl8Q81ukH1vy
+         FtRFmO1lGoX9+XayULTcP/M1lDGeB4Ux9FFb9d1fA2awfYI1kLbe7vXDBuxmXpgw0TTG
+         o1dY/SgID1zy14Wy332bPImnXKgpJMQsOhzvZZUzkRYvJtSURYmtIwZIwX2AFADmv5ZI
+         LulnMJ0la5z5Mt8Zgh8SehBBsJ7G5luciXaFbYVqqR9SqAOYZ5O2lZugCrQafl4SZpUj
+         lgNufci6R/qj0VeyfTLP6lZr2Wv0QYDQNeopSK9Y+uwpuE9yrXhvLEoMEJEfkTfFhHo7
+         Fq+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nMoVhDHOXbkfrQHXkDjBBWNzAhgx6kAOiO9M5hP5GW8=;
+        b=AeO1Kp45irgNoCGB3UVmhdShrK8z+49aaE0uCyqb1uyxtuXEUzo6gPnBhBtpwvVwo2
+         qBuhB3lftUCFlf8cOUzyVzn23n0jm9I0se8QyGJE3Nx0szKcK4P0RAnHgsfCoj5jYRRR
+         QYYZE2f3JduezSRL3bSifPdqK0Y0ZBtlcsO5gO2TdUxn5mmi+gJkHl2QrfG2gZOaQdWd
+         BZfiTxZVSGoTmu0jOfDYsLKqW7eAPLaAWlX3wsLjx9zQVO0k79ov1rLzrgwFJgguXEVM
+         Y6gWl4eJ/5IZUSVxTf+hKkfTYwZNfKbNxQD+nboyJVZ/u80i2l4P+8Q6Hrj65B7buf4P
+         XI0g==
+X-Gm-Message-State: ACrzQf1gP3FDvaMxgjhL7XTmSokVg1UU6+cyqvfVm2k8QwMCRwif5S9X
+	GdUxwGdAq7kcXDxy7T/ImJeb7g==
+X-Google-Smtp-Source: AMsMyM5t905CkC2pl9ZhiooQYt86bJuYi8XfqiZzuanYsiUD8E3vQoIIdhEAJjVCGGpu+HO0b6ENog==
+X-Received: by 2002:a05:620a:2627:b0:6b9:1b05:7b9 with SMTP id z39-20020a05620a262700b006b91b0507b9mr10396742qko.776.1665328596650;
+        Sun, 09 Oct 2022 08:16:36 -0700 (PDT)
+Received: from [192.168.1.57] (cpe-72-225-192-120.nyc.res.rr.com. [72.225.192.120])
+        by smtp.gmail.com with ESMTPSA id l18-20020a37f912000000b006ce580c2663sm7516046qkj.35.2022.10.09.08.16.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Oct 2022 08:16:35 -0700 (PDT)
+Message-ID: <69ac49d8-1a4e-c830-fd7d-08f7ec1e1fa1@linaro.org>
+Date: Sun, 9 Oct 2022 17:14:23 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202210082028.692DFA21@keescook>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v1 2/2] dt-bindings: hpet: add loongson2k hpet binding
+To: Yinbo Zhu <zhuyinbo@loongson.cn>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Jianmin Lv <lvjianmin@loongson.cn>,
+ Yun Liu <liuyun@loongson.cn>, Yang Li <yang.lee@linux.alibaba.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20220930093510.10781-1-zhuyinbo@loongson.cn>
+ <20220930093510.10781-2-zhuyinbo@loongson.cn>
+ <ba5873fa-83fc-2d16-b8c0-715ae8bf630a@linaro.org>
+ <80af028d-d123-6894-189a-a26134ec89ee@loongson.cn>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <80af028d-d123-6894-189a-a26134ec89ee@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Oct 08, 2022 at 08:41:14PM -0700, Kees Cook wrote:
-> On Fri, Oct 07, 2022 at 11:53:52PM -0600, Jason A. Donenfeld wrote:
-> > This is a five part treewide cleanup of random integer handling. The
-> > rules for random integers are:
+On 08/10/2022 05:21, Yinbo Zhu wrote:
 > 
-> Reviewing the delta between of my .cocci rules and your v5, everything
-> matches, except for get_random_int() conversions for files not in
-> your tree:
-> [...]
-> So, I guess I mean to say that "prandom: remove unused functions" is
-> going to cause some pain. :) Perhaps don't push that to -next, and do a
-> final pass next merge window to catch any new stuff, and then send those
-> updates and the removal before -rc1 closes?
+> 
+> 在 2022/9/30 下午5:58, Krzysztof Kozlowski 写道:
+>> On 30/09/2022 11:35, Yinbo Zhu wrote:
+>>> Add the loongson2k High Precision Event Timer (HPET) binding
+>>> with DT schema format using json-schema.
+>>>
+>>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>>> ---
+>>>   .../bindings/timer/loongson,ls2k-hpet.yaml    | 41 +++++++++++++++++++
+>>>   MAINTAINERS                                   |  1 +
+>>>   2 files changed, 42 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+>>> new file mode 100644
+>>> index 000000000000..1a8785076228
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+>>> @@ -0,0 +1,41 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/timer/loongson,ls2k-hpet.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Loongson2k High Precision Event Timer (HPET)
+>>> +
+>>> +maintainers:
+>>> +  - Yinbo Zhu <zhuyinbo@loongson.cn>
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    const: loongson,ls2k-hpet
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +  clock-frequency: true
+>>
+>> clock frequency of what? I assume it's too early to use common clock
+>> framework and just get the clock?
 
-Ooof. Actually I think what I'll do is include a suggested diff for the
-merge commit that fixes up the remaining two thankfully trivial cases.
+Still you did not answer: which/what clock?
 
-Jason
+> The clock-frequency is 125000000, It doesn't support use common clock 
+> framework 
+
+But it should use CCF, if possible.
+
+> and just get the clock from dts, and I refer 
+
+How do you "get" the clock from DTS?
+
+> "arm,armv7m-systick" to add the clock-frequency information:
+
+Better go with Common Clock Framework instead.
+
+> 
+>    clock-frequency: true
+> 
+> oneOf:
+>    - required:
+>        - clocks
+>    - required:
+>        - clock-frequency
+>>
+
+Best regards,
+Krzysztof
+
