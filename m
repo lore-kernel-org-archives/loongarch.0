@@ -1,71 +1,108 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327462591
-	for <loongarch@lists.linux.dev>; Sun,  9 Oct 2022 14:02:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1665324121;
-	bh=Qoxu0zAR0UJSTIFx9IuD3CJgh0F7dmV1Jfk/aUCgYI8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=OM48/voJLBUV8H/ECXKiGjsjYVrUFMeKnn46q9qfPBGNOso3yeyI7IAScOGDYWOw4
-	 D7XFMhND0au76Wfe43/Uy1DQyQifyvrl3i3dkhniDeK8HGFmGVeq4xCoAG222S/tNq
-	 AyXyk0dCrwaD2YR9g4vTWGVJIvVhvG9IcIsdzxIE=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id B792465B5F;
-	Sun,  9 Oct 2022 10:01:59 -0400 (EDT)
-Message-ID: <6ef6686dea98a65176af01f518d30727bde9b2b7.camel@xry111.site>
-Subject: Re: [PATCH v3] checksyscalls: Ignore fstat to silence build warning
- on LoongArch
-From: Xi Ruoyao <xry111@xry111.site>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>,  WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann
- <arnd@arndb.de>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Andrew Morton
-	 <akpm@linux-foundation.org>
-Date: Sun, 09 Oct 2022 22:01:57 +0800
-In-Reply-To: <f794e452-eb04-88df-afa8-991bd40eb3d6@loongson.cn>
-References: <1661830021-8643-1-git-send-email-yangtiezhu@loongson.cn>
-	 <f794e452-eb04-88df-afa8-991bd40eb3d6@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.0 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BCC33D6;
+	Sun,  9 Oct 2022 14:18:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 659D2C433D6;
+	Sun,  9 Oct 2022 14:17:59 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="YgHbN0I0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1665325077;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oirLAgHKzqbm2tDuRRRruxvBPFu6OuA1m1Bdo0JewVo=;
+	b=YgHbN0I0lUsk61F/tkacjTtELz9m0jTOee92icnhvNyHJrs9iBf1nxk5rIk4LCzkioh8sG
+	190YFxxX+8obr4IDytSpJV/y+LGJPtZT2kSp6+N5MRfHp0a/WJLUeHRU53NaAsEmu2d/gM
+	WcwjBCYWAwT/EnbHfbZZP/9zFIVJmUM=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 76b4077f (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Sun, 9 Oct 2022 14:17:57 +0000 (UTC)
+Date: Sun, 9 Oct 2022 08:17:41 -0600
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph =?utf-8?Q?B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Dave Airlie <airlied@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Florian Westphal <fw@strlen.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Hugh Dickins <hughd@google.com>, Jakub Kicinski <kuba@kernel.org>,
+	"James E . J . Bottomley" <jejb@linux.ibm.com>,
+	Jan Kara <jack@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	KP Singh <kpsingh@kernel.org>, Marco Elver <elver@google.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Theodore Ts'o <tytso@mit.edu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Thomas Graf <tgraf@suug.ch>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, dri-devel@lists.freedesktop.org,
+	kasan-dev@googlegroups.com, kernel-janitors@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-nvme@lists.infradead.org, linux-parisc@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-um@lists.infradead.org, linux-usb@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev, netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 0/7] treewide cleanup of random integer usage
+Message-ID: <Y0LYBaooZKDbL93G@zx2c4.com>
+References: <20221008055359.286426-1-Jason@zx2c4.com>
+ <202210082028.692DFA21@keescook>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202210082028.692DFA21@keescook>
 
-On Sun, 2022-10-09 at 12:33 +0800, Tiezhu Yang wrote:
->=20
->=20
-> On 08/30/2022 11:27 AM, Tiezhu Yang wrote:
-> > fstat is replaced by statx on the new architecture, so an exception
-> > is added to the checksyscalls script to silence the following build
-> > warning on LoongArch:
-> >=20
-> > =C2=A0 CALL=C2=A0=C2=A0=C2=A0 scripts/checksyscalls.sh
-> > <stdin>:569:2: warning: #warning syscall fstat not implemented [-
-> > Wcpp]
->=20
-> Hi all,
->=20
-> The above warning still exists when build the latest loongarch-next.
->=20
-> Do you know which tree this patch will go through?
->=20
-> Could you please pick it up via your tree in this merge window?
+On Sat, Oct 08, 2022 at 08:41:14PM -0700, Kees Cook wrote:
+> On Fri, Oct 07, 2022 at 11:53:52PM -0600, Jason A. Donenfeld wrote:
+> > This is a five part treewide cleanup of random integer handling. The
+> > rules for random integers are:
+> 
+> Reviewing the delta between of my .cocci rules and your v5, everything
+> matches, except for get_random_int() conversions for files not in
+> your tree:
+> [...]
+> So, I guess I mean to say that "prandom: remove unused functions" is
+> going to cause some pain. :) Perhaps don't push that to -next, and do a
+> final pass next merge window to catch any new stuff, and then send those
+> updates and the removal before -rc1 closes?
 
-A similar change 3ef6ca4f354c ("checksyscalls: Unconditionally ignore
-fstat{,at}64") was merged through RISC-V tree, so it should be OK to
-merge this from loongarch-next.
+Ooof. Actually I think what I'll do is include a suggested diff for the
+merge commit that fixes up the remaining two thankfully trivial cases.
 
-Not sure if we need to get an Ack from someone first though.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Jason
