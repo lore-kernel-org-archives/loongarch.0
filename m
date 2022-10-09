@@ -1,118 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB52187C
-	for <loongarch@lists.linux.dev>; Sun,  9 Oct 2022 06:15:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C11E4C433B5
-	for <loongarch@lists.linux.dev>; Sun,  9 Oct 2022 06:15:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1665296136;
-	bh=FXMIi4X/yLKllQTQawao9abCe7Z+/qcgFVtJRXh+Q6w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ugmSW59EkGNtQPaGv+m8tLRYNpRz/M/F+bTWjcUh2OpRnH6WJiI7IovegMkB0PQky
-	 tGMc1q3+ns1AT7rjo+c7t5AQUiCB7NnrnJGa7bSHb3OEwiqCgE5duQ2HX5p/NSJSYh
-	 DyCcN18sY9jkJPVvDAjCZ8T0vTlRDvogVw17QHRtpAf0zi7aVj995MsX1pPUwZq0zZ
-	 XyyveacWb6HSJefARt321crIV/SAm7R9Tyvmfxg65679By3tCjr0GWYDOEHtOBGSFk
-	 UF68frUz7GyzbMuRm3Ml3BzSGzfgwFzKtoRYhY3nwBlU2jaLQiS994HNEIALqysxpM
-	 DuI/iJ4MfcgGg==
-Received: by mail-ed1-f49.google.com with SMTP id w10so12034662edd.4
-        for <loongarch@lists.linux.dev>; Sat, 08 Oct 2022 23:15:36 -0700 (PDT)
-X-Gm-Message-State: ACrzQf06OXU2SRgji+9JncGr1jCbt1HnMUXs1cXx7zEd9hA3TCI6fjsw
-	Mpqp2piR4R7qW/AD4TlLU5eU/BM0UlOznjPqm6g=
-X-Google-Smtp-Source: AMsMyM4Yjw/zx7cxOFT+P1VBQW2FA2Yvg9l2Iud5hBYeYyKSQazuLQiFgqafd6jQYFrO171zZPWuWVorWsM6/1OtlUM=
-X-Received: by 2002:a05:6402:c81:b0:458:c428:173a with SMTP id
- cm1-20020a0564020c8100b00458c428173amr12031575edb.298.1665296134980; Sat, 08
- Oct 2022 23:15:34 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 125ED1111
+	for <loongarch@lists.linux.dev>; Sun,  9 Oct 2022 06:44:46 +0000 (UTC)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxX+DPbUJjsykpAA--.19711S6;
+	Sun, 09 Oct 2022 14:44:32 +0800 (CST)
+From: Jianmin Lv <lvjianmin@loongson.cn>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Len Brown <lenb@kernel.org>,
+	rafael@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH V3 4/4] irqchip/loongson-liointc: Support to set irq type for ACPI path
+Date: Sun,  9 Oct 2022 14:44:31 +0800
+Message-Id: <20221009064431.18839-5-lvjianmin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221009064431.18839-1-lvjianmin@loongson.cn>
+References: <20221009064431.18839-1-lvjianmin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1665278582-16038-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1665278582-16038-1-git-send-email-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 9 Oct 2022 14:15:28 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6nT5AMrgWa-FPO_cbvQbSajeoUvDskKGVys9-hsNcGvg@mail.gmail.com>
-Message-ID: <CAAhV-H6nT5AMrgWa-FPO_cbvQbSajeoUvDskKGVys9-hsNcGvg@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: Do not create sysfs control file for io
- master CPUs
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxX+DPbUJjsykpAA--.19711S6
+X-Coremail-Antispam: 1UD129KBjvdXoW7JrWUCF17WFW5CFy5Zw4UCFg_yoWfKwc_u3
+	yIg3Z3Ga4rZF1xJr97uw1YvrWv9aykW3Wv9F45uasav3y8X343urW7Zw13Ga97Kr10vF97
+	AF1S9rySya47tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbakFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+	wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+	vE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+	87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+	Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
+	wVCm-wCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26ryrJr1UJwCFx2IqxVCFs4
+	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+	MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
+	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWU
+	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
+	IYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
 
-Queued for loongarch-next, thanks.
+For ACPI path, the xlate callback used IRQ_TYPE_NONE and ignored
+the irq type in intspec[1]. For supporting to set type for
+irqs of the irqdomain, intspec[1] should be used to get irq
+type.
 
-Huacai
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+---
+ drivers/irqchip/irq-loongson-liointc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-On Sun, Oct 9, 2022 at 9:23 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> Now io master CPUs are not hotpluggable on LoongArch, in the current code,
-> only /sys/devices/system/cpu/cpu0/online is not created, let us set the
-> hotpluggable field of all the io master CPUs as 0, then prevent to create
-> sysfs control file for the other io master CPUs which confuses some user
-> space tools. This is similar with commit 9cce844abf07 ("MIPS: CPU#0 is not
-> hotpluggable").
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/include/asm/bootinfo.h | 5 +++++
->  arch/loongarch/kernel/smp.c           | 5 -----
->  arch/loongarch/kernel/topology.c      | 3 ++-
->  3 files changed, 7 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/bootinfo.h b/arch/loongarch/include/asm/bootinfo.h
-> index 8e5881b..ed0910e 100644
-> --- a/arch/loongarch/include/asm/bootinfo.h
-> +++ b/arch/loongarch/include/asm/bootinfo.h
-> @@ -40,4 +40,9 @@ extern unsigned long fw_arg0, fw_arg1, fw_arg2;
->  extern struct loongson_board_info b_info;
->  extern struct loongson_system_configuration loongson_sysconf;
->
-> +static inline bool io_master(int cpu)
-> +{
-> +       return test_bit(cpu, &loongson_sysconf.cores_io_master);
-> +}
-> +
->  #endif /* _ASM_BOOTINFO_H */
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index b5fab30..781a4d4 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -240,11 +240,6 @@ void loongson3_smp_finish(void)
->
->  #ifdef CONFIG_HOTPLUG_CPU
->
-> -static bool io_master(int cpu)
-> -{
-> -       return test_bit(cpu, &loongson_sysconf.cores_io_master);
-> -}
-> -
->  int loongson3_cpu_disable(void)
->  {
->         unsigned long flags;
-> diff --git a/arch/loongarch/kernel/topology.c b/arch/loongarch/kernel/topology.c
-> index ab1a75c..caa7cd8 100644
-> --- a/arch/loongarch/kernel/topology.c
-> +++ b/arch/loongarch/kernel/topology.c
-> @@ -5,6 +5,7 @@
->  #include <linux/node.h>
->  #include <linux/nodemask.h>
->  #include <linux/percpu.h>
-> +#include <asm/bootinfo.h>
->
->  static DEFINE_PER_CPU(struct cpu, cpu_devices);
->
-> @@ -40,7 +41,7 @@ static int __init topology_init(void)
->         for_each_present_cpu(i) {
->                 struct cpu *c = &per_cpu(cpu_devices, i);
->
-> -               c->hotpluggable = !!i;
-> +               c->hotpluggable = !io_master(i);
->                 ret = register_cpu(c, i);
->                 if (ret < 0)
->                         pr_warn("topology_init: register_cpu %d failed (%d)\n", i, ret);
-> --
-> 2.1.0
->
+diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+index 0da8716f8f24..838c8fa2d868 100644
+--- a/drivers/irqchip/irq-loongson-liointc.c
++++ b/drivers/irqchip/irq-loongson-liointc.c
+@@ -167,7 +167,12 @@ static int liointc_domain_xlate(struct irq_domain *d, struct device_node *ctrlr,
+ 	if (WARN_ON(intsize < 1))
+ 		return -EINVAL;
+ 	*out_hwirq = intspec[0] - GSI_MIN_CPU_IRQ;
+-	*out_type = IRQ_TYPE_NONE;
++
++	if (intsize > 1)
++		*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
++	else
++		*out_type = IRQ_TYPE_NONE;
++
+ 	return 0;
+ }
+ 
+-- 
+2.31.1
+
