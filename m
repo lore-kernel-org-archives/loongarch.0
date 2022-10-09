@@ -1,72 +1,167 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FCF61383
-	for <loongarch@lists.linux.dev>; Sun,  9 Oct 2022 02:36:45 +0000 (UTC)
-Received: from [10.20.42.32] (unknown [10.20.42.32])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axy2q1M0Jj_wQpAA--.14572S3;
-	Sun, 09 Oct 2022 10:36:37 +0800 (CST)
-Subject: Re: [PATCH V2 1/2] irqchip/loongson-pch-pic: Support to set irq type
- for ACPI path
-To: Marc Zyngier <maz@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Huacai Chen <chenhuacai@loongson.cn>, Bjorn Helgaas <bhelgaas@google.com>,
- Len Brown <lenb@kernel.org>, rafael@kernel.org, linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org
-References: <20221008025150.10734-1-lvjianmin@loongson.cn>
- <20221008025150.10734-2-lvjianmin@loongson.cn> <87v8othkgz.wl-maz@kernel.org>
- <7d3894f9-9708-0b4f-b485-f167408feede@loongson.cn>
- <87r0zhhgmy.wl-maz@kernel.org>
-From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <b83ce5ee-4aef-c033-eaf8-8f74143108fe@loongson.cn>
-Date: Sun, 9 Oct 2022 10:36:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D601389;
+	Sun,  9 Oct 2022 02:58:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F02C433D6;
+	Sun,  9 Oct 2022 02:58:04 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="BCnShyLw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1665284282;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PTr9nvXhCIMgKxMMIHmKX/lEwOczzX2VojqQXIdEQXM=;
+	b=BCnShyLwlwmwAtXh10NutIMIlSIhkA3vRZVyN65BKsRj3tXHWyoCFyOeejJMpbUNI3Ekb8
+	49UE+EpPryrYxycNRVtDAFnXtv9x21EZGJQQn9h5YttxW9h0hZ/Z324YkU/7vcz00VHicb
+	bpNHNFK7pnOsAXwDr3Q1vkS9s34eCwg=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b38280f4 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Sun, 9 Oct 2022 02:58:02 +0000 (UTC)
+Date: Sat, 8 Oct 2022 20:57:54 -0600
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: David Laight <David.Laight@ACULAB.COM>
+Cc: Kees Cook <keescook@chromium.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"patches@lists.linux.dev" <patches@lists.linux.dev>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph =?utf-8?Q?B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Dave Airlie <airlied@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Florian Westphal <fw@strlen.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Hugh Dickins <hughd@google.com>, Jakub Kicinski <kuba@kernel.org>,
+	"James E . J . Bottomley" <jejb@linux.ibm.com>,
+	Jan Kara <jack@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	KP Singh <kpsingh@kernel.org>, Marco Elver <elver@google.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Theodore Ts'o <tytso@mit.edu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, Thomas Graf <tgraf@suug.ch>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
+	"kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	"linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+	"linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
+	Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v3 3/5] treewide: use get_random_u32() when possible
+Message-ID: <Y0I4si9+cMracPAq@zx2c4.com>
+References: <848ed24c-13ef-6c38-fd13-639b33809194@csgroup.eu>
+ <CAHmME9raQ4E00r9r8NyWJ17iSXE_KniTG0onCNAfMmfcGar1eg@mail.gmail.com>
+ <f10fcfbf-2da6-cf2d-6027-fbf8b52803e9@csgroup.eu>
+ <6396875c-146a-acf5-dd9e-7f93ba1b4bc3@csgroup.eu>
+ <CAHmME9pE4saqnwxhsAwt-xegYGjsavPOGnHCbZhUXD7kaJ+GAA@mail.gmail.com>
+ <501b0fc3-6c67-657f-781e-25ee0283bc2e@csgroup.eu>
+ <Y0Ayvov/KQmrIwTS@zx2c4.com>
+ <202210071010.52C672FA9@keescook>
+ <Y0BoQmVauPLC2uW5@zx2c4.com>
+ <69080fb8cace486db4e28e2e90f1d550@AcuMS.aculab.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <87r0zhhgmy.wl-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axy2q1M0Jj_wQpAA--.14572S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYu7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
-	AIw28IcVCjz48v1sIEY20_XrWUJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU1a9
-	aPUUUUU==
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <69080fb8cace486db4e28e2e90f1d550@AcuMS.aculab.com>
 
-
-
-On 2022/10/9 上午10:31, Marc Zyngier wrote:
-> On Sun, 09 Oct 2022 03:26:21 +0100,
-> Jianmin Lv <lvjianmin@loongson.cn> wrote:
->>
->> Ok, thanks, I'll separate this patch, so we have to make the patch
->> fixing PCI INTx handling to be after the patch supporting for the LPIC
->> model to avoid kernel hang, yes?
+On Sat, Oct 08, 2022 at 09:53:33PM +0000, David Laight wrote:
+> From: Jason A. Donenfeld
+> > Sent: 07 October 2022 18:56
+> ...
+> > > Given these kinds of less mechanical changes, it may make sense to split
+> > > these from the "trivial" conversions in a treewide patch. The chance of
+> > > needing a revert from the simple 1:1 conversions is much lower than the
+> > > need to revert by-hand changes.
+> > >
+> > > The Cocci script I suggested in my v1 review gets 80% of the first
+> > > patch, for example.
+> > 
+> > I'll split things up into a mechanical step and a non-mechanical step.
+> > Good idea.
 > 
-> Pick whatever order fits your system, really. But don't mix generic
-> ACPI changes and irqchip code in the same patch, that's just wrong.
+> I'd also do something about the 'get_random_int() & 3' cases.
+> (ie remainder by 2^n-1)
+> These can be converted to 'get_random_u8() & 3' (etc).
+> So they only need one random byte (not 4) and no multiply.
 > 
+> Possibly something based on (the quickly typed, and not C):
+> #define get_random_below(val) [
+> 	if (builtin_constant(val))
+> 		BUILD_BUG_ON(!val || val > 0x100000000ull)
+> 		if (!(val & (val - 1)) {
+> 			if (val <= 0x100)
+> 				return get_random_u8() & (val - 1);
+> 			if (val <= 0x10000)
+> 				return get_random_u16() & (val - 1);
+> 			return get_random_u32() & (val - 1);
+> 		}
+> 	}
+> 	BUILD_BUG_ON(sizeof (val) > 4);
+> 	return ((u64)get_random_u32() * val) >> 32;
 
-Ok, thanks, got it.
+This is already how the prandom_u32_max() implementation works, as
+suggested in the cover letter. The multiplication by constants in it
+reduces to bit shifts and you already get all the manual masking
+possible.
 
-> Thanks,
-> 
-> 	M.
-> 
+> get_random_below() is a much better name than prandom_u32_max().
 
+Yes, but that name is reserved for when I succeed at making a function
+that bounds with a uniform distribution. prandom_u32_max()'s
+distribution is non-uniform since it doesn't do rejection sampling. Work
+in progress is on https://git.zx2c4.com/linux-rng/commit/?h=jd/get_random_u32_below .
+But out of common respect for this already huge thread with a massive
+CC list, if you want to bikeshed my WIP stuff, please start a new thread
+for that and not bog this one down. IOW, no need to reply here directly.
+That'd annoy me.
+
+Jason
