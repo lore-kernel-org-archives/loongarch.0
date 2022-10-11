@@ -1,293 +1,211 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6C23C14;
-	Tue, 11 Oct 2022 15:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1665501505; x=1697037505;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7wSP4TYlAxkaflihOJTFEcb8ISzoiRnXg100vqVWAvo=;
-  b=MXMw4wZ/5rbadCiJHvaEuQHz7w7Xf0ABQ2tFtS4hL4boxmdVneRpmo5k
-   uzEQSfn2pIvwKdgCBLcpoKsv99qYKw7ixIlW3kxi6kSmAzAt+HllhXzBl
-   0Bii05mtdAbecmFLjAWl/piDSSOCtI62jXMrtXWzrH2FpVURQTxPbcPLR
-   TwlGpepxW7+4SXRnPBuIUQ5KY4pzIr5XPT5UX57gJcmLxq/gTlrzyTEsp
-   ZAFpJhmm/Or4AtU+365bzewS3JeWnqsUkQ5fyC0oBtrxoOMzStmHltrdr
-   651VmCet+PhauzpE4Dl6DlMUsuWzb2TlhfvcDdoxDLoyQWKQlF4/X/VCc
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="302141919"
-X-IronPort-AV: E=Sophos;i="5.95,176,1661842800"; 
-   d="scan'208";a="302141919"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2022 08:18:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="695098463"
-X-IronPort-AV: E=Sophos;i="5.95,176,1661842800"; 
-   d="scan'208";a="695098463"
-Received: from lkp-server01.sh.intel.com (HELO 2af0a69ca4e0) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Oct 2022 08:18:21 -0700
-Received: from kbuild by 2af0a69ca4e0 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1oiH1R-0002wR-00;
-	Tue, 11 Oct 2022 15:18:21 +0000
-Date: Tue, 11 Oct 2022 23:17:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: ntfs3@lists.linux.dev, loongarch@lists.linux.dev,
- linux-perf-users@vger.kernel.org, linux-nvme@lists.infradead.org,
- linux-mm@kvack.org, linux-iio@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- apparmor@lists.ubuntu.com, amd-gfx@lists.freedesktop.org,
- Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- b9f85101cad3397ef1e509909602a90e257ab9d8
-Message-ID: <6345891e.N8YlqGQ6WJeXXn2f%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E9E3C14
+	for <loongarch@lists.linux.dev>; Tue, 11 Oct 2022 16:17:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1665505029;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pm4VeB8ssmcYRaiZFIcIhGhr8ty4z8Z6FbdtNOJecy0=;
+	b=X24PB1uGCMhBpXyL2eFidTjEOFO7f+QodkMC03tdMCmfyfTPIp+mdLXTscYuUxTjgpnnCY
+	DkCEkXwG77/2i2tR+nmbFP6zXBIp+LiunHReUqFme7BOWXHi42K29n9pDyx2eGx+ZoRMNN
+	qU0IjWxBX+d71GtH/KeV+55Scil5I7Q=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-661-DCG8RWQCNPO1M6nITQ6aOQ-1; Tue, 11 Oct 2022 12:17:08 -0400
+X-MC-Unique: DCG8RWQCNPO1M6nITQ6aOQ-1
+Received: by mail-wr1-f72.google.com with SMTP id i1-20020adfa501000000b0022cd1e1137bso4001058wrb.0
+        for <loongarch@lists.linux.dev>; Tue, 11 Oct 2022 09:17:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pm4VeB8ssmcYRaiZFIcIhGhr8ty4z8Z6FbdtNOJecy0=;
+        b=B4avf1pwCfza7QpA3x+CcKH2y9TiZePbKD2KLlLh0Di0CH/uT6j8/xOTG8/cm68J0B
+         w5Qtv7BzKaAt+AxyiXwfWPuyEokhkUau8IyfiaXHG/63UsSDYJVMEwPaJGwygdhTM5Jg
+         SE5R/giroNkZV1quibbGqD3lvd0KQQ9+SHWkejQfLRs9OoPsmj4gelbP6l2pM3xD0tII
+         1+thnl9FTUwR8WWzhjIm+6ZlSc8vWfvw+N2pji+Dc8lamTmdDj1i4s3pelK+BYlK793n
+         pJdXez97gIA2xYqUYTET0bjzYAAzbfom9fUPFMAwnu/HsmePiFHdSxj2P6GvS8hkMe7r
+         DOGg==
+X-Gm-Message-State: ACrzQf3IBpJZ9riD3WkFLEo+CRrpxWi8GqIXdYLNfvUnvL75JkxYzLy8
+	MSqJ3rdluveSTAa45KvmGiHMcfkbbBxyKTzD7+HSE18PrsFt/esJNue7wzg29Pxun0zN+55dyZi
+	/z8k//xcMm1eAXQs53+aI
+X-Received: by 2002:a7b:cd96:0:b0:3b4:856a:28f7 with SMTP id y22-20020a7bcd96000000b003b4856a28f7mr17405267wmj.117.1665505027277;
+        Tue, 11 Oct 2022 09:17:07 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6+yXZheRjtpI2Mraq3mO0aiY2aGzgLzN/bP6F6DHEepFtgXyphrd7vxKSt0bqtKCZRjEunTA==
+X-Received: by 2002:a7b:cd96:0:b0:3b4:856a:28f7 with SMTP id y22-20020a7bcd96000000b003b4856a28f7mr17405207wmj.117.1665505026699;
+        Tue, 11 Oct 2022 09:17:06 -0700 (PDT)
+Received: from vschneid.remote.csb ([104.132.153.106])
+        by smtp.gmail.com with ESMTPSA id b21-20020a05600c151500b003c6b9749505sm4667967wmg.30.2022.10.11.09.17.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Oct 2022 09:17:05 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Marcelo Tosatti <mtosatti@redhat.com>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-xtensa@linux-xtensa.org, x86@kernel.org, "Paul E. McKenney"
+ <paulmck@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Sebastian
+ Andrzej Siewior <bigeasy@linutronix.de>, Juri Lelli
+ <juri.lelli@redhat.com>, Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>,
+ Nicholas Piggin <npiggin@gmail.com>, Guo Ren <guoren@kernel.org>, "David
+ S. Miller" <davem@davemloft.net>, Douglas RAILLARD
+ <douglas.raillard@arm.com>
+Subject: Re: [RFC PATCH 0/5] Generic IPI sending tracepoint
+In-Reply-To: <Y0CFnWDpMNGajIRD@fuller.cnet>
+References: <20221007154145.1877054-1-vschneid@redhat.com>
+ <Y0CFnWDpMNGajIRD@fuller.cnet>
+Date: Tue, 11 Oct 2022 17:17:04 +0100
+Message-ID: <xhsmhilkqfi7z.mognet@vschneid.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: b9f85101cad3397ef1e509909602a90e257ab9d8  Add linux-next specific files for 20221011
++Cc Douglas
 
-Error/Warning reports:
+On 07/10/22 17:01, Marcelo Tosatti wrote:
+> Hi Valentin,
+>
+> On Fri, Oct 07, 2022 at 04:41:40PM +0100, Valentin Schneider wrote:
+>> Background
+>> ==========
+>> 
+>> As for the targeted CPUs, the existing tracepoint does export them, albeit in
+>> cpumask form, which is quite inconvenient from a tooling perspective. For
+>> instance, as far as I'm aware, it's not possible to do event filtering on a
+>> cpumask via trace-cmd.
+>
+> https://man7.org/linux/man-pages/man1/trace-cmd-set.1.html
+>
+>        -f filter
+>            Specify a filter for the previous event. This must come after
+>            a -e. This will filter what events get recorded based on the
+>            content of the event. Filtering is passed to the kernel
+>            directly so what filtering is allowed may depend on what
+>            version of the kernel you have. Basically, it will let you
+>            use C notation to check if an event should be processed or
+>            not.
+>
+>                ==, >=, <=, >, <, &, |, && and ||
+>
+>            The above are usually safe to use to compare fields.
+>
+> This looks overkill to me (consider large number of bits set in mask).
+>
+> +#define trace_ipi_send_cpumask(callsite, mask) do {            \
+> +	if (static_key_false(&__tracepoint_ipi_send_cpu.key)) { \
+> +               int cpu;                                        \
+> +               for_each_cpu(cpu, mask)                         \
+> +                       trace_ipi_send_cpu(callsite, cpu);	\
+> +	}                                                       \
+> +} while (0)
+>
 
-https://lore.kernel.org/linux-doc/202209201326.sY9kHOLm-lkp@intel.com
-https://lore.kernel.org/linux-doc/202210070057.NpbaMyxB-lkp@intel.com
-https://lore.kernel.org/linux-mm/202210090954.pTR6m6rj-lkp@intel.com
-https://lore.kernel.org/linux-mm/202210110857.9s0tXVNn-lkp@intel.com
-https://lore.kernel.org/linux-mm/202210111318.mbUfyhps-lkp@intel.com
-https://lore.kernel.org/llvm/202210111438.WT5u8Im6-lkp@intel.com
+Indeed, I expected pushback on this :-)
 
-Error/Warning: (recently discovered and may have been fixed)
+I went for this due to how much simpler an int is to process/use compared
+to a cpumask. There is the trigger example I listed above, but the
+consumption of the trace event itself as well.
 
-ERROR: modpost: "dcn20_acquire_dsc" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
-ERROR: modpost: "dcn20_build_mapped_resource" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/idma64.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/qcom/hdma.ko] undefined!
-ERROR: modpost: "devm_memremap" [drivers/misc/open-dice.ko] undefined!
-ERROR: modpost: "devm_memunmap" [drivers/misc/open-dice.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/char/xillybus/xillybus_of.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/net/ethernet/8390/pcnet_cs.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/tty/ipwireless/ipwireless.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/net/ethernet/8390/pcnet_cs.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/tty/ipwireless/ipwireless.ko] undefined!
-Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/clock/microchip,mpfs.yaml
-Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-arch/arm64/kernel/alternative.c:199:6: warning: no previous prototype for 'apply_alternatives_vdso' [-Wmissing-prototypes]
-arch/arm64/kernel/alternative.c:295:14: warning: no previous prototype for 'alt_cb_patch_nops' [-Wmissing-prototypes]
-arch/loongarch/mm/init.c:166:24: warning: variable 'new' set but not used [-Wunused-but-set-variable]
-dc_resource.c:(.text.dc_resource_acquire_secondary_pipe_for_mpc_odm+0x21c): undefined reference to `dcn20_acquire_dsc'
-drivers/iio/adc/mcp3911.c:252 mcp3911_write_raw() error: buffer overflow 'mcp3911_osr_table' 8 <= 31
-drivers/iio/adc/mcp3911.c:499 mcp3911_probe() warn: passing zero to 'PTR_ERR'
-drivers/nvme/target/loop.c:578 nvme_loop_create_ctrl() warn: 'opts->queue_size - 1' 18446744073709551615 can't fit into 65535 'ctrl->ctrl.sqsize'
-drivers/nvme/target/loop.c:578 nvme_loop_create_ctrl() warn: 'opts->queue_size - 1' 4294967295 can't fit into 65535 'ctrl->ctrl.sqsize'
-fs/ext4/super.c:1744:19: warning: 'deprecated_msg' defined but not used [-Wunused-const-variable=]
-fs/ntfs3/namei.c:487 ntfs_d_compare() error: uninitialized symbol 'uni1'.
-include/linux/compiler_types.h:357:45: error: call to '__compiletime_assert_422' declared with attribute error: FIELD_GET: mask is not constant
-mips-linux-ld: dc_resource.c:(.text.dc_resource_acquire_secondary_pipe_for_mpc_odm+0x304): undefined reference to `dcn20_build_mapped_resource'
-mm/mmap.c:802 __vma_adjust() error: uninitialized symbol 'next_next'.
-security/apparmor/policy_unpack.c:1089 unpack_profile() warn: passing zero to 'ERR_PTR'
-security/apparmor/policy_unpack.c:548 unpack_trans_table() error: uninitialized symbol 'table'.
+Consider this event collected on an arm64 QEMU instance (output from trace-cmd)
 
-Error/Warning ids grouped by kconfigs:
+    <...>-234   [001]    37.251567: ipi_raise:            target_mask=00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000004 (Function call interrupts)
 
-gcc_recent_errors
-|-- arm64-allyesconfig
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
-|   `-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
-|-- csky-randconfig-m041-20221010
-|   `-- mm-mmap.c-__vma_adjust()-error:uninitialized-symbol-next_next-.
-|-- i386-allyesconfig
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-defconfig
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a003
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a005
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a011-20221010
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a012-20221010
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a014-20221010
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a016-20221010
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-c001-20221010
-|   `-- include-linux-compiler_types.h:error:call-to-__compiletime_assert_NNN-declared-with-attribute-error:FIELD_GET:mask-is-not-constant
-|-- i386-randconfig-c021-20221010
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-m021-20221010
-|   |-- arch-x86-kernel-apic-apic.c-generic_processor_info()-warn:always-true-condition-(num_processors-()-)-(-u32max-)
-|   |-- drivers-iio-adc-mcp3911.c-mcp3911_probe()-warn:passing-zero-to-PTR_ERR
-|   |-- drivers-iio-adc-mcp3911.c-mcp3911_write_raw()-error:buffer-overflow-mcp3911_osr_table
-|   |-- drivers-nvme-target-loop.c-nvme_loop_create_ctrl()-warn:opts-queue_size-can-t-fit-into-ctrl-ctrl.sqsize
-|   |-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|   `-- mm-mmap.c-__vma_adjust()-error:uninitialized-symbol-next_next-.
-|-- i386-randconfig-s052-20221010
-|   |-- fs-ntfs3-index.c:sparse:sparse:restricted-__le32-degrades-to-integer
-|   |-- fs-ntfs3-namei.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-restricted-__le16-const-usertype-s1-got-unsigned-short
-|   `-- fs-ntfs3-namei.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-restricted-__le16-const-usertype-s2-got-unsigned-short
-|-- loongarch-randconfig-r012-20221010
-|   `-- arch-loongarch-mm-init.c:warning:variable-new-set-but-not-used
-|-- loongarch-randconfig-s032-20221010
-|   |-- arch-loongarch-kernel-perf_event.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-void-ptr-got-int-noderef-__percpu
-|   `-- arch-loongarch-kernel-perf_event.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-void-ptr-got-unsigned-int-noderef-__percpu
-|-- mips-allyesconfig
-|   |-- dc_resource.c:(.text.dc_resource_acquire_secondary_pipe_for_mpc_odm):undefined-reference-to-dcn20_acquire_dsc
-|   `-- mips-linux-ld:dc_resource.c:(.text.dc_resource_acquire_secondary_pipe_for_mpc_odm):undefined-reference-to-dcn20_build_mapped_resource
-|-- powerpc-allmodconfig
-|   |-- ERROR:dcn20_acquire_dsc-drivers-gpu-drm-amd-amdgpu-amdgpu.ko-undefined
-|   `-- ERROR:dcn20_build_mapped_resource-drivers-gpu-drm-amd-amdgpu-amdgpu.ko-undefined
-|-- s390-allmodconfig
-|   |-- ERROR:devm_ioremap_resource-drivers-dma-fsl-edma.ko-undefined
-|   |-- ERROR:devm_ioremap_resource-drivers-dma-idma64.ko-undefined
-clang_recent_errors
-|-- arm-ep93xx_defconfig
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- arm-imx_v4_v5_defconfig
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- arm-ixp4xx_defconfig
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- arm-randconfig-r026-20221010
-|   |-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|   `-- fs-ntfs3-namei.c:warning:variable-uni1-is-used-uninitialized-whenever-if-condition-is-true
-|-- hexagon-randconfig-r041-20221010
-|   |-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|   |-- fs-ntfs3-namei.c:warning:variable-uni1-is-used-uninitialized-whenever-if-condition-is-true
-|   |-- ld.lld:error:vmlinux.a(arch-hexagon-kernel-head.o):(.init.text):relocation-R_HEX_B22_PCREL-out-of-range:is-not-in-references-__vmnewmap
-|   |-- ld.lld:error:vmlinux.a(arch-hexagon-kernel-head.o):(.init.text):relocation-R_HEX_B22_PCREL-out-of-range:is-not-in-references-__vmsetvec
-|   `-- ld.lld:error:vmlinux.a(arch-hexagon-kernel-head.o):(.init.text):relocation-R_HEX_B22_PCREL-out-of-range:is-not-in-references-memset
-|-- i386-buildonly-randconfig-r006-20221010
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dml-dcn32-dcn32_fpu.c:warning:no-previous-prototype-for-function-dcn32_split_stream_for_mpc_or_odm
-|-- i386-randconfig-a002
-|   |-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|   `-- fs-ntfs3-namei.c:warning:variable-uni1-is-used-uninitialized-whenever-if-condition-is-true
-|-- i386-randconfig-a004
-|   |-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|   `-- fs-ntfs3-namei.c:warning:variable-uni1-is-used-uninitialized-whenever-if-condition-is-true
-|-- mips-cu1000-neo_defconfig
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- powerpc-fsp2_defconfig
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- riscv-randconfig-r042-20221011
-|   `-- ld.lld:error:undefined-symbol:riscv_cbom_block_size
-|-- riscv-rv32_defconfig
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- x86_64-randconfig-a001-20221010
-|   |-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|   `-- fs-ntfs3-namei.c:warning:variable-uni1-is-used-uninitialized-whenever-if-condition-is-true
-|-- x86_64-randconfig-a003-20221010
-|   |-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|   `-- fs-ntfs3-namei.c:warning:variable-uni1-is-used-uninitialized-whenever-if-condition-is-true
-|-- x86_64-randconfig-a004-20221010
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-`-- x86_64-rhel-8.3-rust
-    `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
+That sort of formatting has been an issue downstream for things like LISA
+[1] where events are aggregated into Pandas tables, and we need to play
+silly games for performance reason because bitmasks aren't a native Python
+type.
 
-elapsed time: 725m
+I had a look at libtraceevent to see how this data is exposed and if the
+answer would be better tooling:
 
-configs tested: 85
-configs skipped: 3
+tep_get_field_val() just yields an unsigned long long of value 0x200018,
+which AFAICT is just the [length, offset] thing associated with dynamic
+arrays. Not really usable, and I don't see anything exported in the lib to
+extract and use those values.
 
-gcc tested configs:
-x86_64                              defconfig
-arc                                 defconfig
-alpha                               defconfig
-i386                                defconfig
-x86_64                               rhel-8.3
-i386                 randconfig-a011-20221010
-um                             i386_defconfig
-arc                  randconfig-r043-20221010
-s390                             allmodconfig
-x86_64               randconfig-a011-20221010
-um                           x86_64_defconfig
-arm                                 defconfig
-i386                          randconfig-a001
-i386                 randconfig-a013-20221010
-s390                             allyesconfig
-x86_64                          rhel-8.3-func
-i386                 randconfig-a015-20221010
-x86_64               randconfig-a016-20221010
-riscv                randconfig-r042-20221010
-s390                                defconfig
-i386                          randconfig-a003
-x86_64                           allyesconfig
-x86_64                    rhel-8.3-kselftests
-i386                 randconfig-a014-20221010
-x86_64               randconfig-a014-20221010
-i386                          randconfig-a005
-powerpc                           allnoconfig
-s390                 randconfig-r044-20221010
-i386                 randconfig-a016-20221010
-x86_64               randconfig-a015-20221010
-powerpc                     redwood_defconfig
-i386                 randconfig-a012-20221010
-powerpc                          allmodconfig
-xtensa                  cadence_csp_defconfig
-x86_64               randconfig-a012-20221010
-mips                             allyesconfig
-i386                             allyesconfig
-sh                          sdk7780_defconfig
-x86_64               randconfig-a013-20221010
-arm                              allyesconfig
-arc                               allnoconfig
-x86_64                           rhel-8.3-syz
-arm64                            allyesconfig
-sh                               allmodconfig
-alpha                             allnoconfig
-um                                  defconfig
-x86_64                         rhel-8.3-kunit
-xtensa                  audio_kc705_defconfig
-m68k                             allmodconfig
-riscv                             allnoconfig
-x86_64                           rhel-8.3-kvm
-csky                              allnoconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-m68k                        stmark2_defconfig
-arc                 nsimosci_hs_smp_defconfig
-ia64                          tiger_defconfig
-powerpc                     asp8347_defconfig
-m68k                             allyesconfig
-ia64                             allmodconfig
-arm                            pleb_defconfig
-arc                      axs103_smp_defconfig
-m68k                             alldefconfig
-powerpc                  iss476-smp_defconfig
-arm                       omap2plus_defconfig
-i386                 randconfig-c001-20221010
+tep_get_field_raw() is better, it handles the dynamic array for us and
+yields a pointer to the cpumask array at the tail of the record. With that
+it's easy to get an output such as: cpumask[size=32]=[4,0,0,0,]. Still,
+this isn't a native type for many programming languages.
 
-clang tested configs:
-hexagon              randconfig-r045-20221010
-hexagon              randconfig-r041-20221010
-riscv                             allnoconfig
-i386                          randconfig-a002
-x86_64               randconfig-a002-20221010
-x86_64               randconfig-a001-20221010
-x86_64               randconfig-a003-20221010
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64               randconfig-a006-20221010
-x86_64               randconfig-a004-20221010
-x86_64               randconfig-a005-20221010
-arm                          ep93xx_defconfig
-mips                          ath25_defconfig
-arm                       imx_v4_v5_defconfig
-arm                          ixp4xx_defconfig
-mips                     cu1000-neo_defconfig
-x86_64                          rhel-8.3-rust
-powerpc                        fsp2_defconfig
-riscv                          rv32_defconfig
+In contrast, this is immediately readable and consumable by userspace tools
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+<...>-234   [001]    37.250882: ipi_send_cpu:         callsite=__smp_call_single_queue+0x5c target_cpu=2
+
+Thinking out loud, it makes way more sense to record a cpumask in the
+tracepoint, but perhaps we could have a postprocessing step to transform
+those into N events each targeting a single CPU?
+
+[1]: https://github.com/ARM-software/lisa/blob/37b51243a94b27ea031ff62bb4ce818a59a7f6ef/lisa/trace.py#L4756
+
+>
+>> 
+>> Because of the above points, this is introducing a new tracepoint.
+>> 
+>> Patches
+>> =======
+>> 
+>> This results in having trace events for:
+>> 
+>> o smp_call_function*()
+>> o smp_send_reschedule()
+>> o irq_work_queue*()
+>> 
+>> This is incomplete, just looking at arm64 there's more IPI types that aren't covered:
+>> 
+>>   IPI_CPU_STOP,
+>>   IPI_CPU_CRASH_STOP,
+>>   IPI_TIMER,
+>>   IPI_WAKEUP,
+>> 
+>> ... But it feels like a good starting point.
+>
+> Can't you have a single tracepoint (or variant with cpumask) that would
+> cover such cases as well?
+>
+> Maybe (as parameters for tracepoint):
+>
+> 	* type (reschedule, smp_call_function, timer, wakeup, ...).
+>
+> 	* function address: valid for smp_call_function, irq_work_queue
+> 	  types.
+>
+
+That's a good point, I wasn't sure about having a parameter serving as
+discriminant for another, but the function address would be either valid or
+NULL which is fine. So perhaps:
+o callsite (i.e. _RET_IP_), serves as type
+o address of callback tied to IPI, if any
+o target CPUs
+
+>> Another thing worth mentioning is that depending on the callsite, the _RET_IP_
+>> fed to the tracepoint is not always useful - generic_exec_single() doesn't tell
+>> you much about the actual callback being sent via IPI, so there might be value
+>> in exploding the single tracepoint into at least one variant for smp_calls.
+>
+> Not sure i grasp what you mean by "exploding the single tracepoint...",
+> but yes knowing the function or irq work function is very useful.
+>
+
+Sorry; I meant having several "specialized" tracepoints instead of a single one.
+
