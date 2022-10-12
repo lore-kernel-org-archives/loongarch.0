@@ -1,228 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED9B17ED
-	for <loongarch@lists.linux.dev>; Wed, 12 Oct 2022 14:50:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B94D1C433C1;
-	Wed, 12 Oct 2022 14:50:51 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v6.1
-Date: Wed, 12 Oct 2022 22:48:46 +0800
-Message-Id: <20221012144846.2963749-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FF229AC
+	for <loongarch@lists.linux.dev>; Wed, 12 Oct 2022 17:58:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 81243C433D6;
+	Wed, 12 Oct 2022 17:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1665597488;
+	bh=SwKpCBahfSJnN0XUzb13FyH0Ae6UKHlly7aHXxqQhnQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=WNj1PvK3tV3zlCAooCwY4DeLoDk9R8X58g2NTxoXpQ1bTPrp1oKph08qu2KgDCwe5
+	 S/FmV12GvOhlr5x5wOkDDs6JUDWCEaP94GCtZT3qaD7IihduyKmvoTPVkgS80msMpu
+	 ahCUF3bIDYIgoPbWY9zVp2LIJ0xGk/sTQ9ZyVc/JUebIt/jF5DlTyQJjsnnUSW3fh7
+	 L3uIJ0jPJR9L8M9UU0Uny6IxuddC+k0v/nYGfP00rriTYWZ+QFnQe3hapVdtmQHggx
+	 /+ea9XvwfDVFp7Fb1ynj5SjaCVs67s+LSK2gAwQwtSHXRurj2EELXuzLlXs86AmQLR
+	 pm170qtv+Pf+g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6F2D5E29F35;
+	Wed, 12 Oct 2022 17:58:08 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch changes for v6.1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20221012144846.2963749-1-chenhuacai@loongson.cn>
+References: <20221012144846.2963749-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20221012144846.2963749-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.1
+X-PR-Tracked-Commit-Id: 2c8577f5e455b149f3ecb24e9a9f48f372a5d71a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 95b8b5953a315081eadbadf49200e57d7e05aae7
+Message-Id: <166559748844.25532.2588994164402935329.pr-tracker-bot@kernel.org>
+Date: Wed, 12 Oct 2022 17:58:08 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The following changes since commit 4fe89d07dcc2804c8b562f6c7896a45643d34b2f:
+The pull request you sent on Wed, 12 Oct 2022 22:48:46 +0800:
 
-  Linux 6.0 (2022-10-02 14:09:07 -0700)
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.1
 
-are available in the Git repository at:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/95b8b5953a315081eadbadf49200e57d7e05aae7
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.1
+Thank you!
 
-for you to fetch changes up to 2c8577f5e455b149f3ecb24e9a9f48f372a5d71a:
-
-  LoongArch: Update Loongson-3 default config file (2022-10-12 16:36:23 +0800)
-
-----------------------------------------------------------------
-LoongArch changes for v6.1
-
-1, Use EXPLICIT_RELOCS (ABIv2.0);
-2, Use generic BUG() handler;
-3, Refactor TLB/Cache operations;
-4, Add qspinlock support;
-5, Add perf events support;
-6, Add kexec/kdump support;
-7, Add BPF JIT support;
-8, Add ACPI-based laptop driver;
-9, Update the default config file.
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      LoongArch: Kconfig: Fix spelling mistake "delibrately" -> "deliberately"
-
-Huacai Chen (10):
-      Merge tag 'efi-next-for-v6.1' into loongarch-next
-      LoongArch: Flush TLB earlier at initialization
-      LoongArch: Mark __xchg() and __cmpxchg() as __always_inline
-      LoongArch: Refactor cache probe and flush methods
-      LoongArch: Support access filter to /dev/mem interface
-      LoongArch: Use TLB for ioremap()
-      LoongArch: Add qspinlock support
-      LoongArch: Add perf events support
-      LoongArch: Add SysRq-x (TLB Dump) support
-      LoongArch: Update Loongson-3 default config file
-
-Jianmin Lv (2):
-      LoongArch: Fix cpu name after CPU-hotplug
-      LoongArch: Add ACPI-based generic laptop driver
-
-Rui Wang (1):
-      LoongArch: mm: Refactor TLB exception handlers
-
-Tiezhu Yang (4):
-      LoongArch: Do not create sysfs control file for io master CPUs
-      LoongArch: Move {signed,unsigned}_imm_check() to inst.h
-      LoongArch: Add some instruction opcodes and formats
-      LoongArch: Add BPF JIT support
-
-Xi Ruoyao (5):
-      LoongArch: Add Kconfig option AS_HAS_EXPLICIT_RELOCS
-      LoongArch: Adjust symbol addressing for AS_HAS_EXPLICIT_RELOCS
-      LoongArch: Define ELF relocation types added in ABIv2.0
-      LoongArch: Support PC-relative relocations in modules
-      LoongArch: Support R_LARCH_GOT_PC_{LO12,HI20} in modules
-
-Youling Tang (3):
-      LoongArch: Use generic BUG() handler
-      LoongArch: Add kexec support
-      LoongArch: Add kdump support
-
- Documentation/arm/uefi.rst                       |    4 -
- arch/arm/include/asm/efi.h                       |    3 +-
- arch/arm/kernel/efi.c                            |   79 ++
- arch/arm/kernel/setup.c                          |    2 +-
- arch/arm64/Makefile                              |    9 +-
- arch/arm64/boot/.gitignore                       |    1 +
- arch/arm64/boot/Makefile                         |    6 +
- arch/arm64/kernel/image-vars.h                   |   13 -
- arch/loongarch/Kbuild                            |    1 +
- arch/loongarch/Kconfig                           |   74 +-
- arch/loongarch/Makefile                          |   40 +-
- arch/loongarch/boot/.gitignore                   |    1 +
- arch/loongarch/boot/Makefile                     |   14 +-
- arch/loongarch/configs/loongson3_defconfig       |   63 +-
- arch/loongarch/include/asm/Kbuild                |    5 +-
- arch/loongarch/include/asm/bootinfo.h            |    7 +-
- arch/loongarch/include/asm/bug.h                 |   58 +-
- arch/loongarch/include/asm/cacheflush.h          |   87 +-
- arch/loongarch/include/asm/cacheops.h            |   36 +-
- arch/loongarch/include/asm/cmpxchg.h             |    8 +-
- arch/loongarch/include/asm/cpu-features.h        |    5 -
- arch/loongarch/include/asm/cpu-info.h            |   21 +-
- arch/loongarch/include/asm/efi.h                 |   11 +-
- arch/loongarch/include/asm/elf.h                 |   37 +
- arch/loongarch/include/asm/fixmap.h              |   15 +
- arch/loongarch/include/asm/inst.h                |  410 +++++++-
- arch/loongarch/include/asm/io.h                  |   73 +-
- arch/loongarch/include/asm/kexec.h               |   60 ++
- arch/loongarch/include/asm/loongarch.h           |   33 +-
- arch/loongarch/include/asm/module.h              |   27 +-
- arch/loongarch/include/asm/module.lds.h          |    1 +
- arch/loongarch/include/asm/percpu.h              |    9 +
- arch/loongarch/include/asm/perf_event.h          |    4 +-
- arch/loongarch/include/asm/pgtable-bits.h        |    3 +
- arch/loongarch/include/asm/setup.h               |    2 +
- arch/loongarch/include/asm/spinlock.h            |   12 +
- arch/loongarch/include/asm/spinlock_types.h      |   11 +
- arch/loongarch/include/uapi/asm/bpf_perf_event.h |    9 +
- arch/loongarch/include/uapi/asm/perf_regs.h      |   40 +
- arch/loongarch/kernel/Makefile                   |    7 +
- arch/loongarch/kernel/cacheinfo.c                |   98 +-
- arch/loongarch/kernel/cpu-probe.c                |    4 +-
- arch/loongarch/kernel/crash_dump.c               |   23 +
- arch/loongarch/kernel/efi-header.S               |   99 ++
- arch/loongarch/kernel/efi.c                      |   33 +-
- arch/loongarch/kernel/env.c                      |   13 +-
- arch/loongarch/kernel/head.S                     |   40 +-
- arch/loongarch/kernel/image-vars.h               |   27 +
- arch/loongarch/kernel/machine_kexec.c            |  304 ++++++
- arch/loongarch/kernel/mem.c                      |    3 -
- arch/loongarch/kernel/module-sections.c          |   61 +-
- arch/loongarch/kernel/module.c                   |  105 +-
- arch/loongarch/kernel/perf_event.c               |  887 ++++++++++++++++
- arch/loongarch/kernel/perf_regs.c                |   53 +
- arch/loongarch/kernel/relocate_kernel.S          |  112 ++
- arch/loongarch/kernel/setup.c                    |   91 +-
- arch/loongarch/kernel/smp.c                      |    5 -
- arch/loongarch/kernel/sysrq.c                    |   65 ++
- arch/loongarch/kernel/topology.c                 |    3 +-
- arch/loongarch/kernel/traps.c                    |   33 +-
- arch/loongarch/kernel/vmlinux.lds.S              |    5 +
- arch/loongarch/mm/cache.c                        |  211 ++--
- arch/loongarch/mm/init.c                         |   64 ++
- arch/loongarch/mm/mmap.c                         |   29 +
- arch/loongarch/mm/tlb.c                          |    5 +-
- arch/loongarch/mm/tlbex.S                        |  537 +++++-----
- arch/loongarch/net/Makefile                      |    7 +
- arch/loongarch/net/bpf_jit.c                     | 1179 ++++++++++++++++++++++
- arch/loongarch/net/bpf_jit.h                     |  282 ++++++
- arch/loongarch/pci/acpi.c                        |   76 +-
- arch/loongarch/pci/pci.c                         |    7 +-
- arch/riscv/Makefile                              |    6 +-
- arch/riscv/boot/.gitignore                       |    1 +
- arch/riscv/boot/Makefile                         |    6 +
- arch/riscv/kernel/image-vars.h                   |    9 -
- arch/x86/platform/efi/efi_64.c                   |   18 +-
- arch/x86/platform/efi/efi_thunk_64.S             |   13 +-
- drivers/firmware/efi/Kconfig                     |   45 +-
- drivers/firmware/efi/efi-init.c                  |   61 +-
- drivers/firmware/efi/efi.c                       |   15 +
- drivers/firmware/efi/libstub/Makefile            |   32 +-
- drivers/firmware/efi/libstub/Makefile.zboot      |   70 ++
- drivers/firmware/efi/libstub/arm64-stub.c        |   27 +-
- drivers/firmware/efi/libstub/efi-stub-helper.c   |  290 +++---
- drivers/firmware/efi/libstub/efi-stub.c          |  118 +--
- drivers/firmware/efi/libstub/efistub.h           |   69 +-
- drivers/firmware/efi/libstub/fdt.c               |  175 ++--
- drivers/firmware/efi/libstub/file.c              |   23 +-
- drivers/firmware/efi/libstub/intrinsics.c        |   30 +
- drivers/firmware/efi/libstub/loongarch-stub.c    |  102 ++
- drivers/firmware/efi/libstub/mem.c               |   93 +-
- drivers/firmware/efi/libstub/randomalloc.c       |   25 +-
- drivers/firmware/efi/libstub/relocate.c          |   21 +-
- drivers/firmware/efi/libstub/systable.c          |    8 +
- drivers/firmware/efi/libstub/x86-stub.c          |   33 +-
- drivers/firmware/efi/libstub/zboot-header.S      |  143 +++
- drivers/firmware/efi/libstub/zboot.c             |  302 ++++++
- drivers/firmware/efi/libstub/zboot.lds           |   44 +
- drivers/platform/Kconfig                         |    2 +
- drivers/platform/Makefile                        |    1 +
- drivers/platform/loongarch/Kconfig               |   31 +
- drivers/platform/loongarch/Makefile              |    1 +
- drivers/platform/loongarch/loongson-laptop.c     |  624 ++++++++++++
- include/linux/efi.h                              |   35 +
- include/linux/pe.h                               |    2 +
- 105 files changed, 6991 insertions(+), 1246 deletions(-)
- create mode 100644 arch/loongarch/include/asm/kexec.h
- create mode 100644 arch/loongarch/include/asm/spinlock.h
- create mode 100644 arch/loongarch/include/asm/spinlock_types.h
- create mode 100644 arch/loongarch/include/uapi/asm/bpf_perf_event.h
- create mode 100644 arch/loongarch/include/uapi/asm/perf_regs.h
- create mode 100644 arch/loongarch/kernel/crash_dump.c
- create mode 100644 arch/loongarch/kernel/efi-header.S
- create mode 100644 arch/loongarch/kernel/image-vars.h
- create mode 100644 arch/loongarch/kernel/machine_kexec.c
- create mode 100644 arch/loongarch/kernel/perf_event.c
- create mode 100644 arch/loongarch/kernel/perf_regs.c
- create mode 100644 arch/loongarch/kernel/relocate_kernel.S
- create mode 100644 arch/loongarch/kernel/sysrq.c
- create mode 100644 arch/loongarch/net/Makefile
- create mode 100644 arch/loongarch/net/bpf_jit.c
- create mode 100644 arch/loongarch/net/bpf_jit.h
- create mode 100644 drivers/firmware/efi/libstub/Makefile.zboot
- create mode 100644 drivers/firmware/efi/libstub/intrinsics.c
- create mode 100644 drivers/firmware/efi/libstub/loongarch-stub.c
- create mode 100644 drivers/firmware/efi/libstub/systable.c
- create mode 100644 drivers/firmware/efi/libstub/zboot-header.S
- create mode 100644 drivers/firmware/efi/libstub/zboot.c
- create mode 100644 drivers/firmware/efi/libstub/zboot.lds
- create mode 100644 drivers/platform/loongarch/Kconfig
- create mode 100644 drivers/platform/loongarch/Makefile
- create mode 100644 drivers/platform/loongarch/loongson-laptop.c
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
