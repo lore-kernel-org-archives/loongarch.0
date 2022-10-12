@@ -1,291 +1,228 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28F717E0;
-	Wed, 12 Oct 2022 14:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1665585754; x=1697121754;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1qyW+GVUGeVRfhRVj7Mv0CU2cbdZUrFTiwU1yJb/dTg=;
-  b=Pl6yb7RGvIovojh7On7QkMIrQmOnma9508stbeLZ1Jq+DyNPFeE0PUlc
-   RxmSPtcpbN2RaP/diohXwu5v62WMEXcISP70CwvIIcWDVzH0nmPMEa1EK
-   arW3hqmB8/wQo4JYi/f0z3hJwmsZ6U7lbd9Z2owG03+SmGLOSYGPbSUh7
-   hMd2/5UAIc7wQ2xH1xD05ebON5egldg+/WH3aQYx4sd0NCzcMexbrPG2s
-   IFV+k9/RDW3SWsGynu1aFKDBra8f08YqJMZuatcL+YGRGtrN2u7Yjf6tC
-   /ntqEyOwUpKsp4q2g1AjHHAyjsjXDQ4cFu5Kyez/3pxd+Mc0N40xQqstp
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="303548883"
-X-IronPort-AV: E=Sophos;i="5.95,179,1661842800"; 
-   d="scan'208";a="303548883"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 07:42:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="659953331"
-X-IronPort-AV: E=Sophos;i="5.95,179,1661842800"; 
-   d="scan'208";a="659953331"
-Received: from lkp-server01.sh.intel.com (HELO 2af0a69ca4e0) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 12 Oct 2022 07:42:28 -0700
-Received: from kbuild by 2af0a69ca4e0 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1oicwG-0003u0-01;
-	Wed, 12 Oct 2022 14:42:28 +0000
-Date: Wed, 12 Oct 2022 22:41:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: ntfs3@lists.linux.dev, loongarch@lists.linux.dev,
- linux-mm@kvack.org, linux-mediatek@lists.infradead.org,
- linux-ext4@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- amd-gfx@lists.freedesktop.org,
- Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- f843795727e4f5612c612cd178db1557978da742
-Message-ID: <6346d21a.rLmYiYOU73PR5G14%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED9B17ED
+	for <loongarch@lists.linux.dev>; Wed, 12 Oct 2022 14:50:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B94D1C433C1;
+	Wed, 12 Oct 2022 14:50:51 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch changes for v6.1
+Date: Wed, 12 Oct 2022 22:48:46 +0800
+Message-Id: <20221012144846.2963749-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: f843795727e4f5612c612cd178db1557978da742  Add linux-next specific files for 20221012
+The following changes since commit 4fe89d07dcc2804c8b562f6c7896a45643d34b2f:
 
-Error/Warning reports:
+  Linux 6.0 (2022-10-02 14:09:07 -0700)
 
-https://lore.kernel.org/linux-mm/202210090954.pTR6m6rj-lkp@intel.com
-https://lore.kernel.org/linux-mm/202210110857.9s0tXVNn-lkp@intel.com
-https://lore.kernel.org/linux-mm/202210111318.mbUfyhps-lkp@intel.com
-https://lore.kernel.org/llvm/202210122108.67op7Ykg-lkp@intel.com
+are available in the Git repository at:
 
-Error/Warning: (recently discovered and may have been fixed)
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.1
 
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/idma64.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/qcom/hdma.ko] undefined!
-ERROR: modpost: "devm_memremap" [drivers/misc/open-dice.ko] undefined!
-ERROR: modpost: "devm_memunmap" [drivers/misc/open-dice.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/char/xillybus/xillybus_of.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/net/ethernet/8390/pcnet_cs.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/tty/ipwireless/ipwireless.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/net/ethernet/8390/pcnet_cs.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/tty/ipwireless/ipwireless.ko] undefined!
-arch/arm64/kernel/alternative.c:199:6: warning: no previous prototype for 'apply_alternatives_vdso' [-Wmissing-prototypes]
-arch/arm64/kernel/alternative.c:295:14: warning: no previous prototype for 'alt_cb_patch_nops' [-Wmissing-prototypes]
-arch/loongarch/kernel/traps.c:93:39: warning: Null pointer dereference: regs [ctunullpointer]
-arch/loongarch/mm/init.c:166:24: warning: variable 'new' set but not used [-Wunused-but-set-variable]
-arch/loongarch/mm/mmap.c:20:65: warning: Parameter 'filp' can be declared with const [constParameter]
-fs/ext4/super.c:1744:19: warning: 'deprecated_msg' defined but not used [-Wunused-const-variable=]
-grep: smatch_trinity_*: No such file or directory
-mm/mmap.c:802 __vma_adjust() error: uninitialized symbol 'next_next'.
-pahole: .tmp_vmlinux.btf: No such file or directory
+for you to fetch changes up to 2c8577f5e455b149f3ecb24e9a9f48f372a5d71a:
 
-Error/Warning ids grouped by kconfigs:
+  LoongArch: Update Loongson-3 default config file (2022-10-12 16:36:23 +0800)
 
-gcc_recent_errors
-|-- arm64-allyesconfig
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
-|   `-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
-|-- arm64-randconfig-r016-20221012
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
-|   `-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
-|-- arm64-randconfig-s043-20221012
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
-|   |-- fs-ntfs3-index.c:sparse:sparse:restricted-__le32-degrades-to-integer
-|   |-- fs-ntfs3-namei.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-restricted-__le16-const-usertype-s1-got-unsigned-short
-|   `-- fs-ntfs3-namei.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-restricted-__le16-const-usertype-s2-got-unsigned-short
-|-- arm64-randconfig-s052-20221012
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
-|   |-- fs-ext4-fast_commit.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-int-priv1-got-restricted-__le16-addressable-usertype-fc_len
-|   |-- fs-ext4-fast_commit.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-int-tag-got-restricted-__le16-addressable-usertype-fc_tag
-|   |-- fs-ext4-fast_commit.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-unsigned-short-usertype-tag-got-restricted-__le16-addressable-usertype-fc_tag
-|   |-- fs-ext4-fast_commit.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-__le16-usertype-fc_len-got-unsigned-short-usertype
-|   |-- fs-ext4-fast_commit.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-__le16-usertype-fc_tag-got-unsigned-short-usertype
-|   |-- fs-ext4-fast_commit.c:sparse:sparse:incorrect-type-in-initializer-(different-base-types)-expected-int-tag-got-restricted-__le16-usertype-fc_tag
-|   `-- fs-ext4-fast_commit.c:sparse:sparse:restricted-__le16-degrades-to-integer
-|-- csky-randconfig-r013-20221012
-|   `-- pahole:.tmp_vmlinux.btf:No-such-file-or-directory
-|-- csky-randconfig-s042-20221012
-|   |-- fs-ext4-fast_commit.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-int-priv1-got-restricted-__le16-addressable-usertype-fc_len
-|   |-- fs-ext4-fast_commit.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-int-tag-got-restricted-__le16-addressable-usertype-fc_tag
-|   |-- fs-ext4-fast_commit.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-unsigned-short-usertype-tag-got-restricted-__le16-addressable-usertype-fc_tag
-|   |-- fs-ext4-fast_commit.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-__le16-usertype-fc_len-got-unsigned-short-usertype
-|   |-- fs-ext4-fast_commit.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-__le16-usertype-fc_tag-got-unsigned-short-usertype
-|   |-- fs-ext4-fast_commit.c:sparse:sparse:incorrect-type-in-initializer-(different-base-types)-expected-int-tag-got-restricted-__le16-usertype-fc_tag
-|   `-- fs-ext4-fast_commit.c:sparse:sparse:restricted-__le16-degrades-to-integer
-|-- i386-allyesconfig
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-defconfig
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a003
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a005
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a012
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a014
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-a016
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-c001
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-|-- i386-randconfig-c021
-|   `-- fs-ext4-super.c:warning:deprecated_msg-defined-but-not-used
-clang_recent_errors
-|-- arm-buildonly-randconfig-r005-20221012
-|   |-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|   `-- fs-ntfs3-namei.c:warning:variable-uni1-is-used-uninitialized-whenever-if-condition-is-true
-|-- arm-sp7021_defconfig
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- arm64-buildonly-randconfig-r006-20221012
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-function-apply_alternatives_vdso
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:error:a-function-declaration-without-a-prototype-is-deprecated-in-all-versions-of-C-Werror-Wstrict-prototypes
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:error:a-function-declaration-without-a-prototype-is-deprecated-in-all-versions-of-C-and-is-treated-as-a-zero-parameter-prototype-in-C2x-conf
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:error:a-parameter-list-without-types-is-only-allowed-in-a-function-definition
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:error:conflicting-types-for-spin_unlock_irqrestore
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:error:expected-)
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:error:expected-identifier-or-(
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:error:expected-parameter-declarator
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:error:type-specifier-missing-defaults-to-int-ISO-C99-and-later-do-not-support-implicit-int
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:error:while-loop-outside-of-a-function
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-crtc_disable_count-set-but-not-used
-|-- arm64-randconfig-r036-20221012
-|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-function-apply_alternatives_vdso
-|   |-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|   `-- fs-ntfs3-namei.c:warning:variable-uni1-is-used-uninitialized-whenever-if-condition-is-true
-|-- hexagon-randconfig-r001-20221012
-|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt2701.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
-|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
-|   |-- drivers-phy-mediatek-phy-mtk-mipi-dsi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:
-|   |-- drivers-phy-mediatek-phy-mtk-mipi-dsi-mt8183.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:
-|   `-- drivers-phy-mediatek-phy-mtk-tphy.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(unsigned-c
-|-- hexagon-randconfig-r005-20221012
-|   `-- drivers-phy-mediatek-phy-mtk-tphy.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(unsigned-c
-|-- hexagon-randconfig-r041-20221012
-|   |-- drivers-phy-mediatek-phy-mtk-tphy.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(unsigned-c
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- hexagon-randconfig-r045-20221012
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- i386-randconfig-a002
-|   |-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|   `-- fs-ntfs3-namei.c:warning:variable-uni1-is-used-uninitialized-whenever-if-condition-is-true
-|-- i386-randconfig-a004
-|   |-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|   `-- fs-ntfs3-namei.c:warning:variable-uni1-is-used-uninitialized-whenever-if-condition-is-true
-|-- i386-randconfig-a011
-|   |-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|   `-- fs-ntfs3-namei.c:warning:variable-uni1-is-used-uninitialized-whenever-if-condition-is-true
-|-- i386-randconfig-a013
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|-- i386-randconfig-a015
-|   |-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
-|   `-- fs-ntfs3-namei.c:warning:variable-uni1-is-used-uninitialized-whenever-if-condition-is-true
-|-- mips-loongson2k_defconfig
-|   `-- fs-ext4-super.c:warning:unused-variable-deprecated_msg
+----------------------------------------------------------------
+LoongArch changes for v6.1
 
-elapsed time: 729m
+1, Use EXPLICIT_RELOCS (ABIv2.0);
+2, Use generic BUG() handler;
+3, Refactor TLB/Cache operations;
+4, Add qspinlock support;
+5, Add perf events support;
+6, Add kexec/kdump support;
+7, Add BPF JIT support;
+8, Add ACPI-based laptop driver;
+9, Update the default config file.
 
-configs tested: 88
-configs skipped: 3
+----------------------------------------------------------------
+Colin Ian King (1):
+      LoongArch: Kconfig: Fix spelling mistake "delibrately" -> "deliberately"
 
-gcc tested configs:
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                        randconfig-a013
-i386                                defconfig
-arc                           tb10x_defconfig
-x86_64                              defconfig
-sh                         apsh4a3a_defconfig
-x86_64                        randconfig-a011
-arm                         cm_x300_defconfig
-nios2                            alldefconfig
-arm                        keystone_defconfig
-x86_64                               rhel-8.3
-x86_64                           rhel-8.3-syz
-powerpc                           allnoconfig
-xtensa                       common_defconfig
-riscv                randconfig-r042-20221012
-arc                                 defconfig
-powerpc                 mpc834x_mds_defconfig
-x86_64                        randconfig-a015
-s390                 randconfig-r044-20221012
-powerpc                          allmodconfig
-alpha                             allnoconfig
-powerpc                      pasemi_defconfig
-x86_64                          rhel-8.3-func
-powerpc                     taishan_defconfig
-i386                          randconfig-a001
-x86_64                         rhel-8.3-kunit
-i386                             allyesconfig
-x86_64                    rhel-8.3-kselftests
-m68k                          atari_defconfig
-riscv                             allnoconfig
-x86_64                           rhel-8.3-kvm
-ia64                                defconfig
-i386                          randconfig-a003
-mips                             allyesconfig
-xtensa                              defconfig
-s390                             allmodconfig
-csky                              allnoconfig
-xtensa                    smp_lx200_defconfig
-arc                               allnoconfig
-x86_64                           allyesconfig
-arm                                 defconfig
-sh                               allmodconfig
-arc                  randconfig-r043-20221012
-x86_64                        randconfig-a004
-powerpc                       ppc64_defconfig
-i386                          randconfig-a005
-alpha                               defconfig
-alpha                            allyesconfig
-x86_64                        randconfig-a002
-s390                             allyesconfig
-arc                              allyesconfig
-s390                                defconfig
-x86_64                        randconfig-a006
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-c001
-i386                          randconfig-a016
-csky                                defconfig
-ia64                         bigsur_defconfig
-powerpc                    amigaone_defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                          amiga_defconfig
-mips                     decstation_defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-ia64                             allmodconfig
+Huacai Chen (10):
+      Merge tag 'efi-next-for-v6.1' into loongarch-next
+      LoongArch: Flush TLB earlier at initialization
+      LoongArch: Mark __xchg() and __cmpxchg() as __always_inline
+      LoongArch: Refactor cache probe and flush methods
+      LoongArch: Support access filter to /dev/mem interface
+      LoongArch: Use TLB for ioremap()
+      LoongArch: Add qspinlock support
+      LoongArch: Add perf events support
+      LoongArch: Add SysRq-x (TLB Dump) support
+      LoongArch: Update Loongson-3 default config file
 
-clang tested configs:
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-hexagon              randconfig-r041-20221012
-x86_64                        randconfig-a014
-hexagon              randconfig-r045-20221012
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-i386                          randconfig-a013
-x86_64                        randconfig-a005
-i386                          randconfig-a015
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-i386                          randconfig-a011
-mips                        qi_lb60_defconfig
-mips                     loongson2k_defconfig
-x86_64                          rhel-8.3-rust
-arm                          sp7021_defconfig
-arm                       netwinder_defconfig
-powerpc                        icon_defconfig
+Jianmin Lv (2):
+      LoongArch: Fix cpu name after CPU-hotplug
+      LoongArch: Add ACPI-based generic laptop driver
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Rui Wang (1):
+      LoongArch: mm: Refactor TLB exception handlers
+
+Tiezhu Yang (4):
+      LoongArch: Do not create sysfs control file for io master CPUs
+      LoongArch: Move {signed,unsigned}_imm_check() to inst.h
+      LoongArch: Add some instruction opcodes and formats
+      LoongArch: Add BPF JIT support
+
+Xi Ruoyao (5):
+      LoongArch: Add Kconfig option AS_HAS_EXPLICIT_RELOCS
+      LoongArch: Adjust symbol addressing for AS_HAS_EXPLICIT_RELOCS
+      LoongArch: Define ELF relocation types added in ABIv2.0
+      LoongArch: Support PC-relative relocations in modules
+      LoongArch: Support R_LARCH_GOT_PC_{LO12,HI20} in modules
+
+Youling Tang (3):
+      LoongArch: Use generic BUG() handler
+      LoongArch: Add kexec support
+      LoongArch: Add kdump support
+
+ Documentation/arm/uefi.rst                       |    4 -
+ arch/arm/include/asm/efi.h                       |    3 +-
+ arch/arm/kernel/efi.c                            |   79 ++
+ arch/arm/kernel/setup.c                          |    2 +-
+ arch/arm64/Makefile                              |    9 +-
+ arch/arm64/boot/.gitignore                       |    1 +
+ arch/arm64/boot/Makefile                         |    6 +
+ arch/arm64/kernel/image-vars.h                   |   13 -
+ arch/loongarch/Kbuild                            |    1 +
+ arch/loongarch/Kconfig                           |   74 +-
+ arch/loongarch/Makefile                          |   40 +-
+ arch/loongarch/boot/.gitignore                   |    1 +
+ arch/loongarch/boot/Makefile                     |   14 +-
+ arch/loongarch/configs/loongson3_defconfig       |   63 +-
+ arch/loongarch/include/asm/Kbuild                |    5 +-
+ arch/loongarch/include/asm/bootinfo.h            |    7 +-
+ arch/loongarch/include/asm/bug.h                 |   58 +-
+ arch/loongarch/include/asm/cacheflush.h          |   87 +-
+ arch/loongarch/include/asm/cacheops.h            |   36 +-
+ arch/loongarch/include/asm/cmpxchg.h             |    8 +-
+ arch/loongarch/include/asm/cpu-features.h        |    5 -
+ arch/loongarch/include/asm/cpu-info.h            |   21 +-
+ arch/loongarch/include/asm/efi.h                 |   11 +-
+ arch/loongarch/include/asm/elf.h                 |   37 +
+ arch/loongarch/include/asm/fixmap.h              |   15 +
+ arch/loongarch/include/asm/inst.h                |  410 +++++++-
+ arch/loongarch/include/asm/io.h                  |   73 +-
+ arch/loongarch/include/asm/kexec.h               |   60 ++
+ arch/loongarch/include/asm/loongarch.h           |   33 +-
+ arch/loongarch/include/asm/module.h              |   27 +-
+ arch/loongarch/include/asm/module.lds.h          |    1 +
+ arch/loongarch/include/asm/percpu.h              |    9 +
+ arch/loongarch/include/asm/perf_event.h          |    4 +-
+ arch/loongarch/include/asm/pgtable-bits.h        |    3 +
+ arch/loongarch/include/asm/setup.h               |    2 +
+ arch/loongarch/include/asm/spinlock.h            |   12 +
+ arch/loongarch/include/asm/spinlock_types.h      |   11 +
+ arch/loongarch/include/uapi/asm/bpf_perf_event.h |    9 +
+ arch/loongarch/include/uapi/asm/perf_regs.h      |   40 +
+ arch/loongarch/kernel/Makefile                   |    7 +
+ arch/loongarch/kernel/cacheinfo.c                |   98 +-
+ arch/loongarch/kernel/cpu-probe.c                |    4 +-
+ arch/loongarch/kernel/crash_dump.c               |   23 +
+ arch/loongarch/kernel/efi-header.S               |   99 ++
+ arch/loongarch/kernel/efi.c                      |   33 +-
+ arch/loongarch/kernel/env.c                      |   13 +-
+ arch/loongarch/kernel/head.S                     |   40 +-
+ arch/loongarch/kernel/image-vars.h               |   27 +
+ arch/loongarch/kernel/machine_kexec.c            |  304 ++++++
+ arch/loongarch/kernel/mem.c                      |    3 -
+ arch/loongarch/kernel/module-sections.c          |   61 +-
+ arch/loongarch/kernel/module.c                   |  105 +-
+ arch/loongarch/kernel/perf_event.c               |  887 ++++++++++++++++
+ arch/loongarch/kernel/perf_regs.c                |   53 +
+ arch/loongarch/kernel/relocate_kernel.S          |  112 ++
+ arch/loongarch/kernel/setup.c                    |   91 +-
+ arch/loongarch/kernel/smp.c                      |    5 -
+ arch/loongarch/kernel/sysrq.c                    |   65 ++
+ arch/loongarch/kernel/topology.c                 |    3 +-
+ arch/loongarch/kernel/traps.c                    |   33 +-
+ arch/loongarch/kernel/vmlinux.lds.S              |    5 +
+ arch/loongarch/mm/cache.c                        |  211 ++--
+ arch/loongarch/mm/init.c                         |   64 ++
+ arch/loongarch/mm/mmap.c                         |   29 +
+ arch/loongarch/mm/tlb.c                          |    5 +-
+ arch/loongarch/mm/tlbex.S                        |  537 +++++-----
+ arch/loongarch/net/Makefile                      |    7 +
+ arch/loongarch/net/bpf_jit.c                     | 1179 ++++++++++++++++++++++
+ arch/loongarch/net/bpf_jit.h                     |  282 ++++++
+ arch/loongarch/pci/acpi.c                        |   76 +-
+ arch/loongarch/pci/pci.c                         |    7 +-
+ arch/riscv/Makefile                              |    6 +-
+ arch/riscv/boot/.gitignore                       |    1 +
+ arch/riscv/boot/Makefile                         |    6 +
+ arch/riscv/kernel/image-vars.h                   |    9 -
+ arch/x86/platform/efi/efi_64.c                   |   18 +-
+ arch/x86/platform/efi/efi_thunk_64.S             |   13 +-
+ drivers/firmware/efi/Kconfig                     |   45 +-
+ drivers/firmware/efi/efi-init.c                  |   61 +-
+ drivers/firmware/efi/efi.c                       |   15 +
+ drivers/firmware/efi/libstub/Makefile            |   32 +-
+ drivers/firmware/efi/libstub/Makefile.zboot      |   70 ++
+ drivers/firmware/efi/libstub/arm64-stub.c        |   27 +-
+ drivers/firmware/efi/libstub/efi-stub-helper.c   |  290 +++---
+ drivers/firmware/efi/libstub/efi-stub.c          |  118 +--
+ drivers/firmware/efi/libstub/efistub.h           |   69 +-
+ drivers/firmware/efi/libstub/fdt.c               |  175 ++--
+ drivers/firmware/efi/libstub/file.c              |   23 +-
+ drivers/firmware/efi/libstub/intrinsics.c        |   30 +
+ drivers/firmware/efi/libstub/loongarch-stub.c    |  102 ++
+ drivers/firmware/efi/libstub/mem.c               |   93 +-
+ drivers/firmware/efi/libstub/randomalloc.c       |   25 +-
+ drivers/firmware/efi/libstub/relocate.c          |   21 +-
+ drivers/firmware/efi/libstub/systable.c          |    8 +
+ drivers/firmware/efi/libstub/x86-stub.c          |   33 +-
+ drivers/firmware/efi/libstub/zboot-header.S      |  143 +++
+ drivers/firmware/efi/libstub/zboot.c             |  302 ++++++
+ drivers/firmware/efi/libstub/zboot.lds           |   44 +
+ drivers/platform/Kconfig                         |    2 +
+ drivers/platform/Makefile                        |    1 +
+ drivers/platform/loongarch/Kconfig               |   31 +
+ drivers/platform/loongarch/Makefile              |    1 +
+ drivers/platform/loongarch/loongson-laptop.c     |  624 ++++++++++++
+ include/linux/efi.h                              |   35 +
+ include/linux/pe.h                               |    2 +
+ 105 files changed, 6991 insertions(+), 1246 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kexec.h
+ create mode 100644 arch/loongarch/include/asm/spinlock.h
+ create mode 100644 arch/loongarch/include/asm/spinlock_types.h
+ create mode 100644 arch/loongarch/include/uapi/asm/bpf_perf_event.h
+ create mode 100644 arch/loongarch/include/uapi/asm/perf_regs.h
+ create mode 100644 arch/loongarch/kernel/crash_dump.c
+ create mode 100644 arch/loongarch/kernel/efi-header.S
+ create mode 100644 arch/loongarch/kernel/image-vars.h
+ create mode 100644 arch/loongarch/kernel/machine_kexec.c
+ create mode 100644 arch/loongarch/kernel/perf_event.c
+ create mode 100644 arch/loongarch/kernel/perf_regs.c
+ create mode 100644 arch/loongarch/kernel/relocate_kernel.S
+ create mode 100644 arch/loongarch/kernel/sysrq.c
+ create mode 100644 arch/loongarch/net/Makefile
+ create mode 100644 arch/loongarch/net/bpf_jit.c
+ create mode 100644 arch/loongarch/net/bpf_jit.h
+ create mode 100644 drivers/firmware/efi/libstub/Makefile.zboot
+ create mode 100644 drivers/firmware/efi/libstub/intrinsics.c
+ create mode 100644 drivers/firmware/efi/libstub/loongarch-stub.c
+ create mode 100644 drivers/firmware/efi/libstub/systable.c
+ create mode 100644 drivers/firmware/efi/libstub/zboot-header.S
+ create mode 100644 drivers/firmware/efi/libstub/zboot.c
+ create mode 100644 drivers/firmware/efi/libstub/zboot.lds
+ create mode 100644 drivers/platform/loongarch/Kconfig
+ create mode 100644 drivers/platform/loongarch/Makefile
+ create mode 100644 drivers/platform/loongarch/loongson-laptop.c
