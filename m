@@ -1,72 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F5D33C5
-	for <loongarch@lists.linux.dev>; Thu, 13 Oct 2022 15:27:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66E7DC433C1
-	for <loongarch@lists.linux.dev>; Thu, 13 Oct 2022 15:27:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1665674858;
-	bh=myeHeaWInMdCAm60tY6McH+eKfDRYbTXRzlUHuFH74Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=NwvNpc5DoZ9Q/vC851T9KWaWr01cC1qCEY2hDUK+S4iE0CI2ohNq7DhrmaJcxs3wa
-	 tygy+ZdpNwCKcAzEbeTDQzieegX4wKGvrp27bxd2rwUNRZ4t5oHz+OXoNMzUBBVr0+
-	 ao81gFaolxvfcKypSeFiOAk4UhnFKR9S1YTClxX4W5aZWYYn5Lzt0amMStpsw646t7
-	 1/tpuWcawMlOlxRmufnVs3USljjAH9kkxPDuipbKzWwFS33MY9KvuCFwA5/9AXFpGw
-	 mdWpjFNC+xcgXHHLSsSXZaP/l/ivicn5tNTMID7U/pQa459qWsiC4LtfZZVMslwsUf
-	 xwLF6/i011nvg==
-Received: by mail-ed1-f49.google.com with SMTP id s30so3160532eds.1
-        for <loongarch@lists.linux.dev>; Thu, 13 Oct 2022 08:27:38 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0IhzDWit5q7ZnvvPrYYzADRQBjEu1J640DsprJQ5wUuR0SA6LY
-	Tp2l/cuN2EY3Vr3ifgXjo1xfOWjX8jc9o4ShiME=
-X-Google-Smtp-Source: AMsMyM61ntkQ09tAxmD/aksdqFbedBD1EgpOXV90Jy2r2V93n3AtnJgua0sIPdZJp2Qzl14ulQmFptdaSMyb1iDxp6w=
-X-Received: by 2002:a05:6402:550e:b0:456:f79f:2bed with SMTP id
- fi14-20020a056402550e00b00456f79f2bedmr316976edb.106.1665674856608; Thu, 13
- Oct 2022 08:27:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FAE33C5
+	for <loongarch@lists.linux.dev>; Thu, 13 Oct 2022 15:41:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67177C433D6;
+	Thu, 13 Oct 2022 15:41:47 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: BPF: Avoid declare variables in switch-case
+Date: Thu, 13 Oct 2022 23:40:00 +0800
+Message-Id: <20221013154000.3462836-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221012144846.2963749-1-chenhuacai@loongson.cn> <CAHk-=wj=62F=soverz1NT41B1_CMtaxnUZX+_qGQ3mbeQdjivg@mail.gmail.com>
-In-Reply-To: <CAHk-=wj=62F=soverz1NT41B1_CMtaxnUZX+_qGQ3mbeQdjivg@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 13 Oct 2022 23:27:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H49Te6h4Qx0xaKwk8y29pgW+12=hpsJh8w6Tkyp84f0UQ@mail.gmail.com>
-Message-ID: <CAAhV-H49Te6h4Qx0xaKwk8y29pgW+12=hpsJh8w6Tkyp84f0UQ@mail.gmail.com>
-Subject: Re: [GIT PULL] LoongArch changes for v6.1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi, Linus,
+Not all compilers support declare variables in switch-case, so move
+declarations to the beginning of a function. Otherwise we may get such
+build errors:
 
-On Thu, Oct 13, 2022 at 2:24 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, Oct 12, 2022 at 7:51 AM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.1
->
-> Grr.
->
-> This was rebased mere hours before the pull request.
->
-> Much (all?) of it has been in next - with different commit IDs, of
-> course, but the question remains why you have rebased it?
-I'm very sorry for that. The patches are in linux-next for some days,
-but the kernel test robot reports that there is a "define but not
-used" warning, so I fixed that warning and rebased.
+arch/loongarch/net/bpf_jit.c: In function ‘emit_atomic’:
+arch/loongarch/net/bpf_jit.c:362:3: error: a label can only be part of a statement and a declaration is not a statement
+   u8 r0 = regmap[BPF_REG_0];
+   ^~
+arch/loongarch/net/bpf_jit.c: In function ‘build_insn’:
+arch/loongarch/net/bpf_jit.c:727:3: error: a label can only be part of a statement and a declaration is not a statement
+   u8 t7 = -1;
+   ^~
+arch/loongarch/net/bpf_jit.c:778:3: error: a label can only be part of a statement and a declaration is not a statement
+   int ret;
+   ^~~
+arch/loongarch/net/bpf_jit.c:779:3: error: expected expression before ‘u64’
+   u64 func_addr;
+   ^~~
+arch/loongarch/net/bpf_jit.c:780:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   bool func_addr_fixed;
+   ^~~~
+arch/loongarch/net/bpf_jit.c:784:11: error: ‘func_addr’ undeclared (first use in this function); did you mean ‘in_addr’?
+          &func_addr, &func_addr_fixed);
+           ^~~~~~~~~
+           in_addr
+arch/loongarch/net/bpf_jit.c:784:11: note: each undeclared identifier is reported only once for each function it appears in
+arch/loongarch/net/bpf_jit.c:814:3: error: a label can only be part of a statement and a declaration is not a statement
+   u64 imm64 = (u64)(insn + 1)->imm << 32 | (u32)insn->imm;
+   ^~~
 
-> It just makes it much less convenient for me to check "was this in
-> next?" and is generally a *horrible* thing to do.
-I will avoid such operations in future, sorry for that again.
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/net/bpf_jit.c | 31 +++++++++++++------------------
+ 1 file changed, 13 insertions(+), 18 deletions(-)
 
-Huacai
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 43f0a98efe38..2a9b590f47e6 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -279,6 +279,7 @@ static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ 	const u8 t1 = LOONGARCH_GPR_T1;
+ 	const u8 t2 = LOONGARCH_GPR_T2;
+ 	const u8 t3 = LOONGARCH_GPR_T3;
++	const u8 r0 = regmap[BPF_REG_0];
+ 	const u8 src = regmap[insn->src_reg];
+ 	const u8 dst = regmap[insn->dst_reg];
+ 	const s16 off = insn->off;
+@@ -359,8 +360,6 @@ static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ 		break;
+ 	/* r0 = atomic_cmpxchg(dst + off, r0, src); */
+ 	case BPF_CMPXCHG:
+-		u8 r0 = regmap[BPF_REG_0];
+-
+ 		move_reg(ctx, t2, r0);
+ 		if (isdw) {
+ 			emit_insn(ctx, lld, r0, t1, 0);
+@@ -390,8 +389,11 @@ static bool is_signed_bpf_cond(u8 cond)
+ 
+ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool extra_pass)
+ {
+-	const bool is32 = BPF_CLASS(insn->code) == BPF_ALU ||
+-			  BPF_CLASS(insn->code) == BPF_JMP32;
++	u8 t0 = -1;
++	u64 func_addr;
++	bool func_addr_fixed;
++	int i = insn - ctx->prog->insnsi;
++	int ret, jmp_offset;
+ 	const u8 code = insn->code;
+ 	const u8 cond = BPF_OP(code);
+ 	const u8 t1 = LOONGARCH_GPR_T1;
+@@ -400,8 +402,8 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 	const u8 dst = regmap[insn->dst_reg];
+ 	const s16 off = insn->off;
+ 	const s32 imm = insn->imm;
+-	int jmp_offset;
+-	int i = insn - ctx->prog->insnsi;
++	const u64 imm64 = (u64)(insn + 1)->imm << 32 | (u32)insn->imm;
++	const bool is32 = BPF_CLASS(insn->code) == BPF_ALU || BPF_CLASS(insn->code) == BPF_JMP32;
+ 
+ 	switch (code) {
+ 	/* dst = src */
+@@ -724,24 +726,23 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 	case BPF_JMP32 | BPF_JSGE | BPF_K:
+ 	case BPF_JMP32 | BPF_JSLT | BPF_K:
+ 	case BPF_JMP32 | BPF_JSLE | BPF_K:
+-		u8 t7 = -1;
+ 		jmp_offset = bpf2la_offset(i, off, ctx);
+ 		if (imm) {
+ 			move_imm(ctx, t1, imm, false);
+-			t7 = t1;
++			t0 = t1;
+ 		} else {
+ 			/* If imm is 0, simply use zero register. */
+-			t7 = LOONGARCH_GPR_ZERO;
++			t0 = LOONGARCH_GPR_ZERO;
+ 		}
+ 		move_reg(ctx, t2, dst);
+ 		if (is_signed_bpf_cond(BPF_OP(code))) {
+-			emit_sext_32(ctx, t7, is32);
++			emit_sext_32(ctx, t0, is32);
+ 			emit_sext_32(ctx, t2, is32);
+ 		} else {
+-			emit_zext_32(ctx, t7, is32);
++			emit_zext_32(ctx, t0, is32);
+ 			emit_zext_32(ctx, t2, is32);
+ 		}
+-		if (emit_cond_jmp(ctx, cond, t2, t7, jmp_offset) < 0)
++		if (emit_cond_jmp(ctx, cond, t2, t0, jmp_offset) < 0)
+ 			goto toofar;
+ 		break;
+ 
+@@ -775,10 +776,6 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 
+ 	/* function call */
+ 	case BPF_JMP | BPF_CALL:
+-		int ret;
+-		u64 func_addr;
+-		bool func_addr_fixed;
+-
+ 		mark_call(ctx);
+ 		ret = bpf_jit_get_func_addr(ctx->prog, insn, extra_pass,
+ 					    &func_addr, &func_addr_fixed);
+@@ -811,8 +808,6 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 
+ 	/* dst = imm64 */
+ 	case BPF_LD | BPF_IMM | BPF_DW:
+-		u64 imm64 = (u64)(insn + 1)->imm << 32 | (u32)insn->imm;
+-
+ 		move_imm(ctx, dst, imm64, is32);
+ 		return 1;
+ 
+-- 
+2.31.1
 
->
->                        Linus
