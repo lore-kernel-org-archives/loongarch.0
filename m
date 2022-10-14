@@ -1,18 +1,20 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1776A370
-	for <loongarch@lists.linux.dev>; Fri, 14 Oct 2022 01:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31B31370
+	for <loongarch@lists.linux.dev>; Fri, 14 Oct 2022 02:18:40 +0000 (UTC)
 Received: from [10.130.0.135] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxnms+v0hjacAtAA--.17933S3;
-	Fri, 14 Oct 2022 09:45:34 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxqmr+xkhjKcgtAA--.28612S3;
+	Fri, 14 Oct 2022 10:18:39 +0800 (CST)
 Subject: Re: [PATCH] LoongArch: BPF: Avoid declare variables in switch-case
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
 References: <20221013154000.3462836-1-chenhuacai@loongson.cn>
-Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
- Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+ <8a8fa581-94a9-649d-8c01-f1afd4bc9514@xen0n.name>
+ <CAAhV-H5U1c_wfWLuxMaHD6c9-k+g-iSqgtcJVwceoL13J7hEiA@mail.gmail.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
+ Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
  Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <e228a9ce-7801-ae00-001e-12f4ac4d2a81@loongson.cn>
-Date: Fri, 14 Oct 2022 09:45:34 +0800
+Message-ID: <ae6260e5-0eb6-a615-7032-6481cd186f3f@loongson.cn>
+Date: Fri, 14 Oct 2022 10:18:38 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -21,79 +23,86 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20221013154000.3462836-1-chenhuacai@loongson.cn>
+In-Reply-To: <CAAhV-H5U1c_wfWLuxMaHD6c9-k+g-iSqgtcJVwceoL13J7hEiA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxnms+v0hjacAtAA--.17933S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr15uw48CryUGw47KF1kGrg_yoW8Cw1fpF
-	9xArnxC3yDG347Arn2y3yrWrn8KrW8Gw17XFyaya48uanrXr18ZF1fK3s8JayDXw45Xr1f
-	X3yF9rnIvayvva7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Cxqmr+xkhjKcgtAA--.28612S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw1UAry3Xw15WF1fuw18Grg_yoW8tr43pF
+	95Wan8Ka1DJ3yY9FyqqrWkXa48tw4kJrn8KF1FqrZ2kFsF9r1fGr48KF4FkFZxGrn8ur4I
+	va1qvayxuw15CrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
 	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
 	WxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	Yx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbV
 	WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
-	zVAYIcxG8wCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnU
-	UI43ZEXa7VUbNzVUUUUUU==
+	zVAYIcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
+	73UjIFyTuYvjfU5CztUUUUU
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 
 
 
-On 10/13/2022 11:40 PM, Huacai Chen wrote:
-> Not all compilers support declare variables in switch-case, so move
-
-We know that gcc 13 has no problem, it is better to point out the
-compiler version explicitly in the commit message so that the users
-can know how to reproduce the build errors.
-
-> declarations to the beginning of a function. Otherwise we may get such
-> build errors:
-
-We can resolve the errors by adding a pair of curly braces around
-the statements of the case, like this:
-
-switch (...) {
-case ...:
-     {
-         int ...;
-         ...
-         break;
-     }
-}
-
+On 10/14/2022 09:13 AM, Huacai Chen wrote:
+> Hi, Xuerui,
 >
-> arch/loongarch/net/bpf_jit.c: In function ‘emit_atomic’:
-> arch/loongarch/net/bpf_jit.c:362:3: error: a label can only be part of a statement and a declaration is not a statement
->    u8 r0 = regmap[BPF_REG_0];
->    ^~
-> arch/loongarch/net/bpf_jit.c: In function ‘build_insn’:
-> arch/loongarch/net/bpf_jit.c:727:3: error: a label can only be part of a statement and a declaration is not a statement
->    u8 t7 = -1;
->    ^~
-> arch/loongarch/net/bpf_jit.c:778:3: error: a label can only be part of a statement and a declaration is not a statement
->    int ret;
->    ^~~
-> arch/loongarch/net/bpf_jit.c:779:3: error: expected expression before ‘u64’
->    u64 func_addr;
->    ^~~
-> arch/loongarch/net/bpf_jit.c:780:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
->    bool func_addr_fixed;
->    ^~~~
-> arch/loongarch/net/bpf_jit.c:784:11: error: ‘func_addr’ undeclared (first use in this function); did you mean ‘in_addr’?
->           &func_addr, &func_addr_fixed);
->            ^~~~~~~~~
->            in_addr
-> arch/loongarch/net/bpf_jit.c:784:11: note: each undeclared identifier is reported only once for each function it appears in
-> arch/loongarch/net/bpf_jit.c:814:3: error: a label can only be part of a statement and a declaration is not a statement
->    u64 imm64 = (u64)(insn + 1)->imm << 32 | (u32)insn->imm;
->    ^~~
+> On Fri, Oct 14, 2022 at 12:43 AM WANG Xuerui <kernel@xen0n.name> wrote:
+>>
+>> On 10/13/22 23:40, Huacai Chen wrote:
+>>> Not all compilers support declare variables in switch-case, so move
+>>> declarations to the beginning of a function. Otherwise we may get such
+>>> build errors:
+
+...
+
+>>>
+>>>   static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool extra_pass)
+>>>   {
+>>> -     const bool is32 = BPF_CLASS(insn->code) == BPF_ALU ||
+>>> -                       BPF_CLASS(insn->code) == BPF_JMP32;
+>>> +     u8 t0 = -1;
+>> Here "t0" seems to be a versatile temp value, while the "t1" below is
+>> the actual GPR $t1. What about renaming "t0" to something like "tmp" to
+>> reduce confusion? I believe due to things like "t0 = LOONGARCH_GPR_ZERO"
+>> the "t0" is 100% not an actual mapping to $t0.
+> I rename t7 to t0 because there is no t3-t6, t7 looks very strange.
+> But from emit_cond_jmp() the 3rd and 4th parameters have no difference
+> so I suppose t0 is just OK, then whether rename it to tmp depends on
+> Tiezhu's opinion.
 >
+
+Use "tmp" seems better due to it is a temp value.
+
+>>> +     u64 func_addr;
+>>> +     bool func_addr_fixed;
+>>> +     int i = insn - ctx->prog->insnsi;
+>>> +     int ret, jmp_offset;
+>>>       const u8 code = insn->code;
+>>>       const u8 cond = BPF_OP(code);
+>>>       const u8 t1 = LOONGARCH_GPR_T1;
+>>> @@ -400,8 +402,8 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+>>>       const u8 dst = regmap[insn->dst_reg];
+>>>       const s16 off = insn->off;
+>>>       const s32 imm = insn->imm;
+>>> -     int jmp_offset;
+>>> -     int i = insn - ctx->prog->insnsi;
+>>> +     const u64 imm64 = (u64)(insn + 1)->imm << 32 | (u32)insn->imm;
+>>> +     const bool is32 = BPF_CLASS(insn->code) == BPF_ALU || BPF_CLASS(insn->code) == BPF_JMP32;
+>> Please consider reducing diff damage and not touching parts not directly
+>> affected by this change. For example this "is32" declaration and
+>> initialization was moved although not related to this change.
+
+It looks reasonable, one change per patch is better.
+
+> I think defining variables from simple to complex and grouping them
+> can make life easier. :)
+>
+
+No strong opinion on this, I am OK either way.
 
 Thanks,
 Tiezhu
