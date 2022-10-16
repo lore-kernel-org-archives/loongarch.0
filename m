@@ -1,113 +1,676 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FBF63A
-	for <loongarch@lists.linux.dev>; Fri, 14 Oct 2022 08:58:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C0DEC433C1
-	for <loongarch@lists.linux.dev>; Fri, 14 Oct 2022 08:58:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1665737900;
-	bh=jjLpNiBtYUiuOX7cnEKMRg+pshJMGQgSYBE4bgVEUIU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ef/3XGuFVgUUNlF1CkC9qw6I+JqB7jQOVfGbhBOLpsl16VCmb+d514fxn2DpzYxYw
-	 Hhu1A//L1dLqw7XGRdb56GabTHhDqRenlZuu1NDOJGFF2hYXqGeJ1UGfGUJfUi8Sgm
-	 TUq4penAHlqQd3dzB2WFLy106LhHP4CyzkufCQlfNZ1WZKkUs0JxdeiNYRG6LPYUsb
-	 F29ddHnA8qvS8HAxWpp/8aP29DE3qSjhRp11k3ckiLm4KB2cbNcomxWJO6KyFfENK+
-	 gNjueg6UgkvaCLQ+8lHAY3BBffrIMGrCK6ToL4MxNMl0GCtgd0/jxr1CoehvVcM8TJ
-	 5TBrLZ+79Fvlg==
-Received: by mail-ed1-f53.google.com with SMTP id m15so5914497edb.13
-        for <loongarch@lists.linux.dev>; Fri, 14 Oct 2022 01:58:20 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0PqU21QVz0S/fcvQCBiyqgP1IKZJ5Nx0fnnlItGNxsD3lVK2jI
-	nXt/1NuVRqXMQbpofCBpBwqWGlNNjErO6THu6+Y=
-X-Google-Smtp-Source: AMsMyM4wO+ShrjWkuHUfgMw2Cp3IocIUPMPT5y53aZgRfsRMZolMats/QrCYYwSZQffgVQDjZqisQCwpWV6Z3z2l3c4=
-X-Received: by 2002:aa7:d4d9:0:b0:45c:7eae:d8d8 with SMTP id
- t25-20020aa7d4d9000000b0045c7eaed8d8mr3411632edr.254.1665737898655; Fri, 14
- Oct 2022 01:58:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F04110E1
+	for <loongarch@lists.linux.dev>; Sun, 16 Oct 2022 13:35:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F4B0C433C1;
+	Sun, 16 Oct 2022 13:35:56 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Add unaligned access support
+Date: Sun, 16 Oct 2022 21:34:18 +0800
+Message-Id: <20221016133418.2122777-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221013154000.3462836-1-chenhuacai@loongson.cn>
- <8a8fa581-94a9-649d-8c01-f1afd4bc9514@xen0n.name> <CAAhV-H5U1c_wfWLuxMaHD6c9-k+g-iSqgtcJVwceoL13J7hEiA@mail.gmail.com>
- <ae6260e5-0eb6-a615-7032-6481cd186f3f@loongson.cn>
-In-Reply-To: <ae6260e5-0eb6-a615-7032-6481cd186f3f@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 14 Oct 2022 16:58:07 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4H5x=XmShR7s_=bwTE8mN37QTt7t8QRaYy1i3oYQKWgw@mail.gmail.com>
-Message-ID: <CAAhV-H4H5x=XmShR7s_=bwTE8mN37QTt7t8QRaYy1i3oYQKWgw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: BPF: Avoid declare variables in switch-case
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 14, 2022 at 10:18 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
->
->
-> On 10/14/2022 09:13 AM, Huacai Chen wrote:
-> > Hi, Xuerui,
-> >
-> > On Fri, Oct 14, 2022 at 12:43 AM WANG Xuerui <kernel@xen0n.name> wrote:
-> >>
-> >> On 10/13/22 23:40, Huacai Chen wrote:
-> >>> Not all compilers support declare variables in switch-case, so move
-> >>> declarations to the beginning of a function. Otherwise we may get such
-> >>> build errors:
->
-> ...
->
-> >>>
-> >>>   static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool extra_pass)
-> >>>   {
-> >>> -     const bool is32 = BPF_CLASS(insn->code) == BPF_ALU ||
-> >>> -                       BPF_CLASS(insn->code) == BPF_JMP32;
-> >>> +     u8 t0 = -1;
-> >> Here "t0" seems to be a versatile temp value, while the "t1" below is
-> >> the actual GPR $t1. What about renaming "t0" to something like "tmp" to
-> >> reduce confusion? I believe due to things like "t0 = LOONGARCH_GPR_ZERO"
-> >> the "t0" is 100% not an actual mapping to $t0.
-> > I rename t7 to t0 because there is no t3-t6, t7 looks very strange.
-> > But from emit_cond_jmp() the 3rd and 4th parameters have no difference
-> > so I suppose t0 is just OK, then whether rename it to tmp depends on
-> > Tiezhu's opinion.
-> >
->
-> Use "tmp" seems better due to it is a temp value.
-OK, then I will use tmp or just tm for alignment.
+Loongson-2 series (Loongson-2K500, Loongson-2K1000) don't support
+unaligned access in hardware, while Loongson-3 series (Loongson-3A5000,
+Loongson-3C5000) are configurable whether support unaligned access in
+hardware. This patch add unaligned access emulation for those LoongArch
+processors without hardware support.
 
->
-> >>> +     u64 func_addr;
-> >>> +     bool func_addr_fixed;
-> >>> +     int i = insn - ctx->prog->insnsi;
-> >>> +     int ret, jmp_offset;
-> >>>       const u8 code = insn->code;
-> >>>       const u8 cond = BPF_OP(code);
-> >>>       const u8 t1 = LOONGARCH_GPR_T1;
-> >>> @@ -400,8 +402,8 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
-> >>>       const u8 dst = regmap[insn->dst_reg];
-> >>>       const s16 off = insn->off;
-> >>>       const s32 imm = insn->imm;
-> >>> -     int jmp_offset;
-> >>> -     int i = insn - ctx->prog->insnsi;
-> >>> +     const u64 imm64 = (u64)(insn + 1)->imm << 32 | (u32)insn->imm;
-> >>> +     const bool is32 = BPF_CLASS(insn->code) == BPF_ALU || BPF_CLASS(insn->code) == BPF_JMP32;
-> >> Please consider reducing diff damage and not touching parts not directly
-> >> affected by this change. For example this "is32" declaration and
-> >> initialization was moved although not related to this change.
->
-> It looks reasonable, one change per patch is better.
->
-> > I think defining variables from simple to complex and grouping them
-> > can make life easier. :)
-> >
->
-> No strong opinion on this, I am OK either way.
->
-> Thanks,
-> Tiezhu
->
->
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/Kconfig            |   2 +
+ arch/loongarch/include/asm/inst.h |  14 ++
+ arch/loongarch/kernel/Makefile    |   3 +-
+ arch/loongarch/kernel/traps.c     |  27 ++
+ arch/loongarch/kernel/unaligned.c | 401 ++++++++++++++++++++++++++++++
+ arch/loongarch/lib/Makefile       |   2 +-
+ arch/loongarch/lib/unaligned.S    |  93 +++++++
+ 7 files changed, 540 insertions(+), 2 deletions(-)
+ create mode 100644 arch/loongarch/kernel/unaligned.c
+ create mode 100644 arch/loongarch/lib/unaligned.S
+
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 0a6ef613124c..a8dc58e8162a 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -122,6 +122,8 @@ config LOONGARCH
+ 	select RTC_LIB
+ 	select SMP
+ 	select SPARSE_IRQ
++	select SYSCTL_ARCH_UNALIGN_ALLOW
++	select SYSCTL_ARCH_UNALIGN_NO_WARN
+ 	select SYSCTL_EXCEPTION_TRACE
+ 	select SWIOTLB
+ 	select TRACE_IRQFLAGS_SUPPORT
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index fce1843ceebb..e96b5345f389 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -76,6 +76,10 @@ enum reg2i12_op {
+ 	ldbu_op		= 0xa8,
+ 	ldhu_op		= 0xa9,
+ 	ldwu_op		= 0xaa,
++	flds_op		= 0xac,
++	fsts_op		= 0xad,
++	fldd_op		= 0xae,
++	fstd_op		= 0xaf,
+ };
+ 
+ enum reg2i14_op {
+@@ -146,6 +150,10 @@ enum reg3_op {
+ 	ldxbu_op	= 0x7040,
+ 	ldxhu_op	= 0x7048,
+ 	ldxwu_op	= 0x7050,
++	fldxs_op	= 0x7060,
++	fldxd_op	= 0x7068,
++	fstxs_op	= 0x7070,
++	fstxd_op	= 0x7078,
+ 	amswapw_op	= 0x70c0,
+ 	amswapd_op	= 0x70c1,
+ 	amaddw_op	= 0x70c2,
+@@ -566,4 +574,10 @@ static inline void emit_##NAME(union loongarch_instruction *insn,	\
+ 
+ DEF_EMIT_REG3SA2_FORMAT(alsld, alsld_op)
+ 
++struct pt_regs;
++
++unsigned long unaligned_read(void *addr, void *value, unsigned long n, bool sign);
++unsigned long unaligned_write(void *addr, unsigned long value, unsigned long n);
++void emulate_load_store_insn(struct pt_regs *regs, void __user *addr, unsigned int *pc);
++
+ #endif /* _ASM_INST_H */
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 42be564278fa..2ad2555b53ea 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -7,7 +7,8 @@ extra-y		:= vmlinux.lds
+ 
+ obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
+ 		   traps.o irq.o idle.o process.o dma.o mem.o io.o reset.o switch.o \
+-		   elf.o syscall.o signal.o time.o topology.o inst.o ptrace.o vdso.o
++		   elf.o syscall.o signal.o time.o topology.o inst.o ptrace.o vdso.o \
++		   unaligned.o
+ 
+ obj-$(CONFIG_ACPI)		+= acpi.o
+ obj-$(CONFIG_EFI) 		+= efi.o
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index 1a4dce84ebc6..7ea62faeeadb 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -368,13 +368,40 @@ asmlinkage void noinstr do_ade(struct pt_regs *regs)
+ 	irqentry_exit(regs, state);
+ }
+ 
++/* sysctl hooks */
++int unaligned_enabled __read_mostly = 1;	/* Enabled by default */
++int no_unaligned_warning __read_mostly = 1;	/* Only 1 warning by default */
++
+ asmlinkage void noinstr do_ale(struct pt_regs *regs)
+ {
++	unsigned int *pc;
+ 	irqentry_state_t state = irqentry_enter(regs);
+ 
++	perf_sw_event(PERF_COUNT_SW_ALIGNMENT_FAULTS, 1, regs, regs->csr_badvaddr);
++
++	/*
++	 * Did we catch a fault trying to load an instruction?
++	 */
++	if (regs->csr_badvaddr == regs->csr_era)
++		goto sigbus;
++	if (user_mode(regs) && !test_thread_flag(TIF_FIXADE))
++		goto sigbus;
++	if (!unaligned_enabled)
++		goto sigbus;
++	if (!no_unaligned_warning)
++		show_registers(regs);
++
++	pc = (unsigned int *)exception_era(regs);
++
++	emulate_load_store_insn(regs, (void __user *)regs->csr_badvaddr, pc);
++
++	goto out;
++
++sigbus:
+ 	die_if_kernel("Kernel ale access", regs);
+ 	force_sig_fault(SIGBUS, BUS_ADRALN, (void __user *)regs->csr_badvaddr);
+ 
++out:
+ 	irqentry_exit(regs, state);
+ }
+ 
+diff --git a/arch/loongarch/kernel/unaligned.c b/arch/loongarch/kernel/unaligned.c
+new file mode 100644
+index 000000000000..5aeb36d8a8db
+--- /dev/null
++++ b/arch/loongarch/kernel/unaligned.c
+@@ -0,0 +1,401 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Handle unaligned accesses by emulation.
++ *
++ * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
++ *
++ */
++#include <linux/mm.h>
++#include <linux/sched.h>
++#include <linux/signal.h>
++#include <linux/debugfs.h>
++#include <linux/perf_event.h>
++
++#include <asm/asm.h>
++#include <asm/branch.h>
++#include <asm/fpu.h>
++#include <asm/inst.h>
++
++#include "access-helper.h"
++
++#ifdef CONFIG_DEBUG_FS
++static u32 unaligned_instructions_user;
++static u32 unaligned_instructions_kernel;
++#endif
++
++static inline unsigned long read_fpr(unsigned int fd)
++{
++#define READ_FPR(fd, __value)		\
++{					\
++	__asm__ __volatile__(		\
++	"movfr2gr.d\t%0, $f%1\n\t"	\
++	: "=r"(__value) : "i"(fd));	\
++}
++
++	unsigned long __value;
++
++	switch (fd) {
++	case 0:
++		READ_FPR(0, __value);
++		break;
++	case 1:
++		READ_FPR(1, __value);
++		break;
++	case 2:
++		READ_FPR(2, __value);
++		break;
++	case 3:
++		READ_FPR(3, __value);
++		break;
++	case 4:
++		READ_FPR(4, __value);
++		break;
++	case 5:
++		READ_FPR(5, __value);
++		break;
++	case 6:
++		READ_FPR(6, __value);
++		break;
++	case 7:
++		READ_FPR(7, __value);
++		break;
++	case 8:
++		READ_FPR(8, __value);
++		break;
++	case 9:
++		READ_FPR(9, __value);
++		break;
++	case 10:
++		READ_FPR(10, __value);
++		break;
++	case 11:
++		READ_FPR(11, __value);
++		break;
++	case 12:
++		READ_FPR(12, __value);
++		break;
++	case 13:
++		READ_FPR(13, __value);
++		break;
++	case 14:
++		READ_FPR(14, __value);
++		break;
++	case 15:
++		READ_FPR(15, __value);
++		break;
++	case 16:
++		READ_FPR(16, __value);
++		break;
++	case 17:
++		READ_FPR(17, __value);
++		break;
++	case 18:
++		READ_FPR(18, __value);
++		break;
++	case 19:
++		READ_FPR(19, __value);
++		break;
++	case 20:
++		READ_FPR(20, __value);
++		break;
++	case 21:
++		READ_FPR(21, __value);
++		break;
++	case 22:
++		READ_FPR(22, __value);
++		break;
++	case 23:
++		READ_FPR(23, __value);
++		break;
++	case 24:
++		READ_FPR(24, __value);
++		break;
++	case 25:
++		READ_FPR(25, __value);
++		break;
++	case 26:
++		READ_FPR(26, __value);
++		break;
++	case 27:
++		READ_FPR(27, __value);
++		break;
++	case 28:
++		READ_FPR(28, __value);
++		break;
++	case 29:
++		READ_FPR(29, __value);
++		break;
++	case 30:
++		READ_FPR(30, __value);
++		break;
++	case 31:
++		READ_FPR(31, __value);
++		break;
++	default:
++		panic("unexpected fd '%d'", fd);
++	}
++#undef READ_FPR
++	return __value;
++}
++
++static inline void write_fpr(unsigned int fd, unsigned long value)
++{
++#define WRITE_FPR(fd, value)		\
++{					\
++	__asm__ __volatile__(		\
++	"movgr2fr.d $f%1, %0\n\t"	\
++	:: "r"(value), "i"(fd));	\
++}
++
++	switch (fd) {
++	case 0:
++		WRITE_FPR(0, value);
++		break;
++	case 1:
++		WRITE_FPR(1, value);
++		break;
++	case 2:
++		WRITE_FPR(2, value);
++		break;
++	case 3:
++		WRITE_FPR(3, value);
++		break;
++	case 4:
++		WRITE_FPR(4, value);
++		break;
++	case 5:
++		WRITE_FPR(5, value);
++		break;
++	case 6:
++		WRITE_FPR(6, value);
++		break;
++	case 7:
++		WRITE_FPR(7, value);
++		break;
++	case 8:
++		WRITE_FPR(8, value);
++		break;
++	case 9:
++		WRITE_FPR(9, value);
++		break;
++	case 10:
++		WRITE_FPR(10, value);
++		break;
++	case 11:
++		WRITE_FPR(11, value);
++		break;
++	case 12:
++		WRITE_FPR(12, value);
++		break;
++	case 13:
++		WRITE_FPR(13, value);
++		break;
++	case 14:
++		WRITE_FPR(14, value);
++		break;
++	case 15:
++		WRITE_FPR(15, value);
++		break;
++	case 16:
++		WRITE_FPR(16, value);
++		break;
++	case 17:
++		WRITE_FPR(17, value);
++		break;
++	case 18:
++		WRITE_FPR(18, value);
++		break;
++	case 19:
++		WRITE_FPR(19, value);
++		break;
++	case 20:
++		WRITE_FPR(20, value);
++		break;
++	case 21:
++		WRITE_FPR(21, value);
++		break;
++	case 22:
++		WRITE_FPR(22, value);
++		break;
++	case 23:
++		WRITE_FPR(23, value);
++		break;
++	case 24:
++		WRITE_FPR(24, value);
++		break;
++	case 25:
++		WRITE_FPR(25, value);
++		break;
++	case 26:
++		WRITE_FPR(26, value);
++		break;
++	case 27:
++		WRITE_FPR(27, value);
++		break;
++	case 28:
++		WRITE_FPR(28, value);
++		break;
++	case 29:
++		WRITE_FPR(29, value);
++		break;
++	case 30:
++		WRITE_FPR(30, value);
++		break;
++	case 31:
++		WRITE_FPR(31, value);
++		break;
++	default:
++		panic("unexpected fd '%d'", fd);
++	}
++#undef WRITE_FPR
++}
++
++void emulate_load_store_insn(struct pt_regs *regs, void __user *addr, unsigned int *pc)
++{
++	bool user = user_mode(regs);
++	unsigned int res;
++	unsigned long origpc;
++	unsigned long origra;
++	unsigned long value = 0;
++	union loongarch_instruction insn;
++
++	origpc = (unsigned long)pc;
++	origra = regs->regs[1];
++
++	perf_sw_event(PERF_COUNT_SW_EMULATION_FAULTS, 1, regs, 0);
++
++	/*
++	 * This load never faults.
++	 */
++	__get_inst(&insn.word, pc, user);
++	if (user && !access_ok(addr, 8))
++		goto sigbus;
++
++	if (insn.reg2i12_format.opcode == ldd_op ||
++		insn.reg2i14_format.opcode == ldptrd_op ||
++		insn.reg3_format.opcode == ldxd_op) {
++		res = unaligned_read(addr, &value, 8, 1);
++		if (res)
++			goto fault;
++		regs->regs[insn.reg2i12_format.rd] = value;
++	} else if (insn.reg2i12_format.opcode == ldw_op ||
++		insn.reg2i14_format.opcode == ldptrw_op ||
++		insn.reg3_format.opcode == ldxw_op) {
++		res = unaligned_read(addr, &value, 4, 1);
++		if (res)
++			goto fault;
++		regs->regs[insn.reg2i12_format.rd] = value;
++	} else if (insn.reg2i12_format.opcode == ldwu_op ||
++		insn.reg3_format.opcode == ldxwu_op) {
++		res = unaligned_read(addr, &value, 4, 0);
++		if (res)
++			goto fault;
++		regs->regs[insn.reg2i12_format.rd] = value;
++	} else if (insn.reg2i12_format.opcode == ldh_op ||
++		insn.reg3_format.opcode == ldxh_op) {
++		res = unaligned_read(addr, &value, 2, 1);
++		if (res)
++			goto fault;
++		regs->regs[insn.reg2i12_format.rd] = value;
++	} else if (insn.reg2i12_format.opcode == ldhu_op ||
++		insn.reg3_format.opcode == ldxhu_op) {
++		res = unaligned_read(addr, &value, 2, 0);
++		if (res)
++			goto fault;
++		regs->regs[insn.reg2i12_format.rd] = value;
++	} else if (insn.reg2i12_format.opcode == std_op ||
++		insn.reg2i14_format.opcode == stptrd_op ||
++		insn.reg3_format.opcode == stxd_op) {
++		value = regs->regs[insn.reg2i12_format.rd];
++		res = unaligned_write(addr, value, 8);
++		if (res)
++			goto fault;
++	} else if (insn.reg2i12_format.opcode == stw_op ||
++		insn.reg2i14_format.opcode == stptrw_op ||
++		insn.reg3_format.opcode == stxw_op) {
++		value = regs->regs[insn.reg2i12_format.rd];
++		res = unaligned_write(addr, value, 4);
++		if (res)
++			goto fault;
++	} else if (insn.reg2i12_format.opcode == sth_op ||
++		insn.reg3_format.opcode == stxh_op) {
++		value = regs->regs[insn.reg2i12_format.rd];
++		res = unaligned_write(addr, value, 2);
++		if (res)
++			goto fault;
++	} else if (insn.reg2i12_format.opcode == fldd_op ||
++		insn.reg3_format.opcode == fldxd_op) {
++		res = unaligned_read(addr, &value, 8, 1);
++		if (res)
++			goto fault;
++		write_fpr(insn.reg2i12_format.rd, value);
++	} else if (insn.reg2i12_format.opcode == flds_op ||
++		insn.reg3_format.opcode == fldxs_op) {
++		res = unaligned_read(addr, &value, 4, 1);
++		if (res)
++			goto fault;
++		write_fpr(insn.reg2i12_format.rd, value);
++	} else if (insn.reg2i12_format.opcode == fstd_op ||
++		insn.reg3_format.opcode == fstxd_op) {
++		value = read_fpr(insn.reg2i12_format.rd);
++		res = unaligned_write(addr, value, 8);
++		if (res)
++			goto fault;
++	} else if (insn.reg2i12_format.opcode == fsts_op ||
++		insn.reg3_format.opcode == fstxs_op) {
++		value = read_fpr(insn.reg2i12_format.rd);
++		res = unaligned_write(addr, value, 4);
++		if (res)
++			goto fault;
++	} else
++		goto sigbus;
++
++
++#ifdef CONFIG_DEBUG_FS
++	if (user)
++		unaligned_instructions_user++;
++	else
++		unaligned_instructions_kernel++;
++#endif
++
++	compute_return_era(regs);
++	return;
++
++fault:
++	/* roll back jump/branch */
++	regs->csr_era = origpc;
++	regs->regs[1] = origra;
++	/* Did we have an exception handler installed? */
++	if (fixup_exception(regs))
++		return;
++
++	die_if_kernel("Unhandled kernel unaligned access", regs);
++	force_sig(SIGSEGV);
++
++	return;
++
++sigbus:
++	die_if_kernel("Unhandled kernel unaligned access", regs);
++	force_sig(SIGBUS);
++
++	return;
++}
++
++#ifdef CONFIG_DEBUG_FS
++static int __init debugfs_unaligned(void)
++{
++	struct dentry *d;
++
++	d = debugfs_create_dir("loongarch", NULL);
++	if (!d)
++		return -ENOMEM;
++
++	debugfs_create_u32("unaligned_instructions_user",
++				S_IRUGO, d, &unaligned_instructions_user);
++	debugfs_create_u32("unaligned_instructions_kernel",
++				S_IRUGO, d, &unaligned_instructions_kernel);
++
++	return 0;
++}
++arch_initcall(debugfs_unaligned);
++#endif
+diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
+index e36635fccb69..867895530340 100644
+--- a/arch/loongarch/lib/Makefile
++++ b/arch/loongarch/lib/Makefile
+@@ -3,4 +3,4 @@
+ # Makefile for LoongArch-specific library files.
+ #
+ 
+-lib-y	+= delay.o clear_user.o copy_user.o dump_tlb.o
++lib-y	+= delay.o clear_user.o copy_user.o dump_tlb.o unaligned.o
+diff --git a/arch/loongarch/lib/unaligned.S b/arch/loongarch/lib/unaligned.S
+new file mode 100644
+index 000000000000..03210cb5a18d
+--- /dev/null
++++ b/arch/loongarch/lib/unaligned.S
+@@ -0,0 +1,93 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
++ */
++
++#include <linux/linkage.h>
++
++#include <asm/asm.h>
++#include <asm/asmmacro.h>
++#include <asm/errno.h>
++#include <asm/export.h>
++#include <asm/regdef.h>
++
++.macro fixup_ex from, to, fix
++.if \fix
++	.section .fixup, "ax"
++\to:	li.w	a0, -EFAULT
++	jr	ra
++	.previous
++.endif
++	.section __ex_table, "a"
++	PTR	\from\()b, \to\()b
++	.previous
++.endm
++
++/*
++ * unsigned long unaligned_read(void *addr, void *value, unsigned long n, bool sign)
++ *
++ * a0: addr
++ * a1: value
++ * a2: n
++ * a3: sign
++ */
++SYM_FUNC_START(unaligned_read)
++	beqz	a2, 5f
++
++	li.w	t1, 8
++	li.w	t2, 0
++
++	addi.d	t0, a2, -1
++	mul.d	t1, t0, t1
++	add.d 	a0, a0, t0
++
++	beq	a3, zero, 2f
++1:	ld.b	t3, a0, 0
++	b	3f
++
++2:	ld.bu	t3, a0, 0
++3:	sll.d	t3, t3, t1
++	or	t2, t2, t3
++	addi.d	t1, t1, -8
++	addi.d	a0, a0, -1
++	addi.d	a2, a2, -1
++	bgt	a2, zero, 2b
++4:	st.d	t2, a1, 0
++
++	move	a0, a2
++	jr	ra
++
++5:	li.w    a0, -EFAULT
++	jr	ra
++
++	fixup_ex 1, 6, 1
++	fixup_ex 2, 6, 0
++	fixup_ex 4, 6, 0
++SYM_FUNC_END(unaligned_read)
++
++/*
++ * unsigned long unaligned_write(void *addr, unsigned long value, unsigned long n)
++ *
++ * a0: addr
++ * a1: value
++ * a2: n
++ */
++SYM_FUNC_START(unaligned_write)
++	beqz	a2, 3f
++
++	li.w	t0, 0
++1:	srl.d	t1, a1, t0
++2:	st.b	t1, a0, 0
++	addi.d	t0, t0, 8
++	addi.d	a2, a2, -1
++	addi.d	a0, a0, 1
++	bgt	a2, zero, 1b
++
++	move	a0, a2
++	jr	ra
++
++3:	li.w    a0, -EFAULT
++	jr	ra
++
++	fixup_ex 2, 4, 1
++SYM_FUNC_END(unaligned_write)
+-- 
+2.31.1
+
