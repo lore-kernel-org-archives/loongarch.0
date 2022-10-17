@@ -1,444 +1,694 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBC37F;
-	Mon, 17 Oct 2022 12:00:03 +0000 (UTC)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.55])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Mrb7T71GfzpW32;
-	Mon, 17 Oct 2022 19:56:37 +0800 (CST)
-Received: from kwepemm600005.china.huawei.com (7.193.23.191) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 17 Oct 2022 19:59:34 +0800
-Received: from [10.67.103.158] (10.67.103.158) by
- kwepemm600005.china.huawei.com (7.193.23.191) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 17 Oct 2022 19:59:31 +0800
-Subject: Re: [PATCH v6 0/7] treewide cleanup of random integer usage
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>, <linux-kernel@vger.kernel.org>,
-	<patches@lists.linux.dev>
-CC: Andreas Noever <andreas.noever@gmail.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Borislav Petkov <bp@alien8.de>, "Catalin
- Marinas" <catalin.marinas@arm.com>, =?UTF-8?Q?Christoph_B=c3=b6hmwalder?=
-	<christoph.boehmwalder@linbit.com>, Christoph Hellwig <hch@lst.de>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Daniel Borkmann
-	<daniel@iogearbox.net>, Dave Airlie <airlied@redhat.com>, Dave Hansen
-	<dave.hansen@linux.intel.com>, "David S . Miller" <davem@davemloft.net>,
-	"Eric Dumazet" <edumazet@google.com>, Florian Westphal <fw@strlen.de>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "H . Peter Anvin"
-	<hpa@zytor.com>, Heiko Carstens <hca@linux.ibm.com>, Helge Deller
-	<deller@gmx.de>, Herbert Xu <herbert@gondor.apana.org.au>, Huacai Chen
-	<chenhuacai@kernel.org>, Hugh Dickins <hughd@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, "James E . J . Bottomley" <jejb@linux.ibm.com>, Jan Kara
-	<jack@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe
-	<axboe@kernel.dk>, Johannes Berg <johannes@sipsolutions.net>, Jonathan Corbet
-	<corbet@lwn.net>, Jozsef Kadlecsik <kadlec@netfilter.org>, KP Singh
-	<kpsingh@kernel.org>, Kees Cook <keescook@chromium.org>, Marco Elver
-	<elver@google.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "Michael
- Ellerman" <mpe@ellerman.id.au>, Pablo Neira Ayuso <pablo@netfilter.org>,
-	"Paolo Abeni" <pabeni@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	"Richard Weinberger" <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
-	"Theodore Ts'o" <tytso@mit.edu>, Thomas Bogendoerfer
-	<tsbogend@alpha.franken.de>, "Thomas Gleixner" <tglx@linutronix.de>, Thomas
- Graf <tgraf@suug.ch>, Ulf Hansson <ulf.hansson@linaro.org>, Vignesh
- Raghavendra <vigneshr@ti.com>, WANG Xuerui <kernel@xen0n.name>, Will Deacon
-	<will@kernel.org>, Yury Norov <yury.norov@gmail.com>,
-	<dri-devel@lists.freedesktop.org>, <kasan-dev@googlegroups.com>,
-	<kernel-janitors@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-block@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-media@vger.kernel.org>, <linux-mips@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-mmc@vger.kernel.org>,
-	<linux-mtd@lists.infradead.org>, <linux-nvme@lists.infradead.org>,
-	<linux-parisc@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<linux-s390@vger.kernel.org>, <linux-um@lists.infradead.org>,
-	<linux-usb@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <loongarch@lists.linux.dev>,
-	<netdev@vger.kernel.org>, <sparclinux@vger.kernel.org>, <x86@kernel.org>
-References: <20221010230613.1076905-1-Jason@zx2c4.com>
-From: liulongfang <liulongfang@huawei.com>
-Message-ID: <8dad6a2c-9ef6-086e-0fb0-cd9115d4faca@huawei.com>
-Date: Mon, 17 Oct 2022 19:59:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9479A111C
+	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 12:53:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 493CCC433D6;
+	Mon, 17 Oct 2022 12:53:48 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH V3] LoongArch: Add unaligned access support
+Date: Mon, 17 Oct 2022 20:52:09 +0800
+Message-Id: <20221017125209.2639531-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20221010230613.1076905-1-Jason@zx2c4.com>
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.103.158]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600005.china.huawei.com (7.193.23.191)
-X-CFilter-Loop: Reflected
 
-On 2022/10/11 7:06, Jason A. Donenfeld Wrote:
-> Changes v5->v6:
-> - Added a few missing conversions that weren't in my older tree, so now
->   this should be ready to go, as well as a couple nits people had from
->   v5. Barring something large and unforeseen, this is the "final
->   version", as this is ready to ship. Thanks to everyone who reviewed
->   this.
-> 
-> Hi folks,
-> 
-> This is a five part treewide cleanup of random integer handling. The
-> rules for random integers are:
-> 
-> - If you want a secure or an insecure random u64, use get_random_u64().
-> - If you want a secure or an insecure random u32, use get_random_u32().
->   * The old function prandom_u32() has been deprecated for a while now
->     and is just a wrapper around get_random_u32(). Same for
->     get_random_int().
-> - If you want a secure or an insecure random u16, use get_random_u16().
-> - If you want a secure or an insecure random u8, use get_random_u8().
-> - If you want secure or insecure random bytes, use get_random_bytes().
->   * The old function prandom_bytes() has been deprecated for a while now
->     and has long been a wrapper around get_random_bytes().
-> - If you want a non-uniform random u32, u16, or u8 bounded by a certain
->   open interval maximum, use prandom_u32_max().
->   * I say "non-uniform", because it doesn't do any rejection sampling or
->     divisions. Hence, it stays within the prandom_* namespace.
-> 
-> These rules ought to be applied uniformly, so that we can clean up the
-> deprecated functions, and earn the benefits of using the modern
-> functions. In particular, in addition to the boring substitutions, this
-> patchset accomplishes a few nice effects:
-> 
-> - By using prandom_u32_max() with an upper-bound that the compiler can
->   prove at compile-time is ≤65536 or ≤256, internally get_random_u16()
->   or get_random_u8() is used, which wastes fewer batched random bytes,
->   and hence has higher throughput.
-> 
-> - By using prandom_u32_max() instead of %, when the upper-bound is not a
->   constant, division is still avoided, because prandom_u32_max() uses
->   a faster multiplication-based trick instead.
-> 
-> - By using get_random_u16() or get_random_u8() in cases where the return
->   value is intended to indeed be a u16 or a u8, we waste fewer batched
->   random bytes, and hence have higher throughput.
-> 
-> So, based on those rules and benefits from following them, this patchset
-> breaks down into the following five steps:
-> 
-> 1) Replace `prandom_u32() % max` and variants thereof with
->    prandom_u32_max(max).
-> 
->    * Part 1 is done with Coccinelle. Part 2 is done by hand.
-> 
-> 2) Replace `(type)get_random_u32()` and variants thereof with
->    get_random_u16() or get_random_u8(). I took the pains to actually
->    look and see what every lvalue type was across the entire tree.
-> 
->    * Part 1 is done with Coccinelle. Part 2 is done by hand.
-> 
-> 3) Replace remaining deprecated uses of prandom_u32() and
->    get_random_int() with get_random_u32(). 
-> 
->    * A boring search and replace operation.
-> 
-> 4) Replace remaining deprecated uses of prandom_bytes() with
->    get_random_bytes().
-> 
->    * A boring search and replace operation.
-> 
-> 5) Remove the deprecated and now-unused prandom_u32() and
->    prandom_bytes() inline wrapper functions.
-> 
->    * Just deleting code and updating comments.
-> 
-> I'll be sending this toward the end of the 6.1 merge window via the
-> random.git tree.
-> 
-> Please take a look! The number of lines touched is quite small, so this
-> should be reviewable, and as much as is possible has been pushed into
-> Coccinelle scripts.
-> 
-> Thanks,
-> Jason
-> 
-> Cc: Andreas Noever <andreas.noever@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Dave Airlie <airlied@redhat.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Florian Westphal <fw@strlen.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-> Cc: H. Peter Anvin <hpa@zytor.com>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: James E.J. Bottomley <jejb@linux.ibm.com>
-> Cc: Jan Kara <jack@suse.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Johannes Berg <johannes@sipsolutions.net>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
-> Cc: KP Singh <kpsingh@kernel.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Pablo Neira Ayuso <pablo@netfilter.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Theodore Ts'o <tytso@mit.edu>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Thomas Graf <tgraf@suug.ch>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Yury Norov <yury.norov@gmail.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: kasan-dev@googlegroups.com
-> Cc: kernel-janitors@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-block@vger.kernel.org
-> Cc: linux-crypto@vger.kernel.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-mmc@vger.kernel.org
-> Cc: linux-mtd@lists.infradead.org
-> Cc: linux-nvme@lists.infradead.org
-> Cc: linux-parisc@vger.kernel.org
-> Cc: linux-rdma@vger.kernel.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-um@lists.infradead.org
-> Cc: linux-usb@vger.kernel.org
-> Cc: linux-wireless@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: loongarch@lists.linux.dev
-> Cc: netdev@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Cc: x86@kernel.org
-> 
-> Jason A. Donenfeld (7):
->   treewide: use prandom_u32_max() when possible, part 1
->   treewide: use prandom_u32_max() when possible, part 2
->   treewide: use get_random_{u8,u16}() when possible, part 1
->   treewide: use get_random_{u8,u16}() when possible, part 2
->   treewide: use get_random_u32() when possible
->   treewide: use get_random_bytes() when possible
->   prandom: remove unused functions
-> 
->  Documentation/networking/filter.rst           |  2 +-
->  arch/arm/kernel/process.c                     |  2 +-
->  arch/arm/kernel/signal.c                      |  2 +-
->  arch/arm64/kernel/process.c                   |  2 +-
->  arch/arm64/kernel/syscall.c                   |  2 +-
->  arch/loongarch/kernel/process.c               |  2 +-
->  arch/loongarch/kernel/vdso.c                  |  2 +-
->  arch/mips/kernel/process.c                    |  2 +-
->  arch/mips/kernel/vdso.c                       |  2 +-
->  arch/parisc/kernel/process.c                  |  2 +-
->  arch/parisc/kernel/sys_parisc.c               |  4 +-
->  arch/parisc/kernel/vdso.c                     |  2 +-
->  arch/powerpc/crypto/crc-vpmsum_test.c         |  2 +-
->  arch/powerpc/kernel/process.c                 |  2 +-
->  arch/s390/kernel/process.c                    |  4 +-
->  arch/s390/kernel/vdso.c                       |  2 +-
->  arch/s390/mm/mmap.c                           |  2 +-
->  arch/sparc/vdso/vma.c                         |  2 +-
->  arch/um/kernel/process.c                      |  2 +-
->  arch/x86/entry/vdso/vma.c                     |  2 +-
->  arch/x86/kernel/cpu/amd.c                     |  2 +-
->  arch/x86/kernel/module.c                      |  2 +-
->  arch/x86/kernel/process.c                     |  2 +-
->  arch/x86/mm/pat/cpa-test.c                    |  4 +-
->  block/blk-crypto-fallback.c                   |  2 +-
->  crypto/async_tx/raid6test.c                   |  2 +-
->  crypto/testmgr.c                              | 94 +++++++++----------
->  drivers/block/drbd/drbd_receiver.c            |  4 +-
->  drivers/char/random.c                         | 11 +--
->  drivers/dma/dmatest.c                         |  2 +-
->  .../gpu/drm/i915/gem/i915_gem_execbuffer.c    |  2 +-
->  drivers/gpu/drm/i915/i915_gem_gtt.c           |  6 +-
->  .../gpu/drm/i915/selftests/i915_selftest.c    |  2 +-
->  drivers/gpu/drm/tests/drm_buddy_test.c        |  2 +-
->  drivers/gpu/drm/tests/drm_mm_test.c           |  2 +-
->  drivers/infiniband/core/cma.c                 |  2 +-
->  drivers/infiniband/hw/cxgb4/cm.c              |  4 +-
->  drivers/infiniband/hw/cxgb4/id_table.c        |  4 +-
->  drivers/infiniband/hw/hfi1/tid_rdma.c         |  2 +-
->  drivers/infiniband/hw/hns/hns_roce_ah.c       |  5 +-
->  drivers/infiniband/hw/mlx4/mad.c              |  2 +-
->  drivers/infiniband/ulp/ipoib/ipoib_cm.c       |  2 +-
->  drivers/infiniband/ulp/rtrs/rtrs-clt.c        |  3 +-
->  drivers/md/bcache/request.c                   |  2 +-
->  drivers/md/raid5-cache.c                      |  2 +-
->  drivers/media/common/v4l2-tpg/v4l2-tpg-core.c |  2 +-
->  .../media/test-drivers/vivid/vivid-radio-rx.c |  4 +-
->  .../test-drivers/vivid/vivid-touch-cap.c      |  6 +-
->  drivers/misc/habanalabs/gaudi2/gaudi2.c       |  2 +-
->  drivers/mmc/core/core.c                       |  4 +-
->  drivers/mmc/host/dw_mmc.c                     |  2 +-
->  drivers/mtd/nand/raw/nandsim.c                |  8 +-
->  drivers/mtd/tests/mtd_nandecctest.c           | 12 +--
->  drivers/mtd/tests/speedtest.c                 |  2 +-
->  drivers/mtd/tests/stresstest.c                | 19 +---
->  drivers/mtd/ubi/debug.c                       |  2 +-
->  drivers/mtd/ubi/debug.h                       |  6 +-
->  drivers/net/bonding/bond_main.c               |  2 +-
->  drivers/net/ethernet/broadcom/bnxt/bnxt.c     |  2 +-
->  drivers/net/ethernet/broadcom/cnic.c          |  5 +-
->  .../chelsio/inline_crypto/chtls/chtls_cm.c    |  4 +-
->  .../chelsio/inline_crypto/chtls/chtls_io.c    |  4 +-
->  drivers/net/ethernet/rocker/rocker_main.c     |  8 +-
->  drivers/net/hamradio/baycom_epp.c             |  2 +-
->  drivers/net/hamradio/hdlcdrv.c                |  2 +-
->  drivers/net/hamradio/yam.c                    |  2 +-
->  drivers/net/phy/at803x.c                      |  2 +-
->  drivers/net/wireguard/selftest/allowedips.c   | 16 ++--
->  .../broadcom/brcm80211/brcmfmac/p2p.c         |  2 +-
->  .../broadcom/brcm80211/brcmfmac/pno.c         |  2 +-
->  .../net/wireless/intel/iwlwifi/mvm/mac-ctxt.c |  2 +-
->  .../net/wireless/marvell/mwifiex/cfg80211.c   |  4 +-
->  .../wireless/microchip/wilc1000/cfg80211.c    |  2 +-
->  .../net/wireless/quantenna/qtnfmac/cfg80211.c |  2 +-
->  drivers/net/wireless/st/cw1200/wsm.c          |  2 +-
->  drivers/net/wireless/ti/wlcore/main.c         |  2 +-
->  drivers/nvme/common/auth.c                    |  2 +-
->  drivers/scsi/cxgbi/cxgb4i/cxgb4i.c            |  4 +-
->  drivers/scsi/fcoe/fcoe_ctlr.c                 |  4 +-
->  drivers/scsi/lpfc/lpfc_hbadisc.c              |  6 +-
->  drivers/scsi/qedi/qedi_main.c                 |  2 +-
->  drivers/target/iscsi/cxgbit/cxgbit_cm.c       |  2 +-
->  drivers/thunderbolt/xdomain.c                 |  2 +-
->  drivers/video/fbdev/uvesafb.c                 |  2 +-
->  fs/ceph/inode.c                               |  2 +-
->  fs/ceph/mdsmap.c                              |  2 +-
->  fs/exfat/inode.c                              |  2 +-
->  fs/ext2/ialloc.c                              |  3 +-
->  fs/ext4/ialloc.c                              |  7 +-
->  fs/ext4/ioctl.c                               |  4 +-
->  fs/ext4/mmp.c                                 |  2 +-
->  fs/ext4/super.c                               |  7 +-
->  fs/f2fs/gc.c                                  |  2 +-
->  fs/f2fs/namei.c                               |  2 +-
->  fs/f2fs/segment.c                             |  8 +-
->  fs/fat/inode.c                                |  2 +-
->  fs/nfsd/nfs4state.c                           |  4 +-
->  fs/ntfs3/fslog.c                              |  6 +-
->  fs/ubifs/debug.c                              | 10 +-
->  fs/ubifs/journal.c                            |  2 +-
->  fs/ubifs/lpt_commit.c                         | 14 +--
->  fs/ubifs/tnc_commit.c                         |  2 +-
->  fs/xfs/libxfs/xfs_alloc.c                     |  2 +-
->  fs/xfs/libxfs/xfs_ialloc.c                    |  4 +-
->  fs/xfs/xfs_error.c                            |  2 +-
->  fs/xfs/xfs_icache.c                           |  2 +-
->  fs/xfs/xfs_log.c                              |  2 +-
->  include/linux/nodemask.h                      |  2 +-
->  include/linux/prandom.h                       | 12 ---
->  include/linux/random.h                        |  5 -
->  include/net/netfilter/nf_queue.h              |  2 +-
->  include/net/red.h                             |  2 +-
->  include/net/sock.h                            |  2 +-
->  kernel/bpf/bloom_filter.c                     |  2 +-
->  kernel/bpf/core.c                             |  6 +-
->  kernel/bpf/hashtab.c                          |  2 +-
->  kernel/bpf/verifier.c                         |  2 +-
->  kernel/kcsan/selftest.c                       |  4 +-
->  kernel/locking/test-ww_mutex.c                |  4 +-
->  kernel/time/clocksource.c                     |  2 +-
->  lib/cmdline_kunit.c                           |  4 +-
->  lib/fault-inject.c                            |  2 +-
->  lib/find_bit_benchmark.c                      |  4 +-
->  lib/kobject.c                                 |  2 +-
->  lib/random32.c                                |  4 +-
->  lib/reed_solomon/test_rslib.c                 | 12 +--
->  lib/sbitmap.c                                 |  4 +-
->  lib/test-string_helpers.c                     |  2 +-
->  lib/test_fprobe.c                             |  2 +-
->  lib/test_hexdump.c                            | 10 +-
->  lib/test_kasan.c                              |  6 +-
->  lib/test_kprobes.c                            |  2 +-
->  lib/test_list_sort.c                          |  2 +-
->  lib/test_min_heap.c                           |  6 +-
->  lib/test_objagg.c                             |  2 +-
->  lib/test_rhashtable.c                         |  6 +-
->  lib/test_vmalloc.c                            | 19 +---
->  lib/uuid.c                                    |  2 +-
->  mm/migrate.c                                  |  2 +-
->  mm/shmem.c                                    |  2 +-
->  mm/slab.c                                     |  2 +-
->  mm/slub.c                                     |  2 +-
->  net/802/garp.c                                |  2 +-
->  net/802/mrp.c                                 |  2 +-
->  net/ceph/mon_client.c                         |  2 +-
->  net/ceph/osd_client.c                         |  2 +-
->  net/core/neighbour.c                          |  2 +-
->  net/core/pktgen.c                             | 47 +++++-----
->  net/core/stream.c                             |  2 +-
->  net/dccp/ipv4.c                               |  4 +-
->  net/ipv4/datagram.c                           |  2 +-
->  net/ipv4/igmp.c                               |  6 +-
->  net/ipv4/inet_connection_sock.c               |  2 +-
->  net/ipv4/inet_hashtables.c                    |  2 +-
->  net/ipv4/ip_output.c                          |  2 +-
->  net/ipv4/route.c                              |  4 +-
->  net/ipv4/tcp_cdg.c                            |  2 +-
->  net/ipv4/tcp_ipv4.c                           |  4 +-
->  net/ipv4/udp.c                                |  2 +-
->  net/ipv6/addrconf.c                           |  8 +-
->  net/ipv6/ip6_flowlabel.c                      |  2 +-
->  net/ipv6/mcast.c                              | 10 +-
->  net/ipv6/output_core.c                        |  2 +-
->  net/mac80211/rc80211_minstrel_ht.c            |  2 +-
->  net/mac80211/scan.c                           |  2 +-
->  net/netfilter/ipvs/ip_vs_conn.c               |  2 +-
->  net/netfilter/ipvs/ip_vs_twos.c               |  4 +-
->  net/netfilter/nf_nat_core.c                   |  4 +-
->  net/netfilter/xt_statistic.c                  |  2 +-
->  net/openvswitch/actions.c                     |  2 +-
->  net/packet/af_packet.c                        |  2 +-
->  net/rds/bind.c                                |  2 +-
->  net/sched/act_gact.c                          |  2 +-
->  net/sched/act_sample.c                        |  2 +-
->  net/sched/sch_cake.c                          |  8 +-
->  net/sched/sch_netem.c                         | 22 ++---
->  net/sched/sch_pie.c                           |  2 +-
->  net/sched/sch_sfb.c                           |  2 +-
->  net/sctp/socket.c                             |  4 +-
->  net/sunrpc/auth_gss/gss_krb5_wrap.c           |  4 +-
->  net/sunrpc/cache.c                            |  2 +-
->  net/sunrpc/xprt.c                             |  2 +-
->  net/sunrpc/xprtsock.c                         |  2 +-
->  net/tipc/socket.c                             |  2 +-
->  net/unix/af_unix.c                            |  2 +-
->  net/xfrm/xfrm_state.c                         |  2 +-
->  186 files changed, 379 insertions(+), 422 deletions(-)
-> 
+Loongson-2 series (Loongson-2K500, Loongson-2K1000) don't support
+unaligned access in hardware, while Loongson-3 series (Loongson-3A5000,
+Loongson-3C5000) are configurable whether support unaligned access in
+hardware. This patch add unaligned access emulation for those LoongArch
+processors without hardware support.
 
-Hi, Jason:
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+V2: Simplify READ_FPR and WRITE_FPR.
+V3: Cleanup unnecessary code and update documents.
+ 
+ Documentation/admin-guide/sysctl/kernel.rst |   8 +-
+ arch/loongarch/Kconfig                      |   2 +
+ arch/loongarch/include/asm/inst.h           |  14 +
+ arch/loongarch/kernel/Makefile              |   3 +-
+ arch/loongarch/kernel/traps.c               |  27 ++
+ arch/loongarch/kernel/unaligned.c           | 390 ++++++++++++++++++++
+ arch/loongarch/lib/Makefile                 |   2 +-
+ arch/loongarch/lib/unaligned.S              |  91 +++++
+ 8 files changed, 531 insertions(+), 6 deletions(-)
+ create mode 100644 arch/loongarch/kernel/unaligned.c
+ create mode 100644 arch/loongarch/lib/unaligned.S
 
-There is a lot of code using "prandom_u32 % 4" in crypto's kernel self-test file testmgr.c,
-can you modify it together?
-
-Thanks,
-Longfang.
-
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index 98d1b198b2b4..f2b802cd6208 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -433,8 +433,8 @@ ignore-unaligned-usertrap
+ 
+ On architectures where unaligned accesses cause traps, and where this
+ feature is supported (``CONFIG_SYSCTL_ARCH_UNALIGN_NO_WARN``;
+-currently, ``arc`` and ``ia64``), controls whether all unaligned traps
+-are logged.
++currently, ``arc``, ``ia64`` and ``loongarch``), controls whether all
++unaligned traps are logged.
+ 
+ = =============================================================
+ 0 Log all unaligned accesses.
+@@ -1457,8 +1457,8 @@ unaligned-trap
+ 
+ On architectures where unaligned accesses cause traps, and where this
+ feature is supported (``CONFIG_SYSCTL_ARCH_UNALIGN_ALLOW``; currently,
+-``arc`` and ``parisc``), controls whether unaligned traps are caught
+-and emulated (instead of failing).
++``arc``, ``parisc`` and ``loongarch``), controls whether unaligned traps
++are caught and emulated (instead of failing).
+ 
+ = ========================================================
+ 0 Do not emulate unaligned accesses.
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 0a6ef613124c..a8dc58e8162a 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -122,6 +122,8 @@ config LOONGARCH
+ 	select RTC_LIB
+ 	select SMP
+ 	select SPARSE_IRQ
++	select SYSCTL_ARCH_UNALIGN_ALLOW
++	select SYSCTL_ARCH_UNALIGN_NO_WARN
+ 	select SYSCTL_EXCEPTION_TRACE
+ 	select SWIOTLB
+ 	select TRACE_IRQFLAGS_SUPPORT
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index fce1843ceebb..e96b5345f389 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -76,6 +76,10 @@ enum reg2i12_op {
+ 	ldbu_op		= 0xa8,
+ 	ldhu_op		= 0xa9,
+ 	ldwu_op		= 0xaa,
++	flds_op		= 0xac,
++	fsts_op		= 0xad,
++	fldd_op		= 0xae,
++	fstd_op		= 0xaf,
+ };
+ 
+ enum reg2i14_op {
+@@ -146,6 +150,10 @@ enum reg3_op {
+ 	ldxbu_op	= 0x7040,
+ 	ldxhu_op	= 0x7048,
+ 	ldxwu_op	= 0x7050,
++	fldxs_op	= 0x7060,
++	fldxd_op	= 0x7068,
++	fstxs_op	= 0x7070,
++	fstxd_op	= 0x7078,
+ 	amswapw_op	= 0x70c0,
+ 	amswapd_op	= 0x70c1,
+ 	amaddw_op	= 0x70c2,
+@@ -566,4 +574,10 @@ static inline void emit_##NAME(union loongarch_instruction *insn,	\
+ 
+ DEF_EMIT_REG3SA2_FORMAT(alsld, alsld_op)
+ 
++struct pt_regs;
++
++unsigned long unaligned_read(void *addr, void *value, unsigned long n, bool sign);
++unsigned long unaligned_write(void *addr, unsigned long value, unsigned long n);
++void emulate_load_store_insn(struct pt_regs *regs, void __user *addr, unsigned int *pc);
++
+ #endif /* _ASM_INST_H */
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 42be564278fa..2ad2555b53ea 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -7,7 +7,8 @@ extra-y		:= vmlinux.lds
+ 
+ obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
+ 		   traps.o irq.o idle.o process.o dma.o mem.o io.o reset.o switch.o \
+-		   elf.o syscall.o signal.o time.o topology.o inst.o ptrace.o vdso.o
++		   elf.o syscall.o signal.o time.o topology.o inst.o ptrace.o vdso.o \
++		   unaligned.o
+ 
+ obj-$(CONFIG_ACPI)		+= acpi.o
+ obj-$(CONFIG_EFI) 		+= efi.o
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index 1a4dce84ebc6..7ea62faeeadb 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -368,13 +368,40 @@ asmlinkage void noinstr do_ade(struct pt_regs *regs)
+ 	irqentry_exit(regs, state);
+ }
+ 
++/* sysctl hooks */
++int unaligned_enabled __read_mostly = 1;	/* Enabled by default */
++int no_unaligned_warning __read_mostly = 1;	/* Only 1 warning by default */
++
+ asmlinkage void noinstr do_ale(struct pt_regs *regs)
+ {
++	unsigned int *pc;
+ 	irqentry_state_t state = irqentry_enter(regs);
+ 
++	perf_sw_event(PERF_COUNT_SW_ALIGNMENT_FAULTS, 1, regs, regs->csr_badvaddr);
++
++	/*
++	 * Did we catch a fault trying to load an instruction?
++	 */
++	if (regs->csr_badvaddr == regs->csr_era)
++		goto sigbus;
++	if (user_mode(regs) && !test_thread_flag(TIF_FIXADE))
++		goto sigbus;
++	if (!unaligned_enabled)
++		goto sigbus;
++	if (!no_unaligned_warning)
++		show_registers(regs);
++
++	pc = (unsigned int *)exception_era(regs);
++
++	emulate_load_store_insn(regs, (void __user *)regs->csr_badvaddr, pc);
++
++	goto out;
++
++sigbus:
+ 	die_if_kernel("Kernel ale access", regs);
+ 	force_sig_fault(SIGBUS, BUS_ADRALN, (void __user *)regs->csr_badvaddr);
+ 
++out:
+ 	irqentry_exit(regs, state);
+ }
+ 
+diff --git a/arch/loongarch/kernel/unaligned.c b/arch/loongarch/kernel/unaligned.c
+new file mode 100644
+index 000000000000..44117cb8ad20
+--- /dev/null
++++ b/arch/loongarch/kernel/unaligned.c
+@@ -0,0 +1,390 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Handle unaligned accesses by emulation.
++ *
++ * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
++ *
++ * Derived from MIPS:
++ * Copyright (C) 1996, 1998, 1999, 2002 by Ralf Baechle
++ * Copyright (C) 1999 Silicon Graphics, Inc.
++ * Copyright (C) 2014 Imagination Technologies Ltd.
++ */
++#include <linux/mm.h>
++#include <linux/sched.h>
++#include <linux/signal.h>
++#include <linux/debugfs.h>
++#include <linux/perf_event.h>
++
++#include <asm/asm.h>
++#include <asm/branch.h>
++#include <asm/fpu.h>
++#include <asm/inst.h>
++
++#include "access-helper.h"
++
++#ifdef CONFIG_DEBUG_FS
++static u32 unaligned_instructions_user;
++static u32 unaligned_instructions_kernel;
++#endif
++
++static inline unsigned long read_fpr(unsigned int idx)
++{
++#define READ_FPR(idx, __value)		\
++	__asm__ __volatile__("movfr2gr.d %0, $f"#idx"\n\t" : "=r"(__value));
++
++	unsigned long __value;
++
++	switch (idx) {
++	case 0:
++		READ_FPR(0, __value);
++		break;
++	case 1:
++		READ_FPR(1, __value);
++		break;
++	case 2:
++		READ_FPR(2, __value);
++		break;
++	case 3:
++		READ_FPR(3, __value);
++		break;
++	case 4:
++		READ_FPR(4, __value);
++		break;
++	case 5:
++		READ_FPR(5, __value);
++		break;
++	case 6:
++		READ_FPR(6, __value);
++		break;
++	case 7:
++		READ_FPR(7, __value);
++		break;
++	case 8:
++		READ_FPR(8, __value);
++		break;
++	case 9:
++		READ_FPR(9, __value);
++		break;
++	case 10:
++		READ_FPR(10, __value);
++		break;
++	case 11:
++		READ_FPR(11, __value);
++		break;
++	case 12:
++		READ_FPR(12, __value);
++		break;
++	case 13:
++		READ_FPR(13, __value);
++		break;
++	case 14:
++		READ_FPR(14, __value);
++		break;
++	case 15:
++		READ_FPR(15, __value);
++		break;
++	case 16:
++		READ_FPR(16, __value);
++		break;
++	case 17:
++		READ_FPR(17, __value);
++		break;
++	case 18:
++		READ_FPR(18, __value);
++		break;
++	case 19:
++		READ_FPR(19, __value);
++		break;
++	case 20:
++		READ_FPR(20, __value);
++		break;
++	case 21:
++		READ_FPR(21, __value);
++		break;
++	case 22:
++		READ_FPR(22, __value);
++		break;
++	case 23:
++		READ_FPR(23, __value);
++		break;
++	case 24:
++		READ_FPR(24, __value);
++		break;
++	case 25:
++		READ_FPR(25, __value);
++		break;
++	case 26:
++		READ_FPR(26, __value);
++		break;
++	case 27:
++		READ_FPR(27, __value);
++		break;
++	case 28:
++		READ_FPR(28, __value);
++		break;
++	case 29:
++		READ_FPR(29, __value);
++		break;
++	case 30:
++		READ_FPR(30, __value);
++		break;
++	case 31:
++		READ_FPR(31, __value);
++		break;
++	default:
++		panic("unexpected idx '%d'", idx);
++	}
++#undef READ_FPR
++	return __value;
++}
++
++static inline void write_fpr(unsigned int idx, unsigned long value)
++{
++#define WRITE_FPR(idx, value)		\
++	__asm__ __volatile__("movgr2fr.d $f"#idx", %0\n\t" :: "r"(value));
++
++	switch (idx) {
++	case 0:
++		WRITE_FPR(0, value);
++		break;
++	case 1:
++		WRITE_FPR(1, value);
++		break;
++	case 2:
++		WRITE_FPR(2, value);
++		break;
++	case 3:
++		WRITE_FPR(3, value);
++		break;
++	case 4:
++		WRITE_FPR(4, value);
++		break;
++	case 5:
++		WRITE_FPR(5, value);
++		break;
++	case 6:
++		WRITE_FPR(6, value);
++		break;
++	case 7:
++		WRITE_FPR(7, value);
++		break;
++	case 8:
++		WRITE_FPR(8, value);
++		break;
++	case 9:
++		WRITE_FPR(9, value);
++		break;
++	case 10:
++		WRITE_FPR(10, value);
++		break;
++	case 11:
++		WRITE_FPR(11, value);
++		break;
++	case 12:
++		WRITE_FPR(12, value);
++		break;
++	case 13:
++		WRITE_FPR(13, value);
++		break;
++	case 14:
++		WRITE_FPR(14, value);
++		break;
++	case 15:
++		WRITE_FPR(15, value);
++		break;
++	case 16:
++		WRITE_FPR(16, value);
++		break;
++	case 17:
++		WRITE_FPR(17, value);
++		break;
++	case 18:
++		WRITE_FPR(18, value);
++		break;
++	case 19:
++		WRITE_FPR(19, value);
++		break;
++	case 20:
++		WRITE_FPR(20, value);
++		break;
++	case 21:
++		WRITE_FPR(21, value);
++		break;
++	case 22:
++		WRITE_FPR(22, value);
++		break;
++	case 23:
++		WRITE_FPR(23, value);
++		break;
++	case 24:
++		WRITE_FPR(24, value);
++		break;
++	case 25:
++		WRITE_FPR(25, value);
++		break;
++	case 26:
++		WRITE_FPR(26, value);
++		break;
++	case 27:
++		WRITE_FPR(27, value);
++		break;
++	case 28:
++		WRITE_FPR(28, value);
++		break;
++	case 29:
++		WRITE_FPR(29, value);
++		break;
++	case 30:
++		WRITE_FPR(30, value);
++		break;
++	case 31:
++		WRITE_FPR(31, value);
++		break;
++	default:
++		panic("unexpected idx '%d'", idx);
++	}
++#undef WRITE_FPR
++}
++
++void emulate_load_store_insn(struct pt_regs *regs, void __user *addr, unsigned int *pc)
++{
++	bool user = user_mode(regs);
++	unsigned int res;
++	unsigned long value = 0;
++	union loongarch_instruction insn;
++
++	perf_sw_event(PERF_COUNT_SW_EMULATION_FAULTS, 1, regs, 0);
++
++	/*
++	 * This load never faults.
++	 */
++	__get_inst(&insn.word, pc, user);
++	if (user && !access_ok(addr, 8))
++		goto sigbus;
++
++	if (insn.reg2i12_format.opcode == ldd_op ||
++		insn.reg2i14_format.opcode == ldptrd_op ||
++		insn.reg3_format.opcode == ldxd_op) {
++		res = unaligned_read(addr, &value, 8, 1);
++		if (res)
++			goto fault;
++		regs->regs[insn.reg2i12_format.rd] = value;
++	} else if (insn.reg2i12_format.opcode == ldw_op ||
++		insn.reg2i14_format.opcode == ldptrw_op ||
++		insn.reg3_format.opcode == ldxw_op) {
++		res = unaligned_read(addr, &value, 4, 1);
++		if (res)
++			goto fault;
++		regs->regs[insn.reg2i12_format.rd] = value;
++	} else if (insn.reg2i12_format.opcode == ldwu_op ||
++		insn.reg3_format.opcode == ldxwu_op) {
++		res = unaligned_read(addr, &value, 4, 0);
++		if (res)
++			goto fault;
++		regs->regs[insn.reg2i12_format.rd] = value;
++	} else if (insn.reg2i12_format.opcode == ldh_op ||
++		insn.reg3_format.opcode == ldxh_op) {
++		res = unaligned_read(addr, &value, 2, 1);
++		if (res)
++			goto fault;
++		regs->regs[insn.reg2i12_format.rd] = value;
++	} else if (insn.reg2i12_format.opcode == ldhu_op ||
++		insn.reg3_format.opcode == ldxhu_op) {
++		res = unaligned_read(addr, &value, 2, 0);
++		if (res)
++			goto fault;
++		regs->regs[insn.reg2i12_format.rd] = value;
++	} else if (insn.reg2i12_format.opcode == std_op ||
++		insn.reg2i14_format.opcode == stptrd_op ||
++		insn.reg3_format.opcode == stxd_op) {
++		value = regs->regs[insn.reg2i12_format.rd];
++		res = unaligned_write(addr, value, 8);
++		if (res)
++			goto fault;
++	} else if (insn.reg2i12_format.opcode == stw_op ||
++		insn.reg2i14_format.opcode == stptrw_op ||
++		insn.reg3_format.opcode == stxw_op) {
++		value = regs->regs[insn.reg2i12_format.rd];
++		res = unaligned_write(addr, value, 4);
++		if (res)
++			goto fault;
++	} else if (insn.reg2i12_format.opcode == sth_op ||
++		insn.reg3_format.opcode == stxh_op) {
++		value = regs->regs[insn.reg2i12_format.rd];
++		res = unaligned_write(addr, value, 2);
++		if (res)
++			goto fault;
++	} else if (insn.reg2i12_format.opcode == fldd_op ||
++		insn.reg3_format.opcode == fldxd_op) {
++		res = unaligned_read(addr, &value, 8, 1);
++		if (res)
++			goto fault;
++		write_fpr(insn.reg2i12_format.rd, value);
++	} else if (insn.reg2i12_format.opcode == flds_op ||
++		insn.reg3_format.opcode == fldxs_op) {
++		res = unaligned_read(addr, &value, 4, 1);
++		if (res)
++			goto fault;
++		write_fpr(insn.reg2i12_format.rd, value);
++	} else if (insn.reg2i12_format.opcode == fstd_op ||
++		insn.reg3_format.opcode == fstxd_op) {
++		value = read_fpr(insn.reg2i12_format.rd);
++		res = unaligned_write(addr, value, 8);
++		if (res)
++			goto fault;
++	} else if (insn.reg2i12_format.opcode == fsts_op ||
++		insn.reg3_format.opcode == fstxs_op) {
++		value = read_fpr(insn.reg2i12_format.rd);
++		res = unaligned_write(addr, value, 4);
++		if (res)
++			goto fault;
++	} else
++		goto sigbus;
++
++
++#ifdef CONFIG_DEBUG_FS
++	if (user)
++		unaligned_instructions_user++;
++	else
++		unaligned_instructions_kernel++;
++#endif
++
++	compute_return_era(regs);
++
++	return;
++
++fault:
++	/* Did we have an exception handler installed? */
++	if (fixup_exception(regs))
++		return;
++
++	die_if_kernel("Unhandled kernel unaligned access", regs);
++	force_sig(SIGSEGV);
++
++	return;
++
++sigbus:
++	die_if_kernel("Unhandled kernel unaligned access", regs);
++	force_sig(SIGBUS);
++
++	return;
++}
++
++#ifdef CONFIG_DEBUG_FS
++static int __init debugfs_unaligned(void)
++{
++	struct dentry *d;
++
++	d = debugfs_create_dir("loongarch", NULL);
++	if (!d)
++		return -ENOMEM;
++
++	debugfs_create_u32("unaligned_instructions_user",
++				S_IRUGO, d, &unaligned_instructions_user);
++	debugfs_create_u32("unaligned_instructions_kernel",
++				S_IRUGO, d, &unaligned_instructions_kernel);
++
++	return 0;
++}
++arch_initcall(debugfs_unaligned);
++#endif
+diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
+index e36635fccb69..867895530340 100644
+--- a/arch/loongarch/lib/Makefile
++++ b/arch/loongarch/lib/Makefile
+@@ -3,4 +3,4 @@
+ # Makefile for LoongArch-specific library files.
+ #
+ 
+-lib-y	+= delay.o clear_user.o copy_user.o dump_tlb.o
++lib-y	+= delay.o clear_user.o copy_user.o dump_tlb.o unaligned.o
+diff --git a/arch/loongarch/lib/unaligned.S b/arch/loongarch/lib/unaligned.S
+new file mode 100644
+index 000000000000..b42c4a2edfad
+--- /dev/null
++++ b/arch/loongarch/lib/unaligned.S
+@@ -0,0 +1,91 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
++ */
++
++#include <linux/linkage.h>
++
++#include <asm/asm.h>
++#include <asm/asmmacro.h>
++#include <asm/errno.h>
++#include <asm/export.h>
++#include <asm/regdef.h>
++
++.macro fixup_ex from, to, fix
++.if \fix
++	.section .fixup, "ax"
++\to:	li.w	a0, -EFAULT
++	jr	ra
++	.previous
++.endif
++	.section __ex_table, "a"
++	PTR	\from\()b, \to\()b
++	.previous
++.endm
++
++/*
++ * unsigned long unaligned_read(void *addr, void *value, unsigned long n, bool sign)
++ *
++ * a0: addr
++ * a1: value
++ * a2: n
++ * a3: sign
++ */
++SYM_FUNC_START(unaligned_read)
++	beqz	a2, 5f
++
++	li.w	t2, 0
++	addi.d	t0, a2, -1
++	slli.d	t1, t0, 3
++	add.d 	a0, a0, t0
++
++	beqz	a3, 2f
++1:	ld.b	t3, a0, 0
++	b	3f
++
++2:	ld.bu	t3, a0, 0
++3:	sll.d	t3, t3, t1
++	or	t2, t2, t3
++	addi.d	t1, t1, -8
++	addi.d	a0, a0, -1
++	addi.d	a2, a2, -1
++	bgtz	a2, 2b
++4:	st.d	t2, a1, 0
++
++	move	a0, a2
++	jr	ra
++
++5:	li.w    a0, -EFAULT
++	jr	ra
++
++	fixup_ex 1, 6, 1
++	fixup_ex 2, 6, 0
++	fixup_ex 4, 6, 0
++SYM_FUNC_END(unaligned_read)
++
++/*
++ * unsigned long unaligned_write(void *addr, unsigned long value, unsigned long n)
++ *
++ * a0: addr
++ * a1: value
++ * a2: n
++ */
++SYM_FUNC_START(unaligned_write)
++	beqz	a2, 3f
++
++	li.w	t0, 0
++1:	srl.d	t1, a1, t0
++2:	st.b	t1, a0, 0
++	addi.d	t0, t0, 8
++	addi.d	a2, a2, -1
++	addi.d	a0, a0, 1
++	bgtz	a2, 1b
++
++	move	a0, a2
++	jr	ra
++
++3:	li.w    a0, -EFAULT
++	jr	ra
++
++	fixup_ex 2, 4, 1
++SYM_FUNC_END(unaligned_write)
+-- 
+2.31.1
 
