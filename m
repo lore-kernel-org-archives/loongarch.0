@@ -1,123 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DCEEBD
-	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 02:44:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 239C7C43470;
-	Mon, 17 Oct 2022 02:44:03 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Feiyang Chen <chenfeiyang@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V11 4/4] LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-Date: Mon, 17 Oct 2022 10:40:27 +0800
-Message-Id: <20221017024027.2389370-5-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221017024027.2389370-1-chenhuacai@loongson.cn>
-References: <20221017024027.2389370-1-chenhuacai@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BB77E4
+	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 03:47:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C89B9C433D7
+	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 03:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1665978421;
+	bh=gFlCfq117VRVLAxlo1bNCpasOJZNVAJeNeJRIJRLfiw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZOSm3kxgtK/kZVRrDpP+nxhwitDk27YCET63uECeT+t4OnSgfchmJ8dof4Y/zu3hD
+	 VCA9aL4ZRKox/RHJs9osGuO4GUoyAt19ttR51krtBzoztkXzPLBOL843ji4VyP7dZc
+	 NAuljT4B26YvYklgAq8MTzRr95eFbpyn2SXPdcjkbPi076w0EbJv/3UhBmIoGzRozW
+	 AUDsK/EcH5yuHvt03Sz87PM2Lixo+Wb2eXe0ISXZvnpRD0ErDxr02wmHyyUr7Motjc
+	 HMNC3GKmHt4pDulWzbDN/DmW6Z99P3ebZv+dpMCiKYjMDjS6DSLYXFRWDmndK7Ch2j
+	 nAzP0Rbd8fbuA==
+Received: by mail-ed1-f53.google.com with SMTP id b12so14234862edd.6
+        for <loongarch@lists.linux.dev>; Sun, 16 Oct 2022 20:47:01 -0700 (PDT)
+X-Gm-Message-State: ACrzQf1yHs+SNFN0ASjnI3wuXfDRMu5DkUn3rC357wVhScWNnI/AyHRv
+	d8cGi5yTKfoDHRHo250C0QD06WRNWAnxIpnQKfs=
+X-Google-Smtp-Source: AMsMyM4v7qla7xbK8U1wX9tm6zg4n0bG/EEVJEacMfc6ruCa7UvbKsiroJbPj1PKGqJQjS3hpP5Rtd/OZR/0RWJxUrE=
+X-Received: by 2002:aa7:df16:0:b0:45b:f51f:ab73 with SMTP id
+ c22-20020aa7df16000000b0045bf51fab73mr8392539edy.366.1665978420038; Sun, 16
+ Oct 2022 20:47:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220903095507.3425208-1-chenhuacai@loongson.cn> <CAAhV-H4Rn0vQpD5PA8iGHPHLYw1tReNzQM4dps9YoK=u7YNY3Q@mail.gmail.com>
+In-Reply-To: <CAAhV-H4Rn0vQpD5PA8iGHPHLYw1tReNzQM4dps9YoK=u7YNY3Q@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 17 Oct 2022 11:46:47 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6ww7NWzL9v+mCTMztf6pYWpVyp_R9kso8wXTGrnhSvDQ@mail.gmail.com>
+Message-ID: <CAAhV-H6ww7NWzL9v+mCTMztf6pYWpVyp_R9kso8wXTGrnhSvDQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] tools: Add LoongArch build infrastructure
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Shuah Khan <shuah@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	Andy Lutomirski <luto@kernel.org>, Will Drewry <wad@chromium.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Feiyang Chen <chenfeiyang@loongson.cn>
+Ping^2?
 
-The feature of minimizing overhead of struct page associated with each
-HugeTLB page is implemented on x86_64. However, the infrastructure of
-this feature is already there, so just select ARCH_WANT_HUGETLB_PAGE_
-OPTIMIZE_VMEMMAP is enough to enable this feature for LoongArch.
-
-To avoid the following build error on LoongArch we should include linux/
-static_key.h in page-flags.h.
-
-In file included from ./include/linux/mmzone.h:22,
-from ./include/linux/gfp.h:6,
-from ./include/linux/mm.h:7,
-from arch/loongarch/kernel/asm-offsets.c:9:
-./include/linux/page-flags.h:208:1: warning: data definition has no
-type or storage class
-208 | DECLARE_STATIC_KEY_MAYBE(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-| ^~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/page-flags.h:208:1: error: type defaults to 'int' in
-declaration of 'DECLARE_STATIC_KEY_MAYBE' [-Werror=implicit-int]
-./include/linux/page-flags.h:209:26: warning: parameter names (without
-types) in function declaration
-209 | hugetlb_optimize_vmemmap_key);
-| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/page-flags.h: In function 'hugetlb_optimize_vmemmap_enabled':
-./include/linux/page-flags.h:213:16: error: implicit declaration of
-function 'static_branch_maybe' [-Werror=implicit-function-declaration]
-213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-| ^~~~~~~~~~~~~~~~~~~
-./include/linux/page-flags.h:213:36: error:
-'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON' undeclared (first
-use in this function); did you mean
-'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP'?
-213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-| CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-./include/linux/page-flags.h:213:36: note: each undeclared identifier
-is reported only once for each function it appears in
-./include/linux/page-flags.h:214:37: error:
-'hugetlb_optimize_vmemmap_key' undeclared (first use in this
-function); did you mean 'hugetlb_optimize_vmemmap_enabled'?
-214 | &hugetlb_optimize_vmemmap_key);
-| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-| hugetlb_optimize_vmemmap_enabled
-
-Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/Kconfig     | 1 +
- include/linux/page-flags.h | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 6f7fa0c0ca08..0a6ef613124c 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -52,6 +52,7 @@ config LOONGARCH
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_USE_QUEUED_SPINLOCKS
- 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-+	select ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
- 	select ARCH_WANT_LD_ORPHAN_WARN
- 	select ARCH_WANTS_NO_INSTR
- 	select BUILDTIME_TABLE_SORT
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 0b0ae5084e60..1aafdc73e399 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -9,6 +9,7 @@
- #include <linux/types.h>
- #include <linux/bug.h>
- #include <linux/mmdebug.h>
-+#include <linux/static_key.h>
- #ifndef __GENERATING_BOUNDS_H
- #include <linux/mm_types.h>
- #include <generated/bounds.h>
--- 
-2.31.1
-
+On Sat, Sep 17, 2022 at 4:57 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+>
+> Ping?
+>
+> On Sat, Sep 3, 2022 at 5:55 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
+> >
+> > We will add tools support for LoongArch (bpf, perf, objtool, etc.), add
+> > build infrastructure and common headers for preparation.
+> >
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  tools/arch/loongarch/include/uapi/asm/bitsperlong.h |  9 +++++++++
+> >  tools/scripts/Makefile.arch                         | 11 ++++++++++-
+> >  2 files changed, 19 insertions(+), 1 deletion(-)
+> >  create mode 100644 tools/arch/loongarch/include/uapi/asm/bitsperlong.h
+> >
+> > diff --git a/tools/arch/loongarch/include/uapi/asm/bitsperlong.h b/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
+> > new file mode 100644
+> > index 000000000000..d4e32b3d4843
+> > --- /dev/null
+> > +++ b/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
+> > @@ -0,0 +1,9 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> > +#ifndef __ASM_LOONGARCH_BITSPERLONG_H
+> > +#define __ASM_LOONGARCH_BITSPERLONG_H
+> > +
+> > +#define __BITS_PER_LONG (__SIZEOF_POINTER__ * 8)
+> > +
+> > +#include <asm-generic/bitsperlong.h>
+> > +
+> > +#endif /* __ASM_LOONGARCH_BITSPERLONG_H */
+> > diff --git a/tools/scripts/Makefile.arch b/tools/scripts/Makefile.arch
+> > index 0c6c7f456887..1c72d07cb9fe 100644
+> > --- a/tools/scripts/Makefile.arch
+> > +++ b/tools/scripts/Makefile.arch
+> > @@ -5,7 +5,7 @@ HOSTARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
+> >                                    -e s/s390x/s390/ -e s/parisc64/parisc/ \
+> >                                    -e s/ppc.*/powerpc/ -e s/mips.*/mips/ \
+> >                                    -e s/sh[234].*/sh/ -e s/aarch64.*/arm64/ \
+> > -                                  -e s/riscv.*/riscv/)
+> > +                                  -e s/riscv.*/riscv/ -e s/loongarch.*/loongarch/)
+> >
+> >  ifndef ARCH
+> >  ARCH := $(HOSTARCH)
+> > @@ -34,6 +34,15 @@ ifeq ($(ARCH),sh64)
+> >         SRCARCH := sh
+> >  endif
+> >
+> > +# Additional ARCH settings for loongarch
+> > +ifeq ($(ARCH),loongarch32)
+> > +       SRCARCH := loongarch
+> > +endif
+> > +
+> > +ifeq ($(ARCH),loongarch64)
+> > +       SRCARCH := loongarch
+> > +endif
+> > +
+> >  LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)
+> >  ifeq ($(LP64), 1)
+> >    IS_64_BIT := 1
+> > --
+> > 2.31.1
+> >
+> >
