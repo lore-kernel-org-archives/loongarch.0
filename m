@@ -1,76 +1,104 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222C110EA
-	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 08:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1665994439;
-	bh=aUH/XHGaJbH5Gior3HdfSfhEBDSg2UQ+BopOfkKJaP8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=CT60EdmAYb4CCgDZrqx+T7ZRav7AUSN35MF5alxZR2b2HlSI4ihvy0zfwhZCEMSGc
-	 3DtqUl/lEABUu5OwyQP06g866G9jB0xi8Ii0zWFJ0R5CxrvUDWK81Dnq/lUA7vSVLR
-	 AMIbSF4UI3rufVN1gfk2aDlJtvqZkT71i/dHDoIc=
-Received: from [IPv6:240e:358:1124:a900:dc73:854d:832e:3] (unknown [IPv6:240e:358:1124:a900:dc73:854d:832e:3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 3EF7565A8B;
-	Mon, 17 Oct 2022 04:13:53 -0400 (EDT)
-Message-ID: <514ccb3b1a2fbd37f238f169eef0f40c89d3e3dd.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Add unaligned access support
-From: Xi Ruoyao <xry111@xry111.site>
-To: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, Xuefeng
- Li <lixuefeng@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, guoren
- <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-Date: Mon, 17 Oct 2022 16:13:47 +0800
-In-Reply-To: <b97afda4-143c-46d2-a6af-dd6a700472ec@app.fastmail.com>
-References: <20221016133418.2122777-1-chenhuacai@loongson.cn>
-	 <506fe4e5-a203-48e6-84a6-f70133be15dd@app.fastmail.com>
-	 <CAAhV-H7UJDgtY4NfF7-5+TbNEbec7XOpvS87H=fPad4KK0KLaw@mail.gmail.com>
-	 <b97afda4-143c-46d2-a6af-dd6a700472ec@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.0 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFDE10EA
+	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 08:22:51 +0000 (UTC)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.west.internal (Postfix) with ESMTP id 310883200319;
+	Mon, 17 Oct 2022 04:22:50 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute3.internal (MEProxy); Mon, 17 Oct 2022 04:22:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm2; t=1665994969; x=1666081369; bh=gyBfJa1eOL
+	n7mrcvT7v+17sbsp2akKfNFVudJCF/ZBE=; b=MJv7rbrdt1PWbIJ2Fo7Mj32t/V
+	AuPLKMzjPGcGAfh6wMh5+vutte/YuZ1fj0pYUA1loD+QNVNYGXw8wCUPrLwwYuBx
+	BqqKO0YnFE2gvrJ/rFjTsHz+6G0lq28iqmd+jxSAy+ciXgzx3fAGreInyHHu7HeB
+	oXZeGY64dWaH6bt/YjleGqKu278XL6MlBAh41/wSjPL6BsfTwCQa5UMWL0FY5rkU
+	M0kOQhLQtrdjZHa1hxBuHO5JJbXBBNVOYgmvAE+vgHEQKR0Gx5I/3GR0vLJXqVKT
+	iEtYuGFB/zgZo92ebxpTm9EEZiLAaWfKU1iR8ci2wNAD1SJh4OfmzPgXSAog==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1665994969; x=1666081369; bh=gyBfJa1eOLn7mrcvT7v+17sbsp2a
+	kKfNFVudJCF/ZBE=; b=JRpCbL54IprxWQuNjJN5ghgSuX6t98ISDUu1VmTK+6u0
+	CBu/BLVAGUxfg5NM8FPZT16YOQlj0QvKpALcakln7gWJRjJhMHeknBUB3PaHG+VW
+	3dsijGZr7KgHfXoKO4l+Z/zNhJZEs3X4lI2wVU1r+mjrX6u59e/YonGvRKfQngbR
+	BCHLQhQCQRgVlU/m7/+h/5vi7F8ElBZmWu+rGftyhZeGWSIis7H+AcbSvfYsUUtJ
+	0hQafAinwYFwEqZJZyhzvDYVGDHnaYlb0fB1Jut+jcbzrHiEuKtrmDM3s4pk89yF
+	R/cn69RLJx29/N6fiS1YhnhXX/5JqBv+MWgrhzYOvw==
+X-ME-Sender: <xms:2BBNY-FcE1DnNhe9594NQV9outB-3tyBoRXUsFsppK9m0xouuYuLBw>
+    <xme:2BBNY_XNEoPDVElieO0suRRhtNZUSgP1wXgXY2Bo-BPQUAAhQiyHnpaVuqsQ5EjxH
+    uHSiy_ynstC9Jy6INs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeekledgtddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:2BBNY4InSP8A4BJJGGEbRETk97NW_o6_P42WpP5ucLFhQC_rCiEJKA>
+    <xmx:2BBNY4EK8_FVtMvN4DebyDet5ZrgLZINrD4nqM5_5hNlvVUGuDV6xQ>
+    <xmx:2BBNY0UjGyknLWqhAdVeXFTupuGN0OnVgRGbgkwB1_NPpBAplBtKeg>
+    <xmx:2RBNY2K8BZ3fk0eWNADA4wcZX8E70pSvfSBAwZ_yRWnbvFF3L8CE0Q>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 771FFB60086; Mon, 17 Oct 2022 04:22:48 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1047-g9e4af4ada4-fm-20221005.001-g9e4af4ad
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Message-Id: <995e1d32-7818-4a44-9911-705dd1c62929@app.fastmail.com>
+In-Reply-To: <52ada3c4-f4f2-dc27-5899-d29e5952189d@xen0n.name>
+References: <20221016133418.2122777-1-chenhuacai@loongson.cn>
+ <506fe4e5-a203-48e6-84a6-f70133be15dd@app.fastmail.com>
+ <CAAhV-H7UJDgtY4NfF7-5+TbNEbec7XOpvS87H=fPad4KK0KLaw@mail.gmail.com>
+ <b97afda4-143c-46d2-a6af-dd6a700472ec@app.fastmail.com>
+ <52ada3c4-f4f2-dc27-5899-d29e5952189d@xen0n.name>
+Date: Mon, 17 Oct 2022 10:22:00 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "WANG Xuerui" <kernel@xen0n.name>, "Huacai Chen" <chenhuacai@kernel.org>
+Cc: "Huacai Chen" <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
+ "Xuefeng Li" <lixuefeng@loongson.cn>, "Tiezhu Yang" <yangtiezhu@loongson.cn>,
+ guoren <guoren@kernel.org>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] LoongArch: Add unaligned access support
+Content-Type: text/plain
 
-On Mon, 2022-10-17 at 09:38 +0200, Arnd Bergmann wrote:
+On Mon, Oct 17, 2022, at 10:05 AM, WANG Xuerui wrote:
+> On 2022/10/17 15:38, Arnd Bergmann wrote:
+>> On Mon, Oct 17, 2022, at 9:31 AM, Huacai Chen wrote:
+>>>>> +/* sysctl hooks */
+>>>>> +int unaligned_enabled __read_mostly = 1;     /* Enabled by default */
+>>>>> +int no_unaligned_warning __read_mostly = 1;  /* Only 1 warning by default */
+>>>>
+>>>> The comment says 'sysctl', the implementation has a debugfs interface.
+>>> Originally "enabled", "warning" and "counters" are all debugfs
+>>> interfaces, then you told me to use sysctl. Now in this version
+>>> "enabled" and "warning" are converted to sysctl, but there are no
+>>> existing "counters" sysctl.
+>> 
+>> I don't see the sysctl interface in the patch, what am I missing?
+>
+> FYI they are chosen by the Kconfig options and live in kernel/sysctl.c. 
 
-> > Some unaligned accesses are observed from the kernel network stack, it
-> > seems related to whether the packet aligns to IP header or MAC header.
->=20
-> This is usually a bug in the device driver. It's a fairly common bug
-> since the network driver has to ensure the alignment is correct, but
-> it's usually fixable, and fixing it results in better performance on
-> machines that support unaligned access as well.
+Got it, that's what I was looking for, I had completely forgotten
+about how we got here.
 
-Or, maybe a GCC bug is causing -mstrict-align not implemented correctly.
+> And I believe the debugfs interface (the counters) is inspired by the 
+> original mips code. Pretty niche use case but can be handy at times...
 
-> > And, gcc has a -mstrict-align parameter, if without this, there are
-> > unaligned instructions.
->=20
-> Does this default to strict or non-strict mode? Usually gcc does not
-> allow to turn this off on architectures that have no hardware support
-> for unaligned access.
+Right, I see what it does now, and I agree that this is not a problem.
+A tracepoint is probably an even better way to handle this flexibly,
+but since it's not a stable interface either way, this can be optimized
+later on.
 
-On LoongArch the unaligned access support is optional.  An
-implementation is allowed to implement it or not.  The software can
-determine if it's supported by a CPUCFG instruction.
-
-I think -march=3Dla264 will turn off strict align, but it's not added into
-GCC yet.
-
-The GCC default is -mno-strict-align.  I expressed my concern about this
-decision when I reviewed the GCC port, but at last they just kept the
-decision.  But the kernel already sets -mstrict-align in CFLAGS anyway.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+       Arnd
