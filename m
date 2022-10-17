@@ -1,66 +1,104 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2511C01
-	for <loongarch@lists.linux.dev>; Sun, 16 Oct 2022 15:05:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1665932697;
-	bh=KK3E7+y95n/wamk0irXlrFth95WLKZ8CxF125WruhUA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=NZVert3nzC7vV75zXzsFR6pMzODvqxgY6ihc/OPUL40crEb2NkOY6fGya6Eb/Q2cY
-	 lW+sHcAatrG0PPduA9Nl93eCWxtdh7N7VFPs6I2TxXjzjP9A7kdg7n8Dx7B6KPBucs
-	 tNP+dzo/cPO7gg22HxwUBD8QQFw10BM77IauBGFo=
-Received: from [IPv6:240e:358:1113:db00:dc73:854d:832e:4] (unknown [IPv6:240e:358:1113:db00:dc73:854d:832e:4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id A5FFA65AA8;
-	Sun, 16 Oct 2022 11:04:50 -0400 (EDT)
-Message-ID: <c1b674a37a1a04f9c84df1e9a227db68bf78e922.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Add unaligned access support
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>, Tiezhu
- Yang <yangtiezhu@loongson.cn>, Guo Ren <guoren@kernel.org>, Xuerui Wang
- <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- linux-kernel@vger.kernel.org
-Date: Sun, 16 Oct 2022 23:04:42 +0800
-In-Reply-To: <20221016133418.2122777-1-chenhuacai@loongson.cn>
-References: <20221016133418.2122777-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.46.0 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609967B
+	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 00:17:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C53AC433D6
+	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 00:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1665965825;
+	bh=RmH0Em+mUEQfgXRh5FfsxTgViYVAlp+3YdZ6yupU9AY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hY3Ay9re6wdH1Vw2gLbE0W4v1pf1uPrkPKH8HCPj6S0td4xlVrxGDhrYl0ZCxP20d
+	 ESdaITopMB68ljfsqMtJs3BmOzpQ6BKbG9hZE4cNZY7ZVtrokQUuTh/HGYUY8hPTvY
+	 JuqCvTlLVCihZeZdUqwXrs0410UbhOM5ZGKHiuy0knh6VwkKT7fyig/KJ3+dJmPkdu
+	 Z/bxYn6V4MCMPRjVWMKmeVp0yaaVHlpR6QzrOZ7ByaqZH+pcneV5OZUhp7iowxIM+l
+	 K+9vn8S6uEddDK6a+sO/U4kNE2aqeF5CZME/6uuP3rfwatuuRdmgwJd5+9LyxPlM2F
+	 UCYNcL+HLnx6Q==
+Received: by mail-ed1-f46.google.com with SMTP id a13so13910040edj.0
+        for <loongarch@lists.linux.dev>; Sun, 16 Oct 2022 17:17:04 -0700 (PDT)
+X-Gm-Message-State: ACrzQf0uXD0Jv2h7HFE+sla2xLMhzCv8SjGZuBho0ZEeb31VAzTjmBd4
+	RSCKku1Gor4WHLXilUyM1iD8tNNQyJb3LOxeOF0=
+X-Google-Smtp-Source: AMsMyM690iXp/F0qjSxqImW5oshNJm8xdDlg8EMypwugxmntB95iNOzT0EMVK3o4wDffhWCUjYB7br0thiPEizrBa2w=
+X-Received: by 2002:aa7:d4d9:0:b0:45c:7eae:d8d8 with SMTP id
+ t25-20020aa7d4d9000000b0045c7eaed8d8mr7975846edr.254.1665965823238; Sun, 16
+ Oct 2022 17:17:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20221016133418.2122777-1-chenhuacai@loongson.cn> <c1b674a37a1a04f9c84df1e9a227db68bf78e922.camel@xry111.site>
+In-Reply-To: <c1b674a37a1a04f9c84df1e9a227db68bf78e922.camel@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 17 Oct 2022 08:16:53 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4vGt4MTXCyiSnn7cQFrxR-amLC4nKe7-EcLyT8G-Ciqg@mail.gmail.com>
+Message-ID: <CAAhV-H4vGt4MTXCyiSnn7cQFrxR-amLC4nKe7-EcLyT8G-Ciqg@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Add unaligned access support
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	Xuefeng Li <lixuefeng@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-T24gU3VuLCAyMDIyLTEwLTE2IGF0IDIxOjM0ICswODAwLCBIdWFjYWkgQ2hlbiB3cm90ZToKCj4g
-TG9vbmdzb24tMiBzZXJpZXMgKExvb25nc29uLTJLNTAwLCBMb29uZ3Nvbi0ySzEwMDApCgoiMksx
-MDAwTEEiPyAiMksxMDAwIiBpcyBwdXp6bGluZyBiZWNhdXNlIG9mIGEgbmFtZSBjb25mbGljdCB3
-aXRoIHRoZQpNSVBTLWJhc2VkIG1vZGVsLgoKLyogc25pcCAqLwoKPiArc3RhdGljIGlubGluZSB1
-bnNpZ25lZCBsb25nIHJlYWRfZnByKHVuc2lnbmVkIGludCBmZCkKPiArewo+ICsjZGVmaW5lIFJF
-QURfRlBSKGZkLCBfX3ZhbHVlKcKgwqDCoMKgwqDCoMKgwqDCoMKgXAo+ICt7wqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoFwKClVubmVjZXNzYXJ5IGN1cmx5IGJyYWNlIHBhaXIuCgo+ICvCoMKgwqDCoMKgwqDC
-oF9fYXNtX18gX192b2xhdGlsZV9fKMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBcCj4gK8KgwqDCoMKg
-wqDCoMKgIm1vdmZyMmdyLmRcdCUwLCAkZiUxXG5cdCLCoMKgwqDCoMKgwqBcCj4gK8KgwqDCoMKg
-wqDCoMKgOiAiPXIiKF9fdmFsdWUpIDogImkiKGZkKSk7wqDCoMKgwqDCoFwKPiArfQoKSSdtIG5v
-dCBzdXJlIGlmIHRoaXMgaXMgYSBjb3JyZWN0IHVzZSBvZiAiaSIgY29uc3RyYWludC4gIE1heWJl
-IHdlCnNob3VsZCBqdXN0IGNvbmNhdGVuYXRlIHRoZSBzdHJpbmc/CgoibW92ZnIyZ3IuZFx0JTAs
-ICRmIiAjZmQgIlxuXHQiCgo+ICsKPiArwqDCoMKgwqDCoMKgwqB1bnNpZ25lZCBsb25nIF9fdmFs
-dWU7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoHN3aXRjaCAoZmQpIHsKCkkgZG9uJ3QgbGlrZSB0aGlz
-ICJ2ZXJ5IGxvbmciIHN3aXRjaCBzdGF0ZW1lbnQsIGJ1dCBpdCBzZWVtcyB3ZSBoYXZlIG5vCndh
-eSB0byBtYWtlIGl0IGJldHRlci4uLgoKPiArwqDCoMKgwqDCoMKgwqBjYXNlIDA6Cj4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFJFQURfRlBSKDAsIF9fdmFsdWUpOwo+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBicmVhazsKPiArwqDCoMKgwqDCoMKgwqBjYXNlIDE6Cj4g
-K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFJFQURfRlBSKDEsIF9fdmFsdWUpOwo+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBicmVhazsKPiArwqDCoMKgwqDCoMKgwqBjYXNl
-IDI6Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFJFQURfRlBSKDIsIF9fdmFsdWUp
-Owo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBicmVhazsKCi0tIApYaSBSdW95YW8g
-PHhyeTExMUB4cnkxMTEuc2l0ZT4KU2Nob29sIG9mIEFlcm9zcGFjZSBTY2llbmNlIGFuZCBUZWNo
-bm9sb2d5LCBYaWRpYW4gVW5pdmVyc2l0eQo=
+Hi, Ruoyao,
 
+On Sun, Oct 16, 2022 at 11:05 PM Xi Ruoyao <xry111@xry111.site> wrote:
+>
+> On Sun, 2022-10-16 at 21:34 +0800, Huacai Chen wrote:
+>
+> > Loongson-2 series (Loongson-2K500, Loongson-2K1000)
+>
+> "2K1000LA"? "2K1000" is puzzling because of a name conflict with the
+> MIPS-based model.
+Technically this is correct, both MIPS-based and LoongArch-based
+Loongson-2K1000 have no hardware support.
+
+>
+> /* snip */
+>
+> > +static inline unsigned long read_fpr(unsigned int fd)
+> > +{
+> > +#define READ_FPR(fd, __value)          \
+> > +{                                      \
+>
+> Unnecessary curly brace pair.
+OK,thanks.
+
+>
+> > +       __asm__ __volatile__(           \
+> > +       "movfr2gr.d\t%0, $f%1\n\t"      \
+> > +       : "=r"(__value) : "i"(fd));     \
+> > +}
+>
+> I'm not sure if this is a correct use of "i" constraint.  Maybe we
+> should just concatenate the string?
+OK, thanks.
+
+Huacai
+>
+> "movfr2gr.d\t%0, $f" #fd "\n\t"
+>
+> > +
+> > +       unsigned long __value;
+> > +
+> > +       switch (fd) {
+>
+> I don't like this "very long" switch statement, but it seems we have no
+> way to make it better...
+>
+> > +       case 0:
+> > +               READ_FPR(0, __value);
+> > +               break;
+> > +       case 1:
+> > +               READ_FPR(1, __value);
+> > +               break;
+> > +       case 2:
+> > +               READ_FPR(2, __value);
+> > +               break;
+>
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
