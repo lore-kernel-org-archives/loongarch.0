@@ -1,114 +1,165 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730E510EA
-	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 07:31:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37C96C433B5
-	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 07:31:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D663310EA
+	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 07:37:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83994C4347C
+	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 07:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1665991884;
-	bh=hKK4/H1xnGnV6JxVAIIfP0R9btqgiUqTtFuk9VPdO8E=;
+	s=k20201202; t=1665992249;
+	bh=+5A1av+6MnMOMcMrSEXVxrOm6Gs3Za7niSjGLgaRaoA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ck3VaG1NdTRMSdr2v5CcWO6zxNXIIh1+2Aa3rTdhNc+3PLQ136Ci/0fHodVnMocy9
-	 NHSvoM9w48TU9qX6soyvS94XMDj1ubVkzxzhM/PxqI1UCFn8gAVWYgF/4l7O/1iYpu
-	 B02THw4bY93TCQoeOtoV0CoRmn2kKRv1SF58YkqGLc6XvMH6Y78Q7O8fX1NBLyyRok
-	 kyYapdqwmDlo3IlkxGFP+Ce31YJ1yiREqtiNlAXcuf85CgATMmWdAGxCt/a6zVZeL+
-	 5f7JUeIAUKAuJ1ZR2V65BfWt6cgZ8E6LyawZ/BeK5LQLk7Jth7mm/pfpNToUM97OmV
-	 dthvs6Uvn8dZA==
-Received: by mail-ej1-f48.google.com with SMTP id d26so22842809eje.10
-        for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 00:31:24 -0700 (PDT)
-X-Gm-Message-State: ACrzQf28VH1rE89IbG6nmsGXAA0bIsTfcVrVkDEelz6GL5Fk97s8MDBQ
-	czhZfpbDl4h+BtQmzwUpZHC5RLDioCv0G9wbXqk=
-X-Google-Smtp-Source: AMsMyM5uXcEgj0EkeSiQJyHwibP1MhffT/OjqW+8fBpIebeUP1sjp32hftQo9ac5mB7iWHvgF/PTgNZ7eFunhp4S5IQ=
-X-Received: by 2002:a17:907:a044:b0:78d:b569:b891 with SMTP id
- gz4-20020a170907a04400b0078db569b891mr7378357ejc.224.1665991882427; Mon, 17
- Oct 2022 00:31:22 -0700 (PDT)
+	b=aTKhrFZRJllPH5LJZnPbhwVrb3NyyPV16YWHpco4uplbVb77Q9b9SmBLy60I8AqqK
+	 f23O7tGvxDEbgxqlB1bi3Wa4y4nYDonf0git3ImYxxf7Y2Tbj+SKcf0ht70dlu9zcU
+	 8G+7hVyPV41SQIhM6jfv6Er3PnY3yWLky7TMyhC8kRUnicow4486zgyn0VKZzdgClu
+	 XOP+FDw2gHpRnqj/yhraIfcOz3b7zmUsBeaIlivlxfo/VECXZw+yAzJQOtyuZNoO1W
+	 o8rQV8W3lNN4LauJqlV03TXM6MEEZMCNvDhKGDxOr2NzD8SKINKdIr3Y+yEmf7s8j1
+	 a9zgPdjx+mFzA==
+Received: by mail-ed1-f43.google.com with SMTP id s2so14805498edd.2
+        for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 00:37:29 -0700 (PDT)
+X-Gm-Message-State: ACrzQf1zo3/li3ZNX22fAIKID3cwuxkHsq8tdrTCrlCO/tpd0r1/w59Y
+	mbl12zdh/RlL7ZMGj1U/GqrVLWECtilop4YWHB0=
+X-Google-Smtp-Source: AMsMyM4f4vwixo4JyVz7ksqp1i8sB0ECUqnrO8JC8nLqKPuUwCS+N5Ao4ZAhXJh/30TDBqiHpEZl8nUhVbn7kjxV/8A=
+X-Received: by 2002:aa7:d4d9:0:b0:45c:7eae:d8d8 with SMTP id
+ t25-20020aa7d4d9000000b0045c7eaed8d8mr9113622edr.254.1665992247623; Mon, 17
+ Oct 2022 00:37:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221016133418.2122777-1-chenhuacai@loongson.cn> <506fe4e5-a203-48e6-84a6-f70133be15dd@app.fastmail.com>
-In-Reply-To: <506fe4e5-a203-48e6-84a6-f70133be15dd@app.fastmail.com>
+References: <20221017022330.2383060-1-chenhuacai@loongson.cn> <67d9acd0-692f-95d4-2c92-4e43e1d0100c@loongson.cn>
+In-Reply-To: <67d9acd0-692f-95d4-2c92-4e43e1d0100c@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 17 Oct 2022 15:31:09 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7UJDgtY4NfF7-5+TbNEbec7XOpvS87H=fPad4KK0KLaw@mail.gmail.com>
-Message-ID: <CAAhV-H7UJDgtY4NfF7-5+TbNEbec7XOpvS87H=fPad4KK0KLaw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add unaligned access support
-To: Arnd Bergmann <arnd@arndb.de>
+Date: Mon, 17 Oct 2022 15:37:15 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H54TeCwuUu+pGyGUDgy3_k1eCA1hX56-ZrTuk2_WRiFxQ@mail.gmail.com>
+Message-ID: <CAAhV-H54TeCwuUu+pGyGUDgy3_k1eCA1hX56-ZrTuk2_WRiFxQ@mail.gmail.com>
+Subject: Re: [PATCH V2] LoongArch: Add unaligned access support
+To: Jinyang He <hejinyang@loongson.cn>
 Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
 	Xuefeng Li <lixuefeng@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	guoren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
 	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Arnd,
+Hi, Jinyang,
 
-On Mon, Oct 17, 2022 at 3:12 PM Arnd Bergmann <arnd@arndb.de> wrote:
+On Mon, Oct 17, 2022 at 12:22 PM Jinyang He <hejinyang@loongson.cn> wrote:
 >
-> On Sun, Oct 16, 2022, at 3:34 PM, Huacai Chen wrote:
-> > Loongson-2 series (Loongson-2K500, Loongson-2K1000) don't support
-> > unaligned access in hardware, while Loongson-3 series (Loongson-3A5000,
-> > Loongson-3C5000) are configurable whether support unaligned access in
-> > hardware. This patch add unaligned access emulation for those LoongArch
-> > processors without hardware support.
+> Hi, Huacai,
+>
+>
+> On 2022/10/17 =E4=B8=8A=E5=8D=8810:23, Huacai Chen wrote:
+> > [...]
+> > +     default:
+> > +             panic("unexpected fd '%d'", fd);
+> Due to the optimization of gcc, the panic() is unused actually and leave
+> the symbol 'read/write_fpr' in vmlinux. Maybe we can use unreachable() an=
+d
+>
+> always_inline.
+Seems impossible, I have tried __always_inline() and BUILD_BUG(), then
+BUILD_BUG() is triggered, because the reg-number is not a compile time
+constant.
+
+>
+> > [...]
+> > +
+> > +fault:
+> > +     /* roll back jump/branch */
+> > +     regs->csr_era =3D origpc;
+> > +     regs->regs[1] =3D origra;
+>
+> I'm not sure where the csr_era and regs[1] was damaged...
+Yes, seems not be damaged.
+
+>
+> > [...]
 > >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->
-> What does the Loongarch ELF ABI say about this? On most architectures,
-> C compilers are not allowed to produce unaligned accesses for standard
-> compliant source code, the only way you'd get this is when casting
-> a an unaligned (e.g. char*) pointer to another type with higher alignment
-> requirement.
-Some unaligned accesses are observed from the kernel network stack, it
-seems related to whether the packet aligns to IP header or MAC header.
-And, gcc has a -mstrict-align parameter, if without this, there are
-unaligned instructions.
-
->
-> > +/* sysctl hooks */
-> > +int unaligned_enabled __read_mostly = 1;     /* Enabled by default */
-> > +int no_unaligned_warning __read_mostly = 1;  /* Only 1 warning by default */
->
-> The comment says 'sysctl', the implementation has a debugfs interface.
-Originally "enabled", "warning" and "counters" are all debugfs
-interfaces, then you told me to use sysctl. Now in this version
-"enabled" and "warning" are converted to sysctl, but there are no
-existing "counters" sysctl.
-
-Huacai
-
->
-> > +#ifdef CONFIG_DEBUG_FS
-> > +static int __init debugfs_unaligned(void)
-> > +{
-> > +     struct dentry *d;
+> > +/*
+> > + * unsigned long unaligned_read(void *addr, void *value, unsigned long=
+ n, bool sign)
+> > + *
+> > + * a0: addr
+> > + * a1: value
+> > + * a2: n
+> > + * a3: sign
+> > + */
+> > +SYM_FUNC_START(unaligned_read)
+> > +     beqz    a2, 5f
 > > +
-> > +     d = debugfs_create_dir("loongarch", NULL);
-> > +     if (!d)
-> > +             return -ENOMEM;
+> > +     li.w    t1, 8
+> IMHO we can avoid the constant reg t1.
+OK, thanks.
+
+> > +     li.w    t2, 0
 > > +
-> > +     debugfs_create_u32("unaligned_instructions_user",
-> > +                             S_IRUGO, d, &unaligned_instructions_user);
-> > +     debugfs_create_u32("unaligned_instructions_kernel",
-> > +                             S_IRUGO, d, &unaligned_instructions_kernel);
+> > +     addi.d  t0, a2, -1
+> > +     mul.d   t1, t0, t1
+> > +     add.d   a0, a0, t0
 > > +
-> > +     return 0;
-> > +}
-> > +arch_initcall(debugfs_unaligned);
-> > +#endif
+> > +     beq     a3, zero, 2f
+> beqz
+OK, thanks.
+
+> > +1:   ld.b    t3, a0, 0
+> > +     b       3f
+> > +
+> > +2:   ld.bu   t3, a0, 0
+> > +3:   sll.d   t3, t3, t1
+> > +     or      t2, t2, t3
+> > +     addi.d  t1, t1, -8
+> > +     addi.d  a0, a0, -1
+> > +     addi.d  a2, a2, -1
+> > +     bgt     a2, zero, 2b
+> bgtz
+> > +4:   st.d    t2, a1, 0
+> > +
+> > +     move    a0, a2
+> > +     jr      ra
+> > +
+> > +5:   li.w    a0, -EFAULT
+> > +     jr      ra
+> > +
+> > +     fixup_ex 1, 6, 1
+> > +     fixup_ex 2, 6, 0
+> > +     fixup_ex 4, 6, 0
+> > +SYM_FUNC_END(unaligned_read)
+> > +
+> > +/*
+> > + * unsigned long unaligned_write(void *addr, unsigned long value, unsi=
+gned long n)
+> > + *
+> > + * a0: addr
+> > + * a1: value
+> > + * a2: n
+> > + */
+> > +SYM_FUNC_START(unaligned_write)
+> > +     beqz    a2, 3f
+> > +
+> > +     li.w    t0, 0
+> > +1:   srl.d   t1, a1, t0
+> > +2:   st.b    t1, a0, 0
+> > +     addi.d  t0, t0, 8
+> > +     addi.d  a2, a2, -1
+> > +     addi.d  a0, a0, 1
+> > +     bgt     a2, zero, 1b
+> bgtz
+OK, thanks.
+
+> > +
+> > +     move    a0, a2
+> > +     jr      ra
+> > +
+> > +3:   li.w    a0, -EFAULT
+> > +     jr      ra
+> > +
+> > +     fixup_ex 2, 4, 1
+> > +SYM_FUNC_END(unaligned_write)
 >
-> The debugfs interface does not sound like a good way to do this.
-> Overall, my feeling is that for a new architecture we should not
-> introduce this at all but instead provide a way to diagnose and
-> fix user space, since we do not have to keep compatibility with
-> broken binaries that worked in the past.
+> Thanks,
 >
-> If the ELF ABI actually allows compilers to produce unaligned
-> accesses for correct code, there should at least be a more generic
-> way of enabling this that follows what other architectures do.
-> We are already somewhat inconsistent there between architectures,
-> but I don't think anything else uses debugfs here.
+> Jinyang
 >
->      Arnd
