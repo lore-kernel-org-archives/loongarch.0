@@ -1,125 +1,114 @@
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690CA10EA
-	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 07:12:25 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.west.internal (Postfix) with ESMTP id 13215320025E;
-	Mon, 17 Oct 2022 03:12:24 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Mon, 17 Oct 2022 03:12:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm2; t=1665990743; x=1666077143; bh=V8eZeviXGL
-	1+uINoLCcYBas9La4PrZ6COoSZQFiUw6U=; b=gF/szDUmOCYaOJsLcF0gV9YwiE
-	RejMOa/YEn5grDKnOf41ezS6IAKEe/RL2NPZRpXq2vxK2/kKNhDQAe+6y8CsezF5
-	4fBXGau5SXE8dbSy835I7yBtCe6kaLNtvYUa3FjtKliF6EnxYDIeQuotZ7GvsaMW
-	PqF7YunGiI9fPSGh7SXafMNYO1d2WSYF3u34EhLk0TNVgulOFu0JkDiFvwzkRTZ8
-	SJqN1i4jY946BI8kdUqDxehdd6qwvEHJeem+zLWZ2s/mQKCpGBDXoBp8DCrZtryz
-	X6w+o+UGCDja+pSOiDN6txX8PcumVHlBXANKbaJCjlrS0z/dhs4Mz7osCJ6Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1665990743; x=1666077143; bh=V8eZeviXGL1+uINoLCcYBas9La4P
-	rZ6COoSZQFiUw6U=; b=D7I0ggmGlkV1vClLcb8pSO9TaKx7tjfEN6Qvf7HgLEEC
-	ZrL5xiWg7GFA6nHdjgsYQ0cKhU4eniGycXXZOpO0hSV/tdohkUQxsRL3p8G9x+Mb
-	+P1fdN+n7SUY/Mfk+IenaIrOBktLjuxE/6UNl4Q9+8lhdH27+6iBFlHlVJgnr3Kg
-	BWFPPdWjc2d/3Gok1L+suV+wSGC8DEK5mgwGplNrJd9U3HpCHcd2xkRb3uIPfdp5
-	4jlvsEvS1cZZPtTFC+QPKPa4s6xmM1aTFD872iEQxLRmuREI1rOFM/zOMLyx9ZZx
-	KGVgR9Q6d071sjmAtBuPIA5F100REkTqMKyy+Jwj7w==
-X-ME-Sender: <xms:VwBNY5JKV85VuGcJBtQ-q5J7jZdhGyHSivIOgl1Llv7qFTuo7yNG-Q>
-    <xme:VwBNY1IIuOpWzGpyI_91O-kiid8ke-e_5X0JRkl2hzVydz8KOxWnOV14C-Z3NRfR9
-    7ufvHLfuJmIub7EzxM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeekkedguddujecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:VwBNYxuPzQYCle2hKVW3u3kssMsSmO405AQZjck6Op8R0-FVsi7THA>
-    <xmx:VwBNY6ac3y_ctLrLk-OowoTCcNbK9HPPUAvgqLzKLg3Z0aUwYYxH5w>
-    <xmx:VwBNYwabPuKvQrVB1nL1Ej86rLi0eEVkp-X5y4vLq5qt65YN7t7Oow>
-    <xmx:VwBNY1N4VEjbqqK9fyXcSM4tLJ_13q0ZaDp3iUS5Tx23ozV7CX69Lw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 2FD9AB60086; Mon, 17 Oct 2022 03:12:23 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1047-g9e4af4ada4-fm-20221005.001-g9e4af4ad
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730E510EA
+	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 07:31:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37C96C433B5
+	for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 07:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1665991884;
+	bh=hKK4/H1xnGnV6JxVAIIfP0R9btqgiUqTtFuk9VPdO8E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ck3VaG1NdTRMSdr2v5CcWO6zxNXIIh1+2Aa3rTdhNc+3PLQ136Ci/0fHodVnMocy9
+	 NHSvoM9w48TU9qX6soyvS94XMDj1ubVkzxzhM/PxqI1UCFn8gAVWYgF/4l7O/1iYpu
+	 B02THw4bY93TCQoeOtoV0CoRmn2kKRv1SF58YkqGLc6XvMH6Y78Q7O8fX1NBLyyRok
+	 kyYapdqwmDlo3IlkxGFP+Ce31YJ1yiREqtiNlAXcuf85CgATMmWdAGxCt/a6zVZeL+
+	 5f7JUeIAUKAuJ1ZR2V65BfWt6cgZ8E6LyawZ/BeK5LQLk7Jth7mm/pfpNToUM97OmV
+	 dthvs6Uvn8dZA==
+Received: by mail-ej1-f48.google.com with SMTP id d26so22842809eje.10
+        for <loongarch@lists.linux.dev>; Mon, 17 Oct 2022 00:31:24 -0700 (PDT)
+X-Gm-Message-State: ACrzQf28VH1rE89IbG6nmsGXAA0bIsTfcVrVkDEelz6GL5Fk97s8MDBQ
+	czhZfpbDl4h+BtQmzwUpZHC5RLDioCv0G9wbXqk=
+X-Google-Smtp-Source: AMsMyM5uXcEgj0EkeSiQJyHwibP1MhffT/OjqW+8fBpIebeUP1sjp32hftQo9ac5mB7iWHvgF/PTgNZ7eFunhp4S5IQ=
+X-Received: by 2002:a17:907:a044:b0:78d:b569:b891 with SMTP id
+ gz4-20020a170907a04400b0078db569b891mr7378357ejc.224.1665991882427; Mon, 17
+ Oct 2022 00:31:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <506fe4e5-a203-48e6-84a6-f70133be15dd@app.fastmail.com>
-In-Reply-To: <20221016133418.2122777-1-chenhuacai@loongson.cn>
-References: <20221016133418.2122777-1-chenhuacai@loongson.cn>
-Date: Mon, 17 Oct 2022 09:12:02 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Huacai Chen" <chenhuacai@loongson.cn>,
- "Huacai Chen" <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, "Xuefeng Li" <lixuefeng@loongson.cn>,
- "Tiezhu Yang" <yangtiezhu@loongson.cn>, guoren <guoren@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20221016133418.2122777-1-chenhuacai@loongson.cn> <506fe4e5-a203-48e6-84a6-f70133be15dd@app.fastmail.com>
+In-Reply-To: <506fe4e5-a203-48e6-84a6-f70133be15dd@app.fastmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 17 Oct 2022 15:31:09 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7UJDgtY4NfF7-5+TbNEbec7XOpvS87H=fPad4KK0KLaw@mail.gmail.com>
+Message-ID: <CAAhV-H7UJDgtY4NfF7-5+TbNEbec7XOpvS87H=fPad4KK0KLaw@mail.gmail.com>
 Subject: Re: [PATCH] LoongArch: Add unaligned access support
-Content-Type: text/plain
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	Xuefeng Li <lixuefeng@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	guoren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Oct 16, 2022, at 3:34 PM, Huacai Chen wrote:
-> Loongson-2 series (Loongson-2K500, Loongson-2K1000) don't support
-> unaligned access in hardware, while Loongson-3 series (Loongson-3A5000,
-> Loongson-3C5000) are configurable whether support unaligned access in
-> hardware. This patch add unaligned access emulation for those LoongArch
-> processors without hardware support.
+Hi, Arnd,
+
+On Mon, Oct 17, 2022 at 3:12 PM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> On Sun, Oct 16, 2022, at 3:34 PM, Huacai Chen wrote:
+> > Loongson-2 series (Loongson-2K500, Loongson-2K1000) don't support
+> > unaligned access in hardware, while Loongson-3 series (Loongson-3A5000,
+> > Loongson-3C5000) are configurable whether support unaligned access in
+> > hardware. This patch add unaligned access emulation for those LoongArch
+> > processors without hardware support.
+> >
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+>
+> What does the Loongarch ELF ABI say about this? On most architectures,
+> C compilers are not allowed to produce unaligned accesses for standard
+> compliant source code, the only way you'd get this is when casting
+> a an unaligned (e.g. char*) pointer to another type with higher alignment
+> requirement.
+Some unaligned accesses are observed from the kernel network stack, it
+seems related to whether the packet aligns to IP header or MAC header.
+And, gcc has a -mstrict-align parameter, if without this, there are
+unaligned instructions.
 
-What does the Loongarch ELF ABI say about this? On most architectures,
-C compilers are not allowed to produce unaligned accesses for standard
-compliant source code, the only way you'd get this is when casting
-a an unaligned (e.g. char*) pointer to another type with higher alignment
-requirement.
+>
+> > +/* sysctl hooks */
+> > +int unaligned_enabled __read_mostly = 1;     /* Enabled by default */
+> > +int no_unaligned_warning __read_mostly = 1;  /* Only 1 warning by default */
+>
+> The comment says 'sysctl', the implementation has a debugfs interface.
+Originally "enabled", "warning" and "counters" are all debugfs
+interfaces, then you told me to use sysctl. Now in this version
+"enabled" and "warning" are converted to sysctl, but there are no
+existing "counters" sysctl.
 
-> +/* sysctl hooks */
-> +int unaligned_enabled __read_mostly = 1;	/* Enabled by default */
-> +int no_unaligned_warning __read_mostly = 1;	/* Only 1 warning by default */
+Huacai
 
-The comment says 'sysctl', the implementation has a debugfs interface.
-
-> +#ifdef CONFIG_DEBUG_FS
-> +static int __init debugfs_unaligned(void)
-> +{
-> +	struct dentry *d;
-> +
-> +	d = debugfs_create_dir("loongarch", NULL);
-> +	if (!d)
-> +		return -ENOMEM;
-> +
-> +	debugfs_create_u32("unaligned_instructions_user",
-> +				S_IRUGO, d, &unaligned_instructions_user);
-> +	debugfs_create_u32("unaligned_instructions_kernel",
-> +				S_IRUGO, d, &unaligned_instructions_kernel);
-> +
-> +	return 0;
-> +}
-> +arch_initcall(debugfs_unaligned);
-> +#endif
-
-The debugfs interface does not sound like a good way to do this.
-Overall, my feeling is that for a new architecture we should not
-introduce this at all but instead provide a way to diagnose and
-fix user space, since we do not have to keep compatibility with
-broken binaries that worked in the past.
-
-If the ELF ABI actually allows compilers to produce unaligned
-accesses for correct code, there should at least be a more generic
-way of enabling this that follows what other architectures do.
-We are already somewhat inconsistent there between architectures,
-but I don't think anything else uses debugfs here.
-
-     Arnd
+>
+> > +#ifdef CONFIG_DEBUG_FS
+> > +static int __init debugfs_unaligned(void)
+> > +{
+> > +     struct dentry *d;
+> > +
+> > +     d = debugfs_create_dir("loongarch", NULL);
+> > +     if (!d)
+> > +             return -ENOMEM;
+> > +
+> > +     debugfs_create_u32("unaligned_instructions_user",
+> > +                             S_IRUGO, d, &unaligned_instructions_user);
+> > +     debugfs_create_u32("unaligned_instructions_kernel",
+> > +                             S_IRUGO, d, &unaligned_instructions_kernel);
+> > +
+> > +     return 0;
+> > +}
+> > +arch_initcall(debugfs_unaligned);
+> > +#endif
+>
+> The debugfs interface does not sound like a good way to do this.
+> Overall, my feeling is that for a new architecture we should not
+> introduce this at all but instead provide a way to diagnose and
+> fix user space, since we do not have to keep compatibility with
+> broken binaries that worked in the past.
+>
+> If the ELF ABI actually allows compilers to produce unaligned
+> accesses for correct code, there should at least be a more generic
+> way of enabling this that follows what other architectures do.
+> We are already somewhat inconsistent there between architectures,
+> but I don't think anything else uses debugfs here.
+>
+>      Arnd
