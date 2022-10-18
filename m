@@ -1,152 +1,81 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4848A7B
-	for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 09:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1666084821; bh=N48MFgDUmr1tfKHznoAthvRtR1Wpy0hSpJqTj7oKYC4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cHV6qrCjD47k3jGPjUQF3lwihop1RDaw3yjdG73m7BjSD1b/7jyWqLqeN+Uyk642T
-	 VvEcixZUqLhrENpMZkopSZmIH+3rzqlov7m3aEUZuBieiNorHcibY7orD6PjU5mrAB
-	 wuldpVWm+HQ77bl4gfDeA0Z+scSMeI8G3x4eFq+M=
-Received: from [100.100.57.122] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 69A5760087;
-	Tue, 18 Oct 2022 17:20:20 +0800 (CST)
-Message-ID: <27ffa400-b947-7c83-0e79-c8eb9f96e12e@xen0n.name>
-Date: Tue, 18 Oct 2022 17:20:19 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B281C7B
+	for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 09:37:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D52AC433D7
+	for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 09:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1666085820;
+	bh=0xSwj7DpRo1DNNUjXNdGquoqk2dkhuGaKfTJl/tLKY0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tngriZcHLqfhFlJP3nAWgOo49jqGCeWF3zzPJXM2b9B/MzwM2rZjdUeoanxSHeS+W
+	 H1edRO76AD0S2zgxwbeMFQm0JrM4q66FvAjg6m6hsTRe/BW0pwL7wiGvOVQSmzcyWI
+	 xmnyPqTGeBUgsbFj/YbmZTSMse4fAikPcK91jgaQczHuPQoVkUSVHgVktsLjLLehGi
+	 Yz2ETZ94xqWHG3WjIrd/8hRx5n8s/YKxSeukqFNUF2T17PwBSp6+aAACSsVCoiee95
+	 lDn2TstEiiTUuvJMbb0cL49kjTl8WeITwBugAGmwBSQzjKWm0CXd9q5/BSNfrzRqLf
+	 9Sm6D6LNOH3nw==
+Received: by mail-ed1-f50.google.com with SMTP id s30so19621835eds.1
+        for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 02:37:00 -0700 (PDT)
+X-Gm-Message-State: ACrzQf0DSN3HTDMhQ5EWtcwj7m9NB/60mYwMWic23AQekiBnTvmcPr79
+	3zyJjqArtzD9bYPbpgxq56r3zG4/1l/DFn8ZDM8=
+X-Google-Smtp-Source: AMsMyM6HuObCXrNZYkXqjtISIIoI/Uvn3SFQAym7pWH4mufQ4yI/f0iAiWH+gaz4NEPxrbwlVj+LSLMiXIKDLxB76JI=
+X-Received: by 2002:a05:6402:550e:b0:456:f79f:2bed with SMTP id
+ fi14-20020a056402550e00b00456f79f2bedmr1810384edb.106.1666085818499; Tue, 18
+ Oct 2022 02:36:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:107.0)
- Gecko/20100101 Thunderbird/107.0a1
-Subject: Re: [PATCH] mm: remove kern_addr_valid() completely
-Content-Language: en-US
-To: Kefeng Wang <wangkefeng.wang@huawei.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-alpha@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
- linux-fsdevel@vger.kernel.org
-Cc: Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Guo Ren <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Greg Ungerer
- <gerg@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Stafford Horne <shorne@gmail.com>,
- "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- "David S . Miller" <davem@davemloft.net>, Richard Weinberger
- <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>
-References: <20221018074014.185687-1-wangkefeng.wang@huawei.com>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20221018074014.185687-1-wangkefeng.wang@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20221017022330.2383060-1-chenhuacai@loongson.cn>
+ <b8792b1a71754d6eb88debe4d6c2c419@AcuMS.aculab.com> <CAAhV-H5WM97+Um9ULjv7gT3i5pJ3GfQ8ex6NRNr6uzmMgdVY_Q@mail.gmail.com>
+ <c34a277a-1735-65e6-c97d-fcc2ac3d57e6@xen0n.name> <CAAhV-H5y5wz0VzFEHrkDpap4wczWXBn_ibL3LW_JQyYkMzjDXQ@mail.gmail.com>
+ <cbbc32d4bb0f445197eb5d84d796595c@AcuMS.aculab.com>
+In-Reply-To: <cbbc32d4bb0f445197eb5d84d796595c@AcuMS.aculab.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 18 Oct 2022 17:36:45 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H42_dNyfYHDpdmPM=kG=VTF8xtPHMn-ojWHNkLnTNVDiQ@mail.gmail.com>
+Message-ID: <CAAhV-H42_dNyfYHDpdmPM=kG=VTF8xtPHMn-ojWHNkLnTNVDiQ@mail.gmail.com>
+Subject: Re: [PATCH V2] LoongArch: Add unaligned access support
+To: David Laight <David.Laight@aculab.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@loongson.cn>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Guo Ren <guoren@kernel.org>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2022/10/18 15:40, Kefeng Wang wrote:
-> Most architectures(except arm64/x86/sparc) simply return 1 for
+On Tue, Oct 18, 2022 at 3:48 PM David Laight <David.Laight@aculab.com> wrote:
+>
+> From: Huacai Chen
+> > Sent: 18 October 2022 08:33
+> ...
+> > > What about my more structured approach in another reply that avoids the
+> > > huge else-if conditions? Both the terrible line wraps and codegen could
+> > > be avoided.
+> ...
+> > OK, let me try.
+>
+> I suspect you can mask out some 'operand size' bits from the
+> instructions - instead of checking each opcode.
+>
+> I'm also pretty sure you can't assume the FP register are live.
+> If a read from userspace faults then there can be a full
+> process switch - so by the time you try to write to the
+> FP registers they no longer belong to the current process.
+>
+> It might be safer and simpler to just enforce the FP
+> registers be saved and then act on the save area.
+> I'd guess they get restored in the 'return to userspace'
+> code.
+Good catch, will be fixed in V4.
 
-one space before the opening parens
-
-> kern_addr_valid(), which is only used in read_kcore(), and it
-> calls copy_from_kernel_nofault() which could check whether the
-> address is a valid kernel address, so no need kern_addr_valid(),
-
-minor grammatical nit:
-
-"... which already checks whether the address is a valid kernel address. 
-So kern_addr_valid is unnecessary, let's remove it."
-
-> let's remove unneeded kern_addr_valid() completely.
-> 
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->   arch/alpha/include/asm/pgtable.h          |  2 -
->   arch/arc/include/asm/pgtable-bits-arcv2.h |  2 -
->   arch/arm/include/asm/pgtable-nommu.h      |  2 -
->   arch/arm/include/asm/pgtable.h            |  4 --
->   arch/arm64/include/asm/pgtable.h          |  2 -
->   arch/arm64/mm/mmu.c                       | 47 -----------------------
->   arch/arm64/mm/pageattr.c                  |  3 +-
->   arch/csky/include/asm/pgtable.h           |  3 --
->   arch/hexagon/include/asm/page.h           |  7 ----
->   arch/ia64/include/asm/pgtable.h           | 16 --------
->   arch/loongarch/include/asm/pgtable.h      |  2 -
->   arch/m68k/include/asm/pgtable_mm.h        |  2 -
->   arch/m68k/include/asm/pgtable_no.h        |  1 -
->   arch/microblaze/include/asm/pgtable.h     |  3 --
->   arch/mips/include/asm/pgtable.h           |  2 -
->   arch/nios2/include/asm/pgtable.h          |  2 -
->   arch/openrisc/include/asm/pgtable.h       |  2 -
->   arch/parisc/include/asm/pgtable.h         | 15 --------
->   arch/powerpc/include/asm/pgtable.h        |  7 ----
->   arch/riscv/include/asm/pgtable.h          |  2 -
->   arch/s390/include/asm/pgtable.h           |  2 -
->   arch/sh/include/asm/pgtable.h             |  2 -
->   arch/sparc/include/asm/pgtable_32.h       |  6 ---
->   arch/sparc/mm/init_32.c                   |  3 +-
->   arch/sparc/mm/init_64.c                   |  1 -
->   arch/um/include/asm/pgtable.h             |  2 -
->   arch/x86/include/asm/pgtable_32.h         |  9 -----
->   arch/x86/include/asm/pgtable_64.h         |  1 -
->   arch/x86/mm/init_64.c                     | 41 --------------------
->   arch/xtensa/include/asm/pgtable.h         |  2 -
->   fs/proc/kcore.c                           | 26 +++++--------
->   31 files changed, 11 insertions(+), 210 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-> index 946704bee599..fc70b7041b76 100644
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -421,8 +421,6 @@ static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
->   	__update_tlb(vma, address, (pte_t *)pmdp);
->   }
->   
-> -#define kern_addr_valid(addr)	(1)
+Huacai
+>
+>         David
+>
 > -
->   static inline unsigned long pmd_pfn(pmd_t pmd)
->   {
->   	return (pmd_val(pmd) & _PFN_MASK) >> _PFN_SHIFT;
-
-Acked-by: WANG Xuerui <git@xen0n.name> # loongarch
-
-Thanks!
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
