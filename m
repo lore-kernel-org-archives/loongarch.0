@@ -1,78 +1,135 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 106A84A24
-	for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 11:52:35 +0000 (UTC)
-Received: from loongson.cn (unknown [10.90.50.23])
-	by gateway (Coremail) with SMTP id _____8Dxu9hckk5jDmcAAA--.2376S3;
-	Tue, 18 Oct 2022 19:47:41 +0800 (CST)
-Received: from [10.90.50.23] (unknown [10.90.50.23])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_eFbkk5jSKkAAA--.2752S3;
-	Tue, 18 Oct 2022 19:47:39 +0800 (CST)
-Message-ID: <9210a23b-b9cb-24dc-bb5d-6f45caf8d193@loongson.cn>
-Date: Tue, 18 Oct 2022 19:47:39 +0800
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99CE44A24
+	for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 12:00:17 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 109631758;
+	Tue, 18 Oct 2022 05:00:23 -0700 (PDT)
+Received: from [10.57.5.134] (unknown [10.57.5.134])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C64563F7D8;
+	Tue, 18 Oct 2022 05:00:13 -0700 (PDT)
+Message-ID: <c7ae3a66-1d24-1014-b63a-8d4af3de42c8@arm.com>
+Date: Tue, 18 Oct 2022 13:00:08 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
  Thunderbird/102.3.3
-Subject: Re: [PATCH 1/2] Documentation: LoongArch: Document the syscall ABI
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <git@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>,
- Alex Shi <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
- Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20221018100457.3440691-1-kernel@xen0n.name>
- <20221018100457.3440691-2-kernel@xen0n.name>
- <3df303d1b0196a62217f6d034c0375855d77e04b.camel@xry111.site>
-Content-Language: en-US
-From: Qi Hu <huqi@loongson.cn>
-In-Reply-To: <3df303d1b0196a62217f6d034c0375855d77e04b.camel@xry111.site>
+Subject: Re: [PATCH V5 1/2] ACPI / scan: Support multiple dma windows with
+ different offsets
+Content-Language: en-GB
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Yicong Yang <yangyicong@huawei.com>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, yangyicong@hisilicon.com,
+ lpieralisi@kernel.org, chenhuacai@loongson.cn, guohanjun@huawei.com,
+ sudeep.holla@arm.com, lenb@kernel.org, robert.moore@intel.com,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ loongarch@lists.linux.dev, liulongfang <liulongfang@huawei.com>
+References: <20220911090635.5559-1-lvjianmin@loongson.cn>
+ <20220911090635.5559-2-lvjianmin@loongson.cn>
+ <8e9df8ea-06f0-3989-2563-d5dc6b09a062@huawei.com>
+ <CAJZ5v0gBBdTxRkE08PO8W+yi1eTkWqzpGLAyMNuzZmqx02EzFA@mail.gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <CAJZ5v0gBBdTxRkE08PO8W+yi1eTkWqzpGLAyMNuzZmqx02EzFA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Dx_eFbkk5jSKkAAA--.2752S3
-X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQADCWNNReEbvwABsk
-X-Coremail-Antispam: 1Uk129KBjvdXoW7XrW8Cw15urWUGF4xury5XFb_yoW3XFX_ur
-	s7Ar1fJws3Jw4aga1qqrZxGrZxGa90kFyYka45Jr43W34DXa4xAw4Skry7CF43G3yIq39x
-	AryYgryxA347ujkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
-	07kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
-	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
-	w2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2
-	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
-	AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCa
-	FVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI
-	42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
-	IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-	aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7-B_UUUUU
 
+On 2022-10-18 11:08, Rafael J. Wysocki wrote:
+> On Tue, Oct 18, 2022 at 11:33 AM Yicong Yang <yangyicong@huawei.com> wrote:
+>>
+>> On 2022/9/11 17:06, Jianmin Lv wrote:
+>>> In DT systems configurations, of_dma_get_range() returns struct
+>>> bus_dma_region DMA regions; they are used to set-up devices
+>>> DMA windows with different offset available for translation between DMA
+>>> address and CPU address.
+>>>
+>>> In ACPI systems configuration, acpi_dma_get_range() does not return
+>>> DMA regions yet and that precludes setting up the dev->dma_range_map
+>>> pointer and therefore DMA regions with multiple offsets.
+>>>
+>>> Update acpi_dma_get_range() to return struct bus_dma_region
+>>> DMA regions like of_dma_get_range() does.
+>>>
+>>> After updating acpi_dma_get_range(), acpi_arch_dma_setup() is changed for
+>>> ARM64, where the original dma_addr and size are removed as these
+>>> arguments are now redundant, and pass 0 and U64_MAX for dma_base
+>>> and size of arch_setup_dma_ops; this is a simplification consistent
+>>> with what other ACPI architectures also pass to iommu_setup_dma_ops().
+>>>
+>>
+>> Hi,
+>>
+>> With this patch we met problem as well. The DMA coherent mask is not set correctly
+>> for a ehci usb controller and lead to the below calltrace:
+>>
+>> [   16.699259] ------------[ cut here ]------------
+>> [   16.703855] WARNING: CPU: 0 PID: 853 at kernel/dma/mapping.c:499 dma_alloc_attrs+0xc0/0xf0
+>> [   16.712082] Modules linked in:
+>> [   16.715124] CPU: 0 PID: 853 Comm: kworker/0:3 Not tainted 6.1.0-rc1-pipe-deadlock+ #5
+>> [   16.722916] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V5.B211.01 11/10/2021
+>> [   16.731745] Workqueue: events work_for_cpu_fn
+>> [   16.736083] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>> [   16.743013] pc : dma_alloc_attrs+0xc0/0xf0
+>> [   16.747091] lr : dma_pool_alloc+0x11c/0x200
+>> [   16.751255] sp : ffff80001e46bb50
+>> [   16.754554] x29: ffff80001e46bb50 x28: 0000000000000000 x27: 0000000000000000
+>> [   16.761657] x26: ffff80000b33ce18 x25: ffff800009cc6c48 x24: 0000000000000000
+>> [   16.768759] x23: ffff00208c830918 x22: 0000000000001000 x21: 0000000000000cc0
+>> [   16.775861] x20: ffff00208ae82080 x19: ffff0020865c40d0 x18: 0000000000000030
+>> [   16.782964] x17: 626d756e20737562 x16: 2064656e67697373 x15: ffff00208ae82640
+>> [   16.790066] x14: 0000000000000000 x13: 646e756f72616b72 x12: 6f77204348207379
+>> [   16.797167] x11: 73706f6e79532067 x10: ffff205f43980000 x9 : ffff80000830b3ac
+>> [   16.804269] x8 : ffff0020861b1b00 x7 : 0000000000000000 x6 : 0000000000000000
+>> [   16.811371] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000cc0
+>> [   16.818472] x2 : ffff00208c830918 x1 : 0000000000001000 x0 : 0000000000000000
+>> [   16.825574] Call trace:
+>> [   16.828009]  dma_alloc_attrs+0xc0/0xf0
+>> [   16.831741]  dma_pool_alloc+0x11c/0x200
+>> [   16.835559]  ehci_qh_alloc+0x60/0x12c
+>> [   16.839207]  ehci_setup+0x18c/0x40c
+>> [   16.842680]  ehci_pci_setup+0xb8/0x680
+>> [   16.846412]  usb_add_hcd+0x310/0x5c0
+>> [   16.849973]  usb_hcd_pci_probe+0x254/0x36c
+>> [   16.854051]  ehci_pci_probe+0x40/0x60
+>> [   16.857698]  local_pci_probe+0x48/0xb4
+>> [   16.861431]  work_for_cpu_fn+0x24/0x40
+>> [   16.865163]  process_one_work+0x1e0/0x450
+>> [   16.869155]  worker_thread+0x2cc/0x44c
+>> [   16.872886]  kthread+0x114/0x120
+>> [   16.876099]  ret_from_fork+0x10/0x20
+>> [   16.879657] ---[ end trace 0000000000000000 ]---
+>>
+>> After reverting this patch the problem resolved. Tested on the latest 6.1-rc1.
+> 
+> OK, I'll queue up a revert of this and one more commit depending on it.
 
-On 2022/10/18 18:12, Xi Ruoyao wrote:
-> On Tue, 2022-10-18 at 18:04 +0800, WANG Xuerui wrote:
->
-> /* snip */
->
->
->> +The system call number is placed in the register ``a7``.
->> +Parameters, if present, are placed from ``a0`` through ``a6`` as needed,
->> +as if calling a function with the respective arguments.
->> +Upon return, ``a0`` contains the return value, and ``t0-t8`` should be
->> +considered clobbered; all other registers are preserved.
-> Hmm, are a1-a7 guaranteed to be preserved?
->
-Yes, you can find the relevant code here: [1] [2].
+FWIW it looks like the fix should be as simple as below.
 
-Thanks.
+Robin.
 
+----->8-----
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 558664d169fc..b6962bff1eae 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -1509,6 +1509,7 @@ int acpi_dma_get_range(struct device *dev, const 
+struct bus_dma_region **map)
+  			goto out;
+  		}
 
-[1]: 
-https://github.com/torvalds/linux/blob/master/arch/loongarch/kernel/entry.S#L43-L50
-
-[2]: 
-https://github.com/torvalds/linux/blob/master/arch/loongarch/kernel/entry.S#L68
-
++		*map = r;
+  		list_for_each_entry(rentry, &list, node) {
+  			if (rentry->res->start >= rentry->res->end) {
+  				kfree(r);
+@@ -1523,8 +1524,6 @@ int acpi_dma_get_range(struct device *dev, const 
+struct bus_dma_region **map)
+  			r->offset = rentry->offset;
+  			r++;
+  		}
+-
+-		*map = r;
+  	}
+   out:
+  	acpi_dev_free_resource_list(&list);
