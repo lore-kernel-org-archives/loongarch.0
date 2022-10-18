@@ -1,81 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B281C7B
-	for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 09:37:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D52AC433D7
-	for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 09:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1666085820;
-	bh=0xSwj7DpRo1DNNUjXNdGquoqk2dkhuGaKfTJl/tLKY0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tngriZcHLqfhFlJP3nAWgOo49jqGCeWF3zzPJXM2b9B/MzwM2rZjdUeoanxSHeS+W
-	 H1edRO76AD0S2zgxwbeMFQm0JrM4q66FvAjg6m6hsTRe/BW0pwL7wiGvOVQSmzcyWI
-	 xmnyPqTGeBUgsbFj/YbmZTSMse4fAikPcK91jgaQczHuPQoVkUSVHgVktsLjLLehGi
-	 Yz2ETZ94xqWHG3WjIrd/8hRx5n8s/YKxSeukqFNUF2T17PwBSp6+aAACSsVCoiee95
-	 lDn2TstEiiTUuvJMbb0cL49kjTl8WeITwBugAGmwBSQzjKWm0CXd9q5/BSNfrzRqLf
-	 9Sm6D6LNOH3nw==
-Received: by mail-ed1-f50.google.com with SMTP id s30so19621835eds.1
-        for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 02:37:00 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0DSN3HTDMhQ5EWtcwj7m9NB/60mYwMWic23AQekiBnTvmcPr79
-	3zyJjqArtzD9bYPbpgxq56r3zG4/1l/DFn8ZDM8=
-X-Google-Smtp-Source: AMsMyM6HuObCXrNZYkXqjtISIIoI/Uvn3SFQAym7pWH4mufQ4yI/f0iAiWH+gaz4NEPxrbwlVj+LSLMiXIKDLxB76JI=
-X-Received: by 2002:a05:6402:550e:b0:456:f79f:2bed with SMTP id
- fi14-20020a056402550e00b00456f79f2bedmr1810384edb.106.1666085818499; Tue, 18
- Oct 2022 02:36:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1E27B
+	for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 09:48:08 +0000 (UTC)
+Received: by mail-pf1-f176.google.com with SMTP id y1so13594629pfr.3
+        for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 02:48:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jgN57VsOmEbW0oef2R7lDWd91i+seWCcSmuwkn3qm8s=;
+        b=CXpoZkphNnzb3HdWkvbxbX+OdQIuzsEiDKIALM04EGdA0N5wGbiAERk0wougKpWT7B
+         ZYPyDYdtKD65v7HlfNRkRhb9a5c/7Qs5Dt9bFQDUqTyBXIIDG57SRGr+H1igaqm4O35U
+         nkXYGwJLT5JP7o0fjJn1V1eRGDGTnjs3Co0Ydp+Fe87uScw4Z43sLrfd6OoHFaXaYeKd
+         KQ5oa6fXbGltBKCDCreI3T9P7zeZPvoeBW4dYGcN/qKG9JDmkgFuS5BqQLuA72jt53z9
+         B3UwHk7OSxxM9gCqhwzpCNhupg5xGuNqWt1fxhcQef3jC2qtTqJOtZAhfPjoJjBr0TaL
+         bOtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jgN57VsOmEbW0oef2R7lDWd91i+seWCcSmuwkn3qm8s=;
+        b=JFoPIh+ZJfd6z9IUM9hhht4NJubx1NeAGXCZ7NN+h9/4fCM23O5rcR06IZRxKpvOVV
+         h7fGsTNnFo3s/FMybreieFe86NrbTILZUGudFrYrmxBe/yw0hG4k7SNx1lRcLfkZQ3k9
+         V6PZO9wNGBip32G2s27orhfd70J9VyQLlKUlDlUGvlCNksL7VYno6N1tFpma40FmBE88
+         RyAaK6Un5eNb+dhcD3I0d4IFQNxMYgFfyjpNfA2TdcpJgoQiQkAiJdWITnVQfysiyku/
+         EtG15+LtyAun5kTpulD/Lev+fZXEztfkzYsZD6M6nyaI+aLM7HUubP0ETFuljHvB5gmd
+         2aLg==
+X-Gm-Message-State: ACrzQf35lYqd0fYQ7Mn28+Xr1u9Vq4ComKdfWb70ERlRz9txMB9ZU2vM
+	AFcaC0N68uYzd+XgR8ZHx+w=
+X-Google-Smtp-Source: AMsMyM7YrZlETnFnw/Z85QePmZIRib8ilbCH1b/A+iimOLBUdYKd0zLRQzbpBTayU56qlrjADefY6A==
+X-Received: by 2002:a63:8549:0:b0:461:3995:60d1 with SMTP id u70-20020a638549000000b00461399560d1mr1931790pgd.105.1666086488060;
+        Tue, 18 Oct 2022 02:48:08 -0700 (PDT)
+Received: from localhost.localdomain ([43.132.141.4])
+        by smtp.gmail.com with ESMTPSA id q19-20020aa79613000000b005635477c42dsm8775730pfg.133.2022.10.18.02.48.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Oct 2022 02:48:07 -0700 (PDT)
+From: zys.zljxml@gmail.com
+To: chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	oleg@redhat.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	chenhuacai@loongson.cn,
+	lixuefeng@loongson.cn,
+	yangtiezhu@loongson.cn,
+	Yushan Zhou <katrinzhou@tencent.com>
+Subject: [PATCH] LoongArch: use flexible-array member instead of zero-length array
+Date: Tue, 18 Oct 2022 17:47:42 +0800
+Message-Id: <20221018094742.324576-1-zys.zljxml@gmail.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221017022330.2383060-1-chenhuacai@loongson.cn>
- <b8792b1a71754d6eb88debe4d6c2c419@AcuMS.aculab.com> <CAAhV-H5WM97+Um9ULjv7gT3i5pJ3GfQ8ex6NRNr6uzmMgdVY_Q@mail.gmail.com>
- <c34a277a-1735-65e6-c97d-fcc2ac3d57e6@xen0n.name> <CAAhV-H5y5wz0VzFEHrkDpap4wczWXBn_ibL3LW_JQyYkMzjDXQ@mail.gmail.com>
- <cbbc32d4bb0f445197eb5d84d796595c@AcuMS.aculab.com>
-In-Reply-To: <cbbc32d4bb0f445197eb5d84d796595c@AcuMS.aculab.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 18 Oct 2022 17:36:45 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H42_dNyfYHDpdmPM=kG=VTF8xtPHMn-ojWHNkLnTNVDiQ@mail.gmail.com>
-Message-ID: <CAAhV-H42_dNyfYHDpdmPM=kG=VTF8xtPHMn-ojWHNkLnTNVDiQ@mail.gmail.com>
-Subject: Re: [PATCH V2] LoongArch: Add unaligned access support
-To: David Laight <David.Laight@aculab.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@loongson.cn>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Guo Ren <guoren@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 18, 2022 at 3:48 PM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Huacai Chen
-> > Sent: 18 October 2022 08:33
-> ...
-> > > What about my more structured approach in another reply that avoids the
-> > > huge else-if conditions? Both the terrible line wraps and codegen could
-> > > be avoided.
-> ...
-> > OK, let me try.
->
-> I suspect you can mask out some 'operand size' bits from the
-> instructions - instead of checking each opcode.
->
-> I'm also pretty sure you can't assume the FP register are live.
-> If a read from userspace faults then there can be a full
-> process switch - so by the time you try to write to the
-> FP registers they no longer belong to the current process.
->
-> It might be safer and simpler to just enforce the FP
-> registers be saved and then act on the save area.
-> I'd guess they get restored in the 'return to userspace'
-> code.
-Good catch, will be fixed in V4.
+From: Yushan Zhou <katrinzhou@tencent.com>
 
-Huacai
->
->         David
->
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
+Eliminate the following coccicheck warning:
+./arch/loongarch/include/asm/ptrace.h:32:15-21: WARNING use flexible-array member instead
+
+Signed-off-by: Yushan Zhou <katrinzhou@tencent.com>
+---
+ arch/loongarch/include/asm/ptrace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+index 17838c6b7ccd..7437b9366c3b 100644
+--- a/arch/loongarch/include/asm/ptrace.h
++++ b/arch/loongarch/include/asm/ptrace.h
+@@ -29,7 +29,7 @@ struct pt_regs {
+ 	unsigned long csr_euen;
+ 	unsigned long csr_ecfg;
+ 	unsigned long csr_estat;
+-	unsigned long __last[0];
++	unsigned long __last[];
+ } __aligned(8);
+ 
+ static inline int regs_irqs_disabled(struct pt_regs *regs)
+-- 
+2.27.0
+
