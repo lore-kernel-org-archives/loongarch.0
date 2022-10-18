@@ -1,112 +1,117 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125407B
-	for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 10:05:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1666087511; bh=Up/gpEK4jgyKjT0O2XzoNUcjCAExMeiAMzY1xht4nzk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LwYs1+5cqW3kci3hMleC8fSLqfF9LypmNG1y7bwduD5po3YRTCRRAGPGOh61Pqzdf
-	 o+dixOWMBZ7ZN2r5B8FjeyOMygV3UO0o9HVo4aOgsnbct4U7oPZgGHu1YJcJbrk+ZB
-	 qLCAjEhVusLknoPR7o0OfGJ0QgKnMip8+zBvEp9U=
-Received: from ld50.lan (unknown [101.88.135.226])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id AF7D6606AB;
-	Tue, 18 Oct 2022 18:05:11 +0800 (CST)
-From: WANG Xuerui <kernel@xen0n.name>
-To: linux-doc@vger.kernel.org
-Cc: WANG Xuerui <git@xen0n.name>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Alex Shi <alexs@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Jonathan Corbet <corbet@lwn.net>,
-	loongarch@lists.linux.dev
-Subject: [PATCH 2/2] docs/zh_CN: LoongArch: Translate the syscall ABI doc
-Date: Tue, 18 Oct 2022 18:04:57 +0800
-Message-Id: <20221018100457.3440691-3-kernel@xen0n.name>
-X-Mailer: git-send-email 2.38.0
-In-Reply-To: <20221018100457.3440691-1-kernel@xen0n.name>
-References: <20221018100457.3440691-1-kernel@xen0n.name>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990BF7B
+	for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 10:08:59 +0000 (UTC)
+Received: by mail-qv1-f53.google.com with SMTP id i9so9010062qvo.0
+        for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 03:08:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=10SS1JYPy7IO9MTKGwq02lwvA+iKgTwkRVe+FH4lvRo=;
+        b=VtoydF8+Haz5O5iIu1bS9tdxJkpzOPEprcrFt1wcbTVSUOIpqAaeOT8jS0hgjPY1jt
+         HnELO9+QUp0H9JNv+fOGf5wlu4Or5oupHIQD6JabxGJd1ADisIPmMbv8HrmgekLS3mk9
+         2gXH4RCzTgO038rCEkZKPS0Eqg2xdqjygLAD9loyMMTtwMRoxfODuahgs3lOGVITW95/
+         jUao7tE3HNx2Lc0Suu7n49xuca/B4TvfylCQFRVYYk/+VnaMMyOq/2tIFoQUhLLK4D1K
+         I3tSuyQ/sb/Cc3Xbi34bnPXm/OCfCndvfhowUsmbp5OwY+eb/JIPBUsAqpgs/FZF7nM6
+         J8Mg==
+X-Gm-Message-State: ACrzQf2zWSzGqx0a6oIlhnjOUrjgQeC7vaivKjzkId+WdhXZJEcnI/Qu
+	UafsL5gjgarqkBJZx6s5gTFMV6IDnCvWbVoukxU=
+X-Google-Smtp-Source: AMsMyM4ZirpgfPL5vqKpneme4JM1FdO8p8DWVrkH8kGGiCUhPN8Yl7WGBp6lR9RbNe4ddAHU1+iwDuyJpjcBVX85H8s=
+X-Received: by 2002:a05:6214:21e5:b0:4b3:efa6:4b17 with SMTP id
+ p5-20020a05621421e500b004b3efa64b17mr1455809qvj.22.1666087738484; Tue, 18 Oct
+ 2022 03:08:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20220911090635.5559-1-lvjianmin@loongson.cn> <20220911090635.5559-2-lvjianmin@loongson.cn>
+ <8e9df8ea-06f0-3989-2563-d5dc6b09a062@huawei.com>
+In-Reply-To: <8e9df8ea-06f0-3989-2563-d5dc6b09a062@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 18 Oct 2022 12:08:43 +0200
+Message-ID: <CAJZ5v0gBBdTxRkE08PO8W+yi1eTkWqzpGLAyMNuzZmqx02EzFA@mail.gmail.com>
+Subject: Re: [PATCH V5 1/2] ACPI / scan: Support multiple dma windows with
+ different offsets
+To: Yicong Yang <yangyicong@huawei.com>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, yangyicong@hisilicon.com, lpieralisi@kernel.org, 
+	chenhuacai@loongson.cn, robin.murphy@arm.com, guohanjun@huawei.com, 
+	sudeep.holla@arm.com, rafael@kernel.org, lenb@kernel.org, 
+	robert.moore@intel.com, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, loongarch@lists.linux.dev, 
+	liulongfang <liulongfang@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: WANG Xuerui <git@xen0n.name>
+On Tue, Oct 18, 2022 at 11:33 AM Yicong Yang <yangyicong@huawei.com> wrote:
+>
+> On 2022/9/11 17:06, Jianmin Lv wrote:
+> > In DT systems configurations, of_dma_get_range() returns struct
+> > bus_dma_region DMA regions; they are used to set-up devices
+> > DMA windows with different offset available for translation between DMA
+> > address and CPU address.
+> >
+> > In ACPI systems configuration, acpi_dma_get_range() does not return
+> > DMA regions yet and that precludes setting up the dev->dma_range_map
+> > pointer and therefore DMA regions with multiple offsets.
+> >
+> > Update acpi_dma_get_range() to return struct bus_dma_region
+> > DMA regions like of_dma_get_range() does.
+> >
+> > After updating acpi_dma_get_range(), acpi_arch_dma_setup() is changed for
+> > ARM64, where the original dma_addr and size are removed as these
+> > arguments are now redundant, and pass 0 and U64_MAX for dma_base
+> > and size of arch_setup_dma_ops; this is a simplification consistent
+> > with what other ACPI architectures also pass to iommu_setup_dma_ops().
+> >
+>
+> Hi,
+>
+> With this patch we met problem as well. The DMA coherent mask is not set correctly
+> for a ehci usb controller and lead to the below calltrace:
+>
+> [   16.699259] ------------[ cut here ]------------
+> [   16.703855] WARNING: CPU: 0 PID: 853 at kernel/dma/mapping.c:499 dma_alloc_attrs+0xc0/0xf0
+> [   16.712082] Modules linked in:
+> [   16.715124] CPU: 0 PID: 853 Comm: kworker/0:3 Not tainted 6.1.0-rc1-pipe-deadlock+ #5
+> [   16.722916] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V5.B211.01 11/10/2021
+> [   16.731745] Workqueue: events work_for_cpu_fn
+> [   16.736083] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [   16.743013] pc : dma_alloc_attrs+0xc0/0xf0
+> [   16.747091] lr : dma_pool_alloc+0x11c/0x200
+> [   16.751255] sp : ffff80001e46bb50
+> [   16.754554] x29: ffff80001e46bb50 x28: 0000000000000000 x27: 0000000000000000
+> [   16.761657] x26: ffff80000b33ce18 x25: ffff800009cc6c48 x24: 0000000000000000
+> [   16.768759] x23: ffff00208c830918 x22: 0000000000001000 x21: 0000000000000cc0
+> [   16.775861] x20: ffff00208ae82080 x19: ffff0020865c40d0 x18: 0000000000000030
+> [   16.782964] x17: 626d756e20737562 x16: 2064656e67697373 x15: ffff00208ae82640
+> [   16.790066] x14: 0000000000000000 x13: 646e756f72616b72 x12: 6f77204348207379
+> [   16.797167] x11: 73706f6e79532067 x10: ffff205f43980000 x9 : ffff80000830b3ac
+> [   16.804269] x8 : ffff0020861b1b00 x7 : 0000000000000000 x6 : 0000000000000000
+> [   16.811371] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000cc0
+> [   16.818472] x2 : ffff00208c830918 x1 : 0000000000001000 x0 : 0000000000000000
+> [   16.825574] Call trace:
+> [   16.828009]  dma_alloc_attrs+0xc0/0xf0
+> [   16.831741]  dma_pool_alloc+0x11c/0x200
+> [   16.835559]  ehci_qh_alloc+0x60/0x12c
+> [   16.839207]  ehci_setup+0x18c/0x40c
+> [   16.842680]  ehci_pci_setup+0xb8/0x680
+> [   16.846412]  usb_add_hcd+0x310/0x5c0
+> [   16.849973]  usb_hcd_pci_probe+0x254/0x36c
+> [   16.854051]  ehci_pci_probe+0x40/0x60
+> [   16.857698]  local_pci_probe+0x48/0xb4
+> [   16.861431]  work_for_cpu_fn+0x24/0x40
+> [   16.865163]  process_one_work+0x1e0/0x450
+> [   16.869155]  worker_thread+0x2cc/0x44c
+> [   16.872886]  kthread+0x114/0x120
+> [   16.876099]  ret_from_fork+0x10/0x20
+> [   16.879657] ---[ end trace 0000000000000000 ]---
+>
+> After reverting this patch the problem resolved. Tested on the latest 6.1-rc1.
 
-Signed-off-by: WANG Xuerui <git@xen0n.name>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: Alex Shi <alexs@kernel.org>
-Cc: Yanteng Si <siyanteng@loongson.cn>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: loongarch@lists.linux.dev
----
- .../translations/zh_CN/loongarch/index.rst    |  1 +
- .../zh_CN/loongarch/syscall-abi.rst           | 37 +++++++++++++++++++
- 2 files changed, 38 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/loongarch/syscall-abi.rst
+OK, I'll queue up a revert of this and one more commit depending on it.
 
-diff --git a/Documentation/translations/zh_CN/loongarch/index.rst b/Documentation/translations/zh_CN/loongarch/index.rst
-index 7d23eb78379d..6edcc382492f 100644
---- a/Documentation/translations/zh_CN/loongarch/index.rst
-+++ b/Documentation/translations/zh_CN/loongarch/index.rst
-@@ -15,6 +15,7 @@ LoongArch体系结构
- 
-    introduction
-    irq-chip-model
-+   syscall-abi
- 
-    features
- 
-diff --git a/Documentation/translations/zh_CN/loongarch/syscall-abi.rst b/Documentation/translations/zh_CN/loongarch/syscall-abi.rst
-new file mode 100644
-index 000000000000..9089c9f6e9c1
---- /dev/null
-+++ b/Documentation/translations/zh_CN/loongarch/syscall-abi.rst
-@@ -0,0 +1,37 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: Documentation/loongarch/syscall-abi.rst
-+:Translator: WANG Xuerui <kernel@xen0n.name>
-+
-+============================
-+Linux/LoongArch 系统调用 ABI
-+============================
-+
-+本文档描述了 Linux/LoongArch 的系统调用 ABI。
-+由于当前内核仅有 64 位版本，以下的描述均视为遵循 LP64\* 的过程调用约定。
-+
-+系统调用号与参数
-+================
-+
-+正如其他新近的架构移植，绝大部分 Linux/LoongArch 系统调用号和参数都复用
-+asm-generic 的定义。
-+倒是有些值得一提的点。
-+
-+* 没有 ``renameat`` ，请使用 ``renameat2`` 。
-+* 没有 ``getrlimit`` 或者 ``setrlimit`` ，请使用 ``prlimit64`` 。
-+* 没有 ``fstat`` 或者 ``newfstatat`` ，只有 ``statx`` 。
-+  自己进行系统调用的底层组件应当感知这一事实，如有必要，应自带兼容逻辑。
-+
-+调用方式
-+========
-+
-+目前都通过 ``syscall 0`` 指令进行系统调用。
-+尽管当下内核并不检查指令字中的立即数域，我们仍然强烈建议保持其为零，
-+这是为了防止未来它被赋予其他语义而造成您的程序产生非预期结果。
-+
-+系统调用号应被存放于寄存器 ``a7`` 。
-+如系统调用有参数，这些参数应如函数调用一般，从 ``a0`` 到 ``a6`` 按顺序存放。
-+系统调用返回时， ``a0`` 存放返回值， ``t0-t8`` 则应被视作被破坏（clobbered）；
-+其他寄存器的值都保持不变。
--- 
-2.38.0
-
+Thanks!
