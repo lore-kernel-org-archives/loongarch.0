@@ -1,157 +1,122 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC1E523BC
-	for <loongarch@lists.linux.dev>; Wed, 19 Oct 2022 06:29:26 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8Cxq9hFmU9jhqgAAA--.3519S3;
-	Wed, 19 Oct 2022 14:29:25 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxXuA9mU9jHicBAA--.4688S4;
-	Wed, 19 Oct 2022 14:29:23 +0800 (CST)
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: [PATCH v2 3/3] dt-bindings: clock: add loongson2 clock binding
-Date: Wed, 19 Oct 2022 14:29:12 +0800
-Message-Id: <20221019062912.3463-3-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221019062912.3463-1-zhuyinbo@loongson.cn>
-References: <20221019062912.3463-1-zhuyinbo@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFE27E
+	for <loongarch@lists.linux.dev>; Wed, 19 Oct 2022 08:21:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4763C433C1;
+	Wed, 19 Oct 2022 08:21:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1666167709;
+	bh=ZcFAeGx1EwnfKZrHKPUrcfaAFLv6J+3Ph/ReVNboKEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dKlG9FYdHnGZXMWbztJX/zTbSLVTaPplGOMsa99WkY4+MlJf39dSEeo9JxvGwQvse
+	 O3kNszDPaYuZc1VzCbFLp0JskeUfqHmf4tCfv8nqTV97J9hyIJqK4nQcdmi8JCmOF0
+	 SvAKlA6KnokHWd01qnqDTYJQHa39mbrs1WoRHvVcw1MRxrl8zlWn4uTahbqlh+tZVb
+	 vU22VYBYgN7Pv862BUMvsaojqKQUCUXAZB/Salt2Iq/53/s/9Mnw0oYUSHyl9aj7Iz
+	 Hezwvygxd4cRQc0W819j7Ka40CGZFqjY1y09PnKVNfmTglb5uZplbH5vEtt7o63jOt
+	 6OztPNsGddqTA==
+Date: Wed, 19 Oct 2022 10:21:42 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Yicong Yang <yangyicong@huawei.com>, Jianmin Lv <lvjianmin@loongson.cn>,
+	yangyicong@hisilicon.com, chenhuacai@loongson.cn,
+	robin.murphy@arm.com, guohanjun@huawei.com, sudeep.holla@arm.com,
+	lenb@kernel.org, robert.moore@intel.com,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	loongarch@lists.linux.dev, liulongfang <liulongfang@huawei.com>
+Subject: Re: [PATCH V5 1/2] ACPI / scan: Support multiple dma windows with
+ different offsets
+Message-ID: <Y0+zlpFPM8+c8oCD@lpieralisi>
+References: <20220911090635.5559-1-lvjianmin@loongson.cn>
+ <20220911090635.5559-2-lvjianmin@loongson.cn>
+ <8e9df8ea-06f0-3989-2563-d5dc6b09a062@huawei.com>
+ <CAJZ5v0gBBdTxRkE08PO8W+yi1eTkWqzpGLAyMNuzZmqx02EzFA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxXuA9mU9jHicBAA--.4688S4
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF4kJw4fuF43JFWDJwb_yoW5Xr1rpF
-	nxC345GrW09F17uws5KFyxA3Z5Z3WkAFnrZanrAa4jyF98W3W5XF47K34DZa9rAFyxZ39F
-	vFWfur4UC3W8Cw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bSxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
-	1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
-	cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
-	0Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCa
-	FVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28Icx
-	kI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-	07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5
-	JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
-	1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
-	JbIYCTnIWIevJa73UjIFyTuYvjxUzGYpUUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gBBdTxRkE08PO8W+yi1eTkWqzpGLAyMNuzZmqx02EzFA@mail.gmail.com>
 
-Add the loongson2 clock binding with DT schema format using
-json-schema.
+On Tue, Oct 18, 2022 at 12:08:43PM +0200, Rafael J. Wysocki wrote:
+> On Tue, Oct 18, 2022 at 11:33 AM Yicong Yang <yangyicong@huawei.com> wrote:
+> >
+> > On 2022/9/11 17:06, Jianmin Lv wrote:
+> > > In DT systems configurations, of_dma_get_range() returns struct
+> > > bus_dma_region DMA regions; they are used to set-up devices
+> > > DMA windows with different offset available for translation between DMA
+> > > address and CPU address.
+> > >
+> > > In ACPI systems configuration, acpi_dma_get_range() does not return
+> > > DMA regions yet and that precludes setting up the dev->dma_range_map
+> > > pointer and therefore DMA regions with multiple offsets.
+> > >
+> > > Update acpi_dma_get_range() to return struct bus_dma_region
+> > > DMA regions like of_dma_get_range() does.
+> > >
+> > > After updating acpi_dma_get_range(), acpi_arch_dma_setup() is changed for
+> > > ARM64, where the original dma_addr and size are removed as these
+> > > arguments are now redundant, and pass 0 and U64_MAX for dma_base
+> > > and size of arch_setup_dma_ops; this is a simplification consistent
+> > > with what other ACPI architectures also pass to iommu_setup_dma_ops().
+> > >
+> >
+> > Hi,
+> >
+> > With this patch we met problem as well. The DMA coherent mask is not set correctly
+> > for a ehci usb controller and lead to the below calltrace:
+> >
+> > [   16.699259] ------------[ cut here ]------------
+> > [   16.703855] WARNING: CPU: 0 PID: 853 at kernel/dma/mapping.c:499 dma_alloc_attrs+0xc0/0xf0
+> > [   16.712082] Modules linked in:
+> > [   16.715124] CPU: 0 PID: 853 Comm: kworker/0:3 Not tainted 6.1.0-rc1-pipe-deadlock+ #5
+> > [   16.722916] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V5.B211.01 11/10/2021
+> > [   16.731745] Workqueue: events work_for_cpu_fn
+> > [   16.736083] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > [   16.743013] pc : dma_alloc_attrs+0xc0/0xf0
+> > [   16.747091] lr : dma_pool_alloc+0x11c/0x200
+> > [   16.751255] sp : ffff80001e46bb50
+> > [   16.754554] x29: ffff80001e46bb50 x28: 0000000000000000 x27: 0000000000000000
+> > [   16.761657] x26: ffff80000b33ce18 x25: ffff800009cc6c48 x24: 0000000000000000
+> > [   16.768759] x23: ffff00208c830918 x22: 0000000000001000 x21: 0000000000000cc0
+> > [   16.775861] x20: ffff00208ae82080 x19: ffff0020865c40d0 x18: 0000000000000030
+> > [   16.782964] x17: 626d756e20737562 x16: 2064656e67697373 x15: ffff00208ae82640
+> > [   16.790066] x14: 0000000000000000 x13: 646e756f72616b72 x12: 6f77204348207379
+> > [   16.797167] x11: 73706f6e79532067 x10: ffff205f43980000 x9 : ffff80000830b3ac
+> > [   16.804269] x8 : ffff0020861b1b00 x7 : 0000000000000000 x6 : 0000000000000000
+> > [   16.811371] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000cc0
+> > [   16.818472] x2 : ffff00208c830918 x1 : 0000000000001000 x0 : 0000000000000000
+> > [   16.825574] Call trace:
+> > [   16.828009]  dma_alloc_attrs+0xc0/0xf0
+> > [   16.831741]  dma_pool_alloc+0x11c/0x200
+> > [   16.835559]  ehci_qh_alloc+0x60/0x12c
+> > [   16.839207]  ehci_setup+0x18c/0x40c
+> > [   16.842680]  ehci_pci_setup+0xb8/0x680
+> > [   16.846412]  usb_add_hcd+0x310/0x5c0
+> > [   16.849973]  usb_hcd_pci_probe+0x254/0x36c
+> > [   16.854051]  ehci_pci_probe+0x40/0x60
+> > [   16.857698]  local_pci_probe+0x48/0xb4
+> > [   16.861431]  work_for_cpu_fn+0x24/0x40
+> > [   16.865163]  process_one_work+0x1e0/0x450
+> > [   16.869155]  worker_thread+0x2cc/0x44c
+> > [   16.872886]  kthread+0x114/0x120
+> > [   16.876099]  ret_from_fork+0x10/0x20
+> > [   16.879657] ---[ end trace 0000000000000000 ]---
+> >
+> > After reverting this patch the problem resolved. Tested on the latest 6.1-rc1.
+> 
+> OK, I'll queue up a revert of this and one more commit depending on it.
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
----
-Change in v2:
-		1. Drop "Binding" string in the title.
-		2. Drop entire allOf and move the contents to top level.
-		3. Change string "refclk_100m" to "ref_100m". 
+Hi Rafael,
 
- .../bindings/clock/loongson,ls2k-clk.yaml     | 64 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+there is a fix in the making (you probably noticed):
 
-diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-new file mode 100644
-index 000000000000..104e38a618e2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/loongson,ls2k-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson2 SoC Clock Control Module
-+
-+maintainers:
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+description: |
-+  Loongson2 SoC clock control module is an integrated clock controller, which
-+  generates and supplies to all modules.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - loongson,ls2k-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: 100m ref
-+
-+  clock-names:
-+    items:
-+      - const: ref_100m
-+
-+  '#clock-cells':
-+    const: 1
-+    description:
-+      The clock consumer should specify the desired clock by having the clock
-+      ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
-+      for the full list of loongson2 SoC clock IDs.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    ref_100m: clock-ref-100m {
-+        compatible = "fixed-clock";
-+        #clock-cells = <0>;
-+        clock-frequency = <100000000>;
-+        clock-output-names = "ref_100m";
-+    };
-+
-+  - |
-+    clk: clock-controller@1fe00480 {
-+        compatible = "loongson,ls2k-clk";
-+        reg = <0x1fe00480 0x58>;
-+        #clock-cells = <1>;
-+        clocks = <&ref_100m>;
-+        clock-names = "ref_100m";
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a4de8f1b81f0..7b7ba73ccb99 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11918,6 +11918,7 @@ LOONGSON2 SOC SERIES CLOCK DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-clk@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
- F:	drivers/clk/clk-loongson2.c
- F:	include/dt-bindings/clock/loongson,ls2k-clk.h
- 
--- 
-2.31.1
+https://lore.kernel.org/linux-acpi/e94f99cfe09a64c590f009d21c566339117394e2.1666098844.git.robin.murphy@arm.com
+	
+please don't queue up a revert yet.
 
+Thanks,
+Lorenzo
