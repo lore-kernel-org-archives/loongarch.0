@@ -1,127 +1,209 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18A701FC9
-	for <loongarch@lists.linux.dev>; Wed, 19 Oct 2022 03:53:46 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8Dx_NhGdE9jHaEAAA--.3370S3;
-	Wed, 19 Oct 2022 11:51:34 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxj+A+dE9j4hcBAA--.4371S2;
-	Wed, 19 Oct 2022 11:51:33 +0800 (CST)
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: [PATCH v2 1/3] dt-bindings: clock: add loongson2 clock include file
-Date: Wed, 19 Oct 2022 11:51:15 +0800
-Message-Id: <20221019035117.29352-1-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF7B1FC9
+	for <loongarch@lists.linux.dev>; Wed, 19 Oct 2022 04:13:18 +0000 (UTC)
+Received: by mail-pg1-f181.google.com with SMTP id s196so13857000pgs.3
+        for <loongarch@lists.linux.dev>; Tue, 18 Oct 2022 21:13:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=05myh31oMr/q2J5BJn593JOYwoX0tzfWg7ohUct7D5A=;
+        b=YflIaczlCY9WKyaxEUxTSTFp5SQEgE5/lvpGzv1EJ0s5GzPMCU8/P/5D9c5NyhXp8J
+         2DRhFvfOZviWnm3Zsx1lrqhtLuHKljlI+Ws7xMW/wLt+8b9HNRXrBB+KO9mHtbA1kgqu
+         ECHd88+a1WZC6moWpAElwy2ZxE9VAaMYo2R17vybtNPYlM2usvA9FBYzO6OHasjNE+4M
+         01+Q2STtfAweZrTYPBwxX1E9jZ8UrSIxp00BH3bJYUlmix2h+aEIgN/H5Zcvu4tKpWHl
+         PqaGtufpb94uXGiJVukXkkWx2UagdF7byTQQjq/0vWmWTojIlGlPgyUy3ZiQ52xYwhfp
+         K+Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=05myh31oMr/q2J5BJn593JOYwoX0tzfWg7ohUct7D5A=;
+        b=o8dtk4egZV6LxK4EskS0EFukOvk8Psy45U5iR0EdEPbs6XUeHm7elDU13mJj3BpL2l
+         odPwa63VykBOEcarT6Nsg/9OiaSpK+P5WaX4GOD94GVIfYPzkLSd5vunvzbepPZFPGuT
+         r79A6Yc0izgZFh3CmrLAfocIp9OaEApFT6UQxqqtQG8IqYIY9YS2IU3Chzw5R4fJUYrP
+         ilBw2oINcKX/z+Uno7PDKXnwzPIvaTVcIgBXjFs/EZv2SVfq/Lqc6KyaJKmXrt258j3S
+         rhUkZpUOUY3v7gD3Zv6H7I682tjfbhQvF8RZYhmTtKC+tb2eX0rxMdYgM95alVEtyT4/
+         F/Uw==
+X-Gm-Message-State: ACrzQf0PZ57ujY93WNbH184szKiR6QHnnSBl31w0K3aTpMXnAq9RYHtt
+	vuLY0+1TkFO9dYgLC8zI8nc=
+X-Google-Smtp-Source: AMsMyM7PVGan+RHqzkCNfLmfIEcYPPU2SCyyNgOkjvyGlZJSW5qSXCZKTGjoqhBy2dUk+F703Q87Fg==
+X-Received: by 2002:a05:6a00:1884:b0:562:6536:4844 with SMTP id x4-20020a056a00188400b0056265364844mr6639752pfh.2.1666152798231;
+        Tue, 18 Oct 2022 21:13:18 -0700 (PDT)
+Received: from debian.me (subs03-180-214-233-77.three.co.id. [180.214.233.77])
+        by smtp.gmail.com with ESMTPSA id v3-20020a170902e8c300b00176b3d7db49sm9578499plg.0.2022.10.18.21.13.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Oct 2022 21:13:17 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 709A41012EB; Wed, 19 Oct 2022 11:13:14 +0700 (WIB)
+Date: Wed, 19 Oct 2022 11:13:13 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: linux-doc@vger.kernel.org, WANG Xuerui <git@xen0n.name>,
+	Huacai Chen <chenhuacai@kernel.org>, Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Jonathan Corbet <corbet@lwn.net>, loongarch@lists.linux.dev
+Subject: Re: [PATCH 1/2] Documentation: LoongArch: Document the syscall ABI
+Message-ID: <Y095WSk6brB2li/O@debian.me>
+References: <20221018100457.3440691-1-kernel@xen0n.name>
+ <20221018100457.3440691-2-kernel@xen0n.name>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxj+A+dE9j4hcBAA--.4371S2
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7AF4UWr4xtrykArWxtw4ruFg_yoW8KF43pr
-	4kCFWfKry7tF42kwsYgF17Kr13ur4xC3W7AF47uF1UAFnrJw18JrnF9F1fAFZrXr4kCFWx
-	Z3Z7Cw409FZrXw7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x
-	0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
-	xVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_
-	JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
-	WUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBI
-	daVFxhVjvjDU0xZFpf9x07jn73kUUUUU=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="pP58CdA786Rjnrv3"
+Content-Disposition: inline
+In-Reply-To: <20221018100457.3440691-2-kernel@xen0n.name>
 
-This file defines all loongson2 soc clock indexes, it should be
-included in the device tree in which there's device using the
-clocks.
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
----
-Change in v2:
-		1. Make filename matching the compatible.
-		2. Drop weird indentation after define.
-		3. Add dual license.
-		4. Use subject prefixes matching the subsystem.
+--pP58CdA786Rjnrv3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- MAINTAINERS                                   |  6 ++++
- include/dt-bindings/clock/loongson,ls2k-clk.h | 29 +++++++++++++++++++
- 2 files changed, 35 insertions(+)
- create mode 100644 include/dt-bindings/clock/loongson,ls2k-clk.h
+On Tue, Oct 18, 2022 at 06:04:56PM +0800, WANG Xuerui wrote:
+> From: WANG Xuerui <git@xen0n.name>
+>=20
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a162b6fba6fe..401176784853 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11914,6 +11914,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
- F:	drivers/clocksource/loongson2_hpet.c
- 
-+LOONGSON2 SOC SERIES CLOCK DRIVER
-+M:	Yinbo Zhu <zhuyinbo@loongson.cn>
-+L:	linux-clk@vger.kernel.org
-+S:	Maintained
-+F:	include/dt-bindings/clock/loongson,ls2k-clk.h
-+
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
- M:	Sathya Prakash <sathya.prakash@broadcom.com>
- M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-diff --git a/include/dt-bindings/clock/loongson,ls2k-clk.h b/include/dt-bindings/clock/loongson,ls2k-clk.h
-new file mode 100644
-index 000000000000..db1e27e792ff
---- /dev/null
-+++ b/include/dt-bindings/clock/loongson,ls2k-clk.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
-+ * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_LOONGSON2_H
-+#define __DT_BINDINGS_CLOCK_LOONGSON2_H
-+
-+#define LOONGSON2_REF_100M				0
-+#define LOONGSON2_NODE_PLL				1
-+#define LOONGSON2_DDR_PLL				2
-+#define LOONGSON2_DC_PLL				3
-+#define LOONGSON2_PIX0_PLL				4
-+#define LOONGSON2_PIX1_PLL				5
-+#define LOONGSON2_NODE_CLK				6
-+#define LOONGSON2_HDA_CLK				7
-+#define LOONGSON2_GPU_CLK				8
-+#define LOONGSON2_DDR_CLK				9
-+#define LOONGSON2_GMAC_CLK				10
-+#define LOONGSON2_DC_CLK				11
-+#define LOONGSON2_APB_CLK				12
-+#define LOONGSON2_USB_CLK				13
-+#define LOONGSON2_SATA_CLK				14
-+#define LOONGSON2_PIX0_CLK				15
-+#define LOONGSON2_PIX1_CLK				16
-+#define LOONGSON2_CLK_END				17
-+
-+#endif
--- 
-2.31.1
+What description?
 
+> diff --git a/Documentation/loongarch/syscall-abi.rst b/Documentation/loon=
+garch/syscall-abi.rst
+> new file mode 100644
+> index 000000000000..6f63aa3cfc64
+> --- /dev/null
+> +++ b/Documentation/loongarch/syscall-abi.rst
+> @@ -0,0 +1,36 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> +Linux/LoongArch system call ABI
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> +
+> +This document describes the system call ABI of Linux/LoongArch.
+> +As the kernel is 64-bit only for now, the description below assumes an L=
+P64\*
+> +calling convention.
+> +
+> +Syscall numbers and parameters
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+> +
+> +Like with other recent architecture ports, for the most part Linux/Loong=
+Arch
+> +reuses the asm-generic syscall numbers and parameters.
+> +There are a few points worth mentioning though.
+> +
+> +* There is no ``renameat``. Use ``renameat2`` instead.
+> +* There is no ``getrlimit`` or ``setrlimit``. Use ``prlimit64`` instead.
+> +* There is no ``fstat`` or ``newfstatat``. Only ``statx`` is provided, a=
+nd
+> +  low-level components making their own syscalls are expected to be awar=
+e of
+> +  this (and provide their own shims if necessary).
+> +
+> +Invocation
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +System calls are currently made with the ``syscall 0`` instruction.
+> +Although the immediate field in the instruction is not checked at presen=
+t,
+> +it is strongly advised to keep it zeroed in case it is to be made meanin=
+gful
+> +in the future.
+> +
+> +The system call number is placed in the register ``a7``.
+> +Parameters, if present, are placed from ``a0`` through ``a6`` as needed,
+> +as if calling a function with the respective arguments.
+> +Upon return, ``a0`` contains the return value, and ``t0-t8`` should be
+> +considered clobbered; all other registers are preserved.
+
+The wording can be improved:
+
+---- >8 ----
+
+diff --git a/Documentation/loongarch/syscall-abi.rst b/Documentation/loonga=
+rch/syscall-abi.rst
+index 6f63aa3cfc64e5..d05fa2e0211bbf 100644
+--- a/Documentation/loongarch/syscall-abi.rst
++++ b/Documentation/loongarch/syscall-abi.rst
+@@ -5,32 +5,32 @@ Linux/LoongArch system call ABI
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+=20
+ This document describes the system call ABI of Linux/LoongArch.
+-As the kernel is 64-bit only for now, the description below assumes an LP6=
+4\*
+-calling convention.
++As the kernel currently only supports 64-bit LoongArch architecture, the
++description below assumes LP64\* calling convention.
+=20
+ Syscall numbers and parameters
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+=20
+-Like with other recent architecture ports, for the most part Linux/LoongAr=
+ch
++Like ther recent architecture ports, for the most part Linux/LoongArch
+ reuses the asm-generic syscall numbers and parameters.
+-There are a few points worth mentioning though.
++There are a few limitations worth mentioning though.
+=20
+ * There is no ``renameat``. Use ``renameat2`` instead.
+ * There is no ``getrlimit`` or ``setrlimit``. Use ``prlimit64`` instead.
+-* There is no ``fstat`` or ``newfstatat``. Only ``statx`` is provided, and
+-  low-level components making their own syscalls are expected to be aware =
+of
+-  this (and provide their own shims if necessary).
++* There is no ``fstat`` or ``newfstatat``. Only ``statx`` is provided and
++  low-level components invoking their own syscalls are expected to be aware
++  of this (and provide their own shims if necessary).
+=20
+ Invocation
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+-System calls are currently made with the ``syscall 0`` instruction.
++System calls are currently invoked with the ``syscall 0`` instruction.
+ Although the immediate field in the instruction is not checked at present,
+-it is strongly advised to keep it zeroed in case it is to be made meaningf=
+ul
++it is strongly advised to keep it zeroed in case the field has purposes
+ in the future.
+=20
+-The system call number is placed in the register ``a7``.
+-Parameters, if present, are placed from ``a0`` through ``a6`` as needed,
+-as if calling a function with the respective arguments.
+-Upon return, ``a0`` contains the return value, and ``t0-t8`` should be
+-considered clobbered; all other registers are preserved.
++The system call number is placed in the register ``a7``. Parameters, if
++present, are placed from ``a0`` through ``a6`` as needed, as if calling
++a function with respective arguments. Upon return, the return value is pla=
+ced
++in ``a0`` and ``t0-t8`` should be considered clobbered; all other registers
++are preserved.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--pP58CdA786Rjnrv3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCY095VAAKCRD2uYlJVVFO
+o5fFAQCtJdqR+Euwsb9nvjdIt/dLpS21ZxAQz6P2lyHgYsLqEQEArJcNI2Rd6XJ7
+vDMZn/Jl/mZrA7i9pOweOtD2NlRm5gg=
+=3HRU
+-----END PGP SIGNATURE-----
+
+--pP58CdA786Rjnrv3--
