@@ -1,25 +1,30 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF8C23BF
-	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 07:39:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D01C433D6;
-	Thu, 20 Oct 2022 07:39:03 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 240E22900
+	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 08:22:10 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.32])
+	by gateway (Coremail) with SMTP id _____8Cxq9guBVFjLPwAAA--.4978S3;
+	Thu, 20 Oct 2022 16:22:06 +0800 (CST)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLuItBVFjxM4BAA--.7555S4;
+	Thu, 20 Oct 2022 16:22:06 +0800 (CST)
+From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Marc Zyngier <maz@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Huacai Chen <chenhuacai@gmail.com>,
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V2 4/4] irqchip/loongson-pch-lpc: Add suspend/resume support
-Date: Thu, 20 Oct 2022 15:35:27 +0800
-Message-Id: <20221020073527.541845-5-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221020073527.541845-1-chenhuacai@loongson.cn>
-References: <20221020073527.541845-1-chenhuacai@loongson.cn>
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Len Brown <lenb@kernel.org>,
+	rafael@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH V4 2/4] irqchip/loongson-pch-pic: fix translate callback for DT path
+Date: Thu, 20 Oct 2022 16:22:03 +0800
+Message-Id: <20221020082205.20505-3-lvjianmin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221020082205.20505-1-lvjianmin@loongson.cn>
+References: <20221020082205.20505-1-lvjianmin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -27,73 +32,55 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxLuItBVFjxM4BAA--.7555S4
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvdXoW7Xr15GF4rZr43JFyxZF1rCrg_yoWktFb_uF
+	1SqFn3Kw17Zr1Iq3y8Kr4rXF9rta4Du3WvkFs5Aay5GayUXayxAr1Svw4fJa9rGFWUAF1f
+	C395ur1xZF4I9jkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	A7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
+	e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
+	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4
+	kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j
+	6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU0epB3UUUUU==
 
-Add suspend/resume support for PCH-LPC irqchip, which is needed for
-upcoming suspend/hibernation.
+In DT path of translate callback, if fwspec->param_count==1
+and of_node is non-null, fwspec->param[1] will be accessed,
+which is introduced from previous commit bcdd75c596c8
+(irqchip/loongson-pch-pic: Add ACPI init support).
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Before the patch, for non-null of_node, translate callback
+(use irq_domain_translate_twocell()) will return -EINVAL if
+fwspec->param_count < 2, so the check in the patch is added.
+
+Fixes: bcdd75c596c8 ("irqchip/loongson-pch-pic: Add ACPI init support")
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-pch-lpc.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/irqchip/irq-loongson-pch-pic.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/irqchip/irq-loongson-pch-lpc.c b/drivers/irqchip/irq-loongson-pch-lpc.c
-index bf2324910a75..9b35492fb6be 100644
---- a/drivers/irqchip/irq-loongson-pch-lpc.c
-+++ b/drivers/irqchip/irq-loongson-pch-lpc.c
-@@ -13,6 +13,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
-+#include <linux/syscore_ops.h>
+diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+index c01b9c257005..03493cda65a3 100644
+--- a/drivers/irqchip/irq-loongson-pch-pic.c
++++ b/drivers/irqchip/irq-loongson-pch-pic.c
+@@ -159,6 +159,9 @@ static int pch_pic_domain_translate(struct irq_domain *d,
+ 		return -EINVAL;
  
- /* Registers */
- #define LPC_INT_CTL		0x00
-@@ -34,6 +35,7 @@ struct pch_lpc {
- 	u32			saved_reg_pol;
- };
- 
-+static struct pch_lpc *pch_lpc_priv;
- struct fwnode_handle *pch_lpc_handle;
- 
- static void lpc_irq_ack(struct irq_data *d)
-@@ -147,6 +149,26 @@ static int pch_lpc_disabled(struct pch_lpc *priv)
- 			(readl(priv->base + LPC_INT_STS) == 0xffffffff);
- }
- 
-+static int pch_lpc_suspend(void)
-+{
-+	pch_lpc_priv->saved_reg_ctl = readl(pch_lpc_priv->base + LPC_INT_CTL);
-+	pch_lpc_priv->saved_reg_ena = readl(pch_lpc_priv->base + LPC_INT_ENA);
-+	pch_lpc_priv->saved_reg_pol = readl(pch_lpc_priv->base + LPC_INT_POL);
-+	return 0;
-+}
+ 	if (of_node) {
++		if (fwspec->param_count < 2)
++			return -EINVAL;
 +
-+static void pch_lpc_resume(void)
-+{
-+	writel(pch_lpc_priv->saved_reg_ctl, pch_lpc_priv->base + LPC_INT_CTL);
-+	writel(pch_lpc_priv->saved_reg_ena, pch_lpc_priv->base + LPC_INT_ENA);
-+	writel(pch_lpc_priv->saved_reg_pol, pch_lpc_priv->base + LPC_INT_POL);
-+}
-+
-+static struct syscore_ops pch_lpc_syscore_ops = {
-+	.suspend = pch_lpc_suspend,
-+	.resume = pch_lpc_resume,
-+};
-+
- int __init pch_lpc_acpi_init(struct irq_domain *parent,
- 					struct acpi_madt_lpc_pic *acpi_pchlpc)
- {
-@@ -191,7 +213,10 @@ int __init pch_lpc_acpi_init(struct irq_domain *parent,
- 	parent_irq = irq_create_fwspec_mapping(&fwspec);
- 	irq_set_chained_handler_and_data(parent_irq, lpc_irq_dispatch, priv);
- 
-+	pch_lpc_priv = priv;
- 	pch_lpc_handle = irq_handle;
-+	register_syscore_ops(&pch_lpc_syscore_ops);
-+
- 	return 0;
- 
- free_irq_handle:
+ 		*hwirq = fwspec->param[0] + priv->ht_vec_base;
+ 		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+ 	} else {
 -- 
 2.31.1
 
