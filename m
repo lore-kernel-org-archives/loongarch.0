@@ -1,136 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A0E4A0D
-	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 16:47:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED999C433D6;
-	Thu, 20 Oct 2022 16:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1666284440;
-	bh=i2MxslQTn19sPCgAavDX/R8BnJavJaB9fvKHaUuXvsU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=MWN7oC5hi/4+3tLMYX3dO5X/w68hAQRuOaylnk1rkAt0muhiSPMJs7BjKNfl3WJnB
-	 KWjakKCZBHA2GnSypMFC0jBa6Yrxr/7SKc5P1n/1McgtNqzFfe8iGj5HtgEwoM7Ahw
-	 GNEFYFV0q7C62dO69GWAb9ny5sCeH4elomWkd72uSuhpyDZaleMHgqLxvRZl5Z8Yio
-	 LryF36J38pR05ePvkTSaDYnUbKeRaQkt1joW4w0IEVZeklDV7Du1c4ZzZ2grRxG2IX
-	 VrpZAVTYt59GCAzXygXxE/MhqgVrM1L5pRUFILzj9dwLf7Mr0nboRpVhGBIFpDm91A
-	 aefgjE+iSfO2g==
-Date: Thu, 20 Oct 2022 11:47:18 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jianmin Lv <lvjianmin@loongson.cn>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
-	rafael@kernel.org, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH V4 1/4] ACPI / PCI: fix LPIC IRQ model default PCI IRQ
- polarity
-Message-ID: <20221020164718.GA127832@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC4E7E
+	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 18:37:34 +0000 (UTC)
+Received: by mail-qk1-f180.google.com with SMTP id x13so493677qkg.11
+        for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 11:37:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q1hBLD4lH/XELJE0KWPJAlY/VEp51da8IvgbYfbE9SM=;
+        b=m1MqjUsqQL2MbyAa48c2CVvgvq8u1I50bHLNDjMG1UmYjQuTXWEYox4FXqL9j3G6jR
+         woCALKrlvanJEaLbeFrJ84/u56hESDulrFNddmwy58SGRhj3EiEzGT1LtoYHEzYnfJ05
+         OCYYNp5ngLSolI5T5FcWxlKqd/KSyMNiJUnTMpq3gUeAc9Hjvb/jbahFh7g0fh8gk8AV
+         1oMihPlKcs5XeUd3aha6KF8t9Odich8mjDh2Jd+E/9n1hNCcQDYOey8QxfFMnA/XxlfD
+         9mvOHqsQCQHtgaAPmTHWtvv1lyTJ1pEulV28hR3143JLdTg1aVfqv/1MFufOVmRV1lEW
+         aEsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q1hBLD4lH/XELJE0KWPJAlY/VEp51da8IvgbYfbE9SM=;
+        b=0NrRlEwgxmT4LJTvI4g7VmU02iNcYEZQgtXXk/ZJJtz9mGmigNJzf2DOtV4ooo8aVI
+         5KCupHvEGgkmsweQO2Z6sSyScKPLxRIcvjcwu92ZSXtdxh4ohsNO7A3dBs/+MyB6j4qS
+         ucuejwyLM//8Hzw9w/h2zQwa6M0/ohBqWhjrplu69pyFxWB9vGk6PvGbqrZPfr8eK5O/
+         +qn4Db9liS0dCPRPSmd0Bn/hgPctx7xqeN/sPk0aopDudCYg19KA0q4Ad62Ub2EuX9wK
+         ltNYBHVAn3kRzzWrKRXr8cS7hhv2YxhiqUE10Bz6NFVoUT3+VSGHPKFJZZGdxlXnkauD
+         YqHg==
+X-Gm-Message-State: ACrzQf3ivcIMadziQTXRMGydY4hXDNAvp/XRMtQXn2bjSW/XCp0h9x0F
+	TKITZxOlETSHz+b1OUz9HD88sw==
+X-Google-Smtp-Source: AMsMyM6K0N51sGcqCNzQyBHqlKAxnwAGBccxXvK+t7f/OxW1GPu+nee4zPGTsttzdLGjy5sQo7B1IQ==
+X-Received: by 2002:a37:5803:0:b0:6ee:834c:b605 with SMTP id m3-20020a375803000000b006ee834cb605mr10465392qkb.643.1666291053184;
+        Thu, 20 Oct 2022 11:37:33 -0700 (PDT)
+Received: from [192.168.10.124] (pool-72-83-177-149.washdc.east.verizon.net. [72.83.177.149])
+        by smtp.gmail.com with ESMTPSA id d4-20020ac81184000000b00359961365f1sm6400070qtj.68.2022.10.20.11.37.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Oct 2022 11:37:31 -0700 (PDT)
+Message-ID: <fc302fb5-740a-41d6-2610-dde3cce604cc@linaro.org>
+Date: Thu, 20 Oct 2022 14:37:29 -0400
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221020082205.20505-2-lvjianmin@loongson.cn>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH v3 3/3] dt-bindings: clock: add loongson2 clock
+Content-Language: en-US
+To: Yinbo Zhu <zhuyinbo@loongson.cn>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Jianmin Lv <lvjianmin@loongson.cn>,
+ Yang Li <yang.lee@linux.alibaba.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20221020063624.17548-1-zhuyinbo@loongson.cn>
+ <20221020063624.17548-3-zhuyinbo@loongson.cn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221020063624.17548-3-zhuyinbo@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 20, 2022 at 04:22:02PM +0800, Jianmin Lv wrote:
-> On LoongArch ACPI based systems, the PCI devices (e.g. sata
-> controlers and PCI-to-to PCI bridge controlers) existed in
-> Loongson chipsets output high-level interrupt signal to the
-> interrupt controller they connected to,
-
-I assume the active high behavior is hardware behavior that is
-independent of the fact that you're using ACPI firmware on the
-hardware.  If so, I would omit "ACPI based".
-
-s/sata/SATA/
-s/controlers/controllers/ (twice)
-s/PCI-to-to PCI/PCI-to-PCI/
-s/existed in/in/
-s/they connected/they are connected/
-
-> while the IRQs are
-> active low from the perspective of PCI(in 2.2.6. Interrupt
-> Pins, "Interrupts on PCI are optional and defined as level
-> sensitive, asserted low),
-
-I don't think you need this spec reference, since "asserted low" is
-the standard thing that happens everywhere.  But if you do want it, it
-needs to specify which spec it refers to, e.g., "Conventional PCI
-r3.0, sec 2.2.6" so it's not confused with the PCIe spec.
-
-The quote from the spec itself should be terminated with a close quote
-("), i.e., 
-
-  "Interrupts on PCI ... asserted low"
-
-> which means that the interrupt
-> output of PCI devices plugged into PCI-to-to PCI bridges of
-> Loongson chipset will be also converted to high-level. So
-> high level triggered type is required to be passed to
-> acpi_register_gsi() when creating mappings for PCI devices.
-
-This is the part where I was hoping for a reference to a spec that
-talks about how PCI interrupts are inverted.  The inverter is the part
-that's special here.
-
-I see that ACPI r6.5, sec 5.2.12, mentions LPIC, but it doesn't
-mention the inverter.  It has a lot more mentions of GIC, but also no
-details about an inverter.  I suppose that would be in the GIC spec,
-which I'm not familiar with.
-
-The point is that one should be able to write this code from a spec,
-without having to empirically discover the interrupt polarity.  What
-spec tells you about using ACTIVE_HIGH here?
-
-s/PCI-to-to PCI/PCI-to-PCI/ again
-
-Rewrap the log to fill 75 columns like the rest of the history.
-
-> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+On 20/10/2022 02:36, Yinbo Zhu wrote:
+> Add the loongson2 clock binding with DT schema format using
+> json-schema.
+> 
+> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
 > ---
->  drivers/acpi/pci_irq.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-> index 08e15774fb9f..ff30ceca2203 100644
-> --- a/drivers/acpi/pci_irq.c
-> +++ b/drivers/acpi/pci_irq.c
-> @@ -387,13 +387,15 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
->  	u8 pin;
->  	int triggering = ACPI_LEVEL_SENSITIVE;
->  	/*
-> -	 * On ARM systems with the GIC interrupt model, level interrupts
-> +	 * On ARM systems with the GIC interrupt model, or LoongArch
-> +	 * systems with the LPIC interrupt model, level interrupts
 
-Is "LoongArch" required in this comment?  Might the LPIC model be used
-on non-LoongArch systems?
 
-I see it follows the example of "ARM systems".  In my opinion, "ARM"
-probably should be removed, too, because the code checks only for GIC
-or LPIC; it doesn't check for ARM or LoongArch.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-If GIC is restricted to ARM and LPIC is restricted to LoongArch,
-that's fine, but that constraint should be expressed somewhere else
-and doesn't need to be repeated here.
+Best regards,
+Krzysztof
 
->  	 * are always polarity high by specification; PCI legacy
->  	 * IRQs lines are inverted before reaching the interrupt
->  	 * controller and must therefore be considered active high
->  	 * as default.
->  	 */
-> -	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
-> +	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ||
-> +		       acpi_irq_model == ACPI_IRQ_MODEL_LPIC ?
->  				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
->  	char *link = NULL;
->  	char link_desc[16];
-> -- 
-> 2.31.1
-> 
