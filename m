@@ -1,39 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5E923BF
-	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 07:28:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF1ABC433D7;
-	Thu, 20 Oct 2022 07:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F20A23BF
+	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 07:35:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE48C433C1;
+	Thu, 20 Oct 2022 07:35:30 +0000 (UTC)
 From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>
 Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Feiyang Chen <chenfeiyang@loongson.cn>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V12 4/4] LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-Date: Thu, 20 Oct 2022 15:23:17 +0800
-Message-Id: <20221020072317.492906-5-chenhuacai@loongson.cn>
+Subject: [PATCH] irqchip/loongarch: Adjust acpi_cascade_irqdomain_init() and sub-routines
+Date: Thu, 20 Oct 2022 15:33:46 +0800
+Message-Id: <20221020073346.536494-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221020072317.492906-1-chenhuacai@loongson.cn>
-References: <20221020072317.492906-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,82 +26,134 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Feiyang Chen <chenfeiyang@loongson.cn>
+1, Adjust prototype of acpi_cascade_irqdomain_init() because we don't
+   need its return value.
+2, Combine unnecessary short lines to one long line.
 
-The feature of minimizing overhead of struct page associated with each
-HugeTLB page is implemented on x86_64. However, the infrastructure of
-this feature is already there, so just select ARCH_WANT_HUGETLB_PAGE_
-OPTIMIZE_VMEMMAP is enough to enable this feature for LoongArch.
-
-To avoid the following build error on LoongArch we should include linux/
-static_key.h in page-flags.h.
-
-In file included from ./include/linux/mmzone.h:22,
-from ./include/linux/gfp.h:6,
-from ./include/linux/mm.h:7,
-from arch/loongarch/kernel/asm-offsets.c:9:
-./include/linux/page-flags.h:208:1: warning: data definition has no
-type or storage class
-208 | DECLARE_STATIC_KEY_MAYBE(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-| ^~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/page-flags.h:208:1: error: type defaults to 'int' in
-declaration of 'DECLARE_STATIC_KEY_MAYBE' [-Werror=implicit-int]
-./include/linux/page-flags.h:209:26: warning: parameter names (without
-types) in function declaration
-209 | hugetlb_optimize_vmemmap_key);
-| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/page-flags.h: In function 'hugetlb_optimize_vmemmap_enabled':
-./include/linux/page-flags.h:213:16: error: implicit declaration of
-function 'static_branch_maybe' [-Werror=implicit-function-declaration]
-213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-| ^~~~~~~~~~~~~~~~~~~
-./include/linux/page-flags.h:213:36: error:
-'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON' undeclared (first
-use in this function); did you mean
-'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP'?
-213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-| CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-./include/linux/page-flags.h:213:36: note: each undeclared identifier
-is reported only once for each function it appears in
-./include/linux/page-flags.h:214:37: error:
-'hugetlb_optimize_vmemmap_key' undeclared (first use in this
-function); did you mean 'hugetlb_optimize_vmemmap_enabled'?
-214 | &hugetlb_optimize_vmemmap_key);
-| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-| hugetlb_optimize_vmemmap_enabled
-
-Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/Kconfig     | 1 +
- include/linux/page-flags.h | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/irqchip/irq-loongarch-cpu.c    | 19 +++++++------------
+ drivers/irqchip/irq-loongson-eiointc.c | 19 +++++++------------
+ drivers/irqchip/irq-loongson-pch-pic.c | 11 ++++-------
+ 3 files changed, 18 insertions(+), 31 deletions(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 6f7fa0c0ca08..0a6ef613124c 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -52,6 +52,7 @@ config LOONGARCH
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_USE_QUEUED_SPINLOCKS
- 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-+	select ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
- 	select ARCH_WANT_LD_ORPHAN_WARN
- 	select ARCH_WANTS_NO_INSTR
- 	select BUILDTIME_TABLE_SORT
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 0b0ae5084e60..1aafdc73e399 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -9,6 +9,7 @@
- #include <linux/types.h>
- #include <linux/bug.h>
- #include <linux/mmdebug.h>
-+#include <linux/static_key.h>
- #ifndef __GENERATING_BOUNDS_H
- #include <linux/mm_types.h>
- #include <generated/bounds.h>
+diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-loongarch-cpu.c
+index 741612ba6a52..093609c8eaa7 100644
+--- a/drivers/irqchip/irq-loongarch-cpu.c
++++ b/drivers/irqchip/irq-loongarch-cpu.c
+@@ -92,31 +92,26 @@ static const struct irq_domain_ops loongarch_cpu_intc_irq_domain_ops = {
+ 	.xlate = irq_domain_xlate_onecell,
+ };
+ 
+-static int __init
+-liointc_parse_madt(union acpi_subtable_headers *header,
+-		       const unsigned long end)
++static int __init liointc_parse_madt(union acpi_subtable_headers *header,
++					const unsigned long end)
+ {
+ 	struct acpi_madt_lio_pic *liointc_entry = (struct acpi_madt_lio_pic *)header;
+ 
+ 	return liointc_acpi_init(irq_domain, liointc_entry);
+ }
+ 
+-static int __init
+-eiointc_parse_madt(union acpi_subtable_headers *header,
+-		       const unsigned long end)
++static int __init eiointc_parse_madt(union acpi_subtable_headers *header,
++					const unsigned long end)
+ {
+ 	struct acpi_madt_eio_pic *eiointc_entry = (struct acpi_madt_eio_pic *)header;
+ 
+ 	return eiointc_acpi_init(irq_domain, eiointc_entry);
+ }
+ 
+-static int __init acpi_cascade_irqdomain_init(void)
++static void __init acpi_cascade_irqdomain_init(void)
+ {
+-	acpi_table_parse_madt(ACPI_MADT_TYPE_LIO_PIC,
+-			      liointc_parse_madt, 0);
+-	acpi_table_parse_madt(ACPI_MADT_TYPE_EIO_PIC,
+-			      eiointc_parse_madt, 0);
+-	return 0;
++	acpi_table_parse_madt(ACPI_MADT_TYPE_LIO_PIC, liointc_parse_madt, 0);
++	acpi_table_parse_madt(ACPI_MADT_TYPE_EIO_PIC, eiointc_parse_madt, 0);
+ }
+ 
+ static int __init cpuintc_acpi_init(union acpi_subtable_headers *header,
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index 16e9af8d8b1e..efead0bfb1ca 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -301,9 +301,8 @@ static struct irq_domain *acpi_get_vec_parent(int node, struct acpi_vector_group
+ 	return NULL;
+ }
+ 
+-static int __init
+-pch_pic_parse_madt(union acpi_subtable_headers *header,
+-		       const unsigned long end)
++static int __init pch_pic_parse_madt(union acpi_subtable_headers *header,
++					const unsigned long end)
+ {
+ 	struct acpi_madt_bio_pic *pchpic_entry = (struct acpi_madt_bio_pic *)header;
+ 	unsigned int node = (pchpic_entry->address >> 44) & 0xf;
+@@ -315,9 +314,8 @@ pch_pic_parse_madt(union acpi_subtable_headers *header,
+ 	return -EINVAL;
+ }
+ 
+-static int __init
+-pch_msi_parse_madt(union acpi_subtable_headers *header,
+-		       const unsigned long end)
++static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
++					const unsigned long end)
+ {
+ 	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
+ 	struct irq_domain *parent = acpi_get_vec_parent(eiointc_priv[nr_pics - 1]->node, msi_group);
+@@ -328,13 +326,10 @@ pch_msi_parse_madt(union acpi_subtable_headers *header,
+ 	return -EINVAL;
+ }
+ 
+-static int __init acpi_cascade_irqdomain_init(void)
++static void __init acpi_cascade_irqdomain_init(void)
+ {
+-	acpi_table_parse_madt(ACPI_MADT_TYPE_BIO_PIC,
+-			      pch_pic_parse_madt, 0);
+-	acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC,
+-			      pch_msi_parse_madt, 1);
+-	return 0;
++	acpi_table_parse_madt(ACPI_MADT_TYPE_BIO_PIC, pch_pic_parse_madt, 0);
++	acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
+ }
+ 
+ int __init eiointc_acpi_init(struct irq_domain *parent,
+diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+index c01b9c257005..d2cf54a87bee 100644
+--- a/drivers/irqchip/irq-loongson-pch-pic.c
++++ b/drivers/irqchip/irq-loongson-pch-pic.c
+@@ -325,20 +325,17 @@ int find_pch_pic(u32 gsi)
+ 	return -1;
+ }
+ 
+-static int __init
+-pch_lpc_parse_madt(union acpi_subtable_headers *header,
+-		       const unsigned long end)
++static int __init pch_lpc_parse_madt(union acpi_subtable_headers *header,
++					const unsigned long end)
+ {
+ 	struct acpi_madt_lpc_pic *pchlpc_entry = (struct acpi_madt_lpc_pic *)header;
+ 
+ 	return pch_lpc_acpi_init(pch_pic_priv[0]->pic_domain, pchlpc_entry);
+ }
+ 
+-static int __init acpi_cascade_irqdomain_init(void)
++static void __init acpi_cascade_irqdomain_init(void)
+ {
+-	acpi_table_parse_madt(ACPI_MADT_TYPE_LPC_PIC,
+-			      pch_lpc_parse_madt, 0);
+-	return 0;
++	acpi_table_parse_madt(ACPI_MADT_TYPE_LPC_PIC, pch_lpc_parse_madt, 0);
+ }
+ 
+ int __init pch_pic_acpi_init(struct irq_domain *parent,
 -- 
 2.31.1
 
