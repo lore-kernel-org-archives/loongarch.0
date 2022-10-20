@@ -1,82 +1,136 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4ABA3D60
-	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 15:22:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666279329; x=1697815329;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Aczg4Jc/OHYoyF/FrcuRG5QzhTL5LWV6IYaxF3YgRoE=;
-  b=R7R530j0oSaubckB4nFTfgD1fvMX40pEPVuzSrlXU9SRq//Ie7DaSh+P
-   GcSa27wyYQhWSNnJT03MJGdakEdjc1VtZfvFeDvL4JcMMJL70XM2ce4S4
-   V1l6CzDG3nQLYIBgyzCD9cZqdBdxOI9/fZh9B9whp3a+QKEMOflfL5SuZ
-   Ku5iPm8tbtBT1Dyg6IhLdNN8L2YFhQrsXoVT3C7DAfOt+/Ddz5YNQl7w8
-   w3AP4s0hb+SbYzwEDIyRuqy+QbH2jqd0XYRHCVg3zV45VFFVOII37mAjE
-   p7i3URCAZgmgTceSc0qbHx8itbc97XevVWUxeTj8PfYSvP+MsxmRcQbMH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="307840396"
-X-IronPort-AV: E=Sophos;i="5.95,199,1661842800"; 
-   d="scan'208";a="307840396"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2022 08:22:09 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="698724218"
-X-IronPort-AV: E=Sophos;i="5.95,199,1661842800"; 
-   d="scan'208";a="698724218"
-Received: from amancuso-mobl.amr.corp.intel.com (HELO [10.209.121.211]) ([10.209.121.211])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2022 08:22:07 -0700
-Message-ID: <edb1c35e-03d5-5a5a-5157-103a9d9bc3ae@intel.com>
-Date: Thu, 20 Oct 2022 08:21:56 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A0E4A0D
+	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 16:47:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED999C433D6;
+	Thu, 20 Oct 2022 16:47:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1666284440;
+	bh=i2MxslQTn19sPCgAavDX/R8BnJavJaB9fvKHaUuXvsU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=MWN7oC5hi/4+3tLMYX3dO5X/w68hAQRuOaylnk1rkAt0muhiSPMJs7BjKNfl3WJnB
+	 KWjakKCZBHA2GnSypMFC0jBa6Yrxr/7SKc5P1n/1McgtNqzFfe8iGj5HtgEwoM7Ahw
+	 GNEFYFV0q7C62dO69GWAb9ny5sCeH4elomWkd72uSuhpyDZaleMHgqLxvRZl5Z8Yio
+	 LryF36J38pR05ePvkTSaDYnUbKeRaQkt1joW4w0IEVZeklDV7Du1c4ZzZ2grRxG2IX
+	 VrpZAVTYt59GCAzXygXxE/MhqgVrM1L5pRUFILzj9dwLf7Mr0nboRpVhGBIFpDm91A
+	 aefgjE+iSfO2g==
+Date: Thu, 20 Oct 2022 11:47:18 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jianmin Lv <lvjianmin@loongson.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
+	rafael@kernel.org, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH V4 1/4] ACPI / PCI: fix LPIC IRQ model default PCI IRQ
+ polarity
+Message-ID: <20221020164718.GA127832@bhelgaas>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH V12 3/4] mm/sparse-vmemmap: Generalise
- vmemmap_populate_hugepages()
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Huacai Chen <chenhuacai@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Dinh Nguyen <dinguyen@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Feiyang Chen <chenfeiyang@loongson.cn>
-References: <20221020072317.492906-1-chenhuacai@loongson.cn>
- <20221020072317.492906-4-chenhuacai@loongson.cn>
-From: Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20221020072317.492906-4-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221020082205.20505-2-lvjianmin@loongson.cn>
 
-On 10/20/22 00:23, Huacai Chen wrote:
-> From: Feiyang Chen <chenfeiyang@loongson.cn>
-> 
-> Generalise vmemmap_populate_hugepages() so ARM64 & X86 & LoongArch can
-> share its implementation.
-> 
-> Acked-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+On Thu, Oct 20, 2022 at 04:22:02PM +0800, Jianmin Lv wrote:
+> On LoongArch ACPI based systems, the PCI devices (e.g. sata
+> controlers and PCI-to-to PCI bridge controlers) existed in
+> Loongson chipsets output high-level interrupt signal to the
+> interrupt controller they connected to,
+
+I assume the active high behavior is hardware behavior that is
+independent of the fact that you're using ACPI firmware on the
+hardware.  If so, I would omit "ACPI based".
+
+s/sata/SATA/
+s/controlers/controllers/ (twice)
+s/PCI-to-to PCI/PCI-to-PCI/
+s/existed in/in/
+s/they connected/they are connected/
+
+> while the IRQs are
+> active low from the perspective of PCI(in 2.2.6. Interrupt
+> Pins, "Interrupts on PCI are optional and defined as level
+> sensitive, asserted low),
+
+I don't think you need this spec reference, since "asserted low" is
+the standard thing that happens everywhere.  But if you do want it, it
+needs to specify which spec it refers to, e.g., "Conventional PCI
+r3.0, sec 2.2.6" so it's not confused with the PCIe spec.
+
+The quote from the spec itself should be terminated with a close quote
+("), i.e., 
+
+  "Interrupts on PCI ... asserted low"
+
+> which means that the interrupt
+> output of PCI devices plugged into PCI-to-to PCI bridges of
+> Loongson chipset will be also converted to high-level. So
+> high level triggered type is required to be passed to
+> acpi_register_gsi() when creating mappings for PCI devices.
+
+This is the part where I was hoping for a reference to a spec that
+talks about how PCI interrupts are inverted.  The inverter is the part
+that's special here.
+
+I see that ACPI r6.5, sec 5.2.12, mentions LPIC, but it doesn't
+mention the inverter.  It has a lot more mentions of GIC, but also no
+details about an inverter.  I suppose that would be in the GIC spec,
+which I'm not familiar with.
+
+The point is that one should be able to write this code from a spec,
+without having to empirically discover the interrupt polarity.  What
+spec tells you about using ACTIVE_HIGH here?
+
+s/PCI-to-to PCI/PCI-to-PCI/ again
+
+Rewrap the log to fill 75 columns like the rest of the history.
+
+> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 > ---
->  arch/arm64/mm/mmu.c      | 55 +++++++-----------------
->  arch/loongarch/mm/init.c | 59 +++++++-------------------
->  arch/x86/mm/init_64.c    | 92 ++++++++++++++--------------------------
->  include/linux/mm.h       |  6 +++
->  mm/sparse-vmemmap.c      | 63 +++++++++++++++++++++++++++
->  5 files changed, 132 insertions(+), 143 deletions(-)
+>  drivers/acpi/pci_irq.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+> index 08e15774fb9f..ff30ceca2203 100644
+> --- a/drivers/acpi/pci_irq.c
+> +++ b/drivers/acpi/pci_irq.c
+> @@ -387,13 +387,15 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+>  	u8 pin;
+>  	int triggering = ACPI_LEVEL_SENSITIVE;
+>  	/*
+> -	 * On ARM systems with the GIC interrupt model, level interrupts
+> +	 * On ARM systems with the GIC interrupt model, or LoongArch
+> +	 * systems with the LPIC interrupt model, level interrupts
 
-Thanks for doing this.  It's always nice to see the per-arch duplication
-get collapsed!
+Is "LoongArch" required in this comment?  Might the LPIC model be used
+on non-LoongArch systems?
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+I see it follows the example of "ARM systems".  In my opinion, "ARM"
+probably should be removed, too, because the code checks only for GIC
+or LPIC; it doesn't check for ARM or LoongArch.
+
+If GIC is restricted to ARM and LPIC is restricted to LoongArch,
+that's fine, but that constraint should be expressed somewhere else
+and doesn't need to be repeated here.
+
+>  	 * are always polarity high by specification; PCI legacy
+>  	 * IRQs lines are inverted before reaching the interrupt
+>  	 * controller and must therefore be considered active high
+>  	 * as default.
+>  	 */
+> -	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
+> +	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ||
+> +		       acpi_irq_model == ACPI_IRQ_MODEL_LPIC ?
+>  				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
+>  	char *link = NULL;
+>  	char link_desc[16];
+> -- 
+> 2.31.1
+> 
