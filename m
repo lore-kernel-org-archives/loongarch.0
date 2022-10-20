@@ -1,322 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4383C20
-	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 14:27:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2938C433C1;
-	Thu, 20 Oct 2022 14:27:17 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Marc Zyngier <maz@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Huacai Chen <chenhuacai@gmail.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Jianmin Lv <lvjianmin@loongson.cn>
-Subject: [PATCH V3] irqchip/loongson-htvec: Add ACPI init support
-Date: Thu, 20 Oct 2022 22:25:35 +0800
-Message-Id: <20221020142535.1725573-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4ABA3D60
+	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 15:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666279329; x=1697815329;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Aczg4Jc/OHYoyF/FrcuRG5QzhTL5LWV6IYaxF3YgRoE=;
+  b=R7R530j0oSaubckB4nFTfgD1fvMX40pEPVuzSrlXU9SRq//Ie7DaSh+P
+   GcSa27wyYQhWSNnJT03MJGdakEdjc1VtZfvFeDvL4JcMMJL70XM2ce4S4
+   V1l6CzDG3nQLYIBgyzCD9cZqdBdxOI9/fZh9B9whp3a+QKEMOflfL5SuZ
+   Ku5iPm8tbtBT1Dyg6IhLdNN8L2YFhQrsXoVT3C7DAfOt+/Ddz5YNQl7w8
+   w3AP4s0hb+SbYzwEDIyRuqy+QbH2jqd0XYRHCVg3zV45VFFVOII37mAjE
+   p7i3URCAZgmgTceSc0qbHx8itbc97XevVWUxeTj8PfYSvP+MsxmRcQbMH
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="307840396"
+X-IronPort-AV: E=Sophos;i="5.95,199,1661842800"; 
+   d="scan'208";a="307840396"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2022 08:22:09 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="698724218"
+X-IronPort-AV: E=Sophos;i="5.95,199,1661842800"; 
+   d="scan'208";a="698724218"
+Received: from amancuso-mobl.amr.corp.intel.com (HELO [10.209.121.211]) ([10.209.121.211])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2022 08:22:07 -0700
+Message-ID: <edb1c35e-03d5-5a5a-5157-103a9d9bc3ae@intel.com>
+Date: Thu, 20 Oct 2022 08:21:56 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH V12 3/4] mm/sparse-vmemmap: Generalise
+ vmemmap_populate_hugepages()
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Dinh Nguyen <dinguyen@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+ Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+ Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Feiyang Chen <chenfeiyang@loongson.cn>
+References: <20221020072317.492906-1-chenhuacai@loongson.cn>
+ <20221020072317.492906-4-chenhuacai@loongson.cn>
+From: Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <20221020072317.492906-4-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-HTVECINTC stands for "HyperTransport Interrupts" that described in
-Section 14.3 of "Loongson 3A5000 Processor Reference Manual". For more
-information please refer Documentation/loongarch/irq-chip-model.rst.
+On 10/20/22 00:23, Huacai Chen wrote:
+> From: Feiyang Chen <chenfeiyang@loongson.cn>
+> 
+> Generalise vmemmap_populate_hugepages() so ARM64 & X86 & LoongArch can
+> share its implementation.
+> 
+> Acked-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  arch/arm64/mm/mmu.c      | 55 +++++++-----------------
+>  arch/loongarch/mm/init.c | 59 +++++++-------------------
+>  arch/x86/mm/init_64.c    | 92 ++++++++++++++--------------------------
+>  include/linux/mm.h       |  6 +++
+>  mm/sparse-vmemmap.c      | 63 +++++++++++++++++++++++++++
+>  5 files changed, 132 insertions(+), 143 deletions(-)
 
-Though the extended model is the recommended one, there are still some
-legacy model machines. So we add ACPI init support for HTVECINTC.
+Thanks for doing this.  It's always nice to see the per-arch duplication
+get collapsed!
 
-Co-developed-by: Jianmin Lv <lvjianmin@loongson.cn>
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-V2: Adjust acpi_cascade_irqdomain_init() and other small fixes.
-V3: Adjust the return of acpi_cascade_irqdomain_init() and check its
-    return value.
-
- arch/loongarch/include/asm/irq.h       |   2 +-
- drivers/irqchip/Kconfig                |   1 +
- drivers/irqchip/irq-loongson-htvec.c   | 149 +++++++++++++++++++------
- drivers/irqchip/irq-loongson-liointc.c |  25 ++++-
- 4 files changed, 141 insertions(+), 36 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
-index d06d4542b634..9d3d36e41afe 100644
---- a/arch/loongarch/include/asm/irq.h
-+++ b/arch/loongarch/include/asm/irq.h
-@@ -93,7 +93,7 @@ int liointc_acpi_init(struct irq_domain *parent,
- int eiointc_acpi_init(struct irq_domain *parent,
- 					struct acpi_madt_eio_pic *acpi_eiointc);
- 
--struct irq_domain *htvec_acpi_init(struct irq_domain *parent,
-+int htvec_acpi_init(struct irq_domain *parent,
- 					struct acpi_madt_ht_pic *acpi_htvec);
- int pch_lpc_acpi_init(struct irq_domain *parent,
- 					struct acpi_madt_lpc_pic *acpi_pchlpc);
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 7ef9f5e696d3..17396e6e42fc 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -576,6 +576,7 @@ config IRQ_LOONGARCH_CPU
- 	select GENERIC_IRQ_CHIP
- 	select IRQ_DOMAIN
- 	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
-+	select LOONGSON_HTVEC
- 	select LOONGSON_LIOINTC
- 	select LOONGSON_EIOINTC
- 	select LOONGSON_PCH_PIC
-diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
-index 60a335d7e64e..8b06082616cb 100644
---- a/drivers/irqchip/irq-loongson-htvec.c
-+++ b/drivers/irqchip/irq-loongson-htvec.c
-@@ -20,7 +20,6 @@
- /* Registers */
- #define HTVEC_EN_OFF		0x20
- #define HTVEC_MAX_PARENT_IRQ	8
--
- #define VEC_COUNT_PER_REG	32
- #define VEC_REG_IDX(irq_id)	((irq_id) / VEC_COUNT_PER_REG)
- #define VEC_REG_BIT(irq_id)	((irq_id) % VEC_COUNT_PER_REG)
-@@ -32,6 +31,8 @@ struct htvec {
- 	raw_spinlock_t		htvec_lock;
- };
- 
-+static struct htvec *htvec_priv;
-+
- static void htvec_irq_dispatch(struct irq_desc *desc)
- {
- 	int i;
-@@ -155,64 +156,144 @@ static void htvec_reset(struct htvec *priv)
- 	}
- }
- 
--static int htvec_of_init(struct device_node *node,
--				struct device_node *parent)
-+static int htvec_init(phys_addr_t addr, unsigned long size,
-+		int num_parents, int parent_irq[], struct fwnode_handle *domain_handle)
- {
-+	int i;
- 	struct htvec *priv;
--	int err, parent_irq[8], i;
- 
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	priv->num_parents = num_parents;
-+	priv->base = ioremap(addr, size);
- 	raw_spin_lock_init(&priv->htvec_lock);
--	priv->base = of_iomap(node, 0);
--	if (!priv->base) {
--		err = -ENOMEM;
--		goto free_priv;
--	}
--
--	/* Interrupt may come from any of the 8 interrupt lines */
--	for (i = 0; i < HTVEC_MAX_PARENT_IRQ; i++) {
--		parent_irq[i] = irq_of_parse_and_map(node, i);
--		if (parent_irq[i] <= 0)
--			break;
--
--		priv->num_parents++;
--	}
- 
--	if (!priv->num_parents) {
--		pr_err("Failed to get parent irqs\n");
--		err = -ENODEV;
--		goto iounmap_base;
--	}
--
--	priv->htvec_domain = irq_domain_create_linear(of_node_to_fwnode(node),
-+	/* Setup IRQ domain */
-+	priv->htvec_domain = irq_domain_create_linear(domain_handle,
- 					(VEC_COUNT_PER_REG * priv->num_parents),
- 					&htvec_domain_ops, priv);
- 	if (!priv->htvec_domain) {
--		pr_err("Failed to create IRQ domain\n");
--		err = -ENOMEM;
--		goto irq_dispose;
-+		pr_err("loongson-htvec: cannot add IRQ domain\n");
-+		goto iounmap_base;
- 	}
- 
- 	htvec_reset(priv);
- 
--	for (i = 0; i < priv->num_parents; i++)
-+	for (i = 0; i < priv->num_parents; i++) {
- 		irq_set_chained_handler_and_data(parent_irq[i],
- 						 htvec_irq_dispatch, priv);
-+	}
-+
-+	htvec_priv = priv;
- 
- 	return 0;
- 
--irq_dispose:
--	for (; i > 0; i--)
--		irq_dispose_mapping(parent_irq[i - 1]);
- iounmap_base:
- 	iounmap(priv->base);
--free_priv:
- 	kfree(priv);
- 
--	return err;
-+	return -EINVAL;
-+}
-+
-+#ifdef CONFIG_OF
-+
-+static int htvec_of_init(struct device_node *node,
-+				struct device_node *parent)
-+{
-+	int i, err;
-+	int parent_irq[8];
-+	int num_parents = 0;
-+	struct resource res;
-+
-+	if (of_address_to_resource(node, 0, &res))
-+		return -EINVAL;
-+
-+	/* Interrupt may come from any of the 8 interrupt lines */
-+	for (i = 0; i < HTVEC_MAX_PARENT_IRQ; i++) {
-+		parent_irq[i] = irq_of_parse_and_map(node, i);
-+		if (parent_irq[i] <= 0)
-+			break;
-+
-+		num_parents++;
-+	}
-+
-+	err = htvec_init(res.start, resource_size(&res),
-+			num_parents, parent_irq, of_node_to_fwnode(node));
-+	if (err < 0)
-+		return err;
-+
-+	return 0;
- }
- 
- IRQCHIP_DECLARE(htvec, "loongson,htvec-1.0", htvec_of_init);
-+
-+#endif
-+
-+#ifdef CONFIG_ACPI
-+static int __init pch_pic_parse_madt(union acpi_subtable_headers *header,
-+					const unsigned long end)
-+{
-+	struct acpi_madt_bio_pic *pchpic_entry = (struct acpi_madt_bio_pic *)header;
-+
-+	return pch_pic_acpi_init(htvec_priv->htvec_domain, pchpic_entry);
-+}
-+
-+static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
-+					const unsigned long end)
-+{
-+	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
-+
-+	return pch_msi_acpi_init(htvec_priv->htvec_domain, pchmsi_entry);
-+}
-+
-+static int __init acpi_cascade_irqdomain_init(void)
-+{
-+	int r;
-+
-+	r = acpi_table_parse_madt(ACPI_MADT_TYPE_BIO_PIC, pch_pic_parse_madt, 0);
-+	if (r < 0)
-+		return r;
-+
-+	r = acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 0);
-+	if (r < 0)
-+		return r;
-+
-+	return 0;
-+}
-+
-+int __init htvec_acpi_init(struct irq_domain *parent,
-+				   struct acpi_madt_ht_pic *acpi_htvec)
-+{
-+	int i, ret;
-+	int num_parents, parent_irq[8];
-+	struct fwnode_handle *domain_handle;
-+
-+	if (!acpi_htvec)
-+		return -EINVAL;
-+
-+	num_parents = HTVEC_MAX_PARENT_IRQ;
-+
-+	domain_handle = irq_domain_alloc_fwnode(&acpi_htvec->address);
-+	if (!domain_handle) {
-+		pr_err("Unable to allocate domain handle\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* Interrupt may come from any of the 8 interrupt lines */
-+	for (i = 0; i < HTVEC_MAX_PARENT_IRQ; i++)
-+		parent_irq[i] = irq_create_mapping(parent, acpi_htvec->cascade[i]);
-+
-+	ret = htvec_init(acpi_htvec->address, acpi_htvec->size,
-+			num_parents, parent_irq, domain_handle);
-+
-+	if (ret == 0)
-+		ret = acpi_cascade_irqdomain_init();
-+	else
-+		irq_domain_free_fwnode(domain_handle);
-+
-+	return ret;
-+}
-+
-+#endif
-diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
-index 0da8716f8f24..67ec4f121297 100644
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -349,6 +349,26 @@ IRQCHIP_DECLARE(loongson_liointc_2_0, "loongson,liointc-2.0", liointc_of_init);
- #endif
- 
- #ifdef CONFIG_ACPI
-+static int __init htintc_parse_madt(union acpi_subtable_headers *header,
-+					const unsigned long end)
-+{
-+	struct acpi_madt_ht_pic *htintc_entry = (struct acpi_madt_ht_pic *)header;
-+	struct irq_domain *parent = irq_find_matching_fwnode(liointc_handle, DOMAIN_BUS_ANY);
-+
-+	return htvec_acpi_init(parent, htintc_entry);
-+}
-+
-+static int __init acpi_cascade_irqdomain_init(void)
-+{
-+	int r;
-+
-+	r = acpi_table_parse_madt(ACPI_MADT_TYPE_HT_PIC, htintc_parse_madt, 0);
-+	if (r < 0)
-+		return r;
-+
-+	return 0;
-+}
-+
- int __init liointc_acpi_init(struct irq_domain *parent, struct acpi_madt_lio_pic *acpi_liointc)
- {
- 	int ret;
-@@ -365,9 +385,12 @@ int __init liointc_acpi_init(struct irq_domain *parent, struct acpi_madt_lio_pic
- 		pr_err("Unable to allocate domain handle\n");
- 		return -ENOMEM;
- 	}
-+
- 	ret = liointc_init(acpi_liointc->address, acpi_liointc->size,
- 			   1, domain_handle, NULL);
--	if (ret)
-+	if (ret == 0)
-+		ret = acpi_cascade_irqdomain_init();
-+	else
- 		irq_domain_free_fwnode(domain_handle);
- 
- 	return ret;
--- 
-2.31.1
-
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
