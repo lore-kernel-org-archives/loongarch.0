@@ -1,11 +1,11 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 240E22900
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F72328E2
 	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 08:22:10 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.32])
-	by gateway (Coremail) with SMTP id _____8Cxq9guBVFjLPwAAA--.4978S3;
+	by gateway (Coremail) with SMTP id _____8Dxu9guBVFjOPwAAA--.4970S3;
 	Thu, 20 Oct 2022 16:22:06 +0800 (CST)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLuItBVFjxM4BAA--.7555S4;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLuItBVFjxM4BAA--.7555S6;
 	Thu, 20 Oct 2022 16:22:06 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -19,9 +19,9 @@ Cc: linux-kernel@vger.kernel.org,
 	rafael@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-acpi@vger.kernel.org
-Subject: [PATCH V4 2/4] irqchip/loongson-pch-pic: fix translate callback for DT path
-Date: Thu, 20 Oct 2022 16:22:03 +0800
-Message-Id: <20221020082205.20505-3-lvjianmin@loongson.cn>
+Subject: [PATCH V4 4/4] irqchip/loongson-liointc: Support to set IRQ type for ACPI path
+Date: Thu, 20 Oct 2022 16:22:05 +0800
+Message-Id: <20221020082205.20505-5-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20221020082205.20505-1-lvjianmin@loongson.cn>
 References: <20221020082205.20505-1-lvjianmin@loongson.cn>
@@ -32,55 +32,54 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxLuItBVFjxM4BAA--.7555S4
+X-CM-TRANSID:AQAAf8CxLuItBVFjxM4BAA--.7555S6
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Xr15GF4rZr43JFyxZF1rCrg_yoWktFb_uF
-	1SqFn3Kw17Zr1Iq3y8Kr4rXF9rta4Du3WvkFs5Aay5GayUXayxAr1Svw4fJa9rGFWUAF1f
-	C395ur1xZF4I9jkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+X-Coremail-Antispam: 1Uk129KBjvdXoW7XF4DXF15XrWxCF4Dtry5Arb_yoWfKwc_u3
+	yIgwnxGa4rZF1xJr97Ww1YvrWI9aykW3WqgF45uasIy3y8W343urW7AwnxJa93KrW0vFZ7
+	AF1F9rySya47tjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
 	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	A7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	C7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
 	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
-	e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
-	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4
-	kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j
-	6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
-	0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
-	cSsGvfC2KfnxnUUI43ZEXa7IU0epB3UUUUU==
+	6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
+	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
+	kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
+	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5
+	JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
+	1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
+	YxBIdaVFxhVjvjDU0xZFpf9x07j2MKZUUUUU=
 
-In DT path of translate callback, if fwspec->param_count==1
-and of_node is non-null, fwspec->param[1] will be accessed,
-which is introduced from previous commit bcdd75c596c8
-(irqchip/loongson-pch-pic: Add ACPI init support).
+For ACPI path, the xlate callback used IRQ_TYPE_NONE and ignored
+the IRQ type in intspec[1]. For supporting to set type for
+IRQs of the irqdomain, intspec[1] should be used to get IRQ
+type.
 
-Before the patch, for non-null of_node, translate callback
-(use irq_domain_translate_twocell()) will return -EINVAL if
-fwspec->param_count < 2, so the check in the patch is added.
-
-Fixes: bcdd75c596c8 ("irqchip/loongson-pch-pic: Add ACPI init support")
 Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-pch-pic.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/irqchip/irq-loongson-liointc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
-index c01b9c257005..03493cda65a3 100644
---- a/drivers/irqchip/irq-loongson-pch-pic.c
-+++ b/drivers/irqchip/irq-loongson-pch-pic.c
-@@ -159,6 +159,9 @@ static int pch_pic_domain_translate(struct irq_domain *d,
+diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+index 0da8716f8f24..838c8fa2d868 100644
+--- a/drivers/irqchip/irq-loongson-liointc.c
++++ b/drivers/irqchip/irq-loongson-liointc.c
+@@ -167,7 +167,12 @@ static int liointc_domain_xlate(struct irq_domain *d, struct device_node *ctrlr,
+ 	if (WARN_ON(intsize < 1))
  		return -EINVAL;
- 
- 	if (of_node) {
-+		if (fwspec->param_count < 2)
-+			return -EINVAL;
+ 	*out_hwirq = intspec[0] - GSI_MIN_CPU_IRQ;
+-	*out_type = IRQ_TYPE_NONE;
 +
- 		*hwirq = fwspec->param[0] + priv->ht_vec_base;
- 		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
- 	} else {
++	if (intsize > 1)
++		*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
++	else
++		*out_type = IRQ_TYPE_NONE;
++
+ 	return 0;
+ }
+ 
 -- 
 2.31.1
 
