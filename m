@@ -1,110 +1,155 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90EEE7B
-	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 03:18:10 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.32])
-	by gateway (Coremail) with SMTP id _____8Cxq9iUvVBji+wAAA--.4737S3;
-	Thu, 20 Oct 2022 11:16:36 +0800 (CST)
-Received: from [10.20.42.32] (unknown [10.20.42.32])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxPuCTvVBjiq0BAA--.6867S3;
-	Thu, 20 Oct 2022 11:16:36 +0800 (CST)
-Subject: Re: [PATCH V3 1/4] ACPI / PCI: fix LPIC irq model default PCI IRQ
- polarity
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>,
- Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
- rafael@kernel.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20221019160529.GA18372@bhelgaas>
-From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <0ebec963-d835-39cc-537a-bd58855b0171@loongson.cn>
-Date: Thu, 20 Oct 2022 11:16:35 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BCEC15B0
+	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 06:50:06 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8DxPdly7FBjtfUAAA--.4805S3;
+	Thu, 20 Oct 2022 14:36:34 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axf+Bq7FBjccEBAA--.7362S4;
+	Thu, 20 Oct 2022 14:36:33 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH v3 3/3] dt-bindings: clock: add loongson2 clock
+Date: Thu, 20 Oct 2022 14:36:24 +0800
+Message-Id: <20221020063624.17548-3-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221020063624.17548-1-zhuyinbo@loongson.cn>
+References: <20221020063624.17548-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20221019160529.GA18372@bhelgaas>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxPuCTvVBjiq0BAA--.6867S3
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7tF4ruF17Kw1DuryUAF1xAFb_yoW8Kr1fpF
-	Za9an0yrW8tF4DXrs2k3WxXF13XwnakryjkFZ8AanrCFsxur4SvF1IgFy5JryDCFZ5Za18
-	Zr1jyF18WasruaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-CM-TRANSID:AQAAf8Axf+Bq7FBjccEBAA--.7362S4
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF4kJw4fKFyfWF1kuFg_yoW5GFyrpF
+	sxC34rGry0vF17Zws5tFyxA3Z5Z3Z7CFnrZFsrAa42kF98W3W5XF17K34DZa9rAr17Z39F
+	vFWfWr4UC3WxCr7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
-	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
-	s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI
-	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
-	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-	jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
+	bfAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
+	1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
+	cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
+	0Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
+	6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2
+	Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+	1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj
+	6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU8mQ6JUUUUU==
 
-Ok, thanks, I'll improve them as your suggestion.
+Add the loongson2 clock binding with DT schema format using
+json-schema.
 
-On 2022/10/20 上午12:05, Bjorn Helgaas wrote:
-> In the subject and the commit log below, figure out whether you want
-> to use "irq" or "IRQ" and do it consistently.  I vote for "IRQ".  Also
-> consider subject lines for the other patches.  Stuff like this is
-> trivial, but it's an excuse for whoever will handle this (not me in
-> this case) to put it off.  I also add "()" after function names for
-> clarity.
-> 
-> On Sun, Oct 09, 2022 at 02:44:28PM +0800, Jianmin Lv wrote:
->> On LoongArch ACPI based systems, the irq trigger type of PCI devices
->> is high level, so high level triggered type is required to pass
->> to acpi_register_gsi when create irq mapping for PCI devices.
-> 
-> This isn't worded quite right.  The trigger type of PCI devices
-> doesn't change just because you plug them into a LoongArch system
-> instead of an x86 system.  The comment in the code reads better: The
-> IRQs are active low from the perspective of PCI, but are inverted
-> before the interrupt controller.
-> 
-> Including a reference here to the spec that mentions this inversion
-> would help a lot.
-> 
-> s/when create mapping/when creating mappings/
-> 
->> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
->> ---
->>   drivers/acpi/pci_irq.c | 6 ++++--
->>   1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
->> index 08e15774fb9f..ff30ceca2203 100644
->> --- a/drivers/acpi/pci_irq.c
->> +++ b/drivers/acpi/pci_irq.c
->> @@ -387,13 +387,15 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
->>   	u8 pin;
->>   	int triggering = ACPI_LEVEL_SENSITIVE;
->>   	/*
->> -	 * On ARM systems with the GIC interrupt model, level interrupts
->> +	 * On ARM systems with the GIC interrupt model, or LoongArch
->> +	 * systems with the LPIC interrupt model, level interrupts
->>   	 * are always polarity high by specification; PCI legacy
->>   	 * IRQs lines are inverted before reaching the interrupt
->>   	 * controller and must therefore be considered active high
->>   	 * as default.
->>   	 */
->> -	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
->> +	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ||
->> +		       acpi_irq_model == ACPI_IRQ_MODEL_LPIC ?
->>   				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
->>   	char *link = NULL;
->>   	char link_desc[16];
->> -- 
->> 2.31.1
->>
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+---
+Change in v3:
+		1. Drop redundant (last) binding from the title.
+		2. Drop "- |" between ref_100m node and clk node.
+
+ .../bindings/clock/loongson,ls2k-clk.yaml     | 63 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+
+diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+new file mode 100644
+index 000000000000..6cc6e0755735
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/loongson,ls2k-clk.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson2 SoC Clock Control Module
++
++maintainers:
++  - Yinbo Zhu <zhuyinbo@loongson.cn>
++
++description: |
++  Loongson2 SoC clock control module is an integrated clock controller, which
++  generates and supplies to all modules.
++
++properties:
++  compatible:
++    enum:
++      - loongson,ls2k-clk
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: 100m ref
++
++  clock-names:
++    items:
++      - const: ref_100m
++
++  '#clock-cells':
++    const: 1
++    description:
++      The clock consumer should specify the desired clock by having the clock
++      ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
++      for the full list of loongson2 SoC clock IDs.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#clock-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    ref_100m: clock-ref-100m {
++        compatible = "fixed-clock";
++        #clock-cells = <0>;
++        clock-frequency = <100000000>;
++        clock-output-names = "ref_100m";
++    };
++
++    clk: clock-controller@1fe00480 {
++        compatible = "loongson,ls2k-clk";
++        reg = <0x1fe00480 0x58>;
++        #clock-cells = <1>;
++        clocks = <&ref_100m>;
++        clock-names = "ref_100m";
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f01d60cd5c3b..f61a431ad8ca 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11911,6 +11911,7 @@ LOONGSON2 SOC SERIES CLOCK DRIVER
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	linux-clk@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+ F:	drivers/clk/clk-loongson2.c
+ F:	include/dt-bindings/clock/loongson,ls2k-clk.h
+ 
+-- 
+2.31.1
 
