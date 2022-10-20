@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36081290D
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33A8B2908
 	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 08:22:10 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.32])
-	by gateway (Coremail) with SMTP id _____8Bx3NguBVFjJfwAAA--.4991S3;
+	by gateway (Coremail) with SMTP id _____8Dxu9guBVFjMvwAAA--.4969S3;
 	Thu, 20 Oct 2022 16:22:06 +0800 (CST)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLuItBVFjxM4BAA--.7555S3;
-	Thu, 20 Oct 2022 16:22:05 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLuItBVFjxM4BAA--.7555S5;
+	Thu, 20 Oct 2022 16:22:06 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Marc Zyngier <maz@kernel.org>
@@ -19,9 +19,9 @@ Cc: linux-kernel@vger.kernel.org,
 	rafael@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-acpi@vger.kernel.org
-Subject: [PATCH V4 1/4] ACPI / PCI: fix LPIC IRQ model default PCI IRQ polarity
-Date: Thu, 20 Oct 2022 16:22:02 +0800
-Message-Id: <20221020082205.20505-2-lvjianmin@loongson.cn>
+Subject: [PATCH V4 3/4] irqchip/loongson-pch-pic: Support to set IRQ type for ACPI path
+Date: Thu, 20 Oct 2022 16:22:04 +0800
+Message-Id: <20221020082205.20505-4-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20221020082205.20505-1-lvjianmin@loongson.cn>
 References: <20221020082205.20505-1-lvjianmin@loongson.cn>
@@ -32,65 +32,66 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxLuItBVFjxM4BAA--.7555S3
+X-CM-TRANSID:AQAAf8CxLuItBVFjxM4BAA--.7555S5
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxJrW3XFW3ZFWfZFyktFWxXrb_yoW8ArWxpF
-	ZF93Wayr48tFs8XwsFk3WxZry5J3Z3Cryjkrs5Cw4Uua1Dur4IqFyxWFW3Jr98WFZrZa1U
-	ZryYyw48Way7uFJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Ar47tr4UJrWfGw48KryxuFg_yoW8GF4UpF
+	W5Cr4avwsrJry7Cw1Fkw4kG343A3s7tFW7KF4UtFnaqrn7G3s5AF1UuFWv9rn5ZFWfAF12
+	qanYqFW5ua43AFDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
 	1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
 	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
 	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
 	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
 	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
 	kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
 	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
-	CVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
+	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5
+	JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
 	1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
 	YxBIdaVFxhVjvjDU0xZFpf9x07jzc_-UUUUU=
 
-On LoongArch ACPI based systems, the PCI devices (e.g. sata
-controlers and PCI-to-to PCI bridge controlers) existed in
-Loongson chipsets output high-level interrupt signal to the
-interrupt controller they connected to, while the IRQs are
-active low from the perspective of PCI(in 2.2.6. Interrupt
-Pins, "Interrupts on PCI are optional and defined as level
-sensitive, asserted low), which means that the interrupt
-output of PCI devices plugged into PCI-to-to PCI bridges of
-Loongson chipset will be also converted to high-level. So
-high level triggered type is required to be passed to
-acpi_register_gsi() when creating mappings for PCI devices.
+For ACPI path, the translate callback used IRQ_TYPE_NONE and ignored
+the IRQ type in fwspec->param[1]. For supporting to set type for
+IRQs of the irqdomain, fwspec->param[1] should be used to get IRQ
+type.
 
 Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 ---
- drivers/acpi/pci_irq.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-loongson-pch-pic.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index 08e15774fb9f..ff30ceca2203 100644
---- a/drivers/acpi/pci_irq.c
-+++ b/drivers/acpi/pci_irq.c
-@@ -387,13 +387,15 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
- 	u8 pin;
- 	int triggering = ACPI_LEVEL_SENSITIVE;
- 	/*
--	 * On ARM systems with the GIC interrupt model, level interrupts
-+	 * On ARM systems with the GIC interrupt model, or LoongArch
-+	 * systems with the LPIC interrupt model, level interrupts
- 	 * are always polarity high by specification; PCI legacy
- 	 * IRQs lines are inverted before reaching the interrupt
- 	 * controller and must therefore be considered active high
- 	 * as default.
- 	 */
--	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
-+	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ||
-+		       acpi_irq_model == ACPI_IRQ_MODEL_LPIC ?
- 				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
- 	char *link = NULL;
- 	char link_desc[16];
+diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+index 03493cda65a3..a26a3f59d4a5 100644
+--- a/drivers/irqchip/irq-loongson-pch-pic.c
++++ b/drivers/irqchip/irq-loongson-pch-pic.c
+@@ -155,9 +155,6 @@ static int pch_pic_domain_translate(struct irq_domain *d,
+ 	struct pch_pic *priv = d->host_data;
+ 	struct device_node *of_node = to_of_node(fwspec->fwnode);
+ 
+-	if (fwspec->param_count < 1)
+-		return -EINVAL;
+-
+ 	if (of_node) {
+ 		if (fwspec->param_count < 2)
+ 			return -EINVAL;
+@@ -165,8 +162,14 @@ static int pch_pic_domain_translate(struct irq_domain *d,
+ 		*hwirq = fwspec->param[0] + priv->ht_vec_base;
+ 		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+ 	} else {
++		if (fwspec->param_count < 1)
++			return -EINVAL;
++
+ 		*hwirq = fwspec->param[0] - priv->gsi_base;
+-		*type = IRQ_TYPE_NONE;
++		if (fwspec->param_count > 1)
++			*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
++		else
++			*type = IRQ_TYPE_NONE;
+ 	}
+ 
+ 	return 0;
 -- 
 2.31.1
 
