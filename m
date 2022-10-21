@@ -1,81 +1,141 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC4E7E
-	for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 18:37:34 +0000 (UTC)
-Received: by mail-qk1-f180.google.com with SMTP id x13so493677qkg.11
-        for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 11:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q1hBLD4lH/XELJE0KWPJAlY/VEp51da8IvgbYfbE9SM=;
-        b=m1MqjUsqQL2MbyAa48c2CVvgvq8u1I50bHLNDjMG1UmYjQuTXWEYox4FXqL9j3G6jR
-         woCALKrlvanJEaLbeFrJ84/u56hESDulrFNddmwy58SGRhj3EiEzGT1LtoYHEzYnfJ05
-         OCYYNp5ngLSolI5T5FcWxlKqd/KSyMNiJUnTMpq3gUeAc9Hjvb/jbahFh7g0fh8gk8AV
-         1oMihPlKcs5XeUd3aha6KF8t9Odich8mjDh2Jd+E/9n1hNCcQDYOey8QxfFMnA/XxlfD
-         9mvOHqsQCQHtgaAPmTHWtvv1lyTJ1pEulV28hR3143JLdTg1aVfqv/1MFufOVmRV1lEW
-         aEsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q1hBLD4lH/XELJE0KWPJAlY/VEp51da8IvgbYfbE9SM=;
-        b=0NrRlEwgxmT4LJTvI4g7VmU02iNcYEZQgtXXk/ZJJtz9mGmigNJzf2DOtV4ooo8aVI
-         5KCupHvEGgkmsweQO2Z6sSyScKPLxRIcvjcwu92ZSXtdxh4ohsNO7A3dBs/+MyB6j4qS
-         ucuejwyLM//8Hzw9w/h2zQwa6M0/ohBqWhjrplu69pyFxWB9vGk6PvGbqrZPfr8eK5O/
-         +qn4Db9liS0dCPRPSmd0Bn/hgPctx7xqeN/sPk0aopDudCYg19KA0q4Ad62Ub2EuX9wK
-         ltNYBHVAn3kRzzWrKRXr8cS7hhv2YxhiqUE10Bz6NFVoUT3+VSGHPKFJZZGdxlXnkauD
-         YqHg==
-X-Gm-Message-State: ACrzQf3ivcIMadziQTXRMGydY4hXDNAvp/XRMtQXn2bjSW/XCp0h9x0F
-	TKITZxOlETSHz+b1OUz9HD88sw==
-X-Google-Smtp-Source: AMsMyM6K0N51sGcqCNzQyBHqlKAxnwAGBccxXvK+t7f/OxW1GPu+nee4zPGTsttzdLGjy5sQo7B1IQ==
-X-Received: by 2002:a37:5803:0:b0:6ee:834c:b605 with SMTP id m3-20020a375803000000b006ee834cb605mr10465392qkb.643.1666291053184;
-        Thu, 20 Oct 2022 11:37:33 -0700 (PDT)
-Received: from [192.168.10.124] (pool-72-83-177-149.washdc.east.verizon.net. [72.83.177.149])
-        by smtp.gmail.com with ESMTPSA id d4-20020ac81184000000b00359961365f1sm6400070qtj.68.2022.10.20.11.37.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Oct 2022 11:37:31 -0700 (PDT)
-Message-ID: <fc302fb5-740a-41d6-2610-dde3cce604cc@linaro.org>
-Date: Thu, 20 Oct 2022 14:37:29 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 123867E
+	for <loongarch@lists.linux.dev>; Fri, 21 Oct 2022 01:09:34 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8CxKdhN8VFjUEUBAA--.3922S3;
+	Fri, 21 Oct 2022 09:09:33 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxLeBH8VFjU1MCAA--.9462S3;
+	Fri, 21 Oct 2022 09:09:32 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Yun Liu <liuyun@loongson.cn>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH v3 2/2] dt-bindings: hpet: add loongson2 hpet
+Date: Fri, 21 Oct 2022 09:09:25 +0800
+Message-Id: <20221021010925.21604-2-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221021010925.21604-1-zhuyinbo@loongson.cn>
+References: <20221021010925.21604-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH v3 3/3] dt-bindings: clock: add loongson2 clock
-Content-Language: en-US
-To: Yinbo Zhu <zhuyinbo@loongson.cn>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Jianmin Lv <lvjianmin@loongson.cn>,
- Yang Li <yang.lee@linux.alibaba.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20221020063624.17548-1-zhuyinbo@loongson.cn>
- <20221020063624.17548-3-zhuyinbo@loongson.cn>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221020063624.17548-3-zhuyinbo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxLeBH8VFjU1MCAA--.9462S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7uF15Xw1xWFyxXrW8CF4fGrg_yoW8tFyfpF
+	srCFyfJr40gF17Z395tFy8C3WrZ34kAFy7WF17J3WUKr9xX3WrZ3W7Ka4DZa13CrW8Xay7
+	ZFWSkr4UKayUZF7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bf8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM2
+	8EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq
+	07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7
+	xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Y
+	z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64
+	vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E
+	14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+	CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryU
+	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
+	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU8mQ6JUUUUU==
 
-On 20/10/2022 02:36, Yinbo Zhu wrote:
-> Add the loongson2 clock binding with DT schema format using
-> json-schema.
-> 
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
+Add the loongson2 High Precision Event Timer (HPET) binding
+with DT schema format using json-schema.
 
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+---
+Change in v3:
+		1. Update dts that base on common clock framework.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ .../bindings/timer/loongson,ls2k-hpet.yaml    | 50 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
 
-Best regards,
-Krzysztof
+diff --git a/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+new file mode 100644
+index 000000000000..01656048858a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/loongson,ls2k-hpet.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson2 High Precision Event Timer (HPET)
++
++maintainers:
++  - Yinbo Zhu <zhuyinbo@loongson.cn>
++
++properties:
++  compatible:
++    const: loongson,ls2k-hpet
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: SoC apb clock
++
++  clock-names:
++    items:
++      - const: apb_clk
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/loongson,ls2k-clk.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    timer@1fe24000 {
++        compatible = "loongson,ls2k-hpet";
++        reg = <0x1fe24000 0x15f>;
++        clocks = <&clk LOONGSON2_APB_CLK>;
++        clock-names = "apb_clk";
++        interrupt-parent = <&liointc0>;
++        interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index db29c1dc2d89..8cc541ce89b8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11919,6 +11919,7 @@ LOONGSON2 SOC SERIES HPET DRIVER
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+ F:	drivers/clocksource/loongson2_hpet.c
+ 
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+-- 
+2.20.1
 
