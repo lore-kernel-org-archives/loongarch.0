@@ -1,87 +1,163 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5F57E
-	for <loongarch@lists.linux.dev>; Fri, 21 Oct 2022 02:29:14 +0000 (UTC)
-Received: by mail-oi1-f181.google.com with SMTP id p127so1736269oih.9
-        for <loongarch@lists.linux.dev>; Thu, 20 Oct 2022 19:29:14 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52057E
+	for <loongarch@lists.linux.dev>; Fri, 21 Oct 2022 10:16:55 +0000 (UTC)
+Received: by mail-wm1-f51.google.com with SMTP id l32so1868047wms.2
+        for <loongarch@lists.linux.dev>; Fri, 21 Oct 2022 03:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+5cnDmrVndRxKiTHUVemxonBJmpJGHILsZC3ogF/MOw=;
+        b=JPtq+/IRujntwIE/R0H50vcNFzBxZsG6vivxycGAXnEB2uRQt6ffZwiejqzB7e2thQ
+         NUlcGdmwHolJLIyBZw0eVbnviS2rST1avPMOUkg8ACV8YerSEMWgInAYBS94wGapJw4i
+         bfRlNjVOU9KrSi7RqliTvkKJa7cZtLfpxfwmxtE2ad1zmQef69xoS1eIddjy6V/CVYIV
+         OSX1sAbFVNxDQkT8WjHl639ubVOThBYSN7UldhIlgneUKM+K/ZRScAH6fxsbB5g0MWT/
+         301O4bxqIRd29ca4wje7C/60v3tVfhwf0S5eO9cBOGxlGkTMgxAyQO3qnOla5YK5a34j
+         LIJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zeRfb2XRWefyhhuSIvUFSXrC6TpkJoLTjEkTZ9UuysI=;
-        b=n9f0wBa9NVOx302r4r9wL4MovIUgW40pCMIxXZlx2cdUgNzWbkcmjw5gFC9xKxJZCZ
-         lOdShj3mHIc9broVPLa8ZDXD86Bb5dWNvSoh7TZhyHxvVuOvBT5H7aaXSPWpm4Hqcw0k
-         VjGZxN3Yj0ix5bSvCequW7JRAvh4yJyspPb7ZgrsCjsXounIQSJbtlhIRgffNW+7XMlk
-         hpdZoJBNlIINUZ30BbgEO+F+P/SDaadyzInse4+7eFwNe4f041tv+2rn97ZObKqaItL/
-         b/lNwQY+HdfrO/oP4cJ7D7NqVHepIdVFWhoEeSk8Bc4/6aPOX7lRxBe53cMOPTInnn8K
-         rdsg==
-X-Gm-Message-State: ACrzQf05UtlhnWPzuoCRr1qoSxfp5/jPu0phJbpxfWI5+yMaM9R4HEhK
-	2V+tVcUDOF5iJPohD/U8/A==
-X-Google-Smtp-Source: AMsMyM5grMdTsY3sTGXuUp6WdUy3spEjRHLTwzrbXntW9n4h2EOCB+HWR1nAvp+/FmhChF/kG2IAgQ==
-X-Received: by 2002:a05:6808:1186:b0:353:b77a:a481 with SMTP id j6-20020a056808118600b00353b77aa481mr23333601oil.199.1666319353928;
-        Thu, 20 Oct 2022 19:29:13 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id o17-20020a056870969100b0013626c1a5f6sm9725151oaq.10.2022.10.20.19.29.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Oct 2022 19:29:13 -0700 (PDT)
-Received: (nullmailer pid 2201590 invoked by uid 1000);
-	Fri, 21 Oct 2022 02:29:15 -0000
-From: Rob Herring <robh@kernel.org>
-To: Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, loongarch@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>, Rob Herring <robh+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Yun Liu <liuyun@loongson.cn>, Jianmin Lv <lvjianmin@loongson.cn>, devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-In-Reply-To: <20221021010925.21604-2-zhuyinbo@loongson.cn>
-References: <20221021010925.21604-1-zhuyinbo@loongson.cn> <20221021010925.21604-2-zhuyinbo@loongson.cn>
-Message-Id: <166631933126.2201080.1602221756534154524.robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: hpet: add loongson2 hpet
-Date: Thu, 20 Oct 2022 21:29:15 -0500
+        bh=+5cnDmrVndRxKiTHUVemxonBJmpJGHILsZC3ogF/MOw=;
+        b=Ykb4Aad6aBTCazuh7ghLGsk3YtNeg++PYvQsjW/ut/C6h+kMEoGf6X01IlmbR0KSdS
+         t3InchpoVAwDIaz0uSb3Li5Cr7KzOWrvgCZfLan5bVJSUf9gAO1IxFs5bBiBMOAg5tgi
+         Djx5mdB81MvgCOIrDgHwHP/3zGCWWUE+m6dV7EV2Jx2r4gp3SvOCSRrS7wI8wplhK0Qv
+         XYsm8drPfE2kjxfQTQ35NUmzNcs77cH5U6BkDkrIS715VY982hQEvTfdgbN9xSq1Ghx8
+         jx+EGPsz4Rh69uT6v9zJRPwn5uQHwKkNKcnnQwDejAFfMmtU0jDd4ozlcxKM/2V8ROVb
+         yXpw==
+X-Gm-Message-State: ACrzQf3pkCqh92gxDfCaZv1teaUl1LHrs3E7Vq5rMePDU6wVuSEAKurd
+	FzXqbwi37sscJ7ySvrE2Vj+78w==
+X-Google-Smtp-Source: AMsMyM7lFiRw/3BBe90FzLXlb+jXp4Bsd46molv2+M4Io/03D653ZKfrdrAMjZSj/Yk+qHqfl4wzbA==
+X-Received: by 2002:a7b:c841:0:b0:3c6:ce2f:3438 with SMTP id c1-20020a7bc841000000b003c6ce2f3438mr12545988wml.51.1666347414085;
+        Fri, 21 Oct 2022 03:16:54 -0700 (PDT)
+Received: from [10.50.0.10] (ec2-54-194-108-71.eu-west-1.compute.amazonaws.com. [54.194.108.71])
+        by smtp.gmail.com with ESMTPSA id ay41-20020a05600c1e2900b003c6f0ebf988sm2166623wmb.30.2022.10.21.03.16.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Oct 2022 03:16:53 -0700 (PDT)
+Message-ID: <1ca11693-17c2-7260-b642-70b033c64b30@linaro.org>
+Date: Fri, 21 Oct 2022 12:16:50 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.3.2
+Subject: Re: [PATCH V12 4/4] LoongArch: Enable
+ ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Dinh Nguyen <dinguyen@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+ Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+ Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Feiyang Chen <chenfeiyang@loongson.cn>
+References: <20221020072317.492906-1-chenhuacai@loongson.cn>
+ <20221020072317.492906-5-chenhuacai@loongson.cn>
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
+In-Reply-To: <20221020072317.492906-5-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 21 Oct 2022 09:09:25 +0800, Yinbo Zhu wrote:
-> Add the loongson2 High Precision Event Timer (HPET) binding
-> with DT schema format using json-schema.
+On 20/10/22 09:23, Huacai Chen wrote:
+> From: Feiyang Chen <chenfeiyang@loongson.cn>
 > 
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> The feature of minimizing overhead of struct page associated with each
+> HugeTLB page is implemented on x86_64. However, the infrastructure of
+> this feature is already there, so just select ARCH_WANT_HUGETLB_PAGE_
+> OPTIMIZE_VMEMMAP is enough to enable this feature for LoongArch.
+> 
+> To avoid the following build error on LoongArch we should include linux/
+
+s/should/have to/
+
+> static_key.h in page-flags.h.
+
+This looks like 2 different changes in a single patch.. The first is a
+generic "fix missing include" and the second is LoongArch specific.
+
+Splitting in 2 would ease backport cherry-picks.
+
+> In file included from ./include/linux/mmzone.h:22,
+> from ./include/linux/gfp.h:6,
+> from ./include/linux/mm.h:7,
+> from arch/loongarch/kernel/asm-offsets.c:9:
+> ./include/linux/page-flags.h:208:1: warning: data definition has no
+> type or storage class
+> 208 | DECLARE_STATIC_KEY_MAYBE(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
+> | ^~~~~~~~~~~~~~~~~~~~~~~~
+> ./include/linux/page-flags.h:208:1: error: type defaults to 'int' in
+> declaration of 'DECLARE_STATIC_KEY_MAYBE' [-Werror=implicit-int]
+> ./include/linux/page-flags.h:209:26: warning: parameter names (without
+> types) in function declaration
+> 209 | hugetlb_optimize_vmemmap_key);
+> | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> ./include/linux/page-flags.h: In function 'hugetlb_optimize_vmemmap_enabled':
+> ./include/linux/page-flags.h:213:16: error: implicit declaration of
+> function 'static_branch_maybe' [-Werror=implicit-function-declaration]
+> 213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
+> | ^~~~~~~~~~~~~~~~~~~
+> ./include/linux/page-flags.h:213:36: error:
+> 'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON' undeclared (first
+> use in this function); did you mean
+> 'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP'?
+> 213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
+> | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> | CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+> ./include/linux/page-flags.h:213:36: note: each undeclared identifier
+> is reported only once for each function it appears in
+> ./include/linux/page-flags.h:214:37: error:
+> 'hugetlb_optimize_vmemmap_key' undeclared (first use in this
+> function); did you mean 'hugetlb_optimize_vmemmap_enabled'?
+> 214 | &hugetlb_optimize_vmemmap_key);
+> | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> | hugetlb_optimize_vmemmap_enabled
+> 
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
-> Change in v3:
-> 		1. Update dts that base on common clock framework.
+>   arch/loongarch/Kconfig     | 1 +
+>   include/linux/page-flags.h | 1 +
+>   2 files changed, 2 insertions(+)
 > 
->  .../bindings/timer/loongson,ls2k-hpet.yaml    | 50 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
-> 
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 6f7fa0c0ca08..0a6ef613124c 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -52,6 +52,7 @@ config LOONGARCH
+>   	select ARCH_USE_QUEUED_RWLOCKS
+>   	select ARCH_USE_QUEUED_SPINLOCKS
+>   	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+> +	select ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+>   	select ARCH_WANT_LD_ORPHAN_WARN
+>   	select ARCH_WANTS_NO_INSTR
+>   	select BUILDTIME_TABLE_SORT
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index 0b0ae5084e60..1aafdc73e399 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -9,6 +9,7 @@
+>   #include <linux/types.h>
+>   #include <linux/bug.h>
+>   #include <linux/mmdebug.h>
+> +#include <linux/static_key.h>
+>   #ifndef __GENERATING_BOUNDS_H
+>   #include <linux/mm_types.h>
+>   #include <generated/bounds.h>
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Preferably splitting in 2 distinct patches (for each):
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.example.dts:21:18: fatal error: dt-bindings/clock/loongson,ls2k-clk.h: No such file or directory
-   21 |         #include <dt-bindings/clock/loongson,ls2k-clk.h>
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[1]: *** [scripts/Makefile.lib:406: Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.example.dtb] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1492: dt_binding_check] Error 2
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
