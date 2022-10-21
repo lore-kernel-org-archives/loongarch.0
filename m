@@ -1,163 +1,64 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52057E
-	for <loongarch@lists.linux.dev>; Fri, 21 Oct 2022 10:16:55 +0000 (UTC)
-Received: by mail-wm1-f51.google.com with SMTP id l32so1868047wms.2
-        for <loongarch@lists.linux.dev>; Fri, 21 Oct 2022 03:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+5cnDmrVndRxKiTHUVemxonBJmpJGHILsZC3ogF/MOw=;
-        b=JPtq+/IRujntwIE/R0H50vcNFzBxZsG6vivxycGAXnEB2uRQt6ffZwiejqzB7e2thQ
-         NUlcGdmwHolJLIyBZw0eVbnviS2rST1avPMOUkg8ACV8YerSEMWgInAYBS94wGapJw4i
-         bfRlNjVOU9KrSi7RqliTvkKJa7cZtLfpxfwmxtE2ad1zmQef69xoS1eIddjy6V/CVYIV
-         OSX1sAbFVNxDQkT8WjHl639ubVOThBYSN7UldhIlgneUKM+K/ZRScAH6fxsbB5g0MWT/
-         301O4bxqIRd29ca4wje7C/60v3tVfhwf0S5eO9cBOGxlGkTMgxAyQO3qnOla5YK5a34j
-         LIJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+5cnDmrVndRxKiTHUVemxonBJmpJGHILsZC3ogF/MOw=;
-        b=Ykb4Aad6aBTCazuh7ghLGsk3YtNeg++PYvQsjW/ut/C6h+kMEoGf6X01IlmbR0KSdS
-         t3InchpoVAwDIaz0uSb3Li5Cr7KzOWrvgCZfLan5bVJSUf9gAO1IxFs5bBiBMOAg5tgi
-         Djx5mdB81MvgCOIrDgHwHP/3zGCWWUE+m6dV7EV2Jx2r4gp3SvOCSRrS7wI8wplhK0Qv
-         XYsm8drPfE2kjxfQTQ35NUmzNcs77cH5U6BkDkrIS715VY982hQEvTfdgbN9xSq1Ghx8
-         jx+EGPsz4Rh69uT6v9zJRPwn5uQHwKkNKcnnQwDejAFfMmtU0jDd4ozlcxKM/2V8ROVb
-         yXpw==
-X-Gm-Message-State: ACrzQf3pkCqh92gxDfCaZv1teaUl1LHrs3E7Vq5rMePDU6wVuSEAKurd
-	FzXqbwi37sscJ7ySvrE2Vj+78w==
-X-Google-Smtp-Source: AMsMyM7lFiRw/3BBe90FzLXlb+jXp4Bsd46molv2+M4Io/03D653ZKfrdrAMjZSj/Yk+qHqfl4wzbA==
-X-Received: by 2002:a7b:c841:0:b0:3c6:ce2f:3438 with SMTP id c1-20020a7bc841000000b003c6ce2f3438mr12545988wml.51.1666347414085;
-        Fri, 21 Oct 2022 03:16:54 -0700 (PDT)
-Received: from [10.50.0.10] (ec2-54-194-108-71.eu-west-1.compute.amazonaws.com. [54.194.108.71])
-        by smtp.gmail.com with ESMTPSA id ay41-20020a05600c1e2900b003c6f0ebf988sm2166623wmb.30.2022.10.21.03.16.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Oct 2022 03:16:53 -0700 (PDT)
-Message-ID: <1ca11693-17c2-7260-b642-70b033c64b30@linaro.org>
-Date: Fri, 21 Oct 2022 12:16:50 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272507B
+	for <loongarch@lists.linux.dev>; Fri, 21 Oct 2022 12:01:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC042C433C1;
+	Fri, 21 Oct 2022 12:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1666353691;
+	bh=lFmVFFa/5/iKN/Yo2q9AW/qANwcO3UhaXshlV3Z6Umw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kiQBMbsyBg7JyvM9JlDzqbseUWfTuCFGqmjFOrnS5Bv/B3HdA51uDLNEdVMBpg/kT
+	 6l8LizZqkldUz1mlD6Y+9Pgv9sfIRTMbSFWgOZmGX6Ep2yGBsOflaog3GWqgdNzwxt
+	 /nFEQcLM4KyuKH4dNMc71cXam5P/6b0ekEQInTjLZZtKg57J8PkyUxX9SnQceiqN4v
+	 yg/snDhaEwK5kRPUDF0Ggg2/MfsrrqBMun+XVylanKhuJfW6Zitw+RyVQhsyhIDuTC
+	 SIAQec1Vjjs46rwSe/Um12tcq/3lOVXKN4g3ZlORt717fbLaCoNxgDK7i1F8e9HSQO
+	 c3M2OC7XJ1DNQ==
+Date: Fri, 21 Oct 2022 07:01:29 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jianmin Lv <lvjianmin@loongson.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
+	rafael@kernel.org, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH V4 1/4] ACPI / PCI: fix LPIC IRQ model default PCI IRQ
+ polarity
+Message-ID: <20221021120129.GA185586@bhelgaas>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.3.2
-Subject: Re: [PATCH V12 4/4] LoongArch: Enable
- ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Huacai Chen <chenhuacai@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Dinh Nguyen <dinguyen@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Feiyang Chen <chenfeiyang@loongson.cn>
-References: <20221020072317.492906-1-chenhuacai@loongson.cn>
- <20221020072317.492906-5-chenhuacai@loongson.cn>
-From: =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20221020072317.492906-5-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <f8a64289-6560-7d75-461c-39b7a612e9c2@loongson.cn>
 
-On 20/10/22 09:23, Huacai Chen wrote:
-> From: Feiyang Chen <chenfeiyang@loongson.cn>
+On Fri, Oct 21, 2022 at 09:58:57AM +0800, Jianmin Lv wrote:
+> On 2022/10/21 上午12:47, Bjorn Helgaas wrote:
+> > On Thu, Oct 20, 2022 at 04:22:02PM +0800, Jianmin Lv wrote:
+> > > On LoongArch ACPI based systems, the PCI devices (e.g. sata
+> > > controlers and PCI-to-to PCI bridge controlers) existed in
+> > > Loongson chipsets output high-level interrupt signal to the
+> > > interrupt controller they connected to,
+
+> > The point is that one should be able to write this code from a spec,
+> > without having to empirically discover the interrupt polarity.  What
+> > spec tells you about using ACTIVE_HIGH here?
+> > 
+> Yes, no mentions for the inverter in ACPI spec, the description about
+> device interrupt type can be found in Loongson chipset manual:
 > 
-> The feature of minimizing overhead of struct page associated with each
-> HugeTLB page is implemented on x86_64. However, the infrastructure of
-> this feature is already there, so just select ARCH_WANT_HUGETLB_PAGE_
-> OPTIMIZE_VMEMMAP is enough to enable this feature for LoongArch.
-> 
-> To avoid the following build error on LoongArch we should include linux/
+> https://github.com/loongson/LoongArch-Documentation/blob/main/docs/Loongson-7A1000-usermanual-EN/interrupt-controller/device-interrupt-types.adoc
 
-s/should/have to/
+That's the kind of reference I was looking for.  The link to HTML is
+convenient in some ways, but since specs evolve over time and URLs are
+ephemeral, I think a citation like "Loongson 7A1000 Bridge User Manual
+v2.00, sec 5.3" is more likely to be useful far in the future.
 
-> static_key.h in page-flags.h.
-
-This looks like 2 different changes in a single patch.. The first is a
-generic "fix missing include" and the second is LoongArch specific.
-
-Splitting in 2 would ease backport cherry-picks.
-
-> In file included from ./include/linux/mmzone.h:22,
-> from ./include/linux/gfp.h:6,
-> from ./include/linux/mm.h:7,
-> from arch/loongarch/kernel/asm-offsets.c:9:
-> ./include/linux/page-flags.h:208:1: warning: data definition has no
-> type or storage class
-> 208 | DECLARE_STATIC_KEY_MAYBE(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-> | ^~~~~~~~~~~~~~~~~~~~~~~~
-> ./include/linux/page-flags.h:208:1: error: type defaults to 'int' in
-> declaration of 'DECLARE_STATIC_KEY_MAYBE' [-Werror=implicit-int]
-> ./include/linux/page-flags.h:209:26: warning: parameter names (without
-> types) in function declaration
-> 209 | hugetlb_optimize_vmemmap_key);
-> | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ./include/linux/page-flags.h: In function 'hugetlb_optimize_vmemmap_enabled':
-> ./include/linux/page-flags.h:213:16: error: implicit declaration of
-> function 'static_branch_maybe' [-Werror=implicit-function-declaration]
-> 213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-> | ^~~~~~~~~~~~~~~~~~~
-> ./include/linux/page-flags.h:213:36: error:
-> 'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON' undeclared (first
-> use in this function); did you mean
-> 'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP'?
-> 213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON,
-> | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> | CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-> ./include/linux/page-flags.h:213:36: note: each undeclared identifier
-> is reported only once for each function it appears in
-> ./include/linux/page-flags.h:214:37: error:
-> 'hugetlb_optimize_vmemmap_key' undeclared (first use in this
-> function); did you mean 'hugetlb_optimize_vmemmap_enabled'?
-> 214 | &hugetlb_optimize_vmemmap_key);
-> | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> | hugetlb_optimize_vmemmap_enabled
-> 
-> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->   arch/loongarch/Kconfig     | 1 +
->   include/linux/page-flags.h | 1 +
->   2 files changed, 2 insertions(+)
-> 
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 6f7fa0c0ca08..0a6ef613124c 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -52,6 +52,7 @@ config LOONGARCH
->   	select ARCH_USE_QUEUED_RWLOCKS
->   	select ARCH_USE_QUEUED_SPINLOCKS
->   	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-> +	select ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
->   	select ARCH_WANT_LD_ORPHAN_WARN
->   	select ARCH_WANTS_NO_INSTR
->   	select BUILDTIME_TABLE_SORT
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index 0b0ae5084e60..1aafdc73e399 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -9,6 +9,7 @@
->   #include <linux/types.h>
->   #include <linux/bug.h>
->   #include <linux/mmdebug.h>
-> +#include <linux/static_key.h>
->   #ifndef __GENERATING_BOUNDS_H
->   #include <linux/mm_types.h>
->   #include <generated/bounds.h>
-
-Preferably splitting in 2 distinct patches (for each):
-
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-
+Bjorn
