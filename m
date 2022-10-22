@@ -1,69 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19C020F0
-	for <loongarch@lists.linux.dev>; Sat, 22 Oct 2022 06:03:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E12E6C433C1;
-	Sat, 22 Oct 2022 06:03:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1666418605;
-	bh=tCXdIEe/bRuPmuD8DZJI7sITbkxpBfee1t0FtUrlE1s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LGS4FPjZ0GenPE80Ht65ggEck6bgj5dMaBGUbmI1p5KIioZcU/U0B3w+tI1Dn25rx
-	 llIng6acUhVuJ/HM4vaBISzwQ0bzbS9XtQmJ0Vcv4gBrkA4Yvn+Z2n4iaDXSOr93lP
-	 6kE0ELPCFel8IWbq2XeR8VABeZZKCK5yTtr8p63JXPEROgpP0teOCA5RybzOekIHey
-	 WO01JaNbJ4vidygloxS7RXdQaKTXIlWeMJqqphRYpzZR07P/w8/CEUZljrbdPYJwK0
-	 sq4K9MbjRVh/iSW4OILqP9q7FbHb8Bp51AV9w0kHCsF0BcDX0ybnQzP/gy7AmQZBK5
-	 pdal5+51PPfEA==
-Date: Fri, 21 Oct 2022 23:03:22 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens
- <hca@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>, Christoph
- =?UTF-8?B?QsO2aG13YWxkZXI=?= <christoph.boehmwalder@linbit.com>, Jani
- Nikula <jani.nikula@linux.intel.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, "Martin K . Petersen"
- <martin.petersen@oracle.com>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
- <adilger.kernel@dilger.ca>, Jaegeuk Kim <jaegeuk@kernel.org>, Richard
- Weinberger <richard@nod.at>, "Darrick J . Wong" <djwong@kernel.org>,
- SeongJae Park <sj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrew
- Morton <akpm@linux-foundation.org>, Michael Ellerman <mpe@ellerman.id.au>,
- Helge Deller <deller@gmx.de>, netdev@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-block@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-mmc@vger.kernel.org, linux-parisc@vger.kernel.org
-Subject: Re: [PATCH v1 0/5] convert tree to
- get_random_u32_{below,above,between}()
-Message-ID: <20221021230322.00dd045c@kernel.org>
-In-Reply-To: <Y1OD2tdVwQsydSNV@zx2c4.com>
-References: <20221022014403.3881893-1-Jason@zx2c4.com>
-	<20221021205522.6b56fd24@kernel.org>
-	<Y1NwJJOIB4gI5G11@zx2c4.com>
-	<20221021223242.05df0a5b@kernel.org>
-	<Y1OD2tdVwQsydSNV@zx2c4.com>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36CFE7C
+	for <loongarch@lists.linux.dev>; Sat, 22 Oct 2022 08:00:00 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.32])
+	by gateway (Coremail) with SMTP id _____8Axbdr8olNjPZ0BAA--.7187S3;
+	Sat, 22 Oct 2022 15:59:56 +0800 (CST)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_1f7olNjLlUDAA--.13337S6;
+	Sat, 22 Oct 2022 15:59:56 +0800 (CST)
+From: Jianmin Lv <lvjianmin@loongson.cn>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Len Brown <lenb@kernel.org>,
+	rafael@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH V5 4/4] irqchip/loongson-liointc: Support to set IRQ type for ACPI path
+Date: Sat, 22 Oct 2022 15:59:55 +0800
+Message-Id: <20221022075955.11726-5-lvjianmin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221022075955.11726-1-lvjianmin@loongson.cn>
+References: <20221022075955.11726-1-lvjianmin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dx_1f7olNjLlUDAA--.13337S6
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvdXoW7XF4DXF15XrWxCF4Dtry5Arb_yoWfKwc_u3
+	yIgwnxGa4rZF1xJr97Ww1YvrWI9aykW3WqgF45uasIy3y8W343urW7AwnxJa93KrW0vFZ7
+	AF1F9rySya47tjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	C7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
+	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
+	kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
+	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5
+	JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
+	1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
+	YxBIdaVFxhVjvjDU0xZFpf9x07j2MKZUUUUU=
 
-On Sat, 22 Oct 2022 07:47:06 +0200 Jason A. Donenfeld wrote:
-> On Fri, Oct 21, 2022 at 10:32:42PM -0700, Jakub Kicinski wrote:
-> > But whatever. I mean - hopefully there aren't any conflicts in the ~50
-> > networking files you touch. I just wish that people didn't pipe up with
-> > the tree wide changes right after the merge window. Feels like the
-> > worst possible timing.  
-> 
-> Oh, if the timing is what makes this especially worrisome, I have
-> no qualms about rebasing much later, and reposting this series then.
-> I'll do that.
+For ACPI path, the xlate callback used IRQ_TYPE_NONE and ignored
+the IRQ type in intspec[1]. For supporting to set type for
+IRQs of the irqdomain, intspec[1] should be used to get IRQ
+type.
 
-Cool, thanks! I promise to not be grumpy if you repost around rc6 :)
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+---
+ drivers/irqchip/irq-loongson-liointc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+index 0da8716f8f24..838c8fa2d868 100644
+--- a/drivers/irqchip/irq-loongson-liointc.c
++++ b/drivers/irqchip/irq-loongson-liointc.c
+@@ -167,7 +167,12 @@ static int liointc_domain_xlate(struct irq_domain *d, struct device_node *ctrlr,
+ 	if (WARN_ON(intsize < 1))
+ 		return -EINVAL;
+ 	*out_hwirq = intspec[0] - GSI_MIN_CPU_IRQ;
+-	*out_type = IRQ_TYPE_NONE;
++
++	if (intsize > 1)
++		*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
++	else
++		*out_type = IRQ_TYPE_NONE;
++
+ 	return 0;
+ }
+ 
+-- 
+2.31.1
+
