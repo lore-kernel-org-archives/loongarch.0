@@ -1,11 +1,11 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 406C92587
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C443257B
 	for <loongarch@lists.linux.dev>; Sat, 22 Oct 2022 08:00:00 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.32])
-	by gateway (Coremail) with SMTP id _____8AxStj8olNjMZ0BAA--.5146S3;
-	Sat, 22 Oct 2022 15:59:56 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Bxfdr7olNjJZ0BAA--.7206S3;
+	Sat, 22 Oct 2022 15:59:55 +0800 (CST)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.32])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_1f7olNjLlUDAA--.13337S4;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_1f7olNjLlUDAA--.13337S2;
 	Sat, 22 Oct 2022 15:59:55 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -19,12 +19,10 @@ Cc: linux-kernel@vger.kernel.org,
 	rafael@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-acpi@vger.kernel.org
-Subject: [PATCH V5 2/4] irqchip/loongson-pch-pic: fix translate callback for DT path
-Date: Sat, 22 Oct 2022 15:59:53 +0800
-Message-Id: <20221022075955.11726-3-lvjianmin@loongson.cn>
+Subject: [PATCH V5 0/4] irqchip: Support to set irq type for ACPI path
+Date: Sat, 22 Oct 2022 15:59:51 +0800
+Message-Id: <20221022075955.11726-1-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221022075955.11726-1-lvjianmin@loongson.cn>
-References: <20221022075955.11726-1-lvjianmin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -32,55 +30,61 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dx_1f7olNjLlUDAA--.13337S4
+X-CM-TRANSID:AQAAf8Dx_1f7olNjLlUDAA--.13337S2
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Xr15GF4rZr43JFyxZF1rCrg_yoWktFb_uF
-	1SqFn3Kw17Zr1Iq3y8Kr4rXF9rta4Du3WvkFs5Aay5GayUXayxAr1Svw4fJa9rGFWUAF1f
-	C395ur1xZF4I9jkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	C7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
-	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
-	kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8
-	JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
-	1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
-	YxBIdaVFxhVjvjDU0xZFpf9x07j2MKZUUUUU=
+X-Coremail-Antispam: 1Uk129KBjvJXoWrKFWUur13CryDAFy3XrWfAFb_yoW8JryUpa
+	yxCa98tF9xKry2kas3Cr15X343ta1ftrZrKayfK3W29rZ8Wr1v9F18AFWDZas8Cw13GryI
+	9r1FgF1UWa15CFJanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
+	Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
+	O2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+	Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
+	JbIYCTnIWIevJa73UjIFyTuYvjxUxUGYDUUUU
 
-In DT path of translate callback, if fwspec->param_count==1
-and of_node is non-null, fwspec->param[1] will be accessed,
-which is introduced from previous commit bcdd75c596c8
-(irqchip/loongson-pch-pic: Add ACPI init support).
+For ACPI path of pch-pic and liointc driver, setting irq
+type is not supported yet, so the patch series add code
+to implement it.
 
-Before the patch, for non-null of_node, translate callback
-(use irq_domain_translate_twocell()) will return -EINVAL if
-fwspec->param_count < 2, so the check in the patch is added.
+And a bug in translate callback of irqchip/loongson-pch-pic, which
+is introduced by previous patch, is fixed.
 
-Fixes: bcdd75c596c8 ("irqchip/loongson-pch-pic: Add ACPI init support")
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
----
- drivers/irqchip/irq-loongson-pch-pic.c | 3 +++
- 1 file changed, 3 insertions(+)
+GSI for legacy irqs of PCI devices are mapped in pch-pic domain, after
+supporting setting_irq_type for pch-pic domain, we add the workaround
+for LoongArch based PCI controller with high-level trigger intterrupt
+so that the high-level trigger type is passed into acpi_register_gsi().
+  
+V1 -> V2
+- Change comment information and fix a bug for DT path in patch[1].
 
-diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
-index c01b9c257005..03493cda65a3 100644
---- a/drivers/irqchip/irq-loongson-pch-pic.c
-+++ b/drivers/irqchip/irq-loongson-pch-pic.c
-@@ -159,6 +159,9 @@ static int pch_pic_domain_translate(struct irq_domain *d,
- 		return -EINVAL;
- 
- 	if (of_node) {
-+		if (fwspec->param_count < 2)
-+			return -EINVAL;
-+
- 		*hwirq = fwspec->param[0] + priv->ht_vec_base;
- 		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
- 	} else {
+V2 -> V3
+- Separate original patch[1] to three patches[1][2][3].
+
+V3 -> V4
+- Improve commit log
+
+V4 -> V5
+- Improve commit log for patch[1]
+
+Jianmin Lv (4):
+  ACPI / PCI: fix LPIC IRQ model default PCI IRQ polarity
+  irqchip/loongson-pch-pic: fix translate callback for DT path
+  irqchip/loongson-pch-pic: Support to set IRQ type for ACPI path
+  irqchip/loongson-liointc: Support to set IRQ type for ACPI path
+
+ drivers/acpi/pci_irq.c                 |  6 ++++--
+ drivers/irqchip/irq-loongson-liointc.c |  7 ++++++-
+ drivers/irqchip/irq-loongson-pch-pic.c | 14 ++++++++++----
+ 3 files changed, 20 insertions(+), 7 deletions(-)
+
 -- 
 2.31.1
 
