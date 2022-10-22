@@ -1,90 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7140257B
-	for <loongarch@lists.linux.dev>; Sat, 22 Oct 2022 08:06:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B2F2C43140
-	for <loongarch@lists.linux.dev>; Sat, 22 Oct 2022 08:06:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1666425972;
-	bh=0sc7pZ0kQbpvTSEgZwUB5XBCnmITI1rrNWQTuHQ/qqI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jWTd6UfwV5jSwf9RzNKM3PEVuQd7ABwLDPhl41KZjwVeaOICugwADv/ExK0iSEEpD
-	 Ei+by3btZkM5xJWabuYfWHeqg9F9yewRpqapyfji9NHKiLzOd/BCT+RIz/7Mmn7+qQ
-	 hBjtbb1bxrRtOfynABPXPWr5WnVlCHXIHpb6cBaSjl3g/GZP7TxYthKgq/5MnzT0SQ
-	 0H5SC8HWiUQIp6XVyqoeJ/A5ci0UyFb9dU04o8nphudFFuV4MSVfhJSx7Q0xg091YV
-	 nEEcy337NxsHE0j36FIH5sgrW05x6ooj2E5/aXVkFxgNhvFPH6HW4OcQhVfczkEXVV
-	 qn4CboXOd9GiQ==
-Received: by mail-ed1-f51.google.com with SMTP id l22so13799289edj.5
-        for <loongarch@lists.linux.dev>; Sat, 22 Oct 2022 01:06:12 -0700 (PDT)
-X-Gm-Message-State: ACrzQf1PsIz0gHzgjYk2g5FMa1bdwy+2rSkEs9X4mp6qX0AOgzQfEuJO
-	vmYmuOnDqMo24aN8eQ4iN86FpLLzTHjGILepBAM=
-X-Google-Smtp-Source: AMsMyM5emVi0xiH/tcLk8WIfKcO6mBG6El1sDLRfAWJwDsTRbazvgH+a8vqAbytV7mhHndxHo9l+sidtvpnDv3t7wGg=
-X-Received: by 2002:a17:907:a06e:b0:79f:e42d:8d54 with SMTP id
- ia14-20020a170907a06e00b0079fe42d8d54mr2885325ejc.72.1666425970661; Sat, 22
- Oct 2022 01:06:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6E62CA6
+	for <loongarch@lists.linux.dev>; Sat, 22 Oct 2022 10:21:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B97FEC433D6;
+	Sat, 22 Oct 2022 10:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1666434090;
+	bh=4VayhwOVTKVAjPqqz97sF96LRLG+KRcajksLHZHtUxk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=wOx3mp5ksWJtvhNhAOmZUG8X3+HuRkTdY9Nc7h6cWFEIxsW4svt4t9REDVX0plI4T
+	 0jvG2TdFgRx98jdox1K2bPVjxSRKOYymF+6X8vmbsIcB0hIMeoD9P7/9qN6LIAT+Ko
+	 fQekZTeUTocY/mdL9wRqCZaeHaw+pLcmNqIWDT+k=
+Date: Sat, 22 Oct 2022 12:21:27 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	SeongJae Park <sj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michael Ellerman <mpe@ellerman.id.au>, Helge Deller <deller@gmx.de>,
+	netdev@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-mmc@vger.kernel.org,
+	linux-parisc@vger.kernel.org
+Subject: Re: [PATCH v1 0/5] convert tree to
+ get_random_u32_{below,above,between}()
+Message-ID: <Y1PEJxnlY7dh4yK8@kroah.com>
+References: <20221022014403.3881893-1-Jason@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221022075955.11726-1-lvjianmin@loongson.cn>
-In-Reply-To: <20221022075955.11726-1-lvjianmin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 22 Oct 2022 16:05:58 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7DrvgXwuGe5ayAKjP2YdNPoaT3xZg1vU2RDjReNkV9PQ@mail.gmail.com>
-Message-ID: <CAAhV-H7DrvgXwuGe5ayAKjP2YdNPoaT3xZg1vU2RDjReNkV9PQ@mail.gmail.com>
-Subject: Re: [PATCH V5 0/4] irqchip: Support to set irq type for ACPI path
-To: Jianmin Lv <lvjianmin@loongson.cn>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Len Brown <lenb@kernel.org>, rafael@kernel.org, linux-pci@vger.kernel.org, 
-	linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221022014403.3881893-1-Jason@zx2c4.com>
 
-For the whole series:
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+On Fri, Oct 21, 2022 at 09:43:58PM -0400, Jason A. Donenfeld wrote:
+> Hey everyone,
+> 
+> Here's the second and final tranche of tree-wide conversions to get
+> random integer handling a bit tamer. It's predominantly another
+> Coccinelle-based patchset.
+> 
+> First we s/prandom_u32_max/get_random_u32_below/, since the former is
+> just a deprecated alias for the latter. Then in the next commit we can
+> remove prandom_u32_max all together. I'm quite happy about finally being
+> able to do that. It means that prandom.h is now only for deterministic and 
+> repeatable randomness, not non-deterministic/cryptographic randomness.
+> That line is no longer blurred.
+> 
+> Then, in order to clean up a bunch of inefficient patterns, we introduce
+> two trivial static inline helper functions built on top of
+> get_random_u32_below: get_random_u32_above and get_random_u32_between.
+> These are pretty straight forward to use and understand. Then the final
+> two patches convert some gnarly open-coded number juggling to use these
+> helpers.
+> 
+> I've used Coccinelle for all the treewide patches, so hopefully review
+> is rather uneventful. I didn't accept all of the changes that Coccinelle
+> proposed, though, as these tend to be somewhat context-specific. I erred
+> on the side of just going with the most obvious cases, at least this
+> time through. And then we can address more complicated cases through
+> actual maintainer trees.
+> 
+> Since get_random_u32_below() sits in my random.git tree, these patches
+> too will flow through that same tree.
+> 
+> Regards,
+> Jason
 
-On Sat, Oct 22, 2022 at 4:00 PM Jianmin Lv <lvjianmin@loongson.cn> wrote:
->
-> For ACPI path of pch-pic and liointc driver, setting irq
-> type is not supported yet, so the patch series add code
-> to implement it.
->
-> And a bug in translate callback of irqchip/loongson-pch-pic, which
-> is introduced by previous patch, is fixed.
->
-> GSI for legacy irqs of PCI devices are mapped in pch-pic domain, after
-> supporting setting_irq_type for pch-pic domain, we add the workaround
-> for LoongArch based PCI controller with high-level trigger intterrupt
-> so that the high-level trigger type is passed into acpi_register_gsi().
->
-> V1 -> V2
-> - Change comment information and fix a bug for DT path in patch[1].
->
-> V2 -> V3
-> - Separate original patch[1] to three patches[1][2][3].
->
-> V3 -> V4
-> - Improve commit log
->
-> V4 -> V5
-> - Improve commit log for patch[1]
->
-> Jianmin Lv (4):
->   ACPI / PCI: fix LPIC IRQ model default PCI IRQ polarity
->   irqchip/loongson-pch-pic: fix translate callback for DT path
->   irqchip/loongson-pch-pic: Support to set IRQ type for ACPI path
->   irqchip/loongson-liointc: Support to set IRQ type for ACPI path
->
->  drivers/acpi/pci_irq.c                 |  6 ++++--
->  drivers/irqchip/irq-loongson-liointc.c |  7 ++++++-
->  drivers/irqchip/irq-loongson-pch-pic.c | 14 ++++++++++----
->  3 files changed, 20 insertions(+), 7 deletions(-)
->
-> --
-> 2.31.1
->
->
+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
