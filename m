@@ -1,140 +1,121 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D84F809
-	for <loongarch@lists.linux.dev>; Mon, 24 Oct 2022 11:17:48 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id 803485C00C6;
-	Mon, 24 Oct 2022 07:17:47 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Mon, 24 Oct 2022 07:17:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm2; t=1666610267; x=1666696667; bh=xu4mddjmHF
-	LxnCcoSQUu2xkXQQ81r/PoGIDhSxMIONM=; b=Wr8kYIcA8ultl9YCxdTiu/llJM
-	LxGcsgPvU5fWnldqUZ40JmfQqTCeJdQNdLBjgN5/4qnEx3eDcs3l7krCJ4bzvOGI
-	pp6+/a13xHkR/+L1fM5L+4h0jVZwswo60w6JFQUPIiyGvqejgFZz4HiMsTP4B1fr
-	RUU2LFYCORRH22p0iPqHM6J+ZM92pvwTp6DfTJF0pjLjWtglcxUn8348YeBGeg0+
-	ZMXFdVBCqoqfiU4xylqKGNmRb/Ek+H6VhDYRGaXkab8qwK9R1t0W+acywh3CVwuI
-	HkVhvGdAzWYqLCHHapCyP5Qiz4vWp6zX+nGE1K8MqNTeiQzJ3K04o+Aab6rQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1666610267; x=1666696667; bh=xu4mddjmHFLxnCcoSQUu2xkXQQ81
-	r/PoGIDhSxMIONM=; b=a1WFvxkxKo0shWp1h3gg/SNznNtxmUPZJDVbbG1ycf5F
-	l97J0BmEgYPZ08CiU8oe8hIvqPr6Fv5krfwhMtvnqVx/9WoNKsFheR4TyKW5Cuuc
-	PstLqaL2eOiMhOsqpUP7FTBoxcghKDf2XnIiR+EpMfW5IXRrdNYFaxuLufL8tU3n
-	b1pt/WHbEKyD3tYc2eWxNNG12tAIpucTLAgONGqpp7r7sDR+NyBt3aU/3fY+1Z0w
-	vQoRbEbnuNeX42Y3McmyL/aMfZEBZWewBmm1fkOHLReTdyt3ghtEPi1MhEenpzLl
-	u6U5EPRlPtVfP1oLeA/4hzxKBAA7lL+WJxZr8DpKrA==
-X-ME-Sender: <xms:WnRWY-JowfNqXIv4EG3uHHNNF-Zl3n-eIiToAuAstubmzsVrm7rKwQ>
-    <xme:WnRWY2LQ4oF5V3J0jzWjpbNAJvwXwIujYxkZNoBqbs4egCpThPkpezMh3H9vVcVS3
-    f_NgV1LfUPMzva1NEo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrgedtgedgfeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffgeffuddtvdehffefleethfejjeegvdelffejieegueetledvtedtudelgfdu
-    gfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:WnRWY-sdgyIpZZIzyT5LJhp10aUciD3THxBUN8rOD44MfuxdBCRftA>
-    <xmx:WnRWYzZLPCKe05zhg4n9DfJfyCEzJVlvauRKb1aGqJpvpG0UjiPqvA>
-    <xmx:WnRWY1ZOSiURVJBiaQ6z3ZR-i1H0PRmW00hlZ4JMcr4XUyWwUreilg>
-    <xmx:W3RWY7DpzRVJ6nEShxKMNqaXfG_DTOUdWCdFInTmojkG-XTeSPJ0pA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 54C8AB60086; Mon, 24 Oct 2022 07:17:46 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1047-g9e4af4ada4-fm-20221005.001-g9e4af4ad
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D03F809
+	for <loongarch@lists.linux.dev>; Mon, 24 Oct 2022 12:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1666613588; bh=GoDsZzYa5qk5SJQIGIdkoqhz1bCuMbKYaYlybe7flRk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MrSILU/bwE/MuSn/KqEWRYdVu44qs0ZrVJJ3vVhZ3s3Y4SA9lhxnCxrOvNhT8otRu
+	 /0hBTM0pvTrNQOTlJLE2Yw1oJhqFU2UxAebnqGr8izbDHN5b3oIxCHQHFNLvqSVgab
+	 ntptUGeIVnuQ4+4KZ31vUVjrRcOj5hZAWqVH2xto=
+Received: from ld50.lan (unknown [101.88.135.226])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 1D5556008C;
+	Mon, 24 Oct 2022 20:13:08 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	WANG Xuerui <git@xen0n.name>
+Subject: [PATCH 00/13] LoongArch: Better backtraces
+Date: Mon, 24 Oct 2022 20:12:52 +0800
+Message-Id: <20221024121305.381776-1-kernel@xen0n.name>
+X-Mailer: git-send-email 2.38.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <7821b174-ff80-419e-9deb-5fb702457f9a@app.fastmail.com>
-In-Reply-To: <20221024105822.24514-1-zhuyinbo@loongson.cn>
-References: <20221024105822.24514-1-zhuyinbo@loongson.cn>
-Date: Mon, 24 Oct 2022 13:17:26 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Yinbo Zhu" <zhuyinbo@loongson.cn>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- "Hector Martin" <marcan@marcan.st>, "Lubomir Rintel" <lkundrak@v3.sk>,
- "Conor.Dooley" <conor.dooley@microchip.com>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Hitomi Hasegawa" <hasegawa-hitomi@fujitsu.com>,
- =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
- "Brian Norris" <briannorris@chromium.org>, "Sven Peter" <sven@svenpeter.dev>,
- loongarch@lists.linux.dev, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] soc: loongson: add GUTS driver for loongson2 platforms
-Content-Type: text/plain
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 24, 2022, at 12:58, Yinbo Zhu wrote:
-> The global utilities block controls PCIE device enabling, alternate
-> function selection for multiplexed signals, consistency of HDA, USB
-> and PCIE, configuration of memory controller, rtc controller, lio
-> controller, and clock control.
+From: WANG Xuerui <git@xen0n.name>
 
+Hi,
 
-> This patch adds a driver to manage and access global utilities block.
-> Initially only reading SVR and registering soc device are supported.
+Here are some long overdue cleanups of MIPS legacy stuff from
+arch/loongarch codebase , and a bunch of tweaks to the backtrace code so
+the Quality of Life for unfortunate LoongArch kernel devs (including but
+not limited to, myself) could be marginally improved by relieving them of
+having to mentally decode the register names and CSR bitfields.
 
-Is this for MIPS, Loongarch or both?
+Before:
 
-It looks like the driver only deals with identifying the SoC, but
-is at the moment unrelated to the other functionality you mention
-in the changelog text.
+> [   17.879976] $ 0   : 0000000000000000 9000000000cc980c 90000001002cc000 90000001002cfe30
+> [   17.887936] $ 4   : 0000000000000010 9000000000f1f770 90000001002cc000 9000000000cc3468
+> [   17.895895] $ 8   : 900000010028fd00 0000000000000001 000055558e569190 0000000000000004
+> [   17.903853] $12   : 0000000000000000 0000000000000004 9000000001026000 900000000132b2d8
+> [   17.911811] $16   : 9000000001026000 000000006674b539 9000000000d51d10 0000000000000001
+> [   17.919769] $20   : 0000000000000000 900000000025c27c 0000000000000004 0000000000000002
+> [   17.927727] $24   : 900000000102e5b0 900000000102e508 0000000000000000 0000000000000004
+> [   17.935686] $28   : 9000000009007840 0000000000000004 0000000000000000 0000000000000004
+> [   17.943644] era   : 90000000002215a0 __arch_cpu_idle+0x20/0x24
+> [   17.949438] ra    : 9000000000cc980c default_idle_call+0x34/0x5c
+> [   17.955406] CSR crmd: 000000b0
+> [   17.955408] CSR prmd: 00000004
+> [   17.958521] CSR euen: 00000000
+> [   17.961635] CSR ecfg: 00071c1c
+> [   17.964748] CSR estat: 00001000
+> [   17.971062] ExcCode : 0 (SubCode 0)
+> [   17.974522] PrId  : 0014c010 (Loongson-64bit)
 
-Please explain in the text whether you plan to add more functionality
-in this driver later, of if this is just meant to be set up by
-bootloader/firmware.
+After:
 
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
->  MAINTAINERS                             |   7 +
->  drivers/soc/Kconfig                     |   1 +
->  drivers/soc/Makefile                    |   1 +
->  drivers/soc/loongson/Kconfig            |  17 +++
->  drivers/soc/loongson/Makefile           |   6 +
->  drivers/soc/loongson/loongson2_guts.c   | 168 ++++++++++++++++++++++++
->  include/linux/loongson/loongson2_guts.h |  35 +++++
+> [   45.869200]  pc 90000000002215a0 ra 9000000000ce86bc tp 90000001002cc000
+> [   45.875858]  sp 90000001002cfe30 a0 0000000000000018 a1 9000000000f41ee0
+> [   45.882516]  a2 0000000000000001 a3 000000000000000a a4 90000000098032c0
+> [   45.889173]  a5 000000000000001b a6 000000008ea4398a a7 0000000000000004
+> [   45.895831]  t0 0000000000000000 t1 0000000000000004 t2 0000000000003c00
+> [   45.902488]  t3 0000000000cccccd t4 ffffffffffffffff t5 000000010d1ff6c8
+> [   45.909146]  t6 0000000000000000 t7 0000000000000000 t8 000000000000005b
+> [   45.915803] r21 0000000a390fa6c0 s9 0000000000000001 s0 0000000000000003
+> [   45.922460]  s1 90000000010565c0 s2 9000000001056518 s3 0000000000000000
+> [   45.929118]  s4 0000000000000004 s5 0000000000000004 s6 9000000000228194
+> [   45.935775]  s7 900000000102e220 s8 9000000100093e58
+> [   45.940704]    pc: 90000000002215a0 __arch_cpu_idle+0x20/0x24
+> [   45.946412]    ra: 9000000000ce86bc default_idle_call+0x34/0x5c
+> [   45.952294]  crmd: 000000b0 (-WE DACM=CC DACF=CC +PG -DA -IE PLV0)
+> [   45.958443]  prmd: 00000004 (-PWE +PIE PPLV0)
+> [   45.962772]  euen: 00000000 (-BTE -ASXE -SXE -FPE)
+> [   45.967532]  ecfg: 00071c1c (VS=7 LIE=2-4,10-12)
+> [   45.972119] estat: 00001000 [INT] (EsubCode=0 ECode=0 IS=12)
+> [   45.977741]  prid: 0014c010 (Loongson-64bit)
 
-Is there a need to include the header from another driver?
-If not, just fold it into the driver file itself.
+Please review, and let the bikeshedding begin!
 
-> +
-> +menu "Loongson2 series SoC drivers"
-> +
-> +config LOONGSON2_GUTS
-> +	tristate "LOONGSON2 GUTS"
-> +	select SOC_BUS
+WANG Xuerui (13):
+  LoongArch: Unify CSR.EUEN and CSR.ECFG bitfield names with the ISA
+    manual
+  LoongArch: Rename CSR_ESTAT_EXC -> CSR_ESTAT_ECODE
+  LoongArch: Unify the exception code definitions with the manual
+  LoongArch: Clean up the architectural interrupt definitions
+  LoongArch: Print GPRs with ABI names when showing registers
+  LoongArch: Print symbol info for PC and $ra only for kernel-mode
+    contexts
+  LoongArch: Fix format of CSR lines during show_regs
+  LoongArch: Humanize the CRMD line when showing registers
+  LoongArch: Humanize the PRMD line when showing registers
+  LoongArch: Humanize the EUEN line when showing registers
+  LoongArch: Humanize the ECFG line when showing registers
+  LoongArch: Humanize the ESTAT line when showing registers
+  LoongArch: Use lowercase ISA manual names for BADV and CPUCFG.PRID
+    lines in show_regs
 
-Please limit this to to the appropriate targets like
+ arch/loongarch/include/asm/fpu.h       |  10 +-
+ arch/loongarch/include/asm/loongarch.h | 147 ++++++++-------
+ arch/loongarch/kernel/fpu.S            |   2 +-
+ arch/loongarch/kernel/irq.c            |   2 +-
+ arch/loongarch/kernel/perf_event.c     |   2 +-
+ arch/loongarch/kernel/process.c        |   2 +-
+ arch/loongarch/kernel/time.c           |   2 +-
+ arch/loongarch/kernel/traps.c          | 245 ++++++++++++++++++++-----
+ arch/loongarch/mm/fault.c              |   4 +-
+ arch/loongarch/mm/tlb.c                |  14 +-
+ drivers/irqchip/irq-loongarch-cpu.c    |   2 +-
+ 11 files changed, 294 insertions(+), 138 deletions(-)
 
-        depends on MACH_LOONGSON64 || LOONGARCH || COMPILE_TEST
+-- 
+2.38.0
 
-so this does not show up in 'make oldconfig' for users of
-other architectures.
-
-> +struct scfg_guts {
-> +   u32 svr; /* Version Register */
-> +   u8 res0[4];
-> +   u16 feature; /* Feature Register */
-> +   u32 vendor; /* Vendor Register */
-> +   u8 res1[6];
-> +   u32 id;
-> +   u8 res2[0x3ff8 - 0x18];
-> +   u32 chip;
-> +} __packed;
-
-This should not be marked as __packed, since MMIO
-registers have to be accessed atomically while packed
-registers have to be accessed byte-wise on CPUs without
-unaligned access.
-
-    Arnd
