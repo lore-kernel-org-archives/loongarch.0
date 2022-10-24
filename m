@@ -1,147 +1,374 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFA0659
-	for <loongarch@lists.linux.dev>; Mon, 24 Oct 2022 08:04:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3C48C433C1
-	for <loongarch@lists.linux.dev>; Mon, 24 Oct 2022 08:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1666598660;
-	bh=zMRCR9aO2hv7wIrVCElL/LTJoQUq5XjLprILNRp63eY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=q39Z0Jl1UbJQ+ydOt0a6xHmvicc/CX107NlZd3AVvTnKjNVdSgR0yjGIvpQIeKoF4
-	 x8ScpUmx4bU5yFkA8Q2mPwRADEbzogttzxfhc5qzex2wOgJXhACgAce/zDCqs9i3XG
-	 NaMEfTGrBDIjxA/FxD4lj8kEquBpzogImnn96Af3ycNgLiTD5C4072MGl1jtDduFrQ
-	 tEbxO3hNlFVws9P3RAaG8UOjIIJzc0l2hiDgGRKKUWZdqrdXkg4p94POm7JdNESXoI
-	 +p02DGC+oLj+KXmw39glLG3xh67JSd9QYCbOAceb1shPxLGQ3MUWshAft+HLP28MCi
-	 gpswHMEoSy9uQ==
-Received: by mail-ot1-f49.google.com with SMTP id br15-20020a056830390f00b0061c9d73b8bdso5480861otb.6
-        for <loongarch@lists.linux.dev>; Mon, 24 Oct 2022 01:04:20 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0+WGl4/PBRmX1mij/h+gpS/bp22GIcpDM5o8JL6HJlClAHdojr
-	28uriDhZlQisQIwZ9vEKytyjABRFsQgNJV8ww/U=
-X-Google-Smtp-Source: AMsMyM5Cx/80n+ESwscTL8gLYrU0vtuSa4ffmqiRXpnSWEObRQEOy2bsVIlgF7y6VDAQAMzssohT33tmfwmul1u3/3E=
-X-Received: by 2002:a9d:58c6:0:b0:663:c327:8bb with SMTP id
- s6-20020a9d58c6000000b00663c32708bbmr4290089oth.308.1666598659933; Mon, 24
- Oct 2022 01:04:19 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 622A1809
+	for <loongarch@lists.linux.dev>; Mon, 24 Oct 2022 10:58:40 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8DxfbfXb1Zj4BsCAA--.3279S3;
+	Mon, 24 Oct 2022 18:58:31 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPuLRb1ZjIVIEAA--.16508S2;
+	Mon, 24 Oct 2022 18:58:29 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Hector Martin <marcan@marcan.st>,
+	Lubomir Rintel <lkundrak@v3.sk>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Brian Norris <briannorris@chromium.org>,
+	Sven Peter <sven@svenpeter.dev>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH v1 1/2] soc: loongson: add GUTS driver for loongson2 platforms
+Date: Mon, 24 Oct 2022 18:58:21 +0800
+Message-Id: <20221024105822.24514-1-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221024070105.306280-1-chenhuacai@loongson.cn> <20221024070105.306280-5-chenhuacai@loongson.cn>
-In-Reply-To: <20221024070105.306280-5-chenhuacai@loongson.cn>
-From: Guo Ren <guoren@kernel.org>
-Date: Mon, 24 Oct 2022 16:04:06 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSN3zzvgAdiM8rYc3EGFxR4JJnHSh12mvsfUOQsqRRvkg@mail.gmail.com>
-Message-ID: <CAJF2gTSN3zzvgAdiM8rYc3EGFxR4JJnHSh12mvsfUOQsqRRvkg@mail.gmail.com>
-Subject: Re: [PATCH V13 4/4] LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Dinh Nguyen <dinguyen@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Feiyang Chen <chenfeiyang@loongson.cn>, 
-	=?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxPuLRb1ZjIVIEAA--.16508S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3AF43Zr4UXr1kurWfWF43trb_yoWfKr48pa
+	n3C34rGrWUJF43urs5Aa48CFyYka4xCasrZFWxWwn8ur97A34UZ3ZrJFyjyrs7ArykA342
+	qF95GayjkFWUJw7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bf8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM2
+	8EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq
+	07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7
+	xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Y
+	z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64
+	vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E
+	14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+	CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
+	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
+	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU8pBT5UUUUU==
 
-On Mon, Oct 24, 2022 at 3:05 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
->
-> From: Feiyang Chen <chenfeiyang@loongson.cn>
->
-> The feature of minimizing overhead of struct page associated with each
-> HugeTLB page is implemented on x86_64. However, the infrastructure of
-> this feature is already there, so just select ARCH_WANT_HUGETLB_PAGE_
-> OPTIMIZE_VMEMMAP is enough to enable this feature for LoongArch.
->
-> To avoid the following build error on LoongArch we should include linux/
-> static_key.h in page-flags.h. This is straightforward but the build
-> error is implicitly a LoongArch-specific problem, because ARM64 and X86
-> have already include static_key.h from their arch-specific core headers.
->
-> In file included from ./include/linux/mmzone.h:22,
-> from ./include/linux/gfp.h:6,
-> from ./include/linux/mm.h:7,
-> from arch/loongarch/kernel/asm-offsets.c:9:
-> ./include/linux/page-flags.h:208:1: warning: data definition has no
-> type or storage class
-> 208 | DECLARE_STATIC_KEY_MAYBE(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAU=
-LT_ON,
-> | ^~~~~~~~~~~~~~~~~~~~~~~~
-> ./include/linux/page-flags.h:208:1: error: type defaults to 'int' in
-> declaration of 'DECLARE_STATIC_KEY_MAYBE' [-Werror=3Dimplicit-int]
-> ./include/linux/page-flags.h:209:26: warning: parameter names (without
-> types) in function declaration
-> 209 | hugetlb_optimize_vmemmap_key);
-> | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ./include/linux/page-flags.h: In function 'hugetlb_optimize_vmemmap_enabl=
-ed':
-> ./include/linux/page-flags.h:213:16: error: implicit declaration of
-> function 'static_branch_maybe' [-Werror=3Dimplicit-function-declaration]
-> 213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEF=
-AULT_ON,
-> | ^~~~~~~~~~~~~~~~~~~
-> ./include/linux/page-flags.h:213:36: error:
-> 'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON' undeclared (first
-> use in this function); did you mean
-> 'CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP'?
-> 213 | return static_branch_maybe(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEF=
-AULT_ON,
-> | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> | CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
-> ./include/linux/page-flags.h:213:36: note: each undeclared identifier
-> is reported only once for each function it appears in
-> ./include/linux/page-flags.h:214:37: error:
-> 'hugetlb_optimize_vmemmap_key' undeclared (first use in this
-> function); did you mean 'hugetlb_optimize_vmemmap_enabled'?
-> 214 | &hugetlb_optimize_vmemmap_key);
-> | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> | hugetlb_optimize_vmemmap_enabled
->
-> Reviewed-by: Philippe Mathieu-Daud=C3=A9 <philmd@linaro.org>
-> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  arch/loongarch/Kconfig     | 1 +
->  include/linux/page-flags.h | 1 +
->  2 files changed, 2 insertions(+)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 6f7fa0c0ca08..0a6ef613124c 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -52,6 +52,7 @@ config LOONGARCH
->         select ARCH_USE_QUEUED_RWLOCKS
->         select ARCH_USE_QUEUED_SPINLOCKS
->         select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-> +       select ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
->         select ARCH_WANT_LD_ORPHAN_WARN
->         select ARCH_WANTS_NO_INSTR
->         select BUILDTIME_TABLE_SORT
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index 0b0ae5084e60..1aafdc73e399 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -9,6 +9,7 @@
->  #include <linux/types.h>
->  #include <linux/bug.h>
->  #include <linux/mmdebug.h>
-> +#include <linux/static_key.h>
-Em... riscv needn't this.
+The global utilities block controls PCIE device enabling, alternate
+function selection for multiplexed signals, consistency of HDA, USB
+and PCIE, configuration of memory controller, rtc controller, lio
+controller, and clock control.
 
->  #ifndef __GENERATING_BOUNDS_H
->  #include <linux/mm_types.h>
->  #include <generated/bounds.h>
-> --
-> 2.31.1
->
+This patch adds a driver to manage and access global utilities block.
+Initially only reading SVR and registering soc device are supported.
 
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+---
+ MAINTAINERS                             |   7 +
+ drivers/soc/Kconfig                     |   1 +
+ drivers/soc/Makefile                    |   1 +
+ drivers/soc/loongson/Kconfig            |  17 +++
+ drivers/soc/loongson/Makefile           |   6 +
+ drivers/soc/loongson/loongson2_guts.c   | 168 ++++++++++++++++++++++++
+ include/linux/loongson/loongson2_guts.h |  35 +++++
+ 7 files changed, 235 insertions(+)
+ create mode 100644 drivers/soc/loongson/Kconfig
+ create mode 100644 drivers/soc/loongson/Makefile
+ create mode 100644 drivers/soc/loongson/loongson2_guts.c
+ create mode 100644 include/linux/loongson/loongson2_guts.h
 
---=20
-Best Regards
- Guo Ren
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2d002509fc65..f032096d5251 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11930,6 +11930,13 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
+ F:	drivers/pinctrl/pinctrl-loongson2.c
+ 
++LOONGSON2 SOC SERIES GUTS DRIVER
++M:	Yinbo Zhu <zhuyinbo@loongson.cn>
++L:	loongarch@lists.linux.dev
++S:	Maintained
++F:	drivers/soc/loongson/loongson2_guts.c
++F:	include/linux/loongson/loongson2_guts.h
++
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+ M:	Sathya Prakash <sathya.prakash@broadcom.com>
+ M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+index e461c071189b..5dbb09f843f7 100644
+--- a/drivers/soc/Kconfig
++++ b/drivers/soc/Kconfig
+@@ -13,6 +13,7 @@ source "drivers/soc/fujitsu/Kconfig"
+ source "drivers/soc/imx/Kconfig"
+ source "drivers/soc/ixp4xx/Kconfig"
+ source "drivers/soc/litex/Kconfig"
++source "drivers/soc/loongson/Kconfig"
+ source "drivers/soc/mediatek/Kconfig"
+ source "drivers/soc/microchip/Kconfig"
+ source "drivers/soc/pxa/Kconfig"
+diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+index 69ba6508cf2c..fff513bd522d 100644
+--- a/drivers/soc/Makefile
++++ b/drivers/soc/Makefile
+@@ -18,6 +18,7 @@ obj-y				+= imx/
+ obj-y				+= ixp4xx/
+ obj-$(CONFIG_SOC_XWAY)		+= lantiq/
+ obj-$(CONFIG_LITEX_SOC_CONTROLLER) += litex/
++obj-y				+= loongson/
+ obj-y				+= mediatek/
+ obj-y				+= microchip/
+ obj-y				+= pxa/
+diff --git a/drivers/soc/loongson/Kconfig b/drivers/soc/loongson/Kconfig
+new file mode 100644
+index 000000000000..5b97071ff352
+--- /dev/null
++++ b/drivers/soc/loongson/Kconfig
+@@ -0,0 +1,17 @@
++# SPDX-License-Identifier: GPL-2.0+
++#
++# Loongson2 series SoC drivers
++#
++
++menu "Loongson2 series SoC drivers"
++
++config LOONGSON2_GUTS
++	tristate "LOONGSON2 GUTS"
++	select SOC_BUS
++	help
++	  The global utilities block controls PCIE device enabling, alternate
++	  function selection for multiplexed signals, consistency of HDA, USB
++	  and PCIE, configuration of memory controller, rtc controller, lio
++	  controller, and clock control. This patch adds a driver to manage
++	  and access global utilities block. Initially only reading SVR and
++	  registering soc device are supported.
+diff --git a/drivers/soc/loongson/Makefile b/drivers/soc/loongson/Makefile
+new file mode 100644
+index 000000000000..acfc90a624c9
+--- /dev/null
++++ b/drivers/soc/loongson/Makefile
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0+
++#
++# Makefile for the Linux Kernel SoC loongson2 specific device drivers
++#
++
++obj-$(CONFIG_LOONGSON2_GUTS)		+= loongson2_guts.o
+diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson/loongson2_guts.c
+new file mode 100644
+index 000000000000..fc4af7d32174
+--- /dev/null
++++ b/drivers/soc/loongson/loongson2_guts.c
+@@ -0,0 +1,168 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
++ * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/io.h>
++#include <linux/slab.h>
++#include <linux/module.h>
++#include <linux/of_fdt.h>
++#include <linux/sys_soc.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/loongson/loongson2_guts.h>
++
++static struct soc_device_attribute soc_dev_attr;
++static struct soc_device *soc_dev;
++
++static struct guts {
++	struct scfg_guts __iomem *regs;
++	bool little_endian;
++} *guts;
++
++struct loongson2_soc_die_attr {
++	char	*die;
++	u32	svr;
++	u32	mask;
++};
++
++/* SoC die attribute definition for loongson platform */
++static const struct loongson2_soc_die_attr loongson2_soc_die[] = {
++
++	/*
++	 * LA-based SoCs Loongson2 Series
++	 */
++
++	/* Die: 2k1000la, SoC: 2k1000la */
++	{ .die		= "2K1000LA",
++	  .svr		= 0x00000013,
++	  .mask		= 0x000000ff,
++	},
++	{ },
++};
++
++static const struct loongson2_soc_die_attr *loongson2_soc_die_match(
++	u32 svr, const struct loongson2_soc_die_attr *matches)
++{
++	while (matches->svr) {
++		if (matches->svr == (svr & matches->mask))
++			return matches;
++		matches++;
++	};
++
++	return NULL;
++}
++
++static u32 loongson2_guts_get_svr(void)
++{
++	u32 svr = 0;
++
++	if (!guts || !guts->regs)
++		return svr;
++
++	if (guts->little_endian)
++		svr = ioread32(&guts->regs->svr);
++	else
++		svr = ioread32be(&guts->regs->svr);
++
++	return svr;
++}
++
++static int loongson2_guts_probe(struct platform_device *pdev)
++{
++	struct device_node *root, *np = pdev->dev.of_node;
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	const struct loongson2_soc_die_attr *soc_die;
++	const char *machine;
++	u32 svr;
++
++	/* Initialize guts */
++	guts = devm_kzalloc(dev, sizeof(*guts), GFP_KERNEL);
++	if (!guts)
++		return -ENOMEM;
++
++	guts->little_endian = of_property_read_bool(np, "little-endian");
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	guts->regs = ioremap(res->start, res->end - res->start + 1);
++	if (IS_ERR(guts->regs))
++		return PTR_ERR(guts->regs);
++
++	/* Register soc device */
++	root = of_find_node_by_path("/");
++	if (of_property_read_string(root, "model", &machine))
++		of_property_read_string_index(root, "compatible", 0, &machine);
++	of_node_put(root);
++	if (machine)
++		soc_dev_attr.machine = devm_kstrdup(dev, machine, GFP_KERNEL);
++
++	svr = loongson2_guts_get_svr();
++	soc_die = loongson2_soc_die_match(svr, loongson2_soc_die);
++	if (soc_die) {
++		soc_dev_attr.family = devm_kasprintf(dev, GFP_KERNEL,
++						     "Loongson %s", soc_die->die);
++	} else {
++		soc_dev_attr.family = devm_kasprintf(dev, GFP_KERNEL, "Loongson");
++	}
++	if (!soc_dev_attr.family)
++		return -ENOMEM;
++	soc_dev_attr.soc_id = devm_kasprintf(dev, GFP_KERNEL,
++					     "svr:0x%08x", svr);
++	if (!soc_dev_attr.soc_id)
++		return -ENOMEM;
++	soc_dev_attr.revision = devm_kasprintf(dev, GFP_KERNEL, "%d.%d",
++					       (svr >>  4) & 0xf, svr & 0xf);
++	if (!soc_dev_attr.revision)
++		return -ENOMEM;
++
++	soc_dev = soc_device_register(&soc_dev_attr);
++	if (IS_ERR(soc_dev))
++		return PTR_ERR(soc_dev);
++
++	pr_info("Machine: %s\n", soc_dev_attr.machine);
++	pr_info("SoC family: %s\n", soc_dev_attr.family);
++	pr_info("SoC ID: %s, Revision: %s\n",
++		soc_dev_attr.soc_id, soc_dev_attr.revision);
++
++	return 0;
++}
++
++static int loongson2_guts_remove(struct platform_device *dev)
++{
++	soc_device_unregister(soc_dev);
++
++	return 0;
++}
++
++/*
++ * Table for matching compatible strings, for device tree
++ * guts node, for Loongson2 SoCs.
++ */
++static const struct of_device_id loongson2_guts_of_match[] = {
++	{ .compatible = "loongson,ls2k-guts", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, loongson2_guts_of_match);
++
++static struct platform_driver loongson2_guts_driver = {
++	.driver = {
++		.name = "loongson2-guts",
++		.of_match_table = loongson2_guts_of_match,
++	},
++	.probe = loongson2_guts_probe,
++	.remove = loongson2_guts_remove,
++};
++
++static int __init loongson2_guts_init(void)
++{
++	return platform_driver_register(&loongson2_guts_driver);
++}
++core_initcall(loongson2_guts_init);
++
++static void __exit loongson2_guts_exit(void)
++{
++	platform_driver_unregister(&loongson2_guts_driver);
++}
++module_exit(loongson2_guts_exit);
+diff --git a/include/linux/loongson/loongson2_guts.h b/include/linux/loongson/loongson2_guts.h
+new file mode 100644
+index 000000000000..4e5de3ff05c3
+--- /dev/null
++++ b/include/linux/loongson/loongson2_guts.h
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
++ * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
++ */
++
++#ifndef __LOONGSON2_GUTS_H__
++#define __LOONGSON2_GUTS_H__
++
++#include <linux/types.h>
++#include <linux/io.h>
++
++/**
++ * Global Utility Registers.
++ *
++ * Not all registers defined in this structure are available on all chips, so
++ * you are expected to know whether a given register actually exists on your
++ * chip before you access it.
++ *
++ * Also, some registers are similar on different chips but have slightly
++ * different names.  In these cases, one name is chosen to avoid extraneous
++ * #ifdefs.
++ */
++struct scfg_guts {
++	u32	svr;		/* Version Register */
++	u8	res0[4];
++	u16	feature;	/* Feature Register */
++	u32	vendor;		/* Vendor Register */
++	u8	res1[6];
++	u32	id;
++	u8	res2[0x3ff8 - 0x18];
++	u32	chip;
++} __packed;
++
++#endif
+-- 
+2.20.1
+
