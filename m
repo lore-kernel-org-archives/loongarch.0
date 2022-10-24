@@ -1,103 +1,123 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D677B
-	for <loongarch@lists.linux.dev>; Sun, 23 Oct 2022 21:08:38 +0000 (UTC)
-Received: from cwcc.thunk.org (pool-173-48-120-46.bstnma.fios.verizon.net [173.48.120.46])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 29NL7D2p025712
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 23 Oct 2022 17:07:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1666559243; bh=zbENVyGNAon7zNh9ohkJFECSMTzXRXbcNrepMHxrEAM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=FXNrxCWraFmMAOW+vqR38ZOexAnGjiiR9A8LdOwTHYuoNMBlL77R2zP0ktOpr83lt
-	 VqRJZ2eM6bTmotP3IJ0ZjbLCm4EYxGWCpxZWFf6OGNB4ci103uHdfxC4WF6VQ2zTX/
-	 sdIQ8AMmuFf2tnrWyiobYzmlMOkVIMT/l7Xfqoj9INuJk54r2BALT8VjDgqDT3Zhdd
-	 VJdERnwc5/7VlgvkT7OeoHx0mHgokAaWpeUY/UYmdBjcPk3IReiiQVTczMP0A0m8lc
-	 roc5e18VhoTm14PI9JdmJ03W1yO7BPKEnbbIuJ9deFvxdyuN3p81VawGcIo+Cv1H4t
-	 KETGAaOyQuEfg==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id BE8CB15C33A3; Sun, 23 Oct 2022 17:07:13 -0400 (EDT)
-Date: Sun, 23 Oct 2022 17:07:13 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph.boehmwalder@linbit.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Richard Weinberger <richard@nod.at>,
-        "Darrick J . Wong" <djwong@kernel.org>, SeongJae Park <sj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, Helge Deller <deller@gmx.de>,
-        netdev@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-mmc@vger.kernel.org,
-        linux-parisc@vger.kernel.org
-Subject: Re: [PATCH v1 0/5] convert tree to
- get_random_u32_{below,above,between}()
-Message-ID: <Y1WtAZfciG1z2CC7@mit.edu>
-References: <20221022014403.3881893-1-Jason@zx2c4.com>
- <20221021205522.6b56fd24@kernel.org>
- <Y1NwJJOIB4gI5G11@zx2c4.com>
- <20221021223242.05df0a5b@kernel.org>
- <Y1OD2tdVwQsydSNV@zx2c4.com>
- <20221021230322.00dd045c@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DA4659
+	for <loongarch@lists.linux.dev>; Mon, 24 Oct 2022 07:03:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E6FC433C1;
+	Mon, 24 Oct 2022 07:02:55 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Dinh Nguyen <dinguyen@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Feiyang Chen <chenfeiyang@loongson.cn>
+Subject: [PATCH V13 0/4] mm/sparse-vmemmap: Generalise helpers and enable for LoongArch
+Date: Mon, 24 Oct 2022 15:01:01 +0800
+Message-Id: <20221024070105.306280-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221021230322.00dd045c@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 21, 2022 at 11:03:22PM -0700, Jakub Kicinski wrote:
-> On Sat, 22 Oct 2022 07:47:06 +0200 Jason A. Donenfeld wrote:
-> > On Fri, Oct 21, 2022 at 10:32:42PM -0700, Jakub Kicinski wrote:
-> > > But whatever. I mean - hopefully there aren't any conflicts in the ~50
-> > > networking files you touch. I just wish that people didn't pipe up with
-> > > the tree wide changes right after the merge window. Feels like the
-> > > worst possible timing.  
-> > 
-> > Oh, if the timing is what makes this especially worrisome, I have
-> > no qualms about rebasing much later, and reposting this series then.
-> > I'll do that.
-> 
-> Cool, thanks! I promise to not be grumpy if you repost around rc6 :)
+This series is in order to enable sparse-vmemmap for LoongArch. But
+LoongArch cannot use generic helpers directly because MIPS&LoongArch
+need to call pgd_init()/pud_init()/pmd_init() when populating page
+tables. So we adjust the prototypes of p?d_init() to make generic
+helpers can call them, then enable sparse-vmemmap with generic helpers,
+and to be further, generalise vmemmap_populate_hugepages() for ARM64,
+X86 and LoongArch.
 
-One way of making things less painful for the stable branch and for
-the upstream branch is to *add* new helpers instead of playing
-replacement games like s/prandom_u32_max/get_random_u32_below/.  This
-is what causes the patch conflict problems.
+V1 -> V2:
+Split ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP to a separate patch.
 
-One advantage of at least adding the new functions to the stable
-branches, even if we don't do the wholesale replacement, is that it
-makes it much less likely that a backported patch, which uses the new
-API, won't fail to compile --- and of course, the major headache case
-is one where it's not noticed at first because it didn't get picked up
-in people's test compiles until after the Linux x.y.z release has been
-pushed out.
+V2 -> V3:
+1, Change the Signed-off-by order of author and committer;
+2, Update commit message about the build error on LoongArch.
 
-Whether it's worth doing the wholesale replacement is a different
-question, but separating "add the new functions with one or two use
-cases so the functions are actulaly _used_" from the "convert the
-world to use the new functions" from the "remove the old functions",
-might life easier.
+V3 -> V4:
+Change pmd to pmdp for ARM64 for consistency.
 
-					- Ted
+V4 -> V5:
+Add a detailed comment for no-fallback in the altmap case.
+
+V5 -> V6:
+1, Fix build error for NIOS2;
+2, Fix build error for allnoconfig;
+3, Update comment for no-fallback in the altmap case.
+
+V6 -> V7:
+Fix build warnings of "no previous prototype".
+
+V7 -> V8:
+Fix build error for MIPS pud_init().
+
+V8 -> V9:
+Remove redundant #include to avoid build error with latest upstream
+kernel.
+
+V9 -> V10:
+Fix build error due to VMEMMAP changes in 6.0-rc1.
+
+V10 -> V11:
+Adjust context due to ARM64 changes in 6.1-rc1.
+
+V11 -> V12:
+1, Fix build error for !SPARSEMEM;
+2, Simplify pagetable_init() for MIPS32.
+
+V12 -> V13:
+1, Add Acked-by and Reviewed-by tags;
+2, Update commit message for the 4th patch.
+
+Huacai Chen and Feiyang Chen(4):
+ MIPS&LoongArch&NIOS2: Adjust prototypes of p?d_init().
+ LoongArch: Add sparse memory vmemmap support.
+ mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages().
+ LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP.
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn> 
+---
+ arch/arm64/mm/mmu.c                    | 53 ++++++--------------
+ arch/loongarch/Kconfig                 |  2 +
+ arch/loongarch/include/asm/pgalloc.h   | 13 +----
+ arch/loongarch/include/asm/pgtable.h   | 13 +++--
+ arch/loongarch/include/asm/sparsemem.h |  8 +++
+ arch/loongarch/kernel/numa.c           |  4 +-
+ arch/loongarch/mm/init.c               | 44 +++++++++++++++-
+ arch/loongarch/mm/pgtable.c            | 23 +++++----
+ arch/mips/include/asm/pgalloc.h        |  8 +--
+ arch/mips/include/asm/pgtable-64.h     |  8 +--
+ arch/mips/kvm/mmu.c                    |  3 +-
+ arch/mips/mm/pgtable-32.c              | 10 ++--
+ arch/mips/mm/pgtable-64.c              | 18 ++++---
+ arch/mips/mm/pgtable.c                 |  2 +-
+ arch/x86/mm/init_64.c                  | 92 ++++++++++++----------------------
+ include/linux/mm.h                     |  8 +++
+ include/linux/page-flags.h             |  1 +
+ mm/sparse-vmemmap.c                    | 64 +++++++++++++++++++++++
+ 18 files changed, 222 insertions(+), 152 deletions(-)
+--
+2.27.0
+
