@@ -1,138 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2072.outbound.protection.outlook.com [40.107.92.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CD933D3
-	for <loongarch@lists.linux.dev>; Mon, 24 Oct 2022 15:03:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A13AC433C1
-	for <loongarch@lists.linux.dev>; Mon, 24 Oct 2022 15:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1666623813;
-	bh=RYAN8pt1gdhjSz5Zvfh2lWS/69Ah4iwOwzygUzf6hI4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lNNiMTUtw3GH4JcYw8ifH24oU0POM++SyBbRVbkShp7LrIZ6uWMnGVFxY8VCSf8x3
-	 h1zqfRUrtchXD8mZ1fqzjI6Wf940SVR4T9Sht1pV+MoGfNrksWEqLAQ8f4+181R9Wo
-	 M7k4KOLRWrS2JBZWHRCdeHe96kDu0mDBDwBiAF9mFBG341mC+iNypY318Mgwe/yrrD
-	 J+2ZNVuzoHWYzU3+ywcNsPxZ+eHEl7E447IkApLkoa+7wOTYg6SXi8r3N1VpS+6NDK
-	 IqtGbOppm9uQCcpwrY+XNeAe+9rM+Xuc3WnJcITOgthl0ILAwMV8LRqFjPLIb0NR98
-	 91GPybeQ4dpqQ==
-Received: by mail-ej1-f42.google.com with SMTP id n12so316850eja.11
-        for <loongarch@lists.linux.dev>; Mon, 24 Oct 2022 08:03:33 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0ExQSEGDqf/AVMb9q76U91mJUhq7EPA3qQbLSoK1Lg/r8yaUID
-	LUU/n8ZooqhnUQz2D2CVvhu3pfrYfiGIcfuQ+pg=
-X-Google-Smtp-Source: AMsMyM5l0uAv6T2F73xM0Artglcqum1Dlr2U/4nCcorGz0o2GlCpZlmR8EbQjaXQEurbLamdGdxHW3q3jWC24lJe7Cw=
-X-Received: by 2002:a17:906:fe45:b0:788:15a5:7495 with SMTP id
- wz5-20020a170906fe4500b0078815a57495mr28398511ejb.633.1666623811701; Mon, 24
- Oct 2022 08:03:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1313D8A
+	for <loongarch@lists.linux.dev>; Mon, 24 Oct 2022 16:37:15 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ICDCvE1cGkaXDQ9dNdHygCGl4wXrKwHA0jssd1Q+yj9q9rko3Xdq3hK8c+NnDEw80iFQto06X96PtoqyEvChaUtzx4hY4VjvYJVoqMVnc4TqIU6c0Wl6+pMJFmX9eQUf9kslVG/Oqj06MJwZm/jW0FAyWmsiPSnuYW0G+x88AjzTrz5+V/owsC9OjsTUNjPw0OBS9RI8JPyG3THCMuIAyxLWiWLDoDwGY85Z2dBm+WgXevnwzARYHI1nbrnGjO7mBZjhmp635XJXnPkKAYLWo0+N6WqXs4ekOtYjMM5nR2movnDgpkewiV2lspqgtmAvCV0uTRZd7QL/K3W8qyIOGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=k55sh9OjiE0ha8dqN/6u+9zcSFi0E1S4KdYJWOmTGq8=;
+ b=k1paNC2UDXZMoacm7GoSMrLfWXRPnBrZO5Q4Jk3t165ZzZtKli8L+lv9l5QWkdcms59XwAC5VlnukykOwWUFbzke1CkP0XeC9yqDIbgV0qtlupU1tjqHOaaDugRvHTi9Z+KecqkSj7Hp8FbBYaRZGyW2HnXgRpgylPfVJvc0FvEioYtoWKCursbETUrCfkhwkJZGDJeryfCu9i4IN0xQypz2kWexGpZOV7c8sCtxw4WDs17nF4KdaCFUf2uMOJruQxrraK+tX/2ufj9TVwE2fPKn5bzlU4dbigndJOdnRA6hw/DT3Q6dIOcu9Z/YD88IzLftPixXU1z0xTOath/fGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k55sh9OjiE0ha8dqN/6u+9zcSFi0E1S4KdYJWOmTGq8=;
+ b=kjj/r5Ny18+6u+JodYtWt44+A382Ma2Tku8hOID+C4vwVY7XqI7GVjiFyQ7qZKLPyR/fgT7fRQrsiN8M96MHIwfsINw1ue0f7OZ+8vBgHm4XpdYJBNoPt41bAxcYoVXrdtboiz5D9NLgnw2wnEMdQRn9UEGJY9PUy5Ejlm0Z7tvo2uzX0xObF+FGnGy9bsvhHy5VsCkzq6pU+1xOaXkf1FfMxfmMHCDYhzqDHbHAhshL1g7y9Ioo50uSD/rCK9IRHRyGm0s9P5p1vk9UGQoEdDtRiiqCfehbLFxvjaViN+W8jPgyAL+byR08oCcerfYBfOibHAO5NBYFrT0tfsJ9mQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by MN2PR12MB4238.namprd12.prod.outlook.com (2603:10b6:208:199::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.23; Mon, 24 Oct
+ 2022 16:37:13 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::7a81:a4e4:bb9c:d1de]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::7a81:a4e4:bb9c:d1de%6]) with mapi id 15.20.5746.021; Mon, 24 Oct 2022
+ 16:37:13 +0000
+Date: Mon, 24 Oct 2022 13:37:12 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Christoph =?utf-8?Q?B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	SeongJae Park <sj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michael Ellerman <mpe@ellerman.id.au>, Helge Deller <deller@gmx.de>,
+	netdev@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-mmc@vger.kernel.org,
+	linux-parisc@vger.kernel.org
+Subject: Re: [PATCH v1 0/5] convert tree to
+ get_random_u32_{below,above,between}()
+Message-ID: <Y1a/OAJdW+dERHiR@nvidia.com>
+References: <20221022014403.3881893-1-Jason@zx2c4.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221022014403.3881893-1-Jason@zx2c4.com>
+X-ClientProxiedBy: MN2PR01CA0009.prod.exchangelabs.com (2603:10b6:208:10c::22)
+ To LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221024121305.381776-1-kernel@xen0n.name>
-In-Reply-To: <20221024121305.381776-1-kernel@xen0n.name>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 24 Oct 2022 23:03:19 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7y2MwKvkD116Zp_eF4p4-EO0Ab+E+j+2+O3f1Pwjh9qw@mail.gmail.com>
-Message-ID: <CAAhV-H7y2MwKvkD116Zp_eF4p4-EO0Ab+E+j+2+O3f1Pwjh9qw@mail.gmail.com>
-Subject: Re: [PATCH 00/13] LoongArch: Better backtraces
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, WANG Xuerui <git@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|MN2PR12MB4238:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0fec61a3-506b-441f-0275-08dab5de00ff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	EKf80sMrg5IUycWDwhzQGsqhRuRUNEo7co2x6wOatZpaB8t5SUjUHbjAzEr6sRorBvJGsd0/tcT09UpbrAJwcfNhYs/Jg5UoK3Jjoql0TRL1veT7dcI0rexcOtjQYU3c/PD586SfWLxsB8Qu4nrKs+amImQbAeOUnBw/xvaeBbsp819ObeGXW7RI8M5GCpbHipLB+bcZ2n7vo6ylspnISqWqRSjnnLcfbdirJAvcAWn1ijXq6fDiyGByuG31c/K3EBhQXKsv0PaaXjpw6WEimArqnEB4l5DezcFtAt1IHo9N2KF2UkNO7sE9JqcSt4KYZ0kKCslN4fmsF7a8PwpGRZ9gVxDLM7CeqF/JUdTgZcNjtNGogOtecNmLyHwXVD3Ds0lFHcSvpaSHe0XgkhK1MWz4ccGI4dC+r884Rl+W2TJVObYMgqkzkLoXCHJhQXY97m1ikA4hgZs0qvEgSPOUk8Flujc8ZakU95c0DL5zpCoSvqTvSHZEnJPlTYkGrelVPhoLhmLmMA2cr9tSlWcDfkAwBt2sxC09sjlXvRsx9sk502zBfEPjQe4hBEWImrRmfPTjdNKhMhbMXKZi+1sUpv4FTF/0F+TpkkUjJOXmAn2AIEGCDpfvxRSpcm6+V4wuVkaDazIw9R91Y8i0S3a3xNJ2wAD/SH4xrwI4lBKgw/000+OmPzXYst4AReTcXzGFIOGbziklkPp1hdsq1ntvJQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(376002)(346002)(136003)(396003)(366004)(451199015)(6486002)(478600001)(54906003)(316002)(7406005)(7416002)(66946007)(66556008)(66476007)(6506007)(8676002)(4326008)(41300700001)(6916009)(5660300002)(8936002)(26005)(36756003)(6512007)(38100700002)(83380400001)(2906002)(2616005)(186003)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zV0ZvoIw8ElUdZSnE+53L7/s2Lw9Z0tCRY0pU4bjiONBEzMp//3qKb0bLgnT?=
+ =?us-ascii?Q?luu646/cUA9wc8DJrSUGSGSkQB26guhodVON6cVMCUvYlPRSW4x+OrHc/AxZ?=
+ =?us-ascii?Q?oNsxW+M+ZMFX9queecYkKl+Ho63dc2uIgb69s8faH+iDEyhnjNwZbp8QGI2z?=
+ =?us-ascii?Q?WgAqd631DcIyDFUXxhewccmoWHUSxDdi1Z+NOprNHh56Hmccktkqu3K6LWBx?=
+ =?us-ascii?Q?+35gJGUx0jrdX7omox7zE1Xtz5AarWKcQaVPV7qVLlBYX9c5P0y6QF/nao3N?=
+ =?us-ascii?Q?BnP3pESNyEYS0FLK1l2XQ56MX2od6gRR7X3Fm4dZ10f2KLq1zTtuc61j4DV0?=
+ =?us-ascii?Q?r7uf6ibUMK6KzxVlT4D3KLyOU925+dYqAsAOMOJoJ0yKqF4NHNJX+iN3fYD+?=
+ =?us-ascii?Q?v/46CX0UTN9qbIs56xryLjUUtuJ4vNBdyxehJQ3msa70AyJTiE1sz+oEZYPV?=
+ =?us-ascii?Q?b59iLoLm/BJkK4CBoKWP9/m1sWdPlHm4wA8zbLJ3ozQGAeDfoTZLEDnDre8b?=
+ =?us-ascii?Q?CP3hwpxXpNd72XfNV0nMNyuSprnMyNCz8Ohi82MTNRoZMEUwsQiLqDeHGHuY?=
+ =?us-ascii?Q?Jv4Ej/l3j2LVb8sFkoIQFvr45H7/SxqCd9PbkMiWx+p5/0yXk2seEYWRpA0M?=
+ =?us-ascii?Q?ymi6OQ2p7MGVsyzLULIzz88eZT6UL8sQQIL3t5uGQZRwbhVWEUd7BG4LLDtw?=
+ =?us-ascii?Q?SHn8bqfc163LfRlRmaveJCPELg0Au+5kM5Ux9zdU+80DYqSqbq6lTQPSY2BS?=
+ =?us-ascii?Q?QV03v8PYp0RIbmagf5svpXc5w8UyWvXjPzC03jKKRnxCFHq7zDqSeMo85j62?=
+ =?us-ascii?Q?vDMafIvempx1LImdNG+k6axHCPNkmdg3DB1FOprpdrFVgixQaPKd+L2LaKoY?=
+ =?us-ascii?Q?pjqSHVnI1N/yST1NU4ZFh2BJ2yyqzzjSyGqj1blCMSzhlSlRJ3jf4uUCLGjK?=
+ =?us-ascii?Q?x4wTgxuaG3fFRIRu/eSONbfIm84e8MXCt7sLfdvhQe10hk5Y5YT5gH81iPht?=
+ =?us-ascii?Q?pmXR9NgmWM1Qglk2IqHrWyZvxpHqNWBvwA0CFYq9FIw/T9UvyLi447sXp0Fh?=
+ =?us-ascii?Q?b/bIpp5pd+n4crt+I95W4IHQh6JsJz2EMyKKdrgUaJSlYWwIJbAOtpVCbwtt?=
+ =?us-ascii?Q?NsMsCcHOLciSOTGO9tnG7k+JncjFoxOzCVPN8Vj7xa05uiEv9DML2obLP4Om?=
+ =?us-ascii?Q?aNyrOjBMv3zOWG2Wb95mppM1PTQLvsf5DNN6+71IUwwPknrG+FdlrDKVimTh?=
+ =?us-ascii?Q?JMb+HrGacxL3LV/0gjxOLL4xxKbn3GaYUYrIMoa4Ue+/Q6YAFPDJu1FdVcjo?=
+ =?us-ascii?Q?ExfLabg1a/zAkF9Jexm/xdjR4ksawnbO6kvQKUqSQG0RpdktHcyd639dXpMf?=
+ =?us-ascii?Q?LL3A0FFsCUXAhaCcQUYtIZ2oSzbyI6tt4yqq8SNDFbKx7AKKhk+6moaEx1E+?=
+ =?us-ascii?Q?zWC7/maV8irSk1XSAVhM4XjpUu8WrZNwCo17MZlXrE6Kf4nSlQ00CQe2Rz5/?=
+ =?us-ascii?Q?VyvZa1RqT/m42NrbvbnR17eddDyaXxk5KEbu37rw1QWQYgb/Gzfcj+wkGu4r?=
+ =?us-ascii?Q?FAa7n4+VgqzXYzfguXg=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fec61a3-506b-441f-0275-08dab5de00ff
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2022 16:37:13.3550
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: M08JolLSTvc/mpUbbK/5pFVHM/zVSM/eOfwLc7op140A/TyaKEMEkxMK7/WMGLcq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4238
 
-Generally, I agree to improve the output format, but I don't think we
-need to modify the register definitions.
+On Fri, Oct 21, 2022 at 09:43:58PM -0400, Jason A. Donenfeld wrote:
+> Hey everyone,
+> 
+> Here's the second and final tranche of tree-wide conversions to get
+> random integer handling a bit tamer. It's predominantly another
+> Coccinelle-based patchset.
+> 
+> First we s/prandom_u32_max/get_random_u32_below/, since the former is
+> just a deprecated alias for the latter. Then in the next commit we can
+> remove prandom_u32_max all together. I'm quite happy about finally being
+> able to do that. It means that prandom.h is now only for deterministic and 
+> repeatable randomness, not non-deterministic/cryptographic randomness.
+> That line is no longer blurred.
+> 
+> Then, in order to clean up a bunch of inefficient patterns, we introduce
+> two trivial static inline helper functions built on top of
+> get_random_u32_below: get_random_u32_above and get_random_u32_between.
+> These are pretty straight forward to use and understand. Then the final
+> two patches convert some gnarly open-coded number juggling to use these
+> helpers.
+> 
+> I've used Coccinelle for all the treewide patches, so hopefully review
+> is rather uneventful. I didn't accept all of the changes that Coccinelle
+> proposed, though, as these tend to be somewhat context-specific. I erred
+> on the side of just going with the most obvious cases, at least this
+> time through. And then we can address more complicated cases through
+> actual maintainer trees.
+> 
+> Since get_random_u32_below() sits in my random.git tree, these patches
+> too will flow through that same tree.
+> 
+For drivers/infiniband
 
-Huacai
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-On Mon, Oct 24, 2022 at 8:13 PM WANG Xuerui <kernel@xen0n.name> wrote:
->
-> From: WANG Xuerui <git@xen0n.name>
->
-> Hi,
->
-> Here are some long overdue cleanups of MIPS legacy stuff from
-> arch/loongarch codebase , and a bunch of tweaks to the backtrace code so
-> the Quality of Life for unfortunate LoongArch kernel devs (including but
-> not limited to, myself) could be marginally improved by relieving them of
-> having to mentally decode the register names and CSR bitfields.
->
-> Before:
->
-> > [   17.879976] $ 0   : 0000000000000000 9000000000cc980c 90000001002cc000 90000001002cfe30
-> > [   17.887936] $ 4   : 0000000000000010 9000000000f1f770 90000001002cc000 9000000000cc3468
-> > [   17.895895] $ 8   : 900000010028fd00 0000000000000001 000055558e569190 0000000000000004
-> > [   17.903853] $12   : 0000000000000000 0000000000000004 9000000001026000 900000000132b2d8
-> > [   17.911811] $16   : 9000000001026000 000000006674b539 9000000000d51d10 0000000000000001
-> > [   17.919769] $20   : 0000000000000000 900000000025c27c 0000000000000004 0000000000000002
-> > [   17.927727] $24   : 900000000102e5b0 900000000102e508 0000000000000000 0000000000000004
-> > [   17.935686] $28   : 9000000009007840 0000000000000004 0000000000000000 0000000000000004
-> > [   17.943644] era   : 90000000002215a0 __arch_cpu_idle+0x20/0x24
-> > [   17.949438] ra    : 9000000000cc980c default_idle_call+0x34/0x5c
-> > [   17.955406] CSR crmd: 000000b0
-> > [   17.955408] CSR prmd: 00000004
-> > [   17.958521] CSR euen: 00000000
-> > [   17.961635] CSR ecfg: 00071c1c
-> > [   17.964748] CSR estat: 00001000
-> > [   17.971062] ExcCode : 0 (SubCode 0)
-> > [   17.974522] PrId  : 0014c010 (Loongson-64bit)
->
-> After:
->
-> > [   45.869200]  pc 90000000002215a0 ra 9000000000ce86bc tp 90000001002cc000
-> > [   45.875858]  sp 90000001002cfe30 a0 0000000000000018 a1 9000000000f41ee0
-> > [   45.882516]  a2 0000000000000001 a3 000000000000000a a4 90000000098032c0
-> > [   45.889173]  a5 000000000000001b a6 000000008ea4398a a7 0000000000000004
-> > [   45.895831]  t0 0000000000000000 t1 0000000000000004 t2 0000000000003c00
-> > [   45.902488]  t3 0000000000cccccd t4 ffffffffffffffff t5 000000010d1ff6c8
-> > [   45.909146]  t6 0000000000000000 t7 0000000000000000 t8 000000000000005b
-> > [   45.915803] r21 0000000a390fa6c0 s9 0000000000000001 s0 0000000000000003
-> > [   45.922460]  s1 90000000010565c0 s2 9000000001056518 s3 0000000000000000
-> > [   45.929118]  s4 0000000000000004 s5 0000000000000004 s6 9000000000228194
-> > [   45.935775]  s7 900000000102e220 s8 9000000100093e58
-> > [   45.940704]    pc: 90000000002215a0 __arch_cpu_idle+0x20/0x24
-> > [   45.946412]    ra: 9000000000ce86bc default_idle_call+0x34/0x5c
-> > [   45.952294]  crmd: 000000b0 (-WE DACM=CC DACF=CC +PG -DA -IE PLV0)
-> > [   45.958443]  prmd: 00000004 (-PWE +PIE PPLV0)
-> > [   45.962772]  euen: 00000000 (-BTE -ASXE -SXE -FPE)
-> > [   45.967532]  ecfg: 00071c1c (VS=7 LIE=2-4,10-12)
-> > [   45.972119] estat: 00001000 [INT] (EsubCode=0 ECode=0 IS=12)
-> > [   45.977741]  prid: 0014c010 (Loongson-64bit)
->
-> Please review, and let the bikeshedding begin!
->
-> WANG Xuerui (13):
->   LoongArch: Unify CSR.EUEN and CSR.ECFG bitfield names with the ISA
->     manual
->   LoongArch: Rename CSR_ESTAT_EXC -> CSR_ESTAT_ECODE
->   LoongArch: Unify the exception code definitions with the manual
->   LoongArch: Clean up the architectural interrupt definitions
->   LoongArch: Print GPRs with ABI names when showing registers
->   LoongArch: Print symbol info for PC and $ra only for kernel-mode
->     contexts
->   LoongArch: Fix format of CSR lines during show_regs
->   LoongArch: Humanize the CRMD line when showing registers
->   LoongArch: Humanize the PRMD line when showing registers
->   LoongArch: Humanize the EUEN line when showing registers
->   LoongArch: Humanize the ECFG line when showing registers
->   LoongArch: Humanize the ESTAT line when showing registers
->   LoongArch: Use lowercase ISA manual names for BADV and CPUCFG.PRID
->     lines in show_regs
->
->  arch/loongarch/include/asm/fpu.h       |  10 +-
->  arch/loongarch/include/asm/loongarch.h | 147 ++++++++-------
->  arch/loongarch/kernel/fpu.S            |   2 +-
->  arch/loongarch/kernel/irq.c            |   2 +-
->  arch/loongarch/kernel/perf_event.c     |   2 +-
->  arch/loongarch/kernel/process.c        |   2 +-
->  arch/loongarch/kernel/time.c           |   2 +-
->  arch/loongarch/kernel/traps.c          | 245 ++++++++++++++++++++-----
->  arch/loongarch/mm/fault.c              |   4 +-
->  arch/loongarch/mm/tlb.c                |  14 +-
->  drivers/irqchip/irq-loongarch-cpu.c    |   2 +-
->  11 files changed, 294 insertions(+), 138 deletions(-)
->
-> --
-> 2.38.0
->
->
+Jason
