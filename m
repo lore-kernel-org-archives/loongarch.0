@@ -1,45 +1,45 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55DF7B
-	for <loongarch@lists.linux.dev>; Tue, 25 Oct 2022 14:49:31 +0000 (UTC)
-Received: by mail-qk1-f177.google.com with SMTP id j21so8174027qkk.9
-        for <loongarch@lists.linux.dev>; Tue, 25 Oct 2022 07:49:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B2029A8
+	for <loongarch@lists.linux.dev>; Tue, 25 Oct 2022 19:40:28 +0000 (UTC)
+Received: by mail-qv1-f53.google.com with SMTP id x15so9527386qvp.1
+        for <loongarch@lists.linux.dev>; Tue, 25 Oct 2022 12:40:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8YP5wWUEEBMY2PTNKrTu3Hh2pQmEm7huU1HOYVz0Rwk=;
-        b=jwEJWV/zFdZ896Mkmss4/ajlWv6Os+0/UtK8gEBYdYtX5hvHY0/rI58TAvELkvqVsE
-         YJargWbH5W1QyduIbf7U2FNwQcQvsAmEyafhApayU/O8VFZIDia/USrcnbhY0bouVtok
-         2HwauXBFcJTpxlvgaY70ySmMsiDBUGAge285taKQC9lM07fL4/70Xr+lHmbgTxNOQybU
-         q2hM+fHtSfR71pvx5/bB54JFwT/1RwiqtQ2mnzlAWHCDfRE2stpV6SvhOWjj35LMof4W
-         NP1SxoAnNIAI/e+72XdoNM9mVuBXlyQYehDWrG0jwSTWdImJl5cP1bNpiQFnpplwjPKc
-         Hb/A==
+        bh=PuJ4rqhBVW/pzXuCIr6qAp0C/9agM39YZk4Tyezi0lg=;
+        b=L2kqjdxA4/IcBXtCiww7ZIrzUkvLV+QQMxEBKsv9hiUWXaMwc/uzi0z+O/cOcRG7JV
+         /J1c8ZyXAM9gvNhXIYl7273XQr93hmQedx+ZlTHuC1B/oDk0jk4gHMrfs1OIWoZgr5Zp
+         qSyueabix5LDL24xa9eZdzp0Ojzj0lJt52J6DQ6PJuLScOOUbDKNzJ1pBeXOJQeLmYU8
+         6nF+RcwAUmuHQJ1po29cdqUOmaUBN1Jcnv5rSBY2Wabdac1z5bB4zugv2mNo94obfeAU
+         23sIqtykWF1b9ubLcGKJJwi2lMcrN/6AsruNeE2IUUdTRVoVieFZ7ZMKMJT59eqcC0Df
+         1lnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8YP5wWUEEBMY2PTNKrTu3Hh2pQmEm7huU1HOYVz0Rwk=;
-        b=MycHySNn0Hnci/nFyOlTOmxaPX5kqVXKyB7G3Lc73YoyGYjSOQHlxEL9/vgyxCWoh7
-         etjFR5UOZo9Gr8VPf80zbHcINinxLjl96nIWzjhXCn7T80HWHRCErUzSINzVpGplKUH5
-         5cv3tTquq14LYZkR2ZY4tiVyptg/OvzQFKT9wYKnRHg8k1wIhiH+l+jDnLOfcQQ+clll
-         H1icXXVmNXDmY+jLoHRFtfIho1gOZLGJr3P3ce5qsT5xnVdQ3Iwm3+m/vgaWIEwT05y6
-         6KzqZZ5DvH1Y/k9qDEWsTgiY1UwHx9/h+aVdkkV2I7jWDXWkp8z0kxAk22JYJmmZ9cax
-         etFg==
-X-Gm-Message-State: ACrzQf1Yb6eGbMmzpJxmB32QdEqDZ9yhpyP2p8y5Zp2fICwD6HdOgKyc
-	X6qasfZXvF8QEWQV7/b89kw+8w==
-X-Google-Smtp-Source: AMsMyM6CxSbFXx8tIMJFyF8KEBlAnnnHYsyGOMTSwcPVWCGa6Me8gw8xFad19rxKtM7zhMtCSDY/FQ==
-X-Received: by 2002:a05:620a:484c:b0:6ee:9acb:dfdc with SMTP id ec12-20020a05620a484c00b006ee9acbdfdcmr26735181qkb.594.1666709370859;
-        Tue, 25 Oct 2022 07:49:30 -0700 (PDT)
+        bh=PuJ4rqhBVW/pzXuCIr6qAp0C/9agM39YZk4Tyezi0lg=;
+        b=fhn/v0vaWA9GUGjFCcC3YxM3dQnuOhvOCuyUtp3udt9UOK6yPZxDNyKvfKmWRGdIhb
+         P3T/qEt41M1Ct2nlm7gngs7QTaj89Dk2VxymP6tOfEjqF/IDoVQMz2ZO64fhDdYLf4RQ
+         Ygb9ckTwPfwKHYJNVNDAgubsfe/GfPpIU5g0VmKDs/RRg7zOJ+LVN5Q7qakEtv8KPOIq
+         pKE3qIdhbm6gD/H9Kt2QDJs+hohLVt0KuLgXR+tv+MnbRM0iCYFy0M9TjV6F62qKaIHS
+         f9i7mRqBhXcz+IGhMLSGwuWTWzRtAEo8qEe3mM5RSt+ijtwaQZ7iI+N6x+Mwl6E4NS82
+         OSYg==
+X-Gm-Message-State: ACrzQf3S0c5bTIec79NaR8LoK18SOQ5JS9szvTz1kXamkPA5JygIoyBL
+	o8LAl8raimCc+JZXsYT82mIlDw==
+X-Google-Smtp-Source: AMsMyM7+P6vDmIeHHpQ1nGvGx/DyvpypIrLH2RG7R10wpTZc9qLl/phhWX5f1YYNDk+MUG5rmd8g4g==
+X-Received: by 2002:ad4:5eca:0:b0:4ba:535a:6d45 with SMTP id jm10-20020ad45eca000000b004ba535a6d45mr21478617qvb.56.1666726827588;
+        Tue, 25 Oct 2022 12:40:27 -0700 (PDT)
 Received: from [192.168.1.11] ([64.57.193.93])
-        by smtp.gmail.com with ESMTPSA id m17-20020ae9e711000000b006ed61f18651sm2155611qka.16.2022.10.25.07.49.28
+        by smtp.gmail.com with ESMTPSA id l2-20020a05620a28c200b006e8f8ca8287sm2653378qkp.120.2022.10.25.12.40.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Oct 2022 07:49:30 -0700 (PDT)
-Message-ID: <d181924f-d87b-cad3-400a-dec22d3b29a6@linaro.org>
-Date: Tue, 25 Oct 2022 10:49:28 -0400
+        Tue, 25 Oct 2022 12:40:26 -0700 (PDT)
+Message-ID: <7c67c721-685a-fa0e-ab4b-41b7de3ea0a0@linaro.org>
+Date: Tue, 25 Oct 2022 15:40:25 -0400
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -48,92 +48,93 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
-Subject: Re: [PATCH v3 2/2] dt-bindings: hpet: add loongson2 hpet
+Subject: Re: [PATCH v2 2/2] dt-bindings: soc: add loongson2 guts
 Content-Language: en-US
-To: Yinbo Zhu <zhuyinbo@loongson.cn>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
+To: Yinbo Zhu <zhuyinbo@loongson.cn>, Rob Herring <robh+dt@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Jianmin Lv <lvjianmin@loongson.cn>,
- Yun Liu <liuyun@loongson.cn>, Yang Li <yang.lee@linux.alibaba.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20221021010925.21604-1-zhuyinbo@loongson.cn>
- <20221021010925.21604-2-zhuyinbo@loongson.cn>
+ Arnd Bergmann <arnd@arndb.de>, Hector Martin <marcan@marcan.st>,
+ Lubomir Rintel <lkundrak@v3.sk>, Conor Dooley <conor.dooley@microchip.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
+ Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>,
+ Sven Peter <sven@svenpeter.dev>, loongarch@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221025035128.21068-1-zhuyinbo@loongson.cn>
+ <20221025035128.21068-2-zhuyinbo@loongson.cn>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221021010925.21604-2-zhuyinbo@loongson.cn>
+In-Reply-To: <20221025035128.21068-2-zhuyinbo@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 20/10/2022 21:09, Yinbo Zhu wrote:
-> Add the loongson2 High Precision Event Timer (HPET) binding
-> with DT schema format using json-schema.
+On 24/10/2022 23:51, Yinbo Zhu wrote:
+> Add the loongson2 soc guts driver binding with DT schema format
+> using json-schema.
 > 
 > Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
 > ---
-> Change in v3:
-> 		1. Update dts that base on common clock framework.
-> 
->  .../bindings/timer/loongson,ls2k-hpet.yaml    | 50 +++++++++++++++++++
+>  .../soc/loongson/loongson,ls2k-guts.yaml      | 37 +++++++++++++++++++
+
+Looks like wrong location, although difficult to judge because you did
+not describe the hardware at all. If this is chipinfo-like device, then
+Documentation/devicetree/bindings/hwinfo/.
+
+
 >  MAINTAINERS                                   |  1 +
->  2 files changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+>  2 files changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+> diff --git a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
 > new file mode 100644
-> index 000000000000..01656048858a
+> index 000000000000..2502f8aeb74d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
-> @@ -0,0 +1,50 @@
+> +++ b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
+> @@ -0,0 +1,37 @@
 > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/timer/loongson,ls2k-hpet.yaml#
+> +$id: http://devicetree.org/schemas/soc/loongson/loongson,ls2k-guts.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Loongson2 High Precision Event Timer (HPET)
+> +title: Loongson2 GUTS driver.
+
+Drop "driver." unless you refer to some hardware (like motor driver?).
+
 > +
 > +maintainers:
 > +  - Yinbo Zhu <zhuyinbo@loongson.cn>
 > +
+> +description: |
+> +  GUTS driver was to manage and access global utilities block. Initially
+
+Drop "driver" and describe instead what is GUTS, including its acronym,
+
+> +  only reading SVR and registering soc device are supported.
+
+Entire sentence describe Linux driver - drop it. Instead describe the
+device, the hardware.
+
+> +
 > +properties:
 > +  compatible:
-> +    const: loongson,ls2k-hpet
+> +    const: loongson,ls2k-guts
 > +
 > +  reg:
 > +    maxItems: 1
 > +
-> +  clocks:
-> +    items:
-> +      - description: SoC apb clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: apb_clk
-
-Just: apb
-
-> +
-> +  interrupts:
-> +    maxItems: 1
+> +  little-endian: true
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
 > +
 > +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/clock/loongson,ls2k-clk.h>
+> +    guts: guts@1fe00000 {
 
-Your patchset is now untestable/unapplicable because you have a
-dependency. You need to explain the dependencies in the cover letter or
-in the patch changelog (---).
+Node names should be generic.
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
 
 
 Best regards,
