@@ -1,143 +1,162 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 270DCED0
-	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 03:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0222F7B
+	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 07:22:16 +0000 (UTC)
 Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8CxKdhJsFhjnYcCAA--.8003S3;
-	Wed, 26 Oct 2022 11:58:01 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxXuBCsFhjESQFAA--.19175S3;
-	Wed, 26 Oct 2022 11:58:00 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxWtgl4FhjSI0CAA--.8178S3;
+	Wed, 26 Oct 2022 15:22:13 +0800 (CST)
+Received: from [10.180.13.64] (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxLeAh4FhjNzEFAA--.19404S2;
+	Wed, 26 Oct 2022 15:22:09 +0800 (CST)
+Subject: Re: [PATCH v2 2/2] dt-bindings: soc: add loongson2 guts
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ zhuyinbo@loongson.cn, Arnd Bergmann <arnd@arndb.de>,
+ Hector Martin <marcan@marcan.st>, Lubomir Rintel <lkundrak@v3.sk>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
+ Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>,
+ Sven Peter <sven@svenpeter.dev>, loongarch@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221025035128.21068-1-zhuyinbo@loongson.cn>
+ <20221025035128.21068-2-zhuyinbo@loongson.cn>
+ <7c67c721-685a-fa0e-ab4b-41b7de3ea0a0@linaro.org>
 From: Yinbo Zhu <zhuyinbo@loongson.cn>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Yun Liu <liuyun@loongson.cn>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: [PATCH v4 2/2] dt-bindings: hpet: add loongson2 hpet
-Date: Wed, 26 Oct 2022 11:57:52 +0800
-Message-Id: <20221026035752.32681-2-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221026035752.32681-1-zhuyinbo@loongson.cn>
-References: <20221026035752.32681-1-zhuyinbo@loongson.cn>
+Message-ID: <52de60bd-8aa5-a461-9bca-ce8e6f82ead8@loongson.cn>
+Date: Wed, 26 Oct 2022 15:22:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <7c67c721-685a-fa0e-ab4b-41b7de3ea0a0@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxXuBCsFhjESQFAA--.19175S3
+X-CM-TRANSID:AQAAf8DxLeAh4FhjNzEFAA--.19404S2
 X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7uF15Xw15uFy5Ar4DKr1rJFb_yoW8Kw13pa
-	n7CF1rJr40gF13Z39xtFy0k3WrZ34kAFy7WF17A3W7KF98X3WrX3W2ka4DZa13CFW8Way7
-	ZFWSkr4UKayUur7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWFy7ZF43WF4UuFyUJF1rCrg_yoW5Kr13p3
+	WxCFW5KFWvqF129wsIq3WxAF13urZ7C3WDWr9rJ3429FyDCasaqwsxKas8Za1xJr97WFW2
+	9FW0g3yF9F4DAFJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	bDAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
 	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
 	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
 	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x
-	0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
-	xVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
-	Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
-	WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
-	CTnIWIevJa73UjIFyTuYvjxUc9mRUUUUU
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
+	v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
+	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
+	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07joKZXUUUUU=
 
-Add the loongson2 High Precision Event Timer (HPET) binding
-with DT schema format using json-schema.
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
----
-Change in v4: 
-                1. Fixup the clock-names that replace apb-clk with apb.
-                2. This patch need rely on clock patch, which patchwork  
-                   link was "https://patchwork.kernel.org/project/linux-clk/list/?series=688892".
 
- .../bindings/timer/loongson,ls2k-hpet.yaml    | 50 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+在 2022/10/26 上午3:40, Krzysztof Kozlowski 写道:
+> On 24/10/2022 23:51, Yinbo Zhu wrote:
+>> Add the loongson2 soc guts driver binding with DT schema format
+>> using json-schema.
+>>
+>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>> ---
+>>   .../soc/loongson/loongson,ls2k-guts.yaml      | 37 +++++++++++++++++++
+> 
+> Looks like wrong location, although difficult to judge because you did
+> not describe the hardware at all. If this is chipinfo-like device, then
+> Documentation/devicetree/bindings/hwinfo/.
+My guts driver is refer fsl platform. It was was to manage and access
+global utilities register block for SoC and it was only used in SoC
+platform. when driver need use Soc ops to do some function the this 
+driver was needed.  the dcfg (device config) was a function in guts 
+(global utilities) block.
+For these type of driver, other platforms were initially placed on
+Documentation/devicetree/bindings/arm/   if it is arm/arm64
+architecture. Later, move it to the soc directory.
 
-diff --git a/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
-new file mode 100644
-index 000000000000..9682d86e3339
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/loongson,ls2k-hpet.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson2 High Precision Event Timer (HPET)
-+
-+maintainers:
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+properties:
-+  compatible:
-+    const: loongson,ls2k-hpet
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: SoC apb clock
-+
-+  clock-names:
-+    items:
-+      - const: apb
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/loongson,ls2k-clk.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    timer@1fe24000 {
-+        compatible = "loongson,ls2k-hpet";
-+        reg = <0x1fe24000 0x15f>;
-+        clocks = <&clk LOONGSON2_APB_CLK>;
-+        clock-names = "apb";
-+        interrupt-parent = <&liointc0>;
-+        interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index db29c1dc2d89..8cc541ce89b8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11919,6 +11919,7 @@ LOONGSON2 SOC SERIES HPET DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
- F:	drivers/clocksource/loongson2_hpet.c
- 
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
--- 
-2.31.1
+Documentation/devicetree/bindings/soc/fsl/fsl,layerscape-dcfg.yaml
+
+So, do you still think it is inappropriate to place it in the soc dir?
+> 
+> 
+>>   MAINTAINERS                                   |  1 +
+>>   2 files changed, 38 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
+>> new file mode 100644
+>> index 000000000000..2502f8aeb74d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
+>> @@ -0,0 +1,37 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/soc/loongson/loongson,ls2k-guts.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Loongson2 GUTS driver.
+> 
+> Drop "driver." unless you refer to some hardware (like motor driver?).
+this need refer hardware soc datasheet to gain soc register (global 
+utilities register block ).
+so keep "driver" string that whether was more appropriate?
+> 
+>> +
+>> +maintainers:
+>> +  - Yinbo Zhu <zhuyinbo@loongson.cn>
+>> +
+>> +description: |
+>> +  GUTS driver was to manage and access global utilities block. Initially
+> 
+> Drop "driver" and describe instead what is GUTS, including its acronym,
+> 
+>> +  only reading SVR and registering soc device are supported.
+> 
+> Entire sentence describe Linux driver - drop it. Instead describe the
+> device, the hardware.
+> 
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: loongson,ls2k-guts
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  little-endian: true
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    guts: guts@1fe00000 {
+> 
+> Node names should be generic.
+dcfg/scfg (device cfg/ soc cfg)was the key function of guts (global 
+utilities) block. and guts name I was refer fsl soc driver. 
+"drivers/soc/fsl/guts.c"
+this binding file was follows of fsl guts.
+Documentation/devicetree/bindings/soc/fsl/fsl,layerscape-dcfg.yaml
+Documentation/devicetree/bindings/soc/fsl/fsl,layerscape-scfg.yaml
+
+or, I was use scfg as node name, Do you think it's appropriate?
+
+
+> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
 
