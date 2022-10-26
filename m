@@ -1,162 +1,157 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0222F7B
-	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 07:22:16 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8BxWtgl4FhjSI0CAA--.8178S3;
-	Wed, 26 Oct 2022 15:22:13 +0800 (CST)
-Received: from [10.180.13.64] (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxLeAh4FhjNzEFAA--.19404S2;
-	Wed, 26 Oct 2022 15:22:09 +0800 (CST)
-Subject: Re: [PATCH v2 2/2] dt-bindings: soc: add loongson2 guts
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- zhuyinbo@loongson.cn, Arnd Bergmann <arnd@arndb.de>,
- Hector Martin <marcan@marcan.st>, Lubomir Rintel <lkundrak@v3.sk>,
- Conor Dooley <conor.dooley@microchip.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
- Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>,
- Sven Peter <sven@svenpeter.dev>, loongarch@lists.linux.dev,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221025035128.21068-1-zhuyinbo@loongson.cn>
- <20221025035128.21068-2-zhuyinbo@loongson.cn>
- <7c67c721-685a-fa0e-ab4b-41b7de3ea0a0@linaro.org>
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <52de60bd-8aa5-a461-9bca-ce8e6f82ead8@loongson.cn>
-Date: Wed, 26 Oct 2022 15:22:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E647B
+	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 07:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1666769226; bh=8nQhIKwZpGizurT7gT/3D9X5nZ5p3lzIb7aYR9El3aI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gtJDDZYfUvPwRCJxLQK0iPEvMovLBRO0IXt9CqzDubj/aJvdYCEUXcgTRrRQZgG0X
+	 SojJC3o7oJtEIKbaG6I4IY+YmU+J3yq1+C50pam77ucbdWpvzFDetZ+vsYf/swHKu2
+	 KmkM0qK8QVjy6n1Uq/5APwj2HCEIRZ+KJGVJD9g4=
+Received: from [100.100.57.122] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 3FA94600CF;
+	Wed, 26 Oct 2022 15:27:06 +0800 (CST)
+Message-ID: <43126fe8-9040-a574-a149-273844d3073f@xen0n.name>
+Date: Wed, 26 Oct 2022 15:27:05 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <7c67c721-685a-fa0e-ab4b-41b7de3ea0a0@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0)
+ Gecko/20100101 Thunderbird/108.0a1
+Subject: Re: [PATCH v2 RESEND] LoongArch: Remove unused kernel stack padding
+To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>
+Cc: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20221026035501.11986-1-hejinyang@loongson.cn>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxLeAh4FhjNzEFAA--.19404S2
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWFy7ZF43WF4UuFyUJF1rCrg_yoW5Kr13p3
-	WxCFW5KFWvqF129wsIq3WxAF13urZ7C3WDWr9rJ3429FyDCasaqwsxKas8Za1xJr97WFW2
-	9FW0g3yF9F4DAFJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bDAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
-	v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
-	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07joKZXUUUUU=
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20221026035501.11986-1-hejinyang@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+On 2022/10/26 11:55, Jinyang He wrote:
+> Kernel stack padding looks like obey MIPS o32 Calling Convention, as
+> LoongArch is inspired by MIPS and keep it. Remove it avoid not clear
+> code.
+
+Just some improvement to the commit message so it's clearer:
+
+"The current LoongArch kernel stack is padded as if obeying the MIPS o32 
+calling convention, signifying the port's MIPS lineage but no longer 
+making sense. Remove the padding for clarity."
+
+> 
+> Link: https://lore.kernel.org/loongarch/1662130897-13156-1-git-send-email-hejinyang@loongson.cn/
+> 
+
+I think this blank line between the "Link" and S-o-b tags could be removed.
+
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> ---
+> v2: Remove TOP_OF_KERNEL_STACK_PADDING
+>      Remove 'init stack pointer' in head.S
+> 
+>   arch/loongarch/include/asm/processor.h | 2 +-
+>   arch/loongarch/include/asm/ptrace.h    | 2 +-
+>   arch/loongarch/kernel/head.S           | 3 +--
+>   arch/loongarch/kernel/process.c        | 4 ++--
+>   arch/loongarch/kernel/switch.S         | 2 +-
+>   5 files changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+> index 6954dc5d24e9..7184f1dc61f2 100644
+> --- a/arch/loongarch/include/asm/processor.h
+> +++ b/arch/loongarch/include/asm/processor.h
+> @@ -191,7 +191,7 @@ static inline void flush_thread(void)
+>   unsigned long __get_wchan(struct task_struct *p);
+>   
+>   #define __KSTK_TOS(tsk) ((unsigned long)task_stack_page(tsk) + \
+> -			 THREAD_SIZE - 32 - sizeof(struct pt_regs))
+> +			 THREAD_SIZE - sizeof(struct pt_regs))
+>   #define task_pt_regs(tsk) ((struct pt_regs *)__KSTK_TOS(tsk))
+>   #define KSTK_EIP(tsk) (task_pt_regs(tsk)->csr_era)
+>   #define KSTK_ESP(tsk) (task_pt_regs(tsk)->regs[3])
+> diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+> index 7437b9366c3b..59c4608de91d 100644
+> --- a/arch/loongarch/include/asm/ptrace.h
+> +++ b/arch/loongarch/include/asm/ptrace.h
+> @@ -133,7 +133,7 @@ static inline void die_if_kernel(const char *str, struct pt_regs *regs)
+>   #define current_pt_regs()						\
+>   ({									\
+>   	unsigned long sp = (unsigned long)__builtin_frame_address(0);	\
+> -	(struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1 - 32) - 1;	\
+> +	(struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1) - 1;		\
+>   })
+>   
+>   /* Helpers for working with the user stack pointer */
+> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> index 97425779ce9f..84970e266658 100644
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -84,10 +84,9 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
+>   
+>   	la.pcrel	tp, init_thread_union
+>   	/* Set the SP after an empty pt_regs.  */
+> -	PTR_LI		sp, (_THREAD_SIZE - 32 - PT_SIZE)
+> +	PTR_LI		sp, (_THREAD_SIZE - PT_SIZE)
+>   	PTR_ADD		sp, sp, tp
+>   	set_saved_sp	sp, t0, t1
+> -	PTR_ADDI	sp, sp, -4 * SZREG	# init stack pointer
+>   
+>   	bl		start_kernel
+>   	ASM_BUG()
+> diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+> index 1256e3582475..2526b68f1c0f 100644
+> --- a/arch/loongarch/kernel/process.c
+> +++ b/arch/loongarch/kernel/process.c
+> @@ -129,7 +129,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+>   	unsigned long clone_flags = args->flags;
+>   	struct pt_regs *childregs, *regs = current_pt_regs();
+>   
+> -	childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE - 32;
+> +	childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE;
+>   
+>   	/* set up new TSS. */
+>   	childregs = (struct pt_regs *) childksp - 1;
+> @@ -236,7 +236,7 @@ bool in_task_stack(unsigned long stack, struct task_struct *task,
+>   			struct stack_info *info)
+>   {
+>   	unsigned long begin = (unsigned long)task_stack_page(task);
+> -	unsigned long end = begin + THREAD_SIZE - 32;
+> +	unsigned long end = begin + THREAD_SIZE;
+>   
+>   	if (stack < begin || stack >= end)
+>   		return false;
+> diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
+> index 43ebbc3990f7..202a163cb32f 100644
+> --- a/arch/loongarch/kernel/switch.S
+> +++ b/arch/loongarch/kernel/switch.S
+> @@ -26,7 +26,7 @@ SYM_FUNC_START(__switch_to)
+>   	move	tp, a2
+>   	cpu_restore_nonscratch a1
+>   
+> -	li.w		t0, _THREAD_SIZE - 32
+> +	li.w		t0, _THREAD_SIZE
+>   	PTR_ADD		t0, t0, tp
+>   	set_saved_sp	t0, t1, t2
+>   
+
+Otherwise LGTM, assuming you have tested it before sending (I don't 
+currently have the capacity to immediately test this for you)...
+
+Reviewed-by: WANG Xuerui <git@xen0n.name>
 
 
+-- 
+WANG "xen0n" Xuerui
 
-在 2022/10/26 上午3:40, Krzysztof Kozlowski 写道:
-> On 24/10/2022 23:51, Yinbo Zhu wrote:
->> Add the loongson2 soc guts driver binding with DT schema format
->> using json-schema.
->>
->> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
->> ---
->>   .../soc/loongson/loongson,ls2k-guts.yaml      | 37 +++++++++++++++++++
-> 
-> Looks like wrong location, although difficult to judge because you did
-> not describe the hardware at all. If this is chipinfo-like device, then
-> Documentation/devicetree/bindings/hwinfo/.
-My guts driver is refer fsl platform. It was was to manage and access
-global utilities register block for SoC and it was only used in SoC
-platform. when driver need use Soc ops to do some function the this 
-driver was needed.  the dcfg (device config) was a function in guts 
-(global utilities) block.
-For these type of driver, other platforms were initially placed on
-Documentation/devicetree/bindings/arm/   if it is arm/arm64
-architecture. Later, move it to the soc directory.
-
-Documentation/devicetree/bindings/soc/fsl/fsl,layerscape-dcfg.yaml
-
-So, do you still think it is inappropriate to place it in the soc dir?
-> 
-> 
->>   MAINTAINERS                                   |  1 +
->>   2 files changed, 38 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
->> new file mode 100644
->> index 000000000000..2502f8aeb74d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
->> @@ -0,0 +1,37 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/soc/loongson/loongson,ls2k-guts.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Loongson2 GUTS driver.
-> 
-> Drop "driver." unless you refer to some hardware (like motor driver?).
-this need refer hardware soc datasheet to gain soc register (global 
-utilities register block ).
-so keep "driver" string that whether was more appropriate?
-> 
->> +
->> +maintainers:
->> +  - Yinbo Zhu <zhuyinbo@loongson.cn>
->> +
->> +description: |
->> +  GUTS driver was to manage and access global utilities block. Initially
-> 
-> Drop "driver" and describe instead what is GUTS, including its acronym,
-> 
->> +  only reading SVR and registering soc device are supported.
-> 
-> Entire sentence describe Linux driver - drop it. Instead describe the
-> device, the hardware.
-> 
->> +
->> +properties:
->> +  compatible:
->> +    const: loongson,ls2k-guts
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  little-endian: true
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    guts: guts@1fe00000 {
-> 
-> Node names should be generic.
-dcfg/scfg (device cfg/ soc cfg)was the key function of guts (global 
-utilities) block. and guts name I was refer fsl soc driver. 
-"drivers/soc/fsl/guts.c"
-this binding file was follows of fsl guts.
-Documentation/devicetree/bindings/soc/fsl/fsl,layerscape-dcfg.yaml
-Documentation/devicetree/bindings/soc/fsl/fsl,layerscape-scfg.yaml
-
-or, I was use scfg as node name, Do you think it's appropriate?
-
-
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
