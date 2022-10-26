@@ -1,34 +1,23 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15221EC4
-	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 03:03:11 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8Dxfbdpo1hjO4UCAA--.4853S3;
-	Wed, 26 Oct 2022 11:03:05 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxPuBio1hjWR0FAA--.19405S4;
-	Wed, 26 Oct 2022 11:03:03 +0800 (CST)
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84A05EBF
+	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 03:55:17 +0000 (UTC)
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8DxOdijr1hjbIcCAA--.7985S3;
+	Wed, 26 Oct 2022 11:55:15 +0800 (CST)
+Received: from localhost.localdomain (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axf+Cir1hj2yMFAA--.19823S2;
+	Wed, 26 Oct 2022 11:55:15 +0800 (CST)
+From: Jinyang He <hejinyang@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	Oleg Nesterov <oleg@redhat.com>
+Cc: Xi Ruoyao <xry111@xry111.site>,
 	loongarch@lists.linux.dev,
-	Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 3/3] dt-bindings: clock: add loongson2 clock
-Date: Wed, 26 Oct 2022 11:02:56 +0800
-Message-Id: <20221026030256.30512-3-zhuyinbo@loongson.cn>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 RESEND] LoongArch: Remove unused kernel stack padding
+Date: Wed, 26 Oct 2022 11:55:01 +0800
+Message-Id: <20221026035501.11986-1-hejinyang@loongson.cn>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221026030256.30512-1-zhuyinbo@loongson.cn>
-References: <20221026030256.30512-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -36,118 +25,120 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxPuBio1hjWR0FAA--.19405S4
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF4kJw4fKFyfWF1kuFg_yoW5GrWrpF
-	nxC345GryIvF17Zws5Ka4xC3Z5Za1kCF17ZFnrAa42kr98G3W5XF17KryDZa9rAFy7Za9r
-	ZFyxCr4UCa18Cr7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-CM-TRANSID:AQAAf8Axf+Cir1hj2yMFAA--.19823S2
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZF4DKw4DuF4Uur4UKF1ftFb_yoWrXrWrpF
+	9rAwnrGr4jkF1vyryDtrs8uryDJwn7Kw1aga17ta4rCrnFqF1rXry8AryDXFyaqa95K3y0
+	gFyfKwsxtay5J3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x
-	0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
-	xVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_
-	Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
-	WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
-	CTnIWIevJa73UjIFyTuYvjxUc9mRUUUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
 
-Add the loongson2 clock binding with DT schema format using
-json-schema.
+Kernel stack padding looks like obey MIPS o32 Calling Convention, as
+LoongArch is inspired by MIPS and keep it. Remove it avoid not clear
+code.
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Link: https://lore.kernel.org/loongarch/1662130897-13156-1-git-send-email-hejinyang@loongson.cn/
+
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
 ---
- .../bindings/clock/loongson,ls2k-clk.yaml     | 63 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+v2: Remove TOP_OF_KERNEL_STACK_PADDING
+    Remove 'init stack pointer' in head.S
 
-diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-new file mode 100644
-index 000000000000..6cc6e0755735
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/loongson,ls2k-clk.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson2 SoC Clock Control Module
-+
-+maintainers:
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+description: |
-+  Loongson2 SoC clock control module is an integrated clock controller, which
-+  generates and supplies to all modules.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - loongson,ls2k-clk
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: 100m ref
-+
-+  clock-names:
-+    items:
-+      - const: ref_100m
-+
-+  '#clock-cells':
-+    const: 1
-+    description:
-+      The clock consumer should specify the desired clock by having the clock
-+      ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
-+      for the full list of loongson2 SoC clock IDs.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    ref_100m: clock-ref-100m {
-+        compatible = "fixed-clock";
-+        #clock-cells = <0>;
-+        clock-frequency = <100000000>;
-+        clock-output-names = "ref_100m";
-+    };
-+
-+    clk: clock-controller@1fe00480 {
-+        compatible = "loongson,ls2k-clk";
-+        reg = <0x1fe00480 0x58>;
-+        #clock-cells = <1>;
-+        clocks = <&ref_100m>;
-+        clock-names = "ref_100m";
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f01d60cd5c3b..f61a431ad8ca 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11911,6 +11911,7 @@ LOONGSON2 SOC SERIES CLOCK DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-clk@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
- F:	drivers/clk/clk-loongson2.c
- F:	include/dt-bindings/clock/loongson,ls2k-clk.h
+ arch/loongarch/include/asm/processor.h | 2 +-
+ arch/loongarch/include/asm/ptrace.h    | 2 +-
+ arch/loongarch/kernel/head.S           | 3 +--
+ arch/loongarch/kernel/process.c        | 4 ++--
+ arch/loongarch/kernel/switch.S         | 2 +-
+ 5 files changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+index 6954dc5d24e9..7184f1dc61f2 100644
+--- a/arch/loongarch/include/asm/processor.h
++++ b/arch/loongarch/include/asm/processor.h
+@@ -191,7 +191,7 @@ static inline void flush_thread(void)
+ unsigned long __get_wchan(struct task_struct *p);
+ 
+ #define __KSTK_TOS(tsk) ((unsigned long)task_stack_page(tsk) + \
+-			 THREAD_SIZE - 32 - sizeof(struct pt_regs))
++			 THREAD_SIZE - sizeof(struct pt_regs))
+ #define task_pt_regs(tsk) ((struct pt_regs *)__KSTK_TOS(tsk))
+ #define KSTK_EIP(tsk) (task_pt_regs(tsk)->csr_era)
+ #define KSTK_ESP(tsk) (task_pt_regs(tsk)->regs[3])
+diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+index 7437b9366c3b..59c4608de91d 100644
+--- a/arch/loongarch/include/asm/ptrace.h
++++ b/arch/loongarch/include/asm/ptrace.h
+@@ -133,7 +133,7 @@ static inline void die_if_kernel(const char *str, struct pt_regs *regs)
+ #define current_pt_regs()						\
+ ({									\
+ 	unsigned long sp = (unsigned long)__builtin_frame_address(0);	\
+-	(struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1 - 32) - 1;	\
++	(struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1) - 1;		\
+ })
+ 
+ /* Helpers for working with the user stack pointer */
+diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+index 97425779ce9f..84970e266658 100644
+--- a/arch/loongarch/kernel/head.S
++++ b/arch/loongarch/kernel/head.S
+@@ -84,10 +84,9 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
+ 
+ 	la.pcrel	tp, init_thread_union
+ 	/* Set the SP after an empty pt_regs.  */
+-	PTR_LI		sp, (_THREAD_SIZE - 32 - PT_SIZE)
++	PTR_LI		sp, (_THREAD_SIZE - PT_SIZE)
+ 	PTR_ADD		sp, sp, tp
+ 	set_saved_sp	sp, t0, t1
+-	PTR_ADDI	sp, sp, -4 * SZREG	# init stack pointer
+ 
+ 	bl		start_kernel
+ 	ASM_BUG()
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index 1256e3582475..2526b68f1c0f 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -129,7 +129,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 	unsigned long clone_flags = args->flags;
+ 	struct pt_regs *childregs, *regs = current_pt_regs();
+ 
+-	childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE - 32;
++	childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE;
+ 
+ 	/* set up new TSS. */
+ 	childregs = (struct pt_regs *) childksp - 1;
+@@ -236,7 +236,7 @@ bool in_task_stack(unsigned long stack, struct task_struct *task,
+ 			struct stack_info *info)
+ {
+ 	unsigned long begin = (unsigned long)task_stack_page(task);
+-	unsigned long end = begin + THREAD_SIZE - 32;
++	unsigned long end = begin + THREAD_SIZE;
+ 
+ 	if (stack < begin || stack >= end)
+ 		return false;
+diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
+index 43ebbc3990f7..202a163cb32f 100644
+--- a/arch/loongarch/kernel/switch.S
++++ b/arch/loongarch/kernel/switch.S
+@@ -26,7 +26,7 @@ SYM_FUNC_START(__switch_to)
+ 	move	tp, a2
+ 	cpu_restore_nonscratch a1
+ 
+-	li.w		t0, _THREAD_SIZE - 32
++	li.w		t0, _THREAD_SIZE
+ 	PTR_ADD		t0, t0, tp
+ 	set_saved_sp	t0, t1, t2
  
 -- 
-2.31.1
+2.34.3
 
