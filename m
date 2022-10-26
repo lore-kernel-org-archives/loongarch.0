@@ -1,142 +1,123 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B2029A8
-	for <loongarch@lists.linux.dev>; Tue, 25 Oct 2022 19:40:28 +0000 (UTC)
-Received: by mail-qv1-f53.google.com with SMTP id x15so9527386qvp.1
-        for <loongarch@lists.linux.dev>; Tue, 25 Oct 2022 12:40:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PuJ4rqhBVW/pzXuCIr6qAp0C/9agM39YZk4Tyezi0lg=;
-        b=L2kqjdxA4/IcBXtCiww7ZIrzUkvLV+QQMxEBKsv9hiUWXaMwc/uzi0z+O/cOcRG7JV
-         /J1c8ZyXAM9gvNhXIYl7273XQr93hmQedx+ZlTHuC1B/oDk0jk4gHMrfs1OIWoZgr5Zp
-         qSyueabix5LDL24xa9eZdzp0Ojzj0lJt52J6DQ6PJuLScOOUbDKNzJ1pBeXOJQeLmYU8
-         6nF+RcwAUmuHQJ1po29cdqUOmaUBN1Jcnv5rSBY2Wabdac1z5bB4zugv2mNo94obfeAU
-         23sIqtykWF1b9ubLcGKJJwi2lMcrN/6AsruNeE2IUUdTRVoVieFZ7ZMKMJT59eqcC0Df
-         1lnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PuJ4rqhBVW/pzXuCIr6qAp0C/9agM39YZk4Tyezi0lg=;
-        b=fhn/v0vaWA9GUGjFCcC3YxM3dQnuOhvOCuyUtp3udt9UOK6yPZxDNyKvfKmWRGdIhb
-         P3T/qEt41M1Ct2nlm7gngs7QTaj89Dk2VxymP6tOfEjqF/IDoVQMz2ZO64fhDdYLf4RQ
-         Ygb9ckTwPfwKHYJNVNDAgubsfe/GfPpIU5g0VmKDs/RRg7zOJ+LVN5Q7qakEtv8KPOIq
-         pKE3qIdhbm6gD/H9Kt2QDJs+hohLVt0KuLgXR+tv+MnbRM0iCYFy0M9TjV6F62qKaIHS
-         f9i7mRqBhXcz+IGhMLSGwuWTWzRtAEo8qEe3mM5RSt+ijtwaQZ7iI+N6x+Mwl6E4NS82
-         OSYg==
-X-Gm-Message-State: ACrzQf3S0c5bTIec79NaR8LoK18SOQ5JS9szvTz1kXamkPA5JygIoyBL
-	o8LAl8raimCc+JZXsYT82mIlDw==
-X-Google-Smtp-Source: AMsMyM7+P6vDmIeHHpQ1nGvGx/DyvpypIrLH2RG7R10wpTZc9qLl/phhWX5f1YYNDk+MUG5rmd8g4g==
-X-Received: by 2002:ad4:5eca:0:b0:4ba:535a:6d45 with SMTP id jm10-20020ad45eca000000b004ba535a6d45mr21478617qvb.56.1666726827588;
-        Tue, 25 Oct 2022 12:40:27 -0700 (PDT)
-Received: from [192.168.1.11] ([64.57.193.93])
-        by smtp.gmail.com with ESMTPSA id l2-20020a05620a28c200b006e8f8ca8287sm2653378qkp.120.2022.10.25.12.40.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Oct 2022 12:40:26 -0700 (PDT)
-Message-ID: <7c67c721-685a-fa0e-ab4b-41b7de3ea0a0@linaro.org>
-Date: Tue, 25 Oct 2022 15:40:25 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3902AEBF
+	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 03:03:10 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8Cxjdpno1hjK4UCAA--.9991S3;
+	Wed, 26 Oct 2022 11:03:03 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxPuBio1hjWR0FAA--.19405S2;
+	Wed, 26 Oct 2022 11:03:02 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v4 1/3] dt-bindings: clock: add loongson2 clock include file
+Date: Wed, 26 Oct 2022 11:02:54 +0800
+Message-Id: <20221026030256.30512-1-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH v2 2/2] dt-bindings: soc: add loongson2 guts
-Content-Language: en-US
-To: Yinbo Zhu <zhuyinbo@loongson.cn>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Arnd Bergmann <arnd@arndb.de>, Hector Martin <marcan@marcan.st>,
- Lubomir Rintel <lkundrak@v3.sk>, Conor Dooley <conor.dooley@microchip.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
- Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>,
- Sven Peter <sven@svenpeter.dev>, loongarch@lists.linux.dev,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221025035128.21068-1-zhuyinbo@loongson.cn>
- <20221025035128.21068-2-zhuyinbo@loongson.cn>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221025035128.21068-2-zhuyinbo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxPuBio1hjWR0FAA--.19405S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7AF4UWr1DWr17urWktw4Dtwb_yoW8tw1Upr
+	4kCFWfKry2yF4IkwsYgF13Kr13uw4xG3W7AFW7uF1UZF17Jw18JwnF9F1fAa9IqF4kGFWx
+	Za1kCw4j9a9rW3DanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bfxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x
+	0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
+	xVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
+	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_
+	JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	WUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBI
+	daVFxhVjvjDU0xZFpf9x07jn73kUUUUU=
 
-On 24/10/2022 23:51, Yinbo Zhu wrote:
-> Add the loongson2 soc guts driver binding with DT schema format
-> using json-schema.
-> 
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
->  .../soc/loongson/loongson,ls2k-guts.yaml      | 37 +++++++++++++++++++
+This file defines all loongson2 soc clock indexes, it should be
+included in the device tree in which there's device using the
+clocks.
 
-Looks like wrong location, although difficult to judge because you did
-not describe the hardware at all. If this is chipinfo-like device, then
-Documentation/devicetree/bindings/hwinfo/.
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ MAINTAINERS                                   |  6 ++++
+ include/dt-bindings/clock/loongson,ls2k-clk.h | 29 +++++++++++++++++++
+ 2 files changed, 35 insertions(+)
+ create mode 100644 include/dt-bindings/clock/loongson,ls2k-clk.h
 
-
->  MAINTAINERS                                   |  1 +
->  2 files changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
-> new file mode 100644
-> index 000000000000..2502f8aeb74d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
-> @@ -0,0 +1,37 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/loongson/loongson,ls2k-guts.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson2 GUTS driver.
-
-Drop "driver." unless you refer to some hardware (like motor driver?).
-
-> +
-> +maintainers:
-> +  - Yinbo Zhu <zhuyinbo@loongson.cn>
-> +
-> +description: |
-> +  GUTS driver was to manage and access global utilities block. Initially
-
-Drop "driver" and describe instead what is GUTS, including its acronym,
-
-> +  only reading SVR and registering soc device are supported.
-
-Entire sentence describe Linux driver - drop it. Instead describe the
-device, the hardware.
-
-> +
-> +properties:
-> +  compatible:
-> +    const: loongson,ls2k-guts
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  little-endian: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    guts: guts@1fe00000 {
-
-Node names should be generic.
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-Best regards,
-Krzysztof
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0be0f520c032..b6aae412de9c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11907,6 +11907,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
+ F:	drivers/thermal/loongson2_thermal.c
+ 
++LOONGSON2 SOC SERIES CLOCK DRIVER
++M:	Yinbo Zhu <zhuyinbo@loongson.cn>
++L:	linux-clk@vger.kernel.org
++S:	Maintained
++F:	include/dt-bindings/clock/loongson,ls2k-clk.h
++
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+ M:	Sathya Prakash <sathya.prakash@broadcom.com>
+ M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+diff --git a/include/dt-bindings/clock/loongson,ls2k-clk.h b/include/dt-bindings/clock/loongson,ls2k-clk.h
+new file mode 100644
+index 000000000000..db1e27e792ff
+--- /dev/null
++++ b/include/dt-bindings/clock/loongson,ls2k-clk.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
++ * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_LOONGSON2_H
++#define __DT_BINDINGS_CLOCK_LOONGSON2_H
++
++#define LOONGSON2_REF_100M				0
++#define LOONGSON2_NODE_PLL				1
++#define LOONGSON2_DDR_PLL				2
++#define LOONGSON2_DC_PLL				3
++#define LOONGSON2_PIX0_PLL				4
++#define LOONGSON2_PIX1_PLL				5
++#define LOONGSON2_NODE_CLK				6
++#define LOONGSON2_HDA_CLK				7
++#define LOONGSON2_GPU_CLK				8
++#define LOONGSON2_DDR_CLK				9
++#define LOONGSON2_GMAC_CLK				10
++#define LOONGSON2_DC_CLK				11
++#define LOONGSON2_APB_CLK				12
++#define LOONGSON2_USB_CLK				13
++#define LOONGSON2_SATA_CLK				14
++#define LOONGSON2_PIX0_CLK				15
++#define LOONGSON2_PIX1_CLK				16
++#define LOONGSON2_CLK_END				17
++
++#endif
+-- 
+2.31.1
 
