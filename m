@@ -1,100 +1,145 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F5510FB
-	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 09:21:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1666776074; bh=VUxXyqeqC9xJjU4/DUbIIcNzYJ6jIKRvBSz+ajHq9TM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Vc2yQ/lR3CL1OdYJDVQzTwx5zRyjkJbojVYujWgQAF2jxlGSbz7/+Ce9XeeIb0deu
-	 38HdpCujrA9ljRgnbUvkNtOhHDwBxYeFhynaynJb9Cq8nga9Z7BJh974gcbh/VFq5q
-	 4aqUXK4FuOmupXtLcGCPAQiyHSHx686gLsXZrVgo=
-Received: from [100.100.57.122] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 769AC6008C;
-	Wed, 26 Oct 2022 17:21:14 +0800 (CST)
-Message-ID: <edb4002c-3325-53b2-de79-ad4033b363f7@xen0n.name>
-Date: Wed, 26 Oct 2022 17:21:14 +0800
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 345C910F9
+	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 10:52:28 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.32])
+	by gateway (Coremail) with SMTP id _____8BxGdgkEVljtpkCAA--.8210S3;
+	Wed, 26 Oct 2022 18:51:16 +0800 (CST)
+Received: from [10.20.42.32] (unknown [10.20.42.32])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxmFckEVlj8kwFAA--.1514S3;
+	Wed, 26 Oct 2022 18:51:16 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Fix memsection size
+To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+References: <20221026075638.9396-1-lvjianmin@loongson.cn>
+ <edb4002c-3325-53b2-de79-ad4033b363f7@xen0n.name>
+From: Jianmin Lv <lvjianmin@loongson.cn>
+Message-ID: <8196d0ab-8564-b858-32ba-1768c0c31732@loongson.cn>
+Date: Wed, 26 Oct 2022 18:51:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0)
- Gecko/20100101 Thunderbird/108.0a1
-Subject: Re: [PATCH] LoongArch: Fix memsection size
+In-Reply-To: <edb4002c-3325-53b2-de79-ad4033b363f7@xen0n.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-To: Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-References: <20221026075638.9396-1-lvjianmin@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20221026075638.9396-1-lvjianmin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxmFckEVlj8kwFAA--.1514S3
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWrWxKFyrCF47ZF48ZFWDurg_yoW5Kry5pF
+	1Ikr1SkrWDArn7Ar40ya15WFyYka1ru3yUGF98A34DCw13WF1vyr42y3ya9F9rXw4xAay2
+	qFZ8Xws7ZayUAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bxAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42
+	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI4
+	8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4U
+	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
+	8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
 
-On 2022/10/26 15:56, Jianmin Lv wrote:
-> On LoongArch, the physical address space ranging from 0 to 0xfffffff is
-> always memory, which is in the low half of the memsection range from 0 to
-> 0x1fffffff with 512M memsection size, and the high half will be a hole with
-> invalid memory pages.
 
-The description is incorrect. For systems with less than 512MiB of 
-memory for example, I believe not every address from 0x0 to 0x0fff_ffff 
-is valid; and regarding the latter part of the sentence, what you mean 
-by "invalid memory pages"...
 
+On 2022/10/26 下午5:21, WANG Xuerui wrote:
+> On 2022/10/26 15:56, Jianmin Lv wrote:
+>> On LoongArch, the physical address space ranging from 0 to 0xfffffff is
+>> always memory, which is in the low half of the memsection range from 0 to
+>> 0x1fffffff with 512M memsection size, and the high half will be a hole 
+>> with
+>> invalid memory pages.
 > 
-> This situation may cause some issues. For example, the range of 0x10000000
-> to 0x1fffffff is io registers, which will be considered as valid memory range
-> since which is in the memsection of range of 0 to 0x1fffffff. During S3
+> The description is incorrect. For systems with less than 512MiB of 
+> memory for example, I believe not every address from 0x0 to 0x0fff_ffff 
+> is valid; 
 
-... turns out to be totally valid, only of the I/O kind. (This might be 
-a case of Chinglish that is actually conveying the incorrect meaning to 
-unaware readers.)
+As far as I know, almost all designs use  0x0 to 0x0fff_ffff as memory 
+even with 512M because it's difficult to set cpu to support a 
+combination with memory and non-memory for 0x0 to 0x0fff_ffff.
 
-> sleep and resume, these io registers will be saved and restored as valid memory
-> page (pfn_valid() of common version considers that all pages in a memsection
-> are valid), which will cause exception, especially when restoring during resume.
+> and regarding the latter part of the sentence, what you mean 
+> by "invalid memory pages"...
 > 
-> We can use 256M size for memsection of LoongArch, or use the way as ARM64 to
-> walk through all memory memblock to check if a mem pfn is valid which maybe
-> lower performance. For simplicity, this patch just use the former way.
+If with 512M memsection size, for the memsection from 0 to 0x1fffffff, 
+low half (0 to 0xfffffff) is valid memory, and high half(0x10000000 to 
+0x1fffffff ) is I/O registers (of chipsets and cpu), so high half is not 
+memory, I think it's better to change *with invalid memory pages* to 
+*which is not memory.*
 
-And the rest of the commit message is, unfortunately, a bit too verbose 
-and hard to understand in general. I have to look at the actual change 
-(luckily, a one-liner in this case) to confirm my understanding.
-
-I think your intent is just to *avoid stepping into IO memory region 
-during suspend/resume by reducing the section size order by one*. Try 
-reducing the verbosity of the commit message in v2? I can't proofread 
-and edit every commit due to limited time, so you have to practice and 
-improve your writing skills after all. I'll review that piece of text 
-afterwards. :)
-
+>>
+>> This situation may cause some issues. For example, the range of 
+>> 0x10000000
+>> to 0x1fffffff is io registers, which will be considered as valid 
+>> memory range
+>> since which is in the memsection of range of 0 to 0x1fffffff. During S3
 > 
-> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> ... turns out to be totally valid, only of the I/O kind. (This might be 
+> a case of Chinglish that is actually conveying the incorrect meaning to 
+> unaware readers.)
 > 
-> diff --git a/arch/loongarch/include/asm/sparsemem.h b/arch/loongarch/include/asm/sparsemem.h
-> index 3d18cdf1b069..05903b40a625 100644
-> --- a/arch/loongarch/include/asm/sparsemem.h
-> +++ b/arch/loongarch/include/asm/sparsemem.h
-> @@ -8,7 +8,7 @@
->    * SECTION_SIZE_BITS		2^N: how big each section will be
->    * MAX_PHYSMEM_BITS		2^N: how much memory we can have in that space
->    */
-> -#define SECTION_SIZE_BITS	29 /* 2^29 = Largest Huge Page Size */
-> +#define SECTION_SIZE_BITS	28
->   #define MAX_PHYSMEM_BITS	48
->   
->   #endif /* CONFIG_SPARSEMEM */
 
-The change is trivial indeed but I'm not immediately giving the R-b.
+The whole range of the 512M memsection will be totally valid by 
+pfn_valid(), and let me try reduce the example description. :)
 
--- 
-WANG "xen0n" Xuerui
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+>> sleep and resume, these io registers will be saved and restored as 
+>> valid memory
+>> page (pfn_valid() of common version considers that all pages in a 
+>> memsection
+>> are valid), which will cause exception, especially when restoring 
+>> during resume.
+>>
+>> We can use 256M size for memsection of LoongArch, or use the way as 
+>> ARM64 to
+>> walk through all memory memblock to check if a mem pfn is valid which 
+>> maybe
+>> lower performance. For simplicity, this patch just use the former way.
+> 
+> And the rest of the commit message is, unfortunately, a bit too verbose 
+> and hard to understand in general. I have to look at the actual change 
+> (luckily, a one-liner in this case) to confirm my understanding.
+> 
+> I think your intent is just to *avoid stepping into IO memory region 
+> during suspend/resume by reducing the section size order by one*. 
+
+Yes.
+
+
+> Try reducing the verbosity of the commit message in v2?
+
+Ok, let me try. :)
+
+> I can't proofread and edit every commit due to limited time, so you have to practice and 
+> improve your writing skills after all. I'll review that piece of text 
+> afterwards. :)
+> 
+Ok, thanks.
+
+>>
+>> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+>>
+>> diff --git a/arch/loongarch/include/asm/sparsemem.h 
+>> b/arch/loongarch/include/asm/sparsemem.h
+>> index 3d18cdf1b069..05903b40a625 100644
+>> --- a/arch/loongarch/include/asm/sparsemem.h
+>> +++ b/arch/loongarch/include/asm/sparsemem.h
+>> @@ -8,7 +8,7 @@
+>>    * SECTION_SIZE_BITS        2^N: how big each section will be
+>>    * MAX_PHYSMEM_BITS        2^N: how much memory we can have in that 
+>> space
+>>    */
+>> -#define SECTION_SIZE_BITS    29 /* 2^29 = Largest Huge Page Size */
+>> +#define SECTION_SIZE_BITS    28
+>>   #define MAX_PHYSMEM_BITS    48
+>>   #endif /* CONFIG_SPARSEMEM */
+> 
+> The change is trivial indeed but I'm not immediately giving the R-b.
+> 
 
