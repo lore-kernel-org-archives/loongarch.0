@@ -1,447 +1,486 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5809F1110
-	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 12:06:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2822C433D7
-	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 12:06:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D67C1110
+	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 12:09:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12B3DC43144
+	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 12:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1666785984;
-	bh=9/pt6cvIMT2kjajWWK1+2BhTygA31Z0Vhh+eUHAPOTA=;
+	s=k20201202; t=1666786190;
+	bh=T5gZRpFWlBKDyv8ncqwaYHbkyfyyv8ZVB76OXMJ34S0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KWFrAjy5183/rWYKbrwgcP92CnH/283qY8g6eeD8gohTUbGbRPtAWLz3d73vj3F0F
-	 vfO/3qbzxnG7WaXWidxEE+aWJ6+Z3757QBESx1cVe0GW/rSiGem9VvFXgV59b/TSka
-	 O2kYyF3su61GGtnf57t/wrSY+oiVNoNS4tR94RmGYtX4UFaxJAHwSOVHxXvhJTwbM+
-	 oThtxco5EJJODLiZKs0T6PbBog2NmW4ahqPwh+TikGr635RjIItSCO+9M11eNW6UTV
-	 m2O++kLVSy0GAIFxWXrn/e3Jw42O37vCi7lc+uPSBScRmUJbEyvAd1dP6EeDL0vP7k
-	 tT2EEesr6UVbg==
-Received: by mail-ej1-f47.google.com with SMTP id f27so10001244eje.1
-        for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 05:06:23 -0700 (PDT)
-X-Gm-Message-State: ACrzQf1J1NNMdpYuAPJG8u3s1cU1RSkznqcSOwBxvLTJfNRMad52fQKQ
-	kU2ly/2mymXHxiEGzEO/D07mmLHAdDWxYdpe5mo=
-X-Google-Smtp-Source: AMsMyM7+iuZhZY6uasj6Cgupw9IelO0e2oUQFge+5pjQybB95WR6cnGKXe0bFiluy58Iel9hWHQ2u6RbsigiSbG9AyY=
-X-Received: by 2002:a17:907:31c3:b0:770:852b:71a2 with SMTP id
- xf3-20020a17090731c300b00770852b71a2mr37312080ejb.557.1666785981981; Wed, 26
- Oct 2022 05:06:21 -0700 (PDT)
+	b=u4tN0LWTm2VPhCTcWVfR+Pkydn/KMw6wZxRbyLsGmYsK9RaaHVmQQfWa9lxv2kjP6
+	 N3v0TxM5njD2xKWj+IBbVwYWjQfcm53fDPUsqPjwCkc+tHnV7VqNH+jLMccg+USVGJ
+	 IgIiwrX5DP0s6ILM+BsDvAbDBc4SQTN1ClQpoGzZeFYMLxI/jdQtdx4DCThIukvM7Y
+	 cssd+aH8W65WyCV+6pLxhoq+ZGxqcnnbyRQVmUeMjtRZVXLSAd/86WBmh7LHZDdrY2
+	 4S6L3IZPJMWAEsvOzQ3FPKttUajPQqBavEuuncb6zp/JB+VAwCja6T7CNBL52q/gw2
+	 QHKh+7KDyacbg==
+Received: by mail-ed1-f51.google.com with SMTP id t15so6393279edd.4
+        for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 05:09:49 -0700 (PDT)
+X-Gm-Message-State: ACrzQf0/7AsnDNU1hetT/5llX8aN+w0HS07Ohl15H59qRh/w8toOFZ+d
+	6ecMXK5U9Uc1XowwWr7SJXdGDFRpytQW97oLYBs=
+X-Google-Smtp-Source: AMsMyM4sPyDY8U/rtsq3yTTTm7yKZdA9k4J4EICbmaM9P/ePohFg70owW/p6wVK/5MQnbtYOemYhQ7TL2gBPSuOHskc=
+X-Received: by 2002:a05:6402:34cd:b0:462:5382:c3a9 with SMTP id
+ w13-20020a05640234cd00b004625382c3a9mr4033445edc.298.1666786188210; Wed, 26
+ Oct 2022 05:09:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221026030256.30512-1-zhuyinbo@loongson.cn> <20221026030256.30512-2-zhuyinbo@loongson.cn>
-In-Reply-To: <20221026030256.30512-2-zhuyinbo@loongson.cn>
+References: <20221026035752.32681-1-zhuyinbo@loongson.cn>
+In-Reply-To: <20221026035752.32681-1-zhuyinbo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 26 Oct 2022 20:06:08 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H76oz2hNGu06JkQGkVzPZW5u-MbcX3HuxCpMGXgBkahgw@mail.gmail.com>
-Message-ID: <CAAhV-H76oz2hNGu06JkQGkVzPZW5u-MbcX3HuxCpMGXgBkahgw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] clk: clk-loongson2: add clock controller driver support
+Date: Wed, 26 Oct 2022 20:09:35 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4dfz1iCOyxZbBPsH+V5n8iUXc70G_yeB5BYtOxd9PFoQ@mail.gmail.com>
+Message-ID: <CAAhV-H4dfz1iCOyxZbBPsH+V5n8iUXc70G_yeB5BYtOxd9PFoQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] clocksource: loongson2_hpet: add hpet driver support
 To: Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
 	Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, WANG Xuerui <kernel@xen0n.name>, 
 	Jiaxun Yang <jiaxun.yang@flygoat.com>, Jianmin Lv <lvjianmin@loongson.cn>, 
-	Yang Li <yang.lee@linux.alibaba.com>, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yun Liu <liuyun@loongson.cn>, Yang Li <yang.lee@linux.alibaba.com>, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
 Hi, Yinbo,
 
-On Wed, Oct 26, 2022 at 11:03 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+On Wed, Oct 26, 2022 at 11:58 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
 >
-> This driver provides support for clock controller on Loongson2 SoC
-> , the Loongson2 SoC uses a 100MHz clock as the PLL reference clock
-Use Loongson-2, including in commit message, Kconfig description and comments.
+> HPET (High Precision Event Timer) defines a new set of timers, which
+> are used by the operating system to schedule threads, interrupt the
+> kernel and interrupt the multimedia timer server. The operating
+> system can assign different timers to different applications. By
+> configuration, each timer can generate interrupt independently.
+>
+> The loongson2 HPET module includes a main count and three comparators
+The naming issue, which has been pointed out in another thread.
 
-> , there are five independent PLLs inside, each of which PLL can
-> provide up to three sets of frequency dependent clock outputs.
+> , all of which are 32 bits wide. Among the three comparators, only
+> one comparator supports periodic interrupt, all three comparators
+> support non periodic interrupts.
 >
 > Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
 > ---
 > Change in v4:
->                 1. Fixup clock-names that replace "xxx-clk" with "xxx".
+>                 1. Use common clock framework ops to gain apb clock.
+>                 2. This patch need rely on clock patch, which patchwork
+>                    link was "https://patchwork.kernel.org/project/linux-clk/list/?series=688892".
 >
->  MAINTAINERS                  |   1 +
->  arch/loongarch/Kconfig       |   1 +
->  arch/loongarch/kernel/time.c |   3 +
->  drivers/clk/Kconfig          |   9 ++
->  drivers/clk/Makefile         |   1 +
->  drivers/clk/clk-loongson2.c  | 285 +++++++++++++++++++++++++++++++++++
->  6 files changed, 300 insertions(+)
->  create mode 100644 drivers/clk/clk-loongson2.c
+>  MAINTAINERS                          |   6 +
+>  arch/loongarch/kernel/time.c         |   4 +-
+>  drivers/clocksource/Kconfig          |   9 +
+>  drivers/clocksource/Makefile         |   1 +
+>  drivers/clocksource/loongson2_hpet.c | 335 +++++++++++++++++++++++++++
+>  5 files changed, 354 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/clocksource/loongson2_hpet.c
 >
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index b6aae412de9c..f01d60cd5c3b 100644
+> index f61a431ad8ca..db29c1dc2d89 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -11911,6 +11911,7 @@ LOONGSON2 SOC SERIES CLOCK DRIVER
->  M:     Yinbo Zhu <zhuyinbo@loongson.cn>
->  L:     linux-clk@vger.kernel.org
->  S:     Maintained
-> +F:     drivers/clk/clk-loongson2.c
+> @@ -11915,6 +11915,12 @@ F:     Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+>  F:     drivers/clk/clk-loongson2.c
 >  F:     include/dt-bindings/clock/loongson,ls2k-clk.h
 >
+> +LOONGSON2 SOC SERIES HPET DRIVER
+> +M:     Yinbo Zhu <zhuyinbo@loongson.cn>
+> +L:     linux-kernel@vger.kernel.org
+> +S:     Maintained
+> +F:     drivers/clocksource/loongson2_hpet.c
+> +
 >  LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 26aeb1408e56..8b65f349cd6e 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -122,6 +122,7 @@ config LOONGARCH
->         select USE_PERCPU_NUMA_NODE_ID
->         select USER_STACKTRACE_SUPPORT
->         select ZONE_DMA32
-> +       select COMMON_CLK
->
->  config 32BIT
->         bool
+>  M:     Sathya Prakash <sathya.prakash@broadcom.com>
+>  M:     Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 > diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-> index 786735dcc8d6..09f20bc81798 100644
+> index 09f20bc81798..0d8b37763086 100644
 > --- a/arch/loongarch/kernel/time.c
 > +++ b/arch/loongarch/kernel/time.c
-> @@ -12,6 +12,7 @@
->  #include <linux/kernel.h>
->  #include <linux/sched_clock.h>
->  #include <linux/spinlock.h>
-> +#include <linux/of_clk.h>
->
->  #include <asm/cpu-features.h>
->  #include <asm/loongarch.h>
-> @@ -214,6 +215,8 @@ int __init constant_clocksource_init(void)
->
+> @@ -216,7 +216,9 @@ int __init constant_clocksource_init(void)
 >  void __init time_init(void)
 >  {
-> +       of_clk_init(NULL);
-> +
+>         of_clk_init(NULL);
+> -
+> +#ifdef CONFIG_TIMER_PROBE
+> +       timer_probe();
+> +#endif
 >         if (!cpu_has_cpucfg)
 >                 const_clock_freq = cpu_clock_freq;
 >         else
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 48f8f4221e21..88620f86373f 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -428,6 +428,15 @@ config COMMON_CLK_K210
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 4f2bb7315b67..1c7ab3541d81 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -721,4 +721,13 @@ config GOLDFISH_TIMER
 >         help
->           Support for the Canaan Kendryte K210 RISC-V SoC clocks.
+>           Support for the timer/counter of goldfish-rtc
 >
-> +config COMMON_CLK_LOONGSON2
-> +       bool "Clock driver for Loongson2 SoC"
-> +       depends on COMMON_CLK && OF
+> +config LOONGSON2_HPET
+> +       bool "Loongson2 High Precision Event Timer (HPET)"
+> +       select TIMER_PROBE
+> +       select TIMER_OF
 > +       help
-> +         This driver provides support for Clock Controller that base on
-> +         Common Clock Framework Controller (CCF) on Loongson2 SoC.  The
-> +         Clock Controller can generates and supplies clock to various
-> +         peripherals within the SoC.
-> +
->  source "drivers/clk/actions/Kconfig"
->  source "drivers/clk/analogbits/Kconfig"
->  source "drivers/clk/baikal-t1/Kconfig"
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index d5db170d38d2..8ccc7436052f 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -75,6 +75,7 @@ obj-$(CONFIG_COMMON_CLK_RS9_PCIE)     += clk-renesas-pcie.o
->  obj-$(CONFIG_COMMON_CLK_VC5)           += clk-versaclock5.o
->  obj-$(CONFIG_COMMON_CLK_WM831X)                += clk-wm831x.o
->  obj-$(CONFIG_COMMON_CLK_XGENE)         += clk-xgene.o
-> +obj-$(CONFIG_COMMON_CLK_LOONGSON2)     += clk-loongson2.o
->
->  # please keep this section sorted lexicographically by directory path name
->  obj-y                                  += actions/
-> diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
+> +         This option enables Loongson2 High Precision Event Timer
+> +         (HPET) module driver. It supports the oneshot, the periodic
+> +         modes and high resolution. It is used as a clocksource and
+> +         a clockevent.
+>  endmenu
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 64ab547de97b..1a3abb770f11 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -88,3 +88,4 @@ obj-$(CONFIG_MICROCHIP_PIT64B)                += timer-microchip-pit64b.o
+>  obj-$(CONFIG_MSC313E_TIMER)            += timer-msc313e.o
+>  obj-$(CONFIG_GOLDFISH_TIMER)           += timer-goldfish.o
+>  obj-$(CONFIG_GXP_TIMER)                        += timer-gxp.o
+> +obj-$(CONFIG_LOONGSON2_HPET)           += loongson2_hpet.o
+> diff --git a/drivers/clocksource/loongson2_hpet.c b/drivers/clocksource/loongson2_hpet.c
 > new file mode 100644
-> index 000000000000..359fede40112
+> index 000000000000..fbcf69f0204f
 > --- /dev/null
-> +++ b/drivers/clk/clk-loongson2.c
-> @@ -0,0 +1,285 @@
+> +++ b/drivers/clocksource/loongson2_hpet.c
+> @@ -0,0 +1,335 @@
 > +// SPDX-License-Identifier: GPL-2.0+
 > +/*
 > + * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
 > + * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
-Why 2023?
-
-Huacai
 > + */
 > +
-> +#include <linux/clkdev.h>
-> +#include <linux/err.h>
 > +#include <linux/init.h>
-> +#include <linux/of.h>
+> +#include <linux/percpu.h>
+> +#include <linux/delay.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/interrupt.h>
+> +#include <asm/time.h>
+Please include asm headers after all linux headers.
+
+Huacai
+> +#include <linux/of_irq.h>
 > +#include <linux/of_address.h>
-> +#include <dt-bindings/clock/loongson,ls2k-clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/slab.h>
 > +#include <linux/clk.h>
 > +
-> +#define LOONGSON2_PLL_MULT_SHIFT               32
-> +#define LOONGSON2_PLL_MULT_WIDTH               10
-> +#define LOONGSON2_PLL_DIV_SHIFT                        26
-> +#define LOONGSON2_PLL_DIV_WIDTH                        6
-> +#define LOONGSON2_APB_FREQSCALE_SHIFT          20
-> +#define LOONGSON2_APB_FREQSCALE_WIDTH          3
-> +#define LOONGSON2_USB_FREQSCALE_SHIFT          16
-> +#define LOONGSON2_USB_FREQSCALE_WIDTH          3
-> +#define LOONGSON2_SATA_FREQSCALE_SHIFT         12
-> +#define LOONGSON2_SATA_FREQSCALE_WIDTH         3
+> +/* HPET regs */
+> +#define HPET_CFG                0x010
+> +#define HPET_STATUS             0x020
+> +#define HPET_COUNTER            0x0f0
+> +#define HPET_T0_IRS             0x001
+> +#define HPET_T0_CFG             0x100
+> +#define HPET_T0_CMP             0x108
+> +#define HPET_CFG_ENABLE         0x001
+> +#define HPET_TN_LEVEL           0x0002
+> +#define HPET_TN_ENABLE          0x0004
+> +#define HPET_TN_PERIODIC        0x0008
+> +#define HPET_TN_SETVAL          0x0040
+> +#define HPET_TN_32BIT           0x0100
 > +
-> +void __iomem *loongson2_pll_base;
-> +static DEFINE_SPINLOCK(loongson2_clk_lock);
-> +static struct clk_hw **hws;
-> +static struct clk_hw_onecell_data *clk_hw_data;
+> +#define HPET_MIN_CYCLES                16
+> +#define HPET_MIN_PROG_DELTA    (HPET_MIN_CYCLES * 12)
+> +#define HPET_COMPARE_VAL       ((hpet_freq + HZ / 2) / HZ)
 > +
-> +static struct clk_hw *loongson2_clk_register(struct device *dev,
-> +                                         const char *name,
-> +                                         const char *parent_name,
-> +                                         const struct clk_ops *ops,
-> +                                         unsigned long flags)
+> +void __iomem                   *hpet_mmio_base;
+> +unsigned int                   hpet_freq;
+> +unsigned int                   hpet_t0_irq;
+> +unsigned int                   hpet_irq_flags;
+> +unsigned int                   hpet_t0_cfg;
+> +
+> +static DEFINE_SPINLOCK(hpet_lock);
+> +DEFINE_PER_CPU(struct clock_event_device, hpet_clockevent_device);
+> +
+> +static int hpet_read(int offset)
+> +{
+> +       return readl(hpet_mmio_base + offset);
+> +}
+> +
+> +static void hpet_write(int offset, int data)
+> +{
+> +       writel(data, hpet_mmio_base + offset);
+> +}
+> +
+> +static void hpet_start_counter(void)
+> +{
+> +       unsigned int cfg = hpet_read(HPET_CFG);
+> +
+> +       cfg |= HPET_CFG_ENABLE;
+> +       hpet_write(HPET_CFG, cfg);
+> +}
+> +
+> +static void hpet_stop_counter(void)
+> +{
+> +       unsigned int cfg = hpet_read(HPET_CFG);
+> +
+> +       cfg &= ~HPET_CFG_ENABLE;
+> +       hpet_write(HPET_CFG, cfg);
+> +}
+> +
+> +static void hpet_reset_counter(void)
+> +{
+> +       hpet_write(HPET_COUNTER, 0);
+> +       hpet_write(HPET_COUNTER + 4, 0);
+> +}
+> +
+> +static void hpet_restart_counter(void)
+> +{
+> +       hpet_stop_counter();
+> +       hpet_reset_counter();
+> +       hpet_start_counter();
+> +}
+> +
+> +static void hpet_enable_legacy_int(void)
+> +{
+> +       /* Do nothing on Loongson2 */
+> +}
+> +
+> +static int hpet_set_state_periodic(struct clock_event_device *evt)
+> +{
+> +       int cfg;
+> +
+> +       spin_lock(&hpet_lock);
+> +
+> +       pr_info("set clock event to periodic mode!\n");
+> +       /* stop counter */
+> +       hpet_stop_counter();
+> +       hpet_reset_counter();
+> +       hpet_write(HPET_T0_CMP, 0);
+> +
+> +       /* enables the timer0 to generate a periodic interrupt */
+> +       cfg = hpet_read(HPET_T0_CFG);
+> +       cfg &= ~HPET_TN_LEVEL;
+> +       cfg |= HPET_TN_ENABLE | HPET_TN_PERIODIC | HPET_TN_SETVAL |
+> +               HPET_TN_32BIT | hpet_irq_flags;
+> +       hpet_write(HPET_T0_CFG, cfg);
+> +
+> +       /* set the comparator */
+> +       hpet_write(HPET_T0_CMP, HPET_COMPARE_VAL);
+> +       udelay(1);
+> +       hpet_write(HPET_T0_CMP, HPET_COMPARE_VAL);
+> +
+> +       /* start counter */
+> +       hpet_start_counter();
+> +
+> +       spin_unlock(&hpet_lock);
+> +       return 0;
+> +}
+> +
+> +static int hpet_set_state_shutdown(struct clock_event_device *evt)
+> +{
+> +       int cfg;
+> +
+> +       spin_lock(&hpet_lock);
+> +
+> +       cfg = hpet_read(HPET_T0_CFG);
+> +       cfg &= ~HPET_TN_ENABLE;
+> +       hpet_write(HPET_T0_CFG, cfg);
+> +
+> +       spin_unlock(&hpet_lock);
+> +       return 0;
+> +}
+> +
+> +static int hpet_set_state_oneshot(struct clock_event_device *evt)
+> +{
+> +       int cfg;
+> +
+> +       spin_lock(&hpet_lock);
+> +
+> +       pr_info("set clock event to one shot mode!\n");
+> +       cfg = hpet_read(HPET_T0_CFG);
+> +       /*
+> +        * set timer0 type
+> +        * 1 : periodic interrupt
+> +        * 0 : non-periodic(oneshot) interrupt
+> +        */
+> +       cfg &= ~HPET_TN_PERIODIC;
+> +       cfg |= HPET_TN_ENABLE | HPET_TN_32BIT |
+> +               hpet_irq_flags;
+> +       hpet_write(HPET_T0_CFG, cfg);
+> +
+> +       /* start counter */
+> +       hpet_start_counter();
+> +
+> +       spin_unlock(&hpet_lock);
+> +       return 0;
+> +}
+> +
+> +static int hpet_tick_resume(struct clock_event_device *evt)
+> +{
+> +       spin_lock(&hpet_lock);
+> +       hpet_enable_legacy_int();
+> +       spin_unlock(&hpet_lock);
+> +
+> +       return 0;
+> +}
+> +
+> +static int hpet_next_event(unsigned long delta,
+> +               struct clock_event_device *evt)
+> +{
+> +       u32 cnt;
+> +       s32 res;
+> +
+> +       cnt = hpet_read(HPET_COUNTER);
+> +       cnt += (u32) delta;
+> +       hpet_write(HPET_T0_CMP, cnt);
+> +
+> +       res = (s32)(cnt - hpet_read(HPET_COUNTER));
+> +
+> +       return res < HPET_MIN_CYCLES ? -ETIME : 0;
+> +}
+> +
+> +static irqreturn_t hpet_irq_handler(int irq, void *data)
+> +{
+> +       int is_irq;
+> +       struct clock_event_device *cd;
+> +       unsigned int cpu = smp_processor_id();
+> +
+> +       is_irq = hpet_read(HPET_STATUS);
+> +       if (is_irq & HPET_T0_IRS) {
+> +               /* clear the TIMER0 irq status register */
+> +               hpet_write(HPET_STATUS, HPET_T0_IRS);
+> +               cd = &per_cpu(hpet_clockevent_device, cpu);
+> +               cd->event_handler(cd);
+> +               return IRQ_HANDLED;
+> +       }
+> +       return IRQ_NONE;
+> +}
+> +
+> +static struct irqaction hpet_irq_str = {
+> +       .handler = hpet_irq_handler,
+> +       .flags = IRQD_NO_BALANCING | IRQF_TIMER,
+> +       .name = "hpet",
+> +};
+> +
+> +/*
+> + * HPET address assignation and irq setting should be done in bios.
+> + * But, sometimes bios don't do this, we just setup here directly.
+> + */
+> +static void hpet_setup(void)
+> +{
+> +       hpet_enable_legacy_int();
+> +}
+> +
+> +static int hpet_setup_irq(struct clock_event_device *cd)
+> +{
+> +       setup_irq(cd->irq, &hpet_irq_str);
+> +
+> +       disable_irq(cd->irq);
+> +       irq_set_affinity(cd->irq, cd->cpumask);
+> +       enable_irq(cd->irq);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __init loongson2_hpet_clockevent_init(void)
+> +{
+> +       unsigned int cpu = smp_processor_id();
+> +       struct clock_event_device *cd;
+> +
+> +       hpet_setup();
+> +
+> +       cd = &per_cpu(hpet_clockevent_device, cpu);
+> +       cd->name = "hpet";
+> +       cd->rating = 300;
+> +       cd->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
+> +       cd->set_state_shutdown = hpet_set_state_shutdown;
+> +       cd->set_state_periodic = hpet_set_state_periodic;
+> +       cd->set_state_oneshot = hpet_set_state_oneshot;
+> +       cd->tick_resume = hpet_tick_resume;
+> +       cd->set_next_event = hpet_next_event;
+> +       cd->irq = hpet_t0_irq;
+> +       cd->cpumask = cpumask_of(cpu);
+> +       clockevent_set_clock(cd, hpet_freq);
+> +       cd->max_delta_ns = clockevent_delta2ns(0x7fffffff, cd);
+> +       cd->max_delta_ticks = 0x7fffffff;
+> +       cd->min_delta_ns = clockevent_delta2ns(HPET_MIN_PROG_DELTA, cd);
+> +       cd->min_delta_ticks = HPET_MIN_PROG_DELTA;
+> +
+> +       clockevents_register_device(cd);
+> +       hpet_setup_irq(cd);
+> +
+> +       pr_info("hpet clock event device register\n");
+> +
+> +       return 0;
+> +}
+> +
+> +static u64 hpet_read_counter(struct clocksource *cs)
+> +{
+> +       return (u64)hpet_read(HPET_COUNTER);
+> +}
+> +
+> +static void hpet_suspend(struct clocksource *cs)
+> +{
+> +       hpet_t0_cfg = hpet_read(HPET_T0_CFG);
+> +}
+> +
+> +static void hpet_resume(struct clocksource *cs)
+> +{
+> +       hpet_write(HPET_T0_CFG, hpet_t0_cfg);
+> +       hpet_setup();
+> +       hpet_restart_counter();
+> +}
+> +
+> +struct clocksource csrc_hpet = {
+> +       .name = "hpet",
+> +       .rating = 300,
+> +       .read = hpet_read_counter,
+> +       .mask = CLOCKSOURCE_MASK(32),
+> +       /* oneshot mode work normal with this flag */
+> +       .flags = CLOCK_SOURCE_IS_CONTINUOUS,
+> +       .suspend = hpet_suspend,
+> +       .resume = hpet_resume,
+> +       .mult = 0,
+> +       .shift = 10,
+> +};
+> +
+> +static int __init loongson2_hpet_clocksource_init(void)
+> +{
+> +       csrc_hpet.mult = clocksource_hz2mult(hpet_freq, csrc_hpet.shift);
+> +
+> +       /* start counter */
+> +       hpet_start_counter();
+> +
+> +       return clocksource_register_hz(&csrc_hpet, hpet_freq);
+> +}
+> +
+> +static int __init loongson2_hpet_init(struct device_node *np)
 > +{
 > +       int ret;
-> +       struct clk_hw *hw;
-> +       struct clk_init_data init;
-> +
-> +       /* allocate the divider */
-> +       hw = kzalloc(sizeof(*hw), GFP_KERNEL);
-> +       if (!hw)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       init.name = name;
-> +       init.ops = ops;
-> +       init.flags = flags | CLK_IS_BASIC;
-> +       init.parent_names = (parent_name ? &parent_name : NULL);
-> +       init.num_parents = (parent_name ? 1 : 0);
-> +       hw->init = &init;
-> +
-> +       /* register the clock */
-> +       ret = clk_hw_register(dev, hw);
-> +       if (ret) {
-> +               kfree(hw);
-> +               hw = ERR_PTR(ret);
-> +       }
-> +
-> +       return hw;
-> +}
-> +
-> +static struct clk_hw *loongson2_clk_pll_register(const char *name,
-> +                               const char *parent, void __iomem *reg)
-> +{
-> +       u64 val;
-> +       u32 mult = 1, div = 1;
-> +
-> +       val = readq((void *)reg);
-> +
-> +       mult = (val >> LOONGSON2_PLL_MULT_SHIFT) &
-> +                       clk_div_mask(LOONGSON2_PLL_MULT_WIDTH);
-> +       div = (val >> LOONGSON2_PLL_DIV_SHIFT) &
-> +                       clk_div_mask(LOONGSON2_PLL_DIV_WIDTH);
-> +
-> +       return clk_hw_register_fixed_factor(NULL, name, parent,
-> +                               CLK_SET_RATE_PARENT, mult, div);
-> +}
-> +
-> +static unsigned long loongson2_apb_recalc_rate(struct clk_hw *hw,
-> +                                         unsigned long parent_rate)
-> +{
-> +       u64 val;
-> +       u32 mult;
-> +       unsigned long rate;
-> +
-> +       val = readq((void *)(loongson2_pll_base + 0x50));
-> +
-> +       mult = (val >> LOONGSON2_APB_FREQSCALE_SHIFT) &
-> +                       clk_div_mask(LOONGSON2_APB_FREQSCALE_WIDTH);
-> +
-> +       rate = parent_rate * (mult + 1);
-> +       do_div(rate, 8);
-> +
-> +       return rate;
-> +}
-> +
-> +static const struct clk_ops loongson2_apb_clk_ops = {
-> +       .recalc_rate = loongson2_apb_recalc_rate,
-> +};
-> +
-> +static unsigned long loongson2_usb_recalc_rate(struct clk_hw *hw,
-> +                                         unsigned long parent_rate)
-> +{
-> +       u64 val;
-> +       u32 mult;
-> +       unsigned long rate;
-> +
-> +       val = readq((void *)(loongson2_pll_base + 0x50));
-> +
-> +       mult = (val >> LOONGSON2_USB_FREQSCALE_SHIFT) &
-> +                       clk_div_mask(LOONGSON2_USB_FREQSCALE_WIDTH);
-> +
-> +       rate = parent_rate * (mult + 1);
-> +       do_div(rate, 8);
-> +
-> +       return rate;
-> +}
-> +
-> +static const struct clk_ops loongson2_usb_clk_ops = {
-> +       .recalc_rate = loongson2_usb_recalc_rate,
-> +};
-> +
-> +static unsigned long loongson2_sata_recalc_rate(struct clk_hw *hw,
-> +                                         unsigned long parent_rate)
-> +{
-> +       u64 val;
-> +       u32 mult;
-> +       unsigned long rate;
-> +
-> +       val = readq((void *)(loongson2_pll_base + 0x50));
-> +
-> +       mult = (val >> LOONGSON2_SATA_FREQSCALE_SHIFT) &
-> +                       clk_div_mask(LOONGSON2_SATA_FREQSCALE_WIDTH);
-> +
-> +       rate = parent_rate * (mult + 1);
-> +       do_div(rate, 8);
-> +
-> +       return rate;
-> +}
-> +
-> +static const struct clk_ops loongson2_sata_clk_ops = {
-> +       .recalc_rate = loongson2_sata_recalc_rate,
-> +};
-> +
-> +static void loongson2_check_clk_hws(struct clk_hw *clks[], unsigned int count)
-> +{
-> +       unsigned int i;
-> +
-> +       for (i = 0; i < count; i++)
-> +               if (IS_ERR(clks[i]))
-> +                       pr_err("Loongson2 clk %u: register failed with %ld\n"
-> +                               , i, PTR_ERR(clks[i]));
-> +}
-> +
-> +static struct clk_hw *loongson2_obtain_fixed_clk_hw(
-> +                                       struct device_node *np,
-> +                                       const char *name)
-> +{
 > +       struct clk *clk;
 > +
-> +       clk = of_clk_get_by_name(np, name);
-> +       if (IS_ERR(clk))
-> +               return ERR_PTR(-ENOENT);
-> +
-> +       return __clk_get_hw(clk);
-> +}
-> +
-> +static void __init loongson2_clocks_init(struct device_node *np)
-> +{
-> +       loongson2_pll_base = of_iomap(np, 0);
-> +
-> +       if (!loongson2_pll_base) {
-> +               pr_err("clk: unable to map loongson2 clk registers\n");
+> +       hpet_mmio_base = of_iomap(np, 0);
+> +       if (!hpet_mmio_base) {
+> +               pr_err("hpet: unable to map loongson2 hpet registers\n");
 > +               goto err;
 > +       }
 > +
-> +       clk_hw_data = kzalloc(struct_size(clk_hw_data, hws, LOONGSON2_CLK_END),
-> +                                       GFP_KERNEL);
-> +       if (WARN_ON(!clk_hw_data))
+> +       ret = -EINVAL;
+> +       hpet_t0_irq = irq_of_parse_and_map(np, 0);
+> +       if (hpet_t0_irq <= 0) {
+> +               pr_err("hpet: unable to get IRQ from DT, %d\n", hpet_t0_irq);
+> +               goto err;
+> +       }
+> +
+> +       clk = of_clk_get(np, 0);
+> +       if (!IS_ERR(clk)) {
+> +               hpet_freq = clk_get_rate(clk);
+> +               clk_put(clk);
+> +       } else
 > +               goto err;
 > +
-> +       clk_hw_data->num = LOONGSON2_CLK_END;
-> +       hws = clk_hw_data->hws;
+> +       hpet_irq_flags = HPET_TN_LEVEL;
 > +
-> +       hws[LOONGSON2_REF_100M] = loongson2_obtain_fixed_clk_hw(np,
-> +                                               "ref_100m");
+> +       loongson2_hpet_clocksource_init();
 > +
-> +       hws[LOONGSON2_NODE_PLL] = loongson2_clk_pll_register("node_pll",
-> +                                               "ref_100m",
-> +                                               loongson2_pll_base);
+> +       loongson2_hpet_clockevent_init();
 > +
-> +       hws[LOONGSON2_DDR_PLL] = loongson2_clk_pll_register("ddr_pll",
-> +                                               "ref_100m",
-> +                                               loongson2_pll_base + 0x10);
-> +
-> +       hws[LOONGSON2_DC_PLL] = loongson2_clk_pll_register("dc_pll",
-> +                                               "ref_100m",
-> +                                               loongson2_pll_base + 0x20);
-> +
-> +       hws[LOONGSON2_PIX0_PLL] = loongson2_clk_pll_register("pix0_pll",
-> +                                               "ref_100m",
-> +                                               loongson2_pll_base + 0x30);
-> +
-> +       hws[LOONGSON2_PIX1_PLL] = loongson2_clk_pll_register("pix1_pll",
-> +                                               "ref_100m",
-> +                                               loongson2_pll_base + 0x40);
-> +
-> +       hws[LOONGSON2_NODE_CLK] = clk_hw_register_divider(NULL, "node",
-> +                                               "node_pll", 0,
-> +                                               loongson2_pll_base + 0x8, 0,
-> +                                               6, CLK_DIVIDER_ONE_BASED,
-> +                                               &loongson2_clk_lock);
-> +
-> +       /*
-> +        * The hda clk divisor in the upper 32bits and the clk-prodiver
-> +        * layer code doesn't support 64bit io operation thus a conversion
-> +        * is required that subtract shift by 32 and add 4byte to the hda
-> +        * address
-> +        */
-> +       hws[LOONGSON2_HDA_CLK] = clk_hw_register_divider(NULL, "hda",
-> +                                               "ddr_pll", 0,
-> +                                               loongson2_pll_base + 0x22, 12,
-> +                                               7, CLK_DIVIDER_ONE_BASED,
-> +                                               &loongson2_clk_lock);
-> +
-> +       hws[LOONGSON2_GPU_CLK] = clk_hw_register_divider(NULL, "gpu",
-> +                                               "ddr_pll", 0,
-> +                                               loongson2_pll_base + 0x18, 22,
-> +                                               6, CLK_DIVIDER_ONE_BASED,
-> +                                               &loongson2_clk_lock);
-> +
-> +       hws[LOONGSON2_DDR_CLK] = clk_hw_register_divider(NULL, "ddr",
-> +                                               "ddr_pll", 0,
-> +                                               loongson2_pll_base + 0x18, 0,
-> +                                               6, CLK_DIVIDER_ONE_BASED,
-> +                                               &loongson2_clk_lock);
-> +
-> +       hws[LOONGSON2_GMAC_CLK] = clk_hw_register_divider(NULL, "gmac",
-> +                                               "dc_pll", 0,
-> +                                               loongson2_pll_base + 0x28, 22,
-> +                                               6, CLK_DIVIDER_ONE_BASED,
-> +                                               &loongson2_clk_lock);
-> +
-> +       hws[LOONGSON2_DC_CLK] = clk_hw_register_divider(NULL, "dc",
-> +                                               "dc_pll", 0,
-> +                                               loongson2_pll_base + 0x28, 0,
-> +                                               6, CLK_DIVIDER_ONE_BASED,
-> +                                               &loongson2_clk_lock);
-> +
-> +       hws[LOONGSON2_APB_CLK] = loongson2_clk_register(NULL, "apb",
-> +                                               "gmac",
-> +                                               &loongson2_apb_clk_ops, 0);
-> +
-> +       hws[LOONGSON2_USB_CLK] = loongson2_clk_register(NULL, "usb",
-> +                                               "gmac",
-> +                                               &loongson2_usb_clk_ops, 0);
-> +
-> +       hws[LOONGSON2_SATA_CLK] = loongson2_clk_register(NULL, "sata",
-> +                                               "gmac",
-> +                                               &loongson2_sata_clk_ops, 0);
-> +
-> +       hws[LOONGSON2_PIX0_CLK] = clk_hw_register_divider(NULL, "pix0",
-> +                                               "pix0_pll", 0,
-> +                                               loongson2_pll_base + 0x38, 0, 6,
-> +                                               CLK_DIVIDER_ONE_BASED,
-> +                                               &loongson2_clk_lock);
-> +
-> +       hws[LOONGSON2_PIX1_CLK] = clk_hw_register_divider(NULL, "pix1",
-> +                                               "pix1_pll", 0,
-> +                                               loongson2_pll_base + 0x48, 0, 6,
-> +                                               CLK_DIVIDER_ONE_BASED,
-> +                                               &loongson2_clk_lock);
-> +
-> +       loongson2_check_clk_hws(hws, LOONGSON2_CLK_END);
-> +
-> +       of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
+> +       return 0;
 > +
 > +err:
-> +       iounmap(loongson2_pll_base);
+> +       iounmap(hpet_mmio_base);
+> +       return ret;
 > +}
 > +
-> +CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", loongson2_clocks_init);
+> +TIMER_OF_DECLARE(loongson2_hpet, "loongson,ls2k-hpet", loongson2_hpet_init);
 > --
 > 2.31.1
 >
