@@ -1,45 +1,45 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B1C1C06
-	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 14:23:29 +0000 (UTC)
-Received: by mail-qk1-f173.google.com with SMTP id x26so694741qki.0
-        for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 07:23:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575EA1C06
+	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 14:28:21 +0000 (UTC)
+Received: by mail-qt1-f173.google.com with SMTP id cr19so10019410qtb.0
+        for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 07:28:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=BqMNLvHQ2hWVKlzHSd00UW0qgFnV5U+Ku1OTYpudEo4=;
-        b=JRWZV4zzj1C+QUy3o4Hg6Hl7KAVINoB/ig04Wx9mFze3OHESDYG41Aydp3LBDYor4d
-         Cu35M805+/LwGTGokYH+Scm79ho14Wog0i1F8urzeGXB6Abzd4feOpyXO71Q/gT1dWgF
-         zQtzscBAeNFCZ5wVaV0c+x7Jb+2Fl1Fehaz6UG2hlxNXh6mS55d6DoK/W+Ro9ha5t2nM
-         Xcfss3pXHHJqDZo5CrTY3UIjIQL5ESexHBYfLHfObpzEJWGYnmySDvjncisGEVLqDCFV
-         4zztOnLiroyJ3oKNKaRYYNxTN8XlhdSjLIPwJ8l7M8WH8kVjghLlSAFFXJQwdUnXGJ6Q
-         kXEg==
+        bh=l439+0R5hO/yRk1J+3UmLizSxKZrKGZyR0O124ef93c=;
+        b=ZfFHFEdLr++H9TznwXfWaSgfrldon+JVu4ZhPk/fPCUtsE8Odks2IPXyMZC9/hQCt1
+         wUj4yNGIgo1aL1o6wV+5hLweYQwPX/NpmTGrGEsya8CDudaIWVmeuvqUUdHw5C4dHrc+
+         cCfItGQTwsx+PRh4FlH2H35POSGMxx5ToenlLbccOVeaFM7luoSLwnOoL2owPWVg9Z6K
+         xBDEOYwreHgWchDVxKu9Tgn0B8ZbZFznjMSOE9OLjqQ/0jjEBKd6V+YcF8p7aQCVVme6
+         FN+lgF9IcXEoEdUfZWM2S6CLb3d0zxsyuH6atEL9n5Bu46K7OymWzEQzzO67TBZeXMuf
+         hxdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BqMNLvHQ2hWVKlzHSd00UW0qgFnV5U+Ku1OTYpudEo4=;
-        b=AP9cdHphCmv2td6a21+oikdldZhgsv1CTcybomyPVOmsZpT01POzt5cn8z88+bMvV6
-         PONZtMvpkLqs3tI0WXo3whC2Hv7IU0uZ41BLsY++ENGlgzq0ewug8+RQks6TAAB/Z2t2
-         TlzSlpbSEysz4hJNR1JSF7h2wKb7RG8oW5Juamj2N/Nld9c5ekCGD7VOplWYLL1ujV1r
-         qN58trVZ/yt/pao7142jLPe6HSVoCqJNgwR3y3ktFifZSs2VyzhXYjHyoPSwqFIaN/FF
-         Cw1FVLPM1vkBnOSJG7r9rZR06bPBVbh6pS9EBqa/t2263UfA5xk81zWG8wbpRo7sPi57
-         hiuA==
-X-Gm-Message-State: ACrzQf2Pqw/6r/CKT+dJzlf1QDh6+DkOmvIfuOoMCbXjld0yz307cZ2N
-	+8epGFP+ZqY0KlhNhj8A/nJ5ypAbFbLt1A==
-X-Google-Smtp-Source: AMsMyM4wVzLveUDs8MwkkI2QdIMLJxr4YRBhsXq+G3qow0kiGcjCJ274Q7QbwW3pfuvcl/dTGbs56w==
-X-Received: by 2002:a05:620a:e87:b0:6f4:9c2c:c04b with SMTP id w7-20020a05620a0e8700b006f49c2cc04bmr12407111qkm.60.1666794198489;
-        Wed, 26 Oct 2022 07:23:18 -0700 (PDT)
+        bh=l439+0R5hO/yRk1J+3UmLizSxKZrKGZyR0O124ef93c=;
+        b=NgrwQZX0Yh5QSBi2uGmD3SzxtewE9B+N6x8aEgH1DxLsey3Hek8xZwxBIyO3jaE5Kx
+         JSRlK9Pg06cemFcdKrhtLyBNQVnvip87VdvuG6gK3nUw8+TxkyCZlwf2bJiAjzrVhtfb
+         A+h78DIoowR+fZlfstbL/tRHgNe3LjsjL/tSUJ6J1Ydzdu/CFn92ipLiKF6+g+PnlGFb
+         jwjNStfHbIP1lTFmfpJEiJoD5PkvC93ReV1sR1aNDgiotfyncnIdG9mV9YcpVhsnsYG9
+         mieI31f4Hp3XHg5kqFW5soogwYSRKgl4vrV72OlKrRAHdxlur4f3/MW2oQI6mi6ZCkes
+         02yA==
+X-Gm-Message-State: ACrzQf1Dy3u1G7LxlcxmlQd4rKNnaJ75+XtPnDL+Oe3K+HMYpZDrUzWW
+	nmF+MJdYfK+RbYSae6/Q6IYA4Q==
+X-Google-Smtp-Source: AMsMyM5m1uinfI4UXc8SZtse1r7FwSlklruraaJd/xVhVOs+Tk2bRefK0Tu45oSL6DAaO2OGvJc6EQ==
+X-Received: by 2002:a05:622a:138b:b0:39c:eb5a:5c33 with SMTP id o11-20020a05622a138b00b0039ceb5a5c33mr37048294qtk.412.1666794500218;
+        Wed, 26 Oct 2022 07:28:20 -0700 (PDT)
 Received: from [192.168.1.11] ([64.57.193.93])
-        by smtp.gmail.com with ESMTPSA id 3-20020ac85903000000b00399d5d564b7sm3335859qty.56.2022.10.26.07.23.16
+        by smtp.gmail.com with ESMTPSA id f12-20020a05622a114c00b0039cde2cd510sm3279219qty.28.2022.10.26.07.28.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Oct 2022 07:23:17 -0700 (PDT)
-Message-ID: <fd4132ce-fad8-bd33-689c-e8358b587d28@linaro.org>
-Date: Wed, 26 Oct 2022 10:23:15 -0400
+        Wed, 26 Oct 2022 07:28:19 -0700 (PDT)
+Message-ID: <1405ff3d-7d20-b604-189b-6730b8231ed4@linaro.org>
+Date: Wed, 26 Oct 2022 10:28:17 -0400
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -48,8 +48,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
-Subject: Re: [PATCH v4 1/2] clocksource: loongson2_hpet: add hpet driver
- support
+Subject: Re: [PATCH v4 2/2] dt-bindings: hpet: add loongson2 hpet
 Content-Language: en-US
 To: Yinbo Zhu <zhuyinbo@loongson.cn>,
  Daniel Lezcano <daniel.lezcano@linaro.org>,
@@ -61,34 +60,26 @@ To: Yinbo Zhu <zhuyinbo@loongson.cn>,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
  loongarch@lists.linux.dev
 References: <20221026035752.32681-1-zhuyinbo@loongson.cn>
+ <20221026035752.32681-2-zhuyinbo@loongson.cn>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221026035752.32681-1-zhuyinbo@loongson.cn>
+In-Reply-To: <20221026035752.32681-2-zhuyinbo@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 25/10/2022 23:57, Yinbo Zhu wrote:
-> HPET (High Precision Event Timer) defines a new set of timers, which
-> are used by the operating system to schedule threads, interrupt the
-> kernel and interrupt the multimedia timer server. The operating
-> system can assign different timers to different applications. By
-> configuration, each timer can generate interrupt independently.
-> 
-> The loongson2 HPET module includes a main count and three comparators
-> , all of which are 32 bits wide. Among the three comparators, only
-> one comparator supports periodic interrupt, all three comparators
-> support non periodic interrupts.
+> Add the loongson2 High Precision Event Timer (HPET) binding
+> with DT schema format using json-schema.
 > 
 > Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
 > ---
 > Change in v4: 
->                 1. Use common clock framework ops to gain apb clock.
+>                 1. Fixup the clock-names that replace apb-clk with apb.
 >                 2. This patch need rely on clock patch, which patchwork  
 >                    link was "https://patchwork.kernel.org/project/linux-clk/list/?series=688892".
+> 
 
-Your dependency does not apply. You based it on some other tree, so we
-cannot even test this.
 
-Fix your clock patchset.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
