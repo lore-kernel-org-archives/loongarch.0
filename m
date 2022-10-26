@@ -1,183 +1,55 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA35B1374
-	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 13:24:15 +0000 (UTC)
-Received: from loongson.cn (unknown [171.223.96.17])
-	by gateway (Coremail) with SMTP id _____8DxTtv7NFljlKYCAA--.10307S3;
-	Wed, 26 Oct 2022 21:24:11 +0800 (CST)
-Received: from [127.0.0.1] (unknown [171.223.96.17])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxPuD5NFljGVkFAA--.19908S3;
-	Wed, 26 Oct 2022 21:24:10 +0800 (CST)
-Message-ID: <26a42f0c-db3b-9330-de5c-68bf44976201@loongson.cn>
-Date: Wed, 26 Oct 2022 21:24:10 +0800
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5A21374
+	for <loongarch@lists.linux.dev>; Wed, 26 Oct 2022 13:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1666790859; bh=3ejE4L3fwNSToRFYb0YslC/TsKHy6FFSXGUoLdwiKOA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WDHsllv1u7ddxqr+prHR+wQ2amFOBA/LnLHmb/Q9x+C5J0qDwkvLubvkBmV0o5j44
+	 HZv/YuCA/PmQrJ/nzXm+k9z9rkewmnmbrDcNBcvFC7bH8CVsY2xUfEzsZQE4/TbhMh
+	 1uh/ylQwdzfUWZUjlGS1NKTokMIluywZNhQ5F0f8=
+Received: from [100.100.57.122] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 872DD600CF;
+	Wed, 26 Oct 2022 21:27:39 +0800 (CST)
+Message-ID: <78b76ffd-f668-239c-eb97-654bbe6eccc0@xen0n.name>
+Date: Wed, 26 Oct 2022 21:27:39 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0)
+ Gecko/20100101 Thunderbird/108.0a1
 Subject: Re: [PATCH v2 RESEND] LoongArch: Remove unused kernel stack padding
-To: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>,
+Content-Language: en-US
+To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
  Oleg Nesterov <oleg@redhat.com>
 Cc: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev,
  linux-kernel@vger.kernel.org
 References: <20221026035501.11986-1-hejinyang@loongson.cn>
  <43126fe8-9040-a574-a149-273844d3073f@xen0n.name>
-From: Jinyang He <hejinyang@loongson.cn>
-In-Reply-To: <43126fe8-9040-a574-a149-273844d3073f@xen0n.name>
+ <26a42f0c-db3b-9330-de5c-68bf44976201@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <26a42f0c-db3b-9330-de5c-68bf44976201@loongson.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxPuD5NFljGVkFAA--.19908S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxuFW5KF1UZFW3Xr13ZF1UZFb_yoW7tF1rpF
-	1kAF1DJrWUCF1ktryUJr1UZFyUJr1kKw12gF13Ja45Jr4UZr1Ygr18Xr90gF1UJw4rKw40
-	qF1Yqw12va15Ja7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bxAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42
-	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
-	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI4
-	8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4U
-	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
-	8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
+Content-Transfer-Encoding: 7bit
 
-Hi, Xuerui,
+On 2022/10/26 21:24, Jinyang He wrote:
+> Emm, to be honest, I didn't do tests like LTP. I ususally do development
+> on CLFS-LoongArch while kernel has this patch. And it works normally.
 
+For changes touching fundamental parts that make the system work at all, 
+like this, "it continues to boot and work" usually is enough for 
+confirming correctness. Although some harder test runs would certainly 
+be better ;-)
 
-在 2022/10/26 15:27, WANG Xuerui 写道:
-> On 2022/10/26 11:55, Jinyang He wrote:
->> Kernel stack padding looks like obey MIPS o32 Calling Convention, as
->> LoongArch is inspired by MIPS and keep it. Remove it avoid not clear
->> code.
->
-> Just some improvement to the commit message so it's clearer:
->
-> "The current LoongArch kernel stack is padded as if obeying the MIPS 
-> o32 calling convention, signifying the port's MIPS lineage but no 
-> longer making sense. Remove the padding for clarity."
+-- 
+WANG "xen0n" Xuerui
 
-Thanks, I'll improve it and send it later.
-
-
->
->>
->> Link: 
->> https://lore.kernel.org/loongarch/1662130897-13156-1-git-send-email-hejinyang@loongson.cn/
->>
->
-> I think this blank line between the "Link" and S-o-b tags could be 
-> removed.
-
-Ok.
-
-
->
->> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
->> ---
->> v2: Remove TOP_OF_KERNEL_STACK_PADDING
->>      Remove 'init stack pointer' in head.S
->>
->>   arch/loongarch/include/asm/processor.h | 2 +-
->>   arch/loongarch/include/asm/ptrace.h    | 2 +-
->>   arch/loongarch/kernel/head.S           | 3 +--
->>   arch/loongarch/kernel/process.c        | 4 ++--
->>   arch/loongarch/kernel/switch.S         | 2 +-
->>   5 files changed, 6 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/loongarch/include/asm/processor.h 
->> b/arch/loongarch/include/asm/processor.h
->> index 6954dc5d24e9..7184f1dc61f2 100644
->> --- a/arch/loongarch/include/asm/processor.h
->> +++ b/arch/loongarch/include/asm/processor.h
->> @@ -191,7 +191,7 @@ static inline void flush_thread(void)
->>   unsigned long __get_wchan(struct task_struct *p);
->>     #define __KSTK_TOS(tsk) ((unsigned long)task_stack_page(tsk) + \
->> -             THREAD_SIZE - 32 - sizeof(struct pt_regs))
->> +             THREAD_SIZE - sizeof(struct pt_regs))
->>   #define task_pt_regs(tsk) ((struct pt_regs *)__KSTK_TOS(tsk))
->>   #define KSTK_EIP(tsk) (task_pt_regs(tsk)->csr_era)
->>   #define KSTK_ESP(tsk) (task_pt_regs(tsk)->regs[3])
->> diff --git a/arch/loongarch/include/asm/ptrace.h 
->> b/arch/loongarch/include/asm/ptrace.h
->> index 7437b9366c3b..59c4608de91d 100644
->> --- a/arch/loongarch/include/asm/ptrace.h
->> +++ b/arch/loongarch/include/asm/ptrace.h
->> @@ -133,7 +133,7 @@ static inline void die_if_kernel(const char *str, 
->> struct pt_regs *regs)
->>   #define current_pt_regs()                        \
->>   ({                                    \
->>       unsigned long sp = (unsigned long)__builtin_frame_address(0);    \
->> -    (struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1 - 32) - 1;    \
->> +    (struct pt_regs *)((sp | (THREAD_SIZE - 1)) + 1) - 1;        \
->>   })
->>     /* Helpers for working with the user stack pointer */
->> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
->> index 97425779ce9f..84970e266658 100644
->> --- a/arch/loongarch/kernel/head.S
->> +++ b/arch/loongarch/kernel/head.S
->> @@ -84,10 +84,9 @@ SYM_CODE_START(kernel_entry)            # kernel 
->> entry point
->>         la.pcrel    tp, init_thread_union
->>       /* Set the SP after an empty pt_regs.  */
->> -    PTR_LI        sp, (_THREAD_SIZE - 32 - PT_SIZE)
->> +    PTR_LI        sp, (_THREAD_SIZE - PT_SIZE)
->>       PTR_ADD        sp, sp, tp
->>       set_saved_sp    sp, t0, t1
->> -    PTR_ADDI    sp, sp, -4 * SZREG    # init stack pointer
->>         bl        start_kernel
->>       ASM_BUG()
->> diff --git a/arch/loongarch/kernel/process.c 
->> b/arch/loongarch/kernel/process.c
->> index 1256e3582475..2526b68f1c0f 100644
->> --- a/arch/loongarch/kernel/process.c
->> +++ b/arch/loongarch/kernel/process.c
->> @@ -129,7 +129,7 @@ int copy_thread(struct task_struct *p, const 
->> struct kernel_clone_args *args)
->>       unsigned long clone_flags = args->flags;
->>       struct pt_regs *childregs, *regs = current_pt_regs();
->>   -    childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE - 32;
->> +    childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE;
->>         /* set up new TSS. */
->>       childregs = (struct pt_regs *) childksp - 1;
->> @@ -236,7 +236,7 @@ bool in_task_stack(unsigned long stack, struct 
->> task_struct *task,
->>               struct stack_info *info)
->>   {
->>       unsigned long begin = (unsigned long)task_stack_page(task);
->> -    unsigned long end = begin + THREAD_SIZE - 32;
->> +    unsigned long end = begin + THREAD_SIZE;
->>         if (stack < begin || stack >= end)
->>           return false;
->> diff --git a/arch/loongarch/kernel/switch.S 
->> b/arch/loongarch/kernel/switch.S
->> index 43ebbc3990f7..202a163cb32f 100644
->> --- a/arch/loongarch/kernel/switch.S
->> +++ b/arch/loongarch/kernel/switch.S
->> @@ -26,7 +26,7 @@ SYM_FUNC_START(__switch_to)
->>       move    tp, a2
->>       cpu_restore_nonscratch a1
->>   -    li.w        t0, _THREAD_SIZE - 32
->> +    li.w        t0, _THREAD_SIZE
->>       PTR_ADD        t0, t0, tp
->>       set_saved_sp    t0, t1, t2
->
-> Otherwise LGTM, assuming you have tested it before sending (I don't 
-> currently have the capacity to immediately test this for you)...
->
-> Reviewed-by: WANG Xuerui <git@xen0n.name>
-
-
-Emm, to be honest, I didn't do tests like LTP. I ususally do development
-on CLFS-LoongArch while kernel has this patch. And it works normally.
-
-
-Thanks,
-
-Jinyang
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
