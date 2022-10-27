@@ -1,22 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6197B
-	for <loongarch@lists.linux.dev>; Thu, 27 Oct 2022 12:52:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79105C433D7;
-	Thu, 27 Oct 2022 12:52:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7E87B
+	for <loongarch@lists.linux.dev>; Thu, 27 Oct 2022 12:54:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21BACC433B5;
+	Thu, 27 Oct 2022 12:54:49 +0000 (UTC)
 From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Dinh Nguyen <dinguyen@kernel.org>
 Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
 	Xuefeng Li <lixuefeng@loongson.cn>,
 	Guo Ren <guoren@kernel.org>,
 	Xuerui Wang <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
+	linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] platform/loongarch: laptop: Adjust resume order for loongson_hotkey_resume()
-Date: Thu, 27 Oct 2022 20:50:47 +0800
-Message-Id: <20221027125047.3450683-1-chenhuacai@loongson.cn>
+	linux-arm-kernel@lists.infradead.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Feiyang Chen <chenfeiyang@loongson.cn>
+Subject: [PATCH V14 0/4] mm/sparse-vmemmap: Generalise helpers and enable for LoongArch
+Date: Thu, 27 Oct 2022 20:52:49 +0800
+Message-Id: <20221027125253.3458989-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -26,47 +40,87 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some laptops don't support SW_LID, but still have backlight control,
-move backlight resuming before SW_LID event handling so as to avoid
-backlight mistake due to early return.
+This series is in order to enable sparse-vmemmap for LoongArch. But
+LoongArch cannot use generic helpers directly because MIPS&LoongArch
+need to call pgd_init()/pud_init()/pmd_init() when populating page
+tables. So we adjust the prototypes of p?d_init() to make generic
+helpers can call them, then enable sparse-vmemmap with generic helpers,
+and to be further, generalise vmemmap_populate_hugepages() for ARM64,
+X86 and LoongArch.
+
+V1 -> V2:
+Split ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP to a separate patch.
+
+V2 -> V3:
+1, Change the Signed-off-by order of author and committer;
+2, Update commit message about the build error on LoongArch.
+
+V3 -> V4:
+Change pmd to pmdp for ARM64 for consistency.
+
+V4 -> V5:
+Add a detailed comment for no-fallback in the altmap case.
+
+V5 -> V6:
+1, Fix build error for NIOS2;
+2, Fix build error for allnoconfig;
+3, Update comment for no-fallback in the altmap case.
+
+V6 -> V7:
+Fix build warnings of "no previous prototype".
+
+V7 -> V8:
+Fix build error for MIPS pud_init().
+
+V8 -> V9:
+Remove redundant #include to avoid build error with latest upstream
+kernel.
+
+V9 -> V10:
+Fix build error due to VMEMMAP changes in 6.0-rc1.
+
+V10 -> V11:
+Adjust context due to ARM64 changes in 6.1-rc1.
+
+V11 -> V12:
+1, Fix build error for !SPARSEMEM;
+2, Simplify pagetable_init() for MIPS32.
+
+V12 -> V13:
+1, Add Acked-by and Reviewed-by tags;
+2, Update commit message for the 4th patch.
+
+V13 -> V14:
+Remove the static_key.h inclusion in the 4th patch.
+
+Huacai Chen and Feiyang Chen(4):
+ MIPS&LoongArch&NIOS2: Adjust prototypes of p?d_init().
+ LoongArch: Add sparse memory vmemmap support.
+ mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages().
+ LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP.
 
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn> 
 ---
- drivers/platform/loongarch/loongson-laptop.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platform/loongarch/loongson-laptop.c
-index f0166ad5d2c2..0e6f4efe21e5 100644
---- a/drivers/platform/loongarch/loongson-laptop.c
-+++ b/drivers/platform/loongarch/loongson-laptop.c
-@@ -199,6 +199,13 @@ static int loongson_hotkey_resume(struct device *dev)
- 	struct key_entry ke;
- 	struct backlight_device *bd;
- 
-+	bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
-+	if (bd) {
-+		loongson_laptop_backlight_update(bd) ?
-+		pr_warn("Loongson_backlight: resume brightness failed") :
-+		pr_info("Loongson_backlight: resume brightness %d\n", bd->props.brightness);
-+	}
-+
- 	/*
- 	 * Only if the firmware supports SW_LID event model, we can handle the
- 	 * event. This is for the consideration of development board without EC.
-@@ -228,13 +235,6 @@ static int loongson_hotkey_resume(struct device *dev)
- 		}
- 	}
- 
--	bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
--	if (bd) {
--		loongson_laptop_backlight_update(bd) ?
--		pr_warn("Loongson_backlight: resume brightness failed") :
--		pr_info("Loongson_backlight: resume brightness %d\n", bd->props.brightness);
--	}
--
- 	return 0;
- }
- 
--- 
-2.31.1
+ arch/arm64/mm/mmu.c                    | 53 ++++++--------------
+ arch/loongarch/Kconfig                 |  2 +
+ arch/loongarch/include/asm/pgalloc.h   | 13 +----
+ arch/loongarch/include/asm/pgtable.h   | 13 +++--
+ arch/loongarch/include/asm/sparsemem.h |  8 +++
+ arch/loongarch/kernel/numa.c           |  4 +-
+ arch/loongarch/mm/init.c               | 44 +++++++++++++++-
+ arch/loongarch/mm/pgtable.c            | 23 +++++----
+ arch/mips/include/asm/pgalloc.h        |  8 +--
+ arch/mips/include/asm/pgtable-64.h     |  8 +--
+ arch/mips/kvm/mmu.c                    |  3 +-
+ arch/mips/mm/pgtable-32.c              | 10 ++--
+ arch/mips/mm/pgtable-64.c              | 18 ++++---
+ arch/mips/mm/pgtable.c                 |  2 +-
+ arch/x86/mm/init_64.c                  | 92 ++++++++++++----------------------
+ include/linux/mm.h                     |  8 +++
+ include/linux/page-flags.h             |  1 +
+ mm/sparse-vmemmap.c                    | 64 +++++++++++++++++++++++
+ 18 files changed, 222 insertions(+), 152 deletions(-)
+--
+2.27.0
 
