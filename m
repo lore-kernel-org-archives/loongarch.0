@@ -1,412 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CF37B
-	for <loongarch@lists.linux.dev>; Thu, 27 Oct 2022 12:56:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B048C433C1;
-	Thu, 27 Oct 2022 12:56:41 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Feiyang Chen <chenfeiyang@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V14 3/4] mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages()
-Date: Thu, 27 Oct 2022 20:52:52 +0800
-Message-Id: <20221027125253.3458989-4-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221027125253.3458989-1-chenhuacai@loongson.cn>
-References: <20221027125253.3458989-1-chenhuacai@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB427B
+	for <loongarch@lists.linux.dev>; Thu, 27 Oct 2022 12:56:57 +0000 (UTC)
+Received: by mail-qv1-f43.google.com with SMTP id ml12so1194033qvb.0
+        for <loongarch@lists.linux.dev>; Thu, 27 Oct 2022 05:56:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qCO64SkNwxVGG1ag/c7O3RrYpoMWZcVRtx+sb3WRBdM=;
+        b=Mn4UEB1jx0Qdiy3QuA1RzSM1lDNgVbi4heOCcoPNcJtx+/NG28n1JCY7CVARu6tx8v
+         9mFC1fVjFB7DYJ5ux1bABi4xsRpSXcNRgR4QPHLHD2/c/9g3bK0YXoDYhwuNLOvJuKww
+         YQaXgP/7Q8DZhov+Blslx+MhFvEqjcI0bkhT2YYqqHtjSVTjK4aHubr7yR/g12OP/arj
+         Fz15n+9GllhHQ5ti7rt3+zu9xStLe0iI3aegxh/Y8WW/LSp3ASzLPlM20j0BGYdE4hwa
+         vbM4wjrTbtoyui76/uLWtG+idBJB+G5RMjszrlyUUE4WxpX9eBhOUIflv3TiV4cn+ACu
+         ApQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qCO64SkNwxVGG1ag/c7O3RrYpoMWZcVRtx+sb3WRBdM=;
+        b=L3cT3DEapzUWCKWesH1+jEof09av/Z4fqEaUVNe8AB3/BracFF8d+2ejD1rLjZdOj4
+         rk5Kxn8dnEFHnQLtTTYxjQbtm8vvbpsu62ZRB8Q6ef4OTTvUy/jIh45iR6inCoP0lNeH
+         d17qkL410Q/3BKQ5C/0dcUKOQXmSaq/E/Kurq6x7pTagmywxyHfgzPb1s3L9TZBclM6k
+         jonCy60Zh5wlV477l7dK5G9ijiwcoXwgaWjpjnBsX5XQm5TKy/R2BIuJ7ZjO0O/9jys/
+         DGAPZSoBOSIOmUAzZS5DLfs0c01bXNv/pKDUpnG9/tTHoXCo/Csv9E83cPDZJggykjtQ
+         jr9g==
+X-Gm-Message-State: ACrzQf3jdyW0YjW8Im4UWXm4ZAjy4QtYkMvgDFRlKO9S1SlmQiG0c57W
+	lY6LkzLYLhrFRRE/y0dUsfnM8g==
+X-Google-Smtp-Source: AMsMyM5zWzthkb3qrJEd1AJr37EXmT5WBPwcs3gJYiw0SeknjIW5iLzQWI2HIYlaL/cJ/rL1jM2i/g==
+X-Received: by 2002:a05:6214:21ce:b0:4bb:7392:c94d with SMTP id d14-20020a05621421ce00b004bb7392c94dmr16781666qvh.71.1666875416776;
+        Thu, 27 Oct 2022 05:56:56 -0700 (PDT)
+Received: from [192.168.1.11] ([64.57.193.93])
+        by smtp.gmail.com with ESMTPSA id o8-20020ac841c8000000b0039cd508f1d3sm811749qtm.75.2022.10.27.05.56.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Oct 2022 05:56:55 -0700 (PDT)
+Message-ID: <b804457b-2d69-3eb8-38e2-955542cdd0b8@linaro.org>
+Date: Thu, 27 Oct 2022 08:56:54 -0400
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH v2 2/2] dt-bindings: soc: add loongson2 guts
+Content-Language: en-US
+To: Yinbo Zhu <zhuyinbo@loongson.cn>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Arnd Bergmann <arnd@arndb.de>, Hector Martin <marcan@marcan.st>,
+ Lubomir Rintel <lkundrak@v3.sk>, Conor Dooley <conor.dooley@microchip.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
+ Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>,
+ Sven Peter <sven@svenpeter.dev>, loongarch@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221025035128.21068-1-zhuyinbo@loongson.cn>
+ <20221025035128.21068-2-zhuyinbo@loongson.cn>
+ <7c67c721-685a-fa0e-ab4b-41b7de3ea0a0@linaro.org>
+ <52de60bd-8aa5-a461-9bca-ce8e6f82ead8@loongson.cn>
+ <ae7cf416-f7b9-2316-5bb2-0043651ed0fd@linaro.org>
+ <7bd6db22-210b-d8ff-7476-b2e38dc7c683@loongson.cn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <7bd6db22-210b-d8ff-7476-b2e38dc7c683@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Feiyang Chen <chenfeiyang@loongson.cn>
+On 26/10/2022 23:52, Yinbo Zhu wrote:
+> 
+> 
+> 在 2022/10/26 下午10:10, Krzysztof Kozlowski 写道:
+>> On 26/10/2022 03:22, Yinbo Zhu wrote:
+>>>
+>>>
+>>> 在 2022/10/26 上午3:40, Krzysztof Kozlowski 写道:
+>>>> On 24/10/2022 23:51, Yinbo Zhu wrote:
+>>>>> Add the loongson2 soc guts driver binding with DT schema format
+>>>>> using json-schema.
+>>>>>
+>>>>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>>>>> ---
+>>>>>    .../soc/loongson/loongson,ls2k-guts.yaml      | 37 +++++++++++++++++++
+>>>>
+>>>> Looks like wrong location, although difficult to judge because you did
+>>>> not describe the hardware at all. If this is chipinfo-like device, then
+>>>> Documentation/devicetree/bindings/hwinfo/.
+> yes it is a chipinfo/socinfo device, I will following your advice.
+>>> My guts driver is refer fsl platform. It was was to manage and access
+>>> global utilities register block for SoC and it was only used in SoC
+>>> platform. when driver need use Soc ops to do some function the this
+>>> driver was needed.  the dcfg (device config) was a function in guts
+>>> (global utilities) block.
+>>
+>> I can barely understand it.
+> My description is about chipinfo/socinfo definition. and I have a look
+> /bindings/hwinfo/, I think move binding file to hwinfo that is okay for me.
+> 
+> Documentation/devicetree/bindings/hwinfo/ti,k3-socinfo.yaml
+> 
+>>
+>>> For these type of driver, other platforms were initially placed on
+>>> Documentation/devicetree/bindings/arm/   if it is arm/arm64
+>>> architecture. Later, move it to the soc directory.
+>>>
+>>> Documentation/devicetree/bindings/soc/fsl/fsl,layerscape-dcfg.yaml
+>>
+>> How is this related? This is Layerscape, not Loongson2. Describe the
+>> hardware you are adding bindings for.
+> The driver functions/type are the same, the driver was register a struct 
+> soc_device_attribute by soc_device_register then other peripheral driver
+> can call SoC ops, such as soc_device_match.
+> 
+> then layerscape guts module bindings are placed in
+> Documentation/devicetree/bindings/soc/, the loongson guts module 
+> bindings was follow that layerscape and are placed in
+> Documentation/devicetree/bindings/soc/
+> 
+> In a words,  It is a question about where the binding file should be 
+> placed.  I think move binding file to hwinfo that is okay for me.
 
-Generalise vmemmap_populate_hugepages() so ARM64 & X86 & LoongArch can
-share its implementation.
+My review is limited to the scope I understand from what you wrote. You
+described so far something being only a soc info registers. For this the
+place is hwinfo.
 
-Acked-by: Will Deacon <will@kernel.org>
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/arm64/mm/mmu.c      | 55 +++++++-----------------
- arch/loongarch/mm/init.c | 59 +++++++-------------------
- arch/x86/mm/init_64.c    | 92 ++++++++++++++--------------------------
- include/linux/mm.h       |  6 +++
- mm/sparse-vmemmap.c      | 63 +++++++++++++++++++++++++++
- 5 files changed, 132 insertions(+), 143 deletions(-)
+The Layerscape dcfg is more than that - it is a syscon, system register
+controller with at least one child device.
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 9a7c38965154..e3822cb0118b 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -1184,53 +1184,28 @@ static void free_empty_tables(unsigned long addr, unsigned long end,
- }
- #endif
- 
-+void __meminit vmemmap_set_pmd(pmd_t *pmdp, void *p, int node,
-+			       unsigned long addr, unsigned long next)
-+{
-+	pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
-+}
-+
-+int __meminit vmemmap_check_pmd(pmd_t *pmdp, int node,
-+				unsigned long addr, unsigned long next)
-+{
-+	vmemmap_verify((pte_t *)pmdp, node, addr, next);
-+	return 1;
-+}
-+
- int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 		struct vmem_altmap *altmap)
- {
--	unsigned long addr = start;
--	unsigned long next;
--	pgd_t *pgdp;
--	p4d_t *p4dp;
--	pud_t *pudp;
--	pmd_t *pmdp;
--
- 	WARN_ON((start < VMEMMAP_START) || (end > VMEMMAP_END));
- 
- 	if (!ARM64_KERNEL_USES_PMD_MAPS)
- 		return vmemmap_populate_basepages(start, end, node, altmap);
--
--	do {
--		next = pmd_addr_end(addr, end);
--
--		pgdp = vmemmap_pgd_populate(addr, node);
--		if (!pgdp)
--			return -ENOMEM;
--
--		p4dp = vmemmap_p4d_populate(pgdp, addr, node);
--		if (!p4dp)
--			return -ENOMEM;
--
--		pudp = vmemmap_pud_populate(p4dp, addr, node);
--		if (!pudp)
--			return -ENOMEM;
--
--		pmdp = pmd_offset(pudp, addr);
--		if (pmd_none(READ_ONCE(*pmdp))) {
--			void *p = NULL;
--
--			p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
--			if (!p) {
--				if (vmemmap_populate_basepages(addr, next, node, altmap))
--					return -ENOMEM;
--				continue;
--			}
--
--			pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
--		} else
--			vmemmap_verify((pte_t *)pmdp, node, addr, next);
--	} while (addr = next, addr != end);
--
--	return 0;
-+	else
-+		return vmemmap_populate_hugepages(start, end, node, altmap);
- }
- 
- #ifdef CONFIG_MEMORY_HOTPLUG
-diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-index 451d93667bcc..e018aed34586 100644
---- a/arch/loongarch/mm/init.c
-+++ b/arch/loongarch/mm/init.c
-@@ -153,52 +153,25 @@ EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
- #endif
- 
- #ifdef CONFIG_SPARSEMEM_VMEMMAP
--static int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
--						int node, struct vmem_altmap *altmap)
-+void __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
-+			       unsigned long addr, unsigned long next)
- {
--	unsigned long addr = start;
--	unsigned long next;
--	pgd_t *pgd;
--	p4d_t *p4d;
--	pud_t *pud;
--	pmd_t *pmd;
-+	pmd_t entry;
- 
--	for (addr = start; addr < end; addr = next) {
--		next = pmd_addr_end(addr, end);
--
--		pgd = vmemmap_pgd_populate(addr, node);
--		if (!pgd)
--			return -ENOMEM;
--		p4d = vmemmap_p4d_populate(pgd, addr, node);
--		if (!p4d)
--			return -ENOMEM;
--		pud = vmemmap_pud_populate(p4d, addr, node);
--		if (!pud)
--			return -ENOMEM;
--
--		pmd = pmd_offset(pud, addr);
--		if (pmd_none(*pmd)) {
--			void *p = NULL;
--
--			p = vmemmap_alloc_block_buf(PMD_SIZE, node, NULL);
--			if (p) {
--				pmd_t entry;
--
--				entry = pfn_pmd(virt_to_pfn(p), PAGE_KERNEL);
--				pmd_val(entry) |= _PAGE_HUGE | _PAGE_HGLOBAL;
--				set_pmd_at(&init_mm, addr, pmd, entry);
--
--				continue;
--			}
--		} else if (pmd_val(*pmd) & _PAGE_HUGE) {
--			vmemmap_verify((pte_t *)pmd, node, addr, next);
--			continue;
--		}
--		if (vmemmap_populate_basepages(addr, next, node, NULL))
--			return -ENOMEM;
--	}
-+	entry = pfn_pmd(virt_to_pfn(p), PAGE_KERNEL);
-+	pmd_val(entry) |= _PAGE_HUGE | _PAGE_HGLOBAL;
-+	set_pmd_at(&init_mm, addr, pmd, entry);
-+}
-+
-+int __meminit vmemmap_check_pmd(pmd_t *pmd, int node,
-+				unsigned long addr, unsigned long next)
-+{
-+	int huge = pmd_val(*pmd) & _PAGE_HUGE;
-+
-+	if (huge)
-+		vmemmap_verify((pte_t *)pmd, node, addr, next);
- 
--	return 0;
-+	return huge;
- }
- 
- int __meminit vmemmap_populate(unsigned long start, unsigned long end,
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 3f040c6e5d13..58febaf569f6 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1533,72 +1533,44 @@ static long __meminitdata addr_start, addr_end;
- static void __meminitdata *p_start, *p_end;
- static int __meminitdata node_start;
- 
--static int __meminit vmemmap_populate_hugepages(unsigned long start,
--		unsigned long end, int node, struct vmem_altmap *altmap)
-+void __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
-+			       unsigned long addr, unsigned long next)
- {
--	unsigned long addr;
--	unsigned long next;
--	pgd_t *pgd;
--	p4d_t *p4d;
--	pud_t *pud;
--	pmd_t *pmd;
--
--	for (addr = start; addr < end; addr = next) {
--		next = pmd_addr_end(addr, end);
--
--		pgd = vmemmap_pgd_populate(addr, node);
--		if (!pgd)
--			return -ENOMEM;
--
--		p4d = vmemmap_p4d_populate(pgd, addr, node);
--		if (!p4d)
--			return -ENOMEM;
--
--		pud = vmemmap_pud_populate(p4d, addr, node);
--		if (!pud)
--			return -ENOMEM;
--
--		pmd = pmd_offset(pud, addr);
--		if (pmd_none(*pmd)) {
--			void *p;
--
--			p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
--			if (p) {
--				pte_t entry;
--
--				entry = pfn_pte(__pa(p) >> PAGE_SHIFT,
--						PAGE_KERNEL_LARGE);
--				set_pmd(pmd, __pmd(pte_val(entry)));
-+	pte_t entry;
-+
-+	entry = pfn_pte(__pa(p) >> PAGE_SHIFT,
-+			PAGE_KERNEL_LARGE);
-+	set_pmd(pmd, __pmd(pte_val(entry)));
-+
-+	/* check to see if we have contiguous blocks */
-+	if (p_end != p || node_start != node) {
-+		if (p_start)
-+			pr_debug(" [%lx-%lx] PMD -> [%p-%p] on node %d\n",
-+				addr_start, addr_end-1, p_start, p_end-1, node_start);
-+		addr_start = addr;
-+		node_start = node;
-+		p_start = p;
-+	}
- 
--				/* check to see if we have contiguous blocks */
--				if (p_end != p || node_start != node) {
--					if (p_start)
--						pr_debug(" [%lx-%lx] PMD -> [%p-%p] on node %d\n",
--						       addr_start, addr_end-1, p_start, p_end-1, node_start);
--					addr_start = addr;
--					node_start = node;
--					p_start = p;
--				}
-+	addr_end = addr + PMD_SIZE;
-+	p_end = p + PMD_SIZE;
- 
--				addr_end = addr + PMD_SIZE;
--				p_end = p + PMD_SIZE;
-+	if (!IS_ALIGNED(addr, PMD_SIZE) ||
-+		!IS_ALIGNED(next, PMD_SIZE))
-+		vmemmap_use_new_sub_pmd(addr, next);
-+}
- 
--				if (!IS_ALIGNED(addr, PMD_SIZE) ||
--				    !IS_ALIGNED(next, PMD_SIZE))
--					vmemmap_use_new_sub_pmd(addr, next);
-+int __meminit vmemmap_check_pmd(pmd_t *pmd, int node,
-+				unsigned long addr, unsigned long next)
-+{
-+	int large = pmd_large(*pmd);
- 
--				continue;
--			} else if (altmap)
--				return -ENOMEM; /* no fallback */
--		} else if (pmd_large(*pmd)) {
--			vmemmap_verify((pte_t *)pmd, node, addr, next);
--			vmemmap_use_sub_pmd(addr, next);
--			continue;
--		}
--		if (vmemmap_populate_basepages(addr, next, node, NULL))
--			return -ENOMEM;
-+	if (pmd_large(*pmd)) {
-+		vmemmap_verify((pte_t *)pmd, node, addr, next);
-+		vmemmap_use_sub_pmd(addr, next);
- 	}
--	return 0;
-+
-+	return large;
- }
- 
- int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 45eb04c43c6b..2eb88b63a0e0 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3246,8 +3246,14 @@ struct vmem_altmap;
- void *vmemmap_alloc_block_buf(unsigned long size, int node,
- 			      struct vmem_altmap *altmap);
- void vmemmap_verify(pte_t *, int, unsigned long, unsigned long);
-+void vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
-+		     unsigned long addr, unsigned long next);
-+int vmemmap_check_pmd(pmd_t *pmd, int node,
-+		      unsigned long addr, unsigned long next);
- int vmemmap_populate_basepages(unsigned long start, unsigned long end,
- 			       int node, struct vmem_altmap *altmap);
-+int vmemmap_populate_hugepages(unsigned long start, unsigned long end,
-+			       int node, struct vmem_altmap *altmap);
- int vmemmap_populate(unsigned long start, unsigned long end, int node,
- 		struct vmem_altmap *altmap);
- void vmemmap_populate_print_last(void);
-diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-index 797b30e9050c..c5398a5960d0 100644
---- a/mm/sparse-vmemmap.c
-+++ b/mm/sparse-vmemmap.c
-@@ -295,6 +295,69 @@ int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
- 	return vmemmap_populate_range(start, end, node, altmap, NULL);
- }
- 
-+void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
-+				      unsigned long addr, unsigned long next)
-+{
-+}
-+
-+int __weak __meminit vmemmap_check_pmd(pmd_t *pmd, int node,
-+				       unsigned long addr, unsigned long next)
-+{
-+	return 0;
-+}
-+
-+int __meminit vmemmap_populate_hugepages(unsigned long start, unsigned long end,
-+					 int node, struct vmem_altmap *altmap)
-+{
-+	unsigned long addr;
-+	unsigned long next;
-+	pgd_t *pgd;
-+	p4d_t *p4d;
-+	pud_t *pud;
-+	pmd_t *pmd;
-+
-+	for (addr = start; addr < end; addr = next) {
-+		next = pmd_addr_end(addr, end);
-+
-+		pgd = vmemmap_pgd_populate(addr, node);
-+		if (!pgd)
-+			return -ENOMEM;
-+
-+		p4d = vmemmap_p4d_populate(pgd, addr, node);
-+		if (!p4d)
-+			return -ENOMEM;
-+
-+		pud = vmemmap_pud_populate(p4d, addr, node);
-+		if (!pud)
-+			return -ENOMEM;
-+
-+		pmd = pmd_offset(pud, addr);
-+		if (pmd_none(READ_ONCE(*pmd))) {
-+			void *p;
-+
-+			p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
-+			if (p) {
-+				vmemmap_set_pmd(pmd, p, node, addr, next);
-+				continue;
-+			} else if (altmap) {
-+				/*
-+				 * No fallback: In any case we care about, the
-+				 * altmap should be reasonably sized and aligned
-+				 * such that vmemmap_alloc_block_buf() will always
-+				 * succeed. For consistency with the PTE case,
-+				 * return an error here as failure could indicate
-+				 * a configuration issue with the size of the altmap.
-+				 */
-+				return -ENOMEM;
-+			}
-+		} else if (vmemmap_check_pmd(pmd, node, addr, next))
-+			continue;
-+		if (vmemmap_populate_basepages(addr, next, node, altmap))
-+			return -ENOMEM;
-+	}
-+	return 0;
-+}
-+
- /*
-  * For compound pages bigger than section size (e.g. x86 1G compound
-  * pages with 2M subsection size) fill the rest of sections as tail
--- 
-2.31.1
+If your device is exactly like that, describe it in bindings fully, not
+partially. These are then incomplete bindings.
+
+>>
+>>>
+>>> So, do you still think it is inappropriate to place it in the soc dir?
+>>>>
+>>>>
+>>>>>    MAINTAINERS                                   |  1 +
+>>>>>    2 files changed, 38 insertions(+)
+>>>>>    create mode 100644 Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
+>>>>> new file mode 100644
+>>>>> index 000000000000..2502f8aeb74d
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/soc/loongson/loongson,ls2k-guts.yaml
+>>>>> @@ -0,0 +1,37 @@
+>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>>> +%YAML 1.2
+>>>>> +---
+>>>>> +$id: http://devicetree.org/schemas/soc/loongson/loongson,ls2k-guts.yaml#
+>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>> +
+>>>>> +title: Loongson2 GUTS driver.
+>>>>
+>>>> Drop "driver." unless you refer to some hardware (like motor driver?).
+>>> this need refer hardware soc datasheet to gain soc register (global
+>>> utilities register block ).
+>>> so keep "driver" string that whether was more appropriate?
+>>
+>> What? I cannot parse it.
+>>
+>> Did you understand my comment? If yes, please point to Wikipedia article
+>> explaining this "Driver" you refer to.
+> I will remove the "driver" string.
+>>
+>>
+>>>>
+>>>>> +
+>>>>> +maintainers:
+>>>>> +  - Yinbo Zhu <zhuyinbo@loongson.cn>
+>>>>> +
+>>>>> +description: |
+>>>>> +  GUTS driver was to manage and access global utilities block. Initially
+>>>>
+>>>> Drop "driver" and describe instead what is GUTS, including its acronym,
+>>>>
+>>>>> +  only reading SVR and registering soc device are supported.
+>>>>
+>>>> Entire sentence describe Linux driver - drop it. Instead describe the
+>>>> device, the hardware.
+>>>>
+>>>>> +
+>>>>> +properties:
+>>>>> +  compatible:
+>>>>> +    const: loongson,ls2k-guts
+>>>>> +
+>>>>> +  reg:
+>>>>> +    maxItems: 1
+>>>>> +
+>>>>> +  little-endian: true
+>>>>> +
+>>>>> +required:
+>>>>> +  - compatible
+>>>>> +  - reg
+>>>>> +
+>>>>> +additionalProperties: false
+>>>>> +
+>>>>> +examples:
+>>>>> +  - |
+>>>>> +    guts: guts@1fe00000 {
+>>>>
+>>>> Node names should be generic.
+>>> dcfg/scfg (device cfg/ soc cfg)was the key function of guts (global
+>>> utilities) block. and guts name I was refer fsl soc driver.
+>>> "drivers/soc/fsl/guts.c"
+>>> this binding file was follows of fsl guts.
+>>> Documentation/devicetree/bindings/soc/fsl/fsl,layerscape-dcfg.yaml
+>>> Documentation/devicetree/bindings/soc/fsl/fsl,layerscape-scfg.yaml
+>>>
+>>> or, I was use scfg as node name, Do you think it's appropriate?
+>>
+>> No, these are not generic node names.
+> I was refer "ti,k3-socinfo.yaml",  Do you think it's appropriate that 
+> socinfo as node name?
+
+The blocks are called usually chipid and you can find examples for that.
+There are no examples using socinfo name.
+
+If the main purpose of this register block (and/or device) is to provide
+socinfo, then call it chipid.
+
+Best regards,
+Krzysztof
 
