@@ -1,27 +1,34 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0254CE81D
-	for <loongarch@lists.linux.dev>; Fri, 28 Oct 2022 02:41:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D703C433D7;
-	Fri, 28 Oct 2022 02:41:12 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	"Rafael J . Wysocki" <rjw@rjwysocki.net>,
-	Len Brown <lenb@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>
-Cc: loongarch@lists.linux.dev,
-	linux-pm@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F29B0185F
+	for <loongarch@lists.linux.dev>; Fri, 28 Oct 2022 02:55:20 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8AxbdqWRFtjVAEDAA--.11659S3;
+	Fri, 28 Oct 2022 10:55:18 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxmFePRFtj1R8GAA--.3496S4;
+	Fri, 28 Oct 2022 10:55:17 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH 2/2] LoongArch: Add hibernation (ACPI S4) support
-Date: Fri, 28 Oct 2022 10:38:29 +0800
-Message-Id: <20221028023829.4030984-2-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221028023829.4030984-1-chenhuacai@loongson.cn>
-References: <20221028023829.4030984-1-chenhuacai@loongson.cn>
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v5 3/3] dt-bindings: clock: add loongson-2 clock
+Date: Fri, 28 Oct 2022 10:55:04 +0800
+Message-Id: <20221028025504.13247-3-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221028025504.13247-1-zhuyinbo@loongson.cn>
+References: <20221028025504.13247-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -29,242 +36,118 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxmFePRFtj1R8GAA--.3496S4
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF4kJw4fKFyfWF1kuFg_yoW5GrWfpF
+	sxCw13GryIvF17Zws5Ka4xAwn5ua1kCF17Z3ZrCa42kr98W3W5XF17K34DZa9rAFyxZa9r
+	ZFWfCr4UCa10kr7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bfAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUAVWUZwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
+	1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
+	cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
+	0Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
+	6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2
+	Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+	1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj
+	6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU86nQUUUUUU==
 
-Add hibernation (Suspend to Disk, aka ACPI S4) support for LoongArch.
+Add the Loongson-2 clock binding with DT schema format using
+json-schema.
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- arch/loongarch/Kconfig               |  3 ++
- arch/loongarch/kernel/asm-offsets.c  | 12 +++++
- arch/loongarch/kernel/reset.c        |  2 +
- arch/loongarch/kernel/setup.c        |  5 ++
- arch/loongarch/power/Makefile        |  1 +
- arch/loongarch/power/hibernate.c     | 58 ++++++++++++++++++++++++
- arch/loongarch/power/hibernate_asm.S | 68 ++++++++++++++++++++++++++++
- 7 files changed, 149 insertions(+)
- create mode 100644 arch/loongarch/power/hibernate.c
- create mode 100644 arch/loongarch/power/hibernate_asm.S
+ .../bindings/clock/loongson,ls2k-clk.yaml     | 63 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 0df102401d1d..1943f840e494 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -521,6 +521,9 @@ menu "Power management options"
- config ARCH_SUSPEND_POSSIBLE
- 	def_bool y
- 
-+config ARCH_HIBERNATION_POSSIBLE
-+	def_bool y
-+
- source "kernel/power/Kconfig"
- source "drivers/acpi/Kconfig"
- 
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index bdd88eda9513..4ef494577813 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -257,3 +257,15 @@ void output_smpboot_defines(void)
- 	BLANK();
- }
- #endif
-+
-+#ifdef CONFIG_HIBERNATION
-+void output_pbe_defines(void)
-+{
-+	COMMENT(" Linux struct pbe offsets. ");
-+	OFFSET(PBE_ADDRESS, pbe, address);
-+	OFFSET(PBE_ORIG_ADDRESS, pbe, orig_address);
-+	OFFSET(PBE_NEXT, pbe, next);
-+	DEFINE(PBE_SIZE, sizeof(struct pbe));
-+	BLANK();
-+}
-+#endif
-diff --git a/arch/loongarch/kernel/reset.c b/arch/loongarch/kernel/reset.c
-index 8c82021eb2f4..cdf021ff6214 100644
---- a/arch/loongarch/kernel/reset.c
-+++ b/arch/loongarch/kernel/reset.c
-@@ -15,6 +15,7 @@
- #include <acpi/reboot.h>
- #include <asm/idle.h>
- #include <asm/loongarch.h>
-+#include <asm/loongson.h>
- 
- void (*pm_power_off)(void);
- EXPORT_SYMBOL(pm_power_off);
-@@ -42,6 +43,7 @@ void machine_power_off(void)
- 	preempt_disable();
- 	smp_send_stop();
- #endif
-+	enable_pci_wakeup();
- 	do_kernel_power_off();
- #ifdef CONFIG_EFI
- 	efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 96b6cb5db004..3c8bc250f4e2 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -28,6 +28,7 @@
- #include <linux/sizes.h>
- #include <linux/device.h>
- #include <linux/dma-map-ops.h>
-+#include <linux/suspend.h>
- #include <linux/swiotlb.h>
- 
- #include <asm/addrspace.h>
-@@ -312,6 +313,10 @@ static void __init arch_mem_init(char **cmdline_p)
- 
- 	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
- 
-+	/* Reserve for hibernation. */
-+	register_nosave_region(PFN_DOWN(__pa_symbol(&__nosave_begin)),
-+				   PFN_UP(__pa_symbol(&__nosave_end)));
-+
- 	memblock_dump_all();
- 
- 	early_memtest(PFN_PHYS(ARCH_PFN_OFFSET), PFN_PHYS(max_low_pfn));
-diff --git a/arch/loongarch/power/Makefile b/arch/loongarch/power/Makefile
-index 6740117decaa..58151d003e40 100644
---- a/arch/loongarch/power/Makefile
-+++ b/arch/loongarch/power/Makefile
-@@ -1,3 +1,4 @@
- obj-y	+= platform.o
- 
- obj-$(CONFIG_SUSPEND)		+= suspend.o suspend_asm.o
-+obj-$(CONFIG_HIBERNATION)	+= hibernate.o hibernate_asm.o
-diff --git a/arch/loongarch/power/hibernate.c b/arch/loongarch/power/hibernate.c
+diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
 new file mode 100644
-index 000000000000..32dae9ef311a
+index 000000000000..63a59015987e
 --- /dev/null
-+++ b/arch/loongarch/power/hibernate.c
-@@ -0,0 +1,58 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <asm/fpu.h>
-+#include <asm/loongson.h>
-+#include <asm/sections.h>
-+#include <asm/tlbflush.h>
++++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/loongson,ls2k-clk.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+static u64 saved_crmd;
-+static u64 saved_prmd;
-+static u64 saved_euen;
-+static u64 saved_ecfg;
-+struct pt_regs saved_regs;
++title: Loongson-2 SoC Clock Control Module
 +
-+void save_processor_state(void)
-+{
-+	saved_crmd = csr_read32(LOONGARCH_CSR_CRMD);
-+	saved_prmd = csr_read32(LOONGARCH_CSR_PRMD);
-+	saved_euen = csr_read32(LOONGARCH_CSR_EUEN);
-+	saved_ecfg = csr_read32(LOONGARCH_CSR_ECFG);
++maintainers:
++  - Yinbo Zhu <zhuyinbo@loongson.cn>
 +
-+	if (is_fpu_owner())
-+		save_fp(current);
-+}
++description: |
++  Loongson-2 SoC clock control module is an integrated clock controller, which
++  generates and supplies to all modules.
 +
-+void restore_processor_state(void)
-+{
-+	csr_write32(saved_crmd, LOONGARCH_CSR_CRMD);
-+	csr_write32(saved_prmd, LOONGARCH_CSR_PRMD);
-+	csr_write32(saved_euen, LOONGARCH_CSR_EUEN);
-+	csr_write32(saved_ecfg, LOONGARCH_CSR_ECFG);
++properties:
++  compatible:
++    enum:
++      - loongson,ls2k-clk
 +
-+	if (is_fpu_owner())
-+		restore_fp(current);
-+}
++  reg:
++    maxItems: 1
 +
-+int pfn_is_nosave(unsigned long pfn)
-+{
-+	unsigned long nosave_begin_pfn = PFN_DOWN(__pa(&__nosave_begin));
-+	unsigned long nosave_end_pfn = PFN_UP(__pa(&__nosave_end));
++  clocks:
++    items:
++      - description: 100m ref
 +
-+	return	(pfn >= nosave_begin_pfn) && (pfn < nosave_end_pfn);
-+}
++  clock-names:
++    items:
++      - const: ref_100m
 +
-+extern int swsusp_asm_suspend(void);
++  '#clock-cells':
++    const: 1
++    description:
++      The clock consumer should specify the desired clock by having the clock
++      ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
++      for the full list of Loongson-2 SoC clock IDs.
 +
-+int swsusp_arch_suspend(void)
-+{
-+	enable_pci_wakeup();
-+	return swsusp_asm_suspend();
-+}
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#clock-cells'
 +
-+extern int swsusp_asm_resume(void);
++additionalProperties: false
 +
-+int swsusp_arch_resume(void)
-+{
-+	/* Avoid TLB mismatch during and after kernel resume */
-+	local_flush_tlb_all();
-+	return swsusp_asm_resume();
-+}
-diff --git a/arch/loongarch/power/hibernate_asm.S b/arch/loongarch/power/hibernate_asm.S
-new file mode 100644
-index 000000000000..7894fbd56c85
---- /dev/null
-+++ b/arch/loongarch/power/hibernate_asm.S
-@@ -0,0 +1,64 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Hibernation support specific for LoongArch
-+ *
-+ * Author: Huacai Chen <chenhuacai@loongson.cn>
-+ * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-+ */
-+#include <linux/linkage.h>
-+#include <asm/asm.h>
-+#include <asm/asm-offsets.h>
-+#include <asm/regdef.h>
++examples:
++  - |
++    ref_100m: clock-ref-100m {
++        compatible = "fixed-clock";
++        #clock-cells = <0>;
++        clock-frequency = <100000000>;
++        clock-output-names = "ref_100m";
++    };
 +
-+.text
-+SYM_FUNC_START(swsusp_asm_suspend)
-+	la.pcrel	t0, saved_regs
-+	PTR_S		ra, t0, PT_R1
-+	PTR_S		sp, t0, PT_R3
-+	PTR_S		fp, t0, PT_R22
-+	PTR_S		tp, t0, PT_R2
-+	PTR_S		s0, t0, PT_R23
-+	PTR_S		s1, t0, PT_R24
-+	PTR_S		s2, t0, PT_R25
-+	PTR_S		s3, t0, PT_R26
-+	PTR_S		s4, t0, PT_R27
-+	PTR_S		s5, t0, PT_R28
-+	PTR_S		s6, t0, PT_R29
-+	PTR_S		s7, t0, PT_R30
-+	PTR_S		s8, t0, PT_R31
-+	b		swsusp_save
-+SYM_FUNC_END(swsusp_asm_suspend)
-+
-+SYM_FUNC_START(swsusp_asm_resume)
-+	la.pcrel	t0, restore_pblist
-+	PTR_L		t0, t0, 0
-+0:
-+	PTR_L		t1, t0, PBE_ADDRESS  /* source */
-+	PTR_L		t2, t0, PBE_ORIG_ADDRESS /* destination */
-+	PTR_LI		t3, _PAGE_SIZE
-+	PTR_ADD		t3, t3, t1
-+1:
-+	REG_L		t8, t1, 0
-+	REG_S		t8, t2, 0
-+	PTR_ADDI	t1, t1, SZREG
-+	PTR_ADDI	t2, t2, SZREG
-+	bne		t1, t3, 1b
-+	PTR_L		t0, t0, PBE_NEXT
-+	bnez		t0, 0b
-+	la.pcrel	t0, saved_regs
-+	PTR_L		ra, t0, PT_R1
-+	PTR_L		sp, t0, PT_R3
-+	PTR_L		fp, t0, PT_R22
-+	PTR_L		tp, t0, PT_R2
-+	PTR_L		s0, t0, PT_R23
-+	PTR_L		s1, t0, PT_R24
-+	PTR_L		s2, t0, PT_R25
-+	PTR_L		s3, t0, PT_R26
-+	PTR_L		s4, t0, PT_R27
-+	PTR_L		s5, t0, PT_R28
-+	PTR_L		s6, t0, PT_R29
-+	PTR_L		s7, t0, PT_R30
-+	PTR_L		s8, t0, PT_R31
-+	PTR_LI		a0, 0x0
-+	jirl		zero, ra, 0
-+SYM_FUNC_END(swsusp_asm_resume)
++    clk: clock-controller@1fe00480 {
++        compatible = "loongson,ls2k-clk";
++        reg = <0x1fe00480 0x58>;
++        #clock-cells = <1>;
++        clocks = <&ref_100m>;
++        clock-names = "ref_100m";
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ec947d11415e..f645ed2e169d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11911,6 +11911,7 @@ LOONGSON2 SOC SERIES CLOCK DRIVER
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	linux-clk@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+ F:	drivers/clk/clk-loongson2.c
+ F:	include/dt-bindings/clock/loongson,ls2k-clk.h
+ 
 -- 
 2.31.1
 
