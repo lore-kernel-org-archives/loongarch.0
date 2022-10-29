@@ -1,27 +1,32 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61F423C0
-	for <loongarch@lists.linux.dev>; Sat, 29 Oct 2022 07:26:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 243A7C433B5;
-	Sat, 29 Oct 2022 07:26:40 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	"Rafael J . Wysocki" <rjw@rjwysocki.net>,
-	Len Brown <lenb@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>
-Cc: loongarch@lists.linux.dev,
-	linux-pm@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V2 2/2] LoongArch: Add hibernation (ACPI S4) support
-Date: Sat, 29 Oct 2022 15:21:49 +0800
-Message-Id: <20221029072149.1129926-2-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221029072149.1129926-1-chenhuacai@loongson.cn>
-References: <20221029072149.1129926-1-chenhuacai@loongson.cn>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C5F715CA3
+	for <loongarch@lists.linux.dev>; Sat, 29 Oct 2022 08:21:44 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8BxXbeW4lxjUz4DAA--.2938S3;
+	Sat, 29 Oct 2022 16:21:42 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxR1eQ4lxjKWcHAA--.6252S2;
+	Sat, 29 Oct 2022 16:21:40 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Hector Martin <marcan@marcan.st>,
+	Lubomir Rintel <lkundrak@v3.sk>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Brian Norris <briannorris@chromium.org>,
+	Sven Peter <sven@svenpeter.dev>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH v3 1/2] soc: loongson: add GUTS driver for loongson-2 platforms
+Date: Sat, 29 Oct 2022 16:21:34 +0800
+Message-Id: <20221029082135.31096-1-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -29,251 +34,329 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxR1eQ4lxjKWcHAA--.6252S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3AF4xKw1DCr1DJw13GFykZrb_yoWfurWUpa
+	1fC34rGrWUJF45urs8Ja48uFyY9as7CasruF4xWwn8ur97A34UXas7JFyUZrs7ZrykA342
+	qF95GayjkFWUA3DanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bSxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC
+	6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2
+	Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
+	6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
+	JbIYCTnIWIevJa73UjIFyTuYvjxU773vUUUUU
 
-Add hibernation (Suspend to Disk, aka ACPI S4) support for LoongArch.
+The global utilities block controls PCIE device enabling, alternate
+function selection for multiplexed signals, consistency of HDA, USB
+and PCIE, configuration of memory controller, rtc controller, lio
+controller, and clock control.
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+This patch adds a driver to manage and access global utilities block
+for loongarch architecture Loongson-2 SoCs. Initially only reading SVR
+and registering soc device are supported. Other guts accesses, such
+as reading PMON configuration by default, should eventually be added
+into this driver as well.
+
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
 ---
-V2: Save/restore r21 and KS0.
+Change in v3:
+		1. Replace string loongson2/Loongson2 with Loongson-2/loongson-2
+	           in commit message, Kconfig, Makefile file.
+		2. Replace string LOONGSON2 with LOONGSON-2.
 
- arch/loongarch/Kconfig               |  3 ++
- arch/loongarch/kernel/asm-offsets.c  | 12 +++++
- arch/loongarch/kernel/reset.c        |  4 ++
- arch/loongarch/kernel/setup.c        |  5 +++
- arch/loongarch/power/Makefile        |  1 +
- arch/loongarch/power/hibernate.c     | 61 +++++++++++++++++++++++++
- arch/loongarch/power/hibernate_asm.S | 66 ++++++++++++++++++++++++++++
- 7 files changed, 152 insertions(+)
- create mode 100644 arch/loongarch/power/hibernate.c
- create mode 100644 arch/loongarch/power/hibernate_asm.S
+ MAINTAINERS                           |   6 +
+ drivers/soc/Kconfig                   |   1 +
+ drivers/soc/Makefile                  |   1 +
+ drivers/soc/loongson/Kconfig          |  20 +++
+ drivers/soc/loongson/Makefile         |   6 +
+ drivers/soc/loongson/loongson2_guts.c | 189 ++++++++++++++++++++++++++
+ 6 files changed, 223 insertions(+)
+ create mode 100644 drivers/soc/loongson/Kconfig
+ create mode 100644 drivers/soc/loongson/Makefile
+ create mode 100644 drivers/soc/loongson/loongson2_guts.c
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 0df102401d1d..1943f840e494 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -521,6 +521,9 @@ menu "Power management options"
- config ARCH_SUSPEND_POSSIBLE
- 	def_bool y
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4fc949c36a44..a02d45dd21ce 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11930,6 +11930,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
+ F:	drivers/pinctrl/pinctrl-loongson2.c
  
-+config ARCH_HIBERNATION_POSSIBLE
-+	def_bool y
++LOONGSON-2 SOC SERIES GUTS DRIVER
++M:	Yinbo Zhu <zhuyinbo@loongson.cn>
++L:	loongarch@lists.linux.dev
++S:	Maintained
++F:	drivers/soc/loongson/loongson2_guts.c
 +
- source "kernel/power/Kconfig"
- source "drivers/acpi/Kconfig"
- 
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index bdd88eda9513..4ef494577813 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -257,3 +257,15 @@ void output_smpboot_defines(void)
- 	BLANK();
- }
- #endif
-+
-+#ifdef CONFIG_HIBERNATION
-+void output_pbe_defines(void)
-+{
-+	COMMENT(" Linux struct pbe offsets. ");
-+	OFFSET(PBE_ADDRESS, pbe, address);
-+	OFFSET(PBE_ORIG_ADDRESS, pbe, orig_address);
-+	OFFSET(PBE_NEXT, pbe, next);
-+	DEFINE(PBE_SIZE, sizeof(struct pbe));
-+	BLANK();
-+}
-+#endif
-diff --git a/arch/loongarch/kernel/reset.c b/arch/loongarch/kernel/reset.c
-index 8c82021eb2f4..9fad889a3c1b 100644
---- a/arch/loongarch/kernel/reset.c
-+++ b/arch/loongarch/kernel/reset.c
-@@ -15,6 +15,7 @@
- #include <acpi/reboot.h>
- #include <asm/idle.h>
- #include <asm/loongarch.h>
-+#include <asm/loongson.h>
- 
- void (*pm_power_off)(void);
- EXPORT_SYMBOL(pm_power_off);
-@@ -41,6 +42,9 @@ void machine_power_off(void)
- #ifdef CONFIG_SMP
- 	preempt_disable();
- 	smp_send_stop();
-+#endif
-+#ifdef CONFIG_PM
-+	enable_pci_wakeup();
- #endif
- 	do_kernel_power_off();
- #ifdef CONFIG_EFI
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 96b6cb5db004..3c8bc250f4e2 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -28,6 +28,7 @@
- #include <linux/sizes.h>
- #include <linux/device.h>
- #include <linux/dma-map-ops.h>
-+#include <linux/suspend.h>
- #include <linux/swiotlb.h>
- 
- #include <asm/addrspace.h>
-@@ -312,6 +313,10 @@ static void __init arch_mem_init(char **cmdline_p)
- 
- 	dma_contiguous_reserve(PFN_PHYS(max_low_pfn));
- 
-+	/* Reserve for hibernation. */
-+	register_nosave_region(PFN_DOWN(__pa_symbol(&__nosave_begin)),
-+				   PFN_UP(__pa_symbol(&__nosave_end)));
-+
- 	memblock_dump_all();
- 
- 	early_memtest(PFN_PHYS(ARCH_PFN_OFFSET), PFN_PHYS(max_low_pfn));
-diff --git a/arch/loongarch/power/Makefile b/arch/loongarch/power/Makefile
-index 6740117decaa..58151d003e40 100644
---- a/arch/loongarch/power/Makefile
-+++ b/arch/loongarch/power/Makefile
-@@ -1,3 +1,4 @@
- obj-y	+= platform.o
- 
- obj-$(CONFIG_SUSPEND)		+= suspend.o suspend_asm.o
-+obj-$(CONFIG_HIBERNATION)	+= hibernate.o hibernate_asm.o
-diff --git a/arch/loongarch/power/hibernate.c b/arch/loongarch/power/hibernate.c
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+ M:	Sathya Prakash <sathya.prakash@broadcom.com>
+ M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+index e461c071189b..5dbb09f843f7 100644
+--- a/drivers/soc/Kconfig
++++ b/drivers/soc/Kconfig
+@@ -13,6 +13,7 @@ source "drivers/soc/fujitsu/Kconfig"
+ source "drivers/soc/imx/Kconfig"
+ source "drivers/soc/ixp4xx/Kconfig"
+ source "drivers/soc/litex/Kconfig"
++source "drivers/soc/loongson/Kconfig"
+ source "drivers/soc/mediatek/Kconfig"
+ source "drivers/soc/microchip/Kconfig"
+ source "drivers/soc/pxa/Kconfig"
+diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+index 69ba6508cf2c..fff513bd522d 100644
+--- a/drivers/soc/Makefile
++++ b/drivers/soc/Makefile
+@@ -18,6 +18,7 @@ obj-y				+= imx/
+ obj-y				+= ixp4xx/
+ obj-$(CONFIG_SOC_XWAY)		+= lantiq/
+ obj-$(CONFIG_LITEX_SOC_CONTROLLER) += litex/
++obj-y				+= loongson/
+ obj-y				+= mediatek/
+ obj-y				+= microchip/
+ obj-y				+= pxa/
+diff --git a/drivers/soc/loongson/Kconfig b/drivers/soc/loongson/Kconfig
 new file mode 100644
-index 000000000000..efc4a54c8631
+index 000000000000..64e813962bb0
 --- /dev/null
-+++ b/arch/loongarch/power/hibernate.c
-@@ -0,0 +1,61 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <asm/fpu.h>
-+#include <asm/loongson.h>
-+#include <asm/sections.h>
-+#include <asm/tlbflush.h>
++++ b/drivers/soc/loongson/Kconfig
+@@ -0,0 +1,20 @@
++# SPDX-License-Identifier: GPL-2.0+
++#
++# Loongson-2 series SoC drivers
++#
 +
-+static u32 saved_crmd;
-+static u32 saved_prmd;
-+static u32 saved_euen;
-+static u32 saved_ecfg;
-+static u64 saved_pcpu_base;
-+struct pt_regs saved_regs;
++menu "Loongson-2 series SoC drivers"
 +
-+void save_processor_state(void)
-+{
-+	saved_crmd = csr_read32(LOONGARCH_CSR_CRMD);
-+	saved_prmd = csr_read32(LOONGARCH_CSR_PRMD);
-+	saved_euen = csr_read32(LOONGARCH_CSR_EUEN);
-+	saved_ecfg = csr_read32(LOONGARCH_CSR_ECFG);
-+	saved_pcpu_base = csr_read64(PERCPU_BASE_KS);
-+
-+	if (is_fpu_owner())
-+		save_fp(current);
-+}
-+
-+void restore_processor_state(void)
-+{
-+	csr_write32(saved_crmd, LOONGARCH_CSR_CRMD);
-+	csr_write32(saved_prmd, LOONGARCH_CSR_PRMD);
-+	csr_write32(saved_euen, LOONGARCH_CSR_EUEN);
-+	csr_write32(saved_ecfg, LOONGARCH_CSR_ECFG);
-+	csr_write64(saved_pcpu_base, PERCPU_BASE_KS);
-+
-+	if (is_fpu_owner())
-+		restore_fp(current);
-+}
-+
-+int pfn_is_nosave(unsigned long pfn)
-+{
-+	unsigned long nosave_begin_pfn = PFN_DOWN(__pa(&__nosave_begin));
-+	unsigned long nosave_end_pfn = PFN_UP(__pa(&__nosave_end));
-+
-+	return	(pfn >= nosave_begin_pfn) && (pfn < nosave_end_pfn);
-+}
-+
-+extern int swsusp_asm_suspend(void);
-+
-+int swsusp_arch_suspend(void)
-+{
-+	enable_pci_wakeup();
-+	return swsusp_asm_suspend();
-+}
-+
-+extern int swsusp_asm_resume(void);
-+
-+int swsusp_arch_resume(void)
-+{
-+	/* Avoid TLB mismatch during and after kernel resume */
-+	local_flush_tlb_all();
-+	return swsusp_asm_resume();
-+}
-diff --git a/arch/loongarch/power/hibernate_asm.S b/arch/loongarch/power/hibernate_asm.S
++config LOONGSON2_GUTS
++	tristate "Loongson-2 GUTS"
++	depends on LOONGARCH || COMPILE_TEST
++	select SOC_BUS
++	help
++	  The global utilities block controls PCIE device enabling, alternate
++	  function selection for multiplexed signals, consistency of HDA, USB
++	  and PCIE, configuration of memory controller, rtc controller, lio
++	  controller, and clock control. This patch adds a driver to manage
++	  and access global utilities block for loongarch architecture Loongson-2
++	  SoCs. Initially only reading SVR and registering soc device are
++	  supported. Other guts accesses, such as reading PMON configuration by
++	  default, should eventually be added into this driver as well.
+diff --git a/drivers/soc/loongson/Makefile b/drivers/soc/loongson/Makefile
 new file mode 100644
-index 000000000000..60beff533175
+index 000000000000..263c486df638
 --- /dev/null
-+++ b/arch/loongarch/power/hibernate_asm.S
-@@ -0,0 +1,66 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/drivers/soc/loongson/Makefile
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0+
++#
++# Makefile for the Linux Kernel SoC Loongson-2 specific device drivers
++#
++
++obj-$(CONFIG_LOONGSON2_GUTS)		+= loongson2_guts.o
+diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson/loongson2_guts.c
+new file mode 100644
+index 000000000000..8f3d5465c7e8
+--- /dev/null
++++ b/drivers/soc/loongson/loongson2_guts.c
+@@ -0,0 +1,189 @@
++// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Hibernation support specific for LoongArch
-+ *
-+ * Author: Huacai Chen <chenhuacai@loongson.cn>
-+ * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
++ * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
++ * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
 + */
-+#include <linux/linkage.h>
-+#include <asm/asm.h>
-+#include <asm/asm-offsets.h>
-+#include <asm/regdef.h>
 +
-+.text
-+SYM_FUNC_START(swsusp_asm_suspend)
-+	la.pcrel	t0, saved_regs
-+	PTR_S		ra, t0, PT_R1
-+	PTR_S		sp, t0, PT_R3
-+	PTR_S		u0, t0, PT_R21
-+	PTR_S		fp, t0, PT_R22
-+	PTR_S		tp, t0, PT_R2
-+	PTR_S		s0, t0, PT_R23
-+	PTR_S		s1, t0, PT_R24
-+	PTR_S		s2, t0, PT_R25
-+	PTR_S		s3, t0, PT_R26
-+	PTR_S		s4, t0, PT_R27
-+	PTR_S		s5, t0, PT_R28
-+	PTR_S		s6, t0, PT_R29
-+	PTR_S		s7, t0, PT_R30
-+	PTR_S		s8, t0, PT_R31
-+	b		swsusp_save
-+SYM_FUNC_END(swsusp_asm_suspend)
++#include <linux/io.h>
++#include <linux/slab.h>
++#include <linux/module.h>
++#include <linux/of_fdt.h>
++#include <linux/sys_soc.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
 +
-+SYM_FUNC_START(swsusp_asm_resume)
-+	la.pcrel	t0, restore_pblist
-+	PTR_L		t0, t0, 0
-+0:
-+	PTR_L		t1, t0, PBE_ADDRESS  /* source */
-+	PTR_L		t2, t0, PBE_ORIG_ADDRESS /* destination */
-+	PTR_LI		t3, _PAGE_SIZE
-+	PTR_ADD		t3, t3, t1
-+1:
-+	REG_L		t8, t1, 0
-+	REG_S		t8, t2, 0
-+	PTR_ADDI	t1, t1, SZREG
-+	PTR_ADDI	t2, t2, SZREG
-+	bne		t1, t3, 1b
-+	PTR_L		t0, t0, PBE_NEXT
-+	bnez		t0, 0b
-+	la.pcrel	t0, saved_regs
-+	PTR_L		ra, t0, PT_R1
-+	PTR_L		sp, t0, PT_R3
-+	PTR_L		u0, t0, PT_R21
-+	PTR_L		fp, t0, PT_R22
-+	PTR_L		tp, t0, PT_R2
-+	PTR_L		s0, t0, PT_R23
-+	PTR_L		s1, t0, PT_R24
-+	PTR_L		s2, t0, PT_R25
-+	PTR_L		s3, t0, PT_R26
-+	PTR_L		s4, t0, PT_R27
-+	PTR_L		s5, t0, PT_R28
-+	PTR_L		s6, t0, PT_R29
-+	PTR_L		s7, t0, PT_R30
-+	PTR_L		s8, t0, PT_R31
-+	PTR_LI		a0, 0x0
-+	jirl		zero, ra, 0
-+SYM_FUNC_END(swsusp_asm_resume)
++static struct soc_device_attribute soc_dev_attr;
++static struct soc_device *soc_dev;
++
++/*
++ * Global Utility Registers.
++ *
++ * Not all registers defined in this structure are available on all chips, so
++ * you are expected to know whether a given register actually exists on your
++ * chip before you access it.
++ *
++ * Also, some registers are similar on different chips but have slightly
++ * different names.  In these cases, one name is chosen to avoid extraneous
++ * #ifdefs.
++ */
++struct scfg_guts {
++	u32     svr;            /* Version Register */
++	u8      res0[4];
++	u16     feature;        /* Feature Register */
++	u32     vendor;         /* Vendor Register */
++	u8      res1[6];
++	u32     id;
++	u8      res2[0x3ff8 - 0x18];
++	u32     chip;
++};
++
++static struct guts {
++	struct scfg_guts __iomem *regs;
++	bool little_endian;
++} *guts;
++
++struct loongson2_soc_die_attr {
++	char	*die;
++	u32	svr;
++	u32	mask;
++};
++
++/* SoC die attribute definition for Loongson-2 platform */
++static const struct loongson2_soc_die_attr loongson2_soc_die[] = {
++
++	/*
++	 * LA-based SoCs Loongson-2 Series
++	 */
++
++	/* Die: 2k1000la, SoC: 2k1000la */
++	{ .die		= "2K1000LA",
++	  .svr		= 0x00000013,
++	  .mask		= 0x000000ff,
++	},
++	{ },
++};
++
++static const struct loongson2_soc_die_attr *loongson2_soc_die_match(
++	u32 svr, const struct loongson2_soc_die_attr *matches)
++{
++	while (matches->svr) {
++		if (matches->svr == (svr & matches->mask))
++			return matches;
++		matches++;
++	};
++
++	return NULL;
++}
++
++static u32 loongson2_guts_get_svr(void)
++{
++	u32 svr = 0;
++
++	if (!guts || !guts->regs)
++		return svr;
++
++	if (guts->little_endian)
++		svr = ioread32(&guts->regs->svr);
++	else
++		svr = ioread32be(&guts->regs->svr);
++
++	return svr;
++}
++
++static int loongson2_guts_probe(struct platform_device *pdev)
++{
++	struct device_node *root, *np = pdev->dev.of_node;
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	const struct loongson2_soc_die_attr *soc_die;
++	const char *machine;
++	u32 svr;
++
++	/* Initialize guts */
++	guts = devm_kzalloc(dev, sizeof(*guts), GFP_KERNEL);
++	if (!guts)
++		return -ENOMEM;
++
++	guts->little_endian = of_property_read_bool(np, "little-endian");
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	guts->regs = ioremap(res->start, res->end - res->start + 1);
++	if (IS_ERR(guts->regs))
++		return PTR_ERR(guts->regs);
++
++	/* Register soc device */
++	root = of_find_node_by_path("/");
++	if (of_property_read_string(root, "model", &machine))
++		of_property_read_string_index(root, "compatible", 0, &machine);
++	of_node_put(root);
++	if (machine)
++		soc_dev_attr.machine = devm_kstrdup(dev, machine, GFP_KERNEL);
++
++	svr = loongson2_guts_get_svr();
++	soc_die = loongson2_soc_die_match(svr, loongson2_soc_die);
++	if (soc_die) {
++		soc_dev_attr.family = devm_kasprintf(dev, GFP_KERNEL,
++						     "Loongson %s", soc_die->die);
++	} else {
++		soc_dev_attr.family = devm_kasprintf(dev, GFP_KERNEL, "Loongson");
++	}
++	if (!soc_dev_attr.family)
++		return -ENOMEM;
++	soc_dev_attr.soc_id = devm_kasprintf(dev, GFP_KERNEL,
++					     "svr:0x%08x", svr);
++	if (!soc_dev_attr.soc_id)
++		return -ENOMEM;
++	soc_dev_attr.revision = devm_kasprintf(dev, GFP_KERNEL, "%d.%d",
++					       (svr >>  4) & 0xf, svr & 0xf);
++	if (!soc_dev_attr.revision)
++		return -ENOMEM;
++
++	soc_dev = soc_device_register(&soc_dev_attr);
++	if (IS_ERR(soc_dev))
++		return PTR_ERR(soc_dev);
++
++	pr_info("Machine: %s\n", soc_dev_attr.machine);
++	pr_info("SoC family: %s\n", soc_dev_attr.family);
++	pr_info("SoC ID: %s, Revision: %s\n",
++		soc_dev_attr.soc_id, soc_dev_attr.revision);
++
++	return 0;
++}
++
++static int loongson2_guts_remove(struct platform_device *dev)
++{
++	soc_device_unregister(soc_dev);
++
++	return 0;
++}
++
++/*
++ * Table for matching compatible strings, for device tree
++ * guts node, for Loongson-2 SoCs.
++ */
++static const struct of_device_id loongson2_guts_of_match[] = {
++	{ .compatible = "loongson,ls2k-chipid", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, loongson2_guts_of_match);
++
++static struct platform_driver loongson2_guts_driver = {
++	.driver = {
++		.name = "loongson2-guts",
++		.of_match_table = loongson2_guts_of_match,
++	},
++	.probe = loongson2_guts_probe,
++	.remove = loongson2_guts_remove,
++};
++
++static int __init loongson2_guts_init(void)
++{
++	return platform_driver_register(&loongson2_guts_driver);
++}
++core_initcall(loongson2_guts_init);
++
++static void __exit loongson2_guts_exit(void)
++{
++	platform_driver_unregister(&loongson2_guts_driver);
++}
++module_exit(loongson2_guts_exit);
 -- 
 2.31.1
 
