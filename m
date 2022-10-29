@@ -1,34 +1,34 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B69FA17CA
-	for <loongarch@lists.linux.dev>; Sat, 29 Oct 2022 06:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD86017C8
+	for <loongarch@lists.linux.dev>; Sat, 29 Oct 2022 06:52:29 +0000 (UTC)
 Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8Dx_NgVy1xjYjsDAA--.12161S3;
-	Sat, 29 Oct 2022 14:41:25 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxC7aszVxj3jsDAA--.389S3;
+	Sat, 29 Oct 2022 14:52:28 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx5VYPy1xjiSgHAA--.5709S4;
-	Sat, 29 Oct 2022 14:41:24 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxiFenzVxj0S8HAA--.5930S3;
+	Sat, 29 Oct 2022 14:52:27 +0800 (CST)
 From: Yinbo Zhu <zhuyinbo@loongson.cn>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
+To: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Jianmin Lv <lvjianmin@loongson.cn>,
+	Yun Liu <liuyun@loongson.cn>,
 	Yang Li <yang.lee@linux.alibaba.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	Yinbo Zhu <zhuyinbo@loongson.cn>
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 3/3] dt-bindings: clock: add loongson-2 clock
-Date: Sat, 29 Oct 2022 14:41:18 +0800
-Message-Id: <20221029064118.27413-3-zhuyinbo@loongson.cn>
+Subject: [PATCH v6 2/2] dt-bindings: hpet: add loongson-2 hpet
+Date: Sat, 29 Oct 2022 14:52:22 +0800
+Message-Id: <20221029065222.27912-2-zhuyinbo@loongson.cn>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221029064118.27413-1-zhuyinbo@loongson.cn>
-References: <20221029064118.27413-1-zhuyinbo@loongson.cn>
+In-Reply-To: <20221029065222.27912-1-zhuyinbo@loongson.cn>
+References: <20221029065222.27912-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -36,118 +36,105 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx5VYPy1xjiSgHAA--.5709S4
+X-CM-TRANSID:AQAAf8AxiFenzVxj0S8HAA--.5930S3
 X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF4kJw4fKFyfWF1kuFg_yoW5GrWDpF
-	sxC343GryIvF17Zws5Ka4xA3Z5u3Z7CF17ZwnrCa42kr98W3W5XF17K34DZa9rAFy7Za9r
-	ZFWfCr4jka1Ikw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7uF15Xw1xKw17Aw47Kr4kZwb_yoW8tFW8pa
+	nrCF95Jr40kF17Z395KFy0k3WrZ3s7AFy7WF17J3WUKFyDX3W5X3W3Ka4DZwsxCFW8Xay7
+	ZFWSkr45KayUur7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bS8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC
-	6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2
-	Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-	1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj
-	6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
-	0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
-	YxBIdaVFxhVjvjDU0xZFpf9x07UR89_UUUUU=
+	bSAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUAVWUZwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
+	1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
+	cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
+	0Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCa
+	FVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28Icx
+	kI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
+	07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5
+	JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_
+	Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07jrEfOUUUUU=
 
-Add the Loongson-2 clock binding with DT schema format using
-json-schema.
+Add the Loongson-2 High Precision Event Timer (HPET) binding
+with DT schema format using json-schema.
 
 Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../bindings/clock/loongson,ls2k-clk.yaml     | 63 +++++++++++++++++++
+ .../bindings/timer/loongson,ls2k-hpet.yaml    | 50 +++++++++++++++++++
  MAINTAINERS                                   |  1 +
- 2 files changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+ 2 files changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
 
-diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+diff --git a/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
 new file mode 100644
-index 000000000000..63a59015987e
+index 000000000000..30685c8fbead
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-@@ -0,0 +1,63 @@
++++ b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+@@ -0,0 +1,50 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/clock/loongson,ls2k-clk.yaml#
++$id: http://devicetree.org/schemas/timer/loongson,ls2k-hpet.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Loongson-2 SoC Clock Control Module
++title: Loongson-2 High Precision Event Timer (HPET)
 +
 +maintainers:
 +  - Yinbo Zhu <zhuyinbo@loongson.cn>
 +
-+description: |
-+  Loongson-2 SoC clock control module is an integrated clock controller, which
-+  generates and supplies to all modules.
-+
 +properties:
 +  compatible:
-+    enum:
-+      - loongson,ls2k-clk
++    const: loongson,ls2k-hpet
 +
 +  reg:
 +    maxItems: 1
 +
 +  clocks:
 +    items:
-+      - description: 100m ref
++      - description: SoC apb clock
 +
 +  clock-names:
 +    items:
-+      - const: ref_100m
++      - const: apb
 +
-+  '#clock-cells':
-+    const: 1
-+    description:
-+      The clock consumer should specify the desired clock by having the clock
-+      ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
-+      for the full list of Loongson-2 SoC clock IDs.
++  interrupts:
++    maxItems: 1
 +
 +required:
 +  - compatible
 +  - reg
 +  - clocks
 +  - clock-names
-+  - '#clock-cells'
++  - interrupts
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    ref_100m: clock-ref-100m {
-+        compatible = "fixed-clock";
-+        #clock-cells = <0>;
-+        clock-frequency = <100000000>;
-+        clock-output-names = "ref_100m";
-+    };
-+
-+    clk: clock-controller@1fe00480 {
-+        compatible = "loongson,ls2k-clk";
-+        reg = <0x1fe00480 0x58>;
-+        #clock-cells = <1>;
-+        clocks = <&ref_100m>;
-+        clock-names = "ref_100m";
++    #include <dt-bindings/clock/loongson,ls2k-clk.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    timer@1fe24000 {
++        compatible = "loongson,ls2k-hpet";
++        reg = <0x1fe24000 0x15f>;
++        clocks = <&clk LOONGSON2_APB_CLK>;
++        clock-names = "apb";
++        interrupt-parent = <&liointc0>;
++        interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
 +    };
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 5136684fb6c6..e5fb270dd363 100644
+index 21c455d7a99a..e677c77136a2 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -11911,6 +11911,7 @@ LOONGSON-2 SOC SERIES CLOCK DRIVER
+@@ -11919,6 +11919,7 @@ LOONGSON-2 SOC SERIES HPET DRIVER
  M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-clk@vger.kernel.org
+ L:	linux-kernel@vger.kernel.org
  S:	Maintained
-+F:	Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
- F:	drivers/clk/clk-loongson2.c
- F:	include/dt-bindings/clock/loongson,ls2k-clk.h
++F:	Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+ F:	drivers/clocksource/loongson2_hpet.c
  
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
 -- 
 2.31.1
 
