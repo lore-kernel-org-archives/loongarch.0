@@ -1,135 +1,77 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EED523C0
-	for <loongarch@lists.linux.dev>; Sat, 29 Oct 2022 08:21:44 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8AxjreX4lxjXz4DAA--.7250S3;
-	Sat, 29 Oct 2022 16:21:43 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxR1eQ4lxjKWcHAA--.6252S3;
-	Sat, 29 Oct 2022 16:21:41 +0800 (CST)
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-To: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Hector Martin <marcan@marcan.st>,
-	Lubomir Rintel <lkundrak@v3.sk>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Brian Norris <briannorris@chromium.org>,
-	Sven Peter <sven@svenpeter.dev>,
-	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: [PATCH v3 2/2] dt-bindings: soc: add loongson-2 chipid
-Date: Sat, 29 Oct 2022 16:21:35 +0800
-Message-Id: <20221029082135.31096-2-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221029082135.31096-1-zhuyinbo@loongson.cn>
-References: <20221029082135.31096-1-zhuyinbo@loongson.cn>
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE08D23C0
+	for <loongarch@lists.linux.dev>; Sat, 29 Oct 2022 09:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1667034890; bh=eI8IpBS6LrseP7BBua7RiBE8WSQM8q98o5QeMtv4iEA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=R7KotmcH0huu0we2hsHBPkB1LUC/Tk1o7QJ4mE3dr3R65JFjJ2Wd7XFv9Lr/1w6Rv
+	 BmiUDuji1zFBO74QQ1ELN0Yg1EgnE4kPLMBZzNlER0IbXBBVhEqGyrWE22+iOYoEbQ
+	 Qm99BVbTDuvrB5G6W4BnKQm+GgjZz+5siHJwh+rM=
+Received: from [192.168.9.172] (unknown [101.88.133.1])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id CFE5A600CE;
+	Sat, 29 Oct 2022 17:14:49 +0800 (CST)
+Message-ID: <1f353678-3398-e30b-1c87-6edb278f74db@xen0n.name>
+Date: Sat, 29 Oct 2022 17:14:48 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxR1eQ4lxjKWcHAA--.6252S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7uF15Xw1fArW7KFyfJryfXrb_yoW8tFykpa
-	13Cr95KF4xtF17uws5Ka4Ik3W5Zr95AFsFgFZrZw13KrWqg3WFqw43K3WDZanrZr1UJayU
-	uFWfGrW5GF4xCr7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bSxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUAVWUZwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC
-	6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2
-	Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-	1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j
-	6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
-	0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
-	JbIYCTnIWIevJa73UjIFyTuYvjxUwfHjUUUUU
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:108.0) Gecko/20100101
+ Thunderbird/108.0a1
+Subject: Re: [PATCH 0/2] LoongArch syscall ABI documentation
+To: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Cc: WANG Xuerui <git@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>,
+ Alex Shi <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
+ loongarch@lists.linux.dev
+References: <20221018100457.3440691-1-kernel@xen0n.name>
+ <874jvn6be7.fsf@meer.lwn.net>
+Content-Language: en-US
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <874jvn6be7.fsf@meer.lwn.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add the Loongson-2 SoC chipid binding with DT schema format using
-json-schema.
+On 10/29/22 02:39, Jonathan Corbet wrote:
+> WANG Xuerui <kernel@xen0n.name> writes:
+>
+>> From: WANG Xuerui <git@xen0n.name>
+>>
+>> Hi,
+>>
+>> Due to popular demand [1] (even Loongson employees can get lost), the
+>> current LoongArch syscall ABI is now documented. A Simplified Chinese
+>> translation is included too.
+>>
+>> [1]: https://github.com/loongson/LoongArch-Documentation/issues/66
+>>
+>> WANG Xuerui (2):
+>>    Documentation: LoongArch: Document the syscall ABI
+>>    docs/zh_CN: LoongArch: Translate the syscall ABI doc
+>>
+>>   Documentation/loongarch/index.rst             |  1 +
+>>   Documentation/loongarch/syscall-abi.rst       | 36 ++++++++++++++++++
+>>   .../translations/zh_CN/loongarch/index.rst    |  1 +
+>>   .../zh_CN/loongarch/syscall-abi.rst           | 37 +++++++++++++++++++
+>>   4 files changed, 75 insertions(+)
+>>   create mode 100644 Documentation/loongarch/syscall-abi.rst
+>>   create mode 100644 Documentation/translations/zh_CN/loongarch/syscall-abi.rst
+> Would you like me to take these through the docs tree?
+That's fine by me, thanks. I'll send a v2 in the weekend (likely 
+tomorrow) for the people who have commented to give their R-b's.
+>
+> Thanks,
+>
+> jon
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
----
-Change in v3:
-		1. Drop "driver" and describe instead what is GUTS, including
-		   its acronym.
-		2. Add desciption about the SoC register.
-		3. Fixup dts node name.
-		4. Replace string loongson2/Loongson2 with loongson-2/Loongson-2
-                   in binding file and commit message.
-
- .../bindings/hwinfo/loongson,ls2k-chipid.yaml | 38 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
-
-diff --git a/Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml b/Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
-new file mode 100644
-index 000000000000..9d0c36ec1982
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwinfo/loongson,ls2k-chipid.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson-2 SoC ChipID
-+
-+maintainers:
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+description: |
-+  Loongson-2 SoC contains many groups of global utilities register
-+  blocks, of which the ChipID group registers record SoC version,
-+  feature, vendor and id information.
-+
-+properties:
-+  compatible:
-+    const: loongson,ls2k-chipid
-+
-+  reg:
-+    maxItems: 1
-+
-+  little-endian: true
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    chipid: chipid@1fe00000 {
-+        compatible = "loongson,ls2k-chipid";
-+        reg = <0x1fe00000 0x3ffc>;
-+        little-endian;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a02d45dd21ce..072da0f47f14 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11934,6 +11934,7 @@ LOONGSON-2 SOC SERIES GUTS DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	loongarch@lists.linux.dev
- S:	Maintained
-+F:	Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
- F:	drivers/soc/loongson/loongson2_guts.c
- 
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
 -- 
-2.31.1
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
