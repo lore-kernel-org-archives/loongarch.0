@@ -1,69 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC36323CD
-	for <loongarch@lists.linux.dev>; Sun, 30 Oct 2022 09:18:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED56DC433D6;
-	Sun, 30 Oct 2022 09:18:55 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.1-rc3
-Date: Sun, 30 Oct 2022 17:16:58 +0800
-Message-Id: <20221030091658.1843946-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80696AA8
+	for <loongarch@lists.linux.dev>; Sun, 30 Oct 2022 13:50:24 +0000 (UTC)
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-13ba9a4430cso11139898fac.11
+        for <loongarch@lists.linux.dev>; Sun, 30 Oct 2022 06:50:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1QUpqSv8LSRsD1VYxzYGonzNWEdEEaZtwSxjwf3b2Fg=;
+        b=Iu6ET5WZzTrKxc0zUW8xTAPJpOKYMys5kv+kbyJsLaH5P1xCpp3prpindDy81XbIQB
+         zLTfTgioPgkHkth46t12e2WQ0nVnOS/jbu9lo9imY7sS1/aWSI8Iyiy1x9cIlsxk2PIx
+         uExBVFVpw6CfepDRtXZYxY8DkvNtpbOVCpeHDAedgL/x6gQTvSrdQTEKyyym6/SiRWSm
+         ukgZvQwjkeMmfWHdgxwfOQNCsDYnyap8oMxkQ54f1Wi9A0KsHNlljFrWBGqQGeQkuT3d
+         SI/JNVZjxnrWOF9xt66Z7dIgIAETD7QEps/7nen7dvXKtTqqlI5bmfzmiXoUihdJG6Ev
+         GU9g==
+X-Gm-Message-State: ACrzQf0Lj+YqZ+czP/F1wQE/NxH+I2jzmXGf2IX512yf6D6pNd8ltFU4
+	ZsAlIlGK0woSFBjIdBGgsQ==
+X-Google-Smtp-Source: AMsMyM4A4ituhLKMdNGU6GZbc0dsVd/UTLy9ttWdlGJXrzspN/uk3HqBWucUMAxeWy0eP8Y0ZZSnwQ==
+X-Received: by 2002:a05:6871:28a:b0:13b:cb8b:1ab7 with SMTP id i10-20020a056871028a00b0013bcb8b1ab7mr4755663oae.225.1667137823806;
+        Sun, 30 Oct 2022 06:50:23 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id c4-20020a056870478400b0013320d9d9casm1836309oaq.44.2022.10.30.06.50.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Oct 2022 06:50:23 -0700 (PDT)
+Received: (nullmailer pid 992222 invoked by uid 1000);
+	Sun, 30 Oct 2022 13:50:23 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Rob Herring <robh@kernel.org>
+To: Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: devicetree@vger.kernel.org, loongarch@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Yun Liu <liuyun@loongson.cn>, Thomas Gleixner <tglx@linutronix.de>, Jianmin Lv <lvjianmin@loongson.cn>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Yang Li <yang.lee@linux.alibaba.com>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20221029065222.27912-2-zhuyinbo@loongson.cn>
+References: <20221029065222.27912-1-zhuyinbo@loongson.cn>
+ <20221029065222.27912-2-zhuyinbo@loongson.cn>
+Message-Id: <166713668551.965836.8662861477016293697.robh@kernel.org>
+Subject: Re: [PATCH v6 2/2] dt-bindings: hpet: add loongson-2 hpet
+Date: Sun, 30 Oct 2022 08:50:23 -0500
 
-The following changes since commit 247f34f7b80357943234f93f247a1ae6b6c3a740:
 
-  Linux 6.1-rc2 (2022-10-23 15:27:33 -0700)
+On Sat, 29 Oct 2022 14:52:22 +0800, Yinbo Zhu wrote:
+> Add the Loongson-2 High Precision Event Timer (HPET) binding
+> with DT schema format using json-schema.
+> 
+> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../bindings/timer/loongson,ls2k-hpet.yaml    | 50 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+> 
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.1-1
 
-for you to fetch changes up to d81916910f7498fe7a768697e0101d488f9fe665:
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-  platform/loongarch: laptop: Fix possible UAF and simplify generic_acpi_laptop_init() (2022-10-29 16:29:31 +0800)
+yamllint warnings/errors:
 
-----------------------------------------------------------------
-LoongArch fixes for v6.1-rc3
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.example.dts:21:18: fatal error: dt-bindings/clock/loongson,ls2k-clk.h: No such file or directory
+   21 |         #include <dt-bindings/clock/loongson,ls2k-clk.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:406: Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.example.dtb] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1492: dt_binding_check] Error 2
 
-Remove unused kernel stack padding, fix some build errors/warnings and
-two bugs in laptop platform driver.
-----------------------------------------------------------------
-Huacai Chen (2):
-      LoongArch: BPF: Avoid declare variables in switch-case
-      platform/loongarch: laptop: Adjust resume order for loongson_hotkey_resume()
+doc reference errors (make refcheckdocs):
 
-Jinyang He (1):
-      LoongArch: Remove unused kernel stack padding
+See https://patchwork.ozlabs.org/patch/
 
-Yang Yingliang (1):
-      platform/loongarch: laptop: Fix possible UAF and simplify generic_acpi_laptop_init()
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-Yushan Zhou (1):
-      LoongArch: Use flexible-array member instead of zero-length array
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
- arch/loongarch/include/asm/processor.h       |  2 +-
- arch/loongarch/include/asm/ptrace.h          |  4 ++--
- arch/loongarch/kernel/head.S                 |  3 +--
- arch/loongarch/kernel/process.c              |  4 ++--
- arch/loongarch/kernel/switch.S               |  2 +-
- arch/loongarch/net/bpf_jit.c                 | 31 ++++++++++++----------------
- drivers/platform/loongarch/loongson-laptop.c | 24 ++++++++++++---------
- 7 files changed, 34 insertions(+), 36 deletions(-)
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
