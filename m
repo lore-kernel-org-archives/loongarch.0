@@ -1,77 +1,69 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE08D23C0
-	for <loongarch@lists.linux.dev>; Sat, 29 Oct 2022 09:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1667034890; bh=eI8IpBS6LrseP7BBua7RiBE8WSQM8q98o5QeMtv4iEA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=R7KotmcH0huu0we2hsHBPkB1LUC/Tk1o7QJ4mE3dr3R65JFjJ2Wd7XFv9Lr/1w6Rv
-	 BmiUDuji1zFBO74QQ1ELN0Yg1EgnE4kPLMBZzNlER0IbXBBVhEqGyrWE22+iOYoEbQ
-	 Qm99BVbTDuvrB5G6W4BnKQm+GgjZz+5siHJwh+rM=
-Received: from [192.168.9.172] (unknown [101.88.133.1])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id CFE5A600CE;
-	Sat, 29 Oct 2022 17:14:49 +0800 (CST)
-Message-ID: <1f353678-3398-e30b-1c87-6edb278f74db@xen0n.name>
-Date: Sat, 29 Oct 2022 17:14:48 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC36323CD
+	for <loongarch@lists.linux.dev>; Sun, 30 Oct 2022 09:18:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED56DC433D6;
+	Sun, 30 Oct 2022 09:18:55 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.1-rc3
+Date: Sun, 30 Oct 2022 17:16:58 +0800
+Message-Id: <20221030091658.1843946-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:108.0) Gecko/20100101
- Thunderbird/108.0a1
-Subject: Re: [PATCH 0/2] LoongArch syscall ABI documentation
-To: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc: WANG Xuerui <git@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>,
- Alex Shi <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
- loongarch@lists.linux.dev
-References: <20221018100457.3440691-1-kernel@xen0n.name>
- <874jvn6be7.fsf@meer.lwn.net>
-Content-Language: en-US
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <874jvn6be7.fsf@meer.lwn.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/29/22 02:39, Jonathan Corbet wrote:
-> WANG Xuerui <kernel@xen0n.name> writes:
->
->> From: WANG Xuerui <git@xen0n.name>
->>
->> Hi,
->>
->> Due to popular demand [1] (even Loongson employees can get lost), the
->> current LoongArch syscall ABI is now documented. A Simplified Chinese
->> translation is included too.
->>
->> [1]: https://github.com/loongson/LoongArch-Documentation/issues/66
->>
->> WANG Xuerui (2):
->>    Documentation: LoongArch: Document the syscall ABI
->>    docs/zh_CN: LoongArch: Translate the syscall ABI doc
->>
->>   Documentation/loongarch/index.rst             |  1 +
->>   Documentation/loongarch/syscall-abi.rst       | 36 ++++++++++++++++++
->>   .../translations/zh_CN/loongarch/index.rst    |  1 +
->>   .../zh_CN/loongarch/syscall-abi.rst           | 37 +++++++++++++++++++
->>   4 files changed, 75 insertions(+)
->>   create mode 100644 Documentation/loongarch/syscall-abi.rst
->>   create mode 100644 Documentation/translations/zh_CN/loongarch/syscall-abi.rst
-> Would you like me to take these through the docs tree?
-That's fine by me, thanks. I'll send a v2 in the weekend (likely 
-tomorrow) for the people who have commented to give their R-b's.
->
-> Thanks,
->
-> jon
+The following changes since commit 247f34f7b80357943234f93f247a1ae6b6c3a740:
 
--- 
-WANG "xen0n" Xuerui
+  Linux 6.1-rc2 (2022-10-23 15:27:33 -0700)
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.1-1
+
+for you to fetch changes up to d81916910f7498fe7a768697e0101d488f9fe665:
+
+  platform/loongarch: laptop: Fix possible UAF and simplify generic_acpi_laptop_init() (2022-10-29 16:29:31 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v6.1-rc3
+
+Remove unused kernel stack padding, fix some build errors/warnings and
+two bugs in laptop platform driver.
+----------------------------------------------------------------
+Huacai Chen (2):
+      LoongArch: BPF: Avoid declare variables in switch-case
+      platform/loongarch: laptop: Adjust resume order for loongson_hotkey_resume()
+
+Jinyang He (1):
+      LoongArch: Remove unused kernel stack padding
+
+Yang Yingliang (1):
+      platform/loongarch: laptop: Fix possible UAF and simplify generic_acpi_laptop_init()
+
+Yushan Zhou (1):
+      LoongArch: Use flexible-array member instead of zero-length array
+
+ arch/loongarch/include/asm/processor.h       |  2 +-
+ arch/loongarch/include/asm/ptrace.h          |  4 ++--
+ arch/loongarch/kernel/head.S                 |  3 +--
+ arch/loongarch/kernel/process.c              |  4 ++--
+ arch/loongarch/kernel/switch.S               |  2 +-
+ arch/loongarch/net/bpf_jit.c                 | 31 ++++++++++++----------------
+ drivers/platform/loongarch/loongson-laptop.c | 24 ++++++++++++---------
+ 7 files changed, 34 insertions(+), 36 deletions(-)
