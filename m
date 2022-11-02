@@ -1,83 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7881E9EF
-	for <loongarch@lists.linux.dev>; Tue,  1 Nov 2022 17:47:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD53C433D6;
-	Tue,  1 Nov 2022 17:47:05 +0000 (UTC)
-Date: Tue, 1 Nov 2022 17:47:01 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-	linux-fsdevel@vger.kernel.org,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
-	Guo Ren <guoren@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EFDA635
+	for <loongarch@lists.linux.dev>; Wed,  2 Nov 2022 03:50:19 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8Bx37fx6GFj2e0DAA--.9051S3;
+	Wed, 02 Nov 2022 11:50:09 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxLeDr6GFjgqcJAA--.29311S2;
+	Wed, 02 Nov 2022 11:50:08 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Greg Ungerer <gerg@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>
-Subject: Re: [PATCH] mm: remove kern_addr_valid() completely
-Message-ID: <Y2FblZlz2LIGh5qH@arm.com>
-References: <20221018074014.185687-1-wangkefeng.wang@huawei.com>
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v8 1/3] dt-bindings: clock: add loongson-2 clock include file
+Date: Wed,  2 Nov 2022 11:49:55 +0800
+Message-Id: <20221102034957.19626-1-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221018074014.185687-1-wangkefeng.wang@huawei.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxLeDr6GFjgqcJAA--.29311S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Wry3AF4kWr47Kw1fXr4UXFb_yoW8tw15pr
+	4kCFWfKry2yF4IkanYgF13Kr13uw4xA3W7AF47uF1jyF17Jw18JwnruF1fAa9xXF4kJFWx
+	Zan7Cw409FZrX3DanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bfxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x
+	0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
+	xVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
+	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_
+	JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	WUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBI
+	daVFxhVjvjDU0xZFpf9x07jn73kUUUUU=
 
-On Tue, Oct 18, 2022 at 03:40:14PM +0800, Kefeng Wang wrote:
-> Most architectures(except arm64/x86/sparc) simply return 1 for
-> kern_addr_valid(), which is only used in read_kcore(), and it
-> calls copy_from_kernel_nofault() which could check whether the
-> address is a valid kernel address, so no need kern_addr_valid(),
-> let's remove unneeded kern_addr_valid() completely.
-> 
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+This file defines all Loongson-2 SoC clock indexes, it should be
+included in the device tree in which there's device using the
+clocks.
 
-For arm64:
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ MAINTAINERS                                   |  6 ++++
+ include/dt-bindings/clock/loongson,ls2k-clk.h | 29 +++++++++++++++++++
+ 2 files changed, 35 insertions(+)
+ create mode 100644 include/dt-bindings/clock/loongson,ls2k-clk.h
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3aff8b8723b1..d5d1f2b9fcfd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12018,6 +12018,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
+ F:	drivers/thermal/loongson2_thermal.c
+ 
++LOONGSON-2 SOC SERIES CLOCK DRIVER
++M:	Yinbo Zhu <zhuyinbo@loongson.cn>
++L:	linux-clk@vger.kernel.org
++S:	Maintained
++F:	include/dt-bindings/clock/loongson,ls2k-clk.h
++
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+ M:	Sathya Prakash <sathya.prakash@broadcom.com>
+ M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+diff --git a/include/dt-bindings/clock/loongson,ls2k-clk.h b/include/dt-bindings/clock/loongson,ls2k-clk.h
+new file mode 100644
+index 000000000000..db1e27e792ff
+--- /dev/null
++++ b/include/dt-bindings/clock/loongson,ls2k-clk.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
++ * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_LOONGSON2_H
++#define __DT_BINDINGS_CLOCK_LOONGSON2_H
++
++#define LOONGSON2_REF_100M				0
++#define LOONGSON2_NODE_PLL				1
++#define LOONGSON2_DDR_PLL				2
++#define LOONGSON2_DC_PLL				3
++#define LOONGSON2_PIX0_PLL				4
++#define LOONGSON2_PIX1_PLL				5
++#define LOONGSON2_NODE_CLK				6
++#define LOONGSON2_HDA_CLK				7
++#define LOONGSON2_GPU_CLK				8
++#define LOONGSON2_DDR_CLK				9
++#define LOONGSON2_GMAC_CLK				10
++#define LOONGSON2_DC_CLK				11
++#define LOONGSON2_APB_CLK				12
++#define LOONGSON2_USB_CLK				13
++#define LOONGSON2_SATA_CLK				14
++#define LOONGSON2_PIX0_CLK				15
++#define LOONGSON2_PIX1_CLK				16
++#define LOONGSON2_CLK_END				17
++
++#endif
+-- 
+2.33.0
+
