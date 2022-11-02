@@ -1,79 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF55801
-	for <loongarch@lists.linux.dev>; Wed,  2 Nov 2022 11:21:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 941D1C433B5
-	for <loongarch@lists.linux.dev>; Wed,  2 Nov 2022 11:21:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1667388108;
-	bh=y6jA1qc/WukXbdnJwL8P127OXjOsKWmTp8cHhQGAsss=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XUJ1ZKx0yghv6TKuKMouii1GOMY5H1esec69h2OTdYkHDrwTsv45wrMCdHtBMpbC4
-	 L/gF3GtO2pLeF9bOWhUF8w4jfjJiymYEll94AxxfIx9ZZj39CmgUpyOtG/cOGpzq5X
-	 STcVXik+2IgXMdHGXMfHjOdIiuruA+eUT8qBdcVT8ovkDkZGgr/DAS72RehXCnASq/
-	 AOC78AnIVxPT8wpQF6vFHD5gpQUJB4d5Bkl37J1dzwcmiPNKCwMyvX/R91zPYuIziE
-	 1hd4N4o8lttwLBU0f27YvCQxebpcTX4DGYtVNFLWJhsaggf53XLy5gAXnwfYuVwdzx
-	 2q/AJoScGmi/g==
-Received: by mail-lf1-f51.google.com with SMTP id r12so27719279lfp.1
-        for <loongarch@lists.linux.dev>; Wed, 02 Nov 2022 04:21:48 -0700 (PDT)
-X-Gm-Message-State: ACrzQf3sipFit1Bt7EO686BLofZL4U7qU0jMPcWL+13QOIOunJXHWoTM
-	YVkTlKp/7fFe/jWLL0iu54QIwdKFvmeRPvKrqA==
-X-Google-Smtp-Source: AMsMyM7n4p9mPcI4wH0CR8GOhTrHwa9Qm734EamjzWOPQhZCF4pM+Opa28ho7vRj6nl3H4gpCETQNqI02fcLXr7e3Lw=
-X-Received: by 2002:a05:6512:3e10:b0:4a2:48c1:8794 with SMTP id
- i16-20020a0565123e1000b004a248c18794mr8821466lfv.17.1667388106632; Wed, 02
- Nov 2022 04:21:46 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918096D3F
+	for <loongarch@lists.linux.dev>; Wed,  2 Nov 2022 16:17:32 +0000 (UTC)
+Received: by mail-qk1-f173.google.com with SMTP id z30so12037136qkz.13
+        for <loongarch@lists.linux.dev>; Wed, 02 Nov 2022 09:17:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bJek6NkURfosAp/uchM0s6cEp+OyqcYE/P5UFkvDx6c=;
+        b=Beiw3KD5m0lV/hwTJJ4HkM8dOSrGiiegu49uo6QrhJ/Ek2JltLFdnlRfuJ90ZKJLk2
+         rs5qjFPoSzlBuFqtIsTu/wJ/tjYQqxoqW1vDt365YkD97j9BdBo5rSaSJ6zDYG5E5DZG
+         +MEwX2pHBQDnCfC5nl/IyrIz/5SVFK6FG2cSaXv1GiF7ZZl07BNezv3tJC68lIxQ6Ppc
+         TCl2T74zLwlCLik6amA+9TaPYdh0eygJEGAVler8+KiHV6gYKC/mFGxgeC0e/V7B+i+v
+         aoqkyADe1sOKPFx0wcOGUyNO6xRXqpyx3ZrmggMS8pdCij2u1g62wuG3ha11P97XEIUQ
+         dDSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bJek6NkURfosAp/uchM0s6cEp+OyqcYE/P5UFkvDx6c=;
+        b=B1zYVfxolz8cCYh+aYD0MqEPSzKh02XlefS8yk8qMGwmYNeij/C58tWYjKa93Ro/Le
+         6tpV486DgSJONxWlR4dK2MycUyT0hdpoH3vrvo0ZPZa9br/yuCP1blY7lqCrRUT338A2
+         dVkerGuZ4qDuDabfUxe/Bk8dBPYM8QpZv7thBqqkDrfX7JIGUSO8W609RBSbwGnv3rTL
+         +AIE0f3rRnYMYa5F/ZLcktL93I7tKT82GTXkHgWd/MSH8GXlF281u+3OdS9MaBxlXhmS
+         Dht/6veOlCFInM1d60QWji8Yxg5X4ApfLURTyAxoc+cotILfS8boyo323J2Wbz+F6wtE
+         Fqpg==
+X-Gm-Message-State: ACrzQf20pzj0xPZ1BJL1U1jDY7eJqih9WSi8MclAZCHZEdK0hUQXTwcN
+	ZROiJ7XjdBtQCuRZm3TP3UYJjA==
+X-Google-Smtp-Source: AMsMyM6jI/HdsQJ1lS99LjoIpegy8BZrn9T/tm8NZcJHyPfkCUONRJvFwq4pMfMr751vTSJTlDVwgw==
+X-Received: by 2002:a37:de0a:0:b0:6fa:422c:1fda with SMTP id h10-20020a37de0a000000b006fa422c1fdamr8696702qkj.607.1667405851525;
+        Wed, 02 Nov 2022 09:17:31 -0700 (PDT)
+Received: from ?IPV6:2601:586:5000:570:28d9:4790:bc16:cc93? ([2601:586:5000:570:28d9:4790:bc16:cc93])
+        by smtp.gmail.com with ESMTPSA id u21-20020ae9c015000000b006eecc4a0de9sm8578474qkk.62.2022.11.02.09.17.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Nov 2022 09:17:30 -0700 (PDT)
+Message-ID: <abc9ed33-26d2-b850-8c7a-78cb1735ddb2@linaro.org>
+Date: Wed, 2 Nov 2022 12:17:29 -0400
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221102035249.19776-1-zhuyinbo@loongson.cn> <20221102035249.19776-2-zhuyinbo@loongson.cn>
- <166738767754.3460253.533656720238446457.robh@kernel.org>
-In-Reply-To: <166738767754.3460253.533656720238446457.robh@kernel.org>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Wed, 2 Nov 2022 06:21:37 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+H6dgdQJJ0t=3N7q-VYbmO5cJq1VfLOu2mrm+fbg37jw@mail.gmail.com>
-Message-ID: <CAL_Jsq+H6dgdQJJ0t=3N7q-VYbmO5cJq1VfLOu2mrm+fbg37jw@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] dt-bindings: hpet: add loongson-2 hpet
-To: Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Yun Liu <liuyun@loongson.cn>, linux-kernel@vger.kernel.org, 
-	WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Yang Li <yang.lee@linux.alibaba.com>, Jianmin Lv <lvjianmin@loongson.cn>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, loongarch@lists.linux.dev, 
-	Huacai Chen <chenhuacai@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: [PATCH v5 1/3] dt-bindings: clock: add loongson-2 clock include
+ file
+Content-Language: en-US
+To: Yinbo Zhu <zhuyinbo@loongson.cn>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Jianmin Lv <lvjianmin@loongson.cn>,
+ Yang Li <yang.lee@linux.alibaba.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20221028025504.13247-1-zhuyinbo@loongson.cn>
+ <01a38c4c-b42a-c170-3c3d-0b7e087bfaa4@linaro.org>
+ <2bd0f05d-a5c4-3c5c-ccbc-3e3385cc0a1d@loongson.cn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <2bd0f05d-a5c4-3c5c-ccbc-3e3385cc0a1d@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 2, 2022 at 6:16 AM Rob Herring <robh@kernel.org> wrote:
->
->
-> On Wed, 02 Nov 2022 11:52:49 +0800, Yinbo Zhu wrote:
-> > Add the Loongson-2 High Precision Event Timer (HPET) binding
-> > with DT schema format using json-schema.
-> >
-> > Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > ---
-> >  .../bindings/timer/loongson,ls2k-hpet.yaml    | 50 +++++++++++++++++++
-> >  MAINTAINERS                                   |  1 +
-> >  2 files changed, 51 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
-> >
->
-> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-> on your patch (DT_CHECKER_FLAGS is new in v5.13):
->
-> yamllint warnings/errors:
->
-> dtschema/dtc warnings/errors:
-> Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.example.dts:21:18: fatal error: dt-bindings/clock/loongson,ls2k-clk.h: No such file or directory
->    21 |         #include <dt-bindings/clock/loongson,ls2k-clk.h>
+On 28/10/2022 22:54, Yinbo Zhu wrote:
+> 
+> 
+> 在 2022/10/28 下午7:43, Krzysztof Kozlowski 写道:
+>> On 27/10/2022 22:55, Yinbo Zhu wrote:
+>>> This file defines all Loongson-2 SoC clock indexes, it should be
+>>> included in the device tree in which there's device using the
+>>> clocks.
+>>>
+>>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>> ---
+>>> Change in v5:
+>>> 		1. Replace loongson2/Loongson2 with loongson-2/Loongson-2.
+>>> 		2. Replace soc with SoC.
+>>>
+>>
+>> Where is the rest of the changelog?
+> What you're asking is where the replacement string is located.  it was 
+> in commit log.
 
-I assume this header is available somewhere else, but I have no idea.
-Please describe dependencies below the '---' or no one can apply this.
+I am asking why there is only v5 changelog? Where is v4, v3, v2?
 
-Rob
+Best regards,
+Krzysztof
+
