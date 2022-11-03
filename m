@@ -1,99 +1,173 @@
-Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11DA56FAE
-	for <loongarch@lists.linux.dev>; Thu,  3 Nov 2022 12:03:56 +0000 (UTC)
-Received: from [192.168.1.18] ([86.243.100.34])
-	by smtp.orange.fr with ESMTPA
-	id qYTZoLdYwnj75qYTZogmIz; Thu, 03 Nov 2022 12:33:41 +0100
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 03 Nov 2022 12:33:41 +0100
-X-ME-IP: 86.243.100.34
-Message-ID: <3dd246b0-ead3-e1e8-8700-22d68fc82042@wanadoo.fr>
-Date: Thu, 3 Nov 2022 12:33:37 +0100
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F6AF6FCC
+	for <loongarch@lists.linux.dev>; Thu,  3 Nov 2022 13:12:26 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8Bx3Ng5vmNj1jwEAA--.14647S3;
+	Thu, 03 Nov 2022 21:12:25 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxZ1ctvmNjswcMAA--.16743S3;
+	Thu, 03 Nov 2022 21:12:23 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Yun Liu <liuyun@loongson.cn>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v10 2/2] dt-bindings: hpet: add loongson-2 hpet
+Date: Thu,  3 Nov 2022 21:12:02 +0800
+Message-Id: <20221103131202.12481-2-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221103131202.12481-1-zhuyinbo@loongson.cn>
+References: <20221103131202.12481-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH v9 1/2] clocksource: loongson2_hpet: add hpet driver
- support
-Content-Language: fr
-To: zhuyinbo@loongson.cn
-References: <20221103095403.6856-1-zhuyinbo@loongson.cn>
-Cc: chenhuacai@kernel.org, daniel.lezcano@linaro.org,
- devicetree@vger.kernel.org, jiaxun.yang@flygoat.com, kernel@xen0n.name,
- krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
- liuyun@loongson.cn, loongarch@lists.linux.dev, lvjianmin@loongson.cn,
- robh+dt@kernel.org, tglx@linutronix.de, yang.lee@linux.alibaba.com
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20221103095403.6856-1-zhuyinbo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxZ1ctvmNjswcMAA--.16743S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF4fWFWxJr1UAw1DKFg_yoW5KFy7pF
+	s7CF93Jr47tF13u39xKFyI93Z5Zas5AF9rWr17tw1UAF98X3W5XF1xKa4DZ3y3GrWxWay7
+	XFySkw18Ka1j9r7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bSxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM2
+	8EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq
+	07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7
+	xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x
+	0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
+	xVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
+	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
+	Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	WUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
+	JbIYCTnIWIevJa73UjIFyTuYvjxU7ZqXDUUUU
 
-Le 03/11/2022 à 10:54, Yinbo Zhu a écrit :
-> HPET (High Precision Event Timer) defines a new set of timers, which
-> are used by the operating system to schedule threads, interrupt the
-> kernel and interrupt the multimedia timer server. The operating
-> system can assign different timers to different applications. By
-> configuration, each timer can generate interrupt independently.
-> 
-> The Loongson-2 HPET module includes a main count and three comparators,
-> all of which are 32 bits wide. Among the three comparators, only
-> one comparator supports periodic interrupt, all three comparators
-> support non periodic interrupts.
-> 
-> Signed-off-by: Yinbo Zhu <zhuyinbo-cXZgJK919ebM1kAEIRd3EQ@public.gmane.org>
-> ---
+Add the Loongson-2 High Precision Event Timer (HPET) binding
+with DT schema format using json-schema.
 
-[...]
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+Change in v10:
+		1. NO change, but other patch in this series of patches set
+		   has changes.
+                2. This patch need rely on clock patch, which patchwork  
+		   link was "https://patchwork.kernel.org/project/linux-clk/list/?series=691497".
+Change in v9:
+                1. This patch need rely on clock patch, which patchwork  
+		   link was "https://patchwork.kernel.org/project/linux-clk/list/?series=691497".
+		2. NO change, but other patch in this series of patches set
+		   has changes.
+Change in v8:
+                1. This patch need rely on clock patch, which patchwork  
+		   link was "https://patchwork.kernel.org/project/linux-clk/list/?series=691497".
+		2. Add all history change log information.
+Change in v7:
+		1. NO change, but other patch in this series of patches set
+		   has changes.
+Change in v6:
+		1. NO change, but other patch in this series of patches set
+		   has changes.
+Change in v5:
+		1. Replace string loongson2/Loongson2 with Loongson-2/loongson-2.
+		2. Add the patch review information.
+Change in v4: 
+                1. Fixup the clock-names that replace apb-clk with apb.
+                2. This patch need rely on clock patch, which patchwork  
+                   link was "https://patchwork.kernel.org/project/linux-clk/list/?series=688892".
+Change in v3:
+		1. Update dts that base on common clock framework.
+Change in v2:
+		1. Drop the  "hpet0" label.
+		2. Modify the hpet node name to timer.
 
-> +static int __init loongson2_hpet_init(struct device_node *np)
-> +{
-> +	struct clk *clk;
-> +	int ret = -EINVAL;
-> +
-> +	hpet_mmio_base = of_iomap(np, 0);
-> +	if (!hpet_mmio_base) {
-> +		pr_err("hpet: unable to map loongson2 hpet registers\n");
-> +		goto err;
+ .../bindings/timer/loongson,ls2k-hpet.yaml    | 50 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
 
-Hi,
-
-It looks odd to iounmap() after a failed of_iomap().
-It is maybe fine on your arch, but still looks odd.
-
-CJ
-
-> +	}
-> +
-> +	hpet_t0_irq = irq_of_parse_and_map(np, 0);
-> +	if (hpet_t0_irq <= 0) {
-> +		pr_err("hpet: unable to get IRQ from DT, %d\n", hpet_t0_irq);
-> +		goto err;
-> +	}
-> +
-> +	clk = of_clk_get(np, 0);
-> +	if (IS_ERR(clk))
-> +		goto err;
-> +
-> +	hpet_freq = clk_get_rate(clk);
-> +	clk_put(clk);
-> +
-> +	hpet_irq_flags = HPET_TN_LEVEL;
-> +
-> +	loongson2_hpet_clocksource_init();
-> +
-> +	loongson2_hpet_clockevent_init();
-> +
-> +	return 0;
-> +
-> +err:
-> +	iounmap(hpet_mmio_base);
-> +	return ret;
-> +}
-> +
-> +TIMER_OF_DECLARE(loongson2_hpet, "loongson,ls2k-hpet", loongson2_hpet_init);
+diff --git a/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+new file mode 100644
+index 000000000000..30685c8fbead
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/loongson,ls2k-hpet.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson-2 High Precision Event Timer (HPET)
++
++maintainers:
++  - Yinbo Zhu <zhuyinbo@loongson.cn>
++
++properties:
++  compatible:
++    const: loongson,ls2k-hpet
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: SoC apb clock
++
++  clock-names:
++    items:
++      - const: apb
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/loongson,ls2k-clk.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    timer@1fe24000 {
++        compatible = "loongson,ls2k-hpet";
++        reg = <0x1fe24000 0x15f>;
++        clocks = <&clk LOONGSON2_APB_CLK>;
++        clock-names = "apb";
++        interrupt-parent = <&liointc0>;
++        interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 52519695a458..939af260fe0f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12030,6 +12030,7 @@ LOONGSON-2 SOC SERIES HPET DRIVER
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
+ F:	drivers/clocksource/loongson2_hpet.c
+ 
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+-- 
+2.20.1
 
