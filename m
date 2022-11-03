@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A261ED5
-	for <loongarch@lists.linux.dev>; Thu,  3 Nov 2022 09:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87E1AA5B
+	for <loongarch@lists.linux.dev>; Thu,  3 Nov 2022 09:56:52 +0000 (UTC)
 Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8AxTbcWkGNjHDUEAA--.2922S3;
-	Thu, 03 Nov 2022 17:55:34 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxbbY6kGNjLzUEAA--.2871S3;
+	Thu, 03 Nov 2022 17:56:10 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxb+KUj2Njk68LAA--.34206S2;
-	Thu, 03 Nov 2022 17:53:31 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFle8j2Nj4K8LAA--.15696S2;
+	Thu, 03 Nov 2022 17:54:09 +0800 (CST)
 From: Yinbo Zhu <zhuyinbo@loongson.cn>
 To: Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -23,8 +23,8 @@ To: Daniel Lezcano <daniel.lezcano@linaro.org>,
 	loongarch@lists.linux.dev,
 	Yinbo Zhu <zhuyinbo@loongson.cn>
 Subject: [PATCH v9 1/2] clocksource: loongson2_hpet: add hpet driver support
-Date: Thu,  3 Nov 2022 17:53:22 +0800
-Message-Id: <20221103095323.6785-1-zhuyinbo@loongson.cn>
+Date: Thu,  3 Nov 2022 17:54:02 +0800
+Message-Id: <20221103095403.6856-1-zhuyinbo@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -33,25 +33,25 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxb+KUj2Njk68LAA--.34206S2
+X-CM-TRANSID:AQAAf8BxFle8j2Nj4K8LAA--.15696S2
 X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
 X-Coremail-Antispam: 1Uk129KBjvAXoWfJFyxZFyDZFy5JFyUAw1fZwb_yoW8JF1DGo
 	WfCFZIvr1rXryjvayvgw1UtrWaqFykGFWYyrs8Zwn5JFn8Kr1UWry7G3sxJa47A3WrCFyv
-	v39Iqan3GF43t3Z3n29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+	v39Iqan3GF43t3Z3n29KB7ZKAUJUUUUA529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
 	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
 	UUB21xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_JF0_JFyl8cAvFV
-	AK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2
+	AK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2
 	z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
-	1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY
+	1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAaw2AFwI0_Jw0_GFyle2I262IYc4CY
 	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
 	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC
-	6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2
+	6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2
 	Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-	1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I
-	6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
+	1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j
+	6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
 	0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
-	JbIYCTnIWIevJa73UjIFyTuYvjxUFoGHUUUUU
+	JbIYCTnIWIevJa73UjIFyTuYvjxU3M5lUUUUU
 
 HPET (High Precision Event Timer) defines a new set of timers, which
 are used by the operating system to schedule threads, interrupt the
