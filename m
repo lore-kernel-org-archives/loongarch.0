@@ -1,97 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2827E5
-	for <loongarch@lists.linux.dev>; Fri,  4 Nov 2022 00:20:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 971F7C43142
-	for <loongarch@lists.linux.dev>; Fri,  4 Nov 2022 00:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1667521223;
-	bh=M9LmYO99kDc6aa+ZxDXmkvHvftfkjPIsAyEzsL0TVxA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UaD62jJFjihqGMb8cV+WX6Pce1hDoG40qxOJMpky6RlpWXXJ068DZx3l1zEBpjR0b
-	 ObE1EI4ZnTZjPZ6pGwOvLPbIWZTdsVdK2hsysz/6gCfMJShFfJgKNbJjoRuoBAw2lb
-	 7bb7ddeNZbHzqcHTgdJpWDlUW6oPgLO5ehkrht307/P9lq5QMUfdPtzTDGZgTXVBam
-	 Ahx/cH0tHYCyv4jPr5C6kkIGVwrcZGeaTWcD3JiT7xmgulVQf5BBmMHDy3Rkyf3Ein
-	 oHMAdyQTkqYLxEYLefAzG4Vma3rKyr5wvwKX4TImulnWglR5o/j55ylieaEocZVUAF
-	 zE7EcCsIZ1Mqw==
-Received: by mail-ej1-f49.google.com with SMTP id f5so9500398ejc.5
-        for <loongarch@lists.linux.dev>; Thu, 03 Nov 2022 17:20:23 -0700 (PDT)
-X-Gm-Message-State: ACrzQf3NQJngXHjxZE52/QDF0gUnuZk7AQQuLGVfSH8ZmWOzT9DyqS0+
-	fU/v1KMgBjtPk76d0Yg7TyUojdF0EyIXLOIBqIc=
-X-Google-Smtp-Source: AMsMyM5+aYzIYl5HwffMZA6M0uFAPYJJyQv8odvwFx2nC3FthODUsNhj4UNnmJAXUaPqea83JNXdAhLttnijpMh1YKI=
-X-Received: by 2002:a17:906:5a45:b0:7ad:d250:b904 with SMTP id
- my5-20020a1709065a4500b007add250b904mr215917ejc.633.1667521221778; Thu, 03
- Nov 2022 17:20:21 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7F667C
+	for <loongarch@lists.linux.dev>; Fri,  4 Nov 2022 02:48:48 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8BxfdqPfWRjhWYEAA--.15479S3;
+	Fri, 04 Nov 2022 10:48:47 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxJleIfWRjAikNAA--.18979S3;
+	Fri, 04 Nov 2022 10:48:46 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Hector Martin <marcan@marcan.st>,
+	Lubomir Rintel <lkundrak@v3.sk>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Brian Norris <briannorris@chromium.org>,
+	Sven Peter <sven@svenpeter.dev>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	soc@kernel.org,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: Rob Herring <robh@kernel.org>
+Subject: [PATCH v6 2/2] dt-bindings: soc: add loongson-2 chipid
+Date: Fri,  4 Nov 2022 10:48:35 +0800
+Message-Id: <20221104024835.3570-2-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221104024835.3570-1-zhuyinbo@loongson.cn>
+References: <20221104024835.3570-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221102064838.2615669-1-chenhuacai@loongson.cn> <CAJZ5v0hi3cqjCH-2hGp9xeC4Ch5mA+V9Zb+D_mCqDViNA6Musg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hi3cqjCH-2hGp9xeC4Ch5mA+V9Zb+D_mCqDViNA6Musg@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 4 Nov 2022 08:20:10 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Bj+fJWCm8U7sw62X1CgUqn+rCgr32+r814cGN1Po3rg@mail.gmail.com>
-Message-ID: <CAAhV-H4Bj+fJWCm8U7sw62X1CgUqn+rCgr32+r814cGN1Po3rg@mail.gmail.com>
-Subject: Re: [PATCH] ACPI / table: Print CORE_PIC information when MADT is parsed
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, 
-	Len Brown <lenb@kernel.org>, Pavel Machek <pavel@ucw.cz>, loongarch@lists.linux.dev, 
-	linux-pm@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Jianmin Lv <lvjianmin@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxJleIfWRjAikNAA--.18979S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF4kJw17CF4UtF4xZwb_yoW5Gw4rpa
+	17Cr95KF4Iq3W7uanxKa4Ik3WrZF93Aa9FgFy2yw13KrWqgw1Fqw13K3WDZanxur17JayU
+	uFyfKrW5WF4UCr7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bfkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUAVWUZwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x
+	0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
+	xVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
+	C2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
+	Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
+	CTnIWIevJa73UjIFyTuYvjxU2_-PUUUUU
 
-On Fri, Nov 4, 2022 at 2:35 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Wed, Nov 2, 2022 at 7:50 AM Huacai Chen <chenhuacai@loongson.cn> wrote:
-> >
-> > When MADT is parsed, print CORE_PIC information as below:
-> >
-> > ACPI: CORE PIC (processor_id[0x00] core_id[0x00] enabled)
-> > ACPI: CORE PIC (processor_id[0x01] core_id[0x01] enabled)
-> > ...
-> > ACPI: CORE PIC (processor_id[0xff] core_id[0xff] enabled)
-> >
-> > This debug information will be very helpful to bring up early systems to
-> > see if processor_id and core_id are matched or not as spec defined.
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >  drivers/acpi/tables.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-> > index 47ec11d4c68e..23bff77b09f4 100644
-> > --- a/drivers/acpi/tables.c
-> > +++ b/drivers/acpi/tables.c
-> > @@ -210,6 +210,16 @@ void acpi_table_print_madt_entry(struct acpi_subtable_header *header)
-> >                 }
-> >                 break;
-> >
-> > +       case ACPI_MADT_TYPE_CORE_PIC:
-> > +               {
-> > +                       struct acpi_madt_core_pic *p =
-> > +                           (struct acpi_madt_core_pic *)header;
-> > +                       pr_debug("CORE PIC (processor_id[0x%02x] core_id[0x%02x] %s)\n",
-> > +                                p->processor_id, p->core_id,
-> > +                                (p->flags & ACPI_MADT_ENABLED) ? "enabled" : "disabled");
-> > +               }
-> > +               break;
-> > +
-> >         default:
-> >                 pr_warn("Found unsupported MADT entry (type = 0x%x)\n",
-> >                         header->type);
-> > --
->
-> Applied as 6.2 material.
->
-> However, next time please CC ACPI-related patches to linux-acpi rather
-> than to linux-pm (or you can do both if the patch is PM-related
-> anyway).
-Sorry, I will do that next time.
+Add the Loongson-2 SoC chipid binding with DT schema format using
+json-schema.
 
-Huacai
->
-> Thanks!
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Change in v6:
+		1. NO change, but other patch in this series of patches set	
+		   has changes.
+Change in v5:
+		1. Add all history change log information.
+		2. Add reviewed-by information.
+Change in v4:
+		1. NO change, but other patch in this series of patches set	
+		   has changes.
+Change in v3:
+		1. Drop "driver" and describe instead what is GUTS, including
+		   its acronym.
+		2. Add desciption about the SoC register.
+		3. Fixup dts node name.
+		4. Replace string loongson2/Loongson2 with loongson-2/Loongson-2
+                   in binding file and commit message.
+Change in v2:
+		1. NO change, but other patch in this series of patches set	
+		   has changes.
+
+ .../bindings/hwinfo/loongson,ls2k-chipid.yaml | 38 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
+
+diff --git a/Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml b/Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
+new file mode 100644
+index 000000000000..9d0c36ec1982
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/hwinfo/loongson,ls2k-chipid.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson-2 SoC ChipID
++
++maintainers:
++  - Yinbo Zhu <zhuyinbo@loongson.cn>
++
++description: |
++  Loongson-2 SoC contains many groups of global utilities register
++  blocks, of which the ChipID group registers record SoC version,
++  feature, vendor and id information.
++
++properties:
++  compatible:
++    const: loongson,ls2k-chipid
++
++  reg:
++    maxItems: 1
++
++  little-endian: true
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    chipid: chipid@1fe00000 {
++        compatible = "loongson,ls2k-chipid";
++        reg = <0x1fe00000 0x3ffc>;
++        little-endian;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 20ce056ae207..916b2d9cffc0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12045,6 +12045,7 @@ LOONGSON-2 SOC SERIES GUTS DRIVER
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	loongarch@lists.linux.dev
+ S:	Maintained
++F:	Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
+ F:	drivers/soc/loongson/loongson2_guts.c
+ 
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+-- 
+2.20.1
+
