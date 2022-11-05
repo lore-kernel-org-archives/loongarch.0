@@ -1,106 +1,69 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECBEE7C
-	for <loongarch@lists.linux.dev>; Fri,  4 Nov 2022 02:56:15 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8DxndpOf2Rj7GYEAA--.15205S3;
-	Fri, 04 Nov 2022 10:56:14 +0800 (CST)
-Received: from [10.180.13.64] (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxV1dMf2RjryoNAA--.19210S2;
-	Fri, 04 Nov 2022 10:56:13 +0800 (CST)
-Subject: Re: [PATCH v5 1/2] soc: loongson: add GUTS driver for loongson-2
- platforms
-To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Hector Martin <marcan@marcan.st>, Lubomir Rintel <lkundrak@v3.sk>,
- "Conor.Dooley" <conor.dooley@microchip.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
- =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
- Brian Norris <briannorris@chromium.org>, Sven Peter <sven@svenpeter.dev>,
- loongarch@lists.linux.dev, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhuyinbo@loongson.cn
-References: <20221103081942.3529-1-zhuyinbo@loongson.cn>
- <b82c5b2c-d8a3-4b6f-9aad-0a63d2f45f08@app.fastmail.com>
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <8aea609a-8e3e-6191-abf3-577b06da5c74@loongson.cn>
-Date: Fri, 4 Nov 2022 10:56:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB741101
+	for <loongarch@lists.linux.dev>; Sat,  5 Nov 2022 02:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1667614547;
+	bh=AMol7+6VhSazICOuYDq16Qv5nK+JNzmLP+frS6dtp4w=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PavNqb80/Rv0flgsr9bzke8g5vquDM2eEV3Sj5XOAoasFBIt1O0p2QC6QflLtWAM9
+	 vbPDrbwB2Wrf+kCK0XhQRHfwLZQmqPGGZqsXCZmDKUkUQkAXSDrkr7KBFWFLVCuudp
+	 JiT/sP7saxkRNtxILqq6qQsE4g+30nzDk9AxVSLA=
+Received: from xry111-x57s1.. (unknown [IPv6:240e:358:11ed:a500:dc73:854d:832e:4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 332DB65A8C;
+	Fri,  4 Nov 2022 22:15:41 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Alejandro Colomar <alx@kernel.org>,
+	Michael Kerrisk <mtk.manpages@gmail.com>
+Cc: linux-man@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Wang Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH] syscall.2: add loongarch
+Date: Sat,  5 Nov 2022 10:15:14 +0800
+Message-Id: <20221105021514.8344-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <b82c5b2c-d8a3-4b6f-9aad-0a63d2f45f08@app.fastmail.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxV1dMf2RjryoNAA--.19210S2
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7KF17Ar48Jr4xAr4DWFyxAFb_yoW8WrWxpF
-	WrCa13GF4DJr4Yya1293W0gF95uFn3Cws8XrsxKr9F9r98Ja4Sv39rAF13CFWkZrs7Zr12
-	9aykW3y8ZF45CFJanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bq8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
-	1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
-	cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
-	0Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
-	6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7
-	AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC
-	6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv
-	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUc9mRUUUUU
 
+Link: https://lore.kernel.org/loongarch/1f353678-3398-e30b-1c87-6edb278f74db@xen0n.name/
+Link: https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/unix/sysv/linux/loongarch/sysdep.h
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ man2/syscall.2 | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-ÔÚ 2022/11/3 ÏÂÎç4:53, Arnd Bergmann Ð´µÀ:
-> On Thu, Nov 3, 2022, at 09:19, Yinbo Zhu wrote:
->> The global utilities block controls PCIE device enabling, alternate
->> function selection for multiplexed signals, consistency of HDA, USB
->> and PCIE, configuration of memory controller, rtc controller, lio
->> controller, and clock control.
->>
->> This patch adds a driver to manage and access global utilities block
->> for loongarch architecture Loongson-2 SoCs. Initially only reading SVR
->> and registering soc device are supported. Other guts accesses, such
->> as reading PMON configuration by default, should eventually be added
->> into this driver as well.
->>
->> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> 
-> Looks ok to me. I can take the new driver through the SoC tree,
-> so please send it to soc@kernel.org once there are no more
-> remaining review comments that need to be addressed.
-> 
-> One last thing from my side, with that addressed, please add my
-> 
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-okay, I had added it in v6.
-> 
->> +config LOONGSON2_GUTS
->> +	tristate "Loongson-2 GUTS"
->> +	depends on LOONGARCH || COMPILE_TEST
->> +	select SOC_BUS
-> 
-> In the one-line description, please spell out GUTS, since this
-> is not a generic term but apparently is something that is only
-> used on Loongarch and Layerscape.
-okay, I had added it in v6.
-> 
-> Just for clarification: is this derived from the same IP block
-> that NXP are using, or is this just coincidentally named
-> similarly?
-Not the same IP block, it was only use this GUTS name to description
-the register blocks.
-
-Thanks
-Yinbo
-> 
->        Arnd
-> 
+diff --git a/man2/syscall.2 b/man2/syscall.2
+index 1bac0b9d7..a2aef6d33 100644
+--- a/man2/syscall.2
++++ b/man2/syscall.2
+@@ -176,6 +176,7 @@ arm64	svc #0	w8	x0	x1	-
+ blackfin	excpt 0x0	P0	R0	-	-
+ i386	int $0x80	eax	eax	edx	-
+ ia64	break 0x100000	r15	r8	r9	r10	1, 6
++loongarch	syscall 0	a7	a0	-	-
+ m68k	trap #0	d0	d0	-	-
+ microblaze	brki r14,8	r12	r3	-	-
+ mips	syscall	v0	v0	v1	a3	1, 6
+@@ -301,6 +302,7 @@ arm64	x0	x1	x2	x3	x4	x5	-
+ blackfin	R0	R1	R2	R3	R4	R5	-
+ i386	ebx	ecx	edx	esi	edi	ebp	-
+ ia64	out0	out1	out2	out3	out4	out5	-
++loongarch	a0	a1	a2	a3	a4	a5	a6
+ m68k	d1	d2	d3	d4	d5	a0	-
+ microblaze	r5	r6	r7	r8	r9	r10	-
+ mips/o32	a0	a1	a2	a3	-	-	-	1
+-- 
+2.38.1
 
