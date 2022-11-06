@@ -1,70 +1,49 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DB423A9
-	for <loongarch@lists.linux.dev>; Sun,  6 Nov 2022 10:15:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1667729756;
-	bh=/Sv1JuRQzp3rQX3xgsG5i3Ukgn1al9jABbd6jx0bnwI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=g62nqPZZxP8+CMW+5KU+nvyDCCijGG46DufyvLzzTfOpUg9mfJv7J0WdxOCmj0JIe
-	 KNDnZB4zxpGKR/KgbcRa8uHIFxxYRjhjhs1A2dNF0IwNZnFZ4CPLjsA+ueVzvcB27O
-	 rUvFruiGbYuMAFLKqD7EcLvnp2MrKlyeMt+hjnxw=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 4AE6465A9C;
-	Sun,  6 Nov 2022 05:15:54 -0500 (EST)
-Message-ID: <95a90f588b9193ee0f9895fbf238828a3dbbe958.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Support booting with FDT from efi system
- table
-From: Xi Ruoyao <xry111@xry111.site>
-To: WANG Xuerui <kernel@xen0n.name>, Binbin Zhou <zhoubinbin@loongson.cn>, 
- Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Ard Biesheuvel <ardb@kernel.org>,  Jianmin Lv <lvjianmin@loongson.cn>
-Cc: loongarch@lists.linux.dev
-Date: Sun, 06 Nov 2022 18:15:52 +0800
-In-Reply-To: <ac5f393a-be3c-3cd2-4738-b0537bc6e84e@xen0n.name>
-References: <20221106065619.2543121-1-zhoubinbin@loongson.cn>
-	 <ac5f393a-be3c-3cd2-4738-b0537bc6e84e@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.0 
+Received: from jari.cn (unknown [218.92.28.115])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85C7D185F
+	for <loongarch@lists.linux.dev>; Sun,  6 Nov 2022 10:32:40 +0000 (UTC)
+Received: by ajax-webmail-localhost.localdomain (Coremail) ; Sun, 6 Nov 2022
+ 18:26:38 +0800 (GMT+08:00)
+X-Originating-IP: [182.148.13.29]
+Date: Sun, 6 Nov 2022 18:26:38 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: wangkailong@jari.cn
+To: chenhuacai@kernel.org, kernel@xen0n.name, zhangqing@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Fix unsigned comparison with less than zero
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT6.0.1 build 20210329(c53f3fee)
+ Copyright (c) 2002-2022 www.mailtech.cn
+ mispb-4e503810-ca60-4ec8-a188-7102c18937cf-zhkzyfz.cn
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Message-ID: <63425a0e.b8.1844c7a5d80.Coremail.wangkailong@jari.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:AQAAfwD3C+Lei2djsoYBAA--.50W
+X-CM-SenderInfo: 5zdqwypdlo00nj6mt2flof0/1tbiAQATB2FEYx0CNQAEs9
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-On Sun, 2022-11-06 at 17:15 +0800, WANG Xuerui wrote:
-> And, although we're already aware of the part-UEFI and part-FDT usage=20
-> pattern, and the arch UEFI code already has consideration for such, it
-> still makes me a bit wary because you risk losing standards compliance
-> and creating maintenance burden for admins/users/devs alike by relying
-> on this not-really-UEFI-but-advertising-as-such thing. I'd still suggest=
-=20
-> you try throwing together something fully DT, to at least experiment a
-> little with. You already have to rewrite pretty much everything with all=
-=20
-> the boot protocol changes in the past few months, so this would probably=
-=20
-> not even hurt, and the burden on the LoongArch/generic UEFI infra could=
-=20
-> be lessened even further if this plays out. And you can always continue=
-=20
-> working on this change if it turns out infeasible to do so.
-
-AFAIK using UEFI with FDT (instead of ACPI) is fully allowed and
-documented by the standard (section 4.6.1.3 of the UEFI spec).  It may
-be not possible or not worthy to implement ACPI for 2K systems, then FDT
-will be the only choice.
-
-In ARM64=C2=A0ecosystem, SBBR (for server) demands UEFI+ACPI, EBBR (for
-embedded) allows UEFI+ACPI or UEFI+FDT.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+RWxpbWluYXRlIHRoZSBmb2xsb3dpbmcgY29jY2ljaGVjayB3YXJuaW5nOgoKLi9hcmNoL2xvb25n
+YXJjaC9rZXJuZWwvdW53aW5kX3Byb2xvZ3VlLmM6ODQ6NS0xMzogV0FSTklORzogVW5zaWduZWQK
+ZXhwcmVzc2lvbiBjb21wYXJlZCB3aXRoIHplcm86IGZyYW1lX3JhIDwgMAoKU2lnbmVkLW9mZi1i
+eTogS2FpTG9uZyBXYW5nIDx3YW5na2FpbG9uZ0BqYXJpLmNuPgotLS0KIGFyY2gvbG9vbmdhcmNo
+L2tlcm5lbC91bndpbmRfcHJvbG9ndWUuYyB8IDMgKystCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNl
+cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gva2Vy
+bmVsL3Vud2luZF9wcm9sb2d1ZS5jIGIvYXJjaC9sb29uZ2FyY2gva2VybmVsL3Vud2luZF9wcm9s
+b2d1ZS5jCmluZGV4IGIyMDZkOTE1OTIwNS4uNThjY2RiZTdmYTIyIDEwMDY0NAotLS0gYS9hcmNo
+L2xvb25nYXJjaC9rZXJuZWwvdW53aW5kX3Byb2xvZ3VlLmMKKysrIGIvYXJjaC9sb29uZ2FyY2gv
+a2VybmVsL3Vud2luZF9wcm9sb2d1ZS5jCkBAIC00Myw3ICs0Myw4IEBAIHN0YXRpYyBib29sIHVu
+d2luZF9ieV9wcm9sb2d1ZShzdHJ1Y3QgdW53aW5kX3N0YXRlICpzdGF0ZSkKIHsKIAlzdHJ1Y3Qg
+c3RhY2tfaW5mbyAqaW5mbyA9ICZzdGF0ZS0+c3RhY2tfaW5mbzsKIAl1bmlvbiBsb29uZ2FyY2hf
+aW5zdHJ1Y3Rpb24gKmlwLCAqaXBfZW5kOwotCXVuc2lnbmVkIGxvbmcgZnJhbWVfc2l6ZSA9IDAs
+IGZyYW1lX3JhID0gLTE7CisJdW5zaWduZWQgbG9uZyBmcmFtZV9zaXplID0gMDsKKwlsb25nIGZy
+YW1lX3JhID0gLTE7CiAJdW5zaWduZWQgbG9uZyBzaXplLCBvZmZzZXQsIHBjID0gc3RhdGUtPnBj
+OwogCiAJaWYgKHN0YXRlLT5zcCA+PSBpbmZvLT5lbmQgfHwgc3RhdGUtPnNwIDwgaW5mby0+YmVn
+aW4pCi0tIAoyLjI1LjEK
