@@ -1,75 +1,306 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E44D1851
-	for <loongarch@lists.linux.dev>; Sun,  6 Nov 2022 14:34:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B69EC43470
-	for <loongarch@lists.linux.dev>; Sun,  6 Nov 2022 14:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A8028EC
+	for <loongarch@lists.linux.dev>; Sun,  6 Nov 2022 15:06:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6AC7C433D7
+	for <loongarch@lists.linux.dev>; Sun,  6 Nov 2022 15:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1667745243;
-	bh=t7PnW6M+OwiGjkiaSxqoLbKXfEPsRqNR8JAa9rvyIbw=;
+	s=k20201202; t=1667747215;
+	bh=0dHDgHvdmNYdR/Z8cNSXGmDnJIGDTe6sP7m7rL5XCbM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ACNacU4tZErMBneJ7NrGFwoPcWQDGus2zqpaQwVgyXJB/MKhk95NpBy0Uh8wGRjEe
-	 i0fPzMfziXbk9qPm+roE4LCOblm5aPXx/p0Fh1hdA9JesA568ArX+QfeWa+0ePPnB/
-	 fkHoPk82bTYhjNE4MzCqQHip1kY9cbniNDu0capsBs4fgaWOYJyhK/qAFwWiiJI25M
-	 SJpI26QWngc+p/UfEBUp6OVC6WIbM2MaWjORPXZYP8q1WmQqAq2ecSS/o//w1MG+EY
-	 2RxksOY2YA+AVLUqSbi4ue9Qm3Mrgeb4LSt87ODXbjTDUclPaci//HqTt9fitbtADq
-	 l6OCoIrB4bv4g==
-Received: by mail-ed1-f53.google.com with SMTP id f7so13943978edc.6
-        for <loongarch@lists.linux.dev>; Sun, 06 Nov 2022 06:34:02 -0800 (PST)
-X-Gm-Message-State: ACrzQf1tHh7IK4teNiNneFAAhvsjd3KifRnqk5pNMww1GUJjgHMwzpYp
-	gmcW2SYA91GlYW3OmFIXM5A7bz3JnhPP91VRPrI=
-X-Google-Smtp-Source: AMsMyM4VbRUuXP3UuyRpw12buCInZJQ7sUuNZcUiLjLMTCeTaMbuqy3gn9JdtphAxWwukNnbXX8yVcZaO3lXnTB6WeA=
-X-Received: by 2002:aa7:c913:0:b0:462:e375:a1fe with SMTP id
- b19-20020aa7c913000000b00462e375a1femr45282457edt.156.1667745241225; Sun, 06
- Nov 2022 06:34:01 -0800 (PST)
+	b=aND30naUAG4+EPdgTOmTW6/xYBJIJBEK3x7cs22Rl6rxOylaWmLN/01rUOpVBQ9xp
+	 5qnuJvxWF0WdqIO6BIuYiJCO8za+u9nlWLR3i/b+1ujyfZb3L6puoTa7dA9qXHjWxL
+	 /GIHcifYB1mvdH4xKqRkXjhgZ0UUUL/cH4aEZfjzf/deceo3XEnjUxkzV30JilV4y7
+	 1H6OrvGIq8RtX+zaOgwDc2E3DLuE9fWU18MeQHDKPqkNKbWfjSxq0PaqJt/rG8vzb2
+	 D3IGvZh0EyHrEjkqEuATspUqd80j1L2KIkjl3qkP/TIO8Pdfw2ECTaLggXwWkuU4xM
+	 BPTlTW4bVGrog==
+Received: by mail-lj1-f181.google.com with SMTP id c25so12746323ljr.8
+        for <loongarch@lists.linux.dev>; Sun, 06 Nov 2022 07:06:55 -0800 (PST)
+X-Gm-Message-State: ACrzQf2i80dHXbDvRwh04sB6vd0iFeVGcRb7Cmnjp7jpyXKIM8ahx9RZ
+	2Zf2GC2Ad8kKno283vcKxET2hvDVtol2gWD5bT4=
+X-Google-Smtp-Source: AMsMyM659aIJWYOkBrMVNsRZDA5G1equ6u2Y0b+WZxGSwnr1vftzhLw3vdJqb+6pSmH8tUczB/cxY/iv3tTwb3la1C4=
+X-Received: by 2002:a05:651c:516:b0:277:2428:3682 with SMTP id
+ o22-20020a05651c051600b0027724283682mr4615991ljp.291.1667747213668; Sun, 06
+ Nov 2022 07:06:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <63425a0e.b8.1844c7a5d80.Coremail.wangkailong@jari.cn>
-In-Reply-To: <63425a0e.b8.1844c7a5d80.Coremail.wangkailong@jari.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 6 Nov 2022 22:33:48 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5oPv0RnEE6p8K5rCsEEJyfE0QyG4sjBDtVkEQbSSyFEg@mail.gmail.com>
-Message-ID: <CAAhV-H5oPv0RnEE6p8K5rCsEEJyfE0QyG4sjBDtVkEQbSSyFEg@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix unsigned comparison with less than zero
-To: wangkailong@jari.cn
-Cc: kernel@xen0n.name, zhangqing@loongson.cn, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+References: <20221106065619.2543121-1-zhoubinbin@loongson.cn>
+In-Reply-To: <20221106065619.2543121-1-zhoubinbin@loongson.cn>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sun, 6 Nov 2022 16:06:42 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXG3sJTPzWYx1hKaBeXPgD0xQXW-4NxgwZjWpQ-nGw=MhA@mail.gmail.com>
+Message-ID: <CAMj1kXG3sJTPzWYx1hKaBeXPgD0xQXW-4NxgwZjWpQ-nGw=MhA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Support booting with FDT from efi system table
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Jianmin Lv <lvjianmin@loongson.cn>, 
+	loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Queued for loongarch-fixes, thanks.
-
-Huacai
-
-On Sun, Nov 6, 2022 at 6:32 PM <wangkailong@jari.cn> wrote:
+On Sun, 6 Nov 2022 at 07:58, Binbin Zhou <zhoubinbin@loongson.cn> wrote:
 >
-> Eliminate the following coccicheck warning:
+> Since commit 40cd01a9c324("efi/loongarch: libstub: remove dependency on
+> flattened DT"), we can parse the FDT from efi system table.
 >
-> ./arch/loongarch/kernel/unwind_prologue.c:84:5-13: WARNING: Unsigned
-> expression compared with zero: frame_ra < 0
+> And now, the Loongson-2K series cpus based on LoongArch support booting
+> with FDT, so we adds the relevant booting support as well as parameter
+> parsing.
 >
-> Signed-off-by: KaiLong Wang <wangkailong@jari.cn>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > ---
->  arch/loongarch/kernel/unwind_prologue.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  arch/loongarch/Kconfig             |  2 +
+>  arch/loongarch/include/asm/efi.h   |  1 +
+>  arch/loongarch/include/asm/setup.h |  1 +
+>  arch/loongarch/kernel/efi.c        | 27 ++++++++++-
+>  arch/loongarch/kernel/env.c        |  3 ++
+>  arch/loongarch/kernel/setup.c      | 75 +++++++++++++++++++++++++++++-
+>  6 files changed, 106 insertions(+), 3 deletions(-)
 >
-> diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
-> index b206d9159205..58ccdbe7fa22 100644
-> --- a/arch/loongarch/kernel/unwind_prologue.c
-> +++ b/arch/loongarch/kernel/unwind_prologue.c
-> @@ -43,7 +43,8 @@ static bool unwind_by_prologue(struct unwind_state *state)
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 903096bd87f8..ce53d1fa2b64 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -111,6 +111,8 @@ config LOONGARCH
+>         select MODULES_USE_ELF_RELA if MODULES
+>         select NEED_PER_CPU_EMBED_FIRST_CHUNK
+>         select NEED_PER_CPU_PAGE_FIRST_CHUNK
+> +       select OF
+> +       select OF_EARLY_FLATTREE
+>         select PCI
+>         select PCI_DOMAINS_GENERIC
+>         select PCI_ECAM if ACPI
+> diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/asm/efi.h
+> index 174567b00ddb..81e5d3371868 100644
+> --- a/arch/loongarch/include/asm/efi.h
+> +++ b/arch/loongarch/include/asm/efi.h
+> @@ -9,6 +9,7 @@
+>
+>  void __init efi_init(void);
+>  void __init efi_runtime_init(void);
+> +void __init *efi_fdt_pointer(void);
+>  void efifb_setup_from_dmi(struct screen_info *si, const char *opt);
+>
+>  #define ARCH_EFI_IRQ_FLAGS_MASK  0x00000004  /* Bit 2: CSR.CRMD.IE */
+> diff --git a/arch/loongarch/include/asm/setup.h b/arch/loongarch/include/asm/setup.h
+> index ca373f8e3c4d..b18baf878ed4 100644
+> --- a/arch/loongarch/include/asm/setup.h
+> +++ b/arch/loongarch/include/asm/setup.h
+> @@ -13,6 +13,7 @@
+>
+>  extern unsigned long eentry;
+>  extern unsigned long tlbrentry;
+> +extern char original_cmdline[COMMAND_LINE_SIZE];
+>  extern void tlb_init(int cpu);
+>  extern void cpu_cache_init(void);
+>  extern void cache_error_setup(void);
+> diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
+> index a31329971133..16dcd673e905 100644
+> --- a/arch/loongarch/kernel/efi.c
+> +++ b/arch/loongarch/kernel/efi.c
+> @@ -37,7 +37,7 @@ static efi_config_table_type_t arch_tables[] __initdata = {
+>
+>  void __init efi_runtime_init(void)
 >  {
->         struct stack_info *info = &state->stack_info;
->         union loongarch_instruction *ip, *ip_end;
-> -       unsigned long frame_size = 0, frame_ra = -1;
-> +       unsigned long frame_size = 0;
-> +       long frame_ra = -1;
->         unsigned long size, offset, pc = state->pc;
+> -       if (!efi_enabled(EFI_BOOT))
+> +       if (!efi_enabled(EFI_BOOT) || !efi_systab->runtime)
+
+How can this happen? Why would we ever set EFI_BOOT if
+efi_systab->runtime == NULL?
+
+>                 return;
 >
->         if (state->sp >= info->end || state->sp < info->begin)
+>         if (efi_runtime_disabled()) {
+> @@ -101,3 +101,28 @@ void __init efi_init(void)
+>                 early_memunmap(tbl, sizeof(*tbl));
+>         }
+>  }
+> +
+> +/* parse the fdt pointer from efi system table */
+> +void __init *efi_fdt_pointer(void)
+> +{
+> +       int i;
+> +       void *fdt = NULL;
+> +       efi_config_table_t *tables;
+> +
+> +       if (!efi_systab) {
+> +               pr_err("Can't find EFI system table.\n");
+> +               return NULL;
+> +       }
+> +
+> +       tables = (efi_config_table_t *) efi_systab->tables;
+> +
+> +       for (i = 0; i < efi_systab->nr_tables; i++)
+> +               if (efi_guidcmp(tables[i].guid, DEVICE_TREE_GUID) == 0) {
+> +                       fdt = (void *)early_memremap_ro(
+> +                                       (resource_size_t)tables[i].table,
+> +                                       sizeof(efi_config_table_t));
+> +                       break;
+> +               }
+> +
+> +       return fdt;
+> +}
+
+Please use the existing config table discovery mechanism for this.
+
+> diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
+> index 6d56a463b091..4fd6eb9398b4 100644
+> --- a/arch/loongarch/kernel/env.c
+> +++ b/arch/loongarch/kernel/env.c
+> @@ -11,6 +11,7 @@
+>  #include <asm/early_ioremap.h>
+>  #include <asm/bootinfo.h>
+>  #include <asm/loongson.h>
+> +#include <asm/setup.h>
+>
+>  u64 efi_system_table;
+>  struct loongson_system_configuration loongson_sysconf;
+> @@ -27,6 +28,8 @@ void __init init_environ(void)
+>                 clear_bit(EFI_BOOT, &efi.flags);
+>
+>         strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
+> +       /* Save unparsed command line copy for FDT */
+
+Why is this necessary?
+
+> +       strscpy(original_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+>         early_memunmap(cmdline, COMMAND_LINE_SIZE);
+>
+>         efi_system_table = fw_arg2;
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+> index 1eb63fa9bc81..2f578f809a54 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -29,6 +29,9 @@
+>  #include <linux/device.h>
+>  #include <linux/dma-map-ops.h>
+>  #include <linux/swiotlb.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/of_address.h>
+> +#include <linux/libfdt.h>
+>
+>  #include <asm/addrspace.h>
+>  #include <asm/bootinfo.h>
+> @@ -67,6 +70,7 @@ static const char dmi_empty_string[] = "        ";
+>   *
+>   * These are initialized so they are in the .data section
+>   */
+> +char original_cmdline[COMMAND_LINE_SIZE] __initdata;
+>
+>  static int num_standard_resources;
+>  static struct resource *standard_resources;
+> @@ -281,6 +285,47 @@ static void __init check_kernel_sections_mem(void)
+>         }
+>  }
+>
+> +static void __init bootcmdline_init(char **cmdline_p)
+> +{
+> +       /*
+> +        * If CONFIG_CMDLINE_FORCE is enabled then initializing the command line
+> +        * is trivial - we simply use the built-in command line unconditionally &
+> +        * unmodified.
+> +        */
+> +       if (IS_ENABLED(CONFIG_CMDLINE_FORCE)) {
+> +               strscpy(boot_command_line, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+> +               return;
+> +       }
+> +
+> +#ifdef CONFIG_OF_FLATTREE
+> +       /*
+> +        * This is for CONFIG_CMDLINE_EXTEND or CONFIG_CMDLINE_BOOTLOADER.
+> +        *
+> +        * If CONFIG_CMDLINE_BOOTLOADER is enabled, we need to determine if the
+> +        * system is ACPI-based or FDT-based.
+> +        *
+> +        * For ACPI-based system: nothing need to do.
+> +        *
+> +        * For FDT-based system: the boot_command_line will be overwritten by
+> +        * early_init_dt_scan_chosen(), so we need to append original_cmdline(the
+> +        * original copy of boot_command_line) to boot_command_line.
+> +        *
+> +        * As for the built-in command line, if CONFIG_CMDLINE_EXTEND is enabled,
+> +        * both ACPI-based and FDT-based system will append the built-in command
+> +        * line to the boot_command_line themselves, and no additional processing
+> +        * is required here.
+> +        */
+> +       if (initial_boot_params) {
+> +               if (boot_command_line[0])
+> +                       strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
+> +
+> +               strlcat(boot_command_line, original_cmdline, COMMAND_LINE_SIZE);
+> +       }
+> +#endif
+> +
+> +       *cmdline_p = boot_command_line;
+> +}
+> +
+>  /*
+>   * arch_mem_init - initialize memory management subsystem
+>   */
+> @@ -291,6 +336,8 @@ static void __init arch_mem_init(char **cmdline_p)
+>
+>         check_kernel_sections_mem();
+>
+> +       early_init_fdt_scan_reserved_mem();
+> +
+>         /*
+>          * In order to reduce the possibility of kernel panic when failed to
+>          * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
+> @@ -413,20 +460,44 @@ static void __init prefill_possible_map(void)
+>  }
+>  #endif
+>
+> +static void __init fdt_setup(void)
+> +{
+> +#ifdef CONFIG_OF_EARLY_FLATTREE
+> +       void *fdt_pointer;
+> +
+> +       /* ACPI-based systems do not require parsing fdt */
+> +       if (acpi_os_get_root_pointer())
+> +               return;
+> +
+> +       /* Look for a device tree configuration table entry */
+> +       fdt_pointer = efi_fdt_pointer();
+> +       if (!fdt_pointer || fdt_check_header(fdt_pointer))
+> +               return;
+> +
+> +       early_init_dt_scan(fdt_pointer);
+> +       early_init_fdt_reserve_self();
+> +       early_init_dt_scan_chosen_stdout();
+> +
+
+The FDT is only a hardware description, right? So why are we scanning
+/chosen here?
+
+> +       max_low_pfn = PFN_PHYS(memblock_end_of_DRAM());
+> +#endif
+> +}
+> +
+>  void __init setup_arch(char **cmdline_p)
+>  {
+>         cpu_probe();
+> -       *cmdline_p = boot_command_line;
+>
+> +       pagetable_init();
+>         init_environ();
+>         efi_init();
+> +       fdt_setup();
+>         memblock_init();
+> -       pagetable_init();
+> +       bootcmdline_init(cmdline_p);
+>         parse_early_param();
+>         reserve_initrd_mem();
+>
+>         platform_init();
+>         arch_mem_init(cmdline_p);
+> +       unflatten_and_copy_device_tree();
+>
+>         resource_init();
+>  #ifdef CONFIG_SMP
 > --
-> 2.25.1
+> 2.31.1
+>
