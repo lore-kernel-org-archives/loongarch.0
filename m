@@ -1,96 +1,301 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819608F78
-	for <loongarch@lists.linux.dev>; Tue,  8 Nov 2022 12:11:55 +0000 (UTC)
-Received: by mail-ed1-f48.google.com with SMTP id u24so22088264edd.13
-        for <loongarch@lists.linux.dev>; Tue, 08 Nov 2022 04:11:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0318BE7
+	for <loongarch@lists.linux.dev>; Tue,  8 Nov 2022 15:28:22 +0000 (UTC)
+Received: by mail-lj1-f172.google.com with SMTP id a15so21628465ljb.7
+        for <loongarch@lists.linux.dev>; Tue, 08 Nov 2022 07:28:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mzMlRiYVPoJeiMegBbQ1MjhjUAcP2BQ4/F4++yECz0k=;
-        b=GBzcjxcTtY7cjcCkSCQAIGHks2ribsjrH6lBTtbG/1zwiEhQlsnJaSbsqWIDSpSOFx
-         gJ6vlVgZq0l1FPcHLDk7jVXjlQ09V1dSyORgcpzPxrcHaQIAAMaR7a79x2DQ8AjUhDRz
-         JMSHe1Q0tSvaXY4Pm09q1nRDHcwJZNo3OelsxpJBoi8C2q5sBwP+dCKAYZwBnAOhhu7f
-         0aTgOUlr+3G93d5ICdGrtgnqHR0oAI81DJiwEiIC8Z6SnaSq/fzV9s0eUgMTPpF/ueZY
-         N3lw/eDF0TozdSQV7+4aMpm8/4Zw++xw6a1SretE87N2695SH3E7QEONPdbUartnY7F4
-         JuPQ==
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rYyQ/3KwA5SEi7xobmtMHnwgbg0DrEr9YUI+FxITXks=;
+        b=oudhA7iWo073iyyJQt8Okd+b8G1K6VItNkGt4/f1tP4fNyw46cvITxgr/evZp9ORvq
+         rkKqlTFcDHk+3t7el5VIFhrrAQngAPgr6QOO+cfQayIr194tPIilrMUubBSC9iSNv2N4
+         gaptbtSKej2YQ0XMaua2sSnq2tBBTPd+6XX9IJoVzAU8xWAzvjeKyZccNt9GKW6RNjmF
+         BfKHbhmOe5/2s67vZQyjBLFMoJ/A8AWZnLZ53XhvDY+3kWHsxDxQ8aoRlTd1TincoTZP
+         c36QC8Cuzfa3bxTExcAgxbvK3Wu6BxjKMvIwuVPxDs5fcl8yslN13jt8lb0JUOP7udjN
+         8Fgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mzMlRiYVPoJeiMegBbQ1MjhjUAcP2BQ4/F4++yECz0k=;
-        b=FqWejpflUyIc4jQrXXn7X1/q+Pw6YiXaltiWcG8IfFMa5jqxBB4Q4MEwwKMRVN5sXV
-         Ipl7nr6u1c0irXWE/6Q4xDc6VKfc+T8wWUhm7xV1uPtLGZ3Td63Q+vpFJ542GT264MWJ
-         tpCoYZ6crCPEi799B6n9W4cAUUfNgSArmemNj9pmORhppTqpTd06LZn9X9aY4/bqF6Lv
-         5SU8IICvmNPrRqZT4gba9WQW/97zBgl5liSpQskcm7QqtH5Mly9OG+3I1W4f/WAK80Wx
-         hfl9sPpEq1mriKyG1f/bTlTr+UnkmwURBgSXPnw39gXAFECxRU4+kfI39xZM771ycnx3
-         hU8Q==
-X-Gm-Message-State: ACrzQf11oBilSvheaVkePpKf4c7ePHVfYpO2HcYUUK84HLaGIbPT+Aes
-	9gFHr0tAc99luGmqGxMQGm+/0YA2ZpnwjnbjrUe+9w==
-X-Google-Smtp-Source: AMsMyM5kiWVSRjqdEOc/GfF/lf+nlKsl0ToMTcnzZ4XbNPlmja/gkGsp1SDtfcczBpZBE8Xvq90EA3Kh3ciEP69xttM=
-X-Received: by 2002:aa7:d6d1:0:b0:463:ba50:e574 with SMTP id
- x17-20020aa7d6d1000000b00463ba50e574mr37546370edr.158.1667909513741; Tue, 08
- Nov 2022 04:11:53 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rYyQ/3KwA5SEi7xobmtMHnwgbg0DrEr9YUI+FxITXks=;
+        b=JqTNajc442ldWTsT2kT8NpLErgGY6BDy8z3DcaKC3o83gYxkit6cOUsoPwMFjt6DuG
+         t70+Bd+YX3+XJDHsiudpjWlxlsg0ho5HsDnYc3R4pSGNFO5Nq4Xzl+6ximFNzm8A4eD4
+         HC1PvTNNPOz4TWp5RoXrKDrco4Pze4GT4/xJO7ZAT/zZ5XYmv4518qYNV+zTMkT6W3PG
+         iA7KcLVKXb8ZeYz/QyGcaMHi8jAiSH4xbOw0EE6vTpU3Rv1eFKbkHq1Vzyps2wlCoYoI
+         TyqHqqvYTXYs3U1RX0a0f1Q4P1pjkS9u7e9tsGmlb2UyR4pxvkacI6dRUv/H/X2/bq0W
+         bfRA==
+X-Gm-Message-State: ACrzQf1MyEGw9nhv1NXLRlxW0Q/NNcx5OdWfgqKADj7c3S1Tm0pLzh6c
+	SqV7wVXuON/2lOxDJ/NxQmDsZg==
+X-Google-Smtp-Source: AMsMyM7azffc3j7n0RlXzVVXhr4h6KU9GBtHDPvSR1EQLGZAnoaDtp1H2k8dV1j18dnuFx2eTd4lcw==
+X-Received: by 2002:a05:651c:88a:b0:26c:81e1:57dc with SMTP id d10-20020a05651c088a00b0026c81e157dcmr21276405ljq.236.1667921300408;
+        Tue, 08 Nov 2022 07:28:20 -0800 (PST)
+Received: from [192.168.0.20] (088156142199.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.199])
+        by smtp.gmail.com with ESMTPSA id s2-20020a05651c048200b0026fc79fd67dsm1777329ljc.74.2022.11.08.07.28.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Nov 2022 07:28:19 -0800 (PST)
+Message-ID: <d9edb6e1-c3da-0f5b-546d-37d8151aaa35@linaro.org>
+Date: Tue, 8 Nov 2022 16:28:18 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221108092107.28996-1-zhuyinbo@loongson.cn> <20221108092107.28996-2-zhuyinbo@loongson.cn>
-In-Reply-To: <20221108092107.28996-2-zhuyinbo@loongson.cn>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 8 Nov 2022 13:11:42 +0100
-Message-ID: <CACRpkdbJFNhE1acJ5eNncvfK0VZgW=pCB3716Rv3KahdK1dokQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
 Subject: Re: [PATCH v1 2/2] dt-bindings: gpio: add loongson series gpio
-To: Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, richard.liu@st.com, 
-	Arnaud Patard <apatard@mandriva.com>, Hongbing Hu <huhb@lemote.com>, 
-	Huacai Chen <chenhuacai@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
+To: Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org, richard.liu@st.com,
+ Arnaud Patard <apatard@mandriva.com>, Hongbing Hu <huhb@lemote.com>,
+ Huacai Chen <chenhuacai@kernel.org>
+References: <20221108092107.28996-1-zhuyinbo@loongson.cn>
+ <20221108092107.28996-2-zhuyinbo@loongson.cn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221108092107.28996-2-zhuyinbo@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Yinbo,
-
-thanks for your patch!
-
-On Tue, Nov 8, 2022 at 10:21 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
-
+On 08/11/2022 10:21, Yinbo Zhu wrote:
 > Add the Loongson series gpio binding with DT schema format using
 > json-schema.
->
+> 
 > Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> ---
+>  .../bindings/gpio/loongson,ls-gpio.yaml       | 154 ++++++++++++++++++
+>  MAINTAINERS                                   |  11 ++
+>  2 files changed, 165 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> new file mode 100644
+> index 000000000000..9d335262ddcc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> @@ -0,0 +1,154 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/loongson,ls-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson series GPIO controller.
+> +
+> +maintainers:
+> +  - Yinbo Zhu <zhuyinbo@loongson.cn>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - loongson,ls2k-gpio
+> +      - loongson,ls7a-gpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ngpios: true
 
+minimum? maximum?
+
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
 > +  gpio-ranges: true
+> +
+> +  loongson,conf_offset:
 
-So you are using GPIO ranges... and...
+No underscores in node names. Plus comments from Linus seem to apply
+here as well. Drop it entirely or explain why this is not part of
+compatible, why this is needed and why encoding programming model
+address in DT matches the DT...
 
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      This option indicate this GPIO configuration offset address.
+> +
+> +  loongson,out_offset:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      This option indicate this GPIO output value offset address.
+
+Drop
+
+> +
+> +  loongson,in_offset:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      This option indicate this GPIO input value offset address.
+
+Drop
+
+
+> +
 > +  loongson,gpio_base:
 > +    $ref: /schemas/types.yaml#/definitions/uint32
 > +    description:
 > +      This option indicate the first GPIO number in this node.
 
-Then you have added this to reimplement gpio ranges.
+Drop
 
-It also shows in the driver.
 
-Drop gpio_base altogether (we do not encode linux-specific properties
-into the device trees) and use gpio-ranges as they are intended to
-map between the GPIO numberspace and the pin control pin number
-space.
+> +
+> +  loongson,support_irq:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      This option indicate this GPIO whether support interrupt.
 
-See
-Documentation/devicetree/bindings/gpio/gpio.txt
-for documentation on gpio-ranges, also look how other drivers are
-using them.
+Drop
 
-Yours,
-Linus Walleij
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 64
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - ngpios
+> +  - "#gpio-cells"
+> +  - gpio-controller
+> +  - gpio-ranges
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    gpio0: gpio@1fe00500 {
+> +      compatible = "loongson,ls2k-gpio";
+> +      reg = <0x1fe00500 0x38>;
+> +      ngpios = <64>;
+> +      #gpio-cells = <2>;
+> +      gpio-controller;
+> +      gpio-ranges = <&pctrl 0 0 15>,
+> +                    <&pctrl 16 16 15>,
+> +                    <&pctrl 32 32 10>,
+> +                    <&pctrl 44 44 20>;
+> +      loongson,conf_offset = <0>;
+> +      loongson,out_offset = <0x10>;
+> +      loongson,in_offset = <0x20>;
+> +      loongson,gpio_base = <0>;
+> +      loongson,support_irq;
+> +      interrupt-parent = <&liointc1>;
+> +      interrupts = <28 IRQ_TYPE_LEVEL_LOW>,
+> +                   <29 IRQ_TYPE_LEVEL_LOW>,
+> +                   <30 IRQ_TYPE_LEVEL_LOW>,
+> +                   <30 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <>,
+
+What's this?
+
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <>,
+> +                   <>,
+
+What's this?
+
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+> +                   <27 IRQ_TYPE_LEVEL_LOW>;
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 916b2d9cffc0..878b8320ac3b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12048,6 +12048,17 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
+>  F:	drivers/soc/loongson/loongson2_guts.c
+>  
+> +LOONGSON SERIES GPIO DRIVER
+> +M:	Richard Liu, STMicroelectronics <richard.liu@st.com>
+> +M:	Arnaud Patard <apatard@mandriva.com>
+> +M:	Hongbing Hu <huhb@lemote.com>
+> +M:	Huacai Chen <chenhuacai@kernel.org>
+> +M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+
+Are they all maintainers of this driver?
+
+> +L:	linux-gpio@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> +F:	drivers/gpio/gpio-loongson.c
+> +
+>  LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+>  M:	Sathya Prakash <sathya.prakash@broadcom.com>
+>  M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+
+Best regards,
+Krzysztof
+
