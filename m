@@ -1,23 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F2E23A2
-	for <loongarch@lists.linux.dev>; Tue,  8 Nov 2022 01:39:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF33AC433C1;
-	Tue,  8 Nov 2022 01:39:07 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 094C36ABA
+	for <loongarch@lists.linux.dev>; Tue,  8 Nov 2022 09:21:27 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8Bx3NiLH2pjJ0cFAA--.17052S3;
+	Tue, 08 Nov 2022 17:21:15 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axf+CEH2pj+uEOAA--.41643S3;
+	Tue, 08 Nov 2022 17:21:13 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	WANG Xuerui <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juxin Gao <gaojuxin@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: SMP: Change prefix from loongson3 to loongson
-Date: Tue,  8 Nov 2022 09:36:49 +0800
-Message-Id: <20221108013649.3872869-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	richard.liu@st.com,
+	Arnaud Patard <apatard@mandriva.com>,
+	Hongbing Hu <huhb@lemote.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH v1 2/2] dt-bindings: gpio: add loongson series gpio
+Date: Tue,  8 Nov 2022 17:21:07 +0800
+Message-Id: <20221108092107.28996-2-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221108092107.28996-1-zhuyinbo@loongson.cn>
+References: <20221108092107.28996-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -25,288 +41,218 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Axf+CEH2pj+uEOAA--.41643S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3XrWUWr4UZFW7ZFWDur45Wrg_yoW7Ary3p3
+	WDZF9rX3y2gFnxZFs8Kan7Zr1fAr1kCw1rurnxC3yxtrW5Kw15ZF4fKFykG3WfWrWUXF17
+	XwsxurWFya43Aw7anT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bfkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUAVWUZwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x
+	0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
+	xVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
+	C2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
+	Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
+	CTnIWIevJa73UjIFyTuYvjxU2_-PUUUUU
 
-SMP operations can be shared by Loongson-2 series and Loongson-3 series,
-so we change the prefix from loongson3 to loongson for all functions and
-data structures.
+Add the Loongson series gpio binding with DT schema format using
+json-schema.
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
 ---
- arch/loongarch/include/asm/irq.h |  2 +-
- arch/loongarch/include/asm/smp.h | 30 +++++++++++-----------
- arch/loongarch/kernel/irq.c      |  2 +-
- arch/loongarch/kernel/smp.c      | 44 ++++++++++++++++----------------
- 4 files changed, 39 insertions(+), 39 deletions(-)
+ .../bindings/gpio/loongson,ls-gpio.yaml       | 154 ++++++++++++++++++
+ MAINTAINERS                                   |  11 ++
+ 2 files changed, 165 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
 
-diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
-index d06d4542b634..5332b1433f38 100644
---- a/arch/loongarch/include/asm/irq.h
-+++ b/arch/loongarch/include/asm/irq.h
-@@ -117,7 +117,7 @@ extern struct fwnode_handle *liointc_handle;
- extern struct fwnode_handle *pch_lpc_handle;
- extern struct fwnode_handle *pch_pic_handle[MAX_IO_PICS];
+diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+new file mode 100644
+index 000000000000..9d335262ddcc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+@@ -0,0 +1,154 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/loongson,ls-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson series GPIO controller.
++
++maintainers:
++  - Yinbo Zhu <zhuyinbo@loongson.cn>
++
++properties:
++  compatible:
++    enum:
++      - loongson,ls2k-gpio
++      - loongson,ls7a-gpio
++
++  reg:
++    maxItems: 1
++
++  ngpios: true
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++
++  gpio-ranges: true
++
++  loongson,conf_offset:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      This option indicate this GPIO configuration offset address.
++
++  loongson,out_offset:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      This option indicate this GPIO output value offset address.
++
++  loongson,in_offset:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      This option indicate this GPIO input value offset address.
++
++  loongson,gpio_base:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      This option indicate the first GPIO number in this node.
++
++  loongson,support_irq:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      This option indicate this GPIO whether support interrupt.
++
++  interrupts:
++    minItems: 1
++    maxItems: 64
++
++required:
++  - compatible
++  - reg
++  - ngpios
++  - "#gpio-cells"
++  - gpio-controller
++  - gpio-ranges
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    gpio0: gpio@1fe00500 {
++      compatible = "loongson,ls2k-gpio";
++      reg = <0x1fe00500 0x38>;
++      ngpios = <64>;
++      #gpio-cells = <2>;
++      gpio-controller;
++      gpio-ranges = <&pctrl 0 0 15>,
++                    <&pctrl 16 16 15>,
++                    <&pctrl 32 32 10>,
++                    <&pctrl 44 44 20>;
++      loongson,conf_offset = <0>;
++      loongson,out_offset = <0x10>;
++      loongson,in_offset = <0x20>;
++      loongson,gpio_base = <0>;
++      loongson,support_irq;
++      interrupt-parent = <&liointc1>;
++      interrupts = <28 IRQ_TYPE_LEVEL_LOW>,
++                   <29 IRQ_TYPE_LEVEL_LOW>,
++                   <30 IRQ_TYPE_LEVEL_LOW>,
++                   <30 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 916b2d9cffc0..878b8320ac3b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12048,6 +12048,17 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
+ F:	drivers/soc/loongson/loongson2_guts.c
  
--extern irqreturn_t loongson3_ipi_interrupt(int irq, void *dev);
-+extern irqreturn_t loongson_ipi_interrupt(int irq, void *dev);
- 
- #include <asm-generic/irq.h>
- 
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index 71189b28bfb2..3dd172d9ffea 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -19,21 +19,21 @@ extern cpumask_t cpu_sibling_map[];
- extern cpumask_t cpu_core_map[];
- extern cpumask_t cpu_foreign_map[];
- 
--void loongson3_smp_setup(void);
--void loongson3_prepare_cpus(unsigned int max_cpus);
--void loongson3_boot_secondary(int cpu, struct task_struct *idle);
--void loongson3_init_secondary(void);
--void loongson3_smp_finish(void);
--void loongson3_send_ipi_single(int cpu, unsigned int action);
--void loongson3_send_ipi_mask(const struct cpumask *mask, unsigned int action);
-+void loongson_smp_setup(void);
-+void loongson_prepare_cpus(unsigned int max_cpus);
-+void loongson_boot_secondary(int cpu, struct task_struct *idle);
-+void loongson_init_secondary(void);
-+void loongson_smp_finish(void);
-+void loongson_send_ipi_single(int cpu, unsigned int action);
-+void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action);
- #ifdef CONFIG_HOTPLUG_CPU
--int loongson3_cpu_disable(void);
--void loongson3_cpu_die(unsigned int cpu);
-+int loongson_cpu_disable(void);
-+void loongson_cpu_die(unsigned int cpu);
- #endif
- 
- static inline void plat_smp_setup(void)
- {
--	loongson3_smp_setup();
-+	loongson_smp_setup();
- }
- 
- static inline int raw_smp_processor_id(void)
-@@ -85,28 +85,28 @@ extern void show_ipi_list(struct seq_file *p, int prec);
-  */
- static inline void smp_send_reschedule(int cpu)
- {
--	loongson3_send_ipi_single(cpu, SMP_RESCHEDULE);
-+	loongson_send_ipi_single(cpu, SMP_RESCHEDULE);
- }
- 
- static inline void arch_send_call_function_single_ipi(int cpu)
- {
--	loongson3_send_ipi_single(cpu, SMP_CALL_FUNCTION);
-+	loongson_send_ipi_single(cpu, SMP_CALL_FUNCTION);
- }
- 
- static inline void arch_send_call_function_ipi_mask(const struct cpumask *mask)
- {
--	loongson3_send_ipi_mask(mask, SMP_CALL_FUNCTION);
-+	loongson_send_ipi_mask(mask, SMP_CALL_FUNCTION);
- }
- 
- #ifdef CONFIG_HOTPLUG_CPU
- static inline int __cpu_disable(void)
- {
--	return loongson3_cpu_disable();
-+	return loongson_cpu_disable();
- }
- 
- static inline void __cpu_die(unsigned int cpu)
- {
--	loongson3_cpu_die(cpu);
-+	loongson_cpu_die(cpu);
- }
- 
- extern void play_dead(void);
-diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
-index 1ba19c76563e..0524bf1169b7 100644
---- a/arch/loongarch/kernel/irq.c
-+++ b/arch/loongarch/kernel/irq.c
-@@ -117,7 +117,7 @@ void __init init_IRQ(void)
- 	if (ipi_irq < 0)
- 		panic("IPI IRQ mapping failed\n");
- 	irq_set_percpu_devid(ipi_irq);
--	r = request_percpu_irq(ipi_irq, loongson3_ipi_interrupt, "IPI", &ipi_dummy_dev);
-+	r = request_percpu_irq(ipi_irq, loongson_ipi_interrupt, "IPI", &ipi_dummy_dev);
- 	if (r < 0)
- 		panic("IPI IRQ request failed\n");
- #endif
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 781a4d4bdddc..6ed72f7ff278 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -136,12 +136,12 @@ static void ipi_write_action(int cpu, u32 action)
- 	}
- }
- 
--void loongson3_send_ipi_single(int cpu, unsigned int action)
-+void loongson_send_ipi_single(int cpu, unsigned int action)
- {
- 	ipi_write_action(cpu_logical_map(cpu), (u32)action);
- }
- 
--void loongson3_send_ipi_mask(const struct cpumask *mask, unsigned int action)
-+void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action)
- {
- 	unsigned int i;
- 
-@@ -149,7 +149,7 @@ void loongson3_send_ipi_mask(const struct cpumask *mask, unsigned int action)
- 		ipi_write_action(cpu_logical_map(i), (u32)action);
- }
- 
--irqreturn_t loongson3_ipi_interrupt(int irq, void *dev)
-+irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
- {
- 	unsigned int action;
- 	unsigned int cpu = smp_processor_id();
-@@ -169,7 +169,7 @@ irqreturn_t loongson3_ipi_interrupt(int irq, void *dev)
- 	return IRQ_HANDLED;
- }
- 
--void __init loongson3_smp_setup(void)
-+void __init loongson_smp_setup(void)
- {
- 	cpu_data[0].core = cpu_logical_map(0) % loongson_sysconf.cores_per_package;
- 	cpu_data[0].package = cpu_logical_map(0) / loongson_sysconf.cores_per_package;
-@@ -178,7 +178,7 @@ void __init loongson3_smp_setup(void)
- 	pr_info("Detected %i available CPU(s)\n", loongson_sysconf.nr_cpus);
- }
- 
--void __init loongson3_prepare_cpus(unsigned int max_cpus)
-+void __init loongson_prepare_cpus(unsigned int max_cpus)
- {
- 	int i = 0;
- 
-@@ -193,7 +193,7 @@ void __init loongson3_prepare_cpus(unsigned int max_cpus)
- /*
-  * Setup the PC, SP, and TP of a secondary processor and start it running!
-  */
--void loongson3_boot_secondary(int cpu, struct task_struct *idle)
-+void loongson_boot_secondary(int cpu, struct task_struct *idle)
- {
- 	unsigned long entry;
- 
-@@ -205,13 +205,13 @@ void loongson3_boot_secondary(int cpu, struct task_struct *idle)
- 
- 	csr_mail_send(entry, cpu_logical_map(cpu), 0);
- 
--	loongson3_send_ipi_single(cpu, SMP_BOOT_CPU);
-+	loongson_send_ipi_single(cpu, SMP_BOOT_CPU);
- }
- 
- /*
-  * SMP init and finish on secondary CPUs
-  */
--void loongson3_init_secondary(void)
-+void loongson_init_secondary(void)
- {
- 	unsigned int cpu = smp_processor_id();
- 	unsigned int imask = ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 |
-@@ -231,7 +231,7 @@ void loongson3_init_secondary(void)
- 		     cpu_logical_map(cpu) / loongson_sysconf.cores_per_package;
- }
- 
--void loongson3_smp_finish(void)
-+void loongson_smp_finish(void)
- {
- 	local_irq_enable();
- 	iocsr_write64(0, LOONGARCH_IOCSR_MBUF0);
-@@ -240,7 +240,7 @@ void loongson3_smp_finish(void)
- 
- #ifdef CONFIG_HOTPLUG_CPU
- 
--int loongson3_cpu_disable(void)
-+int loongson_cpu_disable(void)
- {
- 	unsigned long flags;
- 	unsigned int cpu = smp_processor_id();
-@@ -262,7 +262,7 @@ int loongson3_cpu_disable(void)
- 	return 0;
- }
- 
--void loongson3_cpu_die(unsigned int cpu)
-+void loongson_cpu_die(unsigned int cpu)
- {
- 	while (per_cpu(cpu_state, cpu) != CPU_DEAD)
- 		cpu_relax();
-@@ -300,19 +300,19 @@ void play_dead(void)
-  */
- #ifdef CONFIG_PM
- 
--static int loongson3_ipi_suspend(void)
-+static int loongson_ipi_suspend(void)
- {
- 	return 0;
- }
- 
--static void loongson3_ipi_resume(void)
-+static void loongson_ipi_resume(void)
- {
- 	iocsr_write32(0xffffffff, LOONGARCH_IOCSR_IPI_EN);
- }
- 
--static struct syscore_ops loongson3_ipi_syscore_ops = {
--	.resume         = loongson3_ipi_resume,
--	.suspend        = loongson3_ipi_suspend,
-+static struct syscore_ops loongson_ipi_syscore_ops = {
-+	.resume         = loongson_ipi_resume,
-+	.suspend        = loongson_ipi_suspend,
- };
- 
- /*
-@@ -321,7 +321,7 @@ static struct syscore_ops loongson3_ipi_syscore_ops = {
-  */
- static int __init ipi_pm_init(void)
- {
--	register_syscore_ops(&loongson3_ipi_syscore_ops);
-+	register_syscore_ops(&loongson_ipi_syscore_ops);
- 	return 0;
- }
- 
-@@ -425,7 +425,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- {
- 	init_new_context(current, &init_mm);
- 	current_thread_info()->cpu = 0;
--	loongson3_prepare_cpus(max_cpus);
-+	loongson_prepare_cpus(max_cpus);
- 	set_cpu_sibling_map(0);
- 	set_cpu_core_map(0);
- 	calculate_cpu_foreign_map();
-@@ -436,7 +436,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 
- int __cpu_up(unsigned int cpu, struct task_struct *tidle)
- {
--	loongson3_boot_secondary(cpu, tidle);
-+	loongson_boot_secondary(cpu, tidle);
- 
- 	/* Wait for CPU to start and be ready to sync counters */
- 	if (!wait_for_completion_timeout(&cpu_starting,
-@@ -465,7 +465,7 @@ asmlinkage void start_secondary(void)
- 
- 	cpu_probe();
- 	constant_clockevent_init();
--	loongson3_init_secondary();
-+	loongson_init_secondary();
- 
- 	set_cpu_sibling_map(cpu);
- 	set_cpu_core_map(cpu);
-@@ -487,11 +487,11 @@ asmlinkage void start_secondary(void)
- 	complete(&cpu_running);
- 
- 	/*
--	 * irq will be enabled in loongson3_smp_finish(), enabling it too
-+	 * irq will be enabled in loongson_smp_finish(), enabling it too
- 	 * early is dangerous.
- 	 */
- 	WARN_ON_ONCE(!irqs_disabled());
--	loongson3_smp_finish();
-+	loongson_smp_finish();
- 
- 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
- }
++LOONGSON SERIES GPIO DRIVER
++M:	Richard Liu, STMicroelectronics <richard.liu@st.com>
++M:	Arnaud Patard <apatard@mandriva.com>
++M:	Hongbing Hu <huhb@lemote.com>
++M:	Huacai Chen <chenhuacai@kernel.org>
++M:	Yinbo Zhu <zhuyinbo@loongson.cn>
++L:	linux-gpio@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
++F:	drivers/gpio/gpio-loongson.c
++
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+ M:	Sathya Prakash <sathya.prakash@broadcom.com>
+ M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
 -- 
-2.31.1
+2.20.1
 
