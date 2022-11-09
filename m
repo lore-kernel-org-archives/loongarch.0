@@ -1,56 +1,14 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447F36AB1
-	for <loongarch@lists.linux.dev>; Wed,  9 Nov 2022 09:24:11 +0000 (UTC)
-Received: by mail-lj1-f172.google.com with SMTP id b9so24830089ljr.5
-        for <loongarch@lists.linux.dev>; Wed, 09 Nov 2022 01:24:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0gm5yfU9YziCMwLNsyVuPxY75pXMz7VSRfqIfnoUFvE=;
-        b=eAz2QvzAzn/m+Dfbq4RDigAZs9DY3fb/ppo0otCSBB0rL6JKxIhyMVX5z5qBd3TWR/
-         esfHXVQT5OwDFrlQbFBn5UWr2a6+Rfd+IxmecJWkbEJBIUvMivnslwveb9VDfXILW4xa
-         gY7l0U4qXQgwg0jG1+gtHBqYyce5aPFtHuwpGAxdPTs+n7j8fLlf+X8FRQfAtSxn8eGl
-         mCCYbC8giysrnBFstKTI+K/cdUyReS/wTi3X/bTofv+jc2IyXO92OFHqd4Fob3YEW4h8
-         5Z4EYgQs5XZ+KtqQwPwsX7otQWYOwDIF17QTI2Gkap78a2tTMVZwp906nXUjxpbCqf57
-         vYdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0gm5yfU9YziCMwLNsyVuPxY75pXMz7VSRfqIfnoUFvE=;
-        b=fJGpJX9ttuYrOkl/1KsufybWAkbybO+Lj4YIuypC5eHvC3FZtbiCrcmZNPw7Ofx+i+
-         xIElKpP8Qyx3693g722kfCUYo3Xn32caUn01q9VDiChw6ABYoVBxYrv+yAcW94ipuB1j
-         j7pzDEfCSetbwQ8/OUOhRaDgU/NIn0Sp4HLqlm/IKANIsklkhG9aD1PkeIqkAOSRmThC
-         GTD0850OBoLPJ80LNA5EqxFAwEtRSzygELdHtkW7CTxbWzpZaYaKKsaLO3mrjhQGwxtI
-         JVNuvsGF7DaGjjURQYs1HYJUUoNV4UNJxjBE76S2W6n2xB+RU6NkGt+GnZryrxjiFzb7
-         c4vA==
-X-Gm-Message-State: ACrzQf0QbmpMQNlvhqSaXvL1bF4Xe2vEftXHfAW2p8VsgmjGItXZmTaP
-	KCybWU8AAYRAhV4Kvm8tLqHyww==
-X-Google-Smtp-Source: AMsMyM5UI1gFIlHma+VcJxWK8k5Kni7jsznGK0vbSHYejZElBiiGKVZcM7EDMrppBCrBZxji9Hvu6g==
-X-Received: by 2002:a2e:350d:0:b0:26d:e73c:e018 with SMTP id z13-20020a2e350d000000b0026de73ce018mr8186724ljz.391.1667985849333;
-        Wed, 09 Nov 2022 01:24:09 -0800 (PST)
-Received: from [192.168.0.20] (088156142199.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.199])
-        by smtp.gmail.com with ESMTPSA id g19-20020a2ea4b3000000b0026de1bf528esm2084311ljm.119.2022.11.09.01.24.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Nov 2022 01:24:08 -0800 (PST)
-Message-ID: <a588a90e-a8ab-7b43-a14b-101bb9f590db@linaro.org>
-Date: Wed, 9 Nov 2022 10:24:07 +0100
-Precedence: bulk
-X-Mailing-List: loongarch@lists.linux.dev
-List-Id: <loongarch.lists.linux.dev>
-List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 105D86AB1
+	for <loongarch@lists.linux.dev>; Wed,  9 Nov 2022 09:38:47 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8Dxu9gfdWtjdYUFAA--.17646S3;
+	Wed, 09 Nov 2022 17:38:39 +0800 (CST)
+Received: from [10.180.13.64] (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxoOIbdWtj2nsPAA--.42525S2;
+	Wed, 09 Nov 2022 17:38:36 +0800 (CST)
 Subject: Re: [PATCH v8 2/2] dt-bindings: hpet: add loongson-2 hpet
-Content-Language: en-US
-To: Yinbo Zhu <zhuyinbo@loongson.cn>,
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
  Daniel Lezcano <daniel.lezcano@linaro.org>,
  Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -62,24 +20,62 @@ To: Yinbo Zhu <zhuyinbo@loongson.cn>,
 References: <20221103065351.32603-1-zhuyinbo@loongson.cn>
  <20221103065351.32603-2-zhuyinbo@loongson.cn>
  <b0aed9f8-f82e-3d74-4299-4d77445c2170@loongson.cn>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <b0aed9f8-f82e-3d74-4299-4d77445c2170@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <a588a90e-a8ab-7b43-a14b-101bb9f590db@linaro.org>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <b20098b3-e833-7412-143e-4f39d344ff67@loongson.cn>
+Date: Wed, 9 Nov 2022 17:38:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+Precedence: bulk
+X-Mailing-List: loongarch@lists.linux.dev
+List-Id: <loongarch.lists.linux.dev>
+List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+In-Reply-To: <a588a90e-a8ab-7b43-a14b-101bb9f590db@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxoOIbdWtj2nsPAA--.42525S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvdXoWruF18uF4fZw4kJw1ftr1UWrg_yoWxCrg_Xa
+	4DK3s3ZF47WrWvgF4IqFnxA347K3s8ZFy8JrZ5X343Ww45trWDZws3Gwsaqw15XrWfCFnx
+	Aryqqw4rursI9jkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
+	n7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2
+	IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84AC
+	jcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE
+	52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
+	80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
+	v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
+	7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
+	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv
+	6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU88nY7UUUUU==
 
-On 09/11/2022 10:19, Yinbo Zhu wrote:
-> Hi maintainer,
+
+
+在 2022/11/9 下午5:24, Krzysztof Kozlowski 写道:
+> On 09/11/2022 10:19, Yinbo Zhu wrote:
+>> Hi maintainer,
+>>
+>> please help me merge it to upstream.
+>> in addition, this patch need rely on
+>> "https://patchwork.kernel.org/project/linux-clk/list/?series=691497"
 > 
-> please help me merge it to upstream.
-> in addition, this patch need rely on 
-> "https://patchwork.kernel.org/project/linux-clk/list/?series=691497"
-
-Why pinging for v8? Didn't you have v9 and v10?
-
-Several of your Loongson patches had many build errors, pointed out by
-lkp. Therefore I have doubts that you test these extensively. This might
-be the reason why your patches float around...
-
-Best regards,
-Krzysztof
+> Why pinging for v8? Didn't you have v9 and v10?
+> 
+> Several of your Loongson patches had many build errors, pointed out by
+> lkp. Therefore I have doubts that you test these extensively. This might
+> be the reason why your patches float around...
+> 
+> Best regards,
+> Krzysztof
+Yes, thanks your remind.
+and I have a compile test and function test about hpet in mainline linux 
+tree 6.1-rc3.
+> 
 
