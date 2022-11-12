@@ -1,135 +1,145 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A99263D
-	for <loongarch@lists.linux.dev>; Fri, 11 Nov 2022 06:08:14 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8BxfdrN5m1joQYGAA--.19375S3;
-	Fri, 11 Nov 2022 14:08:13 +0800 (CST)
-Received: from [10.180.13.64] (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx5VbL5m1j27EQAA--.27161S2;
-	Fri, 11 Nov 2022 14:08:12 +0800 (CST)
-Subject: Re: [PATCH v6 1/2] soc: loongson: add GUTS driver for loongson-2
- platforms
-To: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, WANG Xuerui
- <kernel@xen0n.name>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Hector Martin <marcan@marcan.st>, Lubomir Rintel <lkundrak@v3.sk>,
- "Conor.Dooley" <conor.dooley@microchip.com>,
- Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
- =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
- Brian Norris <briannorris@chromium.org>, Sven Peter <sven@svenpeter.dev>,
- loongarch@lists.linux.dev, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, soc@kernel.org
-References: <20221104024835.3570-1-zhuyinbo@loongson.cn>
- <57c9f565-e75b-0c8f-fdce-9dc8c334d50f@loongson.cn>
- <CACRpkda=-_a+gWQVk1vi4QJ30j-hzeraX-wr86RcQ9xne4-d6Q@mail.gmail.com>
- <574d58b2-0e9a-4fa0-84a8-caf39a9bc37a@app.fastmail.com>
- <CAAhV-H64s-2gNMd0-F21kUzieh5G-MbBnA0k6J8EP2_7SpevaA@mail.gmail.com>
- <0b2ca852-61b2-4e88-b389-f102994d5b2d@app.fastmail.com>
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <b9ec5b1c-053d-a2a7-81ab-bc8066eb9159@loongson.cn>
-Date: Fri, 11 Nov 2022 14:08:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB17E7B
+	for <loongarch@lists.linux.dev>; Sat, 12 Nov 2022 10:26:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 882ACC433D7
+	for <loongarch@lists.linux.dev>; Sat, 12 Nov 2022 10:26:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1668248816;
+	bh=xrGRndr6af8EK9Jo3B73sSAZkJjBqo9SLyX5L2AsDXo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Wk/IDTu67XbsB1Zbtg3RTLNHbPhF27kjVlysCqZeGC4WuW3iQUtT7jFcM1CgHCvG3
+	 SGfTvvNi0CEVZGwHrjUpHouXi8cW0zI0iM5gs+YgsxNAoy2DTWeYpoWLxPn6cBWCNl
+	 tzqCwtF3ch49/2VHJCUQBOnawM/HqS9fCGp9A0j+NGGhcndbhiVGP1HETT0r+OSM+N
+	 y4d7fs0HBI1Z23KjIUoLyXao5XwEPhYrKyHB8pPZdieoz7gLtwCLBbNFpobHZ77gCq
+	 FCEBJcW/tNwrPv4y2uiOqx/cDrX9zAGbiMkF6Ua3TP6o2wqBffsMYTiesJNu6foPVD
+	 1YsL2di8hreTg==
+Received: by mail-ed1-f53.google.com with SMTP id u24so10766864edd.13
+        for <loongarch@lists.linux.dev>; Sat, 12 Nov 2022 02:26:56 -0800 (PST)
+X-Gm-Message-State: ANoB5pnnEzuwZHHK4pnszLLg/TWGHpz4HtMSlNd0bWvk08xSk9axyYJS
+	9LHfZVv7Ze0PGhnFWTgvTUWUC7mrzw5z+SStL6Q=
+X-Google-Smtp-Source: AA0mqf4cCb/rBaVNeOC4vccC3RXsFwpK0pA9R6rHmaDD09Q9QUoNwZ5iv4azux4dqBqbCV7wDGqTqPL3IdDKeOA1YDw=
+X-Received: by 2002:aa7:db85:0:b0:463:f3a:32ce with SMTP id
+ u5-20020aa7db85000000b004630f3a32cemr4917828edt.366.1668248814780; Sat, 12
+ Nov 2022 02:26:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <0b2ca852-61b2-4e88-b389-f102994d5b2d@app.fastmail.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx5VbL5m1j27EQAA--.27161S2
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxJw1fAF17KFykGr1DuryrXrb_yoW5AF1fpF
-	WrtFnxCF4kGF43Ar1Iyw1Uuayrtw4ayr9IgF9Yg34kZF95ZFyIyFy0vFyruF4DXF1fKr4j
-	vF18A348u3WkZF7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bDAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
-	v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
-	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07joKZXUUUUU=
+References: <20221027125253.3458989-1-chenhuacai@loongson.cn>
+In-Reply-To: <20221027125253.3458989-1-chenhuacai@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 12 Nov 2022 18:26:42 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Y5qHSXr2uHvMYpXMgvm5fU7WQmcALB+86OYkgM1XbOg@mail.gmail.com>
+Message-ID: <CAAhV-H4Y5qHSXr2uHvMYpXMgvm5fU7WQmcALB+86OYkgM1XbOg@mail.gmail.com>
+Subject: Re: [PATCH V14 0/4] mm/sparse-vmemmap: Generalise helpers and enable
+ for LoongArch
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, loongarch@lists.linux.dev, 
+	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Feiyang Chen <chenfeiyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+
+Hi, Arnd,
+
+Just a gentle ping, is this series good enough now? I think the last
+problem (static-key.h inclusion) has also been solved.
 
 
+Huacai
 
-ÔÚ 2022/11/9 ÏÂÎç11:08, Arnd Bergmann Ð´µÀ:
-> On Wed, Nov 9, 2022, at 14:50, Huacai Chen wrote:
->> On Wed, Nov 9, 2022 at 7:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
->>> On Wed, Nov 9, 2022, at 11:15, Linus Walleij wrote:
->>>> On Wed, Nov 9, 2022 at 11:03 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
->>>>
->>>>> Hi maintainer,
->>>>>
->>>>> This patch I had verified that base on mainline 6.1-rc3 tree, it is
->>>>> okay, if no other issue, please you help me merge it to upstream.
->>>>
->>>> Aren't these loongarch maintainers listed in MAINTAINERS able to
->>>> merge this? Certainly Huacai can merge stuff to drivers/soc as
->>>> need be. drivers/soc is a bit shared between different archs.
->>>
->>> I'm generally happy to keep an eye on stuff in drivers/soc/ across
->>> architectures and merge it through the soc tree, especially for
->>> new platforms, but merging this through the loongarch tree works
->>> as well.
->> So drivers/soc is similar to drivers/platform that can be merged
->> through corresponding architecture trees?
-> 
-> Right, I think in both cases, there is no top-level subsystem
-> maintainer, but the rules are specific to the second-level
-> hierarchy: most parts of drivers/platform/ happen to go
-> through the x86 platform maintainer trees, and for drivers/soc
-> we merge most stuff through the soc tree, but a few parts
-> of each have different maintainers.
-> 
->>> Since the driver was already sent to soc@kernel.org, I can
->>> simply pick it up through patchwork[1] when I do my next round
->>> of merges. I'll leave this up to Huacai Chen and WANG Xuerui,
->>> let me know if you prefer to merge it through the loongarch
->>> tree.
->> I'm happy that this series be merged through your linux-arch tree, but
->> if it is better (I'm not sure which is better) to go through loongarch
->> tree I can also merge it later. However, I have some comments about
->> this version. :)
-> 
-> I would prefer the soc tree, and will just apply the
-> patches from Yinbo Zhu directly this time as I already
-> have them in my queue. If there are more than a few
-> drivers/soc/loongarch/ patches in the future, maybe you can
-> pick them up into a separate branch and forward those
-> to soc@kernel.org.
-> 
-> Note that I have two separate roles here: I have the
-> asm-generic tree that I maintain for patches to
-> include/asm-generic as well as the occasional new
-> architecture review as I did for loongarch.
-> 
-> The other one is the group maintained soc tree that
-> is mainly for Arm device tree files, but also contains
-> soc specific code (arch/arm/mach-*), defconfig files,
-> drivers (drivers/{soc,firmware,memory,reset}). This is
-> now extended to arch/riscv and occasionally other
-> architectures as well, so drivers/soc/loongson fits
-> well in here.
-> 
->       Arnd
-Hi Arnd Bergmann,
-
-I had add v7 version patch and please help check and merge it.
-in addition, I don't find apprioate branch in your tree for test, so
-my patch was tested that base on 6.1-rc3 master branch.
-
-BRs,
-YinBo.
-> 
-
+On Thu, Oct 27, 2022 at 8:54 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
+>
+> This series is in order to enable sparse-vmemmap for LoongArch. But
+> LoongArch cannot use generic helpers directly because MIPS&LoongArch
+> need to call pgd_init()/pud_init()/pmd_init() when populating page
+> tables. So we adjust the prototypes of p?d_init() to make generic
+> helpers can call them, then enable sparse-vmemmap with generic helpers,
+> and to be further, generalise vmemmap_populate_hugepages() for ARM64,
+> X86 and LoongArch.
+>
+> V1 -> V2:
+> Split ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP to a separate patch.
+>
+> V2 -> V3:
+> 1, Change the Signed-off-by order of author and committer;
+> 2, Update commit message about the build error on LoongArch.
+>
+> V3 -> V4:
+> Change pmd to pmdp for ARM64 for consistency.
+>
+> V4 -> V5:
+> Add a detailed comment for no-fallback in the altmap case.
+>
+> V5 -> V6:
+> 1, Fix build error for NIOS2;
+> 2, Fix build error for allnoconfig;
+> 3, Update comment for no-fallback in the altmap case.
+>
+> V6 -> V7:
+> Fix build warnings of "no previous prototype".
+>
+> V7 -> V8:
+> Fix build error for MIPS pud_init().
+>
+> V8 -> V9:
+> Remove redundant #include to avoid build error with latest upstream
+> kernel.
+>
+> V9 -> V10:
+> Fix build error due to VMEMMAP changes in 6.0-rc1.
+>
+> V10 -> V11:
+> Adjust context due to ARM64 changes in 6.1-rc1.
+>
+> V11 -> V12:
+> 1, Fix build error for !SPARSEMEM;
+> 2, Simplify pagetable_init() for MIPS32.
+>
+> V12 -> V13:
+> 1, Add Acked-by and Reviewed-by tags;
+> 2, Update commit message for the 4th patch.
+>
+> V13 -> V14:
+> Remove the static_key.h inclusion in the 4th patch.
+>
+> Huacai Chen and Feiyang Chen(4):
+>  MIPS&LoongArch&NIOS2: Adjust prototypes of p?d_init().
+>  LoongArch: Add sparse memory vmemmap support.
+>  mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages().
+>  LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP.
+>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+> ---
+>  arch/arm64/mm/mmu.c                    | 53 ++++++--------------
+>  arch/loongarch/Kconfig                 |  2 +
+>  arch/loongarch/include/asm/pgalloc.h   | 13 +----
+>  arch/loongarch/include/asm/pgtable.h   | 13 +++--
+>  arch/loongarch/include/asm/sparsemem.h |  8 +++
+>  arch/loongarch/kernel/numa.c           |  4 +-
+>  arch/loongarch/mm/init.c               | 44 +++++++++++++++-
+>  arch/loongarch/mm/pgtable.c            | 23 +++++----
+>  arch/mips/include/asm/pgalloc.h        |  8 +--
+>  arch/mips/include/asm/pgtable-64.h     |  8 +--
+>  arch/mips/kvm/mmu.c                    |  3 +-
+>  arch/mips/mm/pgtable-32.c              | 10 ++--
+>  arch/mips/mm/pgtable-64.c              | 18 ++++---
+>  arch/mips/mm/pgtable.c                 |  2 +-
+>  arch/x86/mm/init_64.c                  | 92 ++++++++++++----------------------
+>  include/linux/mm.h                     |  8 +++
+>  include/linux/page-flags.h             |  1 +
+>  mm/sparse-vmemmap.c                    | 64 +++++++++++++++++++++++
+>  18 files changed, 222 insertions(+), 152 deletions(-)
+> --
+> 2.27.0
+>
