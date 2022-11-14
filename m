@@ -1,61 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F83749D
-	for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 17:27:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33120C433D6;
-	Mon, 14 Nov 2022 17:27:04 +0000 (UTC)
-Date: Mon, 14 Nov 2022 12:27:45 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-xtensa@linux-xtensa.org, x86@kernel.org, "Paul E. McKenney"
- <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>, Daniel Bristot
- de Oliveira <bristot@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
- Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>,
- Nicholas Piggin <npiggin@gmail.com>, Guo Ren <guoren@kernel.org>, "David S.
- Miller" <davem@davemloft.net>
-Subject: Re: [RFC PATCH v2 0/8] Generic IPI sending tracepoint
-Message-ID: <20221114122745.189af864@gandalf.local.home>
-In-Reply-To: <20221102182949.3119584-1-vschneid@redhat.com>
-References: <20221102182949.3119584-1-vschneid@redhat.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9131749D
+	for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 17:36:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=K1bEu6LvWTU2ExAGlkv+LV4LZM5aPMQ8wzVf8rbOjcY=; b=i/hOOg8D9g633GAnWcZtSrQbCD
+	ZGWVQmc1Wc+hxYX2PDDnuNQSEizqo8zi055fxH/VY4HKiiPtDKCFQuk1iFFEauBh1uvEeYzHLzYHF
+	Lyj5pg+1V1S955h2UtF95/2O9J5D1sO9pfEKtugYpAP1SRqiy4urZt2eagjPIVBAbXPzvl60DgI2S
+	qxUuoF8INS6JQyho+V9EwtEMuVeIIuTcN4g3U32FwSKD+YJoGwkF/BFiipcwZfBsJUYN1qx7+KHDS
+	U60lsRNz53P6RH8pDGpmMeDFOlpORSjYW6kfKJ26FG/2zZHPNRieo47Tb6J6lJQ8q1iiXlGkdNr0o
+	JKqY/exw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35274)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1oudMg-0001BQ-DP; Mon, 14 Nov 2022 17:35:22 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1oudMW-0003zM-JW; Mon, 14 Nov 2022 17:35:12 +0000
+Date: Mon, 14 Nov 2022 17:35:12 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	Kees Cook <keescook@chromium.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	SeongJae Park <sj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michael Ellerman <mpe@ellerman.id.au>, Helge Deller <deller@gmx.de>,
+	netdev@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-mmc@vger.kernel.org,
+	linux-parisc@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] treewide: use get_random_u32_below() instead of
+ deprecated function
+Message-ID: <Y3J8UMzytEySbXwt@shell.armlinux.org.uk>
+References: <20221114164558.1180362-1-Jason@zx2c4.com>
+ <20221114164558.1180362-2-Jason@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221114164558.1180362-2-Jason@zx2c4.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed,  2 Nov 2022 18:29:41 +0000
-Valentin Schneider <vschneid@redhat.com> wrote:
-
-> This is incomplete, just looking at arm64 there's more IPI types that aren't
-> covered: 
+On Mon, Nov 14, 2022 at 05:45:56PM +0100, Jason A. Donenfeld wrote:
+> This is a simple mechanical transformation done by:
 > 
->   IPI_CPU_STOP,
->   IPI_CPU_CRASH_STOP,
->   IPI_TIMER,
->   IPI_WAKEUP,
+> @@
+> expression E;
+> @@
+> - prandom_u32_max
+> + get_random_u32_below
+>   (E)
 > 
-> ... But it feels like a good starting point.
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Acked-by: Darrick J. Wong <djwong@kernel.org> # for xfs
+> Reviewed-by: SeongJae Park <sj@kernel.org> # for damon
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com> # for infiniband
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> ---
+>  arch/arm/kernel/process.c                     |  2 +-
 
-For the tracing portions:
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk> # for arm
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Thanks.
 
--- Steve
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
