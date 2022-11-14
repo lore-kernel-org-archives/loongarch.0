@@ -1,28 +1,32 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEF8B256D
-	for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 09:26:58 +0000 (UTC)
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8BxWtjhCXJjqtsGAA--.18976S3;
-	Mon, 14 Nov 2022 17:26:57 +0800 (CST)
-Received: from [10.136.12.12] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxNlfeCXJjBnsSAA--.31671S3;
-	Mon, 14 Nov 2022 17:26:56 +0800 (CST)
-Subject: Re: [PATCH v2 3/5] LoongArch: Add kretprobe support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
- Masami Hiramatsu <mhiramat@kernel.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <1664326209-13995-1-git-send-email-yangtiezhu@loongson.cn>
- <1664326209-13995-4-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H7N-N2400ivdczJrfJ9Ht12JUbOADxExF87wVPFEj_c_g@mail.gmail.com>
- <dd3fc4ab-6bbb-2fa5-8d5e-b8206b42518c@loongson.cn>
- <CAAhV-H4ok2r2FarFszwYJ6Hah4m7ieNf6egnXyZhUf1ESDUhXg@mail.gmail.com>
- <a528e970-29ac-2fcb-b749-cfae3fbe5a18@loongson.cn>
- <CAAhV-H7uaFeND1-iSHmLXMFJonRTbiu81EnFGjyHZ0uN9bVXZw@mail.gmail.com>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <80db649d-ea12-796c-b76c-49933953e9a8@loongson.cn>
-Date: Mon, 14 Nov 2022 17:26:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73375256D
+	for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 09:50:27 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8AxbdphD3JjLt0GAA--.20740S3;
+	Mon, 14 Nov 2022 17:50:25 +0800 (CST)
+Received: from [10.180.13.64] (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxj+BfD3JjTX8SAA--.49498S2;
+	Mon, 14 Nov 2022 17:50:23 +0800 (CST)
+Subject: Re: [PATCH v1 2/2] dt-bindings: gpio: add loongson series gpio
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, zhuyinbo@loongson.cn, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org, richard.liu@st.com,
+ Arnaud Patard <apatard@mandriva.com>, Hongbing Hu <huhb@lemote.com>,
+ Huacai Chen <chenhuacai@kernel.org>
+References: <20221108092107.28996-1-zhuyinbo@loongson.cn>
+ <20221108092107.28996-2-zhuyinbo@loongson.cn>
+ <d9edb6e1-c3da-0f5b-546d-37d8151aaa35@linaro.org>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <d5457109-3bcb-e7d3-067d-9e4acd66ac17@loongson.cn>
+Date: Mon, 14 Nov 2022 17:50:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -30,267 +34,267 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7uaFeND1-iSHmLXMFJonRTbiu81EnFGjyHZ0uN9bVXZw@mail.gmail.com>
+In-Reply-To: <d9edb6e1-c3da-0f5b-546d-37d8151aaa35@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-CM-TRANSID:AQAAf8DxNlfeCXJjBnsSAA--.31671S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxuw1kJw4xCr4DWF4fWw4rKrg_yoW3tryUpr
-	WkAFn8Zr4UZrnFyr90q34Fqr97tr1kXr17WFy8Jr48Kr4qgr17Jr1UAr17CF1xGr1UJr10
-	qr1rGrW3uFy5J37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bxj+BfD3JjTX8SAA--.49498S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3Jw45JryxJw4fXF4rXFWrZrb_yoWxArWUp3
+	WUAFsrZwsFgF13Cr4YgFnrArn3Ar1kCw1rur9xC347tryqkwn3JF4SgFykW3Z3WryUX3W7
+	Xrsxu3yrGw15A3DanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bakYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17
-	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
-	AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
-	cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
-	80aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIF
-	yTuYvjxU2ID7UUUUU
-
-On 2022/11/14 下午4:51, Huacai Chen wrote:
-
-> On Mon, Nov 14, 2022 at 4:32 PM Jinyang He <hejinyang@loongson.cn> wrote:
->> On 2022/11/14 下午2:50, Huacai Chen wrote:
->>
->>> On Mon, Nov 14, 2022 at 2:11 PM Jinyang He <hejinyang@loongson.cn> wrote:
->>>> On 2022/11/14 下午12:43, Huacai Chen wrote:
->>>>
->>>>> Hi, Tiezhu and Jinyang,
->>>>>
->>>>> On Wed, Sep 28, 2022 at 8:50 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>>>>> Use the generic kretprobe trampoline handler to add kretprobe
->>>>>> support for LoongArch.
->>>>>>
->>>>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->>>>>> ---
->>>>>>     arch/loongarch/Kconfig                     |  1 +
->>>>>>     arch/loongarch/kernel/Makefile             |  2 +-
->>>>>>     arch/loongarch/kernel/kprobes.c            | 24 ++++++++
->>>>>>     arch/loongarch/kernel/kprobes_trampoline.S | 97 ++++++++++++++++++++++++++++++
->>>>>>     4 files changed, 123 insertions(+), 1 deletion(-)
->>>>>>     create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
->>>>>>
->>>>>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->>>>>> index 8debd70..877be6a 100644
->>>>>> --- a/arch/loongarch/Kconfig
->>>>>> +++ b/arch/loongarch/Kconfig
->>>>>> @@ -95,6 +95,7 @@ config LOONGARCH
->>>>>>            select HAVE_IRQ_EXIT_ON_IRQ_STACK
->>>>>>            select HAVE_IRQ_TIME_ACCOUNTING
->>>>>>            select HAVE_KPROBES
->>>>>> +       select HAVE_KRETPROBES
->>>>>>            select HAVE_MOD_ARCH_SPECIFIC
->>>>>>            select HAVE_NMI
->>>>>>            select HAVE_PCI
->>>>>> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
->>>>>> index ff98d8a..48f50607 100644
->>>>>> --- a/arch/loongarch/kernel/Makefile
->>>>>> +++ b/arch/loongarch/kernel/Makefile
->>>>>> @@ -33,6 +33,6 @@ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
->>>>>>
->>>>>>     obj-$(CONFIG_PERF_EVENTS)      += perf_event.o perf_regs.o
->>>>>>
->>>>>> -obj-$(CONFIG_KPROBES)          += kprobes.o
->>>>>> +obj-$(CONFIG_KPROBES)          += kprobes.o kprobes_trampoline.o
->>>>>>
->>>>>>     CPPFLAGS_vmlinux.lds           := $(KBUILD_CFLAGS)
->>>>>> diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
->>>>>> index c11f6e0..ca3f1dc 100644
->>>>>> --- a/arch/loongarch/kernel/kprobes.c
->>>>>> +++ b/arch/loongarch/kernel/kprobes.c
->>>>>> @@ -306,6 +306,30 @@ int __init arch_populate_kprobe_blacklist(void)
->>>>>>                                             (unsigned long)__irqentry_text_end);
->>>>>>     }
->>>>>>
->>>>>> +/* Called from __kretprobe_trampoline */
->>>>>> +void __used *trampoline_probe_handler(struct pt_regs *regs)
->>>>>> +{
->>>>>> +       return (void *)kretprobe_trampoline_handler(regs, NULL);
->>>>>> +}
->>>>>> +NOKPROBE_SYMBOL(trampoline_probe_handler);
->>>>>> +
->>>>>> +void arch_prepare_kretprobe(struct kretprobe_instance *ri,
->>>>>> +                           struct pt_regs *regs)
->>>>>> +{
->>>>>> +       ri->ret_addr = (kprobe_opcode_t *)regs->regs[1];
->>>>>> +       ri->fp = NULL;
->>>>>> +
->>>>>> +       /* Replace the return addr with trampoline addr */
->>>>>> +       regs->regs[1] = (unsigned long)&__kretprobe_trampoline;
->>>>>> +}
->>>>>> +NOKPROBE_SYMBOL(arch_prepare_kretprobe);
->>>>>> +
->>>>>> +int arch_trampoline_kprobe(struct kprobe *p)
->>>>>> +{
->>>>>> +       return 0;
->>>>>> +}
->>>>>> +NOKPROBE_SYMBOL(arch_trampoline_kprobe);
->>>>>> +
->>>>>>     int __init arch_init_kprobes(void)
->>>>>>     {
->>>>>>            return 0;
->>>>>> diff --git a/arch/loongarch/kernel/kprobes_trampoline.S b/arch/loongarch/kernel/kprobes_trampoline.S
->>>>>> new file mode 100644
->>>>>> index 0000000..9888ab8
->>>>>> --- /dev/null
->>>>>> +++ b/arch/loongarch/kernel/kprobes_trampoline.S
->>>>>> @@ -0,0 +1,97 @@
->>>>>> +/* SPDX-License-Identifier: GPL-2.0+ */
->>>>>> +#include <linux/linkage.h>
->>>>>> +#include <asm/stackframe.h>
->>>>>> +
->>>>>> +       .text
->>>>>> +
->>>>>> +       .macro save_all_base_regs
->>>>>> +       cfi_st  zero, PT_R0
->>>>>> +       cfi_st  ra, PT_R1
->>>>>> +       cfi_st  tp, PT_R2
->>>>>> +       cfi_st  a0, PT_R4
->>>>>> +       cfi_st  a1, PT_R5
->>>>>> +       cfi_st  a2, PT_R6
->>>>>> +       cfi_st  a3, PT_R7
->>>>>> +       cfi_st  a4, PT_R8
->>>>>> +       cfi_st  a5, PT_R9
->>>>>> +       cfi_st  a6, PT_R10
->>>>>> +       cfi_st  a7, PT_R11
->>>>>> +       cfi_st  t0, PT_R12
->>>>>> +       cfi_st  t1, PT_R13
->>>>>> +       cfi_st  t2, PT_R14
->>>>>> +       cfi_st  t3, PT_R15
->>>>>> +       cfi_st  t4, PT_R16
->>>>>> +       cfi_st  t5, PT_R17
->>>>>> +       cfi_st  t6, PT_R18
->>>>>> +       cfi_st  t7, PT_R19
->>>>>> +       cfi_st  t8, PT_R20
->>>>>> +       cfi_st  u0, PT_R21
->>>>>> +       cfi_st  fp, PT_R22
->>>>>> +       cfi_st  s0, PT_R23
->>>>>> +       cfi_st  s1, PT_R24
->>>>>> +       cfi_st  s2, PT_R25
->>>>>> +       cfi_st  s3, PT_R26
->>>>>> +       cfi_st  s4, PT_R27
->>>>>> +       cfi_st  s5, PT_R28
->>>>>> +       cfi_st  s6, PT_R29
->>>>>> +       cfi_st  s7, PT_R30
->>>>>> +       cfi_st  s8, PT_R31
->>>>>> +       addi.d  t0, sp, PT_SIZE
->>>>>> +       LONG_S  t0, sp, PT_R3
->>>>>> +       csrrd   t0, LOONGARCH_CSR_CRMD
->>>>>> +       andi    t0, t0, 0x7 /* extract bit[1:0] PLV, bit[2] IE */
->>>>>> +       LONG_S  t0, sp, PT_PRMD
->>>>>> +       .endm
->>>>>> +
->>>>>> +       .macro restore_all_base_regs
->>>>>> +       cfi_ld  zero, PT_R0
->>>>>> +       cfi_ld  tp, PT_R2
->>>>>> +       cfi_ld  a0, PT_R4
->>>>>> +       cfi_ld  a1, PT_R5
->>>>>> +       cfi_ld  a2, PT_R6
->>>>>> +       cfi_ld  a3, PT_R7
->>>>>> +       cfi_ld  a4, PT_R8
->>>>>> +       cfi_ld  a5, PT_R9
->>>>>> +       cfi_ld  a6, PT_R10
->>>>>> +       cfi_ld  a7, PT_R11
->>>>>> +       cfi_ld  t0, PT_R12
->>>>>> +       cfi_ld  t1, PT_R13
->>>>>> +       cfi_ld  t2, PT_R14
->>>>>> +       cfi_ld  t3, PT_R15
->>>>>> +       cfi_ld  t4, PT_R16
->>>>>> +       cfi_ld  t5, PT_R17
->>>>>> +       cfi_ld  t6, PT_R18
->>>>>> +       cfi_ld  t7, PT_R19
->>>>>> +       cfi_ld  t8, PT_R20
->>>>>> +       cfi_ld  u0, PT_R21
->>>>>> +       cfi_ld  fp, PT_R22
->>>>>> +       cfi_ld  s0, PT_R23
->>>>>> +       cfi_ld  s1, PT_R24
->>>>>> +       cfi_ld  s2, PT_R25
->>>>>> +       cfi_ld  s3, PT_R26
->>>>>> +       cfi_ld  s4, PT_R27
->>>>>> +       cfi_ld  s5, PT_R28
->>>>>> +       cfi_ld  s6, PT_R29
->>>>>> +       cfi_ld  s7, PT_R30
->>>>>> +       cfi_ld  s8, PT_R31
->>>>>> +       LONG_L  t0, sp, PT_PRMD
->>>>>> +       li.d    t1, 0x7 /* mask bit[1:0] PLV, bit[2] IE */
->>>>>> +       csrxchg t0, t1, LOONGARCH_CSR_CRMD
->>>>>> +       .endm
->>>>> Do you think we need to save and restore all regs here?
->>>>>
->>>>> Huacai
->>>> Hi, Huacai,
->>>>
->>>>
->>>> Note that it is not function context. In the original kprobe design, it is
->>>> triggered by 'break' and then trap into exception with all pt_regs saved.
->>>> The all pt_regs will be visible to the user. So I think in this version
->>>> we should also support all regs to user. BTW, due to all exceptions is
->>>> trapped by 'break' something in pt_regs is not needed, like estat,
->>>> badvaddr and so on.
->>> OK, but I still have some questions:
->>> 1, Why $r0 need save/restore?
->> Surely $r0 can be not saved, as now we do not have strange purpose
->> to make PT_R0 as a flag.
->>
->>
->>> 2, Why save $r1 but not restore?
->> My wrong idea is $r1 should be saved at CSR_ERA, to plays it like
->> exception happened. But its value always equal the address of
->> __kretprobe_trampoline. The kretprobe is something like fgraph. The real
->> return address is returned by trampoline_probe_handler. And at present,
->> the real return address is replaced in pt_regs->csr_era in
->> __kretprobe_trampoline_handler(). So the $r1 saved in CSR_ERA will
->> be destroied at __kretprobe_trampoline_handler() actually.
->> That's why $r1 saved also is not needed.
->>
->> And both way to get return address from return value or get return address
->>
->> from pt_regs is same on LoongArch because arch_kretprobe_fixup_return()
->>
->> does nothing. But I think get return address from pt_regs is more reliable.
->>
->>
->>> 3, What is the purpose of CRMD magic?
->> PT_CRMD magic is just exception context. It gives us a chance e.g.
->> set ie off at func head, and ie on at func return.
-> ARM64 and RISC-V don't have such magics, so maybe they are unneeded?
->
-ARM64 have noted "Construct a useful saved PSTATE" in kprobes_trampoline.S.
-
-And it seems we provide more interfaces than RISC-V. ?
+	bDkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE
+	52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
+	80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCj
+	c4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI
+	0_Jw0_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCj
+	c4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY
+	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8-4S5UUUUU==
 
 
-Thanks,
 
-Jinyang
-
-
->>>>>> +
->>>>>> +SYM_CODE_START(__kretprobe_trampoline)
->>>>>> +       addi.d  sp, sp, -PT_SIZE
->>>>>> +       save_all_base_regs
->>>>>> +
->>>>>> +       move a0, sp /* pt_regs */
->>>>>> +
->>>>>> +       bl trampoline_probe_handler
->>>>>> +
->>>>>> +       /* use the result as the return-address */
->>>>>> +       move ra, a0
->>>>>> +
->>>>>> +       restore_all_base_regs
->>>>>> +       addi.d  sp, sp, PT_SIZE
->>>>>> +
->>>>>> +       jr ra
->>>>>> +SYM_CODE_END(__kretprobe_trampoline)
->>>>>> --
->>>>>> 2.1.0
->>>>>>
->>>>>>
+在 2022/11/8 下午11:28, Krzysztof Kozlowski 写道:
+> On 08/11/2022 10:21, Yinbo Zhu wrote:
+>> Add the Loongson series gpio binding with DT schema format using
+>> json-schema.
+>>
+>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>> ---
+>>   .../bindings/gpio/loongson,ls-gpio.yaml       | 154 ++++++++++++++++++
+>>   MAINTAINERS                                   |  11 ++
+>>   2 files changed, 165 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+>> new file mode 100644
+>> index 000000000000..9d335262ddcc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+>> @@ -0,0 +1,154 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/gpio/loongson,ls-gpio.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Loongson series GPIO controller.
+>> +
+>> +maintainers:
+>> +  - Yinbo Zhu <zhuyinbo@loongson.cn>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - loongson,ls2k-gpio
+>> +      - loongson,ls7a-gpio
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  ngpios: true
+> 
+> minimum? maximum?
+okay, I got it.
+> 
+>> +
+>> +  "#gpio-cells":
+>> +    const: 2
+>> +
+>> +  gpio-controller: true
+>> +
+>> +  gpio-ranges: true
+>> +
+>> +  loongson,conf_offset:
+> 
+> No underscores in node names. Plus comments from Linus seem to apply
+> here as well. Drop it entirely or explain why this is not part of
+> compatible, why this is needed and why encoding programming model
+> address in DT matches the DT...
+Add it is to distinguish differnt address in different platform.
+and I had drop them and initial them in kernel driver that depend
+on diffent compatible.
+> 
+> 
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      This option indicate this GPIO configuration offset address.
+>> +
+>> +  loongson,out_offset:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      This option indicate this GPIO output value offset address.
+> 
+> Drop
+> 
+>> +
+>> +  loongson,in_offset:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      This option indicate this GPIO input value offset address.
+> 
+> Drop
+> 
+> 
+>> +
+>> +  loongson,gpio_base:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      This option indicate the first GPIO number in this node.
+> 
+> Drop
+> 
+> 
+>> +
+>> +  loongson,support_irq:
+>> +    $ref: /schemas/types.yaml#/definitions/flag
+>> +    description:
+>> +      This option indicate this GPIO whether support interrupt.
+> 
+> Drop
+> 
+>> +
+>> +  interrupts:
+>> +    minItems: 1
+>> +    maxItems: 64
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - ngpios
+>> +  - "#gpio-cells"
+>> +  - gpio-controller
+>> +  - gpio-ranges
+>> +  - interrupts
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +
+>> +    gpio0: gpio@1fe00500 {
+>> +      compatible = "loongson,ls2k-gpio";
+>> +      reg = <0x1fe00500 0x38>;
+>> +      ngpios = <64>;
+>> +      #gpio-cells = <2>;
+>> +      gpio-controller;
+>> +      gpio-ranges = <&pctrl 0 0 15>,
+>> +                    <&pctrl 16 16 15>,
+>> +                    <&pctrl 32 32 10>,
+>> +                    <&pctrl 44 44 20>;
+>> +      loongson,conf_offset = <0>;
+>> +      loongson,out_offset = <0x10>;
+>> +      loongson,in_offset = <0x20>;
+>> +      loongson,gpio_base = <0>;
+>> +      loongson,support_irq;
+>> +      interrupt-parent = <&liointc1>;
+>> +      interrupts = <28 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <29 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <30 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <30 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <26 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <>,
+> 
+> What's this?
+There was no interrupt function in this gpio.
+> 
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <>,
+>> +                   <>,
+> 
+> What's this?
+> 
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>,
+>> +                   <27 IRQ_TYPE_LEVEL_LOW>;
+>> +    };
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 916b2d9cffc0..878b8320ac3b 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -12048,6 +12048,17 @@ S:	Maintained
+>>   F:	Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
+>>   F:	drivers/soc/loongson/loongson2_guts.c
+>>   
+>> +LOONGSON SERIES GPIO DRIVER
+>> +M:	Richard Liu, STMicroelectronics <richard.liu@st.com>
+>> +M:	Arnaud Patard <apatard@mandriva.com>
+>> +M:	Hongbing Hu <huhb@lemote.com>
+>> +M:	Huacai Chen <chenhuacai@kernel.org>
+>> +M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+> 
+> Are they all maintainers of this driver?
+add huacai and myself as maintainer.
+> 
+>> +L:	linux-gpio@vger.kernel.org
+>> +S:	Maintained
+>> +F:	Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+>> +F:	drivers/gpio/gpio-loongson.c
+>> +
+>>   LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+>>   M:	Sathya Prakash <sathya.prakash@broadcom.com>
+>>   M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+> 
+> Best regards,
+> Krzysztof
+> 
 
