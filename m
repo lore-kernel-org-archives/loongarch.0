@@ -1,37 +1,34 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63697749D
-	for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 17:39:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C1C749D
+	for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 17:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1668447563;
-	bh=X0L4Kmonn7g/I6ECLS9q/WYYrNp/WTtXHjeGlk1ZJfQ=;
+	s=default; t=1668447639;
+	bh=VZVaUl9X4eZdGT6RfC1oQDK7UmkPBkc3qKH8A9luH/k=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=h3dx4Qxwa0sMyhlLVa+JFCYVWJxXghUvwxBUJfH8/Brq5Q1a+lRI+yfKPfSE5RfIE
-	 WrDqEve8/uYm0/h1jkNLLPqtV9Why32LERKqit2YMjMz9rEHEbFyAOTZiuQsJZhwVX
-	 yhnaI9/EYYHYkB4Wj/0Zn8lFrj+y8fnt12dKUf3s=
+	b=KTrB9eBQgoxr5DX0uUuzx/b90ylR+U+UWXz3hg3Vs+vUG85nnIUrazptCK3DRDE6W
+	 l/125yCHk6HuegQu58Eq14a4qFiMTtyWw8HpEySXBtvggi3RpOKJ0FEvMzgjlcZ3H7
+	 E1qDhM6SkBktByDII2A3cZqtUkifQMsXFFm9v5uc=
 Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id EE9ED6698D;
-	Mon, 14 Nov 2022 12:39:20 -0500 (EST)
-Message-ID: <99422b6e8253e4fc1427859cc840bc0c5f8c307a.camel@xry111.site>
-Subject: Re: [PATCH 0/2] LoongArch syscall ABI documentation
+	by xry111.site (Postfix) with ESMTPSA id EE49A6698D;
+	Mon, 14 Nov 2022 12:40:37 -0500 (EST)
+Message-ID: <3412acd8ea2f0f3ace22ae7a88b1782fca66aa39.camel@xry111.site>
+Subject: Ping: [PATCH] syscall.2: add loongarch
 From: Xi Ruoyao <xry111@xry111.site>
-To: WANG Xuerui <kernel@xen0n.name>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-doc@vger.kernel.org
-Cc: WANG Xuerui <git@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>, Alex
- Shi <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
- loongarch@lists.linux.dev
-Date: Tue, 15 Nov 2022 01:39:18 +0800
-In-Reply-To: <1f353678-3398-e30b-1c87-6edb278f74db@xen0n.name>
-References: <20221018100457.3440691-1-kernel@xen0n.name>
-	 <874jvn6be7.fsf@meer.lwn.net>
-	 <1f353678-3398-e30b-1c87-6edb278f74db@xen0n.name>
+To: Alejandro Colomar <alx@kernel.org>, Michael Kerrisk
+ <mtk.manpages@gmail.com>
+Cc: linux-man@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, Wang
+ Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
+Date: Tue, 15 Nov 2022 01:40:35 +0800
+In-Reply-To: <20221105021514.8344-1-xry111@xry111.site>
+References: <20221105021514.8344-1-xry111@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 User-Agent: Evolution 3.46.0 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -40,46 +37,43 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Sat, 2022-10-29 at 17:14 +0800, WANG Xuerui wrote:
-> On 10/29/22 02:39, Jonathan Corbet wrote:
-> > WANG Xuerui <kernel@xen0n.name> writes:
-> >=20
-> > > From: WANG Xuerui <git@xen0n.name>
-> > >=20
-> > > Hi,
-> > >=20
-> > > Due to popular demand [1] (even Loongson employees can get lost),
-> > > the
-> > > current LoongArch syscall ABI is now documented. A Simplified
-> > > Chinese
-> > > translation is included too.
-> > >=20
-> > > [1]: https://github.com/loongson/LoongArch-Documentation/issues/66
-> > >=20
-> > > WANG Xuerui (2):
-> > > =C2=A0=C2=A0 Documentation: LoongArch: Document the syscall ABI
-> > > =C2=A0=C2=A0 docs/zh_CN: LoongArch: Translate the syscall ABI doc
-> > >=20
-> > > =C2=A0 Documentation/loongarch/index.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
-> > > =C2=A0 Documentation/loongarch/syscall-abi.rst=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 | 36
-> > > ++++++++++++++++++
-> > > =C2=A0 .../translations/zh_CN/loongarch/index.rst=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 1 +
-> > > =C2=A0 .../zh_CN/loongarch/syscall-abi.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 37
-> > > +++++++++++++++++++
-> > > =C2=A0 4 files changed, 75 insertions(+)
-> > > =C2=A0 create mode 100644 Documentation/loongarch/syscall-abi.rst
-> > > =C2=A0 create mode 100644
-> > > Documentation/translations/zh_CN/loongarch/syscall-abi.rst
-> > Would you like me to take these through the docs tree?
-> That's fine by me, thanks. I'll send a v2 in the weekend (likely=20
-> tomorrow) for the people who have commented to give their R-b's.
+R2VudGxlIFBpbmcgOikuCgpPbiBTYXQsIDIwMjItMTEtMDUgYXQgMTA6MTUgKzA4MDAsIFhpIFJ1
+b3lhbyB3cm90ZToKPiBMaW5rOgo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xvb25nYXJjaC8x
+ZjM1MzY3OC0zMzk4LWUzMGItMWM4Ny02ZWRiMjc4Zjc0ZGJAeGVuMG4ubmFtZS8KPiBMaW5rOgo+
+IGh0dHBzOi8vc291cmNld2FyZS5vcmcvZ2l0Lz9wPWdsaWJjLmdpdDthPWJsb2I7Zj1zeXNkZXBz
+L3VuaXgvc3lzdi9saW51eC9sb29uZ2FyY2gvc3lzZGVwLmgKPiBTaWduZWQtb2ZmLWJ5OiBYaSBS
+dW95YW8gPHhyeTExMUB4cnkxMTEuc2l0ZT4KPiAtLS0KPiDCoG1hbjIvc3lzY2FsbC4yIHwgMiAr
+Kwo+IMKgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9t
+YW4yL3N5c2NhbGwuMiBiL21hbjIvc3lzY2FsbC4yCj4gaW5kZXggMWJhYzBiOWQ3Li5hMmFlZjZk
+MzMgMTAwNjQ0Cj4gLS0tIGEvbWFuMi9zeXNjYWxsLjIKPiArKysgYi9tYW4yL3N5c2NhbGwuMgo+
+IEBAIC0xNzYsNiArMTc2LDcgQEAgYXJtNjTCoMKgwqDCoMKgwqDCoHN2YyAjMMKgwqB3OMKgwqDC
+oMKgwqDCoHgwwqDCoMKgwqDCoMKgeDHCoMKgwqDCoMKgwqAtCj4gwqBibGFja2ZpbsKgwqDCoMKg
+wqDCoMKgZXhjcHQgMHgwwqDCoMKgwqDCoMKgwqBQMMKgwqDCoMKgwqDCoFIwwqDCoMKgwqDCoMKg
+LcKgwqDCoMKgwqDCoMKgLQo+IMKgaTM4NsKgwqDCoGludCAkMHg4MMKgwqDCoMKgwqDCoMKgZWF4
+wqDCoMKgwqDCoGVheMKgwqDCoMKgwqBlZHjCoMKgwqDCoMKgLQo+IMKgaWE2NMKgwqDCoGJyZWFr
+IDB4MTAwMDAwwqDCoHIxNcKgwqDCoMKgwqByOMKgwqDCoMKgwqDCoHI5wqDCoMKgwqDCoMKgcjEw
+wqDCoMKgwqDCoDEsIDYKPiArbG9vbmdhcmNowqDCoMKgwqDCoMKgc3lzY2FsbCAwwqDCoMKgwqDC
+oMKgwqBhN8KgwqDCoMKgwqDCoGEwwqDCoMKgwqDCoMKgLcKgwqDCoMKgwqDCoMKgLQo+IMKgbTY4
+a8KgwqDCoHRyYXAgIzDCoGQwwqDCoMKgwqDCoMKgZDDCoMKgwqDCoMKgwqAtwqDCoMKgwqDCoMKg
+wqAtCj4gwqBtaWNyb2JsYXplwqDCoMKgwqDCoGJya2kgcjE0LDjCoMKgwqDCoMKgwqByMTLCoMKg
+wqDCoMKgcjPCoMKgwqDCoMKgwqAtwqDCoMKgwqDCoMKgwqAtCj4gwqBtaXBzwqDCoMKgc3lzY2Fs
+bMKgdjDCoMKgwqDCoMKgwqB2MMKgwqDCoMKgwqDCoHYxwqDCoMKgwqDCoMKgYTPCoMKgwqDCoMKg
+wqAxLCA2Cj4gQEAgLTMwMSw2ICszMDIsNyBAQAo+IGFybTY0wqDCoMKgwqDCoMKgwqB4MMKgwqDC
+oMKgwqDCoHgxwqDCoMKgwqDCoMKgeDLCoMKgwqDCoMKgwqB4M8KgwqDCoMKgwqDCoHg0wqDCoMKg
+wqDCoMKgeDXCoMKgwqDCoMKgwqAtCj4gwqBibGFja2ZpbsKgwqDCoMKgwqDCoMKgUjDCoMKgwqDC
+oMKgwqBSMcKgwqDCoMKgwqDCoFIywqDCoMKgwqDCoMKgUjPCoMKgwqDCoMKgwqBSNMKgwqDCoMKg
+wqDCoFI1wqDCoMKgwqDCoMKgLQo+IMKgaTM4NsKgwqDCoGVieMKgwqDCoMKgwqBlY3jCoMKgwqDC
+oMKgZWR4wqDCoMKgwqDCoGVzacKgwqDCoMKgwqBlZGnCoMKgwqDCoMKgZWJwwqDCoMKgwqDCoC0K
+PiDCoGlhNjTCoMKgwqBvdXQwwqDCoMKgwqBvdXQxwqDCoMKgwqBvdXQywqDCoMKgwqBvdXQzwqDC
+oMKgwqBvdXQ0wqDCoMKgwqBvdXQ1wqDCoMKgwqAtCj4gK2xvb25nYXJjaMKgwqDCoMKgwqDCoGEw
+wqDCoMKgwqDCoMKgYTHCoMKgwqDCoMKgwqBhMsKgwqDCoMKgwqDCoGEzwqDCoMKgwqDCoMKgYTTC
+oMKgwqDCoMKgwqBhNcKgwqDCoMKgwqDCoGE2Cj4gwqBtNjhrwqDCoMKgZDHCoMKgwqDCoMKgwqBk
+MsKgwqDCoMKgwqDCoGQzwqDCoMKgwqDCoMKgZDTCoMKgwqDCoMKgwqBkNcKgwqDCoMKgwqDCoGEw
+wqDCoMKgwqDCoMKgLQo+IMKgbWljcm9ibGF6ZcKgwqDCoMKgwqByNcKgwqDCoMKgwqDCoHI2wqDC
+oMKgwqDCoMKgcjfCoMKgwqDCoMKgwqByOMKgwqDCoMKgwqDCoHI5wqDCoMKgwqDCoMKgcjEwwqDC
+oMKgwqDCoC0KPiDCoG1pcHMvbzMywqDCoMKgwqDCoMKgwqBhMMKgwqDCoMKgwqDCoGExwqDCoMKg
+wqDCoMKgYTLCoMKgwqDCoMKgwqBhM8KgwqDCoMKgwqDCoC3CoMKgwqDCoMKgwqDCoC3CoMKgwqDC
+oMKgwqDCoC0KPiDCoMKgwqDCoMKgwqDCoDEKCi0tIApYaSBSdW95YW8gPHhyeTExMUB4cnkxMTEu
+c2l0ZT4KU2Nob29sIG9mIEFlcm9zcGFjZSBTY2llbmNlIGFuZCBUZWNobm9sb2d5LCBYaWRpYW4g
+VW5pdmVyc2l0eQo=
 
-Ping ? :)
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
