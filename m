@@ -1,79 +1,99 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C1C749D
-	for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 17:40:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1668447639;
-	bh=VZVaUl9X4eZdGT6RfC1oQDK7UmkPBkc3qKH8A9luH/k=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=KTrB9eBQgoxr5DX0uUuzx/b90ylR+U+UWXz3hg3Vs+vUG85nnIUrazptCK3DRDE6W
-	 l/125yCHk6HuegQu58Eq14a4qFiMTtyWw8HpEySXBtvggi3RpOKJ0FEvMzgjlcZ3H7
-	 E1qDhM6SkBktByDII2A3cZqtUkifQMsXFFm9v5uc=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id EE49A6698D;
-	Mon, 14 Nov 2022 12:40:37 -0500 (EST)
-Message-ID: <3412acd8ea2f0f3ace22ae7a88b1782fca66aa39.camel@xry111.site>
-Subject: Ping: [PATCH] syscall.2: add loongarch
-From: Xi Ruoyao <xry111@xry111.site>
-To: Alejandro Colomar <alx@kernel.org>, Michael Kerrisk
- <mtk.manpages@gmail.com>
-Cc: linux-man@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, Wang
- Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Date: Tue, 15 Nov 2022 01:40:35 +0800
-In-Reply-To: <20221105021514.8344-1-xry111@xry111.site>
-References: <20221105021514.8344-1-xry111@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.46.0 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB1A847C
+	for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 20:09:39 +0000 (UTC)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id 9B0CA5C01C0;
+	Mon, 14 Nov 2022 15:09:38 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute3.internal (MEProxy); Mon, 14 Nov 2022 15:09:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm3; t=1668456578; x=1668542978; bh=LR9Oot9dV3
+	p/sGrwT31gG+j2rSTcoLkSED15p73795Q=; b=RUB0ESW0+BaX89e0krEsUsA8CK
+	AtInxoM2OwKTrBQgSoo5CfTbwvoUSqrj7Ymk5AYhFFZsKP6LQ8i+meOKeqnHLnzD
+	0QPRCcHTe6yetyDdVOApBAV5sHyI2D5Yfgc9sBtmts6qkui+tHWYEOGq8ZgxmyC0
+	NK3hve5GjiHRruNtrBkPAPsQinOf/VlwqoGOnbyEtPtuDsQMCZ0kqHw/GxRn8AVN
+	gYcl2BgrV7/hQtPns4X7RCQIYPbLKEYXSjcJypnaJ/1ZR1uxsBbZITuXQmcbPJlj
+	BRRkTft6f9xDzmoMgfEAYl9KJ1DMxrsBqBYAQKMLIE/ecz/lnjuJhWNleekg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1668456578; x=1668542978; bh=LR9Oot9dV3p/sGrwT31gG+j2rSTc
+	oLkSED15p73795Q=; b=kYinAXvfb+bPRrjG7hkwa9rTdjFzIj9MOLKIheleg5zx
+	doSjGVh9eCju4S4p/HNIxH4RYpCshd6tJvUpT+1cr3nfmDVZhbrtWSOMCVnl6adM
+	ZYkAarikNUPtlET21y7dZkUHRIIQK1denE39eBNhX9zBMwyAMZDs0yEaCGBtuQDK
+	Cl25Dm/wdRgiaVApo7ySyrU/BeDgT4ng5AE51/iOBKbQMC18JGeXKw2CiHi9zVjn
+	2CC2JwuUqH8KYwPb7+OEneUFzqCcpkWG9X8ZSOwzkG+2U6AfCI1ao0fx5nUtD/vj
+	4JaBnMB34YjIq17SLXH0kG695nryUoO3e6qVqDVisA==
+X-ME-Sender: <xms:gKByYym7c_GDr5IHfpqCH2cI1U9lt0Hr98AdbpVG2oy1uyNr1kzl7w>
+    <xme:gKByY52iLygN_eOjANO3Oyzv2nl99rEkyBVHDzTqzMonAvBpxWZzdWkvKQcJxG2wK
+    9XbjhLe7R2FUi2gBS8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrgedvgddutdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:gaByYwqjfe79TcWGfeLK01KCJg-5_ksdvP5rBoMGSNgASwWJz9GSAg>
+    <xmx:gaByY2nTFKoumcd73d_Clr3Z7bbaSaax-UFKgenDelwPQGvAjlT-yw>
+    <xmx:gaByYw0e3k_0RYin8FvbOrTcgUnSzaxFivvpxISivdV6cuwayNp2Hw>
+    <xmx:gqByY3s31fBP0SRr3lSBoFnh1H8PTix3wNenZJ8w3h6CMb-9lnPpfw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id EB13DB60086; Mon, 14 Nov 2022 15:09:36 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Message-Id: <b9c0711c-6efc-4d84-af4e-62e585ac2fa6@app.fastmail.com>
+In-Reply-To: 
+ <CAAhV-H4Y5qHSXr2uHvMYpXMgvm5fU7WQmcALB+86OYkgM1XbOg@mail.gmail.com>
+References: <20221027125253.3458989-1-chenhuacai@loongson.cn>
+ <CAAhV-H4Y5qHSXr2uHvMYpXMgvm5fU7WQmcALB+86OYkgM1XbOg@mail.gmail.com>
+Date: Mon, 14 Nov 2022 21:09:16 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Huacai Chen" <chenhuacai@kernel.org>,
+ "Huacai Chen" <chenhuacai@loongson.cn>
+Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "Andy Lutomirski" <luto@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Dinh Nguyen" <dinguyen@kernel.org>, loongarch@lists.linux.dev,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "Xuefeng Li" <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ "Feiyang Chen" <chenfeiyang@loongson.cn>
+Subject: Re: [PATCH V14 0/4] mm/sparse-vmemmap: Generalise helpers and enable for
+ LoongArch
+Content-Type: text/plain
 
-R2VudGxlIFBpbmcgOikuCgpPbiBTYXQsIDIwMjItMTEtMDUgYXQgMTA6MTUgKzA4MDAsIFhpIFJ1
-b3lhbyB3cm90ZToKPiBMaW5rOgo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xvb25nYXJjaC8x
-ZjM1MzY3OC0zMzk4LWUzMGItMWM4Ny02ZWRiMjc4Zjc0ZGJAeGVuMG4ubmFtZS8KPiBMaW5rOgo+
-IGh0dHBzOi8vc291cmNld2FyZS5vcmcvZ2l0Lz9wPWdsaWJjLmdpdDthPWJsb2I7Zj1zeXNkZXBz
-L3VuaXgvc3lzdi9saW51eC9sb29uZ2FyY2gvc3lzZGVwLmgKPiBTaWduZWQtb2ZmLWJ5OiBYaSBS
-dW95YW8gPHhyeTExMUB4cnkxMTEuc2l0ZT4KPiAtLS0KPiDCoG1hbjIvc3lzY2FsbC4yIHwgMiAr
-Kwo+IMKgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9t
-YW4yL3N5c2NhbGwuMiBiL21hbjIvc3lzY2FsbC4yCj4gaW5kZXggMWJhYzBiOWQ3Li5hMmFlZjZk
-MzMgMTAwNjQ0Cj4gLS0tIGEvbWFuMi9zeXNjYWxsLjIKPiArKysgYi9tYW4yL3N5c2NhbGwuMgo+
-IEBAIC0xNzYsNiArMTc2LDcgQEAgYXJtNjTCoMKgwqDCoMKgwqDCoHN2YyAjMMKgwqB3OMKgwqDC
-oMKgwqDCoHgwwqDCoMKgwqDCoMKgeDHCoMKgwqDCoMKgwqAtCj4gwqBibGFja2ZpbsKgwqDCoMKg
-wqDCoMKgZXhjcHQgMHgwwqDCoMKgwqDCoMKgwqBQMMKgwqDCoMKgwqDCoFIwwqDCoMKgwqDCoMKg
-LcKgwqDCoMKgwqDCoMKgLQo+IMKgaTM4NsKgwqDCoGludCAkMHg4MMKgwqDCoMKgwqDCoMKgZWF4
-wqDCoMKgwqDCoGVheMKgwqDCoMKgwqBlZHjCoMKgwqDCoMKgLQo+IMKgaWE2NMKgwqDCoGJyZWFr
-IDB4MTAwMDAwwqDCoHIxNcKgwqDCoMKgwqByOMKgwqDCoMKgwqDCoHI5wqDCoMKgwqDCoMKgcjEw
-wqDCoMKgwqDCoDEsIDYKPiArbG9vbmdhcmNowqDCoMKgwqDCoMKgc3lzY2FsbCAwwqDCoMKgwqDC
-oMKgwqBhN8KgwqDCoMKgwqDCoGEwwqDCoMKgwqDCoMKgLcKgwqDCoMKgwqDCoMKgLQo+IMKgbTY4
-a8KgwqDCoHRyYXAgIzDCoGQwwqDCoMKgwqDCoMKgZDDCoMKgwqDCoMKgwqAtwqDCoMKgwqDCoMKg
-wqAtCj4gwqBtaWNyb2JsYXplwqDCoMKgwqDCoGJya2kgcjE0LDjCoMKgwqDCoMKgwqByMTLCoMKg
-wqDCoMKgcjPCoMKgwqDCoMKgwqAtwqDCoMKgwqDCoMKgwqAtCj4gwqBtaXBzwqDCoMKgc3lzY2Fs
-bMKgdjDCoMKgwqDCoMKgwqB2MMKgwqDCoMKgwqDCoHYxwqDCoMKgwqDCoMKgYTPCoMKgwqDCoMKg
-wqAxLCA2Cj4gQEAgLTMwMSw2ICszMDIsNyBAQAo+IGFybTY0wqDCoMKgwqDCoMKgwqB4MMKgwqDC
-oMKgwqDCoHgxwqDCoMKgwqDCoMKgeDLCoMKgwqDCoMKgwqB4M8KgwqDCoMKgwqDCoHg0wqDCoMKg
-wqDCoMKgeDXCoMKgwqDCoMKgwqAtCj4gwqBibGFja2ZpbsKgwqDCoMKgwqDCoMKgUjDCoMKgwqDC
-oMKgwqBSMcKgwqDCoMKgwqDCoFIywqDCoMKgwqDCoMKgUjPCoMKgwqDCoMKgwqBSNMKgwqDCoMKg
-wqDCoFI1wqDCoMKgwqDCoMKgLQo+IMKgaTM4NsKgwqDCoGVieMKgwqDCoMKgwqBlY3jCoMKgwqDC
-oMKgZWR4wqDCoMKgwqDCoGVzacKgwqDCoMKgwqBlZGnCoMKgwqDCoMKgZWJwwqDCoMKgwqDCoC0K
-PiDCoGlhNjTCoMKgwqBvdXQwwqDCoMKgwqBvdXQxwqDCoMKgwqBvdXQywqDCoMKgwqBvdXQzwqDC
-oMKgwqBvdXQ0wqDCoMKgwqBvdXQ1wqDCoMKgwqAtCj4gK2xvb25nYXJjaMKgwqDCoMKgwqDCoGEw
-wqDCoMKgwqDCoMKgYTHCoMKgwqDCoMKgwqBhMsKgwqDCoMKgwqDCoGEzwqDCoMKgwqDCoMKgYTTC
-oMKgwqDCoMKgwqBhNcKgwqDCoMKgwqDCoGE2Cj4gwqBtNjhrwqDCoMKgZDHCoMKgwqDCoMKgwqBk
-MsKgwqDCoMKgwqDCoGQzwqDCoMKgwqDCoMKgZDTCoMKgwqDCoMKgwqBkNcKgwqDCoMKgwqDCoGEw
-wqDCoMKgwqDCoMKgLQo+IMKgbWljcm9ibGF6ZcKgwqDCoMKgwqByNcKgwqDCoMKgwqDCoHI2wqDC
-oMKgwqDCoMKgcjfCoMKgwqDCoMKgwqByOMKgwqDCoMKgwqDCoHI5wqDCoMKgwqDCoMKgcjEwwqDC
-oMKgwqDCoC0KPiDCoG1pcHMvbzMywqDCoMKgwqDCoMKgwqBhMMKgwqDCoMKgwqDCoGExwqDCoMKg
-wqDCoMKgYTLCoMKgwqDCoMKgwqBhM8KgwqDCoMKgwqDCoC3CoMKgwqDCoMKgwqDCoC3CoMKgwqDC
-oMKgwqDCoC0KPiDCoMKgwqDCoMKgwqDCoDEKCi0tIApYaSBSdW95YW8gPHhyeTExMUB4cnkxMTEu
-c2l0ZT4KU2Nob29sIG9mIEFlcm9zcGFjZSBTY2llbmNlIGFuZCBUZWNobm9sb2d5LCBYaWRpYW4g
-VW5pdmVyc2l0eQo=
+On Sat, Nov 12, 2022, at 11:26, Huacai Chen wrote:
+> Hi, Arnd,
+>
+> Just a gentle ping, is this series good enough now? I think the last
+> problem (static-key.h inclusion) has also been solved.
 
+Yes, this looks fine to me. Sorry I didn't have this on my
+radar any more.
+
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+
+I guess the series should be merged through Andrew's linux-mm
+tree. Let me know if for some reason I should pick it up into
+the asm-generic tree instead.
+
+     Arnd
