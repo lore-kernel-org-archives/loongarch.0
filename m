@@ -1,145 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB17E7B
-	for <loongarch@lists.linux.dev>; Sat, 12 Nov 2022 10:26:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 882ACC433D7
-	for <loongarch@lists.linux.dev>; Sat, 12 Nov 2022 10:26:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1343010EB
+	for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 04:32:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB0D6C433B5
+	for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 04:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1668248816;
-	bh=xrGRndr6af8EK9Jo3B73sSAZkJjBqo9SLyX5L2AsDXo=;
+	s=k20201202; t=1668400325;
+	bh=EbegW7e7iQHObSeYBPdv3EstAC7CXPC2Nu8Y64xLSrs=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Wk/IDTu67XbsB1Zbtg3RTLNHbPhF27kjVlysCqZeGC4WuW3iQUtT7jFcM1CgHCvG3
-	 SGfTvvNi0CEVZGwHrjUpHouXi8cW0zI0iM5gs+YgsxNAoy2DTWeYpoWLxPn6cBWCNl
-	 tzqCwtF3ch49/2VHJCUQBOnawM/HqS9fCGp9A0j+NGGhcndbhiVGP1HETT0r+OSM+N
-	 y4d7fs0HBI1Z23KjIUoLyXao5XwEPhYrKyHB8pPZdieoz7gLtwCLBbNFpobHZ77gCq
-	 FCEBJcW/tNwrPv4y2uiOqx/cDrX9zAGbiMkF6Ua3TP6o2wqBffsMYTiesJNu6foPVD
-	 1YsL2di8hreTg==
-Received: by mail-ed1-f53.google.com with SMTP id u24so10766864edd.13
-        for <loongarch@lists.linux.dev>; Sat, 12 Nov 2022 02:26:56 -0800 (PST)
-X-Gm-Message-State: ANoB5pnnEzuwZHHK4pnszLLg/TWGHpz4HtMSlNd0bWvk08xSk9axyYJS
-	9LHfZVv7Ze0PGhnFWTgvTUWUC7mrzw5z+SStL6Q=
-X-Google-Smtp-Source: AA0mqf4cCb/rBaVNeOC4vccC3RXsFwpK0pA9R6rHmaDD09Q9QUoNwZ5iv4azux4dqBqbCV7wDGqTqPL3IdDKeOA1YDw=
-X-Received: by 2002:aa7:db85:0:b0:463:f3a:32ce with SMTP id
- u5-20020aa7db85000000b004630f3a32cemr4917828edt.366.1668248814780; Sat, 12
- Nov 2022 02:26:54 -0800 (PST)
+	b=bQ+kvjq7Lbc2Xr2dbJykl+/kSOp4/sxQd8iiCcBfA4XVOf3NIvyO2dNvVYB+/AsZk
+	 RcpM1vluQAMcbsrGRo0+ARRvDhKqZ9IXMEvYCkODixkCsYoXDq6qtP5dpG8HPLCSqo
+	 xoaQ+GG2/q9SnAR0ILC+VN+8kqOpCeRF2wKH9pXd248dxxke564W7a5BkE/Ohqn8rz
+	 6rovxzZYX6lt3SMOiIlWjAYrUZCUz7xSYijY+q1nX6C8VgQBDJHcJ0MZYu73YxiMv2
+	 t3C0XXnZbhS6mslGjKcN3LmKEUMN3Q9j0h16ap9qBLY/7Qg/2EiEwyjaPeZdKDcgoT
+	 B79uLgR3916cA==
+Received: by mail-ej1-f41.google.com with SMTP id k2so25556873ejr.2
+        for <loongarch@lists.linux.dev>; Sun, 13 Nov 2022 20:32:05 -0800 (PST)
+X-Gm-Message-State: ANoB5pmTTLKaG1Rii6yokbHRiOZdup/u8sT6pWmqQpx5IM8AZdDWvk9G
+	xv9uH3aB+Y+8k9PI5CPim5etswhfDB8wYwDn0Lo=
+X-Google-Smtp-Source: AA0mqf5mcW5etmwY+P5oEpsUpHexU3+Y/WyhcfZzap1uWYoO5Y2h2or0GzoGKIGMQkpZGfFAQvRmEZJcP9DKyF5x+CE=
+X-Received: by 2002:a17:906:a20c:b0:7ae:27a7:2a66 with SMTP id
+ r12-20020a170906a20c00b007ae27a72a66mr9181411ejy.72.1668400323862; Sun, 13
+ Nov 2022 20:32:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221027125253.3458989-1-chenhuacai@loongson.cn>
-In-Reply-To: <20221027125253.3458989-1-chenhuacai@loongson.cn>
+References: <1664326209-13995-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1664326209-13995-1-git-send-email-yangtiezhu@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 12 Nov 2022 18:26:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Y5qHSXr2uHvMYpXMgvm5fU7WQmcALB+86OYkgM1XbOg@mail.gmail.com>
-Message-ID: <CAAhV-H4Y5qHSXr2uHvMYpXMgvm5fU7WQmcALB+86OYkgM1XbOg@mail.gmail.com>
-Subject: Re: [PATCH V14 0/4] mm/sparse-vmemmap: Generalise helpers and enable
- for LoongArch
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, loongarch@lists.linux.dev, 
-	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Feiyang Chen <chenfeiyang@loongson.cn>
+Date: Mon, 14 Nov 2022 12:31:51 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H47oPC6mYkeDh7NfmvL2jAHO32ugM-PK2mmFY6XdqF8_Q@mail.gmail.com>
+Message-ID: <CAAhV-H47oPC6mYkeDh7NfmvL2jAHO32ugM-PK2mmFY6XdqF8_Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Add kprobe and kretprobe support for LoongArch
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hi, Arnd,
+Hi, Tiezhu,
 
-Just a gentle ping, is this series good enough now? I think the last
-problem (static-key.h inclusion) has also been solved.
+Thanks for your patches, however,
+1, You should rebase your code, since some functions such as
+is_pc_insn is provided in the github's loongarch-next branch;
+2, Your code may have some problems about preemption, you can do
+something like this commit [1];
+3, I don't think Kprobe should be enabled by default, distribution
+configs can enable it if needed.
 
+[1] https://github.com/loongson/linux/commit/023d5412ab5c154b87d57d70d465a4243df53717
 
 Huacai
 
-On Thu, Oct 27, 2022 at 8:54 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
+On Wed, Sep 28, 2022 at 8:50 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 >
-> This series is in order to enable sparse-vmemmap for LoongArch. But
-> LoongArch cannot use generic helpers directly because MIPS&LoongArch
-> need to call pgd_init()/pud_init()/pmd_init() when populating page
-> tables. So we adjust the prototypes of p?d_init() to make generic
-> helpers can call them, then enable sparse-vmemmap with generic helpers,
-> and to be further, generalise vmemmap_populate_hugepages() for ARM64,
-> X86 and LoongArch.
+> v2:
+>   -- Split simu_branch() and simu_pc() into a single patch
+>   -- Call kprobe_page_fault() in do_page_fault()
+>   -- Add kprobes_trampoline.S for kretprobe
 >
-> V1 -> V2:
-> Split ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP to a separate patch.
+> Tiezhu Yang (5):
+>   LoongArch: Simulate branch and PC instructions
+>   LoongArch: Add kprobe support
+>   LoongArch: Add kretprobe support
+>   samples/kprobes: Add LoongArch support
+>   LoongArch: Enable KPROBES in default config
 >
-> V2 -> V3:
-> 1, Change the Signed-off-by order of author and committer;
-> 2, Update commit message about the build error on LoongArch.
+>  arch/loongarch/Kconfig                     |   2 +
+>  arch/loongarch/configs/loongson3_defconfig |   1 +
+>  arch/loongarch/include/asm/inst.h          |  31 +++
+>  arch/loongarch/include/asm/kprobes.h       |  44 ++++
+>  arch/loongarch/include/asm/ptrace.h        |   1 +
+>  arch/loongarch/kernel/Makefile             |   2 +
+>  arch/loongarch/kernel/inst.c               | 113 ++++++++++
+>  arch/loongarch/kernel/kprobes.c            | 336 +++++++++++++++++++++++++++++
+>  arch/loongarch/kernel/kprobes_trampoline.S |  97 +++++++++
+>  arch/loongarch/mm/fault.c                  |   3 +
+>  samples/kprobes/kprobe_example.c           |   8 +
+>  11 files changed, 638 insertions(+)
+>  create mode 100644 arch/loongarch/include/asm/kprobes.h
+>  create mode 100644 arch/loongarch/kernel/kprobes.c
+>  create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
 >
-> V3 -> V4:
-> Change pmd to pmdp for ARM64 for consistency.
->
-> V4 -> V5:
-> Add a detailed comment for no-fallback in the altmap case.
->
-> V5 -> V6:
-> 1, Fix build error for NIOS2;
-> 2, Fix build error for allnoconfig;
-> 3, Update comment for no-fallback in the altmap case.
->
-> V6 -> V7:
-> Fix build warnings of "no previous prototype".
->
-> V7 -> V8:
-> Fix build error for MIPS pud_init().
->
-> V8 -> V9:
-> Remove redundant #include to avoid build error with latest upstream
-> kernel.
->
-> V9 -> V10:
-> Fix build error due to VMEMMAP changes in 6.0-rc1.
->
-> V10 -> V11:
-> Adjust context due to ARM64 changes in 6.1-rc1.
->
-> V11 -> V12:
-> 1, Fix build error for !SPARSEMEM;
-> 2, Simplify pagetable_init() for MIPS32.
->
-> V12 -> V13:
-> 1, Add Acked-by and Reviewed-by tags;
-> 2, Update commit message for the 4th patch.
->
-> V13 -> V14:
-> Remove the static_key.h inclusion in the 4th patch.
->
-> Huacai Chen and Feiyang Chen(4):
->  MIPS&LoongArch&NIOS2: Adjust prototypes of p?d_init().
->  LoongArch: Add sparse memory vmemmap support.
->  mm/sparse-vmemmap: Generalise vmemmap_populate_hugepages().
->  LoongArch: Enable ARCH_WANT_HUGETLB_PAGE_OPTIMIZE_VMEMMAP.
->
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-> ---
->  arch/arm64/mm/mmu.c                    | 53 ++++++--------------
->  arch/loongarch/Kconfig                 |  2 +
->  arch/loongarch/include/asm/pgalloc.h   | 13 +----
->  arch/loongarch/include/asm/pgtable.h   | 13 +++--
->  arch/loongarch/include/asm/sparsemem.h |  8 +++
->  arch/loongarch/kernel/numa.c           |  4 +-
->  arch/loongarch/mm/init.c               | 44 +++++++++++++++-
->  arch/loongarch/mm/pgtable.c            | 23 +++++----
->  arch/mips/include/asm/pgalloc.h        |  8 +--
->  arch/mips/include/asm/pgtable-64.h     |  8 +--
->  arch/mips/kvm/mmu.c                    |  3 +-
->  arch/mips/mm/pgtable-32.c              | 10 ++--
->  arch/mips/mm/pgtable-64.c              | 18 ++++---
->  arch/mips/mm/pgtable.c                 |  2 +-
->  arch/x86/mm/init_64.c                  | 92 ++++++++++++----------------------
->  include/linux/mm.h                     |  8 +++
->  include/linux/page-flags.h             |  1 +
->  mm/sparse-vmemmap.c                    | 64 +++++++++++++++++++++++
->  18 files changed, 222 insertions(+), 152 deletions(-)
 > --
-> 2.27.0
+> 2.1.0
 >
