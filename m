@@ -1,117 +1,140 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014687C
-	for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 00:46:30 +0000 (UTC)
-Received: by mail-pf1-f177.google.com with SMTP id b185so12628441pfb.9
-        for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 16:46:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=bd5hPyKD2PPr7KyKwYzFS26oIX92ytADq1HkbV02UjM=;
-        b=O1sOJD8rtP4IH4Yi70eGOrg+RsIrPwaSI+E7lsjchaR0vsIk4OcsTePfrD0GDQ6/ok
-         MQcEhTNegM2MgZX6an+q4qFrc0TLFQKTcxlB5byx9V2OQmw/yqG2IxrUKZ4LJpkwjbqV
-         kpXYCE/q5gMp8Dr+etmQpZD5YdgbXCRcIi4dP1hseJ3Vc8FgbnoFeQgznEsFCZ8sc9C/
-         +Aq7UmleDQFCoHsOpxUqFAILq0h693d7cSqfrvEGcQEJdSL70r75p1CQVdbYcraVP6Vv
-         afDwyZksFmO4iq1RAE78LdBL2zCtVUGqKVr5AbYHWRKQe4sZ3haM6vxe+yhoW+EegNn8
-         SrVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bd5hPyKD2PPr7KyKwYzFS26oIX92ytADq1HkbV02UjM=;
-        b=qkLLl12HJ6ye40Nx4/XfqnAgn2Mdw7OiNre+dqnQcIEDSU7QivaieUdIC0FhHMgju3
-         ZIGHrmbu6eAheV2JEAby++1ldMXq1mN4effE5kThOHbf5aJ//Gwbi8gu1fDRrNO26z/X
-         2md+CgXreVzisC6ixJcyHEvXZg1gBtru2MIamSP+6TKADWMfFpy+QEfqw4kTHYRbuiKP
-         jH2wUWH4ZZDMi+rWhIUFftswripJrj3l3KW+i8KAwGINYFPLOcjO7n8ZcGX04Bixfgqu
-         Rjh1EPoD5SePG9EwWSdPVFTCN5HtYLrwd5YUHKj6PDDsBydfGn500xOlmvCNJ1jAGCC2
-         zOVg==
-X-Gm-Message-State: ANoB5plaHWILQEns8q0lTSkIXghQZ9pOwL/ofJZ9q/4sC7tMPcKMxGSZ
-	f/yOAw737vzh1NU3uJpRJZmC5g==
-X-Google-Smtp-Source: AA0mqf6nOJ9c9LDWbjxDMBFuDEMN03fiqfa60Tgw1kwrGN5DHzLmvSOo+bF6ZKKp/POWOk+fWmlLwQ==
-X-Received: by 2002:a63:ce04:0:b0:46f:1081:f517 with SMTP id y4-20020a63ce04000000b0046f1081f517mr14083794pgf.297.1668473190230;
-        Mon, 14 Nov 2022 16:46:30 -0800 (PST)
-Received: from google.com ([2620:15c:2ce:200:d6b2:571a:fff:f8d4])
-        by smtp.gmail.com with ESMTPSA id s30-20020a17090a69a100b00217cdc4b0a5sm10323493pjj.16.2022.11.14.16.46.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Nov 2022 16:46:29 -0800 (PST)
-Date: Mon, 14 Nov 2022 16:46:25 -0800
-From: Fangrui Song <maskray@google.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andy Lutomirski <luto@kernel.org>,
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] vdso: Improve cmd_vdso_check to check all dynamic
- relocations
-Message-ID: <20221115004625.x4wl6zbg4iiuxl5t@google.com>
-References: <20220830193701.1702962-1-maskray@google.com>
- <20220910075316.no72fdyqjvunomwm@google.com>
- <CAFP8O3+OwanSJdzd5V3oGJ_MOJOSVdbn+4iBJJKm2LCR8mCA0Q@mail.gmail.com>
- <9ce45cd2-dcd8-11f8-e496-7efe3649e241@csgroup.eu>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECA791FAE
+	for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 02:55:30 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Dxvref_3JjXh8HAA--.16416S3;
+	Tue, 15 Nov 2022 10:55:27 +0800 (CST)
+Received: from localhost.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLuKf_3JjmywTAA--.51398S2;
+	Tue, 15 Nov 2022 10:55:27 +0800 (CST)
+From: Qing Zhang <zhangqing@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/9] LoongArch: Add ftrace support
+Date: Tue, 15 Nov 2022 10:55:18 +0800
+Message-Id: <20221115025527.13382-1-zhangqing@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9ce45cd2-dcd8-11f8-e496-7efe3649e241@csgroup.eu>
+X-CM-TRANSID:AQAAf8CxLuKf_3JjmywTAA--.51398S2
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXFyDuw4UKr1ruw17XF1UZFb_yoWrJrWDpr
+	W3ZFn3Gr4UCFs3twnxK34rurn5Ar1xCryaq3ZxJryrCr47Zr1UXw1ktrykXa45t393Gry0
+	qF1rWw42gF4qva7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
 
-On 2022-11-14, Christophe Leroy wrote:
->
->
->Le 28/09/2022 à 07:25, Fangrui Song a écrit :
->> On Sat, Sep 10, 2022 at 12:53 AM Fangrui Song <maskray@google.com> wrote:
->>>
->>> On 2022-08-30, Fangrui Song wrote:
->>>> The actual intention is that no dynamic relocation exists. However, some
->>>> GNU ld ports produce unneeded R_*_NONE. (If a port is not care enough to
->>>> determine the exact .rel[a].dyn size, the trailing zeros become R_*_NONE
->>>> relocations. E.g. powerpc64le ld as of 2.38 has the issue with
->>>> defconfig.) R_*_NONE are generally no-op in the dynamic loaders. So just
->>>> ignore them.
->>>>
->>>> With the change, we can remove ARCH_REL_TYPE_ABS. ARCH_REL_TYPE_ABS is a
->>>> bit misnomer as ports may check RELAVETIVE/GLOB_DAT/JUMP_SLOT which are
->>>> not called "absolute relocations". (The patch is motivated by the arm64
->>>> port missing R_AARCH64_RELATIVE.)
->>>>
->>>> While here, replace "egrep" with "grep" as "egrep" is deprecated in GNU
->>>> grep 3.7.
->>>>
->>>> Signed-off-by: Fangrui Song <maskray@google.com>
->>>> ---
->>>> [...]
->>>>
->>>
->>> Ping.
->>
->> Ping^2 :)
->
->Can you explain which ARCH_REL_TYPE_ABS can be removed with this change ?
->How is the verification done if ARCH_REL_TYPE_ABS is removed ?
+This patch series to support basic and dynamic ftrace.
 
-All ARCH_REL_TYPE_ABS relocation types can be removed. As explained, the
-real intention is to check no dynamic relocation, and this is done by
-the new
+1) -pg
+Use `-pg` makes stub like a child function `void _mcount(void *ra)`.
+Thus, it can be seen store RA and open stack before `call _mcount`.
+Find `open stack` at first, and then find `store RA`.
 
-   cmd_vdso_check = if $(READELF) -rW $@ | grep -v _NONE | grep -q "R_\w*_"; \
+2) -fpatchable-function-entry=2
+The compiler has inserted 2 NOPs before the regular function prologue.
+T series registers are available and safe because of LoongArch psABI.
 
-in this patch.
+At runtime, replace nop with bl to enable ftrace call and replace bl with
+nop to disable ftrace call. The bl requires us to save the original RA value,
+so here it saves RA at t0.
+details are:
 
-grep -v _NONE is to work around some GNU ld ports (and likely older releases
-of some ports even if their latest versions are fixed) which produce
-unneeded R_*_NONE dynamic relocations.
+| Compiled   |       Disabled         |        Enabled         |
++------------+------------------------+------------------------+
+| nop        | move     t0, ra        | move     t0, ra        |
+| nop        | nop                    | bl      ftrace_caller  |
+| func_body  | func_body              | func_body              |
+
+The RA value will be recovered by ftrace_regs_entry, and restored into RA
+before returning to the regular function prologue. When a function is not
+being traced, the move t0, ra is not harmful.
+
+performs a series of startup tests on ftrace and The test cases in selftests
+has passed on LoongArch.
+
+Changes in v2:
+ - Remove patch "LoongArch: ftrace: Add CALLER_ADDRx macros" there are other
+   better ways
+ Suggested by Steve:
+ - Add HAVE_DYNAMIC_FTRACE_WITH_ARGS support (6/10)
+ Suggested by Jinyang:
+ - Change addu16id to lu12iw and Adjust module_finalize return value (7/10)
+ - Use the "jr" pseudo-instruction where applicable (1/10)
+ - Use the "la.pcrel" instead of "la" (3/10)
+
+Changes in v3:
+ Reported by Jeff:
+ - Fix unwind state when option func_stack_trace (10/10)
+
+Changes in v4:
+ - No comments. Just resend the series.
+ - Rebased onto v6.0.0-rc4.
+
+Changes in v5:
+ - Modify the indentation of Kconfig and small changes
+
+Changes in v6:
+ Suggested by Huacai:
+ - Adjusting the patch Sequence
+ - renamed mcount-dyn.S for consistency
+
+Qing Zhang (9):
+  LoongArch/ftrace: Add basic support
+  LoongArch/ftrace: Add recordmcount support
+  LoongArch/ftrace: Add dynamic function tracer support
+  LoongArch/ftrace: Add dynamic function graph tracer support
+  LoongArch/ftrace: Add DYNAMIC_FTRACE_WITH_REGS support
+  LoongArch/ftrace: Add HAVE_DYNAMIC_FTRACE_WITH_ARGS support
+  LoongArch/ftrace: Add HAVE_FUNCTION_GRAPH_RET_ADDR_PTR support
+  LoongArch: modules/ftrace: Initialize PLT at load time
+  LoongArch: Enable CONFIG_KALLSYMS_ALL and CONFIG_DEBUG_FS
+
+ arch/loongarch/Kconfig                     |   7 +
+ arch/loongarch/Makefile                    |   5 +
+ arch/loongarch/configs/loongson3_defconfig |   2 +
+ arch/loongarch/include/asm/ftrace.h        |  61 +++++
+ arch/loongarch/include/asm/inst.h          |  18 ++
+ arch/loongarch/include/asm/module.h        |   5 +-
+ arch/loongarch/include/asm/module.lds.h    |   1 +
+ arch/loongarch/include/asm/unwind.h        |   3 +-
+ arch/loongarch/kernel/Makefile             |  13 +
+ arch/loongarch/kernel/ftrace.c             |  74 ++++++
+ arch/loongarch/kernel/ftrace_dyn.c         | 264 +++++++++++++++++++++
+ arch/loongarch/kernel/inst.c               | 127 ++++++++++
+ arch/loongarch/kernel/mcount-dyn.S         | 154 ++++++++++++
+ arch/loongarch/kernel/mcount.S             |  94 ++++++++
+ arch/loongarch/kernel/module-sections.c    |  11 +
+ arch/loongarch/kernel/module.c             |  22 ++
+ arch/loongarch/kernel/unwind_guess.c       |   4 +-
+ arch/loongarch/kernel/unwind_prologue.c    |  46 +++-
+ scripts/recordmcount.c                     |  23 ++
+ 19 files changed, 924 insertions(+), 10 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/ftrace.h
+ create mode 100644 arch/loongarch/kernel/ftrace.c
+ create mode 100644 arch/loongarch/kernel/ftrace_dyn.c
+ create mode 100644 arch/loongarch/kernel/mcount-dyn.S
+ create mode 100644 arch/loongarch/kernel/mcount.S
+
+-- 
+2.36.0
+
