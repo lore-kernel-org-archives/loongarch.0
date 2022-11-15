@@ -1,99 +1,117 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB1A847C
-	for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 20:09:39 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id 9B0CA5C01C0;
-	Mon, 14 Nov 2022 15:09:38 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Mon, 14 Nov 2022 15:09:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm3; t=1668456578; x=1668542978; bh=LR9Oot9dV3
-	p/sGrwT31gG+j2rSTcoLkSED15p73795Q=; b=RUB0ESW0+BaX89e0krEsUsA8CK
-	AtInxoM2OwKTrBQgSoo5CfTbwvoUSqrj7Ymk5AYhFFZsKP6LQ8i+meOKeqnHLnzD
-	0QPRCcHTe6yetyDdVOApBAV5sHyI2D5Yfgc9sBtmts6qkui+tHWYEOGq8ZgxmyC0
-	NK3hve5GjiHRruNtrBkPAPsQinOf/VlwqoGOnbyEtPtuDsQMCZ0kqHw/GxRn8AVN
-	gYcl2BgrV7/hQtPns4X7RCQIYPbLKEYXSjcJypnaJ/1ZR1uxsBbZITuXQmcbPJlj
-	BRRkTft6f9xDzmoMgfEAYl9KJ1DMxrsBqBYAQKMLIE/ecz/lnjuJhWNleekg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1668456578; x=1668542978; bh=LR9Oot9dV3p/sGrwT31gG+j2rSTc
-	oLkSED15p73795Q=; b=kYinAXvfb+bPRrjG7hkwa9rTdjFzIj9MOLKIheleg5zx
-	doSjGVh9eCju4S4p/HNIxH4RYpCshd6tJvUpT+1cr3nfmDVZhbrtWSOMCVnl6adM
-	ZYkAarikNUPtlET21y7dZkUHRIIQK1denE39eBNhX9zBMwyAMZDs0yEaCGBtuQDK
-	Cl25Dm/wdRgiaVApo7ySyrU/BeDgT4ng5AE51/iOBKbQMC18JGeXKw2CiHi9zVjn
-	2CC2JwuUqH8KYwPb7+OEneUFzqCcpkWG9X8ZSOwzkG+2U6AfCI1ao0fx5nUtD/vj
-	4JaBnMB34YjIq17SLXH0kG695nryUoO3e6qVqDVisA==
-X-ME-Sender: <xms:gKByYym7c_GDr5IHfpqCH2cI1U9lt0Hr98AdbpVG2oy1uyNr1kzl7w>
-    <xme:gKByY52iLygN_eOjANO3Oyzv2nl99rEkyBVHDzTqzMonAvBpxWZzdWkvKQcJxG2wK
-    9XbjhLe7R2FUi2gBS8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrgedvgddutdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:gaByYwqjfe79TcWGfeLK01KCJg-5_ksdvP5rBoMGSNgASwWJz9GSAg>
-    <xmx:gaByY2nTFKoumcd73d_Clr3Z7bbaSaax-UFKgenDelwPQGvAjlT-yw>
-    <xmx:gaByYw0e3k_0RYin8FvbOrTcgUnSzaxFivvpxISivdV6cuwayNp2Hw>
-    <xmx:gqByY3s31fBP0SRr3lSBoFnh1H8PTix3wNenZJ8w3h6CMb-9lnPpfw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id EB13DB60086; Mon, 14 Nov 2022 15:09:36 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014687C
+	for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 00:46:30 +0000 (UTC)
+Received: by mail-pf1-f177.google.com with SMTP id b185so12628441pfb.9
+        for <loongarch@lists.linux.dev>; Mon, 14 Nov 2022 16:46:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bd5hPyKD2PPr7KyKwYzFS26oIX92ytADq1HkbV02UjM=;
+        b=O1sOJD8rtP4IH4Yi70eGOrg+RsIrPwaSI+E7lsjchaR0vsIk4OcsTePfrD0GDQ6/ok
+         MQcEhTNegM2MgZX6an+q4qFrc0TLFQKTcxlB5byx9V2OQmw/yqG2IxrUKZ4LJpkwjbqV
+         kpXYCE/q5gMp8Dr+etmQpZD5YdgbXCRcIi4dP1hseJ3Vc8FgbnoFeQgznEsFCZ8sc9C/
+         +Aq7UmleDQFCoHsOpxUqFAILq0h693d7cSqfrvEGcQEJdSL70r75p1CQVdbYcraVP6Vv
+         afDwyZksFmO4iq1RAE78LdBL2zCtVUGqKVr5AbYHWRKQe4sZ3haM6vxe+yhoW+EegNn8
+         SrVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bd5hPyKD2PPr7KyKwYzFS26oIX92ytADq1HkbV02UjM=;
+        b=qkLLl12HJ6ye40Nx4/XfqnAgn2Mdw7OiNre+dqnQcIEDSU7QivaieUdIC0FhHMgju3
+         ZIGHrmbu6eAheV2JEAby++1ldMXq1mN4effE5kThOHbf5aJ//Gwbi8gu1fDRrNO26z/X
+         2md+CgXreVzisC6ixJcyHEvXZg1gBtru2MIamSP+6TKADWMfFpy+QEfqw4kTHYRbuiKP
+         jH2wUWH4ZZDMi+rWhIUFftswripJrj3l3KW+i8KAwGINYFPLOcjO7n8ZcGX04Bixfgqu
+         Rjh1EPoD5SePG9EwWSdPVFTCN5HtYLrwd5YUHKj6PDDsBydfGn500xOlmvCNJ1jAGCC2
+         zOVg==
+X-Gm-Message-State: ANoB5plaHWILQEns8q0lTSkIXghQZ9pOwL/ofJZ9q/4sC7tMPcKMxGSZ
+	f/yOAw737vzh1NU3uJpRJZmC5g==
+X-Google-Smtp-Source: AA0mqf6nOJ9c9LDWbjxDMBFuDEMN03fiqfa60Tgw1kwrGN5DHzLmvSOo+bF6ZKKp/POWOk+fWmlLwQ==
+X-Received: by 2002:a63:ce04:0:b0:46f:1081:f517 with SMTP id y4-20020a63ce04000000b0046f1081f517mr14083794pgf.297.1668473190230;
+        Mon, 14 Nov 2022 16:46:30 -0800 (PST)
+Received: from google.com ([2620:15c:2ce:200:d6b2:571a:fff:f8d4])
+        by smtp.gmail.com with ESMTPSA id s30-20020a17090a69a100b00217cdc4b0a5sm10323493pjj.16.2022.11.14.16.46.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Nov 2022 16:46:29 -0800 (PST)
+Date: Mon, 14 Nov 2022 16:46:25 -0800
+From: Fangrui Song <maskray@google.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andy Lutomirski <luto@kernel.org>,
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] vdso: Improve cmd_vdso_check to check all dynamic
+ relocations
+Message-ID: <20221115004625.x4wl6zbg4iiuxl5t@google.com>
+References: <20220830193701.1702962-1-maskray@google.com>
+ <20220910075316.no72fdyqjvunomwm@google.com>
+ <CAFP8O3+OwanSJdzd5V3oGJ_MOJOSVdbn+4iBJJKm2LCR8mCA0Q@mail.gmail.com>
+ <9ce45cd2-dcd8-11f8-e496-7efe3649e241@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <b9c0711c-6efc-4d84-af4e-62e585ac2fa6@app.fastmail.com>
-In-Reply-To: 
- <CAAhV-H4Y5qHSXr2uHvMYpXMgvm5fU7WQmcALB+86OYkgM1XbOg@mail.gmail.com>
-References: <20221027125253.3458989-1-chenhuacai@loongson.cn>
- <CAAhV-H4Y5qHSXr2uHvMYpXMgvm5fU7WQmcALB+86OYkgM1XbOg@mail.gmail.com>
-Date: Mon, 14 Nov 2022 21:09:16 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Huacai Chen" <chenhuacai@kernel.org>,
- "Huacai Chen" <chenhuacai@loongson.cn>
-Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "Andy Lutomirski" <luto@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Dinh Nguyen" <dinguyen@kernel.org>, loongarch@lists.linux.dev,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "Xuefeng Li" <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- "Feiyang Chen" <chenfeiyang@loongson.cn>
-Subject: Re: [PATCH V14 0/4] mm/sparse-vmemmap: Generalise helpers and enable for
- LoongArch
-Content-Type: text/plain
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9ce45cd2-dcd8-11f8-e496-7efe3649e241@csgroup.eu>
 
-On Sat, Nov 12, 2022, at 11:26, Huacai Chen wrote:
-> Hi, Arnd,
+On 2022-11-14, Christophe Leroy wrote:
 >
-> Just a gentle ping, is this series good enough now? I think the last
-> problem (static-key.h inclusion) has also been solved.
+>
+>Le 28/09/2022 à 07:25, Fangrui Song a écrit :
+>> On Sat, Sep 10, 2022 at 12:53 AM Fangrui Song <maskray@google.com> wrote:
+>>>
+>>> On 2022-08-30, Fangrui Song wrote:
+>>>> The actual intention is that no dynamic relocation exists. However, some
+>>>> GNU ld ports produce unneeded R_*_NONE. (If a port is not care enough to
+>>>> determine the exact .rel[a].dyn size, the trailing zeros become R_*_NONE
+>>>> relocations. E.g. powerpc64le ld as of 2.38 has the issue with
+>>>> defconfig.) R_*_NONE are generally no-op in the dynamic loaders. So just
+>>>> ignore them.
+>>>>
+>>>> With the change, we can remove ARCH_REL_TYPE_ABS. ARCH_REL_TYPE_ABS is a
+>>>> bit misnomer as ports may check RELAVETIVE/GLOB_DAT/JUMP_SLOT which are
+>>>> not called "absolute relocations". (The patch is motivated by the arm64
+>>>> port missing R_AARCH64_RELATIVE.)
+>>>>
+>>>> While here, replace "egrep" with "grep" as "egrep" is deprecated in GNU
+>>>> grep 3.7.
+>>>>
+>>>> Signed-off-by: Fangrui Song <maskray@google.com>
+>>>> ---
+>>>> [...]
+>>>>
+>>>
+>>> Ping.
+>>
+>> Ping^2 :)
+>
+>Can you explain which ARCH_REL_TYPE_ABS can be removed with this change ?
+>How is the verification done if ARCH_REL_TYPE_ABS is removed ?
 
-Yes, this looks fine to me. Sorry I didn't have this on my
-radar any more.
+All ARCH_REL_TYPE_ABS relocation types can be removed. As explained, the
+real intention is to check no dynamic relocation, and this is done by
+the new
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+   cmd_vdso_check = if $(READELF) -rW $@ | grep -v _NONE | grep -q "R_\w*_"; \
 
-I guess the series should be merged through Andrew's linux-mm
-tree. Let me know if for some reason I should pick it up into
-the asm-generic tree instead.
+in this patch.
 
-     Arnd
+grep -v _NONE is to work around some GNU ld ports (and likely older releases
+of some ports even if their latest versions are fixed) which produce
+unneeded R_*_NONE dynamic relocations.
