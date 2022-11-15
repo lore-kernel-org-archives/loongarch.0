@@ -1,338 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1ED23C9
-	for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 08:25:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66808C433C1
-	for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 08:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C3C1841
+	for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 08:31:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9484BC433D7
+	for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 08:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1668500730;
-	bh=tJfEHk8rABrktQjIUxMkI2IQVEnnGdJGnzgh5VVTYJM=;
+	s=k20201202; t=1668501110;
+	bh=HhcFH+cadi57qTWbydHQdoKaz29QoMHUVpKX9PxEtsg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FOUHizE1y4kPnorXu7T5R2g75GG0lVo6NORs+4FakRjgsTNVUlg498/PYUO0IDT9K
-	 eToC+73QlEobxoadmdzKdZuCegtAvn+ghuIZs1pFtesd6WxjsNWxczaT2KKFicjSME
-	 LKXhBvm0hRJnh4ndTkcZKyJ3/9aQbqmY7nlolz5XzUnl2DC77cU9S74sot8B19DfvU
-	 CLgvLBrbFUFsvjd7sKZe4S1AUgSmiWgr6mapdbjMeFdAF9+QYoLmyEX4ZFWLbQJJc7
-	 0sSzQakLanZyavQBQjbYpAvol8NaSGCqz1pdw6yVBhAw1i3RGsnAtc/Dk45cG7sufe
-	 Ocgx44vWwC4Pw==
-Received: by mail-ed1-f51.google.com with SMTP id 21so20842809edv.3
-        for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 00:25:30 -0800 (PST)
-X-Gm-Message-State: ANoB5pkmohUftpnMZcxtkSVcVm9mCuu3E/aJG7OSVxzIx/CeXT0aa8hY
-	x9pQ6eO5UJybqlftLM3INdQPFEb4rjbl+MWlzrs=
-X-Google-Smtp-Source: AA0mqf5wVCxpAllUMe2Lyh9WngGlaktw2In6sfv2mCFs+rzr850FDf3Qj8NcHG5D4LBZf11qghqTSy5fZBuCzEwAa5o=
-X-Received: by 2002:aa7:c983:0:b0:461:c6e8:452e with SMTP id
- c3-20020aa7c983000000b00461c6e8452emr13794089edt.298.1668500728564; Tue, 15
- Nov 2022 00:25:28 -0800 (PST)
+	b=A5CiupwYH8+BO8Nd/6yw0kQBMp/4zN7GL7KoQGLo6/9Vq1+tNz97T0oheaEAN2FDd
+	 WGBKiD0XS9Prx729B8lwDT31wLVTdOmrSmLfX+rmPj1qg31K+SBVoGzeJxLjaa7mNJ
+	 qlsTlGjpROnYtTA7XNPdDweRHP0Bp427g3+vk6pwZnXtHgTPNVTzMSJ/NGA2N/aR9T
+	 YruKv0ZSYd3gl6WWDM3qS3cNJYBPxfn+9oTpJcszdyOaQOAipU7BPumPjgSR/5pQvc
+	 Ut75Wy1hKHP0RN6M1mFuMKyFryvRaNTJvFJBOoz3FpeXt671+GAK6Nu3/pFkEE6fwx
+	 5/PD0m5HM0JVA==
+Received: by mail-ed1-f44.google.com with SMTP id l11so20845648edb.4
+        for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 00:31:50 -0800 (PST)
+X-Gm-Message-State: ANoB5pm+TGQHIWTzzNzhk+WyEwvpHPeuWRof9vINZnpu+wqovQXfjTT5
+	dSMnTMzqhjKY6BM3qQbtGjEBbihazS+yPLejkQg=
+X-Google-Smtp-Source: AA0mqf48zfzMA14DyPoh+Ghu+RUlJPZcKfa5azAGVTnXzRlBdVSZuqAE7DFsi2PIRKckonj7bDwcYXCWZ8wwqZTKgY8=
+X-Received: by 2002:a05:6402:3715:b0:462:32bf:613a with SMTP id
+ ek21-20020a056402371500b0046232bf613amr13628347edb.78.1668501108788; Tue, 15
+ Nov 2022 00:31:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221115025527.13382-1-zhangqing@loongson.cn> <20221115025527.13382-2-zhangqing@loongson.cn>
-In-Reply-To: <20221115025527.13382-2-zhangqing@loongson.cn>
+References: <20221115025527.13382-1-zhangqing@loongson.cn> <20221115025527.13382-10-zhangqing@loongson.cn>
+In-Reply-To: <20221115025527.13382-10-zhangqing@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 15 Nov 2022 16:25:15 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7JxZ9SAVXGLgY3sMo9jtuANxQqu4_o2FrBBfN-Kf=VFw@mail.gmail.com>
-Message-ID: <CAAhV-H7JxZ9SAVXGLgY3sMo9jtuANxQqu4_o2FrBBfN-Kf=VFw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/9] LoongArch/ftrace: Add basic support
+Date: Tue, 15 Nov 2022 16:31:36 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5YnpRu=mcdmHy=x9MstTmfFgHU=WV4ZBd49PBkeeZjAA@mail.gmail.com>
+Message-ID: <CAAhV-H5YnpRu=mcdmHy=x9MstTmfFgHU=WV4ZBd49PBkeeZjAA@mail.gmail.com>
+Subject: Re: [PATCH v6 9/9] LoongArch: Enable CONFIG_KALLSYMS_ALL and CONFIG_DEBUG_FS
 To: Qing Zhang <zhangqing@loongson.cn>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Jinyang He <hejinyang@loongson.cn>
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
 Hi, Qing,
 
-On Tue, Nov 15, 2022 at 10:55 AM Qing Zhang <zhangqing@loongson.cn> wrote:
->
-> This patch contains basic ftrace support for LoongArch.
-> Specifically, function tracer (HAVE_FUNCTION_TRACER), function graph
-> tracer (HAVE_FUNCTION_GRAPH_TRACER) are implemented following the
-> instructions in Documentation/trace/ftrace-design.txt.
->
-> Use `-pg` makes stub like a child function `void _mcount(void *ra)`.
-> Thus, it can be seen store RA and open stack before `call _mcount`.
-> Find `open stack` at first, and then find `store RA`
->
-> Note that the functions in both inst.c and time.c should not be
-> hooked with the compiler's -pg option: to prevent infinite self-
-> referencing for the former, and to ignore early setup stuff for the
-> latter.
->
-> Co-developed-by: Jinyang He <hejinyang@loongson.cn>
-> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
-> ---
->  arch/loongarch/Kconfig              |  2 +
->  arch/loongarch/Makefile             |  5 ++
->  arch/loongarch/include/asm/ftrace.h | 18 ++++++
->  arch/loongarch/kernel/Makefile      |  8 +++
->  arch/loongarch/kernel/ftrace.c      | 74 +++++++++++++++++++++++
->  arch/loongarch/kernel/mcount.S      | 94 +++++++++++++++++++++++++++++
->  6 files changed, 201 insertions(+)
->  create mode 100644 arch/loongarch/include/asm/ftrace.h
->  create mode 100644 arch/loongarch/kernel/ftrace.c
->  create mode 100644 arch/loongarch/kernel/mcount.S
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 1943f840e494..92c4ec8c8527 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -91,6 +91,8 @@ config LOONGARCH
->         select HAVE_EBPF_JIT
->         select HAVE_EXIT_THREAD
->         select HAVE_FAST_GUP
-> +       select HAVE_FUNCTION_GRAPH_TRACER
-This line should be moved to another patch.
-
-> +       select HAVE_FUNCTION_TRACER
->         select HAVE_GENERIC_VDSO
->         select HAVE_IOREMAP_PROT
->         select HAVE_IRQ_EXIT_ON_IRQ_STACK
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index a0fc1f9980e3..6832a8f891fd 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -36,6 +36,11 @@ ifneq ($(SUBARCH),$(ARCH))
->    endif
->  endif
->
-> +ifdef CONFIG_DYNAMIC_FTRACE
-> +KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
-> +CC_FLAGS_FTRACE := -fpatchable-function-entry=2
-> +endif
-> +
->  ifdef CONFIG_64BIT
->  ld-emul                        = $(64bit-emul)
->  cflags-y               += -mabi=lp64s
-> diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-> new file mode 100644
-> index 000000000000..6a3e76234618
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/ftrace.h
-> @@ -0,0 +1,18 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2022 Loongson Technology Corporation Limited
-> + */
-> +
-> +#ifndef _ASM_LOONGARCH_FTRACE_H
-> +#define _ASM_LOONGARCH_FTRACE_H
-> +
-> +#ifdef CONFIG_FUNCTION_TRACER
-> +#define MCOUNT_INSN_SIZE 4             /* sizeof mcount call */
-> +
-> +#ifndef __ASSEMBLY__
-> +extern void _mcount(void);
-> +#define mcount _mcount
-> +
-> +#endif /* __ASSEMBLY__ */
-> +#endif /* CONFIG_FUNCTION_TRACER */
-> +#endif /* _ASM_LOONGARCH_FTRACE_H */
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-> index 86744531b100..3f71bce1c7ce 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -15,6 +15,14 @@ obj-$(CONFIG_EFI)            += efi.o
->
->  obj-$(CONFIG_CPU_HAS_FPU)      += fpu.o
->
-> +ifdef CONFIG_FUNCTION_TRACER
-> +obj-y += mcount.o ftrace.o
-> +CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
-> +CFLAGS_REMOVE_inst.o = $(CC_FLAGS_FTRACE)
-> +CFLAGS_REMOVE_time.o = $(CC_FLAGS_FTRACE)
-> +CFLAGS_REMOVE_perf_event.o = $(CC_FLAGS_FTRACE)
-> +endif
-> +
->  obj-$(CONFIG_MODULES)          += module.o module-sections.o
->  obj-$(CONFIG_STACKTRACE)       += stacktrace.o
->
-> diff --git a/arch/loongarch/kernel/ftrace.c b/arch/loongarch/kernel/ftrace.c
-> new file mode 100644
-> index 000000000000..c8ddc5f11f32
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/ftrace.c
-> @@ -0,0 +1,74 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2022 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <linux/uaccess.h>
-> +#include <linux/init.h>
-> +#include <linux/ftrace.h>
-> +#include <linux/syscalls.h>
-> +
-> +#include <asm/asm.h>
-> +#include <asm/asm-offsets.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/inst.h>
-> +#include <asm/loongarch.h>
-> +#include <asm/syscall.h>
-> +#include <asm/unistd.h>
-> +
-> +#include <asm-generic/sections.h>
-> +
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-This should also be moved to another patch.
-
-> +
-> +/*
-> + * As `call _mcount` follows LoongArch psABI, ra-saved operation and
-> + * stack operation can be found before this insn.
-> + */
-> +
-> +static int ftrace_get_parent_ra_addr(unsigned long insn_addr, int *ra_off)
-> +{
-> +       union loongarch_instruction *insn;
-> +       int limit = 32;
-> +
-> +       insn = (union loongarch_instruction *)insn_addr;
-> +
-> +       do {
-> +               insn--;
-> +               limit--;
-> +
-> +               if (is_ra_save_ins(insn))
-> +                       *ra_off = -((1 << 12) - insn->reg2i12_format.immediate);
-> +
-> +       } while (!is_stack_alloc_ins(insn) && limit);
-> +
-> +       if (!limit)
-> +               return -EINVAL;
-> +
-> +       return 0;
-> +}
-> +
-> +void prepare_ftrace_return(unsigned long self_addr,
-> +               unsigned long callsite_sp, unsigned long old)
-> +{
-> +       int ra_off;
-> +       unsigned long return_hooker = (unsigned long)&return_to_handler;
-> +
-> +       if (unlikely(ftrace_graph_is_dead()))
-> +               return;
-> +
-> +       if (unlikely(atomic_read(&current->tracing_graph_pause)))
-> +               return;
-> +
-> +       if (ftrace_get_parent_ra_addr(self_addr, &ra_off))
-> +               goto out;
-> +
-> +       if (!function_graph_enter(old, self_addr, 0, NULL))
-> +               *(unsigned long *)(callsite_sp + ra_off) = return_hooker;
-> +
-> +       return;
-> +
-> +out:
-> +       ftrace_graph_stop();
-> +       WARN_ON(1);
-> +}
-> +#endif /* CONFIG_FUNCTION_GRAPH_TRACER */
-> diff --git a/arch/loongarch/kernel/mcount.S b/arch/loongarch/kernel/mcount.S
-> new file mode 100644
-> index 000000000000..3de7c2d7fd12
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/mcount.S
-> @@ -0,0 +1,94 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * LoongArch specific _mcount support
-> + *
-> + * Copyright (C) 2022 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <asm/export.h>
-> +#include <asm/regdef.h>
-> +#include <asm/stackframe.h>
-> +#include <asm/ftrace.h>
-> +
-> +       .text
-> +
-> +#define MCOUNT_STACK_SIZE      (2 * SZREG)
-> +#define MCOUNT_S0_OFFSET       (0)
-> +#define MCOUNT_RA_OFFSET       (SZREG)
-> +
-> +       .macro MCOUNT_SAVE_REGS
-> +       PTR_ADDI sp, sp, -MCOUNT_STACK_SIZE
-> +       PTR_S   s0, sp, MCOUNT_S0_OFFSET
-> +       PTR_S   ra, sp, MCOUNT_RA_OFFSET
-> +       move    s0, a0
-> +       .endm
-> +
-> +       .macro MCOUNT_RESTORE_REGS
-> +       move    a0, s0
-> +       PTR_L   ra, sp, MCOUNT_RA_OFFSET
-> +       PTR_L   s0, sp, MCOUNT_S0_OFFSET
-> +       PTR_ADDI sp, sp, MCOUNT_STACK_SIZE
-> +       .endm
-> +
-> +
-> +SYM_FUNC_START(_mcount)
-> +       la.pcrel        t1, ftrace_stub
-> +       la.pcrel        t2, ftrace_trace_function       /* Prepare t2 for (1) */
-> +       PTR_L   t2, t2, 0
-> +       beq     t1, t2, fgraph_trace
-> +
-> +       MCOUNT_SAVE_REGS
-> +
-> +       move    a0, ra                          /* arg0: self return address */
-> +       move    a1, s0                          /* arg1: parent's return address */
-> +       jirl    ra, t2, 0                       /* (1) call *ftrace_trace_function */
-> +
-> +       MCOUNT_RESTORE_REGS
-> +
-> +fgraph_trace:
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-The same as above.
+I suggest not enabling debug mechanisms in the default config file,
+distribution configs can make their own decisions.
 
 Huacai
-> +       la.pcrel        t1, ftrace_stub
-> +       la.pcrel        t3, ftrace_graph_return
-> +       PTR_L   t3, t3, 0
-> +       bne     t1, t3, ftrace_graph_caller
-> +       la.pcrel        t1, ftrace_graph_entry_stub
-> +       la.pcrel        t3, ftrace_graph_entry
-> +       PTR_L   t3, t3, 0
-> +       bne     t1, t3, ftrace_graph_caller
-> +#endif
-> +
-> +       .globl ftrace_stub
-> +ftrace_stub:
-> +       jr      ra
-> +SYM_FUNC_END(_mcount)
-> +EXPORT_SYMBOL(_mcount)
-> +
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +SYM_FUNC_START(ftrace_graph_caller)
-> +       MCOUNT_SAVE_REGS
-> +
-> +       PTR_ADDI        a0, ra, -4                      /* arg0: Callsite self return addr */
-> +       PTR_ADDI        a1, sp, MCOUNT_STACK_SIZE       /* arg1: Callsite sp */
-> +       move    a2, s0                                  /* arg2: Callsite parent ra */
-> +       bl      prepare_ftrace_return
-> +
-> +       MCOUNT_RESTORE_REGS
-> +       jr      ra
-> +SYM_FUNC_END(ftrace_graph_caller)
-> +
-> +SYM_FUNC_START(return_to_handler)
-> +       PTR_ADDI sp, sp, -2 * SZREG
-> +       PTR_S   a0, sp, 0
-> +       PTR_S   a1, sp, SZREG
-> +
-> +       bl      ftrace_return_to_handler
-> +
-> +       /* restore the real parent address: a0 -> ra */
-> +       move    ra, a0
-> +
-> +       PTR_L   a0, sp, 0
-> +       PTR_L   a1, sp, SZREG
-> +       PTR_ADDI        sp, sp, 2 * SZREG
-> +       jr      ra
-> +SYM_FUNC_END(return_to_handler)
-> +#endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+
+On Tue, Nov 15, 2022 at 10:55 AM Qing Zhang <zhangqing@loongson.cn> wrote:
+>
+> Defaults enable CONFIG_KALLSYMS_ALL and CONFIG_DEBUG_FS to convenient
+> ftrace tests.
+>
+> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+> ---
+>  arch/loongarch/configs/loongson3_defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+> index 2d4678e6189a..0bbab17609b0 100644
+> --- a/arch/loongarch/configs/loongson3_defconfig
+> +++ b/arch/loongarch/configs/loongson3_defconfig
+> @@ -34,6 +34,7 @@ CONFIG_SYSFS_DEPRECATED=y
+>  CONFIG_RELAY=y
+>  CONFIG_BLK_DEV_INITRD=y
+>  CONFIG_EXPERT=y
+> +CONFIG_KALLSYMS_ALL=y
+>  CONFIG_USERFAULTFD=y
+>  CONFIG_PERF_EVENTS=y
+>  # CONFIG_COMPAT_BRK is not set
+> @@ -845,6 +846,7 @@ CONFIG_CRYPTO_DEV_VIRTIO=m
+>  CONFIG_PRINTK_TIME=y
+>  CONFIG_STRIP_ASM_SYMS=y
+>  CONFIG_MAGIC_SYSRQ=y
+> +CONFIG_DEBUG_FS=y
+>  # CONFIG_SCHED_DEBUG is not set
+>  CONFIG_SCHEDSTATS=y
+>  # CONFIG_DEBUG_PREEMPT is not set
 > --
 > 2.36.0
 >
