@@ -1,25 +1,34 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B08AF33C7
-	for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 11:11:52 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxC7b2c3NjHD0HAA--.9562S3;
-	Tue, 15 Nov 2022 19:11:50 +0800 (CST)
-Received: from [10.130.0.63] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxNlf0c3Nj85ETAA--.34240S3;
-	Tue, 15 Nov 2022 19:11:50 +0800 (CST)
-Subject: Re: [PATCH v6 3/9] LoongArch/ftrace: Add dynamic function tracer
- support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- Jinyang He <hejinyang@loongson.cn>
-References: <20221115025527.13382-1-zhangqing@loongson.cn>
- <20221115025527.13382-4-zhangqing@loongson.cn>
- <CAAhV-H41XxvVhtkL3WhHH_iFVWu1E28dPNZAbNCOgtrzfrZmpQ@mail.gmail.com>
-From: Qing Zhang <zhangqing@loongson.cn>
-Message-ID: <89b91939-5618-35ff-24c3-d4f76ecf46b2@loongson.cn>
-Date: Tue, 15 Nov 2022 19:11:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61FE0AD30
+	for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 13:07:11 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8BxGdj8jnNjLUUHAA--.19998S3;
+	Tue, 15 Nov 2022 21:07:08 +0800 (CST)
+Received: from [10.180.13.64] (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx9Vb6jnNjO6UTAA--.34062S2;
+	Tue, 15 Nov 2022 21:07:07 +0800 (CST)
+Subject: Re: [PATCH v2 1/2] gpio: loongson: add dts/acpi gpio support
+To: WANG Xuerui <kernel@xen0n.name>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, zhuyinbo@loongson.cn,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>,
+ lvjianmin <lvjianmin@loongson.cn>, zhanghongchen
+ <zhanghongchen@loongson.cn>, Liu Peibao <liupeibao@loongson.cn>
+References: <20221114095332.21079-1-zhuyinbo@loongson.cn>
+ <CAMRc=McnEiSj1Q51pG3Lc8e+HcXE_uU7dm=1VoOa__xOgyoZPg@mail.gmail.com>
+ <8b24e3df-8c22-bd09-cfc1-b27e39a05c25@loongson.cn>
+ <fd5cc541-dfc6-d1cf-0865-669b11ce2e7a@xen0n.name>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <9a448680-0bb6-c4f0-93d2-29a86fede2d4@loongson.cn>
+Date: Tue, 15 Nov 2022 21:07:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -27,597 +36,173 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H41XxvVhtkL3WhHH_iFVWu1E28dPNZAbNCOgtrzfrZmpQ@mail.gmail.com>
+In-Reply-To: <fd5cc541-dfc6-d1cf-0865-669b11ce2e7a@xen0n.name>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxNlf0c3Nj85ETAA--.34240S3
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvAXoW3CrWkAFW7tw4UuF45JF43Wrg_yoW8AFykto
-	WakF129r4fGry3Ca1Yy34DXFW2vr1F9rWUAayaywnxuF4jya47Wr1UGa15tay3Grn5JF45
-	Ca47WF48AayxXr98n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
-	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
-	UUvab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
-	0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1l84
-	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWl
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26F4j6r4U
-	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8w
-	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
-	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64
-	vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_
-	Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42
-	IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUzku4UUUUU
+X-CM-TRANSID:AQAAf8Dx9Vb6jnNjO6UTAA--.34062S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3WF1rurWfGw4kCw1xXFW7twb_yoWxWryDpF
+	n3AayxGFWUGr1xAr1qq34UZryayry5JwnFqF1rJa4UCryqq3Wjqr1UXF1q9F18Gr4rAF1j
+	qry8Gr47uF45ZrUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bDkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE
+	52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
+	80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCj
+	c4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI
+	0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCj
+	c4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY
+	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8pBT5UUUUU==
 
-Hi, huacai
 
-On 2022/11/15 下午6:54, Huacai Chen wrote:
-> Hi, Qing,
+
+在 2022/11/15 下午6:17, WANG Xuerui 写道:
+> Sorry for jumping in, but...
 > 
-> On Tue, Nov 15, 2022 at 10:55 AM Qing Zhang <zhangqing@loongson.cn> wrote:
+> On 2022/11/15 17:53, Yinbo Zhu wrote:
 >>
->> The compiler has inserted 2 NOPs before the regular function prologue.
->> T series registers are available and safe because of LoongArch psABI.
 >>
->> At runtime, replace nop with bl to enable ftrace call and replace bl with
->> nop to disable ftrace call. The bl requires us to save the original RA
->> value, so here it saves RA at t0.
->> details are:
->>
->> | Compiled   |       Disabled         |        Enabled         |
->> +------------+------------------------+------------------------+
->> | nop        | move     t0, ra        | move     t0, ra        |
->> | nop        | nop                    | bl      ftrace_caller  |
->> | func_body  | func_body              | func_body              |
->>
->> The RA value will be recovered by ftrace_regs_entry, and restored into RA
->> before returning to the regular function prologue. When a function is not
->> being traced, the move t0, ra is not harmful.
->>
->> 1) ftrace_make_call, ftrace_make_nop (in kernel/ftrace.c)
->>     The two functions turn each recorded call site of filtered functions
->>     into a call to ftrace_caller or nops.
->>
->> 2) ftracce_update_ftrace_func (in kernel/ftrace.c)
->>     turns the nops at ftrace_call into a call to a generic entry for
->>     function tracers.
->>
->> 3) ftrace_caller (in kernel/mcount-dyn.S)
->>     The entry where each _mcount call sites calls to once they are
->>     filtered to be traced.
->>
->> Co-developed-by: Jinyang He <hejinyang@loongson.cn>
->> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
->> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
->> ---
->>   arch/loongarch/Kconfig                  |   1 +
->>   arch/loongarch/include/asm/ftrace.h     |  16 ++++
->>   arch/loongarch/include/asm/inst.h       |  15 ++++
->>   arch/loongarch/include/asm/unwind.h     |   2 +-
->>   arch/loongarch/kernel/Makefile          |   5 ++
->>   arch/loongarch/kernel/ftrace_dyn.c      | 111 ++++++++++++++++++++++++
->>   arch/loongarch/kernel/inst.c            |  92 ++++++++++++++++++++
->>   arch/loongarch/kernel/mcount-dyn.S      |  89 +++++++++++++++++++
->>   arch/loongarch/kernel/unwind_prologue.c |  35 ++++++--
->>   9 files changed, 360 insertions(+), 6 deletions(-)
->>   create mode 100644 arch/loongarch/kernel/ftrace_dyn.c
->>   create mode 100644 arch/loongarch/kernel/mcount-dyn.S
->>
->> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> index e6b1defca1f1..615ce62422b8 100644
->> --- a/arch/loongarch/Kconfig
->> +++ b/arch/loongarch/Kconfig
->> @@ -89,6 +89,7 @@ config LOONGARCH
->>          select HAVE_C_RECORDMCOUNT
->>          select HAVE_DEBUG_STACKOVERFLOW
->>          select HAVE_DMA_CONTIGUOUS
->> +       select HAVE_DYNAMIC_FTRACE
->>          select HAVE_EBPF_JIT
->>          select HAVE_EXIT_THREAD
->>          select HAVE_FAST_GUP
->> diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
->> index 6a3e76234618..76ca58767f4d 100644
->> --- a/arch/loongarch/include/asm/ftrace.h
->> +++ b/arch/loongarch/include/asm/ftrace.h
->> @@ -10,9 +10,25 @@
->>   #define MCOUNT_INSN_SIZE 4             /* sizeof mcount call */
->>
->>   #ifndef __ASSEMBLY__
->> +#ifndef CONFIG_DYNAMIC_FTRACE
->>   extern void _mcount(void);
->>   #define mcount _mcount
->> +#endif
->>
->> +#ifdef CONFIG_DYNAMIC_FTRACE
->> +static inline unsigned long ftrace_call_adjust(unsigned long addr)
->> +{
->> +       return addr;
->> +}
->> +
->> +struct dyn_arch_ftrace {
->> +};
->> +
->> +struct dyn_ftrace;
->> +int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
->> +#define ftrace_init_nop ftrace_init_nop
->> +
->> +#endif /* CONFIG_DYNAMIC_FTRACE */
->>   #endif /* __ASSEMBLY__ */
->>   #endif /* CONFIG_FUNCTION_TRACER */
->>   #endif /* _ASM_LOONGARCH_FTRACE_H */
->> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
->> index a52913787183..0ec775d39ca5 100644
->> --- a/arch/loongarch/include/asm/inst.h
->> +++ b/arch/loongarch/include/asm/inst.h
->> @@ -11,6 +11,9 @@
->>   #define INSN_NOP               0x03400000
->>   #define INSN_BREAK             0x002a0000
->>
->> +#define INSN_NOP 0x03400000
->> +#define INSN_BREAK 0x002a0000
-> They are already defined.
-
-Sorry :( , I will resend the next version.
-
-Thanks
--Qing
+>> 在 2022/11/15 下午5:05, Bartosz Golaszewski 写道:
+>>> On Mon, Nov 14, 2022 at 10:53 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+>>>>
+>>>> The latest Loongson series platform use dts or acpi framework to
+>>>> register gpio device resources, such as the Loongson-2 series
+>>>> SoC of LOONGARCH architecture. In order to support dts, acpi and
+>>>> compatibility with previous platform device resources in driver,
+>>>> this patch was added.
+>>>>
+>>>> Signed-off-by: lvjianmin <lvjianmin@loongson.cn>
+>>>> Signed-off-by: zhanghongchen <zhanghongchen@loongson.cn>
+>>>> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
+>>>> Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+>>>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>>>> ---
+>>>> Change in v2:
+>>>>                  1. Fixup of_loongson_gpio_get_props and remove the 
+>>>> parse logic about
+>>>>                     "loongson,conf_offset", "loongson,out_offset", 
+>>>> "loongson,in_offset",
+>>>>                     "loongson,gpio_base", "loongson,support_irq" 
+>>>> then kernel driver will
+>>>>                     initial them that depend compatible except 
+>>>> "loongson,gpio_base".
+>>>>
+>>>>   arch/loongarch/include/asm/loongson.h         |  13 +
+>>>>   .../include/asm/mach-loongson2ef/loongson.h   |  12 +
+>>>>   .../include/asm/mach-loongson64/loongson.h    |  13 +
+>>>>   drivers/gpio/Kconfig                          |   6 +-
+>>>>   drivers/gpio/gpio-loongson.c                  | 422 
+>>>> +++++++++++++++---
+>>>>   5 files changed, 391 insertions(+), 75 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/loongson.h 
+>>>> b/arch/loongarch/include/asm/loongson.h
+>>>> index 00db93edae1b..383fdda155f0 100644
+>>>> --- a/arch/loongarch/include/asm/loongson.h
+>>>> +++ b/arch/loongarch/include/asm/loongson.h
+>>>> @@ -60,6 +60,19 @@ static inline void xconf_writeq(u64 val64, 
+>>>> volatile void __iomem *addr)
+>>>>          );
+>>>>   }
+>>>>
+>>>> +/* ============== Data structrues =============== */
+>>>> +
+>>>> +/* gpio data */
+>>>> +struct platform_gpio_data {
+>>>> +       u32 gpio_conf;
+>>>> +       u32 gpio_out;
+>>>> +       u32 gpio_in;
+>>>> +       u32 support_irq;
+>>>> +       char *label;
+>>>> +       int gpio_base;
+>>>> +       int ngpio;
+>>>> +};
+>>>
+>>> This is a terrible name for an exported structure. You would at least
+>>> need some kind of a namespace prefix. But even then the need to add a
+>>> platform data structure is very questionable. We've moved past the
+>>> need for platform data in the kernel. I don't see anyone setting it up
+>>> in this series either. Could you provide more explanation on why you
+>>> would need it and who would use it?
+>> okay, I will add a namespace prefix, about this platform data was added
+>> that was to compatible with legacy platforms that do not support dts or
+>> acpi, then, the mips loongson platform or loongarch loongson platform
 > 
-> Huacai
->> +
->>   #define ADDR_IMMMASK_LU52ID    0xFFF0000000000000
->>   #define ADDR_IMMMASK_LU32ID    0x000FFFFF00000000
->>   #define ADDR_IMMMASK_ADDU16ID  0x00000000FFFF0000
->> @@ -349,6 +352,18 @@ static inline bool is_stack_alloc_ins(union loongarch_instruction *ip)
->>                  is_imm12_negative(ip->reg2i12_format.immediate);
->>   }
+> Why are you trying to support "legacy" LoongArch platforms when the 
+> architecture was just upstreamed *this year*?
+the leagacy gpio driver had support LoongArch, and you can find some
+gpio register defined in arch/loongarch/include
+/asm/loongson.h in legacy gpio driver, such as LOONGSON_GPIODATA,
+The legacy gpio driver is the driver that doesn't include my gpio patch.
+> 
+>> can implement the gpio device driver to initialize the
+>> platform_gpio_data structure as needed after exporting the structure.
+>>>
+>>>> +
+>>>>   /* ============== LS7A registers =============== */
+>>>>   #define LS7A_PCH_REG_BASE              0x10000000UL
+>>>>   /* LPC regs */
+>>>> diff --git a/arch/mips/include/asm/mach-loongson2ef/loongson.h 
+>>>> b/arch/mips/include/asm/mach-loongson2ef/loongson.h
+>>>> index ca039b8dcde3..b261cea4fee1 100644
+>>>> --- a/arch/mips/include/asm/mach-loongson2ef/loongson.h
+>>>> +++ b/arch/mips/include/asm/mach-loongson2ef/loongson.h
+>>>> @@ -315,4 +315,16 @@ extern unsigned long _loongson_addrwincfg_base;
+>>>>
+>>>>   #endif /* ! CONFIG_CPU_SUPPORTS_ADDRWINCFG */
+>>>>
+>>>> +/* ============== Data structrues =============== */
+>>>> +
+>>>> +/* gpio data */
+>>>> +struct platform_gpio_data {
+>>>> +       u32 gpio_conf;
+>>>> +       u32 gpio_out;
+>>>> +       u32 gpio_in;
+>>>> +       u32 support_irq;
+>>>> +       char *label;
+>>>> +       int gpio_base;
+>>>> +       int ngpio;
+>>>> +};
+>>>
+>>> No idea why you would need to duplicate it like this either. And why
+>>> put it in arch/.
+>> because loongson platform include mips and loongarch, and the gpio 
+>> device data was defined in arch/ in leagcy loongson gpio driver.  so the
+>> latest loongson gpio drvier add platform_gpio_data in same dir.
+> 
+> I think at this point it's hopefully clear, that the way forward to 
+> supporting Loongson IP blocks shared between MIPS/LoongArch SoCs is to 
+> start over and do things properly, making the code as platform-agnostic 
+> as possible. Just make sure the drivers can get initialized via DT and 
+> ACPI then you're all set -- the upstream kernel is guaranteed to use one 
+> of the two well-established boot flows for every Loongson chip it 
+> supports. Be it hard-coded DT in arch/mips/boot/dts/loongson, or the 
+> LoongArch ACPI/upcoming DT, no need for hard-coding things in arch/ in 
+> either case.
+Our old platforms are used by customers, but we will not maintain those
+platforms. Adding dts/acpi support to those old platforms not only makes
+no sense, but also affects their use. Because the configuration of
+dts/acpi requires the support of the firmware team, but in fact, we have
+no one to maintain those old platforms.
+
+in a words, My patch to upstream was supposed to consider dts/acpi in
+LoongArch platform  But I have to consider the original legacy gpio
+driver and to compatible with it.
+> 
+>>>
+>>> [snip]
+>>>
+>>> I will hold off reviewing the rest of the patch until we get that 
+>>> clarified.
+>>>
+>>> Bartosz
+>>>
 >>
->> +int larch_insn_read(void *addr, u32 *insnp);
->> +int larch_insn_write(void *addr, u32 insn);
->> +int larch_insn_patch_text(void *addr, u32 insn);
->> +
->> +u32 larch_insn_gen_nop(void);
->> +u32 larch_insn_gen_b(unsigned long pc, unsigned long dest);
->> +u32 larch_insn_gen_bl(unsigned long pc, unsigned long dest);
->> +
->> +u32 larch_insn_gen_or(enum loongarch_gpr rd, enum loongarch_gpr rj,
->> +                       enum loongarch_gpr rk);
->> +u32 larch_insn_gen_move(enum loongarch_gpr rd, enum loongarch_gpr rj);
->> +
->>   u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
->>   u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
->>   u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
->> diff --git a/arch/loongarch/include/asm/unwind.h b/arch/loongarch/include/asm/unwind.h
->> index 6af4718bdf01..a51eec00efb8 100644
->> --- a/arch/loongarch/include/asm/unwind.h
->> +++ b/arch/loongarch/include/asm/unwind.h
->> @@ -20,7 +20,7 @@ struct unwind_state {
->>          char type; /* UNWINDER_XXX */
->>          struct stack_info stack_info;
->>          struct task_struct *task;
->> -       bool first, error;
->> +       bool first, error, is_ftrace;
->>          unsigned long sp, pc, ra;
->>   };
->>
->> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
->> index 3f71bce1c7ce..c5e2bfd8247d 100644
->> --- a/arch/loongarch/kernel/Makefile
->> +++ b/arch/loongarch/kernel/Makefile
->> @@ -16,8 +16,13 @@ obj-$(CONFIG_EFI)            += efi.o
->>   obj-$(CONFIG_CPU_HAS_FPU)      += fpu.o
->>
->>   ifdef CONFIG_FUNCTION_TRACER
->> +ifndef CONFIG_DYNAMIC_FTRACE
->>   obj-y += mcount.o ftrace.o
->>   CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
->> +else
->> +obj-y += mcount-dyn.o ftrace_dyn.o
->> +CFLAGS_REMOVE_ftrace_dyn.o = $(CC_FLAGS_FTRACE)
->> +endif
->>   CFLAGS_REMOVE_inst.o = $(CC_FLAGS_FTRACE)
->>   CFLAGS_REMOVE_time.o = $(CC_FLAGS_FTRACE)
->>   CFLAGS_REMOVE_perf_event.o = $(CC_FLAGS_FTRACE)
->> diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
->> new file mode 100644
->> index 000000000000..1f8955be8b64
->> --- /dev/null
->> +++ b/arch/loongarch/kernel/ftrace_dyn.c
->> @@ -0,0 +1,111 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Based on arch/arm64/kernel/ftrace.c
->> + *
->> + * Copyright (C) 2022 Loongson Technology Corporation Limited
->> + */
->> +
->> +#include <linux/ftrace.h>
->> +#include <linux/uaccess.h>
->> +
->> +#include <asm/inst.h>
->> +
->> +static int ftrace_modify_code(unsigned long pc, u32 old, u32 new,
->> +                             bool validate)
->> +{
->> +       u32 replaced;
->> +
->> +       if (validate) {
->> +               if (larch_insn_read((void *)pc, &replaced))
->> +                       return -EFAULT;
->> +
->> +               if (replaced != old)
->> +                       return -EINVAL;
->> +       }
->> +
->> +       if (larch_insn_patch_text((void *)pc, new))
->> +               return -EPERM;
->> +
->> +       return 0;
->> +}
->> +
->> +int ftrace_update_ftrace_func(ftrace_func_t func)
->> +{
->> +       unsigned long pc;
->> +       u32 new;
->> +
->> +       pc = (unsigned long)&ftrace_call;
->> +       new = larch_insn_gen_bl(pc, (unsigned long)func);
->> +
->> +       return ftrace_modify_code(pc, 0, new, false);
->> +}
->> +
->> +/*
->> + * The compiler has inserted 2 NOPs before the regular function prologue.
->> + * T series registers are available and safe because of LoongArch psABI.
->> + *
->> + * At runtime, replace nop with bl to enable ftrace call and replace bl with
->> + * nop to disable ftrace call. The bl requires us to save the original RA value,
->> + * so here it saves RA at t0.
->> + * details are:
->> + *
->> + * | Compiled   |       Disabled         |        Enabled         |
->> + * +------------+------------------------+------------------------+
->> + * | nop        | move     t0, ra        | move     t0, ra        |
->> + * | nop        | nop                    | bl      ftrace_caller  |
->> + * | func_body  | func_body              | func_body              |
->> + *
->> + * The RA value will be recovered by ftrace_regs_entry, and restored into RA
->> + * before returning to the regular function prologue. When a function is not
->> + * being traced, the move t0, ra is not harmful.
->> + */
->> +
->> +int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
->> +{
->> +       unsigned long pc;
->> +       u32 old, new;
->> +
->> +       pc = rec->ip;
->> +       old = larch_insn_gen_nop();
->> +       new = larch_insn_gen_move(LOONGARCH_GPR_T0, LOONGARCH_GPR_RA);
->> +
->> +       return ftrace_modify_code(pc, old, new, true);
->> +}
->> +
->> +int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
->> +{
->> +       unsigned long pc;
->> +       u32 old, new;
->> +
->> +       pc = rec->ip + LOONGARCH_INSN_SIZE;
->> +
->> +       old = larch_insn_gen_nop();
->> +       new = larch_insn_gen_bl(pc, addr);
->> +
->> +       return ftrace_modify_code(pc, old, new, true);
->> +}
->> +
->> +int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
->> +                   unsigned long addr)
->> +{
->> +       unsigned long pc;
->> +       u32 old, new;
->> +
->> +       pc = rec->ip + LOONGARCH_INSN_SIZE;
->> +
->> +       new = larch_insn_gen_nop();
->> +       old = larch_insn_gen_bl(pc, addr);
->> +
->> +       return ftrace_modify_code(pc, old, new, true);
->> +}
->> +
->> +void arch_ftrace_update_code(int command)
->> +{
->> +       command |= FTRACE_MAY_SLEEP;
->> +       ftrace_modify_all_code(command);
->> +}
->> +
->> +int __init ftrace_dyn_arch_init(void)
->> +{
->> +       return 0;
->> +}
->> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
->> index b1df0ec34bd1..d62cdf4a9ffb 100644
->> --- a/arch/loongarch/kernel/inst.c
->> +++ b/arch/loongarch/kernel/inst.c
->> @@ -2,8 +2,83 @@
->>   /*
->>    * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
->>    */
->> +#include <linux/sizes.h>
->> +#include <linux/uaccess.h>
->> +
->> +#include <asm/cacheflush.h>
->>   #include <asm/inst.h>
->>
->> +static DEFINE_RAW_SPINLOCK(patch_lock);
->> +
->> +int larch_insn_read(void *addr, u32 *insnp)
->> +{
->> +       int ret;
->> +       u32 val;
->> +
->> +       ret = copy_from_kernel_nofault(&val, addr, LOONGARCH_INSN_SIZE);
->> +       if (!ret)
->> +               *insnp = val;
->> +
->> +       return ret;
->> +}
->> +
->> +int larch_insn_write(void *addr, u32 insn)
->> +{
->> +       int ret;
->> +       unsigned long flags = 0;
->> +
->> +       raw_spin_lock_irqsave(&patch_lock, flags);
->> +       ret = copy_to_kernel_nofault(addr, &insn, LOONGARCH_INSN_SIZE);
->> +       raw_spin_unlock_irqrestore(&patch_lock, flags);
->> +
->> +       return ret;
->> +}
->> +
->> +int larch_insn_patch_text(void *addr, u32 insn)
->> +{
->> +       int ret;
->> +       u32 *tp = addr;
->> +
->> +       if ((unsigned long)tp & 3)
->> +               return -EINVAL;
->> +
->> +       ret = larch_insn_write(tp, insn);
->> +       if (!ret)
->> +               flush_icache_range((unsigned long)tp,
->> +                                  (unsigned long)tp + LOONGARCH_INSN_SIZE);
->> +
->> +       return ret;
->> +}
->> +
->> +u32 larch_insn_gen_nop(void)
->> +{
->> +       return INSN_NOP;
->> +}
->> +
->> +u32 larch_insn_gen_bl(unsigned long pc, unsigned long dest)
->> +{
->> +       unsigned int immediate_l, immediate_h;
->> +       union loongarch_instruction insn;
->> +       long offset = dest - pc;
->> +
->> +       if ((offset & 3) || offset < -SZ_128M || offset >= SZ_128M) {
->> +               pr_warn("The generated bl instruction is out of range.\n");
->> +               return INSN_BREAK;
->> +       }
->> +
->> +       offset >>= 2;
->> +
->> +       immediate_l = offset & 0xffff;
->> +       offset >>= 16;
->> +       immediate_h = offset & 0x3ff;
->> +
->> +       insn.reg0i26_format.opcode = bl_op;
->> +       insn.reg0i26_format.immediate_l = immediate_l;
->> +       insn.reg0i26_format.immediate_h = immediate_h;
->> +
->> +       return insn.word;
->> +}
->> +
->>   u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm)
->>   {
->>          union loongarch_instruction insn;
->> @@ -38,3 +113,20 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned l
->>
->>          return insn.word;
->>   }
->> +
->> +u32 larch_insn_gen_or(enum loongarch_gpr rd, enum loongarch_gpr rj, enum loongarch_gpr rk)
->> +{
->> +       union loongarch_instruction insn;
->> +
->> +       insn.reg3_format.opcode = or_op;
->> +       insn.reg3_format.rd = rd;
->> +       insn.reg3_format.rj = rj;
->> +       insn.reg3_format.rk = rk;
->> +
->> +       return insn.word;
->> +}
->> +
->> +u32 larch_insn_gen_move(enum loongarch_gpr rd, enum loongarch_gpr rj)
->> +{
->> +       return larch_insn_gen_or(rd, rj, 0);
->> +}
->> diff --git a/arch/loongarch/kernel/mcount-dyn.S b/arch/loongarch/kernel/mcount-dyn.S
->> new file mode 100644
->> index 000000000000..205925bc3822
->> --- /dev/null
->> +++ b/arch/loongarch/kernel/mcount-dyn.S
->> @@ -0,0 +1,89 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Copyright (C) 2022 Loongson Technology Corporation Limited
->> + */
->> +
->> +#include <asm/export.h>
->> +#include <asm/regdef.h>
->> +#include <asm/stackframe.h>
->> +#include <asm/ftrace.h>
->> +
->> +       .text
->> +/*
->> + * Due to -fpatchable-function-entry=2: the compiler inserted 2 NOPs before the
->> + * regular C function prologue. When PC arrived here, the last 2 instructions
->> + * as follows,
->> + *     move            t0, ra
->> + *     bl              callsite (for modules, callsite is a tramplione)
->> + *
->> + * modules tramplione as follows,
->> + *     lu12i.w         t1, callsite[31:12]
->> + *     lu32i.d         t1, callsite[51:32]
->> + *     lu52i.d         t1, t1, callsite[63:52]
->> + *     jirl            zero, t1, callsite[11:0] >> 2
->> + *
->> + * See arch/loongarch/kernel/ftrace_dyn.c for details. Here, pay attention to
->> + * that the T series regs are available and safe because each C functions
->> + * follows the LoongArch psABI well.
->> + */
->> +
->> +       .macro  ftrace_regs_entry
->> +       PTR_ADDI sp, sp, -PT_SIZE
->> +       /* Save trace function ra at PT_ERA */
->> +       PTR_S   ra, sp, PT_ERA
->> +       /* Save parent ra at PT_R1(RA) */
->> +       PTR_S   t0, sp, PT_R1
->> +       PTR_S   a0, sp, PT_R4
->> +       PTR_S   a1, sp, PT_R5
->> +       PTR_S   a2, sp, PT_R6
->> +       PTR_S   a3, sp, PT_R7
->> +       PTR_S   a4, sp, PT_R8
->> +       PTR_S   a5, sp, PT_R9
->> +       PTR_S   a6, sp, PT_R10
->> +       PTR_S   a7, sp, PT_R11
->> +       PTR_S   fp, sp, PT_R22
->> +
->> +       PTR_ADDI t8, sp, PT_SIZE
->> +       PTR_S   t8, sp, PT_R3
->> +
->> +       .endm
->> +
->> +SYM_CODE_START(ftrace_caller)
->> +       ftrace_regs_entry
->> +       b       ftrace_common
->> +SYM_CODE_END(ftrace_caller)
->> +
->> +SYM_CODE_START(ftrace_common)
->> +       PTR_ADDI        a0, ra, -8      /* arg0: ip */
->> +       move            a1, t0          /* arg1: parent_ip */
->> +       la.pcrel        t1, function_trace_op
->> +       PTR_L           a2, t1, 0       /* arg2: op */
->> +       move            a3, sp          /* arg3: regs */
->> +       .globl ftrace_call
->> +ftrace_call:
->> +       bl              ftrace_stub
->> +/*
->> + * As we didn't use S series regs in this assmembly code and all calls
->> + * are C function which will save S series regs by themselves, there is
->> + * no need to restore S series regs. The T series is available and safe
->> + * at the callsite, so there is no need to restore the T series regs.
->> + */
->> +ftrace_common_return:
->> +       PTR_L   a0, sp, PT_R4
->> +       PTR_L   a1, sp, PT_R5
->> +       PTR_L   a2, sp, PT_R6
->> +       PTR_L   a3, sp, PT_R7
->> +       PTR_L   a4, sp, PT_R8
->> +       PTR_L   a5, sp, PT_R9
->> +       PTR_L   a6, sp, PT_R10
->> +       PTR_L   a7, sp, PT_R11
->> +       PTR_L   fp, sp, PT_R22
->> +       PTR_L   ra, sp, PT_R1
->> +       PTR_L   t0, sp, PT_ERA
->> +       PTR_ADDI sp, sp, PT_SIZE
->> +       jr      t0
->> +SYM_CODE_END(ftrace_common)
->> +
->> +SYM_FUNC_START(ftrace_stub)
->> +       jr      ra
->> +SYM_FUNC_END(ftrace_stub)
->> diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
->> index b206d9159205..c5df4ae73e0d 100644
->> --- a/arch/loongarch/kernel/unwind_prologue.c
->> +++ b/arch/loongarch/kernel/unwind_prologue.c
->> @@ -13,9 +13,7 @@ unsigned long unwind_get_return_address(struct unwind_state *state)
->>
->>          if (unwind_done(state))
->>                  return 0;
->> -       else if (state->type)
->> -               return state->pc;
->> -       else if (state->first)
->> +       else if (state->type || state->first)
->>                  return state->pc;
->>
->>          return *(unsigned long *)(state->sp);
->> @@ -39,16 +37,41 @@ static bool unwind_by_guess(struct unwind_state *state)
->>          return false;
->>   }
->>
->> +static inline void unwind_state_fixup(struct unwind_state *state)
->> +{
->> +#ifdef CONFIG_DYNAMIC_FTRACE
->> +       static unsigned long ftrace_case = (unsigned long)ftrace_call + 4;
->> +
->> +       if (state->pc == ftrace_case)
->> +               state->is_ftrace = true;
->> +#endif
->> +}
->> +
->>   static bool unwind_by_prologue(struct unwind_state *state)
->>   {
->>          struct stack_info *info = &state->stack_info;
->>          union loongarch_instruction *ip, *ip_end;
->>          unsigned long frame_size = 0, frame_ra = -1;
->>          unsigned long size, offset, pc = state->pc;
->> +       struct pt_regs *regs;
->>
->>          if (state->sp >= info->end || state->sp < info->begin)
->>                  return false;
->>
->> +       if (state->is_ftrace) {
->> +               /*
->> +                * As we meet ftrace_regs_entry, reset first flag like first doing
->> +                * tracing, Prologue analysis will stop soon because PC is at entry.
->> +                */
->> +               regs = (struct pt_regs *)state->sp;
->> +               state->pc = regs->csr_era;
->> +               state->ra = regs->regs[1];
->> +               state->sp = regs->regs[3];
->> +               state->first = true;
->> +               state->is_ftrace = false;
->> +               return true;
->> +       }
->> +
->>          if (!kallsyms_lookup_size_offset(pc, &size, &offset))
->>                  return false;
->>
->> @@ -94,7 +117,7 @@ static bool unwind_by_prologue(struct unwind_state *state)
->>
->>          state->pc = *(unsigned long *)(state->sp + frame_ra);
->>          state->sp = state->sp + frame_size;
->> -       return !!__kernel_text_address(state->pc);
->> +       goto out;
->>
->>   first:
->>          state->first = false;
->> @@ -103,7 +126,9 @@ static bool unwind_by_prologue(struct unwind_state *state)
->>
->>          state->pc = state->ra;
->>
->> -       return !!__kernel_text_address(state->ra);
->> +out:
->> +       unwind_state_fixup(state);
->> +       return !!__kernel_text_address(state->pc);
->>   }
->>
->>   void unwind_start(struct unwind_state *state, struct task_struct *task,
->> --
->> 2.36.0
->>
->>
+> 
 
