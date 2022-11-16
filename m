@@ -1,21 +1,22 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB32115D2
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8D8115D1
 	for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 02:53:34 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxXbetUHRjrpEHAA--.12898S3;
+	by gateway (Coremail) with SMTP id _____8BxnretUHRjppEHAA--.17258S3;
 	Wed, 16 Nov 2022 10:53:33 +0800 (CST)
 Received: from localhost.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx9VakUHRjO1MUAA--.35612S8;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx9VakUHRjO1MUAA--.35612S7;
 	Wed, 16 Nov 2022 10:53:33 +0800 (CST)
 From: Qing Zhang <zhangqing@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Ingo Molnar <mingo@redhat.com>
 Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 6/9] LoongArch/ftrace: Add HAVE_DYNAMIC_FTRACE_WITH_ARGS support
-Date: Wed, 16 Nov 2022 10:53:21 +0800
-Message-Id: <20221116025324.1624-7-zhangqing@loongson.cn>
+	linux-kernel@vger.kernel.org,
+	Jinyang He <hejinyang@loongson.cn>
+Subject: [PATCH v7 5/9] LoongArch/ftrace: Add HAVE_DYNAMIC_FTRACE_WITH_REGS support
+Date: Wed, 16 Nov 2022 10:53:20 +0800
+Message-Id: <20221116025324.1624-6-zhangqing@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20221116025324.1624-1-zhangqing@loongson.cn>
 References: <20221116025324.1624-1-zhangqing@loongson.cn>
@@ -26,109 +27,156 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dx9VakUHRjO1MUAA--.35612S8
+X-CM-TRANSID:AQAAf8Dx9VakUHRjO1MUAA--.35612S7
 X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZrW3XFW3WrykGFWrWw13XFb_yoW5AF1DpF
-	yIy3Z8JF47uFsa9asF9Fy5Wrs8Xr97u34avayxJa4rAF1DXFyUZr1xAr1DXFyUt3s7GrWI
-	vFyrKwnIkF45X3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxCF43Gry5Zr1ktr17XFWUJwb_yoWrWw4xpr
+	97Arn5GFWj9FsagrWSg3s5Wrs8JrWvg34ava9rAFyrGr4qqF15Z3y8Cr1DZFyIq3yxG3yx
+	XF1fCr4Yya12qwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b2xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	b28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
 	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
 	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0Ex4A2jsIE14v26F4j6r4U
-	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I
-	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
-	xVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcV
-	AFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8I
-	cIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r
-	4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4hF4DUUUU
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
-Allow for arguments to be passed in to ftrace_regs by default,
-If this is set, then arguments and stack can be found from
-the pt_regs.
+This patch implements CONFIG_DYNAMIC_FTRACE_WITH_REGS on LoongArch, which allows
+a traced function's arguments (and some other registers) to be captured
+into a struct pt_regs, allowing these to be inspected and modified.
 
-1. HAVE_DYNAMIC_FTRACE_WITH_ARGS don't need special hook for graph
-tracer entry point, but instead we can use graph_ops::func function
-to install the return_hooker.
-2. Livepatch requires this option in the future.
-
+Co-developed-by: Jinyang He <hejinyang@loongson.cn>
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
 Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
 ---
  arch/loongarch/Kconfig              |  1 +
- arch/loongarch/include/asm/ftrace.h | 17 +++++++++++++++++
- arch/loongarch/kernel/ftrace_dyn.c  | 12 ++++++++++++
- 3 files changed, 30 insertions(+)
+ arch/loongarch/include/asm/ftrace.h |  3 +++
+ arch/loongarch/kernel/ftrace_dyn.c  | 17 ++++++++++++++
+ arch/loongarch/kernel/mcount_dyn.S  | 36 +++++++++++++++++++++++++++--
+ 4 files changed, 55 insertions(+), 2 deletions(-)
 
 diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 12e3e91a68ae..5c4f1dc87f84 100644
+index 615ce62422b8..12e3e91a68ae 100644
 --- a/arch/loongarch/Kconfig
 +++ b/arch/loongarch/Kconfig
 @@ -90,6 +90,7 @@ config LOONGARCH
  	select HAVE_DEBUG_STACKOVERFLOW
  	select HAVE_DMA_CONTIGUOUS
  	select HAVE_DYNAMIC_FTRACE
-+	select HAVE_DYNAMIC_FTRACE_WITH_ARGS
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS
++	select HAVE_DYNAMIC_FTRACE_WITH_REGS
  	select HAVE_EBPF_JIT
  	select HAVE_EXIT_THREAD
+ 	select HAVE_FAST_GUP
 diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-index a3f974a7a5ce..5cc13ae48164 100644
+index 76ca58767f4d..a3f974a7a5ce 100644
 --- a/arch/loongarch/include/asm/ftrace.h
 +++ b/arch/loongarch/include/asm/ftrace.h
-@@ -15,6 +15,23 @@ extern void _mcount(void);
- #define mcount _mcount
- #endif
+@@ -28,6 +28,9 @@ struct dyn_ftrace;
+ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
+ #define ftrace_init_nop ftrace_init_nop
  
-+#ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
-+struct ftrace_ops;
-+
-+struct ftrace_regs {
-+	struct pt_regs regs;
-+};
-+
-+static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *fregs)
-+{
-+	return &fregs->regs;
-+}
-+
-+void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
-+		       struct ftrace_ops *op, struct ftrace_regs *fregs);
-+#define ftrace_graph_func ftrace_graph_func
++#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
++#define ARCH_SUPPORTS_FTRACE_OPS 1
 +#endif
-+
- #ifdef CONFIG_DYNAMIC_FTRACE
- static inline unsigned long ftrace_call_adjust(unsigned long addr)
- {
+ #endif /* CONFIG_DYNAMIC_FTRACE */
+ #endif /* __ASSEMBLY__ */
+ #endif /* CONFIG_FUNCTION_TRACER */
 diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
-index ec3d951be50c..f538829312d7 100644
+index 3fe791b6783e..ec3d951be50c 100644
 --- a/arch/loongarch/kernel/ftrace_dyn.c
 +++ b/arch/loongarch/kernel/ftrace_dyn.c
-@@ -144,6 +144,17 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent)
- 		*parent = return_hooker;
+@@ -99,6 +99,23 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
+ 	return ftrace_modify_code(pc, old, new, true);
  }
  
-+#ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
-+void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
-+		       struct ftrace_ops *op, struct ftrace_regs *fregs)
++#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
++int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
++			unsigned long addr)
 +{
-+	struct pt_regs *regs = &fregs->regs;
-+	unsigned long *parent = (unsigned long *)&regs->regs[1];
++	unsigned long pc;
++	long offset;
++	u32 old, new;
 +
-+	prepare_ftrace_return(ip, (unsigned long *)parent);
++	pc = rec->ip + LOONGARCH_INSN_SIZE;
++
++	old = larch_insn_gen_bl(pc, old_addr);
++	new = larch_insn_gen_bl(pc, addr);
++
++	return ftrace_modify_code(pc, old, new, true);
 +}
-+#else
++#endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
 +
- static int ftrace_modify_graph_caller(bool enable)
+ void arch_ftrace_update_code(int command)
  {
- 	unsigned long pc, func;
-@@ -170,4 +181,5 @@ int ftrace_disable_ftrace_graph_caller(void)
- {
- 	return ftrace_modify_graph_caller(false);
- }
-+#endif /* CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS */
- #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+ 	command |= FTRACE_MAY_SLEEP;
+diff --git a/arch/loongarch/kernel/mcount_dyn.S b/arch/loongarch/kernel/mcount_dyn.S
+index 0c12cc108e6f..02835186b463 100644
+--- a/arch/loongarch/kernel/mcount_dyn.S
++++ b/arch/loongarch/kernel/mcount_dyn.S
+@@ -27,7 +27,7 @@
+  * follows the LoongArch psABI well.
+  */
+ 
+-	.macro  ftrace_regs_entry
++	.macro  ftrace_regs_entry allregs=0
+ 	PTR_ADDI sp, sp, -PT_SIZE
+ 	/* Save trace function ra at PT_ERA */
+ 	PTR_S	ra, sp, PT_ERA
+@@ -43,16 +43,48 @@
+ 	PTR_S	a7, sp, PT_R11
+ 	PTR_S	fp, sp, PT_R22
+ 
++	.if \allregs
++	PTR_S	t0, sp, PT_R12
++	PTR_S	t1, sp, PT_R13
++	PTR_S	t2, sp, PT_R14
++	PTR_S	t3, sp, PT_R15
++	PTR_S	t4, sp, PT_R16
++	PTR_S	t5, sp, PT_R17
++	PTR_S	t6, sp, PT_R18
++	PTR_S	t7, sp, PT_R19
++	PTR_S	t8, sp, PT_R20
++	PTR_S	s0, sp, PT_R23
++	PTR_S	s1, sp, PT_R24
++	PTR_S	s2, sp, PT_R25
++	PTR_S	s3, sp, PT_R26
++	PTR_S	s4, sp, PT_R27
++	PTR_S	s5, sp, PT_R28
++	PTR_S	s6, sp, PT_R29
++	PTR_S	s7, sp, PT_R30
++	PTR_S	s8, sp, PT_R31
++	PTR_S	tp, sp, PT_R2
++	/* Clear it for later use as a flag sometimes. */
++	PTR_S	zero, sp, PT_R0
++	PTR_S	$r21, sp, PT_R21
++	.endif
++
+ 	PTR_ADDI t8, sp, PT_SIZE
+ 	PTR_S   t8, sp, PT_R3
+ 
+ 	.endm
+ 
+ SYM_CODE_START(ftrace_caller)
+-	ftrace_regs_entry
++	ftrace_regs_entry allregs=0
+ 	b	ftrace_common
+ SYM_CODE_END(ftrace_caller)
+ 
++#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
++SYM_CODE_START(ftrace_regs_caller)
++	ftrace_regs_entry allregs=1
++	b	ftrace_common
++SYM_CODE_END(ftrace_regs_caller)
++#endif
++
+ SYM_CODE_START(ftrace_common)
+ 	PTR_ADDI	a0, ra, -8	/* arg0: ip */
+ 	move		a1, t0		/* arg1: parent_ip */
 -- 
 2.36.0
 
