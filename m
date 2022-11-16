@@ -1,85 +1,59 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9145EAD47
-	for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 14:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1668522482;
-	bh=CeyaCZ4ZqESTcFuuIbk+8CdMbl4qa+2NQGZoRczkRVI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ZgxDus/XA3Zgnzv4ht07ANinJ+SQtjX1m6Ev/Jn0fF2NAkZHvFEen2OtnjUZ1qoYw
-	 dJ6IKt0oTRWBEKQewWrsX5scbgQZDlFUiXrxnBEEKUJgCis6GnZS32izTShC0A2kiC
-	 mcgdfwSXtAsI4dlPCnqT1oN7EYXNsZ56HtBVxoeI=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 4BE5D66876;
-	Tue, 15 Nov 2022 09:28:01 -0500 (EST)
-Message-ID: <7e606e2c3df5d727a6c69b74a803d9f2c8e717b0.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Makefile: use "grep -E" instead of "egrep"
-From: Xi Ruoyao <xry111@xry111.site>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>,  WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Date: Tue, 15 Nov 2022 22:27:59 +0800
-In-Reply-To: <1668506549-28261-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1668506549-28261-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.0 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B28F7C
+	for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 00:53:24 +0000 (UTC)
+Received: from kwepemi500023.china.huawei.com (unknown [172.30.72.53])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NBkvl45M9zqSSl;
+	Wed, 16 Nov 2022 08:49:23 +0800 (CST)
+Received: from huawei.com (10.175.112.208) by kwepemi500023.china.huawei.com
+ (7.221.188.76) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 16 Nov
+ 2022 08:53:10 +0800
+From: Peng Wu <wupeng58@huawei.com>
+To: <zhuyinbo@loongson.cn>, <arnd@arndb.de>, <loongarch@lists.linux.dev>
+CC: <linux-kernel@vger.kernel.org>, <liwei391@huawei.com>, Peng Wu
+	<wupeng58@huawei.com>
+Subject: [PATCH -next] soc: loongson: Fix an IS_ERR() vs NULL bug in loongson2_guts_probe()
+Date: Wed, 16 Nov 2022 00:51:23 +0000
+Message-ID: <20221116005123.81140-1-wupeng58@huawei.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.112.208]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi500023.china.huawei.com (7.221.188.76)
+X-CFilter-Loop: Reflected
 
-On Tue, 2022-11-15 at 18:02 +0800, Tiezhu Yang wrote:
-> The latest version of grep claims the egrep is now obsolete so the
-> build
-> now contains warnings that look like:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0egrep: warning: egrep is =
-obsolescent; using grep -E
-> fix this up by moving the LoongArch Makefile to use "grep -E" instead.
+The ioremap() function returns NULL on error, it doesn't return
+error pointers.
 
-For future reference: this warning message is imprecise because on some
-non-POSIX platforms grep does not support -E (see "Limitations of Usual
-Tools" in autoconf info page).
+Fixes: b82621ac8450 ("soc: loongson: add GUTS driver for loongson-2 platforms")
+Signed-off-by: Peng Wu <wupeng58@huawei.com>
+---
+ drivers/soc/loongson/loongson2_guts.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-However (1) we are already using -w, which is not guaranteed to be
-supported as well; (2) I don't think anyone will build LoongArch kernel
-on such an old non-POSIX system.
+diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson/loongson2_guts.c
+index bace4bc8e03b..52c222b1e6ef 100644
+--- a/drivers/soc/loongson/loongson2_guts.c
++++ b/drivers/soc/loongson/loongson2_guts.c
+@@ -108,8 +108,8 @@ static int loongson2_guts_probe(struct platform_device *pdev)
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	guts->regs = ioremap(res->start, res->end - res->start + 1);
+-	if (IS_ERR(guts->regs))
+-		return PTR_ERR(guts->regs);
++	if (!guts->regs)
++		return -ENOMEM;
+ 
+ 	/* Register soc device */
+ 	root = of_find_node_by_path("/");
+-- 
+2.17.1
 
-So LGTM.
-
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
-> =C2=A0arch/loongarch/Makefile | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index a0fc1f9..5232d8c 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -97,7 +97,7 @@ KBUILD_LDFLAGS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0+=3D -m $(ld-emul)
-> =C2=A0
-> =C2=A0ifdef CONFIG_LOONGARCH
-> =C2=A0CHECKFLAGS +=3D $(shell $(CC) $(KBUILD_CFLAGS) -dM -E -x c /dev/nul=
-l |
-> \
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0egrep -vw '__GNUC_(MINOR_|PATC=
-HLEVEL_)?_' | \
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0grep -E -vw '__GNUC_(MINOR_|PA=
-TCHLEVEL_)?_' | \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sed -e "s/^\#define /-D'/=
-" -e "s/ /'=3D'/" -e "s/$$/'/" -e
-> 's/\$$/&&/g')
-> =C2=A0endif
-> =C2=A0
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
