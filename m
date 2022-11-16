@@ -1,391 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85717F
-	for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 06:37:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C9B1C433B5
-	for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 06:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1668580622;
-	bh=/lWnJAASGLj2cYQzruT9TZ1vRfcxiG94RwOJswNKGvg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Fz3BgrqifX1NxmqJu84ugiEPxCosZmC3fN1YpKb0VgduDIU8RvJpyfbIHOBFuijMB
-	 nWq1yfiKbT/rwonwhr8vvTqjJJAcEVbIRt0WYANS/zmhVOtVaSmq1aYzqVslZHOojz
-	 OneKqUrumr8nxqrkFGKcMGrX41qkoOireG6QySkmaSFzw5nCYbzGiV5IpSXOULE3q6
-	 JazPsPzRwXqP6ad0J2phnRjoZM2ogNNY1EZOYwjfsj8lnniI7TBMzvKyXrrlTqX9Gd
-	 seFlc7wr7SzLWjWYgKvWyXdApLzMk3xWDs13uL50S6qdfjq3XfdB3GjUzG2ffD9V9m
-	 vCqLgJk76ybpQ==
-Received: by mail-ed1-f48.google.com with SMTP id s5so8921847edc.12
-        for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 22:37:02 -0800 (PST)
-X-Gm-Message-State: ANoB5pkCQhKfMBqLubdh5KzzgdI7b039AH17vrjL0+K4oLWs2cO/HEj4
-	T/O7OIt9juCD0BcURxbXxyLwB0hx9VhrOBMYLvI=
-X-Google-Smtp-Source: AA0mqf7H/WTkrpT5pOpqICIWdIeOufjmE0/t4V6kZXpARGvpFR0U4ve6H6cuWDZM5P6BPrxbUQZH+snl0yWqyGPgSeQ=
-X-Received: by 2002:aa7:c515:0:b0:462:a25f:f0f2 with SMTP id
- o21-20020aa7c515000000b00462a25ff0f2mr17796549edq.156.1668580620485; Tue, 15
- Nov 2022 22:37:00 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01D6A23C1
+	for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 06:53:51 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8Axz7f7iHRjN6sHAA--.17620S3;
+	Wed, 16 Nov 2022 14:53:47 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_1fxiHRjC4sUAA--.54738S3;
+	Wed, 16 Nov 2022 14:53:46 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juxin Gao <gaojuxin@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	Arnaud Patard <apatard@mandriva.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH v3 2/2] dt-bindings: gpio: add loongson series gpio
+Date: Wed, 16 Nov 2022 14:53:35 +0800
+Message-Id: <20221116065335.8823-2-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221116065335.8823-1-zhuyinbo@loongson.cn>
+References: <20221116065335.8823-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221116025324.1624-1-zhangqing@loongson.cn> <20221116025324.1624-9-zhangqing@loongson.cn>
-In-Reply-To: <20221116025324.1624-9-zhangqing@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 16 Nov 2022 14:36:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H64De4uSTkuaFuHsLnGpVXDjGSSiYPmLkR1tOvtyyMKww@mail.gmail.com>
-Message-ID: <CAAhV-H64De4uSTkuaFuHsLnGpVXDjGSSiYPmLkR1tOvtyyMKww@mail.gmail.com>
-Subject: Re: [PATCH v7 8/9] LoongArch: modules/ftrace: Initialize PLT at load time
-To: Qing Zhang <zhangqing@loongson.cn>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dx_1fxiHRjC4sUAA--.54738S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tFy8Ww43XFy5Gw4xXrb_yoWrZrykp3
+	WDZFZxX3y2grnxtF45KanrZr4xAr1kC3WrurnxC3yxtrW7KwnxXFWfWFykG3Z3WrWUXF17
+	JwsrurWFya43Aw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bfkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUAVWUZwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x
+	0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
+	xVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
+	C2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
+	Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
+	CTnIWIevJa73UjIFyTuYvjxU2_-PUUUUU
 
-Hi, Qing,
+Add the Loongson series gpio binding with DT schema format using
+json-schema.
 
-On Wed, Nov 16, 2022 at 10:53 AM Qing Zhang <zhangqing@loongson.cn> wrote:
->
-> To Implement ftrace trampiones through plt entry.
->
-> Tested by forcing ftrace_make_call() to use the module PLT, and then
-> loading up a module after setting up ftrace with:
->
-> | echo ":mod:<module-name>" > set_ftrace_filter;
-> | echo function > current_tracer;
-> | modprobe <module-name>
->
-> Since FTRACE_ADDR/FTRACE_REGS_ADDR is only defined when CONFIG_DYNAMIC_FTRACE
-> is selected, we wrap its use along with most of module_init_ftrace_plt() with
-> ifdeffery rather than using IS_ENABLED().
->
-> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
-> ---
->  arch/loongarch/include/asm/ftrace.h     |  4 ++
->  arch/loongarch/include/asm/inst.h       |  3 +
->  arch/loongarch/include/asm/module.h     |  5 +-
->  arch/loongarch/include/asm/module.lds.h |  1 +
->  arch/loongarch/kernel/ftrace_dyn.c      | 79 +++++++++++++++++++++++++
->  arch/loongarch/kernel/inst.c            | 11 ++++
->  arch/loongarch/kernel/module-sections.c | 11 ++++
->  arch/loongarch/kernel/module.c          | 22 +++++++
->  8 files changed, 135 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-> index 1583ec2171fc..8d194f6da8af 100644
-> --- a/arch/loongarch/include/asm/ftrace.h
-> +++ b/arch/loongarch/include/asm/ftrace.h
-> @@ -8,6 +8,10 @@
->
->  #define GRAPH_FAKE_OFFSET (sizeof(struct pt_regs) - offsetof(struct pt_regs, regs[1]))
->
-> +#define FTRACE_PLT_IDX         0
-> +#define FTRACE_REGS_PLT_IDX    1
-> +#define NR_FTRACE_PLTS         2
-> +
->  #ifdef CONFIG_FUNCTION_TRACER
->  #define MCOUNT_INSN_SIZE 4             /* sizeof mcount call */
->
-> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-> index 59fee75590e9..417d6b8bc43e 100644
-> --- a/arch/loongarch/include/asm/inst.h
-> +++ b/arch/loongarch/include/asm/inst.h
-> @@ -13,10 +13,12 @@
->
->  #define ADDR_IMMMASK_LU52ID    0xFFF0000000000000
->  #define ADDR_IMMMASK_LU32ID    0x000FFFFF00000000
-> +#define ADDR_IMMMASK_LU12IW    0x00000000FFFFF000
->  #define ADDR_IMMMASK_ADDU16ID  0x00000000FFFF0000
->
->  #define ADDR_IMMSHIFT_LU52ID   52
->  #define ADDR_IMMSHIFT_LU32ID   32
-> +#define ADDR_IMMSHIFT_LU12IW   12
->  #define ADDR_IMMSHIFT_ADDU16ID 16
->
->  #define ADDR_IMM(addr, INSN)   ((addr & ADDR_IMMMASK_##INSN) >> ADDR_IMMSHIFT_##INSN)
-> @@ -361,6 +363,7 @@ u32 larch_insn_gen_or(enum loongarch_gpr rd, enum loongarch_gpr rj,
->                         enum loongarch_gpr rk);
->  u32 larch_insn_gen_move(enum loongarch_gpr rd, enum loongarch_gpr rj);
->
-> +u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm);
->  u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
->  u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
->  u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
-> diff --git a/arch/loongarch/include/asm/module.h b/arch/loongarch/include/asm/module.h
-> index b29b19a46f42..a311cfec2b23 100644
-> --- a/arch/loongarch/include/asm/module.h
-> +++ b/arch/loongarch/include/asm/module.h
-> @@ -20,6 +20,9 @@ struct mod_arch_specific {
->         struct mod_section got;
->         struct mod_section plt;
->         struct mod_section plt_idx;
-> +
-> +       /* for CONFIG_DYNAMIC_FTRACE */
-> +       struct plt_entry *ftrace_trampolines;
->  };
->
->  struct got_entry {
-> @@ -49,7 +52,7 @@ static inline struct plt_entry emit_plt_entry(unsigned long val)
->  {
->         u32 lu12iw, lu32id, lu52id, jirl;
->
-> -       lu12iw = (lu12iw_op << 25 | (((val >> 12) & 0xfffff) << 5) | LOONGARCH_GPR_T1);
-> +       lu12iw = larch_insn_gen_lu12iw(LOONGARCH_GPR_T1, ADDR_IMM(val, LU12IW));
->         lu32id = larch_insn_gen_lu32id(LOONGARCH_GPR_T1, ADDR_IMM(val, LU32ID));
->         lu52id = larch_insn_gen_lu52id(LOONGARCH_GPR_T1, LOONGARCH_GPR_T1, ADDR_IMM(val, LU52ID));
->         jirl = larch_insn_gen_jirl(0, LOONGARCH_GPR_T1, 0, (val & 0xfff));
-> diff --git a/arch/loongarch/include/asm/module.lds.h b/arch/loongarch/include/asm/module.lds.h
-> index a3d1bc0fcc72..438f09d4ccf4 100644
-> --- a/arch/loongarch/include/asm/module.lds.h
-> +++ b/arch/loongarch/include/asm/module.lds.h
-> @@ -5,4 +5,5 @@ SECTIONS {
->         .got : { BYTE(0) }
->         .plt : { BYTE(0) }
->         .plt.idx : { BYTE(0) }
-> +       .ftrace_trampoline : { BYTE(0) }
->  }
-> diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
-> index cd64887e26b5..b070ce225989 100644
-> --- a/arch/loongarch/kernel/ftrace_dyn.c
-> +++ b/arch/loongarch/kernel/ftrace_dyn.c
-> @@ -9,6 +9,7 @@
->  #include <linux/uaccess.h>
->
->  #include <asm/inst.h>
-> +#include <asm/module.h>
->
->  static int ftrace_modify_code(unsigned long pc, u32 old, u32 new,
->                               bool validate)
-> @@ -72,12 +73,63 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
->         return ftrace_modify_code(pc, old, new, true);
->  }
->
-> +static inline int __get_mod(struct module **mod, unsigned long addr)
-> +{
-> +       preempt_disable();
-> +       *mod = __module_text_address(addr);
-> +       preempt_enable();
-> +
-> +       if (WARN_ON(!(*mod)))
-> +               return -EINVAL;
-> +
-> +       return 0;
-> +}
-> +
-> +static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
-> +{
-> +       struct plt_entry *plt = mod->arch.ftrace_trampolines;
-> +
-> +       if (addr == FTRACE_ADDR)
-> +               return &plt[FTRACE_PLT_IDX];
-> +       if (addr == FTRACE_REGS_ADDR &&
-> +                       IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_REGS))
-> +               return &plt[FTRACE_REGS_PLT_IDX];
-> +
-> +       return NULL;
-> +}
-> +
-> +static unsigned long get_plt_addr(struct module *mod, unsigned long addr)
-> +{
-> +       struct plt_entry *plt;
-> +
-> +       plt = get_ftrace_plt(mod, addr);
-> +       if (!plt) {
-> +               pr_err("ftrace: no module PLT for %ps\n", (void *)addr);
-> +               return -EINVAL;
-> +       }
-> +
-> +       return (unsigned long)plt;
-> +}
-> +
->  int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
->  {
->         unsigned long pc;
-> +       long offset;
->         u32 old, new;
->
->         pc = rec->ip + LOONGARCH_INSN_SIZE;
-> +       offset = (long)pc - (long)addr;
-> +
-> +       if (offset < -SZ_128M || offset >= SZ_128M) {
-> +               int ret;
-> +               struct module *mod;
-> +
-> +               ret = __get_mod(&mod, pc);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               addr = get_plt_addr(mod, addr);
-> +       }
->
->         old = larch_insn_gen_nop();
->         new = larch_insn_gen_bl(pc, addr);
-> @@ -89,9 +141,22 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
->                     unsigned long addr)
->  {
->         unsigned long pc;
-> +       long offset;
->         u32 old, new;
->
->         pc = rec->ip + LOONGARCH_INSN_SIZE;
-> +       offset = (long)pc - (long)addr;
-> +
-> +       if (offset < -SZ_128M || offset >= SZ_128M) {
-> +               int ret;
-> +               struct module *mod;
-> +
-> +               ret = __get_mod(&mod, pc);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               addr = get_plt_addr(mod, addr);
-> +       }
->
->         new = larch_insn_gen_nop();
->         old = larch_insn_gen_bl(pc, addr);
-> @@ -108,6 +173,20 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
->         u32 old, new;
->
->         pc = rec->ip + LOONGARCH_INSN_SIZE;
-> +       offset = (long)pc - (long)addr;
-> +
-> +       if (offset < -SZ_128M || offset >= SZ_128M) {
-> +               int ret;
-> +               struct module *mod;
-> +
-> +               ret = __get_mod(&mod, pc);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               addr = get_plt_addr(mod, addr);
-> +
-> +               old_addr = get_plt_addr(mod, old_addr);
-> +       }
->
->         old = larch_insn_gen_bl(pc, old_addr);
->         new = larch_insn_gen_bl(pc, addr);
-> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-> index 2d2e942eb06a..0d6bd7000ba6 100644
-> --- a/arch/loongarch/kernel/inst.c
-> +++ b/arch/loongarch/kernel/inst.c
-> @@ -103,6 +103,17 @@ u32 larch_insn_gen_bl(unsigned long pc, unsigned long dest)
->         return insn.word;
->  }
->
-> +u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm)
-> +{
-> +       union loongarch_instruction insn;
-> +
-> +       insn.reg1i20_format.opcode = lu12iw_op;
-> +       insn.reg1i20_format.rd = rd;
-> +       insn.reg1i20_format.immediate = imm;
-> +
-> +       return insn.word;
-> +}
-> +
->  u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm)
->  {
->         union loongarch_instruction insn;
-> diff --git a/arch/loongarch/kernel/module-sections.c b/arch/loongarch/kernel/module-sections.c
-> index d296a70b758f..bd1a96691c98 100644
-> --- a/arch/loongarch/kernel/module-sections.c
-> +++ b/arch/loongarch/kernel/module-sections.c
-> @@ -4,6 +4,7 @@
->   */
->
->  #include <linux/elf.h>
-> +#include <linux/ftrace.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->
-> @@ -103,6 +104,7 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->                               char *secstrings, struct module *mod)
->  {
->         unsigned int i, num_plts = 0, num_gots = 0;
-> +       Elf_Shdr *tramp = NULL;
->
->         /*
->          * Find the empty .plt sections.
-> @@ -114,6 +116,8 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->                         mod->arch.plt.shdr = sechdrs + i;
->                 else if (!strcmp(secstrings + sechdrs[i].sh_name, ".plt.idx"))
->                         mod->arch.plt_idx.shdr = sechdrs + i;
-> +               else if (!strcmp(secstrings + sechdrs[i].sh_name, ".ftrace_trampoline"))
-> +                       tramp = sechdrs + i;
->         }
->
->         if (!mod->arch.got.shdr) {
-> @@ -166,5 +170,12 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->         mod->arch.plt_idx.num_entries = 0;
->         mod->arch.plt_idx.max_entries = num_plts;
->
-> +       if (tramp) {
-> +               tramp->sh_type = SHT_NOBITS;
-> +               tramp->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
-> +               tramp->sh_addralign = __alignof__(struct plt_entry);
-> +               tramp->sh_size = NR_FTRACE_PLTS * sizeof(struct plt_entry);
-> +       }
-> +
->         return 0;
->  }
-> diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/module.c
-> index 825fcf77f9e7..a606a0cab968 100644
-> --- a/arch/loongarch/kernel/module.c
-> +++ b/arch/loongarch/kernel/module.c
-> @@ -10,6 +10,7 @@
->
->  #include <linux/moduleloader.h>
->  #include <linux/elf.h>
-> +#include <linux/ftrace.h>
->  #include <linux/mm.h>
->  #include <linux/numa.h>
->  #include <linux/vmalloc.h>
-> @@ -18,6 +19,7 @@
->  #include <linux/string.h>
->  #include <linux/kernel.h>
->  #include <asm/alternative.h>
-> +#include <asm/inst.h>
->
->  static int rela_stack_push(s64 stack_value, s64 *rela_stack, size_t *rela_stack_top)
->  {
-> @@ -458,6 +460,24 @@ void *module_alloc(unsigned long size)
->                         GFP_KERNEL, PAGE_KERNEL, 0, NUMA_NO_NODE, __builtin_return_address(0));
->  }
->
-> +static int module_init_ftrace_plt(const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs,
-> +                                 struct module *mod)
-> +{
-> +#ifdef CONFIG_DYNAMIC_FTRACE
-> +       struct plt_entry *ftrace_plts;
-> +
-> +       ftrace_plts = (void *)sechdrs->sh_addr;
-> +
-> +       ftrace_plts[FTRACE_PLT_IDX] = emit_plt_entry(FTRACE_ADDR);
-> +
-> +       if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_REGS))
-> +               ftrace_plts[FTRACE_REGS_PLT_IDX] = emit_plt_entry(FTRACE_REGS_ADDR);
-> +
-> +       mod->arch.ftrace_trampolines = ftrace_plts;
-> +#endif
-> +       return 0;
-> +}
-> +
->  int module_finalize(const Elf_Ehdr *hdr,
->                     const Elf_Shdr *sechdrs, struct module *mod)
->  {
-> @@ -467,6 +487,8 @@ int module_finalize(const Elf_Ehdr *hdr,
->         for (s = sechdrs, se = sechdrs + hdr->e_shnum; s < se; s++) {
->                 if (!strcmp(".altinstructions", secstrs + s->sh_name))
->                         apply_alternatives((void *)s->sh_addr, (void *)s->sh_addr + s->sh_size);
-> +               if (!strcmp(".ftrace_trampoline", secstrs + s->sh_name))
-> +                       return module_init_ftrace_plt(hdr, s, mod);
-We shouldn't return here, because we are in a loop, if
-.ftrace_trampoline is before .altinstructions, we will lose the
-apply_alternatives() call.
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+---
+Change in v3:
+		1. Separate some changes of MAINTAINERS file and enter the first patch.
+Change in v2:
+		1. Drop "loongson,gpio_base" and "gpio-ranges" will cover it.
+		1. Drop "loongson,conf_offset", "loongson,out_offset", "loongson,in_offset",
+		   "loongson,support_irq" and kernel driver will initial them that depend
+		   compatible in kernel.
+		3. Fixup maintainer for this driver.
 
-Huacai
->         }
->
->         return 0;
-> --
-> 2.36.0
->
+ .../bindings/gpio/loongson,ls-gpio.yaml       | 126 ++++++++++++++++++
+ MAINTAINERS                                   |   1 +
+ 2 files changed, 127 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+new file mode 100644
+index 000000000000..f54048d03d9b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+@@ -0,0 +1,126 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/loongson,ls-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson series GPIO controller.
++
++maintainers:
++  - Yinbo Zhu <zhuyinbo@loongson.cn>
++
++properties:
++  compatible:
++    enum:
++      - loongson,ls2k-gpio
++      - loongson,ls7a-gpio
++
++  reg:
++    maxItems: 1
++
++  ngpios:
++    minimum: 1
++    maximum: 64
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++
++  gpio-ranges: true
++
++  interrupts:
++    minItems: 1
++    maxItems: 64
++
++required:
++  - compatible
++  - reg
++  - ngpios
++  - "#gpio-cells"
++  - gpio-controller
++  - gpio-ranges
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    gpio0: gpio@1fe00500 {
++      compatible = "loongson,ls2k-gpio";
++      reg = <0x1fe00500 0x38>;
++      ngpios = <64>;
++      #gpio-cells = <2>;
++      gpio-controller;
++      gpio-ranges = <&pctrl 0 0 15>,
++                    <&pctrl 16 16 15>,
++                    <&pctrl 32 32 10>,
++                    <&pctrl 44 44 20>;
++      interrupt-parent = <&liointc1>;
++      interrupts = <28 IRQ_TYPE_LEVEL_LOW>,
++                   <29 IRQ_TYPE_LEVEL_LOW>,
++                   <30 IRQ_TYPE_LEVEL_LOW>,
++                   <30 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bbd7a0d946eb..cfef13aada3b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12056,6 +12056,7 @@ M:	Huacai Chen <chenhuacai@kernel.org>
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+ F:	drivers/gpio/gpio-loongson.c
+ F:	include/linux/platform_data/gpio-loongson.h
+ 
+-- 
+2.31.1
+
