@@ -1,90 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF8A7C
-	for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 01:42:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB75C4347C
-	for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 01:42:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1668562945;
-	bh=/73c+abN4QftE1DbXzsL5nCqHYd+wSDjYNjJfma3RpM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ldTpPluM0iki4tcyAUAFdVlF3guA3JyKKKBIJ9GWawHUrkxeCvKTXdYJdpSaia6qY
-	 xAe81NJmcoR4Wen0QVQgAC0mpizUPuMqKY3imVpfYGS7Xf7zWMzOFTeA2unW4Z3QUO
-	 0q0JGwko21GculukSvnotZKrj6CF7D/s437DW3FXCt7ihtsy+qgO9745blza7bGCKg
-	 c8U+vJ1qJaEDfXKDB3HurQ47WcSv50STwTP7U7Tuy606fw1xKAldv1JzMrc756gcke
-	 7SZ9XtmQRcKkw+TT/d49NPDmlEfDhtx1C2vHBjRA6yMmK9dDoK8QGbWrwbpoM5cPx6
-	 wWbWkNKxFUw/w==
-Received: by mail-ed1-f45.google.com with SMTP id a5so24471567edb.11
-        for <loongarch@lists.linux.dev>; Tue, 15 Nov 2022 17:42:25 -0800 (PST)
-X-Gm-Message-State: ANoB5pkf1dtl/ZpqDQ7nzLk1ePgKxS7gKiFYwenHVk7SgQWt2Ngr8WH+
-	wDqoCnD9E1ENGjK9sHBgH9XODretvF33N2U9OfY=
-X-Google-Smtp-Source: AA0mqf43jAe2+JFCQVOPNWtQ4LWc7dlgmJCk0zRPyjuABonKCHNzbeIq1QpbCjJz1+xl7Pb4KUyyQTFBARvH0Mjuq60=
-X-Received: by 2002:aa7:ce83:0:b0:457:23cb:20ab with SMTP id
- y3-20020aa7ce83000000b0045723cb20abmr16899813edv.254.1668562943489; Tue, 15
- Nov 2022 17:42:23 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A66E7C
+	for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 02:36:32 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxLtuuTHRjqI8HAA--.22242S3;
+	Wed, 16 Nov 2022 10:36:30 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxd1etTHRjVk0UAA--.35869S2;
+	Wed, 16 Nov 2022 10:36:29 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/4] Add kprobe and kretprobe support for LoongArch
+Date: Wed, 16 Nov 2022 10:36:25 +0800
+Message-Id: <1668566189-2056-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8Dxd1etTHRjVk0UAA--.35869S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7WryxXr17Aw1DuFyfWr4kJFb_yoW8Gw1xpF
+	nrZrn5Gr4rGwn3Jr9xtw1Uur1rtw48C3y2ga13try8C3WxXryUArs3KrZxXa4vkwsIqr4S
+	qr1rX3yYgFWxJa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <1668506549-28261-1-git-send-email-yangtiezhu@loongson.cn> <7e606e2c3df5d727a6c69b74a803d9f2c8e717b0.camel@xry111.site>
-In-Reply-To: <7e606e2c3df5d727a6c69b74a803d9f2c8e717b0.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 16 Nov 2022 09:42:11 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4enbgFoNCvnon9TW9JE0BuiMiX6ZHW27+GMX-SKEBK9g@mail.gmail.com>
-Message-ID: <CAAhV-H4enbgFoNCvnon9TW9JE0BuiMiX6ZHW27+GMX-SKEBK9g@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Makefile: use "grep -E" instead of "egrep"
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-Queued for loongarch-fixes, thanks.
+v3:
+  -- Rebase on the latest code
+  -- Check the alignment of PC in simu_branch() and simu_pc()
+  -- Add ibar in flush_insn_slot()
+  -- Rename kprobe_{pre,post}_handler() to {post_}kprobe_handler
+  -- Add preempt_disable() and preempt_enable_no_resched()
+  -- Remove r0 save/restore and do some minor changes
+     in kprobes_trampoline.S
+  -- Do not enable CONFIG_KPROBES by default
 
-Huacai
+v2:
+  -- Split simu_branch() and simu_pc() into a single patch
+  -- Call kprobe_page_fault() in do_page_fault()
+  -- Add kprobes_trampoline.S for kretprobe
 
-On Tue, Nov 15, 2022 at 10:28 PM Xi Ruoyao <xry111@xry111.site> wrote:
->
-> On Tue, 2022-11-15 at 18:02 +0800, Tiezhu Yang wrote:
-> > The latest version of grep claims the egrep is now obsolete so the
-> > build
-> > now contains warnings that look like:
-> >         egrep: warning: egrep is obsolescent; using grep -E
-> > fix this up by moving the LoongArch Makefile to use "grep -E" instead.
->
-> For future reference: this warning message is imprecise because on some
-> non-POSIX platforms grep does not support -E (see "Limitations of Usual
-> Tools" in autoconf info page).
->
-> However (1) we are already using -w, which is not guaranteed to be
-> supported as well; (2) I don't think anyone will build LoongArch kernel
-> on such an old non-POSIX system.
->
-> So LGTM.
->
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > ---
-> >  arch/loongarch/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> > index a0fc1f9..5232d8c 100644
-> > --- a/arch/loongarch/Makefile
-> > +++ b/arch/loongarch/Makefile
-> > @@ -97,7 +97,7 @@ KBUILD_LDFLAGS        += -m $(ld-emul)
-> >
-> >  ifdef CONFIG_LOONGARCH
-> >  CHECKFLAGS += $(shell $(CC) $(KBUILD_CFLAGS) -dM -E -x c /dev/null |
-> > \
-> > -       egrep -vw '__GNUC_(MINOR_|PATCHLEVEL_)?_' | \
-> > +       grep -E -vw '__GNUC_(MINOR_|PATCHLEVEL_)?_' | \
-> >         sed -e "s/^\#define /-D'/" -e "s/ /'='/" -e "s/$$/'/" -e
-> > 's/\$$/&&/g')
-> >  endif
-> >
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
-> School of Aerospace Science and Technology, Xidian University
+Tiezhu Yang (4):
+  LoongArch: Simulate branch and PC instructions
+  LoongArch: Add kprobe support
+  LoongArch: Add kretprobe support
+  samples/kprobes: Add LoongArch support
+
+ arch/loongarch/Kconfig                     |   2 +
+ arch/loongarch/include/asm/inst.h          |  22 ++
+ arch/loongarch/include/asm/kprobes.h       |  52 +++++
+ arch/loongarch/include/asm/ptrace.h        |   1 +
+ arch/loongarch/kernel/Makefile             |   2 +
+ arch/loongarch/kernel/inst.c               | 123 ++++++++++
+ arch/loongarch/kernel/kprobes.c            | 348 +++++++++++++++++++++++++++++
+ arch/loongarch/kernel/kprobes_trampoline.S |  96 ++++++++
+ arch/loongarch/mm/fault.c                  |   4 +
+ samples/kprobes/kprobe_example.c           |   8 +
+ 10 files changed, 658 insertions(+)
+ create mode 100644 arch/loongarch/include/asm/kprobes.h
+ create mode 100644 arch/loongarch/kernel/kprobes.c
+ create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
+
+-- 
+2.1.0
+
