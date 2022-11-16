@@ -1,86 +1,139 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1E67F
-	for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 08:03:01 +0000 (UTC)
-Received: by mail-lf1-f45.google.com with SMTP id j4so28332555lfk.0
-        for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 00:03:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wPMDtos2j4aykEy41/Mx5XsfSYAWFrCJwAqrA1+vLB8=;
-        b=Vbf+3SJjn+cqpz+LdY9z/6r5cEJHr1+1UchnsnMsjymxGs3YX4A1/qMU+wq6PmD38S
-         jn9VjKeA/BYPVDYcYaAOsH8ce3BIfl4EwVOEqvcoDl+bz9a3J9NOFmqjodPX7OSErHfH
-         E6DYWl8rdfVkhxVF3nUCD1GrootUNkarZ37/ytXIkdr0R5PECXLglLAkEAqHeJ8IdFIC
-         syCp+lxEgoLpeaaAX9+q7hIf4IBdV69vEeaJlfqAI6ejh53p/0efb4n5rhXUJVaA4/I9
-         V2VxBuLMKkL13/qokqD+edICj1WiwepmD09zH0mSqYdMpt7A73TRqQwmGQg9/i9txPA7
-         wh3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wPMDtos2j4aykEy41/Mx5XsfSYAWFrCJwAqrA1+vLB8=;
-        b=ES2xF9N7E5j8sPTVulYiwxUqZKyjQrt+nyZA9WFkkk/NEyEtACQdb7dXL6txURKWgh
-         CT55uf1wvRvcLZBPEI9Q8XPSzt21qjvulMHV/l09Q2ryNFIOuNlN+v/3F32MTSTcVf4q
-         stIrK0P/a1r3+K7d84LTEtBkTtHD5xhl5SdWZ5MrNQrDsbyyrujMcKXrhND0FW9gihx4
-         EhH5V1Kt3y8J0VJAfAYrca+MU1rygRZXtu4EthgkRjhVlBtE9dG4FEJ6Ba44bg8EPPDy
-         8PemrqwG722WgDglgV/C0GsJfctUAUNJgNsZ7m4FZH8bLCpR0OxIJPQfvrtoZ61uAuNz
-         ktjQ==
-X-Gm-Message-State: ANoB5plS+i6cynp6muJHepQTuhVgN+JoXVlpAxGt73Y8LCrGQD2+dXOG
-	8RIViSu57S5YaWG3jl1NRGCCcw==
-X-Google-Smtp-Source: AA0mqf6amq0LaL/3NgcdvuzYJ/+yws2jhZw2TtQulS8lyZ6z3icivHA4KAo9VicLYX+cy3R2fBjCkw==
-X-Received: by 2002:a19:f703:0:b0:4aa:a6f8:f042 with SMTP id z3-20020a19f703000000b004aaa6f8f042mr6309329lfe.405.1668585779635;
-        Wed, 16 Nov 2022 00:02:59 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id a17-20020a056512201100b0049d83646ce7sm2483365lfb.110.2022.11.16.00.02.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Nov 2022 00:02:59 -0800 (PST)
-Message-ID: <8368b30c-26d5-c7b1-ceab-77df1163cbcc@linaro.org>
-Date: Wed, 16 Nov 2022 09:02:58 +0100
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04ADB7F
+	for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 08:07:31 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxLttCmnRjG7IHAA--.22498S3;
+	Wed, 16 Nov 2022 16:07:30 +0800 (CST)
+Received: from localhost.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx9VY6mnRjQ54UAA--.36317S4;
+	Wed, 16 Nov 2022 16:07:26 +0800 (CST)
+From: Qing Zhang <zhangqing@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v8 2/9] LoongArch/ftrace: Add recordmcount support
+Date: Wed, 16 Nov 2022 16:07:15 +0800
+Message-Id: <20221116080722.4745-3-zhangqing@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221116080722.4745-1-zhangqing@loongson.cn>
+References: <20221116080722.4745-1-zhangqing@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v3 2/2] dt-bindings: gpio: add loongson series gpio
-Content-Language: en-US
-To: Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>
-References: <20221116065335.8823-1-zhuyinbo@loongson.cn>
- <20221116065335.8823-2-zhuyinbo@loongson.cn>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221116065335.8823-2-zhuyinbo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dx9VY6mnRjQ54UAA--.36317S4
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxGr4UXFWrZr4xAFy8ury8Zrb_yoW5CrWDpr
+	4qvFyrJFs2qryfG3ZIy348ur15Zas7Kr4Svryfta1FyFyDXrZ5Gr47JrnrWFyUCrykJ34x
+	WF4F9ry8ua1UJw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b2kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26F4j6r4U
+	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I
+	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
+	xVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcV
+	AFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8I
+	cIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AKxV
+	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zBT7UUUUU==
 
-On 16/11/2022 07:53, Yinbo Zhu wrote:
-> Add the Loongson series gpio binding with DT schema format using
-> json-schema.
-> 
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
-> Change in v3:
-> 		1. Separate some changes of MAINTAINERS file and enter the first patch.
-> Change in v2:
+Recordmcount utility under scripts is run, after compiling each object,
+to find out all the locations of calling _mcount() and put them into
+specific seciton named __mcount_loc.
+Then linker collects all such information into a table in the kernel image
+(between __start_mcount_loc and __stop_mcount_loc) for later use by ftrace.
 
+This patch adds loongarch specific definitions to identify such locations.
+On loongarch, only C version is used to build the kernel now that
+CONFIG_HAVE_C_RECORDMCOUNT is on.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+---
+ arch/loongarch/Kconfig |  2 ++
+ scripts/recordmcount.c | 23 +++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 92c4ec8c8527..e6b1defca1f1 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -86,11 +86,13 @@ config LOONGARCH
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+ 	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_CONTEXT_TRACKING_USER
++	select HAVE_C_RECORDMCOUNT
+ 	select HAVE_DEBUG_STACKOVERFLOW
+ 	select HAVE_DMA_CONTIGUOUS
+ 	select HAVE_EBPF_JIT
+ 	select HAVE_EXIT_THREAD
+ 	select HAVE_FAST_GUP
++	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_GENERIC_VDSO
+diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
+index cce12e1971d8..ae42f9c5dc42 100644
+--- a/scripts/recordmcount.c
++++ b/scripts/recordmcount.c
+@@ -38,6 +38,13 @@
+ #define R_AARCH64_ABS64	257
+ #endif
+ 
++#ifndef EM_LOONGARCH
++#define EM_LOONGARCH		258
++#define R_LARCH_64		2
++#define R_LARCH_MARK_LA			20
++#define R_LARCH_SOP_PUSH_PLT_PCREL	29
++#endif
++
+ #define R_ARM_PC24		1
+ #define R_ARM_THM_CALL		10
+ #define R_ARM_CALL		28
+@@ -441,6 +448,17 @@ static int arm64_is_fake_mcount(Elf64_Rel const *rp)
+ 	return ELF64_R_TYPE(w8(rp->r_info)) != R_AARCH64_CALL26;
+ }
+ 
++static int LARCH64_is_fake_mcount(Elf64_Rel const *rp)
++{
++	switch (ELF64_R_TYPE(w(rp->r_info))) {
++	case R_LARCH_MARK_LA:
++	case R_LARCH_SOP_PUSH_PLT_PCREL:
++		return 0;
++	}
++
++	return 1;
++}
++
+ /* 64-bit EM_MIPS has weird ELF64_Rela.r_info.
+  * http://techpubs.sgi.com/library/manuals/4000/007-4658-001/pdf/007-4658-001.pdf
+  * We interpret Table 29 Relocation Operation (Elf64_Rel, Elf64_Rela) [p.40]
+@@ -558,6 +576,7 @@ static int do_file(char const *const fname)
+ 		break;
+ 	case EM_IA_64:	reltype = R_IA64_IMM64; break;
+ 	case EM_MIPS:	/* reltype: e_class    */ break;
++	case EM_LOONGARCH:	/* reltype: e_class    */ break;
+ 	case EM_PPC:	reltype = R_PPC_ADDR32; break;
+ 	case EM_PPC64:	reltype = R_PPC64_ADDR64; break;
+ 	case EM_S390:	/* reltype: e_class    */ break;
+@@ -610,6 +629,10 @@ static int do_file(char const *const fname)
+ 			Elf64_r_info = MIPS64_r_info;
+ 			is_fake_mcount64 = MIPS64_is_fake_mcount;
+ 		}
++		if (w2(ghdr->e_machine) == EM_LOONGARCH) {
++			reltype = R_LARCH_64;
++			is_fake_mcount64 = LARCH64_is_fake_mcount;
++		}
+ 		if (do64(ghdr, fname, reltype) < 0)
+ 			goto out;
+ 		break;
+-- 
+2.36.0
 
