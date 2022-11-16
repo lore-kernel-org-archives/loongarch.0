@@ -1,101 +1,86 @@
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DEE7F
-	for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 07:31:18 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 5EFE55809C4;
-	Wed, 16 Nov 2022 02:31:17 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Wed, 16 Nov 2022 02:31:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm3; t=1668583877; x=1668591077; bh=E7Jvxw9QD6
-	996LKckctE3pdX4RULOQBfxqDk4Zxzl70=; b=UCYzRJf5/nF7KDyRXSU6qXw6m2
-	h/GU0Nq4X2X7krevsnL8L2tQjh7uA+CbeT3BoQMb0+Z7hbw3YCDdZh3StmM3fQla
-	L+8mrROo/hgakmB9OW4IUO3GJj1yZwqE8JnxdBh6dYzTfATlwnzoSBDzME8MyDTT
-	ksd98dty5hszdERTH7aOJ9A5lXFno5oW9VJ414s4ixJyOfDjugQucJc02H/yraY7
-	m8D/EpW3c4NzwprB+ZRuzHLf99xy3MLiDnSWAKTV4C7GPG6mSl+bu8j21ycmD9Gc
-	RD0dwIdCqv6pAmrzjsTKMDN8jGWTAyhrPQINx0ItVtRXFZX60RtwNhaVDaPQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1668583877; x=1668591077; bh=E7Jvxw9QD6996LKckctE3pdX4RUL
-	OQBfxqDk4Zxzl70=; b=a71ozBRnHjODiY3Bl2l8nH5zIEdMV8WQ9QLrSluipnJQ
-	c+ZPC8SEZNgpWnmMNqVGumLalZNySjSk2TFEHXWBflhQXSwblMaBzCHDll3ksYkv
-	12sVw0c3uZGlni/OyzVh4u/8yVkN4In+Neu8oOK44OdkRjKicMfd88Wp9JpVJsJg
-	Ueg6dGTdJmIUAu1TIdA1z1xmAIOvybbmCEieBdj3cnQMBn+lSPTMlaM019IYdisK
-	Y149puB9nPI8d7avw0dglZCmuP1niuRXJT042eDWdyAcew/kisksjG6M4N9UP8SD
-	6Y065HA8/rCwTDOlRBmzVWQ6NmnPx8ftOwIbBKvmcg==
-X-ME-Sender: <xms:wpF0Yzx92FxEviZ4rKqY1Dg_MtW2wQb6JgAnuyGBwODp2NtLbv_B6w>
-    <xme:wpF0Y7RW98tAi8rBUArSO9nbjLyaioIX8LXbGJFJvmATCQJHsCnxF4urgcYuhecJH
-    WOkouzlyP3ZjLEGZCU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrgeehgddutdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:wpF0Y9X6hQ1Q0rn2n4V8MUqsEMXEI0muIoGMmjnJbHJCYDyzSuE-5A>
-    <xmx:wpF0Y9iWplj5NDFNtnjL2cdlkcKiQqTlvZB06KLoCz-R_6U9mGd23w>
-    <xmx:wpF0Y1AO2AU2yBr2weajsEHEiXyu1eHgd-DKgd8DWFtExHvqN5LVHA>
-    <xmx:xZF0Y957IjAdhwipWoPh3GF8kRlSsqFjl4NYXgZtisTgQwYQyRkuHQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D04D8B60086; Wed, 16 Nov 2022 02:31:14 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1E67F
+	for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 08:03:01 +0000 (UTC)
+Received: by mail-lf1-f45.google.com with SMTP id j4so28332555lfk.0
+        for <loongarch@lists.linux.dev>; Wed, 16 Nov 2022 00:03:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wPMDtos2j4aykEy41/Mx5XsfSYAWFrCJwAqrA1+vLB8=;
+        b=Vbf+3SJjn+cqpz+LdY9z/6r5cEJHr1+1UchnsnMsjymxGs3YX4A1/qMU+wq6PmD38S
+         jn9VjKeA/BYPVDYcYaAOsH8ce3BIfl4EwVOEqvcoDl+bz9a3J9NOFmqjodPX7OSErHfH
+         E6DYWl8rdfVkhxVF3nUCD1GrootUNkarZ37/ytXIkdr0R5PECXLglLAkEAqHeJ8IdFIC
+         syCp+lxEgoLpeaaAX9+q7hIf4IBdV69vEeaJlfqAI6ejh53p/0efb4n5rhXUJVaA4/I9
+         V2VxBuLMKkL13/qokqD+edICj1WiwepmD09zH0mSqYdMpt7A73TRqQwmGQg9/i9txPA7
+         wh3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wPMDtos2j4aykEy41/Mx5XsfSYAWFrCJwAqrA1+vLB8=;
+        b=ES2xF9N7E5j8sPTVulYiwxUqZKyjQrt+nyZA9WFkkk/NEyEtACQdb7dXL6txURKWgh
+         CT55uf1wvRvcLZBPEI9Q8XPSzt21qjvulMHV/l09Q2ryNFIOuNlN+v/3F32MTSTcVf4q
+         stIrK0P/a1r3+K7d84LTEtBkTtHD5xhl5SdWZ5MrNQrDsbyyrujMcKXrhND0FW9gihx4
+         EhH5V1Kt3y8J0VJAfAYrca+MU1rygRZXtu4EthgkRjhVlBtE9dG4FEJ6Ba44bg8EPPDy
+         8PemrqwG722WgDglgV/C0GsJfctUAUNJgNsZ7m4FZH8bLCpR0OxIJPQfvrtoZ61uAuNz
+         ktjQ==
+X-Gm-Message-State: ANoB5plS+i6cynp6muJHepQTuhVgN+JoXVlpAxGt73Y8LCrGQD2+dXOG
+	8RIViSu57S5YaWG3jl1NRGCCcw==
+X-Google-Smtp-Source: AA0mqf6amq0LaL/3NgcdvuzYJ/+yws2jhZw2TtQulS8lyZ6z3icivHA4KAo9VicLYX+cy3R2fBjCkw==
+X-Received: by 2002:a19:f703:0:b0:4aa:a6f8:f042 with SMTP id z3-20020a19f703000000b004aaa6f8f042mr6309329lfe.405.1668585779635;
+        Wed, 16 Nov 2022 00:02:59 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id a17-20020a056512201100b0049d83646ce7sm2483365lfb.110.2022.11.16.00.02.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Nov 2022 00:02:59 -0800 (PST)
+Message-ID: <8368b30c-26d5-c7b1-ceab-77df1163cbcc@linaro.org>
+Date: Wed, 16 Nov 2022 09:02:58 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <88f8d4b3-b144-4d04-a2bc-61ee30dd6ff6@app.fastmail.com>
-In-Reply-To: <20221116065335.8823-1-zhuyinbo@loongson.cn>
-References: <20221116065335.8823-1-zhuyinbo@loongson.cn>
-Date: Wed, 16 Nov 2022 08:30:54 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Yinbo Zhu" <zhuyinbo@loongson.cn>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Juxin Gao" <gaojuxin@loongson.cn>, "Bibo Mao" <maobibo@loongson.cn>,
- "Yanteng Si" <siyanteng@loongson.cn>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v3 2/2] dt-bindings: gpio: add loongson series gpio
+Content-Language: en-US
+To: Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- "Arnaud Patard" <apatard@mandriva.com>, "Huacai Chen" <chenhuacai@kernel.org>
-Cc: "Jianmin Lv" <lvjianmin@loongson.cn>,
- zhanghongchen <zhanghongchen@loongson.cn>,
- "Liu Peibao" <liupeibao@loongson.cn>
-Subject: Re: [PATCH v3 1/2] gpio: loongson: add dts/acpi gpio support
-Content-Type: text/plain
+ Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>
+References: <20221116065335.8823-1-zhuyinbo@loongson.cn>
+ <20221116065335.8823-2-zhuyinbo@loongson.cn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221116065335.8823-2-zhuyinbo@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Nov 16, 2022, at 07:53, Yinbo Zhu wrote:
-> The latest Loongson series platform use dts or acpi framework to
-> register gpio device resources, such as the Loongson-2 series
-> SoC of LOONGARCH architecture. In order to support dts, acpi and
-> compatibility with previous platform device resources in driver,
-> this patch was added.
+On 16/11/2022 07:53, Yinbo Zhu wrote:
+> Add the Loongson series gpio binding with DT schema format using
+> json-schema.
+> 
+> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> ---
+> Change in v3:
+> 		1. Separate some changes of MAINTAINERS file and enter the first patch.
+> Change in v2:
 
-I think the support for legacy platform_data should be left out
-of this patch. I am working on a series that removes unused
-platform_data headers for machines that have DT support and no
-longer use static platform_device declarations anywhere in
-the kernel, so if you add another instance, that would just
-get removed again in the near future.
 
-Just don't add it here. If there are users that use traditional
-boardfiles instead of DT, they already need kernel patches to
-add the board files, and adding in the driver support can be
-part of the same patches.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-      Arnd
+Best regards,
+Krzysztof
+
