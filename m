@@ -1,40 +1,40 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECA08F69
-	for <loongarch@lists.linux.dev>; Thu, 17 Nov 2022 21:57:15 +0000 (UTC)
-Received: by mail-pj1-f46.google.com with SMTP id w15-20020a17090a380f00b0021873113cb4so2842203pjb.0
-        for <loongarch@lists.linux.dev>; Thu, 17 Nov 2022 13:57:15 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0220D8F69
+	for <loongarch@lists.linux.dev>; Thu, 17 Nov 2022 21:58:26 +0000 (UTC)
+Received: by mail-pf1-f180.google.com with SMTP id d192so3121445pfd.0
+        for <loongarch@lists.linux.dev>; Thu, 17 Nov 2022 13:58:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IIh+nGIerLfk4ZB9SpoRZWMODmjSUqXiyhjydKb0Cds=;
-        b=PJZ6jbnQhQq9tru88c3QcgjfZaJDnoJRCzzf1bX0/gWQf6BO1kYnGuZiAkcQbfZxF1
-         wVZdaktXE7y7G0iGR9w0mDib97tK+9Z1KEN4DGKZzUJEwZpO/1SRERjEZW4dZS1lSmQm
-         6pLSDQke2I1tY0Rbt7braOr4eQDXUxJpKb4Zg=
+        bh=r2vqsefxvlQpm7YoDJQXEXeeHIkQ6S5JMCMQ5S8aLio=;
+        b=k2i7Pob22XCdE3eYvjx4pPufwTb8mTPjukR1UCSAv0kmL6U29qZrcajtJc3GiwR25C
+         GxngyGxuAOe8R1u2fG07FDvUurbqbhzNNAvQ0bvvdjotWAgaJxTe1J6rbJlEzDLOD/Zm
+         f5ROj4ZQvL1a3wZkcDpdW1XiI4mqzUly58q/U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IIh+nGIerLfk4ZB9SpoRZWMODmjSUqXiyhjydKb0Cds=;
-        b=bVsr9GPgMwBuQ0v1Bw9QOHmK0rwO14bt4HAEDqDqQImz9yXLiE25rxiSvcVGCnrtLB
-         ri9zr4xGxqPCaeSm94lhXMaXzyMhfmaKa7U9G/h905KSigNA4gbbJtMV8l8ztdLZljfx
-         Dbq5Qe4hrBEStYVM5T59G2jrHDSustUAlONbaodPOYROhZvfBrVX4gxkc44mUtD05FGJ
-         xz+Am9wXvM1/DTxZRFu2O3fWcweU7d02UvY/S9DcXKx8PFCAM6IL4WIa1SxSAc8GS0h0
-         k1/m68b2gUA9YEZ15Mosg6E73IG7ba/XAJ1Y0xwyd9luBUNxd3wliF2sk1gmGmML5Wd/
-         GH8Q==
-X-Gm-Message-State: ANoB5pkBxIT78Nkku2GxDm1ot7SxQ+sKMmcC7YnbBrxdYdq7Aqkp3hzv
-	t2pt/Iq4lAO4WgXe/7clODpdZQ==
-X-Google-Smtp-Source: AA0mqf5F2mDePv/SsUAusLJAu22vdbKLGH3peZOY+MZBhXcyEG7NIlWlaGpyKLA4kx4t011dWowR5A==
-X-Received: by 2002:a17:90a:dd82:b0:212:fdb1:720b with SMTP id l2-20020a17090add8200b00212fdb1720bmr10785160pjv.66.1668722234748;
-        Thu, 17 Nov 2022 13:57:14 -0800 (PST)
+        bh=r2vqsefxvlQpm7YoDJQXEXeeHIkQ6S5JMCMQ5S8aLio=;
+        b=IxsGQ3i2+HdRGGhz6XZ0tgBAz2HiaH/HOdrC4gqfNY5QorUaeQSgh/9EnZdNzKc2+q
+         vB/OBVsASiA+WzyC35f2TlA9qeE17fG2+KZW2mC6rGbw4tAhIsGNgAzkp0jU3+qfmgDU
+         XNvW1faW2DpxHJk5QHTmX9QE5L4CP4Nraw39D+JjOFlIxJPlc2xU50+YzPUj63LaA9mi
+         YXmGKcY5HpDC45gfjnciP47RdT01wLHzhw2cLMeAQAzyd/p0dAo25FbksQ/bcJFtCnXN
+         BemD5CPNyAffAjTGVFUc5kLBstHS9sjGdjnVNlsfZfbywnU1ZXQMD3XKr8/AeamPGeKt
+         0+MQ==
+X-Gm-Message-State: ANoB5pmbkKSCtDG49CpdPMcSCC29lAS2mwRnYo9r8GfrBCZAfBGeHIAt
+	+I6YtbKFvKlfYImGGDvXlpJM/A==
+X-Google-Smtp-Source: AA0mqf6OLZEOM+uadHNHyZ4glxVpWyLO25QJV2wWHbf4ZbABty2OM80CQ8wN7Ibt7qgRI014DYHeJw==
+X-Received: by 2002:a63:5c0f:0:b0:470:8e8a:8e11 with SMTP id q15-20020a635c0f000000b004708e8a8e11mr3843188pgb.490.1668722306503;
+        Thu, 17 Nov 2022 13:58:26 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a28-20020aa795bc000000b0056beae3dee2sm1674860pfk.145.2022.11.17.13.57.14
+        by smtp.gmail.com with ESMTPSA id k3-20020a17090a3cc300b00200461cfa99sm3966446pjd.11.2022.11.17.13.58.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 13:57:14 -0800 (PST)
-Date: Thu, 17 Nov 2022 13:57:13 -0800
+        Thu, 17 Nov 2022 13:58:25 -0800 (PST)
+Date: Thu, 17 Nov 2022 13:58:25 -0800
 From: Kees Cook <keescook@chromium.org>
 To: "Jason A. Donenfeld" <Jason@zx2c4.com>
 Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
@@ -64,12 +64,12 @@ Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
 	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
 	linuxppc-dev@lists.ozlabs.org, linux-mmc@vger.kernel.org,
 	linux-parisc@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] treewide: use get_random_u32_inclusive() when
- possible
-Message-ID: <202211171349.F42BA5B0@keescook>
+Subject: Re: [PATCH v3 2/3] treewide: use get_random_u32_{above,below}()
+ instead of manual loop
+Message-ID: <202211171358.4B4E0E2F17@keescook>
 References: <20221114164558.1180362-1-Jason@zx2c4.com>
  <20221117202906.2312482-1-Jason@zx2c4.com>
- <20221117202906.2312482-4-Jason@zx2c4.com>
+ <20221117202906.2312482-3-Jason@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -78,117 +78,85 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221117202906.2312482-4-Jason@zx2c4.com>
+In-Reply-To: <20221117202906.2312482-3-Jason@zx2c4.com>
 
-On Thu, Nov 17, 2022 at 09:29:06PM +0100, Jason A. Donenfeld wrote:
+On Thu, Nov 17, 2022 at 09:29:05PM +0100, Jason A. Donenfeld wrote:
 > These cases were done with this Coccinelle:
 > 
 > @@
-> expression H;
-> expression L;
+> expression E;
+> identifier I;
 > @@
-> - (get_random_u32_below(H) + L)
-> + get_random_u32_inclusive(L, H + L - 1)
+> -   do {
+>       ... when != I
+> -     I = get_random_u32();
+>       ... when != I
+> -   } while (I > E);
+> +   I = get_random_u32_below(E + 1);
 > 
 > @@
-> expression H;
-> expression L;
+> expression E;
+> identifier I;
+> @@
+> -   do {
+>       ... when != I
+> -     I = get_random_u32();
+>       ... when != I
+> -   } while (I >= E);
+> +   I = get_random_u32_below(E);
+> 
+> @@
+> expression E;
+> identifier I;
+> @@
+> -   do {
+>       ... when != I
+> -     I = get_random_u32();
+>       ... when != I
+> -   } while (I < E);
+> +   I = get_random_u32_above(E - 1);
+> 
+> @@
+> expression E;
+> identifier I;
+> @@
+> -   do {
+>       ... when != I
+> -     I = get_random_u32();
+>       ... when != I
+> -   } while (I <= E);
+> +   I = get_random_u32_above(E);
+> 
+> @@
+> identifier I;
+> @@
+> -   do {
+>       ... when != I
+> -     I = get_random_u32();
+>       ... when != I
+> -   } while (!I);
+> +   I = get_random_u32_above(0);
+> 
+> @@
+> identifier I;
+> @@
+> -   do {
+>       ... when != I
+> -     I = get_random_u32();
+>       ... when != I
+> -   } while (I == 0);
+> +   I = get_random_u32_above(0);
+> 
+> @@
 > expression E;
 > @@
->   get_random_u32_inclusive(L,
->   H
-> - + E
-> - - E
->   )
-> 
-> @@
-> expression H;
-> expression L;
-> expression E;
-> @@
->   get_random_u32_inclusive(L,
->   H
-> - - E
-> - + E
->   )
-> 
-> @@
-> expression H;
-> expression L;
-> expression E;
-> expression F;
-> @@
->   get_random_u32_inclusive(L,
->   H
-> - - E
->   + F
-> - + E
->   )
-> 
-> @@
-> expression H;
-> expression L;
-> expression E;
-> expression F;
-> @@
->   get_random_u32_inclusive(L,
->   H
-> - + E
->   + F
-> - - E
->   )
-> 
-> And then subsequently cleaned up by hand, with several automatic cases
-> rejected if it didn't make sense contextually.
+> - E + 1 + get_random_u32_below(U32_MAX - E)
+> + get_random_u32_above(E)
 > 
 > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com> # for infiniband
 > Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> ---
->  arch/x86/kernel/module.c                      |  2 +-
->  crypto/rsa-pkcs1pad.c                         |  2 +-
->  crypto/testmgr.c                              | 10 ++++----
->  drivers/bus/mhi/host/internal.h               |  2 +-
->  drivers/dma-buf/st-dma-fence-chain.c          |  2 +-
->  drivers/infiniband/core/cma.c                 |  2 +-
->  drivers/infiniband/hw/hns/hns_roce_ah.c       |  5 ++--
->  drivers/mtd/nand/raw/nandsim.c                |  2 +-
->  drivers/net/wireguard/selftest/allowedips.c   |  8 +++---
->  .../broadcom/brcm80211/brcmfmac/p2p.c         |  2 +-
->  .../net/wireless/intel/iwlwifi/mvm/mac-ctxt.c |  2 +-
->  fs/f2fs/segment.c                             |  6 ++---
->  kernel/kcsan/selftest.c                       |  2 +-
->  lib/test_hexdump.c                            | 10 ++++----
->  lib/test_printf.c                             |  2 +-
->  lib/test_vmalloc.c                            |  6 ++---
->  mm/kasan/kasan_test.c                         |  6 ++---
->  mm/kfence/kfence_test.c                       |  2 +-
->  mm/swapfile.c                                 |  5 ++--
->  net/bluetooth/mgmt.c                          |  5 ++--
->  net/core/pktgen.c                             | 25 ++++++++-----------
->  net/ipv4/tcp_input.c                          |  2 +-
->  net/ipv6/addrconf.c                           |  6 ++---
->  net/netfilter/nf_nat_helper.c                 |  2 +-
->  net/xfrm/xfrm_state.c                         |  2 +-
->  25 files changed, 56 insertions(+), 64 deletions(-)
-
-Even the diffstat agrees this is a nice clean-up. :)
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
-
-The only comment I have is that maybe these cases can just be left as-is
-with _below()?
-
-> -             size_t len = get_random_u32_below(rs) + gs;
-> +             size_t len = get_random_u32_inclusive(gs, rs + gs - 1);
-
-It seems like writing it in the form of base plus [0, limit) is clearer?
-
-		size_t len = gs + get_random_u32_below(rs);
-
-But there is only a handful, so *shrug*
-
-All the others are much cleaner rewritten as _inclusive().
 
 -- 
 Kees Cook
