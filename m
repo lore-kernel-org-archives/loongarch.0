@@ -1,217 +1,287 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4C78BFF
-	for <loongarch@lists.linux.dev>; Thu, 17 Nov 2022 18:54:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1668711239;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4648BFD;
+	Thu, 17 Nov 2022 20:29:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7432BC433C1;
+	Thu, 17 Nov 2022 20:29:22 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="IWVZIkww"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1668716959;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pqDtOtNSwX0ZV2YnFqWo79lClAu9bDuVWAJZIEodJ7s=;
-	b=HpsUOQEU44K0KINKcRGDgLeIzb4eCZQZGeFoHnZfIVw1nFfRduZb9f07JM+ke4lNXIlZIg
-	Ukgs+ETqiO5xSd+czSX1rZFwrPoAJpCrRQU0NlZnZXR6f+CHlfHeHzwWSBm4Ydm/KRqd5x
-	kHL+mRUIjF//wsE76j429+QwU70YEfA=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-82--RVe2p4bP3infZgzptQR5A-1; Thu, 17 Nov 2022 13:53:54 -0500
-X-MC-Unique: -RVe2p4bP3infZgzptQR5A-1
-Received: by mail-qk1-f199.google.com with SMTP id bs7-20020a05620a470700b006fac7447b1cso3213995qkb.17
-        for <loongarch@lists.linux.dev>; Thu, 17 Nov 2022 10:53:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pqDtOtNSwX0ZV2YnFqWo79lClAu9bDuVWAJZIEodJ7s=;
-        b=5Hw78Zm4enV4yZk8rWN3HktLvnFvBNIwwORwfISokxtcwfRUr+jKiBPvo2YCm7J2MJ
-         jLD2S2trPrtApo+nizajdDNqit0o8EY1NWmtAfUHxAuGf9Rltxm6xag8qdTkQczTKV3g
-         nsRN7o7zGdpF66OP74e2MT6ay2OaaPVTCCPk9eHUbEsrADcdmuACmyPzG0XnQzmCaQn2
-         SWgsQiZ+KesoilZ/AXc5i6yhUEE0II5LWgCFkVn4VztWoBWxi/VhT75gZFKPqcLhHR3z
-         y+wn7nc7fcFYYNKd89AcCACegypxI+KMamaeX94CX8Puq1+8/URi9BPr6qwyssfkALtq
-         rBqQ==
-X-Gm-Message-State: ANoB5pnL3uFwy0+sqR3EAqiZZF5hxX4K0HlBvm5Qph3IHKV+xtLVRJU1
-	Z6JCb5Yhcr6PhF2tF1/lgRs0UwT+xGcJZvMD/QeloYXF9mmRPEz9H+e48M8EefIdZar27dBWqIG
-	uoudvODaC5dDESYrV1EvK
-X-Received: by 2002:a05:622a:289:b0:343:6909:9204 with SMTP id z9-20020a05622a028900b0034369099204mr3581882qtw.347.1668711234080;
-        Thu, 17 Nov 2022 10:53:54 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf4pjBfmBUmb8xyyeg1C+sqT3nsADmA8FXGzdanQiaRc4baapIqKmPjicoswCyXlkvWC03dPvQ==
-X-Received: by 2002:a05:622a:289:b0:343:6909:9204 with SMTP id z9-20020a05622a028900b0034369099204mr3581867qtw.347.1668711233802;
-        Thu, 17 Nov 2022 10:53:53 -0800 (PST)
-Received: from x1n (bras-base-aurron9127w-grc-46-70-31-27-79.dsl.bell.ca. [70.31.27.79])
-        by smtp.gmail.com with ESMTPSA id d17-20020a05620a241100b006f87d28ea3asm974024qkn.54.2022.11.17.10.53.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 10:53:53 -0800 (PST)
-Date: Thu, 17 Nov 2022 13:53:52 -0500
-From: Peter Xu <peterx@redhat.com>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, r@hev.cc
-Subject: Re: [PATCH 04/47] LoongArch: Set _PAGE_DIRTY only if _PAGE_WRITE is
- set in {pmd,pte}_mkdirty()
-Message-ID: <Y3aDQKwGDLXtWRJu@x1n>
-References: <20221117042532.4064448-1-chenhuacai@loongson.cn>
- <Y3ZPRx/VUoVvujNa@x1n>
+	bh=jxSBEAA2kkiqo7SIyMfmVBoggp8Ul86vERwZDj3FKZI=;
+	b=IWVZIkwwRl0KXw4dTU+fczN5OEKZ1AhRDZ84brT6zM8QlvF9OHC1qCF+Xu6tjDTEa7zPfy
+	m/c7MQ3/QXPqaHT3/L0iOV7WmGV7fUovSVwfmuhXgV50hSgQmpGez6v1/6hLUDujfPywrX
+	AU8UtocYg6LsZbrhFcsdqrtqFJ66jbs=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 0c0ae169 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Thu, 17 Nov 2022 20:29:19 +0000 (UTC)
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Kees Cook <keescook@chromium.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	=?UTF-8?q?Christoph=20B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	SeongJae Park <sj@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Helge Deller <deller@gmx.de>,
+	netdev@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-mmc@vger.kernel.org,
+	linux-parisc@vger.kernel.org
+Subject: [PATCH v3 0/3] convert tree to get_random_u32_{below,above,inclusive}()
+Date: Thu, 17 Nov 2022 21:29:03 +0100
+Message-Id: <20221117202906.2312482-1-Jason@zx2c4.com>
+In-Reply-To: <20221114164558.1180362-1-Jason@zx2c4.com>
+References: <20221114164558.1180362-1-Jason@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <Y3ZPRx/VUoVvujNa@x1n>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 17, 2022 at 10:12:07AM -0500, Peter Xu wrote:
-> Hi, Huacai,
-> 
-> On Thu, Nov 17, 2022 at 12:25:32PM +0800, Huacai Chen wrote:
-> > Now {pmd,pte}_mkdirty() set _PAGE_DIRTY bit unconditionally, this causes
-> > random segmentation fault after commit 0ccf7f168e17bb7e ("mm/thp: carry
-> > over dirty bit when thp splits on pmd").
-> > 
-> > The reason is: when fork(), parent process use pmd_wrprotect() to clear
-> > huge page's _PAGE_WRITE and _PAGE_DIRTY (for COW);
-> 
-> Is it safe to drop dirty bit when wr-protect?  It means the mm can reclaim
-> the page directly assuming the page contains rubbish.
-> 
-> Consider after fork() and memory pressure kicks the kswapd, I don't see
-> anything stops the kswapd from recycling the pages and lose the data in
-> both processes.
+Hey everyone,
 
-Feel free to ignore this question..  I think I got an answer from Hev (and
-I then got a follow up question):
+[Changes v2->v3: rename get_random_u32_between() to
+ get_random_u32_inclusive(), and implement with closed interval.]
 
-https://lore.kernel.org/all/Y3Z9Zf0jARMOkFBq@x1n/
+This series is the second tranche of tree-wide conversions to get random
+integer handling a bit tamer. It's another Coccinelle-based patchset.
 
-> 
-> > then pte_mkdirty() set
-> > _PAGE_DIRTY as well as _PAGE_MODIFIED while splitting dirty huge pages;
-> > once _PAGE_DIRTY is set, there will be no tlb modify exception so the COW
-> > machanism fails; and at last memory corruption occurred between parent
-> > and child processes.
-> > 
-> > So, we should set _PAGE_DIRTY only when _PAGE_WRITE is set in {pmd,pte}_
-> > mkdirty().
-> > 
-> > Cc: stable@vger.kernel.org
-> > Cc: Peter Xu <peterx@redhat.com>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> > Note: CC sparc maillist because they have similar issues.
-> 
-> I also had a look on sparc64, it seems to not do the same as loongarch
-> here (not removing dirty in wr-protect):
-> 
-> static inline pmd_t pmd_wrprotect(pmd_t pmd)
-> {
-> 	pte_t pte = __pte(pmd_val(pmd));
-> 
-> 	pte = pte_wrprotect(pte);
-> 
-> 	return __pmd(pte_val(pte));
-> }
-> 
-> static inline pte_t pte_wrprotect(pte_t pte)
-> {
-> 	unsigned long val = pte_val(pte), tmp;
-> 
-> 	__asm__ __volatile__(
-> 	"\n661:	andn		%0, %3, %0\n"
-> 	"	nop\n"
-> 	"\n662:	nop\n"
-> 	"	nop\n"
-> 	"	.section	.sun4v_2insn_patch, \"ax\"\n"
-> 	"	.word		661b\n"
-> 	"	sethi		%%uhi(%4), %1\n"
-> 	"	sllx		%1, 32, %1\n"
-> 	"	.word		662b\n"
-> 	"	or		%1, %%lo(%4), %1\n"
-> 	"	andn		%0, %1, %0\n"
-> 	"	.previous\n"
-> 	: "=r" (val), "=r" (tmp)
-> 	: "0" (val), "i" (_PAGE_WRITE_4U | _PAGE_W_4U),
-> 	  "i" (_PAGE_WRITE_4V | _PAGE_W_4V));
-> 
-> 	return __pte(val);
-> }
+First we s/prandom_u32_max/get_random_u32_below/, since the former is
+just a deprecated alias for the latter. Then later, we can remove
+prandom_u32_max all together. I'm quite happy about finally being able
+to do that. It means that prandom.h is now only for deterministic and
+repeatable randomness, not non-deterministic/cryptographic randomness.
+That line is no longer blurred.
 
-(Same here; I just overlooked what does _PAGE_W_4U meant..)
+In order to clean up a bunch of inefficient patterns, we use two simple
+helper functions built on top of get_random_u32_below:
+get_random_u32_above and get_random_u32_inclusive. The next two patches
+convert some gnarly open-coded number juggling to use these helpers.
 
-> 
-> >  
-> >  arch/loongarch/include/asm/pgtable.h | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-> > index 946704bee599..debbe116f105 100644
-> > --- a/arch/loongarch/include/asm/pgtable.h
-> > +++ b/arch/loongarch/include/asm/pgtable.h
-> > @@ -349,7 +349,9 @@ static inline pte_t pte_mkclean(pte_t pte)
-> >  
-> >  static inline pte_t pte_mkdirty(pte_t pte)
-> >  {
-> > -	pte_val(pte) |= (_PAGE_DIRTY | _PAGE_MODIFIED);
-> > +	pte_val(pte) |= _PAGE_MODIFIED;
-> > +	if (pte_val(pte) & _PAGE_WRITE)
-> > +		pte_val(pte) |= _PAGE_DIRTY;
-> 
-> I'm not sure whether mm has rule to always set write bit then set dirty
-> bit, need to be careful here because the outcome may differ when use:
-> 
->   pte_mkdirty(pte_mkwrite(pte))
->   (expected)
-> 
-> VS:
-> 
->   pte_mkwrite(pte_mkdirty(pte))
->   (dirty not set)
-> 
-> I had a feeling I miss some arch-specific details here on why loongarch
-> needs such implementation, but I can't quickly tell.
+I've used Coccinelle for these three treewide patches, so hopefully
+review is rather uneventful. I didn't accept all of the changes that
+Coccinelle proposed, though, as these tend to be somewhat
+context-specific. I erred on the side of just going with the most
+obvious cases, at least this time through. And then we can address more
+complicated cases through actual maintainer trees.
 
-After a closer look I think it's fine for loongarch as pte_mkwrite will
-also set the dirty bit unconditionally, so at least the two ways will still
-generate the same pte (DIRTY+MODIFIED+WRITE).
+Since get_random_u32_below() and others sits in my random.git tree,
+these patches too will flow through that same tree.
 
-But this whole thing is still confusing to me.  It'll still be great if
-anyone can help explain why the _DIRTY cannot be set only in pte_mkwrite()
-if that's the solo place in charge of "whether the pte is writable".
+Regards,
+Jason
 
-The other follow up question is: how do we mark "this pte contains valid
-data" (the common definition of "dirty bit"), while "this pte is not
-writable" on loongarch?
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Theodore Ts'o <tytso@mit.edu>
+Cc: Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Darrick J. Wong <djwong@kernel.org>
+Cc: SeongJae Park <sj@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Helge Deller <deller@gmx.de>
+Cc: netdev@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-block@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-media@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-mips@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-mmc@vger.kernel.org
+Cc: linux-parisc@vger.kernel.org
 
-It can happen when we're installing a page with non-zero data meanwhile
-wr-protected.  That's actually a valid case for userfaultfd wr-protect mode
-where user specified UFFDIO_COPY ioctl with flag UFFDIO_COPY_MODE_WP, where
-we'll install a non-zero page from user buffer but don't grant write bit.
+Jason A. Donenfeld (3):
+  treewide: use get_random_u32_below() instead of deprecated function
+  treewide: use get_random_u32_{above,below}() instead of manual loop
+  treewide: use get_random_u32_inclusive() when possible
 
-From code-wise, I think it can be done currently with this on loongarch:
-
-  pte_wrprotect(pte_mkwrite(pte_mkdirty(pte)))
-
-Where pte_wrprotect(pte_mkwrite(pte)) is not a no-op but applying MODIFIED.
-
-While on many other archs it'll be as simple as:
-
-  pte_mkdirty(pte)
-
-But that's really error-prone and not obvious.
-
-Copying Hev too.
-
-Thanks,
+ arch/arm/kernel/process.c                     |  2 +-
+ arch/arm64/kernel/process.c                   |  2 +-
+ arch/loongarch/kernel/process.c               |  2 +-
+ arch/loongarch/kernel/vdso.c                  |  2 +-
+ arch/mips/kernel/process.c                    |  2 +-
+ arch/mips/kernel/vdso.c                       |  2 +-
+ arch/parisc/kernel/vdso.c                     |  2 +-
+ arch/powerpc/crypto/crc-vpmsum_test.c         |  4 +-
+ arch/powerpc/kernel/process.c                 |  2 +-
+ arch/s390/kernel/process.c                    |  2 +-
+ arch/s390/kernel/vdso.c                       |  2 +-
+ arch/sparc/vdso/vma.c                         |  2 +-
+ arch/um/kernel/process.c                      |  2 +-
+ arch/x86/entry/vdso/vma.c                     |  2 +-
+ arch/x86/kernel/module.c                      |  2 +-
+ arch/x86/kernel/process.c                     |  2 +-
+ arch/x86/mm/pat/cpa-test.c                    |  4 +-
+ crypto/rsa-pkcs1pad.c                         |  2 +-
+ crypto/testmgr.c                              | 86 +++++++++----------
+ drivers/block/drbd/drbd_receiver.c            |  4 +-
+ drivers/bus/mhi/host/internal.h               |  2 +-
+ drivers/dma-buf/st-dma-fence-chain.c          |  6 +-
+ .../gpu/drm/i915/gem/i915_gem_execbuffer.c    |  2 +-
+ .../drm/i915/gt/intel_execlists_submission.c  |  2 +-
+ drivers/gpu/drm/i915/intel_memory_region.c    |  4 +-
+ drivers/infiniband/core/cma.c                 |  2 +-
+ drivers/infiniband/hw/cxgb4/id_table.c        |  4 +-
+ drivers/infiniband/hw/hns/hns_roce_ah.c       |  5 +-
+ drivers/infiniband/ulp/rtrs/rtrs-clt.c        |  2 +-
+ drivers/md/bcache/request.c                   |  2 +-
+ drivers/media/common/v4l2-tpg/v4l2-tpg-core.c |  8 +-
+ .../media/test-drivers/vidtv/vidtv_demod.c    |  8 +-
+ .../test-drivers/vivid/vivid-kthread-cap.c    |  2 +-
+ .../test-drivers/vivid/vivid-kthread-out.c    |  2 +-
+ .../media/test-drivers/vivid/vivid-radio-rx.c |  4 +-
+ .../media/test-drivers/vivid/vivid-sdr-cap.c  |  2 +-
+ .../test-drivers/vivid/vivid-touch-cap.c      |  2 +-
+ drivers/mmc/core/core.c                       |  4 +-
+ drivers/mmc/host/dw_mmc.c                     |  2 +-
+ drivers/mtd/nand/raw/nandsim.c                |  4 +-
+ drivers/mtd/tests/mtd_nandecctest.c           | 10 +--
+ drivers/mtd/tests/stresstest.c                |  8 +-
+ drivers/mtd/ubi/debug.c                       |  2 +-
+ drivers/mtd/ubi/debug.h                       |  6 +-
+ drivers/net/ethernet/broadcom/cnic.c          |  2 +-
+ .../chelsio/inline_crypto/chtls/chtls_io.c    |  4 +-
+ drivers/net/phy/at803x.c                      |  2 +-
+ drivers/net/team/team_mode_random.c           |  2 +-
+ drivers/net/wireguard/selftest/allowedips.c   | 20 ++---
+ drivers/net/wireguard/timers.c                |  4 +-
+ .../broadcom/brcm80211/brcmfmac/p2p.c         |  2 +-
+ .../net/wireless/intel/iwlwifi/mvm/mac-ctxt.c |  2 +-
+ drivers/pci/p2pdma.c                          |  2 +-
+ drivers/s390/scsi/zfcp_fc.c                   |  2 +-
+ drivers/scsi/fcoe/fcoe_ctlr.c                 |  4 +-
+ drivers/scsi/qedi/qedi_main.c                 |  2 +-
+ drivers/scsi/scsi_debug.c                     |  6 +-
+ fs/ceph/inode.c                               |  2 +-
+ fs/ceph/mdsmap.c                              |  2 +-
+ fs/ext2/ialloc.c                              |  2 +-
+ fs/ext4/ialloc.c                              |  2 +-
+ fs/ext4/mmp.c                                 |  8 +-
+ fs/ext4/super.c                               |  5 +-
+ fs/f2fs/gc.c                                  |  2 +-
+ fs/f2fs/segment.c                             |  8 +-
+ fs/ubifs/debug.c                              |  8 +-
+ fs/ubifs/lpt_commit.c                         | 14 +--
+ fs/ubifs/tnc_commit.c                         |  2 +-
+ fs/xfs/libxfs/xfs_alloc.c                     |  2 +-
+ fs/xfs/libxfs/xfs_ialloc.c                    |  2 +-
+ fs/xfs/xfs_error.c                            |  2 +-
+ include/linux/damon.h                         |  2 +-
+ include/linux/nodemask.h                      |  2 +-
+ kernel/bpf/core.c                             |  4 +-
+ kernel/kcsan/selftest.c                       |  4 +-
+ kernel/locking/test-ww_mutex.c                |  4 +-
+ kernel/time/clocksource.c                     |  2 +-
+ lib/fault-inject.c                            |  2 +-
+ lib/find_bit_benchmark.c                      |  4 +-
+ lib/kobject.c                                 |  2 +-
+ lib/reed_solomon/test_rslib.c                 |  6 +-
+ lib/sbitmap.c                                 |  4 +-
+ lib/test-string_helpers.c                     |  2 +-
+ lib/test_fprobe.c                             |  5 +-
+ lib/test_hexdump.c                            | 10 +--
+ lib/test_kprobes.c                            |  5 +-
+ lib/test_list_sort.c                          |  2 +-
+ lib/test_printf.c                             |  2 +-
+ lib/test_rhashtable.c                         |  6 +-
+ lib/test_vmalloc.c                            |  8 +-
+ mm/kasan/kasan_test.c                         |  6 +-
+ mm/kfence/core.c                              |  4 +-
+ mm/kfence/kfence_test.c                       |  4 +-
+ mm/slub.c                                     |  2 +-
+ mm/swapfile.c                                 |  5 +-
+ net/802/garp.c                                |  2 +-
+ net/802/mrp.c                                 |  2 +-
+ net/batman-adv/bat_iv_ogm.c                   |  4 +-
+ net/batman-adv/bat_v_elp.c                    |  2 +-
+ net/batman-adv/bat_v_ogm.c                    |  4 +-
+ net/batman-adv/network-coding.c               |  2 +-
+ net/bluetooth/mgmt.c                          |  5 +-
+ net/can/j1939/socket.c                        |  2 +-
+ net/can/j1939/transport.c                     |  2 +-
+ net/ceph/mon_client.c                         |  2 +-
+ net/ceph/osd_client.c                         |  2 +-
+ net/core/neighbour.c                          |  4 +-
+ net/core/pktgen.c                             | 37 ++++----
+ net/core/stream.c                             |  2 +-
+ net/ipv4/icmp.c                               |  2 +-
+ net/ipv4/igmp.c                               |  6 +-
+ net/ipv4/inet_connection_sock.c               |  2 +-
+ net/ipv4/inet_hashtables.c                    |  2 +-
+ net/ipv4/route.c                              |  4 +-
+ net/ipv4/tcp_bbr.c                            |  2 +-
+ net/ipv4/tcp_input.c                          |  3 +-
+ net/ipv6/addrconf.c                           |  8 +-
+ net/ipv6/mcast.c                              | 10 +--
+ net/ipv6/output_core.c                        |  8 +-
+ net/ipv6/route.c                              |  2 +-
+ net/netfilter/ipvs/ip_vs_twos.c               |  4 +-
+ net/netfilter/nf_conntrack_core.c             |  4 +-
+ net/netfilter/nf_nat_helper.c                 |  2 +-
+ net/netlink/af_netlink.c                      |  2 +-
+ net/packet/af_packet.c                        |  4 +-
+ net/sched/act_gact.c                          |  2 +-
+ net/sched/act_sample.c                        |  2 +-
+ net/sched/sch_choke.c                         |  2 +-
+ net/sched/sch_netem.c                         |  4 +-
+ net/sctp/socket.c                             |  2 +-
+ net/sctp/transport.c                          |  2 +-
+ net/sunrpc/cache.c                            |  2 +-
+ net/sunrpc/xprtsock.c                         |  2 +-
+ net/tipc/socket.c                             |  2 +-
+ net/vmw_vsock/af_vsock.c                      |  3 +-
+ net/xfrm/xfrm_state.c                         |  2 +-
+ 136 files changed, 286 insertions(+), 313 deletions(-)
 
 -- 
-Peter Xu
-
+2.38.1
