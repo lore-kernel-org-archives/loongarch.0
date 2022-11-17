@@ -1,107 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE07B6135;
-	Thu, 17 Nov 2022 16:20:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A59CEC433B5;
-	Thu, 17 Nov 2022 16:20:07 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="ShJChEFk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1668702005;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4C78BFF
+	for <loongarch@lists.linux.dev>; Thu, 17 Nov 2022 18:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1668711239;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yXReeGYWAkNsw4+UICMYAUFCUliJi8syMU+jrBjtN+I=;
-	b=ShJChEFkS/WoLTYTfqnIoulaJEVDjPgHlBF73vJKzecwUuNaBWaxad+1izxyXu6Exw/TaA
-	5irR4sihjVzoDK1KiXvBd2OBPvvMwotSdLzvfkIJeE7XNMY72JeeG28zUlT5pyaHmBsZk0
-	JQ9ybm2sWtI6GOjvOwFIenKMBQ/9L7c=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id d3e36533 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Thu, 17 Nov 2022 16:20:04 +0000 (UTC)
-Date: Thu, 17 Nov 2022 17:19:52 +0100
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Kees Cook <kees@kernel.org>, Kees Cook <keescook@chromium.org>,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Christoph =?utf-8?Q?B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Richard Weinberger <richard@nod.at>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	SeongJae Park <sj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michael Ellerman <mpe@ellerman.id.au>, Helge Deller <deller@gmx.de>,
-	netdev@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-mmc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, ydroneaud@opteya.com
-Subject: Re: [PATCH v2 3/3] treewide: use get_random_u32_between() when
- possible
-Message-ID: <Y3ZfKHTHWUkdZIMt@zx2c4.com>
-References: <20221114164558.1180362-1-Jason@zx2c4.com>
- <20221114164558.1180362-4-Jason@zx2c4.com>
- <202211161436.A45AD719A@keescook>
- <Y3V4g8eorwiU++Y3@zx2c4.com>
- <Y3V6QtYMayODVDOk@zx2c4.com>
- <202211161628.164F47F@keescook>
- <Y3WDyl8ArQgeEoUU@zx2c4.com>
- <0EE39896-C7B6-4CB6-87D5-22AA787740A9@kernel.org>
- <Y3ZWbcoGOdFjlPhS@mit.edu>
+	bh=pqDtOtNSwX0ZV2YnFqWo79lClAu9bDuVWAJZIEodJ7s=;
+	b=HpsUOQEU44K0KINKcRGDgLeIzb4eCZQZGeFoHnZfIVw1nFfRduZb9f07JM+ke4lNXIlZIg
+	Ukgs+ETqiO5xSd+czSX1rZFwrPoAJpCrRQU0NlZnZXR6f+CHlfHeHzwWSBm4Ydm/KRqd5x
+	kHL+mRUIjF//wsE76j429+QwU70YEfA=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-82--RVe2p4bP3infZgzptQR5A-1; Thu, 17 Nov 2022 13:53:54 -0500
+X-MC-Unique: -RVe2p4bP3infZgzptQR5A-1
+Received: by mail-qk1-f199.google.com with SMTP id bs7-20020a05620a470700b006fac7447b1cso3213995qkb.17
+        for <loongarch@lists.linux.dev>; Thu, 17 Nov 2022 10:53:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pqDtOtNSwX0ZV2YnFqWo79lClAu9bDuVWAJZIEodJ7s=;
+        b=5Hw78Zm4enV4yZk8rWN3HktLvnFvBNIwwORwfISokxtcwfRUr+jKiBPvo2YCm7J2MJ
+         jLD2S2trPrtApo+nizajdDNqit0o8EY1NWmtAfUHxAuGf9Rltxm6xag8qdTkQczTKV3g
+         nsRN7o7zGdpF66OP74e2MT6ay2OaaPVTCCPk9eHUbEsrADcdmuACmyPzG0XnQzmCaQn2
+         SWgsQiZ+KesoilZ/AXc5i6yhUEE0II5LWgCFkVn4VztWoBWxi/VhT75gZFKPqcLhHR3z
+         y+wn7nc7fcFYYNKd89AcCACegypxI+KMamaeX94CX8Puq1+8/URi9BPr6qwyssfkALtq
+         rBqQ==
+X-Gm-Message-State: ANoB5pnL3uFwy0+sqR3EAqiZZF5hxX4K0HlBvm5Qph3IHKV+xtLVRJU1
+	Z6JCb5Yhcr6PhF2tF1/lgRs0UwT+xGcJZvMD/QeloYXF9mmRPEz9H+e48M8EefIdZar27dBWqIG
+	uoudvODaC5dDESYrV1EvK
+X-Received: by 2002:a05:622a:289:b0:343:6909:9204 with SMTP id z9-20020a05622a028900b0034369099204mr3581882qtw.347.1668711234080;
+        Thu, 17 Nov 2022 10:53:54 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf4pjBfmBUmb8xyyeg1C+sqT3nsADmA8FXGzdanQiaRc4baapIqKmPjicoswCyXlkvWC03dPvQ==
+X-Received: by 2002:a05:622a:289:b0:343:6909:9204 with SMTP id z9-20020a05622a028900b0034369099204mr3581867qtw.347.1668711233802;
+        Thu, 17 Nov 2022 10:53:53 -0800 (PST)
+Received: from x1n (bras-base-aurron9127w-grc-46-70-31-27-79.dsl.bell.ca. [70.31.27.79])
+        by smtp.gmail.com with ESMTPSA id d17-20020a05620a241100b006f87d28ea3asm974024qkn.54.2022.11.17.10.53.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 10:53:53 -0800 (PST)
+Date: Thu, 17 Nov 2022 13:53:52 -0500
+From: Peter Xu <peterx@redhat.com>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, r@hev.cc
+Subject: Re: [PATCH 04/47] LoongArch: Set _PAGE_DIRTY only if _PAGE_WRITE is
+ set in {pmd,pte}_mkdirty()
+Message-ID: <Y3aDQKwGDLXtWRJu@x1n>
+References: <20221117042532.4064448-1-chenhuacai@loongson.cn>
+ <Y3ZPRx/VUoVvujNa@x1n>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <Y3ZPRx/VUoVvujNa@x1n>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Y3ZWbcoGOdFjlPhS@mit.edu>
 
-On Thu, Nov 17, 2022 at 10:42:37AM -0500, Theodore Ts'o wrote:
-> On Wed, Nov 16, 2022 at 04:47:27PM -0800, Kees Cook wrote:
-> > >> > - between
-> > >> > - ranged
-> > >> > - spanning
-> > >> > 
-> > >> > https://www.thefreedictionary.com/List-of-prepositions.htm
-> > >> > - amid
-> > >> > 
-> > >> > Sigh, names.
-> > >> 
-> > >> I think "inclusive" is best.
-> > >
-> > >I find it not very descriptive of what the function does. Is there one
-> > >you like second best? Or are you convinced they're all much much much
-> > >worse than "inclusive" that they shouldn't be considered?
+On Thu, Nov 17, 2022 at 10:12:07AM -0500, Peter Xu wrote:
+> Hi, Huacai,
+> 
+> On Thu, Nov 17, 2022 at 12:25:32PM +0800, Huacai Chen wrote:
+> > Now {pmd,pte}_mkdirty() set _PAGE_DIRTY bit unconditionally, this causes
+> > random segmentation fault after commit 0ccf7f168e17bb7e ("mm/thp: carry
+> > over dirty bit when thp splits on pmd").
 > > 
-> > Right, I don't think any are sufficiently descriptive. "Incluisve"
-> > with two arguments seems unambiguous and complete to me. :)
+> > The reason is: when fork(), parent process use pmd_wrprotect() to clear
+> > huge page's _PAGE_WRITE and _PAGE_DIRTY (for COW);
 > 
-> The problem with "between", "ranged", "spanning" is that they don't
-> tell the reader whether we're dealing with an "open interval" or a
-> "closed interval".  They are just different ways of saying that it's a
-> range between, say, 0 and 20.  But it doesn't tell you whether it
-> includes 0 or 20 or not.
+> Is it safe to drop dirty bit when wr-protect?  It means the mm can reclaim
+> the page directly assuming the page contains rubbish.
 > 
-> The only way I can see for making it ambiguous is either to use the
-> terminology "closed interval" or "inclusive".  And "open" and "closed"
-> can have other meanings, so get_random_u32_inclusive() is going to be
-> less confusing than get_random_u32_closed().
+> Consider after fork() and memory pressure kicks the kswapd, I don't see
+> anything stops the kswapd from recycling the pages and lose the data in
+> both processes.
 
-Alright, that about settles it then. I'll re-roll.
+Feel free to ignore this question..  I think I got an answer from Hev (and
+I then got a follow up question):
 
-Jason
+https://lore.kernel.org/all/Y3Z9Zf0jARMOkFBq@x1n/
+
+> 
+> > then pte_mkdirty() set
+> > _PAGE_DIRTY as well as _PAGE_MODIFIED while splitting dirty huge pages;
+> > once _PAGE_DIRTY is set, there will be no tlb modify exception so the COW
+> > machanism fails; and at last memory corruption occurred between parent
+> > and child processes.
+> > 
+> > So, we should set _PAGE_DIRTY only when _PAGE_WRITE is set in {pmd,pte}_
+> > mkdirty().
+> > 
+> > Cc: stable@vger.kernel.org
+> > Cc: Peter Xu <peterx@redhat.com>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> > Note: CC sparc maillist because they have similar issues.
+> 
+> I also had a look on sparc64, it seems to not do the same as loongarch
+> here (not removing dirty in wr-protect):
+> 
+> static inline pmd_t pmd_wrprotect(pmd_t pmd)
+> {
+> 	pte_t pte = __pte(pmd_val(pmd));
+> 
+> 	pte = pte_wrprotect(pte);
+> 
+> 	return __pmd(pte_val(pte));
+> }
+> 
+> static inline pte_t pte_wrprotect(pte_t pte)
+> {
+> 	unsigned long val = pte_val(pte), tmp;
+> 
+> 	__asm__ __volatile__(
+> 	"\n661:	andn		%0, %3, %0\n"
+> 	"	nop\n"
+> 	"\n662:	nop\n"
+> 	"	nop\n"
+> 	"	.section	.sun4v_2insn_patch, \"ax\"\n"
+> 	"	.word		661b\n"
+> 	"	sethi		%%uhi(%4), %1\n"
+> 	"	sllx		%1, 32, %1\n"
+> 	"	.word		662b\n"
+> 	"	or		%1, %%lo(%4), %1\n"
+> 	"	andn		%0, %1, %0\n"
+> 	"	.previous\n"
+> 	: "=r" (val), "=r" (tmp)
+> 	: "0" (val), "i" (_PAGE_WRITE_4U | _PAGE_W_4U),
+> 	  "i" (_PAGE_WRITE_4V | _PAGE_W_4V));
+> 
+> 	return __pte(val);
+> }
+
+(Same here; I just overlooked what does _PAGE_W_4U meant..)
+
+> 
+> >  
+> >  arch/loongarch/include/asm/pgtable.h | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+> > index 946704bee599..debbe116f105 100644
+> > --- a/arch/loongarch/include/asm/pgtable.h
+> > +++ b/arch/loongarch/include/asm/pgtable.h
+> > @@ -349,7 +349,9 @@ static inline pte_t pte_mkclean(pte_t pte)
+> >  
+> >  static inline pte_t pte_mkdirty(pte_t pte)
+> >  {
+> > -	pte_val(pte) |= (_PAGE_DIRTY | _PAGE_MODIFIED);
+> > +	pte_val(pte) |= _PAGE_MODIFIED;
+> > +	if (pte_val(pte) & _PAGE_WRITE)
+> > +		pte_val(pte) |= _PAGE_DIRTY;
+> 
+> I'm not sure whether mm has rule to always set write bit then set dirty
+> bit, need to be careful here because the outcome may differ when use:
+> 
+>   pte_mkdirty(pte_mkwrite(pte))
+>   (expected)
+> 
+> VS:
+> 
+>   pte_mkwrite(pte_mkdirty(pte))
+>   (dirty not set)
+> 
+> I had a feeling I miss some arch-specific details here on why loongarch
+> needs such implementation, but I can't quickly tell.
+
+After a closer look I think it's fine for loongarch as pte_mkwrite will
+also set the dirty bit unconditionally, so at least the two ways will still
+generate the same pte (DIRTY+MODIFIED+WRITE).
+
+But this whole thing is still confusing to me.  It'll still be great if
+anyone can help explain why the _DIRTY cannot be set only in pte_mkwrite()
+if that's the solo place in charge of "whether the pte is writable".
+
+The other follow up question is: how do we mark "this pte contains valid
+data" (the common definition of "dirty bit"), while "this pte is not
+writable" on loongarch?
+
+It can happen when we're installing a page with non-zero data meanwhile
+wr-protected.  That's actually a valid case for userfaultfd wr-protect mode
+where user specified UFFDIO_COPY ioctl with flag UFFDIO_COPY_MODE_WP, where
+we'll install a non-zero page from user buffer but don't grant write bit.
+
+From code-wise, I think it can be done currently with this on loongarch:
+
+  pte_wrprotect(pte_mkwrite(pte_mkdirty(pte)))
+
+Where pte_wrprotect(pte_mkwrite(pte)) is not a no-op but applying MODIFIED.
+
+While on many other archs it'll be as simple as:
+
+  pte_mkdirty(pte)
+
+But that's really error-prone and not obvious.
+
+Copying Hev too.
+
+Thanks,
+
+-- 
+Peter Xu
+
