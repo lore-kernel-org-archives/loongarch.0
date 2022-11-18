@@ -1,103 +1,122 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4BC8F69
-	for <loongarch@lists.linux.dev>; Thu, 17 Nov 2022 22:15:41 +0000 (UTC)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-135-r8pLcNsHMNSPwdstNZNmIw-1; Thu, 17 Nov 2022 22:15:38 +0000
-X-MC-Unique: r8pLcNsHMNSPwdstNZNmIw-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 17 Nov
- 2022 22:15:36 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.044; Thu, 17 Nov 2022 22:15:36 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Theodore Ts'o' <tytso@mit.edu>, Kees Cook <kees@kernel.org>
-CC: "Jason A. Donenfeld" <Jason@zx2c4.com>, Kees Cook <keescook@chromium.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Jakub Kicinski <kuba@kernel.org>, Russell King
-	<linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, "Thomas
- Bogendoerfer" <tsbogend@alpha.franken.de>, Heiko Carstens
-	<hca@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>,
-	=?iso-8859-1?Q?Christoph_B=F6hmwalder?= <christoph.boehmwalder@linbit.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>, Jason Gunthorpe <jgg@nvidia.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>, "Martin K . Petersen"
-	<martin.petersen@oracle.com>, Andreas Dilger <adilger.kernel@dilger.ca>,
-	Jaegeuk Kim <jaegeuk@kernel.org>, Richard Weinberger <richard@nod.at>,
-	"Darrick J . Wong" <djwong@kernel.org>, SeongJae Park <sj@kernel.org>,
-	"Thomas Gleixner" <tglx@linutronix.de>, Andrew Morton
-	<akpm@linux-foundation.org>, Michael Ellerman <mpe@ellerman.id.au>, Helge
- Deller <deller@gmx.de>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "linux-mips@vger.kernel.org"
-	<linux-mips@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>, "linux-mmc@vger.kernel.org"
-	<linux-mmc@vger.kernel.org>, "linux-parisc@vger.kernel.org"
-	<linux-parisc@vger.kernel.org>, "ydroneaud@opteya.com" <ydroneaud@opteya.com>
-Subject: RE: [PATCH v2 3/3] treewide: use get_random_u32_between() when
- possible
-Thread-Topic: [PATCH v2 3/3] treewide: use get_random_u32_between() when
- possible
-Thread-Index: AQHY+pt8WAMBAHgXDk6lkwvXqmmyGK5DraKg
-Date: Thu, 17 Nov 2022 22:15:36 +0000
-Message-ID: <5b2afac148e24181a206e540768e465b@AcuMS.aculab.com>
-References: <20221114164558.1180362-1-Jason@zx2c4.com>
- <20221114164558.1180362-4-Jason@zx2c4.com> <202211161436.A45AD719A@keescook>
- <Y3V4g8eorwiU++Y3@zx2c4.com> <Y3V6QtYMayODVDOk@zx2c4.com>
- <202211161628.164F47F@keescook> <Y3WDyl8ArQgeEoUU@zx2c4.com>
- <0EE39896-C7B6-4CB6-87D5-22AA787740A9@kernel.org> <Y3ZWbcoGOdFjlPhS@mit.edu>
-In-Reply-To: <Y3ZWbcoGOdFjlPhS@mit.edu>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C719B20EE
+	for <loongarch@lists.linux.dev>; Fri, 18 Nov 2022 04:59:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01DD2C433C1;
+	Fri, 18 Nov 2022 04:59:15 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org,
+	Qi Hu <huqi@loongson.cn>
+Subject: [PATCH] LoongArch: Clear FPU/SIMD thread info flags for kernel thread
+Date: Fri, 18 Nov 2022 12:56:47 +0800
+Message-Id: <20221118045647.1991409-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-From: Theodore Ts'o
-> Sent: 17 November 2022 15:43
-...
-> The problem with "between", "ranged", "spanning" is that they don't
-> tell the reader whether we're dealing with an "open interval" or a
-> "closed interval".  They are just different ways of saying that it's a
-> range between, say, 0 and 20.  But it doesn't tell you whether it
-> includes 0 or 20 or not.
->=20
-> The only way I can see for making it ambiguous is either to use the
-> terminology "closed interval" or "inclusive".  And "open" and "closed"
-> can have other meanings, so get_random_u32_inclusive() is going to be
-> less confusing than get_random_u32_closed().
+If a kernel thread is created by a user thread, it may carry FPU/SIMD
+thread info flags (TIF_USEDFPU, TIF_USEDSIMD, etc.). Then it will be
+considered as a fpu owner and kernel try to save its FPU/SIMD context
+and cause such errors:
 
-It has to be said that removing the extra function and requiring
-the callers use 'base + get_random_below(high [+1] - base)' is
-likely to be the only way to succinctly make the code readable
-and understandable.
+[   41.518931] do_fpu invoked from kernel context![#1]:
+[   41.523933] CPU: 1 PID: 395 Comm: iou-wrk-394 Not tainted 6.1.0-rc5+ #217
+[   41.530757] Hardware name: Loongson Loongson-3A5000-7A1000-1w-CRB/Loongson-LS3A5000-7A1000-1w-CRB, BIOS vUDK2018-LoongArch-V2.0.pre-beta8 08/18/2022                      
+[   41.544064] $ 0   : 0000000000000000 90000000011e9468 9000000106c7c000 9000000106c7fcf0                                                                                   
+[   41.552101] $ 4   : 9000000106305d40 9000000106689800 9000000106c7fd08 0000000003995818                                                                                   
+[   41.560138] $ 8   : 0000000000000001 90000000009a72e4 0000000000000020 fffffffffffffffc                                                                                   
+[   41.568174] $12   : 0000000000000000 0000000000000000 0000000000000020 00000009aab7e130                                                                                   
+[   41.576211] $16   : 00000000000001ff 0000000000000407 0000000000000001 0000000000000000                                                                                   
+[   41.584247] $20   : 0000000000000000 0000000000000001 9000000106c7fd70 90000001002f0400                                                                                   
+[   41.592284] $24   : 0000000000000000 900000000178f740 90000000011e9834 90000001063057c0                                                                                   
+[   41.600320] $28   : 0000000000000000 0000000000000001 9000000006826b40 9000000106305140
+[   41.608356] era   : 9000000000228848 _save_fp+0x0/0xd8
+[   41.613542] ra    : 90000000011e9468 __schedule+0x568/0x8d0
+[   41.619160] CSR crmd: 000000b0
+[   41.619163] CSR prmd: 00000000
+[   41.622359] CSR euen: 00000000
+[   41.625558] CSR ecfg: 00071c1c
+[   41.628756] CSR estat: 000f0000
+[   41.635239] ExcCode : f (SubCode 0)
+[   41.638783] PrId  : 0014c010 (Loongson-64bit)
+[   41.643191] Modules linked in: acpi_ipmi vfat fat ipmi_si ipmi_devintf cfg80211 ipmi_msghandler rfkill fuse efivarfs
+[   41.653734] Process iou-wrk-394 (pid: 395, threadinfo=0000000004ebe913, task=00000000636fa1be)
+[   41.662375] Stack : 00000000ffff0875 9000000006800ec0 9000000006800ec0 90000000002d57e0
+[   41.670412]         0000000000000001 0000000000000000 9000000106535880 0000000000000001
+[   41.678450]         9000000105291800 0000000000000000 9000000105291838 900000000178e000
+[   41.686487]         9000000106c7fd90 9000000106305140 0000000000000001 90000000011e9834
+[   41.694523]         00000000ffff0875 90000000011f034c 9000000105291838 9000000105291830
+[   41.702561]         0000000000000000 9000000006801440 00000000ffff0875 90000000002d48c0
+[   41.710597]         9000000128800001 9000000106305140 9000000105291838 9000000105291838
+[   41.718634]         9000000105291830 9000000107811740 9000000105291848 90000000009bf1e0
+[   41.726672]         9000000105291830 9000000107811748 2d6b72772d756f69 0000000000343933
+[   41.734708]         0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[   41.742745]         ...
+[   41.745252] Call Trace:
+[   42.197868] [<9000000000228848>] _save_fp+0x0/0xd8
+[   42.205214] [<90000000011ed468>] __schedule+0x568/0x8d0
+[   42.210485] [<90000000011ed834>] schedule+0x64/0xd4
+[   42.215411] [<90000000011f434c>] schedule_timeout+0x88/0x188
+[   42.221115] [<90000000009c36d0>] io_wqe_worker+0x184/0x350
+[   42.226645] [<9000000000221cf0>] ret_from_kernel_thread+0xc/0x9c
 
-Otherwise readers either have to look up another function to see
-what it does or waste variable brain cells on more trivia.
+This can be easily triggered by ltp testcase syscalls/io_uring02 and it
+can also be easily fixed by clearing the FPU/SIMD thread info flags for
+kernel threads in copy_thread().
 
-=09David
+Cc: stable@vger.kernel.org
+Reported-by: Qi Hu <huqi@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/process.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index f57c7050fce6..d983dfce7371 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -158,7 +158,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 		childregs->csr_crmd = p->thread.csr_crmd;
+ 		childregs->csr_prmd = p->thread.csr_prmd;
+ 		childregs->csr_ecfg = p->thread.csr_ecfg;
+-		return 0;
++		goto out;
+ 	}
+ 
+ 	/* user thread */
+@@ -177,14 +177,15 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 	 */
+ 	childregs->csr_euen = 0;
+ 
++	if (clone_flags & CLONE_SETTLS)
++		childregs->regs[2] = tls;
++
++out:
+ 	clear_tsk_thread_flag(p, TIF_USEDFPU);
+ 	clear_tsk_thread_flag(p, TIF_USEDSIMD);
+ 	clear_tsk_thread_flag(p, TIF_LSX_CTX_LIVE);
+ 	clear_tsk_thread_flag(p, TIF_LASX_CTX_LIVE);
+ 
+-	if (clone_flags & CLONE_SETTLS)
+-		childregs->regs[2] = tls;
 -
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+ 	return 0;
+ }
+ 
+-- 
+2.31.1
 
