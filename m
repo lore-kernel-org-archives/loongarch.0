@@ -1,113 +1,99 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C095128E3
-	for <loongarch@lists.linux.dev>; Fri, 18 Nov 2022 09:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=mwt73Igv1Cbi6CXwxAPKd0Pr+R9hvpBvRt03pYQ3bys=; b=ab3Y1GXh5hZN4kYCUal3zeuK3Q
-	7SRG1cvzhO7eKodvFDYyuRae96G8g5PWd/XWhtSWcEI5MUsYEab5Ovzc8ze8gBOk9y9y/n4/VG6QA
-	kxoDu7O/fG1a2giqiMnnG8GWp7V1BxUra+Jgp+oiupx2occO6L51vWUZQgeu4+7U3imdC7NUUUJ2N
-	J5VaNoVksNMD06l+gxDbRhfwA3keSj0mXPL1+LX088MVxqFi6HWwWMGwF0jamw9uSp14pYO1PV0sb
-	dSKJCydBYVIQlrwj2um9MWjTnI+ZTo1PEgHrvF9BZHJpiPATdBDwJ3bT9CqtMVsKHp/fep69BWHYQ
-	1FAlMbCA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ovxQb-00287L-Gd; Fri, 18 Nov 2022 09:12:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 78E20300487;
-	Fri, 18 Nov 2022 10:12:43 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5E8232C316131; Fri, 18 Nov 2022 10:12:43 +0100 (CET)
-Date: Fri, 18 Nov 2022 10:12:43 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-	x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Nicholas Piggin <npiggin@gmail.com>, Guo Ren <guoren@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>
-Subject: Re: [RFC PATCH v2 8/8] sched, smp: Trace smp callback causing an IPI
-Message-ID: <Y3dMiyFn6TG1s5g3@hirez.programming.kicks-ass.net>
-References: <20221102182949.3119584-1-vschneid@redhat.com>
- <20221102183336.3120536-7-vschneid@redhat.com>
- <Y3ZBUMteJysc1/lA@hirez.programming.kicks-ass.net>
- <xhsmhfsehy706.mognet@vschneid.remote.csb>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38D620FD
+	for <loongarch@lists.linux.dev>; Fri, 18 Nov 2022 12:38:48 +0000 (UTC)
+Received: by mail-lj1-f177.google.com with SMTP id k19so6642432lji.2
+        for <loongarch@lists.linux.dev>; Fri, 18 Nov 2022 04:38:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=no+H9b9eosuH2qEiOD6KMI4wDDshNFpABjP/G2BO63Y=;
+        b=jppWrMespj1W0x31C9rRdsaH+buh83dd/Gcj7rlLRtIESrlD//bdSWM9+4ikPaNATM
+         3jNHsYnzfIt+1qp93V6OXnhxPO5SNUxRXJ/TWMh0jB8rnvAN/Bn44AAO/yLzhzCdJsuG
+         DguZeIHz+DYm4t6pdwsZB5gtuYIMZaU8yFSrD8Ycim0rDmOfIz8FGLO50T2CTSFKv3LH
+         Oh80rSa6GhGxaEnIuQPwfKoXqHD5jgqlpqmDsi0WdOwZ0TXMPF1FsLhToraw3qbOR6tu
+         PdLgJzSuXcAj6AcIyebrgco2D6UH2F5Y1YrjKqRQhOvfz8cwn6sywTCGsU70k8ptIo7c
+         vbtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=no+H9b9eosuH2qEiOD6KMI4wDDshNFpABjP/G2BO63Y=;
+        b=chhXLHBJ23wCw9uPZrCUOhDVuZgq2i/RzIlVduyDDzuB/9WFpZxr/8AKH7WAwO6sjn
+         BiewTY2fErdndubq5ibMP2/OrToGSYexyliuGUgsig7c0P08a0m+8mCmQQks+Wgy+xHn
+         g8FJjE9NXwgUZsGCYnSlCNQofovUdXrzGauZfCkaGGXSW8vv6Avr61cXhQyRmUrTT2RE
+         lWxwF/0w+/Bf3X+VjkNR/H4VNkxxfIYpXu8Zv1CfXoE68OkGyXTa80x5V+fXe24zjC11
+         bjSuumPW809HPX8ZO7XzmVhhFVnaqB66+IKSBkrSYQPN4E+mYQ9AgZX83zr5aiINWl/s
+         LWMQ==
+X-Gm-Message-State: ANoB5pnvIQh7TnplkdvcgxbKiWDposDUR4hQ5QnUxokW0bhsyoeVYYIK
+	Ge/3Cqb2aUDY9aJf3+hG2hhROg==
+X-Google-Smtp-Source: AA0mqf62h736Id6DM8RIqmZIS9xAsNwoJ77uCAoB61kEqeITqo+LxKOuY7z4FqSEcmCxnj0W6V0Atw==
+X-Received: by 2002:a2e:b529:0:b0:26a:c77f:57f8 with SMTP id z9-20020a2eb529000000b0026ac77f57f8mr2247605ljm.465.1668775127010;
+        Fri, 18 Nov 2022 04:38:47 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id u24-20020a2e9b18000000b002637c04b472sm638303lji.83.2022.11.18.04.38.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Nov 2022 04:38:46 -0800 (PST)
+Message-ID: <947bc72f-2273-9474-9af4-5532d69491b2@linaro.org>
+Date: Fri, 18 Nov 2022 13:38:44 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xhsmhfsehy706.mognet@vschneid.remote.csb>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v1 2/2] dt-bindings: gpio: add loongson series gpio
+Content-Language: en-US
+To: Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org, richard.liu@st.com,
+ Arnaud Patard <apatard@mandriva.com>, Hongbing Hu <huhb@lemote.com>,
+ Huacai Chen <chenhuacai@kernel.org>
+References: <20221108092107.28996-1-zhuyinbo@loongson.cn>
+ <20221108092107.28996-2-zhuyinbo@loongson.cn>
+ <d9edb6e1-c3da-0f5b-546d-37d8151aaa35@linaro.org>
+ <d5457109-3bcb-e7d3-067d-9e4acd66ac17@loongson.cn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <d5457109-3bcb-e7d3-067d-9e4acd66ac17@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Nov 17, 2022 at 02:45:29PM +0000, Valentin Schneider wrote:
+On 14/11/2022 10:50, Yinbo Zhu wrote:
+>
+>>> +
+>>> +  "#gpio-cells":
+>>> +    const: 2
+>>> +
+>>> +  gpio-controller: true
+>>> +
+>>> +  gpio-ranges: true
+>>> +
+>>> +  loongson,conf_offset:
+>>
+>> No underscores in node names. Plus comments from Linus seem to apply
+>> here as well. Drop it entirely or explain why this is not part of
+>> compatible, why this is needed and why encoding programming model
+>> address in DT matches the DT...
+> Add it is to distinguish differnt address in different platform.
+> and I had drop them and initial them in kernel driver that depend
+> on diffent compatible.
+>>
 
-> > +	if (trace_ipi_send_cpumask_enabled()) {
-> > +		call_single_data_t *csd;
-> > +		smp_call_func_t func;
-> > +
-> > +		csd = container_of(node, call_single_data_t, node.llist);
-> > +
-> > +		func = sched_ttwu_pending;
-> > +		if (CSD_TYPE(csd) != CSD_TYPE_TTWU)
-> > +			func = csd->func;
-> > +
-> > +		if (raw_smp_call_single_queue(cpu, node))
-> > +			trace_ipi_send_cpumask(cpumask_of(cpu), _RET_IP_, func);
-> 
-> So I went with the tracepoint being placed *before* the actual IPI gets
-> sent to have a somewhat sane ordering between trace_ipi_send_cpumask() and
-> e.g. trace_call_function_single_entry().
-> 
-> Packaging the call_single_queue logic makes the code less horrible, but it
-> does mix up the event ordering...
+So if you had to drop these, please drop from the bindings.
 
-Keeps em sharp ;-)
+Best regards,
+Krzysztof
 
-> > +		return;
-> > +	}
-> > +
-> > +	raw_smp_call_single_queue(cpu, node);
-> >  }
-> >
-> >  /*
-> > @@ -983,10 +1017,13 @@ static void smp_call_function_many_cond(
-> >                * number of CPUs might be zero due to concurrent changes to the
-> >                * provided mask.
-> >                */
-> > -		if (nr_cpus == 1)
-> > +		if (nr_cpus == 1) {
-> > +			trace_ipi_send_cpumask(cpumask_of(last_cpu), _RET_IP_, func);
-> >                       send_call_function_single_ipi(last_cpu);
-> 
-> This'll yield an IPI event even if no IPI is sent due to the idle task
-> polling, no?
-
-Oh, right..
