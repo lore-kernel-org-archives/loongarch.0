@@ -1,532 +1,113 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E557120FD
-	for <loongarch@lists.linux.dev>; Fri, 18 Nov 2022 06:05:29 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxC7aiIHdjqocIAA--.12230S3;
-	Fri, 18 Nov 2022 14:05:22 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx9VagIHdjT1sWAA--.40305S4;
-	Fri, 18 Nov 2022 14:05:22 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/4] LoongArch: Add kprobe support
-Date: Fri, 18 Nov 2022 14:05:12 +0800
-Message-Id: <1668751514-2998-3-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1668751514-2998-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1668751514-2998-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8Dx9VagIHdjT1sWAA--.40305S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvAXoW3KryUtF43CF1rZw1xJr1fWFg_yoW8Gr4Duo
-	WSvF4DWw48Kr47uF15Ar1DXFWUu3W8KFZ5Aryayanxur1DAr1Fqr1UCrWrJ3W7Xr4Fg3yf
-	u34Y9a4fGFW3Crnxn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
-	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
-	UUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
-	0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
-	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4
-	xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVWUJVW8
-	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I
-	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
-	xVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcV
-	AFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8I
-	cIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
-	4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUzvtCDUUUU
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C095128E3
+	for <loongarch@lists.linux.dev>; Fri, 18 Nov 2022 09:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=mwt73Igv1Cbi6CXwxAPKd0Pr+R9hvpBvRt03pYQ3bys=; b=ab3Y1GXh5hZN4kYCUal3zeuK3Q
+	7SRG1cvzhO7eKodvFDYyuRae96G8g5PWd/XWhtSWcEI5MUsYEab5Ovzc8ze8gBOk9y9y/n4/VG6QA
+	kxoDu7O/fG1a2giqiMnnG8GWp7V1BxUra+Jgp+oiupx2occO6L51vWUZQgeu4+7U3imdC7NUUUJ2N
+	J5VaNoVksNMD06l+gxDbRhfwA3keSj0mXPL1+LX088MVxqFi6HWwWMGwF0jamw9uSp14pYO1PV0sb
+	dSKJCydBYVIQlrwj2um9MWjTnI+ZTo1PEgHrvF9BZHJpiPATdBDwJ3bT9CqtMVsKHp/fep69BWHYQ
+	1FAlMbCA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1ovxQb-00287L-Gd; Fri, 18 Nov 2022 09:12:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 78E20300487;
+	Fri, 18 Nov 2022 10:12:43 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5E8232C316131; Fri, 18 Nov 2022 10:12:43 +0100 (CET)
+Date: Fri, 18 Nov 2022 10:12:43 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+	x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Nicholas Piggin <npiggin@gmail.com>, Guo Ren <guoren@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: Re: [RFC PATCH v2 8/8] sched, smp: Trace smp callback causing an IPI
+Message-ID: <Y3dMiyFn6TG1s5g3@hirez.programming.kicks-ass.net>
+References: <20221102182949.3119584-1-vschneid@redhat.com>
+ <20221102183336.3120536-7-vschneid@redhat.com>
+ <Y3ZBUMteJysc1/lA@hirez.programming.kicks-ass.net>
+ <xhsmhfsehy706.mognet@vschneid.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <xhsmhfsehy706.mognet@vschneid.remote.csb>
 
-Kprobes allows you to trap at almost any kernel address and
-execute a callback function, this commit adds kprobe support
-for LoongArch.
+On Thu, Nov 17, 2022 at 02:45:29PM +0000, Valentin Schneider wrote:
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/Kconfig               |   1 +
- arch/loongarch/include/asm/inst.h    |  10 ++
- arch/loongarch/include/asm/kprobes.h |  54 +++++++
- arch/loongarch/kernel/Makefile       |   2 +
- arch/loongarch/kernel/kprobes.c      | 301 +++++++++++++++++++++++++++++++++++
- arch/loongarch/kernel/traps.c        |   6 +-
- arch/loongarch/mm/fault.c            |   4 +
- 7 files changed, 374 insertions(+), 4 deletions(-)
- create mode 100644 arch/loongarch/include/asm/kprobes.h
- create mode 100644 arch/loongarch/kernel/kprobes.c
+> > +	if (trace_ipi_send_cpumask_enabled()) {
+> > +		call_single_data_t *csd;
+> > +		smp_call_func_t func;
+> > +
+> > +		csd = container_of(node, call_single_data_t, node.llist);
+> > +
+> > +		func = sched_ttwu_pending;
+> > +		if (CSD_TYPE(csd) != CSD_TYPE_TTWU)
+> > +			func = csd->func;
+> > +
+> > +		if (raw_smp_call_single_queue(cpu, node))
+> > +			trace_ipi_send_cpumask(cpumask_of(cpu), _RET_IP_, func);
+> 
+> So I went with the tracepoint being placed *before* the actual IPI gets
+> sent to have a somewhat sane ordering between trace_ipi_send_cpumask() and
+> e.g. trace_call_function_single_entry().
+> 
+> Packaging the call_single_queue logic makes the code less horrible, but it
+> does mix up the event ordering...
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 1943f84..cd71a86 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -95,6 +95,7 @@ config LOONGARCH
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_IRQ_EXIT_ON_IRQ_STACK
- 	select HAVE_IRQ_TIME_ACCOUNTING
-+	select HAVE_KPROBES
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
- 	select HAVE_PCI
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index dea85e7..3e2f870 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -22,6 +22,10 @@
- 
- #define ADDR_IMM(addr, INSN)	((addr & ADDR_IMMMASK_##INSN) >> ADDR_IMMSHIFT_##INSN)
- 
-+enum reg0i15_op {
-+	break_op	= 0x54,
-+};
-+
- enum reg0i26_op {
- 	b_op		= 0x14,
- 	bl_op		= 0x15,
-@@ -178,6 +182,11 @@ enum reg3sa2_op {
- 	alsld_op	= 0x16,
- };
- 
-+struct reg0i15_format {
-+	unsigned int immediate : 15;
-+	unsigned int opcode : 17;
-+};
-+
- struct reg0i26_format {
- 	unsigned int immediate_h : 10;
- 	unsigned int immediate_l : 16;
-@@ -263,6 +272,7 @@ struct reg3sa2_format {
- 
- union loongarch_instruction {
- 	unsigned int word;
-+	struct reg0i15_format	reg0i15_format;
- 	struct reg0i26_format	reg0i26_format;
- 	struct reg1i20_format	reg1i20_format;
- 	struct reg1i21_format	reg1i21_format;
-diff --git a/arch/loongarch/include/asm/kprobes.h b/arch/loongarch/include/asm/kprobes.h
-new file mode 100644
-index 0000000..66423b7
---- /dev/null
-+++ b/arch/loongarch/include/asm/kprobes.h
-@@ -0,0 +1,54 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __ASM_LOONGARCH_KPROBES_H
-+#define __ASM_LOONGARCH_KPROBES_H
-+
-+#include <asm-generic/kprobes.h>
-+#include <asm/cacheflush.h>
-+
-+#ifdef CONFIG_KPROBES
-+
-+#include <asm/inst.h>
-+
-+#define __ARCH_WANT_KPROBES_INSN_SLOT
-+#define MAX_INSN_SIZE			2
-+
-+#define flush_insn_slot(p)						\
-+do {									\
-+	if (p->addr)							\
-+		flush_icache_range((unsigned long)p->addr,		\
-+			   (unsigned long)p->addr +			\
-+			   (MAX_INSN_SIZE * sizeof(kprobe_opcode_t)));	\
-+} while (0)
-+
-+#define kretprobe_blacklist_size	0
-+
-+typedef union loongarch_instruction kprobe_opcode_t;
-+
-+/* Architecture specific copy of original instruction */
-+struct arch_specific_insn {
-+	/* copy of the original instruction */
-+	kprobe_opcode_t *insn;
-+};
-+
-+struct prev_kprobe {
-+	struct kprobe *kp;
-+	unsigned long status;
-+	unsigned long saved_irq;
-+	unsigned long saved_era;
-+};
-+
-+/* per-cpu kprobe control block */
-+struct kprobe_ctlblk {
-+	unsigned long kprobe_status;
-+	unsigned long kprobe_saved_irq;
-+	unsigned long kprobe_saved_era;
-+	struct prev_kprobe prev_kprobe;
-+};
-+
-+void arch_remove_kprobe(struct kprobe *p);
-+bool kprobe_fault_handler(struct pt_regs *regs, int trapnr);
-+bool kprobe_breakpoint_handler(struct pt_regs *regs);
-+bool kprobe_singlestep_handler(struct pt_regs *regs);
-+
-+#endif /* CONFIG_KPROBES */
-+#endif /* __ASM_LOONGARCH_KPROBES_H */
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index 8674453..ac77eb7 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -34,4 +34,6 @@ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
- 
- obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_regs.o
- 
-+obj-$(CONFIG_KPROBES)		+= kprobes.o
-+
- CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
-diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
-new file mode 100644
-index 0000000..04a6166
---- /dev/null
-+++ b/arch/loongarch/kernel/kprobes.c
-@@ -0,0 +1,301 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/kprobes.h>
-+#include <linux/kdebug.h>
-+#include <linux/preempt.h>
-+#include <asm/break.h>
-+
-+static const union loongarch_instruction breakpoint_insn = {
-+	.reg0i15_format = {
-+		.opcode = break_op,
-+		.immediate = BRK_KPROBE_BP,
-+	}
-+};
-+
-+static const union loongarch_instruction singlestep_insn = {
-+	.reg0i15_format = {
-+		.opcode = break_op,
-+		.immediate = BRK_KPROBE_SSTEPBP,
-+	}
-+};
-+
-+DEFINE_PER_CPU(struct kprobe *, current_kprobe);
-+DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
-+
-+static bool insns_are_not_supported(union loongarch_instruction insn)
-+{
-+	switch (insn.reg2i14_format.opcode) {
-+	case llw_op:
-+	case lld_op:
-+	case scw_op:
-+	case scd_op:
-+		pr_notice("kprobe: ll or sc instructions are not supported\n");
-+		return true;
-+	}
-+
-+	switch (insn.reg1i21_format.opcode) {
-+	case bceqz_op:
-+		pr_notice("kprobe: bceqz or bcnez instructions are not supported\n");
-+		return true;
-+	}
-+
-+	return false;
-+}
-+NOKPROBE_SYMBOL(insns_are_not_supported);
-+
-+int arch_prepare_kprobe(struct kprobe *p)
-+{
-+	union loongarch_instruction insn;
-+
-+	insn = p->addr[0];
-+	if (insns_are_not_supported(insn))
-+		return -EINVAL;
-+
-+	p->ainsn.insn = get_insn_slot();
-+	if (!p->ainsn.insn)
-+		return -ENOMEM;
-+
-+	p->ainsn.insn[0] = *p->addr;
-+	p->ainsn.insn[1] = singlestep_insn;
-+
-+	p->opcode = *p->addr;
-+
-+	return 0;
-+}
-+NOKPROBE_SYMBOL(arch_prepare_kprobe);
-+
-+/* Install breakpoint in text */
-+void arch_arm_kprobe(struct kprobe *p)
-+{
-+	*p->addr = breakpoint_insn;
-+	flush_insn_slot(p);
-+}
-+NOKPROBE_SYMBOL(arch_arm_kprobe);
-+
-+/* Remove breakpoint from text */
-+void arch_disarm_kprobe(struct kprobe *p)
-+{
-+	*p->addr = p->opcode;
-+	flush_insn_slot(p);
-+}
-+NOKPROBE_SYMBOL(arch_disarm_kprobe);
-+
-+void arch_remove_kprobe(struct kprobe *p)
-+{
-+	if (p->ainsn.insn) {
-+		free_insn_slot(p->ainsn.insn, 0);
-+		p->ainsn.insn = NULL;
-+	}
-+}
-+NOKPROBE_SYMBOL(arch_remove_kprobe);
-+
-+static void save_previous_kprobe(struct kprobe_ctlblk *kcb)
-+{
-+	kcb->prev_kprobe.kp = kprobe_running();
-+	kcb->prev_kprobe.status = kcb->kprobe_status;
-+	kcb->prev_kprobe.saved_irq = kcb->kprobe_saved_irq;
-+	kcb->prev_kprobe.saved_era = kcb->kprobe_saved_era;
-+}
-+NOKPROBE_SYMBOL(save_previous_kprobe);
-+
-+static void restore_previous_kprobe(struct kprobe_ctlblk *kcb)
-+{
-+	__this_cpu_write(current_kprobe, kcb->prev_kprobe.kp);
-+	kcb->kprobe_status = kcb->prev_kprobe.status;
-+	kcb->kprobe_saved_irq = kcb->prev_kprobe.saved_irq;
-+	kcb->kprobe_saved_era = kcb->prev_kprobe.saved_era;
-+}
-+NOKPROBE_SYMBOL(restore_previous_kprobe);
-+
-+static void set_current_kprobe(struct kprobe *p, struct pt_regs *regs,
-+			       struct kprobe_ctlblk *kcb)
-+{
-+	__this_cpu_write(current_kprobe, p);
-+	kcb->kprobe_saved_irq = regs->csr_prmd & CSR_PRMD_PIE;
-+	kcb->kprobe_saved_era = regs->csr_era;
-+}
-+NOKPROBE_SYMBOL(set_current_kprobe);
-+
-+static bool insns_are_not_simulated(struct kprobe *p, struct pt_regs *regs)
-+{
-+	if (is_branch_ins(&p->opcode)) {
-+		simu_branch(regs, p->opcode);
-+		return false;
-+	} else if (is_pc_ins(&p->opcode)) {
-+		simu_pc(regs, p->opcode);
-+		return false;
-+	} else {
-+		return true;
-+	}
-+}
-+NOKPROBE_SYMBOL(insns_are_not_simulated);
-+
-+static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
-+			     struct kprobe_ctlblk *kcb, int reenter)
-+{
-+	if (reenter) {
-+		save_previous_kprobe(kcb);
-+		set_current_kprobe(p, regs, kcb);
-+		kcb->kprobe_status = KPROBE_REENTER;
-+	} else {
-+		kcb->kprobe_status = KPROBE_HIT_SS;
-+	}
-+
-+	if (p->ainsn.insn->word == breakpoint_insn.word) {
-+		regs->csr_prmd &= ~CSR_PRMD_PIE;
-+		regs->csr_prmd |= kcb->kprobe_saved_irq;
-+		preempt_enable_no_resched();
-+		return;
-+	}
-+
-+	regs->csr_prmd &= ~CSR_PRMD_PIE;
-+
-+	if (insns_are_not_simulated(p, regs)) {
-+		kcb->kprobe_status = KPROBE_HIT_SS;
-+		regs->csr_era = (unsigned long)&p->ainsn.insn[0];
-+	} else {
-+		kcb->kprobe_status = KPROBE_HIT_SSDONE;
-+		if (p->post_handler)
-+			p->post_handler(p, regs, 0);
-+		reset_current_kprobe();
-+		preempt_enable_no_resched();
-+	}
-+}
-+NOKPROBE_SYMBOL(setup_singlestep);
-+
-+static bool reenter_kprobe(struct kprobe *p, struct pt_regs *regs,
-+			  struct kprobe_ctlblk *kcb)
-+{
-+	switch (kcb->kprobe_status) {
-+	case KPROBE_HIT_SSDONE:
-+	case KPROBE_HIT_ACTIVE:
-+		kprobes_inc_nmissed_count(p);
-+		setup_singlestep(p, regs, kcb, 1);
-+		break;
-+	case KPROBE_HIT_SS:
-+	case KPROBE_REENTER:
-+		pr_warn("Failed to recover from reentered kprobes.\n");
-+		dump_kprobe(p);
-+		BUG();
-+		break;
-+	default:
-+		WARN_ON(1);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+NOKPROBE_SYMBOL(reenter_kprobe);
-+
-+bool kprobe_breakpoint_handler(struct pt_regs *regs)
-+{
-+	struct kprobe *p, *cur_kprobe;
-+	struct kprobe_ctlblk *kcb;
-+	unsigned long addr = instruction_pointer(regs);
-+
-+	preempt_disable();
-+	kcb = get_kprobe_ctlblk();
-+	cur_kprobe = kprobe_running();
-+
-+	p = get_kprobe((kprobe_opcode_t *) addr);
-+	if (p) {
-+		if (cur_kprobe) {
-+			if (reenter_kprobe(p, regs, kcb))
-+				return true;
-+		} else {
-+			/* Probe hit */
-+			set_current_kprobe(p, regs, kcb);
-+			kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-+
-+			/*
-+			 * If we have no pre-handler or it returned 0, we
-+			 * continue with normal processing.  If we have a
-+			 * pre-handler and it returned non-zero, it will
-+			 * modify the execution path and no need to single
-+			 * stepping. Let's just reset current kprobe and exit.
-+			 *
-+			 * pre_handler can hit a breakpoint and can step thru
-+			 * before return.
-+			 */
-+			if (!p->pre_handler || !p->pre_handler(p, regs)) {
-+				setup_singlestep(p, regs, kcb, 0);
-+			} else {
-+				reset_current_kprobe();
-+				preempt_enable_no_resched();
-+			}
-+		}
-+		return true;
-+	}
-+
-+	/*
-+	 * The breakpoint instruction was removed right
-+	 * after we hit it.  Another cpu has removed
-+	 * either a probepoint or a debugger breakpoint
-+	 * at this address.  In either case, no further
-+	 * handling of this interrupt is appropriate.
-+	 * Return back to original instruction, and continue.
-+	 */
-+	preempt_enable_no_resched();
-+	return false;
-+}
-+NOKPROBE_SYMBOL(kprobe_breakpoint_handler);
-+
-+bool kprobe_singlestep_handler(struct pt_regs *regs)
-+{
-+	struct kprobe *cur = kprobe_running();
-+	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
-+
-+	if (!cur)
-+		return false;
-+
-+	/* Restore back the original saved kprobes variables and continue */
-+	if (kcb->kprobe_status == KPROBE_REENTER) {
-+		restore_previous_kprobe(kcb);
-+		goto out;
-+	}
-+
-+	/* Call post handler */
-+	kcb->kprobe_status = KPROBE_HIT_SSDONE;
-+	if (cur->post_handler)
-+		cur->post_handler(cur, regs, 0);
-+
-+	regs->csr_era = kcb->kprobe_saved_era + LOONGARCH_INSN_SIZE;
-+	regs->csr_prmd |= kcb->kprobe_saved_irq;
-+
-+	reset_current_kprobe();
-+out:
-+	preempt_enable_no_resched();
-+
-+	return true;
-+}
-+NOKPROBE_SYMBOL(kprobe_singlestep_handler);
-+
-+bool kprobe_fault_handler(struct pt_regs *regs, int trapnr)
-+{
-+	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
-+
-+	if (kcb->kprobe_status & KPROBE_HIT_SS) {
-+		regs->csr_era = kcb->kprobe_saved_era + LOONGARCH_INSN_SIZE;
-+		regs->csr_prmd |= kcb->kprobe_saved_irq;
-+
-+		reset_current_kprobe();
-+		preempt_enable_no_resched();
-+	}
-+
-+	return false;
-+}
-+NOKPROBE_SYMBOL(kprobe_fault_handler);
-+
-+/*
-+ * Provide a blacklist of symbols identifying ranges which cannot be kprobed.
-+ * This blacklist is exposed to userspace via debugfs (kprobes/blacklist).
-+ */
-+int __init arch_populate_kprobe_blacklist(void)
-+{
-+	return kprobe_add_area_blacklist((unsigned long)__irqentry_text_start,
-+					 (unsigned long)__irqentry_text_end);
-+}
-+
-+int __init arch_init_kprobes(void)
-+{
-+	return 0;
-+}
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 7ea62fa..8525446 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -448,14 +448,12 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
- 	 */
- 	switch (bcode) {
- 	case BRK_KPROBE_BP:
--		if (notify_die(DIE_BREAK, "Kprobe", regs, bcode,
--			       current->thread.trap_nr, SIGTRAP) == NOTIFY_STOP)
-+		if (kprobe_breakpoint_handler(regs))
- 			goto out;
- 		else
- 			break;
- 	case BRK_KPROBE_SSTEPBP:
--		if (notify_die(DIE_SSTEPBP, "Kprobe_SingleStep", regs, bcode,
--			       current->thread.trap_nr, SIGTRAP) == NOTIFY_STOP)
-+		if (kprobe_singlestep_handler(regs))
- 			goto out;
- 		else
- 			break;
-diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
-index 1ccd536..fc9225a 100644
---- a/arch/loongarch/mm/fault.c
-+++ b/arch/loongarch/mm/fault.c
-@@ -253,12 +253,16 @@ asmlinkage void __kprobes do_page_fault(struct pt_regs *regs,
- {
- 	irqentry_state_t state = irqentry_enter(regs);
- 
-+	if (kprobe_page_fault(regs, current->thread.trap_nr))
-+		goto out;
-+
- 	/* Enable interrupt if enabled in parent context */
- 	if (likely(regs->csr_prmd & CSR_PRMD_PIE))
- 		local_irq_enable();
- 
- 	__do_page_fault(regs, write, address);
- 
-+out:
- 	local_irq_disable();
- 
- 	irqentry_exit(regs, state);
--- 
-2.1.0
+Keeps em sharp ;-)
 
+> > +		return;
+> > +	}
+> > +
+> > +	raw_smp_call_single_queue(cpu, node);
+> >  }
+> >
+> >  /*
+> > @@ -983,10 +1017,13 @@ static void smp_call_function_many_cond(
+> >                * number of CPUs might be zero due to concurrent changes to the
+> >                * provided mask.
+> >                */
+> > -		if (nr_cpus == 1)
+> > +		if (nr_cpus == 1) {
+> > +			trace_ipi_send_cpumask(cpumask_of(last_cpu), _RET_IP_, func);
+> >                       send_call_function_single_ipi(last_cpu);
+> 
+> This'll yield an IPI event even if no IPI is sent due to the idle task
+> polling, no?
+
+Oh, right..
