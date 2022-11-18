@@ -1,122 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C719B20EE
-	for <loongarch@lists.linux.dev>; Fri, 18 Nov 2022 04:59:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01DD2C433C1;
-	Fri, 18 Nov 2022 04:59:15 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A866620EE
+	for <loongarch@lists.linux.dev>; Fri, 18 Nov 2022 06:05:28 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cxq9igIHdjo4cIAA--.23919S3;
+	Fri, 18 Nov 2022 14:05:20 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx9VagIHdjT1sWAA--.40305S2;
+	Fri, 18 Nov 2022 14:05:20 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Qi Hu <huqi@loongson.cn>
-Subject: [PATCH] LoongArch: Clear FPU/SIMD thread info flags for kernel thread
-Date: Fri, 18 Nov 2022 12:56:47 +0800
-Message-Id: <20221118045647.1991409-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] Add kprobe and kretprobe support for LoongArch
+Date: Fri, 18 Nov 2022 14:05:10 +0800
+Message-Id: <1668751514-2998-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8Dx9VagIHdjT1sWAA--.40305S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxJr4xtw4UKr43Ar4xAw4xZwb_yoW8WF47pF
+	9rZrn5Gr4rGwn3Jr9xt3WUur1ftw18C3y2ga17try8C3W7XryUArs3KrZxXasYkwsIqr1S
+	qr1rW3yYgFyxJa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-If a kernel thread is created by a user thread, it may carry FPU/SIMD
-thread info flags (TIF_USEDFPU, TIF_USEDSIMD, etc.). Then it will be
-considered as a fpu owner and kernel try to save its FPU/SIMD context
-and cause such errors:
+v4:
+  -- Remove kprobe_exceptions_notify() in kprobes.c
+  -- Call kprobe_breakpoint_handler() and kprobe_singlestep_handler()
+     in do_bp()
 
-[   41.518931] do_fpu invoked from kernel context![#1]:
-[   41.523933] CPU: 1 PID: 395 Comm: iou-wrk-394 Not tainted 6.1.0-rc5+ #217
-[   41.530757] Hardware name: Loongson Loongson-3A5000-7A1000-1w-CRB/Loongson-LS3A5000-7A1000-1w-CRB, BIOS vUDK2018-LoongArch-V2.0.pre-beta8 08/18/2022                      
-[   41.544064] $ 0   : 0000000000000000 90000000011e9468 9000000106c7c000 9000000106c7fcf0                                                                                   
-[   41.552101] $ 4   : 9000000106305d40 9000000106689800 9000000106c7fd08 0000000003995818                                                                                   
-[   41.560138] $ 8   : 0000000000000001 90000000009a72e4 0000000000000020 fffffffffffffffc                                                                                   
-[   41.568174] $12   : 0000000000000000 0000000000000000 0000000000000020 00000009aab7e130                                                                                   
-[   41.576211] $16   : 00000000000001ff 0000000000000407 0000000000000001 0000000000000000                                                                                   
-[   41.584247] $20   : 0000000000000000 0000000000000001 9000000106c7fd70 90000001002f0400                                                                                   
-[   41.592284] $24   : 0000000000000000 900000000178f740 90000000011e9834 90000001063057c0                                                                                   
-[   41.600320] $28   : 0000000000000000 0000000000000001 9000000006826b40 9000000106305140
-[   41.608356] era   : 9000000000228848 _save_fp+0x0/0xd8
-[   41.613542] ra    : 90000000011e9468 __schedule+0x568/0x8d0
-[   41.619160] CSR crmd: 000000b0
-[   41.619163] CSR prmd: 00000000
-[   41.622359] CSR euen: 00000000
-[   41.625558] CSR ecfg: 00071c1c
-[   41.628756] CSR estat: 000f0000
-[   41.635239] ExcCode : f (SubCode 0)
-[   41.638783] PrId  : 0014c010 (Loongson-64bit)
-[   41.643191] Modules linked in: acpi_ipmi vfat fat ipmi_si ipmi_devintf cfg80211 ipmi_msghandler rfkill fuse efivarfs
-[   41.653734] Process iou-wrk-394 (pid: 395, threadinfo=0000000004ebe913, task=00000000636fa1be)
-[   41.662375] Stack : 00000000ffff0875 9000000006800ec0 9000000006800ec0 90000000002d57e0
-[   41.670412]         0000000000000001 0000000000000000 9000000106535880 0000000000000001
-[   41.678450]         9000000105291800 0000000000000000 9000000105291838 900000000178e000
-[   41.686487]         9000000106c7fd90 9000000106305140 0000000000000001 90000000011e9834
-[   41.694523]         00000000ffff0875 90000000011f034c 9000000105291838 9000000105291830
-[   41.702561]         0000000000000000 9000000006801440 00000000ffff0875 90000000002d48c0
-[   41.710597]         9000000128800001 9000000106305140 9000000105291838 9000000105291838
-[   41.718634]         9000000105291830 9000000107811740 9000000105291848 90000000009bf1e0
-[   41.726672]         9000000105291830 9000000107811748 2d6b72772d756f69 0000000000343933
-[   41.734708]         0000000000000000 0000000000000000 0000000000000000 0000000000000000
-[   41.742745]         ...
-[   41.745252] Call Trace:
-[   42.197868] [<9000000000228848>] _save_fp+0x0/0xd8
-[   42.205214] [<90000000011ed468>] __schedule+0x568/0x8d0
-[   42.210485] [<90000000011ed834>] schedule+0x64/0xd4
-[   42.215411] [<90000000011f434c>] schedule_timeout+0x88/0x188
-[   42.221115] [<90000000009c36d0>] io_wqe_worker+0x184/0x350
-[   42.226645] [<9000000000221cf0>] ret_from_kernel_thread+0xc/0x9c
+v3:
+  -- Rebase on the latest code
+  -- Check the alignment of PC in simu_branch() and simu_pc()
+  -- Add ibar in flush_insn_slot()
+  -- Rename kprobe_{pre,post}_handler() to {post_}kprobe_handler
+  -- Add preempt_disable() and preempt_enable_no_resched()
+  -- Remove r0 save/restore and do some minor changes
+     in kprobes_trampoline.S
+  -- Do not enable CONFIG_KPROBES by default
 
-This can be easily triggered by ltp testcase syscalls/io_uring02 and it
-can also be easily fixed by clearing the FPU/SIMD thread info flags for
-kernel threads in copy_thread().
+v2:
+  -- Split simu_branch() and simu_pc() into a single patch
+  -- Call kprobe_page_fault() in do_page_fault()
+  -- Add kprobes_trampoline.S for kretprobe
 
-Cc: stable@vger.kernel.org
-Reported-by: Qi Hu <huqi@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/process.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Tiezhu Yang (4):
+  LoongArch: Simulate branch and PC instructions
+  LoongArch: Add kprobe support
+  LoongArch: Add kretprobe support
+  samples/kprobes: Add LoongArch support
 
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index f57c7050fce6..d983dfce7371 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -158,7 +158,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
- 		childregs->csr_crmd = p->thread.csr_crmd;
- 		childregs->csr_prmd = p->thread.csr_prmd;
- 		childregs->csr_ecfg = p->thread.csr_ecfg;
--		return 0;
-+		goto out;
- 	}
- 
- 	/* user thread */
-@@ -177,14 +177,15 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
- 	 */
- 	childregs->csr_euen = 0;
- 
-+	if (clone_flags & CLONE_SETTLS)
-+		childregs->regs[2] = tls;
-+
-+out:
- 	clear_tsk_thread_flag(p, TIF_USEDFPU);
- 	clear_tsk_thread_flag(p, TIF_USEDSIMD);
- 	clear_tsk_thread_flag(p, TIF_LSX_CTX_LIVE);
- 	clear_tsk_thread_flag(p, TIF_LASX_CTX_LIVE);
- 
--	if (clone_flags & CLONE_SETTLS)
--		childregs->regs[2] = tls;
--
- 	return 0;
- }
- 
+ arch/loongarch/Kconfig                     |   2 +
+ arch/loongarch/include/asm/inst.h          |  22 ++
+ arch/loongarch/include/asm/kprobes.h       |  54 +++++
+ arch/loongarch/include/asm/ptrace.h        |   1 +
+ arch/loongarch/kernel/Makefile             |   2 +
+ arch/loongarch/kernel/inst.c               | 123 +++++++++++
+ arch/loongarch/kernel/kprobes.c            | 325 +++++++++++++++++++++++++++++
+ arch/loongarch/kernel/kprobes_trampoline.S |  96 +++++++++
+ arch/loongarch/kernel/traps.c              |   6 +-
+ arch/loongarch/mm/fault.c                  |   4 +
+ samples/kprobes/kprobe_example.c           |   8 +
+ 11 files changed, 639 insertions(+), 4 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kprobes.h
+ create mode 100644 arch/loongarch/kernel/kprobes.c
+ create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
+
 -- 
-2.31.1
+2.1.0
 
