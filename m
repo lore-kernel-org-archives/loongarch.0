@@ -1,243 +1,81 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE10020FC
-	for <loongarch@lists.linux.dev>; Fri, 18 Nov 2022 06:05:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDD5420FF
+	for <loongarch@lists.linux.dev>; Fri, 18 Nov 2022 06:05:29 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxHdmhIHdjp4cIAA--.23928S3;
-	Fri, 18 Nov 2022 14:05:21 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxfbajIHdjtIcIAA--.12594S3;
+	Fri, 18 Nov 2022 14:05:23 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx9VagIHdjT1sWAA--.40305S3;
-	Fri, 18 Nov 2022 14:05:20 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx9VagIHdjT1sWAA--.40305S6;
+	Fri, 18 Nov 2022 14:05:22 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/4] LoongArch: Simulate branch and PC instructions
-Date: Fri, 18 Nov 2022 14:05:11 +0800
-Message-Id: <1668751514-2998-2-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v4 4/4] samples/kprobes: Add LoongArch support
+Date: Fri, 18 Nov 2022 14:05:14 +0800
+Message-Id: <1668751514-2998-5-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1668751514-2998-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1668751514-2998-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8Dx9VagIHdjT1sWAA--.40305S3
+X-CM-TRANSID:AQAAf8Dx9VagIHdjT1sWAA--.40305S6
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3WrWkAF4kWFyxWF1kXF1UWrg_yoWxGr4Upr
-	W29r4kCr4DWr93CrWjqr1kZr15tr4fur43uwnxCw13CFy7ury5GrykWr4jvFyjkw4Utry0
-	gaySqw429FsayaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWrZw4rWrW5CF1fJw1xZFWDJwb_yoW8JF1fpF
+	n0y3W5t3yFyw13WFW3Jayvgry0yryjkay8u3ykC34Yya429ry5AF1rKayjyw4kur90qF43
+	tr1FvryUGF1xZrJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	b28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
 	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
 	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4U
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4U
 	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
 	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
 	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
-	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8wNVDUUUUU==
+	AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-According to LoongArch Reference Manual, simulate branch and
-PC instructions, this is preparation for later patch.
+Add LoongArch specific info in handler_pre() and handler_post().
 
-Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#branch-instructions
-Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#_pcaddi_pcaddu121_pcaddu18l_pcalau12i
-
-Co-developed-by: Jinyang He <hejinyang@loongson.cn>
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/include/asm/inst.h   |  12 ++++
- arch/loongarch/include/asm/ptrace.h |   1 +
- arch/loongarch/kernel/inst.c        | 123 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 136 insertions(+)
+ samples/kprobes/kprobe_example.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index a529137..dea85e7 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -7,6 +7,7 @@
+diff --git a/samples/kprobes/kprobe_example.c b/samples/kprobes/kprobe_example.c
+index fd346f5..ef44c61 100644
+--- a/samples/kprobes/kprobe_example.c
++++ b/samples/kprobes/kprobe_example.c
+@@ -55,6 +55,10 @@ static int __kprobes handler_pre(struct kprobe *p, struct pt_regs *regs)
+ 	pr_info("<%s> p->addr, 0x%p, ip = 0x%lx, flags = 0x%lx\n",
+ 		p->symbol_name, p->addr, regs->psw.addr, regs->flags);
+ #endif
++#ifdef CONFIG_LOONGARCH
++	pr_info("<%s> p->addr = 0x%p, era = 0x%lx, estat = 0x%lx\n",
++		p->symbol_name, p->addr, regs->csr_era, regs->csr_estat);
++#endif
  
- #include <linux/types.h>
- #include <asm/asm.h>
-+#include <asm/ptrace.h>
- 
- #define INSN_NOP		0x03400000
- #define INSN_BREAK		0x002a0000
-@@ -30,6 +31,7 @@ enum reg1i20_op {
- 	lu12iw_op	= 0x0a,
- 	lu32id_op	= 0x0b,
- 	pcaddi_op	= 0x0c,
-+	pcalau12i_op	= 0x0d,
- 	pcaddu12i_op	= 0x0e,
- 	pcaddu18i_op	= 0x0f,
- };
-@@ -352,6 +354,16 @@ static inline bool is_stack_alloc_ins(union loongarch_instruction *ip)
- u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
- u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
- u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
-+void simu_branch(struct pt_regs *regs, union loongarch_instruction insn);
-+void simu_pc(struct pt_regs *regs, union loongarch_instruction insn);
-+
-+static inline unsigned long sign_extended(unsigned long val, unsigned int idx)
-+{
-+	if (val & (1UL << idx))
-+		return ~((1UL << (idx + 1)) - 1) | val;
-+	else
-+		return ((1UL << (idx + 1)) - 1) & val;
-+}
- 
- static inline bool signed_imm_check(long val, unsigned int bit)
- {
-diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
-index 59c4608..58596c4 100644
---- a/arch/loongarch/include/asm/ptrace.h
-+++ b/arch/loongarch/include/asm/ptrace.h
-@@ -6,6 +6,7 @@
- #define _ASM_PTRACE_H
- 
- #include <asm/page.h>
-+#include <asm/irqflags.h>
- #include <asm/thread_info.h>
- #include <uapi/asm/ptrace.h>
- 
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index b1df0ec..1da681e 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -38,3 +38,126 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned l
- 
- 	return insn.word;
+ 	/* A dump_stack() here will give a stack backtrace */
+ 	return 0;
+@@ -92,6 +96,10 @@ static void __kprobes handler_post(struct kprobe *p, struct pt_regs *regs,
+ 	pr_info("<%s> p->addr, 0x%p, flags = 0x%lx\n",
+ 		p->symbol_name, p->addr, regs->flags);
+ #endif
++#ifdef CONFIG_LOONGARCH
++	pr_info("<%s> p->addr = 0x%p, estat = 0x%lx\n",
++		p->symbol_name, p->addr, regs->csr_estat);
++#endif
  }
-+
-+void simu_branch(struct pt_regs *regs, union loongarch_instruction insn)
-+{
-+	unsigned int imm, imm_l, imm_h, rd, rj;
-+	unsigned long pc = regs->csr_era;
-+
-+	if (pc & 3) {
-+		pr_warn("%s: invalid pc 0x%lx\n", __func__, pc);
-+		return;
-+	}
-+
-+	imm_l = insn.reg0i26_format.immediate_l;
-+	imm_h = insn.reg0i26_format.immediate_h;
-+	switch (insn.reg0i26_format.opcode) {
-+	case b_op:
-+		regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 27);
-+		return;
-+	case bl_op:
-+		regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 27);
-+		regs->regs[1] = pc + LOONGARCH_INSN_SIZE;
-+		return;
-+	}
-+
-+	imm_l = insn.reg1i21_format.immediate_l;
-+	imm_h = insn.reg1i21_format.immediate_h;
-+	rj = insn.reg1i21_format.rj;
-+	switch (insn.reg1i21_format.opcode) {
-+	case beqz_op:
-+		if (regs->regs[rj] == 0)
-+			regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 22);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		return;
-+	case bnez_op:
-+		if (regs->regs[rj] != 0)
-+			regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 22);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		return;
-+	}
-+
-+	imm = insn.reg2i16_format.immediate;
-+	rj = insn.reg2i16_format.rj;
-+	rd = insn.reg2i16_format.rd;
-+	switch (insn.reg2i16_format.opcode) {
-+	case beq_op:
-+		if (regs->regs[rj] == regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bne_op:
-+		if (regs->regs[rj] != regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case blt_op:
-+		if ((long)regs->regs[rj] < (long)regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bge_op:
-+		if ((long)regs->regs[rj] >= (long)regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bltu_op:
-+		if (regs->regs[rj] < regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bgeu_op:
-+		if (regs->regs[rj] >= regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case jirl_op:
-+		regs->csr_era = regs->regs[rj] + sign_extended(imm << 2, 17);
-+		regs->regs[rd] = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	default:
-+		pr_info("%s: unknown opcode\n", __func__);
-+		return;
-+	}
-+}
-+
-+void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
-+{
-+	unsigned long pc = regs->csr_era;
-+	unsigned int rd = insn.reg1i20_format.rd;
-+	unsigned int imm = insn.reg1i20_format.immediate;
-+
-+	if (pc & 3) {
-+		pr_warn("%s: invalid pc 0x%lx\n", __func__, pc);
-+		return;
-+	}
-+
-+	switch (insn.reg1i20_format.opcode) {
-+	case pcaddi_op:
-+		regs->regs[rd] = pc + sign_extended(imm << 2, 21);
-+		break;
-+	case pcaddu12i_op:
-+		regs->regs[rd] = pc + sign_extended(imm << 12, 31);
-+		break;
-+	case pcaddu18i_op:
-+		regs->regs[rd] = pc + sign_extended(imm << 18, 37);
-+		break;
-+	case pcalau12i_op:
-+		regs->regs[rd] = pc + sign_extended(imm << 12, 31);
-+		regs->regs[rd] &= ~((1 << 12) - 1);
-+		break;
-+	default:
-+		pr_info("%s: unknown opcode\n", __func__);
-+		return;
-+	}
-+
-+	regs->csr_era += LOONGARCH_INSN_SIZE;
-+}
+ 
+ static int __init kprobe_init(void)
 -- 
 2.1.0
 
