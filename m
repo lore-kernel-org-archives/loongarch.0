@@ -1,148 +1,157 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49EC7C
-	for <loongarch@lists.linux.dev>; Sat, 19 Nov 2022 04:42:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E45CC433C1;
-	Sat, 19 Nov 2022 04:42:51 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Add basic STACKPROTECTOR support
-Date: Sat, 19 Nov 2022 12:40:25 +0800
-Message-Id: <20221119044025.1578509-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBE17C
+	for <loongarch@lists.linux.dev>; Sat, 19 Nov 2022 04:55:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C728C43141
+	for <loongarch@lists.linux.dev>; Sat, 19 Nov 2022 04:55:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1668833720;
+	bh=FWTQg1pMn1zoXjBhI3Oc+0x9wI/eH+gfle52gN1Vz08=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Lzt/x88aEOVDhrXosD7AQZ6LyUoIMvReP0aHrpOdk6BDSRbO+PxeVaYSUNK2Sa8Ah
+	 geq16iBW2jzgpd3rdBISjuKG6TAjHf8kgKvSYd5nflh1/ak8d9e8ZsYXH3V8WesZjE
+	 v+5CKVtLD/LBIW0cPr0TnSlDK/SisMP4wxtWUL0fiID7j6vP545KJMzEfaUD5Nynbt
+	 oqYlUAUfyNMHwV/oObssNVKeCSQPYhxBp0xbM/zs6koJ0Tm+/cA0kqUjyDHcWFgbOx
+	 PkxvO432xiStDZ6kaOpl/grbtWX6q7YptiMqlIqi9rkOIBEQl5owbc+nORjRLyYqNd
+	 GQIjzIVldSf8w==
+Received: by mail-ed1-f51.google.com with SMTP id x2so9767233edd.2
+        for <loongarch@lists.linux.dev>; Fri, 18 Nov 2022 20:55:20 -0800 (PST)
+X-Gm-Message-State: ANoB5pkD7ebNhJmQ8o0gafXQdbc8OXghS0IUSkyRh2vmZkMaJ58k4Lh4
+	BAy7t1xACULiwOzQeMBtIm8h4WmB9D3Ru3sENQQ=
+X-Google-Smtp-Source: AA0mqf6vESNiZK1hg9EvtRH5CNItebjZaMvWg4meVQ/Uu1xL3UdAOY5rd1r11JIbrI3+TW4wHj1dNo//J06bD0qKNv4=
+X-Received: by 2002:a05:6402:5003:b0:462:a25f:f0f2 with SMTP id
+ p3-20020a056402500300b00462a25ff0f2mr8632014eda.156.1668833718733; Fri, 18
+ Nov 2022 20:55:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20221116082338.5145-1-zhangqing@loongson.cn>
+In-Reply-To: <20221116082338.5145-1-zhangqing@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 19 Nov 2022 12:55:07 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4qOW_qw3wD0bdO9P8sCYAoLUHcPS1rpVfMsS36RSX_ZQ@mail.gmail.com>
+Message-ID: <CAAhV-H4qOW_qw3wD0bdO9P8sCYAoLUHcPS1rpVfMsS36RSX_ZQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND v8 0/9] LoongArch: Add ftrace support
+To: Qing Zhang <zhangqing@loongson.cn>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add basic stack protector support similar to other architectures. A
-constant canary value is set at boot time, and with help of compiler's
--fstack-protector we can detect stack corruption.
+Hi, Qing,
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/Kconfig                      |  1 +
- arch/loongarch/include/asm/stackprotector.h | 38 +++++++++++++++++++++
- arch/loongarch/kernel/asm-offsets.c         |  3 ++
- arch/loongarch/kernel/process.c             |  6 ++++
- arch/loongarch/kernel/switch.S              |  5 +++
- 5 files changed, 53 insertions(+)
- create mode 100644 arch/loongarch/include/asm/stackprotector.h
+I have applied this series to
+https://github.com/loongson/linux/commits/loongarch-next with some
+slight modifications, please test that branch to see if everything is
+correct.
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 6c40af615c20..0a43d104c3a0 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -104,6 +104,7 @@ config LOONGARCH
- 	select HAVE_REGS_AND_STACK_ACCESS_API
- 	select HAVE_RSEQ
- 	select HAVE_SETUP_PER_CPU_AREA if NUMA
-+	select HAVE_STACKPROTECTOR
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_TIF_NOHZ
- 	select HAVE_VIRT_CPU_ACCOUNTING_GEN if !SMP
-diff --git a/arch/loongarch/include/asm/stackprotector.h b/arch/loongarch/include/asm/stackprotector.h
-new file mode 100644
-index 000000000000..a1a965751a7b
---- /dev/null
-+++ b/arch/loongarch/include/asm/stackprotector.h
-@@ -0,0 +1,38 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * GCC stack protector support.
-+ *
-+ * Stack protector works by putting predefined pattern at the start of
-+ * the stack frame and verifying that it hasn't been overwritten when
-+ * returning from the function. The pattern is called stack canary and
-+ * on LoongArch gcc expects it to be defined by a global variable called
-+ * "__stack_chk_guard".
-+ */
-+
-+#ifndef _ASM_STACKPROTECTOR_H
-+#define _ASM_STACKPROTECTOR_H
-+
-+#include <linux/random.h>
-+#include <linux/version.h>
-+
-+extern unsigned long __stack_chk_guard;
-+
-+/*
-+ * Initialize the stackprotector canary value.
-+ *
-+ * NOTE: this must only be called from functions that never return,
-+ * and it must always be inlined.
-+ */
-+static __always_inline void boot_init_stack_canary(void)
-+{
-+	unsigned long canary;
-+
-+	/* Try to get a semi random initial value. */
-+	get_random_bytes(&canary, sizeof(canary));
-+	canary ^= LINUX_VERSION_CODE;
-+
-+	current->stack_canary = canary;
-+	__stack_chk_guard = current->stack_canary;
-+}
-+
-+#endif	/* _ASM_STACKPROTECTOR_H */
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index 4ef494577813..4bdb203fc66e 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -68,6 +68,9 @@ void output_task_defines(void)
- 	OFFSET(TASK_FLAGS, task_struct, flags);
- 	OFFSET(TASK_MM, task_struct, mm);
- 	OFFSET(TASK_PID, task_struct, pid);
-+#if defined(CONFIG_STACKPROTECTOR)
-+	OFFSET(TASK_STACK_CANARY, task_struct, stack_canary);
-+#endif
- 	DEFINE(TASK_STRUCT_SIZE, sizeof(struct task_struct));
- 	BLANK();
- }
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index d983dfce7371..27c8cacbce01 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -47,6 +47,12 @@
- #include <asm/unwind.h>
- #include <asm/vdso.h>
- 
-+#ifdef CONFIG_STACKPROTECTOR
-+#include <linux/stackprotector.h>
-+unsigned long __stack_chk_guard __read_mostly;
-+EXPORT_SYMBOL(__stack_chk_guard);
-+#endif
-+
- /*
-  * Idle related variables and functions
-  */
-diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
-index 202a163cb32f..31dd8199b245 100644
---- a/arch/loongarch/kernel/switch.S
-+++ b/arch/loongarch/kernel/switch.S
-@@ -23,6 +23,11 @@ SYM_FUNC_START(__switch_to)
- 	stptr.d	ra, a0, THREAD_REG01
- 	stptr.d a3, a0, THREAD_SCHED_RA
- 	stptr.d a4, a0, THREAD_SCHED_CFA
-+#if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_SMP)
-+	la	t7, __stack_chk_guard
-+	LONG_L	t8, a1, TASK_STACK_CANARY
-+	LONG_S	t8, t7, 0
-+#endif
- 	move	tp, a2
- 	cpu_restore_nonscratch a1
- 
--- 
-2.31.1
+Huacai
 
+On Wed, Nov 16, 2022 at 4:23 PM Qing Zhang <zhangqing@loongson.cn> wrote:
+>
+> This patch series to support basic and dynamic ftrace.
+>
+> 1) -pg
+> Use `-pg` makes stub like a child function `void _mcount(void *ra)`.
+> Thus, it can be seen store RA and open stack before `call _mcount`.
+> Find `open stack` at first, and then find `store RA`.
+>
+> 2) -fpatchable-function-entry=2
+> The compiler has inserted 2 NOPs before the regular function prologue.
+> T series registers are available and safe because of LoongArch psABI.
+>
+> At runtime, replace nop with bl to enable ftrace call and replace bl with
+> nop to disable ftrace call. The bl requires us to save the original RA value,
+> so here it saves RA at t0.
+> details are:
+>
+> | Compiled   |       Disabled         |        Enabled         |
+> +------------+------------------------+------------------------+
+> | nop        | move     t0, ra        | move     t0, ra        |
+> | nop        | nop                    | bl      ftrace_caller  |
+> | func_body  | func_body              | func_body              |
+>
+> The RA value will be recovered by ftrace_regs_entry, and restored into RA
+> before returning to the regular function prologue. When a function is not
+> being traced, the move t0, ra is not harmful.
+>
+> performs a series of startup tests on ftrace and The test cases in selftests
+> has passed on LoongArch.
+>
+> Changes in v2:
+>  - Remove patch "LoongArch: ftrace: Add CALLER_ADDRx macros" there are other
+>    better ways
+>  Suggested by Steve:
+>  - Add HAVE_DYNAMIC_FTRACE_WITH_ARGS support (6/10)
+>  Suggested by Jinyang:
+>  - Change addu16id to lu12iw and Adjust module_finalize return value (7/10)
+>  - Use the "jr" pseudo-instruction where applicable (1/10)
+>  - Use the "la.pcrel" instead of "la" (3/10)
+>
+> Changes in v3:
+>  Reported by Jeff:
+>  - Fix unwind state when option func_stack_trace (10/10)
+>
+> Changes in v4:
+>  - No comments. Just resend the series.
+>  - Rebased onto v6.0.0-rc4.
+>
+> Changes in v5:
+>  - Modify the indentation of Kconfig and small changes
+>
+> Changes in v6:
+>  Suggested by Huacai:
+>  - Adjusting the patch Sequence
+>  - renamed mcount-dyn.S for consistency
+>
+> Changes in v7:
+>  - delete redefinition
+>
+> Changes in v8:
+>  - remove useless macro judgment and modify the return location
+>  - move some code to Patch-3
+>
+> Qing Zhang (9):
+>   LoongArch/ftrace: Add basic support
+>   LoongArch/ftrace: Add recordmcount support
+>   LoongArch/ftrace: Add dynamic function tracer support
+>   LoongArch/ftrace: Add dynamic function graph tracer support
+>   LoongArch/ftrace: Add HAVE_DYNAMIC_FTRACE_WITH_REGS support
+>   LoongArch/ftrace: Add HAVE_DYNAMIC_FTRACE_WITH_ARGS support
+>   LoongArch/ftrace: Add HAVE_FUNCTION_GRAPH_RET_ADDR_PTR support
+>   LoongArch: modules/ftrace: Initialize PLT at load time
+>   LoongArch: Enable CONFIG_KALLSYMS_ALL and CONFIG_DEBUG_FS
+>
+>  arch/loongarch/Kconfig                     |   7 +
+>  arch/loongarch/Makefile                    |   5 +
+>  arch/loongarch/configs/loongson3_defconfig |   2 +
+>  arch/loongarch/include/asm/ftrace.h        |  59 +++++
+>  arch/loongarch/include/asm/inst.h          |  15 ++
+>  arch/loongarch/include/asm/module.h        |   5 +-
+>  arch/loongarch/include/asm/module.lds.h    |   1 +
+>  arch/loongarch/include/asm/unwind.h        |   3 +-
+>  arch/loongarch/kernel/Makefile             |  13 +
+>  arch/loongarch/kernel/ftrace.c             |  74 ++++++
+>  arch/loongarch/kernel/ftrace_dyn.c         | 264 +++++++++++++++++++++
+>  arch/loongarch/kernel/inst.c               | 127 ++++++++++
+>  arch/loongarch/kernel/mcount.S             |  94 ++++++++
+>  arch/loongarch/kernel/mcount_dyn.S         | 154 ++++++++++++
+>  arch/loongarch/kernel/module-sections.c    |  11 +
+>  arch/loongarch/kernel/module.c             |  21 ++
+>  arch/loongarch/kernel/unwind_guess.c       |   4 +-
+>  arch/loongarch/kernel/unwind_prologue.c    |  46 +++-
+>  scripts/recordmcount.c                     |  23 ++
+>  19 files changed, 918 insertions(+), 10 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/ftrace.h
+>  create mode 100644 arch/loongarch/kernel/ftrace.c
+>  create mode 100644 arch/loongarch/kernel/ftrace_dyn.c
+>  create mode 100644 arch/loongarch/kernel/mcount.S
+>  create mode 100644 arch/loongarch/kernel/mcount_dyn.S
+>
+> --
+> 2.36.0
+>
+>
