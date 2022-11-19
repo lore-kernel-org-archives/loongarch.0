@@ -1,157 +1,245 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBE17C
-	for <loongarch@lists.linux.dev>; Sat, 19 Nov 2022 04:55:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C728C43141
-	for <loongarch@lists.linux.dev>; Sat, 19 Nov 2022 04:55:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1668833720;
-	bh=FWTQg1pMn1zoXjBhI3Oc+0x9wI/eH+gfle52gN1Vz08=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Lzt/x88aEOVDhrXosD7AQZ6LyUoIMvReP0aHrpOdk6BDSRbO+PxeVaYSUNK2Sa8Ah
-	 geq16iBW2jzgpd3rdBISjuKG6TAjHf8kgKvSYd5nflh1/ak8d9e8ZsYXH3V8WesZjE
-	 v+5CKVtLD/LBIW0cPr0TnSlDK/SisMP4wxtWUL0fiID7j6vP545KJMzEfaUD5Nynbt
-	 oqYlUAUfyNMHwV/oObssNVKeCSQPYhxBp0xbM/zs6koJ0Tm+/cA0kqUjyDHcWFgbOx
-	 PkxvO432xiStDZ6kaOpl/grbtWX6q7YptiMqlIqi9rkOIBEQl5owbc+nORjRLyYqNd
-	 GQIjzIVldSf8w==
-Received: by mail-ed1-f51.google.com with SMTP id x2so9767233edd.2
-        for <loongarch@lists.linux.dev>; Fri, 18 Nov 2022 20:55:20 -0800 (PST)
-X-Gm-Message-State: ANoB5pkD7ebNhJmQ8o0gafXQdbc8OXghS0IUSkyRh2vmZkMaJ58k4Lh4
-	BAy7t1xACULiwOzQeMBtIm8h4WmB9D3Ru3sENQQ=
-X-Google-Smtp-Source: AA0mqf6vESNiZK1hg9EvtRH5CNItebjZaMvWg4meVQ/Uu1xL3UdAOY5rd1r11JIbrI3+TW4wHj1dNo//J06bD0qKNv4=
-X-Received: by 2002:a05:6402:5003:b0:462:a25f:f0f2 with SMTP id
- p3-20020a056402500300b00462a25ff0f2mr8632014eda.156.1668833718733; Fri, 18
- Nov 2022 20:55:18 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76A7381
+	for <loongarch@lists.linux.dev>; Sat, 19 Nov 2022 14:20:31 +0000 (UTC)
+Received: by mail-il1-f176.google.com with SMTP id x13so529027ilp.8
+        for <loongarch@lists.linux.dev>; Sat, 19 Nov 2022 06:20:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yiIrO3QJ9FqGI1W8MgeqZveRlXgYO7d04pOinsw5OS4=;
+        b=0WGBdTMsp56KBqqY+suna+fbNqVkNRBcNRo/3cUJS8yQnuf7sqWHfjSAEx7vxXyXHr
+         s1BY1rGymPPt4Sxhh2qqE0ACnxv5jxNdd14B/nqCLbt+RcP7oiBYO+0lxRHK4+PpN1l9
+         iP/cQePD4nqmRsDY23HsilrXpJ4+ImjyF7VI9xdPPrPkIRDHWE4dDdRGNVtNV3Hs3kfg
+         PjrXTPjsgAEGqDQI57OjmxhM+g8I0mGUGoBKSr6kqoY8Yj2zKMfL5j3xPdovATQEhLWn
+         vcQICwWuqPacArQzonyKxdgbCNFeQ5I0I8VryS/m5+yrHALQx7kdtee2UJj5JRgcX2Yf
+         503w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yiIrO3QJ9FqGI1W8MgeqZveRlXgYO7d04pOinsw5OS4=;
+        b=ALjXf858FFc/R1qI6hXiq6bVYbOpH98t7V8ImVs8dh6eKKJD5lnACpfoWLolWCgorl
+         zhB+6UgryOTEvOOFFF/jFypkVJzTDKL3zjxAIBwtLMarMN+yn1rgcAQy6QyDXzV76Fkz
+         5qg3glL4elnWa+TQqEm+sZrnoxVnumPTj8t5bJdS+6ZBFAMpoPOfqFI+xzZiZGhrG+fe
+         Sgp5gVvSRWcFH6bfL7ckQWkQsolqWsPNA2PUVuuZUx2Glk2Q7G+IsL+Epfk8isAUIWdN
+         tXAm9nHkuq9i0zVerdsuHjrv0vEmNH7b3VM9gjUdWAD+9XmNsa2HYbDgo/6QpRd8ziQq
+         LEaw==
+X-Gm-Message-State: ANoB5pmeuUrX39LOL04KPhg+sc5BLH8F3JlgUjNu4W9VmBqby5dF2bWG
+	mdyhDvfXtmTrgF52eUGoQZs7+4C2qGXGoAE/rkaZZg==
+X-Google-Smtp-Source: AA0mqf7sY1uF76oTP19CbgpTLmeIV7GhdUPEPCH/OAhw2wNsU60oPlA2YjRv3hFu3eMl08xwgD843RHy4uGgDqYQ8T4=
+X-Received: by 2002:a92:c691:0:b0:302:75c9:5d55 with SMTP id
+ o17-20020a92c691000000b0030275c95d55mr5171218ilg.34.1668867630758; Sat, 19
+ Nov 2022 06:20:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221116082338.5145-1-zhangqing@loongson.cn>
-In-Reply-To: <20221116082338.5145-1-zhangqing@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 19 Nov 2022 12:55:07 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4qOW_qw3wD0bdO9P8sCYAoLUHcPS1rpVfMsS36RSX_ZQ@mail.gmail.com>
-Message-ID: <CAAhV-H4qOW_qw3wD0bdO9P8sCYAoLUHcPS1rpVfMsS36RSX_ZQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND v8 0/9] LoongArch: Add ftrace support
-To: Qing Zhang <zhangqing@loongson.cn>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+References: <20221117042532.4064448-1-chenhuacai@loongson.cn>
+ <Y3ZPRx/VUoVvujNa@x1n> <Y3aDQKwGDLXtWRJu@x1n>
+In-Reply-To: <Y3aDQKwGDLXtWRJu@x1n>
+From: hev <r@hev.cc>
+Date: Sat, 19 Nov 2022 22:20:20 +0800
+Message-ID: <CAHirt9itKO_K_HPboXh5AyJtt16Zf0cD73PtHvM=na39u_ztxA@mail.gmail.com>
+Subject: Re: [PATCH 04/47] LoongArch: Set _PAGE_DIRTY only if _PAGE_WRITE is
+ set in {pmd,pte}_mkdirty()
+To: Peter Xu <peterx@redhat.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, "David S . Miller" <davem@davemloft.net>, 
+	sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hi, Qing,
+Hi, Peter,
 
-I have applied this series to
-https://github.com/loongson/linux/commits/loongarch-next with some
-slight modifications, please test that branch to see if everything is
-correct.
+On Fri, Nov 18, 2022 at 2:53 AM Peter Xu <peterx@redhat.com> wrote:
+>
+> On Thu, Nov 17, 2022 at 10:12:07AM -0500, Peter Xu wrote:
+> > Hi, Huacai,
+> >
+> > On Thu, Nov 17, 2022 at 12:25:32PM +0800, Huacai Chen wrote:
+> > > Now {pmd,pte}_mkdirty() set _PAGE_DIRTY bit unconditionally, this causes
+> > > random segmentation fault after commit 0ccf7f168e17bb7e ("mm/thp: carry
+> > > over dirty bit when thp splits on pmd").
+> > >
+> > > The reason is: when fork(), parent process use pmd_wrprotect() to clear
+> > > huge page's _PAGE_WRITE and _PAGE_DIRTY (for COW);
+> >
+> > Is it safe to drop dirty bit when wr-protect?  It means the mm can reclaim
+> > the page directly assuming the page contains rubbish.
+> >
+> > Consider after fork() and memory pressure kicks the kswapd, I don't see
+> > anything stops the kswapd from recycling the pages and lose the data in
+> > both processes.
+>
+> Feel free to ignore this question..  I think I got an answer from Hev (and
+> I then got a follow up question):
+>
+> https://lore.kernel.org/all/Y3Z9Zf0jARMOkFBq@x1n/
+>
+> >
+> > > then pte_mkdirty() set
+> > > _PAGE_DIRTY as well as _PAGE_MODIFIED while splitting dirty huge pages;
+> > > once _PAGE_DIRTY is set, there will be no tlb modify exception so the COW
+> > > machanism fails; and at last memory corruption occurred between parent
+> > > and child processes.
+> > >
+> > > So, we should set _PAGE_DIRTY only when _PAGE_WRITE is set in {pmd,pte}_
+> > > mkdirty().
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Cc: Peter Xu <peterx@redhat.com>
+> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > ---
+> > > Note: CC sparc maillist because they have similar issues.
+> >
+> > I also had a look on sparc64, it seems to not do the same as loongarch
+> > here (not removing dirty in wr-protect):
+> >
+> > static inline pmd_t pmd_wrprotect(pmd_t pmd)
+> > {
+> >       pte_t pte = __pte(pmd_val(pmd));
+> >
+> >       pte = pte_wrprotect(pte);
+> >
+> >       return __pmd(pte_val(pte));
+> > }
+> >
+> > static inline pte_t pte_wrprotect(pte_t pte)
+> > {
+> >       unsigned long val = pte_val(pte), tmp;
+> >
+> >       __asm__ __volatile__(
+> >       "\n661: andn            %0, %3, %0\n"
+> >       "       nop\n"
+> >       "\n662: nop\n"
+> >       "       nop\n"
+> >       "       .section        .sun4v_2insn_patch, \"ax\"\n"
+> >       "       .word           661b\n"
+> >       "       sethi           %%uhi(%4), %1\n"
+> >       "       sllx            %1, 32, %1\n"
+> >       "       .word           662b\n"
+> >       "       or              %1, %%lo(%4), %1\n"
+> >       "       andn            %0, %1, %0\n"
+> >       "       .previous\n"
+> >       : "=r" (val), "=r" (tmp)
+> >       : "0" (val), "i" (_PAGE_WRITE_4U | _PAGE_W_4U),
+> >         "i" (_PAGE_WRITE_4V | _PAGE_W_4V));
+> >
+> >       return __pte(val);
+> > }
+>
+> (Same here; I just overlooked what does _PAGE_W_4U meant..)
+>
+> >
+> > >
+> > >  arch/loongarch/include/asm/pgtable.h | 8 ++++++--
+> > >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+> > > index 946704bee599..debbe116f105 100644
+> > > --- a/arch/loongarch/include/asm/pgtable.h
+> > > +++ b/arch/loongarch/include/asm/pgtable.h
+> > > @@ -349,7 +349,9 @@ static inline pte_t pte_mkclean(pte_t pte)
+> > >
+> > >  static inline pte_t pte_mkdirty(pte_t pte)
+> > >  {
+> > > -   pte_val(pte) |= (_PAGE_DIRTY | _PAGE_MODIFIED);
+> > > +   pte_val(pte) |= _PAGE_MODIFIED;
+> > > +   if (pte_val(pte) & _PAGE_WRITE)
+> > > +           pte_val(pte) |= _PAGE_DIRTY;
+> >
+> > I'm not sure whether mm has rule to always set write bit then set dirty
+> > bit, need to be careful here because the outcome may differ when use:
+> >
+> >   pte_mkdirty(pte_mkwrite(pte))
+> >   (expected)
+> >
+> > VS:
+> >
+> >   pte_mkwrite(pte_mkdirty(pte))
+> >   (dirty not set)
+> >
+> > I had a feeling I miss some arch-specific details here on why loongarch
+> > needs such implementation, but I can't quickly tell.
+>
+> After a closer look I think it's fine for loongarch as pte_mkwrite will
+> also set the dirty bit unconditionally, so at least the two ways will still
+> generate the same pte (DIRTY+MODIFIED+WRITE).
+>
+> But this whole thing is still confusing to me.  It'll still be great if
+> anyone can help explain why the _DIRTY cannot be set only in pte_mkwrite()
+> if that's the solo place in charge of "whether the pte is writable".
+>
+> The other follow up question is: how do we mark "this pte contains valid
+> data" (the common definition of "dirty bit"), while "this pte is not
+> writable" on loongarch?
+>
+> It can happen when we're installing a page with non-zero data meanwhile
+> wr-protected.  That's actually a valid case for userfaultfd wr-protect mode
+> where user specified UFFDIO_COPY ioctl with flag UFFDIO_COPY_MODE_WP, where
+> we'll install a non-zero page from user buffer but don't grant write bit.
+>
+> From code-wise, I think it can be done currently with this on loongarch:
+>
+>   pte_wrprotect(pte_mkwrite(pte_mkdirty(pte)))
+>
+> Where pte_wrprotect(pte_mkwrite(pte)) is not a no-op but applying MODIFIED.
 
-Huacai
+We would like to note that on LoongArch (for misunderstanding naming):
+* _PAGE_DIRTY meaning hardware writable.
+* _PAGE_WRITE meaning software writable.
+* _PAGE_MODIFIED meaning software dirty, this page contains updated valid data.
 
-On Wed, Nov 16, 2022 at 4:23 PM Qing Zhang <zhangqing@loongson.cn> wrote:
+PTE APIs:
+* pte_mkwrite: Allow to write, only needs set _PAGE_WRITE.
+* pte_mkdirty: Mark as dirty, only needs set _PAGE_MODIFIED.
+* pte_dirty: Test is dirty, only test _PAGE_MODIFIED.
+* pte_wrprotect: Clear both writable, force to raise exception to
+handle_mm_fault.
+
+If a pte is only set _PAGE_WRITE without _PAGE_DIRTY by pte_mkwrite,
+then a write memory access will cause mmu exception, and the
+(_PAGE_DIRTY|_PAGE_MODIFIED) will be set in this exception handler. I
+think the _PAGE_DIRTY is also possible to set in pte_mkwrite for
+speedup, then _PAGE_MODIFIED must be set at the same time. To avoid
+the page data being modified but not detected by pte_dirty. (Current
+code may needs to fix
+
+pte_mkdirty mark pte as dirty is the main function, It can also make
+pte writeable by hardware(_PAGE_DIRTY) for speedup (too) if and only
+if the pte is writable(_PAGE_WRITE). (mkdirty sets _PAGE_DIRTY
+unconditionally is the root cause of the huge page COW issue.
+
+For write-protection, pte_wrprotect will clear both writable(software
+and hardware) in pte to force a MMU exception to handle_mm_fault.
+
+So yeah, the pte marked as dirty(_PAGE_MODIFIED) and without any
+writable in the following code:
+
+  pte_wrprotect(pte_mkwrite(pte_mkdirty(pte)))
+
+Regards,
+Ray
+
 >
-> This patch series to support basic and dynamic ftrace.
+> While on many other archs it'll be as simple as:
 >
-> 1) -pg
-> Use `-pg` makes stub like a child function `void _mcount(void *ra)`.
-> Thus, it can be seen store RA and open stack before `call _mcount`.
-> Find `open stack` at first, and then find `store RA`.
+>   pte_mkdirty(pte)
 >
-> 2) -fpatchable-function-entry=2
-> The compiler has inserted 2 NOPs before the regular function prologue.
-> T series registers are available and safe because of LoongArch psABI.
+> But that's really error-prone and not obvious.
 >
-> At runtime, replace nop with bl to enable ftrace call and replace bl with
-> nop to disable ftrace call. The bl requires us to save the original RA value,
-> so here it saves RA at t0.
-> details are:
+> Copying Hev too.
 >
-> | Compiled   |       Disabled         |        Enabled         |
-> +------------+------------------------+------------------------+
-> | nop        | move     t0, ra        | move     t0, ra        |
-> | nop        | nop                    | bl      ftrace_caller  |
-> | func_body  | func_body              | func_body              |
->
-> The RA value will be recovered by ftrace_regs_entry, and restored into RA
-> before returning to the regular function prologue. When a function is not
-> being traced, the move t0, ra is not harmful.
->
-> performs a series of startup tests on ftrace and The test cases in selftests
-> has passed on LoongArch.
->
-> Changes in v2:
->  - Remove patch "LoongArch: ftrace: Add CALLER_ADDRx macros" there are other
->    better ways
->  Suggested by Steve:
->  - Add HAVE_DYNAMIC_FTRACE_WITH_ARGS support (6/10)
->  Suggested by Jinyang:
->  - Change addu16id to lu12iw and Adjust module_finalize return value (7/10)
->  - Use the "jr" pseudo-instruction where applicable (1/10)
->  - Use the "la.pcrel" instead of "la" (3/10)
->
-> Changes in v3:
->  Reported by Jeff:
->  - Fix unwind state when option func_stack_trace (10/10)
->
-> Changes in v4:
->  - No comments. Just resend the series.
->  - Rebased onto v6.0.0-rc4.
->
-> Changes in v5:
->  - Modify the indentation of Kconfig and small changes
->
-> Changes in v6:
->  Suggested by Huacai:
->  - Adjusting the patch Sequence
->  - renamed mcount-dyn.S for consistency
->
-> Changes in v7:
->  - delete redefinition
->
-> Changes in v8:
->  - remove useless macro judgment and modify the return location
->  - move some code to Patch-3
->
-> Qing Zhang (9):
->   LoongArch/ftrace: Add basic support
->   LoongArch/ftrace: Add recordmcount support
->   LoongArch/ftrace: Add dynamic function tracer support
->   LoongArch/ftrace: Add dynamic function graph tracer support
->   LoongArch/ftrace: Add HAVE_DYNAMIC_FTRACE_WITH_REGS support
->   LoongArch/ftrace: Add HAVE_DYNAMIC_FTRACE_WITH_ARGS support
->   LoongArch/ftrace: Add HAVE_FUNCTION_GRAPH_RET_ADDR_PTR support
->   LoongArch: modules/ftrace: Initialize PLT at load time
->   LoongArch: Enable CONFIG_KALLSYMS_ALL and CONFIG_DEBUG_FS
->
->  arch/loongarch/Kconfig                     |   7 +
->  arch/loongarch/Makefile                    |   5 +
->  arch/loongarch/configs/loongson3_defconfig |   2 +
->  arch/loongarch/include/asm/ftrace.h        |  59 +++++
->  arch/loongarch/include/asm/inst.h          |  15 ++
->  arch/loongarch/include/asm/module.h        |   5 +-
->  arch/loongarch/include/asm/module.lds.h    |   1 +
->  arch/loongarch/include/asm/unwind.h        |   3 +-
->  arch/loongarch/kernel/Makefile             |  13 +
->  arch/loongarch/kernel/ftrace.c             |  74 ++++++
->  arch/loongarch/kernel/ftrace_dyn.c         | 264 +++++++++++++++++++++
->  arch/loongarch/kernel/inst.c               | 127 ++++++++++
->  arch/loongarch/kernel/mcount.S             |  94 ++++++++
->  arch/loongarch/kernel/mcount_dyn.S         | 154 ++++++++++++
->  arch/loongarch/kernel/module-sections.c    |  11 +
->  arch/loongarch/kernel/module.c             |  21 ++
->  arch/loongarch/kernel/unwind_guess.c       |   4 +-
->  arch/loongarch/kernel/unwind_prologue.c    |  46 +++-
->  scripts/recordmcount.c                     |  23 ++
->  19 files changed, 918 insertions(+), 10 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/ftrace.h
->  create mode 100644 arch/loongarch/kernel/ftrace.c
->  create mode 100644 arch/loongarch/kernel/ftrace_dyn.c
->  create mode 100644 arch/loongarch/kernel/mcount.S
->  create mode 100644 arch/loongarch/kernel/mcount_dyn.S
+> Thanks,
 >
 > --
-> 2.36.0
->
+> Peter Xu
 >
