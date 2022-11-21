@@ -1,189 +1,285 @@
-Received: from out2.migadu.com (out2.migadu.com [188.165.223.204])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6B9443F
-	for <loongarch@lists.linux.dev>; Mon, 21 Nov 2022 16:58:37 +0000 (UTC)
-Date: Tue, 22 Nov 2022 00:58:01 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1669049909;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EAB807
+	for <loongarch@lists.linux.dev>; Mon, 21 Nov 2022 18:32:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1669055521;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lEB5sh1/jYLycgzf6hWVQ3EeKLUvTYuUqdOi39E1eA0=;
-	b=jiGbQ4uJNZ21+fNIJjIv+B2mA3lsqr/SPyq3nARdrS1nQvKMIcLo95l1g/jNScRdSx6eq9
-	bGN6ihBFqSiIIP5jbIau4lq0lJzNSX4XUpwrojxf5CUWggmCbNdgiRfKqmXPBCyObzWn9R
-	rPcYHVaQ+XWiuoqpCXgDykipNJHSwG0=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Wu XiangCheng <wu.xiangcheng@linux.dev>
-To: Yanteng Si <siyanteng@loongson.cn>
-Cc: chenhuacai@kernel.org, corbet@lwn.net, alexs@kernel.org,
-	seakeel@gmail.com, kernel@xen0n.name, jiaxun.yang@flygoat.com,
-	linux-doc@vger.kernel.org, loongarch@lists.linux.dev,
-	siyanteng01@gmail.com, Xiaotian Wu <wuxiaotian@loongson.cn>,
-	Yun Liu <liuyun@loongson.cn>
-Subject: Re: [PATCH v1 1/2] docs/LoongArch: Add boot image header
-Message-ID: <Y3uuGXo3SNtzARP0@bobwxc.mipc>
-References: <cover.1669032230.git.siyanteng@loongson.cn>
- <08df007c7488b88ff5400bef6183f9cc68d87616.1669032230.git.siyanteng@loongson.cn>
+	bh=HKC6PzeRn6bPjEwwYUvrQnoSSD38TBwL6brYXNQ38R8=;
+	b=hFt9gHc3vxwslBRw8P9VnrCXMlACTeDdSSsHfsFhtoN0IGQ7GPGnrTwUb3XZtXQ6Ad+jug
+	YfQ1tVjL69WWXU8BSZH/xijZCWTWlcyrXK2HHVMqM6JRYbBOXSUlpLHpNVP2712TvofrPk
+	EPplZSSCKrQFuyl+ICZVKwHxxutYHtM=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-472-cw2uDjUNNdaJGE7b6B3Lwg-1; Mon, 21 Nov 2022 13:31:59 -0500
+X-MC-Unique: cw2uDjUNNdaJGE7b6B3Lwg-1
+Received: by mail-qk1-f197.google.com with SMTP id bk30-20020a05620a1a1e00b006fb2378c857so16448537qkb.18
+        for <loongarch@lists.linux.dev>; Mon, 21 Nov 2022 10:31:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HKC6PzeRn6bPjEwwYUvrQnoSSD38TBwL6brYXNQ38R8=;
+        b=BS7OFxp7MO9RKYCsSghD8xfqDKSwYL6BkI/hIf0q9p1puwbGS+oxUZuCxhJZvmpZWf
+         pKqnLN61uqv7nlm5Qt1zTzHNmB3WVKEkB9DO993uAIaPkQ+Y6zHlM2aqjmMpwObeIR2d
+         U2Lk4Tm1Gi+CtjG2jHQHaNs0puNC1JDtw5FLtHIgR2iZcmpWzAQaCHhyLf9F3bo9RX6n
+         ItbQcu+U3paB+TxCjoLmdMksAKXoZcLwcnZs+/296b62zF0hqziUatgsCfKFqCiktoUo
+         RHFXHxWdtsb/oTt4K5LrC60cCzfmm6ScwQ8UNhlEnuQ4iNTQWe0u6jYVuxDmcOGali2R
+         WZYw==
+X-Gm-Message-State: ANoB5pkkImAoumB6SbDQGn8EQq49QbxDVdrX1YY8OJPSS3O43HGsqrnb
+	/Snebv1KeIs29L7p8PmeYkKmAY1mU3g65UcVD2twsYJd9U5N6PB/qalzkutpDM8SbvKRobPVK/5
+	OXnTqew8P/DSK+ASTluOe
+X-Received: by 2002:a37:5841:0:b0:6ec:b463:3b88 with SMTP id m62-20020a375841000000b006ecb4633b88mr17087696qkb.720.1669055518891;
+        Mon, 21 Nov 2022 10:31:58 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf6xzjkUosYgVU21fd/euPs0iKKvIcKvKxOuaD7CQ/FP4vPZ/uZb2xfuhRFr7numHkNx2q/57w==
+X-Received: by 2002:a37:5841:0:b0:6ec:b463:3b88 with SMTP id m62-20020a375841000000b006ecb4633b88mr17087671qkb.720.1669055518522;
+        Mon, 21 Nov 2022 10:31:58 -0800 (PST)
+Received: from x1n (bras-base-aurron9127w-grc-46-70-31-27-79.dsl.bell.ca. [70.31.27.79])
+        by smtp.gmail.com with ESMTPSA id r13-20020a05620a298d00b006eee3a09ff3sm8695375qkp.69.2022.11.21.10.31.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Nov 2022 10:31:58 -0800 (PST)
+Date: Mon, 21 Nov 2022 13:31:57 -0500
+From: Peter Xu <peterx@redhat.com>
+To: hev <r@hev.cc>
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 04/47] LoongArch: Set _PAGE_DIRTY only if _PAGE_WRITE is
+ set in {pmd,pte}_mkdirty()
+Message-ID: <Y3vEHRiIFCSk8vRG@x1n>
+References: <20221117042532.4064448-1-chenhuacai@loongson.cn>
+ <Y3ZPRx/VUoVvujNa@x1n>
+ <Y3aDQKwGDLXtWRJu@x1n>
+ <CAHirt9itKO_K_HPboXh5AyJtt16Zf0cD73PtHvM=na39u_ztxA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAHirt9itKO_K_HPboXh5AyJtt16Zf0cD73PtHvM=na39u_ztxA@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <08df007c7488b88ff5400bef6183f9cc68d87616.1669032230.git.siyanteng@loongson.cn>
-X-Migadu-Flow: FLOW_OUT
 
-+Cc: Yun Liu <liuyun@loongson.cn>
+On Sat, Nov 19, 2022 at 10:20:20PM +0800, hev wrote:
+> Hi, Peter,
 
-2022-11-21 (一) 20:16:30 +0800 Yanteng Si 曰：
-> Describes the meaning and value of the image header field.
+Hev,
+
 > 
-> Suggested-by: Xiaotian Wu <wuxiaotian@loongson.cn>
-> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
-> ---
->  Documentation/loongarch/boot-image-header.rst | 76 +++++++++++++++++++
->  Documentation/loongarch/index.rst             |  1 +
->  2 files changed, 77 insertions(+)
->  create mode 100644 Documentation/loongarch/boot-image-header.rst
+> On Fri, Nov 18, 2022 at 2:53 AM Peter Xu <peterx@redhat.com> wrote:
+> >
+> > On Thu, Nov 17, 2022 at 10:12:07AM -0500, Peter Xu wrote:
+> > > Hi, Huacai,
+> > >
+> > > On Thu, Nov 17, 2022 at 12:25:32PM +0800, Huacai Chen wrote:
+> > > > Now {pmd,pte}_mkdirty() set _PAGE_DIRTY bit unconditionally, this causes
+> > > > random segmentation fault after commit 0ccf7f168e17bb7e ("mm/thp: carry
+> > > > over dirty bit when thp splits on pmd").
+> > > >
+> > > > The reason is: when fork(), parent process use pmd_wrprotect() to clear
+> > > > huge page's _PAGE_WRITE and _PAGE_DIRTY (for COW);
+> > >
+> > > Is it safe to drop dirty bit when wr-protect?  It means the mm can reclaim
+> > > the page directly assuming the page contains rubbish.
+> > >
+> > > Consider after fork() and memory pressure kicks the kswapd, I don't see
+> > > anything stops the kswapd from recycling the pages and lose the data in
+> > > both processes.
+> >
+> > Feel free to ignore this question..  I think I got an answer from Hev (and
+> > I then got a follow up question):
+> >
+> > https://lore.kernel.org/all/Y3Z9Zf0jARMOkFBq@x1n/
+> >
+> > >
+> > > > then pte_mkdirty() set
+> > > > _PAGE_DIRTY as well as _PAGE_MODIFIED while splitting dirty huge pages;
+> > > > once _PAGE_DIRTY is set, there will be no tlb modify exception so the COW
+> > > > machanism fails; and at last memory corruption occurred between parent
+> > > > and child processes.
+> > > >
+> > > > So, we should set _PAGE_DIRTY only when _PAGE_WRITE is set in {pmd,pte}_
+> > > > mkdirty().
+> > > >
+> > > > Cc: stable@vger.kernel.org
+> > > > Cc: Peter Xu <peterx@redhat.com>
+> > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > ---
+> > > > Note: CC sparc maillist because they have similar issues.
+> > >
+> > > I also had a look on sparc64, it seems to not do the same as loongarch
+> > > here (not removing dirty in wr-protect):
+> > >
+> > > static inline pmd_t pmd_wrprotect(pmd_t pmd)
+> > > {
+> > >       pte_t pte = __pte(pmd_val(pmd));
+> > >
+> > >       pte = pte_wrprotect(pte);
+> > >
+> > >       return __pmd(pte_val(pte));
+> > > }
+> > >
+> > > static inline pte_t pte_wrprotect(pte_t pte)
+> > > {
+> > >       unsigned long val = pte_val(pte), tmp;
+> > >
+> > >       __asm__ __volatile__(
+> > >       "\n661: andn            %0, %3, %0\n"
+> > >       "       nop\n"
+> > >       "\n662: nop\n"
+> > >       "       nop\n"
+> > >       "       .section        .sun4v_2insn_patch, \"ax\"\n"
+> > >       "       .word           661b\n"
+> > >       "       sethi           %%uhi(%4), %1\n"
+> > >       "       sllx            %1, 32, %1\n"
+> > >       "       .word           662b\n"
+> > >       "       or              %1, %%lo(%4), %1\n"
+> > >       "       andn            %0, %1, %0\n"
+> > >       "       .previous\n"
+> > >       : "=r" (val), "=r" (tmp)
+> > >       : "0" (val), "i" (_PAGE_WRITE_4U | _PAGE_W_4U),
+> > >         "i" (_PAGE_WRITE_4V | _PAGE_W_4V));
+> > >
+> > >       return __pte(val);
+> > > }
+> >
+> > (Same here; I just overlooked what does _PAGE_W_4U meant..)
+> >
+> > >
+> > > >
+> > > >  arch/loongarch/include/asm/pgtable.h | 8 ++++++--
+> > > >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+> > > > index 946704bee599..debbe116f105 100644
+> > > > --- a/arch/loongarch/include/asm/pgtable.h
+> > > > +++ b/arch/loongarch/include/asm/pgtable.h
+> > > > @@ -349,7 +349,9 @@ static inline pte_t pte_mkclean(pte_t pte)
+> > > >
+> > > >  static inline pte_t pte_mkdirty(pte_t pte)
+> > > >  {
+> > > > -   pte_val(pte) |= (_PAGE_DIRTY | _PAGE_MODIFIED);
+> > > > +   pte_val(pte) |= _PAGE_MODIFIED;
+> > > > +   if (pte_val(pte) & _PAGE_WRITE)
+> > > > +           pte_val(pte) |= _PAGE_DIRTY;
+> > >
+> > > I'm not sure whether mm has rule to always set write bit then set dirty
+> > > bit, need to be careful here because the outcome may differ when use:
+> > >
+> > >   pte_mkdirty(pte_mkwrite(pte))
+> > >   (expected)
+> > >
+> > > VS:
+> > >
+> > >   pte_mkwrite(pte_mkdirty(pte))
+> > >   (dirty not set)
+> > >
+> > > I had a feeling I miss some arch-specific details here on why loongarch
+> > > needs such implementation, but I can't quickly tell.
+> >
+> > After a closer look I think it's fine for loongarch as pte_mkwrite will
+> > also set the dirty bit unconditionally, so at least the two ways will still
+> > generate the same pte (DIRTY+MODIFIED+WRITE).
+> >
+> > But this whole thing is still confusing to me.  It'll still be great if
+> > anyone can help explain why the _DIRTY cannot be set only in pte_mkwrite()
+> > if that's the solo place in charge of "whether the pte is writable".
+> >
+> > The other follow up question is: how do we mark "this pte contains valid
+> > data" (the common definition of "dirty bit"), while "this pte is not
+> > writable" on loongarch?
+> >
+> > It can happen when we're installing a page with non-zero data meanwhile
+> > wr-protected.  That's actually a valid case for userfaultfd wr-protect mode
+> > where user specified UFFDIO_COPY ioctl with flag UFFDIO_COPY_MODE_WP, where
+> > we'll install a non-zero page from user buffer but don't grant write bit.
+> >
+> > From code-wise, I think it can be done currently with this on loongarch:
+> >
+> >   pte_wrprotect(pte_mkwrite(pte_mkdirty(pte)))
+> >
+> > Where pte_wrprotect(pte_mkwrite(pte)) is not a no-op but applying MODIFIED.
 > 
-> diff --git a/Documentation/loongarch/boot-image-header.rst b/Documentation/loongarch/boot-image-header.rst
-> new file mode 100644
-> index 000000000000..92a953a6f2e6
-> --- /dev/null
-> +++ b/Documentation/loongarch/boot-image-header.rst
-> @@ -0,0 +1,76 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +====================================
-> +Boot image header in LoongArch Linux
-> +====================================
-> +
-> +:Author: Yanteng Si <siyanteng@loongson.cn>
-> +:Date:   18 Nov 2022
-> +
-> +This document only describes the boot image header details for
-> +LoongArch Linux.
-> +
-> +The following 64-byte header is present in decompressed Linux
-> +kernel image::
-> +
-> +	u32	MZ_MAGIC		/* "MZ", MS-DOS header */
-> +	u32	res0 = 0		/* reserved */
-> +	u64	kernel_entry		/* Kernel entry point */
-> +	u64	_end - _text		/* Kernel image effective size */
-> +	u64	0			/* Kernel image load offset from start of RAM */
-> +	u64	res1 = 0		/* reserved */
-> +	u64	res2 = 0		/* reserved */
-> +	u64	res3 = 0		/* reserved */
-> +	u32	res4 = 0		/* reserved */
-> +	u32	pe_header - _head	/* Offset to the PE header */
-> +
-
-Any code related need to be linked here?
-
-> +
-> +Header notes
-> +============
-> +
-> +Currently, LoongArch has removed the "magic" field.
-> +
-> +According to the EFI specification, the PE/COFF image file header is
-> +required at the beginning of the kernel image; the LoongArch kernel
-> +supports the EFI stub, so the first two bytes of the kernel image header
-> +are "MZ" magic characters, and 0x3c should point to the rest of the
-> +PE/COFF file header, between which The kernel entry point, image
-> +effectivesize, and image load offset layout are as follows::
-> +
-> +          +-----------------------------------------------+
-> +    0x0:  |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-> +          +-----------------------------------------------+
-> +    0x8:  | MZ_MAGIC              |          res0         |
-> +          +-----------------------------------------------+
-> +    0x10: |                 kernel_entry                  |
-> +          +-----------------------------------------------+
-> +    0x18: |                  _end - _text                 |
-> +          +-----------------------------------------------+
-> +    0x20: |                       0                       |
-> +          +-----------------------------------------------+
-> +    0x28: |                      res1                     |
-> +          +-----------------------------------------------+
-> +    0x30: |                      res2                     |
-> +          +-----------------------------------------------+
-> +    0x38: |                      res3                     |
-> +          +-----------------------------------------------+
-> +    0x40: |          res14        |       PE header       |
-> +          +-----------------------------------------------+
-> +
-
-emmm, this figure...
-
-So MZ_MAGIC start from 0x08 ?
-
-Or
-
-            0     1     2     3     4     5     6     7   
-         +-----------------------+-----------------------+
-    0x00 |        MZ_MAGIC       |          res0         |
-         +-----------------------+-----------------------+
-    0x08 |                 kernel_entry                  |
-         +-----------------------------------------------+
-    0x10 |                  _end - _text                 |
-         +-----------------------------------------------+
-    0x18 |                       0                       |
-         +-----------------------------------------------+
-    0x20 |                      res1                     |
-         +-----------------------------------------------+
-    0x28 |                      res2                     |
-         +-----------------------------------------------+
-    0x30 |                      res3                     |
-         +-----------------------+-----------------------+
-    0x38 |          res14        |       PE header       |
-         +-----------------------+-----------------------+
-
-If the figure is too difficult to draw, a simple table can also be used
-to instead.
-
-Offset	Name	Size	Note
-...
-
-> +
-> +All bit fields are in little endian:
-> +
-> +    - MZ: Effective length of 2 bytes;
-> +
-> +    - kernel entry point: leaving 6 bytes blank in front, starting
-> +      from 0x8, with a effective length of 8 bytes;
-> +
-> +    - kernel image effective size: Immediately following the kernel
-> +      entry point, with a effective length of 8 bytes, this field is
-> +      required for the bootloader;
-> +
-> +    - kernel image load offset: Immediately following the kernel
-> +      image effective size, with a effective length of 8 bytes;
-> +
-> +    - Offset to the PE header: leaving 28 bytes blank in front,
-> +      starting from 0x3c, with a effective length of 4 bytes.
-> diff --git a/Documentation/loongarch/index.rst b/Documentation/loongarch/index.rst
-> index aaba648db907..97419821adf9 100644
-> --- a/Documentation/loongarch/index.rst
-> +++ b/Documentation/loongarch/index.rst
-> @@ -10,6 +10,7 @@ LoongArch Architecture
->  
->     introduction
->     irq-chip-model
-> +   boot-image-header
->  
->     features
->  
-> -- 
-> 2.31.1
+> We would like to note that on LoongArch (for misunderstanding naming):
+> * _PAGE_DIRTY meaning hardware writable.
+> * _PAGE_WRITE meaning software writable.
+> * _PAGE_MODIFIED meaning software dirty, this page contains updated valid data.
 > 
+> PTE APIs:
+> * pte_mkwrite: Allow to write, only needs set _PAGE_WRITE.
+> * pte_mkdirty: Mark as dirty, only needs set _PAGE_MODIFIED.
+> * pte_dirty: Test is dirty, only test _PAGE_MODIFIED.
+> * pte_wrprotect: Clear both writable, force to raise exception to
+> handle_mm_fault.
+> 
+> If a pte is only set _PAGE_WRITE without _PAGE_DIRTY by pte_mkwrite,
+> then a write memory access will cause mmu exception, and the
+> (_PAGE_DIRTY|_PAGE_MODIFIED) will be set in this exception handler. I
+> think the _PAGE_DIRTY is also possible to set in pte_mkwrite for
+> speedup, then _PAGE_MODIFIED must be set at the same time. To avoid
+> the page data being modified but not detected by pte_dirty. (Current
+> code may needs to fix
+> 
+> pte_mkdirty mark pte as dirty is the main function, It can also make
+> pte writeable by hardware(_PAGE_DIRTY) for speedup (too) if and only
+> if the pte is writable(_PAGE_WRITE). (mkdirty sets _PAGE_DIRTY
+> unconditionally is the root cause of the huge page COW issue.
+
+Yes, and that's why Huacai's patch can fix this issue for Loongarch, but
+sparc64 still suffers from it so far.
+
+> 
+> For write-protection, pte_wrprotect will clear both writable(software
+> and hardware) in pte to force a MMU exception to handle_mm_fault.
+> 
+> So yeah, the pte marked as dirty(_PAGE_MODIFIED) and without any
+> writable in the following code:
+> 
+>   pte_wrprotect(pte_mkwrite(pte_mkdirty(pte)))
+
+Thanks for the further explanation, Hev.
+
+I think so far I keep the questioning on whether it's a good optimization
+to apply _DIRTY in pte_mkdirty here.
+
+Since we have pte_mkwrite() API after all, even if there's an optimization
+IMHO it should be done by the kernel generic code already, I don't
+immediately see why it needs to be arch-specific.  IOW, I'm not sure
+whether such optimization for loongarch will bring any real performance
+benefit?
+
+The thing is, generic mm code should already have called pte_mkwrite()
+along with pte_mkdirty() when proper, so _DIRTY will be properly applied
+even if pte_mkdirty() only applies _MODIFIED in loongarch code without
+extra mmu faults - if you see the code base that's really the major cases,
+except a few very special conditions where we want to only set _MODIFIED
+but may want to keep the pte read-only, but in that case it's never wise to
+set _DIRTY in pte_mkdirty anyway.
+
+I just don't know whether there's anything else I could have overlooked, so
+maybe removing "set _DIRTY" in pte_mkdirty() will regress in some other way.
+
+For now, I think I'll go ahead and try to propose another trivial fix for
+the pmd split generic code so we'll have the pte_mkdirty back (I think I
+need to reorder pte_wrprotect() so that it needs to appear after
+pte_mkdirty()) but hopefully also work for sparc64; loongarch will also
+benefit if before this patch lands.
+
+(Sorry to be off-topic on this thread)
 
 -- 
-Wu XiangCheng	0x32684A40BCA7AEA7
+Peter Xu
 
