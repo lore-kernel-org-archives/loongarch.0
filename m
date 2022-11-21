@@ -1,245 +1,184 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76A7381
-	for <loongarch@lists.linux.dev>; Sat, 19 Nov 2022 14:20:31 +0000 (UTC)
-Received: by mail-il1-f176.google.com with SMTP id x13so529027ilp.8
-        for <loongarch@lists.linux.dev>; Sat, 19 Nov 2022 06:20:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yiIrO3QJ9FqGI1W8MgeqZveRlXgYO7d04pOinsw5OS4=;
-        b=0WGBdTMsp56KBqqY+suna+fbNqVkNRBcNRo/3cUJS8yQnuf7sqWHfjSAEx7vxXyXHr
-         s1BY1rGymPPt4Sxhh2qqE0ACnxv5jxNdd14B/nqCLbt+RcP7oiBYO+0lxRHK4+PpN1l9
-         iP/cQePD4nqmRsDY23HsilrXpJ4+ImjyF7VI9xdPPrPkIRDHWE4dDdRGNVtNV3Hs3kfg
-         PjrXTPjsgAEGqDQI57OjmxhM+g8I0mGUGoBKSr6kqoY8Yj2zKMfL5j3xPdovATQEhLWn
-         vcQICwWuqPacArQzonyKxdgbCNFeQ5I0I8VryS/m5+yrHALQx7kdtee2UJj5JRgcX2Yf
-         503w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yiIrO3QJ9FqGI1W8MgeqZveRlXgYO7d04pOinsw5OS4=;
-        b=ALjXf858FFc/R1qI6hXiq6bVYbOpH98t7V8ImVs8dh6eKKJD5lnACpfoWLolWCgorl
-         zhB+6UgryOTEvOOFFF/jFypkVJzTDKL3zjxAIBwtLMarMN+yn1rgcAQy6QyDXzV76Fkz
-         5qg3glL4elnWa+TQqEm+sZrnoxVnumPTj8t5bJdS+6ZBFAMpoPOfqFI+xzZiZGhrG+fe
-         Sgp5gVvSRWcFH6bfL7ckQWkQsolqWsPNA2PUVuuZUx2Glk2Q7G+IsL+Epfk8isAUIWdN
-         tXAm9nHkuq9i0zVerdsuHjrv0vEmNH7b3VM9gjUdWAD+9XmNsa2HYbDgo/6QpRd8ziQq
-         LEaw==
-X-Gm-Message-State: ANoB5pmeuUrX39LOL04KPhg+sc5BLH8F3JlgUjNu4W9VmBqby5dF2bWG
-	mdyhDvfXtmTrgF52eUGoQZs7+4C2qGXGoAE/rkaZZg==
-X-Google-Smtp-Source: AA0mqf7sY1uF76oTP19CbgpTLmeIV7GhdUPEPCH/OAhw2wNsU60oPlA2YjRv3hFu3eMl08xwgD843RHy4uGgDqYQ8T4=
-X-Received: by 2002:a92:c691:0:b0:302:75c9:5d55 with SMTP id
- o17-20020a92c691000000b0030275c95d55mr5171218ilg.34.1668867630758; Sat, 19
- Nov 2022 06:20:30 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198A57E
+	for <loongarch@lists.linux.dev>; Mon, 21 Nov 2022 06:44:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2080C433C1
+	for <loongarch@lists.linux.dev>; Mon, 21 Nov 2022 06:44:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1669013086;
+	bh=ByEb9CzSYoiFO/dGpr0/iFSZVFlaCOW5X7TzSx2On4s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rxN5CjUiUgd6nnQEwm2BqHZU66U99Edw2Wg3K+uqSakdnlIhQLO4t1YhEkeQO5asG
+	 TTJ695e1zqRwakPikO8TFFB/I6LjA1F9rRsqQ55Qb/EaDCTL5ooha2f6UtGgkJS4en
+	 aEwGG7Pu6ykmfVjZBYAz3srUm7HIDq+sZsOPv3m3mokyd8dGO0s3ozXISOuktfNnu8
+	 a7vGDjwe04kSls31UCh/D4nhYKxUDHmNJY1OpxXST1dpyPNoCjkYn9XibGqtT0/zuW
+	 rbbvX7SvTc5F+3ZfDlzouLN1iy8ELV2qRfLfF+o2NbRW2fVF4QT5ev+29F5ZlL0GTV
+	 3cZJ/qg3K8H7Q==
+Received: by mail-ed1-f47.google.com with SMTP id y24so9833783edi.10
+        for <loongarch@lists.linux.dev>; Sun, 20 Nov 2022 22:44:46 -0800 (PST)
+X-Gm-Message-State: ANoB5pkLfU7FKWFhR8vUWNI1rvKVLHOjU72Ftgr57HRqxXKztcRM9oQZ
+	+R+G2+sE4/aaIozOz6W/ziCax/WqKRBbO+7bNv0=
+X-Google-Smtp-Source: AA0mqf7VJWSKzNKbhsfEgKxPS55uh+3w7AlPSLx369LSwsBq3VOx8no34PQvyskfaD6k8f0Vv4259bYV63Hgb5YlvhA=
+X-Received: by 2002:a05:6402:5003:b0:462:a25f:f0f2 with SMTP id
+ p3-20020a056402500300b00462a25ff0f2mr14962234eda.156.1669013084932; Sun, 20
+ Nov 2022 22:44:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221117042532.4064448-1-chenhuacai@loongson.cn>
- <Y3ZPRx/VUoVvujNa@x1n> <Y3aDQKwGDLXtWRJu@x1n>
-In-Reply-To: <Y3aDQKwGDLXtWRJu@x1n>
-From: hev <r@hev.cc>
-Date: Sat, 19 Nov 2022 22:20:20 +0800
-Message-ID: <CAHirt9itKO_K_HPboXh5AyJtt16Zf0cD73PtHvM=na39u_ztxA@mail.gmail.com>
-Subject: Re: [PATCH 04/47] LoongArch: Set _PAGE_DIRTY only if _PAGE_WRITE is
- set in {pmd,pte}_mkdirty()
-To: Peter Xu <peterx@redhat.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, "David S . Miller" <davem@davemloft.net>, 
-	sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
+References: <20221106065619.2543121-1-zhoubinbin@loongson.cn>
+ <CAMj1kXG3sJTPzWYx1hKaBeXPgD0xQXW-4NxgwZjWpQ-nGw=MhA@mail.gmail.com>
+ <df8e3b76-0594-e26a-b53c-c145b5abbd31@loongson.cn> <89f0adb3-ea3b-e275-b59e-22d30e67f77b@xen0n.name>
+ <e832b206-9891-ab62-254c-c7a55e36d718@loongson.cn>
+In-Reply-To: <e832b206-9891-ab62-254c-c7a55e36d718@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 21 Nov 2022 14:44:34 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4mW-r2aHZh7=SBYRRKDSFmVwOsCYUPFLsi7CMyhkwf3w@mail.gmail.com>
+Message-ID: <CAAhV-H4mW-r2aHZh7=SBYRRKDSFmVwOsCYUPFLsi7CMyhkwf3w@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Support booting with FDT from efi system table
+To: Jianmin Lv <lvjianmin@loongson.cn>, Ard Biesheuvel <ardb@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Peter,
+Hi, Ard,
 
-On Fri, Nov 18, 2022 at 2:53 AM Peter Xu <peterx@redhat.com> wrote:
+On Mon, Nov 7, 2022 at 4:44 PM Jianmin Lv <lvjianmin@loongson.cn> wrote:
 >
-> On Thu, Nov 17, 2022 at 10:12:07AM -0500, Peter Xu wrote:
-> > Hi, Huacai,
-> >
-> > On Thu, Nov 17, 2022 at 12:25:32PM +0800, Huacai Chen wrote:
-> > > Now {pmd,pte}_mkdirty() set _PAGE_DIRTY bit unconditionally, this causes
-> > > random segmentation fault after commit 0ccf7f168e17bb7e ("mm/thp: carry
-> > > over dirty bit when thp splits on pmd").
-> > >
-> > > The reason is: when fork(), parent process use pmd_wrprotect() to clear
-> > > huge page's _PAGE_WRITE and _PAGE_DIRTY (for COW);
-> >
-> > Is it safe to drop dirty bit when wr-protect?  It means the mm can reclaim
-> > the page directly assuming the page contains rubbish.
-> >
-> > Consider after fork() and memory pressure kicks the kswapd, I don't see
-> > anything stops the kswapd from recycling the pages and lose the data in
-> > both processes.
 >
-> Feel free to ignore this question..  I think I got an answer from Hev (and
-> I then got a follow up question):
 >
-> https://lore.kernel.org/all/Y3Z9Zf0jARMOkFBq@x1n/
+> On 2022/11/7 =E4=B8=8A=E5=8D=8810:50, WANG Xuerui wrote:
+> > On 2022/11/7 10:07, Jianmin Lv wrote:
+> >>
+> >>
+> >> On 2022/11/6 =E4=B8=8B=E5=8D=8811:06, Ard Biesheuvel wrote:
+> >>> On Sun, 6 Nov 2022 at 07:58, Binbin Zhou <zhoubinbin@loongson.cn> wro=
+te:
+> >>>>
+> >>>> Since commit 40cd01a9c324("efi/loongarch: libstub: remove dependency=
+ on
+> >>>> flattened DT"), we can parse the FDT from efi system table.
+> >>>>
+> >>>> And now, the Loongson-2K series cpus based on LoongArch support boot=
+ing
+> >>>> with FDT, so we adds the relevant booting support as well as paramet=
+er
+> >>>> parsing.
+> >>>>
+> >>>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> >>>> ---
+> >>>>   arch/loongarch/Kconfig             |  2 +
+> >>>>   arch/loongarch/include/asm/efi.h   |  1 +
+> >>>>   arch/loongarch/include/asm/setup.h |  1 +
+> >>>>   arch/loongarch/kernel/efi.c        | 27 ++++++++++-
+> >>>>   arch/loongarch/kernel/env.c        |  3 ++
+> >>>>   arch/loongarch/kernel/setup.c      | 75
+> >>>> +++++++++++++++++++++++++++++-
+> >>>>   6 files changed, 106 insertions(+), 3 deletions(-)
+> >>>>
+> >>>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> >>>> index 903096bd87f8..ce53d1fa2b64 100644
+> >>>> --- a/arch/loongarch/Kconfig
+> >>>> +++ b/arch/loongarch/Kconfig
+> >>>> @@ -111,6 +111,8 @@ config LOONGARCH
+> >>>>          select MODULES_USE_ELF_RELA if MODULES
+> >>>>          select NEED_PER_CPU_EMBED_FIRST_CHUNK
+> >>>>          select NEED_PER_CPU_PAGE_FIRST_CHUNK
+> >>>> +       select OF
+> >>>> +       select OF_EARLY_FLATTREE
+> >>>>          select PCI
+> >>>>          select PCI_DOMAINS_GENERIC
+> >>>>          select PCI_ECAM if ACPI
+> >>>> diff --git a/arch/loongarch/include/asm/efi.h
+> >>>> b/arch/loongarch/include/asm/efi.h
+> >>>> index 174567b00ddb..81e5d3371868 100644
+> >>>> --- a/arch/loongarch/include/asm/efi.h
+> >>>> +++ b/arch/loongarch/include/asm/efi.h
+> >>>> @@ -9,6 +9,7 @@
+> >>>>
+> >>>>   void __init efi_init(void);
+> >>>>   void __init efi_runtime_init(void);
+> >>>> +void __init *efi_fdt_pointer(void);
+> >>>>   void efifb_setup_from_dmi(struct screen_info *si, const char *opt)=
+;
+> >>>>
+> >>>>   #define ARCH_EFI_IRQ_FLAGS_MASK  0x00000004  /* Bit 2: CSR.CRMD.IE=
+ */
+> >>>> diff --git a/arch/loongarch/include/asm/setup.h
+> >>>> b/arch/loongarch/include/asm/setup.h
+> >>>> index ca373f8e3c4d..b18baf878ed4 100644
+> >>>> --- a/arch/loongarch/include/asm/setup.h
+> >>>> +++ b/arch/loongarch/include/asm/setup.h
+> >>>> @@ -13,6 +13,7 @@
+> >>>>
+> >>>>   extern unsigned long eentry;
+> >>>>   extern unsigned long tlbrentry;
+> >>>> +extern char original_cmdline[COMMAND_LINE_SIZE];
+> >>>>   extern void tlb_init(int cpu);
+> >>>>   extern void cpu_cache_init(void);
+> >>>>   extern void cache_error_setup(void);
+> >>>> diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi=
+.c
+> >>>> index a31329971133..16dcd673e905 100644
+> >>>> --- a/arch/loongarch/kernel/efi.c
+> >>>> +++ b/arch/loongarch/kernel/efi.c
+> >>>> @@ -37,7 +37,7 @@ static efi_config_table_type_t arch_tables[]
+> >>>> __initdata =3D {
+> >>>>
+> >>>>   void __init efi_runtime_init(void)
+> >>>>   {
+> >>>> -       if (!efi_enabled(EFI_BOOT))
+> >>>> +       if (!efi_enabled(EFI_BOOT) || !efi_systab->runtime)
+> >>>
+> >>> How can this happen? Why would we ever set EFI_BOOT if
+> >>> efi_systab->runtime =3D=3D NULL?
+> >>>
+> >>
+> >> Because some firmware (such as PMON) employed UEFI compatible
+> >> implementaion without runtime (and set runtime null pointer).
+> >
+> > Hmm, is it really "UEFI-compatible" when it's without a UEFI runtime?
 >
-> >
-> > > then pte_mkdirty() set
-> > > _PAGE_DIRTY as well as _PAGE_MODIFIED while splitting dirty huge pages;
-> > > once _PAGE_DIRTY is set, there will be no tlb modify exception so the COW
-> > > machanism fails; and at last memory corruption occurred between parent
-> > > and child processes.
-> > >
-> > > So, we should set _PAGE_DIRTY only when _PAGE_WRITE is set in {pmd,pte}_
-> > > mkdirty().
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Cc: Peter Xu <peterx@redhat.com>
-> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > ---
-> > > Note: CC sparc maillist because they have similar issues.
-> >
-> > I also had a look on sparc64, it seems to not do the same as loongarch
-> > here (not removing dirty in wr-protect):
-> >
-> > static inline pmd_t pmd_wrprotect(pmd_t pmd)
-> > {
-> >       pte_t pte = __pte(pmd_val(pmd));
-> >
-> >       pte = pte_wrprotect(pte);
-> >
-> >       return __pmd(pte_val(pte));
-> > }
-> >
-> > static inline pte_t pte_wrprotect(pte_t pte)
-> > {
-> >       unsigned long val = pte_val(pte), tmp;
-> >
-> >       __asm__ __volatile__(
-> >       "\n661: andn            %0, %3, %0\n"
-> >       "       nop\n"
-> >       "\n662: nop\n"
-> >       "       nop\n"
-> >       "       .section        .sun4v_2insn_patch, \"ax\"\n"
-> >       "       .word           661b\n"
-> >       "       sethi           %%uhi(%4), %1\n"
-> >       "       sllx            %1, 32, %1\n"
-> >       "       .word           662b\n"
-> >       "       or              %1, %%lo(%4), %1\n"
-> >       "       andn            %0, %1, %0\n"
-> >       "       .previous\n"
-> >       : "=r" (val), "=r" (tmp)
-> >       : "0" (val), "i" (_PAGE_WRITE_4U | _PAGE_W_4U),
-> >         "i" (_PAGE_WRITE_4V | _PAGE_W_4V));
-> >
-> >       return __pte(val);
-> > }
+> To be frank, it seems that runtime should be always valid in UEFI
+> complaint firmware (according to UEFI spec section 4.5, 8).
+> Unfortunately, some machines shipped with *partially-compatible"
+> (without runtime) firmware have been outside (maybe not many, I'm not
+> sure). So, thinking about compatibility with them, the case have to be
+> taken account, unless rather.
 >
-> (Same here; I just overlooked what does _PAGE_W_4U meant..)
->
+> > Anyway it's becoming increasingly difficult for community reviewers to
+> > check things without corresponding firmware sources available... (and I
+> > think, given the Loongson fork of PMON even back in the MIPS era is
+> > effectively GPL'd [1], the LoongArch port of PMON could probably be GPL
+> > as well, in which case it's totally fair for us to request the sources.=
+)
 > >
-> > >
-> > >  arch/loongarch/include/asm/pgtable.h | 8 ++++++--
-> > >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-> > > index 946704bee599..debbe116f105 100644
-> > > --- a/arch/loongarch/include/asm/pgtable.h
-> > > +++ b/arch/loongarch/include/asm/pgtable.h
-> > > @@ -349,7 +349,9 @@ static inline pte_t pte_mkclean(pte_t pte)
-> > >
-> > >  static inline pte_t pte_mkdirty(pte_t pte)
-> > >  {
-> > > -   pte_val(pte) |= (_PAGE_DIRTY | _PAGE_MODIFIED);
-> > > +   pte_val(pte) |= _PAGE_MODIFIED;
-> > > +   if (pte_val(pte) & _PAGE_WRITE)
-> > > +           pte_val(pte) |= _PAGE_DIRTY;
+> > (I know the similar usage pattern i.e. making use of various UEFI
+> > features but without a runtime was already widespread back in the MIPS
+> > days of Loongson, but personally I don't think it's enough to justify
+> > doing the same when it's 2022 and we're fully upstream.)
 > >
-> > I'm not sure whether mm has rule to always set write bit then set dirty
-> > bit, need to be careful here because the outcome may differ when use:
+> > [1]: https://github.com/loongson-community/pmon/blob/master/LICENSE.md
 > >
-> >   pte_mkdirty(pte_mkwrite(pte))
-> >   (expected)
+> >> Maybe *noefi* in command line is enough for this without
+> >> CONFIG_CMDLINE_FORCE simillar stuff configured?
 > >
-> > VS:
+> > I think having/forcing users to add "noefi" themselves wouldn't be good
+> > ergonomics? Manipulating the cmdline in the firmware could be more
+> > acceptable but I'm not sure.
 > >
-> >   pte_mkwrite(pte_mkdirty(pte))
-> >   (dirty not set)
-> >
-> > I had a feeling I miss some arch-specific details here on why loongarch
-> > needs such implementation, but I can't quickly tell.
 >
-> After a closer look I think it's fine for loongarch as pte_mkwrite will
-> also set the dirty bit unconditionally, so at least the two ways will still
-> generate the same pte (DIRTY+MODIFIED+WRITE).
->
-> But this whole thing is still confusing to me.  It'll still be great if
-> anyone can help explain why the _DIRTY cannot be set only in pte_mkwrite()
-> if that's the solo place in charge of "whether the pte is writable".
->
-> The other follow up question is: how do we mark "this pte contains valid
-> data" (the common definition of "dirty bit"), while "this pte is not
-> writable" on loongarch?
->
-> It can happen when we're installing a page with non-zero data meanwhile
-> wr-protected.  That's actually a valid case for userfaultfd wr-protect mode
-> where user specified UFFDIO_COPY ioctl with flag UFFDIO_COPY_MODE_WP, where
-> we'll install a non-zero page from user buffer but don't grant write bit.
->
-> From code-wise, I think it can be done currently with this on loongarch:
->
->   pte_wrprotect(pte_mkwrite(pte_mkdirty(pte)))
->
-> Where pte_wrprotect(pte_mkwrite(pte)) is not a no-op but applying MODIFIED.
+> I think so, adding it in firmware internally (if using "noefi") maybe
+> acceptable rather than adding it by users.
+With Jianmin's explanation, do you think it is acceptable for
+PMON-like firmware (emulates a systemtable but doesn't provide
+runtime) to set efi boot flag to 1? Or the flag should be 0 unless
+firmware is fully efi-compatible (has systemtable and runtime service
+is available)?
 
-We would like to note that on LoongArch (for misunderstanding naming):
-* _PAGE_DIRTY meaning hardware writable.
-* _PAGE_WRITE meaning software writable.
-* _PAGE_MODIFIED meaning software dirty, this page contains updated valid data.
-
-PTE APIs:
-* pte_mkwrite: Allow to write, only needs set _PAGE_WRITE.
-* pte_mkdirty: Mark as dirty, only needs set _PAGE_MODIFIED.
-* pte_dirty: Test is dirty, only test _PAGE_MODIFIED.
-* pte_wrprotect: Clear both writable, force to raise exception to
-handle_mm_fault.
-
-If a pte is only set _PAGE_WRITE without _PAGE_DIRTY by pte_mkwrite,
-then a write memory access will cause mmu exception, and the
-(_PAGE_DIRTY|_PAGE_MODIFIED) will be set in this exception handler. I
-think the _PAGE_DIRTY is also possible to set in pte_mkwrite for
-speedup, then _PAGE_MODIFIED must be set at the same time. To avoid
-the page data being modified but not detected by pte_dirty. (Current
-code may needs to fix
-
-pte_mkdirty mark pte as dirty is the main function, It can also make
-pte writeable by hardware(_PAGE_DIRTY) for speedup (too) if and only
-if the pte is writable(_PAGE_WRITE). (mkdirty sets _PAGE_DIRTY
-unconditionally is the root cause of the huge page COW issue.
-
-For write-protection, pte_wrprotect will clear both writable(software
-and hardware) in pte to force a MMU exception to handle_mm_fault.
-
-So yeah, the pte marked as dirty(_PAGE_MODIFIED) and without any
-writable in the following code:
-
-  pte_wrprotect(pte_mkwrite(pte_mkdirty(pte)))
-
-Regards,
-Ray
-
->
-> While on many other archs it'll be as simple as:
->
->   pte_mkdirty(pte)
->
-> But that's really error-prone and not obvious.
->
-> Copying Hev too.
->
-> Thanks,
->
-> --
-> Peter Xu
+Huacai
 >
