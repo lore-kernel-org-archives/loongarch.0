@@ -1,233 +1,293 @@
-Received: from smtpfb1-g21.free.fr (smtpfb1-g21.free.fr [212.27.42.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE1DBEA4
-	for <loongarch@lists.linux.dev>; Tue, 22 Nov 2022 15:04:41 +0000 (UTC)
-Received: from smtp1-g21.free.fr (smtp1-g21.free.fr [212.27.42.1])
-	by smtpfb1-g21.free.fr (Postfix) with ESMTP id 1BC15DF8DBF
-	for <loongarch@lists.linux.dev>; Tue, 22 Nov 2022 15:57:54 +0100 (CET)
-Received: from [192.168.10.46] (unknown [130.180.211.218])
-	(Authenticated sender: daniel.lezcano@free.fr)
-	by smtp1-g21.free.fr (Postfix) with ESMTPA id 9578EB00535;
-	Tue, 22 Nov 2022 15:57:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
-	s=smtp-20201208; t=1669129065;
-	bh=B7HUiAPO+9HzwwBVHzf2LAUEewOOfyCp9QGvnFZZBRQ=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=TTcnBD4jzu7Dgg5B7PCE9UWE2GQjqzV0XlqQoqMb8ApUDKCShYCQvjzx2c9tBE6fV
-	 svlmzm+aY/oN24AMqMOLnZ62rbRIrN0J1oMgZE9XBuktzxE6IEIv7RwZFjIOXnc06D
-	 VqtAT0yggyU0CwAJYp81Z1/30GSamPE8J39+R3Zp94WQ2sSO6xw+Y8O5cdtlcsBOm/
-	 VAYLRKoJ3vZ4RtQOUz6t5mJQG0d9s5OLfXnSKXYgxocpg/UPOw94iBC2hORFK/OM2a
-	 ufoGPSt7U1Dlhf5SysKLO/fEb+1YNt2oJUaxQtgGDz9hIgjcq9mp3tRuvLhB0LAVVn
-	 CnTcfashtg30g==
-Message-ID: <7586968e-eb25-56c4-19ce-be10216b0b28@free.fr>
-Date: Tue, 22 Nov 2022 15:57:31 +0100
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9936FD1
+	for <loongarch@lists.linux.dev>; Tue, 22 Nov 2022 16:05:10 +0000 (UTC)
+Received: by mail-pf1-f179.google.com with SMTP id c203so14759564pfc.11
+        for <loongarch@lists.linux.dev>; Tue, 22 Nov 2022 08:05:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mKqixJN/8zapPMiYOY0ZA2E36N6vIQg16uLiOxlikFI=;
+        b=Sxgb7NdwQ/FjyYXzMQLr2Ufh8inWhewppyg2kEhKfSMa5+4xLhcDZFgBkLe+YVojYR
+         b1j/8R8eepdhz2QNEoN59UWxI0C8HtPNMN2hfsnJ2VXdsyzTbL+tlNksQKPnsWg/NtBp
+         chCgU4N95aPK2lbuS5RzKtW5ffOhO3rTLhquzizFSUU3p/ux1MbE2BMO0btBQyCrWeJK
+         WXzMJ1H0fbnItfONfrC7qjjeZVQUnHu7QZDLXM8ZsS1OkeorqU4Yt3+bnHeBb63EIVUM
+         ARM0B0wTMD/PlD/5zjrBQjmOnBQvgdxEwxF1FwYHEN8lHlbB5RkK/8WK1b4hFP6jFplD
+         FuDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mKqixJN/8zapPMiYOY0ZA2E36N6vIQg16uLiOxlikFI=;
+        b=ngwEbzKR4wL+7wBUks1YxN05n663KXcvujbbhBqaddrcjoejEfeNUl3QR/d/iKcf3y
+         DYvwAp8gKTzb4zmEnGKfk3HSNQ9MGBXscLm2YvLHwRCPeooTJb9Bv2CD11XSH7i+Keeh
+         +CVcL5H9X+ofOsdBmKBHQlcoFU41ur2kFczAXXpIy2WhoZII6FRy6QicYwS/U7nFCjhz
+         LTuC5nKLka5g6LDxHNg2cpaiQ1xJ6DIxN001n/bdCtHZ8feGjlIE/WfgM+M3RaNRfaji
+         OzpB3xaZrNYPmQDmkU6BIq556A6FrOQ96RyjWU+ZTOW4kwbD5XkmPGC0JJO/8eqHJkaB
+         3teg==
+X-Gm-Message-State: ANoB5pl6P6jD7xOZd1fzmgurjl8fgLUNbKvX3nwCAYl8fdYpdacgMpKf
+	dcRYrc7C+jy2ON2QPB8kERNewS10wi5jGSyyPPcm0g==
+X-Google-Smtp-Source: AA0mqf6JSvaqlcRgOCqphXQ3MBWuxLvJ9cnb0DNFGeizoGOcIFvJAwjnOuz3SuqXXwFDZ3Z3O+rn4vXVPvsxTfgKOLE=
+X-Received: by 2002:a63:501c:0:b0:477:650a:c29a with SMTP id
+ e28-20020a63501c000000b00477650ac29amr3900068pgb.541.1669133109958; Tue, 22
+ Nov 2022 08:05:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v10 1/2] clocksource: loongson2_hpet: add hpet driver
- support
-Content-Language: en-US
-To: Yinbo Zhu <zhuyinbo@loongson.cn>, Thomas Gleixner <tglx@linutronix.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Jianmin Lv <lvjianmin@loongson.cn>,
- Yun Liu <liuyun@loongson.cn>, Yang Li <yang.lee@linux.alibaba.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20221103131202.12481-1-zhuyinbo@loongson.cn>
-From: Daniel Lezcano <daniel.lezcano@free.fr>
-In-Reply-To: <20221103131202.12481-1-zhuyinbo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20220919095939.761690562@infradead.org> <20220919101521.139727471@infradead.org>
+ <CAPDyKFqTWd4W5Ofk76CtC4X43dxBTNHtmY9YzN355-vpviLsPw@mail.gmail.com> <Y3UBwYNY15ETUKy9@hirez.programming.kicks-ass.net>
+In-Reply-To: <Y3UBwYNY15ETUKy9@hirez.programming.kicks-ass.net>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 22 Nov 2022 17:04:33 +0100
+Message-ID: <CAPDyKFqzmJdVVrcuJ6Hmr5nNgtpd9Oke_exmUKuTGZEb=PjvjQ@mail.gmail.com>
+Subject: Re: [PATCH v2 12/44] cpuidle,dt: Push RCU-idle into driver
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: juri.lelli@redhat.com, rafael@kernel.org, catalin.marinas@arm.com, 
+	linus.walleij@linaro.org, bsegall@google.com, guoren@kernel.org, pavel@ucw.cz, 
+	agordeev@linux.ibm.com, linux-arch@vger.kernel.org, 
+	vincent.guittot@linaro.org, mpe@ellerman.id.au, chenhuacai@kernel.org, 
+	christophe.leroy@csgroup.eu, linux-acpi@vger.kernel.org, agross@kernel.org, 
+	geert@linux-m68k.org, linux-imx@nxp.com, vgupta@kernel.org, 
+	mattst88@gmail.com, mturquette@baylibre.com, sammy@sammy.net, 
+	pmladek@suse.com, linux-pm@vger.kernel.org, 
+	Sascha Hauer <s.hauer@pengutronix.de>, linux-um@lists.infradead.org, npiggin@gmail.com, 
+	tglx@linutronix.de, linux-omap@vger.kernel.org, dietmar.eggemann@arm.com, 
+	andreyknvl@gmail.com, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	senozhatsky@chromium.org, svens@linux.ibm.com, jolsa@kernel.org, 
+	tj@kernel.org, Andrew Morton <akpm@linux-foundation.org>, mark.rutland@arm.com, 
+	linux-ia64@vger.kernel.org, dave.hansen@linux.intel.com, 
+	virtualization@lists.linux-foundation.org, 
+	James.Bottomley@hansenpartnership.com, jcmvbkbc@gmail.com, 
+	thierry.reding@gmail.com, kernel@xen0n.name, cl@linux.com, 
+	linux-s390@vger.kernel.org, vschneid@redhat.com, john.ogness@linutronix.de, 
+	ysato@users.sourceforge.jp, linux-sh@vger.kernel.org, festevam@gmail.com, 
+	deller@gmx.de, daniel.lezcano@linaro.org, jonathanh@nvidia.com, 
+	dennis@kernel.org, lenb@kernel.org, linux-xtensa@linux-xtensa.org, 
+	kernel@pengutronix.de, gor@linux.ibm.com, linux-arm-msm@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+	loongarch@lists.linux.dev, shorne@gmail.com, chris@zankel.net, 
+	sboyd@kernel.org, dinguyen@kernel.org, bristot@redhat.com, 
+	alexander.shishkin@linux.intel.com, fweisbec@gmail.com, lpieralisi@kernel.org, 
+	atishp@atishpatra.org, linux@rasmusvillemoes.dk, kasan-dev@googlegroups.com, 
+	will@kernel.org, boris.ostrovsky@oracle.com, khilman@kernel.org, 
+	linux-csky@vger.kernel.org, pv-drivers@vmware.com, 
+	linux-snps-arc@lists.infradead.org, mgorman@suse.de, 
+	jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>, ulli.kroll@googlemail.com, 
+	linux-clk@vger.kernel.org, rostedt@goodmis.org, ink@jurassic.park.msu.ru, 
+	bcain@quicinc.com, tsbogend@alpha.franken.de, linux-parisc@vger.kernel.org, 
+	ryabinin.a.a@gmail.com, sudeep.holla@arm.com, shawnguo@kernel.org, 
+	davem@davemloft.net, dalias@libc.org, tony@atomide.com, amakhalov@vmware.com, 
+	konrad.dybcio@somainline.org, bjorn.andersson@linaro.org, glider@google.com, 
+	hpa@zytor.com, sparclinux@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, vincenzo.frascino@arm.com, 
+	anton.ivanov@cambridgegreys.com, jonas@southpole.se, yury.norov@gmail.com, 
+	richard@nod.at, x86@kernel.org, linux@armlinux.org.uk, mingo@redhat.com, 
+	aou@eecs.berkeley.edu, hca@linux.ibm.com, richard.henderson@linaro.org, 
+	stefan.kristiansson@saunalahti.fi, openrisc@lists.librecores.org, 
+	acme@kernel.org, paul.walmsley@sifive.com, linux-tegra@vger.kernel.org, 
+	namhyung@kernel.org, andriy.shevchenko@linux.intel.com, jpoimboe@kernel.org, 
+	dvyukov@google.com, jgross@suse.com, monstr@monstr.eu, 
+	linux-mips@vger.kernel.org, palmer@dabbelt.com, anup@brainfault.org, 
+	bp@alien8.de, johannes@sipsolutions.net, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 03/11/2022 14:12, Yinbo Zhu wrote:
-> HPET (High Precision Event Timer) defines a new set of timers, which
-> are used by the operating system to schedule threads, interrupt the
-> kernel and interrupt the multimedia timer server. The operating
-> system can assign different timers to different applications. By
-> configuration, each timer can generate interrupt independently.
-> 
-> The Loongson-2 HPET module includes a main count and three comparators,
-> all of which are 32 bits wide. Among the three comparators, only
-> one comparator supports periodic interrupt, all three comparators
-> support non periodic interrupts.
+On Wed, 16 Nov 2022 at 16:29, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+>
+> Sorry; things keep getting in the way of finishing this :/
+>
+> As such, I need a bit of time to get on-track again..
+>
+> On Tue, Oct 04, 2022 at 01:03:57PM +0200, Ulf Hansson wrote:
+>
+> > > --- a/drivers/acpi/processor_idle.c
+> > > +++ b/drivers/acpi/processor_idle.c
+> > > @@ -1200,6 +1200,8 @@ static int acpi_processor_setup_lpi_stat
+> > >                 state->target_residency = lpi->min_residency;
+> > >                 if (lpi->arch_flags)
+> > >                         state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+> > > +               if (lpi->entry_method == ACPI_CSTATE_FFH)
+> > > +                       state->flags |= CPUIDLE_FLAG_RCU_IDLE;
+> >
+> > I assume the state index here will never be 0?
+> >
+> > If not, it may lead to that acpi_processor_ffh_lpi_enter() may trigger
+> > CPU_PM_CPU_IDLE_ENTER_PARAM() to call ct_cpuidle_enter|exit() for an
+> > idle-state that doesn't have the CPUIDLE_FLAG_RCU_IDLE bit set.
+>
+> I'm not quite sure I see how. AFAICT this condition above implies
+> acpi_processor_ffh_lpi_enter() gets called, no?
+>
+> Which in turn is an unconditional __CPU_PM_CPU_IDLE_ENTER() user, so
+> even if idx==0, it ends up in ct_idle_{enter,exit}().
 
-What is the difference with arch/mips/loongson64/hpet.c ?
+Seems like I was overlooking something here, you are right, this
+shouldn't really be a problem.
 
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
-> Change in v10:
-> 		1. Replace "goto err" with "return -ENOMEM" if of_iomap fail.
->                  2. This patch need rely on clock patch, which patchwork
-> 		   link was "https://patchwork.kernel.org/project/linux-clk/list/?series=691497".
-> Change in v9:
-> 		1. Replace string "register" with "request" in hpet_request_irq.
-> 		2. Move the varible "ret" to the begining position in
-> 		   loongson2_hpet_init and initialized it.
-> 		3. Adjust if judgement in clk_get_rate context, there was less
-> 		   less indentation in the normal path.
->                  4. This patch need rely on clock patch, which patchwork
-> 		   link was "https://patchwork.kernel.org/project/linux-clk/list/?series=691497".
-> Change in v8:
-> 		1. Add all history change log information.
-> Change in v7:
-> 		1. Replace setup_irq with request_irq.
-> Change in v6:
-> 		1. Move comma to the end of the previous line if that comma at
-> 		   the beginning of the line.
-> Change in v5:
-> 		1. Replace string loongson2 with Loongson-2 in commit message
-> 		   and Kconfig file.
-> 		2. Replace string LOONGSON2 with LOONGSON-2 in MAINTAINERS.
-> 		3. Make include asm headers after all linux headers.
-> 		4. Add blank place before comma if comma when the comma is at
-> 		   the beginning of the line.
-> Change in v4:
->                  1. Use common clock framework ops to gain apb clock.
->                  2. This patch need rely on clock patch, which patchwork
->                     link was "https://patchwork.kernel.org/project/linux-clk/list/?series=688892".
-> Change in v3:
-> 		1. NO change, but other patch in this series of patches set
-> 		   has changes
-> Change in v2:
-> 		1. NO change, but other patch in this series of patches set
-> 		   has changes
-> 
->   MAINTAINERS                          |   6 +
->   arch/loongarch/kernel/time.c         |   4 +-
->   drivers/clocksource/Kconfig          |   9 +
->   drivers/clocksource/Makefile         |   1 +
->   drivers/clocksource/loongson2_hpet.c | 334 +++++++++++++++++++++++++++
->   5 files changed, 353 insertions(+), 1 deletion(-)
->   create mode 100644 drivers/clocksource/loongson2_hpet.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7afaf6d72800..52519695a458 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12026,6 +12026,12 @@ F:	Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
->   F:	drivers/clk/clk-loongson2.c
->   F:	include/dt-bindings/clock/loongson,ls2k-clk.h
->   
-> +LOONGSON-2 SOC SERIES HPET DRIVER
-> +M:	Yinbo Zhu <zhuyinbo@loongson.cn>
-> +L:	linux-kernel@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/clocksource/loongson2_hpet.c
-> +
->   LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
->   M:	Sathya Prakash <sathya.prakash@broadcom.com>
->   M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-> index 09f20bc81798..0d8b37763086 100644
-> --- a/arch/loongarch/kernel/time.c
-> +++ b/arch/loongarch/kernel/time.c
-> @@ -216,7 +216,9 @@ int __init constant_clocksource_init(void)
->   void __init time_init(void)
->   {
->   	of_clk_init(NULL);
-> -
-> +#ifdef CONFIG_TIMER_PROBE
-> +	timer_probe();
-> +#endif
+>
+> >
+> > >                 state->enter = acpi_idle_lpi_enter;
+> > >                 drv->safe_state_index = i;
+> > >         }
+> > > --- a/drivers/cpuidle/cpuidle-arm.c
+> > > +++ b/drivers/cpuidle/cpuidle-arm.c
+> > > @@ -53,6 +53,7 @@ static struct cpuidle_driver arm_idle_dr
+> > >          * handler for idle state index 0.
+> > >          */
+> > >         .states[0] = {
+> > > +               .flags                  = CPUIDLE_FLAG_RCU_IDLE,
+> >
+> > Comparing arm64 and arm32 idle-states/idle-drivers, the $subject
+> > series ends up setting the CPUIDLE_FLAG_RCU_IDLE for the ARM WFI idle
+> > state (state zero), but only for the arm64 and psci cases (mostly
+> > arm64). For arm32 we would need to update the ARM_CPUIDLE_WFI_STATE
+> > too, as that is what most arm32 idle-drivers are using. My point is,
+> > the code becomes a bit inconsistent.
+>
+> True.
+>
+> > Perhaps it's easier to avoid setting the CPUIDLE_FLAG_RCU_IDLE bit for
+> > all of the ARM WFI idle states, for both arm64 and arm32?
+>
+> As per the below?
+>
+> >
+> > >                 .enter                  = arm_enter_idle_state,
+> > >                 .exit_latency           = 1,
+> > >                 .target_residency       = 1,
+>
+> > > --- a/include/linux/cpuidle.h
+> > > +++ b/include/linux/cpuidle.h
+> > > @@ -282,14 +282,18 @@ extern s64 cpuidle_governor_latency_req(
+> > >         int __ret = 0;                                                  \
+> > >                                                                         \
+> > >         if (!idx) {                                                     \
+> > > +               ct_idle_enter();                                        \
+> >
+> > According to my comment above, we should then drop these calls to
+> > ct_idle_enter and ct_idle_exit() here. Right?
+>
+> Yes, if we ensure idx==0 never has RCU_IDLE set then these must be
+> removed.
+>
+> > >                 cpu_do_idle();                                          \
+> > > +               ct_idle_exit();                                         \
+> > >                 return idx;                                             \
+> > >         }                                                               \
+> > >                                                                         \
+> > >         if (!is_retention)                                              \
+> > >                 __ret =  cpu_pm_enter();                                \
+> > >         if (!__ret) {                                                   \
+> > > +               ct_idle_enter();                                        \
+> > >                 __ret = low_level_idle_enter(state);                    \
+> > > +               ct_idle_exit();                                         \
+> > >                 if (!is_retention)                                      \
+> > >                         cpu_pm_exit();                                  \
+> > >         }                                                               \
+> > >
+>
+> So the basic premise is that everything that needs RCU inside the idle
+> callback must set CPUIDLE_FLAG_RCU_IDLE and by doing that promise to
+> call ct_idle_{enter,exit}() themselves.
+>
+> Setting RCU_IDLE is required when there is RCU usage, however even if
+> there is no RCU usage, setting RCU_IDLE is fine, as long as
+> ct_idle_{enter,exit}() then get called.
 
-This change should go in another patch.
+Right, I was thinking that it could make sense to shrink the window
+for users getting this wrong. In other words, we shouldn't set the
+CPUIDLE_FLAG_RCU_IDLE unless we really need to.
 
-#ifdef is not needed
+And as I said, consistent behaviour is also nice to have.
 
->   	if (!cpu_has_cpucfg)
->   		const_clock_freq = cpu_clock_freq;
->   	else
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 4469e7f555e9..f114ee47e6f7 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -721,4 +721,13 @@ config GOLDFISH_TIMER
->   	help
->   	  Support for the timer/counter of goldfish-rtc
->   
-> +config LOONGSON2_HPET
-> +	bool "Loongson-2 High Precision Event Timer (HPET)"
-> +	select TIMER_PROBE
+>
+>
+> So does the below (delta) look better to you?
 
-TIMER_OF selects TIMER_PROBE
+Yes, it does!
 
-> +	select TIMER_OF
-> +	help
-> +	  This option enables Loongson-2 High Precision Event Timer
-> +	  (HPET) module driver. It supports the oneshot, the periodic
-> +	  modes and high resolution. It is used as a clocksource and
-> +	  a clockevent.
->   endmenu
-> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-> index 64ab547de97b..1a3abb770f11 100644
-> --- a/drivers/clocksource/Makefile
-> +++ b/drivers/clocksource/Makefile
-> @@ -88,3 +88,4 @@ obj-$(CONFIG_MICROCHIP_PIT64B)		+= timer-microchip-pit64b.o
->   obj-$(CONFIG_MSC313E_TIMER)		+= timer-msc313e.o
->   obj-$(CONFIG_GOLDFISH_TIMER)		+= timer-goldfish.o
->   obj-$(CONFIG_GXP_TIMER)			+= timer-gxp.o
-> +obj-$(CONFIG_LOONGSON2_HPET)		+= loongson2_hpet.o
+Although, one minor comment below.
 
-Please rename to timer-loongson.c
+>
+> --- a/drivers/acpi/processor_idle.c
+> +++ b/drivers/acpi/processor_idle.c
+> @@ -1218,7 +1218,7 @@ static int acpi_processor_setup_lpi_stat
+>                 state->target_residency = lpi->min_residency;
+>                 if (lpi->arch_flags)
+>                         state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+> -               if (lpi->entry_method == ACPI_CSTATE_FFH)
+> +               if (i != 0 && lpi->entry_method == ACPI_CSTATE_FFH)
+>                         state->flags |= CPUIDLE_FLAG_RCU_IDLE;
+>                 state->enter = acpi_idle_lpi_enter;
+>                 drv->safe_state_index = i;
+> --- a/drivers/cpuidle/cpuidle-arm.c
+> +++ b/drivers/cpuidle/cpuidle-arm.c
+> @@ -53,7 +53,7 @@ static struct cpuidle_driver arm_idle_dr
+>          * handler for idle state index 0.
+>          */
+>         .states[0] = {
+> -               .flags                  = CPUIDLE_FLAG_RCU_IDLE,
+> +               .flags                  = 0,
 
-> diff --git a/drivers/clocksource/loongson2_hpet.c b/drivers/clocksource/loongson2_hpet.c
-> new file mode 100644
-> index 000000000000..9b828f9728ca
-> --- /dev/null
-> +++ b/drivers/clocksource/loongson2_hpet.c
-> @@ -0,0 +1,334 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
-> + * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/percpu.h>
-> +#include <linux/delay.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_address.h>
-> +#include <linux/clk.h>
-> +#include <asm/time.h>
-> +
-> +/* HPET regs */
-> +#define HPET_CFG                0x010
-> +#define HPET_STATUS             0x020
-> +#define HPET_COUNTER            0x0f0
-> +#define HPET_T0_IRS             0x001
-> +#define HPET_T0_CFG             0x100
-> +#define HPET_T0_CMP             0x108
-> +#define HPET_CFG_ENABLE         0x001
-> +#define HPET_TN_LEVEL           0x0002
-> +#define HPET_TN_ENABLE          0x0004
-> +#define HPET_TN_PERIODIC        0x0008
-> +#define HPET_TN_SETVAL          0x0040
-> +#define HPET_TN_32BIT           0x0100
-> +
-> +#define HPET_MIN_CYCLES		16
-> +#define HPET_MIN_PROG_DELTA	(HPET_MIN_CYCLES * 12)
-> +#define HPET_COMPARE_VAL	((hpet_freq + HZ / 2) / HZ)
-> +
-> +void __iomem			*hpet_mmio_base;
-> +unsigned int			hpet_freq;
-> +unsigned int			hpet_t0_irq;
-> +unsigned int			hpet_irq_flags;
-> +unsigned int			hpet_t0_cfg;
-> +
-> +static DEFINE_SPINLOCK(hpet_lock);
-> +DEFINE_PER_CPU(struct clock_event_device, hpet_clockevent_device);
-> +
-> +static int hpet_read(int offset)
+Nitpick: I don't think we need to explicitly clear the flag, as it
+should already be zeroed by the compiler from its static declaration.
+Right?
 
-Please replace hpet by loogson as the former is already in the mips 
-namespace.
+>                 .enter                  = arm_enter_idle_state,
+>                 .exit_latency           = 1,
+>                 .target_residency       = 1,
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -357,7 +357,7 @@ static int psci_idle_init_cpu(struct dev
+>          * PSCI idle states relies on architectural WFI to be represented as
+>          * state index 0.
+>          */
+> -       drv->states[0].flags = CPUIDLE_FLAG_RCU_IDLE;
+> +       drv->states[0].flags = 0;
+>         drv->states[0].enter = psci_enter_idle_state;
+>         drv->states[0].exit_latency = 1;
+>         drv->states[0].target_residency = 1;
+> --- a/drivers/cpuidle/cpuidle-qcom-spm.c
+> +++ b/drivers/cpuidle/cpuidle-qcom-spm.c
+> @@ -72,7 +72,7 @@ static struct cpuidle_driver qcom_spm_id
+>         .owner = THIS_MODULE,
+>         .states[0] = {
+>                 .enter                  = spm_enter_idle_state,
+> -               .flags                  = CPUIDLE_FLAG_RCU_IDLE,
+> +               .flags                  = 0,
+>                 .exit_latency           = 1,
+>                 .target_residency       = 1,
+>                 .power_usage            = UINT_MAX,
+> --- a/drivers/cpuidle/cpuidle-riscv-sbi.c
+> +++ b/drivers/cpuidle/cpuidle-riscv-sbi.c
+> @@ -337,7 +337,7 @@ static int sbi_cpuidle_init_cpu(struct d
+>         drv->cpumask = (struct cpumask *)cpumask_of(cpu);
+>
+>         /* RISC-V architectural WFI to be represented as state index 0. */
+> -       drv->states[0].flags = CPUIDLE_FLAG_RCU_IDLE;
+> +       drv->states[0].flags = 0;
+>         drv->states[0].enter = sbi_cpuidle_enter_state;
+>         drv->states[0].exit_latency = 1;
+>         drv->states[0].target_residency = 1;
+> --- a/include/linux/cpuidle.h
+> +++ b/include/linux/cpuidle.h
+> @@ -282,9 +282,7 @@ extern s64 cpuidle_governor_latency_req(
+>         int __ret = 0;                                                  \
+>                                                                         \
+>         if (!idx) {                                                     \
+> -               ct_idle_enter();                                        \
+>                 cpu_do_idle();                                          \
+> -               ct_idle_exit();                                         \
+>                 return idx;                                             \
+>         }                                                               \
+>                                                                         \
 
-
+Kind regards
+Uffe
