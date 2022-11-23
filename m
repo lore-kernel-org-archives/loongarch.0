@@ -1,38 +1,24 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0FA41877
-	for <loongarch@lists.linux.dev>; Wed, 23 Nov 2022 08:04:25 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8CxZPAI1H1jSDEAAA--.556S3;
-	Wed, 23 Nov 2022 16:04:24 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxXuAB1H1jLZ4YAA--.63486S3;
-	Wed, 23 Nov 2022 16:04:22 +0800 (CST)
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	WANG Xuerui <kernel@xen0n.name>,
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D459187C
+	for <loongarch@lists.linux.dev>; Wed, 23 Nov 2022 08:21:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA63BC433D6;
+	Wed, 23 Nov 2022 08:20:57 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Juxin Gao <gaojuxin@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	Arnaud Patard <apatard@mandriva.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v6 2/2] dt-bindings: gpio: add loongson gpio
-Date: Wed, 23 Nov 2022 16:04:14 +0800
-Message-Id: <20221123080414.14005-2-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221123080414.14005-1-zhuyinbo@loongson.cn>
-References: <20221123080414.14005-1-zhuyinbo@loongson.cn>
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Hongchen Zhang <zhanghongchen@loongson.cn>
+Subject: [PATCH] LoongArch: module: Use got/plt section indices for relocations
+Date: Wed, 23 Nov 2022 16:18:20 +0800
+Message-Id: <20221123081820.1705216-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -40,199 +26,326 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxXuAB1H1jLZ4YAA--.63486S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF45Wry5Zw45GFWxWFg_yoWrtFWrp3
-	WDZFZxX3y2gr13tF45Ka17Zr4fAr1kC3WruwnxC3yxtrWUKwnxXFWfWFykG3Z3WrWUXF13
-	JwsrurWrta43Aw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
-	1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
-	cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
-	0Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
-	6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2
-	Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-	1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-	Wlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj
-	6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
-	0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
-	cSsGvfC2KfnxnUUI43ZEXa7IU8mQ6JUUUUU==
 
-Add the Loongson platform gpio binding with DT schema format using
-json-schema.
+Instead of saving a pointer to the .got, .plt and .plt_idx sections to
+apply {got,plt}-based relocations, save and use their section indices
+instead.
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The mod->arch.{core,init}.{got,plt} pointers were problematic for live-
+patch because they pointed within temporary section headers (provided by
+the module loader via info->sechdrs) that would be freed after module
+load. Since livepatch modules may need to apply relocations post-module-
+load (for example, to patch a module that is loaded later), using section
+indices to offset into the section headers (instead of accessing them
+through a saved pointer) allows livepatch modules on LoongArch to pass
+in their own copy of the section headers to apply_relocate_add() to
+apply delayed relocations.
+
+The method used is same as commit c8ebf64eab743 ("arm64/module: use plt
+section indices for relocations").
+
+Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
-Change in v6:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v5:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v4:
-		1. Remove the string "series".
-		2. Add the reviewed-by information.
-Change in v3:
-		1. Separate some changes of MAINTAINERS file and enter the first patch.
-Change in v2:
-		1. Drop "loongson,gpio_base" and "gpio-ranges" will cover it.
-		1. Drop "loongson,conf_offset", "loongson,out_offset", "loongson,in_offset",
-		   "loongson,support_irq" and kernel driver will initial them that depend
-		   compatible in kernel.
-		3. Fixup maintainer for this driver.
+ arch/loongarch/include/asm/module.h     | 22 +++++-----
+ arch/loongarch/kernel/module-sections.c | 54 +++++++++++++------------
+ arch/loongarch/kernel/module.c          | 39 ++++++++++++------
+ 3 files changed, 68 insertions(+), 47 deletions(-)
 
- .../bindings/gpio/loongson,ls-gpio.yaml       | 126 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 2 files changed, 127 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-
-diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-new file mode 100644
-index 000000000000..fb86e8ce6349
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-@@ -0,0 +1,126 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/loongson,ls-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson GPIO controller.
-+
-+maintainers:
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - loongson,ls2k-gpio
-+      - loongson,ls7a-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  ngpios:
-+    minimum: 1
-+    maximum: 64
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  gpio-ranges: true
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 64
-+
-+required:
-+  - compatible
-+  - reg
-+  - ngpios
-+  - "#gpio-cells"
-+  - gpio-controller
-+  - gpio-ranges
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    gpio0: gpio@1fe00500 {
-+      compatible = "loongson,ls2k-gpio";
-+      reg = <0x1fe00500 0x38>;
-+      ngpios = <64>;
-+      #gpio-cells = <2>;
-+      gpio-controller;
-+      gpio-ranges = <&pctrl 0 0 15>,
-+                    <&pctrl 16 16 15>,
-+                    <&pctrl 32 32 10>,
-+                    <&pctrl 44 44 20>;
-+      interrupt-parent = <&liointc1>;
-+      interrupts = <28 IRQ_TYPE_LEVEL_LOW>,
-+                   <29 IRQ_TYPE_LEVEL_LOW>,
-+                   <30 IRQ_TYPE_LEVEL_LOW>,
-+                   <30 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <>,
-+                   <>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2854da69cabb..b8a02a60973d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12055,6 +12055,7 @@ LOONGSON GPIO DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
- F:	drivers/gpio/gpio-loongson-64bit.c
+diff --git a/arch/loongarch/include/asm/module.h b/arch/loongarch/include/asm/module.h
+index b29b19a46f42..60dc62a1146e 100644
+--- a/arch/loongarch/include/asm/module.h
++++ b/arch/loongarch/include/asm/module.h
+@@ -11,7 +11,7 @@
+ #define RELA_STACK_DEPTH 16
  
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+ struct mod_section {
+-	Elf_Shdr *shdr;
++	int shndx;
+ 	int num_entries;
+ 	int max_entries;
+ };
+@@ -37,8 +37,8 @@ struct plt_idx_entry {
+ 	Elf_Addr symbol_addr;
+ };
+ 
+-Elf_Addr module_emit_got_entry(struct module *mod, Elf_Addr val);
+-Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Addr val);
++Elf_Addr module_emit_got_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr val);
++Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr val);
+ 
+ static inline struct got_entry emit_got_entry(Elf_Addr val)
+ {
+@@ -62,10 +62,10 @@ static inline struct plt_idx_entry emit_plt_idx_entry(unsigned long val)
+ 	return (struct plt_idx_entry) { val };
+ }
+ 
+-static inline int get_plt_idx(unsigned long val, const struct mod_section *sec)
++static inline int get_plt_idx(unsigned long val, Elf_Shdr *sechdrs, const struct mod_section *sec)
+ {
+ 	int i;
+-	struct plt_idx_entry *plt_idx = (struct plt_idx_entry *)sec->shdr->sh_addr;
++	struct plt_idx_entry *plt_idx = (struct plt_idx_entry *)sechdrs[sec->shndx].sh_addr;
+ 
+ 	for (i = 0; i < sec->num_entries; i++) {
+ 		if (plt_idx[i].symbol_addr == val)
+@@ -76,11 +76,12 @@ static inline int get_plt_idx(unsigned long val, const struct mod_section *sec)
+ }
+ 
+ static inline struct plt_entry *get_plt_entry(unsigned long val,
+-				      const struct mod_section *sec_plt,
+-				      const struct mod_section *sec_plt_idx)
++					      Elf_Shdr *sechdrs,
++					      const struct mod_section *sec_plt,
++					      const struct mod_section *sec_plt_idx)
+ {
+-	int plt_idx = get_plt_idx(val, sec_plt_idx);
+-	struct plt_entry *plt = (struct plt_entry *)sec_plt->shdr->sh_addr;
++	int plt_idx = get_plt_idx(val, sechdrs, sec_plt_idx);
++	struct plt_entry *plt = (struct plt_entry *)sechdrs[sec_plt->shndx].sh_addr;
+ 
+ 	if (plt_idx < 0)
+ 		return NULL;
+@@ -89,10 +90,11 @@ static inline struct plt_entry *get_plt_entry(unsigned long val,
+ }
+ 
+ static inline struct got_entry *get_got_entry(Elf_Addr val,
++					      Elf_Shdr *sechdrs,
+ 					      const struct mod_section *sec)
+ {
+-	struct got_entry *got = (struct got_entry *)sec->shdr->sh_addr;
+ 	int i;
++	struct got_entry *got = (struct got_entry *)sechdrs[sec->shndx].sh_addr;
+ 
+ 	for (i = 0; i < sec->num_entries; i++)
+ 		if (got[i].symbol_addr == val)
+diff --git a/arch/loongarch/kernel/module-sections.c b/arch/loongarch/kernel/module-sections.c
+index d296a70b758f..13d9a427325a 100644
+--- a/arch/loongarch/kernel/module-sections.c
++++ b/arch/loongarch/kernel/module-sections.c
+@@ -7,17 +7,17 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ 
+-Elf_Addr module_emit_got_entry(struct module *mod, Elf_Addr val)
++Elf_Addr module_emit_got_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr val)
+ {
+ 	struct mod_section *got_sec = &mod->arch.got;
+ 	int i = got_sec->num_entries;
+-	struct got_entry *got = get_got_entry(val, got_sec);
++	struct got_entry *got = get_got_entry(val, sechdrs, got_sec);
+ 
+ 	if (got)
+ 		return (Elf_Addr)got;
+ 
+ 	/* There is no GOT entry for val yet, create a new one. */
+-	got = (struct got_entry *)got_sec->shdr->sh_addr;
++	got = (struct got_entry *)sechdrs[got_sec->shndx].sh_addr;
+ 	got[i] = emit_got_entry(val);
+ 
+ 	got_sec->num_entries++;
+@@ -33,12 +33,12 @@ Elf_Addr module_emit_got_entry(struct module *mod, Elf_Addr val)
+ 	return (Elf_Addr)&got[i];
+ }
+ 
+-Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Addr val)
++Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr val)
+ {
+ 	int nr;
+ 	struct mod_section *plt_sec = &mod->arch.plt;
+ 	struct mod_section *plt_idx_sec = &mod->arch.plt_idx;
+-	struct plt_entry *plt = get_plt_entry(val, plt_sec, plt_idx_sec);
++	struct plt_entry *plt = get_plt_entry(val, sechdrs, plt_sec, plt_idx_sec);
+ 	struct plt_idx_entry *plt_idx;
+ 
+ 	if (plt)
+@@ -47,9 +47,9 @@ Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Addr val)
+ 	nr = plt_sec->num_entries;
+ 
+ 	/* There is no duplicate entry, create a new one */
+-	plt = (struct plt_entry *)plt_sec->shdr->sh_addr;
++	plt = (struct plt_entry *)sechdrs[plt_sec->shndx].sh_addr;
+ 	plt[nr] = emit_plt_entry(val);
+-	plt_idx = (struct plt_idx_entry *)plt_idx_sec->shdr->sh_addr;
++	plt_idx = (struct plt_idx_entry *)sechdrs[plt_idx_sec->shndx].sh_addr;
+ 	plt_idx[nr] = emit_plt_idx_entry(val);
+ 
+ 	plt_sec->num_entries++;
+@@ -103,28 +103,29 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+ 			      char *secstrings, struct module *mod)
+ {
+ 	unsigned int i, num_plts = 0, num_gots = 0;
++	Elf_Shdr *got_sec, *plt_sec, *plt_idx_sec;
+ 
+ 	/*
+ 	 * Find the empty .plt sections.
+ 	 */
+ 	for (i = 0; i < ehdr->e_shnum; i++) {
+ 		if (!strcmp(secstrings + sechdrs[i].sh_name, ".got"))
+-			mod->arch.got.shdr = sechdrs + i;
++			mod->arch.got.shndx = i;
+ 		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".plt"))
+-			mod->arch.plt.shdr = sechdrs + i;
++			mod->arch.plt.shndx = i;
+ 		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".plt.idx"))
+-			mod->arch.plt_idx.shdr = sechdrs + i;
++			mod->arch.plt_idx.shndx = i;
+ 	}
+ 
+-	if (!mod->arch.got.shdr) {
++	if (!mod->arch.got.shndx) {
+ 		pr_err("%s: module GOT section(s) missing\n", mod->name);
+ 		return -ENOEXEC;
+ 	}
+-	if (!mod->arch.plt.shdr) {
++	if (!mod->arch.plt.shndx) {
+ 		pr_err("%s: module PLT section(s) missing\n", mod->name);
+ 		return -ENOEXEC;
+ 	}
+-	if (!mod->arch.plt_idx.shdr) {
++	if (!mod->arch.plt_idx.shndx) {
+ 		pr_err("%s: module PLT.IDX section(s) missing\n", mod->name);
+ 		return -ENOEXEC;
+ 	}
+@@ -145,24 +146,27 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+ 		count_max_entries(relas, num_rela, &num_plts, &num_gots);
+ 	}
+ 
+-	mod->arch.got.shdr->sh_type = SHT_NOBITS;
+-	mod->arch.got.shdr->sh_flags = SHF_ALLOC;
+-	mod->arch.got.shdr->sh_addralign = L1_CACHE_BYTES;
+-	mod->arch.got.shdr->sh_size = (num_gots + 1) * sizeof(struct got_entry);
++	got_sec = sechdrs + mod->arch.got.shndx;
++	got_sec->sh_type = SHT_NOBITS;
++	got_sec->sh_flags = SHF_ALLOC;
++	got_sec->sh_addralign = L1_CACHE_BYTES;
++	got_sec->sh_size = (num_gots + 1) * sizeof(struct got_entry);
+ 	mod->arch.got.num_entries = 0;
+ 	mod->arch.got.max_entries = num_gots;
+ 
+-	mod->arch.plt.shdr->sh_type = SHT_NOBITS;
+-	mod->arch.plt.shdr->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
+-	mod->arch.plt.shdr->sh_addralign = L1_CACHE_BYTES;
+-	mod->arch.plt.shdr->sh_size = (num_plts + 1) * sizeof(struct plt_entry);
++	plt_sec = sechdrs + mod->arch.plt.shndx;
++	plt_sec->sh_type = SHT_NOBITS;
++	plt_sec->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
++	plt_sec->sh_addralign = L1_CACHE_BYTES;
++	plt_sec->sh_size = (num_plts + 1) * sizeof(struct plt_entry);
+ 	mod->arch.plt.num_entries = 0;
+ 	mod->arch.plt.max_entries = num_plts;
+ 
+-	mod->arch.plt_idx.shdr->sh_type = SHT_NOBITS;
+-	mod->arch.plt_idx.shdr->sh_flags = SHF_ALLOC;
+-	mod->arch.plt_idx.shdr->sh_addralign = L1_CACHE_BYTES;
+-	mod->arch.plt_idx.shdr->sh_size = (num_plts + 1) * sizeof(struct plt_idx_entry);
++	plt_idx_sec = sechdrs + mod->arch.plt_idx.shndx;
++	plt_idx_sec->sh_type = SHT_NOBITS;
++	plt_idx_sec->sh_flags = SHF_ALLOC;
++	plt_idx_sec->sh_addralign = L1_CACHE_BYTES;
++	plt_idx_sec->sh_size = (num_plts + 1) * sizeof(struct plt_idx_entry);
+ 	mod->arch.plt_idx.num_entries = 0;
+ 	mod->arch.plt_idx.max_entries = num_plts;
+ 
+diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/module.c
+index 825fcf77f9e7..899dc677cec3 100644
+--- a/arch/loongarch/kernel/module.c
++++ b/arch/loongarch/kernel/module.c
+@@ -99,16 +99,17 @@ static int apply_r_larch_sop_push_dup(struct module *mod, u32 *location, Elf_Add
+ 	return 0;
+ }
+ 
+-static int apply_r_larch_sop_push_plt_pcrel(struct module *mod, u32 *location, Elf_Addr v,
++static int apply_r_larch_sop_push_plt_pcrel(struct module *mod,
++			Elf_Shdr *sechdrs, u32 *location, Elf_Addr v,
+ 			s64 *rela_stack, size_t *rela_stack_top, unsigned int type)
+ {
+ 	ptrdiff_t offset = (void *)v - (void *)location;
+ 
+ 	if (offset >= SZ_128M)
+-		v = module_emit_plt_entry(mod, v);
++		v = module_emit_plt_entry(mod, sechdrs, v);
+ 
+ 	if (offset < -SZ_128M)
+-		v = module_emit_plt_entry(mod, v);
++		v = module_emit_plt_entry(mod, sechdrs, v);
+ 
+ 	return apply_r_larch_sop_push_pcrel(mod, location, v, rela_stack, rela_stack_top, type);
+ }
+@@ -272,17 +273,18 @@ static int apply_r_larch_add_sub(struct module *mod, u32 *location, Elf_Addr v,
+ 	}
+ }
+ 
+-static int apply_r_larch_b26(struct module *mod, u32 *location, Elf_Addr v,
++static int apply_r_larch_b26(struct module *mod,
++			Elf_Shdr *sechdrs, u32 *location, Elf_Addr v,
+ 			s64 *rela_stack, size_t *rela_stack_top, unsigned int type)
+ {
+ 	ptrdiff_t offset = (void *)v - (void *)location;
+ 	union loongarch_instruction *insn = (union loongarch_instruction *)location;
+ 
+ 	if (offset >= SZ_128M)
+-		v = module_emit_plt_entry(mod, v);
++		v = module_emit_plt_entry(mod, sechdrs, v);
+ 
+ 	if (offset < -SZ_128M)
+-		v = module_emit_plt_entry(mod, v);
++		v = module_emit_plt_entry(mod, sechdrs, v);
+ 
+ 	offset = (void *)v - (void *)location;
+ 
+@@ -339,10 +341,11 @@ static int apply_r_larch_pcala(struct module *mod, u32 *location, Elf_Addr v,
+ 	return 0;
+ }
+ 
+-static int apply_r_larch_got_pc(struct module *mod, u32 *location, Elf_Addr v,
++static int apply_r_larch_got_pc(struct module *mod,
++			Elf_Shdr *sechdrs, u32 *location, Elf_Addr v,
+ 			s64 *rela_stack, size_t *rela_stack_top, unsigned int type)
+ {
+-	Elf_Addr got = module_emit_got_entry(mod, v);
++	Elf_Addr got = module_emit_got_entry(mod, sechdrs, v);
+ 
+ 	if (!got)
+ 		return -EINVAL;
+@@ -387,13 +390,10 @@ static reloc_rela_handler reloc_rela_handlers[] = {
+ 	[R_LARCH_SOP_PUSH_PCREL]			     = apply_r_larch_sop_push_pcrel,
+ 	[R_LARCH_SOP_PUSH_ABSOLUTE]			     = apply_r_larch_sop_push_absolute,
+ 	[R_LARCH_SOP_PUSH_DUP]				     = apply_r_larch_sop_push_dup,
+-	[R_LARCH_SOP_PUSH_PLT_PCREL]			     = apply_r_larch_sop_push_plt_pcrel,
+ 	[R_LARCH_SOP_SUB ... R_LARCH_SOP_IF_ELSE] 	     = apply_r_larch_sop,
+ 	[R_LARCH_SOP_POP_32_S_10_5 ... R_LARCH_SOP_POP_32_U] = apply_r_larch_sop_imm_field,
+ 	[R_LARCH_ADD32 ... R_LARCH_SUB64]		     = apply_r_larch_add_sub,
+-	[R_LARCH_B26]					     = apply_r_larch_b26,
+ 	[R_LARCH_PCALA_HI20...R_LARCH_PCALA64_HI12]	     = apply_r_larch_pcala,
+-	[R_LARCH_GOT_PC_HI20...R_LARCH_GOT_PC_LO12]	     = apply_r_larch_got_pc,
+ };
+ 
+ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+@@ -444,7 +444,22 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+ 		       sym->st_value, rel[i].r_addend, (u64)location);
+ 
+ 		v = sym->st_value + rel[i].r_addend;
+-		err = handler(mod, location, v, rela_stack, &rela_stack_top, type);
++		switch (type) {
++		case R_LARCH_B26:
++			err = apply_r_larch_b26(mod, sechdrs, location,
++						     v, rela_stack, &rela_stack_top, type);
++			break;
++		case R_LARCH_GOT_PC_HI20...R_LARCH_GOT_PC_LO12:
++			err = apply_r_larch_got_pc(mod, sechdrs, location,
++						     v, rela_stack, &rela_stack_top, type);
++			break;
++		case R_LARCH_SOP_PUSH_PLT_PCREL:
++			err = apply_r_larch_sop_push_plt_pcrel(mod, sechdrs, location,
++						     v, rela_stack, &rela_stack_top, type);
++			break;
++		default:
++			err = handler(mod, location, v, rela_stack, &rela_stack_top, type);
++		}
+ 		if (err)
+ 			return err;
+ 	}
 -- 
 2.31.1
 
