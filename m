@@ -1,351 +1,512 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D459187C
-	for <loongarch@lists.linux.dev>; Wed, 23 Nov 2022 08:21:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA63BC433D6;
-	Wed, 23 Nov 2022 08:20:57 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Hongchen Zhang <zhanghongchen@loongson.cn>
-Subject: [PATCH] LoongArch: module: Use got/plt section indices for relocations
-Date: Wed, 23 Nov 2022 16:18:20 +0800
-Message-Id: <20221123081820.1705216-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4C01C31
+	for <loongarch@lists.linux.dev>; Wed, 23 Nov 2022 10:25:17 +0000 (UTC)
+Received: by mail-vs1-f51.google.com with SMTP id c184so11305577vsc.3
+        for <loongarch@lists.linux.dev>; Wed, 23 Nov 2022 02:25:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZMErEw1suU1MT0P6/rMfRL5I1kRlC+tSYXA7ait891w=;
+        b=CCX0hAVZ9Vu7nh/i8kLk5vfwMdholAjuN1BtN/t+fu2KBUcRtoi9nOgtX1lOKJwRAd
+         2n8Pcm58dxnwFw7KTeIHGD+uTS52v9LWPKXSKJ03hxP3tb4eTA9VmLb9tLmwXjZpfQln
+         aYlgYKav/S3ozCLllNKcvscTNFgRktsIqEpv+zMFl6fs0dG7mIPZvUgsULP8joxgFrrS
+         X08e1a/zq1oI2RdZDuizc0upp2dddVn1k6Tgs2DsHAdBLTJBA6QmHyGvkKG8a9YElJRV
+         7HvUIMPyXCtsq1DGs0DJwZBsvneLMmp8T9qMVtr/wbUogXb1X/Syt6Ce3KRo0fQzMq7t
+         E3pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZMErEw1suU1MT0P6/rMfRL5I1kRlC+tSYXA7ait891w=;
+        b=yDenwxzekHIHN7mCz7l4aEUeFqBI8OCrr9nqxAjr4oC7edqbGuLX5bvs8puuj7f0we
+         T2rs+vyW1JIsFgfYzytcjlCZXYiKA9hwfWKo3hRmTRnmVegHWJ6crGGFY/p/9g5MWEG4
+         sknTHojXXXj2mrjwgPNYm3LV5/68xsVk0eyh6wp8QOR+4I/PV79iYmOGw1LlrjaKC+ja
+         SLhfHtnvEx139MG6QMP/K12dG25Cjz7tJ1gdRFug3bxrxnkB0BMh1t8wV0C/K003a0F8
+         ILdXacfmyA0BlcxuPTYOYu4PFPLYDFm+i1jZi0SY/Z4wJlTeXcV7wR+Crst5nkOAmaOs
+         OO7A==
+X-Gm-Message-State: ANoB5pkVw++98eUHWT6d7FDydNBXCv+HJSkcJ6WjLfQsumigCGcKe1mn
+	OsOZxzbrEyteGfGldMlnRHpypwy550HEyEGUicW8oQ==
+X-Google-Smtp-Source: AA0mqf5aDTc6a2KFe1GqCik0+hMjUl1Hs2e6BIYmbgRpq00JBCst36XYPmn8YZyE41EgP/LI6p5NIPdVhOsE27fOgFo=
+X-Received: by 2002:a67:fbd6:0:b0:3ac:38c7:1bdd with SMTP id
+ o22-20020a67fbd6000000b003ac38c71bddmr6198959vsr.9.1669199116260; Wed, 23 Nov
+ 2022 02:25:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20221123080414.14005-1-zhuyinbo@loongson.cn>
+In-Reply-To: <20221123080414.14005-1-zhuyinbo@loongson.cn>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 23 Nov 2022 11:25:05 +0100
+Message-ID: <CAMRc=MeyaQdmQxxuOag8a1zYo-4-5Qxvc4dX2pee7k37OD4GFQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] gpio: loongson: add gpio driver support
+To: Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Jianmin Lv <lvjianmin@loongson.cn>, Hongchen Zhang <zhanghongchen@loongson.cn>, 
+	Liu Peibao <liupeibao@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-Instead of saving a pointer to the .got, .plt and .plt_idx sections to
-apply {got,plt}-based relocations, save and use their section indices
-instead.
+On Wed, Nov 23, 2022 at 9:04 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+>
+> The Loongson platforms GPIO controller contains 60 GPIO pins in total,
+> 4 of which are dedicated GPIO pins, and the remaining 56 are reused
+> with other functions. Each GPIO can set input/output and has the
+> interrupt capability.
+>
+> This driver added support for Loongson GPIO controller and support to
+> use DTS or ACPI to descibe GPIO device resources.
+>
+> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
+> Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> ---
+> Change in v6:
+>                 1. Remove the bit mode keep byte mode in all function except
+>                    loongson_gpio_init.
+>                 2. Use bgpio_init replace bit mode.
+>                 3. Implement the function loongson_gpio_get_direction for byte mode.
+>                 4. Set ngpios after call bgpio_init.
+>                 5. Use gpio-loongson-64bit.c as driver filename.
+>                 6. Ignore that loongson legacy drvier and remove the patch about
+>                    "gpio: loongson2ef: move driver to original location".
+> Change in v5:
+>                 1. Move legacy gpio driver to proper location.
+>                 2. Remove the "gpio_base".
+>                 3. Add of_device_id and acpi_device_id data field for platform
+>                    data.
+>                 4. Remove the ACPI_PTR().
+>                 5. Remove the gpio label judgement logic and use mode instead.
+>                 6. Drop platform_loongson_gpio_get_props.
+>                 7. Using devres for all resource.
+>                 8. Remove the loongson_gpio_remove.
+>                 9. Remove the unmatched print information.
+>                 10. Remove the loongson_gpio_exit.
+> Change in v4:
+>                 1. Fixup name spelling about Signed-off-by.
+>                 2. Drop "series" here and everywhere else.
+>                 3. Fixup the copyright in driver.
+>                 4. Drop the "else" in loongson_gpio_request.
+>                 5. Use trinocular operation replace the related logic.
+>                 6. Remove lable judgement in context about "lgpio->chip.to_irq =
+>                    loongson_gpio_to_irq"
+>                 7. Use dev_err replace pr_err in probe.
+>                 8. Make legacy platform_data should be left out of this patch.
+>                 9. Remove the mips config in gpio Kconfig.
+> Change in v3:
+>                 1. Move the gpio platform data struct from arch/ into include/linux/
+>                    platform_data/.
+>                 2. Replace platform_gpio_data with loongson_gpio_platform_data in .c.
+>                 3. Add maintainer in MAINTAINERS file for include/linux/platform_data/
+>                    gpio-loongson.h and gpio-loongson.c
+> Change in v2:
+>                 1. Fixup of_loongson_gpio_get_props and remove the parse logic about
+>                    "loongson,conf_offset", "loongson,out_offset", "loongson,in_offset",
+>                    "loongson,gpio_base", "loongson,support_irq" then kernel driver will
+>                    initial them that depend compatible except "loongson,gpio_base".
+>
+>  MAINTAINERS                        |   6 +
+>  drivers/gpio/Kconfig               |  11 +
+>  drivers/gpio/Makefile              |   1 +
+>  drivers/gpio/gpio-loongson-64bit.c | 315 +++++++++++++++++++++++++++++
+>  4 files changed, 333 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-loongson-64bit.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5114db9c8f32..2854da69cabb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12051,6 +12051,12 @@ S:     Maintained
+>  F:     Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
+>  F:     drivers/soc/loongson/loongson2_guts.c
+>
+> +LOONGSON GPIO DRIVER
+> +M:     Yinbo Zhu <zhuyinbo@loongson.cn>
+> +L:     linux-gpio@vger.kernel.org
+> +S:     Maintained
+> +F:     drivers/gpio/gpio-loongson-64bit.c
+> +
+>  LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+>  M:     Sathya Prakash <sathya.prakash@broadcom.com>
+>  M:     Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index a01af1180616..840e8a80af2b 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -381,6 +381,17 @@ config GPIO_LOONGSON
+>         help
+>           Driver for GPIO functionality on Loongson-2F/3A/3B processors.
+>
+> +config GPIO_LOONGSON_64BIT
+> +       tristate "Loongson 64 bit GPIO support"
+> +       depends on LOONGARCH || COMPILE_TEST
+> +       select GPIO_GENERIC
+> +       help
+> +         Say yes here to support the GPIO functionality of a number of
+> +         Loongson series of chips. The Loongson GPIO controller supports
+> +         up to 60 GPIOS in total, 4 of which are dedicated GPIO pins, and
+> +         the remaining 56 are reused with other functions, with edge or
+> +         level triggered interrupts.
+> +
+>  config GPIO_LPC18XX
+>         tristate "NXP LPC18XX/43XX GPIO support"
+>         default y if ARCH_LPC18XX
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 29e3beb6548c..fc832484cc77 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -78,6 +78,7 @@ obj-$(CONFIG_GPIO_KEMPLD)             += gpio-kempld.o
+>  obj-$(CONFIG_GPIO_LOGICVC)             += gpio-logicvc.o
+>  obj-$(CONFIG_GPIO_LOONGSON1)           += gpio-loongson1.o
+>  obj-$(CONFIG_GPIO_LOONGSON)            += gpio-loongson.o
+> +obj-$(CONFIG_GPIO_LOONGSON_64BIT)      += gpio-loongson-64bit.o
+>  obj-$(CONFIG_GPIO_LP3943)              += gpio-lp3943.o
+>  obj-$(CONFIG_GPIO_LP873X)              += gpio-lp873x.o
+>  obj-$(CONFIG_GPIO_LP87565)             += gpio-lp87565.o
+> diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
+> new file mode 100644
+> index 000000000000..e0528a8768a0
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-loongson-64bit.c
+> @@ -0,0 +1,315 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Loongson GPIO Support
+> + *
+> + * Copyright (C) 2022 Loongson Technology Corporation Limited
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/bitops.h>
+> +#include <asm/types.h>
+> +
+> +#define LOONGSON_GPIO_IN(x)            (x->reg_base +\
+> +                                       x->p_data->in_offset)
+> +#define LOONGSON_GPIO_OUT(x)           (x->reg_base +\
+> +                                       x->p_data->out_offset)
+> +#define LOONGSON_GPIO_OEN(x)           (x->reg_base +\
+> +                                       x->p_data->conf_offset)
+> +#define LOONGSON_GPIO_IN_BYTE(x, gpio) (x->reg_base +\
+> +                                       x->p_data->in_offset + gpio)
+> +#define LOONGSON_GPIO_OUT_BYTE(x, gpio)        (x->reg_base +\
+> +                                       x->p_data->out_offset + gpio)
+> +#define LOONGSON_GPIO_OEN_BYTE(x, gpio)        (x->reg_base +\
+> +                                       x->p_data->conf_offset + gpio)
+> +
+> +enum loongson_gpio_mode {
+> +       BIT_CTRL_MODE,
+> +       BYTE_CTRL_MODE,
+> +};
+> +
+> +struct loongson_gpio_platform_data {
+> +       const char              *label;
+> +       enum loongson_gpio_mode mode;
+> +       int                     conf_offset;
+> +       int                     out_offset;
+> +       int                     in_offset;
+> +};
 
-The mod->arch.{core,init}.{got,plt} pointers were problematic for live-
-patch because they pointed within temporary section headers (provided by
-the module loader via info->sechdrs) that would be freed after module
-load. Since livepatch modules may need to apply relocations post-module-
-load (for example, to patch a module that is loaded later), using section
-indices to offset into the section headers (instead of accessing them
-through a saved pointer) allows livepatch modules on LoongArch to pass
-in their own copy of the section headers to apply_relocate_add() to
-apply delayed relocations.
+Calling this platform_data is confusing as platform data is typically
+used for structures associated with device instances, not device
+types. There is no hard convention but normally it would be called
+chip_data.
 
-The method used is same as commit c8ebf64eab743 ("arm64/module: use plt
-section indices for relocations").
+> +
+> +struct loongson_gpio_chip {
+> +       struct gpio_chip        chip;
+> +       spinlock_t              lock;
+> +       void __iomem            *reg_base;
+> +       u16                     *gsi_idx_map;
+> +       u16                     mapsize;
+> +       const struct loongson_gpio_platform_data *p_data;
+> +};
+> +
+> +static int loongson_gpio_request(
+> +                       struct gpio_chip *chip, unsigned int pin)
+> +{
+> +       if (pin >= chip->ngpio)
+> +               return -EINVAL;
+> +
+> +       return 0;
+> +}
+> +
+> +static inline void __set_direction(struct loongson_gpio_chip *lgpio,
+> +                       unsigned int pin, int input)
+> +{
+> +       u8  bval;
+> +
+> +       bval = input ? 1 : 0;
+> +       writeb(bval, LOONGSON_GPIO_OEN_BYTE(lgpio, pin));
+> +}
+> +
+> +static void __set_level(struct loongson_gpio_chip *lgpio, unsigned int pin,
+> +                       int high)
+> +{
+> +       u8 bval;
+> +
+> +       bval = high ? 1 : 0;
+> +       writeb(bval, LOONGSON_GPIO_OUT_BYTE(lgpio, pin));
+> +}
+> +
+> +static int loongson_gpio_direction_input(
+> +                               struct gpio_chip *chip, unsigned int pin)
+> +{
+> +       unsigned long flags;
+> +       struct loongson_gpio_chip *lgpio =
+> +               container_of(chip, struct loongson_gpio_chip, chip);
+> +
+> +       spin_lock_irqsave(&lgpio->lock, flags);
+> +       __set_direction(lgpio, pin, 1);
+> +       spin_unlock_irqrestore(&lgpio->lock, flags);
+> +
+> +       return 0;
+> +}
+> +
+> +static int loongson_gpio_direction_output(
+> +                               struct gpio_chip *chip, unsigned int pin,
+> +                               int value)
+> +{
+> +       struct loongson_gpio_chip *lgpio =
+> +               container_of(chip, struct loongson_gpio_chip, chip);
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&lgpio->lock, flags);
+> +       __set_level(lgpio, pin, value);
+> +       __set_direction(lgpio, pin, 0);
+> +       spin_unlock_irqrestore(&lgpio->lock, flags);
+> +
+> +       return 0;
+> +}
+> +
+> +static int loongson_gpio_get(struct gpio_chip *chip, unsigned int pin)
+> +{
+> +       u8  bval;
+> +       int val;
+> +
+> +       struct loongson_gpio_chip *lgpio =
+> +               container_of(chip, struct loongson_gpio_chip, chip);
+> +
+> +       bval = readb(LOONGSON_GPIO_IN_BYTE(lgpio, pin));
+> +       val = bval & 1;
+> +
+> +       return val;
+> +}
+> +
+> +static int loongson_gpio_get_direction(
+> +                               struct gpio_chip *chip, unsigned int pin)
+> +{
+> +       u8  bval;
+> +       int val;
+> +
+> +       struct loongson_gpio_chip *lgpio =
+> +               container_of(chip, struct loongson_gpio_chip, chip);
+> +
+> +       bval = readb(LOONGSON_GPIO_OEN_BYTE(lgpio, pin));
+> +       val = bval & 1;
+> +
+> +       return val;
+> +}
+> +
+> +static void loongson_gpio_set(struct gpio_chip *chip, unsigned int pin,
+> +                       int value)
+> +{
+> +       unsigned long flags;
+> +       struct loongson_gpio_chip *lgpio =
+> +               container_of(chip, struct loongson_gpio_chip, chip);
+> +
+> +       spin_lock_irqsave(&lgpio->lock, flags);
+> +       __set_level(lgpio, pin, value);
+> +       spin_unlock_irqrestore(&lgpio->lock, flags);
+> +}
+> +
+> +static int loongson_gpio_to_irq(
+> +                       struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct platform_device *pdev =
+> +               container_of(chip->parent, struct platform_device, dev);
+> +       struct loongson_gpio_chip *lgpio =
+> +               container_of(chip, struct loongson_gpio_chip, chip);
+> +
+> +       if (offset >= chip->ngpio)
+> +               return -EINVAL;
+> +
+> +       if ((lgpio->gsi_idx_map != NULL) && (offset < lgpio->mapsize))
+> +               offset = lgpio->gsi_idx_map[offset];
+> +       else
+> +               return -EINVAL;
+> +
+> +       return platform_get_irq(pdev, offset);
+> +}
+> +
+> +static int loongson_gpio_init(
+> +                       struct device *dev, struct loongson_gpio_chip *lgpio,
+> +                       struct device_node *np, void __iomem *reg_base)
+> +{
+> +       int ret;
+> +       u32 ngpios = lgpio->chip.ngpio;
+> +
+> +       lgpio->reg_base = reg_base;
+> +
+> +       if (lgpio->p_data->mode == BIT_CTRL_MODE) {
+> +               ret = bgpio_init(&lgpio->chip, dev, 8,
+> +                               LOONGSON_GPIO_IN(lgpio),
+> +                               LOONGSON_GPIO_OUT(lgpio), 0,
+> +                               LOONGSON_GPIO_OEN(lgpio), NULL, 0);
+> +               if (ret) {
+> +                       dev_err(dev, "unable to init generic GPIO\n");
+> +                       return ret;
+> +               }
+> +               lgpio->chip.ngpio = ngpios;
+> +               lgpio->chip.base = 0;
+> +       } else {
+> +               lgpio->chip.request = loongson_gpio_request;
+> +               lgpio->chip.direction_input = loongson_gpio_direction_input;
+> +               lgpio->chip.get = loongson_gpio_get;
+> +               lgpio->chip.get_direction = loongson_gpio_get_direction;
+> +               lgpio->chip.direction_output = loongson_gpio_direction_output;
+> +               lgpio->chip.set = loongson_gpio_set;
+> +               lgpio->chip.can_sleep = 0;
+> +               lgpio->chip.of_node = np;
+> +               lgpio->chip.parent = dev;
+> +               spin_lock_init(&lgpio->lock);
+> +       }
+> +
+> +       lgpio->chip.label = lgpio->p_data->label;
+> +
+> +       lgpio->chip.to_irq = loongson_gpio_to_irq;
+> +
+> +       devm_gpiochip_add_data(dev, &lgpio->chip, lgpio);
+> +
+> +       return 0;
 
-Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/module.h     | 22 +++++-----
- arch/loongarch/kernel/module-sections.c | 54 +++++++++++++------------
- arch/loongarch/kernel/module.c          | 39 ++++++++++++------
- 3 files changed, 68 insertions(+), 47 deletions(-)
+You can return the above function directly.
 
-diff --git a/arch/loongarch/include/asm/module.h b/arch/loongarch/include/asm/module.h
-index b29b19a46f42..60dc62a1146e 100644
---- a/arch/loongarch/include/asm/module.h
-+++ b/arch/loongarch/include/asm/module.h
-@@ -11,7 +11,7 @@
- #define RELA_STACK_DEPTH 16
- 
- struct mod_section {
--	Elf_Shdr *shdr;
-+	int shndx;
- 	int num_entries;
- 	int max_entries;
- };
-@@ -37,8 +37,8 @@ struct plt_idx_entry {
- 	Elf_Addr symbol_addr;
- };
- 
--Elf_Addr module_emit_got_entry(struct module *mod, Elf_Addr val);
--Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Addr val);
-+Elf_Addr module_emit_got_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr val);
-+Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr val);
- 
- static inline struct got_entry emit_got_entry(Elf_Addr val)
- {
-@@ -62,10 +62,10 @@ static inline struct plt_idx_entry emit_plt_idx_entry(unsigned long val)
- 	return (struct plt_idx_entry) { val };
- }
- 
--static inline int get_plt_idx(unsigned long val, const struct mod_section *sec)
-+static inline int get_plt_idx(unsigned long val, Elf_Shdr *sechdrs, const struct mod_section *sec)
- {
- 	int i;
--	struct plt_idx_entry *plt_idx = (struct plt_idx_entry *)sec->shdr->sh_addr;
-+	struct plt_idx_entry *plt_idx = (struct plt_idx_entry *)sechdrs[sec->shndx].sh_addr;
- 
- 	for (i = 0; i < sec->num_entries; i++) {
- 		if (plt_idx[i].symbol_addr == val)
-@@ -76,11 +76,12 @@ static inline int get_plt_idx(unsigned long val, const struct mod_section *sec)
- }
- 
- static inline struct plt_entry *get_plt_entry(unsigned long val,
--				      const struct mod_section *sec_plt,
--				      const struct mod_section *sec_plt_idx)
-+					      Elf_Shdr *sechdrs,
-+					      const struct mod_section *sec_plt,
-+					      const struct mod_section *sec_plt_idx)
- {
--	int plt_idx = get_plt_idx(val, sec_plt_idx);
--	struct plt_entry *plt = (struct plt_entry *)sec_plt->shdr->sh_addr;
-+	int plt_idx = get_plt_idx(val, sechdrs, sec_plt_idx);
-+	struct plt_entry *plt = (struct plt_entry *)sechdrs[sec_plt->shndx].sh_addr;
- 
- 	if (plt_idx < 0)
- 		return NULL;
-@@ -89,10 +90,11 @@ static inline struct plt_entry *get_plt_entry(unsigned long val,
- }
- 
- static inline struct got_entry *get_got_entry(Elf_Addr val,
-+					      Elf_Shdr *sechdrs,
- 					      const struct mod_section *sec)
- {
--	struct got_entry *got = (struct got_entry *)sec->shdr->sh_addr;
- 	int i;
-+	struct got_entry *got = (struct got_entry *)sechdrs[sec->shndx].sh_addr;
- 
- 	for (i = 0; i < sec->num_entries; i++)
- 		if (got[i].symbol_addr == val)
-diff --git a/arch/loongarch/kernel/module-sections.c b/arch/loongarch/kernel/module-sections.c
-index d296a70b758f..13d9a427325a 100644
---- a/arch/loongarch/kernel/module-sections.c
-+++ b/arch/loongarch/kernel/module-sections.c
-@@ -7,17 +7,17 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- 
--Elf_Addr module_emit_got_entry(struct module *mod, Elf_Addr val)
-+Elf_Addr module_emit_got_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr val)
- {
- 	struct mod_section *got_sec = &mod->arch.got;
- 	int i = got_sec->num_entries;
--	struct got_entry *got = get_got_entry(val, got_sec);
-+	struct got_entry *got = get_got_entry(val, sechdrs, got_sec);
- 
- 	if (got)
- 		return (Elf_Addr)got;
- 
- 	/* There is no GOT entry for val yet, create a new one. */
--	got = (struct got_entry *)got_sec->shdr->sh_addr;
-+	got = (struct got_entry *)sechdrs[got_sec->shndx].sh_addr;
- 	got[i] = emit_got_entry(val);
- 
- 	got_sec->num_entries++;
-@@ -33,12 +33,12 @@ Elf_Addr module_emit_got_entry(struct module *mod, Elf_Addr val)
- 	return (Elf_Addr)&got[i];
- }
- 
--Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Addr val)
-+Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Shdr *sechdrs, Elf_Addr val)
- {
- 	int nr;
- 	struct mod_section *plt_sec = &mod->arch.plt;
- 	struct mod_section *plt_idx_sec = &mod->arch.plt_idx;
--	struct plt_entry *plt = get_plt_entry(val, plt_sec, plt_idx_sec);
-+	struct plt_entry *plt = get_plt_entry(val, sechdrs, plt_sec, plt_idx_sec);
- 	struct plt_idx_entry *plt_idx;
- 
- 	if (plt)
-@@ -47,9 +47,9 @@ Elf_Addr module_emit_plt_entry(struct module *mod, Elf_Addr val)
- 	nr = plt_sec->num_entries;
- 
- 	/* There is no duplicate entry, create a new one */
--	plt = (struct plt_entry *)plt_sec->shdr->sh_addr;
-+	plt = (struct plt_entry *)sechdrs[plt_sec->shndx].sh_addr;
- 	plt[nr] = emit_plt_entry(val);
--	plt_idx = (struct plt_idx_entry *)plt_idx_sec->shdr->sh_addr;
-+	plt_idx = (struct plt_idx_entry *)sechdrs[plt_idx_sec->shndx].sh_addr;
- 	plt_idx[nr] = emit_plt_idx_entry(val);
- 
- 	plt_sec->num_entries++;
-@@ -103,28 +103,29 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
- 			      char *secstrings, struct module *mod)
- {
- 	unsigned int i, num_plts = 0, num_gots = 0;
-+	Elf_Shdr *got_sec, *plt_sec, *plt_idx_sec;
- 
- 	/*
- 	 * Find the empty .plt sections.
- 	 */
- 	for (i = 0; i < ehdr->e_shnum; i++) {
- 		if (!strcmp(secstrings + sechdrs[i].sh_name, ".got"))
--			mod->arch.got.shdr = sechdrs + i;
-+			mod->arch.got.shndx = i;
- 		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".plt"))
--			mod->arch.plt.shdr = sechdrs + i;
-+			mod->arch.plt.shndx = i;
- 		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".plt.idx"))
--			mod->arch.plt_idx.shdr = sechdrs + i;
-+			mod->arch.plt_idx.shndx = i;
- 	}
- 
--	if (!mod->arch.got.shdr) {
-+	if (!mod->arch.got.shndx) {
- 		pr_err("%s: module GOT section(s) missing\n", mod->name);
- 		return -ENOEXEC;
- 	}
--	if (!mod->arch.plt.shdr) {
-+	if (!mod->arch.plt.shndx) {
- 		pr_err("%s: module PLT section(s) missing\n", mod->name);
- 		return -ENOEXEC;
- 	}
--	if (!mod->arch.plt_idx.shdr) {
-+	if (!mod->arch.plt_idx.shndx) {
- 		pr_err("%s: module PLT.IDX section(s) missing\n", mod->name);
- 		return -ENOEXEC;
- 	}
-@@ -145,24 +146,27 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
- 		count_max_entries(relas, num_rela, &num_plts, &num_gots);
- 	}
- 
--	mod->arch.got.shdr->sh_type = SHT_NOBITS;
--	mod->arch.got.shdr->sh_flags = SHF_ALLOC;
--	mod->arch.got.shdr->sh_addralign = L1_CACHE_BYTES;
--	mod->arch.got.shdr->sh_size = (num_gots + 1) * sizeof(struct got_entry);
-+	got_sec = sechdrs + mod->arch.got.shndx;
-+	got_sec->sh_type = SHT_NOBITS;
-+	got_sec->sh_flags = SHF_ALLOC;
-+	got_sec->sh_addralign = L1_CACHE_BYTES;
-+	got_sec->sh_size = (num_gots + 1) * sizeof(struct got_entry);
- 	mod->arch.got.num_entries = 0;
- 	mod->arch.got.max_entries = num_gots;
- 
--	mod->arch.plt.shdr->sh_type = SHT_NOBITS;
--	mod->arch.plt.shdr->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
--	mod->arch.plt.shdr->sh_addralign = L1_CACHE_BYTES;
--	mod->arch.plt.shdr->sh_size = (num_plts + 1) * sizeof(struct plt_entry);
-+	plt_sec = sechdrs + mod->arch.plt.shndx;
-+	plt_sec->sh_type = SHT_NOBITS;
-+	plt_sec->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
-+	plt_sec->sh_addralign = L1_CACHE_BYTES;
-+	plt_sec->sh_size = (num_plts + 1) * sizeof(struct plt_entry);
- 	mod->arch.plt.num_entries = 0;
- 	mod->arch.plt.max_entries = num_plts;
- 
--	mod->arch.plt_idx.shdr->sh_type = SHT_NOBITS;
--	mod->arch.plt_idx.shdr->sh_flags = SHF_ALLOC;
--	mod->arch.plt_idx.shdr->sh_addralign = L1_CACHE_BYTES;
--	mod->arch.plt_idx.shdr->sh_size = (num_plts + 1) * sizeof(struct plt_idx_entry);
-+	plt_idx_sec = sechdrs + mod->arch.plt_idx.shndx;
-+	plt_idx_sec->sh_type = SHT_NOBITS;
-+	plt_idx_sec->sh_flags = SHF_ALLOC;
-+	plt_idx_sec->sh_addralign = L1_CACHE_BYTES;
-+	plt_idx_sec->sh_size = (num_plts + 1) * sizeof(struct plt_idx_entry);
- 	mod->arch.plt_idx.num_entries = 0;
- 	mod->arch.plt_idx.max_entries = num_plts;
- 
-diff --git a/arch/loongarch/kernel/module.c b/arch/loongarch/kernel/module.c
-index 825fcf77f9e7..899dc677cec3 100644
---- a/arch/loongarch/kernel/module.c
-+++ b/arch/loongarch/kernel/module.c
-@@ -99,16 +99,17 @@ static int apply_r_larch_sop_push_dup(struct module *mod, u32 *location, Elf_Add
- 	return 0;
- }
- 
--static int apply_r_larch_sop_push_plt_pcrel(struct module *mod, u32 *location, Elf_Addr v,
-+static int apply_r_larch_sop_push_plt_pcrel(struct module *mod,
-+			Elf_Shdr *sechdrs, u32 *location, Elf_Addr v,
- 			s64 *rela_stack, size_t *rela_stack_top, unsigned int type)
- {
- 	ptrdiff_t offset = (void *)v - (void *)location;
- 
- 	if (offset >= SZ_128M)
--		v = module_emit_plt_entry(mod, v);
-+		v = module_emit_plt_entry(mod, sechdrs, v);
- 
- 	if (offset < -SZ_128M)
--		v = module_emit_plt_entry(mod, v);
-+		v = module_emit_plt_entry(mod, sechdrs, v);
- 
- 	return apply_r_larch_sop_push_pcrel(mod, location, v, rela_stack, rela_stack_top, type);
- }
-@@ -272,17 +273,18 @@ static int apply_r_larch_add_sub(struct module *mod, u32 *location, Elf_Addr v,
- 	}
- }
- 
--static int apply_r_larch_b26(struct module *mod, u32 *location, Elf_Addr v,
-+static int apply_r_larch_b26(struct module *mod,
-+			Elf_Shdr *sechdrs, u32 *location, Elf_Addr v,
- 			s64 *rela_stack, size_t *rela_stack_top, unsigned int type)
- {
- 	ptrdiff_t offset = (void *)v - (void *)location;
- 	union loongarch_instruction *insn = (union loongarch_instruction *)location;
- 
- 	if (offset >= SZ_128M)
--		v = module_emit_plt_entry(mod, v);
-+		v = module_emit_plt_entry(mod, sechdrs, v);
- 
- 	if (offset < -SZ_128M)
--		v = module_emit_plt_entry(mod, v);
-+		v = module_emit_plt_entry(mod, sechdrs, v);
- 
- 	offset = (void *)v - (void *)location;
- 
-@@ -339,10 +341,11 @@ static int apply_r_larch_pcala(struct module *mod, u32 *location, Elf_Addr v,
- 	return 0;
- }
- 
--static int apply_r_larch_got_pc(struct module *mod, u32 *location, Elf_Addr v,
-+static int apply_r_larch_got_pc(struct module *mod,
-+			Elf_Shdr *sechdrs, u32 *location, Elf_Addr v,
- 			s64 *rela_stack, size_t *rela_stack_top, unsigned int type)
- {
--	Elf_Addr got = module_emit_got_entry(mod, v);
-+	Elf_Addr got = module_emit_got_entry(mod, sechdrs, v);
- 
- 	if (!got)
- 		return -EINVAL;
-@@ -387,13 +390,10 @@ static reloc_rela_handler reloc_rela_handlers[] = {
- 	[R_LARCH_SOP_PUSH_PCREL]			     = apply_r_larch_sop_push_pcrel,
- 	[R_LARCH_SOP_PUSH_ABSOLUTE]			     = apply_r_larch_sop_push_absolute,
- 	[R_LARCH_SOP_PUSH_DUP]				     = apply_r_larch_sop_push_dup,
--	[R_LARCH_SOP_PUSH_PLT_PCREL]			     = apply_r_larch_sop_push_plt_pcrel,
- 	[R_LARCH_SOP_SUB ... R_LARCH_SOP_IF_ELSE] 	     = apply_r_larch_sop,
- 	[R_LARCH_SOP_POP_32_S_10_5 ... R_LARCH_SOP_POP_32_U] = apply_r_larch_sop_imm_field,
- 	[R_LARCH_ADD32 ... R_LARCH_SUB64]		     = apply_r_larch_add_sub,
--	[R_LARCH_B26]					     = apply_r_larch_b26,
- 	[R_LARCH_PCALA_HI20...R_LARCH_PCALA64_HI12]	     = apply_r_larch_pcala,
--	[R_LARCH_GOT_PC_HI20...R_LARCH_GOT_PC_LO12]	     = apply_r_larch_got_pc,
- };
- 
- int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
-@@ -444,7 +444,22 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 		       sym->st_value, rel[i].r_addend, (u64)location);
- 
- 		v = sym->st_value + rel[i].r_addend;
--		err = handler(mod, location, v, rela_stack, &rela_stack_top, type);
-+		switch (type) {
-+		case R_LARCH_B26:
-+			err = apply_r_larch_b26(mod, sechdrs, location,
-+						     v, rela_stack, &rela_stack_top, type);
-+			break;
-+		case R_LARCH_GOT_PC_HI20...R_LARCH_GOT_PC_LO12:
-+			err = apply_r_larch_got_pc(mod, sechdrs, location,
-+						     v, rela_stack, &rela_stack_top, type);
-+			break;
-+		case R_LARCH_SOP_PUSH_PLT_PCREL:
-+			err = apply_r_larch_sop_push_plt_pcrel(mod, sechdrs, location,
-+						     v, rela_stack, &rela_stack_top, type);
-+			break;
-+		default:
-+			err = handler(mod, location, v, rela_stack, &rela_stack_top, type);
-+		}
- 		if (err)
- 			return err;
- 	}
--- 
-2.31.1
-
+> +}
+> +
+> +static void loongson_gpio_get_props(struct platform_device *pdev,
+> +                                 struct loongson_gpio_chip *lgpio)
+> +{
+> +       int rval;
+> +       u32 ngpios;
+> +       struct device *dev = &pdev->dev;
+> +
+> +       device_property_read_u32(dev, "ngpios", &ngpios);
+> +       lgpio->chip.ngpio = ngpios;
+> +
+> +       rval = device_property_read_u16_array(dev, "gsi_idx_map", NULL, 0);
+> +       if (rval > 0) {
+> +               lgpio->gsi_idx_map =
+> +                       devm_kmalloc_array(dev, rval, sizeof(*lgpio->gsi_idx_map),
+> +                                       GFP_KERNEL);
+> +               if (lgpio->gsi_idx_map) {
+> +                       lgpio->mapsize = rval;
+> +                       device_property_read_u16_array(dev, "gsi_idx_map",
+> +                                       lgpio->gsi_idx_map, lgpio->mapsize);
+> +               }
+> +       }
+> +}
+> +
+> +static int loongson_gpio_probe(struct platform_device *pdev)
+> +{
+> +       void __iomem *reg_base;
+> +       struct loongson_gpio_chip *lgpio;
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct device *dev = &pdev->dev;
+> +
+> +       lgpio = devm_kzalloc(dev, sizeof(*lgpio), GFP_KERNEL);
+> +       if (!lgpio)
+> +               return -ENOMEM;
+> +
+> +       loongson_gpio_get_props(pdev, lgpio);
+> +
+> +       lgpio->p_data = device_get_match_data(&pdev->dev);
+> +
+> +       reg_base = devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(reg_base))
+> +               return PTR_ERR(reg_base);
+> +
+> +       loongson_gpio_init(dev, lgpio, np, reg_base);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct loongson_gpio_platform_data loongson_gpio_pdata0 = {
+> +       .label = "ls2k_gpio",
+> +       .mode = BIT_CTRL_MODE,
+> +       .conf_offset = 0x0,
+> +       .in_offset = 0x10,
+> +       .out_offset = 0x20,
+> +};
+> +
+> +static const struct loongson_gpio_platform_data loongson_gpio_pdata1 = {
+> +       .label = "ls7a_gpio",
+> +       .mode = BYTE_CTRL_MODE,
+> +       .conf_offset = 0x800,
+> +       .in_offset = 0x900,
+> +       .out_offset = 0xa00,
+> +};
+> +
+> +static const struct of_device_id loongson_gpio_of_match[] = {
+> +       {
+> +               .compatible = "loongson,ls2k-gpio",
+> +               .data = &loongson_gpio_pdata0,
+> +       },
+> +       {
+> +               .compatible = "loongson,ls7a-gpio",
+> +               .data = &loongson_gpio_pdata1,
+> +       },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, loongson_gpio_of_match);
+> +
+> +static const struct acpi_device_id loongson_gpio_acpi_match[] = {
+> +       {
+> +               .id = "LOON0002",
+> +               .driver_data = (kernel_ulong_t)&loongson_gpio_pdata1,
+> +       },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, loongson_gpio_acpi_match);
+> +
+> +static struct platform_driver loongson_gpio_driver = {
+> +       .driver = {
+> +               .name = "loongson-gpio",
+> +               .owner = THIS_MODULE,
+> +               .of_match_table = loongson_gpio_of_match,
+> +               .acpi_match_table = loongson_gpio_acpi_match,
+> +       },
+> +       .probe = loongson_gpio_probe,
+> +};
+> +
+> +static int __init loongson_gpio_setup(void)
+> +{
+> +       return platform_driver_register(&loongson_gpio_driver);
+> +}
+> +postcore_initcall(loongson_gpio_setup);
+> +
+> +MODULE_DESCRIPTION("Loongson gpio driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.31.1
+>
