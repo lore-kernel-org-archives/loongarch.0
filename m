@@ -1,164 +1,138 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3785E33C1
-	for <loongarch@lists.linux.dev>; Wed, 23 Nov 2022 22:14:44 +0000 (UTC)
-Received: by mail-yb1-f172.google.com with SMTP id 7so22416628ybp.13
-        for <loongarch@lists.linux.dev>; Wed, 23 Nov 2022 14:14:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yxwq700cjgIpgfGXjXVMIWZf+/i54U4hiQu6wwaFrxs=;
-        b=NERkzdTLp+gtlJdbWRZFxyzivY0ZJDPAXdfrGF3m/XML2U8DBM1f9y3bdLAgjKiZn8
-         a2V5OxNDZdSmicHR0Vw2yjHPlWFDCC4yIun+usLgcmKTJw6n4FjYvRAlM4U1S0GaguhK
-         GvFRvouAy/HCKKjynSlpWv5lqkA5xDE/awBDG+0n8wS3M+yA16vT8okceMIwiQIVGgwk
-         cxulXw1lewEXbgR4GCJfE+rEyDVVODX0X8pAQ49ujkduB68QFJCDfQtd9TwO+QdAt6dl
-         9wK2iOGcLfiqo8TB1jUMzOzWqE2LHkAioDTh6SGmTRDJyquX3/viOLFRcnbauKLHHilJ
-         Soew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yxwq700cjgIpgfGXjXVMIWZf+/i54U4hiQu6wwaFrxs=;
-        b=xe/fkJKoKTPVJxl+pl5db8WBZGpzHbsPb0f2B+pigzx/pDwGjCQj22CtTLIuK8Oo2T
-         QYzyo0Zjnywmc2IZTNx71v14HRFVdQY2ONWc9kVNdL+4kmCVWTuooSzEbGdsvkeYttfQ
-         UZ7tmhV5FFmtAEoefONgiwph4GP0iEIIbapspltWYjdRQDXAnPDdcnkmUmHnORMHFi3m
-         Liq1Vkt6LOQMB4HOjh4NUgtJybAdmXEOwR+0SsK1VjUpRXYymK4e+MP4daO3b1PKnAvh
-         S2poi21yTMu4AXet6neT9GV463qjHFOZFC62dXHo2IpfzhJHR5Ng32xe9i/BhmAyoGy3
-         ChjA==
-X-Gm-Message-State: ANoB5pn2PBdf1tmqbcywiIsOIHtHgNjmkH3gFAg6e9EjNzX6roUKDbhW
-	NGyIKeWU5wE+rv24JlJp2OXVOLyU+QhzXY9Ka+Jb0A==
-X-Google-Smtp-Source: AA0mqf4bdwIwAUjV3qYMdxNw8Ige0lynYHKpcKkZxcAuLvYxsMbWkZsSuItzC/6TVTNtDTdGQ7fzuG7GrT5n9w66TJU=
-X-Received: by 2002:a25:acd1:0:b0:6b4:b9e3:c64b with SMTP id
- x17-20020a25acd1000000b006b4b9e3c64bmr10342450ybd.238.1669241683091; Wed, 23
- Nov 2022 14:14:43 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 278061C05
+	for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 02:22:22 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8BxE_BW1X5jZF8AAA--.1110S3;
+	Thu, 24 Nov 2022 10:22:14 +0800 (CST)
+Received: from [10.180.13.64] (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxPuBV1X5j_hUZAA--.53S2;
+	Thu, 24 Nov 2022 10:22:13 +0800 (CST)
+Subject: Re: [PATCH v5 2/3] gpio: loongson: add gpio driver support
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Jianmin Lv <lvjianmin@loongson.cn>,
+ Hongchen Zhang <zhanghongchen@loongson.cn>,
+ Liu Peibao <liupeibao@loongson.cn>
+References: <20221121123803.3786-1-zhuyinbo@loongson.cn>
+ <20221121123803.3786-2-zhuyinbo@loongson.cn>
+ <CACRpkda1adiNwbTZHdAyHKny3r5FFMP_XXVGbo1vnCdw9U1gNg@mail.gmail.com>
+ <8a7abd77-9540-efa8-6f67-908530e85399@loongson.cn>
+ <CACRpkdb=wdydOYCcrpjLSyvfVO--_ezXsFQ46qwfVCiiTd5fNw@mail.gmail.com>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <4c02570e-03d5-85f1-73fb-b66d6170c875@loongson.cn>
+Date: Thu, 24 Nov 2022 10:22:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221123080414.14005-1-zhuyinbo@loongson.cn>
-In-Reply-To: <20221123080414.14005-1-zhuyinbo@loongson.cn>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 23 Nov 2022 23:14:31 +0100
-Message-ID: <CACRpkdZ5OJpMFH1Wi31TKQZskQtCmNGyySdkOpouiNW2t_jV6Q@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] gpio: loongson: add gpio driver support
-To: Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jianmin Lv <lvjianmin@loongson.cn>, Hongchen Zhang <zhanghongchen@loongson.cn>, 
-	Liu Peibao <liupeibao@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-
-On Wed, Nov 23, 2022 at 9:04 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
-
-> The Loongson platforms GPIO controller contains 60 GPIO pins in total,
-> 4 of which are dedicated GPIO pins, and the remaining 56 are reused
-> with other functions. Each GPIO can set input/output and has the
-> interrupt capability.
->
-> This driver added support for Loongson GPIO controller and support to
-> use DTS or ACPI to descibe GPIO device resources.
->
-> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
-> Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
-> Change in v6:
-
-This is way better :)
-
-I guess you notice how the driver gets smaller and smaller.
-This is a good sign!
-
-> +static int loongson_gpio_request(
-> +                       struct gpio_chip *chip, unsigned int pin)
-> +{
-> +       if (pin >= chip->ngpio)
-> +               return -EINVAL;
-> +
-> +       return 0;
-> +}
-
-Drop this altogether as discussed in my other reply.
-
-> +static inline void __set_direction(struct loongson_gpio_chip *lgpio,
-> +                       unsigned int pin, int input)
-> +static void __set_level(struct loongson_gpio_chip *lgpio, unsigned int pin,
-> +                       int high)
-
-I missed this before. Also the use of __underscore for inner functions
-is a bad habit IMO (because __underscore is also used for compiler
-primitives such as __init which is confusing) The signature of these
-functions is too generic. Name them loongson_commit_direction() or
-loongson_commit_level() or something.
-
-> +static int loongson_gpio_get_direction(
-> +                               struct gpio_chip *chip, unsigned int pin)
-
-thanks for implementing this!
-
-> +       if (lgpio->p_data->mode == BIT_CTRL_MODE) {
-> +               ret = bgpio_init(&lgpio->chip, dev, 8,
-> +                               LOONGSON_GPIO_IN(lgpio),
-> +                               LOONGSON_GPIO_OUT(lgpio), 0,
-> +                               LOONGSON_GPIO_OEN(lgpio), NULL, 0);
-> +               if (ret) {
-> +                       dev_err(dev, "unable to init generic GPIO\n");
-> +                       return ret;
-> +               }
-> +               lgpio->chip.ngpio = ngpios;
-
-Neat!
-
-> +               lgpio->chip.base = 0;
-
-Drop this. It is good that the base is unpredictable so
-people don't start to rely on it. (drivers/gpio/TODO)
-
-> +       rval = device_property_read_u16_array(dev, "gsi_idx_map", NULL, 0);
-
-But this gsi_idx_map is missing from your device tree bindings,
-is it not?
-
-Or what am I missing here? Sorry I might overlook something...
-
-> +static int loongson_gpio_probe(struct platform_device *pdev)
-> +{
-> +       void __iomem *reg_base;
-> +       struct loongson_gpio_chip *lgpio;
-> +       struct device_node *np = pdev->dev.of_node;
-> +       struct device *dev = &pdev->dev;
-> +
-> +       lgpio = devm_kzalloc(dev, sizeof(*lgpio), GFP_KERNEL);
-> +       if (!lgpio)
-> +               return -ENOMEM;
-> +
-> +       loongson_gpio_get_props(pdev, lgpio);
-> +
-> +       lgpio->p_data = device_get_match_data(&pdev->dev);
-
-lgpio->p_data = device_get_match_data(dev);
+In-Reply-To: <CACRpkdb=wdydOYCcrpjLSyvfVO--_ezXsFQ46qwfVCiiTd5fNw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxPuBV1X5j_hUZAA--.53S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxurWkGw4DCF1kCrWDGF4UArb_yoW5WF48pF
+	W5Ga909r4DJryIy3saqw4xZF1fta9a9Fy3Jrn5X3s8ZryDXr93Xr1ftrW7ZF97u398Jw4j
+	vF1Fk397Z3WDAFJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bDkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
+	v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
+	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
+	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8ajg7UUUUU==
 
 
-> +static int __init loongson_gpio_setup(void)
-> +{
-> +       return platform_driver_register(&loongson_gpio_driver);
-> +}
-> +postcore_initcall(loongson_gpio_setup);
 
-Why does this have to be postcore_initcall()?
+在 2022/11/24 上午6:05, Linus Walleij 写道:
+> On Wed, Nov 23, 2022 at 9:02 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+>> 在 2022/11/21 下午9:24, Linus Walleij 写道:
+> 
+>>>> +static int loongson_gpio_request(
+>>>> +                       struct gpio_chip *chip, unsigned int pin)
+>>>> +{
+>>>> +       if (pin >= chip->ngpio)
+>>>> +               return -EINVAL;
+>>>
+>>> This is not needed, the gpiolib core already checks this. Drop it.
+>> I check gpio_request in gpilib, I notice gpio_is_valid is not equal to
+>> this condition, so I still kept it for byte mode.
+> 
+> This is because descriptors can only be obtained from gpiod_get() and
+> similar and gpiod_get() falls to gpiod_get_index() which will not
+> return a valid descriptor from either HW backend. gpiod_get()
+> will call gpiod_request() for if and only if the descriptor is valid.
+> 
+> The only reason to implement something like this is because of
+> using the legacy GPIO numberspace which we are getting rid
+> of so it is irrelevant, the consumers of your driver will only be
+> using gpio descriptors, will only come in through gpiod_get_index()
+> and will have desc validity check done before calling gpiod_request().
+> 
+> So drop this.
+okay , I got it.
+Thank you for your detailed explanation.
+> 
+>>> I am bit suspicious that your IRQchip implementation expects consumers
+>>> to call gpiod_to_irq() first and this is not legal.
+>>
+>> okay, I got it, and other driver use gpio interrupt doesn't rely on
+>> gpiod_to_irq, but can use gpiod_to_irq.
+> 
+> Yes it can be used to look up the irq corresponding to a GPIO
+> but it is not mandatory to do that.
+> 
+>> The reason is that gpio interrupt wasn't an independent module,  The
+>> loongson interrupt controller liointc include lots of interrupt was
+>> route to perpherial, such as i2c/spi .. gpio, so gpio interrupt as
+>> normal perpherial interrupt, It is unnecessary and redundant to
+>> implement a gpio irq chip. The liointc controller driver had cover all
+>> interrupt.
+> 
+> This is fine, and it is common for GPIO drivers to implement
+> their own IRQchips.
+> 
+> But these drivers can not rely on the .gpio_to_irq() callback
+> to be called before an IRQ is requested and used.
 
-Yours,
-Linus Walleij
+I may not have made it clear before that the gpio irq chip for other
+platforms may need to be implemented, but the loongson platform may be
+special.
+
+I mean that the loongson platform use gpio irq does not need to rely on
+gpio_to_irq, because loongson interrupt controller driver has covered
+gpio irq.  The specific reason is my above explanation.
+
+so, Can I not realize gpio irq chip?
+> 
+>> in addition,  I don't like to use the dynamically allocated gpio base,
+>> so I set the gpio base after call bgpio_init.
+> 
+> Don't do that because the GPIO maintainers love the
+> dynamic base and hate hardcoded bases. Set the base to -1
+> If you wonder why, read drivers/gpio/TODO.
+okay, I got it.
+> 
+> Yours,
+> Linus Walleij
+> 
+
