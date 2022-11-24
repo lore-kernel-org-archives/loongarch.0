@@ -1,218 +1,150 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAC871FB6
-	for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 07:10:19 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.110])
-	by gateway (Coremail) with SMTP id _____8Bx2+rZGH9j53kAAA--.1272S3;
-	Thu, 24 Nov 2022 15:10:17 +0800 (CST)
-Received: from [192.168.100.127] (unknown [112.20.109.110])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxiFfXGH9jRUEZAA--.47737S3;
-	Thu, 24 Nov 2022 15:10:16 +0800 (CST)
-Message-ID: <d4543b3d-8eeb-e621-1d78-9fc371643e35@loongson.cn>
-Date: Thu, 24 Nov 2022 15:10:15 +0800
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954C723AE
+	for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 08:54:56 +0000 (UTC)
+Received: by mail-yb1-f174.google.com with SMTP id z192so1159075yba.0
+        for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 00:54:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l8R3F5kALGt7fZIFbbdQLZusILmf2AipY3tz1OkoyZg=;
+        b=BoTT++1ZJhXWkMbqvMW/FRK8+Jp2xAbHiq27Xk1WEsyCZ7YGMXSoiYjXndFPTgLW3E
+         Ak39gt1gk7HkJXwvl1ze3jPLtMdIGBkXI3TD6mJazIm5soc2L/KIXoktqhUnYB7k3AQO
+         KG1FZND6mzdGbeZJcgp5NydoulbO1aJlSobDLYBYcFhiuvo+RXDBHhq4BJZm3yE8BZgN
+         I5G/E5r2fLHt1x+F6ZSSRS9XeYFfiCEbobbo8jrrucKv3IHG/S65AHc3Onjwy2SWLsNy
+         VHQs63G8Pxalw2RYjcDYGG1XwzMT0fcZaklDmBMHeJGkteMnQ8zmkk6t27JTibOCODaC
+         H84A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l8R3F5kALGt7fZIFbbdQLZusILmf2AipY3tz1OkoyZg=;
+        b=fhf7Po+6nNmSzuFGJMCwOES0nEPxdFQG1FbwDtI5/8MzwojUCxzoSd/RIVaBAHkvKN
+         El/gpJuiNPLl2T57rWattlFyusHjlCPnjgU9G8kheBoKDvlWiU7Jzm/GLBXKxmd6L39M
+         LxtVWAXLSAl8YUJPKzSsuVgLmmWMC0mPfMaGJYRmSrxt2qzYdqTfr+cWwLQmMKeRg4hH
+         VUnyTOBDpXzzP3wbquclTC3i4HKPFtcY1wKNDsbaumAEplT/MvMahqBz412pqAl9SQ9H
+         8jYK+HtG/x/D4GF9rEgvAlBy/PqMUK+7DqptKfvMGzpKlmQiriM9qe6pIAX/Rhturb7W
+         lWOg==
+X-Gm-Message-State: ANoB5pnLUIqYn9U9VwGvcAqhnEDMbbNMRRrUn6lemPaFqaxcXY0NAG5N
+	NF7aadMbrBWTFXUPtU/SOyZp7tOqGd7MiaH/sDoDZg==
+X-Google-Smtp-Source: AA0mqf7HBKYpljZej6bXe7Ojnqxlh65R7Qj4zpxpnR7ZPi1/Wnuyt44OyTeMDenQUWF4/SbRV3buTCxQI4MkWFzQ1DI=
+X-Received: by 2002:a25:d8d4:0:b0:6f0:36e2:5fc2 with SMTP id
+ p203-20020a25d8d4000000b006f036e25fc2mr5552927ybg.52.1669280095520; Thu, 24
+ Nov 2022 00:54:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v1 1/2] docs/LoongArch: Add boot image header
-To: Wu XiangCheng <wu.xiangcheng@linux.dev>
-Cc: chenhuacai@kernel.org, corbet@lwn.net, alexs@kernel.org,
- seakeel@gmail.com, kernel@xen0n.name, jiaxun.yang@flygoat.com,
- linux-doc@vger.kernel.org, loongarch@lists.linux.dev, siyanteng01@gmail.com,
- Xiaotian Wu <wuxiaotian@loongson.cn>, Yun Liu <liuyun@loongson.cn>
-References: <cover.1669032230.git.siyanteng@loongson.cn>
- <08df007c7488b88ff5400bef6183f9cc68d87616.1669032230.git.siyanteng@loongson.cn>
- <Y3uuGXo3SNtzARP0@bobwxc.mipc>
-Content-Language: en-US
-From: Yanteng Si <siyanteng@loongson.cn>
-In-Reply-To: <Y3uuGXo3SNtzARP0@bobwxc.mipc>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxiFfXGH9jRUEZAA--.47737S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3Ww15Xr1kuFWxtryUXw4rGrg_yoW7Xw45pr
-	nxJFyxJF1DJryUJr17Jr1UXr1UJr48J3WUGF18try8Jr1jvr1DJr1UJr18XryUGry8AFyU
-	Xw1UJryjyF1UJrDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
-	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwI
-	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
-	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
-	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
+References: <20221121123803.3786-1-zhuyinbo@loongson.cn> <20221121123803.3786-2-zhuyinbo@loongson.cn>
+ <CACRpkda1adiNwbTZHdAyHKny3r5FFMP_XXVGbo1vnCdw9U1gNg@mail.gmail.com>
+ <8a7abd77-9540-efa8-6f67-908530e85399@loongson.cn> <CACRpkdb=wdydOYCcrpjLSyvfVO--_ezXsFQ46qwfVCiiTd5fNw@mail.gmail.com>
+ <4c02570e-03d5-85f1-73fb-b66d6170c875@loongson.cn>
+In-Reply-To: <4c02570e-03d5-85f1-73fb-b66d6170c875@loongson.cn>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 24 Nov 2022 09:54:43 +0100
+Message-ID: <CACRpkdbgP9m40t_Ky4H+SQi9TELikomT2M-JpF7+auKmzOxQdg@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] gpio: loongson: add gpio driver support
+To: Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Jianmin Lv <lvjianmin@loongson.cn>, Hongchen Zhang <zhanghongchen@loongson.cn>, 
+	Liu Peibao <liupeibao@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Nov 24, 2022 at 3:22 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+> =E5=9C=A8 2022/11/24 =E4=B8=8A=E5=8D=886:05, Linus Walleij =E5=86=99=E9=
+=81=93:
 
-On 11/22/22 00:58, Wu XiangCheng wrote:
-> +Cc: Yun Liu <liuyun@loongson.cn>
+> > But these drivers can not rely on the .gpio_to_irq() callback
+> > to be called before an IRQ is requested and used.
 >
-> 2022-11-21 (一) 20:16:30 +0800 Yanteng Si 曰：
->> Describes the meaning and value of the image header field.
->>
->> Suggested-by: Xiaotian Wu <wuxiaotian@loongson.cn>
->> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
->> ---
->>   Documentation/loongarch/boot-image-header.rst | 76 +++++++++++++++++++
->>   Documentation/loongarch/index.rst             |  1 +
->>   2 files changed, 77 insertions(+)
->>   create mode 100644 Documentation/loongarch/boot-image-header.rst
->>
->> diff --git a/Documentation/loongarch/boot-image-header.rst b/Documentation/loongarch/boot-image-header.rst
->> new file mode 100644
->> index 000000000000..92a953a6f2e6
->> --- /dev/null
->> +++ b/Documentation/loongarch/boot-image-header.rst
->> @@ -0,0 +1,76 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +====================================
->> +Boot image header in LoongArch Linux
->> +====================================
->> +
->> +:Author: Yanteng Si <siyanteng@loongson.cn>
->> +:Date:   18 Nov 2022
->> +
->> +This document only describes the boot image header details for
->> +LoongArch Linux.
->> +
->> +The following 64-byte header is present in decompressed Linux
->> +kernel image::
->> +
->> +	u32	MZ_MAGIC		/* "MZ", MS-DOS header */
->> +	u32	res0 = 0		/* reserved */
->> +	u64	kernel_entry		/* Kernel entry point */
->> +	u64	_end - _text		/* Kernel image effective size */
->> +	u64	0			/* Kernel image load offset from start of RAM */
->> +	u64	res1 = 0		/* reserved */
->> +	u64	res2 = 0		/* reserved */
->> +	u64	res3 = 0		/* reserved */
->> +	u32	res4 = 0		/* reserved */
->> +	u32	pe_header - _head	/* Offset to the PE header */
->> +
-> Any code related need to be linked here?
-
-The related code is in line 22 of the arch/loongarch/kernel/head.S, 
-which is not very readable.
-
-
+> I may not have made it clear before that the gpio irq chip for other
+> platforms may need to be implemented, but the loongson platform may be
+> special.
 >
->> +
->> +Header notes
->> +============
->> +
->> +Currently, LoongArch has removed the "magic" field.
->> +
->> +According to the EFI specification, the PE/COFF image file header is
->> +required at the beginning of the kernel image; the LoongArch kernel
->> +supports the EFI stub, so the first two bytes of the kernel image header
->> +are "MZ" magic characters, and 0x3c should point to the rest of the
->> +PE/COFF file header, between which The kernel entry point, image
->> +effectivesize, and image load offset layout are as follows::
->> +
->> +          +-----------------------------------------------+
->> +    0x0:  |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
->> +          +-----------------------------------------------+
->> +    0x8:  | MZ_MAGIC              |          res0         |
->> +          +-----------------------------------------------+
->> +    0x10: |                 kernel_entry                  |
->> +          +-----------------------------------------------+
->> +    0x18: |                  _end - _text                 |
->> +          +-----------------------------------------------+
->> +    0x20: |                       0                       |
->> +          +-----------------------------------------------+
->> +    0x28: |                      res1                     |
->> +          +-----------------------------------------------+
->> +    0x30: |                      res2                     |
->> +          +-----------------------------------------------+
->> +    0x38: |                      res3                     |
->> +          +-----------------------------------------------+
->> +    0x40: |          res14        |       PE header       |
->> +          +-----------------------------------------------+
->> +
-> emmm, this figure...
+> I mean that the loongson platform use gpio irq does not need to rely on
+> gpio_to_irq, because loongson interrupt controller driver has covered
+> gpio irq.  The specific reason is my above explanation.
 >
-> So MZ_MAGIC start from 0x08 ?
-Form 0x00.
->
-> Or
->
->              0     1     2     3     4     5     6     7
->           +-----------------------+-----------------------+
->      0x00 |        MZ_MAGIC       |          res0         |
->           +-----------------------+-----------------------+
->      0x08 |                 kernel_entry                  |
->           +-----------------------------------------------+
->      0x10 |                  _end - _text                 |
->           +-----------------------------------------------+
->      0x18 |                       0                       |
->           +-----------------------------------------------+
->      0x20 |                      res1                     |
->           +-----------------------------------------------+
->      0x28 |                      res2                     |
->           +-----------------------------------------------+
->      0x30 |                      res3                     |
->           +-----------------------+-----------------------+
->      0x38 |          res14        |       PE header       |
->           +-----------------------+-----------------------+
+> so, Can I not realize gpio irq chip?
 
-Great!
+Isn't this a hierarchical irqchip then?
 
+Please consult the following from
+Documentation/driver-api/gpio/driver.rst:
 
-In patch V2:
+---------------------------------
 
-res14 -> res4, I don't know why, I misspelled.
+GPIO drivers providing IRQs
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
 
+It is custom that GPIO drivers (GPIO chips) are also providing interrupts,
+most often cascaded off a parent interrupt controller, and in some special
+cases the GPIO logic is melded with a SoC's primary interrupt controller.
 
-Thanks,
+The IRQ portions of the GPIO block are implemented using an irq_chip, using
+the header <linux/irq.h>. So this combined driver is utilizing two sub-
+systems simultaneously: gpio and irq.
 
-Yanteng
+It is legal for any IRQ consumer to request an IRQ from any irqchip even if=
+ it
+is a combined GPIO+IRQ driver. The basic premise is that gpio_chip and
+irq_chip are orthogonal, and offering their services independent of each
+other.
 
+gpiod_to_irq() is just a convenience function to figure out the IRQ for a
+certain GPIO line and should not be relied upon to have been called before
+the IRQ is used.
 
->
-> If the figure is too difficult to draw, a simple table can also be used
-> to instead.
->
-> Offset	Name	Size	Note
-> ...
->
->> +
->> +All bit fields are in little endian:
->> +
->> +    - MZ: Effective length of 2 bytes;
->> +
->> +    - kernel entry point: leaving 6 bytes blank in front, starting
->> +      from 0x8, with a effective length of 8 bytes;
->> +
->> +    - kernel image effective size: Immediately following the kernel
->> +      entry point, with a effective length of 8 bytes, this field is
->> +      required for the bootloader;
->> +
->> +    - kernel image load offset: Immediately following the kernel
->> +      image effective size, with a effective length of 8 bytes;
->> +
->> +    - Offset to the PE header: leaving 28 bytes blank in front,
->> +      starting from 0x3c, with a effective length of 4 bytes.
->> diff --git a/Documentation/loongarch/index.rst b/Documentation/loongarch/index.rst
->> index aaba648db907..97419821adf9 100644
->> --- a/Documentation/loongarch/index.rst
->> +++ b/Documentation/loongarch/index.rst
->> @@ -10,6 +10,7 @@ LoongArch Architecture
->>   
->>      introduction
->>      irq-chip-model
->> +   boot-image-header
->>   
->>      features
->>   
->> -- 
->> 2.31.1
->>
+Always prepare the hardware and make it ready for action in respective
+callbacks from the GPIO and irq_chip APIs. Do not rely on gpiod_to_irq() ha=
+ving
+been called first.
 
+We can divide GPIO irqchips in two broad categories:
+
+- CASCADED INTERRUPT CHIPS: this means that the GPIO chip has one common
+  interrupt output line, which is triggered by any enabled GPIO line on tha=
+t
+  chip. The interrupt output line will then be routed to an parent interrup=
+t
+  controller one level up, in the most simple case the systems primary
+  interrupt controller. This is modeled by an irqchip that will inspect bit=
+s
+  inside the GPIO controller to figure out which line fired it. The irqchip
+  part of the driver needs to inspect registers to figure this out and it
+  will likely also need to acknowledge that it is handling the interrupt
+  by clearing some bit (sometime implicitly, by just reading a status
+  register) and it will often need to set up the configuration such as
+  edge sensitivity (rising or falling edge, or high/low level interrupt for
+  example).
+
+- HIERARCHICAL INTERRUPT CHIPS: this means that each GPIO line has a dedica=
+ted
+  irq line to a parent interrupt controller one level up. There is no need
+  to inquire the GPIO hardware to figure out which line has fired, but it
+  may still be necessary to acknowledge the interrupt and set up configurat=
+ion
+  such as edge sensitivity.
+
+---------------------------------
+
+You find an example of a hierarchical GPIO irqchip using the
+GPIOLIB_IRQCHIP in drivers/gpio/gpio-ixp4xx.c.
+
+Yours,
+Linus Walleij
