@@ -1,74 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE53723AE
-	for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 09:54:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9B6AC433C1;
-	Thu, 24 Nov 2022 09:54:07 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.1-rc7
-Date: Thu, 24 Nov 2022 17:51:20 +0800
-Message-Id: <20221124095120.3116780-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96BB23AE
+	for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 09:55:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 818BCC433D6
+	for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 09:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1669283708;
+	bh=5kaoiogge2CYIRkqs7Z6Uu8+iginiulfFRFqfLUtw0g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Oji2yPLYW7Lu/Or6kTo49asVjl4SI3j0UlBjpUg3bqJCUkx1Z+scI4jdQLep66Rhj
+	 M3eLxaMpJKjcH+Vbo3/0AsB9W08VyKnaLeG2ksn4CLFXw7BRAwf++qjuxdMHii2wT3
+	 HU/PjU5+XDUCuB0gn6g/FMJhVojIbRg4oHr/Fy85jrvwVuacWyaz1kX1j1L9K9xqiq
+	 AVtXSUCT2APz2ZMCltBOeUd0Utn3w5PIFCbqrCahQ4gFWydgwfPyzADXrFfxvU9sPb
+	 K0220O8TRH0s+Qi/mVNoGoRvCHDItM1i7Lhum09nIY8+WPiUMpFvRvGAhezzH0OTSZ
+	 Ct/TK5axZChYQ==
+Received: by mail-ed1-f53.google.com with SMTP id e13so1827950edj.7
+        for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 01:55:08 -0800 (PST)
+X-Gm-Message-State: ANoB5plRdcHGvFmY0dbJhyiBNcaefz77aufea++hO1CspWuZJGoDg+Oj
+	FtyNkYM6rus1VzRuEBHRp68FCD7G8fdowBHEpU0=
+X-Google-Smtp-Source: AA0mqf6uCf7DOW+G4EorXIvJeHLYegfrRCikQfgD6PTITzF4WYxsHRL/hxCaLiQi8oHYLJbosvZBptwkLJT2qgHdxlk=
+X-Received: by 2002:a05:6402:10d1:b0:467:7508:89ca with SMTP id
+ p17-20020a05640210d100b00467750889camr14616991edu.284.1669283706749; Thu, 24
+ Nov 2022 01:55:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1669123257-18550-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1669123257-18550-1-git-send-email-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 24 Nov 2022 17:54:54 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5=BB3=AJ9K=u_6pqxAz9Orr0zBFM7nOafEtkL-PjttUw@mail.gmail.com>
+Message-ID: <CAAhV-H5=BB3=AJ9K=u_6pqxAz9Orr0zBFM7nOafEtkL-PjttUw@mail.gmail.com>
+Subject: Re: [PATCH] docs/zh_CN/LoongArch: Fix wrong description of FPRs Note
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Alex Shi <alexs@kernel.org>, 
+	Yanteng Si <siyanteng@loongson.cn>, Jonathan Corbet <corbet@lwn.net>, loongarch@lists.linux.dev, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-The following changes since commit eb7081409f94a9a8608593d0fb63a1aa3d6f95d8:
-
-  Linux 6.1-rc6 (2022-11-20 16:02:16 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.1-2
-
-for you to fetch changes up to fa0e381290b134da53e65fb421b65825f23221b4:
-
-  docs/zh_CN/LoongArch: Fix wrong description of FPRs Note (2022-11-23 10:28:08 +0800)
-
-----------------------------------------------------------------
-LoongArch fixes for v6.1-rc7
-
-Fix two build warnings, a copy_thread() bug, two page table manipulation
-bugs, and some trivial cleanups.
-----------------------------------------------------------------
-Huacai Chen (5):
-      LoongArch: Combine acpi_boot_table_init() and acpi_boot_init()
-      LoongArch: SMP: Change prefix from loongson3 to loongson
-      LoongArch: Clear FPU/SIMD thread info flags for kernel thread
-      LoongArch: Set _PAGE_DIRTY only if _PAGE_WRITE is set in {pmd,pte}_mkdirty()
-      LoongArch: Set _PAGE_DIRTY only if _PAGE_MODIFIED is set in {pmd,pte}_mkwrite()
-
-KaiLong Wang (1):
-      LoongArch: Fix unsigned comparison with less than zero
-
-Tiezhu Yang (2):
-      LoongArch: Makefile: Use "grep -E" instead of "egrep"
-      docs/zh_CN/LoongArch: Fix wrong description of FPRs Note
-
- .../translations/zh_CN/loongarch/introduction.rst  |  4 +-
- arch/loongarch/Makefile                            |  2 +-
- arch/loongarch/include/asm/irq.h                   |  2 +-
- arch/loongarch/include/asm/pgtable.h               | 16 ++++++--
- arch/loongarch/include/asm/smp.h                   | 30 +++++++--------
- arch/loongarch/kernel/acpi.c                       | 31 +++++----------
- arch/loongarch/kernel/irq.c                        |  2 +-
- arch/loongarch/kernel/process.c                    |  9 +++--
- arch/loongarch/kernel/setup.c                      |  1 -
- arch/loongarch/kernel/smp.c                        | 44 +++++++++++-----------
- arch/loongarch/kernel/unwind_prologue.c            |  3 +-
- 11 files changed, 71 insertions(+), 73 deletions(-)
+QXBwbGllZCB0byBsb29uZ2FyY2gtZml4ZXMsIHRoYW5rcy4NCg0KT24gVHVlLCBOb3YgMjIsIDIw
+MjIgYXQgOToyMSBQTSBUaWV6aHUgWWFuZyA8eWFuZ3RpZXpodUBsb29uZ3Nvbi5jbj4gd3JvdGU6
+DQo+DQo+IFRoZSBDaGluZXNlIHRyYW5zbGF0aW9uIG9mIEZQUnMgTm90ZSBpcyBub3QgY29uc2lz
+dGVudCB3aXRoIHRoZSBvcmlnaW5hbA0KPiBFbmdsaXNoIHZlcnNpb24sICR2MC8kdjEgc2hvdWxk
+IGJlICRmdjAvJGZ2MSwgJGEwLyRhMSBzaG91bGQgYmUgJGZhMC8kZmExLA0KPiBmaXggdGhlbS4N
+Cj4NCj4gU2lnbmVkLW9mZi1ieTogVGllemh1IFlhbmcgPHlhbmd0aWV6aHVAbG9vbmdzb24uY24+
+DQo+IC0tLQ0KPiAgRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMvemhfQ04vbG9vbmdhcmNoL2lu
+dHJvZHVjdGlvbi5yc3QgfCA0ICsrLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
+KyksIDIgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3RyYW5z
+bGF0aW9ucy96aF9DTi9sb29uZ2FyY2gvaW50cm9kdWN0aW9uLnJzdCBiL0RvY3VtZW50YXRpb24v
+dHJhbnNsYXRpb25zL3poX0NOL2xvb25nYXJjaC9pbnRyb2R1Y3Rpb24ucnN0DQo+IGluZGV4IDEy
+ODg3OGYuLmYzZWMyNWIgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vdHJhbnNsYXRpb25z
+L3poX0NOL2xvb25nYXJjaC9pbnRyb2R1Y3Rpb24ucnN0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24v
+dHJhbnNsYXRpb25zL3poX0NOL2xvb25nYXJjaC9pbnRyb2R1Y3Rpb24ucnN0DQo+IEBAIC03MCw4
+ICs3MCw4IEBAIExBNjTkuK3mr4/kuKrlr4TlrZjlmajkuLo2NOS9jeWuveOAgiBgYCRyMGBgIOea
+hOWGheWuueaAu+aYr+WbuuWumuS4ujDvvIzogIzlhbYNCj4gID09PT09PT09PT09PT09PT09ID09
+PT09PT09PT09PT09PT09PSA9PT09PT09PT09PT09PT09PT09ID09PT09PT09PT0NCj4NCj4gIC4u
+IG5vdGU6Og0KPiAtICAgIOazqOaEj++8muWcqOS4gOS6m+mBl+eVmeS7o+eggeS4reacieaXtuWP
+r+iDveingeWIsCBgYCR2MGBgIOWSjCBgYCR2MWBgIO+8jOWug+S7rOaYrw0KPiAtICAgIGBgJGEw
+YGAg5ZKMIGBgJGExYGAg55qE5Yir5ZCN77yM5bGe5LqO5bey57uP5bqf5byD55qE55So5rOV44CC
+DQo+ICsgICAg5rOo5oSP77ya5Zyo5LiA5Lqb6YGX55WZ5Luj56CB5Lit5pyJ5pe25Y+v6IO96KeB
+5YiwIGBgJGZ2MGBgIOWSjCBgYCRmdjFgYCDvvIzlroPku6zmmK8NCj4gKyAgICBgYCRmYTBgYCDl
+kowgYGAkZmExYGAg55qE5Yir5ZCN77yM5bGe5LqO5bey57uP5bqf5byD55qE55So5rOV44CCDQo+
+DQo+DQo+ICDlkJHph4/lr4TlrZjlmagNCj4gLS0NCj4gMi4xLjANCj4NCg==
