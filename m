@@ -1,150 +1,74 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954C723AE
-	for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 08:54:56 +0000 (UTC)
-Received: by mail-yb1-f174.google.com with SMTP id z192so1159075yba.0
-        for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 00:54:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l8R3F5kALGt7fZIFbbdQLZusILmf2AipY3tz1OkoyZg=;
-        b=BoTT++1ZJhXWkMbqvMW/FRK8+Jp2xAbHiq27Xk1WEsyCZ7YGMXSoiYjXndFPTgLW3E
-         Ak39gt1gk7HkJXwvl1ze3jPLtMdIGBkXI3TD6mJazIm5soc2L/KIXoktqhUnYB7k3AQO
-         KG1FZND6mzdGbeZJcgp5NydoulbO1aJlSobDLYBYcFhiuvo+RXDBHhq4BJZm3yE8BZgN
-         I5G/E5r2fLHt1x+F6ZSSRS9XeYFfiCEbobbo8jrrucKv3IHG/S65AHc3Onjwy2SWLsNy
-         VHQs63G8Pxalw2RYjcDYGG1XwzMT0fcZaklDmBMHeJGkteMnQ8zmkk6t27JTibOCODaC
-         H84A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l8R3F5kALGt7fZIFbbdQLZusILmf2AipY3tz1OkoyZg=;
-        b=fhf7Po+6nNmSzuFGJMCwOES0nEPxdFQG1FbwDtI5/8MzwojUCxzoSd/RIVaBAHkvKN
-         El/gpJuiNPLl2T57rWattlFyusHjlCPnjgU9G8kheBoKDvlWiU7Jzm/GLBXKxmd6L39M
-         LxtVWAXLSAl8YUJPKzSsuVgLmmWMC0mPfMaGJYRmSrxt2qzYdqTfr+cWwLQmMKeRg4hH
-         VUnyTOBDpXzzP3wbquclTC3i4HKPFtcY1wKNDsbaumAEplT/MvMahqBz412pqAl9SQ9H
-         8jYK+HtG/x/D4GF9rEgvAlBy/PqMUK+7DqptKfvMGzpKlmQiriM9qe6pIAX/Rhturb7W
-         lWOg==
-X-Gm-Message-State: ANoB5pnLUIqYn9U9VwGvcAqhnEDMbbNMRRrUn6lemPaFqaxcXY0NAG5N
-	NF7aadMbrBWTFXUPtU/SOyZp7tOqGd7MiaH/sDoDZg==
-X-Google-Smtp-Source: AA0mqf7HBKYpljZej6bXe7Ojnqxlh65R7Qj4zpxpnR7ZPi1/Wnuyt44OyTeMDenQUWF4/SbRV3buTCxQI4MkWFzQ1DI=
-X-Received: by 2002:a25:d8d4:0:b0:6f0:36e2:5fc2 with SMTP id
- p203-20020a25d8d4000000b006f036e25fc2mr5552927ybg.52.1669280095520; Thu, 24
- Nov 2022 00:54:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE53723AE
+	for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 09:54:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9B6AC433C1;
+	Thu, 24 Nov 2022 09:54:07 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.1-rc7
+Date: Thu, 24 Nov 2022 17:51:20 +0800
+Message-Id: <20221124095120.3116780-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221121123803.3786-1-zhuyinbo@loongson.cn> <20221121123803.3786-2-zhuyinbo@loongson.cn>
- <CACRpkda1adiNwbTZHdAyHKny3r5FFMP_XXVGbo1vnCdw9U1gNg@mail.gmail.com>
- <8a7abd77-9540-efa8-6f67-908530e85399@loongson.cn> <CACRpkdb=wdydOYCcrpjLSyvfVO--_ezXsFQ46qwfVCiiTd5fNw@mail.gmail.com>
- <4c02570e-03d5-85f1-73fb-b66d6170c875@loongson.cn>
-In-Reply-To: <4c02570e-03d5-85f1-73fb-b66d6170c875@loongson.cn>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 24 Nov 2022 09:54:43 +0100
-Message-ID: <CACRpkdbgP9m40t_Ky4H+SQi9TELikomT2M-JpF7+auKmzOxQdg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] gpio: loongson: add gpio driver support
-To: Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jianmin Lv <lvjianmin@loongson.cn>, Hongchen Zhang <zhanghongchen@loongson.cn>, 
-	Liu Peibao <liupeibao@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 24, 2022 at 3:22 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
-> =E5=9C=A8 2022/11/24 =E4=B8=8A=E5=8D=886:05, Linus Walleij =E5=86=99=E9=
-=81=93:
+The following changes since commit eb7081409f94a9a8608593d0fb63a1aa3d6f95d8:
 
-> > But these drivers can not rely on the .gpio_to_irq() callback
-> > to be called before an IRQ is requested and used.
->
-> I may not have made it clear before that the gpio irq chip for other
-> platforms may need to be implemented, but the loongson platform may be
-> special.
->
-> I mean that the loongson platform use gpio irq does not need to rely on
-> gpio_to_irq, because loongson interrupt controller driver has covered
-> gpio irq.  The specific reason is my above explanation.
->
-> so, Can I not realize gpio irq chip?
+  Linux 6.1-rc6 (2022-11-20 16:02:16 -0800)
 
-Isn't this a hierarchical irqchip then?
+are available in the Git repository at:
 
-Please consult the following from
-Documentation/driver-api/gpio/driver.rst:
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.1-2
 
----------------------------------
+for you to fetch changes up to fa0e381290b134da53e65fb421b65825f23221b4:
 
-GPIO drivers providing IRQs
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
+  docs/zh_CN/LoongArch: Fix wrong description of FPRs Note (2022-11-23 10:28:08 +0800)
 
-It is custom that GPIO drivers (GPIO chips) are also providing interrupts,
-most often cascaded off a parent interrupt controller, and in some special
-cases the GPIO logic is melded with a SoC's primary interrupt controller.
+----------------------------------------------------------------
+LoongArch fixes for v6.1-rc7
 
-The IRQ portions of the GPIO block are implemented using an irq_chip, using
-the header <linux/irq.h>. So this combined driver is utilizing two sub-
-systems simultaneously: gpio and irq.
+Fix two build warnings, a copy_thread() bug, two page table manipulation
+bugs, and some trivial cleanups.
+----------------------------------------------------------------
+Huacai Chen (5):
+      LoongArch: Combine acpi_boot_table_init() and acpi_boot_init()
+      LoongArch: SMP: Change prefix from loongson3 to loongson
+      LoongArch: Clear FPU/SIMD thread info flags for kernel thread
+      LoongArch: Set _PAGE_DIRTY only if _PAGE_WRITE is set in {pmd,pte}_mkdirty()
+      LoongArch: Set _PAGE_DIRTY only if _PAGE_MODIFIED is set in {pmd,pte}_mkwrite()
 
-It is legal for any IRQ consumer to request an IRQ from any irqchip even if=
- it
-is a combined GPIO+IRQ driver. The basic premise is that gpio_chip and
-irq_chip are orthogonal, and offering their services independent of each
-other.
+KaiLong Wang (1):
+      LoongArch: Fix unsigned comparison with less than zero
 
-gpiod_to_irq() is just a convenience function to figure out the IRQ for a
-certain GPIO line and should not be relied upon to have been called before
-the IRQ is used.
+Tiezhu Yang (2):
+      LoongArch: Makefile: Use "grep -E" instead of "egrep"
+      docs/zh_CN/LoongArch: Fix wrong description of FPRs Note
 
-Always prepare the hardware and make it ready for action in respective
-callbacks from the GPIO and irq_chip APIs. Do not rely on gpiod_to_irq() ha=
-ving
-been called first.
-
-We can divide GPIO irqchips in two broad categories:
-
-- CASCADED INTERRUPT CHIPS: this means that the GPIO chip has one common
-  interrupt output line, which is triggered by any enabled GPIO line on tha=
-t
-  chip. The interrupt output line will then be routed to an parent interrup=
-t
-  controller one level up, in the most simple case the systems primary
-  interrupt controller. This is modeled by an irqchip that will inspect bit=
-s
-  inside the GPIO controller to figure out which line fired it. The irqchip
-  part of the driver needs to inspect registers to figure this out and it
-  will likely also need to acknowledge that it is handling the interrupt
-  by clearing some bit (sometime implicitly, by just reading a status
-  register) and it will often need to set up the configuration such as
-  edge sensitivity (rising or falling edge, or high/low level interrupt for
-  example).
-
-- HIERARCHICAL INTERRUPT CHIPS: this means that each GPIO line has a dedica=
-ted
-  irq line to a parent interrupt controller one level up. There is no need
-  to inquire the GPIO hardware to figure out which line has fired, but it
-  may still be necessary to acknowledge the interrupt and set up configurat=
-ion
-  such as edge sensitivity.
-
----------------------------------
-
-You find an example of a hierarchical GPIO irqchip using the
-GPIOLIB_IRQCHIP in drivers/gpio/gpio-ixp4xx.c.
-
-Yours,
-Linus Walleij
+ .../translations/zh_CN/loongarch/introduction.rst  |  4 +-
+ arch/loongarch/Makefile                            |  2 +-
+ arch/loongarch/include/asm/irq.h                   |  2 +-
+ arch/loongarch/include/asm/pgtable.h               | 16 ++++++--
+ arch/loongarch/include/asm/smp.h                   | 30 +++++++--------
+ arch/loongarch/kernel/acpi.c                       | 31 +++++----------
+ arch/loongarch/kernel/irq.c                        |  2 +-
+ arch/loongarch/kernel/process.c                    |  9 +++--
+ arch/loongarch/kernel/setup.c                      |  1 -
+ arch/loongarch/kernel/smp.c                        | 44 +++++++++++-----------
+ arch/loongarch/kernel/unwind_prologue.c            |  3 +-
+ 11 files changed, 71 insertions(+), 73 deletions(-)
