@@ -1,37 +1,37 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B7D28F5
-	for <loongarch@lists.linux.dev>; Fri, 25 Nov 2022 10:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5445F28F5
+	for <loongarch@lists.linux.dev>; Fri, 25 Nov 2022 10:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669371683; x=1700907683;
+  t=1669371827; x=1700907827;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=OlLtPQd1Ky/oYGu3/jZlcYF3OqQrWZc51EQgwDV6o8M=;
-  b=W4LVNfSHvJJn4F4Far3fz6HYms1CoOV9GVX5/zce2wYaAMGj2S/tCxog
-   ek1BeQrQ9kgdfClJrhMxoJSYmVBPhAmxlISATB743mQnQm80FAB9M1dvW
-   DHXYnkew8/+zGrKlB/Ks4mpk20qd9ePZGDWBsHOx2UfnnKc2dmII9pMY6
-   77m/o3zA0sst1yhUm+KfvU/LNAXzuI63s6iT/5i26wY0+0fLvJlmUUeg5
-   bIgqpcysgH89bifEdvT37Y0C1BbVAtKvO1mHD6stTeMagAcZCF2hnktRV
-   ln48aJHVnC0IrmUjWS+Q1Jp+ghtnqHlneXL3aV+PQDPBMBNjljVk4KBkF
+  bh=qaiiZneNmh9uPlFJaZlbiTDiqB5tAEB90ztrbXmYIrQ=;
+  b=TY9thoyNKkzSrAIOVAOB8JGGxKv/Uq5DqPxAhzUzUEo+1XWXygTHrm4p
+   Rcu1U5UxRTYlYAhQj/jACMkkJBAl5MUxJ6P+/rdrn3CJcz0Z0MaaRq6eM
+   RKlL4vGH26E06gl17zX8l5DsHNA2pP76VoBSBES6n4m8bQ2kJx54TAO0o
+   O/5233HEpss4pYNYYwwLpI7iAP8cIX4Z4ZrWbg+8JJcRM8CLsUrHtr0gP
+   jK9zIjfQ9fLVYMwSYbR0Eiug+73SrdaeUXUvy1iFruYmhpj/oPJ+H3zzA
+   bOMY4s6GbhKi1TbUNpcU9U4u/NqH/+ebOhA/PnoY6/zo9T5fxu30grFpO
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10541"; a="312091952"
+X-IronPort-AV: E=McAfee;i="6500,9779,10541"; a="294839968"
 X-IronPort-AV: E=Sophos;i="5.96,193,1665471600"; 
-   d="scan'208";a="312091952"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2022 02:21:22 -0800
+   d="scan'208";a="294839968"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2022 02:23:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10541"; a="971527133"
+X-IronPort-AV: E=McAfee;i="6500,9779,10541"; a="636535062"
 X-IronPort-AV: E=Sophos;i="5.96,193,1665471600"; 
-   d="scan'208";a="971527133"
+   d="scan'208";a="636535062"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Nov 2022 02:21:19 -0800
+  by orsmga007.jf.intel.com with ESMTP; 25 Nov 2022 02:23:42 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1oyVpd-00HBYs-1x;
-	Fri, 25 Nov 2022 12:21:17 +0200
-Date: Fri, 25 Nov 2022 12:21:17 +0200
+	id 1oyVrw-00HBbq-2Q;
+	Fri, 25 Nov 2022 12:23:40 +0200
+Date: Fri, 25 Nov 2022 12:23:40 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Binbin Zhou <zhoubinbin@loongson.cn>
 Cc: Wolfram Sang <wsa@kernel.org>,
@@ -43,11 +43,10 @@ Cc: Wolfram Sang <wsa@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Jianmin Lv <lvjianmin@loongson.cn>
-Subject: Re: [PATCH V3 1/5] i2c: gpio: Fix potential unused warning for
- 'i2c_gpio_dt_ids'
-Message-ID: <Y4CXHXqNcBJwmap7@smile.fi.intel.com>
+Subject: Re: [PATCH V3 2/5] i2c: gpio: Add support on ACPI-based system
+Message-ID: <Y4CXrDh61D/f8V2A@smile.fi.intel.com>
 References: <cover.1669359515.git.zhoubinbin@loongson.cn>
- <4ace98785f900bf1a818d006ae5906f6b51edf7e.1669359515.git.zhoubinbin@loongson.cn>
+ <e0ed6dfa3dbf60b58ef4eaeb40ea46d2577a2834.1669359515.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -56,20 +55,34 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4ace98785f900bf1a818d006ae5906f6b51edf7e.1669359515.git.zhoubinbin@loongson.cn>
+In-Reply-To: <e0ed6dfa3dbf60b58ef4eaeb40ea46d2577a2834.1669359515.git.zhoubinbin@loongson.cn>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Nov 25, 2022 at 04:54:11PM +0800, Binbin Zhou wrote:
-> of_match_ptr() compiles into NULL if CONFIG_OF is disabled.
-> Fix warning by dropping of_match_ptr().
+On Fri, Nov 25, 2022 at 04:54:12PM +0800, Binbin Zhou wrote:
+> Add support for the ACPI-based device registration, so that the driver
+> can be also enabled through ACPI table.
 
-> Suggested by Andy Shevchenko, thanks.
-> 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+...
 
-We have a tag for that:
+> +/* get i2c-gpio props from DT or ACPI table */
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Get
+
+...
+
+> -	if (np) {
+> -		of_i2c_gpio_get_props(np, pdata);
+> +	if (np || has_acpi_companion(dev)) {
+> +		i2c_gpio_get_props(dev, pdata);
+
+	if (dev_fwnode() {
+		i2c_gpio_get_props(dev, pdata);
+
+...
+
+> +	{"LOON0005", 0}, /*LoongArch*/
+
+", 0" part is redundant. Also missing spaces in the comment.
 
 -- 
 With Best Regards,
