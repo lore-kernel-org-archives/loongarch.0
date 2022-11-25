@@ -1,53 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B3333F9
-	for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 19:16:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BBA8DC433D6;
-	Thu, 24 Nov 2022 19:16:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8154315B5
+	for <loongarch@lists.linux.dev>; Fri, 25 Nov 2022 01:41:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 354D1C4347C
+	for <loongarch@lists.linux.dev>; Fri, 25 Nov 2022 01:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1669317389;
-	bh=bAhsQsbumyLiUXdtQPY1//XoFduq0FSOMtUuRyCzq9s=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=j3aQIx96E6ciqrq+lhU0IOglTBVRrYwMWooB6WnANS9K4hHgX1jvYKMgtylcG/hw5
-	 uof2JX2+r2+gSw8BYc9/VIKLj9I4P0mwJUj7uSO+XczyfbXwu4zq1t5seX7xEvBds3
-	 4OVo6ouNIO3XE+IamGKTjB5/5Af7D9wyjrJCB9+R7RQDr7hZKsW/zHuGvbIYxVBO84
-	 MH+lvhAGYoWoQ8yIXPOTC+meu6MSbmZZLPvyWwCcJUfQRmOQBidska+qnjMio8tQR8
-	 b11VYR6LCWRB/3ugF+pbsdq3pFxkrNUOSC0FDxDtodxGFWtOa7XkmStdId2H0Mu9H+
-	 vxSah3LtFiDAA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AA2B7E21EFD;
-	Thu, 24 Nov 2022 19:16:29 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.1-rc7
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20221124095120.3116780-1-chenhuacai@loongson.cn>
-References: <20221124095120.3116780-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-arch.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20221124095120.3116780-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.1-2
-X-PR-Tracked-Commit-Id: fa0e381290b134da53e65fb421b65825f23221b4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3bfd8fcab548659e3a77000b2302c62a47ab2824
-Message-Id: <166931738968.15670.1849929994501511702.pr-tracker-bot@kernel.org>
-Date: Thu, 24 Nov 2022 19:16:29 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	s=k20201202; t=1669340465;
+	bh=Y3BHuC/gbFrlwqqRocEoyTJHEdrLgDfaWv7cGqRXibA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kgn7RiqA0HAdbX+Js/oee5EudXsHbvhMyICPboFz14PGyuY4nZtGrDIEIWoDzbKcn
+	 zZ1grrHhfPW4x26F+VmPblbs5Qox2H7RrO2tzuW0RbjtjSiQlzRvh6jyeRyEgM+KYf
+	 77/me/hUXNv6sbcU8JbPuCD7m6nzCBp9SJ1tHDAQz+Tm6vdI/Zo2IvOgTi32yrJ7QG
+	 f+QZ9FWeWLgDHPsorMEsnvPP3pftuOxLWjWfkrOIqVNv0gaY/yGMrgwT/K2r97UhJQ
+	 jYi7g/G+4r5LbBYw4LrQWwVG4o2w9Yv5Vv2b3127VfxC6E0JmtC22FXKTeG23A2TQV
+	 PPqcf0/8h1peQ==
+Received: by mail-ej1-f42.google.com with SMTP id vp12so5982470ejc.8
+        for <loongarch@lists.linux.dev>; Thu, 24 Nov 2022 17:41:05 -0800 (PST)
+X-Gm-Message-State: ANoB5pk3uer75QyQWzyaCjzx9Gdnm5ANVNH5hHcp4h1ANt9JQALZfqtc
+	xs7febMLIv77w4r+JBj7+mUSl/h2lhzvDkeFXP4=
+X-Google-Smtp-Source: AA0mqf6pp4RtiVd1wxN3Spsj315yGYT2Ld7iTuXwOKiCAo8yDYdoMSQoNyzyt1gyODyBzbSiqFY1Z5h7ZiD8ljKcQoo=
+X-Received: by 2002:a17:907:2143:b0:7ae:27ed:e90e with SMTP id
+ rk3-20020a170907214300b007ae27ede90emr29440485ejb.224.1669340463433; Thu, 24
+ Nov 2022 17:41:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <cover.1669291172.git.siyanteng@loongson.cn>
+In-Reply-To: <cover.1669291172.git.siyanteng@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 25 Nov 2022 09:40:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5ufJgL=cK1b5UAxtb5DDw0at5pNpttV6nGrLu_7k5FDA@mail.gmail.com>
+Message-ID: <CAAhV-H5ufJgL=cK1b5UAxtb5DDw0at5pNpttV6nGrLu_7k5FDA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] docs/LoongArch: Add English and Chinese versions
+ of boot image header
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: corbet@lwn.net, alexs@kernel.org, seakeel@gmail.com, kernel@xen0n.name, 
+	wu.xiangcheng@linux.dev, jiaxun.yang@flygoat.com, liuyun@loongson.cn, 
+	linux-doc@vger.kernel.org, loongarch@lists.linux.dev, siyanteng01@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Thu, 24 Nov 2022 17:51:20 +0800:
+Hi, Yanteng,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.1-2
+I hope you can add a description about boot parameters (a0=efi_boot
+a1=cmdline a2=systemtable), and then rename the file to booting.rst.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3bfd8fcab548659e3a77000b2302c62a47ab2824
+Huacai
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+On Thu, Nov 24, 2022 at 8:11 PM Yanteng Si <siyanteng@loongson.cn> wrote:
+>
+> v2:
+> * Fix magic start address.
+> * res14 -> res4.
+>
+> v1:
+> * Add boot image header.
+> * Translate boot-image-header into Chinese.
+>
+> Yanteng Si (2):
+>   docs/LoongArch: Add boot image header
+>   docs/zh_CN: Add boot-image-header Chinese translation
+>
+>  Documentation/loongarch/boot-image-header.rst | 76 ++++++++++++++++++
+>  Documentation/loongarch/index.rst             |  1 +
+>  .../zh_CN/loongarch/boot-image-header.rst     | 77 +++++++++++++++++++
+>  .../translations/zh_CN/loongarch/index.rst    |  1 +
+>  4 files changed, 155 insertions(+)
+>  create mode 100644 Documentation/loongarch/boot-image-header.rst
+>  create mode 100644 Documentation/translations/zh_CN/loongarch/boot-image-header.rst
+>
+> --
+> 2.31.1
+>
+>
