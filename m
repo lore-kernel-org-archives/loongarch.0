@@ -1,80 +1,78 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF6D62570
-	for <loongarch@lists.linux.dev>; Fri, 25 Nov 2022 08:57:55 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.110])
-	by gateway (Coremail) with SMTP id _____8Cx5vCSg4Bj0uIAAA--.2331S3;
-	Fri, 25 Nov 2022 16:57:54 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.110])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_eGQg4BjEhQaAA--.1503S3;
-	Fri, 25 Nov 2022 16:57:54 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Wolfram Sang <wsa@kernel.org>,
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B7D28F5
+	for <loongarch@lists.linux.dev>; Fri, 25 Nov 2022 10:21:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669371683; x=1700907683;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OlLtPQd1Ky/oYGu3/jZlcYF3OqQrWZc51EQgwDV6o8M=;
+  b=W4LVNfSHvJJn4F4Far3fz6HYms1CoOV9GVX5/zce2wYaAMGj2S/tCxog
+   ek1BeQrQ9kgdfClJrhMxoJSYmVBPhAmxlISATB743mQnQm80FAB9M1dvW
+   DHXYnkew8/+zGrKlB/Ks4mpk20qd9ePZGDWBsHOx2UfnnKc2dmII9pMY6
+   77m/o3zA0sst1yhUm+KfvU/LNAXzuI63s6iT/5i26wY0+0fLvJlmUUeg5
+   bIgqpcysgH89bifEdvT37Y0C1BbVAtKvO1mHD6stTeMagAcZCF2hnktRV
+   ln48aJHVnC0IrmUjWS+Q1Jp+ghtnqHlneXL3aV+PQDPBMBNjljVk4KBkF
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10541"; a="312091952"
+X-IronPort-AV: E=Sophos;i="5.96,193,1665471600"; 
+   d="scan'208";a="312091952"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2022 02:21:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10541"; a="971527133"
+X-IronPort-AV: E=Sophos;i="5.96,193,1665471600"; 
+   d="scan'208";a="971527133"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga005.fm.intel.com with ESMTP; 25 Nov 2022 02:21:19 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1oyVpd-00HBYs-1x;
+	Fri, 25 Nov 2022 12:21:17 +0200
+Date: Fri, 25 Nov 2022 12:21:17 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Wolfram Sang <wsa@kernel.org>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org
-Cc: loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
+	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH V3 5/5] LoongArch: Enable LS2X I2C in loongson3_defconfig
-Date: Fri, 25 Nov 2022 16:55:21 +0800
-Message-Id: <d454f02f0baab458a332f7760f9c15c59b7d96eb.1669359515.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1669359515.git.zhoubinbin@loongson.cn>
+	Jianmin Lv <lvjianmin@loongson.cn>
+Subject: Re: [PATCH V3 1/5] i2c: gpio: Fix potential unused warning for
+ 'i2c_gpio_dt_ids'
+Message-ID: <Y4CXHXqNcBJwmap7@smile.fi.intel.com>
 References: <cover.1669359515.git.zhoubinbin@loongson.cn>
+ <4ace98785f900bf1a818d006ae5906f6b51edf7e.1669359515.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dx_eGQg4BjEhQaAA--.1503S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Jry5XrWkuF48uF15Ww1fXrb_yoWxKFX_Ja
-	47Kw1kWr48JFZ7W3WIqw4rC3yDCa47X3WSkrnrAw1xX3Waqr13trWDA3W7C3Z0ga4DWrW3
-	ZaykJF9F9F18tjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	u7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
-	Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
-	O2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-	Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj4
-	0_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
-	JrUvcSsGvfC2KfnxnUUI43ZEXa7IUneRRtUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4ace98785f900bf1a818d006ae5906f6b51edf7e.1669359515.git.zhoubinbin@loongson.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-This is now supported, enable for Loongson-3 systems.
-Other systems are unaffected.
+On Fri, Nov 25, 2022 at 04:54:11PM +0800, Binbin Zhou wrote:
+> of_match_ptr() compiles into NULL if CONFIG_OF is disabled.
+> Fix warning by dropping of_match_ptr().
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- arch/loongarch/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+> Suggested by Andy Shevchenko, thanks.
+> 
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index cd8e003d885e..017eb0e36738 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -600,6 +600,7 @@ CONFIG_HW_RANDOM_VIRTIO=m
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_PIIX4=y
- CONFIG_I2C_GPIO=y
-+CONFIG_I2C_LS2X=y
- CONFIG_SPI=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_LOONGSON=y
+We have a tag for that:
+
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
 -- 
-2.31.1
+With Best Regards,
+Andy Shevchenko
+
 
