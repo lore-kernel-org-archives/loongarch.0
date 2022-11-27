@@ -1,260 +1,137 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9EF17D0
-	for <loongarch@lists.linux.dev>; Sun, 27 Nov 2022 05:43:22 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id f7so11412438edc.6
-        for <loongarch@lists.linux.dev>; Sat, 26 Nov 2022 21:43:22 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D14C6ABD
+	for <loongarch@lists.linux.dev>; Sun, 27 Nov 2022 20:49:04 +0000 (UTC)
+Received: by mail-lf1-f53.google.com with SMTP id j16so14533718lfe.12
+        for <loongarch@lists.linux.dev>; Sun, 27 Nov 2022 12:49:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QZBNnP8FHtYG+tvjYSybxiFeBtiJ83MhkpqU8o7jStU=;
-        b=g9f5MoHeohB9VLPYcx+PnsoTTKUXQ7jtHayP+8thG4XYo/Ood14KvawMdYrmMi6Sdn
-         XgwQufokf1+IuWUzPTTJRAwwa1x0RIKRqiMbLTDRbbIt6+vZI/b0ztXXMXUwt++dwN2U
-         Nvji3Io4N0jLUXyF2P6mlAzl1aV1D0TKjIkbMGz2fsPlOBpthC/cvC7O6WsdI+uQbYri
-         +suBgomU0xKgdQQ8888KF6Kqf7SoOW9muXzNbD90V0BGikayezGBM/pTHikfY47t1fYR
-         nkotypW/TZCJXVHsXsb4b8k1ZAFbYddCDOQrjaufc9MgNwUqsQHL71poBwzaIUzrjlYp
-         bcfQ==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vR4hvjFZqcJcK9D7nIBiS7pXR2h8XNS5XvEnHFUhGDE=;
+        b=mLpVT2EoF2YuKbsQrmK0Up8tniXVmqelZ/a04ghqJhHsC1N4FbhcF6+uNOzeiYLud+
+         NJk6n15Ea8qZ4y8VR+iQmweBVzanYTs2Ha4mkSOhwlFf3K9ZuUIxdw3mLW8G0Gt0BZ45
+         Sjo0Mrv8dSAjRgpMBriUULmX7mlwkm1b60LvQ+I8lElxEa6EX/u1RaIdMaHq4nBBXkNj
+         ww2YHxcuIUncjEtylGaqEi37xBi7ZCYa5E6bCwkLMvAJixQkgrkc+Lhn69+aWzPLNy6d
+         iJAiwGjYhmY6hvLyGNd7CEb1xHbi44nU+l2sZvUp86muQr+hebJJQiVoryXU4IIxB614
+         ejGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QZBNnP8FHtYG+tvjYSybxiFeBtiJ83MhkpqU8o7jStU=;
-        b=fpU4mRlyOpuAO4fzgxvWgFsWhuOEHTgrEwR45RR0HQOx5VF8XsHO5TPl/5o6XXqjYc
-         3yKdPUZXAhXXnNH+BlsT43ueccbAdNmOdUD4jyiMiu7SsvM82pTTkS+uXHCLG2EsZZa2
-         +2S8wYtTOJtHcORgQSuN5UDq13Y4A285bHcalu/IDmWFZ6YVJDw8HyQeHIq51oTo/Wv7
-         XjOa4NZUemEq1AFAx3D+8S9MQEE4+/OFw9gMnMW++VsSfVTDptJP1JRcmJFv6c8/AKhk
-         bMImSPueVs9k2Mw38VzslE58dehWY7XRdnJiMdmWjtEW5ah5aMCa6VXcpraRNSnfI3dm
-         9TCw==
-X-Gm-Message-State: ANoB5pm+A2OeCRiYk0zMoYDXn0w4mEiJLnrZGNEvv7UP0r1GQbtYInRR
-	oOIsWkQfmG3CUCTAk9uIXQil7hAzY+p+/KuXurU=
-X-Google-Smtp-Source: AA0mqf45PplknXFTYiFz3FlUBn9EzNowRqh6cT67X7zcC5KmhMpgz2cnEbr6lI/yym0HEOHGfZbUqXHRD62N6RxjctE=
-X-Received: by 2002:a05:6402:5388:b0:46a:f4b0:2d23 with SMTP id
- ew8-20020a056402538800b0046af4b02d23mr4184088edb.78.1669527800893; Sat, 26
- Nov 2022 21:43:20 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vR4hvjFZqcJcK9D7nIBiS7pXR2h8XNS5XvEnHFUhGDE=;
+        b=If6/pE/wT9tPxwrBv8+2fj0k5/ShHnVoSsGLfQ+MacCtkm9SPppc6VsS/WfLeMv7bx
+         UoYeTtDk+Wh9tOvb6VlZQA0VzEKNS5GlpkodlDABIaxwJsyMwyTx4uHBrHyCuY2FCuvs
+         cmhOxUGXonFMXN+wzOZQe4CI3pIJXOFx0KYzjZpXoA2EaI37nHG+QRd0WFQKezNdbfx0
+         Q2HX70kXzHoHeObFErjcDSV3nWsRq5+7s9VyYttPbkT/ROkZWEBWEmnFEXc6001sL8VQ
+         //NcA8hme/t5xpX+21WWXa1+JgSkxz5UhJ/bGK3Y4ugUL/+KRJdj1fI9C1zHtijHRR/V
+         rf1A==
+X-Gm-Message-State: ANoB5pmScxGzw6OXyjxx0FikbUaErUDo20HNltIvonPKpLk+ycr6cRCk
+	nQsL14Ik3QaxReMgkNyEWTUUuw==
+X-Google-Smtp-Source: AA0mqf47uMAlT8JMFOyJOqlqu4YKZATtET8jVj4qm5LqbktsNhciwtvw8kt3U1yFZtbUdXSXBVmREQ==
+X-Received: by 2002:a05:6512:6d:b0:4a8:ebec:7143 with SMTP id i13-20020a056512006d00b004a8ebec7143mr16016485lfo.493.1669582142700;
+        Sun, 27 Nov 2022 12:49:02 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id n11-20020a05651203eb00b00497aa190523sm1421668lfq.248.2022.11.27.12.49.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Nov 2022 12:49:02 -0800 (PST)
+Message-ID: <61541d15-fbfd-3f99-fc05-663ebf4a2b54@linaro.org>
+Date: Sun, 27 Nov 2022 21:49:01 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221020142514.1725514-1-chenhuacai@loongson.cn>
-In-Reply-To: <20221020142514.1725514-1-chenhuacai@loongson.cn>
-From: Huacai Chen <chenhuacai@gmail.com>
-Date: Sun, 27 Nov 2022 13:43:06 +0800
-Message-ID: <CAAhV-H6uu5+WUaM0HVn40D=bpH4LmMNdUBJMSGuCMUchhsRa9g@mail.gmail.com>
-Subject: Re: [PATCH V2] irqchip/loongarch: Adjust acpi_cascade_irqdomain_init()
- and sub-routines
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH V3 3/5] dt-bindings: i2c: add bindings for Loongson LS2X
+ I2C
+Content-Language: en-US
+To: Binbin Zhou <zhoubinbin@loongson.cn>, Wolfram Sang <wsa@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org
+Cc: loongarch@lists.linux.dev, devicetree@vger.kernel.org,
+ Huacai Chen <chenhuacai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Jianmin Lv <lvjianmin@loongson.cn>
+References: <cover.1669359515.git.zhoubinbin@loongson.cn>
+ <57339e73b6c0bfe446e19a7f55a48b7ca640b9ec.1669359515.git.zhoubinbin@loongson.cn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <57339e73b6c0bfe446e19a7f55a48b7ca640b9ec.1669359515.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi, Marc,
+On 25/11/2022 09:54, Binbin Zhou wrote:
+> Add device tree bindings for the i2c controller on the Loongson-2K Soc
+> or Loongosn LS7A bridge.
 
-Just a gentle ping, I found that "irqchip/loongson-htvec: Add ACPI
-init support" has been merged, so I think this patch can also be
-merged to keep acpi_cascade_irqdomain_init()'s consistency. Thanks.
+It's a v3 which is for the first time sent to DT maintainers...
 
+Subject: drop second, redundant "bindings for".
 
-Huacai
-
-On Thu, Oct 20, 2022 at 10:27 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
->
-> 1, Adjust the return of acpi_cascade_irqdomain_init() and check its
->    return value.
-> 2, Combine unnecessary short lines to one long line.
->
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> 
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > ---
-> V2: Adjust the return of acpi_cascade_irqdomain_init() and check its
->     return value.
->
->  drivers/irqchip/irq-loongarch-cpu.c    | 30 +++++++++++++++-----------
->  drivers/irqchip/irq-loongson-eiointc.c | 30 +++++++++++++++-----------
->  drivers/irqchip/irq-loongson-pch-pic.c | 15 +++++++------
->  3 files changed, 44 insertions(+), 31 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-loongarch-cpu.c
-> index 741612ba6a52..fdec3e9cfacf 100644
-> --- a/drivers/irqchip/irq-loongarch-cpu.c
-> +++ b/drivers/irqchip/irq-loongarch-cpu.c
-> @@ -92,18 +92,16 @@ static const struct irq_domain_ops loongarch_cpu_intc_irq_domain_ops = {
->         .xlate = irq_domain_xlate_onecell,
->  };
->
-> -static int __init
-> -liointc_parse_madt(union acpi_subtable_headers *header,
-> -                      const unsigned long end)
-> +static int __init liointc_parse_madt(union acpi_subtable_headers *header,
-> +                                       const unsigned long end)
->  {
->         struct acpi_madt_lio_pic *liointc_entry = (struct acpi_madt_lio_pic *)header;
->
->         return liointc_acpi_init(irq_domain, liointc_entry);
->  }
->
-> -static int __init
-> -eiointc_parse_madt(union acpi_subtable_headers *header,
-> -                      const unsigned long end)
-> +static int __init eiointc_parse_madt(union acpi_subtable_headers *header,
-> +                                       const unsigned long end)
->  {
->         struct acpi_madt_eio_pic *eiointc_entry = (struct acpi_madt_eio_pic *)header;
->
-> @@ -112,16 +110,24 @@ eiointc_parse_madt(union acpi_subtable_headers *header,
->
->  static int __init acpi_cascade_irqdomain_init(void)
->  {
-> -       acpi_table_parse_madt(ACPI_MADT_TYPE_LIO_PIC,
-> -                             liointc_parse_madt, 0);
-> -       acpi_table_parse_madt(ACPI_MADT_TYPE_EIO_PIC,
-> -                             eiointc_parse_madt, 0);
-> +       int r;
+>  .../bindings/i2c/loongson,ls2x-i2c.yaml       | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+> new file mode 100644
+> index 000000000000..8c785f329d2f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/i2c/loongson,ls2x-i2c.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+
+Drop quotes form both.
+
 > +
-> +       r = acpi_table_parse_madt(ACPI_MADT_TYPE_LIO_PIC, liointc_parse_madt, 0);
-> +       if (r < 0)
-> +               return r;
+> +title: Loongson LS2X I2C Controller
 > +
-> +       r = acpi_table_parse_madt(ACPI_MADT_TYPE_EIO_PIC, eiointc_parse_madt, 0);
-> +       if (r < 0)
-> +               return r;
+> +maintainers:
+> +  - Binbin Zhou <zhoubinbin@loongson.cn>
 > +
->         return 0;
->  }
->
->  static int __init cpuintc_acpi_init(union acpi_subtable_headers *header,
->                                    const unsigned long end)
->  {
-> +       int ret;
+> +allOf:
+> +  - $ref: /schemas/i2c/i2c-controller.yaml#
 > +
->         if (irq_domain)
->                 return 0;
->
-> @@ -139,9 +145,9 @@ static int __init cpuintc_acpi_init(union acpi_subtable_headers *header,
->         set_handle_irq(&handle_cpu_irq);
->         acpi_set_irq_model(ACPI_IRQ_MODEL_LPIC, lpic_get_gsi_domain_id);
->         acpi_set_gsi_to_irq_fallback(lpic_gsi_to_irq);
-> -       acpi_cascade_irqdomain_init();
-> +       ret = acpi_cascade_irqdomain_init();
->
-> -       return 0;
-> +       return ret;
->  }
->
->  IRQCHIP_ACPI_DECLARE(cpuintc_v1, ACPI_MADT_TYPE_CORE_PIC,
-> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-> index 16e9af8d8b1e..62867209736c 100644
-> --- a/drivers/irqchip/irq-loongson-eiointc.c
-> +++ b/drivers/irqchip/irq-loongson-eiointc.c
-> @@ -301,9 +301,8 @@ static struct irq_domain *acpi_get_vec_parent(int node, struct acpi_vector_group
->         return NULL;
->  }
->
-> -static int __init
-> -pch_pic_parse_madt(union acpi_subtable_headers *header,
-> -                      const unsigned long end)
-> +static int __init pch_pic_parse_madt(union acpi_subtable_headers *header,
-> +                                       const unsigned long end)
->  {
->         struct acpi_madt_bio_pic *pchpic_entry = (struct acpi_madt_bio_pic *)header;
->         unsigned int node = (pchpic_entry->address >> 44) & 0xf;
-> @@ -315,9 +314,8 @@ pch_pic_parse_madt(union acpi_subtable_headers *header,
->         return -EINVAL;
->  }
->
-> -static int __init
-> -pch_msi_parse_madt(union acpi_subtable_headers *header,
-> -                      const unsigned long end)
-> +static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
-> +                                       const unsigned long end)
->  {
->         struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
->         struct irq_domain *parent = acpi_get_vec_parent(eiointc_priv[nr_pics - 1]->node, msi_group);
-> @@ -330,17 +328,23 @@ pch_msi_parse_madt(union acpi_subtable_headers *header,
->
->  static int __init acpi_cascade_irqdomain_init(void)
->  {
-> -       acpi_table_parse_madt(ACPI_MADT_TYPE_BIO_PIC,
-> -                             pch_pic_parse_madt, 0);
-> -       acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC,
-> -                             pch_msi_parse_madt, 1);
-> +       int r;
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - loongson,ls2k-i2c # Loongson-2K SoCs
+> +      - loongson,ls7a-i2c # Loongson LS7A Bridge
+
+Isn't your comment exactly the same as compatible? Where is the
+difference? I propose to drop the comment entirely, unless it explains
+something.
+
 > +
-> +       r = acpi_table_parse_madt(ACPI_MADT_TYPE_BIO_PIC, pch_pic_parse_madt, 0);
-> +       if (r < 0)
-> +               return r;
+> +  reg:
+> +    maxItems: 1
 > +
-> +       r = acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
-> +       if (r < 0)
-> +               return r;
+
+No clocks? I2C controller without clocks? Are you sure the binding is
+complete?
+
+> +  interrupts:
+> +    maxItems: 1
 > +
->         return 0;
->  }
->
->  int __init eiointc_acpi_init(struct irq_domain *parent,
->                                      struct acpi_madt_eio_pic *acpi_eiointc)
->  {
-> -       int i, parent_irq;
-> +       int i, ret, parent_irq;
->         unsigned long node_map;
->         struct eiointc_priv *priv;
->
-> @@ -386,9 +390,9 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
->
->         acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, pch_group);
->         acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, msi_group);
-> -       acpi_cascade_irqdomain_init();
-> +       ret = acpi_cascade_irqdomain_init();
->
-> -       return 0;
-> +       return ret;
->
->  out_free_handle:
->         irq_domain_free_fwnode(priv->domain_handle);
-> diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
-> index c01b9c257005..7477bbcf89fb 100644
-> --- a/drivers/irqchip/irq-loongson-pch-pic.c
-> +++ b/drivers/irqchip/irq-loongson-pch-pic.c
-> @@ -325,9 +325,8 @@ int find_pch_pic(u32 gsi)
->         return -1;
->  }
->
-> -static int __init
-> -pch_lpc_parse_madt(union acpi_subtable_headers *header,
-> -                      const unsigned long end)
-> +static int __init pch_lpc_parse_madt(union acpi_subtable_headers *header,
-> +                                       const unsigned long end)
->  {
->         struct acpi_madt_lpc_pic *pchlpc_entry = (struct acpi_madt_lpc_pic *)header;
->
-> @@ -336,8 +335,12 @@ pch_lpc_parse_madt(union acpi_subtable_headers *header,
->
->  static int __init acpi_cascade_irqdomain_init(void)
->  {
-> -       acpi_table_parse_madt(ACPI_MADT_TYPE_LPC_PIC,
-> -                             pch_lpc_parse_madt, 0);
-> +       int r;
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
 > +
-> +       r = acpi_table_parse_madt(ACPI_MADT_TYPE_LPC_PIC, pch_lpc_parse_madt, 0);
-> +       if (r < 0)
-> +               return r;
-> +
->         return 0;
->  }
->
-> @@ -364,7 +367,7 @@ int __init pch_pic_acpi_init(struct irq_domain *parent,
->         }
->
->         if (acpi_pchpic->id == 0)
-> -               acpi_cascade_irqdomain_init();
-> +               ret = acpi_cascade_irqdomain_init();
->
->         return ret;
->  }
-> --
-> 2.31.1
->
+
+Best regards,
+Krzysztof
+
