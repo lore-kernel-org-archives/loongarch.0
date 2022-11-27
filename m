@@ -1,89 +1,75 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EE87E
-	for <loongarch@lists.linux.dev>; Sat, 26 Nov 2022 22:25:38 +0000 (UTC)
-Received: by mail-io1-f44.google.com with SMTP id e189so5250769iof.1
-        for <loongarch@lists.linux.dev>; Sat, 26 Nov 2022 14:25:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/RMyYOFIS/k1shCeQijOTAmK/nl8iYEKcVhmij4E6XQ=;
-        b=AEU/CCx0N7fP4zsCzS7+dOZtXqQ2x3PD8g0c7IVhVop3yY1/uM4JUTI9VgRJnrbcah
-         aOThQMz7pGynqLyrJj4+gqh4qW/AqlM6JOROJicGr4wHIBzaoQ/SFAYXZNGzqFUlhyrY
-         YdvkhRGwz60I1W+S1oGZCwPqUgZFUg2vivr2QIuu5BkqIwE1kHcgQYE60wNArWIg72xe
-         362E9AaYcIJJ59RtrraT3fcu5vZma+Dg0avA4XnsJRm7fqRih1FRsrIxm0SajCoQRF+q
-         fEqWFjM26dfoUR3LftlhjHx+AJh6vyYdukwzpL3TM6ZipNlBJSvQEzjyUN9LgH+fxIZv
-         EnLQ==
-X-Gm-Message-State: ANoB5pmAFXlRhKrB3w5o4zTZuuy8bZyJVtjGaDG1jHT7Y++aV46whlM0
-	mL77mLxbhhdxESzrgkSwoQ==
-X-Google-Smtp-Source: AA0mqf6L5vpWQSgA/6k8bcYQ9iY//s4vl30Rngyl90snp4mmdp+Xi+UVan/7Qhv91B1sR/JhIJYCkg==
-X-Received: by 2002:a02:9547:0:b0:375:3dd1:743c with SMTP id y65-20020a029547000000b003753dd1743cmr13248207jah.281.1669501537580;
-        Sat, 26 Nov 2022 14:25:37 -0800 (PST)
-Received: from robh_at_kernel.org ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c12-20020a02330c000000b003898778bed7sm2202159jae.134.2022.11.26.14.25.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Nov 2022 14:25:37 -0800 (PST)
-Received: (nullmailer pid 35349 invoked by uid 1000);
-	Sat, 26 Nov 2022 22:25:36 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462DD17D0
+	for <loongarch@lists.linux.dev>; Sun, 27 Nov 2022 05:01:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF939C4314A
+	for <loongarch@lists.linux.dev>; Sun, 27 Nov 2022 05:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1669525293;
+	bh=BcVxCBSSJcipAEV/aBmW/z7LTxZcFoSl+z5RqrQwQRM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ec57qBrMZ1hUgOhD5s2WrKXz0ZAlqGnDJaNH0v9Ae2hVvRCIPUjAz7OlV0iLlvlRY
+	 1nWnPDX9kYgB8EyULaHl1OI8KOn/DIXPSGUbzPFbuhUQ9qYa/MwDHJ/QIIqJD0Cx5Y
+	 L41AwIK8/udrfg9z0xZAOi+1gDg5fEm6HcnT6AuFKMq9P0g22ZjMj2hBXGvGVWOpa9
+	 NGKdVkYYggIJ3ut1bpEooiT6KnKAlYe9+90APh0UWwt1L1ECVXcYtEuZs1sSoncXP4
+	 k8s7pDYnr3LYfGuR22Qx8WzZloeJxLbtPP3coKN8kIWnpSSv38bg9NxN0mogNkbtu6
+	 sXQjmHRwBzJ5w==
+Received: by mail-ed1-f44.google.com with SMTP id b8so11337024edf.11
+        for <loongarch@lists.linux.dev>; Sat, 26 Nov 2022 21:01:32 -0800 (PST)
+X-Gm-Message-State: ANoB5pnNLAmlNOt2javWJlUrhVl6b/sdvAFcTYZZF8LHu4wnW+t1wjUW
+	k75QB+iVM6wayer3VfIgJlfaq1z8zmiTx3ZEPKo=
+X-Google-Smtp-Source: AA0mqf55bS1nRZOEiJH6TFVxm9l5obYLSN1ugZ6X8p84sbPvVWALTBC8rvOIUbzUo9WSbIoMokrNrJDchK1FZIemwBw=
+X-Received: by 2002:a05:6402:5003:b0:462:a25f:f0f2 with SMTP id
+ p3-20020a056402500300b00462a25ff0f2mr42425303eda.156.1669525291148; Sat, 26
+ Nov 2022 21:01:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jianmin Lv <lvjianmin@loongson.cn>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Huacai Chen <chenhuacai@loongson.cn>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, loongarch@lists.linux.dev, Wolfram Sang <wsa@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-In-Reply-To:  =?utf-8?q?=3C57339e73b6c0bfe446e19a7f55a48b7ca640b9ec=2E166935?=
- =?utf-8?q?9515=2Egit=2Ezhoubinbin=40loongson=2Ecn=3E?=
-References: <cover.1669359515.git.zhoubinbin@loongson.cn>  =?utf-8?q?=3C5733?=
- =?utf-8?q?9e73b6c0bfe446e19a7f55a48b7ca640b9ec=2E1669359515=2Egit=2Ezhoubin?=
- =?utf-8?q?bin=40loongson=2Ecn=3E?=
-Message-Id: <166950113038.8130.14678253677023396314.robh@kernel.org>
-Subject:
- Re: [PATCH V3 3/5] dt-bindings: i2c: add bindings for Loongson LS2X I2C
-Date: Sat, 26 Nov 2022 16:25:36 -0600
+References: <20221027125253.3458989-1-chenhuacai@loongson.cn>
+ <CAAhV-H4Y5qHSXr2uHvMYpXMgvm5fU7WQmcALB+86OYkgM1XbOg@mail.gmail.com> <b9c0711c-6efc-4d84-af4e-62e585ac2fa6@app.fastmail.com>
+In-Reply-To: <b9c0711c-6efc-4d84-af4e-62e585ac2fa6@app.fastmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 27 Nov 2022 13:01:19 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7PifGc7jEmVURVYHXLdrKBGdRecjjLwOekeqS_cEXkxw@mail.gmail.com>
+Message-ID: <CAAhV-H7PifGc7jEmVURVYHXLdrKBGdRecjjLwOekeqS_cEXkxw@mail.gmail.com>
+Subject: Re: [PATCH V14 0/4] mm/sparse-vmemmap: Generalise helpers and enable
+ for LoongArch
+To: Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, loongarch@lists.linux.dev, 
+	Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	guoren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mm@kvack.org, linux-mips@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Feiyang Chen <chenfeiyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi, Andrew,
 
-On Fri, 25 Nov 2022 16:54:13 +0800, Binbin Zhou wrote:
-> Add device tree bindings for the i2c controller on the Loongson-2K Soc
-> or Loongosn LS7A bridge.
-> 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  .../bindings/i2c/loongson,ls2x-i2c.yaml       | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
-> 
+On Tue, Nov 15, 2022 at 4:09 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Sat, Nov 12, 2022, at 11:26, Huacai Chen wrote:
+> > Hi, Arnd,
+> >
+> > Just a gentle ping, is this series good enough now? I think the last
+> > problem (static-key.h inclusion) has also been solved.
+>
+> Yes, this looks fine to me. Sorry I didn't have this on my
+> radar any more.
+>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>
+> I guess the series should be merged through Andrew's linux-mm
+> tree. Let me know if for some reason I should pick it up into
+> the asm-generic tree instead.
+Another gentle ping, can this series be merged to linux-mm in the 6.2 cycle?
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.example.dtb: i2c@1fe21000: reg: [[0, 534908928], [0, 8]] is too long
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.example.dtb: i2c@1fe21000: Unevaluated properties are not allowed ('reg' was unexpected)
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/57339e73b6c0bfe446e19a7f55a48b7ca640b9ec.1669359515.git.zhoubinbin@loongson.cn
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command.
-
+Huacai
+>
+>      Arnd
