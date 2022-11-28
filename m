@@ -1,94 +1,179 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BE6181
-	for <loongarch@lists.linux.dev>; Mon, 28 Nov 2022 12:37:27 +0000 (UTC)
-Received: by mail-lf1-f52.google.com with SMTP id s8so17116529lfc.8
-        for <loongarch@lists.linux.dev>; Mon, 28 Nov 2022 04:37:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3zsuy+0KAbon34PjD50ab0w1ynNsD0k56NpcI5wUZZY=;
-        b=nNowC5tN1eKFJBmunGJikmsjqeJ/RZ8kp06qtd4uCbDB1SPM2VZThIjAMQRzCJ48Zc
-         XruHi5Q8q1FrwX0F2jQdhznu3cP6nBBS8CN8/lZr8MWZTa0vyGhF6CCqLPXfaT8BDSnw
-         GLnP+NkrbqP+K8Lf4l3ht12LlKKWaxugQUq1otVv2Z+kEtP7RGcJz6ApOz0yXHeYIwSc
-         KvFtaXxN23QskFC5ezXWO3F/pFocLY5cTITZShvYs03ygkmkg14n+jtBlC92pTu0xzU2
-         ZCMjSRNF5GyZKdcSMk/TdLO62Apm7f+xSABKXB3hp1Xe6RXazm3Pm7QHTwMBDoH+SkT2
-         v50Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3zsuy+0KAbon34PjD50ab0w1ynNsD0k56NpcI5wUZZY=;
-        b=y8b4VokxTknYfiBOvfS8K97WJPcmOfuCQtOkJJpsXlKS6s0wjXrpA73CEVPx15fCNj
-         SjqFik4jlVjxD5L4Be+en3v0nv3eCwIWhJTGrSoZj0rSEZuG2EgzipAeZQnpVw0ut+fH
-         qPIn30yUfC6YCqjR9lZun2bTso59zkYqPSnB2Ygmr6gC9y/fPNU2/R31HAIgdEce62yt
-         p+N/ZbrEjcwjRcTqWxr5ovAAbrfcNByvXu9flQusD+b3gyXVzXwB1drb911nycEd+sQu
-         fkQt05e2p/UJAVrXFmq6r9/m5ru/JuW6gQFD6TlXMiDO6GaogaXxwzXcB5o4s9hHm/Zi
-         78sw==
-X-Gm-Message-State: ANoB5plL/zXECD3cjMaPakCiHl/3U9nL/UzxDtOfHWbjsshUi4vFhZal
-	2MnPj6+ELTDiiVVwbrBQt6V/2w==
-X-Google-Smtp-Source: AA0mqf4wQN/ZHP/4bc7HcoQXJzIU87tAaHbkDsXSPAwaz8rWU+HBFFrbh++nFRy+SN9XCqBEi3d0Hg==
-X-Received: by 2002:ac2:41c6:0:b0:4b0:4b08:6873 with SMTP id d6-20020ac241c6000000b004b04b086873mr18360398lfi.329.1669639045898;
-        Mon, 28 Nov 2022 04:37:25 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id x21-20020a056512047500b00492ca820e15sm1673362lfd.270.2022.11.28.04.37.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Nov 2022 04:37:25 -0800 (PST)
-Message-ID: <58febf4d-05c8-e06e-04c1-6f10322e29c8@linaro.org>
-Date: Mon, 28 Nov 2022 13:37:24 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96458BF0
+	for <loongarch@lists.linux.dev>; Mon, 28 Nov 2022 13:24:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669641848; x=1701177848;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=HrvXiW8VRRZHHMb6cjfiebSM09+Ck0M/oKO7nbe2WBs=;
+  b=HofSxsuGEKxVPtE6SwBCESQ+8aBxXtiOIjKeofAlZ2paQ52/baspKzZD
+   3kZ49SJ76+0ly7tmjeTso9hEVaqW1ZxfaiGaHC2i8D5dlu7tAUQIDbbRy
+   +TepvYxVQExerClQ6PZ6chqcndUttfjCtsOdhv/+sHtih4TPNuh9leQBY
+   1zoxE483JB5OLgpJUYL6Ou3kEg1tkm9Xa+sSTaPqZUZpIF+aAwuhXeC1D
+   AazwnvSfwako9wIuLLwG/jD+UnjKFEWhW+mvtn+YjRF8XKYxQNuMCFUgx
+   YgsE85LIzJ8QkBFeUhCIi4PeOFVH6Fnyn6IOZ19zBaym52bWqcEeMRd6f
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10544"; a="295212371"
+X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
+   d="scan'208";a="295212371"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 05:24:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10544"; a="711962061"
+X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
+   d="scan'208";a="711962061"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Nov 2022 05:24:04 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1oze78-0019LN-2P;
+	Mon, 28 Nov 2022 15:24:02 +0200
+Date: Mon, 28 Nov 2022 15:24:02 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Wolfram Sang <wsa@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>
+Subject: Re: [PATCH V3 4/5] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
+ controller
+Message-ID: <Y4S2cnlAm3YYvZ8E@smile.fi.intel.com>
+References: <cover.1669359515.git.zhoubinbin@loongson.cn>
+ <822356908305580d601e5b3e424371ed7f220b85.1669359515.git.zhoubinbin@loongson.cn>
+ <Y4Cb19PM97M9HaiB@smile.fi.intel.com>
+ <8b0e2e61-2e54-127e-7cb8-9e1068dbc390@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH V3 3/5] dt-bindings: i2c: add bindings for Loongson LS2X
- I2C
-Content-Language: en-US
-To: Binbin Zhou <zhoubinbin@loongson.cn>, Wolfram Sang <wsa@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org
-Cc: loongarch@lists.linux.dev, devicetree@vger.kernel.org,
- Huacai Chen <chenhuacai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Jianmin Lv <lvjianmin@loongson.cn>
-References: <cover.1669359515.git.zhoubinbin@loongson.cn>
- <57339e73b6c0bfe446e19a7f55a48b7ca640b9ec.1669359515.git.zhoubinbin@loongson.cn>
- <61541d15-fbfd-3f99-fc05-663ebf4a2b54@linaro.org>
- <654be437-f4f0-4c98-b124-ac2d8f78fdbe@loongson.cn>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <654be437-f4f0-4c98-b124-ac2d8f78fdbe@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8b0e2e61-2e54-127e-7cb8-9e1068dbc390@loongson.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 28/11/2022 13:24, Binbin Zhou wrote:
+On Mon, Nov 28, 2022 at 08:03:40PM +0800, Binbin Zhou wrote:
+> 在 2022/11/25 18:41, Andy Shevchenko 写道:
+> > On Fri, Nov 25, 2022 at 04:55:20PM +0800, Binbin Zhou wrote:
 
+...
+
+> > Missing bits.h.
 > 
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->> No clocks? I2C controller without clocks? Are you sure the binding is
->> complete?
+> Is it needed? I found it already included in I2c.h.
+
+The rule of thumb is to include headers we are the direct user of.
+Exceptions are the headers that are guaranteed to be included by
+others. i2c.h doesn't guarantee this and many other inclusions
+while using them for itself or simply included them wrongly.
+
+...
+
+> > > +struct ls2x_i2c_dev {
+> > > +	struct device		*dev;
+> > > +	void __iomem		*base;
+> > > +	int			irq;
+> > > +	u32			bus_clk_rate;
+> > > +	struct completion	cmd_complete;
+> > > +	struct i2c_adapter	adapter;
+> > Check if moving this to be the first field makes code generation better
+> > (bloat-o-meter is your friend).
 > 
-> We previously set the default CLOCK in the driver. Of course, we also 
-> provide the path to read the clock-frequency field for redo. In any 
-> case, I will add the clock-frequency field to the V4 patchset.
+> vmlinux.old: original order
+> 
+> vmlinux:  adapter to be the first field
+> 
+> [zhoubinbin@kernelserver github]$ scripts/bloat-o-meter vmlinux.old vmlinux
+> add/remove: 0/0 grow/shrink: 0/2 up/down: 0/-8 (-8)
+> Function                                     old     new   delta
+> ls2x_i2c_remove                               36      32      -4
+> ls2x_i2c_probe                               424     420      -4
+> 
+> Total: Before=19302026, After=19302018, chg -0.00%
 
-I am not thinking here about the driver. What your bindings said, is
-that device does not have any clocks and I have doubts about it...
+Good, up to you (personally I find usually better to have embedded structures,
+which are parent objects in terms of OOP, to be first members).
 
-I also do not say anything about clock-frequency because it is already
-there via i2c-controller.yaml.
+> > > +	unsigned int		suspended:1;
+> > > +};
+> > > +	return ls2x_i2c_send_byte(adap, LS2X_CR_STOP);
+> > > +}
 
-Best regards,
-Krzysztof
+...
+
+> > > +static int ls2x_i2c_start(struct i2c_adapter *adap, struct i2c_msg *msgs)
+> > > +{
+> > > +	struct ls2x_i2c_dev *dev = i2c_get_adapdata(adap);
+> > > +	unsigned char addr = i2c_8bit_addr_from_msg(msgs);
+> > > +
+> > > +	reinit_completion(&dev->cmd_complete);
+> > > +	addr |= (msgs->flags & I2C_M_RD) ? 1 : 0;
+> > Why is this needed?
+> In the ls2x I2C controller, the bit 0 of TXR indicates the read/write status
+> when transferring the address.
+
+Yes, I understand this. I don't understand why do you need this twice.
+
+> > > +	writeb(addr, dev->base + I2C_LS2X_TXR);
+> > > +
+> > > +	return ls2x_i2c_send_byte(adap, (LS2X_CR_START | LS2X_CR_WRITE));
+> > > +}
+
+...
+
+> > > +	for (retry = 0; retry < adap->retries; retry++) {
+> > > +
+> > Unneeded blank line.
+> > 
+> > > +		ret = ls2x_i2c_doxfer(adap, msgs, num);
+> > > +		if (ret != -EAGAIN)
+> > > +			return ret;
+> > > +
+> > > +		dev_dbg(dev->dev, "Retrying transmission (%d)\n", retry);
+> > > +		udelay(100);
+> > > +	}
+> > Can something from iopoll.h be utilized here?
+> I think udelay() should be suitable because it is just the time interval
+> between two retry.
+
+Read again my comment. Also thanks for pointing out that this is atomic. Is
+this really needs to be atomic?
+
+...
+
+> > > +	/*
+> > > +	 * The I2C controller has a fixed I2C bus frequency by default, but to
+> > > +	 * be compatible with more client devices, we can obtain the set I2C
+> > > +	 * bus frequency from ACPI or FDT.
+> > > +	 */
+> > > +	dev->bus_clk_rate = i2c_acpi_find_bus_speed(&pdev->dev);
+> > > +	if (!dev->bus_clk_rate)
+> > > +		device_property_read_u32(&pdev->dev, "clock-frequency",
+> > > +					&dev->bus_clk_rate);
+> > This should be done via
+
+> >          i2c_parse_fw_timings(&pdev->dev, ...);
+
+> > no?
+> 
+> Yes, I get it，and the i2c_ls2x_adjust_bus_speed() function will be
+> introduced to calculate i2c bus_freq_hz.
+
+Yep, depends on your needs. It might be that some of the drivers are using
+the code that you may reuse (by moving to i2c-core-acpi.c).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
