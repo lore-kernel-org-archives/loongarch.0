@@ -1,244 +1,118 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AC7B39B
-	for <loongarch@lists.linux.dev>; Mon, 28 Nov 2022 06:43:12 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8Bx2+p9WIRjrZgBAA--.3770S3;
-	Mon, 28 Nov 2022 14:43:09 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLuJ2WIRjVQwdAA--.8588S3;
-	Mon, 28 Nov 2022 14:43:08 +0800 (CST)
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Juxin Gao <gaojuxin@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	Arnaud Patard <apatard@mandriva.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v8 2/2] dt-bindings: gpio: add loongson gpio
-Date: Mon, 28 Nov 2022 14:43:00 +0800
-Message-Id: <20221128064300.12021-2-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221128064300.12021-1-zhuyinbo@loongson.cn>
-References: <20221128064300.12021-1-zhuyinbo@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3203720E2
+	for <loongarch@lists.linux.dev>; Mon, 28 Nov 2022 08:18:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC724C433B5
+	for <loongarch@lists.linux.dev>; Mon, 28 Nov 2022 08:18:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1669623533;
+	bh=8fvSqyC5O7kIfnW0Kyq33j5dit6Z5CFYOeb+1myKFss=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jylfX3gRUDIRl78mcgXqXQ3hPGGqN6r0iGnar94bW6COLNIN6I5XdxgDk8oM0qrAx
+	 Lnj4SrwhzfbRP8ECsTg4ZihP4FG0a+32QTIQkutFWb28sv9POIo3dh0oBr1P/SLeP4
+	 bHtXKOfipeUdemaf8YGKIS4BGWaavB79/qMzHuZFH7TUUeEauWUAzs630Ti/k7BIUN
+	 xia+PHCdapvTeDHldeCe2YRouwErxoTAB8/KUSPJ1VL+HzoIlzgKF/xMocoNCDCcKR
+	 4wET1oBSGtjids0dhr7OEVaj/vzerKnjmZJGYwmXezKDBd2ezLEm60iNjRlSW4DTLj
+	 Fki0XgEHYWcQA==
+Received: by mail-ej1-f44.google.com with SMTP id vp12so22512778ejc.8
+        for <loongarch@lists.linux.dev>; Mon, 28 Nov 2022 00:18:53 -0800 (PST)
+X-Gm-Message-State: ANoB5pmBfBr42PqgKo3mmeptnLNdwfl7ZiHgYwSaV23cW5fetTYOeT0e
+	B5v16wKxKzMmoZdToQCEzONY7VGfKYE2MB/Pr6w=
+X-Google-Smtp-Source: AA0mqf4+1cmRwSticidoMDLfF2SOB4WXxmURJljOM3sqd+ULavDUaLn5tkZ9YGNeduJcF2Uo7T2lIG95LDpRA7MUUBA=
+X-Received: by 2002:a17:907:9856:b0:780:8144:a41f with SMTP id
+ jj22-20020a170907985600b007808144a41fmr43519094ejc.189.1669623532033; Mon, 28
+ Nov 2022 00:18:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxLuJ2WIRjVQwdAA--.8588S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF45Wry5Zw45GFWxWFg_yoW7Jr48pF
-	1DZFZxX3y2gr13tFs8Ka17Zr4fAr1kC3WruwnxC34xtrWUKw13XFWfWFykG3Z3WrWUXF13
-	JwsxurWrta43Aw7anT9S1TB71UUUU1DqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jw0_GFyle2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x
-	0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
-	xVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
-	Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
-	WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
-	CTnIWIevJa73UjIFyTuYvjxUf4SoDUUUU
+References: <20220714084136.570176-1-chenhuacai@loongson.cn>
+ <20220714084136.570176-3-chenhuacai@loongson.cn> <CAAhV-H7uF85UHfbS+-sMcXbB=q3UO0Z8rO=poNQbEtaipi4PHQ@mail.gmail.com>
+In-Reply-To: <CAAhV-H7uF85UHfbS+-sMcXbB=q3UO0Z8rO=poNQbEtaipi4PHQ@mail.gmail.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Mon, 28 Nov 2022 16:18:40 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTT82uNmjfDcMrSodssZWsMSrN_476s03QCv__kmQH-6GQ@mail.gmail.com>
+Message-ID: <CAJF2gTT82uNmjfDcMrSodssZWsMSrN_476s03QCv__kmQH-6GQ@mail.gmail.com>
+Subject: Re: [PATCH V2 3/3] SH: cpuinfo: Fix a warning for CONFIG_CPUMASK_OFFSTACK
+To: Huacai Chen <chenhuacai@gmail.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org, 
+	linux-sh@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add the Loongson platform gpio binding with DT schema format using
-json-schema.
+On Mon, Nov 28, 2022 at 2:25 PM Huacai Chen <chenhuacai@gmail.com> wrote:
+>
+> ping?
+Who can test?
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
-Change in v8:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v7:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v6:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v5:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v4:
-		1. Remove the string "series".
-		2. Add the reviewed-by information.
-Change in v3:
-		1. Separate some changes of MAINTAINERS file and enter the first patch.
-Change in v2:
-		1. Drop "loongson,gpio_base" and "gpio-ranges" will cover it.
-		1. Drop "loongson,conf_offset", "loongson,out_offset", "loongson,in_offset",
-		   "loongson,support_irq" and kernel driver will initial them that depend
-		   compatible in kernel.
-		3. Fixup maintainer for this driver.
+>
+> On Thu, Jul 14, 2022 at 4:42 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
+> >
+> > When CONFIG_CPUMASK_OFFSTACK and CONFIG_DEBUG_PER_CPU_MAPS is selected,
+> > cpu_max_bits_warn() generates a runtime warning similar as below while
+> > we show /proc/cpuinfo. Fix this by using nr_cpu_ids (the runtime limit)
+> > instead of NR_CPUS to iterate CPUs.
+> >
+> > [    3.052463] ------------[ cut here ]------------
+> > [    3.059679] WARNING: CPU: 3 PID: 1 at include/linux/cpumask.h:108 show_cpuinfo+0x5e8/0x5f0
+> > [    3.070072] Modules linked in: efivarfs autofs4
+> > [    3.076257] CPU: 0 PID: 1 Comm: systemd Not tainted 5.19-rc5+ #1052
+> > [    3.099465] Stack : 9000000100157b08 9000000000f18530 9000000000cf846c 9000000100154000
+> > [    3.109127]         9000000100157a50 0000000000000000 9000000100157a58 9000000000ef7430
+> > [    3.118774]         90000001001578e8 0000000000000040 0000000000000020 ffffffffffffffff
+> > [    3.128412]         0000000000aaaaaa 1ab25f00eec96a37 900000010021de80 900000000101c890
+> > [    3.138056]         0000000000000000 0000000000000000 0000000000000000 0000000000aaaaaa
+> > [    3.147711]         ffff8000339dc220 0000000000000001 0000000006ab4000 0000000000000000
+> > [    3.157364]         900000000101c998 0000000000000004 9000000000ef7430 0000000000000000
+> > [    3.167012]         0000000000000009 000000000000006c 0000000000000000 0000000000000000
+> > [    3.176641]         9000000000d3de08 9000000001639390 90000000002086d8 00007ffff0080286
+> > [    3.186260]         00000000000000b0 0000000000000004 0000000000000000 0000000000071c1c
+> > [    3.195868]         ...
+> > [    3.199917] Call Trace:
+> > [    3.203941] [<90000000002086d8>] show_stack+0x38/0x14c
+> > [    3.210666] [<9000000000cf846c>] dump_stack_lvl+0x60/0x88
+> > [    3.217625] [<900000000023d268>] __warn+0xd0/0x100
+> > [    3.223958] [<9000000000cf3c90>] warn_slowpath_fmt+0x7c/0xcc
+> > [    3.231150] [<9000000000210220>] show_cpuinfo+0x5e8/0x5f0
+> > [    3.238080] [<90000000004f578c>] seq_read_iter+0x354/0x4b4
+> > [    3.245098] [<90000000004c2e90>] new_sync_read+0x17c/0x1c4
+> > [    3.252114] [<90000000004c5174>] vfs_read+0x138/0x1d0
+> > [    3.258694] [<90000000004c55f8>] ksys_read+0x70/0x100
+> > [    3.265265] [<9000000000cfde9c>] do_syscall+0x7c/0x94
+> > [    3.271820] [<9000000000202fe4>] handle_syscall+0xc4/0x160
+> > [    3.281824] ---[ end trace 8b484262b4b8c24c ]---
+> >
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  arch/sh/kernel/cpu/proc.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/sh/kernel/cpu/proc.c b/arch/sh/kernel/cpu/proc.c
+> > index a306bcd6b341..5f6d0e827bae 100644
+> > --- a/arch/sh/kernel/cpu/proc.c
+> > +++ b/arch/sh/kernel/cpu/proc.c
+> > @@ -132,7 +132,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+> >
+> >  static void *c_start(struct seq_file *m, loff_t *pos)
+> >  {
+> > -       return *pos < NR_CPUS ? cpu_data + *pos : NULL;
+> > +       return *pos < nr_cpu_ids ? cpu_data + *pos : NULL;
+> >  }
+> >  static void *c_next(struct seq_file *m, void *v, loff_t *pos)
+> >  {
+> > --
+> > 2.31.1
+> >
 
- .../bindings/gpio/loongson,ls-gpio.yaml       | 126 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 2 files changed, 127 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
 
-diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-new file mode 100644
-index 000000000000..fb86e8ce6349
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-@@ -0,0 +1,126 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/loongson,ls-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson GPIO controller.
-+
-+maintainers:
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - loongson,ls2k-gpio
-+      - loongson,ls7a-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  ngpios:
-+    minimum: 1
-+    maximum: 64
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  gpio-ranges: true
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 64
-+
-+required:
-+  - compatible
-+  - reg
-+  - ngpios
-+  - "#gpio-cells"
-+  - gpio-controller
-+  - gpio-ranges
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    gpio0: gpio@1fe00500 {
-+      compatible = "loongson,ls2k-gpio";
-+      reg = <0x1fe00500 0x38>;
-+      ngpios = <64>;
-+      #gpio-cells = <2>;
-+      gpio-controller;
-+      gpio-ranges = <&pctrl 0 0 15>,
-+                    <&pctrl 16 16 15>,
-+                    <&pctrl 32 32 10>,
-+                    <&pctrl 44 44 20>;
-+      interrupt-parent = <&liointc1>;
-+      interrupts = <28 IRQ_TYPE_LEVEL_LOW>,
-+                   <29 IRQ_TYPE_LEVEL_LOW>,
-+                   <30 IRQ_TYPE_LEVEL_LOW>,
-+                   <30 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <>,
-+                   <>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2854da69cabb..b8a02a60973d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12055,6 +12055,7 @@ LOONGSON GPIO DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
- F:	drivers/gpio/gpio-loongson-64bit.c
- 
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+
 -- 
-2.31.1
-
+Best Regards
+ Guo Ren
