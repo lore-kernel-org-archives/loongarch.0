@@ -1,174 +1,338 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C528723D2
-	for <loongarch@lists.linux.dev>; Mon, 28 Nov 2022 09:56:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04B212F5E
+	for <loongarch@lists.linux.dev>; Mon, 28 Nov 2022 12:03:47 +0000 (UTC)
 Received: from loongson.cn (unknown [112.20.109.110])
-	by gateway (Coremail) with SMTP id _____8Axy+rahYRj_aMBAA--.3888S3;
-	Mon, 28 Nov 2022 17:56:42 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.110])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxn+DWhYRjXzUdAA--.9071S4;
-	Mon, 28 Nov 2022 17:56:42 +0800 (CST)
-From: Yanteng Si <siyanteng@loongson.cn>
-To: chenhuacai@kernel.org,
-	corbet@lwn.net,
-	alexs@kernel.org,
-	seakeel@gmail.com
-Cc: Yanteng Si <siyanteng@loongson.cn>,
-	kernel@xen0n.name,
-	wu.xiangcheng@linux.dev,
-	jiaxun.yang@flygoat.com,
-	liuyun@loongson.cn,
-	linux-doc@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	siyanteng01@gmail.com,
-	Xiaotian Wu <wuxiaotian@loongson.cn>
-Subject: [PATCH v3 2/2] docs/zh_CN: Add booting Chinese translation
-Date: Mon, 28 Nov 2022 17:54:03 +0800
-Message-Id: <69df65012de902986720bc490404db5712d52e92.1669628226.git.siyanteng@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1669628226.git.siyanteng@loongson.cn>
-References: <cover.1669628226.git.siyanteng@loongson.cn>
+	by gateway (Coremail) with SMTP id _____8BxXeueo4RjnqwBAA--.4061S3;
+	Mon, 28 Nov 2022 20:03:42 +0800 (CST)
+Received: from [0.0.0.0] (unknown [112.20.109.110])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxXuCco4Rj+k0dAA--.8254S3;
+	Mon, 28 Nov 2022 20:03:41 +0800 (CST)
+Message-ID: <8b0e2e61-2e54-127e-7cb8-9e1068dbc390@loongson.cn>
+Date: Mon, 28 Nov 2022 20:03:40 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH V3 4/5] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
+ controller
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Wolfram Sang <wsa@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+ devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+ WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Jianmin Lv <lvjianmin@loongson.cn>
+References: <cover.1669359515.git.zhoubinbin@loongson.cn>
+ <822356908305580d601e5b3e424371ed7f220b85.1669359515.git.zhoubinbin@loongson.cn>
+ <Y4Cb19PM97M9HaiB@smile.fi.intel.com>
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+In-Reply-To: <Y4Cb19PM97M9HaiB@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxn+DWhYRjXzUdAA--.9071S4
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAw4ruw45Jr43tw1UCFWUtwb_yoWrZryrpr
-	9xAryxJF4xJryUXr4UKr1UJF1UJr1xG3W7GF10gry8tr18Aw15Jr1Utr9YqFy7G34FyFyU
-	Xr48tr1UGF1UArUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-CM-TRANSID:AQAAf8CxXuCco4Rj+k0dAA--.8254S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3Jr1xXrW5Xw15Cr4kKr1UGFg_yoW3JFyUpF
+	WkJFy5KFW8Xr10grnrXr1YyFy2qrZ3Jw1xtFWrKFy29r90vwn2vFWrWr1Y9r1kWrWkC3yx
+	Aw4qgr45u3yFgFJanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
 	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
 	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
 	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
-	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s02
-	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
-	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvE
-	c7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
-	07jz2NtUUUUU=
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
+	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
+	AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
+	6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU8CksDUUUUU==
 
-Translate ../loongarch/booting.rst into Chinese.
+Hi Andy:
 
-Suggested-by: Xiaotian Wu <wuxiaotian@loongson.cn>
-Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
----
- .../translations/zh_CN/loongarch/booting.rst  | 86 +++++++++++++++++++
- .../translations/zh_CN/loongarch/index.rst    |  1 +
- 2 files changed, 87 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/loongarch/booting.rst
+Firstly, thanks for your careful review.
 
-diff --git a/Documentation/translations/zh_CN/loongarch/booting.rst b/Documentation/translations/zh_CN/loongarch/booting.rst
-new file mode 100644
-index 000000000000..fd82d46bee4c
---- /dev/null
-+++ b/Documentation/translations/zh_CN/loongarch/booting.rst
-@@ -0,0 +1,86 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: Documentation/loongarch/booting.rst
-+
-+:翻译:
-+
-+ 司延腾 Yanteng Si <siyanteng@loongson.cn>
-+
-+====================
-+启动 LoongArch Linux
-+====================
-+
-+:作者: 司延腾 <siyanteng@loongson.cn>
-+:日期: 2022年11月18日
-+
-+BootLoader传递给内核的信息
-+==========================
-+
-+LoongArch是纯ACPI系统，需要传递给内核的信息有memmap、initrd、cmdline等。
-+而在LoongArch机器上，BootLoader（EFISTUB/Grub）会给内核传递三个有效参数，
-+它们分别是::
-+
-+      a0 = efi_boot
-+      a1 = cmdline
-+      a2 = systemtable
-+
-+其中a1是指向cmdline的指针，a2则包含了需要传递给内核的memmap、initrd、cmdline……
-+
-+LoongArch Linux启动镜像文件头
-+=============================
-+
-+在非压缩的Linux内核镜像中存在以下64字节的文件头::
-+
-+	u32	MZ_MAGIC		/* "MZ", MS-DOS 头 */
-+	u32	res0 = 0		/* 保留 */
-+	u64	kernel_entry		/* 内核入口点 */
-+	u64	_end - _text		/* 内核镜像有效大小 */
-+	u64	0			/* 从RAM开始的加载内核镜像的偏移量 */
-+	u64	res1 = 0		/* 保留 */
-+	u64	res2 = 0		/* 保留 */
-+	u64	res3 = 0		/* 保留 */
-+	u32	res4 = 0		/* 保留 */
-+	u32	pe_header - _head	/* 到PE头的偏移量 */
-+
-+镜像头注释
-+==========
-+
-+目前LoongArch已经移除“magic”结构体成员。
-+
-+按照EFI规范的规定，在内核镜像的开始需要PE/COFF镜像文件头。当前LoongArch内核支持
-+EFI stub，故内核镜像头最开始两字节为“MZ”魔术字符，且0x3c处应指向PE/COFF文件头的
-+其余部分，在此之间，内核的入口点、有效镜像大小、镜像加载偏移布局如下::
-+
-+          +-----------------------------------------------+
-+          |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-+          +-----------------------------------------------+
-+    0x00: |       MZ_MAGIC        |          res0         |
-+          +-----------------------------------------------+
-+    0x08: |                 kernel_entry                  |
-+          +-----------------------------------------------+
-+    0x10: |                  _end - _text                 |
-+          +-----------------------------------------------+
-+    0x18: |                       0                       |
-+          +-----------------------------------------------+
-+    0x20: |                      res1                     |
-+          +-----------------------------------------------+
-+    0x28: |                      res2                     |
-+          +-----------------------------------------------+
-+    0x30: |                      res3                     |
-+          +-----------------------------------------------+
-+    0x38: |          res4         |       PE header       |
-+          +-----------------------------------------------+
-+
-+所有的位域都是小端序：
-+
-+    - MZ：有效长度为2字节；
-+
-+    - 内核入口点：前留空6个字节，自0x8开始，有效长度为8字节；
-+
-+    - 内核镜像有效大小：紧接内核入口点，有效长度为8字节，该成员对于引导器来说是必须的；
-+
-+    - 内核镜像加载偏移：紧接内核镜像有效大小，有效长度为8字节；
-+
-+    - 到PE头的偏移量：前留空28字节，自0x3c开始,有效长度为4字节。
-diff --git a/Documentation/translations/zh_CN/loongarch/index.rst b/Documentation/translations/zh_CN/loongarch/index.rst
-index 7d23eb78379d..8609ade41981 100644
---- a/Documentation/translations/zh_CN/loongarch/index.rst
-+++ b/Documentation/translations/zh_CN/loongarch/index.rst
-@@ -15,6 +15,7 @@ LoongArch体系结构
- 
-    introduction
-    irq-chip-model
-+   booting
- 
-    features
- 
--- 
-2.31.1
+在 2022/11/25 18:41, Andy Shevchenko 写道:
+> On Fri, Nov 25, 2022 at 04:55:20PM +0800, Binbin Zhou wrote:
+>> This I2C module is integrated into the Loongson-2K SoCs and Loongson
+>> LS7A bridge chip.
+> ...
+>
+> Missing bits.h.
+
+Is it needed? I found it already included in I2c.h.
+
+>
+>> +#include <linux/completion.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/device.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/init.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+> There is no user of this header.
+> Why?
+>
+>> +#include <linux/platform_device.h>
+> ...
+>
+>> +/* LS2X I2C clock frequency 50M */
+>> +#define HZ_PER_MHZ		(50 * 1000000)
+> units.h ?
+I misunderstood your previous comment, and  the HZ_PER_MHZ in units.h 
+will be used.
+>
+> ...
+>
+>> +struct ls2x_i2c_dev {
+>> +	struct device		*dev;
+>> +	void __iomem		*base;
+>> +	int			irq;
+>> +	u32			bus_clk_rate;
+>> +	struct completion	cmd_complete;
+>> +	struct i2c_adapter	adapter;
+> Check if moving this to be the first field makes code generation better
+> (bloat-o-meter is your friend).
+
+vmlinux.old: original order
+
+vmlinux:  adapter to be the first field
+
+[zhoubinbin@kernelserver github]$ scripts/bloat-o-meter vmlinux.old vmlinux
+add/remove: 0/0 grow/shrink: 0/2 up/down: 0/-8 (-8)
+Function                                     old     new   delta
+ls2x_i2c_remove                               36      32      -4
+ls2x_i2c_probe                               424     420      -4
+
+Total: Before=19302026, After=19302018, chg -0.00%
+
+
+>
+>> +	unsigned int		suspended:1;
+>> +};
+>> +	return ls2x_i2c_send_byte(adap, LS2X_CR_STOP);
+>> +}
+> ...
+>
+>> +static int ls2x_i2c_start(struct i2c_adapter *adap, struct i2c_msg *msgs)
+>> +{
+>> +	struct ls2x_i2c_dev *dev = i2c_get_adapdata(adap);
+>> +	unsigned char addr = i2c_8bit_addr_from_msg(msgs);
+>> +
+>> +	reinit_completion(&dev->cmd_complete);
+>> +	addr |= (msgs->flags & I2C_M_RD) ? 1 : 0;
+> Why is this needed?
+In the ls2x I2C controller, the bit 0 of TXR indicates the read/write 
+status when transferring the address.
+>
+>> +	writeb(addr, dev->base + I2C_LS2X_TXR);
+>> +
+>> +	return ls2x_i2c_send_byte(adap, (LS2X_CR_START | LS2X_CR_WRITE));
+>> +}
+> ...
+>
+>> +	while (len--) {
+>> +		if (len == 0)
+>> +			cmd |= LS2X_CR_ACK;
+>> +
+>> +		writeb(cmd, dev->base + I2C_LS2X_CR);
+> Can be written as
+>
+> 		writeb(cmd | (len ? 0 : LS2X_CR_ACK), dev->base + I2C_LS2X_CR);
+>
+> but it's up to you.
+>
+>> +		time_left = wait_for_completion_timeout(&dev->cmd_complete,
+>> +							adap->timeout);
+>> +		if (unlikely(!time_left)) {
+>> +			dev_err(dev->dev, "transaction timeout\n");
+>> +			return -ETIMEDOUT;
+>> +		}
+>> +
+>> +		*buf++ = readb(dev->base + I2C_LS2X_RXR);
+>> +	}
+> ...
+>
+>> +	for (retry = 0; retry < adap->retries; retry++) {
+>> +
+> Unneeded blank line.
+>
+>> +		ret = ls2x_i2c_doxfer(adap, msgs, num);
+>> +		if (ret != -EAGAIN)
+>> +			return ret;
+>> +
+>> +		dev_dbg(dev->dev, "Retrying transmission (%d)\n", retry);
+>> +		udelay(100);
+>> +	}
+> Can something from iopoll.h be utilized here?
+I think udelay() should be suitable because it is just the time interval 
+between two retry.
+>
+> ...
+>
+>> +	if (iflag & LS2X_SR_IF) {
+>> +		writeb(LS2X_CR_IACK, dev->base + I2C_LS2X_CR);
+>> +		complete(&dev->cmd_complete);
+>> +	} else
+>> +		return IRQ_NONE;
+>
+> Use usual pattern: checking for error condition first.
+>
+> 	if (!(iflag & LS2X_SR_IF))
+> 		return IRQ_NONE;
+>
+> 	writeb(LS2X_CR_IACK, dev->base + I2C_LS2X_CR);
+> 	complete(&dev->cmd_complete);
+>
+>> +	return IRQ_HANDLED;
+> ...
+>
+>> +	writeb((val & 0xff00) >> 8, dev->base + I2C_LS2X_PRER_HI);
+>
+> What ' & 0xff00' part is for?
+Emm... I'll use  writel(val, priv->base + I2C_LS2X_PRER_LO); instead.
+> ...
+>
+>> +	dev = devm_kzalloc(&pdev->dev,
+>> +			sizeof(struct ls2x_i2c_dev), GFP_KERNEL);
+> sizeof(*dev) and make it one line.
+>
+>> +	if (unlikely(!dev))
+> Why unlikely()?
+>
+>> +		return -ENOMEM;
+> ...
+>
+>> +	dev->irq = platform_get_irq(pdev, 0);
+>> +	if (unlikely(dev->irq <= 0))
+> Why 'unlikely()'? Why == 0 is here?
+>
+>> +		return -ENODEV;
+> ...
+>
+>> +	r = devm_request_irq(&pdev->dev, dev->irq, ls2x_i2c_isr,
+>> +			      IRQF_SHARED, "ls2x-i2c", dev);
+>> +	if (unlikely(r)) {
+> Why 'unlikely()'? You must explain all likely() / unlikely() use in the code.
+These 'unlikely()' may not be quite right, at that time I just thought 
+these anomalies were infrequent.
+>
+>> +		dev_err(dev->dev, "failure requesting irq %i\n", dev->irq);
+>> +		return r;
+> 	return dev_err_probe(...);
+>
+>> +	}
+> ...
+>
+>> +	/*
+>> +	 * The I2C controller has a fixed I2C bus frequency by default, but to
+>> +	 * be compatible with more client devices, we can obtain the set I2C
+>> +	 * bus frequency from ACPI or FDT.
+>> +	 */
+>> +	dev->bus_clk_rate = i2c_acpi_find_bus_speed(&pdev->dev);
+>> +	if (!dev->bus_clk_rate)
+>> +		device_property_read_u32(&pdev->dev, "clock-frequency",
+>> +					&dev->bus_clk_rate);
+> This should be done via
+>
+>          i2c_parse_fw_timings(&pdev->dev, ...);
+>
+> no?
+
+Yes, I get it，and the i2c_ls2x_adjust_bus_speed() function will be 
+introduced to calculate i2c bus_freq_hz.
+
+>
+> ...
+>
+>> +	adap->dev.of_node = pdev->dev.of_node;
+>> +	ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
+> device_set_node()
+>
+> ...
+>
+>> +	/* i2c device drivers may be active on return from add_adapter() */
+>> +	r = i2c_add_adapter(adap);
+>> +	if (r) {
+>> +		dev_err(dev->dev, "failure adding adapter\n");
+>> +		return r;
+> 	return dev_err_probe(...);
+>
+>> +	}
+> ...
+>
+>> +static int __maybe_unused ls2x_i2c_suspend_noirq(struct device *dev)
+> No __maybe_unused, use proper PM macros and definitions.
+> (look for pm_ptr() / pm_sleep_ptr() and corresponding defines)
+>
+>> +{
+>> +	struct platform_device *pdev = to_platform_device(dev);
+>> +	struct ls2x_i2c_dev *i2c_dev = platform_get_drvdata(pdev);
+>> +
+>> +	i2c_dev->suspended = 1;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int __maybe_unused ls2x_i2c_resume(struct device *dev)
+>> +{
+>> +	struct platform_device *pdev = to_platform_device(dev);
+>> +	struct ls2x_i2c_dev *i2c_dev = platform_get_drvdata(pdev);
+>> +
+>> +	i2c_dev->suspended = 0;
+>> +	ls2x_i2c_reginit(i2c_dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct dev_pm_ops ls2x_i2c_dev_pm_ops = {
+>> +	SET_SYSTEM_SLEEP_PM_OPS(ls2x_i2c_suspend_noirq, ls2x_i2c_resume)
+>> +};
+> As per above.
+
+The pm_sleep_ptr(&ls2x_i2c_dev_pm_ops) will be used in ls2x_i2c_driver 
+and drop __maybe_unused.
+
+Binbin
+
+> ...
+>
+>> +static const struct of_device_id ls2x_i2c_id_table[] = {
+>> +	{ .compatible = "loongson,ls2k-i2c" },
+>> +	{ .compatible = "loongson,ls7a-i2c" },
+>> +	{ /* sentinel */ },
+> No comma for terminator entry.
+>
+>> +};
+> ...
+>
+>> +	{ "LOON0004", 0 },
+> ', 0' is redundant.
+>
+> ...
+>
+>> +static struct platform_driver ls2x_i2c_driver = {
+>> +	.probe		= ls2x_i2c_probe,
+>> +	.remove		= ls2x_i2c_remove,
+>> +	.driver		= {
+>> +		.name	= "ls2x-i2c",
+>> +		.owner	= THIS_MODULE,
+> Why?
+>
+>> +		.pm	= &ls2x_i2c_dev_pm_ops,
+>> +		.of_match_table = ls2x_i2c_id_table,
+>> +		.acpi_match_table = ls2x_i2c_acpi_match,
+>> +	},
+>> +};
 
