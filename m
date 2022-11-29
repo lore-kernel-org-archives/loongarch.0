@@ -1,178 +1,90 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A78662C
-	for <loongarch@lists.linux.dev>; Tue, 29 Nov 2022 03:09:35 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8Axjuvud4VjS+YBAA--.4642S3;
-	Tue, 29 Nov 2022 11:09:34 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxZ1fmd4VjE+QdAA--.57759S4;
-	Tue, 29 Nov 2022 11:09:32 +0800 (CST)
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Yun Liu <liuyun@loongson.cn>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v11 3/3] dt-bindings: hpet: add loongson-2 hpet
-Date: Tue, 29 Nov 2022 11:09:25 +0800
-Message-Id: <20221129030925.14074-3-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221129030925.14074-1-zhuyinbo@loongson.cn>
-References: <20221129030925.14074-1-zhuyinbo@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF432627
+	for <loongarch@lists.linux.dev>; Tue, 29 Nov 2022 03:26:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A741C433D6
+	for <loongarch@lists.linux.dev>; Tue, 29 Nov 2022 03:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1669692395;
+	bh=2wNwy6iThg3PjSBPSHqTNTq6DPiJNZ31+qv039KIXH4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=K80F1J8UOo6eYH2e7bpYdMdoLxjnE/Jwv85+yc+I49z385mKbIV4m+uhp94ZaR1+S
+	 ETLr2/xInY+2CvSKFz3pvq5ablHqtiDZasWVvFFYLNMAhhhgfIpRLkoX8aZz6Dzgve
+	 h1DCS0Ad/suWRSZMbxS7Zny2yA/X63yleZM1vc0BnnHbxA262uUQ4LI8A9rTALh6iI
+	 oQyULI2fHwmTfinWq8lyiavyMErMd8Fn1gohCqTvRZ9r5i64twIK1jTJkmtwnmVe/v
+	 h57RW9mY+r6vEfCcOf6gUZnj1GmtrbMQvUMHGULoLHdzzTIMHDCBA7Ft9n+SDkRVwi
+	 TaN/6XenKdLuA==
+Received: by mail-ed1-f52.google.com with SMTP id x2so18097364edd.2
+        for <loongarch@lists.linux.dev>; Mon, 28 Nov 2022 19:26:35 -0800 (PST)
+X-Gm-Message-State: ANoB5pl88Fa8WOzyByV3sIV/Im8iKNJX/wX4Da7GedpgffaJskECMjIJ
+	Ib8cGF9dw3Pn2ozpyPl0uI64CD7FJf1UPow2ob8=
+X-Google-Smtp-Source: AA0mqf5i6CvvZTeiTvO8vt+TXfnjgmW3rqRqazHO+w1V3Gb2yVa6G2VdOFt1+sVzGUtAoXGJYrnfcv/T0FURzu78BoQ=
+X-Received: by 2002:a05:6402:5003:b0:462:a25f:f0f2 with SMTP id
+ p3-20020a056402500300b00462a25ff0f2mr50000667eda.156.1669692393478; Mon, 28
+ Nov 2022 19:26:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxZ1fmd4VjE+QdAA--.57759S4
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF4fWFWxJF1xCrW5GFg_yoWrGF4fpF
-	s7CF95Jr47tF1fu39xKFyI9Fn5Za4DAF9rWr17tw1UAryDX3W5XFn2ga4DurW3GrWxWay7
-	XFySkw18Ka1jvr7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bS8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
-	1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
-	cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
-	0Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
-	6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2
-	Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-	1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj
-	6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
-	0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
-	YxBIdaVFxhVjvjDU0xZFpf9x07jO-B_UUUUU=
+References: <20221027125253.3458989-1-chenhuacai@loongson.cn>
+ <CAAhV-H4Y5qHSXr2uHvMYpXMgvm5fU7WQmcALB+86OYkgM1XbOg@mail.gmail.com>
+ <b9c0711c-6efc-4d84-af4e-62e585ac2fa6@app.fastmail.com> <CAAhV-H7PifGc7jEmVURVYHXLdrKBGdRecjjLwOekeqS_cEXkxw@mail.gmail.com>
+ <20221128151005.916e4373cd4e5808111dea0c@linux-foundation.org>
+In-Reply-To: <20221128151005.916e4373cd4e5808111dea0c@linux-foundation.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 29 Nov 2022 11:26:21 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4cYHJe15oK=3RypmH+FiEuA+KovftXpOgbHy2Rz6uH9Q@mail.gmail.com>
+Message-ID: <CAAhV-H4cYHJe15oK=3RypmH+FiEuA+KovftXpOgbHy2Rz6uH9Q@mail.gmail.com>
+Subject: Re: [PATCH V14 0/4] mm/sparse-vmemmap: Generalise helpers and enable
+ for LoongArch
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Dinh Nguyen <dinguyen@kernel.org>, loongarch@lists.linux.dev, 
+	Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	guoren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mm@kvack.org, linux-mips@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Feiyang Chen <chenfeiyang@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-Add the Loongson-2 High Precision Event Timer (HPET) binding
-with DT schema format using json-schema.
+On Tue, Nov 29, 2022 at 7:10 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> On Sun, 27 Nov 2022 13:01:19 +0800 Huacai Chen <chenhuacai@kernel.org> wrote:
+>
+> > Hi, Andrew,
+> >
+> > On Tue, Nov 15, 2022 at 4:09 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > >
+> > > On Sat, Nov 12, 2022, at 11:26, Huacai Chen wrote:
+> > > > Hi, Arnd,
+> > > >
+> > > > Just a gentle ping, is this series good enough now? I think the last
+> > > > problem (static-key.h inclusion) has also been solved.
+> > >
+> > > Yes, this looks fine to me. Sorry I didn't have this on my
+> > > radar any more.
+> > >
+> > > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> > >
+> > > I guess the series should be merged through Andrew's linux-mm
+> > > tree. Let me know if for some reason I should pick it up into
+> > > the asm-generic tree instead.
+> > Another gentle ping, can this series be merged to linux-mm in the 6.2 cycle?
+>
+> It's a pretty large patchset and I'm a bit concerned about the amount
+> of review and test which it has received from the MIPS side?
+We have tested on MIPS-based Loongson. :)
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
-Change in v11:
-		1. NO change, but other patch in this series of patches set
-		   has changes.
-                2. This patch need rely on clock patch, which patchwork  
-		   link was "https://patchwork.kernel.org/project/linux-clk/list/?series=691497".
-Change in v10:
-		1. NO change, but other patch in this series of patches set
-		   has changes.
-                2. This patch need rely on clock patch, which patchwork  
-		   link was "https://patchwork.kernel.org/project/linux-clk/list/?series=691497".
-Change in v9:
-                1. This patch need rely on clock patch, which patchwork  
-		   link was "https://patchwork.kernel.org/project/linux-clk/list/?series=691497".
-		2. NO change, but other patch in this series of patches set
-		   has changes.
-Change in v8:
-                1. This patch need rely on clock patch, which patchwork  
-		   link was "https://patchwork.kernel.org/project/linux-clk/list/?series=691497".
-		2. Add all history change log information.
-Change in v7:
-		1. NO change, but other patch in this series of patches set
-		   has changes.
-Change in v6:
-		1. NO change, but other patch in this series of patches set
-		   has changes.
-Change in v5:
-		1. Replace string loongson2/Loongson2 with Loongson-2/loongson-2.
-		2. Add the patch review information.
-Change in v4: 
-                1. Fixup the clock-names that replace apb-clk with apb.
-                2. This patch need rely on clock patch, which patchwork  
-                   link was "https://patchwork.kernel.org/project/linux-clk/list/?series=688892".
-Change in v3:
-		1. Update dts that base on common clock framework.
-Change in v2:
-		1. Drop the  "hpet0" label.
-		2. Modify the hpet node name to timer.
+>
+> Prudence suggest that we merge this in 6.3-rc1.  But I'll queue it up
+> for now, get a bit of testing while we consider this.
+>
+OK, thanks, you are free to decide this.
 
- .../bindings/timer/loongson,ls2k-hpet.yaml    | 50 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
-
-diff --git a/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
-new file mode 100644
-index 000000000000..30685c8fbead
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/loongson,ls2k-hpet.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson-2 High Precision Event Timer (HPET)
-+
-+maintainers:
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+properties:
-+  compatible:
-+    const: loongson,ls2k-hpet
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: SoC apb clock
-+
-+  clock-names:
-+    items:
-+      - const: apb
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/loongson,ls2k-clk.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    timer@1fe24000 {
-+        compatible = "loongson,ls2k-hpet";
-+        reg = <0x1fe24000 0x15f>;
-+        clocks = <&clk LOONGSON2_APB_CLK>;
-+        clock-names = "apb";
-+        interrupt-parent = <&liointc0>;
-+        interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5d5967f55c36..5b04e37a1bd2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12033,6 +12033,7 @@ LOONGSON-2 SOC SERIES HPET DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/timer/loongson,ls2k-hpet.yaml
- F:	drivers/clocksource/loongson2_hpet.c
- 
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
--- 
-2.31.1
-
+Huacai
