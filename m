@@ -1,11 +1,11 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D6E5627
-	for <loongarch@lists.linux.dev>; Tue, 29 Nov 2022 03:42:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8564630
+	for <loongarch@lists.linux.dev>; Tue, 29 Nov 2022 03:42:04 +0000 (UTC)
 Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8Cx5vCKf4VjXegBAA--.4467S3;
-	Tue, 29 Nov 2022 11:42:02 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxjuuLf4VjaugBAA--.4661S3;
+	Tue, 29 Nov 2022 11:42:03 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxPuCGf4VjjecdAA--.10584S2;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxPuCGf4VjjecdAA--.10584S4;
 	Tue, 29 Nov 2022 11:42:02 +0800 (CST)
 From: Yinbo Zhu <zhuyinbo@loongson.cn>
 To: Michael Turquette <mturquette@baylibre.com>,
@@ -22,11 +22,12 @@ To: Michael Turquette <mturquette@baylibre.com>,
 	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v10 1/4] dt-bindings: clock: add loongson-2 clock include file
-Date: Tue, 29 Nov 2022 11:41:54 +0800
-Message-Id: <20221129034157.15036-1-zhuyinbo@loongson.cn>
+Subject: [PATCH v10 3/4] LoongArch: time: add of_clk_init in time_init
+Date: Tue, 29 Nov 2022 11:41:56 +0800
+Message-Id: <20221129034157.15036-3-zhuyinbo@loongson.cn>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221129034157.15036-1-zhuyinbo@loongson.cn>
+References: <20221129034157.15036-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -34,117 +35,56 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxPuCGf4VjjecdAA--.10584S2
+X-CM-TRANSID:AQAAf8AxPuCGf4VjjecdAA--.10584S4
 X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAF1fAw4ktFykCF4UGw4fuFg_yoW5Cry8pF
-	s5CFZ3KrW2yF4IkanYgFy7Kr15ua4xJ3srAF42kw1UAFnrJw18JrnrKF1rArZxXrsrCFWx
-	Z3ZYkw409a9rZ3DanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bS8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
+X-Coremail-Antispam: 1Uk129KBjvdXoW7Wr4UWFyruw17uw47ZFy5Arb_yoWfZrg_uw
+	17Cw1DWryfJ39ak34vq3ZxXw1jkw48tFn0vas7Zr17CFn7J3yUCw43Z343ArnI9as29rs5
+	ZrWrGF97Cr13KjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	C7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2
+	IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84AC
+	jcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE
+	52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
+	80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE
 	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x
 	0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
-	xVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_
-	JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	xVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
+	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
+	Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
 	WUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-	YxBIdaVFxhVjvjDU0xZFpf9x07joKZXUUUUU=
+	YxBIdaVFxhVjvjDU0xZFpf9x07UKXd8UUUUU=
 
-This file defines all Loongson-2 SoC clock indexes, it should be
-included in the device tree in which there's device using the
-clocks.
+The Loongson-2 clock controller driver used CLK_OF_DECLARE to
+register clock subsystem that ask of_clk_init was called in
+time_init and this patch was to addd such support.
 
 Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Change in v10:
-		1. NO change, but other patch in this series of patches has
-		   changes.
-Change in v9:
-		1. Add all history changelog infomation.
-Change in v8:
-		1. NO change, but other patch in this series of patches has
-		   changes.
-Change in v7:
-		1. NO change, but other patch in this series of patches has
-		   changes.
-Change in v6:
-		1. Replace string LOONGSON2 with LOONGSON-2 in MAINTAINERS.
-Change in v5:
-		1. Replace loongson2/Loongson2 with loongson-2/Loongson-2.
-		2. Replace soc with SoC.
-Change in v4:
-		1. NO change, but other patch in this series of patches has
-		   changes.
-Change in v3:
-		1. Add the review information.
-Change in v2:
-		1. Make filename matching the compatible.
-		2. Drop weird indentation after define.
-		3. Add dual license.
-		4. Use subject prefixes matching the subsystem.
+ arch/loongarch/kernel/time.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- MAINTAINERS                                   |  6 ++++
- include/dt-bindings/clock/loongson,ls2k-clk.h | 29 +++++++++++++++++++
- 2 files changed, 35 insertions(+)
- create mode 100644 include/dt-bindings/clock/loongson,ls2k-clk.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 182129c73ed5..ab94893fe2f6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12021,6 +12021,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/thermal/loongson,ls2k-thermal.yaml
- F:	drivers/thermal/loongson2_thermal.c
+diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+index 786735dcc8d6..09f20bc81798 100644
+--- a/arch/loongarch/kernel/time.c
++++ b/arch/loongarch/kernel/time.c
+@@ -12,6 +12,7 @@
+ #include <linux/kernel.h>
+ #include <linux/sched_clock.h>
+ #include <linux/spinlock.h>
++#include <linux/of_clk.h>
  
-+LOONGSON-2 SOC SERIES CLOCK DRIVER
-+M:	Yinbo Zhu <zhuyinbo@loongson.cn>
-+L:	linux-clk@vger.kernel.org
-+S:	Maintained
-+F:	include/dt-bindings/clock/loongson,ls2k-clk.h
+ #include <asm/cpu-features.h>
+ #include <asm/loongarch.h>
+@@ -214,6 +215,8 @@ int __init constant_clocksource_init(void)
+ 
+ void __init time_init(void)
+ {
++	of_clk_init(NULL);
 +
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
- M:	Sathya Prakash <sathya.prakash@broadcom.com>
- M:	Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-diff --git a/include/dt-bindings/clock/loongson,ls2k-clk.h b/include/dt-bindings/clock/loongson,ls2k-clk.h
-new file mode 100644
-index 000000000000..db1e27e792ff
---- /dev/null
-+++ b/include/dt-bindings/clock/loongson,ls2k-clk.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
-+ * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_LOONGSON2_H
-+#define __DT_BINDINGS_CLOCK_LOONGSON2_H
-+
-+#define LOONGSON2_REF_100M				0
-+#define LOONGSON2_NODE_PLL				1
-+#define LOONGSON2_DDR_PLL				2
-+#define LOONGSON2_DC_PLL				3
-+#define LOONGSON2_PIX0_PLL				4
-+#define LOONGSON2_PIX1_PLL				5
-+#define LOONGSON2_NODE_CLK				6
-+#define LOONGSON2_HDA_CLK				7
-+#define LOONGSON2_GPU_CLK				8
-+#define LOONGSON2_DDR_CLK				9
-+#define LOONGSON2_GMAC_CLK				10
-+#define LOONGSON2_DC_CLK				11
-+#define LOONGSON2_APB_CLK				12
-+#define LOONGSON2_USB_CLK				13
-+#define LOONGSON2_SATA_CLK				14
-+#define LOONGSON2_PIX0_CLK				15
-+#define LOONGSON2_PIX1_CLK				16
-+#define LOONGSON2_CLK_END				17
-+
-+#endif
+ 	if (!cpu_has_cpucfg)
+ 		const_clock_freq = cpu_clock_freq;
+ 	else
 -- 
 2.31.1
 
