@@ -1,174 +1,247 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15AE1622
-	for <loongarch@lists.linux.dev>; Tue, 29 Nov 2022 01:54:44 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.110])
-	by gateway (Coremail) with SMTP id _____8Cx6+pjZoVjQuEBAA--.4381S3;
-	Tue, 29 Nov 2022 09:54:43 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.110])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxb+JeZoVjwtkdAA--.10346S4;
-	Tue, 29 Nov 2022 09:54:42 +0800 (CST)
-From: Yanteng Si <siyanteng@loongson.cn>
-To: chenhuacai@kernel.org,
-	corbet@lwn.net,
-	alexs@kernel.org,
-	seakeel@gmail.com
-Cc: Yanteng Si <siyanteng@loongson.cn>,
-	kernel@xen0n.name,
-	wu.xiangcheng@linux.dev,
-	jiaxun.yang@flygoat.com,
-	liuyun@loongson.cn,
-	linux-doc@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85563622
+	for <loongarch@lists.linux.dev>; Tue, 29 Nov 2022 02:00:57 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8DxvuvYZ4Vj3eEBAA--.4542S3;
+	Tue, 29 Nov 2022 10:00:56 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxR1fRZ4Vj89odAA--.57349S3;
+	Tue, 29 Nov 2022 10:00:54 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juxin Gao <gaojuxin@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	siyanteng01@gmail.com,
-	Xiaotian Wu <wuxiaotian@loongson.cn>
-Subject: [PATCH v4 2/2] docs/zh_CN: Add booting Chinese translation
-Date: Tue, 29 Nov 2022 09:52:01 +0800
-Message-Id: <d3c2d62413214ee1d5d4b31737a305298235c5d1.1669686320.git.siyanteng@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1669686320.git.siyanteng@loongson.cn>
-References: <cover.1669686320.git.siyanteng@loongson.cn>
+	linux-mips@vger.kernel.org,
+	Arnaud Patard <apatard@mandriva.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v9 2/2] dt-bindings: gpio: add loongson gpio
+Date: Tue, 29 Nov 2022 10:00:47 +0800
+Message-Id: <20221129020047.12151-2-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221129020047.12151-1-zhuyinbo@loongson.cn>
+References: <20221129020047.12151-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxb+JeZoVjwtkdAA--.10346S4
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAw4ruw45Jr4ruw47uFy5XFb_yoWrZF1Upr
-	9xAryxJF4xJryUXr4UKr1UJF1UJr1xGa17GF18W348tr18Aw15Jr1Utr9YqFy7G34FyFyU
-	XrW8Kw1UJF1UAwUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-CM-TRANSID:AQAAf8AxR1fRZ4Vj89odAA--.57349S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF4DJw1xAF47Ww45Wrg_yoW7Jw1UpF
+	1DZFZxX3y2gr1ayFs8Ka17Xr4fAr1kC3Wruwn8C34xtrWUKw13XFWfWFykG3Z3WrWUXF13
+	JwsxurWrJa43Aw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
-	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
-	1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY
-	6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
-	AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
-	vjxU4AhLUUUUU
+	bfAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
+	1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
+	cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
+	0Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
+	6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2
+	Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+	1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j
+	6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU8mQ6JUUUUU==
 
-Translate ../loongarch/booting.rst into Chinese.
+Add the Loongson platform gpio binding with DT schema format using
+json-schema.
 
-Suggested-by: Xiaotian Wu <wuxiaotian@loongson.cn>
-Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../translations/zh_CN/loongarch/booting.rst  | 86 +++++++++++++++++++
- .../translations/zh_CN/loongarch/index.rst    |  1 +
- 2 files changed, 87 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/loongarch/booting.rst
+Change in v9:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v8:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v7:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v6:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v5:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v4:
+		1. Remove the string "series".
+		2. Add the reviewed-by information.
+Change in v3:
+		1. Separate some changes of MAINTAINERS file and enter the first patch.
+Change in v2:
+		1. Drop "loongson,gpio_base" and "gpio-ranges" will cover it.
+		1. Drop "loongson,conf_offset", "loongson,out_offset", "loongson,in_offset",
+		   "loongson,support_irq" and kernel driver will initial them that depend
+		   compatible in kernel.
+		3. Fixup maintainer for this driver.
 
-diff --git a/Documentation/translations/zh_CN/loongarch/booting.rst b/Documentation/translations/zh_CN/loongarch/booting.rst
+ .../bindings/gpio/loongson,ls-gpio.yaml       | 126 ++++++++++++++++++
+ MAINTAINERS                                   |   1 +
+ 2 files changed, 127 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
 new file mode 100644
-index 000000000000..a78d5390f6d9
+index 000000000000..fb86e8ce6349
 --- /dev/null
-+++ b/Documentation/translations/zh_CN/loongarch/booting.rst
-@@ -0,0 +1,86 @@
-+.. SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+@@ -0,0 +1,126 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/loongson,ls-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+.. include:: ../disclaimer-zh_CN.rst
++title: Loongson GPIO controller.
 +
-+:Original: Documentation/loongarch/booting.rst
++maintainers:
++  - Yinbo Zhu <zhuyinbo@loongson.cn>
 +
-+:翻译:
++properties:
++  compatible:
++    enum:
++      - loongson,ls2k-gpio
++      - loongson,ls7a-gpio
 +
-+ 司延腾 Yanteng Si <siyanteng@loongson.cn>
++  reg:
++    maxItems: 1
 +
-+====================
-+启动 LoongArch Linux
-+====================
++  ngpios:
++    minimum: 1
++    maximum: 64
 +
-+:作者: 司延腾 <siyanteng@loongson.cn>
-+:日期: 2022年11月18日
++  "#gpio-cells":
++    const: 2
 +
-+BootLoader传递给内核的信息
-+==========================
++  gpio-controller: true
 +
-+LoongArch兼容ACPI和FDT，需要传递给内核的信息有memmap、initrd、cmdline、fdt等。
-+而在LoongArch机器上，BootLoader（EFISTUB/Grub）会给内核传递三个有效参数，
-+它们分别是::
++  gpio-ranges: true
 +
-+      a0 = efi_boot
-+      a1 = cmdline
-+      a2 = systemtable
++  interrupts:
++    minItems: 1
++    maxItems: 64
 +
-+其中a1是指向cmdline的指针，a2则包含了需要传递给内核的memmap、initrd、fdt（可选的）……
++required:
++  - compatible
++  - reg
++  - ngpios
++  - "#gpio-cells"
++  - gpio-controller
++  - gpio-ranges
++  - interrupts
 +
-+LoongArch Linux启动镜像文件头
-+=============================
++additionalProperties: false
 +
-+在非压缩的Linux内核镜像中存在以下64字节的文件头::
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
 +
-+	u32	MZ_MAGIC		/* "MZ", MS-DOS 头 */
-+	u32	res0 = 0		/* 保留 */
-+	u64	kernel_entry		/* 内核入口点 */
-+	u64	_end - _text		/* 内核镜像有效大小 */
-+	u64	0			/* 从RAM开始的加载内核镜像的偏移量 */
-+	u64	res1 = 0		/* 保留 */
-+	u64	res2 = 0		/* 保留 */
-+	u64	res3 = 0		/* 保留 */
-+	u32	res4 = 0		/* 保留 */
-+	u32	pe_header - _head	/* 到PE头的偏移量 */
-+
-+镜像头注释
-+==========
-+
-+目前LoongArch已经移除“magic”结构体成员。
-+
-+按照EFI规范的规定，在内核镜像的开始需要PE/COFF镜像文件头。当前LoongArch内核支持
-+EFI stub，故内核镜像头最开始两字节为“MZ”魔术字符，且0x3c处应指向PE/COFF文件头的
-+其余部分，在此之间，内核的入口点、有效镜像大小、镜像加载偏移布局如下::
-+
-+          +-----------------------------------------------+
-+          |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
-+          +-----------------------------------------------+
-+    0x00: |       MZ_MAGIC        |          res0         |
-+          +-----------------------------------------------+
-+    0x08: |                 kernel_entry                  |
-+          +-----------------------------------------------+
-+    0x10: |                  _end - _text                 |
-+          +-----------------------------------------------+
-+    0x18: |                       0                       |
-+          +-----------------------------------------------+
-+    0x20: |                      res1                     |
-+          +-----------------------------------------------+
-+    0x28: |                      res2                     |
-+          +-----------------------------------------------+
-+    0x30: |                      res3                     |
-+          +-----------------------------------------------+
-+    0x38: |          res4         |       PE header       |
-+          +-----------------------------------------------+
-+
-+所有的位域都是小端序：
-+
-+    - MZ：有效长度为2字节；
-+
-+    - 内核入口点：前留空6个字节，自0x8开始，有效长度为8字节；
-+
-+    - 内核镜像有效大小：紧接内核入口点，有效长度为8字节，该成员对于引导器来说是必须的；
-+
-+    - 内核镜像加载偏移：紧接内核镜像有效大小，有效长度为8字节；
-+
-+    - 到PE头的偏移量：前留空28字节，自0x3c开始,有效长度为4字节。
-diff --git a/Documentation/translations/zh_CN/loongarch/index.rst b/Documentation/translations/zh_CN/loongarch/index.rst
-index 7d23eb78379d..8609ade41981 100644
---- a/Documentation/translations/zh_CN/loongarch/index.rst
-+++ b/Documentation/translations/zh_CN/loongarch/index.rst
-@@ -15,6 +15,7 @@ LoongArch体系结构
++    gpio0: gpio@1fe00500 {
++      compatible = "loongson,ls2k-gpio";
++      reg = <0x1fe00500 0x38>;
++      ngpios = <64>;
++      #gpio-cells = <2>;
++      gpio-controller;
++      gpio-ranges = <&pctrl 0 0 15>,
++                    <&pctrl 16 16 15>,
++                    <&pctrl 32 32 10>,
++                    <&pctrl 44 44 20>;
++      interrupt-parent = <&liointc1>;
++      interrupts = <28 IRQ_TYPE_LEVEL_LOW>,
++                   <29 IRQ_TYPE_LEVEL_LOW>,
++                   <30 IRQ_TYPE_LEVEL_LOW>,
++                   <30 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2854da69cabb..b8a02a60973d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12055,6 +12055,7 @@ LOONGSON GPIO DRIVER
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+ F:	drivers/gpio/gpio-loongson-64bit.c
  
-    introduction
-    irq-chip-model
-+   booting
- 
-    features
- 
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
 -- 
 2.31.1
 
