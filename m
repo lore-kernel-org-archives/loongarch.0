@@ -1,37 +1,37 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62F5801
-	for <loongarch@lists.linux.dev>; Wed, 30 Nov 2022 20:32:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC5A2CAB
+	for <loongarch@lists.linux.dev>; Wed, 30 Nov 2022 20:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669840342; x=1701376342;
+  t=1669840879; x=1701376879;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=tUXXdUxbyL1XhGdlXtjhkDQSLX/WQBuwUckCuNgvEI8=;
-  b=EuOdY6zjyKs9uCMvc73Cs59gAdj1fNJvvqyt0JtRHZOVk7d2eTdphNMi
-   6zq8H1GmuSfU7ZDCdpxLxA5uJWfiwLWX5iUA0ZqiiSrVlO/OcjluXPowI
-   +zd2FgmnyGXlZXos5+8jbid1e7zuk5NuTQRWyvfe3hNWGxeabF/44wBp4
-   ig/etHqH6ggxv5WcX/TjLnPXDvw9wFRikmByCdxc9vEXFbf4SZuS4CKiw
-   areyI3/+rNssalR3uizp2EEnjzWmvERl2Y7IQv29FHwE2pi6+XexvKJzT
-   8OWLAGODHN7pcNp5jkt7m8sgnTFlB2+anpiQyWxbZE6sOC/FEhc87n8km
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="313135100"
+  bh=UWOmdKVYguDg1LsTwZ8A9yuFL4p5c/ehz9UBytFtKoM=;
+  b=MXclAX+R/5I2twvUalPtDhI77t82OZvtLbOWlnT7Yv89r/IcItDmFNfG
+   t/yw9MAj5Xwp9a4vr9uuCSgP8RIlCiXoWqQoUmX2kveF5jjOOMkGBgrSS
+   ziUxRFXLdTSKN/FDd5vY3GjZWUUzBAhMILZsB5YE/S0/IEtwJriPmtv5g
+   ML9haMojLGrXYxi60lCwPpe+JI078As624qD21dG3xI8XFi7ChsRi5Esw
+   RgnOsR9GcawT8mtvXvfntgwPMSWxpX1FgQWuiU+4RQqEFO/5jMljht0ah
+   W4/SGtNA/JHmLDh5aYUNt2iVcFqusyzNG9y8vlhU7TpCloYINWjWLTHB3
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="315533204"
 X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="313135100"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 12:32:18 -0800
+   d="scan'208";a="315533204"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 12:41:18 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="786612376"
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="889438889"
 X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="786612376"
+   d="scan'208";a="889438889"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP; 30 Nov 2022 12:32:15 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 30 Nov 2022 12:41:14 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1p0Tkb-002Szl-0T;
-	Wed, 30 Nov 2022 22:32:13 +0200
-Date: Wed, 30 Nov 2022 22:32:12 +0200
+	id 1p0TtI-002TDf-25;
+	Wed, 30 Nov 2022 22:41:12 +0200
+Date: Wed, 30 Nov 2022 22:41:12 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Binbin Zhou <zhoubinbin@loongson.cn>
 Cc: Wolfram Sang <wsa@kernel.org>,
@@ -43,10 +43,11 @@ Cc: Wolfram Sang <wsa@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Jianmin Lv <lvjianmin@loongson.cn>
-Subject: Re: [PATCH V4 2/5] i2c: gpio: Add support on ACPI-based system
-Message-ID: <Y4e9zDmxohmf5Go8@smile.fi.intel.com>
+Subject: Re: [PATCH V4 4/5] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
+ controller
+Message-ID: <Y4e/6KewuHjAluSZ@smile.fi.intel.com>
 References: <cover.1669777792.git.zhoubinbin@loongson.cn>
- <05a28866877347f2aaed34288ad76963905e2f33.1669777792.git.zhoubinbin@loongson.cn>
+ <f6cc2dbe5cd190031ab4f772d1cf250934288546.1669777792.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -55,28 +56,125 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <05a28866877347f2aaed34288ad76963905e2f33.1669777792.git.zhoubinbin@loongson.cn>
+In-Reply-To: <f6cc2dbe5cd190031ab4f772d1cf250934288546.1669777792.git.zhoubinbin@loongson.cn>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Nov 30, 2022 at 01:55:52PM +0800, Binbin Zhou wrote:
-> Add support for the ACPI-based device registration, so that the driver
-> can be also enabled through ACPI table.
+On Wed, Nov 30, 2022 at 01:56:20PM +0800, Binbin Zhou wrote:
+> This I2C module is integrated into the Loongson-2K SoCs and Loongson
+> LS7A bridge chip.
+
+Looks like some of my comments were not addressed. Are you sure
+you have read the previous reviews carefully?
 
 ...
 
-The of.h is left with this patch. Is it still needed?
+> +static int ls2x_i2c_xfer(struct i2c_adapter *adap,
+> +			struct i2c_msg *msgs, int num)
+> +{
+> +	int ret, retry;
+> +	struct ls2x_i2c_priv *priv = i2c_get_adapdata(adap);
+> +
+> +	for (retry = 0; retry < adap->retries; retry++) {
+> +		ret = ls2x_i2c_doxfer(adap, msgs, num);
+> +		if (ret != -EAGAIN)
+> +			return ret;
+> +
+> +		dev_dbg(priv->dev, "Retrying transmission (%d)\n", retry);
+
+> +		udelay(100);
+
+Why atomic? This long (esp. atomic) delay must be explained.
+
+> +	}
+> +
+> +	return -EREMOTEIO;
+> +}
 
 ...
 
-> +/* Get i2c-gpio props from DT or ACPI table */
+> +static void ls2x_i2c_reginit(struct ls2x_i2c_priv *priv)
+> +{
+> +	u8 data;
+> +
+> +	/* Enable operations about frequency divider register */
+> +	data = readb(priv->base + I2C_LS2X_CTR);
+> +	writeb(data & ~0x80, priv->base + I2C_LS2X_CTR);
 
-properties
+Magic number.
 
-> +static void i2c_gpio_get_props(struct device *dev,
+> +	ls2x_i2c_adjust_bus_speed(priv);
+> +
+> +	/* Set to normal I2C operating mode and enable interrupts */
+> +	data = readb(priv->base + I2C_LS2X_CTR);
+> +	writeb(data | 0xe0, priv->base + I2C_LS2X_CTR);
 
-_properties
+Ditto.
 
-> +				struct i2c_gpio_platform_data *pdata)
+> +}
+
+...
+
+> +	r = devm_request_irq(dev, irq, ls2x_i2c_irq_handler,
+> +				IRQF_SHARED, "ls2x-i2c", priv);
+
+Indentation.
+
+> +	if (r < 0)
+> +		return dev_err_probe(dev, r, "Unable to request irq %d\n", irq);
+
+...
+
+> +	adap->dev.of_node = pdev->dev.of_node;
+
+Why is this needed?
+
+> +	device_set_node(&adap->dev, dev_fwnode(dev));
+
+...
+
+> +	/* i2c device drivers may be active on return from add_adapter() */
+> +	r = i2c_add_adapter(adap);
+
+Why not use devm_ variant of this?
+
+> +	if (r)
+> +		return dev_err_probe(dev, r, "Failure adding adapter\n");
+
+...
+
+> +static int ls2x_i2c_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct ls2x_i2c_priv *priv = platform_get_drvdata(pdev);
+
+Can't you use dev_get_drvdata() directly? Why?
+
+> +
+> +	priv->suspended = 1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ls2x_i2c_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct ls2x_i2c_priv *priv = platform_get_drvdata(pdev);
+
+Ditto.
+
+> +	priv->suspended = 0;
+> +	ls2x_i2c_reginit(priv);
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static const struct dev_pm_ops ls2x_i2c_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(ls2x_i2c_suspend, ls2x_i2c_resume)
+> +};
+
+Use corresponding DEFINE_ macro.
 
 -- 
 With Best Regards,
