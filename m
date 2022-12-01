@@ -1,262 +1,250 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2AA1116
-	for <loongarch@lists.linux.dev>; Thu,  1 Dec 2022 11:29:20 +0000 (UTC)
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1669894152;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EDYHcKJNIl+bFBsPJ9EKGMSmWfe/8gI4HDrW58IPop0=;
-	b=o8IsKqMxg5Xkgxlv83mVHjmHCrw88/1n8GQWsRih1pewbVOeJyEY9TFGg1nPjoeJtVOHWR
-	9+qhCIParsQuUdzuD/Qf/QbU6MIqTThKNCDKkTORdbPxLSJ9GLyXMuUs2opHR7xOaCh9um
-	LHOVcyHL4K0RvjNgf79BcMKr+DRgcQ39V8Lv2y5EnJF6uqpXtqeWhSxiD9CamqQ3l51Y0D
-	wrX8pqk7knVKZyvnI7LaRKrhIpM17v5HyWHAeR1j42SnpLKr3JQlWGHpxB7vUkPELTCYAr
-	ArcU1+H8N1nYX0wXOhIwkVoysCFpcSlqezu4gdK4j2P0TAuF/0vFd8qIO2a8cQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1669894152;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EDYHcKJNIl+bFBsPJ9EKGMSmWfe/8gI4HDrW58IPop0=;
-	b=NVjcGjbsY+ymyeBytgfnNhP/VQjQSsGfl0G38KK1qXT3nvEO7RAfQ3LDnNPDOF/2LiyC1S
-	MUuww9PZ0hNXi1Bw==
-To: Yinbo Zhu <zhuyinbo@loongson.cn>, Daniel Lezcano
- <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>, Jianmin Lv <lvjianmin@loongson.cn>, Yun Liu
- <liuyun@loongson.cn>, Yang Li <yang.lee@linux.alibaba.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- loongarch@lists.linux.dev, Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: Re: [PATCH v11 1/3] clocksource: loongson2_hpet: add hpet driver
- support
-In-Reply-To: <20221129030925.14074-1-zhuyinbo@loongson.cn>
-References: <20221129030925.14074-1-zhuyinbo@loongson.cn>
-Date: Thu, 01 Dec 2022 12:29:12 +0100
-Message-ID: <87k03bs6pj.ffs@tglx>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E797D10E8
+	for <loongarch@lists.linux.dev>; Thu,  1 Dec 2022 12:32:32 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8BxeercnohjFZMCAA--.2947S3;
+	Thu, 01 Dec 2022 20:32:28 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxPuDVnohjJGUjAA--.22543S3;
+	Thu, 01 Dec 2022 20:32:27 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juxin Gao <gaojuxin@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	Arnaud Patard <apatard@mandriva.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v10 2/2] dt-bindings: gpio: add loongson gpio
+Date: Thu,  1 Dec 2022 20:32:20 +0800
+Message-Id: <20221201123220.7893-2-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221201123220.7893-1-zhuyinbo@loongson.cn>
+References: <20221201123220.7893-1-zhuyinbo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxPuDVnohjJGUjAA--.22543S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3XrWUWr1xtw17tr18XrWkJFb_yoW7GF4UpF
+	1DZFZxX3y2gr13AFs8Ka17Xr4fAr1kAw1ruwn8C34xtrWUKw13XFWfWFykG3Z3WrWUXF13
+	JwsxurWrJa43Aw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bf8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM2
+	8EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq
+	07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7
+	xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Y
+	z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64
+	vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E
+	14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+	CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryU
+	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
+	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU8mQ6JUUUUU==
 
-On Tue, Nov 29 2022 at 11:09, Yinbo Zhu wrote:
-> HPET (High Precision Event Timer) defines a new set of timers, which
+Add the Loongson platform gpio binding with DT schema format using
+json-schema.
 
-It's not really new. The HPET specification is 20 years old :)
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+Change in v10:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v9:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v8:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v7:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v6:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v5:
+		1. NO change, but other patch in this series of patches set has
+		   change.
+Change in v4:
+		1. Remove the string "series".
+		2. Add the reviewed-by information.
+Change in v3:
+		1. Separate some changes of MAINTAINERS file and enter the first patch.
+Change in v2:
+		1. Drop "loongson,gpio_base" and "gpio-ranges" will cover it.
+		1. Drop "loongson,conf_offset", "loongson,out_offset", "loongson,in_offset",
+		   "loongson,support_irq" and kernel driver will initial them that depend
+		   compatible in kernel.
+		3. Fixup maintainer for this driver.
 
-> +++ b/drivers/clocksource/loongson2_hpet.c
-> @@ -0,0 +1,334 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
-> + * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/percpu.h>
-> +#include <linux/delay.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_address.h>
-> +#include <linux/clk.h>
-> +#include <asm/time.h>
-> +
-> +/* HPET regs */
-> +#define HPET_CFG                0x010
-> +#define HPET_STATUS             0x020
-> +#define HPET_COUNTER            0x0f0
-> +#define HPET_T0_IRS             0x001
-> +#define HPET_T0_CFG             0x100
-> +#define HPET_T0_CMP             0x108
-> +#define HPET_CFG_ENABLE         0x001
-> +#define HPET_TN_LEVEL           0x0002
-> +#define HPET_TN_ENABLE          0x0004
-> +#define HPET_TN_PERIODIC        0x0008
-> +#define HPET_TN_SETVAL          0x0040
-> +#define HPET_TN_32BIT           0x0100
+ .../bindings/gpio/loongson,ls-gpio.yaml       | 126 ++++++++++++++++++
+ MAINTAINERS                                   |   1 +
+ 2 files changed, 127 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
 
-So this is another copy of the defines which are already available in
-x86 and mips. Seriously?
+diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+new file mode 100644
+index 000000000000..fb86e8ce6349
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+@@ -0,0 +1,126 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/loongson,ls-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson GPIO controller.
++
++maintainers:
++  - Yinbo Zhu <zhuyinbo@loongson.cn>
++
++properties:
++  compatible:
++    enum:
++      - loongson,ls2k-gpio
++      - loongson,ls7a-gpio
++
++  reg:
++    maxItems: 1
++
++  ngpios:
++    minimum: 1
++    maximum: 64
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++
++  gpio-ranges: true
++
++  interrupts:
++    minItems: 1
++    maxItems: 64
++
++required:
++  - compatible
++  - reg
++  - ngpios
++  - "#gpio-cells"
++  - gpio-controller
++  - gpio-ranges
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    gpio0: gpio@1fe00500 {
++      compatible = "loongson,ls2k-gpio";
++      reg = <0x1fe00500 0x38>;
++      ngpios = <64>;
++      #gpio-cells = <2>;
++      gpio-controller;
++      gpio-ranges = <&pctrl 0 0 15>,
++                    <&pctrl 16 16 15>,
++                    <&pctrl 32 32 10>,
++                    <&pctrl 44 44 20>;
++      interrupt-parent = <&liointc1>;
++      interrupts = <28 IRQ_TYPE_LEVEL_LOW>,
++                   <29 IRQ_TYPE_LEVEL_LOW>,
++                   <30 IRQ_TYPE_LEVEL_LOW>,
++                   <30 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <26 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <>,
++                   <>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>,
++                   <27 IRQ_TYPE_LEVEL_LOW>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2203d90bb2cb..2f3b1584db11 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12169,6 +12169,7 @@ LOONGSON GPIO DRIVER
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+ F:	drivers/gpio/gpio-loongson-64bit.c
+ 
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+-- 
+2.20.1
 
-> +static DEFINE_SPINLOCK(hpet_lock);
-
-This wants to be a raw spinlock if at all. But first you have to explain
-the purpose of this lock.
-
-> +DEFINE_PER_CPU(struct clock_event_device, hpet_clockevent_device);
-
-Why needs this to be global and why is it needed at all?
-
-This code does support exactly _ONE_ clock event device.
-
-> +static int hpet_read(int offset)
-> +{
-> +	return readl(hpet_mmio_base + offset);
-> +}
-> +
-> +static void hpet_write(int offset, int data)
-> +{
-> +	writel(data, hpet_mmio_base + offset);
-> +}
-> +
-> +static void hpet_start_counter(void)
-> +{
-> +	unsigned int cfg = hpet_read(HPET_CFG);
-> +
-> +	cfg |= HPET_CFG_ENABLE;
-> +	hpet_write(HPET_CFG, cfg);
-> +}
-> +
-> +static void hpet_stop_counter(void)
-> +{
-> +	unsigned int cfg = hpet_read(HPET_CFG);
-> +
-> +	cfg &= ~HPET_CFG_ENABLE;
-> +	hpet_write(HPET_CFG, cfg);
-> +}
-> +
-> +static void hpet_reset_counter(void)
-> +{
-> +	hpet_write(HPET_COUNTER, 0);
-> +	hpet_write(HPET_COUNTER + 4, 0);
-> +}
-> +
-> +static void hpet_restart_counter(void)
-> +{
-> +	hpet_stop_counter();
-> +	hpet_reset_counter();
-> +	hpet_start_counter();
-> +}
-
-This is also a copy of the x86 HPET code....
-
-> +static void hpet_enable_legacy_int(void)
-> +{
-> +	/* Do nothing on Loongson2 */
-> +}
-> +
-> +static int hpet_set_state_periodic(struct clock_event_device *evt)
-> +{
-> +	int cfg;
-> +
-> +	spin_lock(&hpet_lock);
-
-What's the purpose of this lock ?
-
-> +	pr_info("set clock event to periodic mode!\n");
-> +
-> +	/* stop counter */
-> +	hpet_stop_counter();
-> +	hpet_reset_counter();
-> +	hpet_write(HPET_T0_CMP, 0);
-> +
-> +	/* enables the timer0 to generate a periodic interrupt */
-> +	cfg = hpet_read(HPET_T0_CFG);
-> +	cfg &= ~HPET_TN_LEVEL;
-> +	cfg |= HPET_TN_ENABLE | HPET_TN_PERIODIC | HPET_TN_SETVAL |
-> +		HPET_TN_32BIT | hpet_irq_flags;
-> +	hpet_write(HPET_T0_CFG, cfg);
-> +
-> +	/* set the comparator */
-> +	hpet_write(HPET_T0_CMP, HPET_COMPARE_VAL);
-> +	udelay(1);
-> +	hpet_write(HPET_T0_CMP, HPET_COMPARE_VAL);
-> +
-> +	/* start counter */
-> +	hpet_start_counter();
-
-Pretty much the same code as hpet_clkevt_set_state_periodic()
-
-> +	spin_unlock(&hpet_lock);
-> +	return 0;
-> +}
-> +
-> +static int hpet_set_state_shutdown(struct clock_event_device *evt)
-> +{
-> +	int cfg;
-> +
-> +	spin_lock(&hpet_lock);
-> +
-> +	cfg = hpet_read(HPET_T0_CFG);
-> +	cfg &= ~HPET_TN_ENABLE;
-> +	hpet_write(HPET_T0_CFG, cfg);
-> +
-> +	spin_unlock(&hpet_lock);
-
-Another slightly different copy of the x86 code
-
-> +	return 0;
-> +}
-> +
-> +static int hpet_set_state_oneshot(struct clock_event_device *evt)
-> +{
-> +	int cfg;
-> +
-> +	spin_lock(&hpet_lock);
-> +
-> +	pr_info("set clock event to one shot mode!\n");
-> +	cfg = hpet_read(HPET_T0_CFG);
-> +	/*
-> +	 * set timer0 type
-> +	 * 1 : periodic interrupt
-> +	 * 0 : non-periodic(oneshot) interrupt
-> +	 */
-> +	cfg &= ~HPET_TN_PERIODIC;
-> +	cfg |= HPET_TN_ENABLE | HPET_TN_32BIT |
-> +		hpet_irq_flags;
-> +	hpet_write(HPET_T0_CFG, cfg);
-
-Yet another copy.
-
-> +	/* start counter */
-> +	hpet_start_counter();
-
-Why doe you need an explicit start here?
-
-> +	spin_unlock(&hpet_lock);
-> +	return 0;
-> +}
-> +
-> +static int hpet_tick_resume(struct clock_event_device *evt)
-> +{
-> +	spin_lock(&hpet_lock);
-> +	hpet_enable_legacy_int();
-> +	spin_unlock(&hpet_lock);
-
-More copy and paste just to slap a spinlock on to it which has zero
-value AFAICT.
-
-> +	return 0;
-> +}
-> +
-> +static int hpet_next_event(unsigned long delta,
-> +		struct clock_event_device *evt)
-> +{
-> +	u32 cnt;
-> +	s32 res;
-> +
-> +	cnt = hpet_read(HPET_COUNTER);
-> +	cnt += (u32) delta;
-> +	hpet_write(HPET_T0_CMP, cnt);
-> +
-> +	res = (s32)(cnt - hpet_read(HPET_COUNTER));
-> +
-> +	return res < HPET_MIN_CYCLES ? -ETIME : 0;
-
-Another copy of the x86 code except for omitting the big comment which
-explains the logic.
-
-Seriously, this is not how it works. Instead of copy & paste, we create
-shared infrastructure and just keep the real architecture specific
-pieces separate.
-
-Thanks,
-
-        tglx
