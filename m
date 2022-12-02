@@ -1,316 +1,130 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9229F7B
-	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 04:36:57 +0000 (UTC)
-Received: from loongson.cn (unknown [117.133.84.183])
-	by gateway (Coremail) with SMTP id _____8Dx+OjngIljqbcCAA--.3161S3;
-	Fri, 02 Dec 2022 12:36:55 +0800 (CST)
-Received: from [192.168.1.2] (unknown [117.133.84.183])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx9VblgIljvRckAA--.5510S3;
-	Fri, 02 Dec 2022 12:36:54 +0800 (CST)
-Message-ID: <c46e5ebf-5293-5123-52d3-b3594c6e9244@loongson.cn>
-Date: Fri, 2 Dec 2022 12:36:53 +0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFAF186B
+	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 07:09:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E116EC433B5
+	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 07:09:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1669964996;
+	bh=dTHdSO2Wn9CsGfPV2sYmXDYEvxH1WFE9uaIGBIqnrB4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HLlteQobS+XZSNozT/gUjJihmoiG/RlrP52WAO/7PRltnuK1NG/eB4hGYBR0EDucL
+	 rwQsxw3SRHisEyb991PqHkXP6t5ddNfsULpwE6+TVeVViSBDvQl65W5DHW6kv8DeG/
+	 FUosxffJfEM6dnuhviPHkRbfDHDP0KcrliRF9DvoVEt16L/xtxxrm8PJmkHSW9+2M2
+	 8zjZc5RqNgwQCPWdZLCcEhgGEwOyGne5EVFn7gnS1bi/VYjrS6k8GQunv9gebOtcps
+	 JeZTAADz6WBXec5RdJSFDMedcqD+a+DFeILNAGs4wWX5VYWsTpWLuYxKAntlZ2PqE7
+	 Z/IXTI0zZnVVg==
+Received: by mail-ed1-f49.google.com with SMTP id x2so5357593edd.2
+        for <loongarch@lists.linux.dev>; Thu, 01 Dec 2022 23:09:56 -0800 (PST)
+X-Gm-Message-State: ANoB5pkpeP+l6cYqHm/JVuN92gjtPsj56I7VY73GkHmaGZxxN/mX+v8J
+	y/OF5C/5/3YyJqIzgvby8uUsV7Qvp0o3lYE36oE=
+X-Google-Smtp-Source: AA0mqf7OYqynGhtk1eSd1H+p/vQPcblDH58wYrjfuhXThfO9R3ph9Jqo/6vkLOHPgUaQ9Okhma3t5IuHrJY8bonqZuQ=
+X-Received: by 2002:a05:6402:1013:b0:463:f3a:32ce with SMTP id
+ c19-20020a056402101300b004630f3a32cemr47352914edu.366.1669964995083; Thu, 01
+ Dec 2022 23:09:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v11 1/3] clocksource: loongson2_hpet: add hpet driver
- support
-To: Thomas Gleixner <tglx@linutronix.de>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Jianmin Lv <lvjianmin@loongson.cn>, Yun Liu <liuyun@loongson.cn>,
- Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, loongarch@lists.linux.dev, zhuyinbo@loongson.cn
-References: <20221129030925.14074-1-zhuyinbo@loongson.cn>
- <87k03bs6pj.ffs@tglx>
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-In-Reply-To: <87k03bs6pj.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dx9VblgIljvRckAA--.5510S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3JF17Kr48Jr1rCF1Duw17ZFb_yoWxArWUpF
-	yIvFsxtFWDJr1kXr1jqrs8urWqq3yfury7Kry5tayUJ34qvwn3GFy0939xCr10krZ3Ja9F
-	ya1Yq347uF9FyaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bDkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
-	v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
-	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8ajg7UUUUU==
+References: <1669796376-4608-1-git-send-email-yangtiezhu@loongson.cn> <1669796376-4608-3-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1669796376-4608-3-git-send-email-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 2 Dec 2022 15:09:43 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4vLsfRyVXsxZXNhP+KodK-vmxXNdcCUs3GyD8=tp4kpw@mail.gmail.com>
+Message-ID: <CAAhV-H4vLsfRyVXsxZXNhP+KodK-vmxXNdcCUs3GyD8=tp4kpw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/5] LoongArch: Use stop_machine_cpuslocked() to modify instruction
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu <mhiramat@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi, Tiezhu,
 
-在 2022/12/1 19:29, Thomas Gleixner 写道:
-> On Tue, Nov 29 2022 at 11:09, Yinbo Zhu wrote:
->> HPET (High Precision Event Timer) defines a new set of timers, which
-> It's not really new. The HPET specification is 20 years old :)
-
-I will change it.
-
-thanks.
-
+On Wed, Nov 30, 2022 at 4:19 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 >
->> +++ b/drivers/clocksource/loongson2_hpet.c
->> @@ -0,0 +1,334 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
->> + * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
->> + */
->> +
->> +#include <linux/init.h>
->> +#include <linux/percpu.h>
->> +#include <linux/delay.h>
->> +#include <linux/spinlock.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/of_address.h>
->> +#include <linux/clk.h>
->> +#include <asm/time.h>
->> +
->> +/* HPET regs */
->> +#define HPET_CFG                0x010
->> +#define HPET_STATUS             0x020
->> +#define HPET_COUNTER            0x0f0
->> +#define HPET_T0_IRS             0x001
->> +#define HPET_T0_CFG             0x100
->> +#define HPET_T0_CMP             0x108
->> +#define HPET_CFG_ENABLE         0x001
->> +#define HPET_TN_LEVEL           0x0002
->> +#define HPET_TN_ENABLE          0x0004
->> +#define HPET_TN_PERIODIC        0x0008
->> +#define HPET_TN_SETVAL          0x0040
->> +#define HPET_TN_32BIT           0x0100
-> So this is another copy of the defines which are already available in
-> x86 and mips. Seriously?
+> Rename the current larch_insn_patch_text() to patch_text_nosync(),
+> then redefine larch_insn_patch_text() with stop_machine_cpuslocked()
+> to modify instruction to avoid CPU race, this is preparation for later
+> patch.
+I don't think stop_machine is a good idea for this, because it is too
+expensive, maybe Masami can give us a better suggestion.
 
-in fact, these definition was also record in LoongArch Loongson-2 SoC
-
-datasheet.
-
+Huacai
 >
->> +static DEFINE_SPINLOCK(hpet_lock);
-> This wants to be a raw spinlock if at all. But first you have to explain
-> the purpose of this lock.
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/kernel/inst.c | 33 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 32 insertions(+), 1 deletion(-)
 >
->> +DEFINE_PER_CPU(struct clock_event_device, hpet_clockevent_device);
-> Why needs this to be global and why is it needed at all?
+> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> index aaaf9de..d842405 100644
+> --- a/arch/loongarch/kernel/inst.c
+> +++ b/arch/loongarch/kernel/inst.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+>   */
+>  #include <linux/sizes.h>
+> +#include <linux/stop_machine.h>
+>  #include <linux/uaccess.h>
 >
-> This code does support exactly _ONE_ clock event device.
-
-This is consider that the one hardware clock_event_device is used for 
-multiple cpu cores,
-
-and earch cpu cores has a device from its perspective, so add 
-DEFINE_SPINLOCK(hpet_lock)
-
-and DEFINE_PER_CPU(struct clock_event_device, hpet_clockevent_device),
-
-the use of locks described below is also this reason .
-
-
-and I will use raw spinlock to replace spin lock.
-
+>  #include <asm/cacheflush.h>
+> @@ -10,6 +11,12 @@
 >
->> +static int hpet_read(int offset)
->> +{
->> +	return readl(hpet_mmio_base + offset);
->> +}
->> +
->> +static void hpet_write(int offset, int data)
->> +{
->> +	writel(data, hpet_mmio_base + offset);
->> +}
->> +
->> +static void hpet_start_counter(void)
->> +{
->> +	unsigned int cfg = hpet_read(HPET_CFG);
->> +
->> +	cfg |= HPET_CFG_ENABLE;
->> +	hpet_write(HPET_CFG, cfg);
->> +}
->> +
->> +static void hpet_stop_counter(void)
->> +{
->> +	unsigned int cfg = hpet_read(HPET_CFG);
->> +
->> +	cfg &= ~HPET_CFG_ENABLE;
->> +	hpet_write(HPET_CFG, cfg);
->> +}
->> +
->> +static void hpet_reset_counter(void)
->> +{
->> +	hpet_write(HPET_COUNTER, 0);
->> +	hpet_write(HPET_COUNTER + 4, 0);
->> +}
->> +
->> +static void hpet_restart_counter(void)
->> +{
->> +	hpet_stop_counter();
->> +	hpet_reset_counter();
->> +	hpet_start_counter();
->> +}
-> This is also a copy of the x86 HPET code....
+>  static DEFINE_RAW_SPINLOCK(patch_lock);
 >
->> +static void hpet_enable_legacy_int(void)
->> +{
->> +	/* Do nothing on Loongson2 */
->> +}
->> +
->> +static int hpet_set_state_periodic(struct clock_event_device *evt)
->> +{
->> +	int cfg;
->> +
->> +	spin_lock(&hpet_lock);
-> What's the purpose of this lock ?
+> +struct patch_insn {
+> +       void *addr;
+> +       u32 insn;
+> +       atomic_t cpu_count;
+> +};
+> +
+>  int larch_insn_read(void *addr, u32 *insnp)
+>  {
+>         int ret;
+> @@ -34,7 +41,7 @@ int larch_insn_write(void *addr, u32 insn)
+>         return ret;
+>  }
 >
->> +	pr_info("set clock event to periodic mode!\n");
->> +
->> +	/* stop counter */
->> +	hpet_stop_counter();
->> +	hpet_reset_counter();
->> +	hpet_write(HPET_T0_CMP, 0);
->> +
->> +	/* enables the timer0 to generate a periodic interrupt */
->> +	cfg = hpet_read(HPET_T0_CFG);
->> +	cfg &= ~HPET_TN_LEVEL;
->> +	cfg |= HPET_TN_ENABLE | HPET_TN_PERIODIC | HPET_TN_SETVAL |
->> +		HPET_TN_32BIT | hpet_irq_flags;
->> +	hpet_write(HPET_T0_CFG, cfg);
->> +
->> +	/* set the comparator */
->> +	hpet_write(HPET_T0_CMP, HPET_COMPARE_VAL);
->> +	udelay(1);
->> +	hpet_write(HPET_T0_CMP, HPET_COMPARE_VAL);
->> +
->> +	/* start counter */
->> +	hpet_start_counter();
-> Pretty much the same code as hpet_clkevt_set_state_periodic()
+> -int larch_insn_patch_text(void *addr, u32 insn)
+> +static int patch_text_nosync(void *addr, u32 insn)
+>  {
+>         int ret;
+>         u32 *tp = addr;
+> @@ -50,6 +57,30 @@ int larch_insn_patch_text(void *addr, u32 insn)
+>         return ret;
+>  }
 >
->> +	spin_unlock(&hpet_lock);
->> +	return 0;
->> +}
->> +
->> +static int hpet_set_state_shutdown(struct clock_event_device *evt)
->> +{
->> +	int cfg;
->> +
->> +	spin_lock(&hpet_lock);
->> +
->> +	cfg = hpet_read(HPET_T0_CFG);
->> +	cfg &= ~HPET_TN_ENABLE;
->> +	hpet_write(HPET_T0_CFG, cfg);
->> +
->> +	spin_unlock(&hpet_lock);
-> Another slightly different copy of the x86 code
+> +static int patch_text_cb(void *data)
+> +{
+> +       struct patch_insn *param = data;
+> +       int ret = 0;
+> +
+> +       if (atomic_inc_return(&param->cpu_count) == num_online_cpus()) {
+> +               ret = patch_text_nosync(param->addr, param->insn);
+> +               atomic_inc(&param->cpu_count);
+> +       } else {
+> +               while (atomic_read(&param->cpu_count) <= num_online_cpus())
+> +                       cpu_relax();
+> +               smp_mb();
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +int larch_insn_patch_text(void *addr, u32 insn)
+> +{
+> +       struct patch_insn param = { addr, insn, ATOMIC_INIT(0) };
+> +
+> +       return stop_machine_cpuslocked(patch_text_cb, &param, cpu_online_mask);
+> +}
+> +
+>  u32 larch_insn_gen_nop(void)
+>  {
+>         return INSN_NOP;
+> --
+> 2.1.0
 >
->> +	return 0;
->> +}
->> +
->> +static int hpet_set_state_oneshot(struct clock_event_device *evt)
->> +{
->> +	int cfg;
->> +
->> +	spin_lock(&hpet_lock);
->> +
->> +	pr_info("set clock event to one shot mode!\n");
->> +	cfg = hpet_read(HPET_T0_CFG);
->> +	/*
->> +	 * set timer0 type
->> +	 * 1 : periodic interrupt
->> +	 * 0 : non-periodic(oneshot) interrupt
->> +	 */
->> +	cfg &= ~HPET_TN_PERIODIC;
->> +	cfg |= HPET_TN_ENABLE | HPET_TN_32BIT |
->> +		hpet_irq_flags;
->> +	hpet_write(HPET_T0_CFG, cfg);
-> Yet another copy.
 >
->> +	/* start counter */
->> +	hpet_start_counter();
-> Why doe you need an explicit start here?
-
-if the hpet doesn't support period mode,  the the hpet irq doesn't enable in
-
-oneshot mode, so add it in here.
-
->
->> +	spin_unlock(&hpet_lock);
->> +	return 0;
->> +}
->> +
->> +static int hpet_tick_resume(struct clock_event_device *evt)
->> +{
->> +	spin_lock(&hpet_lock);
->> +	hpet_enable_legacy_int();
->> +	spin_unlock(&hpet_lock);
-> More copy and paste just to slap a spinlock on to it which has zero
-> value AFAICT.
-thank you for reminding me, I will remove it.
->> +	return 0;
->> +}
->> +
->> +static int hpet_next_event(unsigned long delta,
->> +		struct clock_event_device *evt)
->> +{
->> +	u32 cnt;
->> +	s32 res;
->> +
->> +	cnt = hpet_read(HPET_COUNTER);
->> +	cnt += (u32) delta;
->> +	hpet_write(HPET_T0_CMP, cnt);
->> +
->> +	res = (s32)(cnt - hpet_read(HPET_COUNTER));
->> +
->> +	return res < HPET_MIN_CYCLES ? -ETIME : 0;
-> Another copy of the x86 code except for omitting the big comment which
-> explains the logic.
->
-> Seriously, this is not how it works. Instead of copy & paste, we create
-> shared infrastructure and just keep the real architecture specific
-> pieces separate.
->
-> Thanks,
->
->          tglx
-
-I don't find the shared infrastructure in LoongArch, I want to support  
-hpet for LoongArch
-
-architecture Loongson-2 SoC series.   the peripherals on the SoC are 
-generally
-
-descriped by dts.
-
-
-In addition, I havent' found any architecture releated differences for 
-hpet, at least Mips (loongson)
-
-and LoongArch should be like this,  in addtion to the hpet control base 
-address.
-
-
-Loongson-2 SoC need to support dts, so I refer to the hpet driver of 
-Mips and add
-
-hpet dts support for LoongArch architecture Loongson-2 SoC.
-
-
-Thanks,
-
-Yinbo.
-
