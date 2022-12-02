@@ -1,113 +1,129 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3C11C04
-	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 08:25:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1669969510; bh=Ye46Fg5eBuOYdIUglann6zign/1mz4qz1cLGfx4nTj8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G2MeU6gNABJIelvGtyx5+MmmHS/wizejCdW1hz9kFWt/+ckmuGLHyCTEh2laC8421
-	 ufFIU9t+z3AHdnsDPNysAEfnPr5NvHkU6KgwlIhcV7NBmYyMc8kQzJmvnQlKkhYc70
-	 g0Hj7u4QkhL3u+JcsXvuFBY7duJLiUBvBGWFIrVg=
-Received: from [100.100.35.204] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 17F1E600D1;
-	Fri,  2 Dec 2022 16:25:10 +0800 (CST)
-Message-ID: <07e0d775-6bb7-051b-9ec9-71153efbdf21@xen0n.name>
-Date: Fri, 2 Dec 2022 16:25:09 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809DB1C04
+	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 08:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669969786; x=1701505786;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=4tZ8P1rjFZqQdEDu1Entw+Faj29DY+fm4wogYriUb4s=;
+  b=Jdt8OOBFCU2iBd2rV6fjNUU1WhsCSQfugO5vi918dZQOBVDmUURee7kF
+   wy4DNQmulxM9x2mekJdHFLN6ZLJc91iOJz7qwS3qFjUgjUujIKaGnQboA
+   0b1nADg7T/1N2kz+QR31RJem6yAOD9cxhO7pHMPmOM1+adtqmoLK55QvU
+   Tq4jJ0nBdNViYr7fKzjgIPgqe3LRl95LOeif7HKCBeZd9ZOCClCQdeZru
+   xiC3dKvU0NIdH8g9k13TV7JVkXB7WZ9Xiu8hwQ9UmCMZine8eaPBRayq/
+   cbqZA2psQ5Lrurx4B3yQwAHqcrtyA8sLt9uCX2Xl4/IASLIsn7Ry5L5PL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="317764275"
+X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
+   d="scan'208";a="317764275"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 00:29:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="973832094"
+X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
+   d="scan'208";a="973832094"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Dec 2022 00:29:24 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1p11QA-003HNL-05;
+	Fri, 02 Dec 2022 10:29:22 +0200
+Date: Fri, 2 Dec 2022 10:29:21 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Wolfram Sang <wsa@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>
+Subject: Re: [PATCH V4 4/5] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
+ controller
+Message-ID: <Y4m3Ycs88nOk5zs9@smile.fi.intel.com>
+References: <cover.1669777792.git.zhoubinbin@loongson.cn>
+ <f6cc2dbe5cd190031ab4f772d1cf250934288546.1669777792.git.zhoubinbin@loongson.cn>
+ <Y4e/6KewuHjAluSZ@smile.fi.intel.com>
+ <f0060385-644a-847e-48cf-865c12b96473@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0)
- Gecko/20100101 Firefox/109.0 Thunderbird/109.0a1
-Subject: Re: [PATCH] LoongArch: export symbol with function
- smp_send_reschedule
-To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20221202075854.2253116-1-maobibo@loongson.cn>
-Content-Language: en-US
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20221202075854.2253116-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f0060385-644a-847e-48cf-865c12b96473@loongson.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 2022/12/2 15:58, Bibo Mao wrote:
-> Function smp_send_reschedule is standard kernel ABI, which is
-> defined header file include/linux/smp.h, however on LoongArch
-> it is defined as inline function, so that kernel module can
-> not use this function.
-> 
-> Now define smp_send_reschedule as general function, and add
-> EXPORT_SYMBOL_GPL on this function, so that kernel modules can
-> use it.
-> 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->   arch/loongarch/include/asm/smp.h | 10 ----------
->   arch/loongarch/kernel/smp.c      | 11 +++++++++++
->   2 files changed, 11 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-> index 3dd172d9ffea..d82687390b4a 100644
-> --- a/arch/loongarch/include/asm/smp.h
-> +++ b/arch/loongarch/include/asm/smp.h
-> @@ -78,16 +78,6 @@ extern void calculate_cpu_foreign_map(void);
->    */
->   extern void show_ipi_list(struct seq_file *p, int prec);
->   
-> -/*
-> - * This function sends a 'reschedule' IPI to another CPU.
-> - * it goes straight through and wastes no time serializing
-> - * anything. Worst case is that we lose a reschedule ...
-> - */
-> -static inline void smp_send_reschedule(int cpu)
-> -{
-> -	loongson_send_ipi_single(cpu, SMP_RESCHEDULE);
-> -}
-> -
->   static inline void arch_send_call_function_single_ipi(int cpu)
->   {
->   	loongson_send_ipi_single(cpu, SMP_CALL_FUNCTION);
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index 6ed72f7ff278..51dd3c3f06cb 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -141,6 +141,17 @@ void loongson_send_ipi_single(int cpu, unsigned int action)
->   	ipi_write_action(cpu_logical_map(cpu), (u32)action);
->   }
->   
-> +/*
-> + * This function sends a 'reschedule' IPI to another CPU.
-> + * it goes straight through and wastes no time serializing
-> + * anything. Worst case is that we lose a reschedule ...
-> + */
-> +void smp_send_reschedule(int cpu)
-> +{
-> +	loongson_send_ipi_single(cpu, SMP_RESCHEDULE);
-> +}
-> +EXPORT_SYMBOL_GPL(smp_send_reschedule);
-> +
+On Fri, Dec 02, 2022 at 11:22:19AM +0800, Binbin Zhou wrote:
+> 在 2022/12/1 04:41, Andy Shevchenko 写道:
+> > On Wed, Nov 30, 2022 at 01:56:20PM +0800, Binbin Zhou wrote:
 
-While the change is in itself okay (one less case of mips legacy, 
-getting in line with ia64, powerpc and riscv that all EXPORT_SYMBOL_GPL 
-this), I'd suggest you batch this patch with the subsequent changes you 
-plan to enable with this one, so reviewers would have more context and 
-hopefully avoid churn. (I, by my familiarity with Loongson and LoongArch 
-development, know you're probably aiming to use this with KVM, but 
-others probably don't know, and again it's always better to have more 
-context.)
+...
 
->   void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action)
->   {
->   	unsigned int i;
+> > > +	for (retry = 0; retry < adap->retries; retry++) {
+> > > +		ret = ls2x_i2c_doxfer(adap, msgs, num);
+> > > +		if (ret != -EAGAIN)
+> > > +			return ret;
+> > > +
+> > > +		dev_dbg(priv->dev, "Retrying transmission (%d)\n", retry);
+> > > +		udelay(100);
+> > Why atomic? This long (esp. atomic) delay must be explained.
+> 
+> The modification records for this part of the source code are no longer
+> traceable.
+> 
+> Communicating with colleagues offline, I learned that this part of the code
+> first appeared on Linux 2.6.36, which was done to circumvent the problem of
+> probable failure to scan the device for i2c devices on some boards.
+> 
+> How about I add a comment here to explain the reason for this?
+
+Yes, that's what we want, and not what you said above. I.o.w. the comment like
+"reason is unknown" is not accepted.
+
+Can you be more specific about the boards and why do you still need this delay?
+
+And also why is it atomic?
+
+> > > +	}
+
+...
+
+> > > +	r = devm_request_irq(dev, irq, ls2x_i2c_irq_handler,
+> > > +				IRQF_SHARED, "ls2x-i2c", priv);
+> > Indentation.
+> 
+> Do you mean  "IRQF_SHARE"  should be aligned to "dev"  ?
+
+Yes.
+
+...
+
+> > > +static const struct dev_pm_ops ls2x_i2c_pm_ops = {
+> > > +	SET_SYSTEM_SLEEP_PM_OPS(ls2x_i2c_suspend, ls2x_i2c_resume)
+> > > +};
+> > Use corresponding DEFINE_ macro.
+> 
+> ok.
+> 
+> I will use
+> 
+> "static DEFINE_SIMPLE_DEV_PM_OPS(ls2x_i2c_pm_ops, ls2x_i2c_suspend,
+> ls2x_i2c_resume);"  corresponding to  ".pm     = pm_ptr(&ls2x_i2c_pm_ops),"
+
+Shouldn't be pm_sleep_ptr()?
+
 
 -- 
-WANG "xen0n" Xuerui
+With Best Regards,
+Andy Shevchenko
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
