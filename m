@@ -1,31 +1,31 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09C14C71
-	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 15:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196354C71
+	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 15:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1669996747;
+	s=mimecast20190719; t=1669996755;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zkIMvc7EhOE64u6GFhS7x1Bfp7Rm8YufbRtsmhjcZ2o=;
-	b=MJmVNIZevE+AqqJ4fFkUyd4UzuWzI989NlXVgJLYRtlu0EqdUBm+Mf+W26ML/AVBQfM89D
-	W/YR24XIgf67QLdXzKFNvaWv3boO6gb/PPmUtrzYRbxlFg6Q8PvI2IC9GF8M1zYXh6C3n0
-	qUJaWVo4qlRz/GYFe5HOPZak4fQICow=
+	bh=EP4LqydUSiQVulPj8M4fIZioGJfqcQn9EHXEOk9M9cI=;
+	b=OZ8WlPil81r4FQ3wcz63MUxqIYWwHYN6LNVw7zieO9HXra79yz2sR5DrPXNkGAH/cQtRmK
+	VZzUI9tBwA7Wq31ivzpacPZnrDhVVShwrSpRPZn8RhFJFkw+bczYUudbBK7aRTVPsvygBc
+	a+2OUBjqbxibfWIvlrmoflcs77PEFKk=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-530-lYV170HcN-CcrO2NjCca_Q-1; Fri, 02 Dec 2022 10:59:04 -0500
-X-MC-Unique: lYV170HcN-CcrO2NjCca_Q-1
+ us-mta-563-Bg0y_EcoMPeHLIEf6idOGw-1; Fri, 02 Dec 2022 10:59:13 -0500
+X-MC-Unique: Bg0y_EcoMPeHLIEf6idOGw-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E4E05833A0E;
-	Fri,  2 Dec 2022 15:59:02 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BB89085A5A6;
+	Fri,  2 Dec 2022 15:59:11 +0000 (UTC)
 Received: from vschneid.remote.csb (unknown [10.33.36.77])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9BFEE20290A5;
-	Fri,  2 Dec 2022 15:58:58 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A4E3F202903F;
+	Fri,  2 Dec 2022 15:59:07 +0000 (UTC)
 From: Valentin Schneider <vschneid@redhat.com>
 To: linux-alpha@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Nicholas Piggin <npiggin@gmail.com>,
 	Guo Ren <guoren@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>
-Subject: [PATCH v3 2/8] trace: Add trace_ipi_send_cpumask()
-Date: Fri,  2 Dec 2022 15:58:11 +0000
-Message-Id: <20221202155817.2102944-3-vschneid@redhat.com>
+Subject: [PATCH v3 4/8] smp: Trace IPIs sent via arch_send_call_function_ipi_mask()
+Date: Fri,  2 Dec 2022 15:58:13 +0000
+Message-Id: <20221202155817.2102944-5-vschneid@redhat.com>
 In-Reply-To: <20221202155817.2102944-1-vschneid@redhat.com>
 References: <20221202155817.2102944-1-vschneid@redhat.com>
 Precedence: bulk
@@ -78,51 +78,42 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 
-trace_ipi_raise() is unsuitable for generically tracing IPI sources due to
-its "reason" argument being an uninformative string (on arm64 all you get
-is "Function call interrupts" for SMP calls).
-
-Add a variant of it that exports a target CPU, a callsite and a callback.
+This simply wraps around the arch function and prepends it with a
+tracepoint, similar to send_call_function_single_ipi().
 
 Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/trace/events/ipi.h | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ kernel/smp.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/include/trace/events/ipi.h b/include/trace/events/ipi.h
-index 0be71dad6ec03..b1125dc27682c 100644
---- a/include/trace/events/ipi.h
-+++ b/include/trace/events/ipi.h
-@@ -35,6 +35,28 @@ TRACE_EVENT(ipi_raise,
- 	TP_printk("target_mask=%s (%s)", __get_bitmask(target_cpus), __entry->reason)
- );
+diff --git a/kernel/smp.c b/kernel/smp.c
+index e2ca1e2f31274..93b4386cd3096 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -160,6 +160,13 @@ void __init call_function_init(void)
+ 	smpcfd_prepare_cpu(smp_processor_id());
+ }
  
-+TRACE_EVENT(ipi_send_cpumask,
++static __always_inline void
++send_call_function_ipi_mask(const struct cpumask *mask)
++{
++	trace_ipi_send_cpumask(mask, _RET_IP_, NULL);
++	arch_send_call_function_ipi_mask(mask);
++}
 +
-+	TP_PROTO(const struct cpumask *cpumask, unsigned long callsite, void *callback),
-+
-+	TP_ARGS(cpumask, callsite, callback),
-+
-+	TP_STRUCT__entry(
-+		__cpumask(cpumask)
-+		__field(void *, callsite)
-+		__field(void *, callback)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_cpumask(cpumask, cpumask_bits(cpumask));
-+		__entry->callsite = (void *)callsite;
-+		__entry->callback = callback;
-+	),
-+
-+	TP_printk("cpumask=%s callsite=%pS callback=%pS",
-+		  __get_cpumask(cpumask), __entry->callsite, __entry->callback)
-+);
-+
- DECLARE_EVENT_CLASS(ipi_handler,
+ #ifdef CONFIG_CSD_LOCK_WAIT_DEBUG
  
- 	TP_PROTO(const char *reason),
+ static DEFINE_STATIC_KEY_FALSE(csdlock_debug_enabled);
+@@ -970,7 +977,7 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+ 		if (nr_cpus == 1)
+ 			send_call_function_single_ipi(last_cpu);
+ 		else if (likely(nr_cpus > 1))
+-			arch_send_call_function_ipi_mask(cfd->cpumask_ipi);
++			send_call_function_ipi_mask(cfd->cpumask_ipi);
+ 
+ 		cfd_seq_store(this_cpu_ptr(&cfd_seq_local)->pinged, this_cpu, CFD_SEQ_NOCPU, CFD_SEQ_PINGED);
+ 	}
 -- 
 2.31.1
 
