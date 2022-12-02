@@ -1,87 +1,102 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124E71C2B
-	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 09:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1669974091; bh=nTT0ilheWD/3fMGwEcxDEoa3N2e80hM8iKbFgRZk4Ik=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hyyVLg8gtKAx4gllhlbxHai/dV541Fd3Rc4eaff4gddJLFhVLkGukGKVdGb4P6FVm
-	 VWRmCKt1Q1dzQL1foTM0h+7UhGb8Th7Bto+dkin+WqO/wAEvnaShf/yd05MAAVtGEP
-	 zbl/7KOshXS9xvWsIa0EV5PGLRq5+ROLtmx+EGjM=
-Received: from [100.100.35.204] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 7C6BA600F8;
-	Fri,  2 Dec 2022 17:41:31 +0800 (CST)
-Message-ID: <c00462a5-c5c0-a749-15aa-c0efaf232e71@xen0n.name>
-Date: Fri, 2 Dec 2022 17:41:30 +0800
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F5ED2571
+	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 13:08:33 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx5vDK+IljmcoCAA--.6437S3;
+	Fri, 02 Dec 2022 21:08:26 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxV1fJ+IljAHEkAA--.6253S2;
+	Fri, 02 Dec 2022 21:08:25 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/4] Add kprobe and kretprobe support for LoongArch
+Date: Fri,  2 Dec 2022 21:08:21 +0800
+Message-Id: <1669986505-11322-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8BxV1fJ+IljAHEkAA--.6253S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7AF1rJryUtF45Jw1rZrWUJwb_yoW8ur1fpF
+	9rAwn8Kr4rGr93Jr9xJw1Uur1ftw4kG3y7W3W2yryrA3W7ZryUAr4fKrZrXa4rGw4aqr1S
+	qr1rX3yagFyxJa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0)
- Gecko/20100101 Firefox/109.0 Thunderbird/109.0a1
-Subject: Re: [PATCH] LoongArch: export symbol with function
- smp_send_reschedule
-Content-Language: en-US
-To: maobibo <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20221202075854.2253116-1-maobibo@loongson.cn>
- <07e0d775-6bb7-051b-9ec9-71153efbdf21@xen0n.name>
- <c5e1b113-f457-2cc7-808b-b13f83adbb2b@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <c5e1b113-f457-2cc7-808b-b13f83adbb2b@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 2022/12/2 17:03, maobibo wrote:
->>> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
->>> index 6ed72f7ff278..51dd3c3f06cb 100644
->>> --- a/arch/loongarch/kernel/smp.c
->>> +++ b/arch/loongarch/kernel/smp.c
->>> @@ -141,6 +141,17 @@ void loongson_send_ipi_single(int cpu, unsigned int action)
->>>        ipi_write_action(cpu_logical_map(cpu), (u32)action);
->>>    }
->>>    +/*
->>> + * This function sends a 'reschedule' IPI to another CPU.
->>> + * it goes straight through and wastes no time serializing
->>> + * anything. Worst case is that we lose a reschedule ...
->>> + */
->>> +void smp_send_reschedule(int cpu)
->>> +{
->>> +    loongson_send_ipi_single(cpu, SMP_RESCHEDULE);
->>> +}
->>> +EXPORT_SYMBOL_GPL(smp_send_reschedule);
->>> +
->>
->> While the change is in itself okay (one less case of mips legacy, getting in line with ia64, powerpc and riscv that all EXPORT_SYMBOL_GPL this), I'd suggest you batch this patch with the subsequent changes you plan to enable with this one, so reviewers would have more context and hopefully avoid churn. (I, by my familiarity with Loongson and LoongArch development, know you're probably aiming to use this with KVM, but others probably don't know, and again it's always better to have more context.)
->>
-> 
-> yes, kvm module depends on function smp_send_reschedule, only that it is not mature now. And this function is standard API, not arch specified API, it is normal for modules to use it :)
+v7:
+  -- Remove stop_machine_cpuslocked() related code
 
-Hmm, maybe you could post some kind of "sneak peek" code for early 
-reviews on broader things like overall approach and architecture? 
-Frankly speaking, experience suggests that code from Loongson usually 
-needs much refactoring to meet mainline standards, and posting your 
-design and some initial implementation could save you and the community 
-a *huge* amount of time and hassle.
+v6:
+  -- Add a new patch to redefine larch_insn_patch_text() with
+     stop_machine_cpuslocked()
+  -- Modify kprobe_breakpoint_handler() to consider the original
+     insn is break and return the correct value
+  -- Modify do_bp() to refresh bcode when original insn is break
 
-And I'm not arguing this patch shouldn't get included, it's the 
-opposite, but I don't see any difference in applying it now or later 
-when the whole LoongArch KVM support gets mainlined, so maybe it's 
-better to wait so we don't cause any churn if the change turns out 
-unnecessary. For example, in my grepping I found that x86 doesn't have 
-smp_send_reschedule exported, yet its KVM port has no problem using it; 
-and that the s390 and riscv KVM ports don't invoke smp_send_reschedule 
-at all. So it's entirely possible that LoongArch won't need this change 
-for KVM after all, and I'm suggesting to save everyone some time.
+v5:
+  -- Rebase on the latest code
+  -- Use stop_machine_cpuslocked() to modify insn to avoid CPU race
+
+v4:
+  -- Remove kprobe_exceptions_notify() in kprobes.c
+  -- Call kprobe_breakpoint_handler() and kprobe_singlestep_handler()
+     in do_bp()
+
+v3:
+  -- Rebase on the latest code
+  -- Check the alignment of PC in simu_branch() and simu_pc()
+  -- Add ibar in flush_insn_slot()
+  -- Rename kprobe_{pre,post}_handler() to {post_}kprobe_handler
+  -- Add preempt_disable() and preempt_enable_no_resched()
+  -- Remove r0 save/restore and do some minor changes
+     in kprobes_trampoline.S
+  -- Do not enable CONFIG_KPROBES by default
+
+v2:
+  -- Split simu_branch() and simu_pc() into a single patch
+  -- Call kprobe_page_fault() in do_page_fault()
+  -- Add kprobes_trampoline.S for kretprobe
+
+Tiezhu Yang (4):
+  LoongArch: Simulate branch and PC instructions
+  LoongArch: Add kprobe support
+  LoongArch: Add kretprobe support
+  samples/kprobes: Add LoongArch support
+
+ arch/loongarch/Kconfig                     |   2 +
+ arch/loongarch/include/asm/inst.h          |  27 +++
+ arch/loongarch/include/asm/kprobes.h       |  59 +++++
+ arch/loongarch/include/asm/ptrace.h        |   1 +
+ arch/loongarch/kernel/Makefile             |   2 +
+ arch/loongarch/kernel/inst.c               | 123 +++++++++++
+ arch/loongarch/kernel/kprobes.c            | 335 +++++++++++++++++++++++++++++
+ arch/loongarch/kernel/kprobes_trampoline.S |  96 +++++++++
+ arch/loongarch/kernel/traps.c              |  13 +-
+ arch/loongarch/mm/fault.c                  |   4 +
+ samples/kprobes/kprobe_example.c           |   8 +
+ 11 files changed, 666 insertions(+), 4 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kprobes.h
+ create mode 100644 arch/loongarch/kernel/kprobes.c
+ create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
 
 -- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+2.1.0
 
