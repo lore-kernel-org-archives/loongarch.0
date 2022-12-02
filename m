@@ -1,218 +1,316 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02E857C
-	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 03:22:22 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.110])
-	by gateway (Coremail) with SMTP id _____8Dxfettb4lj3LUCAA--.6333S3;
-	Fri, 02 Dec 2022 11:22:21 +0800 (CST)
-Received: from [0.0.0.0] (unknown [112.20.109.110])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxb+Jrb4ljcAwkAA--.23837S3;
-	Fri, 02 Dec 2022 11:22:20 +0800 (CST)
-Message-ID: <f0060385-644a-847e-48cf-865c12b96473@loongson.cn>
-Date: Fri, 2 Dec 2022 11:22:19 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9229F7B
+	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 04:36:57 +0000 (UTC)
+Received: from loongson.cn (unknown [117.133.84.183])
+	by gateway (Coremail) with SMTP id _____8Dx+OjngIljqbcCAA--.3161S3;
+	Fri, 02 Dec 2022 12:36:55 +0800 (CST)
+Received: from [192.168.1.2] (unknown [117.133.84.183])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx9VblgIljvRckAA--.5510S3;
+	Fri, 02 Dec 2022 12:36:54 +0800 (CST)
+Message-ID: <c46e5ebf-5293-5123-52d3-b3594c6e9244@loongson.cn>
+Date: Fri, 2 Dec 2022 12:36:53 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: Re: [PATCH V4 4/5] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
- controller
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Wolfram Sang <wsa@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
- devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
- WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Jianmin Lv <lvjianmin@loongson.cn>
-References: <cover.1669777792.git.zhoubinbin@loongson.cn>
- <f6cc2dbe5cd190031ab4f772d1cf250934288546.1669777792.git.zhoubinbin@loongson.cn>
- <Y4e/6KewuHjAluSZ@smile.fi.intel.com>
-In-Reply-To: <Y4e/6KewuHjAluSZ@smile.fi.intel.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v11 1/3] clocksource: loongson2_hpet: add hpet driver
+ support
+To: Thomas Gleixner <tglx@linutronix.de>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Jianmin Lv <lvjianmin@loongson.cn>, Yun Liu <liuyun@loongson.cn>,
+ Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, loongarch@lists.linux.dev, zhuyinbo@loongson.cn
+References: <20221129030925.14074-1-zhuyinbo@loongson.cn>
+ <87k03bs6pj.ffs@tglx>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+In-Reply-To: <87k03bs6pj.ffs@tglx>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxb+Jrb4ljcAwkAA--.23837S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxJF43KrW7Xw4UJr48Jw1fWFg_yoWrtryDpF
-	W8JFyrKryqqr10gw4kAr1DCFy2vrZ3Jw4jqa1rZ3WxZr1qkr1Ivr4Iqr1j9r48WFW8Jr48
-	Ar4jyry5ur90qFJanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-CM-TRANSID:AQAAf8Dx9VblgIljvRckAA--.5510S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3JF17Kr48Jr1rCF1Duw17ZFb_yoWxArWUpF
+	yIvFsxtFWDJr1kXr1jqrs8urWqq3yfury7Kry5tayUJ34qvwn3GFy0939xCr10krZ3Ja9F
+	ya1Yq347uF9FyaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
-	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
-	s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI
-	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
-	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-	jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
+	bDkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
+	v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
+	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
+	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8ajg7UUUUU==
 
-Hi Andy:
 
-在 2022/12/1 04:41, Andy Shevchenko 写道:
-> On Wed, Nov 30, 2022 at 01:56:20PM +0800, Binbin Zhou wrote:
->> This I2C module is integrated into the Loongson-2K SoCs and Loongson
->> LS7A bridge chip.
-> Looks like some of my comments were not addressed. Are you sure
-> you have read the previous reviews carefully?
+在 2022/12/1 19:29, Thomas Gleixner 写道:
+> On Tue, Nov 29 2022 at 11:09, Yinbo Zhu wrote:
+>> HPET (High Precision Event Timer) defines a new set of timers, which
+> It's not really new. The HPET specification is 20 years old :)
+
+I will change it.
+
+thanks.
+
 >
-> ...
+>> +++ b/drivers/clocksource/loongson2_hpet.c
+>> @@ -0,0 +1,334 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/*
+>> + * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
+>> + * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
+>> + */
+>> +
+>> +#include <linux/init.h>
+>> +#include <linux/percpu.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/clk.h>
+>> +#include <asm/time.h>
+>> +
+>> +/* HPET regs */
+>> +#define HPET_CFG                0x010
+>> +#define HPET_STATUS             0x020
+>> +#define HPET_COUNTER            0x0f0
+>> +#define HPET_T0_IRS             0x001
+>> +#define HPET_T0_CFG             0x100
+>> +#define HPET_T0_CMP             0x108
+>> +#define HPET_CFG_ENABLE         0x001
+>> +#define HPET_TN_LEVEL           0x0002
+>> +#define HPET_TN_ENABLE          0x0004
+>> +#define HPET_TN_PERIODIC        0x0008
+>> +#define HPET_TN_SETVAL          0x0040
+>> +#define HPET_TN_32BIT           0x0100
+> So this is another copy of the defines which are already available in
+> x86 and mips. Seriously?
+
+in fact, these definition was also record in LoongArch Loongson-2 SoC
+
+datasheet.
+
 >
->> +static int ls2x_i2c_xfer(struct i2c_adapter *adap,
->> +			struct i2c_msg *msgs, int num)
+>> +static DEFINE_SPINLOCK(hpet_lock);
+> This wants to be a raw spinlock if at all. But first you have to explain
+> the purpose of this lock.
+>
+>> +DEFINE_PER_CPU(struct clock_event_device, hpet_clockevent_device);
+> Why needs this to be global and why is it needed at all?
+>
+> This code does support exactly _ONE_ clock event device.
+
+This is consider that the one hardware clock_event_device is used for 
+multiple cpu cores,
+
+and earch cpu cores has a device from its perspective, so add 
+DEFINE_SPINLOCK(hpet_lock)
+
+and DEFINE_PER_CPU(struct clock_event_device, hpet_clockevent_device),
+
+the use of locks described below is also this reason .
+
+
+and I will use raw spinlock to replace spin lock.
+
+>
+>> +static int hpet_read(int offset)
 >> +{
->> +	int ret, retry;
->> +	struct ls2x_i2c_priv *priv = i2c_get_adapdata(adap);
->> +
->> +	for (retry = 0; retry < adap->retries; retry++) {
->> +		ret = ls2x_i2c_doxfer(adap, msgs, num);
->> +		if (ret != -EAGAIN)
->> +			return ret;
->> +
->> +		dev_dbg(priv->dev, "Retrying transmission (%d)\n", retry);
->> +		udelay(100);
-> Why atomic? This long (esp. atomic) delay must be explained.
-
-The modification records for this part of the source code are no longer 
-traceable.
-
-Communicating with colleagues offline, I learned that this part of the 
-code first appeared on Linux 2.6.36, which was done to circumvent the 
-problem of probable failure to scan the device for i2c devices on some 
-boards.
-
-How about I add a comment here to explain the reason for this?
-
-
->> +	}
->> +
->> +	return -EREMOTEIO;
+>> +	return readl(hpet_mmio_base + offset);
 >> +}
-> ...
->
->> +static void ls2x_i2c_reginit(struct ls2x_i2c_priv *priv)
+>> +
+>> +static void hpet_write(int offset, int data)
 >> +{
->> +	u8 data;
->> +
->> +	/* Enable operations about frequency divider register */
->> +	data = readb(priv->base + I2C_LS2X_CTR);
->> +	writeb(data & ~0x80, priv->base + I2C_LS2X_CTR);
-> Magic number.
->
->> +	ls2x_i2c_adjust_bus_speed(priv);
->> +
->> +	/* Set to normal I2C operating mode and enable interrupts */
->> +	data = readb(priv->base + I2C_LS2X_CTR);
->> +	writeb(data | 0xe0, priv->base + I2C_LS2X_CTR);
-> Ditto.
-
-OK.. I will use the macro to define the corresponding bit.
-
-@@ -48,6 +48,11 @@
-  #define LS2X_SR_TIP            BIT(1)
-  #define LS2X_SR_IF             BIT(0)
-
-+/* Control Register Bit */
-+#define LS2X_CTR_EN             BIT(7) /* 0: Frequency setting operation */
-+#define LS2X_CTR_IEN            BIT(6) /* Enable i2c interrupt */
-+#define LS2X_CTR_MST            BIT(5) /* 0 = Slave 1 = Master */
-+
-  #define LS2X_I2C_MAX_RETRIES   5
-
-  struct ls2x_i2c_priv {
-@@ -266,13 +271,14 @@ static void ls2x_i2c_reginit(struct ls2x_i2c_priv 
-*priv)
-
-         /* Enable operations about frequency divider register */
-         data = readb(priv->base + I2C_LS2X_CTR);
--       writeb(data & ~0x80, priv->base + I2C_LS2X_CTR);
-+       writeb(data & ~LS2X_CTR_EN, priv->base + I2C_LS2X_CTR);
-
-         ls2x_i2c_adjust_bus_speed(priv);
-
-         /* Set to normal I2C operating mode and enable interrupts */
-         data = readb(priv->base + I2C_LS2X_CTR);
--       writeb(data | 0xe0, priv->base + I2C_LS2X_CTR);
-+       writeb(data | LS2X_CTR_EN | LS2X_CTR_IEN | LS2X_CTR_MST,
-+                       priv->base + I2C_LS2X_CTR);
-
-
+>> +	writel(data, hpet_mmio_base + offset);
 >> +}
-> ...
->
->> +	r = devm_request_irq(dev, irq, ls2x_i2c_irq_handler,
->> +				IRQF_SHARED, "ls2x-i2c", priv);
-> Indentation.
-
-Do you mean  "IRQF_SHARE"  should be aligned to "dev"  ?
-
-
->> +	if (r < 0)
->> +		return dev_err_probe(dev, r, "Unable to request irq %d\n", irq);
-> ...
->
->> +	adap->dev.of_node = pdev->dev.of_node;
-> Why is this needed?
->
->> +	device_set_node(&adap->dev, dev_fwnode(dev));
-> ...
->
->> +	/* i2c device drivers may be active on return from add_adapter() */
->> +	r = i2c_add_adapter(adap);
-> Why not use devm_ variant of this?
->
->> +	if (r)
->> +		return dev_err_probe(dev, r, "Failure adding adapter\n");
-> ...
->
->> +static int ls2x_i2c_suspend(struct device *dev)
+>> +
+>> +static void hpet_start_counter(void)
 >> +{
->> +	struct platform_device *pdev = to_platform_device(dev);
->> +	struct ls2x_i2c_priv *priv = platform_get_drvdata(pdev);
-> Can't you use dev_get_drvdata() directly? Why?
+>> +	unsigned int cfg = hpet_read(HPET_CFG);
+>> +
+>> +	cfg |= HPET_CFG_ENABLE;
+>> +	hpet_write(HPET_CFG, cfg);
+>> +}
+>> +
+>> +static void hpet_stop_counter(void)
+>> +{
+>> +	unsigned int cfg = hpet_read(HPET_CFG);
+>> +
+>> +	cfg &= ~HPET_CFG_ENABLE;
+>> +	hpet_write(HPET_CFG, cfg);
+>> +}
+>> +
+>> +static void hpet_reset_counter(void)
+>> +{
+>> +	hpet_write(HPET_COUNTER, 0);
+>> +	hpet_write(HPET_COUNTER + 4, 0);
+>> +}
+>> +
+>> +static void hpet_restart_counter(void)
+>> +{
+>> +	hpet_stop_counter();
+>> +	hpet_reset_counter();
+>> +	hpet_start_counter();
+>> +}
+> This is also a copy of the x86 HPET code....
 >
+>> +static void hpet_enable_legacy_int(void)
+>> +{
+>> +	/* Do nothing on Loongson2 */
+>> +}
 >> +
->> +	priv->suspended = 1;
+>> +static int hpet_set_state_periodic(struct clock_event_device *evt)
+>> +{
+>> +	int cfg;
 >> +
+>> +	spin_lock(&hpet_lock);
+> What's the purpose of this lock ?
+>
+>> +	pr_info("set clock event to periodic mode!\n");
+>> +
+>> +	/* stop counter */
+>> +	hpet_stop_counter();
+>> +	hpet_reset_counter();
+>> +	hpet_write(HPET_T0_CMP, 0);
+>> +
+>> +	/* enables the timer0 to generate a periodic interrupt */
+>> +	cfg = hpet_read(HPET_T0_CFG);
+>> +	cfg &= ~HPET_TN_LEVEL;
+>> +	cfg |= HPET_TN_ENABLE | HPET_TN_PERIODIC | HPET_TN_SETVAL |
+>> +		HPET_TN_32BIT | hpet_irq_flags;
+>> +	hpet_write(HPET_T0_CFG, cfg);
+>> +
+>> +	/* set the comparator */
+>> +	hpet_write(HPET_T0_CMP, HPET_COMPARE_VAL);
+>> +	udelay(1);
+>> +	hpet_write(HPET_T0_CMP, HPET_COMPARE_VAL);
+>> +
+>> +	/* start counter */
+>> +	hpet_start_counter();
+> Pretty much the same code as hpet_clkevt_set_state_periodic()
+>
+>> +	spin_unlock(&hpet_lock);
 >> +	return 0;
 >> +}
 >> +
->> +static int ls2x_i2c_resume(struct device *dev)
+>> +static int hpet_set_state_shutdown(struct clock_event_device *evt)
 >> +{
->> +	struct platform_device *pdev = to_platform_device(dev);
->> +	struct ls2x_i2c_priv *priv = platform_get_drvdata(pdev);
-> Ditto.
->
->> +	priv->suspended = 0;
->> +	ls2x_i2c_reginit(priv);
+>> +	int cfg;
 >> +
+>> +	spin_lock(&hpet_lock);
+>> +
+>> +	cfg = hpet_read(HPET_T0_CFG);
+>> +	cfg &= ~HPET_TN_ENABLE;
+>> +	hpet_write(HPET_T0_CFG, cfg);
+>> +
+>> +	spin_unlock(&hpet_lock);
+> Another slightly different copy of the x86 code
+>
 >> +	return 0;
 >> +}
-> ...
+>> +
+>> +static int hpet_set_state_oneshot(struct clock_event_device *evt)
+>> +{
+>> +	int cfg;
+>> +
+>> +	spin_lock(&hpet_lock);
+>> +
+>> +	pr_info("set clock event to one shot mode!\n");
+>> +	cfg = hpet_read(HPET_T0_CFG);
+>> +	/*
+>> +	 * set timer0 type
+>> +	 * 1 : periodic interrupt
+>> +	 * 0 : non-periodic(oneshot) interrupt
+>> +	 */
+>> +	cfg &= ~HPET_TN_PERIODIC;
+>> +	cfg |= HPET_TN_ENABLE | HPET_TN_32BIT |
+>> +		hpet_irq_flags;
+>> +	hpet_write(HPET_T0_CFG, cfg);
+> Yet another copy.
 >
->> +static const struct dev_pm_ops ls2x_i2c_pm_ops = {
->> +	SET_SYSTEM_SLEEP_PM_OPS(ls2x_i2c_suspend, ls2x_i2c_resume)
->> +};
-> Use corresponding DEFINE_ macro.
+>> +	/* start counter */
+>> +	hpet_start_counter();
+> Why doe you need an explicit start here?
 
-ok.
+if the hpet doesn't support period mode,  the the hpet irq doesn't enable in
 
-I will use
+oneshot mode, so add it in here.
 
-"static DEFINE_SIMPLE_DEV_PM_OPS(ls2x_i2c_pm_ops, ls2x_i2c_suspend, 
-ls2x_i2c_resume);"  corresponding to  ".pm     = pm_ptr(&ls2x_i2c_pm_ops),"
+>
+>> +	spin_unlock(&hpet_lock);
+>> +	return 0;
+>> +}
+>> +
+>> +static int hpet_tick_resume(struct clock_event_device *evt)
+>> +{
+>> +	spin_lock(&hpet_lock);
+>> +	hpet_enable_legacy_int();
+>> +	spin_unlock(&hpet_lock);
+> More copy and paste just to slap a spinlock on to it which has zero
+> value AFAICT.
+thank you for reminding me, I will remove it.
+>> +	return 0;
+>> +}
+>> +
+>> +static int hpet_next_event(unsigned long delta,
+>> +		struct clock_event_device *evt)
+>> +{
+>> +	u32 cnt;
+>> +	s32 res;
+>> +
+>> +	cnt = hpet_read(HPET_COUNTER);
+>> +	cnt += (u32) delta;
+>> +	hpet_write(HPET_T0_CMP, cnt);
+>> +
+>> +	res = (s32)(cnt - hpet_read(HPET_COUNTER));
+>> +
+>> +	return res < HPET_MIN_CYCLES ? -ETIME : 0;
+> Another copy of the x86 code except for omitting the big comment which
+> explains the logic.
+>
+> Seriously, this is not how it works. Instead of copy & paste, we create
+> shared infrastructure and just keep the real architecture specific
+> pieces separate.
+>
+> Thanks,
+>
+>          tglx
+
+I don't find the shared infrastructure in LoongArch, I want to support  
+hpet for LoongArch
+
+architecture Loongson-2 SoC series.   the peripherals on the SoC are 
+generally
+
+descriped by dts.
 
 
-Thanks.
+In addition, I havent' found any architecture releated differences for 
+hpet, at least Mips (loongson)
 
-Binbin
+and LoongArch should be like this,  in addtion to the hpet control base 
+address.
+
+
+Loongson-2 SoC need to support dts, so I refer to the hpet driver of 
+Mips and add
+
+hpet dts support for LoongArch architecture Loongson-2 SoC.
+
+
+Thanks,
+
+Yinbo.
 
