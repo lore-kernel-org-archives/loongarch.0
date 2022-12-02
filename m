@@ -1,243 +1,251 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94757257A
-	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 13:08:35 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxZPDL+IljncoCAA--.6405S3;
-	Fri, 02 Dec 2022 21:08:27 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxV1fJ+IljAHEkAA--.6253S3;
-	Fri, 02 Dec 2022 21:08:26 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 1/4] LoongArch: Simulate branch and PC instructions
-Date: Fri,  2 Dec 2022 21:08:22 +0800
-Message-Id: <1669986505-11322-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1669986505-11322-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1669986505-11322-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8BxV1fJ+IljAHEkAA--.6253S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3WrWkAF4kWFyxWF1kXF1UWrg_yoWxGr1Upr
-	W29r4kCr4DWr93CrWjqr1kXr15tr4fur43uwnxCw13CFy7uFy5GrykWr4jvFyYkw4Utry0
-	gayftw429F4SyaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
-	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8vD73UUUUU==
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA7F4C71
+	for <loongarch@lists.linux.dev>; Fri,  2 Dec 2022 15:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1669996733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=B+hXh5P61A2DdBxK6OLw+4jPvT0r9cthvTrIhcW2QOA=;
+	b=V5EvK5la88P0Vw5L9npruJd3zjFlCQYiESb38SrZ/Fl4Eq+ORERbxxQ0Z7JFFZapejU49M
+	Wtbr2THtrH8iXGA9BmLddTIDGM0M3Ak28xYAY2t+3SV8X85Mudy9hxt8H9XB0wOb96TkBm
+	sDO61h1w2euzOQV70lpGLMyL11mfDmU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-411-aad4T597M-uqDalSOOGakQ-1; Fri, 02 Dec 2022 10:58:50 -0500
+X-MC-Unique: aad4T597M-uqDalSOOGakQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 471C8800B23;
+	Fri,  2 Dec 2022 15:58:48 +0000 (UTC)
+Received: from vschneid.remote.csb (unknown [10.33.36.77])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 437932028CE4;
+	Fri,  2 Dec 2022 15:58:42 +0000 (UTC)
+From: Valentin Schneider <vschneid@redhat.com>
+To: linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	openrisc@lists.librecores.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-xtensa@linux-xtensa.org,
+	x86@kernel.org
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Guo Ren <guoren@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: [PATCH v3 0/8] Generic IPI sending tracepoint
+Date: Fri,  2 Dec 2022 15:58:09 +0000
+Message-Id: <20221202155817.2102944-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 
-According to LoongArch Reference Manual, simulate branch and
-PC instructions, this is preparation for later patch.
+Background
+==========
 
-Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#branch-instructions
-Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#_pcaddi_pcaddu121_pcaddu18l_pcalau12i
+Detecting IPI *reception* is relatively easy, e.g. using
+trace_irq_handler_{entry,exit} or even just function-trace
+flush_smp_call_function_queue() for SMP calls.  
 
-Co-developed-by: Jinyang He <hejinyang@loongson.cn>
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/inst.h   |  12 ++++
- arch/loongarch/include/asm/ptrace.h |   1 +
- arch/loongarch/kernel/inst.c        | 123 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 136 insertions(+)
+Figuring out their *origin*, is trickier as there is no generic tracepoint tied
+to e.g. smp_call_function():
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 6cd994d..a91798b 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -7,6 +7,7 @@
- 
- #include <linux/types.h>
- #include <asm/asm.h>
-+#include <asm/ptrace.h>
- 
- #define INSN_NOP		0x03400000
- #define INSN_BREAK		0x002a0000
-@@ -32,6 +33,7 @@ enum reg1i20_op {
- 	lu12iw_op	= 0x0a,
- 	lu32id_op	= 0x0b,
- 	pcaddi_op	= 0x0c,
-+	pcalau12i_op	= 0x0d,
- 	pcaddu12i_op	= 0x0e,
- 	pcaddu18i_op	= 0x0f,
- };
-@@ -366,6 +368,16 @@ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm);
- u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
- u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
- u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
-+void simu_branch(struct pt_regs *regs, union loongarch_instruction insn);
-+void simu_pc(struct pt_regs *regs, union loongarch_instruction insn);
-+
-+static inline unsigned long sign_extended(unsigned long val, unsigned int idx)
-+{
-+	if (val & (1UL << idx))
-+		return ~((1UL << (idx + 1)) - 1) | val;
-+	else
-+		return ((1UL << (idx + 1)) - 1) & val;
-+}
- 
- static inline bool signed_imm_check(long val, unsigned int bit)
- {
-diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
-index 59c4608..58596c4 100644
---- a/arch/loongarch/include/asm/ptrace.h
-+++ b/arch/loongarch/include/asm/ptrace.h
-@@ -6,6 +6,7 @@
- #define _ASM_PTRACE_H
- 
- #include <asm/page.h>
-+#include <asm/irqflags.h>
- #include <asm/thread_info.h>
- #include <uapi/asm/ptrace.h>
- 
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index 512579d..aaaf9de 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -165,3 +165,126 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned l
- 
- 	return insn.word;
- }
-+
-+void simu_branch(struct pt_regs *regs, union loongarch_instruction insn)
-+{
-+	unsigned int imm, imm_l, imm_h, rd, rj;
-+	unsigned long pc = regs->csr_era;
-+
-+	if (pc & 3) {
-+		pr_warn("%s: invalid pc 0x%lx\n", __func__, pc);
-+		return;
-+	}
-+
-+	imm_l = insn.reg0i26_format.immediate_l;
-+	imm_h = insn.reg0i26_format.immediate_h;
-+	switch (insn.reg0i26_format.opcode) {
-+	case b_op:
-+		regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 27);
-+		return;
-+	case bl_op:
-+		regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 27);
-+		regs->regs[1] = pc + LOONGARCH_INSN_SIZE;
-+		return;
-+	}
-+
-+	imm_l = insn.reg1i21_format.immediate_l;
-+	imm_h = insn.reg1i21_format.immediate_h;
-+	rj = insn.reg1i21_format.rj;
-+	switch (insn.reg1i21_format.opcode) {
-+	case beqz_op:
-+		if (regs->regs[rj] == 0)
-+			regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 22);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		return;
-+	case bnez_op:
-+		if (regs->regs[rj] != 0)
-+			regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 22);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		return;
-+	}
-+
-+	imm = insn.reg2i16_format.immediate;
-+	rj = insn.reg2i16_format.rj;
-+	rd = insn.reg2i16_format.rd;
-+	switch (insn.reg2i16_format.opcode) {
-+	case beq_op:
-+		if (regs->regs[rj] == regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bne_op:
-+		if (regs->regs[rj] != regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case blt_op:
-+		if ((long)regs->regs[rj] < (long)regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bge_op:
-+		if ((long)regs->regs[rj] >= (long)regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bltu_op:
-+		if (regs->regs[rj] < regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bgeu_op:
-+		if (regs->regs[rj] >= regs->regs[rd])
-+			regs->csr_era = pc + sign_extended(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case jirl_op:
-+		regs->csr_era = regs->regs[rj] + sign_extended(imm << 2, 17);
-+		regs->regs[rd] = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	default:
-+		pr_info("%s: unknown opcode\n", __func__);
-+		return;
-+	}
-+}
-+
-+void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
-+{
-+	unsigned long pc = regs->csr_era;
-+	unsigned int rd = insn.reg1i20_format.rd;
-+	unsigned int imm = insn.reg1i20_format.immediate;
-+
-+	if (pc & 3) {
-+		pr_warn("%s: invalid pc 0x%lx\n", __func__, pc);
-+		return;
-+	}
-+
-+	switch (insn.reg1i20_format.opcode) {
-+	case pcaddi_op:
-+		regs->regs[rd] = pc + sign_extended(imm << 2, 21);
-+		break;
-+	case pcaddu12i_op:
-+		regs->regs[rd] = pc + sign_extended(imm << 12, 31);
-+		break;
-+	case pcaddu18i_op:
-+		regs->regs[rd] = pc + sign_extended(imm << 18, 37);
-+		break;
-+	case pcalau12i_op:
-+		regs->regs[rd] = pc + sign_extended(imm << 12, 31);
-+		regs->regs[rd] &= ~((1 << 12) - 1);
-+		break;
-+	default:
-+		pr_info("%s: unknown opcode\n", __func__);
-+		return;
-+	}
-+
-+	regs->csr_era += LOONGARCH_INSN_SIZE;
-+}
--- 
-2.1.0
+o AFAIA x86 has no tracepoint tied to sending IPIs, only receiving them
+  (cf. trace_call_function{_single}_entry()).
+o arm/arm64 do have trace_ipi_raise(), which gives us the target cpus but also a
+  mostly useless string (smp_calls will all be "Function call interrupts").
+o Other architectures don't seem to have any IPI-sending related tracepoint.  
+
+I believe one reason those tracepoints used by arm/arm64 ended up as they were
+is because these archs used to handle IPIs differently from regular interrupts
+(the IRQ driver would directly invoke an IPI-handling routine), which meant they 
+never showed up in trace_irq_handler_{entry, exit}. The trace_ipi_{entry,exit}
+tracepoints gave a way to trace IPI reception but those have become redundant as
+of: 
+
+      56afcd3dbd19 ("ARM: Allow IPIs to be handled as normal interrupts")
+      d3afc7f12987 ("arm64: Allow IPIs to be handled as normal interrupts")
+
+which gave IPIs a "proper" handler function used through
+generic_handle_domain_irq(), which makes them show up via
+trace_irq_handler_{entry, exit}.
+
+Changing stuff up
+=================
+
+Per the above, it would make sense to reshuffle trace_ipi_raise() and move it
+into generic code. This also came up during Daniel's talk on Osnoise at the CPU
+isolation MC of LPC 2022 [1]. 
+
+Now, to be useful, such a tracepoint needs to export:
+o targeted CPU(s)
+o calling context
+
+The only way to get the calling context with trace_ipi_raise() is to trigger a
+stack dump, e.g. $(trace-cmd -e ipi* -T echo 42).
+
+This is instead introducing a new tracepoint which exports the relevant context
+(callsite, and requested callback for when the callsite isn't helpful), and is
+usable by all architectures as it sits in generic code. 
+
+Another thing worth mentioning is that depending on the callsite, the _RET_IP_
+fed to the tracepoint is not always useful - generic_exec_single() doesn't tell
+you much about the actual callback being sent via IPI, which is why the new
+tracepoint also has a @callback argument.
+
+Patches
+=======
+
+o Patch 1 is included for convenience and will be merged independently. FYI I
+  have libtraceevent patches [2] to improve the 
+  pretty-printing of cpumasks using the new type, which look like:
+  <...>-3322  [021]   560.402583: ipi_send_cpumask:     cpumask=14,17,21 callsite=on_each_cpu_cond_mask+0x40 callback=flush_tlb_func+0x0
+  <...>-187   [010]   562.590584: ipi_send_cpumask:     cpumask=0-23 callsite=on_each_cpu_cond_mask+0x40 callback=do_sync_core+0x0
+
+o Patches 2-6 spread out the tracepoint across relevant sites.
+  Patch 6 ends up sprinkling lots of #include <trace/events/ipi.h> which I'm not
+  the biggest fan of, but is the least horrible solution I've been able to come
+  up with so far.
+  
+o Patch 8 is trying to be smart about tracing the callback associated with the
+  IPI.
+
+This results in having IPI trace events for:
+
+o smp_call_function*()
+o smp_send_reschedule()
+o irq_work_queue*()
+o standalone uses of __smp_call_single_queue()
+
+This is incomplete, just looking at arm64 there's more IPI types that aren't
+covered: 
+
+  IPI_CPU_STOP,
+  IPI_CPU_CRASH_STOP,
+  IPI_TIMER,
+  IPI_WAKEUP,
+
+... But it feels like a good starting point.
+
+Links
+=====
+
+[1]: https://youtu.be/5gT57y4OzBM?t=14234
+[2]: https://lore.kernel.org/all/20221116144154.3662923-1-vschneid@redhat.com/
+
+Revisions
+=========
+
+v2 -> v3
+++++++++
+
+o Dropped the generic export of smp_send_reschedule(), turned it into a macro
+  and a bunch of imports
+o Dropped the send_call_function_single_ipi() macro madness, split it into sched
+  and smp bits using some of Peter's suggestions
+
+v1 -> v2
+++++++++
+
+o Ditched single-CPU tracepoint
+o Changed tracepoint signature to include callback
+o Changed tracepoint callsite field to void *; the parameter is still UL to save
+  up on casts due to using _RET_IP_.
+o Fixed linking failures due to not exporting smp_send_reschedule()
+
+Steven Rostedt (Google) (1):
+  tracing: Add __cpumask to denote a trace event field that is a
+    cpumask_t
+
+Valentin Schneider (7):
+  trace: Add trace_ipi_send_cpumask()
+  sched, smp: Trace IPIs sent via send_call_function_single_ipi()
+  smp: Trace IPIs sent via arch_send_call_function_ipi_mask()
+  irq_work: Trace self-IPIs sent via arch_irq_work_raise()
+  treewide: Trace IPIs sent via smp_send_reschedule()
+  smp: reword smp call IPI comment
+  sched, smp: Trace smp callback causing an IPI
+
+ arch/alpha/kernel/smp.c                      |  2 +-
+ arch/arc/kernel/smp.c                        |  2 +-
+ arch/arm/kernel/smp.c                        |  5 +-
+ arch/arm/mach-actions/platsmp.c              |  2 +
+ arch/arm64/kernel/smp.c                      |  3 +-
+ arch/csky/kernel/smp.c                       |  2 +-
+ arch/hexagon/kernel/smp.c                    |  2 +-
+ arch/ia64/kernel/smp.c                       |  4 +-
+ arch/loongarch/include/asm/smp.h             |  2 +-
+ arch/mips/include/asm/smp.h                  |  2 +-
+ arch/mips/kernel/rtlx-cmp.c                  |  2 +
+ arch/openrisc/kernel/smp.c                   |  2 +-
+ arch/parisc/kernel/smp.c                     |  4 +-
+ arch/powerpc/kernel/smp.c                    |  6 +-
+ arch/powerpc/kvm/book3s_hv.c                 |  3 +
+ arch/powerpc/platforms/powernv/subcore.c     |  2 +
+ arch/riscv/kernel/smp.c                      |  4 +-
+ arch/s390/kernel/smp.c                       |  2 +-
+ arch/sh/kernel/smp.c                         |  2 +-
+ arch/sparc/kernel/smp_32.c                   |  2 +-
+ arch/sparc/kernel/smp_64.c                   |  2 +-
+ arch/x86/include/asm/smp.h                   |  2 +-
+ arch/x86/kvm/svm/svm.c                       |  4 +
+ arch/x86/kvm/x86.c                           |  2 +
+ arch/xtensa/kernel/smp.c                     |  2 +-
+ include/linux/smp.h                          |  8 +-
+ include/trace/bpf_probe.h                    |  6 ++
+ include/trace/events/ipi.h                   | 22 ++++++
+ include/trace/perf.h                         |  6 ++
+ include/trace/stages/stage1_struct_define.h  |  6 ++
+ include/trace/stages/stage2_data_offsets.h   |  6 ++
+ include/trace/stages/stage3_trace_output.h   |  6 ++
+ include/trace/stages/stage4_event_fields.h   |  6 ++
+ include/trace/stages/stage5_get_offsets.h    |  6 ++
+ include/trace/stages/stage6_event_callback.h | 20 +++++
+ include/trace/stages/stage7_class_define.h   |  2 +
+ kernel/irq_work.c                            | 14 +++-
+ kernel/sched/core.c                          | 19 +++--
+ kernel/sched/smp.h                           |  2 +-
+ kernel/smp.c                                 | 78 ++++++++++++++++----
+ samples/trace_events/trace-events-sample.c   |  2 +-
+ samples/trace_events/trace-events-sample.h   | 34 +++++++--
+ virt/kvm/kvm_main.c                          |  1 +
+ 43 files changed, 250 insertions(+), 61 deletions(-)
+
+--
+2.31.1
 
