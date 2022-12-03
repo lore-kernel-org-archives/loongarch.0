@@ -1,88 +1,84 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAE852568
-	for <loongarch@lists.linux.dev>; Sat,  3 Dec 2022 11:05:02 +0000 (UTC)
-Received: from loongson.cn (unknown [117.133.84.183])
-	by gateway (Coremail) with SMTP id _____8Bx3+tdLYtjCvgCAA--.7040S3;
-	Sat, 03 Dec 2022 19:05:01 +0800 (CST)
-Received: from [192.168.1.2] (unknown [117.133.84.183])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxBldcLYtjzwclAA--.7740S3;
-	Sat, 03 Dec 2022 19:05:00 +0800 (CST)
-Message-ID: <b6b34bc4-4089-9c02-81b2-9eaf2c9a4663@loongson.cn>
-Date: Sat, 3 Dec 2022 19:04:59 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 797377B
+	for <loongarch@lists.linux.dev>; Sat,  3 Dec 2022 13:54:27 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Bx1vAJVYtjC_sCAA--.6923S3;
+	Sat, 03 Dec 2022 21:54:18 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxZ1cIVYtjkBMlAA--.8238S2;
+	Sat, 03 Dec 2022 21:54:16 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: Make lscpu show "Model name" and "CPU family"
+Date: Sat,  3 Dec 2022 21:54:16 +0800
+Message-Id: <1670075656-4754-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8CxZ1cIVYtjkBMlAA--.8238S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7uF4fZrWrZr4rtrW7Xr43KFg_yoW8Ar1DpF
+	W3CF4UJw4DGwn8J3yxta48uw4Y9Fn8J3W2van3GrW3C3WUXr4kXw10vw4xXF4Y9r1fKw4r
+	ZFZYgF15KFyUJaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY
+	6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
+	AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
+	vjxU2L05UUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v1] gpio: loongson: enable irqdomain hierarchy config
-To: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>
-References: <20221203105825.15886-1-zhuyinbo@loongson.cn>
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-In-Reply-To: <20221203105825.15886-1-zhuyinbo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxBldcLYtjzwclAA--.7740S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrKFyDWry8Ww1rCr1ftrW5Wrg_yoW3uFX_Cw
-	nF9Fs3Xr1UCryq9F4a9r4fZry2kayUWr1fZw1vq343X34xX3WUuw1a93Z5W3W7Wr17WFZ5
-	ZrWfAryIyryxWjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
-	17CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2
-	IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84AC
-	jcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE
-	52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
-	80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCj
-	c4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI
-	0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCj
-	c4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY
-	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8AuctUUUUU==
 
+When update the latest kernel on LoongArch, and then use lscpu command
+to show cpuinfo, we can not see "Model name" and "CPU family", this is
+because there are no matched patterns in /proc/cpuinfo, use small letter
+of "Model Name" and "CPU Family" in show_cpuinfo() to fix it.
 
-在 2022/12/3 18:58, Yinbo Zhu 写道:
-> The loongson gpio driver need select IRQ_DOMAIN_HIERARCHY and add
-> such support.
->
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
->   drivers/gpio/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 55b7c5bae4aa..0f014411703e 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -395,6 +395,7 @@ config GPIO_LOONGSON_64BIT
->   	depends on LOONGARCH || COMPILE_TEST
->   	select GPIO_GENERIC
->   	select GPIOLIB_IRQCHIP
-> +	select IRQ_DOMAIN_HIERARCHY
->   	help
->   	  Say yes here to support the GPIO functionality of a number of
->   	  Loongson series of chips. The Loongson GPIO controller supports
+Here is the related code of lscpu:
 
-Hi Bartosz,
+static const struct cpuinfo_pattern type_patterns[] =
+{
+...
+        DEF_PAT_CPUTYPE( "cpu family",          PAT_FAMILY,     family),
+...
+        DEF_PAT_CPUTYPE( "model name",          PAT_MODEL_NAME, modelname),
+...
+};
 
+Link: https://github.com/util-linux/util-linux/blob/master/sys-utils/lscpu-cputype.c
+Fixes: 7153c3cbb5b9 ("LoongArch: Add misc common routines")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/kernel/proc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-please help merge this patch on top of the existing series.
-
-
-Thanks,
-
-Yinbo
+diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
+index 5c67cc4..eafd1cf 100644
+--- a/arch/loongarch/kernel/proc.c
++++ b/arch/loongarch/kernel/proc.c
+@@ -49,8 +49,8 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	seq_printf(m, "processor\t\t: %ld\n", n);
+ 	seq_printf(m, "package\t\t\t: %d\n", cpu_data[n].package);
+ 	seq_printf(m, "core\t\t\t: %d\n", cpu_data[n].core);
+-	seq_printf(m, "CPU Family\t\t: %s\n", __cpu_family[n]);
+-	seq_printf(m, "Model Name\t\t: %s\n", __cpu_full_name[n]);
++	seq_printf(m, "cpu family\t\t: %s\n", __cpu_family[n]);
++	seq_printf(m, "model name\t\t: %s\n", __cpu_full_name[n]);
+ 	seq_printf(m, "CPU Revision\t\t: 0x%02x\n", version);
+ 	seq_printf(m, "FPU Revision\t\t: 0x%02x\n", fp_version);
+ 	seq_printf(m, "CPU MHz\t\t\t: %llu.%02llu\n",
+-- 
+2.1.0
 
