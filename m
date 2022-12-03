@@ -1,81 +1,56 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48CF723DC
-	for <loongarch@lists.linux.dev>; Sat,  3 Dec 2022 10:53:24 +0000 (UTC)
-Received: from loongson.cn (unknown [117.133.84.183])
-	by gateway (Coremail) with SMTP id _____8CxruujKotjhvcCAA--.7068S3;
-	Sat, 03 Dec 2022 18:53:23 +0800 (CST)
-Received: from [192.168.1.2] (unknown [117.133.84.183])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axf+ChKotjewYlAA--.26150S3;
-	Sat, 03 Dec 2022 18:53:22 +0800 (CST)
-Message-ID: <35ff475a-e925-81eb-ffeb-448be43f59ff@loongson.cn>
-Date: Sat, 3 Dec 2022 18:53:20 +0800
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8627A23DC
+	for <loongarch@lists.linux.dev>; Sat,  3 Dec 2022 10:58:32 +0000 (UTC)
+Received: from localhost (mdns.lwn.net [45.79.72.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 93414536;
+	Sat,  3 Dec 2022 10:58:30 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 93414536
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1670065112; bh=IaLxs+J9hAFkKyYzKX+A7hLkgWgPeWlmrS5nyJKqIfk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=cSjJxDE5n4TAq9/xyqsXCwgNfNEEu0GHwhQM75DmIX7qXuVYofj0+syxt7D0VCard
+	 9kC3Gt5IkjaQck1DbzgXcNOauD+TWvaBF8yIvk3xdtNB1HpVh5p2vyZl+5ULzZh6SZ
+	 Qrktg7ryv8NLvF04nOl7i50yyEe0WqzM9Y+e5BKE6GqGLkDZvY/+CnvxP8M7a7mus7
+	 MNOgg+b7tM59J4Eni/zoyJhET+EWxXrEYJqhvEyGz4KdKbUSPaHF4O1vvhO7NKLfUN
+	 UewZbclpbPfBlQ8gcNaTOCP40MM8nsSobsfcwygGFyRqY38gtudjF0D2b/JXs12uDi
+	 2qiJLi2oGHLzQ==
+From: Jonathan Corbet <corbet@lwn.net>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Update links of LoongArch ISA Vol1 and ELF psABI
+In-Reply-To: <1669892345-7763-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1669892345-7763-1-git-send-email-yangtiezhu@loongson.cn>
+Date: Sat, 03 Dec 2022 03:58:26 -0700
+Message-ID: <87h6ycoist.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v10 1/2] gpio: loongson: add gpio driver support
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>,
- Jianmin Lv <lvjianmin@loongson.cn>,
- Hongchen Zhang <zhanghongchen@loongson.cn>,
- Liu Peibao <liupeibao@loongson.cn>
-References: <20221201123220.7893-1-zhuyinbo@loongson.cn>
- <CACRpkdZm-4-5625szX_VqJoQH1OQZnw+jH3SqWsb9nr3S0Nbmw@mail.gmail.com>
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-In-Reply-To: <CACRpkdZm-4-5625szX_VqJoQH1OQZnw+jH3SqWsb9nr3S0Nbmw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axf+ChKotjewYlAA--.26150S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUPK1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4
-	v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY
-	67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4x0Y4vEx4A2js
-	IE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7V
-	AKI48JMxAIw28IcVCjz48v1sIEY20_WwCF54CYxVAaw2AFwI0_Jrv_JF1l4c8EcI0Ec7Cj
-	xVAaw2AFwI0_JF0_Jw1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0x
-	ZFpf9x07URxRDUUUUU=
+Content-Type: text/plain
 
+Tiezhu Yang <yangtiezhu@loongson.cn> writes:
 
-在 2022/12/3 18:03, Linus Walleij 写道:
-> On Thu, Dec 1, 2022 at 1:33 PM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
-> (...)
->> +config GPIO_LOONGSON_64BIT
->> +       tristate "Loongson 64 bit GPIO support"
->> +       depends on LOONGARCH || COMPILE_TEST
->> +       select GPIO_GENERIC
->> +       select GPIOLIB_IRQCHIP
-> If the kernelbots start complaining you might need to add a:
+> Tiezhu Yang (2):
+>   docs/LoongArch: Update links of LoongArch ISA Vol1 and ELF psABI
+>   docs/zh_CN/LoongArch: Update links of LoongArch ISA Vol1 and ELF psABI
 >
-> select IRQ_DOMAIN_HIERARCHY
->
-> here.
->
-> Yours,
-> Linus Walleij
+>  Documentation/loongarch/introduction.rst                    | 8 ++++----
+>  Documentation/translations/zh_CN/loongarch/introduction.rst | 8 ++++----
+>  2 files changed, 8 insertions(+), 8 deletions(-)
 
-Bartosz had merged my patch and I will add a change on top of the 
-existing series.
+I've applied these - working links are better than broken ones.  I
+assume, though, that the new URLs, too, will break the next time the
+manual is updated?  Is there any chance Loongson could provide a stable
+URL for the current version of this manual instead?
 
-Thanks.
+Thanks,
 
+jon
