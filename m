@@ -1,56 +1,82 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8627A23DC
-	for <loongarch@lists.linux.dev>; Sat,  3 Dec 2022 10:58:32 +0000 (UTC)
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 93414536;
-	Sat,  3 Dec 2022 10:58:30 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 93414536
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1670065112; bh=IaLxs+J9hAFkKyYzKX+A7hLkgWgPeWlmrS5nyJKqIfk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=cSjJxDE5n4TAq9/xyqsXCwgNfNEEu0GHwhQM75DmIX7qXuVYofj0+syxt7D0VCard
-	 9kC3Gt5IkjaQck1DbzgXcNOauD+TWvaBF8yIvk3xdtNB1HpVh5p2vyZl+5ULzZh6SZ
-	 Qrktg7ryv8NLvF04nOl7i50yyEe0WqzM9Y+e5BKE6GqGLkDZvY/+CnvxP8M7a7mus7
-	 MNOgg+b7tM59J4Eni/zoyJhET+EWxXrEYJqhvEyGz4KdKbUSPaHF4O1vvhO7NKLfUN
-	 UewZbclpbPfBlQ8gcNaTOCP40MM8nsSobsfcwygGFyRqY38gtudjF0D2b/JXs12uDi
-	 2qiJLi2oGHLzQ==
-From: Jonathan Corbet <corbet@lwn.net>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Update links of LoongArch ISA Vol1 and ELF psABI
-In-Reply-To: <1669892345-7763-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1669892345-7763-1-git-send-email-yangtiezhu@loongson.cn>
-Date: Sat, 03 Dec 2022 03:58:26 -0700
-Message-ID: <87h6ycoist.fsf@meer.lwn.net>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75922568
+	for <loongarch@lists.linux.dev>; Sat,  3 Dec 2022 10:58:33 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8Cx5vDYK4tjvfcCAA--.6826S3;
+	Sat, 03 Dec 2022 18:58:32 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxr+DSK4tj5QYlAA--.26430S2;
+	Sat, 03 Dec 2022 18:58:32 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Juxin Gao <gaojuxin@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	Arnaud Patard <apatard@mandriva.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH v1] gpio: loongson: enable irqdomain hierarchy config
+Date: Sat,  3 Dec 2022 18:58:25 +0800
+Message-Id: <20221203105825.15886-1-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dxr+DSK4tj5QYlAA--.26430S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvdXoW7Wry5CF1fZFW5GrykGw1UGFg_yoWxZrc_C3
+	sFqFn3Wr1UCF9F9rWavr4fZry2ka1UWr1ru3Z2qw13Zw17Za15uw15ua1DWw17Wr47WFWr
+	ZrWfJFyjvr4xWjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	X7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2
+	IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84AC
+	jcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE
+	52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
+	80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCj
+	c4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7V
+	AKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
+	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
+	8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5
+	JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07jn73kUUUUU=
 
-Tiezhu Yang <yangtiezhu@loongson.cn> writes:
+The loongson gpio driver need select IRQ_DOMAIN_HIERARCHY and add
+such support.
 
-> Tiezhu Yang (2):
->   docs/LoongArch: Update links of LoongArch ISA Vol1 and ELF psABI
->   docs/zh_CN/LoongArch: Update links of LoongArch ISA Vol1 and ELF psABI
->
->  Documentation/loongarch/introduction.rst                    | 8 ++++----
->  Documentation/translations/zh_CN/loongarch/introduction.rst | 8 ++++----
->  2 files changed, 8 insertions(+), 8 deletions(-)
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+---
+ drivers/gpio/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-I've applied these - working links are better than broken ones.  I
-assume, though, that the new URLs, too, will break the next time the
-manual is updated?  Is there any chance Loongson could provide a stable
-URL for the current version of this manual instead?
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 55b7c5bae4aa..0f014411703e 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -395,6 +395,7 @@ config GPIO_LOONGSON_64BIT
+ 	depends on LOONGARCH || COMPILE_TEST
+ 	select GPIO_GENERIC
+ 	select GPIOLIB_IRQCHIP
++	select IRQ_DOMAIN_HIERARCHY
+ 	help
+ 	  Say yes here to support the GPIO functionality of a number of
+ 	  Loongson series of chips. The Loongson GPIO controller supports
+-- 
+2.20.1
 
-Thanks,
-
-jon
