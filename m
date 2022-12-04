@@ -1,52 +1,56 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80CC52C9D
-	for <loongarch@lists.linux.dev>; Sun,  4 Dec 2022 12:19:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42D5E2CA5
+	for <loongarch@lists.linux.dev>; Sun,  4 Dec 2022 12:19:14 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxSuk+kIxjLRYDAA--.4062S3;
-	Sun, 04 Dec 2022 20:19:11 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxxvBBkIxjNBYDAA--.7067S3;
+	Sun, 04 Dec 2022 20:19:13 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxbuA8kIxjkmMlAA--.26442S2;
-	Sun, 04 Dec 2022 20:19:08 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxbuA8kIxjkmMlAA--.26442S4;
+	Sun, 04 Dec 2022 20:19:11 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: loongarch@lists.linux.dev,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] docs: Correct the arch name of LoongArch
-Date: Sun,  4 Dec 2022 20:18:45 +0800
-Message-Id: <1670156327-9631-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH 2/2] Documentation/features: Use loongarch instead of loong
+Date: Sun,  4 Dec 2022 20:18:47 +0800
+Message-Id: <1670156327-9631-3-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8DxbuA8kIxjkmMlAA--.26442S2
+In-Reply-To: <1670156327-9631-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1670156327-9631-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID:AQAAf8DxbuA8kIxjkmMlAA--.26442S4
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZrW7Zry8XFW7KFyxtr4ruFg_yoW5trW8pa
-	s7Zrnxtrn8Ar1qk34kXFnrXF4UJa98Wa1qgr1jyw10gF4kCF13Aa1ayFs8Z3Z5XrWxXFW8
-	Wrs2qryYyF1UA3JanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
-	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1LiSJUUUUU==
+X-Coremail-Antispam: 1Uk129KBjvAXoWfCF45ZrW7XFW5GrW8tw43Wrg_yoW8KFWUZo
+	ZavFWI934Dur1UX3Z5t342y34xJr1ftrs3A3yxGa15GrW7tF429Fy8u3WIqasFqr93Wryf
+	JrW0k3s8XF18Ganrn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
+	UUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
+	0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
+	M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4
+	xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8
+	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I
+	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
+	xVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcV
+	AFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8I
+	cIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
+	1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UMpBfUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-Based on git.lwn.net/linux.git docs-next
+The official arch name is LoongArch [1], we should use small letter
+loongarch instead of loong in Documentation/features, just use the
+features-refresh.sh to refresh all the related files.
 
-Tiezhu Yang (2):
-  Documentation/features-refresh.sh: Only sed the beginning "arch" of
-    ARCH_DIR
-  Documentation/features: Use loongarch instead of loong
+[1] https://www.kernel.org/doc/html/latest/loongarch/index.html
 
+Fixes: 5860800e8696 ("Documentation/features: Update the arch support status files")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
  Documentation/features/core/cBPF-JIT/arch-support.txt              | 2 +-
  Documentation/features/core/eBPF-JIT/arch-support.txt              | 2 +-
  Documentation/features/core/generic-idle-thread/arch-support.txt   | 2 +-
@@ -76,7 +80,6 @@ Tiezhu Yang (2):
  Documentation/features/perf/perf-stackdump/arch-support.txt        | 2 +-
  Documentation/features/sched/membarrier-sync-core/arch-support.txt | 2 +-
  Documentation/features/sched/numa-balancing/arch-support.txt       | 2 +-
- Documentation/features/scripts/features-refresh.sh                 | 2 +-
  Documentation/features/seccomp/seccomp-filter/arch-support.txt     | 2 +-
  Documentation/features/time/arch-tick-broadcast/arch-support.txt   | 2 +-
  Documentation/features/time/clockevents/arch-support.txt           | 2 +-
@@ -90,8 +93,554 @@ Tiezhu Yang (2):
  Documentation/features/vm/huge-vmap/arch-support.txt               | 2 +-
  Documentation/features/vm/ioremap_prot/arch-support.txt            | 2 +-
  Documentation/features/vm/pte_special/arch-support.txt             | 2 +-
- 43 files changed, 43 insertions(+), 43 deletions(-)
+ 42 files changed, 42 insertions(+), 42 deletions(-)
 
+diff --git a/Documentation/features/core/cBPF-JIT/arch-support.txt b/Documentation/features/core/cBPF-JIT/arch-support.txt
+index a053667..0a1f5bb 100644
+--- a/Documentation/features/core/cBPF-JIT/arch-support.txt
++++ b/Documentation/features/core/cBPF-JIT/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/core/eBPF-JIT/arch-support.txt b/Documentation/features/core/eBPF-JIT/arch-support.txt
+index 7d968c4..6c0f3d7 100644
+--- a/Documentation/features/core/eBPF-JIT/arch-support.txt
++++ b/Documentation/features/core/eBPF-JIT/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/core/generic-idle-thread/arch-support.txt b/Documentation/features/core/generic-idle-thread/arch-support.txt
+index c9bfff2..0b94099 100644
+--- a/Documentation/features/core/generic-idle-thread/arch-support.txt
++++ b/Documentation/features/core/generic-idle-thread/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: |  ok  |
+     |        ia64: |  ok  |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/core/jump-labels/arch-support.txt b/Documentation/features/core/jump-labels/arch-support.txt
+index 20cbefb..2328ead 100644
+--- a/Documentation/features/core/jump-labels/arch-support.txt
++++ b/Documentation/features/core/jump-labels/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/core/thread-info-in-task/arch-support.txt b/Documentation/features/core/thread-info-in-task/arch-support.txt
+index 9b3e2ce..9c5d39e 100644
+--- a/Documentation/features/core/thread-info-in-task/arch-support.txt
++++ b/Documentation/features/core/thread-info-in-task/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: | TODO |
+diff --git a/Documentation/features/core/tracehook/arch-support.txt b/Documentation/features/core/tracehook/arch-support.txt
+index 9c7ffec..aed5679 100644
+--- a/Documentation/features/core/tracehook/arch-support.txt
++++ b/Documentation/features/core/tracehook/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: |  ok  |
+     |        ia64: |  ok  |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/debug/KASAN/arch-support.txt b/Documentation/features/debug/KASAN/arch-support.txt
+index 04afee1..bf0124f 100644
+--- a/Documentation/features/debug/KASAN/arch-support.txt
++++ b/Documentation/features/debug/KASAN/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: | TODO |
+diff --git a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+index c45711e..9ec5d13 100644
+--- a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
++++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: | TODO |
+diff --git a/Documentation/features/debug/gcov-profile-all/arch-support.txt b/Documentation/features/debug/gcov-profile-all/arch-support.txt
+index 0b3ba24..dc4014f 100644
+--- a/Documentation/features/debug/gcov-profile-all/arch-support.txt
++++ b/Documentation/features/debug/gcov-profile-all/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: |  ok  |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/debug/kcov/arch-support.txt b/Documentation/features/debug/kcov/arch-support.txt
+index 0a91f5c..ffcc9f2 100644
+--- a/Documentation/features/debug/kcov/arch-support.txt
++++ b/Documentation/features/debug/kcov/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/debug/kgdb/arch-support.txt b/Documentation/features/debug/kgdb/arch-support.txt
+index 04120d2..958498f 100644
+--- a/Documentation/features/debug/kgdb/arch-support.txt
++++ b/Documentation/features/debug/kgdb/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: |  ok  |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: |  ok  |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/debug/kmemleak/arch-support.txt b/Documentation/features/debug/kmemleak/arch-support.txt
+index e487c35..0cfa5f0 100644
+--- a/Documentation/features/debug/kmemleak/arch-support.txt
++++ b/Documentation/features/debug/kmemleak/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: |  ok  |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
+index b3697f4..bcc29d3 100644
+--- a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
++++ b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: | TODO |
+diff --git a/Documentation/features/debug/kprobes/arch-support.txt b/Documentation/features/debug/kprobes/arch-support.txt
+index 452385a..8a77d62 100644
+--- a/Documentation/features/debug/kprobes/arch-support.txt
++++ b/Documentation/features/debug/kprobes/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: |  ok  |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/debug/kretprobes/arch-support.txt b/Documentation/features/debug/kretprobes/arch-support.txt
+index daecf04..cf4723c 100644
+--- a/Documentation/features/debug/kretprobes/arch-support.txt
++++ b/Documentation/features/debug/kretprobes/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: |  ok  |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/debug/optprobes/arch-support.txt b/Documentation/features/debug/optprobes/arch-support.txt
+index adb1bd0..83a4639 100644
+--- a/Documentation/features/debug/optprobes/arch-support.txt
++++ b/Documentation/features/debug/optprobes/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: | TODO |
+diff --git a/Documentation/features/debug/stackprotector/arch-support.txt b/Documentation/features/debug/stackprotector/arch-support.txt
+index ddcd716..71cd4ba 100644
+--- a/Documentation/features/debug/stackprotector/arch-support.txt
++++ b/Documentation/features/debug/stackprotector/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/debug/uprobes/arch-support.txt b/Documentation/features/debug/uprobes/arch-support.txt
+index 2512120..d53f2f9 100644
+--- a/Documentation/features/debug/uprobes/arch-support.txt
++++ b/Documentation/features/debug/uprobes/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/debug/user-ret-profiler/arch-support.txt b/Documentation/features/debug/user-ret-profiler/arch-support.txt
+index f2fcff8..059110a 100644
+--- a/Documentation/features/debug/user-ret-profiler/arch-support.txt
++++ b/Documentation/features/debug/user-ret-profiler/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: | TODO |
+diff --git a/Documentation/features/io/dma-contiguous/arch-support.txt b/Documentation/features/io/dma-contiguous/arch-support.txt
+index 95e485c..bfe0921 100644
+--- a/Documentation/features/io/dma-contiguous/arch-support.txt
++++ b/Documentation/features/io/dma-contiguous/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: |  ok  |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/locking/cmpxchg-local/arch-support.txt b/Documentation/features/locking/cmpxchg-local/arch-support.txt
+index 8b1a8d9..68329e9 100644
+--- a/Documentation/features/locking/cmpxchg-local/arch-support.txt
++++ b/Documentation/features/locking/cmpxchg-local/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: | TODO |
+diff --git a/Documentation/features/locking/lockdep/arch-support.txt b/Documentation/features/locking/lockdep/arch-support.txt
+index ab69e8f..ddb9452 100644
+--- a/Documentation/features/locking/lockdep/arch-support.txt
++++ b/Documentation/features/locking/lockdep/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: |  ok  |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: |  ok  |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/locking/queued-rwlocks/arch-support.txt b/Documentation/features/locking/queued-rwlocks/arch-support.txt
+index 0bfb72a..5deb845 100644
+--- a/Documentation/features/locking/queued-rwlocks/arch-support.txt
++++ b/Documentation/features/locking/queued-rwlocks/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/locking/queued-spinlocks/arch-support.txt b/Documentation/features/locking/queued-spinlocks/arch-support.txt
+index 59ee62b..2d3961b 100644
+--- a/Documentation/features/locking/queued-spinlocks/arch-support.txt
++++ b/Documentation/features/locking/queued-spinlocks/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/perf/kprobes-event/arch-support.txt b/Documentation/features/perf/kprobes-event/arch-support.txt
+index 0d0647b..641a7d2 100644
+--- a/Documentation/features/perf/kprobes-event/arch-support.txt
++++ b/Documentation/features/perf/kprobes-event/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: |  ok  |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/perf/perf-regs/arch-support.txt b/Documentation/features/perf/perf-regs/arch-support.txt
+index 3732e1c..33866eb 100644
+--- a/Documentation/features/perf/perf-regs/arch-support.txt
++++ b/Documentation/features/perf/perf-regs/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/perf/perf-stackdump/arch-support.txt b/Documentation/features/perf/perf-stackdump/arch-support.txt
+index 4cc3b15..c8e4c7c 100644
+--- a/Documentation/features/perf/perf-stackdump/arch-support.txt
++++ b/Documentation/features/perf/perf-stackdump/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/sched/membarrier-sync-core/arch-support.txt b/Documentation/features/sched/membarrier-sync-core/arch-support.txt
+index 336d728b..1e51614c 100644
+--- a/Documentation/features/sched/membarrier-sync-core/arch-support.txt
++++ b/Documentation/features/sched/membarrier-sync-core/arch-support.txt
+@@ -36,7 +36,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: | TODO |
+diff --git a/Documentation/features/sched/numa-balancing/arch-support.txt b/Documentation/features/sched/numa-balancing/arch-support.txt
+index 76d0121..532cc67 100644
+--- a/Documentation/features/sched/numa-balancing/arch-support.txt
++++ b/Documentation/features/sched/numa-balancing/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ..  |
+     |     hexagon: |  ..  |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: |  ..  |
+     |  microblaze: |  ..  |
+     |        mips: | TODO |
+diff --git a/Documentation/features/seccomp/seccomp-filter/arch-support.txt b/Documentation/features/seccomp/seccomp-filter/arch-support.txt
+index a86b8b1..dc71bf7 100644
+--- a/Documentation/features/seccomp/seccomp-filter/arch-support.txt
++++ b/Documentation/features/seccomp/seccomp-filter/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/time/arch-tick-broadcast/arch-support.txt b/Documentation/features/time/arch-tick-broadcast/arch-support.txt
+index 364169f..9bffac8 100644
+--- a/Documentation/features/time/arch-tick-broadcast/arch-support.txt
++++ b/Documentation/features/time/arch-tick-broadcast/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/time/clockevents/arch-support.txt b/Documentation/features/time/clockevents/arch-support.txt
+index 6ea2747..6251600 100644
+--- a/Documentation/features/time/clockevents/arch-support.txt
++++ b/Documentation/features/time/clockevents/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: |  ok  |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: |  ok  |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/time/context-tracking/arch-support.txt b/Documentation/features/time/context-tracking/arch-support.txt
+index e59071a..72bc5ba 100644
+--- a/Documentation/features/time/context-tracking/arch-support.txt
++++ b/Documentation/features/time/context-tracking/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/time/irq-time-acct/arch-support.txt b/Documentation/features/time/irq-time-acct/arch-support.txt
+index fd17d8d..ceb0366 100644
+--- a/Documentation/features/time/irq-time-acct/arch-support.txt
++++ b/Documentation/features/time/irq-time-acct/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: |  ..  |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/time/virt-cpuacct/arch-support.txt b/Documentation/features/time/virt-cpuacct/arch-support.txt
+index 1a859ac..c063dff 100644
+--- a/Documentation/features/time/virt-cpuacct/arch-support.txt
++++ b/Documentation/features/time/virt-cpuacct/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ok  |
+     |     hexagon: | TODO |
+     |        ia64: |  ok  |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/vm/ELF-ASLR/arch-support.txt b/Documentation/features/vm/ELF-ASLR/arch-support.txt
+index b122995..15164f3 100644
+--- a/Documentation/features/vm/ELF-ASLR/arch-support.txt
++++ b/Documentation/features/vm/ELF-ASLR/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/vm/PG_uncached/arch-support.txt b/Documentation/features/vm/PG_uncached/arch-support.txt
+index 02f325f..5acd64b 100644
+--- a/Documentation/features/vm/PG_uncached/arch-support.txt
++++ b/Documentation/features/vm/PG_uncached/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: |  ok  |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: | TODO |
+diff --git a/Documentation/features/vm/THP/arch-support.txt b/Documentation/features/vm/THP/arch-support.txt
+index 9bfff97..9dd7d75 100644
+--- a/Documentation/features/vm/THP/arch-support.txt
++++ b/Documentation/features/vm/THP/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: |  ..  |
+     |     hexagon: |  ..  |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: |  ..  |
+     |  microblaze: |  ..  |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/vm/TLB/arch-support.txt b/Documentation/features/vm/TLB/arch-support.txt
+index 039e4e9..7f049c2 100644
+--- a/Documentation/features/vm/TLB/arch-support.txt
++++ b/Documentation/features/vm/TLB/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: |  ..  |
+     |  microblaze: |  ..  |
+     |        mips: | TODO |
+diff --git a/Documentation/features/vm/huge-vmap/arch-support.txt b/Documentation/features/vm/huge-vmap/arch-support.txt
+index 13b4940..82b0be4 100644
+--- a/Documentation/features/vm/huge-vmap/arch-support.txt
++++ b/Documentation/features/vm/huge-vmap/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: | TODO |
++    |   loongarch: | TODO |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: | TODO |
+diff --git a/Documentation/features/vm/ioremap_prot/arch-support.txt b/Documentation/features/vm/ioremap_prot/arch-support.txt
+index 6bd78eb..a24149e 100644
+--- a/Documentation/features/vm/ioremap_prot/arch-support.txt
++++ b/Documentation/features/vm/ioremap_prot/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
+diff --git a/Documentation/features/vm/pte_special/arch-support.txt b/Documentation/features/vm/pte_special/arch-support.txt
+index fc3687b..d2b22a0 100644
+--- a/Documentation/features/vm/pte_special/arch-support.txt
++++ b/Documentation/features/vm/pte_special/arch-support.txt
+@@ -13,7 +13,7 @@
+     |        csky: | TODO |
+     |     hexagon: | TODO |
+     |        ia64: | TODO |
+-    |       loong: |  ok  |
++    |   loongarch: |  ok  |
+     |        m68k: | TODO |
+     |  microblaze: | TODO |
+     |        mips: |  ok  |
 -- 
 2.1.0
 
