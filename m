@@ -1,59 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA10B2560
-	for <loongarch@lists.linux.dev>; Sun,  4 Dec 2022 08:33:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B1BEC433D7
-	for <loongarch@lists.linux.dev>; Sun,  4 Dec 2022 08:33:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1670142783;
-	bh=cmjY5oszLL7IRjxDpwx8/GqvDU1hN+fhIgQ9aF+UIUw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Uvd5hYbtk/8v0q44tA1WFnaaNVso30QVka3cc23N+E6jBeX49qGYiC0mrGX+MjVP6
-	 DsnDfEUHCU1m3kf6+IZTU5Wglymllf4ayCV37NuJurBpdJjnRliAMihMXL0vPGkV8E
-	 ttwJBz1t5Fh8HVicTs+cwrl6Q2PGR/7UruWTgEjUe7rGmjULJUNSSd6or4HnyY24Tj
-	 lLHswewTYPdFw6n6orP4N+L0fl8HtbiEclZPGXreKThgj4I52cYB4w22KXhibiLsDW
-	 rAk0CFgKhdeFpfn5zisCNQr1Bac5Mr4OIzN8E2DrsKfvnmy8Pnl71n9p4t1GjzzsN2
-	 BViO+4oXvjvXg==
-Received: by mail-ej1-f50.google.com with SMTP id ml11so21053912ejb.6
-        for <loongarch@lists.linux.dev>; Sun, 04 Dec 2022 00:33:03 -0800 (PST)
-X-Gm-Message-State: ANoB5pnWGphXVr4YqFoc7HusImdo4E8SQ83AAc2qFXlWKr3RWS18xr78
-	q931UMAxdXs9dJbLhkFj+F0402jsqb1IAMRpl7c=
-X-Google-Smtp-Source: AA0mqf58+X/wXxb7q0m22yo39wScLYrmU5UKy4nZGHPlOQ3YaxDJRvaVlpR6W95uXnCBzLHd2MBQsXtg/OUIRuKl0Mk=
-X-Received: by 2002:a17:907:9951:b0:7b2:7e7a:11c1 with SMTP id
- kl17-20020a170907995100b007b27e7a11c1mr49182169ejc.684.1670142781798; Sun, 04
- Dec 2022 00:33:01 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E84E2900
+	for <loongarch@lists.linux.dev>; Sun,  4 Dec 2022 12:19:13 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Axz+s_kIxjMhYDAA--.7156S3;
+	Sun, 04 Dec 2022 20:19:11 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxbuA8kIxjkmMlAA--.26442S3;
+	Sun, 04 Dec 2022 20:19:10 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: loongarch@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] Documentation/features-refresh.sh: Only sed the beginning "arch" of ARCH_DIR
+Date: Sun,  4 Dec 2022 20:18:46 +0800
+Message-Id: <1670156327-9631-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1670156327-9631-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1670156327-9631-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID:AQAAf8DxbuA8kIxjkmMlAA--.26442S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvdXoWrtw1xZF4UJFyrKF1DWr1Utrb_yoWkCwbEka
+	9xtF1UtrWUJr1I9ry5JF4YkFy2v34F9a1ruwn3JF4Fyw1I9a9xGFZFkrW5Za4UZr45Cr1r
+	CFZ7XrW7Ar12qjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUAVWUZwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
+	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
+	W8JbIYCTnIWIevJa73UjIFyTuYvjxU7cdbUUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <1669892345-7763-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1669892345-7763-1-git-send-email-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 4 Dec 2022 16:32:46 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6ayYzo-khc3ephhw2jAcjtdyckdTXahjS8twpHxQQNAg@mail.gmail.com>
-Message-ID: <CAAhV-H6ayYzo-khc3ephhw2jAcjtdyckdTXahjS8twpHxQQNAg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Update links of LoongArch ISA Vol1 and ELF psABI
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jonathan Corbet <corbet@lwn.net>, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-For the whole series,
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+It should only sed the beginning "arch" of ARCH_DIR in features-refresh.sh,
+otherwise loongarch is recognized as loong, that is not what we want.
 
-On Thu, Dec 1, 2022 at 6:59 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> Tiezhu Yang (2):
->   docs/LoongArch: Update links of LoongArch ISA Vol1 and ELF psABI
->   docs/zh_CN/LoongArch: Update links of LoongArch ISA Vol1 and ELF psABI
->
->  Documentation/loongarch/introduction.rst                    | 8 ++++----
->  Documentation/translations/zh_CN/loongarch/introduction.rst | 8 ++++----
->  2 files changed, 8 insertions(+), 8 deletions(-)
->
-> --
-> 2.1.0
->
+Fixes: be99f610a110 ("Documentation/features: Add script that refreshes the arch support status files in place")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ Documentation/features/scripts/features-refresh.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/features/scripts/features-refresh.sh b/Documentation/features/scripts/features-refresh.sh
+index 9e72d38..c228812 100755
+--- a/Documentation/features/scripts/features-refresh.sh
++++ b/Documentation/features/scripts/features-refresh.sh
+@@ -60,7 +60,7 @@ for F_FILE in Documentation/features/*/*/arch-support.txt; do
+ 	echo "    |         arch |status|" >> $T_FILE
+ 	echo "    -----------------------" >> $T_FILE
+ 	for ARCH_DIR in arch/*/; do
+-		ARCH=$(echo $ARCH_DIR | sed -e 's/arch//g' | sed -e 's/\///g')
++		ARCH=$(echo $ARCH_DIR | sed -e 's/^arch//g' | sed -e 's/\///g')
+ 		K_FILES=$(find $ARCH_DIR -name "Kconfig*")
+ 		K_GREP=$(grep "$K" $K_FILES)
+ 		#
+-- 
+2.1.0
+
