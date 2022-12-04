@@ -1,69 +1,97 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E84E2900
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80CC52C9D
 	for <loongarch@lists.linux.dev>; Sun,  4 Dec 2022 12:19:13 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axz+s_kIxjMhYDAA--.7156S3;
+	by gateway (Coremail) with SMTP id _____8AxSuk+kIxjLRYDAA--.4062S3;
 	Sun, 04 Dec 2022 20:19:11 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxbuA8kIxjkmMlAA--.26442S3;
-	Sun, 04 Dec 2022 20:19:10 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxbuA8kIxjkmMlAA--.26442S2;
+	Sun, 04 Dec 2022 20:19:08 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: loongarch@lists.linux.dev,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] Documentation/features-refresh.sh: Only sed the beginning "arch" of ARCH_DIR
-Date: Sun,  4 Dec 2022 20:18:46 +0800
-Message-Id: <1670156327-9631-2-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH 0/2] docs: Correct the arch name of LoongArch
+Date: Sun,  4 Dec 2022 20:18:45 +0800
+Message-Id: <1670156327-9631-1-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1670156327-9631-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1670156327-9631-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8DxbuA8kIxjkmMlAA--.26442S3
+X-CM-TRANSID:AQAAf8DxbuA8kIxjkmMlAA--.26442S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrtw1xZF4UJFyrKF1DWr1Utrb_yoWkCwbEka
-	9xtF1UtrWUJr1I9ry5JF4YkFy2v34F9a1ruwn3JF4Fyw1I9a9xGFZFkrW5Za4UZr45Cr1r
-	CFZ7XrW7Ar12qjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUAVWUZwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
-	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
-	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
-	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
-	W8JbIYCTnIWIevJa73UjIFyTuYvjxU7cdbUUUUU
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZrW7Zry8XFW7KFyxtr4ruFg_yoW5trW8pa
+	s7Zrnxtrn8Ar1qk34kXFnrXF4UJa98Wa1qgr1jyw10gF4kCF13Aa1ayFs8Z3Z5XrWxXFW8
+	Wrs2qryYyF1UA3JanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1LiSJUUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-It should only sed the beginning "arch" of ARCH_DIR in features-refresh.sh,
-otherwise loongarch is recognized as loong, that is not what we want.
+Based on git.lwn.net/linux.git docs-next
 
-Fixes: be99f610a110 ("Documentation/features: Add script that refreshes the arch support status files in place")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- Documentation/features/scripts/features-refresh.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Tiezhu Yang (2):
+  Documentation/features-refresh.sh: Only sed the beginning "arch" of
+    ARCH_DIR
+  Documentation/features: Use loongarch instead of loong
 
-diff --git a/Documentation/features/scripts/features-refresh.sh b/Documentation/features/scripts/features-refresh.sh
-index 9e72d38..c228812 100755
---- a/Documentation/features/scripts/features-refresh.sh
-+++ b/Documentation/features/scripts/features-refresh.sh
-@@ -60,7 +60,7 @@ for F_FILE in Documentation/features/*/*/arch-support.txt; do
- 	echo "    |         arch |status|" >> $T_FILE
- 	echo "    -----------------------" >> $T_FILE
- 	for ARCH_DIR in arch/*/; do
--		ARCH=$(echo $ARCH_DIR | sed -e 's/arch//g' | sed -e 's/\///g')
-+		ARCH=$(echo $ARCH_DIR | sed -e 's/^arch//g' | sed -e 's/\///g')
- 		K_FILES=$(find $ARCH_DIR -name "Kconfig*")
- 		K_GREP=$(grep "$K" $K_FILES)
- 		#
+ Documentation/features/core/cBPF-JIT/arch-support.txt              | 2 +-
+ Documentation/features/core/eBPF-JIT/arch-support.txt              | 2 +-
+ Documentation/features/core/generic-idle-thread/arch-support.txt   | 2 +-
+ Documentation/features/core/jump-labels/arch-support.txt           | 2 +-
+ Documentation/features/core/thread-info-in-task/arch-support.txt   | 2 +-
+ Documentation/features/core/tracehook/arch-support.txt             | 2 +-
+ Documentation/features/debug/KASAN/arch-support.txt                | 2 +-
+ Documentation/features/debug/debug-vm-pgtable/arch-support.txt     | 2 +-
+ Documentation/features/debug/gcov-profile-all/arch-support.txt     | 2 +-
+ Documentation/features/debug/kcov/arch-support.txt                 | 2 +-
+ Documentation/features/debug/kgdb/arch-support.txt                 | 2 +-
+ Documentation/features/debug/kmemleak/arch-support.txt             | 2 +-
+ Documentation/features/debug/kprobes-on-ftrace/arch-support.txt    | 2 +-
+ Documentation/features/debug/kprobes/arch-support.txt              | 2 +-
+ Documentation/features/debug/kretprobes/arch-support.txt           | 2 +-
+ Documentation/features/debug/optprobes/arch-support.txt            | 2 +-
+ Documentation/features/debug/stackprotector/arch-support.txt       | 2 +-
+ Documentation/features/debug/uprobes/arch-support.txt              | 2 +-
+ Documentation/features/debug/user-ret-profiler/arch-support.txt    | 2 +-
+ Documentation/features/io/dma-contiguous/arch-support.txt          | 2 +-
+ Documentation/features/locking/cmpxchg-local/arch-support.txt      | 2 +-
+ Documentation/features/locking/lockdep/arch-support.txt            | 2 +-
+ Documentation/features/locking/queued-rwlocks/arch-support.txt     | 2 +-
+ Documentation/features/locking/queued-spinlocks/arch-support.txt   | 2 +-
+ Documentation/features/perf/kprobes-event/arch-support.txt         | 2 +-
+ Documentation/features/perf/perf-regs/arch-support.txt             | 2 +-
+ Documentation/features/perf/perf-stackdump/arch-support.txt        | 2 +-
+ Documentation/features/sched/membarrier-sync-core/arch-support.txt | 2 +-
+ Documentation/features/sched/numa-balancing/arch-support.txt       | 2 +-
+ Documentation/features/scripts/features-refresh.sh                 | 2 +-
+ Documentation/features/seccomp/seccomp-filter/arch-support.txt     | 2 +-
+ Documentation/features/time/arch-tick-broadcast/arch-support.txt   | 2 +-
+ Documentation/features/time/clockevents/arch-support.txt           | 2 +-
+ Documentation/features/time/context-tracking/arch-support.txt      | 2 +-
+ Documentation/features/time/irq-time-acct/arch-support.txt         | 2 +-
+ Documentation/features/time/virt-cpuacct/arch-support.txt          | 2 +-
+ Documentation/features/vm/ELF-ASLR/arch-support.txt                | 2 +-
+ Documentation/features/vm/PG_uncached/arch-support.txt             | 2 +-
+ Documentation/features/vm/THP/arch-support.txt                     | 2 +-
+ Documentation/features/vm/TLB/arch-support.txt                     | 2 +-
+ Documentation/features/vm/huge-vmap/arch-support.txt               | 2 +-
+ Documentation/features/vm/ioremap_prot/arch-support.txt            | 2 +-
+ Documentation/features/vm/pte_special/arch-support.txt             | 2 +-
+ 43 files changed, 43 insertions(+), 43 deletions(-)
+
 -- 
 2.1.0
 
