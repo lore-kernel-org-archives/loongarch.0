@@ -1,96 +1,131 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31C2B7C
-	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 01:44:51 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx6+oRTY1jjCwDAA--.7305S3;
-	Mon, 05 Dec 2022 09:44:49 +0800 (CST)
-Received: from [10.130.0.135] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHuIOTY1jsK8lAA--.27845S3;
-	Mon, 05 Dec 2022 09:44:46 +0800 (CST)
-Subject: Re: [PATCH 0/2] Update links of LoongArch ISA Vol1 and ELF psABI
-To: Jonathan Corbet <corbet@lwn.net>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Xi Ruoyao <xry111@xry111.site>
-References: <1669892345-7763-1-git-send-email-yangtiezhu@loongson.cn>
- <87h6ycoist.fsf@meer.lwn.net>
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <aea656cb-f3ad-8668-9131-f294235f78da@loongson.cn>
-Date: Mon, 5 Dec 2022 09:44:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6BEF7C
+	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 02:23:57 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.109.110])
+	by gateway (Coremail) with SMTP id _____8AxRPA7Vo1jhC4DAA--.7488S3;
+	Mon, 05 Dec 2022 10:23:55 +0800 (CST)
+Received: from [0.0.0.0] (unknown [112.20.109.110])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLuI4Vo1j17MlAA--.27729S3;
+	Mon, 05 Dec 2022 10:23:54 +0800 (CST)
+Message-ID: <1c07ce92-cd17-8d6a-05d1-d6ea8cc39b56@loongson.cn>
+Date: Mon, 5 Dec 2022 10:23:52 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <87h6ycoist.fsf@meer.lwn.net>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8BxHuIOTY1jsK8lAA--.27845S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7CFyDCF45CF4kAr17ZF48Crg_yoW8WF1fpF
-	yS9FyagF1vyr47uw1kK345WF4FvFWfGayxJF4Utw15WwnxAw1DCFyFqrs8tFZrZ3yfJFWF
-	qryFkws5J3W8A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: Re: [PATCH V4 4/5] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
+ controller
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Wolfram Sang <wsa@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+ devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+ WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Jianmin Lv <lvjianmin@loongson.cn>
+References: <cover.1669777792.git.zhoubinbin@loongson.cn>
+ <f6cc2dbe5cd190031ab4f772d1cf250934288546.1669777792.git.zhoubinbin@loongson.cn>
+ <Y4e/6KewuHjAluSZ@smile.fi.intel.com>
+ <f0060385-644a-847e-48cf-865c12b96473@loongson.cn>
+ <Y4m3Ycs88nOk5zs9@smile.fi.intel.com>
+In-Reply-To: <Y4m3Ycs88nOk5zs9@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxLuI4Vo1j17MlAA--.27729S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7KrW8JF18ur18Gw47Jw43ZFb_yoW8tFy7pF
+	WfJFyYkF4kXF1I9rn2vw15u3Z0y398Jr47Zr4rGw1kCF909wn3Ar48tr1j9r1xWrWxJFW8
+	ZFW5KrW5Gr95ZaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
 	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
 	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
-	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
-	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
-	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
-	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUUU
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
+	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
+	JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
+	1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU8hiSPUUUUU==
 
 
-
-On 12/03/2022 06:58 PM, Jonathan Corbet wrote:
-> Tiezhu Yang <yangtiezhu@loongson.cn> writes:
+在 2022/12/2 16:29, Andy Shevchenko 写道:
+> On Fri, Dec 02, 2022 at 11:22:19AM +0800, Binbin Zhou wrote:
+>> 在 2022/12/1 04:41, Andy Shevchenko 写道:
+>>> On Wed, Nov 30, 2022 at 01:56:20PM +0800, Binbin Zhou wrote:
+> ...
 >
->> Tiezhu Yang (2):
->>   docs/LoongArch: Update links of LoongArch ISA Vol1 and ELF psABI
->>   docs/zh_CN/LoongArch: Update links of LoongArch ISA Vol1 and ELF psABI
+>>>> +	for (retry = 0; retry < adap->retries; retry++) {
+>>>> +		ret = ls2x_i2c_doxfer(adap, msgs, num);
+>>>> +		if (ret != -EAGAIN)
+>>>> +			return ret;
+>>>> +
+>>>> +		dev_dbg(priv->dev, "Retrying transmission (%d)\n", retry);
+>>>> +		udelay(100);
+>>> Why atomic? This long (esp. atomic) delay must be explained.
+>> The modification records for this part of the source code are no longer
+>> traceable.
 >>
->>  Documentation/loongarch/introduction.rst                    | 8 ++++----
->>  Documentation/translations/zh_CN/loongarch/introduction.rst | 8 ++++----
->>  2 files changed, 8 insertions(+), 8 deletions(-)
+>> Communicating with colleagues offline, I learned that this part of the code
+>> first appeared on Linux 2.6.36, which was done to circumvent the problem of
+>> probable failure to scan the device for i2c devices on some boards.
+>>
+>> How about I add a comment here to explain the reason for this?
+> Yes, that's what we want, and not what you said above. I.o.w. the comment like
+> "reason is unknown" is not accepted.
 >
-> I've applied these - working links are better than broken ones.  I
-> assume, though, that the new URLs, too, will break the next time the
-> manual is updated?  Is there any chance Loongson could provide a stable
-> URL for the current version of this manual instead?
+> Can you be more specific about the boards and why do you still need this delay?
 >
-> Thanks,
+> And also why is it atomic?
+
+
+As we expected, the driver is geared towards Loongosn-2K and Loongson 
+LS7A bridge chips, some of the older hardware still in use has scan 
+failure issues and we expect to keep that part as compatible.
+
+"Atomic" may not be necessary, It is expected to try a few more times 
+when the scan device fails. Also, I think the corresponding part of the 
+s3c2410 may have been referenced in the beginning.
+
+I will try to drop the loop part to do the relevant i2c read/write tests.
+
+
+Thanks.
+
+Binbin
+
+>>>> +	}
+> ...
 >
-> jon
+>>>> +	r = devm_request_irq(dev, irq, ls2x_i2c_irq_handler,
+>>>> +				IRQF_SHARED, "ls2x-i2c", priv);
+>>> Indentation.
+>> Do you mean  "IRQF_SHARE"  should be aligned to "dev"  ?
+> Yes.
 >
-
-Here are my thoughts:
-
-(1) Just use the release link without file name, simple and timeless.
-
-https://github.com/loongson/LoongArch-Documentation/releases
-
-(2) Use the online html links, but the Chinese html version of ISA
-Vol1 is unavailable now.
-
-https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-CN.html 
-(unavailable now)
-https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html
-
-https://loongson.github.io/LoongArch-Documentation/LoongArch-ELF-ABI-CN.html
-https://loongson.github.io/LoongArch-Documentation/LoongArch-ELF-ABI-EN.html
-
-(3) As Ruoyao said, use a link with tag name instead of "latest",
-may be outdated but always valid.
-
-https://github.com/loongson/LoongArch-Documentation/releases/download/2022.08.12/LoongArch-Vol1-v1.02-CN.pdf
-
-Thanks,
-Tiezhu
+> ...
+>
+>>>> +static const struct dev_pm_ops ls2x_i2c_pm_ops = {
+>>>> +	SET_SYSTEM_SLEEP_PM_OPS(ls2x_i2c_suspend, ls2x_i2c_resume)
+>>>> +};
+>>> Use corresponding DEFINE_ macro.
+>> ok.
+>>
+>> I will use
+>>
+>> "static DEFINE_SIMPLE_DEV_PM_OPS(ls2x_i2c_pm_ops, ls2x_i2c_suspend,
+>> ls2x_i2c_resume);"  corresponding to  ".pm     = pm_ptr(&ls2x_i2c_pm_ops),"
+> Shouldn't be pm_sleep_ptr()?
+>
+>
 
