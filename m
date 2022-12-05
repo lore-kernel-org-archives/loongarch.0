@@ -1,131 +1,68 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6BEF7C
-	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 02:23:57 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.110])
-	by gateway (Coremail) with SMTP id _____8AxRPA7Vo1jhC4DAA--.7488S3;
-	Mon, 05 Dec 2022 10:23:55 +0800 (CST)
-Received: from [0.0.0.0] (unknown [112.20.109.110])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLuI4Vo1j17MlAA--.27729S3;
-	Mon, 05 Dec 2022 10:23:54 +0800 (CST)
-Message-ID: <1c07ce92-cd17-8d6a-05d1-d6ea8cc39b56@loongson.cn>
-Date: Mon, 5 Dec 2022 10:23:52 +0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53ED184
+	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 04:50:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01B86C433D6;
+	Mon,  5 Dec 2022 04:50:13 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	kernel test robot <lkp@intel.com>,
+	Peibao Liu <liupeibao@loongson.cn>
+Subject: [PATCH] irqchip: loongarch-cpu: Fix a missing prototype warning
+Date: Mon,  5 Dec 2022 12:47:08 +0800
+Message-Id: <20221205044708.2054022-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: Re: [PATCH V4 4/5] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
- controller
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Wolfram Sang <wsa@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
- devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
- WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Jianmin Lv <lvjianmin@loongson.cn>
-References: <cover.1669777792.git.zhoubinbin@loongson.cn>
- <f6cc2dbe5cd190031ab4f772d1cf250934288546.1669777792.git.zhoubinbin@loongson.cn>
- <Y4e/6KewuHjAluSZ@smile.fi.intel.com>
- <f0060385-644a-847e-48cf-865c12b96473@loongson.cn>
- <Y4m3Ycs88nOk5zs9@smile.fi.intel.com>
-In-Reply-To: <Y4m3Ycs88nOk5zs9@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxLuI4Vo1j17MlAA--.27729S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7KrW8JF18ur18Gw47Jw43ZFb_yoW8tFy7pF
-	WfJFyYkF4kXF1I9rn2vw15u3Z0y398Jr47Zr4rGw1kCF909wn3Ar48tr1j9r1xWrWxJFW8
-	ZFW5KrW5Gr95ZaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
-	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
-	JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
-	1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUv
-	cSsGvfC2KfnxnUUI43ZEXa7IU8hiSPUUUUU==
 
+1, Rename loongarch_cpu_irq_of_init() to cpuintc_of_init() in order to
+   keep the same style as the ACPI version.
+2, Fix a missing prototype warning by adding a "static" modifier.
 
-在 2022/12/2 16:29, Andy Shevchenko 写道:
-> On Fri, Dec 02, 2022 at 11:22:19AM +0800, Binbin Zhou wrote:
->> 在 2022/12/1 04:41, Andy Shevchenko 写道:
->>> On Wed, Nov 30, 2022 at 01:56:20PM +0800, Binbin Zhou wrote:
-> ...
->
->>>> +	for (retry = 0; retry < adap->retries; retry++) {
->>>> +		ret = ls2x_i2c_doxfer(adap, msgs, num);
->>>> +		if (ret != -EAGAIN)
->>>> +			return ret;
->>>> +
->>>> +		dev_dbg(priv->dev, "Retrying transmission (%d)\n", retry);
->>>> +		udelay(100);
->>> Why atomic? This long (esp. atomic) delay must be explained.
->> The modification records for this part of the source code are no longer
->> traceable.
->>
->> Communicating with colleagues offline, I learned that this part of the code
->> first appeared on Linux 2.6.36, which was done to circumvent the problem of
->> probable failure to scan the device for i2c devices on some boards.
->>
->> How about I add a comment here to explain the reason for this?
-> Yes, that's what we want, and not what you said above. I.o.w. the comment like
-> "reason is unknown" is not accepted.
->
-> Can you be more specific about the boards and why do you still need this delay?
->
-> And also why is it atomic?
+Fixes: 855d4ca4bdb366aab3d4 ("irqchip: loongarch-cpu: add DT support")
+Reported-by: kernel test robot <lkp@intel.com>
+Cc: Peibao Liu <liupeibao@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/irqchip/irq-loongarch-cpu.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-
-As we expected, the driver is geared towards Loongosn-2K and Loongson 
-LS7A bridge chips, some of the older hardware still in use has scan 
-failure issues and we expect to keep that part as compatible.
-
-"Atomic" may not be necessary, It is expected to try a few more times 
-when the scan device fails. Also, I think the corresponding part of the 
-s3c2410 may have been referenced in the beginning.
-
-I will try to drop the loop part to do the relevant i2c read/write tests.
-
-
-Thanks.
-
-Binbin
-
->>>> +	}
-> ...
->
->>>> +	r = devm_request_irq(dev, irq, ls2x_i2c_irq_handler,
->>>> +				IRQF_SHARED, "ls2x-i2c", priv);
->>> Indentation.
->> Do you mean  "IRQF_SHARE"  should be aligned to "dev"  ?
-> Yes.
->
-> ...
->
->>>> +static const struct dev_pm_ops ls2x_i2c_pm_ops = {
->>>> +	SET_SYSTEM_SLEEP_PM_OPS(ls2x_i2c_suspend, ls2x_i2c_resume)
->>>> +};
->>> Use corresponding DEFINE_ macro.
->> ok.
->>
->> I will use
->>
->> "static DEFINE_SIMPLE_DEV_PM_OPS(ls2x_i2c_pm_ops, ls2x_i2c_suspend,
->> ls2x_i2c_resume);"  corresponding to  ".pm     = pm_ptr(&ls2x_i2c_pm_ops),"
-> Shouldn't be pm_sleep_ptr()?
->
->
+diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-loongarch-cpu.c
+index 00a47c011ec7..9d8f2c406043 100644
+--- a/drivers/irqchip/irq-loongarch-cpu.c
++++ b/drivers/irqchip/irq-loongarch-cpu.c
+@@ -93,7 +93,7 @@ static const struct irq_domain_ops loongarch_cpu_intc_irq_domain_ops = {
+ };
+ 
+ #ifdef CONFIG_OF
+-int __init loongarch_cpu_irq_of_init(struct device_node *of_node,
++static int __init cpuintc_of_init(struct device_node *of_node,
+ 				struct device_node *parent)
+ {
+ 	cpuintc_handle = of_node_to_fwnode(of_node);
+@@ -107,8 +107,7 @@ int __init loongarch_cpu_irq_of_init(struct device_node *of_node,
+ 
+ 	return 0;
+ }
+-IRQCHIP_DECLARE(cpu_intc, "loongson,cpu-interrupt-controller",
+-					loongarch_cpu_irq_of_init);
++IRQCHIP_DECLARE(cpu_intc, "loongson,cpu-interrupt-controller", cpuintc_of_init);
+ #endif
+ 
+ static int __init liointc_parse_madt(union acpi_subtable_headers *header,
+-- 
+2.31.1
 
