@@ -1,97 +1,97 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 943FA17E0
-	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 08:54:35 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.109.110])
-	by gateway (Coremail) with SMTP id _____8DxfevJsY1jHTwDAA--.7552S3;
-	Mon, 05 Dec 2022 16:54:33 +0800 (CST)
-Received: from [0.0.0.0] (unknown [112.20.109.110])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxXuDHsY1jqdolAA--.27108S3;
-	Mon, 05 Dec 2022 16:54:31 +0800 (CST)
-Message-ID: <250be32a-adc1-832c-c10d-38d99d23f647@loongson.cn>
-Date: Mon, 5 Dec 2022 16:54:30 +0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF9A17E0
+	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 08:58:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84A99C43470;
+	Mon,  5 Dec 2022 08:58:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1670230710;
+	bh=CyytMSAI0EJHLFeZ3ModFSXv5+D4fj2pSfK7LNwIbXE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PaLoCxSVdHM3PNcX8lTYwlQsrtKj7I9+DQZzzXpPfGVj90aEmzLIkPsdUsYBx2Z/t
+	 urs4pCGBaRpKX/8gnh/bgkrbeYS2tmcYduV1yp6DwzvsCFZs1y2Gy56iayOQRRudth
+	 QS5mD080JorQY7zQ69u6enT08mWHEySgnyYWjmrYM7uTeqbA6ANKod5Wntfnbk8LOU
+	 R0VwkgLbb29uEZhqjORF+kuAZlre9OHoG+lgPZCjACa+CDvlAy7Ys1W85bqO9foEYA
+	 f0SAKV1dY+lm2aarEdfY5qG+y9qDk1rm9C2sOIa7NVUTA7z2XioL8fiZS0XIWrAbUK
+	 P9VqU7zuqzUMQ==
+Date: Mon, 5 Dec 2022 09:58:26 +0100
+From: Wolfram Sang <wsa@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>
+Subject: Re: [PATCH V4 4/5] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
+ controller
+Message-ID: <Y42ysiAqk8ynGxe6@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>
+References: <cover.1669777792.git.zhoubinbin@loongson.cn>
+ <f6cc2dbe5cd190031ab4f772d1cf250934288546.1669777792.git.zhoubinbin@loongson.cn>
+ <Y42uBT34H6alb4O9@ninjato>
+ <250be32a-adc1-832c-c10d-38d99d23f647@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH V4 4/5] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
- controller
-To: Wolfram Sang <wsa@kernel.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
- devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
- WANG Xuerui <kernel@xen0n.name>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Jianmin Lv <lvjianmin@loongson.cn>
-References: <cover.1669777792.git.zhoubinbin@loongson.cn>
- <f6cc2dbe5cd190031ab4f772d1cf250934288546.1669777792.git.zhoubinbin@loongson.cn>
- <Y42uBT34H6alb4O9@ninjato>
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-In-Reply-To: <Y42uBT34H6alb4O9@ninjato>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxXuDHsY1jqdolAA--.27108S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrZF1ktrWrJFyfKFWkGF4kJFb_yoWDKrXEkF
-	yIyw1kArn5AF1xKa10gryfArn0g34jq395u3Z0qrWxu347tw1rtr48GryfCF1SvrZ7XFs0
-	9a18Jws2kryS9jkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
-	07kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
-	e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280
-	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
-	xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC
-	6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv
-	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxUGYDUUUU
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3AoALBoHv65wX7ah"
+Content-Disposition: inline
+In-Reply-To: <250be32a-adc1-832c-c10d-38d99d23f647@loongson.cn>
 
 
-在 2022/12/5 16:38, Wolfram Sang 写道:
-> On Wed, Nov 30, 2022 at 01:56:20PM +0800, Binbin Zhou wrote:
->> This I2C module is integrated into the Loongson-2K SoCs and Loongson
->> LS7A bridge chip.
->>
->> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> There are currently two people submitting a driver for this hardware.
-> This is the other driver:
->
-> https://lore.kernel.org/all/20221128130025.23184-1-zhuyinbo@loongson.cn/
->
-> Can you guys please decide which one is "better" or combine the two to
-> make a better one?
-
-Hi Wolfram:
-
-When Krzysztof found out about this, Yinbo and I had negotiated offline 
-that I would follow up on this series of patchset submissions,
-
-and this was Yinbo's previous response:
-
-https://lore.kernel.org/all/2e10ae64-3c91-ccf8-a970-eb6e3371b948@loongson.cn/ 
-<https://lore.kernel.org/all/2e10ae64-3c91-ccf8-a970-eb6e3371b948@loongson.cn/>
-
-Here is my previous response:
-
-https://lore.kernel.org/all/57496a84-52b3-db97-f0b9-1477de84eb1e@loongson.cn/
-
-Thanks.
-
-Binbin
+--3AoALBoHv65wX7ah
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
->
-> Thanks,
->
->     Wolfram
->
+> When Krzysztof found out about this, Yinbo and I had negotiated offline t=
+hat
+> I would follow up on this series of patchset submissions,
+>=20
+> and this was Yinbo's previous response:
+>=20
+> https://lore.kernel.org/all/2e10ae64-3c91-ccf8-a970-eb6e3371b948@loongson=
+=2Ecn/ <https://lore.kernel.org/all/2e10ae64-3c91-ccf8-a970-eb6e3371b948@lo=
+ongson.cn/>
 
+OK, I see. Thank you for the quick response!
+
+
+--3AoALBoHv65wX7ah
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmONsrIACgkQFA3kzBSg
+KbaqQQ/+PIMd9b8O9j4ykXh7OC3gzCEiA3H/gwcIZQfXcdl3fJ36iieTsj2zWwIN
+eRtvFc8ZqMIZGDSJaeHmfBZdkuoDJqJ86Xm4+eGEvXevH23KCtsPe2xVnDf1TVqU
+7IieGqB+rRe15aGJ1DZRMhc3MMlX13TlIhQVdi23p3F+6iIDOUmSNUwNzuZTD5YA
+k4ET/8+DCKApf06MDbQ0vx5DvoW6hzSenWt0WDgwmo03a2na7Zt9IizkzRXLdAUa
+ULxsAWiShOteo87AzPZX14vk6uOuMwptb+E93NcT1I6MQ5pb3+cS+8kodreUT9vf
+emmsii8SqdEMKprwFdcgN3sthwVn11SMbhffq6O8wccYwlXjJbiZMzQLuX90tbUZ
+moMP1Ttiz3sXiv96mxMpokxc409CAQQwW6u5fwUTlQwX6DshBd1M7uzPnvzISqAT
+//9iAGrNt+xxZ6sbQCHPavABIYxEj/cLryjRJSgyZOql2T/hixwuajvYyJsphgqj
+BOGDtWghHSwWA7j1PYznIUrgxNyI76dzxD1gfVq63lYAyAbvNUgYzYkE87+MPvt+
+ZOKcTweGutofs6SV86MffPXFl+pTFSRZB4L1KBq08U7YUPy8vVCLJbFvoJ0zqaDi
+lstby5v7kl24fVKOmR7oPWt0Z7JqFpjlHMqiXiHhsYcc3ouRhVw=
+=zoFc
+-----END PGP SIGNATURE-----
+
+--3AoALBoHv65wX7ah--
