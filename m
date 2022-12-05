@@ -1,93 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5236C17E0
-	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 09:29:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76619C433C1;
-	Mon,  5 Dec 2022 09:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1670232566;
-	bh=wOIgdTS5+LY6LwdutNtlRBp6YjjmQTDkbAMmitLdD1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GQ2RDXp8WvglH0rSpUX/1WeA08ECgYx2FIFjWSiXtTpV8IfDvna9baL+JeeSEw1Ub
-	 Yu/wY5aAPIq8F31k4Jlb8hJRgMHWZ4K8gGkMWE2Of3thjL4UlC25rebTEHKdgsk3WA
-	 lMKF8XnGZRVqT943qlWAuOkx4yrB8uuc3csKhfF1cQRIVSze2G8Km4I2h4t9RJvBcd
-	 wBjV+LhQPaFNv4Q7nLTUn0IaIQA84YO531XzvjYZpOjbQj6IVKnTWL47bsHdJtHUXt
-	 WwJOhTt8HMShlZyrwBFm7XxxWExVBE/wFWT+cCYSWzWMkqwaL7/o2yYp/5SbLLp+6M
-	 maRTYm8/gdN3w==
-Date: Mon, 5 Dec 2022 10:29:22 +0100
-From: Wolfram Sang <wsa@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>
-Subject: Re: [PATCH V4 1/5] i2c: gpio: Fix potential unused warning for
- 'i2c_gpio_dt_ids'
-Message-ID: <Y4258kcvPwtA5YvY@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>
-References: <cover.1669777792.git.zhoubinbin@loongson.cn>
- <fda9f8bc2477a3a49bd57ea219f88b4199c2163e.1669777792.git.zhoubinbin@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2F2EB25
+	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 10:02:32 +0000 (UTC)
+Received: from localhost (mdns.lwn.net [45.79.72.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 9778A2C5;
+	Mon,  5 Dec 2022 10:02:24 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 9778A2C5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1670234545; bh=ookYcONnjY6hxSDBsXVx74LJy/vSHoGH6jArwP3li6Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=QtKjcu+Nxoc8ZEHjEv6F+U4sBHak2SZs0uj6W8hTtBkUgKtJ3QkUTfbRA1xcP2jKN
+	 eftBordTZRUOAa8JSv5OlgH5Av3a0LZTiFV5pUjILvPGmuM5W7eLFoEOIByE/03cOb
+	 fs7cuBc23Sti/55XQ8dUAcZn/5jS/va9zzCuDRKVTlpC1ur3azXj9mKIwJta1SV5MK
+	 TJubyfjNDpSP4Bo4DGuOkRCYyd5N1Ejox0gYHs/u/E9cGcKDobleiesaQrCzwfv5Fh
+	 tXy3BultFAyKv+zmxPTK7WqFtKwQnj+sEhi4G5bB66v6dMUR37UyE+J4W5EzUeAmo6
+	 KyHLJMu7BXpMA==
+From: Jonathan Corbet <corbet@lwn.net>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] Documentation/features-refresh.sh: Only sed the
+ beginning "arch" of ARCH_DIR
+In-Reply-To: <1670156327-9631-2-git-send-email-yangtiezhu@loongson.cn>
+References: <1670156327-9631-1-git-send-email-yangtiezhu@loongson.cn>
+ <1670156327-9631-2-git-send-email-yangtiezhu@loongson.cn>
+Date: Mon, 05 Dec 2022 03:02:18 -0700
+Message-ID: <87k036mamt.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wVwLnbPgqIqSgWNQ"
-Content-Disposition: inline
-In-Reply-To: <fda9f8bc2477a3a49bd57ea219f88b4199c2163e.1669777792.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain
 
+Tiezhu Yang <yangtiezhu@loongson.cn> writes:
 
---wVwLnbPgqIqSgWNQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> It should only sed the beginning "arch" of ARCH_DIR in features-refresh.sh,
+> otherwise loongarch is recognized as loong, that is not what we want.
+>
+> Fixes: be99f610a110 ("Documentation/features: Add script that refreshes the arch support status files in place")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  Documentation/features/scripts/features-refresh.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/features/scripts/features-refresh.sh b/Documentation/features/scripts/features-refresh.sh
+> index 9e72d38..c228812 100755
+> --- a/Documentation/features/scripts/features-refresh.sh
+> +++ b/Documentation/features/scripts/features-refresh.sh
+> @@ -60,7 +60,7 @@ for F_FILE in Documentation/features/*/*/arch-support.txt; do
+>  	echo "    |         arch |status|" >> $T_FILE
+>  	echo "    -----------------------" >> $T_FILE
+>  	for ARCH_DIR in arch/*/; do
+> -		ARCH=$(echo $ARCH_DIR | sed -e 's/arch//g' | sed -e 's/\///g')
+> +		ARCH=$(echo $ARCH_DIR | sed -e 's/^arch//g' | sed -e 's/\///g')
 
-On Wed, Nov 30, 2022 at 01:55:51PM +0800, Binbin Zhou wrote:
-> Dropping a matching #ifdef check along with dropping of_match_ptr()
-> is just a cleanup, while dropping of_match_ptr() that has no
-> corresponding #ifdef fixes an actual warning.
->=20
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+So ... looking at this now, it strikes me as a bit of a convoluted way
+to reimplement "basename" - obviously incorrectly before this fix.  Oh
+well, this is better than before, so I've applied the series.
 
-Applied to for-next, thanks!
+Thanks,
 
-
---wVwLnbPgqIqSgWNQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmONue8ACgkQFA3kzBSg
-KbYrtQ/8D4XmsGL3LvHHPDjn+Ghpx73AUmU0ESeUC+sIovCGAGClW2Y9DKAeP97v
-JJINAq5eJ8OStqmVGQCsqz8T3erEOgnuy3Od+5Bv4pK9yJ0MdL5jWYICMUYDpc9x
-ImcpuUD+6sGFbSIYL2iWTkFqGzu37sDmHfQdTD74/fBGbzG97XhkSwpmTTLzbaP8
-jAVVMT51n49VedlMktCH+ACJwM2M9Vf3mbm/TaWdA2VxkWRRQ2M+RW48Yk6qApEZ
-L9a1yfhof1+rbbOtktMfRMLKzPgXaZyvvBk5l3rYYrcCI6tQIJ64QX2+NDXytHVn
-HBQm3GwdqYKzP8HeLHlcWgEQpu45m3Grv/IIPCJe9zLlQ7086Newy1u/y6wmig6+
-y5UMTFMyKpLqC7DrQE8upMEDMfpTi1ztLncxdE7cIUCvhhP99awrR3TqJJ0so6gB
-KkHAD9iSpyclHO0ygZtT3/XznBqYDP3v5d2xZh2bSZlsBLf5yzWZMKoJRurVszrc
-eR+dygg3cpw6jm6ZK00jrxPJsrT5SOA34xMeYRkmROxkS9g1WqXaGIign7+ucCLh
-zYD3Zkui2O29A7wl9rScQaQW7QXIo+KFSU2393cRi4+D33AMs/2mEJJIIMMPoqs9
-FT41Yo4VG6yvdsgwsn0VosygKhjOrNS9FuQdcr10YxoYBDXo+yI=
-=Xr/Q
------END PGP SIGNATURE-----
-
---wVwLnbPgqIqSgWNQ--
+jon
