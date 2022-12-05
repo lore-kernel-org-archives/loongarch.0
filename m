@@ -1,100 +1,96 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14EED7C
-	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 00:57:38 +0000 (UTC)
-Received: from loongson.cn (unknown [117.133.84.183])
-	by gateway (Coremail) with SMTP id _____8Dx+Oj6QY1jGioDAA--.4097S3;
-	Mon, 05 Dec 2022 08:57:30 +0800 (CST)
-Received: from [192.168.1.2] (unknown [117.133.84.183])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_eH6QY1jcKklAA--.27000S3;
-	Mon, 05 Dec 2022 08:57:30 +0800 (CST)
-Message-ID: <2b86e0a3-2367-c7e8-1086-ee79ffb19907@loongson.cn>
-Date: Mon, 5 Dec 2022 08:57:30 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31C2B7C
+	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 01:44:51 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx6+oRTY1jjCwDAA--.7305S3;
+	Mon, 05 Dec 2022 09:44:49 +0800 (CST)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHuIOTY1jsK8lAA--.27845S3;
+	Mon, 05 Dec 2022 09:44:46 +0800 (CST)
+Subject: Re: [PATCH 0/2] Update links of LoongArch ISA Vol1 and ELF psABI
+To: Jonathan Corbet <corbet@lwn.net>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Xi Ruoyao <xry111@xry111.site>
+References: <1669892345-7763-1-git-send-email-yangtiezhu@loongson.cn>
+ <87h6ycoist.fsf@meer.lwn.net>
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <aea656cb-f3ad-8668-9131-f294235f78da@loongson.cn>
+Date: Mon, 5 Dec 2022 09:44:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v1] gpio: loongson: enable irqdomain hierarchy config
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, WANG Xuerui <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>
-References: <20221203105825.15886-1-zhuyinbo@loongson.cn>
- <b6b34bc4-4089-9c02-81b2-9eaf2c9a4663@loongson.cn>
- <CAMRc=MdqOA_xU6TdcMspF=GMYx0MbKv0MzrTNOuZ7W=kg2skDw@mail.gmail.com>
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-In-Reply-To: <CAMRc=MdqOA_xU6TdcMspF=GMYx0MbKv0MzrTNOuZ7W=kg2skDw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dx_eH6QY1jcKklAA--.27000S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7XF4kWrWrCFy8GF4UtrWfuFg_yoWkArg_Cw
-	nFyFs7Cr1UGr929FsI9rWfZr9IkayDWr1rC3Wqqw13Xw12qay8uw1Yvwn3W3W7WrW7WFn7
-	ZrWSyFy7ZrWIgjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
-	b7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2
-	IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84AC
-	jcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE
-	52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
-	80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCj
-	c4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI
-	0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCj
-	c4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2knYUUUUU
+In-Reply-To: <87h6ycoist.fsf@meer.lwn.net>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8BxHuIOTY1jsK8lAA--.27845S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7CFyDCF45CF4kAr17ZF48Crg_yoW8WF1fpF
+	yS9FyagF1vyr47uw1kK345WF4FvFWfGayxJF4Utw15WwnxAw1DCFyFqrs8tFZrZ3yfJFWF
+	qryFkws5J3W8A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
+	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUUU
 
 
-在 2022/12/3 23:01, Bartosz Golaszewski 写道:
-> On Sat, Dec 3, 2022 at 12:05 PM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
->>
->> 在 2022/12/3 18:58, Yinbo Zhu 写道:
->>> The loongson gpio driver need select IRQ_DOMAIN_HIERARCHY and add
->>> such support.
->>>
->>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
->>> ---
->>>    drivers/gpio/Kconfig | 1 +
->>>    1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
->>> index 55b7c5bae4aa..0f014411703e 100644
->>> --- a/drivers/gpio/Kconfig
->>> +++ b/drivers/gpio/Kconfig
->>> @@ -395,6 +395,7 @@ config GPIO_LOONGSON_64BIT
->>>        depends on LOONGARCH || COMPILE_TEST
->>>        select GPIO_GENERIC
->>>        select GPIOLIB_IRQCHIP
->>> +     select IRQ_DOMAIN_HIERARCHY
->>>        help
->>>          Say yes here to support the GPIO functionality of a number of
->>>          Loongson series of chips. The Loongson GPIO controller supports
->> Hi Bartosz,
->>
->>
->> please help merge this patch on top of the existing series.
->>
-> I applied this, but please don't ping me an hour after you submit a
-> patch on a Saturday.
+
+On 12/03/2022 06:58 PM, Jonathan Corbet wrote:
+> Tiezhu Yang <yangtiezhu@loongson.cn> writes:
 >
-> Bart
+>> Tiezhu Yang (2):
+>>   docs/LoongArch: Update links of LoongArch ISA Vol1 and ELF psABI
+>>   docs/zh_CN/LoongArch: Update links of LoongArch ISA Vol1 and ELF psABI
+>>
+>>  Documentation/loongarch/introduction.rst                    | 8 ++++----
+>>  Documentation/translations/zh_CN/loongarch/introduction.rst | 8 ++++----
+>>  2 files changed, 8 insertions(+), 8 deletions(-)
+>
+> I've applied these - working links are better than broken ones.  I
+> assume, though, that the new URLs, too, will break the next time the
+> manual is updated?  Is there any chance Loongson could provide a stable
+> URL for the current version of this manual instead?
+>
+> Thanks,
+>
+> jon
+>
 
-okay, I'll pay attention later.
+Here are my thoughts:
 
+(1) Just use the release link without file name, simple and timeless.
+
+https://github.com/loongson/LoongArch-Documentation/releases
+
+(2) Use the online html links, but the Chinese html version of ISA
+Vol1 is unavailable now.
+
+https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-CN.html 
+(unavailable now)
+https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html
+
+https://loongson.github.io/LoongArch-Documentation/LoongArch-ELF-ABI-CN.html
+https://loongson.github.io/LoongArch-Documentation/LoongArch-ELF-ABI-EN.html
+
+(3) As Ruoyao said, use a link with tag name instead of "latest",
+may be outdated but always valid.
+
+https://github.com/loongson/LoongArch-Documentation/releases/download/2022.08.12/LoongArch-Vol1-v1.02-CN.pdf
 
 Thanks,
-
-Yinbo.
+Tiezhu
 
