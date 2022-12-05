@@ -1,100 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B5417E0
-	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 08:38:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13584C433C1;
-	Mon,  5 Dec 2022 08:38:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1670229512;
-	bh=7LUkgHljyLXmcrQzYuFzCnJfknQ9i1dWFWbYAxACaCE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IlDNyN3RzT+SH8Kg/Jy016kBuqRWFYKlZ7iQt7yEx3TinlMDd9f955/sdwD+nFDrF
-	 Wr/5lIebhpfxivNxJulxLPhfeN9ttSASE/iEtjTQKJn+/sjTKZ1WafELKwVEL4mflQ
-	 nvMm4m8H1BOAd0jVR1XBSmt7+Oc6kUARk5gz3I/6PoVo1VftriyKOt91WpvRU5dTno
-	 JD7AQyWZ6dQdvTD1j0ufQBdnAHibWizOcZS+rA6rOxESJihxOhIV1KW8geXWBaDseX
-	 EbqFSew7+T0s28+yls7O/p/qaIfEOVl8vepHuTaWE0iERQLsYJ0dbo99AmENre28jk
-	 i+dVZDR0buw4g==
-Date: Mon, 5 Dec 2022 09:38:29 +0100
-From: Wolfram Sang <wsa@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>
-Subject: Re: [PATCH V4 4/5] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
- controller
-Message-ID: <Y42uBT34H6alb4O9@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>
-References: <cover.1669777792.git.zhoubinbin@loongson.cn>
- <f6cc2dbe5cd190031ab4f772d1cf250934288546.1669777792.git.zhoubinbin@loongson.cn>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 943FA17E0
+	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 08:54:35 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.109.110])
+	by gateway (Coremail) with SMTP id _____8DxfevJsY1jHTwDAA--.7552S3;
+	Mon, 05 Dec 2022 16:54:33 +0800 (CST)
+Received: from [0.0.0.0] (unknown [112.20.109.110])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxXuDHsY1jqdolAA--.27108S3;
+	Mon, 05 Dec 2022 16:54:31 +0800 (CST)
+Message-ID: <250be32a-adc1-832c-c10d-38d99d23f647@loongson.cn>
+Date: Mon, 5 Dec 2022 16:54:30 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6nvsZOHEl/qat1z9"
-Content-Disposition: inline
-In-Reply-To: <f6cc2dbe5cd190031ab4f772d1cf250934288546.1669777792.git.zhoubinbin@loongson.cn>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH V4 4/5] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
+ controller
+To: Wolfram Sang <wsa@kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+ devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Jianmin Lv <lvjianmin@loongson.cn>
+References: <cover.1669777792.git.zhoubinbin@loongson.cn>
+ <f6cc2dbe5cd190031ab4f772d1cf250934288546.1669777792.git.zhoubinbin@loongson.cn>
+ <Y42uBT34H6alb4O9@ninjato>
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+In-Reply-To: <Y42uBT34H6alb4O9@ninjato>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxXuDHsY1jqdolAA--.27108S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjvdXoWrZF1ktrWrJFyfKFWkGF4kJFb_yoWDKrXEkF
+	yIyw1kArn5AF1xKa10gryfArn0g34jq395u3Z0qrWxu347tw1rtr48GryfCF1SvrZ7XFs0
+	9a18Jws2kryS9jkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
+	07kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
+	e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280
+	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
+	xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC
+	6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
+	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
+	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv
+	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxUGYDUUUU
 
 
---6nvsZOHEl/qat1z9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+在 2022/12/5 16:38, Wolfram Sang 写道:
+> On Wed, Nov 30, 2022 at 01:56:20PM +0800, Binbin Zhou wrote:
+>> This I2C module is integrated into the Loongson-2K SoCs and Loongson
+>> LS7A bridge chip.
+>>
+>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> There are currently two people submitting a driver for this hardware.
+> This is the other driver:
+>
+> https://lore.kernel.org/all/20221128130025.23184-1-zhuyinbo@loongson.cn/
+>
+> Can you guys please decide which one is "better" or combine the two to
+> make a better one?
 
-On Wed, Nov 30, 2022 at 01:56:20PM +0800, Binbin Zhou wrote:
-> This I2C module is integrated into the Loongson-2K SoCs and Loongson
-> LS7A bridge chip.
->=20
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Hi Wolfram:
 
-There are currently two people submitting a driver for this hardware.
-This is the other driver:
+When Krzysztof found out about this, Yinbo and I had negotiated offline 
+that I would follow up on this series of patchset submissions,
 
-https://lore.kernel.org/all/20221128130025.23184-1-zhuyinbo@loongson.cn/
+and this was Yinbo's previous response:
 
-Can you guys please decide which one is "better" or combine the two to
-make a better one?
+https://lore.kernel.org/all/2e10ae64-3c91-ccf8-a970-eb6e3371b948@loongson.cn/ 
+<https://lore.kernel.org/all/2e10ae64-3c91-ccf8-a970-eb6e3371b948@loongson.cn/>
 
-Thanks,
+Here is my previous response:
 
-   Wolfram
+https://lore.kernel.org/all/57496a84-52b3-db97-f0b9-1477de84eb1e@loongson.cn/
+
+Thanks.
+
+Binbin
 
 
---6nvsZOHEl/qat1z9
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+> Thanks,
+>
+>     Wolfram
+>
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmONrgUACgkQFA3kzBSg
-KbadTw/9FgjEE7KzjDYc1H4n858esVXuR4jiNtBUY6DCkWmMjGhzPsvpKbkAjf5/
-GbG9n7CUh+2XfG/t0Mil07q6nNKrgoID9MQzb4/tcV+D86eP2ED3kLhdoLR0xmVm
-UrGjJI3OLiiS7ZEXZCA35k6QoNRZ8MPGOKGpQ4RJ6+/GRG8ba0PDHmbsNvMJAAla
-+BpKXcBONleVtGpVis2g2HGaRJCQGg11EQqKrJPzKPky54O022BHctVnFcUnY/W6
-IRnJcBz1Aq3F+2HU69DieAdXkHLvx9pDUPwhKjcsNEW2tJgMvYdcbV0p/Df9IYDr
-Pof5CZ4/EcoDUTVuMcd2HWfc29ned8qAMfjVk/LnncoHu7elz67ak6Uvv1ON0R1A
-+/84HlBXW6wPh3HNIhN6/AJ/jH0ikOEaYkv9b1oDK7ygmFDp5PFJ8rMdgbKqUuUE
-EbRxLy7HPPGL5lQaFFUBh/YfClF0IndnC1U+Q1Phh55gWyrjaPLqHzFdTTmiYqkS
-kWwFyznB4VF8zzOyjpMtURDUqebEThXiJBcleEfZ5P88hKJ94BYqvOamqHtFpH+l
-qtEVqrAeluBhPrEvTveY2m5TdavYtkBxknEPqRLNg5tjHgkEeABRbipFrvJlju/6
-nU/u9mWrOG8uSN432ytfQMgPVjMoRc+E1P8M0rF8PeZSOFDr4xw=
-=wW2+
------END PGP SIGNATURE-----
-
---6nvsZOHEl/qat1z9--
