@@ -1,68 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53ED184
-	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 04:50:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01B86C433D6;
-	Mon,  5 Dec 2022 04:50:13 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Marc Zyngier <maz@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Huacai Chen <chenhuacai@gmail.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	kernel test robot <lkp@intel.com>,
-	Peibao Liu <liupeibao@loongson.cn>
-Subject: [PATCH] irqchip: loongarch-cpu: Fix a missing prototype warning
-Date: Mon,  5 Dec 2022 12:47:08 +0800
-Message-Id: <20221205044708.2054022-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.31.1
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02876EB0E
+	for <loongarch@lists.linux.dev>; Mon,  5 Dec 2022 06:04:12 +0000 (UTC)
+Received: from loongson.cn (unknown [117.133.84.183])
+	by gateway (Coremail) with SMTP id _____8Bx2+raiY1jljUDAA--.7465S3;
+	Mon, 05 Dec 2022 14:04:10 +0800 (CST)
+Received: from [192.168.1.2] (unknown [117.133.84.183])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx5VbZiY1jCcglAA--.8830S3;
+	Mon, 05 Dec 2022 14:04:10 +0800 (CST)
+Message-ID: <899d9d4c-36e8-6a4f-4243-dcf16f9ef29f@loongson.cn>
+Date: Mon, 5 Dec 2022 14:04:09 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v10 1/2] gpio: loongson: add gpio driver support
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Jianmin Lv <lvjianmin@loongson.cn>,
+ Hongchen Zhang <zhanghongchen@loongson.cn>,
+ Liu Peibao <liupeibao@loongson.cn>
+References: <20221201123220.7893-1-zhuyinbo@loongson.cn>
+ <CACRpkdZm-4-5625szX_VqJoQH1OQZnw+jH3SqWsb9nr3S0Nbmw@mail.gmail.com>
+ <35ff475a-e925-81eb-ffeb-448be43f59ff@loongson.cn>
+ <Y4tq4i2CJdnQWFZC@smile.fi.intel.com> <Y4tuOyKOdZcQ4sjm@smile.fi.intel.com>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+In-Reply-To: <Y4tuOyKOdZcQ4sjm@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cx5VbZiY1jCcglAA--.8830S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7uF17Cw1xCF43ArW5GF1xKrg_yoW8JFyrpa
+	4UXa18CF47Gr4fKw1vvw1UCa1avr13J34rX3WkGr48Cas8tr9rtF18Ja12kry7XFWak3y7
+	JFWFqrW3Ca1rZaDanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bDAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
+	v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
+	7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
+	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jYnmiUUUUU=
 
-1, Rename loongarch_cpu_irq_of_init() to cpuintc_of_init() in order to
-   keep the same style as the ACPI version.
-2, Fix a missing prototype warning by adding a "static" modifier.
 
-Fixes: 855d4ca4bdb366aab3d4 ("irqchip: loongarch-cpu: add DT support")
-Reported-by: kernel test robot <lkp@intel.com>
-Cc: Peibao Liu <liupeibao@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/irqchip/irq-loongarch-cpu.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+在 2022/12/3 23:41, Andy Shevchenko 写道:
+> On Sat, Dec 03, 2022 at 05:27:31PM +0200, Andy Shevchenko wrote:
+>> On Sat, Dec 03, 2022 at 06:53:20PM +0800, Yinbo Zhu wrote:
+>>> 在 2022/12/3 18:03, Linus Walleij 写道:
+>>>> On Thu, Dec 1, 2022 at 1:33 PM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+>>>>> +config GPIO_LOONGSON_64BIT
+>>>>> +       tristate "Loongson 64 bit GPIO support"
+>>>>> +       depends on LOONGARCH || COMPILE_TEST
+>>>>> +       select GPIO_GENERIC
+>>>>> +       select GPIOLIB_IRQCHIP
+>>>> If the kernelbots start complaining you might need to add a:
+>>>>
+>>>> select IRQ_DOMAIN_HIERARCHY
+>>>>
+>>>> here.
+>>> Bartosz had merged my patch and I will add a change on top of the existing
+>>> series.
+>> I don;'t know why he had done that, the driver requires a lot of cleanups,
+>> e.g. why it uses acpi.h, what that "nice" container of the platform device for.
 
-diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-loongarch-cpu.c
-index 00a47c011ec7..9d8f2c406043 100644
---- a/drivers/irqchip/irq-loongarch-cpu.c
-+++ b/drivers/irqchip/irq-loongarch-cpu.c
-@@ -93,7 +93,7 @@ static const struct irq_domain_ops loongarch_cpu_intc_irq_domain_ops = {
- };
- 
- #ifdef CONFIG_OF
--int __init loongarch_cpu_irq_of_init(struct device_node *of_node,
-+static int __init cpuintc_of_init(struct device_node *of_node,
- 				struct device_node *parent)
- {
- 	cpuintc_handle = of_node_to_fwnode(of_node);
-@@ -107,8 +107,7 @@ int __init loongarch_cpu_irq_of_init(struct device_node *of_node,
- 
- 	return 0;
- }
--IRQCHIP_DECLARE(cpu_intc, "loongson,cpu-interrupt-controller",
--					loongarch_cpu_irq_of_init);
-+IRQCHIP_DECLARE(cpu_intc, "loongson,cpu-interrupt-controller", cpuintc_of_init);
- #endif
- 
- static int __init liointc_parse_madt(union acpi_subtable_headers *header,
--- 
-2.31.1
+I just compile it that it is still okay when remove acpi.h, so I will 
+remove it in v11.
+
+and, I'm afraid I didn't catch your meaning about "
+
+what that "nice" container of the platform device for."
+
+
+you said is for following code ?
+144         struct platform_device *pdev =
+145                 container_of(chip->parent, struct platform_device, dev);
+
+> + we have macros for get_direction() returned values and so on.
+okay, I will use that macros in v11.
 
