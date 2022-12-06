@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1EEF17EB
-	for <loongarch@lists.linux.dev>; Tue,  6 Dec 2022 03:19:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 888CC17EB
+	for <loongarch@lists.linux.dev>; Tue,  6 Dec 2022 03:20:25 +0000 (UTC)
 Received: from loongson.cn (unknown [112.20.109.110])
-	by gateway (Coremail) with SMTP id _____8Dx_+vXtI5jznQDAA--.8086S3;
-	Tue, 06 Dec 2022 11:19:51 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxxvD4tI5jDHUDAA--.7943S3;
+	Tue, 06 Dec 2022 11:20:24 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.109.110])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axf+DQtI5jzlcmAA--.29287S5;
-	Tue, 06 Dec 2022 11:19:50 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxj+D3tI5jNlgmAA--.28154S2;
+	Tue, 06 Dec 2022 11:20:23 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Wolfram Sang <wsa@kernel.org>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
@@ -23,8 +23,8 @@ Cc: loongarch@lists.linux.dev,
 	Jianmin Lv <lvjianmin@loongson.cn>,
 	Binbin Zhou <zhoubinbin@loongson.cn>
 Subject: [PATCH V5 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C controller
-Date: Tue,  6 Dec 2022 11:16:56 +0800
-Message-Id: <e088e2ffaef1492adc09b7cdbde0afcea2eeb8b2.1670293176.git.zhoubinbin@loongson.cn>
+Date: Tue,  6 Dec 2022 11:17:36 +0800
+Message-ID: <e088e2ffaef1492adc09b7cdbde0afcea2eeb8b2.1670293176.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1670293176.git.zhoubinbin@loongson.cn>
 References: <cover.1670293176.git.zhoubinbin@loongson.cn>
@@ -35,25 +35,26 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axf+DQtI5jzlcmAA--.29287S5
+X-CM-TRANSID:AQAAf8Bxj+D3tI5jNlgmAA--.28154S2
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
 X-Coremail-Antispam: 1Uk129KBjvAXoW3CryfKrWfZw4kGw45Jr4fKrg_yoW8Jr18Co
 	WxXFs8Xr48J34UC3y0kr12qFW7Z39Y9ry3Kw1fZr97ZFyjyF15tF92kw15G3WIgr45KrWr
-	Zrn3ta1xXF4fA347n29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+	Zrn3ta1xXF4fA347n29KB7ZKAUJUUUUJ529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
 	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
 	UUBSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
 	0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
 	8EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
-	JwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4
-	CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0E
+	JwAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4
+	CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0E
 	x4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7
-	CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l
-	4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
+	CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l
+	4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
 	WUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
 	wI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcI
 	k0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j
-	6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2JKsUUUUU
+	6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUhGNtUUUUU
+Message-ID: <20221206031736.QNE-7k3aOjNyq9-tm12k7SudnJYj0HYQAhHdx2Xeqgc@z>
 
 This I2C module is integrated into the Loongson-2K SoCs and Loongson
 LS7A bridge chip.
