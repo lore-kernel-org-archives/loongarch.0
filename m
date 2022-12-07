@@ -1,294 +1,455 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B80727706
-	for <loongarch@lists.linux.dev>; Tue,  6 Dec 2022 16:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670342918; x=1701878918;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2mfC+49Zrk6yU1xCCdQmj+99niP/bcoQaPMPKBsQNWE=;
-  b=BuxMTt2LU083av4SZ9ZacreX/SC6j7DsIcI+upEluol3bVh643eoLslE
-   ngNZhPjhxapMFZi1SGUoPENqp2+/OcqDSHHg6LLyxzgGenQgtsVWFzy69
-   TaZtOV7Btp9hxfqVjpTOA/cnFnqaDIV6GKvzbinel64/fHDOadHkY04Zb
-   weWc075GMsO+x4yZWqU95qfoCPt59CyljSgJVnensBNavqXEY4CaPiPvW
-   cuVXYSxdocW36uCZZhDLzZxkeMIwWtzHz7zLWeafSurl9fXFbJnTg2KqF
-   9yXpaRPffzSyO3sGNF9mhEOVkT75wVK9OrAerPDE1LgX1LXUmQUqXa/vv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="300077758"
-X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
-   d="scan'208";a="300077758"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 08:06:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="678797228"
-X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
-   d="scan'208";a="678797228"
-Received: from lkp-server01.sh.intel.com (HELO b3c45e08cbc1) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 06 Dec 2022 08:06:09 -0800
-Received: from kbuild by b3c45e08cbc1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1p2aSP-00012q-0F;
-	Tue, 06 Dec 2022 16:06:09 +0000
-Date: Wed, 07 Dec 2022 00:06:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: nouveau@lists.freedesktop.org, netdev@vger.kernel.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-media@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org,
- bpf@vger.kernel.org, amd-gfx@lists.freedesktop.org,
- Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 5d562c48a21eeb029a8fd3f18e1b31fd83660474
-Message-ID: <638f686e.w2vVDS/ig/YhejNK%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C6AD376
+	for <loongarch@lists.linux.dev>; Wed,  7 Dec 2022 02:15:43 +0000 (UTC)
+Received: from loongson.cn (unknown [117.133.84.183])
+	by gateway (Coremail) with SMTP id _____8DxtfBH949jZLYDAA--.8548S3;
+	Wed, 07 Dec 2022 10:15:35 +0800 (CST)
+Received: from [192.168.1.2] (unknown [117.133.84.183])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_1dF949jNf4mAA--.30496S3;
+	Wed, 07 Dec 2022 10:15:33 +0800 (CST)
+Message-ID: <e3bf1f8a-e37e-46e3-f9b3-20a9031d49e2@loongson.cn>
+Date: Wed, 7 Dec 2022 10:15:32 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v10 2/4] clk: clk-loongson2: add clock controller driver
+ support
+To: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Jianmin Lv <lvjianmin@loongson.cn>,
+ Yang Li <yang.lee@linux.alibaba.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20221129034157.15036-1-zhuyinbo@loongson.cn>
+ <20221129034157.15036-2-zhuyinbo@loongson.cn>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+In-Reply-To: <20221129034157.15036-2-zhuyinbo@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dx_1dF949jNf4mAA--.30496S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWfJF4DKr18trWUJr1rJFy3twb_yoWktFy7pF
+	yfAay3GFWjqr4Uurs8JryDGFn8Aas3K3W7ZF43G34UuFZ7X34UWr48GFyxCF4UZrWkAay2
+	vFZa9rWUCFs8W37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bq8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
+	1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
+	cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
+	0Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
+	6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7
+	AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC
+	6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
+	0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0x
+	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv
+	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUc9mRUUUUU
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 5d562c48a21eeb029a8fd3f18e1b31fd83660474  Add linux-next specific files for 20221206
+Hi clock maintainer,
 
-Error/Warning reports:
 
-https://lore.kernel.org/oe-kbuild-all/202211231857.0DmUeoa1-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202211242120.MzZVGULn-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202211290656.VHeDfThu-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202211301840.y7rROb13-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212020520.0OkMIno3-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212032205.IeHBbyyp-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212060700.NjMecjxS-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212061249.U0bAsqZk-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212061341.GNALCbX6-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212061455.6GE7y0jg-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212061633.U9qHpe62-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212061758.tlPQNuof-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212061918.W5IUPcyA-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212062250.tR0otHcz-lkp@intel.com
+Could you help me merge this series patch.
 
-Error/Warning: (recently discovered and may have been fixed)
 
-Error: failed to load BTF from vmlinux: No such file or directory
-arch/loongarch/kernel/asm-offsets.c:262:6: warning: no previous prototype for 'output_pbe_defines' [-Wmissing-prototypes]
-arch/loongarch/power/hibernate.c:14:6: warning: no previous prototype for 'save_processor_state' [-Wmissing-prototypes]
-arch/loongarch/power/hibernate.c:26:6: warning: no previous prototype for 'restore_processor_state' [-Wmissing-prototypes]
-arch/loongarch/power/hibernate.c:38:5: warning: no previous prototype for 'pfn_is_nosave' [-Wmissing-prototypes]
-arch/loongarch/power/hibernate.c:48:5: warning: no previous prototype for 'swsusp_arch_suspend' [-Wmissing-prototypes]
-arch/loongarch/power/hibernate.c:56:5: warning: no previous prototype for 'swsusp_arch_resume' [-Wmissing-prototypes]
-arch/powerpc/kernel/kvm_emul.o: warning: objtool: kvm_template_end(): can't find starting instruction
-arch/powerpc/kernel/optprobes_head.o: warning: objtool: optprobe_template_end(): can't find starting instruction
-arch/riscv/kernel/crash_core.c:12:57: warning: format specifies type 'unsigned long' but the argument has type 'int' [-Wformat]
-arch/riscv/kernel/crash_core.c:14:57: error: use of undeclared identifier 'VMEMMAP_START'
-arch/riscv/kernel/crash_core.c:15:55: error: use of undeclared identifier 'VMEMMAP_END'; did you mean 'MEMREMAP_ENC'?
-arch/riscv/kernel/crash_core.c:17:57: error: use of undeclared identifier 'MODULES_VADDR'
-arch/riscv/kernel/crash_core.c:18:55: error: use of undeclared identifier 'MODULES_END'
-arch/riscv/kernel/crash_core.c:8:20: error: use of undeclared identifier 'VA_BITS'
-clang-16: error: no such file or directory: 'liburandom_read.so'
-drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dcn201/irq_service_dcn201.c:40:20: warning: no previous prototype for 'to_dal_irq_source_dcn201' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/amdgpu_ring_mux.c:353:5: warning: no previous prototype for 'amdgpu_mcbp_scan' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/amdgpu_ring_mux.c:373:5: warning: no previous prototype for 'amdgpu_mcbp_trigger_preempt' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/engine/fifo/gf100.c:451:1: warning: no previous prototype for 'gf100_fifo_nonstall_block' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/engine/fifo/gf100.c:451:1: warning: no previous prototype for function 'gf100_fifo_nonstall_block' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/engine/fifo/runl.c:34:1: warning: no previous prototype for 'nvkm_engn_cgrp_get' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/engine/fifo/runl.c:34:1: warning: no previous prototype for function 'nvkm_engn_cgrp_get' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/engine/gr/tu102.c:210:1: warning: no previous prototype for 'tu102_gr_load' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/engine/gr/tu102.c:210:1: warning: no previous prototype for function 'tu102_gr_load' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/nvfw/acr.c:49:1: warning: no previous prototype for 'wpr_generic_header_dump' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/nvfw/acr.c:49:1: warning: no previous prototype for function 'wpr_generic_header_dump' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/subdev/acr/lsfw.c:221:21: warning: variable 'loc' set but not used [-Wunused-but-set-variable]
-drivers/media/i2c/tc358746.c:816:13: warning: 'm_best' is used uninitialized [-Wuninitialized]
-drivers/media/i2c/tc358746.c:817:13: warning: 'p_best' is used uninitialized [-Wuninitialized]
-drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c:445:7: warning: variable 'ret' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-drivers/mmc/host/sdhci-brcmstb.c:182:34: warning: unused variable 'sdhci_brcm_of_match' [-Wunused-const-variable]
-drivers/regulator/tps65219-regulator.c:310:32: warning: parameter 'dev' set but not used [-Wunused-but-set-parameter]
-drivers/regulator/tps65219-regulator.c:310:60: warning: parameter 'dev' set but not used [-Wunused-but-set-parameter]
-drivers/regulator/tps65219-regulator.c:370:26: warning: ordered comparison of pointer with integer zero [-Wextra]
-error: unable to open output file 'kselftest/net/bpf/nat6to4.o': 'No such file or directory'
-fs/btrfs/btrfs.o: warning: objtool: __btrfs_map_block+0x1c67: unreachable instruction
-hugetlb-madvise.c:20: warning: "__USE_GNU" redefined
-kismet: WARNING: unmet direct dependencies detected for MUX_MMIO when selected by PHY_AM654_SERDES
-kismet: WARNING: unmet direct dependencies detected for MUX_MMIO when selected by SPI_DW_BT1
-ld.lld: error: .btf.vmlinux.bin.o: unknown file type
-make[4]: *** No rule to make target 'scripts/module.lds', needed by 'tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.ko'.
-mount_setattr_test.c:107:8: error: redefinition of 'struct mount_attr'
-pahole: .tmp_vmlinux.btf: No such file or directory
-thermal_nl.h:6:10: fatal error: netlink/netlink.h: No such file or directory
-thermometer.c:21:10: fatal error: libconfig.h: No such file or directory
-tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c:131:14: warning: no previous prototype for 'bpf_testmod_fentry_test1' [-Wmissing-prototypes]
-tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c:136:14: warning: no previous prototype for 'bpf_testmod_fentry_test2' [-Wmissing-prototypes]
-tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c:141:14: warning: no previous prototype for 'bpf_testmod_fentry_test3' [-Wmissing-prototypes]
+Thanks.
 
-Error/Warning ids grouped by kconfigs:
+在 2022/11/29 11:41, Yinbo Zhu 写道:
+> This driver provides support for clock controller on Loongson-2 SoC,
+> the Loongson-2 SoC uses a 100MHz clock as the PLL reference clock,
+> there are five independent PLLs inside, each of which PLL can
+> provide up to three sets of frequency dependent clock outputs.
+>
+> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> ---
+> Change in v10:
+> 		1. Detach of_clk_init to another patch.
+> Change in v9:
+> 		1. Add all history changelog information.
+> Change in v8:
+> 		1. Remove the flag "CLK_IS_BASIC".
+> Change in v7:
+> 		1. Adjust position alphabetically in Kconfig and Makefile.
+> 		2. Add static for loongson2_pll_base.
+> 		3. Move other file-scope variables in probe.
+> Change in v6:
+> 		1. NO change, but other patch in this series of patches has
+> 		   changes.
+> Change in v5:
+> 		1. Replace loongson2 with Loongson-2 in commit info.
+> 		2. Replace Loongson2 with Loongson-2 in binding and
+> 		   Kconfig file.
+> 		3. Replace soc with SoC.
+> Change in v4:
+> 		1. Fixup clock-names that replace "xxx-clk" with "xxx".
+> Change in v3:
+> 		1. NO change, but other patch in this series of patches has
+> 		   changes.
+> Change in v2:
+> 		1. Update the include filename.
+> 		2. Change string from refclk/REFCLK to ref/REF.
+>
+>   MAINTAINERS                 |   1 +
+>   arch/loongarch/Kconfig      |   1 +
+>   drivers/clk/Kconfig         |   9 ++
+>   drivers/clk/Makefile        |   1 +
+>   drivers/clk/clk-loongson2.c | 286 ++++++++++++++++++++++++++++++++++++
+>   5 files changed, 298 insertions(+)
+>   create mode 100644 drivers/clk/clk-loongson2.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ab94893fe2f6..73fa56f1fd5d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12025,6 +12025,7 @@ LOONGSON-2 SOC SERIES CLOCK DRIVER
+>   M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+>   L:	linux-clk@vger.kernel.org
+>   S:	Maintained
+> +F:	drivers/clk/clk-loongson2.c
+>   F:	include/dt-bindings/clock/loongson,ls2k-clk.h
+>   
+>   LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 903096bd87f8..4f8f1b8f796d 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -127,6 +127,7 @@ config LOONGARCH
+>   	select USE_PERCPU_NUMA_NODE_ID
+>   	select USER_STACKTRACE_SUPPORT
+>   	select ZONE_DMA32
+> +	select COMMON_CLK
+>   
+>   config 32BIT
+>   	bool
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index d79905f3e174..d13626f63739 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -326,6 +326,15 @@ config COMMON_CLK_LOCHNAGAR
+>   	  This driver supports the clocking features of the Cirrus Logic
+>   	  Lochnagar audio development board.
+>   
+> +config COMMON_CLK_LOONGSON2
+> +	bool "Clock driver for Loongson-2 SoC"
+> +	depends on COMMON_CLK && OF
+> +	help
+> +	  This driver provides support for Clock Controller that base on
+> +	  Common Clock Framework Controller (CCF) on Loongson-2 SoC. The
+> +	  Clock Controller can generates and supplies clock to various
+> +	  peripherals within the SoC.
+> +
+>   config COMMON_CLK_NXP
+>   	def_bool COMMON_CLK && (ARCH_LPC18XX || ARCH_LPC32XX)
+>   	select REGMAP_MMIO if ARCH_LPC32XX
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index e3ca0d058a25..b298c5dabc1a 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -43,6 +43,7 @@ obj-$(CONFIG_COMMON_CLK_K210)		+= clk-k210.o
+>   obj-$(CONFIG_LMK04832)			+= clk-lmk04832.o
+>   obj-$(CONFIG_COMMON_CLK_LAN966X)	+= clk-lan966x.o
+>   obj-$(CONFIG_COMMON_CLK_LOCHNAGAR)	+= clk-lochnagar.o
+> +obj-$(CONFIG_COMMON_CLK_LOONGSON2)	+= clk-loongson2.o
+>   obj-$(CONFIG_COMMON_CLK_MAX77686)	+= clk-max77686.o
+>   obj-$(CONFIG_COMMON_CLK_MAX9485)	+= clk-max9485.o
+>   obj-$(CONFIG_ARCH_MILBEAUT_M10V)	+= clk-milbeaut.o
+> diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
+> new file mode 100644
+> index 000000000000..7487effceeab
+> --- /dev/null
+> +++ b/drivers/clk/clk-loongson2.c
+> @@ -0,0 +1,286 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
+> + * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
+> + */
+> +
+> +#include <linux/clkdev.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <dt-bindings/clock/loongson,ls2k-clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/slab.h>
+> +#include <linux/clk.h>
+> +
+> +#define LOONGSON2_PLL_MULT_SHIFT		32
+> +#define LOONGSON2_PLL_MULT_WIDTH		10
+> +#define LOONGSON2_PLL_DIV_SHIFT			26
+> +#define LOONGSON2_PLL_DIV_WIDTH			6
+> +#define LOONGSON2_APB_FREQSCALE_SHIFT		20
+> +#define LOONGSON2_APB_FREQSCALE_WIDTH		3
+> +#define LOONGSON2_USB_FREQSCALE_SHIFT		16
+> +#define LOONGSON2_USB_FREQSCALE_WIDTH		3
+> +#define LOONGSON2_SATA_FREQSCALE_SHIFT		12
+> +#define LOONGSON2_SATA_FREQSCALE_WIDTH		3
+> +
+> +static void __iomem *loongson2_pll_base;
+> +
+> +static struct clk_hw *loongson2_clk_register(struct device *dev,
+> +					  const char *name,
+> +					  const char *parent_name,
+> +					  const struct clk_ops *ops,
+> +					  unsigned long flags)
+> +{
+> +	int ret;
+> +	struct clk_hw *hw;
+> +	struct clk_init_data init;
+> +
+> +	/* allocate the divider */
+> +	hw = kzalloc(sizeof(*hw), GFP_KERNEL);
+> +	if (!hw)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	init.name = name;
+> +	init.ops = ops;
+> +	init.flags = flags;
+> +	init.parent_names = (parent_name ? &parent_name : NULL);
+> +	init.num_parents = (parent_name ? 1 : 0);
+> +	hw->init = &init;
+> +
+> +	/* register the clock */
+> +	ret = clk_hw_register(dev, hw);
+> +	if (ret) {
+> +		kfree(hw);
+> +		hw = ERR_PTR(ret);
+> +	}
+> +
+> +	return hw;
+> +}
+> +
+> +static struct clk_hw *loongson2_clk_pll_register(const char *name,
+> +				const char *parent, void __iomem *reg)
+> +{
+> +	u64 val;
+> +	u32 mult = 1, div = 1;
+> +
+> +	val = readq((void *)reg);
+> +
+> +	mult = (val >> LOONGSON2_PLL_MULT_SHIFT) &
+> +			clk_div_mask(LOONGSON2_PLL_MULT_WIDTH);
+> +	div = (val >> LOONGSON2_PLL_DIV_SHIFT) &
+> +			clk_div_mask(LOONGSON2_PLL_DIV_WIDTH);
+> +
+> +	return clk_hw_register_fixed_factor(NULL, name, parent,
+> +				CLK_SET_RATE_PARENT, mult, div);
+> +}
+> +
+> +static unsigned long loongson2_apb_recalc_rate(struct clk_hw *hw,
+> +					  unsigned long parent_rate)
+> +{
+> +	u64 val;
+> +	u32 mult;
+> +	unsigned long rate;
+> +
+> +	val = readq((void *)(loongson2_pll_base + 0x50));
+> +
+> +	mult = (val >> LOONGSON2_APB_FREQSCALE_SHIFT) &
+> +			clk_div_mask(LOONGSON2_APB_FREQSCALE_WIDTH);
+> +
+> +	rate = parent_rate * (mult + 1);
+> +	do_div(rate, 8);
+> +
+> +	return rate;
+> +}
+> +
+> +static const struct clk_ops loongson2_apb_clk_ops = {
+> +	.recalc_rate = loongson2_apb_recalc_rate,
+> +};
+> +
+> +static unsigned long loongson2_usb_recalc_rate(struct clk_hw *hw,
+> +					  unsigned long parent_rate)
+> +{
+> +	u64 val;
+> +	u32 mult;
+> +	unsigned long rate;
+> +
+> +	val = readq((void *)(loongson2_pll_base + 0x50));
+> +
+> +	mult = (val >> LOONGSON2_USB_FREQSCALE_SHIFT) &
+> +			clk_div_mask(LOONGSON2_USB_FREQSCALE_WIDTH);
+> +
+> +	rate = parent_rate * (mult + 1);
+> +	do_div(rate, 8);
+> +
+> +	return rate;
+> +}
+> +
+> +static const struct clk_ops loongson2_usb_clk_ops = {
+> +	.recalc_rate = loongson2_usb_recalc_rate,
+> +};
+> +
+> +static unsigned long loongson2_sata_recalc_rate(struct clk_hw *hw,
+> +					  unsigned long parent_rate)
+> +{
+> +	u64 val;
+> +	u32 mult;
+> +	unsigned long rate;
+> +
+> +	val = readq((void *)(loongson2_pll_base + 0x50));
+> +
+> +	mult = (val >> LOONGSON2_SATA_FREQSCALE_SHIFT) &
+> +			clk_div_mask(LOONGSON2_SATA_FREQSCALE_WIDTH);
+> +
+> +	rate = parent_rate * (mult + 1);
+> +	do_div(rate, 8);
+> +
+> +	return rate;
+> +}
+> +
+> +static const struct clk_ops loongson2_sata_clk_ops = {
+> +	.recalc_rate = loongson2_sata_recalc_rate,
+> +};
+> +
+> +static void loongson2_check_clk_hws(struct clk_hw *clks[], unsigned int count)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < count; i++)
+> +		if (IS_ERR(clks[i]))
+> +			pr_err("Loongson2 clk %u: register failed with %ld\n"
+> +				, i, PTR_ERR(clks[i]));
+> +}
+> +
+> +static struct clk_hw *loongson2_obtain_fixed_clk_hw(
+> +					struct device_node *np,
+> +					const char *name)
+> +{
+> +	struct clk *clk;
+> +
+> +	clk = of_clk_get_by_name(np, name);
+> +	if (IS_ERR(clk))
+> +		return ERR_PTR(-ENOENT);
+> +
+> +	return __clk_get_hw(clk);
+> +}
+> +
+> +static void __init loongson2_clocks_init(struct device_node *np)
+> +{
+> +	struct clk_hw **hws;
+> +	struct clk_hw_onecell_data *clk_hw_data;
+> +	spinlock_t loongson2_clk_lock;
+> +
+> +	loongson2_pll_base = of_iomap(np, 0);
+> +
+> +	if (!loongson2_pll_base) {
+> +		pr_err("clk: unable to map loongson2 clk registers\n");
+> +		goto err;
+> +	}
+> +
+> +	clk_hw_data = kzalloc(struct_size(clk_hw_data, hws, LOONGSON2_CLK_END),
+> +					GFP_KERNEL);
+> +	if (WARN_ON(!clk_hw_data))
+> +		goto err;
+> +
+> +	clk_hw_data->num = LOONGSON2_CLK_END;
+> +	hws = clk_hw_data->hws;
+> +
+> +	hws[LOONGSON2_REF_100M] = loongson2_obtain_fixed_clk_hw(np,
+> +						"ref_100m");
+> +
+> +	hws[LOONGSON2_NODE_PLL] = loongson2_clk_pll_register("node_pll",
+> +						"ref_100m",
+> +						loongson2_pll_base);
+> +
+> +	hws[LOONGSON2_DDR_PLL] = loongson2_clk_pll_register("ddr_pll",
+> +						"ref_100m",
+> +						loongson2_pll_base + 0x10);
+> +
+> +	hws[LOONGSON2_DC_PLL] = loongson2_clk_pll_register("dc_pll",
+> +						"ref_100m",
+> +						loongson2_pll_base + 0x20);
+> +
+> +	hws[LOONGSON2_PIX0_PLL] = loongson2_clk_pll_register("pix0_pll",
+> +						"ref_100m",
+> +						loongson2_pll_base + 0x30);
+> +
+> +	hws[LOONGSON2_PIX1_PLL] = loongson2_clk_pll_register("pix1_pll",
+> +						"ref_100m",
+> +						loongson2_pll_base + 0x40);
+> +
+> +	hws[LOONGSON2_NODE_CLK] = clk_hw_register_divider(NULL, "node",
+> +						"node_pll", 0,
+> +						loongson2_pll_base + 0x8, 0,
+> +						6, CLK_DIVIDER_ONE_BASED,
+> +						&loongson2_clk_lock);
+> +
+> +	/*
+> +	 * The hda clk divisor in the upper 32bits and the clk-prodiver
+> +	 * layer code doesn't support 64bit io operation thus a conversion
+> +	 * is required that subtract shift by 32 and add 4byte to the hda
+> +	 * address
+> +	 */
+> +	hws[LOONGSON2_HDA_CLK] = clk_hw_register_divider(NULL, "hda",
+> +						"ddr_pll", 0,
+> +						loongson2_pll_base + 0x22, 12,
+> +						7, CLK_DIVIDER_ONE_BASED,
+> +						&loongson2_clk_lock);
+> +
+> +	hws[LOONGSON2_GPU_CLK] = clk_hw_register_divider(NULL, "gpu",
+> +						"ddr_pll", 0,
+> +						loongson2_pll_base + 0x18, 22,
+> +						6, CLK_DIVIDER_ONE_BASED,
+> +						&loongson2_clk_lock);
+> +
+> +	hws[LOONGSON2_DDR_CLK] = clk_hw_register_divider(NULL, "ddr",
+> +						"ddr_pll", 0,
+> +						loongson2_pll_base + 0x18, 0,
+> +						6, CLK_DIVIDER_ONE_BASED,
+> +						&loongson2_clk_lock);
+> +
+> +	hws[LOONGSON2_GMAC_CLK] = clk_hw_register_divider(NULL, "gmac",
+> +						"dc_pll", 0,
+> +						loongson2_pll_base + 0x28, 22,
+> +						6, CLK_DIVIDER_ONE_BASED,
+> +						&loongson2_clk_lock);
+> +
+> +	hws[LOONGSON2_DC_CLK] = clk_hw_register_divider(NULL, "dc",
+> +						"dc_pll", 0,
+> +						loongson2_pll_base + 0x28, 0,
+> +						6, CLK_DIVIDER_ONE_BASED,
+> +						&loongson2_clk_lock);
+> +
+> +	hws[LOONGSON2_APB_CLK] = loongson2_clk_register(NULL, "apb",
+> +						"gmac",
+> +						&loongson2_apb_clk_ops, 0);
+> +
+> +	hws[LOONGSON2_USB_CLK] = loongson2_clk_register(NULL, "usb",
+> +						"gmac",
+> +						&loongson2_usb_clk_ops, 0);
+> +
+> +	hws[LOONGSON2_SATA_CLK] = loongson2_clk_register(NULL, "sata",
+> +						"gmac",
+> +						&loongson2_sata_clk_ops, 0);
+> +
+> +	hws[LOONGSON2_PIX0_CLK] = clk_hw_register_divider(NULL, "pix0",
+> +						"pix0_pll", 0,
+> +						loongson2_pll_base + 0x38, 0, 6,
+> +						CLK_DIVIDER_ONE_BASED,
+> +						&loongson2_clk_lock);
+> +
+> +	hws[LOONGSON2_PIX1_CLK] = clk_hw_register_divider(NULL, "pix1",
+> +						"pix1_pll", 0,
+> +						loongson2_pll_base + 0x48, 0, 6,
+> +						CLK_DIVIDER_ONE_BASED,
+> +						&loongson2_clk_lock);
+> +
+> +	loongson2_check_clk_hws(hws, LOONGSON2_CLK_END);
+> +
+> +	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
+> +
+> +err:
+> +	iounmap(loongson2_pll_base);
+> +}
+> +
+> +CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", loongson2_clocks_init);
 
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_ring_mux.c:warning:no-previous-prototype-for-amdgpu_mcbp_scan
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_ring_mux.c:warning:no-previous-prototype-for-amdgpu_mcbp_trigger_preempt
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
-|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
-|   |-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- alpha-randconfig-r002-20221205
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_ring_mux.c:warning:no-previous-prototype-for-amdgpu_mcbp_scan
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_ring_mux.c:warning:no-previous-prototype-for-amdgpu_mcbp_trigger_preempt
-|-- alpha-randconfig-r003-20221204
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
-|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
-|   `-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_ring_mux.c:warning:no-previous-prototype-for-amdgpu_mcbp_scan
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_ring_mux.c:warning:no-previous-prototype-for-amdgpu_mcbp_trigger_preempt
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
-|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
-|   |-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- arc-randconfig-r036-20221204
-|   |-- drivers-media-i2c-tc358746.c:warning:m_best-is-used-uninitialized
-|   `-- drivers-media-i2c-tc358746.c:warning:p_best-is-used-uninitialized
-|-- arc-randconfig-r043-20221204
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_ring_mux.c:warning:no-previous-prototype-for-amdgpu_mcbp_scan
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_ring_mux.c:warning:no-previous-prototype-for-amdgpu_mcbp_trigger_preempt
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_ring_mux.c:warning:no-previous-prototype-for-amdgpu_mcbp_scan
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_ring_mux.c:warning:no-previous-prototype-for-amdgpu_mcbp_trigger_preempt
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
-|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
-|   |-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-clang_recent_errors
-|-- arm-randconfig-r046-20221205
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-function-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-function-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-function-tu102_gr_load
-|   `-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-function-wpr_generic_header_dump
-|-- arm64-randconfig-r016-20221206
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-function-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-function-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-function-tu102_gr_load
-|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-function-wpr_generic_header_dump
-|   `-- drivers-media-platform-renesas-rzg2l-cru-rzg2l-csi2.c:warning:variable-ret-is-used-uninitialized-whenever-if-condition-is-true
-|-- arm64-randconfig-r032-20221205
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-function-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-function-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-function-tu102_gr_load
-|   `-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-function-wpr_generic_header_dump
-|-- hexagon-randconfig-r015-20221206
-|   `-- drivers-mmc-host-sdhci-brcmstb.c:warning:unused-variable-sdhci_brcm_of_match
-|-- hexagon-randconfig-r041-20221204
-|   |-- ld.lld:error:.btf.vmlinux.bin.o:unknown-file-type
-|   `-- pahole:.tmp_vmlinux.btf:No-such-file-or-directory
-|-- powerpc-randconfig-r014-20221206
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-function-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-function-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-function-tu102_gr_load
-|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-function-wpr_generic_header_dump
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-`-- riscv-randconfig-r014-20221206
-    |-- arch-riscv-kernel-crash_core.c:error:use-of-undeclared-identifier-MODULES_END
-    |-- arch-riscv-kernel-crash_core.c:error:use-of-undeclared-identifier-MODULES_VADDR
-    |-- arch-riscv-kernel-crash_core.c:error:use-of-undeclared-identifier-VA_BITS
-    |-- arch-riscv-kernel-crash_core.c:error:use-of-undeclared-identifier-VMEMMAP_END
-    |-- arch-riscv-kernel-crash_core.c:error:use-of-undeclared-identifier-VMEMMAP_START
-    `-- arch-riscv-kernel-crash_core.c:warning:format-specifies-type-unsigned-long-but-the-argument-has-type-int
-
-elapsed time: 723m
-
-configs tested: 65
-configs skipped: 3
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-powerpc                           allnoconfig
-arc                                 defconfig
-i386                                defconfig
-alpha                               defconfig
-x86_64                              defconfig
-sh                               allmodconfig
-arm                                 defconfig
-powerpc                          allmodconfig
-x86_64                               rhel-8.3
-x86_64               randconfig-a011-20221205
-mips                             allyesconfig
-x86_64               randconfig-a012-20221205
-x86_64               randconfig-a014-20221205
-x86_64               randconfig-a013-20221205
-x86_64               randconfig-a015-20221205
-s390                                defconfig
-x86_64                           allyesconfig
-s390                             allmodconfig
-x86_64               randconfig-a016-20221205
-ia64                             allmodconfig
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-arm64                            allyesconfig
-x86_64                           rhel-8.3-kvm
-m68k                             allmodconfig
-arm                              allyesconfig
-arc                              allyesconfig
-s390                             allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                          rhel-8.3-func
-alpha                            allyesconfig
-i386                 randconfig-a014-20221205
-m68k                             allyesconfig
-i386                 randconfig-a013-20221205
-i386                 randconfig-a016-20221205
-i386                 randconfig-a012-20221205
-arc                  randconfig-r043-20221205
-i386                             allyesconfig
-arm                  randconfig-r046-20221204
-i386                 randconfig-a015-20221205
-i386                 randconfig-a011-20221205
-s390                 randconfig-r044-20221205
-arc                  randconfig-r043-20221204
-riscv                randconfig-r042-20221205
-
-clang tested configs:
-x86_64               randconfig-a003-20221205
-x86_64               randconfig-a001-20221205
-x86_64               randconfig-a002-20221205
-i386                 randconfig-a001-20221205
-x86_64               randconfig-a004-20221205
-i386                 randconfig-a002-20221205
-i386                 randconfig-a005-20221205
-x86_64               randconfig-a006-20221205
-i386                 randconfig-a004-20221205
-i386                 randconfig-a003-20221205
-x86_64               randconfig-a005-20221205
-i386                 randconfig-a006-20221205
-hexagon              randconfig-r041-20221204
-s390                 randconfig-r044-20221204
-hexagon              randconfig-r045-20221204
-hexagon              randconfig-r045-20221205
-arm                  randconfig-r046-20221205
-hexagon              randconfig-r041-20221205
-riscv                randconfig-r042-20221204
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
