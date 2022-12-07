@@ -1,23 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFFD8821
-	for <loongarch@lists.linux.dev>; Wed,  7 Dec 2022 14:06:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C569FC43153;
-	Wed,  7 Dec 2022 14:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868BC2102
+	for <loongarch@lists.linux.dev>; Wed,  7 Dec 2022 14:10:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1FCEC433C1;
+	Wed,  7 Dec 2022 14:10:16 +0000 (UTC)
 From: Huacai Chen <chenhuacai@loongson.cn>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Marc Zyngier <maz@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
 	Xuefeng Li <lixuefeng@loongson.cn>,
-	Huacai Chen <chenhuacai@gmail.com>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
 	Huacai Chen <chenhuacai@loongson.cn>,
-	Yingkun Meng <mengyingkun@loongson.cn>
-Subject: [PATCH] irqchip/loongson-liointc: Save/restore int_edge/int_pol registers during S3/S4
-Date: Wed,  7 Dec 2022 22:06:43 +0800
-Message-Id: <20221207140643.1600743-1-chenhuacai@loongson.cn>
+	Rui Wang <wangrui@loongson.cn>
+Subject: [PATCH] LoongArch: mm: Fix huge page entry update for virtual machine
+Date: Wed,  7 Dec 2022 22:10:43 +0800
+Message-Id: <20221207141043.1600863-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -27,60 +27,86 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If int_edge/int_pol registers are configured to not be the default values, we
-should save/restore them during S3/S4.
+In virtual machine (guest mode), the tlbwr instruction can not write the
+last entry of MTLB, so we need to make it non-present by invtlb and then
+write it by tlbfill. This also simplify the whole logic.
 
-Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
+Signed-off-by: Rui Wang <wangrui@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-liointc.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/loongarch/mm/tlbex.S | 30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
-index c116f70929ae..4367ce9b558f 100644
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -55,6 +55,8 @@ struct liointc_priv {
- 	struct liointc_handler_data	handler[LIOINTC_NUM_PARENT];
- 	void __iomem			*core_isr[LIOINTC_NUM_CORES];
- 	u8				map_cache[LIOINTC_CHIP_IRQ];
-+	u32				int_pol;
-+	u32				int_edge;
- 	bool				has_lpc_irq_errata;
- };
+diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
+index d8ee8fbc8c67..58781c6e4191 100644
+--- a/arch/loongarch/mm/tlbex.S
++++ b/arch/loongarch/mm/tlbex.S
+@@ -10,6 +10,8 @@
+ #include <asm/regdef.h>
+ #include <asm/stackframe.h>
  
-@@ -138,6 +140,14 @@ static int liointc_set_type(struct irq_data *data, unsigned int type)
- 	return 0;
- }
- 
-+static void liointc_suspend(struct irq_chip_generic *gc)
-+{
-+	struct liointc_priv *priv = gc->private;
++#define INVTLB_ADDR_GFALSE_AND_ASID	5
 +
-+	priv->int_pol = readl(gc->reg_base + LIOINTC_REG_INTC_POL);
-+	priv->int_edge = readl(gc->reg_base + LIOINTC_REG_INTC_EDGE);
-+}
-+
- static void liointc_resume(struct irq_chip_generic *gc)
- {
- 	struct liointc_priv *priv = gc->private;
-@@ -150,6 +160,8 @@ static void liointc_resume(struct irq_chip_generic *gc)
- 	/* Restore map cache */
- 	for (i = 0; i < LIOINTC_CHIP_IRQ; i++)
- 		writeb(priv->map_cache[i], gc->reg_base + i);
-+	writel(priv->int_pol, gc->reg_base + LIOINTC_REG_INTC_POL);
-+	writel(priv->int_edge, gc->reg_base + LIOINTC_REG_INTC_EDGE);
- 	/* Restore mask cache */
- 	writel(gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
- 	irq_gc_unlock_irqrestore(gc, flags);
-@@ -261,6 +273,7 @@ static int liointc_init(phys_addr_t addr, unsigned long size, int revision,
- 	gc->private = priv;
- 	gc->reg_base = base;
- 	gc->domain = domain;
-+	gc->suspend = liointc_suspend;
- 	gc->resume = liointc_resume;
+ #define PTRS_PER_PGD_BITS	(PAGE_SHIFT - 3)
+ #define PTRS_PER_PUD_BITS	(PAGE_SHIFT - 3)
+ #define PTRS_PER_PMD_BITS	(PAGE_SHIFT - 3)
+@@ -136,13 +138,10 @@ tlb_huge_update_load:
+ 	ori		t0, ra, _PAGE_VALID
+ 	st.d		t0, t1, 0
+ #endif
+-	tlbsrch
+-	addu16i.d	t1, zero, -(CSR_TLBIDX_EHINV >> 16)
+-	addi.d		ra, t1, 0
+-	csrxchg		ra, t1, LOONGARCH_CSR_TLBIDX
+-	tlbwr
+-
+-	csrxchg		zero, t1, LOONGARCH_CSR_TLBIDX
++	csrrd		ra, LOONGARCH_CSR_ASID
++	csrrd		t1, LOONGARCH_CSR_BADV
++	andi		ra, ra, CSR_ASID_ASID
++	invtlb		INVTLB_ADDR_GFALSE_AND_ASID, ra, t1
  
- 	ct = gc->chip_types;
+ 	/*
+ 	 * A huge PTE describes an area the size of the
+@@ -287,13 +286,11 @@ tlb_huge_update_store:
+ 	ori		t0, ra, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
+ 	st.d		t0, t1, 0
+ #endif
+-	tlbsrch
+-	addu16i.d	t1, zero, -(CSR_TLBIDX_EHINV >> 16)
+-	addi.d		ra, t1, 0
+-	csrxchg		ra, t1, LOONGARCH_CSR_TLBIDX
+-	tlbwr
++	csrrd		ra, LOONGARCH_CSR_ASID
++	csrrd		t1, LOONGARCH_CSR_BADV
++	andi		ra, ra, CSR_ASID_ASID
++	invtlb		INVTLB_ADDR_GFALSE_AND_ASID, ra, t1
+ 
+-	csrxchg		zero, t1, LOONGARCH_CSR_TLBIDX
+ 	/*
+ 	 * A huge PTE describes an area the size of the
+ 	 * configured huge page size. This is twice the
+@@ -436,6 +433,11 @@ tlb_huge_update_modify:
+ 	ori		t0, ra, (_PAGE_VALID | _PAGE_DIRTY | _PAGE_MODIFIED)
+ 	st.d		t0, t1, 0
+ #endif
++	csrrd		ra, LOONGARCH_CSR_ASID
++	csrrd		t1, LOONGARCH_CSR_BADV
++	andi		ra, ra, CSR_ASID_ASID
++	invtlb		INVTLB_ADDR_GFALSE_AND_ASID, ra, t1
++
+ 	/*
+ 	 * A huge PTE describes an area the size of the
+ 	 * configured huge page size. This is twice the
+@@ -466,7 +468,7 @@ tlb_huge_update_modify:
+ 	addu16i.d	t1, zero, (PS_HUGE_SIZE << (CSR_TLBIDX_PS_SHIFT - 16))
+ 	csrxchg		t1, t0, LOONGARCH_CSR_TLBIDX
+ 
+-	tlbwr
++	tlbfill
+ 
+ 	/* Reset default page size */
+ 	addu16i.d	t0, zero, (CSR_TLBIDX_PS >> 16)
 -- 
 2.31.1
 
