@@ -1,455 +1,249 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C6AD376
-	for <loongarch@lists.linux.dev>; Wed,  7 Dec 2022 02:15:43 +0000 (UTC)
-Received: from loongson.cn (unknown [117.133.84.183])
-	by gateway (Coremail) with SMTP id _____8DxtfBH949jZLYDAA--.8548S3;
-	Wed, 07 Dec 2022 10:15:35 +0800 (CST)
-Received: from [192.168.1.2] (unknown [117.133.84.183])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_1dF949jNf4mAA--.30496S3;
-	Wed, 07 Dec 2022 10:15:33 +0800 (CST)
-Message-ID: <e3bf1f8a-e37e-46e3-f9b3-20a9031d49e2@loongson.cn>
-Date: Wed, 7 Dec 2022 10:15:32 +0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C4A374
+	for <loongarch@lists.linux.dev>; Wed,  7 Dec 2022 03:07:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBBDBC433D7
+	for <loongarch@lists.linux.dev>; Wed,  7 Dec 2022 03:07:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1670382420;
+	bh=zLuBGwcCS8p9HQhyt9nCfneZASnqsp3I1IkRxV5ZNRs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Cq0iWTle6o15RLIDpGBiLa/PGPfimtyPk4zqtM8GzgR3zkXFGtLTxRMzbvhT2PJie
+	 T7ggmrsG+q395KkTZY7Ekh5S3ls8Jnd4mFN0+JZ/09fua9CtSDx/W5ZXFlHab/PXc3
+	 /mR8EkwfJl2jpA4z1cNCwsMJs6CZ+gypt0hrhZMLk++/OV4zsCOEiJ+yzqTwi9WFE+
+	 rf+y/7ZsKLZJfKqCbEMVty0rm9jzJIl25A6ZS7buvpfMub2z27R8Xe6Gb8lP0hkUeu
+	 VhpbLEWfjixTQwGt7017EevHczQuqLwguf9kQhl+hfJ3lWlkjJFu2wE6WBZ2Rn2jD4
+	 j7o9HnSIBrDfw==
+Received: by mail-ej1-f45.google.com with SMTP id b2so10866242eja.7
+        for <loongarch@lists.linux.dev>; Tue, 06 Dec 2022 19:07:00 -0800 (PST)
+X-Gm-Message-State: ANoB5pn39e5dkCXWOv/SmarSqE0AYBBtHlDyF2165Om/lqKATwSoPEgv
+	NHcXyT/6/RW63iA6erYupqBkIHeyj0j18QECUpQ=
+X-Google-Smtp-Source: AA0mqf48WhSZz1up+iRWyLN3ImNePE6fZF5gntDbPdzZ7R9rdj/4gKInbZH+Ii9SSH/JuzOZJzqvBTDv7rcq0sWcfYk=
+X-Received: by 2002:a17:907:37a:b0:7c0:e4b6:132e with SMTP id
+ rs26-20020a170907037a00b007c0e4b6132emr11923291ejb.224.1670382419076; Tue, 06
+ Dec 2022 19:06:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v10 2/4] clk: clk-loongson2: add clock controller driver
- support
-To: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Jianmin Lv <lvjianmin@loongson.cn>,
- Yang Li <yang.lee@linux.alibaba.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20221129034157.15036-1-zhuyinbo@loongson.cn>
- <20221129034157.15036-2-zhuyinbo@loongson.cn>
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-In-Reply-To: <20221129034157.15036-2-zhuyinbo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dx_1dF949jNf4mAA--.30496S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWfJF4DKr18trWUJr1rJFy3twb_yoWktFy7pF
-	yfAay3GFWjqr4Uurs8JryDGFn8Aas3K3W7ZF43G34UuFZ7X34UWr48GFyxCF4UZrWkAay2
-	vFZa9rWUCFs8W37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bq8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
-	1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
-	cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
-	0Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
-	6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7
-	AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC
-	6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv
-	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUc9mRUUUUU
+References: <1669986505-11322-1-git-send-email-yangtiezhu@loongson.cn> <1669986505-11322-2-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1669986505-11322-2-git-send-email-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 7 Dec 2022 11:06:46 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7CmTu4uF1F655N2dDcPxPBpYAe93HqQ38U_Lg84HVBAQ@mail.gmail.com>
+Message-ID: <CAAhV-H7CmTu4uF1F655N2dDcPxPBpYAe93HqQ38U_Lg84HVBAQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/4] LoongArch: Simulate branch and PC instructions
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu <mhiramat@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi clock maintainer,
+Hi, Tiezhu,
 
-
-Could you help me merge this series patch.
-
-
-Thanks.
-
-在 2022/11/29 11:41, Yinbo Zhu 写道:
-> This driver provides support for clock controller on Loongson-2 SoC,
-> the Loongson-2 SoC uses a 100MHz clock as the PLL reference clock,
-> there are five independent PLLs inside, each of which PLL can
-> provide up to three sets of frequency dependent clock outputs.
+On Fri, Dec 2, 2022 at 9:08 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 >
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> According to LoongArch Reference Manual, simulate branch and
+> PC instructions, this is preparation for later patch.
+>
+> Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#branch-instructions
+> Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#_pcaddi_pcaddu121_pcaddu18l_pcalau12i
+>
+> Co-developed-by: Jinyang He <hejinyang@loongson.cn>
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
-> Change in v10:
-> 		1. Detach of_clk_init to another patch.
-> Change in v9:
-> 		1. Add all history changelog information.
-> Change in v8:
-> 		1. Remove the flag "CLK_IS_BASIC".
-> Change in v7:
-> 		1. Adjust position alphabetically in Kconfig and Makefile.
-> 		2. Add static for loongson2_pll_base.
-> 		3. Move other file-scope variables in probe.
-> Change in v6:
-> 		1. NO change, but other patch in this series of patches has
-> 		   changes.
-> Change in v5:
-> 		1. Replace loongson2 with Loongson-2 in commit info.
-> 		2. Replace Loongson2 with Loongson-2 in binding and
-> 		   Kconfig file.
-> 		3. Replace soc with SoC.
-> Change in v4:
-> 		1. Fixup clock-names that replace "xxx-clk" with "xxx".
-> Change in v3:
-> 		1. NO change, but other patch in this series of patches has
-> 		   changes.
-> Change in v2:
-> 		1. Update the include filename.
-> 		2. Change string from refclk/REFCLK to ref/REF.
+>  arch/loongarch/include/asm/inst.h   |  12 ++++
+>  arch/loongarch/include/asm/ptrace.h |   1 +
+>  arch/loongarch/kernel/inst.c        | 123 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 136 insertions(+)
 >
->   MAINTAINERS                 |   1 +
->   arch/loongarch/Kconfig      |   1 +
->   drivers/clk/Kconfig         |   9 ++
->   drivers/clk/Makefile        |   1 +
->   drivers/clk/clk-loongson2.c | 286 ++++++++++++++++++++++++++++++++++++
->   5 files changed, 298 insertions(+)
->   create mode 100644 drivers/clk/clk-loongson2.c
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+> index 6cd994d..a91798b 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -7,6 +7,7 @@
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ab94893fe2f6..73fa56f1fd5d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12025,6 +12025,7 @@ LOONGSON-2 SOC SERIES CLOCK DRIVER
->   M:	Yinbo Zhu <zhuyinbo@loongson.cn>
->   L:	linux-clk@vger.kernel.org
->   S:	Maintained
-> +F:	drivers/clk/clk-loongson2.c
->   F:	include/dt-bindings/clock/loongson,ls2k-clk.h
->   
->   LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 903096bd87f8..4f8f1b8f796d 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -127,6 +127,7 @@ config LOONGARCH
->   	select USE_PERCPU_NUMA_NODE_ID
->   	select USER_STACKTRACE_SUPPORT
->   	select ZONE_DMA32
-> +	select COMMON_CLK
->   
->   config 32BIT
->   	bool
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index d79905f3e174..d13626f63739 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -326,6 +326,15 @@ config COMMON_CLK_LOCHNAGAR
->   	  This driver supports the clocking features of the Cirrus Logic
->   	  Lochnagar audio development board.
->   
-> +config COMMON_CLK_LOONGSON2
-> +	bool "Clock driver for Loongson-2 SoC"
-> +	depends on COMMON_CLK && OF
-> +	help
-> +	  This driver provides support for Clock Controller that base on
-> +	  Common Clock Framework Controller (CCF) on Loongson-2 SoC. The
-> +	  Clock Controller can generates and supplies clock to various
-> +	  peripherals within the SoC.
+>  #include <linux/types.h>
+>  #include <asm/asm.h>
+> +#include <asm/ptrace.h>
+>
+>  #define INSN_NOP               0x03400000
+>  #define INSN_BREAK             0x002a0000
+> @@ -32,6 +33,7 @@ enum reg1i20_op {
+>         lu12iw_op       = 0x0a,
+>         lu32id_op       = 0x0b,
+>         pcaddi_op       = 0x0c,
+> +       pcalau12i_op    = 0x0d,
+>         pcaddu12i_op    = 0x0e,
+>         pcaddu18i_op    = 0x0f,
+>  };
+> @@ -366,6 +368,16 @@ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm);
+>  u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
+>  u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
+>  u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
+> +void simu_branch(struct pt_regs *regs, union loongarch_instruction insn);
+> +void simu_pc(struct pt_regs *regs, union loongarch_instruction insn);
 > +
->   config COMMON_CLK_NXP
->   	def_bool COMMON_CLK && (ARCH_LPC18XX || ARCH_LPC32XX)
->   	select REGMAP_MMIO if ARCH_LPC32XX
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index e3ca0d058a25..b298c5dabc1a 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -43,6 +43,7 @@ obj-$(CONFIG_COMMON_CLK_K210)		+= clk-k210.o
->   obj-$(CONFIG_LMK04832)			+= clk-lmk04832.o
->   obj-$(CONFIG_COMMON_CLK_LAN966X)	+= clk-lan966x.o
->   obj-$(CONFIG_COMMON_CLK_LOCHNAGAR)	+= clk-lochnagar.o
-> +obj-$(CONFIG_COMMON_CLK_LOONGSON2)	+= clk-loongson2.o
->   obj-$(CONFIG_COMMON_CLK_MAX77686)	+= clk-max77686.o
->   obj-$(CONFIG_COMMON_CLK_MAX9485)	+= clk-max9485.o
->   obj-$(CONFIG_ARCH_MILBEAUT_M10V)	+= clk-milbeaut.o
-> diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
-> new file mode 100644
-> index 000000000000..7487effceeab
-> --- /dev/null
-> +++ b/drivers/clk/clk-loongson2.c
-> @@ -0,0 +1,286 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
-> + * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <linux/clkdev.h>
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <dt-bindings/clock/loongson,ls2k-clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/slab.h>
-> +#include <linux/clk.h>
-> +
-> +#define LOONGSON2_PLL_MULT_SHIFT		32
-> +#define LOONGSON2_PLL_MULT_WIDTH		10
-> +#define LOONGSON2_PLL_DIV_SHIFT			26
-> +#define LOONGSON2_PLL_DIV_WIDTH			6
-> +#define LOONGSON2_APB_FREQSCALE_SHIFT		20
-> +#define LOONGSON2_APB_FREQSCALE_WIDTH		3
-> +#define LOONGSON2_USB_FREQSCALE_SHIFT		16
-> +#define LOONGSON2_USB_FREQSCALE_WIDTH		3
-> +#define LOONGSON2_SATA_FREQSCALE_SHIFT		12
-> +#define LOONGSON2_SATA_FREQSCALE_WIDTH		3
-> +
-> +static void __iomem *loongson2_pll_base;
-> +
-> +static struct clk_hw *loongson2_clk_register(struct device *dev,
-> +					  const char *name,
-> +					  const char *parent_name,
-> +					  const struct clk_ops *ops,
-> +					  unsigned long flags)
+> +static inline unsigned long sign_extended(unsigned long val, unsigned int idx)
 > +{
-> +	int ret;
-> +	struct clk_hw *hw;
-> +	struct clk_init_data init;
-> +
-> +	/* allocate the divider */
-> +	hw = kzalloc(sizeof(*hw), GFP_KERNEL);
-> +	if (!hw)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	init.name = name;
-> +	init.ops = ops;
-> +	init.flags = flags;
-> +	init.parent_names = (parent_name ? &parent_name : NULL);
-> +	init.num_parents = (parent_name ? 1 : 0);
-> +	hw->init = &init;
-> +
-> +	/* register the clock */
-> +	ret = clk_hw_register(dev, hw);
-> +	if (ret) {
-> +		kfree(hw);
-> +		hw = ERR_PTR(ret);
-> +	}
-> +
-> +	return hw;
+> +       if (val & (1UL << idx))
+> +               return ~((1UL << (idx + 1)) - 1) | val;
+> +       else
+> +               return ((1UL << (idx + 1)) - 1) & val;
 > +}
-> +
-> +static struct clk_hw *loongson2_clk_pll_register(const char *name,
-> +				const char *parent, void __iomem *reg)
-> +{
-> +	u64 val;
-> +	u32 mult = 1, div = 1;
-> +
-> +	val = readq((void *)reg);
-> +
-> +	mult = (val >> LOONGSON2_PLL_MULT_SHIFT) &
-> +			clk_div_mask(LOONGSON2_PLL_MULT_WIDTH);
-> +	div = (val >> LOONGSON2_PLL_DIV_SHIFT) &
-> +			clk_div_mask(LOONGSON2_PLL_DIV_WIDTH);
-> +
-> +	return clk_hw_register_fixed_factor(NULL, name, parent,
-> +				CLK_SET_RATE_PARENT, mult, div);
-> +}
-> +
-> +static unsigned long loongson2_apb_recalc_rate(struct clk_hw *hw,
-> +					  unsigned long parent_rate)
-> +{
-> +	u64 val;
-> +	u32 mult;
-> +	unsigned long rate;
-> +
-> +	val = readq((void *)(loongson2_pll_base + 0x50));
-> +
-> +	mult = (val >> LOONGSON2_APB_FREQSCALE_SHIFT) &
-> +			clk_div_mask(LOONGSON2_APB_FREQSCALE_WIDTH);
-> +
-> +	rate = parent_rate * (mult + 1);
-> +	do_div(rate, 8);
-> +
-> +	return rate;
-> +}
-> +
-> +static const struct clk_ops loongson2_apb_clk_ops = {
-> +	.recalc_rate = loongson2_apb_recalc_rate,
-> +};
-> +
-> +static unsigned long loongson2_usb_recalc_rate(struct clk_hw *hw,
-> +					  unsigned long parent_rate)
-> +{
-> +	u64 val;
-> +	u32 mult;
-> +	unsigned long rate;
-> +
-> +	val = readq((void *)(loongson2_pll_base + 0x50));
-> +
-> +	mult = (val >> LOONGSON2_USB_FREQSCALE_SHIFT) &
-> +			clk_div_mask(LOONGSON2_USB_FREQSCALE_WIDTH);
-> +
-> +	rate = parent_rate * (mult + 1);
-> +	do_div(rate, 8);
-> +
-> +	return rate;
-> +}
-> +
-> +static const struct clk_ops loongson2_usb_clk_ops = {
-> +	.recalc_rate = loongson2_usb_recalc_rate,
-> +};
-> +
-> +static unsigned long loongson2_sata_recalc_rate(struct clk_hw *hw,
-> +					  unsigned long parent_rate)
-> +{
-> +	u64 val;
-> +	u32 mult;
-> +	unsigned long rate;
-> +
-> +	val = readq((void *)(loongson2_pll_base + 0x50));
-> +
-> +	mult = (val >> LOONGSON2_SATA_FREQSCALE_SHIFT) &
-> +			clk_div_mask(LOONGSON2_SATA_FREQSCALE_WIDTH);
-> +
-> +	rate = parent_rate * (mult + 1);
-> +	do_div(rate, 8);
-> +
-> +	return rate;
-> +}
-> +
-> +static const struct clk_ops loongson2_sata_clk_ops = {
-> +	.recalc_rate = loongson2_sata_recalc_rate,
-> +};
-> +
-> +static void loongson2_check_clk_hws(struct clk_hw *clks[], unsigned int count)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < count; i++)
-> +		if (IS_ERR(clks[i]))
-> +			pr_err("Loongson2 clk %u: register failed with %ld\n"
-> +				, i, PTR_ERR(clks[i]));
-> +}
-> +
-> +static struct clk_hw *loongson2_obtain_fixed_clk_hw(
-> +					struct device_node *np,
-> +					const char *name)
-> +{
-> +	struct clk *clk;
-> +
-> +	clk = of_clk_get_by_name(np, name);
-> +	if (IS_ERR(clk))
-> +		return ERR_PTR(-ENOENT);
-> +
-> +	return __clk_get_hw(clk);
-> +}
-> +
-> +static void __init loongson2_clocks_init(struct device_node *np)
-> +{
-> +	struct clk_hw **hws;
-> +	struct clk_hw_onecell_data *clk_hw_data;
-> +	spinlock_t loongson2_clk_lock;
-> +
-> +	loongson2_pll_base = of_iomap(np, 0);
-> +
-> +	if (!loongson2_pll_base) {
-> +		pr_err("clk: unable to map loongson2 clk registers\n");
-> +		goto err;
-> +	}
-> +
-> +	clk_hw_data = kzalloc(struct_size(clk_hw_data, hws, LOONGSON2_CLK_END),
-> +					GFP_KERNEL);
-> +	if (WARN_ON(!clk_hw_data))
-> +		goto err;
-> +
-> +	clk_hw_data->num = LOONGSON2_CLK_END;
-> +	hws = clk_hw_data->hws;
-> +
-> +	hws[LOONGSON2_REF_100M] = loongson2_obtain_fixed_clk_hw(np,
-> +						"ref_100m");
-> +
-> +	hws[LOONGSON2_NODE_PLL] = loongson2_clk_pll_register("node_pll",
-> +						"ref_100m",
-> +						loongson2_pll_base);
-> +
-> +	hws[LOONGSON2_DDR_PLL] = loongson2_clk_pll_register("ddr_pll",
-> +						"ref_100m",
-> +						loongson2_pll_base + 0x10);
-> +
-> +	hws[LOONGSON2_DC_PLL] = loongson2_clk_pll_register("dc_pll",
-> +						"ref_100m",
-> +						loongson2_pll_base + 0x20);
-> +
-> +	hws[LOONGSON2_PIX0_PLL] = loongson2_clk_pll_register("pix0_pll",
-> +						"ref_100m",
-> +						loongson2_pll_base + 0x30);
-> +
-> +	hws[LOONGSON2_PIX1_PLL] = loongson2_clk_pll_register("pix1_pll",
-> +						"ref_100m",
-> +						loongson2_pll_base + 0x40);
-> +
-> +	hws[LOONGSON2_NODE_CLK] = clk_hw_register_divider(NULL, "node",
-> +						"node_pll", 0,
-> +						loongson2_pll_base + 0x8, 0,
-> +						6, CLK_DIVIDER_ONE_BASED,
-> +						&loongson2_clk_lock);
-> +
-> +	/*
-> +	 * The hda clk divisor in the upper 32bits and the clk-prodiver
-> +	 * layer code doesn't support 64bit io operation thus a conversion
-> +	 * is required that subtract shift by 32 and add 4byte to the hda
-> +	 * address
-> +	 */
-> +	hws[LOONGSON2_HDA_CLK] = clk_hw_register_divider(NULL, "hda",
-> +						"ddr_pll", 0,
-> +						loongson2_pll_base + 0x22, 12,
-> +						7, CLK_DIVIDER_ONE_BASED,
-> +						&loongson2_clk_lock);
-> +
-> +	hws[LOONGSON2_GPU_CLK] = clk_hw_register_divider(NULL, "gpu",
-> +						"ddr_pll", 0,
-> +						loongson2_pll_base + 0x18, 22,
-> +						6, CLK_DIVIDER_ONE_BASED,
-> +						&loongson2_clk_lock);
-> +
-> +	hws[LOONGSON2_DDR_CLK] = clk_hw_register_divider(NULL, "ddr",
-> +						"ddr_pll", 0,
-> +						loongson2_pll_base + 0x18, 0,
-> +						6, CLK_DIVIDER_ONE_BASED,
-> +						&loongson2_clk_lock);
-> +
-> +	hws[LOONGSON2_GMAC_CLK] = clk_hw_register_divider(NULL, "gmac",
-> +						"dc_pll", 0,
-> +						loongson2_pll_base + 0x28, 22,
-> +						6, CLK_DIVIDER_ONE_BASED,
-> +						&loongson2_clk_lock);
-> +
-> +	hws[LOONGSON2_DC_CLK] = clk_hw_register_divider(NULL, "dc",
-> +						"dc_pll", 0,
-> +						loongson2_pll_base + 0x28, 0,
-> +						6, CLK_DIVIDER_ONE_BASED,
-> +						&loongson2_clk_lock);
-> +
-> +	hws[LOONGSON2_APB_CLK] = loongson2_clk_register(NULL, "apb",
-> +						"gmac",
-> +						&loongson2_apb_clk_ops, 0);
-> +
-> +	hws[LOONGSON2_USB_CLK] = loongson2_clk_register(NULL, "usb",
-> +						"gmac",
-> +						&loongson2_usb_clk_ops, 0);
-> +
-> +	hws[LOONGSON2_SATA_CLK] = loongson2_clk_register(NULL, "sata",
-> +						"gmac",
-> +						&loongson2_sata_clk_ops, 0);
-> +
-> +	hws[LOONGSON2_PIX0_CLK] = clk_hw_register_divider(NULL, "pix0",
-> +						"pix0_pll", 0,
-> +						loongson2_pll_base + 0x38, 0, 6,
-> +						CLK_DIVIDER_ONE_BASED,
-> +						&loongson2_clk_lock);
-> +
-> +	hws[LOONGSON2_PIX1_CLK] = clk_hw_register_divider(NULL, "pix1",
-> +						"pix1_pll", 0,
-> +						loongson2_pll_base + 0x48, 0, 6,
-> +						CLK_DIVIDER_ONE_BASED,
-> +						&loongson2_clk_lock);
-> +
-> +	loongson2_check_clk_hws(hws, LOONGSON2_CLK_END);
-> +
-> +	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
-> +
-> +err:
-> +	iounmap(loongson2_pll_base);
-> +}
-> +
-> +CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", loongson2_clocks_init);
+You can use existing __SIGNEX and its friends rather than reinvent them.
 
+Huacai
+
+>
+>  static inline bool signed_imm_check(long val, unsigned int bit)
+>  {
+> diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+> index 59c4608..58596c4 100644
+> --- a/arch/loongarch/include/asm/ptrace.h
+> +++ b/arch/loongarch/include/asm/ptrace.h
+> @@ -6,6 +6,7 @@
+>  #define _ASM_PTRACE_H
+>
+>  #include <asm/page.h>
+> +#include <asm/irqflags.h>
+>  #include <asm/thread_info.h>
+>  #include <uapi/asm/ptrace.h>
+>
+> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> index 512579d..aaaf9de 100644
+> --- a/arch/loongarch/kernel/inst.c
+> +++ b/arch/loongarch/kernel/inst.c
+> @@ -165,3 +165,126 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned l
+>
+>         return insn.word;
+>  }
+> +
+> +void simu_branch(struct pt_regs *regs, union loongarch_instruction insn)
+> +{
+> +       unsigned int imm, imm_l, imm_h, rd, rj;
+> +       unsigned long pc = regs->csr_era;
+> +
+> +       if (pc & 3) {
+> +               pr_warn("%s: invalid pc 0x%lx\n", __func__, pc);
+> +               return;
+> +       }
+> +
+> +       imm_l = insn.reg0i26_format.immediate_l;
+> +       imm_h = insn.reg0i26_format.immediate_h;
+> +       switch (insn.reg0i26_format.opcode) {
+> +       case b_op:
+> +               regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 27);
+> +               return;
+> +       case bl_op:
+> +               regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 27);
+> +               regs->regs[1] = pc + LOONGARCH_INSN_SIZE;
+> +               return;
+> +       }
+> +
+> +       imm_l = insn.reg1i21_format.immediate_l;
+> +       imm_h = insn.reg1i21_format.immediate_h;
+> +       rj = insn.reg1i21_format.rj;
+> +       switch (insn.reg1i21_format.opcode) {
+> +       case beqz_op:
+> +               if (regs->regs[rj] == 0)
+> +                       regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 22);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               return;
+> +       case bnez_op:
+> +               if (regs->regs[rj] != 0)
+> +                       regs->csr_era = pc + sign_extended((imm_h << 16 | imm_l) << 2, 22);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               return;
+> +       }
+> +
+> +       imm = insn.reg2i16_format.immediate;
+> +       rj = insn.reg2i16_format.rj;
+> +       rd = insn.reg2i16_format.rd;
+> +       switch (insn.reg2i16_format.opcode) {
+> +       case beq_op:
+> +               if (regs->regs[rj] == regs->regs[rd])
+> +                       regs->csr_era = pc + sign_extended(imm << 2, 17);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       case bne_op:
+> +               if (regs->regs[rj] != regs->regs[rd])
+> +                       regs->csr_era = pc + sign_extended(imm << 2, 17);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       case blt_op:
+> +               if ((long)regs->regs[rj] < (long)regs->regs[rd])
+> +                       regs->csr_era = pc + sign_extended(imm << 2, 17);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       case bge_op:
+> +               if ((long)regs->regs[rj] >= (long)regs->regs[rd])
+> +                       regs->csr_era = pc + sign_extended(imm << 2, 17);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       case bltu_op:
+> +               if (regs->regs[rj] < regs->regs[rd])
+> +                       regs->csr_era = pc + sign_extended(imm << 2, 17);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       case bgeu_op:
+> +               if (regs->regs[rj] >= regs->regs[rd])
+> +                       regs->csr_era = pc + sign_extended(imm << 2, 17);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       case jirl_op:
+> +               regs->csr_era = regs->regs[rj] + sign_extended(imm << 2, 17);
+> +               regs->regs[rd] = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       default:
+> +               pr_info("%s: unknown opcode\n", __func__);
+> +               return;
+> +       }
+> +}
+> +
+> +void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
+> +{
+> +       unsigned long pc = regs->csr_era;
+> +       unsigned int rd = insn.reg1i20_format.rd;
+> +       unsigned int imm = insn.reg1i20_format.immediate;
+> +
+> +       if (pc & 3) {
+> +               pr_warn("%s: invalid pc 0x%lx\n", __func__, pc);
+> +               return;
+> +       }
+> +
+> +       switch (insn.reg1i20_format.opcode) {
+> +       case pcaddi_op:
+> +               regs->regs[rd] = pc + sign_extended(imm << 2, 21);
+> +               break;
+> +       case pcaddu12i_op:
+> +               regs->regs[rd] = pc + sign_extended(imm << 12, 31);
+> +               break;
+> +       case pcaddu18i_op:
+> +               regs->regs[rd] = pc + sign_extended(imm << 18, 37);
+> +               break;
+> +       case pcalau12i_op:
+> +               regs->regs[rd] = pc + sign_extended(imm << 12, 31);
+> +               regs->regs[rd] &= ~((1 << 12) - 1);
+> +               break;
+> +       default:
+> +               pr_info("%s: unknown opcode\n", __func__);
+> +               return;
+> +       }
+> +
+> +       regs->csr_era += LOONGARCH_INSN_SIZE;
+> +}
+> --
+> 2.1.0
+>
