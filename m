@@ -1,87 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A972102
-	for <loongarch@lists.linux.dev>; Thu,  8 Dec 2022 13:03:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65084C43147
-	for <loongarch@lists.linux.dev>; Thu,  8 Dec 2022 13:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1670504636;
-	bh=tl+d3Z3AsJlB3fiahmcIVRdWy1uPD4pAhlt3VPhadaA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Gk7aYMA/BrgegS4Q+M6EFs2n4BeBTSv+qRkpRNEIZ1XXbxMqMPEMuTG6H1HOEf28P
-	 hFp5tdXbqqIRadHoDasQll33Ft7qe2CHXhWm9CQAyqLu+EjdMtqANhnngAy7H3HT9Y
-	 8rOKJlZYpUAbWz2TGtRgH8/TNn/OprQctBkCTJP19nKSMreSkc0TvfWgbi+XAfCejP
-	 XTnD1YCENpy1hj79oSjKXF7mRQWqgmlLV/ciq58tYmkRehPKh2zGDx+D2IY+60zq2u
-	 M76iJ7Zj9lwquiug7VnLOrDxvk/RS2xB/Ie0mzz1IrPAgaVcQXX2rxZCM2FtNgcrKg
-	 Yy6Wt1S22v8lw==
-Received: by mail-ej1-f41.google.com with SMTP id vv4so3695813ejc.2
-        for <loongarch@lists.linux.dev>; Thu, 08 Dec 2022 05:03:56 -0800 (PST)
-X-Gm-Message-State: ANoB5platsNrWPkBw/1Ux84WZKtc9OjWpB399iS76I76uqP8zH/qnQs5
-	D4RScWb7nJBR5GU7y7ROZhbWm5vyfvr1omJycV4=
-X-Google-Smtp-Source: AA0mqf5xY99CiJogo1znZHDU86WngN3UZB5D1fanOsf7g1H2xVrXWIQF6OkemgK6SDXsXA60nTHLTW49f+aZ0GsjOf8=
-X-Received: by 2002:a17:907:9951:b0:7b2:7e7a:11c1 with SMTP id
- kl17-20020a170907995100b007b27e7a11c1mr62167508ejc.684.1670504634539; Thu, 08
- Dec 2022 05:03:54 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B6BC258E
+	for <loongarch@lists.linux.dev>; Thu,  8 Dec 2022 13:41:11 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxE_B16ZFjFB8EAA--.10024S3;
+	Thu, 08 Dec 2022 21:41:10 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxTuB06ZFj8BwoAA--.33104S2;
+	Thu, 08 Dec 2022 21:41:08 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v9 0/4] Add kprobe and kretprobe support for LoongArch
+Date: Thu,  8 Dec 2022 21:41:04 +0800
+Message-Id: <1670506868-15771-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8BxTuB06ZFj8BwoAA--.33104S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7ZFy8JFW7uw47Ww4DZFyrZwb_yoW5Jr1rpF
+	9rAwn5Kr4rGr93Ar9xJ3WUur1fta1kC3y7W3W7JrW8Z3W7ZryUArs3KrZxXa48Gws0qr1S
+	qr1rX3yagFy7J37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
+	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
+	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
+	rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJbIYCTnIWIevJa73UjIFyTuYvjxU2DUUUUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <cover.1670289933.git.siyanteng@loongson.cn>
-In-Reply-To: <cover.1670289933.git.siyanteng@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 8 Dec 2022 21:03:43 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7rjMMZnz3SG4usNn0PvDZVj=Gp3zQUovn4a3fkSENseA@mail.gmail.com>
-Message-ID: <CAAhV-H7rjMMZnz3SG4usNn0PvDZVj=Gp3zQUovn4a3fkSENseA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/2] docs/LoongArch: Add English and Chinese versions
- of booting
-To: Yanteng Si <siyanteng@loongson.cn>
-Cc: corbet@lwn.net, alexs@kernel.org, seakeel@gmail.com, kernel@xen0n.name, 
-	wu.xiangcheng@linux.dev, jiaxun.yang@flygoat.com, liuyun@loongson.cn, 
-	linux-doc@vger.kernel.org, loongarch@lists.linux.dev, siyanteng01@gmail.com
-Content-Type: text/plain; charset="UTF-8"
 
-Applied, thanks.
+v9:
+  -- Rename sign_extended() to sign_extend()
+  -- Modify kprobe_fault_handler() to handle all of kprobe_status
 
-Huacai
+v8:
+  -- Put "regs->csr_prmd &= ~CSR_PRMD_PIE;" ahead to save one line
+  -- Add code comment of preempt_disable()
+  -- Put kprobe_page_fault() in __do_page_fault()
+  -- Modify the check condition of break insn in kprobe_breakpoint_handler()
 
-On Tue, Dec 6, 2022 at 10:10 AM Yanteng Si <siyanteng@loongson.cn> wrote:
->
-> v5:
-> * Add LINUX_PE_MAGIC.
-> * Modify some words under Xuerui's advice.
->
-> v4:
-> LoongArch supports ACPI and FDT, so let's add the description of fdt.
->
-> v3:
-> * Add a description about boot parameters (a0=efi_boot a1=cmdline a2=systemtable),
->   and then rename the file to booting.rst.
-> * remove some blank line.
->
-> v2:
-> * Fix magic start address.
-> * res14 -> res4.
->
-> v1:
-> * Add boot image header.
-> * Translate boot-image-header into Chinese.
->
-> Yanteng Si (2):
->   docs/LoongArch: Add booting
->   docs/zh_CN: Add booting Chinese translation
->
->  Documentation/loongarch/booting.rst           | 43 +++++++++++++++++
->  Documentation/loongarch/index.rst             |  1 +
->  .../translations/zh_CN/loongarch/booting.rst  | 48 +++++++++++++++++++
->  .../translations/zh_CN/loongarch/index.rst    |  1 +
->  4 files changed, 93 insertions(+)
->  create mode 100644 Documentation/loongarch/booting.rst
->  create mode 100644 Documentation/translations/zh_CN/loongarch/booting.rst
->
-> --
-> 2.31.1
->
->
+v7:
+  -- Remove stop_machine_cpuslocked() related code
+
+v6:
+  -- Add a new patch to redefine larch_insn_patch_text() with
+     stop_machine_cpuslocked()
+  -- Modify kprobe_breakpoint_handler() to consider the original
+     insn is break and return the correct value
+  -- Modify do_bp() to refresh bcode when original insn is break
+
+v5:
+  -- Rebase on the latest code
+  -- Use stop_machine_cpuslocked() to modify insn to avoid CPU race
+
+v4:
+  -- Remove kprobe_exceptions_notify() in kprobes.c
+  -- Call kprobe_breakpoint_handler() and kprobe_singlestep_handler()
+     in do_bp()
+
+v3:
+  -- Rebase on the latest code
+  -- Check the alignment of PC in simu_branch() and simu_pc()
+  -- Add ibar in flush_insn_slot()
+  -- Rename kprobe_{pre,post}_handler() to {post_}kprobe_handler
+  -- Add preempt_disable() and preempt_enable_no_resched()
+  -- Remove r0 save/restore and do some minor changes
+     in kprobes_trampoline.S
+  -- Do not enable CONFIG_KPROBES by default
+
+v2:
+  -- Split simu_branch() and simu_pc() into a single patch
+  -- Call kprobe_page_fault() in do_page_fault()
+  -- Add kprobes_trampoline.S for kretprobe
+
+Tiezhu Yang (4):
+  LoongArch: Simulate branch and PC instructions
+  LoongArch: Add kprobe support
+  LoongArch: Add kretprobe support
+  samples/kprobes: Add LoongArch support
+
+ arch/loongarch/Kconfig                     |   2 +
+ arch/loongarch/include/asm/inst.h          |  27 +++
+ arch/loongarch/include/asm/kprobes.h       |  59 +++++
+ arch/loongarch/include/asm/ptrace.h        |   1 +
+ arch/loongarch/kernel/Makefile             |   2 +
+ arch/loongarch/kernel/inst.c               | 123 ++++++++++
+ arch/loongarch/kernel/kprobes.c            | 356 +++++++++++++++++++++++++++++
+ arch/loongarch/kernel/kprobes_trampoline.S |  96 ++++++++
+ arch/loongarch/kernel/traps.c              |  13 +-
+ arch/loongarch/mm/fault.c                  |   3 +
+ samples/kprobes/kprobe_example.c           |   8 +
+ 11 files changed, 686 insertions(+), 4 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kprobes.h
+ create mode 100644 arch/loongarch/kernel/kprobes.c
+ create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
+
+-- 
+2.1.0
+
