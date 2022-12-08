@@ -1,109 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E082102
-	for <loongarch@lists.linux.dev>; Thu,  8 Dec 2022 13:03:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4233C433C1
-	for <loongarch@lists.linux.dev>; Thu,  8 Dec 2022 13:03:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A972102
+	for <loongarch@lists.linux.dev>; Thu,  8 Dec 2022 13:03:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65084C43147
+	for <loongarch@lists.linux.dev>; Thu,  8 Dec 2022 13:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1670504614;
-	bh=8WTaKC31dOLPvQwNBCuomCv6vG/IVVtjFcvUZPut1aU=;
+	s=k20201202; t=1670504636;
+	bh=tl+d3Z3AsJlB3fiahmcIVRdWy1uPD4pAhlt3VPhadaA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RpA90rnK6ZkeW+faDwqBMKzwG2VlvHO3GVNI05AsaExpQmKIwfznkWgmdSaNmHkOE
-	 /vSOlfyY2CkO6/JJsgH1MksbIkHnJvbiZNB1gzYKJwklrTiNpQdKkOznyVcdeLEyZ5
-	 ss+q/ruufdMGBPBRs9CxES0u8rAxlYwJzG3mz0YL1i/B1++UCrQ8ZfAhw+ReqzJo+y
-	 jWxN1ta1yfpcq2vOXPMHRrwBYFsgfssJa9Pe0JBgXxwO0gxnQXbfUZiu/ZbqBgkobx
-	 WqxD4adrhfQPyTQEVeEGq+vrkkUpAeiMGYPWHRTmZHv/jeFYJFVxF9e1AG7vHsFybt
-	 i9hd9P4SnMCfA==
-Received: by mail-ej1-f52.google.com with SMTP id ud5so3678531ejc.4
-        for <loongarch@lists.linux.dev>; Thu, 08 Dec 2022 05:03:34 -0800 (PST)
-X-Gm-Message-State: ANoB5pk4fMX5hteHWmweZqdtK0BeI/FOh9L09t82XepYvs6e96Ta/9RA
-	I5AwuB73chyU4K9eJSwLuJuyS5m11/3z9sCVw0w=
-X-Google-Smtp-Source: AA0mqf7H1OACUFYqDO0DYLD9ByXVmg2uFMotk/YK6ZOQTY23PYyp/o7HSpoGih4e2nuCrhBopLmnnqebWqxc1RUACxw=
-X-Received: by 2002:a17:906:1811:b0:7ae:5a4:5356 with SMTP id
- v17-20020a170906181100b007ae05a45356mr64257205eje.748.1670504612741; Thu, 08
- Dec 2022 05:03:32 -0800 (PST)
+	b=Gk7aYMA/BrgegS4Q+M6EFs2n4BeBTSv+qRkpRNEIZ1XXbxMqMPEMuTG6H1HOEf28P
+	 hFp5tdXbqqIRadHoDasQll33Ft7qe2CHXhWm9CQAyqLu+EjdMtqANhnngAy7H3HT9Y
+	 8rOKJlZYpUAbWz2TGtRgH8/TNn/OprQctBkCTJP19nKSMreSkc0TvfWgbi+XAfCejP
+	 XTnD1YCENpy1hj79oSjKXF7mRQWqgmlLV/ciq58tYmkRehPKh2zGDx+D2IY+60zq2u
+	 M76iJ7Zj9lwquiug7VnLOrDxvk/RS2xB/Ie0mzz1IrPAgaVcQXX2rxZCM2FtNgcrKg
+	 Yy6Wt1S22v8lw==
+Received: by mail-ej1-f41.google.com with SMTP id vv4so3695813ejc.2
+        for <loongarch@lists.linux.dev>; Thu, 08 Dec 2022 05:03:56 -0800 (PST)
+X-Gm-Message-State: ANoB5platsNrWPkBw/1Ux84WZKtc9OjWpB399iS76I76uqP8zH/qnQs5
+	D4RScWb7nJBR5GU7y7ROZhbWm5vyfvr1omJycV4=
+X-Google-Smtp-Source: AA0mqf5xY99CiJogo1znZHDU86WngN3UZB5D1fanOsf7g1H2xVrXWIQF6OkemgK6SDXsXA60nTHLTW49f+aZ0GsjOf8=
+X-Received: by 2002:a17:907:9951:b0:7b2:7e7a:11c1 with SMTP id
+ kl17-20020a170907995100b007b27e7a11c1mr62167508ejc.684.1670504634539; Thu, 08
+ Dec 2022 05:03:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221202075854.2253116-1-maobibo@loongson.cn> <07e0d775-6bb7-051b-9ec9-71153efbdf21@xen0n.name>
- <c5e1b113-f457-2cc7-808b-b13f83adbb2b@loongson.cn> <c00462a5-c5c0-a749-15aa-c0efaf232e71@xen0n.name>
-In-Reply-To: <c00462a5-c5c0-a749-15aa-c0efaf232e71@xen0n.name>
+References: <cover.1670289933.git.siyanteng@loongson.cn>
+In-Reply-To: <cover.1670289933.git.siyanteng@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 8 Dec 2022 21:03:21 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H62s_VL2Mv5_1CFkT7+JVvJd6Nmv18=aw9V_YU+AmsJGw@mail.gmail.com>
-Message-ID: <CAAhV-H62s_VL2Mv5_1CFkT7+JVvJd6Nmv18=aw9V_YU+AmsJGw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: export symbol with function smp_send_reschedule
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: maobibo <maobibo@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Thu, 8 Dec 2022 21:03:43 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7rjMMZnz3SG4usNn0PvDZVj=Gp3zQUovn4a3fkSENseA@mail.gmail.com>
+Message-ID: <CAAhV-H7rjMMZnz3SG4usNn0PvDZVj=Gp3zQUovn4a3fkSENseA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] docs/LoongArch: Add English and Chinese versions
+ of booting
+To: Yanteng Si <siyanteng@loongson.cn>
+Cc: corbet@lwn.net, alexs@kernel.org, seakeel@gmail.com, kernel@xen0n.name, 
+	wu.xiangcheng@linux.dev, jiaxun.yang@flygoat.com, liuyun@loongson.cn, 
+	linux-doc@vger.kernel.org, loongarch@lists.linux.dev, siyanteng01@gmail.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
 Applied, thanks.
 
 Huacai
 
-On Fri, Dec 2, 2022 at 5:41 PM WANG Xuerui <kernel@xen0n.name> wrote:
+On Tue, Dec 6, 2022 at 10:10 AM Yanteng Si <siyanteng@loongson.cn> wrote:
 >
-> On 2022/12/2 17:03, maobibo wrote:
-> >>> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.=
-c
-> >>> index 6ed72f7ff278..51dd3c3f06cb 100644
-> >>> --- a/arch/loongarch/kernel/smp.c
-> >>> +++ b/arch/loongarch/kernel/smp.c
-> >>> @@ -141,6 +141,17 @@ void loongson_send_ipi_single(int cpu, unsigned =
-int action)
-> >>>        ipi_write_action(cpu_logical_map(cpu), (u32)action);
-> >>>    }
-> >>>    +/*
-> >>> + * This function sends a 'reschedule' IPI to another CPU.
-> >>> + * it goes straight through and wastes no time serializing
-> >>> + * anything. Worst case is that we lose a reschedule ...
-> >>> + */
-> >>> +void smp_send_reschedule(int cpu)
-> >>> +{
-> >>> +    loongson_send_ipi_single(cpu, SMP_RESCHEDULE);
-> >>> +}
-> >>> +EXPORT_SYMBOL_GPL(smp_send_reschedule);
-> >>> +
-> >>
-> >> While the change is in itself okay (one less case of mips legacy, gett=
-ing in line with ia64, powerpc and riscv that all EXPORT_SYMBOL_GPL this), =
-I'd suggest you batch this patch with the subsequent changes you plan to en=
-able with this one, so reviewers would have more context and hopefully avoi=
-d churn. (I, by my familiarity with Loongson and LoongArch development, kno=
-w you're probably aiming to use this with KVM, but others probably don't kn=
-ow, and again it's always better to have more context.)
-> >>
-> >
-> > yes, kvm module depends on function smp_send_reschedule, only that it i=
-s not mature now. And this function is standard API, not arch specified API=
-, it is normal for modules to use it :)
+> v5:
+> * Add LINUX_PE_MAGIC.
+> * Modify some words under Xuerui's advice.
 >
-> Hmm, maybe you could post some kind of "sneak peek" code for early
-> reviews on broader things like overall approach and architecture?
-> Frankly speaking, experience suggests that code from Loongson usually
-> needs much refactoring to meet mainline standards, and posting your
-> design and some initial implementation could save you and the community
-> a *huge* amount of time and hassle.
+> v4:
+> LoongArch supports ACPI and FDT, so let's add the description of fdt.
 >
-> And I'm not arguing this patch shouldn't get included, it's the
-> opposite, but I don't see any difference in applying it now or later
-> when the whole LoongArch KVM support gets mainlined, so maybe it's
-> better to wait so we don't cause any churn if the change turns out
-> unnecessary. For example, in my grepping I found that x86 doesn't have
-> smp_send_reschedule exported, yet its KVM port has no problem using it;
-> and that the s390 and riscv KVM ports don't invoke smp_send_reschedule
-> at all. So it's entirely possible that LoongArch won't need this change
-> for KVM after all, and I'm suggesting to save everyone some time.
+> v3:
+> * Add a description about boot parameters (a0=efi_boot a1=cmdline a2=systemtable),
+>   and then rename the file to booting.rst.
+> * remove some blank line.
+>
+> v2:
+> * Fix magic start address.
+> * res14 -> res4.
+>
+> v1:
+> * Add boot image header.
+> * Translate boot-image-header into Chinese.
+>
+> Yanteng Si (2):
+>   docs/LoongArch: Add booting
+>   docs/zh_CN: Add booting Chinese translation
+>
+>  Documentation/loongarch/booting.rst           | 43 +++++++++++++++++
+>  Documentation/loongarch/index.rst             |  1 +
+>  .../translations/zh_CN/loongarch/booting.rst  | 48 +++++++++++++++++++
+>  .../translations/zh_CN/loongarch/index.rst    |  1 +
+>  4 files changed, 93 insertions(+)
+>  create mode 100644 Documentation/loongarch/booting.rst
+>  create mode 100644 Documentation/translations/zh_CN/loongarch/booting.rst
 >
 > --
-> WANG "xen0n" Xuerui
->
-> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+> 2.31.1
 >
 >
