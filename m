@@ -1,14 +1,52 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7297F7F3
-	for <loongarch@lists.linux.dev>; Thu,  8 Dec 2022 08:55:42 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.108.31])
-	by gateway (Coremail) with SMTP id _____8BxGemNppFjbhEEAA--.6274S3;
-	Thu, 08 Dec 2022 16:55:41 +0800 (CST)
-Received: from [0.0.0.0] (unknown [112.20.108.31])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx5VaLppFjodknAA--.13869S3;
-	Thu, 08 Dec 2022 16:55:40 +0800 (CST)
-Message-ID: <7bc31b2d-6687-5823-6950-cdedb8105db5@loongson.cn>
-Date: Thu, 8 Dec 2022 16:55:39 +0800
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9830636B
+	for <loongarch@lists.linux.dev>; Thu,  8 Dec 2022 08:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1670489755;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qZzQND0XXn/ac1VVVRiwKzVF2wPIGejtH8QPoB1hHfA=;
+	b=QPFkG++A/8JL5La+pALQpMxgOwAt4ktwVCkc0B7GKmSOmsQdJwO6bUe02qtZHfivaxVdc3
+	G9Wjgdcy6CTAaGzTr8Cckc2sdx+1EbdNMrC++y5ZAPBbYS5RMOrBZy9yOPYliW8bDkf1S/
+	1Ay3qqX5PGov4onlFtRbv5LxaYRg05Q=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-509-P67e7O0bOvWflDRIYH9R4w-1; Thu, 08 Dec 2022 03:55:54 -0500
+X-MC-Unique: P67e7O0bOvWflDRIYH9R4w-1
+Received: by mail-wm1-f71.google.com with SMTP id i203-20020a1c3bd4000000b003d0f49bc21bso2106875wma.6
+        for <loongarch@lists.linux.dev>; Thu, 08 Dec 2022 00:55:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qZzQND0XXn/ac1VVVRiwKzVF2wPIGejtH8QPoB1hHfA=;
+        b=fIg8mDzZQlMYIpujuUCCB18qTlQRe1xVDEWWjUNoOB7sYe88Zuk9veyWSwBjksEgMl
+         ZNpfP7dCLpMa2nej8pTBOQfjHm+/b5Zdsfv0cTKtgFfJDE/AOxgbIPXN8JwWvPA7RXB/
+         SbnrHHF/xeiKFuAPFGsel/sgpvxo6x8Twq6Uzn23JDAzZMTxp4cD2Pl2qTq862gvXbXx
+         3Ic5fkXdmREBEISwIg9gPrJCaILhJW9kWXQ17k3M2nQ0JJ3SsIOTU8yUeFwNqM0hSMBs
+         6g5Q/rORzs7uy+Riqw4Xf4JPh571xnO7k4fFrlQJ16kyL9LeR+vaIEGdOWZCUjZAqDh4
+         axCA==
+X-Gm-Message-State: ANoB5pnnwvTFB96lhQbWkU2MWOUC0fTOvS3387rEVhNrnZ4OMrT1O1w9
+	8BYTnedBNhmCGRLDGa+f7ohbNk49R3uXrEg78Mdm75mXLMqJzfEBwgUXCH8pU0ynqZQMzNWcvn7
+	MkhjUInRfCXWW0w57LeAK
+X-Received: by 2002:a5d:504d:0:b0:242:246c:2f89 with SMTP id h13-20020a5d504d000000b00242246c2f89mr22919601wrt.108.1670489752976;
+        Thu, 08 Dec 2022 00:55:52 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf668NfxbMXQWSDBD6iCzqqUG4mJSCJROvTfbJs0ERpg3lPeZTVH/8wev7o0MHbpIs1xArxqSg==
+X-Received: by 2002:a5d:504d:0:b0:242:246c:2f89 with SMTP id h13-20020a5d504d000000b00242246c2f89mr22919565wrt.108.1670489752626;
+        Thu, 08 Dec 2022 00:55:52 -0800 (PST)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id o29-20020adfa11d000000b0024278304ef6sm6288982wro.13.2022.12.08.00.55.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Dec 2022 00:55:52 -0800 (PST)
+Message-ID: <c904aa67-1add-119c-162f-e35d8243a11a@redhat.com>
+Date: Thu, 8 Dec 2022 09:55:49 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -16,213 +54,131 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: Re: [PATCH V5 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
- controller
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Wolfram Sang <wsa@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
- devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
- WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Jianmin Lv <lvjianmin@loongson.cn>
-References: <cover.1670293176.git.zhoubinbin@loongson.cn>
- <e088e2ffaef1492adc09b7cdbde0afcea2eeb8b2.1670293176.git.zhoubinbin@loongson.cn>
- <Y49ei1fpEawXvGQB@smile.fi.intel.com>
-In-Reply-To: <Y49ei1fpEawXvGQB@smile.fi.intel.com>
+ Thunderbird/102.5.0
+Subject: Re: [PATCH mm-unstable RFC 17/26] powerpc/mm: support
+ __HAVE_ARCH_PTE_SWP_EXCLUSIVE on 32bit book3s
+From: David Hildenbrand <david@redhat.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
+ <hughd@google.com>, John Hubbard <jhubbard@nvidia.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@linux.ibm.com>,
+ Yang Shi <shy828301@gmail.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Nadav Amit <namit@vmware.com>, Andrea Arcangeli <aarcange@redhat.com>,
+ Peter Xu <peterx@redhat.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+ "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ "linux-hexagon@vger.kernel.org" <linux-hexagon@vger.kernel.org>,
+ "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ "openrisc@lists.librecores.org" <openrisc@lists.librecores.org>,
+ "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+ "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+ "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+ "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
+ "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>
+References: <20221206144730.163732-1-david@redhat.com>
+ <20221206144730.163732-18-david@redhat.com>
+ <8be167b6-3836-25c3-9f69-b8b3916ee5b4@csgroup.eu>
+ <0b5b1303-8bcb-c19d-5f63-0e4a3517fea5@redhat.com>
+Organization: Red Hat
+In-Reply-To: <0b5b1303-8bcb-c19d-5f63-0e4a3517fea5@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx5VaLppFjodknAA--.13869S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3Xr4xAw1fur13KrykuFyrtFb_yoW7Ary3pa
-	y8AF48KrWjqr10qr4DJr1UC347Zrs5J34UJr18Jay7A3ZxCr1vqryrXr409F48Gr4kWrsr
-	Aw4Dtr15ua4YvFDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
-	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
-	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
-	AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
-	6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
-	0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIY
-	CTnIWIevJa73UjIFyTuYvjxU2MKZDUUUU
 
-Hi Andy:
+On 08.12.22 09:52, David Hildenbrand wrote:
+> On 07.12.22 14:55, Christophe Leroy wrote:
+>>
+>>
+>> Le 06/12/2022 à 15:47, David Hildenbrand a écrit :
+>>> We already implemented support for 64bit book3s in commit bff9beaa2e80
+>>> ("powerpc/pgtable: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE for book3s")
+>>>
+>>> Let's support __HAVE_ARCH_PTE_SWP_EXCLUSIVE also in 32bit by reusing yet
+>>> unused LSB 2 / MSB 29. There seems to be no real reason why that bit cannot
+>>> be used, and reusing it avoids having to steal one bit from the swap
+>>> offset.
+>>>
+>>> While at it, mask the type in __swp_entry().
+>>>
+>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>>> Cc: Nicholas Piggin <npiggin@gmail.com>
+>>> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>> ---
+>>>     arch/powerpc/include/asm/book3s/32/pgtable.h | 38 +++++++++++++++++---
+>>>     1 file changed, 33 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/include/asm/book3s/32/pgtable.h
+>>> index 75823f39e042..8107835b38c1 100644
+>>> --- a/arch/powerpc/include/asm/book3s/32/pgtable.h
+>>> +++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
+>>> @@ -42,6 +42,9 @@
+>>>     #define _PMD_PRESENT_MASK (PAGE_MASK)
+>>>     #define _PMD_BAD	(~PAGE_MASK)
+>>>     
+>>> +/* We borrow the _PAGE_USER bit to store the exclusive marker in swap PTEs. */
+>>> +#define _PAGE_SWP_EXCLUSIVE	_PAGE_USER
+>>> +
+>>>     /* And here we include common definitions */
+>>>     
+>>>     #define _PAGE_KERNEL_RO		0
+>>> @@ -363,17 +366,42 @@ static inline void __ptep_set_access_flags(struct vm_area_struct *vma,
+>>>     #define pmd_page(pmd)		pfn_to_page(pmd_pfn(pmd))
+>>>     
+>>>     /*
+>>> - * Encode and decode a swap entry.
+>>> - * Note that the bits we use in a PTE for representing a swap entry
+>>> - * must not include the _PAGE_PRESENT bit or the _PAGE_HASHPTE bit (if used).
+>>> - *   -- paulus
+>>> + * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
+>>> + * are !pte_none() && !pte_present().
+>>> + *
+>>> + * Format of swap PTEs (32bit PTEs):
+>>> + *
+>>> + *                         1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
+>>> + *   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+>>> + *   E H P <- type --> <----------------- offset ------------------>
+>>
+>> That's in reversed order. _PAGE_HASHPTE is bit 30 and should be on the
+>> right hand side. Etc ...
+> 
+> Ugh, messed it up while converting back and forth between LSB 0 and MSB 0.
+> 
+> /*
+>    * Format of swap PTEs (32bit PTEs):
+>    *
+>    *                         1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
+>    *   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+>    *   <----------------- offset ------------------> <- type --> E H P
+> 
+> 
 
-在 2022/12/6 23:23, Andy Shevchenko 写道:
-> On Tue, Dec 06, 2022 at 11:16:56AM +0800, Binbin Zhou wrote:
->> This I2C module is integrated into the Loongson-2K SoCs and Loongson
->> LS7A bridge chip.
-> Much better, thanks!
->
-> ...
->
->> +/*
->> + * The I2C controller has a fixed I2C bus frequency by default, but to
->> + * be compatible with more client devices, we can obtain the set I2C
->> + * bus frequency from ACPI or FDT.
->> + */
->> +static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
->> +{
->> +	u16 val = 0x12c; /* Default value of I2C divider latch register */
-> Besides comment better to be placed on top of the commented line, the value
-> is better to have its own definition where you place the comment and elaborate
-> what it means in practice (The clock frequency is changed?  Bus speed is
-> different?)
+Still wrong, the type is only 5 bits:
 
-Ok, I'll put this comment on a separate line.
-
-The LS2X I2C supports STANDARD_MODE and FAST_MODE, so the maximum bus 
-frequency is 400kHz.
-"0x12c" is our empirical value after experimentation and represents 33KHz.
-
-Also, I think the better way is:
-
-@@ -53,6 +53,15 @@
-  #define LS2X_CTR_IEN           BIT(6) /* Enable i2c interrupt */
-  #define LS2X_CTR_MST           BIT(5) /* 0: Slave mode 1: Master mode */
-
-+/* The PCLK clock frequency input from the LPB bus */
-+#define LS2X_I2C_PCLK_FREQ     (50 * HZ_PER_MHZ)
-+/*
-+ * The LS2X I2C controller supports standard mode and fast mode,
-+ * so the maximum bus frequency is 400kHz.
-+ * The '33KHz' is our empirical value after experimentation.
-+ */
-+#define LS2X_I2C_FREQ_STD      (33 * HZ_PER_KHZ)
-+
-  struct ls2x_i2c_priv {
-         struct i2c_adapter      adapter;
-         struct device           *dev;
-@@ -231,17 +240,19 @@ static irqreturn_t ls2x_i2c_irq_handler(int 
-this_irq, void *dev_id)
-   */
-  static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
-  {
--       u16 val = 0x12c; /* Default value of I2C divider latch register */
-         struct i2c_timings *t = &priv->i2c_t;
-         u32 acpi_speed = i2c_acpi_find_bus_speed(priv->dev);
-
-         i2c_parse_fw_timings(priv->dev, t, false);
-
-         if (acpi_speed || t->bus_freq_hz)
--               val = 10 * HZ_PER_MHZ / max(t->bus_freq_hz, acpi_speed) - 1;
-+               t->bus_freq_hz = max(t->bus_freq_hz, acpi_speed);
-+       else
-+               t->bus_freq_hz = LS2X_I2C_FREQ_STD;
-
--       /* Set LS2X I2C frequency */
--       writel(val, priv->base + I2C_LS2X_PRER_LO);
-+       /* Calculate and set LS2X I2C frequency */
-+       writel((LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1),
-+              priv->base + I2C_LS2X_PRER_LO);
-  }
-
->> +	struct i2c_timings *t = &priv->i2c_t;
->> +	u32 acpi_speed = i2c_acpi_find_bus_speed(priv->dev);
->> +
->> +	i2c_parse_fw_timings(priv->dev, t, false);
->> +
->> +	if (acpi_speed || t->bus_freq_hz)
->> +		val = 10 * HZ_PER_MHZ / max(t->bus_freq_hz, acpi_speed) - 1;
->> +
->> +	/* Set LS2X I2C frequency */
->> +	writel(val, priv->base + I2C_LS2X_PRER_LO);
->> +}
-> ...
->
->> +	writeb(data | LS2X_CTR_EN | LS2X_CTR_IEN | LS2X_CTR_MST,
->> +			priv->base + I2C_LS2X_CTR);
-> Wrong indentation.
->
-> ...
->
->> +	r = devm_request_irq(dev, irq, ls2x_i2c_irq_handler,
->> +			     IRQF_SHARED, "ls2x-i2c", priv);
->> +	if (r < 0)
->> +		return dev_err_probe(dev, r, "Unable to request irq %d\n", irq);
-> You requested IRQ without filling all data structures. Is it fine? Have you
-> checked that with CONFIG_DEBUG_SHIRQ being enabled?
-
-Sorry, I don't quite understand what you mean by "without filling all 
-data structures", I need call ls2x_i2c_reginit(priv) before it ?
-
-I see that other i2c drivers request interrupts at about the same time 
-as I do.
-
-I tested it with CONFIG_DEBUG_SHIRQ and no exceptions were reported.
++ * Format of swap PTEs (32bit PTEs):
++ *
++ *                         1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
++ *   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++ *   <----------------- offset --------------------> < type -> E H P
++ *
 
 
-> ...
->
->> +	r = devm_i2c_add_adapter(dev, adap);
->> +	if (r)
->> +		return dev_err_probe(dev, r, "Failure adding adapter\n");
->> +
->> +	return 0;
->> +}
-> Looking at the above...
->
->> +static int ls2x_i2c_remove(struct platform_device *pdev)
->> +{
->> +	struct ls2x_i2c_priv *priv = platform_get_drvdata(pdev);
->> +
->> +	i2c_del_adapter(&priv->adapter);
-> ...are you sure this is correct?
+-- 
+Thanks,
 
-When we use devm_i2c_add_adapter(), the adapter will be auto deleted on 
-driver detach.
-
-So I just drop the ls2x_i2c_remove() ?
-
->> +	return 0;
->> +}
-> ...
->
->> +static int ls2x_i2c_suspend(struct device *dev)
->> +{
->> +	struct ls2x_i2c_priv *priv = dev_get_drvdata(dev);
->> +	priv->suspended = 1;
-> No protection needed?
-
-Actually this variable is not used elsewhere, maybe it is useless, I 
-will try to remove it and add some necessary actions in the 
-suspend/rusume callbacks, such as disable i2c interrupts, to ensure 
-integrity.
-
-
->> +	return 0;
->> +}
->> +
->> +static int ls2x_i2c_resume(struct device *dev)
->> +{
->> +	struct ls2x_i2c_priv *priv = dev_get_drvdata(dev);
->> +	priv->suspended = 0;
-> Ditto.
->
->> +	ls2x_i2c_reginit(priv);
->> +	return 0;
->> +}
-> ...
->
->> +MODULE_ALIAS("platform:ls2x-i2c");
-> Why is this required?
-
-I just referred to other drivers before, and now the MODULE_DEVICE_TABLE 
-already creates proper alias for platform driver.
-
-I will drop it.
-
-Thanks.
-
-Binbin
+David / dhildenb
 
