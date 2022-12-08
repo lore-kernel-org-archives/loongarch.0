@@ -1,81 +1,53 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E03E2F49
-	for <loongarch@lists.linux.dev>; Thu,  8 Dec 2022 13:41:15 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axy+p56ZFjJB8EAA--.9577S3;
-	Thu, 08 Dec 2022 21:41:13 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxTuB06ZFj8BwoAA--.33104S6;
-	Thu, 08 Dec 2022 21:41:12 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v9 4/4] samples/kprobes: Add LoongArch support
-Date: Thu,  8 Dec 2022 21:41:08 +0800
-Message-Id: <1670506868-15771-5-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1670506868-15771-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1670506868-15771-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8BxTuB06ZFj8BwoAA--.33104S6
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWrZw4rWrW5CF1fJw1xZFWDJwb_yoW8JF1fpF
-	n0y3W5t3yFyw13WFW3Jayvgry0yryjkay8u3ykC34Yya429ry5AF1rKayjyw4kur90qF43
-	tr1FvryUGF1xZrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
-	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJbIYCTnIWIevJa73UjIFyTuYvjxUcHUqUUUUU
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B808B8F68
+	for <loongarch@lists.linux.dev>; Thu,  8 Dec 2022 19:26:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 61468C433EF;
+	Thu,  8 Dec 2022 19:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1670527597;
+	bh=SHlfv/OZgrUjwfzihuHOXgOGAoYqPNCzLq+K9PJeh/M=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=p6pvzu6JNbsZClX3nb2V3NJpFiakPCv+7Wqo8i/EXto8NVRyV9Vb8+Y9BAgrCb6KV
+	 VxY4ISzlBKsbADfkWKStD56i06/klvubr4GFgri/wFIDL3hiM1ZjGzl7j5KfzwijLT
+	 0iWxiFopLhc7Rp+HXkTxgw56qpDtzPtgJrSz39dstwij2cMlMUgLaV2LCNQFefjhwg
+	 kgZmsVpuRyH+sNsKE2FMN9ZeYYtgUa2RQydt2xV/sfgHN5G5fOZfMeXt0Y/5MWLwH/
+	 ir5ZXFOhbxfio81mOqs8hC0Hg3yqAc9DmHyyLKWERqUI/Qt3BhjVoQTOeh1+3EiYS1
+	 Us3MI7ejWkCKg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4F4BDE1B4D8;
+	Thu,  8 Dec 2022 19:26:37 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v6.1-final
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20221208130007.336248-1-chenhuacai@loongson.cn>
+References: <20221208130007.336248-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20221208130007.336248-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.1-3
+X-PR-Tracked-Commit-Id: 1385313d8bc112760559f06f64708d936b3f2d7c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 7f043b7662b6a9cfa981c02199ac939ed1c11372
+Message-Id: <167052759732.15249.88213761977579177.pr-tracker-bot@kernel.org>
+Date: Thu, 08 Dec 2022 19:26:37 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-Add LoongArch specific info in handler_pre() and handler_post().
+The pull request you sent on Thu,  8 Dec 2022 21:00:07 +0800:
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- samples/kprobes/kprobe_example.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.1-3
 
-diff --git a/samples/kprobes/kprobe_example.c b/samples/kprobes/kprobe_example.c
-index fd346f5..ef44c61 100644
---- a/samples/kprobes/kprobe_example.c
-+++ b/samples/kprobes/kprobe_example.c
-@@ -55,6 +55,10 @@ static int __kprobes handler_pre(struct kprobe *p, struct pt_regs *regs)
- 	pr_info("<%s> p->addr, 0x%p, ip = 0x%lx, flags = 0x%lx\n",
- 		p->symbol_name, p->addr, regs->psw.addr, regs->flags);
- #endif
-+#ifdef CONFIG_LOONGARCH
-+	pr_info("<%s> p->addr = 0x%p, era = 0x%lx, estat = 0x%lx\n",
-+		p->symbol_name, p->addr, regs->csr_era, regs->csr_estat);
-+#endif
- 
- 	/* A dump_stack() here will give a stack backtrace */
- 	return 0;
-@@ -92,6 +96,10 @@ static void __kprobes handler_post(struct kprobe *p, struct pt_regs *regs,
- 	pr_info("<%s> p->addr, 0x%p, flags = 0x%lx\n",
- 		p->symbol_name, p->addr, regs->flags);
- #endif
-+#ifdef CONFIG_LOONGARCH
-+	pr_info("<%s> p->addr = 0x%p, estat = 0x%lx\n",
-+		p->symbol_name, p->addr, regs->csr_estat);
-+#endif
- }
- 
- static int __init kprobe_init(void)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/7f043b7662b6a9cfa981c02199ac939ed1c11372
+
+Thank you!
+
 -- 
-2.1.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
