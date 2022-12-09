@@ -1,53 +1,250 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B808B8F68
-	for <loongarch@lists.linux.dev>; Thu,  8 Dec 2022 19:26:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 61468C433EF;
-	Thu,  8 Dec 2022 19:26:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8017E
+	for <loongarch@lists.linux.dev>; Fri,  9 Dec 2022 02:05:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0D60C433D2
+	for <loongarch@lists.linux.dev>; Fri,  9 Dec 2022 02:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1670527597;
-	bh=SHlfv/OZgrUjwfzihuHOXgOGAoYqPNCzLq+K9PJeh/M=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=p6pvzu6JNbsZClX3nb2V3NJpFiakPCv+7Wqo8i/EXto8NVRyV9Vb8+Y9BAgrCb6KV
-	 VxY4ISzlBKsbADfkWKStD56i06/klvubr4GFgri/wFIDL3hiM1ZjGzl7j5KfzwijLT
-	 0iWxiFopLhc7Rp+HXkTxgw56qpDtzPtgJrSz39dstwij2cMlMUgLaV2LCNQFefjhwg
-	 kgZmsVpuRyH+sNsKE2FMN9ZeYYtgUa2RQydt2xV/sfgHN5G5fOZfMeXt0Y/5MWLwH/
-	 ir5ZXFOhbxfio81mOqs8hC0Hg3yqAc9DmHyyLKWERqUI/Qt3BhjVoQTOeh1+3EiYS1
-	 Us3MI7ejWkCKg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4F4BDE1B4D8;
-	Thu,  8 Dec 2022 19:26:37 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.1-final
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20221208130007.336248-1-chenhuacai@loongson.cn>
-References: <20221208130007.336248-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20221208130007.336248-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.1-3
-X-PR-Tracked-Commit-Id: 1385313d8bc112760559f06f64708d936b3f2d7c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7f043b7662b6a9cfa981c02199ac939ed1c11372
-Message-Id: <167052759732.15249.88213761977579177.pr-tracker-bot@kernel.org>
-Date: Thu, 08 Dec 2022 19:26:37 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	s=k20201202; t=1670551541;
+	bh=034c5SNu0eN+TDcSr1lJwuT4M0I7LHpEvy7Re0uO4kM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=L5/2/42L+J0mGJe9v7Sg+CPk3oLgSCJVra7+479VfTOnB2JTIpCXQ0Ow1DgberheH
+	 JGVfzW65vi7tmlB3M1QwbpwF3UagHnUNLgr1sOYsDAuSP0iY7mJiLeDSOZx0/+PrA9
+	 DZa1tx/CZyi1dGrpvdKg6vQaKogqKphg3qMO30hZL0jBj/FTO1hyMlw0e0YEfnBr47
+	 /+inXuxGh0yiLuYCpAT1LH0MX5EBjm7duyHVJDRIr1uITkFglop2E+Ll/uCuiQAx7G
+	 wzmGfesj9ihmbTRGwshh3u/GjIm+mlN1YfgdOH7rQJ7CeU9IxJUXJMzKU5Tcea8f8p
+	 atxRtpu/NCRTQ==
+Received: by mail-ej1-f44.google.com with SMTP id fc4so8234972ejc.12
+        for <loongarch@lists.linux.dev>; Thu, 08 Dec 2022 18:05:41 -0800 (PST)
+X-Gm-Message-State: ANoB5pnTv05P1xDXJ1cYI1uIRGyhxQYk6cs0Cip9GtXPLNxPUPbV4nNF
+	sswNK/J/9yzVbdtW2FNFH1KuR5TVNakBfXJd1ss=
+X-Google-Smtp-Source: AA0mqf4gMknRxQ0nMWyiNCNkPsOukZkqp4RNw9fVK/61cMeeUzmkgNvYLZLND3sOuMRTg+pfD//kSKggGjcL1G/6RZ8=
+X-Received: by 2002:a17:906:f116:b0:7c1:764:5e08 with SMTP id
+ gv22-20020a170906f11600b007c107645e08mr10164149ejb.72.1670551540112; Thu, 08
+ Dec 2022 18:05:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <1670506868-15771-1-git-send-email-yangtiezhu@loongson.cn> <1670506868-15771-2-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1670506868-15771-2-git-send-email-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 9 Dec 2022 10:05:28 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H774S2+TxMtgxLA6VcSb0kPwqTmK_i8_K1rsqGyhvH-ZQ@mail.gmail.com>
+Message-ID: <CAAhV-H774S2+TxMtgxLA6VcSb0kPwqTmK_i8_K1rsqGyhvH-ZQ@mail.gmail.com>
+Subject: Re: [PATCH v9 1/4] LoongArch: Simulate branch and PC instructions
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu <mhiramat@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Thu,  8 Dec 2022 21:00:07 +0800:
+Hi, Tiezhu,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.1-3
+On Thu, Dec 8, 2022 at 9:41 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+> According to LoongArch Reference Manual, simulate branch and
+> PC instructions, this is preparation for later patch.
+>
+> Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#branch-instructions
+> Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#_pcaddi_pcaddu121_pcaddu18l_pcalau12i
+>
+> Co-developed-by: Jinyang He <hejinyang@loongson.cn>
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/inst.h   |  12 ++++
+>  arch/loongarch/include/asm/ptrace.h |   1 +
+>  arch/loongarch/kernel/inst.c        | 123 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 136 insertions(+)
+>
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+> index 6cd994d..19cf692 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -7,6 +7,7 @@
+>
+>  #include <linux/types.h>
+>  #include <asm/asm.h>
+> +#include <asm/ptrace.h>
+>
+>  #define INSN_NOP               0x03400000
+>  #define INSN_BREAK             0x002a0000
+> @@ -32,6 +33,7 @@ enum reg1i20_op {
+>         lu12iw_op       = 0x0a,
+>         lu32id_op       = 0x0b,
+>         pcaddi_op       = 0x0c,
+> +       pcalau12i_op    = 0x0d,
+>         pcaddu12i_op    = 0x0e,
+>         pcaddu18i_op    = 0x0f,
+>  };
+> @@ -366,6 +368,16 @@ u32 larch_insn_gen_lu12iw(enum loongarch_gpr rd, int imm);
+>  u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
+>  u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
+>  u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
+> +void simu_branch(struct pt_regs *regs, union loongarch_instruction insn);
+> +void simu_pc(struct pt_regs *regs, union loongarch_instruction insn);
+> +
+> +static inline unsigned long sign_extend(unsigned long val, unsigned int idx)
+> +{
+> +       if (val & (1UL << idx))
+> +               return ~((1UL << (idx + 1)) - 1) | val;
+> +       else
+> +               return ((1UL << (idx + 1)) - 1) & val;
+> +}
+I have rebased https://github.com/loongson/linux/commits/loongarch-next,
+this function is already there.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7f043b7662b6a9cfa981c02199ac939ed1c11372
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Huacai
+>
+>  static inline bool signed_imm_check(long val, unsigned int bit)
+>  {
+> diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+> index 59c4608..58596c4 100644
+> --- a/arch/loongarch/include/asm/ptrace.h
+> +++ b/arch/loongarch/include/asm/ptrace.h
+> @@ -6,6 +6,7 @@
+>  #define _ASM_PTRACE_H
+>
+>  #include <asm/page.h>
+> +#include <asm/irqflags.h>
+>  #include <asm/thread_info.h>
+>  #include <uapi/asm/ptrace.h>
+>
+> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> index 512579d..af48faf 100644
+> --- a/arch/loongarch/kernel/inst.c
+> +++ b/arch/loongarch/kernel/inst.c
+> @@ -165,3 +165,126 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned l
+>
+>         return insn.word;
+>  }
+> +
+> +void simu_branch(struct pt_regs *regs, union loongarch_instruction insn)
+> +{
+> +       unsigned int imm, imm_l, imm_h, rd, rj;
+> +       unsigned long pc = regs->csr_era;
+> +
+> +       if (pc & 3) {
+> +               pr_warn("%s: invalid pc 0x%lx\n", __func__, pc);
+> +               return;
+> +       }
+> +
+> +       imm_l = insn.reg0i26_format.immediate_l;
+> +       imm_h = insn.reg0i26_format.immediate_h;
+> +       switch (insn.reg0i26_format.opcode) {
+> +       case b_op:
+> +               regs->csr_era = pc + sign_extend((imm_h << 16 | imm_l) << 2, 27);
+> +               return;
+> +       case bl_op:
+> +               regs->csr_era = pc + sign_extend((imm_h << 16 | imm_l) << 2, 27);
+> +               regs->regs[1] = pc + LOONGARCH_INSN_SIZE;
+> +               return;
+> +       }
+> +
+> +       imm_l = insn.reg1i21_format.immediate_l;
+> +       imm_h = insn.reg1i21_format.immediate_h;
+> +       rj = insn.reg1i21_format.rj;
+> +       switch (insn.reg1i21_format.opcode) {
+> +       case beqz_op:
+> +               if (regs->regs[rj] == 0)
+> +                       regs->csr_era = pc + sign_extend((imm_h << 16 | imm_l) << 2, 22);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               return;
+> +       case bnez_op:
+> +               if (regs->regs[rj] != 0)
+> +                       regs->csr_era = pc + sign_extend((imm_h << 16 | imm_l) << 2, 22);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               return;
+> +       }
+> +
+> +       imm = insn.reg2i16_format.immediate;
+> +       rj = insn.reg2i16_format.rj;
+> +       rd = insn.reg2i16_format.rd;
+> +       switch (insn.reg2i16_format.opcode) {
+> +       case beq_op:
+> +               if (regs->regs[rj] == regs->regs[rd])
+> +                       regs->csr_era = pc + sign_extend(imm << 2, 17);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       case bne_op:
+> +               if (regs->regs[rj] != regs->regs[rd])
+> +                       regs->csr_era = pc + sign_extend(imm << 2, 17);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       case blt_op:
+> +               if ((long)regs->regs[rj] < (long)regs->regs[rd])
+> +                       regs->csr_era = pc + sign_extend(imm << 2, 17);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       case bge_op:
+> +               if ((long)regs->regs[rj] >= (long)regs->regs[rd])
+> +                       regs->csr_era = pc + sign_extend(imm << 2, 17);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       case bltu_op:
+> +               if (regs->regs[rj] < regs->regs[rd])
+> +                       regs->csr_era = pc + sign_extend(imm << 2, 17);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       case bgeu_op:
+> +               if (regs->regs[rj] >= regs->regs[rd])
+> +                       regs->csr_era = pc + sign_extend(imm << 2, 17);
+> +               else
+> +                       regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       case jirl_op:
+> +               regs->csr_era = regs->regs[rj] + sign_extend(imm << 2, 17);
+> +               regs->regs[rd] = pc + LOONGARCH_INSN_SIZE;
+> +               break;
+> +       default:
+> +               pr_info("%s: unknown opcode\n", __func__);
+> +               return;
+> +       }
+> +}
+> +
+> +void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
+> +{
+> +       unsigned long pc = regs->csr_era;
+> +       unsigned int rd = insn.reg1i20_format.rd;
+> +       unsigned int imm = insn.reg1i20_format.immediate;
+> +
+> +       if (pc & 3) {
+> +               pr_warn("%s: invalid pc 0x%lx\n", __func__, pc);
+> +               return;
+> +       }
+> +
+> +       switch (insn.reg1i20_format.opcode) {
+> +       case pcaddi_op:
+> +               regs->regs[rd] = pc + sign_extend(imm << 2, 21);
+> +               break;
+> +       case pcaddu12i_op:
+> +               regs->regs[rd] = pc + sign_extend(imm << 12, 31);
+> +               break;
+> +       case pcaddu18i_op:
+> +               regs->regs[rd] = pc + sign_extend(imm << 18, 37);
+> +               break;
+> +       case pcalau12i_op:
+> +               regs->regs[rd] = pc + sign_extend(imm << 12, 31);
+> +               regs->regs[rd] &= ~((1 << 12) - 1);
+> +               break;
+> +       default:
+> +               pr_info("%s: unknown opcode\n", __func__);
+> +               return;
+> +       }
+> +
+> +       regs->csr_era += LOONGARCH_INSN_SIZE;
+> +}
+> --
+> 2.1.0
+>
+>
