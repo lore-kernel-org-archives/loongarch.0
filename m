@@ -1,175 +1,94 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A15757B
-	for <loongarch@lists.linux.dev>; Mon, 12 Dec 2022 08:13:04 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8DxdPCI4pZjG_kEAA--.11584S3;
-	Mon, 12 Dec 2022 16:12:56 +0800 (CST)
-Received: from [10.180.13.64] (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHuJ84pZjVDwsAA--.42459S2;
-	Mon, 12 Dec 2022 16:12:55 +0800 (CST)
-Subject: Re: [PATCH v5 2/3] gpio: loongson: add gpio driver support
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>,
- Jianmin Lv <lvjianmin@loongson.cn>,
- Hongchen Zhang <zhanghongchen@loongson.cn>,
- Liu Peibao <liupeibao@loongson.cn>, zhuyinbo@loongson.cn
-References: <20221121123803.3786-1-zhuyinbo@loongson.cn>
- <20221121123803.3786-2-zhuyinbo@loongson.cn>
- <CACRpkda1adiNwbTZHdAyHKny3r5FFMP_XXVGbo1vnCdw9U1gNg@mail.gmail.com>
- <8a7abd77-9540-efa8-6f67-908530e85399@loongson.cn>
- <CACRpkdb=wdydOYCcrpjLSyvfVO--_ezXsFQ46qwfVCiiTd5fNw@mail.gmail.com>
- <4c02570e-03d5-85f1-73fb-b66d6170c875@loongson.cn>
- <CACRpkdbgP9m40t_Ky4H+SQi9TELikomT2M-JpF7+auKmzOxQdg@mail.gmail.com>
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <ce858832-c052-1797-ffeb-2dbe654cbdd1@loongson.cn>
-Date: Mon, 12 Dec 2022 16:12:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4CE7B
+	for <loongarch@lists.linux.dev>; Mon, 12 Dec 2022 08:17:21 +0000 (UTC)
+Received: by mail-oi1-f182.google.com with SMTP id v82so10533665oib.4
+        for <loongarch@lists.linux.dev>; Mon, 12 Dec 2022 00:17:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=c4gMDZhGwu0Ykbz3qv7uQC3nOWgJ8Dr0VLnEwsUdVFc=;
+        b=MCH1mZ6rw34l7dfiP2HPgVzejNItACr8J+CzSpIGYECwK30m0nFv1I0m3Wunj7pDXi
+         DNx81JL+ofmxXmfye7rEqtZDTgXRg+p9W0MpTQtgWQC1ySv0otR+4yrn3EDfaFLm6ra3
+         Fhq+peR0m0yEC74wWe6pf/zPqbVSVXv/dvCUtdasDUxYOvnJ+UhsMTUVc+OdRfyyY9Rz
+         gp2FiJ8xgA4mdhXnp2WUbmNqN9dA6Kk/AoSu04i2xRB30eJimyI84cN39R7wfQDHbC60
+         qz2uY6R6vz+NC2jQOo9ICC+0XETv7AkQLQUXjWS1Ch2Qd4Uf3wA3jZUaj7yVlLNFL0vQ
+         dNNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c4gMDZhGwu0Ykbz3qv7uQC3nOWgJ8Dr0VLnEwsUdVFc=;
+        b=Tx7lTvx6xnSF5K8nCvl0IOpUhk58lRi6hls3sBHfm3gDh9BdBMFrB8k3sYITmZfDnu
+         jq0lUUPOvNmqnKYpLi5VWVdnCAKVCwlnVg/5i868LAGjrUlFaFUgGXRwPz9mNdqvT1Zp
+         ySyv3gIdO9FE7P9rjSM9iXC+fPTHz254H1z/P+xsP0o0t5jfOns/Jc7yisRF8yohK6qv
+         h2tVrpqtYZ2QM1cDphcWdXyMkg0VhVFvBm90zIHceMIr7jCmGt+GTkmC5KCEWCfguOd2
+         A0SXIvW5pLnt2EjmPgdbSY17+lBsN3XSb8552Nyq+I0UfuJ8bpqWFkicvFeWkCEP68Os
+         cCyQ==
+X-Gm-Message-State: ANoB5pkIeS/HNR1BPG9tYMg8Hcw6VqCtzHItyDnWWjrSmJANnlEo0PMt
+	EvIjLWOMn/aznhra9Er7mdtHkt/0fFiGcqCrqTg=
+X-Google-Smtp-Source: AA0mqf5lkAG4R17bx1n1GyzzFa2pF0LzaVpDKb1ElCO3thG2XVmsvyLomwDD6ry2nDk6YSPpXtygLyNjZzkHhvZPjqg=
+X-Received: by 2002:a05:6808:214:b0:35c:149:3428 with SMTP id
+ l20-20020a056808021400b0035c01493428mr11788222oie.180.1670833040572; Mon, 12
+ Dec 2022 00:17:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdbgP9m40t_Ky4H+SQi9TELikomT2M-JpF7+auKmzOxQdg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxHuJ84pZjVDwsAA--.42459S2
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZryrZw1xtFW8tF15Xry5Jwb_yoWrZr4fpF
-	W3Waya9r4kJF40gFyDG348ZFy3Jwn8JFW7AwsYy34xZ3WDZr9Ygr47tF1FvFyUWrZFvw4Y
-	vr1Fyry8uF1DAFJanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bDxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE
-	52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
-	80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCj
-	c4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI
-	0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCj
-	c4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU273kDUUUU
+References: <20221204141027.2511383-1-hengqi.chen@gmail.com>
+ <CAAhV-H7F5R6gVR4KufBitusg5A++z-1cJjnMdNLCYg2EyzafLw@mail.gmail.com> <2ca97911066ddb8eedb46d75d5446f45156f65cd.camel@xry111.site>
+In-Reply-To: <2ca97911066ddb8eedb46d75d5446f45156f65cd.camel@xry111.site>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Mon, 12 Dec 2022 16:17:09 +0800
+Message-ID: <CAEyhmHQT5FumzU=wCRwo6R6qc8BBnD-u17VD062k0wDetqRWiQ@mail.gmail.com>
+Subject: Re: Question about 'ipmi_si IP I0001:00: There appears to be no BMC
+ at this location'
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>, 
+	loongarch@lists.linux.dev, Dongyan Qian <dongyan0314@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi, all:
 
+Thanks.
 
-在 2022/11/24 下午4:54, Linus Walleij 写道:
-> On Thu, Nov 24, 2022 at 3:22 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
->> 在 2022/11/24 上午6:05, Linus Walleij 写道:
-> 
->>> But these drivers can not rely on the .gpio_to_irq() callback
->>> to be called before an IRQ is requested and used.
->>
->> I may not have made it clear before that the gpio irq chip for other
->> platforms may need to be implemented, but the loongson platform may be
->> special.
->>
->> I mean that the loongson platform use gpio irq does not need to rely on
->> gpio_to_irq, because loongson interrupt controller driver has covered
->> gpio irq.  The specific reason is my above explanation.
->>
->> so, Can I not realize gpio irq chip?
-> 
-> Isn't this a hierarchical irqchip then?
-> 
-> Please consult the following from
-> Documentation/driver-api/gpio/driver.rst:
-> 
-> ---------------------------------
-> 
-> GPIO drivers providing IRQs
-> ===========================
-> 
-> It is custom that GPIO drivers (GPIO chips) are also providing interrupts,
-> most often cascaded off a parent interrupt controller, and in some special
-> cases the GPIO logic is melded with a SoC's primary interrupt controller.
-> 
-> The IRQ portions of the GPIO block are implemented using an irq_chip, using
-> the header <linux/irq.h>. So this combined driver is utilizing two sub-
-> systems simultaneously: gpio and irq.
-> 
-> It is legal for any IRQ consumer to request an IRQ from any irqchip even if it
-> is a combined GPIO+IRQ driver. The basic premise is that gpio_chip and
-> irq_chip are orthogonal, and offering their services independent of each
-> other.
-> 
-> gpiod_to_irq() is just a convenience function to figure out the IRQ for a
-> certain GPIO line and should not be relied upon to have been called before
-> the IRQ is used.
-> 
-> Always prepare the hardware and make it ready for action in respective
-> callbacks from the GPIO and irq_chip APIs. Do not rely on gpiod_to_irq() having
-> been called first.
-> 
-> We can divide GPIO irqchips in two broad categories:
-> 
-> - CASCADED INTERRUPT CHIPS: this means that the GPIO chip has one common
->    interrupt output line, which is triggered by any enabled GPIO line on that
->    chip. The interrupt output line will then be routed to an parent interrupt
->    controller one level up, in the most simple case the systems primary
->    interrupt controller. This is modeled by an irqchip that will inspect bits
->    inside the GPIO controller to figure out which line fired it. The irqchip
->    part of the driver needs to inspect registers to figure this out and it
->    will likely also need to acknowledge that it is handling the interrupt
->    by clearing some bit (sometime implicitly, by just reading a status
->    register) and it will often need to set up the configuration such as
->    edge sensitivity (rising or falling edge, or high/low level interrupt for
->    example).
-> 
-> - HIERARCHICAL INTERRUPT CHIPS: this means that each GPIO line has a dedicated
->    irq line to a parent interrupt controller one level up. There is no need
->    to inquire the GPIO hardware to figure out which line has fired, but it
->    may still be necessary to acknowledge the interrupt and set up configuration
->    such as edge sensitivity.
-Hi Linus,
+Now I am able to compile and run using:
+    https://github.com/loongson/linux.git loongarch-next
 
-My patch had send it to v11, but I have some issues. it seems more
-appropriate add them here. the issue as follows:
+The issue is on korg repo:
+    git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git
+loongarch-next
 
+cheers,
+--
+Hengqi
 
-mask_irq/unmask_irq/irq_ack/ function always be called by
-handle_level_irq/handle_edge_irq in current irq domain. and the
-handle_level_irq/handle_edge_irq will be called  by handle_irq_desc that
-ask know which irq is.
-
-when a peripheral need to use a gpio irq that gpio irq driver need know
-irq status and call irq desc->irq_handler.
-
-so I don't got it about which case it is unnecessary to know which irq.
-> 
-> ---------------------------------
-> 
-> You find an example of a hierarchical GPIO irqchip using the
-> GPIOLIB_IRQCHIP in drivers/gpio/gpio-ixp4xx.c.
-
-
-Loongson-2 gpio irq hardware only a enable register, and when a gpio irq 
-happen, then will has a such flow:  "cpuintc -> liointc -> gpioinc ->
-generic_handle_domain_irq -> handle_level_irq ->
-peripheral-action(action->handler)"
-
-generic_handle_domain_irq need rely on specific hwirq that ask gpio irq 
-hardware has a status register but Loongson-2 gpio irq hardware doesn't 
-have it.
-
-so I still think it wasn't appropriate that for loongson-2 gpio driver
-add a irq chip.
-
-Yinbo.
-> 
-> Yours,
-> Linus Walleij
-> 
-
+On Tue, Dec 6, 2022 at 1:20 AM Xi Ruoyao <xry111@xry111.site> wrote:
+>
+> On Mon, 2022-12-05 at 14:06 +0800, Huacai Chen wrote:
+> > On Sun, Dec 4, 2022 at 10:10 PM Hengqi Chen <hengqi.chen@gmail.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > I built the kernel using loongarch-next branch, had the following errors while booting the newly-built kernel:
+> > >
+> > >      ACPI Error: No response from Global Lock hardware, disabling lock (20220331/evglock-59)
+> > >      ipmi_si IP I0001:00: There appears to be no BMC at this location
+> > >
+> > > How can I fix it ? Thanks.
+> > This is "harmless", but I think Jianmin Lv can provide some detail information.
+>
+> "ACPI Error" is likely something imperfect in the firmware.  Such errors
+> frequently show up on x86/x86_64 systems because the vendors use a lot
+> of Windoge-specific hacks in the firmware code, but mostly harmless.
+>
+> Also + firmware team member into CC list.
+>
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
