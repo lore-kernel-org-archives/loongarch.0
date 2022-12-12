@@ -1,208 +1,175 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BAA1374
-	for <loongarch@lists.linux.dev>; Sat, 10 Dec 2022 14:03:03 +0000 (UTC)
-Received: by mail-pf1-f178.google.com with SMTP id t18so5598880pfq.13
-        for <loongarch@lists.linux.dev>; Sat, 10 Dec 2022 06:03:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UaR6A5lOJuxq2TDA8bCpWrZebNLPRf+mo+8EFGWYDjI=;
-        b=jVarftiIsUKe4oUm0+iOvIJrTMCBL5LtSeCvNPiBKivy8Y9EKQFEKDEvLbFaPpLyEl
-         z5te5eqFluV7gWGI295Y/43mN2CV1RKYW1/0N18c8dQUA/Q/M5nM22L8PZcZG7V0Mgi2
-         huautCDQlJbi3FVnnXy2i8umhUyPjcbhqQWCCE9fVzFzvml+A6fB3hHhrgZvPXw7uMcU
-         xI6gRNVG1nwuN94fyBZ7HUwHvpkDnds+c+CZ2SDkVntqx2P5h61cL8Y3e1Evdhotie88
-         GEp4Bk9eN7xFwA9OSPMJ9FS0mhjWnQ0urbYnDc+s1gBBsAIUQWVc4dteuicLVCLcP6FD
-         7QUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UaR6A5lOJuxq2TDA8bCpWrZebNLPRf+mo+8EFGWYDjI=;
-        b=ZLG9X8q+RYSrlKv41HTJXaZ6MdUuF/HtRJFRaKOgoQS/EBUVev5hweOWE7ChC+nA1D
-         JGoTVegPYk/r8bh4FcfacbZ+DHOjeOcP5E9w+InjEz0600wggxDATsaXf1eo3qmdSZvB
-         UMq3V0afkrrK7oEkzZ1e6mbXDEOMMHaqCvfir2izgx9Jan0SJc8GYF5vx76jLLdWITDi
-         ghnuCX6k9T3uo6TTbOAKwYF1SBUYc6nY5gOhEX6F3cD3y/4BWxs0YW4+bALiNgux8276
-         oT0PMOPePKInYE6S92EILOoSXu9IQOvG936qhfUi8tpgbSI3b3sSHSmHlt9qzAhiqCVt
-         +zEw==
-X-Gm-Message-State: ANoB5pkLTBXYilJhOq0R2+YsC8c4TfdwOeTiijMMZOx4TtmtuFuFaQv2
-	uCSevTvgttozm2nn2aX9aQc+uTUq7kLav6GJQQmk3SY9gMknsg==
-X-Google-Smtp-Source: AA0mqf6b7ZTj017Mu7LQIgO/MQmzZ+I/rXNdKSwu8/8itg8SrOMP9Ol22Co6/iGAHYSlfZOn47uBgB966trTFmTHiqU=
-X-Received: by 2002:a63:3153:0:b0:478:9503:f498 with SMTP id
- x80-20020a633153000000b004789503f498mr23993265pgx.96.1670680486804; Sat, 10
- Dec 2022 05:54:46 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A15757B
+	for <loongarch@lists.linux.dev>; Mon, 12 Dec 2022 08:13:04 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8DxdPCI4pZjG_kEAA--.11584S3;
+	Mon, 12 Dec 2022 16:12:56 +0800 (CST)
+Received: from [10.180.13.64] (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHuJ84pZjVDwsAA--.42459S2;
+	Mon, 12 Dec 2022 16:12:55 +0800 (CST)
+Subject: Re: [PATCH v5 2/3] gpio: loongson: add gpio driver support
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Jianmin Lv <lvjianmin@loongson.cn>,
+ Hongchen Zhang <zhanghongchen@loongson.cn>,
+ Liu Peibao <liupeibao@loongson.cn>, zhuyinbo@loongson.cn
+References: <20221121123803.3786-1-zhuyinbo@loongson.cn>
+ <20221121123803.3786-2-zhuyinbo@loongson.cn>
+ <CACRpkda1adiNwbTZHdAyHKny3r5FFMP_XXVGbo1vnCdw9U1gNg@mail.gmail.com>
+ <8a7abd77-9540-efa8-6f67-908530e85399@loongson.cn>
+ <CACRpkdb=wdydOYCcrpjLSyvfVO--_ezXsFQ46qwfVCiiTd5fNw@mail.gmail.com>
+ <4c02570e-03d5-85f1-73fb-b66d6170c875@loongson.cn>
+ <CACRpkdbgP9m40t_Ky4H+SQi9TELikomT2M-JpF7+auKmzOxQdg@mail.gmail.com>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <ce858832-c052-1797-ffeb-2dbe654cbdd1@loongson.cn>
+Date: Mon, 12 Dec 2022 16:12:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1670575981-14389-1-git-send-email-yangtiezhu@loongson.cn> <CAAhV-H6e2HzXs9PCcdnebPBvGZrx5vRXji1vGXfPwkEihBOiKA@mail.gmail.com>
-In-Reply-To: <CAAhV-H6e2HzXs9PCcdnebPBvGZrx5vRXji1vGXfPwkEihBOiKA@mail.gmail.com>
-From: Jeff Xie <xiehuan09@gmail.com>
-Date: Sat, 10 Dec 2022 21:54:34 +0800
-Message-ID: <CAEr6+EC2wPAtK8zb3=e1mUiya3gv0UhqF9J_ySYx9p_96pB+tg@mail.gmail.com>
-Subject: Re: [PATCH v10 0/4] Add kprobe and kretprobe support for LoongArch
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Dec 9, 2022 at 6:01 PM Huacai Chen <chenhuacai@kernel.org> wrote:
->
-> Hi, Masami,
->
-> This series looks good to me now, but I'm not familiar with kprobes.
-> So, if you have any comments, please let me know.
->
-> And Jeff,
->
-> As we all know, you are an expert in this domain, so could you please
-> help me to test this series?
->
-> If there are no objections, I plan to merge this series in a few days.
-> But since the next merge window will be open soon, if there are any
-> problems, I will revert the patches to wait for the next cycle.
-
-I can't use the kprobe function normally now, tested the function from
-the branch: https://github.com/loongson/linux/commits/loongarch-next
-
-steps:
-1. Try to probe __memset_fast()
-
-[root@loongarch ]# cat /proc/kallsyms | grep __memset_fast
-90000000012c75f0 T __memset_fast
-
-./samples/kprobes/kprobe_example.c
-static char symbol[KSYM_NAME_LEN] =3D "__memset_fast";
-
-2. Loading the kprobe_example.ko
-[root@loongarch mnt]# insmod ./kprobe_example.ko
-
-*** The system will keep hanging ***
-
-dmesg-messages:
-gef=E2=9E=A4  lx-dmesg
-[   12.348047] handler_pre: <__memset_fast> p->addr =3D
-0x(____ptrval____), era =3D 0x90000000012c75f0, estat =3D 0xc0000
-[   12.348512] handler_post: <__memset_fast> p->addr =3D
-0x(____ptrval____), estat =3D 0xc0000
-[   12.348525] handler_post: <__memset_fast> p->addr =3D
-0x(____ptrval____), estat =3D 0xc0000
-[   12.349248] handler_pre: <__memset_fast> p->addr =3D
-0x(____ptrval____), era =3D 0x90000000012c75f0, estat =3D 0xc0000
-[   12.349259] handler_post: <__memset_fast> p->addr =3D
-0x(____ptrval____), estat =3D 0xc0000
-
-call trace:
-gef=E2=9E=A4  bt
-#0  0x90000000012f45f8 in queued_spin_lock_slowpath
-(lock=3D0x9000000001cc0018 <die_lock>, val=3D0x1) at
-kernel/locking/qspinlock.c:383
-#1  0x9000000000223b2c in die (str=3Dstr@entry=3D0x90000000017e3488 "Break
-instruction in kernel code", regs=3Dregs@entry=3D0x900000010fd735f0) at
-arch/loongarch/kernel/traps.c:240
-#2  0x90000000012e3968 in die_if_kernel (regs=3D<optimized out>,
-str=3D<optimized out>) at ./arch/loongarch/include/asm/ptrace.h:131
-#3  do_bp (regs=3D0x900000010fd735f0) at arch/loongarch/kernel/traps.c:485
-#4  0x9000000001cb1924 in exception_handlers ()
-Backtrace stopped: frame did not save the PC
+In-Reply-To: <CACRpkdbgP9m40t_Ky4H+SQi9TELikomT2M-JpF7+auKmzOxQdg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxHuJ84pZjVDwsAA--.42459S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZryrZw1xtFW8tF15Xry5Jwb_yoWrZr4fpF
+	W3Waya9r4kJF40gFyDG348ZFy3Jwn8JFW7AwsYy34xZ3WDZr9Ygr47tF1FvFyUWrZFvw4Y
+	vr1Fyry8uF1DAFJanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bDxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE
+	52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
+	80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCj
+	c4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI
+	0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCj
+	c4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU273kDUUUU
 
 
 
-> Thanks,
-> Huacai
->
-> On Fri, Dec 9, 2022 at 4:53 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote=
-:
-> >
-> > v10:
-> >   -- Remove sign_extend() based on the latest code
-> >   -- Rename insns_are_not_supported() to insns_not_supported()
-> >   -- Rename insns_are_not_simulated() to insns_not_simulated()
-> >   -- Set KPROBE_HIT_SSDONE if cur->post_handler is not NULL
-> >   -- Enable preemption for KPROBE_REENTER in kprobe_fault_handler()
-> >
-> > v9:
-> >   -- Rename sign_extended() to sign_extend()
-> >   -- Modify kprobe_fault_handler() to handle all of kprobe_status
-> >
-> > v8:
-> >   -- Put "regs->csr_prmd &=3D ~CSR_PRMD_PIE;" ahead to save one line
-> >   -- Add code comment of preempt_disable()
-> >   -- Put kprobe_page_fault() in __do_page_fault()
-> >   -- Modify the check condition of break insn in kprobe_breakpoint_hand=
-ler()
-> >
-> > v7:
-> >   -- Remove stop_machine_cpuslocked() related code
-> >
-> > v6:
-> >   -- Add a new patch to redefine larch_insn_patch_text() with
-> >      stop_machine_cpuslocked()
-> >   -- Modify kprobe_breakpoint_handler() to consider the original
-> >      insn is break and return the correct value
-> >   -- Modify do_bp() to refresh bcode when original insn is break
-> >
-> > v5:
-> >   -- Rebase on the latest code
-> >   -- Use stop_machine_cpuslocked() to modify insn to avoid CPU race
-> >
-> > v4:
-> >   -- Remove kprobe_exceptions_notify() in kprobes.c
-> >   -- Call kprobe_breakpoint_handler() and kprobe_singlestep_handler()
-> >      in do_bp()
-> >
-> > v3:
-> >   -- Rebase on the latest code
-> >   -- Check the alignment of PC in simu_branch() and simu_pc()
-> >   -- Add ibar in flush_insn_slot()
-> >   -- Rename kprobe_{pre,post}_handler() to {post_}kprobe_handler
-> >   -- Add preempt_disable() and preempt_enable_no_resched()
-> >   -- Remove r0 save/restore and do some minor changes
-> >      in kprobes_trampoline.S
-> >   -- Do not enable CONFIG_KPROBES by default
-> >
-> > v2:
-> >   -- Split simu_branch() and simu_pc() into a single patch
-> >   -- Call kprobe_page_fault() in do_page_fault()
-> >   -- Add kprobes_trampoline.S for kretprobe
-> >
-> > Tiezhu Yang (4):
-> >   LoongArch: Simulate branch and PC instructions
-> >   LoongArch: Add kprobe support
-> >   LoongArch: Add kretprobe support
-> >   samples/kprobes: Add LoongArch support
-> >
-> >  arch/loongarch/Kconfig                     |   2 +
-> >  arch/loongarch/include/asm/inst.h          |  20 ++
-> >  arch/loongarch/include/asm/kprobes.h       |  59 +++++
-> >  arch/loongarch/include/asm/ptrace.h        |   1 +
-> >  arch/loongarch/kernel/Makefile             |   2 +
-> >  arch/loongarch/kernel/inst.c               | 123 ++++++++++
-> >  arch/loongarch/kernel/kprobes.c            | 364 +++++++++++++++++++++=
-++++++++
-> >  arch/loongarch/kernel/kprobes_trampoline.S |  96 ++++++++
-> >  arch/loongarch/kernel/traps.c              |  13 +-
-> >  arch/loongarch/mm/fault.c                  |   3 +
-> >  samples/kprobes/kprobe_example.c           |   8 +
-> >  11 files changed, 687 insertions(+), 4 deletions(-)
-> >  create mode 100644 arch/loongarch/include/asm/kprobes.h
-> >  create mode 100644 arch/loongarch/kernel/kprobes.c
-> >  create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
-> >
-> > --
-> > 2.1.0
-> >
+在 2022/11/24 下午4:54, Linus Walleij 写道:
+> On Thu, Nov 24, 2022 at 3:22 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+>> 在 2022/11/24 上午6:05, Linus Walleij 写道:
+> 
+>>> But these drivers can not rely on the .gpio_to_irq() callback
+>>> to be called before an IRQ is requested and used.
+>>
+>> I may not have made it clear before that the gpio irq chip for other
+>> platforms may need to be implemented, but the loongson platform may be
+>> special.
+>>
+>> I mean that the loongson platform use gpio irq does not need to rely on
+>> gpio_to_irq, because loongson interrupt controller driver has covered
+>> gpio irq.  The specific reason is my above explanation.
+>>
+>> so, Can I not realize gpio irq chip?
+> 
+> Isn't this a hierarchical irqchip then?
+> 
+> Please consult the following from
+> Documentation/driver-api/gpio/driver.rst:
+> 
+> ---------------------------------
+> 
+> GPIO drivers providing IRQs
+> ===========================
+> 
+> It is custom that GPIO drivers (GPIO chips) are also providing interrupts,
+> most often cascaded off a parent interrupt controller, and in some special
+> cases the GPIO logic is melded with a SoC's primary interrupt controller.
+> 
+> The IRQ portions of the GPIO block are implemented using an irq_chip, using
+> the header <linux/irq.h>. So this combined driver is utilizing two sub-
+> systems simultaneously: gpio and irq.
+> 
+> It is legal for any IRQ consumer to request an IRQ from any irqchip even if it
+> is a combined GPIO+IRQ driver. The basic premise is that gpio_chip and
+> irq_chip are orthogonal, and offering their services independent of each
+> other.
+> 
+> gpiod_to_irq() is just a convenience function to figure out the IRQ for a
+> certain GPIO line and should not be relied upon to have been called before
+> the IRQ is used.
+> 
+> Always prepare the hardware and make it ready for action in respective
+> callbacks from the GPIO and irq_chip APIs. Do not rely on gpiod_to_irq() having
+> been called first.
+> 
+> We can divide GPIO irqchips in two broad categories:
+> 
+> - CASCADED INTERRUPT CHIPS: this means that the GPIO chip has one common
+>    interrupt output line, which is triggered by any enabled GPIO line on that
+>    chip. The interrupt output line will then be routed to an parent interrupt
+>    controller one level up, in the most simple case the systems primary
+>    interrupt controller. This is modeled by an irqchip that will inspect bits
+>    inside the GPIO controller to figure out which line fired it. The irqchip
+>    part of the driver needs to inspect registers to figure this out and it
+>    will likely also need to acknowledge that it is handling the interrupt
+>    by clearing some bit (sometime implicitly, by just reading a status
+>    register) and it will often need to set up the configuration such as
+>    edge sensitivity (rising or falling edge, or high/low level interrupt for
+>    example).
+> 
+> - HIERARCHICAL INTERRUPT CHIPS: this means that each GPIO line has a dedicated
+>    irq line to a parent interrupt controller one level up. There is no need
+>    to inquire the GPIO hardware to figure out which line has fired, but it
+>    may still be necessary to acknowledge the interrupt and set up configuration
+>    such as edge sensitivity.
+Hi Linus,
+
+My patch had send it to v11, but I have some issues. it seems more
+appropriate add them here. the issue as follows:
 
 
+mask_irq/unmask_irq/irq_ack/ function always be called by
+handle_level_irq/handle_edge_irq in current irq domain. and the
+handle_level_irq/handle_edge_irq will be called  by handle_irq_desc that
+ask know which irq is.
 
---=20
-Thanks,
-JeffXie
+when a peripheral need to use a gpio irq that gpio irq driver need know
+irq status and call irq desc->irq_handler.
+
+so I don't got it about which case it is unnecessary to know which irq.
+> 
+> ---------------------------------
+> 
+> You find an example of a hierarchical GPIO irqchip using the
+> GPIOLIB_IRQCHIP in drivers/gpio/gpio-ixp4xx.c.
+
+
+Loongson-2 gpio irq hardware only a enable register, and when a gpio irq 
+happen, then will has a such flow:  "cpuintc -> liointc -> gpioinc ->
+generic_handle_domain_irq -> handle_level_irq ->
+peripheral-action(action->handler)"
+
+generic_handle_domain_irq need rely on specific hwirq that ask gpio irq 
+hardware has a status register but Loongson-2 gpio irq hardware doesn't 
+have it.
+
+so I still think it wasn't appropriate that for loongson-2 gpio driver
+add a irq chip.
+
+Yinbo.
+> 
+> Yours,
+> Linus Walleij
+> 
+
