@@ -1,265 +1,147 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D8D1FAB
-	for <loongarch@lists.linux.dev>; Mon, 12 Dec 2022 12:41:36 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id kw15so27585049ejc.10
-        for <loongarch@lists.linux.dev>; Mon, 12 Dec 2022 04:41:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hZ1+FTz6THqoLC6T/CKvtdHItNt+Tzp/zkXabSBeUI4=;
-        b=bWw1vqE1rEW7MBgaQ7GYtWIelGCZwH1cfjWYNpl0oSky8DxJLjOyQ8/cgzPmRKOmWJ
-         PpUoaXYHLabKrny4l8sFlm/oQlr2PIC2FXJJeieubyN3t2EYIqFOBhHN0EPMl9tq7LHt
-         zTbftbPsrtkZHVxkpfpXlhrncWFuDIZDjmvLVu787VVFlfFvAFcKG/FC9ArYh4wITq1f
-         86+9XejMCiE2yeWP7PfuaUu7mY8FfKatWK73Xtq71E68JRtSF57yIGOwOFHx8cSs+gDt
-         qngqx5Al5FNq14+YC6the+xDSQM/o/xBFZHdJHloktcXo8gesLJ57UY/aonQvhbtYeDV
-         g6OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hZ1+FTz6THqoLC6T/CKvtdHItNt+Tzp/zkXabSBeUI4=;
-        b=RXlCL7BmQMjLr9VVY6+LmgPW/ZUU0kQOC6H9tuqPHUW//eFlNdhorMzraPyoavbF5Y
-         0BASGxs2h8+oZ8DKj9YOzZKJxO8RlHmGLoLqUUoEALw4CUKo6kCJle/HzAdMauH3d4RX
-         vAcDC6g9Zuq0RL/h8RjNS4R1W1rWv15Kx/3z8mLGSjhB5l3Zw06kzpYZKzjYQkPb3aj/
-         S4RDx1kvmyQzmkgPEMfwa6Dh25c3JqvDWqCkglzWe9GZUy4k5duAxPQ1n2SKPAQALGCx
-         wHhQJYVDtQVDmMUqeadQvfwSO9/KIPI4pRKtBq8jQ0gmJORElN3JED5vVrSAthqIkMcd
-         OtbQ==
-X-Gm-Message-State: ANoB5pkymHJt0GYhlba8PixSaFVYeuJ1FNVA3sB7qW53/Ih6oUcWn3UF
-	FY/Q0CgXTfXdGWdyBMIrvKn6wVn0vjIxpyLfIKI=
-X-Google-Smtp-Source: AA0mqf6itySe4F146leiFtIFWms7m6ZRhzdtky15s88XZYz/wzWTvUVvQrdNGd9vq8Vlw7wH0jQTzpqd4iwN46UVeLQ=
-X-Received: by 2002:a17:906:882:b0:7ad:e161:b026 with SMTP id
- n2-20020a170906088200b007ade161b026mr77134343eje.760.1670848895016; Mon, 12
- Dec 2022 04:41:35 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1365615AC
+	for <loongarch@lists.linux.dev>; Tue, 13 Dec 2022 03:10:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6E86C433EF;
+	Tue, 13 Dec 2022 03:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1670901016;
+	bh=CdvdAdS5jLjYKwNJdlUzw0ngvoQU+3buJ2cmorcHmeg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jkXWvDIMOd0wDwhOi2HefKyt/fKhOtF/kqfqjCn86OUmc2dKGKhfPwXrIAoxAuTKg
+	 dBUFAfFV3Nka8GSk5UvwwQljN+8P/cJTqICGvVZcwMOFjtTZd2FLG4C/H7ruOhCumO
+	 Awhri52tNRBwIs4YxOKjGA+OqaxOfaqwtEulnYCySg6P91d0+pZI9iIW5nfr98/Jwd
+	 ILHYXgWB/FuOQpAcX5AqbVrN6IlkEblTLHSvyegSbomz1ehk4F/HmFNa2OKSe+2M/H
+	 CpqdIGPW5+ozY8bP39fjPzxncm1aaP/VSFop5o0YGfxjnGovTDNDP3sXfgoT5X6uod
+	 ddb0eZU8jDfKg==
+Date: Tue, 13 Dec 2022 12:10:13 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Jeff Xie <xiehuan09@gmail.com>,
+ WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu <mhiramat@kernel.org>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 0/4] Add kprobe and kretprobe support for LoongArch
+Message-Id: <20221213121013.b09182c5842171f3f25a2e59@kernel.org>
+In-Reply-To: <CAAhV-H6e2HzXs9PCcdnebPBvGZrx5vRXji1vGXfPwkEihBOiKA@mail.gmail.com>
+References: <1670575981-14389-1-git-send-email-yangtiezhu@loongson.cn>
+	<CAAhV-H6e2HzXs9PCcdnebPBvGZrx5vRXji1vGXfPwkEihBOiKA@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <cover.1670293176.git.zhoubinbin@loongson.cn> <e088e2ffaef1492adc09b7cdbde0afcea2eeb8b2.1670293176.git.zhoubinbin@loongson.cn>
- <Y49ei1fpEawXvGQB@smile.fi.intel.com> <7bc31b2d-6687-5823-6950-cdedb8105db5@loongson.cn>
- <Y5b4olYjynDuJekT@smile.fi.intel.com>
-In-Reply-To: <Y5b4olYjynDuJekT@smile.fi.intel.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Mon, 12 Dec 2022 20:41:21 +0800
-Message-ID: <CAMpQs4LQ-Z729nJ49i1FmseaWdELbYELJRjteJwEodFOGq8FeA@mail.gmail.com>
-Subject: Re: [PATCH V5 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C controller
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Wolfram Sang <wsa@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, 
-	loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	Huacai Chen <chenhuacai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Jianmin Lv <lvjianmin@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Andy:
+On Fri, 9 Dec 2022 18:01:44 +0800
+Huacai Chen <chenhuacai@kernel.org> wrote:
 
-On Mon, Dec 12, 2022 at 5:47 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Dec 08, 2022 at 04:55:39PM +0800, Binbin Zhou wrote:
-> > =E5=9C=A8 2022/12/6 23:23, Andy Shevchenko =E5=86=99=E9=81=93:
-> > > On Tue, Dec 06, 2022 at 11:16:56AM +0800, Binbin Zhou wrote:
->
-> ...
->
-> > > > +/*
-> > > > + * The I2C controller has a fixed I2C bus frequency by default, bu=
-t to
-> > > > + * be compatible with more client devices, we can obtain the set I=
-2C
-> > > > + * bus frequency from ACPI or FDT.
-> > > > + */
-> > > > +static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
-> > > > +{
-> > > > + u16 val =3D 0x12c; /* Default value of I2C divider latch register=
- */
-> > > Besides comment better to be placed on top of the commented line, the=
- value
-> > > is better to have its own definition where you place the comment and =
-elaborate
-> > > what it means in practice (The clock frequency is changed?  Bus speed=
- is
-> > > different?)
-> >
-> > Ok, I'll put this comment on a separate line.
-> >
-> > The LS2X I2C supports STANDARD_MODE and FAST_MODE, so the maximum bus
-> > frequency is 400kHz.
-> > "0x12c" is our empirical value after experimentation and represents 33K=
-Hz.
-> >
-> > Also, I think the better way is:
-> >
-> > @@ -53,6 +53,15 @@
-> >  #define LS2X_CTR_IEN           BIT(6) /* Enable i2c interrupt */
-> >  #define LS2X_CTR_MST           BIT(5) /* 0: Slave mode 1: Master mode =
-*/
-> >
-> > +/* The PCLK clock frequency input from the LPB bus */
-> > +#define LS2X_I2C_PCLK_FREQ     (50 * HZ_PER_MHZ)
-> > +/*
-> > + * The LS2X I2C controller supports standard mode and fast mode,
-> > + * so the maximum bus frequency is 400kHz.
-> > + * The '33KHz' is our empirical value after experimentation.
-> > + */
-> > +#define LS2X_I2C_FREQ_STD      (33 * HZ_PER_KHZ)
-> > +
-> >  struct ls2x_i2c_priv {
-> >         struct i2c_adapter      adapter;
-> >         struct device           *dev;
-> > @@ -231,17 +240,19 @@ static irqreturn_t ls2x_i2c_irq_handler(int this_=
-irq,
-> > void *dev_id)
-> >   */
-> >  static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
-> >  {
-> > -       u16 val =3D 0x12c; /* Default value of I2C divider latch regist=
-er */
-> >         struct i2c_timings *t =3D &priv->i2c_t;
-> >         u32 acpi_speed =3D i2c_acpi_find_bus_speed(priv->dev);
-> >
-> >         i2c_parse_fw_timings(priv->dev, t, false);
-> >
-> >         if (acpi_speed || t->bus_freq_hz)
-> > -               val =3D 10 * HZ_PER_MHZ / max(t->bus_freq_hz, acpi_spee=
-d) - 1;
-> > +               t->bus_freq_hz =3D max(t->bus_freq_hz, acpi_speed);
-> > +       else
-> > +               t->bus_freq_hz =3D LS2X_I2C_FREQ_STD;
-> >
-> > -       /* Set LS2X I2C frequency */
-> > -       writel(val, priv->base + I2C_LS2X_PRER_LO);
-> > +       /* Calculate and set LS2X I2C frequency */
->
-> > +       writel((LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1),
->
-> Fine with me, but drop unneeded parentheses.
->
-> > +              priv->base + I2C_LS2X_PRER_LO);
-> >  }
->
-> > > > + struct i2c_timings *t =3D &priv->i2c_t;
-> > > > + u32 acpi_speed =3D i2c_acpi_find_bus_speed(priv->dev);
-> > > > +
-> > > > + i2c_parse_fw_timings(priv->dev, t, false);
-> > > > +
-> > > > + if (acpi_speed || t->bus_freq_hz)
-> > > > +         val =3D 10 * HZ_PER_MHZ / max(t->bus_freq_hz, acpi_speed)=
- - 1;
-> > > > +
-> > > > + /* Set LS2X I2C frequency */
-> > > > + writel(val, priv->base + I2C_LS2X_PRER_LO);
-> > > > +}
->
-> ...
->
-> > > > + r =3D devm_request_irq(dev, irq, ls2x_i2c_irq_handler,
-> > > > +                      IRQF_SHARED, "ls2x-i2c", priv);
-> > > > + if (r < 0)
-> > > > +         return dev_err_probe(dev, r, "Unable to request irq %d\n"=
-, irq);
-> > > You requested IRQ without filling all data structures. Is it fine? Ha=
-ve you
-> > > checked that with CONFIG_DEBUG_SHIRQ being enabled?
-> >
-> > Sorry, I don't quite understand what you mean by "without filling all d=
-ata
-> > structures", I need call ls2x_i2c_reginit(priv) before it ?
->
-> When you register an IRQ handler (which is that call) it needs to be prep=
-ared
-> to handle interrupt immediately. Which means that your data structures ha=
-s to
-> be filled properly. If you can guarantee that with the current code, fine=
- then.
+> Hi, Masami,
+> 
+> This series looks good to me now, but I'm not familiar with kprobes.
+> So, if you have any comments, please let me know.
 
-Emm. If so, I think it might be safer to put ls2x_i2c_reginit() in
-front of it, since the bus frequency needs to be set correctly.
+Sorry I missed this series. Let me add some comments.
+BTW, I don't have any board to run the loongarch, so I'll make
+comments just about style issues.
 
->
-> > I see that other i2c drivers request interrupts at about the same time =
-as I
-> > do.
+Thanks,
+
+> 
+> And Jeff,
+> 
+> As we all know, you are an expert in this domain, so could you please
+> help me to test this series?
+> 
+> If there are no objections, I plan to merge this series in a few days.
+> But since the next merge window will be open soon, if there are any
+> problems, I will revert the patches to wait for the next cycle.
+> 
+> Thanks,
+> Huacai
+> 
+> On Fri, Dec 9, 2022 at 4:53 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 > >
-> > I tested it with CONFIG_DEBUG_SHIRQ and no exceptions were reported.
->
-> Good. And you removed and reinserted module?
->
-> At least this helps to detect some of the potential issues.
-
-Yes, all of these seem normal.
-
->
-> ...
->
-> > > > + r =3D devm_i2c_add_adapter(dev, adap);
-> > > > + if (r)
-> > > > +         return dev_err_probe(dev, r, "Failure adding adapter\n");
-> > > > +
-> > > > + return 0;
-> > > > +}
-> > > Looking at the above...
-> > >
-> > > > +static int ls2x_i2c_remove(struct platform_device *pdev)
-> > > > +{
-> > > > + struct ls2x_i2c_priv *priv =3D platform_get_drvdata(pdev);
-> > > > +
-> > > > + i2c_del_adapter(&priv->adapter);
-> > > ...are you sure this is correct?
+> > v10:
+> >   -- Remove sign_extend() based on the latest code
+> >   -- Rename insns_are_not_supported() to insns_not_supported()
+> >   -- Rename insns_are_not_simulated() to insns_not_simulated()
+> >   -- Set KPROBE_HIT_SSDONE if cur->post_handler is not NULL
+> >   -- Enable preemption for KPROBE_REENTER in kprobe_fault_handler()
 > >
-> > When we use devm_i2c_add_adapter(), the adapter will be auto deleted on
-> > driver detach.
+> > v9:
+> >   -- Rename sign_extended() to sign_extend()
+> >   -- Modify kprobe_fault_handler() to handle all of kprobe_status
 > >
-> > So I just drop the ls2x_i2c_remove() ?
->
-> Correct.
->
-> > > > + return 0;
-> > > > +}
->
-> ...
->
-> > > > +static int ls2x_i2c_suspend(struct device *dev)
-> > > > +{
-> > > > + struct ls2x_i2c_priv *priv =3D dev_get_drvdata(dev);
-> > > > + priv->suspended =3D 1;
-> > > No protection needed?
-.> >
-> > Actually this variable is not used elsewhere, maybe it is useless, I wi=
-ll
-> > try to remove it and add some necessary actions in the suspend/rusume
-> > callbacks, such as disable i2c interrupts, to ensure integrity.
->
-> Is your interrupt a wake source? It might be that you will need a special
-> handling of it.
-
-No. It isn't a wake source.
-I think it is enough to clear the interrupt enable bit in the control regis=
-ter.
-As follows:
-writeb(readb(priv->base + I2C_LS2X_CTR) & ~LS2X_CTR_IEN,
-               priv->base + I2C_LS2X_CTR);
-
-Thanks.
-Binbin
+> > v8:
+> >   -- Put "regs->csr_prmd &= ~CSR_PRMD_PIE;" ahead to save one line
+> >   -- Add code comment of preempt_disable()
+> >   -- Put kprobe_page_fault() in __do_page_fault()
+> >   -- Modify the check condition of break insn in kprobe_breakpoint_handler()
+> >
+> > v7:
+> >   -- Remove stop_machine_cpuslocked() related code
+> >
+> > v6:
+> >   -- Add a new patch to redefine larch_insn_patch_text() with
+> >      stop_machine_cpuslocked()
+> >   -- Modify kprobe_breakpoint_handler() to consider the original
+> >      insn is break and return the correct value
+> >   -- Modify do_bp() to refresh bcode when original insn is break
+> >
+> > v5:
+> >   -- Rebase on the latest code
+> >   -- Use stop_machine_cpuslocked() to modify insn to avoid CPU race
+> >
+> > v4:
+> >   -- Remove kprobe_exceptions_notify() in kprobes.c
+> >   -- Call kprobe_breakpoint_handler() and kprobe_singlestep_handler()
+> >      in do_bp()
+> >
+> > v3:
+> >   -- Rebase on the latest code
+> >   -- Check the alignment of PC in simu_branch() and simu_pc()
+> >   -- Add ibar in flush_insn_slot()
+> >   -- Rename kprobe_{pre,post}_handler() to {post_}kprobe_handler
+> >   -- Add preempt_disable() and preempt_enable_no_resched()
+> >   -- Remove r0 save/restore and do some minor changes
+> >      in kprobes_trampoline.S
+> >   -- Do not enable CONFIG_KPROBES by default
+> >
+> > v2:
+> >   -- Split simu_branch() and simu_pc() into a single patch
+> >   -- Call kprobe_page_fault() in do_page_fault()
+> >   -- Add kprobes_trampoline.S for kretprobe
+> >
+> > Tiezhu Yang (4):
+> >   LoongArch: Simulate branch and PC instructions
+> >   LoongArch: Add kprobe support
+> >   LoongArch: Add kretprobe support
+> >   samples/kprobes: Add LoongArch support
+> >
+> >  arch/loongarch/Kconfig                     |   2 +
+> >  arch/loongarch/include/asm/inst.h          |  20 ++
+> >  arch/loongarch/include/asm/kprobes.h       |  59 +++++
+> >  arch/loongarch/include/asm/ptrace.h        |   1 +
+> >  arch/loongarch/kernel/Makefile             |   2 +
+> >  arch/loongarch/kernel/inst.c               | 123 ++++++++++
+> >  arch/loongarch/kernel/kprobes.c            | 364 +++++++++++++++++++++++++++++
+> >  arch/loongarch/kernel/kprobes_trampoline.S |  96 ++++++++
+> >  arch/loongarch/kernel/traps.c              |  13 +-
+> >  arch/loongarch/mm/fault.c                  |   3 +
+> >  samples/kprobes/kprobe_example.c           |   8 +
+> >  11 files changed, 687 insertions(+), 4 deletions(-)
+> >  create mode 100644 arch/loongarch/include/asm/kprobes.h
+> >  create mode 100644 arch/loongarch/kernel/kprobes.c
+> >  create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
+> >
+> > --
+> > 2.1.0
+> >
 
 
->
-> > > > + return 0;
-> > > > +}
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
->
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
