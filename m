@@ -1,39 +1,38 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0072579
-	for <loongarch@lists.linux.dev>; Tue, 13 Dec 2022 09:36:36 +0000 (UTC)
-Received: by mail-yb1-f169.google.com with SMTP id d131so16935392ybh.4
-        for <loongarch@lists.linux.dev>; Tue, 13 Dec 2022 01:36:36 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B097F2579
+	for <loongarch@lists.linux.dev>; Tue, 13 Dec 2022 09:45:56 +0000 (UTC)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-381662c78a9so184323297b3.7
+        for <loongarch@lists.linux.dev>; Tue, 13 Dec 2022 01:45:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Hd26A52tCpr/TZckO2AVYLVhE5lfnmKa/PoDrSKaIA=;
-        b=G3H1wlAZpdpmQYEieqdVuJKIsOzW5NXXiQInR7B8S9KT3ra2veBRSQ/BqZ5EWCjQqs
-         qYKAfPqCdD3slKR8pI+qp+du4ChkVYmD3V8WcqYibXxIjPCiBekfspJkhEAVlP3OczhF
-         HDS6JM968T9/yi1meoD9tZaH2RtYsxwA7eocXUdrhSNLmiNDC4boRIpo1rv3SPqy4+Q+
-         KcgVKC78qG9irgH4Q1aashBRhUUBRhn9pXpf3FgxB3Oru21hgDkIxo8IKywySuk23/xH
-         u0GehlP7GwmfIXOGXG8SISBiNcf6tIA4LMTXganXiVNdWS01R/7rwXbiJwPuaGt7qlSf
-         j6rA==
+        bh=iPtLftr9mLTiDAptPz9mvrZVG8hTqgqEvX9Avo9sl1g=;
+        b=hKzXso9eZlsyOVFQUJDMuaKvlCYfZTlVdb6U8r74Fs35C7eVjSGT3Vkb/R5Mfy1xkU
+         P/CF6pRg0fmWckEmcLfH8V5KvD8T9TojXNwpF63EKIicT5yAu+kYbbjx5rKWDemGf4VF
+         UxSG6NeaM1rHYnlaN+4K9Mea/3hEf3+Uhd++yPx5AJfRwxGDngXAfpyX3lF47CjJuVa3
+         p+VoyxfRz0LALyDmpZruXOj+MD28bDJnDJPPny3greWOjMnMGdMDE36d4ZVrDwEQoBdp
+         Y46WZSZXo4KSrwnBBUFZ80g7pTpy4HSE4SMlSXz2jshf4Ilr2QoUHiX6xwUed84OZuVg
+         BDtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5Hd26A52tCpr/TZckO2AVYLVhE5lfnmKa/PoDrSKaIA=;
-        b=nR0BgixzcNcBbHTOGTj4tWXuaJDieA1CZU7kf+WNo2AuOf93l3p3ZH68LXfaNFFlv7
-         Zk5W7SHRyWbVm/w9rw6+hsYdLQjS+2qo0FYvlUNoj66bCF6QuFWmWdN7llZBVHYV/v7B
-         7P5VA0kC6CY1M569pzgV4DaUsHvZGniway0r7UsXuG+zb0rRPPAqQ5g+lUZ2Lg/KC318
-         Jzvr42ROupVHmRdEppbcRFeKDtF523x3ex0kjV3L4KYhWudjMqbgiaGRT4jm7FeqPOqy
-         rakBSiSYgFIWLrtvSnpfsKE+IAQfFSQtZx57pixfsaHs1s0OkXmIx0FezTKujSGnzh13
-         KLCA==
-X-Gm-Message-State: ANoB5pnABmHEvMEZ7alVX1J3VpQkT4X2rl1tnM44atVzsQ+Imz1gysk6
-	5cth0ou8kz3xyeA99YUXyhIqzQUWDo0cjv7hY0CgRw==
-X-Google-Smtp-Source: AA0mqf7nZkHxiu+fKuIysqXHZF7UfBmLi0ZBnxPGnQLtOGWmyCu8e8cxfKokNJEIdxwKsyPc4kMyW8JbkbnRGby4zNA=
-X-Received: by 2002:a25:d2ce:0:b0:710:f2e2:eb92 with SMTP id
- j197-20020a25d2ce000000b00710f2e2eb92mr2950219ybg.304.1670924195683; Tue, 13
- Dec 2022 01:36:35 -0800 (PST)
+        bh=iPtLftr9mLTiDAptPz9mvrZVG8hTqgqEvX9Avo9sl1g=;
+        b=h0Wh4CzElXw7ziUgDbcgCsHtu4qYYMrRP6HilBzkBIgnOQ5rIo7MD8HwpCiJBKj2HV
+         aw5hWlx4u2Sgeyyf3dVhWs+LYk2zcjxOdnS+6M1UUBJVx0IftAHkraVbG8uEH73IQqhQ
+         UijKRKO5D2NqVOiWHC0W8VfMbY2vI1F0Xltg+431iE7iSI7U5hXMoR3YWIVFoz0cU2cJ
+         mwLWo/zOkLaQki78rZXbld/3r2Jd4ijdyBNJ98ljcoEYjL4PiPyPaMK/9K6UYa1XTRql
+         hnLYbe3r/52GOOpju0m+V0GZRenwsBh765k4HPGIgFUzJalsapbGu21frlyC+7S1gEmu
+         OgUA==
+X-Gm-Message-State: ANoB5pnG/HocK1DNDFKgjCFTkY6JlaTlHAz7yhiyQIRW7x4CgAvyTw2p
+	1hCnZy6XhkVkuyDjnAT5MtUNPDGnrTPVbhPr0XliWQ==
+X-Google-Smtp-Source: AA0mqf5KB4LYFTpAQUpghbjTaGUJ19gRvoZw0sTgHBYe53MAcw9jcGLIhvF3gdN62YzKc6H5k3qDSar0IR2TxwYnNPo=
+X-Received: by 2002:a81:5d8:0:b0:3f5:b69c:387 with SMTP id 207-20020a8105d8000000b003f5b69c0387mr12925219ywf.359.1670924755634;
+ Tue, 13 Dec 2022 01:45:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,12 +42,11 @@ MIME-Version: 1.0
 References: <20221121123803.3786-1-zhuyinbo@loongson.cn> <20221121123803.3786-2-zhuyinbo@loongson.cn>
  <CACRpkda1adiNwbTZHdAyHKny3r5FFMP_XXVGbo1vnCdw9U1gNg@mail.gmail.com>
  <8a7abd77-9540-efa8-6f67-908530e85399@loongson.cn> <CACRpkdb=wdydOYCcrpjLSyvfVO--_ezXsFQ46qwfVCiiTd5fNw@mail.gmail.com>
- <4c02570e-03d5-85f1-73fb-b66d6170c875@loongson.cn> <CACRpkdbgP9m40t_Ky4H+SQi9TELikomT2M-JpF7+auKmzOxQdg@mail.gmail.com>
- <ce858832-c052-1797-ffeb-2dbe654cbdd1@loongson.cn>
-In-Reply-To: <ce858832-c052-1797-ffeb-2dbe654cbdd1@loongson.cn>
+ <b78f02f4-4329-602e-ca8d-adbe911c2a54@loongson.cn>
+In-Reply-To: <b78f02f4-4329-602e-ca8d-adbe911c2a54@loongson.cn>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 Dec 2022 10:36:24 +0100
-Message-ID: <CACRpkda0VerZhVGMJJjMYyAWdobvSLj4=eWxBjh+5ubmxvFcjQ@mail.gmail.com>
+Date: Tue, 13 Dec 2022 10:45:43 +0100
+Message-ID: <CACRpkdbrY2hV=JM3NJVdFyJbpXARKEhGMVpwrN9U=cP6LzyPQA@mail.gmail.com>
 Subject: Re: [PATCH v5 2/3] gpio: loongson: add gpio driver support
 To: Yinbo Zhu <zhuyinbo@loongson.cn>
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
@@ -63,57 +61,55 @@ Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
 	Liu Peibao <liupeibao@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Dec 12, 2022 at 9:13 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+On Mon, Dec 12, 2022 at 9:34 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
 
-> mask_irq/unmask_irq/irq_ack/ function always be called by
-> handle_level_irq/handle_edge_irq in current irq domain. and the
-> handle_level_irq/handle_edge_irq will be called  by handle_irq_desc that
-> ask know which irq is.
+> > Don't do that because the GPIO maintainers love the
+> > dynamic base and hate hardcoded bases. Set the base to -1
+> > If you wonder why, read drivers/gpio/TODO.
 >
-> when a peripheral need to use a gpio irq that gpio irq driver need know
-> irq status and call irq desc->irq_handler.
+> Hi Linus,
 >
-> so I don't got it about which case it is unnecessary to know which irq.
+> I recenly verfied other peripheral on upstream, some peripheral driver
+> need use gpio number,
 
-Sorry I don't understand what you are asking, can you elaborate?
+What do you mean by upstream? If it is your own derivate kernel
+(what we call *downstream) then it should be fixed, not
+accommodated for.
 
-Do you mean that you don't know which driver will not call ->to_irq()
-on the gpiochip? That would be any driver that takes an IRQ directly in
-the device tree:
+If it is the mainline (Torvalds) kernel you are looking at legacy code
+(such as boardfiles) which should be fixed or deleted. Beware that
+the kernel contains much old code and bad examples which should
+not be followed.
 
-gpio: gpio {
-    interrupt-controller;
-    #interrupt-cells = <2>;
-    ....
-};
+> but if use dynamic base that gpio number will be
+> meaningless.  in additon I notice that many gpio driver don't use
+> dynamic base, although bgpio_int was called.
 
-device {
-    interrupts = <&gpio 14 IRQ_TYPE_LEVEL_HIGH>;
-    ....
-};
+Two wrongs does not make one right.
+It is always possible to find bad examples in the kernel, because we
+maintain lots of legacy code.
+When in doubt, do what the maintainers say.
+This maintainer says this: use a dynamic base.
 
-This case will only call the irqchip callbacks and will never call
-the .to_irq() on the gpio_chip.
+> so I think the gpio number should be keep consistent with datasheet for
+> some platform that need use gpio number.
 
-> > You find an example of a hierarchical GPIO irqchip using the
-> > GPIOLIB_IRQCHIP in drivers/gpio/gpio-ixp4xx.c.
->
-> Loongson-2 gpio irq hardware only a enable register, and when a gpio irq
-> happen, then will has a such flow:  "cpuintc -> liointc -> gpioinc ->
-> generic_handle_domain_irq -> handle_level_irq ->
-> peripheral-action(action->handler)"
->
-> generic_handle_domain_irq need rely on specific hwirq that ask gpio irq
-> hardware has a status register but Loongson-2 gpio irq hardware doesn't
-> have it.
->
-> so I still think it wasn't appropriate that for loongson-2 gpio driver
-> add a irq chip.
+So someone wrote a datasheet for a derivative, home-cooked kernel
+that they had not bothered to synchronize with the community and
+now the community should accommodate this mistake?
 
-generic_handle_domain_irq() is of no concern, what matters is if
-your interrupt is hierarchical or not, the callback in the GPIO chip
-can be a simple remapping of the numberspace followed by
-a call to the parent callbacks.
+Sorry that is not how we work.
+
+That datasheet is probably recommending old and bad practices, such
+as using global GPIO numbers in drivers or using GPIO sysfs. The
+GPIO maintainers do not approve of such stuff.
+
+What about fixing the datasheet to say:
+- We use dynamic GPIO number allocation
+- Assign GPIOs to devices in the device tree with only HW GPIO number
+  references = <&gpio HW_NUM GPIO_ACTIVE_HIGH>; etc
+- For userspace access use libgpiod and /dev/gpiochipN, do not
+  enable the legacy GPIO sysfs.
 
 Yours,
 Linus Walleij
