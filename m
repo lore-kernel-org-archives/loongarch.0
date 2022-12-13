@@ -1,147 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1365615AC
-	for <loongarch@lists.linux.dev>; Tue, 13 Dec 2022 03:10:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6E86C433EF;
-	Tue, 13 Dec 2022 03:10:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1670901016;
-	bh=CdvdAdS5jLjYKwNJdlUzw0ngvoQU+3buJ2cmorcHmeg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jkXWvDIMOd0wDwhOi2HefKyt/fKhOtF/kqfqjCn86OUmc2dKGKhfPwXrIAoxAuTKg
-	 dBUFAfFV3Nka8GSk5UvwwQljN+8P/cJTqICGvVZcwMOFjtTZd2FLG4C/H7ruOhCumO
-	 Awhri52tNRBwIs4YxOKjGA+OqaxOfaqwtEulnYCySg6P91d0+pZI9iIW5nfr98/Jwd
-	 ILHYXgWB/FuOQpAcX5AqbVrN6IlkEblTLHSvyegSbomz1ehk4F/HmFNa2OKSe+2M/H
-	 CpqdIGPW5+ozY8bP39fjPzxncm1aaP/VSFop5o0YGfxjnGovTDNDP3sXfgoT5X6uod
-	 ddb0eZU8jDfKg==
-Date: Tue, 13 Dec 2022 12:10:13 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Jeff Xie <xiehuan09@gmail.com>,
- WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu <mhiramat@kernel.org>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 0/4] Add kprobe and kretprobe support for LoongArch
-Message-Id: <20221213121013.b09182c5842171f3f25a2e59@kernel.org>
-In-Reply-To: <CAAhV-H6e2HzXs9PCcdnebPBvGZrx5vRXji1vGXfPwkEihBOiKA@mail.gmail.com>
-References: <1670575981-14389-1-git-send-email-yangtiezhu@loongson.cn>
-	<CAAhV-H6e2HzXs9PCcdnebPBvGZrx5vRXji1vGXfPwkEihBOiKA@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47BD423D0
+	for <loongarch@lists.linux.dev>; Tue, 13 Dec 2022 08:26:38 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.108.31])
+	by gateway (Coremail) with SMTP id _____8AxSuk3N5hjnDQFAA--.8908S3;
+	Tue, 13 Dec 2022 16:26:31 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.108.31])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxoOI1N5hjkdEtAA--.45851S2;
+	Tue, 13 Dec 2022 16:26:30 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Wolfram Sang <wsa@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org
+Cc: loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH V6 0/4] i2c: ls2x: Add support for the Loongson-2K/LS7A I2C controller
+Date: Tue, 13 Dec 2022 16:26:54 +0800
+Message-Id: <cover.1670897253.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxoOI1N5hjkdEtAA--.45851S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXrW3uw4UGw47XF1fAr1DZFb_yoW5ZrWxpa
+	90939Ikr1qyr17JFn3Ja4fuFyruws3G3yjgr47KwnruF4DC34UZ3yftFya9rnrCry5GrWj
+	qr98K3Z09FyDArJanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
+	Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
+	O2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+	Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4U
+	YxBIdaVFxhVjvjDU0xZFpf9x07jOa93UUUUU=
 
-On Fri, 9 Dec 2022 18:01:44 +0800
-Huacai Chen <chenhuacai@kernel.org> wrote:
+Hi all:
 
-> Hi, Masami,
-> 
-> This series looks good to me now, but I'm not familiar with kprobes.
-> So, if you have any comments, please let me know.
+This patch series adds support for the I2C module found on various
+Loongson systems with the Loongson-2K SoC or the Loongson LS7A bridge chip.
 
-Sorry I missed this series. Let me add some comments.
-BTW, I don't have any board to run the loongarch, so I'll make
-comments just about style issues.
+For now, the I2C driver is suitable for DT-based or ACPI-based systems.
 
-Thanks,
+I have tested on Loongson-3A5000LA+LS7A1000/LS7A2000, Loongson-2K1000LA
+and Loongson-2K0500.
 
-> 
-> And Jeff,
-> 
-> As we all know, you are an expert in this domain, so could you please
-> help me to test this series?
-> 
-> If there are no objections, I plan to merge this series in a few days.
-> But since the next merge window will be open soon, if there are any
-> problems, I will revert the patches to wait for the next cycle.
-> 
-> Thanks,
-> Huacai
-> 
-> On Fri, Dec 9, 2022 at 4:53 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> >
-> > v10:
-> >   -- Remove sign_extend() based on the latest code
-> >   -- Rename insns_are_not_supported() to insns_not_supported()
-> >   -- Rename insns_are_not_simulated() to insns_not_simulated()
-> >   -- Set KPROBE_HIT_SSDONE if cur->post_handler is not NULL
-> >   -- Enable preemption for KPROBE_REENTER in kprobe_fault_handler()
-> >
-> > v9:
-> >   -- Rename sign_extended() to sign_extend()
-> >   -- Modify kprobe_fault_handler() to handle all of kprobe_status
-> >
-> > v8:
-> >   -- Put "regs->csr_prmd &= ~CSR_PRMD_PIE;" ahead to save one line
-> >   -- Add code comment of preempt_disable()
-> >   -- Put kprobe_page_fault() in __do_page_fault()
-> >   -- Modify the check condition of break insn in kprobe_breakpoint_handler()
-> >
-> > v7:
-> >   -- Remove stop_machine_cpuslocked() related code
-> >
-> > v6:
-> >   -- Add a new patch to redefine larch_insn_patch_text() with
-> >      stop_machine_cpuslocked()
-> >   -- Modify kprobe_breakpoint_handler() to consider the original
-> >      insn is break and return the correct value
-> >   -- Modify do_bp() to refresh bcode when original insn is break
-> >
-> > v5:
-> >   -- Rebase on the latest code
-> >   -- Use stop_machine_cpuslocked() to modify insn to avoid CPU race
-> >
-> > v4:
-> >   -- Remove kprobe_exceptions_notify() in kprobes.c
-> >   -- Call kprobe_breakpoint_handler() and kprobe_singlestep_handler()
-> >      in do_bp()
-> >
-> > v3:
-> >   -- Rebase on the latest code
-> >   -- Check the alignment of PC in simu_branch() and simu_pc()
-> >   -- Add ibar in flush_insn_slot()
-> >   -- Rename kprobe_{pre,post}_handler() to {post_}kprobe_handler
-> >   -- Add preempt_disable() and preempt_enable_no_resched()
-> >   -- Remove r0 save/restore and do some minor changes
-> >      in kprobes_trampoline.S
-> >   -- Do not enable CONFIG_KPROBES by default
-> >
-> > v2:
-> >   -- Split simu_branch() and simu_pc() into a single patch
-> >   -- Call kprobe_page_fault() in do_page_fault()
-> >   -- Add kprobes_trampoline.S for kretprobe
-> >
-> > Tiezhu Yang (4):
-> >   LoongArch: Simulate branch and PC instructions
-> >   LoongArch: Add kprobe support
-> >   LoongArch: Add kretprobe support
-> >   samples/kprobes: Add LoongArch support
-> >
-> >  arch/loongarch/Kconfig                     |   2 +
-> >  arch/loongarch/include/asm/inst.h          |  20 ++
-> >  arch/loongarch/include/asm/kprobes.h       |  59 +++++
-> >  arch/loongarch/include/asm/ptrace.h        |   1 +
-> >  arch/loongarch/kernel/Makefile             |   2 +
-> >  arch/loongarch/kernel/inst.c               | 123 ++++++++++
-> >  arch/loongarch/kernel/kprobes.c            | 364 +++++++++++++++++++++++++++++
-> >  arch/loongarch/kernel/kprobes_trampoline.S |  96 ++++++++
-> >  arch/loongarch/kernel/traps.c              |  13 +-
-> >  arch/loongarch/mm/fault.c                  |   3 +
-> >  samples/kprobes/kprobe_example.c           |   8 +
-> >  11 files changed, 687 insertions(+), 4 deletions(-)
-> >  create mode 100644 arch/loongarch/include/asm/kprobes.h
-> >  create mode 100644 arch/loongarch/kernel/kprobes.c
-> >  create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
-> >
-> > --
-> > 2.1.0
-> >
+Thanks.
 
+Changes since V5:
+- patch (1/4)
+  - Add property.h.
+- patch (3/4)
+  - Put the ls2x_i2c_reginit() in front of devm_request_irq();
+  - Refact ls2x_i2c_adjust_bus_speed: discard the magic value of
+    the divider register and LS2X_I2C_FREQ_STD is used to calculate
+    the frequency;
+  - Drop useless parameters: priv->suspended, and also disable I2C
+    interrupts during suspend;
+  - Drop ls2x_i2c_remove(), for the adapter will be auto deleted on
+    driver detach;
+  - Drop MODULE_ALIAS;
+  - Code formatting, such as alignment.
+
+Thanks Andy for your comments.
+
+Changes since V4:
+- patch (1/4)
+  - Drop unneeded headers: of.h;
+  - xxx_props -> xxx_properties.
+- patch (2/4)
+  - Add interrupt headers to fix syntax error found by Rob.
+- patch (3/4)
+  - Drop atmoic loop in ls2x_i2c_master_xfer(), I have tested it on the
+    appropriate environment with no problems;
+  - Define the corresponding bits in I2C_LS2X_CTR to avoid magic
+    numbers;
+  - dev_get_drvdata() is used to get ls2x_i2c_priv() in
+    ls2x_i2c_suspend();
+  - i2c_add_adapter() -> devm_i2c_add_adapter();
+  - SET_SYSTEM_SLEEP_PM_OPS() -> DEFINE_RUNTIME_DEV_PM_OPS();
+  - Code formatting, such as alignment.
+
+    Details: https://lore.kernel.org/all/Y4e%2F6KewuHjAluSZ@smile.fi.intel.com/
+
+Changes since V3:
+- Addressed all review comments from v3
+  - Change the changelog text to make it clearer (1/5);
+  - Fix some minor bugs, such as formatting issues (2/5);
+  - Fix some formatting issues (3/5);
+  - Deep refactoring of code for clarity (4/5).
+     Details: https://lore.kernel.org/all/Y4S2cnlAm3YYvZ8E@smile.fi.intel.com/
+
+Thanks to all for their suggestions.
+
+Changes since V2:
+- Addressed all review comments from v2
+  - Drop of_match_ptr() in i2c-gpio to avoid potential unused warnings
+    (1/5);
+  - Introduce i2c_gpio_get_props() function as the generic interface
+    to get i2c-gpio props from DT or ACPI table (2/5);
+  - Refact ls2x i2c code, similar to removing excessive goto tags (4/5).
+
+Thanks to Andy and Mika for their suggestions.
+
+Changes since V1:
+- Remove the function of getting the static i2c bus number from ACPI "_UID";
+- Fix build warning from kernel test robot.
+
+Binbin Zhou (4):
+  i2c: gpio: Add support on ACPI-based system
+  dt-bindings: i2c: add Loongson LS2X I2C controller
+  i2c: ls2x: Add driver for Loongson-2K/LS7A I2C controller
+  LoongArch: Enable LS2X I2C in loongson3_defconfig
+
+ .../bindings/i2c/loongson,ls2x-i2c.yaml       |  51 +++
+ arch/loongarch/configs/loongson3_defconfig    |   1 +
+ drivers/i2c/busses/Kconfig                    |  11 +
+ drivers/i2c/busses/Makefile                   |   1 +
+ drivers/i2c/busses/i2c-gpio.c                 |  28 +-
+ drivers/i2c/busses/i2c-ls2x.c                 | 376 ++++++++++++++++++
+ 6 files changed, 458 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+ create mode 100644 drivers/i2c/busses/i2c-ls2x.c
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.31.1
+
