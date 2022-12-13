@@ -1,209 +1,240 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F565CBC
-	for <loongarch@lists.linux.dev>; Tue, 13 Dec 2022 14:58:15 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6500,9779,10559"; a="319289494"
-X-IronPort-AV: E=Sophos;i="5.96,241,1665471600"; 
-   d="scan'208";a="319289494"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2022 06:58:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10559"; a="598822601"
-X-IronPort-AV: E=Sophos;i="5.96,241,1665471600"; 
-   d="scan'208";a="598822601"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP; 13 Dec 2022 06:58:10 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-	(envelope-from <andy@kernel.org>)
-	id 1p56jN-009KZE-2N;
-	Tue, 13 Dec 2022 16:58:05 +0200
-Date: Tue, 13 Dec 2022 16:58:05 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Wolfram Sang <wsa@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>
-Subject: Re: [PATCH V6 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
- controller
-Message-ID: <Y5iS/ReDrO3B4Ksl@smile.fi.intel.com>
-References: <cover.1670897253.git.zhoubinbin@loongson.cn>
- <bf55d05a50dc1e9453d124033ff368e9500ed4ed.1670897253.git.zhoubinbin@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BA25CBC
+	for <loongarch@lists.linux.dev>; Tue, 13 Dec 2022 16:18:15 +0000 (UTC)
+Received: by mail-pj1-f54.google.com with SMTP id gt4so3929916pjb.1
+        for <loongarch@lists.linux.dev>; Tue, 13 Dec 2022 08:18:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wj/NGKhLAYwhK6Lvw/Db918GBFSie4zjOTu3uFrT1gA=;
+        b=NkSnMp/V8AsX4vC30wzvTBDvSWE+M7qqraskr+aX6eDcBuYgYQHiZpd5PHFEtwmlex
+         b9sLXADwP2UKefS8URj7BbPzAGmqFf6Sql8Lry6ArNmBxIQqSRNMuMWf8z5+Hg1gJY0V
+         G/j7FdqVWjtps7jKHZujuEhFxXfcZ0TNsoRlDztocQW2ESX1R86PBEikNrfuO5gPc7mJ
+         6/Qoufhc+OUK8D5gU0LfvQQ/f14L5j2fbz4FLayl4GcS/rdSdchyCT6nat7Pvthexifo
+         5a34Jkw09BPh2fSzhpIrcgjFsOBxfZOpzDvRra+RnQyxHfSXNAOYkh3mU13qpd7fHBn3
+         z4dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wj/NGKhLAYwhK6Lvw/Db918GBFSie4zjOTu3uFrT1gA=;
+        b=Blil3dQ1YwfBfA5EzZ1/rvJwDrRJxuZ7FJo2YcZzuXC9qSXEQ+JTqt7NTuIW0lddQy
+         9RcZCwOpy7yGE8MnjuiJ9hYkFgOBzGUJxwCUwTbNQbg0uFSM3HMsKX7umqTkiTNe6dJw
+         Vd1DBPVoSqhbgzGlsxxZ3lPeDV4n0UlVGIjlVRls7q5baixaV1PU72Yi+n4kVjYD0J3x
+         pdp6T9akOteqtcMHijC88QaZ7NXHeEbDcByTzGyuNfYfA15XSqo5PhHUYC0CuEu3xp0d
+         ffpYvdEJIwubCIKNIv293hdf426ZPxN6SV36aUhLwbtvYRUNnL/5bog4yvjzbhZ1+mdw
+         fBdA==
+X-Gm-Message-State: ANoB5plnwgoGbsZUwB2wubwl8Eo/S2rsKIJ9iRjf0pedgtLy19xG5dz7
+	x0TpigKywWRwBFBoCsqTasx6SA==
+X-Google-Smtp-Source: AA0mqf6JTPFlbgzI8iGusijASEg0Bt+tpHInO5Z4ANoXa2VKfVyLMA6BDQNt3aTd/y7ttlWwr47bgg==
+X-Received: by 2002:a17:902:ccc8:b0:188:640f:f41e with SMTP id z8-20020a170902ccc800b00188640ff41emr24115756ple.4.1670948294373;
+        Tue, 13 Dec 2022 08:18:14 -0800 (PST)
+Received: from localhost ([135.180.226.51])
+        by smtp.gmail.com with ESMTPSA id 13-20020a170902c24d00b001898ca438fcsm39047plg.282.2022.12.13.08.18.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Dec 2022 08:18:13 -0800 (PST)
+Date: Tue, 13 Dec 2022 08:18:13 -0800 (PST)
+X-Google-Original-Date: Tue, 13 Dec 2022 08:18:09 PST (-0800)
+Subject:     Re: [PATCH v3 0/8] Generic IPI sending tracepoint
+In-Reply-To: <20221202155817.2102944-1-vschneid@redhat.com>
+CC: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+  linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+  linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+  linux-mips@vger.kernel.org, openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+  linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+  linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org, x86@kernel.org,
+  paulmck@kernel.org, rostedt@goodmis.org, peterz@infradead.org, tglx@linutronix.de,
+  bigeasy@linutronix.de, juri.lelli@redhat.com, bristot@redhat.com, mtosatti@redhat.com,
+  frederic@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+  Marc Zyngier <maz@kernel.org>, mark.rutland@arm.com, linux@armlinux.org.uk, npiggin@gmail.com,
+  guoren@kernel.org, davem@davemloft.net
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: vschneid@redhat.com
+Message-ID: <mhng-ed30efdc-5b5b-40fa-8661-f99d4e2991ed@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bf55d05a50dc1e9453d124033ff368e9500ed4ed.1670897253.git.zhoubinbin@loongson.cn>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 13, 2022 at 04:26:57PM +0800, Binbin Zhou wrote:
-> This I2C module is integrated into the Loongson-2K SoCs and Loongson
-> LS7A bridge chip.
+On Fri, 02 Dec 2022 07:58:09 PST (-0800), vschneid@redhat.com wrote:
+> Background
+> ==========
+>
+> Detecting IPI *reception* is relatively easy, e.g. using
+> trace_irq_handler_{entry,exit} or even just function-trace
+> flush_smp_call_function_queue() for SMP calls.
+>
+> Figuring out their *origin*, is trickier as there is no generic tracepoint tied
+> to e.g. smp_call_function():
+>
+> o AFAIA x86 has no tracepoint tied to sending IPIs, only receiving them
+>   (cf. trace_call_function{_single}_entry()).
+> o arm/arm64 do have trace_ipi_raise(), which gives us the target cpus but also a
+>   mostly useless string (smp_calls will all be "Function call interrupts").
+> o Other architectures don't seem to have any IPI-sending related tracepoint.
+>
+> I believe one reason those tracepoints used by arm/arm64 ended up as they were
+> is because these archs used to handle IPIs differently from regular interrupts
+> (the IRQ driver would directly invoke an IPI-handling routine), which meant they
+> never showed up in trace_irq_handler_{entry, exit}. The trace_ipi_{entry,exit}
+> tracepoints gave a way to trace IPI reception but those have become redundant as
+> of:
+>
+>       56afcd3dbd19 ("ARM: Allow IPIs to be handled as normal interrupts")
+>       d3afc7f12987 ("arm64: Allow IPIs to be handled as normal interrupts")
+>
+> which gave IPIs a "proper" handler function used through
+> generic_handle_domain_irq(), which makes them show up via
+> trace_irq_handler_{entry, exit}.
+>
+> Changing stuff up
+> =================
+>
+> Per the above, it would make sense to reshuffle trace_ipi_raise() and move it
+> into generic code. This also came up during Daniel's talk on Osnoise at the CPU
+> isolation MC of LPC 2022 [1].
+>
+> Now, to be useful, such a tracepoint needs to export:
+> o targeted CPU(s)
+> o calling context
+>
+> The only way to get the calling context with trace_ipi_raise() is to trigger a
+> stack dump, e.g. $(trace-cmd -e ipi* -T echo 42).
+>
+> This is instead introducing a new tracepoint which exports the relevant context
+> (callsite, and requested callback for when the callsite isn't helpful), and is
+> usable by all architectures as it sits in generic code.
+>
+> Another thing worth mentioning is that depending on the callsite, the _RET_IP_
+> fed to the tracepoint is not always useful - generic_exec_single() doesn't tell
+> you much about the actual callback being sent via IPI, which is why the new
+> tracepoint also has a @callback argument.
+>
+> Patches
+> =======
+>
+> o Patch 1 is included for convenience and will be merged independently. FYI I
+>   have libtraceevent patches [2] to improve the
+>   pretty-printing of cpumasks using the new type, which look like:
+>   <...>-3322  [021]   560.402583: ipi_send_cpumask:     cpumask=14,17,21 callsite=on_each_cpu_cond_mask+0x40 callback=flush_tlb_func+0x0
+>   <...>-187   [010]   562.590584: ipi_send_cpumask:     cpumask=0-23 callsite=on_each_cpu_cond_mask+0x40 callback=do_sync_core+0x0
+>
+> o Patches 2-6 spread out the tracepoint across relevant sites.
+>   Patch 6 ends up sprinkling lots of #include <trace/events/ipi.h> which I'm not
+>   the biggest fan of, but is the least horrible solution I've been able to come
+>   up with so far.
+>
+> o Patch 8 is trying to be smart about tracing the callback associated with the
+>   IPI.
+>
+> This results in having IPI trace events for:
+>
+> o smp_call_function*()
+> o smp_send_reschedule()
+> o irq_work_queue*()
+> o standalone uses of __smp_call_single_queue()
+>
+> This is incomplete, just looking at arm64 there's more IPI types that aren't
+> covered:
+>
+>   IPI_CPU_STOP,
+>   IPI_CPU_CRASH_STOP,
+>   IPI_TIMER,
+>   IPI_WAKEUP,
+>
+> ... But it feels like a good starting point.
+>
+> Links
+> =====
+>
+> [1]: https://youtu.be/5gT57y4OzBM?t=14234
+> [2]: https://lore.kernel.org/all/20221116144154.3662923-1-vschneid@redhat.com/
+>
+> Revisions
+> =========
+>
+> v2 -> v3
+> ++++++++
+>
+> o Dropped the generic export of smp_send_reschedule(), turned it into a macro
+>   and a bunch of imports
+> o Dropped the send_call_function_single_ipi() macro madness, split it into sched
+>   and smp bits using some of Peter's suggestions
+>
+> v1 -> v2
+> ++++++++
+>
+> o Ditched single-CPU tracepoint
+> o Changed tracepoint signature to include callback
+> o Changed tracepoint callsite field to void *; the parameter is still UL to save
+>   up on casts due to using _RET_IP_.
+> o Fixed linking failures due to not exporting smp_send_reschedule()
+>
+> Steven Rostedt (Google) (1):
+>   tracing: Add __cpumask to denote a trace event field that is a
+>     cpumask_t
+>
+> Valentin Schneider (7):
+>   trace: Add trace_ipi_send_cpumask()
+>   sched, smp: Trace IPIs sent via send_call_function_single_ipi()
+>   smp: Trace IPIs sent via arch_send_call_function_ipi_mask()
+>   irq_work: Trace self-IPIs sent via arch_irq_work_raise()
+>   treewide: Trace IPIs sent via smp_send_reschedule()
+>   smp: reword smp call IPI comment
+>   sched, smp: Trace smp callback causing an IPI
+>
+>  arch/alpha/kernel/smp.c                      |  2 +-
+>  arch/arc/kernel/smp.c                        |  2 +-
+>  arch/arm/kernel/smp.c                        |  5 +-
+>  arch/arm/mach-actions/platsmp.c              |  2 +
+>  arch/arm64/kernel/smp.c                      |  3 +-
+>  arch/csky/kernel/smp.c                       |  2 +-
+>  arch/hexagon/kernel/smp.c                    |  2 +-
+>  arch/ia64/kernel/smp.c                       |  4 +-
+>  arch/loongarch/include/asm/smp.h             |  2 +-
+>  arch/mips/include/asm/smp.h                  |  2 +-
+>  arch/mips/kernel/rtlx-cmp.c                  |  2 +
+>  arch/openrisc/kernel/smp.c                   |  2 +-
+>  arch/parisc/kernel/smp.c                     |  4 +-
+>  arch/powerpc/kernel/smp.c                    |  6 +-
+>  arch/powerpc/kvm/book3s_hv.c                 |  3 +
+>  arch/powerpc/platforms/powernv/subcore.c     |  2 +
+>  arch/riscv/kernel/smp.c                      |  4 +-
+>  arch/s390/kernel/smp.c                       |  2 +-
+>  arch/sh/kernel/smp.c                         |  2 +-
+>  arch/sparc/kernel/smp_32.c                   |  2 +-
+>  arch/sparc/kernel/smp_64.c                   |  2 +-
+>  arch/x86/include/asm/smp.h                   |  2 +-
+>  arch/x86/kvm/svm/svm.c                       |  4 +
+>  arch/x86/kvm/x86.c                           |  2 +
+>  arch/xtensa/kernel/smp.c                     |  2 +-
+>  include/linux/smp.h                          |  8 +-
+>  include/trace/bpf_probe.h                    |  6 ++
+>  include/trace/events/ipi.h                   | 22 ++++++
+>  include/trace/perf.h                         |  6 ++
+>  include/trace/stages/stage1_struct_define.h  |  6 ++
+>  include/trace/stages/stage2_data_offsets.h   |  6 ++
+>  include/trace/stages/stage3_trace_output.h   |  6 ++
+>  include/trace/stages/stage4_event_fields.h   |  6 ++
+>  include/trace/stages/stage5_get_offsets.h    |  6 ++
+>  include/trace/stages/stage6_event_callback.h | 20 +++++
+>  include/trace/stages/stage7_class_define.h   |  2 +
+>  kernel/irq_work.c                            | 14 +++-
+>  kernel/sched/core.c                          | 19 +++--
+>  kernel/sched/smp.h                           |  2 +-
+>  kernel/smp.c                                 | 78 ++++++++++++++++----
+>  samples/trace_events/trace-events-sample.c   |  2 +-
+>  samples/trace_events/trace-events-sample.h   | 34 +++++++--
+>  virt/kvm/kvm_main.c                          |  1 +
+>  43 files changed, 250 insertions(+), 61 deletions(-)
 
-...
-
-> +// SPDX-License-Identifier: GPL-2.0
-
-GPL-2.0-only
-
-> +/*
-> + * Loongson-2K/Loongson LS7A I2C master mode driver
-> + *
-> + * Copyright (C) 2013 Loongson Technology Corporation Limited.
-> + * Copyright (C) 2014-2017 Lemote, Inc.
-> + * Copyright (C) 2018-2022 Loongson Technology Corporation Limited.
-> + *
-> + * Originally written by liushaozong
-
-> + *
-
-No need to have this blank line.
-
-> + * Rewritten for mainline by Binbin Zhou <zhoubinbin@loongson.cn>
-> + */
-
-...
-
-> +#include <linux/bits.h>
-> +#include <linux/completion.h>
-> +#include <linux/device.h>
-> +#include <linux/i2c.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/platform_device.h>
-
-+ property.h at least for dev_fwnode().
-
-> +#include <linux/units.h>
-
-...
-
-> +#define I2C_LS2X_PRER_LO	0x0 /* Freq Division Low Byte Register */
-> +#define I2C_LS2X_PRER_HI	0x1 /* Freq Division High Byte Register */
-
-_HI is not used, can we just drop the suffix?
-
-...
-
-> +struct ls2x_i2c_priv {
-
-> +	struct i2c_adapter	adapter;
-
-> +	struct device		*dev;
-
-In some cases you are using adapter.dev, in some this one.
-Also isn't it the dev is the same as adapter.dev.parent?
-
-Hence, why do you need this one?
-
-> +	void __iomem		*base;
-> +	struct i2c_timings	i2c_t;
-> +	struct completion	cmd_complete;
-> +};
-
-...
-
-> +	return ls2x_i2c_send_byte(adap, (LS2X_CR_START | LS2X_CR_WRITE));
-
-Too many parentheses.
-
-...
-
-> +static int ls2x_i2c_xfer_one(struct i2c_adapter *adap,
-> +			     struct i2c_msg *msg, bool stop)
-> +{
-> +	int ret;
-> +	bool is_read = msg->flags & I2C_M_RD;
-> +
-> +	/* Contains steps to send start condition and address */
-> +	ret = ls2x_i2c_start(adap, msg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (is_read)
-> +		ret = ls2x_i2c_rx(adap, msg->buf, msg->len);
-> +	else
-> +		ret = ls2x_i2c_tx(adap, msg->buf, msg->len);
-> +
-> +	/* could not acquire bus. bail out without STOP */
-> +	if (ret == -EAGAIN)
-> +		return ret;
-
-So, if ret is *not* 0 and *not* --EAGAIN, why don't we bail out here? It needs
-at least a comment.
-
-> +	if (stop)
-> +		ret = ls2x_i2c_stop(adap);
-> +
-> +	return ret;
-> +}
-
-...
-
-> +static int ls2x_i2c_master_xfer(struct i2c_adapter *adap,
-> +				struct i2c_msg *msgs, int num)
-> +{
-> +	int ret;
-> +	struct i2c_msg *msg, *emsg = msgs + num;
-> +
-> +	for (msg = msgs; msg < emsg; msg++) {
-> +		/* Emit STOP if it is the last message or I2C_M_STOP is set */
-
-> +		bool stop = (msg + 1 == emsg) || (msg->flags & I2C_M_STOP);
-
-I'm wondering if we can always set the _STOP bit in the flags of the last
-message before entering this loop. In such case you can reduce to one part
-and supply as a parameter directly.
-
-> +
-> +		ret = ls2x_i2c_xfer_one(adap, msg, stop);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return num;
-> +}
-
-...
-
-> +	/* Calculate and set LS2X I2C frequency */
-> +	writel(LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1,
-> +	       priv->base + I2C_LS2X_PRER_LO);
-
-writel()?! Shouldn't be writew()?
-
-...
-
-> +	r = devm_request_irq(dev, irq, ls2x_i2c_isr,
-> +			     IRQF_SHARED, "ls2x-i2c", priv);
-
-There is a room on the previous line for at least one more argument.
-
-> +	if (r < 0)
-> +		return dev_err_probe(dev, r, "Unable to request irq %d\n", irq);
-
-...
-
-> +subsys_initcall(ls2x_i2c_init_driver);
-
-Non-standard init calls should be commented.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com> # riscv
