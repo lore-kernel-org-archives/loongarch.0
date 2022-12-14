@@ -1,169 +1,234 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A636121
-	for <loongarch@lists.linux.dev>; Wed, 14 Dec 2022 11:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1671016975;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yxc01zNwMiugjthmgVOlTrtXQnLfLvXjRGMFtbZZLpc=;
-	b=TRsRFy5HWKRJqqxwbSC38MkkVL+pzQVaN48RIhRUvbQBZyedt24vDxP9faiB3QhLUvtPSW
-	jUDazLShTTjthZ9qY/reRE4y5Cap5trYiKq0KlvknrQ+4PgoYPXpD9HQWOo6Qg6rAtYfiW
-	/1ZfU7LhfXDdM3IHhUpPVAiJXEkDOlY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-593-pizQUL_FOFGUR3aIUBVqpQ-1; Wed, 14 Dec 2022 06:22:54 -0500
-X-MC-Unique: pizQUL_FOFGUR3aIUBVqpQ-1
-Received: by mail-wm1-f72.google.com with SMTP id i132-20020a1c3b8a000000b003d0f49bc21bso7087814wma.6
-        for <loongarch@lists.linux.dev>; Wed, 14 Dec 2022 03:22:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yxc01zNwMiugjthmgVOlTrtXQnLfLvXjRGMFtbZZLpc=;
-        b=n8oLH0LLuYFPKaOE1+vPrSifd5TnYTIgKbgfy9asEOhUtKUQw74TiXNeCXtwFyXTai
-         RiS7/+jHTZDgredj8taYLW67XqG5JWsLkORvQr5iGQZC14O79g9tbq3WSecIjwLLA+N5
-         8YUVjReNZVCZuQDBkLG60dHClY7XZ+/oNxSAfhKx8BCI2HpPIqHEWL3ccym2bPin0Dcq
-         AVysKX/E6IGzU16yoQKltX9oKYjEW/e+TkqXPEyF5/3M5QXT6YdN0nvpc75BCCqw85yp
-         d4dAyjd4axiJDi4D4oZo5Hpx0UPevRVcMlOx1/Mxkdj73YsQpUQlYprVJIPHm5j0vhI2
-         PrPQ==
-X-Gm-Message-State: ANoB5plibxJBTA1QmnbFnPK047cduc28v4+jLRSrk1T9yNY7fhshCdCe
-	uwGhPQ0h7CHBIhxGIwbBp4BTuRxcf81KhUo96dJGNStGe+0VEB9iqd2j5//rLWP2OB7MBub5D3I
-	29VndyFqMJNAuz01gTcWR
-X-Received: by 2002:a05:600c:1da2:b0:3cf:5fd2:87a0 with SMTP id p34-20020a05600c1da200b003cf5fd287a0mr17488517wms.40.1671016973462;
-        Wed, 14 Dec 2022 03:22:53 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf4UNUk6/OXN07sN3FMRll3MrS2ehO8GnTfEO+JQv3BigUvXvNgLJLKqkas5vWijxjr/1KiucA==
-X-Received: by 2002:a05:600c:1da2:b0:3cf:5fd2:87a0 with SMTP id p34-20020a05600c1da200b003cf5fd287a0mr17488468wms.40.1671016973157;
-        Wed, 14 Dec 2022 03:22:53 -0800 (PST)
-Received: from ?IPV6:2003:cb:c703:7700:dd7c:92f8:481f:b96b? (p200300cbc7037700dd7c92f8481fb96b.dip0.t-ipconnect.de. [2003:cb:c703:7700:dd7c:92f8:481f:b96b])
-        by smtp.gmail.com with ESMTPSA id o3-20020a05600c510300b003cfa3a12660sm8504320wms.1.2022.12.14.03.22.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Dec 2022 03:22:52 -0800 (PST)
-Message-ID: <10bd4fc0-4fc0-bd98-6926-7d721a3bb12e@redhat.com>
-Date: Wed, 14 Dec 2022 12:22:49 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759B0A48E
+	for <loongarch@lists.linux.dev>; Wed, 14 Dec 2022 16:28:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671035297; x=1702571297;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=PEm95h/YTHcJiYhCqCHq1kOQJQryjVd8bKLlGnmtus4=;
+  b=dDwbRXbBPTgrFG6iQshoFapNfXE6o/Utsg0DNmKzXZzrgMB7KXNGMI15
+   IgTvfkRzBShJtipJHrKU+PMK0CdTysunbXDlNgqvP0xAYIDc+szmK+9gw
+   gWJdVV2Y02sj9AKL3ma5JI4g3GZGGTH/N1aAZvFobese5EPtx4Gy75Llt
+   RbDeJR8gZBCv/uZ7F3BtQu7KNknt7p0tvqcF6iEiwbcKBBlYuh4mboE/m
+   JWY9jGKmFaJmYY4OkBeVVf5u5NlRsPnxdBVeXuGKMxFzzozduqIdqsKx7
+   +ERfSLfXzomi7IUNx4IuQjrrYPJGNRsLOYbZBWlOxc+7wRFPPUZd2Sf/M
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10561"; a="316085816"
+X-IronPort-AV: E=Sophos;i="5.96,244,1665471600"; 
+   d="scan'208";a="316085816"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2022 08:28:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10561"; a="823349494"
+X-IronPort-AV: E=Sophos;i="5.96,244,1665471600"; 
+   d="scan'208";a="823349494"
+Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 14 Dec 2022 08:28:13 -0800
+Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1p5Uc8-0005ck-1T;
+	Wed, 14 Dec 2022 16:28:12 +0000
+Date: Thu, 15 Dec 2022 00:27:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-parisc@vger.kernel.org, linux-omap@vger.kernel.org,
+ kvm@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 663397d1b469ff57f216d499b74a0b0183a508b8
+Message-ID: <6399f97f.8g32TjfFuyg/ourC%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH mm-unstable RFC 00/26] mm: support
- __HAVE_ARCH_PTE_SWP_EXCLUSIVE on all architectures with swap PTEs
-To: linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
- <hughd@google.com>, John Hubbard <jhubbard@nvidia.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@linux.ibm.com>,
- Yang Shi <shy828301@gmail.com>, Vlastimil Babka <vbabka@suse.cz>,
- Nadav Amit <namit@vmware.com>, Andrea Arcangeli <aarcange@redhat.com>,
- Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, x86@kernel.org,
- linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
- Albert Ou <aou@eecs.berkeley.edu>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Chris Zankel <chris@zankel.net>, Dave Hansen <dave.hansen@linux.intel.com>,
- "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Greg Ungerer
- <gerg@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
- Helge Deller <deller@gmx.de>, "H. Peter Anvin" <hpa@zytor.com>,
- Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Johannes Berg <johannes@sipsolutions.net>, Matt Turner <mattst88@gmail.com>,
- Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Michal Simek <monstr@monstr.eu>, Nicholas Piggin <npiggin@gmail.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Richard Henderson
- <richard.henderson@linaro.org>, Richard Weinberger <richard@nod.at>,
- Rich Felker <dalias@libc.org>, Russell King <linux@armlinux.org.uk>,
- Stafford Horne <shorne@gmail.com>,
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Vineet Gupta <vgupta@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Yoshinori Sato <ysato@users.sourceforge.jp>
-References: <20221206144730.163732-1-david@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20221206144730.163732-1-david@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 
-On 06.12.22 15:47, David Hildenbrand wrote:
-> This is the follow-up on [1]:
-> 	[PATCH v2 0/8] mm: COW fixes part 3: reliable GUP R/W FOLL_GET of
-> 	anonymous pages
-> 
-> After we implemented __HAVE_ARCH_PTE_SWP_EXCLUSIVE on most prominent
-> enterprise architectures, implement __HAVE_ARCH_PTE_SWP_EXCLUSIVE on all
-> remaining architectures that support swap PTEs.
-> 
-> This makes sure that exclusive anonymous pages will stay exclusive, even
-> after they were swapped out -- for example, making GUP R/W FOLL_GET of
-> anonymous pages reliable. Details can be found in [1].
-> 
-> This primarily fixes remaining known O_DIRECT memory corruptions that can
-> happen on concurrent swapout, whereby we can lose DMA reads to a page
-> (modifying the user page by writing to it).
-> 
-> To verify, there are two test cases (requiring swap space, obviously):
-> (1) The O_DIRECT+swapout test case [2] from Andrea. This test case tries
->      triggering a race condition.
-> (2) My vmsplice() test case [3] that tries to detect if the exclusive
->      marker was lost during swapout, not relying on a race condition.
-> 
-> 
-> For example, on 32bit x86 (with and without PAE), my test case fails
-> without these patches:
-> 	$ ./test_swp_exclusive
-> 	FAIL: page was replaced during COW
-> But succeeds with these patches:
-> 	$ ./test_swp_exclusive
-> 	PASS: page was not replaced during COW
-> 
-> 
-> Why implement __HAVE_ARCH_PTE_SWP_EXCLUSIVE for all architectures, even
-> the ones where swap support might be in a questionable state? This is the
-> first step towards removing "readable_exclusive" migration entries, and
-> instead using pte_swp_exclusive() also with (readable) migration entries
-> instead (as suggested by Peter). The only missing piece for that is
-> supporting pmd_swp_exclusive() on relevant architectures with THP
-> migration support.
-> 
-> As all relevant architectures now implement __HAVE_ARCH_PTE_SWP_EXCLUSIVE,,
-> we can drop __HAVE_ARCH_PTE_SWP_EXCLUSIVE in the last patch.
-> 
-> 
-> RFC because some of the swap PTE layouts are really tricky and I really
-> need some feedback related to deciphering these layouts and "using yet
-> unused PTE bits in swap PTEs". I tried cross-compiling all relevant setups
-> (phew, I might only miss some power/nohash variants), but only tested on
-> x86 so far.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 663397d1b469ff57f216d499b74a0b0183a508b8  Add linux-next specific files for 20221214
 
-As I was messing with sparc64 either way and got debian to boot under 
-QEMU, I verified that the sparc64 change also seems to work as expected 
-(under sun4u).
+Error/Warning reports:
+
+https://lore.kernel.org/oe-kbuild-all/202211242120.MzZVGULn-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212141410.IlFkWqph-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212141742.w69HZXVa-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212141833.3QHN4iDl-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212142121.vendKsOc-lkp@intel.com
+
+Error/Warning: (recently discovered and may have been fixed)
+
+ERROR: modpost: "___ratelimit" [arch/x86/kernel/msr.ko] undefined!
+ERROR: modpost: "__asan_report_load4_noabort" [arch/x86/kernel/msr.ko] undefined!
+ERROR: modpost: "__asan_report_load8_noabort" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
+ERROR: modpost: "__asan_report_load8_noabort" [arch/x86/kernel/msr.ko] undefined!
+ERROR: modpost: "__fentry__" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
+ERROR: modpost: "__fentry__" [arch/x86/kernel/msr.ko] undefined!
+ERROR: modpost: "__gcov_exit" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
+ERROR: modpost: "__gcov_init" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
+ERROR: modpost: "_find_next_bit" [arch/x86/events/intel/intel-cstate.ko] undefined!
+ERROR: modpost: "_printk" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
+ERROR: modpost: "capable" [arch/x86/kernel/msr.ko] undefined!
+ERROR: modpost: "current_task" [arch/x86/kernel/msr.ko] undefined!
+ERROR: modpost: "device_create" [arch/x86/kernel/msr.ko] undefined!
+ERROR: modpost: "device_destroy" [arch/x86/kernel/msr.ko] undefined!
+ERROR: modpost: "ftrace_likely_update" [arch/x86/kernel/msr.ko] undefined!
+ERROR: modpost: "kasprintf" [arch/x86/kernel/msr.ko] undefined!
+ERROR: modpost: "memcpy" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
+ERROR: modpost: "pcpu_hot" [arch/x86/kvm/kvm-intel.ko] undefined!
+ERROR: modpost: "twofish_dec_blk" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
+ERROR: modpost: "twofish_dec_blk_3way" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
+ERROR: modpost: "twofish_dec_blk_cbc_3way" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
+ERROR: modpost: "twofish_setkey" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
+arch/loongarch/kernel/asm-offsets.c:265:6: warning: no previous prototype for 'output_pbe_defines' [-Wmissing-prototypes]
+arch/parisc/include/asm/pgtable.h:169:32: warning: "PMD_SHIFT" is not defined, evaluates to 0 [-Wundef]
+arch/powerpc/kernel/kvm_emul.o: warning: objtool: kvm_template_end(): can't find starting instruction
+arch/powerpc/kernel/optprobes_head.o: warning: objtool: optprobe_template_end(): can't find starting instruction
+drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dcn201/irq_service_dcn201.c:40:20: warning: no previous prototype for 'to_dal_irq_source_dcn201' [-Wmissing-prototypes]
+drivers/regulator/tps65219-regulator.c:310:60: warning: parameter 'dev' set but not used [-Wunused-but-set-parameter]
+drivers/regulator/tps65219-regulator.c:370:26: warning: ordered comparison of pointer with integer zero [-Wextra]
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- alpha-buildonly-randconfig-r004-20221213
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- arm64-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- i386-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- ia64-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- loongarch-allyesconfig
+|   `-- arch-loongarch-kernel-asm-offsets.c:warning:no-previous-prototype-for-output_pbe_defines
+|-- m68k-allmodconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- m68k-allyesconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- mips-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- openrisc-randconfig-r005-20221213
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|-- parisc-randconfig-r033-20221214
+|   `-- arch-parisc-include-asm-pgtable.h:warning:PMD_SHIFT-is-not-defined-evaluates-to
+|-- powerpc-allmodconfig
+|   |-- arch-powerpc-kernel-kvm_emul.o:warning:objtool:kvm_template_end():can-t-find-starting-instruction
+|   |-- arch-powerpc-kernel-optprobes_head.o:warning:objtool:optprobe_template_end():can-t-find-starting-instruction
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- s390-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+clang_recent_errors
+|-- i386-randconfig-a002
+|   `-- ERROR:pcpu_hot-arch-x86-kvm-kvm-intel.ko-undefined
+`-- i386-randconfig-a015
+    `-- ERROR:_find_next_bit-arch-x86-events-intel-intel-cstate.ko-undefined
+
+elapsed time: 740m
+
+configs tested: 67
+configs skipped: 2
+
+gcc tested configs:
+um                             i386_defconfig
+x86_64                            allnoconfig
+um                           x86_64_defconfig
+arc                                 defconfig
+powerpc                           allnoconfig
+alpha                               defconfig
+x86_64                          rhel-8.3-rust
+arm                                 defconfig
+i386                          randconfig-a001
+arc                  randconfig-r043-20221213
+s390                                defconfig
+arm                  randconfig-r046-20221213
+x86_64                        randconfig-a013
+x86_64                        randconfig-a004
+sh                               allmodconfig
+x86_64                           rhel-8.3-bpf
+x86_64                              defconfig
+x86_64                        randconfig-a002
+m68k                             allyesconfig
+ia64                             allmodconfig
+x86_64                          rhel-8.3-func
+i386                          randconfig-a003
+m68k                             allmodconfig
+x86_64                    rhel-8.3-kselftests
+i386                          randconfig-a014
+arc                              allyesconfig
+x86_64                        randconfig-a006
+m68k                       m5475evb_defconfig
+x86_64                           rhel-8.3-syz
+i386                                defconfig
+x86_64                         rhel-8.3-kunit
+x86_64                        randconfig-a015
+x86_64                               rhel-8.3
+x86_64                           rhel-8.3-kvm
+s390                             allmodconfig
+x86_64                        randconfig-a011
+i386                          randconfig-a012
+nios2                            alldefconfig
+i386                          randconfig-a016
+powerpc                          allmodconfig
+riscv             nommu_k210_sdcard_defconfig
+x86_64                           allyesconfig
+i386                          randconfig-c001
+arm64                            allyesconfig
+alpha                            allyesconfig
+s390                             allyesconfig
+i386                          randconfig-a005
+arm                              allyesconfig
+mips                             allyesconfig
+i386                             allyesconfig
+
+clang tested configs:
+hexagon              randconfig-r041-20221213
+hexagon              randconfig-r045-20221213
+riscv                randconfig-r042-20221213
+s390                 randconfig-r044-20221213
+i386                          randconfig-a013
+x86_64                        randconfig-a012
+x86_64                        randconfig-a001
+arm                           spitz_defconfig
+x86_64                        randconfig-a014
+x86_64                        randconfig-a003
+i386                          randconfig-a011
+x86_64                        randconfig-a005
+i386                          randconfig-a015
+i386                          randconfig-a002
+x86_64                        randconfig-a016
+i386                          randconfig-a006
+i386                          randconfig-a004
 
 -- 
-Thanks,
-
-David / dhildenb
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
