@@ -1,313 +1,169 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E8D33E6
-	for <loongarch@lists.linux.dev>; Wed, 14 Dec 2022 09:45:53 +0000 (UTC)
-Received: by mail-ej1-f41.google.com with SMTP id kw15so43097608ejc.10
-        for <loongarch@lists.linux.dev>; Wed, 14 Dec 2022 01:45:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pi0Xc7ocKeXx6Ak1hOFEArqIKdIzV8Qe/JBw4GdHYCY=;
-        b=UtMVTLrU278e6+T84oIh5qkQyzu5j+g+Uttm2hE6aoOYpP3W3x2kLfZZl9/MBmKVRc
-         JydbZMaQz8bMaIb8KpEee8IYSTZYA9MBoHR2AQXfqjfGR0SImOfgN3Bn6oWoO5I4oGus
-         bmwC7J0FsPwgH6dWXOustffI96hLxcih3u4Alx/TIvX3mz9Y2z+sn9okxeZXkKIPtzUU
-         65jRsSqtXo8zDLhxLZcGNuRf1TiiEootJOyKltQ3+plR2iKGeuZoWYNigeurepK06uFe
-         LNoYDz6vWSoexMfcFIL2qqJWqkrr5EPCycOJ5YN0c28AXhJfks9vVWV4lFZo4IeApFgX
-         MRcQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A636121
+	for <loongarch@lists.linux.dev>; Wed, 14 Dec 2022 11:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1671016975;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yxc01zNwMiugjthmgVOlTrtXQnLfLvXjRGMFtbZZLpc=;
+	b=TRsRFy5HWKRJqqxwbSC38MkkVL+pzQVaN48RIhRUvbQBZyedt24vDxP9faiB3QhLUvtPSW
+	jUDazLShTTjthZ9qY/reRE4y5Cap5trYiKq0KlvknrQ+4PgoYPXpD9HQWOo6Qg6rAtYfiW
+	/1ZfU7LhfXDdM3IHhUpPVAiJXEkDOlY=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-593-pizQUL_FOFGUR3aIUBVqpQ-1; Wed, 14 Dec 2022 06:22:54 -0500
+X-MC-Unique: pizQUL_FOFGUR3aIUBVqpQ-1
+Received: by mail-wm1-f72.google.com with SMTP id i132-20020a1c3b8a000000b003d0f49bc21bso7087814wma.6
+        for <loongarch@lists.linux.dev>; Wed, 14 Dec 2022 03:22:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:in-reply-to:organization:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pi0Xc7ocKeXx6Ak1hOFEArqIKdIzV8Qe/JBw4GdHYCY=;
-        b=1r7lY0ghiwSR/coZ2L18i4KjPDSdJbgHN8VoA+emV6XCMV++pMEbO3ayff18VQZGZG
-         KxVy8lJzHN/+vOG99AZWgGADrLOmxUqSCmi1RHWIMQhBOAQSZDD559RGVGqfGSxmd6mk
-         8ZJCmdSA1aiR8SIre0+EB7w00LfXiccWE/F0xrs4/uen62Y5kcmMQpqX9syxydpTNY/8
-         oU+ILhbmUIzjrGw82r4NiMdq5c4ZpoKq784mV8940Wv/i5XvFvuk9TyBBkn9wn33gCtL
-         L4V2x2r4L6Wa1BFWr5pYJ6VfPFrv8AQC1vsmadyAPlXK0n5gElnBOh0yIXIBnGm57dER
-         daJQ==
-X-Gm-Message-State: ANoB5pmUMW07fksZpn9eK5UJVe/Grqt75c+XnvI4BjBGlQhPzsuFDUN3
-	2Hm5W64HlPkZiGrDvprwmuSoE6Ax1LAso3R8MXM=
-X-Google-Smtp-Source: AA0mqf7XAalqE1A3819qJjgVuoa5tzP4Ctc+4MitcYz5TFxYNGr4UfmG4crt3vrxHnHLcrzm9rlW1YEFkhsxoftVGFc=
-X-Received: by 2002:a17:907:7782:b0:7b6:dd6d:b829 with SMTP id
- ky2-20020a170907778200b007b6dd6db829mr69355763ejc.602.1671011151747; Wed, 14
- Dec 2022 01:45:51 -0800 (PST)
+        bh=yxc01zNwMiugjthmgVOlTrtXQnLfLvXjRGMFtbZZLpc=;
+        b=n8oLH0LLuYFPKaOE1+vPrSifd5TnYTIgKbgfy9asEOhUtKUQw74TiXNeCXtwFyXTai
+         RiS7/+jHTZDgredj8taYLW67XqG5JWsLkORvQr5iGQZC14O79g9tbq3WSecIjwLLA+N5
+         8YUVjReNZVCZuQDBkLG60dHClY7XZ+/oNxSAfhKx8BCI2HpPIqHEWL3ccym2bPin0Dcq
+         AVysKX/E6IGzU16yoQKltX9oKYjEW/e+TkqXPEyF5/3M5QXT6YdN0nvpc75BCCqw85yp
+         d4dAyjd4axiJDi4D4oZo5Hpx0UPevRVcMlOx1/Mxkdj73YsQpUQlYprVJIPHm5j0vhI2
+         PrPQ==
+X-Gm-Message-State: ANoB5plibxJBTA1QmnbFnPK047cduc28v4+jLRSrk1T9yNY7fhshCdCe
+	uwGhPQ0h7CHBIhxGIwbBp4BTuRxcf81KhUo96dJGNStGe+0VEB9iqd2j5//rLWP2OB7MBub5D3I
+	29VndyFqMJNAuz01gTcWR
+X-Received: by 2002:a05:600c:1da2:b0:3cf:5fd2:87a0 with SMTP id p34-20020a05600c1da200b003cf5fd287a0mr17488517wms.40.1671016973462;
+        Wed, 14 Dec 2022 03:22:53 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf4UNUk6/OXN07sN3FMRll3MrS2ehO8GnTfEO+JQv3BigUvXvNgLJLKqkas5vWijxjr/1KiucA==
+X-Received: by 2002:a05:600c:1da2:b0:3cf:5fd2:87a0 with SMTP id p34-20020a05600c1da200b003cf5fd287a0mr17488468wms.40.1671016973157;
+        Wed, 14 Dec 2022 03:22:53 -0800 (PST)
+Received: from ?IPV6:2003:cb:c703:7700:dd7c:92f8:481f:b96b? (p200300cbc7037700dd7c92f8481fb96b.dip0.t-ipconnect.de. [2003:cb:c703:7700:dd7c:92f8:481f:b96b])
+        by smtp.gmail.com with ESMTPSA id o3-20020a05600c510300b003cfa3a12660sm8504320wms.1.2022.12.14.03.22.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Dec 2022 03:22:52 -0800 (PST)
+Message-ID: <10bd4fc0-4fc0-bd98-6926-7d721a3bb12e@redhat.com>
+Date: Wed, 14 Dec 2022 12:22:49 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1670897253.git.zhoubinbin@loongson.cn> <bf55d05a50dc1e9453d124033ff368e9500ed4ed.1670897253.git.zhoubinbin@loongson.cn>
- <Y5iS/ReDrO3B4Ksl@smile.fi.intel.com>
-In-Reply-To: <Y5iS/ReDrO3B4Ksl@smile.fi.intel.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Wed, 14 Dec 2022 17:45:38 +0800
-Message-ID: <CAMpQs4JX-NWJt0-G1nOKcQdOKudmqzv=sKwpSAYYVapQ68JwMw@mail.gmail.com>
-Subject: Re: [PATCH V6 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C controller
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Wolfram Sang <wsa@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, 
-	loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	Huacai Chen <chenhuacai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Jianmin Lv <lvjianmin@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH mm-unstable RFC 00/26] mm: support
+ __HAVE_ARCH_PTE_SWP_EXCLUSIVE on all architectures with swap PTEs
+To: linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
+ <hughd@google.com>, John Hubbard <jhubbard@nvidia.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@linux.ibm.com>,
+ Yang Shi <shy828301@gmail.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Nadav Amit <namit@vmware.com>, Andrea Arcangeli <aarcange@redhat.com>,
+ Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, x86@kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Chris Zankel <chris@zankel.net>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Greg Ungerer
+ <gerg@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
+ Helge Deller <deller@gmx.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Johannes Berg <johannes@sipsolutions.net>, Matt Turner <mattst88@gmail.com>,
+ Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Michal Simek <monstr@monstr.eu>, Nicholas Piggin <npiggin@gmail.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Richard Henderson
+ <richard.henderson@linaro.org>, Richard Weinberger <richard@nod.at>,
+ Rich Felker <dalias@libc.org>, Russell King <linux@armlinux.org.uk>,
+ Stafford Horne <shorne@gmail.com>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Vineet Gupta <vgupta@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Yoshinori Sato <ysato@users.sourceforge.jp>
+References: <20221206144730.163732-1-david@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+In-Reply-To: <20221206144730.163732-1-david@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Andy:
+On 06.12.22 15:47, David Hildenbrand wrote:
+> This is the follow-up on [1]:
+> 	[PATCH v2 0/8] mm: COW fixes part 3: reliable GUP R/W FOLL_GET of
+> 	anonymous pages
+> 
+> After we implemented __HAVE_ARCH_PTE_SWP_EXCLUSIVE on most prominent
+> enterprise architectures, implement __HAVE_ARCH_PTE_SWP_EXCLUSIVE on all
+> remaining architectures that support swap PTEs.
+> 
+> This makes sure that exclusive anonymous pages will stay exclusive, even
+> after they were swapped out -- for example, making GUP R/W FOLL_GET of
+> anonymous pages reliable. Details can be found in [1].
+> 
+> This primarily fixes remaining known O_DIRECT memory corruptions that can
+> happen on concurrent swapout, whereby we can lose DMA reads to a page
+> (modifying the user page by writing to it).
+> 
+> To verify, there are two test cases (requiring swap space, obviously):
+> (1) The O_DIRECT+swapout test case [2] from Andrea. This test case tries
+>      triggering a race condition.
+> (2) My vmsplice() test case [3] that tries to detect if the exclusive
+>      marker was lost during swapout, not relying on a race condition.
+> 
+> 
+> For example, on 32bit x86 (with and without PAE), my test case fails
+> without these patches:
+> 	$ ./test_swp_exclusive
+> 	FAIL: page was replaced during COW
+> But succeeds with these patches:
+> 	$ ./test_swp_exclusive
+> 	PASS: page was not replaced during COW
+> 
+> 
+> Why implement __HAVE_ARCH_PTE_SWP_EXCLUSIVE for all architectures, even
+> the ones where swap support might be in a questionable state? This is the
+> first step towards removing "readable_exclusive" migration entries, and
+> instead using pte_swp_exclusive() also with (readable) migration entries
+> instead (as suggested by Peter). The only missing piece for that is
+> supporting pmd_swp_exclusive() on relevant architectures with THP
+> migration support.
+> 
+> As all relevant architectures now implement __HAVE_ARCH_PTE_SWP_EXCLUSIVE,,
+> we can drop __HAVE_ARCH_PTE_SWP_EXCLUSIVE in the last patch.
+> 
+> 
+> RFC because some of the swap PTE layouts are really tricky and I really
+> need some feedback related to deciphering these layouts and "using yet
+> unused PTE bits in swap PTEs". I tried cross-compiling all relevant setups
+> (phew, I might only miss some power/nohash variants), but only tested on
+> x86 so far.
 
+As I was messing with sparc64 either way and got debian to boot under 
+QEMU, I verified that the sparc64 change also seems to work as expected 
+(under sun4u).
 
-On Tue, Dec 13, 2022 at 10:58 PM Andy Shevchenko <andy@kernel.org> wrote:
->
-> On Tue, Dec 13, 2022 at 04:26:57PM +0800, Binbin Zhou wrote:
-> > This I2C module is integrated into the Loongson-2K SoCs and Loongson
-> > LS7A bridge chip.
->
-> ...
->
-> > +// SPDX-License-Identifier: GPL-2.0
->
-> GPL-2.0-only
->
-> > +/*
-> > + * Loongson-2K/Loongson LS7A I2C master mode driver
-> > + *
-> > + * Copyright (C) 2013 Loongson Technology Corporation Limited.
-> > + * Copyright (C) 2014-2017 Lemote, Inc.
-> > + * Copyright (C) 2018-2022 Loongson Technology Corporation Limited.
-> > + *
-> > + * Originally written by liushaozong
->
-> > + *
->
-> No need to have this blank line.
->
-> > + * Rewritten for mainline by Binbin Zhou <zhoubinbin@loongson.cn>
-> > + */
->
-> ...
->
-> > +#include <linux/bits.h>
-> > +#include <linux/completion.h>
-> > +#include <linux/device.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/init.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/io.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/platform_device.h>
->
-> + property.h at least for dev_fwnode().
->
-> > +#include <linux/units.h>
->
-> ...
->
-> > +#define I2C_LS2X_PRER_LO     0x0 /* Freq Division Low Byte Register */
-> > +#define I2C_LS2X_PRER_HI     0x1 /* Freq Division High Byte Register */
->
-> _HI is not used, can we just drop the suffix?
+-- 
+Thanks,
 
-I will drop it.
+David / dhildenb
 
->
-> ...
->
-> > +struct ls2x_i2c_priv {
->
-> > +     struct i2c_adapter      adapter;
->
-> > +     struct device           *dev;
->
-> In some cases you are using adapter.dev, in some this one.
-> Also isn't it the dev is the same as adapter.dev.parent?
->
-> Hence, why do you need this one?
-
-I checked the use of 'dev' and it can be completely replaced by
-'adapter.dev.parent'. I will drop it.
-
->
-> > +     void __iomem            *base;
-> > +     struct i2c_timings      i2c_t;
-> > +     struct completion       cmd_complete;
-> > +};
->
-> ...
->
-> > +     return ls2x_i2c_send_byte(adap, (LS2X_CR_START | LS2X_CR_WRITE));
->
-> Too many parentheses.
->
-> ...
->
-> > +static int ls2x_i2c_xfer_one(struct i2c_adapter *adap,
-> > +                          struct i2c_msg *msg, bool stop)
-> > +{
-> > +     int ret;
-> > +     bool is_read = msg->flags & I2C_M_RD;
-> > +
-> > +     /* Contains steps to send start condition and address */
-> > +     ret = ls2x_i2c_start(adap, msg);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     if (is_read)
-> > +             ret = ls2x_i2c_rx(adap, msg->buf, msg->len);
-> > +     else
-> > +             ret = ls2x_i2c_tx(adap, msg->buf, msg->len);
-> > +
-> > +     /* could not acquire bus. bail out without STOP */
-> > +     if (ret == -EAGAIN)
-> > +             return ret;
->
-> So, if ret is *not* 0 and *not* --EAGAIN, why don't we bail out here? It needs
-> at least a comment.
-
-After more tests, these judgment conditions may be incomplete.
-
-The following judgment may make more sense:
-1. The return value of ls2x_i2c_start() should also be judged.
-2. When ret = -ENXIO (no ack), we should stop the bus; for other
-errors, such as "arbitration lost", we should reinitialize the i2c
-bus.
-
-As follows:
-@@ -162,23 +222,24 @@ static int ls2x_i2c_xfer_one(struct i2c_adapter *adap,
- {
-        int ret;
-        bool is_read = msg->flags & I2C_M_RD;
-+       struct ls2x_i2c_priv *priv = i2c_get_adapdata(adap);
-
-        /* Contains steps to send start condition and address */
-        ret = ls2x_i2c_start(adap, msg);
--       if (ret)
--               return ret;
--
--       if (is_read)
--               ret = ls2x_i2c_rx(adap, msg->buf, msg->len);
--       else
--               ret = ls2x_i2c_tx(adap, msg->buf, msg->len);
--
--       /* could not acquire bus. bail out without STOP */
--       if (ret == -EAGAIN)
--               return ret;
-+       if (!ret) {
-+               if (is_read)
-+                       ret = ls2x_i2c_rx(adap, msg->buf, msg->len);
-+               else
-+                       ret = ls2x_i2c_tx(adap, msg->buf, msg->len);
-+
-+               if (!ret && stop)
-+                       ret = ls2x_i2c_stop(adap);
-+       }
-
--       if (stop)
--               ret = ls2x_i2c_stop(adap);
-+       if (ret == -ENXIO)
-+               ls2x_i2c_stop(adap);
-+       else if (ret < 0)
-+               ls2x_i2c_reginit(priv);
-
-        return ret;
- }
-
-
->
-> > +     if (stop)
-> > +             ret = ls2x_i2c_stop(adap);
-> > +
-> > +     return ret;
-> > +}
->
-> ...
->
-> > +static int ls2x_i2c_master_xfer(struct i2c_adapter *adap,
-> > +                             struct i2c_msg *msgs, int num)
-> > +{
-> > +     int ret;
-> > +     struct i2c_msg *msg, *emsg = msgs + num;
-> > +
-> > +     for (msg = msgs; msg < emsg; msg++) {
-> > +             /* Emit STOP if it is the last message or I2C_M_STOP is set */
->
-> > +             bool stop = (msg + 1 == emsg) || (msg->flags & I2C_M_STOP);
->
-> I'm wondering if we can always set the _STOP bit in the flags of the last
-> message before entering this loop. In such case you can reduce to one part
-> and supply as a parameter directly.
-
-Here, I think the I2C_M_STOP flag can be ignored as long as the last
-msg is checked.
-As follows:
-@@ -190,10 +190,7 @@ static int ls2x_i2c_master_xfer(struct i2c_adapter *adap,
-        struct i2c_msg *msg, *emsg = msgs + num;
-
-        for (msg = msgs; msg < emsg; msg++) {
--               /* Emit STOP if it is the last message or I2C_M_STOP is set */
--               bool stop = (msg + 1 == emsg) || (msg->flags & I2C_M_STOP);
--
--               ret = ls2x_i2c_xfer_one(adap, msg, stop);
-+               ret = ls2x_i2c_xfer_one(adap, msg, msg == (emsg - 1));
-                if (ret)
-                        return ret;
-        }
-
-
->
-> > +
-> > +             ret = ls2x_i2c_xfer_one(adap, msg, stop);
-> > +             if (ret)
-> > +                     return ret;
-> > +     }
-> > +
-> > +     return num;
-> > +}
->
-> ...
->
-> > +     /* Calculate and set LS2X I2C frequency */
-> > +     writel(LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1,
-> > +            priv->base + I2C_LS2X_PRER_LO);
->
-> writel()?! Shouldn't be writew()?
-
-Sorry, it's my fault, it should be writew().
-
->
-> ...
->
-> > +     r = devm_request_irq(dev, irq, ls2x_i2c_isr,
-> > +                          IRQF_SHARED, "ls2x-i2c", priv);
->
-> There is a room on the previous line for at least one more argument.
->
-> > +     if (r < 0)
-> > +             return dev_err_probe(dev, r, "Unable to request irq %d\n", irq);
->
-> ...
->
-> > +subsys_initcall(ls2x_i2c_init_driver);
->
-> Non-standard init calls should be commented.
-
-On the LS7A bridge chip, the display subsystem depends on it. The i2c
-channel to read the EEID is fixed and the i2c driver should be
-initialized earlier than it, otherwise it will cause conflicts.
-I will comment this.
-
-Thanks.
-Binbin
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
->
