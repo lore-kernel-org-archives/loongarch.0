@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F041217F1
-	for <loongarch@lists.linux.dev>; Thu, 15 Dec 2022 04:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFF5D20EB
+	for <loongarch@lists.linux.dev>; Thu, 15 Dec 2022 04:02:24 +0000 (UTC)
 Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8AxSulGnJpj37kFAA--.10069S3;
-	Thu, 15 Dec 2022 12:02:14 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cx6+pPnJpjC7oFAA--.13235S3;
+	Thu, 15 Dec 2022 12:02:23 +0800 (CST)
 Received: from localhost.localdomain (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtOVDnJpjVBkAAA--.887S3;
-	Thu, 15 Dec 2022 12:02:14 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtOVDnJpjVBkAAA--.887S8;
+	Thu, 15 Dec 2022 12:02:23 +0800 (CST)
 From: Jinyang He <hejinyang@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
@@ -16,9 +16,9 @@ Cc: loongarch@lists.linux.dev,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 1/6] LoongArch: Get frame info in unwind_start when regs is not supported
-Date: Thu, 15 Dec 2022 12:01:36 +0800
-Message-Id: <20221215040141.18610-2-hejinyang@loongson.cn>
+Subject: [PATCH 6/6] LoongArch: Add generic ex-handler unwind in prologue unwinder
+Date: Thu, 15 Dec 2022 12:01:41 +0800
+Message-Id: <20221215040141.18610-7-hejinyang@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20221215040141.18610-1-hejinyang@loongson.cn>
 References: <20221215040141.18610-1-hejinyang@loongson.cn>
@@ -29,112 +29,242 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxtOVDnJpjVBkAAA--.887S3
+X-CM-TRANSID:AQAAf8BxtOVDnJpjVBkAAA--.887S8
 X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxCr1rKFykXr47urWrCrWktFb_yoW5ZFy5p3
-	sxCrsxWr45uF9Fqr9rtw1kZr95Grn7uw12gF9rt34rC3W7XFyxurnYv34DZFs8t3yvgw10
-	qFn5KrW5Ka1UJaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW3XF15XF48Wr4DXFWDuF4Uurg_yoWxAw17pF
+	9akrn5Gr4rKr9Fqry7Jryq9r98Aw4kCw17KF9rKas5CF1Iqry3WrnYy34qvF1DJ3y8WFyI
+	qFs3Xrya9a1UJa7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	ba8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
 	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
-	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
-	1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY
-	6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
-	AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
-	vjxUc-eODUUUU
+	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
+	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
+	M2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
+	CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2
+	z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I
+	3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxV
+	WUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8I
+	cVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aV
+	AFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZE
+	Xa7IU0E38UUUUUU==
 
-At unwind_start, it is better to try to get its frame info even we not
-support regs rather than get them outside. So that we can simply use
-unwind_{start, next_frame, done} outside.
+When exception is triggered, code flow go handle_\exception in some
+cases. One of stackframe in this case as follows,
 
+high -> +-------+
+        | REGS  |  <- a pt_regs
+        |       |
+        |       |  <- ex trigger
+        | REGS  |  <- ex pt_regs   <-+
+        |       |                    |
+        |       |                    |
+low  -> +-------+           ->unwind-+
+
+When unwinder unwind to handler_\exception it cannot go on prologue
+analysis. It is asynchronous code flow, we should get the next frame
+PC from regs->csr_era but not from regs->regs[1]. And we copy the
+handler codes to eentry in the early time and copy the handler codes
+to NUMA-relative memory named pcpu_handlers if NUMA is enabled. Thus,
+unwinder cannot unwind normally. Therefore, try to give some hint in
+handler_\exception and fixup it in unwind_next_frame.
+
+Reported-by: Qing Zhang <zhangqing@loongson.cn>
 Signed-off-by: Jinyang He <hejinyang@loongson.cn>
 ---
- arch/loongarch/kernel/process.c         | 12 +++---------
- arch/loongarch/kernel/unwind_guess.c    |  6 ++++++
- arch/loongarch/kernel/unwind_prologue.c | 16 +++++++++++++---
- 3 files changed, 22 insertions(+), 12 deletions(-)
+ arch/loongarch/include/asm/unwind.h     |   2 +-
+ arch/loongarch/kernel/genex.S           |   3 +
+ arch/loongarch/kernel/unwind_prologue.c | 100 +++++++++++++++++++++---
+ arch/loongarch/mm/tlb.c                 |   2 +-
+ 4 files changed, 92 insertions(+), 15 deletions(-)
 
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index 502b8b950057..6ef45174ad35 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -197,20 +197,14 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+diff --git a/arch/loongarch/include/asm/unwind.h b/arch/loongarch/include/asm/unwind.h
+index a16aff1d086a..c02cb3b39fe2 100644
+--- a/arch/loongarch/include/asm/unwind.h
++++ b/arch/loongarch/include/asm/unwind.h
+@@ -24,7 +24,7 @@ struct unwind_state {
+ 	char type; /* UNWINDER_XXX */
+ 	struct stack_info stack_info;
+ 	struct task_struct *task;
+-	bool first, error, is_ftrace;
++	bool first, error, reset;
+ 	int graph_idx;
+ 	unsigned long sp, pc, ra;
+ 	const struct unwinder_ops *ops;
+diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
+index 75e5be807a0d..7e5c293ed89f 100644
+--- a/arch/loongarch/kernel/genex.S
++++ b/arch/loongarch/kernel/genex.S
+@@ -67,14 +67,17 @@ SYM_FUNC_END(except_vec_cex)
+ 	.macro	BUILD_HANDLER exception handler prep
+ 	.align	5
+ 	SYM_FUNC_START(handle_\exception)
++	666:
+ 	BACKUP_T0T1
+ 	SAVE_ALL
+ 	build_prep_\prep
+ 	move	a0, sp
+ 	la.abs	t0, do_\handler
+ 	jirl	ra, t0, 0
++	668:
+ 	RESTORE_ALL_AND_RET
+ 	SYM_FUNC_END(handle_\exception)
++	SYM_DATA(unwind_hint_\exception, .word 668b - 666b)
+ 	.endm
  
- unsigned long __get_wchan(struct task_struct *task)
- {
--	unsigned long pc;
-+	unsigned long pc = 0;
- 	struct unwind_state state;
- 
- 	if (!try_get_task_stack(task))
- 		return 0;
- 
--	unwind_start(&state, task, NULL);
--	state.sp = thread_saved_fp(task);
--	get_stack_info(state.sp, state.task, &state.stack_info);
--	state.pc = thread_saved_ra(task);
--#ifdef CONFIG_UNWINDER_PROLOGUE
--	state.type = UNWINDER_PROLOGUE;
--#endif
--	for (; !unwind_done(&state); unwind_next_frame(&state)) {
-+	for (unwind_start(&state, task, NULL); !unwind_done(&state);
-+	     unwind_next_frame(&state)) {
- 		pc = unwind_get_return_address(&state);
- 		if (!pc)
- 			break;
-diff --git a/arch/loongarch/kernel/unwind_guess.c b/arch/loongarch/kernel/unwind_guess.c
-index e2d2e4f3001f..e03864511582 100644
---- a/arch/loongarch/kernel/unwind_guess.c
-+++ b/arch/loongarch/kernel/unwind_guess.c
-@@ -26,6 +26,12 @@ void unwind_start(struct unwind_state *state, struct task_struct *task,
- 	if (regs) {
- 		state->sp = regs->regs[3];
- 		state->pc = regs->csr_era;
-+	} else if (task == current) {
-+		state->sp = (unsigned long)__builtin_frame_address(0);
-+		state->pc = (unsigned long)__builtin_return_address(0);
-+	} else {
-+		state->sp = thread_saved_fp(task);
-+		state->pc = thread_saved_ra(task);
- 	}
- 
- 	state->task = task;
+ 	BUILD_HANDLER ade ade badv
 diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
-index 0f8d1451ebb8..9d51ea37782e 100644
+index 441641227c10..c34bb035ac56 100644
 --- a/arch/loongarch/kernel/unwind_prologue.c
 +++ b/arch/loongarch/kernel/unwind_prologue.c
-@@ -141,12 +141,22 @@ void unwind_start(struct unwind_state *state, struct task_struct *task,
- 		    struct pt_regs *regs)
+@@ -2,23 +2,102 @@
+ /*
+  * Copyright (C) 2022 Loongson Technology Corporation Limited
+  */
++#include <linux/cpumask.h>
+ #include <linux/ftrace.h>
+ #include <linux/kallsyms.h>
+ 
+ #include <asm/inst.h>
++#include <asm/loongson.h>
+ #include <asm/ptrace.h>
++#include <asm/setup.h>
+ #include <asm/unwind.h>
+ 
+ static const struct unwinder_ops *guard_unwinder = &unwinder_guess;
+ 
+-static inline void unwind_state_fixup(struct unwind_state *state)
++extern const int unwind_hint_ade;
++extern const int unwind_hint_ale;
++extern const int unwind_hint_bp;
++extern const int unwind_hint_fpe;
++extern const int unwind_hint_fpu;
++extern const int unwind_hint_lsx;
++extern const int unwind_hint_lasx;
++extern const int unwind_hint_lbt;
++extern const int unwind_hint_ri;
++extern const int unwind_hint_watch;
++extern unsigned long eentry;
++#ifdef CONFIG_NUMA
++extern unsigned long pcpu_handlers[NR_CPUS];
++#endif
++
++static inline bool scan_handler(unsigned long entry_offset)
  {
- 	memset(state, 0, sizeof(*state));
-+	state->type = UNWINDER_PROLOGUE;
+-#ifdef CONFIG_DYNAMIC_FTRACE
+-	static unsigned long ftrace = (unsigned long)ftrace_call + 4;
++	int idx, offset;
  
--	if (regs &&  __kernel_text_address(regs->csr_era)) {
--		state->pc = regs->csr_era;
-+	if (regs) {
- 		state->sp = regs->regs[3];
-+		state->pc = regs->csr_era;
+-	if (state->pc == ftrace)
+-		state->is_ftrace = true;
++	if (entry_offset >= EXCCODE_INT_START * VECSIZE)
++		return false;
++
++	idx = entry_offset / VECSIZE;
++	offset = entry_offset % VECSIZE;
++	switch (idx) {
++	case EXCCODE_ADE:
++		return offset == unwind_hint_ade;
++	case EXCCODE_ALE:
++		return offset == unwind_hint_ale;
++	case EXCCODE_BP:
++		return offset == unwind_hint_bp;
++	case EXCCODE_FPE:
++		return offset == unwind_hint_fpe;
++	case EXCCODE_FPDIS:
++		return offset == unwind_hint_fpu;
++	case EXCCODE_LSXDIS:
++		return offset == unwind_hint_lsx;
++	case EXCCODE_LASXDIS:
++		return offset == unwind_hint_lasx;
++	case EXCCODE_BTDIS:
++		return offset == unwind_hint_lbt;
++	case EXCCODE_INE:
++		return offset == unwind_hint_ri;
++	case EXCCODE_WATCH:
++		return offset == unwind_hint_watch;
++	default:
++		return false;
++	}
++}
++
++static inline bool fix_exceptions(unsigned long pc)
++{
++#ifdef CONFIG_NUMA
++	int cpu;
++
++	for_each_possible_cpu(cpu) {
++		if (!pcpu_handlers[cpu])
++			continue;
++		if (scan_handler(pc - pcpu_handlers[cpu]))
++			return true;
++	}
+ #endif
++	return scan_handler(pc - eentry);
++}
++
++/*
++ * As we meet ftrace_regs_entry, reset first flag like first doing
++ * tracing. Prologue analysis will stop soon because PC is at entry.
++ */
++static inline bool fix_ftrace(unsigned long pc)
++{
++#ifdef CONFIG_DYNAMIC_FTRACE
++	return pc == (unsigned long)ftrace_call + LOONGARCH_INSN_SIZE;
++#else
++	return false;
++#endif
++}
++
++static inline bool unwind_state_fixup(struct unwind_state *state)
++{
++	if (!fix_exceptions(state->pc) && !fix_ftrace(state->pc))
++		return false;
++	state->reset = true;
++	return true;
+ }
+ 
+ static unsigned long get_return_address(struct unwind_state *state)
+@@ -46,14 +125,10 @@ static bool unwind_by_prologue(struct unwind_state *state)
+ 	if (state->sp >= info->end || state->sp < info->begin)
+ 		return false;
+ 
+-	if (state->is_ftrace) {
+-		/*
+-		 * As we meet ftrace_regs_entry, reset first flag like first doing
+-		 * tracing. Prologue analysis will stop soon because PC is at entry.
+-		 */
++	if (state->reset) {
+ 		regs = (struct pt_regs *)state->sp;
+ 		state->first = true;
+-		state->is_ftrace = false;
++		state->reset = false;
+ 		state->pc = regs->csr_era;
  		state->ra = regs->regs[1];
--		state->type = UNWINDER_PROLOGUE;
-+		if (!__kernel_text_address(state->pc))
-+			state->type = UNWINDER_GUESS;
-+	} else if (task == current) {
-+		state->sp = (unsigned long)__builtin_frame_address(0);
-+		state->pc = (unsigned long)__builtin_return_address(0);
-+		state->ra = 0;
-+	} else {
-+		state->sp = thread_saved_fp(task);
-+		state->pc = thread_saved_ra(task);
-+		state->ra = 0;
- 	}
+ 		state->sp = regs->regs[3];
+@@ -118,8 +193,7 @@ static bool unwind_by_prologue(struct unwind_state *state)
  
- 	state->task = task;
+ out:
+ 	state->first = false;
+-	unwind_state_fixup(state);
+-	return !!__kernel_text_address(state->pc);
++	return unwind_state_fixup(state) || __kernel_text_address(state->pc);
+ }
+ 
+ static int raw_show_trace;
+diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+index da3681f131c8..8bad6b0cff59 100644
+--- a/arch/loongarch/mm/tlb.c
++++ b/arch/loongarch/mm/tlb.c
+@@ -251,7 +251,7 @@ static void output_pgtable_bits_defines(void)
+ }
+ 
+ #ifdef CONFIG_NUMA
+-static unsigned long pcpu_handlers[NR_CPUS];
++unsigned long pcpu_handlers[NR_CPUS];
+ #endif
+ extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
+ 
 -- 
 2.34.3
 
