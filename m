@@ -1,339 +1,228 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71D582F3A
-	for <loongarch@lists.linux.dev>; Thu, 15 Dec 2022 12:04:59 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx1vBoDZtjftEFAA--.13185S3;
-	Thu, 15 Dec 2022 20:04:56 +0800 (CST)
-Received: from [10.130.0.63] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxb+RmDZtjs3UAAA--.1958S3;
-	Thu, 15 Dec 2022 20:04:55 +0800 (CST)
-Subject: Re: [PATCH 6/6] LoongArch: Add generic ex-handler unwind in prologue
- unwinder
-To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-References: <20221215040141.18610-1-hejinyang@loongson.cn>
- <20221215040141.18610-7-hejinyang@loongson.cn>
-From: Qing Zhang <zhangqing@loongson.cn>
-Message-ID: <2aa963e1-e202-73b8-725f-3ca207d622a7@loongson.cn>
-Date: Thu, 15 Dec 2022 20:04:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398753234
+	for <loongarch@lists.linux.dev>; Thu, 15 Dec 2022 13:41:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671111664; x=1702647664;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4wh4eb0YGFGHFG9dwz94YTVzd1p9vAC1js7+jLRKDKY=;
+  b=n7t//DygNOpd2Qp8Gv7lDTHud79cspZN1qhTzOYjMJe9l3OwHUFEuVeG
+   9y6E/xDHX16yD4w3U2JHlQKiVN1UjGHHoh2i/aSngka0tWXtqd6le1mtP
+   /k++BJoMhk3AwPIs/oOG2ASDabvO1E5nn0danVvIRvwwbANDIWzFmunMk
+   kaptnTg+GWfUB9FbB0JdnXhSGHRDSB78i1qJb0mlEqPoljcgKAseeObvl
+   sdOqbwKGrtwTEbaQDsdkEIPCukdtu+HsiKEhuzvgybUSx2m37yrmZG6cC
+   RuTjyqwq7dQ4OZ9DjCD6RHhZE/vt5B29GQOcE0mEUyv9x3QHr+qVWSSZW
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10561"; a="319819372"
+X-IronPort-AV: E=Sophos;i="5.96,247,1665471600"; 
+   d="scan'208";a="319819372"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2022 05:40:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10561"; a="738110965"
+X-IronPort-AV: E=Sophos;i="5.96,247,1665471600"; 
+   d="scan'208";a="738110965"
+Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Dec 2022 05:40:52 -0800
+Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1p5oTj-0006Iw-0a;
+	Thu, 15 Dec 2022 13:40:51 +0000
+Date: Thu, 15 Dec 2022 21:40:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-xfs@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-omap@vger.kernel.org, linux-can@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, kvm@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org,
+ Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 459c73db4069c27c1d4a0e20d055b837396364b8
+Message-ID: <639b23c8.DdUNqMCLdxZ7gLv2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20221215040141.18610-7-hejinyang@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxb+RmDZtjs3UAAA--.1958S3
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3ZF1fWF4fKF1DZr4furyDJrb_yoWDuF4rpF
-	90yrs5Gr48Kryqvr47JF1UZrn8Z3ZruF47AayDKryUAFn2qr13Xr1vy34q9r1DCrWUWFyI
-	qFnxJrnIka17t3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42
-	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
-	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI4
-	8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4U
-	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I
-	8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2ID7UUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-Hi, Jinyang
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 459c73db4069c27c1d4a0e20d055b837396364b8  Add linux-next specific files for 20221215
 
-On 2022/12/15 下午12:01, Jinyang He wrote:
-> When exception is triggered, code flow go handle_\exception in some
-> cases. One of stackframe in this case as follows,
-> 
-> high -> +-------+
->          | REGS  |  <- a pt_regs
->          |       |
->          |       |  <- ex trigger
->          | REGS  |  <- ex pt_regs   <-+
->          |       |                    |
->          |       |                    |
-> low  -> +-------+           ->unwind-+
-> 
-> When unwinder unwind to handler_\exception it cannot go on prologue
-> analysis. It is asynchronous code flow, we should get the next frame
-> PC from regs->csr_era but not from regs->regs[1]. And we copy the
-> handler codes to eentry in the early time and copy the handler codes
-> to NUMA-relative memory named pcpu_handlers if NUMA is enabled. Thus,
-> unwinder cannot unwind normally. Therefore, try to give some hint in
-> handler_\exception and fixup it in unwind_next_frame.
-> 
-> Reported-by: Qing Zhang <zhangqing@loongson.cn>
-> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-> ---
->   arch/loongarch/include/asm/unwind.h     |   2 +-
->   arch/loongarch/kernel/genex.S           |   3 +
->   arch/loongarch/kernel/unwind_prologue.c | 100 +++++++++++++++++++++---
->   arch/loongarch/mm/tlb.c                 |   2 +-
->   4 files changed, 92 insertions(+), 15 deletions(-)
-> 
-The others look good to me, but there is still a small problem:
-When I tested hw_breakpoint.ko with prologue unwinder,
-sometimes output address [<9000000100302724>] 0x9000000100302724, eg: 
-CPU: 3 PID: 0
-But some processes are normal, eg: CPU: 0 PID: 0
+Error/Warning reports:
 
-[27.655549] CPU: 3 PID: 0 Comm: swapper/3 Not tainted 6.1.0-rc8 #9
-[27.655552] Hardware name: Loongson Loongson-3A5000-7A1000-1w-A2101/
-Loongson-LS3A5000-7A1000-1w-A2101,  BIOS 
-vUDK2018-LoongArch-V2.0.pre-beta8 06/15/2022
+https://lore.kernel.org/oe-kbuild-all/202211242120.MzZVGULn-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212141410.IlFkWqph-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212142121.vendKsOc-lkp@intel.com
 
-[27.655604]...
-[27.655606] Call Trace:
-[27.655607] [<9000000000222f88>] show_stack+0x60/0x184
-[27.655613] [<90000000010e9b8c>] dump_stack_lvl+0x60/0x88
-[27.655618] [] sample_hbp_handler+0x30/0x4c [data_breakpoint]
-[27.655626] [<900000000037c8a0>] __perf_event_overflow+0x84/0x26c
-[27.655629] [<900000000038980c>] perf_bp_event+0xc0/0xc8
-[27.655633] [<900000000022e3bc>] watchpoint_handler+0x54/0x88
-[27.655637] [<90000000010ea2f8>] do_watch+0x30/0x48
-[27.655640] [<9000000100302724>] 0x9000000100302724      // Not natural
-[27.655642] [<9000000000ab4cbc>] add_interrupt_randomness+0x60/0xbc
-[27.655646] [<90000000002a0fa0>] handle_irq_event_percpu+0x28/0x70
-[27.655650] [<90000000002a6f9c>] handle_percpu_irq+0x54/0x88
-[27.655652] [<90000000002a025c>] generic_handle_domain_irq+0x28/0x40
-[27.655655] [<9000000000995458>] handle_cpu_irq+0x68/0xa4
-[27.655658] [<90000000010ea8dc>] handle_loongarch_irq+0x34/0x4c
-[27.655661] [<90000000010ea974>] do_vint+0x80/0xb4
-[27.655664] [<90000000002216a0>] __arch_cpu_idle+0x20/0x24
-[27.655667] [<90000000010f8178>] default_idle_call+0x30/0x58
-[27.655670] [<90000000002825cc>] do_idle+0xb4/0x118
-[27.655674] [<900000000028281c>] cpu_startup_entry+0x20/0x24
-[27.655677] [<900000000022b198>] start_secondary+0x9c/0xa4
-[27.655679] [<90000000010eb124>] smpboot_entry+0x60/0x64
+Error/Warning: (recently discovered and may have been fixed)
 
+Documentation/gpu/drm-internals:179: ./include/drm/drm_file.h:411: WARNING: undefined label: drm_accel_node (if the link has no caption the label must precede a section header)
+Documentation/networking/devlink/etas_es58x.rst: WARNING: document isn't included in any toctree
+Warning: tools/power/cpupower/man/cpupower-powercap-info.1 references a file that doesn't exist: Documentation/power/powercap/powercap.txt
+arch/loongarch/kernel/asm-offsets.c:265:6: warning: no previous prototype for 'output_pbe_defines' [-Wmissing-prototypes]
+arch/parisc/include/asm/pgtable.h:154:32: warning: "PMD_SHIFT" is not defined, evaluates to 0 [-Wundef]
+arch/powerpc/kernel/kvm_emul.o: warning: objtool: kvm_template_end(): can't find starting instruction
+arch/powerpc/kernel/optprobes_head.o: warning: objtool: optprobe_template_end(): can't find starting instruction
+drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dcn201/irq_service_dcn201.c:40:20: warning: no previous prototype for 'to_dal_irq_source_dcn201' [-Wmissing-prototypes]
+drivers/regulator/tps65219-regulator.c:310:60: warning: parameter 'dev' set but not used [-Wunused-but-set-parameter]
+drivers/regulator/tps65219-regulator.c:370:26: warning: ordered comparison of pointer with integer zero [-Wextra]
 
-[27.658940] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.1.0-rc8 #9
-...
-[28.229978] Call Trace:
-[28.229979] [<9000000000222f88>] show_stack+0x60/0x184
-[28.237503] [<90000000010e9b8c>] dump_stack_lvl+0x60/0x88
-[28.242866] [] sample_hbp_handler+0x30/0x4c [data_breakpoint]
-[28.250132] [<900000000037c8a0>] __perf_event_overflow+0x84/0x26c
-[28.256186] [<900000000038980c>] perf_bp_event+0xc0/0xc8
-[28.261462] [<900000000022e3bc>] watchpoint_handler+0x54/0x88
-[28.267170] [<90000000010ea2f8>] do_watch+0x30/0x48
-[28.272013] [<90000000017d2724>] exception_handlers+0x2724/0x1000  //...
-[28.278155] [<9000000000ab4cbc>] add_interrupt_randomness+0x60/0xbc
-[28.284381] [<90000000002a0fa0>] handle_irq_event_percpu+0x28/0x70
-[28.290520] [<90000000002a6f9c>] handle_percpu_irq+0x54/0x88
-[28.296140] [<90000000002a025c>] generic_handle_domain_irq+0x28/0x40
-[28.302452] [<9000000000995458>] handle_cpu_irq+0x68/0xa4
-[28.307813] [<90000000010ea8dc>] handle_loongarch_irq+0x34/0x4c
-[28.313693] [<90000000010ea974>] do_vint+0x80/0xb4
-[28.318450] [<90000000002216a0>] __arch_cpu_idle+0x20/0x24
-[28.323897] [<90000000010f8178>] default_idle_call+0x30/0x58
-[28.329518] [<90000000002825cc>] do_idle+0xb4/0x118
-[28.334361] [<900000000028281c>] cpu_startup_entry+0x20/0x24
-[28.339982] [<90000000010ec0dc>] kernel_init+0x0/0x110
-[28.345085] [<90000000011106f8>] arch_post_acpi_subsys_init+0x0/0x4
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
-Maybe sometimes assembly kallsyms is not recognized, let me think...
+drivers/i2c/busses/i2c-qcom-geni.c:1028:28: sparse: sparse: symbol 'i2c_master_hub' was not declared. Should it be static?
+fs/xfs/xfs_iomap.c:86:29: sparse: sparse: symbol 'xfs_iomap_page_ops' was not declared. Should it be static?
 
-Thanks,
--Qing
+Error/Warning ids grouped by kconfigs:
 
-> diff --git a/arch/loongarch/include/asm/unwind.h b/arch/loongarch/include/asm/unwind.h
-> index a16aff1d086a..c02cb3b39fe2 100644
-> --- a/arch/loongarch/include/asm/unwind.h
-> +++ b/arch/loongarch/include/asm/unwind.h
-> @@ -24,7 +24,7 @@ struct unwind_state {
->   	char type; /* UNWINDER_XXX */
->   	struct stack_info stack_info;
->   	struct task_struct *task;
-> -	bool first, error, is_ftrace;
-> +	bool first, error, reset;
->   	int graph_idx;
->   	unsigned long sp, pc, ra;
->   	const struct unwinder_ops *ops;
-> diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
-> index 75e5be807a0d..7e5c293ed89f 100644
-> --- a/arch/loongarch/kernel/genex.S
-> +++ b/arch/loongarch/kernel/genex.S
-> @@ -67,14 +67,17 @@ SYM_FUNC_END(except_vec_cex)
->   	.macro	BUILD_HANDLER exception handler prep
->   	.align	5
->   	SYM_FUNC_START(handle_\exception)
-> +	666:
->   	BACKUP_T0T1
->   	SAVE_ALL
->   	build_prep_\prep
->   	move	a0, sp
->   	la.abs	t0, do_\handler
->   	jirl	ra, t0, 0
-> +	668:
->   	RESTORE_ALL_AND_RET
->   	SYM_FUNC_END(handle_\exception)
-> +	SYM_DATA(unwind_hint_\exception, .word 668b - 666b)
->   	.endm
->   
->   	BUILD_HANDLER ade ade badv
-> diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
-> index 441641227c10..c34bb035ac56 100644
-> --- a/arch/loongarch/kernel/unwind_prologue.c
-> +++ b/arch/loongarch/kernel/unwind_prologue.c
-> @@ -2,23 +2,102 @@
->   /*
->    * Copyright (C) 2022 Loongson Technology Corporation Limited
->    */
-> +#include <linux/cpumask.h>
->   #include <linux/ftrace.h>
->   #include <linux/kallsyms.h>
->   
->   #include <asm/inst.h>
-> +#include <asm/loongson.h>
->   #include <asm/ptrace.h>
-> +#include <asm/setup.h>
->   #include <asm/unwind.h>
->   
->   static const struct unwinder_ops *guard_unwinder = &unwinder_guess;
->   
-> -static inline void unwind_state_fixup(struct unwind_state *state)
-> +extern const int unwind_hint_ade;
-> +extern const int unwind_hint_ale;
-> +extern const int unwind_hint_bp;
-> +extern const int unwind_hint_fpe;
-> +extern const int unwind_hint_fpu;
-> +extern const int unwind_hint_lsx;
-> +extern const int unwind_hint_lasx;
-> +extern const int unwind_hint_lbt;
-> +extern const int unwind_hint_ri;
-> +extern const int unwind_hint_watch;
-> +extern unsigned long eentry;
-> +#ifdef CONFIG_NUMA
-> +extern unsigned long pcpu_handlers[NR_CPUS];
-> +#endif
-> +
-> +static inline bool scan_handler(unsigned long entry_offset)
->   {
-> -#ifdef CONFIG_DYNAMIC_FTRACE
-> -	static unsigned long ftrace = (unsigned long)ftrace_call + 4;
-> +	int idx, offset;
->   
-> -	if (state->pc == ftrace)
-> -		state->is_ftrace = true;
-> +	if (entry_offset >= EXCCODE_INT_START * VECSIZE)
-> +		return false;
-> +
-> +	idx = entry_offset / VECSIZE;
-> +	offset = entry_offset % VECSIZE;
-> +	switch (idx) {
-> +	case EXCCODE_ADE:
-> +		return offset == unwind_hint_ade;
-> +	case EXCCODE_ALE:
-> +		return offset == unwind_hint_ale;
-> +	case EXCCODE_BP:
-> +		return offset == unwind_hint_bp;
-> +	case EXCCODE_FPE:
-> +		return offset == unwind_hint_fpe;
-> +	case EXCCODE_FPDIS:
-> +		return offset == unwind_hint_fpu;
-> +	case EXCCODE_LSXDIS:
-> +		return offset == unwind_hint_lsx;
-> +	case EXCCODE_LASXDIS:
-> +		return offset == unwind_hint_lasx;
-> +	case EXCCODE_BTDIS:
-> +		return offset == unwind_hint_lbt;
-> +	case EXCCODE_INE:
-> +		return offset == unwind_hint_ri;
-> +	case EXCCODE_WATCH:
-> +		return offset == unwind_hint_watch;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static inline bool fix_exceptions(unsigned long pc)
-> +{
-> +#ifdef CONFIG_NUMA
-> +	int cpu;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		if (!pcpu_handlers[cpu])
-> +			continue;
-> +		if (scan_handler(pc - pcpu_handlers[cpu]))
-> +			return true;
-> +	}
->   #endif
-> +	return scan_handler(pc - eentry);
-> +}
-> +
-> +/*
-> + * As we meet ftrace_regs_entry, reset first flag like first doing
-> + * tracing. Prologue analysis will stop soon because PC is at entry.
-> + */
-> +static inline bool fix_ftrace(unsigned long pc)
-> +{
-> +#ifdef CONFIG_DYNAMIC_FTRACE
-> +	return pc == (unsigned long)ftrace_call + LOONGARCH_INSN_SIZE;
-> +#else
-> +	return false;
-> +#endif
-> +}
-> +
-> +static inline bool unwind_state_fixup(struct unwind_state *state)
-> +{
-> +	if (!fix_exceptions(state->pc) && !fix_ftrace(state->pc))
-> +		return false;
-> +	state->reset = true;
-> +	return true;
->   }
->   
->   static unsigned long get_return_address(struct unwind_state *state)
-> @@ -46,14 +125,10 @@ static bool unwind_by_prologue(struct unwind_state *state)
->   	if (state->sp >= info->end || state->sp < info->begin)
->   		return false;
->   
-> -	if (state->is_ftrace) {
-> -		/*
-> -		 * As we meet ftrace_regs_entry, reset first flag like first doing
-> -		 * tracing. Prologue analysis will stop soon because PC is at entry.
-> -		 */
-> +	if (state->reset) {
->   		regs = (struct pt_regs *)state->sp;
->   		state->first = true;
-> -		state->is_ftrace = false;
-> +		state->reset = false;
->   		state->pc = regs->csr_era;
->   		state->ra = regs->regs[1];
->   		state->sp = regs->regs[3];
-> @@ -118,8 +193,7 @@ static bool unwind_by_prologue(struct unwind_state *state)
->   
->   out:
->   	state->first = false;
-> -	unwind_state_fixup(state);
-> -	return !!__kernel_text_address(state->pc);
-> +	return unwind_state_fixup(state) || __kernel_text_address(state->pc);
->   }
->   
->   static int raw_show_trace;
-> diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-> index da3681f131c8..8bad6b0cff59 100644
-> --- a/arch/loongarch/mm/tlb.c
-> +++ b/arch/loongarch/mm/tlb.c
-> @@ -251,7 +251,7 @@ static void output_pgtable_bits_defines(void)
->   }
->   
->   #ifdef CONFIG_NUMA
-> -static unsigned long pcpu_handlers[NR_CPUS];
-> +unsigned long pcpu_handlers[NR_CPUS];
->   #endif
->   extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
->   
-> 
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- arm-randconfig-c033-20221214
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|-- arm64-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- i386-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- i386-randconfig-s002
+|   `-- fs-xfs-xfs_iomap.c:sparse:sparse:symbol-xfs_iomap_page_ops-was-not-declared.-Should-it-be-static
+|-- ia64-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- ia64-randconfig-r032-20221214
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|-- loongarch-allyesconfig
+|   `-- arch-loongarch-kernel-asm-offsets.c:warning:no-previous-prototype-for-output_pbe_defines
+|-- m68k-allmodconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- m68k-allyesconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- microblaze-randconfig-r033-20221214
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|-- mips-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- parisc-randconfig-r015-20221214
+|   `-- arch-parisc-include-asm-pgtable.h:warning:PMD_SHIFT-is-not-defined-evaluates-to
+|-- parisc-randconfig-r032-20221214
+|   `-- arch-parisc-include-asm-pgtable.h:warning:PMD_SHIFT-is-not-defined-evaluates-to
+|-- parisc-randconfig-r034-20221214
+|   `-- arch-parisc-include-asm-pgtable.h:warning:PMD_SHIFT-is-not-defined-evaluates-to
 
+elapsed time: 722m
+
+configs tested: 80
+configs skipped: 2
+
+gcc tested configs:
+powerpc                           allnoconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              defconfig
+arc                                 defconfig
+i386                                defconfig
+s390                             allmodconfig
+x86_64                        randconfig-a004
+alpha                               defconfig
+x86_64                        randconfig-a002
+s390                                defconfig
+x86_64                               rhel-8.3
+arc                  randconfig-r043-20221214
+x86_64                           rhel-8.3-bpf
+ia64                             allmodconfig
+x86_64                           allyesconfig
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+s390                             allyesconfig
+arm                                 defconfig
+i386                          randconfig-a014
+s390                 randconfig-r044-20221214
+sh                   secureedge5410_defconfig
+i386                          randconfig-a001
+x86_64                        randconfig-a013
+riscv                randconfig-r042-20221214
+x86_64                        randconfig-a006
+x86_64                        randconfig-a011
+x86_64                          rhel-8.3-rust
+i386                          randconfig-a003
+alpha                            allyesconfig
+x86_64                           rhel-8.3-syz
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+i386                          randconfig-a005
+arm64                            allyesconfig
+x86_64                        randconfig-a015
+sh                               allmodconfig
+m68k                             allyesconfig
+i386                          randconfig-a012
+sh                          urquell_defconfig
+arm                              allyesconfig
+i386                          randconfig-a016
+x86_64                            allnoconfig
+sparc                               defconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+i386                             allyesconfig
+arm                          pxa3xx_defconfig
+sh                                  defconfig
+powerpc                     rainier_defconfig
+powerpc                         wii_defconfig
+sh                           se7705_defconfig
+loongarch                         allnoconfig
+sh                        sh7763rdp_defconfig
+sh                             espt_defconfig
+powerpc                 canyonlands_defconfig
+i386                          randconfig-c001
+
+clang tested configs:
+arm                  randconfig-r046-20221214
+hexagon              randconfig-r041-20221214
+hexagon              randconfig-r045-20221214
+x86_64                        randconfig-a014
+x86_64                        randconfig-a001
+i386                          randconfig-a013
+x86_64                        randconfig-a003
+x86_64                        randconfig-a016
+x86_64                        randconfig-a012
+x86_64                        randconfig-a005
+i386                          randconfig-a002
+i386                          randconfig-a011
+i386                          randconfig-a004
+arm                          ixp4xx_defconfig
+i386                          randconfig-a015
+i386                          randconfig-a006
+powerpc                      obs600_defconfig
+x86_64                        randconfig-k001
+mips                        bcm63xx_defconfig
+arm                      pxa255-idp_defconfig
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
