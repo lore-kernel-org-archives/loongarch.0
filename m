@@ -1,178 +1,92 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9181020E8
-	for <loongarch@lists.linux.dev>; Thu, 15 Dec 2022 05:55:54 +0000 (UTC)
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8AxaerotppjK78FAA--.9805S3;
-	Thu, 15 Dec 2022 13:55:52 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxY+XmtppjDSoAAA--.1345S3;
-	Thu, 15 Dec 2022 13:55:52 +0800 (CST)
-Subject: Re: [PATCH 1/6] LoongArch: Get frame info in unwind_start when regs
- is not supported
-To: Qing Zhang <zhangqing@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-References: <20221215040141.18610-1-hejinyang@loongson.cn>
- <20221215040141.18610-2-hejinyang@loongson.cn>
- <d3c5aa06-0cc3-b1a4-18b9-858e8f1216de@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <e4d39bdb-827a-8a9c-0aeb-fcc919743826@loongson.cn>
-Date: Thu, 15 Dec 2022 13:55:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D8820FE
+	for <loongarch@lists.linux.dev>; Thu, 15 Dec 2022 06:16:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD792C43392
+	for <loongarch@lists.linux.dev>; Thu, 15 Dec 2022 06:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1671084968;
+	bh=i5u6MwDdjMbl5c62Ma9C2VxUrEeox5PSRWqUh/AyUOM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bYBxL/j3L6TZTDNkVK26+NjmtaT8e4t9QlRqZIyKMnZRdFpRD4gkOaJNqGj0nEVKL
+	 OxlSvV8UNZSD6F4hIvwPU0iaMpfOHByI+/fsGLyn06LfpH4j/M7V5FFakVxHhgdqmq
+	 Om7DgZgNrftZTF63PgUUllOliS6y4X2ppyFPRgiQSv8qhRTf1SGk3Yj+5SolSmrMJX
+	 1AnmTbmUH0HcsZA5byz1DJbPBqnlJCHvu8InXZjyoJbyG7opD32/G5ccYr59Nxwq7f
+	 dTXB1QPauz6DGBLfmzIdCdDer8hnctDwYF0l8wyOYLmmop3HCFYF4JyD4+2VLAKZt8
+	 eltaXfdlJGrtQ==
+Received: by mail-ed1-f45.google.com with SMTP id e13so25664341edj.7
+        for <loongarch@lists.linux.dev>; Wed, 14 Dec 2022 22:16:08 -0800 (PST)
+X-Gm-Message-State: ANoB5pkgr3aSZ6fydIjc52dOMD9MFGcaH5XkHW+ecMN9Mlh9VWjyNL1S
+	n87BRpiSgPOHdzwZBEcY/nVEFi54hdK83BH4dtk=
+X-Google-Smtp-Source: AA0mqf6xmKh3r7oa6Lk2eyWTOlV7MSnF+EjabO7TglwWDZKTW0VKcmfj/+TaGNvJknxbhkD612pN97/NiknIXBa8Boc=
+X-Received: by 2002:a05:6402:5388:b0:46a:f4b0:2d23 with SMTP id
+ ew8-20020a056402538800b0046af4b02d23mr46876515edb.78.1671084966816; Wed, 14
+ Dec 2022 22:16:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <d3c5aa06-0cc3-b1a4-18b9-858e8f1216de@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8AxY+XmtppjDSoAAA--.1345S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3Jw1DGw1UCw1UZr4DGr47CFg_yoW7Aw43pF
-	1kArW5GrWUWrn7Jr17Jr1UXr98Jr1kCwnrGFyktFy5KF47AFy2gryUXryq9F4UA3y8Gw48
-	Xr15XrnI9anrJaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	baAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1D
-	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
-	AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
-	cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
-	80aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI
-	43ZEXa7IU8I38UUUUUU==
+References: <20221215040141.18610-1-hejinyang@loongson.cn> <20221215040141.18610-6-hejinyang@loongson.cn>
+In-Reply-To: <20221215040141.18610-6-hejinyang@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 15 Dec 2022 14:15:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4QwWV+q_ROSbw10n3mj64BPsiAoErR7k_wZ4v0zG3nhw@mail.gmail.com>
+Message-ID: <CAAhV-H4QwWV+q_ROSbw10n3mj64BPsiAoErR7k_wZ4v0zG3nhw@mail.gmail.com>
+Subject: Re: [PATCH 5/6] LoongArch: Add raw_show_trace to enable guess
+ unwinder default
+To: Jinyang He <hejinyang@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Qing Zhang <zhangqing@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2022-12-15 13:24, Qing Zhang wrote:
+Hi, Jinyang,
 
-> Hi, Jinyang
+Is this patch really necessary?
+
+Huacai
+
+On Thu, Dec 15, 2022 at 12:02 PM Jinyang He <hejinyang@loongson.cn> wrote:
 >
-> On 2022/12/15 下午12:01, Jinyang He wrote:
->> At unwind_start, it is better to try to get its frame info even we not
->> support regs rather than get them outside. So that we can simply use
->> unwind_{start, next_frame, done} outside.
->>
->> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
->> ---
->>   arch/loongarch/kernel/process.c         | 12 +++---------
->>   arch/loongarch/kernel/unwind_guess.c    |  6 ++++++
->>   arch/loongarch/kernel/unwind_prologue.c | 16 +++++++++++++---
->>   3 files changed, 22 insertions(+), 12 deletions(-)
->>
->> diff --git a/arch/loongarch/kernel/process.c 
->> b/arch/loongarch/kernel/process.c
->> index 502b8b950057..6ef45174ad35 100644
->> --- a/arch/loongarch/kernel/process.c
->> +++ b/arch/loongarch/kernel/process.c
->> @@ -197,20 +197,14 @@ int copy_thread(struct task_struct *p, const 
->> struct kernel_clone_args *args)
->>     unsigned long __get_wchan(struct task_struct *task)
->>   {
->> -    unsigned long pc;
->> +    unsigned long pc = 0;
->>       struct unwind_state state;
->>         if (!try_get_task_stack(task))
->>           return 0;
->>   -    unwind_start(&state, task, NULL);
->> -    state.sp = thread_saved_fp(task);
->> -    get_stack_info(state.sp, state.task, &state.stack_info);
->> -    state.pc = thread_saved_ra(task);
->> -#ifdef CONFIG_UNWINDER_PROLOGUE
->> -    state.type = UNWINDER_PROLOGUE;
->> -#endif
->> -    for (; !unwind_done(&state); unwind_next_frame(&state)) {
->> +    for (unwind_start(&state, task, NULL); !unwind_done(&state);
->> +         unwind_next_frame(&state)) {
->>           pc = unwind_get_return_address(&state);
->>           if (!pc)
->>               break;
->> diff --git a/arch/loongarch/kernel/unwind_guess.c 
->> b/arch/loongarch/kernel/unwind_guess.c
->> index e2d2e4f3001f..e03864511582 100644
->> --- a/arch/loongarch/kernel/unwind_guess.c
->> +++ b/arch/loongarch/kernel/unwind_guess.c
->> @@ -26,6 +26,12 @@ void unwind_start(struct unwind_state *state, 
->> struct task_struct *task,
->>       if (regs) {
->>           state->sp = regs->regs[3];
->>           state->pc = regs->csr_era;
->> +    } else if (task == current) {
->> +        state->sp = (unsigned long)__builtin_frame_address(0);
->> +        state->pc = (unsigned long)__builtin_return_address(0);
->> +    } else {
->> +        state->sp = thread_saved_fp(task);
->> +        state->pc = thread_saved_ra(task);
-> The case for tasks is already handled in stacktrace.c, which is 
-> reusable code:
-> void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
->              struct task_struct *task, struct pt_regs *regs)
-> {
-> ...
+> Inspired by MIPS, add cmdline parameter named 'raw_show_trace' to
+> enable guess unwinder in prologue unwinder unwind_start() default.
+> In some cases the guess is more efficient than prologue.
 >
->     if (task == current) {
->         regs->regs[3] = (unsigned long)__builtin_frame_address(0);
->         regs->csr_era = (unsigned long)__builtin_return_address(0);
->     } else {
->         regs->regs[3] = thread_saved_fp(task);
->         regs->csr_era = thread_saved_ra(task);
->     }
-> ...
->     for (unwind_start(&state, task, regs);
->           !unwind_done(&state); unwind_next_frame(&state)) {
->         addr = unwind_get_return_address(&state);
-> ...
-> }
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> ---
+>  arch/loongarch/kernel/unwind_prologue.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 >
->>         state->task = task;
->> diff --git a/arch/loongarch/kernel/unwind_prologue.c 
->> b/arch/loongarch/kernel/unwind_prologue.c
->> index 0f8d1451ebb8..9d51ea37782e 100644
->> --- a/arch/loongarch/kernel/unwind_prologue.c
->> +++ b/arch/loongarch/kernel/unwind_prologue.c
->> @@ -141,12 +141,22 @@ void unwind_start(struct unwind_state *state, 
->> struct task_struct *task,
->>               struct pt_regs *regs)
->>   {
->>       memset(state, 0, sizeof(*state));
->> +    state->type = UNWINDER_PROLOGUE;
->>   -    if (regs && __kernel_text_address(regs->csr_era)) {
->> -        state->pc = regs->csr_era;
->> +    if (regs) {
->>           state->sp = regs->regs[3];
->> +        state->pc = regs->csr_era;
->>           state->ra = regs->regs[1];
->> -        state->type = UNWINDER_PROLOGUE;
->> +        if (!__kernel_text_address(state->pc))
->> +            state->type = UNWINDER_GUESS;
->> +    } else if (task == current) {
->> +        state->sp = (unsigned long)__builtin_frame_address(0);
->> +        state->pc = (unsigned long)__builtin_return_address(0);
->> +        state->ra = 0;
->> +    } else {
->> +        state->sp = thread_saved_fp(task);
->> +        state->pc = thread_saved_ra(task);
->> +        state->ra = 0;
->>       }
-> also...
->>       state->task = task;
->>
-That looks similar, but stacktrace actually provides the regs parameter.
-Unwind_{start, next_frame, get_return_address} is API to others, such the
-GPL module. Btw, if we want to drop the redundant codes in arch_stack_walk
-and keep same result, use "cookie->skip += 1", I think, but beyond this 
-series.
-
-
-Thanks,
-
-Jinyang
-
+> diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
+> index 9677e13c4b4c..441641227c10 100644
+> --- a/arch/loongarch/kernel/unwind_prologue.c
+> +++ b/arch/loongarch/kernel/unwind_prologue.c
+> @@ -122,11 +122,22 @@ static bool unwind_by_prologue(struct unwind_state *state)
+>         return !!__kernel_text_address(state->pc);
+>  }
+>
+> +static int raw_show_trace;
+> +static int __init set_raw_show_trace(char *str)
+> +{
+> +       raw_show_trace = 1;
+> +       return 1;
+> +}
+> +__setup("raw_show_trace", set_raw_show_trace);
+> +
+>  static void start(struct unwind_state *state, struct task_struct *task,
+>                     struct pt_regs *regs)
+>  {
+>         state->first = true;
+>
+> +       if (raw_show_trace)
+> +               unwind_register_unwinder(state, guard_unwinder);
+> +
+>         /*
+>          * The current PC is not kernel text address, we cannot find its
+>          * relative symbol. Thus, prologue analysis will be broken. Luckly,
+> --
+> 2.34.3
+>
