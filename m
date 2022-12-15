@@ -1,234 +1,73 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759B0A48E
-	for <loongarch@lists.linux.dev>; Wed, 14 Dec 2022 16:28:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671035297; x=1702571297;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=PEm95h/YTHcJiYhCqCHq1kOQJQryjVd8bKLlGnmtus4=;
-  b=dDwbRXbBPTgrFG6iQshoFapNfXE6o/Utsg0DNmKzXZzrgMB7KXNGMI15
-   IgTvfkRzBShJtipJHrKU+PMK0CdTysunbXDlNgqvP0xAYIDc+szmK+9gw
-   gWJdVV2Y02sj9AKL3ma5JI4g3GZGGTH/N1aAZvFobese5EPtx4Gy75Llt
-   RbDeJR8gZBCv/uZ7F3BtQu7KNknt7p0tvqcF6iEiwbcKBBlYuh4mboE/m
-   JWY9jGKmFaJmYY4OkBeVVf5u5NlRsPnxdBVeXuGKMxFzzozduqIdqsKx7
-   +ERfSLfXzomi7IUNx4IuQjrrYPJGNRsLOYbZBWlOxc+7wRFPPUZd2Sf/M
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10561"; a="316085816"
-X-IronPort-AV: E=Sophos;i="5.96,244,1665471600"; 
-   d="scan'208";a="316085816"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2022 08:28:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10561"; a="823349494"
-X-IronPort-AV: E=Sophos;i="5.96,244,1665471600"; 
-   d="scan'208";a="823349494"
-Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 14 Dec 2022 08:28:13 -0800
-Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1p5Uc8-0005ck-1T;
-	Wed, 14 Dec 2022 16:28:12 +0000
-Date: Thu, 15 Dec 2022 00:27:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-parisc@vger.kernel.org, linux-omap@vger.kernel.org,
- kvm@vger.kernel.org, amd-gfx@lists.freedesktop.org,
- Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 663397d1b469ff57f216d499b74a0b0183a508b8
-Message-ID: <6399f97f.8g32TjfFuyg/ourC%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA58417E3
+	for <loongarch@lists.linux.dev>; Thu, 15 Dec 2022 04:02:17 +0000 (UTC)
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8BxGelFnJpj2bkFAA--.9724S3;
+	Thu, 15 Dec 2022 12:02:13 +0800 (CST)
+Received: from localhost.localdomain (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtOVDnJpjVBkAAA--.887S2;
+	Thu, 15 Dec 2022 12:02:13 +0800 (CST)
+From: Jinyang He <hejinyang@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Qing Zhang <zhangqing@loongson.cn>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH 0/6] LoongArch: Some fix and new features for unwinders
+Date: Thu, 15 Dec 2022 12:01:35 +0800
+Message-Id: <20221215040141.18610-1-hejinyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxtOVDnJpjVBkAAA--.887S2
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvdXoWrZry8trWxCr15GFW3XrWxCrg_yoWDCwbEgF
+	yfAa4UGrWkWa98J3WDtryfJ34UWa1vqF90kas8ZrWxAFn0yF1rJrsxJw1av34vgrWUXrs8
+	J3y0g3ZY9w1qvjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
+	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
+	W8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 663397d1b469ff57f216d499b74a0b0183a508b8  Add linux-next specific files for 20221214
+Make the stacktrace more effective and the codes more clear.
 
-Error/Warning reports:
+Jinyang He (6):
+  LoongArch: Get frame info in unwind_start when regs is not supported
+  LoongArch: Use correct sp value to get graph addr in unwinder guess
+  LoongArch: Adjust PC value when unwind next frame in prologue unwinder
+  LoongArch: Strip guess_unwinder out from prologue_unwinder
+  LoongArch: Add raw_show_trace to enable guess unwinder default
+  LoongArch: Add generic ex-handler unwind in prologue unwinder
 
-https://lore.kernel.org/oe-kbuild-all/202211242120.MzZVGULn-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212141410.IlFkWqph-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212141742.w69HZXVa-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212141833.3QHN4iDl-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212142121.vendKsOc-lkp@intel.com
-
-Error/Warning: (recently discovered and may have been fixed)
-
-ERROR: modpost: "___ratelimit" [arch/x86/kernel/msr.ko] undefined!
-ERROR: modpost: "__asan_report_load4_noabort" [arch/x86/kernel/msr.ko] undefined!
-ERROR: modpost: "__asan_report_load8_noabort" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
-ERROR: modpost: "__asan_report_load8_noabort" [arch/x86/kernel/msr.ko] undefined!
-ERROR: modpost: "__fentry__" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
-ERROR: modpost: "__fentry__" [arch/x86/kernel/msr.ko] undefined!
-ERROR: modpost: "__gcov_exit" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
-ERROR: modpost: "__gcov_init" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
-ERROR: modpost: "_find_next_bit" [arch/x86/events/intel/intel-cstate.ko] undefined!
-ERROR: modpost: "_printk" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
-ERROR: modpost: "capable" [arch/x86/kernel/msr.ko] undefined!
-ERROR: modpost: "current_task" [arch/x86/kernel/msr.ko] undefined!
-ERROR: modpost: "device_create" [arch/x86/kernel/msr.ko] undefined!
-ERROR: modpost: "device_destroy" [arch/x86/kernel/msr.ko] undefined!
-ERROR: modpost: "ftrace_likely_update" [arch/x86/kernel/msr.ko] undefined!
-ERROR: modpost: "kasprintf" [arch/x86/kernel/msr.ko] undefined!
-ERROR: modpost: "memcpy" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
-ERROR: modpost: "pcpu_hot" [arch/x86/kvm/kvm-intel.ko] undefined!
-ERROR: modpost: "twofish_dec_blk" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
-ERROR: modpost: "twofish_dec_blk_3way" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
-ERROR: modpost: "twofish_dec_blk_cbc_3way" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
-ERROR: modpost: "twofish_setkey" [arch/x86/crypto/twofish-avx-x86_64.ko] undefined!
-arch/loongarch/kernel/asm-offsets.c:265:6: warning: no previous prototype for 'output_pbe_defines' [-Wmissing-prototypes]
-arch/parisc/include/asm/pgtable.h:169:32: warning: "PMD_SHIFT" is not defined, evaluates to 0 [-Wundef]
-arch/powerpc/kernel/kvm_emul.o: warning: objtool: kvm_template_end(): can't find starting instruction
-arch/powerpc/kernel/optprobes_head.o: warning: objtool: optprobe_template_end(): can't find starting instruction
-drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dcn201/irq_service_dcn201.c:40:20: warning: no previous prototype for 'to_dal_irq_source_dcn201' [-Wmissing-prototypes]
-drivers/regulator/tps65219-regulator.c:310:60: warning: parameter 'dev' set but not used [-Wunused-but-set-parameter]
-drivers/regulator/tps65219-regulator.c:370:26: warning: ordered comparison of pointer with integer zero [-Wextra]
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- alpha-buildonly-randconfig-r004-20221213
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- arm64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- ia64-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- loongarch-allyesconfig
-|   `-- arch-loongarch-kernel-asm-offsets.c:warning:no-previous-prototype-for-output_pbe_defines
-|-- m68k-allmodconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- m68k-allyesconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- mips-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- openrisc-randconfig-r005-20221213
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|-- parisc-randconfig-r033-20221214
-|   `-- arch-parisc-include-asm-pgtable.h:warning:PMD_SHIFT-is-not-defined-evaluates-to
-|-- powerpc-allmodconfig
-|   |-- arch-powerpc-kernel-kvm_emul.o:warning:objtool:kvm_template_end():can-t-find-starting-instruction
-|   |-- arch-powerpc-kernel-optprobes_head.o:warning:objtool:optprobe_template_end():can-t-find-starting-instruction
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- s390-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-clang_recent_errors
-|-- i386-randconfig-a002
-|   `-- ERROR:pcpu_hot-arch-x86-kvm-kvm-intel.ko-undefined
-`-- i386-randconfig-a015
-    `-- ERROR:_find_next_bit-arch-x86-events-intel-intel-cstate.ko-undefined
-
-elapsed time: 740m
-
-configs tested: 67
-configs skipped: 2
-
-gcc tested configs:
-um                             i386_defconfig
-x86_64                            allnoconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-powerpc                           allnoconfig
-alpha                               defconfig
-x86_64                          rhel-8.3-rust
-arm                                 defconfig
-i386                          randconfig-a001
-arc                  randconfig-r043-20221213
-s390                                defconfig
-arm                  randconfig-r046-20221213
-x86_64                        randconfig-a013
-x86_64                        randconfig-a004
-sh                               allmodconfig
-x86_64                           rhel-8.3-bpf
-x86_64                              defconfig
-x86_64                        randconfig-a002
-m68k                             allyesconfig
-ia64                             allmodconfig
-x86_64                          rhel-8.3-func
-i386                          randconfig-a003
-m68k                             allmodconfig
-x86_64                    rhel-8.3-kselftests
-i386                          randconfig-a014
-arc                              allyesconfig
-x86_64                        randconfig-a006
-m68k                       m5475evb_defconfig
-x86_64                           rhel-8.3-syz
-i386                                defconfig
-x86_64                         rhel-8.3-kunit
-x86_64                        randconfig-a015
-x86_64                               rhel-8.3
-x86_64                           rhel-8.3-kvm
-s390                             allmodconfig
-x86_64                        randconfig-a011
-i386                          randconfig-a012
-nios2                            alldefconfig
-i386                          randconfig-a016
-powerpc                          allmodconfig
-riscv             nommu_k210_sdcard_defconfig
-x86_64                           allyesconfig
-i386                          randconfig-c001
-arm64                            allyesconfig
-alpha                            allyesconfig
-s390                             allyesconfig
-i386                          randconfig-a005
-arm                              allyesconfig
-mips                             allyesconfig
-i386                             allyesconfig
-
-clang tested configs:
-hexagon              randconfig-r041-20221213
-hexagon              randconfig-r045-20221213
-riscv                randconfig-r042-20221213
-s390                 randconfig-r044-20221213
-i386                          randconfig-a013
-x86_64                        randconfig-a012
-x86_64                        randconfig-a001
-arm                           spitz_defconfig
-x86_64                        randconfig-a014
-x86_64                        randconfig-a003
-i386                          randconfig-a011
-x86_64                        randconfig-a005
-i386                          randconfig-a015
-i386                          randconfig-a002
-x86_64                        randconfig-a016
-i386                          randconfig-a006
-i386                          randconfig-a004
+ arch/loongarch/include/asm/ftrace.h     |   2 -
+ arch/loongarch/include/asm/unwind.h     |  33 +++-
+ arch/loongarch/kernel/Makefile          |   3 +-
+ arch/loongarch/kernel/genex.S           |   3 +
+ arch/loongarch/kernel/process.c         |  12 +-
+ arch/loongarch/kernel/unwind.c          |  52 +++++
+ arch/loongarch/kernel/unwind_guess.c    |  45 ++---
+ arch/loongarch/kernel/unwind_prologue.c | 248 +++++++++++++++---------
+ arch/loongarch/mm/tlb.c                 |   2 +-
+ 9 files changed, 256 insertions(+), 144 deletions(-)
+ create mode 100644 arch/loongarch/kernel/unwind.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.34.3
+
