@@ -1,74 +1,89 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077F4371
-	for <loongarch@lists.linux.dev>; Fri, 16 Dec 2022 04:37:31 +0000 (UTC)
-Received: by mail-pg1-f177.google.com with SMTP id 142so1029117pga.1
-        for <loongarch@lists.linux.dev>; Thu, 15 Dec 2022 20:37:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XLygs21yUm+BsQ9K/jaILqjtoVN7cCv+GmldKd5jCoY=;
-        b=atuW7kj1tICjX6XOEoGlMKRElIbgy8WI/deoKifcFx1519QZRpDCOoxmKj7EgE2l4w
-         PKzJI7L2ZbVuy2LOhWOolJwT0c6HGC5z3GYIC7j6xM/AunIUu1/hMOhZv9S06C7VFhC1
-         4Q2nDbmd0YUF9RndxPqP2p/GdMMZ3K4yhoxZk3FVJ0hYXbi4IN4jZVfHJrGPnQoXbTYJ
-         YAB5z7iNwRy7E4EGbWHbVIEyT9ICXQ8iqfiE3z4SLn1NrJW7NLywpAeLKJB/g9wvfmaM
-         r5jcdkMrnO+dY5EbBAyyZATVFCQYX6igkBalPuLJ6BkhstYEmOV58RsJNRueXOX7Ax8G
-         6CbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XLygs21yUm+BsQ9K/jaILqjtoVN7cCv+GmldKd5jCoY=;
-        b=Qz7pTQkt9wpiCn53PCuzJAEL3V424PODzClVwrYEAtIgLgqOpDuJoWybtO9I+eZ6Rk
-         ieQT1TYI7Tce4aALemgbZMdzBOjGakYGtaDj8wWEVlRGpqZKecC+k+57tGaHpENh3iLT
-         Zj0MIDmpwfdFs+J++EVWNhqTFOGYr8LvIggSu3KyNFkfieK88fpGEbtX1NDzF1mYXi8o
-         VxIiExr8iR2zebB+rvURFwnAa0Kp5DwmgcNdLE+PdprG/ckHbIIL505T1OUrnNuv2ohl
-         99CUknTQZqh2TxyVY3YP1Q8oW5Vvj8GI5cR7DWQVD0GYmyBGRXkTkwrF1UbetK0X6Awu
-         xnxg==
-X-Gm-Message-State: AFqh2koi3XH3PqRU2QRytXf3rEDq6+Sp4y9oF+eNsmuI9xWZY/uMs1+/
-	bixpiVjDNUuDjqlbTC8LXOdfJAKJvmP45yQIkGk=
-X-Google-Smtp-Source: AMrXdXt5JWumad1PiboheGKsXmVaNjeH8snNXdAqZ+Iojn+pij8j6t8nwEgKCk6P8kauAlDPnokzu+Szv1Dew2bD4rM=
-X-Received: by 2002:a63:584c:0:b0:484:2672:2c6a with SMTP id
- i12-20020a63584c000000b0048426722c6amr142358pgm.535.1671165451321; Thu, 15
- Dec 2022 20:37:31 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF377371
+	for <loongarch@lists.linux.dev>; Fri, 16 Dec 2022 06:11:06 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxdPD3C5xjCgkGAA--.14138S3;
+	Fri, 16 Dec 2022 14:11:04 +0800 (CST)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxf+T3C5xjiTkBAA--.5397S3;
+	Fri, 16 Dec 2022 14:11:03 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Correct the definition of is_branch_ins()
+To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>
+References: <1671006659-23859-1-git-send-email-yangtiezhu@loongson.cn>
+ <e89c80c7-53e5-5fec-d66b-4b375aa85d10@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <e65ce2d5-a154-6912-ab01-b0dc158acaaa@loongson.cn>
+Date: Fri, 16 Dec 2022 14:11:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <639b23c8.DdUNqMCLdxZ7gLv2%lkp@intel.com>
-In-Reply-To: <639b23c8.DdUNqMCLdxZ7gLv2%lkp@intel.com>
-From: Vincent Mailhol <vincent.mailhol@gmail.com>
-Date: Fri, 16 Dec 2022 13:37:20 +0900
-Message-ID: <CAMZ6RqJ7-GTPe7tNdhTYCF6OrnagfNL_7EXrhn5HD=YB8dtCGw@mail.gmail.com>
-Subject: Re: [linux-next:master] BUILD REGRESSION 459c73db4069c27c1d4a0e20d055b837396364b8
-To: kernel test robot <lkp@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-omap@vger.kernel.org, 
-	linux-can@vger.kernel.org, linux-arm-msm@vger.kernel.org, kvm@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, 
-	Linux Memory Management List <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e89c80c7-53e5-5fec-d66b-4b375aa85d10@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Cxf+T3C5xjiTkBAA--.5397S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvdXoW7Wr15urW7Xw4UZr4xWF4fAFb_yoWkZwc_ua
+	47Ww48Cw4rJ39rA3WkKw1ftrWUGa18Jan5Ary8tFW7GFn8tw1DA3yUtwnxZwn8Kw4kArs8
+	uF95tr1rCr12gjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	W7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
+	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
+	AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
+	6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIY
+	CTnIWIevJa73UjIFyTuYvjxU2L05UUUUU
 
-On Tue. 15 Dec. 2022 at 22:57, kernel test robot <lkp@intel.com> wrote:
-> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-> branch HEAD: 459c73db4069c27c1d4a0e20d055b837396364b8  Add linux-next specific files for 20221215
+
+
+On 12/16/2022 11:18 AM, Jinyang He wrote:
+> Hi, Tiezhu,
 >
-> Error/Warning reports:
+>
+> On 2022-12-14 16:30, Tiezhu Yang wrote:
+>> The current definition of is_branch_ins() is not correct,
+>
+> But the branch instruction opcode only use the high 6 bits,
 
-(...)
+Yes, I noticed that, the logic result of current code is right,
+but it seems a little strange (only consider reg1i21_format)
+at the first glance, the initial aim of this patch is to make
+it theoretically correct, maybe it is not the best change.
 
-> Documentation/networking/devlink/etas_es58x.rst: WARNING: document isn't included in any toctree
+I think we can neglect the instruction formats and check the
+high 6 bits instead, what do you think of the following change?
 
-A patch for this warning is on its way:
-  https://lore.kernel.org/linux-next/20221213051136.721887-1-mailhol.vincent@wanadoo.fr/T/#u
+diff --git a/arch/loongarch/include/asm/inst.h 
+b/arch/loongarch/include/asm/inst.h
+index c00e151..fd31752 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -329,8 +329,8 @@ static inline bool is_pc_ins(union 
+loongarch_instruction *ip)
 
-(...)
+  static inline bool is_branch_ins(union loongarch_instruction *ip)
+  {
+-       return ip->reg1i21_format.opcode >= beqz_op &&
+-               ip->reg1i21_format.opcode <= bgeu_op;
++       return ((ip->word >> 26) & 0x3f) >= beqz_op &&
++               ((ip->word >> 26) & 0x3f) <= bgeu_op;
+  }
 
-Yours sincerely,
-Vincent Mailhol
+Thanks,
+Tiezhu
+
+
+
