@@ -1,112 +1,74 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A9E8366
-	for <loongarch@lists.linux.dev>; Fri, 16 Dec 2022 03:18:54 +0000 (UTC)
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8Dx9vCc45tjagMGAA--.13632S3;
-	Fri, 16 Dec 2022 11:18:52 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxg+WY45tjChsBAA--.5803S3;
-	Fri, 16 Dec 2022 11:18:50 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Correct the definition of is_branch_ins()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <1671006659-23859-1-git-send-email-yangtiezhu@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <e89c80c7-53e5-5fec-d66b-4b375aa85d10@loongson.cn>
-Date: Fri, 16 Dec 2022 11:18:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077F4371
+	for <loongarch@lists.linux.dev>; Fri, 16 Dec 2022 04:37:31 +0000 (UTC)
+Received: by mail-pg1-f177.google.com with SMTP id 142so1029117pga.1
+        for <loongarch@lists.linux.dev>; Thu, 15 Dec 2022 20:37:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XLygs21yUm+BsQ9K/jaILqjtoVN7cCv+GmldKd5jCoY=;
+        b=atuW7kj1tICjX6XOEoGlMKRElIbgy8WI/deoKifcFx1519QZRpDCOoxmKj7EgE2l4w
+         PKzJI7L2ZbVuy2LOhWOolJwT0c6HGC5z3GYIC7j6xM/AunIUu1/hMOhZv9S06C7VFhC1
+         4Q2nDbmd0YUF9RndxPqP2p/GdMMZ3K4yhoxZk3FVJ0hYXbi4IN4jZVfHJrGPnQoXbTYJ
+         YAB5z7iNwRy7E4EGbWHbVIEyT9ICXQ8iqfiE3z4SLn1NrJW7NLywpAeLKJB/g9wvfmaM
+         r5jcdkMrnO+dY5EbBAyyZATVFCQYX6igkBalPuLJ6BkhstYEmOV58RsJNRueXOX7Ax8G
+         6CbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XLygs21yUm+BsQ9K/jaILqjtoVN7cCv+GmldKd5jCoY=;
+        b=Qz7pTQkt9wpiCn53PCuzJAEL3V424PODzClVwrYEAtIgLgqOpDuJoWybtO9I+eZ6Rk
+         ieQT1TYI7Tce4aALemgbZMdzBOjGakYGtaDj8wWEVlRGpqZKecC+k+57tGaHpENh3iLT
+         Zj0MIDmpwfdFs+J++EVWNhqTFOGYr8LvIggSu3KyNFkfieK88fpGEbtX1NDzF1mYXi8o
+         VxIiExr8iR2zebB+rvURFwnAa0Kp5DwmgcNdLE+PdprG/ckHbIIL505T1OUrnNuv2ohl
+         99CUknTQZqh2TxyVY3YP1Q8oW5Vvj8GI5cR7DWQVD0GYmyBGRXkTkwrF1UbetK0X6Awu
+         xnxg==
+X-Gm-Message-State: AFqh2koi3XH3PqRU2QRytXf3rEDq6+Sp4y9oF+eNsmuI9xWZY/uMs1+/
+	bixpiVjDNUuDjqlbTC8LXOdfJAKJvmP45yQIkGk=
+X-Google-Smtp-Source: AMrXdXt5JWumad1PiboheGKsXmVaNjeH8snNXdAqZ+Iojn+pij8j6t8nwEgKCk6P8kauAlDPnokzu+Szv1Dew2bD4rM=
+X-Received: by 2002:a63:584c:0:b0:484:2672:2c6a with SMTP id
+ i12-20020a63584c000000b0048426722c6amr142358pgm.535.1671165451321; Thu, 15
+ Dec 2022 20:37:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1671006659-23859-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8Cxg+WY45tjChsBAA--.5803S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7CFW8tr1UWr18ZrWxWr15Arb_yoW8CrWkpF
-	9xAFs5GF4kKFZakrnxJa18uF1Fvws3Kr4xXF1a9r1rCwnFqw1qyF18Jw1qyF1vkw4xKr1I
-	qr4fJ3WjgF47A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bIxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
-	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
-	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
-	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcV
-	C2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU83UUUUUUUU==
+References: <639b23c8.DdUNqMCLdxZ7gLv2%lkp@intel.com>
+In-Reply-To: <639b23c8.DdUNqMCLdxZ7gLv2%lkp@intel.com>
+From: Vincent Mailhol <vincent.mailhol@gmail.com>
+Date: Fri, 16 Dec 2022 13:37:20 +0900
+Message-ID: <CAMZ6RqJ7-GTPe7tNdhTYCF6OrnagfNL_7EXrhn5HD=YB8dtCGw@mail.gmail.com>
+Subject: Re: [linux-next:master] BUILD REGRESSION 459c73db4069c27c1d4a0e20d055b837396364b8
+To: kernel test robot <lkp@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-omap@vger.kernel.org, 
+	linux-can@vger.kernel.org, linux-arm-msm@vger.kernel.org, kvm@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, 
+	Linux Memory Management List <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Tiezhu,
-
-
-On 2022-12-14 16:30, Tiezhu Yang wrote:
-> The current definition of is_branch_ins() is not correct,
-
-But the branch instruction opcode only use the high 6 bits, [1]. That's 
-meaningless because it is the same as the original result. If we care 
-too much about the details of instruction format, we will lose a lot of 
-tricks on LoongArch instruction coding.
-
-[1] 
-https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#table-of-instruction-encoding
-
-
-> it was
-> first introduced in commit 49aef111e2da ("LoongArch: Add prologue
-> unwinder support"), in fact, there exist three branch instruction
-> formats rather than only reg1i21_format.
+On Tue. 15 Dec. 2022 at 22:57, kernel test robot <lkp@intel.com> wrote:
+> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+> branch HEAD: 459c73db4069c27c1d4a0e20d055b837396364b8  Add linux-next specific files for 20221215
 >
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->   arch/loongarch/include/asm/inst.h | 27 +++++++++++++++++++++++++--
->   1 file changed, 25 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-> index c00e151..42be39be 100644
-> --- a/arch/loongarch/include/asm/inst.h
-> +++ b/arch/loongarch/include/asm/inst.h
-> @@ -329,8 +329,31 @@ static inline bool is_pc_ins(union loongarch_instruction *ip)
->   
->   static inline bool is_branch_ins(union loongarch_instruction *ip)
->   {
-> -	return ip->reg1i21_format.opcode >= beqz_op &&
-> -		ip->reg1i21_format.opcode <= bgeu_op;
-> +	switch (ip->reg0i26_format.opcode) {
-> +	case b_op:
-> +	case bl_op:
-> +		return true;
-> +	}
-> +
-> +	switch (ip->reg1i21_format.opcode) {
-> +	case beqz_op:
-> +	case bnez_op:
-> +	case bceqz_op:
-> +		return true;
-> +	}
-> +
-> +	switch (ip->reg2i16_format.opcode) {
-> +	case jirl_op:
-> +	case beq_op:
-> +	case bne_op:
-> +	case blt_op:
-> +	case bge_op:
-> +	case bltu_op:
-> +	case bgeu_op:
-> +		return true;
-> +	}
-> +
-> +	return false;
->   }
->   
->   static inline bool is_ra_save_ins(union loongarch_instruction *ip)
+> Error/Warning reports:
 
+(...)
+
+> Documentation/networking/devlink/etas_es58x.rst: WARNING: document isn't included in any toctree
+
+A patch for this warning is on its way:
+  https://lore.kernel.org/linux-next/20221213051136.721887-1-mailhol.vincent@wanadoo.fr/T/#u
+
+(...)
+
+Yours sincerely,
+Vincent Mailhol
