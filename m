@@ -1,105 +1,98 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1933A622
-	for <loongarch@lists.linux.dev>; Sat, 17 Dec 2022 01:49:11 +0000 (UTC)
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8DxOekWIJ1jyEgGAA--.11080S3;
-	Sat, 17 Dec 2022 09:49:10 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxb+QVIJ1jUhECAA--.9141S3;
-	Sat, 17 Dec 2022 09:49:10 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Correct the definition of is_branch_ins()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <1671006659-23859-1-git-send-email-yangtiezhu@loongson.cn>
- <e89c80c7-53e5-5fec-d66b-4b375aa85d10@loongson.cn>
- <e65ce2d5-a154-6912-ab01-b0dc158acaaa@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <5e051682-c4fa-64d7-8567-149b5bd7d403@loongson.cn>
-Date: Sat, 17 Dec 2022 09:49:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CE9622
+	for <loongarch@lists.linux.dev>; Sat, 17 Dec 2022 02:09:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D095CC433D2
+	for <loongarch@lists.linux.dev>; Sat, 17 Dec 2022 02:09:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1671242946;
+	bh=2c/K1FLzSlsGs90CqSv0s2cU3Pb0DF8Hg/Ru7aZ4sws=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=a2pVefvnYxx0QNpWstRNpARXRHN6NMoz6pP5QSaqjTxijI5eFakPGLWTPrTtga0qg
+	 04e2MCbO7mE85N/NOiZbmTwrS9jXI+VehwJ6236EzMf5PbTBhBZsOI4AXAAfRY1UUZ
+	 44X3I2PPvbWhIjE4rv4lcTutNLCiU/KGHf3EvjWkS9zL7UGjYFoTfbGxrTHTL19Rbm
+	 9K6xxn33Pnx8YoX8GOjd5bGQ8+mu7Qsn3I5yLoxEjdwBNZXYYMv69e+zmLJgReDj9C
+	 Nax4HPIfO8skdMihZ1xz2NLCkpJPwbOjgrk/3QAljv/w130WQ1PgReuL8XYCAvIWnv
+	 eStkkzwztimLg==
+Received: by mail-ej1-f54.google.com with SMTP id u19so10085452ejm.8
+        for <loongarch@lists.linux.dev>; Fri, 16 Dec 2022 18:09:06 -0800 (PST)
+X-Gm-Message-State: ANoB5pkGXtkwlwx0yase79lgUwLLb4K3pXC7HAzwdIS6FiTp2m/zW450
+	i+A7vmlVVCZPkqgpBoggoqyaWmtsEFggetg1308=
+X-Google-Smtp-Source: AA0mqf4OfUQSE65JBf8FffwSX+G3LU2TbpfljIUaWnEIHAZ5lG1kU+oGREB/az6hVjvhiB65DZBgf80eGJzKxtZ7Qmw=
+X-Received: by 2002:a17:907:37a:b0:7c0:e4b6:132e with SMTP id
+ rs26-20020a170907037a00b007c0e4b6132emr19078943ejb.224.1671242945036; Fri, 16
+ Dec 2022 18:09:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <e65ce2d5-a154-6912-ab01-b0dc158acaaa@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8Bxb+QVIJ1jUhECAA--.9141S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Cr1kJFWDXr4rXr47Ww4fAFb_yoW8WrW7pF
-	95AFykGrykWrn5CF17tw48Wryftrs7Gwn2gF1UKa45Ar42qr1qqF1rXw1q9F1DXw40gF1F
-	qFWaqw15uF4UAwUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
-	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
-	xGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
-	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
-	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2T5lUUUUU
+References: <1670575981-14389-1-git-send-email-yangtiezhu@loongson.cn>
+ <1670575981-14389-3-git-send-email-yangtiezhu@loongson.cn>
+ <20221214162847.1f9481fd2cf5212657a0fd58@kernel.org> <0a135b50-ca96-8ee1-6f33-29efcdb256ed@loongson.cn>
+In-Reply-To: <0a135b50-ca96-8ee1-6f33-29efcdb256ed@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 17 Dec 2022 10:08:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6LrhiYPtjeiTOp6fT4pdo8j-KvtRXjvSjeGtsbF4FY=A@mail.gmail.com>
+Message-ID: <CAAhV-H6LrhiYPtjeiTOp6fT4pdo8j-KvtRXjvSjeGtsbF4FY=A@mail.gmail.com>
+Subject: Re: [PATCH v10 2/4] LoongArch: Add kprobe support
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi, all,
 
-On 2022-12-16 14:11, Tiezhu Yang wrote:
+This series seems have too many problems, so I will drop it. So Tiezhu
+please export the latest patches from
+https://github.com/loongson/linux/commits/loongarch-next, and do
+modifications on top of them.
+
+Huacai
+
+On Fri, Dec 16, 2022 at 5:33 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 >
 >
-> On 12/16/2022 11:18 AM, Jinyang He wrote:
->> Hi, Tiezhu,
->>
->>
->> On 2022-12-14 16:30, Tiezhu Yang wrote:
->>> The current definition of is_branch_ins() is not correct,
->>
->> But the branch instruction opcode only use the high 6 bits,
 >
-> Yes, I noticed that, the logic result of current code is right,
-> but it seems a little strange (only consider reg1i21_format)
-> at the first glance, the initial aim of this patch is to make
-> it theoretically correct, maybe it is not the best change.
+> On 12/14/2022 03:28 PM, Masami Hiramatsu (Google) wrote:
+> > Hi,
+> >
+> > On Fri,  9 Dec 2022 16:52:59 +0800
+> > Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> >
+> >> Kprobes allows you to trap at almost any kernel address and
+> >> execute a callback function, this commit adds kprobe support
+> >> for LoongArch.
 >
-> I think we can neglect the instruction formats and check the
-> high 6 bits instead, what do you think of the following change?
-
-We defined many instruction format because of variable-width opcode 
-field and parameter field. IMHO if there is no way to solve that problem 
-really, keeping original codes is better. That depends on the 
-maintainers, of course.
-
-
-Thanks,
-
-Jinyang
-
-
+> ...
 >
-> diff --git a/arch/loongarch/include/asm/inst.h 
-> b/arch/loongarch/include/asm/inst.h
-> index c00e151..fd31752 100644
-> --- a/arch/loongarch/include/asm/inst.h
-> +++ b/arch/loongarch/include/asm/inst.h
-> @@ -329,8 +329,8 @@ static inline bool is_pc_ins(union 
-> loongarch_instruction *ip)
+> >> +    case KPROBE_HIT_ACTIVE:
+> >> +    case KPROBE_HIT_SSDONE:
+> >
+> > Recently, I removed these cases because this page fault will be finally
+> > handled by the generic pagefault handler.
+> >
 >
->  static inline bool is_branch_ins(union loongarch_instruction *ip)
->  {
-> -       return ip->reg1i21_format.opcode >= beqz_op &&
-> -               ip->reg1i21_format.opcode <= bgeu_op;
-> +       return ((ip->word >> 26) & 0x3f) >= beqz_op &&
-> +               ((ip->word >> 26) & 0x3f) <= bgeu_op;
->  }
+> Hi Masami,
+>
+> I have addressed all your comments on my local machine, the code logic
+> looks much more clear now, thank you very much.
+>
+> When I test kprobe_example.ko with a C function like "kernel_clone",
+> it works well, but the kernel hangs [1] when test with an assembler
+> function like "__memset_fast" [2].
+>
+> Just did some quick research and it seems the bug is related with
+> kallsyms_lookup_name(), I'm looking for a solution.
+>
+> [1]
+> https://lore.kernel.org/loongarch/CAEr6+EC2wPAtK8zb3=e1mUiya3gv0UhqF9J_ySYx9p_96pB+tg@mail.gmail.com/
+> [2]
+> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/tree/arch/loongarch/lib/memset.S?h=loongarch-next#n56
 >
 > Thanks,
 > Tiezhu
 >
 >
->
-
