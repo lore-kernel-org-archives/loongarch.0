@@ -1,466 +1,227 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1CB562B
-	for <loongarch@lists.linux.dev>; Sat, 17 Dec 2022 02:48:33 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxKen9LZ1jaEsGAA--.10933S3;
-	Sat, 17 Dec 2022 10:48:29 +0800 (CST)
-Received: from [10.130.0.63] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxIL_7LZ1jRRoCAA--.7268S3;
-	Sat, 17 Dec 2022 10:48:28 +0800 (CST)
-Subject: Re: [PATCH 4/6] LoongArch: Strip guess_unwinder out from
- prologue_unwinder
-To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-References: <20221215040141.18610-1-hejinyang@loongson.cn>
- <20221215040141.18610-5-hejinyang@loongson.cn>
- <36c3560a-0a2d-4c3f-ecb6-0e7e71746917@loongson.cn>
- <be643b7c-611e-c87b-c030-5fa51220d78c@loongson.cn>
- <6fdb3dc9-2b34-ce53-1ff8-6b23c1eaaa82@loongson.cn>
- <b1d090e3-1d68-3508-9108-5d697fa84ddd@loongson.cn>
-From: Qing Zhang <zhangqing@loongson.cn>
-Message-ID: <5f46b787-1218-1c5d-3a48-7414fb7914c0@loongson.cn>
-Date: Sat, 17 Dec 2022 10:48:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80FA57E7
+	for <loongarch@lists.linux.dev>; Sun, 18 Dec 2022 03:33:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E716C433AF
+	for <loongarch@lists.linux.dev>; Sun, 18 Dec 2022 03:33:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1671334394;
+	bh=tIkYFzXEO2chGeVvpnhnUSRiaYqUOvaPo7G7agH5seU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NZznuv2H9MQueEsr6jgEx1junfwjYsvNcOR43Yi/brcuSQR9UH+m6CrgXjrTxCtE7
+	 e6bwe9cJqXk1WuwXoKDMvpo9TzcCqL2J7/rfInWmXCzjpBl8AaPX8/ZDKlqMvr8Jnb
+	 yPLDT135jBzOiGZQnkegHTEPk2QAKPw71lNMeRicomC31rduSeqQEgDS6bhnzMGqcq
+	 lEoicK81SZ/d6NH3t3vJk88ScyMf0ePdwVfZuCHv/jvCCwGUN6mZAZhI4t+dG610gH
+	 fki7MqLM2MPF400PykUCrGAk2XSSyU7i3CvLgBvt+bZ5XueXYRrGIX178MJ5NirAWw
+	 7omV8lnwwK5iA==
+Received: by mail-ed1-f47.google.com with SMTP id i9so8681908edj.4
+        for <loongarch@lists.linux.dev>; Sat, 17 Dec 2022 19:33:14 -0800 (PST)
+X-Gm-Message-State: ANoB5pnsBVpZTSifXpC3jHAjyievWOTG/GgzkpneAd+1DA5UcDJ0eu1v
+	rdwM4YiwVFFZHsiG7gMMae14rwKyqm3rddEYnjs=
+X-Google-Smtp-Source: AA0mqf6HJrjOIUv4bzcPb2/bKtCuYat7PlsqCSDeflk0KMk+BHjoAVHTjhW6I8Yv82IxystWMfrMsjTObq3olIShGs4=
+X-Received: by 2002:a05:6402:5003:b0:462:a25f:f0f2 with SMTP id
+ p3-20020a056402500300b00462a25ff0f2mr35194911eda.156.1671334392205; Sat, 17
+ Dec 2022 19:33:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <b1d090e3-1d68-3508-9108-5d697fa84ddd@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxIL_7LZ1jRRoCAA--.7268S3
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvAXoWfJw1xWF43tFW7GFWkuw13XFb_yoW8ArW8Jo
-	W7Kr13Xr4rXryUK34UA34UJFy5tw4UJwnrArW5tr13Gr4Iy3W7Z3yUJa45tayxKr1rGr4U
-	Gryjqr1FvFWxXr1fn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
-	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
-	UUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
-	0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1l84
-	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4
-	xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8
-	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8w
-	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
-	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
-	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_
-	Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
-	vEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
+References: <20221206144730.163732-1-david@redhat.com>
+In-Reply-To: <20221206144730.163732-1-david@redhat.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 18 Dec 2022 11:32:59 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4bU7JnAPyf9Mv1m+WGR5NWmHJLva3d9_CsRd4Q_OHVpg@mail.gmail.com>
+Message-ID: <CAAhV-H4bU7JnAPyf9Mv1m+WGR5NWmHJLva3d9_CsRd4Q_OHVpg@mail.gmail.com>
+Subject: Re: [PATCH mm-unstable RFC 00/26] mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+ on all architectures with swap PTEs
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Hugh Dickins <hughd@google.com>, John Hubbard <jhubbard@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Mike Rapoport <rppt@linux.ibm.com>, Yang Shi <shy828301@gmail.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Nadav Amit <namit@vmware.com>, 
+	Andrea Arcangeli <aarcange@redhat.com>, Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, 
+	x86@kernel.org, linux-alpha@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
+	linux-xtensa@linux-xtensa.org, Albert Ou <aou@eecs.berkeley.edu>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Borislav Petkov <bp@alien8.de>, 
+	Brian Cain <bcain@quicinc.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Chris Zankel <chris@zankel.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Greg Ungerer <gerg@linux-m68k.org>, Guo Ren <guoren@kernel.org>, 
+	Helge Deller <deller@gmx.de>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Matt Turner <mattst88@gmail.com>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, 
+	Nicholas Piggin <npiggin@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Richard Henderson <richard.henderson@linaro.org>, 
+	Richard Weinberger <richard@nod.at>, Rich Felker <dalias@libc.org>, Russell King <linux@armlinux.org.uk>, 
+	Stafford Horne <shorne@gmail.com>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vineet Gupta <vgupta@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi, David,
 
+What is the opposite of exclusive here? Shared or inclusive? I prefer
+pte_swp_mkshared() or pte_swp_mkinclusive() rather than
+pte_swp_clear_exclusive(). Existing examples: dirty/clean, young/old
+...
 
-On 2022/12/17 上午9:47, Jinyang He wrote:
-> On 2022-12-16 10:14, Qing Zhang wrote:
-> 
->> Hi, Jinyang
->>
->> On 2022/12/16 上午9:40, Jinyang He wrote:
->>> On 2022-12-15 17:15, Qing Zhang wrote:
->>>
->>>> Hi, Jinyang
->>>>
->>>> On 2022/12/15 下午12:01, Jinyang He wrote:
->>>>> The prolugue unwinder rely on symbol info. When PC is not in kernel
->>>>> text address, it cannot find relative symbol info and it will be 
->>>>> broken.
->>>>> The guess unwinder will be used in this case. And the guess unwinder
->>>>> codes in prolugue unwinder is redundant. Strip it out and set the
->>>>> unwinder info in unwind_state.
->>>>>
->>>>> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
->>>>> ---
->>>>>   arch/loongarch/include/asm/unwind.h     |  22 ++++
->>>>>   arch/loongarch/kernel/Makefile          |   3 +-
->>>>>   arch/loongarch/kernel/unwind.c          |  52 +++++++++
->>>>>   arch/loongarch/kernel/unwind_guess.c    |  41 ++-----
->>>>>   arch/loongarch/kernel/unwind_prologue.c | 135 
->>>>> +++++++++---------------
->>>>>   5 files changed, 135 insertions(+), 118 deletions(-)
->>>>>   create mode 100644 arch/loongarch/kernel/unwind.c
->>>>>
->>>>> diff --git a/arch/loongarch/include/asm/unwind.h 
->>>>> b/arch/loongarch/include/asm/unwind.h
->>>>> index 6ece48f0ff77..a16aff1d086a 100644
->>>>> --- a/arch/loongarch/include/asm/unwind.h
->>>>> +++ b/arch/loongarch/include/asm/unwind.h
->>>>> @@ -18,6 +18,8 @@ enum unwinder_type {
->>>>>       UNWINDER_PROLOGUE,
->>>>>   };
->>>>>   +struct unwinder_ops;
->>>>> +
->>>>>   struct unwind_state {
->>>>>       char type; /* UNWINDER_XXX */
->>>>>       struct stack_info stack_info;
->>>>> @@ -25,8 +27,22 @@ struct unwind_state {
->>>>>       bool first, error, is_ftrace;
->>>>>       int graph_idx;
->>>>>       unsigned long sp, pc, ra;
->>>>> +    const struct unwinder_ops *ops;
->>>>> +};
->>>>> +
->>>>> +struct unwinder_ops {
->>>>> +    void (*unwind_start)(struct unwind_state *state,
->>>>> +                 struct task_struct *task, struct pt_regs *regs);
->>>>> +    bool (*unwind_next_frame)(struct unwind_state *state);
->>>>> +    unsigned long (*unwind_get_return_address)(struct unwind_state 
->>>>> *state);
->>>>>   };
->>>>>   +extern const struct unwinder_ops *default_unwinder;
->>>>> +extern const struct unwinder_ops unwinder_guess;
->>>>> +#ifdef CONFIG_UNWINDER_PROLOGUE
->>>>> +extern const struct unwinder_ops unwinder_prologue;
->>>>> +#endif
->>>>> +
->>>>>   void unwind_start(struct unwind_state *state,
->>>>>             struct task_struct *task, struct pt_regs *regs);
->>>>>   bool unwind_next_frame(struct unwind_state *state);
->>>>> @@ -49,4 +65,10 @@ static inline unsigned long 
->>>>> unwind_graph_addr(struct unwind_state *state,
->>>>>       return ftrace_graph_ret_addr(state->task, &state->graph_idx,
->>>>>                        pc, (unsigned long *)(cfa - 
->>>>> GRAPH_FAKE_OFFSET));
->>>>>   }
->>>>> +
->>>>> +static inline void unwind_register_unwinder(struct unwind_state 
->>>>> *state,
->>>>> +                      const struct unwinder_ops *unwinder)
->>>>> +{
->>>>> +    state->ops = unwinder;
->>>>> +}
->>>>>   #endif /* _ASM_UNWIND_H */
->>>>> diff --git a/arch/loongarch/kernel/Makefile 
->>>>> b/arch/loongarch/kernel/Makefile
->>>>> index 7ca65195f7f8..cb6029ea3ea9 100644
->>>>> --- a/arch/loongarch/kernel/Makefile
->>>>> +++ b/arch/loongarch/kernel/Makefile
->>>>> @@ -8,7 +8,7 @@ extra-y        := vmlinux.lds
->>>>>   obj-y        += head.o cpu-probe.o cacheinfo.o env.o setup.o 
->>>>> entry.o genex.o \
->>>>>              traps.o irq.o idle.o process.o dma.o mem.o io.o 
->>>>> reset.o switch.o \
->>>>>              elf.o syscall.o signal.o time.o topology.o inst.o 
->>>>> ptrace.o vdso.o \
->>>>> -           alternative.o unaligned.o
->>>>> +           alternative.o unaligned.o unwind.o unwind_guess.o
->>>>>     obj-$(CONFIG_ACPI)        += acpi.o
->>>>>   obj-$(CONFIG_EFI)         += efi.o
->>>>> @@ -42,7 +42,6 @@ obj-$(CONFIG_MAGIC_SYSRQ)    += sysrq.o
->>>>>   obj-$(CONFIG_KEXEC)        += machine_kexec.o relocate_kernel.o
->>>>>   obj-$(CONFIG_CRASH_DUMP)    += crash_dump.o
->>>>>   -obj-$(CONFIG_UNWINDER_GUESS)    += unwind_guess.o
->>>>>   obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
->>>>>     obj-$(CONFIG_PERF_EVENTS)    += perf_event.o perf_regs.o
->>>>> diff --git a/arch/loongarch/kernel/unwind.c 
->>>>> b/arch/loongarch/kernel/unwind.c
->>>>> new file mode 100644
->>>>> index 000000000000..568c6fe707d1
->>>>> --- /dev/null
->>>>> +++ b/arch/loongarch/kernel/unwind.c
->>>>> @@ -0,0 +1,52 @@
->>>>> +// SPDX-License-Identifier: GPL-2.0
->>>>> +/*
->>>>> + * Copyright (C) 2022 Loongson Technology Corporation Limited
->>>>> + */
->>>>> +#include <asm/unwind.h>
->>>>> +
->>>>> +#if defined(CONFIG_UNWINDER_GUESS)
->>>>> +const struct unwinder_ops *default_unwinder = &unwinder_guess;
->>>>> +#elif defined(CONFIG_UNWINDER_PROLOGUE)
->>>>> +const struct unwinder_ops *default_unwinder = &unwinder_prologue;
->>>>> +#endif
->>>>> +
->>>>> +unsigned long unwind_get_return_address(struct unwind_state *state)
->>>>> +{
->>>>> +    if (!state->ops || unwind_done(state))
->>>>> +        return 0;
->>>>> +    return state->ops->unwind_get_return_address(state);
->>>>> +}
->>>>> +EXPORT_SYMBOL_GPL(unwind_get_return_address);
->>>>> +
->>>>> +void unwind_start(struct unwind_state *state, struct task_struct 
->>>>> *task,
->>>>> +            struct pt_regs *regs)
->>>>> +{
->>>>> +    memset(state, 0, sizeof(*state));
->>>>> +    unwind_register_unwinder(state, default_unwinder);
->>>>> +    if (regs) {
->>>>> +        state->sp = regs->regs[3];
->>>>> +        state->pc = regs->csr_era;
->>>>> +        state->ra = regs->regs[1];
->>>>> +    } else if (task == current) {
->>>>> +        state->sp = (unsigned long)__builtin_frame_address(0);
->>>>> +        state->pc = (unsigned long)__builtin_return_address(0);
->>>>> +        state->ra = 0;
->>>>> +    } else {
->>>>> +        state->sp = thread_saved_fp(task);
->>>>> +        state->pc = thread_saved_ra(task);
->>>>> +        state->ra = 0;
->>>>> +    }
->>>>> +    state->task = task;
->>>>> +    get_stack_info(state->sp, state->task, &state->stack_info);
->>>>> +    state->pc = unwind_graph_addr(state, state->pc, state->sp);
->>
->>  here. :)
-> 
-> The PC from branch 'task == current' is the RA of current frame. And the 
-> PC from branch 'regs' is regs->csr_era, which may be RA of frame where 
-> to get the regs->csr_era. They all may traced by function_graph. 
-> Ftrace_graph_ret_addr() returns orignal addr and not destroys result, if 
-> the addr was not traced, so calling it for deal with above cases.
-> 
-ok, you are right. The first state>pc obtained by cat/proc/self/stack 
-after the function graph is a "return to handler".
+Huacai
 
-Thank,
--Qing
-> Thanks,
-> 
-> Jinyang
-> 
->>
->>>>> + state->ops->unwind_start(state, task, regs);
->>>>> +}
->>>>> +EXPORT_SYMBOL_GPL(unwind_start);
->>>>> +
->>>>> +bool unwind_next_frame(struct unwind_state *state)
->>>>> +{
->>>>> +    if (!state->ops || unwind_done(state))
->>>>> +        return false;
->>>>> +    return state->ops->unwind_next_frame(state);
->>>>> +}
->>>>> +EXPORT_SYMBOL_GPL(unwind_next_frame);
->>>>> diff --git a/arch/loongarch/kernel/unwind_guess.c 
->>>>> b/arch/loongarch/kernel/unwind_guess.c
->>>>> index 8ce32c37c587..b7ca2b88ac63 100644
->>>>> --- a/arch/loongarch/kernel/unwind_guess.c
->>>>> +++ b/arch/loongarch/kernel/unwind_guess.c
->>>>> @@ -7,51 +7,23 @@
->>>>>     #include <asm/unwind.h>
->>>>>   -unsigned long unwind_get_return_address(struct unwind_state *state)
->>>>> +static unsigned long get_return_address(struct unwind_state *state)
->>>>>   {
->>>>> -    if (unwind_done(state))
->>>>> -        return 0;
->>>>>       return state->pc;
->>>>>   }
->>>>> -EXPORT_SYMBOL_GPL(unwind_get_return_address);
->>>>>   -void unwind_start(struct unwind_state *state, struct task_struct 
->>>>> *task,
->>>>> +static void start(struct unwind_state *state, struct task_struct 
->>>>> *task,
->>>>>               struct pt_regs *regs)
->>>>>   {
->>>>> -    memset(state, 0, sizeof(*state));
->>>>> -
->>>>> -    if (regs) {
->>>>> -        state->sp = regs->regs[3];
->>>>> -        state->pc = regs->csr_era;
->>>>> -    } else if (task == current) {
->>>>> -        state->sp = (unsigned long)__builtin_frame_address(0);
->>>>> -        state->pc = (unsigned long)__builtin_return_address(0);
->>>>> -    } else {
->>>>> -        state->sp = thread_saved_fp(task);
->>>>> -        state->pc = thread_saved_ra(task);
->>>>> -    }
->>>>> -
->>>>> -    state->task = task;
->>>>> -    state->first = true;
->>>>> -    state->pc = unwind_graph_add(state, state->pc, state->sp);
->>>>
->>>> Do we need to unwind_graph_add again here? unwinder_guess and 
->>>> unwind_prologue have already been done.
->>>
->>> Hi, Qing
->>>
->>>
->>> Sorry I don't what meanning here, as here is a delete line.
->>>
->> Sorry, It's the unwind_start up here.
->>>
->>>>
->>>>> -    get_stack_info(state->sp, state->task, &state->stack_info);
->>>>> -
->>>>>       if (!unwind_done(state) && !__kernel_text_address(state->pc))
->>>>>           unwind_next_frame(state);
->>>>>   }
->>>>> -EXPORT_SYMBOL_GPL(unwind_start);
->>>>>   -bool unwind_next_frame(struct unwind_state *state)
->>>>> +static bool next_frame(struct unwind_state *state)
->>>>>   {
->>>>>       struct stack_info *info = &state->stack_info;
->>>>>       unsigned long addr;
->>>>>   -    if (unwind_done(state))
->>>>> -        return false;
->>>>> -
->>>>> -    if (state->first)
->>>>> -        state->first = false;
->>>>> -
->>>>>       do {
->>>>>           for (state->sp += sizeof(unsigned long);
->>>>>                state->sp < info->end;
->>>>> @@ -68,4 +40,9 @@ bool unwind_next_frame(struct unwind_state *state)
->>>>>         return false;
->>>>>   }
->>>>> -EXPORT_SYMBOL_GPL(unwind_next_frame);
->>>>> +
->>>>> +const struct unwinder_ops unwinder_guess = {
->>>>> +    .unwind_start = start,
->>>>> +    .unwind_next_frame = next_frame,
->>>>> +    .unwind_get_return_address = get_return_address,
->>>>> +};
->>>>> diff --git a/arch/loongarch/kernel/unwind_prologue.c 
->>>>> b/arch/loongarch/kernel/unwind_prologue.c
->>>>> index d464c533c64f..9677e13c4b4c 100644
->>>>> --- a/arch/loongarch/kernel/unwind_prologue.c
->>>>> +++ b/arch/loongarch/kernel/unwind_prologue.c
->>>>> @@ -9,6 +9,8 @@
->>>>>   #include <asm/ptrace.h>
->>>>>   #include <asm/unwind.h>
->>>>>   +static const struct unwinder_ops *guard_unwinder = &unwinder_guess;
->>>>> +
->>>>>   static inline void unwind_state_fixup(struct unwind_state *state)
->>>>>   {
->>>>>   #ifdef CONFIG_DYNAMIC_FTRACE
->>>>> @@ -19,31 +21,19 @@ static inline void unwind_state_fixup(struct 
->>>>> unwind_state *state)
->>>>>   #endif
->>>>>   }
->>>>>   -unsigned long unwind_get_return_address(struct unwind_state *state)
->>>>> +static unsigned long get_return_address(struct unwind_state *state)
->>>>>   {
->>>>> -    if (unwind_done(state))
->>>>> -        return 0;
->>>>>       return state->pc;
->>>>>   }
->>>>> -EXPORT_SYMBOL_GPL(unwind_get_return_address);
->>>>> -
->>>>> -static bool unwind_by_guess(struct unwind_state *state)
->>>>> -{
->>>>> -    struct stack_info *info = &state->stack_info;
->>>>> -    unsigned long addr;
->>>>> -
->>>>> -    for (state->sp += sizeof(unsigned long);
->>>>> -         state->sp < info->end;
->>>>> -         state->sp += sizeof(unsigned long)) {
->>>>> -        addr = *(unsigned long *)(state->sp);
->>>>> -        state->pc = unwind_graph_addr(state, addr, state->sp + 8);
->>>>> -        if (__kernel_text_address(state->pc))
->>>>> -            return true;
->>>>> -    }
->>>>> -
->>>>> -    return false;
->>>>> -}
->>>>>   +/*
->>>>> + * LoongArch function prologue like follows,
->>>>> + *     [others instructions not use stack var]
->>>>> + *     addi.d sp, sp, -imm
->>>>> + *     st.d   xx, sp, offset <- save callee saved regs and
->>>>> + *     st.d   yy, sp, offset    save ra if function is nest.
->>>>> + *     [others instructions]
->>>>> + */
->>>>>   static bool unwind_by_prologue(struct unwind_state *state)
->>>>>   {
->>>>>       long frame_ra = -1;
->>>>> @@ -89,6 +79,10 @@ static bool unwind_by_prologue(struct 
->>>>> unwind_state *state)
->>>>>           ip++;
->>>>>       }
->>>>>   +    /*
->>>>> +     * Not find stack alloc action, PC may be in a leaf function. 
->>>>> Only the
->>>>> +     * first being true is reasonable, otherwise indicate analysis 
->>>>> is broken.
->>>>> +     */
->>>>>       if (!frame_size) {
->>>>>           if (state->first)
->>>>>               goto first;
->>>>> @@ -106,6 +100,7 @@ static bool unwind_by_prologue(struct 
->>>>> unwind_state *state)
->>>>>           ip++;
->>>>>       }
->>>>>   +    /* Not find save $ra action, PC may be in a leaf function, 
->>>>> too. */
->>>>>       if (frame_ra < 0) {
->>>>>           if (state->first) {
->>>>>               state->sp = state->sp + frame_size;
->>>>> @@ -114,96 +109,63 @@ static bool unwind_by_prologue(struct 
->>>>> unwind_state *state)
->>>>>           return false;
->>>>>       }
->>>>>   -    if (state->first)
->>>>> -        state->first = false;
->>>>> -
->>>>>       state->pc = *(unsigned long *)(state->sp + frame_ra);
->>>>>       state->sp = state->sp + frame_size;
->>>>>       goto out;
->>>>>     first:
->>>>> -    state->first = false;
->>>>> -    if (state->pc == state->ra)
->>>>> -        return false;
->>>>> -
->>>>>       state->pc = state->ra;
->>>>>     out:
->>>>> +    state->first = false;
->>>>>       unwind_state_fixup(state);
->>>>>       return !!__kernel_text_address(state->pc);
->>>>>   }
->>>>>   -void unwind_start(struct unwind_state *state, struct task_struct 
->>>>> *task,
->>>>> +static void start(struct unwind_state *state, struct task_struct 
->>>>> *task,
->>>>>               struct pt_regs *regs)
->>>>>   {
->>>>> -    memset(state, 0, sizeof(*state));
->>>>> -    state->type = UNWINDER_PROLOGUE;
->>>>> -
->>>>> -    if (regs) {
->>>>> -        state->sp = regs->regs[3];
->>>>> -        state->pc = regs->csr_era;
->>>>> -        state->ra = regs->regs[1];
->>>>> -        if (!__kernel_text_address(state->pc))
->>>>> -            state->type = UNWINDER_GUESS;
->>>>> -    } else if (task == current) {
->>>>> -        state->sp = (unsigned long)__builtin_frame_address(0);
->>>>> -        state->pc = (unsigned long)__builtin_return_address(0);
->>>>> -        state->ra = 0;
->>>>> -    } else {
->>>>> -        state->sp = thread_saved_fp(task);
->>>>> -        state->pc = thread_saved_ra(task);
->>>>> -        state->ra = 0;
->>>>> -    }
->>>>> -
->>>>> -    state->task = task;
->>>>>       state->first = true;
->>>>> -    state->pc = unwind_graph_addr(state, state->pc, state->sp);
->>>>> -    get_stack_info(state->sp, state->task, &state->stack_info);
->>>>>   -    if (!unwind_done(state) && !__kernel_text_address(state->pc))
->>>>> -        unwind_next_frame(state);
->>>>> +    /*
->>>>> +     * The current PC is not kernel text address, we cannot find its
->>>>> +     * relative symbol. Thus, prologue analysis will be broken. 
->>>>> Luckly,
->>>>> +     * we can use the guard unwinder.
->>>>> +     */
->>>>> +    if (!__kernel_text_address(state->pc)) {
->>>>> +        unwind_register_unwinder(state, guard_unwinder);
->>>>
->>>> Just add a comment here. Instead of using guard_unwinder, can we still
->>>> use guess_unwinder?
->>>
->>> Yes, and I'll use '&guess_unwinder' in next version. And I'll
->>> drop unwind type in next version, too.
->>>
->>>
->>> Thanks,
->>>
->>> Jinyang
->>>
-> 
-
+On Tue, Dec 6, 2022 at 10:48 PM David Hildenbrand <david@redhat.com> wrote:
+>
+> This is the follow-up on [1]:
+>         [PATCH v2 0/8] mm: COW fixes part 3: reliable GUP R/W FOLL_GET of
+>         anonymous pages
+>
+> After we implemented __HAVE_ARCH_PTE_SWP_EXCLUSIVE on most prominent
+> enterprise architectures, implement __HAVE_ARCH_PTE_SWP_EXCLUSIVE on all
+> remaining architectures that support swap PTEs.
+>
+> This makes sure that exclusive anonymous pages will stay exclusive, even
+> after they were swapped out -- for example, making GUP R/W FOLL_GET of
+> anonymous pages reliable. Details can be found in [1].
+>
+> This primarily fixes remaining known O_DIRECT memory corruptions that can
+> happen on concurrent swapout, whereby we can lose DMA reads to a page
+> (modifying the user page by writing to it).
+>
+> To verify, there are two test cases (requiring swap space, obviously):
+> (1) The O_DIRECT+swapout test case [2] from Andrea. This test case tries
+>     triggering a race condition.
+> (2) My vmsplice() test case [3] that tries to detect if the exclusive
+>     marker was lost during swapout, not relying on a race condition.
+>
+>
+> For example, on 32bit x86 (with and without PAE), my test case fails
+> without these patches:
+>         $ ./test_swp_exclusive
+>         FAIL: page was replaced during COW
+> But succeeds with these patches:
+>         $ ./test_swp_exclusive
+>         PASS: page was not replaced during COW
+>
+>
+> Why implement __HAVE_ARCH_PTE_SWP_EXCLUSIVE for all architectures, even
+> the ones where swap support might be in a questionable state? This is the
+> first step towards removing "readable_exclusive" migration entries, and
+> instead using pte_swp_exclusive() also with (readable) migration entries
+> instead (as suggested by Peter). The only missing piece for that is
+> supporting pmd_swp_exclusive() on relevant architectures with THP
+> migration support.
+>
+> As all relevant architectures now implement __HAVE_ARCH_PTE_SWP_EXCLUSIVE,,
+> we can drop __HAVE_ARCH_PTE_SWP_EXCLUSIVE in the last patch.
+>
+>
+> RFC because some of the swap PTE layouts are really tricky and I really
+> need some feedback related to deciphering these layouts and "using yet
+> unused PTE bits in swap PTEs". I tried cross-compiling all relevant setups
+> (phew, I might only miss some power/nohash variants), but only tested on
+> x86 so far.
+>
+> CCing arch maintainers only on this cover letter and on the respective
+> patch(es).
+>
+>
+> [1] https://lkml.kernel.org/r/20220329164329.208407-1-david@redhat.com
+> [2] https://gitlab.com/aarcange/kernel-testcases-for-v5.11/-/blob/main/page_count_do_wp_page-swap.c
+> [3] https://gitlab.com/davidhildenbrand/scratchspace/-/blob/main/test_swp_exclusive.c
+>
+> David Hildenbrand (26):
+>   mm/debug_vm_pgtable: more pte_swp_exclusive() sanity checks
+>   alpha/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   arc/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   arm/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   csky/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   hexagon/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   ia64/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   loongarch/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   m68k/mm: remove dummy __swp definitions for nommu
+>   m68k/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   microblaze/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   mips/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   nios2/mm: refactor swap PTE layout
+>   nios2/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   openrisc/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   parisc/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   powerpc/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE on 32bit book3s
+>   powerpc/nohash/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   riscv/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   sh/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   sparc/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE on 32bit
+>   sparc/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE on 64bit
+>   um/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   x86/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE also on 32bit
+>   xtensa/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>   mm: remove __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+>
+>  arch/alpha/include/asm/pgtable.h              | 40 ++++++++-
+>  arch/arc/include/asm/pgtable-bits-arcv2.h     | 26 +++++-
+>  arch/arm/include/asm/pgtable-2level.h         |  3 +
+>  arch/arm/include/asm/pgtable-3level.h         |  3 +
+>  arch/arm/include/asm/pgtable.h                | 34 ++++++--
+>  arch/arm64/include/asm/pgtable.h              |  1 -
+>  arch/csky/abiv1/inc/abi/pgtable-bits.h        | 13 ++-
+>  arch/csky/abiv2/inc/abi/pgtable-bits.h        | 19 ++--
+>  arch/csky/include/asm/pgtable.h               | 17 ++++
+>  arch/hexagon/include/asm/pgtable.h            | 36 ++++++--
+>  arch/ia64/include/asm/pgtable.h               | 31 ++++++-
+>  arch/loongarch/include/asm/pgtable-bits.h     |  4 +
+>  arch/loongarch/include/asm/pgtable.h          | 38 +++++++-
+>  arch/m68k/include/asm/mcf_pgtable.h           | 35 +++++++-
+>  arch/m68k/include/asm/motorola_pgtable.h      | 37 +++++++-
+>  arch/m68k/include/asm/pgtable_no.h            |  6 --
+>  arch/m68k/include/asm/sun3_pgtable.h          | 38 +++++++-
+>  arch/microblaze/include/asm/pgtable.h         | 44 +++++++---
+>  arch/mips/include/asm/pgtable-32.h            | 86 ++++++++++++++++---
+>  arch/mips/include/asm/pgtable-64.h            | 23 ++++-
+>  arch/mips/include/asm/pgtable.h               | 35 ++++++++
+>  arch/nios2/include/asm/pgtable-bits.h         |  3 +
+>  arch/nios2/include/asm/pgtable.h              | 37 ++++++--
+>  arch/openrisc/include/asm/pgtable.h           | 40 +++++++--
+>  arch/parisc/include/asm/pgtable.h             | 40 ++++++++-
+>  arch/powerpc/include/asm/book3s/32/pgtable.h  | 37 ++++++--
+>  arch/powerpc/include/asm/book3s/64/pgtable.h  |  1 -
+>  arch/powerpc/include/asm/nohash/32/pgtable.h  | 22 +++--
+>  arch/powerpc/include/asm/nohash/32/pte-40x.h  |  6 +-
+>  arch/powerpc/include/asm/nohash/32/pte-44x.h  | 18 +---
+>  arch/powerpc/include/asm/nohash/32/pte-85xx.h |  4 +-
+>  arch/powerpc/include/asm/nohash/64/pgtable.h  | 24 +++++-
+>  arch/powerpc/include/asm/nohash/pgtable.h     | 15 ++++
+>  arch/powerpc/include/asm/nohash/pte-e500.h    |  1 -
+>  arch/riscv/include/asm/pgtable-bits.h         |  3 +
+>  arch/riscv/include/asm/pgtable.h              | 28 ++++--
+>  arch/s390/include/asm/pgtable.h               |  1 -
+>  arch/sh/include/asm/pgtable_32.h              | 53 +++++++++---
+>  arch/sparc/include/asm/pgtable_32.h           | 26 +++++-
+>  arch/sparc/include/asm/pgtable_64.h           | 37 +++++++-
+>  arch/sparc/include/asm/pgtsrmmu.h             | 14 +--
+>  arch/um/include/asm/pgtable.h                 | 36 +++++++-
+>  arch/x86/include/asm/pgtable-2level.h         | 26 ++++--
+>  arch/x86/include/asm/pgtable-3level.h         | 26 +++++-
+>  arch/x86/include/asm/pgtable.h                |  3 -
+>  arch/xtensa/include/asm/pgtable.h             | 31 +++++--
+>  include/linux/pgtable.h                       | 29 -------
+>  mm/debug_vm_pgtable.c                         | 25 +++++-
+>  mm/memory.c                                   |  4 -
+>  mm/rmap.c                                     | 11 ---
+>  50 files changed, 943 insertions(+), 227 deletions(-)
+>
+> --
+> 2.38.1
+>
+>
