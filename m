@@ -1,152 +1,53 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D432F187A
-	for <loongarch@lists.linux.dev>; Mon, 19 Dec 2022 13:04:23 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="299019043"
-X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
-   d="scan'208";a="299019043"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 05:04:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="774922088"
-X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
-   d="scan'208";a="774922088"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP; 19 Dec 2022 05:04:09 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-	(envelope-from <andy@kernel.org>)
-	id 1p7FoM-00CISa-1q;
-	Mon, 19 Dec 2022 15:04:06 +0200
-Date: Mon, 19 Dec 2022 15:04:06 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Wolfram Sang <wsa@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>
-Subject: Re: [PATCH V7 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
- controller
-Message-ID: <Y6BhRsPAU30Dqbdv@smile.fi.intel.com>
-References: <cover.1671451604.git.zhoubinbin@loongson.cn>
- <d44eb07245020431f98fd08e0c05b6926fb31b24.1671451604.git.zhoubinbin@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C645BA47
+	for <loongarch@lists.linux.dev>; Mon, 19 Dec 2022 14:30:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6EDC9C433F0;
+	Mon, 19 Dec 2022 14:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1671460203;
+	bh=eRMSGKZ17Vvg9Cpx3kg7ABmn+nrapUSMgHog2rQO8w4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=Jnddha4M4pvlzMlVBn7BKKx2oSBqM7WuR6TpGYvkn5SRe35OmCSP2iHdmvZ8xE0UM
+	 jiFPQiXfdNNGp2yMR0dE/cRPb39Mua52Z1RpbDaW5oI4tniorVYdVH7WzsK05DMXt1
+	 sp7Z9edv6O432tYp9alPpMkEg/NXkbWedRjiFtyVZyESxdyKJJsAqc1Sw0FQK8IBA6
+	 YmhimpqrxPeHnxY8NMVnrwL+RiSiQDhwbIYlmfGCPWx2sZji58y83FDGZ6iw7H0wk7
+	 YVp78oeMUiVD2K5FQQ2xsYzNUhY/jESaATWUEVl2L6puLEoX7oTdeMb3VZm9Co17Z4
+	 91cN1WR3NjZbA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5D202E21EEE;
+	Mon, 19 Dec 2022 14:30:03 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch changes for v6.2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20221219120612.1637267-1-chenhuacai@loongson.cn>
+References: <20221219120612.1637267-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20221219120612.1637267-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.2
+X-PR-Tracked-Commit-Id: 5535f4f70cfc15ef55b6ea7c7e17337b17337cb6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2f26e424552efd50722f4cf61f7f080373adbb1e
+Message-Id: <167146020334.28969.2711278774891814084.pr-tracker-bot@kernel.org>
+Date: Mon, 19 Dec 2022 14:30:03 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d44eb07245020431f98fd08e0c05b6926fb31b24.1671451604.git.zhoubinbin@loongson.cn>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Dec 19, 2022 at 08:28:33PM +0800, Binbin Zhou wrote:
-> This I2C module is integrated into the Loongson-2K SoCs and Loongson
-> LS7A bridge chip.
+The pull request you sent on Mon, 19 Dec 2022 20:06:12 +0800:
 
-Almost there, see my comments below (note, you have ~1w of time before this
-can be applied anyway, so take you time for carefully addressing comments,
-(re-)testing, etc.).
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.2
 
-...
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2f26e424552efd50722f4cf61f7f080373adbb1e
 
-> @@ -888,6 +888,17 @@ config I2C_OWL
->  	  Say Y here if you want to use the I2C bus controller on
->  	  the Actions Semiconductor Owl SoC's.
->  
-> +config I2C_LS2X
-
-I believe in Latin alphabet L goes before O...
-
-> +	tristate "Loongson LS2X I2C adapter"
-> +	depends on MACH_LOONGSON64 || COMPILE_TEST
-> +	help
-> +	  If you say yes to this option, support will be included for the
-> +	  I2C interface on the Loongson-2K SoCs and Loongson LS7A bridge
-> +	  chip.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called i2c-ls2x.
-> +
->  config I2C_PASEMI
->  	tristate "PA Semi SMBus interface"
->  	depends on PPC_PASEMI && PCI
-
-...
-
->  obj-$(CONFIG_I2C_MXS)		+= i2c-mxs.o
->  obj-$(CONFIG_I2C_NOMADIK)	+= i2c-nomadik.o
->  obj-$(CONFIG_I2C_NPCM)		+= i2c-npcm7xx.o
-> +obj-$(CONFIG_I2C_LS2X)		+= i2c-ls2x.o
-
-...and even before n and m.
-
->  obj-$(CONFIG_I2C_OCORES)	+= i2c-ocores.o
->  obj-$(CONFIG_I2C_OMAP)		+= i2c-omap.o
->  obj-$(CONFIG_I2C_OWL)		+= i2c-owl.o
-
-...
-
-> +static int ls2x_i2c_xfer_one(struct i2c_adapter *adap,
-> +			     struct i2c_msg *msg, bool stop)
-> +{
-> +	int ret;
-> +	bool is_read = msg->flags & I2C_M_RD;
-> +	struct ls2x_i2c_priv *priv = i2c_get_adapdata(adap);
-> +
-> +	/* Contains steps to send start condition and address */
-> +	ret = ls2x_i2c_start(adap, msg);
-> +	if (!ret) {
-> +		if (is_read)
-> +			ret = ls2x_i2c_rx(adap, msg->buf, msg->len);
-> +		else
-> +			ret = ls2x_i2c_tx(adap, msg->buf, msg->len);
-
-> +		if (!ret && stop)
-> +			ret = ls2x_i2c_stop(adap);
-
-So, we will send stop here...
-
-> +	}
-
-> +	if (ret == -ENXIO)
-> +		ls2x_i2c_stop(adap);
-
-...and if it fails, we send it again here. Is it okay?
-
-> +	else if (ret < 0)
-> +		ls2x_i2c_init(priv);
-> +
-> +	return ret;
-> +}
-
-...
-
-> +		ret = ls2x_i2c_xfer_one(adap, msg, msg == (emsg - 1));
-
-Too many parentheses, isn't it?
-
-> +		if (ret)
-> +			return ret;
-
-...
-
-> +	r = devm_request_irq(dev, irq, ls2x_i2c_isr, IRQF_SHARED, "ls2x-i2c",
-> +			     priv);
-
-Everywhere else you use 'ret', why is 'r' here?
-
-> +	if (r < 0)
-> +		return dev_err_probe(dev, r, "Unable to request irq %d\n", irq);
+Thank you!
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
