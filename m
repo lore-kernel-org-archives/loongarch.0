@@ -1,81 +1,152 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C2907E
-	for <loongarch@lists.linux.dev>; Mon, 19 Dec 2022 12:28:58 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.108.31])
-	by gateway (Coremail) with SMTP id _____8CxrusJWaBjBf8GAA--.16060S3;
-	Mon, 19 Dec 2022 20:28:57 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.108.31])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxyuYHWaBjB+MEAA--.21628S2;
-	Mon, 19 Dec 2022 20:28:56 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Wolfram Sang <wsa@kernel.org>,
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D432F187A
+	for <loongarch@lists.linux.dev>; Mon, 19 Dec 2022 13:04:23 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="299019043"
+X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
+   d="scan'208";a="299019043"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 05:04:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="774922088"
+X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
+   d="scan'208";a="774922088"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP; 19 Dec 2022 05:04:09 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+	(envelope-from <andy@kernel.org>)
+	id 1p7FoM-00CISa-1q;
+	Mon, 19 Dec 2022 15:04:06 +0200
+Date: Mon, 19 Dec 2022 15:04:06 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Wolfram Sang <wsa@kernel.org>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andy Shevchenko <andy@kernel.org>,
 	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org
-Cc: loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
+	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH V7 4/4] LoongArch: Enable LS2X I2C in loongson3_defconfig
-Date: Mon, 19 Dec 2022 20:29:27 +0800
-Message-Id: <396e890c927e60f2fc0e2c345ca0e11292ba93ef.1671451604.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1671451604.git.zhoubinbin@loongson.cn>
+	Jianmin Lv <lvjianmin@loongson.cn>
+Subject: Re: [PATCH V7 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
+ controller
+Message-ID: <Y6BhRsPAU30Dqbdv@smile.fi.intel.com>
 References: <cover.1671451604.git.zhoubinbin@loongson.cn>
+ <d44eb07245020431f98fd08e0c05b6926fb31b24.1671451604.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxyuYHWaBjB+MEAA--.21628S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Jry5XrWkuF48uF15Ww1fXrb_yoWxKFX_JF
-	y7Kw1kWr48JFZ7W3WIqw4rGw4DA3W7X3WFkr17Zw1xX3Waqr13JrWDAw17C3Z0ga4DWr43
-	ZaykJF9F9r18tjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	u7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
-	Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
-	O2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-	Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj4
-	0_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
-	JrUvcSsGvfC2KfnxnUUI43ZEXa7IUneRRtUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d44eb07245020431f98fd08e0c05b6926fb31b24.1671451604.git.zhoubinbin@loongson.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-This is now supported, enable for Loongson-3 systems.
-Other systems are unaffected.
+On Mon, Dec 19, 2022 at 08:28:33PM +0800, Binbin Zhou wrote:
+> This I2C module is integrated into the Loongson-2K SoCs and Loongson
+> LS7A bridge chip.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- arch/loongarch/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Almost there, see my comments below (note, you have ~1w of time before this
+can be applied anyway, so take you time for carefully addressing comments,
+(re-)testing, etc.).
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index cb52774c80e8..5677c4f8576e 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -602,6 +602,7 @@ CONFIG_HW_RANDOM_VIRTIO=m
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_PIIX4=y
- CONFIG_I2C_GPIO=y
-+CONFIG_I2C_LS2X=y
- CONFIG_SPI=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_LOONGSON=y
+...
+
+> @@ -888,6 +888,17 @@ config I2C_OWL
+>  	  Say Y here if you want to use the I2C bus controller on
+>  	  the Actions Semiconductor Owl SoC's.
+>  
+> +config I2C_LS2X
+
+I believe in Latin alphabet L goes before O...
+
+> +	tristate "Loongson LS2X I2C adapter"
+> +	depends on MACH_LOONGSON64 || COMPILE_TEST
+> +	help
+> +	  If you say yes to this option, support will be included for the
+> +	  I2C interface on the Loongson-2K SoCs and Loongson LS7A bridge
+> +	  chip.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called i2c-ls2x.
+> +
+>  config I2C_PASEMI
+>  	tristate "PA Semi SMBus interface"
+>  	depends on PPC_PASEMI && PCI
+
+...
+
+>  obj-$(CONFIG_I2C_MXS)		+= i2c-mxs.o
+>  obj-$(CONFIG_I2C_NOMADIK)	+= i2c-nomadik.o
+>  obj-$(CONFIG_I2C_NPCM)		+= i2c-npcm7xx.o
+> +obj-$(CONFIG_I2C_LS2X)		+= i2c-ls2x.o
+
+...and even before n and m.
+
+>  obj-$(CONFIG_I2C_OCORES)	+= i2c-ocores.o
+>  obj-$(CONFIG_I2C_OMAP)		+= i2c-omap.o
+>  obj-$(CONFIG_I2C_OWL)		+= i2c-owl.o
+
+...
+
+> +static int ls2x_i2c_xfer_one(struct i2c_adapter *adap,
+> +			     struct i2c_msg *msg, bool stop)
+> +{
+> +	int ret;
+> +	bool is_read = msg->flags & I2C_M_RD;
+> +	struct ls2x_i2c_priv *priv = i2c_get_adapdata(adap);
+> +
+> +	/* Contains steps to send start condition and address */
+> +	ret = ls2x_i2c_start(adap, msg);
+> +	if (!ret) {
+> +		if (is_read)
+> +			ret = ls2x_i2c_rx(adap, msg->buf, msg->len);
+> +		else
+> +			ret = ls2x_i2c_tx(adap, msg->buf, msg->len);
+
+> +		if (!ret && stop)
+> +			ret = ls2x_i2c_stop(adap);
+
+So, we will send stop here...
+
+> +	}
+
+> +	if (ret == -ENXIO)
+> +		ls2x_i2c_stop(adap);
+
+...and if it fails, we send it again here. Is it okay?
+
+> +	else if (ret < 0)
+> +		ls2x_i2c_init(priv);
+> +
+> +	return ret;
+> +}
+
+...
+
+> +		ret = ls2x_i2c_xfer_one(adap, msg, msg == (emsg - 1));
+
+Too many parentheses, isn't it?
+
+> +		if (ret)
+> +			return ret;
+
+...
+
+> +	r = devm_request_irq(dev, irq, ls2x_i2c_isr, IRQF_SHARED, "ls2x-i2c",
+> +			     priv);
+
+Everywhere else you use 'ret', why is 'r' here?
+
+> +	if (r < 0)
+> +		return dev_err_probe(dev, r, "Unable to request irq %d\n", irq);
+
 -- 
-2.31.1
+With Best Regards,
+Andy Shevchenko
+
 
