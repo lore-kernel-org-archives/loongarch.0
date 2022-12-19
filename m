@@ -1,1081 +1,385 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDC967E
-	for <loongarch@lists.linux.dev>; Mon, 19 Dec 2022 03:30:15 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxOenG2p9jB94GAA--.12278S3;
-	Mon, 19 Dec 2022 11:30:14 +0800 (CST)
-Received: from [10.130.0.63] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxIL_E2p9jtYMEAA--.17146S3;
-	Mon, 19 Dec 2022 11:30:13 +0800 (CST)
-Subject: Re: [RFC PATCH] LoongArch: Add hardware breakpoints/watchpoints
- support
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20221213091008.24223-1-zhangqing@loongson.cn>
- <e9fd5930-f2a3-719b-dc69-87ad5e947063@loongson.cn>
-From: Qing Zhang <zhangqing@loongson.cn>
-Message-ID: <9f5e1496-0e49-9ff1-215e-3927ca9d2283@loongson.cn>
-Date: Mon, 19 Dec 2022 11:30:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FB57E
+	for <loongarch@lists.linux.dev>; Mon, 19 Dec 2022 12:06:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EA71C433D2;
+	Mon, 19 Dec 2022 12:06:38 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch changes for v6.2
+Date: Mon, 19 Dec 2022 20:06:12 +0800
+Message-Id: <20221219120612.1637267-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <e9fd5930-f2a3-719b-dc69-87ad5e947063@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxIL_E2p9jtYMEAA--.17146S3
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvAXoWfAry7ZF48Aw43CF13KF48Zwb_yoWrXFyxKo
-	WUKF1rJr1rJr1UKr4UJryUXF13Jr1UCF1DtF1UGr97Zw10yF1UW3yUJrWjq3yUXr1kGr1U
-	GF1UJry0vFyUJr15n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
-	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
-	UU9Ib4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
-	0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
-	ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1D
-	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
-	AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0
-	cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
-	80aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIF
-	yTuYvjxUcCD7UUUUU
 
-Hi, Youling
+The following changes since commit 830b3c68c1fb1e9176028d02ef86f3cf76aa2476:
 
-On 2022/12/19 上午11:03, Youling Tang wrote:
-> Hi, Qing
-> 
-> On 12/13/2022 05:10 PM, qing zhang wrote:
->> From: Qing Zhang <zhangqing@loongson.cn>
->>
->> Use perf framework to manage hardware instruction and data breakpoints.
->> LoongArch defines hardware watchpoint functions for instruction fetch
->> and load/store operations, after the software configures hardware 
->> watchpoints
->> for instruction fetch and load/store operations. The processor 
->> hardware will
->> monitor the access address of the instruction fetch and load/store 
->> operation,
->> and will trigger the exception of the watchpoint when it meets the 
->> conditions
->> set by the watchpoint.
->>
->> The hardware monitoring points for instruction fetching and load/store 
->> operations
->> each have a register for the overall configuration of all monitoring 
->> points,
->> a register for recording the status of all monitoring points, and four 
->> registers
->> required for configuration of each watchpoint individually.
->>
->> Watchpoint related control status register chapters:
->> https://github.com/loongson/LoongArch-Documentation/releases/download/2022.08.12/ 
->>
->> LoongArch-Vol1-v1.02-CN.pdf
->>
->> Initial version has the following limitations:
->> - userspace debug is not yet enabled: work on ptrace/gdb is in progress
->> - no support for virtualization
->>
->> Despite missing userspace debug, initial implementation can be tested: 
->> e.g.
->> see samples/hw_breakpoint and register_wide_hw_breakpoint.
-> 
-> Perhaps the existing test phenomenon should be exported to give an
-> intuitive sense of this feature.
-> 
-Well, I'll add more detailed output in the next edition.
+  Linux 6.1 (2022-12-11 14:15:18 -0800)
 
-Thank,
--Qing
+are available in the Git repository at:
 
-> Thanks,
-> Youling.
-> 
->>
->> TODO:
->> - Add Kernel tools that use hardware breakpoints: Kgdb, Ptrace
->> - Add hardware breakpoints/watchpoints for gdb
->>
->> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
->>
->> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> index 12571eedc488..69199812fe74 100644
->> --- a/arch/loongarch/Kconfig
->> +++ b/arch/loongarch/Kconfig
->> @@ -99,6 +99,7 @@ config LOONGARCH
->>      select HAVE_FUNCTION_GRAPH_TRACER
->>      select HAVE_FUNCTION_TRACER
->>      select HAVE_GENERIC_VDSO
->> +    select HAVE_HW_BREAKPOINT if PERF_EVENTS
->>      select HAVE_IOREMAP_PROT
->>      select HAVE_IRQ_EXIT_ON_IRQ_STACK
->>      select HAVE_IRQ_TIME_ACCOUNTING
->> diff --git a/arch/loongarch/include/asm/hw_breakpoint.h 
->> b/arch/loongarch/include/asm/hw_breakpoint.h
->> new file mode 100644
->> index 000000000000..a57caf117960
->> --- /dev/null
->> +++ b/arch/loongarch/include/asm/hw_breakpoint.h
->> @@ -0,0 +1,140 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Copyright (C) 2022 Loongson Technology Corporation Limited
->> + */
->> +#ifndef __ASM_HW_BREAKPOINT_H
->> +#define __ASM_HW_BREAKPOINT_H
->> +
->> +#include <asm/loongarch.h>
->> +
->> +#ifdef __KERNEL__
->> +
->> +/* Breakpoint */
->> +#define LOONGARCH_BREAKPOINT_EXECUTE        (0 << 0)
->> +
->> +/* Watchpoints */
->> +#define LOONGARCH_BREAKPOINT_LOAD        (1 << 0)
->> +#define LOONGARCH_BREAKPOINT_STORE        (1 << 1)
->> +
->> +struct arch_hw_breakpoint_ctrl {
->> +    u32 __reserved    : 28,
->> +    type        : 2,
->> +    len        : 2;
->> +};
->> +
->> +struct arch_hw_breakpoint {
->> +    u64 address;
->> +    u64 mask;
->> +    struct arch_hw_breakpoint_ctrl ctrl;
->> +};
->> +
->> +/* Lengths */
->> +#define LOONGARCH_BREAKPOINT_LEN_1    0b11
->> +#define LOONGARCH_BREAKPOINT_LEN_2    0b10
->> +#define LOONGARCH_BREAKPOINT_LEN_4    0b01
->> +#define LOONGARCH_BREAKPOINT_LEN_8    0b00
->> +
->> +/*
->> + * Limits.
->> + * Changing these will require modifications to the register accessors.
->> + */
->> +#define LOONGARCH_MAX_BRP        8
->> +#define LOONGARCH_MAX_WRP        8
->> +
->> +/* Virtual debug register bases. */
->> +#define CSR_CFG_ADDR    0
->> +#define CSR_CFG_MASK    (CSR_CFG_ADDR + LOONGARCH_MAX_BRP)
->> +#define CSR_CFG_CTRL    (CSR_CFG_MASK + LOONGARCH_MAX_BRP)
->> +#define CSR_CFG_ASID    (CSR_CFG_CTRL + LOONGARCH_MAX_WRP)
->> +
->> +/* Debug register names. */
->> +#define LOONGARCH_CSR_NAME_ADDR    ADDR
->> +#define LOONGARCH_CSR_NAME_MASK    MASK
->> +#define LOONGARCH_CSR_NAME_CTRL    CTRL
->> +#define LOONGARCH_CSR_NAME_ASID    ASID
->> +
->> +/* Accessor macros for the debug registers. */
->> +#define LOONGARCH_CSR_READ(N, REG, T, VAL)            \
->> +do {                                \
->> +    if (T == 0)                        \
->> +        VAL = csr_read64(LOONGARCH_CSR_##IB##N##REG);    \
->> +    else                            \
->> +        VAL = csr_read64(LOONGARCH_CSR_##DB##N##REG);    \
->> +} while (0)
->> +
->> +#define LOONGARCH_CSR_WRITE(N, REG, T, VAL)            \
->> +do {                                \
->> +    if (T == 0)                        \
->> +        csr_write64(VAL, LOONGARCH_CSR_##IB##N##REG);    \
->> +    else                            \
->> +        csr_write64(VAL, LOONGARCH_CSR_##DB##N##REG);    \
->> +} while (0)
->> +
->> +static inline u32 encode_ctrl_reg(struct arch_hw_breakpoint_ctrl ctrl)
->> +{
->> +    u32 val = (ctrl.len << 2) | ctrl.type;
->> +
->> +    return val;
->> +}
->> +
->> +static inline void decode_ctrl_reg(u32 reg, struct 
->> arch_hw_breakpoint_ctrl *ctrl)
->> +{
->> +    ctrl->type    = reg & 0x3;
->> +    reg >>= 2;
->> +    ctrl->len    = reg & 0x3;
->> +}
->> +
->> +struct task_struct;
->> +struct notifier_block;
->> +struct perf_event_attr;
->> +struct perf_event;
->> +
->> +extern int arch_bp_generic_fields(struct arch_hw_breakpoint_ctrl ctrl,
->> +                  int *gen_len, int *gen_type, int *offset);
->> +extern int arch_check_bp_in_kernelspace(struct arch_hw_breakpoint *hw);
->> +extern int hw_breakpoint_arch_parse(struct perf_event *bp,
->> +                    const struct perf_event_attr *attr,
->> +                    struct arch_hw_breakpoint *hw);
->> +extern int hw_breakpoint_exceptions_notify(struct notifier_block 
->> *unused,
->> +                       unsigned long val, void *data);
->> +
->> +extern int arch_install_hw_breakpoint(struct perf_event *bp);
->> +extern void arch_uninstall_hw_breakpoint(struct perf_event *bp);
->> +extern void hw_breakpoint_pmu_read(struct perf_event *bp);
->> +extern int hw_breakpoint_slots(int type);
->> +
->> +int breakpoint_handler(struct pt_regs *regs);
->> +int watchpoint_handler(struct pt_regs *regs);
->> +
->> +#ifdef CONFIG_HAVE_HW_BREAKPOINT
->> +extern void hw_breakpoint_thread_switch(struct task_struct *next);
->> +extern void ptrace_hw_copy_thread(struct task_struct *task);
->> +#else
->> +static inline void hw_breakpoint_thread_switch(struct task_struct *next)
->> +{
->> +}
->> +static inline void ptrace_hw_copy_thread(struct task_struct *task)
->> +{
->> +}
->> +#endif
->> +
->> +/* Determine number of BRP registers available. */
->> +static inline int get_num_brps(void)
->> +{
->> +    unsigned int ibcn;
->> +
->> +    ibcn = csr_read64(LOONGARCH_CSR_FWPC) & 0x3f;
->> +    return ibcn;
->> +}
->> +
->> +/* Determine number of WRP registers available. */
->> +static inline int get_num_wrps(void)
->> +{
->> +    unsigned int dbcn;
->> +
->> +    dbcn = csr_read64(LOONGARCH_CSR_MWPC) & 0x3f;
->> +    return dbcn;
->> +}
->> +
->> +#endif    /* __KERNEL__ */
->> +#endif    /* __ASM_BREAKPOINT_H */
->> diff --git a/arch/loongarch/include/asm/loongarch.h 
->> b/arch/loongarch/include/asm/loongarch.h
->> index 7f8d57a61c8b..e9aed583a064 100644
->> --- a/arch/loongarch/include/asm/loongarch.h
->> +++ b/arch/loongarch/include/asm/loongarch.h
->> @@ -970,42 +970,42 @@ static __always_inline void iocsr_write64(u64 
->> val, u32 reg)
->>
->>  #define LOONGARCH_CSR_DB0ADDR        0x310    /* data breakpoint 0 
->> address */
->>  #define LOONGARCH_CSR_DB0MASK        0x311    /* data breakpoint 0 
->> mask */
->> -#define LOONGARCH_CSR_DB0CTL        0x312    /* data breakpoint 0 
->> control */
->> +#define LOONGARCH_CSR_DB0CTRL        0x312    /* data breakpoint 0 
->> control */
->>  #define LOONGARCH_CSR_DB0ASID        0x313    /* data breakpoint 0 
->> asid */
->>
->>  #define LOONGARCH_CSR_DB1ADDR        0x318    /* data breakpoint 1 
->> address */
->>  #define LOONGARCH_CSR_DB1MASK        0x319    /* data breakpoint 1 
->> mask */
->> -#define LOONGARCH_CSR_DB1CTL        0x31a    /* data breakpoint 1 
->> control */
->> +#define LOONGARCH_CSR_DB1CTRL        0x31a    /* data breakpoint 1 
->> control */
->>  #define LOONGARCH_CSR_DB1ASID        0x31b    /* data breakpoint 1 
->> asid */
->>
->>  #define LOONGARCH_CSR_DB2ADDR        0x320    /* data breakpoint 2 
->> address */
->>  #define LOONGARCH_CSR_DB2MASK        0x321    /* data breakpoint 2 
->> mask */
->> -#define LOONGARCH_CSR_DB2CTL        0x322    /* data breakpoint 2 
->> control */
->> +#define LOONGARCH_CSR_DB2CTRL        0x322    /* data breakpoint 2 
->> control */
->>  #define LOONGARCH_CSR_DB2ASID        0x323    /* data breakpoint 2 
->> asid */
->>
->>  #define LOONGARCH_CSR_DB3ADDR        0x328    /* data breakpoint 3 
->> address */
->>  #define LOONGARCH_CSR_DB3MASK        0x329    /* data breakpoint 3 
->> mask */
->> -#define LOONGARCH_CSR_DB3CTL        0x32a    /* data breakpoint 3 
->> control */
->> +#define LOONGARCH_CSR_DB3CTRL        0x32a    /* data breakpoint 3 
->> control */
->>  #define LOONGARCH_CSR_DB3ASID        0x32b    /* data breakpoint 3 
->> asid */
->>
->>  #define LOONGARCH_CSR_DB4ADDR        0x330    /* data breakpoint 4 
->> address */
->>  #define LOONGARCH_CSR_DB4MASK        0x331    /* data breakpoint 4 
->> maks */
->> -#define LOONGARCH_CSR_DB4CTL        0x332    /* data breakpoint 4 
->> control */
->> +#define LOONGARCH_CSR_DB4CTRL        0x332    /* data breakpoint 4 
->> control */
->>  #define LOONGARCH_CSR_DB4ASID        0x333    /* data breakpoint 4 
->> asid */
->>
->>  #define LOONGARCH_CSR_DB5ADDR        0x338    /* data breakpoint 5 
->> address */
->>  #define LOONGARCH_CSR_DB5MASK        0x339    /* data breakpoint 5 
->> mask */
->> -#define LOONGARCH_CSR_DB5CTL        0x33a    /* data breakpoint 5 
->> control */
->> +#define LOONGARCH_CSR_DB5CTRL        0x33a    /* data breakpoint 5 
->> control */
->>  #define LOONGARCH_CSR_DB5ASID        0x33b    /* data breakpoint 5 
->> asid */
->>
->>  #define LOONGARCH_CSR_DB6ADDR        0x340    /* data breakpoint 6 
->> address */
->>  #define LOONGARCH_CSR_DB6MASK        0x341    /* data breakpoint 6 
->> mask */
->> -#define LOONGARCH_CSR_DB6CTL        0x342    /* data breakpoint 6 
->> control */
->> +#define LOONGARCH_CSR_DB6CTRL        0x342    /* data breakpoint 6 
->> control */
->>  #define LOONGARCH_CSR_DB6ASID        0x343    /* data breakpoint 6 
->> asid */
->>
->>  #define LOONGARCH_CSR_DB7ADDR        0x348    /* data breakpoint 7 
->> address */
->>  #define LOONGARCH_CSR_DB7MASK        0x349    /* data breakpoint 7 
->> mask */
->> -#define LOONGARCH_CSR_DB7CTL        0x34a    /* data breakpoint 7 
->> control */
->> +#define LOONGARCH_CSR_DB7CTRL        0x34a    /* data breakpoint 7 
->> control */
->>  #define LOONGARCH_CSR_DB7ASID        0x34b    /* data breakpoint 7 
->> asid */
->>
->>  #define LOONGARCH_CSR_FWPC        0x380    /* instruction breakpoint 
->> config */
->> @@ -1013,42 +1013,42 @@ static __always_inline void iocsr_write64(u64 
->> val, u32 reg)
->>
->>  #define LOONGARCH_CSR_IB0ADDR        0x390    /* inst breakpoint 0 
->> address */
->>  #define LOONGARCH_CSR_IB0MASK        0x391    /* inst breakpoint 0 
->> mask */
->> -#define LOONGARCH_CSR_IB0CTL        0x392    /* inst breakpoint 0 
->> control */
->> +#define LOONGARCH_CSR_IB0CTRL        0x392    /* inst breakpoint 0 
->> control */
->>  #define LOONGARCH_CSR_IB0ASID        0x393    /* inst breakpoint 0 
->> asid */
->>
->>  #define LOONGARCH_CSR_IB1ADDR        0x398    /* inst breakpoint 1 
->> address */
->>  #define LOONGARCH_CSR_IB1MASK        0x399    /* inst breakpoint 1 
->> mask */
->> -#define LOONGARCH_CSR_IB1CTL        0x39a    /* inst breakpoint 1 
->> control */
->> +#define LOONGARCH_CSR_IB1CTRL        0x39a    /* inst breakpoint 1 
->> control */
->>  #define LOONGARCH_CSR_IB1ASID        0x39b    /* inst breakpoint 1 
->> asid */
->>
->>  #define LOONGARCH_CSR_IB2ADDR        0x3a0    /* inst breakpoint 2 
->> address */
->>  #define LOONGARCH_CSR_IB2MASK        0x3a1    /* inst breakpoint 2 
->> mask */
->> -#define LOONGARCH_CSR_IB2CTL        0x3a2    /* inst breakpoint 2 
->> control */
->> +#define LOONGARCH_CSR_IB2CTRL        0x3a2    /* inst breakpoint 2 
->> control */
->>  #define LOONGARCH_CSR_IB2ASID        0x3a3    /* inst breakpoint 2 
->> asid */
->>
->>  #define LOONGARCH_CSR_IB3ADDR        0x3a8    /* inst breakpoint 3 
->> address */
->>  #define LOONGARCH_CSR_IB3MASK        0x3a9    /* breakpoint 3 mask */
->> -#define LOONGARCH_CSR_IB3CTL        0x3aa    /* inst breakpoint 3 
->> control */
->> +#define LOONGARCH_CSR_IB3CTRL        0x3aa    /* inst breakpoint 3 
->> control */
->>  #define LOONGARCH_CSR_IB3ASID        0x3ab    /* inst breakpoint 3 
->> asid */
->>
->>  #define LOONGARCH_CSR_IB4ADDR        0x3b0    /* inst breakpoint 4 
->> address */
->>  #define LOONGARCH_CSR_IB4MASK        0x3b1    /* inst breakpoint 4 
->> mask */
->> -#define LOONGARCH_CSR_IB4CTL        0x3b2    /* inst breakpoint 4 
->> control */
->> +#define LOONGARCH_CSR_IB4CTRL        0x3b2    /* inst breakpoint 4 
->> control */
->>  #define LOONGARCH_CSR_IB4ASID        0x3b3    /* inst breakpoint 4 
->> asid */
->>
->>  #define LOONGARCH_CSR_IB5ADDR        0x3b8    /* inst breakpoint 5 
->> address */
->>  #define LOONGARCH_CSR_IB5MASK        0x3b9    /* inst breakpoint 5 
->> mask */
->> -#define LOONGARCH_CSR_IB5CTL        0x3ba    /* inst breakpoint 5 
->> control */
->> +#define LOONGARCH_CSR_IB5CTRL        0x3ba    /* inst breakpoint 5 
->> control */
->>  #define LOONGARCH_CSR_IB5ASID        0x3bb    /* inst breakpoint 5 
->> asid */
->>
->>  #define LOONGARCH_CSR_IB6ADDR        0x3c0    /* inst breakpoint 6 
->> address */
->>  #define LOONGARCH_CSR_IB6MASK        0x3c1    /* inst breakpoint 6 
->> mask */
->> -#define LOONGARCH_CSR_IB6CTL        0x3c2    /* inst breakpoint 6 
->> control */
->> +#define LOONGARCH_CSR_IB6CTRL        0x3c2    /* inst breakpoint 6 
->> control */
->>  #define LOONGARCH_CSR_IB6ASID        0x3c3    /* inst breakpoint 6 
->> asid */
->>
->>  #define LOONGARCH_CSR_IB7ADDR        0x3c8    /* inst breakpoint 7 
->> address */
->>  #define LOONGARCH_CSR_IB7MASK        0x3c9    /* inst breakpoint 7 
->> mask */
->> -#define LOONGARCH_CSR_IB7CTL        0x3ca    /* inst breakpoint 7 
->> control */
->> +#define LOONGARCH_CSR_IB7CTRL        0x3ca    /* inst breakpoint 7 
->> control */
->>  #define LOONGARCH_CSR_IB7ASID        0x3cb    /* inst breakpoint 7 
->> asid */
->>
->>  #define LOONGARCH_CSR_DEBUG        0x500    /* debug config */
->> diff --git a/arch/loongarch/include/asm/processor.h 
->> b/arch/loongarch/include/asm/processor.h
->> index 7184f1dc61f2..f6ee920122d6 100644
->> --- a/arch/loongarch/include/asm/processor.h
->> +++ b/arch/loongarch/include/asm/processor.h
->> @@ -11,6 +11,7 @@
->>
->>  #include <asm/cpu.h>
->>  #include <asm/cpu-info.h>
->> +#include <asm/hw_breakpoint.h>
->>  #include <asm/loongarch.h>
->>  #include <asm/vdso/processor.h>
->>  #include <uapi/asm/ptrace.h>
->> @@ -131,6 +132,9 @@ struct thread_struct {
->>       * they are conditionally copied at fork().
->>       */
->>      struct loongarch_fpu fpu FPU_ALIGN;
->> +    /* Hardware breakpoints pinned to this task. */
->> +    struct perf_event    *hbp_break[LOONGARCH_MAX_BRP];
->> +    struct perf_event    *hbp_watch[LOONGARCH_MAX_WRP];
->>  };
->>
->>  #define thread_saved_ra(tsk)    (tsk->thread.sched_ra)
->> @@ -172,6 +176,8 @@ struct thread_struct {
->>          .fcc        = 0,                \
->>          .fpr        = {{{0,},},},            \
->>      },                            \
->> +    .hbp_break        = {0},                \
->> +    .hbp_watch        = {0},                \
->>  }
->>
->>  struct task_struct;
->> @@ -184,10 +190,6 @@ extern unsigned long        
->> boot_option_idle_override;
->>   */
->>  extern void start_thread(struct pt_regs *regs, unsigned long pc, 
->> unsigned long sp);
->>
->> -static inline void flush_thread(void)
->> -{
->> -}
->> -
->>  unsigned long __get_wchan(struct task_struct *p);
->>
->>  #define __KSTK_TOS(tsk) ((unsigned long)task_stack_page(tsk) + \
->> diff --git a/arch/loongarch/include/asm/switch_to.h 
->> b/arch/loongarch/include/asm/switch_to.h
->> index 43a5ab162d38..24e3094bebab 100644
->> --- a/arch/loongarch/include/asm/switch_to.h
->> +++ b/arch/loongarch/include/asm/switch_to.h
->> @@ -34,6 +34,7 @@ extern asmlinkage struct task_struct 
->> *__switch_to(struct task_struct *prev,
->>  #define switch_to(prev, next, last)                        \
->>  do {                                        \
->>      lose_fpu_inatomic(1, prev);                        \
->> +    hw_breakpoint_thread_switch(next);                    \
->>      (last) = __switch_to(prev, next, task_thread_info(next),        \
->>           __builtin_return_address(0), __builtin_frame_address(0));    \
->>  } while (0)
->> diff --git a/arch/loongarch/kernel/Makefile 
->> b/arch/loongarch/kernel/Makefile
->> index 7ca65195f7f8..b3aca7f2296e 100644
->> --- a/arch/loongarch/kernel/Makefile
->> +++ b/arch/loongarch/kernel/Makefile
->> @@ -46,6 +46,7 @@ obj-$(CONFIG_UNWINDER_GUESS)    += unwind_guess.o
->>  obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
->>
->>  obj-$(CONFIG_PERF_EVENTS)    += perf_event.o perf_regs.o
->> +obj-$(CONFIG_HAVE_HW_BREAKPOINT)    += hw_breakpoint.o
->>
->>  obj-$(CONFIG_KPROBES)        += kprobes.o kprobes_trampoline.o
->>
->> diff --git a/arch/loongarch/kernel/hw_breakpoint.c 
->> b/arch/loongarch/kernel/hw_breakpoint.c
->> new file mode 100644
->> index 000000000000..16f38ceec321
->> --- /dev/null
->> +++ b/arch/loongarch/kernel/hw_breakpoint.c
->> @@ -0,0 +1,461 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2022 Loongson Technology Corporation Limited
->> + */
->> +#define pr_fmt(fmt) "hw-breakpoint: " fmt
->> +
->> +#include <linux/hw_breakpoint.h>
->> +#include <linux/kprobes.h>
->> +#include <linux/perf_event.h>
->> +
->> +#include <asm/hw_breakpoint.h>
->> +
->> +/* Breakpoint currently in use for each BRP. */
->> +static DEFINE_PER_CPU(struct perf_event *, 
->> bp_on_reg[LOONGARCH_MAX_BRP]);
->> +
->> +/* Watchpoint currently in use for each WRP. */
->> +static DEFINE_PER_CPU(struct perf_event *, 
->> wp_on_reg[LOONGARCH_MAX_WRP]);
->> +
->> +/* Number of BRP/WRP registers on this CPU. */
->> +static int core_num_brps;
->> +static int core_num_wrps;
->> +
->> +int hw_breakpoint_slots(int type)
->> +{
->> +    /*
->> +     * We can be called early, so don't rely on
->> +     * our static variables being initialised.
->> +     */
->> +    switch (type) {
->> +    case TYPE_INST:
->> +        return get_num_brps();
->> +    case TYPE_DATA:
->> +        return get_num_wrps();
->> +    default:
->> +        pr_warn("unknown slot type: %d\n", type);
->> +        return 0;
->> +    }
->> +}
->> +
->> +#define READ_WB_REG_CASE(OFF, N, REG, T, VAL)        \
->> +    case (OFF + N):                    \
->> +        LOONGARCH_CSR_READ(N, REG, T, VAL);    \
->> +        break
->> +
->> +#define WRITE_WB_REG_CASE(OFF, N, REG, T, VAL)        \
->> +    case (OFF + N):                    \
->> +        LOONGARCH_CSR_WRITE(N, REG, T, VAL);    \
->> +        break
->> +
->> +#define GEN_READ_WB_REG_CASES(OFF, REG, T, VAL)        \
->> +    READ_WB_REG_CASE(OFF, 0, REG, T, VAL);        \
->> +    READ_WB_REG_CASE(OFF, 1, REG, T, VAL);        \
->> +    READ_WB_REG_CASE(OFF, 2, REG, T, VAL);        \
->> +    READ_WB_REG_CASE(OFF, 3, REG, T, VAL);        \
->> +    READ_WB_REG_CASE(OFF, 4, REG, T, VAL);        \
->> +    READ_WB_REG_CASE(OFF, 5, REG, T, VAL);        \
->> +    READ_WB_REG_CASE(OFF, 6, REG, T, VAL);        \
->> +    READ_WB_REG_CASE(OFF, 7, REG, T, VAL);
->> +
->> +#define GEN_WRITE_WB_REG_CASES(OFF, REG, T, VAL)    \
->> +    WRITE_WB_REG_CASE(OFF, 0, REG, T, VAL);        \
->> +    WRITE_WB_REG_CASE(OFF, 1, REG, T, VAL);        \
->> +    WRITE_WB_REG_CASE(OFF, 2, REG, T, VAL);        \
->> +    WRITE_WB_REG_CASE(OFF, 3, REG, T, VAL);        \
->> +    WRITE_WB_REG_CASE(OFF, 4, REG, T, VAL);        \
->> +    WRITE_WB_REG_CASE(OFF, 5, REG, T, VAL);        \
->> +    WRITE_WB_REG_CASE(OFF, 6, REG, T, VAL);        \
->> +    WRITE_WB_REG_CASE(OFF, 7, REG, T, VAL);
->> +
->> +static u64 read_wb_reg(int reg, int n, int t)
->> +{
->> +    u64 val = 0;
->> +
->> +    switch (reg + n) {
->> +    GEN_READ_WB_REG_CASES(CSR_CFG_ADDR, ADDR, t, val);
->> +    GEN_READ_WB_REG_CASES(CSR_CFG_MASK, MASK, t, val);
->> +    GEN_READ_WB_REG_CASES(CSR_CFG_CTRL, CTRL, t, val);
->> +    GEN_READ_WB_REG_CASES(CSR_CFG_ASID, ASID, t, val);
->> +    default:
->> +        pr_warn("attempt to read from unknown breakpoint register 
->> %d\n", n);
->> +    }
->> +
->> +    return val;
->> +}
->> +NOKPROBE_SYMBOL(read_wb_reg);
->> +
->> +static void write_wb_reg(int reg, int n, int t, u64 val)
->> +{
->> +    switch (reg + n) {
->> +    GEN_WRITE_WB_REG_CASES(CSR_CFG_ADDR, ADDR, t, val);
->> +    GEN_WRITE_WB_REG_CASES(CSR_CFG_MASK, MASK, t, val);
->> +    GEN_WRITE_WB_REG_CASES(CSR_CFG_CTRL, CTRL, t, val);
->> +    GEN_WRITE_WB_REG_CASES(CSR_CFG_ASID, ASID, t, val);
->> +    default:
->> +        pr_warn("attempt to write to unknown breakpoint register 
->> %d\n", n);
->> +    }
->> +}
->> +NOKPROBE_SYMBOL(write_wb_reg);
->> +
->> +enum hw_breakpoint_ops {
->> +    HW_BREAKPOINT_INSTALL,
->> +    HW_BREAKPOINT_UNINSTALL,
->> +};
->> +
->> +/**
->> + * hw_breakpoint_slot_setup - Find and setup a perf slot according to
->> + *                  operations
->> + *
->> + * @slots: pointer to array of slots
->> + * @max_slots: max number of slots
->> + * @bp: perf_event to setup
->> + * @ops: operation to be carried out on the slot
->> + *
->> + * Return:
->> + *    slot index on success
->> + *    -ENOSPC if no slot is available/matches
->> + *    -EINVAL on wrong operations parameter
->> + */
->> +static int hw_breakpoint_slot_setup(struct perf_event **slots, int 
->> max_slots,
->> +                    struct perf_event *bp,
->> +                    enum hw_breakpoint_ops ops)
->> +{
->> +    int i;
->> +    struct perf_event **slot;
->> +
->> +    for (i = 0; i < max_slots; ++i) {
->> +        slot = &slots[i];
->> +        switch (ops) {
->> +        case HW_BREAKPOINT_INSTALL:
->> +            if (!*slot) {
->> +                *slot = bp;
->> +                return i;
->> +            }
->> +            break;
->> +        case HW_BREAKPOINT_UNINSTALL:
->> +            if (*slot == bp) {
->> +                *slot = NULL;
->> +                return i;
->> +            }
->> +            break;
->> +        default:
->> +            pr_warn_once("Unhandled hw breakpoint ops %d\n", ops);
->> +            return -EINVAL;
->> +        }
->> +    }
->> +    return -ENOSPC;
->> +}
->> +
->> +/*
->> + * Unregister breakpoints from this task and reset the pointers in
->> + * the thread_struct.
->> + */
->> +void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
->> +{
->> +}
->> +
->> +void ptrace_hw_copy_thread(struct task_struct *tsk)
->> +{
->> +    memset(&tsk->thread.hbp_break, 0, sizeof(tsk->thread.hbp_break));
->> +    memset(&tsk->thread.hbp_watch, 0, sizeof(tsk->thread.hbp_watch));
->> +}
->> +
->> +static int hw_breakpoint_control(struct perf_event *bp,
->> +                 enum hw_breakpoint_ops ops)
->> +{
->> +    struct arch_hw_breakpoint *info = counter_arch_bp(bp);
->> +    struct perf_event **slots;
->> +    int i, max_slots, enable;
->> +    u32 ctrl;
->> +    struct pt_regs *regs = task_pt_regs(current);
->> +
->> +    if (info->ctrl.type == LOONGARCH_BREAKPOINT_EXECUTE) {
->> +        /* Breakpoint */
->> +        slots = this_cpu_ptr(bp_on_reg);
->> +        max_slots = core_num_brps;
->> +    } else {
->> +        /* Watchpoint */
->> +        slots = this_cpu_ptr(wp_on_reg);
->> +        max_slots = core_num_wrps;
->> +    }
->> +
->> +    i = hw_breakpoint_slot_setup(slots, max_slots, bp, ops);
->> +
->> +    if (WARN_ONCE(i < 0, "Can't find any breakpoint slot"))
->> +        return i;
->> +
->> +    switch (ops) {
->> +    case HW_BREAKPOINT_INSTALL:
->> +        /* Set the FWPnCFG/MWPnCFG 1~3 register. */
->> +        write_wb_reg(CSR_CFG_ADDR, i, 0, info->address);
->> +        write_wb_reg(CSR_CFG_ADDR, i, 1, info->address);
->> +        if (info->mask) {
->> +            write_wb_reg(CSR_CFG_MASK, i, 0, info->mask);
->> +            write_wb_reg(CSR_CFG_MASK, i, 1, info->mask);
->> +        }
->> +        write_wb_reg(CSR_CFG_ASID, i, 0, 0);
->> +        write_wb_reg(CSR_CFG_ASID, i, 1, 0);
->> +        ctrl = encode_ctrl_reg(info->ctrl);
->> +        if (info->ctrl.type == LOONGARCH_BREAKPOINT_EXECUTE)
->> +            write_wb_reg(CSR_CFG_CTRL, i, 0, ctrl | 0x1e);
->> +        else
->> +            write_wb_reg(CSR_CFG_CTRL, i, 1,  ctrl | 0x1e | 1 << 8 | 
->> 1 << 9);
->> +
->> +        enable = csr_read64(LOONGARCH_CSR_CRMD);
->> +        csr_write64(1 << 9 | enable, LOONGARCH_CSR_CRMD);
->> +        break;
->> +    case HW_BREAKPOINT_UNINSTALL:
->> +        /* Reset the FWPnCFG/MWPnCFG 1~3 register. */
->> +        write_wb_reg(CSR_CFG_ADDR, i, 0, 0);
->> +        write_wb_reg(CSR_CFG_ADDR, i, 1, 0);
->> +        write_wb_reg(CSR_CFG_MASK, i, 0, 0);
->> +        write_wb_reg(CSR_CFG_MASK, i, 1, 0);
->> +        write_wb_reg(CSR_CFG_CTRL, i, 0, 0);
->> +        write_wb_reg(CSR_CFG_CTRL, i, 1, 0);
->> +        write_wb_reg(CSR_CFG_ASID, i, 0, 0);
->> +        write_wb_reg(CSR_CFG_ASID, i, 1, 0);
->> +        break;
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->> +/*
->> + * Install a perf counter breakpoint.
->> + */
->> +int arch_install_hw_breakpoint(struct perf_event *bp)
->> +{
->> +    return hw_breakpoint_control(bp, HW_BREAKPOINT_INSTALL);
->> +}
->> +
->> +void arch_uninstall_hw_breakpoint(struct perf_event *bp)
->> +{
->> +    hw_breakpoint_control(bp, HW_BREAKPOINT_UNINSTALL);
->> +}
->> +
->> +static int get_hbp_len(u8 hbp_len)
->> +{
->> +    unsigned int len_in_bytes = 0;
->> +
->> +    switch (hbp_len) {
->> +    case LOONGARCH_BREAKPOINT_LEN_1:
->> +        len_in_bytes = 1;
->> +        break;
->> +    case LOONGARCH_BREAKPOINT_LEN_2:
->> +        len_in_bytes = 2;
->> +        break;
->> +    case LOONGARCH_BREAKPOINT_LEN_4:
->> +        len_in_bytes = 4;
->> +        break;
->> +    case LOONGARCH_BREAKPOINT_LEN_8:
->> +        len_in_bytes = 8;
->> +        break;
->> +    }
->> +
->> +    return len_in_bytes;
->> +}
->> +
->> +/*
->> + * Check whether bp virtual address is in kernel space.
->> + */
->> +int arch_check_bp_in_kernelspace(struct arch_hw_breakpoint *hw)
->> +{
->> +    unsigned int len;
->> +    unsigned long va;
->> +
->> +    va = hw->address;
->> +    len = get_hbp_len(hw->ctrl.len);
->> +
->> +    return (va >= TASK_SIZE) && ((va + len - 1) >= TASK_SIZE);
->> +}
->> +
->> +/*
->> + * Construct an arch_hw_breakpoint from a perf_event.
->> + */
->> +static int arch_build_bp_info(struct perf_event *bp,
->> +                  const struct perf_event_attr *attr,
->> +                  struct arch_hw_breakpoint *hw)
->> +{
->> +    /* Type */
->> +    switch (attr->bp_type) {
->> +    case HW_BREAKPOINT_X:
->> +        hw->ctrl.type = LOONGARCH_BREAKPOINT_EXECUTE;
->> +        break;
->> +    case HW_BREAKPOINT_R:
->> +        hw->ctrl.type = LOONGARCH_BREAKPOINT_LOAD;
->> +        break;
->> +    case HW_BREAKPOINT_W:
->> +        hw->ctrl.type = LOONGARCH_BREAKPOINT_STORE;
->> +        break;
->> +    case HW_BREAKPOINT_RW:
->> +        hw->ctrl.type = LOONGARCH_BREAKPOINT_LOAD | 
->> LOONGARCH_BREAKPOINT_STORE;
->> +        break;
->> +    default:
->> +        return -EINVAL;
->> +    }
->> +
->> +    /* Len */
->> +    switch (attr->bp_len) {
->> +    case HW_BREAKPOINT_LEN_1:
->> +        hw->ctrl.len = LOONGARCH_BREAKPOINT_LEN_1;
->> +        break;
->> +    case HW_BREAKPOINT_LEN_2:
->> +        hw->ctrl.len = LOONGARCH_BREAKPOINT_LEN_2;
->> +        break;
->> +    case HW_BREAKPOINT_LEN_4:
->> +        hw->ctrl.len = LOONGARCH_BREAKPOINT_LEN_4;
->> +        break;
->> +    case HW_BREAKPOINT_LEN_8:
->> +        hw->ctrl.len = LOONGARCH_BREAKPOINT_LEN_8;
->> +        break;
->> +    default:
->> +        return -EINVAL;
->> +    }
->> +
->> +    /* Address */
->> +    hw->address = attr->bp_addr;
->> +
->> +    return 0;
->> +}
->> +
->> +/*
->> + * Validate the arch-specific HW Breakpoint register settings.
->> + */
->> +int hw_breakpoint_arch_parse(struct perf_event *bp,
->> +                 const struct perf_event_attr *attr,
->> +                 struct arch_hw_breakpoint *hw)
->> +{
->> +    int ret;
->> +    u64 alignment_mask, offset;
->> +
->> +    /* Build the arch_hw_breakpoint. */
->> +    ret = arch_build_bp_info(bp, attr, hw);
->> +    if (ret)
->> +        return ret;
->> +
->> +    if (hw->ctrl.type != LOONGARCH_BREAKPOINT_EXECUTE)
->> +        alignment_mask = 0x7;
->> +    offset = hw->address & alignment_mask;
->> +
->> +    hw->address &= ~alignment_mask;
->> +    hw->ctrl.len <<= offset;
->> +
->> +    return 0;
->> +}
->> +
->> +#define PRMD_WE (1UL<<3) /*prmd watch enable, restore to crmd when 
->> eret*/
->> +static void update_bp_registers(struct pt_regs *regs, int enable)
->> +{
->> +    int i, max_slots;
->> +    u32 ctrl;
->> +    struct perf_event **slots;
->> +
->> +    if (csr_read64(LOONGARCH_CSR_FWPS) & 0xff) {
->> +        slots = this_cpu_ptr(bp_on_reg);
->> +        max_slots = core_num_brps;
->> +
->> +    } else if (csr_read64(LOONGARCH_CSR_MWPS) & 0xff) {
->> +        slots = this_cpu_ptr(wp_on_reg);
->> +        max_slots = core_num_wrps;
->> +    } else {
->> +        return;
->> +    }
->> +
->> +    for (i = 0; i < max_slots; ++i) {
->> +        if (!slots[i])
->> +            continue;
->> +
->> +        ctrl = read_wb_reg(CSR_CFG_CTRL, i, 1);
->> +        if (enable) {
->> +            ctrl = read_wb_reg(CSR_CFG_CTRL, i, 1);
->> +            ctrl |= 0x1 << 8;
->> +            ctrl |= 0x1 << 9;
->> +            write_wb_reg(CSR_CFG_CTRL, i, 1, ctrl);
->> +            regs->csr_prmd |= PRMD_WE;
->> +        } else {
->> +            ctrl = read_wb_reg(CSR_CFG_CTRL, i, 1);
->> +            ctrl &= ~0x1 << 8;
->> +            ctrl &= ~0x1 << 9;
->> +            write_wb_reg(CSR_CFG_CTRL, i, 1, ctrl);
->> +            regs->csr_prmd &= ~PRMD_WE;
->> +        }
->> +    }
->> +}
->> +NOKPROBE_SYMBOL(update_bp_registers);
->> +
->> +/*
->> + * Debug exception handlers.
->> + */
->> +int breakpoint_handler(struct pt_regs *regs)
->> +{
->> +    int i;
->> +    u64 addr;
->> +    struct perf_event *bp, **slots;
->> +
->> +    slots = this_cpu_ptr(bp_on_reg);
->> +
->> +    for (i = 0; i < core_num_brps; ++i) {
->> +        bp = slots[i];
->> +        if (bp == NULL)
->> +            continue;
->> +        perf_bp_event(bp, regs);
->> +    }
->> +    update_bp_registers(regs, 0);
->> +
->> +    return 0;
->> +}
->> +NOKPROBE_SYMBOL(breakpoint_handler);
->> +
->> +int watchpoint_handler(struct pt_regs *regs)
->> +{
->> +    int i;
->> +    struct perf_event *wp, **slots;
->> +
->> +    slots = this_cpu_ptr(wp_on_reg);
->> +
->> +    for (i = 0; i < core_num_wrps; ++i) {
->> +        wp = slots[i];
->> +        if (wp == NULL)
->> +            continue;
->> +        perf_bp_event(wp, regs);
->> +    }
->> +    update_bp_registers(regs, 0);
->> +
->> +    return 0;
->> +}
->> +NOKPROBE_SYMBOL(watchpoint_handler);
->> +
->> +/*
->> + * One-time initialisation.
->> + */
->> +static int __init arch_hw_breakpoint_init(void)
->> +{
->> +    core_num_brps = get_num_brps();
->> +    core_num_wrps = get_num_wrps();
->> +
->> +    pr_info("found %d breakpoint and %d watchpoint registers.\n",
->> +        core_num_brps, core_num_wrps);
->> +    return 0;
->> +}
->> +arch_initcall(arch_hw_breakpoint_init);
->> +
->> +void hw_breakpoint_thread_switch(struct task_struct *next)
->> +{
->> +    struct pt_regs *regs = task_pt_regs(next);
->> +
->> +    /* Update breakpoints/watchpoints. */
->> +    update_bp_registers(regs, 1);
->> +}
->> +
->> +void hw_breakpoint_pmu_read(struct perf_event *bp)
->> +{
->> +}
->> +
->> +/*
->> + * Dummy function to register with die_notifier.
->> + */
->> +int hw_breakpoint_exceptions_notify(struct notifier_block *unused,
->> +                    unsigned long val, void *data)
->> +{
->> +    return NOTIFY_DONE;
->> +}
->> diff --git a/arch/loongarch/kernel/process.c 
->> b/arch/loongarch/kernel/process.c
->> index 27c8cacbce01..f78574562329 100644
->> --- a/arch/loongarch/kernel/process.c
->> +++ b/arch/loongarch/kernel/process.c
->> @@ -37,6 +37,7 @@
->>  #include <asm/cpu.h>
->>  #include <asm/elf.h>
->>  #include <asm/fpu.h>
->> +#include <linux/hw_breakpoint.h>
->>  #include <asm/io.h>
->>  #include <asm/irq.h>
->>  #include <asm/irq_regs.h>
->> @@ -100,6 +101,11 @@ void exit_thread(struct task_struct *tsk)
->>  {
->>  }
->>
->> +void flush_thread(void)
->> +{
->> +    flush_ptrace_hw_breakpoint(current);
->> +}
->> +
->>  int arch_dup_task_struct(struct task_struct *dst, struct task_struct 
->> *src)
->>  {
->>      /*
->> @@ -186,6 +192,8 @@ int copy_thread(struct task_struct *p, const 
->> struct kernel_clone_args *args)
->>      if (clone_flags & CLONE_SETTLS)
->>          childregs->regs[2] = tls;
->>
->> +    ptrace_hw_copy_thread(p);
->> +
->>  out:
->>      clear_tsk_thread_flag(p, TIF_USEDFPU);
->>      clear_tsk_thread_flag(p, TIF_USEDSIMD);
->> diff --git a/arch/loongarch/kernel/traps.c 
->> b/arch/loongarch/kernel/traps.c
->> index 4d9f77565703..d59cf93a4c31 100644
->> --- a/arch/loongarch/kernel/traps.c
->> +++ b/arch/loongarch/kernel/traps.c
->> @@ -45,6 +45,7 @@
->>  #include <asm/tlb.h>
->>  #include <asm/types.h>
->>  #include <asm/unwind.h>
->> +#include <asm/hw_breakpoint.h>
->>
->>  #include "access-helper.h"
->>
->> @@ -514,7 +515,19 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
->>
->>  asmlinkage void noinstr do_watch(struct pt_regs *regs)
->>  {
->> -    pr_warn("Hardware watch point handler not implemented!\n");
->> +    enum ctx_state prev_state;
->> +
->> +    prev_state = exception_enter();
->> +
->> +#ifdef CONFIG_HAVE_HW_BREAKPOINT
->> +    if (breakpoint_handler(regs))
->> +        return;
->> +    if (watchpoint_handler(regs))
->> +        return;
->> +#endif
->> +    force_sig(SIGTRAP);
->> +    exception_exit(prev_state);
->> +    return;
->>  }
->>
->>  asmlinkage void noinstr do_ri(struct pt_regs *regs)
->>
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.2
 
+for you to fetch changes up to 5535f4f70cfc15ef55b6ea7c7e17337b17337cb6:
+
+  LoongArch: Update Loongson-3 default config file (2022-12-14 08:41:54 +0800)
+
+----------------------------------------------------------------
+LoongArch changes for v6.2
+
+1, Switch to relative exception tables;
+2, Add unaligned access support;
+3, Add alternative runtime patching mechanism;
+4, Add FDT booting support from efi system table;
+5, Add suspend/hibernation (ACPI S3/S4) support;
+6, Add basic STACKPROTECTOR support;
+7, Add ftrace (function tracer) support;
+8, Update the default config file.
+
+----------------------------------------------------------------
+Binbin Zhou (2):
+      LoongArch: Add FDT booting support from efi system table
+      LoongArch: Add processing ISA Node in DeviceTree
+
+Huacai Chen (9):
+      Merge tags 'acpi-6.2-rc1' and 'irq-core-2022-12-10' into loongarch-next
+      LoongArch: Add unaligned access support
+      LoongArch: Add alternative runtime patching mechanism
+      LoongArch: Use alternative to optimize libraries
+      LoongArch: Add suspend (ACPI S3) support
+      LoongArch: Add hibernation (ACPI S4) support
+      LoongArch: Add basic STACKPROTECTOR support
+      LoongArch: module: Use got/plt section indices for relocations
+      LoongArch: Update Loongson-3 default config file
+
+Qing Zhang (8):
+      LoongArch/ftrace: Add basic support
+      LoongArch/ftrace: Add recordmcount support
+      LoongArch/ftrace: Add dynamic function tracer support
+      LoongArch/ftrace: Add dynamic function graph tracer support
+      LoongArch/ftrace: Add HAVE_DYNAMIC_FTRACE_WITH_REGS support
+      LoongArch/ftrace: Add HAVE_DYNAMIC_FTRACE_WITH_ARGS support
+      LoongArch/ftrace: Add HAVE_FUNCTION_GRAPH_RET_ADDR_PTR support
+      LoongArch: modules/ftrace: Initialize PLT at load time
+
+Youling Tang (6):
+      LoongArch: Consolidate __ex_table construction
+      LoongArch: Switch to relative exception tables
+      LoongArch: extable: Add `type` and `data` fields
+      LoongArch: extable: Add a dedicated uaccess handler
+      LoongArch: Remove the .fixup section usage
+      LoongArch: BPF: Add BPF exception tables
+
+ Documentation/PCI/msi-howto.rst                    |   10 +
+ Documentation/admin-guide/sysctl/kernel.rst        |    8 +-
+ .../loongarch,cpu-interrupt-controller.yaml        |   34 +
+ .../interrupt-controller/mediatek,cirq.txt         |   33 -
+ .../interrupt-controller/mediatek,mtk-cirq.yaml    |   68 ++
+ arch/arm64/kernel/acpi.c                           |  106 ++
+ arch/ia64/hp/common/aml_nfw.c                      |    4 +-
+ arch/loongarch/Kconfig                             |   20 +
+ arch/loongarch/Makefile                            |    8 +
+ arch/loongarch/configs/loongson3_defconfig         |   56 +-
+ arch/loongarch/include/asm/acpi.h                  |  152 +--
+ arch/loongarch/include/asm/alternative-asm.h       |   82 ++
+ arch/loongarch/include/asm/alternative.h           |  111 ++
+ arch/loongarch/include/asm/asm-extable.h           |   65 ++
+ arch/loongarch/include/asm/bootinfo.h              |    1 +
+ arch/loongarch/include/asm/bugs.h                  |   15 +
+ arch/loongarch/include/asm/efi.h                   |    1 +
+ arch/loongarch/include/asm/extable.h               |   47 +
+ arch/loongarch/include/asm/ftrace.h                |   68 ++
+ arch/loongarch/include/asm/futex.h                 |   27 +-
+ arch/loongarch/include/asm/gpr-num.h               |   22 +
+ arch/loongarch/include/asm/inst.h                  |   46 +
+ arch/loongarch/include/asm/irq.h                   |    2 +-
+ arch/loongarch/include/asm/loongson.h              |    3 +
+ arch/loongarch/include/asm/module.h                |   27 +-
+ arch/loongarch/include/asm/module.lds.h            |    1 +
+ arch/loongarch/include/asm/setup.h                 |    1 +
+ arch/loongarch/include/asm/stackprotector.h        |   38 +
+ arch/loongarch/include/asm/string.h                |    5 +
+ arch/loongarch/include/asm/thread_info.h           |    2 +-
+ arch/loongarch/include/asm/time.h                  |    1 +
+ arch/loongarch/include/asm/uaccess.h               |   24 +-
+ arch/loongarch/include/asm/unwind.h                |    3 +-
+ arch/loongarch/kernel/Makefile                     |   16 +-
+ arch/loongarch/kernel/acpi.c                       |   17 +-
+ arch/loongarch/kernel/alternative.c                |  246 +++++
+ arch/loongarch/kernel/asm-offsets.c                |   15 +
+ arch/loongarch/kernel/efi.c                        |   15 +-
+ arch/loongarch/kernel/env.c                        |    2 +
+ arch/loongarch/kernel/fpu.S                        |    5 +-
+ arch/loongarch/kernel/ftrace.c                     |   73 ++
+ arch/loongarch/kernel/ftrace_dyn.c                 |  273 +++++
+ arch/loongarch/kernel/inst.c                       |  127 +++
+ arch/loongarch/kernel/mcount.S                     |   96 ++
+ arch/loongarch/kernel/mcount_dyn.S                 |  149 +++
+ arch/loongarch/kernel/module-sections.c            |   64 +-
+ arch/loongarch/kernel/module.c                     |   75 +-
+ arch/loongarch/kernel/numa.c                       |   17 +-
+ arch/loongarch/kernel/process.c                    |    6 +
+ arch/loongarch/kernel/reset.c                      |    5 +
+ arch/loongarch/kernel/setup.c                      |  149 ++-
+ arch/loongarch/kernel/smp.c                        |   35 +
+ arch/loongarch/kernel/switch.S                     |    5 +
+ arch/loongarch/kernel/time.c                       |   11 +-
+ arch/loongarch/kernel/traps.c                      |   27 +
+ arch/loongarch/kernel/unaligned.c                  |  499 +++++++++
+ arch/loongarch/kernel/unwind_guess.c               |    4 +-
+ arch/loongarch/kernel/unwind_prologue.c            |   50 +-
+ arch/loongarch/kernel/vmlinux.lds.S                |   13 +-
+ arch/loongarch/lib/Makefile                        |    3 +-
+ arch/loongarch/lib/clear_user.S                    |   85 +-
+ arch/loongarch/lib/copy_user.S                     |  108 +-
+ arch/loongarch/lib/memcpy.S                        |   95 ++
+ arch/loongarch/lib/memmove.S                       |  121 +++
+ arch/loongarch/lib/memset.S                        |   91 ++
+ arch/loongarch/lib/unaligned.S                     |   84 ++
+ arch/loongarch/mm/extable.c                        |   59 +-
+ arch/loongarch/net/bpf_jit.c                       |   86 +-
+ arch/loongarch/net/bpf_jit.h                       |    2 +
+ arch/loongarch/pci/acpi.c                          |    7 +-
+ arch/loongarch/power/Makefile                      |    4 +
+ arch/loongarch/power/hibernate.c                   |   62 ++
+ arch/loongarch/power/hibernate_asm.S               |   66 ++
+ arch/loongarch/power/platform.c                    |   57 +
+ arch/loongarch/power/suspend.c                     |   73 ++
+ arch/loongarch/power/suspend_asm.S                 |   89 ++
+ arch/powerpc/platforms/pseries/msi.c               |    7 +-
+ arch/um/drivers/Kconfig                            |    1 -
+ arch/um/include/asm/pci.h                          |    2 +-
+ arch/x86/Kconfig                                   |    1 -
+ arch/x86/include/asm/hyperv_timer.h                |    9 +
+ arch/x86/include/asm/irq_remapping.h               |    4 -
+ arch/x86/include/asm/irqdomain.h                   |    4 +-
+ arch/x86/include/asm/mshyperv.h                    |    2 -
+ arch/x86/include/asm/msi.h                         |    6 +
+ arch/x86/include/asm/pci.h                         |    5 +-
+ arch/x86/kernel/apic/msi.c                         |  211 ++--
+ arch/x86/kernel/apic/vector.c                      |    4 -
+ arch/x86/platform/olpc/olpc-xo15-sci.c             |    3 +-
+ drivers/acpi/Kconfig                               |   10 +
+ drivers/acpi/Makefile                              |    1 +
+ drivers/acpi/ac.c                                  |    8 +-
+ drivers/acpi/acpi_ffh.c                            |   55 +
+ drivers/acpi/acpi_pad.c                            |    7 +-
+ drivers/acpi/acpi_pcc.c                            |   47 +-
+ drivers/acpi/acpi_video.c                          |    8 +-
+ drivers/acpi/acpica/Makefile                       |    1 +
+ drivers/acpi/acpica/acglobal.h                     |    1 +
+ drivers/acpi/acpica/actables.h                     |    5 -
+ drivers/acpi/acpica/acutils.h                      |   13 +
+ drivers/acpi/acpica/dsmethod.c                     |   10 +-
+ drivers/acpi/acpica/evevent.c                      |   11 +
+ drivers/acpi/acpica/evregion.c                     |    9 +
+ drivers/acpi/acpica/exconfig.c                     |    4 +-
+ drivers/acpi/acpica/exfield.c                      |    8 +-
+ drivers/acpi/acpica/exserial.c                     |    6 +
+ drivers/acpi/acpica/hwsleep.c                      |   14 +
+ drivers/acpi/acpica/tbdata.c                       |    2 +-
+ drivers/acpi/acpica/tbfadt.c                       |    2 +-
+ drivers/acpi/acpica/tbprint.c                      |   77 +-
+ drivers/acpi/acpica/tbutils.c                      |    2 +-
+ drivers/acpi/acpica/tbxfroot.c                     |   32 +-
+ drivers/acpi/acpica/utcksum.c                      |  170 +++
+ drivers/acpi/acpica/utcopy.c                       |    7 -
+ drivers/acpi/acpica/utglobal.c                     |    4 +
+ drivers/acpi/acpica/utstring.c                     |   10 +-
+ drivers/acpi/apei/apei-base.c                      |    2 +-
+ drivers/acpi/apei/einj.c                           |   56 +-
+ drivers/acpi/apei/ghes.c                           |   62 +-
+ drivers/acpi/battery.c                             |   10 +-
+ drivers/acpi/bus.c                                 |    3 +
+ drivers/acpi/button.c                              |    5 +-
+ drivers/acpi/cppc_acpi.c                           |    4 +-
+ drivers/acpi/ec.c                                  |   15 +-
+ drivers/acpi/fan_attr.c                            |   16 +-
+ drivers/acpi/fan_core.c                            |    1 +
+ drivers/acpi/hed.c                                 |    3 +-
+ drivers/acpi/irq.c                                 |    5 +-
+ drivers/acpi/nfit/core.c                           |    3 +-
+ drivers/acpi/pci_irq.c                             |    6 +-
+ drivers/acpi/pfr_telemetry.c                       |    6 +-
+ drivers/acpi/pfr_update.c                          |    6 +-
+ drivers/acpi/power.c                               |    2 +-
+ drivers/acpi/processor_idle.c                      |    9 +-
+ drivers/acpi/processor_perflib.c                   |  100 +-
+ drivers/acpi/processor_throttling.c                |    4 +-
+ drivers/acpi/sbs.c                                 |    9 +-
+ drivers/acpi/sbshc.c                               |    7 +-
+ drivers/acpi/scan.c                                |    2 +-
+ drivers/acpi/sysfs.c                               |    5 +-
+ drivers/acpi/tables.c                              |   17 +-
+ drivers/acpi/thermal.c                             |    9 +-
+ drivers/acpi/tiny-power-button.c                   |   10 +-
+ drivers/acpi/video_detect.c                        |  110 +-
+ drivers/acpi/x86/utils.c                           |   24 +-
+ drivers/base/Makefile                              |    2 +-
+ drivers/base/platform-msi.c                        |    6 +-
+ drivers/bus/fsl-mc/Kconfig                         |    2 +-
+ drivers/bus/fsl-mc/dprc-driver.c                   |    1 -
+ drivers/bus/fsl-mc/fsl-mc-bus.c                    |    1 -
+ drivers/bus/fsl-mc/fsl-mc-msi.c                    |   25 +-
+ drivers/char/sonypi.c                              |    3 +-
+ drivers/char/tpm/tpm_crb.c                         |    4 +-
+ drivers/dma/Kconfig                                |    2 +-
+ drivers/dma/qcom/hidma.c                           |    8 +-
+ drivers/hv/vmbus_drv.c                             |    5 +-
+ drivers/hwmon/acpi_power_meter.c                   |    5 +-
+ drivers/hwmon/asus_atk0110.c                       |    6 +-
+ drivers/input/misc/atlas_btns.c                    |    4 +-
+ drivers/iommu/Kconfig                              |    2 +-
+ drivers/iommu/amd/amd_iommu_types.h                |    1 -
+ drivers/iommu/amd/iommu.c                          |   44 +-
+ drivers/iommu/intel/iommu.h                        |    1 -
+ drivers/iommu/intel/irq_remapping.c                |   52 +-
+ drivers/iommu/of_iommu.c                           |    1 -
+ drivers/irqchip/Kconfig                            |    9 +-
+ drivers/irqchip/irq-apple-aic.c                    |    6 +-
+ drivers/irqchip/irq-gic-pm.c                       |    2 +-
+ drivers/irqchip/irq-gic-v2m.c                      |   11 +-
+ drivers/irqchip/irq-gic-v3.c                       |    3 +-
+ drivers/irqchip/irq-gic.c                          |    7 +-
+ drivers/irqchip/irq-loongarch-cpu.c                |   48 +-
+ drivers/irqchip/irq-loongson-eiointc.c             |   63 +-
+ drivers/irqchip/irq-loongson-htvec.c               |  176 +++-
+ drivers/irqchip/irq-loongson-liointc.c             |   37 +-
+ drivers/irqchip/irq-loongson-pch-lpc.c             |   25 +
+ drivers/irqchip/irq-loongson-pch-pic.c             |   76 +-
+ drivers/irqchip/irq-ls-extirq.c                    |    2 +-
+ drivers/irqchip/irq-mips-gic.c                     |    2 +-
+ drivers/irqchip/irq-mtk-cirq.c                     |   95 +-
+ drivers/irqchip/irq-mvebu-icu.c                    |    4 +-
+ drivers/irqchip/irq-sifive-plic.c                  |    6 +-
+ drivers/irqchip/irq-sl28cpld.c                     |    3 +-
+ drivers/irqchip/irq-st.c                           |    7 +-
+ drivers/irqchip/irq-ti-sci-inta.c                  |    2 +-
+ drivers/irqchip/irq-wpcm450-aic.c                  |    1 +
+ drivers/mailbox/Kconfig                            |    2 +-
+ drivers/mailbox/pcc.c                              |    1 +
+ drivers/net/fjes/fjes_main.c                       |    4 +-
+ drivers/pci/Kconfig                                |    7 +-
+ drivers/pci/controller/Kconfig                     |   30 +-
+ drivers/pci/controller/dwc/Kconfig                 |   48 +-
+ drivers/pci/controller/mobiveil/Kconfig            |    6 +-
+ drivers/pci/controller/pci-hyperv.c                |   15 +-
+ drivers/pci/msi/Makefile                           |    3 +-
+ drivers/pci/msi/api.c                              |  458 ++++++++
+ drivers/pci/msi/irqdomain.c                        |  369 +++++--
+ drivers/pci/msi/msi.c                              | 1100 ++++++++------------
+ drivers/pci/msi/msi.h                              |  114 +-
+ drivers/pci/probe.c                                |    2 -
+ drivers/perf/Kconfig                               |    2 +-
+ drivers/platform/chrome/chromeos_privacy_screen.c  |    3 +-
+ drivers/platform/chrome/wilco_ec/event.c           |    4 +-
+ drivers/platform/surface/surfacepro3_button.c      |    3 +-
+ drivers/platform/x86/asus-laptop.c                 |    3 +-
+ drivers/platform/x86/asus-wireless.c               |    3 +-
+ drivers/platform/x86/classmate-laptop.c            |   20 +-
+ drivers/platform/x86/dell/dell-rbtn.c              |    6 +-
+ drivers/platform/x86/eeepc-laptop.c                |    3 +-
+ drivers/platform/x86/fujitsu-laptop.c              |    4 +-
+ drivers/platform/x86/fujitsu-tablet.c              |    3 +-
+ drivers/platform/x86/intel/rst.c                   |    4 +-
+ drivers/platform/x86/lg-laptop.c                   |    4 +-
+ drivers/platform/x86/panasonic-laptop.c            |    8 +-
+ drivers/platform/x86/sony-laptop.c                 |    9 +-
+ drivers/platform/x86/system76_acpi.c               |    4 +-
+ drivers/platform/x86/topstar-laptop.c              |    3 +-
+ drivers/platform/x86/toshiba_acpi.c                |    4 +-
+ drivers/platform/x86/toshiba_bluetooth.c           |    6 +-
+ drivers/platform/x86/toshiba_haps.c                |    4 +-
+ drivers/platform/x86/wireless-hotkey.c             |    3 +-
+ drivers/platform/x86/xo15-ebook.c                  |    3 +-
+ drivers/pnp/core.c                                 |    4 +-
+ drivers/pnp/driver.c                               |    3 +-
+ drivers/ptp/ptp_vmw.c                              |    3 +-
+ drivers/soc/fsl/dpio/dpio-driver.c                 |    1 -
+ drivers/soc/ti/Kconfig                             |    2 +-
+ drivers/soc/ti/ti_sci_inta_msi.c                   |   12 +-
+ drivers/thermal/intel/intel_menlow.c               |    8 +-
+ drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c             |    1 -
+ drivers/video/backlight/apple_bl.c                 |    3 +-
+ drivers/watchdog/ni903x_wdt.c                      |    4 +-
+ drivers/xen/xen-acpi-pad.c                         |    3 +-
+ include/acpi/acconfig.h                            |    2 +
+ include/acpi/acpi_bus.h                            |    2 +-
+ include/acpi/acpixf.h                              |    2 +-
+ include/acpi/actbl1.h                              |  151 ++-
+ include/acpi/actbl2.h                              |  162 ++-
+ include/acpi/actypes.h                             |   10 +-
+ include/acpi/acuuid.h                              |    3 +-
+ include/acpi/processor.h                           |   10 +
+ include/asm-generic/msi.h                          |    4 +-
+ include/clocksource/hyperv_timer.h                 |    4 +-
+ include/linux/acpi.h                               |   13 +
+ include/linux/device.h                             |    8 +-
+ include/linux/gpio/driver.h                        |    2 +-
+ include/linux/irqdomain.h                          |  143 +--
+ include/linux/irqdomain_defs.h                     |   31 +
+ include/linux/irqreturn.h                          |    8 +-
+ include/linux/msi.h                                |  357 +++++--
+ include/linux/msi_api.h                            |   73 ++
+ include/linux/pci.h                                |   29 +-
+ kernel/irq/Kconfig                                 |    7 +-
+ kernel/irq/chip.c                                  |    8 +-
+ kernel/irq/internals.h                             |    2 +
+ kernel/irq/irqdesc.c                               |   15 +-
+ kernel/irq/manage.c                                |    4 +-
+ kernel/irq/msi.c                                   |  914 +++++++++++++---
+ scripts/mod/modpost.c                              |   13 +
+ scripts/recordmcount.c                             |   39 +
+ scripts/sorttable.c                                |    2 +-
+ tools/power/acpi/tools/acpidump/Makefile           |    1 +
+ tools/power/acpi/tools/acpidump/apdump.c           |    4 +-
+ 263 files changed, 8205 insertions(+), 2358 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongarch,cpu-interrupt-controller.yaml
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,mtk-cirq.yaml
+ create mode 100644 arch/loongarch/include/asm/alternative-asm.h
+ create mode 100644 arch/loongarch/include/asm/alternative.h
+ create mode 100644 arch/loongarch/include/asm/asm-extable.h
+ create mode 100644 arch/loongarch/include/asm/bugs.h
+ create mode 100644 arch/loongarch/include/asm/extable.h
+ create mode 100644 arch/loongarch/include/asm/ftrace.h
+ create mode 100644 arch/loongarch/include/asm/gpr-num.h
+ create mode 100644 arch/loongarch/include/asm/stackprotector.h
+ create mode 100644 arch/loongarch/kernel/alternative.c
+ create mode 100644 arch/loongarch/kernel/ftrace.c
+ create mode 100644 arch/loongarch/kernel/ftrace_dyn.c
+ create mode 100644 arch/loongarch/kernel/mcount.S
+ create mode 100644 arch/loongarch/kernel/mcount_dyn.S
+ create mode 100644 arch/loongarch/kernel/unaligned.c
+ create mode 100644 arch/loongarch/lib/memcpy.S
+ create mode 100644 arch/loongarch/lib/memmove.S
+ create mode 100644 arch/loongarch/lib/memset.S
+ create mode 100644 arch/loongarch/lib/unaligned.S
+ create mode 100644 arch/loongarch/power/Makefile
+ create mode 100644 arch/loongarch/power/hibernate.c
+ create mode 100644 arch/loongarch/power/hibernate_asm.S
+ create mode 100644 arch/loongarch/power/platform.c
+ create mode 100644 arch/loongarch/power/suspend.c
+ create mode 100644 arch/loongarch/power/suspend_asm.S
+ create mode 100644 arch/x86/include/asm/hyperv_timer.h
+ create mode 100644 drivers/acpi/acpi_ffh.c
+ create mode 100644 drivers/acpi/acpica/utcksum.c
+ create mode 100644 drivers/pci/msi/api.c
+ create mode 100644 include/linux/irqdomain_defs.h
+ create mode 100644 include/linux/msi_api.h
