@@ -1,53 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C645BA47
-	for <loongarch@lists.linux.dev>; Mon, 19 Dec 2022 14:30:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6EDC9C433F0;
-	Mon, 19 Dec 2022 14:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1671460203;
-	bh=eRMSGKZ17Vvg9Cpx3kg7ABmn+nrapUSMgHog2rQO8w4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Jnddha4M4pvlzMlVBn7BKKx2oSBqM7WuR6TpGYvkn5SRe35OmCSP2iHdmvZ8xE0UM
-	 jiFPQiXfdNNGp2yMR0dE/cRPb39Mua52Z1RpbDaW5oI4tniorVYdVH7WzsK05DMXt1
-	 sp7Z9edv6O432tYp9alPpMkEg/NXkbWedRjiFtyVZyESxdyKJJsAqc1Sw0FQK8IBA6
-	 YmhimpqrxPeHnxY8NMVnrwL+RiSiQDhwbIYlmfGCPWx2sZji58y83FDGZ6iw7H0wk7
-	 YVp78oeMUiVD2K5FQQ2xsYzNUhY/jESaATWUEVl2L6puLEoX7oTdeMb3VZm9Co17Z4
-	 91cN1WR3NjZbA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5D202E21EEE;
-	Mon, 19 Dec 2022 14:30:03 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch changes for v6.2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20221219120612.1637267-1-chenhuacai@loongson.cn>
-References: <20221219120612.1637267-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20221219120612.1637267-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.2
-X-PR-Tracked-Commit-Id: 5535f4f70cfc15ef55b6ea7c7e17337b17337cb6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2f26e424552efd50722f4cf61f7f080373adbb1e
-Message-Id: <167146020334.28969.2711278774891814084.pr-tracker-bot@kernel.org>
-Date: Mon, 19 Dec 2022 14:30:03 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0340F7E
+	for <loongarch@lists.linux.dev>; Tue, 20 Dec 2022 03:27:08 +0000 (UTC)
+Received: from loongson.cn (unknown [10.180.13.64])
+	by gateway (Coremail) with SMTP id _____8AxTeuFK6FjYzEHAA--.16393S3;
+	Tue, 20 Dec 2022 11:27:01 +0800 (CST)
+Received: from [10.180.13.64] (unknown [10.180.13.64])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxf+SEK6FjHV0FAA--.22782S2;
+	Tue, 20 Dec 2022 11:27:00 +0800 (CST)
+Subject: Re: [PATCH v5 2/3] gpio: loongson: add gpio driver support
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Jianmin Lv <lvjianmin@loongson.cn>,
+ Hongchen Zhang <zhanghongchen@loongson.cn>,
+ Liu Peibao <liupeibao@loongson.cn>, zhuyinbo@loongson.cn
+References: <20221121123803.3786-1-zhuyinbo@loongson.cn>
+ <20221121123803.3786-2-zhuyinbo@loongson.cn>
+ <CACRpkda1adiNwbTZHdAyHKny3r5FFMP_XXVGbo1vnCdw9U1gNg@mail.gmail.com>
+ <8a7abd77-9540-efa8-6f67-908530e85399@loongson.cn>
+ <CACRpkdb=wdydOYCcrpjLSyvfVO--_ezXsFQ46qwfVCiiTd5fNw@mail.gmail.com>
+ <4c02570e-03d5-85f1-73fb-b66d6170c875@loongson.cn>
+ <CACRpkdbgP9m40t_Ky4H+SQi9TELikomT2M-JpF7+auKmzOxQdg@mail.gmail.com>
+ <ce858832-c052-1797-ffeb-2dbe654cbdd1@loongson.cn>
+ <CACRpkda0VerZhVGMJJjMYyAWdobvSLj4=eWxBjh+5ubmxvFcjQ@mail.gmail.com>
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <5dd652c7-f215-0c1f-84c5-fd1e1913b86e@loongson.cn>
+Date: Tue, 20 Dec 2022 11:27:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+In-Reply-To: <CACRpkda0VerZhVGMJJjMYyAWdobvSLj4=eWxBjh+5ubmxvFcjQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cxf+SEK6FjHV0FAA--.22782S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxJF4Utr4rZr4DtFyDtw47urg_yoW5Xr1xpa
+	yj9ay7ur4kGr40v3ZrC3WI9F9xA3s8JrW3Ars5trWxGw1qqwn3KrWjvFyY9F43uay8WFWj
+	qF1Fv3y09F1UAFJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bDkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
+	v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
+	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
+	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8ajg7UUUUU==
 
-The pull request you sent on Mon, 19 Dec 2022 20:06:12 +0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.2
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2f26e424552efd50722f4cf61f7f080373adbb1e
+在 2022/12/13 下午5:36, Linus Walleij 写道:
+> On Mon, Dec 12, 2022 at 9:13 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+> 
+>> mask_irq/unmask_irq/irq_ack/ function always be called by
+>> handle_level_irq/handle_edge_irq in current irq domain. and the
+>> handle_level_irq/handle_edge_irq will be called  by handle_irq_desc that
+>> ask know which irq is.
+>>
+>> when a peripheral need to use a gpio irq that gpio irq driver need know
+>> irq status and call irq desc->irq_handler.
+>>
+>> so I don't got it about which case it is unnecessary to know which irq.
+> 
+> Sorry I don't understand what you are asking, can you elaborate?
+> 
+> Do you mean that you don't know which driver will not call ->to_irq()
+> on the gpiochip? That would be any driver that takes an IRQ directly in
+> the device tree:
+> 
+> gpio: gpio {
+>      interrupt-controller;
+>      #interrupt-cells = <2>;
+>      ....
+> };
+> 
+> device {
+>      interrupts = <&gpio 14 IRQ_TYPE_LEVEL_HIGH>;
+>      ....
+> };
+> 
+> This case will only call the irqchip callbacks and will never call
+> the .to_irq() on the gpio_chip.
 
-Thank you!
+I mean that if the current domain is a valid doamin, every interrupt 
+must have an interrupt status.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+If there is no interrupt status, no one can cover the interrupt,
+and no one will call 14 irq's desc->handle_irq (handle_level_irq)
+and Loongson-2 gpio doesn't have irq status register, so Loongson-2
+gpio irqchip shouldn't be implemented.
+> 
+>>> You find an example of a hierarchical GPIO irqchip using the
+>>> GPIOLIB_IRQCHIP in drivers/gpio/gpio-ixp4xx.c.
+>>
+>> Loongson-2 gpio irq hardware only a enable register, and when a gpio irq
+>> happen, then will has a such flow:  "cpuintc -> liointc -> gpioinc ->
+>> generic_handle_domain_irq -> handle_level_irq ->
+>> peripheral-action(action->handler)"
+>>
+>> generic_handle_domain_irq need rely on specific hwirq that ask gpio irq
+>> hardware has a status register but Loongson-2 gpio irq hardware doesn't
+>> have it.
+>>
+>> so I still think it wasn't appropriate that for loongson-2 gpio driver
+>> add a irq chip.
+> 
+> generic_handle_domain_irq() is of no concern, what matters is if
+> your interrupt is hierarchical or not, the callback in the GPIO chip
+> can be a simple remapping of the numberspace followed by
+> a call to the parent callbacks.
+> 
+> Yours,
+> Linus Walleij
+Hi
+
+I think gpio irq domain should be a normal irq domain that like other 
+irq domain. that need a function A to call virq desc handler in gpio irq 
+domain.  if no use generic_handler_domain_irq or similar interface,
+that will no one to call irq_desc->irq_handler.
+
+"cpuintc -> liointc -> gpioinc -> generic_handle_domain_irq ->
+handle_level_irq -> peripheral-action(action->handler)"
+> 
+
