@@ -1,143 +1,212 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0340F7E
-	for <loongarch@lists.linux.dev>; Tue, 20 Dec 2022 03:27:08 +0000 (UTC)
-Received: from loongson.cn (unknown [10.180.13.64])
-	by gateway (Coremail) with SMTP id _____8AxTeuFK6FjYzEHAA--.16393S3;
-	Tue, 20 Dec 2022 11:27:01 +0800 (CST)
-Received: from [10.180.13.64] (unknown [10.180.13.64])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxf+SEK6FjHV0FAA--.22782S2;
-	Tue, 20 Dec 2022 11:27:00 +0800 (CST)
-Subject: Re: [PATCH v5 2/3] gpio: loongson: add gpio driver support
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Juxin Gao <gaojuxin@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- Arnaud Patard <apatard@mandriva.com>, Huacai Chen <chenhuacai@kernel.org>,
- Jianmin Lv <lvjianmin@loongson.cn>,
- Hongchen Zhang <zhanghongchen@loongson.cn>,
- Liu Peibao <liupeibao@loongson.cn>, zhuyinbo@loongson.cn
-References: <20221121123803.3786-1-zhuyinbo@loongson.cn>
- <20221121123803.3786-2-zhuyinbo@loongson.cn>
- <CACRpkda1adiNwbTZHdAyHKny3r5FFMP_XXVGbo1vnCdw9U1gNg@mail.gmail.com>
- <8a7abd77-9540-efa8-6f67-908530e85399@loongson.cn>
- <CACRpkdb=wdydOYCcrpjLSyvfVO--_ezXsFQ46qwfVCiiTd5fNw@mail.gmail.com>
- <4c02570e-03d5-85f1-73fb-b66d6170c875@loongson.cn>
- <CACRpkdbgP9m40t_Ky4H+SQi9TELikomT2M-JpF7+auKmzOxQdg@mail.gmail.com>
- <ce858832-c052-1797-ffeb-2dbe654cbdd1@loongson.cn>
- <CACRpkda0VerZhVGMJJjMYyAWdobvSLj4=eWxBjh+5ubmxvFcjQ@mail.gmail.com>
-From: Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <5dd652c7-f215-0c1f-84c5-fd1e1913b86e@loongson.cn>
-Date: Tue, 20 Dec 2022 11:27:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4609A7E
+	for <loongarch@lists.linux.dev>; Tue, 20 Dec 2022 11:47:39 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id r26so17078054edc.10
+        for <loongarch@lists.linux.dev>; Tue, 20 Dec 2022 03:47:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ANkEK2a22lW9dvnfGLj43UaNRf7fTpTnz2/IWWrYDOs=;
+        b=KVCjN75cRfFGrEPvEcfVZIGGUOsWCkCb2AGrSnmF8oJivAG5eTgz0asihcnf4PSQwn
+         VDisB7cx9lvP7fPzIdIbB2Cec7j5Gm+dWFsVhyrF1mz4o6TlpSSoUml/Vu6X3QWXzk+e
+         9Z/2VbplFdrZehsUhiVr4u7sQEAhLA7IKP+jxEwG2LAOzbztYzB47VQtv8g7LMFaAYBi
+         9z2W851SR5i1JjpBj+I9Xhh4yGlOcK6hlQOfCAywaF2qm/IztMIGoed8JW2c8MG+Anba
+         zFYlp2QpR/7J22wHq/2DWn5WAsqzNbBWATLqcWftVq4WPBdqkslHUMQ9EAGjJDUUL7b/
+         vNLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ANkEK2a22lW9dvnfGLj43UaNRf7fTpTnz2/IWWrYDOs=;
+        b=swEXmabUpHdOOF3ZjNWuGt179QyIJH26IzZJdb2P/dOw1nK0s8dwkD/8LT9qUyvLPo
+         mVgKKjLoP+hXArsrDWVwf0irpuKJTJuKw1JkYoh+0RqloTIr8ZrbGP+qH4kqOdabGI+n
+         Mno3sZ2TekNTb1E4v8vNjXVSRbMQZIeHLHkA83OPIWEy9Rf+yocvJbcNIE50M4RE50vn
+         m2XJ0r9ihHpG//YSVWJLiqNhfksDHZGFwrvYjZc0gLtrapkyJLo6RwlCPcJisglsWjHB
+         EwFwf38lZvdyoRPGHtzVUqdMDLdJjGGxLqHQz002TcAjRwfFnH7olUb/3//K6XkDm2n+
+         xJ4w==
+X-Gm-Message-State: ANoB5plqjwnECcNB8U/AnCrL7YwFa1RGnjXlUTpIdVaFNPJcxkwn7PPw
+	RGEXiM3Pe7vWBbwcZIvgT+1UI5XWeCxPGyUb7YY=
+X-Google-Smtp-Source: AA0mqf724aq1bzthh+2VkOkrFAK2VplBWViFLKo/lMUM/ifaqHW0JTdfQ8WYHiBqAmZXKuz8pzmsUF/HBaHH+/+G23Q=
+X-Received: by 2002:aa7:d34b:0:b0:46a:914c:9bc9 with SMTP id
+ m11-20020aa7d34b000000b0046a914c9bc9mr59925861edr.418.1671536857368; Tue, 20
+ Dec 2022 03:47:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkda0VerZhVGMJJjMYyAWdobvSLj4=eWxBjh+5ubmxvFcjQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cxf+SEK6FjHV0FAA--.22782S2
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxJF4Utr4rZr4DtFyDtw47urg_yoW5Xr1xpa
-	yj9ay7ur4kGr40v3ZrC3WI9F9xA3s8JrW3Ars5trWxGw1qqwn3KrWjvFyY9F43uay8WFWj
-	qF1Fv3y09F1UAFJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bDkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
-	v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
-	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8ajg7UUUUU==
+References: <cover.1671451604.git.zhoubinbin@loongson.cn> <d44eb07245020431f98fd08e0c05b6926fb31b24.1671451604.git.zhoubinbin@loongson.cn>
+ <Y6BhRsPAU30Dqbdv@smile.fi.intel.com>
+In-Reply-To: <Y6BhRsPAU30Dqbdv@smile.fi.intel.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 20 Dec 2022 19:47:25 +0800
+Message-ID: <CAMpQs4KcskSZdezVdNk9Q8UFYA3rFJm8CguiTRLdmffqkZ9FCg@mail.gmail.com>
+Subject: Re: [PATCH V7 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C controller
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Wolfram Sang <wsa@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, 
+	loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	Huacai Chen <chenhuacai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Jianmin Lv <lvjianmin@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+
+Hi Andy:
+
+On Mon, Dec 19, 2022 at 9:04 PM Andy Shevchenko <andy@kernel.org> wrote:
+>
+> On Mon, Dec 19, 2022 at 08:28:33PM +0800, Binbin Zhou wrote:
+> > This I2C module is integrated into the Loongson-2K SoCs and Loongson
+> > LS7A bridge chip.
+>
+> Almost there, see my comments below (note, you have ~1w of time before this
+> can be applied anyway, so take you time for carefully addressing comments,
+> (re-)testing, etc.).
+>
+> ...
+>
+> > @@ -888,6 +888,17 @@ config I2C_OWL
+> >         Say Y here if you want to use the I2C bus controller on
+> >         the Actions Semiconductor Owl SoC's.
+> >
+> > +config I2C_LS2X
+>
+> I believe in Latin alphabet L goes before O...
+
+Sorry, I will fix it.
+
+>
+> > +     tristate "Loongson LS2X I2C adapter"
+> > +     depends on MACH_LOONGSON64 || COMPILE_TEST
+> > +     help
+> > +       If you say yes to this option, support will be included for the
+> > +       I2C interface on the Loongson-2K SoCs and Loongson LS7A bridge
+> > +       chip.
+> > +
+> > +       This driver can also be built as a module. If so, the module
+> > +       will be called i2c-ls2x.
+> > +
+> >  config I2C_PASEMI
+> >       tristate "PA Semi SMBus interface"
+> >       depends on PPC_PASEMI && PCI
+>
+> ...
+>
+> >  obj-$(CONFIG_I2C_MXS)                += i2c-mxs.o
+> >  obj-$(CONFIG_I2C_NOMADIK)    += i2c-nomadik.o
+> >  obj-$(CONFIG_I2C_NPCM)               += i2c-npcm7xx.o
+> > +obj-$(CONFIG_I2C_LS2X)               += i2c-ls2x.o
+>
+> ...and even before n and m.
+>
+> >  obj-$(CONFIG_I2C_OCORES)     += i2c-ocores.o
+> >  obj-$(CONFIG_I2C_OMAP)               += i2c-omap.o
+> >  obj-$(CONFIG_I2C_OWL)                += i2c-owl.o
+>
+> ...
+>
+> > +static int ls2x_i2c_xfer_one(struct i2c_adapter *adap,
+> > +                          struct i2c_msg *msg, bool stop)
+> > +{
+> > +     int ret;
+> > +     bool is_read = msg->flags & I2C_M_RD;
+> > +     struct ls2x_i2c_priv *priv = i2c_get_adapdata(adap);
+> > +
+> > +     /* Contains steps to send start condition and address */
+> > +     ret = ls2x_i2c_start(adap, msg);
+> > +     if (!ret) {
+> > +             if (is_read)
+> > +                     ret = ls2x_i2c_rx(adap, msg->buf, msg->len);
+> > +             else
+> > +                     ret = ls2x_i2c_tx(adap, msg->buf, msg->len);
+>
+> > +             if (!ret && stop)
+> > +                     ret = ls2x_i2c_stop(adap);
+>
+> So, we will send stop here...
+>
+> > +     }
+>
+> > +     if (ret == -ENXIO)
+> > +             ls2x_i2c_stop(adap);
+>
+> ...and if it fails, we send it again here. Is it okay?
+
+First of all, I think the logic here is fine:
+In the first case, stop is called when the last msg is transmitted successfully;
+In the second case, stop is called when there is a NOACK during the
+transmission;
+In the third case, init is called when other errors occur during the
+transmission, such as TIMEOUT.
+
+The key point is that the current implementation of the stop function
+is probably imperfect, it directly ignores the NOACK. The more
+reasonable method would be to judge by LS2X_SR_BUSY(bus busy state).
+The basic idea: if the i2c bus is detected as idle within the timeout
+range of the stop command issued, the stop command is considered
+successful, otherwise -ETIMEDOUT is returned.
+
+As follows:
+ static int ls2x_i2c_stop(struct i2c_adapter *adap)
+ {
+-       int ret = ls2x_i2c_send_byte(adap, LS2X_CR_STOP);
++       u8 value;
++       struct ls2x_i2c_priv *priv = i2c_get_adapdata(adap);
+
+-       return (ret == -ENXIO) ? 0 : ret;
++       writeb(LS2X_CR_STOP, priv->base + I2C_LS2X_CR);
++       return readl_poll_timeout(priv->base + I2C_LS2X_SR,
++                                 value, !(value & LS2X_SR_BUSY),
++                                 100, jiffies_to_usecs(adap->timeout));
+ }
+
+Now, in the case you mentioned above, the last msg transmission is
+completed and the stop command is sent. If the stop command fails, it
+will only return -ETIMEDOUT and call ls2x_i2c_init().
+
+Of course, I will use tools like i2c-tools to do more tests.
+
+Thanks for the detailed review.
+
+Binbin
+
+>
+> > +     else if (ret < 0)
+> > +             ls2x_i2c_init(priv);
+> > +
+> > +     return ret;
+> > +}
+>
+> ...
+>
+> > +             ret = ls2x_i2c_xfer_one(adap, msg, msg == (emsg - 1));
+>
+> Too many parentheses, isn't it?
+>
+> > +             if (ret)
+> > +                     return ret;
+>
+> ...
+>
+> > +     r = devm_request_irq(dev, irq, ls2x_i2c_isr, IRQF_SHARED, "ls2x-i2c",
+> > +                          priv);
+>
+> Everywhere else you use 'ret', why is 'r' here?
 
 
-
-在 2022/12/13 下午5:36, Linus Walleij 写道:
-> On Mon, Dec 12, 2022 at 9:13 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
-> 
->> mask_irq/unmask_irq/irq_ack/ function always be called by
->> handle_level_irq/handle_edge_irq in current irq domain. and the
->> handle_level_irq/handle_edge_irq will be called  by handle_irq_desc that
->> ask know which irq is.
->>
->> when a peripheral need to use a gpio irq that gpio irq driver need know
->> irq status and call irq desc->irq_handler.
->>
->> so I don't got it about which case it is unnecessary to know which irq.
-> 
-> Sorry I don't understand what you are asking, can you elaborate?
-> 
-> Do you mean that you don't know which driver will not call ->to_irq()
-> on the gpiochip? That would be any driver that takes an IRQ directly in
-> the device tree:
-> 
-> gpio: gpio {
->      interrupt-controller;
->      #interrupt-cells = <2>;
->      ....
-> };
-> 
-> device {
->      interrupts = <&gpio 14 IRQ_TYPE_LEVEL_HIGH>;
->      ....
-> };
-> 
-> This case will only call the irqchip callbacks and will never call
-> the .to_irq() on the gpio_chip.
-
-I mean that if the current domain is a valid doamin, every interrupt 
-must have an interrupt status.
-
-If there is no interrupt status, no one can cover the interrupt,
-and no one will call 14 irq's desc->handle_irq (handle_level_irq)
-and Loongson-2 gpio doesn't have irq status register, so Loongson-2
-gpio irqchip shouldn't be implemented.
-> 
->>> You find an example of a hierarchical GPIO irqchip using the
->>> GPIOLIB_IRQCHIP in drivers/gpio/gpio-ixp4xx.c.
->>
->> Loongson-2 gpio irq hardware only a enable register, and when a gpio irq
->> happen, then will has a such flow:  "cpuintc -> liointc -> gpioinc ->
->> generic_handle_domain_irq -> handle_level_irq ->
->> peripheral-action(action->handler)"
->>
->> generic_handle_domain_irq need rely on specific hwirq that ask gpio irq
->> hardware has a status register but Loongson-2 gpio irq hardware doesn't
->> have it.
->>
->> so I still think it wasn't appropriate that for loongson-2 gpio driver
->> add a irq chip.
-> 
-> generic_handle_domain_irq() is of no concern, what matters is if
-> your interrupt is hierarchical or not, the callback in the GPIO chip
-> can be a simple remapping of the numberspace followed by
-> a call to the parent callbacks.
-> 
-> Yours,
-> Linus Walleij
-Hi
-
-I think gpio irq domain should be a normal irq domain that like other 
-irq domain. that need a function A to call virq desc handler in gpio irq 
-domain.  if no use generic_handler_domain_irq or similar interface,
-that will no one to call irq_desc->irq_handler.
-
-"cpuintc -> liointc -> gpioinc -> generic_handle_domain_irq ->
-handle_level_irq -> peripheral-action(action->handler)"
-> 
-
+>
+> > +     if (r < 0)
+> > +             return dev_err_probe(dev, r, "Unable to request irq %d\n", irq);
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
+>
