@@ -1,234 +1,254 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C83B23B7
-	for <loongarch@lists.linux.dev>; Tue, 20 Dec 2022 13:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671544179; x=1703080179;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ILvH76aAgDaS9txxLdxKFTa4pafrJSu2zimzPO8hm0o=;
-  b=VJlZEMnAT7636hbw8ddeytz0fJk/gt2gBhkqA8U6X8IygkazRaHVZQvV
-   qq//nEPRmKYTypkR6JI5PDT9r/1AnwAx0dfvBEdghJE0qXqmsNwDXBZvx
-   B35/ufDEgNhfL/z4NgGznrMIt82vOgxgupdD49MDrtGB2lXKaqESz1/iB
-   aL6LFXijim8yZ8qOJIlx7gLLZK6VvZhyqpAKs2DVIAW37Fe4QESMOnneS
-   tNBoCosuevoxsyo73cyrC8mz8hC5OE3TVonrg/DLGUdktTYcUJgh59XFu
-   PCtgUEYz4lSu8bosBVMVi5/v7hLHTP8q1NR28my2OVE7ckEEmBA6Co5VA
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10567"; a="299956962"
-X-IronPort-AV: E=Sophos;i="5.96,259,1665471600"; 
-   d="scan'208";a="299956962"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2022 05:49:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10567"; a="714435955"
-X-IronPort-AV: E=Sophos;i="5.96,259,1665471600"; 
-   d="scan'208";a="714435955"
-Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 20 Dec 2022 05:49:34 -0800
-Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1p7czu-0009XY-00;
-	Tue, 20 Dec 2022 13:49:34 +0000
-Date: Tue, 20 Dec 2022 21:49:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: virtualization@lists.linux-foundation.org,
- speakup@linux-speakup.org, netdev@vger.kernel.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-xfs@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-mm@kvack.org, linux-media@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-can@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- e45fb347b630ee76482fe938ba76cf8eab811290
-Message-ID: <63a1bd54.a88xtgO0grxGBbe+%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 882F81FB3
+	for <loongarch@lists.linux.dev>; Wed, 21 Dec 2022 07:42:20 +0000 (UTC)
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8BxGenUuKJjc4gHAA--.13591S3;
+	Wed, 21 Dec 2022 15:42:12 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxHuTRuKJjwk0GAA--.24091S3;
+	Wed, 21 Dec 2022 15:42:11 +0800 (CST)
+Subject: Re: [PATCH v10 1/4] LoongArch: Simulate branch and PC instructions
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <1670575981-14389-1-git-send-email-yangtiezhu@loongson.cn>
+ <1670575981-14389-2-git-send-email-yangtiezhu@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <954b71af-f70b-16cc-19a1-c17331ef1ebb@loongson.cn>
+Date: Wed, 21 Dec 2022 15:42:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <1670575981-14389-2-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8AxHuTRuKJjwk0GAA--.24091S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3JrWrWrW3Kw4xGr4fWryfWFg_yoWxXrWxpr
+	ZrZr4kGr4DuryxurWjqw1kuw15trs5ur43uwnxC343CFy5ZFy8GrykGw1jvF9Yyw48Jr10
+	9a1aqw12yFsIyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
+	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzsqWUUUUU
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: e45fb347b630ee76482fe938ba76cf8eab811290  Add linux-next specific files for 20221220
+On 2022-12-09 16:52, Tiezhu Yang wrote:
 
-Error/Warning reports:
+> According to LoongArch Reference Manual, simulate branch and
+> PC instructions, this is preparation for later patch.
+>
+> Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#branch-instructions
+> Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#_pcaddi_pcaddu121_pcaddu18l_pcalau12i
+>
+> Co-developed-by: Jinyang He <hejinyang@loongson.cn>
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/inst.h   |   5 ++
+>   arch/loongarch/include/asm/ptrace.h |   1 +
+>   arch/loongarch/kernel/inst.c        | 123 ++++++++++++++++++++++++++++++++++++
+>   3 files changed, 129 insertions(+)
+>
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+> index c00e151..e25fd54 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -7,6 +7,7 @@
+>   
+>   #include <linux/types.h>
+>   #include <asm/asm.h>
+> +#include <asm/ptrace.h>
+>   
+>   #define INSN_NOP		0x03400000
+>   #define INSN_BREAK		0x002a0000
+> @@ -32,6 +33,7 @@ enum reg1i20_op {
+>   	lu12iw_op	= 0x0a,
+>   	lu32id_op	= 0x0b,
+>   	pcaddi_op	= 0x0c,
+> +	pcalau12i_op	= 0x0d,
+>   	pcaddu12i_op	= 0x0e,
+>   	pcaddu18i_op	= 0x0f,
+>   };
+> @@ -367,6 +369,9 @@ u32 larch_insn_gen_lu32id(enum loongarch_gpr rd, int imm);
+>   u32 larch_insn_gen_lu52id(enum loongarch_gpr rd, enum loongarch_gpr rj, int imm);
+>   u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned long pc, unsigned long dest);
+>   
+> +void simu_branch(struct pt_regs *regs, union loongarch_instruction insn);
+> +void simu_pc(struct pt_regs *regs, union loongarch_instruction insn);
+> +
+>   static inline bool signed_imm_check(long val, unsigned int bit)
+>   {
+>   	return -(1L << (bit - 1)) <= val && val < (1L << (bit - 1));
+> diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+> index 59c4608..58596c4 100644
+> --- a/arch/loongarch/include/asm/ptrace.h
+> +++ b/arch/loongarch/include/asm/ptrace.h
+> @@ -6,6 +6,7 @@
+>   #define _ASM_PTRACE_H
+>   
+>   #include <asm/page.h>
+> +#include <asm/irqflags.h>
+>   #include <asm/thread_info.h>
+>   #include <uapi/asm/ptrace.h>
+>   
+> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> index 512579d..af48faf 100644
+> --- a/arch/loongarch/kernel/inst.c
+> +++ b/arch/loongarch/kernel/inst.c
+> @@ -165,3 +165,126 @@ u32 larch_insn_gen_jirl(enum loongarch_gpr rd, enum loongarch_gpr rj, unsigned l
+>   
+>   	return insn.word;
+>   }
+> +
+> +void simu_branch(struct pt_regs *regs, union loongarch_instruction insn)
+> +{
+> +	unsigned int imm, imm_l, imm_h, rd, rj;
+> +	unsigned long pc = regs->csr_era;
+> +
+> +	if (pc & 3) {
+> +		pr_warn("%s: invalid pc 0x%lx\n", __func__, pc);
+> +		return;
+> +	}
+> +
+> +	imm_l = insn.reg0i26_format.immediate_l;
+> +	imm_h = insn.reg0i26_format.immediate_h;
+> +	switch (insn.reg0i26_format.opcode) {
+> +	case b_op:
+> +		regs->csr_era = pc + sign_extend((imm_h << 16 | imm_l) << 2, 27);
 
-https://lore.kernel.org/oe-kbuild-all/202211242120.MzZVGULn-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212020520.0OkMIno3-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212040713.rVney9e8-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212061455.6GE7y0jg-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212090509.NjAl9tbo-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212191708.Xk9yBj52-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212201859.qUGugK1F-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212202020.qL8Aaqu0-lkp@intel.com
 
-Error/Warning: (recently discovered and may have been fixed)
+Hi, Tiezhu,
 
-Documentation/gpu/drm-internals:179: ./include/drm/drm_file.h:411: WARNING: undefined label: drm_accel_node (if the link has no caption the label must precede a section header)
-Documentation/networking/devlink/etas_es58x.rst: WARNING: document isn't included in any toctree
-Warning: tools/power/cpupower/man/cpupower-powercap-info.1 references a file that doesn't exist: Documentation/power/powercap/powercap.txt
-arch/arm/kernel/entry-armv.S:485:5: warning: "CONFIG_ARM_THUMB" is not defined, evaluates to 0 [-Wundef]
-arch/loongarch/kernel/asm-offsets.c:265:6: warning: no previous prototype for 'output_pbe_defines' [-Wmissing-prototypes]
-arch/powerpc/kernel/kvm_emul.o: warning: objtool: kvm_template_end(): can't find starting instruction
-arch/powerpc/kernel/optprobes_head.o: warning: objtool: optprobe_template_end(): can't find starting instruction
-drivers/regulator/tps65219-regulator.c:310:32: warning: parameter 'dev' set but not used [-Wunused-but-set-parameter]
-drivers/regulator/tps65219-regulator.c:310:60: warning: parameter 'dev' set but not used [-Wunused-but-set-parameter]
-drivers/regulator/tps65219-regulator.c:370:26: warning: ordered comparison of pointer with integer zero [-Wextra]
-lib/dhry_run.c:61:6: warning: variable 'ret' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-mm/memfd.c:274:31: warning: unused variable 'ns' [-Wunused-variable]
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+We can use sign_extend64() in linux/bitops.h. Its assembly sequence
 
-drivers/accessibility/speakup/main.c:1290:26: sparse: sparse: obsolete array initializer, use C99 syntax
-drivers/cxl/core/mbox.c:832:18: sparse: sparse: cast from non-scalar
-drivers/cxl/core/mbox.c:832:18: sparse: sparse: cast to non-scalar
-drivers/i2c/busses/i2c-qcom-geni.c:1028:28: sparse: sparse: symbol 'i2c_master_hub' was not declared. Should it be static?
-drivers/media/platform/ti/davinci/vpif.c:483:20: sparse: sparse: cast from non-scalar
-drivers/media/platform/ti/davinci/vpif.c:483:20: sparse: sparse: cast to non-scalar
-fs/xfs/xfs_iomap.c:86:29: sparse: sparse: symbol 'xfs_iomap_page_ops' was not declared. Should it be static?
+is slli.d+srai.d, which is more efficient and clear.
 
-Error/Warning ids grouped by kconfigs:
 
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- arm-buildonly-randconfig-r005-20221219
-|   `-- arch-arm-kernel-entry-armv.S:warning:CONFIG_ARM_THUMB-is-not-defined-evaluates-to
-|-- arm64-allyesconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- i386-allyesconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- i386-buildonly-randconfig-r001-20221219
-|   `-- mm-memfd.c:warning:unused-variable-ns
-|-- ia64-allmodconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- loongarch-allyesconfig
-|   `-- arch-loongarch-kernel-asm-offsets.c:warning:no-previous-prototype-for-output_pbe_defines
-|-- loongarch-randconfig-s051-20221218
-|   |-- drivers-i2c-busses-i2c-qcom-geni.c:sparse:sparse:symbol-i2c_master_hub-was-not-declared.-Should-it-be-static
-|   `-- fs-xfs-xfs_iomap.c:sparse:sparse:symbol-xfs_iomap_page_ops-was-not-declared.-Should-it-be-static
-|-- m68k-allmodconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- m68k-allyesconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- mips-allyesconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- powerpc-allmodconfig
-|   |-- arch-powerpc-kernel-kvm_emul.o:warning:objtool:kvm_template_end():can-t-find-starting-instruction
-|   |-- arch-powerpc-kernel-optprobes_head.o:warning:objtool:optprobe_template_end():can-t-find-starting-instruction
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- riscv-randconfig-s041-20221218
-|   |-- drivers-accessibility-speakup-main.c:sparse:sparse:obsolete-array-initializer-use-C99-syntax
-|   `-- fs-xfs-xfs_iomap.c:sparse:sparse:symbol-xfs_iomap_page_ops-was-not-declared.-Should-it-be-static
-|-- riscv-randconfig-s042-20221218
-|   |-- drivers-cxl-core-mbox.c:sparse:sparse:cast-from-non-scalar
-|   |-- drivers-cxl-core-mbox.c:sparse:sparse:cast-to-non-scalar
-|   |-- drivers-net-thunderbolt.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-__le16-usertype-frame_id-got-unsigned-short-usertype
-|   |-- drivers-net-thunderbolt.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-__le16-usertype-frame_index-got-unsigned-short-usertype
-|   |-- drivers-net-thunderbolt.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-__le32-usertype-frame_count-got-unsigned-int-usertype
-clang_recent_errors
-|-- hexagon-allmodconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|   `-- lib-dhry_run.c:warning:variable-ret-is-used-uninitialized-whenever-if-condition-is-false
-`-- x86_64-rhel-8.3-rust
-    `-- vmlinux.o:warning:objtool:___ksymtab_gpl-_RNvNtCsfATHBUcknU9_6kernel5print16call_printk_cont:data-relocation-to-ENDBR:_RNvNtCsfATHBUcknU9_6kernel5print16call_printk_cont
+Jinyang
 
-elapsed time: 726m
 
-configs tested: 66
-configs skipped: 2
+> +		return;
+> +	case bl_op:
+> +		regs->csr_era = pc + sign_extend((imm_h << 16 | imm_l) << 2, 27);
+> +		regs->regs[1] = pc + LOONGARCH_INSN_SIZE;
+> +		return;
+> +	}
+> +
+> +	imm_l = insn.reg1i21_format.immediate_l;
+> +	imm_h = insn.reg1i21_format.immediate_h;
+> +	rj = insn.reg1i21_format.rj;
+> +	switch (insn.reg1i21_format.opcode) {
+> +	case beqz_op:
+> +		if (regs->regs[rj] == 0)
+> +			regs->csr_era = pc + sign_extend((imm_h << 16 | imm_l) << 2, 22);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		return;
+> +	case bnez_op:
+> +		if (regs->regs[rj] != 0)
+> +			regs->csr_era = pc + sign_extend((imm_h << 16 | imm_l) << 2, 22);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		return;
+> +	}
+> +
+> +	imm = insn.reg2i16_format.immediate;
+> +	rj = insn.reg2i16_format.rj;
+> +	rd = insn.reg2i16_format.rd;
+> +	switch (insn.reg2i16_format.opcode) {
+> +	case beq_op:
+> +		if (regs->regs[rj] == regs->regs[rd])
+> +			regs->csr_era = pc + sign_extend(imm << 2, 17);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	case bne_op:
+> +		if (regs->regs[rj] != regs->regs[rd])
+> +			regs->csr_era = pc + sign_extend(imm << 2, 17);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	case blt_op:
+> +		if ((long)regs->regs[rj] < (long)regs->regs[rd])
+> +			regs->csr_era = pc + sign_extend(imm << 2, 17);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	case bge_op:
+> +		if ((long)regs->regs[rj] >= (long)regs->regs[rd])
+> +			regs->csr_era = pc + sign_extend(imm << 2, 17);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	case bltu_op:
+> +		if (regs->regs[rj] < regs->regs[rd])
+> +			regs->csr_era = pc + sign_extend(imm << 2, 17);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	case bgeu_op:
+> +		if (regs->regs[rj] >= regs->regs[rd])
+> +			regs->csr_era = pc + sign_extend(imm << 2, 17);
+> +		else
+> +			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	case jirl_op:
+> +		regs->csr_era = regs->regs[rj] + sign_extend(imm << 2, 17);
+> +		regs->regs[rd] = pc + LOONGARCH_INSN_SIZE;
+> +		break;
+> +	default:
+> +		pr_info("%s: unknown opcode\n", __func__);
+> +		return;
+> +	}
+> +}
+> +
+> +void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
+> +{
+> +	unsigned long pc = regs->csr_era;
+> +	unsigned int rd = insn.reg1i20_format.rd;
+> +	unsigned int imm = insn.reg1i20_format.immediate;
+> +
+> +	if (pc & 3) {
+> +		pr_warn("%s: invalid pc 0x%lx\n", __func__, pc);
+> +		return;
+> +	}
+> +
+> +	switch (insn.reg1i20_format.opcode) {
+> +	case pcaddi_op:
+> +		regs->regs[rd] = pc + sign_extend(imm << 2, 21);
+> +		break;
+> +	case pcaddu12i_op:
+> +		regs->regs[rd] = pc + sign_extend(imm << 12, 31);
+> +		break;
+> +	case pcaddu18i_op:
+> +		regs->regs[rd] = pc + sign_extend(imm << 18, 37);
+> +		break;
+> +	case pcalau12i_op:
+> +		regs->regs[rd] = pc + sign_extend(imm << 12, 31);
+> +		regs->regs[rd] &= ~((1 << 12) - 1);
+> +		break;
+> +	default:
+> +		pr_info("%s: unknown opcode\n", __func__);
+> +		return;
+> +	}
+> +
+> +	regs->csr_era += LOONGARCH_INSN_SIZE;
+> +}
 
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-powerpc                           allnoconfig
-arc                                 defconfig
-x86_64                    rhel-8.3-kselftests
-s390                             allmodconfig
-x86_64                          rhel-8.3-func
-alpha                               defconfig
-i386                                defconfig
-s390                                defconfig
-arm                                 defconfig
-sh                               allmodconfig
-s390                             allyesconfig
-x86_64               randconfig-a002-20221219
-x86_64               randconfig-a003-20221219
-alpha                            allyesconfig
-x86_64               randconfig-a001-20221219
-m68k                             allyesconfig
-x86_64               randconfig-a004-20221219
-mips                             allyesconfig
-m68k                             allmodconfig
-powerpc                          allmodconfig
-arc                              allyesconfig
-x86_64               randconfig-a005-20221219
-arc                  randconfig-r043-20221220
-x86_64                           rhel-8.3-bpf
-x86_64               randconfig-a006-20221219
-x86_64                           rhel-8.3-syz
-riscv                randconfig-r042-20221220
-x86_64                         rhel-8.3-kunit
-ia64                             allmodconfig
-x86_64                            allnoconfig
-arm                              allyesconfig
-x86_64                           rhel-8.3-kvm
-arm64                            allyesconfig
-s390                 randconfig-r044-20221220
-i386                             allyesconfig
-i386                 randconfig-a001-20221219
-i386                 randconfig-a003-20221219
-i386                 randconfig-a002-20221219
-i386                 randconfig-a006-20221219
-i386                 randconfig-a005-20221219
-i386                 randconfig-a004-20221219
-powerpc                     ep8248e_defconfig
-powerpc                     rainier_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-
-clang tested configs:
-x86_64                          rhel-8.3-rust
-hexagon              randconfig-r041-20221220
-arm                  randconfig-r046-20221220
-i386                 randconfig-a011-20221219
-i386                 randconfig-a014-20221219
-hexagon              randconfig-r045-20221220
-i386                 randconfig-a012-20221219
-i386                 randconfig-a013-20221219
-i386                 randconfig-a015-20221219
-i386                 randconfig-a016-20221219
-x86_64               randconfig-a014-20221219
-x86_64               randconfig-a015-20221219
-x86_64               randconfig-a012-20221219
-x86_64               randconfig-a011-20221219
-arm                             mxs_defconfig
-x86_64               randconfig-a016-20221219
-powerpc                     ppa8548_defconfig
-x86_64               randconfig-a013-20221219
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
