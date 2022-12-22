@@ -1,31 +1,31 @@
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15432F25
-	for <loongarch@lists.linux.dev>; Thu, 22 Dec 2022 11:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78562F25
+	for <loongarch@lists.linux.dev>; Thu, 22 Dec 2022 11:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671709728; x=1703245728;
+  t=1671709734; x=1703245734;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=DkmV3GJS9Tl7SCqcbYCFpqWizdAnQdaBoGDZyzrrlMs=;
-  b=FcK7GvqKs4kAWgTEZyo+TV65B+UjKywdIR1cTtYrYeVMkexsdtYfGKeF
-   ZfgKYy/eaTE5+um6caoydU3GQHtWJF3iVP8XF98tcsTtWoyBOVjvLIAkX
-   8SGMaIp/FHCZNWRiwp0vPEt+K2vk2RpaXgdkLXHoxHIhRwkjhTebtUkbl
-   +3/vcdqmKtG6OQ07ZWbBnM1M/T6bj6wIo9EiCL+RxvRrNCA2DMqHpSh6P
-   OWTYkqY04IReukCKT/Mwcgd1k+8Y5Q2asK5maW129DTq/GJE1CNhloh6X
-   MsMZmxasUtBYqar3S5nPESwZxJk1lHeFZnCTw6+HAM7LKWFdfPe+tbviP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10568"; a="318804824"
+  bh=WISTUsk2o+/CiLC/dmDma5HABMnb/JSTbRj0TToQGYg=;
+  b=PHLjfqRtN6HDEILP0GsD5Orr4PqIrF4JzfdcE0mDW7QLemssq6slp75L
+   6j290rpAXdFnQhswnF+9fFG75+HXIssIF6Vx4QEktx5aRajEuEYvd24yt
+   zWupgz/9vS7HbCm9K63kWkafgCU+X2NfyDupNcqFneBLvfeaRZnN4/5Jv
+   XvnKSpUpxkCahWFKWeB6f8HV6myKPi8nkv7bqKEh8onGKwpFnY3maPg8G
+   lpqzZ71N7T+dRmgHJqZuxsURqnta2ppCB7c7YJDXbOXb+pfRESP4nsN2M
+   23I6E7oSlhmWaW+pI8N7nFnvwm2OfeV1hJ7xmmhsGOhKhLhrjNykTW8Wl
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10568"; a="318804852"
 X-IronPort-AV: E=Sophos;i="5.96,265,1665471600"; 
-   d="scan'208";a="318804824"
+   d="scan'208";a="318804852"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2022 03:48:48 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10568"; a="629504846"
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2022 03:48:54 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10568"; a="629504874"
 X-IronPort-AV: E=Sophos;i="5.96,265,1665471600"; 
-   d="scan'208";a="629504846"
+   d="scan'208";a="629504874"
 Received: from lab-ah.igk.intel.com ([10.91.215.196])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2022 03:48:42 -0800
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2022 03:48:48 -0800
 From: Andrzej Hajda <andrzej.hajda@intel.com>
 To: linux-alpha@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -54,9 +54,9 @@ Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Boqun Feng <boqun.feng@gmail.com>,
 	Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 14/19] arch/s390: rename internal name __xchg to __arch_xchg
-Date: Thu, 22 Dec 2022 12:46:30 +0100
-Message-Id: <20221222114635.1251934-15-andrzej.hajda@intel.com>
+Subject: [PATCH 15/19] arch/sh: rename internal name __xchg to __arch_xchg
+Date: Thu, 22 Dec 2022 12:46:31 +0100
+Message-Id: <20221222114635.1251934-16-andrzej.hajda@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221222114635.1251934-1-andrzej.hajda@intel.com>
 References: <20221222114635.1251934-1-andrzej.hajda@intel.com>
@@ -73,31 +73,31 @@ __xchg will be used for non-atomic xchg macro.
 
 Signed-off-by: Andrzej Hajda <andrzej.hajda@intel.com>
 ---
- arch/s390/include/asm/cmpxchg.h | 4 ++--
+ arch/sh/include/asm/cmpxchg.h | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/include/asm/cmpxchg.h b/arch/s390/include/asm/cmpxchg.h
-index 84c3f0d576c5b1..efc16f4aac8643 100644
---- a/arch/s390/include/asm/cmpxchg.h
-+++ b/arch/s390/include/asm/cmpxchg.h
-@@ -14,7 +14,7 @@
+diff --git a/arch/sh/include/asm/cmpxchg.h b/arch/sh/include/asm/cmpxchg.h
+index 0ed9b3f4a57796..288f6f38d98fb4 100644
+--- a/arch/sh/include/asm/cmpxchg.h
++++ b/arch/sh/include/asm/cmpxchg.h
+@@ -22,7 +22,7 @@
  
- void __xchg_called_with_bad_pointer(void);
+ extern void __xchg_called_with_bad_pointer(void);
  
--static __always_inline unsigned long __xchg(unsigned long x,
-+static __always_inline unsigned long __arch_xchg(unsigned long x,
- 					    unsigned long address, int size)
- {
- 	unsigned long old;
-@@ -77,7 +77,7 @@ static __always_inline unsigned long __xchg(unsigned long x,
- 	__typeof__(*(ptr)) __ret;					\
- 									\
- 	__ret = (__typeof__(*(ptr)))					\
--		__xchg((unsigned long)(x), (unsigned long)(ptr),	\
-+		__arch_xchg((unsigned long)(x), (unsigned long)(ptr),	\
- 		       sizeof(*(ptr)));					\
- 	__ret;								\
+-#define __xchg(ptr, x, size)				\
++#define __arch_xchg(ptr, x, size)				\
+ ({							\
+ 	unsigned long __xchg__res;			\
+ 	volatile void *__xchg_ptr = (ptr);		\
+@@ -46,7 +46,7 @@ extern void __xchg_called_with_bad_pointer(void);
  })
+ 
+ #define arch_xchg(ptr,x)	\
+-	((__typeof__(*(ptr)))__xchg((ptr),(unsigned long)(x), sizeof(*(ptr))))
++	((__typeof__(*(ptr)))__arch_xchg((ptr),(unsigned long)(x), sizeof(*(ptr))))
+ 
+ /* This function doesn't exist, so you'll get a linker error
+  * if something tries to do an invalid cmpxchg(). */
 -- 
 2.34.1
 
