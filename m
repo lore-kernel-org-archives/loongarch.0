@@ -1,81 +1,128 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4113F2915
-	for <loongarch@lists.linux.dev>; Fri, 23 Dec 2022 09:00:55 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.108.31])
-	by gateway (Coremail) with SMTP id _____8AxaepFbqVjdg0IAA--.14767S3;
-	Fri, 23 Dec 2022 17:00:53 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.108.31])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxXL5EbqVjET4JAA--.4282S2;
-	Fri, 23 Dec 2022 17:00:52 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Wolfram Sang <wsa@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org
-Cc: loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH V8 4/4] LoongArch: Enable LS2X I2C in loongson3_defconfig
-Date: Fri, 23 Dec 2022 17:01:15 +0800
-Message-Id: <485512df54a8554770b3782665adaa22eff9e036.1671688961.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1671688961.git.zhoubinbin@loongson.cn>
-References: <cover.1671688961.git.zhoubinbin@loongson.cn>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F628476
+	for <loongarch@lists.linux.dev>; Fri, 23 Dec 2022 14:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671805399; x=1703341399;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ELTp1mLG7Y9aCL8aO+3yggqOoksNOYkU+LC/pmwgzyA=;
+  b=h6WHojs6ZpmqWpG2ottoZdl2pYgLLN2M3eW5A5tU9xF/OQlsT/3lk21H
+   c+27dZk3j5L1dN6yN+xTy/Nw2p/XcwLUfb5INN1T1g/0ViZeKJo5dasVa
+   2aM6Qe9tY1i/8kBLtimzGb9etHds0Vj1ICf1c6EWPlU8veg+mh8GlRw1f
+   H1RVwid1/AgXqzvKKGomudHa9NdK5cWPCTVhnP/tSl3PViN1cgTQlPXxG
+   AQqDeqzUnhnC4/YrPK4vlFEzcvUOFF7jMGVaZIH/9U4/Af3L+SOw42Fzh
+   ybnz3reqKRmJRugCywjpmYvBfkXpozGjqKHcppjmrXomjjgBb2U1Jx0jJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10570"; a="322279539"
+X-IronPort-AV: E=Sophos;i="5.96,268,1665471600"; 
+   d="scan'208";a="322279539"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2022 06:23:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10570"; a="897539227"
+X-IronPort-AV: E=Sophos;i="5.96,268,1665471600"; 
+   d="scan'208";a="897539227"
+Received: from irvmail001.ir.intel.com ([10.43.11.63])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Dec 2022 06:23:13 -0800
+Received: from newjersey.igk.intel.com (newjersey.igk.intel.com [10.102.20.203])
+	by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 2BNENBXm013561;
+	Fri, 23 Dec 2022 14:23:11 GMT
+From: Alexander Lobakin <alexandr.lobakin@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Lobakin <alexandr.lobakin@intel.com>,
+        Andrzej Hajda <andrzej.hajda@intel.com>, linux-alpha@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-m68k@vger.kernel.org, linux-mips@vger.kernel.org,
+        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Arnd Bergmann <arnd@arndb.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 00/19] Introduce __xchg, non-atomic xchg
+Date: Fri, 23 Dec 2022 15:23:00 +0100
+Message-Id: <20221223142300.1820652-1-alexandr.lobakin@intel.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221222092147.d2bb177c67870884f2e59a9b@linux-foundation.org>
+References: <20221222114635.1251934-1-andrzej.hajda@intel.com> <20221222092147.d2bb177c67870884f2e59a9b@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxXL5EbqVjET4JAA--.4282S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Jry5XrWkuF48uF15Ww1fXrb_yoWxKFX_JF
-	y7Kw1kWr48JFZ7W3WIqw4rGw4DA3W7X3WFkr17Zw1xX3Waqr13JrWDAw17C3Z0ga4DWr43
-	ZaykJF9F9r18tjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	C7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4
-	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
-	e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2z280
-	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4
-	kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj
-	6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r
-	1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
-	YxBIdaVFxhVjvjDU0xZFpf9x07jqRRiUUUUU=
 
-This is now supported, enable for Loongson-3 systems.
-Other systems are unaffected.
+From: Andrew Morton <akpm@linux-foundation.org>
+Date: Thu, 22 Dec 2022 09:21:47 -0800
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- arch/loongarch/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+> On Thu, 22 Dec 2022 12:46:16 +0100 Andrzej Hajda <andrzej.hajda@intel.com> wrote:
+> 
+> > Hi all,
+> > 
+> > I hope there will be place for such tiny helper in kernel.
+> > Quick cocci analyze shows there is probably few thousands places
+> > where it could be useful.
+> 
+> So to clarify, the intent here is a simple readability cleanup for
+> existing open-coded exchange operations.  The intent is *not* to
+> identify existing xchg() sites which are unnecessarily atomic and to
+> optimize them by using the non-atomic version.
+> 
+> Have you considered the latter?
+> 
+> > I am not sure who is good person to review/ack such patches,
+> 
+> I can take 'em.
+> 
+> > so I've used my intuition to construct to/cc lists, sorry for mistakes.
+> > This is the 2nd approach of the same idea, with comments addressed[0].
+> > 
+> > The helper is tiny and there are advices we can leave without it, so
+> > I want to present few arguments why it would be good to have it:
+> > 
+> > 1. Code readability/simplification/number of lines:
+> > 
+> > Real example from drivers/net/ethernet/mellanox/mlx5/core/esw/qos.c:
+> > -       previous_min_rate = evport->qos.min_rate;
+> > -       evport->qos.min_rate = min_rate;
+> > +       previous_min_rate = __xchg(evport->qos.min_rate, min_rate);
+> > 
+> > For sure the code is more compact, and IMHO more readable.
+> > 
+> > 2. Presence of similar helpers in other somehow related languages/libs:
+> > 
+> > a) Rust[1]: 'replace' from std::mem module, there is also 'take'
+> >     helper (__xchg(&x, 0)), which is the same as private helper in
+> >     i915 - fetch_and_zero, see latest patch.
+> > b) C++ [2]: 'exchange' from utility header.
+> > 
+> > If the idea is OK there are still 2 qestions to answer:
+> > 
+> > 1. Name of the helper, __xchg follows kernel conventions,
+> >     but for me Rust names are also OK.
+> 
+> I like replace(), or, shockingly, exchange().
+> 
+> But...   Can we simply make swap() return the previous value?
+> 
+> 	previous_min_rate = swap(&evport->qos.min_rate, min_rate);
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index cb52774c80e8..5677c4f8576e 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -602,6 +602,7 @@ CONFIG_HW_RANDOM_VIRTIO=m
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_PIIX4=y
- CONFIG_I2C_GPIO=y
-+CONFIG_I2C_LS2X=y
- CONFIG_SPI=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_LOONGSON=y
--- 
-2.31.1
+Unforunately, swap()'s arguments get passed by names, not as
+pointers, so you can't do
 
+	swap(some_ptr, NULL);
+
+ -- pretty common pattern for xchg.
+
+Thanks,
+Olek
