@@ -1,282 +1,110 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F89A5D
-	for <loongarch@lists.linux.dev>; Mon, 26 Dec 2022 16:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672073701; x=1703609701;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=SfZzdNV19bg9UmQpe6KYIZYymHxtUypJH/O7nO8s6g4=;
-  b=h31mID8Nj5IvQhElF9vkmX2MwemEqgYnIN6yGlU2CZyWEac6EvWXINt7
-   l5mr/uWh8P0XXMqpyY+DImnkCpzuQoiOLMHQNkjnGqMbt6mMQVAkvWg4z
-   hj+qhEZ5WAY5AFarg1LsBGlqdJ9qL67uPj6rUFbhHN0Y70lSuVLXgTXW8
-   rqQTxFviXwYYhJIIuAHkrPJNJDSzNLB+ShXcNPWJYa9GYJ/s3OqPVu6yD
-   idmnf7K4mV/AcO6GoTntodEJf3aM2/aWvOftu6AcpJLXRQRv1nfRoEGvR
-   9MlniTegoPbXWLjkxruZ33hcPBnYfy+hr1LAdqJpFRbQ79mQ4RMo4rCfc
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10572"; a="308338535"
-X-IronPort-AV: E=Sophos;i="5.96,276,1665471600"; 
-   d="scan'208";a="308338535"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Dec 2022 08:55:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10572"; a="646205184"
-X-IronPort-AV: E=Sophos;i="5.96,276,1665471600"; 
-   d="scan'208";a="646205184"
-Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 26 Dec 2022 08:54:55 -0800
-Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1p9qkZ-000EZN-0D;
-	Mon, 26 Dec 2022 16:54:55 +0000
-Date: Tue, 27 Dec 2022 00:54:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: virtualization@lists.linux-foundation.org,
- speakup@linux-speakup.org, netdev@vger.kernel.org,
- loongarch@lists.linux.dev, linux-xfs@vger.kernel.org,
- linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-media@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-block@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
- Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- c76083fac3bae1a87ae3d005b5cb1cbc761e31d5
-Message-ID: <63a9d1b2.869GAwHafmAB6R7M%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471D7620
+	for <loongarch@lists.linux.dev>; Tue, 27 Dec 2022 00:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1672100020; bh=ORItN6HMFDhSfD5AXRtkrNg+ZN77mDIU+g1ZnrIzloI=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=Qc/d73mA+Ctu9mXfY+hpOnKyMLzZydaW7/ky1g2FXhj7UvhaFO2raCsQCiKzE/dwY
+	 fXR6ZavQqWaalLV1tFjW7/xlDStf4nfW81dBZC4cOqRFR2Ff9QtT02DqkGqHjEvGpq
+	 KRX+pEjWw2PWvom6cMJOdEsKlm+eMboMRmdWFurI=
+Received: from [192.168.9.172] (unknown [101.88.134.93])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 538D2600DA;
+	Tue, 27 Dec 2022 08:13:40 +0800 (CST)
+Message-ID: <45308e1d-4cbb-5f77-f66d-94917b7e26a4@xen0n.name>
+Date: Tue, 27 Dec 2022 08:13:39 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101
+ Firefox/110.0 Thunderbird/110.0a1
+Subject: Re: [PATCH bpf-next] libbpf: Add LoongArch support to bpf_tracing.h
+To: Hengqi Chen <hengqi.chen@gmail.com>, bpf@vger.kernel.org,
+ loongarch@lists.linux.dev, andrii@kernel.org
+References: <20221225120138.1236072-1-hengqi.chen@gmail.com>
+Content-Language: en-US
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20221225120138.1236072-1-hengqi.chen@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: c76083fac3bae1a87ae3d005b5cb1cbc761e31d5  Add linux-next specific files for 20221226
+Hi,
 
-Error/Warning reports:
+On 12/25/22 20:01, Hengqi Chen wrote:
+> Add PT_REGS macros for LoongArch64 ([0]).
+>
+>    [0]: https://loongson.github.io/LoongArch-Documentation/LoongArch-ELF-ABI-EN.html
+>
+> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> ---
+>   tools/lib/bpf/bpf_tracing.h | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
+>
+> diff --git a/tools/lib/bpf/bpf_tracing.h b/tools/lib/bpf/bpf_tracing.h
+> index 2972dc25ff72..5a8a0830d133 100644
+> --- a/tools/lib/bpf/bpf_tracing.h
+> +++ b/tools/lib/bpf/bpf_tracing.h
+> @@ -32,6 +32,9 @@
+>   #elif defined(__TARGET_ARCH_arc)
+>   	#define bpf_target_arc
+>   	#define bpf_target_defined
+> +#elif defined(__TARGET_ARCH_loongarch)
+> +	#define bpf_target_loongarch
+> +	#define bpf_target_defined
+>   #else
+>
+>   /* Fall back to what the compiler says */
+> @@ -62,6 +65,9 @@
+>   #elif defined(__arc__)
+>   	#define bpf_target_arc
+>   	#define bpf_target_defined
+> +#elif defined(__loongarch__) && __loongarch_grlen == 64
 
-https://lore.kernel.org/oe-kbuild-all/202212020520.0OkMIno3-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212041528.4TbQL9ys-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212051759.cEv6fyHy-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212061455.6GE7y0jg-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212080938.RHVtvwt0-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212090509.NjAl9tbo-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212242239.hWUlGmm0-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212250859.uLjFpJy3-lkp@intel.com
+Isn't the whole patch independent of bitness? I'd suggest just removing 
+this GRLen check so we don't need another change when we want 
+LoongArch32 too.
 
-Error/Warning: (recently discovered and may have been fixed)
+Please adjust the commit message wording accordingly too.
 
-ERROR: modpost: "input_ff_create_memless" [drivers/hid/hid-betopff.ko] undefined!
-ERROR: modpost: "input_ff_create_memless" [drivers/hid/hid-logitech.ko] undefined!
-ERROR: modpost: "input_ff_create_memless" [drivers/hid/hid-megaworld.ko] undefined!
-ERROR: modpost: "input_ff_create_memless" [drivers/hid/hid-mf.ko] undefined!
-ERROR: modpost: "input_ff_create_memless" [drivers/input/misc/drv260x.ko] undefined!
-ERROR: modpost: "input_ff_create_memless" [drivers/input/misc/drv2665.ko] undefined!
-ERROR: modpost: "input_ff_create_memless" [drivers/input/misc/gpio-vibra.ko] undefined!
-ERROR: modpost: "input_ff_create_memless" [drivers/input/misc/regulator-haptic.ko] undefined!
-ERROR: modpost: "input_ff_create_memless" [drivers/input/misc/sc27xx-vibra.ko] undefined!
-aarch64-linux-ld: ID map text too big or misaligned
-arch/arm/kernel/entry-armv.S:485:5: warning: "CONFIG_ARM_THUMB" is not defined, evaluates to 0 [-Wundef]
-arch/arm64/include/asm/pgtable-hwdef.h:82:64: warning: "PMD_SHIFT" is not defined, evaluates to 0 [-Wundef]
-arch/loongarch/kernel/asm-offsets.c:265:6: warning: no previous prototype for 'output_pbe_defines' [-Wmissing-prototypes]
-drivers/regulator/tps65219-regulator.c:310:32: warning: parameter 'dev' set but not used [-Wunused-but-set-parameter]
-drivers/regulator/tps65219-regulator.c:310:60: warning: parameter 'dev' set but not used [-Wunused-but-set-parameter]
-drivers/regulator/tps65219-regulator.c:370:26: sparse:    int
-drivers/regulator/tps65219-regulator.c:370:26: sparse:    struct regulator_dev *[assigned] rdev
-drivers/regulator/tps65219-regulator.c:370:26: warning: ordered comparison of pointer with integer zero [-Wextra]
-loongarch64-linux-ld: sleep.c:(.text+0x22c): undefined reference to `loongarch_wakeup_start'
-sleep.c:(.text+0x228): undefined reference to `loongarch_wakeup_start'
-
-Unverified Error/Warning (likely false positive, please contact us if interested):
-
-drivers/accessibility/speakup/main.c:1290:26: sparse: sparse: obsolete array initializer, use C99 syntax
-drivers/block/null_blk/zoned.c:769 zone_cond_store() warn: potential spectre issue 'dev->zones' [w] (local cap)
-drivers/block/virtio_blk.c:721:9: sparse:    bad type *
-drivers/block/virtio_blk.c:721:9: sparse:    unsigned int *
-drivers/block/virtio_blk.c:721:9: sparse: sparse: incompatible types in comparison expression (different base types):
-drivers/block/virtio_blk.c:721:9: sparse: sparse: no generic selection for 'restricted __le32 [addressable] virtio_cread_v'
-drivers/block/virtio_blk.c:721:9: sparse: sparse: no generic selection for 'restricted __le32 virtio_cread_v'
-drivers/cxl/core/mbox.c:832:18: sparse: sparse: cast from non-scalar
-drivers/cxl/core/mbox.c:832:18: sparse: sparse: cast to non-scalar
-drivers/i2c/busses/i2c-qcom-geni.c:1028:28: sparse: sparse: symbol 'i2c_master_hub' was not declared. Should it be static?
-drivers/iio/adc/twl6030-gpadc.c:955:16-23: duplicated argument to & or |
-drivers/iio/light/tsl2563.c:751:8-33: WARNING: Threaded IRQ with no primary handler requested without IRQF_ONESHOT (unless it is nested IRQ)
-drivers/media/platform/ti/davinci/vpif.c:483:20: sparse: sparse: cast from non-scalar
-drivers/media/platform/ti/davinci/vpif.c:483:20: sparse: sparse: cast to non-scalar
-drivers/media/test-drivers/visl/visl-video.c:690:22: sparse: sparse: symbol 'visl_qops' was not declared. Should it be static?
-fs/exfat/dir.c:862 exfat_get_dentry_set() warn: missing unwind goto?
-fs/xfs/xfs_iomap.c:86:29: sparse: sparse: symbol 'xfs_iomap_page_ops' was not declared. Should it be static?
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- arc-randconfig-r024-20221225
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- arc-randconfig-s041-20221225
-|   `-- fs-xfs-xfs_iomap.c:sparse:sparse:symbol-xfs_iomap_page_ops-was-not-declared.-Should-it-be-static
-|-- arm-allyesconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- arm-badge4_defconfig
-|   `-- arch-arm-kernel-entry-armv.S:warning:CONFIG_ARM_THUMB-is-not-defined-evaluates-to
-|-- arm64-allyesconfig
-|   |-- aarch64-linux-ld:ID-map-text-too-big-or-misaligned
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- arm64-randconfig-c034-20221225
-|   `-- arch-arm64-include-asm-pgtable-hwdef.h:warning:PMD_SHIFT-is-not-defined-evaluates-to
-|-- csky-randconfig-c033-20221225
-|   |-- drivers-iio-light-tsl2563.c:WARNING:Threaded-IRQ-with-no-primary-handler-requested-without-IRQF_ONESHOT-(unless-it-is-nested-IRQ)
-|   `-- drivers-mtd-ubi-build.c:WARNING:conversion-to-bool-not-needed-here
-|-- i386-allyesconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- i386-randconfig-c021-20221226
-|   `-- drivers-iio-light-tsl2563.c:WARNING:Threaded-IRQ-with-no-primary-handler-requested-without-IRQF_ONESHOT-(unless-it-is-nested-IRQ)
-|-- i386-randconfig-m021-20221226
-|   `-- fs-exfat-dir.c-exfat_get_dentry_set()-warn:missing-unwind-goto
-|-- i386-randconfig-s002
-|   `-- fs-xfs-xfs_iomap.c:sparse:sparse:symbol-xfs_iomap_page_ops-was-not-declared.-Should-it-be-static
-|-- ia64-allmodconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- loongarch-allyesconfig
-|   `-- arch-loongarch-kernel-asm-offsets.c:warning:no-previous-prototype-for-output_pbe_defines
-|-- loongarch-randconfig-s043-20221225
-|   |-- arch-loongarch-kernel-asm-offsets.c:warning:no-previous-prototype-for-output_pbe_defines
-|   |-- drivers-cxl-core-mbox.c:sparse:sparse:cast-from-non-scalar
-|   |-- drivers-cxl-core-mbox.c:sparse:sparse:cast-to-non-scalar
-|   |-- drivers-i2c-busses-i2c-qcom-geni.c:sparse:sparse:symbol-i2c_master_hub-was-not-declared.-Should-it-be-static
-|   |-- fs-xfs-xfs_iomap.c:sparse:sparse:symbol-xfs_iomap_page_ops-was-not-declared.-Should-it-be-static
-|   |-- loongarch64-linux-ld:sleep.c:(.text):undefined-reference-to-loongarch_wakeup_start
-|   `-- sleep.c:(.text):undefined-reference-to-loongarch_wakeup_start
-|-- m68k-allmodconfig
-|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-clang_recent_errors
-|-- hexagon-buildonly-randconfig-r003-20221225
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- hexagon-randconfig-r002-20221225
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- riscv-randconfig-r021-20221225
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-|-- x86_64-allyesconfig
-|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
-`-- x86_64-randconfig-a003-20221226
-    `-- vmlinux.o:warning:objtool:___ksymtab_gpl-_RNvNtCsfATHBUcknU9_6kernel5print16call_printk_cont:data-relocation-to-ENDBR:_RNvNtCsfATHBUcknU9_6kernel5print16call_printk_cont
-
-elapsed time: 720m
-
-configs tested: 89
-configs skipped: 2
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-alpha                               defconfig
-i386                 randconfig-a012-20221226
-x86_64                    rhel-8.3-kselftests
-arm                                 defconfig
-i386                 randconfig-a011-20221226
-x86_64                          rhel-8.3-func
-i386                                defconfig
-i386                 randconfig-a013-20221226
-x86_64                           rhel-8.3-bpf
-s390                             allmodconfig
-s390                                defconfig
-ia64                             allmodconfig
-i386                 randconfig-a014-20221226
-x86_64                           rhel-8.3-syz
-x86_64                              defconfig
-i386                 randconfig-a016-20221226
-s390                             allyesconfig
-i386                 randconfig-a015-20221226
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                            allnoconfig
-x86_64               randconfig-a014-20221226
-powerpc                           allnoconfig
-x86_64               randconfig-a013-20221226
-x86_64                               rhel-8.3
-arm64                            allyesconfig
-x86_64               randconfig-a011-20221226
-arm                              allyesconfig
-x86_64               randconfig-a012-20221226
-i386                             allyesconfig
-x86_64               randconfig-a015-20221226
-x86_64               randconfig-a016-20221226
-sh                               allmodconfig
-m68k                             allyesconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-x86_64                           allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-arm                  randconfig-r046-20221225
-arc                  randconfig-r043-20221225
-arc                  randconfig-r043-20221226
-riscv                randconfig-r042-20221226
-s390                 randconfig-r044-20221226
-x86_64                           alldefconfig
-sh                          lboxre2_defconfig
-arc                               allnoconfig
-sh                             shx3_defconfig
-arm                           tegra_defconfig
-microblaze                          defconfig
-m68k                       m5475evb_defconfig
-m68k                        m5407c3_defconfig
-xtensa                              defconfig
-mips                      maltasmvp_defconfig
-parisc                           alldefconfig
-arm                          badge4_defconfig
-powerpc                     mpc83xx_defconfig
-sh                          rsk7201_defconfig
-sh                 kfr2r09-romimage_defconfig
-powerpc                    klondike_defconfig
-sh                  sh7785lcr_32bit_defconfig
-
-clang tested configs:
-x86_64                          rhel-8.3-rust
-i386                 randconfig-a004-20221226
-i386                 randconfig-a001-20221226
-x86_64               randconfig-a002-20221226
-i386                 randconfig-a003-20221226
-i386                 randconfig-a002-20221226
-x86_64               randconfig-a003-20221226
-x86_64               randconfig-a006-20221226
-i386                 randconfig-a005-20221226
-i386                 randconfig-a006-20221226
-x86_64               randconfig-a001-20221226
-x86_64               randconfig-a004-20221226
-x86_64               randconfig-a005-20221226
-hexagon              randconfig-r045-20221225
-hexagon              randconfig-r041-20221225
-hexagon              randconfig-r041-20221226
-arm                  randconfig-r046-20221226
-s390                 randconfig-r044-20221225
-hexagon              randconfig-r045-20221226
-riscv                randconfig-r042-20221225
-powerpc                     tqm5200_defconfig
-arm                         shannon_defconfig
-arm                         orion5x_defconfig
-arm                           sama7_defconfig
-x86_64                           allyesconfig
-
+> +	#define bpf_target_loongarch
+> +	#define bpf_target_defined
+>   #endif /* no compiler target */
+>
+>   #endif
+> @@ -258,6 +264,21 @@ struct pt_regs___arm64 {
+>   /* arc does not select ARCH_HAS_SYSCALL_WRAPPER. */
+>   #define PT_REGS_SYSCALL_REGS(ctx) ctx
+>
+> +#elif defined(bpf_target_loongarch)
+> +
+> +#define __PT_PARM1_REG regs[4]
+> +#define __PT_PARM2_REG regs[5]
+> +#define __PT_PARM3_REG regs[6]
+> +#define __PT_PARM4_REG regs[7]
+> +#define __PT_PARM5_REG regs[8]
+> +#define __PT_RET_REG regs[1]
+> +#define __PT_FP_REG regs[22]
+> +#define __PT_RC_REG regs[4]
+> +#define __PT_SP_REG regs[3]
+> +#define __PT_IP_REG csr_era
+> +/* loongarch does not select ARCH_HAS_SYSCALL_WRAPPER. */
+> +#define PT_REGS_SYSCALL_REGS(ctx) ctx
+> +
+>   #endif
+>
+>   #if defined(bpf_target_defined)
+> --
+> 2.31.1
+>
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
