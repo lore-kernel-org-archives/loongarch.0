@@ -1,245 +1,104 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBDD1C2B
-	for <loongarch@lists.linux.dev>; Thu, 29 Dec 2022 09:23:23 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6500,9779,10574"; a="322250643"
-X-IronPort-AV: E=Sophos;i="5.96,283,1665471600"; 
-   d="scan'208";a="322250643"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2022 01:23:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10574"; a="742253680"
-X-IronPort-AV: E=Sophos;i="5.96,283,1665471600"; 
-   d="scan'208";a="742253680"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP; 29 Dec 2022 01:23:19 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-	(envelope-from <andy@kernel.org>)
-	id 1pAp89-001455-1j;
-	Thu, 29 Dec 2022 11:23:17 +0200
-Date: Thu, 29 Dec 2022 11:23:17 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Wolfram Sang <wsa@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>
-Subject: Re: [PATCH V8 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
- controller
-Message-ID: <Y61chbeq9bo8bi7p@smile.fi.intel.com>
-References: <cover.1671688961.git.zhoubinbin@loongson.cn>
- <9d3e4997519fd9ecebae6fd241148cc22d3fe04f.1671688961.git.zhoubinbin@loongson.cn>
- <Y6tqPenv3NBEl9qD@smile.fi.intel.com>
- <CAMpQs4L-2stVQA43hd2Q-uR8fgekLZJmWzmBZvEDg1+AvT3uSQ@mail.gmail.com>
- <Y61bwY4OpRFixx5r@smile.fi.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5381C2B
+	for <loongarch@lists.linux.dev>; Thu, 29 Dec 2022 09:32:41 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id A20595C022E;
+	Thu, 29 Dec 2022 04:32:40 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 29 Dec 2022 04:32:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm1; t=1672306360; x=1672392760; bh=dQitIKz9Zv
+	Mk4oytHD9JLdnkBzb2SNyrpGTj/IDH57g=; b=V/5Cv1VhfpH5iTFAIPNbee37+7
+	fGRfQGhS2cfvaoU5prjYmzEkJOixzWrHBayYA/LAbI8aGtT5NUL+owTmoaFj3n3B
+	LJoHwRocbJtfuMEyHSx/wyanvvQ13DDzevGclpYyw7qeYNEVViTXINcAj0D9vgsh
+	7pfvXG5yZXolmbAG1xnYy8Ot//4tvH7LNGG1PIQsV13T27gAt8TnwFw1loQa0vbD
+	oPcv9yAU1hrNnDzJ4hHBOxfksO9Tu+rLYKEWw8IH2L2YS5xRATHewhb6Zy3ABb5W
+	Th9HksHzXkv0qeIqDaZbZW8EtN2KMBSeSVjD4popm9MiVXhAr8il3YStrrLA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1672306360; x=1672392760; bh=dQitIKz9ZvMk4oytHD9JLdnkBzb2
+	SNyrpGTj/IDH57g=; b=iDQJHK36vHwWh1wRKl4E4QER7+DQKeClUsyglmglgxkg
+	EljL62jR2iZg18aei0CuCeH832VH529cwGFTM79QLvISe5DOGQCCaE9a5nVoNcdT
+	vRyncomABgBeJ3SsaAqCusYLubSRqSwkWTAzvRqkgUp7P/uDuSrSC8oJAPjjHwnG
+	Zd0Dd9LmkVGzRX1+/eSzkb96N8eNNz/u/R6Fm30nUUZjYR3EyVzLMio8jHJyXxIj
+	iQzshYRj6uSLjiurv3YD4ZUHN8c2WtRhXRw4+fHy6C13RBukmzzaZvqF15WJiEkO
+	SQyTebTGPXArLBywDKO2H+WZBi9s4A/HPkn50Hzk8Q==
+X-ME-Sender: <xms:t16tY_xTXyOBxZzRlwIxGAjI2ettOKadK7A9iMGmJP2qRljOTcBayg>
+    <xme:t16tY3RGUfHsWbJR8Ja2QCw0SFyKp0uowcI1CysTjogMdtCluR5C8uHqieGWGVAVH
+    SG9ndtEeyJsrl3xTZI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrieeggddthecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:t16tY5WPN0eRhQuqkXR1eQBdMOuAo-5nAJJ36hmRXP0lPVn6iv5ojg>
+    <xmx:t16tY5hs5xXyUOxLtmXCD1t9iRdCyPGN1E3t5Pc7uUgssA87nClWZw>
+    <xmx:t16tYxCRfWeK3MQh1NvH9n9BHNHyKE86lXXcTf6N2kZ0kJveeEq2-A>
+    <xmx:uF6tY2yAnrmYZFHKR9Art5c4-CoKhKbO440aSm6r1v3bh4Mq4Q8mmQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id AA077B60086; Thu, 29 Dec 2022 04:32:39 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1185-g841157300a-fm-20221208.002-g84115730
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y61bwY4OpRFixx5r@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Mime-Version: 1.0
+Message-Id: <78b23407-bdd0-4b1b-bf6e-ecd4c00294ab@app.fastmail.com>
+In-Reply-To: <20221222114635.1251934-3-andrzej.hajda@intel.com>
+References: <20221222114635.1251934-1-andrzej.hajda@intel.com>
+ <20221222114635.1251934-3-andrzej.hajda@intel.com>
+Date: Thu, 29 Dec 2022 10:32:19 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andrzej Hajda" <andrzej.hajda@intel.com>, linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-hexagon@vger.kernel.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc: "Rodrigo Vivi" <rodrigo.vivi@intel.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Mark Rutland" <mark.rutland@arm.com>
+Subject: Re: [PATCH 02/19] arch/arc: rename internal name __xchg to __arch_xchg
+Content-Type: text/plain
 
-On Thu, Dec 29, 2022 at 11:20:01AM +0200, Andy Shevchenko wrote:
-> On Thu, Dec 29, 2022 at 03:31:47PM +0800, Binbin Zhou wrote:
-> > On Wed, Dec 28, 2022 at 5:57 AM Andy Shevchenko <andy@kernel.org> wrote:
-> > > On Fri, Dec 23, 2022 at 05:00:51PM +0800, Binbin Zhou wrote:
+On Thu, Dec 22, 2022, at 12:46, Andrzej Hajda wrote:
+> __xchg will be used for non-atomic xchg macro.
+>
+> Signed-off-by: Andrzej Hajda <andrzej.hajda@intel.com>
+> ---
+>  arch/arc/include/asm/cmpxchg.h | 4 ++--
 
-...
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-> > > > +static int ls2x_i2c_xfer_one(struct ls2x_i2c_priv *priv,
-> > > > +                          struct i2c_msg *msg, bool stop)
-> > > > +{
-> > > > +     int ret;
-> > > > +     bool is_read = msg->flags & I2C_M_RD;
-> > > > +
-> > > > +     /* Contains steps to send start condition and address */
-> > > > +     ret = ls2x_i2c_start(priv, msg);
-> > > > +     if (!ret) {
-> > > > +             if (is_read)
-> > > > +                     ret = ls2x_i2c_rx(priv, msg->buf, msg->len);
-> > > > +             else
-> > > > +                     ret = ls2x_i2c_tx(priv, msg->buf, msg->len);
-> > > > +
-> > > > +             if (!ret && stop)
-> > > > +                     ret = ls2x_i2c_stop(priv);
-> > > > +     }
-> > > > +
-> > > > +     if (ret == -ENXIO)
-> > > > +             ls2x_i2c_stop(priv);
-> > > > +     else if (ret < 0)
-> > > > +             ls2x_i2c_init(priv);
-> > > > +
-> > > > +     return ret;
-> > > > +}
-> > >
-> > > Still this code is odd from reader's perspective. It's in particular not clear
-> > > if the stop can be called twice in a row. I recommend to split it to two
-> > 
-> > Sorry,
-> > Actually, I don't quite understand why you keep thinking that the stop
-> > can be called twice in a row.
-> 
-> Because nothing in the code suggests otherwise. You need deeply understand
-> the flow to ensure that it won't. This means that the code is fragile and
-> needs refactoring (even comment, which you can do a least won't help, because
-> changing code in the other parts may break all this and you won't notice it).
-> 
-> > As I said in my last email, the logic here should be:
-> > In the first case, stop is called when the last msg is transmitted successfully;
-> > In the second case, stop is called when there is a NOACK during the
-> > transmission;
-> > In the third case, init is called when other errors occur during the
-> > transmission, such as TIMEOUT.
-> > 
-> > The key pointer is the stop function will only return a TIMEOUT error
-> > or 0 for success, so if the stop function above is failed, the stop
-> > function below will never be called twice.
-> > 
-> > Anyway, I also admit that this part of the code may not be concise and
-> > clear enough, and I have tried the following changes:
-> > 
-> > 1. put the start function into the rx/tx function respectively. As followers:
-> > 
-> > @@ -177,10 +177,16 @@ static int ls2x_i2c_start(struct ls2x_i2c_priv
-> > *priv, struct i2c_msg *msgs)
-> >         return ls2x_i2c_send_byte(priv, LS2X_CR_START | LS2X_CR_WRITE);
-> >  }
-> > 
-> > -static int ls2x_i2c_rx(struct ls2x_i2c_priv *priv, u8 *buf, u16 len)
-> > +static int ls2x_i2c_rx(struct ls2x_i2c_priv *priv, struct i2c_msg *msg)
-> >  {
-> >         int ret;
-> > -       u8 rxdata;
-> > +       u8 rxdata, *buf = msg->buf;
-> > +       u16 len = msg->len;
-> > +
-> > +       /* Contains steps to send start condition and address */
-> > +       ret = ls2x_i2c_start(priv, msg);
-> > +       if (ret)
-> > +               return ret;
-> > 
-> >         while (len--) {
-> >                 ret = ls2x_i2c_xfer_byte(priv,
-> > @@ -195,9 +201,16 @@ static int ls2x_i2c_rx(struct ls2x_i2c_priv
-> > *priv, u8 *buf, u16 len)
-> >         return 0;
-> >  }
-> > 
-> > -static int ls2x_i2c_tx(struct ls2x_i2c_priv *priv, u8 *buf, u16 len)
-> > +static int ls2x_i2c_tx(struct ls2x_i2c_priv *priv, struct i2c_msg *msg)
-> >  {
-> >         int ret;
-> > +       u8 *buf = msg->buf;
-> > +       u16 len = msg->len;
-> > +
-> > +       /* Contains steps to send start condition and address */
-> > +       ret = ls2x_i2c_start(priv, msg);
-> > +       if (ret)
-> > +               return ret;
-> > 
-> >         while (len--) {
-> >                 writeb(*buf++, priv->base + I2C_LS2X_TXR);
-> > 
-> > 2. define the variable 'reinit' in the xfer_one function to mark the
-> > cases where reinit is needed. As follows:
-> > 
-> > static int ls2x_i2c_xfer_one(struct ls2x_i2c_priv *priv,
-> >                              struct i2c_msg *msg, bool stop)
-> > {
-> >         int ret, ret2;
-> >         bool reinit = false;
-> >         bool is_read = msg->flags & I2C_M_RD;
-> > 
-> >         if (is_read)
-> >                 ret = ls2x_i2c_rx(priv, msg);
-> >         else
-> >                 ret = ls2x_i2c_tx(priv, msg);
-> > 
-> >         if (ret == -EAGAIN) /* could not acquire bus. bail out without STOP */
-> >                 return ret;
-> > 
-> >         if (ret == -ETIMEDOUT) {
-> >                 /* Fatal error. Needs reinit. */
-> >                 stop = false;
-> >                 reinit = true;
+for all the arch/*/include/asm/cmpxchg.h changes.
 
-Why do you need to initialize stop here?
-Why not to call reinit here and bailout?
+Since these patches are all the same, and they have identical
+subject and description texts, I would suggest combining them
+into a single patch to keep the series more compact.
 
-> >         }
-> > 
-> >         if (stop) {
-> >                 ret2 = ls2x_i2c_stop(priv);
-> > 
-> >                 if (ret2) {
-> >                         /* Failed to issue STOP. Needs reinit. */
-> >                         reinit = true;
-> >                         ret = ret ?: ret2;
+Having them separate would allow merging the patches through
+the individual architecture maintainer trees, but that in turn
+would mean waiting longer to get it all merged, but in this
+case it seems way easier to go through the asm-generic
+tree.
 
-All the same, try to be less verbose with unneeded variables.
-
-> >                 }
-> >         }
-> > 
-> >         if (reinit)
-> >                 ls2x_i2c_init(priv);
-> > 
-> >         return ret;
-> > }
-> > 
-> > Do you think this is better?
-> 
-> Slightly, but still twisted at the end with the play of error codes. Try to
-> make it even more clear.
-> 
-> > > functions and then do something like
-> > >
-> > > _read_one()
-> > > {
-> > >         ret = start();
-> > >         if (ret)
-> > >                 goto _stop; // Do we really need this?
-> > >
-> > >                 ret = rx();
-> > >                 if (ret)
-> > >                         goto _stop; // Do we need this?
-> > >
-> > >                 /* By setting this call the stop */
-> > >                 if (stop)
-> > >                         ret = -ENXIO;
-> > >
-> > >         out_send_stop:
-> > >                 if (ret == ...)
-> > >                         return _stop();
-> > >                 // I don't like above, so this error checking/setting parts
-> > >                 // also can be rethought and refactored accordingly
-> > >
-> > >                 return ret;
-> > > }
-> > >
-> > >
-> > >         if (is_read)
-> > >                 ret = _read_one();
-> > >         else
-> > >                 ret = _write_one();
-> > >
-> > >         if (ret)
-> > >                 _init();
-> > >
-> > >         return ret;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+     Arnd
