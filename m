@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C6B7136F
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4BB71376
 	for <loongarch@lists.linux.dev>; Thu, 29 Dec 2022 06:15:44 +0000 (UTC)
 Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8AxhfCPMK1jHTMJAA--.20386S3;
+	by gateway (Coremail) with SMTP id _____8AxSumPMK1jIzMJAA--.17132S3;
 	Thu, 29 Dec 2022 14:15:43 +0800 (CST)
 Received: from localhost.localdomain (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxrb6OMK1jIiYPAA--.24618S2;
-	Thu, 29 Dec 2022 14:15:42 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxrb6OMK1jIiYPAA--.24618S3;
+	Thu, 29 Dec 2022 14:15:43 +0800 (CST)
 From: Jinyang He <hejinyang@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
@@ -16,10 +16,12 @@ Cc: loongarch@lists.linux.dev,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2 0/5] LoongArch: Some fix and new features for unwinders
-Date: Thu, 29 Dec 2022 14:15:11 +0800
-Message-Id: <20221229061516.31671-1-hejinyang@loongson.cn>
+Subject: [PATCH v2 1/6] LoongArch: Get frame info in unwind_start when regs is not supported
+Date: Thu, 29 Dec 2022 14:15:12 +0800
+Message-Id: <20221229061516.31671-2-hejinyang@loongson.cn>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221229061516.31671-1-hejinyang@loongson.cn>
+References: <20221229061516.31671-1-hejinyang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -27,56 +29,112 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxrb6OMK1jIiYPAA--.24618S2
+X-CM-TRANSID:AQAAf8Dxrb6OMK1jIiYPAA--.24618S3
 X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrZry5Xw4fZw4rXF4fuF1Utrb_yoWkKwc_WF
-	yxCa4UGrWkWas8J3WDtrWfJw1UXa10qF90kas8Zr4xAFn8AF13JrZxXw13Z34qgr4UWrs8
-	J3y0grnY9w1j9jkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	g7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
-	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2
-	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
-	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s02
-	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
-	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvE
-	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
-	U8q2NtUUUUU==
+X-Coremail-Antispam: 1Uk129KBjvJXoWxCr1rKFykXr47urWrCrWktFb_yoW5Zw13p3
+	9xCrs3Wr45uF9Fqr9rtw1kZr95Grn7uw12gF9rJ34rC3W7XFyxuwnYv34DZan0y3yvgw10
+	qFn5KrW5Ka1UJaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY
+	6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
+	AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
+	vjxU4AhLUUUUU
 
-Make the stacktrace more effective and the codes more clear.
+At unwind_start, it is better to try to get its frame info even we not
+support regs rather than get them outside. So that we can simply use
+unwind_{start, next_frame, done} outside.
 
-v2:
-  Directly use unwinder_guess when regiser unwinder.
-  Drop unwind type.
-  Drop patch which add raw_show_trace parameter.
-  Handle task == NULL case in unwind_start.
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+---
+ arch/loongarch/kernel/process.c         | 12 +++---------
+ arch/loongarch/kernel/unwind_guess.c    |  6 ++++++
+ arch/loongarch/kernel/unwind_prologue.c | 16 +++++++++++++---
+ 3 files changed, 22 insertions(+), 12 deletions(-)
 
-  Thanks for Qing and Huacai.
-
-Jinyang He (5):
-  LoongArch: Get frame info in unwind_start when regs is not supported
-  LoongArch: Use correct sp value to get graph addr in unwinder guess
-  LoongArch: Adjust PC value when unwind next frame in prologue unwinder
-  LoongArch: Strip guess_unwinder out from prologue_unwinder
-  LoongArch: Add generic ex-handler unwind in prologue unwinder
-
- arch/loongarch/include/asm/ftrace.h     |   2 -
- arch/loongarch/include/asm/unwind.h     |  37 +++-
- arch/loongarch/kernel/Makefile          |   3 +-
- arch/loongarch/kernel/genex.S           |   3 +
- arch/loongarch/kernel/process.c         |  12 +-
- arch/loongarch/kernel/traps.c           |   3 -
- arch/loongarch/kernel/unwind.c          |  52 ++++++
- arch/loongarch/kernel/unwind_guess.c    |  45 ++---
- arch/loongarch/kernel/unwind_prologue.c | 235 ++++++++++++++----------
- arch/loongarch/mm/tlb.c                 |   2 +-
- 10 files changed, 242 insertions(+), 152 deletions(-)
- create mode 100644 arch/loongarch/kernel/unwind.c
-
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index 502b8b950057..6ef45174ad35 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -197,20 +197,14 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 
+ unsigned long __get_wchan(struct task_struct *task)
+ {
+-	unsigned long pc;
++	unsigned long pc = 0;
+ 	struct unwind_state state;
+ 
+ 	if (!try_get_task_stack(task))
+ 		return 0;
+ 
+-	unwind_start(&state, task, NULL);
+-	state.sp = thread_saved_fp(task);
+-	get_stack_info(state.sp, state.task, &state.stack_info);
+-	state.pc = thread_saved_ra(task);
+-#ifdef CONFIG_UNWINDER_PROLOGUE
+-	state.type = UNWINDER_PROLOGUE;
+-#endif
+-	for (; !unwind_done(&state); unwind_next_frame(&state)) {
++	for (unwind_start(&state, task, NULL); !unwind_done(&state);
++	     unwind_next_frame(&state)) {
+ 		pc = unwind_get_return_address(&state);
+ 		if (!pc)
+ 			break;
+diff --git a/arch/loongarch/kernel/unwind_guess.c b/arch/loongarch/kernel/unwind_guess.c
+index e2d2e4f3001f..a1bc7c852000 100644
+--- a/arch/loongarch/kernel/unwind_guess.c
++++ b/arch/loongarch/kernel/unwind_guess.c
+@@ -26,6 +26,12 @@ void unwind_start(struct unwind_state *state, struct task_struct *task,
+ 	if (regs) {
+ 		state->sp = regs->regs[3];
+ 		state->pc = regs->csr_era;
++	} else if (task == current || task == NULL) {
++		state->sp = (unsigned long)__builtin_frame_address(0);
++		state->pc = (unsigned long)__builtin_return_address(0);
++	} else {
++		state->sp = thread_saved_fp(task);
++		state->pc = thread_saved_ra(task);
+ 	}
+ 
+ 	state->task = task;
+diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
+index 0f8d1451ebb8..b8b830b69a48 100644
+--- a/arch/loongarch/kernel/unwind_prologue.c
++++ b/arch/loongarch/kernel/unwind_prologue.c
+@@ -141,12 +141,22 @@ void unwind_start(struct unwind_state *state, struct task_struct *task,
+ 		    struct pt_regs *regs)
+ {
+ 	memset(state, 0, sizeof(*state));
++	state->type = UNWINDER_PROLOGUE;
+ 
+-	if (regs &&  __kernel_text_address(regs->csr_era)) {
+-		state->pc = regs->csr_era;
++	if (regs) {
+ 		state->sp = regs->regs[3];
++		state->pc = regs->csr_era;
+ 		state->ra = regs->regs[1];
+-		state->type = UNWINDER_PROLOGUE;
++		if (!__kernel_text_address(state->pc))
++			state->type = UNWINDER_GUESS;
++	} else if (task == current || task == NULL) {
++		state->sp = (unsigned long)__builtin_frame_address(0);
++		state->pc = (unsigned long)__builtin_return_address(0);
++		state->ra = 0;
++	} else {
++		state->sp = thread_saved_fp(task);
++		state->pc = thread_saved_ra(task);
++		state->ra = 0;
+ 	}
+ 
+ 	state->task = task;
 -- 
 2.34.3
 
