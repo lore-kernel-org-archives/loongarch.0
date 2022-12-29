@@ -1,27 +1,27 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069E41363
-	for <loongarch@lists.linux.dev>; Thu, 29 Dec 2022 05:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92C0111F
+	for <loongarch@lists.linux.dev>; Thu, 29 Dec 2022 05:33:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1672292008; bh=krtAGZB0EOSoduIoYfWRR1VuMzfjS6v+BCHOM8cwggo=;
+	t=1672292010; bh=IJvTzfzkObDNE7L4vM15w5bV8a1yXFalby7V2RDEruw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A2MX6Nu/Vaz7JNdW9FkEFUi7YtbWPdc+npWPMyHBLOU1qLH0n0XD6v7FkF5vQMDow
-	 z301E5v4bZaB2kV5I0+f/slooH7Wm6WAY4nRwS+hNWCzkp9EYv6hIgpHfMMRUpU/tU
-	 f+5aG0oxWwGzKP7YVQ9q4d6g9AZ5GUZRS7DJZCoI=
+	b=v+YIAQUq875Pr/csNHwYxR5N51k3XJpRM0jJuvBr1AAd9IS8L6Jam+6rWwAeooC6G
+	 F6H5rcW1Raq9MZ5RuUGmm8Tx1r0c0503mBzIk7Z4Jh82RHsW4XGjm4++GRDgXLWkHo
+	 RDCDlbwKPBhA4f+3vR/b25Jq3qLGELOV+GcJQyBA=
 Received: from ld50.lan (unknown [101.88.134.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id C84BD6019D;
-	Thu, 29 Dec 2022 13:33:28 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id A40C46019E;
+	Thu, 29 Dec 2022 13:33:30 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v2 03/11] LoongArch: Print GPRs with ABI names when showing registers
-Date: Thu, 29 Dec 2022 13:32:58 +0800
-Message-Id: <20221229053306.3285457-4-kernel@xen0n.name>
+Subject: [PATCH v2 04/11] LoongArch: Print symbol info for PC and $ra only for kernel-mode contexts
+Date: Thu, 29 Dec 2022 13:32:59 +0800
+Message-Id: <20221229053306.3285457-5-kernel@xen0n.name>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20221229053306.3285457-1-kernel@xen0n.name>
 References: <20221229053306.3285457-1-kernel@xen0n.name>
@@ -35,66 +35,41 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Print 3 registers per line to fit the entire line within 75 columns even
-with timestamp prefixed to each line, to ease future copy-pastes for all.
+Otherwise the addresses wouldn't make sense at all. And show "pc"
+instead of "era" for a tiny bit of user friendliness.
 
-And show PC (CSR.ERA) in place of $zero, like what arch/riscv does.
+While at it, align the "map keys" to maintain right-alignment with the
+"estat:" line too.
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/kernel/traps.c | 36 ++++++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 13 deletions(-)
+ arch/loongarch/kernel/traps.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index ee5454bdcc74..d05a3e14279b 100644
+index d05a3e14279b..f0720b219006 100644
 --- a/arch/loongarch/kernel/traps.c
 +++ b/arch/loongarch/kernel/traps.c
-@@ -161,22 +161,32 @@ static void __show_regs(const struct pt_regs *regs)
- 	const int field = 2 * sizeof(unsigned long);
- 	unsigned int excsubcode;
- 	unsigned int exccode;
--	int i;
- 
- 	show_regs_print_info(KERN_DEFAULT);
+@@ -188,14 +188,12 @@ static void __show_regs(const struct pt_regs *regs)
+ 	pr_cont(" s7 %0*lx s8 %0*lx\n",
+ 		field, regs->regs[30], field, regs->regs[31]);
  
 -	/*
--	 * Saved main processor registers
+-	 * Saved csr registers
 -	 */
--	for (i = 0; i < 32; ) {
--		if ((i % 4) == 0)
--			printk("$%2d   :", i);
--		pr_cont(" %0*lx", field, regs->regs[i]);
--
--		i++;
--		if ((i % 4) == 0)
--			pr_cont("\n");
--	}
-+	/* Print PC and GPRs, 3 per row to fit output in 75 columns */
-+	pr_cont(" pc %0*lx ra %0*lx tp %0*lx\n",
-+		field, regs->csr_era, field, regs->regs[1], field, regs->regs[2]);
-+	pr_cont(" sp %0*lx a0 %0*lx a1 %0*lx\n",
-+		field, regs->regs[3], field, regs->regs[4], field, regs->regs[5]);
-+	pr_cont(" a2 %0*lx a3 %0*lx a4 %0*lx\n",
-+		field, regs->regs[6], field, regs->regs[7], field, regs->regs[8]);
-+	pr_cont(" a5 %0*lx a6 %0*lx a7 %0*lx\n",
-+		field, regs->regs[9], field, regs->regs[10], field, regs->regs[11]);
-+	pr_cont(" t0 %0*lx t1 %0*lx t2 %0*lx\n",
-+		field, regs->regs[12], field, regs->regs[13], field, regs->regs[14]);
-+	pr_cont(" t3 %0*lx t4 %0*lx t5 %0*lx\n",
-+		field, regs->regs[15], field, regs->regs[16], field, regs->regs[17]);
-+	pr_cont(" t6 %0*lx t7 %0*lx t8 %0*lx\n",
-+		field, regs->regs[18], field, regs->regs[19], field, regs->regs[20]);
-+	pr_cont("r21 %0*lx s9 %0*lx s0 %0*lx\n",
-+		field, regs->regs[21], field, regs->regs[22], field, regs->regs[23]);
-+	pr_cont(" s1 %0*lx s2 %0*lx s3 %0*lx\n",
-+		field, regs->regs[24], field, regs->regs[25], field, regs->regs[26]);
-+	pr_cont(" s4 %0*lx s5 %0*lx s6 %0*lx\n",
-+		field, regs->regs[27], field, regs->regs[28], field, regs->regs[29]);
-+	pr_cont(" s7 %0*lx s8 %0*lx\n",
-+		field, regs->regs[30], field, regs->regs[31]);
+-	printk("era   : %0*lx %pS\n", field, regs->csr_era,
+-	       (void *) regs->csr_era);
+-	printk("ra    : %0*lx %pS\n", field, regs->regs[1],
+-	       (void *) regs->regs[1]);
++	if (!user_mode(regs)) {
++		pr_cont("   pc: %0*lx %pS\n", field, regs->csr_era, (void *) regs->csr_era);
++		pr_cont("   ra: %0*lx %pS\n", field, regs->regs[1], (void *) regs->regs[1]);
++	}
  
- 	/*
- 	 * Saved csr registers
++	/* Print important CSRs */
+ 	printk("CSR crmd: %08lx	", regs->csr_crmd);
+ 	printk("CSR prmd: %08lx	", regs->csr_prmd);
+ 	printk("CSR euen: %08lx	", regs->csr_euen);
 -- 
 2.38.1
 
