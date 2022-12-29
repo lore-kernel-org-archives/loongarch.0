@@ -1,315 +1,253 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10D861386
-	for <loongarch@lists.linux.dev>; Thu, 29 Dec 2022 06:54:43 +0000 (UTC)
-Received: from loongson.cn (unknown [183.166.176.200])
-	by gateway (Coremail) with SMTP id _____8AxTeuyOa1jgjQJAA--.20530S3;
-	Thu, 29 Dec 2022 14:54:42 +0800 (CST)
-Received: from [192.168.31.101] (unknown [183.166.176.200])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxY+WvOa1jnysPAA--.51080S3;
-	Thu, 29 Dec 2022 14:54:40 +0800 (CST)
-Message-ID: <7a028a4d-71f0-7064-cc1c-0ca50749ef2e@loongson.cn>
-Date: Thu, 29 Dec 2022 14:54:39 +0800
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE886139B
+	for <loongarch@lists.linux.dev>; Thu, 29 Dec 2022 07:32:03 +0000 (UTC)
+Received: by mail-ej1-f46.google.com with SMTP id ud5so43268669ejc.4
+        for <loongarch@lists.linux.dev>; Wed, 28 Dec 2022 23:32:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tFzVpEFAc7K+Vt+oAjXGPFPLJF61ACW2fyTFNlsKf0w=;
+        b=GwKY9Vy9sER0WOm+SjW90uwpKfh5LPZ+ULB2fosmyTL9xnj6xJDYo3Zdhik4NDjwZ5
+         +nKwD0el2fc/0dcQPjQIlzhLK9Ey9NUubJ9RqoKpsfzukNtS3q0uV3diCUCBydHqqcA6
+         J4Uq2kpaz52U2YzMemOrFSWxZiiKNJoMZaaAH2lxtieozQ1FF8VqnPNsIEEwBnxHjcZy
+         zNTybIwDWHA5UpY/yZZOGwnN0vD2i0olP/kNShfS67q1O3n8eYRuRyZzroN84lXEqS1U
+         iDHCgqgNoGizsLXwJ+Bv8hkq6qvFvu9N+pihET0xOpZYXTi3SgPqn2B1251dUO0xR1nh
+         1W+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tFzVpEFAc7K+Vt+oAjXGPFPLJF61ACW2fyTFNlsKf0w=;
+        b=pg9R7uHRXKMUvpWMRVTulUDw0Q+cKlC8hJ78Tm81AHlHLotU4Ic4pvLO6ffFt0lkHM
+         QCtEiw3W77eF7VNBx0uG56ERuRcjwoKxpHM2dJFWz33UZADIn/mSzoxQA4pEq+aHFxcv
+         cvE4etu6s6KDFcRTsFrNRPPEHDJy5TjruJbjzpRVZyWmsfzIVzhlX/voVo3ZSnZPnP0L
+         Ry8oeiRvjBPJe94aAENKHVviuoqkDG0vx8Jj93w6qR22ySwZRJRnSHXrhVhPhiJ/9+Zm
+         LMmabkI0t/pQjw5U+0mlw/91r05OqJhtVWvuxgin1YFg+MTqxLKhO5BXzlyRf2h5w0B2
+         kKSQ==
+X-Gm-Message-State: AFqh2krDmkRANrtnRf3miqp0tCPV/fS+R3CmP4rNt71kNdJQpf2oA9vo
+	WWF+H6ulG6ccspRmmyAQAkg7z/P3lOjGNOmTk2c=
+X-Google-Smtp-Source: AMrXdXswgwmT56brOvP2/gqW8vL3NYl6Aj4vIsHtgapQzQrY8gMW/G9Kxo/Q5qIUOjqUMjvRfcvP1FpZEy0yBdsYdT0=
+X-Received: by 2002:a17:907:a510:b0:7c0:e060:e819 with SMTP id
+ vr16-20020a170907a51000b007c0e060e819mr3590920ejc.763.1672299121891; Wed, 28
+ Dec 2022 23:32:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] LoongArch: Fix irq enable in exception handlers
-Content-Language: en-US
-To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Tiezhu Yang <yangtiezhu@loongson.cn>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20221221074238.6699-1-hejinyang@loongson.cn>
- <CAAhV-H6VX=d1oymY0rh-mwOPMuBsYd7C9RzQat8BmmnrJ7apng@mail.gmail.com>
- <8eaea09e-67b0-5e51-4632-2c31a4c56a3e@loongson.cn>
- <CAAhV-H7maW1YWhfvCzYVix=aCMMFbx0KkGodaBjka4ThunBO5Q@mail.gmail.com>
- <1c578efd-ae8a-2d80-e505-a09b1a2f7eaa@loongson.cn>
- <b267cab1-3df4-6263-9c83-0061f20dd4a4@loongson.cn>
- <2364400d-bb1e-cbe2-8a65-adbe87186938@loongson.cn>
-From: Qi Hu <huqi@loongson.cn>
-In-Reply-To: <2364400d-bb1e-cbe2-8a65-adbe87186938@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxY+WvOa1jnysPAA--.51080S3
-X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQAPCWOsMeoKWQABsB
-X-Coremail-Antispam: 1Uk129KBjvJXoW3Gr17AFy8KryDJFWkXr43ZFb_yoWDXr1rpr
-	1kAF1UJryUJr18Xr1Utr1jyryUtr1Ut3WUXr1UJFy8Jr4qyr1qqr18Xr1qgr1UAr48Jr1U
-	Xr15tr129F1UJF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bakYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17
-	MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
-	AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
-	cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
-	80aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIF
-	yTuYvjxU25EfUUUUU
+References: <cover.1671688961.git.zhoubinbin@loongson.cn> <9d3e4997519fd9ecebae6fd241148cc22d3fe04f.1671688961.git.zhoubinbin@loongson.cn>
+ <Y6tqPenv3NBEl9qD@smile.fi.intel.com>
+In-Reply-To: <Y6tqPenv3NBEl9qD@smile.fi.intel.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Thu, 29 Dec 2022 15:31:47 +0800
+Message-ID: <CAMpQs4L-2stVQA43hd2Q-uR8fgekLZJmWzmBZvEDg1+AvT3uSQ@mail.gmail.com>
+Subject: Re: [PATCH V8 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C controller
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Wolfram Sang <wsa@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, 
+	loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	Huacai Chen <chenhuacai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Jianmin Lv <lvjianmin@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+
+Hi Andy:
+
+Sorry for my late reply.
+
+On Wed, Dec 28, 2022 at 5:57 AM Andy Shevchenko <andy@kernel.org> wrote:
+>
+> On Fri, Dec 23, 2022 at 05:00:51PM +0800, Binbin Zhou wrote:
+> > This I2C module is integrated into the Loongson-2K SoCs and Loongson
+> > LS7A bridge chip.
+>
+> ...
+>
+> > +static int ls2x_i2c_xfer_one(struct ls2x_i2c_priv *priv,
+> > +                          struct i2c_msg *msg, bool stop)
+> > +{
+> > +     int ret;
+> > +     bool is_read = msg->flags & I2C_M_RD;
+> > +
+> > +     /* Contains steps to send start condition and address */
+> > +     ret = ls2x_i2c_start(priv, msg);
+> > +     if (!ret) {
+> > +             if (is_read)
+> > +                     ret = ls2x_i2c_rx(priv, msg->buf, msg->len);
+> > +             else
+> > +                     ret = ls2x_i2c_tx(priv, msg->buf, msg->len);
+> > +
+> > +             if (!ret && stop)
+> > +                     ret = ls2x_i2c_stop(priv);
+> > +     }
+> > +
+> > +     if (ret == -ENXIO)
+> > +             ls2x_i2c_stop(priv);
+> > +     else if (ret < 0)
+> > +             ls2x_i2c_init(priv);
+> > +
+> > +     return ret;
+> > +}
+>
+> Still this code is odd from reader's perspective. It's in particular not clear
+> if the stop can be called twice in a row. I recommend to split it to two
+
+Sorry,
+Actually, I don't quite understand why you keep thinking that the stop
+can be called twice in a row.
+
+As I said in my last email, the logic here should be:
+In the first case, stop is called when the last msg is transmitted successfully;
+In the second case, stop is called when there is a NOACK during the
+transmission;
+In the third case, init is called when other errors occur during the
+transmission, such as TIMEOUT.
+
+The key pointer is the stop function will only return a TIMEOUT error
+or 0 for success, so if the stop function above is failed, the stop
+function below will never be called twice.
+
+Anyway, I also admit that this part of the code may not be concise and
+clear enough, and I have tried the following changes:
+
+1. put the start function into the rx/tx function respectively. As followers:
+
+@@ -177,10 +177,16 @@ static int ls2x_i2c_start(struct ls2x_i2c_priv
+*priv, struct i2c_msg *msgs)
+        return ls2x_i2c_send_byte(priv, LS2X_CR_START | LS2X_CR_WRITE);
+ }
+
+-static int ls2x_i2c_rx(struct ls2x_i2c_priv *priv, u8 *buf, u16 len)
++static int ls2x_i2c_rx(struct ls2x_i2c_priv *priv, struct i2c_msg *msg)
+ {
+        int ret;
+-       u8 rxdata;
++       u8 rxdata, *buf = msg->buf;
++       u16 len = msg->len;
++
++       /* Contains steps to send start condition and address */
++       ret = ls2x_i2c_start(priv, msg);
++       if (ret)
++               return ret;
+
+        while (len--) {
+                ret = ls2x_i2c_xfer_byte(priv,
+@@ -195,9 +201,16 @@ static int ls2x_i2c_rx(struct ls2x_i2c_priv
+*priv, u8 *buf, u16 len)
+        return 0;
+ }
+
+-static int ls2x_i2c_tx(struct ls2x_i2c_priv *priv, u8 *buf, u16 len)
++static int ls2x_i2c_tx(struct ls2x_i2c_priv *priv, struct i2c_msg *msg)
+ {
+        int ret;
++       u8 *buf = msg->buf;
++       u16 len = msg->len;
++
++       /* Contains steps to send start condition and address */
++       ret = ls2x_i2c_start(priv, msg);
++       if (ret)
++               return ret;
+
+        while (len--) {
+                writeb(*buf++, priv->base + I2C_LS2X_TXR);
+
+2. define the variable 'reinit' in the xfer_one function to mark the
+cases where reinit is needed. As follows:
+
+static int ls2x_i2c_xfer_one(struct ls2x_i2c_priv *priv,
+                             struct i2c_msg *msg, bool stop)
+{
+        int ret, ret2;
+        bool reinit = false;
+        bool is_read = msg->flags & I2C_M_RD;
+
+        if (is_read)
+                ret = ls2x_i2c_rx(priv, msg);
+        else
+                ret = ls2x_i2c_tx(priv, msg);
+
+        if (ret == -EAGAIN) /* could not acquire bus. bail out without STOP */
+                return ret;
+
+        if (ret == -ETIMEDOUT) {
+                /* Fatal error. Needs reinit. */
+                stop = false;
+                reinit = true;
+        }
+
+        if (stop) {
+                ret2 = ls2x_i2c_stop(priv);
+
+                if (ret2) {
+                        /* Failed to issue STOP. Needs reinit. */
+                        reinit = true;
+                        ret = ret ?: ret2;
+                }
+        }
+
+        if (reinit)
+                ls2x_i2c_init(priv);
+
+        return ret;
+}
 
 
-On 2022/12/29 14:13, Jinyang He wrote:
-> On 2022-12-29 00:51, Qi Hu wrote:
->
->>
->> On 2022/12/27 18:10, Jinyang He wrote:
->>> On 2022-12-27 17:52, Huacai Chen wrote:
->>>
->>>> On Tue, Dec 27, 2022 at 5:30 PM Jinyang He <hejinyang@loongson.cn> 
->>>> wrote:
->>>>>
->>>>> On 2022-12-27 15:37, Huacai Chen wrote:
->>>>>> Hi, Jinyang,
->>>>>>
->>>>>> Move die_if_kernel to irq disabled context to solve what?
->>>>> For more strict logical. If the code flow go to die in 
->>>>> die_if_kernel(),
->>>>> its interrupt state is enable, that means it may cause schedule.
->>>>> So I think it is better to call die_if_kernel() firstly.
->>>> die_if_kernel is called with irq enabled in old kernels for several
->>>> years, and has no problems.
->>>
->>>
->>> I think because it never call die() in die_if_kernel(). What I do
->>> emphasize is that there needs to be more strict logic here than
->>> it worked well in the past. I bet if die_if_kernel() was removed,
->>> it will still work well in the future.
->>>
->>>
->>>>
->>>>>
->>>>>>    And LBT is
->>>>>> surely allowed to be triggered in kernel context.
->>>>> I'm not familar with lbt, I just not see any lbt codes in kernel. 
->>>>> Plz,
->>>>> how lbt exception triggered, and how kernel trigger lbt exception?
->>>> You can ask Huqi for more details, and this was discussed publicly 
->>>> last week.
->>>
->>> To: Qi Hu
->>>
->>>
->>> Hi,
->>>
->>>
->>> We really need some help. Can you give us some ideas?
->>>
->>>
->>> Thanks,
->>>
->>> Jinyang
->>>
->> Huacai is correct. The LBT disable exception (BTD) can be triggered 
->> in kernel context.
->>
->> If the CSR.ENEU.BTE == 0 [^1], the LBT instructions (these [^2] will 
->> be used in the kernel) will trigger the exception.
->>
->> Unfortunately, when you want to do some fpu_{save, restore}, you need 
->> to use some LBT instructions [^3] [^4]. So if FPD is triggered, LBT 
->> might still not be enabled, and the 'do_lbt' will be called in the 
->> kernel context.
->>
->> Hope the information can help. Thanks.
->>
->>
->> [1] 
->> https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#extended-component-unit-enable
->>
->> [2] 
->> https://github.com/loongson/linux/pull/4/files#diff-381d03cf86e2796d280e2fc82c005409d5e44b4bbbf90dd0dc17f5f0fa5553f1R140-R184
->>
->> [3] 
->> https://github.com/loongson/linux/pull/4/files#diff-381d03cf86e2796d280e2fc82c005409d5e44b4bbbf90dd0dc17f5f0fa5553f1R218-R230
->>
->> [4] 
->> https://github.com/loongson/linux/pull/4/files#diff-381d03cf86e2796d280e2fc82c005409d5e44b4bbbf90dd0dc17f5f0fa5553f1R236-R263
->>
->>
-> Hi,
->
->
-> That's helpful. Thanks!
->
->
-> But I still wonder if SXD or ASXD have the same possibility of being 
-> triggered in the kernel mode by sc_save_{lsx, lasx} or other place. Do 
-> we need remove these die_if_kernel codes in do_lasx() and do_lsx()?
->
->
-> Jinyang
->
-Hi Jinyang,
-
-I think only BTD has this tricky situation, because there is some 
-overlap between FPD/SXD/ASXD and BTD.
-
-So, in my view, SXD or ASXD will not be triggered in kernel mode.
+Do you think this is better?
 
 Thanks.
 
+Binbin
 
-Qi
 
+
+> functions and then do something like
 >
->> Qi
->>
->>>
->>>> Huacai
->>>>>
->>>>> Thanks,
->>>>>
->>>>> Jinyang
->>>>>
->>>>>
->>>>>> Huacai
->>>>>>
->>>>>> On Wed, Dec 21, 2022 at 3:43 PM Jinyang He 
->>>>>> <hejinyang@loongson.cn> wrote:
->>>>>>> The interrupt state can be got by regs->csr_prmd. Once previous
->>>>>>> interrupt state is disable, we shouldn't enable interrupt if we
->>>>>>> triggered exception which can be triggered in kernel mode. So
->>>>>>> conditionally enable interrupt. For those do_\exception which
->>>>>>> can not triggered in kernel mode but need enable interrupt, call
->>>>>>> die_if_kernel() firstly. And for do_lsx, do_lasx and do_lbt cannot
->>>>>>> triggered in kernel mode, too.
->>>>>>>
->>>>>>> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
->>>>>>> ---
->>>>>>>    arch/loongarch/kernel/traps.c | 19 ++++++++++---------
->>>>>>>    1 file changed, 10 insertions(+), 9 deletions(-)
->>>>>>>
->>>>>>> diff --git a/arch/loongarch/kernel/traps.c 
->>>>>>> b/arch/loongarch/kernel/traps.c
->>>>>>> index 1ea14f6c18d3..3ac7b32d1e15 100644
->>>>>>> --- a/arch/loongarch/kernel/traps.c
->>>>>>> +++ b/arch/loongarch/kernel/traps.c
->>>>>>> @@ -340,9 +340,9 @@ asmlinkage void noinstr do_fpe(struct 
->>>>>>> pt_regs *regs, unsigned long fcsr)
->>>>>>>
->>>>>>>           /* Clear FCSR.Cause before enabling interrupts */
->>>>>>>           write_fcsr(LOONGARCH_FCSR0, fcsr & ~mask_fcsr_x(fcsr));
->>>>>>> -       local_irq_enable();
->>>>>>>
->>>>>>>           die_if_kernel("FP exception in kernel code", regs);
->>>>>>> +       local_irq_enable();
->>>>>>>
->>>>>>>           sig = SIGFPE;
->>>>>>>           fault_addr = (void __user *) regs->csr_era;
->>>>>>> @@ -432,7 +432,8 @@ asmlinkage void noinstr do_bp(struct pt_regs 
->>>>>>> *regs)
->>>>>>>           unsigned long era = exception_era(regs);
->>>>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>>>
->>>>>>> -       local_irq_enable();
->>>>>>> +       if (regs->csr_prmd & CSR_PRMD_PIE)
->>>>>>> +               local_irq_enable();
->>>>>>>           current->thread.trap_nr = read_csr_excode();
->>>>>>>           if (__get_inst(&opcode, (u32 *)era, user))
->>>>>>>                   goto out_sigsegv;
->>>>>>> @@ -514,7 +515,8 @@ asmlinkage void noinstr do_ri(struct pt_regs 
->>>>>>> *regs)
->>>>>>>           unsigned int __user *era = (unsigned int __user 
->>>>>>> *)exception_era(regs);
->>>>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>>>
->>>>>>> -       local_irq_enable();
->>>>>>> +       if (regs->csr_prmd & CSR_PRMD_PIE)
->>>>>>> +               local_irq_enable();
->>>>>>>           current->thread.trap_nr = read_csr_excode();
->>>>>>>
->>>>>>>           if (notify_die(DIE_RI, "RI Fault", regs, 0, 
->>>>>>> current->thread.trap_nr,
->>>>>>> @@ -606,8 +608,8 @@ asmlinkage void noinstr do_fpu(struct 
->>>>>>> pt_regs *regs)
->>>>>>>    {
->>>>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>>>
->>>>>>> -       local_irq_enable();
->>>>>>>           die_if_kernel("do_fpu invoked from kernel context!", 
->>>>>>> regs);
->>>>>>> +       local_irq_enable();
->>>>>>>           BUG_ON(is_lsx_enabled());
->>>>>>>           BUG_ON(is_lasx_enabled());
->>>>>>>
->>>>>>> @@ -623,13 +625,13 @@ asmlinkage void noinstr do_lsx(struct 
->>>>>>> pt_regs *regs)
->>>>>>>    {
->>>>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>>>
->>>>>>> +       die_if_kernel("do_lsx invoked from kernel context!", regs);
->>>>>>>           local_irq_enable();
->>>>>>>           if (!cpu_has_lsx) {
->>>>>>>                   force_sig(SIGILL);
->>>>>>>                   goto out;
->>>>>>>           }
->>>>>>>
->>>>>>> -       die_if_kernel("do_lsx invoked from kernel context!", regs);
->>>>>>>           BUG_ON(is_lasx_enabled());
->>>>>>>
->>>>>>>           preempt_disable();
->>>>>>> @@ -645,14 +647,13 @@ asmlinkage void noinstr do_lasx(struct 
->>>>>>> pt_regs *regs)
->>>>>>>    {
->>>>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>>>
->>>>>>> +       die_if_kernel("do_lasx invoked from kernel context!", 
->>>>>>> regs);
->>>>>>>           local_irq_enable();
->>>>>>>           if (!cpu_has_lasx) {
->>>>>>>                   force_sig(SIGILL);
->>>>>>>                   goto out;
->>>>>>>           }
->>>>>>>
->>>>>>> -       die_if_kernel("do_lasx invoked from kernel context!", 
->>>>>>> regs);
->>>>>>> -
->>>>>>>           preempt_disable();
->>>>>>>           init_restore_lasx();
->>>>>>>           preempt_enable();
->>>>>>> @@ -666,6 +667,7 @@ asmlinkage void noinstr do_lbt(struct 
->>>>>>> pt_regs *regs)
->>>>>>>    {
->>>>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>>>
->>>>>>> +       die_if_kernel("do_lbt invoked from kernel context!", regs);
->>>>>>>           local_irq_enable();
->>>>>>>           force_sig(SIGILL);
->>>>>>>           local_irq_disable();
->>>>>>> @@ -677,7 +679,6 @@ asmlinkage void noinstr do_reserved(struct 
->>>>>>> pt_regs *regs)
->>>>>>>    {
->>>>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>>>
->>>>>>> -       local_irq_enable();
->>>>>>>           /*
->>>>>>>            * Game over - no way to handle this if it ever 
->>>>>>> occurs. Most probably
->>>>>>>            * caused by a fatal error after another 
->>>>>>> hardware/software error.
->>>>>>> @@ -685,8 +686,8 @@ asmlinkage void noinstr do_reserved(struct 
->>>>>>> pt_regs *regs)
->>>>>>>           pr_err("Caught reserved exception %u on pid:%d [%s] - 
->>>>>>> should not happen\n",
->>>>>>>                   read_csr_excode(), current->pid, current->comm);
->>>>>>>           die_if_kernel("do_reserved exception", regs);
->>>>>>> +       local_irq_enable();
->>>>>>>           force_sig(SIGUNUSED);
->>>>>>> -
->>>>>>>           local_irq_disable();
->>>>>>>
->>>>>>>           irqentry_exit(regs, state);
->>>>>>> -- 
->>>>>>> 2.34.3
->>>>>>>
->>>>>
->>>
->>
+> _read_one()
+> {
+>         ret = start();
+>         if (ret)
+>                 goto _stop; // Do we really need this?
+>
+>                 ret = rx();
+>                 if (ret)
+>                         goto _stop; // Do we need this?
+>
+>                 /* By setting this call the stop */
+>                 if (stop)
+>                         ret = -ENXIO;
+>
+>         out_send_stop:
+>                 if (ret == ...)
+>                         return _stop();
+>                 // I don't like above, so this error checking/setting parts
+>                 // also can be rethought and refactored accordingly
+>
+>                 return ret;
+> }
+>
+>
+>         if (is_read)
+>                 ret = _read_one();
+>         else
+>                 ret = _write_one();
+>
+>         if (ret)
+>                 _init();
+>
+>         return ret;
+>
 >
 
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
+>
