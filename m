@@ -1,27 +1,27 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A238A111F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069E41363
 	for <loongarch@lists.linux.dev>; Thu, 29 Dec 2022 05:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1672292007; bh=I/GQiQgzEOF9t9culG3TklJ4Phq1cID/SRIOlBJDW1I=;
+	t=1672292008; bh=krtAGZB0EOSoduIoYfWRR1VuMzfjS6v+BCHOM8cwggo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jlcQWzGvL/1BoKbhjvnRdjbs3We6uoXzorZ2AxQ/KKl0V1DFrZ35MNjckuJBBXXvp
-	 9OCkVYNfQIAdgxfKaMUYW8Xuz42g2F9b7ICb8wra271Bz2ntSal9Q+fTZGmNTb19Cb
-	 z0029Nu8tb8SmoKWr+AJIpJYNArjo6riHymh79MA=
+	b=A2MX6Nu/Vaz7JNdW9FkEFUi7YtbWPdc+npWPMyHBLOU1qLH0n0XD6v7FkF5vQMDow
+	 z301E5v4bZaB2kV5I0+f/slooH7Wm6WAY4nRwS+hNWCzkp9EYv6hIgpHfMMRUpU/tU
+	 f+5aG0oxWwGzKP7YVQ9q4d6g9AZ5GUZRS7DJZCoI=
 Received: from ld50.lan (unknown [101.88.134.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 55F49600DA;
-	Thu, 29 Dec 2022 13:33:27 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id C84BD6019D;
+	Thu, 29 Dec 2022 13:33:28 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v2 02/11] LoongArch: Add exception subcode definitions for the watchpoint exception
-Date: Thu, 29 Dec 2022 13:32:57 +0800
-Message-Id: <20221229053306.3285457-3-kernel@xen0n.name>
+Subject: [PATCH v2 03/11] LoongArch: Print GPRs with ABI names when showing registers
+Date: Thu, 29 Dec 2022 13:32:58 +0800
+Message-Id: <20221229053306.3285457-4-kernel@xen0n.name>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20221229053306.3285457-1-kernel@xen0n.name>
 References: <20221229053306.3285457-1-kernel@xen0n.name>
@@ -35,26 +35,66 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
+Print 3 registers per line to fit the entire line within 75 columns even
+with timestamp prefixed to each line, to ease future copy-pastes for all.
+
+And show PC (CSR.ERA) in place of $zero, like what arch/riscv does.
+
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/include/asm/loongarch.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/loongarch/kernel/traps.c | 36 ++++++++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 13 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 4910969928f0..d087acaf206d 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -1405,7 +1405,9 @@ __BUILD_CSR_OP(tlbidx)
- #define EXCCODE_FPE		18	/* Floating Point Exception */
- 	#define EXCSUBCODE_FPE		0	/* Floating Point Exception */
- 	#define EXCSUBCODE_VFPE		1	/* Vector Exception */
--#define EXCCODE_WATCH		19	/* Watch address reference */
-+#define EXCCODE_WATCH		19	/* WatchPoint Exception */
-+	#define EXCSUBCODE_WPEF		0	/* ... on instruction Fetch */
-+	#define EXCSUBCODE_WPEM		1	/* ... on Memory access */
- #define EXCCODE_BTDIS		20	/* Binary Trans. Disabled */
- #define EXCCODE_BTE		21	/* Binary Trans. Exception */
- #define EXCCODE_PSI		22	/* Guest Privileged Error */
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index ee5454bdcc74..d05a3e14279b 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -161,22 +161,32 @@ static void __show_regs(const struct pt_regs *regs)
+ 	const int field = 2 * sizeof(unsigned long);
+ 	unsigned int excsubcode;
+ 	unsigned int exccode;
+-	int i;
+ 
+ 	show_regs_print_info(KERN_DEFAULT);
+ 
+-	/*
+-	 * Saved main processor registers
+-	 */
+-	for (i = 0; i < 32; ) {
+-		if ((i % 4) == 0)
+-			printk("$%2d   :", i);
+-		pr_cont(" %0*lx", field, regs->regs[i]);
+-
+-		i++;
+-		if ((i % 4) == 0)
+-			pr_cont("\n");
+-	}
++	/* Print PC and GPRs, 3 per row to fit output in 75 columns */
++	pr_cont(" pc %0*lx ra %0*lx tp %0*lx\n",
++		field, regs->csr_era, field, regs->regs[1], field, regs->regs[2]);
++	pr_cont(" sp %0*lx a0 %0*lx a1 %0*lx\n",
++		field, regs->regs[3], field, regs->regs[4], field, regs->regs[5]);
++	pr_cont(" a2 %0*lx a3 %0*lx a4 %0*lx\n",
++		field, regs->regs[6], field, regs->regs[7], field, regs->regs[8]);
++	pr_cont(" a5 %0*lx a6 %0*lx a7 %0*lx\n",
++		field, regs->regs[9], field, regs->regs[10], field, regs->regs[11]);
++	pr_cont(" t0 %0*lx t1 %0*lx t2 %0*lx\n",
++		field, regs->regs[12], field, regs->regs[13], field, regs->regs[14]);
++	pr_cont(" t3 %0*lx t4 %0*lx t5 %0*lx\n",
++		field, regs->regs[15], field, regs->regs[16], field, regs->regs[17]);
++	pr_cont(" t6 %0*lx t7 %0*lx t8 %0*lx\n",
++		field, regs->regs[18], field, regs->regs[19], field, regs->regs[20]);
++	pr_cont("r21 %0*lx s9 %0*lx s0 %0*lx\n",
++		field, regs->regs[21], field, regs->regs[22], field, regs->regs[23]);
++	pr_cont(" s1 %0*lx s2 %0*lx s3 %0*lx\n",
++		field, regs->regs[24], field, regs->regs[25], field, regs->regs[26]);
++	pr_cont(" s4 %0*lx s5 %0*lx s6 %0*lx\n",
++		field, regs->regs[27], field, regs->regs[28], field, regs->regs[29]);
++	pr_cont(" s7 %0*lx s8 %0*lx\n",
++		field, regs->regs[30], field, regs->regs[31]);
+ 
+ 	/*
+ 	 * Saved csr registers
 -- 
 2.38.1
 
