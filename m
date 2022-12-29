@@ -1,274 +1,119 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A54B1C15
-	for <loongarch@lists.linux.dev>; Wed, 28 Dec 2022 16:53:40 +0000 (UTC)
-Received: from loongson.cn (unknown [60.166.162.119])
-	by gateway (Coremail) with SMTP id _____8CxpfAYdKxjSQsJAA--.19507S3;
-	Thu, 29 Dec 2022 00:51:36 +0800 (CST)
-Received: from [192.168.31.101] (unknown [60.166.162.119])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxsOQVdKxjA74OAA--.49348S3;
-	Thu, 29 Dec 2022 00:51:34 +0800 (CST)
-Message-ID: <b267cab1-3df4-6263-9c83-0061f20dd4a4@loongson.cn>
-Date: Thu, 29 Dec 2022 00:51:33 +0800
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125D61112
+	for <loongarch@lists.linux.dev>; Thu, 29 Dec 2022 05:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1672291994; bh=SFAr2ktQBMVMYlIDswiBxyrAnit03e5m/k1MtB7t/Zc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IQjAYRLGjphIbhQEfKLvhxZUqZtkOhfjSsmaZC2odtELv/vOao4D6I7qM6u3VbV+h
+	 O/p03VKXNew/Ncwal37IKiCQpL1ldCM9xJ6HOPCAjrVVbiBELEfGJZ1A/7RYC+lpIj
+	 404zQa/UbsY472Fk3iz+Zl5T/fWZV45PBK7C8Z/U=
+Received: from ld50.lan (unknown [101.88.134.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 2FF6B600DA;
+	Thu, 29 Dec 2022 13:33:14 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	WANG Xuerui <git@xen0n.name>
+Subject: [PATCH v2 00/11] LoongArch: Better backtraces
+Date: Thu, 29 Dec 2022 13:32:55 +0800
+Message-Id: <20221229053306.3285457-1-kernel@xen0n.name>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] LoongArch: Fix irq enable in exception handlers
-Content-Language: en-US
-To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Tiezhu Yang <yangtiezhu@loongson.cn>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20221221074238.6699-1-hejinyang@loongson.cn>
- <CAAhV-H6VX=d1oymY0rh-mwOPMuBsYd7C9RzQat8BmmnrJ7apng@mail.gmail.com>
- <8eaea09e-67b0-5e51-4632-2c31a4c56a3e@loongson.cn>
- <CAAhV-H7maW1YWhfvCzYVix=aCMMFbx0KkGodaBjka4ThunBO5Q@mail.gmail.com>
- <1c578efd-ae8a-2d80-e505-a09b1a2f7eaa@loongson.cn>
-From: Qi Hu <huqi@loongson.cn>
-In-Reply-To: <1c578efd-ae8a-2d80-e505-a09b1a2f7eaa@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxsOQVdKxjA74OAA--.49348S3
-X-CM-SenderInfo: pkxtxqxorr0wxvrqhubq/1tbiAQAOCWOsMeoCBgABsX
-X-Coremail-Antispam: 1Uk129KBjvJXoWxKw4UtryUJr4kJF1fAw4DXFb_yoWfXw1fpF
-	1kAF1UGry5Ar1kXr12qr1jyryUtr1Ut3WUXr18Ja4rJrsFyrn0gr18Xr1qgr1UAr48Jr1U
-	Xr15tF1293WUJF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r1j6r4UM28EF7xvwVC2z280aVCY1x0267AKxVWUJVW8JwAS0I0E
-	0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzV
-	Aqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S
-	6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
-	IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF
-	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
-	Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
 
+From: WANG Xuerui <git@xen0n.name>
 
-On 2022/12/27 18:10, Jinyang He wrote:
-> On 2022-12-27 17:52, Huacai Chen wrote:
->
->> On Tue, Dec 27, 2022 at 5:30 PM Jinyang He <hejinyang@loongson.cn> 
->> wrote:
->>>
->>> On 2022-12-27 15:37, Huacai Chen wrote:
->>>> Hi, Jinyang,
->>>>
->>>> Move die_if_kernel to irq disabled context to solve what?
->>> For more strict logical. If the code flow go to die in die_if_kernel(),
->>> its interrupt state is enable, that means it may cause schedule.
->>> So I think it is better to call die_if_kernel() firstly.
->> die_if_kernel is called with irq enabled in old kernels for several
->> years, and has no problems.
->
->
-> I think because it never call die() in die_if_kernel(). What I do
-> emphasize is that there needs to be more strict logic here than
-> it worked well in the past. I bet if die_if_kernel() was removed,
-> it will still work well in the future.
->
->
->>
->>>
->>>>    And LBT is
->>>> surely allowed to be triggered in kernel context.
->>> I'm not familar with lbt, I just not see any lbt codes in kernel. Plz,
->>> how lbt exception triggered, and how kernel trigger lbt exception?
->> You can ask Huqi for more details, and this was discussed publicly 
->> last week.
->
-> To: Qi Hu
->
->
-> Hi,
->
->
-> We really need some help. Can you give us some ideas?
->
->
-> Thanks,
->
-> Jinyang
->
-Huacai is correct. The LBT disable exception (BTD) can be triggered in 
-kernel context.
+Hi,
 
-If the CSR.ENEU.BTE == 0 [^1], the LBT instructions (these [^2] will be 
-used in the kernel) will trigger the exception.
+Here are a bunch of tweaks to the backtrace code, so the Quality of Life
+for unfortunate LoongArch kernel devs (including but not limited to,
+myself) could be marginally improved by relieving them of having to
+mentally decode the register names and CSR bitfields.
 
-Unfortunately, when you want to do some fpu_{save, restore}, you need to 
-use some LBT instructions [^3] [^4]. So if FPD is triggered, LBT might 
-still not be enabled, and the 'do_lbt' will be called in the kernel context.
+Before:
 
-Hope the information can help. Thanks.
+> [   17.879976] $ 0   : 0000000000000000 9000000000cc980c 90000001002cc000 90000001002cfe30
+> [   17.887936] $ 4   : 0000000000000010 9000000000f1f770 90000001002cc000 9000000000cc3468
+> [   17.895895] $ 8   : 900000010028fd00 0000000000000001 000055558e569190 0000000000000004
+> [   17.903853] $12   : 0000000000000000 0000000000000004 9000000001026000 900000000132b2d8
+> [   17.911811] $16   : 9000000001026000 000000006674b539 9000000000d51d10 0000000000000001
+> [   17.919769] $20   : 0000000000000000 900000000025c27c 0000000000000004 0000000000000002
+> [   17.927727] $24   : 900000000102e5b0 900000000102e508 0000000000000000 0000000000000004
+> [   17.935686] $28   : 9000000009007840 0000000000000004 0000000000000000 0000000000000004
+> [   17.943644] era   : 90000000002215a0 __arch_cpu_idle+0x20/0x24
+> [   17.949438] ra    : 9000000000cc980c default_idle_call+0x34/0x5c
+> [   17.955406] CSR crmd: 000000b0
+> [   17.955408] CSR prmd: 00000004
+> [   17.958521] CSR euen: 00000000
+> [   17.961635] CSR ecfg: 00071c1c
+> [   17.964748] CSR estat: 00001000
+> [   17.971062] ExcCode : 0 (SubCode 0)
+> [   17.974522] PrId  : 0014c010 (Loongson-64bit)
 
+After:
 
-[1] 
-https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#extended-component-unit-enable
+> [   45.869200]  pc 90000000002215a0 ra 9000000000ce86bc tp 90000001002cc000
+> [   45.875858]  sp 90000001002cfe30 a0 0000000000000018 a1 9000000000f41ee0
+> [   45.882516]  a2 0000000000000001 a3 000000000000000a a4 90000000098032c0
+> [   45.889173]  a5 000000000000001b a6 000000008ea4398a a7 0000000000000004
+> [   45.895831]  t0 0000000000000000 t1 0000000000000004 t2 0000000000003c00
+> [   45.902488]  t3 0000000000cccccd t4 ffffffffffffffff t5 000000010d1ff6c8
+> [   45.909146]  t6 0000000000000000 t7 0000000000000000 t8 000000000000005b
+> [   45.915803] r21 0000000a390fa6c0 s9 0000000000000001 s0 0000000000000003
+> [   45.922460]  s1 90000000010565c0 s2 9000000001056518 s3 0000000000000000
+> [   45.929118]  s4 0000000000000004 s5 0000000000000004 s6 9000000000228194
+> [   45.935775]  s7 900000000102e220 s8 9000000100093e58
+> [   45.940704]    pc: 90000000002215a0 __arch_cpu_idle+0x20/0x24
+> [   45.946412]    ra: 9000000000ce86bc default_idle_call+0x34/0x5c
+> [   45.952294]  crmd: 000000b0 (-WE DACM=CC DACF=CC +PG -DA -IE PLV0)
+> [   45.958443]  prmd: 00000004 (-PWE +PIE PPLV0)
+> [   45.962772]  euen: 00000000 (-BTE -ASXE -SXE -FPE)
+> [   45.967532]  ecfg: 00071c1c (VS=7 LIE=2-4,10-12)
+> [   45.972119] estat: 00001000 [INT] (EsubCode=0 ECode=0 IS=12)
+> [   45.977741]  prid: 0014c010 (Loongson-64bit)
 
-[2] 
-https://github.com/loongson/linux/pull/4/files#diff-381d03cf86e2796d280e2fc82c005409d5e44b4bbbf90dd0dc17f5f0fa5553f1R140-R184
+Please review, and let the bikeshedding begin!
 
-[3] 
-https://github.com/loongson/linux/pull/4/files#diff-381d03cf86e2796d280e2fc82c005409d5e44b4bbbf90dd0dc17f5f0fa5553f1R218-R230
+Changes in v2:
 
-[4] 
-https://github.com/loongson/linux/pull/4/files#diff-381d03cf86e2796d280e2fc82c005409d5e44b4bbbf90dd0dc17f5f0fa5553f1R236-R263
+- rebased and tested on top of next-20221226
+- removed the mass symbol renamings per Huacai's suggestion (but the
+  output still uses the ISA manual names because users are expected to
+  be more familiar with those)
 
+WANG Xuerui (11):
+  LoongArch: Clean up the architectural interrupt definitions
+  LoongArch: Add exception subcode definitions for the watchpoint
+    exception
+  LoongArch: Print GPRs with ABI names when showing registers
+  LoongArch: Print symbol info for PC and $ra only for kernel-mode
+    contexts
+  LoongArch: Fix format of CSR lines during show_regs
+  LoongArch: Humanize the CRMD line when showing registers
+  LoongArch: Humanize the PRMD line when showing registers
+  LoongArch: Humanize the EUEN line when showing registers
+  LoongArch: Humanize the ECFG line when showing registers
+  LoongArch: Humanize the ESTAT line when showing registers
+  LoongArch: Use lowercase ISA manual names for BADV and CPUCFG.PRID
+    lines in show_regs
 
-Qi
+ arch/loongarch/include/asm/loongarch.h |  60 ++++---
+ arch/loongarch/kernel/irq.c            |   2 +-
+ arch/loongarch/kernel/perf_event.c     |   2 +-
+ arch/loongarch/kernel/time.c           |   2 +-
+ arch/loongarch/kernel/traps.c          | 220 +++++++++++++++++++++----
+ 5 files changed, 227 insertions(+), 59 deletions(-)
 
->
->> Huacai
->>>
->>> Thanks,
->>>
->>> Jinyang
->>>
->>>
->>>> Huacai
->>>>
->>>> On Wed, Dec 21, 2022 at 3:43 PM Jinyang He <hejinyang@loongson.cn> 
->>>> wrote:
->>>>> The interrupt state can be got by regs->csr_prmd. Once previous
->>>>> interrupt state is disable, we shouldn't enable interrupt if we
->>>>> triggered exception which can be triggered in kernel mode. So
->>>>> conditionally enable interrupt. For those do_\exception which
->>>>> can not triggered in kernel mode but need enable interrupt, call
->>>>> die_if_kernel() firstly. And for do_lsx, do_lasx and do_lbt cannot
->>>>> triggered in kernel mode, too.
->>>>>
->>>>> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
->>>>> ---
->>>>>    arch/loongarch/kernel/traps.c | 19 ++++++++++---------
->>>>>    1 file changed, 10 insertions(+), 9 deletions(-)
->>>>>
->>>>> diff --git a/arch/loongarch/kernel/traps.c 
->>>>> b/arch/loongarch/kernel/traps.c
->>>>> index 1ea14f6c18d3..3ac7b32d1e15 100644
->>>>> --- a/arch/loongarch/kernel/traps.c
->>>>> +++ b/arch/loongarch/kernel/traps.c
->>>>> @@ -340,9 +340,9 @@ asmlinkage void noinstr do_fpe(struct pt_regs 
->>>>> *regs, unsigned long fcsr)
->>>>>
->>>>>           /* Clear FCSR.Cause before enabling interrupts */
->>>>>           write_fcsr(LOONGARCH_FCSR0, fcsr & ~mask_fcsr_x(fcsr));
->>>>> -       local_irq_enable();
->>>>>
->>>>>           die_if_kernel("FP exception in kernel code", regs);
->>>>> +       local_irq_enable();
->>>>>
->>>>>           sig = SIGFPE;
->>>>>           fault_addr = (void __user *) regs->csr_era;
->>>>> @@ -432,7 +432,8 @@ asmlinkage void noinstr do_bp(struct pt_regs 
->>>>> *regs)
->>>>>           unsigned long era = exception_era(regs);
->>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>
->>>>> -       local_irq_enable();
->>>>> +       if (regs->csr_prmd & CSR_PRMD_PIE)
->>>>> +               local_irq_enable();
->>>>>           current->thread.trap_nr = read_csr_excode();
->>>>>           if (__get_inst(&opcode, (u32 *)era, user))
->>>>>                   goto out_sigsegv;
->>>>> @@ -514,7 +515,8 @@ asmlinkage void noinstr do_ri(struct pt_regs 
->>>>> *regs)
->>>>>           unsigned int __user *era = (unsigned int __user 
->>>>> *)exception_era(regs);
->>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>
->>>>> -       local_irq_enable();
->>>>> +       if (regs->csr_prmd & CSR_PRMD_PIE)
->>>>> +               local_irq_enable();
->>>>>           current->thread.trap_nr = read_csr_excode();
->>>>>
->>>>>           if (notify_die(DIE_RI, "RI Fault", regs, 0, 
->>>>> current->thread.trap_nr,
->>>>> @@ -606,8 +608,8 @@ asmlinkage void noinstr do_fpu(struct pt_regs 
->>>>> *regs)
->>>>>    {
->>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>
->>>>> -       local_irq_enable();
->>>>>           die_if_kernel("do_fpu invoked from kernel context!", regs);
->>>>> +       local_irq_enable();
->>>>>           BUG_ON(is_lsx_enabled());
->>>>>           BUG_ON(is_lasx_enabled());
->>>>>
->>>>> @@ -623,13 +625,13 @@ asmlinkage void noinstr do_lsx(struct 
->>>>> pt_regs *regs)
->>>>>    {
->>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>
->>>>> +       die_if_kernel("do_lsx invoked from kernel context!", regs);
->>>>>           local_irq_enable();
->>>>>           if (!cpu_has_lsx) {
->>>>>                   force_sig(SIGILL);
->>>>>                   goto out;
->>>>>           }
->>>>>
->>>>> -       die_if_kernel("do_lsx invoked from kernel context!", regs);
->>>>>           BUG_ON(is_lasx_enabled());
->>>>>
->>>>>           preempt_disable();
->>>>> @@ -645,14 +647,13 @@ asmlinkage void noinstr do_lasx(struct 
->>>>> pt_regs *regs)
->>>>>    {
->>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>
->>>>> +       die_if_kernel("do_lasx invoked from kernel context!", regs);
->>>>>           local_irq_enable();
->>>>>           if (!cpu_has_lasx) {
->>>>>                   force_sig(SIGILL);
->>>>>                   goto out;
->>>>>           }
->>>>>
->>>>> -       die_if_kernel("do_lasx invoked from kernel context!", regs);
->>>>> -
->>>>>           preempt_disable();
->>>>>           init_restore_lasx();
->>>>>           preempt_enable();
->>>>> @@ -666,6 +667,7 @@ asmlinkage void noinstr do_lbt(struct pt_regs 
->>>>> *regs)
->>>>>    {
->>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>
->>>>> +       die_if_kernel("do_lbt invoked from kernel context!", regs);
->>>>>           local_irq_enable();
->>>>>           force_sig(SIGILL);
->>>>>           local_irq_disable();
->>>>> @@ -677,7 +679,6 @@ asmlinkage void noinstr do_reserved(struct 
->>>>> pt_regs *regs)
->>>>>    {
->>>>>           irqentry_state_t state = irqentry_enter(regs);
->>>>>
->>>>> -       local_irq_enable();
->>>>>           /*
->>>>>            * Game over - no way to handle this if it ever occurs. 
->>>>> Most probably
->>>>>            * caused by a fatal error after another 
->>>>> hardware/software error.
->>>>> @@ -685,8 +686,8 @@ asmlinkage void noinstr do_reserved(struct 
->>>>> pt_regs *regs)
->>>>>           pr_err("Caught reserved exception %u on pid:%d [%s] - 
->>>>> should not happen\n",
->>>>>                   read_csr_excode(), current->pid, current->comm);
->>>>>           die_if_kernel("do_reserved exception", regs);
->>>>> +       local_irq_enable();
->>>>>           force_sig(SIGUNUSED);
->>>>> -
->>>>>           local_irq_disable();
->>>>>
->>>>>           irqentry_exit(regs, state);
->>>>> -- 
->>>>> 2.34.3
->>>>>
->>>
->
+-- 
+2.38.1
 
