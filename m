@@ -1,336 +1,561 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAEB7E
-	for <loongarch@lists.linux.dev>; Fri, 30 Dec 2022 08:49:20 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id u9so50198315ejo.0
-        for <loongarch@lists.linux.dev>; Fri, 30 Dec 2022 00:49:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+NOKd1AXj4Vxaw+3bzzUcFYlTTg0beyv5HIpvl5mGmQ=;
-        b=hQewvjbOM4u8yql5dKUC9eNTAufDXlfdDXFQSCuKYodGGGNMsj2u8S2OQ/LQmt+jUc
-         HIe7OlrxD23P2ssPyf/qpzw3x52I6khjfFJ9vP0wb0OWye5hzatA9RrgZN5dB1MMmc/a
-         Y96d1v3J9Qfs2g5ljyJJ3Wi3g8/Hof9Z5vRMqyhRZtmp+W37MNwCjT0JG4MWshwePWRq
-         FBNKlots9KR3OgVsNJSw6uvTPI+pUPXGlmmxxJeDAiOoAok2EjBiImLhgJkb1RYGyp3N
-         7nkOEhVdUSt2L1BtkaQ7n9JdSGg/Lx06AGklYFUo2yoDfsMEQ4o4vEcktIdtNSUGu62t
-         HEcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+NOKd1AXj4Vxaw+3bzzUcFYlTTg0beyv5HIpvl5mGmQ=;
-        b=nblv2RKJlCh7rcOudUM57VP7PvkLY/jXsDLDGQYvN5XfyTDpFnfnLSiz+13haRblsM
-         S10Eq3Pehi0Qo5XF/FuZgZaEiwt6EvY/6fbzgJRScqfJwG6YUnLUCc/3Yd6chA0JNFnK
-         qlkM07gWHe4AWnRFU+7Y6eaXd3mXVTQlrhCqFUm6S8C6EsKoDgFubIaweIg0PiIabizX
-         iyvD3gSIRKyLlN/sB7iTsAxkY9FrBDfZBbx61RTJ6fKl8wrII/x/tzqgjVjuumRMcgIw
-         j8p9dTu7xum7EuHBNQudAfas0DXERlN/JbpJvljgsDokbljAN3b4fvonwnwzBvUlVYTq
-         9uzA==
-X-Gm-Message-State: AFqh2kqtLpPxIbJJ+Du1iplkBvuI3bwtQWFrEHEElH8L2H50u/xlxZbP
-	X8I/f5xKLLKPf7d9L7/hjKyhQ9tzU9dCZ4zvYIU=
-X-Google-Smtp-Source: AMrXdXujxgYL6n9DFZ75NEwvXwd3gmYpZzPjYrWJsoaK0tFLDgRgpy9YU+4i8CCrSEGS8nl/iloZi2qRtNp/BlyQIIQ=
-X-Received: by 2002:a17:907:6f13:b0:7ad:e161:b026 with SMTP id
- sy19-20020a1709076f1300b007ade161b026mr4109276ejc.760.1672390158291; Fri, 30
- Dec 2022 00:49:18 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9777B2573
+	for <loongarch@lists.linux.dev>; Fri, 30 Dec 2022 14:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1672409783; x=1703945783;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=UmiYFWfwxYLv9h+CpZP7WpdPpUBEjHJSuaZ7aY7p7G4=;
+  b=XX9sC0Q3fBdPNlO+QL4BxvEM96Yv9LudqtX5NdCXilblG3XBe7spgU36
+   XQB19JqmF6Urggpv66ib2akyrFjaHft7DMtnl5nM/sbM3d3ednwmdKC+8
+   hpUyg9k55+zqbpuJU+2ZZGdx4oNSZqu0c6LYN0NLSOWUj2KGdhiRzOOWC
+   MDP9b407ZvZ2yjifJQxSabfYnrOE9Fh8sd30QuORWCdIt2eFs9pyOUCb5
+   OQ2n/8e4pJvRouG/5MX+nTT/SsiZ/QtT0DhjZ6fJGmDydcZpYRYy7G8T1
+   9478Vx0Dl5FLZKsuaUV7pQbImHnwVI/O2A07zMKYhm+nD2afu+c/WJAOC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10576"; a="323196784"
+X-IronPort-AV: E=Sophos;i="5.96,287,1665471600"; 
+   d="scan'208";a="323196784"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2022 06:16:22 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10576"; a="796237279"
+X-IronPort-AV: E=Sophos;i="5.96,287,1665471600"; 
+   d="scan'208";a="796237279"
+Received: from lab-ah.igk.intel.com ([10.91.215.196])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2022 06:16:17 -0800
+From: Andrzej Hajda <andrzej.hajda@intel.com>
+To: linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hexagon@vger.kernel.org,
+	linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	openrisc@lists.librecores.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-xtensa@linux-xtensa.org,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v3] arch: rename all internal names __xchg to __arch_xchg
+Date: Fri, 30 Dec 2022 15:15:52 +0100
+Message-Id: <20221230141552.128508-1-andrzej.hajda@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <202212300642.6pdgegGO-lkp@intel.com>
+References: <202212300642.6pdgegGO-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1671688961.git.zhoubinbin@loongson.cn> <9d3e4997519fd9ecebae6fd241148cc22d3fe04f.1671688961.git.zhoubinbin@loongson.cn>
- <Y6tqPenv3NBEl9qD@smile.fi.intel.com> <CAMpQs4L-2stVQA43hd2Q-uR8fgekLZJmWzmBZvEDg1+AvT3uSQ@mail.gmail.com>
- <Y61bwY4OpRFixx5r@smile.fi.intel.com> <Y61chbeq9bo8bi7p@smile.fi.intel.com>
- <CAMpQs4LK5xmG2467csM=C5a1EAg8pFkqj=0OwSYL4rcO+8eFHA@mail.gmail.com> <Y66g0OV0pgMa5K1p@smile.fi.intel.com>
-In-Reply-To: <Y66g0OV0pgMa5K1p@smile.fi.intel.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 30 Dec 2022 16:49:06 +0800
-Message-ID: <CAMpQs4LPTRcue3v=gjO2aXgJp51S0AgVnb8Jsyepwx12mVd+OA@mail.gmail.com>
-Subject: Re: [PATCH V8 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C controller
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Wolfram Sang <wsa@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, 
-	loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	Huacai Chen <chenhuacai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Jianmin Lv <lvjianmin@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298 Gdansk - KRS 101882 - NIP 957-07-52-316
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 30, 2022 at 4:27 PM Andy Shevchenko <andy@kernel.org> wrote:
->
-> On Fri, Dec 30, 2022 at 09:46:25AM +0800, Binbin Zhou wrote:
-> > On Thu, Dec 29, 2022 at 5:23 PM Andy Shevchenko <andy@kernel.org> wrote:
-> > >
-> > > On Thu, Dec 29, 2022 at 11:20:01AM +0200, Andy Shevchenko wrote:
-> > > > On Thu, Dec 29, 2022 at 03:31:47PM +0800, Binbin Zhou wrote:
-> > > > > On Wed, Dec 28, 2022 at 5:57 AM Andy Shevchenko <andy@kernel.org> wrote:
-> > > > > > On Fri, Dec 23, 2022 at 05:00:51PM +0800, Binbin Zhou wrote:
->
-> ...
->
-> > > > > > > +static int ls2x_i2c_xfer_one(struct ls2x_i2c_priv *priv,
-> > > > > > > +                          struct i2c_msg *msg, bool stop)
-> > > > > > > +{
-> > > > > > > +     int ret;
-> > > > > > > +     bool is_read = msg->flags & I2C_M_RD;
-> > > > > > > +
-> > > > > > > +     /* Contains steps to send start condition and address */
-> > > > > > > +     ret = ls2x_i2c_start(priv, msg);
-> > > > > > > +     if (!ret) {
-> > > > > > > +             if (is_read)
-> > > > > > > +                     ret = ls2x_i2c_rx(priv, msg->buf, msg->len);
-> > > > > > > +             else
-> > > > > > > +                     ret = ls2x_i2c_tx(priv, msg->buf, msg->len);
-> > > > > > > +
-> > > > > > > +             if (!ret && stop)
-> > > > > > > +                     ret = ls2x_i2c_stop(priv);
-> > > > > > > +     }
-> > > > > > > +
-> > > > > > > +     if (ret == -ENXIO)
-> > > > > > > +             ls2x_i2c_stop(priv);
-> > > > > > > +     else if (ret < 0)
-> > > > > > > +             ls2x_i2c_init(priv);
-> > > > > > > +
-> > > > > > > +     return ret;
-> > > > > > > +}
-> > > > > >
-> > > > > > Still this code is odd from reader's perspective. It's in particular not clear
-> > > > > > if the stop can be called twice in a row. I recommend to split it to two
-> > > > >
-> > > > > Sorry,
-> > > > > Actually, I don't quite understand why you keep thinking that the stop
-> > > > > can be called twice in a row.
-> > > >
-> > > > Because nothing in the code suggests otherwise. You need deeply understand
-> > > > the flow to ensure that it won't. This means that the code is fragile and
-> > > > needs refactoring (even comment, which you can do a least won't help, because
-> > > > changing code in the other parts may break all this and you won't notice it).
-> > > >
-> > > > > As I said in my last email, the logic here should be:
-> > > > > In the first case, stop is called when the last msg is transmitted successfully;
-> > > > > In the second case, stop is called when there is a NOACK during the
-> > > > > transmission;
-> > > > > In the third case, init is called when other errors occur during the
-> > > > > transmission, such as TIMEOUT.
-> > > > >
-> > > > > The key pointer is the stop function will only return a TIMEOUT error
-> > > > > or 0 for success, so if the stop function above is failed, the stop
-> > > > > function below will never be called twice.
-> > > > >
-> > > > > Anyway, I also admit that this part of the code may not be concise and
-> > > > > clear enough, and I have tried the following changes:
-> > > > >
-> > > > > 1. put the start function into the rx/tx function respectively. As followers:
-> > > > >
-> > > > > @@ -177,10 +177,16 @@ static int ls2x_i2c_start(struct ls2x_i2c_priv
-> > > > > *priv, struct i2c_msg *msgs)
-> > > > >         return ls2x_i2c_send_byte(priv, LS2X_CR_START | LS2X_CR_WRITE);
-> > > > >  }
-> > > > >
-> > > > > -static int ls2x_i2c_rx(struct ls2x_i2c_priv *priv, u8 *buf, u16 len)
-> > > > > +static int ls2x_i2c_rx(struct ls2x_i2c_priv *priv, struct i2c_msg *msg)
-> > > > >  {
-> > > > >         int ret;
-> > > > > -       u8 rxdata;
-> > > > > +       u8 rxdata, *buf = msg->buf;
-> > > > > +       u16 len = msg->len;
-> > > > > +
-> > > > > +       /* Contains steps to send start condition and address */
-> > > > > +       ret = ls2x_i2c_start(priv, msg);
-> > > > > +       if (ret)
-> > > > > +               return ret;
-> > > > >
-> > > > >         while (len--) {
-> > > > >                 ret = ls2x_i2c_xfer_byte(priv,
-> > > > > @@ -195,9 +201,16 @@ static int ls2x_i2c_rx(struct ls2x_i2c_priv
-> > > > > *priv, u8 *buf, u16 len)
-> > > > >         return 0;
-> > > > >  }
-> > > > >
-> > > > > -static int ls2x_i2c_tx(struct ls2x_i2c_priv *priv, u8 *buf, u16 len)
-> > > > > +static int ls2x_i2c_tx(struct ls2x_i2c_priv *priv, struct i2c_msg *msg)
-> > > > >  {
-> > > > >         int ret;
-> > > > > +       u8 *buf = msg->buf;
-> > > > > +       u16 len = msg->len;
-> > > > > +
-> > > > > +       /* Contains steps to send start condition and address */
-> > > > > +       ret = ls2x_i2c_start(priv, msg);
-> > > > > +       if (ret)
-> > > > > +               return ret;
-> > > > >
-> > > > >         while (len--) {
-> > > > >                 writeb(*buf++, priv->base + I2C_LS2X_TXR);
-> > > > >
-> > > > > 2. define the variable 'reinit' in the xfer_one function to mark the
-> > > > > cases where reinit is needed. As follows:
-> > > > >
-> > > > > static int ls2x_i2c_xfer_one(struct ls2x_i2c_priv *priv,
-> > > > >                              struct i2c_msg *msg, bool stop)
-> > > > > {
-> > > > >         int ret, ret2;
-> > > > >         bool reinit = false;
-> > > > >         bool is_read = msg->flags & I2C_M_RD;
-> > > > >
-> > > > >         if (is_read)
-> > > > >                 ret = ls2x_i2c_rx(priv, msg);
-> > > > >         else
-> > > > >                 ret = ls2x_i2c_tx(priv, msg);
-> > > > >
-> > > > >         if (ret == -EAGAIN) /* could not acquire bus. bail out without STOP */
-> > > > >                 return ret;
-> > > > >
-> > > > >         if (ret == -ETIMEDOUT) {
-> > > > >                 /* Fatal error. Needs reinit. */
-> > > > >                 stop = false;
-> > > > >                 reinit = true;
-> > >
-> > > Why do you need to initialize stop here?
-> > > Why not to call reinit here and bailout?
-> > >
-> > > > >         }
-> > > > >
-> > > > >         if (stop) {
-> > > > >                 ret2 = ls2x_i2c_stop(priv);
-> > > > >
-> > > > >                 if (ret2) {
-> > > > >                         /* Failed to issue STOP. Needs reinit. */
-> > > > >                         reinit = true;
-> > > > >                         ret = ret ?: ret2;
-> > >
-> > > All the same, try to be less verbose with unneeded variables.
-> >
-> > Ok, the reinit and ret2 variables seem to be a bit redundant, I will
-> > remove them.
-> >
-> >  I will divide the whole thing into two parts:
-> > The first part is to handle errors: if ret < 0, return ret directly.
-> > One of the special handling is the fatal error timeout, which requires
-> > reinit.
-> >
-> >         if (ret < 0) {
-> >                 if (ret == -ETIMEDOUT) /* Fatel error. Needs reinit. */
-> >                         ls2x_i2c_init(priv);
-> >                 return ret;
-> >         }
-> >
-> > The second part is to handle the final stop command: it should be
-> > noted that if the stop command fails, reinit is also required.
-> >
-> >         if (stop) {
-> >                 /* Failed to issue STOP. Needs reinit. */
-> >                 ret = ls2x_i2c_stop(priv);
-> >                 if (ret)
-> >                         ls2x_i2c_init(priv);
-> >         }
-> >
-> > The complete code is as follows:
->
-> This looks much better!
-> See a couple of nit-picks below.
->
-> > static int ls2x_i2c_xfer_one(struct ls2x_i2c_priv *priv,
-> >                              struct i2c_msg *msg, bool stop)
-> > {
-> >         int ret;
->
-> >         bool is_read = msg->flags & I2C_M_RD;
-> >
-> >         if (is_read)
->
-> With this you don't need to have is_read variable.
+__xchg will be used for non-atomic xchg macro.
 
-Well, is_read is a bit redundant, I would use 'msg->flags & I2C_M_RD'
-directly in the if judgment condition.
+Signed-off-by: Andrzej Hajda <andrzej.hajda@intel.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2: squashed all arch patches into one
+v3: fixed alpha/xchg_local, thx to lkp@intel.com
+---
+ arch/alpha/include/asm/cmpxchg.h     | 8 ++++----
+ arch/arc/include/asm/cmpxchg.h       | 4 ++--
+ arch/arm/include/asm/cmpxchg.h       | 4 ++--
+ arch/arm64/include/asm/cmpxchg.h     | 4 ++--
+ arch/hexagon/include/asm/cmpxchg.h   | 6 +++---
+ arch/ia64/include/asm/cmpxchg.h      | 2 +-
+ arch/ia64/include/uapi/asm/cmpxchg.h | 4 ++--
+ arch/loongarch/include/asm/cmpxchg.h | 4 ++--
+ arch/m68k/include/asm/cmpxchg.h      | 6 +++---
+ arch/mips/include/asm/cmpxchg.h      | 4 ++--
+ arch/openrisc/include/asm/cmpxchg.h  | 4 ++--
+ arch/parisc/include/asm/cmpxchg.h    | 4 ++--
+ arch/powerpc/include/asm/cmpxchg.h   | 4 ++--
+ arch/riscv/include/asm/atomic.h      | 2 +-
+ arch/riscv/include/asm/cmpxchg.h     | 4 ++--
+ arch/s390/include/asm/cmpxchg.h      | 4 ++--
+ arch/sh/include/asm/cmpxchg.h        | 4 ++--
+ arch/sparc/include/asm/cmpxchg_32.h  | 4 ++--
+ arch/sparc/include/asm/cmpxchg_64.h  | 4 ++--
+ arch/xtensa/include/asm/cmpxchg.h    | 4 ++--
+ 20 files changed, 42 insertions(+), 42 deletions(-)
 
->
-> >                 ret = ls2x_i2c_rx(priv, msg);
-> >         else
-> >                 ret = ls2x_i2c_tx(priv, msg);
-> >
-> >         if (ret < 0) {
-> >                 if (ret == -ETIMEDOUT) /* Fatel error. Needs reinit. */
->
-> Split comment and code, so the comment is followed by the code.
+diff --git a/arch/alpha/include/asm/cmpxchg.h b/arch/alpha/include/asm/cmpxchg.h
+index 6e0a850aa9d38c..e0cb5b5c1c54b9 100644
+--- a/arch/alpha/include/asm/cmpxchg.h
++++ b/arch/alpha/include/asm/cmpxchg.h
+@@ -6,14 +6,14 @@
+  * Atomic exchange routines.
+  */
+ 
+-#define ____xchg(type, args...)		__xchg ## type ## _local(args)
++#define ____xchg(type, args...)		__arch_xchg ## type ## _local(args)
+ #define ____cmpxchg(type, args...)	__cmpxchg ## type ## _local(args)
+ #include <asm/xchg.h>
+ 
+ #define xchg_local(ptr, x)						\
+ ({									\
+ 	__typeof__(*(ptr)) _x_ = (x);					\
+-	(__typeof__(*(ptr))) __xchg_local((ptr), (unsigned long)_x_,	\
++	(__typeof__(*(ptr))) __arch_xchg_local((ptr), (unsigned long)_x_,\
+ 				       sizeof(*(ptr)));			\
+ })
+ 
+@@ -34,7 +34,7 @@
+ 
+ #undef ____xchg
+ #undef ____cmpxchg
+-#define ____xchg(type, args...)		__xchg ##type(args)
++#define ____xchg(type, args...)		__arch_xchg ##type(args)
+ #define ____cmpxchg(type, args...)	__cmpxchg ##type(args)
+ #include <asm/xchg.h>
+ 
+@@ -48,7 +48,7 @@
+ 	__typeof__(*(ptr)) _x_ = (x);					\
+ 	smp_mb();							\
+ 	__ret = (__typeof__(*(ptr)))					\
+-		__xchg((ptr), (unsigned long)_x_, sizeof(*(ptr)));	\
++		__arch_xchg((ptr), (unsigned long)_x_, sizeof(*(ptr)));	\
+ 	smp_mb();							\
+ 	__ret;								\
+ })
+diff --git a/arch/arc/include/asm/cmpxchg.h b/arch/arc/include/asm/cmpxchg.h
+index c5b544a5fe8106..e138fde067dea5 100644
+--- a/arch/arc/include/asm/cmpxchg.h
++++ b/arch/arc/include/asm/cmpxchg.h
+@@ -85,7 +85,7 @@
+  */
+ #ifdef CONFIG_ARC_HAS_LLSC
+ 
+-#define __xchg(ptr, val)						\
++#define __arch_xchg(ptr, val)						\
+ ({									\
+ 	__asm__ __volatile__(						\
+ 	"	ex  %0, [%1]	\n"	/* set new value */	        \
+@@ -102,7 +102,7 @@
+ 									\
+ 	switch(sizeof(*(_p_))) {					\
+ 	case 4:								\
+-		_val_ = __xchg(_p_, _val_);				\
++		_val_ = __arch_xchg(_p_, _val_);			\
+ 		break;							\
+ 	default:							\
+ 		BUILD_BUG();						\
+diff --git a/arch/arm/include/asm/cmpxchg.h b/arch/arm/include/asm/cmpxchg.h
+index 4dfe538dfc689b..6953fc05a97886 100644
+--- a/arch/arm/include/asm/cmpxchg.h
++++ b/arch/arm/include/asm/cmpxchg.h
+@@ -25,7 +25,7 @@
+ #define swp_is_buggy
+ #endif
+ 
+-static inline unsigned long __xchg(unsigned long x, volatile void *ptr, int size)
++static inline unsigned long __arch_xchg(unsigned long x, volatile void *ptr, int size)
+ {
+ 	extern void __bad_xchg(volatile void *, int);
+ 	unsigned long ret;
+@@ -115,7 +115,7 @@ static inline unsigned long __xchg(unsigned long x, volatile void *ptr, int size
+ }
+ 
+ #define arch_xchg_relaxed(ptr, x) ({					\
+-	(__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr),		\
++	(__typeof__(*(ptr)))__arch_xchg((unsigned long)(x), (ptr),		\
+ 				   sizeof(*(ptr)));			\
+ })
+ 
+diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
+index 497acf134d9923..3a36ba58e8c2ef 100644
+--- a/arch/arm64/include/asm/cmpxchg.h
++++ b/arch/arm64/include/asm/cmpxchg.h
+@@ -62,7 +62,7 @@ __XCHG_CASE( ,  ,  mb_, 64, dmb ish, nop,  , a, l, "memory")
+ #undef __XCHG_CASE
+ 
+ #define __XCHG_GEN(sfx)							\
+-static __always_inline  unsigned long __xchg##sfx(unsigned long x,	\
++static __always_inline  unsigned long __arch_xchg##sfx(unsigned long x,	\
+ 					volatile void *ptr,		\
+ 					int size)			\
+ {									\
+@@ -93,7 +93,7 @@ __XCHG_GEN(_mb)
+ ({									\
+ 	__typeof__(*(ptr)) __ret;					\
+ 	__ret = (__typeof__(*(ptr)))					\
+-		__xchg##sfx((unsigned long)(x), (ptr), sizeof(*(ptr))); \
++		__arch_xchg##sfx((unsigned long)(x), (ptr), sizeof(*(ptr))); \
+ 	__ret;								\
+ })
+ 
+diff --git a/arch/hexagon/include/asm/cmpxchg.h b/arch/hexagon/include/asm/cmpxchg.h
+index cdb705e1496af8..92dc5e5f836f3b 100644
+--- a/arch/hexagon/include/asm/cmpxchg.h
++++ b/arch/hexagon/include/asm/cmpxchg.h
+@@ -9,7 +9,7 @@
+ #define _ASM_CMPXCHG_H
+ 
+ /*
+- * __xchg - atomically exchange a register and a memory location
++ * __arch_xchg - atomically exchange a register and a memory location
+  * @x: value to swap
+  * @ptr: pointer to memory
+  * @size:  size of the value
+@@ -19,7 +19,7 @@
+  * Note:  there was an errata for V2 about .new's and memw_locked.
+  *
+  */
+-static inline unsigned long __xchg(unsigned long x, volatile void *ptr,
++static inline unsigned long __arch_xchg(unsigned long x, volatile void *ptr,
+ 				   int size)
+ {
+ 	unsigned long retval;
+@@ -42,7 +42,7 @@ static inline unsigned long __xchg(unsigned long x, volatile void *ptr,
+  * Atomically swap the contents of a register with memory.  Should be atomic
+  * between multiple CPU's and within interrupts on the same CPU.
+  */
+-#define arch_xchg(ptr, v) ((__typeof__(*(ptr)))__xchg((unsigned long)(v), (ptr), \
++#define arch_xchg(ptr, v) ((__typeof__(*(ptr)))__arch_xchg((unsigned long)(v), (ptr), \
+ 	sizeof(*(ptr))))
+ 
+ /*
+diff --git a/arch/ia64/include/asm/cmpxchg.h b/arch/ia64/include/asm/cmpxchg.h
+index 94ef844298431a..8b2e644ef6a14e 100644
+--- a/arch/ia64/include/asm/cmpxchg.h
++++ b/arch/ia64/include/asm/cmpxchg.h
+@@ -5,7 +5,7 @@
+ #include <uapi/asm/cmpxchg.h>
+ 
+ #define arch_xchg(ptr, x)	\
+-({(__typeof__(*(ptr))) __xchg((unsigned long) (x), (ptr), sizeof(*(ptr)));})
++({(__typeof__(*(ptr))) __arch_xchg((unsigned long) (x), (ptr), sizeof(*(ptr)));})
+ 
+ #define arch_cmpxchg(ptr, o, n)		cmpxchg_acq((ptr), (o), (n))
+ #define arch_cmpxchg64(ptr, o, n)	cmpxchg_acq((ptr), (o), (n))
+diff --git a/arch/ia64/include/uapi/asm/cmpxchg.h b/arch/ia64/include/uapi/asm/cmpxchg.h
+index ca2e0268534384..3fec9b037051bb 100644
+--- a/arch/ia64/include/uapi/asm/cmpxchg.h
++++ b/arch/ia64/include/uapi/asm/cmpxchg.h
+@@ -27,7 +27,7 @@
+  */
+ extern void ia64_xchg_called_with_bad_pointer(void);
+ 
+-#define __xchg(x, ptr, size)						\
++#define __arch_xchg(x, ptr, size)					\
+ ({									\
+ 	unsigned long __xchg_result;					\
+ 									\
+@@ -55,7 +55,7 @@ extern void ia64_xchg_called_with_bad_pointer(void);
+ 
+ #ifndef __KERNEL__
+ #define xchg(ptr, x)							\
+-({(__typeof__(*(ptr))) __xchg((unsigned long) (x), (ptr), sizeof(*(ptr)));})
++({(__typeof__(*(ptr))) __arch_xchg((unsigned long) (x), (ptr), sizeof(*(ptr)));})
+ #endif
+ 
+ /*
+diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/include/asm/cmpxchg.h
+index ecfa6cf79806e6..979fde61bba8a4 100644
+--- a/arch/loongarch/include/asm/cmpxchg.h
++++ b/arch/loongarch/include/asm/cmpxchg.h
+@@ -62,7 +62,7 @@ static inline unsigned int __xchg_small(volatile void *ptr, unsigned int val,
+ }
+ 
+ static __always_inline unsigned long
+-__xchg(volatile void *ptr, unsigned long x, int size)
++__arch_xchg(volatile void *ptr, unsigned long x, int size)
+ {
+ 	switch (size) {
+ 	case 1:
+@@ -87,7 +87,7 @@ __xchg(volatile void *ptr, unsigned long x, int size)
+ 	__typeof__(*(ptr)) __res;					\
+ 									\
+ 	__res = (__typeof__(*(ptr)))					\
+-		__xchg((ptr), (unsigned long)(x), sizeof(*(ptr)));	\
++		__arch_xchg((ptr), (unsigned long)(x), sizeof(*(ptr)));	\
+ 									\
+ 	__res;								\
+ })
+diff --git a/arch/m68k/include/asm/cmpxchg.h b/arch/m68k/include/asm/cmpxchg.h
+index 6cf464cdab067e..d7f3de9c5d6f79 100644
+--- a/arch/m68k/include/asm/cmpxchg.h
++++ b/arch/m68k/include/asm/cmpxchg.h
+@@ -9,7 +9,7 @@
+ extern unsigned long __invalid_xchg_size(unsigned long, volatile void *, int);
+ 
+ #ifndef CONFIG_RMW_INSNS
+-static inline unsigned long __xchg(unsigned long x, volatile void * ptr, int size)
++static inline unsigned long __arch_xchg(unsigned long x, volatile void * ptr, int size)
+ {
+ 	unsigned long flags, tmp;
+ 
+@@ -40,7 +40,7 @@ static inline unsigned long __xchg(unsigned long x, volatile void * ptr, int siz
+ 	return x;
+ }
+ #else
+-static inline unsigned long __xchg(unsigned long x, volatile void * ptr, int size)
++static inline unsigned long __arch_xchg(unsigned long x, volatile void * ptr, int size)
+ {
+ 	switch (size) {
+ 	case 1:
+@@ -75,7 +75,7 @@ static inline unsigned long __xchg(unsigned long x, volatile void * ptr, int siz
+ }
+ #endif
+ 
+-#define arch_xchg(ptr,x) ({(__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr)));})
++#define arch_xchg(ptr,x) ({(__typeof__(*(ptr)))__arch_xchg((unsigned long)(x),(ptr),sizeof(*(ptr)));})
+ 
+ #include <asm-generic/cmpxchg-local.h>
+ 
+diff --git a/arch/mips/include/asm/cmpxchg.h b/arch/mips/include/asm/cmpxchg.h
+index 7ec9493b28614f..feed343ad483a9 100644
+--- a/arch/mips/include/asm/cmpxchg.h
++++ b/arch/mips/include/asm/cmpxchg.h
+@@ -68,7 +68,7 @@ extern unsigned long __xchg_small(volatile void *ptr, unsigned long val,
+ 				  unsigned int size);
+ 
+ static __always_inline
+-unsigned long __xchg(volatile void *ptr, unsigned long x, int size)
++unsigned long __arch_xchg(volatile void *ptr, unsigned long x, int size)
+ {
+ 	switch (size) {
+ 	case 1:
+@@ -102,7 +102,7 @@ unsigned long __xchg(volatile void *ptr, unsigned long x, int size)
+ 		smp_mb__before_llsc();					\
+ 									\
+ 	__res = (__typeof__(*(ptr)))					\
+-		__xchg((ptr), (unsigned long)(x), sizeof(*(ptr)));	\
++		__arch_xchg((ptr), (unsigned long)(x), sizeof(*(ptr)));	\
+ 									\
+ 	smp_llsc_mb();							\
+ 									\
+diff --git a/arch/openrisc/include/asm/cmpxchg.h b/arch/openrisc/include/asm/cmpxchg.h
+index 79fd16162ccb6d..5725e22e10683b 100644
+--- a/arch/openrisc/include/asm/cmpxchg.h
++++ b/arch/openrisc/include/asm/cmpxchg.h
+@@ -147,7 +147,7 @@ static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
+ extern unsigned long __xchg_called_with_bad_pointer(void)
+ 	__compiletime_error("Bad argument size for xchg");
+ 
+-static inline unsigned long __xchg(volatile void *ptr, unsigned long with,
++static inline unsigned long __arch_xchg(volatile void *ptr, unsigned long with,
+ 		int size)
+ {
+ 	switch (size) {
+@@ -163,7 +163,7 @@ static inline unsigned long __xchg(volatile void *ptr, unsigned long with,
+ 
+ #define arch_xchg(ptr, with) 						\
+ 	({								\
+-		(__typeof__(*(ptr))) __xchg((ptr),			\
++		(__typeof__(*(ptr))) __arch_xchg((ptr),			\
+ 					    (unsigned long)(with),	\
+ 					    sizeof(*(ptr)));		\
+ 	})
+diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
+index 5f274be105671e..c1d776bb16b4ed 100644
+--- a/arch/parisc/include/asm/cmpxchg.h
++++ b/arch/parisc/include/asm/cmpxchg.h
+@@ -22,7 +22,7 @@ extern unsigned long __xchg64(unsigned long, volatile unsigned long *);
+ 
+ /* optimizer better get rid of switch since size is a constant */
+ static inline unsigned long
+-__xchg(unsigned long x, volatile void *ptr, int size)
++__arch_xchg(unsigned long x, volatile void *ptr, int size)
+ {
+ 	switch (size) {
+ #ifdef CONFIG_64BIT
+@@ -49,7 +49,7 @@ __xchg(unsigned long x, volatile void *ptr, int size)
+ 	__typeof__(*(ptr)) __ret;					\
+ 	__typeof__(*(ptr)) _x_ = (x);					\
+ 	__ret = (__typeof__(*(ptr)))					\
+-		__xchg((unsigned long)_x_, (ptr), sizeof(*(ptr)));	\
++		__arch_xchg((unsigned long)_x_, (ptr), sizeof(*(ptr)));	\
+ 	__ret;								\
+ })
+ 
+diff --git a/arch/powerpc/include/asm/cmpxchg.h b/arch/powerpc/include/asm/cmpxchg.h
+index d0ea0571e79ab5..dbb50c06f0bf4d 100644
+--- a/arch/powerpc/include/asm/cmpxchg.h
++++ b/arch/powerpc/include/asm/cmpxchg.h
+@@ -229,7 +229,7 @@ __xchg_local(void *ptr, unsigned long x, unsigned int size)
+ 		return __xchg_u64_local(ptr, x);
+ #endif
+ 	}
+-	BUILD_BUG_ON_MSG(1, "Unsupported size for __xchg");
++	BUILD_BUG_ON_MSG(1, "Unsupported size for __xchg_local");
+ 	return x;
+ }
+ 
+@@ -248,7 +248,7 @@ __xchg_relaxed(void *ptr, unsigned long x, unsigned int size)
+ 		return __xchg_u64_relaxed(ptr, x);
+ #endif
+ 	}
+-	BUILD_BUG_ON_MSG(1, "Unsupported size for __xchg_local");
++	BUILD_BUG_ON_MSG(1, "Unsupported size for __xchg_relaxed");
+ 	return x;
+ }
+ #define arch_xchg_local(ptr,x)						     \
+diff --git a/arch/riscv/include/asm/atomic.h b/arch/riscv/include/asm/atomic.h
+index 0dfe9d857a762b..bba472928b5393 100644
+--- a/arch/riscv/include/asm/atomic.h
++++ b/arch/riscv/include/asm/atomic.h
+@@ -261,7 +261,7 @@ c_t arch_atomic##prefix##_xchg_release(atomic##prefix##_t *v, c_t n)	\
+ static __always_inline							\
+ c_t arch_atomic##prefix##_xchg(atomic##prefix##_t *v, c_t n)		\
+ {									\
+-	return __xchg(&(v->counter), n, size);				\
++	return __arch_xchg(&(v->counter), n, size);			\
+ }									\
+ static __always_inline							\
+ c_t arch_atomic##prefix##_cmpxchg_relaxed(atomic##prefix##_t *v,	\
+diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+index 12debce235e52d..2f4726d3cfcc25 100644
+--- a/arch/riscv/include/asm/cmpxchg.h
++++ b/arch/riscv/include/asm/cmpxchg.h
+@@ -114,7 +114,7 @@
+ 					    _x_, sizeof(*(ptr)));	\
+ })
+ 
+-#define __xchg(ptr, new, size)						\
++#define __arch_xchg(ptr, new, size)					\
+ ({									\
+ 	__typeof__(ptr) __ptr = (ptr);					\
+ 	__typeof__(new) __new = (new);					\
+@@ -143,7 +143,7 @@
+ #define arch_xchg(ptr, x)						\
+ ({									\
+ 	__typeof__(*(ptr)) _x_ = (x);					\
+-	(__typeof__(*(ptr))) __xchg((ptr), _x_, sizeof(*(ptr)));	\
++	(__typeof__(*(ptr))) __arch_xchg((ptr), _x_, sizeof(*(ptr)));	\
+ })
+ 
+ #define xchg32(ptr, x)							\
+diff --git a/arch/s390/include/asm/cmpxchg.h b/arch/s390/include/asm/cmpxchg.h
+index 84c3f0d576c5b1..efc16f4aac8643 100644
+--- a/arch/s390/include/asm/cmpxchg.h
++++ b/arch/s390/include/asm/cmpxchg.h
+@@ -14,7 +14,7 @@
+ 
+ void __xchg_called_with_bad_pointer(void);
+ 
+-static __always_inline unsigned long __xchg(unsigned long x,
++static __always_inline unsigned long __arch_xchg(unsigned long x,
+ 					    unsigned long address, int size)
+ {
+ 	unsigned long old;
+@@ -77,7 +77,7 @@ static __always_inline unsigned long __xchg(unsigned long x,
+ 	__typeof__(*(ptr)) __ret;					\
+ 									\
+ 	__ret = (__typeof__(*(ptr)))					\
+-		__xchg((unsigned long)(x), (unsigned long)(ptr),	\
++		__arch_xchg((unsigned long)(x), (unsigned long)(ptr),	\
+ 		       sizeof(*(ptr)));					\
+ 	__ret;								\
+ })
+diff --git a/arch/sh/include/asm/cmpxchg.h b/arch/sh/include/asm/cmpxchg.h
+index 0ed9b3f4a57796..288f6f38d98fb4 100644
+--- a/arch/sh/include/asm/cmpxchg.h
++++ b/arch/sh/include/asm/cmpxchg.h
+@@ -22,7 +22,7 @@
+ 
+ extern void __xchg_called_with_bad_pointer(void);
+ 
+-#define __xchg(ptr, x, size)				\
++#define __arch_xchg(ptr, x, size)				\
+ ({							\
+ 	unsigned long __xchg__res;			\
+ 	volatile void *__xchg_ptr = (ptr);		\
+@@ -46,7 +46,7 @@ extern void __xchg_called_with_bad_pointer(void);
+ })
+ 
+ #define arch_xchg(ptr,x)	\
+-	((__typeof__(*(ptr)))__xchg((ptr),(unsigned long)(x), sizeof(*(ptr))))
++	((__typeof__(*(ptr)))__arch_xchg((ptr),(unsigned long)(x), sizeof(*(ptr))))
+ 
+ /* This function doesn't exist, so you'll get a linker error
+  * if something tries to do an invalid cmpxchg(). */
+diff --git a/arch/sparc/include/asm/cmpxchg_32.h b/arch/sparc/include/asm/cmpxchg_32.h
+index 27a57a3a7597eb..7a1339533d1d7e 100644
+--- a/arch/sparc/include/asm/cmpxchg_32.h
++++ b/arch/sparc/include/asm/cmpxchg_32.h
+@@ -15,7 +15,7 @@
+ unsigned long __xchg_u32(volatile u32 *m, u32 new);
+ void __xchg_called_with_bad_pointer(void);
+ 
+-static inline unsigned long __xchg(unsigned long x, __volatile__ void * ptr, int size)
++static inline unsigned long __arch_xchg(unsigned long x, __volatile__ void * ptr, int size)
+ {
+ 	switch (size) {
+ 	case 4:
+@@ -25,7 +25,7 @@ static inline unsigned long __xchg(unsigned long x, __volatile__ void * ptr, int
+ 	return x;
+ }
+ 
+-#define arch_xchg(ptr,x) ({(__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr)));})
++#define arch_xchg(ptr,x) ({(__typeof__(*(ptr)))__arch_xchg((unsigned long)(x),(ptr),sizeof(*(ptr)));})
+ 
+ /* Emulate cmpxchg() the same way we emulate atomics,
+  * by hashing the object address and indexing into an array
+diff --git a/arch/sparc/include/asm/cmpxchg_64.h b/arch/sparc/include/asm/cmpxchg_64.h
+index 12d00a42c0a3ed..4c22fd9110c945 100644
+--- a/arch/sparc/include/asm/cmpxchg_64.h
++++ b/arch/sparc/include/asm/cmpxchg_64.h
+@@ -55,7 +55,7 @@ static inline unsigned long xchg64(__volatile__ unsigned long *m, unsigned long
+ #define arch_xchg(ptr,x)							\
+ ({	__typeof__(*(ptr)) __ret;					\
+ 	__ret = (__typeof__(*(ptr)))					\
+-		__xchg((unsigned long)(x), (ptr), sizeof(*(ptr)));	\
++		__arch_xchg((unsigned long)(x), (ptr), sizeof(*(ptr)));	\
+ 	__ret;								\
+ })
+ 
+@@ -87,7 +87,7 @@ xchg16(__volatile__ unsigned short *m, unsigned short val)
+ 	return (load32 & mask) >> bit_shift;
+ }
+ 
+-static inline unsigned long __xchg(unsigned long x, __volatile__ void * ptr,
++static inline unsigned long __arch_xchg(unsigned long x, __volatile__ void * ptr,
+ 				       int size)
+ {
+ 	switch (size) {
+diff --git a/arch/xtensa/include/asm/cmpxchg.h b/arch/xtensa/include/asm/cmpxchg.h
+index eb87810357ad88..675a11ea8de76b 100644
+--- a/arch/xtensa/include/asm/cmpxchg.h
++++ b/arch/xtensa/include/asm/cmpxchg.h
+@@ -170,7 +170,7 @@ static inline unsigned long xchg_u32(volatile int * m, unsigned long val)
+ }
+ 
+ #define arch_xchg(ptr,x) \
+-	((__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr))))
++	((__typeof__(*(ptr)))__arch_xchg((unsigned long)(x),(ptr),sizeof(*(ptr))))
+ 
+ static inline u32 xchg_small(volatile void *ptr, u32 x, int size)
+ {
+@@ -203,7 +203,7 @@ static inline u32 xchg_small(volatile void *ptr, u32 x, int size)
+ extern void __xchg_called_with_bad_pointer(void);
+ 
+ static __inline__ unsigned long
+-__xchg(unsigned long x, volatile void * ptr, int size)
++__arch_xchg(unsigned long x, volatile void * ptr, int size)
+ {
+ 	switch (size) {
+ 	case 1:
+-- 
+2.34.1
 
-Got it.
-
-In the meantime I'll double check the rest!
-
-Thanks.
-Binbin
->
-> >                         ls2x_i2c_init(priv);
-> >                 return ret;
-> >         }
-> >
-> >         if (stop) {
-> >                 /* Failed to issue STOP. Needs reinit. */
-> >                 ret = ls2x_i2c_stop(priv);
-> >                 if (ret)
-> >                         ls2x_i2c_init(priv);
-> >         }
-> >
-> >         return ret;
-> > }
-> >
-> > Do you think this is better?
->
-> > > > >                 }
-> > > > >         }
-> > > > >
-> > > > >         if (reinit)
-> > > > >                 ls2x_i2c_init(priv);
-> > > > >
-> > > > >         return ret;
-> > > > > }
-> > > > >
-> > > > > Do you think this is better?
-> > > >
-> > > > Slightly, but still twisted at the end with the play of error codes. Try to
-> > > > make it even more clear.
-> > > >
-> > > > > > functions and then do something like
-> > > > > >
-> > > > > > _read_one()
-> > > > > > {
-> > > > > >         ret = start();
-> > > > > >         if (ret)
-> > > > > >                 goto _stop; // Do we really need this?
-> > > > > >
-> > > > > >                 ret = rx();
-> > > > > >                 if (ret)
-> > > > > >                         goto _stop; // Do we need this?
-> > > > > >
-> > > > > >                 /* By setting this call the stop */
-> > > > > >                 if (stop)
-> > > > > >                         ret = -ENXIO;
-> > > > > >
-> > > > > >         out_send_stop:
-> > > > > >                 if (ret == ...)
-> > > > > >                         return _stop();
-> > > > > >                 // I don't like above, so this error checking/setting parts
-> > > > > >                 // also can be rethought and refactored accordingly
-> > > > > >
-> > > > > >                 return ret;
-> > > > > > }
-> > > > > >
-> > > > > >
-> > > > > >         if (is_read)
-> > > > > >                 ret = _read_one();
-> > > > > >         else
-> > > > > >                 ret = _write_one();
-> > > > > >
-> > > > > >         if (ret)
-> > > > > >                 _init();
-> > > > > >
-> > > > > >         return ret;
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
