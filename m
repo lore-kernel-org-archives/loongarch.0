@@ -1,334 +1,519 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3DC462F
-	for <loongarch@lists.linux.dev>; Tue,  3 Jan 2023 08:42:44 +0000 (UTC)
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8AxDOuD6rNj6RYKAA--.22125S3;
-	Tue, 03 Jan 2023 16:42:43 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxUuV_6rNj4csSAA--.60257S3;
-	Tue, 03 Jan 2023 16:42:40 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Fix irq enable in exception handlers
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Qi Hu <huqi@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20221221074238.6699-1-hejinyang@loongson.cn>
- <CAAhV-H6VX=d1oymY0rh-mwOPMuBsYd7C9RzQat8BmmnrJ7apng@mail.gmail.com>
- <8eaea09e-67b0-5e51-4632-2c31a4c56a3e@loongson.cn>
- <CAAhV-H7maW1YWhfvCzYVix=aCMMFbx0KkGodaBjka4ThunBO5Q@mail.gmail.com>
- <1c578efd-ae8a-2d80-e505-a09b1a2f7eaa@loongson.cn>
- <b267cab1-3df4-6263-9c83-0061f20dd4a4@loongson.cn>
- <2364400d-bb1e-cbe2-8a65-adbe87186938@loongson.cn>
- <7a028a4d-71f0-7064-cc1c-0ca50749ef2e@loongson.cn>
- <2190a195-53bb-09a8-9130-101c040edd09@loongson.cn>
- <CAAhV-H7--u0aXy-aAdkJ_KBwimcJ-V+yfbFqS8MsAOHpArWJ2g@mail.gmail.com>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <f0192bb6-2a5c-d51e-ef11-190fd61af0b9@loongson.cn>
-Date: Tue, 3 Jan 2023 16:42:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B0020E4
+	for <loongarch@lists.linux.dev>; Tue,  3 Jan 2023 08:58:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DB4EC433F1
+	for <loongarch@lists.linux.dev>; Tue,  3 Jan 2023 08:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1672736334;
+	bh=XtLtqiz20t99NLW1SJaIufxtn21H6y1AVvyf97/yRaA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eGgXhotOlb1l/8Mbi2jRxO2jRbPn/ULOMc6VMfHb6msXxBemFdCj80kmXvvPR1Q2t
+	 8jir/zAeHmKNebbkoB3QVr9YTooDh1j4Vu6AfaSTaeeeVSCCRG9Qlw9rk9ypwMND8Y
+	 KbXeZK/SgeAzuTBC84fqUVp/XUR39iHvwQOq68GDSv0YC23wLjj2tEHcbA7jrLIVoO
+	 +R2uB1+Hrgl/Fl7MGJuKnqfshIsU/2MSeCQrkwg8rpBTbqqPB2wPDQY7A3haCK/BHM
+	 wNdmK1XI47Sq+9DRXAKcsfMzNWvKQNf+Zz6IvBJLe/WkjRP4o8ZqqYzV2ua3xPpbF7
+	 6++xWQ6uIQSJQ==
+Received: by mail-ed1-f48.google.com with SMTP id c34so36324839edf.0
+        for <loongarch@lists.linux.dev>; Tue, 03 Jan 2023 00:58:54 -0800 (PST)
+X-Gm-Message-State: AFqh2kptAAxUF6K/B9PRK3Xs0vJqLRRpV9uWXn/pJjh4IatSK5zDzOI3
+	/33F7xU0FbDghxYXsFR25d0iNRFteR6D9pXRA1M=
+X-Google-Smtp-Source: AMrXdXsEuy/k7rgkOezBfX4czLspQVdtEIL1Xe7+MYe+bFb71b3Vya73t4PiIrzjYaauhX5r/BC/teIdlWKi9UG+ogc=
+X-Received: by 2002:a05:6402:1751:b0:488:51bf:f809 with SMTP id
+ v17-20020a056402175100b0048851bff809mr1742116edx.156.1672736332649; Tue, 03
+ Jan 2023 00:58:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7--u0aXy-aAdkJ_KBwimcJ-V+yfbFqS8MsAOHpArWJ2g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8DxUuV_6rNj4csSAA--.60257S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWfGrWDtF1xAr1fGFWUtw4UXFb_yoWDAFWrpF
-	17AF4UGF4UJr17Xr12qw1jvr1UtrW8tr18Wr1UAw15Gw1qyr1DJr18Jr4UGF1UZr1UGr10
-	qr1UtF12g3WUJFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
-	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
-	xGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
-	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
-	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcsjjDUUUU
+References: <20221229061516.31671-1-hejinyang@loongson.cn> <20221229061516.31671-5-hejinyang@loongson.cn>
+ <CAAhV-H7J7yWpM-xLpK38gwEw3cMNU-BaxF3atVmDLyRxBcVrLg@mail.gmail.com> <ab0b221e-db13-3cac-dca1-bbd67f739ab3@loongson.cn>
+In-Reply-To: <ab0b221e-db13-3cac-dca1-bbd67f739ab3@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 3 Jan 2023 16:58:40 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6feh3tD6myg5ALhVk8VxfkP-EnUxrgQ4F3JkKNZsfk0w@mail.gmail.com>
+Message-ID: <CAAhV-H6feh3tD6myg5ALhVk8VxfkP-EnUxrgQ4F3JkKNZsfk0w@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] LoongArch: Strip guess_unwinder out from prologue_unwinder
+To: Jinyang He <hejinyang@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Qing Zhang <zhangqing@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-
-On 2023-01-03 12:54, Huacai Chen wrote:
-> On Fri, Dec 30, 2022 at 1:58 PM Jinyang He <hejinyang@loongson.cn> wrote:
->>
->> On 2022-12-29 14:54, Qi Hu wrote:
->>> On 2022/12/29 14:13, Jinyang He wrote:
->>>> On 2022-12-29 00:51, Qi Hu wrote:
->>>>
->>>>> On 2022/12/27 18:10, Jinyang He wrote:
->>>>>> On 2022-12-27 17:52, Huacai Chen wrote:
->>>>>>
->>>>>>> On Tue, Dec 27, 2022 at 5:30 PM Jinyang He <hejinyang@loongson.cn>
->>>>>>> wrote:
->>>>>>>> On 2022-12-27 15:37, Huacai Chen wrote:
->>>>>>>>> Hi, Jinyang,
->>>>>>>>>
->>>>>>>>> Move die_if_kernel to irq disabled context to solve what?
->>>>>>>> For more strict logical. If the code flow go to die in
->>>>>>>> die_if_kernel(),
->>>>>>>> its interrupt state is enable, that means it may cause schedule.
->>>>>>>> So I think it is better to call die_if_kernel() firstly.
->>>>>>> die_if_kernel is called with irq enabled in old kernels for several
->>>>>>> years, and has no problems.
->>>>>>
->>>>>> I think because it never call die() in die_if_kernel(). What I do
->>>>>> emphasize is that there needs to be more strict logic here than
->>>>>> it worked well in the past. I bet if die_if_kernel() was removed,
->>>>>> it will still work well in the future.
->>>>>>
->>>>>>
->>>>>>>>>     And LBT is
->>>>>>>>> surely allowed to be triggered in kernel context.
->>>>>>>> I'm not familar with lbt, I just not see any lbt codes in kernel.
->>>>>>>> Plz,
->>>>>>>> how lbt exception triggered, and how kernel trigger lbt exception?
->>>>>>> You can ask Huqi for more details, and this was discussed publicly
->>>>>>> last week.
->>>>>> To: Qi Hu
->>>>>>
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>>
->>>>>> We really need some help. Can you give us some ideas?
->>>>>>
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>> Jinyang
->>>>>>
->>>>> Huacai is correct. The LBT disable exception (BTD) can be triggered
->>>>> in kernel context.
->>>>>
->>>>> If the CSR.ENEU.BTE == 0 [^1], the LBT instructions (these [^2] will
->>>>> be used in the kernel) will trigger the exception.
->>>>>
->>>>> Unfortunately, when you want to do some fpu_{save, restore}, you
->>>>> need to use some LBT instructions [^3] [^4]. So if FPD is triggered,
->>>>> LBT might still not be enabled, and the 'do_lbt' will be called in
->>>>> the kernel context.
->>>>>
->>>>> Hope the information can help. Thanks.
->>>>>
->>>>>
->>>>> [1]
->>>>> https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#extended-component-unit-enable
->>>>>
->>>>> [2]
->>>>> https://github.com/loongson/linux/pull/4/files#diff-381d03cf86e2796d280e2fc82c005409d5e44b4bbbf90dd0dc17f5f0fa5553f1R140-R184
->>>>>
->>>>> [3]
->>>>> https://github.com/loongson/linux/pull/4/files#diff-381d03cf86e2796d280e2fc82c005409d5e44b4bbbf90dd0dc17f5f0fa5553f1R218-R230
->>>>>
->>>>> [4]
->>>>> https://github.com/loongson/linux/pull/4/files#diff-381d03cf86e2796d280e2fc82c005409d5e44b4bbbf90dd0dc17f5f0fa5553f1R236-R263
->>>>>
->>>>>
->>>> Hi,
->>>>
->>>>
->>>> That's helpful. Thanks!
->>>>
->>>>
->>>> But I still wonder if SXD or ASXD have the same possibility of being
->>>> triggered in the kernel mode by sc_save_{lsx, lasx} or other place.
->>>> Do we need remove these die_if_kernel codes in do_lasx() and do_lsx()?
->>>>
->>>>
->>>> Jinyang
->>>>
->>> Hi Jinyang,
->>>
->>> I think only BTD has this tricky situation, because there is some
->>> overlap between FPD/SXD/ASXD and BTD.
->>>
->>> So, in my view, SXD or ASXD will not be triggered in kernel mode.
->>>
->>> Thanks.
->>>
->>>
->>> Qi
->> Got it. Thanks for your help. And I'll fix my patch in next version.
-> In my opinion only the do_bp() modification is useful, and that part
-> can be squashed to Tiezhu's kprobe patches.
-
-Yes, I have to admit that only the modification of do_bp() is useful,
-in fact other modification are not triggered, I think. Most do_xxx is
-irq enabled or in user mode before triggered. Although I can give a test
-in Qemu that make do_ri() triggered in irq disable state, and then it
-will hang if unconditionally call local_irq_enable, I know it makes no sense
-because these codes can not be triggered currently, just like this BUG
-cannot be found only before Tiezhu supporting kprobe on LoongArch.
-
-If leaving potentially illogical codes is allowed, squash it to Tiezhu's
-kprobe patches.
-
-Jinyang
-
+On Tue, Jan 3, 2023 at 4:41 PM Jinyang He <hejinyang@loongson.cn> wrote:
 >
-> Huacai
->>
->> Jinyang
->>
->>
->>>>> Qi
->>>>>
->>>>>>> Huacai
->>>>>>>> Thanks,
->>>>>>>>
->>>>>>>> Jinyang
->>>>>>>>
->>>>>>>>
->>>>>>>>> Huacai
->>>>>>>>>
->>>>>>>>> On Wed, Dec 21, 2022 at 3:43 PM Jinyang He
->>>>>>>>> <hejinyang@loongson.cn> wrote:
->>>>>>>>>> The interrupt state can be got by regs->csr_prmd. Once previous
->>>>>>>>>> interrupt state is disable, we shouldn't enable interrupt if we
->>>>>>>>>> triggered exception which can be triggered in kernel mode. So
->>>>>>>>>> conditionally enable interrupt. For those do_\exception which
->>>>>>>>>> can not triggered in kernel mode but need enable interrupt, call
->>>>>>>>>> die_if_kernel() firstly. And for do_lsx, do_lasx and do_lbt cannot
->>>>>>>>>> triggered in kernel mode, too.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
->>>>>>>>>> ---
->>>>>>>>>>     arch/loongarch/kernel/traps.c | 19 ++++++++++---------
->>>>>>>>>>     1 file changed, 10 insertions(+), 9 deletions(-)
->>>>>>>>>>
->>>>>>>>>> diff --git a/arch/loongarch/kernel/traps.c
->>>>>>>>>> b/arch/loongarch/kernel/traps.c
->>>>>>>>>> index 1ea14f6c18d3..3ac7b32d1e15 100644
->>>>>>>>>> --- a/arch/loongarch/kernel/traps.c
->>>>>>>>>> +++ b/arch/loongarch/kernel/traps.c
->>>>>>>>>> @@ -340,9 +340,9 @@ asmlinkage void noinstr do_fpe(struct
->>>>>>>>>> pt_regs *regs, unsigned long fcsr)
->>>>>>>>>>
->>>>>>>>>>            /* Clear FCSR.Cause before enabling interrupts */
->>>>>>>>>>            write_fcsr(LOONGARCH_FCSR0, fcsr & ~mask_fcsr_x(fcsr));
->>>>>>>>>> -       local_irq_enable();
->>>>>>>>>>
->>>>>>>>>>            die_if_kernel("FP exception in kernel code", regs);
->>>>>>>>>> +       local_irq_enable();
->>>>>>>>>>
->>>>>>>>>>            sig = SIGFPE;
->>>>>>>>>>            fault_addr = (void __user *) regs->csr_era;
->>>>>>>>>> @@ -432,7 +432,8 @@ asmlinkage void noinstr do_bp(struct
->>>>>>>>>> pt_regs *regs)
->>>>>>>>>>            unsigned long era = exception_era(regs);
->>>>>>>>>>            irqentry_state_t state = irqentry_enter(regs);
->>>>>>>>>>
->>>>>>>>>> -       local_irq_enable();
->>>>>>>>>> +       if (regs->csr_prmd & CSR_PRMD_PIE)
->>>>>>>>>> +               local_irq_enable();
->>>>>>>>>>            current->thread.trap_nr = read_csr_excode();
->>>>>>>>>>            if (__get_inst(&opcode, (u32 *)era, user))
->>>>>>>>>>                    goto out_sigsegv;
->>>>>>>>>> @@ -514,7 +515,8 @@ asmlinkage void noinstr do_ri(struct
->>>>>>>>>> pt_regs *regs)
->>>>>>>>>>            unsigned int __user *era = (unsigned int __user
->>>>>>>>>> *)exception_era(regs);
->>>>>>>>>>            irqentry_state_t state = irqentry_enter(regs);
->>>>>>>>>>
->>>>>>>>>> -       local_irq_enable();
->>>>>>>>>> +       if (regs->csr_prmd & CSR_PRMD_PIE)
->>>>>>>>>> +               local_irq_enable();
->>>>>>>>>>            current->thread.trap_nr = read_csr_excode();
->>>>>>>>>>
->>>>>>>>>>            if (notify_die(DIE_RI, "RI Fault", regs, 0,
->>>>>>>>>> current->thread.trap_nr,
->>>>>>>>>> @@ -606,8 +608,8 @@ asmlinkage void noinstr do_fpu(struct
->>>>>>>>>> pt_regs *regs)
->>>>>>>>>>     {
->>>>>>>>>>            irqentry_state_t state = irqentry_enter(regs);
->>>>>>>>>>
->>>>>>>>>> -       local_irq_enable();
->>>>>>>>>>            die_if_kernel("do_fpu invoked from kernel context!",
->>>>>>>>>> regs);
->>>>>>>>>> +       local_irq_enable();
->>>>>>>>>>            BUG_ON(is_lsx_enabled());
->>>>>>>>>>            BUG_ON(is_lasx_enabled());
->>>>>>>>>>
->>>>>>>>>> @@ -623,13 +625,13 @@ asmlinkage void noinstr do_lsx(struct
->>>>>>>>>> pt_regs *regs)
->>>>>>>>>>     {
->>>>>>>>>>            irqentry_state_t state = irqentry_enter(regs);
->>>>>>>>>>
->>>>>>>>>> +       die_if_kernel("do_lsx invoked from kernel context!",
->>>>>>>>>> regs);
->>>>>>>>>>            local_irq_enable();
->>>>>>>>>>            if (!cpu_has_lsx) {
->>>>>>>>>>                    force_sig(SIGILL);
->>>>>>>>>>                    goto out;
->>>>>>>>>>            }
->>>>>>>>>>
->>>>>>>>>> -       die_if_kernel("do_lsx invoked from kernel context!",
->>>>>>>>>> regs);
->>>>>>>>>>            BUG_ON(is_lasx_enabled());
->>>>>>>>>>
->>>>>>>>>>            preempt_disable();
->>>>>>>>>> @@ -645,14 +647,13 @@ asmlinkage void noinstr do_lasx(struct
->>>>>>>>>> pt_regs *regs)
->>>>>>>>>>     {
->>>>>>>>>>            irqentry_state_t state = irqentry_enter(regs);
->>>>>>>>>>
->>>>>>>>>> +       die_if_kernel("do_lasx invoked from kernel context!",
->>>>>>>>>> regs);
->>>>>>>>>>            local_irq_enable();
->>>>>>>>>>            if (!cpu_has_lasx) {
->>>>>>>>>>                    force_sig(SIGILL);
->>>>>>>>>>                    goto out;
->>>>>>>>>>            }
->>>>>>>>>>
->>>>>>>>>> -       die_if_kernel("do_lasx invoked from kernel context!",
->>>>>>>>>> regs);
->>>>>>>>>> -
->>>>>>>>>>            preempt_disable();
->>>>>>>>>>            init_restore_lasx();
->>>>>>>>>>            preempt_enable();
->>>>>>>>>> @@ -666,6 +667,7 @@ asmlinkage void noinstr do_lbt(struct
->>>>>>>>>> pt_regs *regs)
->>>>>>>>>>     {
->>>>>>>>>>            irqentry_state_t state = irqentry_enter(regs);
->>>>>>>>>>
->>>>>>>>>> +       die_if_kernel("do_lbt invoked from kernel context!",
->>>>>>>>>> regs);
->>>>>>>>>>            local_irq_enable();
->>>>>>>>>>            force_sig(SIGILL);
->>>>>>>>>>            local_irq_disable();
->>>>>>>>>> @@ -677,7 +679,6 @@ asmlinkage void noinstr do_reserved(struct
->>>>>>>>>> pt_regs *regs)
->>>>>>>>>>     {
->>>>>>>>>>            irqentry_state_t state = irqentry_enter(regs);
->>>>>>>>>>
->>>>>>>>>> -       local_irq_enable();
->>>>>>>>>>            /*
->>>>>>>>>>             * Game over - no way to handle this if it ever
->>>>>>>>>> occurs. Most probably
->>>>>>>>>>             * caused by a fatal error after another
->>>>>>>>>> hardware/software error.
->>>>>>>>>> @@ -685,8 +686,8 @@ asmlinkage void noinstr do_reserved(struct
->>>>>>>>>> pt_regs *regs)
->>>>>>>>>>            pr_err("Caught reserved exception %u on pid:%d [%s] -
->>>>>>>>>> should not happen\n",
->>>>>>>>>>                    read_csr_excode(), current->pid, current->comm);
->>>>>>>>>>            die_if_kernel("do_reserved exception", regs);
->>>>>>>>>> +       local_irq_enable();
->>>>>>>>>>            force_sig(SIGUNUSED);
->>>>>>>>>> -
->>>>>>>>>>            local_irq_disable();
->>>>>>>>>>
->>>>>>>>>>            irqentry_exit(regs, state);
->>>>>>>>>> --
->>>>>>>>>> 2.34.3
->>>>>>>>>>
+> On 2023-01-01 17:56, Huacai Chen wrote:
+>
+> > Hi, Jinyang,
+> >
+> > On Thu, Dec 29, 2022 at 2:15 PM Jinyang He <hejinyang@loongson.cn> wrote:
+> >> The prolugue unwinder rely on symbol info. When PC is not in kernel
+> >> text address, it cannot find relative symbol info and it will be broken.
+> >> The guess unwinder will be used in this case. And the guess unwinder
+> >> codes in prolugue unwinder is redundant. Strip it out and set the
+> >> unwinder info in unwind_state.
+> >>
+> >> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> >> ---
+> >>   arch/loongarch/include/asm/unwind.h     |  26 ++++-
+> >>   arch/loongarch/kernel/Makefile          |   3 +-
+> >>   arch/loongarch/kernel/traps.c           |   3 -
+> >>   arch/loongarch/kernel/unwind.c          |  52 +++++++++
+> >>   arch/loongarch/kernel/unwind_guess.c    |  41 ++------
+> >>   arch/loongarch/kernel/unwind_prologue.c | 133 +++++++++---------------
+> >>   6 files changed, 132 insertions(+), 126 deletions(-)
+> >>   create mode 100644 arch/loongarch/kernel/unwind.c
+> >>
+> >> diff --git a/arch/loongarch/include/asm/unwind.h b/arch/loongarch/include/asm/unwind.h
+> >> index 6ece48f0ff77..4a55fd7b77ad 100644
+> >> --- a/arch/loongarch/include/asm/unwind.h
+> >> +++ b/arch/loongarch/include/asm/unwind.h
+> >> @@ -13,20 +13,30 @@
+> >>   #include <asm/ptrace.h>
+> >>   #include <asm/stacktrace.h>
+> >>
+> >> -enum unwinder_type {
+> >> -       UNWINDER_GUESS,
+> >> -       UNWINDER_PROLOGUE,
+> >> -};
+> >> +struct unwinder_ops;
+> >>
+> >>   struct unwind_state {
+> >> -       char type; /* UNWINDER_XXX */
+> >>          struct stack_info stack_info;
+> >>          struct task_struct *task;
+> >>          bool first, error, is_ftrace;
+> >>          int graph_idx;
+> >>          unsigned long sp, pc, ra;
+> >> +       const struct unwinder_ops *ops;
+> >> +};
+> >> +
+> >> +struct unwinder_ops {
+> >> +       void (*unwind_start)(struct unwind_state *state,
+> >> +                            struct task_struct *task, struct pt_regs *regs);
+> >> +       bool (*unwind_next_frame)(struct unwind_state *state);
+> >> +       unsigned long (*unwind_get_return_address)(struct unwind_state *state);
+> >>   };
+> >>
+> >> +extern const struct unwinder_ops *default_unwinder;
+> >> +extern const struct unwinder_ops unwinder_guess;
+> >> +#ifdef CONFIG_UNWINDER_PROLOGUE
+> >> +extern const struct unwinder_ops unwinder_prologue;
+> >> +#endif
+> >> +
+> >>   void unwind_start(struct unwind_state *state,
+> >>                    struct task_struct *task, struct pt_regs *regs);
+> >>   bool unwind_next_frame(struct unwind_state *state);
+> >> @@ -49,4 +59,10 @@ static inline unsigned long unwind_graph_addr(struct unwind_state *state,
+> >>          return ftrace_graph_ret_addr(state->task, &state->graph_idx,
+> >>                                       pc, (unsigned long *)(cfa - GRAPH_FAKE_OFFSET));
+> >>   }
+> >> +
+> >> +static inline void unwind_register_unwinder(struct unwind_state *state,
+> >> +                                         const struct unwinder_ops *unwinder)
+> >> +{
+> >> +       state->ops = unwinder;
+> >> +}
+> >>   #endif /* _ASM_UNWIND_H */
+> >> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+> >> index 7ca65195f7f8..cb6029ea3ea9 100644
+> >> --- a/arch/loongarch/kernel/Makefile
+> >> +++ b/arch/loongarch/kernel/Makefile
+> >> @@ -8,7 +8,7 @@ extra-y         := vmlinux.lds
+> >>   obj-y          += head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
+> >>                     traps.o irq.o idle.o process.o dma.o mem.o io.o reset.o switch.o \
+> >>                     elf.o syscall.o signal.o time.o topology.o inst.o ptrace.o vdso.o \
+> >> -                  alternative.o unaligned.o
+> >> +                  alternative.o unaligned.o unwind.o unwind_guess.o
+> >>
+> >>   obj-$(CONFIG_ACPI)             += acpi.o
+> >>   obj-$(CONFIG_EFI)              += efi.o
+> >> @@ -42,7 +42,6 @@ obj-$(CONFIG_MAGIC_SYSRQ)     += sysrq.o
+> >>   obj-$(CONFIG_KEXEC)            += machine_kexec.o relocate_kernel.o
+> >>   obj-$(CONFIG_CRASH_DUMP)       += crash_dump.o
+> >>
+> >> -obj-$(CONFIG_UNWINDER_GUESS)   += unwind_guess.o
+> >>   obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
+> > We do have CONFIG_UNWINDER_GUESS and I don't like to build guess
+> > unwinder unconditionally, maybe we can refactor it to make the
+> > unwinder still user selectable.
+>
+>
+> In order to provide backtrace info to the user, prologue unwinder
+> will use guess unwinder when its first pc is not a kernel address,
+> such as the first PC is in ebpf generated codes. This patch is intended
+> to extract guess unwinder codes to avoid redundant codes. And if we provide
+> a new unwinder in the future like orc unwinder which take effect after
+> orc_init is set, we can use another backup unwinder like guess unwinder in
+> case we need backtrace before orc_init being set.
+>
+> If you mind this, could we just do as follows,
+>
+> obj-$(CONFIG_UNWINDER_GUESS)   += unwind_guess.o
+> obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o unwind_guess.o
+>
+> Or copy the guess unwinder codes to unwind_prologue.c and set another
+> name for guess unwinder.
+Can we move common functions to unwind.c (or something similar) and
+make unwind_guess.c/unwind_prologue.c as a frontend?
 
+Huacai
+>
+>
+> Thanks,
+>
+> Jinyang
+>
+> > Huacai
+> >>   obj-$(CONFIG_PERF_EVENTS)      += perf_event.o perf_regs.o
+> >> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+> >> index 3adc44832205..1ea14f6c18d3 100644
+> >> --- a/arch/loongarch/kernel/traps.c
+> >> +++ b/arch/loongarch/kernel/traps.c
+> >> @@ -72,9 +72,6 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs,
+> >>          if (!task)
+> >>                  task = current;
+> >>
+> >> -       if (user_mode(regs))
+> >> -               state.type = UNWINDER_GUESS;
+> >> -
+> >>          printk("%sCall Trace:", loglvl);
+> >>          for (unwind_start(&state, task, pregs);
+> >>                !unwind_done(&state); unwind_next_frame(&state)) {
+> >> diff --git a/arch/loongarch/kernel/unwind.c b/arch/loongarch/kernel/unwind.c
+> >> new file mode 100644
+> >> index 000000000000..24d2cf99bfb6
+> >> --- /dev/null
+> >> +++ b/arch/loongarch/kernel/unwind.c
+> >> @@ -0,0 +1,52 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Copyright (C) 2022 Loongson Technology Corporation Limited
+> >> + */
+> >> +#include <asm/unwind.h>
+> >> +
+> >> +#if defined(CONFIG_UNWINDER_GUESS)
+> >> +const struct unwinder_ops *default_unwinder = &unwinder_guess;
+> >> +#elif defined(CONFIG_UNWINDER_PROLOGUE)
+> >> +const struct unwinder_ops *default_unwinder = &unwinder_prologue;
+> >> +#endif
+> >> +
+> >> +unsigned long unwind_get_return_address(struct unwind_state *state)
+> >> +{
+> >> +       if (!state->ops || unwind_done(state))
+> >> +               return 0;
+> >> +       return state->ops->unwind_get_return_address(state);
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(unwind_get_return_address);
+> >> +
+> >> +void unwind_start(struct unwind_state *state, struct task_struct *task,
+> >> +                   struct pt_regs *regs)
+> >> +{
+> >> +       memset(state, 0, sizeof(*state));
+> >> +       unwind_register_unwinder(state, default_unwinder);
+> >> +       if (regs) {
+> >> +               state->sp = regs->regs[3];
+> >> +               state->pc = regs->csr_era;
+> >> +               state->ra = regs->regs[1];
+> >> +       } else if (task == current || task == NULL) {
+> >> +               state->sp = (unsigned long)__builtin_frame_address(0);
+> >> +               state->pc = (unsigned long)__builtin_return_address(0);
+> >> +               state->ra = 0;
+> >> +       } else {
+> >> +               state->sp = thread_saved_fp(task);
+> >> +               state->pc = thread_saved_ra(task);
+> >> +               state->ra = 0;
+> >> +       }
+> >> +       state->task = task;
+> >> +       get_stack_info(state->sp, state->task, &state->stack_info);
+> >> +       state->pc = unwind_graph_addr(state, state->pc, state->sp);
+> >> +       state->ops->unwind_start(state, task, regs);
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(unwind_start);
+> >> +
+> >> +bool unwind_next_frame(struct unwind_state *state)
+> >> +{
+> >> +       if (!state->ops || unwind_done(state))
+> >> +               return false;
+> >> +       return state->ops->unwind_next_frame(state);
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(unwind_next_frame);
+> >> diff --git a/arch/loongarch/kernel/unwind_guess.c b/arch/loongarch/kernel/unwind_guess.c
+> >> index 935d24f8c95c..b7ca2b88ac63 100644
+> >> --- a/arch/loongarch/kernel/unwind_guess.c
+> >> +++ b/arch/loongarch/kernel/unwind_guess.c
+> >> @@ -7,51 +7,23 @@
+> >>
+> >>   #include <asm/unwind.h>
+> >>
+> >> -unsigned long unwind_get_return_address(struct unwind_state *state)
+> >> +static unsigned long get_return_address(struct unwind_state *state)
+> >>   {
+> >> -       if (unwind_done(state))
+> >> -               return 0;
+> >>          return state->pc;
+> >>   }
+> >> -EXPORT_SYMBOL_GPL(unwind_get_return_address);
+> >>
+> >> -void unwind_start(struct unwind_state *state, struct task_struct *task,
+> >> +static void start(struct unwind_state *state, struct task_struct *task,
+> >>                      struct pt_regs *regs)
+> >>   {
+> >> -       memset(state, 0, sizeof(*state));
+> >> -
+> >> -       if (regs) {
+> >> -               state->sp = regs->regs[3];
+> >> -               state->pc = regs->csr_era;
+> >> -       } else if (task == current || task == NULL) {
+> >> -               state->sp = (unsigned long)__builtin_frame_address(0);
+> >> -               state->pc = (unsigned long)__builtin_return_address(0);
+> >> -       } else {
+> >> -               state->sp = thread_saved_fp(task);
+> >> -               state->pc = thread_saved_ra(task);
+> >> -       }
+> >> -
+> >> -       state->task = task;
+> >> -       state->first = true;
+> >> -       state->pc = unwind_graph_addr(state, state->pc, state->sp);
+> >> -       get_stack_info(state->sp, state->task, &state->stack_info);
+> >> -
+> >>          if (!unwind_done(state) && !__kernel_text_address(state->pc))
+> >>                  unwind_next_frame(state);
+> >>   }
+> >> -EXPORT_SYMBOL_GPL(unwind_start);
+> >>
+> >> -bool unwind_next_frame(struct unwind_state *state)
+> >> +static bool next_frame(struct unwind_state *state)
+> >>   {
+> >>          struct stack_info *info = &state->stack_info;
+> >>          unsigned long addr;
+> >>
+> >> -       if (unwind_done(state))
+> >> -               return false;
+> >> -
+> >> -       if (state->first)
+> >> -               state->first = false;
+> >> -
+> >>          do {
+> >>                  for (state->sp += sizeof(unsigned long);
+> >>                       state->sp < info->end;
+> >> @@ -68,4 +40,9 @@ bool unwind_next_frame(struct unwind_state *state)
+> >>
+> >>          return false;
+> >>   }
+> >> -EXPORT_SYMBOL_GPL(unwind_next_frame);
+> >> +
+> >> +const struct unwinder_ops unwinder_guess = {
+> >> +       .unwind_start = start,
+> >> +       .unwind_next_frame = next_frame,
+> >> +       .unwind_get_return_address = get_return_address,
+> >> +};
+> >> diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
+> >> index f7994ed05f04..beb57ea24da2 100644
+> >> --- a/arch/loongarch/kernel/unwind_prologue.c
+> >> +++ b/arch/loongarch/kernel/unwind_prologue.c
+> >> @@ -19,31 +19,19 @@ static inline void unwind_state_fixup(struct unwind_state *state)
+> >>   #endif
+> >>   }
+> >>
+> >> -unsigned long unwind_get_return_address(struct unwind_state *state)
+> >> +static unsigned long get_return_address(struct unwind_state *state)
+> >>   {
+> >> -       if (unwind_done(state))
+> >> -               return 0;
+> >>          return state->pc;
+> >>   }
+> >> -EXPORT_SYMBOL_GPL(unwind_get_return_address);
+> >> -
+> >> -static bool unwind_by_guess(struct unwind_state *state)
+> >> -{
+> >> -       struct stack_info *info = &state->stack_info;
+> >> -       unsigned long addr;
+> >> -
+> >> -       for (state->sp += sizeof(unsigned long);
+> >> -            state->sp < info->end;
+> >> -            state->sp += sizeof(unsigned long)) {
+> >> -               addr = *(unsigned long *)(state->sp);
+> >> -               state->pc = unwind_graph_addr(state, addr, state->sp + 8);
+> >> -               if (__kernel_text_address(state->pc))
+> >> -                       return true;
+> >> -       }
+> >> -
+> >> -       return false;
+> >> -}
+> >>
+> >> +/*
+> >> + * LoongArch function prologue like follows,
+> >> + *     [others instructions not use stack var]
+> >> + *     addi.d sp, sp, -imm
+> >> + *     st.d   xx, sp, offset <- save callee saved regs and
+> >> + *     st.d   yy, sp, offset    save ra if function is nest.
+> >> + *     [others instructions]
+> >> + */
+> >>   static bool unwind_by_prologue(struct unwind_state *state)
+> >>   {
+> >>          long frame_ra = -1;
+> >> @@ -89,6 +77,10 @@ static bool unwind_by_prologue(struct unwind_state *state)
+> >>                  ip++;
+> >>          }
+> >>
+> >> +       /*
+> >> +        * Not find stack alloc action, PC may be in a leaf function. Only the
+> >> +        * first being true is reasonable, otherwise indicate analysis is broken.
+> >> +        */
+> >>          if (!frame_size) {
+> >>                  if (state->first)
+> >>                          goto first;
+> >> @@ -106,6 +98,7 @@ static bool unwind_by_prologue(struct unwind_state *state)
+> >>                  ip++;
+> >>          }
+> >>
+> >> +       /* Not find save $ra action, PC may be in a leaf function, too. */
+> >>          if (frame_ra < 0) {
+> >>                  if (state->first) {
+> >>                          state->sp = state->sp + frame_size;
+> >> @@ -114,96 +107,63 @@ static bool unwind_by_prologue(struct unwind_state *state)
+> >>                  return false;
+> >>          }
+> >>
+> >> -       if (state->first)
+> >> -               state->first = false;
+> >> -
+> >>          state->pc = *(unsigned long *)(state->sp + frame_ra);
+> >>          state->sp = state->sp + frame_size;
+> >>          goto out;
+> >>
+> >>   first:
+> >> -       state->first = false;
+> >> -       if (state->pc == state->ra)
+> >> -               return false;
+> >> -
+> >>          state->pc = state->ra;
+> >>
+> >>   out:
+> >> +       state->first = false;
+> >>          unwind_state_fixup(state);
+> >>          return !!__kernel_text_address(state->pc);
+> >>   }
+> >>
+> >> -void unwind_start(struct unwind_state *state, struct task_struct *task,
+> >> +static void start(struct unwind_state *state, struct task_struct *task,
+> >>                      struct pt_regs *regs)
+> >>   {
+> >> -       memset(state, 0, sizeof(*state));
+> >> -       state->type = UNWINDER_PROLOGUE;
+> >> -
+> >> -       if (regs) {
+> >> -               state->sp = regs->regs[3];
+> >> -               state->pc = regs->csr_era;
+> >> -               state->ra = regs->regs[1];
+> >> -               if (!__kernel_text_address(state->pc))
+> >> -                       state->type = UNWINDER_GUESS;
+> >> -       } else if (task == current || task == NULL) {
+> >> -               state->sp = (unsigned long)__builtin_frame_address(0);
+> >> -               state->pc = (unsigned long)__builtin_return_address(0);
+> >> -               state->ra = 0;
+> >> -       } else {
+> >> -               state->sp = thread_saved_fp(task);
+> >> -               state->pc = thread_saved_ra(task);
+> >> -               state->ra = 0;
+> >> -       }
+> >> -
+> >> -       state->task = task;
+> >>          state->first = true;
+> >> -       state->pc = unwind_graph_addr(state, state->pc, state->sp);
+> >> -       get_stack_info(state->sp, state->task, &state->stack_info);
+> >>
+> >> -       if (!unwind_done(state) && !__kernel_text_address(state->pc))
+> >> -               unwind_next_frame(state);
+> >> +       /*
+> >> +        * The current PC is not kernel text address, we cannot find its
+> >> +        * relative symbol. Thus, prologue analysis will be broken. Luckly,
+> >> +        * we can use the guess unwinder.
+> >> +        */
+> >> +       if (!__kernel_text_address(state->pc)) {
+> >> +               unwind_register_unwinder(state, &unwinder_guess);
+> >> +               if (!unwind_done(state))
+> >> +                       unwind_next_frame(state);
+> >> +       }
+> >>   }
+> >> -EXPORT_SYMBOL_GPL(unwind_start);
+> >>
+> >> -bool unwind_next_frame(struct unwind_state *state)
+> >> +static bool next_frame(struct unwind_state *state)
+> >>   {
+> >>          struct stack_info *info = &state->stack_info;
+> >>          struct pt_regs *regs;
+> >>          unsigned long pc;
+> >>
+> >> -       if (unwind_done(state))
+> >> -               return false;
+> >> -
+> >>          do {
+> >> -               switch (state->type) {
+> >> -               case UNWINDER_GUESS:
+> >> -                       state->first = false;
+> >> -                       if (unwind_by_guess(state))
+> >> -                               return true;
+> >> -                       break;
+> >> -
+> >> -               case UNWINDER_PROLOGUE:
+> >> -                       if (unwind_by_prologue(state)) {
+> >> -                               state->pc = unwind_graph_addr(state, state->pc, state->sp);
+> >> -                               return true;
+> >> -                       }
+> >> +               if (unwind_by_prologue(state)) {
+> >> +                       state->pc = unwind_graph_addr(state, state->pc, state->sp);
+> >> +                       return true;
+> >> +               }
+> >>
+> >> -                       if (info->type == STACK_TYPE_IRQ &&
+> >> -                               info->end == state->sp) {
+> >> -                               regs = (struct pt_regs *)info->next_sp;
+> >> -                               pc = regs->csr_era;
+> >> +               if (info->type == STACK_TYPE_IRQ &&
+> >> +                   info->end == state->sp) {
+> >> +                       regs = (struct pt_regs *)info->next_sp;
+> >> +                       pc = regs->csr_era;
+> >>
+> >> -                               if (user_mode(regs) || !__kernel_text_address(pc))
+> >> -                                       return false;
+> >> +                       if (user_mode(regs) || !__kernel_text_address(pc))
+> >> +                               return false;
+> >>
+> >> -                               state->first = true;
+> >> -                               state->ra = regs->regs[1];
+> >> -                               state->sp = regs->regs[3];
+> >> -                               state->pc = pc;
+> >> -                               get_stack_info(state->sp, state->task, info);
+> >> +                       state->first = true;
+> >> +                       state->ra = regs->regs[1];
+> >> +                       state->sp = regs->regs[3];
+> >> +                       state->pc = pc;
+> >> +                       get_stack_info(state->sp, state->task, info);
+> >>
+> >> -                               return true;
+> >> -                       }
+> >> +                       return true;
+> >>                  }
+> >>
+> >>                  state->sp = info->next_sp;
+> >> @@ -212,4 +172,9 @@ bool unwind_next_frame(struct unwind_state *state)
+> >>
+> >>          return false;
+> >>   }
+> >> -EXPORT_SYMBOL_GPL(unwind_next_frame);
+> >> +
+> >> +const struct unwinder_ops unwinder_prologue = {
+> >> +       .unwind_start = start,
+> >> +       .unwind_next_frame = next_frame,
+> >> +       .unwind_get_return_address = get_return_address,
+> >> +};
+> >> --
+> >> 2.34.3
+> >>
+> >>
+>
