@@ -1,72 +1,40 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428E28839
-	for <loongarch@lists.linux.dev>; Tue,  3 Jan 2023 10:05:43 +0000 (UTC)
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3037hcSP015068;
-	Tue, 3 Jan 2023 10:02:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=dMHVtFosqWThDyY5SftMoOPjqDlLusCntZAFShOz2mY=;
- b=KQ8gHflm592WlbRAgwdQmZyTRlHDWh9M3ZAPFV+EMcsIOXJ461PiMpCp5cUVt9BL1e6j
- zqllDR5Fb/gxAm41jRkoRbn7AyAsUGSUMf7knMuu/spo09IOUdLrV2GM4nc+OlkQbkE7
- IJzG4uvffHGaWIteJBPi+B7FHAqQUQN3AtsThHUAZCqJQIQDHXbgZuAeeqSo9WeDmPJj
- eEQnkInKW+xzSa/aKKaqEDcmxJK5+xsGNpjiHiXPohV0tqVjzNS2xI1QFRZv2I9KIldN
- wQ9mkHaOJ5pKdofCP9qAqPj5s8umAAK+tXrV9dZ+20maLxpkr4T38HkHLw9ablzK3SFk /w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mvbt6xp9k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Jan 2023 10:02:20 +0000
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3039LwDp027251;
-	Tue, 3 Jan 2023 10:02:19 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mvbt6xp8p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Jan 2023 10:02:19 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-	by ppma02fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 302CL8aj017444;
-	Tue, 3 Jan 2023 10:02:16 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma02fra.de.ibm.com (PPS) with ESMTPS id 3mtcq6tmts-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Jan 2023 10:02:16 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 303A2EKB49938694
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 3 Jan 2023 10:02:14 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3B14420071;
-	Tue,  3 Jan 2023 10:02:14 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F230A20069;
-	Tue,  3 Jan 2023 10:02:12 +0000 (GMT)
-Received: from osiris (unknown [9.171.83.23])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  3 Jan 2023 10:02:12 +0000 (GMT)
-Date: Tue, 3 Jan 2023 11:02:09 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Arnd Bergmann <arnd@arndb.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3] arch: rename all internal names __xchg to __arch_xchg
-Message-ID: <Y7P9IcR7/jgYWMcq@osiris>
-References: <202212300642.6pdgegGO-lkp@intel.com>
- <20221230141552.128508-1-andrzej.hajda@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADA3320E
+	for <loongarch@lists.linux.dev>; Tue,  3 Jan 2023 12:13:07 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6500,9779,10578"; a="407904586"
+X-IronPort-AV: E=Sophos;i="5.96,296,1665471600"; 
+   d="scan'208";a="407904586"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 04:13:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10578"; a="632438213"
+X-IronPort-AV: E=Sophos;i="5.96,296,1665471600"; 
+   d="scan'208";a="632438213"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga006.jf.intel.com with ESMTP; 03 Jan 2023 04:13:01 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+	(envelope-from <andy@kernel.org>)
+	id 1pCgA7-003sVu-1H;
+	Tue, 03 Jan 2023 14:12:59 +0200
+Date: Tue, 3 Jan 2023 14:12:59 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Wolfram Sang <wsa@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>, Arnd Bergmann <arnd@arndb.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>
+Subject: Re: [PATCH V9 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
+ controller
+Message-ID: <Y7Qby/QnZdP1QcHK@smile.fi.intel.com>
+References: <cover.1672714138.git.zhoubinbin@loongson.cn>
+ <30d50a8253eb6d7b08c792fd5426baacf876eb2c.1672714138.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -75,53 +43,453 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221230141552.128508-1-andrzej.hajda@intel.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: JUKgavQnlJumrUvi-CztUW8Qob9IZFEg
-X-Proofpoint-GUID: 0ZquoQ4B0WHjt8os5pwnxRNooiQSYFH8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2023-01-03_01,2023-01-03_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1011
- lowpriorityscore=0 mlxlogscore=712 priorityscore=1501 bulkscore=0
- spamscore=0 adultscore=0 phishscore=0 suspectscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301030088
+In-Reply-To: <30d50a8253eb6d7b08c792fd5426baacf876eb2c.1672714138.git.zhoubinbin@loongson.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Dec 30, 2022 at 03:15:52PM +0100, Andrzej Hajda wrote:
-> __xchg will be used for non-atomic xchg macro.
+On Tue, Jan 03, 2023 at 03:00:47PM +0800, Binbin Zhou wrote:
+> This I2C module is integrated into the Loongson-2K SoCs and Loongson
+> LS7A bridge chip.
+
+I believe that you have tested this on real hardware and it works as expected.
+From the code perspective it is good to me,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  drivers/i2c/busses/Kconfig    |  11 +
+>  drivers/i2c/busses/Makefile   |   1 +
+>  drivers/i2c/busses/i2c-ls2x.c | 381 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 393 insertions(+)
+>  create mode 100644 drivers/i2c/busses/i2c-ls2x.c
 > 
-> Signed-off-by: Andrzej Hajda <andrzej.hajda@intel.com>
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v2: squashed all arch patches into one
-> v3: fixed alpha/xchg_local, thx to lkp@intel.com
-> ---
-...
->  arch/s390/include/asm/cmpxchg.h      | 4 ++--
-> diff --git a/arch/s390/include/asm/cmpxchg.h b/arch/s390/include/asm/cmpxchg.h
-> index 84c3f0d576c5b1..efc16f4aac8643 100644
-> --- a/arch/s390/include/asm/cmpxchg.h
-> +++ b/arch/s390/include/asm/cmpxchg.h
-> @@ -14,7 +14,7 @@
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index e50f9603d189..d80c938142f5 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -761,6 +761,17 @@ config I2C_LPC2K
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called i2c-lpc2k.
 >  
->  void __xchg_called_with_bad_pointer(void);
->  
-> -static __always_inline unsigned long __xchg(unsigned long x,
-> +static __always_inline unsigned long __arch_xchg(unsigned long x,
->  					    unsigned long address, int size)
+> +config I2C_LS2X
+> +	tristate "Loongson LS2X I2C adapter"
+> +	depends on MACH_LOONGSON64 || COMPILE_TEST
+> +	help
+> +	  If you say yes to this option, support will be included for the
+> +	  I2C interface on the Loongson-2K SoCs and Loongson LS7A bridge
+> +	  chip.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called i2c-ls2x.
+> +
+>  config I2C_MLXBF
+>          tristate "Mellanox BlueField I2C controller"
+>          depends on MELLANOX_PLATFORM && ARM64
+> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+> index e73cdb1d2b5a..0584fe160824 100644
+> --- a/drivers/i2c/busses/Makefile
+> +++ b/drivers/i2c/busses/Makefile
+> @@ -77,6 +77,7 @@ obj-$(CONFIG_I2C_IOP3XX)	+= i2c-iop3xx.o
+>  obj-$(CONFIG_I2C_JZ4780)	+= i2c-jz4780.o
+>  obj-$(CONFIG_I2C_KEMPLD)	+= i2c-kempld.o
+>  obj-$(CONFIG_I2C_LPC2K)		+= i2c-lpc2k.o
+> +obj-$(CONFIG_I2C_LS2X)		+= i2c-ls2x.o
+>  obj-$(CONFIG_I2C_MESON)		+= i2c-meson.o
+>  obj-$(CONFIG_I2C_MICROCHIP_CORE)	+= i2c-microchip-corei2c.o
+>  obj-$(CONFIG_I2C_MPC)		+= i2c-mpc.o
+> diff --git a/drivers/i2c/busses/i2c-ls2x.c b/drivers/i2c/busses/i2c-ls2x.c
+> new file mode 100644
+> index 000000000000..2215aa04233b
+> --- /dev/null
+> +++ b/drivers/i2c/busses/i2c-ls2x.c
+> @@ -0,0 +1,382 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Loongson-2K/Loongson LS7A I2C master mode driver
+> + *
+> + * Copyright (C) 2013 Loongson Technology Corporation Limited.
+> + * Copyright (C) 2014-2017 Lemote, Inc.
+> + * Copyright (C) 2018-2022 Loongson Technology Corporation Limited.
+> + *
+> + * Originally written by liushaozong
+> + * Rewritten for mainline by Binbin Zhou <zhoubinbin@loongson.cn>
+> + */
+> +
+> +#include <linux/bits.h>
+> +#include <linux/completion.h>
+> +#include <linux/device.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/i2c.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/units.h>
+> +
+> +/* I2C Registers */
+> +#define I2C_LS2X_PRER		0x0 /* Freq Division Register(16 bits) */
+> +#define I2C_LS2X_CTR		0x2 /* Control Register */
+> +#define I2C_LS2X_TXR		0x3 /* Transport Data Register */
+> +#define I2C_LS2X_RXR		0x3 /* Receive Data Register */
+> +#define I2C_LS2X_CR		0x4 /* Command Control Register */
+> +#define I2C_LS2X_SR		0x4 /* State Register */
+> +
+> +/* Command Control Register Bit */
+> +#define LS2X_CR_START		BIT(7) /* Start signal */
+> +#define LS2X_CR_STOP		BIT(6) /* Stop signal */
+> +#define LS2X_CR_READ		BIT(5) /* Read signal */
+> +#define LS2X_CR_WRITE		BIT(4) /* Write signal */
+> +#define LS2X_CR_ACK		BIT(3) /* Response signal */
+> +#define LS2X_CR_IACK		BIT(0) /* Interrupt response signal */
+> +
+> +/* State Register Bit */
+> +#define LS2X_SR_NOACK		BIT(7) /* Receive NACK */
+> +#define LS2X_SR_BUSY		BIT(6) /* Bus busy state */
+> +#define LS2X_SR_AL		BIT(5) /* Arbitration lost */
+> +#define LS2X_SR_TIP		BIT(1) /* Transmission state */
+> +#define LS2X_SR_IF		BIT(0) /* Interrupt flag */
+> +
+> +/* Control Register Bit */
+> +#define LS2X_CTR_EN		BIT(7) /* 0: I2c frequency setting 1: Normal */
+> +#define LS2X_CTR_IEN		BIT(6) /* Enable i2c interrupt */
+> +#define LS2X_CTR_MST		BIT(5) /* 0: Slave mode 1: Master mode */
+> +#define CTR_FREQ_MASK		GENMASK(7, 6)
+> +#define CTR_READY_MASK		GENMASK(7, 5)
+> +
+> +/* The PCLK frequency from LPB */
+> +#define LS2X_I2C_PCLK_FREQ	(50 * HZ_PER_MHZ)
+> +
+> +/* The default bus frequency, which is an empirical value */
+> +#define LS2X_I2C_FREQ_STD	(33 * HZ_PER_KHZ)
+> +
+> +struct ls2x_i2c_priv {
+> +	struct i2c_adapter	adapter;
+> +	void __iomem		*base;
+> +	struct i2c_timings	i2c_t;
+> +	struct completion	cmd_complete;
+> +};
+> +
+> +/*
+> + * Interrupt service routine.
+> + * This gets called whenever an I2C interrupt occurs.
+> + */
+> +static irqreturn_t ls2x_i2c_isr(int this_irq, void *dev_id)
+> +{
+> +	struct ls2x_i2c_priv *priv = dev_id;
+> +
+> +	if (!(readb(priv->base + I2C_LS2X_SR) & LS2X_SR_IF))
+> +		return IRQ_NONE;
+> +
+> +	writeb(LS2X_CR_IACK, priv->base + I2C_LS2X_CR);
+> +	complete(&priv->cmd_complete);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/*
+> + * The ls2x i2c controller supports standard mode and fast mode, so the
+> + * maximum bus frequency is '400kHz'.
+> + * The bus frequency is set to the empirical value of '33KHz' by default,
+> + * but it can also be taken from ACPI or FDT for compatibility with more
+> + * devices.
+> + */
+> +static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
+> +{
+> +	struct i2c_timings *t = &priv->i2c_t;
+> +	struct device *dev = priv->adapter.dev.parent;
+> +	u32 acpi_speed = i2c_acpi_find_bus_speed(dev);
+> +
+> +	i2c_parse_fw_timings(dev, t, false);
+> +
+> +	if (acpi_speed || t->bus_freq_hz)
+> +		t->bus_freq_hz = max(t->bus_freq_hz, acpi_speed);
+> +	else
+> +		t->bus_freq_hz = LS2X_I2C_FREQ_STD;
+> +
+> +	/* Calculate and set i2c frequency. */
+> +	writew(LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1,
+> +	       priv->base + I2C_LS2X_PRER);
+> +}
+> +
+> +static void ls2x_i2c_init(struct ls2x_i2c_priv *priv)
+> +{
+> +	/* Set i2c frequency setting mode and disable interrupts. */
+> +	writeb(readb(priv->base + I2C_LS2X_CTR) & ~CTR_FREQ_MASK,
+> +	       priv->base + I2C_LS2X_CTR);
+> +
+> +	ls2x_i2c_adjust_bus_speed(priv);
+> +
+> +	/* Set i2c normal operating mode and enable interrupts. */
+> +	writeb(readb(priv->base + I2C_LS2X_CTR) | CTR_READY_MASK,
+> +	       priv->base + I2C_LS2X_CTR);
+> +}
+> +
+> +static int ls2x_i2c_xfer_byte(struct ls2x_i2c_priv *priv, u8 txdata, u8 *rxdatap)
+> +{
+> +	u8 rxdata;
+> +	unsigned long time_left;
+> +
+> +	writeb(txdata, priv->base + I2C_LS2X_CR);
+> +
+> +	time_left = wait_for_completion_timeout(&priv->cmd_complete,
+> +						priv->adapter.timeout);
+> +	if (!time_left)
+> +		return -ETIMEDOUT;
+> +
+> +	rxdata = readb(priv->base + I2C_LS2X_SR);
+> +	if (rxdatap)
+> +		*rxdatap = rxdata;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ls2x_i2c_send_byte(struct ls2x_i2c_priv *priv, u8 txdata)
+> +{
+> +	int ret;
+> +	u8 rxdata;
+> +
+> +	ret = ls2x_i2c_xfer_byte(priv, txdata, &rxdata);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (rxdata & LS2X_SR_AL)
+> +		return -EAGAIN;
+> +
+> +	if (rxdata & LS2X_SR_NOACK)
+> +		return -ENXIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ls2x_i2c_stop(struct ls2x_i2c_priv *priv)
+> +{
+> +	u8 value;
+> +
+> +	writeb(LS2X_CR_STOP, priv->base + I2C_LS2X_CR);
+> +	return readb_poll_timeout(priv->base + I2C_LS2X_SR, value,
+> +				  !(value & LS2X_SR_BUSY), 100,
+> +				  jiffies_to_usecs(priv->adapter.timeout));
+> +}
+> +
+> +static int ls2x_i2c_start(struct ls2x_i2c_priv *priv, struct i2c_msg *msgs)
+> +{
+> +	reinit_completion(&priv->cmd_complete);
+> +
+> +	writeb(i2c_8bit_addr_from_msg(msgs), priv->base + I2C_LS2X_TXR);
+> +	return ls2x_i2c_send_byte(priv, LS2X_CR_START | LS2X_CR_WRITE);
+> +}
+> +
+> +static int ls2x_i2c_rx(struct ls2x_i2c_priv *priv, struct i2c_msg *msg)
+> +{
+> +	int ret;
+> +	u8 rxdata, *buf = msg->buf;
+> +	u16 len = msg->len;
+> +
+> +	/* Contains steps to send start condition and address. */
+> +	ret = ls2x_i2c_start(priv, msg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	while (len--) {
+> +		ret = ls2x_i2c_xfer_byte(priv,
+> +					 LS2X_CR_READ | (len ? 0 : LS2X_CR_ACK),
+> +					 &rxdata);
+> +		if (ret)
+> +			return ret;
+> +
+> +		*buf++ = readb(priv->base + I2C_LS2X_RXR);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ls2x_i2c_tx(struct ls2x_i2c_priv *priv, struct i2c_msg *msg)
+> +{
+> +	int ret;
+> +	u8 *buf = msg->buf;
+> +	u16 len = msg->len;
+> +
+> +	/* Contains steps to send start condition and address. */
+> +	ret = ls2x_i2c_start(priv, msg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	while (len--) {
+> +		writeb(*buf++, priv->base + I2C_LS2X_TXR);
+> +
+> +		ret = ls2x_i2c_send_byte(priv, LS2X_CR_WRITE);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ls2x_i2c_xfer_one(struct ls2x_i2c_priv *priv,
+> +			     struct i2c_msg *msg, bool stop)
+> +{
+> +	int ret;
+> +
+> +	if (msg->flags & I2C_M_RD)
+> +		ret = ls2x_i2c_rx(priv, msg);
+> +	else
+> +		ret = ls2x_i2c_tx(priv, msg);
+> +
+> +	if (ret < 0) {
+> +		/* Fatel error. Needs reinit. */
+> +		if (ret == -ETIMEDOUT)
+> +			ls2x_i2c_init(priv);
+> +
+> +		return ret;
+> +	}
+> +
+> +	if (stop) {
+> +		/* Failed to issue STOP. Needs reinit. */
+> +		ret = ls2x_i2c_stop(priv);
+> +		if (ret)
+> +			ls2x_i2c_init(priv);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int ls2x_i2c_master_xfer(struct i2c_adapter *adap,
+> +				struct i2c_msg *msgs, int num)
+> +{
+> +	int ret;
+> +	struct i2c_msg *msg, *emsg = msgs + num;
+> +	struct ls2x_i2c_priv *priv = i2c_get_adapdata(adap);
+> +
+> +	for (msg = msgs; msg < emsg; msg++) {
+> +		ret = ls2x_i2c_xfer_one(priv, msg, msg == emsg - 1);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return num;
+> +}
+> +
+> +static unsigned int ls2x_i2c_func(struct i2c_adapter *adap)
+> +{
+> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+> +}
+> +
+> +static const struct i2c_algorithm ls2x_i2c_algo = {
+> +	.master_xfer	= ls2x_i2c_master_xfer,
+> +	.functionality	= ls2x_i2c_func,
+> +};
+> +
+> +static int ls2x_i2c_probe(struct platform_device *pdev)
+> +{
+> +	int ret, irq;
+> +	struct i2c_adapter *adap;
+> +	struct ls2x_i2c_priv *priv;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	/* Map hardware registers */
+> +	priv->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	/* Add the i2c adapter */
+> +	adap = &priv->adapter;
+> +	adap->retries = 5;
+> +	adap->nr = pdev->id;
+> +	adap->dev.parent = dev;
+> +	adap->owner = THIS_MODULE;
+> +	adap->algo = &ls2x_i2c_algo;
+> +	adap->timeout = msecs_to_jiffies(100);
+> +	device_set_node(&adap->dev, dev_fwnode(dev));
+> +	i2c_set_adapdata(adap, priv);
+> +	strscpy(adap->name, pdev->name, sizeof(adap->name));
+> +	init_completion(&priv->cmd_complete);
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	ls2x_i2c_init(priv);
+> +
+> +	ret = devm_request_irq(dev, irq, ls2x_i2c_isr, IRQF_SHARED, "ls2x-i2c",
+> +			       priv);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Unable to request irq %d\n", irq);
+> +
+> +	return devm_i2c_add_adapter(dev, adap);
+> +}
+> +
+> +static int ls2x_i2c_suspend(struct device *dev)
+> +{
+> +	struct ls2x_i2c_priv *priv = dev_get_drvdata(dev);
+> +
+> +	/* Disable interrupts */
+> +	writeb(readb(priv->base + I2C_LS2X_CTR) & ~LS2X_CTR_IEN,
+> +	       priv->base + I2C_LS2X_CTR);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ls2x_i2c_resume(struct device *dev)
+> +{
+> +	ls2x_i2c_init(dev_get_drvdata(dev));
+> +	return 0;
+> +}
+> +
+> +static DEFINE_RUNTIME_DEV_PM_OPS(ls2x_i2c_pm_ops,
+> +				 ls2x_i2c_suspend, ls2x_i2c_resume, NULL);
+> +
+> +static const struct of_device_id ls2x_i2c_id_table[] = {
+> +	{ .compatible = "loongson,ls2k-i2c" },
+> +	{ .compatible = "loongson,ls7a-i2c" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ls2x_i2c_id_table);
+> +
+> +static const struct acpi_device_id ls2x_i2c_acpi_match[] = {
+> +	{ "LOON0004" }, /* Loongson LS7A */
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, ls2x_i2c_acpi_match);
+> +
+> +static struct platform_driver ls2x_i2c_driver = {
+> +	.probe		= ls2x_i2c_probe,
+> +	.driver		= {
+> +		.name	= "ls2x-i2c",
+> +		.pm	= pm_sleep_ptr(&ls2x_i2c_pm_ops),
+> +		.of_match_table = ls2x_i2c_id_table,
+> +		.acpi_match_table = ls2x_i2c_acpi_match,
+> +	},
+> +};
+> +
+> +/* The DC subsystem depends on it, we should initialize it earlier. */
+> +static int __init ls2x_i2c_init_driver(void)
+> +{
+> +	return platform_driver_register(&ls2x_i2c_driver);
+> +}
+> +subsys_initcall(ls2x_i2c_init_driver);
+> +
+> +static void __exit ls2x_i2c_exit_driver(void)
+> +{
+> +	platform_driver_unregister(&ls2x_i2c_driver);
+> +}
+> +module_exit(ls2x_i2c_exit_driver);
+> +
+> +MODULE_DESCRIPTION("Loongson LS2X I2C Bus driver");
+> +MODULE_AUTHOR("Loongson Technology Corporation Limited");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.31.1
+> 
 
-Please adjust the alignment of the second line.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> @@ -77,7 +77,7 @@ static __always_inline unsigned long __xchg(unsigned long x,
->  	__typeof__(*(ptr)) __ret;					\
->  									\
->  	__ret = (__typeof__(*(ptr)))					\
-> -		__xchg((unsigned long)(x), (unsigned long)(ptr),	\
-> +		__arch_xchg((unsigned long)(x), (unsigned long)(ptr),	\
->  		       sizeof(*(ptr)));					\
 
-Same here.
-
-The same is true for a couple of other architectures - not sure if
-they care however.
