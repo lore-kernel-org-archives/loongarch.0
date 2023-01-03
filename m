@@ -1,81 +1,326 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF887C
-	for <loongarch@lists.linux.dev>; Mon,  2 Jan 2023 08:31:03 +0000 (UTC)
-Received: by mail-qv1-f44.google.com with SMTP id m12so12831868qvq.13
-        for <loongarch@lists.linux.dev>; Mon, 02 Jan 2023 00:31:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jo2CI5pKv7C2jtNLeQsFhlozXL/lFYNzin08UvE0x2c=;
-        b=UyiNckwQCb3AGTQ9PYu1Fazi8JS7ZWN3uwyNzdYsO3VK5nsSJIMLi1zHh4dJlZDmPO
-         /m8o90q+2ScSy+UsX38qhSJyO4oR6gZHH+K+XXQBBa01ppa3YqqrNX05zYQLAEwoN7fl
-         7MwKzJdxn2SVM4neU+Jj47/iNW2RqvIjlVnt/YW1m385wOxjA9e843p4jJ+t4Bs/mdwr
-         HGjyYvcJMteeavXjEGGQil40lJW/LtrOLTv920QanMjMTqcanao19amkZGb+sLkqh9z3
-         us1KBLyyLuFuU+PU64a2cGx6ZgBTkpt97bqg9GMYVbTEg1a6R/dATJk8eaAZcXiO7ZZq
-         DTsA==
-X-Gm-Message-State: AFqh2krfRis6FOAz3CMdsZA+p5PIyPppWOwoeaJCCQd+mACh3r0wUTnv
-	GEJfJKU/47nzaVfQnCY3p4VQT+c0F4y1kg==
-X-Google-Smtp-Source: AMrXdXtDhfD5al99J+TG1P9ixD9thhMOk5+7FQQJzg8W7McuT6yqHUxJOymPxShQiX5Uo/6PVTXQcA==
-X-Received: by 2002:ad4:52e5:0:b0:4c7:797e:7788 with SMTP id p5-20020ad452e5000000b004c7797e7788mr52829071qvu.20.1672648261966;
-        Mon, 02 Jan 2023 00:31:01 -0800 (PST)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id bj42-20020a05620a192a00b006bb82221013sm20392775qkb.0.2023.01.02.00.31.00
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Jan 2023 00:31:01 -0800 (PST)
-Received: by mail-yb1-f179.google.com with SMTP id 83so28730418yba.11
-        for <loongarch@lists.linux.dev>; Mon, 02 Jan 2023 00:31:00 -0800 (PST)
-X-Received: by 2002:a25:d243:0:b0:702:90b4:2e24 with SMTP id
- j64-20020a25d243000000b0070290b42e24mr2730771ybg.365.1672648260480; Mon, 02
- Jan 2023 00:31:00 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0835374
+	for <loongarch@lists.linux.dev>; Tue,  3 Jan 2023 04:54:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BDAFC433EF
+	for <loongarch@lists.linux.dev>; Tue,  3 Jan 2023 04:54:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1672721671;
+	bh=CvQIZK6oadyQ0AzkTqfkutaR7P2wyETlckeaY6hOpYw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dgCkd/odq5CzgKzjXUMu4G8ZFbHY0nqVixi2Tqj5hkv1VesW/Q9oPRJP0Jv8LTuh5
+	 OyETicirMkiMmOFmcVM91R5IlEIv917Kk+G9nKmy5JqEcB+dFP+WRDeTf9IRZ113YW
+	 1hBDdXitWZAq4bz3PVoTe0N8CKhi+93xlPQwgu5Wewf7lsUw+Wb3Su4Lj88Kj5rsld
+	 +ZC5c823dKyF1P0IJwsxaJ8ANPkuzu6mr+36wsX5R0AMI+nCWp/RdYOVUbfjYqJGTG
+	 LPKy5vNeuTWpHkdZq53LDYdzOU9OaxEaQGm637odtqUqnTI4JynNqtpcnggPvaubia
+	 0anH+P2KqHCWA==
+Received: by mail-ej1-f41.google.com with SMTP id jo4so71097139ejb.7
+        for <loongarch@lists.linux.dev>; Mon, 02 Jan 2023 20:54:31 -0800 (PST)
+X-Gm-Message-State: AFqh2ko03ng42gNnox7vgA4H7CV5rxxh7CfpTde5QEnmGtZ9Xr9fRKqW
+	iWddNzhRaZZGHrs0PxGPi2Focyi7QHLmnWjWOVw=
+X-Google-Smtp-Source: AMrXdXt8LD2V7IgxHxNAtRIKeAOHflm3RAQ3yLZTzJzEplqsevtPbMTC7Ch4hYrr4JfLSkKnhqRVriqdxg17o9olBWA=
+X-Received: by 2002:a17:906:cf88:b0:7c1:764:5e08 with SMTP id
+ um8-20020a170906cf8800b007c107645e08mr3146144ejb.72.1672721669533; Mon, 02
+ Jan 2023 20:54:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <78b23407-bdd0-4b1b-bf6e-ecd4c00294ab@app.fastmail.com> <20221229113338.2436892-1-andrzej.hajda@intel.com>
-In-Reply-To: <20221229113338.2436892-1-andrzej.hajda@intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 2 Jan 2023 09:30:48 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVaq9Xg3HrqLo1x5SCuwtJBsczLjWAWmH=23ZtNf_e9hQ@mail.gmail.com>
-Message-ID: <CAMuHMdVaq9Xg3HrqLo1x5SCuwtJBsczLjWAWmH=23ZtNf_e9hQ@mail.gmail.com>
-Subject: Re: [PATCH v2] arch: rename all internal names __xchg to __arch_xchg
-To: Andrzej Hajda <andrzej.hajda@intel.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, openrisc@lists.librecores.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-xtensa@linux-xtensa.org, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, Mark Rutland <mark.rutland@arm.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20221221074238.6699-1-hejinyang@loongson.cn> <CAAhV-H6VX=d1oymY0rh-mwOPMuBsYd7C9RzQat8BmmnrJ7apng@mail.gmail.com>
+ <8eaea09e-67b0-5e51-4632-2c31a4c56a3e@loongson.cn> <CAAhV-H7maW1YWhfvCzYVix=aCMMFbx0KkGodaBjka4ThunBO5Q@mail.gmail.com>
+ <1c578efd-ae8a-2d80-e505-a09b1a2f7eaa@loongson.cn> <b267cab1-3df4-6263-9c83-0061f20dd4a4@loongson.cn>
+ <2364400d-bb1e-cbe2-8a65-adbe87186938@loongson.cn> <7a028a4d-71f0-7064-cc1c-0ca50749ef2e@loongson.cn>
+ <2190a195-53bb-09a8-9130-101c040edd09@loongson.cn>
+In-Reply-To: <2190a195-53bb-09a8-9130-101c040edd09@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 3 Jan 2023 12:54:24 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7--u0aXy-aAdkJ_KBwimcJ-V+yfbFqS8MsAOHpArWJ2g@mail.gmail.com>
+Message-ID: <CAAhV-H7--u0aXy-aAdkJ_KBwimcJ-V+yfbFqS8MsAOHpArWJ2g@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Fix irq enable in exception handlers
+To: Jinyang He <hejinyang@loongson.cn>
+Cc: Qi Hu <huqi@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Dec 29, 2022 at 12:34 PM Andrzej Hajda <andrzej.hajda@intel.com> wrote:
-> __xchg will be used for non-atomic xchg macro.
+On Fri, Dec 30, 2022 at 1:58 PM Jinyang He <hejinyang@loongson.cn> wrote:
 >
-> Signed-off-by: Andrzej Hajda <andrzej.hajda@intel.com>
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>
+> On 2022-12-29 14:54, Qi Hu wrote:
+> >
+> > On 2022/12/29 14:13, Jinyang He wrote:
+> >> On 2022-12-29 00:51, Qi Hu wrote:
+> >>
+> >>>
+> >>> On 2022/12/27 18:10, Jinyang He wrote:
+> >>>> On 2022-12-27 17:52, Huacai Chen wrote:
+> >>>>
+> >>>>> On Tue, Dec 27, 2022 at 5:30 PM Jinyang He <hejinyang@loongson.cn>
+> >>>>> wrote:
+> >>>>>>
+> >>>>>> On 2022-12-27 15:37, Huacai Chen wrote:
+> >>>>>>> Hi, Jinyang,
+> >>>>>>>
+> >>>>>>> Move die_if_kernel to irq disabled context to solve what?
+> >>>>>> For more strict logical. If the code flow go to die in
+> >>>>>> die_if_kernel(),
+> >>>>>> its interrupt state is enable, that means it may cause schedule.
+> >>>>>> So I think it is better to call die_if_kernel() firstly.
+> >>>>> die_if_kernel is called with irq enabled in old kernels for several
+> >>>>> years, and has no problems.
+> >>>>
+> >>>>
+> >>>> I think because it never call die() in die_if_kernel(). What I do
+> >>>> emphasize is that there needs to be more strict logic here than
+> >>>> it worked well in the past. I bet if die_if_kernel() was removed,
+> >>>> it will still work well in the future.
+> >>>>
+> >>>>
+> >>>>>
+> >>>>>>
+> >>>>>>>    And LBT is
+> >>>>>>> surely allowed to be triggered in kernel context.
+> >>>>>> I'm not familar with lbt, I just not see any lbt codes in kernel.
+> >>>>>> Plz,
+> >>>>>> how lbt exception triggered, and how kernel trigger lbt exception?
+> >>>>> You can ask Huqi for more details, and this was discussed publicly
+> >>>>> last week.
+> >>>>
+> >>>> To: Qi Hu
+> >>>>
+> >>>>
+> >>>> Hi,
+> >>>>
+> >>>>
+> >>>> We really need some help. Can you give us some ideas?
+> >>>>
+> >>>>
+> >>>> Thanks,
+> >>>>
+> >>>> Jinyang
+> >>>>
+> >>> Huacai is correct. The LBT disable exception (BTD) can be triggered
+> >>> in kernel context.
+> >>>
+> >>> If the CSR.ENEU.BTE == 0 [^1], the LBT instructions (these [^2] will
+> >>> be used in the kernel) will trigger the exception.
+> >>>
+> >>> Unfortunately, when you want to do some fpu_{save, restore}, you
+> >>> need to use some LBT instructions [^3] [^4]. So if FPD is triggered,
+> >>> LBT might still not be enabled, and the 'do_lbt' will be called in
+> >>> the kernel context.
+> >>>
+> >>> Hope the information can help. Thanks.
+> >>>
+> >>>
+> >>> [1]
+> >>> https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#extended-component-unit-enable
+> >>>
+> >>> [2]
+> >>> https://github.com/loongson/linux/pull/4/files#diff-381d03cf86e2796d280e2fc82c005409d5e44b4bbbf90dd0dc17f5f0fa5553f1R140-R184
+> >>>
+> >>> [3]
+> >>> https://github.com/loongson/linux/pull/4/files#diff-381d03cf86e2796d280e2fc82c005409d5e44b4bbbf90dd0dc17f5f0fa5553f1R218-R230
+> >>>
+> >>> [4]
+> >>> https://github.com/loongson/linux/pull/4/files#diff-381d03cf86e2796d280e2fc82c005409d5e44b4bbbf90dd0dc17f5f0fa5553f1R236-R263
+> >>>
+> >>>
+> >> Hi,
+> >>
+> >>
+> >> That's helpful. Thanks!
+> >>
+> >>
+> >> But I still wonder if SXD or ASXD have the same possibility of being
+> >> triggered in the kernel mode by sc_save_{lsx, lasx} or other place.
+> >> Do we need remove these die_if_kernel codes in do_lasx() and do_lsx()?
+> >>
+> >>
+> >> Jinyang
+> >>
+> > Hi Jinyang,
+> >
+> > I think only BTD has this tricky situation, because there is some
+> > overlap between FPD/SXD/ASXD and BTD.
+> >
+> > So, in my view, SXD or ASXD will not be triggered in kernel mode.
+> >
+> > Thanks.
+> >
+> >
+> > Qi
+>
+> Got it. Thanks for your help. And I'll fix my patch in next version.
+In my opinion only the do_bp() modification is useful, and that part
+can be squashed to Tiezhu's kprobe patches.
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> [m68k]
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Huacai
+>
+>
+> Jinyang
+>
+>
+> >
+> >>
+> >>> Qi
+> >>>
+> >>>>
+> >>>>> Huacai
+> >>>>>>
+> >>>>>> Thanks,
+> >>>>>>
+> >>>>>> Jinyang
+> >>>>>>
+> >>>>>>
+> >>>>>>> Huacai
+> >>>>>>>
+> >>>>>>> On Wed, Dec 21, 2022 at 3:43 PM Jinyang He
+> >>>>>>> <hejinyang@loongson.cn> wrote:
+> >>>>>>>> The interrupt state can be got by regs->csr_prmd. Once previous
+> >>>>>>>> interrupt state is disable, we shouldn't enable interrupt if we
+> >>>>>>>> triggered exception which can be triggered in kernel mode. So
+> >>>>>>>> conditionally enable interrupt. For those do_\exception which
+> >>>>>>>> can not triggered in kernel mode but need enable interrupt, call
+> >>>>>>>> die_if_kernel() firstly. And for do_lsx, do_lasx and do_lbt cannot
+> >>>>>>>> triggered in kernel mode, too.
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> >>>>>>>> ---
+> >>>>>>>>    arch/loongarch/kernel/traps.c | 19 ++++++++++---------
+> >>>>>>>>    1 file changed, 10 insertions(+), 9 deletions(-)
+> >>>>>>>>
+> >>>>>>>> diff --git a/arch/loongarch/kernel/traps.c
+> >>>>>>>> b/arch/loongarch/kernel/traps.c
+> >>>>>>>> index 1ea14f6c18d3..3ac7b32d1e15 100644
+> >>>>>>>> --- a/arch/loongarch/kernel/traps.c
+> >>>>>>>> +++ b/arch/loongarch/kernel/traps.c
+> >>>>>>>> @@ -340,9 +340,9 @@ asmlinkage void noinstr do_fpe(struct
+> >>>>>>>> pt_regs *regs, unsigned long fcsr)
+> >>>>>>>>
+> >>>>>>>>           /* Clear FCSR.Cause before enabling interrupts */
+> >>>>>>>>           write_fcsr(LOONGARCH_FCSR0, fcsr & ~mask_fcsr_x(fcsr));
+> >>>>>>>> -       local_irq_enable();
+> >>>>>>>>
+> >>>>>>>>           die_if_kernel("FP exception in kernel code", regs);
+> >>>>>>>> +       local_irq_enable();
+> >>>>>>>>
+> >>>>>>>>           sig = SIGFPE;
+> >>>>>>>>           fault_addr = (void __user *) regs->csr_era;
+> >>>>>>>> @@ -432,7 +432,8 @@ asmlinkage void noinstr do_bp(struct
+> >>>>>>>> pt_regs *regs)
+> >>>>>>>>           unsigned long era = exception_era(regs);
+> >>>>>>>>           irqentry_state_t state = irqentry_enter(regs);
+> >>>>>>>>
+> >>>>>>>> -       local_irq_enable();
+> >>>>>>>> +       if (regs->csr_prmd & CSR_PRMD_PIE)
+> >>>>>>>> +               local_irq_enable();
+> >>>>>>>>           current->thread.trap_nr = read_csr_excode();
+> >>>>>>>>           if (__get_inst(&opcode, (u32 *)era, user))
+> >>>>>>>>                   goto out_sigsegv;
+> >>>>>>>> @@ -514,7 +515,8 @@ asmlinkage void noinstr do_ri(struct
+> >>>>>>>> pt_regs *regs)
+> >>>>>>>>           unsigned int __user *era = (unsigned int __user
+> >>>>>>>> *)exception_era(regs);
+> >>>>>>>>           irqentry_state_t state = irqentry_enter(regs);
+> >>>>>>>>
+> >>>>>>>> -       local_irq_enable();
+> >>>>>>>> +       if (regs->csr_prmd & CSR_PRMD_PIE)
+> >>>>>>>> +               local_irq_enable();
+> >>>>>>>>           current->thread.trap_nr = read_csr_excode();
+> >>>>>>>>
+> >>>>>>>>           if (notify_die(DIE_RI, "RI Fault", regs, 0,
+> >>>>>>>> current->thread.trap_nr,
+> >>>>>>>> @@ -606,8 +608,8 @@ asmlinkage void noinstr do_fpu(struct
+> >>>>>>>> pt_regs *regs)
+> >>>>>>>>    {
+> >>>>>>>>           irqentry_state_t state = irqentry_enter(regs);
+> >>>>>>>>
+> >>>>>>>> -       local_irq_enable();
+> >>>>>>>>           die_if_kernel("do_fpu invoked from kernel context!",
+> >>>>>>>> regs);
+> >>>>>>>> +       local_irq_enable();
+> >>>>>>>>           BUG_ON(is_lsx_enabled());
+> >>>>>>>>           BUG_ON(is_lasx_enabled());
+> >>>>>>>>
+> >>>>>>>> @@ -623,13 +625,13 @@ asmlinkage void noinstr do_lsx(struct
+> >>>>>>>> pt_regs *regs)
+> >>>>>>>>    {
+> >>>>>>>>           irqentry_state_t state = irqentry_enter(regs);
+> >>>>>>>>
+> >>>>>>>> +       die_if_kernel("do_lsx invoked from kernel context!",
+> >>>>>>>> regs);
+> >>>>>>>>           local_irq_enable();
+> >>>>>>>>           if (!cpu_has_lsx) {
+> >>>>>>>>                   force_sig(SIGILL);
+> >>>>>>>>                   goto out;
+> >>>>>>>>           }
+> >>>>>>>>
+> >>>>>>>> -       die_if_kernel("do_lsx invoked from kernel context!",
+> >>>>>>>> regs);
+> >>>>>>>>           BUG_ON(is_lasx_enabled());
+> >>>>>>>>
+> >>>>>>>>           preempt_disable();
+> >>>>>>>> @@ -645,14 +647,13 @@ asmlinkage void noinstr do_lasx(struct
+> >>>>>>>> pt_regs *regs)
+> >>>>>>>>    {
+> >>>>>>>>           irqentry_state_t state = irqentry_enter(regs);
+> >>>>>>>>
+> >>>>>>>> +       die_if_kernel("do_lasx invoked from kernel context!",
+> >>>>>>>> regs);
+> >>>>>>>>           local_irq_enable();
+> >>>>>>>>           if (!cpu_has_lasx) {
+> >>>>>>>>                   force_sig(SIGILL);
+> >>>>>>>>                   goto out;
+> >>>>>>>>           }
+> >>>>>>>>
+> >>>>>>>> -       die_if_kernel("do_lasx invoked from kernel context!",
+> >>>>>>>> regs);
+> >>>>>>>> -
+> >>>>>>>>           preempt_disable();
+> >>>>>>>>           init_restore_lasx();
+> >>>>>>>>           preempt_enable();
+> >>>>>>>> @@ -666,6 +667,7 @@ asmlinkage void noinstr do_lbt(struct
+> >>>>>>>> pt_regs *regs)
+> >>>>>>>>    {
+> >>>>>>>>           irqentry_state_t state = irqentry_enter(regs);
+> >>>>>>>>
+> >>>>>>>> +       die_if_kernel("do_lbt invoked from kernel context!",
+> >>>>>>>> regs);
+> >>>>>>>>           local_irq_enable();
+> >>>>>>>>           force_sig(SIGILL);
+> >>>>>>>>           local_irq_disable();
+> >>>>>>>> @@ -677,7 +679,6 @@ asmlinkage void noinstr do_reserved(struct
+> >>>>>>>> pt_regs *regs)
+> >>>>>>>>    {
+> >>>>>>>>           irqentry_state_t state = irqentry_enter(regs);
+> >>>>>>>>
+> >>>>>>>> -       local_irq_enable();
+> >>>>>>>>           /*
+> >>>>>>>>            * Game over - no way to handle this if it ever
+> >>>>>>>> occurs. Most probably
+> >>>>>>>>            * caused by a fatal error after another
+> >>>>>>>> hardware/software error.
+> >>>>>>>> @@ -685,8 +686,8 @@ asmlinkage void noinstr do_reserved(struct
+> >>>>>>>> pt_regs *regs)
+> >>>>>>>>           pr_err("Caught reserved exception %u on pid:%d [%s] -
+> >>>>>>>> should not happen\n",
+> >>>>>>>>                   read_csr_excode(), current->pid, current->comm);
+> >>>>>>>>           die_if_kernel("do_reserved exception", regs);
+> >>>>>>>> +       local_irq_enable();
+> >>>>>>>>           force_sig(SIGUNUSED);
+> >>>>>>>> -
+> >>>>>>>>           local_irq_disable();
+> >>>>>>>>
+> >>>>>>>>           irqentry_exit(regs, state);
+> >>>>>>>> --
+> >>>>>>>> 2.34.3
+> >>>>>>>>
+> >>>>>>
+> >>>>
+> >>>
+> >>
+>
