@@ -1,108 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DDB625
-	for <loongarch@lists.linux.dev>; Tue,  3 Jan 2023 06:53:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90B9AC433D2
-	for <loongarch@lists.linux.dev>; Tue,  3 Jan 2023 06:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1672728819;
-	bh=wbWN2d3IanVfbt0qnVLEs1kFgkAHIJ7y4rljhzLPY8U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Qjrhz9ud2ZdY5LEz7riR0Atr5StTgwPHE6xvDOBcoQl6jMqUgE+QWn02erYe4a//v
-	 Ego/2Saxw7Zv0yS+HtVYq24qll4+0YaOh8bLb0wHFPMQmW7QtuWc5+75ovzyJPLEEC
-	 FYFPtR4y9BGoXcE74hnI3Q1j8B6QCLi+mbWCZhHTqP9GPIbXCKK/mM6AX/Nm+B+eu6
-	 v2niHbIkcH3Of2vFUplrCIptJN/srX8Cq7IDdPKJad0CVx4hXBeWEpoLHngRpEDvhh
-	 Cl5eEsTW8zQ06fF50Pdr/jzjxezwUJBvvKx0O2XujKhW4f12752WUb6fgzjfGY0Gbz
-	 +cwv1pKNnzzmQ==
-Received: by mail-ed1-f52.google.com with SMTP id i15so42664379edf.2
-        for <loongarch@lists.linux.dev>; Mon, 02 Jan 2023 22:53:39 -0800 (PST)
-X-Gm-Message-State: AFqh2kqDXLdvAf/ixO888rJ8+PgQ1HiTyy/YGtIPtETT1V8DAq7+5+ff
-	DRstB98/d8O+++V6UHlKM1eSYyWKnpQSAjjE1Ek=
-X-Google-Smtp-Source: AMrXdXtsCm2upyz5f+49LawIIF8A7kWqG7pOZzLb+iBBtm0rcndCRzkmW6uY8SF8DerP1ABCrUAJDqvFp3GsAT3vLPA=
-X-Received: by 2002:aa7:d44e:0:b0:47f:5431:89ea with SMTP id
- q14-20020aa7d44e000000b0047f543189eamr3703643edr.284.1672728817812; Mon, 02
- Jan 2023 22:53:37 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6F68625
+	for <loongarch@lists.linux.dev>; Tue,  3 Jan 2023 07:00:48 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.108.31])
+	by gateway (Coremail) with SMTP id _____8DxdPCZ0rNjbREKAA--.22172S3;
+	Tue, 03 Jan 2023 15:00:41 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.108.31])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxTuSV0rNjSb0SAA--.59328S3;
+	Tue, 03 Jan 2023 15:00:41 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Wolfram Sang <wsa@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org
+Cc: loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH V9 1/4] i2c: gpio: Add support on ACPI-based system
+Date: Tue,  3 Jan 2023 15:00:45 +0800
+Message-Id: <0bc1a9883885ef6a218ab548fbcc57a6a0fe05a7.1672714138.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <cover.1672714138.git.zhoubinbin@loongson.cn>
+References: <cover.1672714138.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221231100757.3177034-1-hengqi.chen@gmail.com>
-In-Reply-To: <20221231100757.3177034-1-hengqi.chen@gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 3 Jan 2023 14:53:25 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6hdXXE4EwFe66rUxJMixc=s7PYuxeyCjaQ5z3Fck40jA@mail.gmail.com>
-Message-ID: <CAAhV-H6hdXXE4EwFe66rUxJMixc=s7PYuxeyCjaQ5z3Fck40jA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] libbpf: Add LoongArch support to bpf_tracing.h
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev, andrii@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxTuSV0rNjSb0SAA--.59328S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZFWxXry8AFyxXr48ZFWDurg_yoW5Zr13pF
+	WY9FZxtFWjgF42grnrXw1kZw1Skwn2q3yIgw47G3sY9w4qqrn8XFy8tFyI9F15ZFW8Gw13
+	tw1UtFW3CFsrZaUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
+	Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
+	O2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+	Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
+	JbIYCTnIWIevJa73UjIFyTuYvjxUxhiSDUUUU
 
-LGTM, I will queue this patch for loongarch-next if no one has
-objections. Thank you.
+Add support for the ACPI-based device registration, so that the driver
+can be also enabled through ACPI table.
 
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ drivers/i2c/busses/i2c-gpio.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-On Sat, Dec 31, 2022 at 6:08 PM Hengqi Chen <hengqi.chen@gmail.com> wrote:
->
-> Add PT_REGS macros for LoongArch ([0]).
->
->   [0]: https://loongson.github.io/LoongArch-Documentation/LoongArch-ELF-ABI-EN.html
->
-> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> ---
->  tools/lib/bpf/bpf_tracing.h | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->
-> diff --git a/tools/lib/bpf/bpf_tracing.h b/tools/lib/bpf/bpf_tracing.h
-> index 9c1b1689068d..bdb0f6b5be84 100644
-> --- a/tools/lib/bpf/bpf_tracing.h
-> +++ b/tools/lib/bpf/bpf_tracing.h
-> @@ -32,6 +32,9 @@
->  #elif defined(__TARGET_ARCH_arc)
->         #define bpf_target_arc
->         #define bpf_target_defined
-> +#elif defined(__TARGET_ARCH_loongarch)
-> +       #define bpf_target_loongarch
-> +       #define bpf_target_defined
->  #else
->
->  /* Fall back to what the compiler says */
-> @@ -62,6 +65,9 @@
->  #elif defined(__arc__)
->         #define bpf_target_arc
->         #define bpf_target_defined
-> +#elif defined(__loongarch__)
-> +       #define bpf_target_loongarch
-> +       #define bpf_target_defined
->  #endif /* no compiler target */
->
->  #endif
-> @@ -258,6 +264,23 @@ struct pt_regs___arm64 {
->  /* arc does not select ARCH_HAS_SYSCALL_WRAPPER. */
->  #define PT_REGS_SYSCALL_REGS(ctx) ctx
->
-> +#elif defined(bpf_target_loongarch)
-> +
-> +/* https://loongson.github.io/LoongArch-Documentation/LoongArch-ELF-ABI-EN.html */
-> +
-> +#define __PT_PARM1_REG regs[4]
-> +#define __PT_PARM2_REG regs[5]
-> +#define __PT_PARM3_REG regs[6]
-> +#define __PT_PARM4_REG regs[7]
-> +#define __PT_PARM5_REG regs[8]
-> +#define __PT_RET_REG regs[1]
-> +#define __PT_FP_REG regs[22]
-> +#define __PT_RC_REG regs[4]
-> +#define __PT_SP_REG regs[3]
-> +#define __PT_IP_REG csr_era
-> +/* loongarch does not select ARCH_HAS_SYSCALL_WRAPPER. */
-> +#define PT_REGS_SYSCALL_REGS(ctx) ctx
-> +
->  #endif
->
->  #if defined(bpf_target_defined)
-> --
-> 2.31.1
->
+diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
+index 0e4385a9bcf7..680936234ef8 100644
+--- a/drivers/i2c/busses/i2c-gpio.c
++++ b/drivers/i2c/busses/i2c-gpio.c
+@@ -13,9 +13,9 @@
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+-#include <linux/of.h>
+ #include <linux/platform_data/i2c-gpio.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/slab.h>
+ 
+ struct i2c_gpio_private_data {
+@@ -300,22 +300,23 @@ static inline void i2c_gpio_fault_injector_init(struct platform_device *pdev) {}
+ static inline void i2c_gpio_fault_injector_exit(struct platform_device *pdev) {}
+ #endif /* CONFIG_I2C_GPIO_FAULT_INJECTOR*/
+ 
+-static void of_i2c_gpio_get_props(struct device_node *np,
+-				  struct i2c_gpio_platform_data *pdata)
++/* Get i2c-gpio properties from DT or ACPI table */
++static void i2c_gpio_get_properties(struct device *dev,
++				     struct i2c_gpio_platform_data *pdata)
+ {
+ 	u32 reg;
+ 
+-	of_property_read_u32(np, "i2c-gpio,delay-us", &pdata->udelay);
++	device_property_read_u32(dev, "i2c-gpio,delay-us", &pdata->udelay);
+ 
+-	if (!of_property_read_u32(np, "i2c-gpio,timeout-ms", &reg))
++	if (!device_property_read_u32(dev, "i2c-gpio,timeout-ms", &reg))
+ 		pdata->timeout = msecs_to_jiffies(reg);
+ 
+ 	pdata->sda_is_open_drain =
+-		of_property_read_bool(np, "i2c-gpio,sda-open-drain");
++		device_property_read_bool(dev, "i2c-gpio,sda-open-drain");
+ 	pdata->scl_is_open_drain =
+-		of_property_read_bool(np, "i2c-gpio,scl-open-drain");
++		device_property_read_bool(dev, "i2c-gpio,scl-open-drain");
+ 	pdata->scl_is_output_only =
+-		of_property_read_bool(np, "i2c-gpio,scl-output-only");
++		device_property_read_bool(dev, "i2c-gpio,scl-output-only");
+ }
+ 
+ static struct gpio_desc *i2c_gpio_get_desc(struct device *dev,
+@@ -373,8 +374,8 @@ static int i2c_gpio_probe(struct platform_device *pdev)
+ 	bit_data = &priv->bit_data;
+ 	pdata = &priv->pdata;
+ 
+-	if (np) {
+-		of_i2c_gpio_get_props(np, pdata);
++	if (dev_fwnode(dev)) {
++		i2c_gpio_get_properties(dev, pdata);
+ 	} else {
+ 		/*
+ 		 * If all platform data settings are zero it is OK
+@@ -489,10 +490,17 @@ static const struct of_device_id i2c_gpio_dt_ids[] = {
+ 
+ MODULE_DEVICE_TABLE(of, i2c_gpio_dt_ids);
+ 
++static const struct acpi_device_id i2c_gpio_acpi_match[] = {
++	{ "LOON0005" }, /* LoongArch */
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, i2c_gpio_acpi_match);
++
+ static struct platform_driver i2c_gpio_driver = {
+ 	.driver		= {
+ 		.name	= "i2c-gpio",
+ 		.of_match_table	= i2c_gpio_dt_ids,
++		.acpi_match_table = i2c_gpio_acpi_match,
+ 	},
+ 	.probe		= i2c_gpio_probe,
+ 	.remove		= i2c_gpio_remove,
+-- 
+2.31.1
+
