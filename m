@@ -1,174 +1,184 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEED7D522
-	for <loongarch@lists.linux.dev>; Thu,  5 Jan 2023 15:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672933821; x=1704469821;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RJatMYrbPfEvNurBxtLaBiUJD4LCEtP8VKvLxxz/leM=;
-  b=QPQuRG5/X0TGbFwY1aNpTZPPg0xboE5ar9Nt+QhfifD6+lTGESvGjUf0
-   rBc1bZOy1SFh2k50fV2mwD3IqabbnVgHxV2BcacGGjtJ8f52jzQxnTpIl
-   NN32R9iBkulz6XQRVFXZKvBlAtsHXGCbhT/Q+7ZzFyWJEC1p+usM843LA
-   gjwz7SNkGXSqnyj0qvQo8fQrHycDm6PJX/qC0cXra6ZtHy8MD7KEp8cRO
-   s8OKqO04H8HpkIdRci3SWduaUlBvZY7/02dJXRaDM88H8E+hLASn98nZk
-   PVlO+jbxle7CbVkpsztBSHfZuhnWliYAjsSHjJhJSfEsIye39CRl84aKk
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="310026054"
-X-IronPort-AV: E=Sophos;i="5.96,303,1665471600"; 
-   d="scan'208";a="310026054"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 07:50:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="633190458"
-X-IronPort-AV: E=Sophos;i="5.96,303,1665471600"; 
-   d="scan'208";a="633190458"
-Received: from lkp-server02.sh.intel.com (HELO f1920e93ebb5) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 05 Jan 2023 07:50:18 -0800
-Received: from kbuild by f1920e93ebb5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1pDSVV-0001zD-1E;
-	Thu, 05 Jan 2023 15:50:17 +0000
-Date: Thu, 05 Jan 2023 23:49:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: loongarch@lists.linux.dev, linux-omap@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- cc3c08b41a9c9402ead726ec6deb1217081d0d8b
-Message-ID: <63b6f194.O4eKwdyFWFrII4HE%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3EBD536
+	for <loongarch@lists.linux.dev>; Thu,  5 Jan 2023 16:29:56 +0000 (UTC)
+Received: by mail-wr1-f42.google.com with SMTP id bs20so34558945wrb.3
+        for <loongarch@lists.linux.dev>; Thu, 05 Jan 2023 08:29:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hriix7PNjl3Fx5Lwj5vGvmpV6J+F4oqIBHmzWDNV1zY=;
+        b=Xkf28zaruVrLmqa0GfGmuAvqQQX+dB8u4vBIZu3Zqzswl7V0McjDKsYjGqvgAnDPVt
+         JAfXVw2P8vm4NtD5ER0v9cpo5fq34lBw+gZ7lyOmQSBDrvgtT42XqrYiXIz43PC1aoqp
+         dm4offnZy34FIeCS0B3FEa0zUz3dEn5dYFCKk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hriix7PNjl3Fx5Lwj5vGvmpV6J+F4oqIBHmzWDNV1zY=;
+        b=EDCQjr1MvP4DTjNOytQTqmBHYrshMyBYGZBGuG4e+c8L/tBVaqzszfJ2XaJs+KmPS/
+         ZCZ4BFlRSdmoZEcXIQolXWgUanpFs/tnr0TTXVJTLr9O/WvpZlJR8Lk+eS7dB4XPylgE
+         XdPtbBtS1ipiic7ihwuGI5pBbv18zW5uH6uuvplRvmBLwiD+GaywmbQZuv2u16UwLLM5
+         yvIOl0sTxLG8mNmSzSaB/jBFUuk2o5c2Tq4H/iYW0MaXvrUACoiii0CfYEYMMt9qbYEX
+         0Utr4arbvkKDzR6j/bFYIHCi/u8cTQyRCiNjKiLWW2TbfjjWSTp9VnwLtrJ4ehTVYFMl
+         JnDg==
+X-Gm-Message-State: AFqh2krAmEgmzdqlbwvLeFLosqtROXwqeI6hFxaxm3r+1oHsmMtpnXy6
+	mxCaE0+CG+lnK0GjqiwDwUw3KA==
+X-Google-Smtp-Source: AMrXdXvytt3BictUpSrNMsVMjqYxBg9ULQXEcgl2Nkqae4pxiPmHRRghamOTQFr1zyRYajkEyGj8ag==
+X-Received: by 2002:adf:f9cb:0:b0:285:d0ba:92e2 with SMTP id w11-20020adff9cb000000b00285d0ba92e2mr22521193wrr.47.1672936194547;
+        Thu, 05 Jan 2023 08:29:54 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id x15-20020a5d490f000000b00236883f2f5csm36488463wrq.94.2023.01.05.08.29.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jan 2023 08:29:53 -0800 (PST)
+Date: Thu, 5 Jan 2023 17:29:51 +0100
+From: Daniel Vetter <daniel@ffwll.ch>
+To: Andrzej Hajda <andrzej.hajda@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Mark Rutland <mark.rutland@arm.com>, linux-m68k@vger.kernel.org,
+	linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	Boqun Feng <boqun.feng@gmail.com>, linux-xtensa@linux-xtensa.org,
+	Arnd Bergmann <arnd@arndb.de>, intel-gfx@lists.freedesktop.org,
+	openrisc@lists.librecores.org, loongarch@lists.linux.dev,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 00/19] Introduce __xchg, non-atomic xchg
+Message-ID: <Y7b6/7coJEVlTVxK@phenom.ffwll.local>
+Mail-Followup-To: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mark Rutland <mark.rutland@arm.com>, linux-m68k@vger.kernel.org,
+	linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	Boqun Feng <boqun.feng@gmail.com>, linux-xtensa@linux-xtensa.org,
+	Arnd Bergmann <arnd@arndb.de>, intel-gfx@lists.freedesktop.org,
+	openrisc@lists.librecores.org, loongarch@lists.linux.dev,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+References: <20221222114635.1251934-1-andrzej.hajda@intel.com>
+ <20221222092147.d2bb177c67870884f2e59a9b@linux-foundation.org>
+ <6e727952-3ad0-fcc3-82f1-c465dcffd56f@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6e727952-3ad0-fcc3-82f1-c465dcffd56f@intel.com>
+X-Operating-System: Linux phenom 5.19.0-2-amd64 
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: cc3c08b41a9c9402ead726ec6deb1217081d0d8b  Add linux-next specific files for 20230105
+On Thu, Dec 29, 2022 at 10:54:50AM +0100, Andrzej Hajda wrote:
+> Forgive me late response - Holidays,
+> 
+> On 22.12.2022 18:21, Andrew Morton wrote:
+> > On Thu, 22 Dec 2022 12:46:16 +0100 Andrzej Hajda <andrzej.hajda@intel.com> wrote:
+> > 
+> > > Hi all,
+> > > 
+> > > I hope there will be place for such tiny helper in kernel.
+> > > Quick cocci analyze shows there is probably few thousands places
+> > > where it could be useful.
+> > So to clarify, the intent here is a simple readability cleanup for
+> > existing open-coded exchange operations.
+> 
+> And replace private helpers with common one, see the last patch - the
+> ultimate goal
+> would be to replace all occurrences of fetch_and_zero with __xchg.
+> 
+> > The intent is *not* to
+> > identify existing xchg() sites which are unnecessarily atomic and to
+> > optimize them by using the non-atomic version.
+> > 
+> > Have you considered the latter?
+> 
+> If you mean some way of (semi-)automatic detection of such cases, then no.
+> Anyway this could be quite interesting challenge.
 
-Error/Warning reports:
+My take is that unless there is very clear demand for this macro from
+outside of i915, it's not worth it. All that fetch_and_zero zero achieved
+is make i915 code a lot more confusing to read for people who don't know
+this thing. And it replaces 2 entirely standard lines of 0, every often
+clearing pointers in data structures where you really want the verbosity
+to have a reminder and thinking about the locking.
 
-https://lore.kernel.org/oe-kbuild-all/202212090509.NjAl9tbo-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202212170128.DFuMhkwh-lkp@intel.com
+Plus it smells way too much like the cmpxchg family of atomic functions,
+addig further to the locking confuion.
 
-Error/Warning: (recently discovered and may have been fixed)
+Imo the right approach is to just open code this macro in i915 and then
+drop it. Again, unless enough people outside of i915 really really want
+this, and want to lift this to a kernel idiom.
+-Daniel
 
-Documentation/gpu/drm-internals:179: ./include/drm/drm_file.h:411: WARNING: undefined label: drm_accel_node (if the link has no caption the label must precede a section header)
-Warning: tools/power/cpupower/man/cpupower-powercap-info.1 references a file that doesn't exist: Documentation/power/powercap/powercap.txt
-aarch64-linux-ld: ID map text too big or misaligned
-arch/loongarch/kernel/asm-offsets.c:265:6: warning: no previous prototype for 'output_pbe_defines' [-Wmissing-prototypes]
-drivers/gpu/drm/ttm/ttm_bo_util.c:364:32: error: implicit declaration of function 'vmap'; did you mean 'kmap'? [-Werror=implicit-function-declaration]
-drivers/gpu/drm/ttm/ttm_bo_util.c:429:17: error: implicit declaration of function 'vunmap'; did you mean 'kunmap'? [-Werror=implicit-function-declaration]
-
-Unverified Error/Warning (likely false positive, please contact us if interested):
-
-drivers/block/null_blk/zoned.c:769 zone_cond_store() warn: potential spectre issue 'dev->zones' [w] (local cap)
-drivers/clk/qcom/camcc-sm6350.c:1745:15: sparse: sparse: symbol 'camcc_sm6350_hws' was not declared. Should it be static?
-fs/udf/file.c:177 udf_file_write_iter() warn: inconsistent returns '&iinfo->i_data_sem'.
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- arm64-allyesconfig
-|   `-- aarch64-linux-ld:ID-map-text-too-big-or-misaligned
-|-- loongarch-allyesconfig
-|   `-- arch-loongarch-kernel-asm-offsets.c:warning:no-previous-prototype-for-output_pbe_defines
-|-- mips-allyesconfig
-|   |-- drivers-gpu-drm-ttm-ttm_bo_util.c:error:implicit-declaration-of-function-vmap
-|   `-- drivers-gpu-drm-ttm-ttm_bo_util.c:error:implicit-declaration-of-function-vunmap
-|-- parisc-randconfig-m041-20230102
-|   `-- fs-udf-file.c-udf_file_write_iter()-warn:inconsistent-returns-iinfo-i_data_sem-.
-|-- riscv-randconfig-m031-20230105
-|   |-- drivers-block-null_blk-zoned.c-zone_cond_store()-warn:potential-spectre-issue-dev-zones-w-(local-cap)
-|   `-- drivers-regulator-tps65219-regulator.c-tps65219_regulator_probe()-warn:unsigned-rdev-is-never-less-than-zero.
-|-- riscv-randconfig-s032-20230105
-|   `-- drivers-clk-qcom-camcc-sm6350.c:sparse:sparse:symbol-camcc_sm6350_hws-was-not-declared.-Should-it-be-static
-`-- x86_64-allnoconfig
-    |-- Documentation-gpu-drm-internals:.-include-drm-drm_file.h:WARNING:undefined-label:drm_accel_node-(if-the-link-has-no-caption-the-label-must-precede-a-section-header)
-    `-- Warning:tools-power-cpupower-man-cpupower-powercap-info.-references-a-file-that-doesn-t-exist:Documentation-power-powercap-powercap.txt
-clang_recent_errors
-`-- x86_64-rhel-8.3-rust
-    `-- vmlinux.o:warning:objtool:___ksymtab_gpl-_RNvNtCsfATHBUcknU9_6kernel5print16call_printk_cont:data-relocation-to-ENDBR:_RNvNtCsfATHBUcknU9_6kernel5print16call_printk_cont
-
-elapsed time: 726m
-
-configs tested: 62
-configs skipped: 2
-
-gcc tested configs:
-um                             i386_defconfig
-x86_64                            allnoconfig
-um                           x86_64_defconfig
-i386                                defconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                           rhel-8.3-bpf
-x86_64                           rhel-8.3-syz
-m68k                             allmodconfig
-powerpc                           allnoconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                         rhel-8.3-kunit
-x86_64                        randconfig-a006
-x86_64                          rhel-8.3-func
-i386                          randconfig-a014
-x86_64                           rhel-8.3-kvm
-arc                              allyesconfig
-i386                          randconfig-a012
-alpha                            allyesconfig
-i386                          randconfig-a016
-x86_64                              defconfig
-m68k                             allyesconfig
-arc                                 defconfig
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-ia64                             allmodconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-i386                          randconfig-a001
-alpha                               defconfig
-arc                  randconfig-r043-20230105
-s390                                defconfig
-i386                          randconfig-a003
-s390                             allmodconfig
-x86_64                        randconfig-a015
-i386                          randconfig-a005
-s390                 randconfig-r044-20230105
-i386                             allyesconfig
-arm                                 defconfig
-s390                             allyesconfig
-riscv                randconfig-r042-20230105
-sh                               allmodconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-
-clang tested configs:
-x86_64                          rhel-8.3-rust
-x86_64                        randconfig-a001
-i386                          randconfig-a013
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a011
-i386                          randconfig-a015
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-arm                  randconfig-r046-20230105
-i386                          randconfig-a002
-x86_64                        randconfig-a016
-hexagon              randconfig-r041-20230105
-i386                          randconfig-a004
-hexagon              randconfig-r045-20230105
-i386                          randconfig-a006
+> 
+> > 
+> > > I am not sure who is good person to review/ack such patches,
+> > I can take 'em.
+> > 
+> > > so I've used my intuition to construct to/cc lists, sorry for mistakes.
+> > > This is the 2nd approach of the same idea, with comments addressed[0].
+> > > 
+> > > The helper is tiny and there are advices we can leave without it, so
+> > > I want to present few arguments why it would be good to have it:
+> > > 
+> > > 1. Code readability/simplification/number of lines:
+> > > 
+> > > Real example from drivers/net/ethernet/mellanox/mlx5/core/esw/qos.c:
+> > > -       previous_min_rate = evport->qos.min_rate;
+> > > -       evport->qos.min_rate = min_rate;
+> > > +       previous_min_rate = __xchg(evport->qos.min_rate, min_rate);
+> > > 
+> > > For sure the code is more compact, and IMHO more readable.
+> > > 
+> > > 2. Presence of similar helpers in other somehow related languages/libs:
+> > > 
+> > > a) Rust[1]: 'replace' from std::mem module, there is also 'take'
+> > >      helper (__xchg(&x, 0)), which is the same as private helper in
+> > >      i915 - fetch_and_zero, see latest patch.
+> > > b) C++ [2]: 'exchange' from utility header.
+> > > 
+> > > If the idea is OK there are still 2 qestions to answer:
+> > > 
+> > > 1. Name of the helper, __xchg follows kernel conventions,
+> > >      but for me Rust names are also OK.
+> > I like replace(), or, shockingly, exchange().
+> > 
+> > But...   Can we simply make swap() return the previous value?
+> > 
+> > 	previous_min_rate = swap(&evport->qos.min_rate, min_rate);
+> 
+> As Alexander already pointed out, swap requires 'references' to two
+> variables,
+> in contrast to xchg which requires reference to variable and value.
+> So we cannot use swap for cases:
+>     old_value = __xchg(&x, new_value);
+> 
+> Regards
+> Andrzej
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
