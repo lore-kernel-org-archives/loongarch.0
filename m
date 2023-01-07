@@ -1,133 +1,114 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320637460
-	for <loongarch@lists.linux.dev>; Fri,  6 Jan 2023 15:37:53 +0000 (UTC)
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1pDomj-0001nf-BJ; Fri, 06 Jan 2023 16:37:33 +0100
-Received: from [85.1.206.226] (helo=linux.home)
-	by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1pDomi-000T50-HK; Fri, 06 Jan 2023 16:37:32 +0100
-Subject: Re: [bpf-next v2] bpf: drop deprecated bpf_jit_enable == 2
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
- "tong@infragraf.org" <tong@infragraf.org>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.or" <linux-arm-kernel@lists.infradead.or>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
- "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>
-Cc: Hao Luo <haoluo@google.com>, John Fastabend <john.fastabend@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- Song Liu <song@kernel.org>, Stanislav Fomichev <sdf@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Hou Tao <houtao1@huawei.com>,
- KP Singh <kpsingh@kernel.org>, Yonghong Song <yhs@fb.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, naveen.n.rao@linux.ibm.com,
- mpe@ellerman.id.au
-References: <20230105030614.26842-1-tong@infragraf.org>
- <ea7673e1-40ec-18be-af89-5f4fd0f71742@csgroup.eu>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <71c83f39-f85f-d990-95b7-ab6068839e6c@iogearbox.net>
-Date: Fri, 6 Jan 2023 16:37:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAA21860
+	for <loongarch@lists.linux.dev>; Sat,  7 Jan 2023 11:04:54 +0000 (UTC)
+Received: by mail-wm1-f51.google.com with SMTP id l26so2686628wme.5
+        for <loongarch@lists.linux.dev>; Sat, 07 Jan 2023 03:04:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jV2yBF+mbkDE0BvyOwe05ARE6EO7XhtOfB/KJLMsfFA=;
+        b=BzPTx+ODS2RwGu5d9Av3CGI6XJ0NbmKP1pStUzg0M0m6+VF6wu2vf0tqTwK0k6q0qV
+         Fbx7Y4Wluy9p+k8PZjL3FOoLufHJHxtq2K/BaarEwd/dPtd/DgO4uDiDqLUXCcfzSy4g
+         Wd0wz4xfpZYGbxR/O6enZWRjIhs25ZrrKgwvTGouDcupcbkSfLeRveiApotbcr4XMgph
+         w/4+08uhP/RwKAozhcyw6lYPvScMk8zL6fmWwbkyxQOkT9WdSUz8lze9ta3Mlh7zLg9k
+         cM2v76pe7iQT/2ZR+EkGweLVXlhhfTIoWJwjo2u32vXfi3qjeDrWte72tROnSs3wxhtS
+         1Wwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jV2yBF+mbkDE0BvyOwe05ARE6EO7XhtOfB/KJLMsfFA=;
+        b=kay0FRrS3MfyiTWK07/WzS29eWpW6KMPy19imTisb06VFENAAFdx5WWkFhMcsYqraM
+         6sfW/wpivfhv697dtr26zsvYXMucZDEZHMLHgCueQSxopUSDJgUFEdk2Y4OB68stZFAx
+         kD1OIZaExVp3ZAv5QRlnPF8LVvSYaJQKlGsskSnzfXo/0kHadA2nVCUpP6vY/RaHlxBa
+         okIb7O/be6FsKMatz/Rq/30pgYBYaK8fkeali8Rqqp5hKn0yNAJP4JJSqAbIgfWyMyfG
+         RPOuYmOFBsW3a06Q9mWeiGNTbRnfWepyuKZWIsHYy5nt/54MNneboogDhrFJWzCY6p0R
+         KkoQ==
+X-Gm-Message-State: AFqh2kom87Fh2M9T1rH+pzOD+Z5Cn7AYkGVZBHYluAAQR3WtwGVAByv1
+	g4KaCMzMz1SsN58/8zU60zs=
+X-Google-Smtp-Source: AMrXdXuUafS1AFxogNrZXZJj6k6oC1QjVGeJmfZCRFdf2sgwNHMbrVBUD4+y7GGme2gWJhcqxBhA0A==
+X-Received: by 2002:a05:600c:601e:b0:3c6:e61e:ae71 with SMTP id az30-20020a05600c601e00b003c6e61eae71mr50341357wmb.1.1673089493118;
+        Sat, 07 Jan 2023 03:04:53 -0800 (PST)
+Received: from gmail.com (1F2EF507.nat.pool.telekom.hu. [31.46.245.7])
+        by smtp.gmail.com with ESMTPSA id o9-20020a05600c510900b003c6f8d30e40sm10657278wms.31.2023.01.07.03.04.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Jan 2023 03:04:50 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Sat, 7 Jan 2023 12:04:47 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+	x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Nicholas Piggin <npiggin@gmail.com>, Guo Ren <guoren@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 3/8] sched, smp: Trace IPIs sent via
+ send_call_function_single_ipi()
+Message-ID: <Y7lRz7oCaAmAhoqS@gmail.com>
+References: <20221202155817.2102944-1-vschneid@redhat.com>
+ <20221202155817.2102944-4-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ea7673e1-40ec-18be-af89-5f4fd0f71742@csgroup.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.7/26773/Fri Jan  6 09:48:44 2023)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221202155817.2102944-4-vschneid@redhat.com>
 
-On 1/5/23 6:53 PM, Christophe Leroy wrote:
-> Le 05/01/2023 à 04:06, tong@infragraf.org a écrit :
->> From: Tonghao Zhang <tong@infragraf.org>
->>
->> The x86_64 can't dump the valid insn in this way. A test BPF prog
->> which include subprog:
->>
->> $ llvm-objdump -d subprog.o
->> Disassembly of section .text:
->> 0000000000000000 <subprog>:
->>          0:       18 01 00 00 73 75 62 70 00 00 00 00 72 6f 67 00 r1 = 29114459903653235 ll
->>          2:       7b 1a f8 ff 00 00 00 00 *(u64 *)(r10 - 8) = r1
->>          3:       bf a1 00 00 00 00 00 00 r1 = r10
->>          4:       07 01 00 00 f8 ff ff ff r1 += -8
->>          5:       b7 02 00 00 08 00 00 00 r2 = 8
->>          6:       85 00 00 00 06 00 00 00 call 6
->>          7:       95 00 00 00 00 00 00 00 exit
->> Disassembly of section raw_tp/sys_enter:
->> 0000000000000000 <entry>:
->>          0:       85 10 00 00 ff ff ff ff call -1
->>          1:       b7 00 00 00 00 00 00 00 r0 = 0
->>          2:       95 00 00 00 00 00 00 00 exit
->>
->> kernel print message:
->> [  580.775387] flen=8 proglen=51 pass=3 image=ffffffffa000c20c from=kprobe-load pid=1643
->> [  580.777236] JIT code: 00000000: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc
->> [  580.779037] JIT code: 00000010: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc
->> [  580.780767] JIT code: 00000020: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc
->> [  580.782568] JIT code: 00000030: cc cc cc
->>
->> $ bpf_jit_disasm
->> 51 bytes emitted from JIT compiler (pass:3, flen:8)
->> ffffffffa000c20c + <x>:
->>      0:   int3
->>      1:   int3
->>      2:   int3
->>      3:   int3
->>      4:   int3
->>      5:   int3
->>      ...
->>
->> Until bpf_jit_binary_pack_finalize is invoked, we copy rw_header to header
->> and then image/insn is valid. BTW, we can use the "bpftool prog dump" JITed instructions.
-> 
-> NACK.
-> 
-> Because the feature is buggy on x86_64, you remove it for all
-> architectures ?
-> 
-> On powerpc bpf_jit_enable == 2 works and is very usefull.
-> 
-> Last time I tried to use bpftool on powerpc/32 it didn't work. I don't
-> remember the details, I think it was an issue with endianess. Maybe it
-> is fixed now, but it needs to be verified.
-> 
-> So please, before removing a working and usefull feature, make sure
-> there is an alternative available to it for all architectures in all
-> configurations.
-> 
-> Also, I don't think bpftool is usable to dump kernel BPF selftests.
-> That's vital when a selftest fails if you want to have a chance to
-> understand why it fails.
 
-If this is actively used by JIT developers and considered useful, I'd be
-ok to leave it for the time being. Overall goal is to reach feature parity
-among (at least major arch) JITs and not just have most functionality only
-available on x86-64 JIT. Could you however check what is not working with
-bpftool on powerpc/32? Perhaps it's not too much effort to just fix it,
-but details would be useful otherwise 'it didn't work' is too fuzzy.
+* Valentin Schneider <vschneid@redhat.com> wrote:
 
-Also, with regards to the last statement that bpftool is not usable to
-dump kernel BPF selftests. Could you elaborate some more? I haven't used
-bpf_jit_enable == 2 in a long time and for debugging always relied on
-bpftool to dump xlated insns or JIT. Or do you mean by BPF selftests
-the test_bpf.ko module? Given it has a big batch with kernel-only tests,
-there I can see it's probably still useful.
+> send_call_function_single_ipi() is the thing that sends IPIs at the bottom
+> of smp_call_function*() via either generic_exec_single() or
+> smp_call_function_many_cond(). Give it an IPI-related tracepoint.
+> 
+> Note that this ends up tracing any IPI sent via __smp_call_single_queue(),
+> which covers __ttwu_queue_wakelist() and irq_work_queue_on() "for free".
+> 
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Cheers,
-Daniel
+Acked-by: Ingo Molnar <mingo@kernel.org>
+
+Patch series logistics:
+
+ - No objections from the scheduler side, this feature looks pretty useful.
+
+ - Certain patches are incomplete, others are noted as being merged 
+   separately, so I presume you'll send an updated/completed series 
+   eventually?
+
+ - We can merge this via the scheduler tree I suspect, as most callbacks 
+   affected relate to tip:sched/core and tmp:smp/core - but if you have 
+   some other preferred tree that's fine too.
+
+Thanks,
+
+	Ingo
