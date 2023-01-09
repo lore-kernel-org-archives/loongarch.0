@@ -1,314 +1,101 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCA112599
-	for <loongarch@lists.linux.dev>; Mon,  9 Jan 2023 09:08:15 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bxb+t+2btjjnUAAA--.1360S3;
-	Mon, 09 Jan 2023 17:08:14 +0800 (CST)
-Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxTuRw2btj_6sWAA--.4042S5;
-	Mon, 09 Jan 2023 17:08:13 +0800 (CST)
-From: Youling Tang <tangyouling@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Xi Ruoyao <xry111@xry111.site>,
-	Jinyang He <hejinyang@loongson.cn>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] LoongArch: Add support for kernel relocation
-Date: Mon,  9 Jan 2023 17:07:53 +0800
-Message-Id: <1673255274-18238-4-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1673255274-18238-1-git-send-email-tangyouling@loongson.cn>
-References: <1673255274-18238-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID:AQAAf8DxTuRw2btj_6sWAA--.4042S5
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3GrWxKF45uw4UZw4fWF18AFb_yoW3AF43pr
-	W3ZrWkJr48GFnxJ3s2q348uryUZan7Ww43WanrKa4rCF1avF1rXw1vvr9rXFyjqws5Gr4F
-	qFyrKasFva1UAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8CztUUUUU=
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862D98C09
+	for <loongarch@lists.linux.dev>; Mon,  9 Jan 2023 19:01:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1673290902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bU+svoPcyEEDaWYmIcNec69dTXz5hTgyu3b7xJNjXUQ=;
+	b=GbQtheaQDoumbby++ka0j+jH5aJ3Hnt0GorR/gU2SDO4iMuId3Kb3RiWCkJWFnKsMSUwjC
+	0XAr2BdyqC222rQVsmTIS+gGhqS2Se9IRxaOWGlWZA5JS451Kgv6Glsfj5znm7VV5wbHo6
+	695EThop73wxWVuFCZ2fEmXM7S9Vy+A=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-629-pVU30zn0M_CxKGG9swZgPw-1; Mon, 09 Jan 2023 14:01:38 -0500
+X-MC-Unique: pVU30zn0M_CxKGG9swZgPw-1
+Received: by mail-qt1-f199.google.com with SMTP id k7-20020ac84747000000b003a87ca26200so4260146qtp.6
+        for <loongarch@lists.linux.dev>; Mon, 09 Jan 2023 11:01:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bU+svoPcyEEDaWYmIcNec69dTXz5hTgyu3b7xJNjXUQ=;
+        b=POc8UX+XxfJWP+25aW5aPhDu86gEwaBGu3tuZue5kYDNSXQ0emIIVypLpUUX7jtG5q
+         jHvNi1f/9HaekGtl7pRRdwAGqRkY7B08f60De09A3efwATSVQrJW8TWR/XX8LwnuaOQX
+         YeTAkydzeTrOcZEjPNPEarSf0wyWypgLpbHc8CAK51S3fyRZrqyFsC8fk/r+5cmB3dMB
+         ZJi/N+FaVEZZVoecE3MeLbW+oQ6dJfDLC01DsXZigzmR7N0Zgs9yODvdDvAUPWLv6lmi
+         dmFVM86y7NEPFa3F+osAH+cgGbQif94lWC2UBb6LckeHZjytIrbcDZPRd0tyfxA8/xxN
+         QZGQ==
+X-Gm-Message-State: AFqh2koKt3sUygpnrXYE/U4/1lEfO9SeB0QXuD9iy/OaB52GZceTXPA6
+	9m1wf9J8cYR1kMo8Ds4jqRfA+6AwXqzcPQHuwqRkywbr4s/wxa3R7IhDCEb+IrzIIsT7AgtAPVQ
+	R6uKmu0bYs845xQ4KZ6cL
+X-Received: by 2002:ac8:7395:0:b0:3a7:ed31:a618 with SMTP id t21-20020ac87395000000b003a7ed31a618mr91336672qtp.7.1673290887985;
+        Mon, 09 Jan 2023 11:01:27 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXseRLv5+JCaBFPqzT7E7Yv2YOrloRSyhYUUSWRG6zA8srvH9gyrV5oV35teC9nwwkDxbanAYA==
+X-Received: by 2002:ac8:7395:0:b0:3a7:ed31:a618 with SMTP id t21-20020ac87395000000b003a7ed31a618mr91336646qtp.7.1673290887764;
+        Mon, 09 Jan 2023 11:01:27 -0800 (PST)
+Received: from vschneid.remote.csb ([154.57.232.159])
+        by smtp.gmail.com with ESMTPSA id cj12-20020a05622a258c00b0039cc0fbdb61sm4985479qtb.53.2023.01.09.11.01.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jan 2023 11:01:27 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-xtensa@linux-xtensa.org, x86@kernel.org, Guo Ren
+ <guoren@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>, Daniel
+ Bristot de Oliveira <bristot@redhat.com>, Marcelo Tosatti
+ <mtosatti@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Marc
+ Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell
+ King <linux@armlinux.org.uk>, Nicholas Piggin <npiggin@gmail.com>, "David
+ S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 6/8] treewide: Trace IPIs sent via smp_send_reschedule()
+In-Reply-To: <CAAhV-H6Oii6t-4aHFjgPkCgFAd+LcVVg+7jMu_w4mEa0Ecuwaw@mail.gmail.com>
+References: <20221202155817.2102944-1-vschneid@redhat.com>
+ <20221202155817.2102944-7-vschneid@redhat.com>
+ <CAAhV-H6Oii6t-4aHFjgPkCgFAd+LcVVg+7jMu_w4mEa0Ecuwaw@mail.gmail.com>
+Date: Mon, 09 Jan 2023 19:01:22 +0000
+Message-ID: <xhsmh5ydfedml.mognet@vschneid.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-arch/loongarch/kernel/relocate.c contains the functions necessary to
-relocate the kernel elsewhere in memory.
+On 08/01/23 20:17, Huacai Chen wrote:
+> Hi, Valentin,
+>
+> On Fri, Dec 2, 2022 at 11:59 PM Valentin Schneider <vschneid@redhat.com> wrote:
+>> @@ -83,7 +83,7 @@ extern void show_ipi_list(struct seq_file *p, int prec);
+>>   * it goes straight through and wastes no time serializing
+>>   * anything. Worst case is that we lose a reschedule ...
+>>   */
+>> -static inline void smp_send_reschedule(int cpu)
+>> +static inline void arch_smp_send_reschedule(int cpu)
+>>  {
+>>         loongson_send_ipi_single(cpu, SMP_RESCHEDULE);
+>>  }
+> This function has been moved to arch/loongarch/kernel/smp.c since 6.2.
+>
 
-The kernel makes a copy of itself at the new address. It uses the
-relocation table inserted by the relocs tool to fix symbol references
-within the new image.
-
-If copy/relocation is successful then the entry point of the new kernel
-is returned, otherwise fall back to starting the kernel in place.
-
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
- arch/loongarch/Kconfig              | 15 +++++
- arch/loongarch/Makefile             |  5 ++
- arch/loongarch/kernel/Makefile      |  2 +
- arch/loongarch/kernel/head.S        | 18 ++++++
- arch/loongarch/kernel/relocate.c    | 96 +++++++++++++++++++++++++++++
- arch/loongarch/kernel/vmlinux.lds.S | 11 +++-
- 6 files changed, 145 insertions(+), 2 deletions(-)
- create mode 100644 arch/loongarch/kernel/relocate.c
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 9cc8b84f7eb0..089a4695b1b3 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -48,6 +48,7 @@ config LOONGARCH
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_SUPPORTS_HUGETLBFS
- 	select ARCH_SUPPORTS_NUMA_BALANCING
-+	select SYS_SUPPORTS_RELOCATABLE
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_CMPXCHG_LOCKREF
- 	select ARCH_USE_QUEUED_RWLOCKS
-@@ -229,6 +230,11 @@ config SCHED_OMIT_FRAME_POINTER
- config AS_HAS_EXPLICIT_RELOCS
- 	def_bool $(as-instr,x:pcalau12i \$t0$(comma)%pc_hi20(x))
- 
-+config SYS_SUPPORTS_RELOCATABLE
-+	bool
-+	help
-+	  Selected if the platform supports relocating the kernel.
-+
- menu "Kernel type and options"
- 
- source "kernel/Kconfig.hz"
-@@ -474,6 +480,15 @@ config PHYSICAL_START
- 	  specified in the "crashkernel=YM@XM" command line boot parameter
- 	  passed to the panic-ed kernel).
- 
-+config RELOCATABLE
-+	bool "Relocatable kernel"
-+	depends on SYS_SUPPORTS_RELOCATABLE
-+	help
-+	  This builds the kernel as a Position Independent Executable (PIE),
-+	  which retains all relocation metadata required to relocate the
-+	  kernel binary at runtime to a different virtual address than the
-+	  address it was linked at.
-+
- config SECCOMP
- 	bool "Enable seccomp to safely compute untrusted bytecode"
- 	depends on PROC_FS
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index 4402387d2755..27b5a70ff31c 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -71,6 +71,11 @@ KBUILD_AFLAGS_MODULE		+= -Wa,-mla-global-with-abs
- KBUILD_CFLAGS_MODULE		+= -fplt -Wa,-mla-global-with-abs,-mla-local-with-abs
- endif
- 
-+ifeq ($(CONFIG_RELOCATABLE),y)
-+LDFLAGS_vmlinux			+= -static -pie --no-dynamic-linker -z notext
-+KBUILD_CFLAGS_KERNEL		+= -fPIE
-+endif
-+
- cflags-y += -ffreestanding
- cflags-y += $(call cc-option, -mno-check-zero-division)
- 
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index fcaa024a685e..33787d22e6f4 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -31,6 +31,8 @@ endif
- obj-$(CONFIG_MODULES)		+= module.o module-sections.o
- obj-$(CONFIG_STACKTRACE)	+= stacktrace.o
- 
-+obj-$(CONFIG_RELOCATABLE)	+= relocate.o
-+
- obj-$(CONFIG_PROC_FS)		+= proc.o
- 
- obj-$(CONFIG_SMP)		+= smp.o
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index e8a4bf9d7599..6db1549177ad 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -88,7 +88,25 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
- 	PTR_ADD		sp, sp, tp
- 	set_saved_sp	sp, t0, t1
- 
-+#ifdef CONFIG_RELOCATABLE
-+	/* Copy kernel and apply the relocations */
-+	bl		relocate_kernel
-+
-+	/* Repoint the sp into the new kernel image */
-+	PTR_LI		sp, (_THREAD_SIZE - 32 - PT_SIZE)
-+	PTR_ADD		sp, sp, tp
-+	set_saved_sp	sp, t0, t1
-+	PTR_ADDI	sp, sp, -4 * SZREG      # init stack pointer
-+
-+	/*
-+	 * relocate_kernel returns the entry point either
-+	 * in the relocated kernel or the original if for
-+	 * some reason relocation failed.
-+	*/
-+	jr		a0
-+#else
- 	bl		start_kernel
-+#endif
- 	ASM_BUG()
- 
- SYM_CODE_END(kernel_entry)
-diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
-new file mode 100644
-index 000000000000..a58551c0698d
---- /dev/null
-+++ b/arch/loongarch/kernel/relocate.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Support for Kernel relocation at boot time
-+ *
-+ * Copyright (C) 2023 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/elf.h>
-+#include <linux/kernel.h>
-+#include <linux/start_kernel.h>
-+#include <linux/printk.h>
-+#include <linux/panic_notifier.h>
-+#include <asm/bootinfo.h>
-+#include <asm/inst.h>
-+#include <asm/sections.h>
-+
-+#define RELOCATED(x) ((void *)((long)x + offset))
-+
-+extern long __rela_dyn_start;
-+extern long __rela_dyn_end;
-+
-+/*
-+ * Choose a new address for the kernel, for now we'll hard
-+ * code the destination.
-+ */
-+static inline void __init *determine_relocation_address(void)
-+{
-+	return (void *)(CACHE_BASE + 0x02000000);
-+}
-+
-+static inline int __init relocation_addr_valid(void *loc_new)
-+{
-+	if ((unsigned long)loc_new & 0x0000ffff) {
-+		/* Inappropriately aligned new location */
-+		return 0;
-+	}
-+	if ((unsigned long)loc_new < (unsigned long)_end) {
-+		/* New location overlaps original kernel */
-+		return 0;
-+	}
-+	return 1;
-+}
-+
-+void *__init relocate_kernel(void)
-+{
-+	Elf64_Rela *rela, *rela_end;
-+	void *loc_new;
-+	unsigned long kernel_length;
-+	long offset = 0;
-+	int res = 1;
-+	/* Default to original kernel entry point */
-+	void *kernel_entry = start_kernel;
-+
-+	kernel_length = (long)(_end) - (long)(_text);
-+
-+	loc_new = determine_relocation_address();
-+
-+	/* Sanity check relocation address */
-+	if (relocation_addr_valid(loc_new))
-+		offset = (unsigned long)loc_new - (unsigned long)(_text);
-+
-+	if (offset) {
-+		/* Copy the kernel to it's new location */
-+		memcpy(loc_new, _text, kernel_length);
-+
-+		/* Sync the caches ready for execution of new kernel */
-+		__asm__ __volatile__ (
-+			"ibar 0 \t\n"
-+			"dbar 0 \t\n");
-+
-+		rela = (Elf64_Rela *)RELOCATED(&__rela_dyn_start);
-+		rela_end = (Elf64_Rela *)RELOCATED(&__rela_dyn_end);
-+
-+		for ( ; rela < rela_end; rela++) {
-+			Elf64_Addr addr = rela->r_offset;
-+			Elf64_Addr relocated_addr = rela->r_addend;
-+
-+			if (rela->r_info != R_LARCH_RELATIVE)
-+				continue;
-+
-+			if (relocated_addr >= VMLINUX_LOAD_ADDRESS)
-+				relocated_addr = RELOCATED(relocated_addr);
-+
-+			*(Elf64_Addr *)RELOCATED(addr) = relocated_addr;
-+
-+		}
-+
-+		/* The current thread is now within the relocated image */
-+		__current_thread_info = RELOCATED(__current_thread_info);
-+
-+		/* Return the new kernel's entry point */
-+		kernel_entry = RELOCATED(start_kernel);
-+	}
-+out:
-+	return kernel_entry;
-+}
-diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-index 733b16e8d55d..aec0b6567d24 100644
---- a/arch/loongarch/kernel/vmlinux.lds.S
-+++ b/arch/loongarch/kernel/vmlinux.lds.S
-@@ -70,6 +70,8 @@ SECTIONS
- 	.plt : ALIGN(16) { *(.plt) }
- 	.got.plt : ALIGN(16) { *(.got.plt) }
- 
-+	.data.rel : { *(.data.rel*) }
-+
- 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
- 	__init_begin = .;
- 	__inittext_begin = .;
-@@ -93,8 +95,6 @@ SECTIONS
- 	PERCPU_SECTION(1 << CONFIG_L1_CACHE_SHIFT)
- #endif
- 
--	.rela.dyn : ALIGN(8) { *(.rela.dyn) *(.rela*) }
--
- 	.init.bss : {
- 		*(.init.bss)
- 	}
-@@ -107,6 +107,12 @@ SECTIONS
- 	RO_DATA(4096)
- 	RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
- 
-+	.rela.dyn : ALIGN(8) {
-+		__rela_dyn_start = .;
-+		 *(.rela.dyn) *(.rela*)
-+		__rela_dyn_end = .;
-+	}
-+
- 	.sdata : {
- 		*(.sdata)
- 	}
-@@ -133,6 +139,7 @@ SECTIONS
- 
- 	DISCARDS
- 	/DISCARD/ : {
-+		*(.dynamic .dynsym .dynstr .hash .gnu.hash)
- 		*(.gnu.attributes)
- 		*(.options)
- 		*(.eh_frame)
--- 
-2.37.1
+Thanks! I'll make sure to rerun the coccinelle script for the next version.
 
