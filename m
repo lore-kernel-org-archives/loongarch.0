@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EE3915C3
-	for <loongarch@lists.linux.dev>; Mon,  9 Jan 2023 01:36:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19D1B15C4
+	for <loongarch@lists.linux.dev>; Mon,  9 Jan 2023 01:36:13 +0000 (UTC)
 Received: from loongson.cn (unknown [112.20.112.33])
-	by gateway (Coremail) with SMTP id _____8CxjfCLb7tjDGoAAA--.1710S3;
-	Mon, 09 Jan 2023 09:36:11 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxTuuMb7tjFmoAAA--.1311S3;
+	Mon, 09 Jan 2023 09:36:12 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.112.33])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD7+Ib7tjyngWAA--.1145S3;
-	Mon, 09 Jan 2023 09:36:10 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD7+Ib7tjyngWAA--.1145S4;
+	Mon, 09 Jan 2023 09:36:12 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Alessandro Zummo <a.zummo@towertech.it>,
 	Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -23,10 +23,11 @@ Cc: linux-rtc@vger.kernel.org,
 	Qing Zhang <zhangqing@loongson.cn>,
 	Tiezhu Yang <yangtiezhu@loongson.cn>,
 	zhaoxiao <zhaoxiao@uniontech.com>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH V2 5/7] MIPS: Loongson: Enable LS2X RTC in loongson3_defconfig
-Date: Mon,  9 Jan 2023 09:36:30 +0800
-Message-Id: <15185155fcd69f78f6c6ffcf8ea0085804ff3578.1673227292.git.zhoubinbin@loongson.cn>
+Subject: [PATCH V2 6/7] MIPS: Loongson64: DTS: Add RTC support to Loongson-2K
+Date: Mon,  9 Jan 2023 09:36:31 +0800
+Message-Id: <8be1bf437f5407c54a93e7be2c6303d0eb6eeb83.1673227292.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1673227292.git.zhoubinbin@loongson.cn>
 References: <cover.1673227292.git.zhoubinbin@loongson.cn>
@@ -37,48 +38,55 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxD7+Ib7tjyngWAA--.1145S3
+X-CM-TRANSID:AQAAf8DxD7+Ib7tjyngWAA--.1145S4
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrur4fZFWxGr4rtr4Dtw1UJrb_yoW3GFX_Gr
-	W7Gw1kWr4rAFWxWayxXw4rWrWDuw1UXF1rAryUJr1aqa9IgrnIq39rKr17GF98WasFgF4f
-	ZaykJFy7uF1IqjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+X-Coremail-Antispam: 1Uk129KBjvdXoW7JFWUCr18Cw4UGryUtFyUGFg_yoWkJFcEya
+	sIk3WkGrWfJF1ft34UXr1UJFy3Z3yUJ3Z5C3WxWF10vas0vwnxJFWUCayDGFy3WrWjgrn3
+	Wws5WF4xAFyxKjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
 	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	u7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	K7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
 	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
 	6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4
-	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2kK
-	e7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2z280
-	aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
-	kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-	07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-	1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW7
-	JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rV
-	WUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
-	JrUvcSsGvfC2KfnxnUUI43ZEXa7IU022NJUUUUU==
+	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
+	w2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_ZF0_GryDMcIj6I8E
+	87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I
+	0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCI
+	bckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_Jr
+	I_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v2
+	6F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7
+	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4j
+	6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxNeODUUUU
 
-From: WANG Xuerui <git@xen0n.name>
+The Loongson-2K RTC module is now supported, enable it.
 
-This is now supported, enable for Loongson-3 systems.
-Other systems are unaffected.
+The MMIO address is unclear from the Loongson 2K1000 user manual, I took
+it from Loongson's out-of-tree fork of Linux 4.19.
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- arch/mips/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
-index aca66a5f330d..4f55a02de9d8 100644
---- a/arch/mips/configs/loongson3_defconfig
-+++ b/arch/mips/configs/loongson3_defconfig
-@@ -319,6 +319,7 @@ CONFIG_USB_SERIAL_OPTION=m
- CONFIG_RTC_CLASS=y
- CONFIG_RTC_DRV_CMOS=y
- CONFIG_RTC_DRV_GOLDFISH=y
-+CONFIG_RTC_DRV_LS2X=y
- CONFIG_DMADEVICES=y
- CONFIG_VIRTIO_PCI=y
- CONFIG_VIRTIO_BALLOON=m
+diff --git a/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi b/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi
+index 8143a61111e3..c22414595140 100644
+--- a/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi
++++ b/arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi
+@@ -57,6 +57,13 @@ pm: reset-controller@1fe07000 {
+ 			reg = <0 0x1fe07000 0 0x422>;
+ 		};
+ 
++		rtc0: rtc@1fe07800 {
++			compatible = "loongson,ls2x-rtc";
++			reg = <0 0x1fe07800 0 0x78>;
++			interrupt-parent = <&liointc0>;
++			interrupts = <60 IRQ_TYPE_LEVEL_LOW>;
++		};
++
+ 		liointc0: interrupt-controller@1fe11400 {
+ 			compatible = "loongson,liointc-2.0";
+ 			reg = <0 0x1fe11400 0 0x40>,
 -- 
 2.31.1
 
