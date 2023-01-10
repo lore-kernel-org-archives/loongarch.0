@@ -1,181 +1,191 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F63522C
-	for <loongarch@lists.linux.dev>; Tue, 10 Jan 2023 12:46:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673354812; x=1704890812;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JjCURNXFRNcYm6qc3FnZISad0UB5+7XjMdbu/B0f1Fo=;
-  b=eslOY4/RyP8FxHyeCRrE19SI3cJMNIdhnh8JoA4TuBfkkrW3r2p0cCt2
-   rheIeTPHgYkQ0JHzek9qwqMWg1qcTnSnT0sExuaC2nbKqNnCi+xainCjS
-   C9lzt8MTxD97249Oz4d8SXSGGt+l1u6tL/+MZ4n/cmPc8liyOQOG1f7sP
-   67NytSLJSJycEjm84crog0C2ual0d23YCtEy6xgVMPpTfAis8VdFISzxC
-   Cib23aMN2gZqrBIjq+1rY12YLlXoPndpLXvXQtnn739OcK0v9AyYAraqM
-   zcTAh/xH0S7Vxee7cuMkO1KQ7jSykT3AsnaUZJKUF+XlPhTPwrzkmL2wt
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="302834337"
-X-IronPort-AV: E=Sophos;i="5.96,315,1665471600"; 
-   d="scan'208";a="302834337"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2023 04:46:46 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="689393555"
-X-IronPort-AV: E=Sophos;i="5.96,315,1665471600"; 
-   d="scan'208";a="689393555"
-Received: from ahajda-mobl.ger.corp.intel.com (HELO [10.213.8.19]) ([10.213.8.19])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2023 04:46:39 -0800
-Message-ID: <1bfae3d0-8c0b-ea83-7184-db847a4a969f@intel.com>
-Date: Tue, 10 Jan 2023 13:46:37 +0100
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C79D5522C
+	for <loongarch@lists.linux.dev>; Tue, 10 Jan 2023 13:03:54 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.112.33])
+	by gateway (Coremail) with SMTP id _____8AxHuszYr1jT74AAA--.2314S3;
+	Tue, 10 Jan 2023 21:03:47 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.112.33])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxnb4wYr1j8W4XAA--.45936S2;
+	Tue, 10 Jan 2023 21:03:45 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Wolfram Sang <wsa@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org
+Cc: loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Peibao Liu <liupeibao@loongson.cn>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH V10 0/4] i2c: ls2x: Add support for the Loongson-2K/LS7A I2C controller
+Date: Tue, 10 Jan 2023 21:03:52 +0800
+Message-Id: <cover.1673340642.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.1
-Subject: Re: [Intel-gfx] [RFC DO NOT MERGE] treewide: use __xchg in most
- obvious places
-Content-Language: en-US
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-ia64@vger.kernel.org,
- linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, Boqun Feng <boqun.feng@gmail.com>,
- linux-xtensa@linux-xtensa.org, Arnd Bergmann <arnd@arndb.de>,
- intel-gfx@lists.freedesktop.org, linux-m68k@lists.linux-m68k.org,
- openrisc@lists.librecores.org, loongarch@lists.linux.dev,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, linux-arm-kernel@lists.infradead.org,
- linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Daniel Vetter <daniel@ffwll.ch>, linux-alpha@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
-References: <Y7b6/7coJEVlTVxK@phenom.ffwll.local>
- <20230110105306.3973122-1-andrzej.hajda@intel.com>
- <Y71G1tkmUzM4BLxn@smile.fi.intel.com>
-From: Andrzej Hajda <andrzej.hajda@intel.com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
- Gdansk - KRS 101882 - NIP 957-07-52-316
-In-Reply-To: <Y71G1tkmUzM4BLxn@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cxnb4wYr1j8W4XAA--.45936S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXrW3uw4UGw4rAr1DJFy7Jrb_yoWrtr4rpa
+	95u3s8Kr4DJr17GF93JF1ruFyFgws3Jayjgr47Kw13WanrWr1UAw4fKFya9r17CrZ8GFWj
+	qFZ0gFn8uF9rArJanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
+	Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
+	O2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+	WUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+	Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4U
+	YxBIdaVFxhVjvjDU0xZFpf9x07j7189UUUUU=
 
-On 10.01.2023 12:07, Andy Shevchenko wrote:
-> On Tue, Jan 10, 2023 at 11:53:06AM +0100, Andrzej Hajda wrote:
->> This patch tries to show usability of __xchg helper.
->> It is not intended to be merged, but I can convert
->> it to proper patchset if necessary.
->>
->> There are many more places where __xchg can be used.
->> This demo shows the most spectacular cases IMHO:
->> - previous value is returned from function,
->> - temporary variables are in use.
->>
->> As a result readability is much better and diffstat is quite
->> nice, less local vars to look at.
->> In many cases whole body of functions is replaced
->> with __xchg(ptr, val), so as further refactoring the whole
->> function can be removed and __xchg can be called directly.
-> 
-> ...
-> 
->>   arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
->>   				  struct pt_regs *regs)
->>   {
->> -	unsigned long orig_ret_vaddr;
->> -
->> -	orig_ret_vaddr = regs->ARM_lr;
->> -	/* Replace the return addr with trampoline addr */
->> -	regs->ARM_lr = trampoline_vaddr;
->> -	return orig_ret_vaddr;
->> +	return __xchg(&regs->ARM_lr, trampoline_vaddr);
->>   }
-> 
-> If it's not a callback, the entire function can be killed.
-> And this is a good example of the function usage.
-> OTOH, these places might have a side effect (if it's in deep CPU
-> handlers), means we need to do this carefully.
-> 
-> ...
-> 
->>   static inline void *qed_chain_produce(struct qed_chain *p_chain)
->>   {
->> -	void *p_ret = NULL, *p_prod_idx, *p_prod_page_idx;
->> +	void *p_prod_idx, *p_prod_page_idx;
->>   
->>   	if (is_chain_u16(p_chain)) {
->>   		if ((p_chain->u.chain16.prod_idx &
->> @@ -390,11 +391,8 @@ static inline void *qed_chain_produce(struct qed_chain *p_chain)
->>   		p_chain->u.chain32.prod_idx++;
->>   	}
->>   
->> -	p_ret = p_chain->p_prod_elem;
->> -	p_chain->p_prod_elem = (void *)(((u8 *)p_chain->p_prod_elem) +
->> -					p_chain->elem_size);
->> -
->> -	return p_ret;
->> +	return __xchg(&p_chain->p_prod_elem,
->> +		      (void *)(((u8 *)p_chain->p_prod_elem) + p_chain->elem_size));
-> 
-> Wondering if you still need a (void *) casting after the change. Ditto for the
-> rest of similar cases.
+Hi all:
 
-IMHO it is not needed also before the change and IIRC gcc has an 
-extension which allows to drop (u8 *) cast as well [1].
+This patch series adds support for the I2C module found on various
+Loongson systems with the Loongson-2K SoC or the Loongson LS7A bridge chip.
 
-[1]: https://gcc.gnu.org/onlinedocs/gcc/Pointer-Arith.html
+For now, the I2C driver is suitable for DT-based or ACPI-based systems.
 
-> 
->>   }
-> 
-> ...
-> 
-> Btw, is it done by coccinelle? If no, why not providing the script?
-> 
+I have tested on Loongson-3A5000LA+LS7A1000/LS7A2000, Loongson-2K1000LA
+and Loongson-2K0500.
 
-Yes I have used cocci. My cocci skills are far from perfect, so I did 
-not want to share my dirty code, but this is nothing secret:
+Thanks.
 
-@r1@
-expression x, v;
-local idexpression p;
-@@
--       p = x;
--       x = v;
--       return p;
-+       return __xchg(&x, v);
+Changes since V9:
+- patch (1/4)
+  - dev->of_node replaced by dev_fwnode() in i2c_gpio_probe();
+  - Add device_set_node();
+  - Add Tested-by tag.
+- patch (3/4)
+  - Add Reviewed-by tag.
 
-@depends on r1@
-expression e;
-@@
-         __xchg(
--       &*e,
-+       e,
-         ...)
+Changes since V8:
+- patch (3/4)
+  - Refactor the error handling process of the ls2x_i2c_xfer_one();
+  - Split comment and code.
 
-@depends on r1@
-expression t;
-@@
--       if (t) {
-+       if (t)
-                 return __xchg(...);
--       }
+Changes since V7:
+- patch (3/4)
+  - I2C_LS2X should be added to the Kconfig/Makefile in Latin
+    alphabetical order.
+  - To avoid repeated type conversions, 'struct ls2x_i2c_priv *priv'
+    replaces 'struct i2c_adapter *adap' as a function parameter, e.g.
+    ls2x_i2c_start();
+  - Refactor ls2x_i2c_stop() with readb_poll_timeout(), mainly with
+    LS2X_SR_BUSY to indicate the status (success/timeout) of the stop
+    command;
+  - Remove extra parentheses;
+  - For consistency, the variable 'r' in ls2x_i2c_probe() is renamed to
+    'ret'.
 
-@depends on r1@
-type t;
-identifier p;
-expression e;
-@@
-(
--       t p;
-|
--       t p = e;
-)
-         ... when != p
+Changes since V6:
+- patch (1/4)
+  - Add Reviewed-by tag.
+- patch (3/4)
+  - GPL-2.0 -> GPL-2.0-only;
+  - Add property.h;
+  - writew() should be used to operate I2C_LS2X_PRER, and drop the
+    suffix of I2C_LS2X_PRER_LO/I2C_LS2X_PRER_HI;
+  - Drop ls2x_i2c_priv->dev, for it can be completely replaced by
+    'adapter.dev.parent';
+  - Reasonable return value handling in ls2x_i2c_xfer_one();
+  - Dropping the I2C_M_STOP flag judgment, the stop parameter of
+    ls2x_i2c_xfer_one() represents the last msg;
+  - Add comments for subsys_initcall();
+  - Code formatting, such as dropping unnecessary blank lines.
 
-Regards
-Andrzej
+Changes since V5:
+- patch (1/4)
+  - Add property.h.
+- patch (3/4)
+  - Put the ls2x_i2c_reginit() in front of irq requst;
+  - Refact ls2x_i2c_adjust_bus_speed: discard the magic value of
+    the divider register and LS2X_I2C_FREQ_STD is used to calculate
+    the frequency;
+  - Drop useless parameters: priv->suspended, and also disable I2C
+    interrupts during suspend;
+  - Drop ls2x_i2c_remove(), for the adapter will be auto deleted on
+    driver detach;
+  - Drop MODULE_ALIAS;
+  - Code formatting, such as alignment.
+
+Thanks Andy for your comments.
+
+Changes since V4:
+- patch (1/4)
+  - Drop unneeded headers: of.h;
+  - xxx_props -> xxx_properties.
+- patch (2/4)
+  - Add interrupt headers to fix syntax error found by Rob.
+- patch (3/4)
+  - Drop atmoic loop in ls2x_i2c_master_xfer(), I have tested it on the
+    appropriate environment with no problems;
+  - Define the corresponding bits in I2C_LS2X_CTR to avoid magic
+    numbers;
+  - dev_get_drvdata() is used to get ls2x_i2c_priv() in
+    ls2x_i2c_suspend();
+  - i2c_add_adapter() -> devm_i2c_add_adapter();
+  - SET_SYSTEM_SLEEP_PM_OPS() -> DEFINE_RUNTIME_DEV_PM_OPS();
+  - Code formatting, such as alignment.
+
+    Details: https://lore.kernel.org/all/Y4e%2F6KewuHjAluSZ@smile.fi.intel.com/
+
+Changes since V3:
+- Addressed all review comments from v3
+  - Change the changelog text to make it clearer (1/5);
+  - Fix some minor bugs, such as formatting issues (2/5);
+  - Fix some formatting issues (3/5);
+  - Deep refactoring of code for clarity (4/5).
+     Details: https://lore.kernel.org/all/Y4S2cnlAm3YYvZ8E@smile.fi.intel.com/
+
+Thanks to all for their suggestions.
+
+Changes since V2:
+- Addressed all review comments from v2
+  - Drop of_match_ptr() in i2c-gpio to avoid potential unused warnings
+    (1/5);
+  - Introduce i2c_gpio_get_props() function as the generic interface
+    to get i2c-gpio props from DT or ACPI table (2/5);
+  - Refact ls2x i2c code, similar to removing excessive goto tags (4/5).
+
+Thanks to Andy and Mika for their suggestions.
+
+Changes since V1:
+- Remove the function of getting the static i2c bus number from ACPI "_UID";
+- Fix build warning from kernel test robot.
+
+Binbin Zhou (4):
+  i2c: gpio: Add support on ACPI-based system
+  dt-bindings: i2c: Add Loongson LS2X I2C controller
+  i2c: ls2x: Add driver for Loongson-2K/LS7A I2C controller
+  LoongArch: Enable LS2X I2C in loongson3_defconfig
+
+ .../bindings/i2c/loongson,ls2x-i2c.yaml       |  51 +++
+ arch/loongarch/configs/loongson3_defconfig    |   1 +
+ drivers/i2c/busses/Kconfig                    |  11 +
+ drivers/i2c/busses/Makefile                   |   1 +
+ drivers/i2c/busses/i2c-gpio.c                 |  34 +-
+ drivers/i2c/busses/i2c-ls2x.c                 | 382 ++++++++++++++++++
+ 6 files changed, 467 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+ create mode 100644 drivers/i2c/busses/i2c-ls2x.c
+
+-- 
+2.31.1
 
