@@ -1,82 +1,102 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DCEC6FD9
-	for <loongarch@lists.linux.dev>; Tue, 10 Jan 2023 13:04:04 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.112.33])
-	by gateway (Coremail) with SMTP id _____8CxjfBEYr1jl74AAA--.2755S3;
-	Tue, 10 Jan 2023 21:04:04 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.112.33])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxUuVCYr1jFm8XAA--.7157S2;
-	Tue, 10 Jan 2023 21:04:03 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Wolfram Sang <wsa@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org
-Cc: loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Peibao Liu <liupeibao@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH V10 4/4] LoongArch: Enable LS2X I2C in loongson3_defconfig
-Date: Tue, 10 Jan 2023 21:04:21 +0800
-Message-Id: <32e154ef6d141b7d4d434078303094d23537513c.1673340642.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1673340642.git.zhoubinbin@loongson.cn>
-References: <cover.1673340642.git.zhoubinbin@loongson.cn>
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49506FD9
+	for <loongarch@lists.linux.dev>; Tue, 10 Jan 2023 13:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673358751; x=1704894751;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Tp8Z9Ay/HrlqQE0qDFK7p4Fost9+vU0ggkXvi/hfbkY=;
+  b=aBaJJRcBVnwg8hGb5THoDJD50+fHFCp/QQHIsaHvzsaypgffYSaY2JBA
+   jVGW9EpVtnXqvFgRF+TCa3ReWQbOwiBWBf8H6mi1vdn0EQ+yGRAlTF3jP
+   PBkMIj/KSDLW3UEqUYnTAn3dwRxigOPMIiyOlB7uep+Et5KJF69WVoria
+   uPt1UStbvwXp1PORyjnW65DR/z/WD8WLzLjTXluuCPp0WV/8Ru/lHMmww
+   UT/vt8xJx/VzWovRPVbi57ADkVlR+phDjEvPrNPFbk8rfs7ELdk4HL4y2
+   yrex8jqIknMK5pNvOHmEMt1LdWs6jfZ8QoE2ZYIHKdZ05JUaOmm/L4A3q
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="387599279"
+X-IronPort-AV: E=Sophos;i="5.96,315,1665471600"; 
+   d="scan'208";a="387599279"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2023 05:52:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="830995823"
+X-IronPort-AV: E=Sophos;i="5.96,315,1665471600"; 
+   d="scan'208";a="830995823"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP; 10 Jan 2023 05:52:23 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1pFF36-0073E7-37;
+	Tue, 10 Jan 2023 15:52:20 +0200
+Date: Tue, 10 Jan 2023 15:52:20 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andrzej Hajda <andrzej.hajda@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-ia64@vger.kernel.org,
+	linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	Boqun Feng <boqun.feng@gmail.com>, linux-xtensa@linux-xtensa.org,
+	Arnd Bergmann <arnd@arndb.de>, intel-gfx@lists.freedesktop.org,
+	linux-m68k@lists.linux-m68k.org, openrisc@lists.librecores.org,
+	loongarch@lists.linux.dev, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+	linux-alpha@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [Intel-gfx] [RFC DO NOT MERGE] treewide: use __xchg in most
+ obvious places
+Message-ID: <Y71tlG23t0gH9K1t@smile.fi.intel.com>
+References: <Y7b6/7coJEVlTVxK@phenom.ffwll.local>
+ <20230110105306.3973122-1-andrzej.hajda@intel.com>
+ <Y71G1tkmUzM4BLxn@smile.fi.intel.com>
+ <1bfae3d0-8c0b-ea83-7184-db847a4a969f@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxUuVCYr1jFm8XAA--.7157S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Jry5XrWkuF48uF15Ww1fXrb_yoWxKFX_JF
-	y7Kw1kWr48JFZ7W3WIqw4rGw4DA3W7X3WFkr17Zw1xX3Waqr13JrWDAw17C3Z0ga4DWr43
-	ZaykJF9F9r18tjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	u7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
-	Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
-	O2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-	WUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-	Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj4
-	0_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
-	JrUvcSsGvfC2KfnxnUUI43ZEXa7IUneRRtUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1bfae3d0-8c0b-ea83-7184-db847a4a969f@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-This is now supported, enable for Loongson-3 systems.
-Other systems are unaffected.
+On Tue, Jan 10, 2023 at 01:46:37PM +0100, Andrzej Hajda wrote:
+> On 10.01.2023 12:07, Andy Shevchenko wrote:
+> > On Tue, Jan 10, 2023 at 11:53:06AM +0100, Andrzej Hajda wrote:
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- arch/loongarch/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+...
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index cb52774c80e8..5677c4f8576e 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -602,6 +602,7 @@ CONFIG_HW_RANDOM_VIRTIO=m
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_PIIX4=y
- CONFIG_I2C_GPIO=y
-+CONFIG_I2C_LS2X=y
- CONFIG_SPI=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_LOONGSON=y
+> > > +	return __xchg(&p_chain->p_prod_elem,
+> > > +		      (void *)(((u8 *)p_chain->p_prod_elem) + p_chain->elem_size));
+> > 
+> > Wondering if you still need a (void *) casting after the change. Ditto for the
+> > rest of similar cases.
+> 
+> IMHO it is not needed also before the change and IIRC gcc has an extension
+> which allows to drop (u8 *) cast as well [1].
+
+I guess you can drop at least the former one.
+
+> [1]: https://gcc.gnu.org/onlinedocs/gcc/Pointer-Arith.html
+
+...
+
+> > Btw, is it done by coccinelle? If no, why not providing the script?
+> 
+> Yes I have used cocci. My cocci skills are far from perfect, so I did not
+> want to share my dirty code, but this is nothing secret:
+
+Thank you! It's not about secrecy, it's about automation / error proofness.
+
 -- 
-2.31.1
+With Best Regards,
+Andy Shevchenko
+
 
