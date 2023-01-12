@@ -1,33 +1,33 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903828835
-	for <loongarch@lists.linux.dev>; Thu, 12 Jan 2023 19:58:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656E6881E
+	for <loongarch@lists.linux.dev>; Thu, 12 Jan 2023 19:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=iAxp8x4lKKvpjseCn+ZLFQYojoG8LdH6O7HFdGbhL8c=; b=dU184L9qptXqKzhAn2XAGLCMqX
-	Fo6uCwipj/TTugnZq1YrnsIUPDgzbS5YayhLveTFkeM3tjj5XI9KAaO3N7ITBzmPcBxH675aAe1po
-	QFaKrLawYMHIBd9b1kJmJZfDDInPS9pTpEAVbe5CUcTVLmAbCoDR5tq4+1E56GXTNFwai1wvBa+hI
-	wQzP/SsFCQ3qiHeZNk9lFVVPk5C4FhQJ+PAAWs8E9hBtrlUOK/rJbvZvsrZ9y6/GuEu0qKrH9wAus
-	o8FdJZPjb0D2g8xF1n/o3HiPZCHeFNS2j+czw/EcCe4Yza/qqlPpVGLypMevS/anzApVELW2+u/j0
-	XJ1RKhWA==;
+	bh=Un035BTYhsjREpZ4dpy/MHkkoifcKtLiH3nYidAuKL8=; b=Cm0cZvx68fOfy3spcfZv1mTyVN
+	I+8nrlfsPTd1YX3ddHPT1tHDaXW6BjutPk9wWpEkW/bLt/CWl0wIYVqUtY/RdgLL1CXyaqx22TN13
+	FVZ1Pu0U/vSbCFKDZV31A7dnMTEMlJVmC5JGl3kdM1NWuU5ROH7eP9w1vfRDaocn4JsSLc4YrPw5Q
+	92CcZo9NDx6pgppJhIre9PG6+hEZcTjM22p8n4v6T0CGJXpMaxOqy0BIl6Hi1HTM4//PS/Q9GRA+r
+	r+JvkRTeh7iePDi9/CdHQ2TT4CowIVH97n1vCAGs/Zkz6o47jhi7eL2nyxXG48k7aP4oDQHY9NYIK
+	bJ7NrLVg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1pG3hE-0045oR-08;
-	Thu, 12 Jan 2023 19:57:08 +0000
+	id 1pG3hZ-0045wj-2V;
+	Thu, 12 Jan 2023 19:57:33 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3288B303412;
-	Thu, 12 Jan 2023 20:57:13 +0100 (CET)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4DBD1300293;
+	Thu, 12 Jan 2023 20:57:14 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id CBBB02CCF1F6D; Thu, 12 Jan 2023 20:57:07 +0100 (CET)
-Message-ID: <20230112195540.190860672@infradead.org>
+	id 7C19A2CD066F8; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
+Message-ID: <20230112195542.397238052@infradead.org>
 User-Agent: quilt/0.66
-Date: Thu, 12 Jan 2023 20:43:28 +0100
+Date: Thu, 12 Jan 2023 20:44:04 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: peterz@infradead.org
 Cc: richard.henderson@linaro.org,
@@ -174,10 +174,8 @@ Cc: richard.henderson@linaro.org,
  linux-arch@vger.kernel.org,
  linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org,
- kasan-dev@googlegroups.com,
- Ulf Hansson <ulf.hansson@linaro.org>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v3 14/51] cpuidle,cpu_pm: Remove RCU fiddling from cpu_pm_{enter,exit}()
+ kasan-dev@googlegroups.com
+Subject: [PATCH v3 50/51] cpuidle: Comments about noinstr/__cpuidle
 References: <20230112194314.845371875@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -187,49 +185,53 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-All callers should still have RCU enabled.
+Add a few words on noinstr / __cpuidle usage.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
-Tested-by: Tony Lindgren <tony@atomide.com>
-Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- kernel/cpu_pm.c |    9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/cpuidle/cpuidle.c      |   12 ++++++++++++
+ include/linux/compiler_types.h |   10 ++++++++++
+ 2 files changed, 22 insertions(+)
 
---- a/kernel/cpu_pm.c
-+++ b/kernel/cpu_pm.c
-@@ -30,16 +30,9 @@ static int cpu_pm_notify(enum cpu_pm_eve
- {
- 	int ret;
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -252,6 +252,18 @@ noinstr int cpuidle_enter_state(struct c
+ 		instrumentation_begin();
+ 	}
  
--	/*
--	 * This introduces a RCU read critical section, which could be
--	 * disfunctional in cpu idle. Copy RCU_NONIDLE code to let RCU know
--	 * this.
--	 */
--	ct_irq_enter_irqson();
- 	rcu_read_lock();
- 	ret = raw_notifier_call_chain(&cpu_pm_notifier.chain, event, NULL);
- 	rcu_read_unlock();
--	ct_irq_exit_irqson();
++	/*
++	 * NOTE!!
++	 *
++	 * For cpuidle_state::enter() methods that do *NOT* set
++	 * CPUIDLE_FLAG_RCU_IDLE RCU will be disabled here and these functions
++	 * must be marked either noinstr or __cpuidle.
++	 *
++	 * For cpuidle_state::enter() methods that *DO* set
++	 * CPUIDLE_FLAG_RCU_IDLE this isn't required, but they must mark the
++	 * function calling ct_cpuidle_enter() as noinstr/__cpuidle and all
++	 * functions called within the RCU-idle region.
++	 */
+ 	entered_state = target_state->enter(dev, drv, index);
  
- 	return notifier_to_errno(ret);
- }
-@@ -49,11 +42,9 @@ static int cpu_pm_notify_robust(enum cpu
- 	unsigned long flags;
- 	int ret;
+ 	if (WARN_ONCE(!irqs_disabled(), "%ps leaked IRQ state", target_state->enter))
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -233,6 +233,16 @@ struct ftrace_likely_data {
  
--	ct_irq_enter_irqson();
- 	raw_spin_lock_irqsave(&cpu_pm_notifier.lock, flags);
- 	ret = raw_notifier_call_chain_robust(&cpu_pm_notifier.chain, event_up, event_down, NULL);
- 	raw_spin_unlock_irqrestore(&cpu_pm_notifier.lock, flags);
--	ct_irq_exit_irqson();
+ #define noinstr __noinstr_section(".noinstr.text")
  
- 	return notifier_to_errno(ret);
- }
++/*
++ * The __cpuidle section is used twofold:
++ *
++ *  1) the original use -- identifying if a CPU is 'stuck' in idle state based
++ *     on it's instruction pointer. See cpu_in_idle().
++ *
++ *  2) supressing instrumentation around where cpuidle disables RCU; where the
++ *     function isn't strictly required for #1, this is interchangeable with
++ *     noinstr.
++ */
+ #define __cpuidle __noinstr_section(".cpuidle.text")
+ 
+ #endif /* __KERNEL__ */
 
 
