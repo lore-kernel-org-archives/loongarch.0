@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D045037A
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE458361
 	for <loongarch@lists.linux.dev>; Thu, 12 Jan 2023 00:37:02 +0000 (UTC)
 Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8DxSuooVr9j5RIBAA--.3200S3;
-	Thu, 12 Jan 2023 08:36:56 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxGuonVr9j2RIBAA--.3267S3;
+	Thu, 12 Jan 2023 08:36:55 +0800 (CST)
 Received: from localhost.localdomain (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxbL4kVr9jLyEYAA--.43573S5;
-	Thu, 12 Jan 2023 08:36:56 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxbL4kVr9jLyEYAA--.43573S3;
+	Thu, 12 Jan 2023 08:36:54 +0800 (CST)
 From: Jinyang He <hejinyang@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
@@ -16,9 +16,9 @@ Cc: loongarch@lists.linux.dev,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v3 3/5] LoongArch: Adjust PC value when unwind next frame in prologue unwinder
-Date: Thu, 12 Jan 2023 08:36:25 +0800
-Message-Id: <20230112003627.26111-4-hejinyang@loongson.cn>
+Subject: [PATCH v3 1/5] LoongArch: Get frame info in unwind_start when regs is not supported
+Date: Thu, 12 Jan 2023 08:36:23 +0800
+Message-Id: <20230112003627.26111-2-hejinyang@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20230112003627.26111-1-hejinyang@loongson.cn>
 References: <20230112003627.26111-1-hejinyang@loongson.cn>
@@ -29,59 +29,112 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxbL4kVr9jLyEYAA--.43573S5
+X-CM-TRANSID:AQAAf8DxbL4kVr9jLyEYAA--.43573S3
 X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7ZryUAFyftF47urWUCry8Zrb_yoW8JFy8pr
-	Z3ArZ5Gr40qr13G39rtr4DuF95CrykCr42gFZrtry8u3Z0qFn7uFn09r909anYq34kJr10
-	q3WFg3yakF4UJw7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxCr1rKFykXr47urWrCrWktFb_yoW5Zw13p3
+	9xCrs3Wr45uF9Fqr9rtw1kZr95Grn7uw12gF9rJ34rC3W7XFyxuwnYv34DZan0y3yvgw10
+	qFn5KrW5Ka1UJaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	b38YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
 	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
 	x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1ln4kS
 	14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
 	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
 	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAq
 	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
-	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF
+	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF
 	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	W8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
-	4AhLUUUUU
+	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
+	c-eODUUUU
 
-When state->first is not set, the PC is a return address in the
-previous frame. We need to adjust it value in case overflow to the
-next symbol.
+At unwind_start, it is better to try to get its frame info even we not
+support regs rather than get them outside. So that we can simply use
+unwind_{start, next_frame, done} outside.
 
 Signed-off-by: Jinyang He <hejinyang@loongson.cn>
 ---
- arch/loongarch/kernel/unwind_prologue.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/loongarch/kernel/process.c         | 12 +++---------
+ arch/loongarch/kernel/unwind_guess.c    |  6 ++++++
+ arch/loongarch/kernel/unwind_prologue.c | 16 +++++++++++++---
+ 3 files changed, 22 insertions(+), 12 deletions(-)
 
-diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
-index 3fbb9c65d64e..f7994ed05f04 100644
---- a/arch/loongarch/kernel/unwind_prologue.c
-+++ b/arch/loongarch/kernel/unwind_prologue.c
-@@ -48,7 +48,7 @@ static bool unwind_by_prologue(struct unwind_state *state)
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index 502b8b950057..6ef45174ad35 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -197,20 +197,14 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 
+ unsigned long __get_wchan(struct task_struct *task)
  {
- 	long frame_ra = -1;
- 	unsigned long frame_size = 0;
--	unsigned long size, offset, pc = state->pc;
-+	unsigned long size, offset, pc;
- 	struct pt_regs *regs;
- 	struct stack_info *info = &state->stack_info;
- 	union loongarch_instruction *ip, *ip_end;
-@@ -70,6 +70,10 @@ static bool unwind_by_prologue(struct unwind_state *state)
- 		return true;
+-	unsigned long pc;
++	unsigned long pc = 0;
+ 	struct unwind_state state;
+ 
+ 	if (!try_get_task_stack(task))
+ 		return 0;
+ 
+-	unwind_start(&state, task, NULL);
+-	state.sp = thread_saved_fp(task);
+-	get_stack_info(state.sp, state.task, &state.stack_info);
+-	state.pc = thread_saved_ra(task);
+-#ifdef CONFIG_UNWINDER_PROLOGUE
+-	state.type = UNWINDER_PROLOGUE;
+-#endif
+-	for (; !unwind_done(&state); unwind_next_frame(&state)) {
++	for (unwind_start(&state, task, NULL); !unwind_done(&state);
++	     unwind_next_frame(&state)) {
+ 		pc = unwind_get_return_address(&state);
+ 		if (!pc)
+ 			break;
+diff --git a/arch/loongarch/kernel/unwind_guess.c b/arch/loongarch/kernel/unwind_guess.c
+index e2d2e4f3001f..a1bc7c852000 100644
+--- a/arch/loongarch/kernel/unwind_guess.c
++++ b/arch/loongarch/kernel/unwind_guess.c
+@@ -26,6 +26,12 @@ void unwind_start(struct unwind_state *state, struct task_struct *task,
+ 	if (regs) {
+ 		state->sp = regs->regs[3];
+ 		state->pc = regs->csr_era;
++	} else if (task == current || task == NULL) {
++		state->sp = (unsigned long)__builtin_frame_address(0);
++		state->pc = (unsigned long)__builtin_return_address(0);
++	} else {
++		state->sp = thread_saved_fp(task);
++		state->pc = thread_saved_ra(task);
  	}
  
-+	/* When first is not set, the PC is a return address in the previous frame.
-+	 * We need to adjust it value in case overflow to the next symbol.
-+	 */
-+	pc = state->pc - (state->first ? 0 : LOONGARCH_INSN_SIZE);
- 	if (!kallsyms_lookup_size_offset(pc, &size, &offset))
- 		return false;
+ 	state->task = task;
+diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
+index 0f8d1451ebb8..b8b830b69a48 100644
+--- a/arch/loongarch/kernel/unwind_prologue.c
++++ b/arch/loongarch/kernel/unwind_prologue.c
+@@ -141,12 +141,22 @@ void unwind_start(struct unwind_state *state, struct task_struct *task,
+ 		    struct pt_regs *regs)
+ {
+ 	memset(state, 0, sizeof(*state));
++	state->type = UNWINDER_PROLOGUE;
  
+-	if (regs &&  __kernel_text_address(regs->csr_era)) {
+-		state->pc = regs->csr_era;
++	if (regs) {
+ 		state->sp = regs->regs[3];
++		state->pc = regs->csr_era;
+ 		state->ra = regs->regs[1];
+-		state->type = UNWINDER_PROLOGUE;
++		if (!__kernel_text_address(state->pc))
++			state->type = UNWINDER_GUESS;
++	} else if (task == current || task == NULL) {
++		state->sp = (unsigned long)__builtin_frame_address(0);
++		state->pc = (unsigned long)__builtin_return_address(0);
++		state->ra = 0;
++	} else {
++		state->sp = thread_saved_fp(task);
++		state->pc = thread_saved_ra(task);
++		state->ra = 0;
+ 	}
+ 
+ 	state->task = task;
 -- 
 2.34.3
 
