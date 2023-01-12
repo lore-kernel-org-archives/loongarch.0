@@ -1,33 +1,33 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3458837
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23718818
 	for <loongarch@lists.linux.dev>; Thu, 12 Jan 2023 19:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=GvwbGFmvCEUlvMDtuRKKain2RkezywAYf/go7N4onKI=; b=UZP1WhwWXNKsSNjUZl7FaNdKCn
-	ddEQs2bPXQi5qPjj7qlJxw/QPW/0nxOgZLN8xBPDMZ/1zjz4Cj4cBDEZBuYnBOjn9uMSnfZ/x7+2I
-	9dTh9PKCvuDC56aeAA3cL71DKDuGL799xQcS7MxhLz5jtlqRv3ljsfno7QvEUZeBL/ZKqQpiu6eX8
-	1n/CZuVsNYoC/48UeqqLacX54nCFrLom4QSa5qKlMYqjjQVNzfHjWkBbeNM7/Bwfq6S/ww+f2nN0u
-	0BjGg5qo+ibAucyPfwz5pwvtUQ9FofzqrnD212u/gvXOr0euOanteiang6T+NsdgqQ3BiJZ1d+Ozd
-	/GvjuQPw==;
+	bh=jJDEZOhAk9N+ZSaOA6QuB1P1t6S4a5Fqf3eoW7G5up4=; b=g8GqpZrZBs/6V7ZcEBgPwjcdfx
+	RzN5EIQzgwhnINnCaYfY2n9e8ruxberdgD9oVXDNG7YtbZJuFTb45S/H+fPvltC8GZOopId40GcrW
+	AjA8r3rpj2n0SPUYiyps5TjYIQhFAuCcVOx3q73tbMUmUmsFJOFjnQHKvLFlGE+QPNhh8ljdxL4dF
+	uEhNEMsDP/u8xa4UcCmCa7nRPM/4jBKkN20B1meW0t5Yl0NahpjdmysonPb3YGsPg97sJdxjUBn+s
+	lGjWVSdxy2Ny8UJn3s4WanbpIOQXXuMwg2JoVT798bOv9N9iHlojnH9paqJ/CUzQBNz9ShA6pr1w+
+	Y7bXuV8w==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1pG3hW-0045tg-0P;
-	Thu, 12 Jan 2023 19:57:31 +0000
+	id 1pG3hF-0045oZ-0H;
+	Thu, 12 Jan 2023 19:57:09 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 20794303471;
-	Thu, 12 Jan 2023 20:57:14 +0100 (CET)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5187F30341E;
+	Thu, 12 Jan 2023 20:57:13 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id 5F8C02CD066D4; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
-Message-ID: <20230112195542.028523143@infradead.org>
+	id E64E52CCF1F79; Thu, 12 Jan 2023 20:57:07 +0100 (CET)
+Message-ID: <20230112195540.434302128@infradead.org>
 User-Agent: quilt/0.66
-Date: Thu, 12 Jan 2023 20:43:58 +0100
+Date: Thu, 12 Jan 2023 20:43:32 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: peterz@infradead.org
 Cc: richard.henderson@linaro.org,
@@ -177,7 +177,7 @@ Cc: richard.henderson@linaro.org,
  kasan-dev@googlegroups.com,
  "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
  Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v3 44/51] entry,kasan,x86: Disallow overriding mem*() functions
+Subject: [PATCH v3 18/51] cpuidle,intel_idle: Fix CPUIDLE_FLAG_IRQ_ENABLE *again*
 References: <20230112194314.845371875@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -187,174 +187,46 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-KASAN cannot just hijack the mem*() functions, it needs to emit
-__asan_mem*() variants if it wants instrumentation (other sanitizers
-already do this).
+  vmlinux.o: warning: objtool: intel_idle_irq+0x10c: call to trace_hardirqs_off() leaves .noinstr.text section
 
-vmlinux.o: warning: objtool: sync_regs+0x24: call to memcpy() leaves .noinstr.text section
-vmlinux.o: warning: objtool: vc_switch_off_ist+0xbe: call to memcpy() leaves .noinstr.text section
-vmlinux.o: warning: objtool: fixup_bad_iret+0x36: call to memset() leaves .noinstr.text section
-vmlinux.o: warning: objtool: __sev_get_ghcb+0xa0: call to memcpy() leaves .noinstr.text section
-vmlinux.o: warning: objtool: __sev_put_ghcb+0x35: call to memcpy() leaves .noinstr.text section
+As per commit 32d4fd5751ea ("cpuidle,intel_idle: Fix
+CPUIDLE_FLAG_IRQ_ENABLE"):
 
-Remove the weak aliases to ensure nobody hijacks these functions and
-add them to the noinstr section.
+  "must not have tracing in idle functions"
 
+Clearly people can't read and tinker along until splat dissapears.
+This straight up reverts commit d295ad34f236 ("intel_idle: Fix false
+positive RCU splats due to incorrect hardirqs state").
+
+It doesn't re-introduce the problem because preceding patches fixed it
+properly.
+
+Fixes: d295ad34f236 ("intel_idle: Fix false positive RCU splats due to incorrect hardirqs state")
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Acked-by: Frederic Weisbecker <frederic@kernel.org>
 Tested-by: Tony Lindgren <tony@atomide.com>
 Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- arch/x86/lib/memcpy_64.S  |    5 ++---
- arch/x86/lib/memmove_64.S |    4 +++-
- arch/x86/lib/memset_64.S  |    4 +++-
- mm/kasan/kasan.h          |    4 ++++
- mm/kasan/shadow.c         |   38 ++++++++++++++++++++++++++++++++++++++
- tools/objtool/check.c     |    3 +++
- 6 files changed, 53 insertions(+), 5 deletions(-)
+ drivers/idle/intel_idle.c |    8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
---- a/arch/x86/lib/memcpy_64.S
-+++ b/arch/x86/lib/memcpy_64.S
-@@ -7,7 +7,7 @@
- #include <asm/alternative.h>
- #include <asm/export.h>
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -168,13 +168,7 @@ static __cpuidle int intel_idle_irq(stru
  
--.pushsection .noinstr.text, "ax"
-+.section .noinstr.text, "ax"
+ 	raw_local_irq_enable();
+ 	ret = __intel_idle(dev, drv, index);
+-
+-	/*
+-	 * The lockdep hardirqs state may be changed to 'on' with timer
+-	 * tick interrupt followed by __do_softirq(). Use local_irq_disable()
+-	 * to keep the hardirqs state correct.
+-	 */
+-	local_irq_disable();
++	raw_local_irq_disable();
  
- /*
-  * We build a jump to memcpy_orig by default which gets NOPped out on
-@@ -42,7 +42,7 @@ SYM_FUNC_START(__memcpy)
- SYM_FUNC_END(__memcpy)
- EXPORT_SYMBOL(__memcpy)
- 
--SYM_FUNC_ALIAS_WEAK(memcpy, __memcpy)
-+SYM_FUNC_ALIAS(memcpy, __memcpy)
- EXPORT_SYMBOL(memcpy)
- 
- /*
-@@ -183,4 +183,3 @@ SYM_FUNC_START_LOCAL(memcpy_orig)
- 	RET
- SYM_FUNC_END(memcpy_orig)
- 
--.popsection
---- a/arch/x86/lib/memmove_64.S
-+++ b/arch/x86/lib/memmove_64.S
-@@ -13,6 +13,8 @@
- 
- #undef memmove
- 
-+.section .noinstr.text, "ax"
-+
- /*
-  * Implement memmove(). This can handle overlap between src and dst.
-  *
-@@ -213,5 +215,5 @@ SYM_FUNC_START(__memmove)
- SYM_FUNC_END(__memmove)
- EXPORT_SYMBOL(__memmove)
- 
--SYM_FUNC_ALIAS_WEAK(memmove, __memmove)
-+SYM_FUNC_ALIAS(memmove, __memmove)
- EXPORT_SYMBOL(memmove)
---- a/arch/x86/lib/memset_64.S
-+++ b/arch/x86/lib/memset_64.S
-@@ -6,6 +6,8 @@
- #include <asm/alternative.h>
- #include <asm/export.h>
- 
-+.section .noinstr.text, "ax"
-+
- /*
-  * ISO C memset - set a memory block to a byte value. This function uses fast
-  * string to get better performance than the original function. The code is
-@@ -43,7 +45,7 @@ SYM_FUNC_START(__memset)
- SYM_FUNC_END(__memset)
- EXPORT_SYMBOL(__memset)
- 
--SYM_FUNC_ALIAS_WEAK(memset, __memset)
-+SYM_FUNC_ALIAS(memset, __memset)
- EXPORT_SYMBOL(memset)
- 
- /*
---- a/mm/kasan/kasan.h
-+++ b/mm/kasan/kasan.h
-@@ -551,6 +551,10 @@ void __asan_set_shadow_f3(const void *ad
- void __asan_set_shadow_f5(const void *addr, size_t size);
- void __asan_set_shadow_f8(const void *addr, size_t size);
- 
-+void *__asan_memset(void *addr, int c, size_t len);
-+void *__asan_memmove(void *dest, const void *src, size_t len);
-+void *__asan_memcpy(void *dest, const void *src, size_t len);
-+
- void __hwasan_load1_noabort(unsigned long addr);
- void __hwasan_store1_noabort(unsigned long addr);
- void __hwasan_load2_noabort(unsigned long addr);
---- a/mm/kasan/shadow.c
-+++ b/mm/kasan/shadow.c
-@@ -38,6 +38,12 @@ bool __kasan_check_write(const volatile
+ 	return ret;
  }
- EXPORT_SYMBOL(__kasan_check_write);
- 
-+#ifndef CONFIG_GENERIC_ENTRY
-+/*
-+ * CONFIG_GENERIC_ENTRY relies on compiler emitted mem*() calls to not be
-+ * instrumented. KASAN enabled toolchains should emit __asan_mem*() functions
-+ * for the sites they want to instrument.
-+ */
- #undef memset
- void *memset(void *addr, int c, size_t len)
- {
-@@ -68,6 +74,38 @@ void *memcpy(void *dest, const void *src
- 
- 	return __memcpy(dest, src, len);
- }
-+#endif
-+
-+void *__asan_memset(void *addr, int c, size_t len)
-+{
-+	if (!kasan_check_range((unsigned long)addr, len, true, _RET_IP_))
-+		return NULL;
-+
-+	return __memset(addr, c, len);
-+}
-+EXPORT_SYMBOL(__asan_memset);
-+
-+#ifdef __HAVE_ARCH_MEMMOVE
-+void *__asan_memmove(void *dest, const void *src, size_t len)
-+{
-+	if (!kasan_check_range((unsigned long)src, len, false, _RET_IP_) ||
-+	    !kasan_check_range((unsigned long)dest, len, true, _RET_IP_))
-+		return NULL;
-+
-+	return __memmove(dest, src, len);
-+}
-+EXPORT_SYMBOL(__asan_memmove);
-+#endif
-+
-+void *__asan_memcpy(void *dest, const void *src, size_t len)
-+{
-+	if (!kasan_check_range((unsigned long)src, len, false, _RET_IP_) ||
-+	    !kasan_check_range((unsigned long)dest, len, true, _RET_IP_))
-+		return NULL;
-+
-+	return __memcpy(dest, src, len);
-+}
-+EXPORT_SYMBOL(__asan_memcpy);
- 
- void kasan_poison(const void *addr, size_t size, u8 value, bool init)
- {
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -956,6 +956,9 @@ static const char *uaccess_safe_builtin[
- 	"__asan_store16_noabort",
- 	"__kasan_check_read",
- 	"__kasan_check_write",
-+	"__asan_memset",
-+	"__asan_memmove",
-+	"__asan_memcpy",
- 	/* KASAN in-line */
- 	"__asan_report_load_n_noabort",
- 	"__asan_report_load1_noabort",
 
 
