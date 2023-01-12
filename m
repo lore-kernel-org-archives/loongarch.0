@@ -1,33 +1,32 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11658814
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB001882B
 	for <loongarch@lists.linux.dev>; Thu, 12 Jan 2023 19:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=mHHfLn3ZXDs7+W84iYI4l64Hgzvzv2j66VWrzu7dGbw=; b=kYTEx0rzU1SllruehA0y8yHATb
-	IJE4wnYq/dRbQHRcZnpN0OXGHrGk0U7J3N0VBj+JSbpdQwQu+8TKRK5iCmxygpxvyweDkZe5UIvKY
-	MwOlwaQnkBOYRnYTKRZAqS1YnWNOV444ewGH4wdgTge715r6fQsvhW/ij5f47Qprmcr4wA7JNnstB
-	e/bXihOVRgcSCgn0rMMHufr9/fNUf4QdhZFePtfdiRCc6x7c+0SOJjOnT1sc/ENafw33wlDFA9nsH
-	0IaR/32BenV0BuTP4t5UZWueg7KT2qaj1MvjhfzmYn2Z4T4bkLiG8Dkn01Xo2lHx6f+yFLnWfJon6
-	ooD7L92g==;
+	bh=grsvYP38q4MnN8oBsFSgy8h24Veck5RfPmpq2ugRYPM=; b=sAS+cVfJZnxSjVZ+cWnQizLCZi
+	uzGVUsOf3anafnENfDcz5DBxNwmF2u/05pvc6A0c+OdcaX2m7Qx3mQCWD2r8+RXAQmr6AABwQQUqG
+	Xnn1+diWHWxMGA10WHWQkPrlviiLNwKR8l/igNBPuc/Urss/XPLwrgEzGEkTLbJF2i3zM2wEUdQId
+	iXvs8/Thb5QmoGtDr5BpPsofdym80GCpPly/+P1kmFfpKKXI1eKi4k9Kt5ZS1McOXBTe8WNh0qvx1
+	Mira4VG3zNGY/eh9MdDKDjG1vDtIkJ7jl+e56WDxEl8scNd8fDZtJTeB77Tp7XyQzYbmD4z6YExxk
+	sfEhC80A==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1pG3hG-0045ox-1D;
-	Thu, 12 Jan 2023 19:57:11 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1pG3hs-005P5q-UH; Thu, 12 Jan 2023 19:57:49 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 862C3303434;
-	Thu, 12 Jan 2023 20:57:13 +0100 (CET)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3351230347B;
+	Thu, 12 Jan 2023 20:57:14 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id 11A262CCF62AB; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
-Message-ID: <20230112195540.865735001@infradead.org>
+	id 6E8FA2CD066EC; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
+Message-ID: <20230112195542.212914195@infradead.org>
 User-Agent: quilt/0.66
-Date: Thu, 12 Jan 2023 20:43:39 +0100
+Date: Thu, 12 Jan 2023 20:44:01 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: peterz@infradead.org
 Cc: richard.henderson@linaro.org,
@@ -174,10 +173,8 @@ Cc: richard.henderson@linaro.org,
  linux-arch@vger.kernel.org,
  linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org,
- kasan-dev@googlegroups.com,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v3 25/51] printk: Remove trace_.*_rcuidle() usage
+ kasan-dev@googlegroups.com
+Subject: [PATCH v3 47/51] cpuidle: Ensure ct_cpuidle_enter() is always called from noinstr/__cpuidle
 References: <20230112194314.845371875@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -187,33 +184,117 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-The problem, per commit fc98c3c8c9dc ("printk: use rcuidle console
-tracepoint"), was printk usage from the cpuidle path where RCU was
-already disabled.
-
-Per the patches earlier in this series, this is no longer the case.
+Tracing (kprobes included) and other compiler instrumentation relies
+on a normal kernel runtime. Therefore all functions that disable RCU
+should be noinstr, as should all functions that are called while RCU
+is disabled.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-Acked-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
-Tested-by: Tony Lindgren <tony@atomide.com>
-Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- kernel/printk/printk.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpuidle/cpuidle.c |   37 ++++++++++++++++++++++++++++---------
+ 1 file changed, 28 insertions(+), 9 deletions(-)
 
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2238,7 +2238,7 @@ static u16 printk_sprint(char *text, u16
- 		}
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -137,11 +137,13 @@ int cpuidle_find_deepest_state(struct cp
+ }
+ 
+ #ifdef CONFIG_SUSPEND
+-static void enter_s2idle_proper(struct cpuidle_driver *drv,
+-				struct cpuidle_device *dev, int index)
++static noinstr void enter_s2idle_proper(struct cpuidle_driver *drv,
++					 struct cpuidle_device *dev, int index)
+ {
+-	ktime_t time_start, time_end;
+ 	struct cpuidle_state *target_state = &drv->states[index];
++	ktime_t time_start, time_end;
++
++	instrumentation_begin();
+ 
+ 	time_start = ns_to_ktime(local_clock());
+ 
+@@ -152,13 +154,18 @@ static void enter_s2idle_proper(struct c
+ 	 * suspended is generally unsafe.
+ 	 */
+ 	stop_critical_timings();
+-	if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE))
++	if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE)) {
+ 		ct_cpuidle_enter();
++		/* Annotate away the indirect call */
++		instrumentation_begin();
++	}
+ 	target_state->enter_s2idle(dev, drv, index);
+ 	if (WARN_ON_ONCE(!irqs_disabled()))
+ 		raw_local_irq_disable();
+-	if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE))
++	if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE)) {
++		instrumentation_end();
+ 		ct_cpuidle_exit();
++	}
+ 	tick_unfreeze();
+ 	start_critical_timings();
+ 
+@@ -166,6 +173,7 @@ static void enter_s2idle_proper(struct c
+ 
+ 	dev->states_usage[index].s2idle_time += ktime_us_delta(time_end, time_start);
+ 	dev->states_usage[index].s2idle_usage++;
++	instrumentation_end();
+ }
+ 
+ /**
+@@ -200,8 +208,9 @@ int cpuidle_enter_s2idle(struct cpuidle_
+  * @drv: cpuidle driver for this cpu
+  * @index: index into the states table in @drv of the state to enter
+  */
+-int cpuidle_enter_state(struct cpuidle_device *dev, struct cpuidle_driver *drv,
+-			int index)
++noinstr int cpuidle_enter_state(struct cpuidle_device *dev,
++				 struct cpuidle_driver *drv,
++				 int index)
+ {
+ 	int entered_state;
+ 
+@@ -209,6 +218,8 @@ int cpuidle_enter_state(struct cpuidle_d
+ 	bool broadcast = !!(target_state->flags & CPUIDLE_FLAG_TIMER_STOP);
+ 	ktime_t time_start, time_end;
+ 
++	instrumentation_begin();
++
+ 	/*
+ 	 * Tell the time framework to switch to a broadcast timer because our
+ 	 * local timer will be shut down.  If a local timer is used from another
+@@ -235,15 +246,21 @@ int cpuidle_enter_state(struct cpuidle_d
+ 	time_start = ns_to_ktime(local_clock());
+ 
+ 	stop_critical_timings();
+-	if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE))
++	if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE)) {
+ 		ct_cpuidle_enter();
++		/* Annotate away the indirect call */
++		instrumentation_begin();
++	}
+ 
+ 	entered_state = target_state->enter(dev, drv, index);
++
+ 	if (WARN_ONCE(!irqs_disabled(), "%ps leaked IRQ state", target_state->enter))
+ 		raw_local_irq_disable();
+ 
+-	if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE))
++	if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE)) {
++		instrumentation_end();
+ 		ct_cpuidle_exit();
++	}
+ 	start_critical_timings();
+ 
+ 	sched_clock_idle_wakeup_event();
+@@ -306,6 +323,8 @@ int cpuidle_enter_state(struct cpuidle_d
+ 		dev->states_usage[index].rejected++;
  	}
  
--	trace_console_rcuidle(text, text_len);
-+	trace_console(text, text_len);
- 
- 	return text_len;
++	instrumentation_end();
++
+ 	return entered_state;
  }
+ 
 
 
