@@ -1,32 +1,33 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39B4847C
-	for <loongarch@lists.linux.dev>; Thu, 12 Jan 2023 19:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11658814
+	for <loongarch@lists.linux.dev>; Thu, 12 Jan 2023 19:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=53PdPXBrlefs7aSWYtbVMctVqERBXlbNfkzlUyuHUdw=; b=ATlfmILWtdBMS162SLdQ7satXH
-	lRrHA+Oo8xPovKk8FQq7RK98sDcnma5GRSfOFtLwNMoVkAXDXisud5eoVVLDZihpqE49vRJxWIbw2
-	/Y9OujIMxZk1pbjWaqUFjWo75kJhYQD0AKKQKJ+8CiSaiG3IgyCVvD8TMNqCScPpUugqNp41+I7do
-	5xU2L9cP7LTkQIolwptF5b7/KAQ9UdyvdXN5gS5y15We2Sa4zjrnXtrvDhbcZWdaP3QN6BMMn3InU
-	Lq/+IhZFycZWB1LH1o2Fy8Qq8PGKdb6bDkxa8FbpQ30yPWc9p7g6EIAFIzA6F77JVZkL+nzT6pZrb
-	3DJjl/xg==;
+	bh=mHHfLn3ZXDs7+W84iYI4l64Hgzvzv2j66VWrzu7dGbw=; b=kYTEx0rzU1SllruehA0y8yHATb
+	IJE4wnYq/dRbQHRcZnpN0OXGHrGk0U7J3N0VBj+JSbpdQwQu+8TKRK5iCmxygpxvyweDkZe5UIvKY
+	MwOlwaQnkBOYRnYTKRZAqS1YnWNOV444ewGH4wdgTge715r6fQsvhW/ij5f47Qprmcr4wA7JNnstB
+	e/bXihOVRgcSCgn0rMMHufr9/fNUf4QdhZFePtfdiRCc6x7c+0SOJjOnT1sc/ENafw33wlDFA9nsH
+	0IaR/32BenV0BuTP4t5UZWueg7KT2qaj1MvjhfzmYn2Z4T4bkLiG8Dkn01Xo2lHx6f+yFLnWfJon6
+	ooD7L92g==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pG3hu-005P7G-BC; Thu, 12 Jan 2023 19:57:50 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1pG3hG-0045ox-1D;
+	Thu, 12 Jan 2023 19:57:11 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 41FAD303481;
-	Thu, 12 Jan 2023 20:57:14 +0100 (CET)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 862C3303434;
+	Thu, 12 Jan 2023 20:57:13 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id 767D32CD066F4; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
-Message-ID: <20230112195542.335211484@infradead.org>
+	id 11A262CCF62AB; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
+Message-ID: <20230112195540.865735001@infradead.org>
 User-Agent: quilt/0.66
-Date: Thu, 12 Jan 2023 20:44:03 +0100
+Date: Thu, 12 Jan 2023 20:43:39 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: peterz@infradead.org
 Cc: richard.henderson@linaro.org,
@@ -173,8 +174,10 @@ Cc: richard.henderson@linaro.org,
  linux-arch@vger.kernel.org,
  linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org,
- kasan-dev@googlegroups.com
-Subject: [PATCH v3 49/51] cpuidle,arch: Mark all regular cpuidle_state::enter methods __cpuidle
+ kasan-dev@googlegroups.com,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v3 25/51] printk: Remove trace_.*_rcuidle() usage
 References: <20230112194314.845371875@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -184,123 +187,33 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-For all cpuidle drivers that do not use CPUIDLE_FLAG_RCU_IDLE (iow,
-the simple ones) make sure all the functions are marked __cpuidle.
+The problem, per commit fc98c3c8c9dc ("printk: use rcuidle console
+tracepoint"), was printk usage from the cpuidle path where RCU was
+already disabled.
 
-( due to lack of noinstr validation on these platforms it is entirely
-  possible this isn't complete )
+Per the patches earlier in this series, this is no longer the case.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Acked-by: Petr Mladek <pmladek@suse.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
+Tested-by: Tony Lindgren <tony@atomide.com>
+Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- arch/arm/kernel/cpuidle.c           |    4 ++--
- arch/arm/mach-davinci/cpuidle.c     |    4 ++--
- arch/arm/mach-imx/cpuidle-imx5.c    |    4 ++--
- arch/arm/mach-imx/cpuidle-imx6sl.c  |    4 ++--
- arch/arm/mach-imx/cpuidle-imx7ulp.c |    4 ++--
- arch/arm/mach-s3c/cpuidle-s3c64xx.c |    5 ++---
- arch/mips/kernel/idle.c             |    6 +++---
- 7 files changed, 15 insertions(+), 16 deletions(-)
+ kernel/printk/printk.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/kernel/cpuidle.c
-+++ b/arch/arm/kernel/cpuidle.c
-@@ -26,8 +26,8 @@ static struct cpuidle_ops cpuidle_ops[NR
-  *
-  * Returns the index passed as parameter
-  */
--int arm_cpuidle_simple_enter(struct cpuidle_device *dev,
--		struct cpuidle_driver *drv, int index)
-+__cpuidle int arm_cpuidle_simple_enter(struct cpuidle_device *dev, struct
-+				       cpuidle_driver *drv, int index)
- {
- 	cpu_do_idle();
- 
---- a/arch/arm/mach-davinci/cpuidle.c
-+++ b/arch/arm/mach-davinci/cpuidle.c
-@@ -44,8 +44,8 @@ static void davinci_save_ddr_power(int e
- }
- 
- /* Actual code that puts the SoC in different idle states */
--static int davinci_enter_idle(struct cpuidle_device *dev,
--			      struct cpuidle_driver *drv, int index)
-+static __cpuidle int davinci_enter_idle(struct cpuidle_device *dev,
-+					struct cpuidle_driver *drv, int index)
- {
- 	davinci_save_ddr_power(1, ddr2_pdown);
- 	cpu_do_idle();
---- a/arch/arm/mach-imx/cpuidle-imx5.c
-+++ b/arch/arm/mach-imx/cpuidle-imx5.c
-@@ -8,8 +8,8 @@
- #include <asm/system_misc.h>
- #include "cpuidle.h"
- 
--static int imx5_cpuidle_enter(struct cpuidle_device *dev,
--			      struct cpuidle_driver *drv, int index)
-+static __cpuidle int imx5_cpuidle_enter(struct cpuidle_device *dev,
-+					struct cpuidle_driver *drv, int index)
- {
- 	arm_pm_idle();
- 	return index;
---- a/arch/arm/mach-imx/cpuidle-imx6sl.c
-+++ b/arch/arm/mach-imx/cpuidle-imx6sl.c
-@@ -11,8 +11,8 @@
- #include "common.h"
- #include "cpuidle.h"
- 
--static int imx6sl_enter_wait(struct cpuidle_device *dev,
--			    struct cpuidle_driver *drv, int index)
-+static __cpuidle int imx6sl_enter_wait(struct cpuidle_device *dev,
-+				       struct cpuidle_driver *drv, int index)
- {
- 	imx6_set_lpm(WAIT_UNCLOCKED);
- 	/*
---- a/arch/arm/mach-imx/cpuidle-imx7ulp.c
-+++ b/arch/arm/mach-imx/cpuidle-imx7ulp.c
-@@ -12,8 +12,8 @@
- #include "common.h"
- #include "cpuidle.h"
- 
--static int imx7ulp_enter_wait(struct cpuidle_device *dev,
--			    struct cpuidle_driver *drv, int index)
-+static __cpuidle int imx7ulp_enter_wait(struct cpuidle_device *dev,
-+					struct cpuidle_driver *drv, int index)
- {
- 	if (index == 1)
- 		imx7ulp_set_lpm(ULP_PM_WAIT);
---- a/arch/arm/mach-s3c/cpuidle-s3c64xx.c
-+++ b/arch/arm/mach-s3c/cpuidle-s3c64xx.c
-@@ -19,9 +19,8 @@
- #include "regs-sys-s3c64xx.h"
- #include "regs-syscon-power-s3c64xx.h"
- 
--static int s3c64xx_enter_idle(struct cpuidle_device *dev,
--			      struct cpuidle_driver *drv,
--			      int index)
-+static __cpuidle int s3c64xx_enter_idle(struct cpuidle_device *dev,
-+					struct cpuidle_driver *drv, int index)
- {
- 	unsigned long tmp;
- 
---- a/arch/mips/kernel/idle.c
-+++ b/arch/mips/kernel/idle.c
-@@ -241,7 +241,7 @@ void __init check_wait(void)
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2238,7 +2238,7 @@ static u16 printk_sprint(char *text, u16
+ 		}
  	}
+ 
+-	trace_console_rcuidle(text, text_len);
++	trace_console(text, text_len);
+ 
+ 	return text_len;
  }
- 
--void arch_cpu_idle(void)
-+__cpuidle void arch_cpu_idle(void)
- {
- 	if (cpu_wait)
- 		cpu_wait();
-@@ -249,8 +249,8 @@ void arch_cpu_idle(void)
- 
- #ifdef CONFIG_CPU_IDLE
- 
--int mips_cpuidle_wait_enter(struct cpuidle_device *dev,
--			    struct cpuidle_driver *drv, int index)
-+__cpuidle int mips_cpuidle_wait_enter(struct cpuidle_device *dev,
-+				      struct cpuidle_driver *drv, int index)
- {
- 	arch_cpu_idle();
- 	return index;
 
 
