@@ -1,32 +1,32 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7852F8488
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3E68487
 	for <loongarch@lists.linux.dev>; Thu, 12 Jan 2023 19:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=KLAmYUkc5o4iaLgWEzyq0DD4W34Vw8wzkDDZ9nw8rNA=; b=ATY8kiKnvovNgLEm6qSQ1EQvbq
-	whhVrHfsY0Boal85ZRoFmxTUxBK5B9bIvgSX8kVgT6BcX1L66jwQCdPl/BWOSqcQGl2XmwgaBL4PW
-	OKdsLfeNG0cKIyK4qLBg5dTibPOilkbVEo3W2vYUVl/MzGrlgC59H1LNDjakisaklXFACDQXCVqgH
-	X3HA2n0rfn3BN7gYs5ZEmCkrHIhhMF7I5lLP2nRilVRm9iYl7qlU43ypHe2kjKrxVavesmViWu98M
-	YhMWMygFonCR9p+h3EzH9ve+5v/3v/1iCRvb+1bzQnO8SY3rlhjeY9n904kFy8Lg9quCma5so/ETV
-	SIrS144Q==;
+	bh=Xy9+JvHHctWh2TNOLRKTbmGfpkTQoSEdFlJnj8l2Ws0=; b=FtR6V7iBnq/tJFzxTCM/j78unY
+	/49Ec+SxLqZvSLDvUDxP80BJ6CshhnFTYKUGLWe52tbZI+g3IT66NcxuF4QJLpXQFqUnB8IYsx7tx
+	rvkkcM1E63xXLT0vxkkEUcwCp+mVujqeEfWYa0bi1HB5/HtroXhr9t67Q2WalkYHntgPdGa+81VAW
+	CoQSxFuXnJjq3lUVUMtBhxrXycskxIxMnWpscRtmQgQtCtsvQQolDB8Is0Qb3ixSa2+dLSsu8VyyZ
+	Ux3DSJ5librNMIilmqzR2tChKdku7Xq+k9WLJD67Xsi7/M3iylmdycXuodbdivvM3FwM/ipJb4qqQ
+	fc1Tmr7Q==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pG3he-005OgL-KO; Thu, 12 Jan 2023 19:57:34 +0000
+	id 1pG3hX-005OcM-HX; Thu, 12 Jan 2023 19:57:27 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D5966303459;
-	Thu, 12 Jan 2023 20:57:13 +0100 (CET)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E0BF73033B9;
+	Thu, 12 Jan 2023 20:57:12 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id 3DD3A2CCFB77A; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
-Message-ID: <20230112195541.538053457@infradead.org>
+	id 996452CCF1F4C; Thu, 12 Jan 2023 20:57:07 +0100 (CET)
+Message-ID: <20230112195539.576412812@infradead.org>
 User-Agent: quilt/0.66
-Date: Thu, 12 Jan 2023 20:43:50 +0100
+Date: Thu, 12 Jan 2023 20:43:18 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: peterz@infradead.org
 Cc: richard.henderson@linaro.org,
@@ -176,7 +176,7 @@ Cc: richard.henderson@linaro.org,
  kasan-dev@googlegroups.com,
  "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
  Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v3 36/51] cpuidle,omap3: Use WFI for omap3_pm_idle()
+Subject: [PATCH v3 04/51] cpuidle: Move IRQ state validation
 References: <20230112194314.845371875@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -186,34 +186,45 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-arch_cpu_idle() is a very simple idle interface and exposes only a
-single idle state and is expected to not require RCU and not do any
-tracing/instrumentation.
-
-As such, omap_sram_idle() is not a valid implementation. Replace it
-with the simple (shallow) omap3_do_wfi() call. Leaving the more
-complicated idle states for the cpuidle driver.
+Make cpuidle_enter_state() consistent with the s2idle variant and
+verify ->enter() always returns with interrupts disabled.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Tony Lindgren <tony@atomide.com>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Acked-by: Frederic Weisbecker <frederic@kernel.org>
 Tested-by: Tony Lindgren <tony@atomide.com>
 Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- arch/arm/mach-omap2/pm34xx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpuidle/cpuidle.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/arch/arm/mach-omap2/pm34xx.c
-+++ b/arch/arm/mach-omap2/pm34xx.c
-@@ -294,7 +294,7 @@ static void omap3_pm_idle(void)
- 	if (omap_irq_pending())
- 		return;
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -236,7 +236,11 @@ int cpuidle_enter_state(struct cpuidle_d
+ 	stop_critical_timings();
+ 	if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE))
+ 		ct_idle_enter();
++
+ 	entered_state = target_state->enter(dev, drv, index);
++	if (WARN_ONCE(!irqs_disabled(), "%ps leaked IRQ state", target_state->enter))
++		raw_local_irq_disable();
++
+ 	if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE))
+ 		ct_idle_exit();
+ 	start_critical_timings();
+@@ -248,12 +252,8 @@ int cpuidle_enter_state(struct cpuidle_d
+ 	/* The cpu is no longer idle or about to enter idle. */
+ 	sched_idle_set_state(NULL);
  
--	omap_sram_idle();
-+	omap3_do_wfi();
- }
+-	if (broadcast) {
+-		if (WARN_ON_ONCE(!irqs_disabled()))
+-			local_irq_disable();
+-
++	if (broadcast)
+ 		tick_broadcast_exit();
+-	}
  
- #ifdef CONFIG_SUSPEND
+ 	if (!cpuidle_state_is_coupled(drv, index))
+ 		local_irq_enable();
 
 
