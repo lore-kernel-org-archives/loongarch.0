@@ -1,33 +1,33 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8D08827
-	for <loongarch@lists.linux.dev>; Thu, 12 Jan 2023 19:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08898813
+	for <loongarch@lists.linux.dev>; Thu, 12 Jan 2023 19:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=OSWUMoytbsEQ8xUnxginHGtpoSP0fDdQQe/5yHesCdA=; b=EbqGBmO2wjgONt8zgzM18NDs6m
-	XSWXjuSHyAYdiczaj+SJdJ6JCpVDm/NyZ+W/ITNEt0wXRBeG9hGdRw+d4O542oF24V6eJCK+fKZou
-	SGXhIpMWcAbse4OnUNvbO3E1vIfOuhg7+w93HdalOv6aag+omVC7au9s3kunWey9tQ97c6CWePXAO
-	5BTGUz3tx6DtcAcaWZ5k9rjHOYh03mIN2x7Rh3M214NeVXNnk7uO3z2bxkuAlGuy3QDwJPMZAA0LE
-	fyJM6A93BOFEwAW+IZ7u/HQbXA13lwllIkLHXwDwMG3xu8F6p14ZDs8SqHu0RES4bZ0rnbC6FKmCr
-	pHO74mxg==;
+	bh=uRuk42rt5J1sC1gDxlIXH9yiXjv0To5K12rtksbRl/w=; b=iXaMItsY0v56AEQ3U/Ak5rPs8n
+	q9U/ba2xBFETFLMPjL3pjzRcmYO/UzSGeq5gsxC9Jtx0ljVT4IZ86pL5AlUr1y7UlkEjtN2tC1twG
+	ZK+sgqL/UxNI4QM4aCEs5CN/t8wtwnzaL/LZGx93vjeYa8I9qfpPm9ZpXDY/7fll+s8kYXJv/esBO
+	jht09SmGbjxJSwjCVrauUHMZho6bxy2J0x4VDQRtXgcQ3czddgAFBiM4sk7z6CUWeA4LA0sx+W4wz
+	8ybF1y+Sh74rk65NGho3pXWI8831IRs4OQil6MJkxRdJKSWXCDp89CIR9rEJWNWPXeV70yEpNTvrG
+	+qFqSBBw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1pG3hD-0045oD-0M;
-	Thu, 12 Jan 2023 19:57:08 +0000
+	id 1pG3hM-0045qO-0g;
+	Thu, 12 Jan 2023 19:57:30 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 16EAB3033FE;
-	Thu, 12 Jan 2023 20:57:13 +0100 (CET)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0667E30346A;
+	Thu, 12 Jan 2023 20:57:14 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id B69572CCF1F52; Thu, 12 Jan 2023 20:57:07 +0100 (CET)
-Message-ID: <20230112195539.946630819@infradead.org>
+	id 520F42CD066C8; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
+Message-ID: <20230112195541.844982902@infradead.org>
 User-Agent: quilt/0.66
-Date: Thu, 12 Jan 2023 20:43:24 +0100
+Date: Thu, 12 Jan 2023 20:43:55 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: peterz@infradead.org
 Cc: richard.henderson@linaro.org,
@@ -175,9 +175,9 @@ Cc: richard.henderson@linaro.org,
  linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org,
  kasan-dev@googlegroups.com,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v3 10/51] cpuidle,armada: Push RCU-idle into driver
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH v3 41/51] cpuidle,clk: Remove trace_.*_rcuidle()
 References: <20230112194314.845371875@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -187,64 +187,49 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-Doing RCU-idle outside the driver, only to then temporarily enable it
-again before going idle is daft.
-
-Notably the cpu_pm_*() calls implicitly re-enable RCU for a bit.
+OMAP was the one and only user.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
 Tested-by: Tony Lindgren <tony@atomide.com>
 Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/cpuidle/cpuidle-mvebu-v7.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/clk/clk.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/cpuidle/cpuidle-mvebu-v7.c
-+++ b/drivers/cpuidle/cpuidle-mvebu-v7.c
-@@ -36,7 +36,10 @@ static int mvebu_v7_enter_idle(struct cp
- 	if (drv->states[index].flags & MVEBU_V7_FLAG_DEEP_IDLE)
- 		deepidle = true;
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -978,12 +978,12 @@ static void clk_core_disable(struct clk_
+ 	if (--core->enable_count > 0)
+ 		return;
  
-+	ct_idle_enter();
- 	ret = mvebu_v7_cpu_suspend(deepidle);
-+	ct_idle_exit();
-+
- 	cpu_pm_exit();
+-	trace_clk_disable_rcuidle(core);
++	trace_clk_disable(core);
  
- 	if (ret)
-@@ -49,6 +52,7 @@ static struct cpuidle_driver armadaxp_id
- 	.name			= "armada_xp_idle",
- 	.states[0]		= ARM_CPUIDLE_WFI_STATE,
- 	.states[1]		= {
-+		.flags			= CPUIDLE_FLAG_RCU_IDLE,
- 		.enter			= mvebu_v7_enter_idle,
- 		.exit_latency		= 100,
- 		.power_usage		= 50,
-@@ -57,6 +61,7 @@ static struct cpuidle_driver armadaxp_id
- 		.desc			= "CPU power down",
- 	},
- 	.states[2]		= {
-+		.flags			= CPUIDLE_FLAG_RCU_IDLE,
- 		.enter			= mvebu_v7_enter_idle,
- 		.exit_latency		= 1000,
- 		.power_usage		= 5,
-@@ -72,6 +77,7 @@ static struct cpuidle_driver armada370_i
- 	.name			= "armada_370_idle",
- 	.states[0]		= ARM_CPUIDLE_WFI_STATE,
- 	.states[1]		= {
-+		.flags			= CPUIDLE_FLAG_RCU_IDLE,
- 		.enter			= mvebu_v7_enter_idle,
- 		.exit_latency		= 100,
- 		.power_usage		= 5,
-@@ -87,6 +93,7 @@ static struct cpuidle_driver armada38x_i
- 	.name			= "armada_38x_idle",
- 	.states[0]		= ARM_CPUIDLE_WFI_STATE,
- 	.states[1]		= {
-+		.flags			= CPUIDLE_FLAG_RCU_IDLE,
- 		.enter			= mvebu_v7_enter_idle,
- 		.exit_latency		= 10,
- 		.power_usage		= 5,
+ 	if (core->ops->disable)
+ 		core->ops->disable(core->hw);
+ 
+-	trace_clk_disable_complete_rcuidle(core);
++	trace_clk_disable_complete(core);
+ 
+ 	clk_core_disable(core->parent);
+ }
+@@ -1037,12 +1037,12 @@ static int clk_core_enable(struct clk_co
+ 		if (ret)
+ 			return ret;
+ 
+-		trace_clk_enable_rcuidle(core);
++		trace_clk_enable(core);
+ 
+ 		if (core->ops->enable)
+ 			ret = core->ops->enable(core->hw);
+ 
+-		trace_clk_enable_complete_rcuidle(core);
++		trace_clk_enable_complete(core);
+ 
+ 		if (ret) {
+ 			clk_core_disable(core->parent);
 
 
