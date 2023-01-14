@@ -1,110 +1,164 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B563ECC
-	for <loongarch@lists.linux.dev>; Sat, 14 Jan 2023 09:27:38 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxrOqJdcJjgp0BAA--.5129S3;
-	Sat, 14 Jan 2023 17:27:37 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxb+SBdcJjcVYZAA--.11667S8;
-	Sat, 14 Jan 2023 17:27:36 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v11 6/6] LoongArch: Use common function sign_extend64()
-Date: Sat, 14 Jan 2023 17:27:24 +0800
-Message-Id: <1673688444-24251-7-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1673688444-24251-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1673688444-24251-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8Bxb+SBdcJjcVYZAA--.11667S8
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7CrW7WF4UtryDWryUKw4rXwb_yoW5JF4kpr
-	ZFyFykJFs8GF1Duryqy3s8XrWrWrn3Cr4aq3W3Kr1I9FWaqr129r18JrWqvF1kt3y0vFW0
-	gFWfXw1Yva1UA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC438498
+	for <loongarch@lists.linux.dev>; Sat, 14 Jan 2023 16:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1673712601;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q3R4pvBr6dG+A0u3o+nBNguX6qX9S+oXSEacD+sP77s=;
+	b=Wkj7TNTzDBlCarT6okCYy9jLm21JgluMUqF96PNMcD/XCA4gZK6P8I/LVqPV3xpbcT+p7L
+	Oct5s03PAAGg/GDNNs/qnrQlangSQQmy3wUB1tWFP9KKy3DrEv/tgHql9zAXzRvH9UXqMz
+	RFeiV1vO2KLhWhoWAQpUCG2TH5SKOYc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-70-2FusZSnBOYmcvnuLbGucvQ-1; Sat, 14 Jan 2023 11:09:39 -0500
+X-MC-Unique: 2FusZSnBOYmcvnuLbGucvQ-1
+Received: by mail-wr1-f72.google.com with SMTP id s20-20020adfa294000000b002b81849101eso4610707wra.16
+        for <loongarch@lists.linux.dev>; Sat, 14 Jan 2023 08:09:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q3R4pvBr6dG+A0u3o+nBNguX6qX9S+oXSEacD+sP77s=;
+        b=Zg5ur94tpaZ/12k0txWOeWFCYEZrIzAmnoe/Aaijdt3LyrjFa25xXXVqbbu3hBTVou
+         F9hIyLA/XwHMd6l6FxJblS2pHOh8STiZ2lACsELPHH/5Sgww0q/ckcMXHG8ngefxq2wa
+         XCB+myT6rLXYNN+A4g2u4JUb9wkjHScwspdFvDypqq1uwOyjyzL263Exks/+S40V3S3J
+         FkyPeC+mRJWJN2tEHObQFgN0cTvvhkeWjApiOV81Egq4KlzIPa3IOu+w3LzyyNwENlsP
+         avdd9LUd/k9QMpnLleSvwq9IHl9ta438k3OyrTEir/Ih9sQcWvdreCS2Oixj5aAM/6Gr
+         SydQ==
+X-Gm-Message-State: AFqh2kprBRsflc5CnYrCJ4xx0wIpCr8KNf0JUNdbVSXPmI4FVFXF7qk8
+	AMpztlYTpKx0qZaUn2TLSgQvNT9JwtHqYveDcXk6F+s0eYYIQlF14dGspr1LjFsAm3XFGEGMTUc
+	tSmlmQ8RbU8MGBO+9zgJx
+X-Received: by 2002:a05:600c:348b:b0:3d1:f16b:30e6 with SMTP id a11-20020a05600c348b00b003d1f16b30e6mr62422448wmq.28.1673712578317;
+        Sat, 14 Jan 2023 08:09:38 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXtvXECQ77f+OwG9Mdcw6TdAWlLhcG76s2TeMh5Hr9A1VofwYXs3lPZWG9daADyc7xNo4jh7zQ==
+X-Received: by 2002:a05:600c:348b:b0:3d1:f16b:30e6 with SMTP id a11-20020a05600c348b00b003d1f16b30e6mr62422426wmq.28.1673712578037;
+        Sat, 14 Jan 2023 08:09:38 -0800 (PST)
+Received: from ?IPV6:2003:cb:c71c:9800:fa4a:c1fc:a860:85af? (p200300cbc71c9800fa4ac1fca86085af.dip0.t-ipconnect.de. [2003:cb:c71c:9800:fa4a:c1fc:a860:85af])
+        by smtp.gmail.com with ESMTPSA id q18-20020adfdfd2000000b002bdc129c8f6sm10260315wrn.43.2023.01.14.08.09.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Jan 2023 08:09:37 -0800 (PST)
+Message-ID: <6aaad548-cf48-77fa-9d6c-db83d724b2eb@redhat.com>
+Date: Sat, 14 Jan 2023 17:09:35 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+To: linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
+ <hughd@google.com>, John Hubbard <jhubbard@nvidia.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@linux.ibm.com>,
+ Yang Shi <shy828301@gmail.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Nadav Amit <namit@vmware.com>, Andrea Arcangeli <aarcange@redhat.com>,
+ Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, x86@kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org
+References: <20230113171026.582290-1-david@redhat.com>
+ <20230113171026.582290-2-david@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH mm-unstable v1 01/26] mm/debug_vm_pgtable: more
+ pte_swp_exclusive() sanity checks
+In-Reply-To: <20230113171026.582290-2-david@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-There exists a common function sign_extend64() to sign extend a 64-bit
-value using specified bit as sign-bit in include/linux/bitops.h, it is
-more efficient, let us use it and remove the arch-specific sign_extend()
-under arch/loongarch.
+On 13.01.23 18:10, David Hildenbrand wrote:
+> We want to implement __HAVE_ARCH_PTE_SWP_EXCLUSIVE on all architectures.
+> Let's extend our sanity checks, especially testing that our PTE bit
+> does not affect:
+> * is_swap_pte() -> pte_present() and pte_none()
+> * the swap entry + type
+> * pte_swp_soft_dirty()
+> 
+> Especially, the pfn_pte() is dodgy when the swap PTE layout differs
+> heavily from ordinary PTEs. Let's properly construct a swap PTE from
+> swap type+offset.
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
 
-Suggested-by: Jinyang He <hejinyang@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+The following fixup for !CONFIG_SWAP on top, which makes it compile for me and
+passes when booting on x86_64 with CONFIG_DEBUG_VM_PGTABLE:
+
+...
+[    0.347112] Loaded X.509 cert 'Build time autogenerated kernel key: ee6afc0578f6475656fec8a4f9d02832'
+[    0.350112] debug_vm_pgtable: [debug_vm_pgtable         ]: Validating architecture page table helpers
+[    0.351217] page_owner is disabled
+...
+
+
+ From 6a6162e8af62a4b3f7b9d823fdfae86de3f34a9d Mon Sep 17 00:00:00 2001
+From: David Hildenbrand <david@redhat.com>
+Date: Sat, 14 Jan 2023 16:47:12 +0100
+Subject: [PATCH] fixup: mm/debug_vm_pgtable: more pte_swp_exclusive() sanity
+  checks
+
+generic_max_swapfile_size() is only available with CONFIG_SWAP -- which
+makes sense, because without SWAP there are no swap files. Let's
+simply probe manually which bits we can obtain after storing them in a
+PTE, and properly call it "max swap offset", which is more generic for
+a swap entry.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/loongarch/include/asm/inst.h   | 8 --------
- arch/loongarch/kernel/alternative.c | 6 +++---
- 2 files changed, 3 insertions(+), 11 deletions(-)
+  mm/debug_vm_pgtable.c | 8 +++++---
+  1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index e0771d2..ba18ce8 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -397,14 +397,6 @@ static inline bool unsigned_imm_check(unsigned long val, unsigned int bit)
- 	return val < (1UL << bit);
- }
- 
--static inline unsigned long sign_extend(unsigned long val, unsigned int idx)
--{
--	if (!is_imm_negative(val, idx + 1))
--		return ((1UL << idx) - 1) & val;
--	else
--		return ~((1UL << idx) - 1) | val;
--}
--
- #define DEF_EMIT_REG0I26_FORMAT(NAME, OP)				\
- static inline void emit_##NAME(union loongarch_instruction *insn,	\
- 			       int offset)				\
-diff --git a/arch/loongarch/kernel/alternative.c b/arch/loongarch/kernel/alternative.c
-index c5aebea..4ad1384 100644
---- a/arch/loongarch/kernel/alternative.c
-+++ b/arch/loongarch/kernel/alternative.c
-@@ -74,7 +74,7 @@ static void __init_or_module recompute_jump(union loongarch_instruction *buf,
- 	switch (src->reg0i26_format.opcode) {
- 	case b_op:
- 	case bl_op:
--		jump_addr = cur_pc + sign_extend((si_h << 16 | si_l) << 2, 27);
-+		jump_addr = cur_pc + sign_extend64((si_h << 16 | si_l) << 2, 27);
- 		if (in_alt_jump(jump_addr, start, end))
- 			return;
- 		offset = jump_addr - pc;
-@@ -93,7 +93,7 @@ static void __init_or_module recompute_jump(union loongarch_instruction *buf,
- 		fallthrough;
- 	case beqz_op:
- 	case bnez_op:
--		jump_addr = cur_pc + sign_extend((si_h << 16 | si_l) << 2, 22);
-+		jump_addr = cur_pc + sign_extend64((si_h << 16 | si_l) << 2, 22);
- 		if (in_alt_jump(jump_addr, start, end))
- 			return;
- 		offset = jump_addr - pc;
-@@ -112,7 +112,7 @@ static void __init_or_module recompute_jump(union loongarch_instruction *buf,
- 	case bge_op:
- 	case bltu_op:
- 	case bgeu_op:
--		jump_addr = cur_pc + sign_extend(si << 2, 17);
-+		jump_addr = cur_pc + sign_extend64(si << 2, 17);
- 		if (in_alt_jump(jump_addr, start, end))
- 			return;
- 		offset = jump_addr - pc;
+diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+index 3da0cc380c35..af59cc7bd307 100644
+--- a/mm/debug_vm_pgtable.c
++++ b/mm/debug_vm_pgtable.c
+@@ -810,15 +810,17 @@ static void __init pmd_swap_soft_dirty_tests(struct pgtable_debug_args *args) {
+  
+  static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
+  {
+-	unsigned long max_swapfile_size = generic_max_swapfile_size();
++	unsigned long max_swap_offset;
+  	swp_entry_t entry, entry2;
+  	pte_t pte;
+  
+  	pr_debug("Validating PTE swap exclusive\n");
+  
++	/* See generic_max_swapfile_size(): probe the maximum offset */
++	max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));
++
+  	/* Create a swp entry with all possible bits set */
+-	entry = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1,
+-			  max_swapfile_size - 1);
++	entry = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1, max_swap_offset);
+  
+  	pte = swp_entry_to_pte(entry);
+  	WARN_ON(pte_swp_exclusive(pte));
 -- 
-2.1.0
+2.39.0
+
+
+
+-- 
+Thanks,
+
+David / dhildenb
 
