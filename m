@@ -1,282 +1,339 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F96AD4A
-	for <loongarch@lists.linux.dev>; Fri, 13 Jan 2023 18:06:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 483FCC433EF;
-	Fri, 13 Jan 2023 18:06:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1673633197;
-	bh=9JM2l3wQvAeTEYaZAWr5I3gZoNrgDAq2iaamsrQXne0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=d/TyPrfu3TMN3RDQxpqP5fajACgLxUzrO1o0lviquPae0CCREqyfMhbNaFpmIDnAD
-	 gc9rcn8tXi7SZ4Sa6feTIN2Ae1ZeCBFbV5dmTzybf+txFmSo/tzOIYxAQ5C/w8Dqvn
-	 lUFscWLbHB7PxSvBS0qnt6QQanZXshhTtjgmZdd4dd7UYrIROlbOAFQjGgiw28eaXg
-	 ZWAP2DT2ukYPCwIGpUnzoCfZFD2NIBDmWoE7vSQ2LoozWiuoZLz82Zhhis8k4Jr+Bj
-	 yNgUqYimkNr/a2hjrvrPsnsWtLyOCrg7bz13Vy3HC3zIgb+UrU6VBUs4Zs2yFiDWYy
-	 hI2RWs0YaghDg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id D78905C06D0; Fri, 13 Jan 2023 10:06:36 -0800 (PST)
-Date: Fri, 13 Jan 2023 10:06:36 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
-	mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
-	nsekhar@ti.com, brgl@bgdev.pl, ulli.kroll@googlemail.com,
-	linus.walleij@linaro.org, shawnguo@kernel.org,
-	Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
-	festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com,
-	khilman@kernel.org, krzysztof.kozlowski@linaro.org,
-	alim.akhtar@samsung.com, catalin.marinas@arm.com, will@kernel.org,
-	guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
-	kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net,
-	monstr@monstr.eu, tsbogend@alpha.franken.de, dinguyen@kernel.org,
-	jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
-	shorne@gmail.com, James.Bottomley@HansenPartnership.com,
-	deller@gmx.de, mpe@ellerman.id.au, npiggin@gmail.com,
-	christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
-	gor@linux.ibm.com, agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com, svens@linux.ibm.com,
-	ysato@users.sourceforge.jp, dalias@libc.org, davem@davemloft.net,
-	richard@nod.at, anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
-	amakhalov@vmware.com, pv-drivers@vmware.com,
-	boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
-	rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
-	gregkh@linuxfoundation.org, mturquette@baylibre.com,
-	sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-	sudeep.holla@arm.com, agross@kernel.org, andersson@kernel.org,
-	konrad.dybcio@linaro.org, anup@brainfault.org,
-	thierry.reding@gmail.com, jonathanh@nvidia.com,
-	jacob.jun.pan@linux.intel.com, atishp@atishpatra.org,
-	Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com,
-	andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
-	dennis@kernel.org, tj@kernel.org, cl@linux.com, rostedt@goodmis.org,
-	mhiramat@kernel.org, frederic@kernel.org, pmladek@suse.com,
-	senozhatsky@chromium.org, john.ogness@linutronix.de,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, ryabinin.a.a@gmail.com,
-	glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
-	vincenzo.frascino@arm.com,
-	Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
-	virtualization@lists.linux-foundation.org,
-	linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com
-Subject: Re: [PATCH v3 00/51] cpuidle,rcu: Clean up the mess
-Message-ID: <20230113180636.GA4028633@paulmck-ThinkPad-P17-Gen-1>
-Reply-To: paulmck@kernel.org
-References: <20230112194314.845371875@infradead.org>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF0BE7C
+	for <loongarch@lists.linux.dev>; Sat, 14 Jan 2023 06:38:13 +0000 (UTC)
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8Bx7erMTcJjlJoBAA--.5132S3;
+	Sat, 14 Jan 2023 14:38:04 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxTuTJTcJj+UwZAA--.11745S3;
+	Sat, 14 Jan 2023 14:38:03 +0800 (CST)
+Subject: Re: [PATCH 1/4] LoongArch: Use trampoline for exception handlers and
+ kill la.abs
+To: Youling Tang <tangyouling@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Xi Ruoyao <xry111@xry111.site>
+Cc: Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <1673255274-18238-1-git-send-email-tangyouling@loongson.cn>
+ <1673255274-18238-2-git-send-email-tangyouling@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <6f1a1f3c-4569-c427-76ae-2f7093cb5e9f@loongson.cn>
+Date: Sat, 14 Jan 2023 14:38:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230112194314.845371875@infradead.org>
+In-Reply-To: <1673255274-18238-2-git-send-email-tangyouling@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8DxTuTJTcJj+UwZAA--.11745S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3Gw45ZFW5XF4Utw1ktr1kKrg_yoW3Kr4rpw
+	nxAF4DJa1vgFn5Za4Ut34jvrW5ZwnrWw4aga12krWruFnFgry5X34kt3s7uF97KayxXF40
+	9F1rZws2vay5JwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1le2I2
+	62IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4
+	CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvj
+	eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+	80aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUUU
 
-On Thu, Jan 12, 2023 at 08:43:14PM +0100, Peter Zijlstra wrote:
-> Hi All!
-> 
-> The (hopefully) final respin of cpuidle vs rcu cleanup patches. Barring any
-> objections I'll be queueing these patches in tip/sched/core in the next few
-> days.
-> 
-> v2: https://lkml.kernel.org/r/20220919095939.761690562@infradead.org
-> 
-> These here patches clean up the mess that is cpuidle vs rcuidle.
-> 
-> At the end of the ride there's only on RCU_NONIDLE user left:
-> 
->   arch/arm64/kernel/suspend.c:            RCU_NONIDLE(__cpu_suspend_exit());
-> 
-> And I know Mark has been prodding that with something sharp.
-> 
-> The last version was tested by a number of people and I'm hoping to not have
-> broken anything in the meantime ;-)
-> 
-> 
-> Changes since v2:
+Hi, Ruoyao and Youling,
 
-150 rcutorture hours on each of the default scenarios passed.  This
-is qemu/KVM on x86:
+I care about the performance when NUMA enabled. We set CSR.EENTRY
+for each possible cpus where is NUMA-relative. So, I guess the more
+codes in NUMA-relative memory makes more performance. If we just set
+handler_trampoline as exception handler, the performance may be
+influenced.
 
-Tested-by: Paul E. McKenney <paulmck@kernel.org>
 
->  - rebased to v6.2-rc3; as available at:
->      git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git sched/idle
-> 
->  - folded: https://lkml.kernel.org/r/Y3UBwYNY15ETUKy9@hirez.programming.kicks-ass.net
->    which makes the ARM cpuidle index 0 consistently not use
->    CPUIDLE_FLAG_RCU_IDLE, as requested by Ulf.
-> 
->  - added a few more __always_inline to empty stub functions as found by the
->    robot.
-> 
->  - Used _RET_IP_ instead of _THIS_IP_ in a few placed because of:
->    https://github.com/ClangBuiltLinux/linux/issues/263
-> 
->  - Added new patches to address various robot reports:
-> 
->      #35:  trace,hardirq: No moar _rcuidle() tracing
->      #47:  cpuidle: Ensure ct_cpuidle_enter() is always called from noinstr/__cpuidle
->      #48:  cpuidle,arch: Mark all ct_cpuidle_enter() callers __cpuidle
->      #49:  cpuidle,arch: Mark all regular cpuidle_state::enter methods __cpuidle
->      #50:  cpuidle: Comments about noinstr/__cpuidle
->      #51:  context_tracking: Fix noinstr vs KASAN
-> 
-> 
+Thanks,
+
+Jinyang
+
+
+On 2023-01-09 17:07, Youling Tang wrote:
+> From: Xi Ruoyao <xry111@xry111.site>
+>
+> Use a trampoline as an exception handlers, which can kill some use of
+> la.abs in preparation for the subsequent support of the PIE kernel.
+>
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
 > ---
->  arch/alpha/kernel/process.c               |  1 -
->  arch/alpha/kernel/vmlinux.lds.S           |  1 -
->  arch/arc/kernel/process.c                 |  3 ++
->  arch/arc/kernel/vmlinux.lds.S             |  1 -
->  arch/arm/include/asm/vmlinux.lds.h        |  1 -
->  arch/arm/kernel/cpuidle.c                 |  4 +-
->  arch/arm/kernel/process.c                 |  1 -
->  arch/arm/kernel/smp.c                     |  6 +--
->  arch/arm/mach-davinci/cpuidle.c           |  4 +-
->  arch/arm/mach-gemini/board-dt.c           |  3 +-
->  arch/arm/mach-imx/cpuidle-imx5.c          |  4 +-
->  arch/arm/mach-imx/cpuidle-imx6q.c         |  8 ++--
->  arch/arm/mach-imx/cpuidle-imx6sl.c        |  4 +-
->  arch/arm/mach-imx/cpuidle-imx6sx.c        |  9 ++--
->  arch/arm/mach-imx/cpuidle-imx7ulp.c       |  4 +-
->  arch/arm/mach-omap2/common.h              |  6 ++-
->  arch/arm/mach-omap2/cpuidle34xx.c         | 16 ++++++-
->  arch/arm/mach-omap2/cpuidle44xx.c         | 29 +++++++------
->  arch/arm/mach-omap2/omap-mpuss-lowpower.c | 12 +++++-
->  arch/arm/mach-omap2/pm.h                  |  2 +-
->  arch/arm/mach-omap2/pm24xx.c              | 51 +---------------------
->  arch/arm/mach-omap2/pm34xx.c              | 14 +++++--
->  arch/arm/mach-omap2/pm44xx.c              |  2 +-
->  arch/arm/mach-omap2/powerdomain.c         | 10 ++---
->  arch/arm/mach-s3c/cpuidle-s3c64xx.c       |  5 +--
->  arch/arm64/kernel/cpuidle.c               |  2 +-
->  arch/arm64/kernel/idle.c                  |  1 -
->  arch/arm64/kernel/smp.c                   |  4 +-
->  arch/arm64/kernel/vmlinux.lds.S           |  1 -
->  arch/csky/kernel/process.c                |  1 -
->  arch/csky/kernel/smp.c                    |  2 +-
->  arch/csky/kernel/vmlinux.lds.S            |  1 -
->  arch/hexagon/kernel/process.c             |  1 -
->  arch/hexagon/kernel/vmlinux.lds.S         |  1 -
->  arch/ia64/kernel/process.c                |  1 +
->  arch/ia64/kernel/vmlinux.lds.S            |  1 -
->  arch/loongarch/kernel/idle.c              |  1 +
->  arch/loongarch/kernel/vmlinux.lds.S       |  1 -
->  arch/m68k/kernel/vmlinux-nommu.lds        |  1 -
->  arch/m68k/kernel/vmlinux-std.lds          |  1 -
->  arch/m68k/kernel/vmlinux-sun3.lds         |  1 -
->  arch/microblaze/kernel/process.c          |  1 -
->  arch/microblaze/kernel/vmlinux.lds.S      |  1 -
->  arch/mips/kernel/idle.c                   | 14 +++----
->  arch/mips/kernel/vmlinux.lds.S            |  1 -
->  arch/nios2/kernel/process.c               |  1 -
->  arch/nios2/kernel/vmlinux.lds.S           |  1 -
->  arch/openrisc/kernel/process.c            |  1 +
->  arch/openrisc/kernel/vmlinux.lds.S        |  1 -
->  arch/parisc/kernel/process.c              |  2 -
->  arch/parisc/kernel/vmlinux.lds.S          |  1 -
->  arch/powerpc/kernel/idle.c                |  5 +--
->  arch/powerpc/kernel/vmlinux.lds.S         |  1 -
->  arch/riscv/kernel/process.c               |  1 -
->  arch/riscv/kernel/vmlinux-xip.lds.S       |  1 -
->  arch/riscv/kernel/vmlinux.lds.S           |  1 -
->  arch/s390/kernel/idle.c                   |  1 -
->  arch/s390/kernel/vmlinux.lds.S            |  1 -
->  arch/sh/kernel/idle.c                     |  1 +
->  arch/sh/kernel/vmlinux.lds.S              |  1 -
->  arch/sparc/kernel/leon_pmc.c              |  4 ++
->  arch/sparc/kernel/process_32.c            |  1 -
->  arch/sparc/kernel/process_64.c            |  3 +-
->  arch/sparc/kernel/vmlinux.lds.S           |  1 -
->  arch/um/kernel/dyn.lds.S                  |  1 -
->  arch/um/kernel/process.c                  |  1 -
->  arch/um/kernel/uml.lds.S                  |  1 -
->  arch/x86/boot/compressed/vmlinux.lds.S    |  1 +
->  arch/x86/coco/tdx/tdcall.S                | 15 +------
->  arch/x86/coco/tdx/tdx.c                   | 25 ++++-------
->  arch/x86/events/amd/brs.c                 | 13 +++---
->  arch/x86/include/asm/fpu/xcr.h            |  4 +-
->  arch/x86/include/asm/irqflags.h           | 11 ++---
->  arch/x86/include/asm/mwait.h              | 14 +++----
->  arch/x86/include/asm/nospec-branch.h      |  2 +-
->  arch/x86/include/asm/paravirt.h           |  6 ++-
->  arch/x86/include/asm/perf_event.h         |  2 +-
->  arch/x86/include/asm/shared/io.h          |  4 +-
->  arch/x86/include/asm/shared/tdx.h         |  1 -
->  arch/x86/include/asm/special_insns.h      |  8 ++--
->  arch/x86/include/asm/xen/hypercall.h      |  2 +-
->  arch/x86/kernel/cpu/bugs.c                |  2 +-
->  arch/x86/kernel/fpu/core.c                |  4 +-
->  arch/x86/kernel/paravirt.c                | 14 ++++++-
->  arch/x86/kernel/process.c                 | 65 ++++++++++++++--------------
->  arch/x86/kernel/vmlinux.lds.S             |  1 -
->  arch/x86/lib/memcpy_64.S                  |  5 +--
->  arch/x86/lib/memmove_64.S                 |  4 +-
->  arch/x86/lib/memset_64.S                  |  4 +-
->  arch/x86/xen/enlighten_pv.c               |  2 +-
->  arch/x86/xen/irq.c                        |  2 +-
->  arch/xtensa/kernel/process.c              |  1 +
->  arch/xtensa/kernel/vmlinux.lds.S          |  1 -
->  drivers/acpi/processor_idle.c             | 28 ++++++++-----
->  drivers/base/power/runtime.c              | 24 +++++------
->  drivers/clk/clk.c                         |  8 ++--
->  drivers/cpuidle/cpuidle-arm.c             |  4 +-
->  drivers/cpuidle/cpuidle-big_little.c      | 12 ++++--
->  drivers/cpuidle/cpuidle-mvebu-v7.c        | 13 ++++--
->  drivers/cpuidle/cpuidle-psci.c            | 26 +++++-------
->  drivers/cpuidle/cpuidle-qcom-spm.c        |  4 +-
->  drivers/cpuidle/cpuidle-riscv-sbi.c       | 19 +++++----
->  drivers/cpuidle/cpuidle-tegra.c           | 31 +++++++++-----
->  drivers/cpuidle/cpuidle.c                 | 70 ++++++++++++++++++++++---------
->  drivers/cpuidle/dt_idle_states.c          |  2 +-
->  drivers/cpuidle/poll_state.c              | 10 ++++-
->  drivers/idle/intel_idle.c                 | 19 ++++-----
->  drivers/perf/arm_pmu.c                    | 11 +----
->  drivers/perf/riscv_pmu_sbi.c              |  8 +---
->  include/asm-generic/vmlinux.lds.h         |  9 ++--
->  include/linux/clockchips.h                |  4 +-
->  include/linux/compiler_types.h            | 18 +++++++-
->  include/linux/cpu.h                       |  3 --
->  include/linux/cpuidle.h                   | 32 ++++++++++++++
->  include/linux/cpumask.h                   |  4 +-
->  include/linux/percpu-defs.h               |  2 +-
->  include/linux/sched/idle.h                | 40 +++++++++++++-----
->  include/linux/thread_info.h               | 18 +++++++-
->  include/linux/tracepoint.h                | 15 ++++++-
->  kernel/context_tracking.c                 | 12 +++---
->  kernel/cpu_pm.c                           |  9 ----
->  kernel/printk/printk.c                    |  2 +-
->  kernel/sched/idle.c                       | 47 ++++++---------------
->  kernel/time/tick-broadcast-hrtimer.c      | 29 ++++++-------
->  kernel/time/tick-broadcast.c              |  6 ++-
->  kernel/trace/trace.c                      |  3 ++
->  kernel/trace/trace_preemptirq.c           | 50 ++++++----------------
->  lib/ubsan.c                               |  5 ++-
->  mm/kasan/kasan.h                          |  4 ++
->  mm/kasan/shadow.c                         | 38 +++++++++++++++++
->  tools/objtool/check.c                     | 17 ++++++++
->  131 files changed, 617 insertions(+), 523 deletions(-)
-> 
+>   arch/loongarch/include/asm/stackframe.h |  8 +++----
+>   arch/loongarch/include/asm/uaccess.h    |  1 -
+>   arch/loongarch/kernel/entry.S           |  6 +++---
+>   arch/loongarch/kernel/genex.S           | 20 +++++++++---------
+>   arch/loongarch/kernel/head.S            |  2 +-
+>   arch/loongarch/kernel/traps.c           |  4 +++-
+>   arch/loongarch/mm/tlbex.S               | 28 +++++++------------------
+>   7 files changed, 29 insertions(+), 40 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
+> index 4ca953062b5b..96c94035b5d0 100644
+> --- a/arch/loongarch/include/asm/stackframe.h
+> +++ b/arch/loongarch/include/asm/stackframe.h
+> @@ -76,8 +76,8 @@
+>    * kernelsp array for it. It stores the current sp in t0 and loads the
+>    * new value in sp.
+>    */
+> -	.macro	get_saved_sp docfi=0
+> -	la.abs	  t1, kernelsp
+> +	.macro	  get_saved_sp docfi=0
+> +	la.pcrel  t1, kernelsp
+>   #ifdef CONFIG_SMP
+>   	csrrd	  t0, PERCPU_BASE_KS
+>   	LONG_ADD  t1, t1, t0
+> @@ -89,8 +89,8 @@
+>   	LONG_L	  sp, t1, 0
+>   	.endm
+>   
+> -	.macro	set_saved_sp stackp temp temp2
+> -	la.abs	  \temp, kernelsp
+> +	.macro	  set_saved_sp stackp temp temp2
+> +	la.pcrel  \temp, kernelsp
+>   #ifdef CONFIG_SMP
+>   	LONG_ADD  \temp, \temp, u0
+>   #endif
+> diff --git a/arch/loongarch/include/asm/uaccess.h b/arch/loongarch/include/asm/uaccess.h
+> index 255899d4a7c3..0d22991ae430 100644
+> --- a/arch/loongarch/include/asm/uaccess.h
+> +++ b/arch/loongarch/include/asm/uaccess.h
+> @@ -22,7 +22,6 @@
+>   extern u64 __ua_limit;
+>   
+>   #define __UA_ADDR	".dword"
+> -#define __UA_LA		"la.abs"
+>   #define __UA_LIMIT	__ua_limit
+>   
+>   /*
+> diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
+> index d53b631c9022..ca01afdbec3f 100644
+> --- a/arch/loongarch/kernel/entry.S
+> +++ b/arch/loongarch/kernel/entry.S
+> @@ -18,9 +18,9 @@
+>   	.text
+>   	.cfi_sections	.debug_frame
+>   	.align	5
+> -SYM_FUNC_START(handle_syscall)
+> +SYM_FUNC_START(handle_sys)
+>   	csrrd	t0, PERCPU_BASE_KS
+> -	la.abs	t1, kernelsp
+> +	la.pcrel	t1, kernelsp
+>   	add.d	t1, t1, t0
+>   	move	t2, sp
+>   	ld.d	sp, t1, 0
+> @@ -66,7 +66,7 @@ SYM_FUNC_START(handle_syscall)
+>   	bl	do_syscall
+>   
+>   	RESTORE_ALL_AND_RET
+> -SYM_FUNC_END(handle_syscall)
+> +SYM_FUNC_END(handle_sys)
+>   
+>   SYM_CODE_START(ret_from_fork)
+>   	bl	schedule_tail		# a0 = struct task_struct *prev
+> diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
+> index 75e5be807a0d..d3df0fa725a2 100644
+> --- a/arch/loongarch/kernel/genex.S
+> +++ b/arch/loongarch/kernel/genex.S
+> @@ -32,9 +32,8 @@ SYM_FUNC_START(__arch_cpu_idle)
+>   SYM_FUNC_END(__arch_cpu_idle)
+>   
+>   SYM_FUNC_START(handle_vint)
+> -	BACKUP_T0T1
+>   	SAVE_ALL
+> -	la.abs	t1, __arch_cpu_idle
+> +	la.pcrel	t1, __arch_cpu_idle
+>   	LONG_L	t0, sp, PT_ERA
+>   	/* 32 byte rollback region */
+>   	ori	t0, t0, 0x1f
+> @@ -43,8 +42,7 @@ SYM_FUNC_START(handle_vint)
+>   	LONG_S	t0, sp, PT_ERA
+>   1:	move	a0, sp
+>   	move	a1, sp
+> -	la.abs	t0, do_vint
+> -	jirl	ra, t0, 0
+> +	bl	do_vint
+>   	RESTORE_ALL_AND_RET
+>   SYM_FUNC_END(handle_vint)
+>   
+> @@ -67,12 +65,10 @@ SYM_FUNC_END(except_vec_cex)
+>   	.macro	BUILD_HANDLER exception handler prep
+>   	.align	5
+>   	SYM_FUNC_START(handle_\exception)
+> -	BACKUP_T0T1
+>   	SAVE_ALL
+>   	build_prep_\prep
+>   	move	a0, sp
+> -	la.abs	t0, do_\handler
+> -	jirl	ra, t0, 0
+> +	bl	do_\handler
+>   	RESTORE_ALL_AND_RET
+>   	SYM_FUNC_END(handle_\exception)
+>   	.endm
+> @@ -89,7 +85,11 @@ SYM_FUNC_END(except_vec_cex)
+>   	BUILD_HANDLER watch watch none
+>   	BUILD_HANDLER reserved reserved none	/* others */
+>   
+> -SYM_FUNC_START(handle_sys)
+> -	la.abs	t0, handle_syscall
+> +SYM_FUNC_START(handler_trampoline)
+> +	csrwr	t0, EXCEPTION_KS0
+> +	csrwr	t1, EXCEPTION_KS1
+> +	pcaddi	t0, 0
+> +	ld.d	t0, t0, 16
+>   	jr	t0
+> -SYM_FUNC_END(handle_sys)
+> +	nop
+> +SYM_FUNC_END(handler_trampoline)
+> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> index 57bada6b4e93..aa6181714ec3 100644
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -117,7 +117,7 @@ SYM_CODE_START(smpboot_entry)
+>   	li.w		t0, 0x00		# FPE=0, SXE=0, ASXE=0, BTE=0
+>   	csrwr		t0, LOONGARCH_CSR_EUEN
+>   
+> -	la.abs		t0, cpuboot_data
+> +	la.pcrel	t0, cpuboot_data
+>   	ld.d		sp, t0, CPU_BOOT_STACK
+>   	ld.d		tp, t0, CPU_BOOT_TINFO
+>   
+> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+> index 7ea62faeeadb..0e8faaca3679 100644
+> --- a/arch/loongarch/kernel/traps.c
+> +++ b/arch/loongarch/kernel/traps.c
+> @@ -61,6 +61,7 @@ extern asmlinkage void handle_lasx(void);
+>   extern asmlinkage void handle_reserved(void);
+>   extern asmlinkage void handle_watch(void);
+>   extern asmlinkage void handle_vint(void);
+> +extern asmlinkage void handler_trampoline(void);
+>   
+>   static void show_backtrace(struct task_struct *task, const struct pt_regs *regs,
+>   			   const char *loglvl, bool user)
+> @@ -716,7 +717,8 @@ void per_cpu_trap_init(int cpu)
+>   /* Install CPU exception handler */
+>   void set_handler(unsigned long offset, void *addr, unsigned long size)
+>   {
+> -	memcpy((void *)(eentry + offset), addr, size);
+> +	memcpy((void *)(eentry + offset), &handler_trampoline, 24);
+> +	memcpy((void *)(eentry + offset + 24), &addr, 8);
+>   	local_flush_icache_range(eentry + offset, eentry + offset + size);
+>   }
+>   
+> diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
+> index 58781c6e4191..cfaacdac518c 100644
+> --- a/arch/loongarch/mm/tlbex.S
+> +++ b/arch/loongarch/mm/tlbex.S
+> @@ -24,8 +24,7 @@
+>   	move		a0, sp
+>   	REG_S		a2, sp, PT_BVADDR
+>   	li.w		a1, \write
+> -	la.abs		t0, do_page_fault
+> -	jirl		ra, t0, 0
+> +	bl		do_page_fault
+>   	RESTORE_ALL_AND_RET
+>   	SYM_FUNC_END(tlb_do_page_fault_\write)
+>   	.endm
+> @@ -34,20 +33,16 @@
+>   	tlb_do_page_fault 1
+>   
+>   SYM_FUNC_START(handle_tlb_protect)
+> -	BACKUP_T0T1
+>   	SAVE_ALL
+>   	move		a0, sp
+>   	move		a1, zero
+>   	csrrd		a2, LOONGARCH_CSR_BADV
+>   	REG_S		a2, sp, PT_BVADDR
+> -	la.abs		t0, do_page_fault
+> -	jirl		ra, t0, 0
+> +	bl		do_page_fault
+>   	RESTORE_ALL_AND_RET
+>   SYM_FUNC_END(handle_tlb_protect)
+>   
+>   SYM_FUNC_START(handle_tlb_load)
+> -	csrwr		t0, EXCEPTION_KS0
+> -	csrwr		t1, EXCEPTION_KS1
+>   	csrwr		ra, EXCEPTION_KS2
+>   
+>   	/*
+> @@ -116,7 +111,7 @@ smp_pgtable_change_load:
+>   
+>   #ifdef CONFIG_64BIT
+>   vmalloc_load:
+> -	la.abs		t1, swapper_pg_dir
+> +	la.pcrel	t1, swapper_pg_dir
+>   	b		vmalloc_done_load
+>   #endif
+>   
+> @@ -187,13 +182,10 @@ tlb_huge_update_load:
+>   nopage_tlb_load:
+>   	dbar		0
+>   	csrrd		ra, EXCEPTION_KS2
+> -	la.abs		t0, tlb_do_page_fault_0
+> -	jr		t0
+> +	b		tlb_do_page_fault_0
+>   SYM_FUNC_END(handle_tlb_load)
+>   
+>   SYM_FUNC_START(handle_tlb_store)
+> -	csrwr		t0, EXCEPTION_KS0
+> -	csrwr		t1, EXCEPTION_KS1
+>   	csrwr		ra, EXCEPTION_KS2
+>   
+>   	/*
+> @@ -263,7 +255,7 @@ smp_pgtable_change_store:
+>   
+>   #ifdef CONFIG_64BIT
+>   vmalloc_store:
+> -	la.abs		t1, swapper_pg_dir
+> +	la.pcrel	t1, swapper_pg_dir
+>   	b		vmalloc_done_store
+>   #endif
+>   
+> @@ -336,13 +328,10 @@ tlb_huge_update_store:
+>   nopage_tlb_store:
+>   	dbar		0
+>   	csrrd		ra, EXCEPTION_KS2
+> -	la.abs		t0, tlb_do_page_fault_1
+> -	jr		t0
+> +	b		tlb_do_page_fault_1
+>   SYM_FUNC_END(handle_tlb_store)
+>   
+>   SYM_FUNC_START(handle_tlb_modify)
+> -	csrwr		t0, EXCEPTION_KS0
+> -	csrwr		t1, EXCEPTION_KS1
+>   	csrwr		ra, EXCEPTION_KS2
+>   
+>   	/*
+> @@ -411,7 +400,7 @@ smp_pgtable_change_modify:
+>   
+>   #ifdef CONFIG_64BIT
+>   vmalloc_modify:
+> -	la.abs		t1, swapper_pg_dir
+> +	la.pcrel	t1, swapper_pg_dir
+>   	b		vmalloc_done_modify
+>   #endif
+>   
+> @@ -483,8 +472,7 @@ tlb_huge_update_modify:
+>   nopage_tlb_modify:
+>   	dbar		0
+>   	csrrd		ra, EXCEPTION_KS2
+> -	la.abs		t0, tlb_do_page_fault_1
+> -	jr		t0
+> +	b		tlb_do_page_fault_1
+>   SYM_FUNC_END(handle_tlb_modify)
+>   
+>   SYM_FUNC_START(handle_tlb_refill)
+
