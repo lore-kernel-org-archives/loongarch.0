@@ -1,114 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7393F10EA
-	for <loongarch@lists.linux.dev>; Mon, 16 Jan 2023 03:18:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24296C433F0
-	for <loongarch@lists.linux.dev>; Mon, 16 Jan 2023 03:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1673839093;
-	bh=xN0nB9m8Mlu0zwKCceXo+pC9SAQhuK5iA+VXSdLnQs8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HVVvza9ZGJjkt7sEzxGmzuTLqg2RZGgzD8Tze/iheITECJkV/S7NTDVP69amQFcFC
-	 /fcSVKAlc9Gi8QoJ3DqLRPfEcfYrIv9ffeCSSAOXyqZmF1tpukkiCMD0SLHBkSuZmp
-	 xO1jIMsoG2R2UrL6bFVM1kOsP28bPF/T6XSz2ChjDBaWNlSedO/+J35NXEN2fekFHw
-	 O1eW5Ifd5kIKW7sayhbQtyIGsJ5vTygrp+pzYBOl/8uspmWvUX0KT6idqbM/OFvVE/
-	 mINqOD13F4ol7uVPGeiXkvAzCTRIR1HwKXeADVisTilaWA6Q3n1JIL03MP6ROLB0fe
-	 SPlhpSLtl0tQA==
-Received: by mail-ej1-f46.google.com with SMTP id mp20so18434181ejc.7
-        for <loongarch@lists.linux.dev>; Sun, 15 Jan 2023 19:18:13 -0800 (PST)
-X-Gm-Message-State: AFqh2kpkJJqZn1V7X91HrNUoLJESKcxx7qv1CEZokMRibgawT6m9n4/C
-	UAoBIWJSYKGHQu2uw61a5TYS5ewvT/zESL4648Y=
-X-Google-Smtp-Source: AMrXdXujtdw++p7a6byoW27xHy/lM3IXLBFnXPf4aQg/GiD1L3SxcQbhdq+FU2oajvc8xr5/AjtWlWWQNdjjCcICCcI=
-X-Received: by 2002:a17:906:5616:b0:852:132b:2d7e with SMTP id
- f22-20020a170906561600b00852132b2d7emr2248742ejq.224.1673839091387; Sun, 15
- Jan 2023 19:18:11 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10AA910EA;
+	Mon, 16 Jan 2023 03:19:32 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Bxa+o8wsRj48sBAA--.5550S3;
+	Mon, 16 Jan 2023 11:19:25 +0800 (CST)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axvr45wsRjYgUaAA--.53479S3;
+	Mon, 16 Jan 2023 11:19:22 +0800 (CST)
+Subject: Re: [PATCH v11 3/6] LoongArch: Add kretprobe support
+To: kernel test robot <lkp@intel.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu <mhiramat@kernel.org>
+References: <1673688444-24251-4-git-send-email-yangtiezhu@loongson.cn>
+ <202301151852.m2cigv2D-lkp@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <bfac74ca-5e8e-7a02-71d4-9b69b804aa7c@loongson.cn>
+Date: Mon, 16 Jan 2023 11:19:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1673688444-24251-1-git-send-email-yangtiezhu@loongson.cn> <1673688444-24251-7-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1673688444-24251-7-git-send-email-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 16 Jan 2023 11:18:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H768YCCdpn62tBAzbT0W24KNK-vnFnPDmMW-+X5_EdxgA@mail.gmail.com>
-Message-ID: <CAAhV-H768YCCdpn62tBAzbT0W24KNK-vnFnPDmMW-+X5_EdxgA@mail.gmail.com>
-Subject: Re: [PATCH v11 6/6] LoongArch: Use common function sign_extend64()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu <mhiramat@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <202301151852.m2cigv2D-lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Axvr45wsRjYgUaAA--.53479S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxJw4fXr15WrW8Zr4xZF48tFb_yoW5ArWxpa
+	yDZr1akr4rWr95XFZ7GayUX3W8Krn5A3srZryUK34Y9ay5Zryftrn293y5AFZrKwn8KFyF
+	vr4Fqas5KF43Aa7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+	s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU82ZX5UUUUU==
 
-I queued this patch, but others need more reviews.
 
-Huacai
 
-On Sat, Jan 14, 2023 at 5:27 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+On 01/15/2023 07:17 PM, kernel test robot wrote:
+> Hi Tiezhu,
 >
-> There exists a common function sign_extend64() to sign extend a 64-bit
-> value using specified bit as sign-bit in include/linux/bitops.h, it is
-> more efficient, let us use it and remove the arch-specific sign_extend()
-> under arch/loongarch.
+> Thank you for the patch! Perhaps something to improve:
 >
-> Suggested-by: Jinyang He <hejinyang@loongson.cn>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/include/asm/inst.h   | 8 --------
->  arch/loongarch/kernel/alternative.c | 6 +++---
->  2 files changed, 3 insertions(+), 11 deletions(-)
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v6.2-rc3 next-20230113]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
 >
-> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-> index e0771d2..ba18ce8 100644
-> --- a/arch/loongarch/include/asm/inst.h
-> +++ b/arch/loongarch/include/asm/inst.h
-> @@ -397,14 +397,6 @@ static inline bool unsigned_imm_check(unsigned long val, unsigned int bit)
->         return val < (1UL << bit);
->  }
+> url:    https://github.com/intel-lab-lkp/linux/commits/Tiezhu-Yang/LoongArch-Simulate-branch-and-PC-instructions/20230114-173012
+> patch link:    https://lore.kernel.org/r/1673688444-24251-4-git-send-email-yangtiezhu%40loongson.cn
+> patch subject: [PATCH v11 3/6] LoongArch: Add kretprobe support
+> config: loongarch-allmodconfig
+> compiler: loongarch64-linux-gcc (GCC) 12.1.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # https://github.com/intel-lab-lkp/linux/commit/da766ea35a574bece74a5068aad708b5773b2981
+>         git remote add linux-review https://github.com/intel-lab-lkp/linux
+>         git fetch --no-tags linux-review Tiezhu-Yang/LoongArch-Simulate-branch-and-PC-instructions/20230114-173012
+>         git checkout da766ea35a574bece74a5068aad708b5773b2981
+>         # save the config file
+>         mkdir build_dir && cp config build_dir/.config
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch olddefconfig
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash arch/loongarch/kernel/
 >
-> -static inline unsigned long sign_extend(unsigned long val, unsigned int idx)
-> -{
-> -       if (!is_imm_negative(val, idx + 1))
-> -               return ((1UL << idx) - 1) & val;
-> -       else
-> -               return ~((1UL << idx) - 1) | val;
-> -}
-> -
->  #define DEF_EMIT_REG0I26_FORMAT(NAME, OP)                              \
->  static inline void emit_##NAME(union loongarch_instruction *insn,      \
->                                int offset)                              \
-> diff --git a/arch/loongarch/kernel/alternative.c b/arch/loongarch/kernel/alternative.c
-> index c5aebea..4ad1384 100644
-> --- a/arch/loongarch/kernel/alternative.c
-> +++ b/arch/loongarch/kernel/alternative.c
-> @@ -74,7 +74,7 @@ static void __init_or_module recompute_jump(union loongarch_instruction *buf,
->         switch (src->reg0i26_format.opcode) {
->         case b_op:
->         case bl_op:
-> -               jump_addr = cur_pc + sign_extend((si_h << 16 | si_l) << 2, 27);
-> +               jump_addr = cur_pc + sign_extend64((si_h << 16 | si_l) << 2, 27);
->                 if (in_alt_jump(jump_addr, start, end))
->                         return;
->                 offset = jump_addr - pc;
-> @@ -93,7 +93,7 @@ static void __init_or_module recompute_jump(union loongarch_instruction *buf,
->                 fallthrough;
->         case beqz_op:
->         case bnez_op:
-> -               jump_addr = cur_pc + sign_extend((si_h << 16 | si_l) << 2, 22);
-> +               jump_addr = cur_pc + sign_extend64((si_h << 16 | si_l) << 2, 22);
->                 if (in_alt_jump(jump_addr, start, end))
->                         return;
->                 offset = jump_addr - pc;
-> @@ -112,7 +112,7 @@ static void __init_or_module recompute_jump(union loongarch_instruction *buf,
->         case bge_op:
->         case bltu_op:
->         case bgeu_op:
-> -               jump_addr = cur_pc + sign_extend(si << 2, 17);
-> +               jump_addr = cur_pc + sign_extend64(si << 2, 17);
->                 if (in_alt_jump(jump_addr, start, end))
->                         return;
->                 offset = jump_addr - pc;
-> --
-> 2.1.0
+> If you fix the issue, kindly add following tag where applicable
+> | Reported-by: kernel test robot <lkp@intel.com>
 >
+> Note: functions only called from assembly code should be annotated with the asmlinkage attribute
+> All warnings (new ones prefixed by >>):
+>
+>>> arch/loongarch/kernel/kprobes.c:376:14: warning: no previous prototype for 'trampoline_probe_handler' [-Wmissing-prototypes]
+>      376 | void __used *trampoline_probe_handler(struct pt_regs *regs)
+>          |              ^~~~~~~~~~~~~~~~~~~~~~~~
+>
+>
+> vim +/trampoline_probe_handler +376 arch/loongarch/kernel/kprobes.c
+>
+>    374	
+>    375	/* Called from __kretprobe_trampoline */
+>  > 376	void __used *trampoline_probe_handler(struct pt_regs *regs)
+>    377	{
+>    378		return (void *)kretprobe_trampoline_handler(regs, NULL);
+>    379	}
+>    380	NOKPROBE_SYMBOL(trampoline_probe_handler);
+>    381	
+>
+
+Thanks for the report, I can reproduce it when make W=1
+and also can silence it when declare the prototype
+
+void *trampoline_probe_handler(struct pt_regs *regs);
+
+in arch/loongarch/include/asm/kprobes.h
+
+Let me wait for some time, if no more comments, I will
+update this patch and then send v12.
+
+Thanks,
+Tiezhu
+
