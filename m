@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE9F11FA7
-	for <loongarch@lists.linux.dev>; Tue, 17 Jan 2023 07:41:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F21C1FB2
+	for <loongarch@lists.linux.dev>; Tue, 17 Jan 2023 07:47:22 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxOuonUcZjXgoCAA--.5982S3;
-	Tue, 17 Jan 2023 15:41:27 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxSuqJUsZjuAoCAA--.6125S3;
+	Tue, 17 Jan 2023 15:47:21 +0800 (CST)
 Received: from [10.130.0.63] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxb+QlUcZjiaIaAA--.15350S3;
-	Tue, 17 Jan 2023 15:41:26 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxf+SHUsZjJqMaAA--.15695S3;
+	Tue, 17 Jan 2023 15:47:20 +0800 (CST)
 Subject: Re: [PATCH v3 5/5] LoongArch: Add generic ex-handler unwind in
  prologue unwinder
 To: Huacai Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>
@@ -16,8 +16,8 @@ Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
 References: <20230112004048.26191-1-hejinyang@loongson.cn>
  <CAAhV-H417wC+Bh6-EeD6sKmqgrJDP8kQPFZ9xu19Ev9Egdu1YQ@mail.gmail.com>
 From: Qing Zhang <zhangqing@loongson.cn>
-Message-ID: <e471ad49-8b2e-179f-45c7-ba1f4ff94101@loongson.cn>
-Date: Tue, 17 Jan 2023 15:41:25 +0800
+Message-ID: <d513fb21-2767-eece-2333-f7064dcdf3be@loongson.cn>
+Date: Tue, 17 Jan 2023 15:47:19 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -30,26 +30,27 @@ In-Reply-To: <CAAhV-H417wC+Bh6-EeD6sKmqgrJDP8kQPFZ9xu19Ev9Egdu1YQ@mail.gmail.com
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxb+QlUcZjiaIaAA--.15350S3
+X-CM-TRANSID:AQAAf8Cxf+SHUsZjJqMaAA--.15695S3
 X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxKrWrGryUAw1xAF1fZFy5Jwb_yoW3JF45pF
-	95CFn5GF48Kry2qryUXryDur95Aw1kCr17KF9rKa4rGFnFvryfWrnYy34v9FWDJrW8WryI
-	vFs5Xr9I9a13ta7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxKrWrGryUAw1xAF1fZFy5Jwb_yoW3Gr1fpF
+	95CFn5GF48Kry2qryUXryDur95Aw1kCr17KF9rKa4rGFnFvryfWr1vy34v9FWDJrW8WryI
+	vFn5Xr9I9a13ta7anT9S1TB71UUUUb7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	bqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
 	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
-	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwI
-	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
-	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
-	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUUU
+	n4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+	s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
+	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jTq2NUUUUU=
 
-Hi, Huacai
+
 
 On 2023/1/17 下午2:25, Huacai Chen wrote:
 > On Thu, Jan 12, 2023 at 8:41 AM Jinyang He <hejinyang@loongson.cn> wrote:
@@ -95,11 +96,7 @@ On 2023/1/17 下午2:25, Huacai Chen wrote:
 >> +       bool first, error, reset;
 > Hi, Qing,
 > Do you think is_reset is better than reset here?
-ok, It depends on you.
-
-Thanks
--Qing
-
+> 
 >>          int graph_idx;
 >>          unsigned long sp, pc, ra;
 >>   };
@@ -121,6 +118,12 @@ Thanks
 >> +       668:
 >>          RESTORE_ALL_AND_RET
 > I think the 668 label should be after RESTORE_ALL_AND_RET, right?
+
+This means that the value of ra after do_\handler is called, the 668 
+label should come after jirl.
+
+Thanks
+-Qing
 > 
 > Huacai
 > 
