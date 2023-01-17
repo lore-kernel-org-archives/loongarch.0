@@ -1,199 +1,272 @@
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.154.221.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF821C20
-	for <loongarch@lists.linux.dev>; Tue, 17 Jan 2023 05:40:14 +0000 (UTC)
-X-QQ-mid: bizesmtp63t1673933452t22prkyo
-Received: from smtpclient.apple ( [1.202.165.115])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 17 Jan 2023 13:30:49 +0800 (CST)
-X-QQ-SSF: 00000000000000709000000A0000000
-X-QQ-FEAT: AC2Z5zz8gBT5NrlZsUHrGX7M6x4b6w7laLHTaGrrBF0cvQnK+h1mht/fhRhSz
-	1fICMuYxXFczf/h6V+62SQezYwdekoTVCEs41JyNQk2aRdNP/SQ+pr+TwXxBucFOaTo9KDm
-	KeG+KNgO43dfcagWaZA2fZQHokfiuaYC3+cgrPVaT1zBQxlmaEZ20ky8h8jHbtyqh06J6A8
-	SuMuNlSvWtc/bkoYYk8F1TAtRXBMn+SRMIZJq8KrMGtrSt3zAmaSQFz7mvrdGMJtsCRy4vq
-	ajkUAeM4j5IzVSIWdgCiDJQ+vm3Km2MoX8V5DPPwuD5oGSAegbggtiSk41aBSdUrOwNURBz
-	jly3lQb6uaae1MUuE8uC2LohNgljCe+zM7/FZWTxFLtBYkFFYrITSDRYxVuW1sz84gSWReP
-X-QQ-GoodBg: 0
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153BC1FA0
+	for <loongarch@lists.linux.dev>; Tue, 17 Jan 2023 06:25:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B339AC433F0
+	for <loongarch@lists.linux.dev>; Tue, 17 Jan 2023 06:25:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1673936732;
+	bh=SUhhovktJ9FRTAG6/N+fubOMF43K6s9mJHMTBJFaaKg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NSSQumc1BujT4TEcVh3DfsVa+WxwV3ZJ9T22Br7+OZAHL8u71kHz+GRtSnx8XtlAh
+	 9WmaSmZQkZ0UVJiF1BAU9KtMJ6zbRAJZkDOFzTrrMahFsXkpsKZ2dM5sAi7Af/Q29q
+	 NulqiQGbfMLLk+SUvo3B40BSnDN2T58kiWcJE27SraNsy0LD+rDCgUjYTEIZ6N0ptW
+	 amQyORWJNJSnOHODLfgeQKJWYrkBKU4te5IWQKnDYNod6XYSBkGNiRfW+UUQw4qOe6
+	 4ctM29TH5aJBaQfRJVWt5ypXKg7KoK3ye7Y/S75jXMSQGzkoqyzQB1SF0jZSGFPnlp
+	 RVb/s+DIY1mcQ==
+Received: by mail-ej1-f44.google.com with SMTP id hw16so61106349ejc.10
+        for <loongarch@lists.linux.dev>; Mon, 16 Jan 2023 22:25:32 -0800 (PST)
+X-Gm-Message-State: AFqh2koqbggaqqDM7A4zULbc40DLkOTSD+jwFC9gD+OHSUEbZ9isbr7U
+	0m7dO4DHy0YaR7AsMyufEl29DqiFZcuUAmK/ABQ=
+X-Google-Smtp-Source: AMrXdXtusuYKMKUYJ+VGpdDXGXIq5V1i0kZX/qdndjt/GSncfLs/81i9g2RfGwCPAkJBYkGZlmxDCg5C2mR+Y0i301Q=
+X-Received: by 2002:a17:906:e107:b0:852:132b:2d7e with SMTP id
+ gj7-20020a170906e10700b00852132b2d7emr150447ejb.224.1673936730845; Mon, 16
+ Jan 2023 22:25:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.20.0.1.32\))
-Subject: Re: [bpf-next v2] bpf: drop deprecated bpf_jit_enable == 2
-From: Tonghao Zhang <tong@infragraf.org>
-In-Reply-To: <5836b464-290e-203f-00f2-fc6632c9f570@csgroup.eu>
-Date: Tue, 17 Jan 2023 13:30:49 +0800
-Cc: Daniel Borkmann <daniel@iogearbox.net>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.or" <linux-arm-kernel@lists.infradead.or>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
- "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
- Hao Luo <haoluo@google.com>,
- John Fastabend <john.fastabend@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>,
- Andrii Nakryiko <andrii@kernel.org>,
- Song Liu <song@kernel.org>,
- Stanislav Fomichev <sdf@google.com>,
- Jiri Olsa <jolsa@kernel.org>,
- Hou Tao <houtao1@huawei.com>,
- KP Singh <kpsingh@kernel.org>,
- Yonghong Song <yhs@fb.com>,
- Martin KaFai Lau <martin.lau@linux.dev>,
- "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
- "mpe@ellerman.id.au" <mpe@ellerman.id.au>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <147A796D-12C0-482F-B48A-16E67120622B@infragraf.org>
-References: <20230105030614.26842-1-tong@infragraf.org>
- <ea7673e1-40ec-18be-af89-5f4fd0f71742@csgroup.eu>
- <71c83f39-f85f-d990-95b7-ab6068839e6c@iogearbox.net>
- <5836b464-290e-203f-00f2-fc6632c9f570@csgroup.eu>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
- Daniel Borkmann <daniel@iogearbox.net>
-X-Mailer: Apple Mail (2.3693.20.0.1.32)
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:infragraf.org:qybglogicsvr:qybglogicsvr5
+MIME-Version: 1.0
+References: <20230112004048.26191-1-hejinyang@loongson.cn>
+In-Reply-To: <20230112004048.26191-1-hejinyang@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 17 Jan 2023 14:25:21 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H417wC+Bh6-EeD6sKmqgrJDP8kQPFZ9xu19Ev9Egdu1YQ@mail.gmail.com>
+Message-ID: <CAAhV-H417wC+Bh6-EeD6sKmqgrJDP8kQPFZ9xu19Ev9Egdu1YQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] LoongArch: Add generic ex-handler unwind in
+ prologue unwinder
+To: Jinyang He <hejinyang@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Qing Zhang <zhangqing@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, Jan 12, 2023 at 8:41 AM Jinyang He <hejinyang@loongson.cn> wrote:
+>
+> When exception is triggered, code flow go handle_\exception in some
+> cases. One of stackframe in this case as follows,
+>
+> high -> +-------+
+>         | REGS  |  <- a pt_regs
+>         |       |
+>         |       |  <- ex trigger
+>         | REGS  |  <- ex pt_regs   <-+
+>         |       |                    |
+>         |       |                    |
+> low  -> +-------+           ->unwind-+
+>
+> When unwinder unwind to handler_\exception it cannot go on prologue
+> analysis. It is asynchronous code flow, we should get the next frame
+> PC from regs->csr_era but not from regs->regs[1]. And we copy the
+> handler codes to eentry in the early time and copy the handler codes
+> to NUMA-relative memory named pcpu_handlers if NUMA is enabled. Thus,
+> unwinder cannot unwind normally. Therefore, try to give some hint in
+> handler_\exception and fixup it in unwind_next_frame.
+>
+> Reported-by: Qing Zhang <zhangqing@loongson.cn>
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/unwind.h     |   2 +-
+>  arch/loongarch/kernel/genex.S           |   3 +
+>  arch/loongarch/kernel/unwind_prologue.c | 100 +++++++++++++++++++++---
+>  arch/loongarch/mm/tlb.c                 |   2 +-
+>  4 files changed, 92 insertions(+), 15 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/unwind.h b/arch/loongarch/include/asm/unwind.h
+> index cb428e1b19af..a38eb152aefb 100644
+> --- a/arch/loongarch/include/asm/unwind.h
+> +++ b/arch/loongarch/include/asm/unwind.h
+> @@ -22,7 +22,7 @@ struct unwind_state {
+>         char type; /* UNWINDER_XXX */
+>         struct stack_info stack_info;
+>         struct task_struct *task;
+> -       bool first, error, is_ftrace;
+> +       bool first, error, reset;
+Hi, Qing,
+Do you think is_reset is better than reset here?
 
+>         int graph_idx;
+>         unsigned long sp, pc, ra;
+>  };
+> diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
+> index 75e5be807a0d..7e5c293ed89f 100644
+> --- a/arch/loongarch/kernel/genex.S
+> +++ b/arch/loongarch/kernel/genex.S
+> @@ -67,14 +67,17 @@ SYM_FUNC_END(except_vec_cex)
+>         .macro  BUILD_HANDLER exception handler prep
+>         .align  5
+>         SYM_FUNC_START(handle_\exception)
+> +       666:
+>         BACKUP_T0T1
+>         SAVE_ALL
+>         build_prep_\prep
+>         move    a0, sp
+>         la.abs  t0, do_\handler
+>         jirl    ra, t0, 0
+> +       668:
+>         RESTORE_ALL_AND_RET
+I think the 668 label should be after RESTORE_ALL_AND_RET, right?
 
-> On Jan 9, 2023, at 4:15 PM, Christophe Leroy =
-<christophe.leroy@csgroup.eu> wrote:
->=20
->=20
->=20
-> Le 06/01/2023 =C3=A0 16:37, Daniel Borkmann a =C3=A9crit :
->> On 1/5/23 6:53 PM, Christophe Leroy wrote:
->>> Le 05/01/2023 =C3=A0 04:06, tong@infragraf.org a =C3=A9crit :
->>>> From: Tonghao Zhang <tong@infragraf.org>
->>>>=20
->>>> The x86_64 can't dump the valid insn in this way. A test BPF prog
->>>> which include subprog:
->>>>=20
->>>> $ llvm-objdump -d subprog.o
->>>> Disassembly of section .text:
->>>> 0000000000000000 <subprog>:
->>>>          0:       18 01 00 00 73 75 62 70 00 00 00 00 72 6f 67 00 =
-r1=20
->>>> =3D 29114459903653235 ll
->>>>          2:       7b 1a f8 ff 00 00 00 00 *(u64 *)(r10 - 8) =3D r1
->>>>          3:       bf a1 00 00 00 00 00 00 r1 =3D r10
->>>>          4:       07 01 00 00 f8 ff ff ff r1 +=3D -8
->>>>          5:       b7 02 00 00 08 00 00 00 r2 =3D 8
->>>>          6:       85 00 00 00 06 00 00 00 call 6
->>>>          7:       95 00 00 00 00 00 00 00 exit
->>>> Disassembly of section raw_tp/sys_enter:
->>>> 0000000000000000 <entry>:
->>>>          0:       85 10 00 00 ff ff ff ff call -1
->>>>          1:       b7 00 00 00 00 00 00 00 r0 =3D 0
->>>>          2:       95 00 00 00 00 00 00 00 exit
->>>>=20
->>>> kernel print message:
->>>> [  580.775387] flen=3D8 proglen=3D51 pass=3D3 =
-image=3Dffffffffa000c20c=20
->>>> from=3Dkprobe-load pid=3D1643
->>>> [  580.777236] JIT code: 00000000: cc cc cc cc cc cc cc cc cc cc cc=20=
+Huacai
 
->>>> cc cc cc cc cc
->>>> [  580.779037] JIT code: 00000010: cc cc cc cc cc cc cc cc cc cc cc=20=
-
->>>> cc cc cc cc cc
->>>> [  580.780767] JIT code: 00000020: cc cc cc cc cc cc cc cc cc cc cc=20=
-
->>>> cc cc cc cc cc
->>>> [  580.782568] JIT code: 00000030: cc cc cc
->>>>=20
->>>> $ bpf_jit_disasm
->>>> 51 bytes emitted from JIT compiler (pass:3, flen:8)
->>>> ffffffffa000c20c + <x>:
->>>>      0:   int3
->>>>      1:   int3
->>>>      2:   int3
->>>>      3:   int3
->>>>      4:   int3
->>>>      5:   int3
->>>>      ...
->>>>=20
->>>> Until bpf_jit_binary_pack_finalize is invoked, we copy rw_header to=20=
-
->>>> header
->>>> and then image/insn is valid. BTW, we can use the "bpftool prog =
-dump"=20
->>>> JITed instructions.
->>>=20
->>> NACK.
->>>=20
->>> Because the feature is buggy on x86_64, you remove it for all
->>> architectures ?
->>>=20
->>> On powerpc bpf_jit_enable =3D=3D 2 works and is very usefull.
->>>=20
->>> Last time I tried to use bpftool on powerpc/32 it didn't work. I =
-don't
->>> remember the details, I think it was an issue with endianess. Maybe =
-it
->>> is fixed now, but it needs to be verified.
->>>=20
->>> So please, before removing a working and usefull feature, make sure
->>> there is an alternative available to it for all architectures in all
->>> configurations.
->>>=20
->>> Also, I don't think bpftool is usable to dump kernel BPF selftests.
->>> That's vital when a selftest fails if you want to have a chance to
->>> understand why it fails.
->>=20
->> If this is actively used by JIT developers and considered useful, I'd =
-be
->> ok to leave it for the time being. Overall goal is to reach feature =
-parity
->> among (at least major arch) JITs and not just have most functionality =
-only
->> available on x86-64 JIT. Could you however check what is not working =
-with
->> bpftool on powerpc/32? Perhaps it's not too much effort to just fix =
-it,
->> but details would be useful otherwise 'it didn't work' is too fuzzy.
->=20
-> Sure I will try to test bpftool again in the coming days.
->=20
-> Previous discussion about that subject is here:=20
-> =
-https://patchwork.kernel.org/project/linux-riscv/patch/20210415093250.3391=
-257-1-Jianlin.Lv@arm.com/#24176847=3D
-Hi Christophe
-Any progress? We discuss to deprecate the bpf_jit_enable =3D=3D 2 in =
-2021, but bpftool can not run on powerpc.
-Now can we fix this issue?=20
->=20
->>=20
->> Also, with regards to the last statement that bpftool is not usable =
-to
->> dump kernel BPF selftests. Could you elaborate some more? I haven't =
-used
->> bpf_jit_enable =3D=3D 2 in a long time and for debugging always =
-relied on
->> bpftool to dump xlated insns or JIT. Or do you mean by BPF selftests
->> the test_bpf.ko module? Given it has a big batch with kernel-only =
-tests,
->> there I can see it's probably still useful.
->=20
-> Yes I mean test_bpf.ko
->=20
-> I used it as the test basis when I implemented eBPF for powerpc/32. =
-And=20
-> not so long ago it helped decover and fix a bug, see=20
-> =
-https://github.com/torvalds/linux/commit/89d21e259a94f7d5582ec675aa445f5a7=
-9f347e4
->=20
->>=20
->> Cheers,
->> Daniel
-
+>         SYM_FUNC_END(handle_\exception)
+> +       SYM_DATA(unwind_hint_\exception, .word 668b - 666b)
+>         .endm
+>
+>         BUILD_HANDLER ade ade badv
+> diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
+> index e6c3f2ee507c..e52c18c2b604 100644
+> --- a/arch/loongarch/kernel/unwind_prologue.c
+> +++ b/arch/loongarch/kernel/unwind_prologue.c
+> @@ -2,21 +2,100 @@
+>  /*
+>   * Copyright (C) 2022 Loongson Technology Corporation Limited
+>   */
+> +#include <linux/cpumask.h>
+>  #include <linux/ftrace.h>
+>  #include <linux/kallsyms.h>
+>
+>  #include <asm/inst.h>
+> +#include <asm/loongson.h>
+>  #include <asm/ptrace.h>
+> +#include <asm/setup.h>
+>  #include <asm/unwind.h>
+>
+> -static inline void unwind_state_fixup(struct unwind_state *state)
+> +extern const int unwind_hint_ade;
+> +extern const int unwind_hint_ale;
+> +extern const int unwind_hint_bp;
+> +extern const int unwind_hint_fpe;
+> +extern const int unwind_hint_fpu;
+> +extern const int unwind_hint_lsx;
+> +extern const int unwind_hint_lasx;
+> +extern const int unwind_hint_lbt;
+> +extern const int unwind_hint_ri;
+> +extern const int unwind_hint_watch;
+> +extern unsigned long eentry;
+> +#ifdef CONFIG_NUMA
+> +extern unsigned long pcpu_handlers[NR_CPUS];
+> +#endif
+> +
+> +static inline bool scan_handler(unsigned long entry_offset)
+>  {
+> -#ifdef CONFIG_DYNAMIC_FTRACE
+> -       static unsigned long ftrace = (unsigned long)ftrace_call + 4;
+> +       int idx, offset;
+>
+> -       if (state->pc == ftrace)
+> -               state->is_ftrace = true;
+> +       if (entry_offset >= EXCCODE_INT_START * VECSIZE)
+> +               return false;
+> +
+> +       idx = entry_offset / VECSIZE;
+> +       offset = entry_offset % VECSIZE;
+> +       switch (idx) {
+> +       case EXCCODE_ADE:
+> +               return offset == unwind_hint_ade;
+> +       case EXCCODE_ALE:
+> +               return offset == unwind_hint_ale;
+> +       case EXCCODE_BP:
+> +               return offset == unwind_hint_bp;
+> +       case EXCCODE_FPE:
+> +               return offset == unwind_hint_fpe;
+> +       case EXCCODE_FPDIS:
+> +               return offset == unwind_hint_fpu;
+> +       case EXCCODE_LSXDIS:
+> +               return offset == unwind_hint_lsx;
+> +       case EXCCODE_LASXDIS:
+> +               return offset == unwind_hint_lasx;
+> +       case EXCCODE_BTDIS:
+> +               return offset == unwind_hint_lbt;
+> +       case EXCCODE_INE:
+> +               return offset == unwind_hint_ri;
+> +       case EXCCODE_WATCH:
+> +               return offset == unwind_hint_watch;
+> +       default:
+> +               return false;
+> +       }
+> +}
+> +
+> +static inline bool fix_exceptions(unsigned long pc)
+> +{
+> +#ifdef CONFIG_NUMA
+> +       int cpu;
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               if (!pcpu_handlers[cpu])
+> +                       continue;
+> +               if (scan_handler(pc - pcpu_handlers[cpu]))
+> +                       return true;
+> +       }
+>  #endif
+> +       return scan_handler(pc - eentry);
+> +}
+> +
+> +/*
+> + * As we meet ftrace_regs_entry, reset first flag like first doing
+> + * tracing. Prologue analysis will stop soon because PC is at entry.
+> + */
+> +static inline bool fix_ftrace(unsigned long pc)
+> +{
+> +#ifdef CONFIG_DYNAMIC_FTRACE
+> +       return pc == (unsigned long)ftrace_call + LOONGARCH_INSN_SIZE;
+> +#else
+> +       return false;
+> +#endif
+> +}
+> +
+> +static inline bool unwind_state_fixup(struct unwind_state *state)
+> +{
+> +       if (!fix_exceptions(state->pc) && !fix_ftrace(state->pc))
+> +               return false;
+> +       state->reset = true;
+> +       return true;
+>  }
+>
+>  /*
+> @@ -39,14 +118,10 @@ static bool unwind_by_prologue(struct unwind_state *state)
+>         if (state->sp >= info->end || state->sp < info->begin)
+>                 return false;
+>
+> -       if (state->is_ftrace) {
+> -               /*
+> -                * As we meet ftrace_regs_entry, reset first flag like first doing
+> -                * tracing. Prologue analysis will stop soon because PC is at entry.
+> -                */
+> +       if (state->reset) {
+>                 regs = (struct pt_regs *)state->sp;
+>                 state->first = true;
+> -               state->is_ftrace = false;
+> +               state->reset = false;
+>                 state->pc = regs->csr_era;
+>                 state->ra = regs->regs[1];
+>                 state->sp = regs->regs[3];
+> @@ -111,8 +186,7 @@ static bool unwind_by_prologue(struct unwind_state *state)
+>
+>  out:
+>         state->first = false;
+> -       unwind_state_fixup(state);
+> -       return !!__kernel_text_address(state->pc);
+> +       return unwind_state_fixup(state) || __kernel_text_address(state->pc);
+>  }
+>
+>  static bool next_frame(struct unwind_state *state)
+> diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+> index da3681f131c8..8bad6b0cff59 100644
+> --- a/arch/loongarch/mm/tlb.c
+> +++ b/arch/loongarch/mm/tlb.c
+> @@ -251,7 +251,7 @@ static void output_pgtable_bits_defines(void)
+>  }
+>
+>  #ifdef CONFIG_NUMA
+> -static unsigned long pcpu_handlers[NR_CPUS];
+> +unsigned long pcpu_handlers[NR_CPUS];
+>  #endif
+>  extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
+>
+> --
+> 2.34.3
+>
+>
