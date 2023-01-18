@@ -1,175 +1,141 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504B74C9A
-	for <loongarch@lists.linux.dev>; Tue, 17 Jan 2023 15:59:49 +0000 (UTC)
-Received: from sslproxy04.your-server.de ([78.46.152.42])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1pHoN1-0007ZP-51; Tue, 17 Jan 2023 16:59:31 +0100
-Received: from [85.1.206.226] (helo=linux.home)
-	by sslproxy04.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1pHoN0-0009Hp-CC; Tue, 17 Jan 2023 16:59:30 +0100
-Subject: Re: [bpf-next v2] bpf: drop deprecated bpf_jit_enable == 2
-To: Tonghao Zhang <tong@infragraf.org>,
- Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.or" <linux-arm-kernel@lists.infradead.or>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
- "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
- Hao Luo <haoluo@google.com>, John Fastabend <john.fastabend@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- Song Liu <song@kernel.org>, Stanislav Fomichev <sdf@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Hou Tao <houtao1@huawei.com>,
- KP Singh <kpsingh@kernel.org>, Yonghong Song <yhs@fb.com>,
- Martin KaFai Lau <martin.lau@linux.dev>,
- "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
- "mpe@ellerman.id.au" <mpe@ellerman.id.au>
-References: <20230105030614.26842-1-tong@infragraf.org>
- <ea7673e1-40ec-18be-af89-5f4fd0f71742@csgroup.eu>
- <71c83f39-f85f-d990-95b7-ab6068839e6c@iogearbox.net>
- <5836b464-290e-203f-00f2-fc6632c9f570@csgroup.eu>
- <147A796D-12C0-482F-B48A-16E67120622B@infragraf.org>
- <0b46b813-05f2-5083-9f2e-82d72970dae2@csgroup.eu>
- <4380D454-3ED0-43F4-9A79-102BB0E3577A@infragraf.org>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <d91bbb9e-484b-d43d-e62d-0474ff21cf91@iogearbox.net>
-Date: Tue, 17 Jan 2023 16:59:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E62227B
+	for <loongarch@lists.linux.dev>; Wed, 18 Jan 2023 02:01:04 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxmOneUsdjPj0CAA--.2969S3;
+	Wed, 18 Jan 2023 10:01:02 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxTuTeUsdjPhYbAA--.17049S2;
+	Wed, 18 Jan 2023 10:01:02 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v12 0/5] Add kprobe and kretprobe support for LoongArch
+Date: Wed, 18 Jan 2023 10:00:56 +0800
+Message-Id: <1674007261-9198-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8DxTuTeUsdjPhYbAA--.17049S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxCr1UXrWUZF1ftFy5Ar1xGrg_yoW5KF1DpF
+	9rArn8tr4rXrySvr9xJa47ur1Sqw4kG3y7W3W7GrWru3W7XryUAr4xKrsrXFy8Gwsaqr1I
+	qr1fXrWagFy3J37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xuctUUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <4380D454-3ED0-43F4-9A79-102BB0E3577A@infragraf.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.7/26784/Tue Jan 17 09:29:12 2023)
 
-On 1/17/23 3:22 PM, Tonghao Zhang wrote:
-> 
-> 
->> On Jan 17, 2023, at 3:30 PM, Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
->>
->>
->>
->> Le 17/01/2023 à 06:30, Tonghao Zhang a écrit :
->>>
->>>
->>>> On Jan 9, 2023, at 4:15 PM, Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
->>>>
->>>>
->>>>
->>>> Le 06/01/2023 à 16:37, Daniel Borkmann a écrit :
->>>>> On 1/5/23 6:53 PM, Christophe Leroy wrote:
->>>>>> Le 05/01/2023 à 04:06, tong@infragraf.org a écrit :
->>>>>>> From: Tonghao Zhang <tong@infragraf.org>
->>>>>>>
->>>>>>> The x86_64 can't dump the valid insn in this way. A test BPF prog
->>>>>>> which include subprog:
->>>>>>>
->>>>>>> $ llvm-objdump -d subprog.o
->>>>>>> Disassembly of section .text:
->>>>>>> 0000000000000000 <subprog>:
->>>>>>>           0:       18 01 00 00 73 75 62 70 00 00 00 00 72 6f 67 00 r1
->>>>>>> = 29114459903653235 ll
->>>>>>>           2:       7b 1a f8 ff 00 00 00 00 *(u64 *)(r10 - 8) = r1
->>>>>>>           3:       bf a1 00 00 00 00 00 00 r1 = r10
->>>>>>>           4:       07 01 00 00 f8 ff ff ff r1 += -8
->>>>>>>           5:       b7 02 00 00 08 00 00 00 r2 = 8
->>>>>>>           6:       85 00 00 00 06 00 00 00 call 6
->>>>>>>           7:       95 00 00 00 00 00 00 00 exit
->>>>>>> Disassembly of section raw_tp/sys_enter:
->>>>>>> 0000000000000000 <entry>:
->>>>>>>           0:       85 10 00 00 ff ff ff ff call -1
->>>>>>>           1:       b7 00 00 00 00 00 00 00 r0 = 0
->>>>>>>           2:       95 00 00 00 00 00 00 00 exit
->>>>>>>
->>>>>>> kernel print message:
->>>>>>> [  580.775387] flen=8 proglen=51 pass=3 image=ffffffffa000c20c
->>>>>>> from=kprobe-load pid=1643
->>>>>>> [  580.777236] JIT code: 00000000: cc cc cc cc cc cc cc cc cc cc cc
->>>>>>> cc cc cc cc cc
->>>>>>> [  580.779037] JIT code: 00000010: cc cc cc cc cc cc cc cc cc cc cc
->>>>>>> cc cc cc cc cc
->>>>>>> [  580.780767] JIT code: 00000020: cc cc cc cc cc cc cc cc cc cc cc
->>>>>>> cc cc cc cc cc
->>>>>>> [  580.782568] JIT code: 00000030: cc cc cc
->>>>>>>
->>>>>>> $ bpf_jit_disasm
->>>>>>> 51 bytes emitted from JIT compiler (pass:3, flen:8)
->>>>>>> ffffffffa000c20c + <x>:
->>>>>>>       0:   int3
->>>>>>>       1:   int3
->>>>>>>       2:   int3
->>>>>>>       3:   int3
->>>>>>>       4:   int3
->>>>>>>       5:   int3
->>>>>>>       ...
->>>>>>>
->>>>>>> Until bpf_jit_binary_pack_finalize is invoked, we copy rw_header to
->>>>>>> header
->>>>>>> and then image/insn is valid. BTW, we can use the "bpftool prog dump"
->>>>>>> JITed instructions.
->>>>>>
->>>>>> NACK.
->>>>>>
->>>>>> Because the feature is buggy on x86_64, you remove it for all
->>>>>> architectures ?
->>>>>>
->>>>>> On powerpc bpf_jit_enable == 2 works and is very usefull.
->>>>>>
->>>>>> Last time I tried to use bpftool on powerpc/32 it didn't work. I don't
->>>>>> remember the details, I think it was an issue with endianess. Maybe it
->>>>>> is fixed now, but it needs to be verified.
->>>>>>
->>>>>> So please, before removing a working and usefull feature, make sure
->>>>>> there is an alternative available to it for all architectures in all
->>>>>> configurations.
->>>>>>
->>>>>> Also, I don't think bpftool is usable to dump kernel BPF selftests.
->>>>>> That's vital when a selftest fails if you want to have a chance to
->>>>>> understand why it fails.
->>>>>
->>>>> If this is actively used by JIT developers and considered useful, I'd be
->>>>> ok to leave it for the time being. Overall goal is to reach feature parity
->>>>> among (at least major arch) JITs and not just have most functionality only
->>>>> available on x86-64 JIT. Could you however check what is not working with
->>>>> bpftool on powerpc/32? Perhaps it's not too much effort to just fix it,
->>>>> but details would be useful otherwise 'it didn't work' is too fuzzy.
->>>>
->>>> Sure I will try to test bpftool again in the coming days.
->>>>
->>>> Previous discussion about that subject is here:
->>>> https://patchwork.kernel.org/project/linux-riscv/patch/20210415093250.3391257-1-Jianlin.Lv@arm.com/#24176847=
->>> Hi Christophe
->>> Any progress? We discuss to deprecate the bpf_jit_enable == 2 in 2021, but bpftool can not run on powerpc.
->>> Now can we fix this issue?
->>
->> Hi Tong,
->>
->> I have started to look at it but I don't have any fruitfull feedback yet.
->>
->> In the meantime, were you able to confirm that bpftool can also be used
->> to dump jitted tests from test_bpf.ko module on x86_64 ? In that can you
->> tell me how to proceed ?
-> Now I do not test, but we can dump the insn after bpf_prog_select_runtime in test_bpf.ko. bpf_map_get_info_by_fd can copy the insn to userspace, but we can
-> dump them in test_bpf.ko in the same way.
+v12:
+  -- Rebase on the latest code
+  -- Fix -Wmissing-prototypes warning when make W=1
+  -- Drop patch #6 "Use common function sign_extend64()"
+     since it has been applied yet
 
-Issue is that these progs are not consumable from userspace (and therefore not bpftool).
-it's just simple bpf_prog_alloc + copy of test insns + bpf_prog_select_runtime() to test
-JITs (see generate_filter()). Some of them could be converted over to test_verifier, but
-not all might actually pass verifier, iirc. Don't think it's a good idea to allow exposing
-them via fd tbh.
+v11:
+  -- Rebase on the latest code
+  -- Address all the review comments, thank you all
+  -- Modify arch_prepare_kprobe() and setup_singlestep()
+     to make the probe logic more clear
+  -- Mark some assembler symbols as non-kprobe-able
+  -- Use common function sign_extend64()
+  -- Test 20 times about 36 hours for all the 71 assembler
+     functions annotated with SYM_CODE_START and SYM_FUNC_START
+     under arch/loongarch, especially test memset alone for 10
+     hours, no hang problems
+
+v10:
+  -- Remove sign_extend() based on the latest code
+  -- Rename insns_are_not_supported() to insns_not_supported()
+  -- Rename insns_are_not_simulated() to insns_not_simulated()
+  -- Set KPROBE_HIT_SSDONE if cur->post_handler is not NULL
+  -- Enable preemption for KPROBE_REENTER in kprobe_fault_handler()
+
+v9:
+  -- Rename sign_extended() to sign_extend()
+  -- Modify kprobe_fault_handler() to handle all of kprobe_status
+
+v8:
+  -- Put "regs->csr_prmd &= ~CSR_PRMD_PIE;" ahead to save one line
+  -- Add code comment of preempt_disable()
+  -- Put kprobe_page_fault() in __do_page_fault()
+  -- Modify the check condition of break insn in kprobe_breakpoint_handler()
+
+v7:
+  -- Remove stop_machine_cpuslocked() related code
+
+v6:
+  -- Add a new patch to redefine larch_insn_patch_text() with
+     stop_machine_cpuslocked()
+  -- Modify kprobe_breakpoint_handler() to consider the original
+     insn is break and return the correct value
+  -- Modify do_bp() to refresh bcode when original insn is break
+
+v5:
+  -- Rebase on the latest code
+  -- Use stop_machine_cpuslocked() to modify insn to avoid CPU race
+
+v4:
+  -- Remove kprobe_exceptions_notify() in kprobes.c
+  -- Call kprobe_breakpoint_handler() and kprobe_singlestep_handler()
+     in do_bp()
+
+v3:
+  -- Rebase on the latest code
+  -- Check the alignment of PC in simu_branch() and simu_pc()
+  -- Add ibar in flush_insn_slot()
+  -- Rename kprobe_{pre,post}_handler() to {post_}kprobe_handler
+  -- Add preempt_disable() and preempt_enable_no_resched()
+  -- Remove r0 save/restore and do some minor changes
+     in kprobes_trampoline.S
+  -- Do not enable CONFIG_KPROBES by default
+
+v2:
+  -- Split simu_branch() and simu_pc() into a single patch
+  -- Call kprobe_page_fault() in do_page_fault()
+  -- Add kprobes_trampoline.S for kretprobe
+
+Tiezhu Yang (5):
+  LoongArch: Simulate branch and PC* instructions
+  LoongArch: Add kprobe support
+  LoongArch: Add kretprobe support
+  LoongArch: Mark some assembler symbols as non-kprobe-able
+  samples/kprobes: Add LoongArch support
+
+ arch/loongarch/Kconfig                     |   2 +
+ arch/loongarch/include/asm/asm.h           |  10 +
+ arch/loongarch/include/asm/inst.h          |  20 ++
+ arch/loongarch/include/asm/kprobes.h       |  61 +++++
+ arch/loongarch/include/asm/ptrace.h        |   1 +
+ arch/loongarch/kernel/Makefile             |   2 +
+ arch/loongarch/kernel/entry.S              |   1 +
+ arch/loongarch/kernel/inst.c               | 123 +++++++++
+ arch/loongarch/kernel/kprobes.c            | 405 +++++++++++++++++++++++++++++
+ arch/loongarch/kernel/kprobes_trampoline.S |  96 +++++++
+ arch/loongarch/kernel/traps.c              |  11 +-
+ arch/loongarch/lib/memcpy.S                |   3 +
+ arch/loongarch/mm/fault.c                  |   3 +
+ samples/kprobes/kprobe_example.c           |   8 +
+ 14 files changed, 741 insertions(+), 5 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kprobes.h
+ create mode 100644 arch/loongarch/kernel/kprobes.c
+ create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
+
+-- 
+2.1.0
+
