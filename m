@@ -1,239 +1,239 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE3AD15C5
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C221015C7
 	for <loongarch@lists.linux.dev>; Wed, 18 Jan 2023 02:01:05 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxqOngUsdjQT0CAA--.2976S3;
+	by gateway (Coremail) with SMTP id _____8DxTuvgUsdjSj0CAA--.6829S3;
 	Wed, 18 Jan 2023 10:01:04 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxTuTeUsdjPhYbAA--.17049S3;
-	Wed, 18 Jan 2023 10:01:02 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxTuTeUsdjPhYbAA--.17049S5;
+	Wed, 18 Jan 2023 10:01:04 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
 	Masami Hiramatsu <mhiramat@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v12 1/5] LoongArch: Simulate branch and PC* instructions
-Date: Wed, 18 Jan 2023 10:00:57 +0800
-Message-Id: <1674007261-9198-2-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v12 3/5] LoongArch: Add kretprobe support
+Date: Wed, 18 Jan 2023 10:00:59 +0800
+Message-Id: <1674007261-9198-4-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1674007261-9198-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1674007261-9198-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8DxTuTeUsdjPhYbAA--.17049S3
+X-CM-TRANSID:AQAAf8DxTuTeUsdjPhYbAA--.17049S5
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3WrWkAF4kWFyxWF1kGF4xtFb_yoW7trWfpr
-	ZxAr1kGr4DZryfCrWjqr1vvr45tr4rur43u3ZxCw13CF17Zry5GrykGr4jvFy0kw4Utry0
-	ga1avw4j9F4ayaUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxtrykKryfXF4xWFWDAF17trb_yoW7Cr1DpF
+	9rArn8Wr4S9rnYvr9xt3yF9FyUtr1kuw42gFyxJrWrGF4UWryUXr1xGr9rZFW3Kws8tr1S
+	qr1fGrW5tFW3J37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	b28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
 	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
 	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4U
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4U
 	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
 	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
 	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
-	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8wNVDUUUUU==
+	AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-According to LoongArch Reference Manual, simulate branch and PC*
-instructions, this is preparation for later patch.
+Use the generic kretprobe trampoline handler to add kretprobe support
+for LoongArch.
 
-Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#branch-instructions
-Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#_pcaddi_pcaddu121_pcaddu18l_pcalau12i
-
-Co-developed-by: Jinyang He <hejinyang@loongson.cn>
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/include/asm/inst.h   |   5 ++
- arch/loongarch/include/asm/ptrace.h |   1 +
- arch/loongarch/kernel/inst.c        | 123 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 129 insertions(+)
+ arch/loongarch/Kconfig                     |  1 +
+ arch/loongarch/include/asm/kprobes.h       |  3 +
+ arch/loongarch/kernel/Makefile             |  2 +-
+ arch/loongarch/kernel/kprobes.c            | 27 +++++++++
+ arch/loongarch/kernel/kprobes_trampoline.S | 96 ++++++++++++++++++++++++++++++
+ 5 files changed, 128 insertions(+), 1 deletion(-)
+ create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 7eedd83..a5dad39 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -7,6 +7,7 @@
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index ce930f2..134a2f8 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -104,6 +104,7 @@ config LOONGARCH
+ 	select HAVE_IRQ_EXIT_ON_IRQ_STACK
+ 	select HAVE_IRQ_TIME_ACCOUNTING
+ 	select HAVE_KPROBES
++	select HAVE_KRETPROBES
+ 	select HAVE_MOD_ARCH_SPECIFIC
+ 	select HAVE_NMI
+ 	select HAVE_PCI
+diff --git a/arch/loongarch/include/asm/kprobes.h b/arch/loongarch/include/asm/kprobes.h
+index 7b9fc3e..798020a 100644
+--- a/arch/loongarch/include/asm/kprobes.h
++++ b/arch/loongarch/include/asm/kprobes.h
+@@ -49,6 +49,9 @@ bool kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ bool kprobe_breakpoint_handler(struct pt_regs *regs);
+ bool kprobe_singlestep_handler(struct pt_regs *regs);
  
- #include <linux/types.h>
- #include <asm/asm.h>
-+#include <asm/ptrace.h>
++void __kretprobe_trampoline(void);
++void *trampoline_probe_handler(struct pt_regs *regs);
++
+ #else /* !CONFIG_KPROBES */
  
- #define INSN_NOP		0x03400000
- #define INSN_BREAK		0x002a0000
-@@ -32,6 +33,7 @@ enum reg1i20_op {
- 	lu12iw_op	= 0x0a,
- 	lu32id_op	= 0x0b,
- 	pcaddi_op	= 0x0c,
-+	pcalau12i_op	= 0x0d,
- 	pcaddu12i_op	= 0x0e,
- 	pcaddu18i_op	= 0x0f,
- };
-@@ -351,6 +353,9 @@ static inline bool is_stack_alloc_ins(union loongarch_instruction *ip)
- 		is_imm12_negative(ip->reg2i12_format.immediate);
+ static inline bool kprobe_breakpoint_handler(struct pt_regs *regs) { return false; }
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 017ac59..45c78ae 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -47,6 +47,6 @@ obj-$(CONFIG_UNWINDER_PROLOGUE) += unwind_prologue.o
+ 
+ obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_regs.o
+ 
+-obj-$(CONFIG_KPROBES)		+= kprobes.o
++obj-$(CONFIG_KPROBES)		+= kprobes.o kprobes_trampoline.o
+ 
+ CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
+diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
+index a0c2f9d..ced9c4c 100644
+--- a/arch/loongarch/kernel/kprobes.c
++++ b/arch/loongarch/kernel/kprobes.c
+@@ -372,6 +372,33 @@ int __init arch_populate_kprobe_blacklist(void)
+ 					 (unsigned long)__irqentry_text_end);
  }
  
-+void simu_pc(struct pt_regs *regs, union loongarch_instruction insn);
-+void simu_branch(struct pt_regs *regs, union loongarch_instruction insn);
-+
- int larch_insn_read(void *addr, u32 *insnp);
- int larch_insn_write(void *addr, u32 insn);
- int larch_insn_patch_text(void *addr, u32 insn);
-diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
-index 59c4608..58596c4 100644
---- a/arch/loongarch/include/asm/ptrace.h
-+++ b/arch/loongarch/include/asm/ptrace.h
-@@ -6,6 +6,7 @@
- #define _ASM_PTRACE_H
- 
- #include <asm/page.h>
-+#include <asm/irqflags.h>
- #include <asm/thread_info.h>
- #include <uapi/asm/ptrace.h>
- 
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index badc590..258ef26 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -10,6 +10,129 @@
- 
- static DEFINE_RAW_SPINLOCK(patch_lock);
- 
-+void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
++/* Called from __kretprobe_trampoline */
++void __used *trampoline_probe_handler(struct pt_regs *regs)
 +{
-+	unsigned long pc = regs->csr_era;
-+	unsigned int rd = insn.reg1i20_format.rd;
-+	unsigned int imm = insn.reg1i20_format.immediate;
-+
-+	if (pc & 3) {
-+		pr_warn("%s: invalid pc 0x%lx\n", __func__, pc);
-+		return;
-+	}
-+
-+	switch (insn.reg1i20_format.opcode) {
-+	case pcaddi_op:
-+		regs->regs[rd] = pc + sign_extend64(imm << 2, 21);
-+		break;
-+	case pcaddu12i_op:
-+		regs->regs[rd] = pc + sign_extend64(imm << 12, 31);
-+		break;
-+	case pcaddu18i_op:
-+		regs->regs[rd] = pc + sign_extend64(imm << 18, 37);
-+		break;
-+	case pcalau12i_op:
-+		regs->regs[rd] = pc + sign_extend64(imm << 12, 31);
-+		regs->regs[rd] &= ~((1 << 12) - 1);
-+		break;
-+	default:
-+		pr_info("%s: unknown opcode\n", __func__);
-+		return;
-+	}
-+
-+	regs->csr_era += LOONGARCH_INSN_SIZE;
++	return (void *)kretprobe_trampoline_handler(regs, NULL);
 +}
++NOKPROBE_SYMBOL(trampoline_probe_handler);
 +
-+void simu_branch(struct pt_regs *regs, union loongarch_instruction insn)
++/* assembler function that handles the kretprobes must not be probed itself */
++NOKPROBE_SYMBOL(__kretprobe_trampoline);
++
++void arch_prepare_kretprobe(struct kretprobe_instance *ri,
++			    struct pt_regs *regs)
 +{
-+	unsigned int imm, imm_l, imm_h, rd, rj;
-+	unsigned long pc = regs->csr_era;
++	ri->ret_addr = (kprobe_opcode_t *)regs->regs[1];
++	ri->fp = NULL;
 +
-+	if (pc & 3) {
-+		pr_warn("%s: invalid pc 0x%lx\n", __func__, pc);
-+		return;
-+	}
-+
-+	imm_l = insn.reg0i26_format.immediate_l;
-+	imm_h = insn.reg0i26_format.immediate_h;
-+	switch (insn.reg0i26_format.opcode) {
-+	case b_op:
-+		regs->csr_era = pc + sign_extend64((imm_h << 16 | imm_l) << 2, 27);
-+		return;
-+	case bl_op:
-+		regs->csr_era = pc + sign_extend64((imm_h << 16 | imm_l) << 2, 27);
-+		regs->regs[1] = pc + LOONGARCH_INSN_SIZE;
-+		return;
-+	}
-+
-+	imm_l = insn.reg1i21_format.immediate_l;
-+	imm_h = insn.reg1i21_format.immediate_h;
-+	rj = insn.reg1i21_format.rj;
-+	switch (insn.reg1i21_format.opcode) {
-+	case beqz_op:
-+		if (regs->regs[rj] == 0)
-+			regs->csr_era = pc + sign_extend64((imm_h << 16 | imm_l) << 2, 22);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		return;
-+	case bnez_op:
-+		if (regs->regs[rj] != 0)
-+			regs->csr_era = pc + sign_extend64((imm_h << 16 | imm_l) << 2, 22);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		return;
-+	}
-+
-+	imm = insn.reg2i16_format.immediate;
-+	rj = insn.reg2i16_format.rj;
-+	rd = insn.reg2i16_format.rd;
-+	switch (insn.reg2i16_format.opcode) {
-+	case beq_op:
-+		if (regs->regs[rj] == regs->regs[rd])
-+			regs->csr_era = pc + sign_extend64(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bne_op:
-+		if (regs->regs[rj] != regs->regs[rd])
-+			regs->csr_era = pc + sign_extend64(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case blt_op:
-+		if ((long)regs->regs[rj] < (long)regs->regs[rd])
-+			regs->csr_era = pc + sign_extend64(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bge_op:
-+		if ((long)regs->regs[rj] >= (long)regs->regs[rd])
-+			regs->csr_era = pc + sign_extend64(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bltu_op:
-+		if (regs->regs[rj] < regs->regs[rd])
-+			regs->csr_era = pc + sign_extend64(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case bgeu_op:
-+		if (regs->regs[rj] >= regs->regs[rd])
-+			regs->csr_era = pc + sign_extend64(imm << 2, 17);
-+		else
-+			regs->csr_era = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	case jirl_op:
-+		regs->csr_era = regs->regs[rj] + sign_extend64(imm << 2, 17);
-+		regs->regs[rd] = pc + LOONGARCH_INSN_SIZE;
-+		break;
-+	default:
-+		pr_info("%s: unknown opcode\n", __func__);
-+		return;
-+	}
++	/* Replace the return addr with trampoline addr */
++	regs->regs[1] = (unsigned long)&__kretprobe_trampoline;
 +}
++NOKPROBE_SYMBOL(arch_prepare_kretprobe);
 +
- int larch_insn_read(void *addr, u32 *insnp)
++int arch_trampoline_kprobe(struct kprobe *p)
++{
++	return 0;
++}
++NOKPROBE_SYMBOL(arch_trampoline_kprobe);
++
+ int __init arch_init_kprobes(void)
  {
- 	int ret;
+ 	return 0;
+diff --git a/arch/loongarch/kernel/kprobes_trampoline.S b/arch/loongarch/kernel/kprobes_trampoline.S
+new file mode 100644
+index 0000000..af94b0d
+--- /dev/null
++++ b/arch/loongarch/kernel/kprobes_trampoline.S
+@@ -0,0 +1,96 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++#include <linux/linkage.h>
++#include <asm/stackframe.h>
++
++	.text
++
++	.macro save_all_base_regs
++	cfi_st  ra, PT_R1
++	cfi_st	tp, PT_R2
++	cfi_st	a0, PT_R4
++	cfi_st	a1, PT_R5
++	cfi_st	a2, PT_R6
++	cfi_st	a3, PT_R7
++	cfi_st	a4, PT_R8
++	cfi_st	a5, PT_R9
++	cfi_st	a6, PT_R10
++	cfi_st	a7, PT_R11
++	cfi_st	t0, PT_R12
++	cfi_st	t1, PT_R13
++	cfi_st	t2, PT_R14
++	cfi_st	t3, PT_R15
++	cfi_st	t4, PT_R16
++	cfi_st	t5, PT_R17
++	cfi_st	t6, PT_R18
++	cfi_st	t7, PT_R19
++	cfi_st	t8, PT_R20
++	cfi_st	u0, PT_R21
++	cfi_st	fp, PT_R22
++	cfi_st	s0, PT_R23
++	cfi_st	s1, PT_R24
++	cfi_st	s2, PT_R25
++	cfi_st	s3, PT_R26
++	cfi_st	s4, PT_R27
++	cfi_st	s5, PT_R28
++	cfi_st	s6, PT_R29
++	cfi_st	s7, PT_R30
++	cfi_st	s8, PT_R31
++	csrrd	t0, LOONGARCH_CSR_CRMD
++	andi	t0, t0, 0x7 /* extract bit[1:0] PLV, bit[2] IE */
++	LONG_S	t0, sp, PT_CRMD
++	.endm
++
++	.macro restore_all_base_regs
++	cfi_ld	tp, PT_R2
++	cfi_ld	a0, PT_R4
++	cfi_ld	a1, PT_R5
++	cfi_ld	a2, PT_R6
++	cfi_ld	a3, PT_R7
++	cfi_ld	a4, PT_R8
++	cfi_ld	a5, PT_R9
++	cfi_ld	a6, PT_R10
++	cfi_ld	a7, PT_R11
++	cfi_ld	t0, PT_R12
++	cfi_ld	t1, PT_R13
++	cfi_ld	t2, PT_R14
++	cfi_ld	t3, PT_R15
++	cfi_ld	t4, PT_R16
++	cfi_ld	t5, PT_R17
++	cfi_ld	t6, PT_R18
++	cfi_ld	t7, PT_R19
++	cfi_ld	t8, PT_R20
++	cfi_ld	u0, PT_R21
++	cfi_ld	fp, PT_R22
++	cfi_ld	s0, PT_R23
++	cfi_ld	s1, PT_R24
++	cfi_ld	s2, PT_R25
++	cfi_ld	s3, PT_R26
++	cfi_ld	s4, PT_R27
++	cfi_ld	s5, PT_R28
++	cfi_ld	s6, PT_R29
++	cfi_ld	s7, PT_R30
++	cfi_ld	s8, PT_R31
++	LONG_L  t0, sp, PT_CRMD
++	li.d	t1, 0x7 /* mask bit[1:0] PLV, bit[2] IE */
++	csrxchg t0, t1, LOONGARCH_CSR_CRMD
++	.endm
++
++SYM_CODE_START(__kretprobe_trampoline)
++	addi.d	sp, sp, -PT_SIZE
++	save_all_base_regs
++
++	addi.d	t0, sp, PT_SIZE
++	LONG_S	t0, sp, PT_R3
++
++	move a0, sp /* pt_regs */
++
++	bl trampoline_probe_handler
++
++	/* use the result as the return-address */
++	move ra, a0
++
++	restore_all_base_regs
++	addi.d	sp, sp, PT_SIZE
++
++	jr ra
++SYM_CODE_END(__kretprobe_trampoline)
 -- 
 2.1.0
 
