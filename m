@@ -1,294 +1,211 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05027485
-	for <loongarch@lists.linux.dev>; Thu, 19 Jan 2023 14:37:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1674139057;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KQsQYSoiV7axOHu2SHPkYXMBMlM95JI1QYM4ca5S0lU=;
-	b=Dx8SpKg4191l2TNOl1ShZGQWNJLsiSoravS89FA/nRRdlTSdkbJX8BOsBWz9o6/jJTbzX5
-	yen5jop9PHYCifYYt/suUICMgog+F60cSBo7y33I+w138gyE77Qveb213e9+bCQY3a1oEF
-	px0RJ/M2j7EmIdL3U5zE3zy3LVDHZGw=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-339-SfVp0ibUOxOmeBYwt3eAmQ-1; Thu, 19 Jan 2023 09:37:34 -0500
-X-MC-Unique: SfVp0ibUOxOmeBYwt3eAmQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8CC143815F70;
-	Thu, 19 Jan 2023 14:37:32 +0000 (UTC)
-Received: from vschneid.remote.csb (unknown [10.33.36.13])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 544032026D68;
-	Thu, 19 Jan 2023 14:37:27 +0000 (UTC)
-From: Valentin Schneider <vschneid@redhat.com>
-To: linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	openrisc@lists.librecores.org,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-xtensa@linux-xtensa.org,
-	x86@kernel.org
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Guo Ren <guoren@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>
-Subject: [PATCH v4 7/7] sched, smp: Trace smp callback causing an IPI
-Date: Thu, 19 Jan 2023 14:36:19 +0000
-Message-Id: <20230119143619.2733236-8-vschneid@redhat.com>
-In-Reply-To: <20230119143619.2733236-1-vschneid@redhat.com>
-References: <20230119143619.2733236-1-vschneid@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974747485
+	for <loongarch@lists.linux.dev>; Thu, 19 Jan 2023 15:32:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B669C433EF;
+	Thu, 19 Jan 2023 15:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1674142321;
+	bh=QoPNuODGj6XDT3N+WFle3ns42zhE4shUpt9pFCuQY1k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NQ8HJAyivLD3sashVo5rHIEaGLBxziNN83QC1IPNteCjyMHgPl6LraKL7968FL+7f
+	 G/V0AmaSLfW2xFl1RyDPP2vCIjeUAAiiFJq0Q9ohabqrtKW9tizYysuEHtCO4wmUBY
+	 Mr1r34PBkaBfOOqP7qG2xae4G4CK0k+/mtjkwXpD3aj7QoZVgvw/1GjHH1EZzRhBuc
+	 Y93gEbVBLT5L1cQYo9V7R7PN9abHxKmM3I9WOIeMpziVUNZytILmSbA1F7AGMdERS+
+	 h03DUk8pAo85rCOG5ZP351OXo5gY3RMerg0ek5xhhfc/qRAJs1pJQhmUfCUVI5woGp
+	 aQYM/WJ7Smc7w==
+Date: Fri, 20 Jan 2023 00:31:56 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Jinyang He
+ <hejinyang@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu
+ <mhiramat@kernel.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 4/5] LoongArch: Mark some assembler symbols as
+ non-kprobe-able
+Message-Id: <20230120003156.48ca16ea2a6f73398e568358@kernel.org>
+In-Reply-To: <CAAhV-H7KJTtZPC9=OZEZfQvMjd6Gw37Q3kZODk=wk9pt6VZuAQ@mail.gmail.com>
+References: <1674007261-9198-1-git-send-email-yangtiezhu@loongson.cn>
+	<1674007261-9198-5-git-send-email-yangtiezhu@loongson.cn>
+	<CAAhV-H7Dt5MhaMU1=D9HxPFR+xjjoQG6RguaYMydy=v_jvrtiA@mail.gmail.com>
+	<48f0508f-3908-c6ca-c8ba-7c12dd6b3f11@loongson.cn>
+	<7f518dec-fd72-a73c-3f23-6372a83d65c2@loongson.cn>
+	<6879b948-2d61-8e09-a9d4-bc2ede31c52b@loongson.cn>
+	<CAAhV-H7KJTtZPC9=OZEZfQvMjd6Gw37Q3kZODk=wk9pt6VZuAQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Context
-=======
+On Wed, 18 Jan 2023 15:17:00 +0800
+Huacai Chen <chenhuacai@kernel.org> wrote:
 
-The newly-introduced ipi_send_cpumask tracepoint has a "callback" parameter
-which so far has only been fed with NULL.
+> On Wed, Jan 18, 2023 at 2:24 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> >
+> >
+> >
+> > On 01/18/2023 02:05 PM, Jinyang He wrote:
+> > >
+> > > On 2023-01-18 12:23, Tiezhu Yang wrote:
+> > >>
+> > >>
+> > >> On 01/18/2023 12:14 PM, Huacai Chen wrote:
+> > >>> If memcpy should be blacklisted, then what about memset and memmove?
+> > >>
+> > >> According to the test results, there are no problems to probe
+> > >> memset and memmove, so no need to blacklist them for now,
+> > >> blacklist memcpy is because it may cause recursive exceptions,
+> > >> there is a detailed discussion in the following link:
+> > >>
+> > >> https://lore.kernel.org/lkml/20230114143859.7ccc45c1c5d9ce302113ab0a@kernel.org/
+> > >>
+> > >
+> > > Hi, Tiezhu,
+> > >
+> > > I cannot reproduce the results when kprobe memcpy. Could you please give
+> > > some details. Emm, I just replace "kernel_clone" with "memcpy" in
+> > > kprobe_example.c.
+> >
+> > Please remove the related "_ASM_NOKPROBE(memcpy)" code in
+> > arch/loongarch/lib/memcpy.S, and then compile and update kernel,
+> > execute the following cmd after reboot, I can reproduce the hang
+> > problem easily (it will take a few minutes).
+> >
+> > modprobe kprobe_example symbol="memcpy"
+> Then, why is handle_syscall different from other exception handlers?
 
-While CSD_TYPE_SYNC/ASYNC and CSD_TYPE_IRQ_WORK share a similar backing
-struct layout (meaning their callback func can be accessed without caring
-about the actual CSD type), CSD_TYPE_TTWU doesn't even have a function
-attached to its struct. This means we need to check the type of a CSD
-before eventually dereferencing its associated callback.
+I need to check the loongarch implementation of handle_syscall() but
+I guess in that handler the register set is not completely set as
+kernel one. In that case, the software breakpoint handler may not
+possible to handle it correctly. So it is better to avoid probing such
+"border" function by kprobes.
 
-This isn't as trivial as it sounds: the CSD type is stored in
-__call_single_node.u_flags, which get cleared right before the callback is
-executed via csd_unlock(). This implies checking the CSD type before it is
-enqueued on the call_single_queue, as the target CPU's queue can be flushed
-before we get to sending an IPI.
+Thank you,
 
-Furthermore, send_call_function_single_ipi() only has a CPU parameter, and
-would need to have an additional argument to trickle down the invoked
-function. This is somewhat silly, as the extra argument will always be
-pushed down to the function even when nothing is being traced, which is
-unnecessary overhead.
+> 
+> Huacai
+> >
+> > >
+> > > And for your call trace,
+> > >
+> > >  handler_pre()
+> > >    pr_info()
+> > >      printk()
+> > >       _printk()
+> > >         vprintk()
+> > >           vprintk_store()
+> > >             memcpy()
+> > >
+> > > I think when we should skip this time kprobe which triggered in
+> > > handler_{pre, post}. That means this time kprobe will not call
+> > > handler_{pre, post} agian, and not cause recursion. I remember
+> > > your codes had done this skip action. So, that's so strange if
+> > > recursion in handler_{pre, post}.
+> > >
+> > >
+> > > Thanks,
+> > >
+> > > Jinyang
+> > >
+> > >
+> > >>
+> > >> Thanks,
+> > >> Tiezhu
+> > >>
+> > >>>
+> > >>> Huacai
+> > >>>
+> > >>> On Wed, Jan 18, 2023 at 10:01 AM Tiezhu Yang <yangtiezhu@loongson.cn>
+> > >>> wrote:
+> > >>>>
+> > >>>> Some assembler symbols are not kprobe safe, such as handle_syscall
+> > >>>> (used as syscall exception handler), *memcpy* (may cause recursive
+> > >>>> exceptions), they can not be instrumented, just blacklist them for
+> > >>>> kprobing.
+> > >>>>
+> > >>>> Here is a related problem and discussion:
+> > >>>> Link:
+> > >>>> https://lore.kernel.org/lkml/20230114143859.7ccc45c1c5d9ce302113ab0a@kernel.org/
+> > >>>>
+> > >>>>
+> > >>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > >>>> ---
+> > >>>>  arch/loongarch/include/asm/asm.h | 10 ++++++++++
+> > >>>>  arch/loongarch/kernel/entry.S    |  1 +
+> > >>>>  arch/loongarch/lib/memcpy.S      |  3 +++
+> > >>>>  3 files changed, 14 insertions(+)
+> > >>>>
+> > >>>> diff --git a/arch/loongarch/include/asm/asm.h
+> > >>>> b/arch/loongarch/include/asm/asm.h
+> > >>>> index 40eea6a..f591b32 100644
+> > >>>> --- a/arch/loongarch/include/asm/asm.h
+> > >>>> +++ b/arch/loongarch/include/asm/asm.h
+> > >>>> @@ -188,4 +188,14 @@
+> > >>>>  #define PTRLOG         3
+> > >>>>  #endif
+> > >>>>
+> > >>>> +/* Annotate a function as being unsuitable for kprobes. */
+> > >>>> +#ifdef CONFIG_KPROBES
+> > >>>> +#define _ASM_NOKPROBE(name)                            \
+> > >>>> +       .pushsection "_kprobe_blacklist", "aw";         \
+> > >>>> +       .quad   name;                                   \
+> > >>>> +       .popsection
+> > >>>> +#else
+> > >>>> +#define _ASM_NOKPROBE(name)
+> > >>>> +#endif
+> > >>>> +
+> > >>>>  #endif /* __ASM_ASM_H */
+> > >>>> diff --git a/arch/loongarch/kernel/entry.S
+> > >>>> b/arch/loongarch/kernel/entry.S
+> > >>>> index d53b631..55e23b1 100644
+> > >>>> --- a/arch/loongarch/kernel/entry.S
+> > >>>> +++ b/arch/loongarch/kernel/entry.S
+> > >>>> @@ -67,6 +67,7 @@ SYM_FUNC_START(handle_syscall)
+> > >>>>
+> > >>>>         RESTORE_ALL_AND_RET
+> > >>>>  SYM_FUNC_END(handle_syscall)
+> > >>>> +_ASM_NOKPROBE(handle_syscall)
+> > >>>>
+> > >>>>  SYM_CODE_START(ret_from_fork)
+> > >>>>         bl      schedule_tail           # a0 = struct task_struct *prev
+> > >>>> diff --git a/arch/loongarch/lib/memcpy.S b/arch/loongarch/lib/memcpy.S
+> > >>>> index 7c07d59..3b7e1de 100644
+> > >>>> --- a/arch/loongarch/lib/memcpy.S
+> > >>>> +++ b/arch/loongarch/lib/memcpy.S
+> > >>>> @@ -17,6 +17,7 @@ SYM_FUNC_START(memcpy)
+> > >>>>         ALTERNATIVE     "b __memcpy_generic", \
+> > >>>>                         "b __memcpy_fast", CPU_FEATURE_UAL
+> > >>>>  SYM_FUNC_END(memcpy)
+> > >>>> +_ASM_NOKPROBE(memcpy)
+> > >>>>
+> > >>>>  EXPORT_SYMBOL(memcpy)
+> > >>>>
+> > >>>> @@ -41,6 +42,7 @@ SYM_FUNC_START(__memcpy_generic)
+> > >>>>  2:     move    a0, a3
+> > >>>>         jr      ra
+> > >>>>  SYM_FUNC_END(__memcpy_generic)
+> > >>>> +_ASM_NOKPROBE(__memcpy_generic)
+> > >>>>
+> > >>>>  /*
+> > >>>>   * void *__memcpy_fast(void *dst, const void *src, size_t n)
+> > >>>> @@ -93,3 +95,4 @@ SYM_FUNC_START(__memcpy_fast)
+> > >>>>  3:     move    a0, a3
+> > >>>>         jr      ra
+> > >>>>  SYM_FUNC_END(__memcpy_fast)
+> > >>>> +_ASM_NOKPROBE(__memcpy_fast)
+> > >>>> --
+> > >>>> 2.1.0
+> > >>>>
+> > >>
+> >
+> >
 
-Changes
-=======
 
-send_call_function_single_ipi() is only used by smp.c, and is defined in
-sched/core.c as it contains scheduler-specific ops (set_nr_if_polling() of
-a CPU's idle task).
-
-Split it into two parts: the scheduler bits remain in sched/core.c, and the
-actual IPI emission is moved into smp.c. This lets us define an
-__always_inline helper function that can take the related callback as
-parameter without creating useless register pressure in the non-traced path
-which only gains a (disabled) static branch.
-
-Do the same thing for the multi IPI case.
-
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
----
- kernel/sched/core.c | 18 +++++++-----
- kernel/sched/smp.h  |  2 +-
- kernel/smp.c        | 72 +++++++++++++++++++++++++++++++++------------
- 3 files changed, 66 insertions(+), 26 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index c0d09eb249603..9733c3ecdbf16 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3816,16 +3816,20 @@ void sched_ttwu_pending(void *arg)
- 	rq_unlock_irqrestore(rq, &rf);
- }
- 
--void send_call_function_single_ipi(int cpu)
-+/*
-+ * Prepare the scene for sending an IPI for a remote smp_call
-+ *
-+ * Returns true if the caller can proceed with sending the IPI.
-+ * Returns false otherwise.
-+ */
-+bool call_function_single_prep_ipi(int cpu)
- {
--	struct rq *rq = cpu_rq(cpu);
--
--	if (!set_nr_if_polling(rq->idle)) {
--		trace_ipi_send_cpumask(cpumask_of(cpu), _RET_IP_, NULL);
--		arch_send_call_function_single_ipi(cpu);
--	} else {
-+	if (set_nr_if_polling(cpu_rq(cpu)->idle)) {
- 		trace_sched_wake_idle_without_ipi(cpu);
-+		return false;
- 	}
-+
-+	return true;
- }
- 
- /*
-diff --git a/kernel/sched/smp.h b/kernel/sched/smp.h
-index 2eb23dd0f2856..21ac44428bb02 100644
---- a/kernel/sched/smp.h
-+++ b/kernel/sched/smp.h
-@@ -6,7 +6,7 @@
- 
- extern void sched_ttwu_pending(void *arg);
- 
--extern void send_call_function_single_ipi(int cpu);
-+extern bool call_function_single_prep_ipi(int cpu);
- 
- #ifdef CONFIG_SMP
- extern void flush_smp_call_function_queue(void);
-diff --git a/kernel/smp.c b/kernel/smp.c
-index 821b5986721ac..5cd680a7e78ef 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -161,9 +161,18 @@ void __init call_function_init(void)
- }
- 
- static __always_inline void
--send_call_function_ipi_mask(const struct cpumask *mask)
-+send_call_function_single_ipi(int cpu, smp_call_func_t func)
- {
--	trace_ipi_send_cpumask(mask, _RET_IP_, NULL);
-+	if (call_function_single_prep_ipi(cpu)) {
-+		trace_ipi_send_cpumask(cpumask_of(cpu), _RET_IP_, func);
-+		arch_send_call_function_single_ipi(cpu);
-+	}
-+}
-+
-+static __always_inline void
-+send_call_function_ipi_mask(const struct cpumask *mask, smp_call_func_t func)
-+{
-+	trace_ipi_send_cpumask(mask, _RET_IP_, func);
- 	arch_send_call_function_ipi_mask(mask);
- }
- 
-@@ -430,12 +439,16 @@ static void __smp_call_single_queue_debug(int cpu, struct llist_node *node)
- 	struct cfd_seq_local *seq = this_cpu_ptr(&cfd_seq_local);
- 	struct call_function_data *cfd = this_cpu_ptr(&cfd_data);
- 	struct cfd_percpu *pcpu = per_cpu_ptr(cfd->pcpu, cpu);
-+	struct __call_single_data *csd;
-+
-+	csd = container_of(node, call_single_data_t, node.llist);
-+	WARN_ON_ONCE(!(CSD_TYPE(csd) & (CSD_TYPE_SYNC | CSD_TYPE_ASYNC)));
- 
- 	cfd_seq_store(pcpu->seq_queue, this_cpu, cpu, CFD_SEQ_QUEUE);
- 	if (llist_add(node, &per_cpu(call_single_queue, cpu))) {
- 		cfd_seq_store(pcpu->seq_ipi, this_cpu, cpu, CFD_SEQ_IPI);
- 		cfd_seq_store(seq->ping, this_cpu, cpu, CFD_SEQ_PING);
--		send_call_function_single_ipi(cpu);
-+		send_call_function_single_ipi(cpu, csd->func);
- 		cfd_seq_store(seq->pinged, this_cpu, cpu, CFD_SEQ_PINGED);
- 	} else {
- 		cfd_seq_store(pcpu->seq_noipi, this_cpu, cpu, CFD_SEQ_NOIPI);
-@@ -477,6 +490,25 @@ static __always_inline void csd_unlock(struct __call_single_data *csd)
- 	smp_store_release(&csd->node.u_flags, 0);
- }
- 
-+static __always_inline void
-+raw_smp_call_single_queue(int cpu, struct llist_node *node, smp_call_func_t func)
-+{
-+	/*
-+	 * The list addition should be visible to the target CPU when it pops
-+	 * the head of the list to pull the entry off it in the IPI handler
-+	 * because of normal cache coherency rules implied by the underlying
-+	 * llist ops.
-+	 *
-+	 * If IPIs can go out of order to the cache coherency protocol
-+	 * in an architecture, sufficient synchronisation should be added
-+	 * to arch code to make it appear to obey cache coherency WRT
-+	 * locking and barrier primitives. Generic code isn't really
-+	 * equipped to do the right thing...
-+	 */
-+	if (llist_add(node, &per_cpu(call_single_queue, cpu)))
-+		send_call_function_single_ipi(cpu, func);
-+}
-+
- static DEFINE_PER_CPU_SHARED_ALIGNED(call_single_data_t, csd_data);
- 
- void __smp_call_single_queue(int cpu, struct llist_node *node)
-@@ -493,21 +525,25 @@ void __smp_call_single_queue(int cpu, struct llist_node *node)
- 		}
- 	}
- #endif
--
- 	/*
--	 * The list addition should be visible to the target CPU when it pops
--	 * the head of the list to pull the entry off it in the IPI handler
--	 * because of normal cache coherency rules implied by the underlying
--	 * llist ops.
--	 *
--	 * If IPIs can go out of order to the cache coherency protocol
--	 * in an architecture, sufficient synchronisation should be added
--	 * to arch code to make it appear to obey cache coherency WRT
--	 * locking and barrier primitives. Generic code isn't really
--	 * equipped to do the right thing...
-+	 * We have to check the type of the CSD before queueing it, because
-+	 * once queued it can have its flags cleared by
-+	 *   flush_smp_call_function_queue()
-+	 * even if we haven't sent the smp_call IPI yet (e.g. the stopper
-+	 * executes migration_cpu_stop() on the remote CPU).
- 	 */
--	if (llist_add(node, &per_cpu(call_single_queue, cpu)))
--		send_call_function_single_ipi(cpu);
-+	if (trace_ipi_send_cpumask_enabled()) {
-+		call_single_data_t *csd;
-+		smp_call_func_t func;
-+
-+		csd = container_of(node, call_single_data_t, node.llist);
-+		func = CSD_TYPE(csd) == CSD_TYPE_TTWU ?
-+			sched_ttwu_pending : csd->func;
-+
-+		raw_smp_call_single_queue(cpu, node, func);
-+	} else {
-+		raw_smp_call_single_queue(cpu, node, NULL);
-+	}
- }
- 
- /*
-@@ -976,9 +1012,9 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
- 		 * provided mask.
- 		 */
- 		if (nr_cpus == 1)
--			send_call_function_single_ipi(last_cpu);
-+			send_call_function_single_ipi(last_cpu, func);
- 		else if (likely(nr_cpus > 1))
--			send_call_function_ipi_mask(cfd->cpumask_ipi);
-+			send_call_function_ipi_mask(cfd->cpumask_ipi, func);
- 
- 		cfd_seq_store(this_cpu_ptr(&cfd_seq_local)->pinged, this_cpu, CFD_SEQ_NOCPU, CFD_SEQ_PINGED);
- 	}
 -- 
-2.31.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
