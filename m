@@ -1,53 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D35A2F34
-	for <loongarch@lists.linux.dev>; Wed, 18 Jan 2023 22:47:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AFE46C433F0;
-	Wed, 18 Jan 2023 22:47:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1674082025;
-	bh=IXzqkYp637f9FFHz3IM9yM1xNvc8W5Lh4WiOPUudzTU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=lxxT/2KPyHjJMFnhlLqT6k3rVwnJ4Hwit1s9PFPCmso0qjY70DFXJCargEkC5G/CO
-	 w14CUcbY8PkOwVzyMm/RGckaJO1ZksSA/8sM4Bn7/9m9/tH6j+SlwGeV3CXquqHhou
-	 KeMkndPzvOM3WE02NFY+EXH+IDMGxd8ZOLWoyC0QXp7Mf7TcMrMoDQhyIOaFgMr7NH
-	 Vuyg7EVybhDNGVp/+vGZl9QTgA5J0MhZrIn9PMLvOpzGCK5JEOjFPpCEKHI9KYK9US
-	 DJ7cmy9KaZ3N1Yt6F4Ifl1vO6rHjyjBswpgmq+OEO4zCnTl+34+Pkn3zwPIZNO8ALu
-	 5gsJGLDsMPtJQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 98249E54D2B;
-	Wed, 18 Jan 2023 22:47:05 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.2-rc5
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20230118092651.2452402-1-chenhuacai@loongson.cn>
-References: <20230118092651.2452402-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20230118092651.2452402-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.2-1
-X-PR-Tracked-Commit-Id: dc74a9e8a8c57966a563ab078ba91c8b2c0d0a72
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 84bd7e08a79a5d3153c3a5805a1347a8dc979f35
-Message-Id: <167408202561.14684.15699936419070494644.pr-tracker-bot@kernel.org>
-Date: Wed, 18 Jan 2023 22:47:05 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E1717CD
+	for <loongarch@lists.linux.dev>; Thu, 19 Jan 2023 12:44:13 +0000 (UTC)
+Received: by mail-ej1-f52.google.com with SMTP id rl14so2005769ejb.2
+        for <loongarch@lists.linux.dev>; Thu, 19 Jan 2023 04:44:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YWR9OlP03r7QcJTROY9XweEp/odJNTYRZKCcANso/mU=;
+        b=pbtkyFp7ZtDm+X8xuDJqBgdFYBgp1Bw/NdO5g5FfOl4kknZn/sGQw1wimziY9bYjbV
+         8uxGfTHJPfMf6e3D9n2oHWBOyw7qocZPqnv5WdyDRikMqs9nHbmNi87b5FlatKNYnulA
+         msKY4jV2P1gVR7cAu8500mBqVRQF3YkBmiQs2fqskH5oOSwspli/2IVyWqcVL4YSiUyK
+         rg+tswGzyQhnNELBgVo05C9hE1CvgRaZvFhH/gRKWakqO/av0Xpp4aLBMjEnTGhxYPss
+         q5j1sTJCYHJZcX/gcnsqkS2zz2D+UtuQWE4v24Jy3PrXvlAsQtf/bYSPp/q46mswgp51
+         ZDEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YWR9OlP03r7QcJTROY9XweEp/odJNTYRZKCcANso/mU=;
+        b=wipSgS+me30wFUP0lr/XW9EZw4gekgb/sz11TZNTI5xWqvPAwvHmnRUa8hRCTjljWD
+         53WkHF612nPzWbAd4xYrMfEciNVMr4++We+eCJzZPhD6UIe4Oil/hDvWmmGKFOHNJOiu
+         wsw6GhMgc/sIrLQ39evYnHFe+FTuOWAiJaaUUGOHhmTjUplPHhBU4QOn2HlxIdu5zqNJ
+         fkHcq+ZiVyh8ERdulm0E8b86raaaMR/69h4daQgIVkq4IPSuFilgLS3HbZJtrmdrDfKF
+         gqTv3vXfdJcHvLjFNRlKXZuefD/3U3w8c96aS465IRGM/DZdlEhrR0h6mWsfdJCwUbRk
+         /Y2Q==
+X-Gm-Message-State: AFqh2kqCRalQzzDhxYDAq1VtopWEQONGOpEM3VKd5Nr9bX8E/3Eak+rb
+	m01NJ55gDJ3p0d9FdQp7/G6Cw/CJkmhy1FTCBxo=
+X-Google-Smtp-Source: AMrXdXsgFbI8xlO3RYYSbd3nxdAZ9bU1GFE9fNtRH8787zHz7V+RCRNvtkaN5CwqR1WER8a6JDEcrs/dNTOJ1pHAWu0=
+X-Received: by 2002:a17:906:25c5:b0:86d:fa64:2941 with SMTP id
+ n5-20020a17090625c500b0086dfa642941mr994344ejb.72.1674132251818; Thu, 19 Jan
+ 2023 04:44:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <20221207140643.1600743-1-chenhuacai@loongson.cn>
+In-Reply-To: <20221207140643.1600743-1-chenhuacai@loongson.cn>
+From: Huacai Chen <chenhuacai@gmail.com>
+Date: Thu, 19 Jan 2023 20:44:00 +0800
+Message-ID: <CAAhV-H7vt5b=ZScvKRRv1dWeqRbVU65aCdgdAaR0Jtw-tvZVyQ@mail.gmail.com>
+Subject: Re: [PATCH] irqchip/loongson-liointc: Save/restore int_edge/int_pol
+ registers during S3/S4
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Yingkun Meng <mengyingkun@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Wed, 18 Jan 2023 17:26:51 +0800:
+Just a gentle ping.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.2-1
+This patch was sent for the 6.2 cycle but seems too late, now I think
+ping it to be reviewed for 6.3 is better than resend it.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/84bd7e08a79a5d3153c3a5805a1347a8dc979f35
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+On Wed, Dec 7, 2022 at 10:06 PM Huacai Chen <chenhuacai@loongson.cn> wrote:
+>
+> If int_edge/int_pol registers are configured to not be the default values, we
+> should save/restore them during S3/S4.
+>
+> Signed-off-by: Yingkun Meng <mengyingkun@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  drivers/irqchip/irq-loongson-liointc.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+> index c116f70929ae..4367ce9b558f 100644
+> --- a/drivers/irqchip/irq-loongson-liointc.c
+> +++ b/drivers/irqchip/irq-loongson-liointc.c
+> @@ -55,6 +55,8 @@ struct liointc_priv {
+>         struct liointc_handler_data     handler[LIOINTC_NUM_PARENT];
+>         void __iomem                    *core_isr[LIOINTC_NUM_CORES];
+>         u8                              map_cache[LIOINTC_CHIP_IRQ];
+> +       u32                             int_pol;
+> +       u32                             int_edge;
+>         bool                            has_lpc_irq_errata;
+>  };
+>
+> @@ -138,6 +140,14 @@ static int liointc_set_type(struct irq_data *data, unsigned int type)
+>         return 0;
+>  }
+>
+> +static void liointc_suspend(struct irq_chip_generic *gc)
+> +{
+> +       struct liointc_priv *priv = gc->private;
+> +
+> +       priv->int_pol = readl(gc->reg_base + LIOINTC_REG_INTC_POL);
+> +       priv->int_edge = readl(gc->reg_base + LIOINTC_REG_INTC_EDGE);
+> +}
+> +
+>  static void liointc_resume(struct irq_chip_generic *gc)
+>  {
+>         struct liointc_priv *priv = gc->private;
+> @@ -150,6 +160,8 @@ static void liointc_resume(struct irq_chip_generic *gc)
+>         /* Restore map cache */
+>         for (i = 0; i < LIOINTC_CHIP_IRQ; i++)
+>                 writeb(priv->map_cache[i], gc->reg_base + i);
+> +       writel(priv->int_pol, gc->reg_base + LIOINTC_REG_INTC_POL);
+> +       writel(priv->int_edge, gc->reg_base + LIOINTC_REG_INTC_EDGE);
+>         /* Restore mask cache */
+>         writel(gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
+>         irq_gc_unlock_irqrestore(gc, flags);
+> @@ -261,6 +273,7 @@ static int liointc_init(phys_addr_t addr, unsigned long size, int revision,
+>         gc->private = priv;
+>         gc->reg_base = base;
+>         gc->domain = domain;
+> +       gc->suspend = liointc_suspend;
+>         gc->resume = liointc_resume;
+>
+>         ct = gc->chip_types;
+> --
+> 2.31.1
+>
