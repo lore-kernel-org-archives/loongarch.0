@@ -1,211 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974747485
-	for <loongarch@lists.linux.dev>; Thu, 19 Jan 2023 15:32:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B669C433EF;
-	Thu, 19 Jan 2023 15:31:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD53217D2
+	for <loongarch@lists.linux.dev>; Fri, 20 Jan 2023 09:08:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 356FCC4339B;
+	Fri, 20 Jan 2023 09:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1674142321;
-	bh=QoPNuODGj6XDT3N+WFle3ns42zhE4shUpt9pFCuQY1k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NQ8HJAyivLD3sashVo5rHIEaGLBxziNN83QC1IPNteCjyMHgPl6LraKL7968FL+7f
-	 G/V0AmaSLfW2xFl1RyDPP2vCIjeUAAiiFJq0Q9ohabqrtKW9tizYysuEHtCO4wmUBY
-	 Mr1r34PBkaBfOOqP7qG2xae4G4CK0k+/mtjkwXpD3aj7QoZVgvw/1GjHH1EZzRhBuc
-	 Y93gEbVBLT5L1cQYo9V7R7PN9abHxKmM3I9WOIeMpziVUNZytILmSbA1F7AGMdERS+
-	 h03DUk8pAo85rCOG5ZP351OXo5gY3RMerg0ek5xhhfc/qRAJs1pJQhmUfCUVI5woGp
-	 aQYM/WJ7Smc7w==
-Date: Fri, 20 Jan 2023 00:31:56 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Jinyang He
- <hejinyang@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu
- <mhiramat@kernel.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 4/5] LoongArch: Mark some assembler symbols as
- non-kprobe-able
-Message-Id: <20230120003156.48ca16ea2a6f73398e568358@kernel.org>
-In-Reply-To: <CAAhV-H7KJTtZPC9=OZEZfQvMjd6Gw37Q3kZODk=wk9pt6VZuAQ@mail.gmail.com>
-References: <1674007261-9198-1-git-send-email-yangtiezhu@loongson.cn>
-	<1674007261-9198-5-git-send-email-yangtiezhu@loongson.cn>
-	<CAAhV-H7Dt5MhaMU1=D9HxPFR+xjjoQG6RguaYMydy=v_jvrtiA@mail.gmail.com>
-	<48f0508f-3908-c6ca-c8ba-7c12dd6b3f11@loongson.cn>
-	<7f518dec-fd72-a73c-3f23-6372a83d65c2@loongson.cn>
-	<6879b948-2d61-8e09-a9d4-bc2ede31c52b@loongson.cn>
-	<CAAhV-H7KJTtZPC9=OZEZfQvMjd6Gw37Q3kZODk=wk9pt6VZuAQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1674205703;
+	bh=O96ThGuyWt09KyloQFrsJRw6KPqNmy1OWLE7cFXERl8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k21IjSbqb93uzSxBV55FK9vwzQOCA9fH9BKTGCg3nVn1bZcxxygORAjzlQyAVERKn
+	 7Jj/W8uovolQdR/BND0gtSmUKVC4fFJOI24cLhCcns1gaeZUwPOzSSyOqbhdQ22L2H
+	 TEPNX7mEr/LKvzjpM1NeGW1OPY9FpIja6XPXJ4ETdvQb2AXdsP4pzKTITVAx7xpbre
+	 x2IFa0I0InMUvs16Sf8BpeRnGhau0VefUu2Z2pC5dlkVL8Dxf+EKZuPlkr6jaJ4QPP
+	 Q6MUjWi87GsxXwa4putVYiVRL7bkCBpjtD+ed/lrOP+ApdStLfaWTReCOiw2Hd2o4M
+	 qNLxV9DSokM0g==
+Date: Fri, 20 Jan 2023 10:08:20 +0100
+From: Wolfram Sang <wsa@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Peibao Liu <liupeibao@loongson.cn>
+Subject: Re: [PATCH V10 3/4] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
+ controller
+Message-ID: <Y8paBAVsBJIqLZnH@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Andy Shevchenko <andy@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Peibao Liu <liupeibao@loongson.cn>
+References: <cover.1673340642.git.zhoubinbin@loongson.cn>
+ <77046b03eb0e75b25934406afce597997624a2b8.1673340642.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Wed, 18 Jan 2023 15:17:00 +0800
-Huacai Chen <chenhuacai@kernel.org> wrote:
-
-> On Wed, Jan 18, 2023 at 2:24 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> >
-> >
-> >
-> > On 01/18/2023 02:05 PM, Jinyang He wrote:
-> > >
-> > > On 2023-01-18 12:23, Tiezhu Yang wrote:
-> > >>
-> > >>
-> > >> On 01/18/2023 12:14 PM, Huacai Chen wrote:
-> > >>> If memcpy should be blacklisted, then what about memset and memmove?
-> > >>
-> > >> According to the test results, there are no problems to probe
-> > >> memset and memmove, so no need to blacklist them for now,
-> > >> blacklist memcpy is because it may cause recursive exceptions,
-> > >> there is a detailed discussion in the following link:
-> > >>
-> > >> https://lore.kernel.org/lkml/20230114143859.7ccc45c1c5d9ce302113ab0a@kernel.org/
-> > >>
-> > >
-> > > Hi, Tiezhu,
-> > >
-> > > I cannot reproduce the results when kprobe memcpy. Could you please give
-> > > some details. Emm, I just replace "kernel_clone" with "memcpy" in
-> > > kprobe_example.c.
-> >
-> > Please remove the related "_ASM_NOKPROBE(memcpy)" code in
-> > arch/loongarch/lib/memcpy.S, and then compile and update kernel,
-> > execute the following cmd after reboot, I can reproduce the hang
-> > problem easily (it will take a few minutes).
-> >
-> > modprobe kprobe_example symbol="memcpy"
-> Then, why is handle_syscall different from other exception handlers?
-
-I need to check the loongarch implementation of handle_syscall() but
-I guess in that handler the register set is not completely set as
-kernel one. In that case, the software breakpoint handler may not
-possible to handle it correctly. So it is better to avoid probing such
-"border" function by kprobes.
-
-Thank you,
-
-> 
-> Huacai
-> >
-> > >
-> > > And for your call trace,
-> > >
-> > >  handler_pre()
-> > >    pr_info()
-> > >      printk()
-> > >       _printk()
-> > >         vprintk()
-> > >           vprintk_store()
-> > >             memcpy()
-> > >
-> > > I think when we should skip this time kprobe which triggered in
-> > > handler_{pre, post}. That means this time kprobe will not call
-> > > handler_{pre, post} agian, and not cause recursion. I remember
-> > > your codes had done this skip action. So, that's so strange if
-> > > recursion in handler_{pre, post}.
-> > >
-> > >
-> > > Thanks,
-> > >
-> > > Jinyang
-> > >
-> > >
-> > >>
-> > >> Thanks,
-> > >> Tiezhu
-> > >>
-> > >>>
-> > >>> Huacai
-> > >>>
-> > >>> On Wed, Jan 18, 2023 at 10:01 AM Tiezhu Yang <yangtiezhu@loongson.cn>
-> > >>> wrote:
-> > >>>>
-> > >>>> Some assembler symbols are not kprobe safe, such as handle_syscall
-> > >>>> (used as syscall exception handler), *memcpy* (may cause recursive
-> > >>>> exceptions), they can not be instrumented, just blacklist them for
-> > >>>> kprobing.
-> > >>>>
-> > >>>> Here is a related problem and discussion:
-> > >>>> Link:
-> > >>>> https://lore.kernel.org/lkml/20230114143859.7ccc45c1c5d9ce302113ab0a@kernel.org/
-> > >>>>
-> > >>>>
-> > >>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > >>>> ---
-> > >>>>  arch/loongarch/include/asm/asm.h | 10 ++++++++++
-> > >>>>  arch/loongarch/kernel/entry.S    |  1 +
-> > >>>>  arch/loongarch/lib/memcpy.S      |  3 +++
-> > >>>>  3 files changed, 14 insertions(+)
-> > >>>>
-> > >>>> diff --git a/arch/loongarch/include/asm/asm.h
-> > >>>> b/arch/loongarch/include/asm/asm.h
-> > >>>> index 40eea6a..f591b32 100644
-> > >>>> --- a/arch/loongarch/include/asm/asm.h
-> > >>>> +++ b/arch/loongarch/include/asm/asm.h
-> > >>>> @@ -188,4 +188,14 @@
-> > >>>>  #define PTRLOG         3
-> > >>>>  #endif
-> > >>>>
-> > >>>> +/* Annotate a function as being unsuitable for kprobes. */
-> > >>>> +#ifdef CONFIG_KPROBES
-> > >>>> +#define _ASM_NOKPROBE(name)                            \
-> > >>>> +       .pushsection "_kprobe_blacklist", "aw";         \
-> > >>>> +       .quad   name;                                   \
-> > >>>> +       .popsection
-> > >>>> +#else
-> > >>>> +#define _ASM_NOKPROBE(name)
-> > >>>> +#endif
-> > >>>> +
-> > >>>>  #endif /* __ASM_ASM_H */
-> > >>>> diff --git a/arch/loongarch/kernel/entry.S
-> > >>>> b/arch/loongarch/kernel/entry.S
-> > >>>> index d53b631..55e23b1 100644
-> > >>>> --- a/arch/loongarch/kernel/entry.S
-> > >>>> +++ b/arch/loongarch/kernel/entry.S
-> > >>>> @@ -67,6 +67,7 @@ SYM_FUNC_START(handle_syscall)
-> > >>>>
-> > >>>>         RESTORE_ALL_AND_RET
-> > >>>>  SYM_FUNC_END(handle_syscall)
-> > >>>> +_ASM_NOKPROBE(handle_syscall)
-> > >>>>
-> > >>>>  SYM_CODE_START(ret_from_fork)
-> > >>>>         bl      schedule_tail           # a0 = struct task_struct *prev
-> > >>>> diff --git a/arch/loongarch/lib/memcpy.S b/arch/loongarch/lib/memcpy.S
-> > >>>> index 7c07d59..3b7e1de 100644
-> > >>>> --- a/arch/loongarch/lib/memcpy.S
-> > >>>> +++ b/arch/loongarch/lib/memcpy.S
-> > >>>> @@ -17,6 +17,7 @@ SYM_FUNC_START(memcpy)
-> > >>>>         ALTERNATIVE     "b __memcpy_generic", \
-> > >>>>                         "b __memcpy_fast", CPU_FEATURE_UAL
-> > >>>>  SYM_FUNC_END(memcpy)
-> > >>>> +_ASM_NOKPROBE(memcpy)
-> > >>>>
-> > >>>>  EXPORT_SYMBOL(memcpy)
-> > >>>>
-> > >>>> @@ -41,6 +42,7 @@ SYM_FUNC_START(__memcpy_generic)
-> > >>>>  2:     move    a0, a3
-> > >>>>         jr      ra
-> > >>>>  SYM_FUNC_END(__memcpy_generic)
-> > >>>> +_ASM_NOKPROBE(__memcpy_generic)
-> > >>>>
-> > >>>>  /*
-> > >>>>   * void *__memcpy_fast(void *dst, const void *src, size_t n)
-> > >>>> @@ -93,3 +95,4 @@ SYM_FUNC_START(__memcpy_fast)
-> > >>>>  3:     move    a0, a3
-> > >>>>         jr      ra
-> > >>>>  SYM_FUNC_END(__memcpy_fast)
-> > >>>> +_ASM_NOKPROBE(__memcpy_fast)
-> > >>>> --
-> > >>>> 2.1.0
-> > >>>>
-> > >>
-> >
-> >
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="8Vp4PIH7jEjIxHln"
+Content-Disposition: inline
+In-Reply-To: <77046b03eb0e75b25934406afce597997624a2b8.1673340642.git.zhoubinbin@loongson.cn>
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+--8Vp4PIH7jEjIxHln
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+the driver looks mostly good. Thank you for your hard work, and also
+thanks to Andy for his great review efforts again!
+
+> +static unsigned int ls2x_i2c_func(struct i2c_adapter *adap)
+> +{
+> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+> +}
+
+Have you tried messages with zero-length or the SMBUS_QUICK transfer
+which is basically the same? i2cdectect uses it by default, so if that
+works, then we are good.
+
+> +/* The DC subsystem depends on it, we should initialize it earlier. */
+> +static int __init ls2x_i2c_init_driver(void)
+> +{
+> +	return platform_driver_register(&ls2x_i2c_driver);
+> +}
+> +subsys_initcall(ls2x_i2c_init_driver);
+
+Can't this be handled with deferred probing?
+
+Happy hacking,
+
+   Wolfram
+
+
+--8Vp4PIH7jEjIxHln
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmPKWgQACgkQFA3kzBSg
+Kbbh+xAAgOJ3y/cc938IHev3jEUXPaLd6Kv7ont6wBNPdFFb84sS5lwDuKGOmdbc
+gs54YpM5RRj5q3QGUyEdBhYPTJ+wBuftjlvm9tQzfbvBjo2Pzp5me7qesmpzzfv0
+0rCMDBSVBFLi8QrYqiEv1UYBy2WqFaFvhu/rFL9p8xrUGx+nYnWOGAHL71P1abUL
+LaAR/N+7SezK9vLDLPdoUTsuzxM0mY2Q1I7Axgfkce0Sh315URu0dzzToTwMtn8I
+eheEWTOwKK+e7PB0INrDB3BRnge8nHPJl+j4TKSOp3T7rfoeU9d1tP/C7r0k7dQC
+XQo0YQoIwKDV9lbmlE19DWrnOwBtD6dsLA3GkHPF0D1tpz9njZr6K5cGuSP09rx9
+DB/VV9CPhplSEiWzJMz3fKq0UP9Og/Q9fccYOF7+mm5CiMbBgKiiY58w05mF+wNP
+4aCIuCjaoHO6pFqP8ijXppyBDSYdHP121ifpMPgnxLCmA7Vq8Hyk6S4QWyXNUjCA
+/9g80ZNAMRQh+BBj0ttM8bW9VlGE/6NfjpliB+VUHdpu+EmOvspk8CQt0thYOMad
+BCGUQPxyBv31LnbIKRSgxS0zzqzzBZAl8JZZX0J1nRRrc4cDmq9rtT5ZXcIOM/zW
+wRWKrM7alG/ihDWIqx4PNTXnXA7puliUklfzocrsAhXm+qleM1o=
+=ajTM
+-----END PGP SIGNATURE-----
+
+--8Vp4PIH7jEjIxHln--
