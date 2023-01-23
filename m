@@ -1,128 +1,125 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EDB7C
-	for <loongarch@lists.linux.dev>; Mon, 23 Jan 2023 10:58:01 +0000 (UTC)
-Received: by mail-wm1-f50.google.com with SMTP id iv8-20020a05600c548800b003db04a0a46bso4352887wmb.0
-        for <loongarch@lists.linux.dev>; Mon, 23 Jan 2023 02:58:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GurJgwjoFQNdZqxTjXXtdzYvuIXsPElEsE5t8iRI348=;
-        b=g4dvnAt/e720eUN0Hw3mkuPvGH+bA9swS9a77z573C2TdQWW6YccWP0BkoVi78A7fD
-         9k0EDsHOFkjnhw2wOEifD+LuTl/asks5WHcBsVRuAWdUJEmWeCb5sfiPEmcBupKXco7L
-         GbvFD/7MEwApELk4GAbMkvKPw8jqR4On0BEH3X+b1r7t6TVjEb9KegIn8YBGFz3Vv8fw
-         Jh0FiWJzDYchnJxivLRKF4Wflf4aRgMtJaDCLIK/Po9RydhxUm8dX6Qe93tyzuQYH5D1
-         Lg/g6wjAGZI6WGgQ22tQbhjn6II6Mckqt+Hjv3IKqVUmi0cBYkGR5LBWB5l5q+psIVBr
-         2gFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GurJgwjoFQNdZqxTjXXtdzYvuIXsPElEsE5t8iRI348=;
-        b=GsHSMAbpFnmOyd/Oz/udDtm+RWHEtaVXs109RPTnLoBLeARabGZHTtz9nhLyo+x/K5
-         ial9XXzWj04syw9uTCwrpU6MZ3m7eOHdXFUpkaD2dZonCxZu/F9j1J3Gy0Vzm3S6Y7Iw
-         5ZSwoJWrADNWyqdSw4AdaiXRA747SuW+xcCBWJ8ols5ShZOoFkAYMDrrCxjH0jrw1ZAS
-         uQ+U6rPZMcrhmOq6paEAvVhJwUgd/e2KgcY/aAGBgzuZpMIWoJmJB7R8z3spHT/M/K2/
-         tYs16Igmrdg9eFxA0YnGcag1GJPnLIf2uLFamWvKjUI7DLM9wWKDmDBV7JiQl5RtmhUC
-         GUrQ==
-X-Gm-Message-State: AFqh2kpDEKgwfTS1sf6Sh4bnuA/zVUKjz6gvMHrpwLq391z0AraZt647
-	lTJPUXprRLm5jW3K9f/pNER/Gw==
-X-Google-Smtp-Source: AMrXdXsPRwYrnaXw9xX4B1eeQb0D5xrFH9eOI3n097aQpLYDHeyfCXKP4eQdFGO4lnW4dO+O4hOv4w==
-X-Received: by 2002:a05:600c:3545:b0:3c6:e60f:3f4a with SMTP id i5-20020a05600c354500b003c6e60f3f4amr23649013wmq.1.1674471479963;
-        Mon, 23 Jan 2023 02:57:59 -0800 (PST)
-Received: from ?IPV6:2a02:8011:e80c:0:c17d:2d7f:4a94:488b? ([2a02:8011:e80c:0:c17d:2d7f:4a94:488b])
-        by smtp.gmail.com with ESMTPSA id s5-20020a1cf205000000b003b47b80cec3sm10322397wmc.42.2023.01.23.02.57.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 02:57:59 -0800 (PST)
-Message-ID: <20dbac19-d510-c8f5-fd3d-588cb08a3afa@isovalent.com>
-Date: Mon, 23 Jan 2023 10:57:58 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBA98829
+	for <loongarch@lists.linux.dev>; Mon, 23 Jan 2023 23:24:05 +0000 (UTC)
+Received: from relay7-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::227])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id 6B86DC452E
+	for <loongarch@lists.linux.dev>; Mon, 23 Jan 2023 23:15:56 +0000 (UTC)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+	by mail.gandi.net (Postfix) with ESMTPSA id 84D4420002;
+	Mon, 23 Jan 2023 23:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1674515748;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aldhPACUtQ3o63pittRgbmKlsA5qruA1kOc/8QR1Hkc=;
+	b=c9ekMjPducohyCm0yQJUUZ+gTV85oV8Ans4jJ6PKCDzXh8pyVPWcNEYDuqgtgVSmWJeTus
+	b8sIp5VFjkyLGQ1Wgk5ibWRFTTUjr5qEDj0kudrhBqhzS/HliL+HiXmfK/K4nukG+cxDjz
+	dXWnDkSfwvcjhzsIsWBEgtzbtColgJxNZrq37cXHPZbQiLL9w0lqUVlIgX3RnjAdlPLZYt
+	wlsKU4d1NzDqc2Skop84h6N5eOrz9qTa4MJxEDuEsyUueFsdtI60TUPbIBhZDVkVafiDo1
+	rcOkWm7Q8lbImQpHyDpJnxKx2ZJey5+QczwHzcb+XcoDcroYtxp2gB+DPa2hFQ==
+Date: Tue, 24 Jan 2023 00:15:45 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Alessandro Zummo <a.zummo@towertech.it>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>, linux-rtc@vger.kernel.org,
+	linux-mips@vger.kernel.org, loongarch@lists.linux.dev,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	devicetree@vger.kernel.org, Qing Zhang <zhangqing@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	zhaoxiao <zhaoxiao@uniontech.com>
+Subject: Re: [PATCH V2 0/7] rtc: ls2x: Add support for the Loongson-2K/LS7A
+ RTC
+Message-ID: <Y88VIXerF5Wk/9kj@mail.local>
+References: <cover.1673227292.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [bpf-next v2] bpf: drop deprecated bpf_jit_enable == 2
-Content-Language: en-GB
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
- Tonghao Zhang <tong@infragraf.org>, Andrii Nakryiko <andrii@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
- "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
- Hao Luo <haoluo@google.com>, John Fastabend <john.fastabend@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Song Liu <song@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Hou Tao <houtao1@huawei.com>, KP Singh <kpsingh@kernel.org>,
- Yonghong Song <yhs@fb.com>, Martin KaFai Lau <martin.lau@linux.dev>,
- "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
- "mpe@ellerman.id.au" <mpe@ellerman.id.au>
-References: <20230105030614.26842-1-tong@infragraf.org>
- <ea7673e1-40ec-18be-af89-5f4fd0f71742@csgroup.eu>
- <71c83f39-f85f-d990-95b7-ab6068839e6c@iogearbox.net>
- <5836b464-290e-203f-00f2-fc6632c9f570@csgroup.eu>
- <147A796D-12C0-482F-B48A-16E67120622B@infragraf.org>
- <0b46b813-05f2-5083-9f2e-82d72970dae2@csgroup.eu>
- <0792068b-9aff-d658-5c7d-086e6d394c6c@csgroup.eu>
- <C811FC00-CE38-4227-B2E8-4CD8989D8B94@infragraf.org>
- <4ab9aafe-6436-b90d-5448-f74da22ddddb@csgroup.eu>
- <376f9737-f9a4-da68-8b7f-26020021613c@isovalent.com>
- <21b09e52-142d-92f5-4f8b-e4190f89383b@csgroup.eu>
- <43e6cd9f-ac54-46da-dba9-d535a2a77207@isovalent.com>
- <26e09ae3-dc7a-858d-c15c-7c2ff080d36d@csgroup.eu>
-From: Quentin Monnet <quentin@isovalent.com>
-In-Reply-To: <26e09ae3-dc7a-858d-c15c-7c2ff080d36d@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1673227292.git.zhoubinbin@loongson.cn>
 
-2023-01-23 07:57 UTC+0000 ~ Christophe Leroy <christophe.leroy@csgroup.eu>
+On 09/01/2023 09:35:10+0800, Binbin Zhou wrote:
+> Hi all:
 > 
+> The initial DT-base ls2x rtc driver was written by Wang Xuerui, He has
+> released five versions of patchset before, and all related mail records
+> are shown below if you are interested:
 > 
-> Le 17/01/2023 à 16:42, Quentin Monnet a écrit :
->>
->> In the meantime, you could disable the use of skeletons in bpftool, by
->> removing "clang-bpf-co-re" from FEATURE_TESTS from the Makefile. You
->> should get a functional binary, which would only miss a few features
->> (namely, printing the pids of programs holding references to BPF
->> programs, and the "bpftool prog profile" command).
+> https://lore.kernel.org/all/?q=ls2x-rtc
 > 
-> Ok, with "clang-bpf-co-re" removed, bpftool doesn't complain.
+> In this series of patches, based on the code above, I have added the
+> following support:
 > 
-> However, does it work at all ?
+> 1. Add ACPI-related support, as Loongson-3A5000 + LS7A is now ACPI-base
+>    by default under LoongArch architecture;
+> 2. Add rtc alarm/walarm related functions.
+> 
+> I have tested on Loongson-3A5000LA+LS7A1000/LS7A2000, Loongson-2K1000LA
+> and Loongson-2K0500.
+> 
+> BTW:
+> There have been discussions about merging the rtc drivers of ls1x and
+> ls2x, but the following reasons made the merger difficult to achieve:
+> 
+> 1. ls1x does not support ACPI, for it is only on MIPS-based system;
 
-Yes it does.
+This is not a good justification, you have to support both in your
+driver anyway, as shown by your CONFIG_ACPI ifdefery.
+
+> 2. ls1x does not support alarm function.
+
+It is just a matter of clearing a single bit, this is not difficult at
+all.
 
 > 
-> I started a 'tcpdump', I confirmed with ' bpf_jit_enable == 2' that a 
-> BPF jitted program is created by tcpdump.
+> Thanks.
 > 
-> 'bptool prog show' and 'bpftool prog list' returns no result.
+> -------
+> Changes since v1:
+> 1. Rebased on top of latest loongarch-next;
+> 2. Add interrupt descriptions to the ls2k and ls7a DTS files to avoid
+> errors when the driver gets the IRQ number, Thanks to Qing Zhang for
+> testing;
+> 3. Remove some inexact CONFIG_ACPI.
+> 
+> Binbin Zhou (4):
+>   rtc: Add support for the Loongson-2K/LS7A RTC
+>   LoongArch: Enable LS2X RTC in loongson3_defconfig
+>   MIPS: Loongson64: DTS: Add RTC support to LS7A
+>   MIPS: Loongson64: DTS: Add RTC support to Loongson-2K
+> 
+> WANG Xuerui (3):
+>   dt-bindings: rtc: Add Loongson LS2X RTC support
+>   MIPS: Loongson: Enable LS2X RTC in loongson3_defconfig
+>   MIPS: Loongson: Enable LS2X RTC in loongson2k_defconfig
+> 
+>  .../devicetree/bindings/rtc/trivial-rtc.yaml  |   2 +
+>  arch/loongarch/configs/loongson3_defconfig    |   1 +
+>  .../boot/dts/loongson/loongson64-2k1000.dtsi  |   7 +
+>  arch/mips/boot/dts/loongson/ls7a-pch.dtsi     |   7 +
+>  arch/mips/configs/loongson2k_defconfig        |   1 +
+>  arch/mips/configs/loongson3_defconfig         |   1 +
+>  drivers/rtc/Kconfig                           |  11 +
+>  drivers/rtc/Makefile                          |   1 +
+>  drivers/rtc/rtc-ls2x.c                        | 379 ++++++++++++++++++
+>  9 files changed, 410 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-ls2x.c
+> 
+> -- 
+> 2.31.1
+> 
 
-Bpftool works with eBPF, not with the older "classic" BPF (cBPF) used by
-tcpdump. You should see programs listed if you load anything eBPF, for
-example by using BCC tools, bpftrace, or load an eBPF program any other
-way from user space:
-
-	$ echo "int main(void) {return 0;}" | \
-		clang -O2 -target bpf -c -o foo.o -x c -
-	# bpftool prog load foo.o /sys/fs/bpf/foo type xdp
-	# bpftool prog list
-	# bpftool prog dump jited name main
-	# rm /sys/fs/bpf/foo
-
-I know tcpdump itself can show the cBPF bytecode for its programs, but I
-don't know of another way to dump the JIT-ed image for cBPF programs.
-Drgn could probably do it, with kernel debug symbols.
-
-Quentin
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
