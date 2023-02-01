@@ -1,74 +1,234 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915C420E0
-	for <loongarch@lists.linux.dev>; Wed,  1 Feb 2023 11:15:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1675249754;
-	bh=KgL43wQ3kPsTkQ5m+/+Q26nDzaZ4pmpPRj2FPWVxTUs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=C0t5G+ErswNWyt0GnaHVhVswjZ08pZQpzuQuRdT5Vo7K/UQjjZn6kLPJLNf5hd6Gl
-	 Zlc+rOzSYYB2b3grow/e2lwqeKOhPNX8dh+bZe0xiJa9vATsXScMtB7HuVNdi46zWV
-	 xDt0zacmto745SsyZTn4CFqAoyPFQpCQ8a/nkslY=
-Received: from [IPv6:240e:358:117f:3800:dc73:854d:832e:2] (unknown [IPv6:240e:358:117f:3800:dc73:854d:832e:2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 6A41F65C7B;
-	Wed,  1 Feb 2023 06:09:11 -0500 (EST)
-Message-ID: <682fcd7bb7ce1b5d04dafa2cd9d8608e6ba80189.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Fix Chinese comma
-From: Xi Ruoyao <xry111@xry111.site>
-To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 01 Feb 2023 19:09:04 +0800
-In-Reply-To: <20230201092904.11070-1-hejinyang@loongson.cn>
-References: <20230201092904.11070-1-hejinyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C7B2590
+	for <loongarch@lists.linux.dev>; Wed,  1 Feb 2023 12:55:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2AF2C433EF;
+	Wed,  1 Feb 2023 12:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1675256141;
+	bh=1xg4451YbC4DyqNIFrhmJrdp/zHaaX2hZC+i5bxMS1I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Puz192zI0V39rqpMK3L4NRd+aXmkg1l1zK8HkXzHR0uqCWo+JbJHMfmllhkGfMzEh
+	 Op9Hqwi7vLbjjtTWavtq71uFw5yIaCZqRhrVc7uumayakNxyop1OR+2W2aUfUw3jjq
+	 XyjUTATpdGYcoCpdkrL8EYmcYcErzwaeB1kVAlEk0mu+9kiVj/6t0hQNOLo+nxOVWN
+	 lb4wl7U+Z09c520N+R+1VWNslv/CfJ1uCwrIb+0wE8QUS1Z4mThkNCn7+juuugvP6W
+	 ShSr4O7TNpiTtLPJocc+iBNIlwmHSDNXHca+B/bSXGwnAjeNMAhUnhQu343bXNpOxd
+	 09fGXzgr2QYZg==
+Date: Wed, 1 Feb 2023 21:55:37 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Jinyang He
+ <hejinyang@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 4/5] LoongArch: Mark some assembler symbols as
+ non-kprobe-able
+Message-Id: <20230201215537.feda4232f7d95f499e408966@kernel.org>
+In-Reply-To: <CAAhV-H59SOQ3QQgbbJ-U1VK5z=zaGR4kEtnTmz9HUALSAnrcGA@mail.gmail.com>
+References: <1674007261-9198-1-git-send-email-yangtiezhu@loongson.cn>
+	<1674007261-9198-5-git-send-email-yangtiezhu@loongson.cn>
+	<CAAhV-H7Dt5MhaMU1=D9HxPFR+xjjoQG6RguaYMydy=v_jvrtiA@mail.gmail.com>
+	<48f0508f-3908-c6ca-c8ba-7c12dd6b3f11@loongson.cn>
+	<7f518dec-fd72-a73c-3f23-6372a83d65c2@loongson.cn>
+	<6879b948-2d61-8e09-a9d4-bc2ede31c52b@loongson.cn>
+	<CAAhV-H7KJTtZPC9=OZEZfQvMjd6Gw37Q3kZODk=wk9pt6VZuAQ@mail.gmail.com>
+	<20230120003156.48ca16ea2a6f73398e568358@kernel.org>
+	<CAAhV-H59SOQ3QQgbbJ-U1VK5z=zaGR4kEtnTmz9HUALSAnrcGA@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2023-02-01 at 17:29 +0800, Jinyang He wrote:
-> Fix Chinese comma in cpu.h.
->=20
-> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+On Fri, 20 Jan 2023 21:23:18 +0800
+Huacai Chen <chenhuacai@kernel.org> wrote:
 
-This is obvious, while I'm wondering if we have a "-Werror=3Dsomething"
-compiler option which can catch non-ASCII characters immediately.
+> On Thu, Jan 19, 2023 at 11:32 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > On Wed, 18 Jan 2023 15:17:00 +0800
+> > Huacai Chen <chenhuacai@kernel.org> wrote:
+> >
+> > > On Wed, Jan 18, 2023 at 2:24 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> > > >
+> > > >
+> > > >
+> > > > On 01/18/2023 02:05 PM, Jinyang He wrote:
+> > > > >
+> > > > > On 2023-01-18 12:23, Tiezhu Yang wrote:
+> > > > >>
+> > > > >>
+> > > > >> On 01/18/2023 12:14 PM, Huacai Chen wrote:
+> > > > >>> If memcpy should be blacklisted, then what about memset and memmove?
+> > > > >>
+> > > > >> According to the test results, there are no problems to probe
+> > > > >> memset and memmove, so no need to blacklist them for now,
+> > > > >> blacklist memcpy is because it may cause recursive exceptions,
+> > > > >> there is a detailed discussion in the following link:
+> > > > >>
+> > > > >> https://lore.kernel.org/lkml/20230114143859.7ccc45c1c5d9ce302113ab0a@kernel.org/
+> > > > >>
+> > > > >
+> > > > > Hi, Tiezhu,
+> > > > >
+> > > > > I cannot reproduce the results when kprobe memcpy. Could you please give
+> > > > > some details. Emm, I just replace "kernel_clone" with "memcpy" in
+> > > > > kprobe_example.c.
+> > > >
+> > > > Please remove the related "_ASM_NOKPROBE(memcpy)" code in
+> > > > arch/loongarch/lib/memcpy.S, and then compile and update kernel,
+> > > > execute the following cmd after reboot, I can reproduce the hang
+> > > > problem easily (it will take a few minutes).
+> > > >
+> > > > modprobe kprobe_example symbol="memcpy"
+> > > Then, why is handle_syscall different from other exception handlers?
+> >
+> > I need to check the loongarch implementation of handle_syscall() but
+> > I guess in that handler the register set is not completely set as
+> > kernel one. In that case, the software breakpoint handler may not
+> > possible to handle it correctly. So it is better to avoid probing such
+> > "border" function by kprobes.
+> Seems reasonable, handle_syscall() indeed doesn't save all registers.
+> But for memcpy(), I still think memmove() and memset() may have the
+> same problem.
 
-> ---
-> =C2=A0arch/loongarch/include/asm/cpu.h | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/loongarch/include/asm/cpu.h
-> b/arch/loongarch/include/asm/cpu.h
-> index 754f28506791..c3da91759472 100644
-> --- a/arch/loongarch/include/asm/cpu.h
-> +++ b/arch/loongarch/include/asm/cpu.h
-> @@ -36,7 +36,7 @@
-> =C2=A0
-> =C2=A0#define PRID_SERIES_LA132=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x8000=
-=C2=A0 /* Loongson 32bit */
-> =C2=A0#define PRID_SERIES_LA264=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xa000=
-=C2=A0 /* Loongson 64bit, 2-issue */
-> -#define PRID_SERIES_LA364=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xb000=C2=
-=A0 /* Loongson 64bit=EF=BC=8C3-issue */
-> +#define PRID_SERIES_LA364=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xb000=C2=
-=A0 /* Loongson 64bit, 3-issue */
-> =C2=A0#define PRID_SERIES_LA464=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xc000=
-=C2=A0 /* Loongson 64bit, 4-issue */
-> =C2=A0#define PRID_SERIES_LA664=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xd000=
-=C2=A0 /* Loongson 64bit, 6-issue */
-> =C2=A0
+I agree with that. Those fundamental functions can be used from some
+debug macros in the software breakpoint code in the future (or already?)
+Maybe you would better to check it with enabling some more (intrusive)
+debug features.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Thank you,
+
+> 
+> Huacai
+> >
+> > Thank you,
+> >
+> > >
+> > > Huacai
+> > > >
+> > > > >
+> > > > > And for your call trace,
+> > > > >
+> > > > >  handler_pre()
+> > > > >    pr_info()
+> > > > >      printk()
+> > > > >       _printk()
+> > > > >         vprintk()
+> > > > >           vprintk_store()
+> > > > >             memcpy()
+> > > > >
+> > > > > I think when we should skip this time kprobe which triggered in
+> > > > > handler_{pre, post}. That means this time kprobe will not call
+> > > > > handler_{pre, post} agian, and not cause recursion. I remember
+> > > > > your codes had done this skip action. So, that's so strange if
+> > > > > recursion in handler_{pre, post}.
+> > > > >
+> > > > >
+> > > > > Thanks,
+> > > > >
+> > > > > Jinyang
+> > > > >
+> > > > >
+> > > > >>
+> > > > >> Thanks,
+> > > > >> Tiezhu
+> > > > >>
+> > > > >>>
+> > > > >>> Huacai
+> > > > >>>
+> > > > >>> On Wed, Jan 18, 2023 at 10:01 AM Tiezhu Yang <yangtiezhu@loongson.cn>
+> > > > >>> wrote:
+> > > > >>>>
+> > > > >>>> Some assembler symbols are not kprobe safe, such as handle_syscall
+> > > > >>>> (used as syscall exception handler), *memcpy* (may cause recursive
+> > > > >>>> exceptions), they can not be instrumented, just blacklist them for
+> > > > >>>> kprobing.
+> > > > >>>>
+> > > > >>>> Here is a related problem and discussion:
+> > > > >>>> Link:
+> > > > >>>> https://lore.kernel.org/lkml/20230114143859.7ccc45c1c5d9ce302113ab0a@kernel.org/
+> > > > >>>>
+> > > > >>>>
+> > > > >>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > > > >>>> ---
+> > > > >>>>  arch/loongarch/include/asm/asm.h | 10 ++++++++++
+> > > > >>>>  arch/loongarch/kernel/entry.S    |  1 +
+> > > > >>>>  arch/loongarch/lib/memcpy.S      |  3 +++
+> > > > >>>>  3 files changed, 14 insertions(+)
+> > > > >>>>
+> > > > >>>> diff --git a/arch/loongarch/include/asm/asm.h
+> > > > >>>> b/arch/loongarch/include/asm/asm.h
+> > > > >>>> index 40eea6a..f591b32 100644
+> > > > >>>> --- a/arch/loongarch/include/asm/asm.h
+> > > > >>>> +++ b/arch/loongarch/include/asm/asm.h
+> > > > >>>> @@ -188,4 +188,14 @@
+> > > > >>>>  #define PTRLOG         3
+> > > > >>>>  #endif
+> > > > >>>>
+> > > > >>>> +/* Annotate a function as being unsuitable for kprobes. */
+> > > > >>>> +#ifdef CONFIG_KPROBES
+> > > > >>>> +#define _ASM_NOKPROBE(name)                            \
+> > > > >>>> +       .pushsection "_kprobe_blacklist", "aw";         \
+> > > > >>>> +       .quad   name;                                   \
+> > > > >>>> +       .popsection
+> > > > >>>> +#else
+> > > > >>>> +#define _ASM_NOKPROBE(name)
+> > > > >>>> +#endif
+> > > > >>>> +
+> > > > >>>>  #endif /* __ASM_ASM_H */
+> > > > >>>> diff --git a/arch/loongarch/kernel/entry.S
+> > > > >>>> b/arch/loongarch/kernel/entry.S
+> > > > >>>> index d53b631..55e23b1 100644
+> > > > >>>> --- a/arch/loongarch/kernel/entry.S
+> > > > >>>> +++ b/arch/loongarch/kernel/entry.S
+> > > > >>>> @@ -67,6 +67,7 @@ SYM_FUNC_START(handle_syscall)
+> > > > >>>>
+> > > > >>>>         RESTORE_ALL_AND_RET
+> > > > >>>>  SYM_FUNC_END(handle_syscall)
+> > > > >>>> +_ASM_NOKPROBE(handle_syscall)
+> > > > >>>>
+> > > > >>>>  SYM_CODE_START(ret_from_fork)
+> > > > >>>>         bl      schedule_tail           # a0 = struct task_struct *prev
+> > > > >>>> diff --git a/arch/loongarch/lib/memcpy.S b/arch/loongarch/lib/memcpy.S
+> > > > >>>> index 7c07d59..3b7e1de 100644
+> > > > >>>> --- a/arch/loongarch/lib/memcpy.S
+> > > > >>>> +++ b/arch/loongarch/lib/memcpy.S
+> > > > >>>> @@ -17,6 +17,7 @@ SYM_FUNC_START(memcpy)
+> > > > >>>>         ALTERNATIVE     "b __memcpy_generic", \
+> > > > >>>>                         "b __memcpy_fast", CPU_FEATURE_UAL
+> > > > >>>>  SYM_FUNC_END(memcpy)
+> > > > >>>> +_ASM_NOKPROBE(memcpy)
+> > > > >>>>
+> > > > >>>>  EXPORT_SYMBOL(memcpy)
+> > > > >>>>
+> > > > >>>> @@ -41,6 +42,7 @@ SYM_FUNC_START(__memcpy_generic)
+> > > > >>>>  2:     move    a0, a3
+> > > > >>>>         jr      ra
+> > > > >>>>  SYM_FUNC_END(__memcpy_generic)
+> > > > >>>> +_ASM_NOKPROBE(__memcpy_generic)
+> > > > >>>>
+> > > > >>>>  /*
+> > > > >>>>   * void *__memcpy_fast(void *dst, const void *src, size_t n)
+> > > > >>>> @@ -93,3 +95,4 @@ SYM_FUNC_START(__memcpy_fast)
+> > > > >>>>  3:     move    a0, a3
+> > > > >>>>         jr      ra
+> > > > >>>>  SYM_FUNC_END(__memcpy_fast)
+> > > > >>>> +_ASM_NOKPROBE(__memcpy_fast)
+> > > > >>>> --
+> > > > >>>> 2.1.0
+> > > > >>>>
+> > > > >>
+> > > >
+> > > >
+> >
+> >
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
