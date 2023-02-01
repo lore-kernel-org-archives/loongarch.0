@@ -1,158 +1,458 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE69C7F4
-	for <loongarch@lists.linux.dev>; Wed,  1 Feb 2023 04:56:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CDA0C4339B
-	for <loongarch@lists.linux.dev>; Wed,  1 Feb 2023 04:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675227379;
-	bh=/rMOgKoaFLGU2ZF+VfOT75t3kgheesZyUZ+Tm8H3Djo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SjMyXWU5PxxuGdyXwzyG/yiwX/Wc1VxOYVSbul69/KjIbm1aX0pQqhiLoZL1lUaqz
-	 CLel9bfz90fF12S5W8E0q+rxKxbNuYPKJNJYXiVrShPrOAHpDRTbB1htAiBoXCI4yE
-	 ccD4T72vhPKGovWiD+uA1u9ijLRfbNcmBx33pKlQnRX5/ABPAflrX48OYDWMQwTiu6
-	 V7ZGo8oqF0wrYQJEh4zPqPuGIVImDp5fipPICNxE/LTsNGG2PBHPpDK8z0Ns+xm7d7
-	 SECgTRZba7Vw+dtRW3JSa2cWZ6ikNp4EA63urmCxZzajJ0d3uxZ9//NoJMnepwGW22
-	 0jeNm64GkhH8Q==
-Received: by mail-ej1-f52.google.com with SMTP id p26so36686981ejx.13
-        for <loongarch@lists.linux.dev>; Tue, 31 Jan 2023 20:56:19 -0800 (PST)
-X-Gm-Message-State: AO0yUKUEJHba0SUD+d6yUz+796MD1HT3ffxVdv0uL8xbpWMIbcF4TcWA
-	5szpBgWTrEQQNsGHx0NV6oHq41CqvDDr+rZKLlg=
-X-Google-Smtp-Source: AK7set92hZkZD97DAYE2AchrM3JKoiNqu2cHYEi9o3Ug7E6yp4puK1BZovDygFPaDwSn08BqjFiA63PxHM5l7M7nQl0=
-X-Received: by 2002:a17:906:5494:b0:860:f9a6:8d57 with SMTP id
- r20-20020a170906549400b00860f9a68d57mr251119ejo.287.1675227377555; Tue, 31
- Jan 2023 20:56:17 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B0D7F
+	for <loongarch@lists.linux.dev>; Wed,  1 Feb 2023 09:16:26 +0000 (UTC)
+Received: by mail-ej1-f53.google.com with SMTP id bk15so49377652ejb.9
+        for <loongarch@lists.linux.dev>; Wed, 01 Feb 2023 01:16:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NkRABpDX1ZDvP4avYxwM4yyLvwDtwWk1oavXF5H0AQM=;
+        b=J0d1Bw0dW7oby1CTXDZVB8QCetFUn/IdxEFBg73QW/pUwW+3lMzsZiztDZFR+k0gje
+         32ZbOpIzigh6M3ZT2NEZLKhQL7cT+HaD3GFE9LvdYbO1QjK/GHSUw0MWhzmPKbfBPqlt
+         cLEl2U/2xLwwRqUXKl8JLytP+XNH3F7KWJhzd5hTTZ7VvfLAQdEhq85zgYdL6wAworAB
+         9OluIbuu5DwYX8idQHYbo/uzL4JJYFEu0pXX30RrWWK5BnAFR4nTFReN3ESFX53lee2g
+         2QoUCQJ8I61rK7huWJ2TCnnOBRl1yVaXutsHSQJP8uC0A5sQaVHxJ1tS1macUYVLfOJa
+         iVpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NkRABpDX1ZDvP4avYxwM4yyLvwDtwWk1oavXF5H0AQM=;
+        b=gM+aF0CDDtfOk+OvwpdPkb2t9gFb2YYJFdFfDOvZNSeI51wBJEFB8wn1C2GuxuGOcr
+         8GBUuXDCT6YM9+Gu6GWgMT8sag+4ZlUc8ZkGz+oGTZnLTBj6B/0HiVuiXTVtoZsFRXgV
+         h5u6mkFBMtm6xSFxKK0f7rxwMjBU2c/AfnGjGq6nrouOL739n319rcyYELK6FZlzySqy
+         5xi0GBjyqCaFrE4e+zCR0wXFuMprvOVAPPoVfazC8qyWcaYeUCNTx8toqr/75zirNKAu
+         puwT5YHz1xbRPtPXIx8cZ9YDToNoj30UlgUxFNm0Keg9SifJFFmtqewEN4AT3iWAUaJC
+         0AJA==
+X-Gm-Message-State: AO0yUKXTcAF7Ns5PO+ho1kJjlksrCWDn1H9MwVmbbcUT/EA7bkDsIK1l
+	XbD1cafBflKx9BTJ3xoyGc7HlH2HCJvjexbC9P8=
+X-Google-Smtp-Source: AK7set87Bue/5JVw8Ns+X18WzKncnKIkvtzD1cLsCPraQX2YUWk4ZFZD5nSzobAh+MqM5LWqBfoJgzoJqQ8HdVGB8oU=
+X-Received: by 2002:a17:906:30c1:b0:86e:3764:4f80 with SMTP id
+ b1-20020a17090630c100b0086e37644f80mr357492ejb.239.1675242984758; Wed, 01 Feb
+ 2023 01:16:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1674007261-9198-1-git-send-email-yangtiezhu@loongson.cn> <CAAhV-H4aTd6_cSy45KKjv-KrLTiwT4iG6+fkb84KfCrL3Y+hpg@mail.gmail.com>
-In-Reply-To: <CAAhV-H4aTd6_cSy45KKjv-KrLTiwT4iG6+fkb84KfCrL3Y+hpg@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 1 Feb 2023 12:56:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5WN5E=0Z9wpbXDc6VO7Nc+j7PGvnyAAGOmCRMJkdwSYw@mail.gmail.com>
-Message-ID: <CAAhV-H5WN5E=0Z9wpbXDc6VO7Nc+j7PGvnyAAGOmCRMJkdwSYw@mail.gmail.com>
-Subject: Re: [PATCH v12 0/5] Add kprobe and kretprobe support for LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Jeff Xie <xiehuan09@gmail.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu <mhiramat@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+References: <cover.1673227292.git.zhoubinbin@loongson.cn> <8cd5e1b763951d4ce69188cdff95d8adaf12755f.1673227292.git.zhoubinbin@loongson.cn>
+ <Y88ZaWnh9ERRocPv@mail.local>
+In-Reply-To: <Y88ZaWnh9ERRocPv@mail.local>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Wed, 1 Feb 2023 17:16:12 +0800
+Message-ID: <CAMpQs4+pWpw9bmCvKor+V41aMcLc-90aYz0QH-WS2KqkkFqMFA@mail.gmail.com>
+Subject: Re: [PATCH V2 2/7] rtc: Add support for the Loongson-2K/LS7A RTC
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Alessandro Zummo <a.zummo@towertech.it>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, linux-rtc@vger.kernel.org, 
+	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, devicetree@vger.kernel.org, 
+	Qing Zhang <zhangqing@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	zhaoxiao <zhaoxiao@uniontech.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <git@xen0n.name>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi, Jeff,
+Hi Alexandre:
 
-Could you please pay some time to test this series? Thank you.
+Sorry for the late reply.
 
-Huacai
+On Tue, Jan 24, 2023 at 7:37 AM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> Hello,
+>
+>
+> On 09/01/2023 09:35:12+0800, Binbin Zhou wrote:
+> > This RTC module is integrated into the Loongson-2K SoC and the LS7A
+> > bridge chip. This version is almost entirely rewritten to make use of
+> > current kernel API, and it supports both ACPI and DT.
+> >
+> > This driver is shared by MIPS-based Loongson-3A4000 system (use FDT) and
+> > LoongArch-based Loongson-3A5000 system (use ACPI).
+> >
+>
+> checkpatch.pl --strict complains, please fix the warnings and checks
 
-On Wed, Jan 18, 2023 at 11:30 AM Huacai Chen <chenhuacai@kernel.org> wrote:
+Got.
 >
-> Hi, Masami,
 >
-> Could you please pay some time to review this series? Thank you.
+> > +#ifdef CONFIG_ACPI
+> > +static u32 ls2x_acpi_fix_handler(void *id)
+> > +{
+> > +     int ret;
+> > +     struct ls2x_rtc_priv *priv = (struct ls2x_rtc_priv *)id;
+> > +
+> > +     spin_lock(&priv->rtc_reglock);
+> > +
+> > +     /* Disable acpi rtc enabled */
+> > +     ret = readl(priv->acpi_base + PM1_EN_REG) & ~RTC_EN;
+> > +     writel(ret, priv->acpi_base + PM1_EN_REG);
+> > +
+> > +     /* Clear acpi rtc interrupt Status */
+> > +     writel(RTC_STS, priv->acpi_base + PM1_STS_REG);
+> > +
+> > +     spin_unlock(&priv->rtc_reglock);
+> > +
+> > +     /*
+> > +      * The TOY_MATCH0_REG should be cleared 0 here,
+> > +      * otherwise the interrupt cannot be cleared.
+> > +      * Because the match condition is still satisfied
+> > +      */
+> > +     ret = regmap_write(priv->regmap, TOY_MATCH0_REG, 0);
+> > +     if (ret < 0)
+> > +             return ret;
 >
-> Huacai
+> How is this an ACPI related issue? I guess the same would happen on
+> !ACPI.
+
+I just assumed that the function would only be called under CONFIG_ACPI.
 >
-> On Wed, Jan 18, 2023 at 10:01 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> >
-> > v12:
-> >   -- Rebase on the latest code
-> >   -- Fix -Wmissing-prototypes warning when make W=1
-> >   -- Drop patch #6 "Use common function sign_extend64()"
-> >      since it has been applied yet
-> >
-> > v11:
-> >   -- Rebase on the latest code
-> >   -- Address all the review comments, thank you all
-> >   -- Modify arch_prepare_kprobe() and setup_singlestep()
-> >      to make the probe logic more clear
-> >   -- Mark some assembler symbols as non-kprobe-able
-> >   -- Use common function sign_extend64()
-> >   -- Test 20 times about 36 hours for all the 71 assembler
-> >      functions annotated with SYM_CODE_START and SYM_FUNC_START
-> >      under arch/loongarch, especially test memset alone for 10
-> >      hours, no hang problems
-> >
-> > v10:
-> >   -- Remove sign_extend() based on the latest code
-> >   -- Rename insns_are_not_supported() to insns_not_supported()
-> >   -- Rename insns_are_not_simulated() to insns_not_simulated()
-> >   -- Set KPROBE_HIT_SSDONE if cur->post_handler is not NULL
-> >   -- Enable preemption for KPROBE_REENTER in kprobe_fault_handler()
-> >
-> > v9:
-> >   -- Rename sign_extended() to sign_extend()
-> >   -- Modify kprobe_fault_handler() to handle all of kprobe_status
-> >
-> > v8:
-> >   -- Put "regs->csr_prmd &= ~CSR_PRMD_PIE;" ahead to save one line
-> >   -- Add code comment of preempt_disable()
-> >   -- Put kprobe_page_fault() in __do_page_fault()
-> >   -- Modify the check condition of break insn in kprobe_breakpoint_handler()
-> >
-> > v7:
-> >   -- Remove stop_machine_cpuslocked() related code
-> >
-> > v6:
-> >   -- Add a new patch to redefine larch_insn_patch_text() with
-> >      stop_machine_cpuslocked()
-> >   -- Modify kprobe_breakpoint_handler() to consider the original
-> >      insn is break and return the correct value
-> >   -- Modify do_bp() to refresh bcode when original insn is break
-> >
-> > v5:
-> >   -- Rebase on the latest code
-> >   -- Use stop_machine_cpuslocked() to modify insn to avoid CPU race
-> >
-> > v4:
-> >   -- Remove kprobe_exceptions_notify() in kprobes.c
-> >   -- Call kprobe_breakpoint_handler() and kprobe_singlestep_handler()
-> >      in do_bp()
-> >
-> > v3:
-> >   -- Rebase on the latest code
-> >   -- Check the alignment of PC in simu_branch() and simu_pc()
-> >   -- Add ibar in flush_insn_slot()
-> >   -- Rename kprobe_{pre,post}_handler() to {post_}kprobe_handler
-> >   -- Add preempt_disable() and preempt_enable_no_resched()
-> >   -- Remove r0 save/restore and do some minor changes
-> >      in kprobes_trampoline.S
-> >   -- Do not enable CONFIG_KPROBES by default
-> >
-> > v2:
-> >   -- Split simu_branch() and simu_pc() into a single patch
-> >   -- Call kprobe_page_fault() in do_page_fault()
-> >   -- Add kprobes_trampoline.S for kretprobe
-> >
-> > Tiezhu Yang (5):
-> >   LoongArch: Simulate branch and PC* instructions
-> >   LoongArch: Add kprobe support
-> >   LoongArch: Add kretprobe support
-> >   LoongArch: Mark some assembler symbols as non-kprobe-able
-> >   samples/kprobes: Add LoongArch support
-> >
-> >  arch/loongarch/Kconfig                     |   2 +
-> >  arch/loongarch/include/asm/asm.h           |  10 +
-> >  arch/loongarch/include/asm/inst.h          |  20 ++
-> >  arch/loongarch/include/asm/kprobes.h       |  61 +++++
-> >  arch/loongarch/include/asm/ptrace.h        |   1 +
-> >  arch/loongarch/kernel/Makefile             |   2 +
-> >  arch/loongarch/kernel/entry.S              |   1 +
-> >  arch/loongarch/kernel/inst.c               | 123 +++++++++
-> >  arch/loongarch/kernel/kprobes.c            | 405 +++++++++++++++++++++++++++++
-> >  arch/loongarch/kernel/kprobes_trampoline.S |  96 +++++++
-> >  arch/loongarch/kernel/traps.c              |  11 +-
-> >  arch/loongarch/lib/memcpy.S                |   3 +
-> >  arch/loongarch/mm/fault.c                  |   3 +
-> >  samples/kprobes/kprobe_example.c           |   8 +
-> >  14 files changed, 741 insertions(+), 5 deletions(-)
-> >  create mode 100644 arch/loongarch/include/asm/kprobes.h
-> >  create mode 100644 arch/loongarch/kernel/kprobes.c
-> >  create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
-> >
+> > +
+> > +     rtc_update_irq(priv->rtcdev, 1, RTC_AF | RTC_IRQF);
+>
+> This is not useful, at that time, userspace has had no chance to open
+> the RTC device file as it is not created yet.
+>
+> > +     return 0;
+> > +}
+> > +#endif
+> > +
+> > +static inline void ls2x_rtc_regs_to_time(struct ls2x_rtc_regs *regs,
+>
+> Those static inline functions seem to be used only once, you should just
+> put the code in the proper location.
+
+I will do it in the next version.
+>
+> > +                                      struct rtc_time *tm)
+> > +{
+> > +     tm->tm_year = regs->reg1;
+> > +     tm->tm_sec = FIELD_GET(TOY_SEC, regs->reg0);
+> > +     tm->tm_min = FIELD_GET(TOY_MIN, regs->reg0);
+> > +     tm->tm_hour = FIELD_GET(TOY_HOUR, regs->reg0);
+> > +     tm->tm_mday = FIELD_GET(TOY_DAY, regs->reg0);
+> > +     tm->tm_mon = FIELD_GET(TOY_MON, regs->reg0) - 1;
+> > +}
+> > +
+> > +static inline void ls2x_rtc_time_to_regs(struct rtc_time *tm,
+> > +                                      struct ls2x_rtc_regs *regs)
+> > +{
+> > +     regs->reg0 = FIELD_PREP(TOY_SEC, tm->tm_sec);
+> > +     regs->reg0 |= FIELD_PREP(TOY_MIN, tm->tm_min);
+> > +     regs->reg0 |= FIELD_PREP(TOY_HOUR, tm->tm_hour);
+> > +     regs->reg0 |= FIELD_PREP(TOY_DAY, tm->tm_mday);
+> > +     regs->reg0 |= FIELD_PREP(TOY_MON, tm->tm_mon + 1);
+> > +     regs->reg1 = tm->tm_year;
+> > +}
+> > +
+> > +static inline void ls2x_rtc_alarm_regs_to_time(struct ls2x_rtc_regs *regs,
+> > +                                      struct rtc_time *tm)
+> > +{
+> > +     tm->tm_sec = FIELD_GET(TOY_MATCH_SEC, regs->reg0);
+> > +     tm->tm_min = FIELD_GET(TOY_MATCH_MIN, regs->reg0);
+> > +     tm->tm_hour = FIELD_GET(TOY_MATCH_HOUR, regs->reg0);
+> > +     tm->tm_mday = FIELD_GET(TOY_MATCH_DAY, regs->reg0);
+> > +     tm->tm_mon = FIELD_GET(TOY_MATCH_MON, regs->reg0) - 1;
+> > +     /*
+> > +      * The rtc SYS_TOYMATCH0/YEAR bit field is only 6 bits, so it means 63
+> > +      * years at most. Therefore, The RTC alarm years can be set from 1900
+> > +      * to 1963. This causes the initialization of alarm fail during call
+> > +      * __rtc_read_alarm.
+> > +      * We add 64 years offset to ls2x_rtc_read_alarm. After adding the
+> > +      * offset, the RTC alarm clock can be set from 1964 to 2027.
+> > +      */
+> > +     tm->tm_year = FIELD_GET(TOY_MATCH_YEAR, regs->reg0) + 64;
+>
+> This is not symmetric with ls2x_rtc_time_to_alarm_regs, how can it work?
+
+This is to avoid an "invalid alarm value" at boot time, which of
+course should not be a good solution.
+When the alarm value is read at boot time, "year" is not yet set to
+the proper value so the year is always set to 1900.
+
+How about just  "tm->tm_year = -1", as the alarm is now only read when booting?
+
+>
+> > +}
+> > +
+> > +static inline void ls2x_rtc_time_to_alarm_regs(struct rtc_time *tm,
+> > +                                      struct ls2x_rtc_regs *regs)
+> > +{
+> > +     regs->reg0 = FIELD_PREP(TOY_MATCH_SEC, tm->tm_sec);
+> > +     regs->reg0 |= FIELD_PREP(TOY_MATCH_MIN, tm->tm_min);
+> > +     regs->reg0 |= FIELD_PREP(TOY_MATCH_HOUR, tm->tm_hour);
+> > +     regs->reg0 |= FIELD_PREP(TOY_MATCH_DAY, tm->tm_mday);
+> > +     regs->reg0 |= FIELD_PREP(TOY_MATCH_MON, tm->tm_mon + 1);
+> > +     regs->reg0 |= FIELD_PREP(TOY_MATCH_YEAR, tm->tm_year);
+> > +}
+> > +
+> > +static int ls2x_rtc_read_time(struct device *dev, struct rtc_time *tm)
+> > +{
+> > +     int ret;
+> > +     struct ls2x_rtc_regs regs;
+> > +     struct ls2x_rtc_priv *priv = dev_get_drvdata(dev);
+> > +
+> > +     ret = regmap_read(priv->regmap, TOY_READ1_REG, &regs.reg1);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> > +     ret = regmap_read(priv->regmap, TOY_READ0_REG, &regs.reg0);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+>
+> I never got a reply to my question:
+>
+> "
+> I'm actually wondering why you read first TOY_READ1_REG then
+> TOY_READ0_REG. ls1x does the opposite and the ls1c datasheet I found
+> doesn't mention any latching happening. So unless latching is done on
+> TOY_READ1_REG, you could use regmap_bulk_read and simply avoid struct
+> ls2x_rtc_regs.
+> If there is no latching, you may need to read TOY_READ0_REG at least
+> twice. Because TOY_READ1_REG only contains the year, it is an issue only
+> on 31 of December and it will not be easy to reproduce.
+> "
+>
+
+The LS7A and Loongson-2K datasheets also do not mention any latching
+happening. Reading TOY_READ1_REG first is probably just a matter of
+habit.
+I tried using regmap_bulk_xxx() and it also reads and writes time
+properly. In the next version I will rewrite this part of the code.
+
+Example:
+
+#define LS2X_NUM_TIME_REGS      2
+
+u32 rtc_data[LS2X_NUM_TIME_REGS];
+struct ls2x_rtc_priv *priv = dev_get_drvdata(dev);
+
+ret = regmap_bulk_read(priv->regmap, TOY_READ0_REG, rtc_data,
+LS2X_NUM_TIME_REGS);
+
+
+>
+> > +     ls2x_rtc_regs_to_time(&regs, tm);
+> > +     return 0;
+> > +}
+> > +
+> > +static int ls2x_rtc_set_time(struct device *dev, struct rtc_time *tm)
+> > +{
+> > +     int ret;
+> > +     struct ls2x_rtc_regs regs;
+> > +     struct ls2x_rtc_priv *priv = dev_get_drvdata(dev);
+> > +
+> > +     ls2x_rtc_time_to_regs(tm, &regs);
+> > +
+> > +     ret = regmap_write(priv->regmap, TOY_WRITE0_REG, regs.reg0);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> > +     return regmap_write(priv->regmap, TOY_WRITE1_REG, regs.reg1);
+> > +}
+> > +
+> > +static int ls2x_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+> > +{
+> > +     int ret;
+> > +     struct ls2x_rtc_regs regs;
+> > +     struct ls2x_rtc_priv *priv = dev_get_drvdata(dev);
+> > +
+> > +     ret = regmap_read(priv->regmap, TOY_MATCH0_REG, &regs.reg0);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> > +     ls2x_rtc_alarm_regs_to_time(&regs, &alrm->time);
+> > +     alrm->enabled = !!(readl(priv->acpi_base + PM1_EN_REG) & RTC_EN);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int ls2x_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
+> > +{
+> > +     u32 val;
+> > +     struct ls2x_rtc_priv *priv = dev_get_drvdata(dev);
+> > +
+> > +     spin_lock(&priv->rtc_reglock);
+> > +     val = readl(priv->acpi_base + PM1_EN_REG);
+> > +
+> > +     /* Enalbe RTC alarm */
+> Typo
+>
+> > +     writel((enabled ? val | RTC_EN : val & ~RTC_EN),
+> > +            priv->acpi_base + PM1_EN_REG);
+> > +     spin_unlock(&priv->rtc_reglock);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int ls2x_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+> > +{
+> > +     int ret;
+> > +     struct ls2x_rtc_regs regs;
+> > +     struct ls2x_rtc_priv *priv = dev_get_drvdata(dev);
+> > +
+> > +     ls2x_rtc_time_to_alarm_regs(&alrm->time, &regs);
+> > +
+> > +     ret = regmap_write(priv->regmap, TOY_MATCH0_REG, regs.reg0);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> > +     return ls2x_rtc_alarm_irq_enable(dev, alrm->enabled);
+> > +}
+> > +
+> > +static const struct rtc_class_ops ls2x_rtc_ops = {
+> > +     .read_time = ls2x_rtc_read_time,
+> > +     .set_time = ls2x_rtc_set_time,
+> > +     .read_alarm = ls2x_rtc_read_alarm,
+> > +     .set_alarm = ls2x_rtc_set_alarm,
+> > +     .alarm_irq_enable = ls2x_rtc_alarm_irq_enable,
+> > +};
+> > +
+> > +static int ls2x_enable_rtc(struct ls2x_rtc_priv *priv)
+> > +{
+> > +     u32 val;
+> > +     int ret;
+> > +
+> > +     ret = regmap_read(priv->regmap, RTC_CTRL_REG, &val);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> > +     return regmap_write(priv->regmap, RTC_CTRL_REG,
+> > +                         val | TOY_ENABLE | OSC_ENABLE);
+> > +}
+> > +
+> > +static int ls2x_rtc_probe(struct platform_device *pdev)
+> > +{
+> > +     int ret;
+> > +     void __iomem *regs;
+> > +     struct ls2x_rtc_priv *priv;
+> > +     struct device *dev = &pdev->dev;
+> > +
+> > +     priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +     if (!priv)
+> > +             return -ENOMEM;
+> > +
+> > +     priv->irq = platform_get_irq(pdev, 0);
+> > +     if (priv->irq < 0)
+> > +             return dev_err_probe(dev, priv->irq, "platform_get_irq failed\n");
+> > +
+> > +     platform_set_drvdata(pdev, priv);
+> > +
+> > +     regs = devm_platform_ioremap_resource(pdev, 0);
+> > +     if (IS_ERR(regs))
+> > +             return dev_err_probe(dev, PTR_ERR(regs),
+> > +                                  "devm_platform_ioremap_resource failed\n");
+> > +
+> > +     priv->regmap = devm_regmap_init_mmio(dev, regs,
+> > +                                          &ls2x_rtc_regmap_config);
+> > +     if (IS_ERR(priv->regmap))
+> > +             return dev_err_probe(dev, PTR_ERR(priv->regmap),
+> > +                                  "devm_regmap_init_mmio failed\n");
+> > +
+> > +     priv->rtcdev = devm_rtc_allocate_device(dev);
+> > +     if (IS_ERR(priv->rtcdev))
+> > +             return dev_err_probe(dev, PTR_ERR(priv->rtcdev),
+> > +                                  "devm_rtc_allocate_device failed\n");
+> > +
+> > +     /* Due to hardware erratum, all years multiple of 4 are considered
+> > +      * leap year, so only years 2000 through 2099 are usable.
+> > +      *
+> > +      * Previous out-of-tree versions of this driver wrote tm_year directly
+> > +      * into the year register, so epoch 2000 must be used to preserve
+> > +      * semantics on shipped systems.
+> > +      */
+> > +     priv->rtcdev->range_min = RTC_TIMESTAMP_BEGIN_2000;
+> > +     priv->rtcdev->range_max = RTC_TIMESTAMP_END_2099;
+> > +     priv->rtcdev->ops = &ls2x_rtc_ops;
+> > +     priv->acpi_base = regs - PM_RTC_OFFSET;
+> > +     spin_lock_init(&priv->rtc_reglock);
+> > +     clear_bit(RTC_FEATURE_UPDATE_INTERRUPT, priv->rtcdev->features);
+>
+> Why?
+
+If you don't clear UIE, on the Loongson-2k, the shutdown will turn
+into a reboot after setting up the wakealarm.
+
+>
+> > +
+> > +#ifdef CONFIG_ACPI
+> > +     if (!acpi_disabled)
+> > +             acpi_install_fixed_event_handler(ACPI_EVENT_RTC,
+> > +                                              ls2x_acpi_fix_handler, priv);
+> > +#endif
+> > +
+> > +     ret = ls2x_enable_rtc(priv);
+> > +     if (ret < 0)
+> > +             return dev_err_probe(dev, ret, "ls2x_enable_rtc failed\n");
+>
+> This should not be done in probe but on the first set_time. This then
+> allows you to know whether the time has been set and is valid in
+> read_time. Please add the check.
+
+Actually I don't quite understand the point you are making, the
+function just enables the TOY counter, would there be any particular
+problem with calling it in the probe function?
+
+Thanks.
+
+Binbin
+>
+> > +
+> > +     ret = devm_request_threaded_irq(dev, priv->irq, NULL, ls2x_rtc_isr,
+> > +                                     IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+> > +                                     "ls2x-alarm", priv);
+> > +     if (ret < 0)
+> > +             return dev_err_probe(dev, ret, "Unable to request irq %d\n",
+> > +                                  priv->irq);
+> > +
+> > +     if (!device_can_wakeup(&pdev->dev))
+> > +             device_init_wakeup(dev, 1);
+> > +
+> > +     return devm_rtc_register_device(priv->rtcdev);
+> > +}
+> > +
+> > +static const struct of_device_id ls2x_rtc_of_match[] = {
+> > +     { .compatible = "loongson,ls2x-rtc" },
+> > +     { /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ls2x_rtc_of_match);
+> > +
+> > +static const struct acpi_device_id ls2x_rtc_acpi_match[] = {
+> > +     { "LOON0001" }, /* Loongson LS7A */
+> > +     { }
+> > +};
+> > +MODULE_DEVICE_TABLE(acpi, ls2x_rtc_acpi_match);
+> > +
+> > +static struct platform_driver ls2x_rtc_driver = {
+> > +     .probe          = ls2x_rtc_probe,
+> > +     .driver         = {
+> > +             .name   = "ls2x-rtc",
+> > +             .of_match_table = ls2x_rtc_of_match,
+> > +             .acpi_match_table = ls2x_rtc_acpi_match,
+> > +     },
+> > +};
+> > +
+> > +module_platform_driver(ls2x_rtc_driver);
+> > +
+> > +MODULE_DESCRIPTION("Loongson LS2X RTC driver");
+> > +MODULE_AUTHOR("WANG Xuerui <git@xen0n.name>");
+> > +MODULE_AUTHOR("Huacai Chen <chenhuacai@kernel.org>");
+> > +MODULE_AUTHOR("Binbin Zhou <zhoubinbin@loongson.cn>");
+> > +MODULE_LICENSE("GPL");
 > > --
-> > 2.1.0
+> > 2.31.1
 > >
-> >
+>
+> --
+> Alexandre Belloni, co-owner and COO, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>
