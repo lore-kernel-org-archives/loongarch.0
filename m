@@ -1,95 +1,86 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAFF10FD
-	for <loongarch@lists.linux.dev>; Thu,  2 Feb 2023 09:47:17 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id 8B34F5C0059;
-	Thu,  2 Feb 2023 04:47:16 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Thu, 02 Feb 2023 04:47:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm3; t=1675331236; x=1675417636; bh=LFC34TAL9j
-	tpDQE+UCn/9sUe6pge8viDh79p+DyhgO8=; b=NJY+AHJV/+n+8tmmq4+Tc+KX7d
-	BDhHlSWy50bc+7b4Ka8ZsSz5n1BnCsrz5GbzUYFO2JdJCEFboO6okmfBq6pVO/ai
-	pLad/FRWb9osPXLM6fBgBKtY5WlHVnX7SitaanTIC/wlqEUpd+jw6V6jSMqGCzKM
-	+JVnf3aJ0kLZoMk04MEQBBqD9gEaoAxmi2hLPn3xZ7zOn3mqB4NP2tmTFv78xkZk
-	lrQ+Fu5gKnwxktllpvwYws7BCF8jYknZ3iTxH6iRGlenntNXfpCCKf1p/2RBEIkO
-	3I8Pj76BYHikSNmB47jgCEqzX9yJtxoBMp6nBvZglp5t5fPXN0/DJlp8nb7g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1675331236; x=1675417636; bh=LFC34TAL9jtpDQE+UCn/9sUe6pge
-	8viDh79p+DyhgO8=; b=QjIxKxoqmL2q359SmbuioNC+3IHi5M7bW64DEsdA+MU0
-	9rgNJx+cTTYMSIHP+P+Tsb/YfRivarH3VTSsjxarkwBCkXYYOn/eQO2FvgS6xsvZ
-	mg03DDLv/OxBkeRuAyvvT9ydMSsQdfQz7u+gru+qs2j86NNtdOgVJPCxAjZeVOg/
-	ybj3ZL3HkaaxfEMZiCiSVo8fEBbLX7EWlJDN9uO4/CnxrvQQ5d45+VIklbOLItZJ
-	3zikSxswjH7LViAgxNSWpewb+v1KnogwOTCsLE4prqkPVyq90IsESdm8KTcnqZ4Y
-	j8Uzcd3z5mNIj7IIOLWu6wFZ1E8A5MRFXOjEYKDZeA==
-X-ME-Sender: <xms:o4bbYxzLhPw7hLtejZEc1RKXRjtdTUtuZIyc6pggt9364cqB8aNF0w>
-    <xme:o4bbYxS_y6BlcgBynek21SvxvCOVrUkavcnwkLSkHnOdpaXce22muRqN0GqJ56e5u
-    Bps74GQuko2fDbUXQ8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudefkedgtdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:o4bbY7WrPPphmReiUgSWAsAcP9vz_uli01d5WXbt7jkPGIQ4PT6czQ>
-    <xmx:o4bbYzgm2ZPuDf8IB2LRfZ7u5m7vnhF3qa7jTpylMhD6TWBFKmLHDg>
-    <xmx:o4bbYzBarxOFNOoXh1-dz86yntwhoU7CORrIHNwZrZ1UxxDOAHyqRQ>
-    <xmx:pIbbY10va1t_-qxKNBI3FQepGoPNaMGoDlpPVa_YPe35V37PLACqVQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id AC923B6044F; Thu,  2 Feb 2023 04:47:15 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-107-g82c3c54364-fm-20230131.002-g82c3c543
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E6C7E8
+	for <loongarch@lists.linux.dev>; Thu,  2 Feb 2023 10:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1675333849; bh=pxzyuwtPjht0CvEbp2BUK8o32JDLmwrAyaaDPGgn1YE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aSIO1WEiRitrrWL/lY6pSFFIiPbl7Jz0PSkrRsQ2bQZQZzmb6TxBZp/gkjBzn35mw
+	 x/n8xyqhobJmV52K0xFt3Qafe3iS2HxZKKhkFDAqWpImh7mr+H5g0ujUImykSE526g
+	 yV/uMjGJu4pb/QvYrvoljua5PYekjzrKxLeVS1Zc=
+Received: from [100.100.35.204] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 7189F60112;
+	Thu,  2 Feb 2023 18:30:48 +0800 (CST)
+Message-ID: <5fc85453-1e2c-1f00-7879-1b5fa318c78a@xen0n.name>
+Date: Thu, 2 Feb 2023 18:30:46 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <ccf74ebd-ccc1-4de5-a425-dcde4ac39a8d@app.fastmail.com>
-In-Reply-To: <20230202084238.2408516-1-chenhuacai@loongson.cn>
-References: <20230202084238.2408516-1-chenhuacai@loongson.cn>
-Date: Thu, 02 Feb 2023 10:46:56 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Huacai Chen" <chenhuacai@loongson.cn>,
- "Huacai Chen" <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>,
- "Xuefeng Li" <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0)
+ Gecko/20100101 Firefox/111.0 Thunderbird/111.0a1
 Subject: Re: [PATCH] LoongArch: Make -mstrict-align be configurable
-Content-Type: text/plain
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
+ Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
+References: <20230202084238.2408516-1-chenhuacai@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20230202084238.2408516-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 2, 2023, at 09:42, Huacai Chen wrote:
+On 2023/2/2 16:42, Huacai Chen wrote:
 > Introduce Kconfig option ARCH_STRICT_ALIGN to make -mstrict-align be
 > configurable.
->
+> 
 > Not all LoongArch cores support h/w unaligned access, we can use the
 > -mstrict-align build parameter to prevent unaligned accesses.
->
+> 
 > This option is disabled by default to optimise for performance, but you
 > can enabled it manually if you want to run kernel on systems without h/w
 > unaligned access support.
->
+
+It's customary to accompany "performance-related" changes like this with 
+some benchmark numbers and concrete use cases where this would be 
+profitable. Especially given that arch/loongarch developer and user base 
+is relatively small, we probably don't want to allow customization of 
+such a low-level characteristic. In general kernel performance does not 
+vary much with compiler flags like this, so I'd really hope to see some 
+numbers here to convince people that this is *really* providing gains.
+
+Also, defaulting to emitting unaligned accesses would mean those future, 
+likely embedded models (and AFAIK some existing models that haven't 
+reached GA yet) would lose support with the defconfig. Which means 
+downstream packagers that care about those use cases would have one more 
+non-default, non-generic option to carry within their Kconfig. We 
+probably don't want to repeat the history of other architectures (think 
+arch/arm or arch/mips) where there wasn't really generic builds and 
+board-specific tweaks proliferated.
+
+> 
 > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-
-This feels like it's a way too low-level option, I would not expect
-users to be able to answer this correctly.
-
-What I would do instead is to have Kconfig options for specific
-CPU implementations and derive the alignment requirements from
-that.
- 
+> ---
+>   arch/loongarch/Kconfig  | 10 ++++++++++
+>   arch/loongarch/Makefile |  2 ++
+>   2 files changed, 12 insertions(+)
+> 
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 9cc8b84f7eb0..7470dcfb32f0 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -441,6 +441,16 @@ config ARCH_IOREMAP
+>   	  protection support. However, you can enable LoongArch DMW-based
+>   	  ioremap() for better performance.
+>   
 > +config ARCH_STRICT_ALIGN
 > +	bool "Enable -mstrict-align to prevent unaligned accesses"
 > +	help
@@ -100,12 +91,28 @@ that.
 > +	  enabled it manually if you want to run kernel on systems without
 > +	  h/w unaligned access support.
 > +
+>   config KEXEC
+>   	bool "Kexec system call"
+>   	select KEXEC_CORE
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index 4402387d2755..ccfb52700237 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+> @@ -91,10 +91,12 @@ KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
+>   # instead of .eh_frame so we don't discard them.
+>   KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
+>   
+> +ifdef CONFIG_ARCH_STRICT_ALIGN
+>   # Don't emit unaligned accesses.
+>   # Not all LoongArch cores support unaligned access, and as kernel we can't
+>   # rely on others to provide emulation for these accesses.
+>   KBUILD_CFLAGS += $(call cc-option,-mstrict-align)
+> +endif >
+>   KBUILD_CFLAGS += -isystem $(shell $(CC) -print-file-name=include)
+>   
 
+-- 
+WANG "xen0n" Xuerui
 
-There is already a global CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-option, I think you should use that one instead of adding another
-one. Setting HAVE_EFFICIENT_UNALIGNED_ACCESS for CPUs that can
-do unaligned access will enable some important optimizations in
-the network stack and a few other places.
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
-    Arnd
