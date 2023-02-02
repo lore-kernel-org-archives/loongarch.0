@@ -1,98 +1,195 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E892F8F7D
-	for <loongarch@lists.linux.dev>; Thu,  2 Feb 2023 21:26:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64382C433D2;
-	Thu,  2 Feb 2023 21:26:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA399AD3A
+	for <loongarch@lists.linux.dev>; Thu,  2 Feb 2023 23:59:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15DF6C433EF;
+	Thu,  2 Feb 2023 23:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675373171;
-	bh=W3AjyQkHsWUf6ay8jgNtEs+jDZGB5ySJ+PvHC36iymc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fqz8oEDaC0pm9msf1bl82X05/7cYVXF/gNC08TXfH2ttImmdnfrLRNcAWAwLLcGm6
-	 Lh/2mshRsNKsoK0QRGn/3nzCCTo11cj9RrAqnal1/TYJh0wQPBBVsii8bHtZlN2ENu
-	 W1g0OqgoY2Phy3SnFOMdAdIovXN7GFJvGDnao/mN3VKJdohIAiLqkPsHXsDb6V4UMc
-	 Yf3Yi+Fee4gqPT5sDV0NweMVCk5Fw0NcaGM6KlBMPgAMgsx+guVvlQNUncgW0viqlC
-	 qtdnNwK1MUK4tmVKf7BZfZggh1OThY7LuImHw2VvzT8cFdkKsxZMpPXoF5FfqKOIEK
-	 QfGHJupa18A4w==
-Date: Thu, 2 Feb 2023 22:26:09 +0100
-From: Wolfram Sang <wsa@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Peibao Liu <liupeibao@loongson.cn>
-Subject: Re: [PATCH V11 2/3] i2c: ls2x: Add driver for Loongson-2K/LS7A I2C
- controller
-Message-ID: <Y9wqcWHBO9y/xKfO@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Andy Shevchenko <andy@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Peibao Liu <liupeibao@loongson.cn>
-References: <cover.1675167975.git.zhoubinbin@loongson.cn>
- <c6d7ee649e73536c62f665d11b0504029bd5613a.1675167975.git.zhoubinbin@loongson.cn>
+	s=k20201202; t=1675382364;
+	bh=2P9wIQEA+MBCToZWJa8KTdnvh+876H8+qF/zfobU/Sg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GOIMSpOlbLBNwO5nm0rQCYPkPzGmiCvglFwaUhyHAaHSohT6EE/Q8UiuIkVxAW1Fg
+	 5lu0jOTsMbjS/MIAniIZKt3xMi9nXHVNGqBYPE/eH8nGohLixm7XZxEh6plUAGwHsV
+	 Ho6Ojjym2kEkBeNbXxW0jXE4ex4C7m/TgXuQpaEEdcNdfbNd9jKpMt4g41vroVq704
+	 +CFIXdh8O+YKkz35LCRRqsE7cU7xTQciSjqetUb7IoIjxJASf/jW4dPAWjzcFjxLwJ
+	 9HxjDoDL+/0ORCC5ZvNmsmwNyxENaLnbF0+ur8KXP1JZqI6MeCi4a6Yip4FFs31+V6
+	 bZjmmIrTfyIMA==
+Date: Fri, 3 Feb 2023 08:59:21 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jeff Xie <xiehuan09@gmail.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu
+ <mhiramat@kernel.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 0/5] Add kprobe and kretprobe support for LoongArch
+Message-Id: <20230203085921.7f8e58c89075d708c266f730@kernel.org>
+In-Reply-To: <CAEr6+EBYF2xqZWEuZaz5un5FF3Jb-rSAQp3s3uojsovm9RcUYA@mail.gmail.com>
+References: <1674007261-9198-1-git-send-email-yangtiezhu@loongson.cn>
+	<CAAhV-H4aTd6_cSy45KKjv-KrLTiwT4iG6+fkb84KfCrL3Y+hpg@mail.gmail.com>
+	<CAAhV-H5WN5E=0Z9wpbXDc6VO7Nc+j7PGvnyAAGOmCRMJkdwSYw@mail.gmail.com>
+	<CAEr6+ECO-=jfhzHrcdKGx0MsjMBMiN6wsBPCfv7CaXo_amAWWg@mail.gmail.com>
+	<02806f85-bc09-d316-f058-3947353cb190@loongson.cn>
+	<CAEr6+EBYF2xqZWEuZaz5un5FF3Jb-rSAQp3s3uojsovm9RcUYA@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Cs5t7USZHMZZKuI0"
-Content-Disposition: inline
-In-Reply-To: <c6d7ee649e73536c62f665d11b0504029bd5613a.1675167975.git.zhoubinbin@loongson.cn>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Thu, 2 Feb 2023 11:33:23 +0800
+Jeff Xie <xiehuan09@gmail.com> wrote:
+
+> On Thu, Feb 2, 2023 at 10:23 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> >
+> >
+> >
+> > On 02/01/2023 05:40 PM, Jeff Xie wrote:
+> > > On Wed, Feb 1, 2023 at 12:56 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+> > >>
+> > >> Hi, Jeff,
+> > >>
+> > >> Could you please pay some time to test this series? Thank you.
+> > >
+> > > Thanks for notifying me about the test.
+> > >
+> > > I have tested the patchset(based on the
+> > > https://github.com/loongson/linux/tree/loongarch-next),
+> > > I found that some functions can't  be probed e.g. scheduler_tick() or
+> > > uart_write_wakeup()
+> > > the two functions have the same point,  they are all run in the hardirq context.
+> > >
+> > > I don't know if it's related to the hardirq context, I haven't had
+> > > time to study this patchset carefully.
+> > > and they can be probed in the x86_64 arch.
+> > >
+> > > root@loongarch modules]# insmod ./kprobe_example.ko symbol=scheduler_tick
+> > > insmod: can't insert './kprobe_example.ko': invalid parameter
+> > >
+> > > dmesg:
+> > > [   39.806435] kprobe_init: register_kprobe failed, returned -22
+> > >
+> >
+> > Thanks for your test.
+> >
+> > On my test environment, I can not reproduce the above issue,
+> > here are the test results, it seems no problem.
+> >
+> > [root@linux loongson]# dmesg -c
+> > [root@linux loongson]# uname -m
+> > loongarch64
+> > [root@linux loongson]# modprobe kprobe_example symbol=scheduler_tick
+> > [root@linux loongson]# rmmod kprobe_example
+> > [root@linux loongson]# dmesg | tail -2
+> > [ 3317.138086] handler_post: <scheduler_tick> p->addr =
+> > 0x0000000065d12f66, estat = 0xc0000
+> > [ 3317.154086] kprobe_exit: kprobe at 0000000065d12f66 unregistered
+> >
+> > [root@linux loongson]# dmesg -c
+> > [root@linux loongson]# uname -m
+> > loongarch64
+> > [root@linux loongson]# modprobe kprobe_example symbol=uart_write_wakeup
+> > [root@linux loongson]# rmmod kprobe_example
+> > [root@linux loongson]# dmesg | tail -2
+> > [ 3433.502092] handler_post: <uart_write_wakeup> p->addr =
+> > 0x0000000019718061, estat = 0xc0000
+> > [ 3433.762085] kprobe_exit: kprobe at 0000000019718061 unregistered
+> >
+> > Additionally, "register_kprobe failed, returned -22" means the symbol
+> > can not be probed, here is the related code:
+> >
+> > register_kprobe()
+> >    check_kprobe_address_safe()
+> >
+> > static int check_kprobe_address_safe(struct kprobe *p,
+> >                                      struct module **probed_mod)
+> > {
+> >         int ret;
+> >
+> >         ret = check_ftrace_location(p);
+> >         if (ret)
+> >                 return ret;
+> >         jump_label_lock();
+> >         preempt_disable();
+> >
+> >         /* Ensure it is not in reserved area nor out of text */
+> >         if (!(core_kernel_text((unsigned long) p->addr) ||
+> >             is_module_text_address((unsigned long) p->addr)) ||
+> >             in_gate_area_no_mm((unsigned long) p->addr) ||
+> >             within_kprobe_blacklist((unsigned long) p->addr) ||
+> >             jump_label_text_reserved(p->addr, p->addr) ||
+> >             static_call_text_reserved(p->addr, p->addr) ||
+> >             find_bug((unsigned long)p->addr)) {
+> >                 ret = -EINVAL;
+> >                 goto out;
+> >         }
+> > ...
+> > }
+> 
+> Today I looked at the code, this has nothing to do with hardirq :-)
+> because I enabled this kernel option CONFIG_DYNAMIC_FTRACE, the
+> loongarch should not support the option yet.
+
+Until you implement the feature, "HAVE_<FEATURE>" should not be selected
+in arch/*/Kconfig. So if the DYNAMIC_FTRACE is not implemented,
+please drop "select HAVE_DYNAMIC_FTRACE"...
+
+Thank you,
 
 
---Cs5t7USZHMZZKuI0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> #ifdef CONFIG_DYNAMIC_FTRACE
+> unsigned long ftrace_location(unsigned long ip);
+> 
+> #else /* CONFIG_DYNAMIC_FTRACE */
+> 
+> static inline unsigned long ftrace_location(unsigned long ip)
+> {
+>         return 0;
+> }
+> 
+> #endif
+> 
+> 
+> static int check_ftrace_location(struct kprobe *p)
+> {
+>         unsigned long addr = (unsigned long)p->addr;
+> 
+>         if (ftrace_location(addr) == addr) {
+> #ifdef CONFIG_KPROBES_ON_FTRACE
+>                 p->flags |= KPROBE_FLAG_FTRACE;
+> #else   /* !CONFIG_KPROBES_ON_FTRACE */
+>                 return -EINVAL;  // get error from here
+> #endif
+>         }
+>         return 0;
+> }
+> 
+> static int check_kprobe_address_safe(struct kprobe *p,
+>                                      struct module **probed_mod)
+> {
+>         int ret;
+> 
+>         ret = check_ftrace_location(p);
+>         if (ret)
+>                 return ret; //  return -EINVAL
+> }
+> 
+> 
+> >
+> > Thanks,
+> > Tiezhu
+> >
+> 
+> 
+> -- 
+> Thanks,
+> JeffXie
 
-On Tue, Jan 31, 2023 at 08:37:31PM +0800, Binbin Zhou wrote:
-> This I2C module is integrated into the Loongson-2K SoCs and Loongson
-> LS7A bridge chip.
->=20
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-Applied to for-next, thank you and all the reviewers!
-
-If you like to maintain the driver, please send an addition to the
-MAINTAINERS file in a seperate patch. That would be great!
-
-
---Cs5t7USZHMZZKuI0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmPcKnAACgkQFA3kzBSg
-Kbb9hBAAn/ENrQRrLTsNXOb+h1W+3dKdvAU7Q1MZsTKMvKfEqYXA/qB3agngvtdh
-wjeBpCVcmlvEwo/shFseEdMeedYQkhonVydcxkcJfyHQKFkbgPYF9FQ9boCINpR5
-k1fpt6azn8fRD1zOJJ/EvcKaaIV9JSLqvp0OgVpaIepNMtEdDWjJj5zQhqDBOw2Z
-jpICbpPpzYDK/D5sCXiLSxM0XjKFm3SGGVMekNRV5a/N/25Nwdtxk3wbvx4BixT3
-NBg4hfl3vfBnDaAqTacSW9EnpZUJ0dyHyMQ75rLaGcjScAGYQ/rR+6da4y2I1t7g
-ubjuRg68FAPjU8RjYR6eha8ocI84WFA6UQMU1VvJYwvTYqTsz8SMFth6E6QOJfti
-4GEVoE/JyiLFEBRvD/jE4Xej5SehknZO3VChm2qGNvZzdLB2aW/Ua4xVJIDY7P04
-h1bvZ2qSGz5zrmXGZ38Z7HbF1SY31Wh983CKsjTbZs0f1+9hhVMBgFhUc5J9FyCa
-MfE/GjRNrvoEXAjEGCseulUaDkxtW11chPebcFwEp07cVA0Tm7IVUswKG//eMmYb
-auIGwlYW2kbMnBDSJoTYS/ClJE0W0HOu/WiOt9kNih58e2gZKugazyKQ8+FsSPri
-kKUj2ALDzjNg/EWE4l46JsJV9UhmTS1LBYmRlIdTq9pZD59xtG0=
-=ErXU
------END PGP SIGNATURE-----
-
---Cs5t7USZHMZZKuI0--
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
