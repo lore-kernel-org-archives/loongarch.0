@@ -1,118 +1,97 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E6C7E8
-	for <loongarch@lists.linux.dev>; Thu,  2 Feb 2023 10:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1675333849; bh=pxzyuwtPjht0CvEbp2BUK8o32JDLmwrAyaaDPGgn1YE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aSIO1WEiRitrrWL/lY6pSFFIiPbl7Jz0PSkrRsQ2bQZQZzmb6TxBZp/gkjBzn35mw
-	 x/n8xyqhobJmV52K0xFt3Qafe3iS2HxZKKhkFDAqWpImh7mr+H5g0ujUImykSE526g
-	 yV/uMjGJu4pb/QvYrvoljua5PYekjzrKxLeVS1Zc=
-Received: from [100.100.35.204] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 7189F60112;
-	Thu,  2 Feb 2023 18:30:48 +0800 (CST)
-Message-ID: <5fc85453-1e2c-1f00-7879-1b5fa318c78a@xen0n.name>
-Date: Thu, 2 Feb 2023 18:30:46 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295858F7D
+	for <loongarch@lists.linux.dev>; Thu,  2 Feb 2023 21:25:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40C40C433EF;
+	Thu,  2 Feb 2023 21:25:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1675373113;
+	bh=Tu0Lv+jemAQVpkWaP+lSA87Ark9WBZjJyyhKVYChSDU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k/HX4KJ4k82Ckc5k8aqlhZgpvPdUYRnNJ7SdFXp6M8owpxCWWRfX5pTMbLD8woDo3
+	 k0E6dvJo5SHvABdTzmPMKhuNcq0U5n9l9/E3HCiN9effa73IMVNpEuu9FmERWGjgV+
+	 nnSkK6Eoaqy2Jo9wk7SgmWWptUE5sYOVRdtUZT5JIfpNv1BVZlvUd4ZHMej6jc/pvh
+	 dMp3NgfUZbe+0C5TlYl5+w7Zqf0j20uAEhFl77XGjLvabQ6GVWHbQmf0vcU4BsUdcZ
+	 PFLycF+3rdJjT7teUcS0shnrmvPhbZfWdiIOKaMe37aapcfE0oBaLCQaswtprzx9xH
+	 ZPg9uZZc8q5Vg==
+Date: Thu, 2 Feb 2023 22:25:10 +0100
+From: Wolfram Sang <wsa@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Peibao Liu <liupeibao@loongson.cn>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH V11 1/3] dt-bindings: i2c: Add Loongson LS2X I2C
+ controller
+Message-ID: <Y9wqNkaNI0GuwrGk@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Andy Shevchenko <andy@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-i2c@vger.kernel.org, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Peibao Liu <liupeibao@loongson.cn>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <cover.1675167975.git.zhoubinbin@loongson.cn>
+ <ae46e649085d7d0dbc329e441f577efcd9a3d68b.1675167975.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0)
- Gecko/20100101 Firefox/111.0 Thunderbird/111.0a1
-Subject: Re: [PATCH] LoongArch: Make -mstrict-align be configurable
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-References: <20230202084238.2408516-1-chenhuacai@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230202084238.2408516-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZCBEJVsENUzayXv9"
+Content-Disposition: inline
+In-Reply-To: <ae46e649085d7d0dbc329e441f577efcd9a3d68b.1675167975.git.zhoubinbin@loongson.cn>
 
-On 2023/2/2 16:42, Huacai Chen wrote:
-> Introduce Kconfig option ARCH_STRICT_ALIGN to make -mstrict-align be
-> configurable.
-> 
-> Not all LoongArch cores support h/w unaligned access, we can use the
-> -mstrict-align build parameter to prevent unaligned accesses.
-> 
-> This option is disabled by default to optimise for performance, but you
-> can enabled it manually if you want to run kernel on systems without h/w
-> unaligned access support.
 
-It's customary to accompany "performance-related" changes like this with 
-some benchmark numbers and concrete use cases where this would be 
-profitable. Especially given that arch/loongarch developer and user base 
-is relatively small, we probably don't want to allow customization of 
-such a low-level characteristic. In general kernel performance does not 
-vary much with compiler flags like this, so I'd really hope to see some 
-numbers here to convince people that this is *really* providing gains.
+--ZCBEJVsENUzayXv9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also, defaulting to emitting unaligned accesses would mean those future, 
-likely embedded models (and AFAIK some existing models that haven't 
-reached GA yet) would lose support with the defconfig. Which means 
-downstream packagers that care about those use cases would have one more 
-non-default, non-generic option to carry within their Kconfig. We 
-probably don't want to repeat the history of other architectures (think 
-arch/arm or arch/mips) where there wasn't really generic builds and 
-board-specific tweaks proliferated.
+On Tue, Jan 31, 2023 at 08:37:30PM +0800, Binbin Zhou wrote:
+> Add Loongson LS2X I2C controller binding with DT schema format using
+> json-schema.
+>=20
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> 
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->   arch/loongarch/Kconfig  | 10 ++++++++++
->   arch/loongarch/Makefile |  2 ++
->   2 files changed, 12 insertions(+)
-> 
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 9cc8b84f7eb0..7470dcfb32f0 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -441,6 +441,16 @@ config ARCH_IOREMAP
->   	  protection support. However, you can enable LoongArch DMW-based
->   	  ioremap() for better performance.
->   
-> +config ARCH_STRICT_ALIGN
-> +	bool "Enable -mstrict-align to prevent unaligned accesses"
-> +	help
-> +	  Not all LoongArch cores support h/w unaligned access, we can use
-> +	  -mstrict-align build parameter to prevent unaligned accesses.
-> +
-> +	  This is disabled by default to optimise for performance, you can
-> +	  enabled it manually if you want to run kernel on systems without
-> +	  h/w unaligned access support.
-> +
->   config KEXEC
->   	bool "Kexec system call"
->   	select KEXEC_CORE
-> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> index 4402387d2755..ccfb52700237 100644
-> --- a/arch/loongarch/Makefile
-> +++ b/arch/loongarch/Makefile
-> @@ -91,10 +91,12 @@ KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
->   # instead of .eh_frame so we don't discard them.
->   KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
->   
-> +ifdef CONFIG_ARCH_STRICT_ALIGN
->   # Don't emit unaligned accesses.
->   # Not all LoongArch cores support unaligned access, and as kernel we can't
->   # rely on others to provide emulation for these accesses.
->   KBUILD_CFLAGS += $(call cc-option,-mstrict-align)
-> +endif >
->   KBUILD_CFLAGS += -isystem $(shell $(CC) -print-file-name=include)
->   
+Applied to for-next, thanks!
 
--- 
-WANG "xen0n" Xuerui
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+--ZCBEJVsENUzayXv9
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmPcKjYACgkQFA3kzBSg
+KbaabA//QJIjSdVf8DnfGVbX1yxGDCKhHUBN7QvxmhPQaXlwPM5oVPPIgiyEWVo3
+xXBcSBCNc61VBzcSi5kAhMft9vG7xp13rPRU9EPD5i9CqnA2tIerJfnbhRLMtPVo
+MNOwF1WuSggfWVFQQUI4sjfiYnEh764kQ/ge5EsJw2SkCgXtaGtAu716/I2AFxIT
+gSvbJ2NZCX4v+iBu1qMOFrYwAETsPKiM6WUba2XQjBU+32Eg5JeQB/fRdwl8TwkG
+7yBcTVZryX/IGgnGCtvRnviqSnwwS3NiiidXnFkYHdCY7jvJwRVytr3d2J0DTVkG
+iMdtsp5X7nY1/xrnWholN1MfWjUYVk1GFJIIdQvbGrCyNHSlczoPrjIyKZbYNhOf
+2fnvE28zsaaeZx8kvJkRPBXhEpKZ56kz57lEkzzUhqvNXEBTXVZH73TT0mkGEWSZ
+8Gr+sudx4tmRMOoTSSJrS+j56+TvChmvQlsNygJX+G0E7XrqMiHXBNgSA56boYwF
+8Bocr8Z8+U86ex6n1VxTRnGCtpuNnCJOt2XHUgpDg+cHQfr0FBVUAiZjYpuvRXay
+K13NHVgJgE5f7CFYvwR2msWCvChPiZLYHY+DdZHIijsLsXDgrtMmA6E02gjJpkLB
+9+C9Ot33/gNVmGz/gFksS0dbNbSm0xH2YsdygJ/QJDu0sD/h9/0=
+=/CL8
+-----END PGP SIGNATURE-----
+
+--ZCBEJVsENUzayXv9--
