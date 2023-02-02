@@ -1,234 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C7B2590
-	for <loongarch@lists.linux.dev>; Wed,  1 Feb 2023 12:55:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2AF2C433EF;
-	Wed,  1 Feb 2023 12:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675256141;
-	bh=1xg4451YbC4DyqNIFrhmJrdp/zHaaX2hZC+i5bxMS1I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Puz192zI0V39rqpMK3L4NRd+aXmkg1l1zK8HkXzHR0uqCWo+JbJHMfmllhkGfMzEh
-	 Op9Hqwi7vLbjjtTWavtq71uFw5yIaCZqRhrVc7uumayakNxyop1OR+2W2aUfUw3jjq
-	 XyjUTATpdGYcoCpdkrL8EYmcYcErzwaeB1kVAlEk0mu+9kiVj/6t0hQNOLo+nxOVWN
-	 lb4wl7U+Z09c520N+R+1VWNslv/CfJ1uCwrIb+0wE8QUS1Z4mThkNCn7+juuugvP6W
-	 ShSr4O7TNpiTtLPJocc+iBNIlwmHSDNXHca+B/bSXGwnAjeNMAhUnhQu343bXNpOxd
-	 09fGXzgr2QYZg==
-Date: Wed, 1 Feb 2023 21:55:37 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Jinyang He
- <hejinyang@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 4/5] LoongArch: Mark some assembler symbols as
- non-kprobe-able
-Message-Id: <20230201215537.feda4232f7d95f499e408966@kernel.org>
-In-Reply-To: <CAAhV-H59SOQ3QQgbbJ-U1VK5z=zaGR4kEtnTmz9HUALSAnrcGA@mail.gmail.com>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 235FF816
+	for <loongarch@lists.linux.dev>; Thu,  2 Feb 2023 02:23:21 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx+emSHttjh_0LAA--.24404S3;
+	Thu, 02 Feb 2023 10:23:14 +0800 (CST)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx2r2RHttjD_AmAA--.10846S3;
+	Thu, 02 Feb 2023 10:23:14 +0800 (CST)
+Subject: Re: [PATCH v12 0/5] Add kprobe and kretprobe support for LoongArch
+To: Jeff Xie <xiehuan09@gmail.com>, Huacai Chen <chenhuacai@kernel.org>
 References: <1674007261-9198-1-git-send-email-yangtiezhu@loongson.cn>
-	<1674007261-9198-5-git-send-email-yangtiezhu@loongson.cn>
-	<CAAhV-H7Dt5MhaMU1=D9HxPFR+xjjoQG6RguaYMydy=v_jvrtiA@mail.gmail.com>
-	<48f0508f-3908-c6ca-c8ba-7c12dd6b3f11@loongson.cn>
-	<7f518dec-fd72-a73c-3f23-6372a83d65c2@loongson.cn>
-	<6879b948-2d61-8e09-a9d4-bc2ede31c52b@loongson.cn>
-	<CAAhV-H7KJTtZPC9=OZEZfQvMjd6Gw37Q3kZODk=wk9pt6VZuAQ@mail.gmail.com>
-	<20230120003156.48ca16ea2a6f73398e568358@kernel.org>
-	<CAAhV-H59SOQ3QQgbbJ-U1VK5z=zaGR4kEtnTmz9HUALSAnrcGA@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <CAAhV-H4aTd6_cSy45KKjv-KrLTiwT4iG6+fkb84KfCrL3Y+hpg@mail.gmail.com>
+ <CAAhV-H5WN5E=0Z9wpbXDc6VO7Nc+j7PGvnyAAGOmCRMJkdwSYw@mail.gmail.com>
+ <CAEr6+ECO-=jfhzHrcdKGx0MsjMBMiN6wsBPCfv7CaXo_amAWWg@mail.gmail.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu <mhiramat@kernel.org>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <02806f85-bc09-d316-f058-3947353cb190@loongson.cn>
+Date: Thu, 2 Feb 2023 10:23:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+In-Reply-To: <CAEr6+ECO-=jfhzHrcdKGx0MsjMBMiN6wsBPCfv7CaXo_amAWWg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-
-On Fri, 20 Jan 2023 21:23:18 +0800
-Huacai Chen <chenhuacai@kernel.org> wrote:
-
-> On Thu, Jan 19, 2023 at 11:32 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> > On Wed, 18 Jan 2023 15:17:00 +0800
-> > Huacai Chen <chenhuacai@kernel.org> wrote:
-> >
-> > > On Wed, Jan 18, 2023 at 2:24 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> > > >
-> > > >
-> > > >
-> > > > On 01/18/2023 02:05 PM, Jinyang He wrote:
-> > > > >
-> > > > > On 2023-01-18 12:23, Tiezhu Yang wrote:
-> > > > >>
-> > > > >>
-> > > > >> On 01/18/2023 12:14 PM, Huacai Chen wrote:
-> > > > >>> If memcpy should be blacklisted, then what about memset and memmove?
-> > > > >>
-> > > > >> According to the test results, there are no problems to probe
-> > > > >> memset and memmove, so no need to blacklist them for now,
-> > > > >> blacklist memcpy is because it may cause recursive exceptions,
-> > > > >> there is a detailed discussion in the following link:
-> > > > >>
-> > > > >> https://lore.kernel.org/lkml/20230114143859.7ccc45c1c5d9ce302113ab0a@kernel.org/
-> > > > >>
-> > > > >
-> > > > > Hi, Tiezhu,
-> > > > >
-> > > > > I cannot reproduce the results when kprobe memcpy. Could you please give
-> > > > > some details. Emm, I just replace "kernel_clone" with "memcpy" in
-> > > > > kprobe_example.c.
-> > > >
-> > > > Please remove the related "_ASM_NOKPROBE(memcpy)" code in
-> > > > arch/loongarch/lib/memcpy.S, and then compile and update kernel,
-> > > > execute the following cmd after reboot, I can reproduce the hang
-> > > > problem easily (it will take a few minutes).
-> > > >
-> > > > modprobe kprobe_example symbol="memcpy"
-> > > Then, why is handle_syscall different from other exception handlers?
-> >
-> > I need to check the loongarch implementation of handle_syscall() but
-> > I guess in that handler the register set is not completely set as
-> > kernel one. In that case, the software breakpoint handler may not
-> > possible to handle it correctly. So it is better to avoid probing such
-> > "border" function by kprobes.
-> Seems reasonable, handle_syscall() indeed doesn't save all registers.
-> But for memcpy(), I still think memmove() and memset() may have the
-> same problem.
-
-I agree with that. Those fundamental functions can be used from some
-debug macros in the software breakpoint code in the future (or already?)
-Maybe you would better to check it with enabling some more (intrusive)
-debug features.
-
-Thank you,
-
-> 
-> Huacai
-> >
-> > Thank you,
-> >
-> > >
-> > > Huacai
-> > > >
-> > > > >
-> > > > > And for your call trace,
-> > > > >
-> > > > >  handler_pre()
-> > > > >    pr_info()
-> > > > >      printk()
-> > > > >       _printk()
-> > > > >         vprintk()
-> > > > >           vprintk_store()
-> > > > >             memcpy()
-> > > > >
-> > > > > I think when we should skip this time kprobe which triggered in
-> > > > > handler_{pre, post}. That means this time kprobe will not call
-> > > > > handler_{pre, post} agian, and not cause recursion. I remember
-> > > > > your codes had done this skip action. So, that's so strange if
-> > > > > recursion in handler_{pre, post}.
-> > > > >
-> > > > >
-> > > > > Thanks,
-> > > > >
-> > > > > Jinyang
-> > > > >
-> > > > >
-> > > > >>
-> > > > >> Thanks,
-> > > > >> Tiezhu
-> > > > >>
-> > > > >>>
-> > > > >>> Huacai
-> > > > >>>
-> > > > >>> On Wed, Jan 18, 2023 at 10:01 AM Tiezhu Yang <yangtiezhu@loongson.cn>
-> > > > >>> wrote:
-> > > > >>>>
-> > > > >>>> Some assembler symbols are not kprobe safe, such as handle_syscall
-> > > > >>>> (used as syscall exception handler), *memcpy* (may cause recursive
-> > > > >>>> exceptions), they can not be instrumented, just blacklist them for
-> > > > >>>> kprobing.
-> > > > >>>>
-> > > > >>>> Here is a related problem and discussion:
-> > > > >>>> Link:
-> > > > >>>> https://lore.kernel.org/lkml/20230114143859.7ccc45c1c5d9ce302113ab0a@kernel.org/
-> > > > >>>>
-> > > > >>>>
-> > > > >>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > > > >>>> ---
-> > > > >>>>  arch/loongarch/include/asm/asm.h | 10 ++++++++++
-> > > > >>>>  arch/loongarch/kernel/entry.S    |  1 +
-> > > > >>>>  arch/loongarch/lib/memcpy.S      |  3 +++
-> > > > >>>>  3 files changed, 14 insertions(+)
-> > > > >>>>
-> > > > >>>> diff --git a/arch/loongarch/include/asm/asm.h
-> > > > >>>> b/arch/loongarch/include/asm/asm.h
-> > > > >>>> index 40eea6a..f591b32 100644
-> > > > >>>> --- a/arch/loongarch/include/asm/asm.h
-> > > > >>>> +++ b/arch/loongarch/include/asm/asm.h
-> > > > >>>> @@ -188,4 +188,14 @@
-> > > > >>>>  #define PTRLOG         3
-> > > > >>>>  #endif
-> > > > >>>>
-> > > > >>>> +/* Annotate a function as being unsuitable for kprobes. */
-> > > > >>>> +#ifdef CONFIG_KPROBES
-> > > > >>>> +#define _ASM_NOKPROBE(name)                            \
-> > > > >>>> +       .pushsection "_kprobe_blacklist", "aw";         \
-> > > > >>>> +       .quad   name;                                   \
-> > > > >>>> +       .popsection
-> > > > >>>> +#else
-> > > > >>>> +#define _ASM_NOKPROBE(name)
-> > > > >>>> +#endif
-> > > > >>>> +
-> > > > >>>>  #endif /* __ASM_ASM_H */
-> > > > >>>> diff --git a/arch/loongarch/kernel/entry.S
-> > > > >>>> b/arch/loongarch/kernel/entry.S
-> > > > >>>> index d53b631..55e23b1 100644
-> > > > >>>> --- a/arch/loongarch/kernel/entry.S
-> > > > >>>> +++ b/arch/loongarch/kernel/entry.S
-> > > > >>>> @@ -67,6 +67,7 @@ SYM_FUNC_START(handle_syscall)
-> > > > >>>>
-> > > > >>>>         RESTORE_ALL_AND_RET
-> > > > >>>>  SYM_FUNC_END(handle_syscall)
-> > > > >>>> +_ASM_NOKPROBE(handle_syscall)
-> > > > >>>>
-> > > > >>>>  SYM_CODE_START(ret_from_fork)
-> > > > >>>>         bl      schedule_tail           # a0 = struct task_struct *prev
-> > > > >>>> diff --git a/arch/loongarch/lib/memcpy.S b/arch/loongarch/lib/memcpy.S
-> > > > >>>> index 7c07d59..3b7e1de 100644
-> > > > >>>> --- a/arch/loongarch/lib/memcpy.S
-> > > > >>>> +++ b/arch/loongarch/lib/memcpy.S
-> > > > >>>> @@ -17,6 +17,7 @@ SYM_FUNC_START(memcpy)
-> > > > >>>>         ALTERNATIVE     "b __memcpy_generic", \
-> > > > >>>>                         "b __memcpy_fast", CPU_FEATURE_UAL
-> > > > >>>>  SYM_FUNC_END(memcpy)
-> > > > >>>> +_ASM_NOKPROBE(memcpy)
-> > > > >>>>
-> > > > >>>>  EXPORT_SYMBOL(memcpy)
-> > > > >>>>
-> > > > >>>> @@ -41,6 +42,7 @@ SYM_FUNC_START(__memcpy_generic)
-> > > > >>>>  2:     move    a0, a3
-> > > > >>>>         jr      ra
-> > > > >>>>  SYM_FUNC_END(__memcpy_generic)
-> > > > >>>> +_ASM_NOKPROBE(__memcpy_generic)
-> > > > >>>>
-> > > > >>>>  /*
-> > > > >>>>   * void *__memcpy_fast(void *dst, const void *src, size_t n)
-> > > > >>>> @@ -93,3 +95,4 @@ SYM_FUNC_START(__memcpy_fast)
-> > > > >>>>  3:     move    a0, a3
-> > > > >>>>         jr      ra
-> > > > >>>>  SYM_FUNC_END(__memcpy_fast)
-> > > > >>>> +_ASM_NOKPROBE(__memcpy_fast)
-> > > > >>>> --
-> > > > >>>> 2.1.0
-> > > > >>>>
-> > > > >>
-> > > >
-> > > >
-> >
-> >
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+X-CM-TRANSID:AQAAf8Cx2r2RHttjD_AmAA--.10846S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWryxKr1xKFWrtrWkArWkWFg_yoW5XF47pF
+	Z2k3W5KrW0g34UZrZru3y8Xryj9r45uFyUJrZ3J34Y9FyDZr18Xr12kay0yF9rur1YqF4a
+	vay8Jay0kFyUX3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
+	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+On 02/01/2023 05:40 PM, Jeff Xie wrote:
+> On Wed, Feb 1, 2023 at 12:56 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+>>
+>> Hi, Jeff,
+>>
+>> Could you please pay some time to test this series? Thank you.
+>
+> Thanks for notifying me about the test.
+>
+> I have tested the patchset(based on the
+> https://github.com/loongson/linux/tree/loongarch-next),
+> I found that some functions can't  be probed e.g. scheduler_tick() or
+> uart_write_wakeup()
+> the two functions have the same point,  they are all run in the hardirq context.
+>
+> I don't know if it's related to the hardirq context, I haven't had
+> time to study this patchset carefully.
+> and they can be probed in the x86_64 arch.
+>
+> root@loongarch modules]# insmod ./kprobe_example.ko symbol=scheduler_tick
+> insmod: can't insert './kprobe_example.ko': invalid parameter
+>
+> dmesg:
+> [   39.806435] kprobe_init: register_kprobe failed, returned -22
+>
+
+Thanks for your test.
+
+On my test environment, I can not reproduce the above issue,
+here are the test results, it seems no problem.
+
+[root@linux loongson]# dmesg -c
+[root@linux loongson]# uname -m
+loongarch64
+[root@linux loongson]# modprobe kprobe_example symbol=scheduler_tick
+[root@linux loongson]# rmmod kprobe_example
+[root@linux loongson]# dmesg | tail -2
+[ 3317.138086] handler_post: <scheduler_tick> p->addr = 
+0x0000000065d12f66, estat = 0xc0000
+[ 3317.154086] kprobe_exit: kprobe at 0000000065d12f66 unregistered
+
+[root@linux loongson]# dmesg -c
+[root@linux loongson]# uname -m
+loongarch64
+[root@linux loongson]# modprobe kprobe_example symbol=uart_write_wakeup
+[root@linux loongson]# rmmod kprobe_example
+[root@linux loongson]# dmesg | tail -2
+[ 3433.502092] handler_post: <uart_write_wakeup> p->addr = 
+0x0000000019718061, estat = 0xc0000
+[ 3433.762085] kprobe_exit: kprobe at 0000000019718061 unregistered
+
+Additionally, "register_kprobe failed, returned -22" means the symbol
+can not be probed, here is the related code:
+
+register_kprobe()
+   check_kprobe_address_safe()
+
+static int check_kprobe_address_safe(struct kprobe *p,
+				     struct module **probed_mod)
+{
+	int ret;
+
+	ret = check_ftrace_location(p);
+	if (ret)
+		return ret;
+	jump_label_lock();
+	preempt_disable();
+
+	/* Ensure it is not in reserved area nor out of text */
+	if (!(core_kernel_text((unsigned long) p->addr) ||
+	    is_module_text_address((unsigned long) p->addr)) ||
+	    in_gate_area_no_mm((unsigned long) p->addr) ||
+	    within_kprobe_blacklist((unsigned long) p->addr) ||
+	    jump_label_text_reserved(p->addr, p->addr) ||
+	    static_call_text_reserved(p->addr, p->addr) ||
+	    find_bug((unsigned long)p->addr)) {
+		ret = -EINVAL;
+		goto out;
+	}
+...
+}
+
+Thanks,
+Tiezhu
+
