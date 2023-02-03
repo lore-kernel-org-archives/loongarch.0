@@ -1,170 +1,179 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D9B11863
-	for <loongarch@lists.linux.dev>; Fri,  3 Feb 2023 08:51:22 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx+ekCy9xjbFcNAA--.26777S3;
-	Fri, 03 Feb 2023 16:51:14 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxJ70Cy9xjzIgoAA--.13281S2;
-	Fri, 03 Feb 2023 16:51:14 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: Add kprobe on ftrace support
-Date: Fri,  3 Feb 2023 16:51:04 +0800
-Message-Id: <1675414264-28241-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8DxJ70Cy9xjzIgoAA--.13281S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxCry5Ar43AF4DZrW3Zw1kKrg_yoWrXr47pF
-	9Iywnxtr47CFsF9FZIv3WUur1FyrWkZrW7G3ZIya4Syr1qqw15Xr1xu3yqqFy5GrWkK34f
-	WFySkryaka4fXa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
-	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62EE1863
+	for <loongarch@lists.linux.dev>; Fri,  3 Feb 2023 09:00:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86805C4339B
+	for <loongarch@lists.linux.dev>; Fri,  3 Feb 2023 09:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1675414856;
+	bh=avk4N2a89jQv7e0ooxsBmJAbAtZiCU8GOuT9TlvNP9Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LxI6bgSuPltAUHn4UtV6KhJ9k0YNJsdljB9npoPsfhr3OOC+EasUlFlj+BDO5lAoT
+	 xTXGXr0tbi1PKoOFwAGrbY0vwBACEPFBH8Qva1jUcFwpbnX4TbOxDhAC4ti3mptu7v
+	 J9Ld9mHsJvplngw8fG5q1tG5suB9YcYKDLHHwFhpRmaNPYhkeU4Z2qzQ4efY5wz+Fw
+	 7uEafK5YVM+Z0tzJhHOWakKoJ5hcv24/Pn45UwmQcKdJmwwghGLIHKUYdI5RegGnkU
+	 90Lhyh2xoRL30Y5yAxVLTYQdkvMnn96pbclLmnHbM2P/H/oaeNk2/oZL8V67A5hOts
+	 VtIv52mopIwVg==
+Received: by mail-ej1-f44.google.com with SMTP id mc11so13406399ejb.10
+        for <loongarch@lists.linux.dev>; Fri, 03 Feb 2023 01:00:56 -0800 (PST)
+X-Gm-Message-State: AO0yUKWdiIuxqfR+ycyi7k+Ug7U1Objt5NNwnvAgwLXiA7zgldzlxo6B
+	saLpJ7Mrn3cgpw8K3lvt5jT15dZnJ+glnbYvnvU=
+X-Google-Smtp-Source: AK7set/3SdmQ07a0yiJMR3tYJFTZFyl0onlRD+uq6uk/P6Yi21hRYnQHvA6LoTkjDL4DZQd57bsStT7iSHGoM65vbbw=
+X-Received: by 2002:a17:907:6087:b0:889:7bef:3a9d with SMTP id
+ ht7-20020a170907608700b008897bef3a9dmr3060315ejc.150.1675414854779; Fri, 03
+ Feb 2023 01:00:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <1675414264-28241-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1675414264-28241-1-git-send-email-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 3 Feb 2023 17:00:44 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4tMC+y9enyvWj9hu0ngin6ND4DPKbcFybVzU=A-7tLSA@mail.gmail.com>
+Message-ID: <CAAhV-H4tMC+y9enyvWj9hu0ngin6ND4DPKbcFybVzU=A-7tLSA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Add kprobe on ftrace support
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu <mhiramat@kernel.org>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add kprobe_ftrace_handler() and arch_prepare_kprobe_ftrace() to support
-kprobe on ftrace, the code is similar with x86 and riscv.
+Hi, Tiezhu,
 
-Here is a simple example:
+On Fri, Feb 3, 2023 at 4:51 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+> Add kprobe_ftrace_handler() and arch_prepare_kprobe_ftrace() to support
+> kprobe on ftrace, the code is similar with x86 and riscv.
+>
+> Here is a simple example:
+>
+>   # echo 'p:myprobe kernel_clone' > /sys/kernel/debug/tracing/kprobe_events
+>   # echo 'r:myretprobe kernel_clone $retval' >> /sys/kernel/debug/tracing/kprobe_events
+>   # echo 1 > /sys/kernel/debug/tracing/events/kprobes/myprobe/enable
+>   # echo 1 > /sys/kernel/debug/tracing/events/kprobes/myretprobe/enable
+>   # echo 1 > /sys/kernel/debug/tracing/tracing_on
+>   # cat /sys/kernel/debug/tracing/trace
+>   # tracer: nop
+>   #
+>   # entries-in-buffer/entries-written: 2/2   #P:4
+>   #
+>   #                                _-----=> irqs-off/BH-disabled
+>   #                               / _----=> need-resched
+>   #                              | / _---=> hardirq/softirq
+>   #                              || / _--=> preempt-depth
+>   #                              ||| / _-=> migrate-disable
+>   #                              |||| /     delay
+>   #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+>   #              | |         |   |||||     |         |
+>               bash-488     [002] .....  2041.190681: myprobe: (kernel_clone+0x0/0x40c)
+>               bash-488     [002] .....  2041.190788: myretprobe: (__do_sys_clone+0x84/0xb8 <- kernel_clone) arg1=0x200
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/Kconfig             |  1 +
+>  arch/loongarch/kernel/ftrace_dyn.c | 65 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 66 insertions(+)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 134a2f8..22a3e77 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -104,6 +104,7 @@ config LOONGARCH
+>         select HAVE_IRQ_EXIT_ON_IRQ_STACK
+>         select HAVE_IRQ_TIME_ACCOUNTING
+>         select HAVE_KPROBES
+> +       select HAVE_KPROBES_ON_FTRACE
+>         select HAVE_KRETPROBES
+>         select HAVE_MOD_ARCH_SPECIFIC
+>         select HAVE_NMI
+> diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
+> index 0f07591..7b074c2 100644
+> --- a/arch/loongarch/kernel/ftrace_dyn.c
+> +++ b/arch/loongarch/kernel/ftrace_dyn.c
+> @@ -6,6 +6,7 @@
+>   */
+>
+>  #include <linux/ftrace.h>
+> +#include <linux/kprobes.h>
+>  #include <linux/uaccess.h>
+>
+>  #include <asm/inst.h>
+> @@ -271,3 +272,67 @@ int ftrace_disable_ftrace_graph_caller(void)
+>  }
+>  #endif /* CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS */
+>  #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+> +
+> +#ifdef CONFIG_KPROBES_ON_FTRACE
+> +/* Ftrace callback handler for kprobes -- called under preepmt disabled */
+> +void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+> +                          struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> +{
+> +       struct kprobe *p;
+> +       struct pt_regs *regs;
+> +       struct kprobe_ctlblk *kcb;
+> +       int bit;
+> +
+> +       bit = ftrace_test_recursion_trylock(ip, parent_ip);
+> +       if (bit < 0)
+> +               return;
+> +
+In the old version I see preempt_disable_notrace() here and
+preempt_enable_notrace() at the end. And I prefer to add this one to
+the kprobes series rather than a separate patch.
 
-  # echo 'p:myprobe kernel_clone' > /sys/kernel/debug/tracing/kprobe_events
-  # echo 'r:myretprobe kernel_clone $retval' >> /sys/kernel/debug/tracing/kprobe_events
-  # echo 1 > /sys/kernel/debug/tracing/events/kprobes/myprobe/enable
-  # echo 1 > /sys/kernel/debug/tracing/events/kprobes/myretprobe/enable
-  # echo 1 > /sys/kernel/debug/tracing/tracing_on
-  # cat /sys/kernel/debug/tracing/trace
-  # tracer: nop
-  #
-  # entries-in-buffer/entries-written: 2/2   #P:4
-  #
-  #                                _-----=> irqs-off/BH-disabled
-  #                               / _----=> need-resched
-  #                              | / _---=> hardirq/softirq
-  #                              || / _--=> preempt-depth
-  #                              ||| / _-=> migrate-disable
-  #                              |||| /     delay
-  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-  #              | |         |   |||||     |         |
-              bash-488     [002] .....  2041.190681: myprobe: (kernel_clone+0x0/0x40c)
-              bash-488     [002] .....  2041.190788: myretprobe: (__do_sys_clone+0x84/0xb8 <- kernel_clone) arg1=0x200
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/Kconfig             |  1 +
- arch/loongarch/kernel/ftrace_dyn.c | 65 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 134a2f8..22a3e77 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -104,6 +104,7 @@ config LOONGARCH
- 	select HAVE_IRQ_EXIT_ON_IRQ_STACK
- 	select HAVE_IRQ_TIME_ACCOUNTING
- 	select HAVE_KPROBES
-+	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_KRETPROBES
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
-diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
-index 0f07591..7b074c2 100644
---- a/arch/loongarch/kernel/ftrace_dyn.c
-+++ b/arch/loongarch/kernel/ftrace_dyn.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/ftrace.h>
-+#include <linux/kprobes.h>
- #include <linux/uaccess.h>
- 
- #include <asm/inst.h>
-@@ -271,3 +272,67 @@ int ftrace_disable_ftrace_graph_caller(void)
- }
- #endif /* CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS */
- #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
-+
-+#ifdef CONFIG_KPROBES_ON_FTRACE
-+/* Ftrace callback handler for kprobes -- called under preepmt disabled */
-+void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
-+			   struct ftrace_ops *ops, struct ftrace_regs *fregs)
-+{
-+	struct kprobe *p;
-+	struct pt_regs *regs;
-+	struct kprobe_ctlblk *kcb;
-+	int bit;
-+
-+	bit = ftrace_test_recursion_trylock(ip, parent_ip);
-+	if (bit < 0)
-+		return;
-+
-+	p = get_kprobe((kprobe_opcode_t *)ip);
-+	if (unlikely(!p) || kprobe_disabled(p))
-+		goto out;
-+
-+	regs = ftrace_get_regs(fregs);
-+	if (!regs)
-+		goto out;
-+
-+	kcb = get_kprobe_ctlblk();
-+	if (kprobe_running()) {
-+		kprobes_inc_nmissed_count(p);
-+	} else {
-+		unsigned long orig_ip = instruction_pointer(regs);
-+
-+		instruction_pointer_set(regs, ip);
-+
-+		__this_cpu_write(current_kprobe, p);
-+		kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-+		if (!p->pre_handler || !p->pre_handler(p, regs)) {
-+			/*
-+			 * Emulate singlestep (and also recover regs->csr_era)
-+			 * as if there is a nop
-+			 */
-+			instruction_pointer_set(regs,
-+				(unsigned long)p->addr + MCOUNT_INSN_SIZE);
-+			if (unlikely(p->post_handler)) {
-+				kcb->kprobe_status = KPROBE_HIT_SSDONE;
-+				p->post_handler(p, regs, 0);
-+			}
-+			instruction_pointer_set(regs, orig_ip);
-+		}
-+
-+		/*
-+		 * If pre_handler returns !0, it changes regs->csr_era. We have to
-+		 * skip emulating post_handler.
-+		 */
-+		__this_cpu_write(current_kprobe, NULL);
-+	}
-+out:
-+	ftrace_test_recursion_unlock(bit);
-+}
-+NOKPROBE_SYMBOL(kprobe_ftrace_handler);
-+
-+int arch_prepare_kprobe_ftrace(struct kprobe *p)
-+{
-+	p->ainsn.insn = NULL;
-+	return 0;
-+}
-+#endif /* CONFIG_KPROBES_ON_FTRACE */
--- 
-2.1.0
-
+Huacai
+> +       p = get_kprobe((kprobe_opcode_t *)ip);
+> +       if (unlikely(!p) || kprobe_disabled(p))
+> +               goto out;
+> +
+> +       regs = ftrace_get_regs(fregs);
+> +       if (!regs)
+> +               goto out;
+> +
+> +       kcb = get_kprobe_ctlblk();
+> +       if (kprobe_running()) {
+> +               kprobes_inc_nmissed_count(p);
+> +       } else {
+> +               unsigned long orig_ip = instruction_pointer(regs);
+> +
+> +               instruction_pointer_set(regs, ip);
+> +
+> +               __this_cpu_write(current_kprobe, p);
+> +               kcb->kprobe_status = KPROBE_HIT_ACTIVE;
+> +               if (!p->pre_handler || !p->pre_handler(p, regs)) {
+> +                       /*
+> +                        * Emulate singlestep (and also recover regs->csr_era)
+> +                        * as if there is a nop
+> +                        */
+> +                       instruction_pointer_set(regs,
+> +                               (unsigned long)p->addr + MCOUNT_INSN_SIZE);
+> +                       if (unlikely(p->post_handler)) {
+> +                               kcb->kprobe_status = KPROBE_HIT_SSDONE;
+> +                               p->post_handler(p, regs, 0);
+> +                       }
+> +                       instruction_pointer_set(regs, orig_ip);
+> +               }
+> +
+> +               /*
+> +                * If pre_handler returns !0, it changes regs->csr_era. We have to
+> +                * skip emulating post_handler.
+> +                */
+> +               __this_cpu_write(current_kprobe, NULL);
+> +       }
+> +out:
+> +       ftrace_test_recursion_unlock(bit);
+> +}
+> +NOKPROBE_SYMBOL(kprobe_ftrace_handler);
+> +
+> +int arch_prepare_kprobe_ftrace(struct kprobe *p)
+> +{
+> +       p->ainsn.insn = NULL;
+> +       return 0;
+> +}
+> +#endif /* CONFIG_KPROBES_ON_FTRACE */
+> --
+> 2.1.0
+>
