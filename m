@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08334BA3F
-	for <loongarch@lists.linux.dev>; Fri,  3 Feb 2023 22:06:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CC2CC433EF;
-	Fri,  3 Feb 2023 22:06:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFC9BA3F
+	for <loongarch@lists.linux.dev>; Fri,  3 Feb 2023 22:06:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08B2BC433A0;
+	Fri,  3 Feb 2023 22:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675461961;
-	bh=2MPoJoU9iEV+5bmq/FA3r/36XSx62v4q4mPHZFDs3ww=;
+	s=k20201202; t=1675461963;
+	bh=NPua2qPyoi9+ZnTVjzJtwJIKtIAcOluqw/LQWD+kyG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aDL8Fbd7q5housqD8r1xvR5Q8U5/Aib+w8BpMXVKm3G1aZwcrHOxSP2YKKdovg1Uv
-	 4ZkJB0Y2uOz0X6yT1wZTvr2Dy/qvqYM4TlvU7jidUr13tcMvpXuDDnfIChFnR0S114
-	 XgCY83e9GokKgbEco/t+NyOFO0YdA+0HxBWOqEp5iV4oSvGtaYrTgda4ZJIFvXPgG4
-	 KNCxMpS4uI9MMwQ1cXs+JGbGCrSe2MWzovJGkzBcoFy7ViFq8mzRs0yA10vH2OGy97
-	 h7LmYagnQeYcVqvMzgJan512rASuYNR/WZMXFdmycbxKND3KFZ57oa/ITSZQBJhWyr
-	 EDE+zUhf9BZHA==
+	b=bEfcJwL6SC/AjDrgqLZ4gobtYzzG+kaVTVeIraggyRhwgYWN4oAFuKJ77/RCNTRvY
+	 fup/m+ICRFhtxmQnpWwYUfJLena8YJAeJTm6ZcubnjXEQ/jgxWcSotzf3Y2mbjtquI
+	 yW5I485ZkkpQ6Jqy0xpqJWrVtVjUykBoHEcmO5kdnHPKSdwkiAEHBedDcPx5HCDW7z
+	 e56cpXGjpV9Wa9j+COiY6xVNqjbTa5hVFZNcyFwrdOvNi774RztXhcvRS8u2WNZfqm
+	 te78V+RaoPzaJRgp+oay8agBh6E4MO/A9zlyBZNVH/Oc0XYt+s1wdWgKe5Q1neeH/O
+	 i9bQ03yAKwMEA==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: jgross@suse.com,
@@ -65,9 +65,9 @@ Cc: jgross@suse.com,
 	bristot@redhat.com,
 	vschneid@redhat.com,
 	paulmck@kernel.org
-Subject: [PATCH 11/22] mips/cpu: Mark play_dead() __noreturn
-Date: Fri,  3 Feb 2023 14:05:20 -0800
-Message-Id: <829d68d289ad4eeac27c5220be695cfa6ace33f4.1675461757.git.jpoimboe@kernel.org>
+Subject: [PATCH 12/22] powerpc/cpu: Mark start_secondary_resume() __noreturn
+Date: Fri,  3 Feb 2023 14:05:21 -0800
+Message-Id: <b5d065218265e79daa23f82bb84efc6a7ea120fc.1675461757.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <cover.1675461757.git.jpoimboe@kernel.org>
 References: <cover.1675461757.git.jpoimboe@kernel.org>
@@ -80,27 +80,27 @@ MIME-Version: 1.0
 Content-type: text/plain
 Content-Transfer-Encoding: 8bit
 
-play_dead() doesn't return.  Annotate it as such.  By extension this
-also makes arch_cpu_idle_dead() noreturn.
+start_secondary_resume() doesn't return.  Annotate it as such.  By
+extension this also makes arch_cpu_idle_dead() noreturn.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/mips/include/asm/smp.h | 2 +-
+ arch/powerpc/include/asm/smp.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/smp.h b/arch/mips/include/asm/smp.h
-index 5d9ff61004ca..4eee29b7845c 100644
---- a/arch/mips/include/asm/smp.h
-+++ b/arch/mips/include/asm/smp.h
-@@ -88,7 +88,7 @@ static inline void __cpu_die(unsigned int cpu)
- 	mp_ops->cpu_die(cpu);
- }
+diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
+index f63505d74932..cfd42ca8765c 100644
+--- a/arch/powerpc/include/asm/smp.h
++++ b/arch/powerpc/include/asm/smp.h
+@@ -66,7 +66,7 @@ void start_secondary(void *unused);
+ extern int smp_send_nmi_ipi(int cpu, void (*fn)(struct pt_regs *), u64 delay_us);
+ extern int smp_send_safe_nmi_ipi(int cpu, void (*fn)(struct pt_regs *), u64 delay_us);
+ extern void smp_send_debugger_break(void);
+-extern void start_secondary_resume(void);
++extern void __noreturn start_secondary_resume(void);
+ extern void smp_generic_give_timebase(void);
+ extern void smp_generic_take_timebase(void);
  
--extern void play_dead(void);
-+extern void __noreturn play_dead(void);
- #endif
- 
- #ifdef CONFIG_KEXEC
 -- 
 2.39.0
 
