@@ -1,97 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490CD7C
-	for <loongarch@lists.linux.dev>; Fri,  3 Feb 2023 02:08:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03212C433A0
-	for <loongarch@lists.linux.dev>; Fri,  3 Feb 2023 02:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675390135;
-	bh=9SFVMDLXP6rCxw0koy5AsHtvGYm4KS5eagd3gakC66Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TG9KSfLg6Fu47hf2AXjQb32PBlMSIL+BaQG1O46FeqOYDz4PBBGz66UJqv8GbS5bQ
-	 gP5NunfWKdyCQUJ7OhSs5ixN5uNiV8NNuGYxlHXR3M5BjkssA4RtyevTajBk9UNVkY
-	 4w0NEixBuDFsaYLO88UtJa1dVZcglfCiWg6xxkmmCYdZVPQrePegFkHmMvkjgAZiYO
-	 A/j+vc8cUjeMMGXUXV5/C9fTa4tvpnIjsTh6RbNV8hn/D3k+NAFPk/NCUoCQY8pnJ/
-	 RvfaxTonSqWo2ktg9AMFD7LuTy96auFxGTvr3yUP/jzRWbdNF1zQArO1T/OTE2GFK0
-	 LPv+vCtLxgW8Q==
-Received: by mail-ej1-f49.google.com with SMTP id ml19so11706838ejb.0
-        for <loongarch@lists.linux.dev>; Thu, 02 Feb 2023 18:08:54 -0800 (PST)
-X-Gm-Message-State: AO0yUKXTfh8P8hAjoemKpINxj8a85cfkXXFOTmi0rWzCO2wLP6eFIvWp
-	ftcLz2jeUzannmVt6hiAZl92pfK+teM0EdkyLgA=
-X-Google-Smtp-Source: AK7set/ydpY+oP3Z+t+NArVdALXiqzOsn4rcGlM7loxkZ8n+4hJG8dOtM1ETH3IvToN2WCewRC5xSUJ3FVILiorZwGg=
-X-Received: by 2002:a17:906:338d:b0:879:b98d:eb0b with SMTP id
- v13-20020a170906338d00b00879b98deb0bmr2023573eja.88.1675390133191; Thu, 02
- Feb 2023 18:08:53 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9FC1863
+	for <loongarch@lists.linux.dev>; Fri,  3 Feb 2023 08:46:29 +0000 (UTC)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-314-hQ5rIG0kMFGt6l0xOnfJhw-1; Fri, 03 Feb 2023 08:46:26 +0000
+X-MC-Unique: hQ5rIG0kMFGt6l0xOnfJhw-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.45; Fri, 3 Feb
+ 2023 08:46:25 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.045; Fri, 3 Feb 2023 08:46:25 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Huacai Chen' <chenhuacai@kernel.org>
+CC: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, Xuefeng Li
+	<lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, Xuerui Wang
+	<kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] LoongArch: Make -mstrict-align be configurable
+Thread-Topic: [PATCH] LoongArch: Make -mstrict-align be configurable
+Thread-Index: AQHZNuKTZOpLs+GXMEuRBwFbIvBWLq67WwCQgAEd3gCAAG+cUA==
+Date: Fri, 3 Feb 2023 08:46:25 +0000
+Message-ID: <9936da8f577842b8b5edafcdc69dc2d1@AcuMS.aculab.com>
+References: <20230202084238.2408516-1-chenhuacai@loongson.cn>
+ <363cd09a5dcb4deab21f58c19025254f@AcuMS.aculab.com>
+ <CAAhV-H7Mz1Z5Bo59tq5VRSUx-N39axeiG7xZs2Szn6nuOxgZfQ@mail.gmail.com>
+In-Reply-To: <CAAhV-H7Mz1Z5Bo59tq5VRSUx-N39axeiG7xZs2Szn6nuOxgZfQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230202084238.2408516-1-chenhuacai@loongson.cn> <ccf74ebd-ccc1-4de5-a425-dcde4ac39a8d@app.fastmail.com>
-In-Reply-To: <ccf74ebd-ccc1-4de5-a425-dcde4ac39a8d@app.fastmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 3 Feb 2023 10:08:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6kuzfjw5i8-6L_68c50nsXzFipHY5hxtbShuv16bqRbg@mail.gmail.com>
-Message-ID: <CAAhV-H6kuzfjw5i8-6L_68c50nsXzFipHY5hxtbShuv16bqRbg@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Make -mstrict-align be configurable
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	guoren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-Hi, Arnd,
+RnJvbTogSHVhY2FpIENoZW4NCj4gU2VudDogMDMgRmVicnVhcnkgMjAyMyAwMjowMQ0KPiANCj4g
+SGksIERhdmlkLA0KPiANCj4gT24gVGh1LCBGZWIgMiwgMjAyMyBhdCA1OjAxIFBNIERhdmlkIExh
+aWdodCA8RGF2aWQuTGFpZ2h0QGFjdWxhYi5jb20+IHdyb3RlOg0KPiA+DQo+ID4gRnJvbTogSHVh
+Y2FpIENoZW4NCj4gPiA+IFNlbnQ6IDAyIEZlYnJ1YXJ5IDIwMjMgMDg6NDMNCj4gPiA+DQo+ID4g
+PiBJbnRyb2R1Y2UgS2NvbmZpZyBvcHRpb24gQVJDSF9TVFJJQ1RfQUxJR04gdG8gbWFrZSAtbXN0
+cmljdC1hbGlnbiBiZQ0KPiA+ID4gY29uZmlndXJhYmxlLg0KPiA+ID4NCj4gPiA+IE5vdCBhbGwg
+TG9vbmdBcmNoIGNvcmVzIHN1cHBvcnQgaC93IHVuYWxpZ25lZCBhY2Nlc3MsIHdlIGNhbiB1c2Ug
+dGhlDQo+ID4gPiAtbXN0cmljdC1hbGlnbiBidWlsZCBwYXJhbWV0ZXIgdG8gcHJldmVudCB1bmFs
+aWduZWQgYWNjZXNzZXMuDQo+ID4gPg0KPiA+ID4gVGhpcyBvcHRpb24gaXMgZGlzYWJsZWQgYnkg
+ZGVmYXVsdCB0byBvcHRpbWlzZSBmb3IgcGVyZm9ybWFuY2UsIGJ1dCB5b3UNCj4gPiA+IGNhbiBl
+bmFibGVkIGl0IG1hbnVhbGx5IGlmIHlvdSB3YW50IHRvIHJ1biBrZXJuZWwgb24gc3lzdGVtcyB3
+aXRob3V0IGgvdw0KPiA+ID4gdW5hbGlnbmVkIGFjY2VzcyBzdXBwb3J0Lg0KPiA+DQo+ID4gU2hv
+dWxkIHRoZXJlIGJlIGFuIGFzc29jaWF0ZWQgcnVuLXRpbWUgY2hlY2sgZHVyaW5nIGtlcm5lbCBp
+bml0aWFsaXNhdGlvbg0KPiA+IHRoYXQgYSBrZXJuZWwgY29tcGlsZWQgd2l0aG91dCAtbXN0cmlj
+dC1hbGlnbiBpc24ndCBiZWluZyBydW4gb24gaGFyZHdhcmUNCj4gPiB0aGF0IGRvZXNuJ3Qgc3Vw
+cG9ydCB1bmFsaWduZWQgYWNjZXNzZXMuDQo+ID4NCj4gPiBJdCBjYW4gYmUgcXVpdGUgYSB3aGls
+ZSBiZWZvcmUgeW91IGdldCBhIGNvbXBpbGVyLWdlbmVyYXRlZCBtaXNhbGlnbmVkIGFjY2Vzc2Vz
+Lg0KPg0KPiBJZiB3ZSBkb24ndCB1c2UgLW1zdHJpY3QtYWxpZ24sIHRoZSBrZXJuZWwgY2Fubm90
+IGJlIHJ1biBvbiBoYXJkd2FyZQ0KPiB0aGF0IGRvZXNuJ3Qgc3VwcG9ydCB1bmFsaWduZWQgYWNj
+ZXNzZXMsIHNvIEkgdGhpbmsgdGhlIHJ1bi10aW1lIGNoZWNrDQo+IGlzIHVzZWxlc3MsIGFuZCBp
+dCBoYXMgbm8gY2hhbmNlIHRvIHJ1biB0aGUgY2hlY2tpbmcuDQoNCklmIHlvdSBkb24ndCBhZGQg
+dGhlIGNoZWNrIGFuZCBzb21lb25lIGJvb3RzIHRoZSB3cm9uZyB0eXBlIG9mIGtlcm5lbA0KdGhl
+biB0aGV5J2xsIHByb2JhYmx5IGdldCBhIHBhbmljIHdlbGwgYWZ0ZXIgYm9vdGluZy4NCllvdSBy
+ZWFsbHkgZG8gd2FudCBhIGNoZWNrIGluIHRoZSBib3QgY29kZS4NCg0KVGhlcmUgaXMgYWxzbyB0
+aGUgcXVlc3Rpb24gb2YgaG93IHVzZXJzcGFjZSBpcyBjb21waWxlZC4NCllvdSBwcmV0dHkgbXVj
+aCBkb24ndCB3YW50IHRvIGJlIHRha2luZyB0cmFwcyB0byBmaXh1cCBtaXNhbGlnbmVkIGFjY2Vz
+c2VzLg0KU28gdGhlIGRlZmF1bHQgY29tcGlsZXIgb3B0aW9ucyBiZXR0ZXIgaW5jbHVkZSAtbXN0
+cmljdC1hbGlnbi4NCg0KWW91IHNob3VsZCBsb29rIGF0IC1tbm8tc3RyaWN0LWFsaWduIGJlaW5n
+IGEgcGVyZm9ybWFuY2Ugb3B0aW9uIHdoZW4NCnJ1bm5pbmcgb24ga25vd24gaGFyZHdhcmUsIG5v
+dCBhIGRlZmF1bHQuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUs
+IEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJl
+Z2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-On Thu, Feb 2, 2023 at 5:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Thu, Feb 2, 2023, at 09:42, Huacai Chen wrote:
-> > Introduce Kconfig option ARCH_STRICT_ALIGN to make -mstrict-align be
-> > configurable.
-> >
-> > Not all LoongArch cores support h/w unaligned access, we can use the
-> > -mstrict-align build parameter to prevent unaligned accesses.
-> >
-> > This option is disabled by default to optimise for performance, but you
-> > can enabled it manually if you want to run kernel on systems without h/w
-> > unaligned access support.
-> >
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->
-> This feels like it's a way too low-level option, I would not expect
-> users to be able to answer this correctly.
->
-> What I would do instead is to have Kconfig options for specific
-> CPU implementations and derive the alignment requirements from
-> that.
-You mean provide something like CONFIG_CPU_XXXX as MIPS do?  That
-seems not a good idea, too. If there are more than 3 CONFIG_CPU_XXXX,
-the complexity is more than CONFIG_ARCH_STRICT_ALIGN. Then users are
-also unable to do a correct selection. On the other hand, we can add
-more words under CONFIG_ARCH_STRICT_ALIGN to describe which processors
-support hardware unaligned accesses.
-
-Huacai
-
->
-> > +config ARCH_STRICT_ALIGN
-> > +     bool "Enable -mstrict-align to prevent unaligned accesses"
-> > +     help
-> > +       Not all LoongArch cores support h/w unaligned access, we can use
-> > +       -mstrict-align build parameter to prevent unaligned accesses.
-> > +
-> > +       This is disabled by default to optimise for performance, you can
-> > +       enabled it manually if you want to run kernel on systems without
-> > +       h/w unaligned access support.
-> > +
->
->
-> There is already a global CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-> option, I think you should use that one instead of adding another
-> one. Setting HAVE_EFFICIENT_UNALIGNED_ACCESS for CPUs that can
-> do unaligned access will enable some important optimizations in
-> the network stack and a few other places.
->
->     Arnd
