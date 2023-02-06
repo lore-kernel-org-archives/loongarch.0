@@ -1,86 +1,69 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADA628E8
-	for <loongarch@lists.linux.dev>; Mon,  6 Feb 2023 11:10:48 +0000 (UTC)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8F128E8
+	for <loongarch@lists.linux.dev>; Mon,  6 Feb 2023 11:18:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1675682332;
+	bh=MMQELgfzmTy2xoXiOtkuiLj6chI+faYOtG4k4503QqY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=FxqEIztYJEsnztsYoMzZasFmEUzUN8QwwE+GVpct7yREFVRzDZtJQJQr7aBsZTnmx
+	 Cskc+ZLptA9aIP+LY5WeMczatirrNccPnYmdx+MiYGBOZPHEf3mVDAmVcKgqojYzFc
+	 5coUMLOyLkYePMjFb+4I/ZAD6610bXAqWQOVLyXs=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4P9NpV6n6sz4x1f;
-	Mon,  6 Feb 2023 22:10:26 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1675681839;
-	bh=kUcid2K08WtpFrwk3dq6n2jc2ZZxMaSNsif8b2qLpcI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=JSr9bUqckLWxlQvgXrqHdLKjhZNKCyo4/W+R7iqEdoTwQny8JL4fA9p8KLiKopoBY
-	 5u53AQEtGGXSUIVhYTsKoGTQqHAWk/L2OGiEhn+0/8fSth4VXKAS3aT226D33i5p+m
-	 FdbPDX2xoyL2dmmxuKSPL38q4OEI/nwe/wpGmzrwBTQTovoqi6LZ4omZBFLcu1QcvH
-	 OCmTE96dRBgZqYLhxf1uVZpSZUhhjl9pivy58AnZ8D9ntUKLxW5BuUV2Rkfq3DMiAR
-	 1E1dDbWxoKsiTVWbw5buAHInDRJ1Jkci48lbw53vA/21E8Kh226KSjdHUbEkKMeduf
-	 u7otQ9CqmaTuA==
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Josh Poimboeuf <jpoimboe@kernel.org>, linux-kernel@vger.kernel.org
-Cc: jgross@suse.com, richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
- mattst88@gmail.com, linux-alpha@vger.kernel.org, linux@armlinux.org.uk,
- linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
- will@kernel.org, guoren@kernel.org, linux-csky@vger.kernel.org,
- linux-ia64@vger.kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev, f.fainelli@gmail.com,
- bcm-kernel-feedback-list@broadcom.com, tsbogend@alpha.franken.de,
- linux-mips@vger.kernel.org, jiaxun.yang@flygoat.com, npiggin@gmail.com,
- christophe.leroy@csgroup.eu, linuxppc-dev@lists.ozlabs.org,
- ysato@users.sourceforge.jp, dalias@libc.org, linux-sh@vger.kernel.org,
- davem@davemloft.net, sparclinux@vger.kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
- linux-xtensa@linux-xtensa.org, peterz@infradead.org,
- juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
- paulmck@kernel.org
-Subject: Re: [PATCH 12/22] powerpc/cpu: Mark start_secondary_resume()
- __noreturn
-In-Reply-To: <b5d065218265e79daa23f82bb84efc6a7ea120fc.1675461757.git.jpoimboe@kernel.org>
-References: <cover.1675461757.git.jpoimboe@kernel.org>
- <b5d065218265e79daa23f82bb84efc6a7ea120fc.1675461757.git.jpoimboe@kernel.org>
-Date: Mon, 06 Feb 2023 22:10:22 +1100
-Message-ID: <87v8kfdp7l.fsf@mpe.ellerman.id.au>
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 8E48365BFE;
+	Mon,  6 Feb 2023 06:18:49 -0500 (EST)
+Message-ID: <b1809500e4d55564a1084a3014fb9603ba3d1438.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: Make -mstrict-align be configurable
+From: Xi Ruoyao <xry111@xry111.site>
+To: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+ Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, Huacai
+ Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org, Xuefeng Li
+	 <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, Jiaxun Yang
+	 <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
+Date: Mon, 06 Feb 2023 19:18:47 +0800
+In-Reply-To: <5303aeda-5c66-ede6-b3ac-7d8ebd73ec70@loongson.cn>
+References: <20230202084238.2408516-1-chenhuacai@loongson.cn>
+	 <5fc85453-1e2c-1f00-7879-1b5fa318c78a@xen0n.name>
+	 <5303aeda-5c66-ede6-b3ac-7d8ebd73ec70@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
 
-Josh Poimboeuf <jpoimboe@kernel.org> writes:
-> start_secondary_resume() doesn't return.  Annotate it as such.  By
-> extension this also makes arch_cpu_idle_dead() noreturn.
+On Mon, 2023-02-06 at 18:24 +0800, Jianmin Lv wrote:
+> Hi, Xuerui
+>=20
+> I think the kernels produced with and without -mstrict-align have mainly=
+=20
+> following differences:
+> - Diffirent size. I build two kernls (vmlinux), size of kernel with=20
+> -mstrict-align is 26533376 bytes and size of kernel without=20
+> -mstrict-align is 26123280 bytes.
+> - Diffirent performance. For example, in kernel function jhash(), the=20
+> assemble code slices with and without -mstrict-align are following:
 
-Can we also mark arch_cpu_idle_dead() (the C function) __noreturn ?
+But there are still questions remaining:
 
-Seems like it would be good documentation, even if it's not required
-once the generic prototype is __noreturn.
+(1) Is the difference contributed by a bad code generation of GCC?  If
+true, it's better to improve GCC before someone starts to build a distro
+for LA264 as it would benefit the user space as well.
 
-But not a show-stopper.
+(2) Is there some "big bad unaligned access loop" on a hot spot in the
+kernel code?  If true, it may be better to just refactor the C code
+because doing so will benefit all ports, not only LoongArch.  Otherwise,
+it may be unworthy to optimize for some cold paths.
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-
-cheers
-
-> diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
-> index f63505d74932..cfd42ca8765c 100644
-> --- a/arch/powerpc/include/asm/smp.h
-> +++ b/arch/powerpc/include/asm/smp.h
-> @@ -66,7 +66,7 @@ void start_secondary(void *unused);
->  extern int smp_send_nmi_ipi(int cpu, void (*fn)(struct pt_regs *), u64 delay_us);
->  extern int smp_send_safe_nmi_ipi(int cpu, void (*fn)(struct pt_regs *), u64 delay_us);
->  extern void smp_send_debugger_break(void);
-> -extern void start_secondary_resume(void);
-> +extern void __noreturn start_secondary_resume(void);
->  extern void smp_generic_give_timebase(void);
->  extern void smp_generic_take_timebase(void);
->  
-> -- 
-> 2.39.0
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
