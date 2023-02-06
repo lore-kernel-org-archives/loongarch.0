@@ -1,133 +1,78 @@
-Received: from out-148.mta0.migadu.com (out-148.mta0.migadu.com [91.218.175.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC40D7B
-	for <loongarch@lists.linux.dev>; Mon,  6 Feb 2023 17:41:24 +0000 (UTC)
-Date: Mon, 6 Feb 2023 17:19:25 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1675703978;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HQYDCy4xAq7++DqBp2PrFrzWfoeLMTv7/t3BwVc+5/M=;
-	b=J9ErNIUpPqZIZXdMg30fbXll1h9T0Tvc0m6YwSEjZKdUoEOooQgqWauEEwTKgz5T3W0FTk
-	rki4AZWQsgRfhqb68OZxWvRzYjB94NkQRpb2vk7/ewhW1i4abF/GN+8YazanH4qC5F0Wee
-	Dwv1drNtXNr6gUzp6+ranIztAkcY0no=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Marc Zyngier <maz@kernel.org>
-Cc: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>, Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Len Brown <lenb@kernel.org>, Rafael Wysocki <rafael@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: Re: [RFC PATCH 29/32] KVM: arm64: Pass hypercalls to userspace
-Message-ID: <Y+E2nVnadj1emNs5@google.com>
-References: <20230203135043.409192-1-james.morse@arm.com>
- <20230203135043.409192-30-james.morse@arm.com>
- <865ycg1kv2.wl-maz@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6456116
+	for <loongarch@lists.linux.dev>; Mon,  6 Feb 2023 22:22:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62D76C433D2;
+	Mon,  6 Feb 2023 22:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1675722127;
+	bh=g8nY4KWQRGHZ+UEBU3IfsGHHp9POeugLWf+ks7MhlYI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ku27bb49TXnifj4vDKUwLt//IhS+AuKgNZHjSBzmgIygXsWngoTvqzjsyI4aaPcuH
+	 Ne/GMb6QblTp2Jv681blYtCgjkXaPsQUgkrsec8L+xRVWuKD28hd8t9BRChWBzJwZK
+	 gFEWXSU7jaZZgPnPMEvOqqaXTfNHVDYUbsIUYWKlmuEb7nAEqsRD53T6hGhLZYqx/u
+	 DQUcYnhTaFCk/Smt9vORx+U2SLIPq7vHqyxTh+SxZ9//C/gkazIzBXyvCtcwtDa+nk
+	 Ec2/QPURQbIa9r42wgKqNXQHC6PZxrciIKrlgpzWDw6z2c/ntsIbU896+w3wVQ78cR
+	 a9GpVI+CKZooA==
+Date: Mon, 6 Feb 2023 14:22:02 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-kernel@vger.kernel.org, jgross@suse.com,
+	richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+	mattst88@gmail.com, linux-alpha@vger.kernel.org,
+	linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
+	catalin.marinas@arm.com, will@kernel.org, guoren@kernel.org,
+	linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
+	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev,
+	f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+	tsbogend@alpha.franken.de, linux-mips@vger.kernel.org,
+	jiaxun.yang@flygoat.com, npiggin@gmail.com,
+	christophe.leroy@csgroup.eu, linuxppc-dev@lists.ozlabs.org,
+	ysato@users.sourceforge.jp, dalias@libc.org,
+	linux-sh@vger.kernel.org, davem@davemloft.net,
+	sparclinux@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
+	linux-xtensa@linux-xtensa.org, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	paulmck@kernel.org
+Subject: Re: [PATCH 12/22] powerpc/cpu: Mark start_secondary_resume()
+ __noreturn
+Message-ID: <20230206222202.zreg3pyhynhvyggy@treble>
+References: <cover.1675461757.git.jpoimboe@kernel.org>
+ <b5d065218265e79daa23f82bb84efc6a7ea120fc.1675461757.git.jpoimboe@kernel.org>
+ <87v8kfdp7l.fsf@mpe.ellerman.id.au>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <865ycg1kv2.wl-maz@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <87v8kfdp7l.fsf@mpe.ellerman.id.au>
 
-On Sun, Feb 05, 2023 at 10:12:49AM +0000, Marc Zyngier wrote:
-> On Fri, 03 Feb 2023 13:50:40 +0000,
-> James Morse <james.morse@arm.com> wrote:
-> > 
-> > From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > 
-> > When capability KVM_CAP_ARM_HVC_TO_USER is available, userspace can
-> > request to handle all hypercalls that aren't handled by KVM. With the
-> > help of another capability, this will allow userspace to handle PSCI
-> > calls.
-> > 
-> > Suggested-by: James Morse <james.morse@arm.com>
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > 
-> > ---
-> > 
+On Mon, Feb 06, 2023 at 10:10:22PM +1100, Michael Ellerman wrote:
+> Josh Poimboeuf <jpoimboe@kernel.org> writes:
+> > start_secondary_resume() doesn't return.  Annotate it as such.  By
+> > extension this also makes arch_cpu_idle_dead() noreturn.
 > 
-> On top of Oliver's ask not to make this a blanket "steal everything",
-> but instead to have an actual request for ranges of forwarded
-> hypercalls:
+> Can we also mark arch_cpu_idle_dead() (the C function) __noreturn ?
 > 
-> > Notes on this implementation:
-> > 
-> > * A similar mechanism was proposed for SDEI some time ago [1]. This RFC
-> >   generalizes the idea to all hypercalls, since that was suggested on
-> >   the list [2, 3].
-> > 
-> > * We're reusing kvm_run.hypercall. I copied x0-x5 into
-> >   kvm_run.hypercall.args[] to help userspace but I'm tempted to remove
-> >   this, because:
-> >   - Most user handlers will need to write results back into the
-> >     registers (x0-x3 for SMCCC), so if we keep this shortcut we should
-> >     go all the way and read them back on return to kernel.
-> >   - QEMU doesn't care about this shortcut, it pulls all vcpu regs before
-> >     handling the call.
-> >   - SMCCC uses x0-x16 for parameters.
-> >   x0 does contain the SMCCC function ID and may be useful for fast
-> >   dispatch, we could keep that plus the immediate number.
-> > 
-> > * Add a flag in the kvm_run.hypercall telling whether this is HVC or
-> >   SMC?  Can be added later in those bottom longmode and pad fields.
-> 
-> We definitely need this. A nested hypervisor can (and does) use SMCs
-> as the conduit. The question is whether they represent two distinct
-> namespaces or not. I *think* we can unify them, but someone should
-> check and maybe get clarification from the owners of the SMCCC spec.
-> 
-> >
-> > * On top of this we could share with userspace which HVC ranges are
-> >   available and which ones are handled by KVM. That can actually be added
-> >   independently, through a vCPU/VM device attribute which doesn't consume
-> >   a new ioctl:
-> >   - userspace issues HAS_ATTR ioctl on the vcpu fd to query whether this
-> >     feature is available.
-> >   - userspace queries the number N of HVC ranges using one GET_ATTR.
-> >   - userspace passes an array of N ranges using another GET_ATTR. The
-> >     array is filled and returned by KVM.
-> 
-> As mentioned above, I think this interface should go both ways.
-> Userspace should request the forwarding of a certain range of
-> hypercalls via a similar SET_ATTR interface.
-> 
-> Another question is how we migrate VMs that have these forwarding
-> requirements. Do we expect the VMM to replay the forwarding as part of
-> the setting up on the other side? Or do we save/restore this via a
-> firmware pseudo-register?
+> Seems like it would be good documentation, even if it's not required
+> once the generic prototype is __noreturn.
 
-Personally I'd prefer we left that job to userspace.
+Yeah, agreed.  Maybe I'll do that (for all the implementations) with
+patch 22.
 
-We could also implement GET_ATTR, in case userspace has forgotten what
-it wrote to the hypercall filter. The firmware pseudo-registers are
-handy for moving KVM state back and forth 'for free', but I don't think
-we need to bend over backwards to migrate state userspace is directly
-responsible for.
+> But not a show-stopper.
+> 
+> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+
+Thanks!
 
 -- 
-Thanks,
-Oliver
+Josh
