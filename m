@@ -1,126 +1,86 @@
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B1528E8
-	for <loongarch@lists.linux.dev>; Mon,  6 Feb 2023 10:33:30 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id 722DC5C00C4;
-	Mon,  6 Feb 2023 05:33:29 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Mon, 06 Feb 2023 05:33:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm3; t=1675679609; x=1675766009; bh=Yhoj4RnsjN
-	wKN2xZh2UIOjfZ9pZQfvv4RITKRu8FFow=; b=GfhJooMvkS9m0B3ZP3Jm/DKvb2
-	wvkzZNFlsHdcx5GQqXTOIIdgkW4AGVQucd2TLpM/YV5QsF+MVqoiJIlnUds4bMOz
-	svFuluBDDN8+nSim5Mb/3ZrR2LMvYNKrbfMDG/xNIuAP26843MFZaYN6EEXUJCFC
-	6l8UKBvPYFB16QO3q6t8Vu2jmGzTfA8hUS60QfPeQMq+lskVHTbUcEcNP8g9B4fD
-	qtFEIydIKwI6KAdacJuMeA+RsDd7Mq1Yr99c1Jv37FTsGFCZHB4MtmHdRaiWXKXr
-	Kqjeyxxmx/1REDs7/mPld0JC4yLprMnOCy2qk8ASd51+OAJyS6+s3pqugtlw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1675679609; x=1675766009; bh=Yhoj4RnsjNwKN2xZh2UIOjfZ9pZQ
-	fvv4RITKRu8FFow=; b=smvapOgGiyeVDzUGIFSkC6FMHwu8GJl/mQ2mRzFEwfAS
-	1wQFNTRw1ls8AdmAk5o83ay72Q1d24UOpPkqtwJ6fQ9Wmz661+5/TTDBss1ax7el
-	bBoiy+pmhnKFTxkqxAmy4+lBplbrYj/pMZy+/1SBHIC17Mt5UeYADcUnqGqGut5P
-	nEzMVSCQ4hS/ujuNY/Axefumn4MXSHRmljxXrZAGyT2HP45Z233zAL+C2b3+qsA/
-	M3ya1mDoW3yL2zY+YSxrVMQRDwymkIU2KUHehFbDZXOWwP81z6LA55iADxrWjvUm
-	29HePxvSoH37lfDU3PUO74//Cqp92ayWEwcjLTEMjA==
-X-ME-Sender: <xms:eNfgY2VjFZtwvSNVOzZumQuALWJSJkDbt9otapt09R4D1tdz8Zi4rA>
-    <xme:eNfgYykser4L5UfWugKaekgvBVWr2aVuH4rmsdAaY6WHQMtnmkdEhjd65IOVrDdjv
-    Z4iDVwNXuNCr1I2UHQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudegiedgudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:eNfgY6b73RgmQJC8bndoUUg7foWU12-uYnoR0C1s2zCBVDIqdO0v6w>
-    <xmx:eNfgY9W1hjzrdQLrDp6ke8IneMRoQ4aGwSOgXK_-GRsQXh9hB9KlEQ>
-    <xmx:eNfgYwmOWF-Gc51XNSJaGYCQCq3ncsZ6iHhepHElRY9EiDxspbSs0A>
-    <xmx:edfgY-ZrZiBljwjhr7COVAbRJDx5zMWSAsP1FBiGN7KnrvJQxxaKkw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id CEE61B60086; Mon,  6 Feb 2023 05:33:28 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-108-ge995779fee-fm-20230203.001-ge995779f
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADA628E8
+	for <loongarch@lists.linux.dev>; Mon,  6 Feb 2023 11:10:48 +0000 (UTC)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4P9NpV6n6sz4x1f;
+	Mon,  6 Feb 2023 22:10:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1675681839;
+	bh=kUcid2K08WtpFrwk3dq6n2jc2ZZxMaSNsif8b2qLpcI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=JSr9bUqckLWxlQvgXrqHdLKjhZNKCyo4/W+R7iqEdoTwQny8JL4fA9p8KLiKopoBY
+	 5u53AQEtGGXSUIVhYTsKoGTQqHAWk/L2OGiEhn+0/8fSth4VXKAS3aT226D33i5p+m
+	 FdbPDX2xoyL2dmmxuKSPL38q4OEI/nwe/wpGmzrwBTQTovoqi6LZ4omZBFLcu1QcvH
+	 OCmTE96dRBgZqYLhxf1uVZpSZUhhjl9pivy58AnZ8D9ntUKLxW5BuUV2Rkfq3DMiAR
+	 1E1dDbWxoKsiTVWbw5buAHInDRJ1Jkci48lbw53vA/21E8Kh226KSjdHUbEkKMeduf
+	 u7otQ9CqmaTuA==
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Josh Poimboeuf <jpoimboe@kernel.org>, linux-kernel@vger.kernel.org
+Cc: jgross@suse.com, richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+ mattst88@gmail.com, linux-alpha@vger.kernel.org, linux@armlinux.org.uk,
+ linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+ will@kernel.org, guoren@kernel.org, linux-csky@vger.kernel.org,
+ linux-ia64@vger.kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+ loongarch@lists.linux.dev, f.fainelli@gmail.com,
+ bcm-kernel-feedback-list@broadcom.com, tsbogend@alpha.franken.de,
+ linux-mips@vger.kernel.org, jiaxun.yang@flygoat.com, npiggin@gmail.com,
+ christophe.leroy@csgroup.eu, linuxppc-dev@lists.ozlabs.org,
+ ysato@users.sourceforge.jp, dalias@libc.org, linux-sh@vger.kernel.org,
+ davem@davemloft.net, sparclinux@vger.kernel.org, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
+ linux-xtensa@linux-xtensa.org, peterz@infradead.org,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+ paulmck@kernel.org
+Subject: Re: [PATCH 12/22] powerpc/cpu: Mark start_secondary_resume()
+ __noreturn
+In-Reply-To: <b5d065218265e79daa23f82bb84efc6a7ea120fc.1675461757.git.jpoimboe@kernel.org>
+References: <cover.1675461757.git.jpoimboe@kernel.org>
+ <b5d065218265e79daa23f82bb84efc6a7ea120fc.1675461757.git.jpoimboe@kernel.org>
+Date: Mon, 06 Feb 2023 22:10:22 +1100
+Message-ID: <87v8kfdp7l.fsf@mpe.ellerman.id.au>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <f90129d9-3262-4e3a-9d78-57f641dbdb64@app.fastmail.com>
-In-Reply-To: 
- <CAAhV-H6kuzfjw5i8-6L_68c50nsXzFipHY5hxtbShuv16bqRbg@mail.gmail.com>
-References: <20230202084238.2408516-1-chenhuacai@loongson.cn>
- <ccf74ebd-ccc1-4de5-a425-dcde4ac39a8d@app.fastmail.com>
- <CAAhV-H6kuzfjw5i8-6L_68c50nsXzFipHY5hxtbShuv16bqRbg@mail.gmail.com>
-Date: Mon, 06 Feb 2023 11:33:10 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Huacai Chen" <chenhuacai@kernel.org>
-Cc: "Huacai Chen" <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "Xuefeng Li" <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Make -mstrict-align be configurable
+MIME-Version: 1.0
 Content-Type: text/plain
 
-On Fri, Feb 3, 2023, at 03:08, Huacai Chen wrote:
-> On Thu, Feb 2, 2023 at 5:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> On Thu, Feb 2, 2023, at 09:42, Huacai Chen wrote:
->> > Introduce Kconfig option ARCH_STRICT_ALIGN to make -mstrict-align be
->> > configurable.
->> >
->> > Not all LoongArch cores support h/w unaligned access, we can use the
->> > -mstrict-align build parameter to prevent unaligned accesses.
->> >
->> > This option is disabled by default to optimise for performance, but you
->> > can enabled it manually if you want to run kernel on systems without h/w
->> > unaligned access support.
->> >
->> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->>
->> This feels like it's a way too low-level option, I would not expect
->> users to be able to answer this correctly.
->>
->> What I would do instead is to have Kconfig options for specific
->> CPU implementations and derive the alignment requirements from
->> that.
-> You mean provide something like CONFIG_CPU_XXXX as MIPS do?  That
-> seems not a good idea, too. If there are more than 3 CONFIG_CPU_XXXX,
-> the complexity is more than CONFIG_ARCH_STRICT_ALIGN.
+Josh Poimboeuf <jpoimboe@kernel.org> writes:
+> start_secondary_resume() doesn't return.  Annotate it as such.  By
+> extension this also makes arch_cpu_idle_dead() noreturn.
 
-The way that mips does it is not useful since that forces you to
-pick a single CPU from a 'choice' list in Kconfig, with the CPUs
-being mutually exclusive in that list. What you need here is either
-a strict hierarchy of CPUs like in arch/x86/Kconfig.cpus where each
-option is a superset of the previous one, or a set of options
-like in arch/arm/mm/Kconfig that are not mutually exclusive and
-let you pick any combinations that you want to support in a kernel
-image.
+Can we also mark arch_cpu_idle_dead() (the C function) __noreturn ?
 
-The important bit is that a kernel you build will by default
-always work across all hardware except the ones that are
-explicitly excluded.
+Seems like it would be good documentation, even if it's not required
+once the generic prototype is __noreturn.
 
-> Then users are also unable to do a correct selection. On the other
-> hand, we can add more words under CONFIG_ARCH_STRICT_ALIGN to
-> describe which processors support hardware unaligned accesses.
+But not a show-stopper.
 
-Trying to handle this with help texts quickly gets out of hand
-when you get to dozens of CPU specific optimizations that are
-incompatible with other CPU cores. I assume you will need similar
-options e.g. for the broken cpu-idle instruction on early cores
-or the missing sub-word atomics, once these are fixed in new
-CPU cores.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-     Arnd
+cheers
+
+> diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
+> index f63505d74932..cfd42ca8765c 100644
+> --- a/arch/powerpc/include/asm/smp.h
+> +++ b/arch/powerpc/include/asm/smp.h
+> @@ -66,7 +66,7 @@ void start_secondary(void *unused);
+>  extern int smp_send_nmi_ipi(int cpu, void (*fn)(struct pt_regs *), u64 delay_us);
+>  extern int smp_send_safe_nmi_ipi(int cpu, void (*fn)(struct pt_regs *), u64 delay_us);
+>  extern void smp_send_debugger_break(void);
+> -extern void start_secondary_resume(void);
+> +extern void __noreturn start_secondary_resume(void);
+>  extern void smp_generic_give_timebase(void);
+>  extern void smp_generic_take_timebase(void);
+>  
+> -- 
+> 2.39.0
