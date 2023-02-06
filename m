@@ -1,120 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE4315BE
-	for <loongarch@lists.linux.dev>; Mon,  6 Feb 2023 03:12:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AB45C4339C
-	for <loongarch@lists.linux.dev>; Mon,  6 Feb 2023 03:12:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675653127;
-	bh=SEHqDj0pecZaoDvI2TxfvISMCoNXpVJslROmtkQHTl0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=aBHWxbUE1qscXgToVSLDbDbOTBJx5ol3QAloFKF6quHuxSLDc6bLN0hEb6oLgxGmy
-	 MnLxdeRrgyeBdJ9pGDDQDN8qL5E9eF3ZREg1BlrIswbxzqSGfwNgKGkpU7eR7l/H+i
-	 Vbq9BwU/inl0wIHB7aGtD4Z3NEhanBgFaoByYV66gksXGt6rGyMFlx2u7/LVAOMEK5
-	 3UQMP1Lhs7EYtOpLuMlrIWY7J57uJMJDeSdRPH5Gq31PiUX/XFKpgBmcKERl5TtGxs
-	 zZmDid7aciqyecTQEc01AFRGPklMTl/8Ni72awcEbNNyPoB7lSyFUULT/gnF3yjq+a
-	 QYealvajIFRZg==
-Received: by mail-ej1-f42.google.com with SMTP id mc11so30431353ejb.10
-        for <loongarch@lists.linux.dev>; Sun, 05 Feb 2023 19:12:07 -0800 (PST)
-X-Gm-Message-State: AO0yUKVgSNPfAx9/dotXM3wiLqiWBzDdj3O6KtLm+j9LyYrHVvf8qAlq
-	d24FXjNhOuyPUK/GoKxxv6UdOlSYLYxIVNy/sHc=
-X-Google-Smtp-Source: AK7set+C2OPIEjxuD4imJwgo/SdFRSDGqxy+aWdQoxwR9LsZ/L0xaRFmrPMBBJUVbKfwf6WwaCs9pUvWr8CjvlkkXS4=
-X-Received: by 2002:a17:906:8419:b0:884:c19c:7c6 with SMTP id
- n25-20020a170906841900b00884c19c07c6mr4724728ejx.120.1675653125517; Sun, 05
- Feb 2023 19:12:05 -0800 (PST)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81C81322A;
+	Mon,  6 Feb 2023 10:10:48 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED41813D5;
+	Mon,  6 Feb 2023 02:11:29 -0800 (PST)
+Received: from [10.57.75.57] (unknown [10.57.75.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 584233F71E;
+	Mon,  6 Feb 2023 02:10:43 -0800 (PST)
+Message-ID: <cffde8a1-74e4-9b61-1eea-544ba3405ed4@arm.com>
+Date: Mon, 6 Feb 2023 10:10:41 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1675461757.git.jpoimboe@kernel.org> <f860f3a1c1a53c437a99abc53e8f1a798aef6881.1675461757.git.jpoimboe@kernel.org>
- <CAJF2gTSKe3ve4_rsOYpmSBOyUSU5rpLHyijn9i2-i+WfLqxzYw@mail.gmail.com> <20230204022932.k24laszjs3v4bc3v@treble>
-In-Reply-To: <20230204022932.k24laszjs3v4bc3v@treble>
-From: Guo Ren <guoren@kernel.org>
-Date: Mon, 6 Feb 2023 11:11:53 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSrGNm3xkwzws4uh1bv__1XYFCh322MJtk2ObQmv1_nEA@mail.gmail.com>
-Message-ID: <CAJF2gTSrGNm3xkwzws4uh1bv__1XYFCh322MJtk2ObQmv1_nEA@mail.gmail.com>
-Subject: Re: [PATCH 05/22] csky/cpu: Make sure arch_cpu_idle_dead() doesn't return
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: linux-kernel@vger.kernel.org, jgross@suse.com, 
-	richard.henderson@linaro.org, ink@jurassic.park.msu.ru, mattst88@gmail.com, 
-	linux-alpha@vger.kernel.org, linux@armlinux.org.uk, 
-	linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, 
-	will@kernel.org, linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev, 
-	f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com, 
-	tsbogend@alpha.franken.de, linux-mips@vger.kernel.org, 
-	jiaxun.yang@flygoat.com, mpe@ellerman.id.au, npiggin@gmail.com, 
-	christophe.leroy@csgroup.eu, linuxppc-dev@lists.ozlabs.org, 
-	ysato@users.sourceforge.jp, dalias@libc.org, linux-sh@vger.kernel.org, 
-	davem@davemloft.net, sparclinux@vger.kernel.org, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, 
-	linux-xtensa@linux-xtensa.org, peterz@infradead.org, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
-	paulmck@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [RFC PATCH 29/32] KVM: arm64: Pass hypercalls to userspace
+To: Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>
+Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
+ kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Len Brown <lenb@kernel.org>, Rafael Wysocki <rafael@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Salil Mehta <salil.mehta@huawei.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>
+References: <20230203135043.409192-1-james.morse@arm.com>
+ <20230203135043.409192-30-james.morse@arm.com> <865ycg1kv2.wl-maz@kernel.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <865ycg1kv2.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 4, 2023 at 10:29 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
->
-> On Sat, Feb 04, 2023 at 09:12:31AM +0800, Guo Ren wrote:
-> > On Sat, Feb 4, 2023 at 6:05 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> > >
-> > > arch_cpu_idle_dead() doesn't return.  Make that more explicit with a
-> > > BUG().
-> > >
-> > > BUG() is preferable to unreachable() because BUG() is a more explicit
-> > > failure mode and avoids undefined behavior like falling off the edge of
-> > > the function into whatever code happens to be next.
-> > >
-> > > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> > > ---
-> > >  arch/csky/kernel/smp.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
-> > > index b45d1073307f..0ec20efaf5fd 100644
-> > > --- a/arch/csky/kernel/smp.c
-> > > +++ b/arch/csky/kernel/smp.c
-> > > @@ -317,5 +317,7 @@ void arch_cpu_idle_dead(void)
-> > >                 "jmpi   csky_start_secondary"
-> > >                 :
-> > >                 : "r" (secondary_stack));
-> > > +
-> > > +       BUG();
-> > Why not:
-> > diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> > index f26ab2675f7d..1d3bf903add2 100644
-> > --- a/kernel/sched/idle.c
-> > +++ b/kernel/sched/idle.c
-> > @@ -285,6 +285,7 @@ static void do_idle(void)
-> >                         tick_nohz_idle_stop_tick();
-> >                         cpuhp_report_idle_dead();
-> >                         arch_cpu_idle_dead();
-> > +                       BUG();
->
-> Without the BUG() in csky arch_cpu_idle_dead(), the compiler will warn
-> about arch_cpu_idle_dead() returning, because it's marked __noreturn but
-> doesn't clearly return (as far as the compiler knows).
->
-> And we want it marked __noreturn so we'll be more likely to catch such
-> bugs at build time.
->
-> And as a bonus we get better code generation and clearer code semantics
-> which helps both humans and tooling understand the intent of the code.
-Thx for the clarification.
+Hi,
 
-Acked-by: Guo Ren <guoren@kernel.org>
+A few cents from the Realm support point of view.
 
->
-> --
-> Josh
+On 05/02/2023 10:12, Marc Zyngier wrote:
+> On Fri, 03 Feb 2023 13:50:40 +0000,
+> James Morse <james.morse@arm.com> wrote:
+>>
+>> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+>>
+>> When capability KVM_CAP_ARM_HVC_TO_USER is available, userspace can
+>> request to handle all hypercalls that aren't handled by KVM. With the
+>> help of another capability, this will allow userspace to handle PSCI
+>> calls.
+>>
+>> Suggested-by: James Morse <james.morse@arm.com>
+>> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+>> Signed-off-by: James Morse <james.morse@arm.com>
+>>
+>> ---
+>>
+> 
+> On top of Oliver's ask not to make this a blanket "steal everything",
+> but instead to have an actual request for ranges of forwarded
+> hypercalls:
+> 
+>> Notes on this implementation:
+>>
+>> * A similar mechanism was proposed for SDEI some time ago [1]. This RFC
+>>    generalizes the idea to all hypercalls, since that was suggested on
+>>    the list [2, 3].
+>>
+>> * We're reusing kvm_run.hypercall. I copied x0-x5 into
+>>    kvm_run.hypercall.args[] to help userspace but I'm tempted to remove
+>>    this, because:
+>>    - Most user handlers will need to write results back into the
+>>      registers (x0-x3 for SMCCC), so if we keep this shortcut we should
+>>      go all the way and read them back on return to kernel.
+>>    - QEMU doesn't care about this shortcut, it pulls all vcpu regs before
+>>      handling the call.
 
+This may not be always possible, e.g., for Realms. GET_ONE_REG is
+not supported. So using an explicit passing down of the args is
+preferrable.
 
-
--- 
-Best Regards
- Guo Ren
+Thanks
+Suzuki
