@@ -1,195 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2103C30
-	for <loongarch@lists.linux.dev>; Mon,  6 Feb 2023 12:13:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72DBDC433EF
-	for <loongarch@lists.linux.dev>; Mon,  6 Feb 2023 12:13:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3363220;
+	Mon,  6 Feb 2023 12:31:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC9D6C433EF;
+	Mon,  6 Feb 2023 12:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675685597;
-	bh=Ks+3bWX8BMBQ1+7CdXHspGcVXJ2Qn/DY7u+Hkp8zSrc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OPWBFefIHR8JRaFXU4l+xk69wU3NZfrWepDWxuheqGJLvbn6l7WlR8677cImYkWLs
-	 izbNClwdBlqWMuWlZOuytrpEEFzgCfYD1LQy26MlbEGKCgeZDDJYWE8BCrvJMWiO1P
-	 nfbZV5ElQhmngJpI1WXymjizo/zr8bLC9wEU/vWFrKC2BvP5jIWLIKtBJE7VHtJy0W
-	 rYfFiYU5wzLFCQ48eBi2AwPDISp8qLtNWX63eWyPbMJIRh6fvsSAlaSp9nvJwQe+re
-	 y3y1JUFsbbPgk0aJyp1gQWaD0++sktmqClZPPIzL49CEMsvegkdQqq2MkdUWd3c61h
-	 3hx1uEJIo8Zbw==
-Received: by mail-ed1-f50.google.com with SMTP id q19so11444358edd.2
-        for <loongarch@lists.linux.dev>; Mon, 06 Feb 2023 04:13:17 -0800 (PST)
-X-Gm-Message-State: AO0yUKViUvDXYV9UONVeW1OcgqLE2UsEZJXz85vLZmFuiakyUZ4PMHTB
-	qK11qLfjx4IPJBj3kkUK0vH2aLT3J4zQ5YdJRwQ=
-X-Google-Smtp-Source: AK7set8asN6FOn8+WUmAov8wIo1dn46oFQk0RdBFmZbl0rjD7eA3kd09j/F0iNyrgtzlttyU1SbTIqAVb0C19xb0+g4=
-X-Received: by 2002:a50:cc9a:0:b0:4aa:a4f7:2304 with SMTP id
- q26-20020a50cc9a000000b004aaa4f72304mr1702807edi.38.1675685595641; Mon, 06
- Feb 2023 04:13:15 -0800 (PST)
+	s=k20201202; t=1675686703;
+	bh=SSKnltqyFrUrRR/6DQuBz9zXXdOyQfpcUJPdcNtRCFU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=g/GTgn5Zr2vIJt5DlEEdvQeuIMMj6GVrHVTg0gW7msGYEZ2ewNkdZaWKqZzbUfZmn
+	 qEpeyC+c7b4H3xQijFuKs2cuxOvAOUxg5ygp7Xrr5LmfFbQXfAWfjtg2yHUDFjTlcv
+	 QPGM84IoNDnhvhOaSBp2uSNhf5ICbdUzFsNx+kn7DISAaAp+hjPnB7narguJLOFKp3
+	 m7ZwGSK/moPApG+Yv66+cdu974/NI95+nMFCtUHDEIpvJhRW6JeYsFnmqtusPKhVsE
+	 B0kCmixpbYxqYmZn0ociftTSOT7vLDSNxMxceEQjR/2SKHUpKesLPIjOIbxOsL/cle
+	 fdk1VexLpof8w==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1pP0er-00800O-6V;
+	Mon, 06 Feb 2023 12:31:41 +0000
+Date: Mon, 06 Feb 2023 12:31:40 +0000
+Message-ID: <86wn4vynyr.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: James Morse <james.morse@arm.com>,
+	linux-pm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-ia64@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Len Brown <lenb@kernel.org>,
+	Rafael Wysocki <rafael@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: Re: [RFC PATCH 29/32] KVM: arm64: Pass hypercalls to userspace
+In-Reply-To: <cffde8a1-74e4-9b61-1eea-544ba3405ed4@arm.com>
+References: <20230203135043.409192-1-james.morse@arm.com>
+	<20230203135043.409192-30-james.morse@arm.com>
+	<865ycg1kv2.wl-maz@kernel.org>
+	<cffde8a1-74e4-9b61-1eea-544ba3405ed4@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <1674007261-9198-1-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H4aTd6_cSy45KKjv-KrLTiwT4iG6+fkb84KfCrL3Y+hpg@mail.gmail.com>
- <CAAhV-H5WN5E=0Z9wpbXDc6VO7Nc+j7PGvnyAAGOmCRMJkdwSYw@mail.gmail.com>
- <CAEr6+ECO-=jfhzHrcdKGx0MsjMBMiN6wsBPCfv7CaXo_amAWWg@mail.gmail.com>
- <02806f85-bc09-d316-f058-3947353cb190@loongson.cn> <CAEr6+EBYF2xqZWEuZaz5un5FF3Jb-rSAQp3s3uojsovm9RcUYA@mail.gmail.com>
-In-Reply-To: <CAEr6+EBYF2xqZWEuZaz5un5FF3Jb-rSAQp3s3uojsovm9RcUYA@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 6 Feb 2023 20:13:03 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5dJGrL3kEwzC-XwMqJTCsYHq-YVDTDRntGcYg9RMz02w@mail.gmail.com>
-Message-ID: <CAAhV-H5dJGrL3kEwzC-XwMqJTCsYHq-YVDTDRntGcYg9RMz02w@mail.gmail.com>
-Subject: Re: [PATCH v12 0/5] Add kprobe and kretprobe support for LoongArch
-To: Jeff Xie <xiehuan09@gmail.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: suzuki.poulose@arm.com, james.morse@arm.com, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, x86@kernel.org, tglx@linutronix.de, lpieralisi@kernel.org, mark.rutland@arm.com, sudeep.holla@arm.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, mingo@redhat.com, will@kernel.org, catalin.marinas@arm.com, chenhuacai@kernel.org, oliver.upton@linux.dev, lenb@kernel.org, rafael@kernel.org, kernel@xen0n.name, salil.mehta@huawei.com, linux@armlinux.org.uk, jean-philippe@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi, Jeff,
+On Mon, 06 Feb 2023 10:10:41 +0000,
+Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> 
+> Hi,
+> 
+> A few cents from the Realm support point of view.
+> 
+> On 05/02/2023 10:12, Marc Zyngier wrote:
+> > On Fri, 03 Feb 2023 13:50:40 +0000,
+> > James Morse <james.morse@arm.com> wrote:
+> >> 
+> >> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> >> 
+> >> When capability KVM_CAP_ARM_HVC_TO_USER is available, userspace can
+> >> request to handle all hypercalls that aren't handled by KVM. With the
+> >> help of another capability, this will allow userspace to handle PSCI
+> >> calls.
+> >> 
+> >> Suggested-by: James Morse <james.morse@arm.com>
+> >> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> >> Signed-off-by: James Morse <james.morse@arm.com>
+> >> 
+> >> ---
+> >> 
+> > 
+> > On top of Oliver's ask not to make this a blanket "steal everything",
+> > but instead to have an actual request for ranges of forwarded
+> > hypercalls:
+> > 
+> >> Notes on this implementation:
+> >> 
+> >> * A similar mechanism was proposed for SDEI some time ago [1]. This RFC
+> >>    generalizes the idea to all hypercalls, since that was suggested on
+> >>    the list [2, 3].
+> >> 
+> >> * We're reusing kvm_run.hypercall. I copied x0-x5 into
+> >>    kvm_run.hypercall.args[] to help userspace but I'm tempted to remove
+> >>    this, because:
+> >>    - Most user handlers will need to write results back into the
+> >>      registers (x0-x3 for SMCCC), so if we keep this shortcut we should
+> >>      go all the way and read them back on return to kernel.
+> >>    - QEMU doesn't care about this shortcut, it pulls all vcpu regs before
+> >>      handling the call.
+> 
+> This may not be always possible, e.g., for Realms. GET_ONE_REG is
+> not supported. So using an explicit passing down of the args is
+> preferrable.
 
-Now I add kprobes on ftrace support in
-https://github.com/loongson/linux/commits/loongarch-next, please test
-again. Thank you.
+What is the blocker for CCA to use GET_ONE_REG? The value obviously
+exists and is made available to the host. pKVM is perfectly able to
+use GET_ONE_REG and gets a bunch of zeroes for things that the
+hypervisor has decided to hide from the host.
 
-Huacai
+Of course, it requires that the hypervisor (the RMM in your case)
+knows about the semantics of the hypercall, but that's obviously
+already a requirement (or you wouldn't be able to use PSCI at all).
 
-On Thu, Feb 2, 2023 at 11:33 AM Jeff Xie <xiehuan09@gmail.com> wrote:
->
-> On Thu, Feb 2, 2023 at 10:23 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> >
-> >
-> >
-> > On 02/01/2023 05:40 PM, Jeff Xie wrote:
-> > > On Wed, Feb 1, 2023 at 12:56 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> > >>
-> > >> Hi, Jeff,
-> > >>
-> > >> Could you please pay some time to test this series? Thank you.
-> > >
-> > > Thanks for notifying me about the test.
-> > >
-> > > I have tested the patchset(based on the
-> > > https://github.com/loongson/linux/tree/loongarch-next),
-> > > I found that some functions can't  be probed e.g. scheduler_tick() or
-> > > uart_write_wakeup()
-> > > the two functions have the same point,  they are all run in the hardirq context.
-> > >
-> > > I don't know if it's related to the hardirq context, I haven't had
-> > > time to study this patchset carefully.
-> > > and they can be probed in the x86_64 arch.
-> > >
-> > > root@loongarch modules]# insmod ./kprobe_example.ko symbol=scheduler_tick
-> > > insmod: can't insert './kprobe_example.ko': invalid parameter
-> > >
-> > > dmesg:
-> > > [   39.806435] kprobe_init: register_kprobe failed, returned -22
-> > >
-> >
-> > Thanks for your test.
-> >
-> > On my test environment, I can not reproduce the above issue,
-> > here are the test results, it seems no problem.
-> >
-> > [root@linux loongson]# dmesg -c
-> > [root@linux loongson]# uname -m
-> > loongarch64
-> > [root@linux loongson]# modprobe kprobe_example symbol=scheduler_tick
-> > [root@linux loongson]# rmmod kprobe_example
-> > [root@linux loongson]# dmesg | tail -2
-> > [ 3317.138086] handler_post: <scheduler_tick> p->addr =
-> > 0x0000000065d12f66, estat = 0xc0000
-> > [ 3317.154086] kprobe_exit: kprobe at 0000000065d12f66 unregistered
-> >
-> > [root@linux loongson]# dmesg -c
-> > [root@linux loongson]# uname -m
-> > loongarch64
-> > [root@linux loongson]# modprobe kprobe_example symbol=uart_write_wakeup
-> > [root@linux loongson]# rmmod kprobe_example
-> > [root@linux loongson]# dmesg | tail -2
-> > [ 3433.502092] handler_post: <uart_write_wakeup> p->addr =
-> > 0x0000000019718061, estat = 0xc0000
-> > [ 3433.762085] kprobe_exit: kprobe at 0000000019718061 unregistered
-> >
-> > Additionally, "register_kprobe failed, returned -22" means the symbol
-> > can not be probed, here is the related code:
-> >
-> > register_kprobe()
-> >    check_kprobe_address_safe()
-> >
-> > static int check_kprobe_address_safe(struct kprobe *p,
-> >                                      struct module **probed_mod)
-> > {
-> >         int ret;
-> >
-> >         ret = check_ftrace_location(p);
-> >         if (ret)
-> >                 return ret;
-> >         jump_label_lock();
-> >         preempt_disable();
-> >
-> >         /* Ensure it is not in reserved area nor out of text */
-> >         if (!(core_kernel_text((unsigned long) p->addr) ||
-> >             is_module_text_address((unsigned long) p->addr)) ||
-> >             in_gate_area_no_mm((unsigned long) p->addr) ||
-> >             within_kprobe_blacklist((unsigned long) p->addr) ||
-> >             jump_label_text_reserved(p->addr, p->addr) ||
-> >             static_call_text_reserved(p->addr, p->addr) ||
-> >             find_bug((unsigned long)p->addr)) {
-> >                 ret = -EINVAL;
-> >                 goto out;
-> >         }
-> > ...
-> > }
->
-> Today I looked at the code, this has nothing to do with hardirq :-)
-> because I enabled this kernel option CONFIG_DYNAMIC_FTRACE, the
-> loongarch should not support the option yet.
->
-> #ifdef CONFIG_DYNAMIC_FTRACE
-> unsigned long ftrace_location(unsigned long ip);
->
-> #else /* CONFIG_DYNAMIC_FTRACE */
->
-> static inline unsigned long ftrace_location(unsigned long ip)
-> {
->         return 0;
-> }
->
-> #endif
->
->
-> static int check_ftrace_location(struct kprobe *p)
-> {
->         unsigned long addr = (unsigned long)p->addr;
->
->         if (ftrace_location(addr) == addr) {
-> #ifdef CONFIG_KPROBES_ON_FTRACE
->                 p->flags |= KPROBE_FLAG_FTRACE;
-> #else   /* !CONFIG_KPROBES_ON_FTRACE */
->                 return -EINVAL;  // get error from here
-> #endif
->         }
->         return 0;
-> }
->
-> static int check_kprobe_address_safe(struct kprobe *p,
->                                      struct module **probed_mod)
-> {
->         int ret;
->
->         ret = check_ftrace_location(p);
->         if (ret)
->                 return ret; //  return -EINVAL
-> }
->
->
-> >
-> > Thanks,
-> > Tiezhu
-> >
->
->
-> --
-> Thanks,
-> JeffXie
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
