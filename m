@@ -1,83 +1,133 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from out-148.mta0.migadu.com (out-148.mta0.migadu.com [91.218.175.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C381A5251
-	for <loongarch@lists.linux.dev>; Mon,  6 Feb 2023 13:31:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1675690262;
-	bh=BcNBytG8LpyrimbJYLehCH+h5QW9ST/22z207Ized/Y=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=G/Bqfhy1zdS1uco+N2xY1SWkwHT7wFq3xB9lGtwxA0yLnLEipotKPEohs/i69CdTy
-	 KuqD6gOcfKgwj8agrf2yo84irDWtJkrui48eYypecZWFCDrSW7v4xtLLULFNM6cPhj
-	 O5RGNADqsH8g++daoimUkIyyWH+gvRw/xIZrGbek=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id E102965EB0;
-	Mon,  6 Feb 2023 08:30:58 -0500 (EST)
-Message-ID: <74ffc2c05475c6af391b87a06df477ae390cc45c.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Make -mstrict-align be configurable
-From: Xi Ruoyao <xry111@xry111.site>
-To: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
- Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, Huacai
- Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org, Xuefeng Li
-	 <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, Jiaxun Yang
-	 <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-Date: Mon, 06 Feb 2023 21:30:55 +0800
-In-Reply-To: <3b17d229-bad4-e6a0-9055-c585dd5a62e4@loongson.cn>
-References: <20230202084238.2408516-1-chenhuacai@loongson.cn>
-	 <5fc85453-1e2c-1f00-7879-1b5fa318c78a@xen0n.name>
-	 <5303aeda-5c66-ede6-b3ac-7d8ebd73ec70@loongson.cn>
-	 <b1809500e4d55564a1084a3014fb9603ba3d1438.camel@xry111.site>
-	 <3b17d229-bad4-e6a0-9055-c585dd5a62e4@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC40D7B
+	for <loongarch@lists.linux.dev>; Mon,  6 Feb 2023 17:41:24 +0000 (UTC)
+Date: Mon, 6 Feb 2023 17:19:25 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1675703978;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HQYDCy4xAq7++DqBp2PrFrzWfoeLMTv7/t3BwVc+5/M=;
+	b=J9ErNIUpPqZIZXdMg30fbXll1h9T0Tvc0m6YwSEjZKdUoEOooQgqWauEEwTKgz5T3W0FTk
+	rki4AZWQsgRfhqb68OZxWvRzYjB94NkQRpb2vk7/ewhW1i4abF/GN+8YazanH4qC5F0Wee
+	Dwv1drNtXNr6gUzp6+ranIztAkcY0no=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Marc Zyngier <maz@kernel.org>
+Cc: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
+	loongarch@lists.linux.dev, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Len Brown <lenb@kernel.org>, Rafael Wysocki <rafael@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: Re: [RFC PATCH 29/32] KVM: arm64: Pass hypercalls to userspace
+Message-ID: <Y+E2nVnadj1emNs5@google.com>
+References: <20230203135043.409192-1-james.morse@arm.com>
+ <20230203135043.409192-30-james.morse@arm.com>
+ <865ycg1kv2.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <865ycg1kv2.wl-maz@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 2023-02-06 at 21:13 +0800, Jianmin Lv wrote:
-> > (1) Is the difference contributed by a bad code generation of GCC?=C2=
-=A0 If
-> > true, it's better to improve GCC before someone starts to build a distr=
-o
-> > for LA264 as it would benefit the user space as well.
-> >=20
-> AFAIK, GCC builds to produce unaligned-access-enabled target binary by
-> default (without -mstrict-align) for improving user space performance=20
-> (small size and runtime high performance), which is also based the fact=
-=20
-> that the vast majority of LoongArch CPUs support unaligned-access.
+On Sun, Feb 05, 2023 at 10:12:49AM +0000, Marc Zyngier wrote:
+> On Fri, 03 Feb 2023 13:50:40 +0000,
+> James Morse <james.morse@arm.com> wrote:
+> > 
+> > From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > 
+> > When capability KVM_CAP_ARM_HVC_TO_USER is available, userspace can
+> > request to handle all hypercalls that aren't handled by KVM. With the
+> > help of another capability, this will allow userspace to handle PSCI
+> > calls.
+> > 
+> > Suggested-by: James Morse <james.morse@arm.com>
+> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > Signed-off-by: James Morse <james.morse@arm.com>
+> > 
+> > ---
+> > 
+> 
+> On top of Oliver's ask not to make this a blanket "steal everything",
+> but instead to have an actual request for ranges of forwarded
+> hypercalls:
+> 
+> > Notes on this implementation:
+> > 
+> > * A similar mechanism was proposed for SDEI some time ago [1]. This RFC
+> >   generalizes the idea to all hypercalls, since that was suggested on
+> >   the list [2, 3].
+> > 
+> > * We're reusing kvm_run.hypercall. I copied x0-x5 into
+> >   kvm_run.hypercall.args[] to help userspace but I'm tempted to remove
+> >   this, because:
+> >   - Most user handlers will need to write results back into the
+> >     registers (x0-x3 for SMCCC), so if we keep this shortcut we should
+> >     go all the way and read them back on return to kernel.
+> >   - QEMU doesn't care about this shortcut, it pulls all vcpu regs before
+> >     handling the call.
+> >   - SMCCC uses x0-x16 for parameters.
+> >   x0 does contain the SMCCC function ID and may be useful for fast
+> >   dispatch, we could keep that plus the immediate number.
+> > 
+> > * Add a flag in the kvm_run.hypercall telling whether this is HVC or
+> >   SMC?  Can be added later in those bottom longmode and pad fields.
+> 
+> We definitely need this. A nested hypervisor can (and does) use SMCs
+> as the conduit. The question is whether they represent two distinct
+> namespaces or not. I *think* we can unify them, but someone should
+> check and maybe get clarification from the owners of the SMCCC spec.
+> 
+> >
+> > * On top of this we could share with userspace which HVC ranges are
+> >   available and which ones are handled by KVM. That can actually be added
+> >   independently, through a vCPU/VM device attribute which doesn't consume
+> >   a new ioctl:
+> >   - userspace issues HAS_ATTR ioctl on the vcpu fd to query whether this
+> >     feature is available.
+> >   - userspace queries the number N of HVC ranges using one GET_ATTR.
+> >   - userspace passes an array of N ranges using another GET_ATTR. The
+> >     array is filled and returned by KVM.
+> 
+> As mentioned above, I think this interface should go both ways.
+> Userspace should request the forwarding of a certain range of
+> hypercalls via a similar SET_ATTR interface.
+> 
+> Another question is how we migrate VMs that have these forwarding
+> requirements. Do we expect the VMM to replay the forwarding as part of
+> the setting up on the other side? Or do we save/restore this via a
+> firmware pseudo-register?
 
-I mean: if someone starts to build a distro for a less-capable LoongArch
-processor, (s)he will need an entire user space compiled with -mstrict-
-align.  So it would be better to start preparation now.
+Personally I'd prefer we left that job to userspace.
 
-And it's likely (s)he will either submit a GCC patch to make GCC
-enable/disable -mstrict-align based on the -march=3D (--with-arch at
-configure time) value, or hack GCC to enable -mstrict-align by default
-for the distro.  So I think we'll also need:
+We could also implement GET_ATTR, in case userspace has forgotten what
+it wrote to the hypercall filter. The firmware pseudo-registers are
+handy for moving KVM state back and forth 'for free', but I don't think
+we need to bend over backwards to migrate state userspace is directly
+responsible for.
 
-> +ifdef CONFIG_ARCH_STRICT_ALIGN may enable strict align by default.
->  # Don't emit unaligned accesses.
->  # Not all LoongArch cores support unaligned access, and as kernel we can=
-'t
->  # rely on others to provide emulation for these accesses.
->  KBUILD_CFLAGS +=3D $(call cc-option,-mstrict-align)
-  +else
-  +# Distros designed for running on both kind of processors may disable
-  +# strict align by default, but the user may want a no-strict-align=C2=A0
-  +# kernel for his/her specific hardware.
-   KBUILD_CFLAGS +=3D $(call cc-option,-mno-strict-align)
-> +endif
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+-- 
+Thanks,
+Oliver
