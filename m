@@ -1,156 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6622F7F
-	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 00:32:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 991E0C433D2;
-	Tue,  7 Feb 2023 00:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675729943;
-	bh=iZCN6sGc9yW2zYcxaQotSvnk+ZA53AaN/sDVv0yII50=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r7OTSPs0ofYJfz2HfC9yS/lpbY7S0BFzpXiLK3x7Ke/Y6aWFhktLvs6Bvgj2Al5Wk
-	 B6UkcQ+D4VR40u7HKhXzSQ4KgoVE+1waBFZlM5JqHCpnVJMmvdP6KTKtVHMcYXlvDW
-	 HvMYz5Nv/QvWcqkqgdC8HtG5iSFLz+5CT0wM3dg+r8XfX8Uoay6JHXFHAsy/jvcyaE
-	 Y+YyyHfN2C/hXNPxeqGA7nAR2Ackxd1K6CCBh1BVMg4QrPnhB6To8MjHdG4AQb2uIw
-	 smNsNDMgzHTMzUtoipazT928V76wO/Qhc/hW1DhF+HtdqhyqNOakQKfsfeblr/+0mf
-	 LLy3JzbNDtsBw==
-Date: Tue, 7 Feb 2023 00:32:12 +0000
-From: Mark Brown <broonie@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>, John Hubbard <jhubbard@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Mike Rapoport <rppt@linux.ibm.com>, Yang Shi <shy828301@gmail.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Nadav Amit <namit@vmware.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, x86@kernel.org,
-	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-	Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH mm-unstable v1 04/26] arm/mm: support
- __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-Message-ID: <Y+GcDFMNHw2cdDN1@sirena.org.uk>
-References: <20230113171026.582290-1-david@redhat.com>
- <20230113171026.582290-5-david@redhat.com>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EC0A7F
+	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 01:13:40 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.155])
+	by gateway (Coremail) with SMTP id _____8BxLuvCpeFjt10PAA--.30108S3;
+	Tue, 07 Feb 2023 09:13:38 +0800 (CST)
+Received: from [10.20.42.155] (unknown [10.20.42.155])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxaL3CpeFjTCsrAA--.17069S3;
+	Tue, 07 Feb 2023 09:13:38 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Make -mstrict-align be configurable
+To: Arnd Bergmann <arnd@arndb.de>, Xi Ruoyao <xry111@xry111.site>,
+ WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, Linux-Arch <linux-arch@vger.kernel.org>,
+ Xuefeng Li <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
+References: <20230202084238.2408516-1-chenhuacai@loongson.cn>
+ <5fc85453-1e2c-1f00-7879-1b5fa318c78a@xen0n.name>
+ <5303aeda-5c66-ede6-b3ac-7d8ebd73ec70@loongson.cn>
+ <b1809500e4d55564a1084a3014fb9603ba3d1438.camel@xry111.site>
+ <3b17d229-bad4-e6a0-9055-c585dd5a62e4@loongson.cn>
+ <b9f274ad-591b-40b5-9441-a45fe67b5b8d@app.fastmail.com>
+From: Jianmin Lv <lvjianmin@loongson.cn>
+Message-ID: <85c36350-34d2-d333-8e47-255914d3fdaa@loongson.cn>
+Date: Tue, 7 Feb 2023 09:13:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NWKvUnutYufNxY+M"
-Content-Disposition: inline
-In-Reply-To: <20230113171026.582290-5-david@redhat.com>
-X-Cookie: No guts, no glory.
+In-Reply-To: <b9f274ad-591b-40b5-9441-a45fe67b5b8d@app.fastmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxaL3CpeFjTCsrAA--.17069S3
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7tw1UGF15uw45tr1kCF13XFb_yoW8tFykpa
+	yYkF9FkF1DJr18Aay0y34rWFWYvw18Kw15W3W0g3s8Wr1qgF92qFW2qw1ruFWrKw1xCw12
+	vFy0q3W7ur4jyaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1le2I2
+	62IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4
+	CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvj
+	eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+	80aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
 
---NWKvUnutYufNxY+M
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 13, 2023 at 06:10:04PM +0100, David Hildenbrand wrote:
-> Let's support __HAVE_ARCH_PTE_SWP_EXCLUSIVE by stealing one bit from the
-> offset. This reduces the maximum swap space per file to 64 GiB (was 128
-> GiB).
->=20
-> While at it drop the PTE_TYPE_FAULT from __swp_entry_to_pte() which is
-> defined to be 0 and is rather confusing because we should be dealing
-> with "Linux PTEs" not "hardware PTEs". Also, properly mask the type in
-> __swp_entry().
+On 2023/2/6 下午9:22, Arnd Bergmann wrote:
+> On Mon, Feb 6, 2023, at 14:13, Jianmin Lv wrote:
+>> On 2023/2/6 下午7:18, Xi Ruoyao wrote:
+>>> On Mon, 2023-02-06 at 18:24 +0800, Jianmin Lv wrote:
+>>>> Hi, Xuerui
+>>>>
+>>>> I think the kernels produced with and without -mstrict-align have mainly
+>>>> following differences:
+>>>> - Diffirent size. I build two kernls (vmlinux), size of kernel with
+>>>> -mstrict-align is 26533376 bytes and size of kernel without
+>>>> -mstrict-align is 26123280 bytes.
+>>>> - Diffirent performance. For example, in kernel function jhash(), the
+>>>> assemble code slices with and without -mstrict-align are following:
+>>>
+>>> But there are still questions remaining:
+>>>
+>>> (1) Is the difference contributed by a bad code generation of GCC?  If
+>>> true, it's better to improve GCC before someone starts to build a distro
+>>> for LA264 as it would benefit the user space as well.
+>>>
+>> AFAIK, GCC builds to produce unaligned-access-enabled target binary by
+>> default (without -mstrict-align) for improving user space performance
+>> (small size and runtime high performance), which is also based the fact
+>> that the vast majority of LoongArch CPUs support unaligned-access.
+>>
+>>> (2) Is there some "big bad unaligned access loop" on a hot spot in the
+>>> kernel code?  If true, it may be better to just refactor the C code
+>>> because doing so will benefit all ports, not only LoongArch.  Otherwise,
+>>> it may be unworthy to optimize for some cold paths.
+>>>
+>> Frankly, I'm not sure if there is this kind of hot code in kernel, I
+>> just see the difference from different kernel size and different
+>> assemble code slice. And I'm afraid that it may be difficult to judge
+>> whether it is reasonable hot code or not if exists.
+> 
+> Just look for CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS, this will
+> show you code locations that use different implementations based on
+> whether the kernel should run on CPUs without unaligned access or
+> not.
+> 
+>        Arnd
+> 
 
-Today's -next (and at least back to Friday, older logs are unclear - I
-only noticed -next issues today) fails to NFS boot on an AT91SAM9G20-EK
-(an old ARMv5 platform) with multi_v5_defconfig, a bisect appears to
-point to this patch (20aae9eff5acd8f5 in today's -next) as the culprit.
+Got it, thank you very much, I greped 
+CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS and found many matched cases 
+including driver, lib, net and so on, it seems that it's reasonable to 
+use high performance way for CPUs with HAVE_EFFICIENT_UNALIGNED_ACCESS 
+configured.
 
-The failure happens at some point after starting userspace, the kernel
-starts spamming the console with messages in the form:
 
-    get_swap_device: Bad swap file entry 10120d20
-
-repeating the same entry number, though different numbers per boot.  The
-system is booting a Debian userspace and shouldn't have swap configured
-(I verfified that successful boots don't), though it only has 64M of RAM
-so there will be some memory pressure, especially during boot.  The
-exact point things fall over seems to vary a little.
-
-A sample failing job with the full log is here:
-
-    https://lava.sirena.org.uk/scheduler/job/262719
-
-Full bisect log:
-
-git bisect start
-# bad: [129af770823407ee115a56c69a04b440fd2fbe61] Add linux-next specific f=
-iles for 20230206
-git bisect bad 129af770823407ee115a56c69a04b440fd2fbe61
-# good: [4ec5183ec48656cec489c49f989c508b68b518e3] Linux 6.2-rc7
-git bisect good 53b3c6467004c627f42d96ef839b223a749bcdd9
-# good: [17b9d0b05d4fa79afb7bd00edb1b97397418a57a] Merge branch 'master' of=
- git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
-git bisect good 17b9d0b05d4fa79afb7bd00edb1b97397418a57a
-# good: [7044a4e1fab22f437d275b1cf85f5c925741276b] Merge branch 'for-next' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-git bisect good 7044a4e1fab22f437d275b1cf85f5c925741276b
-# good: [bef6844b00f0c24543d60b79c558f353a43709f1] Merge branch 'staging-ne=
-xt' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
-git bisect good bef6844b00f0c24543d60b79c558f353a43709f1
-# good: [f6737c53676f9db99daee069407daf203e75bc0f] Merge branch 'for-next' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git
-git bisect good f6737c53676f9db99daee069407daf203e75bc0f
-# bad: [05cda97ecb7046f4192a921741aae33b300dd628] mm: factor out a swap_wri=
-tepage_bdev helper
-git bisect bad 05cda97ecb7046f4192a921741aae33b300dd628
-# good: [ee0800c2f6a9e605947ce499d79fb7e2be16d6dd] mm: convert page_add_ano=
-n_rmap() to use a folio internally
-git bisect good ee0800c2f6a9e605947ce499d79fb7e2be16d6dd
-# bad: [590a2b5f0a9b740e415e0d52bd8a0f87fc15b87b] ceph: convert ceph_writep=
-ages_start() to use filemap_get_folios_tag()
-git bisect bad 590a2b5f0a9b740e415e0d52bd8a0f87fc15b87b
-# good: [92644f583d5124b60bc20a3dd21b0bc9142f020c] mm/khugepaged: introduce=
- release_pte_folio() to replace release_pte_page()
-git bisect good 92644f583d5124b60bc20a3dd21b0bc9142f020c
-# bad: [cca10df1029373cda5904887544ca6fcbbd2bac7] sh/mm: support __HAVE_ARC=
-H_PTE_SWP_EXCLUSIVE
-git bisect bad cca10df1029373cda5904887544ca6fcbbd2bac7
-# bad: [ad464ff2c0f91fcacc24167fc435aa45fe0b7d1b] m68k/mm: remove dummy __s=
-wp definitions for nommu
-git bisect bad ad464ff2c0f91fcacc24167fc435aa45fe0b7d1b
-# bad: [20aae9eff5acd8f50f72adca1176f9269a46b827] arm/mm: support __HAVE_AR=
-CH_PTE_SWP_EXCLUSIVE
-git bisect bad 20aae9eff5acd8f50f72adca1176f9269a46b827
-# good: [2321ba3e3733f513e46e29b9c70512ecddbf1085] mm/debug_vm_pgtable: mor=
-e pte_swp_exclusive() sanity checks
-git bisect good 2321ba3e3733f513e46e29b9c70512ecddbf1085
-# good: [4a446b3dd335d0bd14a5ca3e563688de3637be0c] arc/mm: support __HAVE_A=
-RCH_PTE_SWP_EXCLUSIVE
-git bisect good 4a446b3dd335d0bd14a5ca3e563688de3637be0c
-# first bad commit: [20aae9eff5acd8f50f72adca1176f9269a46b827] arm/mm: supp=
-ort __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-
---NWKvUnutYufNxY+M
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmPhnAwACgkQJNaLcl1U
-h9D7vgf/U3zBEYllgLPQkDLvGQVNlA4YlBJWjoZUOxdqvOZpwxsxFZ/aia+43O0B
-TMZThl9G4WF69YEjqEYV7m4FyfodFzxRw67Z/BCVTINhlSPp8SakUVz0PyMB6IzP
-CpyMhm1L4Qk4wu+FOVPxQ2pEdWlYa2RWWD3TUQUIw/kTwiBILlQAQocSsrKSHSya
-QoivSxIlvDbX1b3D2XPYaTnnQfHnGrcTXKHxR+r01jHeLvwrQ/Q8wEVSsB/lgItx
-bcLc4KvDG0yCWfPa30KHM30ccbZvLmWVw7D7WqT0ASjc2Rkvgi1G7q3QpOOZPWC+
-QjoJLvNMLQb/bbvVbDMElcjLaSuyQw==
-=EHrm
------END PGP SIGNATURE-----
-
---NWKvUnutYufNxY+M--
