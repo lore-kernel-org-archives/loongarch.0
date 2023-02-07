@@ -1,130 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD3137468;
-	Tue,  7 Feb 2023 17:51:16 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6F651762;
-	Tue,  7 Feb 2023 09:51:58 -0800 (PST)
-Received: from [10.1.196.177] (eglon.cambridge.arm.com [10.1.196.177])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDD593FA32;
-	Tue,  7 Feb 2023 09:51:11 -0800 (PST)
-Message-ID: <7462738f-e837-cd99-f441-8e7c29d250cd@arm.com>
-Date: Tue, 7 Feb 2023 17:50:58 +0000
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D379747F
+	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 20:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=XM5/DhrpywJuIcEgHHCo/8ZgkbeDJDYpTgAA6DELtws=; b=U421OkqtCK6gXcQf62Ryz9sZ/W
+	LZu+W2C5RVzWjNR1EJOlHTdtbUA8ODN3LbSVdDS3DjxVjKsvyfrdU85iUtIK1EgYxrddQ0m2wTalm
+	OssTp+Q+6OmZYy35VF4f8TBsgThmOB3u+RJ5a68V/pzMcXN/KM/Ez/WO3wthlQHUm0ELHHtc9xZYE
+	D46tkAcEKppoPWtpXr3+JsOkVr4ibVV2RCEgi+21G7Cx3eq2LJAbAe7NpSaz6q0Nunm9jiFI6Bw1a
+	MDE52Mqb5eTuWPKHiCG+W54+Ozx9KzoajI/jLRKPpRgEHssXN6Hk+ibtCKSSi8VsmJPAbnS9pIDOm
+	jRVggYwA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1pPUZ1-000XLi-7h; Tue, 07 Feb 2023 20:27:39 +0000
+Date: Tue, 7 Feb 2023 20:27:39 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: linux-arch@vger.kernel.org
+Cc: Yin Fengwei <fengwei.yin@intel.com>, linux-mm@kvack.org,
+	linux-alpha@vger.kernel.org, linux-csky@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	Dinh Nguyen <dinguyen@kernel.org>, linux-parisc@vger.kernel.org,
+	linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, openrisc@lists.librecores.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org
+Subject: Re: API for setting multiple PTEs at once
+Message-ID: <Y+K0O35jNNzxiXE6@casper.infradead.org>
+References: <Y9wnr8SGfGGbi/bk@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [RFC PATCH 29/32] KVM: arm64: Pass hypercalls to userspace
-Content-Language: en-GB
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
- kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Len Brown <lenb@kernel.org>,
- Rafael Wysocki <rafael@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Salil Mehta <salil.mehta@huawei.com>, Russell King <linux@armlinux.org.uk>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>
-References: <20230203135043.409192-1-james.morse@arm.com>
- <20230203135043.409192-30-james.morse@arm.com> <865ycg1kv2.wl-maz@kernel.org>
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <865ycg1kv2.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y9wnr8SGfGGbi/bk@casper.infradead.org>
 
-Hi Marc,
+On Thu, Feb 02, 2023 at 09:14:23PM +0000, Matthew Wilcox wrote:
+> For those of you not subscribed, linux-mm is currently discussing
+> how best to handle page faults on large folios.  I simply made it work
+> when adding large folio support.  Now Yin Fengwei is working on
+> making it fast.
 
-On 05/02/2023 10:12, Marc Zyngier wrote:
-> On Fri, 03 Feb 2023 13:50:40 +0000,
-> James Morse <james.morse@arm.com> wrote:
->>
->> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
->>
->> When capability KVM_CAP_ARM_HVC_TO_USER is available, userspace can
->> request to handle all hypercalls that aren't handled by KVM. With the
->> help of another capability, this will allow userspace to handle PSCI
->> calls.
+OK, here's an actual implementation:
 
-> On top of Oliver's ask not to make this a blanket "steal everything",
-> but instead to have an actual request for ranges of forwarded
-> hypercalls:
-> 
->> Notes on this implementation:
->>
->> * A similar mechanism was proposed for SDEI some time ago [1]. This RFC
->>   generalizes the idea to all hypercalls, since that was suggested on
->>   the list [2, 3].
->>
->> * We're reusing kvm_run.hypercall. I copied x0-x5 into
->>   kvm_run.hypercall.args[] to help userspace but I'm tempted to remove
->>   this, because:
->>   - Most user handlers will need to write results back into the
->>     registers (x0-x3 for SMCCC), so if we keep this shortcut we should
->>     go all the way and read them back on return to kernel.
->>   - QEMU doesn't care about this shortcut, it pulls all vcpu regs before
->>     handling the call.
->>   - SMCCC uses x0-x16 for parameters.
->>   x0 does contain the SMCCC function ID and may be useful for fast
->>   dispatch, we could keep that plus the immediate number.
->>
->> * Add a flag in the kvm_run.hypercall telling whether this is HVC or
->>   SMC?  Can be added later in those bottom longmode and pad fields.
+https://lore.kernel.org/linux-mm/20230207194937.122543-3-willy@infradead.org/
 
-> We definitely need this. A nested hypervisor can (and does) use SMCs
-> as the conduit.
+It survives a run of xfstests.  If your architecture doesn't store its
+PFNs at PAGE_SHIFT, you're going to want to implement your own set_ptes(),
+or you'll see entirely the wrong pages mapped into userspace.  You may
+also wish to implement set_ptes() if it can be done more efficiently
+than __pte(pteval(pte) + PAGE_SIZE).
 
-Christoffer's comments last time round on this was that EL2 guests get SMC with this,
-and EL1 guests get HVC. The VMM could never get both...
+Architectures that implement things like flush_icache_page() and
+update_mmu_cache() may want to propose batched versions of those.
+That's alpha, csky, m68k, mips, nios2, parisc, sh,
+arm, loongarch, openrisc, powerpc, riscv, sparc and xtensa.
+Maintainers BCC'd, mailing lists CC'd.
 
-
-> The question is whether they represent two distinct
-> namespaces or not. I *think* we can unify them, but someone should
-> check and maybe get clarification from the owners of the SMCCC spec.
-
-i.e. the VMM requests 0xC400_0000:0xC400_001F regardless of SMC/HVC?
-
-I don't yet see how a VMM could get HVC out of a virtual-EL2 guest....
-
-
->> * On top of this we could share with userspace which HVC ranges are
->>   available and which ones are handled by KVM. That can actually be added
->>   independently, through a vCPU/VM device attribute which doesn't consume
->>   a new ioctl:
->>   - userspace issues HAS_ATTR ioctl on the vcpu fd to query whether this
->>     feature is available.
->>   - userspace queries the number N of HVC ranges using one GET_ATTR.
->>   - userspace passes an array of N ranges using another GET_ATTR. The
->>     array is filled and returned by KVM.
-
-> As mentioned above, I think this interface should go both ways.
-> Userspace should request the forwarding of a certain range of
-> hypercalls via a similar SET_ATTR interface.
-
-Yup, I'll sync up with Oliver about that.
-
-
-> Another question is how we migrate VMs that have these forwarding
-> requirements. Do we expect the VMM to replay the forwarding as part of
-> the setting up on the other side? Or do we save/restore this via a
-> firmware pseudo-register?
-
-Pfff. VMMs problem. Enabling these things means it has its own internal state to migrate.
-(is this vCPU on or off?), I doubt it needs reminding that the state exists.
-
-That said, Salil is looking at making this work with migration in Qemu.
-
-
-Thanks,
-
-James
+I'm happy to collect implementations and submit them as part of a v6.
