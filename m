@@ -1,175 +1,126 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E8A7F
-	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 02:09:59 +0000 (UTC)
-Received: by mail-pf1-f171.google.com with SMTP id 16so34510pfo.8
-        for <loongarch@lists.linux.dev>; Mon, 06 Feb 2023 18:09:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=twi5qezXVrXvljZR32CwVOgUlBky4yiX5EIZlBsZGKM=;
-        b=H605XTSNckRPIcJCYwimDOMlVudKiTi3+wYiqZL2TXofzkKxZDWCZxGHdo5/HU9qV+
-         8ocrTdl9zRCSdKqDWczP7TWC7jEuq1foTSiVvsDPWkZIdJJCY2BT1dmoo2B9D2tdb89p
-         Iuxr+UlYRvU3cl5QjB6VtKxs5AGSimX/1IGND4oJh3Gaie09kOvxHNRX6eDvgkXsDHDk
-         DcMJMpgPcitw1yfjucm3NwMjtadnFBmNYrIOgPrk8IWKvnTuPTVgb7Rh9ZeKOX0cepB4
-         rrCb1m6Vzi9hL2cALqfqMtT0YO6eZXG48bhJ4GlLMvzsJoabHeoQVczI+bxybF1tU7CB
-         JDNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=twi5qezXVrXvljZR32CwVOgUlBky4yiX5EIZlBsZGKM=;
-        b=N2jWu0PtNZIEVpxsxq5kl2QMoTb4quGp2uxJAastkABH6dFMAmzRCwcPBOOuye5jwD
-         2OgUKSyJOuz+KWemYdafB9RUls59v8dNuidIfkPiNS/Lm/gTwCaFm+OAK1sVdm4MU1tE
-         ay2BKubWV6S5kI53MBaW7I5NLnffqavTUmRZ0pxbCVbiyk2QDkdxLDdDVSfxyTXYdjSY
-         HGBIGpjNB19DiBMveQ0YLkDlCYMS8G/+GP4iViUXg+QyjWShDHel1YPf/LeddwDxyfUU
-         8W3YZw5Z/23eynIyaH5VVqNknd1de5euZtcSFaLq0+yX5MQ85aezhxhRrE/hefSM/UwJ
-         /Taw==
-X-Gm-Message-State: AO0yUKVIopRV9OatwTB4ets+N6Y+B3qikBEeh2HjbNlx0A9496QIM1qd
-	jr1l7+Dwq/SzQMQ+azSEDUI=
-X-Google-Smtp-Source: AK7set/fGSroEhUgOMyTAVPr8nPJA37BY6oLlQW0JU++IFPWLNG8tgzXMupiCjYdYAYQfblhN8SYWw==
-X-Received: by 2002:aa7:94ad:0:b0:58d:95aa:88a0 with SMTP id a13-20020aa794ad000000b0058d95aa88a0mr1373510pfl.24.1675735799379;
-        Mon, 06 Feb 2023 18:09:59 -0800 (PST)
-Received: from localhost.localdomain ([112.20.108.204])
-        by smtp.gmail.com with ESMTPSA id d198-20020a621dcf000000b00593225b379dsm7843765pfd.106.2023.02.06.18.09.56
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 06 Feb 2023 18:09:58 -0800 (PST)
-From: chris.chenfeiyang@gmail.com
-X-Google-Original-From: chenfeiyang@loongson.cn
-To: w@1wt.eu,
-	paulmck@kernel.org
-Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
-	chenhuacai@kernel.org,
-	jiaxun.yang@flygoat.com,
-	arnd@arndb.de,
-	chris.chenfeiyang@gmail.com,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] selftests/nolibc: Add support for LoongArch
-Date: Tue,  7 Feb 2023 10:09:42 +0800
-Message-Id: <2d77fe4e895847ae1ea09088dcfa411ce2f57f5f.1675734681.git.chenfeiyang@loongson.cn>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <cover.1675734681.git.chenfeiyang@loongson.cn>
-References: <cover.1675734681.git.chenfeiyang@loongson.cn>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E231617CB
+	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 03:14:40 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxDesewuFjL2UPAA--.30237S3;
+	Tue, 07 Feb 2023 11:14:38 +0800 (CST)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx6r0cwuFjzzUrAA--.17348S3;
+	Tue, 07 Feb 2023 11:14:38 +0800 (CST)
+Subject: Re: [PATCH v12 0/5] Add kprobe and kretprobe support for LoongArch
+To: Jeff Xie <xiehuan09@gmail.com>, Huacai Chen <chenhuacai@kernel.org>
+References: <1674007261-9198-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H4aTd6_cSy45KKjv-KrLTiwT4iG6+fkb84KfCrL3Y+hpg@mail.gmail.com>
+ <CAAhV-H5WN5E=0Z9wpbXDc6VO7Nc+j7PGvnyAAGOmCRMJkdwSYw@mail.gmail.com>
+ <CAEr6+ECO-=jfhzHrcdKGx0MsjMBMiN6wsBPCfv7CaXo_amAWWg@mail.gmail.com>
+ <02806f85-bc09-d316-f058-3947353cb190@loongson.cn>
+ <CAEr6+EBYF2xqZWEuZaz5un5FF3Jb-rSAQp3s3uojsovm9RcUYA@mail.gmail.com>
+ <CAAhV-H5dJGrL3kEwzC-XwMqJTCsYHq-YVDTDRntGcYg9RMz02w@mail.gmail.com>
+ <CAEr6+EDvaqpfvyJhe9TpDbhzrgu9aPPtePi2Vp=vAB5xgMNhXQ@mail.gmail.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu <mhiramat@kernel.org>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <8f306f68-7517-7c45-b2ef-668af9cf5f6a@loongson.cn>
+Date: Tue, 7 Feb 2023 11:14:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEr6+EDvaqpfvyJhe9TpDbhzrgu9aPPtePi2Vp=vAB5xgMNhXQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Dx6r0cwuFjzzUrAA--.17348S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7WFWxGr4fAFWxCw48XrW5Jrb_yoW5JFyfpF
+	yDZrZ5CF4kX34DAw1q93WUXw4rtasrAa4I9FZxJF1Yyr1qvr17Jw10qr47ZF1Utr4Fkr1S
+	q3sxtw1YvF1UA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bxAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42
+	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
+	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI4
+	8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4U
+	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
+	8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-From: Feiyang Chen <chenfeiyang@loongson.cn>
 
-Add support for LoongArch (64 bit) to nolibc selftest.
 
-Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
----
- tools/testing/selftests/nolibc/Makefile | 78 +++++++++++++------------
- 1 file changed, 41 insertions(+), 37 deletions(-)
+On 02/06/2023 08:48 PM, Jeff Xie wrote:
+> On Mon, Feb 6, 2023 at 8:13 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+>>
+>> Hi, Jeff,
+>>
+>> Now I add kprobes on ftrace support in
+>> https://github.com/loongson/linux/commits/loongarch-next, please test
+>> again. Thank you.
+>>
+>
+> When using the kprobe example module kprobe_example.ko, I haven't seen
+> any errors.
+>
+> But when using the ftrace to probe the symbol + offset, the kernel will panic:
+> e.g. probe the scheduler_tick+4 is fine, but when probe the
+> scheduler_tick+5, the kernel will panic.
+>
 
-diff --git a/tools/testing/selftests/nolibc/Makefile b/tools/testing/selftests/nolibc/Makefile
-index 8fe61d3e3cce..ea2b82a3cd86 100644
---- a/tools/testing/selftests/nolibc/Makefile
-+++ b/tools/testing/selftests/nolibc/Makefile
-@@ -13,52 +13,56 @@ ARCH = $(SUBARCH)
- endif
- 
- # kernel image names by architecture
--IMAGE_i386    = arch/x86/boot/bzImage
--IMAGE_x86_64  = arch/x86/boot/bzImage
--IMAGE_x86     = arch/x86/boot/bzImage
--IMAGE_arm64   = arch/arm64/boot/Image
--IMAGE_arm     = arch/arm/boot/zImage
--IMAGE_mips    = vmlinuz
--IMAGE_riscv   = arch/riscv/boot/Image
--IMAGE_s390    = arch/s390/boot/bzImage
--IMAGE         = $(IMAGE_$(ARCH))
--IMAGE_NAME    = $(notdir $(IMAGE))
-+IMAGE_i386       = arch/x86/boot/bzImage
-+IMAGE_x86_64     = arch/x86/boot/bzImage
-+IMAGE_x86        = arch/x86/boot/bzImage
-+IMAGE_arm64      = arch/arm64/boot/Image
-+IMAGE_arm        = arch/arm/boot/zImage
-+IMAGE_mips       = vmlinuz
-+IMAGE_riscv      = arch/riscv/boot/Image
-+IMAGE_s390       = arch/s390/boot/bzImage
-+IMAGE_loongarch  = arch/loongarch/boot/vmlinuz.efi
-+IMAGE            = $(IMAGE_$(ARCH))
-+IMAGE_NAME       = $(notdir $(IMAGE))
- 
- # default kernel configurations that appear to be usable
--DEFCONFIG_i386    = defconfig
--DEFCONFIG_x86_64  = defconfig
--DEFCONFIG_x86     = defconfig
--DEFCONFIG_arm64   = defconfig
--DEFCONFIG_arm     = multi_v7_defconfig
--DEFCONFIG_mips    = malta_defconfig
--DEFCONFIG_riscv   = defconfig
--DEFCONFIG_s390    = defconfig
--DEFCONFIG         = $(DEFCONFIG_$(ARCH))
-+DEFCONFIG_i386       = defconfig
-+DEFCONFIG_x86_64     = defconfig
-+DEFCONFIG_x86        = defconfig
-+DEFCONFIG_arm64      = defconfig
-+DEFCONFIG_arm        = multi_v7_defconfig
-+DEFCONFIG_mips       = malta_defconfig
-+DEFCONFIG_riscv      = defconfig
-+DEFCONFIG_s390       = defconfig
-+DEFCONFIG_loongarch  = defconfig
-+DEFCONFIG            = $(DEFCONFIG_$(ARCH))
- 
- # optional tests to run (default = all)
- TEST =
- 
- # QEMU_ARCH: arch names used by qemu
--QEMU_ARCH_i386    = i386
--QEMU_ARCH_x86_64  = x86_64
--QEMU_ARCH_x86     = x86_64
--QEMU_ARCH_arm64   = aarch64
--QEMU_ARCH_arm     = arm
--QEMU_ARCH_mips    = mipsel  # works with malta_defconfig
--QEMU_ARCH_riscv   = riscv64
--QEMU_ARCH_s390    = s390x
--QEMU_ARCH         = $(QEMU_ARCH_$(ARCH))
-+QEMU_ARCH_i386       = i386
-+QEMU_ARCH_x86_64     = x86_64
-+QEMU_ARCH_x86        = x86_64
-+QEMU_ARCH_arm64      = aarch64
-+QEMU_ARCH_arm        = arm
-+QEMU_ARCH_mips       = mipsel  # works with malta_defconfig
-+QEMU_ARCH_riscv      = riscv64
-+QEMU_ARCH_s390       = s390x
-+QEMU_ARCH_loongarch  = loongarch64
-+QEMU_ARCH            = $(QEMU_ARCH_$(ARCH))
- 
- # QEMU_ARGS : some arch-specific args to pass to qemu
--QEMU_ARGS_i386    = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_x86_64  = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_x86     = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_arm64   = -M virt -cpu cortex-a53 -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_arm     = -M virt -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_mips    = -M malta -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_riscv   = -M virt -append "console=ttyS0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_s390    = -M s390-ccw-virtio -m 1G -append "console=ttyS0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS         = $(QEMU_ARGS_$(ARCH))
-+QEMU_ARGS_i386       = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_x86_64     = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_x86        = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_arm64      = -M virt -cpu cortex-a53 -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_arm        = -M virt -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_mips       = -M malta -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_riscv      = -M virt -append "console=ttyS0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_s390       = -M s390-ccw-virtio -m 1G -append "console=ttyS0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_loongarch  = -M virt -append "console=ttyS0,115200 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS            = $(QEMU_ARGS_$(ARCH))
- 
- # OUTPUT is only set when run from the main makefile, otherwise
- # it defaults to this nolibc directory.
--- 
-2.39.0
+Thanks for your test.
+
+We can see that the instruction address is 4-byte alignment,
+this is because the instruction length is 32-bit on LoongArch.
+
+$ objdump -d vmlinux > dump.txt
+$ grep -A 20 scheduler_tick dump.txt | head -21
+9000000000279fc8 <scheduler_tick>:
+9000000000279fc8:	03400000 	andi        	$zero, $zero, 0x0
+9000000000279fcc:	03400000 	andi        	$zero, $zero, 0x0
+9000000000279fd0:	02ff4063 	addi.d      	$sp, $sp, -48(0xfd0)
+9000000000279fd4:	29c08077 	st.d        	$s0, $sp, 32(0x20)
+9000000000279fd8:	29c06078 	st.d        	$s1, $sp, 24(0x18)
+9000000000279fdc:	29c04079 	st.d        	$s2, $sp, 16(0x10)
+9000000000279fe0:	29c0207a 	st.d        	$s3, $sp, 8(0x8)
+9000000000279fe4:	29c0a061 	st.d        	$ra, $sp, 40(0x28)
+9000000000279fe8:	2700007b 	stptr.d     	$s4, $sp, 0
+9000000000279fec:	24001844 	ldptr.w     	$a0, $tp, 24(0x18)
+9000000000279ff0:	1a02edd9 	pcalau12i   	$s2, 5998(0x176e)
+9000000000279ff4:	1a034bac 	pcalau12i   	$t0, 6749(0x1a5d)
+9000000000279ff8:	02f56339 	addi.d      	$s2, $s2, -680(0xd58)
+9000000000279ffc:	00410c9a 	slli.d      	$s3, $a0, 0x3
+900000000027a000:	28aae18d 	ld.w        	$t1, $t0, -1352(0xab8)
+900000000027a004:	380c6b2e 	ldx.d       	$t2, $s2, $s3
+900000000027a008:	1a022fcc 	pcalau12i   	$t0, 4478(0x117e)
+900000000027a00c:	02f20198 	addi.d      	$s1, $t0, -896(0xc80)
+900000000027a010:	00150317 	move        	$s0, $s1
+900000000027a014:	004081ac 	slli.w      	$t0, $t1, 0x0
+
+So we should check the probe address at the beginning of
+arch_prepare_kprobe(), some other archs do the same thing.
+
+$ git diff
+diff --git a/arch/loongarch/kernel/kprobes.c 
+b/arch/loongarch/kernel/kprobes.c
+index bdab707b6edf..56c8c4b09a42 100644
+--- a/arch/loongarch/kernel/kprobes.c
++++ b/arch/loongarch/kernel/kprobes.c
+@@ -79,6 +79,9 @@ NOKPROBE_SYMBOL(arch_prepare_simulate);
+
+  int arch_prepare_kprobe(struct kprobe *p)
+  {
++       if ((unsigned long)p->addr & 0x3)
++               return -EILSEQ;
++
+         /* copy instruction */
+         p->opcode = *p->addr;
+
+
+Thanks,
+Tiezhu
 
