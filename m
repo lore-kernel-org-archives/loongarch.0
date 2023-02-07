@@ -1,96 +1,90 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDAEE7F
-	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 01:27:27 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.155])
-	by gateway (Coremail) with SMTP id _____8CxYvD+qOFjhF4PAA--.30583S3;
-	Tue, 07 Feb 2023 09:27:26 +0800 (CST)
-Received: from [10.20.42.155] (unknown [10.20.42.155])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF739qOFjhiwrAA--.17524S3;
-	Tue, 07 Feb 2023 09:27:25 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Make -mstrict-align be configurable
-To: Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-References: <20230202084238.2408516-1-chenhuacai@loongson.cn>
- <5fc85453-1e2c-1f00-7879-1b5fa318c78a@xen0n.name>
- <5303aeda-5c66-ede6-b3ac-7d8ebd73ec70@loongson.cn>
- <b1809500e4d55564a1084a3014fb9603ba3d1438.camel@xry111.site>
- <3b17d229-bad4-e6a0-9055-c585dd5a62e4@loongson.cn>
- <74ffc2c05475c6af391b87a06df477ae390cc45c.camel@xry111.site>
-From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <85fb9d71-b956-3d3e-f279-1310eec8e5c9@loongson.cn>
-Date: Tue, 7 Feb 2023 09:27:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BE87F
+	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 02:09:51 +0000 (UTC)
+Received: by mail-pg1-f169.google.com with SMTP id 7so9531871pga.1
+        for <loongarch@lists.linux.dev>; Mon, 06 Feb 2023 18:09:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=t2R4Y9BugjZxBru4uI7Lx5wAt6TYg7t074pOgVYye8E=;
+        b=lNOlZD+5V8nUreql8W9A+qDr4wrT9YB+MUB2mZwi8dg7i5zLJDI4UrhlDGAAS0Wv+x
+         /ANoZlzhDXuQKAehf7Ek9haEgVOhFP/nktYYftJ/05dTbAJjpKR+B0/SU6R/kZD6l0BE
+         aGp2ut44NrzxEkciRcGtNlIxM6GM1JyaSEId1Zgp+0FKTKHm/GuGm2mQotsMZ/20Ljv9
+         rH+okBG5f9PJ/jUaSH2lfS5/QbnpfZD+t6ufW4QfzWPrEZH6+x0MpdHWIY1Nhk6rNEfq
+         lDHzHrM6mk1sKws+AB3mkqqkP+yMgmm8gALlkD8mV8y99GP9NEAA7eF56Kh2Si8MoNpm
+         Bdbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t2R4Y9BugjZxBru4uI7Lx5wAt6TYg7t074pOgVYye8E=;
+        b=2XN5HbMNRp3NRN80k2bxp6nxrmGHFj5WhruGzMrQvglsDqnzPJN38UHiygPl6hAH3T
+         lE/GDSBb+xPpS4v/IFD5yYq8YW1qC9fIN6b0uiVL3/vZ9Vzko+i1idS2u9oCUGprTrKp
+         jsWpeSz3xPKdQNMSECjZfxKtxcbPYJZchVEMt7FqzKcgJBDfuJqCCOFM59mTgQq08zkx
+         IJ1fRiMjVcbZwKvnKF+tCC9Sbmufi/8+o8LIIJaXlkhNt6xEtic+vIPdzV2JGw9zrclK
+         1FpIjFVOO9QzAvpqUF1cvj2fAzvW5mlhDNs/YlSqazIBZXROMPQGsrXc5rlh6WAQ/Ij5
+         Q6eg==
+X-Gm-Message-State: AO0yUKW9No7gQQ1giiYTTYLxZmjD4ZYVA1+K2YQtQ+SbPPlGY938FSBt
+	QjUomaFoMbMAONOEVDqVt8M=
+X-Google-Smtp-Source: AK7set8P+8Tyeug8YnzFi0k2BWMjzEYOH2in+brOqernlAo8WHDuk+fjg8+Ermr6nIP9kszwOpzixQ==
+X-Received: by 2002:aa7:9a0d:0:b0:590:753d:78f5 with SMTP id w13-20020aa79a0d000000b00590753d78f5mr1403975pfj.20.1675735790360;
+        Mon, 06 Feb 2023 18:09:50 -0800 (PST)
+Received: from localhost.localdomain ([112.20.108.204])
+        by smtp.gmail.com with ESMTPSA id d198-20020a621dcf000000b00593225b379dsm7843765pfd.106.2023.02.06.18.09.47
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 06 Feb 2023 18:09:49 -0800 (PST)
+From: chris.chenfeiyang@gmail.com
+X-Google-Original-From: chenfeiyang@loongson.cn
+To: w@1wt.eu,
+	paulmck@kernel.org
+Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
+	chenhuacai@kernel.org,
+	jiaxun.yang@flygoat.com,
+	arnd@arndb.de,
+	chris.chenfeiyang@gmail.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Add LoongArch support to nolibc
+Date: Tue,  7 Feb 2023 10:09:39 +0800
+Message-Id: <cover.1675734681.git.chenfeiyang@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <74ffc2c05475c6af391b87a06df477ae390cc45c.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxF739qOFjhiwrAA--.17524S3
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7KFyftFWDGFWktFW8Gr17Jrb_yoW8Cry5pa
-	y2kasIkFnrXr10kayIk3yUXFZ0v3WkCr15Cr1rGryYgr1Y9a4IgFWIq3Z8WasrCw1Ikw12
-	qr1Iq3W7uwsrAFDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	baxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
-	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04
-	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC2
-	0s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI
-	0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv2
-	0xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2js
-	IE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZF
-	pf9x07josjUUUUUU=
 
+From: Feiyang Chen <chenfeiyang@loongson.cn>
 
+Add statx() support to implement sys_stat().
+Add support for LoongArch (32 and 64 bit) to nolibc.
+It was tested on LoongArch64 only.
 
-On 2023/2/6 下午9:30, Xi Ruoyao wrote:
-> On Mon, 2023-02-06 at 21:13 +0800, Jianmin Lv wrote:
->>> (1) Is the difference contributed by a bad code generation of GCC?  If
->>> true, it's better to improve GCC before someone starts to build a distro
->>> for LA264 as it would benefit the user space as well.
->>>
->> AFAIK, GCC builds to produce unaligned-access-enabled target binary by
->> default (without -mstrict-align) for improving user space performance
->> (small size and runtime high performance), which is also based the fact
->> that the vast majority of LoongArch CPUs support unaligned-access.
-> 
-> I mean: if someone starts to build a distro for a less-capable LoongArch
-> processor, (s)he will need an entire user space compiled with -mstrict-
-> align.  So it would be better to start preparation now.
-> 
-> And it's likely (s)he will either submit a GCC patch to make GCC
-> enable/disable -mstrict-align based on the -march= (--with-arch at
-> configure time) value, or hack GCC to enable -mstrict-align by default
-> for the distro.  So I think we'll also need:
-> 
->> +ifdef CONFIG_ARCH_STRICT_ALIGN may enable strict align by default.
->>   # Don't emit unaligned accesses.
->>   # Not all LoongArch cores support unaligned access, and as kernel we can't
->>   # rely on others to provide emulation for these accesses.
->>   KBUILD_CFLAGS += $(call cc-option,-mstrict-align)
->    +else
->    +# Distros designed for running on both kind of processors may disable
->    +# strict align by default, but the user may want a no-strict-align
->    +# kernel for his/her specific hardware.
->     KBUILD_CFLAGS += $(call cc-option,-mno-strict-align)
->> +endif
-> 
+The latest QEMU support full-system emulation of a LoongArch64
+machine, but for the moment we need to specify the firmware manually.
+https://github.com/loongson/Firmware/tree/main/LoongArchVirtMachine
 
-Thanks, Ruoyao, I think it's good suggestion. After talking about it 
-with GCC colleague, it's very likely make GCC enable/disable 
--mstrict-align based on the -march= in future, just as you said.
+QEMU_ARGS_loongarch  = -M virt -bios edk2-loongarch64-code.fd ...
+
+Feiyang Chen (3):
+  nolibc: Add statx() support to implement sys_stat()
+  nolibc: Add support for LoongArch
+  selftests/nolibc: Add support for LoongArch
+
+ tools/include/nolibc/arch-loongarch.h   | 223 ++++++++++++++++++++++++
+ tools/include/nolibc/arch.h             |   2 +
+ tools/include/nolibc/sys.h              |  36 +++-
+ tools/include/nolibc/types.h            |  46 +++++
+ tools/testing/selftests/nolibc/Makefile |  78 +++++----
+ 5 files changed, 345 insertions(+), 40 deletions(-)
+ create mode 100644 tools/include/nolibc/arch-loongarch.h
+
+-- 
+2.39.0
 
