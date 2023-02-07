@@ -1,157 +1,138 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D1C17F7
-	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 05:24:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1675747458; bh=iufufAo2L+w2AZs187YrZy2mIt/7pr1wc5OIX9c+eLA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Nxbm9xAoO0HD639dptyUxWu1Ap3/aG58G3WZ43qz/6MZb47k9IblyPYb2jjOZG/2/
-	 +q+TaFo+gE0j6gGyXk/JAWPLxMZkgAj2W15TVOFEdzrwyZh4w+4hJ6j+y7PT5EPLWe
-	 rcKJEk6R4/x4OfFrTjw1+PaGSU9yJakGmYMZYP88=
-Received: from [192.168.43.185] (unknown [49.78.239.15])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 2C5BF60106;
-	Tue,  7 Feb 2023 13:24:17 +0800 (CST)
-Message-ID: <379bcb55-f75d-02ce-a51b-467e21ade5a3@xen0n.name>
-Date: Tue, 7 Feb 2023 13:24:15 +0800
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93F6720E8;
+	Tue,  7 Feb 2023 09:42:06 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E327911FB;
+	Tue,  7 Feb 2023 01:42:42 -0800 (PST)
+Received: from [10.57.75.57] (unknown [10.57.75.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B7BF3F71E;
+	Tue,  7 Feb 2023 01:41:56 -0800 (PST)
+Message-ID: <985abd9c-b3f9-3f9d-eec7-df1f26733762@arm.com>
+Date: Tue, 7 Feb 2023 09:41:54 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0)
- Gecko/20100101 Firefox/111.0 Thunderbird/111.0a1
-Subject: Re: [PATCH] LoongArch: Make -mstrict-align be configurable
-To: Jianmin Lv <lvjianmin@loongson.cn>, David Laight
- <David.Laight@ACULAB.COM>, 'Huacai Chen' <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20230202084238.2408516-1-chenhuacai@loongson.cn>
- <363cd09a5dcb4deab21f58c19025254f@AcuMS.aculab.com>
- <CAAhV-H7Mz1Z5Bo59tq5VRSUx-N39axeiG7xZs2Szn6nuOxgZfQ@mail.gmail.com>
- <9936da8f577842b8b5edafcdc69dc2d1@AcuMS.aculab.com>
- <560d73a8-2f2a-4844-44ff-afffad9c8694@loongson.cn>
-Content-Language: en-US
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <560d73a8-2f2a-4844-44ff-afffad9c8694@loongson.cn>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [RFC PATCH 29/32] KVM: arm64: Pass hypercalls to userspace
+To: Marc Zyngier <maz@kernel.org>
+Cc: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
+ loongarch@lists.linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Len Brown <lenb@kernel.org>, Rafael Wysocki <rafael@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Salil Mehta <salil.mehta@huawei.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>
+References: <20230203135043.409192-1-james.morse@arm.com>
+ <20230203135043.409192-30-james.morse@arm.com> <865ycg1kv2.wl-maz@kernel.org>
+ <cffde8a1-74e4-9b61-1eea-544ba3405ed4@arm.com> <86wn4vynyr.wl-maz@kernel.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <86wn4vynyr.wl-maz@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 2023/2/6 18:28, Jianmin Lv wrote:
-> 
-> 
-> On 2023/2/3 下午4:46, David Laight wrote:
->> From: Huacai Chen
->>> Sent: 03 February 2023 02:01
->>>
->>> Hi, David,
->>>
->>> On Thu, Feb 2, 2023 at 5:01 PM David Laight <David.Laight@aculab.com> 
->>> wrote:
+Hi Marc,
+
+On 06/02/2023 12:31, Marc Zyngier wrote:
+> On Mon, 06 Feb 2023 10:10:41 +0000,
+> Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>>
+>> Hi,
+>>
+>> A few cents from the Realm support point of view.
+>>
+>> On 05/02/2023 10:12, Marc Zyngier wrote:
+>>> On Fri, 03 Feb 2023 13:50:40 +0000,
+>>> James Morse <james.morse@arm.com> wrote:
 >>>>
->>>> From: Huacai Chen
->>>>> Sent: 02 February 2023 08:43
->>>>>
->>>>> Introduce Kconfig option ARCH_STRICT_ALIGN to make -mstrict-align be
->>>>> configurable.
->>>>>
->>>>> Not all LoongArch cores support h/w unaligned access, we can use the
->>>>> -mstrict-align build parameter to prevent unaligned accesses.
->>>>>
->>>>> This option is disabled by default to optimise for performance, but 
->>>>> you
->>>>> can enabled it manually if you want to run kernel on systems 
->>>>> without h/w
->>>>> unaligned access support.
+>>>> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 >>>>
->>>> Should there be an associated run-time check during kernel 
->>>> initialisation
->>>> that a kernel compiled without -mstrict-align isn't being run on 
->>>> hardware
->>>> that doesn't support unaligned accesses.
+>>>> When capability KVM_CAP_ARM_HVC_TO_USER is available, userspace can
+>>>> request to handle all hypercalls that aren't handled by KVM. With the
+>>>> help of another capability, this will allow userspace to handle PSCI
+>>>> calls.
 >>>>
->>>> It can be quite a while before you get a compiler-generated 
->>>> misaligned accesses.
+>>>> Suggested-by: James Morse <james.morse@arm.com>
+>>>> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+>>>> Signed-off-by: James Morse <james.morse@arm.com>
+>>>>
+>>>> ---
+>>>>
 >>>
->>> If we don't use -mstrict-align, the kernel cannot be run on hardware
->>> that doesn't support unaligned accesses, so I think the run-time check
->>> is useless, and it has no chance to run the checking.
+>>> On top of Oliver's ask not to make this a blanket "steal everything",
+>>> but instead to have an actual request for ranges of forwarded
+>>> hypercalls:
+>>>
+>>>> Notes on this implementation:
+>>>>
+>>>> * A similar mechanism was proposed for SDEI some time ago [1]. This RFC
+>>>>     generalizes the idea to all hypercalls, since that was suggested on
+>>>>     the list [2, 3].
+>>>>
+>>>> * We're reusing kvm_run.hypercall. I copied x0-x5 into
+>>>>     kvm_run.hypercall.args[] to help userspace but I'm tempted to remove
+>>>>     this, because:
+>>>>     - Most user handlers will need to write results back into the
+>>>>       registers (x0-x3 for SMCCC), so if we keep this shortcut we should
+>>>>       go all the way and read them back on return to kernel.
+>>>>     - QEMU doesn't care about this shortcut, it pulls all vcpu regs before
+>>>>       handling the call.
 >>
->> If you don't add the check and someone boots the wrong type of kernel
->> then they'll probably get a panic well after booting.
->> You really do want a check in the bot code.
->>
-> Agree, maybe it's reasonable to check it at the beginning of cpu probe 
-> stuff.
+>> This may not be always possible, e.g., for Realms. GET_ONE_REG is
+>> not supported. So using an explicit passing down of the args is
+>> preferrable.
+> 
+> What is the blocker for CCA to use GET_ONE_REG? The value obviously
+> exists and is made available to the host. pKVM is perfectly able to
+> use GET_ONE_REG and gets a bunch of zeroes for things that the
+> hypervisor has decided to hide from the host.
+> 
 
-Yeah I think just performing a deliberate unaligned access very early 
-would be enough to stop "weaker" CPUs from continuing in this case.
+It is not impossible. On a "HOST CALL" (explicit calls to the Host from
+Realm), the GPRs are made available to the host and can be stashed into 
+the vcpu reg state and the request can be serviced. However, it is a bit
+odd, to make this exception - "the GET_ONE_REG is valid now", while in 
+almost all other cases it is invalid (exception of MMIO).
+
+Of course we could always return what is stashed in the vcpu state,
+which is may be invalid/ 0. But given the construct of "host doesn't
+have access to the register state", it may be a good idea to say, 
+request always fails, to indicate that the Host is probably doing 
+something wrong, than silently passing on incorrect information.
+
+
+> Of course, it requires that the hypervisor (the RMM in your case)
+> knows about the semantics of the hypercall, but that's obviously
+
+RMM doesn't care about the semantics of hypercall, other than
+considering it just like an SMCCC compliant call. The hypercall
+arguments/results are passed down/up by the Realm in a separate structure.
+
+> already a requirement (or you wouldn't be able to use PSCI at all).
+
+Realm PSCI calls are always serviced by the RMM. RMM may request
+the Hyp for specific information in certain cases, but that doesn't
+need to go down to the VMM.
+
+Thanks
+Suzuki
+
 
 > 
->> There is also the question of how userspace is compiled.
->> You pretty much don't want to be taking traps to fixup misaligned 
->> accesses.
->> So the default compiler options better include -mstrict-align.
->>
->> You should look at -mno-strict-align being a performance option when
->> running on known hardware, not a default.
->>
->>     David
->>
-> I think the key point of the patch is providing users with a high 
-> performance kernel for existed and future unaligned-access-supported 
-> Loongson CPUs (mainly for destop and server system, also called *big* 
-> CPU), which are dominant compared with unaligned-access-unsupported CPUs 
-> (mainly for customized embedded system, also called *small* CPU). By 
-> this way, we just want to provide *the vast majority of big CPU users* 
-> (desktop and server OS) with convenience to directly use high 
-> performance kernel without any extra compile option.
-
-Market share and general availability may matter, but again, if you're 
-considering end users that most likely don't compile their own kernels, 
-Kconfig default or defconfig may not matter after all: distributions 
-invariably maintain their own Kconfig. And I think we should follow the 
-general principle of "least surprises" -- just make the default value 
-most universal. It's not like those comparatively small number of power 
-users / developers are not paying attention to the "Emit unaligned 
-accesses in kernel for performance" config option.
-
-(Yes I've partially changed my mind after seeing Arnd's suggestion that 
-indeed some optimized codepaths can be enabled if we can know the CPU's 
-unaligned capability at config time. Now I'm in support of making this 
-codegen aspect tunable, but I still think keeping the default as-is 
-would be a better idea. It won't regress or surprise anyone and embedded 
-people's convenience wouldn't get sacrificed.)
-
-> Instead, for customized embedded system, we have to support them with an extra 
-> compile option. So, it seems that we have to reconcile default compile 
-> option between small CPU and big CPU, and sacrifice the convenience of 
-> small CPU.
+> Thanks,
 > 
-> For some specific diffirences with and without -mstrict-align, see:
-> https://lore.kernel.org/all/5303aeda-5c66-ede6-b3ac-7d8ebd73ec70@loongson.cn/
-
-As someone who's dabbled with compilers I definitely agree the codegen 
-impact and/or performance benefit could be sizable, after all every 
-potentially unaligned access must be split into two guaranteed-aligned 
-insns if we can't rely on the hardware. But again microbenchmarks could 
-at times translate into real-world gains surprisingly poorly, so I still 
-think concrete use cases would make a better argument.
-
-But again, since some other known-good optimizations can only be turned 
-on at config time, like in the network stack, arguably you don't have to 
-come up with this concrete number any more ;)
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+> 	M.
+> 
 
