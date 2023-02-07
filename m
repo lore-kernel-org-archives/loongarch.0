@@ -1,126 +1,279 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E231617CB
-	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 03:14:40 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxDesewuFjL2UPAA--.30237S3;
-	Tue, 07 Feb 2023 11:14:38 +0800 (CST)
-Received: from [10.130.0.135] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx6r0cwuFjzzUrAA--.17348S3;
-	Tue, 07 Feb 2023 11:14:38 +0800 (CST)
-Subject: Re: [PATCH v12 0/5] Add kprobe and kretprobe support for LoongArch
-To: Jeff Xie <xiehuan09@gmail.com>, Huacai Chen <chenhuacai@kernel.org>
-References: <1674007261-9198-1-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H4aTd6_cSy45KKjv-KrLTiwT4iG6+fkb84KfCrL3Y+hpg@mail.gmail.com>
- <CAAhV-H5WN5E=0Z9wpbXDc6VO7Nc+j7PGvnyAAGOmCRMJkdwSYw@mail.gmail.com>
- <CAEr6+ECO-=jfhzHrcdKGx0MsjMBMiN6wsBPCfv7CaXo_amAWWg@mail.gmail.com>
- <02806f85-bc09-d316-f058-3947353cb190@loongson.cn>
- <CAEr6+EBYF2xqZWEuZaz5un5FF3Jb-rSAQp3s3uojsovm9RcUYA@mail.gmail.com>
- <CAAhV-H5dJGrL3kEwzC-XwMqJTCsYHq-YVDTDRntGcYg9RMz02w@mail.gmail.com>
- <CAEr6+EDvaqpfvyJhe9TpDbhzrgu9aPPtePi2Vp=vAB5xgMNhXQ@mail.gmail.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, Masami Hiramatsu <mhiramat@kernel.org>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <8f306f68-7517-7c45-b2ef-668af9cf5f6a@loongson.cn>
-Date: Tue, 7 Feb 2023 11:14:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42EAC15BD
+	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 04:01:50 +0000 (UTC)
+Received: from loongson.cn (unknown [10.2.9.158])
+	by gateway (Coremail) with SMTP id _____8CxvOoszeFj+2cPAA--.30699S3;
+	Tue, 07 Feb 2023 12:01:49 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.9.158])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxC74szeFj5jkrAA--.17338S2;
+	Tue, 07 Feb 2023 12:01:48 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] LoongArch: add checksum optimization for 64-bit system
+Date: Tue,  7 Feb 2023 12:01:48 +0800
+Message-Id: <20230207040148.1801169-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAEr6+EDvaqpfvyJhe9TpDbhzrgu9aPPtePi2Vp=vAB5xgMNhXQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Dx6r0cwuFjzzUrAA--.17348S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7WFWxGr4fAFWxCw48XrW5Jrb_yoW5JFyfpF
-	yDZrZ5CF4kX34DAw1q93WUXw4rtasrAa4I9FZxJF1Yyr1qvr17Jw10qr47ZF1Utr4Fkr1S
-	q3sxtw1YvF1UA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxC74szeFj5jkrAA--.17338S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3JrW5ZF4UtryxurW3ZFyUAwb_yoWxWF4kpF
+	nxAr9Ygr4UGF1I9r92yrWIqr43Ja1kGr12grZIgFy8ArW7X347Jrs3KrZYvFy7Gw4fGFyx
+	Zay5KF1agFs3JaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bxAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
 	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42
-	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
-	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI4
-	8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4U
-	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
-	8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
 
+loongArch platform is 64-bit system, which supports 8 bytes memory
+accessing, generic checksum function uses 4 byte memory access.
+This patch adds 8-bytes memory access optimization for checksum
+function on loongArch. And the code comes from arm64 system.
 
+When network hw checksum is disabled, iperf performance improves
+about 10% with this patch.
 
-On 02/06/2023 08:48 PM, Jeff Xie wrote:
-> On Mon, Feb 6, 2023 at 8:13 PM Huacai Chen <chenhuacai@kernel.org> wrote:
->>
->> Hi, Jeff,
->>
->> Now I add kprobes on ftrace support in
->> https://github.com/loongson/linux/commits/loongarch-next, please test
->> again. Thank you.
->>
->
-> When using the kprobe example module kprobe_example.ko, I haven't seen
-> any errors.
->
-> But when using the ftrace to probe the symbol + offset, the kernel will panic:
-> e.g. probe the scheduler_tick+4 is fine, but when probe the
-> scheduler_tick+5, the kernel will panic.
->
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/checksum.h |  50 +++++++++
+ arch/loongarch/lib/Makefile           |   2 +-
+ arch/loongarch/lib/csum.c             | 142 ++++++++++++++++++++++++++
+ 3 files changed, 193 insertions(+), 1 deletion(-)
+ create mode 100644 arch/loongarch/include/asm/checksum.h
+ create mode 100644 arch/loongarch/lib/csum.c
 
-Thanks for your test.
-
-We can see that the instruction address is 4-byte alignment,
-this is because the instruction length is 32-bit on LoongArch.
-
-$ objdump -d vmlinux > dump.txt
-$ grep -A 20 scheduler_tick dump.txt | head -21
-9000000000279fc8 <scheduler_tick>:
-9000000000279fc8:	03400000 	andi        	$zero, $zero, 0x0
-9000000000279fcc:	03400000 	andi        	$zero, $zero, 0x0
-9000000000279fd0:	02ff4063 	addi.d      	$sp, $sp, -48(0xfd0)
-9000000000279fd4:	29c08077 	st.d        	$s0, $sp, 32(0x20)
-9000000000279fd8:	29c06078 	st.d        	$s1, $sp, 24(0x18)
-9000000000279fdc:	29c04079 	st.d        	$s2, $sp, 16(0x10)
-9000000000279fe0:	29c0207a 	st.d        	$s3, $sp, 8(0x8)
-9000000000279fe4:	29c0a061 	st.d        	$ra, $sp, 40(0x28)
-9000000000279fe8:	2700007b 	stptr.d     	$s4, $sp, 0
-9000000000279fec:	24001844 	ldptr.w     	$a0, $tp, 24(0x18)
-9000000000279ff0:	1a02edd9 	pcalau12i   	$s2, 5998(0x176e)
-9000000000279ff4:	1a034bac 	pcalau12i   	$t0, 6749(0x1a5d)
-9000000000279ff8:	02f56339 	addi.d      	$s2, $s2, -680(0xd58)
-9000000000279ffc:	00410c9a 	slli.d      	$s3, $a0, 0x3
-900000000027a000:	28aae18d 	ld.w        	$t1, $t0, -1352(0xab8)
-900000000027a004:	380c6b2e 	ldx.d       	$t2, $s2, $s3
-900000000027a008:	1a022fcc 	pcalau12i   	$t0, 4478(0x117e)
-900000000027a00c:	02f20198 	addi.d      	$s1, $t0, -896(0xc80)
-900000000027a010:	00150317 	move        	$s0, $s1
-900000000027a014:	004081ac 	slli.w      	$t0, $t1, 0x0
-
-So we should check the probe address at the beginning of
-arch_prepare_kprobe(), some other archs do the same thing.
-
-$ git diff
-diff --git a/arch/loongarch/kernel/kprobes.c 
-b/arch/loongarch/kernel/kprobes.c
-index bdab707b6edf..56c8c4b09a42 100644
---- a/arch/loongarch/kernel/kprobes.c
-+++ b/arch/loongarch/kernel/kprobes.c
-@@ -79,6 +79,9 @@ NOKPROBE_SYMBOL(arch_prepare_simulate);
-
-  int arch_prepare_kprobe(struct kprobe *p)
-  {
-+       if ((unsigned long)p->addr & 0x3)
-+               return -EILSEQ;
+diff --git a/arch/loongarch/include/asm/checksum.h b/arch/loongarch/include/asm/checksum.h
+new file mode 100644
+index 000000000000..c9d5af206604
+--- /dev/null
++++ b/arch/loongarch/include/asm/checksum.h
+@@ -0,0 +1,50 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2016 ARM Ltd.
++ */
++#ifndef __ASM_CHECKSUM_H
++#define __ASM_CHECKSUM_H
 +
-         /* copy instruction */
-         p->opcode = *p->addr;
-
-
-Thanks,
-Tiezhu
++#include <linux/in6.h>
++
++#define _HAVE_ARCH_IPV6_CSUM
++__sum16 csum_ipv6_magic(const struct in6_addr *saddr,
++			const struct in6_addr *daddr,
++			__u32 len, __u8 proto, __wsum sum);
++
++static inline __sum16 csum_fold(__wsum csum)
++{
++	u32 sum = (__force u32)csum;
++
++	sum += (sum >> 16) | (sum << 16);
++	return ~(__force __sum16)(sum >> 16);
++}
++#define csum_fold csum_fold
++
++static inline __sum16 ip_fast_csum(const void *iph, unsigned int ihl)
++{
++	__uint128_t tmp;
++	u64 sum;
++	int n = ihl; /* we want it signed */
++
++	tmp = *(const __uint128_t *)iph;
++	iph += 16;
++	n -= 4;
++	tmp += ((tmp >> 64) | (tmp << 64));
++	sum = tmp >> 64;
++	do {
++		sum += *(const u32 *)iph;
++		iph += 4;
++	} while (--n > 0);
++
++	sum += ((sum >> 32) | (sum << 32));
++	return csum_fold((__force __wsum)(sum >> 32));
++}
++#define ip_fast_csum ip_fast_csum
++
++extern unsigned int do_csum(const unsigned char *buff, int len);
++#define do_csum do_csum
++
++#include <asm-generic/checksum.h>
++
++#endif	/* __ASM_CHECKSUM_H */
+diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
+index 40bde632900f..6ba6df411f90 100644
+--- a/arch/loongarch/lib/Makefile
++++ b/arch/loongarch/lib/Makefile
+@@ -4,4 +4,4 @@
+ #
+ 
+ lib-y	+= delay.o memset.o memcpy.o memmove.o \
+-	   clear_user.o copy_user.o dump_tlb.o unaligned.o
++	   clear_user.o copy_user.o dump_tlb.o unaligned.o csum.o
+diff --git a/arch/loongarch/lib/csum.c b/arch/loongarch/lib/csum.c
+new file mode 100644
+index 000000000000..0f7e3a5ce96a
+--- /dev/null
++++ b/arch/loongarch/lib/csum.c
+@@ -0,0 +1,142 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright (C) 2019-2020 Arm Ltd.
++
++#include <linux/compiler.h>
++#include <linux/kasan-checks.h>
++#include <linux/kernel.h>
++
++#include <net/checksum.h>
++
++/* Looks dumb, but generates nice-ish code */
++static u64 accumulate(u64 sum, u64 data)
++{
++	__uint128_t tmp;
++
++	tmp = (__uint128_t)sum + data;
++	return tmp + (tmp >> 64);
++}
++
++/*
++ * We over-read the buffer and this makes KASAN unhappy. Instead, disable
++ * instrumentation and call kasan explicitly.
++ */
++unsigned int __no_sanitize_address do_csum(const unsigned char *buff, int len)
++{
++	unsigned int offset, shift, sum;
++	const u64 *ptr;
++	u64 data, sum64 = 0;
++
++	if (unlikely(len == 0))
++		return 0;
++
++	offset = (unsigned long)buff & 7;
++	/*
++	 * This is to all intents and purposes safe, since rounding down cannot
++	 * result in a different page or cache line being accessed, and @buff
++	 * should absolutely not be pointing to anything read-sensitive. We do,
++	 * however, have to be careful not to piss off KASAN, which means using
++	 * unchecked reads to accommodate the head and tail, for which we'll
++	 * compensate with an explicit check up-front.
++	 */
++	kasan_check_read(buff, len);
++	ptr = (u64 *)(buff - offset);
++	len = len + offset - 8;
++
++	/*
++	 * Head: zero out any excess leading bytes. Shifting back by the same
++	 * amount should be at least as fast as any other way of handling the
++	 * odd/even alignment, and means we can ignore it until the very end.
++	 */
++	shift = offset * 8;
++	data = *ptr++;
++	data = (data >> shift) << shift;
++
++	/*
++	 * Body: straightforward aligned loads from here on (the paired loads
++	 * underlying the quadword type still only need dword alignment). The
++	 * main loop strictly excludes the tail, so the second loop will always
++	 * run at least once.
++	 */
++	while (unlikely(len > 64)) {
++		__uint128_t tmp1, tmp2, tmp3, tmp4;
++
++		tmp1 = *(__uint128_t *)ptr;
++		tmp2 = *(__uint128_t *)(ptr + 2);
++		tmp3 = *(__uint128_t *)(ptr + 4);
++		tmp4 = *(__uint128_t *)(ptr + 6);
++
++		len -= 64;
++		ptr += 8;
++
++		/* This is the "don't dump the carry flag into a GPR" idiom */
++		tmp1 += (tmp1 >> 64) | (tmp1 << 64);
++		tmp2 += (tmp2 >> 64) | (tmp2 << 64);
++		tmp3 += (tmp3 >> 64) | (tmp3 << 64);
++		tmp4 += (tmp4 >> 64) | (tmp4 << 64);
++		tmp1 = ((tmp1 >> 64) << 64) | (tmp2 >> 64);
++		tmp1 += (tmp1 >> 64) | (tmp1 << 64);
++		tmp3 = ((tmp3 >> 64) << 64) | (tmp4 >> 64);
++		tmp3 += (tmp3 >> 64) | (tmp3 << 64);
++		tmp1 = ((tmp1 >> 64) << 64) | (tmp3 >> 64);
++		tmp1 += (tmp1 >> 64) | (tmp1 << 64);
++		tmp1 = ((tmp1 >> 64) << 64) | sum64;
++		tmp1 += (tmp1 >> 64) | (tmp1 << 64);
++		sum64 = tmp1 >> 64;
++	}
++	while (len > 8) {
++		__uint128_t tmp;
++
++		sum64 = accumulate(sum64, data);
++		tmp = *(__uint128_t *)ptr;
++
++		len -= 16;
++		ptr += 2;
++
++		data = tmp >> 64;
++		sum64 = accumulate(sum64, tmp);
++	}
++	if (len > 0) {
++		sum64 = accumulate(sum64, data);
++		data = *ptr;
++		len -= 8;
++	}
++	/*
++	 * Tail: zero any over-read bytes similarly to the head, again
++	 * preserving odd/even alignment.
++	 */
++	shift = len * -8;
++	data = (data << shift) >> shift;
++	sum64 = accumulate(sum64, data);
++
++	/* Finally, folding */
++	sum64 += (sum64 >> 32) | (sum64 << 32);
++	sum = sum64 >> 32;
++	sum += (sum >> 16) | (sum << 16);
++	if (offset & 1)
++		return (u16)swab32(sum);
++
++	return sum >> 16;
++}
++
++__sum16 csum_ipv6_magic(const struct in6_addr *saddr,
++			const struct in6_addr *daddr,
++			__u32 len, __u8 proto, __wsum csum)
++{
++	__uint128_t src, dst;
++	u64 sum = (__force u64)csum;
++
++	src = *(const __uint128_t *)saddr->s6_addr;
++	dst = *(const __uint128_t *)daddr->s6_addr;
++
++	sum += (__force u32)htonl(len);
++	sum += (u32)proto << 24;
++	src += (src >> 64) | (src << 64);
++	dst += (dst >> 64) | (dst << 64);
++
++	sum = accumulate(sum, src >> 64);
++	sum = accumulate(sum, dst >> 64);
++
++	sum += ((sum >> 32) | (sum << 32));
++	return csum_fold((__force __wsum)(sum >> 32));
++}
++EXPORT_SYMBOL(csum_ipv6_magic);
+-- 
+2.27.0
 
