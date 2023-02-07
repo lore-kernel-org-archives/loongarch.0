@@ -1,296 +1,147 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393B4BD33
-	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 14:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1675780204;
-	bh=bYU8i2vMnFWlU7t8bvGKvgBRgI3/rqYbEk0nKv8UPc8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DB6T/rgR/D1PBLoQu7/6ZZbYa/q0dP02qSY3OZG9phC2MLiiZyOF0873zkMOum+z8
-	 lf9WSbzcAb549qBYJ3WzJujD2HV7Zqh+tGeaen2GREHF3tGNcxmutODkeunmMAGgE6
-	 UXXrQLjnRWYL54jd8O3nagbsw+oGbkVABQKWs6eo=
-Received: from xry111-x57s1.. (unknown [IPv6:240e:358:11cc:4100:dc73:854d:832e:2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id A369E65DC6;
-	Tue,  7 Feb 2023 09:29:57 -0500 (EST)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Youling Tang <tangyouling@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Jinyang He <hejinyang@loongson.cn>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v2 5/5] LoongArch: Add support for kernel address space layout randomization (KASLR)
-Date: Tue,  7 Feb 2023 22:28:22 +0800
-Message-Id: <20230207142822.52172-6-xry111@xry111.site>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230207142822.52172-1-xry111@xry111.site>
-References: <20230207142822.52172-1-xry111@xry111.site>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4658BD33
+	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 14:31:17 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id D88415C02DD;
+	Tue,  7 Feb 2023 09:31:16 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Tue, 07 Feb 2023 09:31:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm3; t=1675780276; x=1675866676; bh=q4bwqb0741
+	Nxs8yme56AsN58DFJO2o+WSJEKXnecRdw=; b=APRykVVbxg5J3AkpQLEqM2g8AT
+	GzIb5/PJrhBz9Jecig1hGuS9R1hJM9fq2eY+qM22Uih8+1aLARY7OaOXvqhtG7hd
+	8XVCwg2Q0DLwImOZaPZxv6E8MMf4EGYijfQcRONHj0dyZ1ECGw3FvsPjWd94TOW2
+	FhWUaz5t3LLuGCbdzD6EDo1kb0BqxehueKUlvzaN6jMTwzjn5y3S6CPOjcPHY16y
+	aq7aS1L3JrOy/EwcroIIjhq87UOHfAd2MtkcAhznMYGXznCaTunWM1NGgEDqK8jA
+	JWrvlivLfq+1X1kQfN5FwICm/a97hPXveEwaHxiyhmHUND6yWM6zOqcX8U5w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1675780276; x=1675866676; bh=q4bwqb0741Nxs8yme56AsN58DFJO
+	2o+WSJEKXnecRdw=; b=aMG5CeMrqdCxK9mta/KaSJq00gLJiR2dlXfwPST2OhwI
+	K1HXdYYVtzgK5RmTPQoas1NsEAGQWKO5h+RhuBsrsMbyoJ/7SuY2nZRmCrYVi633
+	2ox9TjrJG5Px8fEA5NTGbR/AedLgHmNHRC8vbBZn/lWgNxQ7Giz4sfd8Mvf+R1Gr
+	2COHOyyKmMucpdzV1q7Waa/qS9tXUgzWafN608MxKRg7veoRFxAARDbp95NfN0rh
+	TPoxDcYlQ1RrBK1NVG+jIYJiHZ9+WGl26L09UpfDMcT7lQCvtQTWIQHwyjx7L7L3
+	wGIJt3eRFAUUYke/znnmH4zboozNwMwiwEbv8vAzoA==
+X-ME-Sender: <xms:tGDiY7Bq0Od3YdcxjOSAtr83v-Sg-f7kswnJzceluGuNZEK6a3KIKw>
+    <xme:tGDiYxipzTUkOZe7LxqnL8UbuypN9YubmK364gJnrae6vOmsWmGwiaDRG24pb8C0V
+    woxT1XAI2yZJBLNrD0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudegkedgieefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:tGDiY2nn_FcWMm9MywEM76rhrvcKmsLxlm-IH5yNEBE9pKQJNy_7KA>
+    <xmx:tGDiY9xJRlbftfGrkkeaQ596MvRI09VBAqB5yf4nTbT9O3B_rQp7sw>
+    <xmx:tGDiYwTfXP2MF3UdY1zD9GBmQumUejihfjFpJmv6ZWuQQb8YueinQg>
+    <xmx:tGDiY1JULuG883TKXmsmspQp9C-QW8i3Neqxt_nm-1vxitrg--CR9A>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 92DB5B60086; Tue,  7 Feb 2023 09:31:16 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-156-g081acc5ed5-fm-20230206.001-g081acc5e
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Message-Id: <1e7da4e7-392d-4a9e-aa95-0599a0c84419@app.fastmail.com>
+In-Reply-To: 
+ <1af05c1441e9f96870be1cc20b1162e3f5043b2e.1675734681.git.chenfeiyang@loongson.cn>
+References: <cover.1675734681.git.chenfeiyang@loongson.cn>
+ <1af05c1441e9f96870be1cc20b1162e3f5043b2e.1675734681.git.chenfeiyang@loongson.cn>
+Date: Tue, 07 Feb 2023 15:30:58 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "chris.chenfeiyang" <chris.chenfeiyang@gmail.com>, w@1wt.eu,
+ "Paul E. McKenney" <paulmck@kernel.org>
+Cc: "Feiyang Chen" <chenfeiyang@loongson.cn>,
+ "Huacai Chen" <chenhuacai@kernel.org>,
+ "Jiaxun Yang" <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] nolibc: Add statx() support to implement sys_stat()
+Content-Type: text/plain
 
-From: Youling Tang <tangyouling@loongson.cn>
+On Tue, Feb 7, 2023, at 03:09, chris.chenfeiyang@gmail.com wrote:
+> From: Feiyang Chen <chenfeiyang@loongson.cn>
+>
+> Neither __NR_newfstatat nor __NR_stat is defined on new architecture
+> like LoongArch, but we can use statx() to implement sys_stat().
+>
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
 
-This patch adds support for relocating the kernel to a random address.
+This looks nice, it should also help on 32-bit architectures that
+only have stat64 but not newfstatat or stat.
 
-Entropy is derived from the banner, which will change every build and
-random_get_entropy() which should provide additional runtime entropy.
+> +#if defined(__NR_newfstatat) || defined(__NR_stat)
+>  static __attribute__((unused))
+>  int sys_stat(const char *path, struct stat *buf)
+...
+> +#else
+> +#error None of __NR_newfstatat, __NR_stat, nor __NR_statx defined, 
+> cannot implement sys_stat()
+> +#endif
 
-The kernel is relocated by up to RANDOMIZE_BASE_MAX_OFFSET bytes from
-its link address. Because relocation happens so early in the kernel boot,
-the amount of physical memory has not yet been determined. This means
-the only way to limit relocation within the available memory is via
-Kconfig. Limit the maximum value of RANDOMIZE_BASE_MAX_OFFSET to
-256M(0x10000000) because our memory layout has many holes.
+Given that all architectures implement statx the same way, I wonder
+if we can't just kill off the old function here and always use statx.
 
-KERNELOFFSET (kaslr_offset) is added to vmcoreinfo in the future, for
-crash --kaslr support.
+That would also allow removing the architecture specific
+sys_stat_struct definitions in all arch-*.h files.
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-Signed-off-by: Xi Ruoyao <xry111@xry111.site> # Use arch_initcall
----
- arch/loongarch/Kconfig            |  22 ++++++
- arch/loongarch/include/asm/page.h |   6 ++
- arch/loongarch/kernel/relocate.c  | 115 ++++++++++++++++++++++++++++++
- arch/loongarch/kernel/setup.c     |   3 +
- 4 files changed, 146 insertions(+)
+> +struct statx_timestamp {
+> +	__s64	tv_sec;
+> +	__u32	tv_nsec;
+> +	__s32	__reserved;
+> +};
+> +
+> +struct statx {
+> +	/* 0x00 */
+> +	__u32	stx_mask;	/* What results were written [uncond] */
+> +	__u32	stx_blksize;	/* Preferred general I/O size [uncond] */
+> +	__u64	stx_attributes;	/* Flags conveying information about the file 
+> [uncond] */
+> +	/* 0x10 */
+> +	__u32	stx_nlink;	/* Number of hard links */
+> +	__u32	stx_uid;	/* User ID of owner */
+> +	__u32	stx_gid;	/* Group ID of owner */
+> +	__u16	stx_mode;	/* File mode */
+> +	__u16	__spare0[1];
+> +	/* 0x20 */
+> +	__u64	stx_ino;	/* Inode number */
+> +	__u64	stx_size;	/* File size */
+> +	__u64	stx_blocks;	/* Number of 512-byte blocks allocated */
+> +	__u64	stx_attributes_mask; /* Mask to show what's supported in 
+> stx_attributes */
+> +	/* 0x40 */
+> +	struct statx_timestamp	stx_atime;	/* Last access time */
+> +	struct statx_timestamp	stx_btime;	/* File creation time */
+> +	struct statx_timestamp	stx_ctime;	/* Last attribute change time */
+> +	struct statx_timestamp	stx_mtime;	/* Last data modification time */
+> +	/* 0x80 */
+> +	__u32	stx_rdev_major;	/* Device ID of special file [if bdev/cdev] */
+> +	__u32	stx_rdev_minor;
+> +	__u32	stx_dev_major;	/* ID of device containing file [uncond] */
+> +	__u32	stx_dev_minor;
+> +	/* 0x90 */
+> +	__u64	stx_mnt_id;
+> +	__u32	stx_dio_mem_align;	/* Memory buffer alignment for direct I/O */
+> +	__u32	stx_dio_offset_align;	/* File offset alignment for direct I/O */
+> +	/* 0xa0 */
+> +	__u64	__spare3[12];	/* Spare space for future expansion */
+> +	/* 0x100 */
+> +};
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index db83f71ba1c0..4ceb16ce080a 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -489,6 +489,28 @@ config RELOCATABLE
- 	  kernel binary at runtime to a different virtual address than the
- 	  address it was linked at.
- 
-+config RANDOMIZE_BASE
-+	bool "Randomize the address of the kernel image (KASLR)"
-+	depends on RELOCATABLE
-+	help
-+	   Randomizes the physical and virtual address at which the
-+	   kernel image is loaded, as a security feature that
-+	   deters exploit attempts relying on knowledge of the location
-+	   of kernel internals.
-+
-+	   The kernel will be offset by up to RANDOMIZE_BASE_MAX_OFFSET.
-+
-+	   If unsure, say N.
-+
-+config RANDOMIZE_BASE_MAX_OFFSET
-+	hex "Maximum KASLR offset" if EXPERT
-+	depends on RANDOMIZE_BASE
-+	range 0x0 0x10000000 if 64BIT
-+	default "0x01000000"
-+	help
-+	  When KASLR is active, this provides the maximum offset that will
-+	  be applied to the kernel image.
-+
- config SECCOMP
- 	bool "Enable seccomp to safely compute untrusted bytecode"
- 	depends on PROC_FS
-diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/asm/page.h
-index 53f284a96182..6dda0d6271ca 100644
---- a/arch/loongarch/include/asm/page.h
-+++ b/arch/loongarch/include/asm/page.h
-@@ -106,6 +106,12 @@ extern int __virt_addr_valid(volatile void *kaddr);
- 	 ((current->personality & READ_IMPLIES_EXEC) ? VM_EXEC : 0) | \
- 	 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
- 
-+extern unsigned long __kaslr_offset;
-+static inline unsigned long kaslr_offset(void)
-+{
-+	return __kaslr_offset;
-+}
-+
- #include <asm-generic/memory_model.h>
- #include <asm-generic/getorder.h>
- 
-diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
-index 9c61e03d3e91..351168b70b7a 100644
---- a/arch/loongarch/kernel/relocate.c
-+++ b/arch/loongarch/kernel/relocate.c
-@@ -11,6 +11,7 @@
- #include <linux/printk.h>
- #include <linux/panic_notifier.h>
- #include <asm/bootinfo.h>
-+#include <asm/early_ioremap.h>
- #include <asm/inst.h>
- #include <asm/sections.h>
- 
-@@ -19,6 +20,70 @@
- extern long __rela_dyn_start;
- extern long __rela_dyn_end;
- 
-+#ifdef CONFIG_RANDOMIZE_BASE
-+
-+static inline __init unsigned long rotate_xor(unsigned long hash,
-+					      const void *area, size_t size)
-+{
-+	size_t i;
-+	unsigned long *ptr = (unsigned long *)area;
-+
-+	for (i = 0; i < size / sizeof(hash); i++) {
-+		/* Rotate by odd number of bits and XOR. */
-+		hash = (hash << ((sizeof(hash) * 8) - 7)) | (hash >> 7);
-+		hash ^= ptr[i];
-+	}
-+
-+	return hash;
-+}
-+
-+static inline __init unsigned long get_random_boot(void)
-+{
-+	unsigned long entropy = random_get_entropy();
-+	unsigned long hash = 0;
-+
-+	/* Attempt to create a simple but unpredictable starting entropy. */
-+	hash = rotate_xor(hash, linux_banner, strlen(linux_banner));
-+
-+	/* Add in any runtime entropy we can get */
-+	hash = rotate_xor(hash, &entropy, sizeof(entropy));
-+
-+	return hash;
-+}
-+
-+static inline __init bool kaslr_disabled(void)
-+{
-+	char *str;
-+
-+	str = strstr(boot_command_line, "nokaslr");
-+	if (str == boot_command_line || (str > boot_command_line && *(str - 1) == ' '))
-+		return true;
-+
-+	return false;
-+}
-+
-+/* Choose a new address for the kernel */
-+static inline void __init *determine_relocation_address(void)
-+{
-+	unsigned long kernel_length;
-+	void *dest = _text;
-+	unsigned long offset;
-+
-+	if (kaslr_disabled())
-+		return dest;
-+
-+	kernel_length = (long)_end - (long)_text;
-+
-+	offset = get_random_boot() << 16;
-+	offset &= (CONFIG_RANDOMIZE_BASE_MAX_OFFSET - 1);
-+	if (offset < kernel_length)
-+		offset += ALIGN(kernel_length, 0xffff);
-+
-+	return RELOCATED(dest);
-+}
-+
-+#else
-+
- /*
-  * Choose a new address for the kernel, for now we'll hard
-  * code the destination.
-@@ -28,6 +93,8 @@ static inline void __init *determine_relocation_address(void)
- 	return (void *)(CACHE_BASE + 0x02000000);
- }
- 
-+#endif
-+
- static inline int __init relocation_addr_valid(void *loc_new)
- {
- 	if ((unsigned long)loc_new & 0x0000ffff) {
-@@ -41,6 +108,13 @@ static inline int __init relocation_addr_valid(void *loc_new)
- 	return 1;
- }
- 
-+static inline void __init update_kaslr_offset(unsigned long *addr, long offset)
-+{
-+	unsigned long *new_addr = (unsigned long *)RELOCATED(addr);
-+
-+	*new_addr = (unsigned long)offset;
-+}
-+
- void *__init relocate_kernel(void)
- {
- 	Elf64_Rela *rela, *rela_end;
-@@ -49,6 +123,10 @@ void *__init relocate_kernel(void)
- 	long offset = 0;
- 	/* Default to original kernel entry point */
- 	void *kernel_entry = start_kernel;
-+	char *cmdline = early_ioremap(fw_arg1, COMMAND_LINE_SIZE);
-+
-+	/* Boot command line was passed in fw_arg1 */
-+	strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
- 
- 	kernel_length = (long)(_end) - (long)(_text);
- 
-@@ -90,7 +168,44 @@ void *__init relocate_kernel(void)
- 
- 		/* Return the new kernel's entry point */
- 		kernel_entry = RELOCATED(start_kernel);
-+
-+		/* Error may occur before, so keep it at last */
-+		update_kaslr_offset(&__kaslr_offset, offset);
- 	}
- 
- 	return kernel_entry;
- }
-+
-+/*
-+ * Show relocation information on panic.
-+ */
-+static void show_kernel_relocation(const char *level)
-+{
-+	if (__kaslr_offset > 0) {
-+		printk(level);
-+		pr_cont("Kernel relocated offset @ 0x%lx\n", __kaslr_offset);
-+		pr_cont(" .text @ 0x%lx\n", (unsigned long)&_text);
-+		pr_cont(" .data @ 0x%lx\n", (unsigned long)&_sdata);
-+		pr_cont(" .bss  @ 0x%lx\n", (unsigned long)&__bss_start);
-+	}
-+}
-+
-+static int kernel_location_notifier_fn(struct notifier_block *self,
-+				       unsigned long v, void *p)
-+{
-+	show_kernel_relocation(KERN_EMERG);
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block kernel_location_notifier = {
-+	.notifier_call = kernel_location_notifier_fn
-+};
-+
-+static int __init register_kernel_offset_dumper(void)
-+{
-+	atomic_notifier_chain_register(&panic_notifier_list,
-+				       &kernel_location_notifier);
-+	return 0;
-+}
-+
-+arch_initcall(register_kernel_offset_dumper);
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 4344502c0b31..b2ba2741945c 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -82,6 +82,9 @@ static struct resource code_resource = { .name = "Kernel code", };
- static struct resource data_resource = { .name = "Kernel data", };
- static struct resource bss_resource  = { .name = "Kernel bss", };
- 
-+unsigned long __kaslr_offset __ro_after_init;
-+EXPORT_SYMBOL(__kaslr_offset);
-+
- const char *get_system_type(void)
- {
- 	return "generic-loongson-machine";
--- 
-2.37.0
+Can't we just #include <linux/stat.h> here to avoid having to maintain
+a duplicate copy?
 
+    Arnd
