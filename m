@@ -1,20 +1,65 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 562DF29CA
-	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 13:28:48 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.155])
-	by gateway (Coremail) with SMTP id _____8AxGuoJUuJjyooPAA--.30504S3;
-	Tue, 07 Feb 2023 21:28:41 +0800 (CST)
-Received: from [10.20.42.155] (unknown [10.20.42.155])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxjb4JUuJjVXQrAA--.21977S3;
-	Tue, 07 Feb 2023 21:28:41 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Make -mstrict-align be configurable
-To: Arnd Bergmann <arnd@arndb.de>, WANG Xuerui <kernel@xen0n.name>,
- David Laight <David.Laight@ACULAB.COM>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>,
- guoren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF88633C9
+	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 14:11:14 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id B62FE5C02DD;
+	Tue,  7 Feb 2023 09:11:13 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Tue, 07 Feb 2023 09:11:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to; s=fm3; t=1675779073; x=
+	1675865473; bh=Jg96Pxt0yVVxL3vYZzmFe2GcsQj9/OICvdYXHXfWT1A=; b=I
+	xwZuxP9HsbfeE17W3A/TXYD6TMxCg9dot7t7TcHHPQKvABN+VR3k98AiRhAL4ibq
+	/0jWbC74TOAEh5+C8zo7/4AdkdQaBKs87mTWD2ZXjcI58i6uyYl+D+BQqEu+RHPu
+	s5VeuPsfjIqPdzA0W0hV+UdkF+FkpPVWb6XFsB1mxismre6S/+Rvvo/dnOFN1Rx1
+	s5oKiKHVvSAXPIbTc87IWxapn6hAH3X6k4kpLcwF9yTUu6PXopfzsKitBLmpOp1L
+	mUtz0IXLP09E9hKx98zOcnpyUAG1wvq8EdaJwQYMxghnAdS7f1rg/zrVX7DKfdnA
+	rZGgjmAzMCNbchP0INZlw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1675779073; x=
+	1675865473; bh=Jg96Pxt0yVVxL3vYZzmFe2GcsQj9/OICvdYXHXfWT1A=; b=P
+	HtcdiksJa+6CclsnucdpMNvJpos/aydRwZaZ2LD2dFXoLQPl3GYm5bfW3OTsyoEq
+	jpoYwqXx3Fi6dsXEB2pq5yzbijAD9jtm3E/FOCHRa5/Vss2VkRTCgyOr4j8QxCjT
+	I8LvYCf91E1A9ScHHZIPSiPJw+9TnZriLRRT2947VkLXhkEfysY0apnwas74boEL
+	/NtWgzjM5AFWILWqNG0omI/G5hcWhFvW4VGjNAhc1JHPk2BUubN8O6bvTEhXIRyD
+	HKpPQSAT1zv04rT7Te8mg1zXQLKRGxN0Wa5TV4wkoKMRGfKG6LgONpWBsipnpupk
+	E9pTnoRaT5ueALDNmSttQ==
+X-ME-Sender: <xms:AVziY_657lxuHj7GDAuZ12tw6-kjveHJAyDiQ-cqU9r8CB69BkZV8A>
+    <xme:AVziY06B3Q4mPHbqY3RldDzuVbmMJZplOYVCHo-sMXvO4IaKnxu0xg-9wnhBPLxt3
+    1BVgB1lEvMBWTBUc3w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudegkedgheelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
+    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:AVziY2d6xCUGijZd5Bh2O7nXX512G2GGvZYk34xW6AtCpc5aJQbPAA>
+    <xmx:AVziYwIUeAgZSFpKsQ4gGLP5RxX4PEuYpI6bc9k_HGNc3CDxsLFbqA>
+    <xmx:AVziYzIVNuciWb5ZDl4szfEf6Hu47rLHp-fhkNJJRK80vs_cFg7itA>
+    <xmx:AVziY6_KMm5k_xYbEEPzkOtdPt6gfbCIcuLjoRhasd7ghLh5TsdBSA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id F1B01B60086; Tue,  7 Feb 2023 09:11:12 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-156-g081acc5ed5-fm-20230206.001-g081acc5e
+Precedence: bulk
+X-Mailing-List: loongarch@lists.linux.dev
+List-Id: <loongarch.lists.linux.dev>
+List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+Mime-Version: 1.0
+Message-Id: <59745bb8-00d0-4fa3-b75c-511db310ac16@app.fastmail.com>
+In-Reply-To: <924aa802-410d-a85c-b623-7ca30d15c637@loongson.cn>
 References: <20230202084238.2408516-1-chenhuacai@loongson.cn>
  <363cd09a5dcb4deab21f58c19025254f@AcuMS.aculab.com>
  <CAAhV-H7Mz1Z5Bo59tq5VRSUx-N39axeiG7xZs2Szn6nuOxgZfQ@mail.gmail.com>
@@ -22,53 +67,54 @@ References: <20230202084238.2408516-1-chenhuacai@loongson.cn>
  <560d73a8-2f2a-4844-44ff-afffad9c8694@loongson.cn>
  <379bcb55-f75d-02ce-a51b-467e21ade5a3@xen0n.name>
  <dcd17646-4b8d-447b-bd85-c66c4a7b2cf4@app.fastmail.com>
-From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <924aa802-410d-a85c-b623-7ca30d15c637@loongson.cn>
-Date: Tue, 7 Feb 2023 21:28:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-Precedence: bulk
-X-Mailing-List: loongarch@lists.linux.dev
-List-Id: <loongarch.lists.linux.dev>
-List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <dcd17646-4b8d-447b-bd85-c66c4a7b2cf4@app.fastmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxjb4JUuJjVXQrAA--.21977S3
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrtF15Xry8KF15uFWUtF4kCrg_yoW3WrX_ZF
-	93G34fu34kAayxWwsFqa98CrySqr12k3yUAF48Xw4aq3W7JFZ3ursxXr4avryDKayIqrZ3
-	AFW5Gr1xC3s2yjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	I7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42
-	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
-	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI4
-	8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4U
-	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I
-	8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcrWFUUUUU
+ <924aa802-410d-a85c-b623-7ca30d15c637@loongson.cn>
+Date: Tue, 07 Feb 2023 15:10:54 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Jianmin Lv" <lvjianmin@loongson.cn>, "WANG Xuerui" <kernel@xen0n.name>,
+ "David Laight" <David.Laight@ACULAB.COM>,
+ "Huacai Chen" <chenhuacai@kernel.org>
+Cc: "Huacai Chen" <chenhuacai@loongson.cn>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "Xuefeng Li" <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
+ "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] LoongArch: Make -mstrict-align be configurable
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Feb 7, 2023, at 14:28, Jianmin Lv wrote:
+> On 2023/2/7 =E4=B8=8B=E5=8D=886:32, Arnd Bergmann wrote:
+>> I agree the default should always be to have a kernel that works on
+>> every machine that has been produced, but this also depends on which
+>> models specifically lack the unaligned access. If it's just about
+>> pre-production silicon that is now all but scrapped, things are diffe=
+rent
+>> from a situation where users may actually use them for normal workloa=
+ds.
+>>=20
+>> Is there an overview of the available loongarch CPU cores that have
+>> been produced so far, and which ones support unaligned access?
+>
+> So far, produced CPUs based LoongArch include 3A5000, 3B5000, 3C5000L,=20
+> 3C5000, 2K2000, 2K1000LA and 2K0500, where 2K1000LA and 2K0500 are=20
+> unaligned-access-unsupported, and others are unaligned-access-supporte=
+d.
 
+Ok, so these are actually some of the newer (though low-end)
+implementations that require the workaround, not the older chips.
 
-On 2023/2/7 下午6:32, Arnd Bergmann wrote:
-> I agree the default should always be to have a kernel that works on
-> every machine that has been produced, but this also depends on which
-> models specifically lack the unaligned access. If it's just about
-> pre-production silicon that is now all but scrapped, things are different
-> from a situation where users may actually use them for normal workloads.
-> 
-> Is there an overview of the available loongarch CPU cores that have
-> been produced so far, and which ones support unaligned access?
+In this case, I think both the kernel and toolchain need to default
+to -mstrict-align, unless someone specifically asks for the variant
+that can support unaligned access. The kernel option could be
+guarded by 'depends on EXPERT' to ensure that this is not set by
+default.
 
-So far, produced CPUs based LoongArch include 3A5000, 3B5000, 3C5000L, 
-3C5000, 2K2000, 2K1000LA and 2K0500, where 2K1000LA and 2K0500 are 
-unaligned-access-unsupported, and others are unaligned-access-supported.
+To be sure that this is set correctly, the
+arch/loongarch/kernel/unaligned.c file should also never be included
+when EFFICIENT_UNALIGNED_ACCESS is set, to ensure that any attempt
+to run such a non-portable kernel on 2K1000LA results in a
+a kernel panic rather than silently fixing up the unaligned accesses
+at a huge performance cost.
 
+    Arnd
