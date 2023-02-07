@@ -1,147 +1,63 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4658BD33
-	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 14:31:17 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id D88415C02DD;
-	Tue,  7 Feb 2023 09:31:16 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Tue, 07 Feb 2023 09:31:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm3; t=1675780276; x=1675866676; bh=q4bwqb0741
-	Nxs8yme56AsN58DFJO2o+WSJEKXnecRdw=; b=APRykVVbxg5J3AkpQLEqM2g8AT
-	GzIb5/PJrhBz9Jecig1hGuS9R1hJM9fq2eY+qM22Uih8+1aLARY7OaOXvqhtG7hd
-	8XVCwg2Q0DLwImOZaPZxv6E8MMf4EGYijfQcRONHj0dyZ1ECGw3FvsPjWd94TOW2
-	FhWUaz5t3LLuGCbdzD6EDo1kb0BqxehueKUlvzaN6jMTwzjn5y3S6CPOjcPHY16y
-	aq7aS1L3JrOy/EwcroIIjhq87UOHfAd2MtkcAhznMYGXznCaTunWM1NGgEDqK8jA
-	JWrvlivLfq+1X1kQfN5FwICm/a97hPXveEwaHxiyhmHUND6yWM6zOqcX8U5w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1675780276; x=1675866676; bh=q4bwqb0741Nxs8yme56AsN58DFJO
-	2o+WSJEKXnecRdw=; b=aMG5CeMrqdCxK9mta/KaSJq00gLJiR2dlXfwPST2OhwI
-	K1HXdYYVtzgK5RmTPQoas1NsEAGQWKO5h+RhuBsrsMbyoJ/7SuY2nZRmCrYVi633
-	2ox9TjrJG5Px8fEA5NTGbR/AedLgHmNHRC8vbBZn/lWgNxQ7Giz4sfd8Mvf+R1Gr
-	2COHOyyKmMucpdzV1q7Waa/qS9tXUgzWafN608MxKRg7veoRFxAARDbp95NfN0rh
-	TPoxDcYlQ1RrBK1NVG+jIYJiHZ9+WGl26L09UpfDMcT7lQCvtQTWIQHwyjx7L7L3
-	wGIJt3eRFAUUYke/znnmH4zboozNwMwiwEbv8vAzoA==
-X-ME-Sender: <xms:tGDiY7Bq0Od3YdcxjOSAtr83v-Sg-f7kswnJzceluGuNZEK6a3KIKw>
-    <xme:tGDiYxipzTUkOZe7LxqnL8UbuypN9YubmK364gJnrae6vOmsWmGwiaDRG24pb8C0V
-    woxT1XAI2yZJBLNrD0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudegkedgieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:tGDiY2nn_FcWMm9MywEM76rhrvcKmsLxlm-IH5yNEBE9pKQJNy_7KA>
-    <xmx:tGDiY9xJRlbftfGrkkeaQ596MvRI09VBAqB5yf4nTbT9O3B_rQp7sw>
-    <xmx:tGDiYwTfXP2MF3UdY1zD9GBmQumUejihfjFpJmv6ZWuQQb8YueinQg>
-    <xmx:tGDiY1JULuG883TKXmsmspQp9C-QW8i3Neqxt_nm-1vxitrg--CR9A>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 92DB5B60086; Tue,  7 Feb 2023 09:31:16 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-156-g081acc5ed5-fm-20230206.001-g081acc5e
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78813BD33
+	for <loongarch@lists.linux.dev>; Tue,  7 Feb 2023 14:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1675780783;
+	bh=qK47dEiG4b3VDhFuj1VyNuLxehj7dUGSdSUafKPadoU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=bpJXwySm6en2juFW83O1jqw75uV/ssKIDmQpmVWeZZbnB/zwKimKOhfcl5je3ra3n
+	 C0/yL8wnlm8OPt08XD0flQroTl7rGyLXYdj9IMdj5tGCMhJ0aYH2BZm8D1LaD18oTP
+	 HLI3Jkxy29dW1vqznGQlEZY5Go70PIwMqtex6rI0=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 4246F65EB0;
+	Tue,  7 Feb 2023 09:39:41 -0500 (EST)
+Message-ID: <657d46fa2290ccfacdf5ae0f8e313870405293bb.camel@xry111.site>
+Subject: Re: [PATCH v2 2/5] LoongArch: Use la.pcrel instead of la.abs for
+ exception handlers
+From: Xi Ruoyao <xry111@xry111.site>
+To: Youling Tang <tangyouling@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>,  Jinyang He <hejinyang@loongson.cn>
+Cc: Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Date: Tue, 07 Feb 2023 22:39:39 +0800
+In-Reply-To: <20230207142822.52172-3-xry111@xry111.site>
+References: <20230207142822.52172-1-xry111@xry111.site>
+	 <20230207142822.52172-3-xry111@xry111.site>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <1e7da4e7-392d-4a9e-aa95-0599a0c84419@app.fastmail.com>
-In-Reply-To: 
- <1af05c1441e9f96870be1cc20b1162e3f5043b2e.1675734681.git.chenfeiyang@loongson.cn>
-References: <cover.1675734681.git.chenfeiyang@loongson.cn>
- <1af05c1441e9f96870be1cc20b1162e3f5043b2e.1675734681.git.chenfeiyang@loongson.cn>
-Date: Tue, 07 Feb 2023 15:30:58 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "chris.chenfeiyang" <chris.chenfeiyang@gmail.com>, w@1wt.eu,
- "Paul E. McKenney" <paulmck@kernel.org>
-Cc: "Feiyang Chen" <chenfeiyang@loongson.cn>,
- "Huacai Chen" <chenhuacai@kernel.org>,
- "Jiaxun Yang" <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] nolibc: Add statx() support to implement sys_stat()
-Content-Type: text/plain
+MIME-Version: 1.0
 
-On Tue, Feb 7, 2023, at 03:09, chris.chenfeiyang@gmail.com wrote:
-> From: Feiyang Chen <chenfeiyang@loongson.cn>
->
-> Neither __NR_newfstatat nor __NR_stat is defined on new architecture
-> like LoongArch, but we can use statx() to implement sys_stat().
->
-> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+On Tue, 2023-02-07 at 22:28 +0800, Xi Ruoyao wrote:
+> +struct handler_reloc *eentry_reloc[128] =3D {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0[0] =3D NULL, /* merr handler =
+*/
 
-This looks nice, it should also help on 32-bit architectures that
-only have stat64 but not newfstatat or stat.
+Self review:
 
-> +#if defined(__NR_newfstatat) || defined(__NR_stat)
->  static __attribute__((unused))
->  int sys_stat(const char *path, struct stat *buf)
-...
-> +#else
-> +#error None of __NR_newfstatat, __NR_stat, nor __NR_statx defined, 
-> cannot implement sys_stat()
-> +#endif
+This is actually incorrect.  Currently the merr handler (except_vec_cex)
+is coded as:
 
-Given that all architectures implement statx the same way, I wonder
-if we can't just kill off the old function here and always use statx.
+SYM_FUNC_START(except_vec_cex)
+        b       cache_parity_error
+SYM_FUNC_END(except_vec_cex)
 
-That would also allow removing the architecture specific
-sys_stat_struct definitions in all arch-*.h files.
+Once this is copied into the per-cpu handler page, the offset (coded in
+the b instruction) will be absolutely wrong.  But it's already incorrect
+in the current mainline, and I'm not familiar with CSR.CRMD.DA=3D1
+configuration so I'm not sure how to fix it.
 
-> +struct statx_timestamp {
-> +	__s64	tv_sec;
-> +	__u32	tv_nsec;
-> +	__s32	__reserved;
-> +};
-> +
-> +struct statx {
-> +	/* 0x00 */
-> +	__u32	stx_mask;	/* What results were written [uncond] */
-> +	__u32	stx_blksize;	/* Preferred general I/O size [uncond] */
-> +	__u64	stx_attributes;	/* Flags conveying information about the file 
-> [uncond] */
-> +	/* 0x10 */
-> +	__u32	stx_nlink;	/* Number of hard links */
-> +	__u32	stx_uid;	/* User ID of owner */
-> +	__u32	stx_gid;	/* Group ID of owner */
-> +	__u16	stx_mode;	/* File mode */
-> +	__u16	__spare0[1];
-> +	/* 0x20 */
-> +	__u64	stx_ino;	/* Inode number */
-> +	__u64	stx_size;	/* File size */
-> +	__u64	stx_blocks;	/* Number of 512-byte blocks allocated */
-> +	__u64	stx_attributes_mask; /* Mask to show what's supported in 
-> stx_attributes */
-> +	/* 0x40 */
-> +	struct statx_timestamp	stx_atime;	/* Last access time */
-> +	struct statx_timestamp	stx_btime;	/* File creation time */
-> +	struct statx_timestamp	stx_ctime;	/* Last attribute change time */
-> +	struct statx_timestamp	stx_mtime;	/* Last data modification time */
-> +	/* 0x80 */
-> +	__u32	stx_rdev_major;	/* Device ID of special file [if bdev/cdev] */
-> +	__u32	stx_rdev_minor;
-> +	__u32	stx_dev_major;	/* ID of device containing file [uncond] */
-> +	__u32	stx_dev_minor;
-> +	/* 0x90 */
-> +	__u64	stx_mnt_id;
-> +	__u32	stx_dio_mem_align;	/* Memory buffer alignment for direct I/O */
-> +	__u32	stx_dio_offset_align;	/* File offset alignment for direct I/O */
-> +	/* 0xa0 */
-> +	__u64	__spare3[12];	/* Spare space for future expansion */
-> +	/* 0x100 */
-> +};
-
-Can't we just #include <linux/stat.h> here to avoid having to maintain
-a duplicate copy?
-
-    Arnd
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
