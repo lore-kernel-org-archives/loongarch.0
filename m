@@ -1,75 +1,145 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F2F28E3
-	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 14:19:31 +0000 (UTC)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-262-H5cJoUZoPCauX5L41XFgjQ-1; Wed, 08 Feb 2023 14:19:28 +0000
-X-MC-Unique: H5cJoUZoPCauX5L41XFgjQ-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.45; Wed, 8 Feb
- 2023 14:19:27 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.045; Wed, 8 Feb 2023 14:19:27 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'WANG Xuerui' <kernel@xen0n.name>, 'Bibo Mao' <maobibo@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-CC: Jiaxun Yang <jiaxun.yang@flygoat.com>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] LoongArch: add checksum optimization for 64-bit system
-Thread-Topic: [PATCH] LoongArch: add checksum optimization for 64-bit system
-Thread-Index: AQHZOqjw3I588J9fP0akyPjC04Hova7FBpIAgAAMDwCAAAcXoA==
-Date: Wed, 8 Feb 2023 14:19:27 +0000
-Message-ID: <7636a7bebfd44e378c5b16d6fd355232@AcuMS.aculab.com>
-References: <20230207040148.1801169-1-maobibo@loongson.cn>
- <8fa91bca5e624861b190917933951c7e@AcuMS.aculab.com>
- <5b3c9b61-7fd5-f50c-32ba-e857090b71bc@xen0n.name>
-In-Reply-To: <5b3c9b61-7fd5-f50c-32ba-e857090b71bc@xen0n.name>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A879028E3;
+	Wed,  8 Feb 2023 14:25:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5819EC433EF;
+	Wed,  8 Feb 2023 14:25:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1675866341;
+	bh=t5jw1fCX4NoFeI2EPmYRhXOtkcVOIpQY0b9/jl5R8zA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QgNyeqlpCi/SBDeCi1TjNEdCqZoJFbgr2WJlBzhmFCZPBDl+FvwZLFuUoEtRHiVbv
+	 uS4uK4r0XCkRineIPNNP9oNxBtbjMeBbnPgCgvwNC+24iI018JePzQOYQtTUyIy/Mp
+	 /qg/12O4pWuU4Ph2uCYFfSRaCoExuPkTdS6885J4+z8cV91aO0N0MHwBMlJryvG9OZ
+	 X0le3Z/bcdQT3Q9bcuXnQc0LtSfZRuA6mh3CZD/9kvJpn4wp9UOAU86Mdp+1pChhIx
+	 M/bUit0KIlLfw8FTXVwGO//F6H/bwcRj6WGI2Aj+ovZgdrJEnNUillAjBfdPPc/tmo
+	 KNXBaoR+knFdw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1pPlOF-008gAy-0C;
+	Wed, 08 Feb 2023 14:25:39 +0000
+Date: Wed, 08 Feb 2023 14:25:38 +0000
+Message-ID: <86h6vwz125.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: James Morse <james.morse@arm.com>
+Cc: linux-pm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-ia64@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Len Brown <lenb@kernel.org>,
+	Rafael Wysocki <rafael@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: Re: [RFC PATCH 29/32] KVM: arm64: Pass hypercalls to userspace
+In-Reply-To: <878rh81rfa.wl-maz@kernel.org>
+References: <20230203135043.409192-1-james.morse@arm.com>
+	<20230203135043.409192-30-james.morse@arm.com>
+	<865ycg1kv2.wl-maz@kernel.org>
+	<7462738f-e837-cd99-f441-8e7c29d250cd@arm.com>
+	<878rh81rfa.wl-maz@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: james.morse@arm.com, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, x86@kernel.org, tglx@linutronix.de, lpieralisi@kernel.org, mark.rutland@arm.com, sudeep.holla@arm.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, mingo@redhat.com, will@kernel.org, catalin.marinas@arm.com, chenhuacai@kernel.org, suzuki.poulose@arm.com, oliver.upton@linux.dev, lenb@kernel.org, rafael@kernel.org, kernel@xen0n.name, salil.mehta@huawei.com, linux@armlinux.org.uk, jean-philippe@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-RnJvbTogV0FORyBYdWVydWkNCj4gU2VudDogMDggRmVicnVhcnkgMjAyMyAxMzo0OA0KLi4uDQo+
-IFllYWggTG9vbmdBcmNoIGNhbiBkbyByb3RhdGVzLCBhbmQgeW91ciBzdWdnZXN0aW9uIGNhbiBp
-bmRlZWQgcmVkdWNlIG9uZQ0KPiBpbnNuIGZyb20gZXZlcnkgaW52b2NhdGlvbiBvZiBjc3VtX2Zv
-bGQuDQo+IA0KPiAgRnJvbSB0aGlzOg0KPiANCj4gMDAwMDAwMDAwMDAwMDk2YyA8Y3N1bV9mb2xk
-PjoNCj4gICAgICAgICAgc3VtICs9IChzdW0gPj4gMTYpIHwgKHN1bSA8PCAxNik7DQo+ICAgOTZj
-OiAgIDAwNGNjMDhjICAgICAgICByb3RyaS53ICAgICAgICAgJHQwLCAkYTAsIDB4MTANCj4gICA5
-NzA6ICAgMDAxMDExODQgICAgICAgIGFkZC53ICAgICAgICAgICAkYTAsICR0MCwgJGEwDQo+ICAg
-ICAgICAgIHJldHVybiB+KF9fZm9yY2UgX19zdW0xNikoc3VtID4+IDE2KTsNCj4gICA5NzQ6ICAg
-MDA0NGMwODQgICAgICAgIHNybGkudyAgICAgICAgICAkYTAsICRhMCwgMHgxMA0KPiAgIDk3ODog
-ICAwMDE0MTAwNCAgICAgICAgbm9yICAgICAgICAgICAgICRhMCwgJHplcm8sICRhMA0KPiB9DQo+
-ICAgOTdjOiAgIDAwNmY4MDg0ICAgICAgICBic3RycGljay53ICAgICAgJGEwLCAkYTAsIDB4Ziwg
-MHgwDQo+ICAgOTgwOiAgIDRjMDAwMDIwICAgICAgICBqaXJsICAgICAgICAgICAgJHplcm8sICRy
-YSwgMA0KPiANCj4gVG86DQo+IA0KPiAwMDAwMDAwMDAwMDAwOTg0IDxjc3VtX2ZvbGQyPjoNCj4g
-ICAgICAgICAgcmV0dXJuICh+c3VtIC0gcm9sMzIoc3VtLCAxNikpID4+IDE2Ow0KPiAgIDk4NDog
-ICAwMDE0MTAwYyAgICAgICAgbm9yICAgICAgICAgICAgICR0MCwgJHplcm8sICRhMA0KPiAgICAg
-ICAgICByZXR1cm4gKHggPDwgYW10KSB8ICh4ID4+ICgzMiAtIGFtdCkpOw0KPiAgIDk4ODogICAw
-MDRjYzA4NCAgICAgICAgcm90cmkudyAgICAgICAgICRhMCwgJGEwLCAweDEwDQo+ICAgICAgICAg
-IHJldHVybiAofnN1bSAtIHJvbDMyKHN1bSwgMTYpKSA+PiAxNjsNCj4gICA5OGM6ICAgMDAxMTEx
-ODQgICAgICAgIHN1Yi53ICAgICAgICAgICAkYTAsICR0MCwgJGEwDQo+IH0NCj4gICA5OTA6ICAg
-MDBkZjQwODQgICAgICAgIGJzdHJwaWNrLmQgICAgICAkYTAsICRhMCwgMHgxZiwgMHgxMA0KPiAg
-IDk5NDogICA0YzAwMDAyMCAgICAgICAgamlybCAgICAgICAgICAgICR6ZXJvLCAkcmEsIDANCg0K
-SXQgaXMgYWN0dWFsbHkgc2xpZ2h0bHkgYmV0dGVyIHRoYW4gdGhhdC4NCkluIHRoZSBjc3VtX2Zv
-bGQyIHZlcnNpb24gdGhlIGZpcnN0IHR3byBpbnN0cnVjdGlvbnMNCmFyZSBpbmRlcGVuZGVudCAt
-IHNvIGNhbiBleGVjdXRlIGluIHBhcmFsbGVsIG9uIHNvbWUgY3B1Lg0KDQoJRGF2aWQNCg0KLQ0K
-UmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1p
-bHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVz
-KQ0K
+On Wed, 08 Feb 2023 08:40:09 +0000,
+Marc Zyngier <maz@kernel.org> wrote:
+> 
+> On Tue, 07 Feb 2023 17:50:58 +0000,
+> James Morse <james.morse@arm.com> wrote:
+> > 
+> > Hi Marc,
+> > 
+> > On 05/02/2023 10:12, Marc Zyngier wrote:
+> > > On Fri, 03 Feb 2023 13:50:40 +0000,
+> > > James Morse <james.morse@arm.com> wrote:
+> > >>
+> > >> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > >>
+> > >> When capability KVM_CAP_ARM_HVC_TO_USER is available, userspace can
+> > >> request to handle all hypercalls that aren't handled by KVM. With the
+> > >> help of another capability, this will allow userspace to handle PSCI
+> > >> calls.
+> > 
+> > > On top of Oliver's ask not to make this a blanket "steal everything",
+> > > but instead to have an actual request for ranges of forwarded
+> > > hypercalls:
+> > > 
+> > >> Notes on this implementation:
+> > >>
+> > >> * A similar mechanism was proposed for SDEI some time ago [1]. This RFC
+> > >>   generalizes the idea to all hypercalls, since that was suggested on
+> > >>   the list [2, 3].
+> > >>
+> > >> * We're reusing kvm_run.hypercall. I copied x0-x5 into
+> > >>   kvm_run.hypercall.args[] to help userspace but I'm tempted to remove
+> > >>   this, because:
+> > >>   - Most user handlers will need to write results back into the
+> > >>     registers (x0-x3 for SMCCC), so if we keep this shortcut we should
+> > >>     go all the way and read them back on return to kernel.
+> > >>   - QEMU doesn't care about this shortcut, it pulls all vcpu regs before
+> > >>     handling the call.
+> > >>   - SMCCC uses x0-x16 for parameters.
+> > >>   x0 does contain the SMCCC function ID and may be useful for fast
+> > >>   dispatch, we could keep that plus the immediate number.
+> > >>
+> > >> * Add a flag in the kvm_run.hypercall telling whether this is HVC or
+> > >>   SMC?  Can be added later in those bottom longmode and pad fields.
+> > 
+> > > We definitely need this. A nested hypervisor can (and does) use SMCs
+> > > as the conduit.
+> > 
+> > Christoffer's comments last time round on this was that EL2 guests
+> > get SMC with this, and EL1 guests get HVC. The VMM could never get
+> > both...
+> 
+> I agree with the first half of the statement (EL2 guest using SMC),
+> but limiting EL1 guests to HVC is annoying. On systems that have a
+> secure side, it would make sense to be able to route the guest's SMC
+> calls to userspace and allow it to emulate/proxy/deny such calls.
 
+You also want to look at the TRNG firmware spec (aka DEN0098), which
+explicitly calls out for the use of SMC when EL2 and EL3 are
+implemented (see 1.5 "Invocation considerations").
+
+Is it mad? Yes. But madness seems to be the direction of travel these
+days.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
