@@ -1,121 +1,96 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8968D9456
-	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 09:20:32 +0000 (UTC)
-Received: by mail-lf1-f41.google.com with SMTP id o20so26193948lfk.5
-        for <loongarch@lists.linux.dev>; Wed, 08 Feb 2023 01:20:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6x/YLvjMdKqIyfSq9HWwMBVMm1r5pILgbR3br9aIWe4=;
-        b=eDNiEt5ahHb0Nak3ekxqptay2gOu7jeigadWsx/mo1bJoUDQCyLGcBDi6oFGt616wG
-         JvcD0uxBDJp6+N749kMGO8DJoYJaUbFP3IUcta47A91TCIBvHm30nWUX1+QgWQWtkFTj
-         bfUelsTHIovsAqwjj0IuNpH29JzXWSDKXsaWZ0JGLZw6QoBo5ou19t6Zw97hA1RfD1mz
-         sJN+sp756ZRHSHKWiN725SZxl/RkADyQhWFkhkDPFtb7o2o/levnXS9ZZ2OYb/p/sfIf
-         8yqfUCeIB6u1R8qpWtOYfcAEAoHZyZZH1frh8sg4j2madxhDfJ2MshoH+GbNTC9Dqnca
-         6qOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6x/YLvjMdKqIyfSq9HWwMBVMm1r5pILgbR3br9aIWe4=;
-        b=Du+3dc/UsWe07ukFKJzj1U0YuXsvriyCeMHxEUXXBw9Ut2RE+SsyPcwIcA1ClMWsIY
-         VaAIXiPj+2ebhVunJ62mSotXLckVA/U0mVG5cIcjlLmYcS9DCnfLQdl/gUytneUdvwx6
-         kvaDjdCYB+CSFUus1aafoszPTy1hlyyFqdlrRC+FI8991dcjWPlZhdDby4DjpTR6RSRI
-         QlECptD4LZ5fBFc0OcIftNahNiUllXYB0rYPDsPdbDqhrm1JLAuKQhy7uVHrqcjG5s0o
-         8COQR04+laHnRRmGx8gFv2gZ9MXSl/V63+Uoj7y/HdHbs31nuCAHcgYJG6/Ig7jXF4lG
-         08xQ==
-X-Gm-Message-State: AO0yUKUWGDz2v+AEiMpd38oY0x5B5ZNSlz5Afr4BR371WhQmtPKTI/W5
-	2ZNTs6UfKIwlvz3/fe/wY4UTowvWwybDcNQQP/0=
-X-Google-Smtp-Source: AK7set+kypxFGR3xaFePIv6tbGa7nm2uXd/1Q8BtGmcGgbmFBf62BNVkuqZhLtzKe7MWYdoSW8CDnfKgnRuRHAYikO4=
-X-Received: by 2002:ac2:4350:0:b0:4ca:f757:6c91 with SMTP id
- o16-20020ac24350000000b004caf7576c91mr1005207lfl.92.1675848030486; Wed, 08
- Feb 2023 01:20:30 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 286452109
+	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 10:08:39 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxNummdONjvuwPAA--.23873S3;
+	Wed, 08 Feb 2023 18:08:38 +0800 (CST)
+Received: from localhost.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtOWldONjv1gtAA--.52925S2;
+	Wed, 08 Feb 2023 18:08:37 +0800 (CST)
+From: Qing Zhang <zhangqing@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] LoongArch: Add hardware breakpoints/watchpoints support
+Date: Wed,  8 Feb 2023 18:08:35 +0800
+Message-Id: <20230208100837.2451-1-zhangqing@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1675734681.git.chenfeiyang@loongson.cn> <1af05c1441e9f96870be1cc20b1162e3f5043b2e.1675734681.git.chenfeiyang@loongson.cn>
- <1e7da4e7-392d-4a9e-aa95-0599a0c84419@app.fastmail.com> <CACWXhK==yVZGZbY+3DUAuxL34=gKwQv20Cw3y1+QKir0D2F3EQ@mail.gmail.com>
- <Y+MXk9A+gB1W6T/n@1wt.eu> <CACWXhKn1N6f7XvtrbDno4UyAhMZbV_htQoRbm0ws9gjF08wnBw@mail.gmail.com>
- <7c98aac5-6b64-4f6b-b242-7ad3b8a334a8@app.fastmail.com> <Y+NbF6OrYu62OQCX@1wt.eu>
-In-Reply-To: <Y+NbF6OrYu62OQCX@1wt.eu>
-From: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Date: Wed, 8 Feb 2023 17:20:18 +0800
-Message-ID: <CACWXhKmWo0MX2mVE3O_xDDwNg7XxW_Yjm272K2nzRAiN13CQ9w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] nolibc: Add statx() support to implement sys_stat()
-To: Willy Tarreau <w@1wt.eu>
-Cc: Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxtOWldONjv1gtAA--.52925S2
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7uF4DWw1DKr45tFyxGFWfZrb_yoW8try3pF
+	ZI9rn5Kr4DKrZ3Xwsrt3y8uryrGFn7C3yaq3W7t342ywnFqF1FvrsakryDXa45J3yfJ340
+	qr1rWw4Fga1UAaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
+	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
+	W8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUUU
 
-On Wed, 8 Feb 2023 at 16:19, Willy Tarreau <w@1wt.eu> wrote:
->
-> On Wed, Feb 08, 2023 at 09:06:24AM +0100, Arnd Bergmann wrote:
-> > On Wed, Feb 8, 2023, at 08:42, Feiyang Chen wrote:
-> > > On Wed, 8 Feb 2023 at 11:31, Willy Tarreau <w@1wt.eu> wrote:
-> > >>
-> > >> I generally agree with the Arnd's points overall and I'm fine with the
-> > >> rest of your series. On this specific point, I'm fine with your proposal,
-> > >> let's just start with sys_statx() only on this arch, please add a comment
-> > >> about this possibility in the commit message that brings statx(),
-> > >> indicating that other archs are likely to benefit from it as well, and
-> > >> let's see after this if we can migrate all archs to statx.
-> > >>
-> > >
-> > > We have a problem if we just start with sys_statx() only on this arch.
-> > > When struct stat is not defined, what should we do with stat() in the
-> > > nolibc selftest?
-> >
-> > To clarify: your proposed implementation of the stat() function that
-> > fills the nolibc 'struct stat' based on information from 'struct statx'
-> > is fine here. Just remove the 'struct sys_stat_struct' definition
-> > loongarch but keep 'struct stat'.
->
-> Ah I think now I understand the problem Feiyang is facing. Since "struct
-> stat" is just between libc and userland, there's the "sys_stat_struct"
-> that we're using to abstract the syscalls in sys_stat() and that is
-> compatible with each variant of the stat() syscall on each arch. Here
-> there's simply no stat() syscall so it's best not to try to abstract
-> this function at all since types will not match between stat and statx,
-> so it will be better to just implement it like this:
->
-> #if defined(__NR_statx)
->     static __attribute__((unused))
->     int sys_stat(const char *path, struct stat *buf)
->     {
->        struct statx statx;
->        long ret;
->
->        ret = statx(...);
->        buf->xxx = statx.xxx;
->        ...
->        return ret;
->     }
-> #else ...
->    // keep the regular sys_stat() here
-> #endif
->
-> Also looking at the man page I see that statx() only appeared in 4.11,
-> and here we're targetting userland so I'd rather keep a bit of margin
-> when it comes to backwards compatibility, thus not dropping stat() and
-> friends too early when not necessary. However using statx() by default
-> when available sounds fine to me!
->
+Use perf framework to manage hardware instruction and data breakpoints.
+LoongArch defines hardware watchpoint functions for instruction fetch
+and load/store operations, after the software configures hardware watchpoints
+for instruction fetch and load/store operations. The processor hardware will
+monitor the access address of the instruction fetch and load/store operation,
+and will trigger the exception of the watchpoint when it meets the conditions
+set by the watchpoint.
 
-Hi, Arnd, Willy,
+The hardware monitoring points for instruction fetching and load/store operations
+each have a register for the overall configuration of all monitoring points,
+a register for recording the status of all monitoring points, and four registers
+required for configuration of each watchpoint individually.
 
-I think I get it now, thank you!
+Watchpoint related control status register chapters:
+https://github.com/loongson/LoongArch-Documentation/releases/download/2022.08.12/
+LoongArch-Vol1-v1.02-CN.pdf
 
-Thanks,
-Feiyang
+Initial version has the following limitations:
+- userspace debug is not yet enabled: work on ptrace/gdb is in progress
+- no support for virtualization
 
-> Cheers,
-> Willy
+Can be tested: e.g.
+1. see samples/hw_breakpoint and register_wide_hw_breakpoint.
+2. ptrace(PTRACE_SINGLESTEP/..., pid, NULL, NULL)
+
+TODO:
+- Add hardware breakpoints/watchpoints for gdb, kgdb
+
+Qing Zhang (2):
+  LoongArch: Add hardware breakpoints/watchpoints support
+  LoongArch: Add ptrace single step support
+
+ arch/loongarch/Kconfig                     |   1 +
+ arch/loongarch/include/asm/hw_breakpoint.h | 145 ++++++
+ arch/loongarch/include/asm/loongarch.h     |  32 +-
+ arch/loongarch/include/asm/processor.h     |  11 +-
+ arch/loongarch/include/asm/ptrace.h        |   2 +
+ arch/loongarch/include/asm/switch_to.h     |   1 +
+ arch/loongarch/kernel/Makefile             |   1 +
+ arch/loongarch/kernel/hw_breakpoint.c      | 525 +++++++++++++++++++++
+ arch/loongarch/kernel/process.c            |   7 +
+ arch/loongarch/kernel/ptrace.c             |  68 +++
+ arch/loongarch/kernel/traps.c              |  31 +-
+ 11 files changed, 803 insertions(+), 21 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/hw_breakpoint.h
+ create mode 100644 arch/loongarch/kernel/hw_breakpoint.c
+
+-- 
+2.36.0
+
