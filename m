@@ -1,175 +1,95 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40422113
-	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 10:18:29 +0000 (UTC)
-Received: by mail-pj1-f49.google.com with SMTP id f16-20020a17090a9b1000b0023058bbd7b2so1852670pjp.0
-        for <loongarch@lists.linux.dev>; Wed, 08 Feb 2023 02:18:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WOMPizwvZIOCZuA+NM2fq3lJj7qsjRo1bnIWUyEuTFc=;
-        b=pvZLiQNLHy9hWo+yq3uZlY0c64wAYreH5GuiHBFTDCbc2xdxHfcesCS8f7NwuR19fN
-         cnCRuvQAXZ58p9HRzyXJNOGdf1hC83l9Z/DtVV3Xc3ytSpPeSvo4zzxnaq5Iy/JhY1XO
-         N+kQ20lInIiwi4AA79wm1ixmSeKBbIM4U6BiZm9Ze/LGFNis8B9gsmzP7tMPp0xqzo+G
-         /uix2YIijYl6aDGs0T+Z+hklBCU1mdtsw83zYNuqv14xUea3Qro11pIqm3s0pZzWU9bz
-         BbMtnkI2OreevPsTTyNjb/lCwvjtUR/Nl/81mj1mCY9biHHSko4tc/ZCkOL8qNXLl7Cn
-         8PcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WOMPizwvZIOCZuA+NM2fq3lJj7qsjRo1bnIWUyEuTFc=;
-        b=7vbxd0UzwUXTDm+fg1wOLFdn1DhFX38qRmGCii5opA1QoDnpBqb5w0GOmawVaccKmj
-         jKIyT6LuCNvzbxHgxTi64cqbzXNrlHDl+DJrlE5Y4f+bJZP56c+jLXSEwkdsfGxBn5zA
-         KbWEqRmFdi38nWIYa0Cwjxdv3Q59wgv7cyC54sLSiktYFEaj72i187MvqMii7/RwMfgh
-         lrytykGcj8SyauuwNz9v/kb4iPZFMJBK81Paqa/6bbrlblC/sqjegPm5sqM6cfYkkn7R
-         +X8Dwwt6MUqt08kw/fQq/HJAVyfWqjmBAUVJJ0yRAdgDHPxhLDD9UPz3MVyJU92ycAmk
-         YCWw==
-X-Gm-Message-State: AO0yUKWbFw8GASDKmVSvJDYG2jBBAtVznN/xGG5h7CznV4ueZN5uioRy
-	LPvaX2xd8SxMZN6JaRZiCUxW+Jv++FF1MygE
-X-Google-Smtp-Source: AK7set+hU57Pu5ZJnmJUCtECcmtn9PlGnGm6KGO32y4b9Q2Rg9v3pJczxX5jmX59fRDABK8zGuDuLQ==
-X-Received: by 2002:a17:902:e1c2:b0:198:e4da:f9be with SMTP id t2-20020a170902e1c200b00198e4daf9bemr5080568pla.48.1675851509282;
-        Wed, 08 Feb 2023 02:18:29 -0800 (PST)
-Received: from localhost.localdomain ([112.20.108.204])
-        by smtp.gmail.com with ESMTPSA id v23-20020a1709028d9700b0019926c7757asm3991058plo.289.2023.02.08.02.18.24
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 08 Feb 2023 02:18:28 -0800 (PST)
-From: chris.chenfeiyang@gmail.com
-X-Google-Original-From: chenfeiyang@loongson.cn
-To: w@1wt.eu,
-	paulmck@kernel.org
-Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
-	arnd@arndb.de,
-	chenhuacai@kernel.org,
-	jiaxun.yang@flygoat.com,
-	chris.chenfeiyang@gmail.com,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] selftests/nolibc: Adjust indentation for Makefile
-Date: Wed,  8 Feb 2023 18:17:54 +0800
-Message-Id: <3fcba51af876acc05af9998ce65ab5fc0cb01116.1675851111.git.chenfeiyang@loongson.cn>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <cover.1675851111.git.chenfeiyang@loongson.cn>
-References: <cover.1675851111.git.chenfeiyang@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79102113
+	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 10:39:44 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.west.internal (Postfix) with ESMTP id 1DCA132001BB;
+	Wed,  8 Feb 2023 05:39:43 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 08 Feb 2023 05:39:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm3; t=1675852782; x=1675939182; bh=XvjPcbSB0C
+	+tEip/psUaJBFfDTBjjkzGVMt5Kch20xk=; b=GJ+xnWVPgj1OJ9JwQZvdOdMxvq
+	rLTS3P6zFtgSd8IEUpzfSxE0ccuG71YVeQ8Yrgevc5IsXiZ16PCIckelT7djfZh3
+	V37lk4k0b4C+PWSAxQraalAs7F5rl7hS8CPuhpdRj99sPoiSE/tOnLjNGBS0VXmV
+	yXypzNWiricTSC4ucDQaQpGnYXe3O4SkTMm86vFKE3MUqYZtJ65YIwuW7fLYqBnx
+	WJLJonVNTPqKBMc3T6Em3sckkuDmsGLCm18+MJu0CUUczi9/LtjnryA4RU/iqRMt
+	qhqafG4trQ3tEOq3HiPZw9trTfMFCYS194PKBeOiVuEp1YbMoHHqpPZevMXg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1675852782; x=1675939182; bh=XvjPcbSB0C+tEip/psUaJBFfDTBj
+	jkzGVMt5Kch20xk=; b=bYrNbNtnWmjy/YTNE4mRHrQbCgMHd1jsoj8vF7N4zJfp
+	9PCbZfz9V/iunIurEwg0W8NbnGAVp0XxZhYOFmqymt6DnLDQGLfUdlsFJLVm6Kq9
+	m00UsYPbOOt8FxEIY3Qc2wc9n+D9aqrWqEhAs6PB0c+swLRZQBzMwC6+IlroXanF
+	0eKzkwOVF1FvmkeQ4eW/m6Ll2IsAkrBREfoI2+e6Rf8tagJfM1ABooOkwM37TNVE
+	XmbMNTLfyq4wtx/7jcU4hILi80XGRHhiqNCCEjl8TW5HPv14uBo1w4YLgPZxLkUk
+	NR3KkWNu6LNH0hQ7UKhe/uXOSUsGCgQDs5djcfNcuQ==
+X-ME-Sender: <xms:7XvjY98pHQ1d1GFm5SWZwX662qnO0S-VgrXS0_dJjR3QBSpS7Yp91w>
+    <xme:7XvjYxtKkwxl0XLL0aBB6E1hG4mmy5DlxUnQEc5TOtcMUmHX1lj_gSpCwuih4hZqw
+    QHHR3yacDCNp-F7cAE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudehtddgudekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:7XvjY7Anj2EjVpTJ1a48n5bEUF5WFXgTU7uHJcT9QdUt-Mliydj6tA>
+    <xmx:7XvjYxdyv6Ly9cUBSa2iHEHmu-XXy-_WGZ_ZDdMij_XDcSoLicu-5Q>
+    <xmx:7XvjYyMCfKfGd2xt17U3kFUZida1pxWuiaV_Bz6yDXrIUvTdfJAXkg>
+    <xmx:7nvjY5339qml5ge1kO6AKV7XW_1OcNIHbrOSKmehSXktwnnx5IwvSA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id BBA0AB60086; Wed,  8 Feb 2023 05:39:41 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-156-g081acc5ed5-fm-20230206.001-g081acc5e
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Message-Id: <e09b458a-32bf-46aa-b509-a383e34d4888@app.fastmail.com>
+In-Reply-To: 
+ <b9bbf73286238bb4657d855c9d50983aa17953e2.1675851111.git.chenfeiyang@loongson.cn>
+References: <cover.1675851111.git.chenfeiyang@loongson.cn>
+ <b9bbf73286238bb4657d855c9d50983aa17953e2.1675851111.git.chenfeiyang@loongson.cn>
+Date: Wed, 08 Feb 2023 11:39:23 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "chris.chenfeiyang" <chris.chenfeiyang@gmail.com>,
+ "Willy Tarreau" <w@1wt.eu>, "Paul E. McKenney" <paulmck@kernel.org>
+Cc: "Feiyang Chen" <chenfeiyang@loongson.cn>,
+ "Huacai Chen" <chenhuacai@kernel.org>,
+ "Jiaxun Yang" <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] tools/nolibc: Add statx() and make stat() rely on statx()
+ when available
+Content-Type: text/plain
 
-From: Feiyang Chen <chenfeiyang@loongson.cn>
+On Wed, Feb 8, 2023, at 11:17, chris.chenfeiyang@gmail.com wrote:
+> From: Feiyang Chen <chenfeiyang@loongson.cn>
+>
+> loongarch and riscv32 only have statx(). arc, hexagon, nios2 and
+> openrisc have statx() and stat64() but not stat() or newstat().
+> Add statx() and make stat() rely on statx() to make them happy.
 
-Reindent only, no functional changes.
+> +#ifdef __NR_statx
+> +static __attribute__((unused))
+> +int sys_stat(const char *path, struct stat *buf)
+> +{
 
-Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
----
- tools/testing/selftests/nolibc/Makefile | 74 ++++++++++++-------------
- 1 file changed, 37 insertions(+), 37 deletions(-)
+The actual #ifdef check here does what I had suggested first, using
+statx() for all architectures, rather than what you describe in the
+changelog. I think you should keep the check from the first version,
+testing for __NR_stat/__NR_newfstatat and keep the changelog text
+here. Also please add something about the possibility of using statx()
+everywhere in the future.
 
-diff --git a/tools/testing/selftests/nolibc/Makefile b/tools/testing/selftests/nolibc/Makefile
-index e9c4a9d011a0..ea2b82a3cd86 100644
---- a/tools/testing/selftests/nolibc/Makefile
-+++ b/tools/testing/selftests/nolibc/Makefile
-@@ -13,56 +13,56 @@ ARCH = $(SUBARCH)
- endif
- 
- # kernel image names by architecture
--IMAGE_i386    = arch/x86/boot/bzImage
--IMAGE_x86_64  = arch/x86/boot/bzImage
--IMAGE_x86     = arch/x86/boot/bzImage
--IMAGE_arm64   = arch/arm64/boot/Image
--IMAGE_arm     = arch/arm/boot/zImage
--IMAGE_mips    = vmlinuz
--IMAGE_riscv   = arch/riscv/boot/Image
--IMAGE_s390    = arch/s390/boot/bzImage
-+IMAGE_i386       = arch/x86/boot/bzImage
-+IMAGE_x86_64     = arch/x86/boot/bzImage
-+IMAGE_x86        = arch/x86/boot/bzImage
-+IMAGE_arm64      = arch/arm64/boot/Image
-+IMAGE_arm        = arch/arm/boot/zImage
-+IMAGE_mips       = vmlinuz
-+IMAGE_riscv      = arch/riscv/boot/Image
-+IMAGE_s390       = arch/s390/boot/bzImage
- IMAGE_loongarch  = arch/loongarch/boot/vmlinuz.efi
--IMAGE         = $(IMAGE_$(ARCH))
--IMAGE_NAME    = $(notdir $(IMAGE))
-+IMAGE            = $(IMAGE_$(ARCH))
-+IMAGE_NAME       = $(notdir $(IMAGE))
- 
- # default kernel configurations that appear to be usable
--DEFCONFIG_i386    = defconfig
--DEFCONFIG_x86_64  = defconfig
--DEFCONFIG_x86     = defconfig
--DEFCONFIG_arm64   = defconfig
--DEFCONFIG_arm     = multi_v7_defconfig
--DEFCONFIG_mips    = malta_defconfig
--DEFCONFIG_riscv   = defconfig
--DEFCONFIG_s390    = defconfig
-+DEFCONFIG_i386       = defconfig
-+DEFCONFIG_x86_64     = defconfig
-+DEFCONFIG_x86        = defconfig
-+DEFCONFIG_arm64      = defconfig
-+DEFCONFIG_arm        = multi_v7_defconfig
-+DEFCONFIG_mips       = malta_defconfig
-+DEFCONFIG_riscv      = defconfig
-+DEFCONFIG_s390       = defconfig
- DEFCONFIG_loongarch  = defconfig
--DEFCONFIG         = $(DEFCONFIG_$(ARCH))
-+DEFCONFIG            = $(DEFCONFIG_$(ARCH))
- 
- # optional tests to run (default = all)
- TEST =
- 
- # QEMU_ARCH: arch names used by qemu
--QEMU_ARCH_i386    = i386
--QEMU_ARCH_x86_64  = x86_64
--QEMU_ARCH_x86     = x86_64
--QEMU_ARCH_arm64   = aarch64
--QEMU_ARCH_arm     = arm
--QEMU_ARCH_mips    = mipsel  # works with malta_defconfig
--QEMU_ARCH_riscv   = riscv64
--QEMU_ARCH_s390    = s390x
-+QEMU_ARCH_i386       = i386
-+QEMU_ARCH_x86_64     = x86_64
-+QEMU_ARCH_x86        = x86_64
-+QEMU_ARCH_arm64      = aarch64
-+QEMU_ARCH_arm        = arm
-+QEMU_ARCH_mips       = mipsel  # works with malta_defconfig
-+QEMU_ARCH_riscv      = riscv64
-+QEMU_ARCH_s390       = s390x
- QEMU_ARCH_loongarch  = loongarch64
--QEMU_ARCH         = $(QEMU_ARCH_$(ARCH))
-+QEMU_ARCH            = $(QEMU_ARCH_$(ARCH))
- 
- # QEMU_ARGS : some arch-specific args to pass to qemu
--QEMU_ARGS_i386    = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_x86_64  = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_x86     = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_arm64   = -M virt -cpu cortex-a53 -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_arm     = -M virt -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_mips    = -M malta -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_riscv   = -M virt -append "console=ttyS0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS_s390    = -M s390-ccw-virtio -m 1G -append "console=ttyS0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_i386       = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_x86_64     = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_x86        = -M pc -append "console=ttyS0,9600 i8042.noaux panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_arm64      = -M virt -cpu cortex-a53 -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_arm        = -M virt -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_mips       = -M malta -append "panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_riscv      = -M virt -append "console=ttyS0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
-+QEMU_ARGS_s390       = -M s390-ccw-virtio -m 1G -append "console=ttyS0 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
- QEMU_ARGS_loongarch  = -M virt -append "console=ttyS0,115200 panic=-1 $(TEST:%=NOLIBC_TEST=%)"
--QEMU_ARGS         = $(QEMU_ARGS_$(ARCH))
-+QEMU_ARGS            = $(QEMU_ARGS_$(ARCH))
- 
- # OUTPUT is only set when run from the main makefile, otherwise
- # it defaults to this nolibc directory.
--- 
-2.39.0
-
+      Arnd
