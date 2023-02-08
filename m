@@ -1,120 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FF79452;
-	Wed,  8 Feb 2023 09:02:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 778D4C433A0;
-	Wed,  8 Feb 2023 09:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675846933;
-	bh=Au9MWvR8WSilVR5o+G1SBG0j1tkJGbQ1BYt+vNhmIjE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RzQiZ9P6NDDC6vH0trcQ+X2uILhWWJkrt7w+rg5sjO3axMWd9ufymHHtAWCV7eUqM
-	 fjAVNVi0+LTcNRR/9g4MpfdnptHZaX9SFbjlPF7S/NDq6hsgVkqHzcWmVNnqaNzrMD
-	 MSkofGRklN9fhQfkxl7z7jeZmJqtZRcSCZjdWnHZzr3MpC+TtmwHuRNNS8tDu6i7yz
-	 D0ShsgTgsIGKOHCWr2jWrCUf8c6PPX6NLy/tGbT6kWGgYUWy8gDNUwjdBdslnJe24f
-	 hj2PWLvbvaqv/tKaepwKx9+ywYeFCX/gY1aRb3iikq4ryc4DBq8BCLhh/NFh6gIMQ3
-	 z2Qv8NH9XA0Nw==
-Received: from [104.132.45.110] (helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1pPgLD-008bNL-4P;
-	Wed, 08 Feb 2023 09:02:11 +0000
-Date: Wed, 08 Feb 2023 09:02:09 +0000
-Message-ID: <877cws1qem.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: James Morse <james.morse@arm.com>
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-	linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-ia64@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Len Brown <lenb@kernel.org>,
-	Rafael Wysocki <rafael@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: Re: [RFC PATCH 29/32] KVM: arm64: Pass hypercalls to userspace
-In-Reply-To: <0621bf8e-06f2-70f2-6d2b-f311c5a4ffce@arm.com>
-References: <20230203135043.409192-1-james.morse@arm.com>
-	<20230203135043.409192-30-james.morse@arm.com>
-	<Y913sIqWxmf4O5oG@google.com>
-	<0621bf8e-06f2-70f2-6d2b-f311c5a4ffce@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8968D9456
+	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 09:20:32 +0000 (UTC)
+Received: by mail-lf1-f41.google.com with SMTP id o20so26193948lfk.5
+        for <loongarch@lists.linux.dev>; Wed, 08 Feb 2023 01:20:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6x/YLvjMdKqIyfSq9HWwMBVMm1r5pILgbR3br9aIWe4=;
+        b=eDNiEt5ahHb0Nak3ekxqptay2gOu7jeigadWsx/mo1bJoUDQCyLGcBDi6oFGt616wG
+         JvcD0uxBDJp6+N749kMGO8DJoYJaUbFP3IUcta47A91TCIBvHm30nWUX1+QgWQWtkFTj
+         bfUelsTHIovsAqwjj0IuNpH29JzXWSDKXsaWZ0JGLZw6QoBo5ou19t6Zw97hA1RfD1mz
+         sJN+sp756ZRHSHKWiN725SZxl/RkADyQhWFkhkDPFtb7o2o/levnXS9ZZ2OYb/p/sfIf
+         8yqfUCeIB6u1R8qpWtOYfcAEAoHZyZZH1frh8sg4j2madxhDfJ2MshoH+GbNTC9Dqnca
+         6qOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6x/YLvjMdKqIyfSq9HWwMBVMm1r5pILgbR3br9aIWe4=;
+        b=Du+3dc/UsWe07ukFKJzj1U0YuXsvriyCeMHxEUXXBw9Ut2RE+SsyPcwIcA1ClMWsIY
+         VaAIXiPj+2ebhVunJ62mSotXLckVA/U0mVG5cIcjlLmYcS9DCnfLQdl/gUytneUdvwx6
+         kvaDjdCYB+CSFUus1aafoszPTy1hlyyFqdlrRC+FI8991dcjWPlZhdDby4DjpTR6RSRI
+         QlECptD4LZ5fBFc0OcIftNahNiUllXYB0rYPDsPdbDqhrm1JLAuKQhy7uVHrqcjG5s0o
+         8COQR04+laHnRRmGx8gFv2gZ9MXSl/V63+Uoj7y/HdHbs31nuCAHcgYJG6/Ig7jXF4lG
+         08xQ==
+X-Gm-Message-State: AO0yUKUWGDz2v+AEiMpd38oY0x5B5ZNSlz5Afr4BR371WhQmtPKTI/W5
+	2ZNTs6UfKIwlvz3/fe/wY4UTowvWwybDcNQQP/0=
+X-Google-Smtp-Source: AK7set+kypxFGR3xaFePIv6tbGa7nm2uXd/1Q8BtGmcGgbmFBf62BNVkuqZhLtzKe7MWYdoSW8CDnfKgnRuRHAYikO4=
+X-Received: by 2002:ac2:4350:0:b0:4ca:f757:6c91 with SMTP id
+ o16-20020ac24350000000b004caf7576c91mr1005207lfl.92.1675848030486; Wed, 08
+ Feb 2023 01:20:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 104.132.45.110
-X-SA-Exim-Rcpt-To: james.morse@arm.com, oliver.upton@linux.dev, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, x86@kernel.org, tglx@linutronix.de, lpieralisi@kernel.org, mark.rutland@arm.com, sudeep.holla@arm.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, mingo@redhat.com, will@kernel.org, catalin.marinas@arm.com, chenhuacai@kernel.org, suzuki.poulose@arm.com, lenb@kernel.org, rafael@kernel.org, kernel@xen0n.name, salil.mehta@huawei.com, linux@armlinux.org.uk, jean-philippe@linaro.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <cover.1675734681.git.chenfeiyang@loongson.cn> <1af05c1441e9f96870be1cc20b1162e3f5043b2e.1675734681.git.chenfeiyang@loongson.cn>
+ <1e7da4e7-392d-4a9e-aa95-0599a0c84419@app.fastmail.com> <CACWXhK==yVZGZbY+3DUAuxL34=gKwQv20Cw3y1+QKir0D2F3EQ@mail.gmail.com>
+ <Y+MXk9A+gB1W6T/n@1wt.eu> <CACWXhKn1N6f7XvtrbDno4UyAhMZbV_htQoRbm0ws9gjF08wnBw@mail.gmail.com>
+ <7c98aac5-6b64-4f6b-b242-7ad3b8a334a8@app.fastmail.com> <Y+NbF6OrYu62OQCX@1wt.eu>
+In-Reply-To: <Y+NbF6OrYu62OQCX@1wt.eu>
+From: Feiyang Chen <chris.chenfeiyang@gmail.com>
+Date: Wed, 8 Feb 2023 17:20:18 +0800
+Message-ID: <CACWXhKmWo0MX2mVE3O_xDDwNg7XxW_Yjm272K2nzRAiN13CQ9w@mail.gmail.com>
+Subject: Re: [PATCH 1/3] nolibc: Add statx() support to implement sys_stat()
+To: Willy Tarreau <w@1wt.eu>
+Cc: Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Feiyang Chen <chenfeiyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 07 Feb 2023 17:50:59 +0000,
-James Morse <james.morse@arm.com> wrote:
-> 
-> Hi Oliver,
-> 
-> On 03/02/2023 21:08, Oliver Upton wrote:
-> > On Fri, Feb 03, 2023 at 01:50:40PM +0000, James Morse wrote:
-> >> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> >>
-> >> When capability KVM_CAP_ARM_HVC_TO_USER is available, userspace can
-> >> request to handle all hypercalls that aren't handled by KVM.
-> 
-> > I would very much prefer we not go down this route. This capability
-> > effectively constructs an ABI out of what KVM presently does not
-> > implement. What would happen if KVM decides to implement a new set
-> > of hypercalls later down the road that were previously forwarded to
-> > userspace?
-> 
-> The user-space support would never get called. If we have a
-> wild-west allocation of IDs in this area we have bigger
-> problems. I'd hope in this example it would be a VMM or an in-kernel
-> implementation of the same feature.
-> 
-> When I floated something like this before for supporting SDEI in
-> guests, Christoffer didn't like tie-ing KVM to SMC-CC - hence the
-> all or nothing.
-> 
-> Since then we've had things like Spectre, which I don't think the
-> VMM should ever be allowed to handle, which makes the whole thing
-> much murkier.
+On Wed, 8 Feb 2023 at 16:19, Willy Tarreau <w@1wt.eu> wrote:
+>
+> On Wed, Feb 08, 2023 at 09:06:24AM +0100, Arnd Bergmann wrote:
+> > On Wed, Feb 8, 2023, at 08:42, Feiyang Chen wrote:
+> > > On Wed, 8 Feb 2023 at 11:31, Willy Tarreau <w@1wt.eu> wrote:
+> > >>
+> > >> I generally agree with the Arnd's points overall and I'm fine with the
+> > >> rest of your series. On this specific point, I'm fine with your proposal,
+> > >> let's just start with sys_statx() only on this arch, please add a comment
+> > >> about this possibility in the commit message that brings statx(),
+> > >> indicating that other archs are likely to benefit from it as well, and
+> > >> let's see after this if we can migrate all archs to statx.
+> > >>
+> > >
+> > > We have a problem if we just start with sys_statx() only on this arch.
+> > > When struct stat is not defined, what should we do with stat() in the
+> > > nolibc selftest?
+> >
+> > To clarify: your proposed implementation of the stat() function that
+> > fills the nolibc 'struct stat' based on information from 'struct statx'
+> > is fine here. Just remove the 'struct sys_stat_struct' definition
+> > loongarch but keep 'struct stat'.
+>
+> Ah I think now I understand the problem Feiyang is facing. Since "struct
+> stat" is just between libc and userland, there's the "sys_stat_struct"
+> that we're using to abstract the syscalls in sys_stat() and that is
+> compatible with each variant of the stat() syscall on each arch. Here
+> there's simply no stat() syscall so it's best not to try to abstract
+> this function at all since types will not match between stat and statx,
+> so it will be better to just implement it like this:
+>
+> #if defined(__NR_statx)
+>     static __attribute__((unused))
+>     int sys_stat(const char *path, struct stat *buf)
+>     {
+>        struct statx statx;
+>        long ret;
+>
+>        ret = statx(...);
+>        buf->xxx = statx.xxx;
+>        ...
+>        return ret;
+>     }
+> #else ...
+>    // keep the regular sys_stat() here
+> #endif
+>
+> Also looking at the man page I see that statx() only appeared in 4.11,
+> and here we're targetting userland so I'd rather keep a bit of margin
+> when it comes to backwards compatibility, thus not dropping stat() and
+> friends too early when not necessary. However using statx() by default
+> when available sounds fine to me!
+>
 
-That ship has sailed a long time ago. We also have grown a bunch of
-in-kernel SMCCC services that are KVM specific (the silly PTP stuff,
-for example, not to mention all the pKVM hypercalls...).
+Hi, Arnd, Willy,
 
-It is also likely that these ranges will grow over time (it has been a
-long time since the last drop of Spectre-like crap, and something must
-be brewing somewhere), so a level of discrimination is important.
+I think I get it now, thank you!
 
-	M.
+Thanks,
+Feiyang
 
--- 
-Without deviation from the norm, progress is not possible.
+> Cheers,
+> Willy
