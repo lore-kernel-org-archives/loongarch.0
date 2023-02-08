@@ -1,127 +1,100 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6143120EE
-	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 07:43:09 +0000 (UTC)
-Received: by mail-lf1-f54.google.com with SMTP id y25so25856262lfa.9
-        for <loongarch@lists.linux.dev>; Tue, 07 Feb 2023 23:43:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mVCtFK5+Mzt3hAp57nZ3RLtIxxaSOtloZUtvAg8w8Z8=;
-        b=VC+DuNOOj82IU4SduBxcLaGSrM4ddq1tKPseKrkGHxrCuw6C/zChYL0qfklZdF3P+R
-         D8iSXjulGePVAobJZom/AbyDrYjYoyTEXpmBoVlf8bfLTTa58LNTnVU9IluL9SnnYy4+
-         Xhteo6NM0gniCGjlZ9LVNHdnI+ch8r40Pr+V9w6Pn5fT/DWby3Wiy0apGsjIoE4MD87F
-         PAUlSSgzqdIaRPULhcl/SOkLvQG2vUG94lwmIYS6Zvq8WqNntjWA2DeZOzAGaJag5KHN
-         M6eAl5fpOnIncJ/PIO101Fnr6nQTWSLxJ2Bsu4d4iXAGLGDnEN7cfPow6lg01i9FIeqc
-         viQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mVCtFK5+Mzt3hAp57nZ3RLtIxxaSOtloZUtvAg8w8Z8=;
-        b=WqcV8iIszwxpKcQ+28gAX8Rq3co0cYnDUzRc12uZ42XWTCiv6OTW0xuncukQA0K6IM
-         Xkx1vjk/k6WmapIxK1wTjxFL1yP9UEWI9sCFv5JONptk2/ZTQua3Bbihntd6gOzDxtb/
-         Hji/DzfqdnYiehL32uqEDsLE2sofJjwiLZLiRdrbcS7bsFTugFPYAA49C8ISyLweEfeH
-         iBsAaKoNitlpG2UGmIm+Cgf8i/9qiaUeQ+jDlqcOAE8WypQTJk/QG6zj7Fz0mFJep8bC
-         dxlb8f1QONgfvyWkRmIuko/D0stHoPzc/TP2VxXDdE42sDAeaRPsdzQVHpYMtuHPQ/QC
-         MSnA==
-X-Gm-Message-State: AO0yUKXCGD98pPXBBm82uXp0U5tpjmPvlMPn463opSuzJSH7uotiST/L
-	4DN8Cht9/fO8lvlaSgP0jGhHsYfJF8j3ZMJWofI=
-X-Google-Smtp-Source: AK7set8sYvuy7Swp4ow4tiyiX80IrlkMkxfPBMo7vkP9t44dgWIjcaX3D9lMBrZqlgJspQF9whRYX1nMJFdMt/TWUR0=
-X-Received: by 2002:a19:f60e:0:b0:4b5:5f2d:1458 with SMTP id
- x14-20020a19f60e000000b004b55f2d1458mr1153724lfe.253.1675842187514; Tue, 07
- Feb 2023 23:43:07 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DCE9449
+	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 08:06:46 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.west.internal (Postfix) with ESMTP id 6A4903200564;
+	Wed,  8 Feb 2023 03:06:45 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 08 Feb 2023 03:06:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm3; t=1675843605; x=1675930005; bh=5yKWBSh3Gk
+	Z49uSSSGKd13vlZdjjf2xcz3rZbXFJUj8=; b=MLxSEVnKTtpNhJy4s4Z6SwWrLd
+	M2GPzQY2cs32HhsL1CI+Rn5MJ06oRCFyhJCyNSMCAlSQE+tBlVnHEhZFv9ka0Ra2
+	Cb8h+DBPRJ2jEv/s/OIt4cc0qBnw5RxgssRmX8Xr7Aa3MfbP5UWTShzt5yDdVyGk
+	nV3J6/5G+s9mwZM4CMNychTKVRL/6DOT4u0ar4RAEgKadOjsmQSQTgb1InzxTGcn
+	rt2MbIKglx8mGOR68IwVDo7cizMjN1kfTvqJYmKRL7uGAwruWYQbDFYk4EKShZ3+
+	iDQ/DbPZEnXWiPSkhNss+0rWcGoJ37AZ4xVNAaszz2FkjrF5p7vyiwUnsvzA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1675843605; x=1675930005; bh=5yKWBSh3GkZ49uSSSGKd13vlZdjj
+	f2xcz3rZbXFJUj8=; b=srC9EyasVIJ7OP17Anr255vbCOCPRXgQWeMzUk8cQZTe
+	dOT6bMhjai9QQh+CTNNSy6wonmO8Ev/2FOSe1vHGtIsOpAp/TVmL0xFBhIXR73UC
+	xid35edw4yQsWGvcCJB73qc+ZW8ZHK8/W2u1NjBuMW2g+NhjhEJJNSnIBxpqe7yn
+	saO6Y5pj0Rv9XTOmllbbpazat+MVgC1sYRUKCZRD5QWOxxTLkljjSvVzkwEBSXMr
+	vlTZv0hXW0Z+lY+g7pVEB28E8z1HwIhtneYqfOqS14QG4xC78fQpKCphmckpS7zk
+	QHOCQ2k8OIHEJXhR+N86gxsTff0Fiq++EjH+DxLaTg==
+X-ME-Sender: <xms:FFjjY8OXXGtsQlPP6VcBedQNALDfNLII1rOkydz8_ynK6NElYI9OHw>
+    <xme:FFjjYy_sfzAJOekqNoCJG3jrE2RI_1tsxqYMCcDwKK_VamigC8eH3rDnhDlZRcKXd
+    CnP5CIOtr_nNt03rqk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudegledguddufecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:FFjjYzQiXgkcywEFr_oGyEJImrPkHtkR1mUG7mEwrOjA8MViVVGYcQ>
+    <xmx:FFjjY0u0onS3WGMtCch8uPmZgWKmzhwQMflXhjcp4AV8ilOv9oqowg>
+    <xmx:FFjjY0fqqVJQ4kIlkYnzu-ukb1J_3vTcEE_jq29pA6zptZo-1FeChg>
+    <xmx:FVjjY5HjoFfswnTnnsrYAcnbRmt5HLUV1eDkz7CW1TdJwGoTOIh_gQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 80D4FB60086; Wed,  8 Feb 2023 03:06:44 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-156-g081acc5ed5-fm-20230206.001-g081acc5e
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <cover.1675734681.git.chenfeiyang@loongson.cn> <1af05c1441e9f96870be1cc20b1162e3f5043b2e.1675734681.git.chenfeiyang@loongson.cn>
- <1e7da4e7-392d-4a9e-aa95-0599a0c84419@app.fastmail.com> <CACWXhK==yVZGZbY+3DUAuxL34=gKwQv20Cw3y1+QKir0D2F3EQ@mail.gmail.com>
+Mime-Version: 1.0
+Message-Id: <7c98aac5-6b64-4f6b-b242-7ad3b8a334a8@app.fastmail.com>
+In-Reply-To: 
+ <CACWXhKn1N6f7XvtrbDno4UyAhMZbV_htQoRbm0ws9gjF08wnBw@mail.gmail.com>
+References: <cover.1675734681.git.chenfeiyang@loongson.cn>
+ <1af05c1441e9f96870be1cc20b1162e3f5043b2e.1675734681.git.chenfeiyang@loongson.cn>
+ <1e7da4e7-392d-4a9e-aa95-0599a0c84419@app.fastmail.com>
+ <CACWXhK==yVZGZbY+3DUAuxL34=gKwQv20Cw3y1+QKir0D2F3EQ@mail.gmail.com>
  <Y+MXk9A+gB1W6T/n@1wt.eu>
-In-Reply-To: <Y+MXk9A+gB1W6T/n@1wt.eu>
-From: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Date: Wed, 8 Feb 2023 15:42:56 +0800
-Message-ID: <CACWXhKn1N6f7XvtrbDno4UyAhMZbV_htQoRbm0ws9gjF08wnBw@mail.gmail.com>
+ <CACWXhKn1N6f7XvtrbDno4UyAhMZbV_htQoRbm0ws9gjF08wnBw@mail.gmail.com>
+Date: Wed, 08 Feb 2023 09:06:24 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "chris.chenfeiyang" <chris.chenfeiyang@gmail.com>,
+ "Willy Tarreau" <w@1wt.eu>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+ "Feiyang Chen" <chenfeiyang@loongson.cn>,
+ "Huacai Chen" <chenhuacai@kernel.org>,
+ "Jiaxun Yang" <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 1/3] nolibc: Add statx() support to implement sys_stat()
-To: Willy Tarreau <w@1wt.eu>
-Cc: Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Feiyang Chen <chenfeiyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Wed, 8 Feb 2023 at 11:31, Willy Tarreau <w@1wt.eu> wrote:
+On Wed, Feb 8, 2023, at 08:42, Feiyang Chen wrote:
+> On Wed, 8 Feb 2023 at 11:31, Willy Tarreau <w@1wt.eu> wrote:
+>>
+>> I generally agree with the Arnd's points overall and I'm fine with the
+>> rest of your series. On this specific point, I'm fine with your proposal,
+>> let's just start with sys_statx() only on this arch, please add a comment
+>> about this possibility in the commit message that brings statx(),
+>> indicating that other archs are likely to benefit from it as well, and
+>> let's see after this if we can migrate all archs to statx.
+>>
 >
-> Hi Feiyang,
->
-> Sorry for the delay.
->
-> On Wed, Feb 08, 2023 at 10:09:48AM +0800, Feiyang Chen wrote:
-> > On Tue, 7 Feb 2023 at 22:31, Arnd Bergmann <arnd@arndb.de> wrote:
-> (...)
-> > > Given that all architectures implement statx the same way, I wonder
-> > > if we can't just kill off the old function here and always use statx.
-> > >
-> > > That would also allow removing the architecture specific
-> > > sys_stat_struct definitions in all arch-*.h files.
-> > >
-> >
-> > Hi, Arnd,
-> >
-> > I'd really like to make all architectures use sys_statx() instead
-> > of sys_stat(). I just fear we might get dragged into a long discussion.
-> > Can I send a patch series to do this later?
->
-> I generally agree with the Arnd's points overall and I'm fine with the
-> rest of your series. On this specific point, I'm fine with your proposal,
-> let's just start with sys_statx() only on this arch, please add a comment
-> about this possibility in the commit message that brings statx(),
-> indicating that other archs are likely to benefit from it as well, and
-> let's see after this if we can migrate all archs to statx.
->
+> We have a problem if we just start with sys_statx() only on this arch.
+> When struct stat is not defined, what should we do with stat() in the
+> nolibc selftest?
 
-Hi, Arnd, Willy,
+To clarify: your proposed implementation of the stat() function that
+fills the nolibc 'struct stat' based on information from 'struct statx'
+is fine here. Just remove the 'struct sys_stat_struct' definition
+loongarch but keep 'struct stat'.
 
-We have a problem if we just start with sys_statx() only on this arch.
-When struct stat is not defined, what should we do with stat() in the
-nolibc selftest?
-
-> I'm having another comment below however:
->
-> > > > +struct statx_timestamp {
-> > > > +     __s64   tv_sec;
-> > > > +     __u32   tv_nsec;
-> > > > +     __s32   __reserved;
-> > > > +};
-> > > > +
-> > > > +struct statx {
-> > > > +     /* 0x00 */
-> > > > +     __u32   stx_mask;       /* What results were written [uncond] */
-> > > > +     __u32   stx_blksize;    /* Preferred general I/O size [uncond] */
-> > > > +     __u64   stx_attributes; /* Flags conveying information about the file
-> (...)
->
-> For all these types exposed to userland that you have to define, I'd
-> prefer if we would avoid using kernel-inherited types like __u32, __u64
-> etc given that all other archs for now only use regular types. It's not
-> critical at all but I'd prefer that we stay consistent between all archs.
-> Also, based on the comments on the fields it seems to me that this file
-> was just copy-pasted from some uapi header which is not under the same
-> license, so that's another reason for just defining what is needed here
-> if you need to define it here. And of course, if including linux/stat.h
-> also works, that's by far the preferred solution which will also save
-> us from having to maintain a copy!
->
-
-I try to include linux/stat.h and it works.
-
-Thanks,
-Feiyang
-
-> Thanks!
-> Willy
+     Arnd
