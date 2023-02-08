@@ -1,84 +1,106 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0427A643
-	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 06:40:10 +0000 (UTC)
-Received: by mail-lf1-f50.google.com with SMTP id bi36so25724377lfb.8
-        for <loongarch@lists.linux.dev>; Tue, 07 Feb 2023 22:40:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rioQaHBJKgU5h2wt1ICSVdRiaXNLiRM7oRrhkkGAa5c=;
-        b=isCFkc5u2uP2ClQCHSVxO+0KSCLP+cRrVZ52mMTmEbBq20Ijdy+nFlkUtWzi8WnCCT
-         m0PyotMq0LIE7d9S1ePfQpOzGMQhEBLiWu1NIyq+GdbVF2xXwO7FRWkJcbnIV8mE2EQ2
-         ebyK3MvjgII3onh9IHYOEUj4JBla6YzV3A/YB+P7bK6W2l5ar71HcPevB1NbAVlKvZCX
-         jfFvrFygrMqIbxwaJ6TnpeMgDJQrYxWwvrTdF/taQgwy74UqwOfW1dstAJJ02PsbqszU
-         tOMhn7vpAqrBvp5NKL0tM/MiqR0lKZYu7j6e0vrOBWbS76UlATnUw3DGi0p1QS5ZP01y
-         g0Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rioQaHBJKgU5h2wt1ICSVdRiaXNLiRM7oRrhkkGAa5c=;
-        b=W4RxcqGarZi8hkrE6b1bn7Nj2g2+Cm+HOOE02xVUQAo4+Ut6cVb2PVF4sDYXkk/uwL
-         lO1rf3gxLTKROzB472ylWFWgNf26+93ZjEPZFRQQvy+JgQOjWWSqB0A3ufYPAeYOeNG3
-         yuVZzMMkiPTO3Zd5Uf8XmdJduy7qoaItrmOzUPsimE1GPVluyeD2+lZIfPgnBjxmZKvL
-         86Gppy3cuN9X1drxVIf94QcoJt6xPDXoK0MIRpgKmFo1l6156a2roNZGfjjroMZc7saD
-         XlWD/tPWjIIms/6sudFKERHOgwWqDWBwKHkswmyKPMnRU1avuNcTQnUt3z4cEbDE1UUm
-         +X7g==
-X-Gm-Message-State: AO0yUKUuN2sruqTd1Gz1XQIz7XdtpAsgJR7/XnjND+/DiIwHrbdduXPs
-	xkAAgBM1nhAKFODbG2tspqoAEIqcbCbKaDxXe6Q=
-X-Google-Smtp-Source: AK7set/mqzkeoYr53Z7E6apC4zDRNLOyfSapa311XsyR+Gg5X+L4H2y1ooOKo08B740E4Ed6TWRdf9iF3s4MyaKiZgI=
-X-Received: by 2002:ac2:5504:0:b0:4d8:5895:a6fd with SMTP id
- j4-20020ac25504000000b004d85895a6fdmr727477lfk.273.1675838408910; Tue, 07 Feb
- 2023 22:40:08 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D993643
+	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 07:30:10 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.west.internal (Postfix) with ESMTP id 13406320051E;
+	Wed,  8 Feb 2023 02:30:09 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 08 Feb 2023 02:30:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm3; t=1675841408; x=1675927808; bh=HoqvZX70Yt
+	h8x4215VzvDeECL+DtSnZZQRsGLrfFrlU=; b=Op1Xtgv7aXeuYBfdV9tiN7eOcs
+	9e6Sr5zA0nbZWkaBdPvYrx1yrQvI5xEKrT8sD10LftZ0YNaNpy4tAHZUgu7uBb7Y
+	BxMV8XTYOJk4wzNt5/A/UT8yRdSi96H6LXhzJaVMQ3Wu9xfgkHYF109t8zIDFdCQ
+	7WS5T6Y1XQVjaY8j2YBsKnqhF6gvxrOnQwUwYZfgH/LlIaeVkD5G+zx6MWjEn1u1
+	PBtSxVYPpfV3UeyHS4bHK8Uf38zuJPHU7lvJ2wfPZ0uyhdhJQYohUA7lnPwUZeOj
+	z6yjzqziXKLzQrxaql8G1Yfkq7G08p4OyK5/PAH5ZGg0wtBG5zssAWEoDyuw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1675841408; x=1675927808; bh=HoqvZX70Yth8x4215VzvDeECL+Dt
+	SnZZQRsGLrfFrlU=; b=RrdZGDZbvT5ggMmVsTTAq6zgSJSAdli9PQ3y6s2XclQ+
+	+Dtyl6i6WXx8HtIGEOPzZTu5M0Jd/tzp19ErRy83VX6ywgMhz5iIRudHeFVX7kex
+	7012XlMQYs+6t5UbLhoTsmAocdn4Xc3vJemeBEumo0DFtNu1z133G8yGhdGRPZk5
+	iaJPPMLV95NkRiCZp10zbkGkWtzDuNvF/CWlS/tiguafXVLcD3KzIntFtWpAUUcK
+	yBNhG1FNs1UpF4HYgPHO5C3Wk1q95xRL2dNWeI+n2NR2IvRPYJWHGXJzXHTa7k+p
+	sS/IDZQe8ef6aIAqCPTT38CvOebrNQFgMwdmLwLPoQ==
+X-ME-Sender: <xms:f0_jY5PGmweNK-mQBRvDafGozsTFW6AtYWOFmoiX1PtzqXXduTEjFw>
+    <xme:f0_jY7-6NQMQBYvb3R0qL5Q8yaHvoT1OlLKsTK1iud-iJBXL6igCjLgeWX8-hzmwg
+    tQhoT7MWkV0IIeL6Ew>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudegledguddtiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:f0_jY4R1HGXemXEP35icekwxCeo_JoKLIqVBbS-4yltaQ_-P6eZuPQ>
+    <xmx:f0_jY1sNRrGzqmGn4O5BcZOv1Uwi63hwAx0hVHyAANEPArwlSvmiLw>
+    <xmx:f0_jYxc2--DWrQtbGU7IIJCdob83qv4AHpPzBiADaed1HzC9Ub29tQ>
+    <xmx:gE_jY6HvwaYVBtXnXc55zc9qj5NzRTWQJuQ48gICPppecV1cF2ijng>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id AE21DB60089; Wed,  8 Feb 2023 02:30:07 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-156-g081acc5ed5-fm-20230206.001-g081acc5e
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <cover.1675734681.git.chenfeiyang@loongson.cn> <2d77fe4e895847ae1ea09088dcfa411ce2f57f5f.1675734681.git.chenfeiyang@loongson.cn>
- <Y+Mc37ACt0PUBRAQ@1wt.eu> <20230208043440.GA3164268@paulmck-ThinkPad-P17-Gen-1>
-In-Reply-To: <20230208043440.GA3164268@paulmck-ThinkPad-P17-Gen-1>
-From: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Date: Wed, 8 Feb 2023 14:39:57 +0800
-Message-ID: <CACWXhK=Jk+FsJ50mc2KFkFYMb9P1BXGv1D4dR=_M1gymqREpiA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] selftests/nolibc: Add support for LoongArch
-To: paulmck@kernel.org
-Cc: Willy Tarreau <w@1wt.eu>, Feiyang Chen <chenfeiyang@loongson.cn>, chenhuacai@kernel.org, 
-	jiaxun.yang@flygoat.com, arnd@arndb.de, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Message-Id: <17740a63-624f-47da-a701-dd218f95f9da@app.fastmail.com>
+In-Reply-To: <Y+MXk9A+gB1W6T/n@1wt.eu>
+References: <cover.1675734681.git.chenfeiyang@loongson.cn>
+ <1af05c1441e9f96870be1cc20b1162e3f5043b2e.1675734681.git.chenfeiyang@loongson.cn>
+ <1e7da4e7-392d-4a9e-aa95-0599a0c84419@app.fastmail.com>
+ <CACWXhK==yVZGZbY+3DUAuxL34=gKwQv20Cw3y1+QKir0D2F3EQ@mail.gmail.com>
+ <Y+MXk9A+gB1W6T/n@1wt.eu>
+Date: Wed, 08 Feb 2023 08:29:47 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Willy Tarreau" <w@1wt.eu>,
+ "chris.chenfeiyang" <chris.chenfeiyang@gmail.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+ "Feiyang Chen" <chenfeiyang@loongson.cn>,
+ "Huacai Chen" <chenhuacai@kernel.org>,
+ "Jiaxun Yang" <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] nolibc: Add statx() support to implement sys_stat()
+Content-Type: text/plain
 
-On Wed, 8 Feb 2023 at 12:34, Paul E. McKenney <paulmck@kernel.org> wrote:
+On Wed, Feb 8, 2023, at 04:31, Willy Tarreau wrote:
+> On Wed, Feb 08, 2023 at 10:09:48AM +0800, Feiyang Chen wrote:
+>> On Tue, 7 Feb 2023 at 22:31, Arnd Bergmann <arnd@arndb.de> wrote:
+> (...)
+>> > Given that all architectures implement statx the same way, I wonder
+>> > if we can't just kill off the old function here and always use statx.
+>> >
+>> > That would also allow removing the architecture specific
+>> > sys_stat_struct definitions in all arch-*.h files.
+>> >
+>> 
+>> Hi, Arnd,
+>> 
+>> I'd really like to make all architectures use sys_statx() instead
+>> of sys_stat(). I just fear we might get dragged into a long discussion.
+>> Can I send a patch series to do this later?
 >
-> On Wed, Feb 08, 2023 at 04:54:07AM +0100, Willy Tarreau wrote:
-> > On Tue, Feb 07, 2023 at 10:09:42AM +0800, chris.chenfeiyang@gmail.com wrote:
-> > > From: Feiyang Chen <chenfeiyang@loongson.cn>
-> > >
-> > > Add support for LoongArch (64 bit) to nolibc selftest.
-> >
-> > Please also mention in this one that the makefile was reindented with
-> > no other change than adding entries for loongarch, this will save
-> > those reading this patch later from checking that the rest was not
-> > changed.
->
-> I like Willy's suggestion, but even better would be to put the whitespace
-> changes into one commit, and the code changes into another commit.
-> This makes it a lot easier for reviewers and future nolibc developers
-> to quickly and easily see exactly what changed.
->
+> I generally agree with the Arnd's points overall and I'm fine with the
+> rest of your series. On this specific point, I'm fine with your proposal,
+> let's just start with sys_statx() only on this arch, please add a comment
+> about this possibility in the commit message that brings statx(),
+> indicating that other archs are likely to benefit from it as well, and
+> let's see after this if we can migrate all archs to statx.
 
-Hi, Willy, Paul,
+Ok, makes sense. Just change the description then to note that this
+will also fix riscv32 (which has only statx) as well as arc, hexagon,
+nios2 and openrisc (which have statx and stat64 but not stat or newstat).
 
-I get it now, thank you.
-
-> And one of those future nolibc maintainers just might be you!  ;-)
->
->                                                         Thanx, Paul
-
-Thanks,
-Feiyang
+   Arnd
