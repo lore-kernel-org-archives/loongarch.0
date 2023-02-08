@@ -1,43 +1,43 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D292113
-	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 10:18:10 +0000 (UTC)
-Received: by mail-pl1-f175.google.com with SMTP id g17so1225748ply.11
-        for <loongarch@lists.linux.dev>; Wed, 08 Feb 2023 02:18:10 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851272113
+	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 10:18:15 +0000 (UTC)
+Received: by mail-pl1-f178.google.com with SMTP id r8so18742411pls.2
+        for <loongarch@lists.linux.dev>; Wed, 08 Feb 2023 02:18:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YFDa6RzFjbYJQKnaADEQ469/RoyljuIaxBNPhmYoeo0=;
-        b=j8s42LpmW6Y2jpUh2/r/k420Dqx2Nj/DoQrajguzkxbPLNszzOy+J7zKfE+kAyeMMp
-         PLJoSocqe/R/SI98XlpLBbbaF1A/1XGVCWnuP5e/k9jTNDxscp/ksIl0H8BwQl5Nxk1A
-         g6qid9M60K8mNPYoqZmiFc9uAZFCJnxqksJM8rOCeKERTLgB8qvDO0U5F/llDF1lKew9
-         MfDXFn7hcA1gdLNJz/plwyySU98VmpDC67pv4tEVkpa/war5rLiK77ydKPeYt2I+HyWq
-         m71Ubk3u1uPECcqero5CwYuR72LNVM8mFHuIwOVnz2ENLwCHkUa5Ao3sTQLk9XJwa+sn
-         zL+w==
+        bh=eGdDoS4Ih3Tm5U0bLO+WZaZect02AOAohgwE+xzoAvA=;
+        b=Ngk24v3RNJEahx30zOXr7umBMNpg//DjSZ/beFNtkh/DKk+gKdJ6boLUFVFRAPRVvt
+         Pal3vXCSrjF2fwh9HTV6wTr1au9tiUzGIGOWrAy4TXmnPOnOFbiW+qQkfirLAHi/+UCu
+         r99MxqOZMe9PIzpw9tjmH5Yi3Cgh7SWmQeqW+8PvmqR/spkGeTlBbDdsV2Jfh6wntVP7
+         2iR1EMDwfXZPApUyEpkFl259XlrJSx6cuTIil70oKxBgKNxPhkvAzoKFsUysgCRHB32v
+         ajLTXhS90uNmZSJ32cDYhSae6aJhGIKOLbNxv/uHOMPHWFJ/530L2NKi8ZmESoHj+Qa6
+         g8qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YFDa6RzFjbYJQKnaADEQ469/RoyljuIaxBNPhmYoeo0=;
-        b=YgCVViUDMkb2QRMFrxPNKL1rAtnSuJUuQ1zsHswzYCdau0OF1pd1U/d9Man+YZntds
-         v5FMHOsVhXciyhkZNGQlZV0qM7rnxAVvntrcQ1HVgJuXzsG6Wq2yMPUX6bFxORAJ6+t9
-         +M+s0/xHDAbAGy/NaaXOxFvLqeJkhhTp/FeKs4qPpLW2p9oiuu7YEXOOPylZGx2ZKft1
-         XSgKeyI+flx13+OkXRh9nSCSCw2HGPpIcF4V+EutxoDgK3j/RJyhOTbap2ALhey7J8IE
-         9AG95gLt1vPwEjE3ZTEE9OdOMks5wlUbH/sLrgNZ4oJ7vI9knLmH9u/m1XSoUZunrvgj
-         lmEg==
-X-Gm-Message-State: AO0yUKU1+H+gyZkP6xRv1klchRacclV628eiR4yNWOaMTXKvywewtemL
-	wHXlcU6559awotGWceGJi9Q=
-X-Google-Smtp-Source: AK7set9/EE2raGMoytste5SzOwD31oKFjlIJABzy3vfltf46sSpJUgS0bi1S35nFZu7qy7+P+NcL4Q==
-X-Received: by 2002:a17:902:e844:b0:196:8dce:82eb with SMTP id t4-20020a170902e84400b001968dce82ebmr7551286plg.66.1675851490266;
-        Wed, 08 Feb 2023 02:18:10 -0800 (PST)
+        bh=eGdDoS4Ih3Tm5U0bLO+WZaZect02AOAohgwE+xzoAvA=;
+        b=DkGAcoEe/lhsDmprWWgE8Sr0v0wrif3gaTZ8Q7yzAwnl8yrJOI03KiAj7H7b2Ir5v2
+         LRo/Wz+bD8APKl1uZg4nypkhoPF80zbyjGJj4KzIVrQRSqUcvXWKRCxAMkM5A2OpSU8u
+         YlHRktDVUtnclSBeanWvaH7ZavZG7IsNKRLBjiJ5CjHWUI0W2ONIE4jvj+YKWyr/t1LI
+         Eac5RCkQ9aAUFmyRHH6KZNNNErdZrVLL4dd7tf+XesZmoilSd0w2662TQxr8Lg2ohVar
+         VjUnAvDzAfQlvt3WbGAVV30Skk49Y/qv/lTfBOU7oL2++pDd9lF+CkqRJ69RSRDciuwB
+         I0AA==
+X-Gm-Message-State: AO0yUKXBEVAJtRd9O7iA9N0pihohK0NwWLloUPR2MCTCXb7VAmxOyckL
+	BMFZ+OIAbhRxBVBetkCbGkc=
+X-Google-Smtp-Source: AK7set8V1QYaE1EGsxPbUb15bdPNIpk58Ue4idMWqEVdiQYiu7RIS9PstAklRxujvuG9ODvWYrXb3Q==
+X-Received: by 2002:a17:902:ec92:b0:199:527d:42c3 with SMTP id x18-20020a170902ec9200b00199527d42c3mr87899plg.24.1675851495012;
+        Wed, 08 Feb 2023 02:18:15 -0800 (PST)
 Received: from localhost.localdomain ([112.20.108.204])
-        by smtp.gmail.com with ESMTPSA id v23-20020a1709028d9700b0019926c7757asm3991058plo.289.2023.02.08.02.18.05
+        by smtp.gmail.com with ESMTPSA id v23-20020a1709028d9700b0019926c7757asm3991058plo.289.2023.02.08.02.18.10
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 08 Feb 2023 02:18:09 -0800 (PST)
+        Wed, 08 Feb 2023 02:18:14 -0800 (PST)
 From: chris.chenfeiyang@gmail.com
 X-Google-Original-From: chenfeiyang@loongson.cn
 To: w@1wt.eu,
@@ -49,9 +49,9 @@ Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
 	chris.chenfeiyang@gmail.com,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] tools/nolibc: Include linux/fcntl.h and remove duplicate code
-Date: Wed,  8 Feb 2023 18:17:50 +0800
-Message-Id: <cf503323a85a90dcc8040a1b07a6448b97cf6b5c.1675851111.git.chenfeiyang@loongson.cn>
+Subject: [PATCH v2 2/5] tools/nolibc: Add statx() and make stat() rely on statx() when available
+Date: Wed,  8 Feb 2023 18:17:51 +0800
+Message-Id: <b9bbf73286238bb4657d855c9d50983aa17953e2.1675851111.git.chenfeiyang@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <cover.1675851111.git.chenfeiyang@loongson.cn>
 References: <cover.1675851111.git.chenfeiyang@loongson.cn>
@@ -65,51 +65,97 @@ Content-Transfer-Encoding: 8bit
 
 From: Feiyang Chen <chenfeiyang@loongson.cn>
 
-Include linux/fcntl.h for O_* and AT_*. asm/fcntl.h is included
-by linux/fcntl.h, so it can be safely removed.
+loongarch and riscv32 only have statx(). arc, hexagon, nios2 and
+openrisc have statx() and stat64() but not stat() or newstat().
+Add statx() and make stat() rely on statx() to make them happy.
 
 Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
 ---
- tools/include/nolibc/sys.h   | 2 +-
- tools/include/nolibc/types.h | 5 -----
- 2 files changed, 1 insertion(+), 6 deletions(-)
+ tools/include/nolibc/sys.h | 51 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
 diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-index b5f8cd35c03b..c4818a9c8823 100644
+index c4818a9c8823..46b6b3bb3b4e 100644
 --- a/tools/include/nolibc/sys.h
 +++ b/tools/include/nolibc/sys.h
-@@ -11,7 +11,6 @@
- #include "std.h"
- 
- /* system includes */
--#include <asm/fcntl.h>   // for O_*
- #include <asm/unistd.h>
- #include <asm/signal.h>  // for SIGCHLD
- #include <asm/ioctls.h>
-@@ -20,6 +19,7 @@
- #include <linux/loop.h>
+@@ -20,6 +20,7 @@
  #include <linux/time.h>
  #include <linux/auxvec.h>
-+#include <linux/fcntl.h> // for O_* and AT_*
+ #include <linux/fcntl.h> // for O_* and AT_*
++#include <linux/stat.h>  // for statx()
  
  #include "arch.h"
  #include "errno.h"
-diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
-index fbbc0e68c001..a3651c514e2f 100644
---- a/tools/include/nolibc/types.h
-+++ b/tools/include/nolibc/types.h
-@@ -60,11 +60,6 @@
- #define MAXPATHLEN     (PATH_MAX)
- #endif
+@@ -1048,12 +1049,61 @@ pid_t setsid(void)
+ 	return ret;
+ }
  
--/* Special FD used by all the *at functions */
--#ifndef AT_FDCWD
--#define AT_FDCWD       (-100)
--#endif
--
- /* whence values for lseek() */
- #define SEEK_SET       0
- #define SEEK_CUR       1
++/*
++ * int statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf);
++ */
++
++static __attribute__((unused))
++int sys_statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf)
++{
++	return my_syscall5(__NR_statx, fd, path, flags, mask, buf);
++}
++
++static __attribute__((unused))
++int statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf)
++{
++	int ret = sys_statx(fd, path, flags, mask, buf);
++
++	if (ret < 0) {
++		SET_ERRNO(-ret);
++		ret = -1;
++	}
++	return ret;
++}
+ 
+ /*
+  * int stat(const char *path, struct stat *buf);
+  * Warning: the struct stat's layout is arch-dependent.
+  */
+ 
++#ifdef __NR_statx
++static __attribute__((unused))
++int sys_stat(const char *path, struct stat *buf)
++{
++	struct statx stat;
++	long ret;
++
++	ret = sys_statx(AT_FDCWD, path, AT_NO_AUTOMOUNT, STATX_BASIC_STATS, &stat);
++	buf->st_dev     = ((stat.stx_dev_minor & 0xff)
++			  | (stat.stx_dev_major << 8)
++			  | ((stat.stx_dev_minor & ~0xff) << 12));
++	buf->st_ino     = stat.stx_ino;
++	buf->st_mode    = stat.stx_mode;
++	buf->st_nlink   = stat.stx_nlink;
++	buf->st_uid     = stat.stx_uid;
++	buf->st_gid     = stat.stx_gid;
++	buf->st_rdev    = ((stat.stx_rdev_minor & 0xff)
++			  | (stat.stx_rdev_major << 8)
++			  | ((stat.stx_rdev_minor & ~0xff) << 12));
++	buf->st_size    = stat.stx_size;
++	buf->st_blksize = stat.stx_blksize;
++	buf->st_blocks  = stat.stx_blocks;
++	buf->st_atime   = stat.stx_atime.tv_sec;
++	buf->st_mtime   = stat.stx_mtime.tv_sec;
++	buf->st_ctime   = stat.stx_ctime.tv_sec;
++	return ret;
++}
++#else
+ static __attribute__((unused))
+ int sys_stat(const char *path, struct stat *buf)
+ {
+@@ -1083,6 +1133,7 @@ int sys_stat(const char *path, struct stat *buf)
+ 	buf->st_ctime   = stat.st_ctime;
+ 	return ret;
+ }
++#endif /* __NR_statx */
+ 
+ static __attribute__((unused))
+ int stat(const char *path, struct stat *buf)
 -- 
 2.39.0
 
