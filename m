@@ -1,91 +1,188 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BC320F7
-	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 08:27:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1675844855;
-	bh=+2J469dohyjlak5iPQx/w6sbyFoadZoRv4g88y0JLtU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=NfoA4oqLm7u/obUTCasF6heQxMdccUAAggvyoTcNpCEA9dpkhxCZuwbF5Z11NvoGO
-	 eg0BOhj8+XHkE4sg7jqprxkaq/inLgghXjLkCy41QdnhK73C86yhUFR0rCrv6vJHFn
-	 smzcs/Cu13P3huiqLqaRY+PQAWkcki7sA72igqag=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 556EA667AF;
-	Wed,  8 Feb 2023 03:27:34 -0500 (EST)
-Message-ID: <87b9f23ba8b123a765c4139c2112aa365546c1e5.camel@xry111.site>
-Subject: Re: [PATCH v2 0/5] LoongArch: Add kernel relocation and KASLR
- support
-From: Xi Ruoyao <xry111@xry111.site>
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-  Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Date: Wed, 08 Feb 2023 16:27:31 +0800
-In-Reply-To: <70278d23-aa0e-19d9-796f-78c0fd06fee0@loongson.cn>
-References: <20230207142822.52172-1-xry111@xry111.site>
-	 <70278d23-aa0e-19d9-796f-78c0fd06fee0@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E64625;
+	Wed,  8 Feb 2023 08:40:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79529C433D2;
+	Wed,  8 Feb 2023 08:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1675845614;
+	bh=adWnpp1g9RFqPwQqHmQOvEb/SGvHh6YP0oNFIBMWN5Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iW9MSmpK9cnLE/S4Oe4ja1Gv4lyUkFg5DM+mnVIWe5ssivwI7nGiTYym/18HTYKxV
+	 99cd+PNPxkugWHgVsXjRh0QoiuylkSTsQmFcpcse2GeIgDXf/BDkU3msTm4tzlqNZc
+	 JyBo+qEmxglrRYYxIY1uc+ciYNo8eBRzV1rwKnTdgznolowEmR+D0226ANjJBROhU7
+	 /da85/eUXgBJTJF+4RmqUQs1DKIdeb8p4rYG3jDDxnnt+EohAqdt8sOD4b4/djnppA
+	 X8DrOqxWL8UgGEMbCbY4IhDVQ1eL02nlb6gVN16lwQJT4AxQPFf2i9VdxZMFBFy0ul
+	 nELH+UI9hsu6w==
+Received: from 82-132-235-19.dab.02.net ([82.132.235.19] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1pPfzv-008b9y-Ss;
+	Wed, 08 Feb 2023 08:40:12 +0000
+Date: Wed, 08 Feb 2023 08:40:09 +0000
+Message-ID: <878rh81rfa.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: James Morse <james.morse@arm.com>
+Cc: linux-pm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-ia64@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Len Brown <lenb@kernel.org>,
+	Rafael Wysocki <rafael@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: Re: [RFC PATCH 29/32] KVM: arm64: Pass hypercalls to userspace
+In-Reply-To: <7462738f-e837-cd99-f441-8e7c29d250cd@arm.com>
+References: <20230203135043.409192-1-james.morse@arm.com>
+	<20230203135043.409192-30-james.morse@arm.com>
+	<865ycg1kv2.wl-maz@kernel.org>
+	<7462738f-e837-cd99-f441-8e7c29d250cd@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 82.132.235.19
+X-SA-Exim-Rcpt-To: james.morse@arm.com, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, x86@kernel.org, tglx@linutronix.de, lpieralisi@kernel.org, mark.rutland@arm.com, sudeep.holla@arm.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, mingo@redhat.com, will@kernel.org, catalin.marinas@arm.com, chenhuacai@kernel.org, suzuki.poulose@arm.com, oliver.upton@linux.dev, lenb@kernel.org, rafael@kernel.org, kernel@xen0n.name, salil.mehta@huawei.com, linux@armlinux.org.uk, jean-philippe@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, 2023-02-08 at 12:37 +0800, Youling Tang wrote:
-> In the case of "[Patch v2 2/5] LoongArch: use la.pcrel instenad of
-> la.abs for exception handlerS", the above failure will occur.
->=20
-> Patch2 may have certain problems when using the old toolchains.
->=20
-> Youling.
+On Tue, 07 Feb 2023 17:50:58 +0000,
+James Morse <james.morse@arm.com> wrote:
+> 
+> Hi Marc,
+> 
+> On 05/02/2023 10:12, Marc Zyngier wrote:
+> > On Fri, 03 Feb 2023 13:50:40 +0000,
+> > James Morse <james.morse@arm.com> wrote:
+> >>
+> >> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> >>
+> >> When capability KVM_CAP_ARM_HVC_TO_USER is available, userspace can
+> >> request to handle all hypercalls that aren't handled by KVM. With the
+> >> help of another capability, this will allow userspace to handle PSCI
+> >> calls.
+> 
+> > On top of Oliver's ask not to make this a blanket "steal everything",
+> > but instead to have an actual request for ranges of forwarded
+> > hypercalls:
+> > 
+> >> Notes on this implementation:
+> >>
+> >> * A similar mechanism was proposed for SDEI some time ago [1]. This RFC
+> >>   generalizes the idea to all hypercalls, since that was suggested on
+> >>   the list [2, 3].
+> >>
+> >> * We're reusing kvm_run.hypercall. I copied x0-x5 into
+> >>   kvm_run.hypercall.args[] to help userspace but I'm tempted to remove
+> >>   this, because:
+> >>   - Most user handlers will need to write results back into the
+> >>     registers (x0-x3 for SMCCC), so if we keep this shortcut we should
+> >>     go all the way and read them back on return to kernel.
+> >>   - QEMU doesn't care about this shortcut, it pulls all vcpu regs before
+> >>     handling the call.
+> >>   - SMCCC uses x0-x16 for parameters.
+> >>   x0 does contain the SMCCC function ID and may be useful for fast
+> >>   dispatch, we could keep that plus the immediate number.
+> >>
+> >> * Add a flag in the kvm_run.hypercall telling whether this is HVC or
+> >>   SMC?  Can be added later in those bottom longmode and pad fields.
+> 
+> > We definitely need this. A nested hypervisor can (and does) use SMCs
+> > as the conduit.
+> 
+> Christoffer's comments last time round on this was that EL2 guests
+> get SMC with this, and EL1 guests get HVC. The VMM could never get
+> both...
 
-Thanks for the test...
+I agree with the first half of the statement (EL2 guest using SMC),
+but limiting EL1 guests to HVC is annoying. On systems that have a
+secure side, it would make sense to be able to route the guest's SMC
+calls to userspace and allow it to emulate/proxy/deny such calls.
 
-The problem is: old toolchain uses pcaddu12i/ori/lu32i.d/lu52i.d/add.d
-for a 3-operand la.pcrel, while the new toolchain uses
-pcalau12i/addi.d/lu32i/lu52i/add.d.  (I've somehow forgotten all the
-difference!)
+This would solve the 10 year old question of "how do we allow a guest
+to call into secure services...
 
-We can fix it with something like...
+> 
+> 
+> > The question is whether they represent two distinct
+> > namespaces or not. I *think* we can unify them, but someone should
+> > check and maybe get clarification from the owners of the SMCCC spec.
+> 
+> i.e. the VMM requests 0xC400_0000:0xC400_001F regardless of SMC/HVC?
+> 
+> I don't yet see how a VMM could get HVC out of a virtual-EL2 guest....
 
-> +void reloc_handler(unsigned long handler, struct handler_reloc *rel)
-> +{
-> +	if (!rel)
-> +		return;
-> +
-> +	for (unsigned long i =3D 0; i < rel->cnt; i++) {
-> +		unsigned long pc =3D handler + rel->entries[i].offset;
-> +		unsigned long v =3D rel->entries[i].sym;
+My statement was badly formulated, and I conflated the need for SMC in
+EL2 guests with the (separate) need to handle SMC for EL1 guests.
 
-                /* anchor etc. moved into do_reloc_pcalau12i */
+>
+> 
+> >> * On top of this we could share with userspace which HVC ranges are
+> >>   available and which ones are handled by KVM. That can actually be added
+> >>   independently, through a vCPU/VM device attribute which doesn't consume
+> >>   a new ioctl:
+> >>   - userspace issues HAS_ATTR ioctl on the vcpu fd to query whether this
+> >>     feature is available.
+> >>   - userspace queries the number N of HVC ranges using one GET_ATTR.
+> >>   - userspace passes an array of N ranges using another GET_ATTR. The
+> >>     array is filled and returned by KVM.
+> 
+> > As mentioned above, I think this interface should go both ways.
+> > Userspace should request the forwarding of a certain range of
+> > hypercalls via a similar SET_ATTR interface.
+> 
+> Yup, I'll sync up with Oliver about that.
+> 
+> 
+> > Another question is how we migrate VMs that have these forwarding
+> > requirements. Do we expect the VMM to replay the forwarding as part of
+> > the setting up on the other side? Or do we save/restore this via a
+> > firmware pseudo-register?
+> 
+> Pfff. VMMs problem. Enabling these things means it has its own
+> internal state to migrate.  (is this vCPU on or off?), I doubt it
+> needs reminding that the state exists.
 
-> +		union loongarch_instruction *insn =3D
-> +			(union loongarch_instruction *)pc;
+I'm perfectly OK with the VMM being in the driving seat here and that
+it'd have to replay its own state. But it needs some level of
+documentation.
 
-                switch insn[0]->reg1i20_format->reg1i20_format {
-                case pcaddu12i_op:
-                        do_reloc_pcaddu12i(insn, pc, v);
-                        break;
-                case pcalau12i_op: /* TODO: add it for asm/inst.h */
-                        do_reloc_pcalau12i(insn, pc, v);
-                        break;
-                default:
-                        panic("what the f**k");
-                }
+> That said, Salil is looking at making this work with migration in Qemu.
 
-Alternatively, we can also emit the pcalau12i/addi.d/lu32i/lu52i
-sequence and overwrite the pcaddu12i/ori sequence generated by the old
-toolchain.
+Yup, that'd be needed.
 
-Which way do you like?
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
