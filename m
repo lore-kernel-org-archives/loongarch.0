@@ -1,145 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A879028E3;
-	Wed,  8 Feb 2023 14:25:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5819EC433EF;
-	Wed,  8 Feb 2023 14:25:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A62833C9
+	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 16:39:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C217C433EF;
+	Wed,  8 Feb 2023 16:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675866341;
-	bh=t5jw1fCX4NoFeI2EPmYRhXOtkcVOIpQY0b9/jl5R8zA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QgNyeqlpCi/SBDeCi1TjNEdCqZoJFbgr2WJlBzhmFCZPBDl+FvwZLFuUoEtRHiVbv
-	 uS4uK4r0XCkRineIPNNP9oNxBtbjMeBbnPgCgvwNC+24iI018JePzQOYQtTUyIy/Mp
-	 /qg/12O4pWuU4Ph2uCYFfSRaCoExuPkTdS6885J4+z8cV91aO0N0MHwBMlJryvG9OZ
-	 X0le3Z/bcdQT3Q9bcuXnQc0LtSfZRuA6mh3CZD/9kvJpn4wp9UOAU86Mdp+1pChhIx
-	 M/bUit0KIlLfw8FTXVwGO//F6H/bwcRj6WGI2Aj+ovZgdrJEnNUillAjBfdPPc/tmo
-	 KNXBaoR+knFdw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1pPlOF-008gAy-0C;
-	Wed, 08 Feb 2023 14:25:39 +0000
-Date: Wed, 08 Feb 2023 14:25:38 +0000
-Message-ID: <86h6vwz125.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: James Morse <james.morse@arm.com>
-Cc: linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-ia64@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Len Brown <lenb@kernel.org>,
-	Rafael Wysocki <rafael@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: Re: [RFC PATCH 29/32] KVM: arm64: Pass hypercalls to userspace
-In-Reply-To: <878rh81rfa.wl-maz@kernel.org>
-References: <20230203135043.409192-1-james.morse@arm.com>
-	<20230203135043.409192-30-james.morse@arm.com>
-	<865ycg1kv2.wl-maz@kernel.org>
-	<7462738f-e837-cd99-f441-8e7c29d250cd@arm.com>
-	<878rh81rfa.wl-maz@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1675874394;
+	bh=k2WDmJefTVbmF4UtYjVTRVt38vEfq5VHOD9s78R7eyg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rm1BIDwVjM+vtyitHjo1e7C/8O3osDSw3ddUWkl4Wx2bC5t9PAYPPNOMyPOnhDGBE
+	 x0/ntl8Z+mYIwUFJ4SJYgRaphWg6Yt4w739Gu/lXfntdZ6JeZX0Y+rfAbGvNs2ZHt8
+	 st0eJcGbt8o4IXvW5Pd80HgnuHqj+dz7ZtRrgPBzs0UpJBQvPfkACmHMCJmVksp2u1
+	 7j+OBIBzFLzMDdGcGKQCjlEbr0xBVw1CpjWop+Te/iJBfsS4i7ncKglT5iTBbI8VBo
+	 HOM9qBR39AlYqQf2ZmUflFWYvSQAKch5roLODmzzrvB8D8QMKelVKI/xJc21XFfhdD
+	 dus+tchf6H0SA==
+Date: Wed, 8 Feb 2023 16:39:44 +0000
+From: Mark Brown <broonie@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>, John Hubbard <jhubbard@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Mike Rapoport <rppt@linux.ibm.com>, Yang Shi <shy828301@gmail.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Nadav Amit <namit@vmware.com>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, x86@kernel.org,
+	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+	Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH mm-unstable v1 04/26] arm/mm: support
+ __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+Message-ID: <Y+PQUMwH4AZSVpjb@sirena.org.uk>
+References: <20230113171026.582290-1-david@redhat.com>
+ <20230113171026.582290-5-david@redhat.com>
+ <Y+GcDFMNHw2cdDN1@sirena.org.uk>
+ <39fd91e3-c93b-23c6-afc6-cbe473bb0ca9@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: james.morse@arm.com, linux-pm@vger.kernel.org, loongarch@lists.linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, x86@kernel.org, tglx@linutronix.de, lpieralisi@kernel.org, mark.rutland@arm.com, sudeep.holla@arm.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, mingo@redhat.com, will@kernel.org, catalin.marinas@arm.com, chenhuacai@kernel.org, suzuki.poulose@arm.com, oliver.upton@linux.dev, lenb@kernel.org, rafael@kernel.org, kernel@xen0n.name, salil.mehta@huawei.com, linux@armlinux.org.uk, jean-philippe@linaro.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="W0tQR/5xWRekS1hu"
+Content-Disposition: inline
+In-Reply-To: <39fd91e3-c93b-23c6-afc6-cbe473bb0ca9@redhat.com>
+X-Cookie: Walk softly and carry a megawatt laser.
 
-On Wed, 08 Feb 2023 08:40:09 +0000,
-Marc Zyngier <maz@kernel.org> wrote:
-> 
-> On Tue, 07 Feb 2023 17:50:58 +0000,
-> James Morse <james.morse@arm.com> wrote:
-> > 
-> > Hi Marc,
-> > 
-> > On 05/02/2023 10:12, Marc Zyngier wrote:
-> > > On Fri, 03 Feb 2023 13:50:40 +0000,
-> > > James Morse <james.morse@arm.com> wrote:
-> > >>
-> > >> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > >>
-> > >> When capability KVM_CAP_ARM_HVC_TO_USER is available, userspace can
-> > >> request to handle all hypercalls that aren't handled by KVM. With the
-> > >> help of another capability, this will allow userspace to handle PSCI
-> > >> calls.
-> > 
-> > > On top of Oliver's ask not to make this a blanket "steal everything",
-> > > but instead to have an actual request for ranges of forwarded
-> > > hypercalls:
-> > > 
-> > >> Notes on this implementation:
-> > >>
-> > >> * A similar mechanism was proposed for SDEI some time ago [1]. This RFC
-> > >>   generalizes the idea to all hypercalls, since that was suggested on
-> > >>   the list [2, 3].
-> > >>
-> > >> * We're reusing kvm_run.hypercall. I copied x0-x5 into
-> > >>   kvm_run.hypercall.args[] to help userspace but I'm tempted to remove
-> > >>   this, because:
-> > >>   - Most user handlers will need to write results back into the
-> > >>     registers (x0-x3 for SMCCC), so if we keep this shortcut we should
-> > >>     go all the way and read them back on return to kernel.
-> > >>   - QEMU doesn't care about this shortcut, it pulls all vcpu regs before
-> > >>     handling the call.
-> > >>   - SMCCC uses x0-x16 for parameters.
-> > >>   x0 does contain the SMCCC function ID and may be useful for fast
-> > >>   dispatch, we could keep that plus the immediate number.
-> > >>
-> > >> * Add a flag in the kvm_run.hypercall telling whether this is HVC or
-> > >>   SMC?  Can be added later in those bottom longmode and pad fields.
-> > 
-> > > We definitely need this. A nested hypervisor can (and does) use SMCs
-> > > as the conduit.
-> > 
-> > Christoffer's comments last time round on this was that EL2 guests
-> > get SMC with this, and EL1 guests get HVC. The VMM could never get
-> > both...
-> 
-> I agree with the first half of the statement (EL2 guest using SMC),
-> but limiting EL1 guests to HVC is annoying. On systems that have a
-> secure side, it would make sense to be able to route the guest's SMC
-> calls to userspace and allow it to emulate/proxy/deny such calls.
 
-You also want to look at the TRNG firmware spec (aka DEN0098), which
-explicitly calls out for the use of SMC when EL2 and EL3 are
-implemented (see 1.5 "Invocation considerations").
+--W0tQR/5xWRekS1hu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Is it mad? Yes. But madness seems to be the direction of travel these
-days.
+On Wed, Feb 08, 2023 at 03:12:06PM +0100, David Hildenbrand wrote:
+> On 07.02.23 01:32, Mark Brown wrote:
 
-	M.
+> > Today's -next (and at least back to Friday, older logs are unclear - I
+> > only noticed -next issues today) fails to NFS boot on an AT91SAM9G20-EK
+> > (an old ARMv5 platform) with multi_v5_defconfig, a bisect appears to
+> > point to this patch (20aae9eff5acd8f5 in today's -next) as the culprit.
 
--- 
-Without deviation from the norm, progress is not possible.
+> It's been in -next for quite a while, thanks for the report!
+
+Yeah, there's been some other things obscuring the issue.
+
+> Could you give the following a test?
+>=20
+>=20
+> From 8c4bdbd9862f85782d5919d044c172b584063e83 Mon Sep 17 00:00:00 2001
+> From: David Hildenbrand <david@redhat.com>
+> Date: Wed, 8 Feb 2023 15:08:01 +0100
+> Subject: [PATCH] arm/mm: Fix swp type masking in __swp_entry()
+>=20
+> We're masking with the number of type bits instead of the type mask, which
+> is obviously wrong.
+
+Tested-by: Mark Brown <broonie@kernel.org>
+
+but note that I had to manually apply it, though it's pretty trivial so
+I probably applied the right thing.
+
+--W0tQR/5xWRekS1hu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmPj0FAACgkQJNaLcl1U
+h9C7hQf/VKRwP16M1jInUqUdUtyzPdvalnHTpasxKVZ8Sy0U3jwXMqNUqmnpEOSO
+UB3Q8audVEzRc8pj92dk3jilZBDPHyP58UUKRsjkrZVz22Q2/R16FcjaLrdlwNlj
+GWMfEWv5OKYPHaxP4W/VX0sXzS0XMTuulvAF1BOQRlOAS3L3jYsYUtzI2pkzJm1G
+64ICND0ZQRerzQmdQd6oO2tVhymhv8Y1LPY4TT0HikINGVpwwCJoOiocmstgqqGW
+uE+M+XJ9Lp/p78SIjfccjF1rdCWlc5MJJLS/qZzYnm6OnkKMOlBAUX9bwqvyrvE9
+quDK6fshhrFo/uJ5YVAQnAEuDKLv9g==
+=rC9E
+-----END PGP SIGNATURE-----
+
+--W0tQR/5xWRekS1hu--
