@@ -1,33 +1,32 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039226AA7
-	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 17:16:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD92B6AA7
+	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 17:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1675876590;
-	bh=KqQlLM65Y+42Fzaj+u5LF59N7vKKvEZNbihd+mJCsx8=;
+	s=default; t=1675876600;
+	bh=h1F/YrWW3XcqAQ47zVGYpE7dCV+4pws3M6qqm11X04s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MVL/l6kUiZfPLh/gLfrTpJEPAlvyM5VsrmcLwFxYDTWntpd3sTe5QN4PvCLenOlI8
-	 DlKthMbYgk6B+W59CxJyI3H+bpTny2zaHdYXaUz2F7wfmwEvxxyMoXsDG4gZHBECJL
-	 pwuH06A0mO7Kl+Md9pLTJNAZPmhFPhJJeAjiYUl8=
+	b=bTJCWvXWM8Q6dno6KlrLRbNe2ft4qV9CVD5bVpswhtMpAjddknkD7Agan6hxb7ezR
+	 HamGmkv3iExs4uewZorU53ThtWzwcQWOn0W64nrX7uR8rHTvxhftkj9ztbzxUuXt01
+	 oqszZ07bC5I2ofKd3M1gcj18kdGs1QM4vZmbG9J8=
 Received: from xry111-x57s1.. (unknown [IPv6:240e:358:1174:d100:dc73:854d:832e:3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id BAFBA65C52;
-	Wed,  8 Feb 2023 12:16:26 -0500 (EST)
+	by xry111.site (Postfix) with ESMTPSA id 9184265C4F;
+	Wed,  8 Feb 2023 12:16:36 -0500 (EST)
 From: Xi Ruoyao <xry111@xry111.site>
 To: Youling Tang <tangyouling@loongson.cn>,
 	Huacai Chen <chenhuacai@kernel.org>,
 	Jinyang He <hejinyang@loongson.cn>
 Cc: Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v3 1/5] LoongArch: Use la.pcrel instead of la.abs when it's trivially possible
-Date: Thu,  9 Feb 2023 01:16:03 +0800
-Message-Id: <20230208171607.391107-2-xry111@xry111.site>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 3/5] LoongArch: Add JUMP_LINK_ADDR macro implementation to avoid using la.abs
+Date: Thu,  9 Feb 2023 01:16:05 +0800
+Message-Id: <20230208171607.391107-4-xry111@xry111.site>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230208171607.391107-1-xry111@xry111.site>
 References: <20230208171607.391107-1-xry111@xry111.site>
@@ -39,83 +38,78 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Let's start to kill la.abs inpreparation for the subsequent support of the
-PIE kernel.
+From: Youling Tang <tangyouling@loongson.cn>
 
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+Add JUMP_LINK_ADDR macro implementation to avoid using la.abs.
+
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
 ---
- arch/loongarch/include/asm/stackframe.h | 2 +-
- arch/loongarch/include/asm/uaccess.h    | 1 -
- arch/loongarch/kernel/entry.S           | 2 +-
- arch/loongarch/kernel/head.S            | 2 +-
- arch/loongarch/mm/tlbex.S               | 3 +--
- 5 files changed, 4 insertions(+), 6 deletions(-)
+ arch/loongarch/include/asm/stackframe.h |  8 ++++++++
+ arch/loongarch/kernel/head.S            | 10 ++++------
+ arch/loongarch/power/suspend_asm.S      |  5 ++---
+ 3 files changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
-index 4ca953062b5b..7deb043ce387 100644
+index bbec1e56b61b..cd8240858599 100644
 --- a/arch/loongarch/include/asm/stackframe.h
 +++ b/arch/loongarch/include/asm/stackframe.h
-@@ -90,7 +90,7 @@
+@@ -217,4 +217,12 @@
+ 	RESTORE_SP_AND_RET \docfi
  	.endm
  
- 	.macro	set_saved_sp stackp temp temp2
--	la.abs	  \temp, kernelsp
-+	la.pcrel  \temp, kernelsp
- #ifdef CONFIG_SMP
- 	LONG_ADD  \temp, \temp, u0
- #endif
-diff --git a/arch/loongarch/include/asm/uaccess.h b/arch/loongarch/include/asm/uaccess.h
-index 255899d4a7c3..0d22991ae430 100644
---- a/arch/loongarch/include/asm/uaccess.h
-+++ b/arch/loongarch/include/asm/uaccess.h
-@@ -22,7 +22,6 @@
- extern u64 __ua_limit;
- 
- #define __UA_ADDR	".dword"
--#define __UA_LA		"la.abs"
- #define __UA_LIMIT	__ua_limit
- 
- /*
-diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-index d53b631c9022..2566977f2f68 100644
---- a/arch/loongarch/kernel/entry.S
-+++ b/arch/loongarch/kernel/entry.S
-@@ -20,7 +20,7 @@
- 	.align	5
- SYM_FUNC_START(handle_syscall)
- 	csrrd	t0, PERCPU_BASE_KS
--	la.abs	t1, kernelsp
-+	la.pcrel	t1, kernelsp
- 	add.d	t1, t1, t0
- 	move	t2, sp
- 	ld.d	sp, t1, 0
++/* Jump to the virtual address of the link. */
++	.macro JUMP_LINK_ADDR
++	li.d	t0, CACHE_BASE
++	pcaddi	t1, 0
++	or	t0, t0, t1
++	jirl	zero, t0, 0xc
++	.endm
++
+ #endif /* _ASM_STACKFRAME_H */
 diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index 57bada6b4e93..aa6181714ec3 100644
+index aa6181714ec3..e8a4bf9d7599 100644
 --- a/arch/loongarch/kernel/head.S
 +++ b/arch/loongarch/kernel/head.S
-@@ -117,7 +117,7 @@ SYM_CODE_START(smpboot_entry)
- 	li.w		t0, 0x00		# FPE=0, SXE=0, ASXE=0, BTE=0
- 	csrwr		t0, LOONGARCH_CSR_EUEN
+@@ -52,9 +52,8 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
  
--	la.abs		t0, cpuboot_data
-+	la.pcrel	t0, cpuboot_data
- 	ld.d		sp, t0, CPU_BOOT_STACK
- 	ld.d		tp, t0, CPU_BOOT_TINFO
+ 	/* We might not get launched at the address the kernel is linked to,
+ 	   so we jump there.  */
+-	la.abs		t0, 0f
+-	jr		t0
+-0:
++	JUMP_LINK_ADDR
++
+ 	/* Enable PG */
+ 	li.w		t0, 0xb0		# PLV=0, IE=0, PG=1
+ 	csrwr		t0, LOONGARCH_CSR_CRMD
+@@ -106,9 +105,8 @@ SYM_CODE_START(smpboot_entry)
+ 	li.d		t0, CSR_DMW1_INIT	# CA, PLV0
+ 	csrwr		t0, LOONGARCH_CSR_DMWIN1
  
-diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
-index 58781c6e4191..3dd2a9615cd9 100644
---- a/arch/loongarch/mm/tlbex.S
-+++ b/arch/loongarch/mm/tlbex.S
-@@ -24,8 +24,7 @@
- 	move		a0, sp
- 	REG_S		a2, sp, PT_BVADDR
- 	li.w		a1, \write
--	la.abs		t0, do_page_fault
--	jirl		ra, t0, 0
-+	bl		do_page_fault
- 	RESTORE_ALL_AND_RET
- 	SYM_FUNC_END(tlb_do_page_fault_\write)
- 	.endm
+-	la.abs		t0, 0f
+-	jr		t0
+-0:
++	JUMP_LINK_ADDR
++
+ 	/* Enable PG */
+ 	li.w		t0, 0xb0		# PLV=0, IE=0, PG=1
+ 	csrwr		t0, LOONGARCH_CSR_CRMD
+diff --git a/arch/loongarch/power/suspend_asm.S b/arch/loongarch/power/suspend_asm.S
+index eb2675642f9f..596a682a7924 100644
+--- a/arch/loongarch/power/suspend_asm.S
++++ b/arch/loongarch/power/suspend_asm.S
+@@ -78,9 +78,8 @@ SYM_INNER_LABEL(loongarch_wakeup_start, SYM_L_GLOBAL)
+ 	li.d		t0, CSR_DMW1_INIT	# CA, PLV0
+ 	csrwr		t0, LOONGARCH_CSR_DMWIN1
+ 
+-	la.abs		t0, 0f
+-	jr		t0
+-0:
++	JUMP_LINK_ADDR
++
+ 	la.pcrel	t0, acpi_saved_sp
+ 	ld.d		sp, t0, 0
+ 	SETUP_WAKEUP
 -- 
 2.39.1
 
