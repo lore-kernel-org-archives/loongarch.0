@@ -1,76 +1,143 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BCB937B
-	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 00:59:22 +0000 (UTC)
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8Bxd+jp8+JjubwPAA--.23722S3;
-	Wed, 08 Feb 2023 08:59:21 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxg+Xn8+Jj41YsAA--.50874S3;
-	Wed, 08 Feb 2023 08:59:20 +0800 (CST)
-Subject: Re: [PATCH v2 2/5] LoongArch: Use la.pcrel instead of la.abs for
- exception handlers
-To: Xi Ruoyao <xry111@xry111.site>, Youling Tang <tangyouling@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20230207142822.52172-1-xry111@xry111.site>
- <20230207142822.52172-3-xry111@xry111.site>
- <657d46fa2290ccfacdf5ae0f8e313870405293bb.camel@xry111.site>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <eb21dd1b-e318-e9ac-7926-873ed35c06f9@loongson.cn>
-Date: Wed, 8 Feb 2023 08:59:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B632B37B
+	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 02:10:04 +0000 (UTC)
+Received: by mail-lf1-f48.google.com with SMTP id o20so25082420lfk.5
+        for <loongarch@lists.linux.dev>; Tue, 07 Feb 2023 18:10:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bZ6NoWzJpDakiHcogI6scQ8ESAgcqrMD04j+O8pqNzk=;
+        b=UEAfx2BSvPPcHMDrAR5sjatHfl/nTvivvrky/LNkDVB33PlZbL92I1siXTEs1W11t8
+         vYiu/6g5Z7esCEiWXAtfeLrmdL+YVnWMHdv4z3xTKcB7116TClxvvMvbPicEuLMfrePw
+         RsvTkQ2F8+HXPKmq4iieEeDNswvqJ6NIJvK0OgPIPQN3KLwVWV3T7qxshaxIOWqYDm5J
+         eb5x1PLH6AG3uT0ij5zhsD9e4iO2EKmiEhEfBQdtDRngBXb+Eou54bq1lZ5scfNDKHuZ
+         cToW8aj62c7cJMGrnlHEYbRclo2Ead9etynJqggpiCvKewyDLii8YHke4QmhOyhb3pJY
+         ueKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bZ6NoWzJpDakiHcogI6scQ8ESAgcqrMD04j+O8pqNzk=;
+        b=PHeiA51XCUaSRTzPQmv10WifJAojVAyN4Hg2pATvYETw3ZkoeuCK5DJB0ROQGX5O8C
+         BvczD+2Cy4l2Qvfht19OfH41GVGhoj0FQ3zOmVTc+LGAqJYc1wh2AMZYGc2XNrUnIDvU
+         8GuBPlj+Dnnyl9osJtazFsPHFyrWif18SK9K0D9jNxt796ZS9iUm+CIXr2IGxwXNmpc9
+         ubGEemgBWEZ9lf+6z0fKrNah5UjKft8Jw2AoDuzKqrLq3Zj2JyKmNzPGAHByb7RsfqwI
+         nFWOmR1jA8qv9Qk/XOhQ4l9uqBPyafDOG9HBPKbFW2y0tNNNvzNR1LitOugCePcNd14q
+         n/Sw==
+X-Gm-Message-State: AO0yUKVYB349t83MIRArzoqbCsAIm48LA8aYKHYW3DIZQGRS4PML/CkH
+	fEtx0eUi/T9q9tep+nZFWEP7fZ2+Y5yWb9Oxhls=
+X-Google-Smtp-Source: AK7set92dwlpY4y5jslgDXCD/rZ1nC5QmxGOuitbQxwdvVHuTBWXe1tHOk6ECb9cs7XXmQc+gRWjbL4mv+PV0OGlNaA=
+X-Received: by 2002:ac2:4a73:0:b0:4db:d97:224e with SMTP id
+ q19-20020ac24a73000000b004db0d97224emr465975lfp.84.1675822202479; Tue, 07 Feb
+ 2023 18:10:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <657d46fa2290ccfacdf5ae0f8e313870405293bb.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8Cxg+Xn8+Jj41YsAA--.50874S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrKry5WF48GFy7Kr47uFy5XFb_yoW3trg_uF
-	Wkuw4UGw40yFWxAr4Ivr1DuF9rG3Z0grWUtrySqrWFyr9rXryDAFWSvrWxAa18WrnIvF98
-	Gr1DtF4Sqry2vjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	27kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
-	xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E
-	0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzV
-	Aqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S
-	6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
-	IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF
-	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
-	Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
+References: <cover.1675734681.git.chenfeiyang@loongson.cn> <1af05c1441e9f96870be1cc20b1162e3f5043b2e.1675734681.git.chenfeiyang@loongson.cn>
+ <1e7da4e7-392d-4a9e-aa95-0599a0c84419@app.fastmail.com>
+In-Reply-To: <1e7da4e7-392d-4a9e-aa95-0599a0c84419@app.fastmail.com>
+From: Feiyang Chen <chris.chenfeiyang@gmail.com>
+Date: Wed, 8 Feb 2023 10:09:48 +0800
+Message-ID: <CACWXhK==yVZGZbY+3DUAuxL34=gKwQv20Cw3y1+QKir0D2F3EQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] nolibc: Add statx() support to implement sys_stat()
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: w@1wt.eu, "Paul E. McKenney" <paulmck@kernel.org>, Feiyang Chen <chenfeiyang@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 7 Feb 2023 at 22:31, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Tue, Feb 7, 2023, at 03:09, chris.chenfeiyang@gmail.com wrote:
+> > From: Feiyang Chen <chenfeiyang@loongson.cn>
+> >
+> > Neither __NR_newfstatat nor __NR_stat is defined on new architecture
+> > like LoongArch, but we can use statx() to implement sys_stat().
+> >
+> > Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+>
+> This looks nice, it should also help on 32-bit architectures that
+> only have stat64 but not newfstatat or stat.
+>
+> > +#if defined(__NR_newfstatat) || defined(__NR_stat)
+> >  static __attribute__((unused))
+> >  int sys_stat(const char *path, struct stat *buf)
+> ...
+> > +#else
+> > +#error None of __NR_newfstatat, __NR_stat, nor __NR_statx defined,
+> > cannot implement sys_stat()
+> > +#endif
+>
+> Given that all architectures implement statx the same way, I wonder
+> if we can't just kill off the old function here and always use statx.
+>
+> That would also allow removing the architecture specific
+> sys_stat_struct definitions in all arch-*.h files.
+>
 
-On 2023-02-07 22:39, Xi Ruoyao wrote:
-> On Tue, 2023-02-07 at 22:28 +0800, Xi Ruoyao wrote:
->> +struct handler_reloc *eentry_reloc[128] = {
->> +       [0] = NULL, /* merr handler */
-> Self review:
->
-> This is actually incorrect.  Currently the merr handler (except_vec_cex)
-> is coded as:
->
-> SYM_FUNC_START(except_vec_cex)
->          b       cache_parity_error
-> SYM_FUNC_END(except_vec_cex)
->
-> Once this is copied into the per-cpu handler page, the offset (coded in
-> the b instruction) will be absolutely wrong.  But it's already incorrect
-> in the current mainline, and I'm not familiar with CSR.CRMD.DA=1
-> configuration so I'm not sure how to fix it.
->
-It bothers me, too. And I've mentioned it to Huacai offline before.
-Besides, after fixing this issue I'll support a series of patches
-to fix the cfi note in asm files.
+Hi, Arnd,
 
+I'd really like to make all architectures use sys_statx() instead
+of sys_stat(). I just fear we might get dragged into a long discussion.
+Can I send a patch series to do this later?
 
+> > +struct statx_timestamp {
+> > +     __s64   tv_sec;
+> > +     __u32   tv_nsec;
+> > +     __s32   __reserved;
+> > +};
+> > +
+> > +struct statx {
+> > +     /* 0x00 */
+> > +     __u32   stx_mask;       /* What results were written [uncond] */
+> > +     __u32   stx_blksize;    /* Preferred general I/O size [uncond] */
+> > +     __u64   stx_attributes; /* Flags conveying information about the file
+> > [uncond] */
+> > +     /* 0x10 */
+> > +     __u32   stx_nlink;      /* Number of hard links */
+> > +     __u32   stx_uid;        /* User ID of owner */
+> > +     __u32   stx_gid;        /* Group ID of owner */
+> > +     __u16   stx_mode;       /* File mode */
+> > +     __u16   __spare0[1];
+> > +     /* 0x20 */
+> > +     __u64   stx_ino;        /* Inode number */
+> > +     __u64   stx_size;       /* File size */
+> > +     __u64   stx_blocks;     /* Number of 512-byte blocks allocated */
+> > +     __u64   stx_attributes_mask; /* Mask to show what's supported in
+> > stx_attributes */
+> > +     /* 0x40 */
+> > +     struct statx_timestamp  stx_atime;      /* Last access time */
+> > +     struct statx_timestamp  stx_btime;      /* File creation time */
+> > +     struct statx_timestamp  stx_ctime;      /* Last attribute change time */
+> > +     struct statx_timestamp  stx_mtime;      /* Last data modification time */
+> > +     /* 0x80 */
+> > +     __u32   stx_rdev_major; /* Device ID of special file [if bdev/cdev] */
+> > +     __u32   stx_rdev_minor;
+> > +     __u32   stx_dev_major;  /* ID of device containing file [uncond] */
+> > +     __u32   stx_dev_minor;
+> > +     /* 0x90 */
+> > +     __u64   stx_mnt_id;
+> > +     __u32   stx_dio_mem_align;      /* Memory buffer alignment for direct I/O */
+> > +     __u32   stx_dio_offset_align;   /* File offset alignment for direct I/O */
+> > +     /* 0xa0 */
+> > +     __u64   __spare3[12];   /* Spare space for future expansion */
+> > +     /* 0x100 */
+> > +};
+>
+> Can't we just #include <linux/stat.h> here to avoid having to maintain
+> a duplicate copy?
+>
+
+Yes, I will #include <linux/stat.h> here.
+
+Thanks,
+Feiyang
+
+>     Arnd
