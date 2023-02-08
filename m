@@ -1,106 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A62833C9
-	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 16:39:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C217C433EF;
-	Wed,  8 Feb 2023 16:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675874394;
-	bh=k2WDmJefTVbmF4UtYjVTRVt38vEfq5VHOD9s78R7eyg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rm1BIDwVjM+vtyitHjo1e7C/8O3osDSw3ddUWkl4Wx2bC5t9PAYPPNOMyPOnhDGBE
-	 x0/ntl8Z+mYIwUFJ4SJYgRaphWg6Yt4w739Gu/lXfntdZ6JeZX0Y+rfAbGvNs2ZHt8
-	 st0eJcGbt8o4IXvW5Pd80HgnuHqj+dz7ZtRrgPBzs0UpJBQvPfkACmHMCJmVksp2u1
-	 7j+OBIBzFLzMDdGcGKQCjlEbr0xBVw1CpjWop+Te/iJBfsS4i7ncKglT5iTBbI8VBo
-	 HOM9qBR39AlYqQf2ZmUflFWYvSQAKch5roLODmzzrvB8D8QMKelVKI/xJc21XFfhdD
-	 dus+tchf6H0SA==
-Date: Wed, 8 Feb 2023 16:39:44 +0000
-From: Mark Brown <broonie@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>, John Hubbard <jhubbard@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Mike Rapoport <rppt@linux.ibm.com>, Yang Shi <shy828301@gmail.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Nadav Amit <namit@vmware.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, x86@kernel.org,
-	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-	Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH mm-unstable v1 04/26] arm/mm: support
- __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-Message-ID: <Y+PQUMwH4AZSVpjb@sirena.org.uk>
-References: <20230113171026.582290-1-david@redhat.com>
- <20230113171026.582290-5-david@redhat.com>
- <Y+GcDFMNHw2cdDN1@sirena.org.uk>
- <39fd91e3-c93b-23c6-afc6-cbe473bb0ca9@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1FE33C9
+	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 17:16:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1675876585;
+	bh=EJ9NVe253KjmTra80L8ReGUQvb0ZTCo7dnOHVEPK+Pc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=je3ll1bBqQBDkdYtOapkJMEg9JcFZoNvog+AyMHyFs9uArqxgb74J+7bQucywo7x8
+	 kVC9rEj8NWAQPOyjksILpJUSa8f3DLgVN6wASTzQx2cHT9EVEl+xtWUXWFNYW6laqu
+	 35MSdl8t/X4rHK2rwqu1ZPDOWV2wVPamEbTdvDYw=
+Received: from xry111-x57s1.. (unknown [IPv6:240e:358:1174:d100:dc73:854d:832e:3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 3FC6665C4F;
+	Wed,  8 Feb 2023 12:16:21 -0500 (EST)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Youling Tang <tangyouling@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Jinyang He <hejinyang@loongson.cn>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH v3 0/5] LoongArch: Add kernel relocation and KASLR support
+Date: Thu,  9 Feb 2023 01:16:02 +0800
+Message-Id: <20230208171607.391107-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="W0tQR/5xWRekS1hu"
-Content-Disposition: inline
-In-Reply-To: <39fd91e3-c93b-23c6-afc6-cbe473bb0ca9@redhat.com>
-X-Cookie: Walk softly and carry a megawatt laser.
+Content-Transfer-Encoding: 8bit
 
+This patch series to support kernel relocation and KASLR (only 64bit).
 
---W0tQR/5xWRekS1hu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tested the kernel images built with new toolchain (Binutils-2.40 + patched
+GCC-12.2) and old toolchain (kernel.org cross toolchain [1]) on a
+3A5000-7A2000-EVB.
 
-On Wed, Feb 08, 2023 at 03:12:06PM +0100, David Hildenbrand wrote:
-> On 07.02.23 01:32, Mark Brown wrote:
+With CONFIG_RANDOMIZE_BASE=y, the results are:
 
-> > Today's -next (and at least back to Friday, older logs are unclear - I
-> > only noticed -next issues today) fails to NFS boot on an AT91SAM9G20-EK
-> > (an old ARMv5 platform) with multi_v5_defconfig, a bisect appears to
-> > point to this patch (20aae9eff5acd8f5 in today's -next) as the culprit.
+1. first boot, new toolchain:
 
-> It's been in -next for quite a while, thanks for the report!
+$ sudo cat /proc/iomem | grep Kernel
+  01080000-0189ffff : Kernel code
+  018a0000-01deb5ff : Kernel data
+  01deb600-01ef6e9f : Kernel bss
 
-Yeah, there's been some other things obscuring the issue.
+2. second boot, new toolchain:
 
-> Could you give the following a test?
->=20
->=20
-> From 8c4bdbd9862f85782d5919d044c172b584063e83 Mon Sep 17 00:00:00 2001
-> From: David Hildenbrand <david@redhat.com>
-> Date: Wed, 8 Feb 2023 15:08:01 +0100
-> Subject: [PATCH] arm/mm: Fix swp type masking in __swp_entry()
->=20
-> We're masking with the number of type bits instead of the type mask, which
-> is obviously wrong.
+$ sudo cat /proc/iomem | grep Kernel
+  012f0000-01b0ffff : Kernel code
+  01b10000-0205b5ff : Kernel data
+  0205b600-02166e9f : Kernel bss
 
-Tested-by: Mark Brown <broonie@kernel.org>
+3. first boot, old toolchain:
+  010e0000-018fffff : Kernel code
+  01900000-01e591ff : Kernel data
+  01e59200-01f56dcf : Kernel bss
 
-but note that I had to manually apply it, though it's pretty trivial so
-I probably applied the right thing.
+4. second boot, old toolchain:
+  010b0000-018cffff : Kernel code
+  018d0000-01e291ff : Kernel data
+  01e29200-01f26dcf : Kernel bss
 
---W0tQR/5xWRekS1hu
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes from v2:
 
------BEGIN PGP SIGNATURE-----
+- Correctly fixup pcaddi12i/ori/lu32i.d/lu52i.d sequence generated by
+  GNU as <= 2.39 for la.pcrel.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmPj0FAACgkQJNaLcl1U
-h9C7hQf/VKRwP16M1jInUqUdUtyzPdvalnHTpasxKVZ8Sy0U3jwXMqNUqmnpEOSO
-UB3Q8audVEzRc8pj92dk3jilZBDPHyP58UUKRsjkrZVz22Q2/R16FcjaLrdlwNlj
-GWMfEWv5OKYPHaxP4W/VX0sXzS0XMTuulvAF1BOQRlOAS3L3jYsYUtzI2pkzJm1G
-64ICND0ZQRerzQmdQd6oO2tVhymhv8Y1LPY4TT0HikINGVpwwCJoOiocmstgqqGW
-uE+M+XJ9Lp/p78SIjfccjF1rdCWlc5MJJLS/qZzYnm6OnkKMOlBAUX9bwqvyrvE9
-quDK6fshhrFo/uJ5YVAQnAEuDKLv9g==
-=rC9E
------END PGP SIGNATURE-----
+Changes from v1 to v2:
 
---W0tQR/5xWRekS1hu--
+- Relocate the handlers instead of using a trampoline, to avoid
+  performance issue on NUMA systems.
+- Fix compiler warnings.
+
+Xi Ruoyao (2):
+  LoongArch: Use la.pcrel instead of la.abs when it's trivially possible
+  LoongArch: Use la.pcrel instead of la.abs for exception handlers
+
+Youling Tang (3):
+  LoongArch: Add JUMP_LINK_ADDR macro implementation to avoid using
+    la.abs
+  LoongArch: Add support for kernel relocation
+  LoongArch: Add support for kernel address space layout randomization
+    (KASLR)
+
+ arch/loongarch/Kconfig                  |  37 +++++
+ arch/loongarch/Makefile                 |   5 +
+ arch/loongarch/include/asm/inst.h       |   1 +
+ arch/loongarch/include/asm/page.h       |   6 +
+ arch/loongarch/include/asm/setup.h      |   6 +-
+ arch/loongarch/include/asm/stackframe.h |  13 +-
+ arch/loongarch/include/asm/uaccess.h    |   1 -
+ arch/loongarch/kernel/Makefile          |   2 +
+ arch/loongarch/kernel/entry.S           |   2 +-
+ arch/loongarch/kernel/genex.S           |  40 ++++-
+ arch/loongarch/kernel/head.S            |  30 +++-
+ arch/loongarch/kernel/relocate.c        | 211 ++++++++++++++++++++++++
+ arch/loongarch/kernel/setup.c           |   3 +
+ arch/loongarch/kernel/traps.c           | 158 +++++++++++++++---
+ arch/loongarch/kernel/vmlinux.lds.S     |  11 +-
+ arch/loongarch/mm/tlb.c                 |  23 +--
+ arch/loongarch/mm/tlbex.S               |  72 +++++++-
+ arch/loongarch/power/suspend_asm.S      |   5 +-
+ 18 files changed, 564 insertions(+), 62 deletions(-)
+ create mode 100644 arch/loongarch/kernel/relocate.c
+
+-- 
+2.39.1
+
