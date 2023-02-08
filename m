@@ -1,171 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C5C2581
-	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 14:05:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60C6CC433EF;
-	Wed,  8 Feb 2023 14:05:34 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V2] LoongArch: Make -mstrict-align configurable
-Date: Wed,  8 Feb 2023 22:05:36 +0800
-Message-Id: <20230208140536.2911880-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.0
+Received: from 1wt.eu (wtarreau.pck.nerim.net [62.212.114.60])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32FBB28E3
+	for <loongarch@lists.linux.dev>; Wed,  8 Feb 2023 14:07:48 +0000 (UTC)
+Received: (from willy@localhost)
+	by mail.home.local (8.17.1/8.17.1/Submit) id 318E7ZT7002066;
+	Wed, 8 Feb 2023 15:07:35 +0100
+Date: Wed, 8 Feb 2023 15:07:35 +0100
+From: Willy Tarreau <w@1wt.eu>
+To: David Laight <David.Laight@ACULAB.COM>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+        "chris.chenfeiyang" <chris.chenfeiyang@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Feiyang Chen <chenfeiyang@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] nolibc: Add statx() support to implement sys_stat()
+Message-ID: <Y+Osp43OQOlllIVl@1wt.eu>
+References: <cover.1675734681.git.chenfeiyang@loongson.cn>
+ <1af05c1441e9f96870be1cc20b1162e3f5043b2e.1675734681.git.chenfeiyang@loongson.cn>
+ <1e7da4e7-392d-4a9e-aa95-0599a0c84419@app.fastmail.com>
+ <CACWXhK==yVZGZbY+3DUAuxL34=gKwQv20Cw3y1+QKir0D2F3EQ@mail.gmail.com>
+ <Y+MXk9A+gB1W6T/n@1wt.eu>
+ <CACWXhKn1N6f7XvtrbDno4UyAhMZbV_htQoRbm0ws9gjF08wnBw@mail.gmail.com>
+ <7c98aac5-6b64-4f6b-b242-7ad3b8a334a8@app.fastmail.com>
+ <Y+NbF6OrYu62OQCX@1wt.eu>
+ <d0df35466db74097b8e70e28d35a4776@AcuMS.aculab.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d0df35466db74097b8e70e28d35a4776@AcuMS.aculab.com>
 
-Introduce Kconfig option ARCH_STRICT_ALIGN to make -mstrict-align be
-configurable.
+On Wed, Feb 08, 2023 at 01:01:48PM +0000, David Laight wrote:
+> From: Willy Tarreau
+> > Sent: 08 February 2023 08:20
+> ....
+> > Also looking at the man page I see that statx() only appeared in 4.11,
+> > and here we're targetting userland so I'd rather keep a bit of margin
+> > when it comes to backwards compatibility, thus not dropping stat() and
+> > friends too early when not necessary. However using statx() by default
+> > when available sounds fine to me!
+> 
+> Does that really matter?
+> Isn't 'nolibc' really just used for programs built in the
+> kernel source tree to be release/run with the current kernel?
 
-Not all LoongArch cores support h/w unaligned access, we can use the
--mstrict-align build parameter to prevent unaligned accesses.
+Not just that even if mostly related, and even in such a case
+we'd rather maintain a low level of breakage when it doesn't
+require any effort (and moving the ifdef __NR_statx up 20 lines
+is perfectly within what I consider low effort).
 
-CPUs with h/w unaligned access support:
-Loongson-2K2000/2K3000/3A5000/3C5000/3D5000.
+> I also wonder if building a 'mini_libc.a' that the programs
+> can be linked against might be easier than having to
+> generate inline versions of everything?
 
-CPUs without h/w unaligned access support:
-Loongson-2K500/2K1000.
+It's another option but a different approach. There are pros and cons
+to different approaches. For this, better not reinvent the wheel,
+there's already klibc that does this well. A few of us do value the
+simplicity of not having to pre-build anything before the test program,
+especially when running tests that cover multiple architectures and/or
+versions. I'm not saying it's a solution to everything at all, far from
+this (and the level of coverage of that code should be self-explanatory
+to remind anyone that it's not the goal). But when working on some small
+test programs it's quite handy like this.
 
-This option is enabled by default to make the kernel be able to run on
-all LoongArch systems. But you can disable it manually if you want to
-run kernel only on systems with h/w unaligned access support in order to
-optimise for performance.
-
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-V2:
-1, Enabled ARCH_STRICT_ALIGN by default;
-2, Keep consistency with HAVE_EFFICIENT_UNALIGNED_ACCESS;
-3, Build unaligned access emulation only if ARCH_STRICT_ALIGN enabled.
-
- arch/loongarch/Kconfig         | 19 +++++++++++++++++++
- arch/loongarch/Makefile        |  5 +++++
- arch/loongarch/kernel/Makefile |  4 +++-
- arch/loongarch/kernel/traps.c  |  9 +++++++--
- 4 files changed, 34 insertions(+), 3 deletions(-)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 9cc8b84f7eb0..0c1c6063cc66 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -94,6 +94,7 @@ config LOONGARCH
- 	select HAVE_DYNAMIC_FTRACE_WITH_ARGS
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS
- 	select HAVE_EBPF_JIT
-+	select HAVE_EFFICIENT_UNALIGNED_ACCESS if !ARCH_STRICT_ALIGN
- 	select HAVE_EXIT_THREAD
- 	select HAVE_FAST_GUP
- 	select HAVE_FTRACE_MCOUNT_RECORD
-@@ -441,6 +442,24 @@ config ARCH_IOREMAP
- 	  protection support. However, you can enable LoongArch DMW-based
- 	  ioremap() for better performance.
- 
-+config ARCH_STRICT_ALIGN
-+	bool "Enable -mstrict-align to prevent unaligned accesses" if EXPERT
-+	default y
-+	help
-+	  Not all LoongArch cores support h/w unaligned access, we can use
-+	  -mstrict-align build parameter to prevent unaligned accesses.
-+
-+	  CPUs with h/w unaligned access support:
-+	  Loongson-2K2000/2K3000/3A5000/3C5000/3D5000.
-+
-+	  CPUs without h/w unaligned access support:
-+	  Loongson-2K500/2K1000.
-+
-+	  This option is enabled by default to make the kernel be able to run
-+	  on all LoongArch systems. But you can disable it manually if you want
-+	  to run kernel only on systems with h/w unaligned access support in
-+	  order to optimise for performance.
-+
- config KEXEC
- 	bool "Kexec system call"
- 	select KEXEC_CORE
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index 4402387d2755..6e1c931a8507 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -91,10 +91,15 @@ KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
- # instead of .eh_frame so we don't discard them.
- KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
- 
-+ifdef CONFIG_ARCH_STRICT_ALIGN
- # Don't emit unaligned accesses.
- # Not all LoongArch cores support unaligned access, and as kernel we can't
- # rely on others to provide emulation for these accesses.
- KBUILD_CFLAGS += $(call cc-option,-mstrict-align)
-+else
-+# Optimise for performance on hardware supports unaligned access.
-+KBUILD_CFLAGS += $(call cc-option,-mno-strict-align)
-+endif
- 
- KBUILD_CFLAGS += -isystem $(shell $(CC) -print-file-name=include)
- 
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index c8cfbd562921..df5dbabfe7a6 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -8,13 +8,15 @@ extra-y		:= vmlinux.lds
- obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
- 		   traps.o irq.o idle.o process.o dma.o mem.o io.o reset.o switch.o \
- 		   elf.o syscall.o signal.o time.o topology.o inst.o ptrace.o vdso.o \
--		   alternative.o unaligned.o unwind.o
-+		   alternative.o unwind.o
- 
- obj-$(CONFIG_ACPI)		+= acpi.o
- obj-$(CONFIG_EFI) 		+= efi.o
- 
- obj-$(CONFIG_CPU_HAS_FPU)	+= fpu.o
- 
-+obj-$(CONFIG_ARCH_STRICT_ALIGN)	+= unaligned.o
-+
- ifdef CONFIG_FUNCTION_TRACER
-   ifndef CONFIG_DYNAMIC_FTRACE
-     obj-y += mcount.o ftrace.o
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index c38a146a973b..05511203732c 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -371,9 +371,14 @@ int no_unaligned_warning __read_mostly = 1;	/* Only 1 warning by default */
- 
- asmlinkage void noinstr do_ale(struct pt_regs *regs)
- {
--	unsigned int *pc;
- 	irqentry_state_t state = irqentry_enter(regs);
- 
-+#ifndef CONFIG_ARCH_STRICT_ALIGN
-+	die_if_kernel("Kernel ale access", regs);
-+	force_sig_fault(SIGBUS, BUS_ADRALN, (void __user *)regs->csr_badvaddr);
-+#else
-+	unsigned int *pc;
-+
- 	perf_sw_event(PERF_COUNT_SW_ALIGNMENT_FAULTS, 1, regs, regs->csr_badvaddr);
- 
- 	/*
-@@ -397,8 +402,8 @@ asmlinkage void noinstr do_ale(struct pt_regs *regs)
- sigbus:
- 	die_if_kernel("Kernel ale access", regs);
- 	force_sig_fault(SIGBUS, BUS_ADRALN, (void __user *)regs->csr_badvaddr);
--
- out:
-+#endif
- 	irqentry_exit(regs, state);
- }
- 
--- 
-2.39.0
-
+Regards,
+Willy
