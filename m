@@ -1,104 +1,108 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0713836C
-	for <loongarch@lists.linux.dev>; Thu,  9 Feb 2023 01:16:17 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8Ax3epaSeRjLDoQAA--.32191S3;
-	Thu, 09 Feb 2023 09:16:10 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxQuVZSeRjCOQuAA--.54035S3;
-	Thu, 09 Feb 2023 09:16:09 +0800 (CST)
-Message-ID: <aea24370-2526-7f43-ca5f-55d1d8b8c4bb@loongson.cn>
-Date: Thu, 9 Feb 2023 09:16:09 +0800
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5FA36C
+	for <loongarch@lists.linux.dev>; Thu,  9 Feb 2023 02:03:10 +0000 (UTC)
+Received: by mail-lf1-f50.google.com with SMTP id u12so1302455lfq.0
+        for <loongarch@lists.linux.dev>; Wed, 08 Feb 2023 18:03:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8wpbhKb6PCWqitcpF+KztK8LkCfUogfjPGXlhCk+nko=;
+        b=N8dxlFPY97Zdt08adulRLRKyc1gg6nLtHX6LDy57XcJ12OFfF+zG2uy+XbcIlUPmzO
+         ALheyy0jbOtIp3NtWPAGsqfg0YHzs1deQ7ZapNHSPCiuJ3+8o2U2zaGSC+txn+0aT7uj
+         JuaYQvcxK3wY6BrrXA0eyiULr8cecRMCPfIRpAOiR5DRnjqbdQE/0w57QwtZkHF6cYau
+         vOQk9kIoi1OUXLdFQNFETsm9WVvtbS/EQKuiBa5Wb5EyuNOZYDNks+r4vM7+pxiyRrrz
+         xVM+M70s6nYomCA/MlRKaSruQu6msvtgGDtnk2NnqPCjw/x32Ugcfik8eGjO5cAs57FA
+         f6xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8wpbhKb6PCWqitcpF+KztK8LkCfUogfjPGXlhCk+nko=;
+        b=JFLzlS+AFlWlorpqbVTxlW83H+K5mX9XeEl9S2aEexvg7QmOAeBk1mNX1YYxsgt48O
+         rbUOb3SSD8gdRDF0IRyfyWliQ/lKqYexiiki+XygZwsB2IBI/IZ1+Q4/pabxh18BLflq
+         gefKDUW535oqieAnN8GGN9Kvl+ywC43vobrgGOwvgV+4uXVlB/jQv/WXBcWgGEv5XXgj
+         aPtwv2D4V/r10k+bC+jt4zASq95D1oJrXc7gv0pDMqfrsLh7894sdY+QjSsfiR1/6Zhb
+         j92blGPEXGrb+LlyWEf2lnMYJ8QkVZHxBZHSgPZXmLuEzaYDjs22JlMocu/KBbvkaQZ5
+         goGA==
+X-Gm-Message-State: AO0yUKXuiNk7dOkxoyoV5BWKOey9zTTjxyrBxRCFKic6LLF81kRju6B5
+	OM5cgvmirFSbER5OlzJDjpky5W5S01kDs00znT0=
+X-Google-Smtp-Source: AK7set86DF6JSVay1oyAqtnLhmYEG3+tim+RPGMEM718C2gOfldauh6tcUoygjt1ghpYvV92EwgZnXQ6eW7AHYBySE8=
+X-Received: by 2002:a19:f60e:0:b0:4b5:5f2d:1458 with SMTP id
+ x14-20020a19f60e000000b004b55f2d1458mr1783908lfe.253.1675908188264; Wed, 08
+ Feb 2023 18:03:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] LoongArch: add checksum optimization for 64-bit system
-To: David Laight <David.Laight@ACULAB.COM>, 'WANG Xuerui'
- <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20230207040148.1801169-1-maobibo@loongson.cn>
- <8fa91bca5e624861b190917933951c7e@AcuMS.aculab.com>
- <5b3c9b61-7fd5-f50c-32ba-e857090b71bc@xen0n.name>
- <7636a7bebfd44e378c5b16d6fd355232@AcuMS.aculab.com>
-Content-Language: en-US
-From: maobibo <maobibo@loongson.cn>
-In-Reply-To: <7636a7bebfd44e378c5b16d6fd355232@AcuMS.aculab.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxQuVZSeRjCOQuAA--.54035S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7AFWktw18uF1UGw45WryfZwb_yoW8Gr1Upr
-	1DWay3Ga10q347uwn2yF48Jw15ur43AF45Ja4Yvr1rAFy5XryDJaykGrWjga4Ivr45C3W8
-	uFWUtayayr4F9aDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bxkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
-	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04
-	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
-	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr4
-	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1l
-	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
-	A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
+References: <cover.1675851111.git.chenfeiyang@loongson.cn> <b9bbf73286238bb4657d855c9d50983aa17953e2.1675851111.git.chenfeiyang@loongson.cn>
+ <Y+N76C7hfcu5Ze/J@1wt.eu>
+In-Reply-To: <Y+N76C7hfcu5Ze/J@1wt.eu>
+From: Feiyang Chen <chris.chenfeiyang@gmail.com>
+Date: Thu, 9 Feb 2023 10:02:56 +0800
+Message-ID: <CACWXhKmmG799esYaEZZqWwNx-UwL74r6sr0qrxrF=Li4Ehckgg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] tools/nolibc: Add statx() and make stat() rely on
+ statx() when available
+To: Willy Tarreau <w@1wt.eu>
+Cc: paulmck@kernel.org, Feiyang Chen <chenfeiyang@loongson.cn>, arnd@arndb.de, 
+	chenhuacai@kernel.org, jiaxun.yang@flygoat.com, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-
-
-在 2023/2/8 22:19, David Laight 写道:
-> From: WANG Xuerui
->> Sent: 08 February 2023 13:48
-> ...
->> Yeah LoongArch can do rotates, and your suggestion can indeed reduce one
->> insn from every invocation of csum_fold.
->>
->>  From this:
->>
->> 000000000000096c <csum_fold>:
->>          sum += (sum >> 16) | (sum << 16);
->>   96c:   004cc08c        rotri.w         $t0, $a0, 0x10
->>   970:   00101184        add.w           $a0, $t0, $a0
->>          return ~(__force __sum16)(sum >> 16);
->>   974:   0044c084        srli.w          $a0, $a0, 0x10
->>   978:   00141004        nor             $a0, $zero, $a0
->> }
->>   97c:   006f8084        bstrpick.w      $a0, $a0, 0xf, 0x0
->>   980:   4c000020        jirl            $zero, $ra, 0
->>
->> To:
->>
->> 0000000000000984 <csum_fold2>:
->>          return (~sum - rol32(sum, 16)) >> 16;
->>   984:   0014100c        nor             $t0, $zero, $a0
->>          return (x << amt) | (x >> (32 - amt));
->>   988:   004cc084        rotri.w         $a0, $a0, 0x10
->>          return (~sum - rol32(sum, 16)) >> 16;
->>   98c:   00111184        sub.w           $a0, $t0, $a0
->> }
->>   990:   00df4084        bstrpick.d      $a0, $a0, 0x1f, 0x10
->>   994:   4c000020        jirl            $zero, $ra, 0
-> 
-> It is actually slightly better than that.
-> In the csum_fold2 version the first two instructions
-> are independent - so can execute in parallel on some cpu.
-> 
-> 	David
+On Wed, 8 Feb 2023 at 18:39, Willy Tarreau <w@1wt.eu> wrote:
+>
+> Hi Feiyang,
+>
+> On Wed, Feb 08, 2023 at 06:17:51PM +0800, chris.chenfeiyang@gmail.com wrote:
+> > From: Feiyang Chen <chenfeiyang@loongson.cn>
+> >
+> > loongarch and riscv32 only have statx(). arc, hexagon, nios2 and
+> > openrisc have statx() and stat64() but not stat() or newstat().
+> > Add statx() and make stat() rely on statx() to make them happy.
+>
+> Thanks for this, that's way better. I'm just having one small request
+> below:
+>
+> > +/*
+> > + * int statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf);
+> > + */
+> > +
+> > +static __attribute__((unused))
+> > +int sys_statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf)
+> > +{
+> > +     return my_syscall5(__NR_statx, fd, path, flags, mask, buf);
+> > +}
+> > +
+> > +static __attribute__((unused))
+> > +int statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf)
+> > +{
+> > +     int ret = sys_statx(fd, path, flags, mask, buf);
+> > +
+> > +     if (ret < 0) {
+> > +             SET_ERRNO(-ret);
+> > +             ret = -1;
+> > +     }
+> > +     return ret;
+> > +}
+>
+> Please guard these inside #if defined(__NR_statx) so that this can still
+> be used as-is from slightly older toolchains that provide their own kernel
+> includes.
 >
 
-Thanks for the good suggestion.
-Will send the second version soon.
+Hi, Willy,
 
-regards
-bibo,mao
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
+OK.
 
+Thanks,
+Feiyang
+
+> The rest of the series looks pretty good to me.
+>
+> Thank you!
+> Willy
