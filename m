@@ -1,106 +1,96 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD341638
-	for <loongarch@lists.linux.dev>; Thu,  9 Feb 2023 06:34:56 +0000 (UTC)
-Received: from loongson.cn (unknown [192.168.200.1])
-	by gateway (Coremail) with SMTP id _____8DxSuoPlORjKFEQAA--.32261S3;
-	Thu, 09 Feb 2023 14:34:55 +0800 (CST)
-Received: from [0.0.0.0] (unknown [192.168.200.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtOUNlORjhygvAA--.55653S3;
-	Thu, 09 Feb 2023 14:34:53 +0800 (CST)
-Subject: Re: [PATCH v2 0/5] LoongArch: Add kernel relocation and KASLR support
-To: Xi Ruoyao <xry111@xry111.site>
-References: <20230207142822.52172-1-xry111@xry111.site>
- <70278d23-aa0e-19d9-796f-78c0fd06fee0@loongson.cn>
- <87b9f23ba8b123a765c4139c2112aa365546c1e5.camel@xry111.site>
-Cc: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <c11aae17-838f-3741-0c13-1c830ac30a56@loongson.cn>
-Date: Thu, 9 Feb 2023 14:34:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C404D371
+	for <loongarch@lists.linux.dev>; Thu,  9 Feb 2023 09:35:37 +0000 (UTC)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-314-fI1z6-A-NXaR-V9G3rhcqA-1; Thu, 09 Feb 2023 09:35:34 +0000
+X-MC-Unique: fI1z6-A-NXaR-V9G3rhcqA-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.45; Thu, 9 Feb
+ 2023 09:35:29 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.045; Thu, 9 Feb 2023 09:35:29 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Bibo Mao' <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+CC: Jiaxun Yang <jiaxun.yang@flygoat.com>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
+Thread-Topic: [PATCH v2] LoongArch: add checksum optimization for 64-bit
+ system
+Thread-Index: AQHZPDrPjnYkuPc3GUK7DnTa61yn8K7GU7lQ
+Date: Thu, 9 Feb 2023 09:35:29 +0000
+Message-ID: <e6bb59c32134477aa4890047ae5ad51b@AcuMS.aculab.com>
+References: <20230209035839.2610277-1-maobibo@loongson.cn>
+In-Reply-To: <20230209035839.2610277-1-maobibo@loongson.cn>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <87b9f23ba8b123a765c4139c2112aa365546c1e5.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8BxtOUNlORjhygvAA--.55653S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxJry5JF1xJF4fKr43ZFW5Jrb_yoW8XFy3pF
-	yfGr4DKF4DXF1I9F429a45XryIyr4xK3yrCFsYk348Z390gF13KFyrKws2krZ7Ar12gF4I
-	9rWSyFyxCF45AFDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bOxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2
-	zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_WwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
-	wIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0zRVWl
-	kUUUUU=
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+From: Bibo Mao
+> Sent: 09 February 2023 03:59
+>=20
+> loongArch platform is 64-bit system, which supports 8 bytes memory
+> accessing, generic checksum function uses 4 byte memory access.
+> This patch adds 8-bytes memory access optimization for checksum
+> function on loongArch. And the code comes from arm64 system.
 
+How fast do these functions actually run (in bytes/clock)?
 
-On 02/08/2023 04:27 PM, Xi Ruoyao wrote:
-> On Wed, 2023-02-08 at 12:37 +0800, Youling Tang wrote:
->> In the case of "[Patch v2 2/5] LoongArch: use la.pcrel instenad of
->> la.abs for exception handlerS", the above failure will occur.
->>
->> Patch2 may have certain problems when using the old toolchains.
->>
->> Youling.
->
-> Thanks for the test...
->
-> The problem is: old toolchain uses pcaddu12i/ori/lu32i.d/lu52i.d/add.d
-> for a 3-operand la.pcrel, while the new toolchain uses
-> pcalau12i/addi.d/lu32i/lu52i/add.d.  (I've somehow forgotten all the
-> difference!)
->
-> We can fix it with something like...
->
->> +void reloc_handler(unsigned long handler, struct handler_reloc *rel)
->> +{
->> +	if (!rel)
->> +		return;
->> +
->> +	for (unsigned long i = 0; i < rel->cnt; i++) {
->> +		unsigned long pc = handler + rel->entries[i].offset;
->> +		unsigned long v = rel->entries[i].sym;
->
->                 /* anchor etc. moved into do_reloc_pcalau12i */
->
->> +		union loongarch_instruction *insn =
->> +			(union loongarch_instruction *)pc;
->
->                 switch insn[0]->reg1i20_format->reg1i20_format {
->                 case pcaddu12i_op:
->                         do_reloc_pcaddu12i(insn, pc, v);
->                         break;
->                 case pcalau12i_op: /* TODO: add it for asm/inst.h */
->                         do_reloc_pcalau12i(insn, pc, v);
->                         break;
->                 default:
->                         panic("what the f**k");
->                 }
->
-> Alternatively, we can also emit the pcalau12i/addi.d/lu32i/lu52i
-> sequence and overwrite the pcaddu12i/ori sequence generated by the old
-> toolchain.
->
-> Which way do you like?
+It is quite possible that just adding 32bit values to a
+64bit register is faster.
+Any non-trivial cpu will run that at 4 bytes/clock
+(for suitably unrolled and pipelined code).
+On a more complex cpu adding to two registers will
+give 8 bytes/clock (needs two memory loads/clock).
 
-v3 tested successfully in both new and old toolchains.
+The fastest 64bit sum you'll get on anything mips-like
+(no carry flag) is probably from something like:
+=09val =3D *mem++;  // 64bit read
+=09sum +=3D val;
+=09carry =3D sum < val;
+=09carry_sum +=3D carry;
+which is 2 bytes/instruction again.
+To get to 8 bytes/clock you need to execute all 4 instructions
+every clock - so 1 read and 3 arithmetic.
+(c/f 2 read and 2 arithmetic for 32bit adds.)
 
-Youling.
->
+Arm has a carry flag so the code is:
+=09val =3D *mem++;
+=09temp,carry =3D sum + val;
+=09sum =3D sum + val + carry;
+There are still two dependant arithmetic instructions for
+each 8-byte word.
+The dependencies on the flags register also make it harder
+to get any benefit from interleaving adds to two registers.
+
+x86-64 uses 64bit 'add with carry' chains.
+No one ever noticed that they take two clocks each on
+Intel cpu until (about) Haswell.
+It is possible to get 12 bytes/clock with some strange
+loops that use (IIRC) adxo and adxc.
+
+=09David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
