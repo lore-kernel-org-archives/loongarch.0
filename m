@@ -1,169 +1,103 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11156623
-	for <loongarch@lists.linux.dev>; Thu,  9 Feb 2023 02:25:38 +0000 (UTC)
-Received: by mail-lf1-f51.google.com with SMTP id v17so1271623lfd.7
-        for <loongarch@lists.linux.dev>; Wed, 08 Feb 2023 18:25:38 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7E7627
+	for <loongarch@lists.linux.dev>; Thu,  9 Feb 2023 03:24:25 +0000 (UTC)
+Received: by mail-pl1-f173.google.com with SMTP id v23so1497134plo.1
+        for <loongarch@lists.linux.dev>; Wed, 08 Feb 2023 19:24:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BLMhakQIT48mGbHrdvPxdUIKakGtAAFrbhrtkAP1xIc=;
-        b=NAuw8qmITfKbzgSAY21VWv7uWWfH8qzLzScXXCjfhcuNIlrl9EqTGg4Wh7knFgg/3h
-         mhlJbw3wsvlQQD3Bg/BBQbuwmG6UFljokJ70KU0ULTVnR6IjlT9KCfmQMgIfGg7wEPOu
-         z3BCRn0AEJPlgWrIvvbOnY3sIYMGtOFVxxtTML+ZbtwxxzS9a4v/3y058xHkObHJlgDW
-         83ZdzIHbjjGHkUpc9NG4HNobv5LmofmRq6SLk7BvgI5zO69J0Bgl8hh4pEx2ipDbdfUn
-         cEsxu6NGZuewYaiwOrzp2tpnZoxOVXyT5pyQTrxJMWzbYviD5pJGlvuChKh/vWcy0gKL
-         5efg==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qKunBXC3vQ45FVVBeIZmijePAOg8/w3l9r8B7emsY08=;
+        b=m9f+D936Lynz8XfhzqYAPeS/gqaRhHAhH45wb77Vehe0foBNIiaUrjCzh22yFC+0mK
+         dW7jpoad/pVZo49x0Gvfq4bSkv7iXTtEKpsB7loVtxytqmBpME7Lz62+pMb2jaBXOuTh
+         0TYNRi52BzoAP1e5yHopuT3YTrEyxBlk4OwSNt2QgXgM154QaEMNeWQ0RRia7wA3fuUG
+         dPWrCWZVUwz12Lqvg5gFgB25yleiPMma4Gku2hm6Yx0E5iNvk06MmZNI9PdtzU/gcGn9
+         M0ugKYNaeZSGH4vOv/2eHeWu1bR124S/4sfXtojudOeNj9iDCV2BOeiP2YWUU35S4bff
+         /f5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BLMhakQIT48mGbHrdvPxdUIKakGtAAFrbhrtkAP1xIc=;
-        b=5XMh9KPlWlgkcH9BK9/372gPjqc/bDy2rIw+Rrr3ycx4Gt94erbrl9aJ6PDUVSg2iy
-         4sUUOZV//rc6YHaprf05noo2YMXsoLghlZmbIWL/BXlMkszwG8tnj3rpqc6+aiyIWlw5
-         qs/Ky8tBRil7tCRVwBiU5dUxmhKzbsa2zt2t/mhzJOrabgJKqrHdWbWt0igtohhjAczS
-         y6128uGmVI3euwX9tRt4vb31nUx4Xdr5kgfJCx/UKt3ci1LFG9nzjRhsCgOYc5rlgWF/
-         aC70SPh2fhk0bke9Db1BoIDJG6Qiy1mQ2jWyRMUIaB/zBpP3aZT7b6MwPshZEsLdd5WK
-         NlEw==
-X-Gm-Message-State: AO0yUKV+M4KelpHnf2wR/OADESYkzTsOGFTEKcATbfXEBcDv7xRbzGQU
-	OcrPQutLCHM4dk5Kl3Pczfrs6Zb0KpQ30zGDgas=
-X-Google-Smtp-Source: AK7set+tR+Pcz4be1Z2RwNX+EtODsH6ZtIZ90H7521wMHix2MU+MxbvOK6lpRZgqnZpZBD4z1KCgHzehupj747EwbNU=
-X-Received: by 2002:ac2:560a:0:b0:4da:fb89:fcc5 with SMTP id
- v10-20020ac2560a000000b004dafb89fcc5mr1469342lfd.192.1675909537133; Wed, 08
- Feb 2023 18:25:37 -0800 (PST)
+        bh=qKunBXC3vQ45FVVBeIZmijePAOg8/w3l9r8B7emsY08=;
+        b=MoarV7O69ZZj1ZKuO54eIfc/LRPXJyNZAchBZAXfT4twyP2HASMwXzheKNEF/4cXlj
+         VAIBSdaEqLQ/gdlJ4w9tLLDwZbCat/rUUyTHMdEwARrnZR7qzy9awapnEoGZhyLDRFym
+         VMB6xtA+fVjvymZPMYU7+E93tufe9kJiiFO/zdeygkmbrgwkAyAQIHH12M+gqERIjpRx
+         QWg/sOf9Y6k67WvxH87YR6msS6J11dyeYxpCXBw7fE6SijR54weu2Ak+VBxlO5zQU2zg
+         XTOoQpfJyTohJDlqHZzX6EkDVJT51FzAzLjb6ohZiy1SLrYWjYzMwptHhfz0S0pmYRr8
+         o2cg==
+X-Gm-Message-State: AO0yUKXLlGF1WUwOyFhAU2tXRGWZJu5cbV3aMbn4QODd4FHi2hITqr8J
+	UjqAq7uxnlax6wpGIOCQtnw=
+X-Google-Smtp-Source: AK7set/DkLLYt3R1VK/wnJ0Ej7bGTH7R6PF4H6QPNl5GJOp344SFGftIIHiCCF//lA+MRKbB9GmASQ==
+X-Received: by 2002:a17:902:d2cf:b0:195:e590:c7c6 with SMTP id n15-20020a170902d2cf00b00195e590c7c6mr9981058plc.22.1675913064918;
+        Wed, 08 Feb 2023 19:24:24 -0800 (PST)
+Received: from localhost.localdomain ([112.20.108.204])
+        by smtp.gmail.com with ESMTPSA id p5-20020a170902eac500b00192820d00d0sm216086pld.120.2023.02.08.19.24.22
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 08 Feb 2023 19:24:24 -0800 (PST)
+From: chris.chenfeiyang@gmail.com
+X-Google-Original-From: chenfeiyang@loongson.cn
+To: w@1wt.eu,
+	paulmck@kernel.org
+Cc: Feiyang Chen <chenfeiyang@loongson.cn>,
+	arnd@arndb.de,
+	chenhuacai@kernel.org,
+	jiaxun.yang@flygoat.com,
+	chris.chenfeiyang@gmail.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/5] Add LoongArch support to nolibc
+Date: Thu,  9 Feb 2023 11:24:11 +0800
+Message-Id: <cover.1675907639.git.chenfeiyang@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1675851111.git.chenfeiyang@loongson.cn> <b9bbf73286238bb4657d855c9d50983aa17953e2.1675851111.git.chenfeiyang@loongson.cn>
- <CAAhV-H5AvXdpYok43xA+QNz+oDEkcmQDxRdGoZ6jWTApf9mDBw@mail.gmail.com>
-In-Reply-To: <CAAhV-H5AvXdpYok43xA+QNz+oDEkcmQDxRdGoZ6jWTApf9mDBw@mail.gmail.com>
-From: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Date: Thu, 9 Feb 2023 10:25:25 +0800
-Message-ID: <CACWXhKnwez6oG4ErzsCe69N-cQp3Ymab=fEk798x6DyH311i-g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] tools/nolibc: Add statx() and make stat() rely on
- statx() when available
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: w@1wt.eu, paulmck@kernel.org, Feiyang Chen <chenfeiyang@loongson.cn>, arnd@arndb.de, 
-	jiaxun.yang@flygoat.com, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 8 Feb 2023 at 19:00, Huacai Chen <chenhuacai@kernel.org> wrote:
->
-> Hi, Feiyang,
->
-> On Wed, Feb 8, 2023 at 6:18 PM <chris.chenfeiyang@gmail.com> wrote:
-> >
-> > From: Feiyang Chen <chenfeiyang@loongson.cn>
-> >
-> > loongarch and riscv32 only have statx(). arc, hexagon, nios2 and
-> > openrisc have statx() and stat64() but not stat() or newstat().
-> > Add statx() and make stat() rely on statx() to make them happy.
-> Some bikesheddings, maybe it is better to use LoongArch here.
->
+From: Feiyang Chen <chenfeiyang@loongson.cn>
 
-Hi, Huacai
+Add statx() and make stat() rely on statx() if necessary.
+Add support for LoongArch (32 and 64 bit) to nolibc.
+It was tested on LoongArch64 only.
 
-Yes.
+The latest QEMU support full-system emulation of a LoongArch64
+machine, but for the moment we need to specify the firmware manually.
+https://github.com/loongson/Firmware/tree/main/LoongArchVirtMachine
 
-Thanks,
-Feiyang
+QEMU_ARGS_loongarch  = -M virt -bios edk2-loongarch64-code.fd ...
 
-> Huacai
-> >
-> > Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-> > ---
-> >  tools/include/nolibc/sys.h | 51 ++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
-> >
-> > diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-> > index c4818a9c8823..46b6b3bb3b4e 100644
-> > --- a/tools/include/nolibc/sys.h
-> > +++ b/tools/include/nolibc/sys.h
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/time.h>
-> >  #include <linux/auxvec.h>
-> >  #include <linux/fcntl.h> // for O_* and AT_*
-> > +#include <linux/stat.h>  // for statx()
-> >
-> >  #include "arch.h"
-> >  #include "errno.h"
-> > @@ -1048,12 +1049,61 @@ pid_t setsid(void)
-> >         return ret;
-> >  }
-> >
-> > +/*
-> > + * int statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf);
-> > + */
-> > +
-> > +static __attribute__((unused))
-> > +int sys_statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf)
-> > +{
-> > +       return my_syscall5(__NR_statx, fd, path, flags, mask, buf);
-> > +}
-> > +
-> > +static __attribute__((unused))
-> > +int statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf)
-> > +{
-> > +       int ret = sys_statx(fd, path, flags, mask, buf);
-> > +
-> > +       if (ret < 0) {
-> > +               SET_ERRNO(-ret);
-> > +               ret = -1;
-> > +       }
-> > +       return ret;
-> > +}
-> >
-> >  /*
-> >   * int stat(const char *path, struct stat *buf);
-> >   * Warning: the struct stat's layout is arch-dependent.
-> >   */
-> >
-> > +#ifdef __NR_statx
-> > +static __attribute__((unused))
-> > +int sys_stat(const char *path, struct stat *buf)
-> > +{
-> > +       struct statx stat;
-> > +       long ret;
-> > +
-> > +       ret = sys_statx(AT_FDCWD, path, AT_NO_AUTOMOUNT, STATX_BASIC_STATS, &stat);
-> > +       buf->st_dev     = ((stat.stx_dev_minor & 0xff)
-> > +                         | (stat.stx_dev_major << 8)
-> > +                         | ((stat.stx_dev_minor & ~0xff) << 12));
-> > +       buf->st_ino     = stat.stx_ino;
-> > +       buf->st_mode    = stat.stx_mode;
-> > +       buf->st_nlink   = stat.stx_nlink;
-> > +       buf->st_uid     = stat.stx_uid;
-> > +       buf->st_gid     = stat.stx_gid;
-> > +       buf->st_rdev    = ((stat.stx_rdev_minor & 0xff)
-> > +                         | (stat.stx_rdev_major << 8)
-> > +                         | ((stat.stx_rdev_minor & ~0xff) << 12));
-> > +       buf->st_size    = stat.stx_size;
-> > +       buf->st_blksize = stat.stx_blksize;
-> > +       buf->st_blocks  = stat.stx_blocks;
-> > +       buf->st_atime   = stat.stx_atime.tv_sec;
-> > +       buf->st_mtime   = stat.stx_mtime.tv_sec;
-> > +       buf->st_ctime   = stat.stx_ctime.tv_sec;
-> > +       return ret;
-> > +}
-> > +#else
-> >  static __attribute__((unused))
-> >  int sys_stat(const char *path, struct stat *buf)
-> >  {
-> > @@ -1083,6 +1133,7 @@ int sys_stat(const char *path, struct stat *buf)
-> >         buf->st_ctime   = stat.st_ctime;
-> >         return ret;
-> >  }
-> > +#endif /* __NR_statx */
-> >
-> >  static __attribute__((unused))
-> >  int stat(const char *path, struct stat *buf)
-> > --
-> > 2.39.0
-> >
+v2:
+- Mention that statx() will also benefit other architectures.
+- Make stat() rely on statx() when available.
+- Put the whitespace changes into one commit.
+
+v3:
+- Add #if defined(__NR_statx) guard.
+- Keep the check for statx() from the first version.
+- Mention that we may use statx() everywhere in the future.
+- struct statx stat -> struct statx statx.
+
+Feiyang Chen (5):
+  tools/nolibc: Include linux/fcntl.h and remove duplicate code
+  tools/nolibc: Add statx() and make stat() rely on statx() if necessary
+  tools/nolibc: Add support for LoongArch
+  selftests/nolibc: Add support for LoongArch
+  selftests/nolibc: Adjust indentation for Makefile
+
+ tools/include/nolibc/arch-loongarch.h   | 200 ++++++++++++++++++++++++
+ tools/include/nolibc/arch.h             |   2 +
+ tools/include/nolibc/sys.h              |  58 ++++++-
+ tools/include/nolibc/types.h            |   5 -
+ tools/testing/selftests/nolibc/Makefile |  78 ++++-----
+ 5 files changed, 300 insertions(+), 43 deletions(-)
+ create mode 100644 tools/include/nolibc/arch-loongarch.h
+
+-- 
+2.39.0
+
