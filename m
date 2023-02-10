@@ -1,193 +1,132 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764EB80F
-	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 07:13:08 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8BxZ+l87uVjFrsQAA--.28140S3;
-	Fri, 10 Feb 2023 15:13:00 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxrb567uVjlj0wAA--.30222S3;
-	Fri, 10 Feb 2023 15:12:59 +0800 (CST)
-Message-ID: <ca8763c6-6bac-47fb-4b1e-fa4e88e2c422@loongson.cn>
-Date: Fri, 10 Feb 2023 15:12:58 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A55A29
+	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 08:47:41 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxnfCqBOZjT8AQAA--.33727S3;
+	Fri, 10 Feb 2023 16:47:39 +0800 (CST)
+Received: from bogon.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxX+SpBOZjLUYwAA--.56353S2;
+	Fri, 10 Feb 2023 16:47:37 +0800 (CST)
+From: Youling Tang <tangyouling@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Xi Ruoyao <xry111@xry111.site>,
+	Jinyang He <hejinyang@loongson.cn>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/5] LoongArch: Add kernel relocation and KASLR support
+Date: Fri, 10 Feb 2023 16:47:31 +0800
+Message-Id: <1676018856-26520-1-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8AxX+SpBOZjLUYwAA--.56353S2
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZryUGrWUXF1fCFWfWFWktFb_yoW5Xrykpa
+	4Yyr98JF48Gr1fXwsxt3y5ur15t3Z7Kr1agFsFyryFkr1agF1UZr10vwnrXFyUtw4rXrWI
+	gFn5KF13K3W7AaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY
+	6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
+	AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x
+	07jjWlkUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@kernel.org>,
- David Laight <David.Laight@aculab.com>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20230209035839.2610277-1-maobibo@loongson.cn>
- <e6bb59c32134477aa4890047ae5ad51b@AcuMS.aculab.com>
- <741b2246-d609-ccc6-bf55-d6b0b5e54b54@loongson.cn>
- <2aa6243491784e74960182dc12968170@AcuMS.aculab.com>
- <CAAhV-H7BgBASt_CpSQgS6MNbzxODhoq8ykK5ZAn2y3ZOekXM9g@mail.gmail.com>
-From: maobibo <maobibo@loongson.cn>
-In-Reply-To: <CAAhV-H7BgBASt_CpSQgS6MNbzxODhoq8ykK5ZAn2y3ZOekXM9g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxrb567uVjlj0wAA--.30222S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWr4kXw1UZw45urWkCrW5trb_yoW7Jr4Upr
-	Wxtay0yFs8XF4fCa12g3WUZF4rtry3Jr15Zry0qr10v3saqrnrGFykJryjka4UJr4rCryj
-	q3Wvv3sIgFnrA3DanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
-	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
-	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
-	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
-	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
+This patch series to support kernel relocation and KASLR (only 64bit).
 
+Tested the kernel images built with new toolchain (Binutils-2.40 + patched
+GCC-12.2) and old toolchain (kernel.org cross toolchain [1]) on a
+3A5000-7A2000-EVB.
 
-在 2023/2/10 11:21, Huacai Chen 写道:
-> This commit comes from the old internal kernel, I want to know which
-> one has better performance.
-> 
-> https://github.com/loongson/linux/commit/92a6df48ccb73dd2c3dc1799add08adf0e0b0deb
+With CONFIG_RANDOMIZE_BASE=y, the results are:
 
-There is no obvious performance difference between asm code csum_partial function
-and uint128 c code. Tested with buffer size 1500/4096, uint128 c code method is
-about 5% faster than asm code csum_partial.
+1. first boot, new toolchain:
 
-regards
-bibo, mao
-> 
-> On Thu, Feb 9, 2023 at 8:39 PM David Laight <David.Laight@aculab.com> wrote:
->>
->> From: maobibo
->>> Sent: 09 February 2023 11:55
->>>
->>>
->>> 在 2023/2/9 17:35, David Laight 写道:
->>>> From: Bibo Mao
->>>>> Sent: 09 February 2023 03:59
->>>>>
->>>>> loongArch platform is 64-bit system, which supports 8 bytes memory
->>>>> accessing, generic checksum function uses 4 byte memory access.
->>>>> This patch adds 8-bytes memory access optimization for checksum
->>>>> function on loongArch. And the code comes from arm64 system.
->>>>
->>>> How fast do these functions actually run (in bytes/clock)?
->>> With uint128 method, there will unrolled loop, instruction
->>> can execute in parallel. It gets the best result on loongarch
->>> system where there is no neither carry flag nor post-index
->>> addressing modes.
->>
->> We're probably almost agreeing...
->>
->>> Here is the piece of disassemble code with uint128 method:
->>
->> Load 8 values:
->>
->>>    120000a40:   28c0222f        ld.d    $r15,$r17,8(0x8)
->>>    120000a44:   28c0622a        ld.d    $r10,$r17,24(0x18)
->>>    120000a48:   28c0a230        ld.d    $r16,$r17,40(0x28)
->>>    120000a4c:   28c0e232        ld.d    $r18,$r17,56(0x38)
->>>    120000a50:   28c0022e        ld.d    $r14,$r17,0
->>>    120000a54:   28c0422d        ld.d    $r13,$r17,16(0x10)
->>>    120000a58:   28c0822b        ld.d    $r11,$r17,32(0x20)
->>>    120000a5c:   28c0c22c        ld.d    $r12,$r17,48(0x30)
->>
->> Pairwise add them
->>
->>>    120000a60:   0010b9f7        add.d   $r23,$r15,$r14
->>>    120000a64:   0010b54d        add.d   $r13,$r10,$r13
->>>    120000a68:   0010b24c        add.d   $r12,$r18,$r12
->>>    120000a6c:   0010ae0b        add.d   $r11,$r16,$r11
->>
->> Generate 4 'carry' bits
->>
->>>    120000a70:   0012c992        sltu    $r18,$r12,$r18
->>>    120000a74:   0012beee        sltu    $r14,$r23,$r15
->>>    120000a78:   0012c170        sltu    $r16,$r11,$r16
->>>    120000a7c:   0012a9aa        sltu    $r10,$r13,$r10
->>
->> Add the carry bits onto the sums.
->> I've not quite worked out which add is which!
->> But I think you've missed a few adds here.
->>
->>>    120000a80:   0010ae0f        add.d   $r15,$r16,$r11
->>>    120000a84:   0010ddce        add.d   $r14,$r14,$r23
->>>    120000a88:   0010b250        add.d   $r16,$r18,$r12
->>>    120000a8c:   0010b54d        add.d   $r13,$r10,$r13
->>>    120000a90:   0010b5d2        add.d   $r18,$r14,$r13
->>>    120000a94:   0010c1f0        add.d   $r16,$r15,$r16
->>
->> Somewhere each value needs an add, an sltu to generate the 'carry',
->> and an add for the carry itself.
->> If you sum the carry bits into a separate register it is
->> possible to get a both adds and the sltu (for different values)
->> to run in the same clock (on a suitable cpu).
->> If there are 4 integer units you can also get the loop instructions
->> 'for free' and unrolling 8 times may not be needed at all.
->>
->> ...
->>> There is no post-index addressing modes on loongarch,
->>>       val = *mem;  // 64bit read
->>>         mem++;
->>>       sum += val;
->>>       carry = sum < val;
->>>       carry_sum += carry;
->>> it takes 5 instruction and these 5 instructions depends on previous instr.
->>
->> I'd assume the loop was unrolled enough so the address
->> increment doesn't matter.
->>
->>> There is the piece of disassemble code:
->>>    120000d90:   28c001f0        ld.d    $r16,$r15,0
->>>    120000d94:   0010c58c        add.d   $r12,$r12,$r17
->>>    120000d98:   02c021ef        addi.d  $r15,$r15,8(0x8)
->>
->> Those three instructions are independent.
->>
->>>    120000d9c:   0010b20c        add.d   $r12,$r16,$r12
->>
->> that one depends on the ld.d
->>
->>>    120000da0:   0012c191        sltu    $r17,$r12,$r16
->>
->> that depends on the add.d
->> but it could be execute after the 'bne' in parallel with the ld.d
->>
->>>    120000da4:   5fffedf2        bne     $r15,$r18,-20(0x3ffec) # 120000d90 <do_csum_64+0x90>
->>
->> If you tweak the code it is possible to get down to just
->> the addi.d and bne constraining the dependency chain.
->> (Assuming there is no delay on the read and there are an infinite
->> number of execution units.)
->> Unroll once and do:
->>         ld.d r,addr,0
->>         addi.d addr,16
->>         ld.d r,addr,-8
->>         bne addr,limit,loop_top
->> and you might get a loop that does a memory read every clock.
->>
->> So you end up worrying about how the memory read delays affect
->> the instruction pipeline.
->> The Intel x86 cpu I've got just pile up the arithmetic instructions
->> waiting for the data to be read.
->> If you get a memory read requested every clock everything else
->> follows - provided you don't try to execute too many instrcutions
->> at once.
->>
->>         David
->>
->> -
->> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
->> Registration No: 1397386 (Wales)
+$ sudo cat /proc/iomem | grep Kernel
+  01080000-0189ffff : Kernel code
+  018a0000-01deb5ff : Kernel data
+  01deb600-01ef6e9f : Kernel bss
+
+2. second boot, new toolchain:
+
+$ sudo cat /proc/iomem | grep Kernel
+  012f0000-01b0ffff : Kernel code
+  01b10000-0205b5ff : Kernel data
+  0205b600-02166e9f : Kernel bss
+
+3. first boot, old toolchain:
+  010e0000-018fffff : Kernel code
+  01900000-01e591ff : Kernel data
+  01e59200-01f56dcf : Kernel bss
+
+4. second boot, old toolchain:
+  010b0000-018cffff : Kernel code
+  018d0000-01e291ff : Kernel data
+  01e29200-01f26dcf : Kernel bss
+
+Changes from v3:
+
+- JUMP_LINK_ADDR renamed to JUMP_VIRT_ADDR, and use the way of parameter
+  passing.
+
+- Reimplement kernel relocation, when the link address and load address
+  are different, realize the effect of adaptive relocation (one of the
+  usage scenarios is kdump operation).
+
+- Reimplement KASLR.
+
+Changes from v2:
+
+- Correctly fixup pcaddi12i/ori/lu32i.d/lu52i.d sequence generated by
+  GNU as <= 2.39 for la.pcrel.
+
+Changes from v1 to v2:
+
+- Relocate the handlers instead of using a trampoline, to avoid
+  performance issue on NUMA systems.
+- Fix compiler warnings.
+
+Xi Ruoyao (2):
+  LoongArch: Use la.pcrel instead of la.abs when it's trivially possible
+  LoongArch: Use la.pcrel instead of la.abs for exception handlers
+
+Youling Tang (3):
+  LoongArch: Add JUMP_VIRT_ADDR macro implementation to avoid using
+    la.abs
+  LoongArch: Add support for kernel relocation
+  LoongArch: Add support for kernel address space layout randomization
+    (KASLR)
+
+ arch/loongarch/Kconfig                  |  38 +++++
+ arch/loongarch/Makefile                 |   5 +
+ arch/loongarch/include/asm/inst.h       |   1 +
+ arch/loongarch/include/asm/setup.h      |   6 +-
+ arch/loongarch/include/asm/stackframe.h |  14 +-
+ arch/loongarch/include/asm/uaccess.h    |   1 -
+ arch/loongarch/kernel/Makefile          |   2 +
+ arch/loongarch/kernel/entry.S           |   2 +-
+ arch/loongarch/kernel/genex.S           |  40 ++++-
+ arch/loongarch/kernel/head.S            |  31 +++-
+ arch/loongarch/kernel/relocate.c        | 215 ++++++++++++++++++++++++
+ arch/loongarch/kernel/traps.c           | 158 ++++++++++++++---
+ arch/loongarch/kernel/vmlinux.lds.S     |  11 +-
+ arch/loongarch/mm/tlb.c                 |  23 +--
+ arch/loongarch/mm/tlbex.S               |  72 +++++++-
+ arch/loongarch/power/suspend_asm.S      |   5 +-
+ 16 files changed, 560 insertions(+), 64 deletions(-)
+ create mode 100644 arch/loongarch/kernel/relocate.c
+
+-- 
+2.37.3
 
