@@ -1,129 +1,180 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF49933ED
-	for <loongarch@lists.linux.dev>; Thu,  9 Feb 2023 12:39:14 +0000 (UTC)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-246-maV0mZRmMnWCaAOCB0EZVA-1; Thu, 09 Feb 2023 12:39:11 +0000
-X-MC-Unique: maV0mZRmMnWCaAOCB0EZVA-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.45; Thu, 9 Feb
- 2023 12:39:07 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.045; Thu, 9 Feb 2023 12:39:07 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'maobibo' <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	"WANG Xuerui" <kernel@xen0n.name>
-CC: Jiaxun Yang <jiaxun.yang@flygoat.com>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
-Thread-Topic: [PATCH v2] LoongArch: add checksum optimization for 64-bit
- system
-Thread-Index: AQHZPDrPjnYkuPc3GUK7DnTa61yn8K7GU7lQgAAunoCAAAOYoA==
-Date: Thu, 9 Feb 2023 12:39:07 +0000
-Message-ID: <2aa6243491784e74960182dc12968170@AcuMS.aculab.com>
-References: <20230209035839.2610277-1-maobibo@loongson.cn>
- <e6bb59c32134477aa4890047ae5ad51b@AcuMS.aculab.com>
- <741b2246-d609-ccc6-bf55-d6b0b5e54b54@loongson.cn>
-In-Reply-To: <741b2246-d609-ccc6-bf55-d6b0b5e54b54@loongson.cn>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774C1627
+	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 03:21:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20556C433A0
+	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 03:21:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1675999307;
+	bh=kx8K+qjPI3fEVB2cKDazV2+EJu5JDYSk+vcOqEGi0Rs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ag35YqlGysUM5iTBMV6QTNoMHxEFux+SLd6UBMYXzCSb8MRG0q23yfGkWcpidgJvq
+	 jQCPne6Mp19nnrT9NY7n35SBFKzP+us0Kmvw2xFi5YUn8enyLCHUoCBr1gJ2kcEnTd
+	 TxrFUzDCeD54EPiV7JAmxjBnY+Gwqhav8lwbD4xAaLelgjInRNrBPaB4MdPAfqREho
+	 a08S7qxisZfMSB0YLSyEgkluiLs3O0KK8Ytub08UaDnZ9Bd9DKbOLkUdTLYi5gfYEN
+	 e3Qmt0aOBjMZMEkAFFhWAvOhma+ZtqunEA9HdQ+qclb8r7PGB3UwKmfs8k/c+iVpyo
+	 MZkUN54GQiQqA==
+Received: by mail-ej1-f45.google.com with SMTP id jg8so12459731ejc.6
+        for <loongarch@lists.linux.dev>; Thu, 09 Feb 2023 19:21:47 -0800 (PST)
+X-Gm-Message-State: AO0yUKVkN0/WV8q/02fNhq1nqS9yQ0kvqTEr/NAvejmbcEMxkt/2pnlA
+	LtGvnkKF/0rhUKMtNQBLaYurPCn8cnVHkaeynKE=
+X-Google-Smtp-Source: AK7set+PihFfDOFPBtCCTlYAxuDSf7LfkVmUWMZ3DTl2A8TkRWZ/5QbP1ECkuEi/45gSUPh2Oh2JlEMS7iXI9DHGPM8=
+X-Received: by 2002:a17:907:2e02:b0:8af:4969:6c5f with SMTP id
+ ig2-20020a1709072e0200b008af49696c5fmr273909ejc.150.1675999305288; Thu, 09
+ Feb 2023 19:21:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20230209035839.2610277-1-maobibo@loongson.cn> <e6bb59c32134477aa4890047ae5ad51b@AcuMS.aculab.com>
+ <741b2246-d609-ccc6-bf55-d6b0b5e54b54@loongson.cn> <2aa6243491784e74960182dc12968170@AcuMS.aculab.com>
+In-Reply-To: <2aa6243491784e74960182dc12968170@AcuMS.aculab.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 10 Feb 2023 11:21:33 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7BgBASt_CpSQgS6MNbzxODhoq8ykK5ZAn2y3ZOekXM9g@mail.gmail.com>
+Message-ID: <CAAhV-H7BgBASt_CpSQgS6MNbzxODhoq8ykK5ZAn2y3ZOekXM9g@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
+To: David Laight <David.Laight@aculab.com>
+Cc: maobibo <maobibo@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-RnJvbTogbWFvYmlibw0KPiBTZW50OiAwOSBGZWJydWFyeSAyMDIzIDExOjU1DQo+IA0KPiANCj4g
-5ZyoIDIwMjMvMi85IDE3OjM1LCBEYXZpZCBMYWlnaHQg5YaZ6YGTOg0KPiA+IEZyb206IEJpYm8g
-TWFvDQo+ID4+IFNlbnQ6IDA5IEZlYnJ1YXJ5IDIwMjMgMDM6NTkNCj4gPj4NCj4gPj4gbG9vbmdB
-cmNoIHBsYXRmb3JtIGlzIDY0LWJpdCBzeXN0ZW0sIHdoaWNoIHN1cHBvcnRzIDggYnl0ZXMgbWVt
-b3J5DQo+ID4+IGFjY2Vzc2luZywgZ2VuZXJpYyBjaGVja3N1bSBmdW5jdGlvbiB1c2VzIDQgYnl0
-ZSBtZW1vcnkgYWNjZXNzLg0KPiA+PiBUaGlzIHBhdGNoIGFkZHMgOC1ieXRlcyBtZW1vcnkgYWNj
-ZXNzIG9wdGltaXphdGlvbiBmb3IgY2hlY2tzdW0NCj4gPj4gZnVuY3Rpb24gb24gbG9vbmdBcmNo
-LiBBbmQgdGhlIGNvZGUgY29tZXMgZnJvbSBhcm02NCBzeXN0ZW0uDQo+ID4NCj4gPiBIb3cgZmFz
-dCBkbyB0aGVzZSBmdW5jdGlvbnMgYWN0dWFsbHkgcnVuIChpbiBieXRlcy9jbG9jayk/DQo+IFdp
-dGggdWludDEyOCBtZXRob2QsIHRoZXJlIHdpbGwgdW5yb2xsZWQgbG9vcCwgaW5zdHJ1Y3Rpb24N
-Cj4gY2FuIGV4ZWN1dGUgaW4gcGFyYWxsZWwuIEl0IGdldHMgdGhlIGJlc3QgcmVzdWx0IG9uIGxv
-b25nYXJjaA0KPiBzeXN0ZW0gd2hlcmUgdGhlcmUgaXMgbm8gbmVpdGhlciBjYXJyeSBmbGFnIG5v
-ciBwb3N0LWluZGV4DQo+IGFkZHJlc3NpbmcgbW9kZXMuDQoNCldlJ3JlIHByb2JhYmx5IGFsbW9z
-dCBhZ3JlZWluZy4uLg0KDQo+IEhlcmUgaXMgdGhlIHBpZWNlIG9mIGRpc2Fzc2VtYmxlIGNvZGUg
-d2l0aCB1aW50MTI4IG1ldGhvZDoNCg0KTG9hZCA4IHZhbHVlczoNCg0KPiAgICAxMjAwMDBhNDA6
-ICAgMjhjMDIyMmYgICAgICAgIGxkLmQgICAgJHIxNSwkcjE3LDgoMHg4KQ0KPiAgICAxMjAwMDBh
-NDQ6ICAgMjhjMDYyMmEgICAgICAgIGxkLmQgICAgJHIxMCwkcjE3LDI0KDB4MTgpDQo+ICAgIDEy
-MDAwMGE0ODogICAyOGMwYTIzMCAgICAgICAgbGQuZCAgICAkcjE2LCRyMTcsNDAoMHgyOCkNCj4g
-ICAgMTIwMDAwYTRjOiAgIDI4YzBlMjMyICAgICAgICBsZC5kICAgICRyMTgsJHIxNyw1NigweDM4
-KQ0KPiAgICAxMjAwMDBhNTA6ICAgMjhjMDAyMmUgICAgICAgIGxkLmQgICAgJHIxNCwkcjE3LDAN
-Cj4gICAgMTIwMDAwYTU0OiAgIDI4YzA0MjJkICAgICAgICBsZC5kICAgICRyMTMsJHIxNywxNigw
-eDEwKQ0KPiAgICAxMjAwMDBhNTg6ICAgMjhjMDgyMmIgICAgICAgIGxkLmQgICAgJHIxMSwkcjE3
-LDMyKDB4MjApDQo+ICAgIDEyMDAwMGE1YzogICAyOGMwYzIyYyAgICAgICAgbGQuZCAgICAkcjEy
-LCRyMTcsNDgoMHgzMCkNCg0KUGFpcndpc2UgYWRkIHRoZW0NCg0KPiAgICAxMjAwMDBhNjA6ICAg
-MDAxMGI5ZjcgICAgICAgIGFkZC5kICAgJHIyMywkcjE1LCRyMTQNCj4gICAgMTIwMDAwYTY0OiAg
-IDAwMTBiNTRkICAgICAgICBhZGQuZCAgICRyMTMsJHIxMCwkcjEzDQo+ICAgIDEyMDAwMGE2ODog
-ICAwMDEwYjI0YyAgICAgICAgYWRkLmQgICAkcjEyLCRyMTgsJHIxMg0KPiAgICAxMjAwMDBhNmM6
-ICAgMDAxMGFlMGIgICAgICAgIGFkZC5kICAgJHIxMSwkcjE2LCRyMTENCg0KR2VuZXJhdGUgNCAn
-Y2FycnknIGJpdHMNCg0KPiAgICAxMjAwMDBhNzA6ICAgMDAxMmM5OTIgICAgICAgIHNsdHUgICAg
-JHIxOCwkcjEyLCRyMTgNCj4gICAgMTIwMDAwYTc0OiAgIDAwMTJiZWVlICAgICAgICBzbHR1ICAg
-ICRyMTQsJHIyMywkcjE1DQo+ICAgIDEyMDAwMGE3ODogICAwMDEyYzE3MCAgICAgICAgc2x0dSAg
-ICAkcjE2LCRyMTEsJHIxNg0KPiAgICAxMjAwMDBhN2M6ICAgMDAxMmE5YWEgICAgICAgIHNsdHUg
-ICAgJHIxMCwkcjEzLCRyMTANCg0KQWRkIHRoZSBjYXJyeSBiaXRzIG9udG8gdGhlIHN1bXMuDQpJ
-J3ZlIG5vdCBxdWl0ZSB3b3JrZWQgb3V0IHdoaWNoIGFkZCBpcyB3aGljaCENCkJ1dCBJIHRoaW5r
-IHlvdSd2ZSBtaXNzZWQgYSBmZXcgYWRkcyBoZXJlLg0KDQo+ICAgIDEyMDAwMGE4MDogICAwMDEw
-YWUwZiAgICAgICAgYWRkLmQgICAkcjE1LCRyMTYsJHIxMQ0KPiAgICAxMjAwMDBhODQ6ICAgMDAx
-MGRkY2UgICAgICAgIGFkZC5kICAgJHIxNCwkcjE0LCRyMjMNCj4gICAgMTIwMDAwYTg4OiAgIDAw
-MTBiMjUwICAgICAgICBhZGQuZCAgICRyMTYsJHIxOCwkcjEyDQo+ICAgIDEyMDAwMGE4YzogICAw
-MDEwYjU0ZCAgICAgICAgYWRkLmQgICAkcjEzLCRyMTAsJHIxMw0KPiAgICAxMjAwMDBhOTA6ICAg
-MDAxMGI1ZDIgICAgICAgIGFkZC5kICAgJHIxOCwkcjE0LCRyMTMNCj4gICAgMTIwMDAwYTk0OiAg
-IDAwMTBjMWYwICAgICAgICBhZGQuZCAgICRyMTYsJHIxNSwkcjE2DQoNClNvbWV3aGVyZSBlYWNo
-IHZhbHVlIG5lZWRzIGFuIGFkZCwgYW4gc2x0dSB0byBnZW5lcmF0ZSB0aGUgJ2NhcnJ5JywNCmFu
-ZCBhbiBhZGQgZm9yIHRoZSBjYXJyeSBpdHNlbGYuDQpJZiB5b3Ugc3VtIHRoZSBjYXJyeSBiaXRz
-IGludG8gYSBzZXBhcmF0ZSByZWdpc3RlciBpdCBpcw0KcG9zc2libGUgdG8gZ2V0IGEgYm90aCBh
-ZGRzIGFuZCB0aGUgc2x0dSAoZm9yIGRpZmZlcmVudCB2YWx1ZXMpDQp0byBydW4gaW4gdGhlIHNh
-bWUgY2xvY2sgKG9uIGEgc3VpdGFibGUgY3B1KS4NCklmIHRoZXJlIGFyZSA0IGludGVnZXIgdW5p
-dHMgeW91IGNhbiBhbHNvIGdldCB0aGUgbG9vcCBpbnN0cnVjdGlvbnMNCidmb3IgZnJlZScgYW5k
-IHVucm9sbGluZyA4IHRpbWVzIG1heSBub3QgYmUgbmVlZGVkIGF0IGFsbC4NCg0KLi4uDQo+IFRo
-ZXJlIGlzIG5vIHBvc3QtaW5kZXggYWRkcmVzc2luZyBtb2RlcyBvbiBsb29uZ2FyY2gsDQo+ICAJ
-dmFsID0gKm1lbTsgIC8vIDY0Yml0IHJlYWQNCj4gICAgICAgICBtZW0rKzsNCj4gIAlzdW0gKz0g
-dmFsOw0KPiAgCWNhcnJ5ID0gc3VtIDwgdmFsOw0KPiAgCWNhcnJ5X3N1bSArPSBjYXJyeTsNCj4g
-aXQgdGFrZXMgNSBpbnN0cnVjdGlvbiBhbmQgdGhlc2UgNSBpbnN0cnVjdGlvbnMgZGVwZW5kcyBv
-biBwcmV2aW91cyBpbnN0ci4NCg0KSSdkIGFzc3VtZSB0aGUgbG9vcCB3YXMgdW5yb2xsZWQgZW5v
-dWdoIHNvIHRoZSBhZGRyZXNzDQppbmNyZW1lbnQgZG9lc24ndCBtYXR0ZXIuDQoNCj4gVGhlcmUg
-aXMgdGhlIHBpZWNlIG9mIGRpc2Fzc2VtYmxlIGNvZGU6DQo+ICAgIDEyMDAwMGQ5MDogICAyOGMw
-MDFmMCAgICAgICAgbGQuZCAgICAkcjE2LCRyMTUsMA0KPiAgICAxMjAwMDBkOTQ6ICAgMDAxMGM1
-OGMgICAgICAgIGFkZC5kICAgJHIxMiwkcjEyLCRyMTcNCj4gICAgMTIwMDAwZDk4OiAgIDAyYzAy
-MWVmICAgICAgICBhZGRpLmQgICRyMTUsJHIxNSw4KDB4OCkNCg0KVGhvc2UgdGhyZWUgaW5zdHJ1
-Y3Rpb25zIGFyZSBpbmRlcGVuZGVudC4NCg0KPiAgICAxMjAwMDBkOWM6ICAgMDAxMGIyMGMgICAg
-ICAgIGFkZC5kICAgJHIxMiwkcjE2LCRyMTINCg0KdGhhdCBvbmUgZGVwZW5kcyBvbiB0aGUgbGQu
-ZA0KDQo+ICAgIDEyMDAwMGRhMDogICAwMDEyYzE5MSAgICAgICAgc2x0dSAgICAkcjE3LCRyMTIs
-JHIxNg0KDQp0aGF0IGRlcGVuZHMgb24gdGhlIGFkZC5kDQpidXQgaXQgY291bGQgYmUgZXhlY3V0
-ZSBhZnRlciB0aGUgJ2JuZScgaW4gcGFyYWxsZWwgd2l0aCB0aGUgbGQuZA0KDQo+ICAgIDEyMDAw
-MGRhNDogICA1ZmZmZWRmMiAgICAgICAgYm5lICAgICAkcjE1LCRyMTgsLTIwKDB4M2ZmZWMpICMg
-MTIwMDAwZDkwIDxkb19jc3VtXzY0KzB4OTA+DQoNCklmIHlvdSB0d2VhayB0aGUgY29kZSBpdCBp
-cyBwb3NzaWJsZSB0byBnZXQgZG93biB0byBqdXN0DQp0aGUgYWRkaS5kIGFuZCBibmUgY29uc3Ry
-YWluaW5nIHRoZSBkZXBlbmRlbmN5IGNoYWluLg0KKEFzc3VtaW5nIHRoZXJlIGlzIG5vIGRlbGF5
-IG9uIHRoZSByZWFkIGFuZCB0aGVyZSBhcmUgYW4gaW5maW5pdGUNCm51bWJlciBvZiBleGVjdXRp
-b24gdW5pdHMuKQ0KVW5yb2xsIG9uY2UgYW5kIGRvOg0KCWxkLmQgcixhZGRyLDANCglhZGRpLmQg
-YWRkciwxNg0KCWxkLmQgcixhZGRyLC04DQoJYm5lIGFkZHIsbGltaXQsbG9vcF90b3ANCmFuZCB5
-b3UgbWlnaHQgZ2V0IGEgbG9vcCB0aGF0IGRvZXMgYSBtZW1vcnkgcmVhZCBldmVyeSBjbG9jay4N
-Cg0KU28geW91IGVuZCB1cCB3b3JyeWluZyBhYm91dCBob3cgdGhlIG1lbW9yeSByZWFkIGRlbGF5
-cyBhZmZlY3QNCnRoZSBpbnN0cnVjdGlvbiBwaXBlbGluZS4NClRoZSBJbnRlbCB4ODYgY3B1IEkn
-dmUgZ290IGp1c3QgcGlsZSB1cCB0aGUgYXJpdGhtZXRpYyBpbnN0cnVjdGlvbnMNCndhaXRpbmcg
-Zm9yIHRoZSBkYXRhIHRvIGJlIHJlYWQuDQpJZiB5b3UgZ2V0IGEgbWVtb3J5IHJlYWQgcmVxdWVz
-dGVkIGV2ZXJ5IGNsb2NrIGV2ZXJ5dGhpbmcgZWxzZQ0KZm9sbG93cyAtIHByb3ZpZGVkIHlvdSBk
-b24ndCB0cnkgdG8gZXhlY3V0ZSB0b28gbWFueSBpbnN0cmN1dGlvbnMNCmF0IG9uY2UuDQoNCglE
-YXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91
-bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5
-NzM4NiAoV2FsZXMpDQo=
+This commit comes from the old internal kernel, I want to know which
+one has better performance.
 
+https://github.com/loongson/linux/commit/92a6df48ccb73dd2c3dc1799add08adf0e=
+0b0deb
+
+On Thu, Feb 9, 2023 at 8:39 PM David Laight <David.Laight@aculab.com> wrote=
+:
+>
+> From: maobibo
+> > Sent: 09 February 2023 11:55
+> >
+> >
+> > =E5=9C=A8 2023/2/9 17:35, David Laight =E5=86=99=E9=81=93:
+> > > From: Bibo Mao
+> > >> Sent: 09 February 2023 03:59
+> > >>
+> > >> loongArch platform is 64-bit system, which supports 8 bytes memory
+> > >> accessing, generic checksum function uses 4 byte memory access.
+> > >> This patch adds 8-bytes memory access optimization for checksum
+> > >> function on loongArch. And the code comes from arm64 system.
+> > >
+> > > How fast do these functions actually run (in bytes/clock)?
+> > With uint128 method, there will unrolled loop, instruction
+> > can execute in parallel. It gets the best result on loongarch
+> > system where there is no neither carry flag nor post-index
+> > addressing modes.
+>
+> We're probably almost agreeing...
+>
+> > Here is the piece of disassemble code with uint128 method:
+>
+> Load 8 values:
+>
+> >    120000a40:   28c0222f        ld.d    $r15,$r17,8(0x8)
+> >    120000a44:   28c0622a        ld.d    $r10,$r17,24(0x18)
+> >    120000a48:   28c0a230        ld.d    $r16,$r17,40(0x28)
+> >    120000a4c:   28c0e232        ld.d    $r18,$r17,56(0x38)
+> >    120000a50:   28c0022e        ld.d    $r14,$r17,0
+> >    120000a54:   28c0422d        ld.d    $r13,$r17,16(0x10)
+> >    120000a58:   28c0822b        ld.d    $r11,$r17,32(0x20)
+> >    120000a5c:   28c0c22c        ld.d    $r12,$r17,48(0x30)
+>
+> Pairwise add them
+>
+> >    120000a60:   0010b9f7        add.d   $r23,$r15,$r14
+> >    120000a64:   0010b54d        add.d   $r13,$r10,$r13
+> >    120000a68:   0010b24c        add.d   $r12,$r18,$r12
+> >    120000a6c:   0010ae0b        add.d   $r11,$r16,$r11
+>
+> Generate 4 'carry' bits
+>
+> >    120000a70:   0012c992        sltu    $r18,$r12,$r18
+> >    120000a74:   0012beee        sltu    $r14,$r23,$r15
+> >    120000a78:   0012c170        sltu    $r16,$r11,$r16
+> >    120000a7c:   0012a9aa        sltu    $r10,$r13,$r10
+>
+> Add the carry bits onto the sums.
+> I've not quite worked out which add is which!
+> But I think you've missed a few adds here.
+>
+> >    120000a80:   0010ae0f        add.d   $r15,$r16,$r11
+> >    120000a84:   0010ddce        add.d   $r14,$r14,$r23
+> >    120000a88:   0010b250        add.d   $r16,$r18,$r12
+> >    120000a8c:   0010b54d        add.d   $r13,$r10,$r13
+> >    120000a90:   0010b5d2        add.d   $r18,$r14,$r13
+> >    120000a94:   0010c1f0        add.d   $r16,$r15,$r16
+>
+> Somewhere each value needs an add, an sltu to generate the 'carry',
+> and an add for the carry itself.
+> If you sum the carry bits into a separate register it is
+> possible to get a both adds and the sltu (for different values)
+> to run in the same clock (on a suitable cpu).
+> If there are 4 integer units you can also get the loop instructions
+> 'for free' and unrolling 8 times may not be needed at all.
+>
+> ...
+> > There is no post-index addressing modes on loongarch,
+> >       val =3D *mem;  // 64bit read
+> >         mem++;
+> >       sum +=3D val;
+> >       carry =3D sum < val;
+> >       carry_sum +=3D carry;
+> > it takes 5 instruction and these 5 instructions depends on previous ins=
+tr.
+>
+> I'd assume the loop was unrolled enough so the address
+> increment doesn't matter.
+>
+> > There is the piece of disassemble code:
+> >    120000d90:   28c001f0        ld.d    $r16,$r15,0
+> >    120000d94:   0010c58c        add.d   $r12,$r12,$r17
+> >    120000d98:   02c021ef        addi.d  $r15,$r15,8(0x8)
+>
+> Those three instructions are independent.
+>
+> >    120000d9c:   0010b20c        add.d   $r12,$r16,$r12
+>
+> that one depends on the ld.d
+>
+> >    120000da0:   0012c191        sltu    $r17,$r12,$r16
+>
+> that depends on the add.d
+> but it could be execute after the 'bne' in parallel with the ld.d
+>
+> >    120000da4:   5fffedf2        bne     $r15,$r18,-20(0x3ffec) # 120000=
+d90 <do_csum_64+0x90>
+>
+> If you tweak the code it is possible to get down to just
+> the addi.d and bne constraining the dependency chain.
+> (Assuming there is no delay on the read and there are an infinite
+> number of execution units.)
+> Unroll once and do:
+>         ld.d r,addr,0
+>         addi.d addr,16
+>         ld.d r,addr,-8
+>         bne addr,limit,loop_top
+> and you might get a loop that does a memory read every clock.
+>
+> So you end up worrying about how the memory read delays affect
+> the instruction pipeline.
+> The Intel x86 cpu I've got just pile up the arithmetic instructions
+> waiting for the data to be read.
+> If you get a memory read requested every clock everything else
+> follows - provided you don't try to execute too many instrcutions
+> at once.
+>
+>         David
+>
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
+ 1PT, UK
+> Registration No: 1397386 (Wales)
