@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006F3A29
-	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 09:05:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAF31C433A4
-	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 09:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26B2A29
+	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 09:06:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D41C4339E
+	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 09:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1676019908;
-	bh=9U7CAvxUS1c6VeuyWWZ3cZARkJIL/0IO53QbqxCET9U=;
+	s=k20201202; t=1676019966;
+	bh=1r7L+3EHiBcjwCIcanjKDgAqmBUr/TaCmD4Qt2zzwVM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ql0iGiaOSKr1ANSwRtZLRZt02O4DtpdBeg5JVRlMlGVFTZW67xxSOXU6LrKY8l28h
-	 NRbcd5Mp3tpY6HEqg0sLBa4KyvRzRwqlsEiz1Fp+1sfMG0t1AzKQ1N1mz8cmwzJaM3
-	 rXtzhv9GSj2UCyvde2hztc3UutaUzoMDGlanj4JKisxx+sNR9gO/yAvavu4FNiDDo2
-	 b37wTVoVfOTvrlYjdRaw47sBOze77sLlZoWYiBk7ESyne8i0rfA40AJx+0YEvI4D79
-	 WN2xUQ1rohh1co5aMrZnAxhjMzM4yyZwUqm68xv90dlxbytWCBQ1qRbZBo4BHztS+D
-	 rOn2fjJ2/+bIA==
-Received: by mail-ej1-f51.google.com with SMTP id m2so13967054ejb.8
-        for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 01:05:08 -0800 (PST)
-X-Gm-Message-State: AO0yUKXcL8rtssg7seFBhPdGEJkAsZIh+1B27slKn54AqC9VM5s2ipl1
-	OC9TSqsIgJCibkFCASFj49ETQsm1odzPIsg42SQ=
-X-Google-Smtp-Source: AK7set9plhZBOmVMfSwgksajA1QtuS8dBN87wF4hZN1kxaK4auVE8/wT4XPf2Q4IupvW6dsq6Vpmf9yEnKwQ08bpPO8=
-X-Received: by 2002:a17:907:366:b0:88d:ba79:4310 with SMTP id
- rs6-20020a170907036600b0088dba794310mr1286469ejb.0.1676019906867; Fri, 10 Feb
- 2023 01:05:06 -0800 (PST)
+	b=E7EMdbTSs8yW9HP/CXI9rSifsgdTlu6ilA8Bfv1EZaf0dxEcDIqhdVIA5Hanq//zC
+	 8q0PQ2qB8UJ1Ph8xJ+LCeDGrGjb8uo/QanmgVKcFy8wUIBCuuVg1j0zqUf/zuJuIlr
+	 xIRbGx04Js6u/tbtUMSiEhWA9tjO7poCOC+511/HtEEKT3fCvKI9rzCW8rSWQuHcmI
+	 GOTF+CYcwaPpVJMHZly1qDtRrQOGaDYAKAnFD1xWnrRo+PsAlHsj3KzPKT7SzKgBH6
+	 Q3Q1pnuyYwvjF4K2fIfrKiAc7VI7SJW1n9LQN/xskUKBpBHd8SnP6VQ99pV9ppW3EE
+	 vWTlI8VCTdklQ==
+Received: by mail-ed1-f54.google.com with SMTP id l12so4242818edb.0
+        for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 01:06:06 -0800 (PST)
+X-Gm-Message-State: AO0yUKXMBpThS1ysImLtVjEEGSPbntOu3pWK94dNQMnOfNedSVxDkmx8
+	pA75bdWXiegoAGCF1PYNzZZowsvyFCsjItgCyKs=
+X-Google-Smtp-Source: AK7set+3oqG6WFGBWVSGztfivQLcSrUNYBhoQbuSp6GlP4aJ27vDBbKw7eJMohUdwy9h8SVTHDDmlW3o5AjwCUSwOhM=
+X-Received: by 2002:a50:99c3:0:b0:49d:ec5d:28b1 with SMTP id
+ n3-20020a5099c3000000b0049dec5d28b1mr3213137edb.7.1676019964850; Fri, 10 Feb
+ 2023 01:06:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1676018856-26520-1-git-send-email-tangyouling@loongson.cn> <1676018856-26520-2-git-send-email-tangyouling@loongson.cn>
-In-Reply-To: <1676018856-26520-2-git-send-email-tangyouling@loongson.cn>
+References: <1676018856-26520-1-git-send-email-tangyouling@loongson.cn> <1676018856-26520-5-git-send-email-tangyouling@loongson.cn>
+In-Reply-To: <1676018856-26520-5-git-send-email-tangyouling@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 10 Feb 2023 17:04:55 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4VqA0HmrG1B_NNsX=7Stnun1B_TCQiKa-3h1Y_Y1JqOA@mail.gmail.com>
-Message-ID: <CAAhV-H4VqA0HmrG1B_NNsX=7Stnun1B_TCQiKa-3h1Y_Y1JqOA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] LoongArch: Use la.pcrel instead of la.abs when
- it's trivially possible
+Date: Fri, 10 Feb 2023 17:05:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6NdM014fWuP3=mDMtfroYtfQ9r6orDBXz0D1R99ophQQ@mail.gmail.com>
+Message-ID: <CAAhV-H6NdM014fWuP3=mDMtfroYtfQ9r6orDBXz0D1R99ophQQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] LoongArch: Add support for kernel relocation
 To: Youling Tang <tangyouling@loongson.cn>
 Cc: Xi Ruoyao <xry111@xry111.site>, Jinyang He <hejinyang@loongson.cn>, 
 	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
@@ -44,91 +43,240 @@ Content-Type: text/plain; charset="UTF-8"
 
 Hi, Youling,
 
-On Fri, Feb 10, 2023 at 4:47 PM Youling Tang <tangyouling@loongson.cn> wrote:
+On Fri, Feb 10, 2023 at 4:48 PM Youling Tang <tangyouling@loongson.cn> wrote:
 >
-> From: Xi Ruoyao <xry111@xry111.site>
+> This config allows to compile kernel as PIE and to relocate it at
+> any virtual address at runtime: this paves the way to KASLR.
+> Runtime relocation is possible since relocation metadata are embedded
+> into the kernel.
 >
-> Let's start to kill la.abs inpreparation for the subsequent support of the
-> PIE kernel.
->
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site> # Use arch_initcall
 > ---
->  arch/loongarch/include/asm/stackframe.h | 2 +-
->  arch/loongarch/include/asm/uaccess.h    | 1 -
->  arch/loongarch/kernel/entry.S           | 2 +-
->  arch/loongarch/kernel/head.S            | 2 +-
->  arch/loongarch/mm/tlbex.S               | 3 +--
->  5 files changed, 4 insertions(+), 6 deletions(-)
+>  arch/loongarch/Kconfig              | 15 ++++++
+>  arch/loongarch/Makefile             |  5 ++
+>  arch/loongarch/kernel/Makefile      |  2 +
+>  arch/loongarch/kernel/head.S        |  5 ++
+>  arch/loongarch/kernel/relocate.c    | 78 +++++++++++++++++++++++++++++
+>  arch/loongarch/kernel/vmlinux.lds.S | 11 +++-
+>  6 files changed, 114 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/loongarch/kernel/relocate.c
 >
-> diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
-> index 4ca953062b5b..7deb043ce387 100644
-> --- a/arch/loongarch/include/asm/stackframe.h
-> +++ b/arch/loongarch/include/asm/stackframe.h
-> @@ -90,7 +90,7 @@
->         .endm
->
->         .macro  set_saved_sp stackp temp temp2
-> -       la.abs    \temp, kernelsp
-> +       la.pcrel  \temp, kernelsp
->  #ifdef CONFIG_SMP
->         LONG_ADD  \temp, \temp, u0
->  #endif
-> diff --git a/arch/loongarch/include/asm/uaccess.h b/arch/loongarch/include/asm/uaccess.h
-> index 255899d4a7c3..0d22991ae430 100644
-> --- a/arch/loongarch/include/asm/uaccess.h
-> +++ b/arch/loongarch/include/asm/uaccess.h
-> @@ -22,7 +22,6 @@
->  extern u64 __ua_limit;
->
->  #define __UA_ADDR      ".dword"
-> -#define __UA_LA                "la.abs"
->  #define __UA_LIMIT     __ua_limit
->
->  /*
-> diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-> index d53b631c9022..2566977f2f68 100644
-> --- a/arch/loongarch/kernel/entry.S
-> +++ b/arch/loongarch/kernel/entry.S
-> @@ -20,7 +20,7 @@
->         .align  5
->  SYM_FUNC_START(handle_syscall)
->         csrrd   t0, PERCPU_BASE_KS
-> -       la.abs  t1, kernelsp
-> +       la.pcrel        t1, kernelsp
-Retab the whole function to align the first parameter, please.
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 9cc8b84f7eb0..089a4695b1b3 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -48,6 +48,7 @@ config LOONGARCH
+>         select ARCH_SUPPORTS_ATOMIC_RMW
+>         select ARCH_SUPPORTS_HUGETLBFS
+>         select ARCH_SUPPORTS_NUMA_BALANCING
+> +       select SYS_SUPPORTS_RELOCATABLE
+We don't need such a Kconfig option since it is always true.
 
 Huacai
->         add.d   t1, t1, t0
->         move    t2, sp
->         ld.d    sp, t1, 0
+>         select ARCH_USE_BUILTIN_BSWAP
+>         select ARCH_USE_CMPXCHG_LOCKREF
+>         select ARCH_USE_QUEUED_RWLOCKS
+> @@ -229,6 +230,11 @@ config SCHED_OMIT_FRAME_POINTER
+>  config AS_HAS_EXPLICIT_RELOCS
+>         def_bool $(as-instr,x:pcalau12i \$t0$(comma)%pc_hi20(x))
+>
+> +config SYS_SUPPORTS_RELOCATABLE
+> +       bool
+> +       help
+> +         Selected if the platform supports relocating the kernel.
+> +
+>  menu "Kernel type and options"
+>
+>  source "kernel/Kconfig.hz"
+> @@ -474,6 +480,15 @@ config PHYSICAL_START
+>           specified in the "crashkernel=YM@XM" command line boot parameter
+>           passed to the panic-ed kernel).
+>
+> +config RELOCATABLE
+> +       bool "Relocatable kernel"
+> +       depends on SYS_SUPPORTS_RELOCATABLE
+> +       help
+> +         This builds the kernel as a Position Independent Executable (PIE),
+> +         which retains all relocation metadata required to relocate the
+> +         kernel binary at runtime to a different virtual address than the
+> +         address it was linked at.
+> +
+>  config SECCOMP
+>         bool "Enable seccomp to safely compute untrusted bytecode"
+>         depends on PROC_FS
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index 4402387d2755..27b5a70ff31c 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+> @@ -71,6 +71,11 @@ KBUILD_AFLAGS_MODULE         += -Wa,-mla-global-with-abs
+>  KBUILD_CFLAGS_MODULE           += -fplt -Wa,-mla-global-with-abs,-mla-local-with-abs
+>  endif
+>
+> +ifeq ($(CONFIG_RELOCATABLE),y)
+> +LDFLAGS_vmlinux                        += -static -pie --no-dynamic-linker -z notext
+> +KBUILD_CFLAGS_KERNEL           += -fPIE
+> +endif
+> +
+>  cflags-y += -ffreestanding
+>  cflags-y += $(call cc-option, -mno-check-zero-division)
+>
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+> index c8cfbd562921..3341dd5f0926 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -31,6 +31,8 @@ endif
+>  obj-$(CONFIG_MODULES)          += module.o module-sections.o
+>  obj-$(CONFIG_STACKTRACE)       += stacktrace.o
+>
+> +obj-$(CONFIG_RELOCATABLE)      += relocate.o
+> +
+>  obj-$(CONFIG_PROC_FS)          += proc.o
+>
+>  obj-$(CONFIG_SMP)              += smp.o
 > diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> index 57bada6b4e93..aa6181714ec3 100644
+> index d2ac26b5b22b..499edc80d8ab 100644
 > --- a/arch/loongarch/kernel/head.S
 > +++ b/arch/loongarch/kernel/head.S
-> @@ -117,7 +117,7 @@ SYM_CODE_START(smpboot_entry)
->         li.w            t0, 0x00                # FPE=0, SXE=0, ASXE=0, BTE=0
->         csrwr           t0, LOONGARCH_CSR_EUEN
+> @@ -86,6 +86,11 @@ SYM_CODE_START(kernel_entry)                 # kernel entry point
+>         PTR_ADD         sp, sp, tp
+>         set_saved_sp    sp, t0, t1
 >
-> -       la.abs          t0, cpuboot_data
-> +       la.pcrel        t0, cpuboot_data
->         ld.d            sp, t0, CPU_BOOT_STACK
->         ld.d            tp, t0, CPU_BOOT_TINFO
+> +#ifdef CONFIG_RELOCATABLE
+> +       /* Apply the relocations */
+> +       bl              relocate_kernel
+> +#endif
+> +
+>         bl              start_kernel
+>         ASM_BUG()
 >
-> diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
-> index 58781c6e4191..3dd2a9615cd9 100644
-> --- a/arch/loongarch/mm/tlbex.S
-> +++ b/arch/loongarch/mm/tlbex.S
-> @@ -24,8 +24,7 @@
->         move            a0, sp
->         REG_S           a2, sp, PT_BVADDR
->         li.w            a1, \write
-> -       la.abs          t0, do_page_fault
-> -       jirl            ra, t0, 0
-> +       bl              do_page_fault
->         RESTORE_ALL_AND_RET
->         SYM_FUNC_END(tlb_do_page_fault_\write)
->         .endm
+> diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
+> new file mode 100644
+> index 000000000000..91ce92433bab
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/relocate.c
+> @@ -0,0 +1,78 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Support for Kernel relocation at boot time
+> + *
+> + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> + */
+> +
+> +#include <linux/elf.h>
+> +#include <linux/kernel.h>
+> +#include <linux/printk.h>
+> +#include <linux/panic_notifier.h>
+> +#include <asm/sections.h>
+> +
+> +#define RELOCATED(x) ((void *)((long)x + reloc_offset))
+> +
+> +extern long __rela_dyn_start;
+> +extern long __rela_dyn_end;
+> +
+> +static unsigned long reloc_offset;
+> +
+> +void __init relocate_kernel(void)
+> +{
+> +       reloc_offset = (unsigned long)_text - VMLINUX_LOAD_ADDRESS;
+> +
+> +       if (reloc_offset) {
+> +               Elf64_Rela *rela, *rela_end;
+> +               rela = (Elf64_Rela *)&__rela_dyn_start;
+> +               rela_end = (Elf64_Rela *)&__rela_dyn_end;
+> +
+> +               for ( ; rela < rela_end; rela++) {
+> +                       Elf64_Addr addr = rela->r_offset;
+> +                       Elf64_Addr relocated_addr = rela->r_addend;
+> +
+> +                       if (rela->r_info != R_LARCH_RELATIVE)
+> +                               continue;
+> +
+> +                       if (relocated_addr >= VMLINUX_LOAD_ADDRESS)
+> +                               relocated_addr =
+> +                                       (Elf64_Addr)RELOCATED(relocated_addr);
+> +
+> +                       *(Elf64_Addr *)RELOCATED(addr) = relocated_addr;
+> +               }
+> +       }
+> +}
+> +
+> +/*
+> + * Show relocation information on panic.
+> + */
+> +static void show_kernel_relocation(const char *level)
+> +{
+> +       if (reloc_offset > 0) {
+> +               printk(level);
+> +               pr_cont("Kernel relocated offset @ 0x%lx\n", reloc_offset);
+> +               pr_cont(" .text @ 0x%lx\n", (unsigned long)&_text);
+> +               pr_cont(" .data @ 0x%lx\n", (unsigned long)&_sdata);
+> +               pr_cont(" .bss  @ 0x%lx\n", (unsigned long)&__bss_start);
+> +       }
+> +}
+> +
+> +static int kernel_location_notifier_fn(struct notifier_block *self,
+> +                                      unsigned long v, void *p)
+> +{
+> +       show_kernel_relocation(KERN_EMERG);
+> +       return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block kernel_location_notifier = {
+> +       .notifier_call = kernel_location_notifier_fn
+> +};
+> +
+> +static int __init register_kernel_offset_dumper(void)
+> +{
+> +       atomic_notifier_chain_register(&panic_notifier_list,
+> +                                      &kernel_location_notifier);
+> +       return 0;
+> +}
+> +
+> +arch_initcall(register_kernel_offset_dumper);
+> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
+> index 733b16e8d55d..aec0b6567d24 100644
+> --- a/arch/loongarch/kernel/vmlinux.lds.S
+> +++ b/arch/loongarch/kernel/vmlinux.lds.S
+> @@ -70,6 +70,8 @@ SECTIONS
+>         .plt : ALIGN(16) { *(.plt) }
+>         .got.plt : ALIGN(16) { *(.got.plt) }
+>
+> +       .data.rel : { *(.data.rel*) }
+> +
+>         . = ALIGN(PECOFF_SEGMENT_ALIGN);
+>         __init_begin = .;
+>         __inittext_begin = .;
+> @@ -93,8 +95,6 @@ SECTIONS
+>         PERCPU_SECTION(1 << CONFIG_L1_CACHE_SHIFT)
+>  #endif
+>
+> -       .rela.dyn : ALIGN(8) { *(.rela.dyn) *(.rela*) }
+> -
+>         .init.bss : {
+>                 *(.init.bss)
+>         }
+> @@ -107,6 +107,12 @@ SECTIONS
+>         RO_DATA(4096)
+>         RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
+>
+> +       .rela.dyn : ALIGN(8) {
+> +               __rela_dyn_start = .;
+> +                *(.rela.dyn) *(.rela*)
+> +               __rela_dyn_end = .;
+> +       }
+> +
+>         .sdata : {
+>                 *(.sdata)
+>         }
+> @@ -133,6 +139,7 @@ SECTIONS
+>
+>         DISCARDS
+>         /DISCARD/ : {
+> +               *(.dynamic .dynsym .dynstr .hash .gnu.hash)
+>                 *(.gnu.attributes)
+>                 *(.options)
+>                 *(.eh_frame)
 > --
 > 2.37.3
->
 >
