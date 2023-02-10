@@ -1,543 +1,96 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41ED42588
-	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 10:09:09 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxjfDFF+ZjhsYQAA--.33674S3;
-	Fri, 10 Feb 2023 18:09:09 +0800 (CST)
-Received: from localhost.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxHuTDF+ZjXFIwAA--.54176S5;
-	Fri, 10 Feb 2023 18:09:08 +0800 (CST)
-From: Qing Zhang <zhangqing@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] LoongArch: ptrace: expose hardware breakpoints to debuggers
-Date: Fri, 10 Feb 2023 18:09:06 +0800
-Message-Id: <20230210100906.16169-4-zhangqing@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230210100906.16169-1-zhangqing@loongson.cn>
-References: <20230210100906.16169-1-zhangqing@loongson.cn>
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAF22CA2
+	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 11:08:18 +0000 (UTC)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-306-jgSE72GeOa-T0HoHuh_z1g-1; Fri, 10 Feb 2023 11:08:16 +0000
+X-MC-Unique: jgSE72GeOa-T0HoHuh_z1g-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.45; Fri, 10 Feb
+ 2023 11:08:15 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.045; Fri, 10 Feb 2023 11:08:15 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'maobibo' <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+CC: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
+Thread-Topic: [PATCH v2] LoongArch: add checksum optimization for 64-bit
+ system
+Thread-Index: AQHZPDrPjnYkuPc3GUK7DnTa61yn8K7GU7lQgAAunoCAAAOYoIABcE8jgAAK1MA=
+Date: Fri, 10 Feb 2023 11:08:15 +0000
+Message-ID: <b17430342e9e4c39b53004d842ea9c55@AcuMS.aculab.com>
+References: <20230209035839.2610277-1-maobibo@loongson.cn>
+ <e6bb59c32134477aa4890047ae5ad51b@AcuMS.aculab.com>
+ <741b2246-d609-ccc6-bf55-d6b0b5e54b54@loongson.cn>
+ <2aa6243491784e74960182dc12968170@AcuMS.aculab.com>
+ <CAAhV-H7BgBASt_CpSQgS6MNbzxODhoq8ykK5ZAn2y3ZOekXM9g@mail.gmail.com>
+ <0fe7ed7c-7161-65d5-a09f-12db6ccda05a@loongson.cn>
+In-Reply-To: <0fe7ed7c-7161-65d5-a09f-12db6ccda05a@loongson.cn>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxHuTDF+ZjXFIwAA--.54176S5
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3KryfWr1fZF48XryDJrykAFb_yoWktry3pF
-	47C3yUtrWUtrZ2kr4ftws8Ar15Gw4IvrWxGrWfuw1Sya4jqrZ8K3W8Kr90vr4fC348ua4f
-	Aa909w4Y9ayUX3DanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b2xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWl
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26F4j6r4U
-	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I
-	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
-	xVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcV
-	AFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8I
-	cIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r
-	4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUwNVyUUUUU
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-Implement regset-based ptrace interface that exposes hardware
-breakpoints to user-space debuggers to query and set instruction
-and data breakpoints.
-
-Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
----
- arch/loongarch/include/uapi/asm/ptrace.h |   9 +
- arch/loongarch/kernel/ptrace.c           | 416 +++++++++++++++++++++++
- include/uapi/linux/elf.h                 |   2 +
- 3 files changed, 427 insertions(+)
-
-diff --git a/arch/loongarch/include/uapi/asm/ptrace.h b/arch/loongarch/include/uapi/asm/ptrace.h
-index 46eb40932bb1..7ac4a0e44570 100644
---- a/arch/loongarch/include/uapi/asm/ptrace.h
-+++ b/arch/loongarch/include/uapi/asm/ptrace.h
-@@ -56,6 +56,15 @@ struct user_lasx_state {
- 	uint64_t vregs[32*4];
- };
- 
-+struct user_watch_state {
-+	uint16_t dbg_info;
-+	struct {
-+		uint64_t    addr;
-+		uint64_t    mask;
-+		uint32_t    ctrl;
-+	}		dbg_regs[8];
-+};
-+
- #define PTRACE_SYSEMU			0x1f
- #define PTRACE_SYSEMU_SINGLESTEP	0x20
- 
-diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
-index 52a3ee4366f4..7b0ec3b29212 100644
---- a/arch/loongarch/kernel/ptrace.c
-+++ b/arch/loongarch/kernel/ptrace.c
-@@ -22,6 +22,7 @@
- #include <linux/errno.h>
- #include <linux/hw_breakpoint.h>
- #include <linux/mm.h>
-+#include <linux/nospec.h>
- #include <linux/ptrace.h>
- #include <linux/regset.h>
- #include <linux/sched.h>
-@@ -333,6 +334,399 @@ static int simd_set(struct task_struct *target,
- 
- #endif /* CONFIG_CPU_HAS_LSX */
- 
-+#ifdef CONFIG_HAVE_HW_BREAKPOINT
-+
-+/*
-+ * Handle hitting a HW-breakpoint.
-+ */
-+static void ptrace_hbptriggered(struct perf_event *bp,
-+				struct perf_sample_data *data,
-+				struct pt_regs *regs)
-+{
-+	int i;
-+	struct arch_hw_breakpoint *bkpt = counter_arch_bp(bp);
-+
-+	for (i = 0; i < LOONGARCH_MAX_BRP; ++i)
-+		if (current->thread.hbp_break[i] == bp)
-+			break;
-+
-+	for (i = 0; i < LOONGARCH_MAX_WRP; ++i)
-+		if (current->thread.hbp_watch[i] == bp)
-+			break;
-+
-+	force_sig_ptrace_errno_trap(i, (void __user *)bkpt->address);
-+}
-+
-+static struct perf_event *ptrace_hbp_get_event(unsigned int note_type,
-+					       struct task_struct *tsk,
-+					       unsigned long idx)
-+{
-+	struct perf_event *bp = ERR_PTR(-EINVAL);
-+
-+	switch (note_type) {
-+	case NT_LOONGARCH_HW_BREAK:
-+		if (idx >= LOONGARCH_MAX_BRP)
-+			goto out;
-+		idx = array_index_nospec(idx, LOONGARCH_MAX_BRP);
-+		bp = tsk->thread.hbp_break[idx];
-+		break;
-+	case NT_LOONGARCH_HW_WATCH:
-+		if (idx >= LOONGARCH_MAX_WRP)
-+			goto out;
-+		idx = array_index_nospec(idx, LOONGARCH_MAX_WRP);
-+		bp = tsk->thread.hbp_watch[idx];
-+		break;
-+	}
-+
-+out:
-+	return bp;
-+}
-+
-+static int ptrace_hbp_set_event(unsigned int note_type,
-+				struct task_struct *tsk,
-+				unsigned long idx,
-+				struct perf_event *bp)
-+{
-+	int err = -EINVAL;
-+
-+	switch (note_type) {
-+	case NT_LOONGARCH_HW_BREAK:
-+		if (idx >= LOONGARCH_MAX_BRP)
-+			goto out;
-+		idx = array_index_nospec(idx, LOONGARCH_MAX_BRP);
-+		tsk->thread.hbp_break[idx] = bp;
-+		err = 0;
-+		break;
-+	case NT_LOONGARCH_HW_WATCH:
-+		if (idx >= LOONGARCH_MAX_WRP)
-+			goto out;
-+		idx = array_index_nospec(idx, LOONGARCH_MAX_WRP);
-+		tsk->thread.hbp_watch[idx] = bp;
-+		err = 0;
-+		break;
-+	}
-+
-+out:
-+	return err;
-+}
-+
-+static struct perf_event *ptrace_hbp_create(unsigned int note_type,
-+					    struct task_struct *tsk,
-+					    unsigned long idx)
-+{
-+	struct perf_event *bp;
-+	struct perf_event_attr attr;
-+	int err, type;
-+
-+	switch (note_type) {
-+	case NT_LOONGARCH_HW_BREAK:
-+		type = HW_BREAKPOINT_X;
-+		break;
-+	case NT_LOONGARCH_HW_WATCH:
-+		type = HW_BREAKPOINT_RW;
-+		break;
-+	default:
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	ptrace_breakpoint_init(&attr);
-+
-+	/*
-+	 * Initialise fields to sane defaults
-+	 * (i.e. values that will pass validation).
-+	 */
-+	attr.bp_addr	= 0;
-+	attr.bp_len	= HW_BREAKPOINT_LEN_4;
-+	attr.bp_type	= type;
-+	attr.disabled	= 1;
-+
-+	bp = register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
-+	if (IS_ERR(bp))
-+		return bp;
-+
-+	err = ptrace_hbp_set_event(note_type, tsk, idx, bp);
-+	if (err)
-+		return ERR_PTR(err);
-+
-+	return bp;
-+}
-+
-+static int ptrace_hbp_fill_attr_ctrl(unsigned int note_type,
-+				     struct arch_hw_breakpoint_ctrl ctrl,
-+				     struct perf_event_attr *attr)
-+{
-+	int err, len, type, offset;
-+
-+	err = arch_bp_generic_fields(ctrl, &len, &type, &offset);
-+	if (err)
-+		return err;
-+
-+	switch (note_type) {
-+	case NT_LOONGARCH_HW_BREAK:
-+		if ((type & HW_BREAKPOINT_X) != type)
-+			return -EINVAL;
-+		break;
-+	case NT_LOONGARCH_HW_WATCH:
-+		if ((type & HW_BREAKPOINT_RW) != type)
-+			return -EINVAL;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	attr->bp_len	= len;
-+	attr->bp_type	= type;
-+	attr->bp_addr	+= offset;
-+
-+	return 0;
-+}
-+
-+static int ptrace_hbp_get_resource_info(unsigned int note_type, u16 *info)
-+{
-+	u8 num;
-+	u16 reg = 0;
-+
-+	switch (note_type) {
-+	case NT_LOONGARCH_HW_BREAK:
-+		num = hw_breakpoint_slots(TYPE_INST);
-+		break;
-+	case NT_LOONGARCH_HW_WATCH:
-+		num = hw_breakpoint_slots(TYPE_DATA);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	reg |= num;
-+
-+	*info = reg;
-+	return 0;
-+}
-+
-+static int ptrace_hbp_get_ctrl(unsigned int note_type,
-+			       struct task_struct *tsk,
-+			       unsigned long idx,
-+			       u32 *ctrl)
-+{
-+	struct perf_event *bp = ptrace_hbp_get_event(note_type, tsk, idx);
-+
-+	if (IS_ERR(bp))
-+		return PTR_ERR(bp);
-+
-+	*ctrl = bp ? encode_ctrl_reg(counter_arch_bp(bp)->ctrl) : 0;
-+	return 0;
-+}
-+
-+static int ptrace_hbp_get_mask(unsigned int note_type,
-+			       struct task_struct *tsk,
-+			       unsigned long idx,
-+			       u64 *mask)
-+{
-+	struct perf_event *bp = ptrace_hbp_get_event(note_type, tsk, idx);
-+
-+	if (IS_ERR(bp))
-+		return PTR_ERR(bp);
-+
-+	*mask = bp ? counter_arch_bp(bp)->mask : 0;
-+	return 0;
-+}
-+
-+static int ptrace_hbp_get_addr(unsigned int note_type,
-+			       struct task_struct *tsk,
-+			       unsigned long idx,
-+			       u64 *addr)
-+{
-+	struct perf_event *bp = ptrace_hbp_get_event(note_type, tsk, idx);
-+
-+	if (IS_ERR(bp))
-+		return PTR_ERR(bp);
-+
-+	*addr = bp ? counter_arch_bp(bp)->address : 0;
-+	return 0;
-+}
-+
-+static struct perf_event *ptrace_hbp_get_initialised_bp(unsigned int note_type,
-+							struct task_struct *tsk,
-+							unsigned long idx)
-+{
-+	struct perf_event *bp = ptrace_hbp_get_event(note_type, tsk, idx);
-+
-+	if (!bp)
-+		bp = ptrace_hbp_create(note_type, tsk, idx);
-+
-+	return bp;
-+}
-+
-+static int ptrace_hbp_set_ctrl(unsigned int note_type,
-+			       struct task_struct *tsk,
-+			       unsigned long idx,
-+			       u32 uctrl)
-+{
-+	int err;
-+	struct perf_event *bp;
-+	struct perf_event_attr attr;
-+	struct arch_hw_breakpoint_ctrl ctrl;
-+
-+	bp = ptrace_hbp_get_initialised_bp(note_type, tsk, idx);
-+	if (IS_ERR(bp)) {
-+		err = PTR_ERR(bp);
-+		return err;
-+	}
-+
-+	attr = bp->attr;
-+	decode_ctrl_reg(uctrl, &ctrl);
-+	err = ptrace_hbp_fill_attr_ctrl(note_type, ctrl, &attr);
-+	if (err)
-+		return err;
-+
-+	return modify_user_hw_breakpoint(bp, &attr);
-+}
-+
-+static int ptrace_hbp_set_mask(unsigned int note_type,
-+			       struct task_struct *tsk,
-+			       unsigned long idx,
-+			       u64 mask)
-+{
-+	int err;
-+	struct perf_event *bp;
-+	struct perf_event_attr attr;
-+	struct arch_hw_breakpoint *info;
-+
-+	bp = ptrace_hbp_get_initialised_bp(note_type, tsk, idx);
-+	if (IS_ERR(bp)) {
-+		err = PTR_ERR(bp);
-+		return err;
-+	}
-+
-+	attr = bp->attr;
-+	info = counter_arch_bp(bp);
-+	info->mask = mask;
-+	err = modify_user_hw_breakpoint(bp, &attr);
-+	return err;
-+}
-+
-+static int ptrace_hbp_set_addr(unsigned int note_type,
-+			       struct task_struct *tsk,
-+			       unsigned long idx,
-+			       u64 addr)
-+{
-+	int err;
-+	struct perf_event *bp;
-+	struct perf_event_attr attr;
-+
-+	bp = ptrace_hbp_get_initialised_bp(note_type, tsk, idx);
-+	if (IS_ERR(bp)) {
-+		err = PTR_ERR(bp);
-+		return err;
-+	}
-+
-+	attr = bp->attr;
-+	attr.bp_addr = addr;
-+	err = modify_user_hw_breakpoint(bp, &attr);
-+	return err;
-+}
-+
-+#define PTRACE_HBP_ADDR_SZ	sizeof(u64)
-+#define PTRACE_HBP_MASK_SZ	sizeof(u64)
-+#define PTRACE_HBP_CTRL_SZ	sizeof(u32)
-+
-+static int hw_break_get(struct task_struct *target,
-+			const struct user_regset *regset,
-+			struct membuf to)
-+{
-+	unsigned int note_type = regset->core_note_type;
-+	int ret, idx = 0;
-+	u16 info;
-+	u32 ctrl;
-+	u64 addr, mask;
-+
-+	/* Resource info */
-+	ret = ptrace_hbp_get_resource_info(note_type, &info);
-+	if (ret)
-+		return ret;
-+
-+	membuf_write(&to, &info, sizeof(info));
-+	/* (address, ctrl) registers */
-+	while (to.left) {
-+		ret = ptrace_hbp_get_addr(note_type, target, idx, &addr);
-+		if (ret)
-+			return ret;
-+
-+		ret = ptrace_hbp_get_mask(note_type, target, idx, &mask);
-+		if (ret)
-+			return ret;
-+
-+		ret = ptrace_hbp_get_ctrl(note_type, target, idx, &ctrl);
-+		if (ret)
-+			return ret;
-+
-+		membuf_store(&to, addr);
-+		membuf_store(&to, mask);
-+		membuf_store(&to, ctrl);
-+		idx++;
-+	}
-+	return 0;
-+}
-+
-+static int hw_break_set(struct task_struct *target,
-+			const struct user_regset *regset,
-+			unsigned int pos, unsigned int count,
-+			const void *kbuf, const void __user *ubuf)
-+{
-+	unsigned int note_type = regset->core_note_type;
-+	int ret, idx = 0, offset, limit;
-+	u32 ctrl;
-+	u64 addr, mask;
-+
-+	/* Resource info */
-+	offset = offsetof(struct user_watch_state, dbg_regs);
-+	user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 0, offset);
-+
-+	/* (address, ctrl) registers */
-+	limit = regset->n * regset->size;
-+	while (count && offset < limit) {
-+		if (count < PTRACE_HBP_ADDR_SZ)
-+			return -EINVAL;
-+
-+		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &addr,
-+					 offset, offset + PTRACE_HBP_ADDR_SZ);
-+		if (ret)
-+			return ret;
-+
-+		ret = ptrace_hbp_set_addr(note_type, target, idx, addr);
-+		if (ret)
-+			return ret;
-+		offset += PTRACE_HBP_ADDR_SZ;
-+
-+		if (!count)
-+			break;
-+
-+		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &mask,
-+					 offset, offset + PTRACE_HBP_ADDR_SZ);
-+		if (ret)
-+			return ret;
-+
-+		ret = ptrace_hbp_set_mask(note_type, target, idx, mask);
-+		if (ret)
-+			return ret;
-+		offset += PTRACE_HBP_MASK_SZ;
-+
-+		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &mask,
-+					 offset, offset + PTRACE_HBP_MASK_SZ);
-+		if (ret)
-+			return ret;
-+
-+		ret = ptrace_hbp_set_ctrl(note_type, target, idx, ctrl);
-+		if (ret)
-+			return ret;
-+		offset += PTRACE_HBP_CTRL_SZ;
-+		idx++;
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
- struct pt_regs_offset {
- 	const char *name;
- 	int offset;
-@@ -412,6 +806,10 @@ enum loongarch_regset {
- #ifdef CONFIG_CPU_HAS_LASX
- 	REGSET_LASX,
- #endif
-+#ifdef CONFIG_HAVE_HW_BREAKPOINT
-+	REGSET_HW_BREAK,
-+	REGSET_HW_WATCH,
-+#endif
- };
- 
- static const struct user_regset loongarch64_regsets[] = {
-@@ -459,6 +857,24 @@ static const struct user_regset loongarch64_regsets[] = {
- 		.set		= simd_set,
- 	},
- #endif
-+#ifdef CONFIG_HAVE_HW_BREAKPOINT
-+	[REGSET_HW_BREAK] = {
-+		.core_note_type = NT_LOONGARCH_HW_BREAK,
-+		.n = sizeof(struct user_watch_state) / sizeof(u32),
-+		.size = sizeof(u32),
-+		.align = sizeof(u32),
-+		.regset_get = hw_break_get,
-+		.set = hw_break_set,
-+	},
-+	[REGSET_HW_WATCH] = {
-+		.core_note_type = NT_LOONGARCH_HW_WATCH,
-+		.n = sizeof(struct user_watch_state) / sizeof(u32),
-+		.size = sizeof(u32),
-+		.align = sizeof(u32),
-+		.regset_get = hw_break_get,
-+		.set = hw_break_set,
-+	},
-+#endif
- };
- 
- static const struct user_regset_view user_loongarch64_view = {
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index 4c6a8fa5e7ed..3cf66946a0bb 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -444,6 +444,8 @@ typedef struct elf64_shdr {
- #define NT_LOONGARCH_LSX	0xa02	/* LoongArch Loongson SIMD Extension registers */
- #define NT_LOONGARCH_LASX	0xa03	/* LoongArch Loongson Advanced SIMD Extension registers */
- #define NT_LOONGARCH_LBT	0xa04	/* LoongArch Loongson Binary Translation registers */
-+#define NT_LOONGARCH_HW_BREAK   0xa05   /* LoongArch hardware breakpoint registers */
-+#define NT_LOONGARCH_HW_WATCH   0xa06   /* LoongArch hardware watchpoint registers */
- 
- /* Note types with note name "GNU" */
- #define NT_GNU_PROPERTY_TYPE_0	5
--- 
-2.36.0
+RnJvbTogbWFvYmlibw0KPiBTZW50OiAxMCBGZWJydWFyeSAyMDIzIDEwOjA2DQo+IA0KPiBXaXRo
+IHRoZSB0ZXN0IGNhc2VzDQo+ICAgaHR0cHM6Ly9naXRodWIuY29tL2JpYm8tbWFvL2JlbmNoL3Ry
+ZWUvbWFzdGVyL2NzdW0NCj4gDQo+IFRlc3RlZCB3aXRoIGRpZmZlcmVudCBidWZmZXIgc2l6ZSA0
+MDk2LzE0NzIvMjUwLzQwLCBoZXJlIGlzIHRoZSBvdXRwdXQgb24gbXkNCj4gbG9vbmdhcmNoIG1h
+Y2hpbmUuIExvb3BzIHRpbWVzIGlzIDB4MTAwMDAwLCBhbmQgdGltZSBjb3N0IHVuaXQgaXMgbWls
+bGlzZWNvbmRzLA0KPiBhbmQgdGhlIHNtYWxsZXIgdmFsdWUgd2lsbCBiZSBiZXR0ZXIuDQo+IA0K
+PiANCj4gYnVmIHNpemVbNDA5Nl0gbG9vcHNbMHgxMDAwMDBdIHRpbWVzW3VzXTogY3N1bSB1aW50
+MTI4IDM0NDQ3MyBhc20gbWV0aG9kIDM3MzM5MSB1aW50NjQgNzQxNDEyDQo+IGJ1ZiBzaXplWzE0
+NzJdIGxvb3BzWzB4MTAwMDAwXSB0aW1lc1t1c106IGNzdW0gdWludDEyOCAxMzE4NDkgYXNtIG1l
+dGhvZCAxMzg1MzMgdWludDY0IDI3MTMxNw0KPiBidWYgc2l6ZVsgMjUwXSBsb29wc1sweDEwMDAw
+MF0gdGltZXNbdXNdOiBjc3VtIHVpbnQxMjggMzQ1MTIgYXNtIG1ldGhvZCAzNjI5NCB1aW50NjQg
+NTE1NzYNCj4gYnVmIHNpemVbICA0MF0gbG9vcHNbMHgxMDAwMDBdIHRpbWVzW3VzXTogY3N1bSB1
+aW50MTI4IDEyMTgyIGFzbSBtZXRob2QgMjM4NzQgdWludDY0IDE1NzY5DQoNCldoYXQgZG8gdGhv
+c2Ugd29yayBvdXQgYXMgaW4gYnl0ZXMvY2xvY2s/DQoNClJhdGhlciB0aGFuIHJ1biAxMDAwcyBv
+ZiBpdGVyYXRpb25zIChhbmQgYmUgaGl0IGJ5IGludGVycnVwdHMgZXRjKQ0KSSBzb21ldGltZXMg
+anVzdCB1c2UgYW4gYWNjdXJhdGUgY3ljbGUgY291bnRlciBhbmQgbWVhc3VyZSB0aGUNCnRpbWUg
+Zm9yIGEgc2luZ2xlIGJ1ZmZlciAob3IgdmFyeWluZyBsZW5ndGgpLg0KU2F2ZSBhbmQgcHJpbnQg
+dGhlIHZhbHVlcyBvZiAxMCBjYWxscyBhbmQgeW91J2xsIGdldCBwcmV0dHkNCmNvbnNpc3RlbnQg
+dmFsdWVzIGFmdGVyIHRoZSBmaXJzdCBjb3VwbGUgKGNvbGQgY2FjaGUpLg0KVGhlbiB5b3UgY2Fu
+IHdvcmsgb3V0IGhvdyBsb25nIGVhY2ggaXRlcmF0aW9uIG9mIHRoZSBtYWluIGxvb3AgY29zdHMu
+DQoNCkkgdGhpbmsgeW91IGhhdmUgdG8gZXhlY3V0ZSA0IGluc3RydWN0aW9ucyBmb3IgZWFjaCA2
+NGJpdCB3b3JkLg0KT25lIG1lbW9yeSByZWFkLCB0aGUgbWFpbiBhZGQsIGEgc2V0bGUgYW5kIHRo
+ZSBhZGQgb2YgdGhlIGNhcnJ5Lg0KDQpGb3IgYSBzaW1wbGUgY3B1IHRoYXQgaXMgYWx3YXlzIGdv
+aW5nIHRvIGJlIDQgY2xvY2tzLg0KQnV0IGlmIHRoZXJlIGFyZSBkZWxheSBzbG90cyBhZnRlciB0
+aGUgbWVtb3J5IHJlYWQgeW91IGNhbg0KZmlsbCB0aGVtIHdpdGggdGhlIGFsdSBpbnN0cnVjdGlv
+bnMgZm9yIGFuIGVhcmxpZXIgcmVhZC4NCllvdSBhbHNvIG5lZWQgYW4gYWRkIGFuZCBibmUgZm9y
+IHRoZSBhZGRyZXNzIGZvciBlYWNoIGl0ZXJhdGlvbi4NClNvIHVucm9sbGluZyB0aGUgbG9vcCBm
+dXJ0aGVyIHdpbGwgaGVscC4NCg0KT1RPSCBpZiB5b3VyIGNwdSBjYW4gZXhlY3V0ZSBtdWx0aXBs
+ZSBpbnN0cnVjdGlvbnMgaW4gb25lIGNsb2NrDQp5b3UgY2FuIGV4cGVjdCB0byBkbyBhIGxvdCBi
+ZXR0ZXIuDQpXaXRoIDMgQUxVIGluc3RydWN0aW9ucyAoYW5kIG9uZSByZWFkKSB5b3Ugc2hvdWxk
+IGJlIGFibGUgdG8NCmZpbmQgYSBjb2RlIHNlcXVlbmNlIHRoYXQgd2lsbCBydW4gYXQgOCBieXRl
+cy9jbG9jay4NCldpdGggNCBBTFUgaXQgaXMgbGlrZWx5IHRoYXQgdGhlIGxvb3AgaW5zdHJ1Y3Rp
+b25zIGNhbiBhbHNvDQpleGVjdXRlIGluIHBhcmFsbGVsIC0gc28geW91IGRvbid0IG5lZWQgbWFz
+c2l2ZSBsb29wIHVucm9sbGluZy4NCg0KVW5sZXNzIHRoZSBjcHUgaXMgbWFzc2l2ZWx5ICdvdXQg
+b2Ygb3JkZXInIChsaWtlIHNvbWUgeDg2KQ0KSSdkIGV4cGVjdCB0aGUgYmVzdCBjb2RlIHRvIGlu
+dGVybGVhdmUgdGhlIHJlYWRzIGFuZCBhbHUNCm9wZXJhdGlvbnMgZm9yIGVhcmxpZXIgdmFsdWVz
+IC0gcmF0aGVyIHRoYW4gaGF2aW5nIGFsbA0KdGhlIHJlYWRzIGF0IHRoZSB0b3Agb2YgdGhlIGxv
+b3AuDQpTbyB0aGUgbG9vcCB3b3VsZCBiZSBhIHJlcGVhdGluZyBwYXR0ZXJuIG9mIGluc3RydWN0
+aW9ucw0Kd2l0aCBzb21lIHZhbHVlcyBiZWluZyBjYXJyaWVkIGJldHdlZW4gaXRlcmF0aW9ucy4N
+Cg0KSSBkb3VidCB5b3UnbGwgZ2V0IGEgbG9vcCB0byBleGVjdXRlIGV2ZXJ5IGNsb2NrLCBidXQN
+CmEgdHdvIGNsb2NrIGxvb3AgaXMgZW50aXJlbHkgcG9zc2libGUuDQpJdCByYXRoZXIgZGVwZW5k
+cyBob3cgZmFzdCB0aGUgaW5zdHJ1Y3Rpb24gZGVjb2Rlcg0KaGFuZGxlcyB0aGUgKHByZWRpY3Rl
+ZCkgYnJhbmNoLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBC
+cmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdp
+c3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
