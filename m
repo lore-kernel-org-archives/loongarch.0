@@ -1,96 +1,136 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAF22CA2
-	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 11:08:18 +0000 (UTC)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-306-jgSE72GeOa-T0HoHuh_z1g-1; Fri, 10 Feb 2023 11:08:16 +0000
-X-MC-Unique: jgSE72GeOa-T0HoHuh_z1g-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.45; Fri, 10 Feb
- 2023 11:08:15 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.045; Fri, 10 Feb 2023 11:08:15 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'maobibo' <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-CC: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
-Thread-Topic: [PATCH v2] LoongArch: add checksum optimization for 64-bit
- system
-Thread-Index: AQHZPDrPjnYkuPc3GUK7DnTa61yn8K7GU7lQgAAunoCAAAOYoIABcE8jgAAK1MA=
-Date: Fri, 10 Feb 2023 11:08:15 +0000
-Message-ID: <b17430342e9e4c39b53004d842ea9c55@AcuMS.aculab.com>
-References: <20230209035839.2610277-1-maobibo@loongson.cn>
- <e6bb59c32134477aa4890047ae5ad51b@AcuMS.aculab.com>
- <741b2246-d609-ccc6-bf55-d6b0b5e54b54@loongson.cn>
- <2aa6243491784e74960182dc12968170@AcuMS.aculab.com>
- <CAAhV-H7BgBASt_CpSQgS6MNbzxODhoq8ykK5ZAn2y3ZOekXM9g@mail.gmail.com>
- <0fe7ed7c-7161-65d5-a09f-12db6ccda05a@loongson.cn>
-In-Reply-To: <0fe7ed7c-7161-65d5-a09f-12db6ccda05a@loongson.cn>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0255C2F45
+	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 13:30:11 +0000 (UTC)
+Received: from loongson.cn (unknown [106.39.149.70])
+	by gateway (Coremail) with SMTP id _____8CxPuvhRuZjZNYQAA--.33146S3;
+	Fri, 10 Feb 2023 21:30:09 +0800 (CST)
+Received: from [192.168.3.5] (unknown [106.39.149.70])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axfb7fRuZjaHQwAA--.29998S3;
+	Fri, 10 Feb 2023 21:30:09 +0800 (CST)
+Message-ID: <cd21fa7a-e74e-9eb3-50b2-07c876b774e8@loongson.cn>
+Date: Fri, 10 Feb 2023 21:30:07 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+To: David Laight <David.Laight@ACULAB.COM>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20230209035839.2610277-1-maobibo@loongson.cn>
+ <e6bb59c32134477aa4890047ae5ad51b@AcuMS.aculab.com>
+ <741b2246-d609-ccc6-bf55-d6b0b5e54b54@loongson.cn>
+ <2aa6243491784e74960182dc12968170@AcuMS.aculab.com>
+ <CAAhV-H7BgBASt_CpSQgS6MNbzxODhoq8ykK5ZAn2y3ZOekXM9g@mail.gmail.com>
+ <0fe7ed7c-7161-65d5-a09f-12db6ccda05a@loongson.cn>
+ <b17430342e9e4c39b53004d842ea9c55@AcuMS.aculab.com>
+From: maobibo <maobibo@loongson.cn>
+In-Reply-To: <b17430342e9e4c39b53004d842ea9c55@AcuMS.aculab.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Axfb7fRuZjaHQwAA--.29998S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxGFWUWry3Zr1UAw15Cw4xtFb_yoW5ur17pr
+	WSkr15GFs2qF95ur1xtw1xXrySv393GF15Jrs8Jr90kas8JrnaqFykKrWYkF9rur4fCF12
+	qF10qwsru3WDAw7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
+	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
+	AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
+	6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU8fsqJUUUUU==
 
-RnJvbTogbWFvYmlibw0KPiBTZW50OiAxMCBGZWJydWFyeSAyMDIzIDEwOjA2DQo+IA0KPiBXaXRo
-IHRoZSB0ZXN0IGNhc2VzDQo+ICAgaHR0cHM6Ly9naXRodWIuY29tL2JpYm8tbWFvL2JlbmNoL3Ry
-ZWUvbWFzdGVyL2NzdW0NCj4gDQo+IFRlc3RlZCB3aXRoIGRpZmZlcmVudCBidWZmZXIgc2l6ZSA0
-MDk2LzE0NzIvMjUwLzQwLCBoZXJlIGlzIHRoZSBvdXRwdXQgb24gbXkNCj4gbG9vbmdhcmNoIG1h
-Y2hpbmUuIExvb3BzIHRpbWVzIGlzIDB4MTAwMDAwLCBhbmQgdGltZSBjb3N0IHVuaXQgaXMgbWls
-bGlzZWNvbmRzLA0KPiBhbmQgdGhlIHNtYWxsZXIgdmFsdWUgd2lsbCBiZSBiZXR0ZXIuDQo+IA0K
-PiANCj4gYnVmIHNpemVbNDA5Nl0gbG9vcHNbMHgxMDAwMDBdIHRpbWVzW3VzXTogY3N1bSB1aW50
-MTI4IDM0NDQ3MyBhc20gbWV0aG9kIDM3MzM5MSB1aW50NjQgNzQxNDEyDQo+IGJ1ZiBzaXplWzE0
-NzJdIGxvb3BzWzB4MTAwMDAwXSB0aW1lc1t1c106IGNzdW0gdWludDEyOCAxMzE4NDkgYXNtIG1l
-dGhvZCAxMzg1MzMgdWludDY0IDI3MTMxNw0KPiBidWYgc2l6ZVsgMjUwXSBsb29wc1sweDEwMDAw
-MF0gdGltZXNbdXNdOiBjc3VtIHVpbnQxMjggMzQ1MTIgYXNtIG1ldGhvZCAzNjI5NCB1aW50NjQg
-NTE1NzYNCj4gYnVmIHNpemVbICA0MF0gbG9vcHNbMHgxMDAwMDBdIHRpbWVzW3VzXTogY3N1bSB1
-aW50MTI4IDEyMTgyIGFzbSBtZXRob2QgMjM4NzQgdWludDY0IDE1NzY5DQoNCldoYXQgZG8gdGhv
-c2Ugd29yayBvdXQgYXMgaW4gYnl0ZXMvY2xvY2s/DQoNClJhdGhlciB0aGFuIHJ1biAxMDAwcyBv
-ZiBpdGVyYXRpb25zIChhbmQgYmUgaGl0IGJ5IGludGVycnVwdHMgZXRjKQ0KSSBzb21ldGltZXMg
-anVzdCB1c2UgYW4gYWNjdXJhdGUgY3ljbGUgY291bnRlciBhbmQgbWVhc3VyZSB0aGUNCnRpbWUg
-Zm9yIGEgc2luZ2xlIGJ1ZmZlciAob3IgdmFyeWluZyBsZW5ndGgpLg0KU2F2ZSBhbmQgcHJpbnQg
-dGhlIHZhbHVlcyBvZiAxMCBjYWxscyBhbmQgeW91J2xsIGdldCBwcmV0dHkNCmNvbnNpc3RlbnQg
-dmFsdWVzIGFmdGVyIHRoZSBmaXJzdCBjb3VwbGUgKGNvbGQgY2FjaGUpLg0KVGhlbiB5b3UgY2Fu
-IHdvcmsgb3V0IGhvdyBsb25nIGVhY2ggaXRlcmF0aW9uIG9mIHRoZSBtYWluIGxvb3AgY29zdHMu
-DQoNCkkgdGhpbmsgeW91IGhhdmUgdG8gZXhlY3V0ZSA0IGluc3RydWN0aW9ucyBmb3IgZWFjaCA2
-NGJpdCB3b3JkLg0KT25lIG1lbW9yeSByZWFkLCB0aGUgbWFpbiBhZGQsIGEgc2V0bGUgYW5kIHRo
-ZSBhZGQgb2YgdGhlIGNhcnJ5Lg0KDQpGb3IgYSBzaW1wbGUgY3B1IHRoYXQgaXMgYWx3YXlzIGdv
-aW5nIHRvIGJlIDQgY2xvY2tzLg0KQnV0IGlmIHRoZXJlIGFyZSBkZWxheSBzbG90cyBhZnRlciB0
-aGUgbWVtb3J5IHJlYWQgeW91IGNhbg0KZmlsbCB0aGVtIHdpdGggdGhlIGFsdSBpbnN0cnVjdGlv
-bnMgZm9yIGFuIGVhcmxpZXIgcmVhZC4NCllvdSBhbHNvIG5lZWQgYW4gYWRkIGFuZCBibmUgZm9y
-IHRoZSBhZGRyZXNzIGZvciBlYWNoIGl0ZXJhdGlvbi4NClNvIHVucm9sbGluZyB0aGUgbG9vcCBm
-dXJ0aGVyIHdpbGwgaGVscC4NCg0KT1RPSCBpZiB5b3VyIGNwdSBjYW4gZXhlY3V0ZSBtdWx0aXBs
-ZSBpbnN0cnVjdGlvbnMgaW4gb25lIGNsb2NrDQp5b3UgY2FuIGV4cGVjdCB0byBkbyBhIGxvdCBi
-ZXR0ZXIuDQpXaXRoIDMgQUxVIGluc3RydWN0aW9ucyAoYW5kIG9uZSByZWFkKSB5b3Ugc2hvdWxk
-IGJlIGFibGUgdG8NCmZpbmQgYSBjb2RlIHNlcXVlbmNlIHRoYXQgd2lsbCBydW4gYXQgOCBieXRl
-cy9jbG9jay4NCldpdGggNCBBTFUgaXQgaXMgbGlrZWx5IHRoYXQgdGhlIGxvb3AgaW5zdHJ1Y3Rp
-b25zIGNhbiBhbHNvDQpleGVjdXRlIGluIHBhcmFsbGVsIC0gc28geW91IGRvbid0IG5lZWQgbWFz
-c2l2ZSBsb29wIHVucm9sbGluZy4NCg0KVW5sZXNzIHRoZSBjcHUgaXMgbWFzc2l2ZWx5ICdvdXQg
-b2Ygb3JkZXInIChsaWtlIHNvbWUgeDg2KQ0KSSdkIGV4cGVjdCB0aGUgYmVzdCBjb2RlIHRvIGlu
-dGVybGVhdmUgdGhlIHJlYWRzIGFuZCBhbHUNCm9wZXJhdGlvbnMgZm9yIGVhcmxpZXIgdmFsdWVz
-IC0gcmF0aGVyIHRoYW4gaGF2aW5nIGFsbA0KdGhlIHJlYWRzIGF0IHRoZSB0b3Agb2YgdGhlIGxv
-b3AuDQpTbyB0aGUgbG9vcCB3b3VsZCBiZSBhIHJlcGVhdGluZyBwYXR0ZXJuIG9mIGluc3RydWN0
-aW9ucw0Kd2l0aCBzb21lIHZhbHVlcyBiZWluZyBjYXJyaWVkIGJldHdlZW4gaXRlcmF0aW9ucy4N
-Cg0KSSBkb3VidCB5b3UnbGwgZ2V0IGEgbG9vcCB0byBleGVjdXRlIGV2ZXJ5IGNsb2NrLCBidXQN
-CmEgdHdvIGNsb2NrIGxvb3AgaXMgZW50aXJlbHkgcG9zc2libGUuDQpJdCByYXRoZXIgZGVwZW5k
-cyBob3cgZmFzdCB0aGUgaW5zdHJ1Y3Rpb24gZGVjb2Rlcg0KaGFuZGxlcyB0aGUgKHByZWRpY3Rl
-ZCkgYnJhbmNoLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBC
-cmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdp
-c3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+
+
+On 2023/2/10 19:08, David Laight wrote:
+> From: maobibo
+>> Sent: 10 February 2023 10:06
+>>
+>> With the test cases
+>>    https://github.com/bibo-mao/bench/tree/master/csum
+>>
+>> Tested with different buffer size 4096/1472/250/40, here is the output on my
+>> loongarch machine. Loops times is 0x100000, and time cost unit is milliseconds,
+>> and the smaller value will be better.
+>>
+>>
+>> buf size[4096] loops[0x100000] times[us]: csum uint128 344473 asm method 373391 uint64 741412
+>> buf size[1472] loops[0x100000] times[us]: csum uint128 131849 asm method 138533 uint64 271317
+>> buf size[ 250] loops[0x100000] times[us]: csum uint128 34512 asm method 36294 uint64 51576
+>> buf size[  40] loops[0x100000] times[us]: csum uint128 12182 asm method 23874 uint64 15769
+> 
+> What do those work out as in bytes/clock?
+> 
+> Rather than run 1000s of iterations (and be hit by interrupts etc)
+> I sometimes just use an accurate cycle counter and measure the
+> time for a single buffer (or varying length).
+> Save and print the values of 10 calls and you'll get pretty
+> consistent values after the first couple (cold cache).
+> Then you can work out how long each iteration of the main loop costs.
+> 
+CPU freq is 2G, from result for buffer size 4096, it is 5.8 bytes/clock.
+Freq of timestamp count on Loongarch is 100MHZ at constant ,and there is 
+no cpu cycle count register on the platform.
+
+> I think you have to execute 4 instructions for each 64bit word.
+> One memory read, the main add, a setle and the add of the carry.
+> 
+> For a simple cpu that is always going to be 4 clocks.
+> But if there are delay slots after the memory read you can
+> fill them with the alu instructions for an earlier read.
+> You also need an add and bne for the address for each iteration.
+> So unrolling the loop further will help.
+There is no delay slot on Loongarch platform, yes for 8bytes csum
+calculation at least 4 clocks should be used.
+
+> 
+> OTOH if your cpu can execute multiple instructions in one clock
+> you can expect to do a lot better.
+> With 3 ALU instructions (and one read) you should be able to
+> find a code sequence that will run at 8 bytes/clock.
+> With 4 ALU it is likely that the loop instructions can also
+> execute in parallel - so you don't need massive loop unrolling.
+> 
+> Unless the cpu is massively 'out of order' (like some x86)
+> I'd expect the best code to interleave the reads and alu
+> operations for earlier values - rather than having all
+> the reads at the top of the loop.
+I do not think so, like memcpy asm function, memory accessing is
+put together, memory access can be stalled if not in L1 cache for
+the first time. cacheline will be load at cpu read buffer, the next
+memory read in the cache line will cost 1 cycle.
+However I will try the method  interleave the reads and alu operations.
+
+> So the loop would be a repeating pattern of instructions
+> with some values being carried between iterations.
+> 
+> I doubt you'll get a loop to execute every clock, but
+> a two clock loop is entirely possible.
+> It rather depends how fast the instruction decoder
+> handles the (predicted) branch.
+yes, branch prediction is always expensive and hard to control  :(
+
+Regards
+Bibo, Mao
+> 
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
 
