@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46CF2A4F
-	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 08:47:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB441A29
+	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 08:48:00 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx_eq3BOZjesAQAA--.33169S3;
-	Fri, 10 Feb 2023 16:47:51 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cxe+q_BOZjocAQAA--.32946S3;
+	Fri, 10 Feb 2023 16:47:59 +0800 (CST)
 Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxX+SpBOZjLUYwAA--.56353S4;
-	Fri, 10 Feb 2023 16:47:50 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxX+SpBOZjLUYwAA--.56353S6;
+	Fri, 10 Feb 2023 16:47:58 +0800 (CST)
 From: Youling Tang <tangyouling@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Xi Ruoyao <xry111@xry111.site>,
@@ -14,569 +14,265 @@ To: Huacai Chen <chenhuacai@kernel.org>,
 Cc: Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/5] LoongArch: Use la.pcrel instead of la.abs for exception handlers
-Date: Fri, 10 Feb 2023 16:47:33 +0800
-Message-Id: <1676018856-26520-3-git-send-email-tangyouling@loongson.cn>
+Subject: [PATCH v4 4/5] LoongArch: Add support for kernel relocation
+Date: Fri, 10 Feb 2023 16:47:35 +0800
+Message-Id: <1676018856-26520-5-git-send-email-tangyouling@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1676018856-26520-1-git-send-email-tangyouling@loongson.cn>
 References: <1676018856-26520-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID:AQAAf8AxX+SpBOZjLUYwAA--.56353S4
+X-CM-TRANSID:AQAAf8AxX+SpBOZjLUYwAA--.56353S6
 X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvAXoW3KF48JFy3JFyxGw1kJFy8Grg_yoW8Aryfuo
-	Wayw4DtF18GwsrKa43JFsxJa18ZFnIg395Aw4vkw1rWFWDCa4UWw1UtF1qqa4xuwn3Jryx
-	Zay3G3WUWF1xXrn8n29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
-	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
-	UUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
-	0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
-	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4
-	xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWx
-	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I
-	8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AK
-	xVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcV
-	AFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8I
-	cIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r
-	4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2F4iUUUUU
+X-Coremail-Antispam: 1Uk129KBjvJXoWxKr4xCrW3Zw43Xw15Gw1Dtrb_yoWxZFW7pr
+	Zruws5Jr47GFn3Xr9xt34kuryUJ3WkWw17WanxK34rAF12vF95X3ykZr9rXFyjqws5JFWr
+	XFyrK342va15AaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-From: Xi Ruoyao <xry111@xry111.site>
+This config allows to compile kernel as PIE and to relocate it at
+any virtual address at runtime: this paves the way to KASLR.
+Runtime relocation is possible since relocation metadata are embedded
+into the kernel.
 
-It's needed to build the kernel as a PIE, or the linker will complain.
-
-For the consideration about performance, we copy the exception handlers
-to a dedicated 64 KB area for each CPU.  So, the PC-relative offset
-calculated at link time will be incorrect and we need to relocate the
-exception handlers after copying them.
-
-For the simplicity, we don't use the ELF R_LARCH_* relocations, but code
-an relocation entry as simply (offset_in_the_handler, symbol_addr).  For
-each exception handler, we also code the number of relocation entries.
-Then we can use the relocation information to fix up the handlers after
-copying them.
-
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+Signed-off-by: Xi Ruoyao <xry111@xry111.site> # Use arch_initcall
 ---
- arch/loongarch/include/asm/inst.h       |   1 +
- arch/loongarch/include/asm/setup.h      |   6 +-
- arch/loongarch/include/asm/stackframe.h |   3 +-
- arch/loongarch/kernel/genex.S           |  40 +++++-
- arch/loongarch/kernel/traps.c           | 158 ++++++++++++++++++++----
- arch/loongarch/mm/tlb.c                 |  23 ++--
- arch/loongarch/mm/tlbex.S               |  69 +++++++++--
- 7 files changed, 255 insertions(+), 45 deletions(-)
+ arch/loongarch/Kconfig              | 15 ++++++
+ arch/loongarch/Makefile             |  5 ++
+ arch/loongarch/kernel/Makefile      |  2 +
+ arch/loongarch/kernel/head.S        |  5 ++
+ arch/loongarch/kernel/relocate.c    | 78 +++++++++++++++++++++++++++++
+ arch/loongarch/kernel/vmlinux.lds.S | 11 +++-
+ 6 files changed, 114 insertions(+), 2 deletions(-)
+ create mode 100644 arch/loongarch/kernel/relocate.c
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 7eedd83fd0d7..426054518a3d 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -32,6 +32,7 @@ enum reg1i20_op {
- 	lu12iw_op	= 0x0a,
- 	lu32id_op	= 0x0b,
- 	pcaddi_op	= 0x0c,
-+	pcalau12i_op	= 0x0d,
- 	pcaddu12i_op	= 0x0e,
- 	pcaddu18i_op	= 0x0f,
- };
-diff --git a/arch/loongarch/include/asm/setup.h b/arch/loongarch/include/asm/setup.h
-index 72ead58039f3..f0a2b34365f1 100644
---- a/arch/loongarch/include/asm/setup.h
-+++ b/arch/loongarch/include/asm/setup.h
-@@ -11,6 +11,9 @@
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 9cc8b84f7eb0..089a4695b1b3 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -48,6 +48,7 @@ config LOONGARCH
+ 	select ARCH_SUPPORTS_ATOMIC_RMW
+ 	select ARCH_SUPPORTS_HUGETLBFS
+ 	select ARCH_SUPPORTS_NUMA_BALANCING
++	select SYS_SUPPORTS_RELOCATABLE
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF
+ 	select ARCH_USE_QUEUED_RWLOCKS
+@@ -229,6 +230,11 @@ config SCHED_OMIT_FRAME_POINTER
+ config AS_HAS_EXPLICIT_RELOCS
+ 	def_bool $(as-instr,x:pcalau12i \$t0$(comma)%pc_hi20(x))
  
- #define VECSIZE 0x200
++config SYS_SUPPORTS_RELOCATABLE
++	bool
++	help
++	  Selected if the platform supports relocating the kernel.
++
+ menu "Kernel type and options"
  
-+struct handler_reloc;
-+
-+extern struct handler_reloc *eentry_reloc[];
- extern unsigned long eentry;
- extern unsigned long tlbrentry;
- extern char init_command_line[COMMAND_LINE_SIZE];
-@@ -18,7 +21,8 @@ extern void tlb_init(int cpu);
- extern void cpu_cache_init(void);
- extern void cache_error_setup(void);
- extern void per_cpu_trap_init(int cpu);
--extern void set_handler(unsigned long offset, void *addr, unsigned long len);
-+extern void set_handler(unsigned long exccode, void *addr);
- extern void set_merr_handler(unsigned long offset, void *addr, unsigned long len);
-+extern void reloc_handler(unsigned long handler, struct handler_reloc *rel);
+ source "kernel/Kconfig.hz"
+@@ -474,6 +480,15 @@ config PHYSICAL_START
+ 	  specified in the "crashkernel=YM@XM" command line boot parameter
+ 	  passed to the panic-ed kernel).
  
- #endif /* __SETUP_H */
-diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
-index 7deb043ce387..bbec1e56b61b 100644
---- a/arch/loongarch/include/asm/stackframe.h
-+++ b/arch/loongarch/include/asm/stackframe.h
-@@ -77,7 +77,8 @@
-  * new value in sp.
-  */
- 	.macro	get_saved_sp docfi=0
--	la.abs	  t1, kernelsp
-+	/* The label is used for generating reloc tables for handlers */
-+514:	la.pcrel  t1, t0, kernelsp
- #ifdef CONFIG_SMP
- 	csrrd	  t0, PERCPU_BASE_KS
- 	LONG_ADD  t1, t1, t0
-diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
-index 7e5c293ed89f..005a10fe5a50 100644
---- a/arch/loongarch/kernel/genex.S
-+++ b/arch/loongarch/kernel/genex.S
-@@ -34,7 +34,7 @@ SYM_FUNC_END(__arch_cpu_idle)
- SYM_FUNC_START(handle_vint)
- 	BACKUP_T0T1
- 	SAVE_ALL
--	la.abs	t1, __arch_cpu_idle
-+0:	la.pcrel t1, t2, __arch_cpu_idle
- 	LONG_L	t0, sp, PT_ERA
- 	/* 32 byte rollback region */
- 	ori	t0, t0, 0x1f
-@@ -43,11 +43,25 @@ SYM_FUNC_START(handle_vint)
- 	LONG_S	t0, sp, PT_ERA
- 1:	move	a0, sp
- 	move	a1, sp
--	la.abs	t0, do_vint
-+2:	la.pcrel t0, t2, do_vint
- 	jirl	ra, t0, 0
- 	RESTORE_ALL_AND_RET
- SYM_FUNC_END(handle_vint)
++config RELOCATABLE
++	bool "Relocatable kernel"
++	depends on SYS_SUPPORTS_RELOCATABLE
++	help
++	  This builds the kernel as a Position Independent Executable (PIE),
++	  which retains all relocation metadata required to relocate the
++	  kernel binary at runtime to a different virtual address than the
++	  address it was linked at.
++
+ config SECCOMP
+ 	bool "Enable seccomp to safely compute untrusted bytecode"
+ 	depends on PROC_FS
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index 4402387d2755..27b5a70ff31c 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -71,6 +71,11 @@ KBUILD_AFLAGS_MODULE		+= -Wa,-mla-global-with-abs
+ KBUILD_CFLAGS_MODULE		+= -fplt -Wa,-mla-global-with-abs,-mla-local-with-abs
+ endif
  
-+SYM_DATA_START(rel_handle_vint)
-+LONG	3
++ifeq ($(CONFIG_RELOCATABLE),y)
++LDFLAGS_vmlinux			+= -static -pie --no-dynamic-linker -z notext
++KBUILD_CFLAGS_KERNEL		+= -fPIE
++endif
 +
-+LONG	514b - handle_vint
-+LONG	kernelsp
-+
-+LONG	0b - handle_vint
-+LONG	__arch_cpu_idle
-+
-+LONG	2b - handle_vint
-+LONG	do_vint
-+
-+SYM_DATA_END(rel_handle_vint)
-+
- SYM_FUNC_START(except_vec_cex)
- 	b	cache_parity_error
- SYM_FUNC_END(except_vec_cex)
-@@ -72,12 +86,24 @@ SYM_FUNC_END(except_vec_cex)
- 	SAVE_ALL
- 	build_prep_\prep
- 	move	a0, sp
--	la.abs	t0, do_\handler
-+	667:
-+	la.pcrel t0, t1, do_\handler
- 	jirl	ra, t0, 0
- 	668:
- 	RESTORE_ALL_AND_RET
- 	SYM_FUNC_END(handle_\exception)
- 	SYM_DATA(unwind_hint_\exception, .word 668b - 666b)
-+
-+	SYM_DATA_START(rel_handle_\exception)
-+	LONG	2
-+
-+	LONG	514b - 666b
-+	LONG	kernelsp
-+
-+	LONG	667b - 666b
-+	LONG	do_\handler
-+
-+	SYM_DATA_END(rel_handle_\exception)
- 	.endm
+ cflags-y += -ffreestanding
+ cflags-y += $(call cc-option, -mno-check-zero-division)
  
- 	BUILD_HANDLER ade ade badv
-@@ -93,6 +119,12 @@ SYM_FUNC_END(except_vec_cex)
- 	BUILD_HANDLER reserved reserved none	/* others */
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index c8cfbd562921..3341dd5f0926 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -31,6 +31,8 @@ endif
+ obj-$(CONFIG_MODULES)		+= module.o module-sections.o
+ obj-$(CONFIG_STACKTRACE)	+= stacktrace.o
  
- SYM_FUNC_START(handle_sys)
--	la.abs	t0, handle_syscall
-+	la.pcrel t0, t1, handle_syscall
- 	jr	t0
- SYM_FUNC_END(handle_sys)
++obj-$(CONFIG_RELOCATABLE)	+= relocate.o
 +
-+SYM_DATA_START(rel_handle_sys)
-+LONG	1
-+LONG	0
-+LONG	handle_syscall
-+SYM_DATA_END(rel_handle_sys)
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index c38a146a973b..7e073854f493 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -62,6 +62,127 @@ extern asmlinkage void handle_reserved(void);
- extern asmlinkage void handle_watch(void);
- extern asmlinkage void handle_vint(void);
+ obj-$(CONFIG_PROC_FS)		+= proc.o
  
-+struct handler_reloc_entry {
-+	unsigned long offset;
-+	unsigned long sym;
-+};
+ obj-$(CONFIG_SMP)		+= smp.o
+diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+index d2ac26b5b22b..499edc80d8ab 100644
+--- a/arch/loongarch/kernel/head.S
++++ b/arch/loongarch/kernel/head.S
+@@ -86,6 +86,11 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
+ 	PTR_ADD		sp, sp, tp
+ 	set_saved_sp	sp, t0, t1
+ 
++#ifdef CONFIG_RELOCATABLE
++	/* Apply the relocations */
++	bl		relocate_kernel
++#endif
 +
-+struct handler_reloc {
-+	unsigned long cnt;
-+	struct handler_reloc_entry entries[];
-+};
+ 	bl		start_kernel
+ 	ASM_BUG()
+ 
+diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
+new file mode 100644
+index 000000000000..91ce92433bab
+--- /dev/null
++++ b/arch/loongarch/kernel/relocate.c
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Support for Kernel relocation at boot time
++ *
++ * Copyright (C) 2023 Loongson Technology Corporation Limited
++ */
 +
-+extern struct handler_reloc rel_handle_tlb_load;
-+extern struct handler_reloc rel_handle_tlb_store;
-+extern struct handler_reloc rel_handle_tlb_modify;
-+extern struct handler_reloc rel_handle_tlb_protect;
-+extern struct handler_reloc rel_handle_ade;
-+extern struct handler_reloc rel_handle_ale;
-+extern struct handler_reloc rel_handle_sys;
-+extern struct handler_reloc rel_handle_bp;
-+extern struct handler_reloc rel_handle_ri;
-+extern struct handler_reloc rel_handle_fpu;
-+extern struct handler_reloc rel_handle_lsx;
-+extern struct handler_reloc rel_handle_lasx;
-+extern struct handler_reloc rel_handle_fpe;
-+extern struct handler_reloc rel_handle_lbt;
-+extern struct handler_reloc rel_handle_watch;
-+extern struct handler_reloc rel_handle_reserved;
-+extern struct handler_reloc rel_handle_vint;
++#include <linux/elf.h>
++#include <linux/kernel.h>
++#include <linux/printk.h>
++#include <linux/panic_notifier.h>
++#include <asm/sections.h>
 +
-+struct handler_reloc *eentry_reloc[128] = {
-+	[0] = NULL, /* merr handler */
-+	[EXCCODE_TLBL] = &rel_handle_tlb_load,
-+	[EXCCODE_TLBS] = &rel_handle_tlb_store,
-+	[EXCCODE_TLBI] = &rel_handle_tlb_load,
-+	[EXCCODE_TLBM] = &rel_handle_tlb_modify,
-+	[EXCCODE_TLBNR] = &rel_handle_tlb_protect,
-+	[EXCCODE_TLBNX] = &rel_handle_tlb_protect,
-+	[EXCCODE_TLBPE] = &rel_handle_tlb_protect,
-+	[EXCCODE_ADE] = &rel_handle_ade,
-+	[EXCCODE_ALE] = &rel_handle_ale,
-+	[EXCCODE_SYS] = &rel_handle_sys,
-+	[EXCCODE_BP] = &rel_handle_bp,
-+	[EXCCODE_INE] = &rel_handle_ri,
-+	[EXCCODE_IPE] = &rel_handle_ri,
-+	[EXCCODE_FPDIS] = &rel_handle_fpu,
-+	[EXCCODE_LSXDIS] = &rel_handle_lsx,
-+	[EXCCODE_LASXDIS] = &rel_handle_lasx,
-+	[EXCCODE_FPE] = &rel_handle_fpe,
-+	[EXCCODE_BTDIS] = &rel_handle_lbt,
-+	[EXCCODE_WATCH] = &rel_handle_watch,
-+	[(EXCCODE_WATCH + 1) ... (EXCCODE_INT_START - 1)] = &rel_handle_reserved,
-+	[EXCCODE_INT_START ... (EXCCODE_INT_END - 1)] = &rel_handle_vint,
-+};
++#define RELOCATED(x) ((void *)((long)x + reloc_offset))
 +
-+void reloc_handler(unsigned long handler, struct handler_reloc *rel)
++extern long __rela_dyn_start;
++extern long __rela_dyn_end;
++
++static unsigned long reloc_offset;
++
++void __init relocate_kernel(void)
 +{
-+	if (!rel)
-+		return;
++	reloc_offset = (unsigned long)_text - VMLINUX_LOAD_ADDRESS;
 +
-+	for (unsigned long i = 0; i < rel->cnt; i++) {
-+		unsigned long pc = handler + rel->entries[i].offset;
-+		union loongarch_instruction *insn =
-+			(union loongarch_instruction *)pc;
-+		u32 imm[4];
-+		unsigned long v = rel->entries[i].sym;
++	if (reloc_offset) {
++		Elf64_Rela *rela, *rela_end;
++		rela = (Elf64_Rela *)&__rela_dyn_start;
++		rela_end = (Elf64_Rela *)&__rela_dyn_end;
 +
-+		/* GNU as >= 2.40 uses pcalau12i for la.pcrel, but GNU ld <= 2.39
-+		 * uses pcaddu12i.
-+		 */
-+		if (insn->reg1i20_format.opcode == pcalau12i_op) {
-+			/* Use s32 deliberately for sign extension. */
-+			s32 offset_hi20 = ((v + 0x800) & ~0xfff) -
-+					  (pc & ~0xfff);
-+			unsigned long anchor = (pc & ~0xfff) + offset_hi20;
-+			unsigned long offset_rem = v - anchor;
++		for ( ; rela < rela_end; rela++) {
++			Elf64_Addr addr = rela->r_offset;
++			Elf64_Addr relocated_addr = rela->r_addend;
 +
-+			imm[0] = (offset_hi20 >> 12) & 0xfffff;
-+			imm[1] = v & 0xfff;
-+			imm[2] = (offset_rem >> 32) & 0xfffff;
-+			imm[3] = offset_rem >> 52;
-+		} else if (insn->reg1i20_format.opcode == pcaddu12i_op) {
-+			/* Use s32 deliberately for sign extension. */
-+			s32 offset_lo = v - pc;
-+			unsigned long offset_hi = v - pc - offset_lo;
++			if (rela->r_info != R_LARCH_RELATIVE)
++				continue;
 +
-+			imm[0] = (offset_lo >> 12) & 0xfffff;
-+			imm[1] = offset_lo & 0xfff;
-+			imm[2] = (offset_hi >> 32) & 0xfffff;
-+			imm[3] = offset_hi >> 52;
-+		} else
-+			panic("Cannot fixup la.pcrel for exception handler at %lu: unexpected instruction %d!",
-+			      pc, insn->word);
++			if (relocated_addr >= VMLINUX_LOAD_ADDRESS)
++				relocated_addr =
++					(Elf64_Addr)RELOCATED(relocated_addr);
 +
-+		insn[0].reg1i20_format.immediate = imm[0];
-+		insn[1].reg2i12_format.immediate = imm[1];
-+		insn[2].reg1i20_format.immediate = imm[2];
-+		insn[3].reg2i12_format.immediate = imm[3];
++			*(Elf64_Addr *)RELOCATED(addr) = relocated_addr;
++		}
 +	}
 +}
 +
-+/* Install CPU exception handler */
-+static void do_set_handler(unsigned long exccode, void *addr,
-+			   struct handler_reloc *rel)
++/*
++ * Show relocation information on panic.
++ */
++static void show_kernel_relocation(const char *level)
 +{
-+	unsigned long dest_addr = eentry + exccode * VECSIZE;
-+
-+	memcpy((void *)dest_addr, addr, VECSIZE);
-+	reloc_handler(dest_addr, rel);
-+	local_flush_icache_range(dest_addr, dest_addr + VECSIZE);
++	if (reloc_offset > 0) {
++		printk(level);
++		pr_cont("Kernel relocated offset @ 0x%lx\n", reloc_offset);
++		pr_cont(" .text @ 0x%lx\n", (unsigned long)&_text);
++		pr_cont(" .data @ 0x%lx\n", (unsigned long)&_sdata);
++		pr_cont(" .bss  @ 0x%lx\n", (unsigned long)&__bss_start);
++	}
 +}
 +
-+/* Install CPU exception handler, with the reloc table from eentry_reloc */
-+void set_handler(unsigned long exccode, void *addr)
++static int kernel_location_notifier_fn(struct notifier_block *self,
++				       unsigned long v, void *p)
 +{
-+	do_set_handler(exccode, addr, eentry_reloc[exccode]);
++	show_kernel_relocation(KERN_EMERG);
++	return NOTIFY_DONE;
 +}
 +
-+static void set_handler_reserved(unsigned long exccode)
++static struct notifier_block kernel_location_notifier = {
++	.notifier_call = kernel_location_notifier_fn
++};
++
++static int __init register_kernel_offset_dumper(void)
 +{
-+	do_set_handler(exccode, handle_reserved, &rel_handle_reserved);
++	atomic_notifier_chain_register(&panic_notifier_list,
++				       &kernel_location_notifier);
++	return 0;
 +}
 +
- static void show_backtrace(struct task_struct *task, const struct pt_regs *regs,
- 			   const char *loglvl, bool user)
- {
-@@ -704,19 +825,12 @@ void per_cpu_trap_init(int cpu)
- 	/* Initialise exception handlers */
- 	if (cpu == 0)
- 		for (i = 0; i < 64; i++)
--			set_handler(i * VECSIZE, handle_reserved, VECSIZE);
-+			set_handler_reserved(i);
++arch_initcall(register_kernel_offset_dumper);
+diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
+index 733b16e8d55d..aec0b6567d24 100644
+--- a/arch/loongarch/kernel/vmlinux.lds.S
++++ b/arch/loongarch/kernel/vmlinux.lds.S
+@@ -70,6 +70,8 @@ SECTIONS
+ 	.plt : ALIGN(16) { *(.plt) }
+ 	.got.plt : ALIGN(16) { *(.got.plt) }
  
- 	tlb_init(cpu);
- 	cpu_cache_init();
- }
- 
--/* Install CPU exception handler */
--void set_handler(unsigned long offset, void *addr, unsigned long size)
--{
--	memcpy((void *)(eentry + offset), addr, size);
--	local_flush_icache_range(eentry + offset, eentry + offset + size);
--}
--
- static const char panic_null_cerr[] =
- 	"Trying to set NULL cache error exception handler\n";
- 
-@@ -741,20 +855,20 @@ void __init trap_init(void)
- 
- 	/* Set interrupt vector handler */
- 	for (i = EXCCODE_INT_START; i < EXCCODE_INT_END; i++)
--		set_handler(i * VECSIZE, handle_vint, VECSIZE);
--
--	set_handler(EXCCODE_ADE * VECSIZE, handle_ade, VECSIZE);
--	set_handler(EXCCODE_ALE * VECSIZE, handle_ale, VECSIZE);
--	set_handler(EXCCODE_SYS * VECSIZE, handle_sys, VECSIZE);
--	set_handler(EXCCODE_BP * VECSIZE, handle_bp, VECSIZE);
--	set_handler(EXCCODE_INE * VECSIZE, handle_ri, VECSIZE);
--	set_handler(EXCCODE_IPE * VECSIZE, handle_ri, VECSIZE);
--	set_handler(EXCCODE_FPDIS * VECSIZE, handle_fpu, VECSIZE);
--	set_handler(EXCCODE_LSXDIS * VECSIZE, handle_lsx, VECSIZE);
--	set_handler(EXCCODE_LASXDIS * VECSIZE, handle_lasx, VECSIZE);
--	set_handler(EXCCODE_FPE * VECSIZE, handle_fpe, VECSIZE);
--	set_handler(EXCCODE_BTDIS * VECSIZE, handle_lbt, VECSIZE);
--	set_handler(EXCCODE_WATCH * VECSIZE, handle_watch, VECSIZE);
-+		set_handler(i, handle_vint);
++	.data.rel : { *(.data.rel*) }
 +
-+	set_handler(EXCCODE_ADE, handle_ade);
-+	set_handler(EXCCODE_ALE, handle_ale);
-+	set_handler(EXCCODE_SYS, handle_sys);
-+	set_handler(EXCCODE_BP, handle_bp);
-+	set_handler(EXCCODE_INE, handle_ri);
-+	set_handler(EXCCODE_IPE, handle_ri);
-+	set_handler(EXCCODE_FPDIS, handle_fpu);
-+	set_handler(EXCCODE_LSXDIS, handle_lsx);
-+	set_handler(EXCCODE_LASXDIS, handle_lasx);
-+	set_handler(EXCCODE_FPE, handle_fpe);
-+	set_handler(EXCCODE_BTDIS, handle_lbt);
-+	set_handler(EXCCODE_WATCH, handle_watch);
- 
- 	cache_error_setup();
- 
-diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-index 8bad6b0cff59..6f70aab7202a 100644
---- a/arch/loongarch/mm/tlb.c
-+++ b/arch/loongarch/mm/tlb.c
-@@ -253,7 +253,6 @@ static void output_pgtable_bits_defines(void)
- #ifdef CONFIG_NUMA
- unsigned long pcpu_handlers[NR_CPUS];
+ 	. = ALIGN(PECOFF_SEGMENT_ALIGN);
+ 	__init_begin = .;
+ 	__inittext_begin = .;
+@@ -93,8 +95,6 @@ SECTIONS
+ 	PERCPU_SECTION(1 << CONFIG_L1_CACHE_SHIFT)
  #endif
--extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
  
- void setup_tlb_handler(int cpu)
- {
-@@ -264,19 +263,20 @@ void setup_tlb_handler(int cpu)
- 	if (cpu == 0) {
- 		memcpy((void *)tlbrentry, handle_tlb_refill, 0x80);
- 		local_flush_icache_range(tlbrentry, tlbrentry + 0x80);
--		set_handler(EXCCODE_TLBI * VECSIZE, handle_tlb_load, VECSIZE);
--		set_handler(EXCCODE_TLBL * VECSIZE, handle_tlb_load, VECSIZE);
--		set_handler(EXCCODE_TLBS * VECSIZE, handle_tlb_store, VECSIZE);
--		set_handler(EXCCODE_TLBM * VECSIZE, handle_tlb_modify, VECSIZE);
--		set_handler(EXCCODE_TLBNR * VECSIZE, handle_tlb_protect, VECSIZE);
--		set_handler(EXCCODE_TLBNX * VECSIZE, handle_tlb_protect, VECSIZE);
--		set_handler(EXCCODE_TLBPE * VECSIZE, handle_tlb_protect, VECSIZE);
-+		set_handler(EXCCODE_TLBI, handle_tlb_load);
-+		set_handler(EXCCODE_TLBL, handle_tlb_load);
-+		set_handler(EXCCODE_TLBS, handle_tlb_store);
-+		set_handler(EXCCODE_TLBM, handle_tlb_modify);
-+		set_handler(EXCCODE_TLBNR, handle_tlb_protect);
-+		set_handler(EXCCODE_TLBNX, handle_tlb_protect);
-+		set_handler(EXCCODE_TLBPE, handle_tlb_protect);
+-	.rela.dyn : ALIGN(8) { *(.rela.dyn) *(.rela*) }
+-
+ 	.init.bss : {
+ 		*(.init.bss)
  	}
- #ifdef CONFIG_NUMA
- 	else {
- 		void *addr;
-+		unsigned long addr_ul;
- 		struct page *page;
--		const int vec_sz = sizeof(exception_handlers);
-+		const int vec_sz = VECSIZE * 128;
+@@ -107,6 +107,12 @@ SECTIONS
+ 	RO_DATA(4096)
+ 	RW_DATA(1 << CONFIG_L1_CACHE_SHIFT, PAGE_SIZE, THREAD_SIZE)
  
- 		if (pcpu_handlers[cpu])
- 			return;
-@@ -286,8 +286,11 @@ void setup_tlb_handler(int cpu)
- 			return;
++	.rela.dyn : ALIGN(8) {
++		__rela_dyn_start = .;
++		 *(.rela.dyn) *(.rela*)
++		__rela_dyn_end = .;
++	}
++
+ 	.sdata : {
+ 		*(.sdata)
+ 	}
+@@ -133,6 +139,7 @@ SECTIONS
  
- 		addr = page_address(page);
-+		addr_ul = (unsigned long)addr;
- 		pcpu_handlers[cpu] = (unsigned long)addr;
--		memcpy((void *)addr, (void *)eentry, vec_sz);
-+		memcpy(addr, (void *)eentry, vec_sz);
-+		for (unsigned long i = 0; i < 128; i++)
-+			reloc_handler(addr_ul + i * VECSIZE, eentry_reloc[i]);
- 		local_flush_icache_range((unsigned long)addr, (unsigned long)addr + vec_sz);
- 		csr_write64(pcpu_handlers[cpu], LOONGARCH_CSR_EENTRY);
- 		csr_write64(pcpu_handlers[cpu], LOONGARCH_CSR_MERRENTRY);
-diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
-index 3dd2a9615cd9..044c2190771a 100644
---- a/arch/loongarch/mm/tlbex.S
-+++ b/arch/loongarch/mm/tlbex.S
-@@ -39,11 +39,21 @@ SYM_FUNC_START(handle_tlb_protect)
- 	move		a1, zero
- 	csrrd		a2, LOONGARCH_CSR_BADV
- 	REG_S		a2, sp, PT_BVADDR
--	la.abs		t0, do_page_fault
-+1:	la.pcrel	t0, t1, do_page_fault
- 	jirl		ra, t0, 0
- 	RESTORE_ALL_AND_RET
- SYM_FUNC_END(handle_tlb_protect)
- 
-+SYM_DATA_START(rel_handle_tlb_protect)
-+	LONG	2
-+
-+	LONG	514b - handle_tlb_protect
-+	LONG	kernelsp
-+
-+	LONG	1b - handle_tlb_protect
-+	LONG	do_page_fault
-+SYM_DATA_END(rel_handle_tlb_protect)
-+
- SYM_FUNC_START(handle_tlb_load)
- 	csrwr		t0, EXCEPTION_KS0
- 	csrwr		t1, EXCEPTION_KS1
-@@ -115,7 +125,8 @@ smp_pgtable_change_load:
- 
- #ifdef CONFIG_64BIT
- vmalloc_load:
--	la.abs		t1, swapper_pg_dir
-+	/* The first insn of vmalloc_done_load overwrites ra */
-+1:	la.pcrel	t1, ra, swapper_pg_dir
- 	b		vmalloc_done_load
- #endif
- 
-@@ -186,10 +197,24 @@ tlb_huge_update_load:
- nopage_tlb_load:
- 	dbar		0
- 	csrrd		ra, EXCEPTION_KS2
--	la.abs		t0, tlb_do_page_fault_0
-+2:	la.pcrel	t0, t1, tlb_do_page_fault_0
- 	jr		t0
- SYM_FUNC_END(handle_tlb_load)
- 
-+SYM_DATA_START(rel_handle_tlb_load)
-+#ifdef CONFIG_64BIT
-+	LONG	2
-+
-+	LONG	1b - handle_tlb_load
-+	LONG	swapper_pg_dir
-+#else
-+	LONG	1
-+#endif
-+
-+	LONG	2b - handle_tlb_load
-+	LONG	tlb_do_page_fault_0
-+SYM_DATA_END(rel_handle_tlb_load)
-+
- SYM_FUNC_START(handle_tlb_store)
- 	csrwr		t0, EXCEPTION_KS0
- 	csrwr		t1, EXCEPTION_KS1
-@@ -262,7 +287,8 @@ smp_pgtable_change_store:
- 
- #ifdef CONFIG_64BIT
- vmalloc_store:
--	la.abs		t1, swapper_pg_dir
-+	/* The first insn of vmalloc_done_store overwrites ra */
-+1:	la.pcrel	t1, ra, swapper_pg_dir
- 	b		vmalloc_done_store
- #endif
- 
-@@ -335,10 +361,24 @@ tlb_huge_update_store:
- nopage_tlb_store:
- 	dbar		0
- 	csrrd		ra, EXCEPTION_KS2
--	la.abs		t0, tlb_do_page_fault_1
-+2:	la.pcrel	t0, t1, tlb_do_page_fault_1
- 	jr		t0
- SYM_FUNC_END(handle_tlb_store)
- 
-+SYM_DATA_START(rel_handle_tlb_store)
-+#ifdef CONFIG_64BIT
-+	LONG	2
-+
-+	LONG	1b - handle_tlb_store
-+	LONG	swapper_pg_dir
-+#else
-+	LONG	1
-+#endif
-+
-+	LONG	2b - handle_tlb_store
-+	LONG	tlb_do_page_fault_1
-+SYM_DATA_END(rel_handle_tlb_store)
-+
- SYM_FUNC_START(handle_tlb_modify)
- 	csrwr		t0, EXCEPTION_KS0
- 	csrwr		t1, EXCEPTION_KS1
-@@ -410,7 +450,8 @@ smp_pgtable_change_modify:
- 
- #ifdef CONFIG_64BIT
- vmalloc_modify:
--	la.abs		t1, swapper_pg_dir
-+	/* The first insn of vmalloc_done_modify overwrites ra */
-+1:	la.pcrel	t1, ra, swapper_pg_dir
- 	b		vmalloc_done_modify
- #endif
- 
-@@ -482,10 +523,24 @@ tlb_huge_update_modify:
- nopage_tlb_modify:
- 	dbar		0
- 	csrrd		ra, EXCEPTION_KS2
--	la.abs		t0, tlb_do_page_fault_1
-+2:	la.pcrel	t0, t1, tlb_do_page_fault_1
- 	jr		t0
- SYM_FUNC_END(handle_tlb_modify)
- 
-+SYM_DATA_START(rel_handle_tlb_modify)
-+#ifdef CONFIG_64BIT
-+	LONG	2
-+
-+	LONG	1b - handle_tlb_modify
-+	LONG	swapper_pg_dir
-+#else
-+	LONG	1
-+#endif
-+
-+	LONG	2b - handle_tlb_modify
-+	LONG	tlb_do_page_fault_1
-+SYM_DATA_END(rel_handle_tlb_modify)
-+
- SYM_FUNC_START(handle_tlb_refill)
- 	csrwr		t0, LOONGARCH_CSR_TLBRSAVE
- 	csrrd		t0, LOONGARCH_CSR_PGD
+ 	DISCARDS
+ 	/DISCARD/ : {
++		*(.dynamic .dynsym .dynstr .hash .gnu.hash)
+ 		*(.gnu.attributes)
+ 		*(.options)
+ 		*(.eh_frame)
 -- 
 2.37.3
 
