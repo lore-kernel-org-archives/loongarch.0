@@ -1,372 +1,170 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5398EA29
-	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 09:37:03 +0000 (UTC)
-Received: from loongson.cn (unknown [192.168.200.1])
-	by gateway (Coremail) with SMTP id _____8AxrvA+EOZjScQQAA--.33612S3;
-	Fri, 10 Feb 2023 17:37:02 +0800 (CST)
-Received: from [0.0.0.0] (unknown [192.168.200.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxQuU9EOZjkU0wAA--.56092S3;
-	Fri, 10 Feb 2023 17:37:02 +0800 (CST)
-Subject: Re: [PATCH v4 5/5] LoongArch: Add support for kernel address space
- layout randomization (KASLR)
-To: Huacai Chen <chenhuacai@kernel.org>
-References: <1676018856-26520-1-git-send-email-tangyouling@loongson.cn>
- <1676018856-26520-6-git-send-email-tangyouling@loongson.cn>
- <28cda200-c318-7c36-f76e-f5cb171f7bb9@loongson.cn>
-Cc: Xi Ruoyao <xry111@xry111.site>, Jinyang He <hejinyang@loongson.cn>,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <3e5651a1-2c3f-47db-e421-6f57b834ca7e@loongson.cn>
-Date: Fri, 10 Feb 2023 17:37:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE3CA29
+	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 10:03:22 +0000 (UTC)
+Received: by mail-ej1-f46.google.com with SMTP id c26so9594842ejz.10
+        for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 02:03:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XHUKpkdGd++gIe1TTqGxf+onHwGJzdjk6BqCtOyUWvo=;
+        b=B25J+RQN4hbCSUxZHXRFFwp33OvvgN0dBQzT282s5MI7kUYCNiby7K17JStLnnUCcC
+         46mdcIDgqSfpVzx1xpKPLTud12CfnL15O+g5lyV7si4Vuwmlp6JoVi3bGsbf4mck+MnF
+         kVQ1nDv85/hVeOQSXgre5inRNCMh0FPNSUtY3MbtAP7f9eutqv2Fj9JOsWwIRWVMY0rE
+         OG/tNEROztQ5uJQjLkZj5Xd68jOtfHi3FgmCMY6B76A3/zhmKXBvUFM8WS0eNFOSpRAf
+         kz67laa3To7OxMpGMEL1CEmZPrOOuZt9gcE1rmsbFKS1aIXXuSBsDl7f1WuvTT0Z+A5D
+         9ShA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XHUKpkdGd++gIe1TTqGxf+onHwGJzdjk6BqCtOyUWvo=;
+        b=KSUHu2tUorIw3sFlc5kINyk/GzlmnlAXAJiHxVaPwgXxkz2fpxydLqwSoAlzGtXFNF
+         9KkiZg4pqIzkbLiQ5USOgeaeofhNJ8Yh2zlFq9D693JcbDzACy61L+kHcyStoZ65+Ts2
+         vNxdv3xwlEQ6onEnX9Luo4UiKDJuJ3yHIivE+0j5O5kK6gxUncPWehB+Cb//9cSoqvvc
+         PaTF/kfQMG3EgVQmGJYCMrDuN7IwvKI765/f2ykBrTHHLVf7RT2D+a8qQk1Ru9kOaNkr
+         uaupbM2hVyPmJHj4DzS1nVzlyU3xfWS5JftccVxITk/0vWqviOM0AD4Pdp3efoimIGEH
+         uxSw==
+X-Gm-Message-State: AO0yUKWgxF8bmPozJPItjg9CdBSlcLHWr98EJSzBiZypcJ6V+GP8wcHp
+	rphJZ0ndIvPrfv+9reXRe6bSywbqzMi894wr4j0=
+X-Google-Smtp-Source: AK7set8Me7MZ4F9pBrAU7Tp/HAMc22VtwSTNVx3364jQvI8VRWK34oOx3/MuG5UbwaGmdEfiy06Y4EjoA9wWAaCaaFc=
+X-Received: by 2002:a17:907:c715:b0:8af:449f:8fae with SMTP id
+ ty21-20020a170907c71500b008af449f8faemr763617ejc.3.1676023400392; Fri, 10 Feb
+ 2023 02:03:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <28cda200-c318-7c36-f76e-f5cb171f7bb9@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8CxQuU9EOZjkU0wAA--.56092S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3JF4xtr4fJFyDXrWUAw17Awb_yoWfZw4rpF
-	W7Ga1UtF47XF17GrsFq3s5ur98Jws2gw13GFsrK34rZ3ZFvF1rJa4kuwnxWay8Ar18Wr4S
-	vFy5t3429ws8AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bz8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2
-	zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_WwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
-	wIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxV
-	AFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvj4RC_MaUUUUU
+References: <cover.1673227292.git.zhoubinbin@loongson.cn> <Y88VIXerF5Wk/9kj@mail.local>
+ <CAMpQs4+8m0r98eGMHO7ktS2_AuNCA_u3Yk1q06i99TdbVZJ_Cg@mail.gmail.com>
+In-Reply-To: <CAMpQs4+8m0r98eGMHO7ktS2_AuNCA_u3Yk1q06i99TdbVZJ_Cg@mail.gmail.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Fri, 10 Feb 2023 18:03:07 +0800
+Message-ID: <CAMpQs4+uW75TdkMicdfU+5LYQxA_7kfbdabwO=iDiKwW-PzO9Q@mail.gmail.com>
+Subject: Re: [PATCH V2 0/7] rtc: ls2x: Add support for the Loongson-2K/LS7A RTC
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Alessandro Zummo <a.zummo@towertech.it>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, linux-rtc@vger.kernel.org, 
+	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, devicetree@vger.kernel.org, 
+	Qing Zhang <zhangqing@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	zhaoxiao <zhaoxiao@uniontech.com>, zhzhl555@gmail.com, 
+	Kelvin Cheung <keguang.zhang@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-
-
-On 02/10/2023 05:06 PM, Youling Tang wrote:
+On Tue, Jan 31, 2023 at 8:59 PM Binbin Zhou <zhoubb.aaron@gmail.com> wrote:
+>
+> Hi Kelvin:
+>
+> Excuse me.
+> I am submitting the Loongson-2K/LS7A RTC driver and Alexandre would
+> like me to merge the ls1x rtc driver in parallel.
+> Unfortunately I found out that the loongson-1 does not yet support DT
+> and would like to ask if you have any plans to support DT?
+>
+> I think this is the prerequisite for the merge.
+>
+> Regards.
+> Binbin
 >
 >
-> On 02/10/2023 04:47 PM, Youling Tang wrote:
->> This patch adds support for relocating the kernel to a random address.
->>
->> Entropy is derived from the banner, which will change every build and
->> random_get_entropy() which should provide additional runtime entropy.
->>
->> The kernel is relocated by up to RANDOMIZE_BASE_MAX_OFFSET bytes from
->> its link address. Because relocation happens so early in the kernel boot,
->> the amount of physical memory has not yet been determined. This means
->> the only way to limit relocation within the available memory is via
->> Kconfig. Limit the maximum value of RANDOMIZE_BASE_MAX_OFFSET to
->> 256M(0x10000000) because our memory layout has many holes.
->>
->> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
->> Signed-off-by: Xi Ruoyao <xry111@xry111.site> # Fix compiler warnings
->> ---
->>  arch/loongarch/Kconfig           |  23 +++++
->>  arch/loongarch/kernel/head.S     |  14 ++-
->>  arch/loongarch/kernel/relocate.c | 143 ++++++++++++++++++++++++++++++-
->>  3 files changed, 176 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> index 089a4695b1b3..f0a070bd7254 100644
->> --- a/arch/loongarch/Kconfig
->> +++ b/arch/loongarch/Kconfig
->> @@ -489,6 +489,29 @@ config RELOCATABLE
->>        kernel binary at runtime to a different virtual address than the
->>        address it was linked at.
->>
->> +config RANDOMIZE_BASE
->> +    bool "Randomize the address of the kernel image (KASLR)"
->> +    depends on RELOCATABLE
->> +    help
->> +       Randomizes the physical and virtual address at which the
->> +       kernel image is loaded, as a security feature that
->> +       deters exploit attempts relying on knowledge of the location
->> +       of kernel internals.
->> +
->> +       The kernel will be offset by up to RANDOMIZE_BASE_MAX_OFFSET.
->> +
->> +       If unsure, say N.
->> +
->> +config RANDOMIZE_BASE_MAX_OFFSET
->> +    hex "Maximum KASLR offset" if EXPERT
->> +    depends on RANDOMIZE_BASE
->> +    range 0x0 0x10000000 if 64BIT
->> +    default "0x01000000"
->> +    help
->> +      When KASLR is active, this provides the maximum offset that will
->> +      be applied to the kernel image.
->> +
->> +
->>  config SECCOMP
->>      bool "Enable seccomp to safely compute untrusted bytecode"
->>      depends on PROC_FS
->> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
->> index 499edc80d8ab..b12f459ad73a 100644
->> --- a/arch/loongarch/kernel/head.S
->> +++ b/arch/loongarch/kernel/head.S
->> @@ -87,10 +87,22 @@ SYM_CODE_START(kernel_entry)            # kernel
->> entry point
->>      set_saved_sp    sp, t0, t1
->>
->>  #ifdef CONFIG_RELOCATABLE
->> +#ifdef CONFIG_RANDOMIZE_BASE
->> +    bl        do_kaslr
->> +
->> +    /* Repoint the sp into the new kernel image */
->> +    PTR_LI        sp, (_THREAD_SIZE - PT_SIZE)
->> +    PTR_ADD        sp, sp, tp
->> +    set_saved_sp    sp, t0, t1
->> +
->> +    /* do_kaslr returns the new kernel image entry point */
->> +    jr        a0
->> +    ASM_BUG()
->> +#else
->>      /* Apply the relocations */
->>      bl        relocate_kernel
->>  #endif
->> -
->> +#endif
->>      bl        start_kernel
->>      ASM_BUG()
->>
->> diff --git a/arch/loongarch/kernel/relocate.c
->> b/arch/loongarch/kernel/relocate.c
->> index 91ce92433bab..5266f23a3006 100644
->> --- a/arch/loongarch/kernel/relocate.c
->> +++ b/arch/loongarch/kernel/relocate.c
->> @@ -9,19 +9,21 @@
->>  #include <linux/kernel.h>
->>  #include <linux/printk.h>
->>  #include <linux/panic_notifier.h>
->> +#include <linux/start_kernel.h>
->> +#include <asm/bootinfo.h>
->> +#include <asm/early_ioremap.h>
->>  #include <asm/sections.h>
->>
->>  #define RELOCATED(x) ((void *)((long)x + reloc_offset))
->> +#define RELOCATED_KASLR(x) ((void *)((long)x + offset))
->>
->>  extern long __rela_dyn_start;
->>  extern long __rela_dyn_end;
->>
->>  static unsigned long reloc_offset;
->>
->> -void __init relocate_kernel(void)
->> +static inline __init void relocate_relative(void)
->>  {
->> -    reloc_offset = (unsigned long)_text - VMLINUX_LOAD_ADDRESS;
->> -
->>      if (reloc_offset) {
->>          Elf64_Rela *rela, *rela_end;
->>          rela = (Elf64_Rela *)&__rela_dyn_start;
->> @@ -43,6 +45,141 @@ void __init relocate_kernel(void)
->>      }
->>  }
->>
->> +#ifdef CONFIG_RANDOMIZE_BASE
->> +static inline __init unsigned long rotate_xor(unsigned long hash,
->> +                          const void *area, size_t size)
->> +{
->> +    size_t i;
->> +    unsigned long *ptr = (unsigned long *)area;
->> +
->> +    for (i = 0; i < size / sizeof(hash); i++) {
->> +        /* Rotate by odd number of bits and XOR. */
->> +        hash = (hash << ((sizeof(hash) * 8) - 7)) | (hash >> 7);
->> +        hash ^= ptr[i];
->> +    }
->> +
->> +    return hash;
->> +}
->> +
->> +static inline __init unsigned long get_random_boot(void)
->> +{
->> +    unsigned long entropy = random_get_entropy();
->> +    unsigned long hash = 0;
->> +
->> +    /* Attempt to create a simple but unpredictable starting entropy. */
->> +    hash = rotate_xor(hash, linux_banner, strlen(linux_banner));
->> +
->> +    /* Add in any runtime entropy we can get */
->> +    hash = rotate_xor(hash, &entropy, sizeof(entropy));
->> +
->> +    return hash;
->> +}
->> +
->> +static inline __init bool kaslr_disabled(void)
->> +{
->> +    char *str;
->> +
->> +    str = strstr(boot_command_line, "nokaslr");
->> +    if (str == boot_command_line || (str > boot_command_line && *(str
->> - 1) == ' '))
->> +        return true;
->> +
->> +    return false;
->> +}
->> +
->> +/* Choose a new address for the kernel */
->> +static inline void __init *determine_relocation_address(void)
->> +{
->> +    unsigned long kernel_length;
->> +    void *dest = _text;
->> +    unsigned long offset;
->> +
->> +    if (kaslr_disabled())
->> +        return dest;
->> +
->> +    kernel_length = (long)_end - (long)_text;
->> +
->> +    offset = get_random_boot() << 16;
->> +    offset &= (CONFIG_RANDOMIZE_BASE_MAX_OFFSET - 1);
->> +    if (offset < kernel_length)
->> +        offset += ALIGN(kernel_length, 0xffff);
->> +
->> +    return RELOCATED_KASLR(dest);
->> +}
->> +
->> +static inline int __init relocation_addr_valid(void *loc_new)
->> +{
->> +    if ((unsigned long)loc_new & 0x00000ffff) {
->> +        /* Inappropriately aligned new location */
->> +        return 0;
->> +    }
->> +    if ((unsigned long)loc_new < (unsigned long)_end) {
->> +        /* New location overlaps original kernel */
->> +        return 0;
->> +    }
->> +    return 1;
->> +}
->> +
->> +static inline void __init update_reloc_offset(unsigned long *addr,
->> long offset)
->> +{
->> +    unsigned long *new_addr = (unsigned long *)RELOCATED_KASLR(addr);
->> +
->> +    *new_addr = (unsigned long)offset;
->> +}
->> +
->> +void *__init do_kaslr(void)
->> +{
->> +    void *loc_new;
->> +    unsigned long kernel_length;
->> +    long offset = 0;
->> +    /* Default to original kernel entry point */
->> +    void *kernel_entry = start_kernel;
->> +    char *cmdline = early_ioremap(fw_arg1, COMMAND_LINE_SIZE);
->> +
->> +    /* Boot command line was passed in fw_arg1 */
->> +    strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
->> +
->> +    kernel_length = (long)(_end) - (long)(_text);
->> +
->> +    loc_new = determine_relocation_address();
->> +
->> +    /* Sanity check relocation address */
->> +    if (relocation_addr_valid(loc_new))
->> +        offset = (unsigned long)loc_new - (unsigned long)(_text);
->> +
->> +    if (offset) {
->> +        /* Copy the kernel to it's new location */
->> +        memcpy(loc_new, _text, kernel_length);
->> +
->> +        /* Sync the caches ready for execution of new kernel */
->> +        __asm__ __volatile__ (
->> +            "ibar 0 \t\n"
->> +            "dbar 0 \t\n");
->> +
->> +        reloc_offset = (unsigned long)_text - VMLINUX_LOAD_ADDRESS;
->> +        reloc_offset += offset;
->> +
->> +        relocate_relative();
->> +
->> +        /* The current thread is now within the relocated image */
->> +        __current_thread_info = RELOCATED_KASLR(__current_thread_info);
->> +
->> +        /* Return the new kernel's entry point */
->> +        kernel_entry = RELOCATED_KASLR(start_kernel);
->> +
->> +        update_reloc_offset(&reloc_offset, offset);
->> +    }
->
-> Self review:
->
-> There is a problem with do_kaslr implementation, which will be fixed in
-> the next version.
 
-When offset is 0, but reloc_offset is not 0, relocate_relative() also
-needs to be executed.
+Hi Alexandre:
 
-It will be modified as follows:
+Unfortunately there has been no reply from Keguang for the past week
+or so. Can we try rtc-ls2x and rtc-ls1x to coexist until Loongson-1
+supports DT?
+Later on, if Keguang or someone else familiar with Loongson-1 adds DT
+support, I would be happy to continue trying to merge the two drivers.
 
---- a/arch/loongarch/kernel/relocate.c
-+++ b/arch/loongarch/kernel/relocate.c
-@@ -146,6 +146,8 @@ void *__init do_kaslr(void)
-         if (relocation_addr_valid(loc_new))
-                 offset = (unsigned long)loc_new - (unsigned long)(_text);
-
-+       reloc_offset = (unsigned long)_text - VMLINUX_LOAD_ADDRESS;
-+
-         if (offset) {
-                 /* Copy the kernel to it's new location */
-                 memcpy(loc_new, _text, kernel_length);
-@@ -155,11 +157,8 @@ void *__init do_kaslr(void)
-                         "ibar 0 \t\n"
-                         "dbar 0 \t\n");
-
--               reloc_offset = (unsigned long)_text - VMLINUX_LOAD_ADDRESS;
-                 reloc_offset += offset;
-
--               relocate_relative();
--
-                 /* The current thread is now within the relocated image */
-                 __current_thread_info = 
-RELOCATED_KASLR(__current_thread_info);
-
-@@ -169,6 +168,9 @@ void *__init do_kaslr(void)
-                 update_reloc_offset(&reloc_offset, offset);
-         }
-
-+       if (reloc_offset)
-+               relocate_relative();
-+
-         return kernel_entry;
-  }
-  #endif
-@@ -177,7 +179,8 @@ void __init relocate_kernel(void)
-  {
-         reloc_offset = (unsigned long)_text - VMLINUX_LOAD_ADDRESS;
-
--       relocate_relative();
-+       if (reloc_offset)
-+               relocate_relative();
-  }
+Regards.
+Binbin
 
 >
->> +
->> +    return kernel_entry;
->> +}
->> +#endif
->> +
->> +void __init relocate_kernel(void)
->> +{
->> +    reloc_offset = (unsigned long)_text - VMLINUX_LOAD_ADDRESS;
->> +
->> +    relocate_relative();
->> +}
->> +
->>  /*
->>   * Show relocation information on panic.
->>   */
->>
 >
-
+> On Tue, Jan 24, 2023 at 7:24 AM Alexandre Belloni
+> <alexandre.belloni@bootlin.com> wrote:
+> >
+> > On 09/01/2023 09:35:10+0800, Binbin Zhou wrote:
+> > > Hi all:
+> > >
+> > > The initial DT-base ls2x rtc driver was written by Wang Xuerui, He has
+> > > released five versions of patchset before, and all related mail records
+> > > are shown below if you are interested:
+> > >
+> > > https://lore.kernel.org/all/?q=ls2x-rtc
+> > >
+> > > In this series of patches, based on the code above, I have added the
+> > > following support:
+> > >
+> > > 1. Add ACPI-related support, as Loongson-3A5000 + LS7A is now ACPI-base
+> > >    by default under LoongArch architecture;
+> > > 2. Add rtc alarm/walarm related functions.
+> > >
+> > > I have tested on Loongson-3A5000LA+LS7A1000/LS7A2000, Loongson-2K1000LA
+> > > and Loongson-2K0500.
+> > >
+> > > BTW:
+> > > There have been discussions about merging the rtc drivers of ls1x and
+> > > ls2x, but the following reasons made the merger difficult to achieve:
+> > >
+> > > 1. ls1x does not support ACPI, for it is only on MIPS-based system;
+> >
+> > This is not a good justification, you have to support both in your
+> > driver anyway, as shown by your CONFIG_ACPI ifdefery.
+> >
+> > > 2. ls1x does not support alarm function.
+> >
+> > It is just a matter of clearing a single bit, this is not difficult at
+> > all.
+> >
+> > >
+> > > Thanks.
+> > >
+> > > -------
+> > > Changes since v1:
+> > > 1. Rebased on top of latest loongarch-next;
+> > > 2. Add interrupt descriptions to the ls2k and ls7a DTS files to avoid
+> > > errors when the driver gets the IRQ number, Thanks to Qing Zhang for
+> > > testing;
+> > > 3. Remove some inexact CONFIG_ACPI.
+> > >
+> > > Binbin Zhou (4):
+> > >   rtc: Add support for the Loongson-2K/LS7A RTC
+> > >   LoongArch: Enable LS2X RTC in loongson3_defconfig
+> > >   MIPS: Loongson64: DTS: Add RTC support to LS7A
+> > >   MIPS: Loongson64: DTS: Add RTC support to Loongson-2K
+> > >
+> > > WANG Xuerui (3):
+> > >   dt-bindings: rtc: Add Loongson LS2X RTC support
+> > >   MIPS: Loongson: Enable LS2X RTC in loongson3_defconfig
+> > >   MIPS: Loongson: Enable LS2X RTC in loongson2k_defconfig
+> > >
+> > >  .../devicetree/bindings/rtc/trivial-rtc.yaml  |   2 +
+> > >  arch/loongarch/configs/loongson3_defconfig    |   1 +
+> > >  .../boot/dts/loongson/loongson64-2k1000.dtsi  |   7 +
+> > >  arch/mips/boot/dts/loongson/ls7a-pch.dtsi     |   7 +
+> > >  arch/mips/configs/loongson2k_defconfig        |   1 +
+> > >  arch/mips/configs/loongson3_defconfig         |   1 +
+> > >  drivers/rtc/Kconfig                           |  11 +
+> > >  drivers/rtc/Makefile                          |   1 +
+> > >  drivers/rtc/rtc-ls2x.c                        | 379 ++++++++++++++++++
+> > >  9 files changed, 410 insertions(+)
+> > >  create mode 100644 drivers/rtc/rtc-ls2x.c
+> > >
+> > > --
+> > > 2.31.1
+> > >
+> >
+> > --
+> > Alexandre Belloni, co-owner and COO, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> >
