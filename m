@@ -1,180 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774C1627
-	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 03:21:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20556C433A0
-	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 03:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1675999307;
-	bh=kx8K+qjPI3fEVB2cKDazV2+EJu5JDYSk+vcOqEGi0Rs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ag35YqlGysUM5iTBMV6QTNoMHxEFux+SLd6UBMYXzCSb8MRG0q23yfGkWcpidgJvq
-	 jQCPne6Mp19nnrT9NY7n35SBFKzP+us0Kmvw2xFi5YUn8enyLCHUoCBr1gJ2kcEnTd
-	 TxrFUzDCeD54EPiV7JAmxjBnY+Gwqhav8lwbD4xAaLelgjInRNrBPaB4MdPAfqREho
-	 a08S7qxisZfMSB0YLSyEgkluiLs3O0KK8Ytub08UaDnZ9Bd9DKbOLkUdTLYi5gfYEN
-	 e3Qmt0aOBjMZMEkAFFhWAvOhma+ZtqunEA9HdQ+qclb8r7PGB3UwKmfs8k/c+iVpyo
-	 MZkUN54GQiQqA==
-Received: by mail-ej1-f45.google.com with SMTP id jg8so12459731ejc.6
-        for <loongarch@lists.linux.dev>; Thu, 09 Feb 2023 19:21:47 -0800 (PST)
-X-Gm-Message-State: AO0yUKVkN0/WV8q/02fNhq1nqS9yQ0kvqTEr/NAvejmbcEMxkt/2pnlA
-	LtGvnkKF/0rhUKMtNQBLaYurPCn8cnVHkaeynKE=
-X-Google-Smtp-Source: AK7set+PihFfDOFPBtCCTlYAxuDSf7LfkVmUWMZ3DTl2A8TkRWZ/5QbP1ECkuEi/45gSUPh2Oh2JlEMS7iXI9DHGPM8=
-X-Received: by 2002:a17:907:2e02:b0:8af:4969:6c5f with SMTP id
- ig2-20020a1709072e0200b008af49696c5fmr273909ejc.150.1675999305288; Thu, 09
- Feb 2023 19:21:45 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAD47F4
+	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 05:08:18 +0000 (UTC)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4PChZj6hzVz4xwy;
+	Fri, 10 Feb 2023 16:08:13 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1676005696;
+	bh=gjOEhpmQ4QzYiJxNRSCplO6mzBIo8CgdHMudas4f4m4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=VzBHDakF5oapgbqSwyCXW4NlOxuhWIXgHT5bnjksmwxnwzB2j77QlwtNy9auFKO5k
+	 R5zuzvTLv5v6JR0g4zAQSDALbGO0+HtyCcaxIv+XCmtUOUNdsZXpr/60HJ8m0se9Ac
+	 HCqPfRmHl1K9cRm2zGL0JLt1dLbvDoohuA4JmvWcFN0J1XTPyIZXfr0n3q8zPBgbwM
+	 2KTETWI8PkOX6ZP5se3LmuOaFIoUbfwmRFq7s/gffXRM+ntl6Tsz8s7uIuoBncovYH
+	 169scsrJUZSYlGwI60JQl2lk38JbvV/eRPo8tLjsBgWQeltv5kZiHwGm5Gqurl9z/4
+	 hTaeq+aYRbc4A==
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
+ <hughd@google.com>, John Hubbard <jhubbard@nvidia.com>, Jason Gunthorpe
+ <jgg@nvidia.com>, Mike Rapoport <rppt@linux.ibm.com>, Yang Shi
+ <shy828301@gmail.com>, Vlastimil Babka <vbabka@suse.cz>, Nadav Amit
+ <namit@vmware.com>, Andrea Arcangeli <aarcange@redhat.com>, Peter Xu
+ <peterx@redhat.com>, linux-mm@kvack.org, x86@kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org, David
+ Hildenbrand <david@redhat.com>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH mm-unstable v1 17/26] powerpc/mm: support
+ __HAVE_ARCH_PTE_SWP_EXCLUSIVE on 32bit book3s
+In-Reply-To: <20230113171026.582290-18-david@redhat.com>
+References: <20230113171026.582290-1-david@redhat.com>
+ <20230113171026.582290-18-david@redhat.com>
+Date: Fri, 10 Feb 2023 16:08:07 +1100
+Message-ID: <87cz6iw1jc.fsf@mpe.ellerman.id.au>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230209035839.2610277-1-maobibo@loongson.cn> <e6bb59c32134477aa4890047ae5ad51b@AcuMS.aculab.com>
- <741b2246-d609-ccc6-bf55-d6b0b5e54b54@loongson.cn> <2aa6243491784e74960182dc12968170@AcuMS.aculab.com>
-In-Reply-To: <2aa6243491784e74960182dc12968170@AcuMS.aculab.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 10 Feb 2023 11:21:33 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7BgBASt_CpSQgS6MNbzxODhoq8ykK5ZAn2y3ZOekXM9g@mail.gmail.com>
-Message-ID: <CAAhV-H7BgBASt_CpSQgS6MNbzxODhoq8ykK5ZAn2y3ZOekXM9g@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
-To: David Laight <David.Laight@aculab.com>
-Cc: maobibo <maobibo@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-This commit comes from the old internal kernel, I want to know which
-one has better performance.
+David Hildenbrand <david@redhat.com> writes:
+> We already implemented support for 64bit book3s in commit bff9beaa2e80
+> ("powerpc/pgtable: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE for book3s")
+>
+> Let's support __HAVE_ARCH_PTE_SWP_EXCLUSIVE also in 32bit by reusing yet
+> unused LSB 2 / MSB 29. There seems to be no real reason why that bit cannot
+> be used, and reusing it avoids having to steal one bit from the swap
+> offset.
+>
+> While at it, mask the type in __swp_entry().
+>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  arch/powerpc/include/asm/book3s/32/pgtable.h | 38 +++++++++++++++++---
+>  1 file changed, 33 insertions(+), 5 deletions(-)
 
-https://github.com/loongson/linux/commit/92a6df48ccb73dd2c3dc1799add08adf0e=
-0b0deb
+I gave this a quick test on a ppc32 machine, everything seems fine.
 
-On Thu, Feb 9, 2023 at 8:39 PM David Laight <David.Laight@aculab.com> wrote=
-:
+Your test_swp_exclusive.c passes, and an LTP run looks normal.
+
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+
+cheers
+
+> diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/include/asm/book3s/32/pgtable.h
+> index 75823f39e042..0ecb3a58f23f 100644
+> --- a/arch/powerpc/include/asm/book3s/32/pgtable.h
+> +++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
+> @@ -42,6 +42,9 @@
+>  #define _PMD_PRESENT_MASK (PAGE_MASK)
+>  #define _PMD_BAD	(~PAGE_MASK)
+>  
+> +/* We borrow the _PAGE_USER bit to store the exclusive marker in swap PTEs. */
+> +#define _PAGE_SWP_EXCLUSIVE	_PAGE_USER
+> +
+>  /* And here we include common definitions */
+>  
+>  #define _PAGE_KERNEL_RO		0
+> @@ -363,17 +366,42 @@ static inline void __ptep_set_access_flags(struct vm_area_struct *vma,
+>  #define pmd_page(pmd)		pfn_to_page(pmd_pfn(pmd))
+>  
+>  /*
+> - * Encode and decode a swap entry.
+> - * Note that the bits we use in a PTE for representing a swap entry
+> - * must not include the _PAGE_PRESENT bit or the _PAGE_HASHPTE bit (if used).
+> - *   -- paulus
+> + * Encode/decode swap entries and swap PTEs. Swap PTEs are all PTEs that
+> + * are !pte_none() && !pte_present().
+> + *
+> + * Format of swap PTEs (32bit PTEs):
+> + *
+> + *                         1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
+> + *   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+> + *   <----------------- offset --------------------> < type -> E H P
+> + *
+> + *   E is the exclusive marker that is not stored in swap entries.
+> + *   _PAGE_PRESENT (P) and __PAGE_HASHPTE (H) must be 0.
+> + *
+> + * For 64bit PTEs, the offset is extended by 32bit.
+>   */
+>  #define __swp_type(entry)		((entry).val & 0x1f)
+>  #define __swp_offset(entry)		((entry).val >> 5)
+> -#define __swp_entry(type, offset)	((swp_entry_t) { (type) | ((offset) << 5) })
+> +#define __swp_entry(type, offset)	((swp_entry_t) { ((type) & 0x1f) | ((offset) << 5) })
+>  #define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val(pte) >> 3 })
+>  #define __swp_entry_to_pte(x)		((pte_t) { (x).val << 3 })
+>  
+> +#define __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+> +static inline int pte_swp_exclusive(pte_t pte)
+> +{
+> +	return pte_val(pte) & _PAGE_SWP_EXCLUSIVE;
+> +}
+> +
+> +static inline pte_t pte_swp_mkexclusive(pte_t pte)
+> +{
+> +	return __pte(pte_val(pte) | _PAGE_SWP_EXCLUSIVE);
+> +}
+> +
+> +static inline pte_t pte_swp_clear_exclusive(pte_t pte)
+> +{
+> +	return __pte(pte_val(pte) & ~_PAGE_SWP_EXCLUSIVE);
+> +}
+> +
+>  /* Generic accessors to PTE bits */
+>  static inline int pte_write(pte_t pte)		{ return !!(pte_val(pte) & _PAGE_RW);}
+>  static inline int pte_read(pte_t pte)		{ return 1; }
+> -- 
+> 2.39.0
 >
-> From: maobibo
-> > Sent: 09 February 2023 11:55
-> >
-> >
-> > =E5=9C=A8 2023/2/9 17:35, David Laight =E5=86=99=E9=81=93:
-> > > From: Bibo Mao
-> > >> Sent: 09 February 2023 03:59
-> > >>
-> > >> loongArch platform is 64-bit system, which supports 8 bytes memory
-> > >> accessing, generic checksum function uses 4 byte memory access.
-> > >> This patch adds 8-bytes memory access optimization for checksum
-> > >> function on loongArch. And the code comes from arm64 system.
-> > >
-> > > How fast do these functions actually run (in bytes/clock)?
-> > With uint128 method, there will unrolled loop, instruction
-> > can execute in parallel. It gets the best result on loongarch
-> > system where there is no neither carry flag nor post-index
-> > addressing modes.
 >
-> We're probably almost agreeing...
->
-> > Here is the piece of disassemble code with uint128 method:
->
-> Load 8 values:
->
-> >    120000a40:   28c0222f        ld.d    $r15,$r17,8(0x8)
-> >    120000a44:   28c0622a        ld.d    $r10,$r17,24(0x18)
-> >    120000a48:   28c0a230        ld.d    $r16,$r17,40(0x28)
-> >    120000a4c:   28c0e232        ld.d    $r18,$r17,56(0x38)
-> >    120000a50:   28c0022e        ld.d    $r14,$r17,0
-> >    120000a54:   28c0422d        ld.d    $r13,$r17,16(0x10)
-> >    120000a58:   28c0822b        ld.d    $r11,$r17,32(0x20)
-> >    120000a5c:   28c0c22c        ld.d    $r12,$r17,48(0x30)
->
-> Pairwise add them
->
-> >    120000a60:   0010b9f7        add.d   $r23,$r15,$r14
-> >    120000a64:   0010b54d        add.d   $r13,$r10,$r13
-> >    120000a68:   0010b24c        add.d   $r12,$r18,$r12
-> >    120000a6c:   0010ae0b        add.d   $r11,$r16,$r11
->
-> Generate 4 'carry' bits
->
-> >    120000a70:   0012c992        sltu    $r18,$r12,$r18
-> >    120000a74:   0012beee        sltu    $r14,$r23,$r15
-> >    120000a78:   0012c170        sltu    $r16,$r11,$r16
-> >    120000a7c:   0012a9aa        sltu    $r10,$r13,$r10
->
-> Add the carry bits onto the sums.
-> I've not quite worked out which add is which!
-> But I think you've missed a few adds here.
->
-> >    120000a80:   0010ae0f        add.d   $r15,$r16,$r11
-> >    120000a84:   0010ddce        add.d   $r14,$r14,$r23
-> >    120000a88:   0010b250        add.d   $r16,$r18,$r12
-> >    120000a8c:   0010b54d        add.d   $r13,$r10,$r13
-> >    120000a90:   0010b5d2        add.d   $r18,$r14,$r13
-> >    120000a94:   0010c1f0        add.d   $r16,$r15,$r16
->
-> Somewhere each value needs an add, an sltu to generate the 'carry',
-> and an add for the carry itself.
-> If you sum the carry bits into a separate register it is
-> possible to get a both adds and the sltu (for different values)
-> to run in the same clock (on a suitable cpu).
-> If there are 4 integer units you can also get the loop instructions
-> 'for free' and unrolling 8 times may not be needed at all.
->
-> ...
-> > There is no post-index addressing modes on loongarch,
-> >       val =3D *mem;  // 64bit read
-> >         mem++;
-> >       sum +=3D val;
-> >       carry =3D sum < val;
-> >       carry_sum +=3D carry;
-> > it takes 5 instruction and these 5 instructions depends on previous ins=
-tr.
->
-> I'd assume the loop was unrolled enough so the address
-> increment doesn't matter.
->
-> > There is the piece of disassemble code:
-> >    120000d90:   28c001f0        ld.d    $r16,$r15,0
-> >    120000d94:   0010c58c        add.d   $r12,$r12,$r17
-> >    120000d98:   02c021ef        addi.d  $r15,$r15,8(0x8)
->
-> Those three instructions are independent.
->
-> >    120000d9c:   0010b20c        add.d   $r12,$r16,$r12
->
-> that one depends on the ld.d
->
-> >    120000da0:   0012c191        sltu    $r17,$r12,$r16
->
-> that depends on the add.d
-> but it could be execute after the 'bne' in parallel with the ld.d
->
-> >    120000da4:   5fffedf2        bne     $r15,$r18,-20(0x3ffec) # 120000=
-d90 <do_csum_64+0x90>
->
-> If you tweak the code it is possible to get down to just
-> the addi.d and bne constraining the dependency chain.
-> (Assuming there is no delay on the read and there are an infinite
-> number of execution units.)
-> Unroll once and do:
->         ld.d r,addr,0
->         addi.d addr,16
->         ld.d r,addr,-8
->         bne addr,limit,loop_top
-> and you might get a loop that does a memory read every clock.
->
-> So you end up worrying about how the memory read delays affect
-> the instruction pipeline.
-> The Intel x86 cpu I've got just pile up the arithmetic instructions
-> waiting for the data to be read.
-> If you get a memory read requested every clock everything else
-> follows - provided you don't try to execute too many instrcutions
-> at once.
->
->         David
->
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
- 1PT, UK
-> Registration No: 1397386 (Wales)
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
