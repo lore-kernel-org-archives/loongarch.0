@@ -1,77 +1,259 @@
-Received: from out-141.mta1.migadu.com (out-141.mta1.migadu.com [95.215.58.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FA3813
-	for <loongarch@lists.linux.dev>; Sat, 11 Feb 2023 01:45:16 +0000 (UTC)
-Date: Sat, 11 Feb 2023 01:44:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1676079907;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ATfIOa15+8O6yLufISvtN1TVTqsxnTy8db9Z05Rn/lM=;
-	b=Rg/5vaCGC6R2WY/BoSaEk9npLFDaCrjyEy+ovYHEvHIAzOzHgOFlFOzgzfnyZulHtcsJgj
-	4WDRxAWfHwLR2m/YnH2XZS6PY5IsxqbrkAZ+M3IlX0OOHFQKnM/tp8Ty0j+fLhx3NZV/3T
-	zsjh9O5QqBvEOJfneV8w5MqEtU/4W8A=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: James Morse <james.morse@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>, linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>, Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Len Brown <lenb@kernel.org>, Rafael Wysocki <rafael@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: Re: [RFC PATCH 29/32] KVM: arm64: Pass hypercalls to userspace
-Message-ID: <Y+bzG6JH5gY9afNW@linux.dev>
-References: <20230203135043.409192-1-james.morse@arm.com>
- <20230203135043.409192-30-james.morse@arm.com>
- <865ycg1kv2.wl-maz@kernel.org>
- <7462738f-e837-cd99-f441-8e7c29d250cd@arm.com>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF97FA23
+	for <loongarch@lists.linux.dev>; Sat, 11 Feb 2023 02:41:52 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.108.204])
+	by gateway (Coremail) with SMTP id _____8Cx+eluAOdjXxsRAA--.34170S3;
+	Sat, 11 Feb 2023 10:41:50 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.108.204])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxjb5tAOdjVNwwAA--.30227S2;
+	Sat, 11 Feb 2023 10:41:50 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH] irqchip/loongson-eiointc: Add DT init support
+Date: Sat, 11 Feb 2023 10:41:56 +0800
+Message-Id: <20230211024156.3530526-1-zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.39.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7462738f-e837-cd99-f441-8e7c29d250cd@arm.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bxjb5tAOdjVNwwAA--.30227S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3Xr15XrWktw4UJr1fJw4ruFg_yoWxXr4Dpa
+	yUAF98trWrXFy7WrWftw4DX343Aws5u3y7Xa4fWFWftFsrCry8GF1FyFyqkryjk3yrXF4a
+	vF4UZF1Uu3W5KaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bVAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1ln4kS
+	14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
+	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5
+	xhLUUUUU=
 
-Hey James,
+Add DT support for EIOINTC irqchip, which is needed for the Loongson-2K
+series, e.g. Loongson-2K500 soc.
 
-On Tue, Feb 07, 2023 at 05:50:58PM +0000, James Morse wrote:
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ drivers/irqchip/irq-loongson-eiointc.c | 119 ++++++++++++++++++-------
+ 1 file changed, 85 insertions(+), 34 deletions(-)
 
-[...]
-
-> > As mentioned above, I think this interface should go both ways.
-> > Userspace should request the forwarding of a certain range of
-> > hypercalls via a similar SET_ATTR interface.
-> 
-> Yup, I'll sync up with Oliver about that.
-
-Sorry, I was tied up with some unrelated stuff at work this week. I
-polished up what I had and sent out an RFC v2 for SMCCC filtering [1].
-Mentioning it here because my email service gives up if I Cc too many
-recipients so I didn't include everyone on this series.
-
-[1]: https://lore.kernel.org/linux-arm-kernel/20230211013759.3556016-1-oliver.upton@linux.dev/
-
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index d15fd38c1756..d5e1ee6aada6 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -39,6 +39,7 @@ static int nr_pics;
+ 
+ struct eiointc_priv {
+ 	u32			node;
++	u32			vec_count;
+ 	nodemask_t		node_map;
+ 	cpumask_t		cpuspan_map;
+ 	struct fwnode_handle	*domain_handle;
+@@ -156,18 +157,19 @@ static int eiointc_router_init(unsigned int cpu)
+ 	if ((cpu_logical_map(cpu) % CORES_PER_EIO_NODE) == 0) {
+ 		eiointc_enable();
+ 
+-		for (i = 0; i < VEC_COUNT / 32; i++) {
++		for (i = 0; i < eiointc_priv[0]->vec_count / 32; i++) {
++			pr_info("");
+ 			data = (((1 << (i * 2 + 1)) << 16) | (1 << (i * 2)));
+ 			iocsr_write32(data, EIOINTC_REG_NODEMAP + i * 4);
+ 		}
+ 
+-		for (i = 0; i < VEC_COUNT / 32 / 4; i++) {
++		for (i = 0; i < eiointc_priv[0]->vec_count / 32 / 4; i++) {
+ 			bit = BIT(1 + index); /* Route to IP[1 + index] */
+ 			data = bit | (bit << 8) | (bit << 16) | (bit << 24);
+ 			iocsr_write32(data, EIOINTC_REG_IPMAP + i * 4);
+ 		}
+ 
+-		for (i = 0; i < VEC_COUNT / 4; i++) {
++		for (i = 0; i < eiointc_priv[0]->vec_count / 4; i++) {
+ 			/* Route to Node-0 Core-0 */
+ 			if (index == 0)
+ 				bit = BIT(cpu_logical_map(0));
+@@ -178,7 +180,7 @@ static int eiointc_router_init(unsigned int cpu)
+ 			iocsr_write32(data, EIOINTC_REG_ROUTE + i * 4);
+ 		}
+ 
+-		for (i = 0; i < VEC_COUNT / 32; i++) {
++		for (i = 0; i < eiointc_priv[0]->vec_count / 32; i++) {
+ 			data = 0xffffffff;
+ 			iocsr_write32(data, EIOINTC_REG_ENABLE + i * 4);
+ 			iocsr_write32(data, EIOINTC_REG_BOUNCE + i * 4);
+@@ -198,7 +200,7 @@ static void eiointc_irq_dispatch(struct irq_desc *desc)
+ 
+ 	chained_irq_enter(chip, desc);
+ 
+-	for (i = 0; i < VEC_REG_COUNT; i++) {
++	for (i = 0; i < eiointc_priv[0]->vec_count / VEC_COUNT_PER_REG; i++) {
+ 		pending = iocsr_read64(EIOINTC_REG_ISR + (i << 3));
+ 		iocsr_write64(pending, EIOINTC_REG_ISR + (i << 3));
+ 		while (pending) {
+@@ -316,7 +318,7 @@ static void eiointc_resume(void)
+ 	eiointc_router_init(0);
+ 
+ 	for (i = 0; i < nr_pics; i++) {
+-		for (j = 0; j < VEC_COUNT; j++) {
++		for (j = 0; j < eiointc_priv[i]->vec_count; j++) {
+ 			desc = irq_resolve_mapping(eiointc_priv[i]->eiointc_domain, j);
+ 			if (desc && desc->handle_irq && desc->handle_irq != handle_bad_irq) {
+ 				raw_spin_lock(&desc->lock);
+@@ -373,11 +375,44 @@ static int __init acpi_cascade_irqdomain_init(void)
+ 	return 0;
+ }
+ 
++static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
++			       u64 node_map)
++{
++	int i;
++
++	node_map = node_map ? node_map : -1ULL;
++	for_each_possible_cpu(i) {
++		if (node_map & (1ULL << (cpu_to_eio_node(i)))) {
++			node_set(cpu_to_eio_node(i), priv->node_map);
++			cpumask_or(&priv->cpuspan_map, &priv->cpuspan_map,
++				   cpumask_of(i));
++		}
++	}
++
++	priv->eiointc_domain = irq_domain_create_linear(priv->domain_handle,
++							priv->vec_count,
++							&eiointc_domain_ops,
++							priv);
++	if (!priv->eiointc_domain) {
++		pr_err("loongson-extioi: cannot add IRQ domain\n");
++		return -ENOMEM;
++	}
++
++	eiointc_priv[nr_pics++] = priv;
++	eiointc_router_init(0);
++	irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
++	register_syscore_ops(&eiointc_syscore_ops);
++	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_LOONGARCH_STARTING,
++				  "irqchip/loongarch/intc:starting",
++				  eiointc_router_init, NULL);
++
++	return 0;
++}
++
+ int __init eiointc_acpi_init(struct irq_domain *parent,
+ 				     struct acpi_madt_eio_pic *acpi_eiointc)
+ {
+-	int i, ret, parent_irq;
+-	unsigned long node_map;
++	int parent_irq, ret;
+ 	struct eiointc_priv *priv;
+ 
+ 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+@@ -391,39 +426,20 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
+ 		goto out_free_priv;
+ 	}
+ 
++	priv->vec_count = VEC_COUNT;
+ 	priv->node = acpi_eiointc->node;
+-	node_map = acpi_eiointc->node_map ? : -1ULL;
+-
+-	for_each_possible_cpu(i) {
+-		if (node_map & (1ULL << cpu_to_eio_node(i))) {
+-			node_set(cpu_to_eio_node(i), priv->node_map);
+-			cpumask_or(&priv->cpuspan_map, &priv->cpuspan_map, cpumask_of(i));
+-		}
+-	}
+-
+-	/* Setup IRQ domain */
+-	priv->eiointc_domain = irq_domain_create_linear(priv->domain_handle, VEC_COUNT,
+-					&eiointc_domain_ops, priv);
+-	if (!priv->eiointc_domain) {
+-		pr_err("loongson-eiointc: cannot add IRQ domain\n");
+-		goto out_free_handle;
+-	}
+-
+-	eiointc_priv[nr_pics++] = priv;
+-
+-	eiointc_router_init(0);
+-
+ 	parent_irq = irq_create_mapping(parent, acpi_eiointc->cascade);
+-	irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
+ 
+-	register_syscore_ops(&eiointc_syscore_ops);
+-	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_LOONGARCH_STARTING,
+-				  "irqchip/loongarch/intc:starting",
+-				  eiointc_router_init, NULL);
++	ret = eiointc_init(priv, parent_irq, acpi_eiointc->node_map);
++	if (ret < 0)
++		goto out_free_handle;
+ 
+ 	acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, pch_group);
+ 	acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, msi_group);
++
+ 	ret = acpi_cascade_irqdomain_init();
++	if (ret < 0)
++		goto out_free_handle;
+ 
+ 	return ret;
+ 
+@@ -435,3 +451,39 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
+ 
+ 	return -ENOMEM;
+ }
++
++static int __init eiointc_of_init(struct device_node *of_node,
++				  struct device_node *parent)
++{
++	int parent_irq, ret;
++	struct eiointc_priv *priv;
++
++	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	parent_irq = of_irq_get_byname(of_node, "cascade");
++	if (parent_irq <= 0) {
++		ret = -ENODEV;
++		goto out_free_priv;
++	}
++
++	ret = of_property_read_u32(of_node, "vec_count", &priv->vec_count);
++	if (ret < 0)
++		goto out_free_priv;
++
++	priv->node = 0;
++	priv->domain_handle = of_node_to_fwnode(of_node);
++
++	ret = eiointc_init(priv, parent_irq, 0);
++	if (ret < 0)
++		goto out_free_priv;
++
++	return 0;
++
++out_free_priv:
++	kfree(priv);
++	return ret;
++}
++
++IRQCHIP_DECLARE(loongson_eiointc, "loongson,eiointc", eiointc_of_init);
 -- 
-Thanks,
-Oliver
+2.39.0
+
