@@ -1,44 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-141.mta1.migadu.com (out-141.mta1.migadu.com [95.215.58.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0C82F41
-	for <loongarch@lists.linux.dev>; Fri, 10 Feb 2023 23:43:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0382DC4339B;
-	Fri, 10 Feb 2023 23:43:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1676072613;
-	bh=nBuvPyelXr4iBjwuXRn1yKj6xtX4mp9S6G9RcdQLJV8=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=i+neAW10lz+HGlhMeTk98I6o8W96sVJp7ubINnbgPdG4wG6EPfItAz4rtCFUAo+UH
-	 HwqPTt0MgEsky6Nn27fyaqJe7M5c2kO1Y5nwh2z8GFCKHicTG7nkRK3T5tJQfGGHKQ
-	 WYsuO59VQYpxE3kmJNN8QaXOe3hM+V0wkt6LqrLm7gvzzURn+vh96dk1JAWM3DHW6X
-	 RUpbgdfHXR1HK/AytQpyO4WKwNtoZ9FUGhynGUf0iPYM4rawvL8xmw3Ctbg2UnHLOw
-	 SINv87FnD8HyF9bZFE2olRYXp/bd2sb5kck53ropb2nZnw+dos2QIyV9JlBp3rkx4S
-	 VsxQyyvPjcyEw==
-Message-ID: <deffd7b0d7f832b682dd6bde113b60ac.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FA3813
+	for <loongarch@lists.linux.dev>; Sat, 11 Feb 2023 01:45:16 +0000 (UTC)
+Date: Sat, 11 Feb 2023 01:44:59 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1676079907;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ATfIOa15+8O6yLufISvtN1TVTqsxnTy8db9Z05Rn/lM=;
+	b=Rg/5vaCGC6R2WY/BoSaEk9npLFDaCrjyEy+ovYHEvHIAzOzHgOFlFOzgzfnyZulHtcsJgj
+	4WDRxAWfHwLR2m/YnH2XZS6PY5IsxqbrkAZ+M3IlX0OOHFQKnM/tp8Ty0j+fLhx3NZV/3T
+	zsjh9O5QqBvEOJfneV8w5MqEtU/4W8A=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: James Morse <james.morse@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>, linux-pm@vger.kernel.org,
+	loongarch@lists.linux.dev, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Len Brown <lenb@kernel.org>, Rafael Wysocki <rafael@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: Re: [RFC PATCH 29/32] KVM: arm64: Pass hypercalls to userspace
+Message-ID: <Y+bzG6JH5gY9afNW@linux.dev>
+References: <20230203135043.409192-1-james.morse@arm.com>
+ <20230203135043.409192-30-james.morse@arm.com>
+ <865ycg1kv2.wl-maz@kernel.org>
+ <7462738f-e837-cd99-f441-8e7c29d250cd@arm.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20221129034157.15036-4-zhuyinbo@loongson.cn>
-References: <20221129034157.15036-1-zhuyinbo@loongson.cn> <20221129034157.15036-4-zhuyinbo@loongson.cn>
-Subject: Re: [PATCH v10 4/4] dt-bindings: clock: add loongson-2 clock
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Huacai Chen <chenhuacai@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Yang Li <yang.lee@linux.alibaba.com>, Yinbo Zhu <zhuyinbo@loongson.cn>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Date: Fri, 10 Feb 2023 15:43:30 -0800
-User-Agent: alot/0.10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7462738f-e837-cd99-f441-8e7c29d250cd@arm.com>
+X-Migadu-Flow: FLOW_OUT
 
-Quoting Yinbo Zhu (2022-11-28 19:41:57)
-> Add the Loongson-2 clock binding with DT schema format using
-> json-schema.
->=20
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
+Hey James,
 
-Applied to clk-next
+On Tue, Feb 07, 2023 at 05:50:58PM +0000, James Morse wrote:
+
+[...]
+
+> > As mentioned above, I think this interface should go both ways.
+> > Userspace should request the forwarding of a certain range of
+> > hypercalls via a similar SET_ATTR interface.
+> 
+> Yup, I'll sync up with Oliver about that.
+
+Sorry, I was tied up with some unrelated stuff at work this week. I
+polished up what I had and sent out an RFC v2 for SMCCC filtering [1].
+Mentioning it here because my email service gives up if I Cc too many
+recipients so I didn't include everyone on this series.
+
+[1]: https://lore.kernel.org/linux-arm-kernel/20230211013759.3556016-1-oliver.upton@linux.dev/
+
+-- 
+Thanks,
+Oliver
