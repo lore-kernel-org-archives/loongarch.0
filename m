@@ -1,265 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCD7EA0
-	for <loongarch@lists.linux.dev>; Sun, 12 Feb 2023 01:53:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31AB2C4339B
-	for <loongarch@lists.linux.dev>; Sun, 12 Feb 2023 01:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1676166819;
-	bh=iWYmgs0WbDiXdtQItHUIENcHjm0UVFT22zKPAOTteq8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=T7tItgzu8I0N17lwsshpnEk/8ISITPNPvXKc8rycUH2TmRXflT+9W6mNJsewP8XUx
-	 ne+nWOv75VrzyShMZ9E+yqET+zt1K+YKqmjRn7tJHVaFbJhdQxCCcMmbLcWlOfFTw1
-	 MOdfrMcnicFTAQhR4hXkTtyGhKEj19SpwJFw/lMTP2xBfDvUVMqVhd30/FkzBA5lUE
-	 rFQTsUYPbbfIzJ+pp8k7CzK0kZQVKlG9ynTUNnBZKljqWGLAwtk6sIXsRqhl2cfauv
-	 xsKr/BB3azbMy6H3JRB2qjigRLLOCQS2bQPMn1HozcQQjwlbhKfbV7A5XVT8tbEAtJ
-	 +JBh1y/wqJVTQ==
-Received: by mail-ej1-f54.google.com with SMTP id gr7so24335710ejb.5
-        for <loongarch@lists.linux.dev>; Sat, 11 Feb 2023 17:53:39 -0800 (PST)
-X-Gm-Message-State: AO0yUKWliTPdOQC0cgOuc2TZPw0bZkXgG0Wkstr/V8ChQIfaw4UWlZJL
-	yogZznhjuh19xcZXKMNyR3Mh69C+zYCwzLxVACo=
-X-Google-Smtp-Source: AK7set8g7S95wGsc/KNVqcFlY61cC8dFkQeu2HRBjwlnqhmUzIGORAMJ4QQTL2HSO8IW7meNVgEbWtiNtLfwd40IoZM=
-X-Received: by 2002:a17:906:8557:b0:87b:da7a:f202 with SMTP id
- h23-20020a170906855700b0087bda7af202mr2853743ejy.1.1676166817356; Sat, 11 Feb
- 2023 17:53:37 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDBD10E7
+	for <loongarch@lists.linux.dev>; Sun, 12 Feb 2023 03:52:52 +0000 (UTC)
+Received: by mail-pj1-f48.google.com with SMTP id e10-20020a17090a630a00b0022bedd66e6dso13923578pjj.1
+        for <loongarch@lists.linux.dev>; Sat, 11 Feb 2023 19:52:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PgeDiep57yqZOM9tBJGHWCt+l/2GlmGGj/5BxR/KoUM=;
+        b=jZQnfx7PEytHc9wBW0FT7w2XXaOwvsSMaNSDBSsXNwpynEUGG+JmhGx6cDjZhCOibh
+         9v4k+N2zNN7EdmZ69KXx1j58MkmAKnqoPBKa4o2jszHOwKOw004VtM0/evZwWuTC7IPp
+         kYmph3Y0MwThZSLMgFbI+H7EgNNTg8oySHHvI2OmUrDDxXGwIroNGPTczgt7CbDuR2Hz
+         xOSTycNhJa2KuF0N0YHj+PpasAqzre2GVJj31dIUwsNEujV4Opy/vfMEJFCinKMq3zB1
+         +L8xHQpJ2BPxOArZm1D3cA0a/XoeLgq8Xfy9X6524bvbnERBw94uU26C9l+/esjxjlcu
+         D7VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PgeDiep57yqZOM9tBJGHWCt+l/2GlmGGj/5BxR/KoUM=;
+        b=yvLTPX9l/7d/kNWhwOlX0Y5NIyolJvpt6MZSVrKgYUgO7y8Kt1OBCoUqtjPEALrN+C
+         Zu5S7NkPME9DOPcuaWILVzzOQ6sSnz3v3bx4g+XVzEx+kvecsmcFsdveARWJzmS68O4n
+         N7E954Ml9egGOO1MswVOWR4lkrr0bDlANWG1jidf6bttmfND4GDH9WE78pqb+He834Ei
+         bf6bgSeboEet1tqR/gmFXcbecqYtPypW7gGqQNHGidnUuJ9Zwe9tCeDzfvDq1TAmHo7M
+         W8gkFc3pH9i8gLdnNIsBi7Bbxs1quZ+9bqiTb7fKqgB8SFVi/X6WTKunT7BkUaqgppIi
+         CDaA==
+X-Gm-Message-State: AO0yUKVYlCZeu98d5mnyr7ycLclABdxrwTQviNlXY9yzCiXxJ7kHaXqW
+	5yO6DQQgtnKag+mG/LvVJJk=
+X-Google-Smtp-Source: AK7set+DCePLre4oTy3bjFr0clrDBIsqIeAwe7aiTJ+7oCIoo61sxgjMksnWkK6nWwAZGa9pFz5FxA==
+X-Received: by 2002:a05:6a21:99a2:b0:bf:8aea:c555 with SMTP id ve34-20020a056a2199a200b000bf8aeac555mr24418942pzb.13.1676173972071;
+        Sat, 11 Feb 2023 19:52:52 -0800 (PST)
+Received: from localhost.localdomain ([43.132.141.9])
+        by smtp.gmail.com with ESMTPSA id s1-20020a63dc01000000b004fab4455748sm5055399pgg.75.2023.02.11.19.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Feb 2023 19:52:51 -0800 (PST)
+From: Hengqi Chen <hengqi.chen@gmail.com>
+To: bpf@vger.kernel.org,
+	loongarch@lists.linux.dev
+Cc: hengqi.chen@gmail.com
+Subject: [PATCH 0/2] Allow mixing bpf2bpf calls with tailcalls on LoongArch
+Date: Sun, 12 Feb 2023 11:52:34 +0800
+Message-Id: <20230212035236.1436532-1-hengqi.chen@gmail.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230211024156.3530526-1-zhoubinbin@loongson.cn>
-In-Reply-To: <20230211024156.3530526-1-zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 12 Feb 2023 09:53:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5JOD4WRyN2rZq9qZAja2--Vg5gdVWYU9Ue0OfioRLJPQ@mail.gmail.com>
-Message-ID: <CAAhV-H5JOD4WRyN2rZq9qZAja2--Vg5gdVWYU9Ue0OfioRLJPQ@mail.gmail.com>
-Subject: Re: [PATCH] irqchip/loongson-eiointc: Add DT init support
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Marc Zyngier <maz@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>, linux-kernel@vger.kernel.org, 
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi, Binbin,
+This patchset enables mixing bpf2bpf calls with tailcalls on LoongArch.
 
-On Sat, Feb 11, 2023 at 10:41 AM Binbin Zhou <zhoubinbin@loongson.cn> wrote:
->
-> Add DT support for EIOINTC irqchip, which is needed for the Loongson-2K
-> series, e.g. Loongson-2K500 soc.
-Use SOC instead of soc.
+The first patch fixes JIT for function calls, like:
 
->
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  drivers/irqchip/irq-loongson-eiointc.c | 119 ++++++++++++++++++-------
->  1 file changed, 85 insertions(+), 34 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-> index d15fd38c1756..d5e1ee6aada6 100644
-> --- a/drivers/irqchip/irq-loongson-eiointc.c
-> +++ b/drivers/irqchip/irq-loongson-eiointc.c
-> @@ -39,6 +39,7 @@ static int nr_pics;
->
->  struct eiointc_priv {
->         u32                     node;
-> +       u32                     vec_count;
->         nodemask_t              node_map;
->         cpumask_t               cpuspan_map;
->         struct fwnode_handle    *domain_handle;
-> @@ -156,18 +157,19 @@ static int eiointc_router_init(unsigned int cpu)
->         if ((cpu_logical_map(cpu) % CORES_PER_EIO_NODE) == 0) {
->                 eiointc_enable();
->
-> -               for (i = 0; i < VEC_COUNT / 32; i++) {
-> +               for (i = 0; i < eiointc_priv[0]->vec_count / 32; i++) {
-> +                       pr_info("");
-Why print an empty string?
+  [   29.346981] multi-func JIT bug 105 != 103
 
-Others look good to me.
+This is because we are emiting variable instructions for 64-bit immediate moves.
+During the first pass of JIT, the placeholder address is just zero, emiting two
+instructions for it. In the extra pass, the function address is in XKVRANGE,
+emiting four instructions for it. This change the instruction index in JIT context.
+Fix it by using a fixed 4-instruction sequence.
 
-Huacai
->                         data = (((1 << (i * 2 + 1)) << 16) | (1 << (i * 2)));
->                         iocsr_write32(data, EIOINTC_REG_NODEMAP + i * 4);
->                 }
->
-> -               for (i = 0; i < VEC_COUNT / 32 / 4; i++) {
-> +               for (i = 0; i < eiointc_priv[0]->vec_count / 32 / 4; i++) {
->                         bit = BIT(1 + index); /* Route to IP[1 + index] */
->                         data = bit | (bit << 8) | (bit << 16) | (bit << 24);
->                         iocsr_write32(data, EIOINTC_REG_IPMAP + i * 4);
->                 }
->
-> -               for (i = 0; i < VEC_COUNT / 4; i++) {
-> +               for (i = 0; i < eiointc_priv[0]->vec_count / 4; i++) {
->                         /* Route to Node-0 Core-0 */
->                         if (index == 0)
->                                 bit = BIT(cpu_logical_map(0));
-> @@ -178,7 +180,7 @@ static int eiointc_router_init(unsigned int cpu)
->                         iocsr_write32(data, EIOINTC_REG_ROUTE + i * 4);
->                 }
->
-> -               for (i = 0; i < VEC_COUNT / 32; i++) {
-> +               for (i = 0; i < eiointc_priv[0]->vec_count / 32; i++) {
->                         data = 0xffffffff;
->                         iocsr_write32(data, EIOINTC_REG_ENABLE + i * 4);
->                         iocsr_write32(data, EIOINTC_REG_BOUNCE + i * 4);
-> @@ -198,7 +200,7 @@ static void eiointc_irq_dispatch(struct irq_desc *desc)
->
->         chained_irq_enter(chip, desc);
->
-> -       for (i = 0; i < VEC_REG_COUNT; i++) {
-> +       for (i = 0; i < eiointc_priv[0]->vec_count / VEC_COUNT_PER_REG; i++) {
->                 pending = iocsr_read64(EIOINTC_REG_ISR + (i << 3));
->                 iocsr_write64(pending, EIOINTC_REG_ISR + (i << 3));
->                 while (pending) {
-> @@ -316,7 +318,7 @@ static void eiointc_resume(void)
->         eiointc_router_init(0);
->
->         for (i = 0; i < nr_pics; i++) {
-> -               for (j = 0; j < VEC_COUNT; j++) {
-> +               for (j = 0; j < eiointc_priv[i]->vec_count; j++) {
->                         desc = irq_resolve_mapping(eiointc_priv[i]->eiointc_domain, j);
->                         if (desc && desc->handle_irq && desc->handle_irq != handle_bad_irq) {
->                                 raw_spin_lock(&desc->lock);
-> @@ -373,11 +375,44 @@ static int __init acpi_cascade_irqdomain_init(void)
->         return 0;
->  }
->
-> +static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
-> +                              u64 node_map)
-> +{
-> +       int i;
-> +
-> +       node_map = node_map ? node_map : -1ULL;
-> +       for_each_possible_cpu(i) {
-> +               if (node_map & (1ULL << (cpu_to_eio_node(i)))) {
-> +                       node_set(cpu_to_eio_node(i), priv->node_map);
-> +                       cpumask_or(&priv->cpuspan_map, &priv->cpuspan_map,
-> +                                  cpumask_of(i));
-> +               }
-> +       }
-> +
-> +       priv->eiointc_domain = irq_domain_create_linear(priv->domain_handle,
-> +                                                       priv->vec_count,
-> +                                                       &eiointc_domain_ops,
-> +                                                       priv);
-> +       if (!priv->eiointc_domain) {
-> +               pr_err("loongson-extioi: cannot add IRQ domain\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       eiointc_priv[nr_pics++] = priv;
-> +       eiointc_router_init(0);
-> +       irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
-> +       register_syscore_ops(&eiointc_syscore_ops);
-> +       cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_LOONGARCH_STARTING,
-> +                                 "irqchip/loongarch/intc:starting",
-> +                                 eiointc_router_init, NULL);
-> +
-> +       return 0;
-> +}
-> +
->  int __init eiointc_acpi_init(struct irq_domain *parent,
->                                      struct acpi_madt_eio_pic *acpi_eiointc)
->  {
-> -       int i, ret, parent_irq;
-> -       unsigned long node_map;
-> +       int parent_irq, ret;
->         struct eiointc_priv *priv;
->
->         priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> @@ -391,39 +426,20 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
->                 goto out_free_priv;
->         }
->
-> +       priv->vec_count = VEC_COUNT;
->         priv->node = acpi_eiointc->node;
-> -       node_map = acpi_eiointc->node_map ? : -1ULL;
-> -
-> -       for_each_possible_cpu(i) {
-> -               if (node_map & (1ULL << cpu_to_eio_node(i))) {
-> -                       node_set(cpu_to_eio_node(i), priv->node_map);
-> -                       cpumask_or(&priv->cpuspan_map, &priv->cpuspan_map, cpumask_of(i));
-> -               }
-> -       }
-> -
-> -       /* Setup IRQ domain */
-> -       priv->eiointc_domain = irq_domain_create_linear(priv->domain_handle, VEC_COUNT,
-> -                                       &eiointc_domain_ops, priv);
-> -       if (!priv->eiointc_domain) {
-> -               pr_err("loongson-eiointc: cannot add IRQ domain\n");
-> -               goto out_free_handle;
-> -       }
-> -
-> -       eiointc_priv[nr_pics++] = priv;
-> -
-> -       eiointc_router_init(0);
-> -
->         parent_irq = irq_create_mapping(parent, acpi_eiointc->cascade);
-> -       irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
->
-> -       register_syscore_ops(&eiointc_syscore_ops);
-> -       cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_LOONGARCH_STARTING,
-> -                                 "irqchip/loongarch/intc:starting",
-> -                                 eiointc_router_init, NULL);
-> +       ret = eiointc_init(priv, parent_irq, acpi_eiointc->node_map);
-> +       if (ret < 0)
-> +               goto out_free_handle;
->
->         acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, pch_group);
->         acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, msi_group);
-> +
->         ret = acpi_cascade_irqdomain_init();
-> +       if (ret < 0)
-> +               goto out_free_handle;
->
->         return ret;
->
-> @@ -435,3 +451,39 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
->
->         return -ENOMEM;
->  }
-> +
-> +static int __init eiointc_of_init(struct device_node *of_node,
-> +                                 struct device_node *parent)
-> +{
-> +       int parent_irq, ret;
-> +       struct eiointc_priv *priv;
-> +
-> +       priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       parent_irq = of_irq_get_byname(of_node, "cascade");
-> +       if (parent_irq <= 0) {
-> +               ret = -ENODEV;
-> +               goto out_free_priv;
-> +       }
-> +
-> +       ret = of_property_read_u32(of_node, "vec_count", &priv->vec_count);
-> +       if (ret < 0)
-> +               goto out_free_priv;
-> +
-> +       priv->node = 0;
-> +       priv->domain_handle = of_node_to_fwnode(of_node);
-> +
-> +       ret = eiointc_init(priv, parent_irq, 0);
-> +       if (ret < 0)
-> +               goto out_free_priv;
-> +
-> +       return 0;
-> +
-> +out_free_priv:
-> +       kfree(priv);
-> +       return ret;
-> +}
-> +
-> +IRQCHIP_DECLARE(loongson_eiointc, "loongson,eiointc", eiointc_of_init);
-> --
-> 2.39.0
->
->
+The second patch enables mixing bpf2bpf calls with tailcalls on LoongArch.
+
+Hengqi Chen (2):
+  LoongArch: BPF: Treat function address as 64-bit value
+  LoongArch: BPF: Support mixing bpf2bpf and tailcalls
+
+ arch/loongarch/net/bpf_jit.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
+
+--
+2.31.1
