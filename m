@@ -1,89 +1,97 @@
-Received: from 1wt.eu (wtarreau.pck.nerim.net [62.212.114.60])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E5917E5
-	for <loongarch@lists.linux.dev>; Sun, 12 Feb 2023 21:12:59 +0000 (UTC)
-Received: (from willy@localhost)
-	by mail.home.local (8.17.1/8.17.1/Submit) id 31CLCWem005521;
-	Sun, 12 Feb 2023 22:12:32 +0100
-Date: Sun, 12 Feb 2023 22:12:32 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: chris.chenfeiyang@gmail.com
-Cc: paulmck@kernel.org, Feiyang Chen <chenfeiyang@loongson.cn>, arnd@arndb.de,
-        chenhuacai@kernel.org, jiaxun.yang@flygoat.com,
-        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Vincent Dagonneau <v@vda.io>
-Subject: Re: [PATCH v3 2/5] tools/nolibc: Add statx() and make stat() rely on
- statx() if necessary
-Message-ID: <Y+lWQC3XU3xWqEi2@1wt.eu>
-References: <cover.1675907639.git.chenfeiyang@loongson.cn>
- <f60027664200d6d1f0ed6c7b87915a223afb982f.1675907639.git.chenfeiyang@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F66290B
+	for <loongarch@lists.linux.dev>; Sun, 12 Feb 2023 23:29:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CCCDC433D2;
+	Sun, 12 Feb 2023 23:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1676244561;
+	bh=N5j1gNb+Re0EUJllz+g3X981RTaDhkZJEQX4YsWLntg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qZvbsejPY7adVJe/ylm0jXSnqaQjBr4gMjdLu7HD0MicyRS5mc87LmWeT1h4PFwai
+	 7USe/MSYrrzYUoZRYEX28j9afBhTU1UThttTUFEAn+TcO0+vgDUDXQg+FixduVUzMy
+	 zhQzmuKPl0Tx6tNTKkeWen10KCXMEsgSzIQpDxbC4J2ADHwSx1ou49wzJuMm6ZwMvq
+	 90Ocx4edd8lNZatpDUJhk9EOQP0SCjULewWLzS3pV5RSb0UQbt1sbP0wQIqMkMB/sN
+	 2kNrOf//yu/DW+uTrAN4jaMO+ttHdpRyDOq96yZIkFwbSvOojXhAdduIyFQCNDpLsA
+	 5FDJjB1cfqttw==
+Date: Mon, 13 Feb 2023 08:29:17 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Qing Zhang <zhangqing@loongson.cn>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: add LoongArch support for kprobe args
+ string tests
+Message-Id: <20230213082917.68a4fde41f1143fd32c6111b@kernel.org>
+In-Reply-To: <20230211084346.25941-1-zhangqing@loongson.cn>
+References: <20230211084346.25941-1-zhangqing@loongson.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f60027664200d6d1f0ed6c7b87915a223afb982f.1675907639.git.chenfeiyang@loongson.cn>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Feiyang,
+On Sat, 11 Feb 2023 16:43:46 +0800
+Qing Zhang <zhangqing@loongson.cn> wrote:
 
-On Thu, Feb 09, 2023 at 11:24:13AM +0800, chris.chenfeiyang@gmail.com wrote:
-> From: Feiyang Chen <chenfeiyang@loongson.cn>
+> before:
+> [5] Kprobe event string type argument	[UNTESTED]
+> [7] Kprobe event argument syntax	[UNTESTED]
+> after:
+> [5] Kprobe event string type argument	[PASS]
+> [7] Kprobe event argument syntax	[PASS]
 > 
-> LoongArch and RISC-V 32-bit only have statx(). ARC, Hexagon, Nios2 and
-> OpenRISC have statx() and stat64() but not stat() or newstat(). Add
-> statx() and make stat() rely on statx() if necessary to make them happy.
-> We may just use statx() for all architectures in the future.
-> 
-> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+
+Thanks for updating the test!
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
 > ---
->  tools/include/nolibc/sys.h | 56 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
+>  .../selftests/ftrace/test.d/kprobe/kprobe_args_string.tc      | 3 +++
+>  .../selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc      | 4 ++++
+>  2 files changed, 7 insertions(+)
 > 
-> diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-> index c4818a9c8823..70c30d457952 100644
-> --- a/tools/include/nolibc/sys.h
-> +++ b/tools/include/nolibc/sys.h
-> @@ -20,6 +20,7 @@
->  #include <linux/time.h>
->  #include <linux/auxvec.h>
->  #include <linux/fcntl.h> // for O_* and AT_*
-> +#include <linux/stat.h>  // for statx()
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+> index 459741565222..a4f8e7c53c1f 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+> @@ -28,6 +28,9 @@ s390*)
+>  mips*)
+>    ARG1=%r4
+>  ;;
+> +loongarch*)
+> +  ARG1=%r4
+> +;;
+>  *)
+>    echo "Please implement other architecture here"
+>    exit_untested
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
+> index d4662c8cf407..1df61e13a812 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
+> @@ -40,6 +40,10 @@ mips*)
+>    GOODREG=%r4
+>    BADREG=%r12
+>  ;;
+> +loongarch*)
+> +  GOODREG=%r4
+> +  BADREG=%r12
+> +;;
+>  *)
+>    echo "Please implement other architecture here"
+>    exit_untested
+> -- 
+> 2.36.0
+> 
 
-This one causes build warnings on all archs but x86_64:
 
-  /f/tc/nolibc/gcc-11.3.0-nolibc/aarch64-linux/bin/aarch64-linux-gcc -Os -fno-ident -fno-asynchronous-unwind-tables  -s -o nolibc-test \
-    -nostdlib -static -Isysroot/arm64/include nolibc-test.c -lgcc
-  In file included from sysroot/arm64/include/sys.h:23,
-                   from sysroot/arm64/include/nolibc.h:99,
-                   from sysroot/arm64/include/errno.h:26,
-                   from sysroot/arm64/include/stdio.h:14,
-                   from nolibc-test.c:15:
-  sysroot/arm64/include/linux/stat.h:9: warning: "S_IFMT" redefined
-      9 | #define S_IFMT  00170000
-        | 
-  In file included from sysroot/arm64/include/nolibc.h:98,
-                   from sysroot/arm64/include/errno.h:26,
-                   from sysroot/arm64/include/stdio.h:14,
-                   from nolibc-test.c:15:
-  sysroot/arm64/include/types.h:27: note: this is the location of the previous definition
-
-This is caused by the definitions for S_IF* and S_IS* in types.h. However
-if I remove them I'm seeing x86_64 fail on S_IFCHR not defined. The root
-cause is that the x86_64 toolchain falls back to /usr/include for the
-include_next <limits.h> that others do not do (probably that when built
-it thought it was a native compiler instead of a cross-compiler). I'm
-apparently able to work around this by ifdefing out the definitions but
-it makes me feel like I'm hiding the dust under the carpet. Instead I'm
-thinking of reusing Vincent's work who added stdint and the definitions
-for the various INT*MAX values that are normally found in limits.h and
-providing our own limits.h so that this issue is globally addressed.
-
-I'm going to experiment a little bit about this and will propose something
-once I'm satisfied with a solution that we can queue for 6.4. Most likely
-it will involve merging a variant of Vincent's series first, a few changes
-to have limits.h then your series.
-
-Best regards,
-Willy
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
