@@ -1,47 +1,23 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CA146BB
-	for <loongarch@lists.linux.dev>; Sun, 12 Feb 2023 16:13:22 +0000 (UTC)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-169ba826189so12720300fac.2
-        for <loongarch@lists.linux.dev>; Sun, 12 Feb 2023 08:13:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m9JNrWha4YKLX9rD9uaO4Le+Z0yMwIJejyvjLhFB0mM=;
-        b=RPfdfqoXr1Cw8prltm7TREoupX5eaNpNd+CDIlDXf9L709PnPoKQLyqZ+zboWylzWR
-         vxu85Zr3W8llfd+943ctWIFMuj/eUOowqYJKaVeMEAuOZh7DSd87i28bvDxNAQ6PoOwC
-         wXW2mjy0Nv7rWdLT7K6lR96N0WQft3GWf2KAFrqyzdPjhTZH7LFIYRkc0u2koR60TrCD
-         1hpxf+WoKXg0JbOE+h0e0CkhGndeecaH5fbwJ/zhVif01anzu3CRcpBwMXBGR6L77UGt
-         T0ZqZhaH9160JyrIQvfc6bBDGV0wnlmjvzDTuOmCpyHfThC29vCqk4lTBNsczBdn8qUd
-         qBXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m9JNrWha4YKLX9rD9uaO4Le+Z0yMwIJejyvjLhFB0mM=;
-        b=zgIATGtDIWxIt7DTGtqVTO4PPwYerhbYeHbJ66GWtXQxgNxp5TUvaxGJHIXK4Emc3c
-         2xXl1YysmOqw0TNlD4M9ouUNhgpXiVuOmlV9mvKCngmnA7GrEz84gwMVm2hoGjf1ro3c
-         sbdhcw8c2lhwtYLLDM9V9N9d8FrDfaYG61cAOAiKoZDlslQLvdoQfJWyw9LiQ+2Q1SyF
-         qZ31Ow1D5BNvRogwPq8Pc/cWVq2t+SEHBBhBvUSW8H5n3fqxNMj3EgcqHgnffaGVIwlg
-         cYxFYKTAP1pwahul/Ep7d+XgUghiGuLrwvRJZz/VRiDZfzLcjD8AEFin46wwy0o3IiTx
-         L+FA==
-X-Gm-Message-State: AO0yUKV3r9tJ5Pcib4iwv1XD/I5we6IsJAwrhAMvTiACb2oUh/Gx8d6V
-	NMll6vbQtxleZxkNdJ3gOhI=
-X-Google-Smtp-Source: AK7set9kfP8sfCh4EsN95J/ZdmLAzZQPNePNkWSy8sPECM/cP6PHARZOJXcrMxdY1LlBw1JK0pRDxg==
-X-Received: by 2002:a05:6870:b48d:b0:16d:ec6a:71ec with SMTP id y13-20020a056870b48d00b0016dec6a71ecmr2441541oap.27.1676218402068;
-        Sun, 12 Feb 2023 08:13:22 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n2-20020a056870844200b0010c727a3c79sm3225235oak.26.2023.02.12.08.13.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Feb 2023 08:13:21 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 12 Feb 2023 08:13:20 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Mike Rapoport <rppt@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B600146BB
+	for <loongarch@lists.linux.dev>; Sun, 12 Feb 2023 16:26:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD8E1C433D2;
+	Sun, 12 Feb 2023 16:26:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1676219190;
+	bh=PHaVWIiDiKuPiyj9CpZVeYgSGEpSXGrmMvcZSQN2a1w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WHZ1dOpcNlciKJV60ceMatG/ln4gwqhaZjp3ZE5RHjwYiIsNbKgPfiLOmHrkEtBNT
+	 0LBqZ54vZ15wL/dO9fbXmNbGA5IZXywhsLgmuVeT8Mxh6nsVQ2XXz5mIslqXmGe9/g
+	 AzIa8vrmuhuYMA0WsrKUzqY1iJ2X6VnzRjkJW1xeJOjb+i+e+3nJ6w3tM54rnCLk9r
+	 bZn+yK6CEohAWfFi7LJuH0EYEVZLCz4dM4UGrtoZL997U+pcfquEEXsVB3fsWZbkQi
+	 9pDJGG+mrF8objq54yFjgqFeB5zDvEOjRdynh9jYkrT7/GybhbLGr2AHJa/rTTFxa0
+	 QsuwvU4Larsqw==
+Date: Sun, 12 Feb 2023 18:26:06 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Arnd Bergmann <arnd@arndb.de>, Brian Cain <bcain@quicinc.com>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -72,9 +48,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	x86@kernel.org, Huacai Chen <chenhuacai@loongson.cn>
 Subject: Re: [PATCH v2 4/4] mm, arch: add generic implementation of
  pfn_valid() for FLATMEM
-Message-ID: <20230212161320.GA3784076@roeck-us.net>
+Message-ID: <Y+kTHsaq8FAG72CX@kernel.org>
 References: <20230129124235.209895-1-rppt@kernel.org>
  <20230129124235.209895-5-rppt@kernel.org>
+ <20230212161320.GA3784076@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -83,51 +60,28 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230129124235.209895-5-rppt@kernel.org>
+In-Reply-To: <20230212161320.GA3784076@roeck-us.net>
 
-On Sun, Jan 29, 2023 at 02:42:35PM +0200, Mike Rapoport wrote:
-> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+Hi Guenter,
+
+On Sun, Feb 12, 2023 at 08:13:20AM -0800, Guenter Roeck wrote:
+> On Sun, Jan 29, 2023 at 02:42:35PM +0200, Mike Rapoport wrote:
+> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> > 
+> > Every architecture that supports FLATMEM memory model defines its own
+> > version of pfn_valid() that essentially compares a pfn to max_mapnr.
+> > 
+> > Use mips/powerpc version implemented as static inline as a generic
+> > implementation of pfn_valid() and drop its per-architecture definitions.
+> > 
 > 
-> Every architecture that supports FLATMEM memory model defines its own
-> version of pfn_valid() that essentially compares a pfn to max_mapnr.
-> 
-> Use mips/powerpc version implemented as static inline as a generic
-> implementation of pfn_valid() and drop its per-architecture definitions.
-> 
+> With this patch in the tree, sh4 and sh4eb qemu emulations no longer boot.
+> Reverting this patch fixes the problem.
+ 
+Can you please test with only partial revert for arch/sh?
 
-With this patch in the tree, sh4 and sh4eb qemu emulations no longer boot.
-Reverting this patch fixes the problem.
+> Guenter
 
-Guenter
-
----
-# bad: [6ba8a227fd19d19779005fb66ad7562608e1df83] Add linux-next specific files for 20230210
-# good: [4ec5183ec48656cec489c49f989c508b68b518e3] Linux 6.2-rc7
-git bisect start 'HEAD' 'v6.2-rc7'
-# good: [94613f0efc69ed41f9229ef5c294db3ec37145da] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
-git bisect good 94613f0efc69ed41f9229ef5c294db3ec37145da
-# good: [19e62c715fe70dae4582c2874ed3e66715d09af6] Merge branch 'rcu/next' of git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
-git bisect good 19e62c715fe70dae4582c2874ed3e66715d09af6
-# good: [5d8b7ecef7f4a681b6e5538db59ff26c389c0ab6] Merge branch 'for-next' of https://gitlab.com/peda-linux/mux.git
-git bisect good 5d8b7ecef7f4a681b6e5538db59ff26c389c0ab6
-# good: [c349bf6ec83903b20fe570c5609b9a864a64e09c] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/krisman/unicode.git
-git bisect good c349bf6ec83903b20fe570c5609b9a864a64e09c
-# good: [5a06a9f17454df38f35672be522ff5eb9b4277d2] selftest: add testing unsharing and counting ksm zero page
-git bisect good 5a06a9f17454df38f35672be522ff5eb9b4277d2
-# bad: [f5d115a7b06e5661ed5218ffa9a2644c4ff1c135] Merge branch 'mm-nonmm-unstable' into mm-everything
-git bisect bad f5d115a7b06e5661ed5218ffa9a2644c4ff1c135
-# bad: [acb018d6ea0c055381fba7dddaef386ee28f8075] mm/vmalloc.c: allow vread() to read out vm_map_ram areas
-git bisect bad acb018d6ea0c055381fba7dddaef386ee28f8075
-# good: [1a5d9782ac969dc6e61c6786500b5160603188ea] mm/mmap: remove __vma_adjust()
-git bisect good 1a5d9782ac969dc6e61c6786500b5160603188ea
-# good: [4b32363697de957dcc890b6245bec3f58903639a] arm: include asm-generic/memory_model.h from page.h rather than memory.h
-git bisect good 4b32363697de957dcc890b6245bec3f58903639a
-# bad: [328cf3fa6682ce6a4de6f8bb8009c833dc33f3c8] mm/migrate: convert isolate_movable_page() to use folios
-git bisect bad 328cf3fa6682ce6a4de6f8bb8009c833dc33f3c8
-# bad: [b704c765b08cabe82adf76a4d1a74f3688eee410] mm/mempolicy: convert queue_pages_pmd() to queue_folios_pmd()
-git bisect bad b704c765b08cabe82adf76a4d1a74f3688eee410
-# bad: [e5734c8b0edfd2a053a5c256189586a3b1e9f63d] mm, arch: add generic implementation of pfn_valid() for FLATMEM
-git bisect bad e5734c8b0edfd2a053a5c256189586a3b1e9f63d
-# good: [ad8aecea034c591b9754bc5908da9719853aa7fa] mips: drop definition of pfn_valid() for DISCONTIGMEM
-git bisect good ad8aecea034c591b9754bc5908da9719853aa7fa
-# first bad commit: [e5734c8b0edfd2a053a5c256189586a3b1e9f63d] mm, arch: add generic implementation of pfn_valid() for FLATMEM
+-- 
+Sincerely yours,
+Mike.
