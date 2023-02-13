@@ -1,130 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2C47E
-	for <loongarch@lists.linux.dev>; Mon, 13 Feb 2023 01:27:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CC29C433D2;
-	Mon, 13 Feb 2023 01:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1676251624;
-	bh=pgBUeo8liI0s6ek7TqeHWnNdId7/PxzL//1niqaJld4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k2F0Wjc3QZMPuc5srm1Uo6lh7DtJEgv5IlU00OIY/g3/oDmwNPK6vJ5mQLe6zmVrZ
-	 U7Qf9xDiV06Q1jflce9qkhXfkc1L6KRYpke8THr9inSs6C0A1otBnGQNf8uF3cegrG
-	 0EmGevUaEIDKsnNmf8ZIAVce1Z4AArOyR1csZlUiMjSIKmKH8MO7Hyaem7TY9a1GEj
-	 /SbSFhoFkx3AJUFAXowUvw9JrdQQfq+lGUITVEsyDg1W74fq+wDnkm3XGeS8Pklcvf
-	 5Csxvk8nJ+MA2NJIxi5jp+cpyC0bXkipJo3PVapLRiTQVfyphFUD+Ia9usI95Mzr9H
-	 V7q1GNDMLixEg==
-Date: Mon, 13 Feb 2023 03:26:39 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>, Brian Cain <bcain@quicinc.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Greg Ungerer <gerg@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Rich Felker <dalias@libc.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>,
-	Stafford Horne <shorne@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Vineet Gupta <vgupta@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-	x86@kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v2 4/4] mm, arch: add generic implementation of
- pfn_valid() for FLATMEM
-Message-ID: <Y+mRz6Wfocopv9jw@kernel.org>
-References: <20230129124235.209895-1-rppt@kernel.org>
- <20230129124235.209895-5-rppt@kernel.org>
- <20230212161320.GA3784076@roeck-us.net>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52DD015A6
+	for <loongarch@lists.linux.dev>; Mon, 13 Feb 2023 03:02:04 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxrOokqOljj+QRAA--.35407S3;
+	Mon, 13 Feb 2023 11:01:57 +0800 (CST)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax97wjqOljlAUyAA--.27550S3;
+	Mon, 13 Feb 2023 11:01:56 +0800 (CST)
+Subject: Re: [PATCH 1/2] LoongArch: BPF: Treat function address as 64-bit
+ value
+To: Hengqi Chen <hengqi.chen@gmail.com>, bpf@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20230212035236.1436532-1-hengqi.chen@gmail.com>
+ <20230212035236.1436532-2-hengqi.chen@gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <07edfd3b-9895-f711-47a7-a805a4e92691@loongson.cn>
+Date: Mon, 13 Feb 2023 11:01:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230212161320.GA3784076@roeck-us.net>
+In-Reply-To: <20230212035236.1436532-2-hengqi.chen@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Ax97wjqOljlAUyAA--.27550S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7tr1fAry5uFyUCryDuw4Durg_yoW8tFykpr
+	s8CFs5CrW8Xr47WFnxJa18WFnIyFs8K3yUX3W7t3yFkanxXr93XF1kKw4a9as8G3y8Cw4I
+	vrW0kw15Zan0ka7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
+	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUUU
 
-On Sun, Feb 12, 2023 at 08:13:20AM -0800, Guenter Roeck wrote:
-> On Sun, Jan 29, 2023 at 02:42:35PM +0200, Mike Rapoport wrote:
-> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
-> > 
-> > Every architecture that supports FLATMEM memory model defines its own
-> > version of pfn_valid() that essentially compares a pfn to max_mapnr.
-> > 
-> > Use mips/powerpc version implemented as static inline as a generic
-> > implementation of pfn_valid() and drop its per-architecture definitions.
-> > 
-> 
-> With this patch in the tree, sh4 and sh4eb qemu emulations no longer boot.
-> Reverting this patch fixes the problem.
+Hi Hengqi,
 
-This should be a better fix than a revert:
-
-diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-index 506784702430..bf1b54055316 100644
---- a/arch/sh/mm/init.c
-+++ b/arch/sh/mm/init.c
-@@ -301,6 +301,7 @@ void __init paging_init(void)
- 	 */
- 	max_low_pfn = max_pfn = memblock_end_of_DRAM() >> PAGE_SHIFT;
- 	min_low_pfn = __MEMORY_START >> PAGE_SHIFT;
-+	set_max_mapnr(max_low_pfn - min_low_pfn);
- 
- 	nodes_clear(node_online_map);
- 
- 
-> Guenter
-> 
+On 02/12/2023 11:52 AM, Hengqi Chen wrote:
+> Let's always use 4 instructions for function address in JIT.
+> So that the instruction sequences don't change between the first
+> pass and the extra pass for function calls.
+>
+> Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
+> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
 > ---
-> # bad: [6ba8a227fd19d19779005fb66ad7562608e1df83] Add linux-next specific files for 20230210
-> # good: [4ec5183ec48656cec489c49f989c508b68b518e3] Linux 6.2-rc7
-> git bisect start 'HEAD' 'v6.2-rc7'
-> # good: [94613f0efc69ed41f9229ef5c294db3ec37145da] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
-> git bisect good 94613f0efc69ed41f9229ef5c294db3ec37145da
-> # good: [19e62c715fe70dae4582c2874ed3e66715d09af6] Merge branch 'rcu/next' of git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
-> git bisect good 19e62c715fe70dae4582c2874ed3e66715d09af6
-> # good: [5d8b7ecef7f4a681b6e5538db59ff26c389c0ab6] Merge branch 'for-next' of https://gitlab.com/peda-linux/mux.git
-> git bisect good 5d8b7ecef7f4a681b6e5538db59ff26c389c0ab6
-> # good: [c349bf6ec83903b20fe570c5609b9a864a64e09c] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/krisman/unicode.git
-> git bisect good c349bf6ec83903b20fe570c5609b9a864a64e09c
-> # good: [5a06a9f17454df38f35672be522ff5eb9b4277d2] selftest: add testing unsharing and counting ksm zero page
-> git bisect good 5a06a9f17454df38f35672be522ff5eb9b4277d2
-> # bad: [f5d115a7b06e5661ed5218ffa9a2644c4ff1c135] Merge branch 'mm-nonmm-unstable' into mm-everything
-> git bisect bad f5d115a7b06e5661ed5218ffa9a2644c4ff1c135
-> # bad: [acb018d6ea0c055381fba7dddaef386ee28f8075] mm/vmalloc.c: allow vread() to read out vm_map_ram areas
-> git bisect bad acb018d6ea0c055381fba7dddaef386ee28f8075
-> # good: [1a5d9782ac969dc6e61c6786500b5160603188ea] mm/mmap: remove __vma_adjust()
-> git bisect good 1a5d9782ac969dc6e61c6786500b5160603188ea
-> # good: [4b32363697de957dcc890b6245bec3f58903639a] arm: include asm-generic/memory_model.h from page.h rather than memory.h
-> git bisect good 4b32363697de957dcc890b6245bec3f58903639a
-> # bad: [328cf3fa6682ce6a4de6f8bb8009c833dc33f3c8] mm/migrate: convert isolate_movable_page() to use folios
-> git bisect bad 328cf3fa6682ce6a4de6f8bb8009c833dc33f3c8
-> # bad: [b704c765b08cabe82adf76a4d1a74f3688eee410] mm/mempolicy: convert queue_pages_pmd() to queue_folios_pmd()
-> git bisect bad b704c765b08cabe82adf76a4d1a74f3688eee410
-> # bad: [e5734c8b0edfd2a053a5c256189586a3b1e9f63d] mm, arch: add generic implementation of pfn_valid() for FLATMEM
-> git bisect bad e5734c8b0edfd2a053a5c256189586a3b1e9f63d
-> # good: [ad8aecea034c591b9754bc5908da9719853aa7fa] mips: drop definition of pfn_valid() for DISCONTIGMEM
-> git bisect good ad8aecea034c591b9754bc5908da9719853aa7fa
-> # first bad commit: [e5734c8b0edfd2a053a5c256189586a3b1e9f63d] mm, arch: add generic implementation of pfn_valid() for FLATMEM
+>  arch/loongarch/net/bpf_jit.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index c4b1947ebf76..2d952110be72 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -446,6 +446,27 @@ static int add_exception_handler(const struct bpf_insn *insn,
+>  	return 0;
+>  }
+>
+> +static inline void emit_addr_move(struct jit_ctx *ctx, enum loongarch_gpr rd, u64 addr)
+> +{
+> +	u64 imm_11_0, imm_31_12, imm_51_32, imm_63_52;
+> +
+> +	/* lu12iw rd, imm_31_12 */
+> +	imm_31_12 = (addr >> 12) & 0xfffff;
+> +	emit_insn(ctx, lu12iw, rd, imm_31_12);
+> +
+> +	/* ori rd, rd, imm_11_0 */
+> +	imm_11_0 = addr & 0xfff;
+> +	emit_insn(ctx, ori, rd, rd, imm_11_0);
+> +
+> +	/* lu32id rd, imm_51_32 */
+> +	imm_51_32 = (addr >> 32) & 0xfffff;
+> +	emit_insn(ctx, lu32id, rd, imm_51_32);
+> +
+> +	/* lu52id rd, rd, imm_63_52 */
+> +	imm_63_52 = (addr >> 52) & 0xfff;
+> +	emit_insn(ctx, lu52id, rd, rd, imm_63_52);
+> +}
+> +
+>  static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool extra_pass)
+>  {
+>  	u8 tm = -1;
+> @@ -841,7 +862,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+>  		if (ret < 0)
+>  			return ret;
+>
+> -		move_imm(ctx, t1, func_addr, is32);
+> +		emit_addr_move(ctx, t1, func_addr);
+>  		emit_insn(ctx, jirl, t1, LOONGARCH_GPR_RA, 0);
+>  		move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_A0);
+>  		break;
+>
 
--- 
-Sincerely yours,
-Mike.
+The code itself looks good to me.
+
+Could you please give more detailed info in the commit message?
+For example, description of problem, steps to reproduce, ...
+I think the descriptions in the cover letter are useful, it is
+better to record them in the commit message.
+
+Additionally, emit_addr_move() is similar with move_imm(), it is
+better to define emit_addr_move() before move_imm() in bpf_jit.h.
+
+Thanks,
+Tiezhu
+
