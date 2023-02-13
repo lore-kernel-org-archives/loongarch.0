@@ -1,159 +1,80 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401461FA8
-	for <loongarch@lists.linux.dev>; Mon, 13 Feb 2023 06:37:21 +0000 (UTC)
-Received: by mail-oo1-f51.google.com with SMTP id c29-20020a4ad21d000000b00517a55a78d4so1100029oos.12
-        for <loongarch@lists.linux.dev>; Sun, 12 Feb 2023 22:37:21 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2934E1FA8
+	for <loongarch@lists.linux.dev>; Mon, 13 Feb 2023 06:43:57 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id d40so10198185eda.8
+        for <loongarch@lists.linux.dev>; Sun, 12 Feb 2023 22:43:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=r+mD21wjZ7sbz4e4MxBS6xbK/1FhjAg9+awm6A789ww=;
-        b=k6tlOEQZNhmHTa+ZCajRLjNoXOkqSfo4mR8OrWgNmaL2MKywaTjKPH0ulYH6V9boxY
-         52UWHSIcC8rNsw1dQfTkq/COZKRQGSqbB6Kc2G15s3DFFoFMZdeK0fle1rX83pU7KJ4L
-         ++BO1fcXWC7mjkIEb9evuvP+OSvCviMd3N1ZHNescW7Lpv6a0HL6BarepuSkif6zPqmJ
-         C0miEzpiGke8zc2vSBRq5eRVJsUX8UcbybG0D55ni/6ICUXuIpztwVcd4DNb/6z3a9gS
-         0Q6J9mDHSQbj/EfASGYAa6yP1HnW6//0d7Bxm++QcZv8+DAFF4S+17znkvYeLv4XlC8U
-         Iyig==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rupOtt5ylLjo3fhbHlzPJE20iu9FpqDjZ+/K/Redjx8=;
+        b=RcloBeKyGiN5jhXwNZnYJooc9NETmlpmcBG0PCwG//qfKJxVGf0biHLkDx5aShb7DL
+         /UB3zX5Ab+pa7uY69n/QM/4BccnvWZk7aVRdg8NS5uRWfVQ5zdVhcqH4FGpacZWKLcur
+         4oxgQMtFOEEQv2WA4o2f/9vKx2VB7ZKkXhST8lhNCF91mRQ8miAt3ruYLDQ1fi16QmTq
+         VTevFJpeL6yrO2nJYmwu39TwBlO0A9/wnAQjjfzH7uUskS3JEje+pbYbXnOsBj3lM9k1
+         /iKxtiyK4QCurN3hjyVa4uBXHI9crjgOo0d1Be/nxe2Ay+XsTSVvUvJqKhSziot9tkWB
+         sdKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=r+mD21wjZ7sbz4e4MxBS6xbK/1FhjAg9+awm6A789ww=;
-        b=cw17OGM4Pf4RSgBQEADqOgM/TYOeudAAa19yhwzjKVKKVdTRVgBFBAsTlj0GSkgvCT
-         K3gVPweMKxmrMAcMbhTPWayiiztwLVnYj8KrpzHX8jil57dpIRjpUnH1URH2jjUmL+H8
-         ZajEFUqP8L0ajC9/7mjoKHX2YQtcZhuKFhjkgX22GQUFhxni7RAH4Z4mgbS9+U5UhAUU
-         AjXbfLjOBBDF52vT0/xmmEIurKnRK3ffzrMqhUA1K2HN4oQFYVRFKan4HgrIW95oyYDF
-         f7ZlFwgzX9EbFh4j3be4v1HVK4ckOnwIbF7AEotkXNaXNlmZDyBGAIQco0kMQCZ7By8N
-         JSrA==
-X-Gm-Message-State: AO0yUKXNvIl/KUn+c1rJP6N9U94pSwbltsQtJBUd03BSPiBp2PpN0c+c
-	IwHNc3TJhidiQE3WvtKmiNE=
-X-Google-Smtp-Source: AK7set8CrGfl+FsDAT8ZOxZzNC5b1OZaQkksHfF8KDK4IpXQlQWLkqRaCxpy9jhC5xUjdOk1jrrITw==
-X-Received: by 2002:a4a:d623:0:b0:512:2016:53e5 with SMTP id n3-20020a4ad623000000b00512201653e5mr12513885oon.6.1676270240292;
-        Sun, 12 Feb 2023 22:37:20 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b15-20020a4ad88f000000b004fc4000ae48sm4528998oov.15.2023.02.12.22.37.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Feb 2023 22:37:19 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <15a2c023-fdfa-9543-ac36-a846e5f8a000@roeck-us.net>
-Date: Sun, 12 Feb 2023 22:37:15 -0800
+        bh=rupOtt5ylLjo3fhbHlzPJE20iu9FpqDjZ+/K/Redjx8=;
+        b=AVqj+FBHUp1qICUM/lqWAJgW/h1EBVSs5UNiqzj2YCuyTxn/CO+IEnMaGxzwSTTnsM
+         +YUnVw8iE56/FYTl96IrbsOKhomrVG/7O86m5i1gqFb0pMOdQbF1zIU9n/ex3o1pXzJQ
+         XmvvS3TJ/etn46IScwJRr2h6BbfIqQq6yMmCmvyC+fBuz6Jh8AoDSl4eA6JJD1+bCZv/
+         7YnPY3lAAGxvlrn/SebrFXd1C4igq6WhiRNTcPfKY2Z3nNdlfDagHTzbj7zTxIzT2Msa
+         WtphsJ8q8TjnWsVOQYCsUYliN0fGrdRRSfBHqQJ8ktQuqViGFtFT0MiOwHJKv8bjeCLo
+         LXeA==
+X-Gm-Message-State: AO0yUKXkAVIgleDFrCovR9POjDbsQTYDgMO1EVaxbpENQWs0L2+8PZlc
+	LPWdUDNMscstT6+CpZA7VJr4MDP9Yz437gLoNE75NcVcFRg=
+X-Google-Smtp-Source: AK7set/hbslv9tB2aTA07MPLpW6tzHMxN4NvFICuLuZaCEMs+04VVTiV26HkiYJEQ7IMxrN4pUx4eXnJfGdqT06vU0g=
+X-Received: by 2002:a50:f61b:0:b0:4ac:b528:5728 with SMTP id
+ c27-20020a50f61b000000b004acb5285728mr2940770edn.2.1676270635423; Sun, 12 Feb
+ 2023 22:43:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v2 4/4] mm, arch: add generic implementation of
- pfn_valid() for FLATMEM
-Content-Language: en-US
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
- Brian Cain <bcain@quicinc.com>, "David S. Miller" <davem@davemloft.net>,
- Dinh Nguyen <dinguyen@kernel.org>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Greg Ungerer <gerg@linux-m68k.org>,
- Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
- Huacai Chen <chenhuacai@kernel.org>, Matt Turner <mattst88@gmail.com>,
- Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Michal Simek <monstr@monstr.eu>, Palmer Dabbelt <palmer@dabbelt.com>,
- Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>,
- Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Vineet Gupta <vgupta@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, linux-alpha@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-mm@kvack.org, linux-parisc@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
- linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
- loongarch@lists.linux.dev, openrisc@lists.librecores.org,
- sparclinux@vger.kernel.org, x86@kernel.org,
- Huacai Chen <chenhuacai@loongson.cn>
-References: <20230129124235.209895-1-rppt@kernel.org>
- <20230129124235.209895-5-rppt@kernel.org>
- <20230212161320.GA3784076@roeck-us.net> <Y+mRz6Wfocopv9jw@kernel.org>
-From: Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <Y+mRz6Wfocopv9jw@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20230211024156.3530526-1-zhoubinbin@loongson.cn> <87lel3kssq.wl-maz@kernel.org>
+In-Reply-To: <87lel3kssq.wl-maz@kernel.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Mon, 13 Feb 2023 14:43:40 +0800
+Message-ID: <CAMpQs4KwCgUA24apw=wmN=k7n+ERiip8gG9-8kirCQ+-HDP1Jg@mail.gmail.com>
+Subject: Re: [PATCH] irqchip/loongson-eiointc: Add DT init support
+To: Marc Zyngier <maz@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
+	loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/12/23 17:26, Mike Rapoport wrote:
-> On Sun, Feb 12, 2023 at 08:13:20AM -0800, Guenter Roeck wrote:
->> On Sun, Jan 29, 2023 at 02:42:35PM +0200, Mike Rapoport wrote:
->>> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
->>>
->>> Every architecture that supports FLATMEM memory model defines its own
->>> version of pfn_valid() that essentially compares a pfn to max_mapnr.
->>>
->>> Use mips/powerpc version implemented as static inline as a generic
->>> implementation of pfn_valid() and drop its per-architecture definitions.
->>>
->>
->> With this patch in the tree, sh4 and sh4eb qemu emulations no longer boot.
->> Reverting this patch fixes the problem.
-> 
-> This should be a better fix than a revert:
-> 
-> diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-> index 506784702430..bf1b54055316 100644
-> --- a/arch/sh/mm/init.c
-> +++ b/arch/sh/mm/init.c
-> @@ -301,6 +301,7 @@ void __init paging_init(void)
->   	 */
->   	max_low_pfn = max_pfn = memblock_end_of_DRAM() >> PAGE_SHIFT;
->   	min_low_pfn = __MEMORY_START >> PAGE_SHIFT;
-> +	set_max_mapnr(max_low_pfn - min_low_pfn);
->   
->   	nodes_clear(node_online_map);
->   
+On Sun, Feb 12, 2023 at 7:49 PM Marc Zyngier <maz@kernel.org> wrote:
+>
+> On Sat, 11 Feb 2023 02:41:56 +0000,
+> Binbin Zhou <zhoubinbin@loongson.cn> wrote:
+> >
+> > Add DT support for EIOINTC irqchip, which is needed for the Loongson-2K
+> > series, e.g. Loongson-2K500 soc.
+>
+> Where is the binding? I'm pretty sure other drivers need updating.
+> Where are they?
 
-Confirmed, this fixes the problem for me.
+Hi Marc:
 
-Thanks,
-Guenter
+I will add the binding file in my next version patchset.
 
->   
->> Guenter
->>
->> ---
->> # bad: [6ba8a227fd19d19779005fb66ad7562608e1df83] Add linux-next specific files for 20230210
->> # good: [4ec5183ec48656cec489c49f989c508b68b518e3] Linux 6.2-rc7
->> git bisect start 'HEAD' 'v6.2-rc7'
->> # good: [94613f0efc69ed41f9229ef5c294db3ec37145da] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
->> git bisect good 94613f0efc69ed41f9229ef5c294db3ec37145da
->> # good: [19e62c715fe70dae4582c2874ed3e66715d09af6] Merge branch 'rcu/next' of git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
->> git bisect good 19e62c715fe70dae4582c2874ed3e66715d09af6
->> # good: [5d8b7ecef7f4a681b6e5538db59ff26c389c0ab6] Merge branch 'for-next' of https://gitlab.com/peda-linux/mux.git
->> git bisect good 5d8b7ecef7f4a681b6e5538db59ff26c389c0ab6
->> # good: [c349bf6ec83903b20fe570c5609b9a864a64e09c] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/krisman/unicode.git
->> git bisect good c349bf6ec83903b20fe570c5609b9a864a64e09c
->> # good: [5a06a9f17454df38f35672be522ff5eb9b4277d2] selftest: add testing unsharing and counting ksm zero page
->> git bisect good 5a06a9f17454df38f35672be522ff5eb9b4277d2
->> # bad: [f5d115a7b06e5661ed5218ffa9a2644c4ff1c135] Merge branch 'mm-nonmm-unstable' into mm-everything
->> git bisect bad f5d115a7b06e5661ed5218ffa9a2644c4ff1c135
->> # bad: [acb018d6ea0c055381fba7dddaef386ee28f8075] mm/vmalloc.c: allow vread() to read out vm_map_ram areas
->> git bisect bad acb018d6ea0c055381fba7dddaef386ee28f8075
->> # good: [1a5d9782ac969dc6e61c6786500b5160603188ea] mm/mmap: remove __vma_adjust()
->> git bisect good 1a5d9782ac969dc6e61c6786500b5160603188ea
->> # good: [4b32363697de957dcc890b6245bec3f58903639a] arm: include asm-generic/memory_model.h from page.h rather than memory.h
->> git bisect good 4b32363697de957dcc890b6245bec3f58903639a
->> # bad: [328cf3fa6682ce6a4de6f8bb8009c833dc33f3c8] mm/migrate: convert isolate_movable_page() to use folios
->> git bisect bad 328cf3fa6682ce6a4de6f8bb8009c833dc33f3c8
->> # bad: [b704c765b08cabe82adf76a4d1a74f3688eee410] mm/mempolicy: convert queue_pages_pmd() to queue_folios_pmd()
->> git bisect bad b704c765b08cabe82adf76a4d1a74f3688eee410
->> # bad: [e5734c8b0edfd2a053a5c256189586a3b1e9f63d] mm, arch: add generic implementation of pfn_valid() for FLATMEM
->> git bisect bad e5734c8b0edfd2a053a5c256189586a3b1e9f63d
->> # good: [ad8aecea034c591b9754bc5908da9719853aa7fa] mips: drop definition of pfn_valid() for DISCONTIGMEM
->> git bisect good ad8aecea034c591b9754bc5908da9719853aa7fa
->> # first bad commit: [e5734c8b0edfd2a053a5c256189586a3b1e9f63d] mm, arch: add generic implementation of pfn_valid() for FLATMEM
-> 
+Thanks.
+Binbin
 
+>
+>         M.
+>
+> --
+> Without deviation from the norm, progress is not possible.
+>
