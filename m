@@ -1,127 +1,146 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B64F7E
-	for <loongarch@lists.linux.dev>; Mon, 13 Feb 2023 01:06:52 +0000 (UTC)
-Received: by mail-lj1-f179.google.com with SMTP id u27so12940881ljo.12
-        for <loongarch@lists.linux.dev>; Sun, 12 Feb 2023 17:06:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=H0tOTl0q9G0IbiCA8ynYG2VbbtfPCnSoMkBJxv+VPkk=;
-        b=p3p2+yunSP8zag+A7hM/kfSUJ/nuLfcHj3C8enkMjTrcEkQa8I+P30KMtdIFGcCrNo
-         N0J00ZnsL7ZlkXDPPsYaVZ4yyNE2KIYZTcJMtoTWIRdv0wwBLJ5ZwvGSV6GHRUvFmTDE
-         L2s+/QaxWKHYytRh/zl8+RZhiZzh6JjD5u+R1DR+4M0ygpmzc9wgFoCvWYeMaUfC/jpG
-         NhTYtvIG6jiKG1AkRIkCV7o+ADzT6rKGNPFPhxJ3lIj1QoCk90XNj/AhOqDLiXM6xTOV
-         4yr2UvHSbc3ypeAexc3TxFo4hQaqWmk3iULCk6yKlIbPVJR77tWdS/QLbUUEIA6qB/nB
-         Kt0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H0tOTl0q9G0IbiCA8ynYG2VbbtfPCnSoMkBJxv+VPkk=;
-        b=v54tbCfnjE1mh7lzKVST04yv17BQYmaUvxPTDLYaqEk3Ce1xPkBPgWG6Vi4yvnop5Z
-         FXywb1w31ypTjEy1R1MRwl4ABb7xqunqK1cfs5s2n2ckyy+fliHIWSqMIT4WgJ9hT2sL
-         0HCTsfj+UYCdbtQPO+4jVCSG9+pLI8sXvtPWxr6LDFzAdQWl3PFIriFe04m2Nbf4rJsz
-         iCKwktPWgHkyLwJoRxYUMpp9G1wo3ejYKjSJBeAmhaDYu9QV2hbucU/xYuKhkRObnS+r
-         OLwGGF6o9fGd3gz4xFjZSjuhy+TuNxyscdUrnsm1KvNiJXDySSQa8QKKMHM7ext4cdgK
-         FrPA==
-X-Gm-Message-State: AO0yUKW6UXHfypbG3kz5lY1+PzJsrb1v5F/ACPhqJBOUbTAeraRuSYaQ
-	iWCHL5p8DciFo6cNIg4+c1QIR3Ejxi1KjA8h3Go=
-X-Google-Smtp-Source: AK7set8XpcGjgfMefDDmmIZk31WrVPckHl8M/dQUPlwxVExbl3UjUkOEDjEYckTydZ8xIhxrGgA4G3OZeMgWRkXjBlA=
-X-Received: by 2002:a2e:8457:0:b0:293:5147:d811 with SMTP id
- u23-20020a2e8457000000b002935147d811mr50919ljh.132.1676250410037; Sun, 12 Feb
- 2023 17:06:50 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06907E
+	for <loongarch@lists.linux.dev>; Mon, 13 Feb 2023 01:15:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B8BDC433D2;
+	Mon, 13 Feb 2023 01:15:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1676250940;
+	bh=6xoS4EH/AvrMxo4l4vmXuR4AQHVc+FNzj7T1N0mRmNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bKep+A7+xJ/92/b5KLIU8b6MYcaWdBzqmXK2ccWLreI9FGxL9egqBJn5q9Vph791j
+	 puzGhxH7ZpaphtMdqK+3u3KsDuIEgHvlXlfLgmHHLQNOyillSnmjqnmwiGzCbHWjb2
+	 2krsDHjlf6yqyGqww3UHLRxAwb0QSBHd/9sygOcwxOdkSqrf1/TVIPBqYAN5wMsPzT
+	 PnV7iDcLnk7lrEiGPpJTZccklii69bbqjJq5C+ceXe3xFjyi/KyqxO5SmsQLDNoU+D
+	 LBpxjUIf9Bd02MtBnZ2ZZuuQW+pyfJ5367aFv0T2s55DZVNFbZYgmjmloY7QF6OTXd
+	 vYxO5PxdceqiA==
+Date: Mon, 13 Feb 2023 03:15:17 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Brian Cain <bcain@quicinc.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Greg Ungerer <gerg@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Rich Felker <dalias@libc.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Vineet Gupta <vgupta@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v2 2/4] m68k: use asm-generic/memory_model.h for both MMU
+ and !MMU
+Message-ID: <Y+mPJYpVBk1YutDL@kernel.org>
+References: <20230129124235.209895-1-rppt@kernel.org>
+ <20230129124235.209895-3-rppt@kernel.org>
+ <20230212173513.GA4052259@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1675907639.git.chenfeiyang@loongson.cn> <f60027664200d6d1f0ed6c7b87915a223afb982f.1675907639.git.chenfeiyang@loongson.cn>
- <Y+lWQC3XU3xWqEi2@1wt.eu>
-In-Reply-To: <Y+lWQC3XU3xWqEi2@1wt.eu>
-From: Feiyang Chen <chris.chenfeiyang@gmail.com>
-Date: Mon, 13 Feb 2023 09:06:36 +0800
-Message-ID: <CACWXhK=FKV=CppZnHtO3x33GhJgMQ8gmcgxp_Hn-bo7YcxRrnQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] tools/nolibc: Add statx() and make stat() rely on
- statx() if necessary
-To: Willy Tarreau <w@1wt.eu>
-Cc: paulmck@kernel.org, Feiyang Chen <chenfeiyang@loongson.cn>, arnd@arndb.de, 
-	chenhuacai@kernel.org, jiaxun.yang@flygoat.com, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Vincent Dagonneau <v@vda.io>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230212173513.GA4052259@roeck-us.net>
 
-On Mon, 13 Feb 2023 at 05:12, Willy Tarreau <w@1wt.eu> wrote:
->
-> Hi Feiyang,
->
-> On Thu, Feb 09, 2023 at 11:24:13AM +0800, chris.chenfeiyang@gmail.com wrote:
-> > From: Feiyang Chen <chenfeiyang@loongson.cn>
-> >
-> > LoongArch and RISC-V 32-bit only have statx(). ARC, Hexagon, Nios2 and
-> > OpenRISC have statx() and stat64() but not stat() or newstat(). Add
-> > statx() and make stat() rely on statx() if necessary to make them happy.
-> > We may just use statx() for all architectures in the future.
-> >
-> > Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-> > ---
-> >  tools/include/nolibc/sys.h | 56 ++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 56 insertions(+)
-> >
-> > diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-> > index c4818a9c8823..70c30d457952 100644
-> > --- a/tools/include/nolibc/sys.h
-> > +++ b/tools/include/nolibc/sys.h
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/time.h>
-> >  #include <linux/auxvec.h>
-> >  #include <linux/fcntl.h> // for O_* and AT_*
-> > +#include <linux/stat.h>  // for statx()
->
-> This one causes build warnings on all archs but x86_64:
->
->   /f/tc/nolibc/gcc-11.3.0-nolibc/aarch64-linux/bin/aarch64-linux-gcc -Os -fno-ident -fno-asynchronous-unwind-tables  -s -o nolibc-test \
->     -nostdlib -static -Isysroot/arm64/include nolibc-test.c -lgcc
->   In file included from sysroot/arm64/include/sys.h:23,
->                    from sysroot/arm64/include/nolibc.h:99,
->                    from sysroot/arm64/include/errno.h:26,
->                    from sysroot/arm64/include/stdio.h:14,
->                    from nolibc-test.c:15:
->   sysroot/arm64/include/linux/stat.h:9: warning: "S_IFMT" redefined
->       9 | #define S_IFMT  00170000
->         |
->   In file included from sysroot/arm64/include/nolibc.h:98,
->                    from sysroot/arm64/include/errno.h:26,
->                    from sysroot/arm64/include/stdio.h:14,
->                    from nolibc-test.c:15:
->   sysroot/arm64/include/types.h:27: note: this is the location of the previous definition
->
-> This is caused by the definitions for S_IF* and S_IS* in types.h. However
-> if I remove them I'm seeing x86_64 fail on S_IFCHR not defined. The root
-> cause is that the x86_64 toolchain falls back to /usr/include for the
-> include_next <limits.h> that others do not do (probably that when built
-> it thought it was a native compiler instead of a cross-compiler). I'm
-> apparently able to work around this by ifdefing out the definitions but
-> it makes me feel like I'm hiding the dust under the carpet. Instead I'm
-> thinking of reusing Vincent's work who added stdint and the definitions
-> for the various INT*MAX values that are normally found in limits.h and
-> providing our own limits.h so that this issue is globally addressed.
->
-> I'm going to experiment a little bit about this and will propose something
-> once I'm satisfied with a solution that we can queue for 6.4. Most likely
-> it will involve merging a variant of Vincent's series first, a few changes
-> to have limits.h then your series.
->
+Hi,
 
-Hi, Willy,
+On Sun, Feb 12, 2023 at 09:35:13AM -0800, Guenter Roeck wrote:
+> Hi,
+> 
+> On Sun, Jan 29, 2023 at 02:42:33PM +0200, Mike Rapoport wrote:
+> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> > 
+> > The MMU variant uses generic definitions of page_to_pfn() and
+> > pfn_to_page(), but !MMU defines them in include/asm/page_no.h for no
+> > good reason.
+> > 
+> > Include asm-generic/memory_model.h in the common include/asm/page.h and
+> > drop redundant definitions.
+> > 
+> > Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> > Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> 
+> This patch results in a boot failure when trying to boot the mcf5208evb qemu
+> emulation. Reverting it together with "mm, arch: add generic implementation
+> of pfn_valid() for FLATMEM" fixes the problem. There is no error log - the
+> emulation hangs silently until aborted.
 
-OK. Thank you very much!
+With the patch below I was able to get to the mount of the root file system,
+but I don't have one, so I couldn't test the boot properly.
 
-Thanks,
-Feiyang
+diff --git a/arch/m68k/include/asm/page_no.h b/arch/m68k/include/asm/page_no.h
+index 43ff6b109ebb..060e4c0e7605 100644
+--- a/arch/m68k/include/asm/page_no.h
++++ b/arch/m68k/include/asm/page_no.h
+@@ -28,6 +28,8 @@ extern unsigned long memory_end;
+ #define	virt_addr_valid(kaddr)	(((unsigned long)(kaddr) >= PAGE_OFFSET) && \
+ 				((unsigned long)(kaddr) < memory_end))
+ 
++#define ARCH_PFN_OFFSET PHYS_PFN(PAGE_OFFSET_RAW)
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* _M68K_PAGE_NO_H */
+ 
+> Guenter
+> 
+> ---
+> bisect log:
+> 
+> # bad: [6ba8a227fd19d19779005fb66ad7562608e1df83] Add linux-next specific files for 20230210
+> # good: [4ec5183ec48656cec489c49f989c508b68b518e3] Linux 6.2-rc7
+> git bisect start 'HEAD' 'v6.2-rc7'
+> # good: [94613f0efc69ed41f9229ef5c294db3ec37145da] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
+> git bisect good 94613f0efc69ed41f9229ef5c294db3ec37145da
+> # good: [19e62c715fe70dae4582c2874ed3e66715d09af6] Merge branch 'rcu/next' of git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
+> git bisect good 19e62c715fe70dae4582c2874ed3e66715d09af6
+> # good: [5d8b7ecef7f4a681b6e5538db59ff26c389c0ab6] Merge branch 'for-next' of https://gitlab.com/peda-linux/mux.git
+> git bisect good 5d8b7ecef7f4a681b6e5538db59ff26c389c0ab6
+> # good: [c349bf6ec83903b20fe570c5609b9a864a64e09c] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/krisman/unicode.git
+> git bisect good c349bf6ec83903b20fe570c5609b9a864a64e09c
+> # good: [5a06a9f17454df38f35672be522ff5eb9b4277d2] selftest: add testing unsharing and counting ksm zero page
+> git bisect good 5a06a9f17454df38f35672be522ff5eb9b4277d2
+> # bad: [f5d115a7b06e5661ed5218ffa9a2644c4ff1c135] Merge branch 'mm-nonmm-unstable' into mm-everything
+> git bisect bad f5d115a7b06e5661ed5218ffa9a2644c4ff1c135
+> # bad: [acb018d6ea0c055381fba7dddaef386ee28f8075] mm/vmalloc.c: allow vread() to read out vm_map_ram areas
+> git bisect bad acb018d6ea0c055381fba7dddaef386ee28f8075
+> # good: [1a5d9782ac969dc6e61c6786500b5160603188ea] mm/mmap: remove __vma_adjust()
+> git bisect good 1a5d9782ac969dc6e61c6786500b5160603188ea
+> # good: [4b32363697de957dcc890b6245bec3f58903639a] arm: include asm-generic/memory_model.h from page.h rather than memory.h
+> git bisect good 4b32363697de957dcc890b6245bec3f58903639a
+> # bad: [328cf3fa6682ce6a4de6f8bb8009c833dc33f3c8] mm/migrate: convert isolate_movable_page() to use folios
+> git bisect bad 328cf3fa6682ce6a4de6f8bb8009c833dc33f3c8
+> # bad: [b704c765b08cabe82adf76a4d1a74f3688eee410] mm/mempolicy: convert queue_pages_pmd() to queue_folios_pmd()
+> git bisect bad b704c765b08cabe82adf76a4d1a74f3688eee410
+> # bad: [e5734c8b0edfd2a053a5c256189586a3b1e9f63d] mm, arch: add generic implementation of pfn_valid() for FLATMEM
+> git bisect bad e5734c8b0edfd2a053a5c256189586a3b1e9f63d
+> # bad: [ad8aecea034c591b9754bc5908da9719853aa7fa] mips: drop definition of pfn_valid() for DISCONTIGMEM
+> git bisect bad ad8aecea034c591b9754bc5908da9719853aa7fa
+> # bad: [1f6271a0dfdf952c2e3981f424784d48f243a2be] m68k: use asm-generic/memory_model.h for both MMU and !MMU
+> git bisect bad 1f6271a0dfdf952c2e3981f424784d48f243a2be
+> # first bad commit: [1f6271a0dfdf952c2e3981f424784d48f243a2be] m68k: use asm-generic/memory_model.h for both MMU and !MMU
 
-> Best regards,
-> Willy
+-- 
+Sincerely yours,
+Mike.
