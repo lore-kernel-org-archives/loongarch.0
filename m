@@ -1,79 +1,106 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6CCE7C
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 09:03:52 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.120])
-	by gateway (Coremail) with SMTP id _____8Dx2tl2TutjZHQAAA--.1209S3;
-	Tue, 14 Feb 2023 17:03:50 +0800 (CST)
-Received: from [10.20.42.120] (unknown [10.20.42.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxyuZ0TutjzMIyAA--.60563S3;
-	Tue, 14 Feb 2023 17:03:49 +0800 (CST)
-Subject: Re: [PATCH v1 03/24] LoongArch: KVM: Implement vcpu
- create,run,destroy operations.
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
- <20230214025648.1898508-4-zhaotianrui@loongson.cn>
- <Y+ssx3hQPD2l23u+@kroah.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-Message-ID: <a6806992-723b-2796-ba8e-108d18f3f64e@loongson.cn>
-Date: Tue, 14 Feb 2023 17:03:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799007C
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 09:04:55 +0000 (UTC)
+Received: by mail-wr1-f51.google.com with SMTP id y1so14877183wru.2
+        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 01:04:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KZk18aUwfr/crPnHPA/QNPK0H4tWzNL+2OmakVamCi8=;
+        b=FuqeOAA0zOBxZDuVrmVbvP8dKvoEf0MRrKKfm5NpFSyLOS1syMedD57gIqKmrL5zko
+         qHpdqh+1Qi4vk3xY+Y+b00Y3rfjpVOFAPuWKFoaNHXYX+NhTIfQLIuO5WcCVUFUjRwy7
+         xMFDBg0c617IjgdOAOjwaUswIiGz5V4UI7DfJ8LBDe8ExR38WilQf/7hqV4J4nMfP3dK
+         +NkXzLhRfCI4LG9OC+J6fTkyG/7he+OYSDs5hlMQV6UXzYF2Dol240t6thsBMIDBZKNF
+         mf4lP1Tmk2bhebKijyv57HPqf77+Ml7M9RiO9cyGc/K41l5a0L/IdrW6ctCufCt4MQrg
+         Mpqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KZk18aUwfr/crPnHPA/QNPK0H4tWzNL+2OmakVamCi8=;
+        b=XgkcQqjG3vDeHoIVXbLS00DzAO2eRWixrRD6XFE55wXg11pPjhDH3Gljkui5dVhFzd
+         /q3/p5qxZxbymS8nVOLgXesFX9cDnLYfbgewidMnGaBiqOafq8URIr8nw1cDdob4jFoC
+         XGIW62ZAvLoVSnmtPJ4uIF9eE7Rt/K+6M7tGRX63kRWL+lpH7U/MPP7ecJ8M0X+Uhl2z
+         GzDWQ0cZ3Ys6UX9luEctJmw39OiBiqeSzMVWZL0PyNP/3hx2CpyZ6jCS3PNyt5tIvU7U
+         gXCxpVTEGAwn2H+KT2Fo6naBhqY7HzG5bj/BazJd5ZTG+rdx2dHa6jheC+7516qdYDY5
+         6kYQ==
+X-Gm-Message-State: AO0yUKXqEl7/UXGVtM/eE3Al8iwdsvnJUwMKmqjPquhwnuh2hVoJDva9
+	+HLwRS9hu3CftetxJaZXQ4CEWA==
+X-Google-Smtp-Source: AK7set+jlADAGeMno/J4b9rMaQi1OSFbGE2cOeHJ3WYCoMJkKRkmj2/GQpc+G+sprep4ghyf/aRSVg==
+X-Received: by 2002:a05:6000:8b:b0:2bd:f5bd:5482 with SMTP id m11-20020a056000008b00b002bdf5bd5482mr1310606wrx.28.1676365493352;
+        Tue, 14 Feb 2023 01:04:53 -0800 (PST)
+Received: from [192.168.30.216] ([81.0.6.76])
+        by smtp.gmail.com with ESMTPSA id d13-20020adfe88d000000b002c54f4d0f71sm7494931wrm.38.2023.02.14.01.04.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Feb 2023 01:04:52 -0800 (PST)
+Message-ID: <a018ab25-b545-1227-951b-a7b4e1c25d5e@linaro.org>
+Date: Tue, 14 Feb 2023 10:04:48 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <Y+ssx3hQPD2l23u+@kroah.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.7.2
+Subject: Re: [PATCH v3 20/24] x86: Remove empty <uapi/asm/setup.h>
+Content-Language: en-US
+To: Alexandre Ghiti <alexghiti@rivosinc.com>, Jonathan Corbet
+ <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ "David S . Miller" <davem@davemloft.net>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+ Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+ Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org
+Cc: Palmer Dabbelt <palmer@rivosinc.com>
+References: <20230214074925.228106-1-alexghiti@rivosinc.com>
+ <20230214074925.228106-21-alexghiti@rivosinc.com>
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
+In-Reply-To: <20230214074925.228106-21-alexghiti@rivosinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxyuZ0TutjzMIyAA--.60563S3
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrtw43Kr4rAF17Cry7Jr4kXrb_yoWfAwb_Wr
-	4vga4DKr1jqFnIyanxGwsrtFyrJF4rX3W7ZrWjqFZrCr1jv395Kr4vgrs3u3Z7ta47tFn8
-	X390kry3trnFgjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
-	e7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-	xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWln4kS
-	14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE
-	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280
-	aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07j2MKZUUUUU=
 
+On 14/2/23 08:49, Alexandre Ghiti wrote:
+> From: Palmer Dabbelt <palmer@rivosinc.com>
+> 
+> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+> ---
+>   arch/x86/include/asm/setup.h      | 2 --
+>   arch/x86/include/uapi/asm/setup.h | 1 -
+>   2 files changed, 3 deletions(-)
+>   delete mode 100644 arch/x86/include/uapi/asm/setup.h
 
-
-在 2023年02月14日 14:40, Greg Kroah-Hartman 写道:
-> On Tue, Feb 14, 2023 at 10:56:27AM +0800, Tianrui Zhao wrote:
->> Implement loongarch vcpu related operations:
->> 1. Implement vcpu create interface, saving some info into vcpu arch
->> structure such as vcpu exception entrance, vcpu enter guest pointer,
->> etc. Init vcpu timer and set address translation mode when vcpu create.
->> 2. Implement vcpu run interface, handling mmio, iocsr reading fault
->> and deliver interrupt, lose fpu before vcpu enter guest.
->> 3. Implement vcpu handle exit interface, getting the exit code by ESTAT
->> register and using kvm exception vector to handle it.
-> Again, when you have to list different things in a patch, that is a huge
-> hint that it needs to be split up into smaller pieces.
-Thanks for your advice, I will fix my patch and split it into smaller 
-pieces.
-
-Thanks,
-Tianrui Zhao
->
-> thanks,
->
-> greg k-h
-
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
