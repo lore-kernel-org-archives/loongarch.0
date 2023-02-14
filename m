@@ -1,93 +1,79 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEB67C
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 09:02:05 +0000 (UTC)
-Received: by mail-lf1-f51.google.com with SMTP id b3so22552941lfv.2
-        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 01:02:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Vo1pwF0Y3+477kchtQyZldRaytGfE/r9ZXPNmjOtQDY=;
-        b=i8BUVcIlwbe5TJ8LrEegdOmytlKzPWe1VQ+/dbiwCX5xHcOozuKXFEXik2E356WQAO
-         AhBR+cveONSay5PgYAjwWnFiTcIAbNjTghzUI6Hl0ZolG3uqtzDblFxv1tWaYW+R0dyv
-         S9M+LdVtY7kyTkikQ6tKm5OATDfNlhFxf7It82+hQD69/aZjpb70WngSyZGmozLx7+ap
-         n7s/05PN/rBRRdGuYyC5Hrdusv2bQFsqyPxaDXEIFsYnHXItCuTlNTrKIKbtgVjGALw2
-         jZ5TL6BA+kozk34GgZ8H7L6NWu/Q/w74AnlCr/gDNJULCqQ/dhERPezQFaKZ0p+vfJ7T
-         2tIg==
-X-Gm-Message-State: AO0yUKUcFPmGX70yDq1YsTHFvlF7s7Et2uOBXzVV++dF3esbZwlqyamb
-	mkXCJvAYSXcy4I/EUH01qeVdiU/83EWzcwZ7
-X-Google-Smtp-Source: AK7set+Wq6PJuMdhbhcu1TqwN069GE73Ocis+U1I9ceUuE5fdP27H8cdLHsFEUKrGi7agHODlMRFBw==
-X-Received: by 2002:ac2:514c:0:b0:4a4:68b7:f863 with SMTP id q12-20020ac2514c000000b004a468b7f863mr783014lfd.7.1676365323299;
-        Tue, 14 Feb 2023 01:02:03 -0800 (PST)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id d12-20020ac244cc000000b004d8540a1f51sm1049759lfm.107.2023.02.14.01.01.59
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Feb 2023 01:02:00 -0800 (PST)
-Received: by mail-lj1-f180.google.com with SMTP id a9so17560959ljr.13
-        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 01:01:59 -0800 (PST)
-X-Received: by 2002:a2e:9448:0:b0:293:5264:ad89 with SMTP id
- o8-20020a2e9448000000b002935264ad89mr149971ljh.37.1676365308893; Tue, 14 Feb
- 2023 01:01:48 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6CCE7C
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 09:03:52 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.120])
+	by gateway (Coremail) with SMTP id _____8Dx2tl2TutjZHQAAA--.1209S3;
+	Tue, 14 Feb 2023 17:03:50 +0800 (CST)
+Received: from [10.20.42.120] (unknown [10.20.42.120])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxyuZ0TutjzMIyAA--.60563S3;
+	Tue, 14 Feb 2023 17:03:49 +0800 (CST)
+Subject: Re: [PATCH v1 03/24] LoongArch: KVM: Implement vcpu
+ create,run,destroy operations.
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
+ <20230214025648.1898508-4-zhaotianrui@loongson.cn>
+ <Y+ssx3hQPD2l23u+@kroah.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+Message-ID: <a6806992-723b-2796-ba8e-108d18f3f64e@loongson.cn>
+Date: Tue, 14 Feb 2023 17:03:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230214074925.228106-1-alexghiti@rivosinc.com> <20230214074925.228106-16-alexghiti@rivosinc.com>
-In-Reply-To: <20230214074925.228106-16-alexghiti@rivosinc.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 14 Feb 2023 10:01:35 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVQeh4ZqSmVXkNJTOCZ_Ywi0b0JiGpg2EQFRWZXzkNeyw@mail.gmail.com>
-Message-ID: <CAMuHMdVQeh4ZqSmVXkNJTOCZ_Ywi0b0JiGpg2EQFRWZXzkNeyw@mail.gmail.com>
-Subject: Re: [PATCH v3 15/24] m68k: Remove empty <uapi/asm/setup.h>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, "David S . Miller" <davem@davemloft.net>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org, 
-	linux-arch@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <Y+ssx3hQPD2l23u+@kroah.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxyuZ0TutjzMIyAA--.60563S3
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvdXoWrtw43Kr4rAF17Cry7Jr4kXrb_yoWfAwb_Wr
+	4vga4DKr1jqFnIyanxGwsrtFyrJF4rX3W7ZrWjqFZrCr1jv395Kr4vgrs3u3Z7ta47tFn8
+	X390kry3trnFgjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
+	e7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+	xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWln4kS
+	14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE
+	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
+	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280
+	aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07j2MKZUUUUU=
 
-On Tue, Feb 14, 2023 at 9:05 AM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
-> From: Palmer Dabbelt <palmer@rivosinc.com>
+
+
+在 2023年02月14日 14:40, Greg Kroah-Hartman 写道:
+> On Tue, Feb 14, 2023 at 10:56:27AM +0800, Tianrui Zhao wrote:
+>> Implement loongarch vcpu related operations:
+>> 1. Implement vcpu create interface, saving some info into vcpu arch
+>> structure such as vcpu exception entrance, vcpu enter guest pointer,
+>> etc. Init vcpu timer and set address translation mode when vcpu create.
+>> 2. Implement vcpu run interface, handling mmio, iocsr reading fault
+>> and deliver interrupt, lose fpu before vcpu enter guest.
+>> 3. Implement vcpu handle exit interface, getting the exit code by ESTAT
+>> register and using kvm exception vector to handle it.
+> Again, when you have to list different things in a patch, that is a huge
+> hint that it needs to be split up into smaller pieces.
+Thanks for your advice, I will fix my patch and split it into smaller 
+pieces.
+
+Thanks,
+Tianrui Zhao
 >
-> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+> thanks,
+>
+> greg k-h
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
