@@ -1,142 +1,172 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E3F7C
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 08:40:11 +0000 (UTC)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31E8Vi22004628;
-	Tue, 14 Feb 2023 08:38:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=XmTTRTqN8QHhuqqaK0B4wcZMFk6wbx4+9SlCVYUudEg=;
- b=q0CFhD00GHRgiAn5Lc7+9XPoIXhbH37jo9LPP5gO0FR/vTvQM2oqGpmnUzQ/izmDF9v0
- KdAdBX+lzRH997zibc6I+ZDhX9NkR3s4PeteSiWnk3qMLqykhF7VHts/j4ounccd62iV
- 6zcE2d9N3AcFvu42RVPJGqHk19n5kfAfYcELyf5vZX21pLHO9cWuVpRgVcF4ehkFPB9o
- K9L59Nu09a5yT/SgLgfiy57OTzuJRb0tm23G7nl+ZAEOvsDYZRkFKkNDE7G+veUt0tTq
- kDWPNL6pCGB2ooJtc34IbfhYfLJPh8EqpCM4gyBz9pzkOASeQq1W919Hg2daScb2Sld3 rg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nr6v9r5bg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Feb 2023 08:38:57 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31E8bEt7027902;
-	Tue, 14 Feb 2023 08:38:55 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nr6v9r5as-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Feb 2023 08:38:55 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-	by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 31E65wsH017640;
-	Tue, 14 Feb 2023 08:38:52 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3np2n6kqqk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Feb 2023 08:38:52 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 31E8cnPQ39649594
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 14 Feb 2023 08:38:49 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DDF1E20043;
-	Tue, 14 Feb 2023 08:38:48 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C3EAF20040;
-	Tue, 14 Feb 2023 08:38:47 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.244])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 14 Feb 2023 08:38:47 +0000 (GMT)
-Date: Tue, 14 Feb 2023 09:38:47 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] Remove COMMAND_LINE_SIZE from uapi
-Message-ID: <Y+tIl07KOOrGZ2Et@osiris>
-References: <20230214074925.228106-1-alexghiti@rivosinc.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635857C
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 08:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1676364394;
+	bh=H6e5KBXUJHMcDLyQ/BFYqS0gPcEakg+isU2JEhLTeyM=;
+	h=Subject:From:To:Cc:Date:From;
+	b=EOwMFCvOU4Mz4idsY5QoQO/4tnaadZ0L9Zx4D46QqKwuPpUQycYKBAFGwgUp3D0+U
+	 BIt6OoamZYo5Y24kwd9Z7Uohys6ryeYnKoQmgNLMHyRrayM7sMLi7O0EvDdZAjEFwY
+	 e7woHUT/8UVCVe/yV8ZhdYXtha2JThJShaS9VYOk=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 0624366868;
+	Tue, 14 Feb 2023 03:46:32 -0500 (EST)
+Message-ID: <1e6f4d35946e4e2e7c7f5dcc7b69d5e609de8184.camel@xry111.site>
+Subject: "kernel ade access" oops on LoongArch
+From: Xi Ruoyao <xry111@xry111.site>
+To: loongarch@lists.linux.dev
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	linux-kernel@vger.kernel.org
+Date: Tue, 14 Feb 2023 16:46:30 +0800
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230214074925.228106-1-alexghiti@rivosinc.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: lcWVAyn8KN60Dj6qJ5LWCkwvnMHsQyNY
-X-Proofpoint-GUID: QnuEgtAeE2k8CuQJG5mickOtwsFFWUEl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-14_05,2023-02-13_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 phishscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 mlxscore=0 bulkscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302140067
 
-On Tue, Feb 14, 2023 at 08:49:01AM +0100, Alexandre Ghiti wrote:
-> This all came up in the context of increasing COMMAND_LINE_SIZE in the
-> RISC-V port.  In theory that's a UABI break, as COMMAND_LINE_SIZE is the
-> maximum length of /proc/cmdline and userspace could staticly rely on
-> that to be correct.
-> 
-> Usually I wouldn't mess around with changing this sort of thing, but
-> PowerPC increased it with a5980d064fe2 ("powerpc: Bump COMMAND_LINE_SIZE
-> to 2048").  There are also a handful of examples of COMMAND_LINE_SIZE
-> increasing, but they're from before the UAPI split so I'm not quite sure
-> what that means: e5a6a1c90948 ("powerpc: derive COMMAND_LINE_SIZE from
-> asm-generic"), 684d2fd48e71 ("[S390] kernel: Append scpdata to kernel
-> boot command line"), 22242681cff5 ("MIPS: Extend COMMAND_LINE_SIZE"),
-> and 2b74b85693c7 ("sh: Derive COMMAND_LINE_SIZE from
-> asm-generic/setup.h.").
-> 
-> It seems to me like COMMAND_LINE_SIZE really just shouldn't have been
-> part of the uapi to begin with, and userspace should be able to handle
-> /proc/cmdline of whatever length it turns out to be.  I don't see any
-> references to COMMAND_LINE_SIZE anywhere but Linux via a quick Google
-> search, but that's not really enough to consider it unused on my end.
-> 
-> The feedback on the v1 seemed to indicate that COMMAND_LINE_SIZE really
-> shouldn't be part of uapi, so this now touches all the ports.  I've
-> tried to split this all out and leave it bisectable, but I haven't
-> tested it all that aggressively.
+This is a "help wanted" message :(.
 
-Just to confirm this assumption a bit more: that's actually the same
-conclusion that we ended up with when commit 3da0243f906a ("s390: make
-command line configurable") went upstream.
+I've recently run into some strange kernel oops testing Glibc for LoongArch=
+.  A log looks like:
+
+[11569.195043] Kernel ade access[#1]:
+[11569.198441] CPU: 1 PID: 1132296 Comm: ld-linux-loonga Not tainted 6.2.0-=
+rc8+ #61
+[11569.205792] Hardware name: Loongson Loongson-3A5000-HV-7A2000-1w-V0.1-EV=
+B/Loongson-LS3A5000-7A2000-1w-EVB-V1.21, BIOS Loongson-UDK2018-V4.0.05383-b=
+eta10 1
+[11569.219536] $ 0   : 0000000000000000 90000000005e3448 90000001113a0000 9=
+0000001113a3ab0
+[11569.227505] $ 4   : 90000001113a3af8 1000000000cf16d0 5555555555555850 0=
+00000000000000c
+[11569.235475] $ 8   : 90000000009caa10 0000000000000000 00000000000002ca 0=
+00000000000008b
+[11569.243438] $12   : 0000000000000001 9000000000cf1258 ffffffffffffffff 0=
+0007ffffb93c000
+[11569.251402] $16   : 0000000000000000 0000000000000140 0000000000000000 0=
+000000000000020
+[11569.259366] $20   : 90000001113a3ec8 9000000000a97ee0 00007ffffb93bfa0 1=
+555555555555613
+[11569.267334] $24   : 1000000000cf16d0 000000000000000c 9000000000cf1258 9=
+0000000009caa10
+[11569.275303] $28   : 90000001113a3af8 0aaaaaaaaaaaab0a 00007ffffb93bde0 9=
+0000001113a3ec0
+[11569.283268] era   : 90000000009caa10 cmp_ex_search+0x0/0x28
+[11569.288814] ra    : 90000000005e3448 bsearch+0x58/0xa8
+[11569.293921] CSR crmd: 000000b0=09
+[11569.293923] CSR prmd: 00000004=09
+[11569.297037] CSR euen: 00000000=09
+[11569.300152] CSR ecfg: 00071c1c=09
+[11569.303266] CSR estat: 00480000=09
+[11569.309587] ExcCode : 8 (SubCode 1)
+[11569.313049] BadVA : 1000000000cf16d0
+[11569.316596] PrId  : 0014c011 (Loongson-64bit)
+[11569.320923] Modules linked in: amdgpu nls_cp936 vfat fat input_leds drm_=
+ttm_helper ttm video gpu_sched drm_buddy snd_hda_codec_generic drm_display_=
+helper ledtrig_audio drm_kms_helper led_class snd_hda_intel sha256_generic =
+snd_intel_dspcfg cfbfillrect libsha256 snd_hda_codec syscopyarea snd_hda_co=
+re hid_generic cfbimgblt cfg80211 snd_pcm sysfillrect usbhid sysimgblt snd_=
+timer cfbcopyarea hid snd igb soundcore efivarfs
+[11569.357709] Process ld-linux-loonga (pid: 1132296, threadinfo=3D00000000=
+3cbd0caa, task=3D000000005bcd27a6)
+[11569.366977] Stack : 00007ffffb93bd60 0000000000000000 9000000180a36a40 0=
+000000000000001
+[11569.374940]         90000001113a3bb0 00007ffffb93c000 9000000000224c94 9=
+0000000009cab2c
+[11569.382899]         0000000000000001 9000000000224c94 00007ffff3258000 9=
+00000000025a1b4
+[11569.390866]         90000001113a3bb0 900000000022f4cc 00007ffffb93c000 9=
+00000000022f74c
+[11569.398834]         9000000180a36a40 0000000000000001 0000000000000000 0=
+0007ffffb93c000
+[11569.406800]         90000001113a3bb0 900000000022f8f8 90000001113a3ec0 0=
+0007ffffb93bde0
+[11569.414768]         00007ffffb93bd60 0000000000000000 0000000000000000 0=
+0007fffff7c4600
+[11569.422734]         9000000182ebab70 9000000000d08000 0000000046505501 9=
+00000000022ee6c
+[11569.430698]         0000000000000000 9000000000224b84 90000001113a0000 9=
+0000001113a3cf0
+[11569.438661]         0000000000000000 00007ffffb93c0d0 0000000000000000 0=
+000000000000040
+[11569.446627]         ...
+[11569.449058] Call Trace:
+[11569.449062] [<90000000009caa10>] cmp_ex_search+0x0/0x28
+[11569.456681] [<90000000005e3448>] bsearch+0x58/0xa8
+[11569.461443] [<90000000009cab2c>] search_extable+0x28/0x34
+[11569.466807] [<900000000025a1b4>] search_exception_tables+0x48/0x7c
+[11569.472953] [<900000000022f4cc>] fixup_exception+0x18/0xcc
+[11569.478410] [<900000000022f74c>] do_sigsegv+0x174/0x1b0
+[11569.483605] [<900000000022f8f8>] do_page_fault+0x170/0x344
+[11569.489058] [<900000000022ee6c>] tlb_do_page_fault_1+0x128/0x1c4
+[11569.495029] [<9000000000224b84>] handle_signal+0x634/0x884
+[11569.500487] [<9000000000225704>] arch_do_signal_or_restart+0xb4/0xe0
+[11569.506808] [<90000000002b5b30>] exit_to_user_mode_prepare+0xbc/0x100
+[11569.513214] [<9000000000a02628>] syscall_exit_to_user_mode+0x30/0x4c
+[11569.519533] [<90000000002214a4>] handle_syscall+0xc4/0x160
+
+[11569.526472] Code: 4c000020  02800404  4c000020 <240000ac> 26000084  0010=
+b0a5  680014a4  00129484  00111004=20
+
+[11569.537704] ---[ end trace 0000000000000000 ]---
+
+"BadVA : 1000000000cf16d0" may suggest the highest bit of an address is
+somehow cleared.
+
+The issue is not deterministic, but it seems easily reproduced by:
+
+1. Compile Glibc:
+
+../glibc/configure --prefix=3D/usr                      \
+             --disable-werror                         \
+             --enable-kernel=3D5.19                     \
+             --enable-stack-protector=3Dstrong          \
+             --with-headers=3D/usr/include              \
+             libc_cv_slibdir=3D/usr/lib
+make -j4
+
+2. Check Glibc:
+
+make check -j4
+
+3. If the oops did not happen during the last step, run a specific test
+in a dead loop:
+
+while true; do make test t=3Dmalloc/tst-mallocfork3-malloc-check; done
+
+Then an oops would likely show up in several minutes.
+
+Though the oops is nondeterministic, I'm almost sure it's not a hardware
+stability issue because I'm getting exactly same stack traces for each
+oops message.  I cannot easily rule out the possibility about "the
+compiler miscompiles kernel code" though.
+
+I'm running 6.2-rc8 with the following patches from loongarch-next:
+
+ACPI: Define ACPI_MACHINE_WIDTH to 64 for LoongArch
+PCI: loongson: Improve the MRRS quirk for LS7A
+PCI: Add quirk for LS7A to avoid reboot failure
+irqchip/loongson-liointc: Save/restore int_edge/int_pol registers during S3=
+/S4
+LoongArch: Add vector extensions support
+tools: Add LoongArch build infrastructure
+libbpf: Add LoongArch support to bpf_tracing.h
+selftests/seccomp: Add LoongArch selftesting support
+SH: cpuinfo: Fix a warning for CONFIG_CPUMASK_OFFSTACK
+LoongArch: Add CPU HWMon platform driver
+
+Any idea to fix the issue or suggestion to debug it further?
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
