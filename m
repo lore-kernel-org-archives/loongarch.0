@@ -1,362 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540C02CAB
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:07:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 793FFC433AC;
-	Tue, 14 Feb 2023 07:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1676358453;
-	bh=gVdYdGvVouxRS7I5HTvloIF+eef11VP/cTzmju48sa8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L7mfxQeb7fxb/v6PpTBeFDgujh25Hr7W7QQNyWAgMa+vOQ0vZOC9jbATwq2Z39yZ4
-	 qFZsq7gm/ULoVsC6wRl+5NPePvftL0yuLY+Ya/IJ6DcbSvLCo2XKjlpfze71MWncqR
-	 OHhzDHffkGNUAOP/KLqrjPZIlsCkQrDhN3QoteTdQWnew5jcqKIHkKr2Ir4jsEYOoB
-	 psXgdT+CxTHnwVpYCWAFTN2eJu5PAXlZZAohNqwRWqNIoT0XVAM/cr0XxkCybCJd16
-	 WR75rMrtimgplrjhJork8V0V7UD8BePOUY7Z7CbS/aq86TV62VkxEPbpDQUVbHq1HF
-	 wChgtf5mBAF/A==
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: jgross@suse.com,
-	richard.henderson@linaro.org,
-	ink@jurassic.park.msu.ru,
-	mattst88@gmail.com,
-	linux-alpha@vger.kernel.org,
-	linux@armlinux.org.uk,
-	linux-arm-kernel@lists.infradead.org,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	guoren@kernel.org,
-	linux-csky@vger.kernel.org,
-	linux-ia64@vger.kernel.org,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	loongarch@lists.linux.dev,
-	f.fainelli@gmail.com,
-	bcm-kernel-feedback-list@broadcom.com,
-	tsbogend@alpha.franken.de,
-	linux-mips@vger.kernel.org,
-	jiaxun.yang@flygoat.com,
-	mpe@ellerman.id.au,
-	npiggin@gmail.com,
-	christophe.leroy@csgroup.eu,
-	linuxppc-dev@lists.ozlabs.org,
-	ysato@users.sourceforge.jp,
-	dalias@libc.org,
-	linux-sh@vger.kernel.org,
-	davem@davemloft.net,
-	sparclinux@vger.kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	chris@zankel.net,
-	jcmvbkbc@gmail.com,
-	linux-xtensa@linux-xtensa.org,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	bristot@redhat.com,
-	vschneid@redhat.com,
-	paulmck@kernel.org
-Subject: [PATCH v2 24/24] sched/idle: Mark arch_cpu_idle_dead() __noreturn
-Date: Mon, 13 Feb 2023 23:05:58 -0800
-Message-Id: <60d527353da8c99d4cf13b6473131d46719ed16d.1676358308.git.jpoimboe@kernel.org>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <cover.1676358308.git.jpoimboe@kernel.org>
-References: <cover.1676358308.git.jpoimboe@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FED33F6;
+	Tue, 14 Feb 2023 07:08:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676358500; x=1707894500;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7mxrqjucLiuCXh3jkBMuGLi7BeMczW6z9ZSnKt52TSc=;
+  b=lxOGp5JPZTvL26dUqbZm86vn7aEG6XW1oCyXP/5RE7W81pTcaUFIHXfb
+   OvRM3h4VGlglwhSo6m47ccFSSLjU9IUOoTpAgHlbnb0ocILDiAch/gH4x
+   mtJVEMob+VNaETPp3vF4W3ALSOCtZd+lvTO5P5OdVMGOHJVprEoMPZ9q5
+   OMekt/NgyFgtCtVHvXr4B1CFgXPl/6PEAjUtpSAfpvM0rxv/52Fav1JYZ
+   LmwKsVAKHsB9MD8y0FGabVpgtNAnRG3dTw0kMi91vxoii6KO99OwWHaMr
+   YCnj3mmxUsw+RVOJu/YHuL0BkbT9+zRdaZX9Er7jAxOs0HU9Nnfhq6wma
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="393499244"
+X-IronPort-AV: E=Sophos;i="5.97,296,1669104000"; 
+   d="scan'208";a="393499244"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 23:08:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="618939126"
+X-IronPort-AV: E=Sophos;i="5.97,296,1669104000"; 
+   d="scan'208";a="618939126"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 13 Feb 2023 23:07:59 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1pRpPy-0008I9-1S;
+	Tue, 14 Feb 2023 07:07:58 +0000
+Date: Tue, 14 Feb 2023 15:07:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH v1 22/24] LoongArch: KVM: Implement vcpu world switch
+Message-ID: <202302141408.1hBkpMAf-lkp@intel.com>
+References: <20230214025648.1898508-23-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230214025648.1898508-23-zhaotianrui@loongson.cn>
 
-Before commit 076cbf5d2163 ("x86/xen: don't let xen_pv_play_dead()
-return"), in Xen, when a previously offlined CPU was brought back
-online, it unexpectedly resumed execution where it left off in the
-middle of the idle loop.
+Hi Tianrui,
 
-There were some hacks to make that work, but the behavior was surprising
-as do_idle() doesn't expect an offlined CPU to return from the dead (in
-arch_cpu_idle_dead()).
+Thank you for the patch! Perhaps something to improve:
 
-Now that Xen has been fixed, and the arch-specific implementations of
-arch_cpu_idle_dead() also don't return, give it a __noreturn attribute.
+[auto build test WARNING on kvm/queue]
+[also build test WARNING on linus/master v6.2-rc8]
+[cannot apply to kvm/linux-next next-20230214]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-This will cause the compiler to complain if an arch-specific
-implementation might return.  It also improves code generation for both
-caller and callee.
+url:    https://github.com/intel-lab-lkp/linux/commits/Tianrui-Zhao/LoongArch-KVM-Implement-kvm-module-related-interface/20230214-110506
+base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git queue
+patch link:    https://lore.kernel.org/r/20230214025648.1898508-23-zhaotianrui%40loongson.cn
+patch subject: [PATCH v1 22/24] LoongArch: KVM: Implement vcpu world switch
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20230214/202302141408.1hBkpMAf-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/1adfa2faabc606d0813446b2d2111e04aa3d2828
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Tianrui-Zhao/LoongArch-KVM-Implement-kvm-module-related-interface/20230214-110506
+        git checkout 1adfa2faabc606d0813446b2d2111e04aa3d2828
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch prepare
 
-Also fixes the following warning:
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202302141408.1hBkpMAf-lkp@intel.com/
 
-  vmlinux.o: warning: objtool: do_idle+0x25f: unreachable instruction
+All warnings (new ones prefixed by >>):
 
-Reported-by: Paul E. McKenney <paulmck@kernel.org>
-Tested-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- arch/alpha/kernel/process.c     | 2 +-
- arch/arm/kernel/smp.c           | 2 +-
- arch/arm64/kernel/process.c     | 2 +-
- arch/csky/kernel/smp.c          | 2 +-
- arch/ia64/kernel/process.c      | 2 +-
- arch/loongarch/kernel/process.c | 2 +-
- arch/mips/kernel/process.c      | 2 +-
- arch/parisc/kernel/process.c    | 2 +-
- arch/powerpc/kernel/smp.c       | 2 +-
- arch/riscv/kernel/cpu-hotplug.c | 2 +-
- arch/s390/kernel/idle.c         | 2 +-
- arch/sh/kernel/idle.c           | 2 +-
- arch/sparc/kernel/process_64.c  | 2 +-
- arch/x86/kernel/process.c       | 2 +-
- arch/xtensa/kernel/smp.c        | 2 +-
- include/linux/cpu.h             | 2 +-
- kernel/sched/idle.c             | 2 +-
- tools/objtool/check.c           | 1 +
- 18 files changed, 18 insertions(+), 17 deletions(-)
+   arch/loongarch/kernel/asm-offsets.c:17:6: warning: no previous prototype for 'output_ptreg_defines' [-Wmissing-prototypes]
+      17 | void output_ptreg_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:64:6: warning: no previous prototype for 'output_task_defines' [-Wmissing-prototypes]
+      64 | void output_task_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:79:6: warning: no previous prototype for 'output_thread_info_defines' [-Wmissing-prototypes]
+      79 | void output_thread_info_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:95:6: warning: no previous prototype for 'output_thread_defines' [-Wmissing-prototypes]
+      95 | void output_thread_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:138:6: warning: no previous prototype for 'output_thread_fpu_defines' [-Wmissing-prototypes]
+     138 | void output_thread_fpu_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:178:6: warning: no previous prototype for 'output_mm_defines' [-Wmissing-prototypes]
+     178 | void output_mm_defines(void)
+         |      ^~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:210:6: warning: no previous prototype for 'output_sc_defines' [-Wmissing-prototypes]
+     210 | void output_sc_defines(void)
+         |      ^~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:218:6: warning: no previous prototype for 'output_signal_defines' [-Wmissing-prototypes]
+     218 | void output_signal_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:256:6: warning: no previous prototype for 'output_smpboot_defines' [-Wmissing-prototypes]
+     256 | void output_smpboot_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:266:6: warning: no previous prototype for 'output_pbe_defines' [-Wmissing-prototypes]
+     266 | void output_pbe_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~
+>> arch/loongarch/kernel/asm-offsets.c:277:6: warning: no previous prototype for 'output_kvm_defines' [-Wmissing-prototypes]
+     277 | void output_kvm_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~
+--
+   arch/loongarch/kernel/asm-offsets.c:17:6: warning: no previous prototype for 'output_ptreg_defines' [-Wmissing-prototypes]
+      17 | void output_ptreg_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:64:6: warning: no previous prototype for 'output_task_defines' [-Wmissing-prototypes]
+      64 | void output_task_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:79:6: warning: no previous prototype for 'output_thread_info_defines' [-Wmissing-prototypes]
+      79 | void output_thread_info_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:95:6: warning: no previous prototype for 'output_thread_defines' [-Wmissing-prototypes]
+      95 | void output_thread_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:138:6: warning: no previous prototype for 'output_thread_fpu_defines' [-Wmissing-prototypes]
+     138 | void output_thread_fpu_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:178:6: warning: no previous prototype for 'output_mm_defines' [-Wmissing-prototypes]
+     178 | void output_mm_defines(void)
+         |      ^~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:210:6: warning: no previous prototype for 'output_sc_defines' [-Wmissing-prototypes]
+     210 | void output_sc_defines(void)
+         |      ^~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:218:6: warning: no previous prototype for 'output_signal_defines' [-Wmissing-prototypes]
+     218 | void output_signal_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:256:6: warning: no previous prototype for 'output_smpboot_defines' [-Wmissing-prototypes]
+     256 | void output_smpboot_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:266:6: warning: no previous prototype for 'output_pbe_defines' [-Wmissing-prototypes]
+     266 | void output_pbe_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~
+>> arch/loongarch/kernel/asm-offsets.c:277:6: warning: no previous prototype for 'output_kvm_defines' [-Wmissing-prototypes]
+     277 | void output_kvm_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~
+   <stdin>:569:2: warning: #warning syscall fstat not implemented [-Wcpp]
 
-diff --git a/arch/alpha/kernel/process.c b/arch/alpha/kernel/process.c
-index d0ff06eda8fa..9bae2fc4910f 100644
---- a/arch/alpha/kernel/process.c
-+++ b/arch/alpha/kernel/process.c
-@@ -60,7 +60,7 @@ void arch_cpu_idle(void)
- 	wtint(0);
- }
- 
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	wtint(INT_MAX);
- 	BUG();
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index adcd417c526b..c2daa0f2f784 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -320,7 +320,7 @@ void __cpu_die(unsigned int cpu)
-  * of the other hotplug-cpu capable cores, so presumably coming
-  * out of idle fixes this.
-  */
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	unsigned int cpu = smp_processor_id();
- 
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 269ac1c25ae2..8d606bbb4a9a 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -69,7 +69,7 @@ void (*pm_power_off)(void);
- EXPORT_SYMBOL_GPL(pm_power_off);
- 
- #ifdef CONFIG_HOTPLUG_CPU
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
-        cpu_die();
- }
-diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
-index 0ec20efaf5fd..9c7a20b73ac6 100644
---- a/arch/csky/kernel/smp.c
-+++ b/arch/csky/kernel/smp.c
-@@ -300,7 +300,7 @@ void __cpu_die(unsigned int cpu)
- 	pr_notice("CPU%u: shutdown\n", cpu);
- }
- 
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	idle_task_exit();
- 
-diff --git a/arch/ia64/kernel/process.c b/arch/ia64/kernel/process.c
-index 78f5794b2dde..9a5cd9fad3a9 100644
---- a/arch/ia64/kernel/process.c
-+++ b/arch/ia64/kernel/process.c
-@@ -225,7 +225,7 @@ static inline void __noreturn play_dead(void)
- }
- #endif /* CONFIG_HOTPLUG_CPU */
- 
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	play_dead();
- }
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index edfd220a3737..ba70e94eb996 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -61,7 +61,7 @@ unsigned long boot_option_idle_override = IDLE_NO_OVERRIDE;
- EXPORT_SYMBOL(boot_option_idle_override);
- 
- #ifdef CONFIG_HOTPLUG_CPU
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	play_dead();
- }
-diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
-index 093dbbd6b843..a3225912c862 100644
---- a/arch/mips/kernel/process.c
-+++ b/arch/mips/kernel/process.c
-@@ -40,7 +40,7 @@
- #include <asm/stacktrace.h>
- 
- #ifdef CONFIG_HOTPLUG_CPU
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	play_dead();
- }
-diff --git a/arch/parisc/kernel/process.c b/arch/parisc/kernel/process.c
-index c064719b49b0..97c6f875bd0e 100644
---- a/arch/parisc/kernel/process.c
-+++ b/arch/parisc/kernel/process.c
-@@ -159,7 +159,7 @@ EXPORT_SYMBOL(running_on_qemu);
- /*
-  * Called from the idle thread for the CPU which has been shutdown.
-  */
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- #ifdef CONFIG_HOTPLUG_CPU
- 	idle_task_exit();
-diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index 6b90f10a6c81..f62e5e651bcd 100644
---- a/arch/powerpc/kernel/smp.c
-+++ b/arch/powerpc/kernel/smp.c
-@@ -1752,7 +1752,7 @@ void __cpu_die(unsigned int cpu)
- 		smp_ops->cpu_die(cpu);
- }
- 
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	/*
- 	 * Disable on the down path. This will be re-enabled by
-diff --git a/arch/riscv/kernel/cpu-hotplug.c b/arch/riscv/kernel/cpu-hotplug.c
-index f7a832e3a1d1..59b80211c25f 100644
---- a/arch/riscv/kernel/cpu-hotplug.c
-+++ b/arch/riscv/kernel/cpu-hotplug.c
-@@ -71,7 +71,7 @@ void __cpu_die(unsigned int cpu)
- /*
-  * Called from the idle thread for the CPU which has been shutdown.
-  */
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	idle_task_exit();
- 
-diff --git a/arch/s390/kernel/idle.c b/arch/s390/kernel/idle.c
-index b04fb418307c..45b5ee28dbe3 100644
---- a/arch/s390/kernel/idle.c
-+++ b/arch/s390/kernel/idle.c
-@@ -143,7 +143,7 @@ void arch_cpu_idle_exit(void)
- {
- }
- 
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	cpu_die();
- }
-diff --git a/arch/sh/kernel/idle.c b/arch/sh/kernel/idle.c
-index 114f0c4abeac..d662503b0665 100644
---- a/arch/sh/kernel/idle.c
-+++ b/arch/sh/kernel/idle.c
-@@ -30,7 +30,7 @@ void default_idle(void)
- 	clear_bl_bit();
- }
- 
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	play_dead();
- }
-diff --git a/arch/sparc/kernel/process_64.c b/arch/sparc/kernel/process_64.c
-index 91c2b8124527..b51d8fb0ecdc 100644
---- a/arch/sparc/kernel/process_64.c
-+++ b/arch/sparc/kernel/process_64.c
-@@ -95,7 +95,7 @@ void arch_cpu_idle(void)
- }
- 
- #ifdef CONFIG_HOTPLUG_CPU
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	sched_preempt_enable_no_resched();
- 	cpu_play_dead();
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 4433d13edd44..e52158263d30 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -727,7 +727,7 @@ void arch_cpu_idle_enter(void)
- 	local_touch_nmi();
- }
- 
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	play_dead();
- }
-diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
-index 7bad78495536..054bd64eab19 100644
---- a/arch/xtensa/kernel/smp.c
-+++ b/arch/xtensa/kernel/smp.c
-@@ -322,7 +322,7 @@ void __cpu_die(unsigned int cpu)
- 	pr_err("CPU%u: unable to kill\n", cpu);
- }
- 
--void arch_cpu_idle_dead(void)
-+void __noreturn arch_cpu_idle_dead(void)
- {
- 	cpu_die();
- }
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index f83e4519c5f0..8582a7142623 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -182,7 +182,7 @@ void arch_cpu_idle(void);
- void arch_cpu_idle_prepare(void);
- void arch_cpu_idle_enter(void);
- void arch_cpu_idle_exit(void);
--void arch_cpu_idle_dead(void);
-+void __noreturn arch_cpu_idle_dead(void);
- 
- int cpu_report_state(int cpu);
- int cpu_check_up_prepare(int cpu);
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 56e152f06d0f..342f58a329f5 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -75,7 +75,7 @@ static noinline int __cpuidle cpu_idle_poll(void)
- void __weak arch_cpu_idle_prepare(void) { }
- void __weak arch_cpu_idle_enter(void) { }
- void __weak arch_cpu_idle_exit(void) { }
--void __weak arch_cpu_idle_dead(void) { while (1); }
-+void __weak __noreturn arch_cpu_idle_dead(void) { while (1); }
- void __weak arch_cpu_idle(void)
- {
- 	cpu_idle_force_poll = 1;
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index f79baae3e338..4be38a40aaca 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -168,6 +168,7 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
- 		"__stack_chk_fail",
- 		"__ubsan_handle_builtin_unreachable",
- 		"arch_call_rest_init",
-+		"arch_cpu_idle_dead",
- 		"cpu_bringup_and_idle",
- 		"cpu_startup_entry",
- 		"do_exit",
+
+vim +/output_kvm_defines +277 arch/loongarch/kernel/asm-offsets.c
+
+   217	
+ > 218	void output_signal_defines(void)
+   219	{
+   220		COMMENT("Linux signal numbers.");
+   221		DEFINE(_SIGHUP, SIGHUP);
+   222		DEFINE(_SIGINT, SIGINT);
+   223		DEFINE(_SIGQUIT, SIGQUIT);
+   224		DEFINE(_SIGILL, SIGILL);
+   225		DEFINE(_SIGTRAP, SIGTRAP);
+   226		DEFINE(_SIGIOT, SIGIOT);
+   227		DEFINE(_SIGABRT, SIGABRT);
+   228		DEFINE(_SIGFPE, SIGFPE);
+   229		DEFINE(_SIGKILL, SIGKILL);
+   230		DEFINE(_SIGBUS, SIGBUS);
+   231		DEFINE(_SIGSEGV, SIGSEGV);
+   232		DEFINE(_SIGSYS, SIGSYS);
+   233		DEFINE(_SIGPIPE, SIGPIPE);
+   234		DEFINE(_SIGALRM, SIGALRM);
+   235		DEFINE(_SIGTERM, SIGTERM);
+   236		DEFINE(_SIGUSR1, SIGUSR1);
+   237		DEFINE(_SIGUSR2, SIGUSR2);
+   238		DEFINE(_SIGCHLD, SIGCHLD);
+   239		DEFINE(_SIGPWR, SIGPWR);
+   240		DEFINE(_SIGWINCH, SIGWINCH);
+   241		DEFINE(_SIGURG, SIGURG);
+   242		DEFINE(_SIGIO, SIGIO);
+   243		DEFINE(_SIGSTOP, SIGSTOP);
+   244		DEFINE(_SIGTSTP, SIGTSTP);
+   245		DEFINE(_SIGCONT, SIGCONT);
+   246		DEFINE(_SIGTTIN, SIGTTIN);
+   247		DEFINE(_SIGTTOU, SIGTTOU);
+   248		DEFINE(_SIGVTALRM, SIGVTALRM);
+   249		DEFINE(_SIGPROF, SIGPROF);
+   250		DEFINE(_SIGXCPU, SIGXCPU);
+   251		DEFINE(_SIGXFSZ, SIGXFSZ);
+   252		BLANK();
+   253	}
+   254	
+   255	#ifdef CONFIG_SMP
+   256	void output_smpboot_defines(void)
+   257	{
+   258		COMMENT("Linux smp cpu boot offsets.");
+   259		OFFSET(CPU_BOOT_STACK, secondary_data, stack);
+   260		OFFSET(CPU_BOOT_TINFO, secondary_data, thread_info);
+   261		BLANK();
+   262	}
+   263	#endif
+   264	
+   265	#ifdef CONFIG_HIBERNATION
+   266	void output_pbe_defines(void)
+   267	{
+   268		COMMENT(" Linux struct pbe offsets. ");
+   269		OFFSET(PBE_ADDRESS, pbe, address);
+   270		OFFSET(PBE_ORIG_ADDRESS, pbe, orig_address);
+   271		OFFSET(PBE_NEXT, pbe, next);
+   272		DEFINE(PBE_SIZE, sizeof(struct pbe));
+   273		BLANK();
+   274	}
+   275	#endif
+   276	
+ > 277	void output_kvm_defines(void)
+
 -- 
-2.39.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
