@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2F42CAB
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:07:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5E18C433D2;
-	Tue, 14 Feb 2023 07:07:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B2C2CAB
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:07:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4AC7C433AA;
+	Tue, 14 Feb 2023 07:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1676358432;
-	bh=m+7K5x/TKiEj3Gy7/GvXMcVUaI8EGyr7dPyawUZEKXQ=;
+	s=k20201202; t=1676358434;
+	bh=D1LUoA9CXZXsUzjzdlL9Bm6VbDUOTXL6qHw2u/NeOks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fOpRTeaeqj7hhaGmET48v/uJfiCnR9WNdfn8ZFw7ORfMJaETjqccEYQqZqCgVORhN
-	 dd/OOQ8j6dRStxceWMED1vf7o2DVlLr8j5I/tYedDKi+X5u6X1sxCVvCrWSEssWddS
-	 GGM63fRebwPaXosH+NvNaaJoQlvxVTTRU8RCVlA5gO7tdOJQG7CacZD3MILsrijiVH
-	 k+GbCTQ+whZStivN99KdDh6cSLrC9i5RzLyA1L/2wZ7DZoTD1LAhiQ3M953wxi8Zrt
-	 Q706WZCFFns6QWrdh3xYBCIvXV3fPLHaYT/Qq1T7t2MAcMw1dYiRA/OI5B6Cy2NHtD
-	 HPkrBoE/aroSw==
+	b=tUPSKG32HeoUCaOwBqAbfzbtqzgHjEbcGBaE7+nOvdmvAM7y6sjCfuAxrGE/4DQIt
+	 QH91rW2rmrkUZKNGHLdfWY4XgxUP3q4Vbi89ZxDv5Z53hCbFwD/HoI0itn8umcp7zd
+	 RO1BgsyKfF+AmWkCuaRz60jhPAQ3thpP86qkBSYIYmcMJLhiCNGhvBk3KB+CqCgBNS
+	 IADaxy26ZmuVaW+f5LGai7QJ7wkOBu1+2sVQWEQpeUuans/o+A2obrVfVyHv3nbjp5
+	 ovm3K37rOQZ/jfwh28veu79x5ix2ETxdaBjyHzZ/jKVQT/SKpvH9Os+fLy+wdjLWvv
+	 iAHgPTcY4MX+g==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: jgross@suse.com,
@@ -65,9 +65,9 @@ Cc: jgross@suse.com,
 	bristot@redhat.com,
 	vschneid@redhat.com,
 	paulmck@kernel.org
-Subject: [PATCH v2 13/24] sh/cpu: Make sure play_dead() doesn't return
-Date: Mon, 13 Feb 2023 23:05:47 -0800
-Message-Id: <d0c3ff5349adfe8fd227acc236ae2c278a05eb4c.1676358308.git.jpoimboe@kernel.org>
+Subject: [PATCH v2 14/24] sh/cpu: Mark play_dead() __noreturn
+Date: Mon, 13 Feb 2023 23:05:48 -0800
+Message-Id: <03549a74fad9f73576d57e6fc0b5102322f9cff4.1676358308.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <cover.1676358308.git.jpoimboe@kernel.org>
 References: <cover.1676358308.git.jpoimboe@kernel.org>
@@ -80,29 +80,36 @@ MIME-Version: 1.0
 Content-type: text/plain
 Content-Transfer-Encoding: 8bit
 
-play_dead() doesn't return.  Make that more explicit with a BUG().
-
-BUG() is preferable to unreachable() because BUG() is a more explicit
-failure mode and avoids undefined behavior like falling off the edge of
-the function into whatever code happens to be next.
+play_dead() doesn't return.  Annotate it as such.  By extension this
+also makes arch_cpu_idle_dead() noreturn.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/sh/include/asm/smp-ops.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/sh/include/asm/smp-ops.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/sh/include/asm/smp-ops.h b/arch/sh/include/asm/smp-ops.h
-index e27702130eb6..63866b1595a0 100644
+index 63866b1595a0..97331fcb7b85 100644
 --- a/arch/sh/include/asm/smp-ops.h
 +++ b/arch/sh/include/asm/smp-ops.h
-@@ -27,6 +27,7 @@ static inline void plat_smp_setup(void)
- static inline void play_dead(void)
- {
- 	mp_ops->play_dead();
-+	BUG();
+@@ -24,7 +24,7 @@ static inline void plat_smp_setup(void)
+ 	mp_ops->smp_setup();
  }
  
- extern void register_smp_ops(struct plat_smp_ops *ops);
+-static inline void play_dead(void)
++static inline void __noreturn play_dead(void)
+ {
+ 	mp_ops->play_dead();
+ 	BUG();
+@@ -43,7 +43,7 @@ static inline void register_smp_ops(struct plat_smp_ops *ops)
+ {
+ }
+ 
+-static inline void play_dead(void)
++static inline void __noreturn play_dead(void)
+ {
+ 	BUG();
+ }
 -- 
 2.39.1
 
