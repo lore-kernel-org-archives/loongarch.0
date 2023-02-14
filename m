@@ -1,96 +1,117 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9477C
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 09:00:57 +0000 (UTC)
-Received: by mail-lf1-f49.google.com with SMTP id w11so22486698lfu.11
-        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 01:00:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7mNyenBvavxUdV7/ZOu+dVcpWueC+FqvBBNVPDVl8j0=;
-        b=t2CcOG0vMNbyoOvrfBn+aOWQ3iTnRqXBqEtZcSADg3HDfrt9gVbVilgYtrpkpqTjHR
-         LA01dF4WuzrE7IHiLq61GLMRRctcQOEneQoORkjtxALyzl5R1fyWKjgwCybyEKGnvK1C
-         8FjMgXAPAshgCZKplRbcDeyMeQYpvNkovjEo3NfKnhmQqtVaI3QZ81JGF00fxa7GXPdu
-         yQlkRryF6WHcHSPKY/De5hHRyNDVpde46OMCtpG8UMQKW0ukqvt6dfa2RMQ4WiXJ96uE
-         Mcre54JqFBzdl/4UWO/7jlG23h1JVTXuq87M111NV/W4NsKTBrLTnvLD3kv0Fd7CiJ49
-         au1Q==
-X-Gm-Message-State: AO0yUKU1v1qUWvhnfld6t33cJXYXMWCWkW0NJ1bdokdU1sMl3GU5Jao7
-	b2Gh/Ax21bIDC7+5JWOdbnFM3zoMs7nbj+XU
-X-Google-Smtp-Source: AK7set9Xu5w9uQ3EVkLQWxnzCA87uusHUlgS0jArXKgqhRZyTlu5fFUIHvXnU5e4VrBfxVfqYTaO0Q==
-X-Received: by 2002:ac2:548d:0:b0:4cc:7ff3:ab4d with SMTP id t13-20020ac2548d000000b004cc7ff3ab4dmr555647lfk.20.1676365254383;
-        Tue, 14 Feb 2023 01:00:54 -0800 (PST)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id r25-20020ac25a59000000b004cc9edb0f99sm1054194lfn.44.2023.02.14.01.00.46
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Feb 2023 01:00:50 -0800 (PST)
-Received: by mail-lf1-f47.google.com with SMTP id x40so22478296lfu.12
-        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 01:00:46 -0800 (PST)
-X-Received: by 2002:a2e:9448:0:b0:293:5264:ad89 with SMTP id
- o8-20020a2e9448000000b002935264ad89mr149587ljh.37.1676365235984; Tue, 14 Feb
- 2023 01:00:35 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B1867C
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 09:01:08 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.120])
+	by gateway (Coremail) with SMTP id _____8CxxtjKTetj3nMAAA--.645S3;
+	Tue, 14 Feb 2023 17:00:58 +0800 (CST)
+Received: from [10.20.42.120] (unknown [10.20.42.120])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axeb3ITetjQMIyAA--.29053S3;
+	Tue, 14 Feb 2023 17:00:56 +0800 (CST)
+Subject: Re: [PATCH v1 01/24] LoongArch: KVM: Implement kvm module related
+ interface
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
+ <20230214025648.1898508-2-zhaotianrui@loongson.cn>
+ <Y+ssT+W27GxDRAAZ@kroah.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+Message-ID: <6fd2ca5a-7243-0627-79e9-8c8bd840adc2@loongson.cn>
+Date: Tue, 14 Feb 2023 17:00:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230214074925.228106-1-alexghiti@rivosinc.com> <20230214074925.228106-6-alexghiti@rivosinc.com>
-In-Reply-To: <20230214074925.228106-6-alexghiti@rivosinc.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 14 Feb 2023 10:00:22 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWxgRrZqn=Ex4gSSL58gciuHp-6ye+FTR0wgw=jp=4=DA@mail.gmail.com>
-Message-ID: <CAMuHMdWxgRrZqn=Ex4gSSL58gciuHp-6ye+FTR0wgw=jp=4=DA@mail.gmail.com>
-Subject: Re: [PATCH v3 05/24] m68k: Remove COMMAND_LINE_SIZE from uapi
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, "David S . Miller" <davem@davemloft.net>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org, 
-	linux-arch@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <Y+ssT+W27GxDRAAZ@kroah.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Axeb3ITetjQMIyAA--.29053S3
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWrWxAF47KF1xuw15tw4kXrb_yoW5Ar4xpF
+	WDAFn5KF4rGr1fGwnaq3Wagrn8GFykGF47K3W293yUAFWjqw1UCr4kK3sIva4jva1kXr10
+	gF13X3WYg3ZFy37anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
+	e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280
+	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
+	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
+	xVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
+	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_
+	JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	WUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
+	JbIYCTnIWIevJa73UjIFyTuYvjxU2MKZDUUUU
 
-On Tue, Feb 14, 2023 at 8:55 AM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
-> From: Palmer Dabbelt <palmer@rivosinc.com>
+
+
+在 2023年02月14日 14:38, Greg Kroah-Hartman 写道:
+> On Tue, Feb 14, 2023 at 10:56:25AM +0800, Tianrui Zhao wrote:
+>> 1. Implement loongarch kvm module init, module exit interface,
+>> using kvm context to save the vpid info and vcpu world switch
+>> interface pointer.
+>> 2. Implement kvm hardware enable, disable interface, setting
+>> the guest config reg to enable virtualization features.
+>> 3. Add kvm related headers.
+> Shouldn't this be 3 different patches instead?
+Thanks, I will separate this to 3 different patches.
 >
-> As far as I can tell this is not used by userspace and thus should not
-> be part of the user-visible API.
+>> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+>> ---
+>>   arch/loongarch/include/asm/cpu-features.h |  22 ++
+>>   arch/loongarch/include/asm/kvm_host.h     | 257 ++++++++++++++++++++++
+>>   arch/loongarch/include/asm/kvm_types.h    |  11 +
+>>   arch/loongarch/include/uapi/asm/kvm.h     | 121 ++++++++++
+>>   arch/loongarch/kvm/main.c                 | 152 +++++++++++++
+>>   include/uapi/linux/kvm.h                  |  15 ++
+>>   6 files changed, 578 insertions(+)
+>>   create mode 100644 arch/loongarch/include/asm/kvm_host.h
+>>   create mode 100644 arch/loongarch/include/asm/kvm_types.h
+>>   create mode 100644 arch/loongarch/include/uapi/asm/kvm.h
+>>   create mode 100644 arch/loongarch/kvm/main.c
+>>
+>> diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
+>> index b07974218..23e7c3ae5 100644
+>> --- a/arch/loongarch/include/asm/cpu-features.h
+>> +++ b/arch/loongarch/include/asm/cpu-features.h
+>> @@ -64,5 +64,27 @@
+>>   #define cpu_has_guestid		cpu_opt(LOONGARCH_CPU_GUESTID)
+>>   #define cpu_has_hypervisor	cpu_opt(LOONGARCH_CPU_HYPERVISOR)
+>>   
+>> +#define cpu_has_matc_guest	(cpu_data[0].guest_cfg & (1 << 0))
+>> +#define cpu_has_matc_root	(cpu_data[0].guest_cfg & (1 << 1))
+>> +#define cpu_has_matc_nest	(cpu_data[0].guest_cfg & (1 << 2))
+>> +#define cpu_has_sitp		(cpu_data[0].guest_cfg & (1 << 6))
+>> +#define cpu_has_titp		(cpu_data[0].guest_cfg & (1 << 8))
+>> +#define cpu_has_toep		(cpu_data[0].guest_cfg & (1 << 10))
+>> +#define cpu_has_topp		(cpu_data[0].guest_cfg & (1 << 12))
+>> +#define cpu_has_torup		(cpu_data[0].guest_cfg & (1 << 14))
+>> +#define cpu_has_gcip_all	(cpu_data[0].guest_cfg & (1 << 16))
+>> +#define cpu_has_gcip_hit	(cpu_data[0].guest_cfg & (1 << 17))
+>> +#define cpu_has_gcip_secure	(cpu_data[0].guest_cfg & (1 << 18))
+> Why not use BIT() for all of those "<<" statements?
+Ok thanks, I will use BIT() to replace those "<<" statements.
 >
-> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+>> +#define KVM_GET_CSRS		_IOWR(KVMIO, 0xc5, struct kvm_csrs)
+>> +#define KVM_SET_CSRS		_IOW(KVMIO,  0xc6, struct kvm_csrs)
+> Why does this arch need new ioctls?
+We want to use this ioctl to access multiple csrs at one time. If 
+without this, we only access one csr.
+There is another function, can we use the KVM_GET/SET_MSRS to access our 
+csrs?
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Thanks,
+Tianrui Zhao
+> thanks,
+>
+> greg k-h
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
