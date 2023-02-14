@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FBC91C26
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 02:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E8DF7E
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 02:58:43 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8DxF9l4+OpjkFcAAA--.915S3;
+	by gateway (Coremail) with SMTP id _____8Cxjdp4+OpjrFcAAA--.1154S3;
 	Tue, 14 Feb 2023 10:56:56 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axeb1w+OpjmZwyAA--.28802S17;
-	Tue, 14 Feb 2023 10:56:55 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axeb1w+OpjmZwyAA--.28802S21;
+	Tue, 14 Feb 2023 10:56:56 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -18,9 +18,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Jens Axboe <axboe@kernel.dk>,
 	Mark Brown <broonie@kernel.org>,
 	Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH v1 15/24] LoongArch: KVM: Implement handle csr excption
-Date: Tue, 14 Feb 2023 10:56:39 +0800
-Message-Id: <20230214025648.1898508-16-zhaotianrui@loongson.cn>
+Subject: [PATCH v1 19/24] LoongArch: KVM: Implement handle mmio exception
+Date: Tue, 14 Feb 2023 10:56:43 +0800
+Message-Id: <20230214025648.1898508-20-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
 References: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
@@ -31,237 +31,355 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axeb1w+OpjmZwyAA--.28802S17
+X-CM-TRANSID:AQAAf8Axeb1w+OpjmZwyAA--.28802S21
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3Ar1ktryxJF1fKF1DAFW5Wrg_yoW7Cw47pF
-	WUCa15Zw40q3W7Kas3JFs0vrZ8X3ykGw17tFy7t34SvFnFyFn5XFWvgryDXF98ta93WFWa
-	qay5trn5Cr1DtaUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW3JFWfZF48Cr4Utry5Kr1kAFb_yoW3GF18pr
+	WUC34jvrsaqryYy3srKrs5Xr1a9F48GrsrJrZ7t39Fgr17tFy5Ar4v9rW2vFW3CrWF9a1x
+	Z3Z3JF47uF1UAa7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bzAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
+	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487
 	Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1s
-	IEY20_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4
-	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
-	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
+	IEY20_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vI
+	r41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14
+	v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26w1j6s0DMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJb
+	IYCTnIWIevJa73UjIFyTuYvj4RKtC7UUUUU
 
-Implement kvm handle loongarch vcpu exit caused by reading and
-writing csr. Using loongarch_csr structure to emulate the registers.
+Implement handle mmio exception, setting the mmio info into vcpu_run and
+return to user space to handle it.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/include/asm/kvm_csr.h |  89 +++++++++++++++++++++++
- arch/loongarch/kvm/exit.c            | 101 +++++++++++++++++++++++++++
- 2 files changed, 190 insertions(+)
- create mode 100644 arch/loongarch/include/asm/kvm_csr.h
- create mode 100644 arch/loongarch/kvm/exit.c
+ arch/loongarch/kvm/exit.c | 308 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 308 insertions(+)
 
-diff --git a/arch/loongarch/include/asm/kvm_csr.h b/arch/loongarch/include/asm/kvm_csr.h
-new file mode 100644
-index 000000000..44fcd724c
---- /dev/null
-+++ b/arch/loongarch/include/asm/kvm_csr.h
-@@ -0,0 +1,89 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#ifndef __ASM_LOONGARCH_KVM_CSR_H__
-+#define __ASM_LOONGARCH_KVM_CSR_H__
-+#include <asm/loongarch.h>
-+#include <asm/kvm_host.h>
-+#include <asm/kvm_vcpu.h>
-+#include <linux/uaccess.h>
-+#include <linux/kvm_host.h>
-+
-+#define kvm_read_hw_gcsr(id)		gcsr_read(id)
-+#define kvm_write_hw_gcsr(csr, id, val)	gcsr_write(val, id)
-+
-+int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force);
-+int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force);
-+
-+int _kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu);
-+
-+static inline void kvm_save_hw_gcsr(struct loongarch_csrs *csr, int gid)
-+{
-+	csr->csrs[gid] = gcsr_read(gid);
-+}
-+
-+static inline void kvm_restore_hw_gcsr(struct loongarch_csrs *csr, int gid)
-+{
-+	gcsr_write(csr->csrs[gid], gid);
-+}
-+
-+static inline unsigned long kvm_read_sw_gcsr(struct loongarch_csrs *csr, int gid)
-+{
-+	return csr->csrs[gid];
-+}
-+
-+static inline void kvm_write_sw_gcsr(struct loongarch_csrs *csr, int gid, unsigned long val)
-+{
-+	csr->csrs[gid] = val;
-+}
-+
-+static inline void kvm_set_sw_gcsr(struct loongarch_csrs *csr, int gid, unsigned long val)
-+{
-+	csr->csrs[gid] |= val;
-+}
-+
-+static inline void kvm_change_sw_gcsr(struct loongarch_csrs *csr, int gid, unsigned long mask,
-+	unsigned long val)
-+{
-+	unsigned long _mask = mask;
-+
-+	csr->csrs[gid] &= ~_mask;
-+	csr->csrs[gid] |= val & _mask;
-+}
-+
-+
-+#define GET_HW_GCSR(id, csrid, v)				\
-+	do {							\
-+		if (csrid == id) {				\
-+			*v = (long)kvm_read_hw_gcsr(csrid);	\
-+			return 0;				\
-+		}						\
-+	} while (0)
-+
-+#define GET_SW_GCSR(csr, id, csrid, v)				\
-+	do {							\
-+		if (csrid == id) {				\
-+			*v = kvm_read_sw_gcsr(csr, id);		\
-+			return 0;				\
-+		}						\
-+	} while (0)
-+
-+#define SET_HW_GCSR(csr, id, csrid, v)				\
-+	do {							\
-+		if (csrid == id) {				\
-+			kvm_write_hw_gcsr(csr, csrid, *v);	\
-+			return 0;				\
-+		}						\
-+	} while (0)
-+
-+#define SET_SW_GCSR(csr, id, csrid, v)				\
-+	do {							\
-+		if (csrid == id) {				\
-+			kvm_write_sw_gcsr(csr, csrid, *v);	\
-+			return 0;				\
-+		}						\
-+	} while (0)
-+
-+#endif	/* __ASM_LOONGARCH_KVM_CSR_H__ */
 diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-new file mode 100644
-index 000000000..dc37827d9
---- /dev/null
+index 75c61272b..30e64ba72 100644
+--- a/arch/loongarch/kvm/exit.c
 +++ b/arch/loongarch/kvm/exit.c
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/preempt.h>
-+#include <linux/vmalloc.h>
-+#include <asm/fpu.h>
-+#include <asm/inst.h>
-+#include <asm/time.h>
-+#include <asm/tlb.h>
-+#include <asm/loongarch.h>
-+#include <asm/numa.h>
-+#include <asm/kvm_vcpu.h>
-+#include <asm/kvm_csr.h>
-+#include <linux/kvm_host.h>
-+#include <asm/mmzone.h>
-+
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
-+
-+static unsigned long _kvm_emu_read_csr(struct kvm_vcpu *vcpu, int csrid)
+@@ -204,6 +204,265 @@ int _kvm_emu_idle(struct kvm_vcpu *vcpu)
+ 	return EMULATE_DONE;
+ }
+ 
++int _kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst)
 +{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	unsigned long val = 0;
-+
-+	val = 0;
-+	if (csrid < 4096)
-+		val = kvm_read_sw_gcsr(csr, csrid);
-+	else
-+		pr_warn_once("Unsupport csrread 0x%x with pc %lx\n",
-+			csrid, vcpu->arch.pc);
-+	return val;
-+}
-+
-+static void _kvm_emu_write_csr(struct kvm_vcpu *vcpu, int csrid,
-+	unsigned long val)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+
-+	if (csrid < 4096)
-+		kvm_write_sw_gcsr(csr, csrid, val);
-+	else
-+		pr_warn_once("Unsupport csrwrite 0x%x with pc %lx\n",
-+				csrid, vcpu->arch.pc);
-+}
-+
-+static void _kvm_emu_xchg_csr(struct kvm_vcpu *vcpu, int csrid,
-+	unsigned long csr_mask, unsigned long val)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+
-+	if (csrid < 4096) {
-+		unsigned long orig;
-+
-+		orig = kvm_read_sw_gcsr(csr, csrid);
-+		orig &= ~csr_mask;
-+		orig |= val & csr_mask;
-+		kvm_write_sw_gcsr(csr, csrid, orig);
-+	} else
-+		pr_warn_once("Unsupport csrxchg 0x%x with pc %lx\n",
-+				csrid, vcpu->arch.pc);
-+}
-+
-+static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
-+{
-+	unsigned int rd, rj, csrid;
-+	unsigned long csr_mask;
-+	unsigned long val = 0;
++	struct kvm_run *run = vcpu->run;
++	unsigned int rd, op8, opcode;
++	unsigned long rd_val = 0;
++	void *data = run->mmio.data;
++	unsigned long curr_pc;
++	int ret;
 +
 +	/*
-+	 * CSR value mask imm
-+	 * rj = 0 means csrrd
-+	 * rj = 1 means csrwr
-+	 * rj != 0,1 means csrxchg
++	 * Update PC and hold onto current PC in case there is
++	 * an error and we want to rollback the PC
 +	 */
-+	rd = inst.reg2csr_format.rd;
-+	rj = inst.reg2csr_format.rj;
-+	csrid = inst.reg2csr_format.csr;
++	curr_pc = vcpu->arch.pc;
++	update_pc(&vcpu->arch);
 +
-+	/* Process CSR ops */
-+	if (rj == 0) {
-+		/* process csrrd */
-+		val = _kvm_emu_read_csr(vcpu, csrid);
-+		vcpu->arch.gprs[rd] = val;
-+	} else if (rj == 1) {
-+		/* process csrwr */
-+		val = vcpu->arch.gprs[rd];
-+		_kvm_emu_write_csr(vcpu, csrid, val);
++	op8 = (inst.word >> 24) & 0xff;
++	run->mmio.phys_addr = vcpu->arch.badv;
++	ret = EMULATE_DO_MMIO;
++	if (op8 < 0x28) {
++		/* stptrw/d process */
++		rd = inst.reg2i14_format.rd;
++		opcode = inst.reg2i14_format.opcode;
++
++		switch (opcode) {
++		case stptrd_op:
++			run->mmio.len = 8;
++			*(unsigned long *)data = vcpu->arch.gprs[rd];
++			break;
++		case stptrw_op:
++			run->mmio.len = 4;
++			*(unsigned int *)data = vcpu->arch.gprs[rd];
++			break;
++		default:
++			ret = EMULATE_FAIL;
++			break;
++		}
++	} else if (op8 < 0x30) {
++		/* st.b/h/w/d  process */
++		rd = inst.reg2i12_format.rd;
++		opcode = inst.reg2i12_format.opcode;
++		rd_val = vcpu->arch.gprs[rd];
++
++		switch (opcode) {
++		case std_op:
++			run->mmio.len = 8;
++			*(unsigned long *)data = rd_val;
++			break;
++		case stw_op:
++			run->mmio.len = 4;
++			*(unsigned int *)data = rd_val;
++			break;
++		case sth_op:
++			run->mmio.len = 2;
++			*(unsigned short *)data = rd_val;
++			break;
++		case stb_op:
++			run->mmio.len = 1;
++			*(unsigned char *)data = rd_val;
++			break;
++		default:
++			ret = EMULATE_FAIL;
++			break;
++		}
++	} else if (op8 == 0x38) {
++		/* stxb/h/w/d process */
++		rd = inst.reg3_format.rd;
++		opcode = inst.reg3_format.opcode;
++
++		switch (opcode) {
++		case stxb_op:
++			run->mmio.len = 1;
++			*(unsigned char *)data = vcpu->arch.gprs[rd];
++			break;
++		case stxh_op:
++			run->mmio.len = 2;
++			*(unsigned short *)data = vcpu->arch.gprs[rd];
++			break;
++		case stxw_op:
++			run->mmio.len = 4;
++			*(unsigned int *)data = vcpu->arch.gprs[rd];
++			break;
++		case stxd_op:
++			run->mmio.len = 8;
++			*(unsigned long *)data = vcpu->arch.gprs[rd];
++			break;
++		default:
++			ret = EMULATE_FAIL;
++			break;
++		}
++	} else
++		ret = EMULATE_FAIL;
++
++	if (ret == EMULATE_DO_MMIO) {
++		run->mmio.is_write = 1;
++		vcpu->mmio_needed = 1;
++		vcpu->mmio_is_write = 1;
 +	} else {
-+		/* process csrxchg */
-+		val = vcpu->arch.gprs[rd];
-+		csr_mask = vcpu->arch.gprs[rj];
-+		_kvm_emu_xchg_csr(vcpu, csrid, csr_mask, val);
++		vcpu->arch.pc = curr_pc;
++		kvm_err("Write not supporded inst=0x%08x @%lx BadVaddr:%#lx\n",
++			inst.word, vcpu->arch.pc, vcpu->arch.badv);
++		kvm_arch_vcpu_dump_regs(vcpu);
++		/* Rollback PC if emulation was unsuccessful */
 +	}
 +
-+	return EMULATE_DONE;
++	return ret;
++}
++
++int _kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst)
++{
++	unsigned int op8, opcode, rd;
++	struct kvm_run *run = vcpu->run;
++	int ret;
++
++	run->mmio.phys_addr = vcpu->arch.badv;
++	vcpu->mmio_needed = 2;	/* signed */
++	op8 = (inst.word >> 24) & 0xff;
++	ret = EMULATE_DO_MMIO;
++
++	if (op8 < 0x28) {
++		/* ldptr.w/d process */
++		rd = inst.reg2i14_format.rd;
++		opcode = inst.reg2i14_format.opcode;
++
++		switch (opcode) {
++		case ldptrd_op:
++			run->mmio.len = 8;
++			break;
++		case ldptrw_op:
++			run->mmio.len = 4;
++			break;
++		default:
++			break;
++		}
++	} else if (op8 < 0x2f) {
++		/* ld.b/h/w/d, ld.bu/hu/wu process */
++		rd = inst.reg2i12_format.rd;
++		opcode = inst.reg2i12_format.opcode;
++
++		switch (opcode) {
++		case ldd_op:
++			run->mmio.len = 8;
++			break;
++		case ldwu_op:
++			vcpu->mmio_needed = 1;	/* unsigned */
++			run->mmio.len = 4;
++			break;
++		case ldw_op:
++			run->mmio.len = 4;
++			break;
++		case ldhu_op:
++			vcpu->mmio_needed = 1;	/* unsigned */
++			run->mmio.len = 2;
++			break;
++		case ldh_op:
++			run->mmio.len = 2;
++			break;
++		case ldbu_op:
++			vcpu->mmio_needed = 1;	/* unsigned */
++			run->mmio.len = 1;
++			break;
++		case ldb_op:
++			run->mmio.len = 1;
++			break;
++		default:
++			ret = EMULATE_FAIL;
++			break;
++		}
++	} else if (op8 == 0x38) {
++		/* ldxb/h/w/d, ldxb/h/wu, ldgtb/h/w/d, ldleb/h/w/d process */
++		rd = inst.reg3_format.rd;
++		opcode = inst.reg3_format.opcode;
++
++		switch (opcode) {
++		case ldxb_op:
++			run->mmio.len = 1;
++			break;
++		case ldxbu_op:
++			run->mmio.len = 1;
++			vcpu->mmio_needed = 1;	/* unsigned */
++			break;
++		case ldxh_op:
++			run->mmio.len = 2;
++			break;
++		case ldxhu_op:
++			run->mmio.len = 2;
++			vcpu->mmio_needed = 1;	/* unsigned */
++			break;
++		case ldxw_op:
++			run->mmio.len = 4;
++			break;
++		case ldxwu_op:
++			run->mmio.len = 4;
++			vcpu->mmio_needed = 1;	/* unsigned */
++			break;
++		case ldxd_op:
++			run->mmio.len = 8;
++			break;
++		default:
++			ret = EMULATE_FAIL;
++			break;
++		}
++	} else
++		ret = EMULATE_FAIL;
++
++	if (ret == EMULATE_DO_MMIO) {
++		/* Set for _kvm_complete_mmio_read use */
++		vcpu->arch.io_gpr = rd;
++		run->mmio.is_write = 0;
++		vcpu->mmio_is_write = 0;
++	} else {
++		kvm_err("Load not supporded inst=0x%08x @%lx BadVaddr:%#lx\n",
++			inst.word, vcpu->arch.pc, vcpu->arch.badv);
++		kvm_arch_vcpu_dump_regs(vcpu);
++		vcpu->mmio_needed = 0;
++	}
++	return ret;
++}
++
++int _kvm_complete_mmio_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
++{
++	unsigned long *gpr = &vcpu->arch.gprs[vcpu->arch.io_gpr];
++	enum emulation_result er = EMULATE_DONE;
++
++	/* update with new PC */
++	update_pc(&vcpu->arch);
++	switch (run->mmio.len) {
++	case 8:
++		*gpr = *(s64 *)run->mmio.data;
++		break;
++	case 4:
++		if (vcpu->mmio_needed == 2)
++			*gpr = *(int *)run->mmio.data;
++		else
++			*gpr = *(unsigned int *)run->mmio.data;
++		break;
++	case 2:
++		if (vcpu->mmio_needed == 2)
++			*gpr = *(short *) run->mmio.data;
++		else
++			*gpr = *(unsigned short *)run->mmio.data;
++
++		break;
++	case 1:
++		if (vcpu->mmio_needed == 2)
++			*gpr = *(char *) run->mmio.data;
++		else
++			*gpr = *(unsigned char *) run->mmio.data;
++		break;
++	default:
++		kvm_err("Bad MMIO length: %d,addr is 0x%lx",
++				run->mmio.len, vcpu->arch.badv);
++		er = EMULATE_FAIL;
++		break;
++	}
++
++	return er;
++}
++
+ static int _kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
+ {
+ 	enum emulation_result er = EMULATE_DONE;
+@@ -317,3 +576,52 @@ static int _kvm_handle_gspr(struct kvm_vcpu *vcpu)
+ 	}
+ 	return ret;
+ }
++
++static int _kvm_handle_mmu_fault(struct kvm_vcpu *vcpu, bool write)
++{
++	struct kvm_run *run = vcpu->run;
++	unsigned long badv = vcpu->arch.badv;
++	larch_inst inst;
++	enum emulation_result er = EMULATE_DONE;
++	int ret;
++
++	ret = kvm_handle_mm_fault(vcpu, badv, write);
++	if (ret) {
++		/* Treat as MMIO */
++		inst.word = vcpu->arch.badi;
++		if (write) {
++			er = _kvm_emu_mmio_write(vcpu, inst);
++		} else {
++			/* A code fetch fault doesn't count as an MMIO */
++			if (kvm_is_ifetch_fault(&vcpu->arch)) {
++				kvm_err("%s ifetch error addr:%lx\n", __func__, badv);
++				run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++				return RESUME_HOST;
++			}
++
++			er = _kvm_emu_mmio_read(vcpu, inst);
++		}
++	}
++
++	if (er == EMULATE_DONE) {
++		ret = RESUME_GUEST;
++	} else if (er == EMULATE_DO_MMIO) {
++		run->exit_reason = KVM_EXIT_MMIO;
++		ret = RESUME_HOST;
++	} else {
++		run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++		ret = RESUME_HOST;
++	}
++
++	return ret;
++}
++
++static int _kvm_handle_write_fault(struct kvm_vcpu *vcpu)
++{
++	return _kvm_handle_mmu_fault(vcpu, true);
++}
++
++static int _kvm_handle_read_fault(struct kvm_vcpu *vcpu)
++{
++	return _kvm_handle_mmu_fault(vcpu, false);
 +}
 -- 
 2.31.1
