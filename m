@@ -1,108 +1,95 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FB7C5F2
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 19:48:53 +0000 (UTC)
-Received: by mail-pg1-f180.google.com with SMTP id c29so6890005pgm.5
-        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 11:48:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3KPvoJ4GnlMgsohhv5ZFTkjPNgvE0397TI0CYAnCxqM=;
-        b=Gr6T/uMmQW0P2TPA5kU2B0SezfYIPng0GmMu1nbsnL7n4Qhw9RF68MIXO9T2lIb4Vd
-         9XqzWMo3zWupmo7DDnQIRZvSJhGTc3cJrOSj6qnw7ZLFMuv1jhehz7SDmTyxss5IvAuF
-         ITBMuNHAK1NOe9nMNVZ11QjpI/ucBxZuVeSuDtnc42j7aN5Y3/LFY0jJey9dm6rJdUJ4
-         LHKBtyEUPuxrQMMdOfkgTlii7etUm1Jsa4u0tgyMoqTav4keZsI205xjLS15k/6dNP48
-         pxdBRqWKGSlZs5JtldCGgNcu4SmZfcR6VtsRIgsyLA6/xT3/Y75dtU4bMody4IfGBQxC
-         Gv8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3KPvoJ4GnlMgsohhv5ZFTkjPNgvE0397TI0CYAnCxqM=;
-        b=kO4ZEyOKLy8cBxBl4WLzoNIgHtruoRl/PLtrEJ9lWssNFvB0zr4QvclyYYzaYeysKX
-         O/o8fOhoipFzLGkOc9IvEr8+ayMGGPfh/Om4Zcb89wmCulQuepkC9uSKQZplZxg60a0G
-         n1i6oV9MrSJlwr7dK9acUD9wA2pEORRAEjcqxFVDNsRAeZQYX9cI/A/dpmA8CDwOvqBO
-         o74+7BWT8cQpXfDg+2twC4BkU1Eq7WrmIzJFPIfiUMeeoQ253zkL2arQ89UsFNXXOqwC
-         Gg3pnnw/d38YwrL0WrgKiLes7X+JmAexMOIzT7qbYCW8/sC5GIZPhesiekPLBaLVeJaM
-         A7zA==
-X-Gm-Message-State: AO0yUKXJfis7/d67umkYCbhRKZLImG0I4EzPCNMsTGCiCgdC9Hj9fr2H
-	wfzOHqE0FSo27OScqrbpyBLHCB36rlprkSacsyc=
-X-Google-Smtp-Source: AK7set/RjysGRw6Tb1OUrwUKy/GM2o6xSEOZ9Hy3VBjfC8/RJ69CUMocJn0vWTmElSm33m/BGVWvbyqYG1s66BcSQYs=
-X-Received: by 2002:aa7:9591:0:b0:5a8:65e5:b1ba with SMTP id
- z17-20020aa79591000000b005a865e5b1bamr740284pfj.29.1676404133096; Tue, 14 Feb
- 2023 11:48:53 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FFCC5F7
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 20:19:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40F00C433EF;
+	Tue, 14 Feb 2023 20:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1676405952;
+	bh=8/V8zQrKDfVgeKbs27WthihxgwdivBHQ1xvEeA6uoYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vQOpB4jZU06j0E1MKDDJZEPPNRmXS0/cOAjGFTxoXLPrgQIK/B47hTb0QFcKIneZb
+	 s0jPY923NwwG0EAaHw8yq2VeY+rnIZejt5UaWx/A6Novye6lAoPweaDLN/vVDTfV4/
+	 z2wbU080F9o3lsW1XlbaHeONXQOQPrvD/SUfEbdGlUuV0/0zX3LoW10/MVrsarzBdE
+	 ceX7Oa5FeZeJLYpScL4JzHvW13XbOGzyYkvzihDtHpZE/AnlwkFrJ1ZK6bjfdTEzD6
+	 0YVc817WUB5hgfgY4gpdM1zFQ3vDBu3uys4X8js6W3ZOQyDxWfawx8vYr8MN57D9M7
+	 IlAUpkSGii2pg==
+Date: Tue, 14 Feb 2023 12:19:09 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Max Filippov <jcmvbkbc@gmail.com>
+Cc: juri.lelli@redhat.com, dalias@libc.org, linux-ia64@vger.kernel.org,
+	linux-sh@vger.kernel.org, peterz@infradead.org,
+	catalin.marinas@arm.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org,
+	bsegall@google.com, guoren@kernel.org, hpa@zytor.com,
+	sparclinux@vger.kernel.org, kernel@xen0n.name, will@kernel.org,
+	vschneid@redhat.com, f.fainelli@gmail.com,
+	vincent.guittot@linaro.org, ysato@users.sourceforge.jp,
+	chenhuacai@kernel.org, linux@armlinux.org.uk,
+	linux-csky@vger.kernel.org, mingo@redhat.com,
+	bcm-kernel-feedback-list@broadcom.com, mgorman@suse.de,
+	mattst88@gmail.com, linux-xtensa@linux-xtensa.org,
+	paulmck@kernel.org, richard.henderson@linaro.org, npiggin@gmail.com,
+	ink@jurassic.park.msu.ru, rostedt@goodmis.org,
+	loongarch@lists.linux.dev, tglx@linutronix.de,
+	dietmar.eggemann@arm.com, linux-arm-kernel@lists.infradead.org,
+	jgross@suse.com, chris@zankel.net, tsbogend@alpha.franken.de,
+	Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+	bristot@redhat.com, linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org, bp@alien8.de,
+	linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
+Subject: Re: [PATCH v2 19/24] xtensa/cpu: Make sure cpu_die() doesn't return
+Message-ID: <20230214201909.flqc3g3njnbl5hun@treble>
+References: <cover.1676358308.git.jpoimboe@kernel.org>
+ <cca346b5c87693499e630291d78fb0bf12c24290.1676358308.git.jpoimboe@kernel.org>
+ <1b4afd82-83cb-0060-7cab-8e16d2e69ff9@linaro.org>
+ <20230214182322.r5tyeowxzloiuh72@treble>
+ <CAMo8BfLzV0Oe_i-QrMzE-BE028s6GNvOd827N5+tteELidjpvA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1676358308.git.jpoimboe@kernel.org> <cca346b5c87693499e630291d78fb0bf12c24290.1676358308.git.jpoimboe@kernel.org>
- <1b4afd82-83cb-0060-7cab-8e16d2e69ff9@linaro.org> <20230214182322.r5tyeowxzloiuh72@treble>
-In-Reply-To: <20230214182322.r5tyeowxzloiuh72@treble>
-From: Max Filippov <jcmvbkbc@gmail.com>
-Date: Tue, 14 Feb 2023 11:48:41 -0800
-Message-ID: <CAMo8BfLzV0Oe_i-QrMzE-BE028s6GNvOd827N5+tteELidjpvA@mail.gmail.com>
-Subject: Re: [PATCH v2 19/24] xtensa/cpu: Make sure cpu_die() doesn't return
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>, 
-	linux-kernel@vger.kernel.org, jgross@suse.com, richard.henderson@linaro.org, 
-	ink@jurassic.park.msu.ru, mattst88@gmail.com, linux-alpha@vger.kernel.org, 
-	linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, 
-	catalin.marinas@arm.com, will@kernel.org, guoren@kernel.org, 
-	linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org, chenhuacai@kernel.org, 
-	kernel@xen0n.name, loongarch@lists.linux.dev, f.fainelli@gmail.com, 
-	bcm-kernel-feedback-list@broadcom.com, tsbogend@alpha.franken.de, 
-	linux-mips@vger.kernel.org, jiaxun.yang@flygoat.com, mpe@ellerman.id.au, 
-	npiggin@gmail.com, christophe.leroy@csgroup.eu, linuxppc-dev@lists.ozlabs.org, 
-	ysato@users.sourceforge.jp, dalias@libc.org, linux-sh@vger.kernel.org, 
-	davem@davemloft.net, sparclinux@vger.kernel.org, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, chris@zankel.net, linux-xtensa@linux-xtensa.org, 
-	peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, paulmck@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMo8BfLzV0Oe_i-QrMzE-BE028s6GNvOd827N5+tteELidjpvA@mail.gmail.com>
 
-On Tue, Feb 14, 2023 at 10:23 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote=
-:
-> On Tue, Feb 14, 2023 at 08:55:32AM +0100, Philippe Mathieu-Daud=C3=A9 wro=
-te:
-> > Can you update the documentation along? Currently we have:
+On Tue, Feb 14, 2023 at 11:48:41AM -0800, Max Filippov wrote:
+> On Tue, Feb 14, 2023 at 10:23 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> > On Tue, Feb 14, 2023 at 08:55:32AM +0100, Philippe Mathieu-Daudé wrote:
+> > > Can you update the documentation along? Currently we have:
+> > >
+> > >   /*
+> > >    * Called from the idle thread for the CPU which has been shutdown.
+> > >    *
+> > >    * Note that we disable IRQs here, but do not re-enable them
+> > >    * before returning to the caller. This is also the behaviour
+> > >    * of the other hotplug-cpu capable cores, so presumably coming
+> > >    * out of idle fixes this.
+> > >    */
 > >
-> >   /*
-> >    * Called from the idle thread for the CPU which has been shutdown.
-> >    *
-> >    * Note that we disable IRQs here, but do not re-enable them
-> >    * before returning to the caller. This is also the behaviour
-> >    * of the other hotplug-cpu capable cores, so presumably coming
-> >    * out of idle fixes this.
-> >    */
->
-> void __ref cpu_die(void)
-> {
->         idle_task_exit();
->         local_irq_disable();
->         __asm__ __volatile__(
->                         "       movi    a2, cpu_restart\n"
->                         "       jx      a2\n");
->
->         BUG();
-> }
->
-> Hm, not only is the comment wrong, but it seems to be branching to
-> cpu_restart?  That doesn't seem right at all.
+> > void __ref cpu_die(void)
+> > {
+> >         idle_task_exit();
+> >         local_irq_disable();
+> >         __asm__ __volatile__(
+> >                         "       movi    a2, cpu_restart\n"
+> >                         "       jx      a2\n");
+> >
+> >         BUG();
+> > }
+> >
+> > Hm, not only is the comment wrong, but it seems to be branching to
+> > cpu_restart?  That doesn't seem right at all.
+> 
+> Perhaps the name is a bit misleading. The CPU that enters 'cpu_restart'
+> loops there until a call to 'boot_secondary' releases it, after which it goes
+> to '_startup'. So it is a restart, but not immediate.
 
-Perhaps the name is a bit misleading. The CPU that enters 'cpu_restart'
-loops there until a call to 'boot_secondary' releases it, after which it go=
-es
-to '_startup'. So it is a restart, but not immediate.
+Ah, I see.  That sounds similar to what Xen does.
 
---=20
-Thanks.
--- Max
+-- 
+Josh
