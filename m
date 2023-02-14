@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B2C2CAB
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:07:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4AC7C433AA;
-	Tue, 14 Feb 2023 07:07:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C06E2CAB
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:07:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFFFFC433EF;
+	Tue, 14 Feb 2023 07:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1676358434;
-	bh=D1LUoA9CXZXsUzjzdlL9Bm6VbDUOTXL6qHw2u/NeOks=;
+	s=k20201202; t=1676358436;
+	bh=Ps4PGBv5yPXgtfxfiozPFQBkOC0Om6bfqHZoaR0a8Wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tUPSKG32HeoUCaOwBqAbfzbtqzgHjEbcGBaE7+nOvdmvAM7y6sjCfuAxrGE/4DQIt
-	 QH91rW2rmrkUZKNGHLdfWY4XgxUP3q4Vbi89ZxDv5Z53hCbFwD/HoI0itn8umcp7zd
-	 RO1BgsyKfF+AmWkCuaRz60jhPAQ3thpP86qkBSYIYmcMJLhiCNGhvBk3KB+CqCgBNS
-	 IADaxy26ZmuVaW+f5LGai7QJ7wkOBu1+2sVQWEQpeUuans/o+A2obrVfVyHv3nbjp5
-	 ovm3K37rOQZ/jfwh28veu79x5ix2ETxdaBjyHzZ/jKVQT/SKpvH9Os+fLy+wdjLWvv
-	 iAHgPTcY4MX+g==
+	b=MDsB0lHraBham/iBQwdl/0Ii9dk8Fs9DMdBLbIn4m+kNU0Ocm8Gn9vAEo2FfPFAGg
+	 MXid5BhOlSnx6jtD07OvEM0AQjNL6xK96ztsfJaaJbji01ahTN77Njrk8qiVs4WrQZ
+	 RGqCdA/2a/guY2gP+hj7f+21EdwRYt7sXIbtaE1Ukcp1q+Gh6DgkQ64wn1A5vJLc+V
+	 odxmo+I5tHChoineV/Y+LwKEiWgmUKi/aJU+aQ/l6vUIO1+ZQ8XYX80Bv/mo2ZVL6d
+	 4DsM/ppaCL0pPFKUsMcO3kYD7KJFpXSTX3GxGujVjrt5tnDm1VdYU8uBZ+R1xQzCB4
+	 rNYx73prqIL/A==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: jgross@suse.com,
@@ -65,9 +65,9 @@ Cc: jgross@suse.com,
 	bristot@redhat.com,
 	vschneid@redhat.com,
 	paulmck@kernel.org
-Subject: [PATCH v2 14/24] sh/cpu: Mark play_dead() __noreturn
-Date: Mon, 13 Feb 2023 23:05:48 -0800
-Message-Id: <03549a74fad9f73576d57e6fc0b5102322f9cff4.1676358308.git.jpoimboe@kernel.org>
+Subject: [PATCH v2 15/24] sh/cpu: Expose arch_cpu_idle_dead()'s prototype definition
+Date: Mon, 13 Feb 2023 23:05:49 -0800
+Message-Id: <3d9661e97828fb464a48d4becf18f12604831903.1676358308.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <cover.1676358308.git.jpoimboe@kernel.org>
 References: <cover.1676358308.git.jpoimboe@kernel.org>
@@ -80,36 +80,26 @@ MIME-Version: 1.0
 Content-type: text/plain
 Content-Transfer-Encoding: 8bit
 
-play_dead() doesn't return.  Annotate it as such.  By extension this
-also makes arch_cpu_idle_dead() noreturn.
+Include <linux/cpu.h> to make sure arch_cpu_idle_dead() matches its
+prototype going forward.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/sh/include/asm/smp-ops.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/sh/kernel/idle.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/sh/include/asm/smp-ops.h b/arch/sh/include/asm/smp-ops.h
-index 63866b1595a0..97331fcb7b85 100644
---- a/arch/sh/include/asm/smp-ops.h
-+++ b/arch/sh/include/asm/smp-ops.h
-@@ -24,7 +24,7 @@ static inline void plat_smp_setup(void)
- 	mp_ops->smp_setup();
- }
- 
--static inline void play_dead(void)
-+static inline void __noreturn play_dead(void)
- {
- 	mp_ops->play_dead();
- 	BUG();
-@@ -43,7 +43,7 @@ static inline void register_smp_ops(struct plat_smp_ops *ops)
- {
- }
- 
--static inline void play_dead(void)
-+static inline void __noreturn play_dead(void)
- {
- 	BUG();
- }
+diff --git a/arch/sh/kernel/idle.c b/arch/sh/kernel/idle.c
+index 3418c40f0099..114f0c4abeac 100644
+--- a/arch/sh/kernel/idle.c
++++ b/arch/sh/kernel/idle.c
+@@ -4,6 +4,7 @@
+  *
+  *  Copyright (C) 2002 - 2009  Paul Mundt
+  */
++#include <linux/cpu.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/mm.h>
 -- 
 2.39.1
 
