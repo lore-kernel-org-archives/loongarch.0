@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8E107E
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 02:56:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D65F61C26
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 02:56:57 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Axrtp3+OpjglcAAA--.1090S3;
-	Tue, 14 Feb 2023 10:56:55 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cxf9t4+OpjllcAAA--.1141S3;
+	Tue, 14 Feb 2023 10:56:56 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axeb1w+OpjmZwyAA--.28802S15;
-	Tue, 14 Feb 2023 10:56:54 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axeb1w+OpjmZwyAA--.28802S18;
+	Tue, 14 Feb 2023 10:56:55 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -18,9 +18,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Jens Axboe <axboe@kernel.dk>,
 	Mark Brown <broonie@kernel.org>,
 	Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH v1 13/24] LoongArch: KVM: Implement vcpu timer operations
-Date: Tue, 14 Feb 2023 10:56:37 +0800
-Message-Id: <20230214025648.1898508-14-zhaotianrui@loongson.cn>
+Subject: [PATCH v1 16/24] LoongArch: KVM: Implement handle iocsr exception
+Date: Tue, 14 Feb 2023 10:56:40 +0800
+Message-Id: <20230214025648.1898508-17-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
 References: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
@@ -31,11 +31,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axeb1w+OpjmZwyAA--.28802S15
+X-CM-TRANSID:AQAAf8Axeb1w+OpjmZwyAA--.28802S18
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxtw1UCF1fuF43ArykXw47Jwb_yoW3Zw1xpr
-	WIkryIqr48Xryqgwn3AFs0vrn8W3yrKw17Gry7J3ySyrnxJ3s8XF40gryDJFZxGFyIvF1S
-	vryrAwn8Ar4kA3DanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWFW5XFyDGr4xCry7trWDArb_yoWrJryDpa
+	yUu34ktrW8Ww1ftwsxJFs7Xr1aqF48Gr9rJFZxJw4rurW2ya45Jr4vyrnFvF98K39xGr4I
+	vw1fJryxuF1qy3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -50,289 +50,155 @@ X-Coremail-Antispam: 1Uk129KBjvJXoWxtw1UCF1fuF43ArykXw47Jwb_yoW3Zw1xpr
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
 	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement loongarch vcpu timer operations such as init kvm timer,
-require kvm timer, save kvm timer and restore kvm timer. When
-vcpu exit, we use kvm soft timer to emulate hardware timer. If
-timeout happens, the vcpu timer interrupt will be set and it is
-going to be handled at vcpu next entrance.
+Implement kvm handle vcpu iocsr exception, setting the iocsr info into
+vcpu_run and return to user space to handle it.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/timer.c | 266 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 266 insertions(+)
- create mode 100644 arch/loongarch/kvm/timer.c
+ arch/loongarch/include/asm/inst.h | 16 ++++++
+ arch/loongarch/kvm/exit.c         | 92 +++++++++++++++++++++++++++++++
+ 2 files changed, 108 insertions(+)
 
-diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
-new file mode 100644
-index 000000000..2c7677248
---- /dev/null
-+++ b/arch/loongarch/kvm/timer.c
-@@ -0,0 +1,266 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index 7eedd83fd..8ed137814 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -50,6 +50,14 @@ enum reg2_op {
+ 	revbd_op	= 0x0f,
+ 	revh2w_op	= 0x10,
+ 	revhd_op	= 0x11,
++	iocsrrdb_op	= 0x19200,
++	iocsrrdh_op	= 0x19201,
++	iocsrrdw_op	= 0x19202,
++	iocsrrdd_op	= 0x19203,
++	iocsrwrb_op	= 0x19204,
++	iocsrwrh_op	= 0x19205,
++	iocsrwrw_op	= 0x19206,
++	iocsrwrd_op	= 0x19207,
+ };
+ 
+ enum reg2i5_op {
+@@ -261,6 +269,13 @@ struct reg3sa2_format {
+ 	unsigned int opcode : 15;
+ };
+ 
++struct reg2csr_format {
++	unsigned int rd : 5;
++	unsigned int rj : 5;
++	unsigned int csr : 14;
++	unsigned int opcode : 8;
++};
 +
-+#include <linux/kvm_host.h>
-+#include <asm/kvm_csr.h>
-+#include <asm/kvm_vcpu.h>
+ union loongarch_instruction {
+ 	unsigned int word;
+ 	struct reg0i26_format	reg0i26_format;
+@@ -275,6 +290,7 @@ union loongarch_instruction {
+ 	struct reg2bstrd_format	reg2bstrd_format;
+ 	struct reg3_format	reg3_format;
+ 	struct reg3sa2_format	reg3sa2_format;
++	struct reg2csr_format	reg2csr_format;
+ };
+ 
+ #define LOONGARCH_INSN_SIZE	sizeof(union loongarch_instruction)
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index dc37827d9..f02e2b940 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -99,3 +99,95 @@ static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
+ 
+ 	return EMULATE_DONE;
+ }
 +
-+/* low level hrtimer wake routine */
-+enum hrtimer_restart kvm_swtimer_wakeup(struct hrtimer *timer)
++int _kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu)
 +{
-+	struct kvm_vcpu *vcpu;
++	u32 rd, rj, opcode;
++	u32 addr;
++	unsigned long val;
++	int ret;
 +
-+	vcpu = container_of(timer, struct kvm_vcpu, arch.swtimer);
-+	_kvm_queue_irq(vcpu, LARCH_INT_TIMER);
-+	rcuwait_wake_up(&vcpu->wait);
-+	return kvm_count_timeout(vcpu);
-+}
++	/*
++	 * Each IOCSR with different opcode
++	 */
++	rd = inst.reg2_format.rd;
++	rj = inst.reg2_format.rj;
++	opcode = inst.reg2_format.opcode;
++	addr = vcpu->arch.gprs[rj];
++	ret = EMULATE_DO_IOCSR;
++	run->iocsr_io.phys_addr = addr;
++	run->iocsr_io.is_write = 0;
 +
-+/*
-+ * ktime_to_tick() - Scale ktime_t to a 64-bit stable timer.
-+ *
-+ * Caches the dynamic nanosecond bias in vcpu->arch.timer_dyn_bias.
-+ */
-+static unsigned long ktime_to_tick(struct kvm_vcpu *vcpu, ktime_t now)
-+{
-+	s64 now_ns, periods;
-+	unsigned long delta;
-+
-+	now_ns = ktime_to_ns(now);
-+	delta = now_ns + vcpu->arch.timer_dyn_bias;
-+
-+	if (delta >= vcpu->arch.timer_period) {
-+		/* If delta is out of safe range the bias needs adjusting */
-+		periods = div64_s64(now_ns, vcpu->arch.timer_period);
-+		vcpu->arch.timer_dyn_bias = -periods * vcpu->arch.timer_period;
-+		/* Recalculate delta with new bias */
-+		delta = now_ns + vcpu->arch.timer_dyn_bias;
++	/* LoongArch is Little endian */
++	switch (opcode) {
++	case iocsrrdb_op:
++		run->iocsr_io.len = 1;
++		break;
++	case iocsrrdh_op:
++		run->iocsr_io.len = 2;
++		break;
++	case iocsrrdw_op:
++		run->iocsr_io.len = 4;
++		break;
++	case iocsrrdd_op:
++		run->iocsr_io.len = 8;
++		break;
++	case iocsrwrb_op:
++		run->iocsr_io.len = 1;
++		run->iocsr_io.is_write = 1;
++		break;
++	case iocsrwrh_op:
++		run->iocsr_io.len = 2;
++		run->iocsr_io.is_write = 1;
++		break;
++	case iocsrwrw_op:
++		run->iocsr_io.len = 4;
++		run->iocsr_io.is_write = 1;
++		break;
++	case iocsrwrd_op:
++		run->iocsr_io.len = 8;
++		run->iocsr_io.is_write = 1;
++		break;
++	default:
++		ret = EMULATE_FAIL;
++		break;
 +	}
 +
-+	/*
-+	 * We've ensured that:
-+	 *   delta < timer_period
-+	 */
-+	return div_u64(delta * vcpu->arch.timer_mhz, MNSEC_PER_SEC);
-+}
-+
-+/**
-+ * kvm_resume_hrtimer() - Resume hrtimer, updating expiry.
-+ * @vcpu:	Virtual CPU.
-+ * @now:	ktime at point of resume.
-+ * @val:	stable timer at point of resume.
-+ *
-+ * Resumes the timer and updates the timer expiry based on @now and @count.
-+ */
-+static void kvm_resume_hrtimer(struct kvm_vcpu *vcpu, ktime_t now,
-+				unsigned long val)
-+{
-+	unsigned long delta;
-+	ktime_t expire;
-+
-+	/* Stable timer decreased to zero or
-+	 * initialize to zero, set 4 second timer
-+	 */
-+	delta = div_u64(val * MNSEC_PER_SEC, vcpu->arch.timer_mhz);
-+	expire = ktime_add_ns(now, delta);
-+
-+	/* Update hrtimer to use new timeout */
-+	hrtimer_cancel(&vcpu->arch.swtimer);
-+	hrtimer_start(&vcpu->arch.swtimer, expire, HRTIMER_MODE_ABS_PINNED);
-+}
-+
-+/**
-+ * kvm_init_timer() - Initialise stable timer.
-+ * @vcpu:	Virtual CPU.
-+ * @timer_hz:	Frequency of timer.
-+ *
-+ * Initialise the timer to the specified frequency, zero it, and set it going if
-+ * it's enabled.
-+ */
-+void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long timer_hz)
-+{
-+	ktime_t now;
-+	unsigned long ticks;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+
-+	ticks = (unsigned long)MNSEC_PER_SEC * CSR_TCFG_VAL;
-+	vcpu->arch.timer_mhz = timer_hz >> 20;
-+	vcpu->arch.timer_period = div_u64(ticks, vcpu->arch.timer_mhz);
-+	vcpu->arch.timer_dyn_bias = 0;
-+
-+	/* Starting at 0 */
-+	ticks = 0;
-+	now = ktime_get();
-+	vcpu->arch.timer_bias = ticks - ktime_to_tick(vcpu, now);
-+	vcpu->arch.timer_bias &= CSR_TCFG_VAL;
-+	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_TVAL, ticks);
-+}
-+
-+/**
-+ * kvm_count_timeout() - Push timer forward on timeout.
-+ * @vcpu:	Virtual CPU.
-+ *
-+ * Handle an hrtimer event by push the hrtimer forward a period.
-+ *
-+ * Returns:	The hrtimer_restart value to return to the hrtimer subsystem.
-+ */
-+enum hrtimer_restart kvm_count_timeout(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long cfg;
-+
-+	/* Add the Count period to the current expiry time */
-+	cfg = kvm_read_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_TCFG);
-+	if (cfg & CSR_TCFG_PERIOD) {
-+		hrtimer_add_expires_ns(&vcpu->arch.swtimer, cfg & CSR_TCFG_VAL);
-+		return HRTIMER_RESTART;
-+	} else
-+		return HRTIMER_NORESTART;
-+}
-+
-+/*
-+ * kvm_restore_timer() - Restore timer state.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Restore soft timer state from saved context.
-+ */
-+void kvm_restore_timer(struct kvm_vcpu *vcpu)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	ktime_t saved_ktime, now;
-+	unsigned long val, new, delta;
-+	int expired = 0;
-+	unsigned long cfg;
-+
-+	/*
-+	 * Set guest stable timer cfg csr
-+	 */
-+	cfg = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TCFG);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	if (!(cfg & CSR_TCFG_EN)) {
-+		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TCFG);
-+		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TVAL);
-+		return;
-+	}
-+
-+	now = ktime_get();
-+	saved_ktime = vcpu->arch.stable_ktime_saved;
-+	val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TVAL);
-+
-+	/*hrtimer not expire */
-+	delta = ktime_to_tick(vcpu, ktime_sub(now, saved_ktime));
-+	if (delta >= val) {
-+		expired = 1;
-+		if (cfg & CSR_TCFG_PERIOD)
-+			new = (delta - val) % (cfg & CSR_TCFG_VAL);
-+		else
-+			new = 1;
-+	} else
-+		new = val - delta;
-+
-+	new &= CSR_TCFG_VAL;
-+	write_gcsr_timercfg(cfg);
-+	write_gcsr_timertick(new);
-+	if (expired)
-+		_kvm_queue_irq(vcpu, LARCH_INT_TIMER);
-+}
-+
-+/*
-+ * kvm_acquire_timer() - Switch to hard timer state.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Restore hard timer state on top of existing soft timer state if possible.
-+ *
-+ * Since hard timer won't remain active over preemption, preemption should be
-+ * disabled by the caller.
-+ */
-+void kvm_acquire_timer(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long flags, guestcfg;
-+
-+	guestcfg = read_csr_gcfg();
-+	if (!(guestcfg & CSR_GCFG_TIT))
-+		return;
-+
-+	/* enable guest access to hard timer */
-+	write_csr_gcfg(guestcfg & ~CSR_GCFG_TIT);
-+
-+	/*
-+	 * Freeze the soft-timer and sync the guest stable timer with it. We do
-+	 * this with interrupts disabled to avoid latency.
-+	 */
-+	local_irq_save(flags);
-+	hrtimer_cancel(&vcpu->arch.swtimer);
-+	local_irq_restore(flags);
-+}
-+
-+
-+/*
-+ * _kvm_save_timer() - Switch to software emulation of guest timer.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Save guest timer state and switch to software emulation of guest
-+ * timer. The hard timer must already be in use, so preemption should be
-+ * disabled.
-+ */
-+static ktime_t _kvm_save_timer(struct kvm_vcpu *vcpu, unsigned long *val)
-+{
-+	unsigned long end_time;
-+	ktime_t before_time;
-+
-+	before_time = ktime_get();
-+
-+	/*
-+	 * Record a final stable timer which we will transfer to the soft-timer.
-+	 */
-+	end_time = read_gcsr_timertick();
-+	*val = end_time;
-+
-+	kvm_resume_hrtimer(vcpu, before_time, end_time);
-+	return before_time;
-+}
-+
-+/*
-+ * kvm_save_timer() - Save guest timer state.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Save guest timer state and switch to soft guest timer if hard timer was in
-+ * use.
-+ */
-+void kvm_save_timer(struct kvm_vcpu *vcpu)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	unsigned long guestcfg, val;
-+	ktime_t save_ktime;
-+
-+	preempt_disable();
-+	guestcfg = read_csr_gcfg();
-+	if (!(guestcfg & CSR_GCFG_TIT)) {
-+		/* disable guest use of hard timer */
-+		write_csr_gcfg(guestcfg | CSR_GCFG_TIT);
-+
-+		/* save hard timer state */
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TCFG);
-+		if (kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TCFG) & CSR_TCFG_EN) {
-+			save_ktime = _kvm_save_timer(vcpu, &val);
-+			kvm_write_sw_gcsr(csr, LOONGARCH_CSR_TVAL, val);
-+			vcpu->arch.stable_ktime_saved = save_ktime;
-+			if (val == CSR_TCFG_VAL)
-+				_kvm_queue_irq(vcpu, LARCH_INT_TIMER);
-+		} else {
-+			kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TVAL);
++	if (ret == EMULATE_DO_IOCSR) {
++		if (run->iocsr_io.is_write) {
++			val = vcpu->arch.gprs[rd];
++			memcpy(run->iocsr_io.data, &val, run->iocsr_io.len);
 +		}
++		vcpu->arch.io_gpr = rd;
 +	}
 +
-+	/* save timer-related state to VCPU context */
-+	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	preempt_enable();
++	return ret;
 +}
 +
-+void kvm_reset_timer(struct kvm_vcpu *vcpu)
++int _kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
 +{
-+	write_gcsr_timercfg(0);
-+	kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_TCFG, 0);
-+	hrtimer_cancel(&vcpu->arch.swtimer);
++	unsigned long *gpr = &vcpu->arch.gprs[vcpu->arch.io_gpr];
++	enum emulation_result er = EMULATE_DONE;
++
++	switch (run->iocsr_io.len) {
++	case 8:
++		*gpr = *(s64 *)run->iocsr_io.data;
++		break;
++	case 4:
++		*gpr = *(int *)run->iocsr_io.data;
++		break;
++	case 2:
++		*gpr = *(short *)run->iocsr_io.data;
++		break;
++	case 1:
++		*gpr = *(char *) run->iocsr_io.data;
++		break;
++	default:
++		kvm_err("Bad IOCSR length: %d,addr is 0x%lx",
++				run->iocsr_io.len, vcpu->arch.badv);
++		er = EMULATE_FAIL;
++		break;
++	}
++
++	return er;
 +}
 -- 
 2.31.1
