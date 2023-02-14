@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DBFF1FD8
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 02:56:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A638C1FD1
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 02:56:58 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Dxmdl6+Opj01cAAA--.975S3;
-	Tue, 14 Feb 2023 10:56:58 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axeb1w+OpjmZwyAA--.28802S25;
+	by gateway (Coremail) with SMTP id _____8Cxjdp5+OpjulcAAA--.1156S3;
 	Tue, 14 Feb 2023 10:56:57 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axeb1w+OpjmZwyAA--.28802S22;
+	Tue, 14 Feb 2023 10:56:56 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -18,9 +18,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Jens Axboe <axboe@kernel.dk>,
 	Mark Brown <broonie@kernel.org>,
 	Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH v1 23/24] LoongArch: KVM: Implement probe virtualization when loongarch cpu init
-Date: Tue, 14 Feb 2023 10:56:47 +0800
-Message-Id: <20230214025648.1898508-24-zhaotianrui@loongson.cn>
+Subject: [PATCH v1 20/24] LoongArch: KVM: Implement handle fpu exception
+Date: Tue, 14 Feb 2023 10:56:44 +0800
+Message-Id: <20230214025648.1898508-21-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
 References: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
@@ -31,11 +31,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axeb1w+OpjmZwyAA--.28802S25
+X-CM-TRANSID:AQAAf8Axeb1w+OpjmZwyAA--.28802S22
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw1fCFWfZw1DJr47ZrW5KFg_yoW8tFy5pr
-	W2vFW3trWUKr92ga93Gr1agrnxtFWkKa129F47tayfAr4Ut3W5Xwn3C34UCFs7Zw4xAryr
-	Xrn7A3WvqF1DX3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7tF45ur4xuFW7KFWUtF47Arb_yoW8Gr18pF
+	WfZwnY9r48Wry7ta9Iy3Wqqr43CrZ5Kry7WrZFk345Zw4Uta4rXF48KrWvgFy5tr1rXa1S
+	qr13KFn8uF1UA3DanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -50,85 +50,49 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw1fCFWfZw1DJr47ZrW5KFg_yoW8tFy5pr
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
 	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement probe virtualization when loongarch cpu init, including guest
-gid info, guest fpu info, etc.
+Implement handle fpu exception, using kvm_own_fpu to enable fpu for
+guest.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kernel/cpu-probe.c | 53 +++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ arch/loongarch/kvm/exit.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index 3a3fce2d7..9c3483d9a 100644
---- a/arch/loongarch/kernel/cpu-probe.c
-+++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -176,6 +176,57 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
- 	}
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index 30e64ba72..89c90faa1 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -625,3 +625,30 @@ static int _kvm_handle_read_fault(struct kvm_vcpu *vcpu)
+ {
+ 	return _kvm_handle_mmu_fault(vcpu, false);
  }
- 
-+static inline void cpu_probe_guestinfo(struct cpuinfo_loongarch *c)
-+{
-+	unsigned long guestinfo;
 +
-+	guestinfo = read_csr_gstat();
-+	if (guestinfo & CSR_GSTAT_GIDBIT) {
-+		c->options |= LOONGARCH_CPU_GUESTID;
-+		write_csr_gstat(0);
++/**
++ * _kvm_handle_fpu_disabled() - Guest used fpu however it is disabled at host
++ * @vcpu:	Virtual CPU context.
++ *
++ * Handle when the guest attempts to use fpu which hasn't been allowed
++ * by the root context.
++ */
++static int _kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
++{
++	struct kvm_run *run = vcpu->run;
++
++	/*
++	 * If guest FPU not present, the FPU operation should have been
++	 * treated as a reserved instruction!
++	 * If FPU already in use, we shouldn't get this at all.
++	 */
++	if (WARN_ON(!_kvm_guest_has_fpu(&vcpu->arch) ||
++				vcpu->arch.aux_inuse & KVM_LARCH_FPU)) {
++		kvm_err("%s internal error\n", __func__);
++		run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++		return RESUME_HOST;
 +	}
++
++	kvm_own_fpu(vcpu);
++	return RESUME_GUEST;
 +}
-+
-+static inline void cpu_probe_lvz(struct cpuinfo_loongarch *c)
-+{
-+	unsigned long gcfg, gprcfg1;
-+
-+	cpu_probe_guestinfo(c);
-+
-+	c->guest.options |= LOONGARCH_CPU_FPU;
-+	c->guest.options_dyn |= LOONGARCH_CPU_FPU;
-+	c->guest.options_dyn |= LOONGARCH_CPU_PMP;
-+
-+	c->guest.ases |= LOONGARCH_CPU_LSX;
-+	c->guest.ases_dyn |= LOONGARCH_CPU_LSX;
-+	gprcfg1 = read_gcsr_prcfg1();
-+	c->guest.kscratch_mask = GENMASK((gprcfg1 & CSR_CONF1_KSNUM) - 1, 0);
-+
-+	gcfg = read_csr_gcfg();
-+	if (gcfg & CSR_GCFG_MATP_GUEST)
-+		c->guest_cfg |= BIT(0);
-+	if (gcfg & CSR_GCFG_MATP_ROOT)
-+		c->guest_cfg |= BIT(1);
-+	if (gcfg & CSR_GCFG_MATP_NEST)
-+		c->guest_cfg |= BIT(2);
-+	if (gcfg & CSR_GCFG_SITP)
-+		c->guest_cfg |= BIT(6);
-+	if (gcfg & CSR_GCFG_TITP)
-+		c->guest_cfg |= BIT(8);
-+	if (gcfg & CSR_GCFG_TOEP)
-+		c->guest_cfg |= BIT(10);
-+	if (gcfg & CSR_GCFG_TOPP)
-+		c->guest_cfg |= BIT(12);
-+	if (gcfg & CSR_GCFG_TORUP)
-+		c->guest_cfg |= BIT(14);
-+	if (gcfg & CSR_GCFG_GCIP_ALL)
-+		c->guest_cfg |= BIT(16);
-+	if (gcfg & CSR_GCFG_GCIP_HIT)
-+		c->guest_cfg |= BIT(17);
-+	if (gcfg & CSR_GCFG_GCIP_SECURE)
-+		c->guest_cfg |= BIT(18);
-+}
-+
- #define MAX_NAME_LEN	32
- #define VENDOR_OFFSET	0
- #define CPUNAME_OFFSET	9
-@@ -289,6 +340,8 @@ void cpu_probe(void)
- 	if (cpu == 0)
- 		__ua_limit = ~((1ull << cpu_vabits) - 1);
- #endif
-+	if (cpu_has_lvz)
-+		cpu_probe_lvz(c);
- 
- 	cpu_report();
- }
 -- 
 2.31.1
 
