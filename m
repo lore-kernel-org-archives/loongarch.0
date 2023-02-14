@@ -1,100 +1,113 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5487C
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 10:03:39 +0000 (UTC)
-Received: from relay8-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::228])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id C66FFD05FD
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 09:55:59 +0000 (UTC)
-Received: (Authenticated sender: alex@ghiti.fr)
-	by mail.gandi.net (Postfix) with ESMTPSA id AB0771BF20A;
-	Tue, 14 Feb 2023 09:55:43 +0000 (UTC)
-Message-ID: <0bf59207-838b-2a0b-a95e-925a6bbf1913@ghiti.fr>
-Date: Tue, 14 Feb 2023 10:55:43 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B7A10799
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 10:40:03 +0000 (UTC)
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.95)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1pRshz-000K86-Qj; Tue, 14 Feb 2023 11:38:47 +0100
+Received: from p5b13aa49.dip0.t-ipconnect.de ([91.19.170.73] helo=[192.168.178.81])
+          by inpost2.zedat.fu-berlin.de (Exim 4.95)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1pRshz-003Z8i-EF; Tue, 14 Feb 2023 11:38:47 +0100
+Message-ID: <6a420bb0e033562bc7f67cc8f218f994e0892d3b.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v3 10/24] sparc: Remove COMMAND_LINE_SIZE from uapi
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: WANG Xuerui <kernel@xen0n.name>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+ Alexandre Ghiti <alexghiti@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
+ <ink@jurassic.park.msu.ru>,  Matt Turner <mattst88@gmail.com>, Vineet Gupta
+ <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,  Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
+ <chenhuacai@kernel.org>,  Geert Uytterhoeven <geert@linux-m68k.org>, Michal
+ Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>, Helge
+ Deller <deller@gmx.de>,  Michael Ellerman <mpe@ellerman.id.au>, Nicholas
+ Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Paul Walmsley <paul.walmsley@sifive.com>,  Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Heiko Carstens
+ <hca@linux.ibm.com>,  Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Yoshinori
+ Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, "David S
+ . Miller" <davem@davemloft.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin"
+ <hpa@zytor.com>,  Chris Zankel <chris@zankel.net>, Max Filippov
+ <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, 
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org,  linux-xtensa@linux-xtensa.org,
+ linux-arch@vger.kernel.org
+Cc: Palmer Dabbelt <palmer@rivosinc.com>
+Date: Tue, 14 Feb 2023 11:38:45 +0100
+In-Reply-To: <f3db61bb-5c89-2724-769f-9d606f587f92@xen0n.name>
+References: <20230214074925.228106-1-alexghiti@rivosinc.com>
+	 <20230214074925.228106-11-alexghiti@rivosinc.com>
+	 <017f0b40-8021-8b3b-24d2-c70661b6b292@omp.ru>
+	 <f3db61bb-5c89-2724-769f-9d606f587f92@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: API for setting multiple PTEs at once
-Content-Language: en-US
-To: Matthew Wilcox <willy@infradead.org>, linux-arch@vger.kernel.org
-Cc: Yin Fengwei <fengwei.yin@intel.com>, linux-mm@kvack.org,
- linux-alpha@vger.kernel.org, linux-csky@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- Dinh Nguyen <dinguyen@kernel.org>, linux-parisc@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, openrisc@lists.librecores.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org
-References: <Y9wnr8SGfGGbi/bk@casper.infradead.org>
- <Y+K0O35jNNzxiXE6@casper.infradead.org>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <Y+K0O35jNNzxiXE6@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 91.19.170.73
 
-Hi Matthew,
+On Tue, 2023-02-14 at 16:59 +0800, WANG Xuerui wrote:
+> On 2023/2/14 16:50, Sergey Shtylyov wrote:
+> > On 2/14/23 10:49 AM, Alexandre Ghiti wrote:
+> >=20
+> > > From: Palmer Dabbelt <palmer@rivosinc.com>
+> > >=20
+> > > As far as I can tell this is not used by userspace and thus should no=
+t
+> > > be part of the user-visible API.
+> > >=20
+> > > Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+> > > ---
+> > >   arch/sparc/include/asm/setup.h      | 6 +++++-
+> > >   arch/sparc/include/uapi/asm/setup.h | 7 -------
+> > >   2 files changed, 5 insertions(+), 8 deletions(-)
+> > >=20
+> > > diff --git a/arch/sparc/include/asm/setup.h b/arch/sparc/include/asm/=
+setup.h
+> > > index 72205684e51e..d1384ed92547 100644
+> > > --- a/arch/sparc/include/asm/setup.h
+> > > +++ b/arch/sparc/include/asm/setup.h
+> > > @@ -7,7 +7,11 @@
+> > >  =20
+> > >   #include <linux/interrupt.h>
+> > >  =20
+> > > -#include <uapi/asm/setup.h>
+> > > +#if defined(__sparc__) && defined(__arch64__)
+> >=20
+> >     Mhm, I don't think these two can be #define'd simulaneously...
+>=20
+> I believe it's just a SPARC-ism [1] [2] that may look strange and be=20
+> easily confused for __aarch64__ (notice the extra 'a')...
 
-On 2/7/23 21:27, Matthew Wilcox wrote:
-> On Thu, Feb 02, 2023 at 09:14:23PM +0000, Matthew Wilcox wrote:
->> For those of you not subscribed, linux-mm is currently discussing
->> how best to handle page faults on large folios.  I simply made it work
->> when adding large folio support.  Now Yin Fengwei is working on
->> making it fast.
-> OK, here's an actual implementation:
->
-> https://lore.kernel.org/linux-mm/20230207194937.122543-3-willy@infradead.org/
->
-> It survives a run of xfstests.  If your architecture doesn't store its
-> PFNs at PAGE_SHIFT, you're going to want to implement your own set_ptes(),
-> or you'll see entirely the wrong pages mapped into userspace.  You may
-> also wish to implement set_ptes() if it can be done more efficiently
-> than __pte(pteval(pte) + PAGE_SIZE).
->
-> Architectures that implement things like flush_icache_page() and
-> update_mmu_cache() may want to propose batched versions of those.
-> That's alpha, csky, m68k, mips, nios2, parisc, sh,
-> arm, loongarch, openrisc, powerpc, riscv, sparc and xtensa.
-> Maintainers BCC'd, mailing lists CC'd.
->
-> I'm happy to collect implementations and submit them as part of a v6.
+Yep, that's correct. On 64-bit Linux/SPARC, gcc/clang define __sparc__ AND =
+__arch64__.
 
+Adrian
 
-Please find below the riscv implementation for set_ptes:
-
-diff --git a/arch/riscv/include/asm/pgtable.h 
-b/arch/riscv/include/asm/pgtable.h
-index ebee56d47003..10bf812776a4 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -463,6 +463,20 @@ static inline void set_pte_at(struct mm_struct *mm,
-         __set_pte_at(mm, addr, ptep, pteval);
-  }
-
-+#define set_ptes set_ptes
-+static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
-+                           pte_t *ptep, pte_t pte, unsigned int nr)
-+{
-+       for (;;) {
-+               set_pte_at(mm, addr, ptep, pte);
-+               if (--nr == 0)
-+                       break;
-+               ptep++;
-+               addr += PAGE_SIZE;
-+               pte = __pte(pte_val(pte) + (1 << _PAGE_PFN_SHIFT));
-+       }
-+}
-+
-  static inline void pte_clear(struct mm_struct *mm,
-         unsigned long addr, pte_t *ptep)
-  {
-
-
-Thanks,
-
-Alex
-
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
