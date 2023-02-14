@@ -1,43 +1,43 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2D23C02
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:58:13 +0000 (UTC)
-Received: by mail-wm1-f43.google.com with SMTP id o36so10375292wms.1
-        for <loongarch@lists.linux.dev>; Mon, 13 Feb 2023 23:58:13 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEC13C02
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:59:15 +0000 (UTC)
+Received: by mail-wr1-f44.google.com with SMTP id a2so14703049wrd.6
+        for <loongarch@lists.linux.dev>; Mon, 13 Feb 2023 23:59:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uKtnovAK57aTUQkxGFuVdZUCgYZPh93HJz6h/9KVrck=;
-        b=y2SxFP6uVSLNYz9fZvs3Zs4vhw4emYUflONQjIooXwDO5X6gb+wppeyUmN2kbvXFp3
-         gFadUXn2Cp6yqNx9BDGh77dMz5r+vX2Kj22jLhvWxa606s5pKuk33OrVMfmVGTSXH4Iw
-         +LoFIHTgDRFHVjoYg4ixCY3aHm67ODUPGfSc9P9eN6uKI9PTm52qHExgYzYPLnSr9J/q
-         tLNh+jZRCj6qrjKQvcjjvtKRt0/4/7bcAVMQ2ZOu61x7gveXSgs6wqdmp6NeNPWHUIIE
-         PPfyUfT5XwF4q0oq7T93YCkNxcwDBU0oXmgdg4Z+7bvc1OIW0EXOQFT6P/48RtxnrGAp
-         ooug==
+        bh=sKk4GN0spR9gtNWG0hZUgVWkUK+7Um33RqMXGa01caM=;
+        b=5mP6q9BM0qHn9ItmjYG+RAEsvlPcjV7W6jVv8m3uX6Xy8xX47dHXqzHeQe7TjqTIgD
+         XdTQ4cnNLsqCvrZ2I/lG623c4t+EyMZX0oCCn2FSvdSyqBnxHSzgs0fZG07Sz+fzhW9k
+         wcTpQ/rtBWqG579EawU5Q1Hl1pgPrnrUYqlA9iTGlPxxW88r3XpZcdpG1DpAhZWxL/7Y
+         jg6Podz4ehO6/h/Vuc3goKhWZ8oBqxvn53/Ru/S9ao0uNcA8foQScWbCR0TmDs2+3G5b
+         ayxaQ/GeBeBoCjGRs9sJRYCMA6Mo1hIpNscNciXeJfZuC+bbej7aWHI78NSYxMHnjPmH
+         6tYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uKtnovAK57aTUQkxGFuVdZUCgYZPh93HJz6h/9KVrck=;
-        b=jKK4vbYSHE+ygljO7ujzCpUBACz6yzuEj2TJFa8QC7TRTkAn4zyYDMC7dlSiFzrTmE
-         eEjzN4rNSif7X067z6wOhEM43j6QtEmY4rod/o2pGxExw9AWjEgE/yDUAguXIQez5srF
-         qOIts2nxyb2lvQykYKmuVoOzXzvm4HwYOeOHLxSTNyOU/RkGrfK8MedVndLgG27zrp7O
-         I2SWScneGKFejRTIUTa15qH81DVMcilfWHzFTj9Cc2qU+vqnz+Cw242OiTAEwZJiH3MY
-         WXaZVFnZ2CAJekOiZWJBEH2goVwH1HwURW0lL4CJgLiqYe8KP42G1W2NpclJUY4SlWoL
-         1G3w==
-X-Gm-Message-State: AO0yUKVIhFxbSSTzArYXrxVX8MoXeTtEuDxR3FBplvPbYvX6Xisvb79o
-	1x6NGbMzdwhIiTLwV/IZhYEX7g==
-X-Google-Smtp-Source: AK7set+dWzDjRt2XvGeZUMudd7QPyQQYQ9E3bJKbYtGRe7QDJdJALnxrxn/uZt6awC+8BUYrg5x21w==
-X-Received: by 2002:a05:600c:908:b0:3dd:e86e:8805 with SMTP id m8-20020a05600c090800b003dde86e8805mr1103960wmp.5.1676361491858;
-        Mon, 13 Feb 2023 23:58:11 -0800 (PST)
+        bh=sKk4GN0spR9gtNWG0hZUgVWkUK+7Um33RqMXGa01caM=;
+        b=jdBR0WbUoQPZQQAU9yBs+zONWK/QpVncXUqAfZvr31obWLgsu87XZeb6o30Ehsyx/0
+         BStQTwD0NS4rVrEXtYWILV8bxEsFwt1ak/6QLQ3lt/HapnywNR7zso/toPNr7xO48hKB
+         MEqsHMGxlh7xVkl43NPwoUIjFVeg5+RBoG7I6mKhywzWN0XE85MKgj4uG+19w3S/ougS
+         630FkqW5Ohexh8srTGM1ltPQ5yQG3ee3CdkzHe1cHazMCjNpnEuHetJINZo5Szs/MGEI
+         HX5DLY71JAAkxBgi7EgZOIaNfW1gXDSYWuvR1eTO0L25J7LThstdmFO+25JcwQfbJHEm
+         CoaA==
+X-Gm-Message-State: AO0yUKUPyi4RsQc8nwfXJ5X7wBesh5JU58FZn6OYjAwZZZqeVVc8bRZ/
+	x/H8YCb6N6ndGzFCzsWb9Vhzaw==
+X-Google-Smtp-Source: AK7set8lqeB9mVjVbFOfgyWnY8813vnjKKFmjbTcrsvjzmsHHkFtSxC/mHYd2secDiukidPqMYXitw==
+X-Received: by 2002:adf:fac4:0:b0:2c5:5357:60b8 with SMTP id a4-20020adffac4000000b002c5535760b8mr1023860wrs.48.1676361553556;
+        Mon, 13 Feb 2023 23:59:13 -0800 (PST)
 Received: from alex-rivos.ba.rivosinc.com (lfbn-lyo-1-450-160.w2-7.abo.wanadoo.fr. [2.7.42.160])
-        by smtp.gmail.com with ESMTPSA id l40-20020a05600c1d2800b003dd1b00bd9asm17999041wms.32.2023.02.13.23.58.10
+        by smtp.gmail.com with ESMTPSA id g17-20020a056000119100b002c54e26bca5sm7843497wrx.49.2023.02.13.23.59.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Feb 2023 23:58:11 -0800 (PST)
+        Mon, 13 Feb 2023 23:59:13 -0800 (PST)
 From: Alexandre Ghiti <alexghiti@rivosinc.com>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Richard Henderson <richard.henderson@linaro.org>,
@@ -95,9 +95,9 @@ To: Jonathan Corbet <corbet@lwn.net>,
 	linux-xtensa@linux-xtensa.org,
 	linux-arch@vger.kernel.org
 Cc: Palmer Dabbelt <palmer@rivosinc.com>
-Subject: [PATCH v3 08/24] parisc: Remove COMMAND_LINE_SIZE from uapi
-Date: Tue, 14 Feb 2023 08:49:09 +0100
-Message-Id: <20230214074925.228106-9-alexghiti@rivosinc.com>
+Subject: [PATCH v3 09/24] powerpc: Remove COMMAND_LINE_SIZE from uapi
+Date: Tue, 14 Feb 2023 08:49:10 +0100
+Message-Id: <20230214074925.228106-10-alexghiti@rivosinc.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230214074925.228106-1-alexghiti@rivosinc.com>
 References: <20230214074925.228106-1-alexghiti@rivosinc.com>
@@ -116,35 +116,34 @@ be part of the user-visible API.
 
 Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
 ---
- arch/parisc/include/asm/setup.h      | 7 +++++++
- arch/parisc/include/uapi/asm/setup.h | 2 --
- 2 files changed, 7 insertions(+), 2 deletions(-)
- create mode 100644 arch/parisc/include/asm/setup.h
+ arch/powerpc/include/asm/setup.h      | 2 +-
+ arch/powerpc/include/uapi/asm/setup.h | 2 --
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/parisc/include/asm/setup.h b/arch/parisc/include/asm/setup.h
-new file mode 100644
-index 000000000000..78b2f4ec7d65
---- /dev/null
-+++ b/arch/parisc/include/asm/setup.h
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _PARISC_SETUP_H
-+#define _PARISC_SETUP_H
-+
-+#define COMMAND_LINE_SIZE	1024
-+
-+#endif /* _PARISC_SETUP_H */
-diff --git a/arch/parisc/include/uapi/asm/setup.h b/arch/parisc/include/uapi/asm/setup.h
-index 78b2f4ec7d65..bfad89428e47 100644
---- a/arch/parisc/include/uapi/asm/setup.h
-+++ b/arch/parisc/include/uapi/asm/setup.h
-@@ -2,6 +2,4 @@
- #ifndef _PARISC_SETUP_H
- #define _PARISC_SETUP_H
+diff --git a/arch/powerpc/include/asm/setup.h b/arch/powerpc/include/asm/setup.h
+index e29e83f8a89c..31786d1db2ef 100644
+--- a/arch/powerpc/include/asm/setup.h
++++ b/arch/powerpc/include/asm/setup.h
+@@ -2,7 +2,7 @@
+ #ifndef _ASM_POWERPC_SETUP_H
+ #define _ASM_POWERPC_SETUP_H
  
--#define COMMAND_LINE_SIZE	1024
+-#include <uapi/asm/setup.h>
++#define COMMAND_LINE_SIZE	2048
+ 
+ #ifndef __ASSEMBLY__
+ extern void ppc_printk_progress(char *s, unsigned short hex);
+diff --git a/arch/powerpc/include/uapi/asm/setup.h b/arch/powerpc/include/uapi/asm/setup.h
+index c54940b09d06..f2ca747aa45b 100644
+--- a/arch/powerpc/include/uapi/asm/setup.h
++++ b/arch/powerpc/include/uapi/asm/setup.h
+@@ -2,6 +2,4 @@
+ #ifndef _UAPI_ASM_POWERPC_SETUP_H
+ #define _UAPI_ASM_POWERPC_SETUP_H
+ 
+-#define COMMAND_LINE_SIZE	2048
 -
- #endif /* _PARISC_SETUP_H */
+ #endif /* _UAPI_ASM_POWERPC_SETUP_H */
 -- 
 2.37.2
 
