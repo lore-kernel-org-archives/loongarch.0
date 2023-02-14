@@ -1,201 +1,189 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CA8FC088
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 14:19:14 +0000 (UTC)
-Received: from loongson.cn (unknown [106.39.149.70])
-	by gateway (Coremail) with SMTP id _____8AxadlemOtjpI4AAA--.1398S3;
-	Tue, 14 Feb 2023 22:19:10 +0800 (CST)
-Received: from [192.168.3.5] (unknown [106.39.149.70])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxg+VdmOtjJ+IyAA--.60883S3;
-	Tue, 14 Feb 2023 22:19:09 +0800 (CST)
-Message-ID: <0d591c10-e897-d00a-dbf0-a069389ef196@loongson.cn>
-Date: Tue, 14 Feb 2023 22:19:09 +0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBBBC09C
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 14:51:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D6E5C433D2
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 14:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1676386319;
+	bh=U5DFjUqh2ny78KGnnav+Jqbho0ENCFT2So2JYaB05t0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qn/EgaBSaPjryAsuKezf4hEmgn0/7eBXwesO8KQoo66WBQwI6uEF50t1b8bdXXXuQ
+	 hAXtFITQpQQKKBy35IW1jRhCiYd7fAd6RYjqOlQ2FkV6JikRxttU2P1OSm2PyggYxB
+	 Rrucf94yaAXOl25JtsUT1ljtjYd1GmhM4wcYHsl6dvoNdbO+MS9eumo3fOsSWf34S3
+	 vVNzAIkqIVWLpDhqqR0H/WQIZ7YZpUDZvdCCDzKt18W9H4Wft5AVggCnRNKIMKmjc7
+	 GHtKs+//6h9lZy5OGVf4I6gJ8PzeUPVF4zyxR5GdmW7kfl8453nvqRxh0ZGQhQ1pLX
+	 QnHdw+liPhGWQ==
+Received: by mail-ej1-f42.google.com with SMTP id dr8so40635394ejc.12
+        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 06:51:59 -0800 (PST)
+X-Gm-Message-State: AO0yUKVHqQlxC+0IKSMTPKXuF0oNngojjtOV/k+LNRyjkmbQIAuA3dko
+	uW4B5ACf9m8vtM/pU8bnywFSHUUE5+nSgJVW8MA=
+X-Google-Smtp-Source: AK7set/9WDrehwjo3A47zZGeWnusro/YXsYPd0KNCp9OhkKOiI7z1upthcWoH05Ar0k5/9s8v0eoC7pT23RqCyXR8u4=
+X-Received: by 2002:a17:906:8592:b0:878:8061:e114 with SMTP id
+ v18-20020a170906859200b008788061e114mr1110158ejx.0.1676386317768; Tue, 14 Feb
+ 2023 06:51:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
-To: David Laight <David.Laight@ACULAB.COM>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20230209035839.2610277-1-maobibo@loongson.cn>
- <e6bb59c32134477aa4890047ae5ad51b@AcuMS.aculab.com>
- <741b2246-d609-ccc6-bf55-d6b0b5e54b54@loongson.cn>
- <2aa6243491784e74960182dc12968170@AcuMS.aculab.com>
- <CAAhV-H7BgBASt_CpSQgS6MNbzxODhoq8ykK5ZAn2y3ZOekXM9g@mail.gmail.com>
- <0fe7ed7c-7161-65d5-a09f-12db6ccda05a@loongson.cn>
- <b17430342e9e4c39b53004d842ea9c55@AcuMS.aculab.com>
- <ec49593a-60a4-be91-0fb2-af517eaf6d6a@loongson.cn>
- <5dc1c39bbaf149f78c132f4467cdb365@AcuMS.aculab.com>
-Content-Language: en-US
-From: maobibo <maobibo@loongson.cn>
-In-Reply-To: <5dc1c39bbaf149f78c132f4467cdb365@AcuMS.aculab.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Cxg+VdmOtjJ+IyAA--.60883S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXr1DJw45Ar13XFWDWFykXwb_yoW5KFWkpr
-	yUGwn5Aa1vyFn3Ar17AF4jkrWF93Z8GrWDCFy3trW2kFy8GF1rtFZrKFn0yas7ur1FkFn8
-	Z34j9wn3uryDAF7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bxAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
-	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04
-	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
-	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr4
-	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1l
-	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4
-	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
+References: <1e6f4d35946e4e2e7c7f5dcc7b69d5e609de8184.camel@xry111.site>
+In-Reply-To: <1e6f4d35946e4e2e7c7f5dcc7b69d5e609de8184.camel@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 14 Feb 2023 22:51:44 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7co2Sx5c7oGA8nb12Ohh_jCvsuq5i6d5qnmV4an3M47Q@mail.gmail.com>
+Message-ID: <CAAhV-H7co2Sx5c7oGA8nb12Ohh_jCvsuq5i6d5qnmV4an3M47Q@mail.gmail.com>
+Subject: Re: "kernel ade access" oops on LoongArch
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: loongarch@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Ruoyao,
 
+It seems to have something related to Youling's relative exception patchset=
+.
 
-On 2023/2/14 17:47, David Laight wrote:
-> From: maobibo
->> Sent: 14 February 2023 01:31
-> ...
->> Part of asm code depends on previous intr in website
->> https://github.com/loongson/linux/commit/92a6df48ccb73dd2c3dc1799add08adf0e0b0deb,
->> such as macro ADDC
->> #define ADDC(sum,reg)                                           \
->>          ADD     sum, sum, reg;                                  \
->>          sltu    t8, sum, reg;                                   \
->>          ADD     sum, sum, t8;                                   \
->> these three instructions depends on each other, and can not execute
->> in parallel.
-> 
-> Right, but you can add the carry bits into a different register.
-> Since the aim is 8 bytes/clock limited by 1 memory read/clock
-> you can (probably) manage with all the word adds going to one
-> register and all the carry adds to a second. So:
-> #define ADDC(carry, sum, reg) \
-> 	add	sum, sum, reg	\
-> 	sltu	reg, sum, reg	\
-> 	add	carry, carry, reg
-> 
->>
->> The original of main loop about Lmove_128bytes is:
->> #define CSUM_BIGCHUNK(src, offset, sum, _t0, _t1, _t2, _t3)     \
->>          LOAD    _t0, src, (offset + UNIT(0));                   \
->>          LOAD    _t1, src, (offset + UNIT(1));                   \
->>          LOAD    _t2, src, (offset + UNIT(2));                   \
->>          LOAD    _t3, src, (offset + UNIT(3));                   \
->>          ADDC(_t0, _t1);                                         \
->>          ADDC(_t2, _t3);                                         \
->>          ADDC(sum, _t0);                                         \
->>          ADDC(sum, _t2)
->>
->> .Lmove_128bytes:
->>          CSUM_BIGCHUNK(src, 0x00, sum, t0, t1, t3, t4)
->>          CSUM_BIGCHUNK(src, 0x20, sum, t0, t1, t3, t4)
->>          CSUM_BIGCHUNK(src, 0x40, sum, t0, t1, t3, t4)
->>          CSUM_BIGCHUNK(src, 0x60, sum, t0, t1, t3, t4)
->>          addi.d  t5, t5, -1
->>          addi.d  src, src, 0x80
->>          bnez    t5, .Lmove_128bytes
->>
->> I modified the main loop with label .Lmove_128bytes to reduce
->> dependency between instructions like this, it can improve the
->> performance.
->> can improve the performance.
->> .Lmove_128bytes:
->>          LOAD    t0, src, 0
->>          LOAD    t1, src, 8
->>          LOAD    t3, src, 16
->>          LOAD    t4, src, 24
->>          LOAD    a3, src, 0 + 0x20
->>          LOAD    a4, src, 8 + 0x20
->>          LOAD    a5, src, 16 + 0x20
->>          LOAD    a6, src, 24 + 0x20
->>          ADD     t0, t0,  t1
->>          ADD     t3, t3,  t4
->>          ADD     a3, a3,  a4
->>          ADD     a5, a5,  a6
->>          sltu    t8, t0,  t1
->>          sltu    a7, t3,  t4
->>          ADD     t0, t0,  t8
->>          ADD     t3, t3,  a7
->>          sltu    t1, a3,  a4
->>          sltu    t4, a5,  a6
->>          ADD     a3, a3,  t1
->>          ADD     a5, a5,  t4
->>          ADD     t0, t0, t3
->>          ADD     a3, a3, a5
->>          sltu    t1, t0, t3
->>          sltu    t4, a3, a5
->>          ADD     t0, t0, t1
->>          ADD     a3, a3, t4
->>          ADD     sum, sum, t0
->>          sltu    t8,  sum, t0
->>          ADD     sum, sum,  t8
->>          ADD     sum, sum, a3
->>          sltu    t8,  sum, a3
->>          addi.d  t5, t5, -1
->>          ADD     sum, sum, t8
->>
->> However the result and principle is almost the similar with
->> uint128 c code. And there is no performance impact interleaving
->> the reads and alu operations.
-> 
-> You are still relying on the 'out of order' logic to execute
-> ALU instructions while the memory reads are going on.
-> Try something like:
-> 	complex setup :-)
-> loop:
-> 	sltu	c0, sum, v0
-> 	load	v0, src, 0
-> 	add	sum, v1
-> 	add	carry, c3
-> 
-> 	sltu	c1, sum, v1
-> 	load	v1, src, 8
-> 	add	sum, v2
-> 	add	carry, c0
-> 
-> 	sltu	c2, sum, v2
-> 	load	v2, src, 16
-> 	addi	src, 32
-> 	add	sum, v3
-> 	add	carry, c1
-> 
-> 	sltu	c3, sum, v3
-> 	load	v3, src, 24
-> 	add	sum, v0
-> 	add	carry, c2
-> 	bne	src, limit, loop
-> 
-> 	complex finalise
-> 
-> The idea being that each group of instructions executes
-> in one clock - so the loop is 4 clocks.
-> The above code allows for 2 delay clocks on reads.
-> They may not be needed, in that case the above may run
-> at 8 bytes/clock with just 2 blocks of instructions.
-> 
-> You'd give the cpu a bit more leeway by using two sum and
-> carry registers.
-Got it. It makes use of pipeline better, rather than number of ALUs for 
-different micro-architectures. I will try this method, thanks again for 
-kindly help and explanation with patience.
+Huacai
 
-Regards
-Bibo, mao
-
-> 
-> I'd time the loop without worrying about the setup/finalise
-> code.
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-
+On Tue, Feb 14, 2023 at 4:46 PM Xi Ruoyao <xry111@xry111.site> wrote:
+>
+> This is a "help wanted" message :(.
+>
+> I've recently run into some strange kernel oops testing Glibc for LoongAr=
+ch.  A log looks like:
+>
+> [11569.195043] Kernel ade access[#1]:
+> [11569.198441] CPU: 1 PID: 1132296 Comm: ld-linux-loonga Not tainted 6.2.=
+0-rc8+ #61
+> [11569.205792] Hardware name: Loongson Loongson-3A5000-HV-7A2000-1w-V0.1-=
+EVB/Loongson-LS3A5000-7A2000-1w-EVB-V1.21, BIOS Loongson-UDK2018-V4.0.05383=
+-beta10 1
+> [11569.219536] $ 0   : 0000000000000000 90000000005e3448 90000001113a0000=
+ 90000001113a3ab0
+> [11569.227505] $ 4   : 90000001113a3af8 1000000000cf16d0 5555555555555850=
+ 000000000000000c
+> [11569.235475] $ 8   : 90000000009caa10 0000000000000000 00000000000002ca=
+ 000000000000008b
+> [11569.243438] $12   : 0000000000000001 9000000000cf1258 ffffffffffffffff=
+ 00007ffffb93c000
+> [11569.251402] $16   : 0000000000000000 0000000000000140 0000000000000000=
+ 0000000000000020
+> [11569.259366] $20   : 90000001113a3ec8 9000000000a97ee0 00007ffffb93bfa0=
+ 1555555555555613
+> [11569.267334] $24   : 1000000000cf16d0 000000000000000c 9000000000cf1258=
+ 90000000009caa10
+> [11569.275303] $28   : 90000001113a3af8 0aaaaaaaaaaaab0a 00007ffffb93bde0=
+ 90000001113a3ec0
+> [11569.283268] era   : 90000000009caa10 cmp_ex_search+0x0/0x28
+> [11569.288814] ra    : 90000000005e3448 bsearch+0x58/0xa8
+> [11569.293921] CSR crmd: 000000b0
+> [11569.293923] CSR prmd: 00000004
+> [11569.297037] CSR euen: 00000000
+> [11569.300152] CSR ecfg: 00071c1c
+> [11569.303266] CSR estat: 00480000
+> [11569.309587] ExcCode : 8 (SubCode 1)
+> [11569.313049] BadVA : 1000000000cf16d0
+> [11569.316596] PrId  : 0014c011 (Loongson-64bit)
+> [11569.320923] Modules linked in: amdgpu nls_cp936 vfat fat input_leds dr=
+m_ttm_helper ttm video gpu_sched drm_buddy snd_hda_codec_generic drm_displa=
+y_helper ledtrig_audio drm_kms_helper led_class snd_hda_intel sha256_generi=
+c snd_intel_dspcfg cfbfillrect libsha256 snd_hda_codec syscopyarea snd_hda_=
+core hid_generic cfbimgblt cfg80211 snd_pcm sysfillrect usbhid sysimgblt sn=
+d_timer cfbcopyarea hid snd igb soundcore efivarfs
+> [11569.357709] Process ld-linux-loonga (pid: 1132296, threadinfo=3D000000=
+003cbd0caa, task=3D000000005bcd27a6)
+> [11569.366977] Stack : 00007ffffb93bd60 0000000000000000 9000000180a36a40=
+ 0000000000000001
+> [11569.374940]         90000001113a3bb0 00007ffffb93c000 9000000000224c94=
+ 90000000009cab2c
+> [11569.382899]         0000000000000001 9000000000224c94 00007ffff3258000=
+ 900000000025a1b4
+> [11569.390866]         90000001113a3bb0 900000000022f4cc 00007ffffb93c000=
+ 900000000022f74c
+> [11569.398834]         9000000180a36a40 0000000000000001 0000000000000000=
+ 00007ffffb93c000
+> [11569.406800]         90000001113a3bb0 900000000022f8f8 90000001113a3ec0=
+ 00007ffffb93bde0
+> [11569.414768]         00007ffffb93bd60 0000000000000000 0000000000000000=
+ 00007fffff7c4600
+> [11569.422734]         9000000182ebab70 9000000000d08000 0000000046505501=
+ 900000000022ee6c
+> [11569.430698]         0000000000000000 9000000000224b84 90000001113a0000=
+ 90000001113a3cf0
+> [11569.438661]         0000000000000000 00007ffffb93c0d0 0000000000000000=
+ 0000000000000040
+> [11569.446627]         ...
+> [11569.449058] Call Trace:
+> [11569.449062] [<90000000009caa10>] cmp_ex_search+0x0/0x28
+> [11569.456681] [<90000000005e3448>] bsearch+0x58/0xa8
+> [11569.461443] [<90000000009cab2c>] search_extable+0x28/0x34
+> [11569.466807] [<900000000025a1b4>] search_exception_tables+0x48/0x7c
+> [11569.472953] [<900000000022f4cc>] fixup_exception+0x18/0xcc
+> [11569.478410] [<900000000022f74c>] do_sigsegv+0x174/0x1b0
+> [11569.483605] [<900000000022f8f8>] do_page_fault+0x170/0x344
+> [11569.489058] [<900000000022ee6c>] tlb_do_page_fault_1+0x128/0x1c4
+> [11569.495029] [<9000000000224b84>] handle_signal+0x634/0x884
+> [11569.500487] [<9000000000225704>] arch_do_signal_or_restart+0xb4/0xe0
+> [11569.506808] [<90000000002b5b30>] exit_to_user_mode_prepare+0xbc/0x100
+> [11569.513214] [<9000000000a02628>] syscall_exit_to_user_mode+0x30/0x4c
+> [11569.519533] [<90000000002214a4>] handle_syscall+0xc4/0x160
+>
+> [11569.526472] Code: 4c000020  02800404  4c000020 <240000ac> 26000084  00=
+10b0a5  680014a4  00129484  00111004
+>
+> [11569.537704] ---[ end trace 0000000000000000 ]---
+>
+> "BadVA : 1000000000cf16d0" may suggest the highest bit of an address is
+> somehow cleared.
+>
+> The issue is not deterministic, but it seems easily reproduced by:
+>
+> 1. Compile Glibc:
+>
+> ../glibc/configure --prefix=3D/usr                      \
+>              --disable-werror                         \
+>              --enable-kernel=3D5.19                     \
+>              --enable-stack-protector=3Dstrong          \
+>              --with-headers=3D/usr/include              \
+>              libc_cv_slibdir=3D/usr/lib
+> make -j4
+>
+> 2. Check Glibc:
+>
+> make check -j4
+>
+> 3. If the oops did not happen during the last step, run a specific test
+> in a dead loop:
+>
+> while true; do make test t=3Dmalloc/tst-mallocfork3-malloc-check; done
+>
+> Then an oops would likely show up in several minutes.
+>
+> Though the oops is nondeterministic, I'm almost sure it's not a hardware
+> stability issue because I'm getting exactly same stack traces for each
+> oops message.  I cannot easily rule out the possibility about "the
+> compiler miscompiles kernel code" though.
+>
+> I'm running 6.2-rc8 with the following patches from loongarch-next:
+>
+> ACPI: Define ACPI_MACHINE_WIDTH to 64 for LoongArch
+> PCI: loongson: Improve the MRRS quirk for LS7A
+> PCI: Add quirk for LS7A to avoid reboot failure
+> irqchip/loongson-liointc: Save/restore int_edge/int_pol registers during =
+S3/S4
+> LoongArch: Add vector extensions support
+> tools: Add LoongArch build infrastructure
+> libbpf: Add LoongArch support to bpf_tracing.h
+> selftests/seccomp: Add LoongArch selftesting support
+> SH: cpuinfo: Fix a warning for CONFIG_CPUMASK_OFFSTACK
+> LoongArch: Add CPU HWMon platform driver
+>
+> Any idea to fix the issue or suggestion to debug it further?
+>
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
