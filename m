@@ -1,45 +1,45 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799007C
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 09:04:55 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id y1so14877183wru.2
-        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 01:04:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCDD7C
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 09:05:34 +0000 (UTC)
+Received: by mail-wr1-f47.google.com with SMTP id bu23so14847005wrb.8
+        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 01:05:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=KZk18aUwfr/crPnHPA/QNPK0H4tWzNL+2OmakVamCi8=;
-        b=FuqeOAA0zOBxZDuVrmVbvP8dKvoEf0MRrKKfm5NpFSyLOS1syMedD57gIqKmrL5zko
-         qHpdqh+1Qi4vk3xY+Y+b00Y3rfjpVOFAPuWKFoaNHXYX+NhTIfQLIuO5WcCVUFUjRwy7
-         xMFDBg0c617IjgdOAOjwaUswIiGz5V4UI7DfJ8LBDe8ExR38WilQf/7hqV4J4nMfP3dK
-         +NkXzLhRfCI4LG9OC+J6fTkyG/7he+OYSDs5hlMQV6UXzYF2Dol240t6thsBMIDBZKNF
-         mf4lP1Tmk2bhebKijyv57HPqf77+Ml7M9RiO9cyGc/K41l5a0L/IdrW6ctCufCt4MQrg
-         Mpqg==
+        bh=UN96HvyAH3A0F2+hA45TCkXOEUd+s53tiI7+aSVqnGA=;
+        b=WP20i8MASM2rCtGp2Z93dGmU3cHmgSrcGF/TuhBxt26HL8dLV8rMBWxB7sa8KBt4Tv
+         IL6JfqV+420KDLNpueRS17I87wZnHynwV7GyYH2PGB5tWYRSxhfFEZxTzExAwws6mG6P
+         iakcPY+GsXyCb0Vpx7GzOxxLT7GAjj6878tQ978Llodda2xKxo9vKpEvTImdNhhBzQyU
+         GBTQXOLeWISX7EYhUsOut4r3WpqCivpUPrmqlCqWIZ3Nn69+5MkbHE7fIJ058QvFHCQX
+         3iiN01Fw0+PayGQK0xVI5HNTUycC8oyQptZzWy5M0sPaLFpPfPKlT60lGhE8n0Vhtc/y
+         UvqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KZk18aUwfr/crPnHPA/QNPK0H4tWzNL+2OmakVamCi8=;
-        b=XgkcQqjG3vDeHoIVXbLS00DzAO2eRWixrRD6XFE55wXg11pPjhDH3Gljkui5dVhFzd
-         /q3/p5qxZxbymS8nVOLgXesFX9cDnLYfbgewidMnGaBiqOafq8URIr8nw1cDdob4jFoC
-         XGIW62ZAvLoVSnmtPJ4uIF9eE7Rt/K+6M7tGRX63kRWL+lpH7U/MPP7ecJ8M0X+Uhl2z
-         GzDWQ0cZ3Ys6UX9luEctJmw39OiBiqeSzMVWZL0PyNP/3hx2CpyZ6jCS3PNyt5tIvU7U
-         gXCxpVTEGAwn2H+KT2Fo6naBhqY7HzG5bj/BazJd5ZTG+rdx2dHa6jheC+7516qdYDY5
-         6kYQ==
-X-Gm-Message-State: AO0yUKXqEl7/UXGVtM/eE3Al8iwdsvnJUwMKmqjPquhwnuh2hVoJDva9
-	+HLwRS9hu3CftetxJaZXQ4CEWA==
-X-Google-Smtp-Source: AK7set+jlADAGeMno/J4b9rMaQi1OSFbGE2cOeHJ3WYCoMJkKRkmj2/GQpc+G+sprep4ghyf/aRSVg==
-X-Received: by 2002:a05:6000:8b:b0:2bd:f5bd:5482 with SMTP id m11-20020a056000008b00b002bdf5bd5482mr1310606wrx.28.1676365493352;
-        Tue, 14 Feb 2023 01:04:53 -0800 (PST)
+        bh=UN96HvyAH3A0F2+hA45TCkXOEUd+s53tiI7+aSVqnGA=;
+        b=nrWsAkecjVDMRGfQY9pz/vxOS/dlD9cSOzIJxTM5MBmW/VKgVrL8RHsoCAVk9yjfgZ
+         N6bEPmscXURqfoThJl0mUvW8nX+FIkMUVgXyYgfiAiinQB14jL1TuAIN05iJmktnr4vc
+         EKZ4XkvKcwvjBYAiSexQkkSdVKszjwXDMOr8WhvGefCLuJ5xUwpM+Swe1BMIK4K5pqN/
+         +0pZ/gEUpXBuDppKpRUo+sXkAwTKi3BncrrMtlYFIJeuWZnuYcIYMkrbEW9WIif4kJJy
+         20lrFcmZYBeNRFal72edOH4Kl9z6dAQevy4+5OMK/d5cFwjxxh5rgy6ucl6Mjbf5nlQL
+         oJSg==
+X-Gm-Message-State: AO0yUKU6iIWy1YFAX3owAvwz7U+GYH/vXR44TZCx2jK6BlLIivp8NVpW
+	syxNYGbJ3Moyzj8EsWUYxpZMTg==
+X-Google-Smtp-Source: AK7set/bnATx/QinUZEv/kaFr37XQ6gSjCAmEMskILGrw/zUjdr7eN5YeojitqRWgY6y+UsZcveJ9A==
+X-Received: by 2002:adf:ef91:0:b0:2c3:e0a0:94f with SMTP id d17-20020adfef91000000b002c3e0a0094fmr1673667wro.37.1676365532856;
+        Tue, 14 Feb 2023 01:05:32 -0800 (PST)
 Received: from [192.168.30.216] ([81.0.6.76])
-        by smtp.gmail.com with ESMTPSA id d13-20020adfe88d000000b002c54f4d0f71sm7494931wrm.38.2023.02.14.01.04.49
+        by smtp.gmail.com with ESMTPSA id o7-20020a056000010700b002c559def236sm3870899wrx.57.2023.02.14.01.05.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Feb 2023 01:04:52 -0800 (PST)
-Message-ID: <a018ab25-b545-1227-951b-a7b4e1c25d5e@linaro.org>
-Date: Tue, 14 Feb 2023 10:04:48 +0100
+        Tue, 14 Feb 2023 01:05:32 -0800 (PST)
+Message-ID: <34543e7d-f34f-a3bb-cb64-d47da577589e@linaro.org>
+Date: Tue, 14 Feb 2023 10:05:29 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -48,7 +48,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.7.2
-Subject: Re: [PATCH v3 20/24] x86: Remove empty <uapi/asm/setup.h>
+Subject: Re: [PATCH v3 24/24] s390: Remove empty <uapi/asm/setup.h>
 Content-Language: en-US
 To: Alexandre Ghiti <alexghiti@rivosinc.com>, Jonathan Corbet
  <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>,
@@ -86,9 +86,9 @@ To: Alexandre Ghiti <alexghiti@rivosinc.com>, Jonathan Corbet
  linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org
 Cc: Palmer Dabbelt <palmer@rivosinc.com>
 References: <20230214074925.228106-1-alexghiti@rivosinc.com>
- <20230214074925.228106-21-alexghiti@rivosinc.com>
+ <20230214074925.228106-25-alexghiti@rivosinc.com>
 From: =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20230214074925.228106-21-alexghiti@rivosinc.com>
+In-Reply-To: <20230214074925.228106-25-alexghiti@rivosinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
@@ -97,10 +97,10 @@ On 14/2/23 08:49, Alexandre Ghiti wrote:
 > 
 > Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
 > ---
->   arch/x86/include/asm/setup.h      | 2 --
->   arch/x86/include/uapi/asm/setup.h | 1 -
->   2 files changed, 3 deletions(-)
->   delete mode 100644 arch/x86/include/uapi/asm/setup.h
+>   arch/s390/include/asm/setup.h      | 1 -
+>   arch/s390/include/uapi/asm/setup.h | 1 -
+>   2 files changed, 2 deletions(-)
+>   delete mode 100644 arch/s390/include/uapi/asm/setup.h
 
 Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
