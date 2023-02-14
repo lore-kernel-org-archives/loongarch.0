@@ -1,133 +1,129 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945FBC0AE
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 15:36:23 +0000 (UTC)
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-1442977d77dso19478731fac.6
-        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:36:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=m1D2RWhLhHxsdFzivabikU8ZEQlDesftIUFBoVoaEws=;
-        b=KaSeq2tWYKYTua21H7tKdDViD7rR4+2NfwLa6dZGIC1lyN1Xu2d7hpnDPXgOm/83Gf
-         JQB7JFIKbb4qX7R4Fi33GZY7id/B9WOoTX5f5JvKXB4gN9lt+kC/Jj7jFtz0gQahVUuH
-         2UM09EKRkFzdDZnLMovvJboyFIoghvIp+l/DAiL3h8cBC/duErxySMvoU7aNd5JyAn7w
-         d9uovJPirwdy8IcqcN+0hhQn816XPX4tmpUiphWiekU1GxsKjYkhSr15d09uLHdtwcYW
-         resel0YqqhUYgJ1fKyt9CCHXJYF8Bs4OHuOyd1ssfLUNfZIfPvlYcR09gCAYrQQGibMB
-         xkEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m1D2RWhLhHxsdFzivabikU8ZEQlDesftIUFBoVoaEws=;
-        b=zBfRd9Mw9ArdPOJZtSxsJ4oEVc2p4qD6Od1fkIfMf7mpXKACqzRJu3SqIhKC0HyE7C
-         thWlUunNC5l2/OiwwIAYJ5+WOL4Mb6BBlbccjQvZv5Bv3fBWpgnlShWjI6Y0jg7x5C/D
-         JRPg18lOcTiXLIB2kgU0FanAnglzGpg04RHIIT3romLQEIXpEYtiTE4l4J2xrYwdq/4N
-         RhpwOI+r55TrshWrpa9DFFJxd9Bl+/wHdpDXxjEIxRzmP6cOdhbciqJqYcO0Z+AcWrBU
-         IJespQZHI8gCMF4BB8ANnyItwCCMb4MC3vpXUJ8SW0Q8A2iUY/tDc2ep9FzeMwTTAO96
-         /OXA==
-X-Gm-Message-State: AO0yUKWKXi0q7ftG7qEjeNyvzIz5ilT2dw0olqcesUkLQd5NKrhHkooO
-	SB85ZPkgTbmer3IJQB4dkRCvhn1nzW1tmE9X+Ww=
-X-Google-Smtp-Source: AK7set/QXywFK2CgflsnTo1Mkt4Mi+/aZpDU+kj66GQyOF37Y2xnTMjQIiQKdBC6pmiOdUWkBq1z1JN19bkISIZ+Fq8=
-X-Received: by 2002:a05:6871:29b:b0:16e:143e:86bf with SMTP id
- i27-20020a056871029b00b0016e143e86bfmr518753oae.197.1676388982644; Tue, 14
- Feb 2023 07:36:22 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84713BA54
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 18:11:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F352C4339B;
+	Tue, 14 Feb 2023 18:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1676398265;
+	bh=TKLtb/CYAjL8ExEwN2xeP7hJFXlbI5pH9qu3eQ0qmvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n8kTCiR3nrn23S9SyNNUTkXUfCumSDdFWvPXylR4gSXNC6g+2D+lxgO1fwXaaokrY
+	 YVuLXGZbvvPMISaAP3wcazASy0rreHUgKB6li+yndvVqSXl0jqLsa1A9ETU4D4baHD
+	 +///MI1JyNrU0ZT9OEzao9lmsZ8IdtbTtCxXLGbZAyZGrD2bN6mrI5UH2cs9usKRiY
+	 bQMkI5fWLLowvUmtkCaAN5DN5oB/0AQwqle2Bn8qcUvo4LBvfw0VUZsTdIt2ANhZAW
+	 wrih0yuj8p3luuIs6lJTwcX1j3ukAvE1/aQWQn2g4hCMVpjAMdZ4HwZ/dNztV4bKzz
+	 l6j7aiyTxWddw==
+Date: Tue, 14 Feb 2023 10:11:01 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Cc: linux-kernel@vger.kernel.org, jgross@suse.com,
+	richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+	mattst88@gmail.com, linux-alpha@vger.kernel.org,
+	linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
+	catalin.marinas@arm.com, will@kernel.org, guoren@kernel.org,
+	linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
+	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev,
+	f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+	tsbogend@alpha.franken.de, linux-mips@vger.kernel.org,
+	jiaxun.yang@flygoat.com, mpe@ellerman.id.au, npiggin@gmail.com,
+	christophe.leroy@csgroup.eu, linuxppc-dev@lists.ozlabs.org,
+	ysato@users.sourceforge.jp, dalias@libc.org,
+	linux-sh@vger.kernel.org, davem@davemloft.net,
+	sparclinux@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
+	linux-xtensa@linux-xtensa.org, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	paulmck@kernel.org
+Subject: Re: [PATCH v2 09/24] mips/cpu: Expose play_dead()'s prototype
+ definition
+Message-ID: <20230214181101.3a2tscbmwdnwbqpu@treble>
+References: <cover.1676358308.git.jpoimboe@kernel.org>
+ <39835bc75af2e812fce56400533cb2ab41bcf0e2.1676358308.git.jpoimboe@kernel.org>
+ <080a5ccb-7fa0-1a75-538f-a09dc146fc4e@linaro.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230212035236.1436532-1-hengqi.chen@gmail.com>
- <20230212035236.1436532-2-hengqi.chen@gmail.com> <07edfd3b-9895-f711-47a7-a805a4e92691@loongson.cn>
-In-Reply-To: <07edfd3b-9895-f711-47a7-a805a4e92691@loongson.cn>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Tue, 14 Feb 2023 23:36:11 +0800
-Message-ID: <CAEyhmHRJgX-20QE4AxGHgLKsvvbjdTY0didrrX7XPoS3Rc6e5A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] LoongArch: BPF: Treat function address as 64-bit value
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <080a5ccb-7fa0-1a75-538f-a09dc146fc4e@linaro.org>
 
-Hi Tiezhu,
-
-On Mon, Feb 13, 2023 at 11:02 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> Hi Hengqi,
->
-> On 02/12/2023 11:52 AM, Hengqi Chen wrote:
-> > Let's always use 4 instructions for function address in JIT.
-> > So that the instruction sequences don't change between the first
-> > pass and the extra pass for function calls.
-> >
-> > Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-> > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+On Tue, Feb 14, 2023 at 08:46:41AM +0100, Philippe Mathieu-Daudé wrote:
+> Hi Josh,
+> 
+> On 14/2/23 08:05, Josh Poimboeuf wrote:
+> > Include <asm/smp.h> to make sure play_dead() matches its prototype going
+> > forward.
+> > 
+> > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 > > ---
-> >  arch/loongarch/net/bpf_jit.c | 23 ++++++++++++++++++++++-
-> >  1 file changed, 22 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> > index c4b1947ebf76..2d952110be72 100644
-> > --- a/arch/loongarch/net/bpf_jit.c
-> > +++ b/arch/loongarch/net/bpf_jit.c
-> > @@ -446,6 +446,27 @@ static int add_exception_handler(const struct bpf_insn *insn,
-> >       return 0;
-> >  }
-> >
-> > +static inline void emit_addr_move(struct jit_ctx *ctx, enum loongarch_gpr rd, u64 addr)
-> > +{
-> > +     u64 imm_11_0, imm_31_12, imm_51_32, imm_63_52;
-> > +
-> > +     /* lu12iw rd, imm_31_12 */
-> > +     imm_31_12 = (addr >> 12) & 0xfffff;
-> > +     emit_insn(ctx, lu12iw, rd, imm_31_12);
-> > +
-> > +     /* ori rd, rd, imm_11_0 */
-> > +     imm_11_0 = addr & 0xfff;
-> > +     emit_insn(ctx, ori, rd, rd, imm_11_0);
-> > +
-> > +     /* lu32id rd, imm_51_32 */
-> > +     imm_51_32 = (addr >> 32) & 0xfffff;
-> > +     emit_insn(ctx, lu32id, rd, imm_51_32);
-> > +
-> > +     /* lu52id rd, rd, imm_63_52 */
-> > +     imm_63_52 = (addr >> 52) & 0xfff;
-> > +     emit_insn(ctx, lu52id, rd, rd, imm_63_52);
-> > +}
-> > +
-> >  static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool extra_pass)
-> >  {
-> >       u8 tm = -1;
-> > @@ -841,7 +862,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
-> >               if (ret < 0)
-> >                       return ret;
-> >
-> > -             move_imm(ctx, t1, func_addr, is32);
-> > +             emit_addr_move(ctx, t1, func_addr);
-> >               emit_insn(ctx, jirl, t1, LOONGARCH_GPR_RA, 0);
-> >               move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_A0);
-> >               break;
-> >
->
-> The code itself looks good to me.
->
-> Could you please give more detailed info in the commit message?
-> For example, description of problem, steps to reproduce, ...
-> I think the descriptions in the cover letter are useful, it is
-> better to record them in the commit message.
->
-> Additionally, emit_addr_move() is similar with move_imm(), it is
-> better to define emit_addr_move() before move_imm() in bpf_jit.h.
->
-> Thanks,
-> Tiezhu
->
+> >   arch/mips/kernel/smp-bmips.c | 1 +
+> >   1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
+> > index f5d7bfa3472a..df9158e8329d 100644
+> > --- a/arch/mips/kernel/smp-bmips.c
+> > +++ b/arch/mips/kernel/smp-bmips.c
+> > @@ -38,6 +38,7 @@
+> >   #include <asm/traps.h>
+> >   #include <asm/barrier.h>
+> >   #include <asm/cpu-features.h>
+> > +#include <asm/smp.h>
+> 
+> What about the other implementations?
+> 
+> $ git grep -L asm/smp.h $(git grep -wlF 'play_dead(void)' arch/mips)
+> arch/mips/cavium-octeon/smp.c
+> arch/mips/kernel/smp-bmips.c
+> arch/mips/kernel/smp-cps.c
+> arch/mips/loongson64/smp.c
 
-I've addressed your comments and send a v2 for review.
-The second patch is dropped, as it is incomplete.
+Indeed.  I really wish we had -Wmissing-prototypes.
 
-Cheers,
----
-Hengqi
+I'll squash this in:
+
+diff --git a/arch/mips/cavium-octeon/smp.c b/arch/mips/cavium-octeon/smp.c
+index 89954f5f87fb..4212584e6efa 100644
+--- a/arch/mips/cavium-octeon/smp.c
++++ b/arch/mips/cavium-octeon/smp.c
+@@ -20,6 +20,7 @@
+ #include <asm/mmu_context.h>
+ #include <asm/time.h>
+ #include <asm/setup.h>
++#include <asm/smp.h>
+ 
+ #include <asm/octeon/octeon.h>
+ 
+diff --git a/arch/mips/kernel/smp-cps.c b/arch/mips/kernel/smp-cps.c
+index bcd6a944b839..6d69a9ba8167 100644
+--- a/arch/mips/kernel/smp-cps.c
++++ b/arch/mips/kernel/smp-cps.c
+@@ -20,6 +20,7 @@
+ #include <asm/mipsregs.h>
+ #include <asm/pm-cps.h>
+ #include <asm/r4kcache.h>
++#include <asm/smp.h>
+ #include <asm/smp-cps.h>
+ #include <asm/time.h>
+ #include <asm/uasm.h>
+diff --git a/arch/mips/loongson64/smp.c b/arch/mips/loongson64/smp.c
+index c81c2bd07c62..df8d789ede3c 100644
+--- a/arch/mips/loongson64/smp.c
++++ b/arch/mips/loongson64/smp.c
+@@ -14,6 +14,7 @@
+ #include <linux/cpufreq.h>
+ #include <linux/kexec.h>
+ #include <asm/processor.h>
++#include <asm/smp.h>
+ #include <asm/time.h>
+ #include <asm/tlbflush.h>
+ #include <asm/cacheflush.h>
