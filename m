@@ -1,124 +1,133 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6C62569
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 15:26:46 +0000 (UTC)
-Received: by mail-pf1-f171.google.com with SMTP id bd35so5390874pfb.6
-        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:26:46 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945FBC0AE
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 15:36:23 +0000 (UTC)
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-1442977d77dso19478731fac.6
+        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:36:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vTX2F2TrplX3EhIegiab/3E+IwCv8ZrrolJOY/X43qI=;
-        b=cVBk39aHq03A7S4pjaSi9XwIDsVx3qTb3qzFJn2KvBXcqjs0zuREdv/SGmq5/yDq7w
-         kuyAPoL2/rXQtr9IC2n/gztkvHBjERvbg4s1xAJwtbn0Mqb9zcRbrOlkWSCCK4a5VNsz
-         mKDPbr0IVMgu4/Tf9lVcKJmomkOjlNnpzcrwu3EY0j/hfpMzNceqE78hSXFAVj4+t+Ig
-         UEvT49IzIN9yrK9LL/5ny+3Q9ltDYp4fp2qz/lEsozizZiO04+egopaq0gArba1MxtSt
-         VaNFV4H6moYXI54sY3djmPd1RK+bpuCSJ0XzVUXxlmE33KXf0IoKOy76lk8WoPLtESh3
-         ydOg==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=m1D2RWhLhHxsdFzivabikU8ZEQlDesftIUFBoVoaEws=;
+        b=KaSeq2tWYKYTua21H7tKdDViD7rR4+2NfwLa6dZGIC1lyN1Xu2d7hpnDPXgOm/83Gf
+         JQB7JFIKbb4qX7R4Fi33GZY7id/B9WOoTX5f5JvKXB4gN9lt+kC/Jj7jFtz0gQahVUuH
+         2UM09EKRkFzdDZnLMovvJboyFIoghvIp+l/DAiL3h8cBC/duErxySMvoU7aNd5JyAn7w
+         d9uovJPirwdy8IcqcN+0hhQn816XPX4tmpUiphWiekU1GxsKjYkhSr15d09uLHdtwcYW
+         resel0YqqhUYgJ1fKyt9CCHXJYF8Bs4OHuOyd1ssfLUNfZIfPvlYcR09gCAYrQQGibMB
+         xkEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vTX2F2TrplX3EhIegiab/3E+IwCv8ZrrolJOY/X43qI=;
-        b=0cKwGL0ZIeRjIsqb2HnEDRjAnZr+7ycYuIwi/QsF2oyCrAKWAbB6KktoAQOhbHv+jl
-         g8uJhmoIffBbasDflEfxm0gRKbYerIOmFbKIkIeL5PNXkhAWp7/iCzOyyajzTgKsjfys
-         MrloFLTA5LinQt9spY02If2BJo3UblR3wecgzzc09qALdk21pzlbWTDYIjYDCSS6gEVg
-         VUMPDvikosMlmscOYYQDbIVUtC6i2nHIr3vaKhsJ4UsbIrD9be4xlhLuOELSZhKxqDFd
-         xjQNrBOaA9NEoM78eT34iSEcmpkXeiTnNt4aOmXMoYako0HAnoHI5XXAT1rVazP3t3j1
-         AJ4A==
-X-Gm-Message-State: AO0yUKWgcmWyuPSIXiu5qc5TdBIZuIZ1MnONjoaAdZh4XpRC6TFE7sTE
-	p3NBcKXA48hwQYb6l3n4MVo=
-X-Google-Smtp-Source: AK7set/tDKzzBEnN43HEgzoCe5LIepdUP8bXEDO8AG49ol8YYY7wy25/WjsRd4CCUMrEeYgg2yWmzw==
-X-Received: by 2002:a62:30c4:0:b0:590:921d:5740 with SMTP id w187-20020a6230c4000000b00590921d5740mr1795217pfw.13.1676388405969;
-        Tue, 14 Feb 2023 07:26:45 -0800 (PST)
-Received: from localhost.localdomain ([43.132.141.8])
-        by smtp.gmail.com with ESMTPSA id d17-20020aa78151000000b005810a54fdefsm9951938pfn.114.2023.02.14.07.26.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Feb 2023 07:26:45 -0800 (PST)
-From: Hengqi Chen <hengqi.chen@gmail.com>
-To: bpf@vger.kernel.org,
-	loongarch@lists.linux.dev
-Cc: hengqi.chen@gmail.com
-Subject: [PATCH v2] LoongArch: BPF: Use 4 instructions for function address in JIT
-Date: Tue, 14 Feb 2023 15:26:33 +0000
-Message-Id: <20230214152633.2265699-1-hengqi.chen@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        bh=m1D2RWhLhHxsdFzivabikU8ZEQlDesftIUFBoVoaEws=;
+        b=zBfRd9Mw9ArdPOJZtSxsJ4oEVc2p4qD6Od1fkIfMf7mpXKACqzRJu3SqIhKC0HyE7C
+         thWlUunNC5l2/OiwwIAYJ5+WOL4Mb6BBlbccjQvZv5Bv3fBWpgnlShWjI6Y0jg7x5C/D
+         JRPg18lOcTiXLIB2kgU0FanAnglzGpg04RHIIT3romLQEIXpEYtiTE4l4J2xrYwdq/4N
+         RhpwOI+r55TrshWrpa9DFFJxd9Bl+/wHdpDXxjEIxRzmP6cOdhbciqJqYcO0Z+AcWrBU
+         IJespQZHI8gCMF4BB8ANnyItwCCMb4MC3vpXUJ8SW0Q8A2iUY/tDc2ep9FzeMwTTAO96
+         /OXA==
+X-Gm-Message-State: AO0yUKWKXi0q7ftG7qEjeNyvzIz5ilT2dw0olqcesUkLQd5NKrhHkooO
+	SB85ZPkgTbmer3IJQB4dkRCvhn1nzW1tmE9X+Ww=
+X-Google-Smtp-Source: AK7set/QXywFK2CgflsnTo1Mkt4Mi+/aZpDU+kj66GQyOF37Y2xnTMjQIiQKdBC6pmiOdUWkBq1z1JN19bkISIZ+Fq8=
+X-Received: by 2002:a05:6871:29b:b0:16e:143e:86bf with SMTP id
+ i27-20020a056871029b00b0016e143e86bfmr518753oae.197.1676388982644; Tue, 14
+ Feb 2023 07:36:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230212035236.1436532-1-hengqi.chen@gmail.com>
+ <20230212035236.1436532-2-hengqi.chen@gmail.com> <07edfd3b-9895-f711-47a7-a805a4e92691@loongson.cn>
+In-Reply-To: <07edfd3b-9895-f711-47a7-a805a4e92691@loongson.cn>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Tue, 14 Feb 2023 23:36:11 +0800
+Message-ID: <CAEyhmHRJgX-20QE4AxGHgLKsvvbjdTY0didrrX7XPoS3Rc6e5A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] LoongArch: BPF: Treat function address as 64-bit value
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-This patch fixes the following issue of function calls in JIT, like:
+Hi Tiezhu,
 
-  [   29.346981] multi-func JIT bug 105 != 103
+On Mon, Feb 13, 2023 at 11:02 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+> Hi Hengqi,
+>
+> On 02/12/2023 11:52 AM, Hengqi Chen wrote:
+> > Let's always use 4 instructions for function address in JIT.
+> > So that the instruction sequences don't change between the first
+> > pass and the extra pass for function calls.
+> >
+> > Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
+> > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> > ---
+> >  arch/loongarch/net/bpf_jit.c | 23 ++++++++++++++++++++++-
+> >  1 file changed, 22 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> > index c4b1947ebf76..2d952110be72 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -446,6 +446,27 @@ static int add_exception_handler(const struct bpf_insn *insn,
+> >       return 0;
+> >  }
+> >
+> > +static inline void emit_addr_move(struct jit_ctx *ctx, enum loongarch_gpr rd, u64 addr)
+> > +{
+> > +     u64 imm_11_0, imm_31_12, imm_51_32, imm_63_52;
+> > +
+> > +     /* lu12iw rd, imm_31_12 */
+> > +     imm_31_12 = (addr >> 12) & 0xfffff;
+> > +     emit_insn(ctx, lu12iw, rd, imm_31_12);
+> > +
+> > +     /* ori rd, rd, imm_11_0 */
+> > +     imm_11_0 = addr & 0xfff;
+> > +     emit_insn(ctx, ori, rd, rd, imm_11_0);
+> > +
+> > +     /* lu32id rd, imm_51_32 */
+> > +     imm_51_32 = (addr >> 32) & 0xfffff;
+> > +     emit_insn(ctx, lu32id, rd, imm_51_32);
+> > +
+> > +     /* lu52id rd, rd, imm_63_52 */
+> > +     imm_63_52 = (addr >> 52) & 0xfff;
+> > +     emit_insn(ctx, lu52id, rd, rd, imm_63_52);
+> > +}
+> > +
+> >  static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool extra_pass)
+> >  {
+> >       u8 tm = -1;
+> > @@ -841,7 +862,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+> >               if (ret < 0)
+> >                       return ret;
+> >
+> > -             move_imm(ctx, t1, func_addr, is32);
+> > +             emit_addr_move(ctx, t1, func_addr);
+> >               emit_insn(ctx, jirl, t1, LOONGARCH_GPR_RA, 0);
+> >               move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_A0);
+> >               break;
+> >
+>
+> The code itself looks good to me.
+>
+> Could you please give more detailed info in the commit message?
+> For example, description of problem, steps to reproduce, ...
+> I think the descriptions in the cover letter are useful, it is
+> better to record them in the commit message.
+>
+> Additionally, emit_addr_move() is similar with move_imm(), it is
+> better to define emit_addr_move() before move_imm() in bpf_jit.h.
+>
+> Thanks,
+> Tiezhu
+>
 
-The issus can be reproduced by running the "inline simple bpf_loop call"
-verifier test.
+I've addressed your comments and send a v2 for review.
+The second patch is dropped, as it is incomplete.
 
-This is because we are emiting 2-4 instructions for 64-bit immediate moves.
-During the first pass of JIT, the placeholder address is zero, emiting two
-instructions for it. In the extra pass, the function address is in XKVRANGE,
-emiting four instructions for it. This change the instruction index in
-JIT context. Let's always use 4 instructions for function address in JIT.
-So that the instruction sequences don't change between the first pass and
-the extra pass for function calls.
-
-Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+Cheers,
 ---
- arch/loongarch/net/bpf_jit.c |  2 +-
- arch/loongarch/net/bpf_jit.h | 21 +++++++++++++++++++++
- 2 files changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index c4b1947ebf76..288003a9f0ca 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -841,7 +841,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 		if (ret < 0)
- 			return ret;
-
--		move_imm(ctx, t1, func_addr, is32);
-+		move_addr(ctx, t1, func_addr);
- 		emit_insn(ctx, jirl, t1, LOONGARCH_GPR_RA, 0);
- 		move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_A0);
- 		break;
-diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-index ca708024fdd3..c335dc4eed37 100644
---- a/arch/loongarch/net/bpf_jit.h
-+++ b/arch/loongarch/net/bpf_jit.h
-@@ -82,6 +82,27 @@ static inline void emit_sext_32(struct jit_ctx *ctx, enum loongarch_gpr reg, boo
- 	emit_insn(ctx, addiw, reg, reg, 0);
- }
-
-+static inline void move_addr(struct jit_ctx *ctx, enum loongarch_gpr rd, u64 addr)
-+{
-+	u64 imm_11_0, imm_31_12, imm_51_32, imm_63_52;
-+
-+	/* lu12iw rd, imm_31_12 */
-+	imm_31_12 = (addr >> 12) & 0xfffff;
-+	emit_insn(ctx, lu12iw, rd, imm_31_12);
-+
-+	/* ori rd, rd, imm_11_0 */
-+	imm_11_0 = addr & 0xfff;
-+	emit_insn(ctx, ori, rd, rd, imm_11_0);
-+
-+	/* lu32id rd, imm_51_32 */
-+	imm_51_32 = (addr >> 32) & 0xfffff;
-+	emit_insn(ctx, lu32id, rd, imm_51_32);
-+
-+	/* lu52id rd, rd, imm_63_52 */
-+	imm_63_52 = (addr >> 52) & 0xfff;
-+	emit_insn(ctx, lu52id, rd, rd, imm_63_52);
-+}
-+
- static inline void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm, bool is32)
- {
- 	long imm_11_0, imm_31_12, imm_51_32, imm_63_52, imm_51_0, imm_51_31;
---
-2.31.1
+Hengqi
