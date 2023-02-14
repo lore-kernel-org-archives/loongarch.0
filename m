@@ -1,106 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC38C088
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 14:10:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1676383852;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7edBYp6qpX/SlmDw/QknJtcx6m2SrqGm1x4V+hfCBb4=;
-	b=hJ8l+sTbhqlxPfpgz9IPnE3v2+m+9DukW6d9XwAmJE9UafeMd71Gt5huOxcF45yLsJkJAP
-	+GopWafvY0VeWKh1H0Gj46lvsmypZFP1SJ0GraS9U5zcv5ADt1yxHGgWnKifBieyPj45cA
-	GvIpwdFIlJ41saefHctiC0nP9OTOKPc=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-561-D5MAkn96MKCQ_ET191W45A-1; Tue, 14 Feb 2023 09:10:50 -0500
-X-MC-Unique: D5MAkn96MKCQ_ET191W45A-1
-Received: by mail-qv1-f70.google.com with SMTP id kd28-20020a056214401c00b0053cd4737a42so8801119qvb.22
-        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 06:10:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7edBYp6qpX/SlmDw/QknJtcx6m2SrqGm1x4V+hfCBb4=;
-        b=kq7gxxjX5lzs/pPHTVmPR9qEbQIE3ZWz6zwRIEWcn+ideK/DwkDPUG4jxDxzh3iGBW
-         mouJTpv0zXPYYTn3FLReZTPoSQXxEs40DDJONoX02+vbdtorf/4GKCC+iWs1aEAaXYA0
-         UkVRXSM4vwFMb+r6jJDidin5SWEQuBDGjQlVenmzJUszWU9BA3PotWwkhq6pXrf0JMI/
-         8+uFT13W+AvsOECA6AAayMnGeha2yMP2UYqr5UdBQEaCibE1FdmFo8nIP38H+PnlWmlF
-         dxM4Cf0b+ebpU9IlLbL6bAzGWed60t9D0RYcj/jnerj+nTdm5sssJCIDN/arsB4uealQ
-         vXnw==
-X-Gm-Message-State: AO0yUKWLZ4o1S+ROyJYx/QnexLbFykG4tzymLdDK60cuCvZ9R9TSKeX2
-	19Q6YHJqYzcRx/nWWF0Ke2rR5iyYJlKMNJ1hgRmohDOPYCQ7FyCTzEvKGn3OthJb1Yp7u8onJQ0
-	DANoRM8Vjn76A/Kl9wMKF
-X-Received: by 2002:a05:622a:50:b0:3b8:691f:271 with SMTP id y16-20020a05622a005000b003b8691f0271mr3386037qtw.63.1676383850322;
-        Tue, 14 Feb 2023 06:10:50 -0800 (PST)
-X-Google-Smtp-Source: AK7set98OEMKfsGkU19OgnlE6heJ9O6LLo1g6QDlcHkAXfWHsX591p7/3MvgrPqMUwlWB9z0tPx4tA==
-X-Received: by 2002:a05:622a:50:b0:3b8:691f:271 with SMTP id y16-20020a05622a005000b003b8691f0271mr3385969qtw.63.1676383849978;
-        Tue, 14 Feb 2023 06:10:49 -0800 (PST)
-Received: from vschneid.remote.csb ([154.57.232.159])
-        by smtp.gmail.com with ESMTPSA id s184-20020ae9dec1000000b0073b38652b9csm4892065qkf.122.2023.02.14.06.10.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Feb 2023 06:10:49 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-xtensa@linux-xtensa.org, x86@kernel.org
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>, Daniel
- Bristot de Oliveira <bristot@redhat.com>, Marcelo Tosatti
- <mtosatti@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Marc
- Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell
- King <linux@armlinux.org.uk>, Nicholas Piggin <npiggin@gmail.com>, Guo Ren
- <guoren@kernel.org>, "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v4 0/7] Generic IPI sending tracepoint
-In-Reply-To: <20230119143619.2733236-1-vschneid@redhat.com>
-References: <20230119143619.2733236-1-vschneid@redhat.com>
-Date: Tue, 14 Feb 2023 14:10:43 +0000
-Message-ID: <xhsmhh6voqqvw.mognet@vschneid.remote.csb>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC457C088
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 14:15:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0907C433EF;
+	Tue, 14 Feb 2023 14:14:59 +0000 (UTC)
+Date: Tue, 14 Feb 2023 14:14:56 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+	linux-arch@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>
+Subject: Re: [PATCH v3 02/24] arm64: Remove COMMAND_LINE_SIZE from uapi
+Message-ID: <Y+uXYILgDMc7zrh+@arm.com>
+References: <20230214074925.228106-1-alexghiti@rivosinc.com>
+ <20230214074925.228106-3-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230214074925.228106-3-alexghiti@rivosinc.com>
 
+On Tue, Feb 14, 2023 at 08:49:03AM +0100, Alexandre Ghiti wrote:
+> From: Palmer Dabbelt <palmer@rivosinc.com>
+> 
+> As far as I can tell this is not used by userspace and thus should not
+> be part of the user-visible API.
+> 
+> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
 
-Hey folks,
-
-On 19/01/23 14:36, Valentin Schneider wrote:
-> Patches
-> =======
->
-> o Patches 1-5 spread out the tracepoint across relevant sites.
->   Patch 5 ends up sprinkling lots of #include <trace/events/ipi.h> which I'm not
->   the biggest fan of, but is the least horrible solution I've been able to come
->   up with so far.
->
-> o Patch 7 is trying to be smart about tracing the callback associated with the
->   IPI.
->
-> This results in having IPI trace events for:
->
-> o smp_call_function*()
-> o smp_send_reschedule()
-> o irq_work_queue*()
-> o standalone uses of __smp_call_single_queue()
->
-
-This still rebases cleanly on top of the latest tip/sched/core, any
-objections to parking it there?
-
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
