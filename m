@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A638C1FD1
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 02:56:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CBEC1FDE
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 02:56:59 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Cxjdp5+OpjulcAAA--.1156S3;
-	Tue, 14 Feb 2023 10:56:57 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Bxedl6+Opj2FcAAA--.818S3;
+	Tue, 14 Feb 2023 10:56:58 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axeb1w+OpjmZwyAA--.28802S22;
-	Tue, 14 Feb 2023 10:56:56 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axeb1w+OpjmZwyAA--.28802S26;
+	Tue, 14 Feb 2023 10:56:58 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -18,9 +18,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Jens Axboe <axboe@kernel.dk>,
 	Mark Brown <broonie@kernel.org>,
 	Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH v1 20/24] LoongArch: KVM: Implement handle fpu exception
-Date: Tue, 14 Feb 2023 10:56:44 +0800
-Message-Id: <20230214025648.1898508-21-zhaotianrui@loongson.cn>
+Subject: [PATCH v1 24/24] LoongArch: KVM: Enable kvm config and add the makefile
+Date: Tue, 14 Feb 2023 10:56:48 +0800
+Message-Id: <20230214025648.1898508-25-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
 References: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
@@ -31,11 +31,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axeb1w+OpjmZwyAA--.28802S22
+X-CM-TRANSID:AQAAf8Axeb1w+OpjmZwyAA--.28802S26
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7tF45ur4xuFW7KFWUtF47Arb_yoW8Gr18pF
-	WfZwnY9r48Wry7ta9Iy3Wqqr43CrZ5Kry7WrZFk345Zw4Uta4rXF48KrWvgFy5tr1rXa1S
-	qr13KFn8uF1UA3DanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXFW3Ww4DWry3Cr48KFy7GFg_yoW5KF1DpF
+	s7Ar1kGr4xWFn3JrZ3t34kWrs8CFn7Kr47u3Waya48Cry7Z34kur1ktr9rXFyUA393JrW0
+	gr1rGa1agayUJw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -50,49 +50,133 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7tF45ur4xuFW7KFWUtF47Arb_yoW8Gr18pF
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
 	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement handle fpu exception, using kvm_own_fpu to enable fpu for
-guest.
+Enable loongarch kvm config and add the makefile to support build kvm
+module.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/loongarch/Kbuild                      |  1 +
+ arch/loongarch/Kconfig                     |  2 ++
+ arch/loongarch/configs/loongson3_defconfig |  2 ++
+ arch/loongarch/kvm/Kconfig                 | 38 ++++++++++++++++++++++
+ arch/loongarch/kvm/Makefile                | 21 ++++++++++++
+ 5 files changed, 64 insertions(+)
+ create mode 100644 arch/loongarch/kvm/Kconfig
+ create mode 100644 arch/loongarch/kvm/Makefile
 
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 30e64ba72..89c90faa1 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -625,3 +625,30 @@ static int _kvm_handle_read_fault(struct kvm_vcpu *vcpu)
- {
- 	return _kvm_handle_mmu_fault(vcpu, false);
- }
+diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
+index b01f5cdb2..40be8a169 100644
+--- a/arch/loongarch/Kbuild
++++ b/arch/loongarch/Kbuild
+@@ -2,6 +2,7 @@ obj-y += kernel/
+ obj-y += mm/
+ obj-y += net/
+ obj-y += vdso/
++obj-y += kvm/
+ 
+ # for cleaning
+ subdir- += boot
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 9cc8b84f7..424ad9392 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -142,6 +142,7 @@ config LOONGARCH
+ 	select USE_PERCPU_NUMA_NODE_ID
+ 	select USER_STACKTRACE_SUPPORT
+ 	select ZONE_DMA32
++	select HAVE_KVM
+ 
+ config 32BIT
+ 	bool
+@@ -541,3 +542,4 @@ source "drivers/acpi/Kconfig"
+ endmenu
+ 
+ source "drivers/firmware/Kconfig"
++source "arch/loongarch/kvm/Kconfig"
+diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+index eb84cae64..9a6e31b43 100644
+--- a/arch/loongarch/configs/loongson3_defconfig
++++ b/arch/loongarch/configs/loongson3_defconfig
+@@ -62,6 +62,8 @@ CONFIG_EFI_ZBOOT=y
+ CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
+ CONFIG_EFI_CAPSULE_LOADER=m
+ CONFIG_EFI_TEST=m
++CONFIG_VIRTUALIZATION=y
++CONFIG_KVM=m
+ CONFIG_MODULES=y
+ CONFIG_MODULE_FORCE_LOAD=y
+ CONFIG_MODULE_UNLOAD=y
+diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
+new file mode 100644
+index 000000000..8a999b4c0
+--- /dev/null
++++ b/arch/loongarch/kvm/Kconfig
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# KVM configuration
++#
 +
-+/**
-+ * _kvm_handle_fpu_disabled() - Guest used fpu however it is disabled at host
-+ * @vcpu:	Virtual CPU context.
-+ *
-+ * Handle when the guest attempts to use fpu which hasn't been allowed
-+ * by the root context.
-+ */
-+static int _kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_run *run = vcpu->run;
++source "virt/kvm/Kconfig"
 +
-+	/*
-+	 * If guest FPU not present, the FPU operation should have been
-+	 * treated as a reserved instruction!
-+	 * If FPU already in use, we shouldn't get this at all.
-+	 */
-+	if (WARN_ON(!_kvm_guest_has_fpu(&vcpu->arch) ||
-+				vcpu->arch.aux_inuse & KVM_LARCH_FPU)) {
-+		kvm_err("%s internal error\n", __func__);
-+		run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-+		return RESUME_HOST;
-+	}
++menuconfig VIRTUALIZATION
++	bool "Virtualization"
++	help
++	  Say Y here to get to see options for using your Linux host to run
++	  other operating systems inside virtual machines (guests).
++	  This option alone does not add any kernel code.
 +
-+	kvm_own_fpu(vcpu);
-+	return RESUME_GUEST;
-+}
++	  If you say N, all options in this submenu will be skipped and
++	  disabled.
++
++if VIRTUALIZATION
++
++config KVM
++	tristate "Kernel-based Virtual Machine (KVM) support"
++	depends on HAVE_KVM
++	select MMU_NOTIFIER
++	select ANON_INODES
++	select PREEMPT_NOTIFIERS
++	select KVM_MMIO
++	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
++	select HAVE_KVM_VCPU_ASYNC_IOCTL
++	select HAVE_KVM_EVENTFD
++	select SRCU
++	help
++	  Support hosting virtualized guest machines using hardware
++	  virtualization extensions. You will need a fairly processor
++	  equipped with virtualization extensions.
++
++	  If unsure, say N.
++
++endif # VIRTUALIZATION
+diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+new file mode 100644
+index 000000000..42e9dcc18
+--- /dev/null
++++ b/arch/loongarch/kvm/Makefile
+@@ -0,0 +1,21 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Makefile for LOONGARCH KVM support
++#
++
++ccflags-y += -I $(srctree)/$(src)
++
++include $(srctree)/virt/kvm/Makefile.kvm
++
++obj-$(CONFIG_KVM) += kvm.o
++
++kvm-y += main.o
++kvm-y += vm.o
++kvm-y += vmid.o
++kvm-y += tlb.o
++kvm-y += mmu.o
++kvm-y += vcpu.o
++kvm-y += exit.o
++kvm-y += interrupt.o
++kvm-y += timer.o
++kvm-y += switch.o
 -- 
 2.31.1
 
