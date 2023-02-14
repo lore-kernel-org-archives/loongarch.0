@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FCC2CAB
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:06:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7744CC433AE;
-	Tue, 14 Feb 2023 07:06:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308322CAB
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:06:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57FCAC433A1;
+	Tue, 14 Feb 2023 07:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1676358412;
-	bh=Ya58HiCcymNeXiDsDrSrB3MVa42ANSTnVDrYM/I8DGE=;
+	s=k20201202; t=1676358414;
+	bh=wu6LTRXru7nWyi2Ep9Lymkp1Vs6jli+8qnKXJEfRRlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o1g46MnmwcBx8T5+mpqxpWg9RNiPGwxWh7u50+UbvVV/HCNE/CzztVflEM53qxglv
-	 YYK/YrY0Q9V6xIHds9bSBH9HN0lqUKa6Z1xe3cfCjxpSNsspagp2pNbL0WMNKEQ0Rx
-	 pzr+HaAh9N3K2/cV0XtAVxzNNCB75oEBpHNITqIRR27J3mfkFgz/r562+bVXahSIST
-	 IY0Pnmrhw/r9K8+6kstkVaj4pLQJnS5iSYM8p9up4WRV2EcZ3VkSKGVUgn+3GYoIew
-	 SCyrNFtXGmtYxVMosYI0z60anWodjY2gKyCCb0H5AEcAnHnT5mlvQpZIVvTrKYjllD
-	 UOkJrRuEY33Fg==
+	b=pBWajwyC6eZHxl5YTbqnE/95CYn//yQCVENJWaDj5KhoUt1aag5nvaHja/0HdJ1mW
+	 X4MWumwa8fgVpZVuVCKQjcQ2ErPDfuq9EWIL1C6CsOcO4hXctxKlHJVwMXOUF+JTiF
+	 B+//nYfwgDdiV1oKlcXo9Hd0YLE8QOjNVv1BQhhcOsgmaTkK99tBhbNQ1crwms+Ua9
+	 am/PeEUzKk2CCwsnSgTjTS3Ztlw5wa3G6w/fqp3eeOJYZuKeyUDi3bvvzbM718WHOi
+	 Uuem/JRBOqIzvtXYvVZXF1W4bCz75afEA61iOZpnVcnNwJStxDuuCWKI6Hr+grLu3E
+	 hXdS10io+JBzg==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: jgross@suse.com,
@@ -65,9 +65,9 @@ Cc: jgross@suse.com,
 	bristot@redhat.com,
 	vschneid@redhat.com,
 	paulmck@kernel.org
-Subject: [PATCH v2 02/24] alpha/cpu: Make sure arch_cpu_idle_dead() doesn't return
-Date: Mon, 13 Feb 2023 23:05:36 -0800
-Message-Id: <19ffef09a175fecb783abcd44d6bcfeade2857eb.1676358308.git.jpoimboe@kernel.org>
+Subject: [PATCH v2 03/24] arm/cpu: Make sure arch_cpu_idle_dead() doesn't return
+Date: Mon, 13 Feb 2023 23:05:37 -0800
+Message-Id: <ed361403b8ee965f758fe491c47336dddcfb8fd5.1676358308.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <cover.1676358308.git.jpoimboe@kernel.org>
 References: <cover.1676358308.git.jpoimboe@kernel.org>
@@ -89,20 +89,21 @@ the function into whatever code happens to be next.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/alpha/kernel/process.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/kernel/smp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/alpha/kernel/process.c b/arch/alpha/kernel/process.c
-index d1f2e8b6b107..d0ff06eda8fa 100644
---- a/arch/alpha/kernel/process.c
-+++ b/arch/alpha/kernel/process.c
-@@ -63,6 +63,7 @@ void arch_cpu_idle(void)
- void arch_cpu_idle_dead(void)
- {
- 	wtint(INT_MAX);
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index 0b8c25763adc..adcd417c526b 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -382,6 +382,8 @@ void arch_cpu_idle_dead(void)
+ 		: "r" (task_stack_page(current) + THREAD_SIZE - 8),
+ 		  "r" (current)
+ 		: "r0");
++
 +	BUG();
  }
- #endif /* ALPHA_WTINT */
+ #endif /* CONFIG_HOTPLUG_CPU */
  
 -- 
 2.39.1
