@@ -1,194 +1,178 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE38C7C
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 01:31:12 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8Dx1thd5Opjx1EAAA--.301S3;
-	Tue, 14 Feb 2023 09:31:09 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxib1b5OpjgJQyAA--.28695S3;
-	Tue, 14 Feb 2023 09:31:07 +0800 (CST)
-Message-ID: <ec49593a-60a4-be91-0fb2-af517eaf6d6a@loongson.cn>
-Date: Tue, 14 Feb 2023 09:31:07 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06F4115CA
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 02:56:53 +0000 (UTC)
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8Bx+9lz+OpjLlcAAA--.957S3;
+	Tue, 14 Feb 2023 10:56:51 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axeb1w+OpjmZwyAA--.28802S2;
+	Tue, 14 Feb 2023 10:56:48 +0800 (CST)
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH v1 00/24] Add KVM LoongArch support
+Date: Tue, 14 Feb 2023 10:56:24 +0800
+Message-Id: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
-Content-Language: en-US
-To: David Laight <David.Laight@ACULAB.COM>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20230209035839.2610277-1-maobibo@loongson.cn>
- <e6bb59c32134477aa4890047ae5ad51b@AcuMS.aculab.com>
- <741b2246-d609-ccc6-bf55-d6b0b5e54b54@loongson.cn>
- <2aa6243491784e74960182dc12968170@AcuMS.aculab.com>
- <CAAhV-H7BgBASt_CpSQgS6MNbzxODhoq8ykK5ZAn2y3ZOekXM9g@mail.gmail.com>
- <0fe7ed7c-7161-65d5-a09f-12db6ccda05a@loongson.cn>
- <b17430342e9e4c39b53004d842ea9c55@AcuMS.aculab.com>
-From: maobibo <maobibo@loongson.cn>
-In-Reply-To: <b17430342e9e4c39b53004d842ea9c55@AcuMS.aculab.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxib1b5OpjgJQyAA--.28695S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxGFWUWry3Zr1UAw15Cw4xtFb_yoWrZryrpF
-	W5GF1rG3ZrZFn5Jrn7tF47u395Zws5GryUGF45JrWYv3s8CF4ftayDKrZ0vanFkr4SkFya
-	v3Wqvw1xWF1DAw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-CM-TRANSID:AQAAf8Axeb1w+OpjmZwyAA--.28802S2
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxKFWkZFWrGr4kGry7Jr1DKFg_yoWxXFWkpF
+	W3urn8Gr4UGrZ3X3yvq3s8Zwn0vF1xGryag3WavFy8CrW2qry8ZrykKr9FvFy3AaykJr10
+	qr1rKw1ag3WUJaDanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1le2I2
-	62IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4
-	CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvj
-	eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw2
-	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
-	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrw
-	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI
-	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
-	80aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUUU
+	bcAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
+	CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
+
+This series adds KVM LoongArch support. Loongson 3A5000 supports hardware
+assisted virtualization. With cpu virtualization, there are separate
+hw-supported user mode and kernel mode in guest mode. With memory
+virtualization, there are two-level hw mmu table for guest mode and host
+mode. Also there is separate hw cpu timer with consant frequency in
+guest mode, so that vm can migrate between hosts with different freq.
+Currently, we are able to boot LoongArch Linux Guests.
+
+Few key aspects of KVM LoongArch added by this series are:
+1. Enable kvm hardware function when kvm module is loaded.
+2. Implement VM and vcpu related ioctl interface such as vcpu create,
+   vcpu run etc. GET_ONE_REG/SET_ONE_REG ioctl commands are use to
+   get general registers one by one; KVM_GET_CSRS can be used to
+   get system registers with batch mode similar with KVM_GET_MSRS in x86.
+3. Hardware access about MMU, timer and csr are emulated in kernel.
+4. Hardwares such as mmio and iocsr device are emulated in user space
+   such as APIC, IPI, pci devices etc.
+
+The running environment of LoongArch virt machine:
+1. Cross tools to build kernel and uefi:
+   $ wget https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-6.3-cross-tools-gcc-glibc.tar.xz
+   tar -vxf loongarch64-clfs-6.3-cross-tools-gcc-glibc.tar.xz  -C /opt
+   export PATH=/opt/cross-tools/bin:$PATH
+   export LD_LIBRARY_PATH=/opt/cross-tools/lib:$LD_LIBRARY_PATH
+   export LD_LIBRARY_PATH=/opt/cross-tools/loongarch64-unknown-linux-gnu/lib/:$LD_LIBRARY_PATH
+2. This series is based on the linux source code:
+   https://github.com/loongson/linux-loongarch-kvm
+   Build command:
+   git checkout kvm-loongarch
+   make ARCH=loongarch CROSS_COMPILE=loongarch64-unknown-linux-gnu- loongson3_defconfig
+   make ARCH=loongarch CROSS_COMPILE=loongarch64-unknown-linux-gnu-
+3. QEMU hypervisor with LoongArch supported:
+   https://github.com/loongson/qemu
+   Build command:
+   git checkout kvm-loongarch
+   ./configure --target-list="loongarch64-softmmu"  --enable-kvm
+   make
+4. Uefi bios of LoongArch virt machine:
+   Reference: https://github.com/tianocore/edk2-platforms/tree/master/Platform/Loongson/LoongArchQemuPkg#readme
+5. you can also access the binary files we have already build:
+   https://github.com/yangxiaojuan-loongson/qemu-binary
+
+The command to boot loongarch virt machine:
+   $ qemu-system-loongarch64 -machine virt -m 4G -cpu la464 \
+   -smp 1 -bios QEMU_EFI.fd -kernel vmlinuz.efi -initrd ramdisk \
+   -serial stdio   -monitor telnet:localhost:4495,server,nowait \
+   -append "root=/dev/ram rdinit=/sbin/init console=ttyS0,115200" \
+   --nographic
 
 
+Tianrui Zhao (24):
+  LoongArch: KVM: Implement kvm module related interface
+  LoongArch: KVM: Implement VM related functions
+  LoongArch: KVM: Implement vcpu create,run,destroy operations.
+  LoongArch: KVM: Implement vcpu get, vcpu set registers
+  LoongArch: KVM: Implement vcpu ENABLE_CAP, CHECK_EXTENSION ioctl
+    interface
+  LoongArch: KVM: Implement fpu related operations for vcpu
+  LoongArch: KVM: Implement vcpu interrupt operations
+  LoongArch: KVM: Implement misc vcpu related interfaces
+  LoongArch: KVM: Implement vcpu load and vcpu put operations
+  LoongArch: KVM: Implement vcpu status description
+  LoongArch: KVM: Implement update VM id function
+  LoongArch: KVM: Implement virtual machine tlb operations
+  LoongArch: KVM: Implement vcpu timer operations
+  LoongArch: KVM: Implement kvm mmu operations
+  LoongArch: KVM: Implement handle csr excption
+  LoongArch: KVM: Implement handle iocsr exception
+  LoongArch: KVM: Implement handle idle exception
+  LoongArch: KVM: Implement handle gspr exception
+  LoongArch: KVM: Implement handle mmio exception
+  LoongArch: KVM: Implement handle fpu exception
+  LoongArch: KVM: Implement kvm exception vector
+  LoongArch: KVM: Implement vcpu world switch
+  LoongArch: KVM: Implement probe virtualization when loongarch cpu init
+  LoongArch: KVM: Enable kvm config and add the makefile
 
-在 2023/2/10 19:08, David Laight 写道:
-> From: maobibo
->> Sent: 10 February 2023 10:06
->>
->> With the test cases
->>   https://github.com/bibo-mao/bench/tree/master/csum
->>
->> Tested with different buffer size 4096/1472/250/40, here is the output on my
->> loongarch machine. Loops times is 0x100000, and time cost unit is milliseconds,
->> and the smaller value will be better.
->>
->>
->> buf size[4096] loops[0x100000] times[us]: csum uint128 344473 asm method 373391 uint64 741412
->> buf size[1472] loops[0x100000] times[us]: csum uint128 131849 asm method 138533 uint64 271317
->> buf size[ 250] loops[0x100000] times[us]: csum uint128 34512 asm method 36294 uint64 51576
->> buf size[  40] loops[0x100000] times[us]: csum uint128 12182 asm method 23874 uint64 15769
-> 
-> What do those work out as in bytes/clock?
-> 
-> Rather than run 1000s of iterations (and be hit by interrupts etc)
-> I sometimes just use an accurate cycle counter and measure the
-> time for a single buffer (or varying length).
-> Save and print the values of 10 calls and you'll get pretty
-> consistent values after the first couple (cold cache).
-> Then you can work out how long each iteration of the main loop costs.
-> 
-> I think you have to execute 4 instructions for each 64bit word.
-> One memory read, the main add, a setle and the add of the carry.
-> 
-> For a simple cpu that is always going to be 4 clocks.
-> But if there are delay slots after the memory read you can
-> fill them with the alu instructions for an earlier read.
-> You also need an add and bne for the address for each iteration.
-> So unrolling the loop further will help.
-> 
-> OTOH if your cpu can execute multiple instructions in one clock
-> you can expect to do a lot better.
-> With 3 ALU instructions (and one read) you should be able to
-> find a code sequence that will run at 8 bytes/clock.
-> With 4 ALU it is likely that the loop instructions can also
-> execute in parallel - so you don't need massive loop unrolling.
-> 
-> Unless the cpu is massively 'out of order' (like some x86)
-> I'd expect the best code to interleave the reads and alu
-> operations for earlier values - rather than having all
-> the reads at the top of the loop.
-> So the loop would be a repeating pattern of instructions
-> with some values being carried between iterations.
-Part of asm code depends on previous intr in website
-https://github.com/loongson/linux/commit/92a6df48ccb73dd2c3dc1799add08adf0e0b0deb,
-such as macro ADDC
-#define ADDC(sum,reg)                                           \
-        ADD     sum, sum, reg;                                  \
-        sltu    t8, sum, reg;                                   \
-        ADD     sum, sum, t8;                                   \
-these three instructions depends on each other, and can not execute
-in parallel. 
+ arch/loongarch/Kbuild                      |    1 +
+ arch/loongarch/Kconfig                     |    2 +
+ arch/loongarch/configs/loongson3_defconfig |    2 +
+ arch/loongarch/include/asm/cpu-features.h  |   22 +
+ arch/loongarch/include/asm/cpu-info.h      |   13 +
+ arch/loongarch/include/asm/inst.h          |   16 +
+ arch/loongarch/include/asm/kvm_csr.h       |   89 ++
+ arch/loongarch/include/asm/kvm_host.h      |  257 +++++
+ arch/loongarch/include/asm/kvm_types.h     |   11 +
+ arch/loongarch/include/asm/kvm_vcpu.h      |  112 ++
+ arch/loongarch/include/asm/loongarch.h     |  195 +++-
+ arch/loongarch/include/uapi/asm/kvm.h      |  121 ++
+ arch/loongarch/kernel/asm-offsets.c        |   32 +
+ arch/loongarch/kernel/cpu-probe.c          |   53 +
+ arch/loongarch/kvm/Kconfig                 |   38 +
+ arch/loongarch/kvm/Makefile                |   21 +
+ arch/loongarch/kvm/exit.c                  |  702 ++++++++++++
+ arch/loongarch/kvm/interrupt.c             |  126 +++
+ arch/loongarch/kvm/main.c                  |  152 +++
+ arch/loongarch/kvm/mmu.c                   |  821 ++++++++++++++
+ arch/loongarch/kvm/switch.S                |  327 ++++++
+ arch/loongarch/kvm/timer.c                 |  266 +++++
+ arch/loongarch/kvm/tlb.c                   |   31 +
+ arch/loongarch/kvm/trace.h                 |  137 +++
+ arch/loongarch/kvm/vcpu.c                  | 1185 ++++++++++++++++++++
+ arch/loongarch/kvm/vm.c                    |   85 ++
+ arch/loongarch/kvm/vmid.c                  |   64 ++
+ include/uapi/linux/kvm.h                   |   15 +
+ 28 files changed, 4890 insertions(+), 6 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kvm_csr.h
+ create mode 100644 arch/loongarch/include/asm/kvm_host.h
+ create mode 100644 arch/loongarch/include/asm/kvm_types.h
+ create mode 100644 arch/loongarch/include/asm/kvm_vcpu.h
+ create mode 100644 arch/loongarch/include/uapi/asm/kvm.h
+ create mode 100644 arch/loongarch/kvm/Kconfig
+ create mode 100644 arch/loongarch/kvm/Makefile
+ create mode 100644 arch/loongarch/kvm/exit.c
+ create mode 100644 arch/loongarch/kvm/interrupt.c
+ create mode 100644 arch/loongarch/kvm/main.c
+ create mode 100644 arch/loongarch/kvm/mmu.c
+ create mode 100644 arch/loongarch/kvm/switch.S
+ create mode 100644 arch/loongarch/kvm/timer.c
+ create mode 100644 arch/loongarch/kvm/tlb.c
+ create mode 100644 arch/loongarch/kvm/trace.h
+ create mode 100644 arch/loongarch/kvm/vcpu.c
+ create mode 100644 arch/loongarch/kvm/vm.c
+ create mode 100644 arch/loongarch/kvm/vmid.c
 
-The original of main loop about Lmove_128bytes is:
-#define CSUM_BIGCHUNK(src, offset, sum, _t0, _t1, _t2, _t3)     \
-        LOAD    _t0, src, (offset + UNIT(0));                   \
-        LOAD    _t1, src, (offset + UNIT(1));                   \
-        LOAD    _t2, src, (offset + UNIT(2));                   \
-        LOAD    _t3, src, (offset + UNIT(3));                   \
-        ADDC(_t0, _t1);                                         \
-        ADDC(_t2, _t3);                                         \
-        ADDC(sum, _t0);                                         \
-        ADDC(sum, _t2)
-
-.Lmove_128bytes:
-        CSUM_BIGCHUNK(src, 0x00, sum, t0, t1, t3, t4)
-        CSUM_BIGCHUNK(src, 0x20, sum, t0, t1, t3, t4)
-        CSUM_BIGCHUNK(src, 0x40, sum, t0, t1, t3, t4)
-        CSUM_BIGCHUNK(src, 0x60, sum, t0, t1, t3, t4)
-        addi.d  t5, t5, -1
-        addi.d  src, src, 0x80
-        bnez    t5, .Lmove_128bytes
-
-I modified the main loop with label .Lmove_128bytes to reduce
-dependency between instructions like this, it can improve the
-performance.
-can improve the performance.
-.Lmove_128bytes:
-        LOAD    t0, src, 0
-        LOAD    t1, src, 8
-        LOAD    t3, src, 16
-        LOAD    t4, src, 24
-        LOAD    a3, src, 0 + 0x20
-        LOAD    a4, src, 8 + 0x20
-        LOAD    a5, src, 16 + 0x20
-        LOAD    a6, src, 24 + 0x20
-        ADD     t0, t0,  t1
-        ADD     t3, t3,  t4
-        ADD     a3, a3,  a4
-        ADD     a5, a5,  a6
-        sltu    t8, t0,  t1
-        sltu    a7, t3,  t4
-        ADD     t0, t0,  t8
-        ADD     t3, t3,  a7
-        sltu    t1, a3,  a4
-        sltu    t4, a5,  a6
-        ADD     a3, a3,  t1
-        ADD     a5, a5,  t4
-        ADD     t0, t0, t3
-        ADD     a3, a3, a5
-        sltu    t1, t0, t3
-        sltu    t4, a3, a5
-        ADD     t0, t0, t1
-        ADD     a3, a3, t4
-        ADD     sum, sum, t0
-        sltu    t8,  sum, t0
-        ADD     sum, sum,  t8
-        ADD     sum, sum, a3
-        sltu    t8,  sum, a3
-        addi.d  t5, t5, -1
-        ADD     sum, sum, t8
-
-However the result and principle is almost the similar with
-uint128 c code. And there is no performance impact interleaving
-the reads and alu operations.
-
-Regards
-Bibo, Mao
-
-> 
-> I doubt you'll get a loop to execute every clock, but
-> a two clock loop is entirely possible.
-> It rather depends how fast the instruction decoder
-> handles the (predicted) branch.
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
+-- 
+2.31.1
 
