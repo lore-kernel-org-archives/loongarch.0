@@ -1,95 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FFCC5F7
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 20:19:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40F00C433EF;
-	Tue, 14 Feb 2023 20:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1676405952;
-	bh=8/V8zQrKDfVgeKbs27WthihxgwdivBHQ1xvEeA6uoYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vQOpB4jZU06j0E1MKDDJZEPPNRmXS0/cOAjGFTxoXLPrgQIK/B47hTb0QFcKIneZb
-	 s0jPY923NwwG0EAaHw8yq2VeY+rnIZejt5UaWx/A6Novye6lAoPweaDLN/vVDTfV4/
-	 z2wbU080F9o3lsW1XlbaHeONXQOQPrvD/SUfEbdGlUuV0/0zX3LoW10/MVrsarzBdE
-	 ceX7Oa5FeZeJLYpScL4JzHvW13XbOGzyYkvzihDtHpZE/AnlwkFrJ1ZK6bjfdTEzD6
-	 0YVc817WUB5hgfgY4gpdM1zFQ3vDBu3uys4X8js6W3ZOQyDxWfawx8vYr8MN57D9M7
-	 IlAUpkSGii2pg==
-Date: Tue, 14 Feb 2023 12:19:09 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Max Filippov <jcmvbkbc@gmail.com>
-Cc: juri.lelli@redhat.com, dalias@libc.org, linux-ia64@vger.kernel.org,
-	linux-sh@vger.kernel.org, peterz@infradead.org,
-	catalin.marinas@arm.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org,
-	bsegall@google.com, guoren@kernel.org, hpa@zytor.com,
-	sparclinux@vger.kernel.org, kernel@xen0n.name, will@kernel.org,
-	vschneid@redhat.com, f.fainelli@gmail.com,
-	vincent.guittot@linaro.org, ysato@users.sourceforge.jp,
-	chenhuacai@kernel.org, linux@armlinux.org.uk,
-	linux-csky@vger.kernel.org, mingo@redhat.com,
-	bcm-kernel-feedback-list@broadcom.com, mgorman@suse.de,
-	mattst88@gmail.com, linux-xtensa@linux-xtensa.org,
-	paulmck@kernel.org, richard.henderson@linaro.org, npiggin@gmail.com,
-	ink@jurassic.park.msu.ru, rostedt@goodmis.org,
-	loongarch@lists.linux.dev, tglx@linutronix.de,
-	dietmar.eggemann@arm.com, linux-arm-kernel@lists.infradead.org,
-	jgross@suse.com, chris@zankel.net, tsbogend@alpha.franken.de,
-	Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-	bristot@redhat.com, linux-kernel@vger.kernel.org,
-	linux-alpha@vger.kernel.org, bp@alien8.de,
-	linuxppc-dev@lists.ozlabs.org, davem@davemloft.net
-Subject: Re: [PATCH v2 19/24] xtensa/cpu: Make sure cpu_die() doesn't return
-Message-ID: <20230214201909.flqc3g3njnbl5hun@treble>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6C4CB80
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 22:02:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ZAoS9GAPCjvcD2e9rjRkdzaMQfoBwDvlSDrbpklXNtw=; b=gOWkVHN6VrFdTRZ3tkfzExyMX5
+	iJG3T+SC9IXbxn90Fbaz8qafSZ2cSWCKJIfE8M6lrpaFk6i6pbMJcmCesDgK+0V1ZlSkpV3lpLQvt
+	6t3as6FVzUgvCdry0d05aVbpoyawUPAWWKEqHsdUd51LfdMnUdvaseupK9S0TyD3aRX25kRmEaruc
+	EDzNZOFM6e6s8/SHUq+zLrY0bXzYJpc9f4y5Cy3NTRq9ku5n9kEMzAqA4jLJe3H8GReXifQoT0YuX
+	GYQEQY1P5tctvQOGyUvJ+7gLiMHs9z3IdsrOcbX7CJOmYcb6RVPKTGGR+IyKtzcy3IDf7PHmpL/Fz
+	TKUvgqew==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59692)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1pS3Ms-00064U-Fz; Tue, 14 Feb 2023 22:01:42 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1pS3Mf-0004Fv-KA; Tue, 14 Feb 2023 22:01:29 +0000
+Date: Tue, 14 Feb 2023 22:01:29 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: linux-kernel@vger.kernel.org, jgross@suse.com,
+	richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+	mattst88@gmail.com, linux-alpha@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+	will@kernel.org, guoren@kernel.org, linux-csky@vger.kernel.org,
+	linux-ia64@vger.kernel.org, chenhuacai@kernel.org,
+	kernel@xen0n.name, loongarch@lists.linux.dev, f.fainelli@gmail.com,
+	bcm-kernel-feedback-list@broadcom.com, tsbogend@alpha.franken.de,
+	linux-mips@vger.kernel.org, jiaxun.yang@flygoat.com,
+	mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+	linuxppc-dev@lists.ozlabs.org, ysato@users.sourceforge.jp,
+	dalias@libc.org, linux-sh@vger.kernel.org, davem@davemloft.net,
+	sparclinux@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
+	linux-xtensa@linux-xtensa.org, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	paulmck@kernel.org
+Subject: Re: [PATCH v2 03/24] arm/cpu: Make sure arch_cpu_idle_dead() doesn't
+ return
+Message-ID: <Y+wEubLjgDQDIbSO@shell.armlinux.org.uk>
 References: <cover.1676358308.git.jpoimboe@kernel.org>
- <cca346b5c87693499e630291d78fb0bf12c24290.1676358308.git.jpoimboe@kernel.org>
- <1b4afd82-83cb-0060-7cab-8e16d2e69ff9@linaro.org>
- <20230214182322.r5tyeowxzloiuh72@treble>
- <CAMo8BfLzV0Oe_i-QrMzE-BE028s6GNvOd827N5+tteELidjpvA@mail.gmail.com>
+ <ed361403b8ee965f758fe491c47336dddcfb8fd5.1676358308.git.jpoimboe@kernel.org>
+ <Y+ttS0japRCzHoFM@shell.armlinux.org.uk>
+ <20230214183926.46trlpdror3v5sk5@treble>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMo8BfLzV0Oe_i-QrMzE-BE028s6GNvOd827N5+tteELidjpvA@mail.gmail.com>
+In-Reply-To: <20230214183926.46trlpdror3v5sk5@treble>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Tue, Feb 14, 2023 at 11:48:41AM -0800, Max Filippov wrote:
-> On Tue, Feb 14, 2023 at 10:23 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> > On Tue, Feb 14, 2023 at 08:55:32AM +0100, Philippe Mathieu-Daudé wrote:
-> > > Can you update the documentation along? Currently we have:
-> > >
-> > >   /*
-> > >    * Called from the idle thread for the CPU which has been shutdown.
-> > >    *
-> > >    * Note that we disable IRQs here, but do not re-enable them
-> > >    * before returning to the caller. This is also the behaviour
-> > >    * of the other hotplug-cpu capable cores, so presumably coming
-> > >    * out of idle fixes this.
-> > >    */
-> >
-> > void __ref cpu_die(void)
-> > {
-> >         idle_task_exit();
-> >         local_irq_disable();
-> >         __asm__ __volatile__(
-> >                         "       movi    a2, cpu_restart\n"
-> >                         "       jx      a2\n");
-> >
-> >         BUG();
-> > }
-> >
-> > Hm, not only is the comment wrong, but it seems to be branching to
-> > cpu_restart?  That doesn't seem right at all.
+On Tue, Feb 14, 2023 at 10:39:26AM -0800, Josh Poimboeuf wrote:
+> On Tue, Feb 14, 2023 at 11:15:23AM +0000, Russell King (Oracle) wrote:
+> > On Mon, Feb 13, 2023 at 11:05:37PM -0800, Josh Poimboeuf wrote:
+> > > arch_cpu_idle_dead() doesn't return.  Make that more explicit with a
+> > > BUG().
+> > > 
+> > > BUG() is preferable to unreachable() because BUG() is a more explicit
+> > > failure mode and avoids undefined behavior like falling off the edge of
+> > > the function into whatever code happens to be next.
+> > 
+> > This is silly. Just mark the function __noreturn and be done with it.
+> > If the CPU ever executes code past the "b" instruction, it's already
+> > really broken that the extra instructions that BUG() gives will be
+> > meaningless.
+> > 
+> > This patch does nothing except add yet more bloat the kernel.
+> > 
+> > Sorry, but NAK.
 > 
-> Perhaps the name is a bit misleading. The CPU that enters 'cpu_restart'
-> loops there until a call to 'boot_secondary' releases it, after which it goes
-> to '_startup'. So it is a restart, but not immediate.
+> Problem is, the compiler can't read inline asm.  So you'd get a 
+> "'noreturn' function does return" warning.
+> 
+> We can do an unreachable() instead of a BUG() here if you prefer
+> undefined behavior.
 
-Ah, I see.  That sounds similar to what Xen does.
+That's fine.
 
 -- 
-Josh
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
