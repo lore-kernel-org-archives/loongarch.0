@@ -1,43 +1,43 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8213C02
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:53:04 +0000 (UTC)
-Received: by mail-wm1-f42.google.com with SMTP id hg24-20020a05600c539800b003e1f5f2a29cso563239wmb.4
-        for <loongarch@lists.linux.dev>; Mon, 13 Feb 2023 23:53:04 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972D13C02
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:54:06 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id l37-20020a05600c1d2500b003dfe46a9801so10891421wms.0
+        for <loongarch@lists.linux.dev>; Mon, 13 Feb 2023 23:54:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6DeOLRVEJw2sfJI9qGhq/0LGJxW9LKFzi0kTd/R8USc=;
-        b=6En8tdEtEE2yL3ckaGlXW3X8IQF8Oidpm5CEN86wGeiTSRAoieRepn+r4rC5ddJwkT
-         R7z+fNhI1jTwzCKC1qEthBZ7fy0C8HXkbpCrS0h8EKEvU+R1uQHwrcO5/Ir3XPZl0Cxi
-         qvQrVaQw2cM+ZrnU7ySm4xsvlyMxy2SCR4WjRYH73U8D5COPFpkQbsk/KyNbZp+52EPE
-         pxSn+Zf6U5s/1WbezYC7kxAfU3IlzhAkmUB3ryL/U0YPH8JDn8kDVh/7RVpooyefQALn
-         5nTTBqhr5EASjx8oFrM02zf9aUd7huvqzvu7C822aHmXHbhXiBANbSxBOxQ2g99ZQuhx
-         NDcg==
+        bh=CISuzHFPlWEL0+BckqkuDR3KPCbCkgyxsx0yLTYCfgQ=;
+        b=TbwsWG1Sn+sWyFPn93RQ/E8FmcL5js4qcQYMxtbZXz+Vuq/lOwgnwszhywHHgoFdy2
+         7+VWbilZfSUk+bbREGoM2Esjrn4SEdqWACckKJIxPYE/hCT0HqSJI4v1hwL5gwiFv+P8
+         9Wh4x2D8Q9jU/jJEdL6p7FteTGz8eAd5CjtUvl05zpXbipeHr9ppDsTmp+Iqjh63V5oJ
+         DqPmjcjAdehZFmnqAZxvgwTTbUt47kEA6Eua6Dljyl1PxvepgZOg3k3QaUD9vs/nV/G8
+         D29m2UsrBWY7AG3VIwTVeQB1nAYkz8se+m7qFSN2ubp3C+Qxjjv67nhupuqOhscVsQxC
+         7oKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6DeOLRVEJw2sfJI9qGhq/0LGJxW9LKFzi0kTd/R8USc=;
-        b=trJ946CKXz/ChVzmAh+XHqQrhs3HyESc6V597iNUbGA69XZBbdnWDUvN9yyykqdXkg
-         SuBgCfIJYrZkBtL4BsfkF9iEAJ6sRNhZxDWDUCibbe5uALGj8u26obq9tt4EUlSMgIxV
-         bNT0EEk7BEpZ2Vy8sMb4Qn2lITPdQuta40mfyt24Dm+HG88dmdhJwjDGF1MlsqKKChPK
-         rxidwYHS9fNHhK38dLSdmA5sQgR6gzMX2h2jUQklbwV9Qt+vBebTjHtKR8RFGaIOlNeZ
-         0qiUJdRo06pfRp0VpIaByGfLJHnxY92YzOWy87Pt8c4WJaGacxQu/jJi8wdu61QOf0Jq
-         nFXg==
-X-Gm-Message-State: AO0yUKXYGXig7nJ/tvWLrRTG0RiQSiUKaNWCr7M54yHGBYQTYPHMq89k
-	K8C6TcKnC84IExvLFHo8mulufw==
-X-Google-Smtp-Source: AK7set98ypC2QKiebUDI9vIcpmaeqJoN5nCZYHjsCTsTkPxxmAu0Y14ja5TgZ/XhdzRBgxqEZEckPA==
-X-Received: by 2002:a05:600c:4383:b0:3dc:d5b:5f73 with SMTP id e3-20020a05600c438300b003dc0d5b5f73mr1279751wmn.19.1676361183239;
-        Mon, 13 Feb 2023 23:53:03 -0800 (PST)
+        bh=CISuzHFPlWEL0+BckqkuDR3KPCbCkgyxsx0yLTYCfgQ=;
+        b=F44VH20Acag7b5tHJtlNx16KZ9QoN5MoMPRKzJmP7r+3f11MuEwjmNytXoxEBJJ/dO
+         DswNxKneYtO7BzMtGzyVf/O9Al4BFf5qn45Lw04LVHcOOmy4YHs9Rbeo91Sa9eA5lTO2
+         +2tD0zbPbt3mIYqQiz0swLog+yt7Cnctu2lh1JvfKS5I74lP6sUlc4tcWtC4Yw9wXOXT
+         lXyysVsqY44eyPNrupPrl6CyT/c113ZMg5FGY/P6gTvIQlIr1KexWafzFg6L6NAvYYis
+         jJMJzQuMAzgjPlgNTAKkV4XlTxSZ+QydBIZzcGCS39bua4jvMuzXbzXy1ASt84zETcCq
+         Gtrg==
+X-Gm-Message-State: AO0yUKUUrtONaRCbwUmTUyGNkxs+V2d2B46H5Z1xEEfRBMrUkxL8zdO5
+	lnMCPftEkoRbLNSv/WGC0fLW8g==
+X-Google-Smtp-Source: AK7set9BzCtqV+RYkgGgKe564EJVd05WyCH1yfNfnKO1SUr9SI4GuO9h1eq0NzoXBm8eLk/pvUJNSQ==
+X-Received: by 2002:a7b:c855:0:b0:3db:742:cfe9 with SMTP id c21-20020a7bc855000000b003db0742cfe9mr1711836wml.34.1676361244922;
+        Mon, 13 Feb 2023 23:54:04 -0800 (PST)
 Received: from alex-rivos.ba.rivosinc.com (lfbn-lyo-1-450-160.w2-7.abo.wanadoo.fr. [2.7.42.160])
-        by smtp.gmail.com with ESMTPSA id y6-20020a05600c364600b003df7b40f99fsm18631615wmq.11.2023.02.13.23.53.01
+        by smtp.gmail.com with ESMTPSA id f24-20020a05600c491800b003dc0cb5e3f1sm15292695wmp.46.2023.02.13.23.54.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Feb 2023 23:53:02 -0800 (PST)
+        Mon, 13 Feb 2023 23:54:04 -0800 (PST)
 From: Alexandre Ghiti <alexghiti@rivosinc.com>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Richard Henderson <richard.henderson@linaro.org>,
@@ -95,9 +95,9 @@ To: Jonathan Corbet <corbet@lwn.net>,
 	linux-xtensa@linux-xtensa.org,
 	linux-arch@vger.kernel.org
 Cc: Palmer Dabbelt <palmer@rivosinc.com>
-Subject: [PATCH v3 03/24] arm: Remove COMMAND_LINE_SIZE from uapi
-Date: Tue, 14 Feb 2023 08:49:04 +0100
-Message-Id: <20230214074925.228106-4-alexghiti@rivosinc.com>
+Subject: [PATCH v3 04/24] ia64: Remove COMMAND_LINE_SIZE from uapi
+Date: Tue, 14 Feb 2023 08:49:05 +0100
+Message-Id: <20230214074925.228106-5-alexghiti@rivosinc.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230214074925.228106-1-alexghiti@rivosinc.com>
 References: <20230214074925.228106-1-alexghiti@rivosinc.com>
@@ -116,35 +116,42 @@ be part of the user-visible API.
 
 Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
 ---
- arch/arm/include/asm/setup.h      | 1 +
- arch/arm/include/uapi/asm/setup.h | 2 --
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ arch/ia64/include/asm/setup.h      | 10 ++++++++++
+ arch/ia64/include/uapi/asm/setup.h |  6 ++----
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+ create mode 100644 arch/ia64/include/asm/setup.h
 
-diff --git a/arch/arm/include/asm/setup.h b/arch/arm/include/asm/setup.h
-index ba0872a8dcda..8a1e4f804d1b 100644
---- a/arch/arm/include/asm/setup.h
-+++ b/arch/arm/include/asm/setup.h
-@@ -13,6 +13,7 @@
- 
- #include <uapi/asm/setup.h>
- 
-+#define COMMAND_LINE_SIZE 1024
- 
- #define __tag __used __section(".taglist.init")
- #define __tagtable(tag, fn) \
-diff --git a/arch/arm/include/uapi/asm/setup.h b/arch/arm/include/uapi/asm/setup.h
-index 25ceda63b284..87a4f4af28e1 100644
---- a/arch/arm/include/uapi/asm/setup.h
-+++ b/arch/arm/include/uapi/asm/setup.h
-@@ -17,8 +17,6 @@
- 
- #include <linux/types.h>
- 
--#define COMMAND_LINE_SIZE 1024
+diff --git a/arch/ia64/include/asm/setup.h b/arch/ia64/include/asm/setup.h
+new file mode 100644
+index 000000000000..0b19338ea3ec
+--- /dev/null
++++ b/arch/ia64/include/asm/setup.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++
++#ifndef __IA64_SETUP_H
++#define __IA64_SETUP_H
++
++#include <uapi/asm/setup.h>
++
++#define COMMAND_LINE_SIZE	2048
++
++#endif
+diff --git a/arch/ia64/include/uapi/asm/setup.h b/arch/ia64/include/uapi/asm/setup.h
+index 8d13ce8fb03a..bcbb2b242ded 100644
+--- a/arch/ia64/include/uapi/asm/setup.h
++++ b/arch/ia64/include/uapi/asm/setup.h
+@@ -1,8 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+-#ifndef __IA64_SETUP_H
+-#define __IA64_SETUP_H
 -
- /* The list ends with an ATAG_NONE node. */
- #define ATAG_NONE	0x00000000
+-#define COMMAND_LINE_SIZE	2048
++#ifndef __UAPI_IA64_SETUP_H
++#define __UAPI_IA64_SETUP_H
  
+ extern struct ia64_boot_param {
+ 	__u64 command_line;		/* physical address of command line arguments */
 -- 
 2.37.2
 
