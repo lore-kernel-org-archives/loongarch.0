@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DA881C06
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FBC91C26
 	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 02:58:42 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Dxndp5+OpjvlcAAA--.1132S3;
-	Tue, 14 Feb 2023 10:56:57 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxF9l4+OpjkFcAAA--.915S3;
+	Tue, 14 Feb 2023 10:56:56 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axeb1w+OpjmZwyAA--.28802S23;
-	Tue, 14 Feb 2023 10:56:57 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axeb1w+OpjmZwyAA--.28802S17;
+	Tue, 14 Feb 2023 10:56:55 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -18,9 +18,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Jens Axboe <axboe@kernel.dk>,
 	Mark Brown <broonie@kernel.org>,
 	Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH v1 21/24] LoongArch: KVM: Implement kvm exception vector
-Date: Tue, 14 Feb 2023 10:56:45 +0800
-Message-Id: <20230214025648.1898508-22-zhaotianrui@loongson.cn>
+Subject: [PATCH v1 15/24] LoongArch: KVM: Implement handle csr excption
+Date: Tue, 14 Feb 2023 10:56:39 +0800
+Message-Id: <20230214025648.1898508-16-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
 References: <20230214025648.1898508-1-zhaotianrui@loongson.cn>
@@ -31,11 +31,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axeb1w+OpjmZwyAA--.28802S23
+X-CM-TRANSID:AQAAf8Axeb1w+OpjmZwyAA--.28802S17
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Kw15tF1UurWUKF17uF4UJwb_yoW8ZFW8pF
-	yfA34Yyr48Ww12ya4akw1vgF13AayxKr17WrW7G345uw4qqryrtrWvk397JF43KryrZF1x
-	JFZ8tFn8uF4UG37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW3Ar1ktryxJF1fKF1DAFW5Wrg_yoW7Cw47pF
+	WUCa15Zw40q3W7Kas3JFs0vrZ8X3ykGw17tFy7t34SvFnFyFn5XFWvgryDXF98ta93WFWa
+	qay5trn5Cr1DtaUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -50,69 +50,218 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7Kw15tF1UurWUKF17uF4UJwb_yoW8ZFW8pF
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
 	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement kvm exception vector, using _kvm_fault_tables array to save
-the handle function pointer and it is used when vcpu handle exit.
+Implement kvm handle loongarch vcpu exit caused by reading and
+writing csr. Using loongarch_csr structure to emulate the registers.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 48 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ arch/loongarch/include/asm/kvm_csr.h |  89 +++++++++++++++++++++++
+ arch/loongarch/kvm/exit.c            | 101 +++++++++++++++++++++++++++
+ 2 files changed, 190 insertions(+)
+ create mode 100644 arch/loongarch/include/asm/kvm_csr.h
+ create mode 100644 arch/loongarch/kvm/exit.c
 
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 89c90faa1..6fd3219bb 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -652,3 +652,51 @@ static int _kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
- 	kvm_own_fpu(vcpu);
- 	return RESUME_GUEST;
- }
-+
+diff --git a/arch/loongarch/include/asm/kvm_csr.h b/arch/loongarch/include/asm/kvm_csr.h
+new file mode 100644
+index 000000000..44fcd724c
+--- /dev/null
++++ b/arch/loongarch/include/asm/kvm_csr.h
+@@ -0,0 +1,89 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Loongarch KVM callback handling for not implemented guest exiting
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
 + */
-+static int _kvm_fault_ni(struct kvm_vcpu *vcpu)
++
++#ifndef __ASM_LOONGARCH_KVM_CSR_H__
++#define __ASM_LOONGARCH_KVM_CSR_H__
++#include <asm/loongarch.h>
++#include <asm/kvm_host.h>
++#include <asm/kvm_vcpu.h>
++#include <linux/uaccess.h>
++#include <linux/kvm_host.h>
++
++#define kvm_read_hw_gcsr(id)		gcsr_read(id)
++#define kvm_write_hw_gcsr(csr, id, val)	gcsr_write(val, id)
++
++int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force);
++int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force);
++
++int _kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu);
++
++static inline void kvm_save_hw_gcsr(struct loongarch_csrs *csr, int gid)
 +{
-+	unsigned long estat, badv;
-+	unsigned int exccode, inst;
++	csr->csrs[gid] = gcsr_read(gid);
++}
++
++static inline void kvm_restore_hw_gcsr(struct loongarch_csrs *csr, int gid)
++{
++	gcsr_write(csr->csrs[gid], gid);
++}
++
++static inline unsigned long kvm_read_sw_gcsr(struct loongarch_csrs *csr, int gid)
++{
++	return csr->csrs[gid];
++}
++
++static inline void kvm_write_sw_gcsr(struct loongarch_csrs *csr, int gid, unsigned long val)
++{
++	csr->csrs[gid] = val;
++}
++
++static inline void kvm_set_sw_gcsr(struct loongarch_csrs *csr, int gid, unsigned long val)
++{
++	csr->csrs[gid] |= val;
++}
++
++static inline void kvm_change_sw_gcsr(struct loongarch_csrs *csr, int gid, unsigned long mask,
++	unsigned long val)
++{
++	unsigned long _mask = mask;
++
++	csr->csrs[gid] &= ~_mask;
++	csr->csrs[gid] |= val & _mask;
++}
++
++
++#define GET_HW_GCSR(id, csrid, v)				\
++	do {							\
++		if (csrid == id) {				\
++			*v = (long)kvm_read_hw_gcsr(csrid);	\
++			return 0;				\
++		}						\
++	} while (0)
++
++#define GET_SW_GCSR(csr, id, csrid, v)				\
++	do {							\
++		if (csrid == id) {				\
++			*v = kvm_read_sw_gcsr(csr, id);		\
++			return 0;				\
++		}						\
++	} while (0)
++
++#define SET_HW_GCSR(csr, id, csrid, v)				\
++	do {							\
++		if (csrid == id) {				\
++			kvm_write_hw_gcsr(csr, csrid, *v);	\
++			return 0;				\
++		}						\
++	} while (0)
++
++#define SET_SW_GCSR(csr, id, csrid, v)				\
++	do {							\
++		if (csrid == id) {				\
++			kvm_write_sw_gcsr(csr, csrid, *v);	\
++			return 0;				\
++		}						\
++	} while (0)
++
++#endif	/* __ASM_LOONGARCH_KVM_CSR_H__ */
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+new file mode 100644
+index 000000000..dc37827d9
+--- /dev/null
++++ b/arch/loongarch/kvm/exit.c
+@@ -0,0 +1,101 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/errno.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/preempt.h>
++#include <linux/vmalloc.h>
++#include <asm/fpu.h>
++#include <asm/inst.h>
++#include <asm/time.h>
++#include <asm/tlb.h>
++#include <asm/loongarch.h>
++#include <asm/numa.h>
++#include <asm/kvm_vcpu.h>
++#include <asm/kvm_csr.h>
++#include <linux/kvm_host.h>
++#include <asm/mmzone.h>
++
++#define CREATE_TRACE_POINTS
++#include "trace.h"
++
++static unsigned long _kvm_emu_read_csr(struct kvm_vcpu *vcpu, int csrid)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++	unsigned long val = 0;
++
++	val = 0;
++	if (csrid < 4096)
++		val = kvm_read_sw_gcsr(csr, csrid);
++	else
++		pr_warn_once("Unsupport csrread 0x%x with pc %lx\n",
++			csrid, vcpu->arch.pc);
++	return val;
++}
++
++static void _kvm_emu_write_csr(struct kvm_vcpu *vcpu, int csrid,
++	unsigned long val)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++
++	if (csrid < 4096)
++		kvm_write_sw_gcsr(csr, csrid, val);
++	else
++		pr_warn_once("Unsupport csrwrite 0x%x with pc %lx\n",
++				csrid, vcpu->arch.pc);
++}
++
++static void _kvm_emu_xchg_csr(struct kvm_vcpu *vcpu, int csrid,
++	unsigned long csr_mask, unsigned long val)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++
++	if (csrid < 4096) {
++		unsigned long orig;
++
++		orig = kvm_read_sw_gcsr(csr, csrid);
++		orig &= ~csr_mask;
++		orig |= val & csr_mask;
++		kvm_write_sw_gcsr(csr, csrid, orig);
++	} else
++		pr_warn_once("Unsupport csrxchg 0x%x with pc %lx\n",
++				csrid, vcpu->arch.pc);
++}
++
++static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
++{
++	unsigned int rd, rj, csrid;
++	unsigned long csr_mask;
++	unsigned long val = 0;
 +
 +	/*
-+	 *  Fetch the instruction.
++	 * CSR value mask imm
++	 * rj = 0 means csrrd
++	 * rj = 1 means csrwr
++	 * rj != 0,1 means csrxchg
 +	 */
-+	badv = vcpu->arch.badv;
-+	estat = vcpu->arch.host_estat;
-+	exccode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
-+	inst = vcpu->arch.badi;
-+	kvm_err("Exccode: %d PC=%#lx inst=0x%08x BadVaddr=%#lx estat=%#llx\n",
-+			exccode, vcpu->arch.pc, inst, badv, read_gcsr_estat());
-+	kvm_arch_vcpu_dump_regs(vcpu);
-+	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++	rd = inst.reg2csr_format.rd;
++	rj = inst.reg2csr_format.rj;
++	csrid = inst.reg2csr_format.csr;
 +
-+	return RESUME_HOST;
-+}
++	/* Process CSR ops */
++	if (rj == 0) {
++		/* process csrrd */
++		val = _kvm_emu_read_csr(vcpu, csrid);
++		vcpu->arch.gprs[rd] = val;
++	} else if (rj == 1) {
++		/* process csrwr */
++		val = vcpu->arch.gprs[rd];
++		_kvm_emu_write_csr(vcpu, csrid, val);
++	} else {
++		/* process csrxchg */
++		val = vcpu->arch.gprs[rd];
++		csr_mask = vcpu->arch.gprs[rj];
++		_kvm_emu_xchg_csr(vcpu, csrid, csr_mask, val);
++	}
 +
-+static exit_handle_fn _kvm_fault_tables[EXCCODE_INT_START] = {
-+	[EXCCODE_TLBL]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBI]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBNR]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBNX]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBS]		= _kvm_handle_write_fault,
-+	[EXCCODE_TLBM]		= _kvm_handle_write_fault,
-+	[EXCCODE_FPDIS]		= _kvm_handle_fpu_disabled,
-+	[EXCCODE_GSPR]		= _kvm_handle_gspr,
-+};
-+
-+int _kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
-+{
-+	return _kvm_fault_tables[fault](vcpu);
-+}
-+
-+void _kvm_init_fault(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < EXCCODE_INT_START; i++)
-+		if (!_kvm_fault_tables[i])
-+			_kvm_fault_tables[i] = _kvm_fault_ni;
++	return EMULATE_DONE;
 +}
 -- 
 2.31.1
