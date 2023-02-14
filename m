@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A422CAB
-	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:06:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EC7AC433D2;
-	Tue, 14 Feb 2023 07:06:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4DE2CAB
+	for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 07:06:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E12C5C433A7;
+	Tue, 14 Feb 2023 07:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1676358417;
-	bh=1IRtpjryrFlaH3zPaQpRgLkIHqmynE5Y+t83e8Katow=;
+	s=k20201202; t=1676358419;
+	bh=3mR91vFTYi4rZMGRYXhJgaTgkFrCc+v4wRJPGBILCHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WIt7PESUlL7eAgHG5yZuO/+Pzi2Iam84D6QDgX/lNFfE8E0LXUA7q2LZkTiM5E8Fr
-	 ltBF7m+A7cmNRWpEhtz56mVsB+LFjKR/8ja/VIadHjfLNx6yoIichWpu3qYfGaq9zV
-	 JUaO6KsixyAIrqpbjns4PoYgTh+jmEq6E6/qod0ooIa5PLN2YlJkG0c45baK9kSFk7
-	 rEpSQ/SUSV1Cm1007AMLqK1a8R4bFLtedrlHoNLHVcT+P7vYH3dJ2lb1AoYpaKKEfb
-	 G5zQb6o7kDZcoEXZ/kyJnO9GlC/GcWjY5p12geGmAv8g+mjBO16dd/Nnx7oWVJM63e
-	 qIsMMhe6b0uBA==
+	b=lSg8bVoi1sh/I6LONG4iulI3+H5Ch/fv8oDbHX3Iz0jLvADbdNJ6D9Sz4m9UcKyBI
+	 u8j3EjXkJ36I1pjLPkbtpMMmXURLhpf0+V6yaLVf1isw74nA6CnSOlvkxRCip1ngGU
+	 95eXUsVxMrlU6SstBN4ziVQPwIQ8/17wMlV2LoZUpRs3AjK1TEzUHxr9L1Unx2Bc2c
+	 iPW6u9juO9foAwGO5JJByMvXfPQB1Lpxb4CcPYBA8FAJBUrIQBu6A2r//KGsu7LfUt
+	 1HyKwkSfkaRwk/DdZ7zy/c/F59Cd3SGJj/k7oluBq9g8jtnPj9mSreXUy0dUR7bYBo
+	 6iq/gvWezobbQ==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: jgross@suse.com,
@@ -65,9 +65,9 @@ Cc: jgross@suse.com,
 	bristot@redhat.com,
 	vschneid@redhat.com,
 	paulmck@kernel.org
-Subject: [PATCH v2 05/24] csky/cpu: Make sure arch_cpu_idle_dead() doesn't return
-Date: Mon, 13 Feb 2023 23:05:39 -0800
-Message-Id: <1e9ecc3d248e82973e80bc336fc9f97e3ba2708d.1676358308.git.jpoimboe@kernel.org>
+Subject: [PATCH v2 06/24] ia64/cpu: Mark play_dead() __noreturn
+Date: Mon, 13 Feb 2023 23:05:40 -0800
+Message-Id: <7575bb38417bd8bcb5be980443f99cab29319342.1676358308.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <cover.1676358308.git.jpoimboe@kernel.org>
 References: <cover.1676358308.git.jpoimboe@kernel.org>
@@ -80,31 +80,36 @@ MIME-Version: 1.0
 Content-type: text/plain
 Content-Transfer-Encoding: 8bit
 
-arch_cpu_idle_dead() doesn't return.  Make that more explicit with a
-BUG().
+play_dead() doesn't return.  Annotate it as such.  By extension this
+also makes arch_cpu_idle_dead() noreturn.
 
-BUG() is preferable to unreachable() because BUG() is a more explicit
-failure mode and avoids undefined behavior like falling off the edge of
-the function into whatever code happens to be next.
-
-Acked-by: Guo Ren <guoren@kernel.org>
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- arch/csky/kernel/smp.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/ia64/kernel/process.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
-index b45d1073307f..0ec20efaf5fd 100644
---- a/arch/csky/kernel/smp.c
-+++ b/arch/csky/kernel/smp.c
-@@ -317,5 +317,7 @@ void arch_cpu_idle_dead(void)
- 		"jmpi	csky_start_secondary"
- 		:
- 		: "r" (secondary_stack));
-+
-+	BUG();
+diff --git a/arch/ia64/kernel/process.c b/arch/ia64/kernel/process.c
+index f6195a0a00ae..78f5794b2dde 100644
+--- a/arch/ia64/kernel/process.c
++++ b/arch/ia64/kernel/process.c
+@@ -201,7 +201,7 @@ __setup("nohalt", nohalt_setup);
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+ /* We don't actually take CPU down, just spin without interrupts. */
+-static inline void play_dead(void)
++static inline void __noreturn play_dead(void)
+ {
+ 	unsigned int this_cpu = smp_processor_id();
+ 
+@@ -219,7 +219,7 @@ static inline void play_dead(void)
+ 	BUG();
  }
- #endif
+ #else
+-static inline void play_dead(void)
++static inline void __noreturn play_dead(void)
+ {
+ 	BUG();
+ }
 -- 
 2.39.1
 
