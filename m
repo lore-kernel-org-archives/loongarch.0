@@ -1,109 +1,157 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C60397B
-	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 08:26:01 +0000 (UTC)
-Received: from loongson.cn (unknown [192.168.200.1])
-	by gateway (Coremail) with SMTP id _____8Dx_5cTl+xjl9sAAA--.1163S3;
-	Wed, 15 Feb 2023 16:25:55 +0800 (CST)
-Received: from [0.0.0.0] (unknown [192.168.200.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxbL4Sl+xjNrczAA--.30625S3;
-	Wed, 15 Feb 2023 16:25:55 +0800 (CST)
-Subject: Re: "kernel ade access" oops on LoongArch
-To: Xi Ruoyao <xry111@xry111.site>
-References: <1e6f4d35946e4e2e7c7f5dcc7b69d5e609de8184.camel@xry111.site>
- <2e902dfa-cb84-7ef0-6b50-02b16354a139@loongson.cn>
- <511d385675ea7a846ff791974c6ae7feeeec2589.camel@xry111.site>
- <9a70e89c-0f3b-0660-501e-3292e410cfd8@loongson.cn>
- <5403e5eb-5792-7d6f-df74-ca3fab82ecd5@loongson.cn>
- <818419c03037bda833a5b281588a4b331c34ae8c.camel@xry111.site>
-Cc: Jinyang He <hejinyang@loongson.cn>, loongarch@lists.linux.dev,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- linux-kernel@vger.kernel.org
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <74fb1e24-36c0-c642-5bab-3646ba7790df@loongson.cn>
-Date: Wed, 15 Feb 2023 16:25:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965C37B
+	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 08:29:26 +0000 (UTC)
+Received: by mail-wr1-f46.google.com with SMTP id bu23so18181480wrb.8
+        for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 00:29:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D+uRuWA2my0PkLfTRJkVAZ05w6wbQaFzpjSQTlA3Y10=;
+        b=EAjtSefiFMcRJUjTT1vKa++/98Yo1SN60xpEBkPSeru5QVrOombFl7ZHZ9y0eBb+k8
+         1ZpycnMJayGmVT6T6UnuPRjCB3nPxmBujGFtXaNp8cbOZSlWgdaIEhXU+GGjztzV/czy
+         1WDq6VfomA00oo7hLpCf0eBYSqerRkvKuSrVmRTM4XbxzJrQVoIbRj0AGC+iAePl6sTf
+         Z2xptiD/VOo1nfoRA4XWNffLKM3ZE08q46EkUvIRst5VglioETpQYFtr/iY0tCSkcOlD
+         bJtursUf7vQFXV0RL9Rz9XvQSF18NBopDoEorHB9a2ffDlY3yM0iSt8r0hW9VmbKY8B/
+         Tfog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D+uRuWA2my0PkLfTRJkVAZ05w6wbQaFzpjSQTlA3Y10=;
+        b=qt/ZHsuQJCGa7FFGCfJ3h2e7vTzbQPKN7Uxj2lMCULbq8e8TW3s1igEHk4C602gYaX
+         0RjHe+6Pcn3uu7VPEn4ZrC7/08R3MzvTiRzfE4rLNXEUKm5W6EOral+pgloraC1nkMyS
+         9u3cwe4d7vDVIOvMBuivzR58lTv6Zxk/0aEOx6B4GV1c2O3u5aN52zqKJvaQ2EFQSpnX
+         eDy6j9hcAZQTJ86xCUXGazkIMiV9qMsIQaaq2w5q1DwocaVI7elGoUQmbNJIcN/IcHTs
+         zRzj/VmWDkWlEedTghmptIuBqsaNTsUPgr1dpgxnLz0wm4XdTV4VrotSoQKgiNm1rtBh
+         Ib5A==
+X-Gm-Message-State: AO0yUKVlXQVOjjDjN5KgYNgYmyRfp1clrgOqIQRSBL+vNaX+nbQ6hRL8
+	dNO72TAdlf6V6A6JvZHIGdmJvw==
+X-Google-Smtp-Source: AK7set8G2iiFdHjvUAVVY5llFOflusvwqwWTyX5fVt/Awzv2HxyXMg5++kq1nd94kDMQiFL/tQeRqw==
+X-Received: by 2002:a5d:67cc:0:b0:2c5:58fc:e1bb with SMTP id n12-20020a5d67cc000000b002c558fce1bbmr826926wrw.10.1676449764713;
+        Wed, 15 Feb 2023 00:29:24 -0800 (PST)
+Received: from [192.168.30.216] ([81.0.6.76])
+        by smtp.gmail.com with ESMTPSA id i2-20020adfefc2000000b002c553e061fdsm8524783wrp.112.2023.02.15.00.29.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Feb 2023 00:29:24 -0800 (PST)
+Message-ID: <c56dc4b9-035d-7773-ecb2-0e1ac6af7abc@linaro.org>
+Date: Wed, 15 Feb 2023 09:29:20 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <818419c03037bda833a5b281588a4b331c34ae8c.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.7.2
+Subject: Re: [PATCH v2 09/24] mips/cpu: Expose play_dead()'s prototype
+ definition
+Content-Language: en-US
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: linux-kernel@vger.kernel.org, jgross@suse.com,
+ richard.henderson@linaro.org, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+ linux-alpha@vger.kernel.org, linux@armlinux.org.uk,
+ linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+ will@kernel.org, guoren@kernel.org, linux-csky@vger.kernel.org,
+ linux-ia64@vger.kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+ loongarch@lists.linux.dev, f.fainelli@gmail.com,
+ bcm-kernel-feedback-list@broadcom.com, tsbogend@alpha.franken.de,
+ linux-mips@vger.kernel.org, jiaxun.yang@flygoat.com, mpe@ellerman.id.au,
+ npiggin@gmail.com, christophe.leroy@csgroup.eu,
+ linuxppc-dev@lists.ozlabs.org, ysato@users.sourceforge.jp, dalias@libc.org,
+ linux-sh@vger.kernel.org, davem@davemloft.net, sparclinux@vger.kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ chris@zankel.net, jcmvbkbc@gmail.com, linux-xtensa@linux-xtensa.org,
+ peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, paulmck@kernel.org
+References: <cover.1676358308.git.jpoimboe@kernel.org>
+ <39835bc75af2e812fce56400533cb2ab41bcf0e2.1676358308.git.jpoimboe@kernel.org>
+ <080a5ccb-7fa0-1a75-538f-a09dc146fc4e@linaro.org>
+ <20230214181101.3a2tscbmwdnwbqpu@treble>
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
+In-Reply-To: <20230214181101.3a2tscbmwdnwbqpu@treble>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxbL4Sl+xjNrczAA--.30625S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7KFy8Xw4UKF4rtr48JrWDurg_yoW8WFW3pr
-	Wjka40krs8JF9xtayq9w4UCF1rta93Gay5GwnxXay8ZF90yF1YgwsrKF18uw1Iyrn5Wa4S
-	9Fykt3ya9F4UAw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bz8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2
-	zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_WwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
-	wIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxV
-	AFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvj4RC_MaUUUUU
 
-
-
-On 02/15/2023 04:07 PM, Xi Ruoyao wrote:
-> On Wed, 2023-02-15 at 15:51 +0800, Jinyang He wrote:
->
->>> There was a build error in make check, so only tst-mallocfork3-
->>> malloc-check was tested separately.
->>>
->>> # make test t=malloc/tst-mallocfork3-malloc-check
->>> make[2]: 离开目录“/home/loongson/glibc/malloc”
->>> PASS: malloc/tst-mallocfork3-malloc-check
->>> original exit status 0
->>> info: signals received during fork: 301
->>> info: signals received during free: 1693
->>> info: signals received during malloc: 119
->>> make[1]: 离开目录“/home/loongson/glibc”
->>>
->>> A total of five tests are PASS, and the serial port does not display
->>> CallTrace.
->>>
->>> Youling.
->>>
->> I had test it by using the cmd "while true..." Ruoyao gave on
+On 14/2/23 19:11, Josh Poimboeuf wrote:
+> On Tue, Feb 14, 2023 at 08:46:41AM +0100, Philippe Mathieu-Daudé wrote:
+>> Hi Josh,
 >>
->> Loongson-3A5000, CLFS 7.1, 6.2-rc8 kernel with those patches and
+>> On 14/2/23 08:05, Josh Poimboeuf wrote:
+>>> Include <asm/smp.h> to make sure play_dead() matches its prototype going
+>>> forward.
+>>>
+>>> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+>>> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+>>> ---
+>>>    arch/mips/kernel/smp-bmips.c | 1 +
+>>>    1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
+>>> index f5d7bfa3472a..df9158e8329d 100644
+>>> --- a/arch/mips/kernel/smp-bmips.c
+>>> +++ b/arch/mips/kernel/smp-bmips.c
+>>> @@ -38,6 +38,7 @@
+>>>    #include <asm/traps.h>
+>>>    #include <asm/barrier.h>
+>>>    #include <asm/cpu-features.h>
+>>> +#include <asm/smp.h>
 >>
->> 6.2-rc7 kernel form loongson-next. No calltrace displayed, either.
->
-> Hmm... I've read the code for a while and I couldn't see how it could
-> end up accessing a bad address too.  Maybe my hardware or compiler is
-> really faulty?
+>> What about the other implementations?
+>>
+>> $ git grep -L asm/smp.h $(git grep -wlF 'play_dead(void)' arch/mips)
+>> arch/mips/cavium-octeon/smp.c
+>> arch/mips/kernel/smp-bmips.c
+>> arch/mips/kernel/smp-cps.c
+>> arch/mips/loongson64/smp.c
+> 
+> Indeed.  I really wish we had -Wmissing-prototypes.
+> 
+> I'll squash this in:
+> 
+> diff --git a/arch/mips/cavium-octeon/smp.c b/arch/mips/cavium-octeon/smp.c
+> index 89954f5f87fb..4212584e6efa 100644
+> --- a/arch/mips/cavium-octeon/smp.c
+> +++ b/arch/mips/cavium-octeon/smp.c
+> @@ -20,6 +20,7 @@
+>   #include <asm/mmu_context.h>
+>   #include <asm/time.h>
+>   #include <asm/setup.h>
+> +#include <asm/smp.h>
+>   
+>   #include <asm/octeon/octeon.h>
+>   
+> diff --git a/arch/mips/kernel/smp-cps.c b/arch/mips/kernel/smp-cps.c
+> index bcd6a944b839..6d69a9ba8167 100644
+> --- a/arch/mips/kernel/smp-cps.c
+> +++ b/arch/mips/kernel/smp-cps.c
+> @@ -20,6 +20,7 @@
+>   #include <asm/mipsregs.h>
+>   #include <asm/pm-cps.h>
+>   #include <asm/r4kcache.h>
+> +#include <asm/smp.h>
+>   #include <asm/smp-cps.h>
+>   #include <asm/time.h>
+>   #include <asm/uasm.h>
+> diff --git a/arch/mips/loongson64/smp.c b/arch/mips/loongson64/smp.c
+> index c81c2bd07c62..df8d789ede3c 100644
+> --- a/arch/mips/loongson64/smp.c
+> +++ b/arch/mips/loongson64/smp.c
+> @@ -14,6 +14,7 @@
+>   #include <linux/cpufreq.h>
+>   #include <linux/kexec.h>
+>   #include <asm/processor.h>
+> +#include <asm/smp.h>
+>   #include <asm/time.h>
+>   #include <asm/tlbflush.h>
+>   #include <asm/cacheflush.h>
 
-Can you modify the kernel as follows and test it, so as to avoid
-possible relationship with the exception table data link position and
-alignment rules (or use EXCEPTION_TABLE(12))?
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
---- a/arch/loongarch/kernel/vmlinux.lds.S
-+++ b/arch/loongarch/kernel/vmlinux.lds.S
-@@ -4,7 +4,6 @@
-  #include <asm/thread_info.h>
-
-  #define PAGE_SIZE _PAGE_SIZE
--#define RO_EXCEPTION_TABLE_ALIGN       4
-
-  /*
-   * Put .bss..swapper_pg_dir as the first thing in .bss. This will
-@@ -54,6 +53,8 @@ SECTIONS
-         . = ALIGN(PECOFF_SEGMENT_ALIGN);
-         _etext = .;
-
-+       EXCEPTION_TABLE(16)
-+
-
-Youling.
-
-
+Thanks.
