@@ -1,119 +1,85 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4957F3C1E
-	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 09:25:01 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxmdnrpOxjROAAAA--.2218S3;
-	Wed, 15 Feb 2023 17:24:59 +0800 (CST)
-Received: from localhost.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxHuTopOxj3MczAA--.59761S2;
-	Wed, 15 Feb 2023 17:24:56 +0800 (CST)
-From: Qing Zhang <zhangqing@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] LoongArch: ptrace: Add function argument access API
-Date: Wed, 15 Feb 2023 17:24:56 +0800
-Message-Id: <20230215092456.30446-1-zhangqing@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEA97C
+	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 11:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1676461935;
+	bh=Sk/Bg/0AfjKLFwi3dSCYsVcH9mEMa2atHropqO8Z7ps=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=JQYVPOTSZGv/vrzXksNZLuN69G27GDcBZyyP56ZCfBUN4ki0xhprUoWUPk9dJwUPZ
+	 +LowQDcEgrtOOri7IEWndC57kAjkyPBkc5ixrD2EzisgwkFNPaVERUyA5Iih7WpLAs
+	 4Or2SEc4n5j6ChE5RQ9dgnoLIWEWmQZSKFcf8jIw=
+Received: from [IPv6:240e:358:111b:f00:dc73:854d:832e:3] (unknown [IPv6:240e:358:111b:f00:dc73:854d:832e:3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 20BFA6681E;
+	Wed, 15 Feb 2023 06:52:10 -0500 (EST)
+Message-ID: <bf0e57db317d7061ecaaf928ce6cf40941b1740c.camel@xry111.site>
+Subject: Re: "kernel ade access" oops on LoongArch
+From: Xi Ruoyao <xry111@xry111.site>
+To: Youling Tang <tangyouling@loongson.cn>
+Cc: Jinyang He <hejinyang@loongson.cn>, loongarch@lists.linux.dev, Huacai
+ Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ linux-kernel@vger.kernel.org
+Date: Wed, 15 Feb 2023 19:52:04 +0800
+In-Reply-To: <21b0e60dac8bedf9e389645ec103aa4241b35f8d.camel@xry111.site>
+References: <1e6f4d35946e4e2e7c7f5dcc7b69d5e609de8184.camel@xry111.site>
+	 <2e902dfa-cb84-7ef0-6b50-02b16354a139@loongson.cn>
+	 <511d385675ea7a846ff791974c6ae7feeeec2589.camel@xry111.site>
+	 <9a70e89c-0f3b-0660-501e-3292e410cfd8@loongson.cn>
+	 <5403e5eb-5792-7d6f-df74-ca3fab82ecd5@loongson.cn>
+	 <818419c03037bda833a5b281588a4b331c34ae8c.camel@xry111.site>
+	 <74fb1e24-36c0-c642-5bab-3646ba7790df@loongson.cn>
+	 <21b0e60dac8bedf9e389645ec103aa4241b35f8d.camel@xry111.site>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxHuTopOxj3MczAA--.59761S2
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Kr1kZFyfCF4fWF1DurWrAFb_yoW5JFWrpa
-	4kA3ZxGr48urs3uFW3J3WrZryrZrs7CrWSkr1Ik34Syr9FqryrJFWkXr1qy3WktrWUJFWI
-	gF15t3yYgFs8Z3JanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0Ex4A2jsIE14v26r4j6F4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jT-e5UUUUU=
 
-Add regs_get_argument() which returns N th argument of the function
-call, This enables ftrace kprobe events to access kernel function
-arguments via $argN syntax.
+On Wed, 2023-02-15 at 16:35 +0800, Xi Ruoyao wrote:
+> On Wed, 2023-02-15 at 16:25 +0800, Youling Tang wrote:
+> > Can you modify the kernel as follows and test it, so as to avoid
+> > possible relationship with the exception table data link position and
+> > alignment rules (or use EXCEPTION_TABLE(12))?
+> >=20
+> > --- a/arch/loongarch/kernel/vmlinux.lds.S
+> > +++ b/arch/loongarch/kernel/vmlinux.lds.S
+> > @@ -4,7 +4,6 @@
+> > =C2=A0 #include <asm/thread_info.h>
+> >=20
+> > =C2=A0 #define PAGE_SIZE _PAGE_SIZE
+> > -#define RO_EXCEPTION_TABLE_ALIGN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 4
+> >=20
+> > =C2=A0 /*
+> > =C2=A0=C2=A0 * Put .bss..swapper_pg_dir as the first thing in .bss. Thi=
+s will
+> > @@ -54,6 +53,8 @@ SECTIONS
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 . =3D ALIGN(PECOFF_SEG=
+MENT_ALIGN);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 _etext =3D .;
+> >=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EXCEPTION_TABLE(16)
+> > +
+>=20
+> It seems the kernel refuses to boot after the change, but I'm not
+> completely sure: I'm 5 km away from the board and operating it via ssh
+> so maybe it's a reboot failure or network failure.=C2=A0 I'll report agai=
+n in
+> the evening.
 
-eg:
-echo 'p bio_add_page arg1=$arg1' > kprobe_events
-bash: echo: write error: Invalid argument
+It was a reboot failure.
 
-Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
----
- arch/loongarch/Kconfig              |  1 +
- arch/loongarch/include/asm/ptrace.h | 33 +++++++++++++++++++++++++++++
- 2 files changed, 34 insertions(+)
+Now it has booted successfully, but the stack trace still shows (during
+the 25th run of the make test t=3D... command).
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index e3eba2eb4b44..103046966893 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -97,6 +97,7 @@ config LOONGARCH
- 	select HAVE_EXIT_THREAD
- 	select HAVE_FAST_GUP
- 	select HAVE_FTRACE_MCOUNT_RECORD
-+	select HAVE_FUNCTION_ARG_ACCESS_API
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_GENERIC_VDSO
-diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
-index 66a0e6c480a3..f6ffcc00753c 100644
---- a/arch/loongarch/include/asm/ptrace.h
-+++ b/arch/loongarch/include/asm/ptrace.h
-@@ -120,6 +120,39 @@ static inline long regs_return_value(struct pt_regs *regs)
- 	return regs->regs[4];
- }
- 
-+/**
-+ * regs_get_kernel_argument() - get Nth function argument in kernel
-+ * @regs:       pt_regs of that context
-+ * @n:          function argument number (start from 0)
-+ *
-+ * regs_get_argument() returns @n th argument of the function call.
-+ * Note that this chooses most probably assignment, in some case
-+ * it can be incorrect.
-+ * This is expected to be called from kprobes or ftrace with regs
-+ * where the top of stack is the return address.
-+ */
-+static inline unsigned long regs_get_kernel_argument(struct pt_regs *regs,
-+						     unsigned int n)
-+{
-+	static const unsigned int argument_offs[] = {
-+		offsetof(struct pt_regs, regs[4]),
-+		offsetof(struct pt_regs, regs[5]),
-+		offsetof(struct pt_regs, regs[6]),
-+		offsetof(struct pt_regs, regs[7]),
-+		offsetof(struct pt_regs, regs[8]),
-+		offsetof(struct pt_regs, regs[9]),
-+		offsetof(struct pt_regs, regs[10]),
-+		offsetof(struct pt_regs, regs[11]),
-+#define NR_REG_ARGUMENTS 8
-+	};
-+
-+	if (n >= NR_REG_ARGUMENTS) {
-+		n -= NR_REG_ARGUMENTS;
-+		return regs_get_kernel_stack_nth(regs, n);
-+	} else
-+		return regs_get_register(regs, argument_offs[n]);
-+}
-+
- #define instruction_pointer(regs) ((regs)->csr_era)
- #define profile_pc(regs) instruction_pointer(regs)
- 
--- 
-2.36.0
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
