@@ -1,104 +1,134 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD7410792
-	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 20:12:22 +0000 (UTC)
-Received: by mail-ed1-f41.google.com with SMTP id fi26so25431125edb.7
-        for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 12:12:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWoZA8qGgq7/x6EJNe+HmaR5fU3v8UqOPtojqnq1sKg=;
-        b=MsGryKrtxHBLaqw/J3F42LFYUz5sSQzBldJ0cMFEzla/sx+xMPqtLJEDuKS1QNi98k
-         iWAUSYZxKkhY5NCUw04aRg9xrjCr12i3b1r4pQLuNUZILpblRbtFk6pg1Wo7qhpzGF7q
-         naNqeo4EW7i2JDAQeW/Q/XLtRk2JXPaDQ9AZIJTlJOJNL7dMCGelqkY7TNUiCbeJKPtB
-         3JIuJxAmdsyA07dsHFlAqcrYdRvbVgsCsU3bm1jtUaVQkgcpSsSh979kSjKcXxtenKHh
-         kgaU78naEAHo+Yb6LTN1O02s8gsrlo01HK7r4C0Obi1E3qs0LQAy6GJaPzLHwyMYJ9tg
-         bA5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWoZA8qGgq7/x6EJNe+HmaR5fU3v8UqOPtojqnq1sKg=;
-        b=az+3N6tUydX69QJkkfcn7Bxm4K23+0MyqItLwFAbQtXqimIBc/5wmFBAovIH1wW0Ua
-         QK+bn2cjysLKIUMThEp1Qq25xv2/FehBWjMcIJraKyPFb85k1T8MwU3EVTjtRZfT8TJ4
-         DxsOoY9SqSJYCZetCfESbjsyQ+v+cCIcklhWIWAqBz+1zh3Gb0HJGeGxeySjTVQOsCOh
-         +4J/tQfEOAxk4CDH1v6vbGQ08UrQCy4AMryl/29Sbbj+lI0ybibiL32oqZsZcaq1yHDC
-         vdFdx3HsViQ24e1t0/hTd7KPElt9b4QCCz0cA+66O7cKjmxVWTSMdpTcACIrtfuw+bBD
-         nuBg==
-X-Gm-Message-State: AO0yUKX08kcqJJEeq9xFTZwzZSurEg7/UeKVaEcU0MZqCMCHPE/v8kmR
-	9t/u87MJxMnNNsNTAmgyqEwlMg==
-X-Google-Smtp-Source: AK7set/jHl1Odp5mSZbVYnAK8AAz4shx+jKhUVZbGwC/0QQ2RDATXndC8SUR3jQp9W3UQU0pjK4lyA==
-X-Received: by 2002:aa7:dc18:0:b0:4ad:152a:9ded with SMTP id b24-20020aa7dc18000000b004ad152a9dedmr967831edu.32.1676491940846;
-        Wed, 15 Feb 2023 12:12:20 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id 29-20020a508e5d000000b004acdef7baaesm2709053edx.96.2023.02.15.12.12.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Feb 2023 12:12:20 -0800 (PST)
-Message-ID: <730f6bf9-ce57-6834-12e0-b60abbfb2e1f@linaro.org>
-Date: Wed, 15 Feb 2023 21:12:18 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0598D2F8
+	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 22:22:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FAD0C433D2;
+	Wed, 15 Feb 2023 22:22:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1676499772;
+	bh=3/B+NZRwzEkNo04hOsRXt8MwWSjpYxIfsEH4O0Y0Iy0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=lgMebc9/PyCNI2WQWQFGhJ6pEjvuGS4FIDV8Hndf+NKrHLS1WG/DGBpNgqf8fOyYC
+	 y8+V3Q2tj+S2zmKUBdMwoObfAcO+heEDDn/va0AU2ijfCtQ4tDaxjdOoA+qCu96qJu
+	 tkWdqqKZlqO1cHNQGCQ3kzUKY7M1SSh9fmDTqH1qGb+lN/kKUpvSTLbTM6FeL2JzDg
+	 3qeqvtZTigjAwCmsYZOm8DYFJHs+rNCQMwz1iolZjE/BUncjAH+Fit4Bh2Gox6pFxx
+	 1CSx3J/q9TyNq1z7sg7E7kSGGeSWuf8YWJVgL80Qlbz1kmmdtCqghuKDCBxMa4nZ97
+	 KwdXvAMHmGl/A==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id D10DF5C0F9D; Wed, 15 Feb 2023 14:22:49 -0800 (PST)
+Date: Wed, 15 Feb 2023 14:22:49 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: linux-kernel@vger.kernel.org, jgross@suse.com,
+	richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+	mattst88@gmail.com, linux-alpha@vger.kernel.org,
+	linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
+	catalin.marinas@arm.com, will@kernel.org, guoren@kernel.org,
+	linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
+	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev,
+	f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+	tsbogend@alpha.franken.de, linux-mips@vger.kernel.org,
+	jiaxun.yang@flygoat.com, mpe@ellerman.id.au, npiggin@gmail.com,
+	christophe.leroy@csgroup.eu, linuxppc-dev@lists.ozlabs.org,
+	ysato@users.sourceforge.jp, dalias@libc.org,
+	linux-sh@vger.kernel.org, davem@davemloft.net,
+	sparclinux@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
+	linux-xtensa@linux-xtensa.org, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com
+Subject: Re: [PATCH v2 00/24] cpu,sched: Mark arch_cpu_idle_dead() __noreturn
+Message-ID: <20230215222249.GM2948950@paulmck-ThinkPad-P17-Gen-1>
+Reply-To: paulmck@kernel.org
+References: <cover.1676358308.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH V2 1/2] dt-bindings: interrupt-controller: Add Loongson
- EIOINTC
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>,
- linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
- loongarch@lists.linux.dev, devicetree@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-References: <cover.1676289084.git.zhoubinbin@loongson.cn>
- <a9f697906df6599e6b001981e668479da71aa7a0.1676289084.git.zhoubinbin@loongson.cn>
- <df464409-9a93-c057-5f66-923a9e24696a@linaro.org>
- <CAMpQs4JX0Vgf5tvv5Yw5eLGANFfn1p=iQ_kMS0yQPV6kE2tN1g@mail.gmail.com>
- <23068d0c-d37c-0563-e1c1-e4d112059f5b@linaro.org>
-In-Reply-To: <23068d0c-d37c-0563-e1c1-e4d112059f5b@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1676358308.git.jpoimboe@kernel.org>
 
-On 14/02/2023 13:43, Krzysztof Kozlowski wrote:
->>
->>>
->>>> +
->>>> +  reg:
->>>> +    minItems: 1
->>>> +    maxItems: 3
->>>
->>> You need to describe the items.>>>
->>>> +
->>>> +  interrupt-controller: true
->>>> +
->>>> +  interrupts:
->>>> +    description:
->>>> +      Interrupt source of the CPU interrupts.
->>>
->>> You need to describe the items.
->>
->> Do you mean a more detailed description?
+On Mon, Feb 13, 2023 at 11:05:34PM -0800, Josh Poimboeuf wrote:
+> v2:
+> - make arch_call_rest_init() and rest_init() __noreturn
+> - make objtool 'global_returns' work for weak functions
+> - rebase on tip/objtool/core with dependencies merged in (mingo)
+> - add acks
 > 
-> I mean constraints on interrupts and/or description if they are not obvious.
+> v1.1:
+> - add __noreturn to all arch_cpu_idle_dead() implementations (mpe)
 
+With this, rcutorture no longer gets objtool complaints on x86, thank you!
 
-Actually I noticed that for interrupts you provided the name, so it is
-description and you just need maxItems:1.
+Tested-by: Paul E. McKenney <paulmck@kernel.org>
 
-The reg however need list of items which clearly documents what is there.
-
-Best regards,
-Krzysztof
-
+> Josh Poimboeuf (24):
+>   alpha/cpu: Expose arch_cpu_idle_dead()'s prototype declaration
+>   alpha/cpu: Make sure arch_cpu_idle_dead() doesn't return
+>   arm/cpu: Make sure arch_cpu_idle_dead() doesn't return
+>   arm64/cpu: Mark cpu_die() __noreturn
+>   csky/cpu: Make sure arch_cpu_idle_dead() doesn't return
+>   ia64/cpu: Mark play_dead() __noreturn
+>   loongarch/cpu: Make sure play_dead() doesn't return
+>   loongarch/cpu: Mark play_dead() __noreturn
+>   mips/cpu: Expose play_dead()'s prototype definition
+>   mips/cpu: Make sure play_dead() doesn't return
+>   mips/cpu: Mark play_dead() __noreturn
+>   powerpc/cpu: Mark start_secondary_resume() __noreturn
+>   sh/cpu: Make sure play_dead() doesn't return
+>   sh/cpu: Mark play_dead() __noreturn
+>   sh/cpu: Expose arch_cpu_idle_dead()'s prototype definition
+>   sparc/cpu: Mark cpu_play_dead() __noreturn
+>   x86/cpu: Make sure play_dead() doesn't return
+>   x86/cpu: Mark play_dead() __noreturn
+>   xtensa/cpu: Make sure cpu_die() doesn't return
+>   xtensa/cpu: Mark cpu_die() __noreturn
+>   sched/idle: Make sure weak version of arch_cpu_idle_dead() doesn't
+>     return
+>   objtool: Include weak functions in 'global_noreturns' check
+>   init: Make arch_call_rest_init() and rest_init() __noreturn
+>   sched/idle: Mark arch_cpu_idle_dead() __noreturn
+> 
+>  arch/alpha/kernel/process.c      |  4 +++-
+>  arch/arm/kernel/smp.c            |  4 +++-
+>  arch/arm64/include/asm/smp.h     |  2 +-
+>  arch/arm64/kernel/process.c      |  2 +-
+>  arch/csky/kernel/smp.c           |  4 +++-
+>  arch/ia64/kernel/process.c       |  6 +++---
+>  arch/loongarch/include/asm/smp.h |  2 +-
+>  arch/loongarch/kernel/process.c  |  2 +-
+>  arch/loongarch/kernel/smp.c      |  2 +-
+>  arch/mips/include/asm/smp.h      |  2 +-
+>  arch/mips/kernel/process.c       |  2 +-
+>  arch/mips/kernel/smp-bmips.c     |  3 +++
+>  arch/mips/loongson64/smp.c       |  1 +
+>  arch/parisc/kernel/process.c     |  2 +-
+>  arch/powerpc/include/asm/smp.h   |  2 +-
+>  arch/powerpc/kernel/smp.c        |  2 +-
+>  arch/riscv/kernel/cpu-hotplug.c  |  2 +-
+>  arch/s390/kernel/idle.c          |  2 +-
+>  arch/s390/kernel/setup.c         |  2 +-
+>  arch/sh/include/asm/smp-ops.h    |  5 +++--
+>  arch/sh/kernel/idle.c            |  3 ++-
+>  arch/sparc/include/asm/smp_64.h  |  2 +-
+>  arch/sparc/kernel/process_64.c   |  2 +-
+>  arch/x86/include/asm/smp.h       |  3 ++-
+>  arch/x86/kernel/process.c        |  4 ++--
+>  arch/xtensa/include/asm/smp.h    |  2 +-
+>  arch/xtensa/kernel/smp.c         |  4 +++-
+>  include/linux/cpu.h              |  2 +-
+>  include/linux/start_kernel.h     |  4 ++--
+>  init/main.c                      |  4 ++--
+>  kernel/sched/idle.c              |  2 +-
+>  tools/objtool/check.c            | 11 +++++++----
+>  32 files changed, 57 insertions(+), 39 deletions(-)
+> 
+> -- 
+> 2.39.1
+> 
