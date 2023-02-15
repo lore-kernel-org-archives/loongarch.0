@@ -1,137 +1,102 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C5353AF
-	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 13:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1676466389;
-	bh=la/gxvFeBwR+hympTcN39C8IlB05NbIOEkTkiTkOIik=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Faae/TO7zgg3VIqTmyTx1N2B6zwcLHrBChGYbATM5XqI/xHwiTlXqVvUxb3c+avmm
-	 PWWSaY1n19GZ6EFG9Gtft7JFl57/sjA4Dn+6dKx8e4xuS53rb7aYD8K8Aq731viA3L
-	 CI1oNweWuyPl89XMQfa+AX83q90oLpsjocyRM7KI=
-Received: from [IPv6:240e:358:111b:f00:dc73:854d:832e:3] (unknown [IPv6:240e:358:111b:f00:dc73:854d:832e:3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id DB3AD65926;
-	Wed, 15 Feb 2023 08:06:25 -0500 (EST)
-Message-ID: <1f2b697ee10ba1b1ea2e2128697e1924d2479d4c.camel@xry111.site>
-Subject: Re: "kernel ade access" oops on LoongArch
-From: Xi Ruoyao <xry111@xry111.site>
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: Jinyang He <hejinyang@loongson.cn>, loongarch@lists.linux.dev, Huacai
- Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- linux-kernel@vger.kernel.org
-Date: Wed, 15 Feb 2023 21:06:21 +0800
-In-Reply-To: <6268f221cfca8b7550ad0673246f09cd439ede05.camel@xry111.site>
-References: <1e6f4d35946e4e2e7c7f5dcc7b69d5e609de8184.camel@xry111.site>
-	 <2e902dfa-cb84-7ef0-6b50-02b16354a139@loongson.cn>
-	 <511d385675ea7a846ff791974c6ae7feeeec2589.camel@xry111.site>
-	 <9a70e89c-0f3b-0660-501e-3292e410cfd8@loongson.cn>
-	 <5403e5eb-5792-7d6f-df74-ca3fab82ecd5@loongson.cn>
-	 <818419c03037bda833a5b281588a4b331c34ae8c.camel@xry111.site>
-	 <74fb1e24-36c0-c642-5bab-3646ba7790df@loongson.cn>
-	 <21b0e60dac8bedf9e389645ec103aa4241b35f8d.camel@xry111.site>
-	 <bf0e57db317d7061ecaaf928ce6cf40941b1740c.camel@xry111.site>
-	 <6268f221cfca8b7550ad0673246f09cd439ede05.camel@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0CFA53AF
+	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 13:09:34 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F7ABFEC;
+	Wed, 15 Feb 2023 05:10:16 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.89.142])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8797A3F663;
+	Wed, 15 Feb 2023 05:09:26 -0800 (PST)
+Date: Wed, 15 Feb 2023 13:09:21 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, linux-kernel@vger.kernel.org,
+	jgross@suse.com, richard.henderson@linaro.org,
+	ink@jurassic.park.msu.ru, mattst88@gmail.com,
+	linux-alpha@vger.kernel.org, linux@armlinux.org.uk,
+	linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+	will@kernel.org, guoren@kernel.org, linux-csky@vger.kernel.org,
+	linux-ia64@vger.kernel.org, chenhuacai@kernel.org,
+	kernel@xen0n.name, loongarch@lists.linux.dev, f.fainelli@gmail.com,
+	bcm-kernel-feedback-list@broadcom.com, tsbogend@alpha.franken.de,
+	linux-mips@vger.kernel.org, jiaxun.yang@flygoat.com,
+	mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+	linuxppc-dev@lists.ozlabs.org, ysato@users.sourceforge.jp,
+	dalias@libc.org, linux-sh@vger.kernel.org, davem@davemloft.net,
+	sparclinux@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
+	linux-xtensa@linux-xtensa.org, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	paulmck@kernel.org
+Subject: Re: [PATCH v2 04/24] arm64/cpu: Mark cpu_die() __noreturn
+Message-ID: <Y+zZgZIP7RPIgyQf@FVFF77S0Q05N>
+References: <cover.1676358308.git.jpoimboe@kernel.org>
+ <e47fc487980d5330e6059ac6e16416bec88cda0e.1676358308.git.jpoimboe@kernel.org>
+ <14274f04-2991-95bd-c29b-07e86e8755c1@linaro.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <14274f04-2991-95bd-c29b-07e86e8755c1@linaro.org>
 
-On Wed, 2023-02-15 at 20:51 +0800, Xi Ruoyao wrote:
-> On Wed, 2023-02-15 at 19:52 +0800, Xi Ruoyao wrote:
-> > On Wed, 2023-02-15 at 16:35 +0800, Xi Ruoyao wrote:
-> > > On Wed, 2023-02-15 at 16:25 +0800, Youling Tang wrote:
-> > > > Can you modify the kernel as follows and test it, so as to avoid
-> > > > possible relationship with the exception table data link
-> > > > position
-> > > > and
-> > > > alignment rules (or use EXCEPTION_TABLE(12))?
-> > > >=20
-> > > > --- a/arch/loongarch/kernel/vmlinux.lds.S
-> > > > +++ b/arch/loongarch/kernel/vmlinux.lds.S
-> > > > @@ -4,7 +4,6 @@
-> > > > =C2=A0 #include <asm/thread_info.h>
-> > > >=20
-> > > > =C2=A0 #define PAGE_SIZE _PAGE_SIZE
-> > > > -#define RO_EXCEPTION_TABLE_ALIGN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 4
-> > > >=20
-> > > > =C2=A0 /*
-> > > > =C2=A0=C2=A0 * Put .bss..swapper_pg_dir as the first thing in .bss.=
- This
-> > > > will
-> > > > @@ -54,6 +53,8 @@ SECTIONS
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 . =3D ALIGN(PECOFF=
-_SEGMENT_ALIGN);
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 _etext =3D .;
-> > > >=20
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EXCEPTION_TABLE(16)
-> > > > +
-> > >=20
-> > > It seems the kernel refuses to boot after the change, but I'm not
-> > > completely sure: I'm 5 km away from the board and operating it via
-> > > ssh
-> > > so maybe it's a reboot failure or network failure.=C2=A0 I'll report
-> > > again in
-> > > the evening.
-> >=20
-> > It was a reboot failure.
-> >=20
-> > Now it has booted successfully, but the stack trace still shows
-> > (during
-> > the 25th run of the make test t=3D... command).
->=20
-> Ouch, I know what's happening...
->=20
-> In the architecture-independent code we have something like
->=20
-> extern struct exception_table_entry a[], b[];
-> bsearch(a, b - a);
->=20
-> According to the C standard, when you write "b - a" where a and b are
-> pointers to type T, "b" and "a" must be pointers to elements in the
-> same
-> array of T.=C2=A0 So the compiler can assume ((uintptr_t)b - (uintptr_t)a=
-)
-> %
-> 12 =3D=3D 0 and optimize "b - a" to something like
->=20
-> (((uintptr_t)b - (uintptr_t)a) >> 2) * inv3
->=20
-> Here inv3 is the inversion of 3 in the modulo-2**64 integer ring, so
-> the
-> compiler can avoid an expensive divide instruction.=C2=A0 But in my vmlin=
-ux
-> ((uintptr_t)b - (uintptr_t)a) is somehow not a multiple of 12:
->=20
-> (gdb) p ((uintptr_t)__stop___ex_table - (uintptr_t)__start___ex_table)
-> % sizeof(struct exception_table_entry)
-> $9 =3D 8
->=20
-> So I guess
->=20
-> #define RO_EXCEPTION_TABLE_ALIGN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 12
->=20
-> will work.=C2=A0 I'll take a try...
+On Tue, Feb 14, 2023 at 09:13:08AM +0100, Philippe Mathieu-Daudé wrote:
+> On 14/2/23 08:05, Josh Poimboeuf wrote:
+> > cpu_die() doesn't return.  Annotate it as such.  By extension this also
+> > makes arch_cpu_idle_dead() noreturn.
+> > 
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> > ---
+> >   arch/arm64/include/asm/smp.h | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+> > index fc55f5a57a06..5733a31bab08 100644
+> > --- a/arch/arm64/include/asm/smp.h
+> > +++ b/arch/arm64/include/asm/smp.h
+> > @@ -100,7 +100,7 @@ static inline void arch_send_wakeup_ipi_mask(const struct cpumask *mask)
+> >   extern int __cpu_disable(void);
+> >   extern void __cpu_die(unsigned int cpu);
+> > -extern void cpu_die(void);
+> > +extern void __noreturn cpu_die(void);
+> >   extern void cpu_die_early(void);
+> 
+> Shouldn't cpu_operations::cpu_die() be declared noreturn first?
 
-No, it's not related...
+The cpu_die() function ends with a BUG(), and so does not return, even if a
+cpu_operations::cpu_die() function that it calls erroneously returned.
 
-The reason is the "LoongArch: Add vector extensions support" in my local
-repo is not same as the version in loongarch-next!  My local version
-contains some ".section __ex_table", and the content seems predates the
-relative exception table change.
+We *could* mark cpu_operations::cpu_die() as noreturn, but I'd prefer that we
+did not so that the compiler doesn't optimize away the BUG() which is there to
+catch such erroneous returns.
 
-Sorry for wasted you guys an afternoon :(.
+That said, could we please add __noreturn to the implementation of cpu_die() in
+arch/arm64/kernel/smp.c? i.e. the fixup below.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+With that fixup:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+---->8----
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index ffc5d76cf695..a98a76f7c1c6 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -361,7 +361,7 @@ void __cpu_die(unsigned int cpu)
+  * Called from the idle thread for the CPU which has been shutdown.
+  *
+  */
+-void cpu_die(void)
++void __noreturn cpu_die(void)
+ {
+        unsigned int cpu = smp_processor_id();
+        const struct cpu_operations *ops = get_cpu_ops(cpu);
