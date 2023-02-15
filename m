@@ -1,157 +1,132 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965C37B
-	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 08:29:26 +0000 (UTC)
-Received: by mail-wr1-f46.google.com with SMTP id bu23so18181480wrb.8
-        for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 00:29:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=D+uRuWA2my0PkLfTRJkVAZ05w6wbQaFzpjSQTlA3Y10=;
-        b=EAjtSefiFMcRJUjTT1vKa++/98Yo1SN60xpEBkPSeru5QVrOombFl7ZHZ9y0eBb+k8
-         1ZpycnMJayGmVT6T6UnuPRjCB3nPxmBujGFtXaNp8cbOZSlWgdaIEhXU+GGjztzV/czy
-         1WDq6VfomA00oo7hLpCf0eBYSqerRkvKuSrVmRTM4XbxzJrQVoIbRj0AGC+iAePl6sTf
-         Z2xptiD/VOo1nfoRA4XWNffLKM3ZE08q46EkUvIRst5VglioETpQYFtr/iY0tCSkcOlD
-         bJtursUf7vQFXV0RL9Rz9XvQSF18NBopDoEorHB9a2ffDlY3yM0iSt8r0hW9VmbKY8B/
-         Tfog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D+uRuWA2my0PkLfTRJkVAZ05w6wbQaFzpjSQTlA3Y10=;
-        b=qt/ZHsuQJCGa7FFGCfJ3h2e7vTzbQPKN7Uxj2lMCULbq8e8TW3s1igEHk4C602gYaX
-         0RjHe+6Pcn3uu7VPEn4ZrC7/08R3MzvTiRzfE4rLNXEUKm5W6EOral+pgloraC1nkMyS
-         9u3cwe4d7vDVIOvMBuivzR58lTv6Zxk/0aEOx6B4GV1c2O3u5aN52zqKJvaQ2EFQSpnX
-         eDy6j9hcAZQTJ86xCUXGazkIMiV9qMsIQaaq2w5q1DwocaVI7elGoUQmbNJIcN/IcHTs
-         zRzj/VmWDkWlEedTghmptIuBqsaNTsUPgr1dpgxnLz0wm4XdTV4VrotSoQKgiNm1rtBh
-         Ib5A==
-X-Gm-Message-State: AO0yUKVlXQVOjjDjN5KgYNgYmyRfp1clrgOqIQRSBL+vNaX+nbQ6hRL8
-	dNO72TAdlf6V6A6JvZHIGdmJvw==
-X-Google-Smtp-Source: AK7set8G2iiFdHjvUAVVY5llFOflusvwqwWTyX5fVt/Awzv2HxyXMg5++kq1nd94kDMQiFL/tQeRqw==
-X-Received: by 2002:a5d:67cc:0:b0:2c5:58fc:e1bb with SMTP id n12-20020a5d67cc000000b002c558fce1bbmr826926wrw.10.1676449764713;
-        Wed, 15 Feb 2023 00:29:24 -0800 (PST)
-Received: from [192.168.30.216] ([81.0.6.76])
-        by smtp.gmail.com with ESMTPSA id i2-20020adfefc2000000b002c553e061fdsm8524783wrp.112.2023.02.15.00.29.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Feb 2023 00:29:24 -0800 (PST)
-Message-ID: <c56dc4b9-035d-7773-ecb2-0e1ac6af7abc@linaro.org>
-Date: Wed, 15 Feb 2023 09:29:20 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED5319E
+	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 08:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1676450054; bh=0yynJsMs9oTSW41YB9S9LQD4Ti4OoVeVdFtde3WJhQM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=f/KBAl++Lm3WbZpPvScD76cFn24ynR+VULCHYgelNpHrW/k3uJ0WowWgO0KaoW0i2
+	 y5+r0onI20szWtQD+W7rDlilGLsbvojmig5vUVVnmSc4ccDs2GkPuAzS1b0uBtLO2d
+	 r4V9oGVAHzjOgnAHqYcFkDrVVD2AJcCze7d8ex9c=
+Received: from ld50.lan (unknown [114.93.192.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 50E20600A9;
+	Wed, 15 Feb 2023 16:34:13 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	WANG Xuerui <git@xen0n.name>
+Subject: [PATCH v3 00/11] LoongArch: Better backtraces
+Date: Wed, 15 Feb 2023 16:34:01 +0800
+Message-Id: <20230215083412.3795357-1-kernel@xen0n.name>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.7.2
-Subject: Re: [PATCH v2 09/24] mips/cpu: Expose play_dead()'s prototype
- definition
-Content-Language: en-US
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: linux-kernel@vger.kernel.org, jgross@suse.com,
- richard.henderson@linaro.org, ink@jurassic.park.msu.ru, mattst88@gmail.com,
- linux-alpha@vger.kernel.org, linux@armlinux.org.uk,
- linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
- will@kernel.org, guoren@kernel.org, linux-csky@vger.kernel.org,
- linux-ia64@vger.kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev, f.fainelli@gmail.com,
- bcm-kernel-feedback-list@broadcom.com, tsbogend@alpha.franken.de,
- linux-mips@vger.kernel.org, jiaxun.yang@flygoat.com, mpe@ellerman.id.au,
- npiggin@gmail.com, christophe.leroy@csgroup.eu,
- linuxppc-dev@lists.ozlabs.org, ysato@users.sourceforge.jp, dalias@libc.org,
- linux-sh@vger.kernel.org, davem@davemloft.net, sparclinux@vger.kernel.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- chris@zankel.net, jcmvbkbc@gmail.com, linux-xtensa@linux-xtensa.org,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, paulmck@kernel.org
-References: <cover.1676358308.git.jpoimboe@kernel.org>
- <39835bc75af2e812fce56400533cb2ab41bcf0e2.1676358308.git.jpoimboe@kernel.org>
- <080a5ccb-7fa0-1a75-538f-a09dc146fc4e@linaro.org>
- <20230214181101.3a2tscbmwdnwbqpu@treble>
-From: =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20230214181101.3a2tscbmwdnwbqpu@treble>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 14/2/23 19:11, Josh Poimboeuf wrote:
-> On Tue, Feb 14, 2023 at 08:46:41AM +0100, Philippe Mathieu-Daudé wrote:
->> Hi Josh,
->>
->> On 14/2/23 08:05, Josh Poimboeuf wrote:
->>> Include <asm/smp.h> to make sure play_dead() matches its prototype going
->>> forward.
->>>
->>> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
->>> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
->>> ---
->>>    arch/mips/kernel/smp-bmips.c | 1 +
->>>    1 file changed, 1 insertion(+)
->>>
->>> diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
->>> index f5d7bfa3472a..df9158e8329d 100644
->>> --- a/arch/mips/kernel/smp-bmips.c
->>> +++ b/arch/mips/kernel/smp-bmips.c
->>> @@ -38,6 +38,7 @@
->>>    #include <asm/traps.h>
->>>    #include <asm/barrier.h>
->>>    #include <asm/cpu-features.h>
->>> +#include <asm/smp.h>
->>
->> What about the other implementations?
->>
->> $ git grep -L asm/smp.h $(git grep -wlF 'play_dead(void)' arch/mips)
->> arch/mips/cavium-octeon/smp.c
->> arch/mips/kernel/smp-bmips.c
->> arch/mips/kernel/smp-cps.c
->> arch/mips/loongson64/smp.c
-> 
-> Indeed.  I really wish we had -Wmissing-prototypes.
-> 
-> I'll squash this in:
-> 
-> diff --git a/arch/mips/cavium-octeon/smp.c b/arch/mips/cavium-octeon/smp.c
-> index 89954f5f87fb..4212584e6efa 100644
-> --- a/arch/mips/cavium-octeon/smp.c
-> +++ b/arch/mips/cavium-octeon/smp.c
-> @@ -20,6 +20,7 @@
->   #include <asm/mmu_context.h>
->   #include <asm/time.h>
->   #include <asm/setup.h>
-> +#include <asm/smp.h>
->   
->   #include <asm/octeon/octeon.h>
->   
-> diff --git a/arch/mips/kernel/smp-cps.c b/arch/mips/kernel/smp-cps.c
-> index bcd6a944b839..6d69a9ba8167 100644
-> --- a/arch/mips/kernel/smp-cps.c
-> +++ b/arch/mips/kernel/smp-cps.c
-> @@ -20,6 +20,7 @@
->   #include <asm/mipsregs.h>
->   #include <asm/pm-cps.h>
->   #include <asm/r4kcache.h>
-> +#include <asm/smp.h>
->   #include <asm/smp-cps.h>
->   #include <asm/time.h>
->   #include <asm/uasm.h>
-> diff --git a/arch/mips/loongson64/smp.c b/arch/mips/loongson64/smp.c
-> index c81c2bd07c62..df8d789ede3c 100644
-> --- a/arch/mips/loongson64/smp.c
-> +++ b/arch/mips/loongson64/smp.c
-> @@ -14,6 +14,7 @@
->   #include <linux/cpufreq.h>
->   #include <linux/kexec.h>
->   #include <asm/processor.h>
-> +#include <asm/smp.h>
->   #include <asm/time.h>
->   #include <asm/tlbflush.h>
->   #include <asm/cacheflush.h>
+From: WANG Xuerui <git@xen0n.name>
 
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Hi,
 
-Thanks.
+Here are a bunch of tweaks to the backtrace code, so the Quality of Life
+for unfortunate LoongArch kernel devs (including but not limited to,
+myself) could be marginally improved by relieving them of having to
+mentally decode the register names and CSR bitfields.
+
+Before:
+
+> [   17.879976] $ 0   : 0000000000000000 9000000000cc980c 90000001002cc000 90000001002cfe30
+> [   17.887936] $ 4   : 0000000000000010 9000000000f1f770 90000001002cc000 9000000000cc3468
+> [   17.895895] $ 8   : 900000010028fd00 0000000000000001 000055558e569190 0000000000000004
+> [   17.903853] $12   : 0000000000000000 0000000000000004 9000000001026000 900000000132b2d8
+> [   17.911811] $16   : 9000000001026000 000000006674b539 9000000000d51d10 0000000000000001
+> [   17.919769] $20   : 0000000000000000 900000000025c27c 0000000000000004 0000000000000002
+> [   17.927727] $24   : 900000000102e5b0 900000000102e508 0000000000000000 0000000000000004
+> [   17.935686] $28   : 9000000009007840 0000000000000004 0000000000000000 0000000000000004
+> [   17.943644] era   : 90000000002215a0 __arch_cpu_idle+0x20/0x24
+> [   17.949438] ra    : 9000000000cc980c default_idle_call+0x34/0x5c
+> [   17.955406] CSR crmd: 000000b0
+> [   17.955408] CSR prmd: 00000004
+> [   17.958521] CSR euen: 00000000
+> [   17.961635] CSR ecfg: 00071c1c
+> [   17.964748] CSR estat: 00001000
+> [   17.971062] ExcCode : 0 (SubCode 0)
+> [   17.974522] PrId  : 0014c010 (Loongson-64bit)
+
+After:
+
+> [  113.936553] tp 90000000010f8000 sp 90000000010fbdc0 a0 0000000000000000
+> [  113.943125] a1 9000000000ff5158 a2 90000000010f8000 a3 9000000000d6233c
+> [  113.949696] a4 9000000104603e00 a5 0000000000000000 a6 00000000000b9800
+> [  113.956267] a7 0000000000000004 t0 0000000000000000 t1 0000000000000004
+> [  113.962838] t2 900000000110a000 t3 900000000141b5e0 t4 900000000110a000
+> [  113.969408] t5 00000002a6d585d7 t6 9000000000e02118 t7 0000000000000001
+> [  113.975979] t8 0000000000000000 u0 0000001a3dae9000 s9 9000000001035c80
+> [  113.982550] s0 0000000000000000 s1 90000000011125d0 s2 9000000001112528
+> [  113.989121] s3 0000000000000000 s4 0000000000000004 s5 9000000005521880
+> [  113.995692] s6 90000000055218b2 s7 0000000000000000 s8 9000000001035c80
+> [  114.002263]   era: 9000000000221600 __arch_cpu_idle+0x20/0x24
+> [  114.007972]    ra: 9000000000d687f0 default_idle_call+0x34/0x5c
+> [  114.013854]  crmd: 000000b0 (-WE DACM=CC DACF=CC +PG -DA -IE PLV0)
+> [  114.020005]  prmd: 00000004 (-PWE +PIE PPLV0)
+> [  114.024334]  euen: 00000000 (-BTE -ASXE -SXE -FPE)
+> [  114.029096]  ecfg: 00071c1d (VS=7 LIE=0,2-4,10-12)
+> [  114.033855] estat: 00001000 [INT] (EsubCode=0 ECode=0 IS=12)
+> [  114.039479]  prid: 0014c010 (Loongson-64bit)
+
+Although I still have different opinions with respect to some of the
+review comments, I've chosen to implement all of Huacai's suggestions
+nevertheless, in favor of quick adoption by users (aiming for the
+upcoming merge window) instead of having this work blocked indefinitely
+thus affecting everyone else in the long term.
+
+Please review, and let the bikeshedding begin!
+
+Changes in v3:
+
+- rebased and tested on top of v6.2-rc8
+- restored the "era" name for PC per review suggestion
+- show "u0" in case of r21 according to kernel register convention
+- removed redundant print of $ra
+- print the syscall restart flag if non-zero
+
+Changes in v2:
+
+- rebased and tested on top of next-20221226
+- removed the mass symbol renamings per Huacai's suggestion (but the
+  output still uses the ISA manual names because users are expected to
+  be more familiar with those)
+
+WANG Xuerui (11):
+  LoongArch: Clean up the architectural interrupt definitions
+  LoongArch: Add exception subcode definitions for the watchpoint
+    exception
+  LoongArch: Print GPRs with ABI names when showing registers
+  LoongArch: Print symbol info for CSR.ERA and $ra only for kernel-mode
+    contexts
+  LoongArch: Fix format of CSR lines during show_regs
+  LoongArch: Humanize the CRMD line when showing registers
+  LoongArch: Humanize the PRMD line when showing registers
+  LoongArch: Humanize the EUEN line when showing registers
+  LoongArch: Humanize the ECFG line when showing registers
+  LoongArch: Humanize the ESTAT line when showing registers
+  LoongArch: Use lowercase ISA manual names for BADV and CPUCFG.PRID
+    lines in show_regs
+
+ arch/loongarch/include/asm/loongarch.h |  60 ++++---
+ arch/loongarch/kernel/irq.c            |   2 +-
+ arch/loongarch/kernel/perf_event.c     |   2 +-
+ arch/loongarch/kernel/time.c           |   2 +-
+ arch/loongarch/kernel/traps.c          | 225 +++++++++++++++++++++----
+ 5 files changed, 232 insertions(+), 59 deletions(-)
+
+-- 
+2.39.1
+
