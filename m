@@ -1,28 +1,30 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED5319E
-	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 08:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937DF2900
+	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 08:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1676450054; bh=0yynJsMs9oTSW41YB9S9LQD4Ti4OoVeVdFtde3WJhQM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=f/KBAl++Lm3WbZpPvScD76cFn24ynR+VULCHYgelNpHrW/k3uJ0WowWgO0KaoW0i2
-	 y5+r0onI20szWtQD+W7rDlilGLsbvojmig5vUVVnmSc4ccDs2GkPuAzS1b0uBtLO2d
-	 r4V9oGVAHzjOgnAHqYcFkDrVVD2AJcCze7d8ex9c=
+	t=1676450059; bh=CakCsDjlb9yDfLUs/H/N9AlvCIjDhSUcOMVz7rPhvWI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=aWsL1D/l3PLILEHpM4HBOvstbRGn4rfBrbiAivq9hr6PfCS6yHFXP7ChsBOZb/pNm
+	 9PWAWXbXiS7zvjG/VQ0775C2qnEV0L3R43mKGTtl75Q6mSddnoBs5J5yu55LoHarSe
+	 yNIyH2UdWyiKQU0FlIISV4/O+wHmN0xWIr3JEHiA=
 Received: from ld50.lan (unknown [114.93.192.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 50E20600A9;
-	Wed, 15 Feb 2023 16:34:13 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 37B5160111;
+	Wed, 15 Feb 2023 16:34:18 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v3 00/11] LoongArch: Better backtraces
-Date: Wed, 15 Feb 2023 16:34:01 +0800
-Message-Id: <20230215083412.3795357-1-kernel@xen0n.name>
+Subject: [PATCH v3 01/11] LoongArch: Clean up the architectural interrupt definitions
+Date: Wed, 15 Feb 2023 16:34:02 +0800
+Message-Id: <20230215083412.3795357-2-kernel@xen0n.name>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230215083412.3795357-1-kernel@xen0n.name>
+References: <20230215083412.3795357-1-kernel@xen0n.name>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -33,100 +35,167 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Hi,
+While interrupts are assigned ECodes `64 + interrupt number`, all
+existing use sites of interrupt numbers want the 64 subtracted.
+Re-arrange the definitions so that the actual interrupt number is used
+everywhere, and make EXCCODE_INT_END inclusive as it is more intuitive
+that way.
 
-Here are a bunch of tweaks to the backtrace code, so the Quality of Life
-for unfortunate LoongArch kernel devs (including but not limited to,
-myself) could be marginally improved by relieving them of having to
-mentally decode the register names and CSR bitfields.
+While at it, document an ISA manual erratum that is confirmed by Huacai
+but not yet officially fixed in the official (Chinese) version of the
+manual, namely the total number of architectural interrupts should be
+(at least) 14 instead of 13. Relevant bitfields and masks have been
+adjusted as well.
 
-Before:
+Signed-off-by: WANG Xuerui <git@xen0n.name>
+---
+ arch/loongarch/include/asm/loongarch.h | 56 ++++++++++++++++----------
+ arch/loongarch/kernel/irq.c            |  2 +-
+ arch/loongarch/kernel/perf_event.c     |  2 +-
+ arch/loongarch/kernel/time.c           |  2 +-
+ arch/loongarch/kernel/traps.c          |  2 +-
+ 5 files changed, 38 insertions(+), 26 deletions(-)
 
-> [   17.879976] $ 0   : 0000000000000000 9000000000cc980c 90000001002cc000 90000001002cfe30
-> [   17.887936] $ 4   : 0000000000000010 9000000000f1f770 90000001002cc000 9000000000cc3468
-> [   17.895895] $ 8   : 900000010028fd00 0000000000000001 000055558e569190 0000000000000004
-> [   17.903853] $12   : 0000000000000000 0000000000000004 9000000001026000 900000000132b2d8
-> [   17.911811] $16   : 9000000001026000 000000006674b539 9000000000d51d10 0000000000000001
-> [   17.919769] $20   : 0000000000000000 900000000025c27c 0000000000000004 0000000000000002
-> [   17.927727] $24   : 900000000102e5b0 900000000102e508 0000000000000000 0000000000000004
-> [   17.935686] $28   : 9000000009007840 0000000000000004 0000000000000000 0000000000000004
-> [   17.943644] era   : 90000000002215a0 __arch_cpu_idle+0x20/0x24
-> [   17.949438] ra    : 9000000000cc980c default_idle_call+0x34/0x5c
-> [   17.955406] CSR crmd: 000000b0
-> [   17.955408] CSR prmd: 00000004
-> [   17.958521] CSR euen: 00000000
-> [   17.961635] CSR ecfg: 00071c1c
-> [   17.964748] CSR estat: 00001000
-> [   17.971062] ExcCode : 0 (SubCode 0)
-> [   17.974522] PrId  : 0014c010 (Loongson-64bit)
-
-After:
-
-> [  113.936553] tp 90000000010f8000 sp 90000000010fbdc0 a0 0000000000000000
-> [  113.943125] a1 9000000000ff5158 a2 90000000010f8000 a3 9000000000d6233c
-> [  113.949696] a4 9000000104603e00 a5 0000000000000000 a6 00000000000b9800
-> [  113.956267] a7 0000000000000004 t0 0000000000000000 t1 0000000000000004
-> [  113.962838] t2 900000000110a000 t3 900000000141b5e0 t4 900000000110a000
-> [  113.969408] t5 00000002a6d585d7 t6 9000000000e02118 t7 0000000000000001
-> [  113.975979] t8 0000000000000000 u0 0000001a3dae9000 s9 9000000001035c80
-> [  113.982550] s0 0000000000000000 s1 90000000011125d0 s2 9000000001112528
-> [  113.989121] s3 0000000000000000 s4 0000000000000004 s5 9000000005521880
-> [  113.995692] s6 90000000055218b2 s7 0000000000000000 s8 9000000001035c80
-> [  114.002263]   era: 9000000000221600 __arch_cpu_idle+0x20/0x24
-> [  114.007972]    ra: 9000000000d687f0 default_idle_call+0x34/0x5c
-> [  114.013854]  crmd: 000000b0 (-WE DACM=CC DACF=CC +PG -DA -IE PLV0)
-> [  114.020005]  prmd: 00000004 (-PWE +PIE PPLV0)
-> [  114.024334]  euen: 00000000 (-BTE -ASXE -SXE -FPE)
-> [  114.029096]  ecfg: 00071c1d (VS=7 LIE=0,2-4,10-12)
-> [  114.033855] estat: 00001000 [INT] (EsubCode=0 ECode=0 IS=12)
-> [  114.039479]  prid: 0014c010 (Loongson-64bit)
-
-Although I still have different opinions with respect to some of the
-review comments, I've chosen to implement all of Huacai's suggestions
-nevertheless, in favor of quick adoption by users (aiming for the
-upcoming merge window) instead of having this work blocked indefinitely
-thus affecting everyone else in the long term.
-
-Please review, and let the bikeshedding begin!
-
-Changes in v3:
-
-- rebased and tested on top of v6.2-rc8
-- restored the "era" name for PC per review suggestion
-- show "u0" in case of r21 according to kernel register convention
-- removed redundant print of $ra
-- print the syscall restart flag if non-zero
-
-Changes in v2:
-
-- rebased and tested on top of next-20221226
-- removed the mass symbol renamings per Huacai's suggestion (but the
-  output still uses the ISA manual names because users are expected to
-  be more familiar with those)
-
-WANG Xuerui (11):
-  LoongArch: Clean up the architectural interrupt definitions
-  LoongArch: Add exception subcode definitions for the watchpoint
-    exception
-  LoongArch: Print GPRs with ABI names when showing registers
-  LoongArch: Print symbol info for CSR.ERA and $ra only for kernel-mode
-    contexts
-  LoongArch: Fix format of CSR lines during show_regs
-  LoongArch: Humanize the CRMD line when showing registers
-  LoongArch: Humanize the PRMD line when showing registers
-  LoongArch: Humanize the EUEN line when showing registers
-  LoongArch: Humanize the ECFG line when showing registers
-  LoongArch: Humanize the ESTAT line when showing registers
-  LoongArch: Use lowercase ISA manual names for BADV and CPUCFG.PRID
-    lines in show_regs
-
- arch/loongarch/include/asm/loongarch.h |  60 ++++---
- arch/loongarch/kernel/irq.c            |   2 +-
- arch/loongarch/kernel/perf_event.c     |   2 +-
- arch/loongarch/kernel/time.c           |   2 +-
- arch/loongarch/kernel/traps.c          | 225 +++++++++++++++++++++----
- 5 files changed, 232 insertions(+), 59 deletions(-)
-
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 7f8d57a61c8b..4910969928f0 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -311,8 +311,8 @@ static __always_inline void iocsr_write64(u64 val, u32 reg)
+ #define  CSR_ECFG_VS_WIDTH		3
+ #define  CSR_ECFG_VS			(_ULCAST_(0x7) << CSR_ECFG_VS_SHIFT)
+ #define  CSR_ECFG_IM_SHIFT		0
+-#define  CSR_ECFG_IM_WIDTH		13
+-#define  CSR_ECFG_IM			(_ULCAST_(0x1fff) << CSR_ECFG_IM_SHIFT)
++#define  CSR_ECFG_IM_WIDTH		14
++#define  CSR_ECFG_IM			(_ULCAST_(0x3fff) << CSR_ECFG_IM_SHIFT)
+ 
+ #define LOONGARCH_CSR_ESTAT		0x5	/* Exception status */
+ #define  CSR_ESTAT_ESUBCODE_SHIFT	22
+@@ -322,8 +322,8 @@ static __always_inline void iocsr_write64(u64 val, u32 reg)
+ #define  CSR_ESTAT_EXC_WIDTH		6
+ #define  CSR_ESTAT_EXC			(_ULCAST_(0x3f) << CSR_ESTAT_EXC_SHIFT)
+ #define  CSR_ESTAT_IS_SHIFT		0
+-#define  CSR_ESTAT_IS_WIDTH		15
+-#define  CSR_ESTAT_IS			(_ULCAST_(0x7fff) << CSR_ESTAT_IS_SHIFT)
++#define  CSR_ESTAT_IS_WIDTH		14
++#define  CSR_ESTAT_IS			(_ULCAST_(0x3fff) << CSR_ESTAT_IS_SHIFT)
+ 
+ #define LOONGARCH_CSR_ERA		0x6	/* ERA */
+ 
+@@ -1087,7 +1087,7 @@ static __always_inline void iocsr_write64(u64 val, u32 reg)
+ #define ECFGF_IPI		(_ULCAST_(1) << ECFGB_IPI)
+ #define ECFGF(hwirq)		(_ULCAST_(1) << hwirq)
+ 
+-#define ESTATF_IP		0x00001fff
++#define ESTATF_IP		0x00003fff
+ 
+ #define LOONGARCH_IOCSR_FEATURES	0x8
+ #define  IOCSRF_TEMP			BIT_ULL(0)
+@@ -1415,23 +1415,35 @@ __BUILD_CSR_OP(tlbidx)
+ 	#define EXCSUBCODE_GCHC		1	/* Hardware caused */
+ #define EXCCODE_SE		25	/* Security */
+ 
+-#define EXCCODE_INT_START   64
+-#define EXCCODE_SIP0        64
+-#define EXCCODE_SIP1        65
+-#define EXCCODE_IP0         66
+-#define EXCCODE_IP1         67
+-#define EXCCODE_IP2         68
+-#define EXCCODE_IP3         69
+-#define EXCCODE_IP4         70
+-#define EXCCODE_IP5         71
+-#define EXCCODE_IP6         72
+-#define EXCCODE_IP7         73
+-#define EXCCODE_PMC         74 /* Performance Counter */
+-#define EXCCODE_TIMER       75
+-#define EXCCODE_IPI         76
+-#define EXCCODE_NMI         77
+-#define EXCCODE_INT_END     78
+-#define EXCCODE_INT_NUM	    (EXCCODE_INT_END - EXCCODE_INT_START)
++/*
++ * Interrupt numbers
++ *
++ * The LoongArch ISA manual v1.02 says there are 13 interrupts in total (see
++ * the description about CSR.ESTAT, Volume 1, section 7.4.6), namely omitting
++ * the NMI.
++ * Unfortunately in this case the manual is wrong, and the definitions here
++ * shall prevail. In other words, CSR.ECFG.LIE and CSR.ESTAT.IS are 14 bits
++ * wide, instead of 13 as the manual suggests otherwise.
++ */
++#define INT_SWI0	0	/* Software Interrupts */
++#define INT_SWI1	1
++#define INT_HWI0	2	/* Hardware Interrupts */
++#define INT_HWI1	3
++#define INT_HWI2	4
++#define INT_HWI3	5
++#define INT_HWI4	6
++#define INT_HWI5	7
++#define INT_HWI6	8
++#define INT_HWI7	9
++#define INT_PCOV	10	/* Performance Counter Overflow */
++#define INT_TI		11	/* Timer */
++#define INT_IPI		12
++#define INT_NMI		13
++
++/* ExcCodes corresponding to interrupts */
++#define EXCCODE_INT_NUM		(INT_NMI + 1)
++#define EXCCODE_INT_START	64
++#define EXCCODE_INT_END		(EXCCODE_INT_START + EXCCODE_INT_NUM - 1)
+ 
+ /* FPU register names */
+ #define LOONGARCH_FCSR0	$r0
+diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
+index 0524bf1169b7..883e5066ae44 100644
+--- a/arch/loongarch/kernel/irq.c
++++ b/arch/loongarch/kernel/irq.c
+@@ -92,7 +92,7 @@ static int __init get_ipi_irq(void)
+ 	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
+ 
+ 	if (d)
+-		return irq_create_mapping(d, EXCCODE_IPI - EXCCODE_INT_START);
++		return irq_create_mapping(d, INT_IPI);
+ 
+ 	return -EINVAL;
+ }
+diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
+index 707bd32e5c4f..ff28f99b47d7 100644
+--- a/arch/loongarch/kernel/perf_event.c
++++ b/arch/loongarch/kernel/perf_event.c
+@@ -461,7 +461,7 @@ static int get_pmc_irq(void)
+ 	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
+ 
+ 	if (d)
+-		return irq_create_mapping(d, EXCCODE_PMC - EXCCODE_INT_START);
++		return irq_create_mapping(d, INT_PCOV);
+ 
+ 	return -EINVAL;
+ }
+diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+index a6576dea590c..c76a2a22e8e3 100644
+--- a/arch/loongarch/kernel/time.c
++++ b/arch/loongarch/kernel/time.c
+@@ -133,7 +133,7 @@ static int get_timer_irq(void)
+ 	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
+ 
+ 	if (d)
+-		return irq_create_mapping(d, EXCCODE_TIMER - EXCCODE_INT_START);
++		return irq_create_mapping(d, INT_TI);
+ 
+ 	return -EINVAL;
+ }
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index c38a146a973b..b1387b893feb 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -740,7 +740,7 @@ void __init trap_init(void)
+ 	long i;
+ 
+ 	/* Set interrupt vector handler */
+-	for (i = EXCCODE_INT_START; i < EXCCODE_INT_END; i++)
++	for (i = EXCCODE_INT_START; i <= EXCCODE_INT_END; i++)
+ 		set_handler(i * VECSIZE, handle_vint, VECSIZE);
+ 
+ 	set_handler(EXCCODE_ADE * VECSIZE, handle_ade, VECSIZE);
 -- 
 2.39.1
 
