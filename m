@@ -1,27 +1,27 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CAC22F43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E182900
 	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 08:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1676450064; bh=VXb1yM+aDLCT/i6fgHOvRYt/Pk1+zxGvrpjPfWANT98=;
+	t=1676450063; bh=K2Gd3ufVgpXdRPUVXubZnpeOOFS7V5v5dSgGL1WZJ2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mM1NeGlZFSC3Q6RI6rTz5suDlli2WcLqli/eDtE753fIk9Fu3koGgDwCzRXQJ5Vud
-	 WP2PqDaEZVneb0wghe23Zw+bndAukrKpYCs080H5USNVaRdQWrJgmUOrNlSLzXFxon
-	 aEFw52Jz5r3mA/oP+EVWn94fShg1T5rfYXSbVLYo=
+	b=Yg5cqyOmQg46U80EvcAYXrqMp0yy17HNAFnOm75nZaslseNHgYDkCW4srKaVFneIj
+	 rfAI4nG+QhubP9T1B2IBd2IN2K/uxW3Vz2mVc6pvCldlEHj1iIbnxbbR53mQelm88D
+	 ZKiSk3cB3+BSuhx6qH9LMEVz9C5XhgnvVOAo6c0w=
 Received: from ld50.lan (unknown [114.93.192.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 81224607DC;
-	Wed, 15 Feb 2023 16:34:24 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id F27DD607CD;
+	Wed, 15 Feb 2023 16:34:22 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v3 06/11] LoongArch: Humanize the CRMD line when showing registers
-Date: Wed, 15 Feb 2023 16:34:07 +0800
-Message-Id: <20230215083412.3795357-7-kernel@xen0n.name>
+Subject: [PATCH v3 04/11] LoongArch: Print symbol info for CSR.ERA and $ra only for kernel-mode contexts
+Date: Wed, 15 Feb 2023 16:34:05 +0800
+Message-Id: <20230215083412.3795357-5-kernel@xen0n.name>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230215083412.3795357-1-kernel@xen0n.name>
 References: <20230215083412.3795357-1-kernel@xen0n.name>
@@ -35,86 +35,43 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Example output looks like:
+Otherwise the addresses wouldn't make sense at all.
 
-[   xx.xxxxxx]  crmd: 000000b0 (-WE DACM=CC DACF=CC +PG -DA -IE PLV0)
+While at it, align the "map keys" to maintain right-alignment with the
+"estat:" line too.
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/kernel/traps.c | 46 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
+ arch/loongarch/kernel/traps.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index ea869f122a6f..5d2ba6b3ce08 100644
+index 27dbd6d30be7..c52c488171ba 100644
 --- a/arch/loongarch/kernel/traps.c
 +++ b/arch/loongarch/kernel/traps.c
-@@ -3,6 +3,7 @@
-  * Author: Huacai Chen <chenhuacai@loongson.cn>
-  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-  */
-+#include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/bug.h>
- #include <linux/compiler.h>
-@@ -153,6 +154,49 @@ static void show_code(unsigned int *pc, bool user)
- 	pr_cont("\n");
- }
+@@ -187,14 +187,15 @@ static void __show_regs(const struct pt_regs *regs)
+ 	if (regs->regs[0])
+ 		pr_cont("syscall restart flag: %0*lx\n", field, regs->regs[0]);
  
-+static void print_bool_fragment(const char *key, unsigned long val, bool first)
-+{
-+	/* e.g. "+PG", "-DA" */
-+	pr_cont("%s%c%s", first ? "" : " ", val ? '+' : '-', key);
-+}
-+
-+static void print_plv_fragment(const char *key, int val)
-+{
-+	/* e.g. "PLV0", "PPLV3" */
-+	pr_cont(" %s%d", key, val);
-+}
-+
-+static void print_memory_type_fragment(const char *key, unsigned long val)
-+{
-+	/* e.g. "DATM=WUC" */
-+	const char *humanized_type = NULL;
-+
-+	switch (val) {
-+	case 0: humanized_type = "SUC"; break;
-+	case 1: humanized_type = "CC"; break;
-+	case 2: humanized_type = "WUC"; break;
-+	}
-+
-+	if (humanized_type) {
-+		pr_cont(" %s=%s", key, humanized_type);
+-	/*
+-	 * Saved csr registers
+-	 */
+-	printk("era   : %0*lx %pS\n", field, regs->csr_era,
+-	       (void *) regs->csr_era);
+-	printk("ra    : %0*lx %pS\n", field, regs->regs[1],
+-	       (void *) regs->regs[1]);
++	if (user_mode(regs)) {
++		pr_cont("  era: %0*lx\n", field, regs->csr_era);
++		pr_cont("   ra: %0*lx\n", field, regs->regs[1]);
 +	} else {
-+		pr_cont(" %s=Reserved(%lu)", key, val);
++		pr_cont("  era: %0*lx %pS\n", field, regs->csr_era, (void *) regs->csr_era);
++		pr_cont("   ra: %0*lx %pS\n", field, regs->regs[1], (void *) regs->regs[1]);
 +	}
-+}
-+
-+static void print_crmd(unsigned long x)
-+{
-+	pr_cont(" crmd: %08lx (", x);
-+	print_bool_fragment("WE", FIELD_GET(CSR_CRMD_WE, x), true);
-+	print_memory_type_fragment("DACM", FIELD_GET(CSR_CRMD_DACM, x));
-+	print_memory_type_fragment("DACF", FIELD_GET(CSR_CRMD_DACF, x));
-+	print_bool_fragment("PG", FIELD_GET(CSR_CRMD_PG, x), false);
-+	print_bool_fragment("DA", FIELD_GET(CSR_CRMD_DA, x), false);
-+	print_bool_fragment("IE", FIELD_GET(CSR_CRMD_IE, x), false);
-+	print_plv_fragment("PLV", (int) FIELD_GET(CSR_CRMD_PLV, x));
-+	pr_cont(")\n");
-+}
-+
- static void __show_regs(const struct pt_regs *regs)
- {
- 	const int field = 2 * sizeof(unsigned long);
-@@ -196,7 +240,7 @@ static void __show_regs(const struct pt_regs *regs)
- 	}
  
- 	/* Print important CSRs */
--	pr_cont(" crmd: %08lx\n", regs->csr_crmd);
-+	print_crmd(regs->csr_crmd);
- 	pr_cont(" prmd: %08lx\n", regs->csr_prmd);
- 	pr_cont(" euen: %08lx\n", regs->csr_euen);
- 	pr_cont(" ecfg: %08lx\n", regs->csr_ecfg);
++	/* Print important CSRs */
+ 	printk("CSR crmd: %08lx	", regs->csr_crmd);
+ 	printk("CSR prmd: %08lx	", regs->csr_prmd);
+ 	printk("CSR euen: %08lx	", regs->csr_euen);
 -- 
 2.39.1
 
