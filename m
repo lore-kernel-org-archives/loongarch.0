@@ -1,119 +1,97 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC2429A5
-	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 12:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1676465507;
-	bh=MUWUkL8rO981gmCLrVOjPwLtUdMwE5KMREDb1Q0ZIhE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SIBsXnczOMXEUFhFmrpm9Xs6N1S62dfK/3vfnOEK4KN/5UacNTPtt8b6UjzCVf++b
-	 JF+7EejyL2Tc1TZUwJAXtXn4Wcr0SSF47qRxpOknQmjOa7o63kdbooiEcVcpjwXbyB
-	 4Za5nDMv5X+3OQe0gtIt+30bKwEW02QxvYDPL+yE=
-Received: from [IPv6:240e:358:111b:f00:dc73:854d:832e:3] (unknown [IPv6:240e:358:111b:f00:dc73:854d:832e:3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id EE16166220;
-	Wed, 15 Feb 2023 07:51:43 -0500 (EST)
-Message-ID: <6268f221cfca8b7550ad0673246f09cd439ede05.camel@xry111.site>
-Subject: Re: "kernel ade access" oops on LoongArch
-From: Xi Ruoyao <xry111@xry111.site>
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: Jinyang He <hejinyang@loongson.cn>, loongarch@lists.linux.dev, Huacai
- Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- linux-kernel@vger.kernel.org
-Date: Wed, 15 Feb 2023 20:51:38 +0800
-In-Reply-To: <bf0e57db317d7061ecaaf928ce6cf40941b1740c.camel@xry111.site>
-References: <1e6f4d35946e4e2e7c7f5dcc7b69d5e609de8184.camel@xry111.site>
-	 <2e902dfa-cb84-7ef0-6b50-02b16354a139@loongson.cn>
-	 <511d385675ea7a846ff791974c6ae7feeeec2589.camel@xry111.site>
-	 <9a70e89c-0f3b-0660-501e-3292e410cfd8@loongson.cn>
-	 <5403e5eb-5792-7d6f-df74-ca3fab82ecd5@loongson.cn>
-	 <818419c03037bda833a5b281588a4b331c34ae8c.camel@xry111.site>
-	 <74fb1e24-36c0-c642-5bab-3646ba7790df@loongson.cn>
-	 <21b0e60dac8bedf9e389645ec103aa4241b35f8d.camel@xry111.site>
-	 <bf0e57db317d7061ecaaf928ce6cf40941b1740c.camel@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA09C53AF
+	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 13:00:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=T80Dv/pbeHv4yQbIV1WRGowSCcOuo+FwhGVSDYirNyo=; b=typStl4V61M+0LWV6CYl45n1NF
+	m4W0eM90AoKd85qmixDcPpthnLk+b95bwsgFFcBvnssjyLxRNyWUkf38MBdHnC5hJMHQXzrAXfE4u
+	sjXI9CnPsT2tyWCtaFGJReOhVBJ7C1Ky0fJf6uDeq4qgqxhR8LjP5C0F4+mFpu0QYM/1ri8+MwHzB
+	Qf+rKkAOQgWN+tf3cp48UNgtPLftSBYrStzhBTXcXjZymQMX0JdBeGP5uBPfD69mswliqG6fC1C8X
+	g8JyK0lQvJ+nNDGbGSfSRKRlMGVdmWQAdYU5t1SmOnXYVevrwp2QWkhQ7cr4d8xZJhXA4l/PEejz+
+	YbEfXprg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60068)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1pSHNj-0006l6-Uv; Wed, 15 Feb 2023 12:59:31 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1pSHNS-0004uV-TZ; Wed, 15 Feb 2023 12:59:14 +0000
+Date: Wed, 15 Feb 2023 12:59:14 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+	linux-arch@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>
+Subject: Re: [PATCH v3 03/24] arm: Remove COMMAND_LINE_SIZE from uapi
+Message-ID: <Y+zXIgwO5wteLQZ5@shell.armlinux.org.uk>
+References: <20230214074925.228106-1-alexghiti@rivosinc.com>
+ <20230214074925.228106-4-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230214074925.228106-4-alexghiti@rivosinc.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, 2023-02-15 at 19:52 +0800, Xi Ruoyao wrote:
-> On Wed, 2023-02-15 at 16:35 +0800, Xi Ruoyao wrote:
-> > On Wed, 2023-02-15 at 16:25 +0800, Youling Tang wrote:
-> > > Can you modify the kernel as follows and test it, so as to avoid
-> > > possible relationship with the exception table data link position
-> > > and
-> > > alignment rules (or use EXCEPTION_TABLE(12))?
-> > >=20
-> > > --- a/arch/loongarch/kernel/vmlinux.lds.S
-> > > +++ b/arch/loongarch/kernel/vmlinux.lds.S
-> > > @@ -4,7 +4,6 @@
-> > > =C2=A0 #include <asm/thread_info.h>
-> > >=20
-> > > =C2=A0 #define PAGE_SIZE _PAGE_SIZE
-> > > -#define RO_EXCEPTION_TABLE_ALIGN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 4
-> > >=20
-> > > =C2=A0 /*
-> > > =C2=A0=C2=A0 * Put .bss..swapper_pg_dir as the first thing in .bss. T=
-his
-> > > will
-> > > @@ -54,6 +53,8 @@ SECTIONS
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 . =3D ALIGN(PECOFF_S=
-EGMENT_ALIGN);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 _etext =3D .;
-> > >=20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EXCEPTION_TABLE(16)
-> > > +
-> >=20
-> > It seems the kernel refuses to boot after the change, but I'm not
-> > completely sure: I'm 5 km away from the board and operating it via
-> > ssh
-> > so maybe it's a reboot failure or network failure.=C2=A0 I'll report
-> > again in
-> > the evening.
->=20
-> It was a reboot failure.
->=20
-> Now it has booted successfully, but the stack trace still shows (during
-> the 25th run of the make test t=3D... command).
+On Tue, Feb 14, 2023 at 08:49:04AM +0100, Alexandre Ghiti wrote:
+> From: Palmer Dabbelt <palmer@rivosinc.com>
+> 
+> As far as I can tell this is not used by userspace and thus should not
+> be part of the user-visible API.
+> 
+> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
 
-Ouch, I know what's happening...
+Looks good to me. What's the merge plan for this?
 
-In the architecture-independent code we have something like
+Thanks.
 
-extern struct exception_table_entry a[], b[];
-bsearch(a, b - a);
-
-According to the C standard, when you write "b - a" where a and b are
-pointers to type T, "b" and "a" must be pointers to elements in the same
-array of T.  So the compiler can assume ((uintptr_t)b - (uintptr_t)a) %
-12 =3D=3D 0 and optimize "b - a" to something like
-
-(((uintptr_t)b - (uintptr_t)a) >> 2) * inv3
-
-Here inv3 is the inversion of 3 in the modulo-2**64 integer ring, so the
-compiler can avoid an expensive divide instruction.  But in my vmlinux
-((uintptr_t)b - (uintptr_t)a) is somehow not a multiple of 12:
-
-(gdb) p ((uintptr_t)__stop___ex_table - (uintptr_t)__start___ex_table) % si=
-zeof(struct exception_table_entry)
-$9 =3D 8
-
-So I guess
-
-#define RO_EXCEPTION_TABLE_ALIGN       12
-
-will work.  I'll take a try...
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
