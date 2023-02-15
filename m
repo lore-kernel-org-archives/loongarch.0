@@ -1,82 +1,102 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908B77B
-	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 07:04:33 +0000 (UTC)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4PGpwB16Cyz4x5V;
-	Wed, 15 Feb 2023 18:04:10 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1676444666;
-	bh=JUTkPQAgfduuGSuPZGMfN9jX5ig96F9RnCKqmUbpwX8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=c9jhtw7yA0XcW4ZIPKehScWAnBIE+yzQpATJfnqks6S8ZJ2HNm+BGFL2euWeBOt8a
-	 OhWOKbt3aSBVpTmFcz15w7a7UuhkDO05uNLtnmT22dKVJC01MB7W9tPpnBm9YQMsGK
-	 RYNgu0G4CP5zVuci+an4PNoxZ0HU0g5JR/uSa4eE8zpo9iyyuHKEmh9FPQybvgw+KY
-	 d58FT+wdEKfgJkLAPaL0Cw6X5qfGspbdggu7TZ1U8VrT0mS5Jx5jrv8cpfFyy5N9KE
-	 2xLTt+2MVtXNE6iyfLrIZtYM6caEuBGdw8QxqlgG0gE7FVIBHx1EiyfBSI2iWVwldk
-	 /dc0iTP1Vtrhw==
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>, Jonathan Corbet
- <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
- Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
- Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek
- <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>, Helge
- Deller <deller@gmx.de>, Nicholas Piggin <npiggin@gmail.com>, Christophe
- Leroy <christophe.leroy@csgroup.eu>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Christian
- Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich
- Felker <dalias@libc.org>, "David S . Miller" <davem@davemloft.net>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, Chris Zankel
- <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann
- <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
- linux-arch@vger.kernel.org
-Cc: Palmer Dabbelt <palmer@rivosinc.com>
-Subject: Re: [PATCH v3 09/24] powerpc: Remove COMMAND_LINE_SIZE from uapi
-In-Reply-To: <20230214074925.228106-10-alexghiti@rivosinc.com>
-References: <20230214074925.228106-1-alexghiti@rivosinc.com>
- <20230214074925.228106-10-alexghiti@rivosinc.com>
-Date: Wed, 15 Feb 2023 18:04:04 +1100
-Message-ID: <87357776l7.fsf@mpe.ellerman.id.au>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDCB37B
+	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 07:23:06 +0000 (UTC)
+Received: from loongson.cn (unknown [192.168.200.1])
+	by gateway (Coremail) with SMTP id _____8Cxf9tXiOxjd9cAAA--.2281S3;
+	Wed, 15 Feb 2023 15:23:04 +0800 (CST)
+Received: from [0.0.0.0] (unknown [192.168.200.1])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxC75WiOxjQawzAA--.30175S3;
+	Wed, 15 Feb 2023 15:23:03 +0800 (CST)
+Subject: Re: "kernel ade access" oops on LoongArch
+To: Xi Ruoyao <xry111@xry111.site>
+References: <1e6f4d35946e4e2e7c7f5dcc7b69d5e609de8184.camel@xry111.site>
+ <2e902dfa-cb84-7ef0-6b50-02b16354a139@loongson.cn>
+ <511d385675ea7a846ff791974c6ae7feeeec2589.camel@xry111.site>
+Cc: loongarch@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <9a70e89c-0f3b-0660-501e-3292e410cfd8@loongson.cn>
+Date: Wed, 15 Feb 2023 15:23:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <511d385675ea7a846ff791974c6ae7feeeec2589.camel@xry111.site>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxC75WiOxjQawzAA--.30175S3
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7ZFy7CFW8GFWDGF1DKryDJrb_yoW8CF18pr
+	WayryFgFW8AFyftrW2v3yUCF1rJw4UG347Gw43JwsIvFsxXFy3tay3tFyFgw42yas5X3Wj
+	grWkKFW5C3W8Gw7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bc8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
+	CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxv
+	r21l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r
+	1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
+	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+	AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvj4RKtC7UUUUU
 
-Alexandre Ghiti <alexghiti@rivosinc.com> writes:
-> From: Palmer Dabbelt <palmer@rivosinc.com>
+
+
+On 02/15/2023 01:35 PM, Xi Ruoyao wrote:
+> On Wed, 2023-02-15 at 12:52 +0800, Youling Tang wrote:
+>> ../stdlib/stdlib.h:141:8: error: ‘_Float32’ does not name a type
+>>    141 | extern _Float32 strtof32 (const char *__restrict __nptr,
+>>        |        ^~~~~~~~
 >
-> As far as I can tell this is not used by userspace and thus should not
-> be part of the user-visible API.
+> This is because Glibc expects GCC 13 to support _Float32, but early GCC
+> 13 snapshots did not.
 >
-> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
-> ---
->  arch/powerpc/include/asm/setup.h      | 2 +-
->  arch/powerpc/include/uapi/asm/setup.h | 2 --
->  2 files changed, 1 insertion(+), 3 deletions(-)
+>> /usr/bin/ld: /home/loongson/build_glibc/libc.a(dl-reloc-static-pie.o):
+>> in function `_dl_relocate_static_pie':
+>> /home/loongson/glibc/elf/dl-reloc-static-pie.c:44: undefined reference
+>> to `_DYNAMIC'
+>
+> Oh, this one is my fault.  The check for compiler static PIE support was
+> not written correctly.  I'll fix it for Glibc later, but now you can
+> update GCC to the latest git master to proceed.
+>
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Tested on Loongson-3C5000L-LL machine, using CLFS7.3 system.
 
-cheers
+$ gcc -v
+gcc version 13.0.0 20221018 (experimental) (GCC)
+
+# make check -j32
+/home/loongson/build_glibc/math/test-tgmath3-atan2.c: 
+在函数‘test_atan2_84’中:
+/home/loongson/build_glibc/math/test-tgmath3-atan2.c:903:59: 
+错误：conflicting types for ‘var__Float32x’; have ‘double’
+   903 |   extern typeof (atan2 (vol_var__Float32x, vol_var_char)) 
+var__Float32x __attribute__ ((unused));
+       | 
+^~~~~~~~~~~~~
+
+There was a build error in make check, so only tst-mallocfork3-
+malloc-check was tested separately.
+
+# make test t=malloc/tst-mallocfork3-malloc-check
+make[2]: 离开目录“/home/loongson/glibc/malloc”
+PASS: malloc/tst-mallocfork3-malloc-check
+original exit status 0
+info: signals received during fork: 301
+info: signals received during free: 1693
+info: signals received during malloc: 119
+make[1]: 离开目录“/home/loongson/glibc”
+
+A total of five tests are PASS, and the serial port does not display
+CallTrace.
+
+Youling.
+
