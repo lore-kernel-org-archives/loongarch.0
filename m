@@ -1,61 +1,82 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33D917F5
-	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 05:36:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1676439367;
-	bh=rVyZAFFRh7e/R88WQ0bLxVMue6cqCoIBHLnwDLoBYqA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=dX/daGUGivN0y6yEX4yhthTptihmU5h3T7aaehDQeiSKw2GGfJqGQYB82/OxMJT2j
-	 qy6PltM1z8OFV5nr/7ZWzTKJmh2q8qIYH8kjx6BaLgYZP1Daf/f9Ki02muxgSQpYyv
-	 AEmEygft9BGUG8eS6TAM4t0VNREO7hMwLCOdzpuE=
-Received: from [IPv6:240e:456:1020:352:6860:35c9:52f4:b84b] (unknown [IPv6:240e:456:1020:352:6860:35c9:52f4:b84b])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908B77B
+	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 07:04:33 +0000 (UTC)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 95DAA667C4;
-	Wed, 15 Feb 2023 00:36:02 -0500 (EST)
-Message-ID: <511d385675ea7a846ff791974c6ae7feeeec2589.camel@xry111.site>
-Subject: Re: "kernel ade access" oops on LoongArch
-From: Xi Ruoyao <xry111@xry111.site>
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: loongarch@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>, WANG
- Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org
-Date: Wed, 15 Feb 2023 13:35:56 +0800
-In-Reply-To: <2e902dfa-cb84-7ef0-6b50-02b16354a139@loongson.cn>
-References: <1e6f4d35946e4e2e7c7f5dcc7b69d5e609de8184.camel@xry111.site>
-	 <2e902dfa-cb84-7ef0-6b50-02b16354a139@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4PGpwB16Cyz4x5V;
+	Wed, 15 Feb 2023 18:04:10 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1676444666;
+	bh=JUTkPQAgfduuGSuPZGMfN9jX5ig96F9RnCKqmUbpwX8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=c9jhtw7yA0XcW4ZIPKehScWAnBIE+yzQpATJfnqks6S8ZJ2HNm+BGFL2euWeBOt8a
+	 OhWOKbt3aSBVpTmFcz15w7a7UuhkDO05uNLtnmT22dKVJC01MB7W9tPpnBm9YQMsGK
+	 RYNgu0G4CP5zVuci+an4PNoxZ0HU0g5JR/uSa4eE8zpo9iyyuHKEmh9FPQybvgw+KY
+	 d58FT+wdEKfgJkLAPaL0Cw6X5qfGspbdggu7TZ1U8VrT0mS5Jx5jrv8cpfFyy5N9KE
+	 2xLTt+2MVtXNE6iyfLrIZtYM6caEuBGdw8QxqlgG0gE7FVIBHx1EiyfBSI2iWVwldk
+	 /dc0iTP1Vtrhw==
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>, Jonathan Corbet
+ <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
+ Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+ Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek
+ <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>, Helge
+ Deller <deller@gmx.de>, Nicholas Piggin <npiggin@gmail.com>, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Christian
+ Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
+ <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich
+ Felker <dalias@libc.org>, "David S . Miller" <davem@davemloft.net>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, Chris Zankel
+ <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann
+ <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+ linux-arch@vger.kernel.org
+Cc: Palmer Dabbelt <palmer@rivosinc.com>
+Subject: Re: [PATCH v3 09/24] powerpc: Remove COMMAND_LINE_SIZE from uapi
+In-Reply-To: <20230214074925.228106-10-alexghiti@rivosinc.com>
+References: <20230214074925.228106-1-alexghiti@rivosinc.com>
+ <20230214074925.228106-10-alexghiti@rivosinc.com>
+Date: Wed, 15 Feb 2023 18:04:04 +1100
+Message-ID: <87357776l7.fsf@mpe.ellerman.id.au>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-On Wed, 2023-02-15 at 12:52 +0800, Youling Tang wrote:
-> ../stdlib/stdlib.h:141:8: error: =E2=80=98_Float32=E2=80=99 does not name=
- a type
-> =C2=A0=C2=A0 141 | extern _Float32 strtof32 (const char *__restrict __npt=
-r,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 ^~~~~~~~
+Alexandre Ghiti <alexghiti@rivosinc.com> writes:
+> From: Palmer Dabbelt <palmer@rivosinc.com>
+>
+> As far as I can tell this is not used by userspace and thus should not
+> be part of the user-visible API.
+>
+> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+> ---
+>  arch/powerpc/include/asm/setup.h      | 2 +-
+>  arch/powerpc/include/uapi/asm/setup.h | 2 --
+>  2 files changed, 1 insertion(+), 3 deletions(-)
 
-This is because Glibc expects GCC 13 to support _Float32, but early GCC
-13 snapshots did not.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-> /usr/bin/ld: /home/loongson/build_glibc/libc.a(dl-reloc-static-pie.o):
-> in function `_dl_relocate_static_pie':
-> /home/loongson/glibc/elf/dl-reloc-static-pie.c:44: undefined reference
-> to `_DYNAMIC'
-
-Oh, this one is my fault.  The check for compiler static PIE support was
-not written correctly.  I'll fix it for Glibc later, but now you can
-update GCC to the latest git master to proceed.
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+cheers
