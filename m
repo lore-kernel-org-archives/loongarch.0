@@ -1,150 +1,195 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C347B
-	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 00:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=14nHaJTTJLogPcUZuCEw0mL+Iya7jGOiXqjT0WfuZdM=; b=VMhl2MxgG1aA2Z9hNjtO5b58Vy
-	nv826ZYIllfa1zt9yg7SEuriSrs0ex4xZ6nV9Jc3kXc3hXJxnlAHpijGVB1kXI8TakpR1A2AedpKY
-	3cM+LeFUIKKLJ+8AF3Sapzini1bb49OfSQ8M1yW9pTqmgBmSnDQnbyiCa2Yl9Foc9H849xveo3KYS
-	dorlO+z+W5o9flgAIiPb662GdmEks3ScivOF35YJf2vehTnUhKZJeKCSXBx3Vd0m8pCj/oEbCe2A5
-	bf543Z+nuQbLbk6t+hlrliycPMkSFVoRDLia01T6ilwUZ+ki/WOy/2fh94XThA/g6n1oxY7fOiBuO
-	xawIPtMw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pS5IN-006wkr-1k; Wed, 15 Feb 2023 00:05:11 +0000
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: linux-mm@kvack.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [PATCH 13/7] loongson: Implement the new page table range API
-Date: Wed, 15 Feb 2023 00:04:46 +0000
-Message-Id: <20230215000446.1655635-5-willy@infradead.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20230215000446.1655635-1-willy@infradead.org>
-References: <20230211033948.891959-1-willy@infradead.org>
- <20230215000446.1655635-1-willy@infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C10517C7
+	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 02:17:04 +0000 (UTC)
+Received: by mail-ej1-f49.google.com with SMTP id gn39so6409137ejc.8
+        for <loongarch@lists.linux.dev>; Tue, 14 Feb 2023 18:17:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6LxxlzPg4mizXqJNDigPYQlPuo1iqpw5WjKtKqM6DiE=;
+        b=mdtXMHguzvpQUS5lrmb4Pf8yWnMPy5O161mHqUuRD4pHl7RTCZeGex5H/ndl31zNNY
+         PS/JLb/hknFAl07aGpTgHTffCShUXFfsoR83lCCdp6qPLn+XUaNaAuRpRx2i0ZMdl5yu
+         vUqNqN0aQsm+cIXEE6YdIeJNwJON5NAvKLyN93ICk5Mf3Kfg46o6Qoy9twk5KthbGvTQ
+         ufMkFNE4fOy3I2lS3W6V2sIiJ8k2Fxy9zu11Yv8ucnvQD5EQ8jjV4l7aR4g61xEXQJwt
+         0BIYHSA1BtjqoBOQ7w01yVI2/zpT3paAa2Qm5OP7iLl2lhL3Nkc0VZrAVf8PGEiaHBrQ
+         NUjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6LxxlzPg4mizXqJNDigPYQlPuo1iqpw5WjKtKqM6DiE=;
+        b=qbdegRN6q5/h/bD9BjkLRQmK4mwTw2l0O4dISTcoW4C/Yi3+ZeD0uEduOliU85GamM
+         RvcRb2TCZ+rH983AkFnUNghIiJplMhSlqgyej93mquN2gmdc+UiAomidRCRZxM/LHEaq
+         1IoA6BuUNXBFra7FVTbuEbknQHRk91F+ubDIRfVTAE6wNj6lUPG5qtS8Up8tlSm5Ex5r
+         kLw+KZRTrKCiA/+B/Qk4CBt2HGF1GOgaSbj/I7ro+gPbmd1Nah3GJebCRqAs+Q5iEd9c
+         fL5Lc+2TG5JRh9lRQfSUrJSMtU/Es5UK4OCMuo4YM/cRiuWJ5Ry8l0NQMdKE38I0vlO4
+         bMuA==
+X-Gm-Message-State: AO0yUKUONIKxsgpVyiuTzXyFVcROLEaMCWgycmWnflPl+9qOQxwYmtEB
+	fKi5f+w0ax30+DwdJKW8VT14JPjreYncIEGKGSY=
+X-Google-Smtp-Source: AK7set/fzpOM02wfNk52NdqUIG77iAJxisnDk9pzjjI5GCx7b+6LlJ3SFgk59YpfC9G6AH0tDasj2Vs3AbAXQYTg2Sw=
+X-Received: by 2002:a17:906:5ad4:b0:877:747e:f076 with SMTP id
+ x20-20020a1709065ad400b00877747ef076mr300787ejs.0.1676427422995; Tue, 14 Feb
+ 2023 18:17:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1673227292.git.zhoubinbin@loongson.cn> <Y88VIXerF5Wk/9kj@mail.local>
+ <CAMpQs4+8m0r98eGMHO7ktS2_AuNCA_u3Yk1q06i99TdbVZJ_Cg@mail.gmail.com>
+ <CAMpQs4+uW75TdkMicdfU+5LYQxA_7kfbdabwO=iDiKwW-PzO9Q@mail.gmail.com> <Y+wWp61zxZ3V316d@mail.local>
+In-Reply-To: <Y+wWp61zxZ3V316d@mail.local>
+From: Kelvin Cheung <keguang.zhang@gmail.com>
+Date: Wed, 15 Feb 2023 10:16:46 +0800
+Message-ID: <CAJhJPsX2qLYMaVOR1bwS75sju4EPf3PcVX4L6Tyuz7NMv4Z2eQ@mail.gmail.com>
+Subject: Re: [PATCH V2 0/7] rtc: ls2x: Add support for the Loongson-2K/LS7A RTC
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Alessandro Zummo <a.zummo@towertech.it>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	WANG Xuerui <kernel@xen0n.name>, linux-rtc@vger.kernel.org, linux-mips@vger.kernel.org, 
+	loongarch@lists.linux.dev, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, devicetree@vger.kernel.org, 
+	Qing Zhang <zhangqing@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	zhaoxiao <zhaoxiao@uniontech.com>, zhzhl555@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add set_ptes() and update_mmu_cache_range().
+Hi Alexandre,
+I will maintain rtc-ls1x continuously.
+And I'm adding DT support for it.
 
-THIS PATCH IS INCOMPLETE.  I DO NOT KNOW WHAT TO DO IN __update_tlb()
+On Wed, Feb 15, 2023 at 7:18 AM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> On 10/02/2023 18:03:07+0800, Binbin Zhou wrote:
+> > On Tue, Jan 31, 2023 at 8:59 PM Binbin Zhou <zhoubb.aaron@gmail.com> wrote:
+> > >
+> > > Hi Kelvin:
+> > >
+> > > Excuse me.
+> > > I am submitting the Loongson-2K/LS7A RTC driver and Alexandre would
+> > > like me to merge the ls1x rtc driver in parallel.
+> > > Unfortunately I found out that the loongson-1 does not yet support DT
+> > > and would like to ask if you have any plans to support DT?
+> > >
+> > > I think this is the prerequisite for the merge.
+> > >
+> > > Regards.
+> > > Binbin
+> > >
+> > >
+> >
+> > Hi Alexandre:
+> >
+> > Unfortunately there has been no reply from Keguang for the past week
+> > or so. Can we try rtc-ls2x and rtc-ls1x to coexist until Loongson-1
+> > supports DT?
+> > Later on, if Keguang or someone else familiar with Loongson-1 adds DT
+> > support, I would be happy to continue trying to merge the two drivers.
+> >
+>
+> My point is exactly that if nobody in Loongson wants to maintain
+> rtc-ls1x, we may just drop it. This also probably tells a lot about how
+> rtc-ls2x is going to be maintained once upstreamed...
+>
+> > Regards.
+> > Binbin
+> >
+> > >
+> > >
+> > > On Tue, Jan 24, 2023 at 7:24 AM Alexandre Belloni
+> > > <alexandre.belloni@bootlin.com> wrote:
+> > > >
+> > > > On 09/01/2023 09:35:10+0800, Binbin Zhou wrote:
+> > > > > Hi all:
+> > > > >
+> > > > > The initial DT-base ls2x rtc driver was written by Wang Xuerui, He has
+> > > > > released five versions of patchset before, and all related mail records
+> > > > > are shown below if you are interested:
+> > > > >
+> > > > > https://lore.kernel.org/all/?q=ls2x-rtc
+> > > > >
+> > > > > In this series of patches, based on the code above, I have added the
+> > > > > following support:
+> > > > >
+> > > > > 1. Add ACPI-related support, as Loongson-3A5000 + LS7A is now ACPI-base
+> > > > >    by default under LoongArch architecture;
+> > > > > 2. Add rtc alarm/walarm related functions.
+> > > > >
+> > > > > I have tested on Loongson-3A5000LA+LS7A1000/LS7A2000, Loongson-2K1000LA
+> > > > > and Loongson-2K0500.
+> > > > >
+> > > > > BTW:
+> > > > > There have been discussions about merging the rtc drivers of ls1x and
+> > > > > ls2x, but the following reasons made the merger difficult to achieve:
+> > > > >
+> > > > > 1. ls1x does not support ACPI, for it is only on MIPS-based system;
+> > > >
+> > > > This is not a good justification, you have to support both in your
+> > > > driver anyway, as shown by your CONFIG_ACPI ifdefery.
+> > > >
+> > > > > 2. ls1x does not support alarm function.
+> > > >
+> > > > It is just a matter of clearing a single bit, this is not difficult at
+> > > > all.
+> > > >
+> > > > >
+> > > > > Thanks.
+> > > > >
+> > > > > -------
+> > > > > Changes since v1:
+> > > > > 1. Rebased on top of latest loongarch-next;
+> > > > > 2. Add interrupt descriptions to the ls2k and ls7a DTS files to avoid
+> > > > > errors when the driver gets the IRQ number, Thanks to Qing Zhang for
+> > > > > testing;
+> > > > > 3. Remove some inexact CONFIG_ACPI.
+> > > > >
+> > > > > Binbin Zhou (4):
+> > > > >   rtc: Add support for the Loongson-2K/LS7A RTC
+> > > > >   LoongArch: Enable LS2X RTC in loongson3_defconfig
+> > > > >   MIPS: Loongson64: DTS: Add RTC support to LS7A
+> > > > >   MIPS: Loongson64: DTS: Add RTC support to Loongson-2K
+> > > > >
+> > > > > WANG Xuerui (3):
+> > > > >   dt-bindings: rtc: Add Loongson LS2X RTC support
+> > > > >   MIPS: Loongson: Enable LS2X RTC in loongson3_defconfig
+> > > > >   MIPS: Loongson: Enable LS2X RTC in loongson2k_defconfig
+> > > > >
+> > > > >  .../devicetree/bindings/rtc/trivial-rtc.yaml  |   2 +
+> > > > >  arch/loongarch/configs/loongson3_defconfig    |   1 +
+> > > > >  .../boot/dts/loongson/loongson64-2k1000.dtsi  |   7 +
+> > > > >  arch/mips/boot/dts/loongson/ls7a-pch.dtsi     |   7 +
+> > > > >  arch/mips/configs/loongson2k_defconfig        |   1 +
+> > > > >  arch/mips/configs/loongson3_defconfig         |   1 +
+> > > > >  drivers/rtc/Kconfig                           |  11 +
+> > > > >  drivers/rtc/Makefile                          |   1 +
+> > > > >  drivers/rtc/rtc-ls2x.c                        | 379 ++++++++++++++++++
+> > > > >  9 files changed, 410 insertions(+)
+> > > > >  create mode 100644 drivers/rtc/rtc-ls2x.c
+> > > > >
+> > > > > --
+> > > > > 2.31.1
+> > > > >
+> > > >
+> > > > --
+> > > > Alexandre Belloni, co-owner and COO, Bootlin
+> > > > Embedded Linux and Kernel engineering
+> > > > https://bootlin.com
+> > > >
+>
+> --
+> Alexandre Belloni, co-owner and COO, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- arch/loongarch/include/asm/cacheflush.h |  2 ++
- arch/loongarch/include/asm/pgtable.h    | 30 ++++++++++++++++---------
- arch/loongarch/mm/tlb.c                 |  4 +++-
- 3 files changed, 25 insertions(+), 11 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
-index 0681788eb474..7907eb42bfbd 100644
---- a/arch/loongarch/include/asm/cacheflush.h
-+++ b/arch/loongarch/include/asm/cacheflush.h
-@@ -47,8 +47,10 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
- #define flush_cache_vmap(start, end)			do { } while (0)
- #define flush_cache_vunmap(start, end)			do { } while (0)
- #define flush_icache_page(vma, page)			do { } while (0)
-+#define flush_icache_pages(vma, page)			do { } while (0)
- #define flush_icache_user_page(vma, page, addr, len)	do { } while (0)
- #define flush_dcache_page(page)				do { } while (0)
-+#define flush_dcache_folio(folio)			do { } while (0)
- #define flush_dcache_mmap_lock(mapping)			do { } while (0)
- #define flush_dcache_mmap_unlock(mapping)		do { } while (0)
- 
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index d28fb9dbec59..0f5fa7c40c52 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -334,12 +334,20 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
- 	}
- }
- 
--static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
--			      pte_t *ptep, pte_t pteval)
--{
--	set_pte(ptep, pteval);
-+static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
-+		pte_t *ptep, pte_t pte, unsigned int nr)
-+{
-+	for (;;) {
-+		set_pte(ptep, pte);
-+		if (--nr == 0)
-+			break;
-+		ptep++;
-+		pte_val(pte) += 1 << _PFN_SHIFT;
-+	}
- }
- 
-+#define set_pte_at(mm, addr, ptep, pte) set_ptes(mm, addr, ptep, pte, 1)
-+
- static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
- {
- 	/* Preserve global status for the pair */
-@@ -442,14 +450,16 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- 		     (pgprot_val(newprot) & ~_PAGE_CHG_MASK));
- }
- 
--extern void __update_tlb(struct vm_area_struct *vma,
--			unsigned long address, pte_t *ptep);
-+extern void __update_tlb(struct vm_area_struct *vma, unsigned long address,
-+		pte_t *ptep, unsigned int nr);
- 
--static inline void update_mmu_cache(struct vm_area_struct *vma,
--			unsigned long address, pte_t *ptep)
-+static inline void update_mmu_cache_range(struct vm_area_struct *vma,
-+		unsigned long address, pte_t *ptep, unsigned int nr)
- {
--	__update_tlb(vma, address, ptep);
-+	__update_tlb(vma, address, ptep, nr);
- }
-+#define update_mmu_cache(vma, addr, ptep) \
-+	update_mmu_cache_range(vma, addr, ptep, 1)
- 
- #define __HAVE_ARCH_UPDATE_MMU_TLB
- #define update_mmu_tlb	update_mmu_cache
-@@ -457,7 +467,7 @@ static inline void update_mmu_cache(struct vm_area_struct *vma,
- static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
- 			unsigned long address, pmd_t *pmdp)
- {
--	__update_tlb(vma, address, (pte_t *)pmdp);
-+	__update_tlb(vma, address, (pte_t *)pmdp, 1);
- }
- 
- static inline unsigned long pmd_pfn(pmd_t pmd)
-diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-index 8bad6b0cff59..ac0b19dbd1dc 100644
---- a/arch/loongarch/mm/tlb.c
-+++ b/arch/loongarch/mm/tlb.c
-@@ -162,7 +162,8 @@ static void __update_hugetlb(struct vm_area_struct *vma, unsigned long address,
- #endif
- }
- 
--void __update_tlb(struct vm_area_struct *vma, unsigned long address, pte_t *ptep)
-+void __update_tlb(struct vm_area_struct *vma, unsigned long address,
-+		pte_t *ptep, unsigned int nr)
- {
- 	int idx;
- 	unsigned long flags;
-@@ -187,6 +188,7 @@ void __update_tlb(struct vm_area_struct *vma, unsigned long address, pte_t *ptep
- 	write_csr_entryhi(address);
- 	tlb_probe();
- 	idx = read_csr_tlbidx();
-+// I have no idea what to do here
- 	write_csr_pagesize(PS_DEFAULT_SIZE);
- 	write_csr_entrylo0(pte_val(*ptep++));
- 	write_csr_entrylo1(pte_val(*ptep));
+
 -- 
-2.39.1
+Best regards,
 
+Kelvin Cheung
