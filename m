@@ -1,128 +1,137 @@
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7174353AF
-	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 13:05:22 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 2D40B582003;
-	Wed, 15 Feb 2023 08:05:20 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Wed, 15 Feb 2023 08:05:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm3; t=1676466320; x=1676473520; bh=NzdIn9sEy/
-	TdUrl/ZdBVY4dMEk2Tnlph7NyUne+YOMM=; b=PPD6X7vdu8v5pQCFFeEkwZ+xGH
-	hQxkzIm/THMwEiH6lmaNEBYbBzt3pargJVOdi2J1QMA6KHvLC9K1XeMABvJeeUMa
-	lTPgSxuAXiTHnvnPs7+H7Vr/fKIWrN+XZApp3CpAC5yE5WgT9W327fh6++AuDJlF
-	B9gywk5zLcSwCMvFm6irNxbf5/UMEQOklyQcP+yNMbxqWsOqNEYHAAgGHFLNZqZS
-	WLgt7CmsFbv+vqD/Mh8pW6i09fttS8BnRngWkrvO1YOvB+eqJf9YBCzB8hRdQL8g
-	Zrmyq7fkrOXYnHgcPd99guxknzQGmfAMstEvWh3k4ZTVkZadU+R5weMlaG7A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1676466320; x=1676473520; bh=NzdIn9sEy/TdUrl/ZdBVY4dMEk2T
-	nlph7NyUne+YOMM=; b=Tp/P1vDtiwaXsxOOvmxonT9LDeiFaEudeIfZX0AV5xmw
-	X3ENq+2GlESFOAR7xURKTITb3Q9/bLEcQhyKkak30WygkBgQXOUwH+1TEYwAnfSW
-	VN79grgOoloKlVxQxKg9d/GE/aNuuNhUwV2IHK4xpJLpSY9XO1XpwbGHxBbR0DF/
-	IjnWEESEaF5s9xx5Zj0yYZVtiwtJOFrRCp6Vfpm8unxAKwLTF76Egia3fqB+SRTf
-	HhmCGeRY4V0PNJ2mo3ZpzkurciWsN1Fx3VZnNvLG3nNn/NwNqCwiyIzXTWlmQOpN
-	G3WAp6KoO5IxE4n9w+AW7QNxTKU5fRGQe3g4//HLhw==
-X-ME-Sender: <xms:jdjsY_Wh-8LcQ3nmLEwGZ7X-cUO_UZrmKOzBi9pl67XX_YGZ0IXNyA>
-    <xme:jdjsY3kveCSQ-Laj-6oAgDyXLkBUjq7fx_C7UYY5m4XU_HQAFhNFJiZGPFSylztsR
-    Jx6pcGWaR_WFw62yQQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudeihedggeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:jdjsY7ZEvyr4y1ulYt1S1iPqX3mkImnPSdU2AD0rfL5VPKqJb7xP1w>
-    <xmx:jdjsY6Ux13tFNHeawURlV0JH7DjSnY4lgf_B232j8MtUR1dl7xMefQ>
-    <xmx:jdjsY5klmieqtEjUAp2jmIMBcwIQHQA6TF9wkqBiRc9-j4DSJjfhdQ>
-    <xmx:kNjsY5_DeMdprgdbaWkVv0vgYRqpvs9Cxn7CSU6n-WZIW-e7MJJXrA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 79450B60086; Wed, 15 Feb 2023 08:05:17 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-156-g081acc5ed5-fm-20230206.001-g081acc5e
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C5353AF
+	for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 13:06:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1676466389;
+	bh=la/gxvFeBwR+hympTcN39C8IlB05NbIOEkTkiTkOIik=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Faae/TO7zgg3VIqTmyTx1N2B6zwcLHrBChGYbATM5XqI/xHwiTlXqVvUxb3c+avmm
+	 PWWSaY1n19GZ6EFG9Gtft7JFl57/sjA4Dn+6dKx8e4xuS53rb7aYD8K8Aq731viA3L
+	 CI1oNweWuyPl89XMQfa+AX83q90oLpsjocyRM7KI=
+Received: from [IPv6:240e:358:111b:f00:dc73:854d:832e:3] (unknown [IPv6:240e:358:111b:f00:dc73:854d:832e:3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id DB3AD65926;
+	Wed, 15 Feb 2023 08:06:25 -0500 (EST)
+Message-ID: <1f2b697ee10ba1b1ea2e2128697e1924d2479d4c.camel@xry111.site>
+Subject: Re: "kernel ade access" oops on LoongArch
+From: Xi Ruoyao <xry111@xry111.site>
+To: Youling Tang <tangyouling@loongson.cn>
+Cc: Jinyang He <hejinyang@loongson.cn>, loongarch@lists.linux.dev, Huacai
+ Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ linux-kernel@vger.kernel.org
+Date: Wed, 15 Feb 2023 21:06:21 +0800
+In-Reply-To: <6268f221cfca8b7550ad0673246f09cd439ede05.camel@xry111.site>
+References: <1e6f4d35946e4e2e7c7f5dcc7b69d5e609de8184.camel@xry111.site>
+	 <2e902dfa-cb84-7ef0-6b50-02b16354a139@loongson.cn>
+	 <511d385675ea7a846ff791974c6ae7feeeec2589.camel@xry111.site>
+	 <9a70e89c-0f3b-0660-501e-3292e410cfd8@loongson.cn>
+	 <5403e5eb-5792-7d6f-df74-ca3fab82ecd5@loongson.cn>
+	 <818419c03037bda833a5b281588a4b331c34ae8c.camel@xry111.site>
+	 <74fb1e24-36c0-c642-5bab-3646ba7790df@loongson.cn>
+	 <21b0e60dac8bedf9e389645ec103aa4241b35f8d.camel@xry111.site>
+	 <bf0e57db317d7061ecaaf928ce6cf40941b1740c.camel@xry111.site>
+	 <6268f221cfca8b7550ad0673246f09cd439ede05.camel@xry111.site>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <f3e1585c-0d9d-4709-9b21-74a63d8cc9ac@app.fastmail.com>
-In-Reply-To: <Y+zXIgwO5wteLQZ5@shell.armlinux.org.uk>
-References: <20230214074925.228106-1-alexghiti@rivosinc.com>
- <20230214074925.228106-4-alexghiti@rivosinc.com>
- <Y+zXIgwO5wteLQZ5@shell.armlinux.org.uk>
-Date: Wed, 15 Feb 2023 14:04:59 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Russell King" <linux@armlinux.org.uk>,
- "Alexandre Ghiti" <alexghiti@rivosinc.com>
-Cc: "Jonathan Corbet" <corbet@lwn.net>,
- "Richard Henderson" <richard.henderson@linaro.org>,
- "Ivan Kokshaysky" <ink@jurassic.park.msu.ru>,
- "Matt Turner" <mattst88@gmail.com>, "Vineet Gupta" <vgupta@kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, "Huacai Chen" <chenhuacai@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Michal Simek" <monstr@monstr.eu>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Helge Deller" <deller@gmx.de>, "Michael Ellerman" <mpe@ellerman.id.au>,
- "Nicholas Piggin" <npiggin@gmail.com>,
- "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>,
- "Heiko Carstens" <hca@linux.ibm.com>,
- "Vasily Gorbik" <gor@linux.ibm.com>,
- "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Christian Borntraeger" <borntraeger@linux.ibm.com>,
- "Sven Schnelle" <svens@linux.ibm.com>,
- "Yoshinori Sato" <ysato@users.sourceforge.jp>,
- "Rich Felker" <dalias@libc.org>,
- "David S . Miller" <davem@davemloft.net>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Chris Zankel" <chris@zankel.net>,
- "Max Filippov" <jcmvbkbc@gmail.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-xtensa@linux-xtensa.org, Linux-Arch <linux-arch@vger.kernel.org>,
- "Palmer Dabbelt" <palmer@rivosinc.com>
-Subject: Re: [PATCH v3 03/24] arm: Remove COMMAND_LINE_SIZE from uapi
-Content-Type: text/plain
+MIME-Version: 1.0
 
-On Wed, Feb 15, 2023, at 13:59, Russell King (Oracle) wrote:
-> On Tue, Feb 14, 2023 at 08:49:04AM +0100, Alexandre Ghiti wrote:
->> From: Palmer Dabbelt <palmer@rivosinc.com>
->> 
->> As far as I can tell this is not used by userspace and thus should not
->> be part of the user-visible API.
->> 
->> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
->
-> Looks good to me. What's the merge plan for this?
+On Wed, 2023-02-15 at 20:51 +0800, Xi Ruoyao wrote:
+> On Wed, 2023-02-15 at 19:52 +0800, Xi Ruoyao wrote:
+> > On Wed, 2023-02-15 at 16:35 +0800, Xi Ruoyao wrote:
+> > > On Wed, 2023-02-15 at 16:25 +0800, Youling Tang wrote:
+> > > > Can you modify the kernel as follows and test it, so as to avoid
+> > > > possible relationship with the exception table data link
+> > > > position
+> > > > and
+> > > > alignment rules (or use EXCEPTION_TABLE(12))?
+> > > >=20
+> > > > --- a/arch/loongarch/kernel/vmlinux.lds.S
+> > > > +++ b/arch/loongarch/kernel/vmlinux.lds.S
+> > > > @@ -4,7 +4,6 @@
+> > > > =C2=A0 #include <asm/thread_info.h>
+> > > >=20
+> > > > =C2=A0 #define PAGE_SIZE _PAGE_SIZE
+> > > > -#define RO_EXCEPTION_TABLE_ALIGN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 4
+> > > >=20
+> > > > =C2=A0 /*
+> > > > =C2=A0=C2=A0 * Put .bss..swapper_pg_dir as the first thing in .bss.=
+ This
+> > > > will
+> > > > @@ -54,6 +53,8 @@ SECTIONS
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 . =3D ALIGN(PECOFF=
+_SEGMENT_ALIGN);
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 _etext =3D .;
+> > > >=20
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 EXCEPTION_TABLE(16)
+> > > > +
+> > >=20
+> > > It seems the kernel refuses to boot after the change, but I'm not
+> > > completely sure: I'm 5 km away from the board and operating it via
+> > > ssh
+> > > so maybe it's a reboot failure or network failure.=C2=A0 I'll report
+> > > again in
+> > > the evening.
+> >=20
+> > It was a reboot failure.
+> >=20
+> > Now it has booted successfully, but the stack trace still shows
+> > (during
+> > the 25th run of the make test t=3D... command).
+>=20
+> Ouch, I know what's happening...
+>=20
+> In the architecture-independent code we have something like
+>=20
+> extern struct exception_table_entry a[], b[];
+> bsearch(a, b - a);
+>=20
+> According to the C standard, when you write "b - a" where a and b are
+> pointers to type T, "b" and "a" must be pointers to elements in the
+> same
+> array of T.=C2=A0 So the compiler can assume ((uintptr_t)b - (uintptr_t)a=
+)
+> %
+> 12 =3D=3D 0 and optimize "b - a" to something like
+>=20
+> (((uintptr_t)b - (uintptr_t)a) >> 2) * inv3
+>=20
+> Here inv3 is the inversion of 3 in the modulo-2**64 integer ring, so
+> the
+> compiler can avoid an expensive divide instruction.=C2=A0 But in my vmlin=
+ux
+> ((uintptr_t)b - (uintptr_t)a) is somehow not a multiple of 12:
+>=20
+> (gdb) p ((uintptr_t)__stop___ex_table - (uintptr_t)__start___ex_table)
+> % sizeof(struct exception_table_entry)
+> $9 =3D 8
+>=20
+> So I guess
+>=20
+> #define RO_EXCEPTION_TABLE_ALIGN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 12
+>=20
+> will work.=C2=A0 I'll take a try...
 
-The easiest way is probably if I merge it through the whole
-series through the asm-generic tree. The timing is a bit
-unfortunate as we're just ahead of the merge window, so unless
-we really need this in 6.3, I'd suggest that Alexandre resend
-the series to me in two weeks with the Acks added in and I'll
-pick it up for 6.4.
+No, it's not related...
 
-     Arnd
+The reason is the "LoongArch: Add vector extensions support" in my local
+repo is not same as the version in loongarch-next!  My local version
+contains some ".section __ex_table", and the content seems predates the
+relative exception table change.
+
+Sorry for wasted you guys an afternoon :(.
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
