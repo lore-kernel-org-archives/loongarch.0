@@ -1,29 +1,28 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC137B
-	for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 09:03:12 +0000 (UTC)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-82-NNoxohhnO26LHaxwi1IFYA-1; Thu, 16 Feb 2023 09:03:10 +0000
-X-MC-Unique: NNoxohhnO26LHaxwi1IFYA-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.45; Thu, 16 Feb
- 2023 09:03:08 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.045; Thu, 16 Feb 2023 09:03:08 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'maobibo' <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-CC: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
-Thread-Topic: [PATCH v2] LoongArch: add checksum optimization for 64-bit
- system
-Thread-Index: AQHZPDrPjnYkuPc3GUK7DnTa61yn8K7GU7lQgAAunoCAAAOYoIABcE8jgAAK1MCABa59gIAAfSaggABZcICAAsbaQA==
-Date: Thu, 16 Feb 2023 09:03:08 +0000
-Message-ID: <8bc06b0ef9c243b087e944e0611b54b5@AcuMS.aculab.com>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 439E47B
+	for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 09:26:21 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8AxJNi19u1jPUUBAA--.2173S3;
+	Thu, 16 Feb 2023 17:26:13 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD7+19u1j6nY0AA--.60001S3;
+	Thu, 16 Feb 2023 17:26:13 +0800 (CST)
+Message-ID: <ff1ede2c-8289-a833-3997-48f8a30dc606@loongson.cn>
+Date: Thu, 16 Feb 2023 17:26:13 +0800
+Precedence: bulk
+X-Mailing-List: loongarch@lists.linux.dev
+List-Id: <loongarch.lists.linux.dev>
+List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
+To: David Laight <David.Laight@ACULAB.COM>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 References: <20230209035839.2610277-1-maobibo@loongson.cn>
  <e6bb59c32134477aa4890047ae5ad51b@AcuMS.aculab.com>
  <741b2246-d609-ccc6-bf55-d6b0b5e54b54@loongson.cn>
@@ -34,50 +33,115 @@ References: <20230209035839.2610277-1-maobibo@loongson.cn>
  <ec49593a-60a4-be91-0fb2-af517eaf6d6a@loongson.cn>
  <5dc1c39bbaf149f78c132f4467cdb365@AcuMS.aculab.com>
  <0d591c10-e897-d00a-dbf0-a069389ef196@loongson.cn>
-In-Reply-To: <0d591c10-e897-d00a-dbf0-a069389ef196@loongson.cn>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-Precedence: bulk
-X-Mailing-List: loongarch@lists.linux.dev
-List-Id: <loongarch.lists.linux.dev>
-List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+ <8bc06b0ef9c243b087e944e0611b54b5@AcuMS.aculab.com>
 Content-Language: en-US
+From: maobibo <maobibo@loongson.cn>
+In-Reply-To: <8bc06b0ef9c243b087e944e0611b54b5@AcuMS.aculab.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxD7+19u1j6nY0AA--.60001S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Zr43XFyfGFy7KF4UZr1fWFg_yoW8KF1DpF
+	WrKwn0kFWSvrWxGrn3Zw4UWFy7CFs3Aw45AFnrt34xCay5GFyFqFWIy395ZFWkA3sYga12
+	vFWjy34UuF92y3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
+	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUUU
 
-RnJvbTogbWFvYmlibw0KPiBTZW50OiAxNCBGZWJydWFyeSAyMDIzIDE0OjE5DQouLi4NCj4gR290
-IGl0LiBJdCBtYWtlcyB1c2Ugb2YgcGlwZWxpbmUgYmV0dGVyLCByYXRoZXIgdGhhbiBudW1iZXIg
-b2YgQUxVcyBmb3INCj4gZGlmZmVyZW50IG1pY3JvLWFyY2hpdGVjdHVyZXMuIEkgd2lsbCB0cnkg
-dGhpcyBtZXRob2QsIHRoYW5rcyBhZ2FpbiBmb3INCj4ga2luZGx5IGhlbHAgYW5kIGV4cGxhbmF0
-aW9uIHdpdGggcGF0aWVuY2UuDQoNCkl0IGlzIGFsc28gd29ydGggcG9pbnRpbmcgb3V0IHRoYXQg
-aWYgdGhlIGNwdSBkb2VzICdvdXQgb2Ygb3JkZXInDQpleGVjdXRpb24gaXQgbWF5IGJlIGp1c3Qg
-YXMgZ29vZCB0byBqdXN0IHJlcGVhdCBibG9ja3Mgb2Y6DQoJbG9hZAl2MCwgYWRkciwgMCo4DQoJ
-YWRkCXN1bTAsIHYwDQoJc2x0dQl2MCwgc3VtMCwgdjANCglhZGQJY2FycnkwLCB2MA0KDQpBc3N1
-bWluZyB0aGUgcHJlZmV0Y2gvZGVjb2RlIGxvZ2ljIGNhbiBwcmVkaWN0IHRoZSBsb29wDQphbmQg
-Z2VuZXJhdGUgZW5vdWdoIGRlY29kZWQgaW5zdHJ1Y3Rpb24gZm9yIGFsbCB0aGUgYWx1IHVuaXRz
-Lg0KDQpUaGUgYWRkL3NsdHUvYWRkIHdpbGwgYmUgcXVldWVkIHVudGlsIHRoZSBsb2FkIGNvbXBs
-ZXRlcw0KYW5kIHRoZW4gZXhlY3V0ZSBpbiB0aGUgbmV4dCB0aHJlZSBjbG9ja3MuDQpUaGUgbG9h
-ZCBmb3IgdGhlIG5leHQgYmxvY2sgd2lsbCBiZSBzY2hlZHVsZWQgYXMgc29vbiBhcw0KdGhlIGxv
-YWQvc3RvcmUgdW5pdCBoYXMgZmluaXNoZWQgcHJvY2Vzc2luZyB0aGUgcHJldmlvdXMgbG9hZC4N
-ClNvIGFsbCB0aGUgYWx1IGluc3RydWN0aW9ucyBqdXN0IHdhaXQgZm9yIHRoZSByZXF1aXJlZCBp
-bnB1dA0KdG8gYmUgYXZhaWxhYmxlIGFuZCBhIG1lbW9yeSBsb2FkIGV4ZWN1dGVzIGV2ZXJ5IGNs
-b2NrLg0KDQpNdWx0aXBsZSBzdW0wIGFuZCBjYXJyeTAgcmVnaXN0ZXJzIGFyZW4ndCBhY3R1YWxs
-eSBuZWVkZWQuDQpCdXQgaGF2aW5nIDIgb2YgZWFjaCAoZXZlbiBpZiB0aGUgbG9vcCBpcyB1bnJv
-bGxlZCA0IHRpbWVzKQ0KbWlnaHQgaGVscCBhIGJpdC4NCg0KSWYgdGhlIGNwdSBkb2VzICdyZWdp
-c3RlciByZW5hbWluZycgKGFzIG1vc3QgeDg2IGRvKSB5b3UNCmNhbiB1c2UgdGhlIHNhbWUgcmVn
-aXN0ZXIgbmFtZSBmb3IgJ3YwJyBpbiBhbGwgdGhlIGJsb2Nrcw0KKGV2ZW4gdGhvdWdoIGl0IGlz
-IGFsaXZlIHdpdGggbXVsdGlwbGUgdmFsdWVzKS4NCg0KQnV0IGEgc2ltcGxlciBpbi1vcmRlciBt
-dWx0aS1pc3N1ZSBjcHUgd2lsbCBuZWVkIHlvdSB0bw0KY29ycmVjdGx5IGludGVybGVhdmUgdGhl
-IGluc3RydWN0aW9ucyBmb3IgbWF4aW11bSB0aHJvdWdocHV0Lg0KSXQgYWxzbyBkb2VzIG5vIGhh
-cmQgZm9yIGEgdmVyeSBzaW1wbGUgY3B1IHRoYXQgaGFzIGRlbGF5cw0KYmVmb3JlIGEgcmVhZCB2
-YWx1ZSBjYW4gYmUgdXNlZC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
-c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
-Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+
+
+在 2023/2/16 17:03, David Laight 写道:
+> From: maobibo
+>> Sent: 14 February 2023 14:19
+> ...
+>> Got it. It makes use of pipeline better, rather than number of ALUs for
+>> different micro-architectures. I will try this method, thanks again for
+>> kindly help and explanation with patience.
+> 
+> It is also worth pointing out that if the cpu does 'out of order'
+> execution it may be just as good to just repeat blocks of:
+> 	load	v0, addr, 0*8
+> 	add	sum0, v0
+> 	sltu	v0, sum0, v0
+> 	add	carry0, v0
+> 
+It is strange that there is no performance improvement on my loongarch
+machine when interleaving ALU instructions before load; however on x86
+box the performance improvement is huge compared to uint128 function.
+
+Here is the piece of of the code:
+        while (len > 48) {
+                len -= 48;
+                tmp4 = *(unsigned long *)ptr;
+                if (tmp1 < tmp2)
+                        tmp1 += 1;
+                tmp3 += tmp4;
+
+                tmp0 = *(unsigned long *)(ptr + 1);
+                if (tmp3 < tmp4)
+                        tmp3 += 1;
+                sum64 += tmp0;
+
+                tmp2 = *(unsigned long *)(ptr + 2);
+                if (sum64 < tmp0)
+                        sum64 += 1;
+                tmp1 += tmp2;
+
+                tmp4 = *(unsigned long *)(ptr + 3);
+                if (tmp1 < tmp2)
+                        tmp1 +=1;
+                tmp3 += tmp4;
+
+                tmp0 = *(unsigned long *)(ptr + 4);
+                if (tmp3 < tmp4)
+                        tmp3 +=1;
+                sum64 += tmp0;
+
+                tmp2 = *(unsigned long *)(ptr + 5);
+                if (sum64 < tmp0)
+                        sum64 += 1;
+                tmp1 += tmp2;
+                ptr += 6;
+        }
+
+Regards
+Bibo, Mao
+> Assuming the prefetch/decode logic can predict the loop
+> and generate enough decoded instruction for all the alu units.
+> 
+> The add/sltu/add will be queued until the load completes
+> and then execute in the next three clocks.
+> The load for the next block will be scheduled as soon as
+> the load/store unit has finished processing the previous load.
+> So all the alu instructions just wait for the required input
+> to be available and a memory load executes every clock.
+> 
+> Multiple sum0 and carry0 registers aren't actually needed.
+> But having 2 of each (even if the loop is unrolled 4 times)
+> might help a bit.
+> 
+> If the cpu does 'register renaming' (as most x86 do) you
+> can use the same register name for 'v0' in all the blocks
+> (even though it is alive with multiple values).
+> 
+> But a simpler in-order multi-issue cpu will need you to
+> correctly interleave the instructions for maximum throughput.
+> It also does no hard for a very simple cpu that has delays
+> before a read value can be used.
+> 
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
 
