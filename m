@@ -1,183 +1,306 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507097B
-	for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 01:46:24 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id my5so1599000ejc.7
-        for <loongarch@lists.linux.dev>; Wed, 15 Feb 2023 17:46:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jv6cvjo686LVOVKC6rcDtTFa30YNfYHMmyU6W4jz+Mo=;
-        b=hOWbdVvnNuMQYO9emFZuvkmpGwBNqkXb+ZPFKNmb7bIH0iXmHZzotyY82ak4bTuKy8
-         OgUZ3o7+2yFys7PMR3ebJXqp9xC3HrEeA4U7QRly93FNJsWUcRvUaHEtm8xYgT3CagFM
-         6TXeKgZk9mNnaBA6PYoiMyXCfkZ4MXdI+ABezHkYuHs9KxwtIzp+KH5xXM2tsQc3PWnj
-         TGiJ8lIxEZKdsIdthvHiWSJUGxNTA2ZB7PffHHuVHIfoTB3PxFI4Y2CKoDlp8JGWSt4T
-         /BaHLOXLYMuTAX+HUqpTmQCmozzwJDgMVxwV7SP4177HEgx/HykPbLGYhiunja7g0e1Q
-         j2DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Jv6cvjo686LVOVKC6rcDtTFa30YNfYHMmyU6W4jz+Mo=;
-        b=ydqiN1YzJWFa8T607m3XjUFC2vP8tz1aojPReKu03AMimqlr9kaH0rf3wNPylYdxEs
-         DOdhDwJ9BccOSYDnjODewp9ghMGJ5c+Z0PHpZj5MMce98L4PWDEW7bnOSWKunJP6G7Nb
-         ipUkSLDPMI8fKiFmj1+ETjXlPLyB68vUxevqn1B1K1q2Z/GmEeyr61TmfGe1/KdjXn67
-         MhAjmXKQz2DARcgpJL2zTo9mxwLM41bz57p/Bb2ILVOiy2JQ8uRqzeAmk1mMq09BrknL
-         WcH1H91rkP8oTZOLLE7ZyNH1zUTNhi73PQz0OD1N7G5mkCoV+FgLY6DKJ7T56QN7Q5Lx
-         cVSA==
-X-Gm-Message-State: AO0yUKWUT5bDqR1neKC108yjZGhi9GgHaIZFzfXBP/tlObQAjAP6HTES
-	9MTfJxkpQqOQpGAGuRE7GIz46kMmeLznojBp6Ng=
-X-Google-Smtp-Source: AK7set+rcb8VPwl22THcOhg2BjlDEf1NPu44Ct2NLA8hipljIJtynALfkEnslMffAmaYmRViaZJ5bukXBH6hc0cGtcs=
-X-Received: by 2002:a17:906:4dc4:b0:877:e539:810b with SMTP id
- f4-20020a1709064dc400b00877e539810bmr2031759ejw.2.1676511982463; Wed, 15 Feb
- 2023 17:46:22 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 796E07B
+	for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 02:07:49 +0000 (UTC)
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8CxRNjzj+1jCSQBAA--.1819S3;
+	Thu, 16 Feb 2023 10:07:47 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax97zyj+1jxys0AA--.31155S3;
+	Thu, 16 Feb 2023 10:07:46 +0800 (CST)
+Subject: Re: [PATCH v3 2/3] LoongArch: Add ptrace single step support
+To: Qing Zhang <zhangqing@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, WANG Xuerui <kernel@xen0n.name>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20230215092358.30368-1-zhangqing@loongson.cn>
+ <20230215092358.30368-3-zhangqing@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <2b759af4-4047-4ac6-acbb-42e91c14fb48@loongson.cn>
+Date: Thu, 16 Feb 2023 10:07:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1676289084.git.zhoubinbin@loongson.cn> <a9f697906df6599e6b001981e668479da71aa7a0.1676289084.git.zhoubinbin@loongson.cn>
- <df464409-9a93-c057-5f66-923a9e24696a@linaro.org> <CAMpQs4JX0Vgf5tvv5Yw5eLGANFfn1p=iQ_kMS0yQPV6kE2tN1g@mail.gmail.com>
- <23068d0c-d37c-0563-e1c1-e4d112059f5b@linaro.org>
-In-Reply-To: <23068d0c-d37c-0563-e1c1-e4d112059f5b@linaro.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 16 Feb 2023 09:46:09 +0800
-Message-ID: <CAMpQs4K+aYGrOoWy04vrbEy53kba9zUzGkOwD34pwAH0c=D8iA@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] dt-bindings: interrupt-controller: Add Loongson EIOINTC
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Jianmin Lv <lvjianmin@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>, linux-kernel@vger.kernel.org, 
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-	devicetree@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20230215092358.30368-3-zhangqing@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8Ax97zyj+1jxys0AA--.31155S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxuw1UJr1xtFyUKFWDCw1UAwb_yoW3tF1rpF
+	9rAF1kGrWjgr18WFnxX3W5ZF15tw1kWw42gFyIy34YywnFgryrGr1vkr90vF4rAw4qga4I
+	9r1YgwsIgF4DXaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bxkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
+	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
 
-On Tue, Feb 14, 2023 at 8:43 PM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+
+On 2023-02-15 17:23, Qing Zhang wrote:
+> Use the generic ptrace_resume code for PTRACE_SYSCALL, PTRACE_CONT,
+> PTRACE_KILL and PTRACE_SINGLESTEP. This implies defining
+> arch_has_single_step in  and implementing the
+> user_enable_single_step and user_disable_single_step functions.
 >
-> On 14/02/2023 13:40, Binbin Zhou wrote:
-> > On Tue, Feb 14, 2023 at 5:53 PM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 13/02/2023 13:15, Binbin Zhou wrote:
-> >>> Add Loongson Extended I/O Interrupt controller binding with DT schema
-> >>> format using json-schema.
-> >>>
-> >>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> >>> ---
-> >>>  .../loongson,eiointc.yaml                     | 80 +++++++++++++++++++
-> >>>  1 file changed, 80 insertions(+)
-> >>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
-> >>> new file mode 100644
-> >>> index 000000000000..88580297f955
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
-> >>> @@ -0,0 +1,80 @@
-> >>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >>> +%YAML 1.2
-> >>> +---
-> >>> +$id: "http://devicetree.org/schemas/interrupt-controller/loongson,eiointc.yaml#"
-> >>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> >>
-> >> Drop quotes from bopth.
-> >>
-> >>> +
-> >>> +title: Loongson Extended I/O Interrupt Controller
-> >>> +
-> >>> +maintainers:
-> >>> +  - Binbin Zhou <zhoubinbin@loongson.cn>
-> >>> +
-> >>> +description: |
-> >>> +  This interrupt controller is found on the Loongson-3 family chips and
-> >>> +  Loongson-2K0500 chip and is used to distribute interrupts directly to
-> >>> +  individual cores without forwarding them through the HT's interrupt line.
-> >>> +
-> >>> +allOf:
-> >>> +  - $ref: /schemas/interrupt-controller.yaml#
-> >>> +
-> >>> +properties:
-> >>> +  compatible:
-> >>> +    enum:
-> >>> +      - loongson,eiointc-1.0
-> >>
-> >> Why not using SoC based compatible? It is preferred.
-> >
-> > Hi Krzysztof:
-> >
-> > So far, from the datasheet, I know that only the EXIOINTC of the
-> > Loongson-2K0500 is different from the other chips, and that is the
-> > "loongson,eio-num-vecs" below, which is 128, while all the others are
-> > 256.
-> > My original idea was to add this property to make compatible
-> > consistent, and also to make it easier to add new chips if they have
-> > different eio-num-vecs.
+> LongArch has no hardware single-step register. the hardware single-step
+> function multiplex fetch instruction watchpoint(FWPS) and specifies that
+> the next instruction must trigger the watch exception by setting the mask bit.
 >
-> We talk about different things. SoC based compatibles are preferred over
-> version ones. This was on the lists expressed many times. Please provide
-> a reason why you deviate from general recommendation. Flexibility and
-> genericness of bindings is not a reason - it's the opposite of the
-> argument, thus this will be a: NAK. :(
+> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/processor.h |  3 ++
+>   arch/loongarch/include/asm/ptrace.h    |  2 +
+>   arch/loongarch/kernel/hw_breakpoint.c  | 35 +++++++++++--
+>   arch/loongarch/kernel/ptrace.c         | 68 ++++++++++++++++++++++++++
+>   arch/loongarch/kernel/traps.c          | 20 ++++++--
+>   5 files changed, 120 insertions(+), 8 deletions(-)
 >
->
-Hi Krzysztof:
+> diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+> index db060c5a976f..3ea0f1910c23 100644
+> --- a/arch/loongarch/include/asm/processor.h
+> +++ b/arch/loongarch/include/asm/processor.h
+> @@ -131,6 +131,9 @@ struct thread_struct {
+>   	struct perf_event	*hbp_break[LOONGARCH_MAX_BRP];
+>   	struct perf_event	*hbp_watch[LOONGARCH_MAX_WRP];
+>   
+> +	/* Used by ptrace single_step */
+> +	unsigned long single_step;
+> +
+>   	/*
+>   	 * FPU & vector registers, must be at last because
+>   	 * they are conditionally copied at fork().
+> diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+> index 58596c4f8a0f..66a0e6c480a3 100644
+> --- a/arch/loongarch/include/asm/ptrace.h
+> +++ b/arch/loongarch/include/asm/ptrace.h
+> @@ -150,4 +150,6 @@ static inline void user_stack_pointer_set(struct pt_regs *regs,
+>   	regs->regs[3] = val;
+>   }
+>   
+> +#define arch_has_single_step()		(1)
+> +
+>   #endif /* _ASM_PTRACE_H */
+> diff --git a/arch/loongarch/kernel/hw_breakpoint.c b/arch/loongarch/kernel/hw_breakpoint.c
+> index 6431cd319c32..94967b887d92 100644
+> --- a/arch/loongarch/kernel/hw_breakpoint.c
+> +++ b/arch/loongarch/kernel/hw_breakpoint.c
+> @@ -153,6 +153,22 @@ static int hw_breakpoint_slot_setup(struct perf_event **slots, int max_slots,
+>    */
+>   void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
+>   {
+> +	int i;
+> +	struct thread_struct *t = &tsk->thread;
+> +
+> +	for (i = 0; i < LOONGARCH_MAX_BRP; i++) {
+> +		if (t->hbp_break[i]) {
+> +			unregister_hw_breakpoint(t->hbp_break[i]);
+> +			t->hbp_break[i] = NULL;
+> +		}
+> +	}
+> +
+> +	for (i = 0; i < LOONGARCH_MAX_WRP; i++) {
+> +		if (t->hbp_watch[i]) {
+> +			unregister_hw_breakpoint(t->hbp_watch[i]);
+> +			t->hbp_watch[i] = NULL;
+> +		}
+> +	}
+>   }
+>   
+>   void ptrace_hw_copy_thread(struct task_struct *tsk)
+> @@ -498,11 +514,20 @@ arch_initcall(arch_hw_breakpoint_init);
+>   void hw_breakpoint_thread_switch(struct task_struct *next)
+>   {
+>   	struct pt_regs *regs = task_pt_regs(next);
+> -
+> -	/* Update breakpoints */
+> -	update_bp_registers(regs, 1, 0);
+> -	/* Update watchpoints */
+> -	update_bp_registers(regs, 1, 1);
+> +	u64 addr, mask;
+> +
+> +	if (test_bit(TIF_SINGLESTEP, &task_thread_info(next)->flags)) {
+> +		addr = read_wb_reg(CSR_CFG_ADDR, 0, 0);
+> +		mask = read_wb_reg(CSR_CFG_MASK, 0, 0);
+> +		if ((task_pt_regs(next)->csr_era & ~mask) == (addr & ~mask))
+> +			csr_write32(0x10000, LOONGARCH_CSR_FWPS);
+> +		regs->csr_prmd |= CSR_PRMD_PWE;
+> +	} else {
+> +		/* Update breakpoints */
+> +		update_bp_registers(regs, 1, 0);
+> +		/* Update watchpoints */
+> +		update_bp_registers(regs, 1, 1);
+> +	}
+>   }
+>   
+>   void hw_breakpoint_pmu_read(struct perf_event *bp)
+> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+> index bee4194177fd..52a3ee4366f4 100644
+> --- a/arch/loongarch/kernel/ptrace.c
+> +++ b/arch/loongarch/kernel/ptrace.c
+> @@ -20,6 +20,7 @@
+>   #include <linux/context_tracking.h>
+>   #include <linux/elf.h>
+>   #include <linux/errno.h>
+> +#include <linux/hw_breakpoint.h>
+>   #include <linux/mm.h>
+>   #include <linux/ptrace.h>
+>   #include <linux/regset.h>
+> @@ -30,6 +31,7 @@
+>   #include <linux/stddef.h>
+>   #include <linux/seccomp.h>
+>   #include <linux/uaccess.h>
+> +#include <linux/thread_info.h>
+>   
+>   #include <asm/byteorder.h>
+>   #include <asm/cpu.h>
+> @@ -39,6 +41,7 @@
+>   #include <asm/page.h>
+>   #include <asm/pgtable.h>
+>   #include <asm/processor.h>
+> +#include <asm/ptrace.h>
+>   #include <asm/reg.h>
+>   #include <asm/syscall.h>
+>   
+> @@ -541,3 +544,68 @@ long arch_ptrace(struct task_struct *child, long request,
+>   
+>   	return ret;
+>   }
+> +
+> +void ptrace_triggered(struct perf_event *bp,
+> +		      struct perf_sample_data *data, struct pt_regs *regs)
+> +{
+> +	struct perf_event_attr attr;
+> +
+> +	attr = bp->attr;
+> +	attr.disabled = true;
+> +	modify_user_hw_breakpoint(bp, &attr);
+> +}
+> +
+> +static int set_single_step(struct task_struct *tsk, unsigned long addr)
+> +{
+> +	struct thread_struct *thread = &tsk->thread;
+> +	struct perf_event *bp;
+> +	struct perf_event_attr attr;
+> +	struct arch_hw_breakpoint *info;
+> +
+> +	bp = thread->hbp_break[0];
+> +	if (!bp) {
+> +		ptrace_breakpoint_init(&attr);
+> +
+> +		attr.bp_addr = addr;
+> +		attr.bp_len = HW_BREAKPOINT_LEN_8;
+> +		attr.bp_type = HW_BREAKPOINT_X;
+> +
+> +		bp = register_user_hw_breakpoint(&attr, ptrace_triggered,
+> +						 NULL, tsk);
+> +		if (IS_ERR(bp))
+> +			return PTR_ERR(bp);
+> +
+> +		thread->hbp_break[0] = bp;
+> +	} else {
+> +		int err;
+> +
+> +		attr = bp->attr;
+> +		attr.bp_addr = addr;
+> +		/* reenable breakpoint */
+> +		attr.disabled = false;
+> +		err = modify_user_hw_breakpoint(bp, &attr);
+> +		if (unlikely(err))
+> +			return err;
+> +
+> +		csr_write64(attr.bp_addr, LOONGARCH_CSR_IB0ADDR);
+> +	}
+> +	info = counter_arch_bp(bp);
+> +	info->mask = 0xffffffffffff;
+> +
+> +	return 0;
+> +}
+> +
+> +/* ptrace API */
+> +void user_enable_single_step(struct task_struct *task)
+> +{
+> +	struct thread_info *ti = task_thread_info(task);
+> +
+> +	set_single_step(task, task_pt_regs(task)->csr_era);
+> +	task->thread.single_step = task_pt_regs(task)->csr_era;
+> +	set_ti_thread_flag(ti, TIF_SINGLESTEP);
+> +}
+> +
+> +void user_disable_single_step(struct task_struct *task)
+> +{
+> +	clear_tsk_thread_flag(task, TIF_SINGLESTEP);
+> +}
+> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+> index 2b133079e0f3..56d7d076153c 100644
+> --- a/arch/loongarch/kernel/traps.c
+> +++ b/arch/loongarch/kernel/traps.c
+> @@ -511,9 +511,23 @@ asmlinkage void noinstr do_watch(struct pt_regs *regs)
+>   #ifdef CONFIG_HAVE_HW_BREAKPOINT
+>   	irqentry_state_t state = irqentry_enter(regs);
+>   
+> -	breakpoint_handler(regs);
+> -	watchpoint_handler(regs);
+> -	force_sig(SIGTRAP);
+> +	if (test_tsk_thread_flag(current, TIF_SINGLESTEP)) {
+> +		int llbit = (csr_read32(LOONGARCH_CSR_LLBCTL) & 0x1);
+> +		unsigned long pc = regs->csr_era;
+> +
+> +		if (llbit) {
 
-Allow me to give a brief overview of the current status of eiointc (DT-based):
-     Loongson-3A series supports eiointc;
-     Loongson-2K1000 does not support eiointc now;
-     Loongson-2K0500 supports eiointc, with differences from
-Loongson-3, e.g. only up to 128 devices are supported;
-     Loongson-2K2000 supports eiointc, similar to Loongson-3.
-     ....
+Hi, Qing,
 
-As can be seen, there is now a bit of confusion in the chip's design of eiointc.
 
-The design of eiointc is probably refined step by step with the chip.
-The same version of eiointc can be used for multiple chips, and the
-same chip series may also use different versions of eiointc. Low-end
-chips may use eiointc-2.0, and high-end chips may use eiointc-1.0,
-depending on the time it's produced.
+It should be noted here. When the ll-sc combo is encountered, it is
+regarded as an single instruction. So donnot clear llbit and reset
+CSR.FWPS.Skip until the llsc execution is completed.
 
-So in the Loongson-2K series I have defined the current state as
-eiointc-1.0, using the dts property to indicate the maximum number of
-devices supported by eiointc that can be used directly in the driver.
+> +			csr_write32(0x10000, LOONGARCH_CSR_FWPS);
+> +			csr_write32(0x4, LOONGARCH_CSR_LLBCTL);
+> +		} else if (pc == current->thread.single_step) {
+Note here as well. Because 3A5000 has a strange hardware issue that
+certain insns are occasionally not skipped when CSR.FWPS.Skip is set,
+such as fld.d/fst.d. Singlestep needs compare whether the csr_era is
+equal to the value of singlestep which last time set, as in most case
 
-If there are new changes to the design later on, such as the
-definition of registers, we can call it eiointc-2.0, which can also
-cover more than one chip.
+they should be not equal.
 
-Thanks.
-Binbin
 
-> >
-> >>
-> >>> +
-> >>> +  reg:
-> >>> +    minItems: 1
-> >>> +    maxItems: 3
-> >>
-> >> You need to describe the items.
-> >>
-> >>> +
-> >>> +  interrupt-controller: true
-> >>> +
-> >>> +  interrupts:
-> >>> +    description:
-> >>> +      Interrupt source of the CPU interrupts.
-> >>
-> >> You need to describe the items.
-> >
-> > Do you mean a more detailed description?
->
-> I mean constraints on interrupts and/or description if they are not obvious.
->
-> Best regards,
-> Krzysztof
->
+And for this condition expression, some potentially strange insns may
+cause bugs. For example, "b 0" or "jr rd" where rd is equal to its PC
+will cause cannot stop the singlestep. These insns is so strange that
+we did not consider in OW. However, I think we should consider this
+case for robustness in upstream.
+
+It is better to use macros avoid direct numbers when csr_write* is invoked.
+
+
+Thanks,
+
+Jinyang
+
+> +			csr_write32(0x10000, LOONGARCH_CSR_FWPS);
+> +		} else {
+> +			force_sig(SIGTRAP);
+> +		}
+> +	} else {
+> +		breakpoint_handler(regs);
+> +		watchpoint_handler(regs);
+> +		force_sig(SIGTRAP);
+> +	}
+>   
+>   	irqentry_exit(regs, state);
+>   #endif
+
