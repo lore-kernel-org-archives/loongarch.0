@@ -1,176 +1,83 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7D720FB
-	for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 08:10:36 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id b2so3170486ejz.9
-        for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 00:10:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oW0V6umLJy0hS07mWMTA08LmxSLhrAJj8WzjMCOF2bw=;
-        b=Q/l20dOw+fFU30ZZsMO3nTpWbTXVMGX9nDXDEIIrCD/27js0WE/SpBC8PjaueADFv2
-         2TdpVfe/hJ0ftL4MGJIj+EmbR/GyCkTdnThpauSxR5AY2zNwl9E/TjGht6H+Gn6O7JqT
-         4RkgrLo0C15R2KnaZOyUtXliU+tZf1riBT+99p75VOiXtUhX2XKudTrsRuMAMen3dlKa
-         qvE92lbnqbViniVNKeDsc3Ut31Ev5a/E1fLy/GvJF//vB1QTkt66bXKf0JgdxkMNKLfr
-         O7O7AM7i9Ctgj7wsSa1w/oIKxnJhTzcEhFPzqsz4TvMaOYNZuXuM+7vt/8W06U9ZG15t
-         HfXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oW0V6umLJy0hS07mWMTA08LmxSLhrAJj8WzjMCOF2bw=;
-        b=c86thLrpTel2usRo65aXYzu/pVVJUXAwydcDEolchjZolHIaXtayYxfvLB9JD8mtsp
-         w9ZEN1lGpBLQXvWU93LXoa/Z9yUREVuoRLsq3fCbXHgw8mQD4HYHGgXdiaMd5pbjvyJp
-         oXGfjpf62anktPq3lBlPvtm6NYZGPMvHVa/LhO34+IWICUBnkDai0qO1ieZ1Gm4jr3Ik
-         V1DoBtaO6j1/I+3R/Lr1cHPX9QLn498uX1REf5IoI7aFDv3o6+NMzejika9tkXhTLZJG
-         5UC2BGjQGTQzL9q9HwNQW6ER0Aic3MIAJzjsHIaGlKu50m9+ZbSTo5zaVQjgTBBoVkCA
-         uROg==
-X-Gm-Message-State: AO0yUKUB9UZK5fQNbv0gkerbkS8LsgXx23+iUhOAHbveK7gJtp6ddoVx
-	t/SiDg9j/1GZpFikjruNhb8s4Q==
-X-Google-Smtp-Source: AK7set+IG8aKhp/1WTD7nwtbH604B/L6qXfYbtPaA03zUfX6H1lEkvKZrd0aeoZ70gQgV5BAX4wwyQ==
-X-Received: by 2002:a17:906:288b:b0:88a:888b:c8b with SMTP id o11-20020a170906288b00b0088a888b0c8bmr5504301ejd.35.1676535034591;
-        Thu, 16 Feb 2023 00:10:34 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id jt8-20020a170906dfc800b008b13ce1c460sm477556ejc.40.2023.02.16.00.10.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Feb 2023 00:10:34 -0800 (PST)
-Message-ID: <49c8255e-66f3-fa1f-2949-1f03f77a0fa4@linaro.org>
-Date: Thu, 16 Feb 2023 09:10:32 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC137B
+	for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 09:03:12 +0000 (UTC)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-82-NNoxohhnO26LHaxwi1IFYA-1; Thu, 16 Feb 2023 09:03:10 +0000
+X-MC-Unique: NNoxohhnO26LHaxwi1IFYA-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.45; Thu, 16 Feb
+ 2023 09:03:08 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.045; Thu, 16 Feb 2023 09:03:08 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'maobibo' <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+CC: WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] LoongArch: add checksum optimization for 64-bit system
+Thread-Topic: [PATCH v2] LoongArch: add checksum optimization for 64-bit
+ system
+Thread-Index: AQHZPDrPjnYkuPc3GUK7DnTa61yn8K7GU7lQgAAunoCAAAOYoIABcE8jgAAK1MCABa59gIAAfSaggABZcICAAsbaQA==
+Date: Thu, 16 Feb 2023 09:03:08 +0000
+Message-ID: <8bc06b0ef9c243b087e944e0611b54b5@AcuMS.aculab.com>
+References: <20230209035839.2610277-1-maobibo@loongson.cn>
+ <e6bb59c32134477aa4890047ae5ad51b@AcuMS.aculab.com>
+ <741b2246-d609-ccc6-bf55-d6b0b5e54b54@loongson.cn>
+ <2aa6243491784e74960182dc12968170@AcuMS.aculab.com>
+ <CAAhV-H7BgBASt_CpSQgS6MNbzxODhoq8ykK5ZAn2y3ZOekXM9g@mail.gmail.com>
+ <0fe7ed7c-7161-65d5-a09f-12db6ccda05a@loongson.cn>
+ <b17430342e9e4c39b53004d842ea9c55@AcuMS.aculab.com>
+ <ec49593a-60a4-be91-0fb2-af517eaf6d6a@loongson.cn>
+ <5dc1c39bbaf149f78c132f4467cdb365@AcuMS.aculab.com>
+ <0d591c10-e897-d00a-dbf0-a069389ef196@loongson.cn>
+In-Reply-To: <0d591c10-e897-d00a-dbf0-a069389ef196@loongson.cn>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH V2 1/2] dt-bindings: interrupt-controller: Add Loongson
- EIOINTC
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>,
- linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
- loongarch@lists.linux.dev, devicetree@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-References: <cover.1676289084.git.zhoubinbin@loongson.cn>
- <a9f697906df6599e6b001981e668479da71aa7a0.1676289084.git.zhoubinbin@loongson.cn>
- <df464409-9a93-c057-5f66-923a9e24696a@linaro.org>
- <CAMpQs4JX0Vgf5tvv5Yw5eLGANFfn1p=iQ_kMS0yQPV6kE2tN1g@mail.gmail.com>
- <23068d0c-d37c-0563-e1c1-e4d112059f5b@linaro.org>
- <CAMpQs4K+aYGrOoWy04vrbEy53kba9zUzGkOwD34pwAH0c=D8iA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAMpQs4K+aYGrOoWy04vrbEy53kba9zUzGkOwD34pwAH0c=D8iA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 
-On 16/02/2023 02:46, Binbin Zhou wrote:
-> On Tue, Feb 14, 2023 at 8:43 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 14/02/2023 13:40, Binbin Zhou wrote:
->>> On Tue, Feb 14, 2023 at 5:53 PM Krzysztof Kozlowski
->>> <krzysztof.kozlowski@linaro.org> wrote:
->>>>
->>>> On 13/02/2023 13:15, Binbin Zhou wrote:
->>>>> Add Loongson Extended I/O Interrupt controller binding with DT schema
->>>>> format using json-schema.
->>>>>
->>>>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
->>>>> ---
->>>>>  .../loongson,eiointc.yaml                     | 80 +++++++++++++++++++
->>>>>  1 file changed, 80 insertions(+)
->>>>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
->>>>> new file mode 100644
->>>>> index 000000000000..88580297f955
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
->>>>> @@ -0,0 +1,80 @@
->>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>> +%YAML 1.2
->>>>> +---
->>>>> +$id: "http://devicetree.org/schemas/interrupt-controller/loongson,eiointc.yaml#"
->>>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->>>>
->>>> Drop quotes from bopth.
->>>>
->>>>> +
->>>>> +title: Loongson Extended I/O Interrupt Controller
->>>>> +
->>>>> +maintainers:
->>>>> +  - Binbin Zhou <zhoubinbin@loongson.cn>
->>>>> +
->>>>> +description: |
->>>>> +  This interrupt controller is found on the Loongson-3 family chips and
->>>>> +  Loongson-2K0500 chip and is used to distribute interrupts directly to
->>>>> +  individual cores without forwarding them through the HT's interrupt line.
->>>>> +
->>>>> +allOf:
->>>>> +  - $ref: /schemas/interrupt-controller.yaml#
->>>>> +
->>>>> +properties:
->>>>> +  compatible:
->>>>> +    enum:
->>>>> +      - loongson,eiointc-1.0
->>>>
->>>> Why not using SoC based compatible? It is preferred.
->>>
->>> Hi Krzysztof:
->>>
->>> So far, from the datasheet, I know that only the EXIOINTC of the
->>> Loongson-2K0500 is different from the other chips, and that is the
->>> "loongson,eio-num-vecs" below, which is 128, while all the others are
->>> 256.
->>> My original idea was to add this property to make compatible
->>> consistent, and also to make it easier to add new chips if they have
->>> different eio-num-vecs.
->>
->> We talk about different things. SoC based compatibles are preferred over
->> version ones. This was on the lists expressed many times. Please provide
->> a reason why you deviate from general recommendation. Flexibility and
->> genericness of bindings is not a reason - it's the opposite of the
->> argument, thus this will be a: NAK. :(
->>
->>
-> Hi Krzysztof:
-> 
-> Allow me to give a brief overview of the current status of eiointc (DT-based):
->      Loongson-3A series supports eiointc;
->      Loongson-2K1000 does not support eiointc now;
->      Loongson-2K0500 supports eiointc, with differences from
-> Loongson-3, e.g. only up to 128 devices are supported;
->      Loongson-2K2000 supports eiointc, similar to Loongson-3.
->      ....
-> 
-> As can be seen, there is now a bit of confusion in the chip's design of eiointc.
-> 
-> The design of eiointc is probably refined step by step with the chip.
-> The same version of eiointc can be used for multiple chips, and the
-> same chip series may also use different versions of eiointc. Low-end
-> chips may use eiointc-2.0, and high-end chips may use eiointc-1.0,
-> depending on the time it's produced.
-> 
-> So in the Loongson-2K series I have defined the current state as
-> eiointc-1.0, using the dts property to indicate the maximum number of
-> devices supported by eiointc that can be used directly in the driver.
-> 
-> If there are new changes to the design later on, such as the
-> definition of registers, we can call it eiointc-2.0, which can also
-> cover more than one chip.
-
-Just go with SoC-based compatibles. If your version is not specific
-enough, then it is not a good way to represent the hardware.
-
-Best regards,
-Krzysztof
+RnJvbTogbWFvYmlibw0KPiBTZW50OiAxNCBGZWJydWFyeSAyMDIzIDE0OjE5DQouLi4NCj4gR290
+IGl0LiBJdCBtYWtlcyB1c2Ugb2YgcGlwZWxpbmUgYmV0dGVyLCByYXRoZXIgdGhhbiBudW1iZXIg
+b2YgQUxVcyBmb3INCj4gZGlmZmVyZW50IG1pY3JvLWFyY2hpdGVjdHVyZXMuIEkgd2lsbCB0cnkg
+dGhpcyBtZXRob2QsIHRoYW5rcyBhZ2FpbiBmb3INCj4ga2luZGx5IGhlbHAgYW5kIGV4cGxhbmF0
+aW9uIHdpdGggcGF0aWVuY2UuDQoNCkl0IGlzIGFsc28gd29ydGggcG9pbnRpbmcgb3V0IHRoYXQg
+aWYgdGhlIGNwdSBkb2VzICdvdXQgb2Ygb3JkZXInDQpleGVjdXRpb24gaXQgbWF5IGJlIGp1c3Qg
+YXMgZ29vZCB0byBqdXN0IHJlcGVhdCBibG9ja3Mgb2Y6DQoJbG9hZAl2MCwgYWRkciwgMCo4DQoJ
+YWRkCXN1bTAsIHYwDQoJc2x0dQl2MCwgc3VtMCwgdjANCglhZGQJY2FycnkwLCB2MA0KDQpBc3N1
+bWluZyB0aGUgcHJlZmV0Y2gvZGVjb2RlIGxvZ2ljIGNhbiBwcmVkaWN0IHRoZSBsb29wDQphbmQg
+Z2VuZXJhdGUgZW5vdWdoIGRlY29kZWQgaW5zdHJ1Y3Rpb24gZm9yIGFsbCB0aGUgYWx1IHVuaXRz
+Lg0KDQpUaGUgYWRkL3NsdHUvYWRkIHdpbGwgYmUgcXVldWVkIHVudGlsIHRoZSBsb2FkIGNvbXBs
+ZXRlcw0KYW5kIHRoZW4gZXhlY3V0ZSBpbiB0aGUgbmV4dCB0aHJlZSBjbG9ja3MuDQpUaGUgbG9h
+ZCBmb3IgdGhlIG5leHQgYmxvY2sgd2lsbCBiZSBzY2hlZHVsZWQgYXMgc29vbiBhcw0KdGhlIGxv
+YWQvc3RvcmUgdW5pdCBoYXMgZmluaXNoZWQgcHJvY2Vzc2luZyB0aGUgcHJldmlvdXMgbG9hZC4N
+ClNvIGFsbCB0aGUgYWx1IGluc3RydWN0aW9ucyBqdXN0IHdhaXQgZm9yIHRoZSByZXF1aXJlZCBp
+bnB1dA0KdG8gYmUgYXZhaWxhYmxlIGFuZCBhIG1lbW9yeSBsb2FkIGV4ZWN1dGVzIGV2ZXJ5IGNs
+b2NrLg0KDQpNdWx0aXBsZSBzdW0wIGFuZCBjYXJyeTAgcmVnaXN0ZXJzIGFyZW4ndCBhY3R1YWxs
+eSBuZWVkZWQuDQpCdXQgaGF2aW5nIDIgb2YgZWFjaCAoZXZlbiBpZiB0aGUgbG9vcCBpcyB1bnJv
+bGxlZCA0IHRpbWVzKQ0KbWlnaHQgaGVscCBhIGJpdC4NCg0KSWYgdGhlIGNwdSBkb2VzICdyZWdp
+c3RlciByZW5hbWluZycgKGFzIG1vc3QgeDg2IGRvKSB5b3UNCmNhbiB1c2UgdGhlIHNhbWUgcmVn
+aXN0ZXIgbmFtZSBmb3IgJ3YwJyBpbiBhbGwgdGhlIGJsb2Nrcw0KKGV2ZW4gdGhvdWdoIGl0IGlz
+IGFsaXZlIHdpdGggbXVsdGlwbGUgdmFsdWVzKS4NCg0KQnV0IGEgc2ltcGxlciBpbi1vcmRlciBt
+dWx0aS1pc3N1ZSBjcHUgd2lsbCBuZWVkIHlvdSB0bw0KY29ycmVjdGx5IGludGVybGVhdmUgdGhl
+IGluc3RydWN0aW9ucyBmb3IgbWF4aW11bSB0aHJvdWdocHV0Lg0KSXQgYWxzbyBkb2VzIG5vIGhh
+cmQgZm9yIGEgdmVyeSBzaW1wbGUgY3B1IHRoYXQgaGFzIGRlbGF5cw0KYmVmb3JlIGEgcmVhZCB2
+YWx1ZSBjYW4gYmUgdXNlZC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
+c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
+Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
