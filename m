@@ -1,323 +1,222 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D142117FF
-	for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 06:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1676530666; bh=zCwedMKNgSjvY2H0j2H2RqiSjd2/0Bn6ptsVy3J6/Oo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MWfZQ2OWTMnOnm7D4H1ho8JZZwx64M8fmrNKkBtzkBKruijtMoNKRRZQTx81kq0q2
-	 lPgy+woUOJDFQDbrqnev1j3ay5xLcqZ3H+aphcyqe46P3kxpkZShc2VCiFOSM3U64T
-	 ki5sfDN3/vnKAMyxCCs613x4j72XUfLUF7wdGQeU=
-Received: from [100.100.57.122] (unknown [58.34.185.106])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id BAAD960096;
-	Thu, 16 Feb 2023 14:57:45 +0800 (CST)
-Message-ID: <469f1228-dd70-a183-3135-4e3b2e9165f7@xen0n.name>
-Date: Thu, 16 Feb 2023 14:57:45 +0800
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C0B17FF
+	for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 06:59:17 +0000 (UTC)
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8Ax69lC1O1jZDoBAA--.2972S3;
+	Thu, 16 Feb 2023 14:59:15 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxg+U81O1jR140AA--.63254S3;
+	Thu, 16 Feb 2023 14:59:10 +0800 (CST)
+Subject: Re: [PATCH v4 2/5] LoongArch: Use la.pcrel instead of la.abs for
+ exception handlers
+To: Youling Tang <tangyouling@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Xi Ruoyao <xry111@xry111.site>
+Cc: Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+ Jianmin lv <lvjianmin@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>
+References: <1676018856-26520-1-git-send-email-tangyouling@loongson.cn>
+ <1676018856-26520-3-git-send-email-tangyouling@loongson.cn>
+ <CAAhV-H4Bs5n_ek3mq6zwxAgVw0nvER1XUA+WUA8M12eKcYVPDQ@mail.gmail.com>
+ <05ef2d91-ab87-b8d9-85fa-6a90a92f8f39@loongson.cn>
+ <848e2985-9ba3-c14d-23ac-a7f1c218215f@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <5adf0fc4-b75c-f7f2-311c-0f5d8f14311b@loongson.cn>
+Date: Thu, 16 Feb 2023 14:59:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.7.2
-Subject: Re: [PATCH v3 2/3] LoongArch: Add ptrace single step support
-Content-Language: en-US
-To: Youling Tang <tangyouling@loongson.cn>, Jinyang He
- <hejinyang@loongson.cn>, Qing Zhang <zhangqing@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Oleg Nesterov <oleg@redhat.com>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20230215092358.30368-1-zhangqing@loongson.cn>
- <20230215092358.30368-3-zhangqing@loongson.cn>
- <2b759af4-4047-4ac6-acbb-42e91c14fb48@loongson.cn>
- <42a352da-936a-bf7e-994f-6d884a230646@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <42a352da-936a-bf7e-994f-6d884a230646@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <848e2985-9ba3-c14d-23ac-a7f1c218215f@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8Cxg+U81O1jR140AA--.63254S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxArWUGF4rJFyxur4UZF4DCFg_yoWrtry5pr
+	1fZr4kArWUGr1kJr1Utw1jvryUJw1DG3y7XF18XFy8A3Wjgr10qr18Xr1q9F1Utw4rGr4F
+	qF1rJry2vFsrJwUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
+	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
+	JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
+	1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
+	YxBIdaVFxhVjvjDU0xZFpf9x07jeSoXUUUUU=
 
-On 2023/2/16 11:13, Youling Tang wrote:
-> 
-> 
-> On 02/16/2023 10:07 AM, Jinyang He wrote:
+On 2023-02-16 10:32, Youling Tang wrote:
+
+> Hi folks,
+>
+> On 02/10/2023 05:18 PM, Youling Tang wrote:
 >>
->> On 2023-02-15 17:23, Qing Zhang wrote:
->>> Use the generic ptrace_resume code for PTRACE_SYSCALL, PTRACE_CONT,
->>> PTRACE_KILL and PTRACE_SINGLESTEP. This implies defining
->>> arch_has_single_step in  and implementing the
->>> user_enable_single_step and user_disable_single_step functions.
+>>
+>> On 02/10/2023 05:09 PM, Huacai Chen wrote:
+>>> Hi, Youling and Ruoyao,
 >>>
->>> LongArch has no hardware single-step register. the hardware single-step
->>> function multiplex fetch instruction watchpoint(FWPS) and specifies that
->>> the next instruction must trigger the watch exception by setting the
->>> mask bit.
->>>
->>> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
->>> ---
->>>   arch/loongarch/include/asm/processor.h |  3 ++
->>>   arch/loongarch/include/asm/ptrace.h    |  2 +
->>>   arch/loongarch/kernel/hw_breakpoint.c  | 35 +++++++++++--
->>>   arch/loongarch/kernel/ptrace.c         | 68 ++++++++++++++++++++++++++
->>>   arch/loongarch/kernel/traps.c          | 20 ++++++--
->>>   5 files changed, 120 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/arch/loongarch/include/asm/processor.h
->>> b/arch/loongarch/include/asm/processor.h
->>> index db060c5a976f..3ea0f1910c23 100644
->>> --- a/arch/loongarch/include/asm/processor.h
->>> +++ b/arch/loongarch/include/asm/processor.h
->>> @@ -131,6 +131,9 @@ struct thread_struct {
->>>       struct perf_event    *hbp_break[LOONGARCH_MAX_BRP];
->>>       struct perf_event    *hbp_watch[LOONGARCH_MAX_WRP];
->>>   +    /* Used by ptrace single_step */
->>> +    unsigned long single_step;
->>> +
->>>       /*
->>>        * FPU & vector registers, must be at last because
->>>        * they are conditionally copied at fork().
->>> diff --git a/arch/loongarch/include/asm/ptrace.h
->>> b/arch/loongarch/include/asm/ptrace.h
->>> index 58596c4f8a0f..66a0e6c480a3 100644
->>> --- a/arch/loongarch/include/asm/ptrace.h
->>> +++ b/arch/loongarch/include/asm/ptrace.h
->>> @@ -150,4 +150,6 @@ static inline void user_stack_pointer_set(struct
->>> pt_regs *regs,
->>>       regs->regs[3] = val;
->>>   }
->>>   +#define arch_has_single_step()        (1)
->>> +
->>>   #endif /* _ASM_PTRACE_H */
->>> diff --git a/arch/loongarch/kernel/hw_breakpoint.c
->>> b/arch/loongarch/kernel/hw_breakpoint.c
->>> index 6431cd319c32..94967b887d92 100644
->>> --- a/arch/loongarch/kernel/hw_breakpoint.c
->>> +++ b/arch/loongarch/kernel/hw_breakpoint.c
->>> @@ -153,6 +153,22 @@ static int hw_breakpoint_slot_setup(struct
->>> perf_event **slots, int max_slots,
->>>    */
->>>   void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
->>>   {
->>> +    int i;
->>> +    struct thread_struct *t = &tsk->thread;
->>> +
->>> +    for (i = 0; i < LOONGARCH_MAX_BRP; i++) {
->>> +        if (t->hbp_break[i]) {
->>> +            unregister_hw_breakpoint(t->hbp_break[i]);
->>> +            t->hbp_break[i] = NULL;
->>> +        }
->>> +    }
->>> +
->>> +    for (i = 0; i < LOONGARCH_MAX_WRP; i++) {
->>> +        if (t->hbp_watch[i]) {
->>> +            unregister_hw_breakpoint(t->hbp_watch[i]);
->>> +            t->hbp_watch[i] = NULL;
->>> +        }
->>> +    }
->>>   }
->>>     void ptrace_hw_copy_thread(struct task_struct *tsk)
->>> @@ -498,11 +514,20 @@ arch_initcall(arch_hw_breakpoint_init);
->>>   void hw_breakpoint_thread_switch(struct task_struct *next)
->>>   {
->>>       struct pt_regs *regs = task_pt_regs(next);
->>> -
->>> -    /* Update breakpoints */
->>> -    update_bp_registers(regs, 1, 0);
->>> -    /* Update watchpoints */
->>> -    update_bp_registers(regs, 1, 1);
->>> +    u64 addr, mask;
->>> +
->>> +    if (test_bit(TIF_SINGLESTEP, &task_thread_info(next)->flags)) {
->>> +        addr = read_wb_reg(CSR_CFG_ADDR, 0, 0);
->>> +        mask = read_wb_reg(CSR_CFG_MASK, 0, 0);
->>> +        if ((task_pt_regs(next)->csr_era & ~mask) == (addr & ~mask))
->>> +            csr_write32(0x10000, LOONGARCH_CSR_FWPS);
->>> +        regs->csr_prmd |= CSR_PRMD_PWE;
->>> +    } else {
->>> +        /* Update breakpoints */
->>> +        update_bp_registers(regs, 1, 0);
->>> +        /* Update watchpoints */
->>> +        update_bp_registers(regs, 1, 1);
->>> +    }
->>>   }
->>>     void hw_breakpoint_pmu_read(struct perf_event *bp)
->>> diff --git a/arch/loongarch/kernel/ptrace.c
->>> b/arch/loongarch/kernel/ptrace.c
->>> index bee4194177fd..52a3ee4366f4 100644
->>> --- a/arch/loongarch/kernel/ptrace.c
->>> +++ b/arch/loongarch/kernel/ptrace.c
->>> @@ -20,6 +20,7 @@
->>>   #include <linux/context_tracking.h>
->>>   #include <linux/elf.h>
->>>   #include <linux/errno.h>
->>> +#include <linux/hw_breakpoint.h>
->>>   #include <linux/mm.h>
->>>   #include <linux/ptrace.h>
->>>   #include <linux/regset.h>
->>> @@ -30,6 +31,7 @@
->>>   #include <linux/stddef.h>
->>>   #include <linux/seccomp.h>
->>>   #include <linux/uaccess.h>
->>> +#include <linux/thread_info.h>
->>>     #include <asm/byteorder.h>
->>>   #include <asm/cpu.h>
->>> @@ -39,6 +41,7 @@
->>>   #include <asm/page.h>
->>>   #include <asm/pgtable.h>
->>>   #include <asm/processor.h>
->>> +#include <asm/ptrace.h>
->>>   #include <asm/reg.h>
->>>   #include <asm/syscall.h>
->>>   @@ -541,3 +544,68 @@ long arch_ptrace(struct task_struct *child,
->>> long request,
->>>         return ret;
->>>   }
->>> +
->>> +void ptrace_triggered(struct perf_event *bp,
->>> +              struct perf_sample_data *data, struct pt_regs *regs)
->>> +{
->>> +    struct perf_event_attr attr;
->>> +
->>> +    attr = bp->attr;
->>> +    attr.disabled = true;
->>> +    modify_user_hw_breakpoint(bp, &attr);
->>> +}
->>> +
->>> +static int set_single_step(struct task_struct *tsk, unsigned long addr)
->>> +{
->>> +    struct thread_struct *thread = &tsk->thread;
->>> +    struct perf_event *bp;
->>> +    struct perf_event_attr attr;
->>> +    struct arch_hw_breakpoint *info;
->>> +
->>> +    bp = thread->hbp_break[0];
->>> +    if (!bp) {
->>> +        ptrace_breakpoint_init(&attr);
->>> +
->>> +        attr.bp_addr = addr;
->>> +        attr.bp_len = HW_BREAKPOINT_LEN_8;
->>> +        attr.bp_type = HW_BREAKPOINT_X;
->>> +
->>> +        bp = register_user_hw_breakpoint(&attr, ptrace_triggered,
->>> +                         NULL, tsk);
->>> +        if (IS_ERR(bp))
->>> +            return PTR_ERR(bp);
->>> +
->>> +        thread->hbp_break[0] = bp;
->>> +    } else {
->>> +        int err;
->>> +
->>> +        attr = bp->attr;
->>> +        attr.bp_addr = addr;
->>> +        /* reenable breakpoint */
->>> +        attr.disabled = false;
->>> +        err = modify_user_hw_breakpoint(bp, &attr);
->>> +        if (unlikely(err))
->>> +            return err;
->>> +
->>> +        csr_write64(attr.bp_addr, LOONGARCH_CSR_IB0ADDR);
->>> +    }
->>> +    info = counter_arch_bp(bp);
->>> +    info->mask = 0xffffffffffff;
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +/* ptrace API */
->>> +void user_enable_single_step(struct task_struct *task)
->>> +{
->>> +    struct thread_info *ti = task_thread_info(task);
->>> +
->>> +    set_single_step(task, task_pt_regs(task)->csr_era);
->>> +    task->thread.single_step = task_pt_regs(task)->csr_era;
->>> +    set_ti_thread_flag(ti, TIF_SINGLESTEP);
->>> +}
->>> +
->>> +void user_disable_single_step(struct task_struct *task)
->>> +{
->>> +    clear_tsk_thread_flag(task, TIF_SINGLESTEP);
->>> +}
->>> diff --git a/arch/loongarch/kernel/traps.c
->>> b/arch/loongarch/kernel/traps.c
->>> index 2b133079e0f3..56d7d076153c 100644
->>> --- a/arch/loongarch/kernel/traps.c
->>> +++ b/arch/loongarch/kernel/traps.c
->>> @@ -511,9 +511,23 @@ asmlinkage void noinstr do_watch(struct pt_regs
->>> *regs)
->>>   #ifdef CONFIG_HAVE_HW_BREAKPOINT
->>>       irqentry_state_t state = irqentry_enter(regs);
->>>   -    breakpoint_handler(regs);
->>> -    watchpoint_handler(regs);
->>> -    force_sig(SIGTRAP);
->>> +    if (test_tsk_thread_flag(current, TIF_SINGLESTEP)) {
->>> +        int llbit = (csr_read32(LOONGARCH_CSR_LLBCTL) & 0x1);
->>> +        unsigned long pc = regs->csr_era;
->>> +
->>> +        if (llbit) {
->>
->> Hi, Qing,
->>
->>
->> It should be noted here. When the ll-sc combo is encountered, it is
->> regarded as an single instruction. So donnot clear llbit and reset
->> CSR.FWPS.Skip until the llsc execution is completed.
->>
->>> +            csr_write32(0x10000, LOONGARCH_CSR_FWPS);
->>> +            csr_write32(0x4, LOONGARCH_CSR_LLBCTL);
->>> +        } else if (pc == current->thread.single_step) {
->> Note here as well. Because 3A5000 has a strange hardware issue that
->> certain insns are occasionally not skipped when CSR.FWPS.Skip is set,
->> such as fld.d/fst.d. Singlestep needs compare whether the csr_era is
->> equal to the value of singlestep which last time set, as in most case
->>
->> they should be not equal.
-> 
-> BTW, I prefer to separate this special processing from this patch (for
-> example, add two patchs in this series, add special processing of
-> instructions such as LL-SC, and FLD.D/FST.D, etc.), and add
-> corresponding test cases to describe the phenomenon and reason, this
-> is conducive to everyone's understanding of the code.
-> 
->>
->>
->> And for this condition expression, some potentially strange insns may
->> cause bugs. For example, "b 0" or "jr rd" where rd is equal to its PC
->> will cause cannot stop the singlestep. These insns is so strange that
->> we did not consider in OW. However, I think we should consider this
->> case for robustness in upstream.
->>
-> 
-> I don't know if there will be instructions like "b 0" or "jr rd (rd =
-> pc)" in the executable file after linking?
-FWIW `jirl A, A, 0` is apparently ubiquitous in the old world:
+>>> Thank you very much for implementing the per-node exceptions. But I
+>>> want to know if the per-node solution is really worthy for a PIE
+>>> kernel. So, could you please test the performance? Maybe we can reduce
+>>> the complexity if we give up the per-node solution.
+>
+> Tested on Loongson-3C5000L-LL machine, using CLFS7.3 system.
+>
+> - nopernode:
+>   Based on the v1 patch method, and remove the else branch process in
+>   setup_tlb_handler().
+>
+> - pernode: Based on the v4 patch method.
+>
+> - pie: Enable RANDOMIZE_BASE (KASLR).
+>
+> - nopie: Disable RANDOMIZE_BASE and RELOCATABLE.
+>
+>
+> The UnixBench test results are as follows:
+>
+> - nopernode-nopie: 3938.7
+>
+> - pernode-nopie: 4062.2
+>
+> - nopernode-pie: 4009.7
+>
+> - pernode-pie: 4028.7
+>
+> In general, `pernode` is higher than `nopernode`, and `nopie` is higher
+> than `pie`. (except that nopernode-pie is higher than nopernode-nopie,
+> which is not as expected, which may be caused by the instability of the
+> machine).
+>
+> Everyone is more inclined to use `pernode` or `nopernode` to implement
+> in the exception handling process?
+>
+> Youling.
 
-$ objdump -d 
-~/loongnix-sysroot/usr/lib/loongarch64-linux-gnu/libc_nonshared.a | grep 
--E 'jirl\s+\$(..), \$\1'
-   20:   4c000021        jirl            $ra, $ra, 0
-   24:   4c000021        jirl            $ra, $ra, 0
-    c:   4c000021        jirl            $ra, $ra, 0
+Hi, Youling,
 
-One of the occurrences is in __stack_chk_fail_local, guess how popular 
-it is among the whole old world...
 
-But fortunately a quick check against my Gentoo sysroot yielded nothing, 
-so perhaps the new world as a whole isn't going to be affected. I've 
-checked some of the *older* (i.e. before 2022) new world sysroots I have 
-at hand and they seemed not affected either.
+Thanks for your test results.
 
-As for `b 0`, they are kinda already signifying some panic/abort/halt 
-condition, at least in a few projects that I've studied/ported.
 
-But IMO the kernel shouldn't get DoS'd even if userland gets stuck in 
-things like this, so some kind of workaround should still be necessary.
+I did an informal patch to keep la.abs, which think la.abs as a macro. 
+just qemu test.
 
--- 
-WANG "xen0n" Xuerui
+To test this patch, patch the [PATCH v4 1/5] [PATCH v4 3/5] as prediction.
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+This following patch just provides a method. I'm busy with other things. 
+Hopefully it will help you simplify [PATCH v4 2/5].
+
+
+Thanks,
+
+Jinyang
+
+
+
+diff --git a/arch/loongarch/include/asm/asmmacro.h 
+b/arch/loongarch/include/asm/asmmacro.h
+index 328bb956f241..6ebad458d662 100644
+--- a/arch/loongarch/include/asm/asmmacro.h
++++ b/arch/loongarch/include/asm/asmmacro.h
+@@ -667,4 +667,19 @@
+      nor    \dst, \src, zero
+  .endm
+
++.macro la.abs reg, sym
++766:
++    nop
++    nop
++    nop
++    nop
++    .pushsection ".laabs", "aw", %progbits
++768:
++    .word 768b-766b
++    parse_r regno, \reg
++    .word regno
++    .dword \sym
++    .popsection
++.endm
++
+  #endif /* _ASM_ASMMACRO_H */
+diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+index d2ac26b5b22b..3b273f05be8c 100644
+--- a/arch/loongarch/kernel/head.S
++++ b/arch/loongarch/kernel/head.S
+@@ -86,6 +86,7 @@ SYM_CODE_START(kernel_entry)            # kernel entry 
+point
+      PTR_ADD        sp, sp, tp
+      set_saved_sp    sp, t0, t1
+
++    bl        relocate_laabs
+      bl        start_kernel
+      ASM_BUG()
+
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 4344502c0b31..9f8833a2524a 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -582,3 +582,30 @@ void __init setup_arch(char **cmdline_p)
+
+      paging_init();
+  }
++
++void __init relocate_laabs(void)
++{
++    extern void *__laabs_begin;
++    extern void *__laabs_end;
++    struct laabs {
++        int offset;
++        int reg;
++        long symvalue;
++    } *p;
++
++    for (p = (void *)&__laabs_begin; (void *)p < (void *)&__laabs_end; p++)
++    {
++        int lu12iw, ori, lu32id, lu52id;
++        long v = p->symvalue;
++        int reg = p->reg;
++        int *insn = (void *)p - p->offset;
++        lu12iw = 0x14000000 | reg | (((v & 0xfffff000) >> 12) << 5);
++        ori = 0x03800000 | reg | (reg<<5) | ((v & 0xfff) << 10);
++        lu32id = 0x16000000 | reg | (((v & 0x000fffff00000000) >> 32) 
+<< 5);
++        lu52id = 0x03000000 | reg | (reg<<5) | (((v >> 52) & 0xfff) << 10);
++        insn[0] = lu12iw;
++        insn[1] = ori;
++        insn[2] = lu32id;
++        insn[3] = lu52id;
++    }
++}
+diff --git a/arch/loongarch/kernel/vmlinux.lds.S 
+b/arch/loongarch/kernel/vmlinux.lds.S
+index 733b16e8d55d..4d128e089393 100644
+--- a/arch/loongarch/kernel/vmlinux.lds.S
++++ b/arch/loongarch/kernel/vmlinux.lds.S
+@@ -66,6 +66,13 @@ SECTIONS
+          __alt_instructions_end = .;
+      }
+
++    . = ALIGN(4);
++    .laabs : AT(ADDR(.laabs) - LOAD_OFFSET) {
++        __laabs_begin = .;
++        *(.laabs)
++        __laabs_end = .;
++    }
++
+      .got : ALIGN(16) { *(.got) }
+      .plt : ALIGN(16) { *(.plt) }
+      .got.plt : ALIGN(16) { *(.got.plt) }
+
+
+
 
