@@ -1,189 +1,224 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05967B
-	for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 09:34:17 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id f21so3639610ejq.8
-        for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 01:34:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xlE78N7SwGUFP9az71FkKXaJ04noS1VC//kRi/UVdqM=;
-        b=qk2ho0Dn+kiBw+yOLu9QE+mJzyhgW5YHK7yfLKrCDk+7P6TY2nUpDYs4QuUT9FNQ0U
-         SBQL9P8vhjDkHUz66C2I+MxGGXFiO1vzGi26LNgF87ZuacxT2PO6WNrqGosIi/w6/Kpo
-         Bt+IL1ruRfny21fybHwrw1TRWSXi4dGF2wIuJvRLdf15g8Dg5rr+PiR5UuQMKyuRbvmC
-         VHLCP6y3krEFfnMq7QdoyZ5Nx1/ChUiYWqaYsJ6m1kMotTeQ7f8/r88ETnMKkT0PNCuG
-         N/xcsFyTWgvdc+dY8quFVuXM3F49oNAjBTXczae77BTR0q5NyE1mC+ctqviU/XC4C9KN
-         IKcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xlE78N7SwGUFP9az71FkKXaJ04noS1VC//kRi/UVdqM=;
-        b=HbugrSnOmQFixKHIqpIWxQQaETYXPSRNJORin5dTRMg/nmrW7KkiIbr+9stV+SIMjV
-         79Qd8cIKBhbIqQmFQDqBoap0KuDcmkwap7LS7uAmFCHZzGfO6uf38d41341xb8gewrcZ
-         KuHEs20/XFoVPpRK4Fo7b1vcbUD3L/BQfh1V/Is6RA7wVL45woqL9x3HIUYGAx1PdTcN
-         ufjZqVeaUrFpwV/nfE+dLF9QfphhBhQtZAAUydjYXROYkyOLvI0qOTEFTQ1o+ugGT664
-         sdl25pcoZ75MW7BxCGoPRH6hsHMHK+O18VHooDHvPu1Y1wG22xG6lku759nB4dsKscIt
-         XPMg==
-X-Gm-Message-State: AO0yUKVI5xJE6XrYjP3MMNQIkxrDs1IGLivyzeATBOTOh5+tuJn33Gkw
-	bPMTXbmjgvVo5PPRGn2tvbHUMQ==
-X-Google-Smtp-Source: AK7set9DgurDP4wEVrFOs7M52beuPRqtI24FolaG8A6C0viAI6f+7xUUlXY8RCpQPV9oU7R/0Dg27A==
-X-Received: by 2002:a17:906:dfd2:b0:877:7113:71f3 with SMTP id jt18-20020a170906dfd200b00877711371f3mr5305331ejc.25.1676540056008;
-        Thu, 16 Feb 2023 01:34:16 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id dk14-20020a170906f0ce00b0087bd2924e74sm553002ejb.205.2023.02.16.01.34.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Feb 2023 01:34:14 -0800 (PST)
-Message-ID: <0f5f367e-5531-e209-9be3-94a94c4ad65c@linaro.org>
-Date: Thu, 16 Feb 2023 10:34:11 +0100
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01BBA3C3B
+	for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 11:19:02 +0000 (UTC)
+Received: from loongson.cn (unknown [192.168.200.1])
+	by gateway (Coremail) with SMTP id _____8BxNNgkEe5jxk4BAA--.2232S3;
+	Thu, 16 Feb 2023 19:19:00 +0800 (CST)
+Received: from [0.0.0.0] (unknown [192.168.200.1])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axvr4hEe5j3ow0AA--.37035S3;
+	Thu, 16 Feb 2023 19:18:57 +0800 (CST)
+Subject: Re: [PATCH v4 2/5] LoongArch: Use la.pcrel instead of la.abs for
+ exception handlers
+To: Xi Ruoyao <xry111@xry111.site>, Jinyang He <hejinyang@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>
+References: <1676018856-26520-1-git-send-email-tangyouling@loongson.cn>
+ <1676018856-26520-3-git-send-email-tangyouling@loongson.cn>
+ <CAAhV-H4Bs5n_ek3mq6zwxAgVw0nvER1XUA+WUA8M12eKcYVPDQ@mail.gmail.com>
+ <05ef2d91-ab87-b8d9-85fa-6a90a92f8f39@loongson.cn>
+ <848e2985-9ba3-c14d-23ac-a7f1c218215f@loongson.cn>
+ <5adf0fc4-b75c-f7f2-311c-0f5d8f14311b@loongson.cn>
+ <48c4b1f81c21950e9fd46d4acb5196d979b147cb.camel@xry111.site>
+ <295efdc0-388e-cda4-120c-5f9c4740b208@loongson.cn>
+Cc: Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+ Jianmin lv <lvjianmin@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <33b173e4-d61d-5f43-b2f2-d96ec2897361@loongson.cn>
+Date: Thu, 16 Feb 2023 19:18:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH V2 1/2] dt-bindings: interrupt-controller: Add Loongson
- EIOINTC
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Binbin Zhou
- <zhoubinbin@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>,
- linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
- loongarch@lists.linux.dev, devicetree@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-References: <cover.1676289084.git.zhoubinbin@loongson.cn>
- <a9f697906df6599e6b001981e668479da71aa7a0.1676289084.git.zhoubinbin@loongson.cn>
- <df464409-9a93-c057-5f66-923a9e24696a@linaro.org>
- <CAMpQs4JX0Vgf5tvv5Yw5eLGANFfn1p=iQ_kMS0yQPV6kE2tN1g@mail.gmail.com>
- <23068d0c-d37c-0563-e1c1-e4d112059f5b@linaro.org>
- <CAMpQs4K+aYGrOoWy04vrbEy53kba9zUzGkOwD34pwAH0c=D8iA@mail.gmail.com>
- <49c8255e-66f3-fa1f-2949-1f03f77a0fa4@linaro.org>
- <CAAhV-H6+aDYZ4JAPpdkefPR0P3QFqKCmt=RsZiw+FZRRax5TgA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAAhV-H6+aDYZ4JAPpdkefPR0P3QFqKCmt=RsZiw+FZRRax5TgA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <295efdc0-388e-cda4-120c-5f9c4740b208@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Axvr4hEe5j3ow0AA--.37035S3
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxuryfCF1fZFWDXr1ftr15twb_yoWrGw4DpF
+	W29a4vqF45Grn3Aa1DJ3ykZry5tanrWw4agF9rKFy8Zay29r1rtFykC3srZ3WDGa10ka1S
+	qFyYqasFvF45AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bO8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
+	0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE
+	44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6cx26rWlOx8S6xCaFVCjc4
+	AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vI
+	r41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_
+	Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7xRE6wZ7
+	UUUUU==
 
-On 16/02/2023 10:30, Huacai Chen wrote:
-> Hi, Krzysztof,
-> 
-> On Thu, Feb 16, 2023 at 4:10 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
+
+On 02/16/2023 04:03 PM, Youling Tang wrote:
+>
+>
+> On 02/16/2023 03:10 PM, Xi Ruoyao wrote:
+>> On Thu, 2023-02-16 at 14:59 +0800, Jinyang He wrote:
+>>> +.macro la.abs reg, sym
+>>> +766:
+>>> +    nop
+>>> +    nop
+>>> +    nop
+>>> +    nop
 >>
->> On 16/02/2023 02:46, Binbin Zhou wrote:
->>> On Tue, Feb 14, 2023 at 8:43 PM Krzysztof Kozlowski
->>> <krzysztof.kozlowski@linaro.org> wrote:
->>>>
->>>> On 14/02/2023 13:40, Binbin Zhou wrote:
->>>>> On Tue, Feb 14, 2023 at 5:53 PM Krzysztof Kozlowski
->>>>> <krzysztof.kozlowski@linaro.org> wrote:
->>>>>>
->>>>>> On 13/02/2023 13:15, Binbin Zhou wrote:
->>>>>>> Add Loongson Extended I/O Interrupt controller binding with DT schema
->>>>>>> format using json-schema.
->>>>>>>
->>>>>>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
->>>>>>> ---
->>>>>>>  .../loongson,eiointc.yaml                     | 80 +++++++++++++++++++
->>>>>>>  1 file changed, 80 insertions(+)
->>>>>>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
->>>>>>> new file mode 100644
->>>>>>> index 000000000000..88580297f955
->>>>>>> --- /dev/null
->>>>>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
->>>>>>> @@ -0,0 +1,80 @@
->>>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>>>> +%YAML 1.2
->>>>>>> +---
->>>>>>> +$id: "http://devicetree.org/schemas/interrupt-controller/loongson,eiointc.yaml#"
->>>>>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->>>>>>
->>>>>> Drop quotes from bopth.
->>>>>>
->>>>>>> +
->>>>>>> +title: Loongson Extended I/O Interrupt Controller
->>>>>>> +
->>>>>>> +maintainers:
->>>>>>> +  - Binbin Zhou <zhoubinbin@loongson.cn>
->>>>>>> +
->>>>>>> +description: |
->>>>>>> +  This interrupt controller is found on the Loongson-3 family chips and
->>>>>>> +  Loongson-2K0500 chip and is used to distribute interrupts directly to
->>>>>>> +  individual cores without forwarding them through the HT's interrupt line.
->>>>>>> +
->>>>>>> +allOf:
->>>>>>> +  - $ref: /schemas/interrupt-controller.yaml#
->>>>>>> +
->>>>>>> +properties:
->>>>>>> +  compatible:
->>>>>>> +    enum:
->>>>>>> +      - loongson,eiointc-1.0
->>>>>>
->>>>>> Why not using SoC based compatible? It is preferred.
->>>>>
->>>>> Hi Krzysztof:
->>>>>
->>>>> So far, from the datasheet, I know that only the EXIOINTC of the
->>>>> Loongson-2K0500 is different from the other chips, and that is the
->>>>> "loongson,eio-num-vecs" below, which is 128, while all the others are
->>>>> 256.
->>>>> My original idea was to add this property to make compatible
->>>>> consistent, and also to make it easier to add new chips if they have
->>>>> different eio-num-vecs.
->>>>
->>>> We talk about different things. SoC based compatibles are preferred over
->>>> version ones. This was on the lists expressed many times. Please provide
->>>> a reason why you deviate from general recommendation. Flexibility and
->>>> genericness of bindings is not a reason - it's the opposite of the
->>>> argument, thus this will be a: NAK. :(
->>>>
->>>>
->>> Hi Krzysztof:
->>>
->>> Allow me to give a brief overview of the current status of eiointc (DT-based):
->>>      Loongson-3A series supports eiointc;
->>>      Loongson-2K1000 does not support eiointc now;
->>>      Loongson-2K0500 supports eiointc, with differences from
->>> Loongson-3, e.g. only up to 128 devices are supported;
->>>      Loongson-2K2000 supports eiointc, similar to Loongson-3.
->>>      ....
->>>
->>> As can be seen, there is now a bit of confusion in the chip's design of eiointc.
->>>
->>> The design of eiointc is probably refined step by step with the chip.
->>> The same version of eiointc can be used for multiple chips, and the
->>> same chip series may also use different versions of eiointc. Low-end
->>> chips may use eiointc-2.0, and high-end chips may use eiointc-1.0,
->>> depending on the time it's produced.
->>>
->>> So in the Loongson-2K series I have defined the current state as
->>> eiointc-1.0, using the dts property to indicate the maximum number of
->>> devices supported by eiointc that can be used directly in the driver.
->>>
->>> If there are new changes to the design later on, such as the
->>> definition of registers, we can call it eiointc-2.0, which can also
->>> cover more than one chip.
+>> In the "formal" version we can code
 >>
->> Just go with SoC-based compatibles. If your version is not specific
->> enough, then it is not a good way to represent the hardware.
-> EIOINTC is a bit like the existing LIOINTC which is already use
-> version to represent hardware.
+>> lu12i.w        reg, 0
+>> ori        reg, reg, 0
+>> lu32i.d        reg, 0
+>> lu52i.d        reg, reg, 0
+>>
+>> here.  Then we only need to fixup the immediate slot so we can avoid
+>> using parse_r.
+>>
+>>
+>>> +    .pushsection ".laabs", "aw", %progbits
+>>> +768:
+>>> +    .word 768b-766b
+>>> +    parse_r regno, \reg
+>>> +    .word regno
+>>> +    .dword \sym
+>>> +    .popsection
+>>> +.endm
+>
+> I will try to modify a version for testing, using the following
+> definition, when the RELOCATABLE is turned on, the "la.abs macro" is
+> used, otherwise the "la.abs pseudo instruction" is still used as before.
+>
+> #ifdef CONFIG_RELOCATABLE
+> .macro la.abs reg, sym
+> lu12i.w        reg, 0
+> ori        reg, reg, 0
+> lu32i.d        reg, 0
+> lu52i.d        reg, reg, 0
+> .endm
+> #endif
 
-Heh, so why did you go with version in compatible for liointc if it also
-does not match it correctly?
+On the basis of the v4 patch set, remove patch2, and then add the 
+following patches, and the test is successful on qemu.
 
-Best regards,
-Krzysztof
+If this method is more acceptable to everyone, I will send v5.
+
+diff --git a/arch/loongarch/include/asm/asmmacro.h 
+b/arch/loongarch/include/asm/asmmacro.h
+index 328bb956f241..adb04ae6b208 100644
+--- a/arch/loongarch/include/asm/asmmacro.h
++++ b/arch/loongarch/include/asm/asmmacro.h
+@@ -667,4 +667,19 @@
+         nor     \dst, \src, zero
+  .endm
+
++#ifdef CONFIG_RELOCATABLE
++.macro la.abs reg, sym
++766:
++       lu12i.w \reg, 0
++       ori     \reg, \reg, 0
++       lu32i.d \reg, 0
++       lu52i.d \reg, \reg, 0
++       .pushsection ".laabs", "aw", %progbits
++768:
++       .dword 768b-766b
++       .dword \sym
++       .popsection
++.endm
++#endif
++
+  #endif /* _ASM_ASMMACRO_H */
+diff --git a/arch/loongarch/kernel/relocate.c 
+b/arch/loongarch/kernel/relocate.c
+index 7d19cc0d2185..7ad327a554f9 100644
+--- a/arch/loongarch/kernel/relocate.c
++++ b/arch/loongarch/kernel/relocate.c
+@@ -12,6 +12,7 @@
+  #include <linux/start_kernel.h>
+  #include <asm/bootinfo.h>
+  #include <asm/early_ioremap.h>
++#include <asm/inst.h>
+  #include <asm/sections.h>
+
+  #define RELOCATED(x) ((void *)((long)x + reloc_offset))
+@@ -45,6 +46,32 @@ static inline __init void relocate_relative(void)
+         }
+  }
+
++static inline void __init relocate_laabs(long offset)
++{
++       extern void *__laabs_begin;
++       extern void *__laabs_end;
++       struct laabs {
++               long offset;
++               long symvalue;
++       } *p;
++
++       for (p = (void *)&__laabs_begin; (void *)p < (void 
+*)&__laabs_end; p++) {
++               long v = p->symvalue + reloc_offset;
++               union loongarch_instruction *insn = (void *)p - 
+p->offset + offset;
++               u32 lu12iw, ori, lu32id, lu52id;
++
++               lu12iw = (v >> 12) & 0xfffff;
++               ori = v & 0xfff;
++               lu32id = (v >> 32) & 0xfffff;
++               lu52id = v >> 52;
++
++               insn[0].reg1i20_format.immediate = lu12iw;
++               insn[1].reg2i12_format.immediate = ori;
++               insn[2].reg1i20_format.immediate = lu32id;
++               insn[3].reg2i12_format.immediate = lu52id;
++    }
++}
++
+  #ifdef CONFIG_RANDOMIZE_BASE
+  static inline __init unsigned long rotate_xor(unsigned long hash,
+                                               const void *area, size_t 
+size)
+@@ -168,8 +195,10 @@ void *__init do_kaslr(void)
+                 update_reloc_offset(&reloc_offset, offset);
+         }
+
+-       if (reloc_offset)
++       if (reloc_offset) {
+                 relocate_relative();
++               relocate_laabs(offset);
++       }
+
+         return kernel_entry;
+  }
+@@ -181,6 +210,8 @@ void __init relocate_kernel(void)
+
+         if (reloc_offset)
+                 relocate_relative();
++
++       relocate_laabs(0);
+  }
+
+  /*
+diff --git a/arch/loongarch/kernel/vmlinux.lds.S 
+b/arch/loongarch/kernel/vmlinux.lds.S
+index aec0b6567d24..0e58c68bf427 100644
+--- a/arch/loongarch/kernel/vmlinux.lds.S
++++ b/arch/loongarch/kernel/vmlinux.lds.S
+@@ -66,6 +66,13 @@ SECTIONS
+                 __alt_instructions_end = .;
+         }
+
++       . = ALIGN(8);
++       .laabs : AT(ADDR(.laabs) - LOAD_OFFSET) {
++               __laabs_begin = .;
++               *(.laabs)
++               __laabs_end = .;
++       }
++
+         .got : ALIGN(16) { *(.got) }
+
+
+Youling.
 
