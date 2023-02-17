@@ -1,134 +1,398 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A548E323E
-	for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 10:12:16 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id cn2so2374159edb.4
-        for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 02:12:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7hw648BlWiWtBk/f0KKzoPuGmE7KbLFt/y3M1QgpRb8=;
-        b=DkGgz7LrrshUUqf98FEQHx+4ZLsw1fmj5xlLMYyg/apRAjsxEw7p1q2hYhewpY//AC
-         JgOSPxlI58u/6CrB5nHfIey6F8vFzD+IG3h1qtADCX3oNJnQ9VuURgFNHi9tc2KKhQ3Y
-         T7cRhAo/RxwKzzcpWDvHV4kJRYaTe3ZU5R4DFUcINE8j4tEYgcDBxmVD9MAKeJayMoFL
-         s+cpWPIhjOUCWh+HZPwXIWgujNEJrGjyWRFZLc2Ph8F+9Tj2N54bsdJ4+9gbMYFO5+ME
-         ZMjzQcSSj5F3MJtyWzD6nHA/Vj/ff9wONV3GbAUHv9o3HdcwAF1IQ1JX6zFdJsQ/hGcZ
-         iU6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7hw648BlWiWtBk/f0KKzoPuGmE7KbLFt/y3M1QgpRb8=;
-        b=NURvY7wKU3zXpkWNilEH2OHIX6hjwIUrttjUngUag/+bRk3ILVYRl40RnLu/XslYwg
-         +MLkfPocq93+XVpJX/LYo5Pp+x+5FpmJtUneFVyDzOci1XAdWz9epRSgDWlAUF5NTDp/
-         FCch13K1GqVBk8pEID6RqNSZHU5Y8Y00TaNSlMEV//W/KVMRmYJSGNu/tOfXdnTVrDTQ
-         bKXDwlgQqf9yiRlkhWcVSP/spi1q/ZnIgLBA99XS9LaunvueEZopwcWVjLRhredjbVdE
-         Os5LsW8GQCHBLY19+qUAkZcKCiJSVZxr9bOTgi8WY9Qrp2jfrA5iVa9WwB0Jbu4qVE+Y
-         VhmQ==
-X-Gm-Message-State: AO0yUKXwEwjC7RHmpG1rkHt5PMCqNitX5X9I0/25augzx6hblEsGTv5e
-	BaXGMg4JjUAOGjzqXOWjczRNhjgDUZxwxPwYYCE=
-X-Google-Smtp-Source: AK7set+GT0Ah3I/6vPnxNmj3RSo2G/EDRSHCWkFAtQuG+sMISDYexJpAIhdh9LnTy7Wf3Mb443eJzI2NRdM6y6KK2Zo=
-X-Received: by 2002:a17:907:76ad:b0:8b1:749f:b2c6 with SMTP id
- jw13-20020a17090776ad00b008b1749fb2c6mr1849103ejc.2.1676628734827; Fri, 17
- Feb 2023 02:12:14 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07E3323E
+	for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 10:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1676628994; bh=mktOgn41vxedMEa2KB+BXaGq3+OurN2Pfq1lnp6IMCA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tfQXiVF+scF9bZuxuo7t1orQpZao4paTgcC1MOENqQY7jtrImYZC7NCQ0dQa4fFDK
+	 DyV2/Ree0JiO3nTArXebbQZogrYdrmRdIerYYlnShryZtH1pDAkleEDc5txfoUVWzB
+	 jCoetr9LpQ4XHiSk8GExDL/JzAkL/kMMrCnHPdAg=
+Received: from [100.100.57.122] (unknown [58.34.185.106])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 83D6C600BD;
+	Fri, 17 Feb 2023 18:16:34 +0800 (CST)
+Message-ID: <bd9e8bf6-fadc-5be5-3179-e04daa45e150@xen0n.name>
+Date: Fri, 17 Feb 2023 18:16:33 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1676289084.git.zhoubinbin@loongson.cn> <a9f697906df6599e6b001981e668479da71aa7a0.1676289084.git.zhoubinbin@loongson.cn>
- <df464409-9a93-c057-5f66-923a9e24696a@linaro.org> <CAMpQs4JX0Vgf5tvv5Yw5eLGANFfn1p=iQ_kMS0yQPV6kE2tN1g@mail.gmail.com>
- <23068d0c-d37c-0563-e1c1-e4d112059f5b@linaro.org> <CAMpQs4K+aYGrOoWy04vrbEy53kba9zUzGkOwD34pwAH0c=D8iA@mail.gmail.com>
- <49c8255e-66f3-fa1f-2949-1f03f77a0fa4@linaro.org> <CAMpQs4KennWg60ccQ5NYOs=5a9gqTk_bKY26noQ3u0qLQSBg_w@mail.gmail.com>
- <4dcaaa70-11e0-fc9d-da03-224d34e36983@linaro.org>
-In-Reply-To: <4dcaaa70-11e0-fc9d-da03-224d34e36983@linaro.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 17 Feb 2023 18:12:01 +0800
-Message-ID: <CAMpQs4KpE7RLyxw4++4z4RhjR_ix300mtDfwh6KgJJw1B43CqA@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] dt-bindings: interrupt-controller: Add Loongson EIOINTC
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Jianmin Lv <lvjianmin@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>, linux-kernel@vger.kernel.org, 
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-	devicetree@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.7.2
+Subject: Re: [PATCH v4 2/3] LoongArch: Add ptrace single step support
+Content-Language: en-US
+To: Qing Zhang <zhangqing@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20230217023745.20800-1-zhangqing@loongson.cn>
+ <20230217023745.20800-3-zhangqing@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20230217023745.20800-3-zhangqing@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 17, 2023 at 4:40 PM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 17/02/2023 07:09, Binbin Zhou wrote:
->
-> >>> Hi Krzysztof:
-> >>>
-> >>> Allow me to give a brief overview of the current status of eiointc (DT-based):
-> >>>      Loongson-3A series supports eiointc;
-> >>>      Loongson-2K1000 does not support eiointc now;
-> >>>      Loongson-2K0500 supports eiointc, with differences from
-> >>> Loongson-3, e.g. only up to 128 devices are supported;
-> >>>      Loongson-2K2000 supports eiointc, similar to Loongson-3.
-> >>>      ....
-> >>>
-> >>> As can be seen, there is now a bit of confusion in the chip's design of eiointc.
-> >>>
-> >>> The design of eiointc is probably refined step by step with the chip.
-> >>> The same version of eiointc can be used for multiple chips, and the
-> >>> same chip series may also use different versions of eiointc. Low-end
-> >>> chips may use eiointc-2.0, and high-end chips may use eiointc-1.0,
-> >>> depending on the time it's produced.
-> >>>
-> >>> So in the Loongson-2K series I have defined the current state as
-> >>> eiointc-1.0, using the dts property to indicate the maximum number of
-> >>> devices supported by eiointc that can be used directly in the driver.
-> >>>
-> >>> If there are new changes to the design later on, such as the
-> >>> definition of registers, we can call it eiointc-2.0, which can also
-> >>> cover more than one chip.
-> >>
-> >> Just go with SoC-based compatibles. If your version is not specific
-> >> enough, then it is not a good way to represent the hardware.
-> >>
-> >
-> > Hi Krzysztof:
-> >
-> > I have tried to write the following  SoC-based compatibles,  is it fine?
-> >
-> > compatible:
-> >     enum:
-> >       - loongson,ls3a-eiointc  # For MIPS Loongson-3A if necessary.
-> >       - loongson,ls2k0500-eiointc
-> >       - loongson,ls2k200-eiointc
->
-> Looks good, but didn't you state these are compatible between each
-> other? I have impression there is a common set, so maybe one compatible
-> work on other device with reduced number of devices?
->
+On 2023/2/17 10:37, Qing Zhang wrote:
+> Use the generic ptrace_resume code for PTRACE_SYSCALL, PTRACE_CONT,
+> PTRACE_KILL and PTRACE_SINGLESTEP. This implies defining
+> arch_has_single_step in  and implementing the
+> user_enable_single_step and user_disable_single_step functions.
+> 
+> LongArch has no hardware single-step register. the hardware single-step
 
-So far, the difference between ls2k SOCs is the number of devices
-supported by eiointc.
+"LoongArch cannot do hardware single-stepping per se" could be more 
+accurate a description. ("Hardware single-step register" could be 
+ambiguous in implying the only way to achieve single-stepping would be 
+via software, but in fact you explained in the next sentence that it's 
+actually doable, just in an alternate way.)
 
-Do you mean use unified compatible and reuse loongson,eio-num-vecs?
+> function multiplex fetch instruction watchpoint(FWPS) and specifies that
+> the next instruction must trigger the watch exception by setting the mask bit.
 
-Would this be possible, e.g.
-compatible:
-     const: loongson,ls2k-eiointc
+I assume the "multiplex" is translated from "复用", in which case it's not 
+used in the exact same way as in Chinese. Plus you have the subject 
+wrong, "hardware single-step function" is the topic but not the actor 
+doing the "multiplexing".
 
-  loongson,eio-num-vecs:
-    description:
-      The number of devices supported by the extended I/O interrupt vector.
-    $ref: /schemas/types.yaml#/definitions/uint32
-    minimum: 1
-    maximum: 256
+My take (continuing from the previous sentence I suggested):
 
-Thanks.
-Binbin
+"Instead it is achieved by configuring the instruction fetch watchpoints 
+so that WPEF is triggered on the next instruction."
 
-> Best regards,
-> Krzysztof
->
+> Some scenarios use CSR.FWPS.Skip to ignore the next hit result, not to trigger
+> the watchpoint exception, and proceed to the next instruction.
+
+Again, wrong topicalization ("scenarios" is not the actor/subject). "In 
+some scenarios CSR.FWPS.Skip is used to ..." sounds better.
+
+And the multiple "next" usages sound unclear, you could probably reword 
+this a bit. (I can't immediately understand this part so I'm unable to 
+provide a suggestion.)
+
+> 
+> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/inst.h      | 39 +++++++++++++++
+>   arch/loongarch/include/asm/loongarch.h |  3 ++
+>   arch/loongarch/include/asm/processor.h |  3 ++
+>   arch/loongarch/include/asm/ptrace.h    |  2 +
+>   arch/loongarch/kernel/hw_breakpoint.c  | 35 +++++++++++--
+>   arch/loongarch/kernel/ptrace.c         | 68 ++++++++++++++++++++++++++
+>   arch/loongarch/kernel/traps.c          | 34 +++++++++++--
+>   7 files changed, 176 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+> index ba18ce8fbdf2..00c6f261d9a2 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -368,6 +368,45 @@ static inline bool is_stack_alloc_ins(union loongarch_instruction *ip)
+>   		is_imm12_negative(ip->reg2i12_format.immediate);
+>   }
+>   
+> +static inline bool branch_ins_target_pc(union loongarch_instruction *ip)
+
+This name is not faithfully reflecting its purpose, which is to check if 
+the given instruction will change PC; and the reason this has to be done 
+in the first place being that, single stepping would never stop due to 
+current hardware erratum if the PC would stay the same after the insn's 
+execution.
+
+You may want to add some comments regarding the erratum too if you're in 
+a position to disclose more details.
+
+> +{
+> +	switch (ip->reg0i26_format.opcode) {
+> +	case b_op:
+> +	case bl_op:
+> +		if (ip->reg0i26_format.immediate_l == 0
+> +		   && ip->reg0i26_format.immediate_h == 0)
+> +			return false;
+> +	}
+> +
+> +	switch (ip->reg1i21_format.opcode) {
+> +	case beqz_op:
+> +	case bnez_op:
+> +	case bceqz_op:
+> +		if (ip->reg1i21_format.immediate_l == 0
+> +		   && ip->reg1i21_format.immediate_h == 0)
+> +			return false;
+> +	}
+> +
+> +	switch (ip->reg2i16_format.opcode) {
+> +	case jirl_op:
+> +		if (ip->reg2i16_format.rj == 0x1
+> +		   && ip->reg2i16_format.rd == 0x1
+Given the appearance of the other cases, I feel like the triggering 
+condition of the nonterminating singlestepping is that "new PC == 
+current PC" always hold. So, isn't every `rd == rj && imm == 0` case 
+problematic?
+
+> +		   && ip->reg2i16_format.immediate == 0)
+> +			return false;
+> +		break;
+> +	case beq_op:
+> +	case bne_op:
+> +	case blt_op:
+> +	case bge_op:
+> +	case bltu_op:
+> +	case bgeu_op:
+> +		if (ip->reg2i16_format.immediate == 0)
+> +			return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>   void simu_pc(struct pt_regs *regs, union loongarch_instruction insn);
+>   void simu_branch(struct pt_regs *regs, union loongarch_instruction insn);
+>   
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+> index e9aed583a064..65b7dcdea16d 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -1055,6 +1055,9 @@ static __always_inline void iocsr_write64(u64 val, u32 reg)
+>   #define LOONGARCH_CSR_DERA		0x501	/* debug era */
+>   #define LOONGARCH_CSR_DESAVE		0x502	/* debug save */
+>   
+> +#define CSR_FWPC_SKIP_SHIFT		16
+> +#define CSR_FWPC_SKIP			(_ULCAST_(1) << CSR_FWPC_SKIP_SHIFT)
+> +
+>   /*
+>    * CSR_ECFG IM
+>    */
+> diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+> index db060c5a976f..3ea0f1910c23 100644
+> --- a/arch/loongarch/include/asm/processor.h
+> +++ b/arch/loongarch/include/asm/processor.h
+> @@ -131,6 +131,9 @@ struct thread_struct {
+>   	struct perf_event	*hbp_break[LOONGARCH_MAX_BRP];
+>   	struct perf_event	*hbp_watch[LOONGARCH_MAX_WRP];
+>   
+> +	/* Used by ptrace single_step */
+
+"PTRACE_SINGLESTEP" if you want to refer to the technical name of the 
+feature, or "ptrace single stepping" which is more natural language.
+
+> +	unsigned long single_step;
+> +
+>   	/*
+>   	 * FPU & vector registers, must be at last because
+>   	 * they are conditionally copied at fork().
+> diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
+> index 58596c4f8a0f..66a0e6c480a3 100644
+> --- a/arch/loongarch/include/asm/ptrace.h
+> +++ b/arch/loongarch/include/asm/ptrace.h
+> @@ -150,4 +150,6 @@ static inline void user_stack_pointer_set(struct pt_regs *regs,
+>   	regs->regs[3] = val;
+>   }
+>   
+> +#define arch_has_single_step()		(1)
+> +
+>   #endif /* _ASM_PTRACE_H */
+> diff --git a/arch/loongarch/kernel/hw_breakpoint.c b/arch/loongarch/kernel/hw_breakpoint.c
+> index 6431cd319c32..75d3652fbe00 100644
+> --- a/arch/loongarch/kernel/hw_breakpoint.c
+> +++ b/arch/loongarch/kernel/hw_breakpoint.c
+> @@ -153,6 +153,22 @@ static int hw_breakpoint_slot_setup(struct perf_event **slots, int max_slots,
+>    */
+>   void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
+>   {
+> +	int i;
+> +	struct thread_struct *t = &tsk->thread;
+> +
+> +	for (i = 0; i < LOONGARCH_MAX_BRP; i++) {
+> +		if (t->hbp_break[i]) {
+> +			unregister_hw_breakpoint(t->hbp_break[i]);
+> +			t->hbp_break[i] = NULL;
+> +		}
+> +	}
+> +
+> +	for (i = 0; i < LOONGARCH_MAX_WRP; i++) {
+> +		if (t->hbp_watch[i]) {
+> +			unregister_hw_breakpoint(t->hbp_watch[i]);
+> +			t->hbp_watch[i] = NULL;
+> +		}
+> +	}
+>   }
+>   
+>   void ptrace_hw_copy_thread(struct task_struct *tsk)
+> @@ -498,11 +514,20 @@ arch_initcall(arch_hw_breakpoint_init);
+>   void hw_breakpoint_thread_switch(struct task_struct *next)
+>   {
+>   	struct pt_regs *regs = task_pt_regs(next);
+> -
+> -	/* Update breakpoints */
+> -	update_bp_registers(regs, 1, 0);
+> -	/* Update watchpoints */
+> -	update_bp_registers(regs, 1, 1);
+> +	u64 addr, mask;
+> +
+> +	if (test_bit(TIF_SINGLESTEP, &task_thread_info(next)->flags)) {
+> +		addr = read_wb_reg(CSR_CFG_ADDR, 0, 0);
+> +		mask = read_wb_reg(CSR_CFG_MASK, 0, 0);
+> +		if ((task_pt_regs(next)->csr_era & ~mask) == (addr & ~mask))
+> +			csr_write32(CSR_FWPC_SKIP, LOONGARCH_CSR_FWPS);
+> +		regs->csr_prmd |= CSR_PRMD_PWE;
+> +	} else {
+> +		/* Update breakpoints */
+> +		update_bp_registers(regs, 1, 0);
+> +		/* Update watchpoints */
+> +		update_bp_registers(regs, 1, 1);
+> +	}
+>   }
+>   
+>   void hw_breakpoint_pmu_read(struct perf_event *bp)
+> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
+> index bee4194177fd..52a3ee4366f4 100644
+> --- a/arch/loongarch/kernel/ptrace.c
+> +++ b/arch/loongarch/kernel/ptrace.c
+> @@ -20,6 +20,7 @@
+>   #include <linux/context_tracking.h>
+>   #include <linux/elf.h>
+>   #include <linux/errno.h>
+> +#include <linux/hw_breakpoint.h>
+>   #include <linux/mm.h>
+>   #include <linux/ptrace.h>
+>   #include <linux/regset.h>
+> @@ -30,6 +31,7 @@
+>   #include <linux/stddef.h>
+>   #include <linux/seccomp.h>
+>   #include <linux/uaccess.h>
+> +#include <linux/thread_info.h>
+>   
+>   #include <asm/byteorder.h>
+>   #include <asm/cpu.h>
+> @@ -39,6 +41,7 @@
+>   #include <asm/page.h>
+>   #include <asm/pgtable.h>
+>   #include <asm/processor.h>
+> +#include <asm/ptrace.h>
+>   #include <asm/reg.h>
+>   #include <asm/syscall.h>
+>   
+> @@ -541,3 +544,68 @@ long arch_ptrace(struct task_struct *child, long request,
+>   
+>   	return ret;
+>   }
+> +
+> +void ptrace_triggered(struct perf_event *bp,
+> +		      struct perf_sample_data *data, struct pt_regs *regs)
+> +{
+> +	struct perf_event_attr attr;
+> +
+> +	attr = bp->attr;
+> +	attr.disabled = true;
+> +	modify_user_hw_breakpoint(bp, &attr);
+> +}
+> +
+> +static int set_single_step(struct task_struct *tsk, unsigned long addr)
+> +{
+> +	struct thread_struct *thread = &tsk->thread;
+> +	struct perf_event *bp;
+> +	struct perf_event_attr attr;
+> +	struct arch_hw_breakpoint *info;
+> +
+> +	bp = thread->hbp_break[0];
+> +	if (!bp) {
+> +		ptrace_breakpoint_init(&attr);
+> +
+> +		attr.bp_addr = addr;
+> +		attr.bp_len = HW_BREAKPOINT_LEN_8;
+> +		attr.bp_type = HW_BREAKPOINT_X;
+> +
+> +		bp = register_user_hw_breakpoint(&attr, ptrace_triggered,
+> +						 NULL, tsk);
+> +		if (IS_ERR(bp))
+> +			return PTR_ERR(bp);
+> +
+> +		thread->hbp_break[0] = bp;
+> +	} else {
+> +		int err;
+> +
+> +		attr = bp->attr;
+> +		attr.bp_addr = addr;
+> +		/* reenable breakpoint */
+> +		attr.disabled = false;
+> +		err = modify_user_hw_breakpoint(bp, &attr);
+> +		if (unlikely(err))
+> +			return err;
+> +
+> +		csr_write64(attr.bp_addr, LOONGARCH_CSR_IB0ADDR);
+> +	}
+> +	info = counter_arch_bp(bp);
+> +	info->mask = 0xffffffffffff;
+> +
+> +	return 0;
+> +}
+> +
+> +/* ptrace API */
+> +void user_enable_single_step(struct task_struct *task)
+> +{
+> +	struct thread_info *ti = task_thread_info(task);
+> +
+> +	set_single_step(task, task_pt_regs(task)->csr_era);
+> +	task->thread.single_step = task_pt_regs(task)->csr_era;
+> +	set_ti_thread_flag(ti, TIF_SINGLESTEP);
+> +}
+> +
+> +void user_disable_single_step(struct task_struct *task)
+> +{
+> +	clear_tsk_thread_flag(task, TIF_SINGLESTEP);
+> +}
+> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+> index 2b133079e0f3..a59275a43bd1 100644
+> --- a/arch/loongarch/kernel/traps.c
+> +++ b/arch/loongarch/kernel/traps.c
+> @@ -511,9 +511,37 @@ asmlinkage void noinstr do_watch(struct pt_regs *regs)
+>   #ifdef CONFIG_HAVE_HW_BREAKPOINT
+>   	irqentry_state_t state = irqentry_enter(regs);
+>   
+> -	breakpoint_handler(regs);
+> -	watchpoint_handler(regs);
+> -	force_sig(SIGTRAP);
+> +	if (test_tsk_thread_flag(current, TIF_SINGLESTEP)) {
+> +		int llbit = (csr_read32(LOONGARCH_CSR_LLBCTL) & 0x1);
+> +		unsigned long pc = regs->csr_era;
+> +		union loongarch_instruction *ip = (union loongarch_instruction *)pc;
+> +
+> +		if (llbit) {
+> +		/*
+> +		 * When the ll-sc combo is encountered, it is regarded as an single
+> +		 * instruction. So don't clear llbit and reset CSR.FWPS.Skip until
+> +		 * the llsc execution is completed.
+> +		 */
+> +			csr_write32(CSR_FWPC_SKIP, LOONGARCH_CSR_FWPS);
+> +			csr_write32(CSR_LLBCTL_KLO, LOONGARCH_CSR_LLBCTL);
+> +		} else if (pc == current->thread.single_step) {
+> +		/*
+> +		 * Maybe some hardware Bug caused that certain insns are occasionally
+> +		 * not skipped when CSR.FWPS.Skip is set, such as fld.d/fst.d. So Singlestep
+> +		 * needs to compare whether the csr_era is equal to the value of singlestep
+> +		 * which last time set.
+> +		 */
+> +			if (branch_ins_target_pc(ip))
+> +			/* Prevent rd == pc from causing single step to fail to stop */
+> +				csr_write32(CSR_FWPC_SKIP, LOONGARCH_CSR_FWPS);
+> +		} else {
+> +			force_sig(SIGTRAP);
+> +		}
+> +	} else {
+> +		breakpoint_handler(regs);
+> +		watchpoint_handler(regs);
+> +		force_sig(SIGTRAP);
+> +	}
+>   
+>   	irqentry_exit(regs, state);
+>   #endif
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
