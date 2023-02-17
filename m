@@ -1,182 +1,103 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32E163E
-	for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 06:09:33 +0000 (UTC)
-Received: by mail-ed1-f47.google.com with SMTP id dn12so8115688edb.5
-        for <loongarch@lists.linux.dev>; Thu, 16 Feb 2023 22:09:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PtVZueFf795vFNiS/F0qWJesHcrC0oubN9RD4XuzgFA=;
-        b=MGL/TkVJPptPxBlf66mae7qkZeaQUdTOAroZx1TE1sKA3LyDPUeOlsU1jSYyzaDsMh
-         FIEVlXUn1jKf79YLmx3V7ALEm792jAKh31ZVysrE+5uPfZ7YjmGyZujSCRPAG7LqhDrE
-         4URGIvYjWennyEts6ahumeBmUZxwXn+4ImWT/YnHRYE77MHNiRYMDjRBgrtWgws5lyNz
-         NBvHea0+6xkiCzr7UM8vWpgIQmh5oVejcq+3dmee9u1KgoI1EZO8kYlRS0EBFBnW8X0b
-         KHswRGkvJEVVfMB22aibav0aSnyKKX9S+y8EANVI7aWvrhsAKWhM9NsNu86PwDicCr4Q
-         4ayA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PtVZueFf795vFNiS/F0qWJesHcrC0oubN9RD4XuzgFA=;
-        b=oD8Ksd2jSRC2xr5d2G6AuN5BIUQBnKO8E9fcsTs4CGXYKmvi4D1R49ctgS8QvqaYGS
-         rbl/FL/BZWADq1zuNH70fTeTEPLGGllkBBDULxk8hlMZoXRX9h6hgCGC5xjPwUOAbyV4
-         iDW4KadRtc3g5W6pmkmJYajz6P9u8jhtchU+POgw2l2tNCfYAyleyl9R8esP/AKdR29i
-         pGpkVvWIribDxEvHGGC6Vn+PVBQfdLAUBGS13ES+mO+MZddaYqrw3gAK9o8k/I1RKOkX
-         SmaoxACxw+CLTvF72+HH/1X9KW3u3Nfy8lMjQ7hDZwobN8zkHRH+cEH12FdBhRVvW9n3
-         g/tA==
-X-Gm-Message-State: AO0yUKXRhMzbEFtsIL3dne3N54F8PrtjJu5ZpcPe7ldqmh3JXvatWemd
-	toetX1OCHsxop4/D95oTnIoqcBVx0TrU5eemgU0=
-X-Google-Smtp-Source: AK7set9Bu2tGTO4MLrq+l4cMPuC3nYjn7sdpEzh7v8DtnqKyi850WRRsUnY3QcZw/u/AOuhzzkv3chvpLCoe2cV3dio=
-X-Received: by 2002:a17:906:c306:b0:8af:38c9:d52d with SMTP id
- s6-20020a170906c30600b008af38c9d52dmr128027ejz.2.1676614171784; Thu, 16 Feb
- 2023 22:09:31 -0800 (PST)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACB417F
+	for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 07:08:20 +0000 (UTC)
+Received: from loongson.cn (unknown [192.168.200.1])
+	by gateway (Coremail) with SMTP id _____8BxNNjiJ+9jgKwBAA--.2931S3;
+	Fri, 17 Feb 2023 15:08:18 +0800 (CST)
+Received: from [0.0.0.0] (unknown [192.168.200.1])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtOXhJ+9j_iE1AA--.64834S3;
+	Fri, 17 Feb 2023 15:08:18 +0800 (CST)
+Subject: Re: [PATCH v2] LoongArch: BPF: Use 4 instructions for function
+ address in JIT
+To: Hengqi Chen <hengqi.chen@gmail.com>
+References: <20230214152633.2265699-1-hengqi.chen@gmail.com>
+ <9b999261-9c6e-05a9-3213-b9f6dd2eaa07@loongson.cn>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, bpf@vger.kernel.org,
+ loongarch@lists.linux.dev
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <bba05e0a-3d30-3c61-33af-08fed4aa9915@loongson.cn>
+Date: Fri, 17 Feb 2023 15:08:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1676289084.git.zhoubinbin@loongson.cn> <a9f697906df6599e6b001981e668479da71aa7a0.1676289084.git.zhoubinbin@loongson.cn>
- <df464409-9a93-c057-5f66-923a9e24696a@linaro.org> <CAMpQs4JX0Vgf5tvv5Yw5eLGANFfn1p=iQ_kMS0yQPV6kE2tN1g@mail.gmail.com>
- <23068d0c-d37c-0563-e1c1-e4d112059f5b@linaro.org> <CAMpQs4K+aYGrOoWy04vrbEy53kba9zUzGkOwD34pwAH0c=D8iA@mail.gmail.com>
- <49c8255e-66f3-fa1f-2949-1f03f77a0fa4@linaro.org>
-In-Reply-To: <49c8255e-66f3-fa1f-2949-1f03f77a0fa4@linaro.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 17 Feb 2023 14:09:18 +0800
-Message-ID: <CAMpQs4KennWg60ccQ5NYOs=5a9gqTk_bKY26noQ3u0qLQSBg_w@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] dt-bindings: interrupt-controller: Add Loongson EIOINTC
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Jianmin Lv <lvjianmin@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>, linux-kernel@vger.kernel.org, 
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-	devicetree@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9b999261-9c6e-05a9-3213-b9f6dd2eaa07@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8BxtOXhJ+9j_iE1AA--.64834S3
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7ArWDWw1xJw4rGF1DKFyDKFg_yoW8Aw4UpF
+	Wa93ZakFWDXry8C3ZrJayfXFyakan5Jr4UJayUG3yI9r13Xwna9F1vgF1Y9asxt3ySkF12
+	gr4jqrZ8Z3WqyFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bOxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
+	CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2
+	zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_WwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
+	wIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0zRVWl
+	kUUUUU=
 
-On Thu, Feb 16, 2023 at 4:10 PM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+Hi, Hengqi
+
+On 02/16/2023 02:52 PM, Tiezhu Yang wrote:
 >
-> On 16/02/2023 02:46, Binbin Zhou wrote:
-> > On Tue, Feb 14, 2023 at 8:43 PM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 14/02/2023 13:40, Binbin Zhou wrote:
-> >>> On Tue, Feb 14, 2023 at 5:53 PM Krzysztof Kozlowski
-> >>> <krzysztof.kozlowski@linaro.org> wrote:
-> >>>>
-> >>>> On 13/02/2023 13:15, Binbin Zhou wrote:
-> >>>>> Add Loongson Extended I/O Interrupt controller binding with DT schema
-> >>>>> format using json-schema.
-> >>>>>
-> >>>>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> >>>>> ---
-> >>>>>  .../loongson,eiointc.yaml                     | 80 +++++++++++++++++++
-> >>>>>  1 file changed, 80 insertions(+)
-> >>>>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
-> >>>>> new file mode 100644
-> >>>>> index 000000000000..88580297f955
-> >>>>> --- /dev/null
-> >>>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
-> >>>>> @@ -0,0 +1,80 @@
-> >>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >>>>> +%YAML 1.2
-> >>>>> +---
-> >>>>> +$id: "http://devicetree.org/schemas/interrupt-controller/loongson,eiointc.yaml#"
-> >>>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> >>>>
-> >>>> Drop quotes from bopth.
-> >>>>
-> >>>>> +
-> >>>>> +title: Loongson Extended I/O Interrupt Controller
-> >>>>> +
-> >>>>> +maintainers:
-> >>>>> +  - Binbin Zhou <zhoubinbin@loongson.cn>
-> >>>>> +
-> >>>>> +description: |
-> >>>>> +  This interrupt controller is found on the Loongson-3 family chips and
-> >>>>> +  Loongson-2K0500 chip and is used to distribute interrupts directly to
-> >>>>> +  individual cores without forwarding them through the HT's interrupt line.
-> >>>>> +
-> >>>>> +allOf:
-> >>>>> +  - $ref: /schemas/interrupt-controller.yaml#
-> >>>>> +
-> >>>>> +properties:
-> >>>>> +  compatible:
-> >>>>> +    enum:
-> >>>>> +      - loongson,eiointc-1.0
-> >>>>
-> >>>> Why not using SoC based compatible? It is preferred.
-> >>>
-> >>> Hi Krzysztof:
-> >>>
-> >>> So far, from the datasheet, I know that only the EXIOINTC of the
-> >>> Loongson-2K0500 is different from the other chips, and that is the
-> >>> "loongson,eio-num-vecs" below, which is 128, while all the others are
-> >>> 256.
-> >>> My original idea was to add this property to make compatible
-> >>> consistent, and also to make it easier to add new chips if they have
-> >>> different eio-num-vecs.
-> >>
-> >> We talk about different things. SoC based compatibles are preferred over
-> >> version ones. This was on the lists expressed many times. Please provide
-> >> a reason why you deviate from general recommendation. Flexibility and
-> >> genericness of bindings is not a reason - it's the opposite of the
-> >> argument, thus this will be a: NAK. :(
-> >>
-> >>
-> > Hi Krzysztof:
-> >
-> > Allow me to give a brief overview of the current status of eiointc (DT-based):
-> >      Loongson-3A series supports eiointc;
-> >      Loongson-2K1000 does not support eiointc now;
-> >      Loongson-2K0500 supports eiointc, with differences from
-> > Loongson-3, e.g. only up to 128 devices are supported;
-> >      Loongson-2K2000 supports eiointc, similar to Loongson-3.
-> >      ....
-> >
-> > As can be seen, there is now a bit of confusion in the chip's design of eiointc.
-> >
-> > The design of eiointc is probably refined step by step with the chip.
-> > The same version of eiointc can be used for multiple chips, and the
-> > same chip series may also use different versions of eiointc. Low-end
-> > chips may use eiointc-2.0, and high-end chips may use eiointc-1.0,
-> > depending on the time it's produced.
-> >
-> > So in the Loongson-2K series I have defined the current state as
-> > eiointc-1.0, using the dts property to indicate the maximum number of
-> > devices supported by eiointc that can be used directly in the driver.
-> >
-> > If there are new changes to the design later on, such as the
-> > definition of registers, we can call it eiointc-2.0, which can also
-> > cover more than one chip.
 >
-> Just go with SoC-based compatibles. If your version is not specific
-> enough, then it is not a good way to represent the hardware.
+> On 02/14/2023 11:26 PM, Hengqi Chen wrote:
+>> This patch fixes the following issue of function calls in JIT, like:
+>>
+>>   [   29.346981] multi-func JIT bug 105 != 103
+>>
+>> The issus can be reproduced by running the "inline simple bpf_loop call"
+>> verifier test.
+>>
+>> This is because we are emiting 2-4 instructions for 64-bit immediate
+>> moves.
+>> During the first pass of JIT, the placeholder address is zero, emiting
+>> two
+>> instructions for it. In the extra pass, the function address is in
+>> XKVRANGE,
+>> emiting four instructions for it. This change the instruction index in
+>> JIT context. Let's always use 4 instructions for function address in JIT.
+>> So that the instruction sequences don't change between the first pass and
+>> the extra pass for function calls.
+>>
+>> Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
+>> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+>
+> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 >
 
-Hi Krzysztof:
+In RISCV, I looked at the 'case BPF_JMP | BPF_CALL' handling，
+emit_call
+     emit_jump_and_link
 
-I have tried to write the following  SoC-based compatibles,  is it fine?
+The number of instructions is controlled by the 'force_jalr' parameter
+in emit_jump_and_link().
 
-compatible:
-    enum:
-      - loongson,ls3a-eiointc  # For MIPS Loongson-3A if necessary.
-      - loongson,ls2k0500-eiointc
-      - loongson,ls2k200-eiointc
-       ....
-Also remove the 'loongson,eio-num-vecs' property.
+force_jalr = true: auipc/jalr          (fixed-length)
+force_jalr = false: jal or auipc/jalr  (variable-length)
 
-Thanks.
-Binbin
+"force_jalr" comes from "fixed" in bpf_jit_get_func_addr().
 
-> Best regards,
-> Krzysztof
->
+- In LoongArch, is it possible to do a similar operation by using
+   'func_addr_fixed' to control whether it is variable, instead of
+   using a fixed-length unconditionally through move_addr()?
+
+- Commit information can refer to b54b6003612a ("riscv, bpf: Emit
+   fixed-length instructions for BPF_PSEUDO_FUNC").
+
+- In 'case BPF_LD | BPF_IMM | BPF_DW', is it also necessary to add
+   BPF_PSEUDO_FUNC processing?
+
+Youling.
+
