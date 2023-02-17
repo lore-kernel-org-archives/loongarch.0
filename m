@@ -1,52 +1,87 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C59C7F
-	for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 08:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1676621350;
-	bh=vVf5VbiVyKplW7aWezPMq82Yq0t9rkQkhpF/eqcg270=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IJ6AmcpDeD3m20zBJRDwrPZc1SwNU9tyDaj/GmC+kPOro3d7WvK04qbHNlh9wKxJU
-	 wLiOyA1Gr828Yc+CLXixdK0rAbg22LlJpqFcEbreQj2BlcKQFhVaeZGTue2W8owzCU
-	 on/y+YsAI6f7lDVRtnt/RvJTnA1JLuDeqQZEDRlA=
-Received: from [IPv6:240e:358:1156:5900:dc73:854d:832e:4] (unknown [IPv6:240e:358:1156:5900:dc73:854d:832e:4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id C46F365CF0;
-	Fri, 17 Feb 2023 03:09:07 -0500 (EST)
-Message-ID: <41b6c7b779c1c4d33c644c406f337e27e124adaa.camel@xry111.site>
-Subject: Re: [PATCH v4 5/5] LoongArch: Add support for kernel address space
- layout randomization (KASLR)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Youling Tang <tangyouling@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>,  Jinyang He <hejinyang@loongson.cn>
-Cc: Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Date: Fri, 17 Feb 2023 16:09:04 +0800
-In-Reply-To: <1676018856-26520-6-git-send-email-tangyouling@loongson.cn>
-References: <1676018856-26520-1-git-send-email-tangyouling@loongson.cn>
-	 <1676018856-26520-6-git-send-email-tangyouling@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.46.4 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD0EB7F
+	for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 08:13:44 +0000 (UTC)
+Received: from loongson.cn (unknown [192.168.200.1])
+	by gateway (Coremail) with SMTP id _____8Cxxtg2N+9jNLIBAA--.3298S3;
+	Fri, 17 Feb 2023 16:13:42 +0800 (CST)
+Received: from [0.0.0.0] (unknown [192.168.200.1])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxyr02N+9jnyo1AA--.32871S3;
+	Fri, 17 Feb 2023 16:13:42 +0800 (CST)
+Subject: Re: [PATCH v5 4/5] LoongArch: Add support for kernel relocation
+To: Xi Ruoyao <xry111@xry111.site>
+References: <1676618789-20485-1-git-send-email-tangyouling@loongson.cn>
+ <1676618789-20485-5-git-send-email-tangyouling@loongson.cn>
+ <5ac82f53aeb6a040be90eac2be7c64055e62f0ef.camel@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>,
+ Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <fc5b0403-ed2f-2dcf-11b9-e3be4642ddda@loongson.cn>
+Date: Fri, 17 Feb 2023 16:13:42 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <5ac82f53aeb6a040be90eac2be7c64055e62f0ef.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Bxyr02N+9jnyo1AA--.32871S3
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvdXoWrtr1UZFW3Cr4kuF1rWFW5trb_yoWDXwb_uF
+	WFgr1qk3W5CrZ7K3Z2va13Xrs293yrJF4UWrn3X3yIva4ayanxJas8trnF9F45Xrn8Cr13
+	Zan7ur1Fkry2yjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUU5
+	Q7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
+	0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E
+	6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaVAv8VWrMcvjeVCFs4IE7x
+	kEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAK
+	I48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j
+	6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zRVWl
+	kUUUUU=
 
-T24gRnJpLCAyMDIzLTAyLTEwIGF0IDE2OjQ3ICswODAwLCBZb3VsaW5nIFRhbmcgd3JvdGU6Cgo+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAvKiBTeW5jIHRoZSBjYWNoZXMgcmVhZHkg
-Zm9yIGV4ZWN1dGlvbiBvZiBuZXcga2VybmVsCj4gKi8KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgX19hc21fXyBfX3ZvbGF0aWxlX18gKAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImliYXIgMCBcdFxuIgo+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImRiYXIgMCBcdFxuIik7CgpJIHRoaW5rIHdl
-IHNob3VsZCBhZGQgOjo6ICJtZW1vcnkiIGhlcmUgdG8gcHJldmVudCBhIGZ1dHVyZSBjb21waWxl
-cgpmcm9tIGJlaW5nIHRvbyBzbWFydC4KCk90aGVyd2lzZSBMR1RNLgoKLS0gClhpIFJ1b3lhbyA8
-eHJ5MTExQHhyeTExMS5zaXRlPgpTY2hvb2wgb2YgQWVyb3NwYWNlIFNjaWVuY2UgYW5kIFRlY2hu
-b2xvZ3ksIFhpZGlhbiBVbml2ZXJzaXR5Cg==
+
+
+On 02/17/2023 04:02 PM, Xi Ruoyao wrote:
+> On Fri, 2023-02-17 at 15:26 +0800, Youling Tang wrote:
+>
+>> This config allows to compile kernel as PIE and to relocate it at
+>> any virtual address at runtime: this paves the way to KASLR.
+>> Runtime relocation is possible since relocation metadata are embedded
+>> into the kernel.
+>>
+>> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+>> Signed-off-by: Xi Ruoyao <xry111@xry111.site> # Use arch_initcall
+>> Signed-off-by: Jinyang He <hejinyang@loongson.cn> # Provide la_abs idea
+>
+> Use Suggested-by if only "idea" is provided.
+In addition to the idea, the first draft code of la_abs is also
+provided.
+
+Maybe change it to the following,
+   Signed-off-by: Jinyang He <hejinyang@loongson.cn> # Provide la_abs 
+relocation draft code
+
+>
+>> +struct rela_la_abs {
+>> +               long offset;
+>> +               long symvalue;
+>> +};
+>
+> Use one tab instead of two for the indent.
+My mistake.
+
+Also the missing do_kaslr declaration will be added.
+
+Youling.
+> Otherwise LGTM.
+>
 
