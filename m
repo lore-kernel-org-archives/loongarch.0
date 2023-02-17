@@ -1,103 +1,136 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACB417F
-	for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 07:08:20 +0000 (UTC)
-Received: from loongson.cn (unknown [192.168.200.1])
-	by gateway (Coremail) with SMTP id _____8BxNNjiJ+9jgKwBAA--.2931S3;
-	Fri, 17 Feb 2023 15:08:18 +0800 (CST)
-Received: from [0.0.0.0] (unknown [192.168.200.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtOXhJ+9j_iE1AA--.64834S3;
-	Fri, 17 Feb 2023 15:08:18 +0800 (CST)
-Subject: Re: [PATCH v2] LoongArch: BPF: Use 4 instructions for function
- address in JIT
-To: Hengqi Chen <hengqi.chen@gmail.com>
-References: <20230214152633.2265699-1-hengqi.chen@gmail.com>
- <9b999261-9c6e-05a9-3213-b9f6dd2eaa07@loongson.cn>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, bpf@vger.kernel.org,
- loongarch@lists.linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07CC17F
+	for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 07:26:32 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxldgnLO9jFK4BAA--.3384S3;
+	Fri, 17 Feb 2023 15:26:31 +0800 (CST)
+Received: from bogon.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxf+QmLO9jiSQ1AA--.63745S2;
+	Fri, 17 Feb 2023 15:26:30 +0800 (CST)
 From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <bba05e0a-3d30-3c61-33af-08fed4aa9915@loongson.cn>
-Date: Fri, 17 Feb 2023 15:08:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Xi Ruoyao <xry111@xry111.site>,
+	Jinyang He <hejinyang@loongson.cn>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/5] LoongArch: Add kernel relocation and KASLR support
+Date: Fri, 17 Feb 2023 15:26:24 +0800
+Message-Id: <1676618789-20485-1-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8Cxf+QmLO9jiSQ1AA--.63745S2
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZryUGrWUXF1fCFWfWFWktFb_yoW5WF4kpr
+	yYkr95JF48Gr1fXwsrt3y3ur15t3Z7Gr43WFsIk34FkF1agr1UAry0vwsxXFyDtw4rXr4I
+	gFn5KF12g3WUAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8yrW7UUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <9b999261-9c6e-05a9-3213-b9f6dd2eaa07@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8BxtOXhJ+9j_iE1AA--.64834S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7ArWDWw1xJw4rGF1DKFyDKFg_yoW8Aw4UpF
-	Wa93ZakFWDXry8C3ZrJayfXFyakan5Jr4UJayUG3yI9r13Xwna9F1vgF1Y9asxt3ySkF12
-	gr4jqrZ8Z3WqyFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bOxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2
-	zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_WwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
-	wIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0zRVWl
-	kUUUUU=
 
-Hi, Hengqi
+This patch series to support kernel relocation and KASLR (only 64bit).
 
-On 02/16/2023 02:52 PM, Tiezhu Yang wrote:
->
->
-> On 02/14/2023 11:26 PM, Hengqi Chen wrote:
->> This patch fixes the following issue of function calls in JIT, like:
->>
->>   [   29.346981] multi-func JIT bug 105 != 103
->>
->> The issus can be reproduced by running the "inline simple bpf_loop call"
->> verifier test.
->>
->> This is because we are emiting 2-4 instructions for 64-bit immediate
->> moves.
->> During the first pass of JIT, the placeholder address is zero, emiting
->> two
->> instructions for it. In the extra pass, the function address is in
->> XKVRANGE,
->> emiting four instructions for it. This change the instruction index in
->> JIT context. Let's always use 4 instructions for function address in JIT.
->> So that the instruction sequences don't change between the first pass and
->> the extra pass for function calls.
->>
->> Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
->> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
->
-> Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->
+Tested the kernel images built with new toolchain (Binutils-2.40 + patched
+GCC-12.2) and old toolchain (kernel.org cross toolchain [1]) on a
+3A5000-7A2000-EVB.
 
-In RISCV, I looked at the 'case BPF_JMP | BPF_CALL' handling，
-emit_call
-     emit_jump_and_link
+With CONFIG_RANDOMIZE_BASE=y, the results are:
 
-The number of instructions is controlled by the 'force_jalr' parameter
-in emit_jump_and_link().
+1. first boot, new toolchain:
 
-force_jalr = true: auipc/jalr          (fixed-length)
-force_jalr = false: jal or auipc/jalr  (variable-length)
+$ sudo cat /proc/iomem | grep Kernel
+  01080000-0189ffff : Kernel code
+  018a0000-01deb5ff : Kernel data
+  01deb600-01ef6e9f : Kernel bss
 
-"force_jalr" comes from "fixed" in bpf_jit_get_func_addr().
+2. second boot, new toolchain:
 
-- In LoongArch, is it possible to do a similar operation by using
-   'func_addr_fixed' to control whether it is variable, instead of
-   using a fixed-length unconditionally through move_addr()?
+$ sudo cat /proc/iomem | grep Kernel
+  012f0000-01b0ffff : Kernel code
+  01b10000-0205b5ff : Kernel data
+  0205b600-02166e9f : Kernel bss
 
-- Commit information can refer to b54b6003612a ("riscv, bpf: Emit
-   fixed-length instructions for BPF_PSEUDO_FUNC").
+3. first boot, old toolchain:
+  010e0000-018fffff : Kernel code
+  01900000-01e591ff : Kernel data
+  01e59200-01f56dcf : Kernel bss
 
-- In 'case BPF_LD | BPF_IMM | BPF_DW', is it also necessary to add
-   BPF_PSEUDO_FUNC processing?
+4. second boot, old toolchain:
+  010b0000-018cffff : Kernel code
+  018d0000-01e291ff : Kernel data
+  01e29200-01f26dcf : Kernel bss
 
-Youling.
+Changes from v4:
+- Add la_abs macro implementation.
+- Remove patch2 (LoongArch: Use la.pcrel instead of la.abs for exception
+  handlers).
+- Remove SYS_SUPPORTS_RELOCATABLE.
+- Fix do_kaslr.
+- Fix compiler warnings.
+- Move some declarations and struct definitions to setup.h.
+
+Changes from v3:
+
+- JUMP_LINK_ADDR renamed to JUMP_VIRT_ADDR, and use the way of parameter
+  passing.
+- Reimplement kernel relocation, when the link address and load address
+  are different, realize the effect of adaptive relocation (one of the
+  usage scenarios is kdump operation).
+- Reimplement KASLR.
+
+Changes from v2:
+
+- Correctly fixup pcaddi12i/ori/lu32i.d/lu52i.d sequence generated by
+  GNU as <= 2.39 for la.pcrel.
+
+Changes from v1 to v2:
+
+- Relocate the handlers instead of using a trampoline, to avoid
+  performance issue on NUMA systems.
+- Fix compiler warnings.
+
+Xi Ruoyao (1):
+  LoongArch: Use la.pcrel instead of la.abs when it's trivially possible
+
+Youling Tang (4):
+  LoongArch: Add JUMP_VIRT_ADDR macro implementation to avoid using
+    la.abs
+  LoongArch: Add la_abs macro implementation
+  LoongArch: Add support for kernel relocation
+  LoongArch: Add support for kernel address space layout randomization
+    (KASLR)
+
+ arch/loongarch/Kconfig                  |  31 +++
+ arch/loongarch/Makefile                 |   5 +
+ arch/loongarch/include/asm/asmmacro.h   |  17 ++
+ arch/loongarch/include/asm/setup.h      |  14 ++
+ arch/loongarch/include/asm/stackframe.h |  13 +-
+ arch/loongarch/include/asm/uaccess.h    |   1 -
+ arch/loongarch/kernel/Makefile          |   2 +
+ arch/loongarch/kernel/entry.S           |   2 +-
+ arch/loongarch/kernel/genex.S           |   8 +-
+ arch/loongarch/kernel/head.S            |  31 ++-
+ arch/loongarch/kernel/relocate.c        | 240 ++++++++++++++++++++++++
+ arch/loongarch/kernel/vmlinux.lds.S     |  20 +-
+ arch/loongarch/mm/tlbex.S               |  17 +-
+ arch/loongarch/power/suspend_asm.S      |   5 +-
+ 14 files changed, 375 insertions(+), 31 deletions(-)
+ create mode 100644 arch/loongarch/kernel/relocate.c
+
+-- 
+2.37.3
 
