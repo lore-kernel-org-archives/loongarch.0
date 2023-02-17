@@ -1,70 +1,125 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BE7E7F
-	for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 08:24:34 +0000 (UTC)
-Received: from loongson.cn (unknown [192.168.200.1])
-	by gateway (Coremail) with SMTP id _____8Dx2tnBOe9jIrMBAA--.3972S3;
-	Fri, 17 Feb 2023 16:24:33 +0800 (CST)
-Received: from [0.0.0.0] (unknown [192.168.200.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxf+TAOe9j9Cs1AA--.63789S3;
-	Fri, 17 Feb 2023 16:24:32 +0800 (CST)
-Subject: Re: [PATCH v4 5/5] LoongArch: Add support for kernel address space
- layout randomization (KASLR)
-To: Xi Ruoyao <xry111@xry111.site>
-References: <1676018856-26520-1-git-send-email-tangyouling@loongson.cn>
- <1676018856-26520-6-git-send-email-tangyouling@loongson.cn>
- <41b6c7b779c1c4d33c644c406f337e27e124adaa.camel@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <f3cf8395-b4fa-4530-0702-2d5a01dd06f4@loongson.cn>
-Date: Fri, 17 Feb 2023 16:24:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F83625
+	for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 08:40:54 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id co2so1005515edb.13
+        for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 00:40:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yNlzdhkOQHzq20NVyGLukWTdEN+zeap3hr8OBMls538=;
+        b=xD6/IJpi470BpQTRI/51fSBug+Im2ui4QtKq+o4q97OX5PiWIG3hNYI27KdZnkUYgh
+         kosxXQJkJhA0oRORMQKnD2L8v3TsBt1bcb/Wp5wxbdmKuejaoBsrPMKGYWa3l3xM4NIu
+         SDYChuxobHu2bS4v0WbwIm/U3GMasJcboFEumhaepTHUzGNo+2oTYY0MfjaQYPVaXYcE
+         vpSbqMdqCaRcdbcPqAzLbFISfPMETDr9GZSS5h17oYPSPy9RmjgamOAyCMnfrar5xmaC
+         11YwTblo+ykwObG+HDz4V2xHFmwBj/X3WYOt8+acK5thggzxlI2bThv6thANwTn5D7T6
+         JE9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yNlzdhkOQHzq20NVyGLukWTdEN+zeap3hr8OBMls538=;
+        b=NWEO/S55jcfm2Ta195plYg3jNiDsRwvguQTF19YZAQPy8cwINVDHPNDLWx1xP8DXO5
+         XB1MAM5nkzIG1TmRJx2A5Or+yHNoLj4JT4RzhbiXpU7B6xGq7LeOfXkMD9sKzrSNdL3Y
+         S1B0/1lXYbm0HmK3A2kUazTP8t3/BTZQsYMWbjfxsZgtx6CFCgPLOVVVGe8yn64hgG4R
+         eNOEDeifEG8PB8r8IsKID8rPJvYHemLUwpI7ja+RRljK9lvg4K6IK0HL+eAa1Q/pqttP
+         32xN5CW1Mp+PsdjW6e2YKlwaX3r07Kg16xTebvFmDf7spxTR8zzidMssEpBMsF+QDnmI
+         lHQA==
+X-Gm-Message-State: AO0yUKUGDQNppkNYROjwvWo7iaC/joNtbrwysh00apPNxNDMpJp6g3Cc
+	vN7OiZz1rA4BulnESY29vlo4uw==
+X-Google-Smtp-Source: AK7set9PRGCfdro26MLR7ocLmnYzrc1z44bpXULKIiN9W8O9OqdmP07SWABEAtqN/zho+4rT/h7Ovw==
+X-Received: by 2002:a17:906:308a:b0:8b1:81eb:159e with SMTP id 10-20020a170906308a00b008b181eb159emr1395860ejv.7.1676623252738;
+        Fri, 17 Feb 2023 00:40:52 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id lt13-20020a170906fa8d00b00888d593ce76sm1859298ejb.72.2023.02.17.00.40.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Feb 2023 00:40:52 -0800 (PST)
+Message-ID: <4dcaaa70-11e0-fc9d-da03-224d34e36983@linaro.org>
+Date: Fri, 17 Feb 2023 09:40:50 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <41b6c7b779c1c4d33c644c406f337e27e124adaa.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH V2 1/2] dt-bindings: interrupt-controller: Add Loongson
+ EIOINTC
+Content-Language: en-US
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>,
+ linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+ loongarch@lists.linux.dev, devicetree@vger.kernel.org,
+ loongson-kernel@lists.loongnix.cn
+References: <cover.1676289084.git.zhoubinbin@loongson.cn>
+ <a9f697906df6599e6b001981e668479da71aa7a0.1676289084.git.zhoubinbin@loongson.cn>
+ <df464409-9a93-c057-5f66-923a9e24696a@linaro.org>
+ <CAMpQs4JX0Vgf5tvv5Yw5eLGANFfn1p=iQ_kMS0yQPV6kE2tN1g@mail.gmail.com>
+ <23068d0c-d37c-0563-e1c1-e4d112059f5b@linaro.org>
+ <CAMpQs4K+aYGrOoWy04vrbEy53kba9zUzGkOwD34pwAH0c=D8iA@mail.gmail.com>
+ <49c8255e-66f3-fa1f-2949-1f03f77a0fa4@linaro.org>
+ <CAMpQs4KennWg60ccQ5NYOs=5a9gqTk_bKY26noQ3u0qLQSBg_w@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CAMpQs4KennWg60ccQ5NYOs=5a9gqTk_bKY26noQ3u0qLQSBg_w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Cxf+TAOe9j9Cs1AA--.63789S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUgm1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK0I
-	I2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0
-	Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84
-	ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxv
-	r21l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r
-	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0x
-	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-	nxnUUI43ZEXa7xRE6wZ7UUUUU==
 
+On 17/02/2023 07:09, Binbin Zhou wrote:
 
-On 02/17/2023 04:09 PM, Xi Ruoyao wrote:
-> On Fri, 2023-02-10 at 16:47 +0800, Youling Tang wrote:
->
->> +               /* Sync the caches ready for execution of new kernel
->> */
->> +               __asm__ __volatile__ (
->> +                       "ibar 0 \t\n"
->> +                       "dbar 0 \t\n");
->
-> I think we should add ::: "memory" here to prevent a future compiler
-> from being too smart.
-Got it.
+>>> Hi Krzysztof:
+>>>
+>>> Allow me to give a brief overview of the current status of eiointc (DT-based):
+>>>      Loongson-3A series supports eiointc;
+>>>      Loongson-2K1000 does not support eiointc now;
+>>>      Loongson-2K0500 supports eiointc, with differences from
+>>> Loongson-3, e.g. only up to 128 devices are supported;
+>>>      Loongson-2K2000 supports eiointc, similar to Loongson-3.
+>>>      ....
+>>>
+>>> As can be seen, there is now a bit of confusion in the chip's design of eiointc.
+>>>
+>>> The design of eiointc is probably refined step by step with the chip.
+>>> The same version of eiointc can be used for multiple chips, and the
+>>> same chip series may also use different versions of eiointc. Low-end
+>>> chips may use eiointc-2.0, and high-end chips may use eiointc-1.0,
+>>> depending on the time it's produced.
+>>>
+>>> So in the Loongson-2K series I have defined the current state as
+>>> eiointc-1.0, using the dts property to indicate the maximum number of
+>>> devices supported by eiointc that can be used directly in the driver.
+>>>
+>>> If there are new changes to the design later on, such as the
+>>> definition of registers, we can call it eiointc-2.0, which can also
+>>> cover more than one chip.
+>>
+>> Just go with SoC-based compatibles. If your version is not specific
+>> enough, then it is not a good way to represent the hardware.
+>>
+> 
+> Hi Krzysztof:
+> 
+> I have tried to write the following  SoC-based compatibles,  is it fine?
+> 
+> compatible:
+>     enum:
+>       - loongson,ls3a-eiointc  # For MIPS Loongson-3A if necessary.
+>       - loongson,ls2k0500-eiointc
+>       - loongson,ls2k200-eiointc
 
-Thanks,
-Youling
+Looks good, but didn't you state these are compatible between each
+other? I have impression there is a common set, so maybe one compatible
+work on other device with reduced number of devices?
 
->
-> Otherwise LGTM.
->
+Best regards,
+Krzysztof
 
