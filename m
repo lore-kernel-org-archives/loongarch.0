@@ -1,23 +1,24 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD0EB7F
-	for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 08:13:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BE7E7F
+	for <loongarch@lists.linux.dev>; Fri, 17 Feb 2023 08:24:34 +0000 (UTC)
 Received: from loongson.cn (unknown [192.168.200.1])
-	by gateway (Coremail) with SMTP id _____8Cxxtg2N+9jNLIBAA--.3298S3;
-	Fri, 17 Feb 2023 16:13:42 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dx2tnBOe9jIrMBAA--.3972S3;
+	Fri, 17 Feb 2023 16:24:33 +0800 (CST)
 Received: from [0.0.0.0] (unknown [192.168.200.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxyr02N+9jnyo1AA--.32871S3;
-	Fri, 17 Feb 2023 16:13:42 +0800 (CST)
-Subject: Re: [PATCH v5 4/5] LoongArch: Add support for kernel relocation
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxf+TAOe9j9Cs1AA--.63789S3;
+	Fri, 17 Feb 2023 16:24:32 +0800 (CST)
+Subject: Re: [PATCH v4 5/5] LoongArch: Add support for kernel address space
+ layout randomization (KASLR)
 To: Xi Ruoyao <xry111@xry111.site>
-References: <1676618789-20485-1-git-send-email-tangyouling@loongson.cn>
- <1676618789-20485-5-git-send-email-tangyouling@loongson.cn>
- <5ac82f53aeb6a040be90eac2be7c64055e62f0ef.camel@xry111.site>
+References: <1676018856-26520-1-git-send-email-tangyouling@loongson.cn>
+ <1676018856-26520-6-git-send-email-tangyouling@loongson.cn>
+ <41b6c7b779c1c4d33c644c406f337e27e124adaa.camel@xry111.site>
 Cc: Huacai Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>,
  Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
  linux-kernel@vger.kernel.org
 From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <fc5b0403-ed2f-2dcf-11b9-e3be4642ddda@loongson.cn>
-Date: Fri, 17 Feb 2023 16:13:42 +0800
+Message-ID: <f3cf8395-b4fa-4530-0702-2d5a01dd06f4@loongson.cn>
+Date: Fri, 17 Feb 2023 16:24:32 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -26,62 +27,44 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <5ac82f53aeb6a040be90eac2be7c64055e62f0ef.camel@xry111.site>
+In-Reply-To: <41b6c7b779c1c4d33c644c406f337e27e124adaa.camel@xry111.site>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Bxyr02N+9jnyo1AA--.32871S3
+X-CM-TRANSID:AQAAf8Cxf+TAOe9j9Cs1AA--.63789S3
 X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrtr1UZFW3Cr4kuF1rWFW5trb_yoWDXwb_uF
-	WFgr1qk3W5CrZ7K3Z2va13Xrs293yrJF4UWrn3X3yIva4ayanxJas8trnF9F45Xrn8Cr13
-	Zan7ur1Fkry2yjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUU5
-	Q7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
-	0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E
-	6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaVAv8VWrMcvjeVCFs4IE7x
-	kEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAK
-	I48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j
-	6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zRVWl
-	kUUUUU=
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUgm1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK0I
+	I2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0
+	Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84
+	ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxv
+	r21l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
+	cVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+	nxnUUI43ZEXa7xRE6wZ7UUUUU==
 
 
-
-On 02/17/2023 04:02 PM, Xi Ruoyao wrote:
-> On Fri, 2023-02-17 at 15:26 +0800, Youling Tang wrote:
+On 02/17/2023 04:09 PM, Xi Ruoyao wrote:
+> On Fri, 2023-02-10 at 16:47 +0800, Youling Tang wrote:
 >
->> This config allows to compile kernel as PIE and to relocate it at
->> any virtual address at runtime: this paves the way to KASLR.
->> Runtime relocation is possible since relocation metadata are embedded
->> into the kernel.
->>
->> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
->> Signed-off-by: Xi Ruoyao <xry111@xry111.site> # Use arch_initcall
->> Signed-off-by: Jinyang He <hejinyang@loongson.cn> # Provide la_abs idea
+>> +               /* Sync the caches ready for execution of new kernel
+>> */
+>> +               __asm__ __volatile__ (
+>> +                       "ibar 0 \t\n"
+>> +                       "dbar 0 \t\n");
 >
-> Use Suggested-by if only "idea" is provided.
-In addition to the idea, the first draft code of la_abs is also
-provided.
+> I think we should add ::: "memory" here to prevent a future compiler
+> from being too smart.
+Got it.
 
-Maybe change it to the following,
-   Signed-off-by: Jinyang He <hejinyang@loongson.cn> # Provide la_abs 
-relocation draft code
+Thanks,
+Youling
 
 >
->> +struct rela_la_abs {
->> +               long offset;
->> +               long symvalue;
->> +};
->
-> Use one tab instead of two for the indent.
-My mistake.
-
-Also the missing do_kaslr declaration will be added.
-
-Youling.
 > Otherwise LGTM.
 >
 
