@@ -1,52 +1,51 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A783201
-	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 11:23:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23037ED
+	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 17:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1676892214;
+	s=mimecast20190719; t=1676915181;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JGvEUYyDyInAU1qTOkUUwH1+5Pn5/FfAg09zLJh1EcU=;
-	b=LJ4z/ydlreQO2yAtfBGq5VjJCLgp297eaAHVbIuZOwUBIi2Z0QExyTv6nd/ARNoqMqdjn1
-	/zMysMRY0+wYzE6vrOvE/OCyAU5zz2zZy4+k6HBeuFrxSJpfHYMdYB4k5d6NnCqUnBPAwg
-	e5+N+BoK+DPErZpuJFnQdtZCGVRIc3E=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ck/8YAQ6br4cg4ndwhAICwHSU+oSs0QdaDqjZp8nNfE=;
+	b=D8Jilf6to6LqQ5fttr2vt2BOjQDwMzw9V9PqwzjKtsZtgus3F1jU2gnfG8Uot2bCZBTHyj
+	9q1PQSxAUgEKb1TBBI2iIXDs/Z/EMWu7oCHkLDMBnuYhzO7iCgMv8w5jTFxVpWT4T+3HId
+	llOLE+Z8Dmg99ZGAkGjwrYNthWokbFU=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-422-5z8iaukdNK29-jAFRtHbQQ-1; Mon, 20 Feb 2023 06:23:33 -0500
-X-MC-Unique: 5z8iaukdNK29-jAFRtHbQQ-1
-Received: by mail-wm1-f69.google.com with SMTP id j7-20020a05600c1c0700b003dc5dd44c0cso420229wms.8
-        for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 03:23:33 -0800 (PST)
+ us-mta-622-VKeTUvDOMPq7WdtcREwKPg-1; Mon, 20 Feb 2023 12:46:20 -0500
+X-MC-Unique: VKeTUvDOMPq7WdtcREwKPg-1
+Received: by mail-ed1-f72.google.com with SMTP id b1-20020aa7dc01000000b004ad062fee5eso2474849edu.17
+        for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 09:46:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JGvEUYyDyInAU1qTOkUUwH1+5Pn5/FfAg09zLJh1EcU=;
-        b=xZJRyL3CHxTkWgGKQPLPzHIeOSiU7r3uOrS5zct4JiBb0IQoSR8wJdHvZSH+C4I+uH
-         e2DG5Ow9Q9NvnKvWg4SxjKfMFKJplCV6cVsgQoIPAUivWxkajOX9Rvd2N5gBod0Emo7H
-         SFwCrHIAtwKuOIl2i/WcUDHIfeXqmR0MggQGSzOZawIjiO9KVdcl0niaJxdEOvyY31y5
-         pdQX+zP8ssbH5D9/RZzAH8/VxzcV7UJQ2++22HXR12kBPyYGc6OFDHBKpXgwUEMoOp2W
-         jZcPRb7ErrkWdGVBj/qv5MR6Ldj3XLZqf24wcSWdcH5CcPf+kMJU+F5MdrwGSYayie0Q
-         v4Hw==
-X-Gm-Message-State: AO0yUKVmrbx1RbZJZk8jihQz7uAQJO4fKQcc2/WvADKrSEx011wIdvVl
-	GpZTFUZKD8syoigRKMeqvBUoTF1fqsv7uYORoaXMwz3cWg0GSf97u4hIkFG2D+MT7T9RTQylsdc
-	A/KbUwXtvVNUfq5ZzvvCk
-X-Received: by 2002:adf:e889:0:b0:2bf:ae19:d8e4 with SMTP id d9-20020adfe889000000b002bfae19d8e4mr1431248wrm.16.1676892211955;
-        Mon, 20 Feb 2023 03:23:31 -0800 (PST)
-X-Google-Smtp-Source: AK7set8MwtYqrZBvXsoQ9yPZN/bwu32QfvZtBFBM6ley7E2vAkMmUmM+SZmaWRHMAwPacrP/Dgjyyg==
-X-Received: by 2002:adf:e889:0:b0:2bf:ae19:d8e4 with SMTP id d9-20020adfe889000000b002bfae19d8e4mr1431211wrm.16.1676892211619;
-        Mon, 20 Feb 2023 03:23:31 -0800 (PST)
-Received: from ?IPV6:2003:cb:c705:8300:e519:4218:a8b5:5bec? (p200300cbc7058300e5194218a8b55bec.dip0.t-ipconnect.de. [2003:cb:c705:8300:e519:4218:a8b5:5bec])
-        by smtp.gmail.com with ESMTPSA id u13-20020a5d434d000000b002c55ec7f661sm154441wrr.5.2023.02.20.03.23.28
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ck/8YAQ6br4cg4ndwhAICwHSU+oSs0QdaDqjZp8nNfE=;
+        b=D9+TefoFZQOZNbZrdoEHRjvcU2Bl/fWRV0uvFFVGdoloSzKpg2tDt4sncJ1AYabQJJ
+         vez4V0oXwWEx/jBnBajdo+z6MnDlUBi4hCAaxUwZDN3QPBFgltAxsGVIQpBE71kVfzXO
+         JGKfxp+wvMLUEY+fLqgEU7bjEo95hQUdtFTrEA4ztx34A3b+ThowJ84ZO7EfI9S305jy
+         BMWEcy/D5Fr7Q/UCvKnR1iA9lNG2bzjb/PVI3OnZSMQdgF06oYMNBo097TNomNe/1KlM
+         wIbz2aAVoonymnmr8VvkPZK6Ut4ye+IUhr400LTmbBBsnjWHWv8aKOxdG+lC9YKd0C57
+         vPzg==
+X-Gm-Message-State: AO0yUKXw8iUq8Cg1zMhsrhltDZO/S4wFykNog2ZWzoK6uZUaIJUTfSqf
+	qnb6i3OiUcJmUdat3QUkdSwF3ZK+fVQHIsl1DwlqnNjOnCClfwkA9jGxE7/kWZknWyyT+3uwgtZ
+	KYXMrWkPx6uEjXxfjYXNy
+X-Received: by 2002:a17:907:9714:b0:8b1:7eba:de5 with SMTP id jg20-20020a170907971400b008b17eba0de5mr9354782ejc.10.1676915179027;
+        Mon, 20 Feb 2023 09:46:19 -0800 (PST)
+X-Google-Smtp-Source: AK7set/Tg+D8jplbtCuUA/KAbL7Qq6RReoePpMuhnouFw3R+uTK3cUHQ5gyse11r3SB4HbH+iQqFqw==
+X-Received: by 2002:a17:907:9714:b0:8b1:7eba:de5 with SMTP id jg20-20020a170907971400b008b17eba0de5mr9354767ejc.10.1676915178760;
+        Mon, 20 Feb 2023 09:46:18 -0800 (PST)
+Received: from ?IPV6:2001:b07:6468:f312:4783:a68:c1ee:15c5? ([2001:b07:6468:f312:4783:a68:c1ee:15c5])
+        by smtp.googlemail.com with ESMTPSA id ce6-20020a170906b24600b008b1fc59a22esm4860751ejb.65.2023.02.20.09.46.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Feb 2023 03:23:30 -0800 (PST)
-Message-ID: <f50daeb7-7b41-0bed-73f0-b6358169521b@redhat.com>
-Date: Mon, 20 Feb 2023 12:23:28 +0100
+        Mon, 20 Feb 2023 09:46:18 -0800 (PST)
+Message-ID: <bf4111f9-f722-1847-4f1d-964c5356f392@redhat.com>
+Date: Mon, 20 Feb 2023 18:46:16 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -54,174 +53,60 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH v6 13/41] mm: Make pte_mkwrite() take a VMA
-To: Rick Edgecombe <rick.p.edgecombe@intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-arch@vger.kernel.org,
- linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- Andy Lutomirski <luto@kernel.org>, Balbir Singh <bsingharora@gmail.com>,
- Borislav Petkov <bp@alien8.de>, Cyrill Gorcunov <gorcunov@gmail.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Eugene Syromiatnikov <esyr@redhat.com>, Florian Weimer <fweimer@redhat.com>,
- "H . J . Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
- Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
- Mike Kravetz <mike.kravetz@oracle.com>, Nadav Amit <nadav.amit@gmail.com>,
- Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
- Peter Zijlstra <peterz@infradead.org>, Randy Dunlap <rdunlap@infradead.org>,
- Weijiang Yang <weijiang.yang@intel.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- John Allen <john.allen@amd.com>, kcc@google.com, eranian@google.com,
- rppt@kernel.org, jamorris@linux.microsoft.com, dethoma@microsoft.com,
- akpm@linux-foundation.org, Andrew.Cooper3@citrix.com,
- christina.schimpe@intel.com, debug@rivosinc.com
-Cc: linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
- linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, xen-devel@lists.xenproject.org
-References: <20230218211433.26859-1-rick.p.edgecombe@intel.com>
- <20230218211433.26859-14-rick.p.edgecombe@intel.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20230218211433.26859-14-rick.p.edgecombe@intel.com>
+ Thunderbird/102.7.1
+To: Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn
+References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
+ <20230220065735.1282809-3-zhaotianrui@loongson.cn>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v2 02/29] LoongArch: KVM: Implement kvm module related
+ interface
+In-Reply-To: <20230220065735.1282809-3-zhaotianrui@loongson.cn>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 18.02.23 22:14, Rick Edgecombe wrote:
-> The x86 Control-flow Enforcement Technology (CET) feature includes a new
-> type of memory called shadow stack. This shadow stack memory has some
-> unusual properties, which requires some core mm changes to function
-> properly.
-> 
-> One of these unusual properties is that shadow stack memory is writable,
-> but only in limited ways. These limits are applied via a specific PTE
-> bit combination. Nevertheless, the memory is writable, and core mm code
-> will need to apply the writable permissions in the typical paths that
-> call pte_mkwrite().
-> 
-> In addition to VM_WRITE, the shadow stack VMA's will have a flag denoting
-> that they are special shadow stack flavor of writable memory. So make
-> pte_mkwrite() take a VMA, so that the x86 implementation of it can know to
-> create regular writable memory or shadow stack memory.
-> 
-> Apply the same changes for pmd_mkwrite() and huge_pte_mkwrite().
-> 
-> No functional change.
-> 
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-alpha@vger.kernel.org
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-csky@vger.kernel.org
-> Cc: linux-hexagon@vger.kernel.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: loongarch@lists.linux.dev
-> Cc: linux-m68k@lists.linux-m68k.org
-> Cc: Michal Simek <monstr@monstr.eu>
-> Cc: Dinh Nguyen <dinguyen@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: openrisc@lists.librecores.org
-> Cc: linux-parisc@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Cc: linux-um@lists.infradead.org
-> Cc: xen-devel@lists.xenproject.org
-> Cc: linux-arch@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Tested-by: Pengfei Xu <pengfei.xu@intel.com>
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-> 
-> ---
-> Hi Non-x86 Arch’s,
-> 
-> x86 has a feature that allows for the creation of a special type of
-> writable memory (shadow stack) that is only writable in limited specific
-> ways. Previously, changes were proposed to core MM code to teach it to
-> decide when to create normally writable memory or the special shadow stack
-> writable memory, but David Hildenbrand suggested[0] to change
-> pXX_mkwrite() to take a VMA, so awareness of shadow stack memory can be
-> moved into x86 code.
-> 
-> Since pXX_mkwrite() is defined in every arch, it requires some tree-wide
-> changes. So that is why you are seeing some patches out of a big x86
-> series pop up in your arch mailing list. There is no functional change.
-> After this refactor, the shadow stack series goes on to use the arch
-> helpers to push shadow stack memory details inside arch/x86.
-> 
-> Testing was just 0-day build testing.
-> 
-> Hopefully that is enough context. Thanks!
-> 
-> [0] https://lore.kernel.org/lkml/0e29a2d0-08d8-bcd6-ff26-4bea0e4037b0@redhat.com/#t
-> 
-> v6:
->   - New patch
-> ---
->   Documentation/mm/arch_pgtable_helpers.rst    |  9 ++++++---
->   arch/alpha/include/asm/pgtable.h             |  6 +++++-
->   arch/arc/include/asm/hugepage.h              |  2 +-
->   arch/arc/include/asm/pgtable-bits-arcv2.h    |  7 ++++++-
->   arch/arm/include/asm/pgtable-3level.h        |  7 ++++++-
->   arch/arm/include/asm/pgtable.h               |  2 +-
->   arch/arm64/include/asm/pgtable.h             |  4 ++--
->   arch/csky/include/asm/pgtable.h              |  2 +-
->   arch/hexagon/include/asm/pgtable.h           |  2 +-
->   arch/ia64/include/asm/pgtable.h              |  2 +-
->   arch/loongarch/include/asm/pgtable.h         |  4 ++--
->   arch/m68k/include/asm/mcf_pgtable.h          |  2 +-
->   arch/m68k/include/asm/motorola_pgtable.h     |  6 +++++-
->   arch/m68k/include/asm/sun3_pgtable.h         |  6 +++++-
->   arch/microblaze/include/asm/pgtable.h        |  2 +-
->   arch/mips/include/asm/pgtable.h              |  6 +++---
->   arch/nios2/include/asm/pgtable.h             |  2 +-
->   arch/openrisc/include/asm/pgtable.h          |  2 +-
->   arch/parisc/include/asm/pgtable.h            |  6 +++++-
->   arch/powerpc/include/asm/book3s/32/pgtable.h |  2 +-
->   arch/powerpc/include/asm/book3s/64/pgtable.h |  4 ++--
->   arch/powerpc/include/asm/nohash/32/pgtable.h |  2 +-
->   arch/powerpc/include/asm/nohash/32/pte-8xx.h |  2 +-
->   arch/powerpc/include/asm/nohash/64/pgtable.h |  2 +-
->   arch/riscv/include/asm/pgtable.h             |  6 +++---
->   arch/s390/include/asm/hugetlb.h              |  4 ++--
->   arch/s390/include/asm/pgtable.h              |  4 ++--
->   arch/sh/include/asm/pgtable_32.h             | 10 ++++++++--
->   arch/sparc/include/asm/pgtable_32.h          |  2 +-
->   arch/sparc/include/asm/pgtable_64.h          |  6 +++---
->   arch/um/include/asm/pgtable.h                |  2 +-
->   arch/x86/include/asm/pgtable.h               |  6 ++++--
->   arch/xtensa/include/asm/pgtable.h            |  2 +-
->   include/asm-generic/hugetlb.h                |  4 ++--
->   include/linux/mm.h                           |  2 +-
->   mm/debug_vm_pgtable.c                        | 16 ++++++++--------
->   mm/huge_memory.c                             |  6 +++---
->   mm/hugetlb.c                                 |  4 ++--
->   mm/memory.c                                  |  4 ++--
->   mm/migrate_device.c                          |  2 +-
->   mm/mprotect.c                                |  2 +-
->   mm/userfaultfd.c                             |  2 +-
->   42 files changed, 106 insertions(+), 69 deletions(-)
+On 2/20/23 07:57, Tianrui Zhao wrote:
+> +	order = get_order(kvm_vector_size + kvm_enter_guest_size);
+> +	addr = (void *)__get_free_pages(GFP_KERNEL, order);
+> +	if (!addr) {
+> +		free_percpu(vmcs);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	memcpy(addr, kvm_vector_entry, kvm_vector_size);
+> +	memcpy(addr + kvm_vector_size, kvm_enter_guest, kvm_enter_guest_size);
+> +	flush_icache_range((unsigned long)addr, (unsigned long)addr +
+> +				kvm_vector_size + kvm_enter_guest_size);
+> +
+> +	vpid_mask = read_csr_gstat();
+> +	vpid_mask = (vpid_mask & CSR_GSTAT_GIDBIT) >> CSR_GSTAT_GIDBIT_SHIFT;
+> +	if (vpid_mask)
+> +		vpid_mask = GENMASK(vpid_mask - 1, 0);
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		context = per_cpu_ptr(vmcs, cpu);
+> +		context->vpid_mask = vpid_mask;
+> +		context->vpid_cache = context->vpid_mask + 1;
+> +		context->last_vcpu = NULL;
+> +		context->kvm_eentry = addr;
+> +		context->kvm_enter_guest = addr + kvm_vector_size;
+> +		context->page_order = order;
+> +	}
 
-That looks painful but IMHO worth it :)
+A lot of these variables are constant across all pCPUs, any reason to 
+have them in a per-CPU variable?  Likewise, since they are all the same 
+as the constant global vmcs variable, why make them part of struct 
+kvm_context instead of just making them globals?
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Also, why does the world switch code need a copy?
 
--- 
-Thanks,
-
-David / dhildenb
+Paolo
 
