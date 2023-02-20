@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A85B3EDF
-	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 06:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10CC9EDD
+	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 06:57:39 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxYczlGfNjmrQCAA--.50S3;
-	Mon, 20 Feb 2023 14:57:41 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxII_jGfNjTbQCAA--.54S3;
+	Mon, 20 Feb 2023 14:57:39 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax+73fGfNjFvk2AA--.34690S17;
-	Mon, 20 Feb 2023 14:57:40 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax+73fGfNjFvk2AA--.34690S10;
+	Mon, 20 Feb 2023 14:57:38 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -20,9 +20,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn
-Subject: [PATCH v2 15/29] LoongArch: KVM: Implement vcpu status description
-Date: Mon, 20 Feb 2023 14:57:21 +0800
-Message-Id: <20230220065735.1282809-16-zhaotianrui@loongson.cn>
+Subject: [PATCH v2 08/29] LoongArch: KVM: Implement vcpu handle exit interface
+Date: Mon, 20 Feb 2023 14:57:14 +0800
+Message-Id: <20230220065735.1282809-9-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
 References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
@@ -33,13 +33,13 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax+73fGfNjFvk2AA--.34690S17
+X-CM-TRANSID:AQAAf8Ax+73fGfNjFvk2AA--.34690S10
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxJrWfXw17tr1kZryDXw4rGrg_yoW8Jw4rpF
-	nrua4Ygr4rWwn3Ww1fJ398Xw47XrZ5WF1fWr9Fq34YkFnrtrn5XFW0krWDGFyvy34rAr1S
-	qayrtwnrua90yw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxGw47Zr4UXFWDGFWrWw43Awb_yoW5Ww47pa
+	y8CryY9w48G34xAanayr1qqr4YvrZ3Kr1xZrZrW3yayrsrtas8Jr4kKrZxtFy8W34FvF1f
+	ZF1rt3Z0kr4qyw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	b4xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
 	CY1x0267AKxVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
@@ -48,46 +48,115 @@ X-Coremail-Antispam: 1Uk129KBjvJXoWxJrWfXw17tr1kZryDXw4rGrg_yoW8Jw4rpF
 	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
 	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
 	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
+	x0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-Implement loongarch vcpu status description such as idle exits counter,
-signal exits counter, cpucfg exits counter, etc.
+Implement vcpu handle exit interface, getting the exit code by ESTAT
+register and using kvm exception vector to handle it.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 86 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index f649f47c4..cfd35b4d6 100644
+index 571ac8b9d..e08a4faa0 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -13,6 +13,23 @@
- #define CREATE_TRACE_POINTS
- #include "trace.h"
+@@ -38,6 +38,92 @@ static int _kvm_check_requests(struct kvm_vcpu *vcpu, int cpu)
+ 	return ret;
+ }
  
-+const struct _kvm_stats_desc kvm_vcpu_stats_desc[] = {
-+	KVM_GENERIC_VCPU_STATS(),
-+	STATS_DESC_COUNTER(VCPU, idle_exits),
-+	STATS_DESC_COUNTER(VCPU, signal_exits),
-+	STATS_DESC_COUNTER(VCPU, int_exits),
-+	STATS_DESC_COUNTER(VCPU, cpucfg_exits),
-+};
++/*
++ * Return value is in the form (errcode<<2 | RESUME_FLAG_HOST | RESUME_FLAG_NV)
++ */
++static int _kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
++{
++	unsigned long exst = vcpu->arch.host_estat;
++	u32 intr = exst & 0x1fff; /* ignore NMI */
++	u32 exccode = (exst & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
++	u32 __user *opc = (u32 __user *) vcpu->arch.pc;
++	int ret = RESUME_GUEST, cpu;
 +
-+const struct kvm_stats_header kvm_vcpu_stats_header = {
-+	.name_size = KVM_STATS_NAME_SIZE,
-+	.num_desc = ARRAY_SIZE(kvm_vcpu_stats_desc),
-+	.id_offset = sizeof(struct kvm_stats_header),
-+	.desc_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE,
-+	.data_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE +
-+		       sizeof(kvm_vcpu_stats_desc),
-+};
++	vcpu->mode = OUTSIDE_GUEST_MODE;
 +
- int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
++	/* Set a default exit reason */
++	run->exit_reason = KVM_EXIT_UNKNOWN;
++	run->ready_for_interrupt_injection = 1;
++
++	/*
++	 * Set the appropriate status bits based on host CPU features,
++	 * before we hit the scheduler
++	 */
++
++	local_irq_enable();
++
++	kvm_debug("%s: exst: %lx, PC: %p, kvm_run: %p, kvm_vcpu: %p\n",
++			__func__, exst, opc, run, vcpu);
++	trace_kvm_exit(vcpu, exccode);
++	if (exccode) {
++		ret = _kvm_handle_fault(vcpu, exccode);
++	} else {
++		WARN(!intr, "suspicious vm exiting");
++		++vcpu->stat.int_exits;
++
++		if (need_resched())
++			cond_resched();
++
++		ret = RESUME_GUEST;
++	}
++
++	cond_resched();
++
++	local_irq_disable();
++
++	if (ret == RESUME_GUEST)
++		kvm_acquire_timer(vcpu);
++
++	if (!(ret & RESUME_HOST)) {
++		_kvm_deliver_intr(vcpu);
++		/* Only check for signals if not already exiting to userspace */
++		if (signal_pending(current)) {
++			run->exit_reason = KVM_EXIT_INTR;
++			ret = (-EINTR << 2) | RESUME_HOST;
++			++vcpu->stat.signal_exits;
++			trace_kvm_exit(vcpu, KVM_TRACE_EXIT_SIGNAL);
++		}
++	}
++
++	if (ret == RESUME_GUEST) {
++		trace_kvm_reenter(vcpu);
++
++		/*
++		 * Make sure the read of VCPU requests in vcpu_reenter()
++		 * callback is not reordered ahead of the write to vcpu->mode,
++		 * or we could miss a TLB flush request while the requester sees
++		 * the VCPU as outside of guest mode and not needing an IPI.
++		 */
++		smp_store_mb(vcpu->mode, IN_GUEST_MODE);
++
++		cpu = smp_processor_id();
++		_kvm_check_requests(vcpu, cpu);
++		_kvm_check_vmid(vcpu, cpu);
++		vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
++
++		/*
++		 * If FPU are enabled (i.e. the guest's FPU context
++		 * is live), restore FCSR0.
++		 */
++		if (_kvm_guest_has_fpu(&vcpu->arch) &&
++			read_csr_euen() & (CSR_EUEN_FPEN)) {
++			kvm_restore_fcsr(&vcpu->arch.fpu);
++		}
++	}
++
++	return ret;
++}
++
+ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
  {
- 	return !!(vcpu->arch.irq_pending);
+ 	int i;
 -- 
 2.31.1
 
