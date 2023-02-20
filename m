@@ -1,51 +1,51 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5688B2F29
-	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 18:45:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDC28497
+	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 18:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1676918719;
+	s=mimecast20190719; t=1676919014;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=m2vFhn7t5tTwlRY2KgZYkIDGVjOFCQRkUrMdOBQQfYk=;
-	b=H466vI/dp7Uj2gDxkSJd4dl0Ck7L6fhcPteIOASaRka0Q3yz/lxLEGBMJAMj6NZpI83GKk
-	aR+HJ8hgHLcmVeJFv4JX2NQO0N+XYnZz0XwBR0NEN5qamw4C6AHWnWaM3dcHrs8/+qBncv
-	Y/kIyf4SHzO62ZW94qJ1bSMBYGxgV2g=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=oNEQIMEKzUu2uav8P64r69zff0c8FcvklSUxsToQk9c=;
+	b=B2iGCubM1EgoY3r2T0HjtaZyjssca654gV53rqs5FH3StQyM96hjktj+p40iC5EfyEZFME
+	dCrlFfHuu3bIkm8O/yBlfOMP+5ZQVF75LRTblAPg2rsPR1eMsGnfH5NsbAP3GQwSnQbE00
+	npAsJ+vbDENEiExhl2N7IeVbtw9oybE=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-371-rODwwa2XM2CQLOyApci5Fg-1; Mon, 20 Feb 2023 13:45:18 -0500
-X-MC-Unique: rODwwa2XM2CQLOyApci5Fg-1
-Received: by mail-ed1-f71.google.com with SMTP id k12-20020a50c8cc000000b004accf30f6d3so2726699edh.14
-        for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 10:45:17 -0800 (PST)
+ us-mta-660-3BethDz5MpSaCnGOcNMS8A-1; Mon, 20 Feb 2023 13:50:13 -0500
+X-MC-Unique: 3BethDz5MpSaCnGOcNMS8A-1
+Received: by mail-ed1-f70.google.com with SMTP id q13-20020a5085cd000000b004af50de0bcfso39336edh.15
+        for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 10:50:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m2vFhn7t5tTwlRY2KgZYkIDGVjOFCQRkUrMdOBQQfYk=;
-        b=x5i93GczIB7Ppjbygolf86kYMiIMTyOne19j7lDbmX8lwcclGhfMB23PF+RbliCTOF
-         UarPSxfNDNx3kCN2715X7I4aMQokNYLNOZFpnfpr2X6nOUrW8OJf8vkLWtPbTlFeQ9WD
-         ZKoEPtdprRq3XLjnbmg+tx59Ed701HLPTrPmSNZ4zVbnqSyZIo3srKB/sW24Ux2c17Qs
-         m8GqTzRdC4KdDSSa8TqpxaKhLznc2NHFb7RVJMlgQdh4vHGC6nneh4dKljXn94bzzJI0
-         4Guamq6eGMWevzqFaP5eYh6Y68LocThcKocukoV/nNqBat++IFuYgpc0Vjh3+BsYHWGK
-         v5Og==
-X-Gm-Message-State: AO0yUKWb0rNYjojkfRLgDpcWboe3qgKSkwk8PnmuJx9uzNnHZFcQnnhs
-	vOlNSQymZFFdOwQu7L0ffMhOhkUxuM1SnM9cKLLr0wtySuwq9wTza1Yl5N7z3VnQ17Z6vfyg1CQ
-	/asoa9Aqi1Db+4CD9/625
-X-Received: by 2002:aa7:de99:0:b0:4ad:8fc7:76db with SMTP id j25-20020aa7de99000000b004ad8fc776dbmr1703387edv.36.1676918717073;
-        Mon, 20 Feb 2023 10:45:17 -0800 (PST)
-X-Google-Smtp-Source: AK7set9E6TCSVTn6bfP1N1j0XVnsM2kC+uO9GjLfyWWpTDZNEIwmetLbyvbD8dAXXLs2i9/y0H+5mg==
-X-Received: by 2002:aa7:de99:0:b0:4ad:8fc7:76db with SMTP id j25-20020aa7de99000000b004ad8fc776dbmr1703365edv.36.1676918716802;
-        Mon, 20 Feb 2023 10:45:16 -0800 (PST)
+        bh=oNEQIMEKzUu2uav8P64r69zff0c8FcvklSUxsToQk9c=;
+        b=TIJyUysxYzoyH6+MTtiqhwiAGm1q4PvU34drTU2PSW7pA0GKLIXDhorZn3+GN5YP5H
+         1B+6V3A1uXbRIBoyzoZs3CQAYI811ZOiuGXJoaTU/hjgZ8x/6qqR8Mt7dwFPsepEldPi
+         pB3Of5Hpeewo8HdpUckxrXyAEWlwlSszVaOLsnB3s4OM3MVlcJfk2AFVyD9AxFd4u8H/
+         KAXfus7jDXhebHFmCNe1yb/UK6SRnJOYqIF50TShmHYjjkRlSXRrbGEnI3V2N4NBkfXZ
+         3W8eGIlexDihCgHtgjVi1+tzjQtxpWMG2bOTtVyRPB1i1UngXO7RQjAyZ5Ho8MJDs6bB
+         HZvQ==
+X-Gm-Message-State: AO0yUKXrdk/jLWrdA26etk11mSvYI+/8XixW5XmVycKsGGttLWngyoQo
+	pNzqRl+3iU3sRtHTzg4Q6gV7eAmjeqjZbHIdmJAVT1k11+IYzaZ8o4+IrSfXp3iQb1Fyefh5bUU
+	QVNR1shJN70O6/8bgM9VH
+X-Received: by 2002:a17:906:2413:b0:86c:a3ed:1442 with SMTP id z19-20020a170906241300b0086ca3ed1442mr8756810eja.4.1676919011914;
+        Mon, 20 Feb 2023 10:50:11 -0800 (PST)
+X-Google-Smtp-Source: AK7set/xFOW7y3n8LAi7Lq4oM1pBvG3AfNA2jHHJRrTVLW3aX4k0F1SjGK9u/iFMGDvuf2vLJ5sZqg==
+X-Received: by 2002:a17:906:2413:b0:86c:a3ed:1442 with SMTP id z19-20020a170906241300b0086ca3ed1442mr8756797eja.4.1676919011664;
+        Mon, 20 Feb 2023 10:50:11 -0800 (PST)
 Received: from ?IPV6:2001:b07:6468:f312:4783:a68:c1ee:15c5? ([2001:b07:6468:f312:4783:a68:c1ee:15c5])
-        by smtp.googlemail.com with ESMTPSA id b10-20020a056402278a00b004aee606432dsm1479350ede.83.2023.02.20.10.45.15
+        by smtp.googlemail.com with ESMTPSA id fq30-20020a1709069d9e00b008ce5b426d77sm2194511ejc.13.2023.02.20.10.50.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Feb 2023 10:45:16 -0800 (PST)
-Message-ID: <f6bb5bdd-c058-b76e-d743-f83c99ee45f5@redhat.com>
-Date: Mon, 20 Feb 2023 19:45:15 +0100
+        Mon, 20 Feb 2023 10:50:11 -0800 (PST)
+Message-ID: <918d0522-56ac-49c3-6604-f44a58ddc645@redhat.com>
+Date: Mon, 20 Feb 2023 19:50:10 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -54,6 +54,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
+Subject: Re: [PATCH v2 13/29] LoongArch: KVM: Implement misc vcpu related
+ interfaces
 To: Tianrui Zhao <zhaotianrui@loongson.cn>
 Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
@@ -62,11 +64,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
  Alex Deucher <alexander.deucher@amd.com>,
  Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn
 References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
- <20230220065735.1282809-9-zhaotianrui@loongson.cn>
+ <20230220065735.1282809-14-zhaotianrui@loongson.cn>
 From: Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v2 08/29] LoongArch: KVM: Implement vcpu handle exit
- interface
-In-Reply-To: <20230220065735.1282809-9-zhaotianrui@loongson.cn>
+In-Reply-To: <20230220065735.1282809-14-zhaotianrui@loongson.cn>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -74,216 +74,15 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2/20/23 07:57, Tianrui Zhao wrote:
-> + * Return value is in the form (errcode<<2 | RESUME_FLAG_HOST | RESUME_FLAG_NV)
-
-As far as I can see, RESUME_FLAG_NV does not exist anymore and this is 
-just copied from arch/mips?
-
-You can keep RESUME_HOST/RESUME_GUEST for the individual functions, but 
-here please make it just "1" for resume guest, and "<= 0" for resume 
-host.  This is easy enough to check from assembly and removes the srai by 2.
-
-> +static int _kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
+> +
+> +int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu *vcpu,
+> +				  struct kvm_translation *tr)
 > +{
-> +	unsigned long exst = vcpu->arch.host_estat;
-> +	u32 intr = exst & 0x1fff; /* ignore NMI */
-> +	u32 exccode = (exst & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
-> +	u32 __user *opc = (u32 __user *) vcpu->arch.pc;
-> +	int ret = RESUME_GUEST, cpu;
-> +
-> +	vcpu->mode = OUTSIDE_GUEST_MODE;
-> +
-> +	/* Set a default exit reason */
-> +	run->exit_reason = KVM_EXIT_UNKNOWN;
-> +	run->ready_for_interrupt_injection = 1;
-> +
-> +	/*
-> +	 * Set the appropriate status bits based on host CPU features,
-> +	 * before we hit the scheduler
-> +	 */
-
-Stale comment?
-
-> +	local_irq_enable();
-
-Please add guest_state_exit_irqoff() here.
-
-> +	kvm_debug("%s: exst: %lx, PC: %p, kvm_run: %p, kvm_vcpu: %p\n",
-> +			__func__, exst, opc, run, vcpu);
-
-Please add the information to the kvm_exit tracepoint (thus also 
-removing variables such as "exst" or "opc" from this function) instead 
-of calling kvm_debug().
-
-> +	trace_kvm_exit(vcpu, exccode);
-> +	if (exccode) {
-> +		ret = _kvm_handle_fault(vcpu, exccode);
-> +	} else {
-> +		WARN(!intr, "suspicious vm exiting");
-> +		++vcpu->stat.int_exits;
-> +
-> +		if (need_resched())
-> +			cond_resched();
-
-This "if" is not necessary because there is already a cond_resched() below.
-
-> +		ret = RESUME_GUEST;
-
-This "ret" is not necessary because "ret" is already initialized to 
-RESUME_GUEST above, you can either remove it or remove the initializer.
-
-> +	}
-> +
-> +	cond_resched();
-> +	local_irq_disable();
-
-At this point, ret is either RESUME_GUEST or RESUME_HOST.  So, the "if"s 
-below are either all taken or all not taken, and most of this code:
-
-	kvm_acquire_timer(vcpu);
-	_kvm_deliver_intr(vcpu);
-
-	if (signal_pending(current)) {
-		run->exit_reason = KVM_EXIT_INTR;
-		ret = (-EINTR << 2) | RESUME_HOST;
-		++vcpu->stat.signal_exits;
-		// no need for a tracepoint here
-		// trace_kvm_exit(vcpu, KVM_TRACE_EXIT_SIGNAL);
-	}
-
-	trace_kvm_reenter(vcpu);
-
-	/*
-	 * Make sure the read of VCPU requests in vcpu_reenter()
-	 * callback is not reordered ahead of the write to vcpu->mode,
-	 * or we could miss a TLB flush request while the requester sees
-	 * the VCPU as outside of guest mode and not needing an IPI.
-	 */
-	smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-
-	cpu = smp_processor_id();
-	_kvm_check_requests(vcpu, cpu);
-	_kvm_check_vmid(vcpu, cpu);
-	vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
-
-	/*
-	 * If FPU are enabled (i.e. the guest's FPU context
-	 * is live), restore FCSR0.
-	 */
-	if (_kvm_guest_has_fpu(&vcpu->arch) &&
-		read_csr_euen() & (CSR_EUEN_FPEN)) {
-		kvm_restore_fcsr(&vcpu->arch.fpu);
-	}
-
-(all except for the "if (signal_pending(current))" and the final "if") 
-is pretty much duplicated with kvm_arch_vcpu_ioctl_run(); the remaining 
-code can also be done from kvm_arch_vcpu_ioctl_run(), the cost is small. 
-  Please move it to a separate function, for example:
-
-int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
-{
-	if (signal_pending(current)) {
-		run->exit_reason = KVM_EXIT_INTR;
-		++vcpu->stat.signal_exits;
-		return -EINTR;
-	}
-
-	kvm_acquire_timer(vcpu);
-	_kvm_deliver_intr(vcpu);
-
-	...
-
-	if (_kvm_guest_has_fpu(&vcpu->arch) &&
-		read_csr_euen() & (CSR_EUEN_FPEN)) {
-		kvm_restore_fcsr(&vcpu->arch.fpu);
-	}
-	return 1;
-}
-
-Call it from _kvm_handle_exit():
-
-	if (ret == RESUME_HOST)
-		return 0;
-
-	r = kvm_pre_enter_guest(vcpu);
-	if (r > 0) {
-		trace_kvm_reenter(vcpu);
-		guest_state_enter_irqoff();
-	}
-
-	return r;
-
-and from kvm_arch_vcpu_ioctl_run():
-
-	local_irq_disable();
-	guest_timing_enter_irqoff();
-	r = kvm_pre_enter_guest(vcpu);
-	if (r > 0) {
-		trace_kvm_enter(vcpu);
-		/*
-		 * This should actually not be a function pointer, but
-		 * just for clarity */
-		 */
-		guest_state_enter_irqoff();
-		r = vcpu->arch.vcpu_run(run, vcpu);
-		/* guest_state_exit_irqoff() already done.  */
-		trace_kvm_out(vcpu);
-	}
-	guest_timing_exit_irqoff();
-	local_irq_enable();
-
-out:
-	kvm_sigset_deactivate(vcpu);
-
-	vcpu_put(vcpu);
-	return r;
-
-Paolo
-
-> +	if (ret == RESUME_GUEST)
-> +		kvm_acquire_timer(vcpu);
-> +
-> +	if (!(ret & RESUME_HOST)) {
-> +		_kvm_deliver_intr(vcpu);
-> +		/* Only check for signals if not already exiting to userspace */
-> +		if (signal_pending(current)) {
-> +			run->exit_reason = KVM_EXIT_INTR;
-> +			ret = (-EINTR << 2) | RESUME_HOST;
-> +			++vcpu->stat.signal_exits;
-> +			trace_kvm_exit(vcpu, KVM_TRACE_EXIT_SIGNAL);
-> +		}
-> +	}
-> +
-> +	if (ret == RESUME_GUEST) {
-> +		trace_kvm_reenter(vcpu);
-> +
-> +		/*
-> +		 * Make sure the read of VCPU requests in vcpu_reenter()
-> +		 * callback is not reordered ahead of the write to vcpu->mode,
-> +		 * or we could miss a TLB flush request while the requester sees
-> +		 * the VCPU as outside of guest mode and not needing an IPI.
-> +		 */
-> +		smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-> +
-> +		cpu = smp_processor_id();
-> +		_kvm_check_requests(vcpu, cpu);
-> +		_kvm_check_vmid(vcpu, cpu);
-> +		vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
-> +
-> +		/*
-> +		 * If FPU are enabled (i.e. the guest's FPU context
-> +		 * is live), restore FCSR0.
-> +		 */
-> +		if (_kvm_guest_has_fpu(&vcpu->arch) &&
-> +			read_csr_euen() & (CSR_EUEN_FPEN)) {
-> +			kvm_restore_fcsr(&vcpu->arch.fpu);
-> +		}
-> +	}
-> +
-> +	return ret;
+> +	return 0;
 > +}
 > +
->   int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->   {
->   	int i;
+
+Please return -EINVAL instead.
+
+Paolo
 
