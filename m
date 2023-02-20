@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCEC9EDD
-	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 06:57:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB17D10E1
+	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 06:57:49 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Dxj83qGfNjI7UCAA--.65S3;
-	Mon, 20 Feb 2023 14:57:46 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxJPTrGfNjNLUCAA--.69S3;
+	Mon, 20 Feb 2023 14:57:47 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax+73fGfNjFvk2AA--.34690S28;
-	Mon, 20 Feb 2023 14:57:44 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax+73fGfNjFvk2AA--.34690S30;
+	Mon, 20 Feb 2023 14:57:46 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -20,9 +20,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn
-Subject: [PATCH v2 26/29] LoongArch: KVM: Implement kvm exception vector
-Date: Mon, 20 Feb 2023 14:57:32 +0800
-Message-Id: <20230220065735.1282809-27-zhaotianrui@loongson.cn>
+Subject: [PATCH v2 28/29] LoongArch: KVM: Implement probe virtualization when loongarch cpu init
+Date: Mon, 20 Feb 2023 14:57:34 +0800
+Message-Id: <20230220065735.1282809-29-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
 References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
@@ -33,11 +33,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax+73fGfNjFvk2AA--.34690S28
+X-CM-TRANSID:AQAAf8Ax+73fGfNjFvk2AA--.34690S30
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Kw15tF1UurWUKF17uF4UJwb_yoW8ZFW8pF
-	yfA34Yyr48Ww12ya4akw1vgF13AayxKr17WrW7G345uw4qqryrtrWvk397JF43KryrZF1x
-	JFZ8tFn8uF4UG37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw1fCFWfZw1DJr47ZrW5KFg_yoW8tFy5pr
+	W2vFW3trWUKr92ga93Gr1agrnxtFWkKa129F47tayfAr4Ut3W5Xwn3C34UCFs7Zw4xAryr
+	Xrn7A3WvqF1DX3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -52,70 +52,85 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7Kw15tF1UurWUKF17uF4UJwb_yoW8ZFW8pF
 	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
 	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
 
-Implement kvm exception vector, using _kvm_fault_tables array to save
-the handle function pointer and it is used when vcpu handle exit.
+Implement probe virtualization when loongarch cpu init, including guest
+gid info, guest fpu info, etc.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 48 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ arch/loongarch/kernel/cpu-probe.c | 53 +++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 89c90faa1..6fd3219bb 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -652,3 +652,51 @@ static int _kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
- 	kvm_own_fpu(vcpu);
- 	return RESUME_GUEST;
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index 3a3fce2d7..9c3483d9a 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -176,6 +176,57 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
+ 	}
  }
-+
-+/*
-+ * Loongarch KVM callback handling for not implemented guest exiting
-+ */
-+static int _kvm_fault_ni(struct kvm_vcpu *vcpu)
+ 
++static inline void cpu_probe_guestinfo(struct cpuinfo_loongarch *c)
 +{
-+	unsigned long estat, badv;
-+	unsigned int exccode, inst;
++	unsigned long guestinfo;
 +
-+	/*
-+	 *  Fetch the instruction.
-+	 */
-+	badv = vcpu->arch.badv;
-+	estat = vcpu->arch.host_estat;
-+	exccode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
-+	inst = vcpu->arch.badi;
-+	kvm_err("Exccode: %d PC=%#lx inst=0x%08x BadVaddr=%#lx estat=%#llx\n",
-+			exccode, vcpu->arch.pc, inst, badv, read_gcsr_estat());
-+	kvm_arch_vcpu_dump_regs(vcpu);
-+	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-+
-+	return RESUME_HOST;
++	guestinfo = read_csr_gstat();
++	if (guestinfo & CSR_GSTAT_GIDBIT) {
++		c->options |= LOONGARCH_CPU_GUESTID;
++		write_csr_gstat(0);
++	}
 +}
 +
-+static exit_handle_fn _kvm_fault_tables[EXCCODE_INT_START] = {
-+	[EXCCODE_TLBL]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBI]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBNR]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBNX]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBS]		= _kvm_handle_write_fault,
-+	[EXCCODE_TLBM]		= _kvm_handle_write_fault,
-+	[EXCCODE_FPDIS]		= _kvm_handle_fpu_disabled,
-+	[EXCCODE_GSPR]		= _kvm_handle_gspr,
-+};
-+
-+int _kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
++static inline void cpu_probe_lvz(struct cpuinfo_loongarch *c)
 +{
-+	return _kvm_fault_tables[fault](vcpu);
++	unsigned long gcfg, gprcfg1;
++
++	cpu_probe_guestinfo(c);
++
++	c->guest.options |= LOONGARCH_CPU_FPU;
++	c->guest.options_dyn |= LOONGARCH_CPU_FPU;
++	c->guest.options_dyn |= LOONGARCH_CPU_PMP;
++
++	c->guest.ases |= LOONGARCH_CPU_LSX;
++	c->guest.ases_dyn |= LOONGARCH_CPU_LSX;
++	gprcfg1 = read_gcsr_prcfg1();
++	c->guest.kscratch_mask = GENMASK((gprcfg1 & CSR_CONF1_KSNUM) - 1, 0);
++
++	gcfg = read_csr_gcfg();
++	if (gcfg & CSR_GCFG_MATP_GUEST)
++		c->guest_cfg |= BIT(0);
++	if (gcfg & CSR_GCFG_MATP_ROOT)
++		c->guest_cfg |= BIT(1);
++	if (gcfg & CSR_GCFG_MATP_NEST)
++		c->guest_cfg |= BIT(2);
++	if (gcfg & CSR_GCFG_SITP)
++		c->guest_cfg |= BIT(6);
++	if (gcfg & CSR_GCFG_TITP)
++		c->guest_cfg |= BIT(8);
++	if (gcfg & CSR_GCFG_TOEP)
++		c->guest_cfg |= BIT(10);
++	if (gcfg & CSR_GCFG_TOPP)
++		c->guest_cfg |= BIT(12);
++	if (gcfg & CSR_GCFG_TORUP)
++		c->guest_cfg |= BIT(14);
++	if (gcfg & CSR_GCFG_GCIP_ALL)
++		c->guest_cfg |= BIT(16);
++	if (gcfg & CSR_GCFG_GCIP_HIT)
++		c->guest_cfg |= BIT(17);
++	if (gcfg & CSR_GCFG_GCIP_SECURE)
++		c->guest_cfg |= BIT(18);
 +}
 +
-+void _kvm_init_fault(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < EXCCODE_INT_START; i++)
-+		if (!_kvm_fault_tables[i])
-+			_kvm_fault_tables[i] = _kvm_fault_ni;
-+}
+ #define MAX_NAME_LEN	32
+ #define VENDOR_OFFSET	0
+ #define CPUNAME_OFFSET	9
+@@ -289,6 +340,8 @@ void cpu_probe(void)
+ 	if (cpu == 0)
+ 		__ua_limit = ~((1ull << cpu_vabits) - 1);
+ #endif
++	if (cpu_has_lvz)
++		cpu_probe_lvz(c);
+ 
+ 	cpu_report();
+ }
 -- 
 2.31.1
 
