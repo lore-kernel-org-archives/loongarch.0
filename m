@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10CC9EDD
-	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 06:57:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB9E4ED2
+	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 06:57:38 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxII_jGfNjTbQCAA--.54S3;
-	Mon, 20 Feb 2023 14:57:39 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Axkk7hGfNjFbQCAA--.54S3;
+	Mon, 20 Feb 2023 14:57:37 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax+73fGfNjFvk2AA--.34690S10;
-	Mon, 20 Feb 2023 14:57:38 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax+73fGfNjFvk2AA--.34690S2;
+	Mon, 20 Feb 2023 14:57:35 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -20,12 +20,10 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn
-Subject: [PATCH v2 08/29] LoongArch: KVM: Implement vcpu handle exit interface
-Date: Mon, 20 Feb 2023 14:57:14 +0800
-Message-Id: <20230220065735.1282809-9-zhaotianrui@loongson.cn>
+Subject: [PATCH v2 00/29] Add KVM LoongArch support
+Date: Mon, 20 Feb 2023 14:57:06 +0800
+Message-Id: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
-References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -33,130 +31,161 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax+73fGfNjFvk2AA--.34690S10
+X-CM-TRANSID:AQAAf8Ax+73fGfNjFvk2AA--.34690S2
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxGw47Zr4UXFWDGFWrWw43Awb_yoW5Ww47pa
-	y8CryY9w48G34xAanayr1qqr4YvrZ3Kr1xZrZrW3yayrsrtas8Jr4kKrZxtFy8W34FvF1f
-	ZF1rt3Z0kr4qyw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxKFWkZFWrGr4kGry7Jr1DKFg_yoWxur43pF
+	W3urn8Gr4DGrsaq39Yq3s8Z3s8ZF1xGryaq3Wa9Fy8CrW2qry8Z34kKr9FvFy3AaykJr10
+	qr1rKw1ag3WUJaDanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
-	CY1x0267AKxVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
-	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
-	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
+	bckFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
+	CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-Implement vcpu handle exit interface, getting the exit code by ESTAT
-register and using kvm exception vector to handle it.
+This series adds KVM LoongArch support. Loongson 3A5000 supports hardware
+assisted virtualization. With cpu virtualization, there are separate
+hw-supported user mode and kernel mode in guest mode. With memory
+virtualization, there are two-level hw mmu table for guest mode and host
+mode. Also there is separate hw cpu timer with consant frequency in
+guest mode, so that vm can migrate between hosts with different freq.
+Currently, we are able to boot LoongArch Linux Guests.
 
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
----
- arch/loongarch/kvm/vcpu.c | 86 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+Few key aspects of KVM LoongArch added by this series are:
+1. Enable kvm hardware function when kvm module is loaded.
+2. Implement VM and vcpu related ioctl interface such as vcpu create,
+   vcpu run etc. GET_ONE_REG/SET_ONE_REG ioctl commands are use to
+   get general registers one by one.
+3. Hardware access about MMU, timer and csr are emulated in kernel.
+4. Hardwares such as mmio and iocsr device are emulated in user space
+   such as APIC, IPI, pci devices etc.
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 571ac8b9d..e08a4faa0 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -38,6 +38,92 @@ static int _kvm_check_requests(struct kvm_vcpu *vcpu, int cpu)
- 	return ret;
- }
- 
-+/*
-+ * Return value is in the form (errcode<<2 | RESUME_FLAG_HOST | RESUME_FLAG_NV)
-+ */
-+static int _kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
-+{
-+	unsigned long exst = vcpu->arch.host_estat;
-+	u32 intr = exst & 0x1fff; /* ignore NMI */
-+	u32 exccode = (exst & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
-+	u32 __user *opc = (u32 __user *) vcpu->arch.pc;
-+	int ret = RESUME_GUEST, cpu;
-+
-+	vcpu->mode = OUTSIDE_GUEST_MODE;
-+
-+	/* Set a default exit reason */
-+	run->exit_reason = KVM_EXIT_UNKNOWN;
-+	run->ready_for_interrupt_injection = 1;
-+
-+	/*
-+	 * Set the appropriate status bits based on host CPU features,
-+	 * before we hit the scheduler
-+	 */
-+
-+	local_irq_enable();
-+
-+	kvm_debug("%s: exst: %lx, PC: %p, kvm_run: %p, kvm_vcpu: %p\n",
-+			__func__, exst, opc, run, vcpu);
-+	trace_kvm_exit(vcpu, exccode);
-+	if (exccode) {
-+		ret = _kvm_handle_fault(vcpu, exccode);
-+	} else {
-+		WARN(!intr, "suspicious vm exiting");
-+		++vcpu->stat.int_exits;
-+
-+		if (need_resched())
-+			cond_resched();
-+
-+		ret = RESUME_GUEST;
-+	}
-+
-+	cond_resched();
-+
-+	local_irq_disable();
-+
-+	if (ret == RESUME_GUEST)
-+		kvm_acquire_timer(vcpu);
-+
-+	if (!(ret & RESUME_HOST)) {
-+		_kvm_deliver_intr(vcpu);
-+		/* Only check for signals if not already exiting to userspace */
-+		if (signal_pending(current)) {
-+			run->exit_reason = KVM_EXIT_INTR;
-+			ret = (-EINTR << 2) | RESUME_HOST;
-+			++vcpu->stat.signal_exits;
-+			trace_kvm_exit(vcpu, KVM_TRACE_EXIT_SIGNAL);
-+		}
-+	}
-+
-+	if (ret == RESUME_GUEST) {
-+		trace_kvm_reenter(vcpu);
-+
-+		/*
-+		 * Make sure the read of VCPU requests in vcpu_reenter()
-+		 * callback is not reordered ahead of the write to vcpu->mode,
-+		 * or we could miss a TLB flush request while the requester sees
-+		 * the VCPU as outside of guest mode and not needing an IPI.
-+		 */
-+		smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-+
-+		cpu = smp_processor_id();
-+		_kvm_check_requests(vcpu, cpu);
-+		_kvm_check_vmid(vcpu, cpu);
-+		vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
-+
-+		/*
-+		 * If FPU are enabled (i.e. the guest's FPU context
-+		 * is live), restore FCSR0.
-+		 */
-+		if (_kvm_guest_has_fpu(&vcpu->arch) &&
-+			read_csr_euen() & (CSR_EUEN_FPEN)) {
-+			kvm_restore_fcsr(&vcpu->arch.fpu);
-+		}
-+	}
-+
-+	return ret;
-+}
-+
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- {
- 	int i;
+The running environment of LoongArch virt machine:
+1. Cross tools to build kernel and uefi:
+   $ wget https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-6.3-cross-tools-gcc-glibc.tar.xz
+   tar -vxf loongarch64-clfs-6.3-cross-tools-gcc-glibc.tar.xz  -C /opt
+   export PATH=/opt/cross-tools/bin:$PATH
+   export LD_LIBRARY_PATH=/opt/cross-tools/lib:$LD_LIBRARY_PATH
+   export LD_LIBRARY_PATH=/opt/cross-tools/loongarch64-unknown-linux-gnu/lib/:$LD_LIBRARY_PATH
+2. This series is based on the linux source code:
+   https://github.com/loongson/linux-loongarch-kvm
+   Build command:
+   git checkout kvm-loongarch
+   make ARCH=loongarch CROSS_COMPILE=loongarch64-unknown-linux-gnu- loongson3_defconfig
+   make ARCH=loongarch CROSS_COMPILE=loongarch64-unknown-linux-gnu-
+3. QEMU hypervisor with LoongArch supported:
+   https://github.com/loongson/qemu
+   Build command:
+   git checkout kvm-loongarch
+   ./configure --target-list="loongarch64-softmmu"  --enable-kvm
+   make
+4. Uefi bios of LoongArch virt machine:
+   Reference: https://github.com/tianocore/edk2-platforms/tree/master/Platform/Loongson/LoongArchQemuPkg#readme
+5. you can also access the binary files we have already build:
+   https://github.com/yangxiaojuan-loongson/qemu-binary
+
+The command to boot loongarch virt machine:
+   $ qemu-system-loongarch64 -machine virt -m 4G -cpu la464 \
+   -smp 1 -bios QEMU_EFI.fd -kernel vmlinuz.efi -initrd ramdisk \
+   -serial stdio   -monitor telnet:localhost:4495,server,nowait \
+   -append "root=/dev/ram rdinit=/sbin/init console=ttyS0,115200" \
+   --nographic
+
+Changes since v1:
+1. Seprate the original patch-01 and patch-03 into small patches, and the
+patches mainly contain kvm module init, module exit, vcpu create, vcpu run,
+etc.
+2. Remove the original KVM_{GET,SET}_CSRS ioctl in the kvm uapi header,
+and we use the common KVM_{GET,SET}_ONE_REG to access register.
+3. Use BIT(x) to replace the "1 << n_bits" statement.
+                                                                                  
+Tianrui Zhao (29):
+  LoongArch: KVM: Add kvm related header files
+  LoongArch: KVM: Implement kvm module related interface
+  LoongArch: KVM: Implement kvm hardware enable, disable interface
+  LoongArch: KVM: Implement VM related functions
+  LoongArch: KVM: Add vcpu related header files
+  LoongArch: KVM: Implement vcpu create and destroy interface
+  LoongArch: KVM: Implement vcpu run interface
+  LoongArch: KVM: Implement vcpu handle exit interface
+  LoongArch: KVM: Implement vcpu get, vcpu set registers
+  LoongArch: KVM: Implement vcpu ENABLE_CAP, CHECK_EXTENSION ioctl
+    interface
+  LoongArch: KVM: Implement fpu related operations for vcpu
+  LoongArch: KVM: Implement vcpu interrupt operations
+  LoongArch: KVM: Implement misc vcpu related interfaces
+  LoongArch: KVM: Implement vcpu load and vcpu put operations
+  LoongArch: KVM: Implement vcpu status description
+  LoongArch: KVM: Implement update VM id function
+  LoongArch: KVM: Implement virtual machine tlb operations
+  LoongArch: KVM: Implement vcpu timer operations
+  LoongArch: KVM: Implement kvm mmu operations
+  LoongArch: KVM: Implement handle csr excption
+  LoongArch: KVM: Implement handle iocsr exception
+  LoongArch: KVM: Implement handle idle exception
+  LoongArch: KVM: Implement handle gspr exception
+  LoongArch: KVM: Implement handle mmio exception
+  LoongArch: KVM: Implement handle fpu exception
+  LoongArch: KVM: Implement kvm exception vector
+  LoongArch: KVM: Implement vcpu world switch
+  LoongArch: KVM: Implement probe virtualization when loongarch cpu init
+  LoongArch: KVM: Enable kvm config and add the makefile
+
+ arch/loongarch/Kbuild                      |    1 +
+ arch/loongarch/Kconfig                     |    2 +
+ arch/loongarch/configs/loongson3_defconfig |    2 +
+ arch/loongarch/include/asm/cpu-features.h  |   22 +
+ arch/loongarch/include/asm/cpu-info.h      |   13 +
+ arch/loongarch/include/asm/inst.h          |   16 +
+ arch/loongarch/include/asm/kvm_csr.h       |   89 ++
+ arch/loongarch/include/asm/kvm_host.h      |  257 +++++
+ arch/loongarch/include/asm/kvm_types.h     |   11 +
+ arch/loongarch/include/asm/kvm_vcpu.h      |  112 ++
+ arch/loongarch/include/asm/loongarch.h     |  195 +++-
+ arch/loongarch/include/uapi/asm/kvm.h      |  107 ++
+ arch/loongarch/kernel/asm-offsets.c        |   32 +
+ arch/loongarch/kernel/cpu-probe.c          |   53 +
+ arch/loongarch/kvm/Kconfig                 |   38 +
+ arch/loongarch/kvm/Makefile                |   21 +
+ arch/loongarch/kvm/exit.c                  |  702 ++++++++++++
+ arch/loongarch/kvm/interrupt.c             |  126 +++
+ arch/loongarch/kvm/main.c                  |  152 +++
+ arch/loongarch/kvm/mmu.c                   |  821 ++++++++++++++
+ arch/loongarch/kvm/switch.S                |  327 ++++++
+ arch/loongarch/kvm/timer.c                 |  266 +++++
+ arch/loongarch/kvm/tlb.c                   |   31 +
+ arch/loongarch/kvm/trace.h                 |  137 +++
+ arch/loongarch/kvm/vcpu.c                  | 1118 ++++++++++++++++++++
+ arch/loongarch/kvm/vm.c                    |   85 ++
+ arch/loongarch/kvm/vmid.c                  |   64 ++
+ include/uapi/linux/kvm.h                   |   12 +
+ 28 files changed, 4806 insertions(+), 6 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kvm_csr.h
+ create mode 100644 arch/loongarch/include/asm/kvm_host.h
+ create mode 100644 arch/loongarch/include/asm/kvm_types.h
+ create mode 100644 arch/loongarch/include/asm/kvm_vcpu.h
+ create mode 100644 arch/loongarch/include/uapi/asm/kvm.h
+ create mode 100644 arch/loongarch/kvm/Kconfig
+ create mode 100644 arch/loongarch/kvm/Makefile
+ create mode 100644 arch/loongarch/kvm/exit.c
+ create mode 100644 arch/loongarch/kvm/interrupt.c
+ create mode 100644 arch/loongarch/kvm/main.c
+ create mode 100644 arch/loongarch/kvm/mmu.c
+ create mode 100644 arch/loongarch/kvm/switch.S
+ create mode 100644 arch/loongarch/kvm/timer.c
+ create mode 100644 arch/loongarch/kvm/tlb.c
+ create mode 100644 arch/loongarch/kvm/trace.h
+ create mode 100644 arch/loongarch/kvm/vcpu.c
+ create mode 100644 arch/loongarch/kvm/vm.c
+ create mode 100644 arch/loongarch/kvm/vmid.c
+
 -- 
 2.31.1
 
