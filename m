@@ -1,142 +1,154 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80CF2EA6
-	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 05:45:02 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.35])
-	by gateway (Coremail) with SMTP id _____8AxJDTUCPNjhq8CAA--.34S3;
-	Mon, 20 Feb 2023 13:44:52 +0800 (CST)
-Received: from [10.20.42.35] (unknown [10.20.42.35])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxjb7TCPNj1_I2AA--.39054S3;
-	Mon, 20 Feb 2023 13:44:51 +0800 (CST)
-Subject: Re: [PATCH v10 2/4] clk: clk-loongson2: add clock controller driver
- support
-To: Stephen Boyd <sboyd@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- Jianmin Lv <lvjianmin@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Michael Turquette <mturquette@baylibre.com>, Rob Herring
- <robh+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Yang Li <yang.lee@linux.alibaba.com>, devicetree@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
- liupeibao@loongson.cn, loongarch@lists.linux.dev, wanghongliang@loongson.cn
-References: <20221129034157.15036-1-zhuyinbo@loongson.cn>
- <20221129034157.15036-2-zhuyinbo@loongson.cn>
- <31c690a347f858a477bbba9c838984ed.sboyd@kernel.org>
- <4b5fd886-57ce-01ef-8224-432898b7fb1c@loongson.cn>
- <8332a1cf44b01f06bdd5db9dc5d7f387.sboyd@kernel.org>
-From: zhuyinbo <zhuyinbo@loongson.cn>
-Message-ID: <01ee3dc6-a868-fd2b-93aa-11e6bdfcc9df@loongson.cn>
-Date: Mon, 20 Feb 2023 13:44:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0805EC8
+	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 06:57:38 +0000 (UTC)
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8AxUU_hGfNjDLQCAA--.64S3;
+	Mon, 20 Feb 2023 14:57:37 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax+73fGfNjFvk2AA--.34690S4;
+	Mon, 20 Feb 2023 14:57:36 +0800 (CST)
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	maobibo@loongson.cn
+Subject: [PATCH v2 02/29] LoongArch: KVM: Implement kvm module related interface
+Date: Mon, 20 Feb 2023 14:57:08 +0800
+Message-Id: <20230220065735.1282809-3-zhaotianrui@loongson.cn>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
+References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <8332a1cf44b01f06bdd5db9dc5d7f387.sboyd@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8Bxjb7TCPNj1_I2AA--.39054S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxArykCF15Xw18GFWkKrWktFb_yoW5Gr1Dpr
-	y3Zay7KF4Dtr4qvrnF934UZ3ZIvr43tF17XF4fG3WDC34qk343Zr4UXFyrCas3Aw13J3y0
-	vryvgF47CF98ZFDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-CM-TRANSID:AQAAf8Ax+73fGfNjFvk2AA--.34690S4
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXFWfWFW7Wry8Ary5WF1Dtrb_yoW5GFykpa
+	47urn5Jr48Jwn7X3ZIy3Wqvry5WrWkKF1I9a42va4Yy3srtr1q9w4kJr9FvFyxZ3ykJF4F
+	vas5XFsxWF1DX3DanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bDkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
-	v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
-	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8ajg7UUUUU==
+	bckFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
+	CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
+Implement loongarch kvm module init, module exit interface,
+using kvm context to save the vpid info and vcpu world switch
+interface pointer.
 
-在 2023/2/18 上午6:15, Stephen Boyd 写道:
-> Quoting zhuyinbo (2023-02-14 23:35:22)
->> 在 2023/2/11 上午7:42, Stephen Boyd 写道:
->>> Quoting Yinbo Zhu (2022-11-28 19:41:55)
->>>
->>>> +
->>>> +       mult = (val >> LOONGSON2_USB_FREQSCALE_SHIFT) &
->>>> +                       clk_div_mask(LOONGSON2_USB_FREQSCALE_WIDTH);
->>>> +
->>>> +       rate = parent_rate * (mult + 1);
->>>> +       do_div(rate, 8);
->>> Why is do_div() being used?
->> no expecial reason, I only want to get a result that rate divide 8.
-> Ok, you can use div_u64() here and simplify.
-okay, I got it.
->
->> you meaning is to use clk_parent_data to rework
->> loongson2_clk_pll_register  and drop
->>
->> loongson2_obtain_fixed_clk_hw ?
-> Yes
->
->>>> +}
->>>> +
->>>> +static void __init loongson2_clocks_init(struct device_node *np)
->>>> +{
->>>> +       struct clk_hw **hws;
->>>> +       struct clk_hw_onecell_data *clk_hw_data;
->>>> +       spinlock_t loongson2_clk_lock;
->>>> +
->>>> +       loongson2_pll_base = of_iomap(np, 0);
->>>> +
->>>> +       if (!loongson2_pll_base) {
->>>> +               pr_err("clk: unable to map loongson2 clk registers\n");
->>>> +               goto err;
->>> return?
->> sorry, I don't get it.  you meaning is that  remove "goto err". Instead,
->> add a "return".
-> Yes.
->
->>>> +       }
->>>> +
->>>> +       clk_hw_data = kzalloc(struct_size(clk_hw_data, hws, LOONGSON2_CLK_END),
->>>> +                                       GFP_KERNEL);
->>>> +       if (WARN_ON(!clk_hw_data))
->>>> +               goto err;
-> [...]
->>>> +
->>>> +err:
->>>> +       iounmap(loongson2_pll_base);
->>>> +}
->>>> +
->>>> +CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", loongson2_clocks_init);
->>> Any reason this can't be a platform driver?
+Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+---
+ arch/loongarch/kvm/main.c | 81 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+ create mode 100644 arch/loongarch/kvm/main.c
 
-Your question is that  why I don't use the platform_driver_register to 
-register  clk and use CLK_OF_DECLARE ?
-
-I was  consider other clock controllers of Loongson-2 series may be 
-different with 2k1000 and I can add a line
-
-CLK_OF_DECLARE() for compatible other platform in the future. eg.
-
-CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", loongson2_clocks_init);
-
-+  CLK_OF_DECLARE(xxx1, xxx2,  xxx3);  // for other clock controllers of 
-Loongson-2 series
-
->> For the compatible consideration of other clock controllers of
->> Loongson-2 series in the future, the way of using dts can be
->>
->> better compatible.
->>
-> Sorry that sentence doesn't make sense to me. The use of dts doesn't
-> require the use of CLK_OF_DECLARE.
-
-yes, the use of dts doesn't require the use of CLK_OF_DECLARE and can 
-use platform_driver_register
-
-but my drvier not use platform_driver_register to register  clk and use 
-CLK_OF_DECLARE to match of_clk_init.
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+new file mode 100644
+index 000000000..d7969d02a
+--- /dev/null
++++ b/arch/loongarch/kvm/main.c
+@@ -0,0 +1,81 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/kvm_host.h>
++#include <asm/kvm_host.h>
++#include <asm/cacheflush.h>
++
++static struct kvm_context __percpu *vmcs;
++
++int kvm_arch_init(void *opaque)
++{
++	struct kvm_context *context;
++	unsigned long vpid_mask;
++	int cpu, order;
++	void *addr;
++
++	vmcs = alloc_percpu(struct kvm_context);
++	if (!vmcs) {
++		pr_err("kvm: failed to allocate percpu kvm_context\n");
++		return -ENOMEM;
++	}
++
++	order = get_order(kvm_vector_size + kvm_enter_guest_size);
++	addr = (void *)__get_free_pages(GFP_KERNEL, order);
++	if (!addr) {
++		free_percpu(vmcs);
++		return -ENOMEM;
++	}
++
++	memcpy(addr, kvm_vector_entry, kvm_vector_size);
++	memcpy(addr + kvm_vector_size, kvm_enter_guest, kvm_enter_guest_size);
++	flush_icache_range((unsigned long)addr, (unsigned long)addr +
++				kvm_vector_size + kvm_enter_guest_size);
++
++	vpid_mask = read_csr_gstat();
++	vpid_mask = (vpid_mask & CSR_GSTAT_GIDBIT) >> CSR_GSTAT_GIDBIT_SHIFT;
++	if (vpid_mask)
++		vpid_mask = GENMASK(vpid_mask - 1, 0);
++
++	for_each_possible_cpu(cpu) {
++		context = per_cpu_ptr(vmcs, cpu);
++		context->vpid_mask = vpid_mask;
++		context->vpid_cache = context->vpid_mask + 1;
++		context->last_vcpu = NULL;
++		context->kvm_eentry = addr;
++		context->kvm_enter_guest = addr + kvm_vector_size;
++		context->page_order = order;
++	}
++
++	_kvm_init_fault();
++
++	return 0;
++}
++
++void kvm_arch_exit(void)
++{
++	struct kvm_context *context = per_cpu_ptr(vmcs, 0);
++
++	free_pages((unsigned long)context->kvm_eentry, context->page_order);
++	free_percpu(vmcs);
++}
++
++static int kvm_loongarch_init(void)
++{
++	if (!cpu_has_lvz)
++		return 0;
++
++	return kvm_init(NULL, sizeof(struct kvm_vcpu), 0, THIS_MODULE);
++}
++
++static void kvm_loongarch_exit(void)
++{
++	kvm_exit();
++}
++
++module_init(kvm_loongarch_init);
++module_exit(kvm_loongarch_exit);
+-- 
+2.31.1
 
