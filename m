@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7315710E1
-	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 06:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFFD8ED5
+	for <loongarch@lists.linux.dev>; Mon, 20 Feb 2023 06:57:38 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Dxj83jGfNjWbQCAA--.49S3;
-	Mon, 20 Feb 2023 14:57:39 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxEZThGfNjJrQCAA--.39S3;
+	Mon, 20 Feb 2023 14:57:37 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax+73fGfNjFvk2AA--.34690S11;
-	Mon, 20 Feb 2023 14:57:38 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax+73fGfNjFvk2AA--.34690S6;
+	Mon, 20 Feb 2023 14:57:37 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -20,9 +20,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn
-Subject: [PATCH v2 09/29] LoongArch: KVM: Implement vcpu get, vcpu set registers
-Date: Mon, 20 Feb 2023 14:57:15 +0800
-Message-Id: <20230220065735.1282809-10-zhaotianrui@loongson.cn>
+Subject: [PATCH v2 04/29] LoongArch: KVM: Implement VM related functions
+Date: Mon, 20 Feb 2023 14:57:10 +0800
+Message-Id: <20230220065735.1282809-5-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
 References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
@@ -33,419 +33,127 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax+73fGfNjFvk2AA--.34690S11
+X-CM-TRANSID:AQAAf8Ax+73fGfNjFvk2AA--.34690S6
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvAXoW3CFy5ZF15Gw1rGFWrKF45Jrb_yoW8JrWUAo
-	W8tw48CrWrGw12ywsrtw12qay8JFyxu3WkZr1rAF1F9anrJF4rWr18Ca1DZry3Xr9xWryU
-	Ca1jgFn7uayktFn8n29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
-	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
-	UUkE1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64
-	kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY
-	1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2js
-	IEc7CjxVAFwI0_Cr1j6rxdM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
-	Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1s
-	IEY20_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4
-	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWFWUCrWxGr13uw4UXF4kXrb_yoW5Gw4kpF
+	1UAayrKr4rXwn3tr1fJ3yDuw1S9a93GryxJa42v345CFnxtwn5JFy0yry3WF98J34ruryf
+	Xa4aqwn09a4Yy3DanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bckFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
+	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-Implement loongarch vcpu get registers and set registers operations, it
-is called when user space use the ioctl interface to get or set regs.
+Implement loongarch VM operations: Init and destroy vm interface,
+allocating memory page to save the vm pgd when init vm. Implement
+vm check extension, such as getting vcpu number info, memory slots
+info, and fpu info. And implement vm status description.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 375 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 375 insertions(+)
+ arch/loongarch/kvm/vm.c | 85 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100644 arch/loongarch/kvm/vm.c
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index e08a4faa0..4b7642bce 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -13,6 +13,381 @@
- #define CREATE_TRACE_POINTS
- #include "trace.h"
- 
-+int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force)
+diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+new file mode 100644
+index 000000000..6efa6689b
+--- /dev/null
++++ b/arch/loongarch/kvm/vm.c
+@@ -0,0 +1,85 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/kvm_host.h>
++#include <asm/kvm_host.h>
++
++#define KVM_LOONGARCH_VERSION 1
++
++const struct _kvm_stats_desc kvm_vm_stats_desc[] = {
++	KVM_GENERIC_VM_STATS(),
++};
++
++const struct kvm_stats_header kvm_vm_stats_header = {
++	.name_size = KVM_STATS_NAME_SIZE,
++	.num_desc = ARRAY_SIZE(kvm_vm_stats_desc),
++	.id_offset =  sizeof(struct kvm_stats_header),
++	.desc_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE,
++	.data_offset = sizeof(struct kvm_stats_header) + KVM_STATS_NAME_SIZE +
++					sizeof(kvm_vm_stats_desc),
++};
++
++int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
 +{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
++	/* Allocate page table to map GPA -> RPA */
++	kvm->arch.gpa_mm.pgd = kvm_pgd_alloc();
++	if (!kvm->arch.gpa_mm.pgd)
++		return -ENOMEM;
 +
-+	GET_HW_GCSR(id, LOONGARCH_CSR_CRMD, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_PRMD, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_EUEN, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_MISC, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_ECFG, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_ESTAT, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_ERA, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_BADV, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_BADI, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_EENTRY, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TLBIDX, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TLBEHI, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TLBELO0, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TLBELO1, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_ASID, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_PGDL, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_PGDH, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_PWCTL0, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_PWCTL1, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_STLBPGSIZE, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_RVACFG, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_CPUID, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_PRCFG1, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_PRCFG2, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_PRCFG3, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_KS0, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_KS1, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_KS2, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_KS3, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_KS4, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_KS5, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_KS6, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_KS7, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TMID, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TCFG, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TVAL, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_CNTC, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_LLBCTL, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRENTRY, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRBADV, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRERA, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRSAVE, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRELO0, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRELO1, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TLBREHI, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRPRMD, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_DMWIN0, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_DMWIN1, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_DMWIN2, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_DMWIN3, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_MWPS, v);
-+	GET_HW_GCSR(id, LOONGARCH_CSR_FWPS, v);
-+
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_IMPCTL1, v);
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_IMPCTL2, v);
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRCTL, v);
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRINFO1, v);
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRINFO2, v);
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRENTRY, v);
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRERA, v);
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRSAVE, v);
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_CTAG, v);
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_DEBUG, v);
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_DERA, v);
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_DESAVE, v);
-+
-+	GET_SW_GCSR(csr, id, LOONGARCH_CSR_TINTCLR, v);
-+
-+	if (force && (id < CSR_ALL_SIZE)) {
-+		*v = kvm_read_sw_gcsr(csr, id);
-+		return 0;
-+	}
-+
-+	return -1;
-+}
-+
-+int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	int ret;
-+
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_CRMD, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PRMD, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_EUEN, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_MISC, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_ECFG, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_ERA, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_BADV, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_BADI, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_EENTRY, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBIDX, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBEHI, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBELO0, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBELO1, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_ASID, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PGDL, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PGDH, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PWCTL0, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PWCTL1, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_STLBPGSIZE, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_RVACFG, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_CPUID, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS0, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS1, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS2, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS3, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS4, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS5, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS6, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS7, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TMID, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TCFG, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TVAL, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_CNTC, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_LLBCTL, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRENTRY, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRBADV, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRERA, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRSAVE, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRELO0, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRELO1, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBREHI, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRPRMD, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_DMWIN0, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_DMWIN1, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_DMWIN2, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_DMWIN3, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_MWPS, v);
-+	SET_HW_GCSR(csr, id, LOONGARCH_CSR_FWPS, v);
-+
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_IMPCTL1, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_IMPCTL2, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRCTL, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRINFO1, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRINFO2, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRENTRY, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRERA, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRSAVE, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_CTAG, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_DEBUG, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_DERA, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_DESAVE, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_PRCFG1, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_PRCFG2, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_PRCFG3, v);
-+
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_PGD, v);
-+	SET_SW_GCSR(csr, id, LOONGARCH_CSR_TINTCLR, v);
-+
-+	ret = -1;
-+	switch (id) {
-+	case LOONGARCH_CSR_ESTAT:
-+		write_gcsr_estat(*v);
-+		/* estat IP0~IP7 inject through guestexcept */
-+		write_csr_gintc(((*v) >> 2)  & 0xff);
-+		ret = 0;
-+		break;
-+	default:
-+		if (force && (id < CSR_ALL_SIZE)) {
-+			kvm_set_sw_gcsr(csr, id, *v);
-+			ret = 0;
-+		}
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int _kvm_get_one_reg(struct kvm_vcpu *vcpu,
-+		const struct kvm_one_reg *reg, s64 *v)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	int reg_idx, ret;
-+
-+	if ((reg->id & KVM_IOC_CSRID(0)) == KVM_IOC_CSRID(0)) {
-+		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
-+		ret = _kvm_getcsr(vcpu, reg_idx, v, 0);
-+		if (ret == 0)
-+			return ret;
-+	}
-+
-+	switch (reg->id) {
-+	case KVM_REG_LOONGARCH_COUNTER:
-+		*v = drdtime() + vcpu->kvm->arch.time_offset;
-+		break;
-+	default:
-+		if ((reg->id & KVM_REG_LOONGARCH_MASK) != KVM_REG_LOONGARCH_CSR)
-+			return -EINVAL;
-+
-+		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
-+		if (reg_idx < CSR_ALL_SIZE)
-+			*v = kvm_read_sw_gcsr(csr, reg_idx);
-+		else
-+			return -EINVAL;
-+	}
-+
++	kvm_init_vmcs(kvm);
 +	return 0;
 +}
 +
-+static int _kvm_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
++void kvm_arch_destroy_vm(struct kvm *kvm)
 +{
-+	int ret;
-+	s64 v;
-+
-+	ret = _kvm_get_one_reg(vcpu, reg, &v);
-+	if (ret)
-+		return ret;
-+
-+	ret = -EINVAL;
-+	if ((reg->id & KVM_REG_SIZE_MASK) == KVM_REG_SIZE_U64) {
-+		u64 __user *uaddr = (u64 __user *)(long)reg->addr;
-+
-+		ret = put_user(v, uaddr);
-+	} else if ((reg->id & KVM_REG_SIZE_MASK) == KVM_REG_SIZE_U32) {
-+		u32 __user *uaddr = (u32 __user *)(long)reg->addr;
-+		u32 v32 = (u32)v;
-+
-+		ret = put_user(v32, uaddr);
-+	}
-+
-+	return ret;
++	kvm_destroy_vcpus(kvm);
++	_kvm_destroy_mm(kvm);
 +}
 +
-+static int _kvm_set_one_reg(struct kvm_vcpu *vcpu,
-+		const struct kvm_one_reg *reg,
-+		s64 v)
++int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
 +{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	int ret = 0;
-+	unsigned long flags;
-+	u64 val;
-+	int reg_idx;
++	int r;
 +
-+	val = v;
-+	if ((reg->id & KVM_IOC_CSRID(0)) == KVM_IOC_CSRID(0)) {
-+		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
-+		ret = _kvm_setcsr(vcpu, reg_idx, &val, 0);
-+		if (ret == 0)
-+			return ret;
-+	}
-+
-+	switch (reg->id) {
-+	case KVM_REG_LOONGARCH_COUNTER:
-+		local_irq_save(flags);
-+		/*
-+		 * gftoffset is relative with board, not vcpu
-+		 * only set for the first time for smp system
-+		 */
-+		if (vcpu->vcpu_id == 0)
-+			vcpu->kvm->arch.time_offset = (signed long)(v - drdtime());
-+		write_csr_gcntc((ulong)vcpu->kvm->arch.time_offset);
-+		local_irq_restore(flags);
++	switch (ext) {
++	case KVM_CAP_ONE_REG:
++	case KVM_CAP_ENABLE_CAP:
++	case KVM_CAP_READONLY_MEM:
++	case KVM_CAP_SYNC_MMU:
++	case KVM_CAP_IMMEDIATE_EXIT:
++	case KVM_CAP_IOEVENTFD:
++		r = 1;
 +		break;
-+	case KVM_REG_LOONGARCH_VCPU_RESET:
-+		kvm_reset_timer(vcpu);
-+		memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
-+		memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
++	case KVM_CAP_NR_VCPUS:
++		r = num_online_cpus();
++		break;
++	case KVM_CAP_MAX_VCPUS:
++		r = KVM_MAX_VCPUS;
++		break;
++	case KVM_CAP_MAX_VCPU_ID:
++		r = KVM_MAX_VCPU_IDS;
++		break;
++	case KVM_CAP_NR_MEMSLOTS:
++		r = KVM_USER_MEM_SLOTS;
++		break;
++	case KVM_CAP_LOONGARCH_FPU:
++		/* We don't handle systems with inconsistent cpu_has_fpu */
++		r = !!cpu_has_fpu;
++		break;
++	case KVM_CAP_LOONGARCH_VZ:
++		/* get user defined kvm version */
++		r = KVM_LOONGARCH_VERSION;
 +		break;
 +	default:
-+		if ((reg->id & KVM_REG_LOONGARCH_MASK) != KVM_REG_LOONGARCH_CSR)
-+			return -EINVAL;
-+
-+		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
-+		if (reg_idx < CSR_ALL_SIZE)
-+			kvm_write_sw_gcsr(csr, reg_idx, v);
-+		else
-+			return -EINVAL;
-+	}
-+	return ret;
-+}
-+
-+static int _kvm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
-+{
-+	s64 v;
-+	int ret;
-+
-+	ret = -EINVAL;
-+	if ((reg->id & KVM_REG_SIZE_MASK) == KVM_REG_SIZE_U64) {
-+		u64 __user *uaddr;
-+
-+		uaddr = (u64 __user *)(long)reg->addr;
-+		ret = get_user(v, uaddr);
-+	} else if ((reg->id & KVM_REG_SIZE_MASK) == KVM_REG_SIZE_U32) {
-+		u32 __user *uaddr;
-+		s32 v32;
-+
-+		uaddr = (u32 __user *)(long)reg->addr;
-+		ret = get_user(v32, uaddr);
-+		v = (s64)v32;
-+	}
-+
-+	if (ret)
-+		return -EFAULT;
-+
-+	return _kvm_set_one_reg(vcpu, reg, v);
-+}
-+
-+int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu,
-+				  struct kvm_sregs *sregs)
-+{
-+	return -ENOIOCTLCMD;
-+}
-+
-+int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu,
-+				  struct kvm_sregs *sregs)
-+{
-+	return -ENOIOCTLCMD;
-+}
-+
-+int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
-+{
-+	int i;
-+
-+	vcpu_load(vcpu);
-+
-+	for (i = 0; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
-+		regs->gpr[i] = vcpu->arch.gprs[i];
-+
-+	regs->pc = vcpu->arch.pc;
-+
-+	vcpu_put(vcpu);
-+	return 0;
-+}
-+
-+int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
-+{
-+	int i;
-+
-+	vcpu_load(vcpu);
-+
-+	for (i = 1; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
-+		vcpu->arch.gprs[i] = regs->gpr[i];
-+	vcpu->arch.gprs[0] = 0; /* zero is special, and cannot be set. */
-+	vcpu->arch.pc = regs->pc;
-+
-+	vcpu_put(vcpu);
-+	return 0;
-+}
-+
-+long kvm_arch_vcpu_ioctl(struct file *filp,
-+			 unsigned int ioctl, unsigned long arg)
-+{
-+	struct kvm_vcpu *vcpu = filp->private_data;
-+	void __user *argp = (void __user *)arg;
-+	long r;
-+
-+	vcpu_load(vcpu);
-+
-+	switch (ioctl) {
-+	case KVM_SET_ONE_REG:
-+	case KVM_GET_ONE_REG: {
-+		struct kvm_one_reg reg;
-+
-+		r = -EFAULT;
-+		if (copy_from_user(&reg, argp, sizeof(reg)))
-+			break;
-+		if (ioctl == KVM_SET_ONE_REG)
-+			r = _kvm_set_reg(vcpu, &reg);
-+		else
-+			r = _kvm_get_reg(vcpu, &reg);
-+		break;
-+	}
-+	default:
-+		r = -ENOIOCTLCMD;
++		r = 0;
 +		break;
 +	}
 +
-+	vcpu_put(vcpu);
 +	return r;
 +}
 +
- int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- {
- 	return 0;
++long kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
++{
++	return -ENOIOCTLCMD;
++}
 -- 
 2.31.1
 
