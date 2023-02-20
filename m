@@ -1,37 +1,37 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A6B23B1;
-	Mon, 20 Feb 2023 09:48:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559042F2B;
+	Mon, 20 Feb 2023 11:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676886495; x=1708422495;
+  t=1676891359; x=1708427359;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=vQmDqxb9kEUGbhsZdbhEIPJY1DZxqbi/gUkFIWUe5qM=;
-  b=DdMGO/6tMWnV2/9ZYkp53LmjSsSSZKcokkDk9xpVOFg39Au97uYHPwA3
-   MLAqeVPyf8MkbUiM4Q4JieZIlfRDkm63AJ7626OvpJHqqY32I4da8lKsz
-   89T2+Nqge7UHfcjnlFhlFrxHz4zdk3mhn0Vo3En2TwSoHSrBcteGERBoT
-   J+J9WkWC5KjdOUPdw1emKlofr/uaZzG2l1UvBvtMfA/VOfDuR0PZf/wum
-   mNSOX5nuG1V/ihohdaz0QPjg/PCNbY2RUYWxIhPhRUuJDJodpIBREAJqT
-   dlfsFwAXbsDS2q4P9l9xsr7vxS9UmNlTO51LlIkrbmYVj1yNaW7G+VIbE
+  bh=wqpW4f7kuHzOWu1Si17/JH06bpaL/okRZA45T2z28Eo=;
+  b=JPC9CqjeAdy3OreDzpaTItORbEbMn1lt8MJYly7PHXilJP7AcTVokKMA
+   ADPwS5Z4m3zIs7+98Km1ocB9Gz00cClmt7DIkerCJHof5q/GOiF2uma5z
+   jPDieYpUOVlj/1Q2li7uZzGqLaYJ2ExD9RJReda7y7XgcLPpUO31uosbl
+   KOtAhOXYZEAyfVui1SCZ+qnQ/xFda1CMhetUXT3iw8nAr7LVp0gjFkDI5
+   Bq/R/24VfmVkJseprp/AjmeRPlsl8M7+jawl9AhWr7bFEko7Va4lLVqVE
+   x4s6ESziPnowuZDWO03DvvwAvgt3kMj3iF0GP3KI7RM3e8uYgq4FdRozs
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10626"; a="334565103"
+X-IronPort-AV: E=McAfee;i="6500,9779,10626"; a="397061061"
 X-IronPort-AV: E=Sophos;i="5.97,312,1669104000"; 
-   d="scan'208";a="334565103"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2023 01:48:14 -0800
+   d="scan'208";a="397061061"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2023 03:09:18 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10626"; a="845276926"
+X-IronPort-AV: E=McAfee;i="6500,9779,10626"; a="740011369"
 X-IronPort-AV: E=Sophos;i="5.97,312,1669104000"; 
-   d="scan'208";a="845276926"
+   d="scan'208";a="740011369"
 Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 20 Feb 2023 01:48:10 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 20 Feb 2023 03:09:14 -0800
 Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1pU2mH-000Dpr-2w;
-	Mon, 20 Feb 2023 09:48:09 +0000
-Date: Mon, 20 Feb 2023 17:47:33 +0800
+	id 1pU42j-000Drt-1e;
+	Mon, 20 Feb 2023 11:09:13 +0000
+Date: Mon, 20 Feb 2023 19:09:11 +0800
 From: kernel test robot <lkp@intel.com>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Paolo Bonzini <pbonzini@redhat.com>
@@ -45,7 +45,7 @@ Cc: oe-kbuild-all@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn
 Subject: Re: [PATCH v2 29/29] LoongArch: KVM: Enable kvm config and add the
  makefile
-Message-ID: <202302201710.ERtpPSuD-lkp@intel.com>
+Message-ID: <202302201849.mzOz4b5p-lkp@intel.com>
 References: <20230220065735.1282809-30-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -59,10 +59,10 @@ In-Reply-To: <20230220065735.1282809-30-zhaotianrui@loongson.cn>
 
 Hi Tianrui,
 
-Thank you for the patch! Perhaps something to improve:
+Thank you for the patch! Yet something to improve:
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.2]
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.2]
 [cannot apply to kvm/queue kvm/linux-next next-20230220]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
@@ -71,7 +71,7 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 url:    https://github.com/intel-lab-lkp/linux/commits/Tianrui-Zhao/LoongArch-KVM-Add-kvm-related-header-files/20230220-151305
 patch link:    https://lore.kernel.org/r/20230220065735.1282809-30-zhaotianrui%40loongson.cn
 patch subject: [PATCH v2 29/29] LoongArch: KVM: Enable kvm config and add the makefile
-config: loongarch-defconfig (https://download.01.org/0day-ci/archive/20230220/202302201710.ERtpPSuD-lkp@intel.com/config)
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20230220/202302201849.mzOz4b5p-lkp@intel.com/config)
 compiler: loongarch64-linux-gcc (GCC) 12.1.0
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
@@ -87,16 +87,597 @@ reproduce (this is a W=1 build):
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202302201710.ERtpPSuD-lkp@intel.com/
+| Link: https://lore.kernel.org/oe-kbuild-all/202302201849.mzOz4b5p-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+All error/warnings (new ones prefixed by >>):
 
+   In file included from include/trace/define_trace.h:102,
+                    from arch/loongarch/kvm/trace.h:137,
+                    from arch/loongarch/kvm/vcpu.c:14:
+   arch/loongarch/kvm/./trace.h: In function 'trace_raw_output_kvm_exit':
+   arch/loongarch/kvm/./trace.h:54:31: warning: left-hand operand of comma expression has no effect [-Wunused-value]
+      54 |         ({ KVM_TRACE_EXIT_IDLE,         "IDLE" },                       \
+         |                               ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:73:40: note: in expansion of macro 'kvm_trace_symbol_exit_types'
+      73 |                                        kvm_trace_symbol_exit_types),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> arch/loongarch/kvm/./trace.h:54:48: error: expected ';' before '}' token
+      54 |         ({ KVM_TRACE_EXIT_IDLE,         "IDLE" },                       \
+         |                                                ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:73:40: note: in expansion of macro 'kvm_trace_symbol_exit_types'
+      73 |                                        kvm_trace_symbol_exit_types),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> arch/loongarch/kvm/./trace.h:54:49: error: expected ')' before ',' token
+      54 |         ({ KVM_TRACE_EXIT_IDLE,         "IDLE" },                       \
+         |                                                 ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:73:40: note: in expansion of macro 'kvm_trace_symbol_exit_types'
+      73 |                                        kvm_trace_symbol_exit_types),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> arch/loongarch/kvm/./trace.h:54:9: warning: initialization of 'long unsigned int' from 'char *' makes integer from pointer without a cast [-Wint-conversion]
+      54 |         ({ KVM_TRACE_EXIT_IDLE,         "IDLE" },                       \
+         |         ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:73:40: note: in expansion of macro 'kvm_trace_symbol_exit_types'
+      73 |                                        kvm_trace_symbol_exit_types),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:54:9: note: (near initialization for 'symbols[0].mask')
+      54 |         ({ KVM_TRACE_EXIT_IDLE,         "IDLE" },                       \
+         |         ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:73:40: note: in expansion of macro 'kvm_trace_symbol_exit_types'
+      73 |                                        kvm_trace_symbol_exit_types),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> arch/loongarch/kvm/./trace.h:54:9: error: initializer element is not constant
+      54 |         ({ KVM_TRACE_EXIT_IDLE,         "IDLE" },                       \
+         |         ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:73:40: note: in expansion of macro 'kvm_trace_symbol_exit_types'
+      73 |                                        kvm_trace_symbol_exit_types),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:54:9: note: (near initialization for 'symbols[0].mask')
+      54 |         ({ KVM_TRACE_EXIT_IDLE,         "IDLE" },                       \
+         |         ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:73:40: note: in expansion of macro 'kvm_trace_symbol_exit_types'
+      73 |                                        kvm_trace_symbol_exit_types),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> include/trace/stages/stage3_trace_output.h:77:37: warning: braces around scalar initializer
+      77 |                 static const struct trace_print_flags symbols[] =       \
+         |                                     ^~~~~~~~~~~~~~~~~
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+   include/trace/stages/stage3_trace_output.h:77:37: note: (near initialization for 'symbols[0].name')
+      77 |                 static const struct trace_print_flags symbols[] =       \
+         |                                     ^~~~~~~~~~~~~~~~~
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+>> include/trace/stages/stage3_trace_output.h:78:43: warning: initialization of 'const char *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+      78 |                         { symbol_array, { -1, NULL }};                  \
+         |                                           ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+   include/trace/stages/stage3_trace_output.h:78:43: note: (near initialization for 'symbols[0].name')
+      78 |                         { symbol_array, { -1, NULL }};                  \
+         |                                           ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+>> include/linux/stddef.h:8:14: warning: excess elements in scalar initializer
+       8 | #define NULL ((void *)0)
+         |              ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   include/trace/stages/stage3_trace_output.h:78:47: note: in expansion of macro 'NULL'
+      78 |                         { symbol_array, { -1, NULL }};                  \
+         |                                               ^~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+   include/linux/stddef.h:8:14: note: (near initialization for 'symbols[0].name')
+       8 | #define NULL ((void *)0)
+         |              ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   include/trace/stages/stage3_trace_output.h:78:47: note: in expansion of macro 'NULL'
+      78 |                         { symbol_array, { -1, NULL }};                  \
+         |                                               ^~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+>> include/trace/stages/stage3_trace_output.h:78:25: warning: missing braces around initializer [-Wmissing-braces]
+      78 |                         { symbol_array, { -1, NULL }};                  \
+         |                         ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:58:1: note: in expansion of macro 'TRACE_EVENT'
+      58 | TRACE_EVENT(kvm_exit,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:71:13: note: in expansion of macro 'TP_printk'
+      71 |             TP_printk("[%s]PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:72:23: note: in expansion of macro '__print_symbolic'
+      72 |                       __print_symbolic(__entry->reason,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h: In function 'trace_raw_output_kvm_aux':
+   arch/loongarch/kvm/./trace.h:86:33: warning: left-hand operand of comma expression has no effect [-Wunused-value]
+      86 |         ({ KVM_TRACE_AUX_RESTORE, "restore" },          \
+         |                                 ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:113:40: note: in expansion of macro 'kvm_trace_symbol_aux_op'
+     113 |                                        kvm_trace_symbol_aux_op),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:86:45: error: expected ';' before '}' token
+      86 |         ({ KVM_TRACE_AUX_RESTORE, "restore" },          \
+         |                                             ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:113:40: note: in expansion of macro 'kvm_trace_symbol_aux_op'
+     113 |                                        kvm_trace_symbol_aux_op),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:86:46: error: expected ')' before ',' token
+      86 |         ({ KVM_TRACE_AUX_RESTORE, "restore" },          \
+         |                                              ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:113:40: note: in expansion of macro 'kvm_trace_symbol_aux_op'
+     113 |                                        kvm_trace_symbol_aux_op),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:86:9: warning: initialization of 'long unsigned int' from 'char *' makes integer from pointer without a cast [-Wint-conversion]
+      86 |         ({ KVM_TRACE_AUX_RESTORE, "restore" },          \
+         |         ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:113:40: note: in expansion of macro 'kvm_trace_symbol_aux_op'
+     113 |                                        kvm_trace_symbol_aux_op),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:86:9: note: (near initialization for 'symbols[0].mask')
+      86 |         ({ KVM_TRACE_AUX_RESTORE, "restore" },          \
+         |         ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:113:40: note: in expansion of macro 'kvm_trace_symbol_aux_op'
+     113 |                                        kvm_trace_symbol_aux_op),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:86:9: error: initializer element is not constant
+      86 |         ({ KVM_TRACE_AUX_RESTORE, "restore" },          \
+         |         ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:113:40: note: in expansion of macro 'kvm_trace_symbol_aux_op'
+     113 |                                        kvm_trace_symbol_aux_op),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:86:9: note: (near initialization for 'symbols[0].mask')
+      86 |         ({ KVM_TRACE_AUX_RESTORE, "restore" },          \
+         |         ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:113:40: note: in expansion of macro 'kvm_trace_symbol_aux_op'
+     113 |                                        kvm_trace_symbol_aux_op),
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~
+>> include/trace/stages/stage3_trace_output.h:77:37: warning: braces around scalar initializer
+      77 |                 static const struct trace_print_flags symbols[] =       \
+         |                                     ^~~~~~~~~~~~~~~~~
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+   include/trace/stages/stage3_trace_output.h:77:37: note: (near initialization for 'symbols[0].name')
+      77 |                 static const struct trace_print_flags symbols[] =       \
+         |                                     ^~~~~~~~~~~~~~~~~
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+>> include/trace/stages/stage3_trace_output.h:78:43: warning: initialization of 'const char *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+      78 |                         { symbol_array, { -1, NULL }};                  \
+         |                                           ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+   include/trace/stages/stage3_trace_output.h:78:43: note: (near initialization for 'symbols[0].name')
+      78 |                         { symbol_array, { -1, NULL }};                  \
+         |                                           ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+>> include/linux/stddef.h:8:14: warning: excess elements in scalar initializer
+       8 | #define NULL ((void *)0)
+         |              ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   include/trace/stages/stage3_trace_output.h:78:47: note: in expansion of macro 'NULL'
+      78 |                         { symbol_array, { -1, NULL }};                  \
+         |                                               ^~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+   include/linux/stddef.h:8:14: note: (near initialization for 'symbols[0].name')
+       8 | #define NULL ((void *)0)
+         |              ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   include/trace/stages/stage3_trace_output.h:78:47: note: in expansion of macro 'NULL'
+      78 |                         { symbol_array, { -1, NULL }};                  \
+         |                                               ^~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+>> include/trace/stages/stage3_trace_output.h:78:25: warning: missing braces around initializer [-Wmissing-braces]
+      78 |                         { symbol_array, { -1, NULL }};                  \
+         |                         ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:112:23: note: in expansion of macro '__print_symbolic'
+     112 |                       __print_symbolic(__entry->op,
+         |                       ^~~~~~~~~~~~~~~~
+>> include/trace/stages/stage3_trace_output.h:78:39: error: expected expression before ',' token
+      78 |                         { symbol_array, { -1, NULL }};                  \
+         |                                       ^
+   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     203 |         trace_event_printf(iter, print);                                \
+         |                                  ^~~~~
+   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
+      45 |                              PARAMS(print));                   \
+         |                              ^~~~~~
+   arch/loongarch/kvm/./trace.h:95:1: note: in expansion of macro 'TRACE_EVENT'
+      95 | TRACE_EVENT(kvm_aux,
+         | ^~~~~~~~~~~
+   arch/loongarch/kvm/./trace.h:111:13: note: in expansion of macro 'TP_printk'
+     111 |             TP_printk("%s %s PC: 0x%08lx",
+         |             ^~~~~~~~~
+   arch/loongarch/kvm/./trace.h:114:23: note: in expansion of macro '__print_symbolic'
+     114 |                       __print_symbolic(__entry->state,
+         |                       ^~~~~~~~~~~~~~~~
    arch/loongarch/kvm/vcpu.c: In function 'kvm_own_fpu':
->> arch/loongarch/kvm/vcpu.c:595:23: warning: variable 'sr' set but not used [-Wunused-but-set-variable]
+   arch/loongarch/kvm/vcpu.c:595:23: warning: variable 'sr' set but not used [-Wunused-but-set-variable]
      595 |         unsigned long sr;
          |                       ^~
    arch/loongarch/kvm/vcpu.c: At top level:
->> arch/loongarch/kvm/vcpu.c:636:5: warning: no previous prototype for 'kvm_vcpu_ioctl_interrupt' [-Wmissing-prototypes]
+   arch/loongarch/kvm/vcpu.c:636:5: warning: no previous prototype for 'kvm_vcpu_ioctl_interrupt' [-Wmissing-prototypes]
      636 | int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu,
          |     ^~~~~~~~~~~~~~~~~~~~~~~~
    In file included from include/linux/huge_mm.h:8,
@@ -121,80 +702,18 @@ All warnings (new ones prefixed by >>):
    arch/loongarch/kvm/vcpu.c:116:1: note: in expansion of macro 'DEFINE_SIMPLE_ATTRIBUTE'
      116 | DEFINE_SIMPLE_ATTRIBUTE(lvcpu_stat_fops, lvcpu_stat_get, NULL, "%llu\n");
          | ^~~~~~~~~~~~~~~~~~~~~~~
+..
 
 
-vim +/sr +595 arch/loongarch/kvm/vcpu.c
+vim +54 arch/loongarch/kvm/./trace.h
 
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  591  
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  592  /* Enable FPU for guest and restore context */
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  593  void kvm_own_fpu(struct kvm_vcpu *vcpu)
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  594  {
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20 @595  	unsigned long sr;
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  596  
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  597  	preempt_disable();
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  598  
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  599  	sr = kvm_read_hw_gcsr(LOONGARCH_CSR_EUEN);
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  600  
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  601  	/*
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  602  	 * Enable FPU for guest
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  603  	 * We set FR and FRE according to guest context
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  604  	 */
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  605  	set_csr_euen(CSR_EUEN_FPEN);
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  606  
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  607  	/* If guest FPU state not active, restore it now */
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  608  	if (!(vcpu->arch.aux_inuse & KVM_LARCH_FPU)) {
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  609  		kvm_restore_fpu(&vcpu->arch.fpu);
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  610  		vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  611  		trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_FPU);
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  612  	} else {
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  613  		trace_kvm_aux(vcpu, KVM_TRACE_AUX_ENABLE, KVM_TRACE_AUX_FPU);
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  614  	}
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  615  
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  616  	preempt_enable();
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  617  }
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  618  
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  619  /* Save and disable FPU */
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  620  void kvm_lose_fpu(struct kvm_vcpu *vcpu)
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  621  {
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  622  	preempt_disable();
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  623  
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  624  	if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  625  		kvm_save_fpu(&vcpu->arch.fpu);
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  626  		vcpu->arch.aux_inuse &= ~KVM_LARCH_FPU;
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  627  		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_FPU);
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  628  
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  629  		/* Disable FPU */
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  630  		clear_csr_euen(CSR_EUEN_FPEN);
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  631  	}
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  632  
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  633  	preempt_enable();
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  634  }
-81d0b9f4fa1f11 Tianrui Zhao 2023-02-20  635  
-a4dadfc6695b38 Tianrui Zhao 2023-02-20 @636  int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu,
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  637  			     struct kvm_loongarch_interrupt *irq)
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  638  {
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  639  	int intr = (int)irq->irq;
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  640  	struct kvm_vcpu *dvcpu = NULL;
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  641  
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  642  	if (irq->cpu == -1)
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  643  		dvcpu = vcpu;
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  644  	else
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  645  		dvcpu = kvm_get_vcpu(vcpu->kvm, irq->cpu);
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  646  
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  647  	if (intr > 0)
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  648  		_kvm_queue_irq(dvcpu, intr);
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  649  	else if (intr < 0)
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  650  		_kvm_dequeue_irq(dvcpu, -intr);
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  651  	else {
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  652  		kvm_err("%s: invalid interrupt ioctl (%d:%d)\n", __func__,
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  653  				irq->cpu, irq->irq);
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  654  		return -EINVAL;
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  655  	}
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  656  
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  657  	kvm_vcpu_kick(dvcpu);
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  658  	return 0;
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  659  }
-a4dadfc6695b38 Tianrui Zhao 2023-02-20  660  
+d73e24865c7b73 Tianrui Zhao 2023-02-20  51  
+d73e24865c7b73 Tianrui Zhao 2023-02-20  52  /* Tracepoints for VM exits */
+d73e24865c7b73 Tianrui Zhao 2023-02-20  53  #define kvm_trace_symbol_exit_types					\
+d73e24865c7b73 Tianrui Zhao 2023-02-20 @54  	({ KVM_TRACE_EXIT_IDLE,		"IDLE" },			\
+d73e24865c7b73 Tianrui Zhao 2023-02-20  55  	{ KVM_TRACE_EXIT_CACHE,		"CACHE" },			\
+d73e24865c7b73 Tianrui Zhao 2023-02-20  56  	{ KVM_TRACE_EXIT_SIGNAL,	"Signal" })
+d73e24865c7b73 Tianrui Zhao 2023-02-20  57  
 
 -- 
 0-DAY CI Kernel Test Service
