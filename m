@@ -1,109 +1,88 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4AA32F41
-	for <loongarch@lists.linux.dev>; Tue, 21 Feb 2023 13:00:28 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.120])
-	by gateway (Coremail) with SMTP id _____8Dx_5drwPRjuCgDAA--.941S3;
-	Tue, 21 Feb 2023 21:00:27 +0800 (CST)
-Received: from [10.20.42.120] (unknown [10.20.42.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx2r1qwPRjncI3AA--.36473S3;
-	Tue, 21 Feb 2023 21:00:26 +0800 (CST)
-Subject: Re: [PATCH v2 27/29] LoongArch: KVM: Implement vcpu world switch
-To: Paolo Bonzini <pbonzini@redhat.com>
-References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
- <20230220065735.1282809-28-zhaotianrui@loongson.cn>
- <50575db8-efb8-2d56-5dd9-fe4318db2af3@redhat.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-Message-ID: <e33bbe6b-fb21-7473-cb8a-5068b44f21ce@loongson.cn>
-Date: Tue, 21 Feb 2023 21:00:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504E9A937
+	for <loongarch@lists.linux.dev>; Tue, 21 Feb 2023 23:08:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B04C433EF;
+	Tue, 21 Feb 2023 23:08:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1677020881;
+	bh=g8YnvXSDdiBcJGkbnJUwhw1gZuR5pUkf8INqeaTaD20=;
+	h=In-Reply-To:References:Subject:From:To:Date:From;
+	b=tbgTptyIePR25r5jm0JW9KfWwmX6OyBxf4W62CcasLfpu27xEn87gaGhiK5VvxSqz
+	 2bHAuMq/JFEKm5fsP9+TtRPOhCdzmyM9LwNDEZKhTDNWPQy4aoR1DRD6QUnzARUNQu
+	 4rAEhcD3+501LmEJ0PHdzfe44NFwVvjAO9m83BPqp/hoJyXBjl0bTZ1bHSV8uRKG5H
+	 c4nhdthU+doAe34dtum7/fH78bXCJ+nAhzEUJxJuc3mg7eAWyqQIFstkmjbELt2TRG
+	 3lwmBkl8YIkDQzVlRi4iho5B+wmsxhRzAfguzMPILnS9EtzPt+nxke8EHy2Us3AlH/
+	 e1xxZ3rntDwxQ==
+Message-ID: <9e8952c9415973dc7276185e3cdf5ae7.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <50575db8-efb8-2d56-5dd9-fe4318db2af3@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx2r1qwPRjncI3AA--.36473S3
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7KFyDCF1Utw43GrWkAr45Awb_yoW8uFWxp3
-	y8JrZIyFyUKrs7uF4vvrWUWw4IqF4fWr4Igrn8Wr18urykWFW0vF1UKF1DK347tr18XF1U
-	ZF4rJr17ArsrA3DanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bqAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
-	w2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-	jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
-	s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI
-	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
-	IxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
-	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E
-	87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU28nYUUUUU
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <01ee3dc6-a868-fd2b-93aa-11e6bdfcc9df@loongson.cn>
+References: <20221129034157.15036-1-zhuyinbo@loongson.cn> <20221129034157.15036-2-zhuyinbo@loongson.cn> <31c690a347f858a477bbba9c838984ed.sboyd@kernel.org> <4b5fd886-57ce-01ef-8224-432898b7fb1c@loongson.cn> <8332a1cf44b01f06bdd5db9dc5d7f387.sboyd@kernel.org> <01ee3dc6-a868-fd2b-93aa-11e6bdfcc9df@loongson.cn>
+Subject: Re: [PATCH v10 2/4] clk: clk-loongson2: add clock controller driver support
+From: Stephen Boyd <sboyd@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Yang Li <yang.lee@linux.alibaba.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, liupeibao@loongson.cn, loongarch@lists.linux.dev, wanghongliang@loongson.cn, zhuyinbo <zhuyinbo@loongson.cn>
+Date: Tue, 21 Feb 2023 15:07:58 -0800
+User-Agent: alot/0.10
 
+Quoting zhuyinbo (2023-02-19 21:44:51)
+>=20
+> =E5=9C=A8 2023/2/18 =E4=B8=8A=E5=8D=886:15, Stephen Boyd =E5=86=99=E9=81=
+=93:
+> > Quoting zhuyinbo (2023-02-14 23:35:22)
+> >> =E5=9C=A8 2023/2/11 =E4=B8=8A=E5=8D=887:42, Stephen Boyd =E5=86=99=E9=
+=81=93:
+> >>>> +
+> >>>> +err:
+> >>>> +       iounmap(loongson2_pll_base);
+> >>>> +}
+> >>>> +
+> >>>> +CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", loongson2_clocks=
+_init);
+> >>> Any reason this can't be a platform driver?
+>=20
+> Your question is that=C2=A0 why I don't use the platform_driver_register =
+to=20
+> register=C2=A0 clk and use CLK_OF_DECLARE ?
 
+Yes.
 
-在 2023年02月21日 15:45, Paolo Bonzini 写道:
-> On 2/20/23 07:57, Tianrui Zhao wrote:
->> +    /* Load Guest gprs */
->> +    ld.d    $r1,   \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 1)
->> +    ld.d    $r2,   \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 2)
->> +    ld.d    $r3,   \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 3)
->> +    ld.d    $r4,   \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 4)
->> +    ld.d    $r5,   \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 5)
->> +    ld.d    $r7,   \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 7)
->> +    ld.d    $r8,   \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 8)
->> +    ld.d    $r9,   \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 9)
->> +    ld.d    $r10,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 10)
->> +    ld.d    $r11,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 11)
->> +    ld.d    $r12,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 12)
->> +    ld.d    $r13,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 13)
->> +    ld.d    $r14,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 14)
->> +    ld.d    $r15,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 15)
->> +    ld.d    $r16,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 16)
->> +    ld.d    $r17,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 17)
->> +    ld.d    $r18,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 18)
->> +    ld.d    $r19,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 19)
->> +    ld.d    $r20,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 20)
->> +    ld.d    $r21,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 21)
->> +    ld.d    $r22,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 22)
->> +    ld.d    $r23,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 23)
->> +    ld.d    $r24,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 24)
->> +    ld.d    $r25,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 25)
->> +    ld.d    $r26,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 26)
->> +    ld.d    $r27,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 27)
->> +    ld.d    $r28,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 28)
->> +    ld.d    $r29,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 29)
->> +    ld.d    $r30,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 30)
->> +    ld.d    $r31,  \KVM_ARCH,  (KVM_ARCH_GGPR + 8 * 31)
->> +    /* Load KVM_ARCH register */
->> +    ld.d    \KVM_ARCH, \KVM_ARCH, (KVM_ARCH_GGPR + 8 * \GPRNUM)
->
-> This in practice relies on KVM_ARCH being a2 so please remove the 
-> KVM_ARCH and GPRNUM arguments from the macro; just replace \KVM_ARCH 
-> with a2 as needed.
->
-> Also, in these ld.d and st.d sequences you may want to use the ABI 
-> names instead of the rNN names, so it's clearer that you are skipping 
-> the KVM_ARCH register.
->
-> Paolo
+>=20
+> I was=C2=A0 consider other clock controllers of Loongson-2 series may be =
 
-Thanks, I will use a2 to replace the KVM_ARCH and remove the GPRNUM 
-argument.
+> different with 2k1000 and I can add a line
+>=20
+> CLK_OF_DECLARE() for compatible other platform in the future. eg.
+>=20
+> CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", loongson2_clocks_init);
+>=20
+> +=C2=A0 CLK_OF_DECLARE(xxx1, xxx2,=C2=A0 xxx3);=C2=A0 // for other clock =
+controllers of=20
+> Loongson-2 series
+>=20
+> >> For the compatible consideration of other clock controllers of
+> >> Loongson-2 series in the future, the way of using dts can be
+> >>
+> >> better compatible.
+> >>
+> > Sorry that sentence doesn't make sense to me. The use of dts doesn't
+> > require the use of CLK_OF_DECLARE.
+>=20
+> yes, the use of dts doesn't require the use of CLK_OF_DECLARE and can=20
+> use platform_driver_register
+>=20
+> but my drvier not use platform_driver_register to register=C2=A0 clk and =
+use=20
+> CLK_OF_DECLARE to match of_clk_init.
 
-Thanks
-Tianrui Zhao
-
-
+of_clk_init() is there to register clks that are needed for early init,
+i.e. the clockevent/clocksource or the root interrupt controller
+(irqchip). Otherwise, it isn't necessary to register clks via
+of_clk_init().
