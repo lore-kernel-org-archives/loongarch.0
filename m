@@ -1,24 +1,24 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAF0A47
-	for <loongarch@lists.linux.dev>; Tue, 21 Feb 2023 04:37:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11D410F6
+	for <loongarch@lists.linux.dev>; Tue, 21 Feb 2023 04:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1676954221;
-	bh=lefJq0PkABiE40hGP+cE8pG5V0Ru6IiPZz+2dOAh2DQ=;
+	s=default; t=1676954696;
+	bh=U7tebzEXNfcMfa8vjS1Fs5D6M++aN+BR4LUTQIO77CI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=YYIpv6zJsqWzhdbfWvspbND955SnKSHHFRLw8GOhYDEntWPuWp0L+FW3BNKyhpLp8
-	 tjQuqncIr+DGVWcPhVYOI7rQFoMxbie6E3hL+87kmR7kFjtselhdw478SZHkQVKeB0
-	 /+2K8kPoxKsM5m7PzpEw7bx2ugJBGTfv7ArXjHII=
+	b=luInTmqsKc0D+KACJmDSyQurJ8PqPyFyZ9kX2ZEGn6iuG+sSGL5+CuV/XMnu11FSK
+	 V6tBdP76qrgyDpbvcESGb+WGG7/UvxAxRRp9/8tPB8ZAD/al1AR9rgVgULhPhP5+Q6
+	 f5WvTPqqjQNNw1rPGe4++fbUKUq7f+X7XUJ3CxuI=
 Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 9559265C4D;
-	Mon, 20 Feb 2023 23:36:59 -0500 (EST)
-Message-ID: <ef024d7e4e0207e76c165c1818d1bb21f07235ab.camel@xry111.site>
-Subject: Re: [PATCH v2 01/29] LoongArch: KVM: Add kvm related header files
+	by xry111.site (Postfix) with ESMTPSA id D659865C56;
+	Mon, 20 Feb 2023 23:44:53 -0500 (EST)
+Message-ID: <497693ca2cbc443c1d9f796c3aace6c9987bec72.camel@xry111.site>
+Subject: Re: [PATCH v2 05/29] LoongArch: KVM: Add vcpu related header files
 From: Xi Ruoyao <xry111@xry111.site>
 To: Tianrui Zhao <zhaotianrui@loongson.cn>, Paolo Bonzini
  <pbonzini@redhat.com>
@@ -28,12 +28,12 @@ Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
  <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,  Alex Deucher
  <alexander.deucher@amd.com>, Oliver Upton <oliver.upton@linux.dev>,
  maobibo@loongson.cn
-Date: Tue, 21 Feb 2023 12:36:58 +0800
-In-Reply-To: <20230220065735.1282809-2-zhaotianrui@loongson.cn>
+Date: Tue, 21 Feb 2023 12:44:52 +0800
+In-Reply-To: <20230220065735.1282809-6-zhaotianrui@loongson.cn>
 References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
-	 <20230220065735.1282809-2-zhaotianrui@loongson.cn>
+	 <20230220065735.1282809-6-zhaotianrui@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 User-Agent: Evolution 3.46.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -42,38 +42,19 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Mon, 2023-02-20 at 14:57 +0800, Tianrui Zhao wrote:
+T24gTW9uLCAyMDIzLTAyLTIwIGF0IDE0OjU3ICswODAwLCBUaWFucnVpIFpoYW8gd3JvdGU6Cj4g
+Ky8qIEdDU1IgKi8KPiArc3RhdGljIGlubGluZSB1NjQgZ2Nzcl9yZWFkKHUzMiByZWcpCj4gK3sK
+PiArwqDCoMKgwqDCoMKgwqB1NjQgdmFsID0gMDsKPiArCj4gK8KgwqDCoMKgwqDCoMKgYXNtIHZv
+bGF0aWxlICgKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgInBhcnNlX3IgX19yZWcs
+ICVbdmFsXVxuXHQiCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCIud29yZCAweDUg
+PDwgMjQgfCAlW3JlZ10gPDwgMTAgfCAwIDw8IDUgfCBfX3JlZ1xuXHQiCgpEb24ndCBkbyB0aGlz
+LiAgWW91IHNob3VsZCBhZGQgdGhlIGluc3RydWN0aW9uIHRvIGJpbnV0aWxzIGZpcnN0LCB0aGVu
+Cm1ha2UgQ09ORklHX0tWTSBkZXBlbmQgb24gdGhlIGFzc2VtYmxlciBzdXBwb3J0aW5nIHRoaXMg
+aW5zdHJ1Y3Rpb24uIApUaGlzIGlzIGNvbXBsZXRlbHkgdW5yZWFkYWJsZSBhbmQgb25seSBmaW5l
+IGZvciBhbiBpbnRlcm5hbCBQb0MuCgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA6
+IFt2YWxdICIrciIgKHZhbCkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgOiBbcmVn
+XSAiaSIgKHJlZykKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgOiAibWVtb3J5Iik7
+Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoHJldHVybiB2YWw7Cj4gK30KCi0tIApYaSBSdW95YW8gPHhy
+eTExMUB4cnkxMTEuc2l0ZT4KU2Nob29sIG9mIEFlcm9zcGFjZSBTY2llbmNlIGFuZCBUZWNobm9s
+b2d5LCBYaWRpYW4gVW5pdmVyc2l0eQo=
 
-/* snip */
-
-> +/*
-> + * for KVM_GET_FPU and KVM_SET_FPU
-> + */
-> +struct kvm_fpu {
-> +	__u32 fcsr;
-> +	__u32 none;
-> +	__u64 fcc;    /* 8x8 */
-> +	struct kvm_fpureg {
-> +		__u64 val64[4];	//support max 256 bits
-> +	} fpr[32];
-
-Do we need __attribute__((__aligned__(16))) for fpureg (like
-sc_extcontext in struct sigcontext)?
-
-> +};
-> +
-> +/*
-> + * For LOONGARCH, we use KVM_SET_ONE_REG and KVM_GET_ONE_REG to
-          ^^^^^^^^^
-          LoongArch
-
-> access various
-> + * registers.=C2=A0 The id field is broken down as follows:
-> + *
-> + *=C2=A0 bits[63..52] - As per linux/kvm.h
-> + *=C2=A0 bits[51..32] - Must be zero.
-> + *=C2=A0 bits[31..16] - Register set.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
