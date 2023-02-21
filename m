@@ -1,27 +1,35 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E21D31C07
-	for <loongarch@lists.linux.dev>; Tue, 21 Feb 2023 10:18:42 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8Axkk6BmvRj_R0DAA--.912S3;
-	Tue, 21 Feb 2023 18:18:41 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx2r2AmvRj56s3AA--.36327S3;
-	Tue, 21 Feb 2023 18:18:40 +0800 (CST)
-Message-ID: <2875aa3f-0dc4-4e48-17ad-42c703e12063@loongson.cn>
-Date: Tue, 21 Feb 2023 18:18:40 +0800
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071551C33
+	for <loongarch@lists.linux.dev>; Tue, 21 Feb 2023 10:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1676975848; bh=kttlikzHwisAM0E2qY/d8RHeLStCZm5KlaC55tFr4CU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=A4g5I85hUYVQJ4SHKWhlfMQrRbyItlwUavJVuBjGob+k8vmVXjA7H6nNXFrV49req
+	 7zjwdT3tnAEserZ62WFgSVtsO+wfG2cz7p7Hla51+t7h0OBdtuXiOR1EtR41O6m/oS
+	 4iGCHu89NLXDtXQBWSc3x/5mAupivdX9iD64G4XI=
+Received: from [100.100.57.122] (unknown [58.34.185.106])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id A5054600BD;
+	Tue, 21 Feb 2023 18:37:27 +0800 (CST)
+Message-ID: <35d54051-3876-4fb7-d1c8-d1c605420962@xen0n.name>
+Date: Tue, 21 Feb 2023 18:37:27 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.8.0
 Subject: Re: [PATCH v2 02/29] LoongArch: KVM: Implement kvm module related
  interface
-To: Paolo Bonzini <pbonzini@redhat.com>,
+To: maobibo <maobibo@loongson.cn>, Paolo Bonzini <pbonzini@redhat.com>,
  Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+Cc: Huacai Chen <chenhuacai@kernel.org>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
  linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
  Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
@@ -32,68 +40,52 @@ References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
  <bf4111f9-f722-1847-4f1d-964c5356f392@redhat.com>
  <0fa9c062-d3fc-61e5-4d54-6bc29f7c64cf@loongson.cn>
  <3f16a8e1-21d9-808e-aa1a-4f1d6f6f291b@redhat.com>
+ <2875aa3f-0dc4-4e48-17ad-42c703e12063@loongson.cn>
 Content-Language: en-US
-From: maobibo <maobibo@loongson.cn>
-In-Reply-To: <3f16a8e1-21d9-808e-aa1a-4f1d6f6f291b@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <2875aa3f-0dc4-4e48-17ad-42c703e12063@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx2r2AmvRj56s3AA--.36327S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw1Uur15CF17Cw1UKw4fGrg_yoW8CrWfpa
-	ySyrW7Gr1vkr9Yka1kXw1v934IkFZYka15Jry7JFZYyws0grZIya40kry7AF98Cr4rXr1U
-	Zws0yaykCwn8Z37anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
-	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2
-	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
-	AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCa
-	FVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI
-	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
-	IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280
-	aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0b6pPUUUUU==
 
-
-
-在 2023/2/21 16:14, Paolo Bonzini 写道:
-> On 2/21/23 07:59, maobibo wrote:
->>> Also, why does the world switch code need a copy?
->> There will be problem in world switch code if there is page fault reenter,
->> since pgd register is shared between root kernel and kvm hypervisor.
->> World switch entry need be unmapped area, cannot be tlb mapped area.
+On 2023/2/21 18:18, maobibo wrote:
 > 
-> So if I understand correctly the processor is in direct address translation mode until the "csrwr t0, LOONGARCH_CSR_CRMD" instruction. Where does it leave paged mode?
-The processor still in paged mode during world switch context. For example
-when vm exits from guest mode to root mode, it executes world switch code
-from kvm_vector_entry, PC register points to HVA address, however vmid from
-LOONGARCH_CSR_GTLBC is not clear to root mode. If there is page fault
-exception, hardware treats it exception from GPA-->HPA rather than that
-from HVA --> HPA, since vmid info in CSR_GTLBC is not zero.
-
-In page mode, there are two kinds of address: unmapped address and 
-tlb mapped address. For unmapped address there is only cachable/uncachable
-attribution, but not RWX attr; and there is no tlb handling for it.
-For simplicity,  unmapped address can be treated as window filtered address.
-
-It will be fully root mode only after this piece of code is executed
-during world switch context; vmid is zero and PC points to HVA.
-        ori     t0, zero, CSR_GSTAT_PVM
-        csrxchg zero, t0, LOONGARCH_CSR_GSTAT
-        /* Clear GTLBC.TGID field */
-        csrrd   t0, LOONGARCH_CSR_GTLBC
-        bstrins.w       t0, zero, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
-        csrwr   t0, LOONGARCH_CSR_GTLBC
-
 > 
-> Can you please also add comments to kvm_vector_entry explaining the processor state after a VZ exception entry (interrupts, paging, ...)?
-Yeap, we will add more comments about these critical exception entry.
-
-Regards
-Bibo, Mao
+> 在 2023/2/21 16:14, Paolo Bonzini 写道:
+>> On 2/21/23 07:59, maobibo wrote:
+>>>> Also, why does the world switch code need a copy?
+>>> There will be problem in world switch code if there is page fault reenter,
+>>> since pgd register is shared between root kernel and kvm hypervisor.
+>>> World switch entry need be unmapped area, cannot be tlb mapped area.
+>>
+>> So if I understand correctly the processor is in direct address translation mode until the "csrwr t0, LOONGARCH_CSR_CRMD" instruction. Where does it leave paged mode?
+> The processor still in paged mode during world switch context. For example
+> when vm exits from guest mode to root mode, it executes world switch code
+> from kvm_vector_entry, PC register points to HVA address, however vmid from
+> LOONGARCH_CSR_GTLBC is not clear to root mode. If there is page fault
+> exception, hardware treats it exception from GPA-->HPA rather than that
+> from HVA --> HPA, since vmid info in CSR_GTLBC is not zero.
 > 
-> Paolo
+> In page mode, there are two kinds of address: unmapped address and
+> tlb mapped address. For unmapped address there is only cachable/uncachable
+> attribution, but not RWX attr; and there is no tlb handling for it.
+> For simplicity,  unmapped address can be treated as window filtered address.
+> 
+> It will be fully root mode only after this piece of code is executed
+> during world switch context; vmid is zero and PC points to HVA.
+>          ori     t0, zero, CSR_GSTAT_PVM
+>          csrxchg zero, t0, LOONGARCH_CSR_GSTAT
+>          /* Clear GTLBC.TGID field */
+>          csrrd   t0, LOONGARCH_CSR_GTLBC
+>          bstrins.w       t0, zero, CSR_GTLBC_TGID_SHIFT_END, CSR_GTLBC_TGID_SHIFT
+>          csrwr   t0, LOONGARCH_CSR_GTLBC
+
+AFAIK all of these is probably coming from Volume 3 of LoongArch ISA 
+Manual, which is unfortunately not publicly available at the moment. For 
+sake of meaningful reviews, when can we expect to get our hands on the 
+manuals?
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
