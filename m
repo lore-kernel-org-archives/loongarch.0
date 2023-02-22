@@ -1,183 +1,106 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C011F10EA
-	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 10:36:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677062185; x=1708598185;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ofUmRpvhNVTg3+A6hyPOFASnnH8za9ygTzj8N8YfXSk=;
-  b=D/jJH3b5mxjsbESOrhJADbGdNryNkN5ht6TZOmPghGueyhBQ3yHW6jzZ
-   mvwy9VQxQRotTqmD1xui3nJFhKuthdB35AN0ItIqt2iwZq71+dEyEFire
-   21wyeBK5nOZMw7n7OHSIzvNjWZbIScLczJOGSjKo9fapzh946QPYzLLap
-   3wF4j8RhRlvAsHQqoURxxl4TWcIUKUmVhJBJU8BN1TA5W2GwqPFWHABhL
-   mnEz7xFLY6qQoBWvNNY3+AcBzJaM5GfvbaZMMSR4XrkdM8rzUAuPTvKRf
-   7cvC+7b/DTH9mhYSMQALdPpTwKnWa88ZkKchLv4ANZZgtnATOQHcIiKoS
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10628"; a="321031741"
-X-IronPort-AV: E=Sophos;i="5.97,318,1669104000"; 
-   d="scan'208";a="321031741"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2023 02:36:24 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10628"; a="781379853"
-X-IronPort-AV: E=Sophos;i="5.97,318,1669104000"; 
-   d="scan'208";a="781379853"
-Received: from ahajda-mobl.ger.corp.intel.com (HELO [10.213.26.51]) ([10.213.26.51])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2023 02:36:19 -0800
-Message-ID: <50c1806b-f153-da48-ddf4-53923fa90334@intel.com>
-Date: Wed, 22 Feb 2023 11:36:17 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7E65384
+	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 12:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1677068250;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=goul4Fhvfk43vCc860FayPZUVbj7HGLTXeMvhYOcsh0=;
+	b=CkPhquxiQWsvafBi/fkRE01r5Dae6+53Mufk8B+ReRIUsPqvvpGywaQERDkMLOnvYmsDY7
+	Avo8A4Z8NrB/K2RPC/lwOXXZGuDsMmhMjwfDnzsmYwiSwWpuY0iKIYZk6b8ZyoYC80EJKM
+	VhEYi6aJms7JOJH6ixcPhD7361sHxBs=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-135-kaxZ85wvORiTVe1TEM-eqw-1; Wed, 22 Feb 2023 07:17:29 -0500
+X-MC-Unique: kaxZ85wvORiTVe1TEM-eqw-1
+Received: by mail-ed1-f70.google.com with SMTP id t9-20020a056402524900b004af59c073abso5091581edd.6
+        for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 04:17:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=goul4Fhvfk43vCc860FayPZUVbj7HGLTXeMvhYOcsh0=;
+        b=dnfP+4Np2tvVGHamCHmqpFZcjdpnioTt/yIfZM132zbTfAN7Crwu4rVlpXtrRLlKXp
+         XixPojPusqw7egALLDTTVzkm5702dRDCeyvbmasrtE4ICyI8YXXn2VN0bnaqSRZIsUKq
+         MZUq2qvbocUuT3fYFCDymKTw3UG5jVkgVfcMuTQxuhwBUXOHH291u5y7tL+SzmhjSyGT
+         VZ26WV9hZYuzDma3AKuo/FgQAB0wETNGb+gBWWEE6ZcRwUlTyMkCZJB4gm1b1dTHr2Gr
+         6fw80yqMK4MW3FvEEW9jZZDSxvT+RvxcjVUUXKh1pkwsi+5Lfaq2FSxeUbxSaNWGS+19
+         V3kQ==
+X-Gm-Message-State: AO0yUKX418prasIFKO2qlkGbOh3jE7/MdOi7R7y4vy7MNFxUJ/KXH+DX
+	tNK/my7GKhnT4x73chVg/8Hx5nr3zwr/0gmANAVeCoOwKnoStFv2Qojww+fhk/c4sIHe+qNEtP/
+	GD+jnAFUeGppZTH4Y3kB7
+X-Received: by 2002:aa7:ccc6:0:b0:4ad:d4b9:f8f4 with SMTP id y6-20020aa7ccc6000000b004add4b9f8f4mr8172169edt.8.1677068248251;
+        Wed, 22 Feb 2023 04:17:28 -0800 (PST)
+X-Google-Smtp-Source: AK7set+3d7Z+mzeZfVcH9q2/QwKk/+Du//iEo4lNyoG0L3TyJI3S5+479TSrRz5mFMr/NTPfpxKX0w==
+X-Received: by 2002:aa7:ccc6:0:b0:4ad:d4b9:f8f4 with SMTP id y6-20020aa7ccc6000000b004add4b9f8f4mr8172146edt.8.1677068247919;
+        Wed, 22 Feb 2023 04:17:27 -0800 (PST)
+Received: from ?IPV6:2001:b07:6468:f312:9af8:e5f5:7516:fa89? ([2001:b07:6468:f312:9af8:e5f5:7516:fa89])
+        by smtp.googlemail.com with ESMTPSA id m27-20020a50d7db000000b004acc61206cfsm2594721edj.33.2023.02.22.04.17.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Feb 2023 04:17:27 -0800 (PST)
+Message-ID: <a9623c91-a28a-d91d-5311-fcfc4bd13247@redhat.com>
+Date: Wed, 22 Feb 2023 13:17:25 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.8.0
-Subject: Re: [Intel-gfx] [PATCH v5 0/7] Introduce __xchg, non-atomic xchg
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+To: Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn
+References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
+ <20230220065735.1282809-7-zhaotianrui@loongson.cn>
+ <cbd95763-ec38-63f7-89bf-c8b01aa7df77@redhat.com>
+ <abfa3fbc-e234-d0ab-ec35-90d9c251bf79@loongson.cn>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v2 06/29] LoongArch: KVM: Implement vcpu create and
+ destroy interface
+In-Reply-To: <abfa3fbc-e234-d0ab-ec35-90d9c251bf79@loongson.cn>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-To: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-xtensa@linux-xtensa.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
- Peter Zijlstra <peterz@infradead.org>, Boqun Feng <boqun.feng@gmail.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20230118153529.57695-1-andrzej.hajda@intel.com>
-From: Andrzej Hajda <andrzej.hajda@intel.com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
- Gdansk - KRS 101882 - NIP 957-07-52-316
-In-Reply-To: <20230118153529.57695-1-andrzej.hajda@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+On 2/22/23 02:52, Tianrui Zhao wrote:
+>>
+>>> +    vcpu->arch.guest_eentry = (unsigned long)kvm_context->kvm_eentry;
+>>> +    vcpu->arch.vcpu_run = kvm_context->kvm_enter_guest;
+>>> +    vcpu->arch.handle_exit = _kvm_handle_exit;
+>>
+>> Here as well, whatever is constant must not be stored in struct 
+>> kvm_arch_vcpu.
+>>
+>> Paolo
+> 
+> Thanks,  we use this in vcpu_arch because the vcpu_arch is used as 
+> argument in switch.S' methods, we can quickly access the guest_eentry 
+> and handle_exit by using the  KVM_ARCH_GEENTRY, KVM_ARCH_HANDLE_EXIT 
+> offsets. If we change to global variable ,  we should relocate it in 
+> switch.S and may lead  to lower accessing speed.
 
-Ping on the series.
-Arnd, Andrew is there anything more I can do to push the process forward?
+For guest_eentry and handle_exit this is correct so you can add a 
+comment in kvm_host.h, like
 
-Regards
-Andrzej
+	/* Pointers stored here for easy access from assembly code.  */
 
+However, vcpu->arch.vcpu_run is not used in switch.S so there is no need 
+to store it in struct kvm_arch_vcpu.  Since you're already going to move 
+kvm_enter_guest out of kvm_context and into a global variable, please 
+give it the right pointer-to-function type instead of using unsigned long.
 
-On 18.01.2023 16:35, Andrzej Hajda wrote:
-> Hi all,
-> 
-> The helper is tiny and there are advices we can live without it, so
-> I want to present few arguments why it would be good to have it:
-> 
-> 1. Code readability/simplification/number of lines:
->    - decreases number of lines,
->    - it often eliminates local variables,
->    - for real examples see patches 3+.
-> 
-> 2. Presence of similar helpers in other somehow related languages/libs:
-> 
-> a) Rust[1]: 'replace' from std::mem module, there is also 'take'
->      helper (__xchg(&x, 0)), which is the same as private helper in
->      i915 - fetch_and_zero, see latest patch.
-> b) C++ [2]: 'exchange' from utility header.
-> 
-> If the idea is OK there are still 2 questions to answer:
-> 
-> 1. Name of the helper, __xchg follows kernel conventions,
->      but for me Rust names are also OK.
-> 2. Where to put the helper:
-> a) as in this patchset include/linux/non-atomic/xchg.h,
->      proposed by Andy Shevchenko,
-> b) include/linux/utils.h ? any better name? Some kind
->      of container for simple helpers.
-> 
-> All __xchg conversions were performed using cocci script,
-> then manually adjusted if necessary.
-> 
-> There is lot of places it can be used in, I have just chosen
-> some of them. I can provide cocci script to detect others (not all),
-> if necessary.
-> 
-> Changes:
-> v2: squashed all __xchg -> __arch_xchg t one patch (Arnd)
-> v3: fixed alpha/xchg_local (lkp@intel.com)
-> v4: adjusted indentation (Heiko)
-> v5: added more __xchg conversions - patches 3-6, added tags
-> 
-> [1]: https://doc.rust-lang.org/std/mem/index.html
-> [2]: https://en.cppreference.com/w/cpp/header/utility
-> 
-> Regards
-> Andrzej
-> 
-> Andrzej Hajda (7):
->    arch: rename all internal names __xchg to __arch_xchg
->    linux/include: add non-atomic version of xchg
->    arch/*/uprobes: simplify arch_uretprobe_hijack_return_addr
->    llist: simplify __llist_del_all
->    io_uring: use __xchg if possible
->    qed: use __xchg if possible
->    drm/i915/gt: use __xchg instead of internal helper
-> 
->   arch/alpha/include/asm/cmpxchg.h              | 10 +++++-----
->   arch/arc/include/asm/cmpxchg.h                |  4 ++--
->   arch/arm/include/asm/cmpxchg.h                |  7 ++++---
->   arch/arm/probes/uprobes/core.c                |  8 ++------
->   arch/arm64/include/asm/cmpxchg.h              |  7 +++----
->   arch/arm64/kernel/probes/uprobes.c            |  9 ++-------
->   arch/csky/kernel/probes/uprobes.c             |  9 ++-------
->   arch/hexagon/include/asm/cmpxchg.h            | 10 +++++-----
->   arch/ia64/include/asm/cmpxchg.h               |  2 +-
->   arch/ia64/include/uapi/asm/cmpxchg.h          |  4 ++--
->   arch/loongarch/include/asm/cmpxchg.h          |  4 ++--
->   arch/m68k/include/asm/cmpxchg.h               |  6 +++---
->   arch/mips/include/asm/cmpxchg.h               |  4 ++--
->   arch/mips/kernel/uprobes.c                    | 10 ++--------
->   arch/openrisc/include/asm/cmpxchg.h           | 10 +++++-----
->   arch/parisc/include/asm/cmpxchg.h             |  4 ++--
->   arch/powerpc/include/asm/cmpxchg.h            |  4 ++--
->   arch/powerpc/kernel/uprobes.c                 | 10 ++--------
->   arch/riscv/include/asm/atomic.h               |  2 +-
->   arch/riscv/include/asm/cmpxchg.h              |  4 ++--
->   arch/riscv/kernel/probes/uprobes.c            |  9 ++-------
->   arch/s390/include/asm/cmpxchg.h               |  8 ++++----
->   arch/s390/kernel/uprobes.c                    |  7 ++-----
->   arch/sh/include/asm/cmpxchg.h                 |  4 ++--
->   arch/sparc/include/asm/cmpxchg_32.h           |  4 ++--
->   arch/sparc/include/asm/cmpxchg_64.h           |  6 +++---
->   arch/sparc/kernel/uprobes.c                   |  7 ++-----
->   arch/xtensa/include/asm/cmpxchg.h             |  4 ++--
->   drivers/gpu/drm/i915/gt/intel_engine_cs.c     |  2 +-
->   .../gpu/drm/i915/gt/intel_engine_heartbeat.c  |  4 ++--
->   .../drm/i915/gt/intel_execlists_submission.c  |  4 ++--
->   drivers/gpu/drm/i915/gt/intel_ggtt.c          |  4 ++--
->   drivers/gpu/drm/i915/gt/intel_gsc.c           |  2 +-
->   drivers/gpu/drm/i915/gt/intel_gt.c            |  4 ++--
->   drivers/gpu/drm/i915/gt/intel_gt_pm.c         |  2 +-
->   drivers/gpu/drm/i915/gt/intel_lrc.c           |  6 +++---
->   drivers/gpu/drm/i915/gt/intel_migrate.c       |  2 +-
->   drivers/gpu/drm/i915/gt/intel_rc6.c           |  2 +-
->   drivers/gpu/drm/i915/gt/intel_rps.c           |  2 +-
->   drivers/gpu/drm/i915/gt/selftest_context.c    |  2 +-
->   .../drm/i915/gt/selftest_ring_submission.c    |  2 +-
->   drivers/gpu/drm/i915/gt/selftest_timeline.c   |  2 +-
->   drivers/gpu/drm/i915/gt/uc/intel_gsc_uc.c     |  2 +-
->   drivers/gpu/drm/i915/gt/uc/intel_uc.c         |  2 +-
->   drivers/gpu/drm/i915/gt/uc/intel_uc_fw.c      |  2 +-
->   drivers/gpu/drm/i915/i915_utils.h             |  1 +
->   include/linux/llist.h                         |  6 ++----
->   include/linux/non-atomic/xchg.h               | 19 +++++++++++++++++++
->   include/linux/qed/qed_chain.h                 | 19 +++++++------------
->   io_uring/io_uring.c                           |  7 ++-----
->   io_uring/slist.h                              |  6 ++----
->   51 files changed, 126 insertions(+), 155 deletions(-)
->   create mode 100644 include/linux/non-atomic/xchg.h
-> 
+Paolo
 
