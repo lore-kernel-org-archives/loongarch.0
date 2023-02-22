@@ -1,331 +1,120 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D32D9185B
-	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 03:16:50 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxJPQhifVjXm8DAA--.1467S3;
-	Wed, 22 Feb 2023 11:16:49 +0800 (CST)
-Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxUuUbifVj9l84AA--.2774S7;
-	Wed, 22 Feb 2023 11:16:48 +0800 (CST)
-From: Youling Tang <tangyouling@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Xi Ruoyao <xry111@xry111.site>,
-	Jinyang He <hejinyang@loongson.cn>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 5/5] LoongArch: Add support for kernel address space layout randomization (KASLR)
-Date: Wed, 22 Feb 2023 11:16:43 +0800
-Message-Id: <1677035803-7932-6-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1677035803-7932-1-git-send-email-tangyouling@loongson.cn>
-References: <1677035803-7932-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID:AQAAf8DxUuUbifVj9l84AA--.2774S7
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3XFyxJr1kJry8Wr18Wr1kAFb_yoW3ZFW5pr
-	ZxAw4Utr43GF17GrsFq34kury5Aws7W343WFsxKryru3W2qF1rXFykuryDXFy8t3yvgr4S
-	qFy5Kaya9w4UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 495641C17
+	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 05:10:16 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.35])
+	by gateway (Coremail) with SMTP id _____8Axbdq3o_VjR3cDAA--.1579S3;
+	Wed, 22 Feb 2023 13:10:15 +0800 (CST)
+Received: from [10.20.42.35] (unknown [10.20.42.35])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxWL22o_VjmHY4AA--.37752S3;
+	Wed, 22 Feb 2023 13:10:14 +0800 (CST)
+Subject: Re: [PATCH v10 2/4] clk: clk-loongson2: add clock controller driver
+ support
+From: zhuyinbo <zhuyinbo@loongson.cn>
+To: Stephen Boyd <sboyd@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ Jianmin Lv <lvjianmin@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>, Rob Herring
+ <robh+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Yang Li <yang.lee@linux.alibaba.com>, devicetree@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ liupeibao@loongson.cn, loongarch@lists.linux.dev, wanghongliang@loongson.cn
+References: <20221129034157.15036-1-zhuyinbo@loongson.cn>
+ <20221129034157.15036-2-zhuyinbo@loongson.cn>
+ <31c690a347f858a477bbba9c838984ed.sboyd@kernel.org>
+ <4b5fd886-57ce-01ef-8224-432898b7fb1c@loongson.cn>
+ <8332a1cf44b01f06bdd5db9dc5d7f387.sboyd@kernel.org>
+ <01ee3dc6-a868-fd2b-93aa-11e6bdfcc9df@loongson.cn>
+ <9e8952c9415973dc7276185e3cdf5ae7.sboyd@kernel.org>
+ <d92223a0-6d4c-33ea-1473-3d40bdd0ad9e@loongson.cn>
+Message-ID: <834da7dc-bb5d-3427-43e5-938e40a2d180@loongson.cn>
+Date: Wed, 22 Feb 2023 13:10:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+In-Reply-To: <d92223a0-6d4c-33ea-1473-3d40bdd0ad9e@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8CxWL22o_VjmHY4AA--.37752S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Zr4UJrW7tr4kAF1fJF4xWFg_yoW8uF1Upr
+	ZxCay7KF4Dtr40vr1qgw4UZas0ya1ftF17Xw4ftw1DCa4qk345ur4UXFn5CF93Jr45G3y0
+	qr18tw47CFyq9rJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bfxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
+	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7V
+	AKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
+	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
+	8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
+	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07jYzuAUUUUU=
 
-This patch adds support for relocating the kernel to a random address.
 
-Entropy is derived from the banner, which will change every build and
-random_get_entropy() which should provide additional runtime entropy.
+在 2023/2/22 上午10:02, zhuyinbo 写道:
+>
+> 在 2023/2/22 上午7:07, Stephen Boyd 写道:
+>> Quoting zhuyinbo (2023-02-19 21:44:51)
+>>> 在 2023/2/18 上午6:15, Stephen Boyd 写道:
+>>>> Quoting zhuyinbo (2023-02-14 23:35:22)
+>>>>> 在 2023/2/11 上午7:42, Stephen Boyd 写道:
+>>>>>>> +
+>>>>>>> +err:
+>>>>>>> +       iounmap(loongson2_pll_base);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", 
+>>>>>>> loongson2_clocks_init);
+>>>>>> Any reason this can't be a platform driver?
+>>> Your question is that  why I don't use the platform_driver_register to
+>>> register  clk and use CLK_OF_DECLARE ?
+>> Yes.
+>>
+>>> I was  consider other clock controllers of Loongson-2 series may be
+>>> different with 2k1000 and I can add a line
+>>>
+>>> CLK_OF_DECLARE() for compatible other platform in the future. eg.
+>>>
+>>> CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", 
+>>> loongson2_clocks_init);
+>>>
+>>> +  CLK_OF_DECLARE(xxx1, xxx2,  xxx3);  // for other clock 
+>>> controllers of
+>>> Loongson-2 series
+>>>
+>>>>> For the compatible consideration of other clock controllers of
+>>>>> Loongson-2 series in the future, the way of using dts can be
+>>>>>
+>>>>> better compatible.
+>>>>>
+>>>> Sorry that sentence doesn't make sense to me. The use of dts doesn't
+>>>> require the use of CLK_OF_DECLARE.
+>>> yes, the use of dts doesn't require the use of CLK_OF_DECLARE and can
+>>> use platform_driver_register
+>>>
+>>> but my drvier not use platform_driver_register to register clk and use
+>>> CLK_OF_DECLARE to match of_clk_init.
+>> of_clk_init() is there to register clks that are needed for early init,
+>> i.e. the clockevent/clocksource or the root interrupt controller
+>> (irqchip). Otherwise, it isn't necessary to register clks via
+>> of_clk_init().
+> okay, I got it.
 
-The kernel is relocated by up to RANDOMIZE_BASE_MAX_OFFSET bytes from
-its link address. Because relocation happens so early in the kernel boot,
-the amount of physical memory has not yet been determined. This means
-the only way to limit relocation within the available memory is via
-Kconfig. Limit the maximum value of RANDOMIZE_BASE_MAX_OFFSET to
-256M(0x10000000) because our memory layout has many holes.
+and,  the time driver  get clock by CCF that ask loongson2 clock driver 
+use CLK_OF_DECLARE
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-Signed-off-by: Xi Ruoyao <xry111@xry111.site> # Fix compiler warnings
----
- arch/loongarch/Kconfig             |  23 +++++
- arch/loongarch/include/asm/setup.h |   2 +
- arch/loongarch/kernel/head.S       |  14 ++-
- arch/loongarch/kernel/relocate.c   | 145 ++++++++++++++++++++++++++++-
- 4 files changed, 179 insertions(+), 5 deletions(-)
+to match of_clk_init.   because  the timer_probe  is very early and the 
+timer driver was use TIMER_OF_DECLARE
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 406a28758a52..ab4c2ab146ab 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -530,6 +530,29 @@ config RELOCATABLE
- 	  kernel binary at runtime to a different virtual address than the
- 	  address it was linked at.
- 
-+config RANDOMIZE_BASE
-+	bool "Randomize the address of the kernel image (KASLR)"
-+	depends on RELOCATABLE
-+	help
-+	   Randomizes the physical and virtual address at which the
-+	   kernel image is loaded, as a security feature that
-+	   deters exploit attempts relying on knowledge of the location
-+	   of kernel internals.
-+
-+	   The kernel will be offset by up to RANDOMIZE_BASE_MAX_OFFSET.
-+
-+	   If unsure, say N.
-+
-+config RANDOMIZE_BASE_MAX_OFFSET
-+	hex "Maximum KASLR offset" if EXPERT
-+	depends on RANDOMIZE_BASE
-+	range 0x0 0x10000000 if 64BIT
-+	default "0x01000000"
-+	help
-+	  When KASLR is active, this provides the maximum offset that will
-+	  be applied to the kernel image.
-+
-+
- config SECCOMP
- 	bool "Enable seccomp to safely compute untrusted bytecode"
- 	depends on PROC_FS
-diff --git a/arch/loongarch/include/asm/setup.h b/arch/loongarch/include/asm/setup.h
-index 68b5b5a1fe8a..8d2a9d7a4356 100644
---- a/arch/loongarch/include/asm/setup.h
-+++ b/arch/loongarch/include/asm/setup.h
-@@ -33,6 +33,8 @@ extern void *__la_abs_begin;
- extern void *__la_abs_end;
- 
- extern void __init relocate_kernel(void);
-+extern void *__init do_kaslr(void);
-+
- #endif
- 
- #endif /* __SETUP_H */
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index 499edc80d8ab..b12f459ad73a 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -87,10 +87,22 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
- 	set_saved_sp	sp, t0, t1
- 
- #ifdef CONFIG_RELOCATABLE
-+#ifdef CONFIG_RANDOMIZE_BASE
-+	bl		do_kaslr
-+
-+	/* Repoint the sp into the new kernel image */
-+	PTR_LI		sp, (_THREAD_SIZE - PT_SIZE)
-+	PTR_ADD		sp, sp, tp
-+	set_saved_sp	sp, t0, t1
-+
-+	/* do_kaslr returns the new kernel image entry point */
-+	jr		a0
-+	ASM_BUG()
-+#else
- 	/* Apply the relocations */
- 	bl		relocate_kernel
- #endif
--
-+#endif
- 	bl		start_kernel
- 	ASM_BUG()
- 
-diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
-index feeba0730875..73faf7505140 100644
---- a/arch/loongarch/kernel/relocate.c
-+++ b/arch/loongarch/kernel/relocate.c
-@@ -9,11 +9,15 @@
- #include <linux/kernel.h>
- #include <linux/printk.h>
- #include <linux/panic_notifier.h>
-+#include <linux/start_kernel.h>
-+#include <asm/bootinfo.h>
-+#include <asm/early_ioremap.h>
- #include <asm/inst.h>
- #include <asm/sections.h>
- #include <asm/setup.h>
- 
- #define RELOCATED(x) ((void *)((long)x + reloc_offset))
-+#define RELOCATED_KASLR(x) ((void *)((long)x + offset))
- 
- static unsigned long reloc_offset;
- 
-@@ -38,13 +42,13 @@ static inline __init void relocate_relative(void)
- 	}
- }
- 
--static inline void __init relocate_la_abs(void)
-+static inline void __init relocate_la_abs(long offset)
- {
- 	struct rela_la_abs *p;
- 	void *start, *end;
- 
--	start = &__la_abs_begin;
--	end = &__la_abs_end;
-+	start = RELOCATED_KASLR((unsigned long)&__la_abs_begin);
-+	end = RELOCATED_KASLR((unsigned long)&__la_abs_end);
- 
- 	for (p = start; (void *)p < end; p++) {
- 		long v = p->symvalue;
-@@ -63,6 +67,139 @@ static inline void __init relocate_la_abs(void)
- 	}
- }
- 
-+#ifdef CONFIG_RANDOMIZE_BASE
-+static inline __init unsigned long rotate_xor(unsigned long hash,
-+					      const void *area, size_t size)
-+{
-+	size_t i;
-+	unsigned long *ptr = (unsigned long *)area;
-+
-+	for (i = 0; i < size / sizeof(hash); i++) {
-+		/* Rotate by odd number of bits and XOR. */
-+		hash = (hash << ((sizeof(hash) * 8) - 7)) | (hash >> 7);
-+		hash ^= ptr[i];
-+	}
-+
-+	return hash;
-+}
-+
-+static inline __init unsigned long get_random_boot(void)
-+{
-+	unsigned long entropy = random_get_entropy();
-+	unsigned long hash = 0;
-+
-+	/* Attempt to create a simple but unpredictable starting entropy. */
-+	hash = rotate_xor(hash, linux_banner, strlen(linux_banner));
-+
-+	/* Add in any runtime entropy we can get */
-+	hash = rotate_xor(hash, &entropy, sizeof(entropy));
-+
-+	return hash;
-+}
-+
-+static inline __init bool kaslr_disabled(void)
-+{
-+	char *str;
-+
-+	str = strstr(boot_command_line, "nokaslr");
-+	if (str == boot_command_line || (str > boot_command_line && *(str - 1) == ' '))
-+		return true;
-+
-+	return false;
-+}
-+
-+/* Choose a new address for the kernel */
-+static inline void __init *determine_relocation_address(void)
-+{
-+	unsigned long kernel_length;
-+	void *dest = _text;
-+	unsigned long offset;
-+
-+	if (kaslr_disabled())
-+		return dest;
-+
-+	kernel_length = (long)_end - (long)_text;
-+
-+	offset = get_random_boot() << 16;
-+	offset &= (CONFIG_RANDOMIZE_BASE_MAX_OFFSET - 1);
-+	if (offset < kernel_length)
-+		offset += ALIGN(kernel_length, 0xffff);
-+
-+	return RELOCATED_KASLR(dest);
-+}
-+
-+static inline int __init relocation_addr_valid(void *loc_new)
-+{
-+	if ((unsigned long)loc_new & 0x00000ffff) {
-+		/* Inappropriately aligned new location */
-+		return 0;
-+	}
-+	if ((unsigned long)loc_new < (unsigned long)_end) {
-+		/* New location overlaps original kernel */
-+		return 0;
-+	}
-+	return 1;
-+}
-+
-+static inline void __init update_reloc_offset(unsigned long *addr, long offset)
-+{
-+	unsigned long *new_addr = (unsigned long *)RELOCATED_KASLR(addr);
-+
-+	*new_addr = (unsigned long)offset;
-+}
-+
-+void *__init do_kaslr(void)
-+{
-+	void *loc_new;
-+	unsigned long kernel_length;
-+	long offset = 0;
-+	/* Default to original kernel entry point */
-+	void *kernel_entry = start_kernel;
-+	char *cmdline = early_ioremap(fw_arg1, COMMAND_LINE_SIZE);
-+
-+	/* Boot command line was passed in fw_arg1 */
-+	strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
-+
-+	kernel_length = (long)(_end) - (long)(_text);
-+
-+	loc_new = determine_relocation_address();
-+
-+	/* Sanity check relocation address */
-+	if (relocation_addr_valid(loc_new))
-+		offset = (unsigned long)loc_new - (unsigned long)(_text);
-+
-+	reloc_offset = (unsigned long)_text - VMLINUX_LOAD_ADDRESS;
-+
-+	if (offset) {
-+		/* Copy the kernel to it's new location */
-+		memcpy(loc_new, _text, kernel_length);
-+
-+		/* Sync the caches ready for execution of new kernel */
-+		__asm__ __volatile__ (
-+			"ibar 0 \t\n"
-+			"dbar 0 \t\n"
-+			::: "memory");
-+
-+		reloc_offset += offset;
-+
-+		/* The current thread is now within the relocated image */
-+		__current_thread_info = RELOCATED_KASLR(__current_thread_info);
-+
-+		/* Return the new kernel's entry point */
-+		kernel_entry = RELOCATED_KASLR(start_kernel);
-+
-+		update_reloc_offset(&reloc_offset, offset);
-+	}
-+
-+	if (reloc_offset)
-+		relocate_relative();
-+
-+	relocate_la_abs(offset);
-+
-+	return kernel_entry;
-+}
-+#endif
-+
- void __init relocate_kernel(void)
- {
- 	reloc_offset = (unsigned long)_text - VMLINUX_LOAD_ADDRESS;
-@@ -70,7 +207,7 @@ void __init relocate_kernel(void)
- 	if (reloc_offset)
- 		relocate_relative();
- 
--	relocate_la_abs();
-+	relocate_la_abs(0);
- }
- 
- /*
--- 
-2.37.3
+to match time_probe.
 
