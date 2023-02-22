@@ -1,69 +1,140 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FBEF1360
-	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 02:08:23 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.120])
-	by gateway (Coremail) with SMTP id _____8AxbdoWefVjf2kDAA--.1464S3;
-	Wed, 22 Feb 2023 10:08:22 +0800 (CST)
-Received: from [10.20.42.120] (unknown [10.20.42.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax+70VefVjmFM4AA--.36844S3;
-	Wed, 22 Feb 2023 10:08:22 +0800 (CST)
-Subject: Re: [PATCH v2 07/29] LoongArch: KVM: Implement vcpu run interface
-To: Paolo Bonzini <pbonzini@redhat.com>
-References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
- <20230220065735.1282809-8-zhaotianrui@loongson.cn>
- <489768bf-34e1-305b-9264-cdb1cebf3be2@redhat.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-Message-ID: <6f78f884-2d57-d112-a179-bac6be6688bc@loongson.cn>
-Date: Wed, 22 Feb 2023 10:08:21 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48CC21854
+	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 03:16:46 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxEZQdifVjRW8DAA--.1516S3;
+	Wed, 22 Feb 2023 11:16:45 +0800 (CST)
+Received: from bogon.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxUuUbifVj9l84AA--.2774S2;
+	Wed, 22 Feb 2023 11:16:44 +0800 (CST)
+From: Youling Tang <tangyouling@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Xi Ruoyao <xry111@xry111.site>,
+	Jinyang He <hejinyang@loongson.cn>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/5] LoongArch: Add kernel relocation and KASLR support
+Date: Wed, 22 Feb 2023 11:16:38 +0800
+Message-Id: <1677035803-7932-1-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8DxUuUbifVj9l84AA--.2774S2
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZryUGrWUXF1fCFWfWFWktFb_yoW5Ar4Dpr
+	yYkr95JF48Gr1fXwsrt3y3ur15t3Z7Gr4agFsIk34FkF1agr1UCr10vws8XFyktw4rXr4I
+	gFn5KF1ag3W5AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1LiSJUUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <489768bf-34e1-305b-9264-cdb1cebf3be2@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Ax+70VefVjmFM4AA--.36844S3
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUBmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCF54CYxVAaw2AFwI0_Jrv_JF1l4I8I3I0E
-	4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGw
-	C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
-	MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
-	IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E
-	87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcDDGUUUUU
 
+This patch series to support kernel relocation and KASLR (only 64bit).
 
+Tested the kernel images built with new toolchain (Binutils-2.40 + patched
+GCC-12.2) and old toolchain (kernel.org cross toolchain [1]) on a
+3A5000-7A2000-EVB.
 
-在 2023年02月21日 02:44, Paolo Bonzini 写道:
-> On 2/20/23 07:57, Tianrui Zhao wrote:
->> +    lose_fpu(1);
->
-> Is this enough to clear CSR_EUEN_FPEN?
+With CONFIG_RANDOMIZE_BASE=y, the results are:
 
-Yes, in lose_fpu function, the task's CSR_EUEN_FPEN flag is unmasked.
+1. first boot, new toolchain:
 
-Thanks
-Tianrui Zhao
+$ sudo cat /proc/iomem | grep Kernel
+  01080000-0189ffff : Kernel code
+  018a0000-01deb5ff : Kernel data
+  01deb600-01ef6e9f : Kernel bss
 
->
->
-> Paolo
+2. second boot, new toolchain:
+
+$ sudo cat /proc/iomem | grep Kernel
+  012f0000-01b0ffff : Kernel code
+  01b10000-0205b5ff : Kernel data
+  0205b600-02166e9f : Kernel bss
+
+3. first boot, old toolchain:
+  010e0000-018fffff : Kernel code
+  01900000-01e591ff : Kernel data
+  01e59200-01f56dcf : Kernel bss
+
+4. second boot, old toolchain:
+  010b0000-018cffff : Kernel code
+  018d0000-01e291ff : Kernel data
+  01e29200-01f26dcf : Kernel bss
+
+Changes from v5:
+- Fix relocate_la_abs.
+- Other minor modifications.
+
+Changes from v4:
+- Add la_abs macro implementation.
+- Remove patch2 (LoongArch: Use la.pcrel instead of la.abs for exception
+  handlers).
+- Remove SYS_SUPPORTS_RELOCATABLE.
+- Fix do_kaslr.
+- Fix compiler warnings.
+- Move some declarations and struct definitions to setup.h.
+
+Changes from v3:
+
+- JUMP_LINK_ADDR renamed to JUMP_VIRT_ADDR, and use the way of parameter
+  passing.
+- Reimplement kernel relocation, when the link address and load address
+  are different, realize the effect of adaptive relocation (one of the
+  usage scenarios is kdump operation).
+- Reimplement KASLR.
+
+Changes from v2:
+
+- Correctly fixup pcaddi12i/ori/lu32i.d/lu52i.d sequence generated by
+  GNU as <= 2.39 for la.pcrel.
+
+Changes from v1 to v2:
+
+- Relocate the handlers instead of using a trampoline, to avoid
+  performance issue on NUMA systems.
+- Fix compiler warnings.
+
+Xi Ruoyao (1):
+  LoongArch: Use la.pcrel instead of la.abs when it's trivially possible
+
+Youling Tang (4):
+  LoongArch: Add JUMP_VIRT_ADDR macro implementation to avoid using
+    la.abs
+  LoongArch: Add la_abs macro implementation
+  LoongArch: Add support for kernel relocation
+  LoongArch: Add support for kernel address space layout randomization
+    (KASLR)
+
+ arch/loongarch/Kconfig                  |  31 +++
+ arch/loongarch/Makefile                 |   5 +
+ arch/loongarch/include/asm/asmmacro.h   |  17 ++
+ arch/loongarch/include/asm/setup.h      |  16 ++
+ arch/loongarch/include/asm/stackframe.h |  13 +-
+ arch/loongarch/include/asm/uaccess.h    |   1 -
+ arch/loongarch/kernel/Makefile          |   2 +
+ arch/loongarch/kernel/entry.S           |   2 +-
+ arch/loongarch/kernel/genex.S           |   8 +-
+ arch/loongarch/kernel/head.S            |  31 ++-
+ arch/loongarch/kernel/relocate.c        | 245 ++++++++++++++++++++++++
+ arch/loongarch/kernel/vmlinux.lds.S     |  20 +-
+ arch/loongarch/mm/tlbex.S               |  17 +-
+ arch/loongarch/power/suspend_asm.S      |   5 +-
+ 14 files changed, 382 insertions(+), 31 deletions(-)
+ create mode 100644 arch/loongarch/kernel/relocate.c
+
+-- 
+2.37.3
 
