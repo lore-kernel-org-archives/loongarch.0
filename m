@@ -1,167 +1,183 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F2423A5
-	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 10:12:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1677060744; bh=gl77/uhMzHl5LvD1iZLRjwPZnpIAtfB1KdFD5EeZD+o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=R8q6PWnHYZANesuZGjB66GOFwf22Eu0TR+AKKAhQRykItUX7s3HqnOyjGx28Kkl78
-	 mzoutsRPlyM+DgHSKJIdVfzTVaWuKpyUY8W+FbsA6mQllFAC8rgtEKqooI5P1ujqUl
-	 68nPJt8bgKe7RhUl27CDRZoiqJSGvn21tUvyFvuc=
-Received: from [100.100.57.122] (unknown [58.34.185.106])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 01E53600DA;
-	Wed, 22 Feb 2023 18:12:23 +0800 (CST)
-Message-ID: <aa7032be-be91-4377-a09a-1bb3f382cab2@xen0n.name>
-Date: Wed, 22 Feb 2023 18:12:23 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C011F10EA
+	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 10:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677062185; x=1708598185;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ofUmRpvhNVTg3+A6hyPOFASnnH8za9ygTzj8N8YfXSk=;
+  b=D/jJH3b5mxjsbESOrhJADbGdNryNkN5ht6TZOmPghGueyhBQ3yHW6jzZ
+   mvwy9VQxQRotTqmD1xui3nJFhKuthdB35AN0ItIqt2iwZq71+dEyEFire
+   21wyeBK5nOZMw7n7OHSIzvNjWZbIScLczJOGSjKo9fapzh946QPYzLLap
+   3wF4j8RhRlvAsHQqoURxxl4TWcIUKUmVhJBJU8BN1TA5W2GwqPFWHABhL
+   mnEz7xFLY6qQoBWvNNY3+AcBzJaM5GfvbaZMMSR4XrkdM8rzUAuPTvKRf
+   7cvC+7b/DTH9mhYSMQALdPpTwKnWa88ZkKchLv4ANZZgtnATOQHcIiKoS
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10628"; a="321031741"
+X-IronPort-AV: E=Sophos;i="5.97,318,1669104000"; 
+   d="scan'208";a="321031741"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2023 02:36:24 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10628"; a="781379853"
+X-IronPort-AV: E=Sophos;i="5.97,318,1669104000"; 
+   d="scan'208";a="781379853"
+Received: from ahajda-mobl.ger.corp.intel.com (HELO [10.213.26.51]) ([10.213.26.51])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2023 02:36:19 -0800
+Message-ID: <50c1806b-f153-da48-ddf4-53923fa90334@intel.com>
+Date: Wed, 22 Feb 2023 11:36:17 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH 1/2] LoongArch: kdump: Add the same binary implementation
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.8.0
+Subject: Re: [Intel-gfx] [PATCH v5 0/7] Introduce __xchg, non-atomic xchg
 Content-Language: en-US
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <1677048791-26951-1-git-send-email-tangyouling@loongson.cn>
- <1677048791-26951-2-git-send-email-tangyouling@loongson.cn>
- <6d71e063-8e18-dd08-ac40-36b41ccfcfdb@xen0n.name>
- <3ec77f64-55b2-5549-52f8-b875392d992e@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <3ec77f64-55b2-5549-52f8-b875392d992e@loongson.cn>
+To: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-xtensa@linux-xtensa.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
+ Peter Zijlstra <peterz@infradead.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20230118153529.57695-1-andrzej.hajda@intel.com>
+From: Andrzej Hajda <andrzej.hajda@intel.com>
+Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
+ Gdansk - KRS 101882 - NIP 957-07-52-316
+In-Reply-To: <20230118153529.57695-1-andrzej.hajda@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 2023/2/22 17:54, Youling Tang wrote:
-> Hi, Xuerui
-> 
-> On 02/22/2023 05:05 PM, WANG Xuerui wrote:
->> On 2023/2/22 14:53, Youling Tang wrote:
->>> This feature depends on the relocation function, so the relocation
->>> configuration
->>> CONFIG_RELOCATABLE will be enabled.
->>
->> In general try to describe things briefly: "This depends on the kernel
->> being relocatable" would be enough in this case.
-> OK.
-> 
->>
->>>
->>> Add the same set of binary implementations for kdump, and then no
->>> longer need to
->>> compile two kernels (the production kernel and the capture kernel
->>> share the same
->>> binary).
->>
->> Sorry but what do you mean by "same set of binary implementation",
->> where's the "first set of binary implementation"?
-> 
-> kdump requires two kernels, the production kernel and the capture
-> kernel, which made the final link address different through different
-> configuration options in the previous implementation. Now it is
-> possible to share a kernel, and after entering the capture kernel, it
-> can be corrected by relocation.
-> 
->>
->> Judging from the patch content, I guess it's kinda wrong translation,
->> and what you actually mean is something like "enable using the same
->> image for crashkernel"?
-> 
-> Or "LoongArch: kdump: Add support for using a single image" ?
-> 
+Hi,
 
-Whatever you prefer, literally anything else would be better than the 
-original. I don't have strong opinion over this.
+Ping on the series.
+Arnd, Andrew is there anything more I can do to push the process forward?
 
->>
->>>
->>> CONFIG_CRASH_DUMP is enabled by default (CONFIG_RELOCATABLE is also
->>> enabled).
->>
->> No it's not: you didn't add "default y" anywhere. What you actually did
->> is to enable it *in the defconfig*. And the latter part about
->> CONFIG_RELOCATABLE shouldn't be necessary, it's implementation detail
->> after all, and the users likely don't have to be aware of it.
->>
->> Better reword a little bit, like "Also enable CONFIG_CRASH_DUMP in
->> loongson3_defconfig".
+Regards
+Andrzej
+
+
+On 18.01.2023 16:35, Andrzej Hajda wrote:
+> Hi all,
 > 
-> Thanks, I'll rewrite the commit message.
+> The helper is tiny and there are advices we can live without it, so
+> I want to present few arguments why it would be good to have it:
 > 
->>
->>>
->>> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
->>> ---
->>>   arch/loongarch/Kconfig                     | 12 +-----------
->>>   arch/loongarch/Makefile                    |  4 ----
->>>   arch/loongarch/configs/loongson3_defconfig |  1 +
->>>   arch/loongarch/include/asm/addrspace.h     |  2 ++
->>>   arch/loongarch/kernel/head.S               |  2 +-
->>>   5 files changed, 5 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->>> index ab4c2ab146ab..84f220273296 100644
->>> --- a/arch/loongarch/Kconfig
->>> +++ b/arch/loongarch/Kconfig
->>> @@ -502,6 +502,7 @@ config KEXEC
->>>     config CRASH_DUMP
->>>       bool "Build kdump crash kernel"
->>> +    select RELOCATABLE
->>>       help
->>>         Generate crash dump after being started by kexec. This should
->>>         be normally only set in special crash dump kernels which are
->>> @@ -511,17 +512,6 @@ config CRASH_DUMP
->>>           For more details see Documentation/admin-guide/kdump/kdump.rst
->>>   -config PHYSICAL_START
->>> -    hex "Physical address where the kernel is loaded"
->>> -    default "0x90000000a0000000"
->>> -    depends on CRASH_DUMP
->>> -    help
->>> -      This gives the XKPRANGE address where the kernel is loaded.
->>> -      If you plan to use kernel for capturing the crash dump change
->>> -      this value to start of the reserved region (the "X" value as
->>> -      specified in the "crashkernel=YM@XM" command line boot parameter
->>> -      passed to the panic-ed kernel).
->>> -
->>>   config RELOCATABLE
->>>       bool "Relocatable kernel"
->>>       help
->>> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
->>> index 2aba6ff30436..8304fed7aa42 100644
->>> --- a/arch/loongarch/Makefile
->>> +++ b/arch/loongarch/Makefile
->>> @@ -79,11 +79,7 @@ endif
->>>   cflags-y += -ffreestanding
->>>   cflags-y += $(call cc-option, -mno-check-zero-division)
->>>   -ifndef CONFIG_PHYSICAL_START
->>>   load-y        = 0x9000000000200000
->>> -else
->>> -load-y        = $(CONFIG_PHYSICAL_START)
->>> -endif
->>>   bootvars-y    = VMLINUX_LOAD_ADDRESS=$(load-y)
->>
->> Both load-y and VMLINUX_LOAD_ADDRESS are kinda LoongArch-ism (stemming
->> from similar usage in arch/mips apparently), so why not just drop load-y
->> and fold the constant into the bootvars-y definition? So we have one
->> piece of "special" definition instead of two.
+> 1. Code readability/simplification/number of lines:
+>    - decreases number of lines,
+>    - it often eliminates local variables,
+>    - for real examples see patches 3+.
 > 
-> This series of patches will not modify it, perhaps it can be submitted
-> and discussed separately later.
-
-I mean since you're already touching this part, you might be better off 
-just simplify along the way because it's used by nowhere else. But 
-splitting commits would be indeed cleaner and of course you can add such 
-a followup commit in the next revision.
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+> 2. Presence of similar helpers in other somehow related languages/libs:
+> 
+> a) Rust[1]: 'replace' from std::mem module, there is also 'take'
+>      helper (__xchg(&x, 0)), which is the same as private helper in
+>      i915 - fetch_and_zero, see latest patch.
+> b) C++ [2]: 'exchange' from utility header.
+> 
+> If the idea is OK there are still 2 questions to answer:
+> 
+> 1. Name of the helper, __xchg follows kernel conventions,
+>      but for me Rust names are also OK.
+> 2. Where to put the helper:
+> a) as in this patchset include/linux/non-atomic/xchg.h,
+>      proposed by Andy Shevchenko,
+> b) include/linux/utils.h ? any better name? Some kind
+>      of container for simple helpers.
+> 
+> All __xchg conversions were performed using cocci script,
+> then manually adjusted if necessary.
+> 
+> There is lot of places it can be used in, I have just chosen
+> some of them. I can provide cocci script to detect others (not all),
+> if necessary.
+> 
+> Changes:
+> v2: squashed all __xchg -> __arch_xchg t one patch (Arnd)
+> v3: fixed alpha/xchg_local (lkp@intel.com)
+> v4: adjusted indentation (Heiko)
+> v5: added more __xchg conversions - patches 3-6, added tags
+> 
+> [1]: https://doc.rust-lang.org/std/mem/index.html
+> [2]: https://en.cppreference.com/w/cpp/header/utility
+> 
+> Regards
+> Andrzej
+> 
+> Andrzej Hajda (7):
+>    arch: rename all internal names __xchg to __arch_xchg
+>    linux/include: add non-atomic version of xchg
+>    arch/*/uprobes: simplify arch_uretprobe_hijack_return_addr
+>    llist: simplify __llist_del_all
+>    io_uring: use __xchg if possible
+>    qed: use __xchg if possible
+>    drm/i915/gt: use __xchg instead of internal helper
+> 
+>   arch/alpha/include/asm/cmpxchg.h              | 10 +++++-----
+>   arch/arc/include/asm/cmpxchg.h                |  4 ++--
+>   arch/arm/include/asm/cmpxchg.h                |  7 ++++---
+>   arch/arm/probes/uprobes/core.c                |  8 ++------
+>   arch/arm64/include/asm/cmpxchg.h              |  7 +++----
+>   arch/arm64/kernel/probes/uprobes.c            |  9 ++-------
+>   arch/csky/kernel/probes/uprobes.c             |  9 ++-------
+>   arch/hexagon/include/asm/cmpxchg.h            | 10 +++++-----
+>   arch/ia64/include/asm/cmpxchg.h               |  2 +-
+>   arch/ia64/include/uapi/asm/cmpxchg.h          |  4 ++--
+>   arch/loongarch/include/asm/cmpxchg.h          |  4 ++--
+>   arch/m68k/include/asm/cmpxchg.h               |  6 +++---
+>   arch/mips/include/asm/cmpxchg.h               |  4 ++--
+>   arch/mips/kernel/uprobes.c                    | 10 ++--------
+>   arch/openrisc/include/asm/cmpxchg.h           | 10 +++++-----
+>   arch/parisc/include/asm/cmpxchg.h             |  4 ++--
+>   arch/powerpc/include/asm/cmpxchg.h            |  4 ++--
+>   arch/powerpc/kernel/uprobes.c                 | 10 ++--------
+>   arch/riscv/include/asm/atomic.h               |  2 +-
+>   arch/riscv/include/asm/cmpxchg.h              |  4 ++--
+>   arch/riscv/kernel/probes/uprobes.c            |  9 ++-------
+>   arch/s390/include/asm/cmpxchg.h               |  8 ++++----
+>   arch/s390/kernel/uprobes.c                    |  7 ++-----
+>   arch/sh/include/asm/cmpxchg.h                 |  4 ++--
+>   arch/sparc/include/asm/cmpxchg_32.h           |  4 ++--
+>   arch/sparc/include/asm/cmpxchg_64.h           |  6 +++---
+>   arch/sparc/kernel/uprobes.c                   |  7 ++-----
+>   arch/xtensa/include/asm/cmpxchg.h             |  4 ++--
+>   drivers/gpu/drm/i915/gt/intel_engine_cs.c     |  2 +-
+>   .../gpu/drm/i915/gt/intel_engine_heartbeat.c  |  4 ++--
+>   .../drm/i915/gt/intel_execlists_submission.c  |  4 ++--
+>   drivers/gpu/drm/i915/gt/intel_ggtt.c          |  4 ++--
+>   drivers/gpu/drm/i915/gt/intel_gsc.c           |  2 +-
+>   drivers/gpu/drm/i915/gt/intel_gt.c            |  4 ++--
+>   drivers/gpu/drm/i915/gt/intel_gt_pm.c         |  2 +-
+>   drivers/gpu/drm/i915/gt/intel_lrc.c           |  6 +++---
+>   drivers/gpu/drm/i915/gt/intel_migrate.c       |  2 +-
+>   drivers/gpu/drm/i915/gt/intel_rc6.c           |  2 +-
+>   drivers/gpu/drm/i915/gt/intel_rps.c           |  2 +-
+>   drivers/gpu/drm/i915/gt/selftest_context.c    |  2 +-
+>   .../drm/i915/gt/selftest_ring_submission.c    |  2 +-
+>   drivers/gpu/drm/i915/gt/selftest_timeline.c   |  2 +-
+>   drivers/gpu/drm/i915/gt/uc/intel_gsc_uc.c     |  2 +-
+>   drivers/gpu/drm/i915/gt/uc/intel_uc.c         |  2 +-
+>   drivers/gpu/drm/i915/gt/uc/intel_uc_fw.c      |  2 +-
+>   drivers/gpu/drm/i915/i915_utils.h             |  1 +
+>   include/linux/llist.h                         |  6 ++----
+>   include/linux/non-atomic/xchg.h               | 19 +++++++++++++++++++
+>   include/linux/qed/qed_chain.h                 | 19 +++++++------------
+>   io_uring/io_uring.c                           |  7 ++-----
+>   io_uring/slist.h                              |  6 ++----
+>   51 files changed, 126 insertions(+), 155 deletions(-)
+>   create mode 100644 include/linux/non-atomic/xchg.h
+> 
 
