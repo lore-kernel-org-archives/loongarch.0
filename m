@@ -1,106 +1,69 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BFC41360
-	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 02:02:30 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.35])
-	by gateway (Coremail) with SMTP id _____8Axkk6yd_Vj92gDAA--.1465S3;
-	Wed, 22 Feb 2023 10:02:26 +0800 (CST)
-Received: from [10.20.42.35] (unknown [10.20.42.35])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxrb6cd_VjO1I4AA--.42644S3;
-	Wed, 22 Feb 2023 10:02:04 +0800 (CST)
-Subject: Re: [PATCH v10 2/4] clk: clk-loongson2: add clock controller driver
- support
-To: Stephen Boyd <sboyd@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- Jianmin Lv <lvjianmin@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Michael Turquette <mturquette@baylibre.com>, Rob Herring
- <robh+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Yang Li <yang.lee@linux.alibaba.com>, devicetree@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
- liupeibao@loongson.cn, loongarch@lists.linux.dev, wanghongliang@loongson.cn
-References: <20221129034157.15036-1-zhuyinbo@loongson.cn>
- <20221129034157.15036-2-zhuyinbo@loongson.cn>
- <31c690a347f858a477bbba9c838984ed.sboyd@kernel.org>
- <4b5fd886-57ce-01ef-8224-432898b7fb1c@loongson.cn>
- <8332a1cf44b01f06bdd5db9dc5d7f387.sboyd@kernel.org>
- <01ee3dc6-a868-fd2b-93aa-11e6bdfcc9df@loongson.cn>
- <9e8952c9415973dc7276185e3cdf5ae7.sboyd@kernel.org>
-From: zhuyinbo <zhuyinbo@loongson.cn>
-Message-ID: <d92223a0-6d4c-33ea-1473-3d40bdd0ad9e@loongson.cn>
-Date: Wed, 22 Feb 2023 10:02:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FBEF1360
+	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 02:08:23 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.120])
+	by gateway (Coremail) with SMTP id _____8AxbdoWefVjf2kDAA--.1464S3;
+	Wed, 22 Feb 2023 10:08:22 +0800 (CST)
+Received: from [10.20.42.120] (unknown [10.20.42.120])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax+70VefVjmFM4AA--.36844S3;
+	Wed, 22 Feb 2023 10:08:22 +0800 (CST)
+Subject: Re: [PATCH v2 07/29] LoongArch: KVM: Implement vcpu run interface
+To: Paolo Bonzini <pbonzini@redhat.com>
+References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
+ <20230220065735.1282809-8-zhaotianrui@loongson.cn>
+ <489768bf-34e1-305b-9264-cdb1cebf3be2@redhat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+Message-ID: <6f78f884-2d57-d112-a179-bac6be6688bc@loongson.cn>
+Date: Wed, 22 Feb 2023 10:08:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <9e8952c9415973dc7276185e3cdf5ae7.sboyd@kernel.org>
+In-Reply-To: <489768bf-34e1-305b-9264-cdb1cebf3be2@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8Dxrb6cd_VjO1I4AA--.42644S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Kw4xtw45CF1DZw4xJry7ZFb_yoW8AF1Upr
-	ZxZay7KF4qqr42vwnFga1UAas09F43tF17Zw4ftw1DCa4qk345ur4UXFn5CF93Jr43W3yv
-	qr1kta17CFyq9rJanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bDxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM2
-	8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE
-	52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
-	80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCj
-	c4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI
-	0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCj
-	c4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7uc_DUUUU
+X-CM-TRANSID:AQAAf8Ax+70VefVjmFM4AA--.36844S3
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUBmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCF54CYxVAaw2AFwI0_Jrv_JF1l4I8I3I0E
+	4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGw
+	C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
+	MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
+	IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E
+	87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcDDGUUUUU
 
 
-在 2023/2/22 上午7:07, Stephen Boyd 写道:
-> Quoting zhuyinbo (2023-02-19 21:44:51)
->> 在 2023/2/18 上午6:15, Stephen Boyd 写道:
->>> Quoting zhuyinbo (2023-02-14 23:35:22)
->>>> 在 2023/2/11 上午7:42, Stephen Boyd 写道:
->>>>>> +
->>>>>> +err:
->>>>>> +       iounmap(loongson2_pll_base);
->>>>>> +}
->>>>>> +
->>>>>> +CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", loongson2_clocks_init);
->>>>> Any reason this can't be a platform driver?
->> Your question is that  why I don't use the platform_driver_register to
->> register  clk and use CLK_OF_DECLARE ?
-> Yes.
+
+在 2023年02月21日 02:44, Paolo Bonzini 写道:
+> On 2/20/23 07:57, Tianrui Zhao wrote:
+>> +    lose_fpu(1);
 >
->> I was  consider other clock controllers of Loongson-2 series may be
->> different with 2k1000 and I can add a line
->>
->> CLK_OF_DECLARE() for compatible other platform in the future. eg.
->>
->> CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", loongson2_clocks_init);
->>
->> +  CLK_OF_DECLARE(xxx1, xxx2,  xxx3);  // for other clock controllers of
->> Loongson-2 series
->>
->>>> For the compatible consideration of other clock controllers of
->>>> Loongson-2 series in the future, the way of using dts can be
->>>>
->>>> better compatible.
->>>>
->>> Sorry that sentence doesn't make sense to me. The use of dts doesn't
->>> require the use of CLK_OF_DECLARE.
->> yes, the use of dts doesn't require the use of CLK_OF_DECLARE and can
->> use platform_driver_register
->>
->> but my drvier not use platform_driver_register to register  clk and use
->> CLK_OF_DECLARE to match of_clk_init.
-> of_clk_init() is there to register clks that are needed for early init,
-> i.e. the clockevent/clocksource or the root interrupt controller
-> (irqchip). Otherwise, it isn't necessary to register clks via
-> of_clk_init().
-okay, I got it.
+> Is this enough to clear CSR_EUEN_FPEN?
+
+Yes, in lose_fpu function, the task's CSR_EUEN_FPEN flag is unmasked.
+
+Thanks
+Tianrui Zhao
+
+>
+>
+> Paolo
 
