@@ -1,120 +1,71 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 495641C17
-	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 05:10:16 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.35])
-	by gateway (Coremail) with SMTP id _____8Axbdq3o_VjR3cDAA--.1579S3;
-	Wed, 22 Feb 2023 13:10:15 +0800 (CST)
-Received: from [10.20.42.35] (unknown [10.20.42.35])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxWL22o_VjmHY4AA--.37752S3;
-	Wed, 22 Feb 2023 13:10:14 +0800 (CST)
-Subject: Re: [PATCH v10 2/4] clk: clk-loongson2: add clock controller driver
- support
-From: zhuyinbo <zhuyinbo@loongson.cn>
-To: Stephen Boyd <sboyd@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- Jianmin Lv <lvjianmin@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Michael Turquette <mturquette@baylibre.com>, Rob Herring
- <robh+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Yang Li <yang.lee@linux.alibaba.com>, devicetree@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
- liupeibao@loongson.cn, loongarch@lists.linux.dev, wanghongliang@loongson.cn
-References: <20221129034157.15036-1-zhuyinbo@loongson.cn>
- <20221129034157.15036-2-zhuyinbo@loongson.cn>
- <31c690a347f858a477bbba9c838984ed.sboyd@kernel.org>
- <4b5fd886-57ce-01ef-8224-432898b7fb1c@loongson.cn>
- <8332a1cf44b01f06bdd5db9dc5d7f387.sboyd@kernel.org>
- <01ee3dc6-a868-fd2b-93aa-11e6bdfcc9df@loongson.cn>
- <9e8952c9415973dc7276185e3cdf5ae7.sboyd@kernel.org>
- <d92223a0-6d4c-33ea-1473-3d40bdd0ad9e@loongson.cn>
-Message-ID: <834da7dc-bb5d-3427-43e5-938e40a2d180@loongson.cn>
-Date: Wed, 22 Feb 2023 13:10:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8C1F1FB6
+	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 06:53:27 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxQMzeu_VjrX0DAA--.1601S3;
+	Wed, 22 Feb 2023 14:53:18 +0800 (CST)
+Received: from bogon.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxK77Yu_VjuoY4AA--.37664S2;
+	Wed, 22 Feb 2023 14:53:13 +0800 (CST)
+From: Youling Tang <tangyouling@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] LoongArch: Add the same binary implementation for kdump
+Date: Wed, 22 Feb 2023 14:53:09 +0800
+Message-Id: <1677048791-26951-1-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8DxK77Yu_VjuoY4AA--.37664S2
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvdXoWrZw15Jr15JryDtF4fGFykKrg_yoWDGrg_CF
+	yfX34UWw18Jay0yw42qr4fJayYkay8ZFn0kF1qqrZrWwnxJrn8JrsIya1rZr1qgay8Ars8
+	XrWvqr9YkrnFqjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	87kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
+	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
+	W8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1MKZJUUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <d92223a0-6d4c-33ea-1473-3d40bdd0ad9e@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8CxWL22o_VjmHY4AA--.37752S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Zr4UJrW7tr4kAF1fJF4xWFg_yoW8uF1Upr
-	ZxCay7KF4Dtr40vr1qgw4UZas0ya1ftF17Xw4ftw1DCa4qk345ur4UXFn5CF93Jr45G3y0
-	qr18tw47CFyq9rJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7V
-	AKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
-	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
-	8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
-	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
-	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
-	daVFxhVjvjDU0xZFpf9x07jYzuAUUUUU=
 
+Add the same binary implementation for kdump.
 
-在 2023/2/22 上午10:02, zhuyinbo 写道:
->
-> 在 2023/2/22 上午7:07, Stephen Boyd 写道:
->> Quoting zhuyinbo (2023-02-19 21:44:51)
->>> 在 2023/2/18 上午6:15, Stephen Boyd 写道:
->>>> Quoting zhuyinbo (2023-02-14 23:35:22)
->>>>> 在 2023/2/11 上午7:42, Stephen Boyd 写道:
->>>>>>> +
->>>>>>> +err:
->>>>>>> +       iounmap(loongson2_pll_base);
->>>>>>> +}
->>>>>>> +
->>>>>>> +CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", 
->>>>>>> loongson2_clocks_init);
->>>>>> Any reason this can't be a platform driver?
->>> Your question is that  why I don't use the platform_driver_register to
->>> register  clk and use CLK_OF_DECLARE ?
->> Yes.
->>
->>> I was  consider other clock controllers of Loongson-2 series may be
->>> different with 2k1000 and I can add a line
->>>
->>> CLK_OF_DECLARE() for compatible other platform in the future. eg.
->>>
->>> CLK_OF_DECLARE(loongson2_clk, "loongson,ls2k-clk", 
->>> loongson2_clocks_init);
->>>
->>> +  CLK_OF_DECLARE(xxx1, xxx2,  xxx3);  // for other clock 
->>> controllers of
->>> Loongson-2 series
->>>
->>>>> For the compatible consideration of other clock controllers of
->>>>> Loongson-2 series in the future, the way of using dts can be
->>>>>
->>>>> better compatible.
->>>>>
->>>> Sorry that sentence doesn't make sense to me. The use of dts doesn't
->>>> require the use of CLK_OF_DECLARE.
->>> yes, the use of dts doesn't require the use of CLK_OF_DECLARE and can
->>> use platform_driver_register
->>>
->>> but my drvier not use platform_driver_register to register clk and use
->>> CLK_OF_DECLARE to match of_clk_init.
->> of_clk_init() is there to register clks that are needed for early init,
->> i.e. the clockevent/clocksource or the root interrupt controller
->> (irqchip). Otherwise, it isn't necessary to register clks via
->> of_clk_init().
-> okay, I got it.
+kexec-tools needs to be updated to make sure it jumps to the correct
+kernel entry.
 
-and,  the time driver  get clock by CCF that ask loongson2 clock driver 
-use CLK_OF_DECLARE
+When kaslr is enabled, it is best to add the "nokaslr" parameter when
+performing kdump operations to ensure that the randomized kernel
+position conflicts with other segments (such as initrd loading
+position).
+eg: sudo kexec -p vmlinux.efi --reuse-cmdline --append="nokaslr"
 
-to match of_clk_init.   because  the timer_probe  is very early and the 
-timer driver was use TIMER_OF_DECLARE
+Based on the "[PATCH v6 0/5] LoongArch: Add kernel relocation and
+KASLR support" series of patches.
 
-to match time_probe.
+Youling Tang (2):
+  LoongArch: kdump: Add the same binary implementation
+  LoongArch: kdump: Add crashkernel=YM handling
+
+ arch/loongarch/Kconfig                     | 12 +-----------
+ arch/loongarch/Makefile                    |  4 ----
+ arch/loongarch/configs/loongson3_defconfig |  1 +
+ arch/loongarch/include/asm/addrspace.h     |  2 ++
+ arch/loongarch/kernel/head.S               |  2 +-
+ arch/loongarch/kernel/setup.c              | 15 ++++++++++++---
+ 6 files changed, 17 insertions(+), 19 deletions(-)
+
+-- 
+2.37.3
 
