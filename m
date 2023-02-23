@@ -1,72 +1,101 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 303742564
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33E092566
 	for <loongarch@lists.linux.dev>; Thu, 23 Feb 2023 11:06:39 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxWNm4SPdjDxsEAA--.8359S3;
-	Thu, 23 Feb 2023 19:06:32 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Ax69m5SPdjFxsEAA--.2622S3;
+	Thu, 23 Feb 2023 19:06:33 +0800 (CST)
 Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxK763SPdjgJg5AA--.39214S2;
-	Thu, 23 Feb 2023 19:06:32 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxK763SPdjgJg5AA--.39214S4;
+	Thu, 23 Feb 2023 19:06:33 +0800 (CST)
 From: Youling Tang <tangyouling@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] LoongArch: Add single kernel image implementation for kdump
-Date: Thu, 23 Feb 2023 19:06:29 +0800
-Message-Id: <1677150391-12838-1-git-send-email-tangyouling@loongson.cn>
+Subject: [PATCH v2 2/2] LoongArch: kdump: Add crashkernel=YM handling
+Date: Thu, 23 Feb 2023 19:06:31 +0800
+Message-Id: <1677150391-12838-3-git-send-email-tangyouling@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8DxK763SPdjgJg5AA--.39214S2
+In-Reply-To: <1677150391-12838-1-git-send-email-tangyouling@loongson.cn>
+References: <1677150391-12838-1-git-send-email-tangyouling@loongson.cn>
+X-CM-TRANSID:AQAAf8DxK763SPdjgJg5AA--.39214S4
 X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrZw15JFykJFWrXrW7Cr43Awb_yoWfuFg_ua
-	s3J34UGw48XFWvyw42qw4fXa4akay8ZFn0yF1qqrW3Wwn3Jrn8Jrs8X3Wrur1qgay8trs8
-	JrWvqF9YyrnFvjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	j7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
-	xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I2
-	62IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4
-	CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvj
-	eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxV
-	CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-	6r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-	WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG
-	6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_Gr
-	UvcSsGvfC2KfnxnUUI43ZEXa7IU8PCzJUUUUU==
+X-Coremail-Antispam: 1Uk129KBjvJXoW7WFy3tF1kXr4Uur1xXrW8WFg_yoW8ZFWrpr
+	1UAF45tFW5GF93G3yrAr9rur1rA3Wxua4jgFZ0y34kAF9xXrn8tw4kW3ZrZFyUK3s3WF4j
+	vrZYqF9Iga18taDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
+	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
+	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+	0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
+	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
+	4UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-Add single kernel image implementation for kdump.
+When the kernel crashkernel parameter is specified with just a size,
+we are supposed to allocate a region from RAM to store the crashkernel,
+"crashkernel=512M" would be recommended for kdump.
 
-kexec-tools needs to be updated to make sure it jumps to the correct
-kernel entry.
+Fix this by lifting similar code from x86, importing it to LoongArch
+with the LoongArch specific parameters added. We allocate the crashkernel
+region from the first 4G of physical memory (SWIOTLB needs to be allocated
+on low 4G). Currently LoongArch does not implement crashkernel_low and
+crashkernel_high like x86.
 
-When kaslr is enabled, it is best to add the "nokaslr" parameter when
-performing kdump operations to ensure that the randomized kernel
-position conflicts with other segments (such as initrd loading
-position).
-eg: sudo kexec -p vmlinux.efi --reuse-cmdline --append="nokaslr"
+When X is not specified, crash_base defaults to 0 (crashkernel=YM@XM).
 
-Changes from v1 to v2:
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+---
+ arch/loongarch/kernel/setup.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-- Rewrite commit message.
-
-Youling Tang (2):
-  LoongArch: kdump: Add single kernel image implementation
-  LoongArch: kdump: Add crashkernel=YM handling
-
- arch/loongarch/Kconfig                     | 12 +-----------
- arch/loongarch/Makefile                    |  4 ----
- arch/loongarch/configs/loongson3_defconfig |  1 +
- arch/loongarch/include/asm/addrspace.h     |  2 ++
- arch/loongarch/kernel/head.S               |  2 +-
- arch/loongarch/kernel/setup.c              | 15 ++++++++++++---
- 6 files changed, 17 insertions(+), 19 deletions(-)
-
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 4344502c0b31..ac2aad988fdb 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -234,11 +234,14 @@ static void __init arch_reserve_vmcore(void)
+ #endif
+ }
+ 
++/* 16M alignment for crash kernel regions */
++#define CRASH_ALIGN	SZ_16M
++#define CRASH_ADDR_MAX	SZ_4G
++
+ static void __init arch_parse_crashkernel(void)
+ {
+ #ifdef CONFIG_KEXEC
+ 	int ret;
+-	unsigned long long start;
+ 	unsigned long long total_mem;
+ 	unsigned long long crash_base, crash_size;
+ 
+@@ -247,8 +250,14 @@ static void __init arch_parse_crashkernel(void)
+ 	if (ret < 0 || crash_size <= 0)
+ 		return;
+ 
+-	start = memblock_phys_alloc_range(crash_size, 1, crash_base, crash_base + crash_size);
+-	if (start != crash_base) {
++	if (crash_base <= 0) {
++		crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN, CRASH_ALIGN,
++				CRASH_ADDR_MAX);
++		if (!crash_base) {
++			pr_warn("crashkernel reservation failed - No suitable area found.\n");
++			return;
++		}
++	} else if (!memblock_phys_alloc_range(crash_size, 1, crash_base, crash_base + crash_size)) {
+ 		pr_warn("Invalid memory region reserved for crash kernel\n");
+ 		return;
+ 	}
 -- 
 2.37.3
 
