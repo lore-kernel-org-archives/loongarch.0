@@ -1,95 +1,116 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E21F15B7
-	for <loongarch@lists.linux.dev>; Thu, 23 Feb 2023 02:16:53 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.35])
-	by gateway (Coremail) with SMTP id _____8DxE0yTzPZjavEDAA--.2444S3;
-	Thu, 23 Feb 2023 10:16:51 +0800 (CST)
-Received: from [10.20.42.35] (unknown [10.20.42.35])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax97yRzPZjYl45AA--.38704S3;
-	Thu, 23 Feb 2023 10:16:49 +0800 (CST)
-Subject: Re: [PATCH v10 2/4] clk: clk-loongson2: add clock controller driver
- support
-To: Stephen Boyd <sboyd@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- Jianmin Lv <lvjianmin@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Michael Turquette <mturquette@baylibre.com>, Rob Herring
- <robh+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Yang Li <yang.lee@linux.alibaba.com>, devicetree@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
- liupeibao@loongson.cn, loongarch@lists.linux.dev, wanghongliang@loongson.cn
-References: <20221129034157.15036-1-zhuyinbo@loongson.cn>
- <20221129034157.15036-2-zhuyinbo@loongson.cn>
- <31c690a347f858a477bbba9c838984ed.sboyd@kernel.org>
- <4b5fd886-57ce-01ef-8224-432898b7fb1c@loongson.cn>
- <8332a1cf44b01f06bdd5db9dc5d7f387.sboyd@kernel.org>
- <01ee3dc6-a868-fd2b-93aa-11e6bdfcc9df@loongson.cn>
- <9e8952c9415973dc7276185e3cdf5ae7.sboyd@kernel.org>
- <d92223a0-6d4c-33ea-1473-3d40bdd0ad9e@loongson.cn>
- <834da7dc-bb5d-3427-43e5-938e40a2d180@loongson.cn>
- <6c497d2d70d215a86be178fc08546f4d.sboyd@kernel.org>
-From: zhuyinbo <zhuyinbo@loongson.cn>
-Message-ID: <d2519ebc-8f71-1cf0-9ec8-a65a7f094853@loongson.cn>
-Date: Thu, 23 Feb 2023 10:16:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88A223A5
+	for <loongarch@lists.linux.dev>; Thu, 23 Feb 2023 09:54:38 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id m25-20020a7bcb99000000b003e7842b75f2so5899988wmi.3
+        for <loongarch@lists.linux.dev>; Thu, 23 Feb 2023 01:54:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mAI7GZiBb7iDC4DRNXr8MXcTGzYlBwIWTXO3a37K9fA=;
+        b=6rqEsmJobKimBOx+ObGs4Y9oYCoGGA+7PUJSCUc+XzhAJr7k8trhGNeL9l///zHG9h
+         zKi4GFdApLZMJxwwGKyAK5T4vZVP0aQ3XXyt/OWPp5oueU3BzBJzSR5QoLC+/Xx2iJgz
+         5hm79+32XzmlSgEMuCRgCF6jE20gfyjKVSWE2hFVc6aKlMZQREWTRqXyzaVmSBj/MhzH
+         AXlVDuu21E6Hjr/kwbOkk278Lu43ZitZTQ7OHZU1h8q5OpD5tJY9ufRMnPPJf2Rq79nz
+         v4bZ2eQSQps7BpX5yAyoX5mS+40xRdAoLwhab6GQ6F1yPaND58wp3xipYKvUJEcT++Q8
+         E7ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mAI7GZiBb7iDC4DRNXr8MXcTGzYlBwIWTXO3a37K9fA=;
+        b=yVmphAx4/hQn5TQhAnResrHuJBmOP2CEzczzKSXTzDMzzfhtrTjFpISkLh4vDW9qi2
+         ifIUhgoK71fmsVWJrIULCAbLlfGlUblI4GKI2jz0kIvA4MtxYWbniZDnC5jpNegvSdvz
+         r0dpNRuN6ybca7MLnFWom02TxoFACuUjzLuYNMGj8zi6pIfGMNzmAv1M3HxYooGjT65h
+         a9ao5SbzIW2eQOJLIvNUguZSOBBoM437LNeOe5RnI6xbe4yzoYnj5/5wbLfZTuB5GaJo
+         A39RSFZfgh3tMb1lcbMYqKfS9sK3jgu39avZAsbFr8pRrBSu2oLqMj5CVocDCWgAtRYR
+         y2BA==
+X-Gm-Message-State: AO0yUKWLpcMtSzikkUckCjBrVxIynqqwq8D/MxEfbIKb106FtGZzAiWl
+	Bbgmbu6/vJvagYhmp3SwJFsmbSsLGvL2tstUz0VEMw==
+X-Google-Smtp-Source: AK7set+bh83ESZvs/5JP0HBfjTnQ76DE1v1RkcKyYbYV7gCfY3t7LNoC9ir4Jaga+QNOEzC6TCzSn38PMw2DLd3UjM4=
+X-Received: by 2002:a05:600c:3b9c:b0:3df:df03:45be with SMTP id
+ n28-20020a05600c3b9c00b003dfdf0345bemr826148wms.7.1677146076791; Thu, 23 Feb
+ 2023 01:54:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <6c497d2d70d215a86be178fc08546f4d.sboyd@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:AQAAf8Ax97yRzPZjYl45AA--.38704S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Wr45Wry3Wr1kCryrCF1UAwb_yoW8JrW8pr
-	WrGay2yF4jqr4jvrsF9anrZFWjyw1xJF1j9w1rJw1Dua4DCrySkr4DWFs5uFZ8Jrs8Gw40
-	vr10ka18uFyUZrJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bDkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
-	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY
-	6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-	C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
-	7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
-	v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
-	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8ajg7UUUUU==
+References: <20230214074925.228106-1-alexghiti@rivosinc.com>
+ <20230214074925.228106-4-alexghiti@rivosinc.com> <Y+zXIgwO5wteLQZ5@shell.armlinux.org.uk>
+ <f3e1585c-0d9d-4709-9b21-74a63d8cc9ac@app.fastmail.com>
+In-Reply-To: <f3e1585c-0d9d-4709-9b21-74a63d8cc9ac@app.fastmail.com>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Thu, 23 Feb 2023 10:54:26 +0100
+Message-ID: <CAHVXubgsvjxGbgM6AcxfsHDsHT0iL2pAemGMr5t8KVLKiqC3RA@mail.gmail.com>
+Subject: Re: [PATCH v3 03/24] arm: Remove COMMAND_LINE_SIZE from uapi
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@armlinux.org.uk>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, "David S . Miller" <davem@davemloft.net>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>, 
+	Palmer Dabbelt <palmer@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Arnd,
 
-在 2023/2/23 上午5:00, Stephen Boyd 写道:
-> Quoting zhuyinbo (2023-02-21 21:10:14)
->>>>> yes, the use of dts doesn't require the use of CLK_OF_DECLARE and can
->>>>> use platform_driver_register
->>>>>
->>>>> but my drvier not use platform_driver_register to register clk and use
->>>>> CLK_OF_DECLARE to match of_clk_init.
->>>> of_clk_init() is there to register clks that are needed for early init,
->>>> i.e. the clockevent/clocksource or the root interrupt controller
->>>> (irqchip). Otherwise, it isn't necessary to register clks via
->>>> of_clk_init().
->>> okay, I got it.
->> and,  the time driver  get clock by CCF that ask loongson2 clock driver
->> use CLK_OF_DECLARE
->>
->> to match of_clk_init.   because  the timer_probe  is very early and the
->> timer driver was use TIMER_OF_DECLARE
->>
->> to match time_probe.
->>
-> If you have a time driver that gets clks, register those early with
-> CLK_OF_DECLARE_DRIVER() and then have a platform driver for the rest of
-> the clk tree that registers clks later.
+On Wed, Feb 15, 2023 at 2:05 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Wed, Feb 15, 2023, at 13:59, Russell King (Oracle) wrote:
+> > On Tue, Feb 14, 2023 at 08:49:04AM +0100, Alexandre Ghiti wrote:
+> >> From: Palmer Dabbelt <palmer@rivosinc.com>
+> >>
+> >> As far as I can tell this is not used by userspace and thus should not
+> >> be part of the user-visible API.
+> >>
+> >> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+> >
+> > Looks good to me. What's the merge plan for this?
+>
+> The easiest way is probably if I merge it through the whole
+> series through the asm-generic tree. The timing is a bit
+> unfortunate as we're just ahead of the merge window, so unless
+> we really need this in 6.3, I'd suggest that Alexandre resend
+> the series to me in two weeks with the Acks added in and I'll
+> pick it up for 6.4.
 
-okay, I got it.  and this series patch I will use platform driver. 
-later, if the loongson2 time driver use the
+Sorry for the response delay, I was waiting to see if Palmer would
+merge my KASAN patchset in 6.3 (which he does): I have to admit that
+fixing the command line size + the KASAN patchset would allow 6.3 to
+run on syzkaller, which would be nice.
 
-CLK_OF_DECLARE style I will make a alone time clk driver for it that 
-use  CLK_OF_DECLARE_DRIVER()
+If I don't see this merged in 6.3, I'll send another round as you
+suggested in 1 week now :)
 
+Thanks!
+
+Alex
+
+>
+>      Arnd
