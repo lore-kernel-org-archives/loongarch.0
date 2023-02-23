@@ -1,145 +1,152 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35CC42567
-	for <loongarch@lists.linux.dev>; Thu, 23 Feb 2023 11:06:39 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxJIS4SPdjExsEAA--.2654S3;
-	Thu, 23 Feb 2023 19:06:32 +0800 (CST)
-Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxK763SPdjgJg5AA--.39214S3;
-	Thu, 23 Feb 2023 19:06:32 +0800 (CST)
-From: Youling Tang <tangyouling@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] LoongArch: kdump: Add single kernel image implementation
-Date: Thu, 23 Feb 2023 19:06:30 +0800
-Message-Id: <1677150391-12838-2-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1677150391-12838-1-git-send-email-tangyouling@loongson.cn>
-References: <1677150391-12838-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID:AQAAf8DxK763SPdjgJg5AA--.39214S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXr13Jry5tw47Ar4ruFWxWFg_yoWrJryUpr
-	9xAr4kJrW8Grn5taykt34DWrWDJwn7KF1ag3W7AFyrCFW2vw1UZr1kAr9rWFyUt393t3y0
-	gFyrGw1ava1UGwUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
-	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
-	4UYxBIdaVFxhVjvjDU0xZFpf9x07j5WrAUUUUU=
+Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631212584
+	for <loongarch@lists.linux.dev>; Thu, 23 Feb 2023 13:09:40 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailnew.nyi.internal (Postfix) with ESMTP id 22E3A581FE1;
+	Thu, 23 Feb 2023 08:09:39 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 23 Feb 2023 08:09:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm3; t=1677157779; x=1677164979; bh=7qpJ4fyuUV
+	Fw9F28lxEJyIMUTjdhT7HcNbFM6c+Ezgs=; b=HxQNx9y5lkyPfQ9EucQyFAYeXv
+	+wBR4Ci7rIGXcf143C5IPzx2ZqOJaNF3jH5KmZtz7FNxSNa7UoskPstWQeZigMq4
+	WxcCQ/z8bM77PvSxe3rqZoHfF3/mUHrwHyZBzZyDjUboQ9PAUWQIgKxeLmPPaybo
+	9/oRTW8VDP0nTjfHs0i59PhLTfNd8oWYpFzHOr0hyB1JlkxO557CYUNzTcaySrYq
+	HfLz3P47VseG4GU6ljvciKdgu2WLAHI0ASvuTQe3I7jJxJymgUN3BAWU2M5XA1VM
+	uz8KTTIcMwkEpMCm/wKVwxs95KyUmVotFEk351GtecxQeN6fTZ8IWLBMqI8Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1677157779; x=1677164979; bh=7qpJ4fyuUVFw9F28lxEJyIMUTjdh
+	T7HcNbFM6c+Ezgs=; b=RNlma8km1MAuSRNBq9ipJtyRBtTc/ZaAqtJnrMAUd01N
+	A3vr/e+h0oVB8QM+EKHuX7FBVUPTgKtTYa2OG7uDKF7mduylXrp7vgdnX2bpO6hn
+	LS+Tf+OM77FKRpjy1JUZ2k0z0u/ejvDE6PI/VehVVhk2zuyRoIGqumjHPpY/bmKf
+	gvFjjmEnsXN8V98XE2pj0tKi9Raz1zeD5754Phu10AF+P5RZcfvQiwYY0QyK/8IM
+	Z39ZZNv3bEYOxSsbpEC/pekLv/VdBZd/iO4Lnr0WCAnTGVKHo4fDKs57IjC2i0EP
+	d1qc3PDGC8rYTjrBw1CIt1iMeMmgiwXuDce1d0Oivw==
+X-ME-Sender: <xms:kGX3Y3ous26euV3YoyiFJjq3ixwKAGVcNF8YOm8J6PvPHtK-RotuAw>
+    <xme:kGX3YxqCegrJEbUNfah7isGKrsvvXcWdV6BiyY6iP9_c7iKPA4gwBe8CDKSxsQmsp
+    iSx53Wsw9qCkCqiXG4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudekuddggeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:kGX3Y0MZZfqfcD0VGp9DlsZ1Swf2ynZlE3p_Z8X_FJsHbAIjqOEPMA>
+    <xmx:kGX3Y65fZRpBccwKrsV3jr7sAnG0lDQI0aqT_-pKFxlTBQg3DS1ixA>
+    <xmx:kGX3Y27Vy6XJ9Ep718BXrLdXAhCs5gSA4QbBN1kcE8ycfHfyCwcofw>
+    <xmx:k2X3YyBwHlCTwxFQtAXbLNTtXf_KnKgFaDgG5zL8sv-qdX4Uj_y99g>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 24130B60086; Thu, 23 Feb 2023 08:09:36 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-172-g9a2dae1853-fm-20230213.001-g9a2dae18
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+Mime-Version: 1.0
+Message-Id: <874b8076-b0d1-4aaa-bcd8-05d523060152@app.fastmail.com>
+In-Reply-To: 
+ <CAHVXubgsvjxGbgM6AcxfsHDsHT0iL2pAemGMr5t8KVLKiqC3RA@mail.gmail.com>
+References: <20230214074925.228106-1-alexghiti@rivosinc.com>
+ <20230214074925.228106-4-alexghiti@rivosinc.com>
+ <Y+zXIgwO5wteLQZ5@shell.armlinux.org.uk>
+ <f3e1585c-0d9d-4709-9b21-74a63d8cc9ac@app.fastmail.com>
+ <CAHVXubgsvjxGbgM6AcxfsHDsHT0iL2pAemGMr5t8KVLKiqC3RA@mail.gmail.com>
+Date: Thu, 23 Feb 2023 14:09:17 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Alexandre Ghiti" <alexghiti@rivosinc.com>
+Cc: "Russell King" <linux@armlinux.org.uk>,
+ "Jonathan Corbet" <corbet@lwn.net>,
+ "Richard Henderson" <richard.henderson@linaro.org>,
+ "Ivan Kokshaysky" <ink@jurassic.park.msu.ru>,
+ "Matt Turner" <mattst88@gmail.com>, "Vineet Gupta" <vgupta@kernel.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Will Deacon" <will@kernel.org>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ "Michal Simek" <monstr@monstr.eu>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Helge Deller" <deller@gmx.de>, "Michael Ellerman" <mpe@ellerman.id.au>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+ "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Heiko Carstens" <hca@linux.ibm.com>,
+ "Vasily Gorbik" <gor@linux.ibm.com>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>,
+ "Christian Borntraeger" <borntraeger@linux.ibm.com>,
+ "Sven Schnelle" <svens@linux.ibm.com>,
+ "Yoshinori Sato" <ysato@users.sourceforge.jp>,
+ "Rich Felker" <dalias@libc.org>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Chris Zankel" <chris@zankel.net>,
+ "Max Filippov" <jcmvbkbc@gmail.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "Palmer Dabbelt" <palmer@rivosinc.com>
+Subject: Re: [PATCH v3 03/24] arm: Remove COMMAND_LINE_SIZE from uapi
+Content-Type: text/plain
 
-This feature depends on the kernel being relocatable.
+On Thu, Feb 23, 2023, at 10:54, Alexandre Ghiti wrote:
+> On Wed, Feb 15, 2023 at 2:05 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>>
+>> On Wed, Feb 15, 2023, at 13:59, Russell King (Oracle) wrote:
+>> > On Tue, Feb 14, 2023 at 08:49:04AM +0100, Alexandre Ghiti wrote:
+>> >> From: Palmer Dabbelt <palmer@rivosinc.com>
+>> >>
+>> >> As far as I can tell this is not used by userspace and thus should not
+>> >> be part of the user-visible API.
+>> >>
+>> >> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+>> >
+>> > Looks good to me. What's the merge plan for this?
+>>
+>> The easiest way is probably if I merge it through the whole
+>> series through the asm-generic tree. The timing is a bit
+>> unfortunate as we're just ahead of the merge window, so unless
+>> we really need this in 6.3, I'd suggest that Alexandre resend
+>> the series to me in two weeks with the Acks added in and I'll
+>> pick it up for 6.4.
+>
+> Sorry for the response delay, I was waiting to see if Palmer would
+> merge my KASAN patchset in 6.3 (which he does): I have to admit that
+> fixing the command line size + the KASAN patchset would allow 6.3 to
+> run on syzkaller, which would be nice.
+>
+> If I don't see this merged in 6.3, I'll send another round as you
+> suggested in 1 week now :)
 
-Enable using single kernel image for kdump, and then no longer need to build
-two kernels (production kernel and capture kernel share single kernel image).
+Hi Alexandre,
 
-Also enable CONFIG_CRASH_DUMP in loongson3_defconfig.
+I have no plans to still pick up the series for 6.3. The patches
+all look fine to me, but it's clearly too late now. What is the
+actual dependency for KASAN, do you just need a longer command
+line or something else? If it's just the command line size,
+I would suggest that Palmer can still pick up a oneline change
+to increase it and refer to this thread in the changelog as a
+reference for why it is not an actual UAPI break.
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
- arch/loongarch/Kconfig                     | 12 +-----------
- arch/loongarch/Makefile                    |  4 ----
- arch/loongarch/configs/loongson3_defconfig |  1 +
- arch/loongarch/include/asm/addrspace.h     |  2 ++
- arch/loongarch/kernel/head.S               |  2 +-
- 5 files changed, 5 insertions(+), 16 deletions(-)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index bafdfc8c7a4d..7342a36e8a15 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -513,6 +513,7 @@ config KEXEC
- 
- config CRASH_DUMP
- 	bool "Build kdump crash kernel"
-+	select RELOCATABLE
- 	help
- 	  Generate crash dump after being started by kexec. This should
- 	  be normally only set in special crash dump kernels which are
-@@ -522,17 +523,6 @@ config CRASH_DUMP
- 
- 	  For more details see Documentation/admin-guide/kdump/kdump.rst
- 
--config PHYSICAL_START
--	hex "Physical address where the kernel is loaded"
--	default "0x90000000a0000000"
--	depends on CRASH_DUMP
--	help
--	  This gives the XKPRANGE address where the kernel is loaded.
--	  If you plan to use kernel for capturing the crash dump change
--	  this value to start of the reserved region (the "X" value as
--	  specified in the "crashkernel=YM@XM" command line boot parameter
--	  passed to the panic-ed kernel).
--
- config RELOCATABLE
- 	bool "Relocatable kernel"
- 	help
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index 768592998b39..f71edf574101 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -79,11 +79,7 @@ endif
- cflags-y += -ffreestanding
- cflags-y += $(call cc-option, -mno-check-zero-division)
- 
--ifndef CONFIG_PHYSICAL_START
- load-y		= 0x9000000000200000
--else
--load-y		= $(CONFIG_PHYSICAL_START)
--endif
- bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y)
- 
- drivers-$(CONFIG_PCI)		+= arch/loongarch/pci/
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index cb52774c80e8..7885f6e5de93 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -48,6 +48,7 @@ CONFIG_HOTPLUG_CPU=y
- CONFIG_NR_CPUS=64
- CONFIG_NUMA=y
- CONFIG_KEXEC=y
-+CONFIG_CRASH_DUMP=y
- CONFIG_SUSPEND=y
- CONFIG_HIBERNATION=y
- CONFIG_ACPI=y
-diff --git a/arch/loongarch/include/asm/addrspace.h b/arch/loongarch/include/asm/addrspace.h
-index d342935e5a72..4edcb3c21cf5 100644
---- a/arch/loongarch/include/asm/addrspace.h
-+++ b/arch/loongarch/include/asm/addrspace.h
-@@ -125,4 +125,6 @@ extern unsigned long vm_map_base;
- #define ISA_IOSIZE	SZ_16K
- #define IO_SPACE_LIMIT	(PCI_IOSIZE - 1)
- 
-+#define PHYS_LINK_ADDR	PHYSADDR(VMLINUX_LOAD_ADDRESS)
-+
- #endif /* _ASM_ADDRSPACE_H */
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index 1d35becc01ee..7fb32aa26c2c 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -24,7 +24,7 @@ _head:
- 	.org	0x8
- 	.dword	kernel_entry		/* Kernel entry point */
- 	.dword	_end - _text		/* Kernel image effective size */
--	.quad	0			/* Kernel image load offset from start of RAM */
-+	.quad	PHYS_LINK_ADDR		/* Kernel image load offset from start of RAM */
- 	.org	0x38			/* 0x20 ~ 0x37 reserved */
- 	.long	LINUX_PE_MAGIC
- 	.long	pe_header - _head	/* Offset to the PE header */
--- 
-2.37.3
-
+     Arnd
