@@ -1,62 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB3B3239
-	for <loongarch@lists.linux.dev>; Wed, 22 Feb 2023 21:00:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3343C433D2;
-	Wed, 22 Feb 2023 21:00:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1677099652;
-	bh=PhUBOUnu/Py6uAl2pOs4CADrQSyz1xYDNSEEsVhDC/I=;
-	h=In-Reply-To:References:Subject:From:To:Date:From;
-	b=DpJr7k66EtPYQI9xatYOgOw+EE3B/CCLQiS0GREbShipdAQo2k+yVDNFOrSZ9HSy3
-	 oPNZFO7RQhLjl5Fr/ea7VW2P3MXfuoM/xqXAw1EJefmt97xtgSo9NhXRqyYA9EbEKj
-	 mrYW8ZTs2HmsK8V2my1FWFE1Aee9cHdwtV4ZSMgBNy0gKyEF7KYYbYDpdxCuP+FgX2
-	 dFuz0SfaUznSR2cFsYjXym6+EEeFijP9+N85tXppZ+FcJUNi6fCbM9otmhSdRoCIwG
-	 VishBR9+2nmfLbgcSc9cz7RidDf8GccP3zOLrzLNL7g1aRaDM5STkB4omyywV+VPSJ
-	 dpnBje/xd02Tg==
-Message-ID: <6c497d2d70d215a86be178fc08546f4d.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DBD315B7
+	for <loongarch@lists.linux.dev>; Thu, 23 Feb 2023 01:23:18 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.120])
+	by gateway (Coremail) with SMTP id _____8BxMI8EwPZj9+wDAA--.2325S3;
+	Thu, 23 Feb 2023 09:23:16 +0800 (CST)
+Received: from [10.20.42.120] (unknown [10.20.42.120])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axvr4CwPZjolc5AA--.43950S3;
+	Thu, 23 Feb 2023 09:23:15 +0800 (CST)
+Subject: Re: [PATCH v2 06/29] LoongArch: KVM: Implement vcpu create and
+ destroy interface
+To: Paolo Bonzini <pbonzini@redhat.com>
+References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
+ <20230220065735.1282809-7-zhaotianrui@loongson.cn>
+ <cbd95763-ec38-63f7-89bf-c8b01aa7df77@redhat.com>
+ <abfa3fbc-e234-d0ab-ec35-90d9c251bf79@loongson.cn>
+ <a9623c91-a28a-d91d-5311-fcfc4bd13247@redhat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+Message-ID: <bb5ad31a-cac1-bbfd-789a-a371eece4e9e@loongson.cn>
+Date: Thu, 23 Feb 2023 09:23:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <834da7dc-bb5d-3427-43e5-938e40a2d180@loongson.cn>
-References: <20221129034157.15036-1-zhuyinbo@loongson.cn> <20221129034157.15036-2-zhuyinbo@loongson.cn> <31c690a347f858a477bbba9c838984ed.sboyd@kernel.org> <4b5fd886-57ce-01ef-8224-432898b7fb1c@loongson.cn> <8332a1cf44b01f06bdd5db9dc5d7f387.sboyd@kernel.org> <01ee3dc6-a868-fd2b-93aa-11e6bdfcc9df@loongson.cn> <9e8952c9415973dc7276185e3cdf5ae7.sboyd@kernel.org> <d92223a0-6d4c-33ea-1473-3d40bdd0ad9e@loongson.cn> <834da7dc-bb5d-3427-43e5-938e40a2d180@loongson.cn>
-Subject: Re: [PATCH v10 2/4] clk: clk-loongson2: add clock controller driver support
-From: Stephen Boyd <sboyd@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Yang Li <yang.lee@linux.alibaba.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, liupeibao@loongson.cn, loongarch@lists.linux.dev, wanghongliang@loongson.cn, zhuyinbo <zhuyinbo@loongson.cn>
-Date: Wed, 22 Feb 2023 13:00:50 -0800
-User-Agent: alot/0.10
+In-Reply-To: <a9623c91-a28a-d91d-5311-fcfc4bd13247@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Axvr4CwPZjolc5AA--.43950S3
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxJrWUJF4DGrW8Aw1kXr1UZFb_yoW8Gryxpa
+	4kAan09r4DJryxJ3WqgF17ZFyI9rW8ZryUWF1DWrWUX3yDtrn3Ar18K3s8CF98ur1kZ3W0
+	qFWvgFn5A3WYyrDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+	s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HKZJUUUUU==
 
-Quoting zhuyinbo (2023-02-21 21:10:14)
->=20
-> >
-> >>> yes, the use of dts doesn't require the use of CLK_OF_DECLARE and can
-> >>> use platform_driver_register
-> >>>
-> >>> but my drvier not use platform_driver_register to register clk and use
-> >>> CLK_OF_DECLARE to match of_clk_init.
-> >> of_clk_init() is there to register clks that are needed for early init,
-> >> i.e. the clockevent/clocksource or the root interrupt controller
-> >> (irqchip). Otherwise, it isn't necessary to register clks via
-> >> of_clk_init().
-> > okay, I got it.
->=20
-> and,=C2=A0 the time driver=C2=A0 get clock by CCF that ask loongson2 cloc=
-k driver=20
-> use CLK_OF_DECLARE
->=20
-> to match of_clk_init.=C2=A0=C2=A0 because=C2=A0 the timer_probe=C2=A0 is =
-very early and the=20
-> timer driver was use TIMER_OF_DECLARE
->=20
-> to match time_probe.
->=20
 
-If you have a time driver that gets clks, register those early with
-CLK_OF_DECLARE_DRIVER() and then have a platform driver for the rest of
-the clk tree that registers clks later.
+
+在 2023年02月22日 20:17, Paolo Bonzini 写道:
+> On 2/22/23 02:52, Tianrui Zhao wrote:
+>>>
+>>>> +    vcpu->arch.guest_eentry = (unsigned long)kvm_context->kvm_eentry;
+>>>> +    vcpu->arch.vcpu_run = kvm_context->kvm_enter_guest;
+>>>> +    vcpu->arch.handle_exit = _kvm_handle_exit;
+>>>
+>>> Here as well, whatever is constant must not be stored in struct 
+>>> kvm_arch_vcpu.
+>>>
+>>> Paolo
+>>
+>> Thanks,  we use this in vcpu_arch because the vcpu_arch is used as 
+>> argument in switch.S' methods, we can quickly access the guest_eentry 
+>> and handle_exit by using the  KVM_ARCH_GEENTRY, KVM_ARCH_HANDLE_EXIT 
+>> offsets. If we change to global variable , we should relocate it in 
+>> switch.S and may lead  to lower accessing speed.
+>
+> For guest_eentry and handle_exit this is correct so you can add a 
+> comment in kvm_host.h, like
+>
+>     /* Pointers stored here for easy access from assembly code. */
+>
+> However, vcpu->arch.vcpu_run is not used in switch.S so there is no 
+> need to store it in struct kvm_arch_vcpu.  Since you're already going 
+> to move kvm_enter_guest out of kvm_context and into a global variable, 
+> please give it the right pointer-to-function type instead of using 
+> unsigned long.
+>
+> Paolo
+
+Thanks, I will remove this vcpu_run and replace it with the new global 
+variable, and fix the pointer-to-function type.
+
+Thanks
+Tianrui Zhao
+
+
