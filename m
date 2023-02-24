@@ -1,108 +1,99 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B032902
-	for <loongarch@lists.linux.dev>; Fri, 24 Feb 2023 08:56:33 +0000 (UTC)
-X-UUID: c9717bd47cae43d0911e1fd4d8dc24da-20230224
-X-CPASD-INFO: 7dd45989569642d19af65cc12933cc8f@gLSeVGJsZmlhVnuCg3Wva1mSlmZlj4O
-	AdHNTY5GTZIaVhH5xTV5nX1V9gnNXZF5dXFV3dnBQYmBhXVJ3i3-XblBgXoZgUZB3hqaeVGVnaA==
-X-CLOUD-ID: 7dd45989569642d19af65cc12933cc8f
-X-CPASD-SUMMARY: SIP:-1,APTIP:-2.0,KEY:0.0,FROMBLOCK:1,OB:0.0,URL:-5,TVAL:168.
-	0,ESV:0.0,ECOM:-5.0,ML:0.0,FD:0.0,CUTS:145.0,IP:-3.0,MAL:-5.0,PHF:-5.0,PHC:-5
-	.0,SPF:4.0,EDMS:-5,IPLABEL:-5.0,FROMTO:0,AD:0,FFOB:0.0,CFOB:0.0,SPC:0,SIG:-5,
-	AUF:9,DUF:16924,ACD:243,DCD:243,SL:0,EISP:0,AG:0,CFC:0.397,CFSR:0.09,UAT:0,RA
-	F:2,IMG:-5.0,DFA:0,DTA:0,IBL:-5,ADI:-5,SBL:0,REDM:0,REIP:0,ESB:0,ATTNUM:0,EAF
-	:0,CID:-5.0,VERSION:2.3.17
-X-CPASD-ID: c9717bd47cae43d0911e1fd4d8dc24da-20230224
-X-CPASD-BLOCK: 1000
-X-CPASD-STAGE: 1
-X-UUID: c9717bd47cae43d0911e1fd4d8dc24da-20230224
-X-User: lienze@kylinos.cn
-Received: from [172.30.60.63] [(210.12.40.82)] by mailgw
-	(envelope-from <lienze@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 957161311; Fri, 24 Feb 2023 16:56:32 +0800
-Message-ID: <35436454a1bdd4c98896a14b1d2e96f90d828057.camel@kylinos.cn>
-Subject: Re: [PATCH] LoongArch/syscall: remove asm/unistd.h include from
- syscall.c
-From: Enze Li <lienze@kylinos.cn>
-To: WANG Xuerui <kernel@xen0n.name>, chenhuacai@kernel.org,
- xry111@xry111.site
-Cc: loongarch@lists.linux.dev, enze.li@gmx.com
-Date: Fri, 24 Feb 2023 16:56:25 +0800
-In-Reply-To: <78e9232e-ff2f-fc17-edc2-560c5bced72b@xen0n.name>
-References: <20230224064921.299908-1-lienze@kylinos.cn>
-	 <78e9232e-ff2f-fc17-edc2-560c5bced72b@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EBA533F7
+	for <loongarch@lists.linux.dev>; Fri, 24 Feb 2023 10:10:47 +0000 (UTC)
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8CxC9oljfhjeaQEAA--.9423S3;
+	Fri, 24 Feb 2023 18:10:46 +0800 (CST)
+Received: from localhost.localdomain (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxX+QjjfhjNH86AA--.6368S2;
+	Fri, 24 Feb 2023 18:10:44 +0800 (CST)
+From: Jinyang He <hejinyang@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Xi Ruoyao <xry111@xry111.site>,
+	Youling Tang <tangyouling@loongson.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] Drop the per-node-mode exception handlers
+Date: Fri, 24 Feb 2023 18:10:07 +0800
+Message-Id: <20230224101013.26971-1-hejinyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxX+QjjfhjNH86AA--.6368S2
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Ww1DJrW3AFy5ZF48Xw45GFg_yoW8Zr48pr
+	9xZF93Jr48Gr9avw13t34Uurn8Jrn7Kr12qanFk348Cw12vr1UWr18JrWkXFyjq3y8Jr40
+	qF1rJw1jgF1Dt37anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY
+	6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
+	AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x
+	07jjWlkUUUUU=
 
-Hi Xuerui, Ruoyao,
+This series drops the per-node-mode exception handlers.
 
-Thanks for your swift reply.
+The UnixBench test results are as follows, Loongson-3C5000L-LL, CLFS7.1,
 
-On Fri, 2023-02-24 at 15:39 +0800, WANG Xuerui wrote:
-> On 2023/2/24 14:49, Enze Li wrote:
-> > At first glance, this inclusion looks weird.  After digging
-> > further, I
-> 
-> It's not weird, it's just overriding the fallback entries with
-> actual 
-> function pointers for the existing supported syscalls.
+a, DYNAMIC_FTRACE enabled, KASLR disabled, no-pernode
+b, DYNAMIC_FTRACE enabled, KASLR disabled, pernode
+c, DYNAMIC_FTRACE enabled, KASLR enabled, no-pernode
+       1 cpu     16 cpus
+  a-1, 782.6     4025.1
+  a-2, 783.3     3994.5
+  a-3, 784.2     4045.5
+  b-1, 775.5     3913.0
+  b-2, 763.9     3833.8
+  b-3, 777.7     3930.4
+  c-1, 811.0     3950.4
+  c-2, 795.7     3952.9
 
-Thanks again for pointing out the actual mechanism.
+The results were almost identical, as Huacai said, the performance
+difference between pernode and nopernode is negligible
 
-It's clear that I should have checked the preprocessing source code
-while digging further.
+Jinyang He (6):
+  LoongArch: Rename handle_syscall to handle_sys
+  LoongArch: Move the content defined by SYM_DATA to data or rodata
+    section
+  LoongArch: Create a exception handlers section
+  LoongArch: Drop pernode exception handlers
+  LoongArch: Fix up the prologue unwinder unwind exception frame
+  LoongArch: Clean up la_abs macro
 
-> 
-> > realized that there's no need to include the "asm/unistd.h"
-> > file.  I've
-> > tested this patch for a few weeks, and didn't see any regressions.
-> > Therefore, removes the unnecessary inclusion.
-> > 
-> > Signed-off-by: Enze Li <lienze@kylinos.cn>
-> > ---
-> >   arch/loongarch/kernel/syscall.c | 1 -
-> >   1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/arch/loongarch/kernel/syscall.c
-> > b/arch/loongarch/kernel/syscall.c
-> > index 3fc4211db989..4dea411e9e0d 100644
-> > --- a/arch/loongarch/kernel/syscall.c
-> > +++ b/arch/loongarch/kernel/syscall.c
-> > @@ -31,7 +31,6 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr,
-> > unsigned long, len, unsigned long,
-> >   
-> >   void *sys_call_table[__NR_syscalls] = {
-> >   	[0 ... __NR_syscalls - 1] = sys_ni_syscall,
-> > -#include <asm/unistd.h>
-> 
-> Is this really supposed to work? You're removing *every* handler
-> from 
-> the syscall table so every single syscall will just -ENOSYS. I don't 
-> believe you can test such a kernel "for a few weeks without
-> regressions".
+ arch/loongarch/include/asm/asmmacro.h   | 17 -----
+ arch/loongarch/include/asm/setup.h      | 14 ----
+ arch/loongarch/include/asm/stackframe.h |  2 +-
+ arch/loongarch/include/asm/traps.h      | 81 ++++++++++++++++++++++
+ arch/loongarch/include/asm/unwind.h     |  2 +-
+ arch/loongarch/kernel/entry.S           | 16 +++--
+ arch/loongarch/kernel/genex.S           | 73 +++++++++++++-------
+ arch/loongarch/kernel/head.S            |  2 +
+ arch/loongarch/kernel/mcount_dyn.S      |  2 +
+ arch/loongarch/kernel/relocate.c        | 28 --------
+ arch/loongarch/kernel/traps.c           | 74 +-------------------
+ arch/loongarch/kernel/unwind_prologue.c | 91 +++----------------------
+ arch/loongarch/kernel/vmlinux.lds.S     | 37 +++++++---
+ arch/loongarch/mm/cache.c               |  6 --
+ arch/loongarch/mm/tlb.c                 | 40 -----------
+ arch/loongarch/mm/tlbex.S               | 67 +++++++++++-------
+ arch/loongarch/power/suspend.c          |  5 +-
+ 17 files changed, 231 insertions(+), 326 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/traps.h
 
-Oops!  Sorry about that, I've been kind of flaky these days :(  Maybe
-some other patches, I'm not quite sure.
-
-Anyway, I'll devote more attention to the following work (Especially
-for testing).  Please drop this one as it is unnecessary.
-
-Best Regards,
-Enze
-
-> 
-> >   };
-> >   
-> >   typedef long (*sys_call_fn)(unsigned long, unsigned long,
-> > 
-> > base-commit: 804f6d04b1adae9602edbd6410c0ba3a556964fe
+-- 
+2.34.3
 
