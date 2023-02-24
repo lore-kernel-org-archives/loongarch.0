@@ -1,78 +1,94 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246A97C
-	for <loongarch@lists.linux.dev>; Fri, 24 Feb 2023 07:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1677224368; bh=8pT5NHFFPI6K+UXL7Ee2pQvDYSUg1+u8JZdamiAcObc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KLuijKcYq92b5tQpiwoNnvwRdC/YLJtdHQdafrKzJChZ3sVXK5VAWz5iu8KhysDH+
-	 PKVkgxNhxOW22GaM3tVu9FyWA9BqEejynz1j9lbN4d2x8uF3bXytjAIBrwClooEC1j
-	 /Y0Vp76fovMU2TnX8+o12OAFQB0d55xa41BcOyT4=
-Received: from [100.100.57.122] (unknown [58.34.185.106])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 449E8600DA;
-	Fri, 24 Feb 2023 15:39:28 +0800 (CST)
-Message-ID: <78e9232e-ff2f-fc17-edc2-560c5bced72b@xen0n.name>
-Date: Fri, 24 Feb 2023 15:39:27 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06757C
+	for <loongarch@lists.linux.dev>; Fri, 24 Feb 2023 07:40:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1677224406;
+	bh=XTnPbVOCMVGJVcNvc/eXslOzCR98VNQGqDY/qUPMfLw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=k/uG1B4m4Y/rJhRakL7lK2iVeWILpnlVLRT072NMwDhM5xdTKjRyBez9LgBfPvKSl
+	 THeA/mmOnQthXQvRAHGB97nWAHP8tsDdwx/9hzrNg6b8nCLwyhA4lT6e4JYCJcfLSJ
+	 PmENnwyDkVR0n0evbrNdeyH7RNr+B2O9gHlNiAFA=
+Received: from [192.168.43.231] (unknown [123.138.183.192])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id CB42E65C53;
+	Fri, 24 Feb 2023 02:40:04 -0500 (EST)
+Message-ID: <2abc92962b6412f18a7ae0444194804ad96a1d20.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch/syscall: remove asm/unistd.h include from
+ syscall.c
+From: Xi Ruoyao <xry111@xry111.site>
+To: Enze Li <lienze@kylinos.cn>, chenhuacai@kernel.org, kernel@xen0n.name
+Cc: loongarch@lists.linux.dev, enze.li@gmx.com
+Date: Fri, 24 Feb 2023 15:40:00 +0800
+In-Reply-To: <20230224064921.299908-1-lienze@kylinos.cn>
+References: <20230224064921.299908-1-lienze@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH] LoongArch/syscall: remove asm/unistd.h include from
- syscall.c
-Content-Language: en-US
-To: Enze Li <lienze@kylinos.cn>, chenhuacai@kernel.org
-Cc: loongarch@lists.linux.dev, enze.li@gmx.com
-References: <20230224064921.299908-1-lienze@kylinos.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230224064921.299908-1-lienze@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 2023/2/24 14:49, Enze Li wrote:
-> At first glance, this inclusion looks weird.  After digging further, I
+On Fri, 2023-02-24 at 14:49 +0800, Enze Li wrote:
+> At first glance, this inclusion looks weird.=C2=A0 After digging further,=
+ I
+> realized that there's no need to include the "asm/unistd.h" file.
 
-It's not weird, it's just overriding the fallback entries with actual 
-function pointers for the existing supported syscalls.
+How did you get this conclusion?  When I run "make
+arch/loongarch/kernel/syscall.i" it seems the preprocessed result indeed
+contains some entries imported from asm/unistd.h:
 
-> realized that there's no need to include the "asm/unistd.h" file.  I've
-> tested this patch for a few weeks, and didn't see any regressions.
+void *sys_call_table[451] =3D {
+ [0 ... 451 - 1] =3D sys_ni_syscall,
+# 1 "./arch/loongarch/include/asm/unistd.h" 1
+# 9 "./arch/loongarch/include/asm/unistd.h"
+# 1 "./arch/loongarch/include/uapi/asm/unistd.h" 1
+# 1 "./include/uapi/asm-generic/unistd.h" 1
+# 34 "./include/uapi/asm-generic/unistd.h"
+[0] =3D (sys_io_setup),
+[1] =3D (sys_io_destroy),
+[2] =3D (sys_io_submit),
+[3] =3D (sys_io_cancel),
+[4] =3D (sys_io_getevents),
+
+/* snip */
+
+> I've tested this patch for a few weeks, and didn't see any regressions.
+
+Frankly, I can't believe this.
+
 > Therefore, removes the unnecessary inclusion.
-> 
+>=20
 > Signed-off-by: Enze Li <lienze@kylinos.cn>
 > ---
->   arch/loongarch/kernel/syscall.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kernel/syscall.c b/arch/loongarch/kernel/syscall.c
+> =C2=A0arch/loongarch/kernel/syscall.c | 1 -
+> =C2=A01 file changed, 1 deletion(-)
+>=20
+> diff --git a/arch/loongarch/kernel/syscall.c
+> b/arch/loongarch/kernel/syscall.c
 > index 3fc4211db989..4dea411e9e0d 100644
 > --- a/arch/loongarch/kernel/syscall.c
 > +++ b/arch/loongarch/kernel/syscall.c
-> @@ -31,7 +31,6 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len, unsigned long,
->   
->   void *sys_call_table[__NR_syscalls] = {
->   	[0 ... __NR_syscalls - 1] = sys_ni_syscall,
+> @@ -31,7 +31,6 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned
+> long, len, unsigned long,
+> =C2=A0
+> =C2=A0void *sys_call_table[__NR_syscalls] =3D {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0[0 ... __NR_syscalls - 1]=
+ =3D sys_ni_syscall,
 > -#include <asm/unistd.h>
-
-Is this really supposed to work? You're removing *every* handler from 
-the syscall table so every single syscall will just -ENOSYS. I don't 
-believe you can test such a kernel "for a few weeks without regressions".
-
->   };
->   
->   typedef long (*sys_call_fn)(unsigned long, unsigned long,
-> 
+> =C2=A0};
+> =C2=A0
+> =C2=A0typedef long (*sys_call_fn)(unsigned long, unsigned long,
+>=20
 > base-commit: 804f6d04b1adae9602edbd6410c0ba3a556964fe
 
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
