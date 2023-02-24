@@ -1,101 +1,68 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC2F915A5
-	for <loongarch@lists.linux.dev>; Fri, 24 Feb 2023 01:27:34 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.120])
-	by gateway (Coremail) with SMTP id _____8DxE4SEEvhjTWkEAA--.3157S3;
-	Fri, 24 Feb 2023 09:27:32 +0800 (CST)
-Received: from [10.20.42.120] (unknown [10.20.42.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxK76DEvhjKh46AA--.40084S3;
-	Fri, 24 Feb 2023 09:27:32 +0800 (CST)
-Subject: Re: [PATCH v2 01/29] LoongArch: KVM: Add kvm related header files
-To: Xi Ruoyao <xry111@xry111.site>, Paolo Bonzini <pbonzini@redhat.com>
-References: <20230220065735.1282809-1-zhaotianrui@loongson.cn>
- <20230220065735.1282809-2-zhaotianrui@loongson.cn>
- <ef024d7e4e0207e76c165c1818d1bb21f07235ab.camel@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-Message-ID: <004179bf-2d9c-f534-f40a-646bafc1e2bf@loongson.cn>
-Date: Fri, 24 Feb 2023 09:27:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1994917C7
+	for <loongarch@lists.linux.dev>; Fri, 24 Feb 2023 03:32:21 +0000 (UTC)
+X-UUID: 8c2ad22cf0fa4ca2a04de56038de492e-20230224
+X-CPASD-INFO: 5b8c439f5a3b46eb8356621ec6dd3374@frJyg2FlZ5ZhgXWug3mwnFhkaWJWgXO
+	fg2eSlF9TjIaMbFJkYl1SgIFqVmprYmBZUHt1bFZgYGJdUXh3lHKPVGFeYIJUdJOAd5xYlGJj
+X-CLOUD-ID: 5b8c439f5a3b46eb8356621ec6dd3374
+X-CPASD-SUMMARY: SIP:-1,APTIP:-2.0,KEY:0.0,FROMBLOCK:1,OB:1.0,URL:-5,TVAL:197.
+	0,ESV:0.0,ECOM:-5.0,ML:14.0,FD:0.0,CUTS:75.0,IP:-2.0,MAL:-5.0,PHF:-5.0,PHC:-5
+	.0,SPF:4.0,EDMS:-5,IPLABEL:4992.0,FROMTO:0,AD:0,FFOB:1.0,CFOB:1.0,SPC:0,SIG:-
+	5,AUF:7,DUF:16886,ACD:242,DCD:242,SL:0,EISP:0,AG:0,CFC:0.328,CFSR:0.088,UAT:0
+	,RAF:0,IMG:-5.0,DFA:0,DTA:0,IBL:-2.0,ADI:-5,SBL:0,REDM:0,REIP:0,ESB:0,ATTNUM:
+	0,EAF:0,CID:-5.0,VERSION:2.3.17
+X-CPASD-ID: 8c2ad22cf0fa4ca2a04de56038de492e-20230224
+X-CPASD-BLOCK: 14
+X-CPASD-STAGE: 1
+X-UUID: 8c2ad22cf0fa4ca2a04de56038de492e-20230224
+X-User: lienze@kylinos.cn
+Received: from localhost.localdomain [(210.12.40.82)] by mailgw
+	(envelope-from <lienze@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1346359212; Fri, 24 Feb 2023 11:27:14 +0800
+From: Enze Li <lienze@kylinos.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: loongarch@lists.linux.dev,
+	enze.li@gmx.com
+Subject: [PATCH] LoongArch: use EXCCODE_INT_START instead of hard coded value
+Date: Fri, 24 Feb 2023 11:30:17 +0800
+Message-Id: <20230224033017.15653-1-lienze@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ef024d7e4e0207e76c165c1818d1bb21f07235ab.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxK76DEvhjKh46AA--.40084S3
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Xr18GFyrZFy7tF4Dtw4xWFg_yoWfuFX_Zw
-	4xAw4kGa1rtrnFqrn2gFn0gF1vga1kt3Wvvw1YvF95Zwn3Xay8Ar4kC34kAasrJ34rtF17
-	ur4kta4fWrZ7XjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
-	17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-	xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1ln4kS
-	14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE
-	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HKZJUUUUU==
 
+The for loop in per_cpu_trap_init function use a hard coded length while
+setting default exception handler.  Use the proper define instead of
+hard coded value.
 
+Signed-off-by: Enze Li <lienze@kylinos.cn>
+---
+ arch/loongarch/kernel/traps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-在 2023年02月21日 12:36, Xi Ruoyao 写道:
-> On Mon, 2023-02-20 at 14:57 +0800, Tianrui Zhao wrote:
->
-> /* snip */
->
->> +/*
->> + * for KVM_GET_FPU and KVM_SET_FPU
->> + */
->> +struct kvm_fpu {
->> +	__u32 fcsr;
->> +	__u32 none;
->> +	__u64 fcc;    /* 8x8 */
->> +	struct kvm_fpureg {
->> +		__u64 val64[4];	//support max 256 bits
->> +	} fpr[32];
-> Do we need __attribute__((__aligned__(16))) for fpureg (like
-> sc_extcontext in struct sigcontext)?
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index de8ebe20b666..7d5784eccf19 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -755,7 +755,7 @@ void per_cpu_trap_init(int cpu)
+ 
+ 	/* Initialise exception handlers */
+ 	if (cpu == 0)
+-		for (i = 0; i < 64; i++)
++		for (i = 0; i < EXCCODE_INT_START; i++)
+ 			set_handler(i * VECSIZE, handle_reserved, VECSIZE);
+ 
+ 	tlb_init(cpu);
 
-Thanks,  the loongarch_fpu variable is already has FPU_ALIGN feature in 
-the kvm_vcpu_arch structure, so it need not to use __aligned__(16).
-
-Thanks
-Tianrui Zhao
-
->
->> +};
->> +
->> +/*
->> + * For LOONGARCH, we use KVM_SET_ONE_REG and KVM_GET_ONE_REG to
->            ^^^^^^^^^
->            LoongArch
-
-Thanks, I will fix it
-
-Thanks
-Tianrui Zhao
-
->
->> access various
->> + * registers.  The id field is broken down as follows:
->> + *
->> + *  bits[63..52] - As per linux/kvm.h
->> + *  bits[51..32] - Must be zero.
->> + *  bits[31..16] - Register set.
+base-commit: 804f6d04b1adae9602edbd6410c0ba3a556964fe
+-- 
+2.39.2
 
