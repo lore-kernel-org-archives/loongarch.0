@@ -1,103 +1,158 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D639D2F2
-	for <loongarch@lists.linux.dev>; Fri, 24 Feb 2023 10:43:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1677235437;
-	bh=mOMOVF2iJgJR2obOieRkRdSF9pKgncWHGSHN+UgxW64=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=FsiEuNmKyogza/4nI1R66rJ75uhZZirj2+zK24xqUVLyyUWYAC8yxY7/Pu1kdqu4F
-	 cqylnQ7R4Pldh5LQqqPB3H8sYiVFAyTTV37TuHNgRdh10qCUXs7zuJF32a7TeM2jwu
-	 BV3DG42vKLqGwDpGROT4gUL3BhMTOl+m+6/+ExX4=
-Received: from [IPv6:2408:8471:1116:556a:af80:d15d:41f2:3e09] (unknown [IPv6:2408:8471:1116:556a:af80:d15d:41f2:3e09])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 6AA6765DC8;
-	Fri, 24 Feb 2023 05:43:49 -0500 (EST)
-Message-ID: <cc9fe98d7e157c3e4bdf82d92e9ea368b894ce00.camel@xry111.site>
-Subject: Re: [PATCH 6/6] LoongArch: Clean up la_abs macro
-From: Xi Ruoyao <xry111@xry111.site>
-To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-  WANG Xuerui <kernel@xen0n.name>
-Cc: Youling Tang <tangyouling@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Date: Fri, 24 Feb 2023 18:43:33 +0800
-In-Reply-To: <20230224101013.26971-7-hejinyang@loongson.cn>
-References: <20230224101013.26971-1-hejinyang@loongson.cn>
-	 <20230224101013.26971-7-hejinyang@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.46.4 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E87E539D
+	for <loongarch@lists.linux.dev>; Fri, 24 Feb 2023 13:04:10 +0000 (UTC)
+Received: from loongson.cn (unknown [118.116.19.77])
+	by gateway (Coremail) with SMTP id _____8Axkk7Ctfhjq7oEAA--.3802S3;
+	Fri, 24 Feb 2023 21:04:03 +0800 (CST)
+Received: from [127.0.0.1] (unknown [118.116.19.77])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxb+TBtfhjn6o6AA--.5563S3;
+	Fri, 24 Feb 2023 21:04:02 +0800 (CST)
+Message-ID: <d5e96b4f-ac51-9d56-fcf3-b4f18779b76e@loongson.cn>
+Date: Fri, 24 Feb 2023 21:04:03 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: [PATCH 6/6] LoongArch: Clean up la_abs macro
+To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>
+Cc: Youling Tang <tangyouling@loongson.cn>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20230224101013.26971-1-hejinyang@loongson.cn>
+ <20230224101013.26971-7-hejinyang@loongson.cn>
+ <cc9fe98d7e157c3e4bdf82d92e9ea368b894ce00.camel@xry111.site>
+From: Jinyang He <hejinyang@loongson.cn>
+In-Reply-To: <cc9fe98d7e157c3e4bdf82d92e9ea368b894ce00.camel@xry111.site>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bxb+TBtfhjn6o6AA--.5563S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxAFyfArWrJF4xXw48KF15Arb_yoWrWr1rpr
+	1kJr1DJrW5Gr1kJr1UJr1DXry5Jr1DJ3WUGr1UJFyUGr47Jr1jgr1UXryqgr17Jr48Jr48
+	Xr1UXr17Zr1UJw7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2
+	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
+	AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
+	6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU8ewZ7UUUUU==
 
-T24gRnJpLCAyMDIzLTAyLTI0IGF0IDE4OjEwICswODAwLCBKaW55YW5nIEhlIHdyb3RlOgoKLyog
-c25pcCAqLwoKPiBkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gva2VybmVsL2VudHJ5LlMKPiBi
-L2FyY2gvbG9vbmdhcmNoL2tlcm5lbC9lbnRyeS5TCj4gaW5kZXggY2E0NjUxZjkxZTczLi40ZGU2
-YjMxZGMzYmYgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9sb29uZ2FyY2gva2VybmVsL2VudHJ5LlMKPiAr
-KysgYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwvZW50cnkuUwoKLyogc25pcCAqLwoKPiBAQCAtNjUs
-NyArNjUsNyBAQCBTWU1fRlVOQ19TVEFSVChoYW5kbGVfc3lzKQo+IMKgwqDCoMKgwqDCoMKgwqBh
-bmTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHRwLCB0cCwgc3AKPiDCoAo+IMKgwqDCoMKgwqDC
-oMKgwqBtb3ZlwqDCoMKgwqBhMCwgc3AKPiAtwqDCoMKgwqDCoMKgwqBsYV9hYnPCoMKgcmEsIGRv
-X3N5c2NhbGwKPiArwqDCoMKgwqDCoMKgwqBsYS5wY3JlbMKgwqDCoMKgwqDCoMKgwqByYSwgZG9f
-c3lzY2FsbAo+IMKgwqDCoMKgwqDCoMKgwqBqaXJswqDCoMKgwqByYSwgcmEsIDAKCmJsCWRvX3N5
-c2NhbGwKCj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgUkVTVE9SRV9BTExfQU5EX1JFVAo+IGRpZmYg
-LS1naXQgYS9hcmNoL2xvb25nYXJjaC9rZXJuZWwvZ2VuZXguUwo+IGIvYXJjaC9sb29uZ2FyY2gv
-a2VybmVsL2dlbmV4LlMKPiBpbmRleCA4NzA1YTc2NjFjZTkuLmI2YTc0MjQ2ZDFjNCAxMDA2NDQK
-PiAtLS0gYS9hcmNoL2xvb25nYXJjaC9rZXJuZWwvZ2VuZXguUwo+ICsrKyBiL2FyY2gvbG9vbmdh
-cmNoL2tlcm5lbC9nZW5leC5TCgovKiBzbmlwICovCgo+IEBAIC00NSw3ICs0NSw3IEBAIFNZTV9G
-VU5DX1NUQVJUKGhhbmRsZV92aW50XGlkeCkKPiDCoMKgwqDCoMKgwqDCoMKgTE9OR19TwqDCoHQw
-LCBzcCwgUFRfRVJBCj4gwqAxOsKgwqDCoMKgwqBtb3ZlwqDCoMKgwqBhMCwgc3AKPiDCoMKgwqDC
-oMKgwqDCoMKgbW92ZcKgwqDCoMKgYTEsIHNwCj4gLcKgwqDCoMKgwqDCoMKgbGFfYWJzwqDCoHQw
-LCBkb192aW50Cj4gK8KgwqDCoMKgwqDCoMKgbGEucGNyZWzCoMKgwqDCoMKgwqDCoMKgdDAsIGRv
-X3ZpbnQKPiDCoMKgwqDCoMKgwqDCoMKgamlybMKgwqDCoMKgcmEsIHQwLCAwCgpibAlkb192aW50
-Cgo+IMKgwqDCoMKgwqDCoMKgwqBSRVNUT1JFX0FMTF9BTkRfUkVUCj4gwqBTWU1fRlVOQ19FTkQo
-aGFuZGxlX3ZpbnRcaWR4KQo+IEBAIC03Niw3ICs3Niw3IEBAIFNZTV9GVU5DX1NUQVJUKGhhbmRs
-ZV9cZXhjZXB0aW9uKQo+IMKgwqDCoMKgwqDCoMKgwqBTQVZFX0FMTAo+IMKgwqDCoMKgwqDCoMKg
-wqBidWlsZF9wcmVwX1xwcmVwCj4gwqDCoMKgwqDCoMKgwqDCoG1vdmXCoMKgwqDCoGEwLCBzcAo+
-IC3CoMKgwqDCoMKgwqDCoGxhX2Fic8KgwqB0MCwgZG9fXGhhbmRsZXIKPiArwqDCoMKgwqDCoMKg
-wqBsYS5wY3JlbMKgwqDCoMKgwqDCoMKgwqB0MCwgZG9fXGhhbmRsZXIKPiDCoMKgwqDCoMKgwqDC
-oMKgamlybMKgwqDCoMKgcmEsIHQwLCAwCgpibAlkb19caGFuZGxlcgoKLyogc25pcCAqLwoKPiBk
-aWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gvbW0vdGxiZXguUyBiL2FyY2gvbG9vbmdhcmNoL21t
-L3RsYmV4LlMKPiBpbmRleCA1MzMyMWQzNDQ3YTIuLjE5NmQ5YmM4NzBjNSAxMDA2NDQKPiAtLS0g
-YS9hcmNoL2xvb25nYXJjaC9tbS90bGJleC5TCj4gKysrIGIvYXJjaC9sb29uZ2FyY2gvbW0vdGxi
-ZXguUwo+IEBAIC00MSw3ICs0MSw3IEBAIFNZTV9GVU5DX1NUQVJUKGhhbmRsZV90bGJfcHJvdGVj
-dFxpZHgpCj4gwqDCoMKgwqDCoMKgwqDCoG1vdmXCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBhMSwg
-emVybwo+IMKgwqDCoMKgwqDCoMKgwqBjc3JyZMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBhMiwgTE9P
-TkdBUkNIX0NTUl9CQURWCj4gwqDCoMKgwqDCoMKgwqDCoFJFR19TwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoGEyLCBzcCwgUFRfQlZBRERSCj4gLcKgwqDCoMKgwqDCoMKgbGFfYWJzwqDCoMKgwqDCoMKg
-wqDCoMKgwqB0MCwgZG9fcGFnZV9mYXVsdAo+ICvCoMKgwqDCoMKgwqDCoGxhLnBjcmVswqDCoMKg
-wqDCoMKgwqDCoHQwLCBkb19wYWdlX2ZhdWx0Cj4gwqDCoMKgwqDCoMKgwqDCoGppcmzCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqByYSwgdDAsIDAKCmJsCWRvX3BhZ2VfZmF1bHQKCi8qIHNuaXAgKi8K
-Cj4gQEAgLTE5MCw3ICsxOTAsNyBAQCBTWU1fRlVOQ19TVEFSVChoYW5kbGVfdGxiX2xvYWRcaWR4
-KQo+IMKgNTogLyogbm9wYWdlX3RsYl9sb2FkOiAqLwo+IMKgwqDCoMKgwqDCoMKgwqBkYmFywqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgMAo+IMKgwqDCoMKgwqDCoMKgwqBjc3JyZMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqByYSwgRVhDRVBUSU9OX0tTMgo+IC3CoMKgwqDCoMKgwqDCoGxhX2Fic8KgwqDC
-oMKgwqDCoMKgwqDCoMKgdDAsIHRsYl9kb19wYWdlX2ZhdWx0XzAKPiArwqDCoMKgwqDCoMKgwqBs
-YS5wY3JlbMKgwqDCoMKgwqDCoMKgwqB0MCwgdGxiX2RvX3BhZ2VfZmF1bHRfMAo+IMKgwqDCoMKg
-wqDCoMKgwqBqcsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB0MAoKYgl0bGJfZG9fcGFnZV9m
-YXVsdF8wCgovKiBzbmlwICovCgo+IEBAIC0zNDEsNyArMzQxLDcgQEAgdGxiX2h1Z2VfdXBkYXRl
-X3N0b3JlOgo+IMKgbm9wYWdlX3RsYl9zdG9yZToKPiDCoMKgwqDCoMKgwqDCoMKgZGJhcsKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoDAKPiDCoMKgwqDCoMKgwqDCoMKgY3NycmTCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgcmEsIEVYQ0VQVElPTl9LUzIKPiAtwqDCoMKgwqDCoMKgwqBsYV9hYnPCoMKgwqDC
-oMKgwqDCoMKgwqDCoHQwLCB0bGJfZG9fcGFnZV9mYXVsdF8xCj4gK8KgwqDCoMKgwqDCoMKgbGEu
-cGNyZWzCoMKgwqDCoMKgwqDCoMKgdDAsIHRsYl9kb19wYWdlX2ZhdWx0XzEKPiDCoMKgwqDCoMKg
-wqDCoMKganLCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgdDAKCmIJdGxiX2RvX3BhZ2VfZmF1
-bHRfMQoKLyogc25pcCAqLwoKPiBAQCAtNDkwLDcgKzQ5MCw3IEBAIHRsYl9odWdlX3VwZGF0ZV9t
-b2RpZnk6Cj4gwqBub3BhZ2VfdGxiX21vZGlmeToKPiDCoMKgwqDCoMKgwqDCoMKgZGJhcsKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoDAKPiDCoMKgwqDCoMKgwqDCoMKgY3NycmTCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgcmEsIEVYQ0VQVElPTl9LUzIKPiAtwqDCoMKgwqDCoMKgwqBsYV9hYnPCoMKgwqDC
-oMKgwqDCoMKgwqDCoHQwLCB0bGJfZG9fcGFnZV9mYXVsdF8xCj4gK8KgwqDCoMKgwqDCoMKgbGEu
-cGNyZWzCoMKgwqDCoMKgwqDCoMKgdDAsIHRsYl9kb19wYWdlX2ZhdWx0XzEKPiDCoMKgwqDCoMKg
-wqDCoMKganLCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgdDAKCmIJdGxiX2RvX3BhZ2VfZmF1
-bHRfMQoKPiDCoFNZTV9GVU5DX0VORChoYW5kbGVfdGxiX21vZGlmeSkKPiDCoMKgwqDCoMKgwqDC
-oMKgLmVuZG0KCi0tIApYaSBSdW95YW8gPHhyeTExMUB4cnkxMTEuc2l0ZT4KU2Nob29sIG9mIEFl
-cm9zcGFjZSBTY2llbmNlIGFuZCBUZWNobm9sb2d5LCBYaWRpYW4gVW5pdmVyc2l0eQo=
+在 2023/2/24 18:43, Xi Ruoyao 写道:
+
+> On Fri, 2023-02-24 at 18:10 +0800, Jinyang He wrote:
+>
+> /* snip */
+>
+>> diff --git a/arch/loongarch/kernel/entry.S
+>> b/arch/loongarch/kernel/entry.S
+>> index ca4651f91e73..4de6b31dc3bf 100644
+>> --- a/arch/loongarch/kernel/entry.S
+>> +++ b/arch/loongarch/kernel/entry.S
+> /* snip */
+>
+>> @@ -65,7 +65,7 @@ SYM_FUNC_START(handle_sys)
+>>          and             tp, tp, sp
+>>   
+>>          move    a0, sp
+>> -       la_abs  ra, do_syscall
+>> +       la.pcrel        ra, do_syscall
+>>          jirl    ra, ra, 0
+> bl	do_syscall
+>
+>>   
+>>          RESTORE_ALL_AND_RET
+>> diff --git a/arch/loongarch/kernel/genex.S
+>> b/arch/loongarch/kernel/genex.S
+>> index 8705a7661ce9..b6a74246d1c4 100644
+>> --- a/arch/loongarch/kernel/genex.S
+>> +++ b/arch/loongarch/kernel/genex.S
+> /* snip */
+>
+>> @@ -45,7 +45,7 @@ SYM_FUNC_START(handle_vint\idx)
+>>          LONG_S  t0, sp, PT_ERA
+>>   1:     move    a0, sp
+>>          move    a1, sp
+>> -       la_abs  t0, do_vint
+>> +       la.pcrel        t0, do_vint
+>>          jirl    ra, t0, 0
+> bl	do_vint
+>
+>>          RESTORE_ALL_AND_RET
+>>   SYM_FUNC_END(handle_vint\idx)
+>> @@ -76,7 +76,7 @@ SYM_FUNC_START(handle_\exception)
+>>          SAVE_ALL
+>>          build_prep_\prep
+>>          move    a0, sp
+>> -       la_abs  t0, do_\handler
+>> +       la.pcrel        t0, do_\handler
+>>          jirl    ra, t0, 0
+> bl	do_\handler
+>
+> /* snip */
+>
+>> diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
+>> index 53321d3447a2..196d9bc870c5 100644
+>> --- a/arch/loongarch/mm/tlbex.S
+>> +++ b/arch/loongarch/mm/tlbex.S
+>> @@ -41,7 +41,7 @@ SYM_FUNC_START(handle_tlb_protect\idx)
+>>          move            a1, zero
+>>          csrrd           a2, LOONGARCH_CSR_BADV
+>>          REG_S           a2, sp, PT_BVADDR
+>> -       la_abs          t0, do_page_fault
+>> +       la.pcrel        t0, do_page_fault
+>>          jirl            ra, t0, 0
+> bl	do_page_fault
+>
+> /* snip */
+>
+>> @@ -190,7 +190,7 @@ SYM_FUNC_START(handle_tlb_load\idx)
+>>   5: /* nopage_tlb_load: */
+>>          dbar            0
+>>          csrrd           ra, EXCEPTION_KS2
+>> -       la_abs          t0, tlb_do_page_fault_0
+>> +       la.pcrel        t0, tlb_do_page_fault_0
+>>          jr              t0
+> b	tlb_do_page_fault_0
+>
+> /* snip */
+>
+>> @@ -341,7 +341,7 @@ tlb_huge_update_store:
+>>   nopage_tlb_store:
+>>          dbar            0
+>>          csrrd           ra, EXCEPTION_KS2
+>> -       la_abs          t0, tlb_do_page_fault_1
+>> +       la.pcrel        t0, tlb_do_page_fault_1
+>>          jr              t0
+> b	tlb_do_page_fault_1
+>
+> /* snip */
+>
+>> @@ -490,7 +490,7 @@ tlb_huge_update_modify:
+>>   nopage_tlb_modify:
+>>          dbar            0
+>>          csrrd           ra, EXCEPTION_KS2
+>> -       la_abs          t0, tlb_do_page_fault_1
+>> +       la.pcrel        t0, tlb_do_page_fault_1
+>>          jr              t0
+> b	tlb_do_page_fault_1
+>
+>>   SYM_FUNC_END(handle_tlb_modify)
+>>          .endm
+
+Thanks, I'll check other places, too.
+
+
+Jinyang
 
