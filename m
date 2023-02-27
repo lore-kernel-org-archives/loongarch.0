@@ -1,143 +1,498 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58290640
-	for <loongarch@lists.linux.dev>; Mon, 27 Feb 2023 05:39:34 +0000 (UTC)
-Received: (Authenticated sender: alexandre.belloni@bootlin.com)
-	by mail.gandi.net (Postfix) with ESMTPSA id A04741BF203;
-	Mon, 27 Feb 2023 05:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1677476366;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HSUtZZZIsMOTcVvHu0tixFiyHTHL04pUAee04ApJQyU=;
-	b=egUclZcQnQTw2I4NZ+GndWv94hAxJyCN5DHJ1mUawKqxqv8VA56PzKyWy6uj96Odo4q9X7
-	X5T1l2IaFCg4WW2FqUqqkGZkXUDFNxT4c7AVfukix3A7sf7bjp1kuPR52Xs/h3hz0Cqyzx
-	1wMipbSb0mzsWoNnJ/mggq2aOXMrMX73Tb7lgjSC4di0DbGdXiBGdmx16X+hRHXRvQ/369
-	LJHIbEH+sPSS1HwYINJRLgWfYsn07h7RLEGtiqm8JYP7XT8TjC0dBXQR6YKIjyQDyyNQbO
-	AHqtoh0hkXEPyp/KxnnagpO4CFNn9Zc8viF4tw/nRW6WwmLoBZFs0MbLhPyz8A==
-Date: Mon, 27 Feb 2023 06:39:23 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>, linux-rtc@vger.kernel.org,
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev,
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4242659
+	for <loongarch@lists.linux.dev>; Mon, 27 Feb 2023 06:46:37 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.35])
+	by gateway (Coremail) with SMTP id _____8CxhdjIUfxjp_8FAA--.5588S3;
+	Mon, 27 Feb 2023 14:46:32 +0800 (CST)
+Received: from user-pc.202.106.0.20 (unknown [10.20.42.35])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD7_AUfxj14I+AA--.9411S2;
+	Mon, 27 Feb 2023 14:46:31 +0800 (CST)
+From: Yinbo Zhu <zhuyinbo@loongson.cn>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	devicetree@vger.kernel.org, Qing Zhang <zhangqing@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	zhaoxiao <zhaoxiao@uniontech.com>,
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <git@xen0n.name>
-Subject: Re: [PATCH V2 2/7] rtc: Add support for the Loongson-2K/LS7A RTC
-Message-ID: <Y/xCC8cpGxG/8g97@mail.local>
-References: <cover.1673227292.git.zhoubinbin@loongson.cn>
- <8cd5e1b763951d4ce69188cdff95d8adaf12755f.1673227292.git.zhoubinbin@loongson.cn>
- <Y88ZaWnh9ERRocPv@mail.local>
- <CAMpQs4+pWpw9bmCvKor+V41aMcLc-90aYz0QH-WS2KqkkFqMFA@mail.gmail.com>
- <Y+wVkl7r6HbriqA7@mail.local>
- <CAMpQs4Kx3E+MdE0naf-TM2_JMjwWr2f4+b0vP+adZNFOF1fLhA@mail.gmail.com>
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Cc: Jianmin Lv <lvjianmin@loongson.cn>,
+	Liu Peibao <liupeibao@loongson.cn>,
+	wanghongliang@loongson.cn,
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH v12 2/4] clk: clk-loongson2: add clock controller driver support
+Date: Mon, 27 Feb 2023 14:46:20 +0800
+Message-Id: <20230227064620.29468-1-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpQs4Kx3E+MdE0naf-TM2_JMjwWr2f4+b0vP+adZNFOF1fLhA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxD7_AUfxj14I+AA--.9411S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvAXoW3Kr45Wr1xGF4rXF13Gry3Jwb_yoW8Jw18uo
+	W3uFn8Jr4fJ348XFWIvw15tr47XFsIvFsIyF1fArn8GayY9r98XrW8A3W3GFn7ZFyrKFnx
+	AryrKayrJr4Iqr47n29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
+	UU9j1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFV
+	AK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2
+	z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
+	1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkE
+	cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
+	0Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
+	6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l42xK82IY6x8Erc
+	xFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E
+	5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtV
+	W8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY
+	1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
+	0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U8gdbUUUUUU==
 
-On 27/02/2023 10:26:09+0800, Binbin Zhou wrote:
-> > > > > +static inline void ls2x_rtc_alarm_regs_to_time(struct ls2x_rtc_regs *regs,
-> > > > > +                                      struct rtc_time *tm)
-> > > > > +{
-> > > > > +     tm->tm_sec = FIELD_GET(TOY_MATCH_SEC, regs->reg0);
-> > > > > +     tm->tm_min = FIELD_GET(TOY_MATCH_MIN, regs->reg0);
-> > > > > +     tm->tm_hour = FIELD_GET(TOY_MATCH_HOUR, regs->reg0);
-> > > > > +     tm->tm_mday = FIELD_GET(TOY_MATCH_DAY, regs->reg0);
-> > > > > +     tm->tm_mon = FIELD_GET(TOY_MATCH_MON, regs->reg0) - 1;
-> > > > > +     /*
-> > > > > +      * The rtc SYS_TOYMATCH0/YEAR bit field is only 6 bits, so it means 63
-> > > > > +      * years at most. Therefore, The RTC alarm years can be set from 1900
-> > > > > +      * to 1963. This causes the initialization of alarm fail during call
-> > > > > +      * __rtc_read_alarm.
-> > > > > +      * We add 64 years offset to ls2x_rtc_read_alarm. After adding the
-> > > > > +      * offset, the RTC alarm clock can be set from 1964 to 2027.
-> > > > > +      */
-> > > > > +     tm->tm_year = FIELD_GET(TOY_MATCH_YEAR, regs->reg0) + 64;
-> > > >
-> > > > This is not symmetric with ls2x_rtc_time_to_alarm_regs, how can it work?
-> > >
-> > > This is to avoid an "invalid alarm value" at boot time, which of
-> > > course should not be a good solution.
-> > > When the alarm value is read at boot time, "year" is not yet set to
-> > > the proper value so the year is always set to 1900.
-> >
-> > Why isn't it set at boot time? Isn't the register persisting after a
-> > reboot?
-> > Setting a bogus alarm is not a solution.
-> >
-> 
-> Hi, Alexandre:
-> 
-> Sorry, I seem to have misled the issue.
-> This is a hardware bug, as we know from the datasheet, the year field
-> in the TOY_MATCH register has only 6 bits (bit[31:26]), so the maximum
-> value is 63. For example, 2023 can only be read here as 1959,
-> resulting in an invalid alarm.
-> The current workaround: after reading the year field in
-> ls2x_rtc_read_alarm(), manually add 64 or a multiple of 64 (equivalent
-> to completing the high bits), which also ensures that the reading and
-> writing is consistent.
+This driver provides support for clock controller on Loongson-2 SoC,
+the Loongson-2 SoC uses a 100MHz clock as the PLL reference clock,
+there are five independent PLLs inside, each of which PLL can
+provide up to three sets of frequency dependent clock outputs.
 
-My first complain was that this is not symmetric with
-ls2x_rtc_time_to_alarm_regs. If you are adding 64 when reading the
-alarm, you need to remove 64 when setting the alarm.
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+---
+Change in v12:
+		1. Change driver register way that use platform driver register.
+Change in v11:
+		1. Remove the repetitive COMMON_CLK config in loongarch Kconfig.
+		2. Fixup the help paragraph descprition in COMMON_CLK_LOONGSON2.
+		3. Drop the <linux/clkdev.h>.
+		4. Drop the cast in clock driver.
+		5. Use div_u64() replace do_div().
+		6. Inline this function for loongson2_check_clk_hws.
+		7. Fixup the comma deposition on the loongson2_check_clk_hws.
+		8. Drop the loongson2_obtain_fixed_clk_hw and rework this driver
+		   use clk_parent_data and the 'fw_name'.
+Change in v10:
+		1. Detach of_clk_init to another patch. 
+Change in v9:
+		1. Add all history changelog information.
+Change in v8:
+		1. Remove the flag "CLK_IS_BASIC".
+Change in v7:
+		1. Adjust position alphabetically in Kconfig and Makefile.
+		2. Add static for loongson2_pll_base.
+		3. Move other file-scope variables in probe.
+Change in v6:
+		1. NO change, but other patch in this series of patches has
+		   changes.
+Change in v5:
+		1. Replace loongson2 with Loongson-2 in commit info.
+		2. Replace Loongson2 with Loongson-2 in binding and
+		   Kconfig file.
+		3. Replace soc with SoC.
+Change in v4:
+		1. Fixup clock-names that replace "xxx-clk" with "xxx".
+Change in v3:
+		1. NO change, but other patch in this series of patches has
+		   changes.
+Change in v2:
+		1. Update the include filename.
+		2. Change string from refclk/REFCLK to ref/REF.
 
-Now I get that FIELD_PREP will drop the overflowing bits.
-Instead of having support for the 1964 to 2027 range, you should
-probably aim for 2000 to 2064.
+ MAINTAINERS                 |   1 +
+ drivers/clk/Kconfig         |   9 +
+ drivers/clk/Makefile        |   1 +
+ drivers/clk/clk-loongson2.c | 337 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 348 insertions(+)
+ create mode 100644 drivers/clk/clk-loongson2.c
 
-Also, this makes me realize that you are not setting the year properly,
-the datasheet I have says that the supported year goes from 00 to 99.
-This is also what you set in .probe.
-Removing 100 from tm_year when setting and adding it back when reading
-would fix all of that.
-
-> > > The LS7A and Loongson-2K datasheets also do not mention any latching
-> > > happening. Reading TOY_READ1_REG first is probably just a matter of
-> > > habit.
-> > > I tried using regmap_bulk_xxx() and it also reads and writes time
-> > > properly. In the next version I will rewrite this part of the code.
-> > >
-> > > Example:
-> > >
-> > > #define LS2X_NUM_TIME_REGS      2
-> > >
-> > > u32 rtc_data[LS2X_NUM_TIME_REGS];
-> > > struct ls2x_rtc_priv *priv = dev_get_drvdata(dev);
-> > >
-> > > ret = regmap_bulk_read(priv->regmap, TOY_READ0_REG, rtc_data,
-> > > LS2X_NUM_TIME_REGS);
-> > >
-> >
-> > Doing a bulk read doesn't guarantee the atomicity of the operation. You
-> > really must check whether a register changed while reading the other
-> > one.
-> >
-> 
-> How about protecting with mutex?
-> 
-
-No, this would fix multiple processes accessing a variable, here what
-you have are two unsynchronized hardware registers.
-
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6147c2742563..1901c3230bc0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12090,6 +12090,7 @@ LOONGSON-2 SOC SERIES CLOCK DRIVER
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	linux-clk@vger.kernel.org
+ S:	Maintained
++F:	drivers/clk/clk-loongson2.c
+ F:	include/dt-bindings/clock/loongson,ls2k-clk.h
+ 
+ LOONGSON GPIO DRIVER
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index b6c5bf69a2b2..27c5fa02916a 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -325,6 +325,15 @@ config COMMON_CLK_LOCHNAGAR
+ 	  This driver supports the clocking features of the Cirrus Logic
+ 	  Lochnagar audio development board.
+ 
++config COMMON_CLK_LOONGSON2
++	bool "Clock driver for Loongson-2 SoC"
++	depends on COMMON_CLK && OF
++	help
++          This driver provides support for clock controller on Loongson-2 SoC.
++          The clock controller can generates and supplies clock to various
++          peripherals within the SoC.
++          Say Y here to support Loongson-2 SoC clock driver.
++
+ config COMMON_CLK_NXP
+ 	def_bool COMMON_CLK && (ARCH_LPC18XX || ARCH_LPC32XX)
+ 	select REGMAP_MMIO if ARCH_LPC32XX
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index e3ca0d058a25..b298c5dabc1a 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -43,6 +43,7 @@ obj-$(CONFIG_COMMON_CLK_K210)		+= clk-k210.o
+ obj-$(CONFIG_LMK04832)			+= clk-lmk04832.o
+ obj-$(CONFIG_COMMON_CLK_LAN966X)	+= clk-lan966x.o
+ obj-$(CONFIG_COMMON_CLK_LOCHNAGAR)	+= clk-lochnagar.o
++obj-$(CONFIG_COMMON_CLK_LOONGSON2)	+= clk-loongson2.o
+ obj-$(CONFIG_COMMON_CLK_MAX77686)	+= clk-max77686.o
+ obj-$(CONFIG_COMMON_CLK_MAX9485)	+= clk-max9485.o
+ obj-$(CONFIG_ARCH_MILBEAUT_M10V)	+= clk-milbeaut.o
+diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
+new file mode 100644
+index 000000000000..e0f269994327
+--- /dev/null
++++ b/drivers/clk/clk-loongson2.c
+@@ -0,0 +1,337 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Author: Yinbo Zhu <zhuyinbo@loongson.cn>
++ * Copyright (C) 2022-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/clk-provider.h>
++#include <linux/slab.h>
++#include <linux/clk.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <dt-bindings/clock/loongson,ls2k-clk.h>
++
++#define LOONGSON2_PLL_MULT_SHIFT		32
++#define LOONGSON2_PLL_MULT_WIDTH		10
++#define LOONGSON2_PLL_DIV_SHIFT			26
++#define LOONGSON2_PLL_DIV_WIDTH			6
++#define LOONGSON2_APB_FREQSCALE_SHIFT		20
++#define LOONGSON2_APB_FREQSCALE_WIDTH		3
++#define LOONGSON2_USB_FREQSCALE_SHIFT		16
++#define LOONGSON2_USB_FREQSCALE_WIDTH		3
++#define LOONGSON2_SATA_FREQSCALE_SHIFT		12
++#define LOONGSON2_SATA_FREQSCALE_WIDTH		3
++
++static void __iomem *loongson2_pll_base;
++
++static const struct clk_parent_data pdata[] = {
++	{ .fw_name = "ref_100m", .name = "ref_clk", },
++};
++
++static struct clk_hw *loongson2_clk_register(struct device_node *np,
++					  const char *name,
++					  const char *parent_name,
++					  const struct clk_ops *ops,
++					  unsigned long flags)
++{
++	int ret;
++	struct clk_hw *hw;
++	struct clk_init_data init;
++
++	/* allocate the divider */
++	hw = kzalloc(sizeof(*hw), GFP_KERNEL);
++	if (!hw)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = ops;
++	init.flags = flags;
++	init.num_parents = 1;
++
++	if (!parent_name)
++		init.parent_data = pdata;
++	else
++		init.parent_names = &parent_name;
++
++	hw->init = &init;
++
++	/* register the clock */
++	ret = of_clk_hw_register(np, hw);
++	if (ret) {
++		kfree(hw);
++		hw = ERR_PTR(ret);
++	}
++
++	return hw;
++}
++
++static unsigned long loongson2_calc_pll_rate(int offset, unsigned long rate)
++{
++	u64 val;
++	u32 mult = 1, div = 1;
++
++	val = readq(loongson2_pll_base + offset);
++
++	mult = (val >> LOONGSON2_PLL_MULT_SHIFT) &
++			clk_div_mask(LOONGSON2_PLL_MULT_WIDTH);
++	div = (val >> LOONGSON2_PLL_DIV_SHIFT) &
++			clk_div_mask(LOONGSON2_PLL_DIV_WIDTH);
++
++	return div_u64((u64)rate * mult, div);
++}
++
++static unsigned long loongson2_node_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
++{
++	return loongson2_calc_pll_rate(0x0, parent_rate);
++}
++
++static const struct clk_ops loongson2_node_clk_ops = {
++	.recalc_rate = loongson2_node_recalc_rate,
++};
++
++static unsigned long loongson2_ddr_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
++{
++	return loongson2_calc_pll_rate(0x10, parent_rate);
++}
++
++static const struct clk_ops loongson2_ddr_clk_ops = {
++	.recalc_rate = loongson2_ddr_recalc_rate,
++};
++
++static unsigned long loongson2_dc_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
++{
++	return loongson2_calc_pll_rate(0x20, parent_rate);
++}
++
++static const struct clk_ops loongson2_dc_clk_ops = {
++	.recalc_rate = loongson2_dc_recalc_rate,
++};
++
++static unsigned long loongson2_pix0_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
++{
++	return loongson2_calc_pll_rate(0x30, parent_rate);
++}
++
++static const struct clk_ops loongson2_pix0_clk_ops = {
++	.recalc_rate = loongson2_pix0_recalc_rate,
++};
++
++static unsigned long loongson2_pix1_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
++{
++	return loongson2_calc_pll_rate(0x40, parent_rate);
++}
++
++static const struct clk_ops loongson2_pix1_clk_ops = {
++	.recalc_rate = loongson2_pix1_recalc_rate,
++};
++
++static unsigned long loongson2_calc_rate(unsigned long rate,
++					 int shift, int width)
++{
++	u64 val;
++	u32 mult;
++
++	val = readq(loongson2_pll_base + 0x50);
++
++	mult = (val >> shift) & clk_div_mask(width);
++
++	return div_u64((u64)rate * (mult + 1), 8);
++}
++
++static unsigned long loongson2_apb_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
++{
++	return loongson2_calc_rate(parent_rate,
++				   LOONGSON2_APB_FREQSCALE_SHIFT,
++				   LOONGSON2_APB_FREQSCALE_WIDTH);
++}
++
++static const struct clk_ops loongson2_apb_clk_ops = {
++	.recalc_rate = loongson2_apb_recalc_rate,
++};
++
++static unsigned long loongson2_usb_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
++{
++	return loongson2_calc_rate(parent_rate,
++				   LOONGSON2_USB_FREQSCALE_SHIFT,
++				   LOONGSON2_USB_FREQSCALE_WIDTH);
++}
++
++static const struct clk_ops loongson2_usb_clk_ops = {
++	.recalc_rate = loongson2_usb_recalc_rate,
++};
++
++static unsigned long loongson2_sata_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
++{
++	return loongson2_calc_rate(parent_rate,
++				   LOONGSON2_SATA_FREQSCALE_SHIFT,
++				   LOONGSON2_SATA_FREQSCALE_WIDTH);
++}
++
++static const struct clk_ops loongson2_sata_clk_ops = {
++	.recalc_rate = loongson2_sata_recalc_rate,
++};
++
++static inline void loongson2_check_clk_hws(struct clk_hw *clks[], unsigned int count)
++{
++	unsigned int i;
++
++	for (i = 0; i < count; i++)
++		if (IS_ERR(clks[i]))
++			pr_err("Loongson2 clk %u: register failed with %ld\n",
++				i, PTR_ERR(clks[i]));
++}
++
++static void loongson2_clocks_init(struct device_node *np)
++{
++	struct clk_hw **hws;
++	struct clk_hw_onecell_data *clk_hw_data;
++	spinlock_t loongson2_clk_lock;
++
++	loongson2_pll_base = of_iomap(np, 0);
++
++	if (!loongson2_pll_base) {
++		pr_err("clk: unable to map loongson2 clk registers\n");
++		return;
++	}
++
++	clk_hw_data = kzalloc(struct_size(clk_hw_data, hws, LOONGSON2_CLK_END),
++					GFP_KERNEL);
++	if (WARN_ON(!clk_hw_data))
++		goto err;
++
++	clk_hw_data->num = LOONGSON2_CLK_END;
++	hws = clk_hw_data->hws;
++
++	hws[LOONGSON2_NODE_PLL] = loongson2_clk_register(np, "node_pll",
++						NULL,
++						&loongson2_node_clk_ops, 0);
++
++	hws[LOONGSON2_DDR_PLL] = loongson2_clk_register(np, "ddr_pll",
++						NULL,
++						&loongson2_ddr_clk_ops, 0);
++
++	hws[LOONGSON2_DC_PLL] = loongson2_clk_register(np, "dc_pll",
++						NULL,
++						&loongson2_dc_clk_ops, 0);
++
++	hws[LOONGSON2_PIX0_PLL] = loongson2_clk_register(np, "pix0_pll",
++						NULL,
++						&loongson2_pix0_clk_ops, 0);
++
++	hws[LOONGSON2_PIX1_PLL] = loongson2_clk_register(np, "pix1_pll",
++						NULL,
++						&loongson2_pix1_clk_ops, 0);
++
++	hws[LOONGSON2_NODE_CLK] = clk_hw_register_divider(NULL, "node",
++						"node_pll", 0,
++						loongson2_pll_base + 0x8, 0,
++						6, CLK_DIVIDER_ONE_BASED,
++						&loongson2_clk_lock);
++
++	/*
++	 * The hda clk divisor in the upper 32bits and the clk-prodiver
++	 * layer code doesn't support 64bit io operation thus a conversion
++	 * is required that subtract shift by 32 and add 4byte to the hda
++	 * address
++	 */
++	hws[LOONGSON2_HDA_CLK] = clk_hw_register_divider(NULL, "hda",
++						"ddr_pll", 0,
++						loongson2_pll_base + 0x22, 12,
++						7, CLK_DIVIDER_ONE_BASED,
++						&loongson2_clk_lock);
++
++	hws[LOONGSON2_GPU_CLK] = clk_hw_register_divider(NULL, "gpu",
++						"ddr_pll", 0,
++						loongson2_pll_base + 0x18, 22,
++						6, CLK_DIVIDER_ONE_BASED,
++						&loongson2_clk_lock);
++
++	hws[LOONGSON2_DDR_CLK] = clk_hw_register_divider(NULL, "ddr",
++						"ddr_pll", 0,
++						loongson2_pll_base + 0x18, 0,
++						6, CLK_DIVIDER_ONE_BASED,
++						&loongson2_clk_lock);
++
++	hws[LOONGSON2_GMAC_CLK] = clk_hw_register_divider(NULL, "gmac",
++						"dc_pll", 0,
++						loongson2_pll_base + 0x28, 22,
++						6, CLK_DIVIDER_ONE_BASED,
++						&loongson2_clk_lock);
++
++	hws[LOONGSON2_DC_CLK] = clk_hw_register_divider(NULL, "dc",
++						"dc_pll", 0,
++						loongson2_pll_base + 0x28, 0,
++						6, CLK_DIVIDER_ONE_BASED,
++						&loongson2_clk_lock);
++
++	hws[LOONGSON2_APB_CLK] = loongson2_clk_register(NULL, "apb",
++						"gmac",
++						&loongson2_apb_clk_ops, 0);
++
++	hws[LOONGSON2_USB_CLK] = loongson2_clk_register(NULL, "usb",
++						"gmac",
++						&loongson2_usb_clk_ops, 0);
++
++	hws[LOONGSON2_SATA_CLK] = loongson2_clk_register(NULL, "sata",
++						"gmac",
++						&loongson2_sata_clk_ops, 0);
++
++	hws[LOONGSON2_PIX0_CLK] = clk_hw_register_divider(NULL, "pix0",
++						"pix0_pll", 0,
++						loongson2_pll_base + 0x38, 0, 6,
++						CLK_DIVIDER_ONE_BASED,
++						&loongson2_clk_lock);
++
++	hws[LOONGSON2_PIX1_CLK] = clk_hw_register_divider(NULL, "pix1",
++						"pix1_pll", 0,
++						loongson2_pll_base + 0x48, 0, 6,
++						CLK_DIVIDER_ONE_BASED,
++						&loongson2_clk_lock);
++
++	loongson2_check_clk_hws(hws, LOONGSON2_CLK_END);
++
++	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_hw_data);
++
++err:
++	iounmap(loongson2_pll_base);
++}
++
++static const struct of_device_id loongson2_clk_match_table[] = {
++	{ .compatible = "loongson,ls2k-clk" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, loongson2_clk_match_table);
++
++static int loongson2_clk_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++
++	loongson2_clocks_init(np);
++
++	return 0;
++}
++
++static struct platform_driver loongson2_clk_driver = {
++	.probe	= loongson2_clk_probe,
++	.driver	= {
++		.name	= "loongson2-clk",
++		.of_match_table	= loongson2_clk_match_table,
++	},
++};
++module_platform_driver(loongson2_clk_driver);
++
++MODULE_DESCRIPTION("Loongson2 clock driver");
++MODULE_LICENSE("GPL");
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.31.1
+
