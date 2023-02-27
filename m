@@ -1,32 +1,32 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C86AA57
-	for <loongarch@lists.linux.dev>; Mon, 27 Feb 2023 09:58:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17BE808
+	for <loongarch@lists.linux.dev>; Mon, 27 Feb 2023 09:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677491904; x=1709027904;
+  t=1677491955; x=1709027955;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=WLpJB0qI2/zRDKGnG+kitqzMLkyJLUqz1gpLf8+y3Pw=;
-  b=PlC9UhwO3iZ+X+U+rY+V2CiZkJb5c8ZAh9BGeJngS91fgKHio3qK64hy
-   vm1eQW3+NBVGrBTAWim3S83tiGrG1QukRqNn3jKSUJbf3cegAI8CpJC5q
-   jH9DQxLYjHVkGHxjZEKXmThkj7h0tCWHcGo0fRBaimX0ykwmicxxi4LB7
-   ShmbWdBx1uySvWfrRYKMaMUOKqwxecYIHArIoeJ6//GB0oLKPhursMExL
-   RSjm1AF9PWcU7nZ/h7TXUceqSJs7KRwY+/sv5ryafWDit33kd5/QgHO9U
-   xAwhCCmr66W1S/v/XdyviJRQ40JNT9FVm944YucpynEBI4/Q2LcDZamWt
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10633"; a="361380472"
+  bh=jR91B98qom+5gzYhQGkhIgN06B7vIdWxDnI3INGZGCs=;
+  b=WF6UhWcbFp2kL/1V64Rb28KCRs+oJYzcK0djftIcjNihXFPNiV8lDhQg
+   HkNOv2+u/sb3ZxEB6iVlmuGnAv8Uiq8Z9PKzdse6XmvzjzCKZaKW8qSk3
+   CYgCpQ3Hbj7hZb2jZ2sY/sPE0vtnp+gwbmEEgoAGUS26Vra23DHn057CN
+   HCCAishFZs4odYeECe6z9njObmULQCrlV7u4zok3izcjJYpUqoretOTcn
+   x/GLyQI5n0yDJ5KxX1vTiE2lSVBQ1iICwopTEFLl9/gyCPyBEKj1CLvua
+   L5GweQ88vBphOLwVPVzF/UlBuq+FF2D4da/s3X3I2QxkNUn02dYulPIwK
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10633"; a="335304388"
 X-IronPort-AV: E=Sophos;i="5.97,331,1669104000"; 
-   d="scan'208";a="361380472"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2023 01:58:23 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10633"; a="847757997"
+   d="scan'208";a="335304388"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2023 01:59:15 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10633"; a="737604557"
 X-IronPort-AV: E=Sophos;i="5.97,331,1669104000"; 
-   d="scan'208";a="847757997"
+   d="scan'208";a="737604557"
 Received: from jrissane-mobl2.ger.corp.intel.com (HELO intel.com) ([10.249.41.42])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2023 01:58:16 -0800
-Date: Mon, 27 Feb 2023 10:58:13 +0100
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2023 01:59:08 -0800
+Date: Mon, 27 Feb 2023 10:59:04 +0100
 From: Andi Shyti <andi.shyti@linux.intel.com>
 To: Andrzej Hajda <andrzej.hajda@intel.com>
 Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -45,12 +45,11 @@ Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Rodrigo Vivi <rodrigo.vivi@intel.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [Intel-gfx] [PATCH v5 7/7] drm/i915/gt: use __xchg instead of
- internal helper
-Message-ID: <Y/x+tckkW3BbHBYa@ashyti-mobl2.lan>
+Subject: Re: [Intel-gfx] [PATCH v5 5/7] io_uring: use __xchg if possible
+Message-ID: <Y/x+6KutaJKGv+Zz@ashyti-mobl2.lan>
 References: <20230118153529.57695-1-andrzej.hajda@intel.com>
  <20230118154450.73842-1-andrzej.hajda@intel.com>
- <20230118154450.73842-7-andrzej.hajda@intel.com>
+ <20230118154450.73842-5-andrzej.hajda@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -59,12 +58,12 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230118154450.73842-7-andrzej.hajda@intel.com>
+In-Reply-To: <20230118154450.73842-5-andrzej.hajda@intel.com>
 
 Hi Andrzej,
 
-On Wed, Jan 18, 2023 at 04:44:50PM +0100, Andrzej Hajda wrote:
-> Prefer core helper if available.
+On Wed, Jan 18, 2023 at 04:44:48PM +0100, Andrzej Hajda wrote:
+> Recently introduced helper simplifies the code.
 > 
 > Signed-off-by: Andrzej Hajda <andrzej.hajda@intel.com>
 
