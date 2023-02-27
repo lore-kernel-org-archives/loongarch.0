@@ -1,123 +1,125 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E861F79E0
-	for <loongarch@lists.linux.dev>; Mon, 27 Feb 2023 17:57:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=fxYZM+dA5j6swMF6gw/nu6/QS6N0if0H8qzTGtI3Nx4=; b=b1Oo1BaN8LP9ha/JnRRL5DsJ/V
-	EoOvGgwr+jghsnF8bDZmTkXQLjBfuksYjYMyLBXvW/1odjPJlIm3s4dgF9og2c/I7g1bC+56ijwba
-	j7Ta1l/0uPm4WPgpcHC8zMM32aZDUTBtelP6RMHAg4ibMytgguA9LwUh4YsU1mlG7BaHbEm2OcHPy
-	Tl5mglk3oQIHBJxKysycjLijuvERqc9MndGUyA7hGduAhswYpEtS2qbzIYt27c3Q6/Eep2B23yb08
-	3Gfp5dOlhZxtrrGtnzcENqXnoJYdpS16nFWRBi/hBpg3UPW5TyJkSI+KkSI+Uuz3XlSPWHa9OI7uf
-	lu5QnORw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pWhku-000IXP-G1; Mon, 27 Feb 2023 17:57:44 +0000
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: linux-mm@kvack.org,
-	linux-arch@vger.kernel.org
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev
-Subject: [PATCH v2 11/30] loongarch: Implement the new page table range API
-Date: Mon, 27 Feb 2023 17:57:22 +0000
-Message-Id: <20230227175741.71216-12-willy@infradead.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20230227175741.71216-1-willy@infradead.org>
-References: <20230227175741.71216-1-willy@infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFF979EF
+	for <loongarch@lists.linux.dev>; Mon, 27 Feb 2023 19:46:48 +0000 (UTC)
+Received: by mail-qt1-f174.google.com with SMTP id s12so7972382qtq.11
+        for <loongarch@lists.linux.dev>; Mon, 27 Feb 2023 11:46:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zgbfP6t1iEXlYeQDHgpgkGKrmlu/wPbkfmiZJDZsq5c=;
+        b=CuDTGVyS/TeSP2rxTGjDXSIQ02tvZFOJOD4mxr6lOw4FxhqXg/hODAMUnGzbSrMCrC
+         bASdwGz16M4a9h2a+0dxlwVWasjquoMlmatwbCeX6Q81wc2HaYny+wPgQrKuRzIj+Ni1
+         ILoX6Sm7oohZ+YiR6Qi6rssz7ns5jmtNEfgk5/yaWExtBEBYjQOfCsu44L/gsHaWnJSY
+         4JKPhwOR2XbHA3mHEJIGWUJx1MenN317TvVgldlqb6HwCiAS+fZKF6AnT2VxQysKG5N3
+         Q0Cx43DeOLAtktMFbkF0KHzJyoro9DMjwm+F8oQ8S5Nc2dlztCxN3nEDKcL/9VUB7oH4
+         JLIA==
+X-Gm-Message-State: AO0yUKVFJLXGIft/s+Ebg4ZR73dRveGetLQGM660Zq8jqkaGBAdKzycx
+	fjRQ5DkCSB/q0x9eGdz9L25IqNL3Khz35w==
+X-Google-Smtp-Source: AK7set+pcj4fk4l0vlToUeQCBKs+4YAzbmD9Jod4TWkKE5jgyYhfBLYY3Jidlr6mFq3+hIj2WMjbqw==
+X-Received: by 2002:ac8:5bcc:0:b0:3b8:4adb:c604 with SMTP id b12-20020ac85bcc000000b003b84adbc604mr881931qtb.14.1677527206921;
+        Mon, 27 Feb 2023 11:46:46 -0800 (PST)
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
+        by smtp.gmail.com with ESMTPSA id z15-20020ac8454f000000b003b848759ed8sm5164432qtn.47.2023.02.27.11.46.45
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Feb 2023 11:46:45 -0800 (PST)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5384ff97993so207994007b3.2
+        for <loongarch@lists.linux.dev>; Mon, 27 Feb 2023 11:46:45 -0800 (PST)
+X-Received: by 2002:a5b:d4e:0:b0:967:f8b2:7a42 with SMTP id
+ f14-20020a5b0d4e000000b00967f8b27a42mr7816406ybr.7.1677527205039; Mon, 27 Feb
+ 2023 11:46:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230113171026.582290-1-david@redhat.com> <20230113171026.582290-12-david@redhat.com>
+ <CAMuHMdX-FDga8w=pgg1myskEx6wp+oyZifhPPPFnWrc1zW7ZpQ@mail.gmail.com>
+ <9ed766a6-cf06-535d-3337-ea6ff25c2362@redhat.com> <CAMuHMdWSaoKqO1Nx7QMDCcXrRmFbqqX8uwDRezXs8g+HdEFjKA@mail.gmail.com>
+ <c145a2db-f92c-65aa-3e68-07dbb2e097a6@redhat.com>
+In-Reply-To: <c145a2db-f92c-65aa-3e68-07dbb2e097a6@redhat.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 27 Feb 2023 20:46:31 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdX7MND++KXgTpx4jscfctQA_-zPt3EN9-+79EWE7e+OjA@mail.gmail.com>
+Message-ID: <CAMuHMdX7MND++KXgTpx4jscfctQA_-zPt3EN9-+79EWE7e+OjA@mail.gmail.com>
+Subject: Re: [PATCH mm-unstable v1 11/26] microblaze/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Hugh Dickins <hughd@google.com>, John Hubbard <jhubbard@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Mike Rapoport <rppt@linux.ibm.com>, Yang Shi <shy828301@gmail.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Nadav Amit <namit@vmware.com>, 
+	Andrea Arcangeli <aarcange@redhat.com>, Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, 
+	x86@kernel.org, linux-alpha@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
+	linux-xtensa@linux-xtensa.org, Michal Simek <monstr@monstr.eu>
+Content-Type: text/plain; charset="UTF-8"
 
-Add set_ptes() and update_mmu_cache_range().  It would probably be
-more efficient to implement __update_tlb() by flushing the entire
-folio instead of calling it __update_tlb() N times, but I'll leave
-that for someone who understands the architecture better.
+Hi David,
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev
----
- arch/loongarch/include/asm/cacheflush.h |  2 ++
- arch/loongarch/include/asm/pgtable.h    | 30 +++++++++++++++++++------
- 2 files changed, 25 insertions(+), 7 deletions(-)
+On Mon, Feb 27, 2023 at 6:01 PM David Hildenbrand <david@redhat.com> wrote:
+> >>>>    /*
+> >>>>     * Externally used page protection values.
+> >>>> diff --git a/arch/microblaze/include/asm/pgtable.h b/arch/microblaze/include/asm/pgtable.h
+> >>>> index 42f5988e998b..7e3de54bf426 100644
+> >>>> --- a/arch/microblaze/include/asm/pgtable.h
+> >>>> +++ b/arch/microblaze/include/asm/pgtable.h
 
-diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
-index 0681788eb474..7907eb42bfbd 100644
---- a/arch/loongarch/include/asm/cacheflush.h
-+++ b/arch/loongarch/include/asm/cacheflush.h
-@@ -47,8 +47,10 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
- #define flush_cache_vmap(start, end)			do { } while (0)
- #define flush_cache_vunmap(start, end)			do { } while (0)
- #define flush_icache_page(vma, page)			do { } while (0)
-+#define flush_icache_pages(vma, page)			do { } while (0)
- #define flush_icache_user_page(vma, page, addr, len)	do { } while (0)
- #define flush_dcache_page(page)				do { } while (0)
-+#define flush_dcache_folio(folio)			do { } while (0)
- #define flush_dcache_mmap_lock(mapping)			do { } while (0)
- #define flush_dcache_mmap_unlock(mapping)		do { } while (0)
- 
-diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-index d28fb9dbec59..9154d317ffb4 100644
---- a/arch/loongarch/include/asm/pgtable.h
-+++ b/arch/loongarch/include/asm/pgtable.h
-@@ -334,12 +334,20 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
- 	}
- }
- 
--static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
--			      pte_t *ptep, pte_t pteval)
--{
--	set_pte(ptep, pteval);
-+static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
-+		pte_t *ptep, pte_t pte, unsigned int nr)
-+{
-+	for (;;) {
-+		set_pte(ptep, pte);
-+		if (--nr == 0)
-+			break;
-+		ptep++;
-+		pte_val(pte) += 1 << _PFN_SHIFT;
-+	}
- }
- 
-+#define set_pte_at(mm, addr, ptep, pte) set_ptes(mm, addr, ptep, pte, 1)
-+
- static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
- {
- 	/* Preserve global status for the pair */
-@@ -445,11 +453,19 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- extern void __update_tlb(struct vm_area_struct *vma,
- 			unsigned long address, pte_t *ptep);
- 
--static inline void update_mmu_cache(struct vm_area_struct *vma,
--			unsigned long address, pte_t *ptep)
-+static inline void update_mmu_cache_range(struct vm_area_struct *vma,
-+		unsigned long address, pte_t *ptep, unsigned int nr)
- {
--	__update_tlb(vma, address, ptep);
-+	for (;;) {
-+		__update_tlb(vma, address, ptep);
-+		if (--nr == 0)
-+			break;
-+		address += PAGE_SIZE;
-+		ptep++;
-+	}
- }
-+#define update_mmu_cache(vma, addr, ptep) \
-+	update_mmu_cache_range(vma, addr, ptep, 1)
- 
- #define __HAVE_ARCH_UPDATE_MMU_TLB
- #define update_mmu_tlb	update_mmu_cache
+> >>>>     * - All other bits of the PTE are loaded into TLBLO without
+> >>>>     *  * modification, leaving us only the bits 20, 21, 24, 25, 26, 30 for
+> >>>>     * software PTE bits.  We actually use bits 21, 24, 25, and
+> >>>> @@ -155,6 +155,9 @@ extern pte_t *va_to_pte(unsigned long address);
+> >>>>    #define _PAGE_ACCESSED 0x400   /* software: R: page referenced */
+> >>>>    #define _PMD_PRESENT   PAGE_MASK
+> >>>>
+> >>>> +/* We borrow bit 24 to store the exclusive marker in swap PTEs. */
+> >>>> +#define _PAGE_SWP_EXCLUSIVE    _PAGE_DIRTY
+> >>>
+> >>> _PAGE_DIRTY is 0x80, so this is also bit 7, thus the new comment is
+> >>> wrong?
+> >>
+> >> In the example, I use MSB-0 bit numbering (which I determined to be
+> >> correct in microblaze context eventually, but I got confused a couple a
+> >> times because it's very inconsistent). That should be MSB-0 bit 24.
+> >
+> > Thanks, TIL microblaze uses IBM bit numbering...
+>
+> I assume IBM bit numbering corresponds to MSB-0 bit numbering, correct?
+
+Correct, as seen in s370 and PowerPC manuals...
+
+> I recall that I used the comment above "/* Definitions for MicroBlaze.
+> */" as an orientation.
+>
+> 0  1  2  3  4  ... 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+> RPN.....................  0  0 EX WR ZSEL.......  W  I  M  G
+
+Indeed, that's where I noticed the "unconventional" numbering...
+
+> So ... either we adjust both or we leave it as is. (again, depends on
+> what the right thing to to is -- which I don't know :) )
+
+It depends whether you want to match the hardware documentation,
+or the Linux BIT() macro and friends...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.39.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
