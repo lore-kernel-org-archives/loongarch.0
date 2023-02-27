@@ -1,163 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78992F3A
-	for <loongarch@lists.linux.dev>; Mon, 27 Feb 2023 17:01:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1677517268;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S+gj+IVlpRNML/WhRdwS5WpJ1kIzGGA+IXuZi3TvglQ=;
-	b=CO4vPT8FEr4c5KILOPehuo2ednd1QqMLMz+KC6WxAJUOlW582XOEgefdRmKwS8w+w6HIs3
-	z46sxuR0DTYKHs0z2CtYKplOuH8JSayebvxyG1zzHfgYUUcVC4ReKbuluc8geqj8QvfFmn
-	N+qHIDhVM7mb/TXAqAxQyzUDXVuMkKA=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-259-SnlTCdmOPB2z4J_miDJPTw-1; Mon, 27 Feb 2023 12:01:04 -0500
-X-MC-Unique: SnlTCdmOPB2z4J_miDJPTw-1
-Received: by mail-wm1-f72.google.com with SMTP id c7-20020a7bc847000000b003e00be23a70so5616055wml.2
-        for <loongarch@lists.linux.dev>; Mon, 27 Feb 2023 09:01:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S+gj+IVlpRNML/WhRdwS5WpJ1kIzGGA+IXuZi3TvglQ=;
-        b=Mv1E7Wjx9kCdmgDCiDZrg21WdTN357qRXaaGkNAL4hGP60O4+IG/EKa3q1Q6B9IUhf
-         PEZUqL6yYFjoZR5QE0bD9uShOzSEwsisjlIY/Lq08l//JMLpnfQED1gkbj9cb1OV2DO+
-         JcB2T2/XldKpsu1yvq3ismHVP2uvUZIUfuTlpUNjeooWMpU6hcawuRlxq5jbaqhUewrt
-         fxPgjszkWaV1WTAn20DxqN21qEqq4jTufrMlhsYx1sPF4+1Y8qm436ymnHfXuLoQ3LwA
-         Psh1A5O7HU2YIs5/Rm/tOHF87X5btY5hjbkA//B8frZgyc4V0dWofvd8bpjTdeth+d14
-         KzIQ==
-X-Gm-Message-State: AO0yUKVK6QWhCYUBT85H1XNPf4Ojm7Nmg6egQCGKMSEVMjsqpAr3GVui
-	Hnyey69fCurDD9qhjqOvjfEAVAXrnssV0d/9caj6fMaw+X8mNeQ/XGBvDbMLePgRiYoGMZr3Eau
-	QkNzqIG3B2IuqzJ3S1pnW
-X-Received: by 2002:a5d:570e:0:b0:2bf:d940:29b6 with SMTP id a14-20020a5d570e000000b002bfd94029b6mr22317872wrv.54.1677517263062;
-        Mon, 27 Feb 2023 09:01:03 -0800 (PST)
-X-Google-Smtp-Source: AK7set/UUjV2lk6TzBDGO2RyIGoSkW6MncSJyiWPHsxHHIhpKbsx37PxyO7HkStEnBG5FTknvHrGmg==
-X-Received: by 2002:a5d:570e:0:b0:2bf:d940:29b6 with SMTP id a14-20020a5d570e000000b002bfd94029b6mr22317842wrv.54.1677517262720;
-        Mon, 27 Feb 2023 09:01:02 -0800 (PST)
-Received: from [192.168.3.108] (p5b0c68fb.dip0.t-ipconnect.de. [91.12.104.251])
-        by smtp.gmail.com with ESMTPSA id l4-20020a05600c1d0400b003db0ad636d1sm15217382wms.28.2023.02.27.09.01.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Feb 2023 09:01:02 -0800 (PST)
-Message-ID: <c145a2db-f92c-65aa-3e68-07dbb2e097a6@redhat.com>
-Date: Mon, 27 Feb 2023 18:01:00 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E861F79E0
+	for <loongarch@lists.linux.dev>; Mon, 27 Feb 2023 17:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=fxYZM+dA5j6swMF6gw/nu6/QS6N0if0H8qzTGtI3Nx4=; b=b1Oo1BaN8LP9ha/JnRRL5DsJ/V
+	EoOvGgwr+jghsnF8bDZmTkXQLjBfuksYjYMyLBXvW/1odjPJlIm3s4dgF9og2c/I7g1bC+56ijwba
+	j7Ta1l/0uPm4WPgpcHC8zMM32aZDUTBtelP6RMHAg4ibMytgguA9LwUh4YsU1mlG7BaHbEm2OcHPy
+	Tl5mglk3oQIHBJxKysycjLijuvERqc9MndGUyA7hGduAhswYpEtS2qbzIYt27c3Q6/Eep2B23yb08
+	3Gfp5dOlhZxtrrGtnzcENqXnoJYdpS16nFWRBi/hBpg3UPW5TyJkSI+KkSI+Uuz3XlSPWHa9OI7uf
+	lu5QnORw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1pWhku-000IXP-G1; Mon, 27 Feb 2023 17:57:44 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: linux-mm@kvack.org,
+	linux-arch@vger.kernel.org
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev
+Subject: [PATCH v2 11/30] loongarch: Implement the new page table range API
+Date: Mon, 27 Feb 2023 17:57:22 +0000
+Message-Id: <20230227175741.71216-12-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20230227175741.71216-1-willy@infradead.org>
+References: <20230227175741.71216-1-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH mm-unstable v1 11/26] microblaze/mm: support
- __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Hugh Dickins <hughd@google.com>, John Hubbard <jhubbard@nvidia.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@linux.ibm.com>,
- Yang Shi <shy828301@gmail.com>, Vlastimil Babka <vbabka@suse.cz>,
- Nadav Amit <namit@vmware.com>, Andrea Arcangeli <aarcange@redhat.com>,
- Peter Xu <peterx@redhat.com>, linux-mm@kvack.org, x86@kernel.org,
- linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
- Michal Simek <monstr@monstr.eu>
-References: <20230113171026.582290-1-david@redhat.com>
- <20230113171026.582290-12-david@redhat.com>
- <CAMuHMdX-FDga8w=pgg1myskEx6wp+oyZifhPPPFnWrc1zW7ZpQ@mail.gmail.com>
- <9ed766a6-cf06-535d-3337-ea6ff25c2362@redhat.com>
- <CAMuHMdWSaoKqO1Nx7QMDCcXrRmFbqqX8uwDRezXs8g+HdEFjKA@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <CAMuHMdWSaoKqO1Nx7QMDCcXrRmFbqqX8uwDRezXs8g+HdEFjKA@mail.gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
->>>>    /*
->>>>     * Externally used page protection values.
->>>> diff --git a/arch/microblaze/include/asm/pgtable.h b/arch/microblaze/include/asm/pgtable.h
->>>> index 42f5988e998b..7e3de54bf426 100644
->>>> --- a/arch/microblaze/include/asm/pgtable.h
->>>> +++ b/arch/microblaze/include/asm/pgtable.h
->>>> @@ -131,10 +131,10 @@ extern pte_t *va_to_pte(unsigned long address);
->>>>     * of the 16 available.  Bit 24-26 of the TLB are cleared in the TLB
->>>>     * miss handler.  Bit 27 is PAGE_USER, thus selecting the correct
->>>>     * zone.
->>>> - * - PRESENT *must* be in the bottom two bits because swap cache
->>>> - * entries use the top 30 bits.  Because 4xx doesn't support SMP
->>>> - * anyway, M is irrelevant so we borrow it for PAGE_PRESENT.  Bit 30
->>>> - * is cleared in the TLB miss handler before the TLB entry is loaded.
->>>> + * - PRESENT *must* be in the bottom two bits because swap PTEs use the top
->>>> + * 30 bits.  Because 4xx doesn't support SMP anyway, M is irrelevant so we
->>>> + * borrow it for PAGE_PRESENT.  Bit 30 is cleared in the TLB miss handler
->>>> + * before the TLB entry is loaded.
->>>
->>> So the PowerPC 4xx comment is still here?
->>
->> I only dropped the comment above __swp_type(). I guess you mean that we
->> could also drop the "Because 4xx doesn't support SMP anyway, M is
->> irrelevant so we borrow it for PAGE_PRESENT." sentence, correct? Not
-> 
-> Yes, that's what I meant.
-> 
->> sure about the "Bit 30 is cleared in the TLB miss handler" comment, if
->> that can similarly be dropped.
-> 
-> No idea, didn't check. But if it was copied from PPC, chances are
-> high it's no longer true....
+Add set_ptes() and update_mmu_cache_range().  It would probably be
+more efficient to implement __update_tlb() by flushing the entire
+folio instead of calling it __update_tlb() N times, but I'll leave
+that for someone who understands the architecture better.
 
-I'll have a look.
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
+---
+ arch/loongarch/include/asm/cacheflush.h |  2 ++
+ arch/loongarch/include/asm/pgtable.h    | 30 +++++++++++++++++++------
+ 2 files changed, 25 insertions(+), 7 deletions(-)
 
-> 
->>>>     * - All other bits of the PTE are loaded into TLBLO without
->>>>     *  * modification, leaving us only the bits 20, 21, 24, 25, 26, 30 for
->>>>     * software PTE bits.  We actually use bits 21, 24, 25, and
->>>> @@ -155,6 +155,9 @@ extern pte_t *va_to_pte(unsigned long address);
->>>>    #define _PAGE_ACCESSED 0x400   /* software: R: page referenced */
->>>>    #define _PMD_PRESENT   PAGE_MASK
->>>>
->>>> +/* We borrow bit 24 to store the exclusive marker in swap PTEs. */
->>>> +#define _PAGE_SWP_EXCLUSIVE    _PAGE_DIRTY
->>>
->>> _PAGE_DIRTY is 0x80, so this is also bit 7, thus the new comment is
->>> wrong?
->>
->> In the example, I use MSB-0 bit numbering (which I determined to be
->> correct in microblaze context eventually, but I got confused a couple a
->> times because it's very inconsistent). That should be MSB-0 bit 24.
-> 
-> Thanks, TIL microblaze uses IBM bit numbering...
-
-I assume IBM bit numbering corresponds to MSB-0 bit numbering, correct?
-
-
-I recall that I used the comment above "/* Definitions for MicroBlaze. 
-*/" as an orientation.
-
-0  1  2  3  4  ... 18 19 20 21 22 23 24 25 26 27 28 29 30 31
-RPN.....................  0  0 EX WR ZSEL.......  W  I  M  G
-
-
-So ... either we adjust both or we leave it as is. (again, depends on 
-what the right thing to to is -- which I don't know :) )
-
+diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
+index 0681788eb474..7907eb42bfbd 100644
+--- a/arch/loongarch/include/asm/cacheflush.h
++++ b/arch/loongarch/include/asm/cacheflush.h
+@@ -47,8 +47,10 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
+ #define flush_cache_vmap(start, end)			do { } while (0)
+ #define flush_cache_vunmap(start, end)			do { } while (0)
+ #define flush_icache_page(vma, page)			do { } while (0)
++#define flush_icache_pages(vma, page)			do { } while (0)
+ #define flush_icache_user_page(vma, page, addr, len)	do { } while (0)
+ #define flush_dcache_page(page)				do { } while (0)
++#define flush_dcache_folio(folio)			do { } while (0)
+ #define flush_dcache_mmap_lock(mapping)			do { } while (0)
+ #define flush_dcache_mmap_unlock(mapping)		do { } while (0)
+ 
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index d28fb9dbec59..9154d317ffb4 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -334,12 +334,20 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
+ 	}
+ }
+ 
+-static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+-			      pte_t *ptep, pte_t pteval)
+-{
+-	set_pte(ptep, pteval);
++static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
++		pte_t *ptep, pte_t pte, unsigned int nr)
++{
++	for (;;) {
++		set_pte(ptep, pte);
++		if (--nr == 0)
++			break;
++		ptep++;
++		pte_val(pte) += 1 << _PFN_SHIFT;
++	}
+ }
+ 
++#define set_pte_at(mm, addr, ptep, pte) set_ptes(mm, addr, ptep, pte, 1)
++
+ static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+ {
+ 	/* Preserve global status for the pair */
+@@ -445,11 +453,19 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ extern void __update_tlb(struct vm_area_struct *vma,
+ 			unsigned long address, pte_t *ptep);
+ 
+-static inline void update_mmu_cache(struct vm_area_struct *vma,
+-			unsigned long address, pte_t *ptep)
++static inline void update_mmu_cache_range(struct vm_area_struct *vma,
++		unsigned long address, pte_t *ptep, unsigned int nr)
+ {
+-	__update_tlb(vma, address, ptep);
++	for (;;) {
++		__update_tlb(vma, address, ptep);
++		if (--nr == 0)
++			break;
++		address += PAGE_SIZE;
++		ptep++;
++	}
+ }
++#define update_mmu_cache(vma, addr, ptep) \
++	update_mmu_cache_range(vma, addr, ptep, 1)
+ 
+ #define __HAVE_ARCH_UPDATE_MMU_TLB
+ #define update_mmu_tlb	update_mmu_cache
 -- 
-Thanks,
-
-David / dhildenb
+2.39.1
 
