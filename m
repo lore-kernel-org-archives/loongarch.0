@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1541A4D
-	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 07:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 186B381C
+	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 07:01:11 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Dx_5etpv1jj2AGAA--.6574S3;
-	Tue, 28 Feb 2023 15:01:01 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxYeWwpv1j8GAGAA--.6480S3;
+	Tue, 28 Feb 2023 15:01:04 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S14;
-	Tue, 28 Feb 2023 15:01:01 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S22;
+	Tue, 28 Feb 2023 15:01:03 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -21,9 +21,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v3 12/29] LoongArch: KVM: Implement vcpu interrupt operations
-Date: Tue, 28 Feb 2023 15:00:39 +0800
-Message-Id: <20230228070057.3687180-13-zhaotianrui@loongson.cn>
+Subject: [PATCH v3 20/29] LoongArch: KVM: Implement handle csr excption
+Date: Tue, 28 Feb 2023 15:00:47 +0800
+Message-Id: <20230228070057.3687180-21-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
 References: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
@@ -34,11 +34,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S14
+X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S22
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxCrWfAr1fKFWkWry3Gr1rJFb_yoWrKw4UpF
-	W8Cw45Xw48Gr17G343ZFnYvr4YqrykKFZxCr97C3y3K347tr95XFyvyr98XF1UGw4UKF1f
-	X34Sva4kCa45JwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW3Ar1ktryxJF1fKF1DAFW5Wrg_yoW7Zr13pF
+	WUCa15Zw40q3W7Kas3JFs0vrZ8X3ykGw17tFy7t34SvFnFyFn5XFWvgryDXF98ta93WFWa
+	qay5trn5Cr1DtaUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -53,23 +53,118 @@ X-Coremail-Antispam: 1Uk129KBjvJXoWxCrWfAr1fKFWkWry3Gr1rJFb_yoWrKw4UpF
 	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
 	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-Implement vcpu interrupt operations such as vcpu set irq and
-vcpu clear irq, using set_gcsr_estat to set irq which is
-parsed by the irq bitmap.
+Implement kvm handle loongarch vcpu exit caused by reading and
+writing csr. Using loongarch_csr structure to emulate the registers.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/interrupt.c | 126 +++++++++++++++++++++++++++++++++
- arch/loongarch/kvm/vcpu.c      |  45 ++++++++++++
- 2 files changed, 171 insertions(+)
- create mode 100644 arch/loongarch/kvm/interrupt.c
+ arch/loongarch/include/asm/kvm_csr.h |  89 +++++++++++++++++++++++
+ arch/loongarch/kvm/exit.c            | 101 +++++++++++++++++++++++++++
+ 2 files changed, 190 insertions(+)
+ create mode 100644 arch/loongarch/include/asm/kvm_csr.h
+ create mode 100644 arch/loongarch/kvm/exit.c
 
-diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
+diff --git a/arch/loongarch/include/asm/kvm_csr.h b/arch/loongarch/include/asm/kvm_csr.h
 new file mode 100644
-index 000000000000..02267a71d1aa
+index 000000000000..44fcd724c380
 --- /dev/null
-+++ b/arch/loongarch/kvm/interrupt.c
-@@ -0,0 +1,126 @@
++++ b/arch/loongarch/include/asm/kvm_csr.h
+@@ -0,0 +1,89 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#ifndef __ASM_LOONGARCH_KVM_CSR_H__
++#define __ASM_LOONGARCH_KVM_CSR_H__
++#include <asm/loongarch.h>
++#include <asm/kvm_host.h>
++#include <asm/kvm_vcpu.h>
++#include <linux/uaccess.h>
++#include <linux/kvm_host.h>
++
++#define kvm_read_hw_gcsr(id)		gcsr_read(id)
++#define kvm_write_hw_gcsr(csr, id, val)	gcsr_write(val, id)
++
++int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force);
++int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force);
++
++int _kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu);
++
++static inline void kvm_save_hw_gcsr(struct loongarch_csrs *csr, int gid)
++{
++	csr->csrs[gid] = gcsr_read(gid);
++}
++
++static inline void kvm_restore_hw_gcsr(struct loongarch_csrs *csr, int gid)
++{
++	gcsr_write(csr->csrs[gid], gid);
++}
++
++static inline unsigned long kvm_read_sw_gcsr(struct loongarch_csrs *csr, int gid)
++{
++	return csr->csrs[gid];
++}
++
++static inline void kvm_write_sw_gcsr(struct loongarch_csrs *csr, int gid, unsigned long val)
++{
++	csr->csrs[gid] = val;
++}
++
++static inline void kvm_set_sw_gcsr(struct loongarch_csrs *csr, int gid, unsigned long val)
++{
++	csr->csrs[gid] |= val;
++}
++
++static inline void kvm_change_sw_gcsr(struct loongarch_csrs *csr, int gid, unsigned long mask,
++	unsigned long val)
++{
++	unsigned long _mask = mask;
++
++	csr->csrs[gid] &= ~_mask;
++	csr->csrs[gid] |= val & _mask;
++}
++
++
++#define GET_HW_GCSR(id, csrid, v)				\
++	do {							\
++		if (csrid == id) {				\
++			*v = (long)kvm_read_hw_gcsr(csrid);	\
++			return 0;				\
++		}						\
++	} while (0)
++
++#define GET_SW_GCSR(csr, id, csrid, v)				\
++	do {							\
++		if (csrid == id) {				\
++			*v = kvm_read_sw_gcsr(csr, id);		\
++			return 0;				\
++		}						\
++	} while (0)
++
++#define SET_HW_GCSR(csr, id, csrid, v)				\
++	do {							\
++		if (csrid == id) {				\
++			kvm_write_hw_gcsr(csr, csrid, *v);	\
++			return 0;				\
++		}						\
++	} while (0)
++
++#define SET_SW_GCSR(csr, id, csrid, v)				\
++	do {							\
++		if (csrid == id) {				\
++			kvm_write_sw_gcsr(csr, csrid, *v);	\
++			return 0;				\
++		}						\
++	} while (0)
++
++#endif	/* __ASM_LOONGARCH_KVM_CSR_H__ */
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+new file mode 100644
+index 000000000000..dc37827d9bcb
+--- /dev/null
++++ b/arch/loongarch/kvm/exit.c
+@@ -0,0 +1,101 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
@@ -77,181 +172,100 @@ index 000000000000..02267a71d1aa
 +
 +#include <linux/errno.h>
 +#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/preempt.h>
++#include <linux/vmalloc.h>
++#include <asm/fpu.h>
++#include <asm/inst.h>
++#include <asm/time.h>
++#include <asm/tlb.h>
++#include <asm/loongarch.h>
++#include <asm/numa.h>
 +#include <asm/kvm_vcpu.h>
++#include <asm/kvm_csr.h>
++#include <linux/kvm_host.h>
++#include <asm/mmzone.h>
 +
-+static unsigned int int_to_coreint[LOONGARCH_EXC_MAX] = {
-+	[LARCH_INT_TIMER]	= CPU_TIMER,
-+	[LARCH_INT_IPI]		= CPU_IPI,
-+	[LARCH_INT_SIP0]	= CPU_SIP0,
-+	[LARCH_INT_SIP1]	= CPU_SIP1,
-+	[LARCH_INT_IP0]		= CPU_IP0,
-+	[LARCH_INT_IP1]		= CPU_IP1,
-+	[LARCH_INT_IP2]		= CPU_IP2,
-+	[LARCH_INT_IP3]		= CPU_IP3,
-+	[LARCH_INT_IP4]		= CPU_IP4,
-+	[LARCH_INT_IP5]		= CPU_IP5,
-+	[LARCH_INT_IP6]		= CPU_IP6,
-+	[LARCH_INT_IP7]		= CPU_IP7,
-+};
++#define CREATE_TRACE_POINTS
++#include "trace.h"
 +
-+static int _kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
++static unsigned long _kvm_emu_read_csr(struct kvm_vcpu *vcpu, int csrid)
 +{
-+	unsigned int irq = 0;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++	unsigned long val = 0;
 +
-+	clear_bit(priority, &vcpu->arch.irq_pending);
-+	if (priority < LOONGARCH_EXC_MAX)
-+		irq = int_to_coreint[priority];
-+
-+	switch (priority) {
-+	case LARCH_INT_TIMER:
-+	case LARCH_INT_IPI:
-+	case LARCH_INT_SIP0:
-+	case LARCH_INT_SIP1:
-+		set_gcsr_estat(irq);
-+		break;
-+
-+	case LARCH_INT_IP0:
-+	case LARCH_INT_IP1:
-+	case LARCH_INT_IP2:
-+	case LARCH_INT_IP3:
-+	case LARCH_INT_IP4:
-+	case LARCH_INT_IP5:
-+	case LARCH_INT_IP6:
-+	case LARCH_INT_IP7:
-+		set_csr_gintc(irq);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 1;
-+}
-+
-+static int _kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
-+{
-+	unsigned int irq = 0;
-+
-+	clear_bit(priority, &vcpu->arch.irq_clear);
-+	if (priority < LOONGARCH_EXC_MAX)
-+		irq = int_to_coreint[priority];
-+
-+	switch (priority) {
-+	case LARCH_INT_TIMER:
-+	case LARCH_INT_IPI:
-+	case LARCH_INT_SIP0:
-+	case LARCH_INT_SIP1:
-+		clear_gcsr_estat(irq);
-+		break;
-+
-+	case LARCH_INT_IP0:
-+	case LARCH_INT_IP1:
-+	case LARCH_INT_IP2:
-+	case LARCH_INT_IP3:
-+	case LARCH_INT_IP4:
-+	case LARCH_INT_IP5:
-+	case LARCH_INT_IP6:
-+	case LARCH_INT_IP7:
-+		clear_csr_gintc(irq);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 1;
-+}
-+
-+void _kvm_deliver_intr(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long *pending = &vcpu->arch.irq_pending;
-+	unsigned long *pending_clr = &vcpu->arch.irq_clear;
-+	unsigned int priority;
-+
-+	if (!(*pending) && !(*pending_clr))
-+		return;
-+
-+	if (*pending_clr) {
-+		priority = __ffs(*pending_clr);
-+		while (priority <= LOONGARCH_EXC_IPNUM) {
-+			_kvm_irq_clear(vcpu, priority);
-+			priority = find_next_bit(pending_clr,
-+					BITS_PER_BYTE * sizeof(*pending_clr),
-+					priority + 1);
-+		}
-+	}
-+
-+	if (*pending) {
-+		priority = __ffs(*pending);
-+		while (priority <= LOONGARCH_EXC_IPNUM) {
-+			_kvm_irq_deliver(vcpu, priority);
-+			priority = find_next_bit(pending,
-+					BITS_PER_BYTE * sizeof(*pending),
-+					priority + 1);
-+		}
-+	}
-+}
-+
-+int _kvm_pending_timer(struct kvm_vcpu *vcpu)
-+{
-+	return test_bit(LARCH_INT_TIMER, &vcpu->arch.irq_pending);
-+}
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 133c302ea3e1..bdcc73172eae 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -474,6 +474,51 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
- 	preempt_enable();
- }
- 
-+int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu,
-+			     struct kvm_loongarch_interrupt *irq)
-+{
-+	int intr = (int)irq->irq;
-+	struct kvm_vcpu *dvcpu = NULL;
-+
-+	if (irq->cpu == -1)
-+		dvcpu = vcpu;
++	val = 0;
++	if (csrid < 4096)
++		val = kvm_read_sw_gcsr(csr, csrid);
 +	else
-+		dvcpu = kvm_get_vcpu(vcpu->kvm, irq->cpu);
-+
-+	if (intr > 0)
-+		_kvm_queue_irq(dvcpu, intr);
-+	else if (intr < 0)
-+		_kvm_dequeue_irq(dvcpu, -intr);
-+	else {
-+		kvm_err("%s: invalid interrupt ioctl (%d:%d)\n", __func__,
-+				irq->cpu, irq->irq);
-+		return -EINVAL;
-+	}
-+
-+	kvm_vcpu_kick(dvcpu);
-+	return 0;
++		pr_warn_once("Unsupport csrread 0x%x with pc %lx\n",
++			csrid, vcpu->arch.pc);
++	return val;
 +}
 +
-+long kvm_arch_vcpu_async_ioctl(struct file *filp,
-+			       unsigned int ioctl, unsigned long arg)
++static void _kvm_emu_write_csr(struct kvm_vcpu *vcpu, int csrid,
++	unsigned long val)
 +{
-+	struct kvm_vcpu *vcpu = filp->private_data;
-+	void __user *argp = (void __user *)arg;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
 +
-+	if (ioctl == KVM_INTERRUPT) {
-+		struct kvm_loongarch_interrupt irq;
-+
-+		if (copy_from_user(&irq, argp, sizeof(irq)))
-+			return -EFAULT;
-+		kvm_debug("[%d] %s: irq: %d\n", vcpu->vcpu_id, __func__,
-+			  irq.irq);
-+
-+		return kvm_vcpu_ioctl_interrupt(vcpu, &irq);
-+	}
-+
-+	return -ENOIOCTLCMD;
++	if (csrid < 4096)
++		kvm_write_sw_gcsr(csr, csrid, val);
++	else
++		pr_warn_once("Unsupport csrwrite 0x%x with pc %lx\n",
++				csrid, vcpu->arch.pc);
 +}
 +
- int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- {
- 	return 0;
++static void _kvm_emu_xchg_csr(struct kvm_vcpu *vcpu, int csrid,
++	unsigned long csr_mask, unsigned long val)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++
++	if (csrid < 4096) {
++		unsigned long orig;
++
++		orig = kvm_read_sw_gcsr(csr, csrid);
++		orig &= ~csr_mask;
++		orig |= val & csr_mask;
++		kvm_write_sw_gcsr(csr, csrid, orig);
++	} else
++		pr_warn_once("Unsupport csrxchg 0x%x with pc %lx\n",
++				csrid, vcpu->arch.pc);
++}
++
++static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
++{
++	unsigned int rd, rj, csrid;
++	unsigned long csr_mask;
++	unsigned long val = 0;
++
++	/*
++	 * CSR value mask imm
++	 * rj = 0 means csrrd
++	 * rj = 1 means csrwr
++	 * rj != 0,1 means csrxchg
++	 */
++	rd = inst.reg2csr_format.rd;
++	rj = inst.reg2csr_format.rj;
++	csrid = inst.reg2csr_format.csr;
++
++	/* Process CSR ops */
++	if (rj == 0) {
++		/* process csrrd */
++		val = _kvm_emu_read_csr(vcpu, csrid);
++		vcpu->arch.gprs[rd] = val;
++	} else if (rj == 1) {
++		/* process csrwr */
++		val = vcpu->arch.gprs[rd];
++		_kvm_emu_write_csr(vcpu, csrid, val);
++	} else {
++		/* process csrxchg */
++		val = vcpu->arch.gprs[rd];
++		csr_mask = vcpu->arch.gprs[rj];
++		_kvm_emu_xchg_csr(vcpu, csrid, csr_mask, val);
++	}
++
++	return EMULATE_DONE;
++}
 -- 
 2.31.1
 
