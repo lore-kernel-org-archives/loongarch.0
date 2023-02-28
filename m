@@ -1,32 +1,23 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04A2A817
-	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 07:02:11 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxEJWzpv1jSGEGAA--.6416S3;
-	Tue, 28 Feb 2023 15:01:07 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S31;
-	Tue, 28 Feb 2023 15:01:06 +0800 (CST)
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71B1FA38
+	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 08:03:20 +0000 (UTC)
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8DxE4RAtf1jsWUGAA--.6441S3;
+	Tue, 28 Feb 2023 16:03:12 +0800 (CST)
+Received: from localhost.localdomain (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxB707tf1jb3tAAA--.49681S2;
+	Tue, 28 Feb 2023 16:03:09 +0800 (CST)
+From: Jinyang He <hejinyang@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Xi Ruoyao <xry111@xry111.site>,
+	Youling Tang <tangyouling@loongson.cn>,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	Mark Brown <broonie@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	maobibo@loongson.cn,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v3 29/29] LoongArch: KVM: Enable kvm config and add the makefile
-Date: Tue, 28 Feb 2023 15:00:56 +0800
-Message-Id: <20230228070057.3687180-30-zhaotianrui@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
-References: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/6] Drop the per-node-mode exception handlers
+Date: Tue, 28 Feb 2023 16:02:51 +0800
+Message-Id: <20230228080257.28807-1-hejinyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -34,152 +25,79 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S31
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXFW3Ww4DWry3Cr48KFy7GFg_yoW5KFWDpF
-	s3Ar1kGr4xWFn3JrZ3t34kWrs8CFn7KF47u3Wava48Cry7Z34kur18tr9rXFyUA393JrW0
-	gr1rGa1agFWUJaUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-CM-TRANSID:AQAAf8BxB707tf1jb3tAAA--.49681S2
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Ww1DJrW3AFy5ZF48Xw45GFg_yoW8ZFy5pr
+	9xZF93Jr48Gr9avw13t34Uurn8Jws7Kr12qanFk348C3Wavr1UWr18trWkXFyjq3yrJr40
+	qFn5Jw1agF1qq37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+	b7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
+	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
+	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
+	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
+	4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-Enable loongarch kvm config and add the makefile to support build kvm
-module.
+This series drops the per-node-mode exception handlers.
 
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
----
- arch/loongarch/Kbuild                      |  1 +
- arch/loongarch/Kconfig                     |  2 ++
- arch/loongarch/configs/loongson3_defconfig |  2 ++
- arch/loongarch/kvm/Kconfig                 | 38 ++++++++++++++++++++++
- arch/loongarch/kvm/Makefile                | 21 ++++++++++++
- 5 files changed, 64 insertions(+)
- create mode 100644 arch/loongarch/kvm/Kconfig
- create mode 100644 arch/loongarch/kvm/Makefile
+The UnixBench test results are as follows, Loongson-3C5000L-LL, CLFS7.1,
 
-diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
-index b01f5cdb27e0..40be8a1696f9 100644
---- a/arch/loongarch/Kbuild
-+++ b/arch/loongarch/Kbuild
-@@ -2,6 +2,7 @@ obj-y += kernel/
- obj-y += mm/
- obj-y += net/
- obj-y += vdso/
-+obj-y += kvm/
- 
- # for cleaning
- subdir- += boot
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 9cc8b84f7eb0..424ad93927ce 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -142,6 +142,7 @@ config LOONGARCH
- 	select USE_PERCPU_NUMA_NODE_ID
- 	select USER_STACKTRACE_SUPPORT
- 	select ZONE_DMA32
-+	select HAVE_KVM
- 
- config 32BIT
- 	bool
-@@ -541,3 +542,4 @@ source "drivers/acpi/Kconfig"
- endmenu
- 
- source "drivers/firmware/Kconfig"
-+source "arch/loongarch/kvm/Kconfig"
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index eb84cae642e5..9a6e31b43916 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -62,6 +62,8 @@ CONFIG_EFI_ZBOOT=y
- CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
- CONFIG_EFI_CAPSULE_LOADER=m
- CONFIG_EFI_TEST=m
-+CONFIG_VIRTUALIZATION=y
-+CONFIG_KVM=m
- CONFIG_MODULES=y
- CONFIG_MODULE_FORCE_LOAD=y
- CONFIG_MODULE_UNLOAD=y
-diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
-new file mode 100644
-index 000000000000..8a999b4c0232
---- /dev/null
-+++ b/arch/loongarch/kvm/Kconfig
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# KVM configuration
-+#
-+
-+source "virt/kvm/Kconfig"
-+
-+menuconfig VIRTUALIZATION
-+	bool "Virtualization"
-+	help
-+	  Say Y here to get to see options for using your Linux host to run
-+	  other operating systems inside virtual machines (guests).
-+	  This option alone does not add any kernel code.
-+
-+	  If you say N, all options in this submenu will be skipped and
-+	  disabled.
-+
-+if VIRTUALIZATION
-+
-+config KVM
-+	tristate "Kernel-based Virtual Machine (KVM) support"
-+	depends on HAVE_KVM
-+	select MMU_NOTIFIER
-+	select ANON_INODES
-+	select PREEMPT_NOTIFIERS
-+	select KVM_MMIO
-+	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
-+	select HAVE_KVM_VCPU_ASYNC_IOCTL
-+	select HAVE_KVM_EVENTFD
-+	select SRCU
-+	help
-+	  Support hosting virtualized guest machines using hardware
-+	  virtualization extensions. You will need a fairly processor
-+	  equipped with virtualization extensions.
-+
-+	  If unsure, say N.
-+
-+endif # VIRTUALIZATION
-diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
-new file mode 100644
-index 000000000000..42e9dcc18a07
---- /dev/null
-+++ b/arch/loongarch/kvm/Makefile
-@@ -0,0 +1,21 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for LOONGARCH KVM support
-+#
-+
-+ccflags-y += -I $(srctree)/$(src)
-+
-+include $(srctree)/virt/kvm/Makefile.kvm
-+
-+obj-$(CONFIG_KVM) += kvm.o
-+
-+kvm-y += main.o
-+kvm-y += vm.o
-+kvm-y += vmid.o
-+kvm-y += tlb.o
-+kvm-y += mmu.o
-+kvm-y += vcpu.o
-+kvm-y += exit.o
-+kvm-y += interrupt.o
-+kvm-y += timer.o
-+kvm-y += switch.o
+a, DYNAMIC_FTRACE enabled, KASLR disabled, no-pernode
+b, DYNAMIC_FTRACE enabled, KASLR disabled, pernode
+c, DYNAMIC_FTRACE enabled, KASLR enabled, no-pernode
+       1 cpu     16 cpus
+  a-1, 782.6     4025.1
+  a-2, 783.3     3994.5
+  a-3, 784.2     4045.5
+  b-1, 775.5     3913.0
+  b-2, 763.9     3833.8
+  b-3, 777.7     3930.4
+  c-1, 811.0     3950.4
+  c-2, 795.7     3952.9
+
+The results were almost identical, as Huacai said, the performance
+difference between pernode and nopernode is negligible
+
+v2:
+  Directly call rather than using jirl.
+
+Thanks for Ruoyao.
+
+Jinyang He (6):
+  LoongArch: Rename handle_syscall to handle_sys
+  LoongArch: Move the content defined by SYM_DATA to data or rodata
+    section
+  LoongArch: Create a exception handlers section
+  LoongArch: Drop pernode exception handlers
+  LoongArch: Fix up the prologue unwinder unwind exception frame
+  LoongArch: Clean up la_abs macro
+
+ arch/loongarch/include/asm/asmmacro.h   | 17 -----
+ arch/loongarch/include/asm/setup.h      | 14 ----
+ arch/loongarch/include/asm/stackframe.h |  2 +-
+ arch/loongarch/include/asm/traps.h      | 81 ++++++++++++++++++++++
+ arch/loongarch/include/asm/unwind.h     |  2 +-
+ arch/loongarch/kernel/entry.S           | 15 ++--
+ arch/loongarch/kernel/genex.S           | 75 ++++++++++++--------
+ arch/loongarch/kernel/head.S            |  2 +
+ arch/loongarch/kernel/mcount_dyn.S      |  2 +
+ arch/loongarch/kernel/relocate.c        | 28 --------
+ arch/loongarch/kernel/traps.c           | 74 +-------------------
+ arch/loongarch/kernel/unwind_prologue.c | 91 +++----------------------
+ arch/loongarch/kernel/vmlinux.lds.S     | 37 +++++++---
+ arch/loongarch/mm/cache.c               |  6 --
+ arch/loongarch/mm/tlb.c                 | 40 -----------
+ arch/loongarch/mm/tlbex.S               | 71 +++++++++++--------
+ arch/loongarch/power/suspend.c          |  5 +-
+ 17 files changed, 230 insertions(+), 332 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/traps.h
+
 -- 
-2.31.1
+2.34.3
 
