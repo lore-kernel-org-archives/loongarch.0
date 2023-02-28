@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E197A21
-	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 07:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA6BF81C
+	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 07:01:06 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Bxttiypv1jJWEGAA--.11445S3;
-	Tue, 28 Feb 2023 15:01:06 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dx_5expv1jDmEGAA--.6580S3;
+	Tue, 28 Feb 2023 15:01:05 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S28;
-	Tue, 28 Feb 2023 15:01:06 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S25;
+	Tue, 28 Feb 2023 15:01:05 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -21,9 +21,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v3 26/29] LoongArch: KVM: Implement kvm exception vector
-Date: Tue, 28 Feb 2023 15:00:53 +0800
-Message-Id: <20230228070057.3687180-27-zhaotianrui@loongson.cn>
+Subject: [PATCH v3 23/29] LoongArch: KVM: Implement handle gspr exception
+Date: Tue, 28 Feb 2023 15:00:50 +0800
+Message-Id: <20230228070057.3687180-24-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
 References: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
@@ -34,88 +34,155 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S28
+X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S25
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Kw15tF1UurWUKF17uF4UJwb_yoW8ZFWfpF
-	yfA34YyrW8W342ya4akw1vgF13AayxKr17WrW7G345uw4jqryrtrWkK397JF43KryrZF1x
-	JFZ8tr15uF4UG37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZrW3CrWrJF18Ary8ZF4xJFb_yoW5ZF4kpr
+	W7Z34F9r4kJryft3yaqrsYvrn0vF48Kry7Xr9xJ343Z3y7t3s5Jr40yrZFyF1DKrySvF4x
+	Za15tF13CF1UAaUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
+	CY1x0267AKxVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
+	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-Implement kvm exception vector, using _kvm_fault_tables array to save
-the handle function pointer and it is used when vcpu handle exit.
+Implement kvm handle gspr exception interface, including emulate the
+reading and writing of cpucfg, csr, iocsr resource.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 48 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ arch/loongarch/kvm/exit.c | 115 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 115 insertions(+)
 
 diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 2f626063ede3..04ae7e1973c6 100644
+index f0de0b638f31..97b90b04d641 100644
 --- a/arch/loongarch/kvm/exit.c
 +++ b/arch/loongarch/kvm/exit.c
-@@ -652,3 +652,51 @@ static int _kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
- 	kvm_own_fpu(vcpu);
- 	return RESUME_GUEST;
+@@ -203,3 +203,118 @@ int _kvm_emu_idle(struct kvm_vcpu *vcpu)
+ 
+ 	return EMULATE_DONE;
  }
 +
-+/*
-+ * Loongarch KVM callback handling for not implemented guest exiting
-+ */
-+static int _kvm_fault_ni(struct kvm_vcpu *vcpu)
++static int _kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
 +{
-+	unsigned long estat, badv;
-+	unsigned int exccode, inst;
++	enum emulation_result er = EMULATE_DONE;
++	struct kvm_run *run = vcpu->run;
++	larch_inst inst;
++	unsigned long curr_pc;
++	int rd, rj;
++	unsigned int index;
 +
 +	/*
 +	 *  Fetch the instruction.
 +	 */
-+	badv = vcpu->arch.badv;
-+	estat = vcpu->arch.host_estat;
-+	exccode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
-+	inst = vcpu->arch.badi;
-+	kvm_err("Exccode: %d PC=%#lx inst=0x%08x BadVaddr=%#lx estat=%#llx\n",
-+			exccode, vcpu->arch.pc, inst, badv, read_gcsr_estat());
-+	kvm_arch_vcpu_dump_regs(vcpu);
-+	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++	inst.word = vcpu->arch.badi;
++	curr_pc = vcpu->arch.pc;
++	update_pc(&vcpu->arch);
 +
-+	return RESUME_HOST;
++	trace_kvm_exit_gspr(vcpu, inst.word);
++	er = EMULATE_FAIL;
++	switch (((inst.word >> 24) & 0xff)) {
++	case 0x0:
++		/* cpucfg GSPR */
++		if (inst.reg2_format.opcode == 0x1B) {
++			rd = inst.reg2_format.rd;
++			rj = inst.reg2_format.rj;
++			++vcpu->stat.cpucfg_exits;
++			index = vcpu->arch.gprs[rj];
++
++			vcpu->arch.gprs[rd] = read_cpucfg(index);
++			/* Nested KVM is not supported */
++			if (index == 2)
++				vcpu->arch.gprs[rd] &= ~CPUCFG2_LVZP;
++			if (index == 6)
++				vcpu->arch.gprs[rd] &= ~CPUCFG6_PMP;
++			er = EMULATE_DONE;
++		}
++		break;
++	case 0x4:
++		/* csr GSPR */
++		er = _kvm_handle_csr(vcpu, inst);
++		break;
++	case 0x6:
++		/* iocsr,cache,idle GSPR */
++		switch (((inst.word >> 22) & 0x3ff)) {
++		case 0x18:
++			/* cache GSPR */
++			er = EMULATE_DONE;
++			trace_kvm_exit_cache(vcpu, KVM_TRACE_EXIT_CACHE);
++			break;
++		case 0x19:
++			/* iocsr/idle GSPR */
++			switch (((inst.word >> 15) & 0x1ffff)) {
++			case 0xc90:
++				/* iocsr GSPR */
++				er = _kvm_emu_iocsr(inst, run, vcpu);
++				break;
++			case 0xc91:
++				/* idle GSPR */
++				er = _kvm_emu_idle(vcpu);
++				break;
++			default:
++				er = EMULATE_FAIL;
++				break;
++			}
++			break;
++		default:
++			er = EMULATE_FAIL;
++			break;
++		}
++		break;
++	default:
++		er = EMULATE_FAIL;
++		break;
++	}
++
++	/* Rollback PC only if emulation was unsuccessful */
++	if (er == EMULATE_FAIL) {
++		kvm_err("[%#lx]%s: unsupported gspr instruction 0x%08x\n",
++			curr_pc, __func__, inst.word);
++
++		kvm_arch_vcpu_dump_regs(vcpu);
++		vcpu->arch.pc = curr_pc;
++	}
++	return er;
 +}
 +
-+static exit_handle_fn _kvm_fault_tables[EXCCODE_INT_START] = {
-+	[EXCCODE_TLBL]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBI]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBNR]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBNX]		= _kvm_handle_read_fault,
-+	[EXCCODE_TLBS]		= _kvm_handle_write_fault,
-+	[EXCCODE_TLBM]		= _kvm_handle_write_fault,
-+	[EXCCODE_FPDIS]		= _kvm_handle_fpu_disabled,
-+	[EXCCODE_GSPR]		= _kvm_handle_gspr,
-+};
-+
-+int _kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
++/*
++ * Execute cpucfg instruction will tirggerGSPR,
++ * Also the access to unimplemented csrs 0x15
++ * 0x16, 0x50~0x53, 0x80, 0x81, 0x90~0x95, 0x98
++ * 0xc0~0xff, 0x100~0x109, 0x500~0x502,
++ * cache_op, idle_op iocsr ops the same
++ */
++static int _kvm_handle_gspr(struct kvm_vcpu *vcpu)
 +{
-+	return _kvm_fault_tables[fault](vcpu);
-+}
++	enum emulation_result er = EMULATE_DONE;
++	int ret = RESUME_GUEST;
 +
-+void _kvm_init_fault(void)
-+{
-+	int i;
++	er = _kvm_trap_handle_gspr(vcpu);
 +
-+	for (i = 0; i < EXCCODE_INT_START; i++)
-+		if (!_kvm_fault_tables[i])
-+			_kvm_fault_tables[i] = _kvm_fault_ni;
++	if (er == EMULATE_DONE) {
++		ret = RESUME_GUEST;
++	} else if (er == EMULATE_DO_MMIO) {
++		vcpu->run->exit_reason = KVM_EXIT_MMIO;
++		ret = RESUME_HOST;
++	} else if (er == EMULATE_DO_IOCSR) {
++		vcpu->run->exit_reason = KVM_EXIT_LOONGARCH_IOCSR;
++		ret = RESUME_HOST;
++	} else {
++		kvm_err("%s internal error\n", __func__);
++		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++		ret = RESUME_HOST;
++	}
++	return ret;
 +}
 -- 
 2.31.1
