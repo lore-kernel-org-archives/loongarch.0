@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2279A38
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F39CA4F
 	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 07:01:07 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8DxAf+spv1jX2AGAA--.6581S3;
-	Tue, 28 Feb 2023 15:01:00 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cxf82zpv1jOmEGAA--.6316S3;
+	Tue, 28 Feb 2023 15:01:07 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S9;
-	Tue, 28 Feb 2023 15:01:00 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S30;
+	Tue, 28 Feb 2023 15:01:06 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -21,9 +21,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v3 07/29] LoongArch: KVM: Implement vcpu run interface
-Date: Tue, 28 Feb 2023 15:00:34 +0800
-Message-Id: <20230228070057.3687180-8-zhaotianrui@loongson.cn>
+Subject: [PATCH v3 28/29] LoongArch: KVM: Implement probe virtualization when loongarch cpu init
+Date: Tue, 28 Feb 2023 15:00:55 +0800
+Message-Id: <20230228070057.3687180-29-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
 References: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
@@ -34,132 +34,104 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S9
+X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S30
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAry8CF4DKryfXFWrKr45Wrg_yoW5Gw13pF
-	4xC3s0vw4rJ34xG3y3Jrs09rs0qrZYgr17Xryxt3y3tr4Utw1DursakrWjyFWfA34rZF1S
-	vFn5tF1UCF1jy37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw1fCFWfZw1DGr1DXw1UWrg_yoW8tFyDpr
+	W2vFW3trWUKr92ga93Gr1agrnxtFWkKa129F47ta1fAr4Ut3W5Xwn3C34UCFs7Zw4xAryr
+	Xrn7A3WvqF1DX3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
-	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
-	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
+	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
+	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
 
-Implement vcpu run interface, handling mmio, iocsr reading fault
-and deliver interrupt, lose fpu before vcpu enter guest.
+Implement probe virtualization when loongarch cpu init, including guest
+gid info, guest fpu info, etc.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 84 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+ arch/loongarch/kernel/cpu-probe.c | 53 +++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 7af2ff64b8c7..4fcfb36a7133 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -18,6 +18,42 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- 	return 0;
- }
- 
-+/* Returns 1 if the guest TLB may be clobbered */
-+static int _kvm_check_requests(struct kvm_vcpu *vcpu, int cpu)
-+{
-+	int ret = 0;
-+
-+	if (!kvm_request_pending(vcpu))
-+		return 0;
-+
-+	if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu)) {
-+		/* Drop vpid for this VCPU */
-+		vcpu->arch.vpid = 0;
-+		/* This will clobber guest TLB contents too */
-+		ret = 1;
-+	}
-+
-+	return ret;
-+}
-+
-+static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
-+{
-+	int cpu;
-+
-+	/*
-+	 * handle vcpu timer, interrupts, check requests and
-+	 * check vmid before vcpu enter guest
-+	 */
-+	kvm_acquire_timer(vcpu);
-+	_kvm_deliver_intr(vcpu);
-+	/* make sure the vcpu mode has been written */
-+	smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-+	cpu = smp_processor_id();
-+	_kvm_check_requests(vcpu, cpu);
-+	_kvm_check_vmid(vcpu, cpu);
-+	vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
-+}
-+
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- {
- 	unsigned long timer_hz;
-@@ -87,3 +123,51 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 			context->last_vcpu = NULL;
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index 3a3fce2d7846..9c3483d9a131 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -176,6 +176,57 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
  	}
  }
-+
-+int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ 
++static inline void cpu_probe_guestinfo(struct cpuinfo_loongarch *c)
 +{
-+	int r = -EINTR;
-+	struct kvm_run *run = vcpu->run;
++	unsigned long guestinfo;
 +
-+	vcpu_load(vcpu);
-+
-+	kvm_sigset_activate(vcpu);
-+
-+	if (vcpu->mmio_needed) {
-+		if (!vcpu->mmio_is_write)
-+			_kvm_complete_mmio_read(vcpu, run);
-+		vcpu->mmio_needed = 0;
++	guestinfo = read_csr_gstat();
++	if (guestinfo & CSR_GSTAT_GIDBIT) {
++		c->options |= LOONGARCH_CPU_GUESTID;
++		write_csr_gstat(0);
 +	}
-+
-+	if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
-+		if (!run->iocsr_io.is_write)
-+			_kvm_complete_iocsr_read(vcpu, run);
-+	}
-+
-+	/* clear exit_reason */
-+	run->exit_reason = KVM_EXIT_UNKNOWN;
-+	if (run->immediate_exit)
-+		goto out;
-+
-+	lose_fpu(1);
-+
-+	local_irq_disable();
-+	guest_timing_enter_irqoff();
-+
-+	kvm_pre_enter_guest(vcpu);
-+	trace_kvm_enter(vcpu);
-+
-+	guest_state_enter_irqoff();
-+	r = kvm_loongarch_ops->enter_guest(run, vcpu);
-+
-+	/* guest_state_exit_irqoff() already done.  */
-+	trace_kvm_out(vcpu);
-+	guest_timing_exit_irqoff();
-+	local_irq_enable();
-+
-+out:
-+	kvm_sigset_deactivate(vcpu);
-+
-+	vcpu_put(vcpu);
-+	return r;
 +}
++
++static inline void cpu_probe_lvz(struct cpuinfo_loongarch *c)
++{
++	unsigned long gcfg, gprcfg1;
++
++	cpu_probe_guestinfo(c);
++
++	c->guest.options |= LOONGARCH_CPU_FPU;
++	c->guest.options_dyn |= LOONGARCH_CPU_FPU;
++	c->guest.options_dyn |= LOONGARCH_CPU_PMP;
++
++	c->guest.ases |= LOONGARCH_CPU_LSX;
++	c->guest.ases_dyn |= LOONGARCH_CPU_LSX;
++	gprcfg1 = read_gcsr_prcfg1();
++	c->guest.kscratch_mask = GENMASK((gprcfg1 & CSR_CONF1_KSNUM) - 1, 0);
++
++	gcfg = read_csr_gcfg();
++	if (gcfg & CSR_GCFG_MATP_GUEST)
++		c->guest_cfg |= BIT(0);
++	if (gcfg & CSR_GCFG_MATP_ROOT)
++		c->guest_cfg |= BIT(1);
++	if (gcfg & CSR_GCFG_MATP_NEST)
++		c->guest_cfg |= BIT(2);
++	if (gcfg & CSR_GCFG_SITP)
++		c->guest_cfg |= BIT(6);
++	if (gcfg & CSR_GCFG_TITP)
++		c->guest_cfg |= BIT(8);
++	if (gcfg & CSR_GCFG_TOEP)
++		c->guest_cfg |= BIT(10);
++	if (gcfg & CSR_GCFG_TOPP)
++		c->guest_cfg |= BIT(12);
++	if (gcfg & CSR_GCFG_TORUP)
++		c->guest_cfg |= BIT(14);
++	if (gcfg & CSR_GCFG_GCIP_ALL)
++		c->guest_cfg |= BIT(16);
++	if (gcfg & CSR_GCFG_GCIP_HIT)
++		c->guest_cfg |= BIT(17);
++	if (gcfg & CSR_GCFG_GCIP_SECURE)
++		c->guest_cfg |= BIT(18);
++}
++
+ #define MAX_NAME_LEN	32
+ #define VENDOR_OFFSET	0
+ #define CPUNAME_OFFSET	9
+@@ -289,6 +340,8 @@ void cpu_probe(void)
+ 	if (cpu == 0)
+ 		__ua_limit = ~((1ull << cpu_vabits) - 1);
+ #endif
++	if (cpu_has_lvz)
++		cpu_probe_lvz(c);
+ 
+ 	cpu_report();
+ }
 -- 
 2.31.1
 
