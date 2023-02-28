@@ -1,24 +1,34 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78199475
-	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 21:11:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 620DBC433EF;
-	Tue, 28 Feb 2023 21:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1677618677;
-	bh=hQNwE+IEUbKQvI91yvljJosaVP7JCZ7+8bppV3cOFbg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=EWCQE/HQjrWuM9JLi5n8h88COIVDC0Dwj8Ls7hxDeYr4SIALkO/qqCk/UGcAvWK5o
-	 c02+sh/QcUi/6bE0ILdbEb/C+A8GV+CJaLo8WfaGxJWgLFvkSK7vL/E7uokCa4MOxg
-	 ngdg3jXiJrkGUm98gEQXAgu/dxa50c+7WgMlmDgNw1PpnJ2oFrWoeU4ingGh4tZ7R7
-	 NCLLPqaZ1Zn4rnovGjIPX8BlJ6CPAfDs1vwTGYqI9oMCtgbAk9Bh8oF1Q3q6KxteX4
-	 j5u6Jm2tA55Z1q6NEJRkgLy4vCcaaRiYhIH8qBVhYl9/Ucn2GR4gvjnvRg/iSe5UV4
-	 UdVCGz5UeLKDg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3FB70C691DE;
-	Tue, 28 Feb 2023 21:11:17 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37919475
+	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 21:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=fxYZM+dA5j6swMF6gw/nu6/QS6N0if0H8qzTGtI3Nx4=; b=t6c3JJ2fH0x5/grUhxogUZYeOe
+	SShFST+p4XE+MLjmz3zZC+Bb2IuqOE3tNx+RraD0omIWAq8IcyRUrAPXzFKZ1FrTAucOdlBe3xMzE
+	lQ57T91RzbVntY61EzTv9D7IE1ldyJJ45YLjjzYxuzP9II163WbEtWeScny5ZSan37odChHi7yzRD
+	kQLo8dzCNRFj9wvhvvnLj0c2MX9sfST0vtR4aTtBeUJN+KuLRfgPKa0ZU1DIZFA4SRGErx2dWS898
+	N3GIZC4rqgn3P//+KVhXPknGJ/J+PLr4uzkkj/ZAmK8Kp1dglWSVVGN+44eBlFHrtp7r1RIDhlb+9
+	5+/0JPsQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1pX7fI-0018pA-LT; Tue, 28 Feb 2023 21:37:40 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: linux-mm@kvack.org,
+	linux-arch@vger.kernel.org
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev
+Subject: [PATCH v3 12/34] loongarch: Implement the new page table range API
+Date: Tue, 28 Feb 2023 21:37:15 +0000
+Message-Id: <20230228213738.272178-13-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20230228213738.272178-1-willy@infradead.org>
+References: <20230228213738.272178-1-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -26,115 +36,88 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH mm-unstable v1 00/26] mm: support
- __HAVE_ARCH_PTE_SWP_EXCLUSIVE on all architectures with swap PTEs
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <167761867725.10135.3611718470427113262.git-patchwork-notify@kernel.org>
-Date: Tue, 28 Feb 2023 21:11:17 +0000
-References: <20230113171026.582290-1-david@redhat.com>
-In-Reply-To: <20230113171026.582290-1-david@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- akpm@linux-foundation.org, hughd@google.com, jhubbard@nvidia.com,
- jgg@nvidia.com, rppt@linux.ibm.com, shy828301@gmail.com, vbabka@suse.cz,
- namit@vmware.com, aarcange@redhat.com, peterx@redhat.com, linux-mm@kvack.org,
- x86@kernel.org, linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
- aou@eecs.berkeley.edu, anton.ivanov@cambridgegreys.com, bp@alien8.de,
- bcain@quicinc.com, christophe.leroy@csgroup.eu, chris@zankel.net,
- dave.hansen@linux.intel.com, davem@davemloft.net, dinguyen@kernel.org,
- geert@linux-m68k.org, gerg@linux-m68k.org, guoren@kernel.org, deller@gmx.de,
- hpa@zytor.com, chenhuacai@kernel.org, mingo@redhat.com,
- ink@jurassic.park.msu.ru, James.Bottomley@HansenPartnership.com,
- johannes@sipsolutions.net, mattst88@gmail.com, jcmvbkbc@gmail.com,
- mpe@ellerman.id.au, monstr@monstr.eu, npiggin@gmail.com, palmer@dabbelt.com,
- paul.walmsley@sifive.com, richard.henderson@linaro.org, richard@nod.at,
- dalias@libc.org, linux@armlinux.org.uk, shorne@gmail.com,
- stefan.kristiansson@saunalahti.fi, tsbogend@alpha.franken.de,
- tglx@linutronix.de, vgupta@kernel.org, kernel@xen0n.name,
- ysato@users.sourceforge.jp
 
-Hello:
+Add set_ptes() and update_mmu_cache_range().  It would probably be
+more efficient to implement __update_tlb() by flushing the entire
+folio instead of calling it __update_tlb() N times, but I'll leave
+that for someone who understands the architecture better.
 
-This series was applied to riscv/linux.git (for-next)
-by Andrew Morton <akpm@linux-foundation.org>:
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
+---
+ arch/loongarch/include/asm/cacheflush.h |  2 ++
+ arch/loongarch/include/asm/pgtable.h    | 30 +++++++++++++++++++------
+ 2 files changed, 25 insertions(+), 7 deletions(-)
 
-On Fri, 13 Jan 2023 18:10:00 +0100 you wrote:
-> This is the follow-up on [1]:
-> 	[PATCH v2 0/8] mm: COW fixes part 3: reliable GUP R/W FOLL_GET of
-> 	anonymous pages
-> 
-> After we implemented __HAVE_ARCH_PTE_SWP_EXCLUSIVE on most prominent
-> enterprise architectures, implement __HAVE_ARCH_PTE_SWP_EXCLUSIVE on all
-> remaining architectures that support swap PTEs.
-> 
-> [...]
-
-Here is the summary with links:
-  - [mm-unstable,v1,01/26] mm/debug_vm_pgtable: more pte_swp_exclusive() sanity checks
-    (no matching commit)
-  - [mm-unstable,v1,02/26] alpha/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,03/26] arc/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,04/26] arm/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,05/26] csky/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,06/26] hexagon/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,07/26] ia64/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,08/26] loongarch/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,09/26] m68k/mm: remove dummy __swp definitions for nommu
-    (no matching commit)
-  - [mm-unstable,v1,10/26] m68k/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,11/26] microblaze/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,12/26] mips/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,13/26] nios2/mm: refactor swap PTE layout
-    (no matching commit)
-  - [mm-unstable,v1,14/26] nios2/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,15/26] openrisc/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,16/26] parisc/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,17/26] powerpc/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE on 32bit book3s
-    (no matching commit)
-  - [mm-unstable,v1,18/26] powerpc/nohash/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,19/26] riscv/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    https://git.kernel.org/riscv/c/51a1007d4113
-  - [mm-unstable,v1,20/26] sh/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,21/26] sparc/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE on 32bit
-    (no matching commit)
-  - [mm-unstable,v1,22/26] sparc/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE on 64bit
-    (no matching commit)
-  - [mm-unstable,v1,23/26] um/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,24/26] x86/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE also on 32bit
-    (no matching commit)
-  - [mm-unstable,v1,25/26] xtensa/mm: support __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-  - [mm-unstable,v1,26/26] mm: remove __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-    (no matching commit)
-
-You are awesome, thank you!
+diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
+index 0681788eb474..7907eb42bfbd 100644
+--- a/arch/loongarch/include/asm/cacheflush.h
++++ b/arch/loongarch/include/asm/cacheflush.h
+@@ -47,8 +47,10 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
+ #define flush_cache_vmap(start, end)			do { } while (0)
+ #define flush_cache_vunmap(start, end)			do { } while (0)
+ #define flush_icache_page(vma, page)			do { } while (0)
++#define flush_icache_pages(vma, page)			do { } while (0)
+ #define flush_icache_user_page(vma, page, addr, len)	do { } while (0)
+ #define flush_dcache_page(page)				do { } while (0)
++#define flush_dcache_folio(folio)			do { } while (0)
+ #define flush_dcache_mmap_lock(mapping)			do { } while (0)
+ #define flush_dcache_mmap_unlock(mapping)		do { } while (0)
+ 
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index d28fb9dbec59..9154d317ffb4 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -334,12 +334,20 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
+ 	}
+ }
+ 
+-static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+-			      pte_t *ptep, pte_t pteval)
+-{
+-	set_pte(ptep, pteval);
++static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
++		pte_t *ptep, pte_t pte, unsigned int nr)
++{
++	for (;;) {
++		set_pte(ptep, pte);
++		if (--nr == 0)
++			break;
++		ptep++;
++		pte_val(pte) += 1 << _PFN_SHIFT;
++	}
+ }
+ 
++#define set_pte_at(mm, addr, ptep, pte) set_ptes(mm, addr, ptep, pte, 1)
++
+ static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+ {
+ 	/* Preserve global status for the pair */
+@@ -445,11 +453,19 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ extern void __update_tlb(struct vm_area_struct *vma,
+ 			unsigned long address, pte_t *ptep);
+ 
+-static inline void update_mmu_cache(struct vm_area_struct *vma,
+-			unsigned long address, pte_t *ptep)
++static inline void update_mmu_cache_range(struct vm_area_struct *vma,
++		unsigned long address, pte_t *ptep, unsigned int nr)
+ {
+-	__update_tlb(vma, address, ptep);
++	for (;;) {
++		__update_tlb(vma, address, ptep);
++		if (--nr == 0)
++			break;
++		address += PAGE_SIZE;
++		ptep++;
++	}
+ }
++#define update_mmu_cache(vma, addr, ptep) \
++	update_mmu_cache_range(vma, addr, ptep, 1)
+ 
+ #define __HAVE_ARCH_UPDATE_MMU_TLB
+ #define update_mmu_tlb	update_mmu_cache
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.39.1
 
