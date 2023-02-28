@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04A5B818
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 049E6815
 	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 07:02:11 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Cxf9utpv1jiWAGAA--.6348S3;
-	Tue, 28 Feb 2023 15:01:01 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxJAywpv1j+mAGAA--.6374S3;
+	Tue, 28 Feb 2023 15:01:04 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S13;
-	Tue, 28 Feb 2023 15:01:01 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S23;
+	Tue, 28 Feb 2023 15:01:04 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -21,9 +21,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v3 11/29] LoongArch: KVM: Implement fpu related operations for vcpu
-Date: Tue, 28 Feb 2023 15:00:38 +0800
-Message-Id: <20230228070057.3687180-12-zhaotianrui@loongson.cn>
+Subject: [PATCH v3 21/29] LoongArch: KVM: Implement handle iocsr exception
+Date: Tue, 28 Feb 2023 15:00:48 +0800
+Message-Id: <20230228070057.3687180-22-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
 References: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
@@ -34,11 +34,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S13
+X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S23
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7KF1UXF4kKw4xWr4xKFyxAFb_yoW8ur1kpF
-	W7u3s8X3yrG3WxK3yaqr1jqr1avrWkKr1xXa47WryfAr1UtryYvF4vkrZFvFy5Jw1xZFyI
-	vF1fGF1UCa4DAwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWFWrGw17Kry5ZFy7ZrWfAFb_yoWrJF1Upa
+	yUu34ktrW8Ww1ftwsxJFs7Xr1aqF48Gr9rXFZxJw4rurW2ya45Jr4vyrnFvF98K39xGr4I
+	vw1fJryxuF1qy3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -53,85 +53,156 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7KF1UXF4kKw4xWr4xKFyxAFb_yoW8ur1kpF
 	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
 	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-Implement loongarch fpu related interface for vcpu, such as get fpu, set
-fpu, own fpu and lose fpu, etc.
+Implement kvm handle vcpu iocsr exception, setting the iocsr info into
+vcpu_run and return to user space to handle it.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 60 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ arch/loongarch/include/asm/inst.h | 16 ++++++
+ arch/loongarch/kvm/exit.c         | 92 +++++++++++++++++++++++++++++++
+ 2 files changed, 108 insertions(+)
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 06d5c79e73ba..133c302ea3e1 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -414,6 +414,66 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 	return r;
- }
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index 7eedd83fd0d7..8ed137814118 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -50,6 +50,14 @@ enum reg2_op {
+ 	revbd_op	= 0x0f,
+ 	revh2w_op	= 0x10,
+ 	revhd_op	= 0x11,
++	iocsrrdb_op	= 0x19200,
++	iocsrrdh_op	= 0x19201,
++	iocsrrdw_op	= 0x19202,
++	iocsrrdd_op	= 0x19203,
++	iocsrwrb_op	= 0x19204,
++	iocsrwrh_op	= 0x19205,
++	iocsrwrw_op	= 0x19206,
++	iocsrwrd_op	= 0x19207,
+ };
  
-+int kvm_arch_vcpu_ioctl_get_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
+ enum reg2i5_op {
+@@ -261,6 +269,13 @@ struct reg3sa2_format {
+ 	unsigned int opcode : 15;
+ };
+ 
++struct reg2csr_format {
++	unsigned int rd : 5;
++	unsigned int rj : 5;
++	unsigned int csr : 14;
++	unsigned int opcode : 8;
++};
++
+ union loongarch_instruction {
+ 	unsigned int word;
+ 	struct reg0i26_format	reg0i26_format;
+@@ -275,6 +290,7 @@ union loongarch_instruction {
+ 	struct reg2bstrd_format	reg2bstrd_format;
+ 	struct reg3_format	reg3_format;
+ 	struct reg3sa2_format	reg3sa2_format;
++	struct reg2csr_format	reg2csr_format;
+ };
+ 
+ #define LOONGARCH_INSN_SIZE	sizeof(union loongarch_instruction)
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index dc37827d9bcb..f02e2b9402f2 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -99,3 +99,95 @@ static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
+ 
+ 	return EMULATE_DONE;
+ }
++
++int _kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu)
 +{
-+	int i = 0;
-+
-+	/* no need vcpu_load and vcpu_put */
-+	fpu->fcsr = vcpu->arch.fpu.fcsr;
-+	fpu->fcc = vcpu->arch.fpu.fcc;
-+	for (i = 0; i < NUM_FPU_REGS; i++)
-+		memcpy(&fpu->fpr[i], &vcpu->arch.fpu.fpr[i], FPU_REG_WIDTH / 64);
-+
-+	return 0;
-+}
-+
-+int kvm_arch_vcpu_ioctl_set_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
-+{
-+	int i = 0;
-+
-+	/* no need vcpu_load and vcpu_put */
-+	vcpu->arch.fpu.fcsr = fpu->fcsr;
-+	vcpu->arch.fpu.fcc = fpu->fcc;
-+	for (i = 0; i < NUM_FPU_REGS; i++)
-+		memcpy(&vcpu->arch.fpu.fpr[i], &fpu->fpr[i], FPU_REG_WIDTH / 64);
-+
-+	return 0;
-+}
-+
-+/* Enable FPU for guest and restore context */
-+void kvm_own_fpu(struct kvm_vcpu *vcpu)
-+{
-+	preempt_disable();
++	u32 rd, rj, opcode;
++	u32 addr;
++	unsigned long val;
++	int ret;
 +
 +	/*
-+	 * Enable FPU for guest
++	 * Each IOCSR with different opcode
 +	 */
-+	set_csr_euen(CSR_EUEN_FPEN);
++	rd = inst.reg2_format.rd;
++	rj = inst.reg2_format.rj;
++	opcode = inst.reg2_format.opcode;
++	addr = vcpu->arch.gprs[rj];
++	ret = EMULATE_DO_IOCSR;
++	run->iocsr_io.phys_addr = addr;
++	run->iocsr_io.is_write = 0;
 +
-+	kvm_restore_fpu(&vcpu->arch.fpu);
-+	vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
-+	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_FPU);
-+
-+	preempt_enable();
-+}
-+
-+/* Save and disable FPU */
-+void kvm_lose_fpu(struct kvm_vcpu *vcpu)
-+{
-+	preempt_disable();
-+
-+	if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
-+		kvm_save_fpu(&vcpu->arch.fpu);
-+		vcpu->arch.aux_inuse &= ~KVM_LARCH_FPU;
-+		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_FPU);
-+
-+		/* Disable FPU */
-+		clear_csr_euen(CSR_EUEN_FPEN);
++	/* LoongArch is Little endian */
++	switch (opcode) {
++	case iocsrrdb_op:
++		run->iocsr_io.len = 1;
++		break;
++	case iocsrrdh_op:
++		run->iocsr_io.len = 2;
++		break;
++	case iocsrrdw_op:
++		run->iocsr_io.len = 4;
++		break;
++	case iocsrrdd_op:
++		run->iocsr_io.len = 8;
++		break;
++	case iocsrwrb_op:
++		run->iocsr_io.len = 1;
++		run->iocsr_io.is_write = 1;
++		break;
++	case iocsrwrh_op:
++		run->iocsr_io.len = 2;
++		run->iocsr_io.is_write = 1;
++		break;
++	case iocsrwrw_op:
++		run->iocsr_io.len = 4;
++		run->iocsr_io.is_write = 1;
++		break;
++	case iocsrwrd_op:
++		run->iocsr_io.len = 8;
++		run->iocsr_io.is_write = 1;
++		break;
++	default:
++		ret = EMULATE_FAIL;
++		break;
 +	}
 +
-+	preempt_enable();
++	if (ret == EMULATE_DO_IOCSR) {
++		if (run->iocsr_io.is_write) {
++			val = vcpu->arch.gprs[rd];
++			memcpy(run->iocsr_io.data, &val, run->iocsr_io.len);
++		}
++		vcpu->arch.io_gpr = rd;
++	}
++
++	return ret;
 +}
 +
- int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- {
- 	return 0;
++int _kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
++{
++	unsigned long *gpr = &vcpu->arch.gprs[vcpu->arch.io_gpr];
++	enum emulation_result er = EMULATE_DONE;
++
++	switch (run->iocsr_io.len) {
++	case 8:
++		*gpr = *(s64 *)run->iocsr_io.data;
++		break;
++	case 4:
++		*gpr = *(int *)run->iocsr_io.data;
++		break;
++	case 2:
++		*gpr = *(short *)run->iocsr_io.data;
++		break;
++	case 1:
++		*gpr = *(char *) run->iocsr_io.data;
++		break;
++	default:
++		kvm_err("Bad IOCSR length: %d,addr is 0x%lx",
++				run->iocsr_io.len, vcpu->arch.badv);
++		er = EMULATE_FAIL;
++		break;
++	}
++
++	return er;
++}
 -- 
 2.31.1
 
