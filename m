@@ -1,322 +1,101 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26E8CA50
-	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 08:03:48 +0000 (UTC)
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8AxlF1itf1jGGYGAA--.6558S3;
-	Tue, 28 Feb 2023 16:03:46 +0800 (CST)
-Received: from localhost.localdomain (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxB707tf1jb3tAAA--.49681S8;
-	Tue, 28 Feb 2023 16:03:42 +0800 (CST)
-From: Jinyang He <hejinyang@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: Xi Ruoyao <xry111@xry111.site>,
-	Youling Tang <tangyouling@loongson.cn>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] LoongArch: Clean up la_abs macro
-Date: Tue, 28 Feb 2023 16:02:57 +0800
-Message-Id: <20230228080257.28807-7-hejinyang@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230228080257.28807-1-hejinyang@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5206C29AC
+	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 12:42:39 +0000 (UTC)
+Received: from loongson.cn (unknown [192.168.200.1])
+	by gateway (Coremail) with SMTP id _____8AxYeW99v1jWncGAA--.6677S3;
+	Tue, 28 Feb 2023 20:42:37 +0800 (CST)
+Received: from [0.0.0.0] (unknown [192.168.200.1])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxJ7289v1jIPVAAA--.50084S3;
+	Tue, 28 Feb 2023 20:42:37 +0800 (CST)
+Subject: Re: [PATCH v2 3/6] LoongArch: Create a exception handlers section
+To: Jinyang He <hejinyang@loongson.cn>
 References: <20230228080257.28807-1-hejinyang@loongson.cn>
+ <20230228080257.28807-4-hejinyang@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <68036cab-e2f0-86b6-c26c-4bcd0716e554@loongson.cn>
+Date: Tue, 28 Feb 2023 20:42:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxB707tf1jb3tAAA--.49681S8
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxKryDGFWUXr1xtw13tF4rGrg_yoW3JF1kpr
-	nxZrn7Ja1rWrn3Za4Dta4DurZ8AwnFg342ganIkFyru3W7ZF18XrykA3s7ZF97Kay8XF4I
-	gF1ftws2qF4UJwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+In-Reply-To: <20230228080257.28807-4-hejinyang@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8DxJ7289v1jIPVAAA--.50084S3
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Cw1xZw4fAw43Zr4ruw4xtFb_yoW8Xr4Dpr
+	y2vrWkZr4DCFn8ZFyDZa1jvrWjv34Sgw43Gayaga48C3WavF109r4kAryDAanF9w1kXa18
+	XF1rA3ySya45Aa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
-	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+	bYkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCF
+	FI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_WwAm72CE4IkC6x0Yz7
+	v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxG
+	rwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0zRVWlkUUU
+	UU=
 
-Now we can replace la_abs with la.pcrel. Clean up the la_abs macro.
+Hi, Jinyang
 
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
----
- arch/loongarch/include/asm/asmmacro.h   | 17 ---------------
- arch/loongarch/include/asm/setup.h      |  7 -------
- arch/loongarch/include/asm/stackframe.h |  2 +-
- arch/loongarch/kernel/entry.S           |  5 ++---
- arch/loongarch/kernel/genex.S           |  8 +++----
- arch/loongarch/kernel/relocate.c        | 28 -------------------------
- arch/loongarch/kernel/vmlinux.lds.S     |  9 --------
- arch/loongarch/mm/tlbex.S               | 18 +++++++---------
- 8 files changed, 13 insertions(+), 81 deletions(-)
+On 02/28/2023 04:02 PM, Jinyang He wrote:
 
-diff --git a/arch/loongarch/include/asm/asmmacro.h b/arch/loongarch/include/asm/asmmacro.h
-index 79e1d53fea89..328bb956f241 100644
---- a/arch/loongarch/include/asm/asmmacro.h
-+++ b/arch/loongarch/include/asm/asmmacro.h
-@@ -667,21 +667,4 @@
- 	nor	\dst, \src, zero
- .endm
- 
--.macro la_abs reg, sym
--#ifndef CONFIG_RELOCATABLE
--	la.abs	\reg, \sym
--#else
--	766:
--	lu12i.w	\reg, 0
--	ori	\reg, \reg, 0
--	lu32i.d	\reg, 0
--	lu52i.d	\reg, \reg, 0
--	.pushsection ".la_abs", "aw", %progbits
--	768:
--	.dword	768b-766b
--	.dword	\sym
--	.popsection
--#endif
--.endm
--
- #endif /* _ASM_ASMMACRO_H */
-diff --git a/arch/loongarch/include/asm/setup.h b/arch/loongarch/include/asm/setup.h
-index 4074225339ec..84d131f29e0c 100644
---- a/arch/loongarch/include/asm/setup.h
-+++ b/arch/loongarch/include/asm/setup.h
-@@ -16,13 +16,6 @@ extern void per_cpu_trap_init(int cpu);
- 
- #ifdef CONFIG_RELOCATABLE
- 
--struct rela_la_abs {
--	long offset;
--	long symvalue;
--};
--
--extern long __la_abs_begin;
--extern long __la_abs_end;
- extern long __rela_dyn_begin;
- extern long __rela_dyn_end;
- 
-diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
-index bb5e0e2bd3a9..fff4a0ce7750 100644
---- a/arch/loongarch/include/asm/stackframe.h
-+++ b/arch/loongarch/include/asm/stackframe.h
-@@ -86,7 +86,7 @@
-  * new value in sp.
-  */
- 	.macro	get_saved_sp docfi=0
--	la_abs	  t1, kernelsp
-+	la.pcrel  t1, kernelsp
- #ifdef CONFIG_SMP
- 	csrrd	  t0, PERCPU_BASE_KS
- 	LONG_ADD  t1, t1, t0
-diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-index ca4651f91e73..87b620a0aa13 100644
---- a/arch/loongarch/kernel/entry.S
-+++ b/arch/loongarch/kernel/entry.S
-@@ -22,7 +22,7 @@
- 	.align	5
- SYM_FUNC_START(handle_sys)
- 	csrrd		t0, PERCPU_BASE_KS
--	la_abs		t1, kernelsp
-+	la.pcrel	t1, kernelsp
- 	add.d		t1, t1, t0
- 	move		t2, sp
- 	ld.d		sp, t1, 0
-@@ -65,8 +65,7 @@ SYM_FUNC_START(handle_sys)
- 	and		tp, tp, sp
- 
- 	move	a0, sp
--	la_abs	ra, do_syscall
--	jirl	ra, ra, 0
-+	bl	do_syscall
- 
- 	RESTORE_ALL_AND_RET
- SYM_FUNC_END(handle_sys)
-diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
-index 8705a7661ce9..061727164ec2 100644
---- a/arch/loongarch/kernel/genex.S
-+++ b/arch/loongarch/kernel/genex.S
-@@ -36,7 +36,7 @@ SYM_FUNC_END(__arch_cpu_idle)
- SYM_FUNC_START(handle_vint\idx)
- 	BACKUP_T0T1
- 	SAVE_ALL
--	la_abs	t1, __arch_cpu_idle
-+	la.pcrel	t1, __arch_cpu_idle
- 	LONG_L	t0, sp, PT_ERA
- 	/* 32 byte rollback region */
- 	ori	t0, t0, 0x1f
-@@ -45,8 +45,7 @@ SYM_FUNC_START(handle_vint\idx)
- 	LONG_S	t0, sp, PT_ERA
- 1:	move	a0, sp
- 	move	a1, sp
--	la_abs	t0, do_vint
--	jirl	ra, t0, 0
-+	bl	do_vint
- 	RESTORE_ALL_AND_RET
- SYM_FUNC_END(handle_vint\idx)
- 	.endm
-@@ -76,8 +75,7 @@ SYM_FUNC_START(handle_\exception)
- 	SAVE_ALL
- 	build_prep_\prep
- 	move	a0, sp
--	la_abs	t0, do_\handler
--	jirl	ra, t0, 0
-+	bl	do_\handler
- 	UNW_NEED_RESET
- 	RESTORE_ALL_AND_RET
- SYM_FUNC_END(handle_\exception)
-diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
-index 070b9fb87ebc..5ecfd7791268 100644
---- a/arch/loongarch/kernel/relocate.c
-+++ b/arch/loongarch/kernel/relocate.c
-@@ -12,7 +12,6 @@
- #include <linux/start_kernel.h>
- #include <asm/bootinfo.h>
- #include <asm/early_ioremap.h>
--#include <asm/inst.h>
- #include <asm/sections.h>
- #include <asm/setup.h>
- 
-@@ -41,31 +40,6 @@ static inline __init void relocate_relative(void)
- 	}
- }
- 
--static inline void __init relocate_la_abs(long random_offset)
--{
--	void *begin, *end;
--	struct rela_la_abs *p;
--
--	begin = RELOCATED_KASLR(&__la_abs_begin);
--	end   = RELOCATED_KASLR(&__la_abs_end);
--
--	for (p = begin; (void *)p < end; p++) {
--		long v = p->symvalue;
--		uint32_t lu12iw, ori, lu32id, lu52id;
--		union loongarch_instruction *insn = (void *)p - p->offset;
--
--		lu12iw = (v >> 12) & 0xfffff;
--		ori    = v & 0xfff;
--		lu32id = (v >> 32) & 0xfffff;
--		lu52id = v >> 52;
--
--		insn[0].reg1i20_format.immediate = lu12iw;
--		insn[1].reg2i12_format.immediate = ori;
--		insn[2].reg1i20_format.immediate = lu32id;
--		insn[3].reg2i12_format.immediate = lu52id;
--	}
--}
--
- #ifdef CONFIG_RANDOMIZE_BASE
- static inline __init unsigned long rotate_xor(unsigned long hash,
- 					      const void *area, size_t size)
-@@ -202,8 +176,6 @@ void * __init relocate_kernel(void)
- 	if (reloc_offset)
- 		relocate_relative();
- 
--	relocate_la_abs(random_offset);
--
- 	return kernel_entry;
- }
- 
-diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-index 00f1f9061961..8ae5f245eb2f 100644
---- a/arch/loongarch/kernel/vmlinux.lds.S
-+++ b/arch/loongarch/kernel/vmlinux.lds.S
-@@ -91,15 +91,6 @@ SECTIONS
- 		__alt_instructions_end = .;
- 	}
- 
--#ifdef CONFIG_RELOCATABLE
--	. = ALIGN(8);
--	.la_abs : AT(ADDR(.la_abs) - LOAD_OFFSET) {
--		__la_abs_begin = .;
--		*(.la_abs)
--		__la_abs_end = .;
--	}
--#endif
--
- 	.got : ALIGN(16) { *(.got) }
- 	.plt : ALIGN(16) { *(.plt) }
- 	.got.plt : ALIGN(16) { *(.got.plt) }
-diff --git a/arch/loongarch/mm/tlbex.S b/arch/loongarch/mm/tlbex.S
-index 53321d3447a2..3ee16fc61788 100644
---- a/arch/loongarch/mm/tlbex.S
-+++ b/arch/loongarch/mm/tlbex.S
-@@ -41,8 +41,7 @@ SYM_FUNC_START(handle_tlb_protect\idx)
- 	move		a1, zero
- 	csrrd		a2, LOONGARCH_CSR_BADV
- 	REG_S		a2, sp, PT_BVADDR
--	la_abs		t0, do_page_fault
--	jirl		ra, t0, 0
-+	bl		do_page_fault
- 	RESTORE_ALL_AND_RET
- SYM_FUNC_END(handle_tlb_protect\idx)
- 	.endm
-@@ -119,7 +118,7 @@ SYM_FUNC_START(handle_tlb_load\idx)
- 
- #ifdef CONFIG_64BIT
- 3: /* vmalloc_load: */
--	la_abs		t1, swapper_pg_dir
-+	la.pcrel	t1, swapper_pg_dir
- 	b		1b
- #endif
- 
-@@ -190,8 +189,7 @@ SYM_FUNC_START(handle_tlb_load\idx)
- 5: /* nopage_tlb_load: */
- 	dbar		0
- 	csrrd		ra, EXCEPTION_KS2
--	la_abs		t0, tlb_do_page_fault_0
--	jr		t0
-+	b		tlb_do_page_fault_0
- SYM_FUNC_END(handle_tlb_load\idx)
- 	.endm
- 
-@@ -268,7 +266,7 @@ smp_pgtable_change_store:
- 
- #ifdef CONFIG_64BIT
- vmalloc_store:
--	la_abs		t1, swapper_pg_dir
-+	la.pcrel	t1, swapper_pg_dir
- 	b		vmalloc_done_store
- #endif
- 
-@@ -341,8 +339,7 @@ tlb_huge_update_store:
- nopage_tlb_store:
- 	dbar		0
- 	csrrd		ra, EXCEPTION_KS2
--	la_abs		t0, tlb_do_page_fault_1
--	jr		t0
-+	b		tlb_do_page_fault_1
- SYM_FUNC_END(handle_tlb_store)
- 	.endm
- 
-@@ -418,7 +415,7 @@ smp_pgtable_change_modify:
- 
- #ifdef CONFIG_64BIT
- vmalloc_modify:
--	la_abs		t1, swapper_pg_dir
-+	la.pcrel	t1, swapper_pg_dir
- 	b		vmalloc_done_modify
- #endif
- 
-@@ -490,8 +487,7 @@ tlb_huge_update_modify:
- nopage_tlb_modify:
- 	dbar		0
- 	csrrd		ra, EXCEPTION_KS2
--	la_abs		t0, tlb_do_page_fault_1
--	jr		t0
-+	b		tlb_do_page_fault_1
- SYM_FUNC_END(handle_tlb_modify)
- 	.endm
- 
--- 
-2.34.3
+> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
+> index ad2ce1a0908e..e99b50359900 100644
+> --- a/arch/loongarch/kernel/vmlinux.lds.S
+> +++ b/arch/loongarch/kernel/vmlinux.lds.S
+> @@ -21,6 +21,11 @@
+>   */
+>  PECOFF_FILE_ALIGN = 0x200;
+>  PECOFF_SEGMENT_ALIGN = 0x10000;
+> +EX_HANDLER_ALIGN = SZ_512;
+> +EX_HANDLER_SIZE = SZ_512;
+> +EX_HANDLER_TOTAL = 78; /* 64 Exceptions + 14 Interrupts */
+
+You can define EXCCODE_NUM as 78 in loongarch.h, and remove the unused
+EXCCODE_INT_END and EXCCODE_INT_NUM in PATCH4.
+
+Youling.
+
+> +EXCEPTION_ENTRY_ALIGN = SZ_64K;
+> +TLBR_ENTRY_ALIGN = SZ_4K;
+>
+>  OUTPUT_ARCH(loongarch)
+>  ENTRY(kernel_entry)
+> @@ -54,6 +59,17 @@ SECTIONS
+>  	. = ALIGN(PECOFF_SEGMENT_ALIGN);
+>  	_etext = .;
+>
+> +	. = ALIGN(EXCEPTION_ENTRY_ALIGN);
+> +	.ex_handlers : {
+> +		__ex_handlers = .;
+> +		*(SORT_BY_INIT_PRIORITY(.exception_handlers.*))
+> +		. = ALIGN(EX_HANDLER_ALIGN);
+> +		__ex_handlers_end = .;
+> +		. = ALIGN(TLBR_ENTRY_ALIGN);
+> +		__tlbr_entry = .;
+> +		*(.tlbrhandler)
+> +	}
+> +
+>  	/*
+>  	 * struct alt_inst entries. From the header (alternative.h):
+>  	 * "Alternative instructions for different CPU types or capabilities"
+> @@ -154,3 +170,6 @@ SECTIONS
+>  		*(.eh_frame)
+>  	}
+>  }
+> +
+> +ASSERT(__ex_handlers_end == (__ex_handlers + EX_HANDLER_SIZE * EX_HANDLER_TOTAL),
+> +       "The amount of exception handlers does not match!");
 
