@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D60C1A21
-	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 07:02:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04A2A817
+	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 07:02:11 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Cx_82upv1jx2AGAA--.6545S3;
-	Tue, 28 Feb 2023 15:01:02 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxEJWzpv1jSGEGAA--.6416S3;
+	Tue, 28 Feb 2023 15:01:07 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S19;
-	Tue, 28 Feb 2023 15:01:02 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S31;
+	Tue, 28 Feb 2023 15:01:06 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -21,9 +21,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v3 17/29] LoongArch: KVM: Implement virtual machine tlb operations
-Date: Tue, 28 Feb 2023 15:00:44 +0800
-Message-Id: <20230228070057.3687180-18-zhaotianrui@loongson.cn>
+Subject: [PATCH v3 29/29] LoongArch: KVM: Enable kvm config and add the makefile
+Date: Tue, 28 Feb 2023 15:00:56 +0800
+Message-Id: <20230228070057.3687180-30-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
 References: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
@@ -34,71 +34,152 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S19
+X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S31
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7WrW7Xw4fGF4xGw1xtw43KFg_yoW8JF4kpF
-	yfurs5Kw4fX3ZxW39xXwn7Wr13Xr4vkF17ZFW3ua4rZrsrtr1vyFnakrykJFWUtayrCr48
-	W34ftF4jgFWUJw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXFW3Ww4DWry3Cr48KFy7GFg_yoW5KFWDpF
+	s3Ar1kGr4xWFn3JrZ3t34kWrs8CFn7KF47u3Wava48Cry7Z34kur18tr9rXFyUA393JrW0
+	gr1rGa1agFWUJaUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
-	CY1x0267AKxVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
-	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
-	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
+	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
 
-Implement loongarch virtual machine tlb operations such as flush tlb by
-specific gpa parameter and flush all of the virt machines tlb.
+Enable loongarch kvm config and add the makefile to support build kvm
+module.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/tlb.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 arch/loongarch/kvm/tlb.c
+ arch/loongarch/Kbuild                      |  1 +
+ arch/loongarch/Kconfig                     |  2 ++
+ arch/loongarch/configs/loongson3_defconfig |  2 ++
+ arch/loongarch/kvm/Kconfig                 | 38 ++++++++++++++++++++++
+ arch/loongarch/kvm/Makefile                | 21 ++++++++++++
+ 5 files changed, 64 insertions(+)
+ create mode 100644 arch/loongarch/kvm/Kconfig
+ create mode 100644 arch/loongarch/kvm/Makefile
 
-diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
+diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
+index b01f5cdb27e0..40be8a1696f9 100644
+--- a/arch/loongarch/Kbuild
++++ b/arch/loongarch/Kbuild
+@@ -2,6 +2,7 @@ obj-y += kernel/
+ obj-y += mm/
+ obj-y += net/
+ obj-y += vdso/
++obj-y += kvm/
+ 
+ # for cleaning
+ subdir- += boot
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 9cc8b84f7eb0..424ad93927ce 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -142,6 +142,7 @@ config LOONGARCH
+ 	select USE_PERCPU_NUMA_NODE_ID
+ 	select USER_STACKTRACE_SUPPORT
+ 	select ZONE_DMA32
++	select HAVE_KVM
+ 
+ config 32BIT
+ 	bool
+@@ -541,3 +542,4 @@ source "drivers/acpi/Kconfig"
+ endmenu
+ 
+ source "drivers/firmware/Kconfig"
++source "arch/loongarch/kvm/Kconfig"
+diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+index eb84cae642e5..9a6e31b43916 100644
+--- a/arch/loongarch/configs/loongson3_defconfig
++++ b/arch/loongarch/configs/loongson3_defconfig
+@@ -62,6 +62,8 @@ CONFIG_EFI_ZBOOT=y
+ CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
+ CONFIG_EFI_CAPSULE_LOADER=m
+ CONFIG_EFI_TEST=m
++CONFIG_VIRTUALIZATION=y
++CONFIG_KVM=m
+ CONFIG_MODULES=y
+ CONFIG_MODULE_FORCE_LOAD=y
+ CONFIG_MODULE_UNLOAD=y
+diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
 new file mode 100644
-index 000000000000..66e116cf2486
+index 000000000000..8a999b4c0232
 --- /dev/null
-+++ b/arch/loongarch/kvm/tlb.c
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
++++ b/arch/loongarch/kvm/Kconfig
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# KVM configuration
++#
 +
-+#include <linux/kvm_host.h>
-+#include <asm/tlb.h>
++source "virt/kvm/Kconfig"
 +
-+int kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
-+{
-+	preempt_disable();
-+	gpa &= (PAGE_MASK << 1);
-+	invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
-+	preempt_enable();
-+	return 0;
-+}
++menuconfig VIRTUALIZATION
++	bool "Virtualization"
++	help
++	  Say Y here to get to see options for using your Linux host to run
++	  other operating systems inside virtual machines (guests).
++	  This option alone does not add any kernel code.
 +
-+/**
-+ * kvm_flush_tlb_all() - Flush all root TLB entries for
-+ * guests.
-+ *
-+ * Invalidate all entries including GVA-->GPA and GPA-->HPA mappings.
-+ */
-+void kvm_flush_tlb_all(void)
-+{
-+	unsigned long flags;
++	  If you say N, all options in this submenu will be skipped and
++	  disabled.
 +
-+	local_irq_save(flags);
-+	invtlb_all(INVTLB_ALLGID, 0, 0);
-+	local_irq_restore(flags);
-+}
++if VIRTUALIZATION
++
++config KVM
++	tristate "Kernel-based Virtual Machine (KVM) support"
++	depends on HAVE_KVM
++	select MMU_NOTIFIER
++	select ANON_INODES
++	select PREEMPT_NOTIFIERS
++	select KVM_MMIO
++	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
++	select HAVE_KVM_VCPU_ASYNC_IOCTL
++	select HAVE_KVM_EVENTFD
++	select SRCU
++	help
++	  Support hosting virtualized guest machines using hardware
++	  virtualization extensions. You will need a fairly processor
++	  equipped with virtualization extensions.
++
++	  If unsure, say N.
++
++endif # VIRTUALIZATION
+diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+new file mode 100644
+index 000000000000..42e9dcc18a07
+--- /dev/null
++++ b/arch/loongarch/kvm/Makefile
+@@ -0,0 +1,21 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Makefile for LOONGARCH KVM support
++#
++
++ccflags-y += -I $(srctree)/$(src)
++
++include $(srctree)/virt/kvm/Makefile.kvm
++
++obj-$(CONFIG_KVM) += kvm.o
++
++kvm-y += main.o
++kvm-y += vm.o
++kvm-y += vmid.o
++kvm-y += tlb.o
++kvm-y += mmu.o
++kvm-y += vcpu.o
++kvm-y += exit.o
++kvm-y += interrupt.o
++kvm-y += timer.o
++kvm-y += switch.o
 -- 
 2.31.1
 
