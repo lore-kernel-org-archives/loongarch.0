@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 049E6815
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04B2881D
 	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 07:02:11 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxJAywpv1j+mAGAA--.6374S3;
-	Tue, 28 Feb 2023 15:01:04 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dx_5etpv1jnmAGAA--.6576S3;
+	Tue, 28 Feb 2023 15:01:01 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S23;
-	Tue, 28 Feb 2023 15:01:04 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S15;
+	Tue, 28 Feb 2023 15:01:01 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -21,9 +21,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v3 21/29] LoongArch: KVM: Implement handle iocsr exception
-Date: Tue, 28 Feb 2023 15:00:48 +0800
-Message-Id: <20230228070057.3687180-22-zhaotianrui@loongson.cn>
+Subject: [PATCH v3 13/29] LoongArch: KVM: Implement misc vcpu related interfaces
+Date: Tue, 28 Feb 2023 15:00:40 +0800
+Message-Id: <20230228070057.3687180-14-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
 References: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
@@ -34,11 +34,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S23
+X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S15
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWFWrGw17Kry5ZFy7ZrWfAFb_yoWrJF1Upa
-	yUu34ktrW8Ww1ftwsxJFs7Xr1aqF48Gr9rXFZxJw4rurW2ya45Jr4vyrnFvF98K39xGr4I
-	vw1fJryxuF1qy3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxJw4kXFW5Wr48KF18Wr17Wrg_yoW5CFy8pr
+	1xC3y5X3yrGr47Gw1ftrs09rsI93ykKr17Zry7W3ya9r4DKF15Aa1kKrWDAFW5Jr1rZF1S
+	vrn8ta1Dua1Fy3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -53,156 +53,120 @@ X-Coremail-Antispam: 1Uk129KBjvJXoWxWFWrGw17Kry5ZFy7ZrWfAFb_yoWrJF1Upa
 	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
 	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-Implement kvm handle vcpu iocsr exception, setting the iocsr info into
-vcpu_run and return to user space to handle it.
+Implement some misc vcpu relaterd interfaces, such as vcpu runnable,
+vcpu should kick, vcpu dump regs, etc.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/include/asm/inst.h | 16 ++++++
- arch/loongarch/kvm/exit.c         | 92 +++++++++++++++++++++++++++++++
- 2 files changed, 108 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 95 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 7eedd83fd0d7..8ed137814118 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -50,6 +50,14 @@ enum reg2_op {
- 	revbd_op	= 0x0f,
- 	revh2w_op	= 0x10,
- 	revhd_op	= 0x11,
-+	iocsrrdb_op	= 0x19200,
-+	iocsrrdh_op	= 0x19201,
-+	iocsrrdw_op	= 0x19202,
-+	iocsrrdd_op	= 0x19203,
-+	iocsrwrb_op	= 0x19204,
-+	iocsrwrh_op	= 0x19205,
-+	iocsrwrw_op	= 0x19206,
-+	iocsrwrd_op	= 0x19207,
- };
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index bdcc73172eae..615f68d082f8 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -13,6 +13,101 @@
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
  
- enum reg2i5_op {
-@@ -261,6 +269,13 @@ struct reg3sa2_format {
- 	unsigned int opcode : 15;
- };
- 
-+struct reg2csr_format {
-+	unsigned int rd : 5;
-+	unsigned int rj : 5;
-+	unsigned int csr : 14;
-+	unsigned int opcode : 8;
-+};
-+
- union loongarch_instruction {
- 	unsigned int word;
- 	struct reg0i26_format	reg0i26_format;
-@@ -275,6 +290,7 @@ union loongarch_instruction {
- 	struct reg2bstrd_format	reg2bstrd_format;
- 	struct reg3_format	reg3_format;
- 	struct reg3sa2_format	reg3sa2_format;
-+	struct reg2csr_format	reg2csr_format;
- };
- 
- #define LOONGARCH_INSN_SIZE	sizeof(union loongarch_instruction)
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index dc37827d9bcb..f02e2b9402f2 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -99,3 +99,95 @@ static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
- 
- 	return EMULATE_DONE;
- }
-+
-+int _kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu)
++int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
 +{
-+	u32 rd, rj, opcode;
-+	u32 addr;
-+	unsigned long val;
-+	int ret;
-+
-+	/*
-+	 * Each IOCSR with different opcode
-+	 */
-+	rd = inst.reg2_format.rd;
-+	rj = inst.reg2_format.rj;
-+	opcode = inst.reg2_format.opcode;
-+	addr = vcpu->arch.gprs[rj];
-+	ret = EMULATE_DO_IOCSR;
-+	run->iocsr_io.phys_addr = addr;
-+	run->iocsr_io.is_write = 0;
-+
-+	/* LoongArch is Little endian */
-+	switch (opcode) {
-+	case iocsrrdb_op:
-+		run->iocsr_io.len = 1;
-+		break;
-+	case iocsrrdh_op:
-+		run->iocsr_io.len = 2;
-+		break;
-+	case iocsrrdw_op:
-+		run->iocsr_io.len = 4;
-+		break;
-+	case iocsrrdd_op:
-+		run->iocsr_io.len = 8;
-+		break;
-+	case iocsrwrb_op:
-+		run->iocsr_io.len = 1;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	case iocsrwrh_op:
-+		run->iocsr_io.len = 2;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	case iocsrwrw_op:
-+		run->iocsr_io.len = 4;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	case iocsrwrd_op:
-+		run->iocsr_io.len = 8;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	default:
-+		ret = EMULATE_FAIL;
-+		break;
-+	}
-+
-+	if (ret == EMULATE_DO_IOCSR) {
-+		if (run->iocsr_io.is_write) {
-+			val = vcpu->arch.gprs[rd];
-+			memcpy(run->iocsr_io.data, &val, run->iocsr_io.len);
-+		}
-+		vcpu->arch.io_gpr = rd;
-+	}
-+
-+	return ret;
++	return !!(vcpu->arch.irq_pending);
 +}
 +
-+int _kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
++int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
 +{
-+	unsigned long *gpr = &vcpu->arch.gprs[vcpu->arch.io_gpr];
-+	enum emulation_result er = EMULATE_DONE;
++	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
++}
 +
-+	switch (run->iocsr_io.len) {
-+	case 8:
-+		*gpr = *(s64 *)run->iocsr_io.data;
-+		break;
-+	case 4:
-+		*gpr = *(int *)run->iocsr_io.data;
-+		break;
-+	case 2:
-+		*gpr = *(short *)run->iocsr_io.data;
-+		break;
-+	case 1:
-+		*gpr = *(char *) run->iocsr_io.data;
-+		break;
-+	default:
-+		kvm_err("Bad IOCSR length: %d,addr is 0x%lx",
-+				run->iocsr_io.len, vcpu->arch.badv);
-+		er = EMULATE_FAIL;
-+		break;
++bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
++{
++	return false;
++}
++
++vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
++{
++	return VM_FAULT_SIGBUS;
++}
++
++int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu *vcpu,
++				  struct kvm_translation *tr)
++{
++	return -EINVAL;
++}
++
++int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
++{
++	return _kvm_pending_timer(vcpu) ||
++		kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT) &
++			(1 << (EXCCODE_TIMER - EXCCODE_INT_START));
++}
++
++int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu)
++{
++	int i;
++
++	if (!vcpu)
++		return -1;
++
++	kvm_debug("VCPU Register Dump:\n");
++	kvm_debug("\tpc = 0x%08lx\n", vcpu->arch.pc);
++	kvm_debug("\texceptions: %08lx\n", vcpu->arch.irq_pending);
++
++	for (i = 0; i < 32; i += 4) {
++		kvm_debug("\tgpr%02d: %08lx %08lx %08lx %08lx\n", i,
++		       vcpu->arch.gprs[i],
++		       vcpu->arch.gprs[i + 1],
++		       vcpu->arch.gprs[i + 2], vcpu->arch.gprs[i + 3]);
 +	}
 +
-+	return er;
++	kvm_debug("\tCRMOD: 0x%08llx, exst: 0x%08llx\n",
++		  kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD),
++		  kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT));
++
++	kvm_debug("\tERA: 0x%08llx\n", kvm_read_hw_gcsr(LOONGARCH_CSR_ERA));
++
++	return 0;
 +}
++
++int kvm_arch_vcpu_ioctl_get_mpstate(struct kvm_vcpu *vcpu,
++				    struct kvm_mp_state *mp_state)
++{
++	return -ENOIOCTLCMD;
++}
++
++int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
++				    struct kvm_mp_state *mp_state)
++{
++	return -ENOIOCTLCMD;
++}
++
++int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
++					struct kvm_guest_debug *dbg)
++{
++	return -EINVAL;
++}
++
++/**
++ * kvm_migrate_count() - Migrate timer.
++ * @vcpu:       Virtual CPU.
++ *
++ * Migrate hrtimer to the current CPU by cancelling and restarting it
++ * if it was running prior to being cancelled.
++ *
++ * Must be called when the VCPU is migrated to a different CPU to ensure that
++ * timer expiry during guest execution interrupts the guest and causes the
++ * interrupt to be delivered in a timely manner.
++ */
++static void kvm_migrate_count(struct kvm_vcpu *vcpu)
++{
++	if (hrtimer_cancel(&vcpu->arch.swtimer))
++		hrtimer_restart(&vcpu->arch.swtimer);
++}
++
+ int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force)
+ {
+ 	struct loongarch_csrs *csr = vcpu->arch.csr;
 -- 
 2.31.1
 
