@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04AAA81C
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04B4C81F
 	for <loongarch@lists.linux.dev>; Tue, 28 Feb 2023 07:02:11 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxIk6ypv1jK2EGAA--.6411S3;
-	Tue, 28 Feb 2023 15:01:06 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cxf9uupv1jvWAGAA--.6352S3;
+	Tue, 28 Feb 2023 15:01:02 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S26;
-	Tue, 28 Feb 2023 15:01:05 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+Wppv1jPG9AAA--.15462S18;
+	Tue, 28 Feb 2023 15:01:02 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -21,9 +21,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v3 24/29] LoongArch: KVM: Implement handle mmio exception
-Date: Tue, 28 Feb 2023 15:00:51 +0800
-Message-Id: <20230228070057.3687180-25-zhaotianrui@loongson.cn>
+Subject: [PATCH v3 16/29] LoongArch: KVM: Implement update VM id function
+Date: Tue, 28 Feb 2023 15:00:43 +0800
+Message-Id: <20230228070057.3687180-17-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
 References: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
@@ -34,355 +34,104 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S26
+X-CM-TRANSID:AQAAf8Bxc+Wppv1jPG9AAA--.15462S18
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3JFWfZF48Cr4Utry5Kr1kAFb_yoW3GF1fpr
-	WUC34jvrsaqryYy3srKrs5Xr1a9F48GrsrJrZ7t39Fgr17tFy5Ar4v9rW2vFW3CrWF9a1x
-	Z3Z3JF47uF1UAa7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Aw1kJrWDZF4Dur48Aw1UWrg_yoW8tryDpF
+	WxCrn5Wr48Xwnxu3sIqw10qr1Y9395JF13Xa47Ja4Yyr17t3sFkrWvkrWDAFyrXr1rAryx
+	XF15tF4YkF18A37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
+	CY1x0267AKxVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
+	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-Implement handle mmio exception, setting the mmio info into vcpu_run and
-return to user space to handle it.
+Implement kvm check vmid and update vmid, the vmid should be checked before
+vcpu enter guest.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 308 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 308 insertions(+)
+ arch/loongarch/kvm/vmid.c | 65 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 arch/loongarch/kvm/vmid.c
 
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 97b90b04d641..85e2523dad33 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -204,6 +204,265 @@ int _kvm_emu_idle(struct kvm_vcpu *vcpu)
- 	return EMULATE_DONE;
- }
- 
-+int _kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst)
+diff --git a/arch/loongarch/kvm/vmid.c b/arch/loongarch/kvm/vmid.c
+new file mode 100644
+index 000000000000..7d9688c24184
+--- /dev/null
++++ b/arch/loongarch/kvm/vmid.c
+@@ -0,0 +1,65 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/kvm_host.h>
++#include <asm/kvm_host.h>
++#include "trace.h"
++
++static void _kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
 +{
-+	struct kvm_run *run = vcpu->run;
-+	unsigned int rd, op8, opcode;
-+	unsigned long rd_val = 0;
-+	void *data = run->mmio.data;
-+	unsigned long curr_pc;
-+	int ret;
++	struct kvm_context *context;
++	unsigned long vpid;
++
++	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
++	vpid = context->vpid_cache + 1;
++	if (!(vpid & vpid_mask)) {
++		/* finish round of 64 bit loop */
++		if (unlikely(!vpid))
++			vpid = vpid_mask + 1;
++
++		/* vpid 0 reserved for root */
++		++vpid;
++
++		/* start new vpid cycle */
++		kvm_flush_tlb_all();
++	}
++
++	context->vpid_cache = vpid;
++	vcpu->arch.vpid = vpid;
++}
++
++void _kvm_check_vmid(struct kvm_vcpu *vcpu, int cpu)
++{
++	struct kvm_context *context;
++	bool migrated;
++	unsigned long ver, old, vpid;
 +
 +	/*
-+	 * Update PC and hold onto current PC in case there is
-+	 * an error and we want to rollback the PC
++	 * Are we entering guest context on a different CPU to last time?
++	 * If so, the VCPU's guest TLB state on this CPU may be stale.
 +	 */
-+	curr_pc = vcpu->arch.pc;
-+	update_pc(&vcpu->arch);
++	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
++	migrated = (vcpu->arch.last_exec_cpu != cpu);
++	vcpu->arch.last_exec_cpu = cpu;
 +
-+	op8 = (inst.word >> 24) & 0xff;
-+	run->mmio.phys_addr = vcpu->arch.badv;
-+	ret = EMULATE_DO_MMIO;
-+	if (op8 < 0x28) {
-+		/* stptrw/d process */
-+		rd = inst.reg2i14_format.rd;
-+		opcode = inst.reg2i14_format.opcode;
-+
-+		switch (opcode) {
-+		case stptrd_op:
-+			run->mmio.len = 8;
-+			*(unsigned long *)data = vcpu->arch.gprs[rd];
-+			break;
-+		case stptrw_op:
-+			run->mmio.len = 4;
-+			*(unsigned int *)data = vcpu->arch.gprs[rd];
-+			break;
-+		default:
-+			ret = EMULATE_FAIL;
-+			break;
-+		}
-+	} else if (op8 < 0x30) {
-+		/* st.b/h/w/d  process */
-+		rd = inst.reg2i12_format.rd;
-+		opcode = inst.reg2i12_format.opcode;
-+		rd_val = vcpu->arch.gprs[rd];
-+
-+		switch (opcode) {
-+		case std_op:
-+			run->mmio.len = 8;
-+			*(unsigned long *)data = rd_val;
-+			break;
-+		case stw_op:
-+			run->mmio.len = 4;
-+			*(unsigned int *)data = rd_val;
-+			break;
-+		case sth_op:
-+			run->mmio.len = 2;
-+			*(unsigned short *)data = rd_val;
-+			break;
-+		case stb_op:
-+			run->mmio.len = 1;
-+			*(unsigned char *)data = rd_val;
-+			break;
-+		default:
-+			ret = EMULATE_FAIL;
-+			break;
-+		}
-+	} else if (op8 == 0x38) {
-+		/* stxb/h/w/d process */
-+		rd = inst.reg3_format.rd;
-+		opcode = inst.reg3_format.opcode;
-+
-+		switch (opcode) {
-+		case stxb_op:
-+			run->mmio.len = 1;
-+			*(unsigned char *)data = vcpu->arch.gprs[rd];
-+			break;
-+		case stxh_op:
-+			run->mmio.len = 2;
-+			*(unsigned short *)data = vcpu->arch.gprs[rd];
-+			break;
-+		case stxw_op:
-+			run->mmio.len = 4;
-+			*(unsigned int *)data = vcpu->arch.gprs[rd];
-+			break;
-+		case stxd_op:
-+			run->mmio.len = 8;
-+			*(unsigned long *)data = vcpu->arch.gprs[rd];
-+			break;
-+		default:
-+			ret = EMULATE_FAIL;
-+			break;
-+		}
-+	} else
-+		ret = EMULATE_FAIL;
-+
-+	if (ret == EMULATE_DO_MMIO) {
-+		run->mmio.is_write = 1;
-+		vcpu->mmio_needed = 1;
-+		vcpu->mmio_is_write = 1;
-+	} else {
-+		vcpu->arch.pc = curr_pc;
-+		kvm_err("Write not supporded inst=0x%08x @%lx BadVaddr:%#lx\n",
-+			inst.word, vcpu->arch.pc, vcpu->arch.badv);
-+		kvm_arch_vcpu_dump_regs(vcpu);
-+		/* Rollback PC if emulation was unsuccessful */
++	/*
++	 * Check if our vpid is of an older version
++	 *
++	 * We also discard the stored vpid if we've executed on
++	 * another CPU, as the guest mappings may have changed without
++	 * hypervisor knowledge.
++	 */
++	ver = vcpu->arch.vpid & ~vpid_mask;
++	old = context->vpid_cache  & ~vpid_mask;
++	if (migrated || (ver != old)) {
++		_kvm_update_vpid(vcpu, cpu);
++		trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
 +	}
 +
-+	return ret;
-+}
-+
-+int _kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst)
-+{
-+	unsigned int op8, opcode, rd;
-+	struct kvm_run *run = vcpu->run;
-+	int ret;
-+
-+	run->mmio.phys_addr = vcpu->arch.badv;
-+	vcpu->mmio_needed = 2;	/* signed */
-+	op8 = (inst.word >> 24) & 0xff;
-+	ret = EMULATE_DO_MMIO;
-+
-+	if (op8 < 0x28) {
-+		/* ldptr.w/d process */
-+		rd = inst.reg2i14_format.rd;
-+		opcode = inst.reg2i14_format.opcode;
-+
-+		switch (opcode) {
-+		case ldptrd_op:
-+			run->mmio.len = 8;
-+			break;
-+		case ldptrw_op:
-+			run->mmio.len = 4;
-+			break;
-+		default:
-+			break;
-+		}
-+	} else if (op8 < 0x2f) {
-+		/* ld.b/h/w/d, ld.bu/hu/wu process */
-+		rd = inst.reg2i12_format.rd;
-+		opcode = inst.reg2i12_format.opcode;
-+
-+		switch (opcode) {
-+		case ldd_op:
-+			run->mmio.len = 8;
-+			break;
-+		case ldwu_op:
-+			vcpu->mmio_needed = 1;	/* unsigned */
-+			run->mmio.len = 4;
-+			break;
-+		case ldw_op:
-+			run->mmio.len = 4;
-+			break;
-+		case ldhu_op:
-+			vcpu->mmio_needed = 1;	/* unsigned */
-+			run->mmio.len = 2;
-+			break;
-+		case ldh_op:
-+			run->mmio.len = 2;
-+			break;
-+		case ldbu_op:
-+			vcpu->mmio_needed = 1;	/* unsigned */
-+			run->mmio.len = 1;
-+			break;
-+		case ldb_op:
-+			run->mmio.len = 1;
-+			break;
-+		default:
-+			ret = EMULATE_FAIL;
-+			break;
-+		}
-+	} else if (op8 == 0x38) {
-+		/* ldxb/h/w/d, ldxb/h/wu, ldgtb/h/w/d, ldleb/h/w/d process */
-+		rd = inst.reg3_format.rd;
-+		opcode = inst.reg3_format.opcode;
-+
-+		switch (opcode) {
-+		case ldxb_op:
-+			run->mmio.len = 1;
-+			break;
-+		case ldxbu_op:
-+			run->mmio.len = 1;
-+			vcpu->mmio_needed = 1;	/* unsigned */
-+			break;
-+		case ldxh_op:
-+			run->mmio.len = 2;
-+			break;
-+		case ldxhu_op:
-+			run->mmio.len = 2;
-+			vcpu->mmio_needed = 1;	/* unsigned */
-+			break;
-+		case ldxw_op:
-+			run->mmio.len = 4;
-+			break;
-+		case ldxwu_op:
-+			run->mmio.len = 4;
-+			vcpu->mmio_needed = 1;	/* unsigned */
-+			break;
-+		case ldxd_op:
-+			run->mmio.len = 8;
-+			break;
-+		default:
-+			ret = EMULATE_FAIL;
-+			break;
-+		}
-+	} else
-+		ret = EMULATE_FAIL;
-+
-+	if (ret == EMULATE_DO_MMIO) {
-+		/* Set for _kvm_complete_mmio_read use */
-+		vcpu->arch.io_gpr = rd;
-+		run->mmio.is_write = 0;
-+		vcpu->mmio_is_write = 0;
-+	} else {
-+		kvm_err("Load not supporded inst=0x%08x @%lx BadVaddr:%#lx\n",
-+			inst.word, vcpu->arch.pc, vcpu->arch.badv);
-+		kvm_arch_vcpu_dump_regs(vcpu);
-+		vcpu->mmio_needed = 0;
-+	}
-+	return ret;
-+}
-+
-+int _kvm_complete_mmio_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
-+{
-+	unsigned long *gpr = &vcpu->arch.gprs[vcpu->arch.io_gpr];
-+	enum emulation_result er = EMULATE_DONE;
-+
-+	/* update with new PC */
-+	update_pc(&vcpu->arch);
-+	switch (run->mmio.len) {
-+	case 8:
-+		*gpr = *(s64 *)run->mmio.data;
-+		break;
-+	case 4:
-+		if (vcpu->mmio_needed == 2)
-+			*gpr = *(int *)run->mmio.data;
-+		else
-+			*gpr = *(unsigned int *)run->mmio.data;
-+		break;
-+	case 2:
-+		if (vcpu->mmio_needed == 2)
-+			*gpr = *(short *) run->mmio.data;
-+		else
-+			*gpr = *(unsigned short *)run->mmio.data;
-+
-+		break;
-+	case 1:
-+		if (vcpu->mmio_needed == 2)
-+			*gpr = *(char *) run->mmio.data;
-+		else
-+			*gpr = *(unsigned char *) run->mmio.data;
-+		break;
-+	default:
-+		kvm_err("Bad MMIO length: %d,addr is 0x%lx",
-+				run->mmio.len, vcpu->arch.badv);
-+		er = EMULATE_FAIL;
-+		break;
-+	}
-+
-+	return er;
-+}
-+
- static int _kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
- {
- 	enum emulation_result er = EMULATE_DONE;
-@@ -318,3 +577,52 @@ static int _kvm_handle_gspr(struct kvm_vcpu *vcpu)
- 	}
- 	return ret;
- }
-+
-+static int _kvm_handle_mmu_fault(struct kvm_vcpu *vcpu, bool write)
-+{
-+	struct kvm_run *run = vcpu->run;
-+	unsigned long badv = vcpu->arch.badv;
-+	larch_inst inst;
-+	enum emulation_result er = EMULATE_DONE;
-+	int ret;
-+
-+	ret = kvm_handle_mm_fault(vcpu, badv, write);
-+	if (ret) {
-+		/* Treat as MMIO */
-+		inst.word = vcpu->arch.badi;
-+		if (write) {
-+			er = _kvm_emu_mmio_write(vcpu, inst);
-+		} else {
-+			/* A code fetch fault doesn't count as an MMIO */
-+			if (kvm_is_ifetch_fault(&vcpu->arch)) {
-+				kvm_err("%s ifetch error addr:%lx\n", __func__, badv);
-+				run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-+				return RESUME_HOST;
-+			}
-+
-+			er = _kvm_emu_mmio_read(vcpu, inst);
-+		}
-+	}
-+
-+	if (er == EMULATE_DONE) {
-+		ret = RESUME_GUEST;
-+	} else if (er == EMULATE_DO_MMIO) {
-+		run->exit_reason = KVM_EXIT_MMIO;
-+		ret = RESUME_HOST;
-+	} else {
-+		run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-+		ret = RESUME_HOST;
-+	}
-+
-+	return ret;
-+}
-+
-+static int _kvm_handle_write_fault(struct kvm_vcpu *vcpu)
-+{
-+	return _kvm_handle_mmu_fault(vcpu, true);
-+}
-+
-+static int _kvm_handle_read_fault(struct kvm_vcpu *vcpu)
-+{
-+	return _kvm_handle_mmu_fault(vcpu, false);
++	/* Restore GSTAT(0x50).vpid */
++	vpid = (vcpu->arch.vpid & vpid_mask)
++		<< CSR_GSTAT_GID_SHIFT;
++	change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
 +}
 -- 
 2.31.1
