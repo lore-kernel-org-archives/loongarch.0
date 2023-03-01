@@ -1,129 +1,111 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AECD10EE
-	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 09:21:49 +0000 (UTC)
-Received: from loongson.cn (unknown [192.168.200.1])
-	by gateway (Coremail) with SMTP id _____8Ax69kTGf9j1sQGAA--.7272S3;
-	Wed, 01 Mar 2023 17:21:23 +0800 (CST)
-Received: from [0.0.0.0] (unknown [192.168.200.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxaL3CGP9jtlJDAA--.53207S3;
-	Wed, 01 Mar 2023 17:20:03 +0800 (CST)
-Subject: Re: [PATCH] efi/loongarch: Reintroduce efi_relocate_kernel() to
- relocate kernel
-To: Huacai Chen <chenhuacai@loongson.cn>, Ard Biesheuvel <ardb@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>
-References: <20230301085545.2373646-1-chenhuacai@loongson.cn>
-Cc: linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
- Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <aba37b65-6fc4-721e-ebc5-df52533e4791@loongson.cn>
-Date: Wed, 1 Mar 2023 17:20:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BFF10EE
+	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 09:24:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1677662679;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EjLBO2oSAz1qd2pyxymW7NNpmRhL/8rZkZFuY2z88lg=;
+	b=hnB5k+trrb5GvrQ9AWqRCwMOlVsJ4WEvgzLxtacsgGagHMdFaWClQGlBZOVYORF9QlSbff
+	s6bwU/OYaJFvnJp6h/jIzTTU3aGnUOeqYwg+jki4jtKPb3ro7jIMmePKnPUbRY4izbQqqs
+	9LsGwrm8u6px4D8pFlcj9IYzN0jqFHw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-280-y6BwrYfuMfy1XckhSv52eQ-1; Wed, 01 Mar 2023 04:24:33 -0500
+X-MC-Unique: y6BwrYfuMfy1XckhSv52eQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 41D9A85CBE0;
+	Wed,  1 Mar 2023 09:24:32 +0000 (UTC)
+Received: from localhost (ovpn-13-180.pek2.redhat.com [10.72.13.180])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id F07B52026D76;
+	Wed,  1 Mar 2023 09:24:28 +0000 (UTC)
+Date: Wed, 1 Mar 2023 17:24:26 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Matthew Wilcox <willy@infradead.org>,
+	Edward Cree <ecree.xilinx@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, arnd@arndb.de, christophe.leroy@csgroup.eu,
+	hch@infradead.org, agordeev@linux.ibm.com,
+	wangkefeng.wang@huawei.com, schnelle@linux.ibm.com,
+	David.Laight@aculab.com, shorne@gmail.com,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	x86@kernel.org, netdev@vger.kernel.org,
+	Martin Habets <habetsm.xilinx@gmail.com>
+Subject: Re: [PATCH v5 01/17] asm-generic/iomap.h: remove ARCH_HAS_IOREMAP_xx
+ macros
+Message-ID: <Y/8Zyjfuypg3EiDd@MiWiFi-R3L-srv>
+References: <20230301034247.136007-1-bhe@redhat.com>
+ <20230301034247.136007-2-bhe@redhat.com>
+ <7bd6db48-ffb1-7eb1-decf-afa8be032970@gmail.com>
+ <Y/7eceqZ+89iPm1C@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230301085545.2373646-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8DxaL3CGP9jtlJDAA--.53207S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Zr1rCr17ZF4DXr18Aw15XFb_yoW5JF17p3
-	sxAr40yr47Xr4rA3Z7J34UuF98Xws7trWagF9Fyw1ruryav3WDZr1rWrZ7WFWjyFWkK3y5
-	XF1IyF12ka1UGw7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bO8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E
-	6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaVAv8VWrMcvjeVCFs4IE7x
-	kEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAK
-	I48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7xRE6wZ7
-	UUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y/7eceqZ+89iPm1C@casper.infradead.org>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 
-Hi, Huacai
+On 03/01/23 at 05:11am, Matthew Wilcox wrote:
+> On Wed, Mar 01, 2023 at 04:38:10AM +0000, Edward Cree wrote:
+> > On 01/03/2023 03:42, Baoquan He wrote:
+> > > diff --git a/drivers/net/ethernet/sfc/io.h b/drivers/net/ethernet/sfc/io.h
+> > > index 30439cc83a89..07f99ad14bf3 100644
+> > > --- a/drivers/net/ethernet/sfc/io.h
+> > > +++ b/drivers/net/ethernet/sfc/io.h
+> > > @@ -70,7 +70,7 @@
+> > >   */
+> > >  #ifdef CONFIG_X86_64
+> > >  /* PIO is a win only if write-combining is possible */
+> > > -#ifdef ARCH_HAS_IOREMAP_WC
+> > > +#ifdef ioremap_wc
+> > >  #define EFX_USE_PIO 1
+> > >  #endif
+> > >  #endif
+> > 
+> > So I don't know how valid what we're doing here is...
+> 
+> Well, x86 defines ARCH_HAS_IOREMAP_WC unconditionally, so it doesn't
+> affect you ... but you raise a good question about how a driver can
+> determine if it's actually getting WC memory.
 
-On 03/01/2023 04:55 PM, Huacai Chen wrote:
-> Since Linux-6.3, LoongArch supports PIE kernel now, so let's reintroduce
-> efi_relocate_kernel() to relocate the core kernel.
+Yeah, this change doesn't affect sfc. Because ARCH_HAS_IOREMAP_WC is used to
+make ioremap_wc defined in <asm/io.h> override the default one in
+<asm-generic/iomap.h>, this patch has made code have the same effect.
 
-If we strongly rely on the PIE feature after the modification, we need
-to modify it as follows,
+Besides, I have a question still in my mind. Surely this is unrelated to
+this patch.
 
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -137,6 +137,7 @@ config LOONGARCH
-         select PCI_MSI_ARCH_FALLBACKS
-         select PCI_QUIRKS
-         select PERF_USE_VMALLOC
-+       select RELOCATABLE
-         select RTC_LIB
-         select SMP
-         select SPARSE_IRQ
+In commit 38d9029a652c (parisc: Define ioremap_uc and ioremap_wc),
+ioremap_wc definition was added in arch/parisc/include/asm/io.h, and it
+didn't add ARCH_HAS_IOREMAP_WC definition. However, it won't cause
+redefinition of ioremap_wc, even though there's "#include <asm-generic/iomap.h>"
+at below. I could be dizzy on these io.h and iomap.h.
 
-or:
+When I added ioremap_wt and ioremap_np to debug, ioremap_np will
+cause redefinition, while ioremap_wt woundn't. Does anyone know what
+I am missing?
 
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -360,6 +360,7 @@ config EFI_STUB
-         default y
-         depends on EFI
-         select EFI_GENERIC_STUB
-+       select RELOCATABLE
-         help
-
-Youling.
-
->
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  drivers/firmware/efi/libstub/loongarch-stub.c | 24 ++++++-------------
->  1 file changed, 7 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/drivers/firmware/efi/libstub/loongarch-stub.c
-> index eee7ed43cdfb..72c71ae201f0 100644
-> --- a/drivers/firmware/efi/libstub/loongarch-stub.c
-> +++ b/drivers/firmware/efi/libstub/loongarch-stub.c
-> @@ -21,26 +21,16 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
->  				 efi_loaded_image_t *image,
->  				 efi_handle_t image_handle)
->  {
-> -	int nr_pages = round_up(kernel_asize, EFI_ALLOC_ALIGN) / EFI_PAGE_SIZE;
-> -	efi_physical_addr_t kernel_addr = EFI_KIMG_PREFERRED_ADDRESS;
->  	efi_status_t status;
-> +	unsigned long kernel_addr = 0;
->
-> -	/*
-> -	 * Allocate space for the kernel image at the preferred offset. This is
-> -	 * the only location in memory from where we can execute the image, so
-> -	 * no point in falling back to another allocation.
-> -	 */
-> -	status = efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
-> -			     EFI_LOADER_DATA, nr_pages, &kernel_addr);
-> -	if (status != EFI_SUCCESS)
-> -		return status;
-> -
-> -	*image_addr = EFI_KIMG_PREFERRED_ADDRESS;
-> -	*image_size = kernel_asize;
-> +	kernel_addr = (unsigned long)&kernel_offset - kernel_offset;
-> +
-> +	status = efi_relocate_kernel(&kernel_addr, kernel_fsize, kernel_asize,
-> +		     EFI_KIMG_PREFERRED_ADDRESS, efi_get_kimg_min_align(), 0x0);
->
-> -	memcpy((void *)EFI_KIMG_PREFERRED_ADDRESS,
-> -	       (void *)&kernel_offset - kernel_offset,
-> -	       kernel_fsize);
-> +	*image_addr = kernel_addr;
-> +	*image_size = kernel_asize;
->
->  	return status;
->  }
->
+diff --git a/arch/parisc/include/asm/io.h b/arch/parisc/include/asm/io.h
+index c05e781be2f5..20d566eec3b3 100644
+--- a/arch/parisc/include/asm/io.h
++++ b/arch/parisc/include/asm/io.h
+@@ -127,6 +127,8 @@ static inline void gsc_writeq(unsigned long long val, unsigned long addr)
+  */
+ void __iomem *ioremap(unsigned long offset, unsigned long size);
+ #define ioremap_wc                     ioremap
++#define ioremap_wt                     ioremap
++#define ioremap_np                     ioremap
+ #define ioremap_uc                     ioremap
+ #define pci_iounmap                    pci_iounmap
 
