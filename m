@@ -1,326 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C320E2F32
-	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 12:54:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74353C433A0
-	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 12:54:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1677675260;
-	bh=nsAjfERmlYcwPCwRlGaZKt5QRBPCc6LjHfkvMN26bl4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=a698muagCddvVl3CDIHAIYRMgtMcCBtj584mVF/hFgrYFOjty+gro00FXeCVDc9fL
-	 rC0S3uGEe9+eXbm3Pjora2P9bdKI3KwA1qWp5TqqC1yMXcC1JeV5Y4/Qf6javE/WYL
-	 EO90Al8AgFaVHyTaZrhddYrmTdW02/WuQI077Qu2i+PPfn4slmjGwYyvqleTE3xe/h
-	 bjZRwBN5ShNx+tbLc5mETbAu5Z6bcWcN33qMXNFID++u3D3DB1LhR96p3hPPCcxHfa
-	 aGGl/I/0IHWqA+r3eLk0wltCXQ3ZZINgPdhWXkXxluCRuxxMz/WA//h4Xza92PFwdX
-	 q9DUuOZEYeRHA==
-Received: by mail-ed1-f45.google.com with SMTP id s26so53180462edw.11
-        for <loongarch@lists.linux.dev>; Wed, 01 Mar 2023 04:54:20 -0800 (PST)
-X-Gm-Message-State: AO0yUKUJJOeh6Y4rEzQu5+t5Ep8I9FjtnDu1LW8rS6SXFWGQ9GCUym7c
-	LME6oM9L4IxY4Hjd/wkvLTTir5IFIHGZicSXNJE=
-X-Google-Smtp-Source: AK7set+gKy5PfoUAkxjPyqViMV5TLsZt5d1WtsqHlZa+P0ra5Ew9UlFJGwuPsmKCDxZYFDS/4dfjtQPEgxSjqt+fJAk=
-X-Received: by 2002:a50:c319:0:b0:4ad:7439:cec3 with SMTP id
- a25-20020a50c319000000b004ad7439cec3mr3563374edb.7.1677675258664; Wed, 01 Mar
- 2023 04:54:18 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A4046BD
+	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 15:41:36 +0000 (UTC)
+Received: by mail-pj1-f54.google.com with SMTP id m3-20020a17090ade0300b00229eec90a7fso1525659pjv.0
+        for <loongarch@lists.linux.dev>; Wed, 01 Mar 2023 07:41:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20210112.gappssmtp.com; s=20210112; t=1677685296;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=T04RMfKzSUFRrZ3CYc3+bErGU8vpxkP2QVI3mwlpG78=;
+        b=RacUjtkKVhkSdFUBywOGho+8dt8NsK+GHdxWXdQ69WX2yCf/yYWl7r6icMXBWT/ShM
+         KzbzJEeKqlnWntlEh4Hu5sno9Ak81pDzhFum2pY94j4Sv2hldxTUvXOesOtDXjR8r6gc
+         qTgIZDS9fRsSDLNbTTTqAFsgPsTJ/DQ+0jjGE9ek1g+5UBhUcmjFAxCNoVki1FxJorhz
+         1mqoDsTuoBLwUNz+cTKmWUvmBN0WlvjuL/8NCCPe/UsZ69pgJ+6lNteW1mdicJGes/KY
+         sz2TvcyHAjAaMaJRH5/VJiCFama3PVa+Xs98E38Ow6CsZfQ4ni3p2/e/LUrMvV5jGCLw
+         yEmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677685296;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T04RMfKzSUFRrZ3CYc3+bErGU8vpxkP2QVI3mwlpG78=;
+        b=KPuM6MVMvNrxXC0KoHVHcKvSyexk6P5ktt5gZw3qjv+NpCxs5LyScOEAcSQcE9fPH4
+         PBgUiczqMiwFzMs0vqOPTWMe5b9NFTqQHzlI1+HjKtYj2kMxJi+xwfDClwObtI6cQbm1
+         62OcbIM37VfA6p6mezaG1teqZQKyTWbiEdr82Ocj6Z3sw+qUZS775Z7xq1vW86wAjYXi
+         QG4nBgfVNSNSJnAf1HEHKKqldNgAEOy7PTuOtH4TLunZlz6HWgSB/kfB0cfbY9M4an7u
+         YniyFZxLMhGv2cI4FilIgD/3G/Tw74tNIxAeZZWYgAabPfz3KXjYmcgYjun/pil6vhfE
+         RGxg==
+X-Gm-Message-State: AO0yUKXxNxu24USTNOOKV5sjvOa6oNZf7uWiFWEiDde3Mgff2DtQd/kW
+	XgR/fBjmVy9T/KW6MGyaWaXz0w==
+X-Google-Smtp-Source: AK7set89u8u7K351sr+Ck6r7PKKsfq0NxjZus48TDBYC9SmTqwP5jGqb0tSf18Db2RC/D0Tp3KOSQg==
+X-Received: by 2002:a05:6a20:2444:b0:cc:ac05:88f7 with SMTP id t4-20020a056a20244400b000ccac0588f7mr8304959pzc.34.1677685295782;
+        Wed, 01 Mar 2023 07:41:35 -0800 (PST)
+Received: from debug.ba.rivosinc.com ([66.220.2.162])
+        by smtp.gmail.com with ESMTPSA id l12-20020a62be0c000000b005821c109cebsm8058970pff.199.2023.03.01.07.41.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Mar 2023 07:41:35 -0800 (PST)
+Date: Wed, 1 Mar 2023 07:41:30 -0800
+From: Deepak Gupta <debug@rivosinc.com>
+To: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>,
+	Balbir Singh <bsingharora@gmail.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Cyrill Gorcunov <gorcunov@gmail.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Eugene Syromiatnikov <esyr@redhat.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	"H . J . Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	Nadav Amit <nadav.amit@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+	Pavel Machek <pavel@ucw.cz>, Peter Zijlstra <peterz@infradead.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Weijiang Yang <weijiang.yang@intel.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	John Allen <john.allen@amd.com>, kcc@google.com, eranian@google.com,
+	rppt@kernel.org, jamorris@linux.microsoft.com,
+	dethoma@microsoft.com, akpm@linux-foundation.org,
+	Andrew.Cooper3@citrix.com, christina.schimpe@intel.com,
+	david@redhat.com, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
+	linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v6 13/41] mm: Make pte_mkwrite() take a VMA
+Message-ID: <20230301154130.GB3505369@debug.ba.rivosinc.com>
+References: <20230218211433.26859-1-rick.p.edgecombe@intel.com>
+ <20230218211433.26859-14-rick.p.edgecombe@intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230216130914.156613-1-maobibo@loongson.cn>
-In-Reply-To: <20230216130914.156613-1-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 1 Mar 2023 20:54:04 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6T_F4=D1i6GkJTczHY5i-FSa6o_oXiRdZFGOXBU=pwXg@mail.gmail.com>
-Message-ID: <CAAhV-H6T_F4=D1i6GkJTczHY5i-FSa6o_oXiRdZFGOXBU=pwXg@mail.gmail.com>
-Subject: Re: [PATCH v3] LoongArch: add checksum optimization for 64-bit system
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, David Laight <David.Laight@aculab.com>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230218211433.26859-14-rick.p.edgecombe@intel.com>
 
-Hi, Bibo,
+On Sat, Feb 18, 2023 at 01:14:05PM -0800, Rick Edgecombe wrote:
+>The x86 Control-flow Enforcement Technology (CET) feature includes a new
+>type of memory called shadow stack. This shadow stack memory has some
+>unusual properties, which requires some core mm changes to function
+>properly.
+>
+>One of these unusual properties is that shadow stack memory is writable,
+>but only in limited ways. These limits are applied via a specific PTE
+>bit combination. Nevertheless, the memory is writable, and core mm code
+>will need to apply the writable permissions in the typical paths that
+>call pte_mkwrite().
+>
+>In addition to VM_WRITE, the shadow stack VMA's will have a flag denoting
+>that they are special shadow stack flavor of writable memory. So make
+>pte_mkwrite() take a VMA, so that the x86 implementation of it can know to
+>create regular writable memory or shadow stack memory.
+>
+>Apply the same changes for pmd_mkwrite() and huge_pte_mkwrite().
+>
+>No functional change.
+>
+>Cc: linux-doc@vger.kernel.org
+>Cc: linux-kernel@vger.kernel.org
+>Cc: linux-alpha@vger.kernel.org
+>Cc: linux-snps-arc@lists.infradead.org
+>Cc: linux-arm-kernel@lists.infradead.org
+>Cc: linux-csky@vger.kernel.org
+>Cc: linux-hexagon@vger.kernel.org
+>Cc: linux-ia64@vger.kernel.org
+>Cc: loongarch@lists.linux.dev
+>Cc: linux-m68k@lists.linux-m68k.org
+>Cc: Michal Simek <monstr@monstr.eu>
+>Cc: Dinh Nguyen <dinguyen@kernel.org>
+>Cc: linux-mips@vger.kernel.org
+>Cc: openrisc@lists.librecores.org
+>Cc: linux-parisc@vger.kernel.org
+>Cc: linuxppc-dev@lists.ozlabs.org
+>Cc: linux-riscv@lists.infradead.org
+>Cc: linux-s390@vger.kernel.org
+>Cc: linux-sh@vger.kernel.org
+>Cc: sparclinux@vger.kernel.org
+>Cc: linux-um@lists.infradead.org
+>Cc: xen-devel@lists.xenproject.org
+>Cc: linux-arch@vger.kernel.org
+>Cc: linux-mm@kvack.org
+>Tested-by: Pengfei Xu <pengfei.xu@intel.com>
+>Suggested-by: David Hildenbrand <david@redhat.com>
+>Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+>
 
-I found the version here [1] provides more functions than this one. So
-is it possible to take advantages from both versions?
-
-[1] https://github.com/loongson/linux/commit/92a6df48ccb73dd2c3dc1799add08a=
-df0e0b0deb
-
-Huacai
-
-On Thu, Feb 16, 2023 at 9:09=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> loongArch platform is 64-bit system, which supports 8 bytes memory
-> accessing, generic checksum function uses 4 byte memory access.
-> This patch adds 8-bytes memory access optimization for checksum
-> function on loongArch. And the code comes from arm64 system.
->
-> When network hw checksum is disabled, iperf performance improves
-> about 10% with this patch.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
-> Changelog:
-> v3: modify function accumulate() to handle better on loongarch platform,
->     maybe it's compiler optimization issue.
-> v2: use rotation API in function csum_fold to reduce one instruction.
-> ---
->  arch/loongarch/include/asm/checksum.h |  65 ++++++++++++
->  arch/loongarch/lib/Makefile           |   2 +-
->  arch/loongarch/lib/csum.c             | 141 ++++++++++++++++++++++++++
->  3 files changed, 207 insertions(+), 1 deletion(-)
->  create mode 100644 arch/loongarch/include/asm/checksum.h
->  create mode 100644 arch/loongarch/lib/csum.c
->
-> diff --git a/arch/loongarch/include/asm/checksum.h b/arch/loongarch/inclu=
-de/asm/checksum.h
-> new file mode 100644
-> index 000000000000..8a7d368d801d
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/checksum.h
-> @@ -0,0 +1,65 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2016 ARM Ltd.
-> + * Copyright (C) 2023 Loongson Technology Corporation Limited
-> + */
-> +#ifndef __ASM_CHECKSUM_H
-> +#define __ASM_CHECKSUM_H
-> +
-> +#include <linux/in6.h>
-> +
-> +#define _HAVE_ARCH_IPV6_CSUM
-> +__sum16 csum_ipv6_magic(const struct in6_addr *saddr,
-> +                       const struct in6_addr *daddr,
-> +                       __u32 len, __u8 proto, __wsum sum);
-> +
-> +/*
-> + * turns a 32-bit partial checksum (e.g. from csum_partial) into a
-> + * 1's complement 16-bit checksum.
-> + */
-> +static inline __sum16 csum_fold(__wsum sum)
-> +{
-> +       u32 tmp =3D (__force u32)sum;
-> +
-> +       /*
-> +        * swap the two 16-bit halves of sum
-> +        * if there is a carry from adding the two 16-bit halves,
-> +        * it will carry from the lower half into the upper half,
-> +        * giving us the correct sum in the upper half.
-> +        */
-> +       return (__force __sum16)(~(tmp + rol32(tmp, 16)) >> 16);
-> +}
-> +#define csum_fold csum_fold
-> +
-> +/*
-> + * This is a version of ip_compute_csum() optimized for IP headers,
-> + * which always checksum on 4 octet boundaries.  ihl is the number
-> + * of 32-bit words and is always >=3D 5.
-> + */
-> +static inline __sum16 ip_fast_csum(const void *iph, unsigned int ihl)
-> +{
-> +       __uint128_t tmp;
-> +       u64 sum;
-> +       int n =3D ihl; /* we want it signed */
-> +
-> +       tmp =3D *(const __uint128_t *)iph;
-> +       iph +=3D 16;
-> +       n -=3D 4;
-> +       tmp +=3D ((tmp >> 64) | (tmp << 64));
-> +       sum =3D tmp >> 64;
-> +       do {
-> +               sum +=3D *(const u32 *)iph;
-> +               iph +=3D 4;
-> +       } while (--n > 0);
-> +
-> +       sum +=3D ror64(sum, 32);
-> +       return csum_fold((__force __wsum)(sum >> 32));
-> +}
-> +#define ip_fast_csum ip_fast_csum
-> +
-> +extern unsigned int do_csum(const unsigned char *buff, int len);
-> +#define do_csum do_csum
-> +
-> +#include <asm-generic/checksum.h>
-> +
-> +#endif /* __ASM_CHECKSUM_H */
-> diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
-> index 40bde632900f..6ba6df411f90 100644
-> --- a/arch/loongarch/lib/Makefile
-> +++ b/arch/loongarch/lib/Makefile
-> @@ -4,4 +4,4 @@
->  #
->
->  lib-y  +=3D delay.o memset.o memcpy.o memmove.o \
-> -          clear_user.o copy_user.o dump_tlb.o unaligned.o
-> +          clear_user.o copy_user.o dump_tlb.o unaligned.o csum.o
-> diff --git a/arch/loongarch/lib/csum.c b/arch/loongarch/lib/csum.c
-> new file mode 100644
-> index 000000000000..a5e84b403c3b
-> --- /dev/null
-> +++ b/arch/loongarch/lib/csum.c
-> @@ -0,0 +1,141 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright (C) 2019-2020 Arm Ltd.
-> +
-> +#include <linux/compiler.h>
-> +#include <linux/kasan-checks.h>
-> +#include <linux/kernel.h>
-> +
-> +#include <net/checksum.h>
-> +
-> +static u64 accumulate(u64 sum, u64 data)
-> +{
-> +       sum +=3D data;
-> +       if (sum < data)
-> +               sum +=3D 1;
-> +       return sum;
-> +}
-> +
-> +/*
-> + * We over-read the buffer and this makes KASAN unhappy. Instead, disabl=
-e
-> + * instrumentation and call kasan explicitly.
-> + */
-> +unsigned int __no_sanitize_address do_csum(const unsigned char *buff, in=
-t len)
-> +{
-> +       unsigned int offset, shift, sum;
-> +       const u64 *ptr;
-> +       u64 data, sum64 =3D 0;
-> +
-> +       if (unlikely(len =3D=3D 0))
-> +               return 0;
-> +
-> +       offset =3D (unsigned long)buff & 7;
-> +       /*
-> +        * This is to all intents and purposes safe, since rounding down =
-cannot
-> +        * result in a different page or cache line being accessed, and @=
-buff
-> +        * should absolutely not be pointing to anything read-sensitive. =
-We do,
-> +        * however, have to be careful not to piss off KASAN, which means=
- using
-> +        * unchecked reads to accommodate the head and tail, for which we=
-'ll
-> +        * compensate with an explicit check up-front.
-> +        */
-> +       kasan_check_read(buff, len);
-> +       ptr =3D (u64 *)(buff - offset);
-> +       len =3D len + offset - 8;
-> +
-> +       /*
-> +        * Head: zero out any excess leading bytes. Shifting back by the =
-same
-> +        * amount should be at least as fast as any other way of handling=
- the
-> +        * odd/even alignment, and means we can ignore it until the very =
-end.
-> +        */
-> +       shift =3D offset * 8;
-> +       data =3D *ptr++;
-> +       data =3D (data >> shift) << shift;
-> +
-> +       /*
-> +        * Body: straightforward aligned loads from here on (the paired l=
-oads
-> +        * underlying the quadword type still only need dword alignment).=
- The
-> +        * main loop strictly excludes the tail, so the second loop will =
-always
-> +        * run at least once.
-> +        */
-> +       while (unlikely(len > 64)) {
-> +               __uint128_t tmp1, tmp2, tmp3, tmp4;
-> +
-> +               tmp1 =3D *(__uint128_t *)ptr;
-> +               tmp2 =3D *(__uint128_t *)(ptr + 2);
-> +               tmp3 =3D *(__uint128_t *)(ptr + 4);
-> +               tmp4 =3D *(__uint128_t *)(ptr + 6);
-> +
-> +               len -=3D 64;
-> +               ptr +=3D 8;
-> +
-> +               /* This is the "don't dump the carry flag into a GPR" idi=
-om */
-> +               tmp1 +=3D (tmp1 >> 64) | (tmp1 << 64);
-> +               tmp2 +=3D (tmp2 >> 64) | (tmp2 << 64);
-> +               tmp3 +=3D (tmp3 >> 64) | (tmp3 << 64);
-> +               tmp4 +=3D (tmp4 >> 64) | (tmp4 << 64);
-> +               tmp1 =3D ((tmp1 >> 64) << 64) | (tmp2 >> 64);
-> +               tmp1 +=3D (tmp1 >> 64) | (tmp1 << 64);
-> +               tmp3 =3D ((tmp3 >> 64) << 64) | (tmp4 >> 64);
-> +               tmp3 +=3D (tmp3 >> 64) | (tmp3 << 64);
-> +               tmp1 =3D ((tmp1 >> 64) << 64) | (tmp3 >> 64);
-> +               tmp1 +=3D (tmp1 >> 64) | (tmp1 << 64);
-> +               tmp1 =3D ((tmp1 >> 64) << 64) | sum64;
-> +               tmp1 +=3D (tmp1 >> 64) | (tmp1 << 64);
-> +               sum64 =3D tmp1 >> 64;
-> +       }
-> +       while (len > 8) {
-> +               __uint128_t tmp;
-> +
-> +               sum64 =3D accumulate(sum64, data);
-> +               tmp =3D *(__uint128_t *)ptr;
-> +
-> +               len -=3D 16;
-> +               ptr +=3D 2;
-> +
-> +               data =3D tmp >> 64;
-> +               sum64 =3D accumulate(sum64, tmp);
-> +       }
-> +       if (len > 0) {
-> +               sum64 =3D accumulate(sum64, data);
-> +               data =3D *ptr;
-> +               len -=3D 8;
-> +       }
-> +       /*
-> +        * Tail: zero any over-read bytes similarly to the head, again
-> +        * preserving odd/even alignment.
-> +        */
-> +       shift =3D len * -8;
-> +       data =3D (data << shift) >> shift;
-> +       sum64 =3D accumulate(sum64, data);
-> +
-> +       /* Finally, folding */
-> +       sum64 +=3D (sum64 >> 32) | (sum64 << 32);
-> +       sum =3D sum64 >> 32;
-> +       sum +=3D (sum >> 16) | (sum << 16);
-> +       if (offset & 1)
-> +               return (u16)swab32(sum);
-> +
-> +       return sum >> 16;
-> +}
-> +
-> +__sum16 csum_ipv6_magic(const struct in6_addr *saddr,
-> +                       const struct in6_addr *daddr,
-> +                       __u32 len, __u8 proto, __wsum csum)
-> +{
-> +       __uint128_t src, dst;
-> +       u64 sum =3D (__force u64)csum;
-> +
-> +       src =3D *(const __uint128_t *)saddr->s6_addr;
-> +       dst =3D *(const __uint128_t *)daddr->s6_addr;
-> +
-> +       sum +=3D (__force u32)htonl(len);
-> +       sum +=3D (u32)proto << 24;
-> +       src +=3D (src >> 64) | (src << 64);
-> +       dst +=3D (dst >> 64) | (dst << 64);
-> +
-> +       sum =3D accumulate(sum, src >> 64);
-> +       sum =3D accumulate(sum, dst >> 64);
-> +
-> +       sum +=3D ((sum >> 32) | (sum << 32));
-> +       return csum_fold((__force __wsum)(sum >> 32));
-> +}
-> +EXPORT_SYMBOL(csum_ipv6_magic);
-> --
-> 2.27.0
->
+Acked-by: Deepak Gupta <debug@rivosinc.com>
