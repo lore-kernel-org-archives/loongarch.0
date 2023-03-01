@@ -1,67 +1,149 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CADA3B
-	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 05:11:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hXZNqqCBlKtrYnD75V9Zin6CQQ9GsiuAV2QuBhHw8t0=; b=wUFjowPZM9tYICB9b/77CU7dnJ
-	MB0PIZrQVl9kpzkq8wVJ8MDNqTaW5iKCDxi0d/81sVAJDK/nbnq2NpcDJqEjSxvXNEwtVYlDIVxTm
-	JPhFQg/0QP1WqufLtvipNbhtqOiLicjoai9AM8IsH48uTtuQq3CYRP1cYkqCoz6aFIxvcKIgh6zN+
-	sn2C13Gm04x1hlaqlOvOh+Ak2RQgeSLS9twVbIpDqrooOQtVzw1nU5OPp0UPLkEA0Jq1tySPE5InC
-	cHLKIZHwVvOncey3ttM5gKAz2E3afoUboGUK6OA1ZQuFwAy0a12zBWi+yEscxN1wmGdRMhdPHXOLk
-	uLtJ857w==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pXEkD-001OZz-LR; Wed, 01 Mar 2023 05:11:13 +0000
-Date: Wed, 1 Mar 2023 05:11:13 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Edward Cree <ecree.xilinx@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, arnd@arndb.de,
-	christophe.leroy@csgroup.eu, hch@infradead.org,
-	agordeev@linux.ibm.com, wangkefeng.wang@huawei.com,
-	schnelle@linux.ibm.com, David.Laight@aculab.com, shorne@gmail.com,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	x86@kernel.org, netdev@vger.kernel.org,
-	Martin Habets <habetsm.xilinx@gmail.com>
-Subject: Re: [PATCH v5 01/17] asm-generic/iomap.h: remove ARCH_HAS_IOREMAP_xx
- macros
-Message-ID: <Y/7eceqZ+89iPm1C@casper.infradead.org>
-References: <20230301034247.136007-1-bhe@redhat.com>
- <20230301034247.136007-2-bhe@redhat.com>
- <7bd6db48-ffb1-7eb1-decf-afa8be032970@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5073FEC8
+	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 06:58:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DD9C4339B;
+	Wed,  1 Mar 2023 06:58:17 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch changes for v6.3
+Date: Wed,  1 Mar 2023 14:58:08 +0800
+Message-Id: <20230301065808.2259768-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7bd6db48-ffb1-7eb1-decf-afa8be032970@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 01, 2023 at 04:38:10AM +0000, Edward Cree wrote:
-> On 01/03/2023 03:42, Baoquan He wrote:
-> > diff --git a/drivers/net/ethernet/sfc/io.h b/drivers/net/ethernet/sfc/io.h
-> > index 30439cc83a89..07f99ad14bf3 100644
-> > --- a/drivers/net/ethernet/sfc/io.h
-> > +++ b/drivers/net/ethernet/sfc/io.h
-> > @@ -70,7 +70,7 @@
-> >   */
-> >  #ifdef CONFIG_X86_64
-> >  /* PIO is a win only if write-combining is possible */
-> > -#ifdef ARCH_HAS_IOREMAP_WC
-> > +#ifdef ioremap_wc
-> >  #define EFX_USE_PIO 1
-> >  #endif
-> >  #endif
-> 
-> So I don't know how valid what we're doing here is...
+The following changes since commit c9c3395d5e3dcc6daee66c6908354d47bf98cb0c:
 
-Well, x86 defines ARCH_HAS_IOREMAP_WC unconditionally, so it doesn't
-affect you ... but you raise a good question about how a driver can
-determine if it's actually getting WC memory.
+  Linux 6.2 (2023-02-19 14:24:22 -0800)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.3
+
+for you to fetch changes up to 8883bf83127d533abb415b204eabc064863ae6c9:
+
+  selftests/ftrace: Add LoongArch kprobe args string tests support (2023-02-25 22:12:18 +0800)
+
+----------------------------------------------------------------
+LoongArch changes for v6.3
+
+1, Make -mstrict-align configurable;
+2, Add kernel relocation and KASLR support;
+3, Add single kernel image implementation for kdump;
+4, Add hardware breakpoints/watchpoints support;
+5, Add kprobes/kretprobes/kprobes_on_ftrace support;
+6, Add LoongArch support for some selftests.
+
+----------------------------------------------------------------
+Huacai Chen (4):
+      Merge 'pci/enumeration' into loongarch-next
+      LoongArch: Make -mstrict-align configurable
+      tools: Add LoongArch build infrastructure
+      selftests/seccomp: Add LoongArch selftesting support
+
+Jinyang He (1):
+      LoongArch: Fix Chinese comma in cpu.h
+
+Qing Zhang (5):
+      LoongArch: Add hardware breakpoints/watchpoints support
+      LoongArch: ptrace: Expose hardware breakpoints to debuggers
+      LoongArch: ptrace: Add function argument access API
+      LoongArch: ptrace: Add hardware single step support
+      selftests/ftrace: Add LoongArch kprobe args string tests support
+
+Tiezhu Yang (7):
+      LoongArch: Only call get_timer_irq() once in constant_clockevent_init()
+      LoongArch: Simulate branch and PC* instructions
+      LoongArch: Add kprobes support
+      LoongArch: Add kretprobes support
+      LoongArch: Add kprobes on ftrace support
+      LoongArch: Mark some assembler symbols as non-kprobe-able
+      samples/kprobes: Add LoongArch support
+
+Xi Ruoyao (1):
+      LoongArch: Use la.pcrel instead of la.abs when it's trivially possible
+
+Youling Tang (6):
+      LoongArch: Add JUMP_VIRT_ADDR macro implementation to avoid using la.abs
+      LoongArch: Add la_abs macro implementation
+      LoongArch: Add support for kernel relocation
+      LoongArch: Add support for kernel address space layout randomization (KASLR)
+      LoongArch: kdump: Add single kernel image implementation
+      LoongArch: kdump: Add crashkernel=YM handling
+
+ arch/loongarch/Kconfig                             |  65 ++-
+ arch/loongarch/Makefile                            |  14 +-
+ arch/loongarch/configs/loongson3_defconfig         |   1 +
+ arch/loongarch/include/asm/addrspace.h             |   2 +
+ arch/loongarch/include/asm/asm.h                   |  10 +
+ arch/loongarch/include/asm/asmmacro.h              |  17 +
+ arch/loongarch/include/asm/cpu.h                   |   2 +-
+ arch/loongarch/include/asm/hw_breakpoint.h         | 145 ++++++
+ arch/loongarch/include/asm/inst.h                  |  58 +++
+ arch/loongarch/include/asm/kprobes.h               |  61 +++
+ arch/loongarch/include/asm/loongarch.h             |  35 +-
+ arch/loongarch/include/asm/processor.h             |  16 +-
+ arch/loongarch/include/asm/ptrace.h                |  39 ++
+ arch/loongarch/include/asm/setup.h                 |  16 +
+ arch/loongarch/include/asm/stackframe.h            |  13 +-
+ arch/loongarch/include/asm/switch_to.h             |   1 +
+ arch/loongarch/include/asm/uaccess.h               |   1 -
+ arch/loongarch/include/uapi/asm/ptrace.h           |   9 +
+ arch/loongarch/kernel/Makefile                     |   9 +-
+ arch/loongarch/kernel/entry.S                      |  91 ++--
+ arch/loongarch/kernel/ftrace_dyn.c                 |  64 +++
+ arch/loongarch/kernel/genex.S                      |   8 +-
+ arch/loongarch/kernel/head.S                       |  33 +-
+ arch/loongarch/kernel/hw_breakpoint.c              | 548 +++++++++++++++++++++
+ arch/loongarch/kernel/inst.c                       | 123 +++++
+ arch/loongarch/kernel/kprobes.c                    | 406 +++++++++++++++
+ arch/loongarch/kernel/kprobes_trampoline.S         |  96 ++++
+ arch/loongarch/kernel/process.c                    |   7 +
+ arch/loongarch/kernel/ptrace.c                     | 472 ++++++++++++++++++
+ arch/loongarch/kernel/relocate.c                   | 242 +++++++++
+ arch/loongarch/kernel/setup.c                      |  14 +-
+ arch/loongarch/kernel/time.c                       |  11 +-
+ arch/loongarch/kernel/traps.c                      |  68 ++-
+ arch/loongarch/kernel/vmlinux.lds.S                |  20 +-
+ arch/loongarch/lib/memcpy.S                        |   3 +
+ arch/loongarch/lib/memmove.S                       |   4 +
+ arch/loongarch/lib/memset.S                        |   3 +
+ arch/loongarch/mm/fault.c                          |   3 +
+ arch/loongarch/mm/tlbex.S                          |  17 +-
+ arch/loongarch/power/suspend_asm.S                 |   5 +-
+ drivers/pci/controller/pci-loongson.c              |  71 +--
+ drivers/pci/pci.c                                  |  10 +
+ drivers/pci/pcie/portdrv.c                         |  16 +-
+ drivers/pci/probe.c                                |   2 +
+ include/linux/pci.h                                |   1 +
+ include/uapi/linux/elf.h                           |   2 +
+ samples/kprobes/kprobe_example.c                   |   8 +
+ .../arch/loongarch/include/uapi/asm/bitsperlong.h  |   9 +
+ tools/scripts/Makefile.arch                        |  11 +-
+ .../ftrace/test.d/kprobe/kprobe_args_string.tc     |   3 +
+ .../ftrace/test.d/kprobe/kprobe_args_syntax.tc     |   4 +
+ tools/testing/selftests/seccomp/seccomp_bpf.c      |   6 +
+ 52 files changed, 2728 insertions(+), 167 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/hw_breakpoint.h
+ create mode 100644 arch/loongarch/include/asm/kprobes.h
+ create mode 100644 arch/loongarch/kernel/hw_breakpoint.c
+ create mode 100644 arch/loongarch/kernel/kprobes.c
+ create mode 100644 arch/loongarch/kernel/kprobes_trampoline.S
+ create mode 100644 arch/loongarch/kernel/relocate.c
+ create mode 100644 tools/arch/loongarch/include/uapi/asm/bitsperlong.h
