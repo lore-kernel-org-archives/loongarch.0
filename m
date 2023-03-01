@@ -1,142 +1,317 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A4046BD
-	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 15:41:36 +0000 (UTC)
-Received: by mail-pj1-f54.google.com with SMTP id m3-20020a17090ade0300b00229eec90a7fso1525659pjv.0
-        for <loongarch@lists.linux.dev>; Wed, 01 Mar 2023 07:41:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20210112.gappssmtp.com; s=20210112; t=1677685296;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T04RMfKzSUFRrZ3CYc3+bErGU8vpxkP2QVI3mwlpG78=;
-        b=RacUjtkKVhkSdFUBywOGho+8dt8NsK+GHdxWXdQ69WX2yCf/yYWl7r6icMXBWT/ShM
-         KzbzJEeKqlnWntlEh4Hu5sno9Ak81pDzhFum2pY94j4Sv2hldxTUvXOesOtDXjR8r6gc
-         qTgIZDS9fRsSDLNbTTTqAFsgPsTJ/DQ+0jjGE9ek1g+5UBhUcmjFAxCNoVki1FxJorhz
-         1mqoDsTuoBLwUNz+cTKmWUvmBN0WlvjuL/8NCCPe/UsZ69pgJ+6lNteW1mdicJGes/KY
-         sz2TvcyHAjAaMaJRH5/VJiCFama3PVa+Xs98E38Ow6CsZfQ4ni3p2/e/LUrMvV5jGCLw
-         yEmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677685296;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T04RMfKzSUFRrZ3CYc3+bErGU8vpxkP2QVI3mwlpG78=;
-        b=KPuM6MVMvNrxXC0KoHVHcKvSyexk6P5ktt5gZw3qjv+NpCxs5LyScOEAcSQcE9fPH4
-         PBgUiczqMiwFzMs0vqOPTWMe5b9NFTqQHzlI1+HjKtYj2kMxJi+xwfDClwObtI6cQbm1
-         62OcbIM37VfA6p6mezaG1teqZQKyTWbiEdr82Ocj6Z3sw+qUZS775Z7xq1vW86wAjYXi
-         QG4nBgfVNSNSJnAf1HEHKKqldNgAEOy7PTuOtH4TLunZlz6HWgSB/kfB0cfbY9M4an7u
-         YniyFZxLMhGv2cI4FilIgD/3G/Tw74tNIxAeZZWYgAabPfz3KXjYmcgYjun/pil6vhfE
-         RGxg==
-X-Gm-Message-State: AO0yUKXxNxu24USTNOOKV5sjvOa6oNZf7uWiFWEiDde3Mgff2DtQd/kW
-	XgR/fBjmVy9T/KW6MGyaWaXz0w==
-X-Google-Smtp-Source: AK7set89u8u7K351sr+Ck6r7PKKsfq0NxjZus48TDBYC9SmTqwP5jGqb0tSf18Db2RC/D0Tp3KOSQg==
-X-Received: by 2002:a05:6a20:2444:b0:cc:ac05:88f7 with SMTP id t4-20020a056a20244400b000ccac0588f7mr8304959pzc.34.1677685295782;
-        Wed, 01 Mar 2023 07:41:35 -0800 (PST)
-Received: from debug.ba.rivosinc.com ([66.220.2.162])
-        by smtp.gmail.com with ESMTPSA id l12-20020a62be0c000000b005821c109cebsm8058970pff.199.2023.03.01.07.41.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Mar 2023 07:41:35 -0800 (PST)
-Date: Wed, 1 Mar 2023 07:41:30 -0800
-From: Deepak Gupta <debug@rivosinc.com>
-To: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>,
-	Balbir Singh <bsingharora@gmail.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Cyrill Gorcunov <gorcunov@gmail.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Eugene Syromiatnikov <esyr@redhat.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	"H . J . Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	Nadav Amit <nadav.amit@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-	Pavel Machek <pavel@ucw.cz>, Peter Zijlstra <peterz@infradead.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Weijiang Yang <weijiang.yang@intel.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	John Allen <john.allen@amd.com>, kcc@google.com, eranian@google.com,
-	rppt@kernel.org, jamorris@linux.microsoft.com,
-	dethoma@microsoft.com, akpm@linux-foundation.org,
-	Andrew.Cooper3@citrix.com, christina.schimpe@intel.com,
-	david@redhat.com, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
-	linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-um@lists.infradead.org, xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v6 13/41] mm: Make pte_mkwrite() take a VMA
-Message-ID: <20230301154130.GB3505369@debug.ba.rivosinc.com>
-References: <20230218211433.26859-1-rick.p.edgecombe@intel.com>
- <20230218211433.26859-14-rick.p.edgecombe@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA1846BD;
+	Wed,  1 Mar 2023 15:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677685527; x=1709221527;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pbp3V9v3IHoln3VTxeY5EiT636+2yaIZ+8lKQgynV7M=;
+  b=I6IpOOPfupzTlvckSIJssDA8Gc7sjzokRw+C5TSENiNm97gpLXMSLvqG
+   1vS1h06ThFGvu4yqsk94Kv2/xxSXu/bT/b3cGKRJqkeR8XD+3t6ziSQCu
+   NaEbD3CXXX/T2SjAqyEdKzJhGYEJX8VD4t81zvV9sYVvfpPbnm3OZIwMv
+   d7/4RAR9Azyp9KbrZn9fU7BYEUUr9M1yRAOIE56/0ZpMeY0IKv9xOLhUb
+   D6TCWKUIg546HBkR/Qtr2IItSCOE4BVNffMh/mvkBIjUv5IQqi/qDTStU
+   egAqxNR3TuWDHoyQq9v7mlSICcXRiQ2bgzHNJk1PDHwkb5sr1CTbJsnsq
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="362022174"
+X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
+   d="scan'208";a="362022174"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 07:45:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="738682476"
+X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
+   d="scan'208";a="738682476"
+Received: from lkp-server01.sh.intel.com (HELO 3895f5c55ead) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Mar 2023 07:45:22 -0800
+Received: from kbuild by 3895f5c55ead with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1pXOdu-0006Fj-0Q;
+	Wed, 01 Mar 2023 15:45:22 +0000
+Date: Wed, 01 Mar 2023 23:44:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: loongarch@lists.linux.dev, linux-watchdog@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-arch@vger.kernel.org, asahi@lists.linux.dev,
+ amd-gfx@lists.freedesktop.org,
+ Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 1716a175592aff9549a0c07aac8f9cadd03003f5
+Message-ID: <63ff72ed.GV64WhqVJwrx6pJw%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230218211433.26859-14-rick.p.edgecombe@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 18, 2023 at 01:14:05PM -0800, Rick Edgecombe wrote:
->The x86 Control-flow Enforcement Technology (CET) feature includes a new
->type of memory called shadow stack. This shadow stack memory has some
->unusual properties, which requires some core mm changes to function
->properly.
->
->One of these unusual properties is that shadow stack memory is writable,
->but only in limited ways. These limits are applied via a specific PTE
->bit combination. Nevertheless, the memory is writable, and core mm code
->will need to apply the writable permissions in the typical paths that
->call pte_mkwrite().
->
->In addition to VM_WRITE, the shadow stack VMA's will have a flag denoting
->that they are special shadow stack flavor of writable memory. So make
->pte_mkwrite() take a VMA, so that the x86 implementation of it can know to
->create regular writable memory or shadow stack memory.
->
->Apply the same changes for pmd_mkwrite() and huge_pte_mkwrite().
->
->No functional change.
->
->Cc: linux-doc@vger.kernel.org
->Cc: linux-kernel@vger.kernel.org
->Cc: linux-alpha@vger.kernel.org
->Cc: linux-snps-arc@lists.infradead.org
->Cc: linux-arm-kernel@lists.infradead.org
->Cc: linux-csky@vger.kernel.org
->Cc: linux-hexagon@vger.kernel.org
->Cc: linux-ia64@vger.kernel.org
->Cc: loongarch@lists.linux.dev
->Cc: linux-m68k@lists.linux-m68k.org
->Cc: Michal Simek <monstr@monstr.eu>
->Cc: Dinh Nguyen <dinguyen@kernel.org>
->Cc: linux-mips@vger.kernel.org
->Cc: openrisc@lists.librecores.org
->Cc: linux-parisc@vger.kernel.org
->Cc: linuxppc-dev@lists.ozlabs.org
->Cc: linux-riscv@lists.infradead.org
->Cc: linux-s390@vger.kernel.org
->Cc: linux-sh@vger.kernel.org
->Cc: sparclinux@vger.kernel.org
->Cc: linux-um@lists.infradead.org
->Cc: xen-devel@lists.xenproject.org
->Cc: linux-arch@vger.kernel.org
->Cc: linux-mm@kvack.org
->Tested-by: Pengfei Xu <pengfei.xu@intel.com>
->Suggested-by: David Hildenbrand <david@redhat.com>
->Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 1716a175592aff9549a0c07aac8f9cadd03003f5  Add linux-next specific files for 20230301
 
-Acked-by: Deepak Gupta <debug@rivosinc.com>
+Error/Warning reports:
+
+https://lore.kernel.org/oe-kbuild-all/202302111601.jtY4lKrA-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302201555.OI4N54jb-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302210350.lynWcL4t-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202303011456.WEPeM0ZN-lkp@intel.com
+
+Error/Warning: (recently discovered and may have been fixed)
+
+FAILED: load BTF from vmlinux: No data available
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_optc.c:294:6: warning: no previous prototype for 'optc3_wait_drr_doublebuffer_pending_clear' [-Wmissing-prototypes]
+idma64.c:(.text+0x145a): undefined reference to `devm_platform_ioremap_resource'
+include/asm-generic/div64.h:238:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Werror=incompatible-pointer-types]
+
+Unverified Error/Warning (likely false positive, please contact us if interested):
+
+arch/loongarch/include/asm/loongarch.h:226:9: sparse: sparse: too many errors
+drivers/iommu/apple-dart.c:1281:1: sparse: sparse: symbol 'apple_dart_pm_ops' was not declared. Should it be static?
+drivers/usb/gadget/composite.c:2082:33: sparse: sparse: restricted __le16 degrades to integer
+drivers/watchdog/imx2_wdt.c:442:22: sparse: sparse: symbol 'imx_wdt' was not declared. Should it be static?
+drivers/watchdog/imx2_wdt.c:446:22: sparse: sparse: symbol 'imx_wdt_legacy' was not declared. Should it be static?
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- arc-allyesconfig
+|   `-- include-asm-generic-div64.h:error:passing-argument-of-__div64_32-from-incompatible-pointer-type
+|-- arc-randconfig-r001-20230226
+|   `-- FAILED:load-BTF-from-vmlinux:No-data-available
+|-- arm-allmodconfig
+|   `-- include-asm-generic-div64.h:error:passing-argument-of-__div64_32-from-incompatible-pointer-type
+|-- arm-allyesconfig
+|   `-- include-asm-generic-div64.h:error:passing-argument-of-__div64_32-from-incompatible-pointer-type
+|-- arm64-allyesconfig
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn30-dcn30_optc.c:warning:no-previous-prototype-for-optc3_wait_drr_doublebuffer_pending_clear
+|-- arm64-randconfig-r025-20230227
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn30-dcn30_optc.c:warning:no-previous-prototype-for-optc3_wait_drr_doublebuffer_pending_clear
+|-- i386-allyesconfig
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn30-dcn30_optc.c:warning:no-previous-prototype-for-optc3_wait_drr_doublebuffer_pending_clear
+|-- i386-randconfig-s001
+|   `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+|-- i386-randconfig-s003
+|   `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+|-- loongarch-randconfig-s041-20230226
+|   |-- arch-loongarch-include-asm-loongarch.h:sparse:sparse:too-many-errors
+|   |-- arch-loongarch-kernel-relocate.c:sparse:sparse:incorrect-type-in-initializer-(different-address-spaces)-expected-char-cmdline-got-void-noderef-__iomem
+|   |-- drivers-iommu-apple-dart.c:sparse:sparse:symbol-apple_dart_pm_ops-was-not-declared.-Should-it-be-static
+|   |-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+|   |-- drivers-watchdog-imx2_wdt.c:sparse:sparse:symbol-imx_wdt-was-not-declared.-Should-it-be-static
+|   `-- drivers-watchdog-imx2_wdt.c:sparse:sparse:symbol-imx_wdt_legacy-was-not-declared.-Should-it-be-static
+|-- loongarch-randconfig-s053-20230226
+|   |-- arch-loongarch-kernel-relocate.c:sparse:sparse:incorrect-type-in-initializer-(different-address-spaces)-expected-char-cmdline-got-void-noderef-__iomem
+|   |-- drivers-iommu-apple-dart.c:sparse:sparse:symbol-apple_dart_pm_ops-was-not-declared.-Should-it-be-static
+|   `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+|-- mips-randconfig-s051-20230226
+|   |-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+|   |-- drivers-watchdog-imx2_wdt.c:sparse:sparse:symbol-imx_wdt-was-not-declared.-Should-it-be-static
+|   `-- drivers-watchdog-imx2_wdt.c:sparse:sparse:symbol-imx_wdt_legacy-was-not-declared.-Should-it-be-static
+|-- nios2-allyesconfig
+|   `-- include-asm-generic-div64.h:error:passing-argument-of-__div64_32-from-incompatible-pointer-type
+|-- powerpc-allmodconfig
+|   `-- include-asm-generic-div64.h:error:passing-argument-of-__div64_32-from-incompatible-pointer-type
+|-- s390-randconfig-s033-20230226
+|   `-- idma64.c:(.text):undefined-reference-to-devm_platform_ioremap_resource
+|-- x86_64-allnoconfig
+|   `-- Warning:Documentation-devicetree-bindings-usb-rockchip-dwc3.yaml-references-a-file-that-doesn-t-exist:Documentation-devicetree-bindings-phy-phy-rockchip-inno-usb2.yaml
+|-- x86_64-allyesconfig
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn30-dcn30_optc.c:warning:no-previous-prototype-for-optc3_wait_drr_doublebuffer_pending_clear
+`-- x86_64-randconfig-s021
+    `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+
+elapsed time: 866m
+
+configs tested: 179
+configs skipped: 11
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha        buildonly-randconfig-r001-20230227   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r005-20230227   gcc  
+alpha                randconfig-r026-20230227   gcc  
+alpha                randconfig-r031-20230228   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r001-20230226   gcc  
+arc                  randconfig-r015-20230226   gcc  
+arc                  randconfig-r043-20230226   gcc  
+arc                  randconfig-r043-20230227   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                     am200epdkit_defconfig   clang
+arm          buildonly-randconfig-r005-20230227   clang
+arm                                 defconfig   gcc  
+arm                        keystone_defconfig   gcc  
+arm                          pxa910_defconfig   gcc  
+arm                  randconfig-c002-20230226   gcc  
+arm                  randconfig-r012-20230226   gcc  
+arm                  randconfig-r035-20230226   clang
+arm                  randconfig-r046-20230226   gcc  
+arm                  randconfig-r046-20230227   clang
+arm64                            allyesconfig   gcc  
+arm64        buildonly-randconfig-r004-20230227   clang
+arm64                               defconfig   gcc  
+arm64                randconfig-r025-20230227   gcc  
+arm64                randconfig-r036-20230228   gcc  
+csky         buildonly-randconfig-r003-20230227   gcc  
+csky                                defconfig   gcc  
+hexagon      buildonly-randconfig-r001-20230226   clang
+hexagon              randconfig-r015-20230228   clang
+hexagon              randconfig-r041-20230226   clang
+hexagon              randconfig-r041-20230227   clang
+hexagon              randconfig-r045-20230226   clang
+hexagon              randconfig-r045-20230227   clang
+i386                             allyesconfig   gcc  
+i386                         debian-10.3-func   gcc  
+i386                   debian-10.3-kselftests   gcc  
+i386                        debian-10.3-kunit   gcc  
+i386                          debian-10.3-kvm   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230227   clang
+i386                 randconfig-a002-20230227   clang
+i386                 randconfig-a003-20230227   clang
+i386                 randconfig-a004-20230227   clang
+i386                 randconfig-a005-20230227   clang
+i386                 randconfig-a006-20230227   clang
+i386                 randconfig-a011-20230227   gcc  
+i386                 randconfig-a012-20230227   gcc  
+i386                 randconfig-a013-20230227   gcc  
+i386                 randconfig-a014-20230227   gcc  
+i386                 randconfig-a015-20230227   gcc  
+i386                 randconfig-a016-20230227   gcc  
+i386                          randconfig-c001   gcc  
+ia64                             allmodconfig   gcc  
+ia64         buildonly-randconfig-r002-20230226   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r013-20230228   gcc  
+ia64                 randconfig-r021-20230227   gcc  
+ia64                 randconfig-r025-20230226   gcc  
+ia64                 randconfig-r031-20230227   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch    buildonly-randconfig-r006-20230226   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r011-20230227   gcc  
+loongarch            randconfig-r011-20230228   gcc  
+loongarch            randconfig-r036-20230227   gcc  
+m68k                             allmodconfig   gcc  
+m68k                         apollo_defconfig   gcc  
+m68k         buildonly-randconfig-r003-20230226   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r003-20230227   gcc  
+m68k                 randconfig-r016-20230227   gcc  
+m68k                 randconfig-r034-20230228   gcc  
+microblaze   buildonly-randconfig-r006-20230227   gcc  
+microblaze           randconfig-r004-20230227   gcc  
+microblaze           randconfig-r011-20230226   gcc  
+microblaze           randconfig-r014-20230228   gcc  
+microblaze           randconfig-r023-20230227   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                  cavium_octeon_defconfig   clang
+mips                           ci20_defconfig   gcc  
+mips                      loongson3_defconfig   gcc  
+mips                 randconfig-r012-20230227   clang
+mips                 randconfig-r035-20230227   gcc  
+mips                           rs90_defconfig   clang
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r006-20230227   gcc  
+openrisc     buildonly-randconfig-r002-20230227   gcc  
+openrisc             randconfig-r012-20230228   gcc  
+openrisc             randconfig-r014-20230226   gcc  
+openrisc             randconfig-r016-20230226   gcc  
+openrisc             randconfig-r031-20230226   gcc  
+openrisc             randconfig-r034-20230227   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-64bit_defconfig   gcc  
+parisc               randconfig-r033-20230226   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                  iss476-smp_defconfig   gcc  
+powerpc                   motionpro_defconfig   gcc  
+powerpc                 mpc8540_ads_defconfig   gcc  
+powerpc                      obs600_defconfig   clang
+powerpc                      pcm030_defconfig   gcc  
+powerpc                      pmac32_defconfig   clang
+powerpc                         wii_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv        buildonly-randconfig-r005-20230226   clang
+riscv                               defconfig   gcc  
+riscv                randconfig-r024-20230226   clang
+riscv                randconfig-r036-20230226   gcc  
+riscv                randconfig-r042-20230226   clang
+riscv                randconfig-r042-20230227   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r002-20230226   gcc  
+s390                 randconfig-r013-20230226   clang
+s390                 randconfig-r044-20230226   clang
+s390                 randconfig-r044-20230227   gcc  
+s390                       zfcpdump_defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                        edosk7760_defconfig   gcc  
+sh                   randconfig-r033-20230227   gcc  
+sh                             sh03_defconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r002-20230227   gcc  
+sparc                randconfig-r005-20230226   gcc  
+sparc                randconfig-r013-20230227   gcc  
+sparc                randconfig-r015-20230227   gcc  
+sparc                randconfig-r022-20230227   gcc  
+sparc                randconfig-r032-20230227   gcc  
+sparc64      buildonly-randconfig-r004-20230226   gcc  
+sparc64              randconfig-r033-20230228   gcc  
+sparc64              randconfig-r035-20230228   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230227   clang
+x86_64               randconfig-a002-20230227   clang
+x86_64               randconfig-a003-20230227   clang
+x86_64               randconfig-a004-20230227   clang
+x86_64               randconfig-a005-20230227   clang
+x86_64               randconfig-a006-20230227   clang
+x86_64               randconfig-a011-20230227   gcc  
+x86_64               randconfig-a012-20230227   gcc  
+x86_64               randconfig-a013-20230227   gcc  
+x86_64               randconfig-a014-20230227   gcc  
+x86_64               randconfig-a015-20230227   gcc  
+x86_64               randconfig-a016-20230227   gcc  
+x86_64                        randconfig-c001   gcc  
+x86_64                        randconfig-k001   clang
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                    rhel-8.3-kselftests   gcc  
+x86_64                         rhel-8.3-kunit   gcc  
+x86_64                           rhel-8.3-kvm   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                           rhel-8.3-syz   gcc  
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r001-20230227   gcc  
+xtensa               randconfig-r003-20230226   gcc  
+xtensa               randconfig-r004-20230226   gcc  
+xtensa               randconfig-r016-20230228   gcc  
+xtensa               randconfig-r023-20230226   gcc  
+xtensa               randconfig-r032-20230226   gcc  
+xtensa               randconfig-r032-20230228   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
