@@ -1,168 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E19EC8
-	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 08:16:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1677658573;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qQIo0hNE1IdmdTJeAfVSWSJHdp/A2L81MbqwgQGi7/s=;
-	b=FnNmmWhj6jw7qmxXDZvcSwk1E/ibBLHHzp7n7wcnj/m3FkxFT4EJKuytAzNT5LRrPcDloo
-	taZBuVQ9CvDxDvBp3YJzalLYQcq+tcc6teSsiwXS0yw9pq3rJ2GHpjU+9CV7E+XXHllHLa
-	yUa2Adc21MG+ndVqUfHWbRlUuS1M5uc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-649-FKtlQ0M0O1aCoE9xVJgGAg-1; Wed, 01 Mar 2023 03:16:10 -0500
-X-MC-Unique: FKtlQ0M0O1aCoE9xVJgGAg-1
-Received: by mail-wm1-f70.google.com with SMTP id l20-20020a05600c1d1400b003e10d3e1c23so8006569wms.1
-        for <loongarch@lists.linux.dev>; Wed, 01 Mar 2023 00:16:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:organization:from
-         :content-language:references:cc:to:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qQIo0hNE1IdmdTJeAfVSWSJHdp/A2L81MbqwgQGi7/s=;
-        b=WLbcIrDM2kc8YgFlMNllhjn8ASoDDzMWf+wbXg+lqWpI3/kuQvojvVikeXjiym+YEo
-         0Numx1Hvg4rpUUiY5+W5XxEqP0wbRYJnAnFosxJ2fbKWMseGaZS9HcXxNWueIFukRtWz
-         ej+w76RuWW5nMTtuxb6Gz/t20Vyp9BLn7CrMDaLvKDcB5/ERr8UBOVmupthVa3nRs/sl
-         Ngd4Nq6B1CeilC1pb/8cZZqROWrt6S+Pk0JI1y/X2GARWAsn9K104AxwAbOr4XC3jPw4
-         +v1w6IKNuPqTVn3HHoaJjpr9ChiYvA0drO7e+NJBnuQs9panixwzy9jfxX6UolF7DQxT
-         gcuA==
-X-Gm-Message-State: AO0yUKVbdy7o9u0kxoT8urhVQ1oM7Q6twGeMn470OqH+FO91vaSs95Er
-	Dp+Clx034dtpYzIQ4MQlvMfg6/jCLu0ZFcQtlWe9q3yaRdxSKfp2vFkycaN05PM6eijbXL8riIm
-	xllZVybenIHwLuiS4dzys
-X-Received: by 2002:adf:fa42:0:b0:2c8:9cfe:9e29 with SMTP id y2-20020adffa42000000b002c89cfe9e29mr3673937wrr.38.1677658569269;
-        Wed, 01 Mar 2023 00:16:09 -0800 (PST)
-X-Google-Smtp-Source: AK7set/Zcp0KDYd3P+ttMa1nxfZFskB2aS7FMY5A6AFDn91vWMJGTRwO0n5U4FI/yi5+QKrlOm4zVQ==
-X-Received: by 2002:adf:fa42:0:b0:2c8:9cfe:9e29 with SMTP id y2-20020adffa42000000b002c89cfe9e29mr3673883wrr.38.1677658568881;
-        Wed, 01 Mar 2023 00:16:08 -0800 (PST)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id m15-20020a5d6a0f000000b002c707785da4sm11739026wru.107.2023.03.01.00.16.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Mar 2023 00:16:08 -0800 (PST)
-Message-ID: <550c6035-6dd0-d215-226b-1a82dafa05d6@redhat.com>
-Date: Wed, 1 Mar 2023 09:16:06 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DF3A32
+	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 08:51:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDE49C433D2;
+	Wed,  1 Mar 2023 08:51:20 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Export some symbols without GPL
+Date: Wed,  1 Mar 2023 16:51:09 +0800
+Message-Id: <20230301085109.2373524-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>, "x86@kernel.org"
- <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>,
- Balbir Singh <bsingharora@gmail.com>, Borislav Petkov <bp@alien8.de>,
- Cyrill Gorcunov <gorcunov@gmail.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Eugene Syromiatnikov <esyr@redhat.com>, Florian Weimer <fweimer@redhat.com>,
- "H . J . Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
- Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
- Mike Kravetz <mike.kravetz@oracle.com>, Nadav Amit <nadav.amit@gmail.com>,
- Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
- Peter Zijlstra <peterz@infradead.org>, Randy Dunlap <rdunlap@infradead.org>,
- Weijiang Yang <weijiang.yang@intel.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- John Allen <john.allen@amd.com>, "kcc@google.com" <kcc@google.com>,
- "eranian@google.com" <eranian@google.com>, "rppt@kernel.org"
- <rppt@kernel.org>,
- "jamorris@linux.microsoft.com" <jamorris@linux.microsoft.com>,
- "dethoma@microsoft.com" <dethoma@microsoft.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "Andrew.Cooper3@citrix.com" <Andrew.Cooper3@citrix.com>,
- "christina.schimpe@intel.com" <christina.schimpe@intel.com>,
- "debug@rivosinc.com" <debug@rivosinc.com>
-Cc: "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
- "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- "linux-hexagon@vger.kernel.org" <linux-hexagon@vger.kernel.org>,
- "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
- Michal Simek <monstr@monstr.eu>, Dinh Nguyen <dinguyen@kernel.org>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
- "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
- "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
- "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
- "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
- "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-References: <20230227222957.24501-1-rick.p.edgecombe@intel.com>
- <20230227222957.24501-14-rick.p.edgecombe@intel.com>
- <1f8b78b6-9f34-b646-68f2-eac62136b9f4@csgroup.eu>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH v7 13/41] mm: Make pte_mkwrite() take a VMA
-In-Reply-To: <1f8b78b6-9f34-b646-68f2-eac62136b9f4@csgroup.eu>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 01.03.23 08:03, Christophe Leroy wrote:
-> 
-> 
-> Le 27/02/2023 à 23:29, Rick Edgecombe a écrit :
->> The x86 Control-flow Enforcement Technology (CET) feature includes a new
->> type of memory called shadow stack. This shadow stack memory has some
->> unusual properties, which requires some core mm changes to function
->> properly.
->>
->> One of these unusual properties is that shadow stack memory is writable,
->> but only in limited ways. These limits are applied via a specific PTE
->> bit combination. Nevertheless, the memory is writable, and core mm code
->> will need to apply the writable permissions in the typical paths that
->> call pte_mkwrite().
->>
->> In addition to VM_WRITE, the shadow stack VMA's will have a flag denoting
->> that they are special shadow stack flavor of writable memory. So make
->> pte_mkwrite() take a VMA, so that the x86 implementation of it can know to
->> create regular writable memory or shadow stack memory.
->>
->> Apply the same changes for pmd_mkwrite() and huge_pte_mkwrite().
-> 
-> I'm not sure it is a good idea to add a second argument to
-> pte_mkwrite(). All pte_mkxxxx() only take a pte and nothing else.
+Some symbols, i.e., vm_map_base, empty_zero_page and invalid_pmd_table,
+could be accessed widely by some out-of-tree non-GPL but important file
+systems or drivers (e.g., OpenZFS). Let's use EXPORT_SYMBOL() instead of
+EXPORT_SYMBOL_GPL() to export them, so as to avoid build errors.
 
-We touched on this in previous revisions and so far there was no strong 
-push back. This turned out to be cleaner and easier than the 
-alternatives we evaluated.
+Details about vm_map_base: may be referenced through macros PCI_IOBASE,
+VMALLOC_START and VMALLOC_END.
 
-pte_modify(), for example, takes another argument. Sure, we could try 
-thinking about passing something else than a VMA to identify the 
-writability type, but I am not convinced that will look particularly better.
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/cpu-probe.c | 2 +-
+ arch/loongarch/mm/init.c          | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-> 
-> I think you should do the same as commit d9ed9faac283 ("mm: add new
-> arch_make_huge_pte() method for tile support")
-> 
-
-We already have 3 architectures intending to support shadow stacks in 
-one way or the other. Replacing all pte_mkwrite() with 
-arch_pte_mkwrite() doesn't sound particularly appealing to me.
-
-
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index 008b0249905f..001e43dd94ca 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -60,7 +60,7 @@ static inline void set_elf_platform(int cpu, const char *plat)
+ 
+ /* MAP BASE */
+ unsigned long vm_map_base;
+-EXPORT_SYMBOL_GPL(vm_map_base);
++EXPORT_SYMBOL(vm_map_base);
+ 
+ static void cpu_probe_addrbits(struct cpuinfo_loongarch *c)
+ {
+diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+index e018aed34586..3b7d8129570b 100644
+--- a/arch/loongarch/mm/init.c
++++ b/arch/loongarch/mm/init.c
+@@ -41,7 +41,7 @@
+  * don't have to care about aliases on other CPUs.
+  */
+ unsigned long empty_zero_page, zero_page_mask;
+-EXPORT_SYMBOL_GPL(empty_zero_page);
++EXPORT_SYMBOL(empty_zero_page);
+ EXPORT_SYMBOL(zero_page_mask);
+ 
+ void setup_zero_pages(void)
+@@ -270,7 +270,7 @@ pud_t invalid_pud_table[PTRS_PER_PUD] __page_aligned_bss;
+ #endif
+ #ifndef __PAGETABLE_PMD_FOLDED
+ pmd_t invalid_pmd_table[PTRS_PER_PMD] __page_aligned_bss;
+-EXPORT_SYMBOL_GPL(invalid_pmd_table);
++EXPORT_SYMBOL(invalid_pmd_table);
+ #endif
+ pte_t invalid_pte_table[PTRS_PER_PTE] __page_aligned_bss;
+ EXPORT_SYMBOL(invalid_pte_table);
 -- 
-Thanks,
-
-David / dhildenb
+2.39.1
 
