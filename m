@@ -1,110 +1,326 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDEB7F6
-	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 12:30:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8EA4C433EF;
-	Wed,  1 Mar 2023 12:30:43 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH V2] LoongArch: Mark 3 symbol exports as non-GPL
-Date: Wed,  1 Mar 2023 20:30:32 +0800
-Message-Id: <20230301123032.2452817-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C320E2F32
+	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 12:54:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74353C433A0
+	for <loongarch@lists.linux.dev>; Wed,  1 Mar 2023 12:54:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1677675260;
+	bh=nsAjfERmlYcwPCwRlGaZKt5QRBPCc6LjHfkvMN26bl4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=a698muagCddvVl3CDIHAIYRMgtMcCBtj584mVF/hFgrYFOjty+gro00FXeCVDc9fL
+	 rC0S3uGEe9+eXbm3Pjora2P9bdKI3KwA1qWp5TqqC1yMXcC1JeV5Y4/Qf6javE/WYL
+	 EO90Al8AgFaVHyTaZrhddYrmTdW02/WuQI077Qu2i+PPfn4slmjGwYyvqleTE3xe/h
+	 bjZRwBN5ShNx+tbLc5mETbAu5Z6bcWcN33qMXNFID++u3D3DB1LhR96p3hPPCcxHfa
+	 aGGl/I/0IHWqA+r3eLk0wltCXQ3ZZINgPdhWXkXxluCRuxxMz/WA//h4Xza92PFwdX
+	 q9DUuOZEYeRHA==
+Received: by mail-ed1-f45.google.com with SMTP id s26so53180462edw.11
+        for <loongarch@lists.linux.dev>; Wed, 01 Mar 2023 04:54:20 -0800 (PST)
+X-Gm-Message-State: AO0yUKUJJOeh6Y4rEzQu5+t5Ep8I9FjtnDu1LW8rS6SXFWGQ9GCUym7c
+	LME6oM9L4IxY4Hjd/wkvLTTir5IFIHGZicSXNJE=
+X-Google-Smtp-Source: AK7set+gKy5PfoUAkxjPyqViMV5TLsZt5d1WtsqHlZa+P0ra5Ew9UlFJGwuPsmKCDxZYFDS/4dfjtQPEgxSjqt+fJAk=
+X-Received: by 2002:a50:c319:0:b0:4ad:7439:cec3 with SMTP id
+ a25-20020a50c319000000b004ad7439cec3mr3563374edb.7.1677675258664; Wed, 01 Mar
+ 2023 04:54:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230216130914.156613-1-maobibo@loongson.cn>
+In-Reply-To: <20230216130914.156613-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 1 Mar 2023 20:54:04 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6T_F4=D1i6GkJTczHY5i-FSa6o_oXiRdZFGOXBU=pwXg@mail.gmail.com>
+Message-ID: <CAAhV-H6T_F4=D1i6GkJTczHY5i-FSa6o_oXiRdZFGOXBU=pwXg@mail.gmail.com>
+Subject: Re: [PATCH v3] LoongArch: add checksum optimization for 64-bit system
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, David Laight <David.Laight@aculab.com>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-vm_map_base, empty_zero_page and invalid_pmd_table could be accessed
-widely by some out-of-tree non-GPL but important file systems or drivers
-(e.g. OpenZFS). Let's use EXPORT_SYMBOL() instead of EXPORT_SYMBOL_GPL()
-to export them, so as to avoid build errors.
+Hi, Bibo,
 
-1, Details about vm_map_base:
+I found the version here [1] provides more functions than this one. So
+is it possible to take advantages from both versions?
 
-This is a LoongArch-specific symbol and may be referenced through macros
-PCI_IOBASE, VMALLOC_START and VMALLOC_END.
+[1] https://github.com/loongson/linux/commit/92a6df48ccb73dd2c3dc1799add08a=
+df0e0b0deb
 
-2, Details about empty_zero_page:
+Huacai
 
-As it stands today, only 3 architectures export empty_zero_page as a GPL 
-symbol: IA64, LoongArch and MIPS. LoongArch gets the GPL export by 
-inheriting from MIPS, and the MIPS export was first introduced in commit 
-497d2adcbf50b ("[MIPS] Export empty_zero_page for sake of the ext4 
-module."). The IA64 export was similar: commit a7d57ecf4216e ("[IA64] 
-Export three symbols for module use") did so for kvm.
-
-In both IA64 and MIPS, the export of empty_zero_page was done for 
-satisfying some in-kernel component built as module (kvm and ext4 
-respectively), and given its reasonably low-level nature, GPL is a 
-reasonable choice. But looking at the bigger picture it is evident most 
-other architectures do not regard it as GPL, so in effect the symbol 
-probably should not be treated as such, in favor of consistency.
-
-3, Details about invalid_pmd_table:
-
-Keep consistency with invalid_pte_table and make it be possible by some
-modules.
-
-Reviewed-by: WANG Xuerui <git@xen0n.name>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-V2: Update commit messages.
-
- arch/loongarch/kernel/cpu-probe.c | 2 +-
- arch/loongarch/mm/init.c          | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index 008b0249905f..001e43dd94ca 100644
---- a/arch/loongarch/kernel/cpu-probe.c
-+++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -60,7 +60,7 @@ static inline void set_elf_platform(int cpu, const char *plat)
- 
- /* MAP BASE */
- unsigned long vm_map_base;
--EXPORT_SYMBOL_GPL(vm_map_base);
-+EXPORT_SYMBOL(vm_map_base);
- 
- static void cpu_probe_addrbits(struct cpuinfo_loongarch *c)
- {
-diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-index e018aed34586..3b7d8129570b 100644
---- a/arch/loongarch/mm/init.c
-+++ b/arch/loongarch/mm/init.c
-@@ -41,7 +41,7 @@
-  * don't have to care about aliases on other CPUs.
-  */
- unsigned long empty_zero_page, zero_page_mask;
--EXPORT_SYMBOL_GPL(empty_zero_page);
-+EXPORT_SYMBOL(empty_zero_page);
- EXPORT_SYMBOL(zero_page_mask);
- 
- void setup_zero_pages(void)
-@@ -270,7 +270,7 @@ pud_t invalid_pud_table[PTRS_PER_PUD] __page_aligned_bss;
- #endif
- #ifndef __PAGETABLE_PMD_FOLDED
- pmd_t invalid_pmd_table[PTRS_PER_PMD] __page_aligned_bss;
--EXPORT_SYMBOL_GPL(invalid_pmd_table);
-+EXPORT_SYMBOL(invalid_pmd_table);
- #endif
- pte_t invalid_pte_table[PTRS_PER_PTE] __page_aligned_bss;
- EXPORT_SYMBOL(invalid_pte_table);
--- 
-2.39.1
-
+On Thu, Feb 16, 2023 at 9:09=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> loongArch platform is 64-bit system, which supports 8 bytes memory
+> accessing, generic checksum function uses 4 byte memory access.
+> This patch adds 8-bytes memory access optimization for checksum
+> function on loongArch. And the code comes from arm64 system.
+>
+> When network hw checksum is disabled, iperf performance improves
+> about 10% with this patch.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+> Changelog:
+> v3: modify function accumulate() to handle better on loongarch platform,
+>     maybe it's compiler optimization issue.
+> v2: use rotation API in function csum_fold to reduce one instruction.
+> ---
+>  arch/loongarch/include/asm/checksum.h |  65 ++++++++++++
+>  arch/loongarch/lib/Makefile           |   2 +-
+>  arch/loongarch/lib/csum.c             | 141 ++++++++++++++++++++++++++
+>  3 files changed, 207 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/loongarch/include/asm/checksum.h
+>  create mode 100644 arch/loongarch/lib/csum.c
+>
+> diff --git a/arch/loongarch/include/asm/checksum.h b/arch/loongarch/inclu=
+de/asm/checksum.h
+> new file mode 100644
+> index 000000000000..8a7d368d801d
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/checksum.h
+> @@ -0,0 +1,65 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2016 ARM Ltd.
+> + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> + */
+> +#ifndef __ASM_CHECKSUM_H
+> +#define __ASM_CHECKSUM_H
+> +
+> +#include <linux/in6.h>
+> +
+> +#define _HAVE_ARCH_IPV6_CSUM
+> +__sum16 csum_ipv6_magic(const struct in6_addr *saddr,
+> +                       const struct in6_addr *daddr,
+> +                       __u32 len, __u8 proto, __wsum sum);
+> +
+> +/*
+> + * turns a 32-bit partial checksum (e.g. from csum_partial) into a
+> + * 1's complement 16-bit checksum.
+> + */
+> +static inline __sum16 csum_fold(__wsum sum)
+> +{
+> +       u32 tmp =3D (__force u32)sum;
+> +
+> +       /*
+> +        * swap the two 16-bit halves of sum
+> +        * if there is a carry from adding the two 16-bit halves,
+> +        * it will carry from the lower half into the upper half,
+> +        * giving us the correct sum in the upper half.
+> +        */
+> +       return (__force __sum16)(~(tmp + rol32(tmp, 16)) >> 16);
+> +}
+> +#define csum_fold csum_fold
+> +
+> +/*
+> + * This is a version of ip_compute_csum() optimized for IP headers,
+> + * which always checksum on 4 octet boundaries.  ihl is the number
+> + * of 32-bit words and is always >=3D 5.
+> + */
+> +static inline __sum16 ip_fast_csum(const void *iph, unsigned int ihl)
+> +{
+> +       __uint128_t tmp;
+> +       u64 sum;
+> +       int n =3D ihl; /* we want it signed */
+> +
+> +       tmp =3D *(const __uint128_t *)iph;
+> +       iph +=3D 16;
+> +       n -=3D 4;
+> +       tmp +=3D ((tmp >> 64) | (tmp << 64));
+> +       sum =3D tmp >> 64;
+> +       do {
+> +               sum +=3D *(const u32 *)iph;
+> +               iph +=3D 4;
+> +       } while (--n > 0);
+> +
+> +       sum +=3D ror64(sum, 32);
+> +       return csum_fold((__force __wsum)(sum >> 32));
+> +}
+> +#define ip_fast_csum ip_fast_csum
+> +
+> +extern unsigned int do_csum(const unsigned char *buff, int len);
+> +#define do_csum do_csum
+> +
+> +#include <asm-generic/checksum.h>
+> +
+> +#endif /* __ASM_CHECKSUM_H */
+> diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
+> index 40bde632900f..6ba6df411f90 100644
+> --- a/arch/loongarch/lib/Makefile
+> +++ b/arch/loongarch/lib/Makefile
+> @@ -4,4 +4,4 @@
+>  #
+>
+>  lib-y  +=3D delay.o memset.o memcpy.o memmove.o \
+> -          clear_user.o copy_user.o dump_tlb.o unaligned.o
+> +          clear_user.o copy_user.o dump_tlb.o unaligned.o csum.o
+> diff --git a/arch/loongarch/lib/csum.c b/arch/loongarch/lib/csum.c
+> new file mode 100644
+> index 000000000000..a5e84b403c3b
+> --- /dev/null
+> +++ b/arch/loongarch/lib/csum.c
+> @@ -0,0 +1,141 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +// Copyright (C) 2019-2020 Arm Ltd.
+> +
+> +#include <linux/compiler.h>
+> +#include <linux/kasan-checks.h>
+> +#include <linux/kernel.h>
+> +
+> +#include <net/checksum.h>
+> +
+> +static u64 accumulate(u64 sum, u64 data)
+> +{
+> +       sum +=3D data;
+> +       if (sum < data)
+> +               sum +=3D 1;
+> +       return sum;
+> +}
+> +
+> +/*
+> + * We over-read the buffer and this makes KASAN unhappy. Instead, disabl=
+e
+> + * instrumentation and call kasan explicitly.
+> + */
+> +unsigned int __no_sanitize_address do_csum(const unsigned char *buff, in=
+t len)
+> +{
+> +       unsigned int offset, shift, sum;
+> +       const u64 *ptr;
+> +       u64 data, sum64 =3D 0;
+> +
+> +       if (unlikely(len =3D=3D 0))
+> +               return 0;
+> +
+> +       offset =3D (unsigned long)buff & 7;
+> +       /*
+> +        * This is to all intents and purposes safe, since rounding down =
+cannot
+> +        * result in a different page or cache line being accessed, and @=
+buff
+> +        * should absolutely not be pointing to anything read-sensitive. =
+We do,
+> +        * however, have to be careful not to piss off KASAN, which means=
+ using
+> +        * unchecked reads to accommodate the head and tail, for which we=
+'ll
+> +        * compensate with an explicit check up-front.
+> +        */
+> +       kasan_check_read(buff, len);
+> +       ptr =3D (u64 *)(buff - offset);
+> +       len =3D len + offset - 8;
+> +
+> +       /*
+> +        * Head: zero out any excess leading bytes. Shifting back by the =
+same
+> +        * amount should be at least as fast as any other way of handling=
+ the
+> +        * odd/even alignment, and means we can ignore it until the very =
+end.
+> +        */
+> +       shift =3D offset * 8;
+> +       data =3D *ptr++;
+> +       data =3D (data >> shift) << shift;
+> +
+> +       /*
+> +        * Body: straightforward aligned loads from here on (the paired l=
+oads
+> +        * underlying the quadword type still only need dword alignment).=
+ The
+> +        * main loop strictly excludes the tail, so the second loop will =
+always
+> +        * run at least once.
+> +        */
+> +       while (unlikely(len > 64)) {
+> +               __uint128_t tmp1, tmp2, tmp3, tmp4;
+> +
+> +               tmp1 =3D *(__uint128_t *)ptr;
+> +               tmp2 =3D *(__uint128_t *)(ptr + 2);
+> +               tmp3 =3D *(__uint128_t *)(ptr + 4);
+> +               tmp4 =3D *(__uint128_t *)(ptr + 6);
+> +
+> +               len -=3D 64;
+> +               ptr +=3D 8;
+> +
+> +               /* This is the "don't dump the carry flag into a GPR" idi=
+om */
+> +               tmp1 +=3D (tmp1 >> 64) | (tmp1 << 64);
+> +               tmp2 +=3D (tmp2 >> 64) | (tmp2 << 64);
+> +               tmp3 +=3D (tmp3 >> 64) | (tmp3 << 64);
+> +               tmp4 +=3D (tmp4 >> 64) | (tmp4 << 64);
+> +               tmp1 =3D ((tmp1 >> 64) << 64) | (tmp2 >> 64);
+> +               tmp1 +=3D (tmp1 >> 64) | (tmp1 << 64);
+> +               tmp3 =3D ((tmp3 >> 64) << 64) | (tmp4 >> 64);
+> +               tmp3 +=3D (tmp3 >> 64) | (tmp3 << 64);
+> +               tmp1 =3D ((tmp1 >> 64) << 64) | (tmp3 >> 64);
+> +               tmp1 +=3D (tmp1 >> 64) | (tmp1 << 64);
+> +               tmp1 =3D ((tmp1 >> 64) << 64) | sum64;
+> +               tmp1 +=3D (tmp1 >> 64) | (tmp1 << 64);
+> +               sum64 =3D tmp1 >> 64;
+> +       }
+> +       while (len > 8) {
+> +               __uint128_t tmp;
+> +
+> +               sum64 =3D accumulate(sum64, data);
+> +               tmp =3D *(__uint128_t *)ptr;
+> +
+> +               len -=3D 16;
+> +               ptr +=3D 2;
+> +
+> +               data =3D tmp >> 64;
+> +               sum64 =3D accumulate(sum64, tmp);
+> +       }
+> +       if (len > 0) {
+> +               sum64 =3D accumulate(sum64, data);
+> +               data =3D *ptr;
+> +               len -=3D 8;
+> +       }
+> +       /*
+> +        * Tail: zero any over-read bytes similarly to the head, again
+> +        * preserving odd/even alignment.
+> +        */
+> +       shift =3D len * -8;
+> +       data =3D (data << shift) >> shift;
+> +       sum64 =3D accumulate(sum64, data);
+> +
+> +       /* Finally, folding */
+> +       sum64 +=3D (sum64 >> 32) | (sum64 << 32);
+> +       sum =3D sum64 >> 32;
+> +       sum +=3D (sum >> 16) | (sum << 16);
+> +       if (offset & 1)
+> +               return (u16)swab32(sum);
+> +
+> +       return sum >> 16;
+> +}
+> +
+> +__sum16 csum_ipv6_magic(const struct in6_addr *saddr,
+> +                       const struct in6_addr *daddr,
+> +                       __u32 len, __u8 proto, __wsum csum)
+> +{
+> +       __uint128_t src, dst;
+> +       u64 sum =3D (__force u64)csum;
+> +
+> +       src =3D *(const __uint128_t *)saddr->s6_addr;
+> +       dst =3D *(const __uint128_t *)daddr->s6_addr;
+> +
+> +       sum +=3D (__force u32)htonl(len);
+> +       sum +=3D (u32)proto << 24;
+> +       src +=3D (src >> 64) | (src << 64);
+> +       dst +=3D (dst >> 64) | (dst << 64);
+> +
+> +       sum =3D accumulate(sum, src >> 64);
+> +       sum =3D accumulate(sum, dst >> 64);
+> +
+> +       sum +=3D ((sum >> 32) | (sum << 32));
+> +       return csum_fold((__force __wsum)(sum >> 32));
+> +}
+> +EXPORT_SYMBOL(csum_ipv6_magic);
+> --
+> 2.27.0
+>
