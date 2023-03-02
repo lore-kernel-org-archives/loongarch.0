@@ -1,43 +1,43 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC77433D8
-	for <loongarch@lists.linux.dev>; Thu,  2 Mar 2023 09:58:21 +0000 (UTC)
-Received: by mail-wr1-f50.google.com with SMTP id q16so15940750wrw.2
-        for <loongarch@lists.linux.dev>; Thu, 02 Mar 2023 01:58:21 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9196633D8
+	for <loongarch@lists.linux.dev>; Thu,  2 Mar 2023 09:59:23 +0000 (UTC)
+Received: by mail-wr1-f53.google.com with SMTP id h14so15922678wru.4
+        for <loongarch@lists.linux.dev>; Thu, 02 Mar 2023 01:59:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20210112.gappssmtp.com; s=20210112; t=1677751100;
+        d=rivosinc-com.20210112.gappssmtp.com; s=20210112; t=1677751162;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dWpoWTHF+daqxuKXm60VZYbfqB4+Spk5kTFrpLEIhE4=;
-        b=GbOzkhHpIeW6q3QAL7eh/145Udusgp0gIBvSMfE+ON43AdeZu/ee7w201pWjLeG957
-         Qq6RowkieZ+r7WYxDV4f068I/TnwbRuLBxT7WIxFprPNBY5ETmLUPXT8bUynxL5VSaUV
-         PVUZGZk6ER9seRO9uoW7f1L2mApWo7MewdzdL0qcnQpdXHFH3/9ZB2LUy9VpmO3HrtOm
-         pZFwuHfUDS0wMlnfUfqj5o1GaX3nlvS+nxi6hyejhckM5q2KO+HBjRFOyHjW/SKZSMU4
-         7gpUQh5NelsMLIJiVkw0+WCtWlNbCFujwtZy/wvskJrB7zILzjZi7BblFbcCuFLCBqPv
-         Bewg==
+        bh=ILvb9GZC9A1qdpzGm/54DVnwfbD0aC1FwyW+Sl0y38Q=;
+        b=iEFVfsrb5OtcQreF8wlM/GwKwWXjAdiB5zFZjDGOkxsfSSW2ix9k7XafXuRFWHkNIw
+         TQUj1z5ar2C0vEVfH9chUCmNH/nteRlN1JdwyEUKTQ48/qxc5zj7lbxM6oIumNApIlqo
+         K5VLD6wVEEWQMgZjLuZL0KrTQGr9096IfMMlinEHKNGLif5eFvYvdBjXluO8Ix1w5R4U
+         RJY91d9JKU56mcqJltFuMP1hPTP3suLy9poPdP2dzMNCJAeF1wsN9BU7pj1S6IwmR5Pr
+         qxXd+GuaTvJtDc6/YI8Kl6o8vw4aO5d1givhUukt4+tiF5HMj/+lNEF0nfMftS0WTvNr
+         b4nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677751100;
+        d=1e100.net; s=20210112; t=1677751162;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dWpoWTHF+daqxuKXm60VZYbfqB4+Spk5kTFrpLEIhE4=;
-        b=ZapkAYiIPJxwztD+xi+k18Lxko22xtfh9GtArBAGzWxRBHT4Gz66CLyDL7Olhzz4fl
-         vRsapj60+KkwEOQ3pdabtRTiOyn+H7oYKtXCqKW67nm4+StkBO+DXzgh8jWUhwPi6XZV
-         SpKWt0ptQ/8qDYetFbXbQd0NuOyl+yRUx6qRl+ySQZRWARpPZl1oUUdxEgysndKwO4Rp
-         5m1qiJ/3WNY+NQm3dzLaFqH65Yem41pHgNs0NbHF/mlZLRJDvmYoTHyrCHhbrPzO78XJ
-         e+CTRxCdo/qexvQRrtIXTmagUnHbcbZ75Hsqpq1D2W1oJtuG4Ybx0T7aBWVYbuOwoK+O
-         cOmg==
-X-Gm-Message-State: AO0yUKX2tMyygm0ptKCnOBiNLx7Y8U6e7AOHJ0JivIbuee2dZKVuy0ZQ
-	eVq7Qqx+MA45nGCqRyWrVF1p5g==
-X-Google-Smtp-Source: AK7set/HXPU9Bp6RN1ljNqKlOOYPCzZVkHLiMhzV0VzI+tVIVoliI9/U3d28g8WZmzzIQccODQQ95w==
-X-Received: by 2002:adf:e490:0:b0:2c5:c71:4a84 with SMTP id i16-20020adfe490000000b002c50c714a84mr7272840wrm.68.1677751100153;
-        Thu, 02 Mar 2023 01:58:20 -0800 (PST)
+        bh=ILvb9GZC9A1qdpzGm/54DVnwfbD0aC1FwyW+Sl0y38Q=;
+        b=ovTKGWfF3+c7wRl+sjuOPu0/+pUH3E+vnI7gpD0Jwu/fDF43xP1m+OKJ3MaUSi3eQb
+         ZJe03PBs0m5deKK3I1HS7yCsPpkk7gl8eHCvf9EyrnXsyO1Ij1Zehssj/RU+s7v9mF5K
+         JKc5afMVb55CsR1xjAMxkjoHCZrSI4xQsG91Yog/93nou0tYJ/mTlpkQ25Z5wp9/1KPb
+         EuUdsEuM+6GcCroZCItfuWSx9fxzcrKfuCm2ts5tWtaiWv3hXpG6JQkZeUwVTBWJJR+V
+         MlHPqx+pdi0tl5eZkErqsuWKLDb7BaZ5uf9Sa/gT8Jy3GhFHVuJ0jRA+2CnbzB3f7tUU
+         U0ag==
+X-Gm-Message-State: AO0yUKXFhMOKFrZSDX3UYLWXrFGECP3KQDw29MNa1nrYkicwKSxfIYnZ
+	MpjakJIQjJsVBjFHA5j89TNKHg==
+X-Google-Smtp-Source: AK7set/ZaZqc8Pqp5NMCbp2YvB641qs31ffprFtxgjh4YFRfODcsMY9Ph9awlpUQ4nOMh9NRpwbCrA==
+X-Received: by 2002:adf:db90:0:b0:2c5:8d06:75c2 with SMTP id u16-20020adfdb90000000b002c58d0675c2mr7214454wri.35.1677751161891;
+        Thu, 02 Mar 2023 01:59:21 -0800 (PST)
 Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id r8-20020a05600c458800b003df5be8987esm2546772wmo.20.2023.03.02.01.58.18
+        by smtp.gmail.com with ESMTPSA id s17-20020adff811000000b002c758fe9689sm14771605wrp.52.2023.03.02.01.59.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Mar 2023 01:58:19 -0800 (PST)
+        Thu, 02 Mar 2023 01:59:21 -0800 (PST)
 From: Alexandre Ghiti <alexghiti@rivosinc.com>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Richard Henderson <richard.henderson@linaro.org>,
@@ -95,9 +95,9 @@ To: Jonathan Corbet <corbet@lwn.net>,
 	linux-xtensa@linux-xtensa.org,
 	linux-arch@vger.kernel.org
 Cc: Palmer Dabbelt <palmer@rivosinc.com>
-Subject: [PATCH v4 22/24] powerpc: Remove empty <uapi/asm/setup.h>
-Date: Thu,  2 Mar 2023 10:35:37 +0100
-Message-Id: <20230302093539.372962-23-alexghiti@rivosinc.com>
+Subject: [PATCH v4 23/24] mips: Remove empty <uapi/asm/setup.h>
+Date: Thu,  2 Mar 2023 10:35:38 +0100
+Message-Id: <20230302093539.372962-24-alexghiti@rivosinc.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230302093539.372962-1-alexghiti@rivosinc.com>
 References: <20230302093539.372962-1-alexghiti@rivosinc.com>
@@ -113,21 +113,21 @@ From: Palmer Dabbelt <palmer@rivosinc.com>
 
 Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
 ---
- arch/powerpc/include/uapi/asm/setup.h | 5 -----
+ arch/mips/include/uapi/asm/setup.h | 5 -----
  1 file changed, 5 deletions(-)
- delete mode 100644 arch/powerpc/include/uapi/asm/setup.h
+ delete mode 100644 arch/mips/include/uapi/asm/setup.h
 
-diff --git a/arch/powerpc/include/uapi/asm/setup.h b/arch/powerpc/include/uapi/asm/setup.h
+diff --git a/arch/mips/include/uapi/asm/setup.h b/arch/mips/include/uapi/asm/setup.h
 deleted file mode 100644
-index f2ca747aa45b..000000000000
---- a/arch/powerpc/include/uapi/asm/setup.h
+index 157c3c392fb4..000000000000
+--- a/arch/mips/include/uapi/asm/setup.h
 +++ /dev/null
 @@ -1,5 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#ifndef _UAPI_ASM_POWERPC_SETUP_H
--#define _UAPI_ASM_POWERPC_SETUP_H
+-#ifndef _UAPI_MIPS_SETUP_H
+-#define _UAPI_MIPS_SETUP_H
 -
--#endif /* _UAPI_ASM_POWERPC_SETUP_H */
+-#endif /* _UAPI_MIPS_SETUP_H */
 -- 
 2.37.2
 
