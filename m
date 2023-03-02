@@ -1,341 +1,118 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98E06EA1
-	for <loongarch@lists.linux.dev>; Thu,  2 Mar 2023 02:20:13 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8DxUOWzBwBkLBgHAA--.7889S3;
-	Thu, 02 Mar 2023 10:19:31 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx6r05BwBkwXtFAA--.57447S3;
-	Thu, 02 Mar 2023 10:17:29 +0800 (CST)
-Message-ID: <f1d5f169-898a-9d7a-b932-ce0de20a217a@loongson.cn>
-Date: Thu, 2 Mar 2023 10:17:29 +0800
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADA4EC4
+	for <loongarch@lists.linux.dev>; Thu,  2 Mar 2023 03:17:18 +0000 (UTC)
+Received: by mail-pl1-f175.google.com with SMTP id i10so16175007plr.9
+        for <loongarch@lists.linux.dev>; Wed, 01 Mar 2023 19:17:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20210112.gappssmtp.com; s=20210112; t=1677727038;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hgpf8cgLJj50M86L5F9BUoIAMwjT++SeEfR1/zwwwE0=;
+        b=05BK9h2oN73d+vLQZ8AXICX+yqZH9PJw8eGQwQu3aLpPw/PQkKLBM+zl4FHFPDCMbr
+         oT2a7ycW9j4IvNJVs7ZNd3qeiw85Qtha4m0oAo5Q0QiPipyRwzSV4J3XcelEef5d8yqB
+         I4KXQDK7qQ+mAPYeZvAqQG78vIyZoGQH/5i1rIXtVNLbcQNF9Kn0gW9O7HWaBv1Z1Hfx
+         4q2OGZuaoqmuPypq3KgIWVltCxcy5gmQYJ+016KcQmuC/U0yrGY0o6z+m+PHYIZUzGYI
+         1grLiGwuTn7D4jkc5r6I/7tUA73EppBwvM41vkni8yrDAA+aUFBNlGO/ZUE432ubFqlh
+         lUug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677727038;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hgpf8cgLJj50M86L5F9BUoIAMwjT++SeEfR1/zwwwE0=;
+        b=jtjpINLiK4KcooYW2WpxhCwWDTLd7YhZUbO90GbC6xtQ1mGFrX9Fwdauhjec5LgU6U
+         lYdx8CD9DVPG1+kb/60QOkRONW2edKHHQEAMO9ErtstnDJqUZoJNFrdK2Q18Uy/UkjN/
+         7hxilgyiu/KF8LoWIflVBICIzqE+CvRlZ/Hnr+bhLHB+QNX79fsnRetWCdnLBl9LFxmN
+         MZ4lg3jYBUKaelAT9Ofwysh1eAENSraTcyi5p6jrKndgPeZQTswG2wHJ3N7dFKLCGTha
+         xhPdMEBej3Dt+67SekIOR1U5dpOPBqEeCTVgZS2Xxdv9U6jrSj+wzgwtQO5hPdix4W4Y
+         BLyA==
+X-Gm-Message-State: AO0yUKV09Nsem0C0H0xAEriSs9MdptjQopu+sbW+7HcqFX/uOi+K/6eO
+	vcqq1wDzcEz4LnlBFtx7XByZdg==
+X-Google-Smtp-Source: AK7set9sdV/+BdUm2bBjL395AsIYL1A1j9eCLS8ecMxY0Ws8WD4l1oqL273WzlVwyO1Yv4lm9xFKPQ==
+X-Received: by 2002:a05:6a20:1bde:b0:cc:de56:957a with SMTP id cv30-20020a056a201bde00b000ccde56957amr8709472pzb.13.1677727037881;
+        Wed, 01 Mar 2023 19:17:17 -0800 (PST)
+Received: from localhost ([50.221.140.188])
+        by smtp.gmail.com with ESMTPSA id h192-20020a636cc9000000b00502f5cd216bsm8183287pgc.6.2023.03.01.19.17.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Mar 2023 19:17:16 -0800 (PST)
+Date: Wed, 01 Mar 2023 19:17:16 -0800 (PST)
+X-Google-Original-Date: Wed, 01 Mar 2023 18:55:30 PST (-0800)
+Subject:     Re: [PATCH v3 03/24] arm: Remove COMMAND_LINE_SIZE from uapi
+In-Reply-To: <874b8076-b0d1-4aaa-bcd8-05d523060152@app.fastmail.com>
+CC: alexghiti@rivosinc.com, linux@armlinux.org.uk, corbet@lwn.net,
+  Richard Henderson <richard.henderson@linaro.org>, ink@jurassic.park.msu.ru, mattst88@gmail.com, vgupta@kernel.org,
+  Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, chenhuacai@kernel.org, kernel@xen0n.name,
+  geert@linux-m68k.org, monstr@monstr.eu, tsbogend@alpha.franken.de,
+  James.Bottomley@hansenpartnership.com, deller@gmx.de, mpe@ellerman.id.au, npiggin@gmail.com,
+  christophe.leroy@csgroup.eu, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+  hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+  svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org, davem@davemloft.net,
+  tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+  hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, linux-doc@vger.kernel.org,
+  linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+  linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+  linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+  linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+  linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-arch@vger.kernel.org
+From: Palmer Dabbelt <palmer@rivosinc.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Message-ID: <mhng-78901e66-16df-4563-9e2c-3a9744ef2828@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v3] LoongArch: add checksum optimization for 64-bit system
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, David Laight <David.Laight@aculab.com>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20230216130914.156613-1-maobibo@loongson.cn>
- <CAAhV-H6T_F4=D1i6GkJTczHY5i-FSa6o_oXiRdZFGOXBU=pwXg@mail.gmail.com>
-Content-Language: en-US
-From: maobibo <maobibo@loongson.cn>
-In-Reply-To: <CAAhV-H6T_F4=D1i6GkJTczHY5i-FSa6o_oXiRdZFGOXBU=pwXg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dx6r05BwBkwXtFAA--.57447S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxKF4DCF48Gw17GryUGF1DAwb_yoWfAF43pF
-	yDtrn0gF48Xr1xtr12v3y3tFnxWws7GrnrKryagFy8Ar9Ivw1xJrn8KrZ09a43Jw1fGFy0
-	vFWYgry3GFn3JaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
-	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-	1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
-	JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
-	1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUv
-	cSsGvfC2KfnxnUUI43ZEXa7IU8hiSPUUUUU==
 
-
-
-在 2023/3/1 20:54, Huacai Chen 写道:
-> Hi, Bibo,
-> 
-> I found the version here [1] provides more functions than this one. So
-> is it possible to take advantages from both versions?
-csum and copy user will take me much time:(  Just for csum there is no obvious
-results between uint128 and interleave method, it depends on compiler version
-also. I want to re-investigate two methods after LoongArch gcc optimization
-version is stable.
-
-Three methods are tested on LoongArch 3A5000 machine: uint128/asm/interleave
-methods, interleave method gets double performance on x86 box compared with
-uint128 method, however no better than LoongArch 3A5000 machine and one
-ARM64 machine. The three test methods are listed at website:
-https://github.com/bibo-mao/bench/tree/master/csum
-
-Here is the result on 3A5000 machine, time unit is us, smaller for
-better performance.
-
-buf size    loops      uint128      asm       interleave
-4096       0x100000     279824     373401     291508
-1472       0x100000     109137     138224     106035
-250        0x100000     29008      35838      23408
-40         0x100000     9789       23408      9122
-
-Regards
-Bibo, mao
-> 
-> [1] https://github.com/loongson/linux/commit/92a6df48ccb73dd2c3dc1799add08adf0e0b0deb
-> 
-> Huacai
-> 
-> On Thu, Feb 16, 2023 at 9:09 PM Bibo Mao <maobibo@loongson.cn> wrote:
+On Thu, 23 Feb 2023 05:09:17 PST (-0800), Arnd Bergmann wrote:
+> On Thu, Feb 23, 2023, at 10:54, Alexandre Ghiti wrote:
+>> On Wed, Feb 15, 2023 at 2:05 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>>>
+>>> On Wed, Feb 15, 2023, at 13:59, Russell King (Oracle) wrote:
+>>> > On Tue, Feb 14, 2023 at 08:49:04AM +0100, Alexandre Ghiti wrote:
+>>> >> From: Palmer Dabbelt <palmer@rivosinc.com>
+>>> >>
+>>> >> As far as I can tell this is not used by userspace and thus should not
+>>> >> be part of the user-visible API.
+>>> >>
+>>> >> Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+>>> >
+>>> > Looks good to me. What's the merge plan for this?
+>>>
+>>> The easiest way is probably if I merge it through the whole
+>>> series through the asm-generic tree. The timing is a bit
+>>> unfortunate as we're just ahead of the merge window, so unless
+>>> we really need this in 6.3, I'd suggest that Alexandre resend
+>>> the series to me in two weeks with the Acks added in and I'll
+>>> pick it up for 6.4.
 >>
->> loongArch platform is 64-bit system, which supports 8 bytes memory
->> accessing, generic checksum function uses 4 byte memory access.
->> This patch adds 8-bytes memory access optimization for checksum
->> function on loongArch. And the code comes from arm64 system.
+>> Sorry for the response delay, I was waiting to see if Palmer would
+>> merge my KASAN patchset in 6.3 (which he does): I have to admit that
+>> fixing the command line size + the KASAN patchset would allow 6.3 to
+>> run on syzkaller, which would be nice.
 >>
->> When network hw checksum is disabled, iperf performance improves
->> about 10% with this patch.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->> Changelog:
->> v3: modify function accumulate() to handle better on loongarch platform,
->>     maybe it's compiler optimization issue.
->> v2: use rotation API in function csum_fold to reduce one instruction.
->> ---
->>  arch/loongarch/include/asm/checksum.h |  65 ++++++++++++
->>  arch/loongarch/lib/Makefile           |   2 +-
->>  arch/loongarch/lib/csum.c             | 141 ++++++++++++++++++++++++++
->>  3 files changed, 207 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/loongarch/include/asm/checksum.h
->>  create mode 100644 arch/loongarch/lib/csum.c
->>
->> diff --git a/arch/loongarch/include/asm/checksum.h b/arch/loongarch/include/asm/checksum.h
->> new file mode 100644
->> index 000000000000..8a7d368d801d
->> --- /dev/null
->> +++ b/arch/loongarch/include/asm/checksum.h
->> @@ -0,0 +1,65 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Copyright (C) 2016 ARM Ltd.
->> + * Copyright (C) 2023 Loongson Technology Corporation Limited
->> + */
->> +#ifndef __ASM_CHECKSUM_H
->> +#define __ASM_CHECKSUM_H
->> +
->> +#include <linux/in6.h>
->> +
->> +#define _HAVE_ARCH_IPV6_CSUM
->> +__sum16 csum_ipv6_magic(const struct in6_addr *saddr,
->> +                       const struct in6_addr *daddr,
->> +                       __u32 len, __u8 proto, __wsum sum);
->> +
->> +/*
->> + * turns a 32-bit partial checksum (e.g. from csum_partial) into a
->> + * 1's complement 16-bit checksum.
->> + */
->> +static inline __sum16 csum_fold(__wsum sum)
->> +{
->> +       u32 tmp = (__force u32)sum;
->> +
->> +       /*
->> +        * swap the two 16-bit halves of sum
->> +        * if there is a carry from adding the two 16-bit halves,
->> +        * it will carry from the lower half into the upper half,
->> +        * giving us the correct sum in the upper half.
->> +        */
->> +       return (__force __sum16)(~(tmp + rol32(tmp, 16)) >> 16);
->> +}
->> +#define csum_fold csum_fold
->> +
->> +/*
->> + * This is a version of ip_compute_csum() optimized for IP headers,
->> + * which always checksum on 4 octet boundaries.  ihl is the number
->> + * of 32-bit words and is always >= 5.
->> + */
->> +static inline __sum16 ip_fast_csum(const void *iph, unsigned int ihl)
->> +{
->> +       __uint128_t tmp;
->> +       u64 sum;
->> +       int n = ihl; /* we want it signed */
->> +
->> +       tmp = *(const __uint128_t *)iph;
->> +       iph += 16;
->> +       n -= 4;
->> +       tmp += ((tmp >> 64) | (tmp << 64));
->> +       sum = tmp >> 64;
->> +       do {
->> +               sum += *(const u32 *)iph;
->> +               iph += 4;
->> +       } while (--n > 0);
->> +
->> +       sum += ror64(sum, 32);
->> +       return csum_fold((__force __wsum)(sum >> 32));
->> +}
->> +#define ip_fast_csum ip_fast_csum
->> +
->> +extern unsigned int do_csum(const unsigned char *buff, int len);
->> +#define do_csum do_csum
->> +
->> +#include <asm-generic/checksum.h>
->> +
->> +#endif /* __ASM_CHECKSUM_H */
->> diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
->> index 40bde632900f..6ba6df411f90 100644
->> --- a/arch/loongarch/lib/Makefile
->> +++ b/arch/loongarch/lib/Makefile
->> @@ -4,4 +4,4 @@
->>  #
->>
->>  lib-y  += delay.o memset.o memcpy.o memmove.o \
->> -          clear_user.o copy_user.o dump_tlb.o unaligned.o
->> +          clear_user.o copy_user.o dump_tlb.o unaligned.o csum.o
->> diff --git a/arch/loongarch/lib/csum.c b/arch/loongarch/lib/csum.c
->> new file mode 100644
->> index 000000000000..a5e84b403c3b
->> --- /dev/null
->> +++ b/arch/loongarch/lib/csum.c
->> @@ -0,0 +1,141 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +// Copyright (C) 2019-2020 Arm Ltd.
->> +
->> +#include <linux/compiler.h>
->> +#include <linux/kasan-checks.h>
->> +#include <linux/kernel.h>
->> +
->> +#include <net/checksum.h>
->> +
->> +static u64 accumulate(u64 sum, u64 data)
->> +{
->> +       sum += data;
->> +       if (sum < data)
->> +               sum += 1;
->> +       return sum;
->> +}
->> +
->> +/*
->> + * We over-read the buffer and this makes KASAN unhappy. Instead, disable
->> + * instrumentation and call kasan explicitly.
->> + */
->> +unsigned int __no_sanitize_address do_csum(const unsigned char *buff, int len)
->> +{
->> +       unsigned int offset, shift, sum;
->> +       const u64 *ptr;
->> +       u64 data, sum64 = 0;
->> +
->> +       if (unlikely(len == 0))
->> +               return 0;
->> +
->> +       offset = (unsigned long)buff & 7;
->> +       /*
->> +        * This is to all intents and purposes safe, since rounding down cannot
->> +        * result in a different page or cache line being accessed, and @buff
->> +        * should absolutely not be pointing to anything read-sensitive. We do,
->> +        * however, have to be careful not to piss off KASAN, which means using
->> +        * unchecked reads to accommodate the head and tail, for which we'll
->> +        * compensate with an explicit check up-front.
->> +        */
->> +       kasan_check_read(buff, len);
->> +       ptr = (u64 *)(buff - offset);
->> +       len = len + offset - 8;
->> +
->> +       /*
->> +        * Head: zero out any excess leading bytes. Shifting back by the same
->> +        * amount should be at least as fast as any other way of handling the
->> +        * odd/even alignment, and means we can ignore it until the very end.
->> +        */
->> +       shift = offset * 8;
->> +       data = *ptr++;
->> +       data = (data >> shift) << shift;
->> +
->> +       /*
->> +        * Body: straightforward aligned loads from here on (the paired loads
->> +        * underlying the quadword type still only need dword alignment). The
->> +        * main loop strictly excludes the tail, so the second loop will always
->> +        * run at least once.
->> +        */
->> +       while (unlikely(len > 64)) {
->> +               __uint128_t tmp1, tmp2, tmp3, tmp4;
->> +
->> +               tmp1 = *(__uint128_t *)ptr;
->> +               tmp2 = *(__uint128_t *)(ptr + 2);
->> +               tmp3 = *(__uint128_t *)(ptr + 4);
->> +               tmp4 = *(__uint128_t *)(ptr + 6);
->> +
->> +               len -= 64;
->> +               ptr += 8;
->> +
->> +               /* This is the "don't dump the carry flag into a GPR" idiom */
->> +               tmp1 += (tmp1 >> 64) | (tmp1 << 64);
->> +               tmp2 += (tmp2 >> 64) | (tmp2 << 64);
->> +               tmp3 += (tmp3 >> 64) | (tmp3 << 64);
->> +               tmp4 += (tmp4 >> 64) | (tmp4 << 64);
->> +               tmp1 = ((tmp1 >> 64) << 64) | (tmp2 >> 64);
->> +               tmp1 += (tmp1 >> 64) | (tmp1 << 64);
->> +               tmp3 = ((tmp3 >> 64) << 64) | (tmp4 >> 64);
->> +               tmp3 += (tmp3 >> 64) | (tmp3 << 64);
->> +               tmp1 = ((tmp1 >> 64) << 64) | (tmp3 >> 64);
->> +               tmp1 += (tmp1 >> 64) | (tmp1 << 64);
->> +               tmp1 = ((tmp1 >> 64) << 64) | sum64;
->> +               tmp1 += (tmp1 >> 64) | (tmp1 << 64);
->> +               sum64 = tmp1 >> 64;
->> +       }
->> +       while (len > 8) {
->> +               __uint128_t tmp;
->> +
->> +               sum64 = accumulate(sum64, data);
->> +               tmp = *(__uint128_t *)ptr;
->> +
->> +               len -= 16;
->> +               ptr += 2;
->> +
->> +               data = tmp >> 64;
->> +               sum64 = accumulate(sum64, tmp);
->> +       }
->> +       if (len > 0) {
->> +               sum64 = accumulate(sum64, data);
->> +               data = *ptr;
->> +               len -= 8;
->> +       }
->> +       /*
->> +        * Tail: zero any over-read bytes similarly to the head, again
->> +        * preserving odd/even alignment.
->> +        */
->> +       shift = len * -8;
->> +       data = (data << shift) >> shift;
->> +       sum64 = accumulate(sum64, data);
->> +
->> +       /* Finally, folding */
->> +       sum64 += (sum64 >> 32) | (sum64 << 32);
->> +       sum = sum64 >> 32;
->> +       sum += (sum >> 16) | (sum << 16);
->> +       if (offset & 1)
->> +               return (u16)swab32(sum);
->> +
->> +       return sum >> 16;
->> +}
->> +
->> +__sum16 csum_ipv6_magic(const struct in6_addr *saddr,
->> +                       const struct in6_addr *daddr,
->> +                       __u32 len, __u8 proto, __wsum csum)
->> +{
->> +       __uint128_t src, dst;
->> +       u64 sum = (__force u64)csum;
->> +
->> +       src = *(const __uint128_t *)saddr->s6_addr;
->> +       dst = *(const __uint128_t *)daddr->s6_addr;
->> +
->> +       sum += (__force u32)htonl(len);
->> +       sum += (u32)proto << 24;
->> +       src += (src >> 64) | (src << 64);
->> +       dst += (dst >> 64) | (dst << 64);
->> +
->> +       sum = accumulate(sum, src >> 64);
->> +       sum = accumulate(sum, dst >> 64);
->> +
->> +       sum += ((sum >> 32) | (sum << 32));
->> +       return csum_fold((__force __wsum)(sum >> 32));
->> +}
->> +EXPORT_SYMBOL(csum_ipv6_magic);
->> --
->> 2.27.0
->>
+>> If I don't see this merged in 6.3, I'll send another round as you
+>> suggested in 1 week now :)
+>
+> Hi Alexandre,
+>
+> I have no plans to still pick up the series for 6.3. The patches
+> all look fine to me, but it's clearly too late now. What is the
+> actual dependency for KASAN, do you just need a longer command
+> line or something else? If it's just the command line size,
+> I would suggest that Palmer can still pick up a oneline change
+> to increase it and refer to this thread in the changelog as a
+> reference for why it is not an actual UAPI break.
 
+Sorry for being slow here, I just queued up the original patch in the 
+RISC-V tree and intend on sending it for 6.3 -- the main worry was that 
+it's a uABi change and we're confident it's not.  It's late, but I'd 
+prefer to have this as it should let us start running syzkaller now and 
+that'll probably find more bugs than this is likely to trigger.
+
+https://lore.kernel.org/r/mhng-b5f934ff-a9bb-4c2b-9ba6-3ab68312077a@palmer-ri-x1c9a/
