@@ -1,139 +1,109 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C91EEA0
-	for <loongarch@lists.linux.dev>; Fri,  3 Mar 2023 04:30:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1677817838; bh=ACQD43d0AOgkJQffrIDqolBmi9goAho/+WKSzK28JHw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=A3u/I/aMYzg9Gpt2xqwDquEnREVnd7wJ7DjrO8gl/hCULrx7vJNrhhqf0yXC8OUI5
-	 alWcN/sIq62gRLOb+3laHDDGrnRRYsKDI7IGy7tJU36D5yc7OjloJqr2RBS9t16OyN
-	 y4lP6YaDFr2EogAWE955R+cHNMNetK72M8YZU1w8=
-Received: from [100.100.57.122] (unknown [58.34.185.106])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id E0C4560087;
-	Fri,  3 Mar 2023 12:30:37 +0800 (CST)
-Message-ID: <8b82786b-d810-a3c0-7919-e602e9e53de5@xen0n.name>
-Date: Fri, 3 Mar 2023 12:30:36 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F84538C
+	for <loongarch@lists.linux.dev>; Fri,  3 Mar 2023 11:59:28 +0000 (UTC)
+Received: (Authenticated sender: alex@ghiti.fr)
+	by mail.gandi.net (Postfix) with ESMTPSA id 078BCFF807;
+	Fri,  3 Mar 2023 11:59:01 +0000 (UTC)
+Message-ID: <674bc31e-e4ed-988f-820d-54213d83f9c7@ghiti.fr>
+Date: Fri, 3 Mar 2023 12:59:01 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH] LoongArch: Fix the CRC32 feature probing
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v3 00/24] Remove COMMAND_LINE_SIZE from uapi
 Content-Language: en-US
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-References: <20230303002508.2891681-1-chenhuacai@loongson.cn>
- <480ab341-6437-e409-8779-c4938924fd64@xen0n.name>
- <CAAhV-H7NYCdqXGwvmVqR8Njw=kDpBdCq+QRzPFGxR5zjHcdZ9g@mail.gmail.com>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <CAAhV-H7NYCdqXGwvmVqR8Njw=kDpBdCq+QRzPFGxR5zjHcdZ9g@mail.gmail.com>
+To: "H. Peter Anvin" <hpa@zytor.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ hca@linux.ibm.com
+Cc: geert@linux-m68k.org, alexghiti@rivosinc.com, corbet@lwn.net,
+ Richard Henderson <richard.henderson@linaro.org>, ink@jurassic.park.msu.ru,
+ mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ chenhuacai@kernel.org, kernel@xen0n.name, monstr@monstr.eu,
+ tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
+ deller@gmx.de, mpe@ellerman.id.au, npiggin@gmail.com,
+ christophe.leroy@csgroup.eu, Paul Walmsley <paul.walmsley@sifive.com>,
+ aou@eecs.berkeley.edu, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ borntraeger@linux.ibm.com, svens@linux.ibm.com, ysato@users.osdn.me,
+ dalias@libc.org, davem@davemloft.net, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, chris@zankel.net,
+ jcmvbkbc@gmail.com, Arnd Bergmann <arnd@arndb.de>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+ linux-arch@vger.kernel.org
+References: <mhng-e8b09772-24e5-4729-a0bf-01a9e4c76636@palmer-ri-x1c9a>
+ <21F95EC4-71EA-4154-A7DC-8A5BA54F174B@zytor.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <21F95EC4-71EA-4154-A7DC-8A5BA54F174B@zytor.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 2023/3/3 11:55, Huacai Chen wrote:
-> Hi, Xuerui,
-> 
-> On Fri, Mar 3, 2023 at 11:15 AM WANG Xuerui <kernel@xen0n.name> wrote:
+Hi Peter,
+
+
+On 3/2/23 20:50, H. Peter Anvin wrote:
+> On March 1, 2023 7:17:18 PM PST, Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>> On Tue, 14 Feb 2023 01:19:02 PST (-0800), hca@linux.ibm.com wrote:
+>>> On Tue, Feb 14, 2023 at 09:58:17AM +0100, Geert Uytterhoeven wrote:
+>>>> Hi Heiko,
+>>>>
+>>>> On Tue, Feb 14, 2023 at 9:39 AM Heiko Carstens <hca@linux.ibm.com> wrote:
+>>>>> On Tue, Feb 14, 2023 at 08:49:01AM +0100, Alexandre Ghiti wrote:
+>>>>>> This all came up in the context of increasing COMMAND_LINE_SIZE in the
+>>>>>> RISC-V port.  In theory that's a UABI break, as COMMAND_LINE_SIZE is the
+>>>>>> maximum length of /proc/cmdline and userspace could staticly rely on
+>>>>>> that to be correct.
+>>>>>>
+>>>>>> Usually I wouldn't mess around with changing this sort of thing, but
+>>>>>> PowerPC increased it with a5980d064fe2 ("powerpc: Bump COMMAND_LINE_SIZE
+>>>>>> to 2048").  There are also a handful of examples of COMMAND_LINE_SIZE
+>>>>>> increasing, but they're from before the UAPI split so I'm not quite sure
+>>>>>> what that means: e5a6a1c90948 ("powerpc: derive COMMAND_LINE_SIZE from
+>>>>>> asm-generic"), 684d2fd48e71 ("[S390] kernel: Append scpdata to kernel
+>>>>>> boot command line"), 22242681cff5 ("MIPS: Extend COMMAND_LINE_SIZE"),
+>>>>>> and 2b74b85693c7 ("sh: Derive COMMAND_LINE_SIZE from
+>>>>>> asm-generic/setup.h.").
+>>>>>>
+>>>>>> It seems to me like COMMAND_LINE_SIZE really just shouldn't have been
+>>>>>> part of the uapi to begin with, and userspace should be able to handle
+>>>>>> /proc/cmdline of whatever length it turns out to be.  I don't see any
+>>>>>> references to COMMAND_LINE_SIZE anywhere but Linux via a quick Google
+>>>>>> search, but that's not really enough to consider it unused on my end.
+>>>>>>
+>>>>>> The feedback on the v1 seemed to indicate that COMMAND_LINE_SIZE really
+>>>>>> shouldn't be part of uapi, so this now touches all the ports.  I've
+>>>>>> tried to split this all out and leave it bisectable, but I haven't
+>>>>>> tested it all that aggressively.
+>>>>> Just to confirm this assumption a bit more: that's actually the same
+>>>>> conclusion that we ended up with when commit 3da0243f906a ("s390: make
+>>>>> command line configurable") went upstream.
+>> Thanks, I guess I'd missed that one.  At some point I think there was some discussion of making this a Kconfig for everyone, which seems reasonable to me -- our use case for this being extended is syzkaller, but we're sort of just picking a value that's big enough for now and running with it.
 >>
->> On 2023/3/3 08:25, Huacai Chen wrote:
->>> Not all LoongArch processors support CRC32 instructions, and this feature
->>> is indicated by CPUCFG1.CRC32 (Bit25). This bit is wrongly defined in loongarch.h
+>> Probably best to get it out of uapi first, though, as that way at least it's clear that it's not uABI.
 >>
->> The ISA manual suggests it's IOCSR_BRD (likely "IOCSR Branding"). You
->> have to somehow reconcile the two, either by fixing the manuals, or
->> mention here explicitly that the manual is wrong. (Actually thinking
->> about it harder now, you may be in fact re-purposing the IOCSR_BRD field
->> for CRC32 capability, because all LoongArch cores in existence are
->> designed by Loongson, and you may very well know that all cores
->> supporting CRC32 have this bit set, and those not having CRC32 haven't.
->> If that's the case, please explicitly document this reasoning too.)
-> The ISA manual has been modified and will be released soon.
+>>>> Commit 622021cd6c560ce7 ("s390: make command line configurable"),
+>>>> I assume?
+>>> Yes, sorry for that. I got distracted while writing and used the wrong
+>>> branch to look this up.
+>> Alex: Probably worth adding that to the list in the cover letter as it looks like you were planning on a v4 anyway (which I guess you now have to do, given that I just added the issue to RISC-V).
+> The only use that is uapi is the *default* length of the command line if the kernel header doesn't include it (in the case of x86, it is in the bzImage header, but that is atchitecture- or even boot format-specific.)
 
-I'm wary of Loongson official statements like this but let's see... 
-meanwhile the commit message and/or comments could be improved 
-nevertheless, to provide more background.
+Is COMMAND_LINE_SIZE what you call the default length? Does that mean 
+that to you the patchset is wrong?
 
-Also I've just noticed the patch title sounds unnatural too. "Fix 
-probing of the CRC32 feature" or dropping "the" from the current wording 
-sounds better IMO.
+Thanks,
 
->>> and CRC32 is set unconditionally now, so fix it.
->>>
->>> BTW, expose the CRC32 feature in /proc/cpuinfo.
->>>
->>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->>> ---
->>>    arch/loongarch/include/asm/cpu-features.h |  1 +
->>>    arch/loongarch/include/asm/cpu.h          | 40 ++++++++++++-----------
->>>    arch/loongarch/include/asm/loongarch.h    |  2 +-
->>>    arch/loongarch/kernel/cpu-probe.c         |  7 +++-
->>>    arch/loongarch/kernel/proc.c              |  1 +
->>>    5 files changed, 30 insertions(+), 21 deletions(-)
->>>
->>> diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
->>> index b07974218393..f6177f133477 100644
->>> --- a/arch/loongarch/include/asm/cpu-features.h
->>> +++ b/arch/loongarch/include/asm/cpu-features.h
->>> @@ -42,6 +42,7 @@
->>>    #define cpu_has_fpu         cpu_opt(LOONGARCH_CPU_FPU)
->>>    #define cpu_has_lsx         cpu_opt(LOONGARCH_CPU_LSX)
->>>    #define cpu_has_lasx                cpu_opt(LOONGARCH_CPU_LASX)
->>> +#define cpu_has_crc32                cpu_opt(LOONGARCH_CPU_CRC32)
->>>    #define cpu_has_complex             cpu_opt(LOONGARCH_CPU_COMPLEX)
->>>    #define cpu_has_crypto              cpu_opt(LOONGARCH_CPU_CRYPTO)
->>>    #define cpu_has_lvz         cpu_opt(LOONGARCH_CPU_LVZ)
->>> diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
->>> index c3da91759472..ca9e2be571ec 100644
->>> --- a/arch/loongarch/include/asm/cpu.h
->>> +++ b/arch/loongarch/include/asm/cpu.h
->>> @@ -78,25 +78,26 @@ enum cpu_type_enum {
->>>    #define CPU_FEATURE_FPU                     3       /* CPU has FPU */
->>>    #define CPU_FEATURE_LSX                     4       /* CPU has LSX (128-bit SIMD) */
->>>    #define CPU_FEATURE_LASX            5       /* CPU has LASX (256-bit SIMD) */
->>> -#define CPU_FEATURE_COMPLEX          6       /* CPU has Complex instructions */
->>> -#define CPU_FEATURE_CRYPTO           7       /* CPU has Crypto instructions */
->>> -#define CPU_FEATURE_LVZ                      8       /* CPU has Virtualization extension */
->>> -#define CPU_FEATURE_LBT_X86          9       /* CPU has X86 Binary Translation */
->>> -#define CPU_FEATURE_LBT_ARM          10      /* CPU has ARM Binary Translation */
->>> -#define CPU_FEATURE_LBT_MIPS         11      /* CPU has MIPS Binary Translation */
->>> -#define CPU_FEATURE_TLB                      12      /* CPU has TLB */
->>> -#define CPU_FEATURE_CSR                      13      /* CPU has CSR */
->>> -#define CPU_FEATURE_WATCH            14      /* CPU has watchpoint registers */
->>> -#define CPU_FEATURE_VINT             15      /* CPU has vectored interrupts */
->>> -#define CPU_FEATURE_CSRIPI           16      /* CPU has CSR-IPI */
->>> -#define CPU_FEATURE_EXTIOI           17      /* CPU has EXT-IOI */
->>> -#define CPU_FEATURE_PREFETCH         18      /* CPU has prefetch instructions */
->>> -#define CPU_FEATURE_PMP                      19      /* CPU has perfermance counter */
->>> -#define CPU_FEATURE_SCALEFREQ                20      /* CPU supports cpufreq scaling */
->>> -#define CPU_FEATURE_FLATMODE         21      /* CPU has flat mode */
->>> -#define CPU_FEATURE_EIODECODE                22      /* CPU has EXTIOI interrupt pin decode mode */
->>> -#define CPU_FEATURE_GUESTID          23      /* CPU has GuestID feature */
->>> -#define CPU_FEATURE_HYPERVISOR               24      /* CPU has hypervisor (running in VM) */
->>> +#define CPU_FEATURE_CRC32            6       /* CPU has Complex instructions */
->>
->> "CPU has CRC32 instructions".
->>
->> Also, the diff damage is real, is there any reason this must come here
->> and not last? To me "aesthetics" is not enough to justify such a diff
->> damage.
-> To keep CPU_FEATURE and elf_hwcap in the same order.
+Alex
 
-IMO they don't have to. You could split into two commits so the mass 
-reordering could happen separately, making each change nicely focused.
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
