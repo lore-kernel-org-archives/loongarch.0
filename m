@@ -1,141 +1,168 @@
-Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0731A938
-	for <loongarch@lists.linux.dev>; Thu,  2 Mar 2023 20:24:09 +0000 (UTC)
-Received: from [127.0.0.1] ([73.223.221.228])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 322JolfB1654568
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 2 Mar 2023 11:50:48 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 322JolfB1654568
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2023020601; t=1677786658;
-	bh=n/GRsm1pImWCPNm4dPoe5zec7Kp4K3JReb8gPrI8/mc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=EoMqj2NrvtdnnKP1K3ZY31x6mzZLyhmRVv+AfJ7wKdoAJbCxWwA+q2O/5sMmJVAVH
-	 CBl1NaM0Y8H4KZuzvQjbNwKYV6dXCiIfmDalzvbDgGVmn+bMayegSv6UvQXFNOV7kH
-	 d/WVC69GzUYAENKo48YQjfv0/LuQNbAN20Le/uIDHGiGr9P8B8oHP2fS95eG5xB58F
-	 uasUM1VqxwzDuwffGGAapL9uswmgoHxhnTzGnsDohaOFjOu2pxA/e5nnYVugsNl2zn
-	 98XlC/4jazJIi0XM8kFrS6seI0EpKbWqSgJdlLGlfl4yBTPVtfQW74gM369HHmiIcn
-	 4YRgUzYFXGcXg==
-Date: Thu, 02 Mar 2023 11:50:45 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Palmer Dabbelt <palmer@dabbelt.com>, hca@linux.ibm.com
-CC: geert@linux-m68k.org, alexghiti@rivosinc.com, corbet@lwn.net,
-        Richard Henderson <richard.henderson@linaro.org>,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com, vgupta@kernel.org,
-        linux@armlinux.org.uk, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, chenhuacai@kernel.org,
-        kernel@xen0n.name, monstr@monstr.eu, tsbogend@alpha.franken.de,
-        James.Bottomley@hansenpartnership.com, deller@gmx.de,
-        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, ysato@users.osdn.me, dalias@libc.org,
-        davem@davemloft.net, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        chris@zankel.net, jcmvbkbc@gmail.com, Arnd Bergmann <arnd@arndb.de>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-m68k@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] Remove COMMAND_LINE_SIZE from uapi
-User-Agent: K-9 Mail for Android
-In-Reply-To: <mhng-e8b09772-24e5-4729-a0bf-01a9e4c76636@palmer-ri-x1c9a>
-References: <mhng-e8b09772-24e5-4729-a0bf-01a9e4c76636@palmer-ri-x1c9a>
-Message-ID: <21F95EC4-71EA-4154-A7DC-8A5BA54F174B@zytor.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E9C7E0
+	for <loongarch@lists.linux.dev>; Fri,  3 Mar 2023 00:25:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 110B6C433D2;
+	Fri,  3 Mar 2023 00:25:14 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Fix the CRC32 feature probing
+Date: Fri,  3 Mar 2023 08:25:08 +0800
+Message-Id: <20230303002508.2891681-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On March 1, 2023 7:17:18 PM PST, Palmer Dabbelt <palmer@dabbelt=2Ecom> wrot=
-e:
->On Tue, 14 Feb 2023 01:19:02 PST (-0800), hca@linux=2Eibm=2Ecom wrote:
->> On Tue, Feb 14, 2023 at 09:58:17AM +0100, Geert Uytterhoeven wrote:
->>> Hi Heiko,
->>>=20
->>> On Tue, Feb 14, 2023 at 9:39 AM Heiko Carstens <hca@linux=2Eibm=2Ecom>=
- wrote:
->>> > On Tue, Feb 14, 2023 at 08:49:01AM +0100, Alexandre Ghiti wrote:
->>> > > This all came up in the context of increasing COMMAND_LINE_SIZE in=
- the
->>> > > RISC-V port=2E  In theory that's a UABI break, as COMMAND_LINE_SIZ=
-E is the
->>> > > maximum length of /proc/cmdline and userspace could staticly rely =
-on
->>> > > that to be correct=2E
->>> > >
->>> > > Usually I wouldn't mess around with changing this sort of thing, b=
-ut
->>> > > PowerPC increased it with a5980d064fe2 ("powerpc: Bump COMMAND_LIN=
-E_SIZE
->>> > > to 2048")=2E  There are also a handful of examples of COMMAND_LINE=
-_SIZE
->>> > > increasing, but they're from before the UAPI split so I'm not quit=
-e sure
->>> > > what that means: e5a6a1c90948 ("powerpc: derive COMMAND_LINE_SIZE =
-from
->>> > > asm-generic"), 684d2fd48e71 ("[S390] kernel: Append scpdata to ker=
-nel
->>> > > boot command line"), 22242681cff5 ("MIPS: Extend COMMAND_LINE_SIZE=
-"),
->>> > > and 2b74b85693c7 ("sh: Derive COMMAND_LINE_SIZE from
->>> > > asm-generic/setup=2Eh=2E")=2E
->>> > >
->>> > > It seems to me like COMMAND_LINE_SIZE really just shouldn't have b=
-een
->>> > > part of the uapi to begin with, and userspace should be able to ha=
-ndle
->>> > > /proc/cmdline of whatever length it turns out to be=2E  I don't se=
-e any
->>> > > references to COMMAND_LINE_SIZE anywhere but Linux via a quick Goo=
-gle
->>> > > search, but that's not really enough to consider it unused on my e=
-nd=2E
->>> > >
->>> > > The feedback on the v1 seemed to indicate that COMMAND_LINE_SIZE r=
-eally
->>> > > shouldn't be part of uapi, so this now touches all the ports=2E  I=
-'ve
->>> > > tried to split this all out and leave it bisectable, but I haven't
->>> > > tested it all that aggressively=2E
->>> >
->>> > Just to confirm this assumption a bit more: that's actually the same
->>> > conclusion that we ended up with when commit 3da0243f906a ("s390: ma=
-ke
->>> > command line configurable") went upstream=2E
->
->Thanks, I guess I'd missed that one=2E  At some point I think there was s=
-ome discussion of making this a Kconfig for everyone, which seems reasonabl=
-e to me -- our use case for this being extended is syzkaller, but we're sor=
-t of just picking a value that's big enough for now and running with it=2E
->
->Probably best to get it out of uapi first, though, as that way at least i=
-t's clear that it's not uABI=2E
->
->>> Commit 622021cd6c560ce7 ("s390: make command line configurable"),
->>> I assume?
->>=20
->> Yes, sorry for that=2E I got distracted while writing and used the wron=
-g
->> branch to look this up=2E
->
->Alex: Probably worth adding that to the list in the cover letter as it lo=
-oks like you were planning on a v4 anyway (which I guess you now have to do=
-, given that I just added the issue to RISC-V)=2E
+Not all LoongArch processors support CRC32 instructions, and this feature
+is indicated by CPUCFG1.CRC32 (Bit25). This bit is wrongly defined in loongarch.h
+and CRC32 is set unconditionally now, so fix it.
 
-The only use that is uapi is the *default* length of the command line if t=
-he kernel header doesn't include it (in the case of x86, it is in the bzIma=
-ge header, but that is atchitecture- or even boot format-specific=2E)
+BTW, expose the CRC32 feature in /proc/cpuinfo.
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/cpu-features.h |  1 +
+ arch/loongarch/include/asm/cpu.h          | 40 ++++++++++++-----------
+ arch/loongarch/include/asm/loongarch.h    |  2 +-
+ arch/loongarch/kernel/cpu-probe.c         |  7 +++-
+ arch/loongarch/kernel/proc.c              |  1 +
+ 5 files changed, 30 insertions(+), 21 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
+index b07974218393..f6177f133477 100644
+--- a/arch/loongarch/include/asm/cpu-features.h
++++ b/arch/loongarch/include/asm/cpu-features.h
+@@ -42,6 +42,7 @@
+ #define cpu_has_fpu		cpu_opt(LOONGARCH_CPU_FPU)
+ #define cpu_has_lsx		cpu_opt(LOONGARCH_CPU_LSX)
+ #define cpu_has_lasx		cpu_opt(LOONGARCH_CPU_LASX)
++#define cpu_has_crc32		cpu_opt(LOONGARCH_CPU_CRC32)
+ #define cpu_has_complex		cpu_opt(LOONGARCH_CPU_COMPLEX)
+ #define cpu_has_crypto		cpu_opt(LOONGARCH_CPU_CRYPTO)
+ #define cpu_has_lvz		cpu_opt(LOONGARCH_CPU_LVZ)
+diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
+index c3da91759472..ca9e2be571ec 100644
+--- a/arch/loongarch/include/asm/cpu.h
++++ b/arch/loongarch/include/asm/cpu.h
+@@ -78,25 +78,26 @@ enum cpu_type_enum {
+ #define CPU_FEATURE_FPU			3	/* CPU has FPU */
+ #define CPU_FEATURE_LSX			4	/* CPU has LSX (128-bit SIMD) */
+ #define CPU_FEATURE_LASX		5	/* CPU has LASX (256-bit SIMD) */
+-#define CPU_FEATURE_COMPLEX		6	/* CPU has Complex instructions */
+-#define CPU_FEATURE_CRYPTO		7	/* CPU has Crypto instructions */
+-#define CPU_FEATURE_LVZ			8	/* CPU has Virtualization extension */
+-#define CPU_FEATURE_LBT_X86		9	/* CPU has X86 Binary Translation */
+-#define CPU_FEATURE_LBT_ARM		10	/* CPU has ARM Binary Translation */
+-#define CPU_FEATURE_LBT_MIPS		11	/* CPU has MIPS Binary Translation */
+-#define CPU_FEATURE_TLB			12	/* CPU has TLB */
+-#define CPU_FEATURE_CSR			13	/* CPU has CSR */
+-#define CPU_FEATURE_WATCH		14	/* CPU has watchpoint registers */
+-#define CPU_FEATURE_VINT		15	/* CPU has vectored interrupts */
+-#define CPU_FEATURE_CSRIPI		16	/* CPU has CSR-IPI */
+-#define CPU_FEATURE_EXTIOI		17	/* CPU has EXT-IOI */
+-#define CPU_FEATURE_PREFETCH		18	/* CPU has prefetch instructions */
+-#define CPU_FEATURE_PMP			19	/* CPU has perfermance counter */
+-#define CPU_FEATURE_SCALEFREQ		20	/* CPU supports cpufreq scaling */
+-#define CPU_FEATURE_FLATMODE		21	/* CPU has flat mode */
+-#define CPU_FEATURE_EIODECODE		22	/* CPU has EXTIOI interrupt pin decode mode */
+-#define CPU_FEATURE_GUESTID		23	/* CPU has GuestID feature */
+-#define CPU_FEATURE_HYPERVISOR		24	/* CPU has hypervisor (running in VM) */
++#define CPU_FEATURE_CRC32		6	/* CPU has Complex instructions */
++#define CPU_FEATURE_COMPLEX		7	/* CPU has Complex instructions */
++#define CPU_FEATURE_CRYPTO		8	/* CPU has Crypto instructions */
++#define CPU_FEATURE_LVZ			9	/* CPU has Virtualization extension */
++#define CPU_FEATURE_LBT_X86		10	/* CPU has X86 Binary Translation */
++#define CPU_FEATURE_LBT_ARM		11	/* CPU has ARM Binary Translation */
++#define CPU_FEATURE_LBT_MIPS		12	/* CPU has MIPS Binary Translation */
++#define CPU_FEATURE_TLB			13	/* CPU has TLB */
++#define CPU_FEATURE_CSR			14	/* CPU has CSR */
++#define CPU_FEATURE_WATCH		15	/* CPU has watchpoint registers */
++#define CPU_FEATURE_VINT		16	/* CPU has vectored interrupts */
++#define CPU_FEATURE_CSRIPI		17	/* CPU has CSR-IPI */
++#define CPU_FEATURE_EXTIOI		18	/* CPU has EXT-IOI */
++#define CPU_FEATURE_PREFETCH		19	/* CPU has prefetch instructions */
++#define CPU_FEATURE_PMP			20	/* CPU has perfermance counter */
++#define CPU_FEATURE_SCALEFREQ		21	/* CPU supports cpufreq scaling */
++#define CPU_FEATURE_FLATMODE		22	/* CPU has flat mode */
++#define CPU_FEATURE_EIODECODE		23	/* CPU has EXTIOI interrupt pin decode mode */
++#define CPU_FEATURE_GUESTID		24	/* CPU has GuestID feature */
++#define CPU_FEATURE_HYPERVISOR		25	/* CPU has hypervisor (running in VM) */
+ 
+ #define LOONGARCH_CPU_CPUCFG		BIT_ULL(CPU_FEATURE_CPUCFG)
+ #define LOONGARCH_CPU_LAM		BIT_ULL(CPU_FEATURE_LAM)
+@@ -104,6 +105,7 @@ enum cpu_type_enum {
+ #define LOONGARCH_CPU_FPU		BIT_ULL(CPU_FEATURE_FPU)
+ #define LOONGARCH_CPU_LSX		BIT_ULL(CPU_FEATURE_LSX)
+ #define LOONGARCH_CPU_LASX		BIT_ULL(CPU_FEATURE_LASX)
++#define LOONGARCH_CPU_CRC32		BIT_ULL(CPU_FEATURE_CRC32)
+ #define LOONGARCH_CPU_COMPLEX		BIT_ULL(CPU_FEATURE_COMPLEX)
+ #define LOONGARCH_CPU_CRYPTO		BIT_ULL(CPU_FEATURE_CRYPTO)
+ #define LOONGARCH_CPU_LVZ		BIT_ULL(CPU_FEATURE_LVZ)
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 65b7dcdea16d..8c2969965c3c 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -117,7 +117,7 @@ static inline u32 read_cpucfg(u32 reg)
+ #define  CPUCFG1_EP			BIT(22)
+ #define  CPUCFG1_RPLV			BIT(23)
+ #define  CPUCFG1_HUGEPG			BIT(24)
+-#define  CPUCFG1_IOCSRBRD		BIT(25)
++#define  CPUCFG1_CRC32			BIT(25)
+ #define  CPUCFG1_MSGINT			BIT(26)
+ 
+ #define LOONGARCH_CPUCFG2		0x2
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index 3a3fce2d7846..482643167119 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -94,13 +94,18 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
+ 	c->options = LOONGARCH_CPU_CPUCFG | LOONGARCH_CPU_CSR |
+ 		     LOONGARCH_CPU_TLB | LOONGARCH_CPU_VINT | LOONGARCH_CPU_WATCH;
+ 
+-	elf_hwcap = HWCAP_LOONGARCH_CPUCFG | HWCAP_LOONGARCH_CRC32;
++	elf_hwcap = HWCAP_LOONGARCH_CPUCFG;
+ 
+ 	config = read_cpucfg(LOONGARCH_CPUCFG1);
+ 	if (config & CPUCFG1_UAL) {
+ 		c->options |= LOONGARCH_CPU_UAL;
+ 		elf_hwcap |= HWCAP_LOONGARCH_UAL;
+ 	}
++	if (config & CPUCFG1_CRC32) {
++		c->options |= LOONGARCH_CPU_CRC32;
++		elf_hwcap |= HWCAP_LOONGARCH_CRC32;
++	}
++
+ 
+ 	config = read_cpucfg(LOONGARCH_CPUCFG2);
+ 	if (config & CPUCFG2_LAM) {
+diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
+index 5c67cc4fd56d..0d82907b5404 100644
+--- a/arch/loongarch/kernel/proc.c
++++ b/arch/loongarch/kernel/proc.c
+@@ -76,6 +76,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	if (cpu_has_fpu)	seq_printf(m, " fpu");
+ 	if (cpu_has_lsx)	seq_printf(m, " lsx");
+ 	if (cpu_has_lasx)	seq_printf(m, " lasx");
++	if (cpu_has_crc32)	seq_printf(m, " crc32");
+ 	if (cpu_has_complex)	seq_printf(m, " complex");
+ 	if (cpu_has_crypto)	seq_printf(m, " crypto");
+ 	if (cpu_has_lvz)	seq_printf(m, " lvz");
+-- 
+2.39.1
+
