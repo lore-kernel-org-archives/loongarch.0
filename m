@@ -1,162 +1,185 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA6AD2FC
-	for <loongarch@lists.linux.dev>; Sun,  5 Mar 2023 06:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1677995603; bh=ru9CFu4osSLUM/PSNshnk6mPmLOfwqKnocmDx/wnhi0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=V5nrTBOB8Hb5ZA2SK2gLNursyCkiyOvf+dsfE9n5mWzNm65hJiz/SQD8/gRt8Dfw6
-	 x/2L8cwzlFB18vZysaaa0bmaAvu0X1pV/gkaP8uu6q6pHyEhHzCUkCc5x1xa3b8hb2
-	 t9I1FnA8TVddZsfNxMZRmpJSR0HQE0/Uqy+IOzA4=
-Received: from [192.168.9.172] (unknown [114.93.192.93])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 0DE53600F8;
-	Sun,  5 Mar 2023 13:53:23 +0800 (CST)
-Message-ID: <48f508aa-ab40-7032-a68d-90d8986afb2f@xen0n.name>
-Date: Sun, 5 Mar 2023 13:53:21 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBEB2564
+	for <loongarch@lists.linux.dev>; Sun,  5 Mar 2023 12:19:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A2E7C4339E
+	for <loongarch@lists.linux.dev>; Sun,  5 Mar 2023 12:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1678018751;
+	bh=eaCWuGYM9w2VikIC3ptHBvXxP1mOVgZ4wreQHD81Uxs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sibKS33VbRqkU21P3oHklXd8gYnm0+bd2m5OWXY1IiKAZzvXD9Ocgk1VQAC0SVAZO
+	 zesHPuha5GAInx110yVLuYJnQ3hE0aeu1IfaPuV5y+MEJxnNYFo5fJqVDKjdit6PtY
+	 fWb8K7uy2NrAa766LzELwt+RPpBELMVEJcqyC3AhV72X2A1SNh3FqD2pf6v5D0Di0Z
+	 HjcqALi/rUzkx6wNZy7+pRb88SHV05JssascfrqBrpV5hYVB4X09YhXKCG8tSiHf5R
+	 dLQ43zT+C/6cYjFSF2k3VBh5aMWDElHAQsWAL+0LiqaeKON8QmxzuID5z3I29u6dz0
+	 79oPHPiLzvIzQ==
+Received: by mail-ed1-f46.google.com with SMTP id cy23so27627836edb.12
+        for <loongarch@lists.linux.dev>; Sun, 05 Mar 2023 04:19:10 -0800 (PST)
+X-Gm-Message-State: AO0yUKU1gcc79JIRbd053Yq9064X7molUNQjELOUfPx7OSlt21tjTuEG
+	GPhhSEuLTLWmnW8HJNZI0w6dsurIIgnsRbSDtZ8=
+X-Google-Smtp-Source: AK7set9HpSqnBuNpG80A12biEE3obOYDBysgdv7zsSl6uIn/ixbsWEZFTSp5H3jXGZIX4xtaGv3ccl3ST0qpDr2RNu8=
+X-Received: by 2002:a17:906:d041:b0:87b:da7a:f202 with SMTP id
+ bo1-20020a170906d04100b0087bda7af202mr3308431ejb.1.1678018749262; Sun, 05 Mar
+ 2023 04:19:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
+References: <20230305052818.4030447-1-chenhuacai@loongson.cn> <48f508aa-ab40-7032-a68d-90d8986afb2f@xen0n.name>
+In-Reply-To: <48f508aa-ab40-7032-a68d-90d8986afb2f@xen0n.name>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 5 Mar 2023 20:18:54 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H55QUrkYYR1Lbj=zbquiz3frX2dNAH23fAuN6eCOUddNA@mail.gmail.com>
+Message-ID: <CAAhV-H55QUrkYYR1Lbj=zbquiz3frX2dNAH23fAuN6eCOUddNA@mail.gmail.com>
 Subject: Re: [PATCH] LoongArch: Provide kernel fpu functions
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-References: <20230305052818.4030447-1-chenhuacai@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230305052818.4030447-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
+	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/5/23 13:28, Huacai Chen wrote:
-> Provide kernel_fpu_begin()/kernel_fpu_end() to let the kernel use fpu
-> itself. They can be used by AMDGPU graphic driver for DCN.
+Hi, Xuerui,
 
-Grammar nit: "itself" is wrongly placed. "allow the kernel itself to use 
-FPU" could be better.
-
-Also the expected usage is way broader than a single driver's single 
-component. It's useful for a wide array of operations that will benefit 
-from SIMD acceleration support that'll hopefully appear later. For now 
-I'd suggest at least adding a single "e.g." after "used by" to signify 
-this, if you're not rewording the sentence.
+On Sun, Mar 5, 2023 at 1:53=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wrot=
+e:
+>
+> On 3/5/23 13:28, Huacai Chen wrote:
+> > Provide kernel_fpu_begin()/kernel_fpu_end() to let the kernel use fpu
+> > itself. They can be used by AMDGPU graphic driver for DCN.
+>
+> Grammar nit: "itself" is wrongly placed. "allow the kernel itself to use
+> FPU" could be better.
+>
+> Also the expected usage is way broader than a single driver's single
+> component. It's useful for a wide array of operations that will benefit
+> from SIMD acceleration support that'll hopefully appear later. For now
+> I'd suggest at least adding a single "e.g." after "used by" to signify
+> this, if you're not rewording the sentence.
+OK, I will update it.
 
 >
-> Reported-by: Xuerui Wang <kernel@xen0n.name>
-Thanks, but I prefer my name spelled in the native word order ;-)
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->   arch/loongarch/include/asm/fpu.h |  3 +++
->   arch/loongarch/kernel/Makefile   |  2 +-
->   arch/loongarch/kernel/kfpu.c     | 41 ++++++++++++++++++++++++++++++++
->   3 files changed, 45 insertions(+), 1 deletion(-)
->   create mode 100644 arch/loongarch/kernel/kfpu.c
+> >
+> > Reported-by: Xuerui Wang <kernel@xen0n.name>
+> Thanks, but I prefer my name spelled in the native word order ;-)
+OK, I will correct it.
+
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >   arch/loongarch/include/asm/fpu.h |  3 +++
+> >   arch/loongarch/kernel/Makefile   |  2 +-
+> >   arch/loongarch/kernel/kfpu.c     | 41 +++++++++++++++++++++++++++++++=
++
+> >   3 files changed, 45 insertions(+), 1 deletion(-)
+> >   create mode 100644 arch/loongarch/kernel/kfpu.c
+> >
+> > diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/=
+asm/fpu.h
+> > index 358b254d9c1d..192f8e35d912 100644
+> > --- a/arch/loongarch/include/asm/fpu.h
+> > +++ b/arch/loongarch/include/asm/fpu.h
+> > @@ -21,6 +21,9 @@
+> >
+> >   struct sigcontext;
+> >
+> > +extern void kernel_fpu_begin(void);
+> > +extern void kernel_fpu_end(void);
+> > +
+> >   extern void _init_fpu(unsigned int);
+> >   extern void _save_fp(struct loongarch_fpu *);
+> >   extern void _restore_fp(struct loongarch_fpu *);
+> > diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Mak=
+efile
+> > index 78d4e3384305..9a72d91cd104 100644
+> > --- a/arch/loongarch/kernel/Makefile
+> > +++ b/arch/loongarch/kernel/Makefile
+> > @@ -13,7 +13,7 @@ obj-y               +=3D head.o cpu-probe.o cacheinfo=
+.o env.o setup.o entry.o genex.o \
+> >   obj-$(CONFIG_ACPI)          +=3D acpi.o
+> >   obj-$(CONFIG_EFI)           +=3D efi.o
+> >
+> > -obj-$(CONFIG_CPU_HAS_FPU)    +=3D fpu.o
+> > +obj-$(CONFIG_CPU_HAS_FPU)    +=3D fpu.o kfpu.o
+> >
+> >   obj-$(CONFIG_ARCH_STRICT_ALIGN)     +=3D unaligned.o
+> >
+> > diff --git a/arch/loongarch/kernel/kfpu.c b/arch/loongarch/kernel/kfpu.=
+c
+> > new file mode 100644
+> > index 000000000000..cd2a18fecdcc
+> > --- /dev/null
+> > +++ b/arch/loongarch/kernel/kfpu.c
+> > @@ -0,0 +1,41 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+> > + */
+> > +
+> > +#include <linux/cpu.h>
+> > +#include <linux/init.h>
+> > +#include <asm/fpu.h>
+> > +#include <asm/smp.h>
+> > +
+> > +static DEFINE_PER_CPU(bool, in_kernel_fpu);
+> > +
+> > +void kernel_fpu_begin(void)
+> > +{
+> > +     if(this_cpu_read(in_kernel_fpu))
+> > +             return;
+> Could be a conditional WARN_ON_ONCE like in arch/x86?
+> > +
+> > +     preempt_disable();
+> > +     this_cpu_write(in_kernel_fpu, true);
+> > +
+> > +     if (!is_fpu_owner())
+> > +             enable_fpu();
+> > +     else
+> > +             _save_fp(&current->thread.fpu);
+> > +}
+> > +EXPORT_SYMBOL_GPL(kernel_fpu_begin);
 >
-> diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/asm/fpu.h
-> index 358b254d9c1d..192f8e35d912 100644
-> --- a/arch/loongarch/include/asm/fpu.h
-> +++ b/arch/loongarch/include/asm/fpu.h
-> @@ -21,6 +21,9 @@
->   
->   struct sigcontext;
->   
-> +extern void kernel_fpu_begin(void);
-> +extern void kernel_fpu_end(void);
-> +
->   extern void _init_fpu(unsigned int);
->   extern void _save_fp(struct loongarch_fpu *);
->   extern void _restore_fp(struct loongarch_fpu *);
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-> index 78d4e3384305..9a72d91cd104 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -13,7 +13,7 @@ obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
->   obj-$(CONFIG_ACPI)		+= acpi.o
->   obj-$(CONFIG_EFI) 		+= efi.o
->   
-> -obj-$(CONFIG_CPU_HAS_FPU)	+= fpu.o
-> +obj-$(CONFIG_CPU_HAS_FPU)	+= fpu.o kfpu.o
->   
->   obj-$(CONFIG_ARCH_STRICT_ALIGN)	+= unaligned.o
->   
-> diff --git a/arch/loongarch/kernel/kfpu.c b/arch/loongarch/kernel/kfpu.c
-> new file mode 100644
-> index 000000000000..cd2a18fecdcc
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/kfpu.c
-> @@ -0,0 +1,41 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <linux/cpu.h>
-> +#include <linux/init.h>
-> +#include <asm/fpu.h>
-> +#include <asm/smp.h>
-> +
-> +static DEFINE_PER_CPU(bool, in_kernel_fpu);
-> +
-> +void kernel_fpu_begin(void)
-> +{
-> +	if(this_cpu_read(in_kernel_fpu))
-> +		return;
-Could be a conditional WARN_ON_ONCE like in arch/x86?
-> +
-> +	preempt_disable();
-> +	this_cpu_write(in_kernel_fpu, true);
-> +
-> +	if (!is_fpu_owner())
-> +		enable_fpu();
-> +	else
-> +		_save_fp(&current->thread.fpu);
-> +}
-> +EXPORT_SYMBOL_GPL(kernel_fpu_begin);
+> Might be good to provide some explanation in the commit message as to
+> why the pair of helpers should be GPL-only. Do they touch state buried
+> deep enough to make any downstream user a "derivative work"? Or are the
+> annotation inspired by arch/x86?
+Yes, just inspired by arch/x86, and I don't think these symbols should
+be used by non-GPL modules.
 
-Might be good to provide some explanation in the commit message as to 
-why the pair of helpers should be GPL-only. Do they touch state buried 
-deep enough to make any downstream user a "derivative work"? Or are the 
-annotation inspired by arch/x86?
-
-I think this kinda needs more thought, because similar operations like 
-arm's kernel_neon_{begin,end}, powerpc's enable_kernel_{fp,vsx,altivec} 
-or s390's __kernel_fpu_{begin,end} are not made GPL-only. Making these 
-helpers GPL-only precludes any non-GPL module to make use of SIMD on 
-LoongArch, which may or may not be what you want. This can have 
-commercial consequences so I can only leave the decision to you. 
-(Although IMO the semantics are encapsulated and high-level enough to 
-not warrant GPL-only marks, but it may well be the case that you have 
-thought of something else but didn't mention here.)
-
-> +
-> +void kernel_fpu_end(void)
-> +{
-> +	if(!this_cpu_read(in_kernel_fpu))
-> +		return;
-> +
-> +	if (!is_fpu_owner())
-> +		disable_fpu();
-> +	else
-> +		_restore_fp(&current->thread.fpu);
-> +
-> +	this_cpu_write(in_kernel_fpu, false);
-> +	preempt_enable();
-> +}
-> +EXPORT_SYMBOL_GPL(kernel_fpu_end);
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+Huacai
+>
+> I think this kinda needs more thought, because similar operations like
+> arm's kernel_neon_{begin,end}, powerpc's enable_kernel_{fp,vsx,altivec}
+> or s390's __kernel_fpu_{begin,end} are not made GPL-only. Making these
+> helpers GPL-only precludes any non-GPL module to make use of SIMD on
+> LoongArch, which may or may not be what you want. This can have
+> commercial consequences so I can only leave the decision to you.
+> (Although IMO the semantics are encapsulated and high-level enough to
+> not warrant GPL-only marks, but it may well be the case that you have
+> thought of something else but didn't mention here.)
+>
+> > +
+> > +void kernel_fpu_end(void)
+> > +{
+> > +     if(!this_cpu_read(in_kernel_fpu))
+> > +             return;
+> > +
+> > +     if (!is_fpu_owner())
+> > +             disable_fpu();
+> > +     else
+> > +             _restore_fp(&current->thread.fpu);
+> > +
+> > +     this_cpu_write(in_kernel_fpu, false);
+> > +     preempt_enable();
+> > +}
+> > +EXPORT_SYMBOL_GPL(kernel_fpu_end);
+>
+> --
+> WANG "xen0n" Xuerui
+>
+> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+>
