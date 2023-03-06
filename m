@@ -1,88 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B506B7E
-	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 10:01:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 541C2C4339C
-	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 10:01:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1678096896;
-	bh=MffwcC6int9JSMK1YiF0OPb3x4WeVt12Vxv4iGTYbWI=;
-	h=References:In-Reply-To:From:Date:Subject:List-Id:To:Cc:From;
-	b=MTYrwTcdnlV6MzHAwraKILQezBv4wTxGTITjTGdSxgVTJqaCnq8tH1LNtNtTm06VD
-	 rafho/znxBOAuxRkpOERWTAG3TRBdddjBlRm11X056vmZZ9m9NcGlzFC63CPNJ9eFl
-	 gw+Ada6e6aSVJCGSxYH3JRNE6SyHYCFzn+Igbx6xO+ca38uFihQtoabE6Bk4MzXDjI
-	 I3S2R+WsenKPVbHMLk7APXVTO2boR+Him/WL/3FY3KBsTdykgosOvbJdk+0FHEcQB7
-	 3EwAXERK7dGSPusW+sqawkfGhB+xgkkhrZYOvyy9DbKk/dNPDicyxwfxZYHyR2FwCh
-	 SOAnMLiThFz+w==
-Received: by mail-ed1-f46.google.com with SMTP id k10so12173652edk.13
-        for <loongarch@lists.linux.dev>; Mon, 06 Mar 2023 02:01:36 -0800 (PST)
-X-Gm-Message-State: AO0yUKX/PP2rrQu9wQsvNXvLjd9RLTp/gmIb8dJmAW6M0paNX3TVkDg8
-	+A7fgnvHXiAM6BzK186r1/h7K+pjwPPB0TQvAJU=
-X-Google-Smtp-Source: AK7set/A0Tbz32X15Ac3Ku9kHPYy93OKJY6xsIGZIPixma6k4WjDXtebdvGjuaum1GSwTQugxJrH+ZrxIkugk1LHk0c=
-X-Received: by 2002:a17:906:a14:b0:8b2:d30:e728 with SMTP id
- w20-20020a1709060a1400b008b20d30e728mr4877908ejf.1.1678096894553; Mon, 06 Mar
- 2023 02:01:34 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1557E
+	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 10:05:46 +0000 (UTC)
+Received: by mail-wm1-f41.google.com with SMTP id j19-20020a05600c1c1300b003e9b564fae9so7768991wms.2
+        for <loongarch@lists.linux.dev>; Mon, 06 Mar 2023 02:05:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20210112.gappssmtp.com; s=20210112; t=1678097144;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OJlcjxfKw8jXMW5N6Ul3wEtOotHt+pEdQ/DGM7xaX10=;
+        b=JEqgx1ClmnhOe6ebVyq1YqTIUhSXqSCUzyVnszcOp7awHNdT/xsM+7rlI1qdGO+YiE
+         slQ76DmA72N+jgwPU2NK3rXaHYk02KROwM+j5UoVlE6/S84CO+vB/F3BWaDO7xRB2RIG
+         of8yuUcFzP4Tre4cToIWTCOQJWBuRErMO44gEIuUiHYSd2Cn7gaTQDsMMDbVeLzUpjB4
+         mzd55rdVRoXyW887zexXWxI8zSMxD3E76H/lTdsw61lekuH6TU9lFSZs1SwhjoOVi1uJ
+         k2ny/foI2AfuKjMCphWC6FEhY+VrVHZTIxhlexwMTUthb5QjBCQqbA/uzSZiUyHHThiI
+         YNPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678097144;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OJlcjxfKw8jXMW5N6Ul3wEtOotHt+pEdQ/DGM7xaX10=;
+        b=gH51E84fqzeds7GHdfgZfrCfsz2/bkoz4gxqw6Qft9ue61tBaF3nroS6Pot+8Qg2e8
+         TbXhLTloAbH6KBZjaYM3JWVT0tdaq4nJnPVimPBIkGSyPciQCHjrqu3DpcOzefFsmmd7
+         gJOV50r1NMCQ5AMHYGXJ3x5zEKZpXonW1YJUWgBDBxPTXvb7ECZUqTdJhgIJt3WtI8Dn
+         XSOn55Kki0cBfxseqr24sha84l/gAMUejHLbCvWXGqsdLeav6Ff+a+a4KVl3DXCDiVjv
+         bpBONeQB6Y/1KVjYhZIbN4nXfMl8ta/HThlYkt2GQtfK9eix+a57l8Ypf3DYGBt3JK6s
+         Cn9w==
+X-Gm-Message-State: AO0yUKXJy089hBROjj47Wap/v/HWeZkoBUI7WXxGUWuw5CPZu1VRp7WA
+	WXpZ6XyXYBjQzl+WoTOHZNHRkw==
+X-Google-Smtp-Source: AK7set99ZkofQ6d3rgbVc8vHPZA3jk10S3lFiRC/cDNeG2Kooe0Xt+AMGkkoqceiwIcjL4YA9m24iQ==
+X-Received: by 2002:a05:600c:45c8:b0:3ea:ed4d:38fc with SMTP id s8-20020a05600c45c800b003eaed4d38fcmr9291657wmo.31.1678097144359;
+        Mon, 06 Mar 2023 02:05:44 -0800 (PST)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id p8-20020a05600c2e8800b003e2066a6339sm9863700wmn.5.2023.03.06.02.05.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Mar 2023 02:05:43 -0800 (PST)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Greg KH <gregkh@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-xtensa@linux-xtensa.org,
+	linux-arch@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v5 00/26] Remove COMMAND_LINE_SIZE from uapi
+Date: Mon,  6 Mar 2023 11:04:42 +0100
+Message-Id: <20230306100508.1171812-1-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230306032854.254700-1-dzm91@hust.edu.cn> <73cd36b6-c6ee-5c55-e2e1-31cae2f712f7@loongson.cn>
-In-Reply-To: <73cd36b6-c6ee-5c55-e2e1-31cae2f712f7@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 6 Mar 2023 18:01:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7Nt+OKAnN1GsYCZCb2SUa3r7zRFRsy3fjMX+TAp1_7Uw@mail.gmail.com>
-Message-ID: <CAAhV-H7Nt+OKAnN1GsYCZCb2SUa3r7zRFRsy3fjMX+TAp1_7Uw@mail.gmail.com>
-Subject: Re: [PATCH v3] drivers: loongson: fix memory leak in loongson2_guts_probe
-List-Id: <soc.lore.kernel.org>
-To: zhuyinbo <zhuyinbo@loongson.cn>, soc@kernel.org, Arnd Bergmann <arnd@arndb.de>
-Cc: Dongliang Mu <dzm91@hust.edu.cn>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-CC + Arnd&SOC list
+This all came up in the context of increasing COMMAND_LINE_SIZE in the
+RISC-V port.  In theory that's a UABI break, as COMMAND_LINE_SIZE is the
+maximum length of /proc/cmdline and userspace could staticly rely on
+that to be correct.
 
-On Mon, Mar 6, 2023 at 11:48=E2=80=AFAM zhuyinbo <zhuyinbo@loongson.cn> wro=
-te:
->
-> Tested-by: Yinbo Zhu <zhuyinbo@loongson.cn>
->
-> =E5=9C=A8 2023/3/6 =E4=B8=8A=E5=8D=8811:28, Dongliang Mu =E5=86=99=E9=81=
-=93:
-> > drivers/soc/loongson/loongson2_guts.c:150 loongson2_guts_probe()
-> > warn: 'guts->regs' from ioremap() not released on lines: 131,135,139,14=
-3.
-> >
-> > Fix this by modifying ioremap to devm_ioremap.
-> >
-> > Note that, this patch is not tested due to the loongson architecture.
-> >
-> > Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
-> > ---
-> > v2->v3: change res->end - res->start + 1 to resource_size(res)
-> > v1->v2: instead of modifying error handling code, directly change
-> > ioremap to devm_ioremap.
-> > ---
-> >   drivers/soc/loongson/loongson2_guts.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongs=
-on/loongson2_guts.c
-> > index bace4bc8e03b..ffee5a55a985 100644
-> > --- a/drivers/soc/loongson/loongson2_guts.c
-> > +++ b/drivers/soc/loongson/loongson2_guts.c
-> > @@ -107,7 +107,7 @@ static int loongson2_guts_probe(struct platform_dev=
-ice *pdev)
-> >       guts->little_endian =3D of_property_read_bool(np, "little-endian"=
-);
-> >
-> >       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > -     guts->regs =3D ioremap(res->start, res->end - res->start + 1);
-> > +     guts->regs =3D devm_ioremap(dev, res->start, resource_size(res));
-> >       if (IS_ERR(guts->regs))
-> >               return PTR_ERR(guts->regs);
-> >
->
->
+Usually I wouldn't mess around with changing this sort of thing, but
+PowerPC increased it with a5980d064fe2 ("powerpc: Bump COMMAND_LINE_SIZE
+to 2048").  There are also a handful of examples of COMMAND_LINE_SIZE
+increasing, but they're from before the UAPI split so I'm not quite sure
+what that means: e5a6a1c90948 ("powerpc: derive COMMAND_LINE_SIZE from
+asm-generic"), 684d2fd48e71 ("[S390] kernel: Append scpdata to kernel
+boot command line"), 22242681cff5 ("MIPS: Extend COMMAND_LINE_SIZE"),
+and 2b74b85693c7 ("sh: Derive COMMAND_LINE_SIZE from
+asm-generic/setup.h.").
+
+It seems to me like COMMAND_LINE_SIZE really just shouldn't have been
+part of the uapi to begin with, and userspace should be able to handle
+/proc/cmdline of whatever length it turns out to be.  I don't see any
+references to COMMAND_LINE_SIZE anywhere but Linux via a quick Google
+search, but that's not really enough to consider it unused on my end.
+
+This issue was already considered in s390 and they reached the same
+conclusion in commit 622021cd6c56 ("s390: make command line
+configurable").
+
+The feedback on the v1 seemed to indicate that COMMAND_LINE_SIZE really
+shouldn't be part of uapi, so this now touches all the ports.  I've
+tried to split this all out and leave it bisectable, but I haven't
+tested it all that aggressively.
+
+Changes since v4 <https://lore.kernel.org/all/20230302093539.372962-1-alexghiti@rivosinc.com/>:
+* Add my own SoB as suggested by Geert
+* Add riscv patches as suggested by Björn
+* Remove "WITH Linux-syscall-note" from new setup.h not in uapi/, as
+  suggested by Greg KH, his quoted answer below:
+
+"The "syscall note" makes no sense at all for any files not in the uapi/
+directory, so you can remove it just fine as that WITH doesn't mean
+anything _UNLESS_ the file is in the uapi directory."
+
+Changes since v3 <https://lore.kernel.org/all/20230214074925.228106-1-alexghiti@rivosinc.com/>:
+* Added RB/AB
+* Added a mention to commit 622021cd6c56 ("s390: make command line
+  configurable") in the cover letter
+
+Changes since v2 <https://lore.kernel.org/all/20221211061358.28035-1-palmer@rivosinc.com/>:
+* Fix sh, csky and ia64 builds, as reported by kernel test robot
+
+Changes since v1 <https://lore.kernel.org/all/20210423025545.313965-1-palmer@dabbelt.com/>:
+* Touches every arch.
+
+base-commit-tag: next-20230207
+
+Alexandre Ghiti (2):
+  riscv: Remove COMMAND_LINE_SIZE from uapi
+  riscv: Remove empty <uapi/asm/setup.h>
+
+Palmer Dabbelt (24):
+  alpha: Remove COMMAND_LINE_SIZE from uapi
+  arm64: Remove COMMAND_LINE_SIZE from uapi
+  arm: Remove COMMAND_LINE_SIZE from uapi
+  ia64: Remove COMMAND_LINE_SIZE from uapi
+  m68k: Remove COMMAND_LINE_SIZE from uapi
+  microblaze: Remove COMMAND_LINE_SIZE from uapi
+  mips: Remove COMMAND_LINE_SIZE from uapi
+  parisc: Remove COMMAND_LINE_SIZE from uapi
+  powerpc: Remove COMMAND_LINE_SIZE from uapi
+  sparc: Remove COMMAND_LINE_SIZE from uapi
+  xtensa: Remove COMMAND_LINE_SIZE from uapi
+  asm-generic: Remove COMMAND_LINE_SIZE from uapi
+  alpha: Remove empty <uapi/asm/setup.h>
+  arc: Remove empty <uapi/asm/setup.h>
+  m68k: Remove empty <uapi/asm/setup.h>
+  arm64: Remove empty <uapi/asm/setup.h>
+  microblaze: Remove empty <uapi/asm/setup.h>
+  sparc: Remove empty <uapi/asm/setup.h>
+  parisc: Remove empty <uapi/asm/setup.h>
+  x86: Remove empty <uapi/asm/setup.h>
+  xtensa: Remove empty <uapi/asm/setup.h>
+  powerpc: Remove empty <uapi/asm/setup.h>
+  mips: Remove empty <uapi/asm/setup.h>
+  s390: Remove empty <uapi/asm/setup.h>
+
+ .../admin-guide/kernel-parameters.rst         |  2 +-
+ arch/alpha/include/asm/setup.h                |  4 +--
+ arch/alpha/include/uapi/asm/setup.h           |  7 -----
+ arch/arc/include/asm/setup.h                  |  1 -
+ arch/arc/include/uapi/asm/setup.h             |  6 -----
+ arch/arm/include/asm/setup.h                  |  1 +
+ arch/arm/include/uapi/asm/setup.h             |  2 --
+ arch/arm64/include/asm/setup.h                |  3 ++-
+ arch/arm64/include/uapi/asm/setup.h           | 27 -------------------
+ arch/ia64/include/asm/setup.h                 | 10 +++++++
+ arch/ia64/include/uapi/asm/setup.h            |  6 ++---
+ arch/loongarch/include/asm/setup.h            |  2 +-
+ arch/m68k/include/asm/setup.h                 |  3 +--
+ arch/m68k/include/uapi/asm/setup.h            | 17 ------------
+ arch/microblaze/include/asm/setup.h           |  2 +-
+ arch/microblaze/include/uapi/asm/setup.h      | 20 --------------
+ arch/mips/include/asm/setup.h                 |  3 ++-
+ arch/mips/include/uapi/asm/setup.h            |  8 ------
+ arch/parisc/include/{uapi => }/asm/setup.h    |  2 +-
+ arch/powerpc/include/asm/setup.h              |  2 +-
+ arch/powerpc/include/uapi/asm/setup.h         |  7 -----
+ arch/riscv/include/asm/setup.h                |  7 +++++
+ arch/riscv/include/uapi/asm/setup.h           |  8 ------
+ arch/s390/include/asm/setup.h                 |  1 -
+ arch/s390/include/uapi/asm/setup.h            |  1 -
+ arch/sh/include/asm/setup.h                   |  2 +-
+ arch/sparc/include/asm/setup.h                |  6 ++++-
+ arch/sparc/include/uapi/asm/setup.h           | 16 -----------
+ arch/x86/include/asm/setup.h                  |  2 --
+ arch/x86/include/uapi/asm/setup.h             |  1 -
+ arch/xtensa/include/{uapi => }/asm/setup.h    |  2 +-
+ include/asm-generic/Kbuild                    |  1 +
+ include/{uapi => }/asm-generic/setup.h        |  0
+ include/uapi/asm-generic/Kbuild               |  1 -
+ 34 files changed, 40 insertions(+), 143 deletions(-)
+ delete mode 100644 arch/alpha/include/uapi/asm/setup.h
+ delete mode 100644 arch/arc/include/uapi/asm/setup.h
+ delete mode 100644 arch/arm64/include/uapi/asm/setup.h
+ create mode 100644 arch/ia64/include/asm/setup.h
+ delete mode 100644 arch/m68k/include/uapi/asm/setup.h
+ delete mode 100644 arch/microblaze/include/uapi/asm/setup.h
+ delete mode 100644 arch/mips/include/uapi/asm/setup.h
+ rename arch/parisc/include/{uapi => }/asm/setup.h (63%)
+ delete mode 100644 arch/powerpc/include/uapi/asm/setup.h
+ create mode 100644 arch/riscv/include/asm/setup.h
+ delete mode 100644 arch/riscv/include/uapi/asm/setup.h
+ delete mode 100644 arch/s390/include/uapi/asm/setup.h
+ delete mode 100644 arch/sparc/include/uapi/asm/setup.h
+ delete mode 100644 arch/x86/include/uapi/asm/setup.h
+ rename arch/xtensa/include/{uapi => }/asm/setup.h (84%)
+ rename include/{uapi => }/asm-generic/setup.h (100%)
+
+-- 
+2.37.2
+
