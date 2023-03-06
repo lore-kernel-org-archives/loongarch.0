@@ -1,18 +1,18 @@
 Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D895665
-	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 16:58:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3A05665
+	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 17:17:04 +0000 (UTC)
 Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
  relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-267-eKtrbf90My6ZKBR6Hk0zIA-1; Mon, 06 Mar 2023 16:58:01 +0000
-X-MC-Unique: eKtrbf90My6ZKBR6Hk0zIA-1
+ uk-mta-105-EIq3RAbYNcSvtkVurUtkKA-1; Mon, 06 Mar 2023 17:17:01 +0000
+X-MC-Unique: EIq3RAbYNcSvtkVurUtkKA-1
 Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
  (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.47; Mon, 6 Mar
- 2023 16:57:57 +0000
+ 2023 17:16:58 +0000
 Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.047; Mon, 6 Mar 2023 16:57:57 +0000
+ id 15.00.1497.047; Mon, 6 Mar 2023 17:16:58 +0000
 From: David Laight <David.Laight@ACULAB.COM>
 To: 'Huacai Chen' <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
 	Huacai Chen <chenhuacai@kernel.org>
@@ -24,9 +24,9 @@ CC: "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
 	"loongson-kernel@lists.loongnix.cn" <loongson-kernel@lists.loongnix.cn>
 Subject: RE: [PATCH V3] LoongArch: Provide kernel fpu functions
 Thread-Topic: [PATCH V3] LoongArch: Provide kernel fpu functions
-Thread-Index: AQHZUBJ45VTcAaETSEKOkFhUUQ2cwq7t95nA
-Date: Mon, 6 Mar 2023 16:57:57 +0000
-Message-ID: <5171500c01604a70b55529d8cd780a57@AcuMS.aculab.com>
+Thread-Index: AQHZUBJ45VTcAaETSEKOkFhUUQ2cwq7t/HHA
+Date: Mon, 6 Mar 2023 17:16:58 +0000
+Message-ID: <93bf992f70a8400b875a7e70e0cb5234@AcuMS.aculab.com>
 References: <20230306095934.609589-1-chenhuacai@loongson.cn>
 In-Reply-To: <20230306095934.609589-1-chenhuacai@loongson.cn>
 Accept-Language: en-GB, en-US
@@ -54,35 +54,64 @@ From: Huacai Chen
 > AMDGPU graphic driver for DCN.
 >=20
 ...
-> +void kernel_fpu_end(void)
+> diff --git a/arch/loongarch/kernel/kfpu.c b/arch/loongarch/kernel/kfpu.c
+> new file mode 100644
+> index 000000000000..cd2a18fecdcc
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/kfpu.c
+> @@ -0,0 +1,41 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> + */
+> +
+> +#include <linux/cpu.h>
+> +#include <linux/init.h>
+> +#include <asm/fpu.h>
+> +#include <asm/smp.h>
+> +
+> +static DEFINE_PER_CPU(bool, in_kernel_fpu);
+> +
+> +void kernel_fpu_begin(void)
 > +{
-> +=09if (!this_cpu_read(in_kernel_fpu))
+> +=09if (this_cpu_read(in_kernel_fpu))
 > +=09=09return;
 
-Shouldn't it be better for that to be a counter?
-Not sure what anyone else does.
+Isn't this check entirely broken?
+It absolutely needs to be inside the preempt_disable().
+If there are nested requests then fpu use is disabled by the first
+kernel_fpu_end() call.
 
+> +
+> +=09preempt_disable();
+> +=09this_cpu_write(in_kernel_fpu, true);
 > +
 > +=09if (!is_fpu_owner())
-> +=09=09disable_fpu();
+> +=09=09enable_fpu();
 > +=09else
-> +=09=09_restore_fp(&current->thread.fpu);
+> +=09=09_save_fp(&current->thread.fpu);
+> +}
 
-Does that actual do the restore?
-You really don't need to do it until 'return to user'.
-That will speed up a subsequent kernel_fpu_begin().
+More interestingly, unless the kernel is doing the kind of
+'lazy fpu switch' that x86 used to do (not sure it still does in Linux)
+where the fpu registers can contain values for a different process
+isn't it actually enough for kernel_fpu_begin() to just be:
 
-If fact, couldn't kernel_fpu_end() just be preemt_enable()?
+=09preempt_disable();
+=09if (current->fpu_regs_live)
+=09=09__save_fp(current);
+=09preempt_enable();
+
+and for kernel_fpu_end() to basically be a nop.
+
+Then rely on the 'return to user' path to pick up the
+live fpu registers from the save area.
+
+After all, you pretty much don't want to load the fpu regs
+every time a process wakes up and goes back to sleep without
+returning to user.
 
 =09David
-
-> +
-> +=09this_cpu_write(in_kernel_fpu, false);
-> +=09preempt_enable();
-> +}
-> +EXPORT_SYMBOL(kernel_fpu_end);
-> --
-> 2.39.1
 
 -
 Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
