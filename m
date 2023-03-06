@@ -1,63 +1,21 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from hust.edu.cn (mail.hust.edu.cn [202.114.0.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381433C34
-	for <loongarch@lists.linux.dev>; Sun,  5 Mar 2023 20:57:09 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id cw28so30810118edb.5
-        for <loongarch@lists.linux.dev>; Sun, 05 Mar 2023 12:57:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678049827;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5Rhi81UV6n4gJ23KpYxVv3UnO+FDfYmlmuIH3bT2sEE=;
-        b=aaSodGvZdSV4IP+c2rumCkx8LxrQY+OBcusU42ckg9I4HKl7svI97bHUL8PVa79jUn
-         xPkYv74szn3W9Ezoiv7g17E92uqKZF9Q6lBk+rGSEagwXuvpV3i07e8Pkz9ghdOWM4i1
-         iAl7K94WX200NR6mzgorkcWMi2oDE5W7MB8oFzbbHYstFEsoUP9VT8+2rb1+kLDxgFBE
-         ZcscWfl9eYRBg4Ct/7ikk8jQHl/U1WRWKyYDrbRBQqttA6QIp2sq8CY+PM01/wuGFC2y
-         y6zmednb1IPxVz9Qo9+FsPJS256xZdDaz0IlmMKsI4jFxJQKu6pKz93CrGfjPPmVLESV
-         KAMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678049827;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5Rhi81UV6n4gJ23KpYxVv3UnO+FDfYmlmuIH3bT2sEE=;
-        b=kUfR0JroU9V7U4qOg0GzJ0tq7mml83OFfwytIcPQDegx3N/Y6gG5wT7YCmnUVFedjC
-         o3cdYy93+Hpu13uIxwKsynUrOl3ps9qdsP8N2VLhpp4sICLJrQwhU2qrODFRnI4O9BTM
-         InQ93n6jdS4DrluLqqrDeh5RJCbsgrH9ZtZjhISa1a++60IYsoZvP1gZht6YbzzU4pz6
-         P9sMW733M50DZ1qewA2l6nDs7X8bDGwOsNEVdh/b2SgLfZnjI+2VQ9JX+GB98NXCdW7T
-         iE+nrCxViSNsPmRjm/TwmKR8kJI/qlnfHETsiyb6tee3xVaoWCefEK31UweBqH+DsBjV
-         7SGQ==
-X-Gm-Message-State: AO0yUKUJtvNR9cbrH7m46WopooJfr9ukiT8gh00dCUHHmqSd7B4TwuuK
-	gtOxzKOGqOB1+SaAVUQiu6Oz6c0qplLKYq3Q
-X-Google-Smtp-Source: AK7set9KsKppg5AWKoMtA+hKEWxwqg26/PPfzfADGxEx0JJl9+WRzjaOFmjzce84cTTXvCp3CMtMKA==
-X-Received: by 2002:a17:906:408f:b0:8b1:7968:7fb8 with SMTP id u15-20020a170906408f00b008b179687fb8mr9606766ejj.62.1678049827406;
-        Sun, 05 Mar 2023 12:57:07 -0800 (PST)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id ay24-20020a170906d29800b0090953b9da51sm3615436ejb.194.2023.03.05.12.57.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Mar 2023 12:57:07 -0800 (PST)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-arch@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 09/10] locking/x86: Enable local{,64}_try_cmpxchg
-Date: Sun,  5 Mar 2023 21:56:27 +0100
-Message-Id: <20230305205628.27385-10-ubizjak@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E477E
+	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 01:34:58 +0000 (UTC)
+Received: from localhost.localdomain ([172.16.0.254])
+	(user=dzm91@hust.edu.cn mech=LOGIN bits=0)
+	by mx1.hust.edu.cn  with ESMTP id 3261OaYh027380-3261OaYk027380
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 6 Mar 2023 09:24:41 +0800
+From: Dongliang Mu <dzm91@hust.edu.cn>
+To: Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: Dongliang Mu <dzm91@hust.edu.cn>, loongarch@lists.linux.dev,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers: loongson: fix memory leak in loongson2_guts_probe/remove
+Date: Mon,  6 Mar 2023 09:22:00 +0800
+Message-Id: <20230306012201.242413-1-dzm91@hust.edu.cn>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230305205628.27385-1-ubizjak@gmail.com>
-References: <20230305205628.27385-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -65,39 +23,77 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-FEAS-AUTH-USER: dzm91@hust.edu.cn
 
-Enable local_try_cmpxchg and also local64_try_cmpxchg for x86_64.
+drivers/soc/loongson/loongson2_guts.c:150 loongson2_guts_probe()
+warn: 'guts->regs' from ioremap() not released on lines: 131,135,139,143.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Fix this by invoking iounmap() in the error handling code and the remove
+function.
+
+Note that, this patch is not tested due to the loongson architecture.
+
+Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
 ---
- arch/x86/include/asm/cmpxchg.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/soc/loongson/loongson2_guts.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/cmpxchg.h b/arch/x86/include/asm/cmpxchg.h
-index 94fbe6ae7431..e8f939e8432e 100644
---- a/arch/x86/include/asm/cmpxchg.h
-+++ b/arch/x86/include/asm/cmpxchg.h
-@@ -221,9 +221,15 @@ extern void __add_wrong_size(void)
- #define __try_cmpxchg(ptr, pold, new, size)				\
- 	__raw_try_cmpxchg((ptr), (pold), (new), (size), LOCK_PREFIX)
+diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson/loongson2_guts.c
+index bace4bc8e03b..ba330adb555c 100644
+--- a/drivers/soc/loongson/loongson2_guts.c
++++ b/drivers/soc/loongson/loongson2_guts.c
+@@ -98,6 +98,7 @@ static int loongson2_guts_probe(struct platform_device *pdev)
+ 	const struct loongson2_soc_die_attr *soc_die;
+ 	const char *machine;
+ 	u32 svr;
++	int rc = -ENOMEM;
  
-+#define __try_cmpxchg_local(ptr, pold, new, size)			\
-+	__raw_try_cmpxchg((ptr), (pold), (new), (size), "")
-+
- #define arch_try_cmpxchg(ptr, pold, new) 				\
- 	__try_cmpxchg((ptr), (pold), (new), sizeof(*(ptr)))
+ 	/* Initialize guts */
+ 	guts = devm_kzalloc(dev, sizeof(*guts), GFP_KERNEL);
+@@ -128,19 +129,21 @@ static int loongson2_guts_probe(struct platform_device *pdev)
+ 		soc_dev_attr.family = devm_kasprintf(dev, GFP_KERNEL, "Loongson");
+ 	}
+ 	if (!soc_dev_attr.family)
+-		return -ENOMEM;
++		goto iounmap;
+ 	soc_dev_attr.soc_id = devm_kasprintf(dev, GFP_KERNEL,
+ 					     "svr:0x%08x", svr);
+ 	if (!soc_dev_attr.soc_id)
+-		return -ENOMEM;
++		goto iounmap;
+ 	soc_dev_attr.revision = devm_kasprintf(dev, GFP_KERNEL, "%d.%d",
+ 					       (svr >>  4) & 0xf, svr & 0xf);
+ 	if (!soc_dev_attr.revision)
+-		return -ENOMEM;
++		goto iounmap;
  
-+#define arch_try_cmpxchg_local(ptr, pold, new) 				\
-+	__try_cmpxchg_local((ptr), (pold), (new), sizeof(*(ptr)))
+ 	soc_dev = soc_device_register(&soc_dev_attr);
+-	if (IS_ERR(soc_dev))
+-		return PTR_ERR(soc_dev);
++	if (IS_ERR(soc_dev)) {
++		rc = PTR_ERR(soc_dev);
++		goto iounmap;
++	}
+ 
+ 	pr_info("Machine: %s\n", soc_dev_attr.machine);
+ 	pr_info("SoC family: %s\n", soc_dev_attr.family);
+@@ -148,11 +151,16 @@ static int loongson2_guts_probe(struct platform_device *pdev)
+ 		soc_dev_attr.soc_id, soc_dev_attr.revision);
+ 
+ 	return 0;
 +
- /*
-  * xadd() adds "inc" to "*ptr" and atomically returns the previous
-  * value of "*ptr".
++iounmap:
++	iounmap(guts->regs);
++	return rc;
+ }
+ 
+ static int loongson2_guts_remove(struct platform_device *dev)
+ {
+ 	soc_device_unregister(soc_dev);
++	iounmap(guts->regs);
+ 
+ 	return 0;
+ }
 -- 
 2.39.2
 
