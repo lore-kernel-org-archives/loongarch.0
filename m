@@ -1,43 +1,43 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8E32CA7
-	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 10:26:19 +0000 (UTC)
-Received: by mail-wr1-f51.google.com with SMTP id t15so8229531wrz.7
-        for <loongarch@lists.linux.dev>; Mon, 06 Mar 2023 02:26:19 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37D12CA7
+	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 10:27:21 +0000 (UTC)
+Received: by mail-wr1-f52.google.com with SMTP id bx12so8210548wrb.11
+        for <loongarch@lists.linux.dev>; Mon, 06 Mar 2023 02:27:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20210112.gappssmtp.com; s=20210112; t=1678098378;
+        d=rivosinc-com.20210112.gappssmtp.com; s=20210112; t=1678098440;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5Swqwg1ld/osn6FVGiU0tRhJoEIYHACqIeiNcFb5PLI=;
-        b=uIfY1NRXzEv+Xx/IYayWVnpzA4exJklrAwIb3ziJrRorM1XluURLNe5sRP/ryqZYpH
-         a/ROxZBG/PG3wqXEXFLgmc9IwQJMtJTeJVdZkx9HkTXi3YcloRvI0Ka60lGCZWzAqitd
-         s8kb5y1Al5ulup5Y9WUbhZSCqL8VLLE28WkIRRztX5wElA5K0w4aOgqjDYTJquKniuWS
-         8YlGMCdIBW0itW/lFwZO+SGXFLtcZlBF8ZuhVhvpM6nHQKyjbreMrzIlhd56H2CyYJX0
-         OC/OHVVFh/+iUfAq4Ek70MGaipb61JQEk8RcMhvIfK2xVIBEtu1MYjED6cGdncSMd6/n
-         946Q==
+        bh=IkOpojqO2OnrnjqWakJ/ssyTb7fIeaWwMcDQKKqwZNE=;
+        b=2SGZsdegW2cBo8kqTvJjfFIjyiIe3RlAF3Yg2d3PkCw98QBaJe6s+BTqk6sAhk4Ru9
+         x7fyYH3R/rrntqQj+20SwCyMBoNiJLiYg4WuOmQwPJL5b+DF3FDm/orSsIYy2QoXBVXd
+         Cdzwovn8N6wE2qNxhoW3UDgdtmZP7Nh0XnCmz0czTNkoRdhMmQH5C5i4wPzm0FnSENL2
+         yCQ8iTsDqS3+6TIBvW13lzxa8x1nucKgzziQ/y1owwV6sges+GmrnrvY9v4F/wR0jN9s
+         dJNciHWJZZVZZq4DF3TZv9N2W4QxXz9fcom5MmwMFKt9Voj1e11JRoqNawBuW3HhlupR
+         GlvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678098378;
+        d=1e100.net; s=20210112; t=1678098440;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5Swqwg1ld/osn6FVGiU0tRhJoEIYHACqIeiNcFb5PLI=;
-        b=4bLwk1xKxXYr7xThNYPUv7gl9riNPC37MySUb+OyhI68mgjcUgbLJKhCz4EV40Sf2P
-         UcjmZOnD2zspPf/CpmXHxuavYXhtbSV1N6L1WDXMDwQ9wYR8SCr0GgSkMqZgXh9+2rdw
-         vgvEy+DFcpEKKJjyz7frxA+BIEE79iAQ6KEVHMyUaPm0P7uc2vXnHp3sdqng7EWcyxuC
-         7vWsufLascquNpDZoQYHZFsHDTbLNtNkAe9uHidzIBtRTufxN7ikbALejvDK+to5470w
-         nacKIRSdr1LykdnDHEoa1y+gL19DnA+001lx7MgEQEeSV/d0WEXU7zP7tmweNIDiNabY
-         gk+A==
-X-Gm-Message-State: AO0yUKVKufGKv4rPxyFyPna3f0WeBdvGiBnADBWK/qV5SRGfEWJffiIF
-	8s4/s2z6rfMFg4Yt5/XtQ080WQ==
-X-Google-Smtp-Source: AK7set9U6fM9Xsgv6YkGBRqVzeGSi+gpLiQEhEz2I65vcVv3MM3OWhwJd6wPw1/siNKByhVwY2r8Wg==
-X-Received: by 2002:a5d:6148:0:b0:2c5:5335:73f3 with SMTP id y8-20020a5d6148000000b002c5533573f3mr10413383wrt.34.1678098378256;
-        Mon, 06 Mar 2023 02:26:18 -0800 (PST)
+        bh=IkOpojqO2OnrnjqWakJ/ssyTb7fIeaWwMcDQKKqwZNE=;
+        b=uJ70+Tk2uhwWtPsMSG5LJuxVMMngEJoiPiUd8HyL29rAabVlRB3NqfppE9U8C4r4qS
+         lr78aP3m9/AcqW84odyA2Qxaop8TlFaG6IrJFLlLB2Y4OyeoJKbBsxz5aERbRcy/YNKO
+         Q6MjH7AhA8PKp9xJZYT9CCfk7Q8HhIyDFM0GGC6Nth3gdQAc1ipjWV4I9emfXYdObaUe
+         Mfsn5MHnKezpnL/vMcVoN5vZ20D/h1rZa50HUiMR+lb2ZFRqJDmAqzH+gl7f5zE7LpBP
+         z5nRmV1luGPuwplza4hCln/XX4VbsHrkbs5E0x6Kb1CuB4oRqKQeblO3Ez5vTnGy3wv2
+         owIw==
+X-Gm-Message-State: AO0yUKXYRyPDtdnvQRu72qE7H80Pa/EH8DVZDt+Tg4hh2hTt31X09Ubv
+	kHF98OIX2NBY43Xx2ctivkxpfA==
+X-Google-Smtp-Source: AK7set8g+/98oO5ZP6uqzBMUSmWnh62L8fRNjgLpgkBPpDr7Mkg4SnpC/vtuHWPhO/s9VWytKbeQJQ==
+X-Received: by 2002:adf:f483:0:b0:2c7:46f:c410 with SMTP id l3-20020adff483000000b002c7046fc410mr6736693wro.36.1678098439964;
+        Mon, 06 Mar 2023 02:27:19 -0800 (PST)
 Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id z16-20020adfdf90000000b002c707785da4sm9415798wrl.107.2023.03.06.02.26.16
+        by smtp.gmail.com with ESMTPSA id m5-20020a5d56c5000000b002be505ab59asm9431737wrw.97.2023.03.06.02.27.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Mar 2023 02:26:18 -0800 (PST)
+        Mon, 06 Mar 2023 02:27:19 -0800 (PST)
 From: Alexandre Ghiti <alexghiti@rivosinc.com>
 To: Greg KH <gregkh@linuxfoundation.org>,
 	Jonathan Corbet <corbet@lwn.net>,
@@ -98,9 +98,9 @@ To: Greg KH <gregkh@linuxfoundation.org>,
 Cc: Palmer Dabbelt <palmer@rivosinc.com>,
 	Alexandre Ghiti <alexghiti@rivosinc.com>,
 	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: [PATCH v5 20/26] parisc: Remove empty <uapi/asm/setup.h>
-Date: Mon,  6 Mar 2023 11:05:02 +0100
-Message-Id: <20230306100508.1171812-21-alexghiti@rivosinc.com>
+Subject: [PATCH v5 21/26] x86: Remove empty <uapi/asm/setup.h>
+Date: Mon,  6 Mar 2023 11:05:03 +0100
+Message-Id: <20230306100508.1171812-22-alexghiti@rivosinc.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230306100508.1171812-1-alexghiti@rivosinc.com>
 References: <20230306100508.1171812-1-alexghiti@rivosinc.com>
@@ -118,23 +118,32 @@ From: Palmer Dabbelt <palmer@rivosinc.com>
 Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
 Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Acked-by: Helge Deller <deller@gmx.de>
 ---
- arch/parisc/include/uapi/asm/setup.h | 5 -----
- 1 file changed, 5 deletions(-)
- delete mode 100644 arch/parisc/include/uapi/asm/setup.h
+ arch/x86/include/asm/setup.h      | 2 --
+ arch/x86/include/uapi/asm/setup.h | 1 -
+ 2 files changed, 3 deletions(-)
+ delete mode 100644 arch/x86/include/uapi/asm/setup.h
 
-diff --git a/arch/parisc/include/uapi/asm/setup.h b/arch/parisc/include/uapi/asm/setup.h
-deleted file mode 100644
-index bfad89428e47..000000000000
---- a/arch/parisc/include/uapi/asm/setup.h
-+++ /dev/null
-@@ -1,5 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#ifndef _PARISC_SETUP_H
--#define _PARISC_SETUP_H
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index f37cbff7354c..449b50a2f390 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -2,8 +2,6 @@
+ #ifndef _ASM_X86_SETUP_H
+ #define _ASM_X86_SETUP_H
+ 
+-#include <uapi/asm/setup.h>
 -
--#endif /* _PARISC_SETUP_H */
+ #define COMMAND_LINE_SIZE 2048
+ 
+ #include <linux/linkage.h>
+diff --git a/arch/x86/include/uapi/asm/setup.h b/arch/x86/include/uapi/asm/setup.h
+deleted file mode 100644
+index 79a9626b5500..000000000000
+--- a/arch/x86/include/uapi/asm/setup.h
++++ /dev/null
+@@ -1 +0,0 @@
+-/* */
 -- 
 2.37.2
 
