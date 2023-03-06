@@ -1,22 +1,22 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E837E
-	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 02:18:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479B87E
+	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 02:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1678069116; bh=ZHnW+A+s3D7t9NyDHWLNv5AKl7GYJwEEJGQPmuQN+TM=;
+	t=1678069638; bh=MpPZN7N9R3QdG3r1SIgebPmdNiwfksXkOOP8VhiaGyg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LCrc16B+oLgMfDF07fT2jeraC0azAnESHc2hlMFFHEFEBjuJ3LWGtcqzNhYS29XuE
-	 dOXw4fW3iiPqwcjbzFy2XLUKALVmq6M4My1dDLgj/wd2xu8gjqS9/c/gzBGnqg0ncb
-	 SvkDNVr91Jkcky1gUgKef5CSaAq334D8RAbXJ3jQ=
+	b=eJP9ViJcHgzZguSD9T5ZRyhfokZ3cGkRpZlOaNjjLtM+F4wiJ184vBtl+FceJix9C
+	 gzrsjqvUzS6j1meeE7W7MvUjUqM1yvuzHkIlag4KfMG/yVIGFmc/MRVmXN5DN7+eH0
+	 BLs0AOODZhGsa+WE8ePsHfbYlLyZI8D/MdrL6fUA=
 Received: from [100.100.57.122] (unknown [58.34.185.106])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 00029600BD;
-	Mon,  6 Mar 2023 10:18:35 +0800 (CST)
-Message-ID: <65d890c8-9c37-070c-f5c6-db26ab8cfe54@xen0n.name>
-Date: Mon, 6 Mar 2023 10:18:34 +0800
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id A083F600A6;
+	Mon,  6 Mar 2023 10:27:17 +0800 (CST)
+Message-ID: <20622cce-7bd0-fd2a-16b1-064f572d52dc@xen0n.name>
+Date: Mon, 6 Mar 2023 10:27:16 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -25,62 +25,69 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH] LoongArch: Provide kernel fpu functions
+Subject: Re: [PATCH] drivers: loongson: fix memory leak in
+ loongson2_guts_probe/remove
 Content-Language: en-US
-To: Huacai Chen <chenhuacai@kernel.org>, Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-References: <20230305052818.4030447-1-chenhuacai@loongson.cn>
- <48f508aa-ab40-7032-a68d-90d8986afb2f@xen0n.name>
- <CAAhV-H55QUrkYYR1Lbj=zbquiz3frX2dNAH23fAuN6eCOUddNA@mail.gmail.com>
- <58cc7e6d19628757d6d8dc192d07876288f6077e.camel@xry111.site>
- <CAAhV-H7vv+AE-7kDf7YpU6_f_dTNxKKoRSHC6vA4aBHOVyMRAQ@mail.gmail.com>
+To: Dongliang Mu <dzm91@hust.edu.cn>, Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20230306012201.242413-1-dzm91@hust.edu.cn>
 From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <CAAhV-H7vv+AE-7kDf7YpU6_f_dTNxKKoRSHC6vA4aBHOVyMRAQ@mail.gmail.com>
+In-Reply-To: <20230306012201.242413-1-dzm91@hust.edu.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 2023/3/6 09:55, Huacai Chen wrote:
-> On Sun, Mar 5, 2023 at 9:28 PM Xi Ruoyao <xry111@xry111.site> wrote:
->>
->> On Sun, 2023-03-05 at 20:18 +0800, Huacai Chen wrote:
->>>> Might be good to provide some explanation in the commit message as to
->>>> why the pair of helpers should be GPL-only. Do they touch state buried
->>>> deep enough to make any downstream user a "derivative work"? Or are the
->>>> annotation inspired by arch/x86?
->>> Yes, just inspired by arch/x86, and I don't think these symbols should
->>> be used by non-GPL modules.
->>
->> Hmm, what if one of your partners wish to provide a proprietary GPU
->> driver using the FPU like this way?  As a FLOSS developer I'd say "don't
->> do that, make your driver GPL".  But for Loongson there may be a
->> commercial issue.
-> So use EXPORT_SYMBOL can make life easier?
+Hi,
 
-As I've detailed in my first reply, every arch other than x86 exposes 
-this functionality without the GPL-only restriction. Although IMO 
-non-GPL driver developers wouldn't grieve over this particular feature 
-simply because pretty much everyone would have to build on x86 and that 
-arch wouldn't have it exposed, I do think it will be more demanded on 
-loongarch, where HW performance is in general lower than x86/arm64 
-offerings at similar cost levels, so perhaps people would have to resort 
-to FP/SIMD tricks to reach performance on par with others.
+On 2023/3/6 09:22, Dongliang Mu wrote:
+> drivers/soc/loongson/loongson2_guts.c:150 loongson2_guts_probe()
+> warn: 'guts->regs' from ioremap() not released on lines: 131,135,139,143.
+> 
+> Fix this by invoking iounmap() in the error handling code and the remove
+> function.
+> 
+> Note that, this patch is not tested due to the loongson architecture.
 
-Also, if the old world is taken into consideration (which we normally 
-have the luxury of not having to do so), consider Ruoyao's case where a 
-commercial partner of Loongson wants to do this with the vendor kernel, 
-but the symbols are exported GPL -- in this case I doubt the GPL marking 
-will remain, thus creating inconsistency between upstream and vendor 
-kernels, and community distros are going to complain loudly about the 
-need to patch things. It's probably best to avoid all of this upfront.
+I can't test either, AFAIK no one outside of Loongson have working 
+LoongArch Loongson-2 hardware running new world system. Yinbo will have 
+to take care of this.
 
-Note that this is all suggestion though, it's down to you and your team 
-to decide after all. And I've not done the archaeology about the other 
-arches' choice yet, which may or may not reveal more reasoning behind 
-their status quo.
+> 
+> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn> > ---
+>   drivers/soc/loongson/loongson2_guts.c | 18 +++++++++++++-----
+>   1 file changed, 13 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson/loongson2_guts.c
+> index bace4bc8e03b..ba330adb555c 100644
+> --- a/drivers/soc/loongson/loongson2_guts.c
+> +++ b/drivers/soc/loongson/loongson2_guts.c
+> @@ -98,6 +98,7 @@ static int loongson2_guts_probe(struct platform_device *pdev)
+>   	const struct loongson2_soc_die_attr *soc_die;
+>   	const char *machine;
+>   	u32 svr;
+> +	int rc = -ENOMEM;
+>   
+>   	/* Initialize guts */
+>   	guts = devm_kzalloc(dev, sizeof(*guts), GFP_KERNEL);
+> @@ -128,19 +129,21 @@ static int loongson2_guts_probe(struct platform_device *pdev)
+>   		soc_dev_attr.family = devm_kasprintf(dev, GFP_KERNEL, "Loongson");
+>   	}
+>   	if (!soc_dev_attr.family)
+> -		return -ENOMEM;
+> +		goto iounmap;
+>   	soc_dev_attr.soc_id = devm_kasprintf(dev, GFP_KERNEL,
+>   					     "svr:0x%08x", svr);
+>   	if (!soc_dev_attr.soc_id)
+> -		return -ENOMEM;
+> +		goto iounmap;
+>   	soc_dev_attr.revision = devm_kasprintf(dev, GFP_KERNEL, "%d.%d",
+>   					       (svr >>  4) & 0xf, svr & 0xf);
+>   	if (!soc_dev_attr.revision)
+> -		return -ENOMEM;
+> +		goto iounmap;
+
+Instead of so many goto's, it's probably better to just change the 
+ioremap to devm_ioremap and let the driver core take care of the rest. 
+Much more maintainable this way IMO.
 
 -- 
 WANG "xen0n" Xuerui
