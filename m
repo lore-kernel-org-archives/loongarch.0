@@ -1,85 +1,81 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from hust.edu.cn (mail.hust.edu.cn [202.114.0.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B8B17F3
-	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 03:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=z90/4JGdbEKqrGeZRYhIg9Sanb/fEMmQopDvi9/WFeo=; b=ztwVpACRtiWxy3GWpmfjTbVFaP
-	SOVIudq0nIen+nAbYIuwUdO1AO5EazFCKO/IIbYG3gKFJbG7eOdR4Cz5q7raeJZgQzW7vkzNS/Fba
-	i60RFMLtc86g1pRL78NZjQ7iq3sksxabj7Hj3BWM6hcE1E/ZiAug2E5L4kcwP9wWf8OJEjtrxjerD
-	23ssZB+0/oWS1j9PK39/W05H2vPsa9F1Y+4Qe0tRWd6FVg13z8aT7dxHqaqKLysbc7dwBVWR62uAm
-	MZ0rD8H/kjM2nvLEMtmQlzpPheEGM/IDWVtOtNHWeunn8W+1QnZa2xG/vh6zHrhvGH2x2/UnTJbgl
-	xNfyMzvg==;
-Received: from [2601:1c2:980:9ec0::df2f]
-	by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pZ1K7-00B6c0-PX; Mon, 06 Mar 2023 03:15:39 +0000
-Message-ID: <984b486f-0613-6adc-4e87-5fc00560498f@infradead.org>
-Date: Sun, 5 Mar 2023 19:15:39 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93777D2F8
+	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 03:20:08 +0000 (UTC)
+Received: from smtpclient.apple ([172.16.0.254])
+	(user=dzm91@hust.edu.cn mech=PLAIN bits=0)
+	by mx1.hust.edu.cn  with ESMTP id 3263K5qV006092-3263K5qX006092
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 6 Mar 2023 11:20:05 +0800
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH V2] LoongArch: Provide kernel fpu functions
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-References: <20230306031258.99230-1-chenhuacai@loongson.cn>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230306031258.99230-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-Hi,
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.2\))
+Subject: Re: [PATCH v2] drivers: loongson: fix memory leak in
+ loongson2_guts_probe
+From: Dongliang Mu <dzm91@hust.edu.cn>
+In-Reply-To: <b9a04f64-90a6-8915-2b96-2805d8117459@xen0n.name>
+Date: Mon, 6 Mar 2023 11:20:05 +0800
+Cc: Yinbo Zhu <zhuyinbo@loongson.cn>, loongarch@lists.linux.dev,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7AEE1E65-5A60-45DB-B2BA-AADB2711356C@hust.edu.cn>
+References: <20230306025308.248987-1-dzm91@hust.edu.cn>
+ <b9a04f64-90a6-8915-2b96-2805d8117459@xen0n.name>
+To: WANG Xuerui <kernel@xen0n.name>
+X-Mailer: Apple Mail (2.3696.120.41.1.2)
+X-FEAS-AUTH-USER: dzm91@hust.edu.cn
 
 
-On 3/5/23 19:12, Huacai Chen wrote:
-> +void kernel_fpu_begin(void)
-> +{
-> +	if(this_cpu_read(in_kernel_fpu))
+> On Mar 6, 2023, at 11:03, WANG Xuerui <kernel@xen0n.name> wrote:
+>=20
+> On 2023/3/6 10:53, Dongliang Mu wrote:
+>> drivers/soc/loongson/loongson2_guts.c:150 loongson2_guts_probe()
+>> warn: 'guts->regs' from ioremap() not released on lines: =
+131,135,139,143.
+>> Fix this by modifying ioremap to devm_ioremap.
+>> Note that, this patch is not tested due to the loongson architecture.
+>> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
+>> ---
+>> v1->v2: instead of modifying error handling code, directly change
+>> ioremap to devm_ioremap.
+>>  drivers/soc/loongson/loongson2_guts.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> diff --git a/drivers/soc/loongson/loongson2_guts.c =
+b/drivers/soc/loongson/loongson2_guts.c
+>> index bace4bc8e03b..a053e3fdae09 100644
+>> --- a/drivers/soc/loongson/loongson2_guts.c
+>> +++ b/drivers/soc/loongson/loongson2_guts.c
+>> @@ -107,7 +107,7 @@ static int loongson2_guts_probe(struct =
+platform_device *pdev)
+>>  	guts->little_endian =3D of_property_read_bool(np, =
+"little-endian");
+>>    	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> -	guts->regs =3D ioremap(res->start, res->end - res->start + 1);
+>> +	guts->regs =3D devm_ioremap(dev, res->start, res->end - =
+res->start + 1);
+>=20
+> resource_size(res) is exactly "res->end - res->start + 1", you may use =
+that to simplify code now that you touched this line.
 
-	if (
-> +		return;
-> +
-> +	preempt_disable();
-> +	this_cpu_write(in_kernel_fpu, true);
-> +
-> +	if (!is_fpu_owner())
-> +		enable_fpu();
-> +	else
-> +		_save_fp(&current->thread.fpu);
-> +}
-> +EXPORT_SYMBOL(kernel_fpu_begin);
-> +
-> +void kernel_fpu_end(void)
-> +{
-> +	if(!this_cpu_read(in_kernel_fpu))
+I will send a v3 patch since this is a good suggestion.
 
-	if (
+>=20
+>>  	if (IS_ERR(guts->regs))
+>>  		return PTR_ERR(guts->regs);
+>> =20
+>=20
+> Otherwise LGTM, thanks! Untested by me though,
+>=20
+> Reviewed-by: WANG Xuerui <git@xen0n.name>
+>=20
+> --=20
+> WANG "xen0n" Xuerui
+>=20
+> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
-i.e., add a space after "if".
-
-> +		return;
-> +
-> +	if (!is_fpu_owner())
-> +		disable_fpu();
-> +	else
-> +		_restore_fp(&current->thread.fpu);
-> +
-> +	this_cpu_write(in_kernel_fpu, false);
-> +	preempt_enable();
-> +}
-> +EXPORT_SYMBOL(kernel_fpu_end);
-
--- 
-~Randy
