@@ -1,68 +1,70 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDBE17FF
-	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 03:35:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1678073757; bh=VUQNUraGLbD0xchZYnzzx8R6+Jx7Jbqf5zAc2EnfQRc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SYml2qj++0af4Qc/lBOyUIC4miP+40onItr1fu8Udir2+3hie00GyCH83cXWl26p4
-	 /OceGAMTS66Xp5/qFDXFVVuxmCBK6+cz56aG0/o0lZmtIs9yTpaCuS7xx50dSerY/S
-	 h9AMLaomjcN7NRGzHyz1WvwLs0zREW4N6+xMeuEY=
-Received: from [100.100.57.122] (unknown [58.34.185.106])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 38FC960B17;
-	Mon,  6 Mar 2023 11:35:57 +0800 (CST)
-Message-ID: <5523441e-6845-8e6b-52dd-aa7f1b444fd9@xen0n.name>
-Date: Mon, 6 Mar 2023 11:35:56 +0800
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1D73D301
+	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 03:41:53 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.35])
+	by gateway (Coremail) with SMTP id _____8BxedmzYAVkep4IAA--.10576S3;
+	Mon, 06 Mar 2023 11:40:35 +0800 (CST)
+Received: from [10.20.42.35] (unknown [10.20.42.35])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxSL2zYAVkmuhLAA--.1545S3;
+	Mon, 06 Mar 2023 11:40:35 +0800 (CST)
+Subject: Re: [PATCH v2] drivers: loongson: fix memory leak in
+ loongson2_guts_probe
+To: Dongliang Mu <dzm91@hust.edu.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20230306025308.248987-1-dzm91@hust.edu.cn>
+From: zhuyinbo <zhuyinbo@loongson.cn>
+Message-ID: <d858d9eb-73f3-2b3d-1795-78d7fa4aeca3@loongson.cn>
+Date: Mon, 6 Mar 2023 11:40:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH v3] drivers: loongson: fix memory leak in
- loongson2_guts_probe
+In-Reply-To: <20230306025308.248987-1-dzm91@hust.edu.cn>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-To: Dongliang Mu <dzm91@hust.edu.cn>, Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: loongarch@lists.linux.dev
-References: <20230306032854.254700-1-dzm91@hust.edu.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230306032854.254700-1-dzm91@hust.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8BxSL2zYAVkmuhLAA--.1545S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7uFWDAw4kJryruFy3ZFyDtrb_yoW8Jw4fp3
+	93AFW8uFW5JF17uFn5Ja4xWF15Ca4agF9xGF47X3W5ur9xA3W7urn3GFWUurs3ArWkC34a
+	qF95KrWUGFyUu3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+	kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28E
+	F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487
+	Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l42xK82IY6x
+	8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+	80aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUFAwIDUUUU
 
-On 2023/3/6 11:28, Dongliang Mu wrote:
+Tested-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+
+ÔÚ 2023/3/6 ÉÏÎç10:53, Dongliang Mu Ð´µÀ:
 > drivers/soc/loongson/loongson2_guts.c:150 loongson2_guts_probe()
 > warn: 'guts->regs' from ioremap() not released on lines: 131,135,139,143.
-> 
+>
 > Fix this by modifying ioremap to devm_ioremap.
-> 
+>
 > Note that, this patch is not tested due to the loongson architecture.
-> 
+>
 > Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
-
-You may retain the R-b tags from Huacai and me, since v3 -> v2 changes 
-was trivial.
-
-But in this case the maintainer (Yinbo) could be aware of this when 
-applying the patch locally, so you won't have to resend this time. You 
-may do better for your future patches though, and thanks for your patience!
-
 > ---
-> v2->v3: change res->end - res->start + 1 to resource_size(res)
 > v1->v2: instead of modifying error handling code, directly change
 > ioremap to devm_ioremap.
-> ---
 >   drivers/soc/loongson/loongson2_guts.c | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+>
 > diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson/loongson2_guts.c
-> index bace4bc8e03b..ffee5a55a985 100644
+> index bace4bc8e03b..a053e3fdae09 100644
 > --- a/drivers/soc/loongson/loongson2_guts.c
 > +++ b/drivers/soc/loongson/loongson2_guts.c
 > @@ -107,7 +107,7 @@ static int loongson2_guts_probe(struct platform_device *pdev)
@@ -70,13 +72,8 @@ may do better for your future patches though, and thanks for your patience!
 >   
 >   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 > -	guts->regs = ioremap(res->start, res->end - res->start + 1);
-> +	guts->regs = devm_ioremap(dev, res->start, resource_size(res));
+> +	guts->regs = devm_ioremap(dev, res->start, res->end - res->start + 1);
 >   	if (IS_ERR(guts->regs))
 >   		return PTR_ERR(guts->regs);
 >   
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
