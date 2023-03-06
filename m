@@ -1,80 +1,123 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B1017D7
-	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 03:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1678071830; bh=QZPqaw4Vy+xY+frX396NhuWBavPLVqkf2+wTUzsAumc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HMVPx2K2muE445gi6ORO6suVJgSesaVYPqmKNhODHRuZ+jdb8wBa3dS2farLzDdM2
-	 3wG/wcSSajx6SnrN5nSwOXYoEgsQ1c12WttMF7rMQlljplxvofB3PQy8cjx3+Dv0We
-	 UH96iAkhM4tr6uwHp48jZsYw1fZcpIpIpTuZmob0=
-Received: from [100.100.57.122] (unknown [58.34.185.106])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 6DC0E60B17;
-	Mon,  6 Mar 2023 11:03:50 +0800 (CST)
-Message-ID: <b9a04f64-90a6-8915-2b96-2805d8117459@xen0n.name>
-Date: Mon, 6 Mar 2023 11:03:49 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028B3D2EE
+	for <loongarch@lists.linux.dev>; Mon,  6 Mar 2023 03:13:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBEEAC433EF;
+	Mon,  6 Mar 2023 03:13:05 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH V2] LoongArch: Provide kernel fpu functions
+Date: Mon,  6 Mar 2023 11:12:58 +0800
+Message-Id: <20230306031258.99230-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH v2] drivers: loongson: fix memory leak in
- loongson2_guts_probe
-Content-Language: en-US
-To: Dongliang Mu <dzm91@hust.edu.cn>, Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20230306025308.248987-1-dzm91@hust.edu.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230306025308.248987-1-dzm91@hust.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2023/3/6 10:53, Dongliang Mu wrote:
-> drivers/soc/loongson/loongson2_guts.c:150 loongson2_guts_probe()
-> warn: 'guts->regs' from ioremap() not released on lines: 131,135,139,143.
-> 
-> Fix this by modifying ioremap to devm_ioremap.
-> 
-> Note that, this patch is not tested due to the loongson architecture.
-> 
-> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
-> ---
-> v1->v2: instead of modifying error handling code, directly change
-> ioremap to devm_ioremap.
->   drivers/soc/loongson/loongson2_guts.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson/loongson2_guts.c
-> index bace4bc8e03b..a053e3fdae09 100644
-> --- a/drivers/soc/loongson/loongson2_guts.c
-> +++ b/drivers/soc/loongson/loongson2_guts.c
-> @@ -107,7 +107,7 @@ static int loongson2_guts_probe(struct platform_device *pdev)
->   	guts->little_endian = of_property_read_bool(np, "little-endian");
->   
->   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	guts->regs = ioremap(res->start, res->end - res->start + 1);
-> +	guts->regs = devm_ioremap(dev, res->start, res->end - res->start + 1);
+Provide kernel_fpu_begin()/kernel_fpu_end() to allow the kernel itself
+to use fpu. They can be used by some other kernel components, e.g., the
+AMDGPU graphic driver for DCN.
 
-resource_size(res) is exactly "res->end - res->start + 1", you may use 
-that to simplify code now that you touched this line.
+Reported-by: WANG Xuerui<kernel@xen0n.name>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+V2: Use non-GPL exports and update commit messages.
 
->   	if (IS_ERR(guts->regs))
->   		return PTR_ERR(guts->regs);
->   
+ arch/loongarch/include/asm/fpu.h |  3 +++
+ arch/loongarch/kernel/Makefile   |  2 +-
+ arch/loongarch/kernel/kfpu.c     | 41 ++++++++++++++++++++++++++++++++
+ 3 files changed, 45 insertions(+), 1 deletion(-)
+ create mode 100644 arch/loongarch/kernel/kfpu.c
 
-Otherwise LGTM, thanks! Untested by me though,
-
-Reviewed-by: WANG Xuerui <git@xen0n.name>
-
+diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/asm/fpu.h
+index 358b254d9c1d..192f8e35d912 100644
+--- a/arch/loongarch/include/asm/fpu.h
++++ b/arch/loongarch/include/asm/fpu.h
+@@ -21,6 +21,9 @@
+ 
+ struct sigcontext;
+ 
++extern void kernel_fpu_begin(void);
++extern void kernel_fpu_end(void);
++
+ extern void _init_fpu(unsigned int);
+ extern void _save_fp(struct loongarch_fpu *);
+ extern void _restore_fp(struct loongarch_fpu *);
+diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+index 78d4e3384305..9a72d91cd104 100644
+--- a/arch/loongarch/kernel/Makefile
++++ b/arch/loongarch/kernel/Makefile
+@@ -13,7 +13,7 @@ obj-y		+= head.o cpu-probe.o cacheinfo.o env.o setup.o entry.o genex.o \
+ obj-$(CONFIG_ACPI)		+= acpi.o
+ obj-$(CONFIG_EFI) 		+= efi.o
+ 
+-obj-$(CONFIG_CPU_HAS_FPU)	+= fpu.o
++obj-$(CONFIG_CPU_HAS_FPU)	+= fpu.o kfpu.o
+ 
+ obj-$(CONFIG_ARCH_STRICT_ALIGN)	+= unaligned.o
+ 
+diff --git a/arch/loongarch/kernel/kfpu.c b/arch/loongarch/kernel/kfpu.c
+new file mode 100644
+index 000000000000..cd2a18fecdcc
+--- /dev/null
++++ b/arch/loongarch/kernel/kfpu.c
+@@ -0,0 +1,41 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/cpu.h>
++#include <linux/init.h>
++#include <asm/fpu.h>
++#include <asm/smp.h>
++
++static DEFINE_PER_CPU(bool, in_kernel_fpu);
++
++void kernel_fpu_begin(void)
++{
++	if(this_cpu_read(in_kernel_fpu))
++		return;
++
++	preempt_disable();
++	this_cpu_write(in_kernel_fpu, true);
++
++	if (!is_fpu_owner())
++		enable_fpu();
++	else
++		_save_fp(&current->thread.fpu);
++}
++EXPORT_SYMBOL(kernel_fpu_begin);
++
++void kernel_fpu_end(void)
++{
++	if(!this_cpu_read(in_kernel_fpu))
++		return;
++
++	if (!is_fpu_owner())
++		disable_fpu();
++	else
++		_restore_fp(&current->thread.fpu);
++
++	this_cpu_write(in_kernel_fpu, false);
++	preempt_enable();
++}
++EXPORT_SYMBOL(kernel_fpu_end);
 -- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+2.39.1
 
