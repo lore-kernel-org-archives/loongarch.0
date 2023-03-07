@@ -1,87 +1,127 @@
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E025D2577
-	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 08:15:42 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id E45965C0561;
-	Tue,  7 Mar 2023 03:15:41 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Tue, 07 Mar 2023 03:15:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm1; t=1678176941; x=1678263341; bh=Hm
-	07sqySuKUxzpvkQ23XmW4OObXTH92oKa0jToSXpUE=; b=q2l3SmAjXQ5dRNvILG
-	6hpmumeQgAoEeBos/DKG40cWgVIyGUY3gaDcJDtqqaeU4Vk/NjNC6QIE5vRelGCF
-	K1uiTYXLIRX9ouH0NXdlgB7AQ5sJUDNO0HdoNsa/ABkKCj0qBhPcpqHQm4v+tqYj
-	BZ12mqDFKsBhqy3QugRQOQyvIlSmXZr6J4ZncHk916vaYTIaZjx3ZmeywPr+V+Ut
-	pWRlilpGocKC5smsUEgXJjL3HaaXi8lUE1SguYF1M4Sf0QZ37Lgzafuxnvt66mC0
-	nlHt1a5/eszYtKcsigHusYTzd1TTHtla5L2eIjGmyBJdlhUDo7RhVLEM2wsa7Ovn
-	5vdA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1678176941; x=1678263341; bh=Hm07sqySuKUxz
-	pvkQ23XmW4OObXTH92oKa0jToSXpUE=; b=CQgGcEgEdDThQR94w6svPShi6nXjh
-	6WBCjguHQwoFr26M+wUCTVLQqQInNP0gmv1FjvTN4oukN8T7nx1glpMs1TfUqWAJ
-	UI5x5ZC+LbuSDYd4jFOm47jSyyQchVaJjGwY3ZlQAe5yGg/5RgB/9RAl/+G4NVrT
-	mvxTqEcIURSC3reb/cNVbAaAb90DeHRBWYoaFW6cggGVOlldjVHRrlCd4SqEMB51
-	fdebxeCLJ06+VPIinSvsozPsErFFsJKIBrwVSlHaBnzZFgZ9zJtmFumFXz2Yax+/
-	NNuLne7kGrxHZLirJRjVayO1pyEaPkpKjnAkJnhqU777Rz3UBIs+eJepg==
-X-ME-Sender: <xms:rPIGZBKBG8lE_4Lz3LTSP_fYP-FWnbWp_xG66x3CPvhD2ph3q_egKQ>
-    <xme:rPIGZNI8OjeVXXY6FXpZP76VWbXuFcOdgYDyca7OExXa88oZ9Rs5OXsqpJf0FDBMQ
-    f4jV2E1bqRz3RB9NNA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddtledgudduiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:rPIGZJvpaPsHYSjtwABff8TpAv5GvhAAiTSp7LwLbxrqKSlySe-8MA>
-    <xmx:rPIGZCYlVFcYIiS6P-TR0PjFqji0P6sbHdHUaenBjUXA6SR89iBLng>
-    <xmx:rPIGZIa5fzfr_YVcF6NzbSAfKE1wgbJYLlY23FLv05yRbiP0D36sCQ>
-    <xmx:rfIGZNNOky7F16JCzs7wu7utpCiHR7LS7QOrTB-0PmPzPBMNv1ZgaQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 297A9B60086; Tue,  7 Mar 2023 03:15:40 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-206-g57c8fdedf8-fm-20230227.001-g57c8fded
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A66333D2
+	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 10:57:35 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxAf+eGAdkFVMJAA--.12143S3;
+	Tue, 07 Mar 2023 18:57:34 +0800 (CST)
+Received: from bogon.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtOWdGAdk1vFNAA--.36843S2;
+	Tue, 07 Mar 2023 18:57:33 +0800 (CST)
+From: Youling Tang <tangyouling@loongson.cn>
+To: Huacai Chen <chenhuacai@loongson.cn>,
+	Ard Biesheuvel <ardb@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	linux-efi@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH] efistub: LoongArch: Reimplement kernel_entry_address()
+Date: Tue,  7 Mar 2023 18:57:33 +0800
+Message-Id: <1678186653-27659-1-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8BxtOWdGAdk1vFNAA--.36843S2
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXryftw1rCrWkXr48Xw1kZrb_yoW5Aw47pa
+	s0yrsxCF4ft3yfCaykAw15uFy5X3Z7KFyagF9Fk34F93W3XF1DZrWFgr98WFyDZ3y0q3ya
+	qr1YyFnFk3WUJw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
+	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
+	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
+	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
+	4UYxBIdaVFxhVjvjDU0xZFpf9x07jOuc_UUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <69d943f7-fa47-48c3-8b38-f3de4ea08ec0@app.fastmail.com>
-In-Reply-To: <1678175940-20872-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1678175940-20872-1-git-send-email-yangtiezhu@loongson.cn>
-Date: Tue, 07 Mar 2023 09:15:19 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>,
- "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 RESEND] checksyscalls: Ignore fstat to silence build warning on
- LoongArch
-Content-Type: text/plain
 
-On Tue, Mar 7, 2023, at 08:59, Tiezhu Yang wrote:
-> fstat is replaced by statx on the new architecture, so an exception
-> is added to the checksyscalls script to silence the following build
-> warning on LoongArch:
->
->   CALL    scripts/checksyscalls.sh
-> <stdin>:569:2: warning: #warning syscall fstat not implemented [-Wcpp]
->
-> Suggested-by: WANG Xuerui <kernel@xen0n.name>
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+When EFI_KIMG_PREFERRED_ADDRESS is not equal to PHYS_LINK_KADDR, we
+should not jump to the link address but the actual load address, so
+fix the processing of kernel_entry_address().
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+---
+- EFI_KIMG_PREFERRED_ADDRESS = PHYS_LINK_KADDR:
+/ # cat /proc/iomem 
+00000000-0fffffff : System RAM
+  00000000-001fffff : Reserved
+  00200000-0113ffff : Kernel code
+  01140000-01a0e5ff : Kernel data
+  01a0e600-01b0b337 : Kernel bss
+
+- EFI_KIMG_PREFERRED_ADDRESS = PHYS_LINK_KADDR + 0x4000000 (Enable CONFIG_RELOCATABLE):
+ # cat /proc/iomem 
+00000000-0fffffff : System RAM
+  00000000-041fffff : Reserved
+  04200000-0513ffff : Kernel code
+  05140000-05a0e5ff : Kernel data
+  05a0e600-05b0b337 : Kernel bss
+
+ arch/loongarch/include/asm/efi.h              |  2 --
+ drivers/firmware/efi/libstub/loongarch-stub.c |  7 -------
+ drivers/firmware/efi/libstub/loongarch.c      | 14 ++++++++++++--
+ 3 files changed, 12 insertions(+), 11 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/asm/efi.h
+index 091897d40b03..eddc8e79b3fa 100644
+--- a/arch/loongarch/include/asm/efi.h
++++ b/arch/loongarch/include/asm/efi.h
+@@ -32,6 +32,4 @@ static inline unsigned long efi_get_kimg_min_align(void)
+ 
+ #define EFI_KIMG_PREFERRED_ADDRESS	PHYSADDR(VMLINUX_LOAD_ADDRESS)
+ 
+-unsigned long kernel_entry_address(void);
+-
+ #endif /* _ASM_LOONGARCH_EFI_H */
+diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/drivers/firmware/efi/libstub/loongarch-stub.c
+index eee7ed43cdfb..71d178f87274 100644
+--- a/drivers/firmware/efi/libstub/loongarch-stub.c
++++ b/drivers/firmware/efi/libstub/loongarch-stub.c
+@@ -44,10 +44,3 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+ 
+ 	return status;
+ }
+-
+-unsigned long kernel_entry_address(void)
+-{
+-	unsigned long base = (unsigned long)&kernel_offset - kernel_offset;
+-
+-	return (unsigned long)&kernel_entry - base + VMLINUX_LOAD_ADDRESS;
+-}
+diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/efi/libstub/loongarch.c
+index 807cba2693fc..79fa16a765ce 100644
+--- a/drivers/firmware/efi/libstub/loongarch.c
++++ b/drivers/firmware/efi/libstub/loongarch.c
+@@ -37,9 +37,19 @@ static efi_status_t exit_boot_func(struct efi_boot_memmap *map, void *priv)
+ 	return EFI_SUCCESS;
+ }
+ 
+-unsigned long __weak kernel_entry_address(void)
++/*
++ * Get the offset of EFI_KIMG_PREFERRED_ADDRESS relative to the physical
++ * link address.
++ */
++static long get_kernel_offset(void)
++{
++	return EFI_KIMG_PREFERRED_ADDRESS - PHYS_LINK_KADDR;
++}
++
++unsigned long kernel_entry_address(void)
+ {
+-	return *(unsigned long *)(PHYSADDR(VMLINUX_LOAD_ADDRESS) + 8);
++	return *(unsigned long *)(EFI_KIMG_PREFERRED_ADDRESS + 8) +
++		get_kernel_offset();
+ }
+ 
+ efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
+-- 
+2.37.3
+
