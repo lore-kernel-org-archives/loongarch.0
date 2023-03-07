@@ -1,144 +1,69 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E18020EE
-	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 07:10:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7472A20EE
+	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 07:39:03 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxJFxL4wZkwT8JAA--.11762S3;
-	Tue, 07 Mar 2023 15:10:04 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cxf80W6gZkrUIJAA--.11784S3;
+	Tue, 07 Mar 2023 15:39:02 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxf+RJ4wZkk7hNAA--.35219S2;
-	Tue, 07 Mar 2023 15:10:01 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxbL4V6gZkqsBNAA--.4136S2;
+	Tue, 07 Mar 2023 15:39:01 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH] LoongArch: Add support for function error injection
-Date: Tue,  7 Mar 2023 15:10:01 +0800
-Message-Id: <1678173001-16852-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH] tools/arch/loongarch: Use __SIZEOF_LONG__ to define __BITS_PER_LONG
+Date: Tue,  7 Mar 2023 15:39:01 +0800
+Message-Id: <1678174741-19219-1-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8Cxf+RJ4wZkk7hNAA--.35219S2
+X-CM-TRANSID:AQAAf8DxbL4V6gZkqsBNAA--.4136S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAF4kKr47Jr13Zr13GFWktFb_yoWrJr1kpF
-	9IywnrGrWkWr4xJr9IyFyrZFyvvFs7CFW29F1Ika4rCrW7Zr1ktr4kKryqqF48G3yUGrW0
-	g3WrGr43tF45CaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
-	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2
-	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
-	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s02
-	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF
-	0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvE
-	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
-	U8ewZ7UUUUU==
+X-Coremail-Antispam: 1Uk129KBjvdXoWrtrW5Aw4xCFW3uw43uF1Dtrb_yoWDCrc_Zr
+	47Jw1UCr4xWF97X3y8ZrsYqr1jgay8GFnY9FnxZr13uF4Yyw48Gws7Gas2yF4q9rs0van3
+	XFWktr9Yk3yUtjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	b7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
+	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
+	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
+	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
+	4UYxBIdaVFxhVjvjDU0xZFpf9x07jOF4_UUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-Inspired by the commit 42d038c4fb00 ("arm64: Add support for function error
-injection") and commit ee55ff803b38 ("riscv: Add support for function error
-injection"), support function error injection for LoongArch.
-
-Mainly implement two functions:
-(1) regs_set_return_value() which is used to overwrite the return value,
-(2) override_function_with_return() which is used to override the probed
-function returning and jump to its caller.
-
-Here is a simple test under CONFIG_FUNCTION_ERROR_INJECTION and
-CONFIG_FAIL_FUNCTION:
-
-  # echo sys_clone > /sys/kernel/debug/fail_function/inject
-  # echo 100 > /sys/kernel/debug/fail_function/probability
-  # dmesg
-  bash: fork: Invalid argument
-  # dmesg
-  ...
-  FAULT_INJECTION: forcing a failure.
-  name fail_function, interval 1, probability 100, space 0, times 1
-  ...
-  Call Trace:
-  [<90000000002238f4>] show_stack+0x5c/0x180
-  [<90000000012e384c>] dump_stack_lvl+0x60/0x88
-  [<9000000000b1879c>] should_fail_ex+0x1b0/0x1f4
-  [<900000000032ead4>] fei_kprobe_handler+0x28/0x6c
-  [<9000000000230970>] kprobe_breakpoint_handler+0xf0/0x118
-  [<90000000012e3e60>] do_bp+0x2c4/0x358
-  [<9000000002241924>] exception_handlers+0x1924/0x10000
-  [<900000000023b7d0>] sys_clone+0x0/0x4
-  [<90000000012e4744>] do_syscall+0x7c/0x94
-  [<9000000000221e44>] handle_syscall+0xc4/0x160
+Although __SIZEOF_POINTER__ is equal with _SIZEOF_LONG__ on LoongArch,
+it is better to use __SIZEOF_LONG__ to define __BITS_PER_LONG to keep
+consistent between arch/loongarch/include/uapi/asm/bitsperlong.h and
+tools/arch/loongarch/include/uapi/asm/bitsperlong.h.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/Kconfig              |  1 +
- arch/loongarch/include/asm/ptrace.h |  6 ++++++
- arch/loongarch/lib/Makefile         |  2 ++
- arch/loongarch/lib/error-inject.c   | 10 ++++++++++
- 4 files changed, 19 insertions(+)
- create mode 100644 arch/loongarch/lib/error-inject.c
+ tools/arch/loongarch/include/uapi/asm/bitsperlong.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 7fd5125..b16ff7e 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -99,6 +99,7 @@ config LOONGARCH
- 	select HAVE_FAST_GUP
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_ARG_ACCESS_API
-+	select HAVE_FUNCTION_ERROR_INJECTION
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_GENERIC_VDSO
-diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
-index d761db9..db7332a 100644
---- a/arch/loongarch/include/asm/ptrace.h
-+++ b/arch/loongarch/include/asm/ptrace.h
-@@ -154,6 +154,12 @@ static inline long regs_return_value(struct pt_regs *regs)
- 	return regs->regs[4];
- }
+diff --git a/tools/arch/loongarch/include/uapi/asm/bitsperlong.h b/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
+index d4e32b3..00b4ba1 100644
+--- a/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
++++ b/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
+@@ -2,7 +2,7 @@
+ #ifndef __ASM_LOONGARCH_BITSPERLONG_H
+ #define __ASM_LOONGARCH_BITSPERLONG_H
  
-+static inline void regs_set_return_value(struct pt_regs *regs,
-+					 unsigned long val)
-+{
-+	regs->regs[4] = val;
-+}
-+
- #define instruction_pointer(regs) ((regs)->csr_era)
- #define profile_pc(regs) instruction_pointer(regs)
+-#define __BITS_PER_LONG (__SIZEOF_POINTER__ * 8)
++#define __BITS_PER_LONG (__SIZEOF_LONG__ * 8)
  
-diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
-index 40bde63..30b1595 100644
---- a/arch/loongarch/lib/Makefile
-+++ b/arch/loongarch/lib/Makefile
-@@ -5,3 +5,5 @@
+ #include <asm-generic/bitsperlong.h>
  
- lib-y	+= delay.o memset.o memcpy.o memmove.o \
- 	   clear_user.o copy_user.o dump_tlb.o unaligned.o
-+
-+obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
-diff --git a/arch/loongarch/lib/error-inject.c b/arch/loongarch/lib/error-inject.c
-new file mode 100644
-index 0000000..afc9e1c
---- /dev/null
-+++ b/arch/loongarch/lib/error-inject.c
-@@ -0,0 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/error-injection.h>
-+#include <linux/kprobes.h>
-+
-+void override_function_with_return(struct pt_regs *regs)
-+{
-+	instruction_pointer_set(regs, regs->regs[1]);
-+}
-+NOKPROBE_SYMBOL(override_function_with_return);
 -- 
 2.1.0
 
