@@ -1,92 +1,87 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EA7420EE
-	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 07:59:10 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxrtrN7gZkUUQJAA--.206S3;
-	Tue, 07 Mar 2023 15:59:09 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxTL7K7gZkSsRNAA--.4529S2;
-	Tue, 07 Mar 2023 15:59:07 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v3 RESEND] checksyscalls: Ignore fstat to silence build warning on LoongArch
-Date: Tue,  7 Mar 2023 15:59:00 +0800
-Message-Id: <1678175940-20872-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8BxTL7K7gZkSsRNAA--.4529S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7KF47Aw4DtF4kGrWfGw4DJwb_yoW8GF47p3
-	WSya40qr95GF18uw1293W3try7Awn3ArnrGFy5urs8AFZ8tan5tr9ava98GrnFvayxKa45
-	WrWkua47XFyqgFDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
-	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-	JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
-	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-	W8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8vApUUUUUU==
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E025D2577
+	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 08:15:42 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id E45965C0561;
+	Tue,  7 Mar 2023 03:15:41 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Tue, 07 Mar 2023 03:15:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm1; t=1678176941; x=1678263341; bh=Hm
+	07sqySuKUxzpvkQ23XmW4OObXTH92oKa0jToSXpUE=; b=q2l3SmAjXQ5dRNvILG
+	6hpmumeQgAoEeBos/DKG40cWgVIyGUY3gaDcJDtqqaeU4Vk/NjNC6QIE5vRelGCF
+	K1uiTYXLIRX9ouH0NXdlgB7AQ5sJUDNO0HdoNsa/ABkKCj0qBhPcpqHQm4v+tqYj
+	BZ12mqDFKsBhqy3QugRQOQyvIlSmXZr6J4ZncHk916vaYTIaZjx3ZmeywPr+V+Ut
+	pWRlilpGocKC5smsUEgXJjL3HaaXi8lUE1SguYF1M4Sf0QZ37Lgzafuxnvt66mC0
+	nlHt1a5/eszYtKcsigHusYTzd1TTHtla5L2eIjGmyBJdlhUDo7RhVLEM2wsa7Ovn
+	5vdA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1678176941; x=1678263341; bh=Hm07sqySuKUxz
+	pvkQ23XmW4OObXTH92oKa0jToSXpUE=; b=CQgGcEgEdDThQR94w6svPShi6nXjh
+	6WBCjguHQwoFr26M+wUCTVLQqQInNP0gmv1FjvTN4oukN8T7nx1glpMs1TfUqWAJ
+	UI5x5ZC+LbuSDYd4jFOm47jSyyQchVaJjGwY3ZlQAe5yGg/5RgB/9RAl/+G4NVrT
+	mvxTqEcIURSC3reb/cNVbAaAb90DeHRBWYoaFW6cggGVOlldjVHRrlCd4SqEMB51
+	fdebxeCLJ06+VPIinSvsozPsErFFsJKIBrwVSlHaBnzZFgZ9zJtmFumFXz2Yax+/
+	NNuLne7kGrxHZLirJRjVayO1pyEaPkpKjnAkJnhqU777Rz3UBIs+eJepg==
+X-ME-Sender: <xms:rPIGZBKBG8lE_4Lz3LTSP_fYP-FWnbWp_xG66x3CPvhD2ph3q_egKQ>
+    <xme:rPIGZNI8OjeVXXY6FXpZP76VWbXuFcOdgYDyca7OExXa88oZ9Rs5OXsqpJf0FDBMQ
+    f4jV2E1bqRz3RB9NNA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddtledgudduiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:rPIGZJvpaPsHYSjtwABff8TpAv5GvhAAiTSp7LwLbxrqKSlySe-8MA>
+    <xmx:rPIGZCYlVFcYIiS6P-TR0PjFqji0P6sbHdHUaenBjUXA6SR89iBLng>
+    <xmx:rPIGZIa5fzfr_YVcF6NzbSAfKE1wgbJYLlY23FLv05yRbiP0D36sCQ>
+    <xmx:rfIGZNNOky7F16JCzs7wu7utpCiHR7LS7QOrTB-0PmPzPBMNv1ZgaQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 297A9B60086; Tue,  7 Mar 2023 03:15:40 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-206-g57c8fdedf8-fm-20230227.001-g57c8fded
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+Mime-Version: 1.0
+Message-Id: <69d943f7-fa47-48c3-8b38-f3de4ea08ec0@app.fastmail.com>
+In-Reply-To: <1678175940-20872-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1678175940-20872-1-git-send-email-yangtiezhu@loongson.cn>
+Date: Tue, 07 Mar 2023 09:15:19 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Tiezhu Yang" <yangtiezhu@loongson.cn>,
+ "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Masahiro Yamada" <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v3 RESEND] checksyscalls: Ignore fstat to silence build warning on
+ LoongArch
+Content-Type: text/plain
 
-fstat is replaced by statx on the new architecture, so an exception
-is added to the checksyscalls script to silence the following build
-warning on LoongArch:
+On Tue, Mar 7, 2023, at 08:59, Tiezhu Yang wrote:
+> fstat is replaced by statx on the new architecture, so an exception
+> is added to the checksyscalls script to silence the following build
+> warning on LoongArch:
+>
+>   CALL    scripts/checksyscalls.sh
+> <stdin>:569:2: warning: #warning syscall fstat not implemented [-Wcpp]
+>
+> Suggested-by: WANG Xuerui <kernel@xen0n.name>
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-  CALL    scripts/checksyscalls.sh
-<stdin>:569:2: warning: #warning syscall fstat not implemented [-Wcpp]
-
-Suggested-by: WANG Xuerui <kernel@xen0n.name>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
-
-This warning still exists when build 6.3-rc1, it looks like
-not so good, just resend the patch (2022-08-30):
-
-https://lore.kernel.org/lkml/1661830021-8643-1-git-send-email-yangtiezhu@loongson.cn/
-
- scripts/checksyscalls.sh | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/checksyscalls.sh b/scripts/checksyscalls.sh
-index f33e61a..1e5d2ee 100755
---- a/scripts/checksyscalls.sh
-+++ b/scripts/checksyscalls.sh
-@@ -114,7 +114,6 @@ cat << EOF
- #define __IGNORE_truncate
- #define __IGNORE_stat
- #define __IGNORE_lstat
--#define __IGNORE_fstat
- #define __IGNORE_fcntl
- #define __IGNORE_fadvise64
- #define __IGNORE_newfstatat
-@@ -255,6 +254,9 @@ cat << EOF
- /* 64-bit ports never needed these, and new 32-bit ports can use statx */
- #define __IGNORE_fstat64
- #define __IGNORE_fstatat64
-+
-+/* Newer ports are not required to provide fstat in favor of statx */
-+#define __IGNORE_fstat
- EOF
- }
- 
--- 
-2.1.0
-
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
