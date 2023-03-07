@@ -1,14 +1,14 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADB74361
-	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 02:23:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AF1D36E
+	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 02:49:31 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.170])
-	by gateway (Coremail) with SMTP id _____8Axrto3oAZkcikJAA--.12S3;
-	Tue, 07 Mar 2023 10:23:51 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxONk5pgZk2SwJAA--.11635S3;
+	Tue, 07 Mar 2023 10:49:29 +0800 (CST)
 Received: from [10.20.42.170] (unknown [10.20.42.170])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx6r02oAZkU3JNAA--.4220S3;
-	Tue, 07 Mar 2023 10:23:51 +0800 (CST)
-Message-ID: <221b58cc-81b6-c55a-b1eb-68947cd19c88@loongson.cn>
-Date: Tue, 7 Mar 2023 10:23:50 +0800
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxg+U4pgZk+nhNAA--.35761S3;
+	Tue, 07 Mar 2023 10:49:28 +0800 (CST)
+Message-ID: <8ba8c05d-af9e-ae3e-c19d-61e1eaf56e19@loongson.cn>
+Date: Tue, 7 Mar 2023 10:49:28 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -17,9 +17,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH v3 09/29] LoongArch: KVM: Implement vcpu get, vcpu set
- registers
-Content-Language: en-US
+Subject: Re: [PATCH v3 19/29] LoongArch: KVM: Implement kvm mmu operations
 To: Tianrui Zhao <zhaotianrui@loongson.cn>,
  Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
@@ -29,480 +27,882 @@ Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
  Alex Deucher <alexander.deucher@amd.com>,
  Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>
 References: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
- <20230228070057.3687180-10-zhaotianrui@loongson.cn>
+ <20230228070057.3687180-20-zhaotianrui@loongson.cn>
+Content-Language: en-US
 From: maobibo <maobibo@loongson.cn>
-In-Reply-To: <20230228070057.3687180-10-zhaotianrui@loongson.cn>
+In-Reply-To: <20230228070057.3687180-20-zhaotianrui@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dx6r02oAZkU3JNAA--.4220S3
+X-CM-TRANSID:AQAAf8Cxg+U4pgZk+nhNAA--.35761S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjvAXoW3Cw18tFy5Cr4fZryxKFy3Jwb_yoW8GF4fAo
-	Z3tw48Cr4fGw12yw47tr12qay8JFyxC3Z7ZFyrZF1F9a9rtFyfXr18AayDZryfWrnxuryU
-	Ca1qga4kuaykJ3Z8n29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+X-Coremail-Antispam: 1Uk129KBjvAXoWfXF4xJrWrGrWfKF48tr1xAFb_yoW8Kry8Jo
+	WfGrsF9w4rZryUAFy8Cry3tayjv3ykG39rAryqyr43XFyUt345ZFZ3G3yrZry8Cr1rKF93
+	Aa97Xws7tFZ5twnxn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
 	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
-	UUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
+	UUPSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
 	0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
-	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-	M2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
-	CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2
-	z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2
-	IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E
-	4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGw
-	C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
-	MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
-	IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E
-	87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxYiiDUUUU
+	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+	8EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
+	JwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4
+	CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0E
+	x4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0Sjx
+	kI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s02
+	6xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr
+	4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxG
+	rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8Jw
+	CI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2
+	z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0b6pPUUUUU==
 
 
 
 在 2023/2/28 15:00, Tianrui Zhao 写道:
-> Implement loongarch vcpu get registers and set registers operations, it
-> is called when user space use the ioctl interface to get or set regs.
+> Implement loongarch kvm mmu, it is used to switch gpa to hpa when
+> guest exit because of address translation exception. This patch
+> implement allocate gpa page table, search gpa from it and flush guest
+> gpa in the table.
 > 
 > Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 > ---
->  arch/loongarch/kvm/vcpu.c | 375 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 375 insertions(+)
+>  arch/loongarch/kvm/mmu.c | 821 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 821 insertions(+)
+>  create mode 100644 arch/loongarch/kvm/mmu.c
 > 
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index e16b7ca852e3..dce89ace2750 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -13,6 +13,381 @@
->  #define CREATE_TRACE_POINTS
->  #include "trace.h"
->  
-> +int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force)
+> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> new file mode 100644
+> index 000000000000..049824f8e462
+> --- /dev/null
+> +++ b/arch/loongarch/kvm/mmu.c
+> @@ -0,0 +1,821 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+> + */
+> +
+> +#include <linux/highmem.h>
+> +#include <linux/hugetlb.h>
+> +#include <linux/page-flags.h>
+> +#include <linux/kvm_host.h>
+> +#include <linux/uaccess.h>
+> +#include <asm/kvm_host.h>
+> +#include <asm/mmu_context.h>
+> +#include <asm/pgalloc.h>
+> +#include <asm/tlb.h>
+> +
+> +/*
+> + * KVM_MMU_CACHE_MIN_PAGES is the number of GPA page table translation levels
+> + * for which pages need to be cached.
+> + */
+> +#if defined(__PAGETABLE_PMD_FOLDED)
+> +#define KVM_MMU_CACHE_MIN_PAGES 1
+> +#else
+> +#define KVM_MMU_CACHE_MIN_PAGES 2
+> +#endif
+> +
+> +/**
+> + * kvm_pgd_alloc() - Allocate and initialise a KVM GPA page directory.
+> + *
+> + * Allocate a blank KVM GPA page directory (PGD) for representing guest physical
+> + * to host physical page mappings.
+> + *
+> + * Returns:	Pointer to new KVM GPA page directory.
+> + *		NULL on allocation failure.
+> + */
+> +pgd_t *kvm_pgd_alloc(void)
 > +{
-> +	struct loongarch_csrs *csr = vcpu->arch.csr;
+> +	pgd_t *pgd;
 > +
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_CRMD, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_PRMD, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_EUEN, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_MISC, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_ECFG, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_ESTAT, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_ERA, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_BADV, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_BADI, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_EENTRY, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBIDX, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBEHI, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBELO0, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBELO1, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_ASID, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_PGDL, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_PGDH, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_PWCTL0, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_PWCTL1, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_STLBPGSIZE, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_RVACFG, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_CPUID, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_PRCFG1, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_PRCFG2, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_PRCFG3, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS0, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS1, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS2, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS3, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS4, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS5, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS6, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS7, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TMID, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TCFG, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TVAL, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_CNTC, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_LLBCTL, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRENTRY, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRBADV, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRERA, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRSAVE, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRELO0, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRELO1, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBREHI, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRPRMD, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_DMWIN0, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_DMWIN1, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_DMWIN2, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_DMWIN3, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_MWPS, v);
-> +	GET_HW_GCSR(id, LOONGARCH_CSR_FWPS, v);
-
-#define GET_HW_GCSR(id, csrid, v)                               \
-        do {                                                    \
-                if (csrid == id) {                              \
-                        *v = (long)kvm_read_hw_gcsr(csrid);     \
-                        return 0;                               \
-                }                                               \
-        } while (0)
-
-With expanded macro, this piece of code shows like this:
-        if (LOONGARCH_CSR_CRMD == id) {
-              *v = (long)kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD);
-              return 0;
-        }
-        if (LOONGARCH_CSR_PRMD == id) {
-              *v = (long)kvm_read_hw_gcsr(LOONGARCH_CSR_PRMD);
-              return 0;
-        }
-        if (LOONGARCH_CSR_EUEN == id) {
-              *v = (long)kvm_read_hw_gcsr(LOONGARCH_CSR_EUEN);
-              return 0;
-        }
-        ...
-
-It is strange since macro kvm_read_hw_gcsr must be constant variable.
-Can we define generic csr reading function like this?
-SYM_CODE_START(kvm_csrread)
-    ldpcrel t0, 0f
-    multi.d a0, a0, CSRFUNC_SIZE
-    add.d   t0, t0, a0
-    jirl    r0, t0, 0
-
-    csrnum=0
-    .rept NR_CSR_NUM
-0 :
-        csrread  a0, csrnum
-        jirl    r0, ra, 0
-        /* Ensure that the above is CSRFUNC_ALIGN bytes max */
-        .fill 0b + CSRFUNC_SIZE - ., 1, 0xcc
-        csrnum = csrnum+1
-    .endr
-SYM_CODE_END(kvm_csrread)
-
-Wit this function, only one sentence can be used here.
-   v = kvm_csrread(id);
-
-
-Regards
-Bibo, mao
-
-
-
-
-
+> +	pgd = (pgd_t *)__get_free_pages(GFP_KERNEL, 0);
+> +	if (pgd)
+> +		pgd_init((void *)pgd);
 > +
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_IMPCTL1, v);
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_IMPCTL2, v);
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRCTL, v);
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRINFO1, v);
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRINFO2, v);
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRENTRY, v);
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRERA, v);
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRSAVE, v);
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_CTAG, v);
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_DEBUG, v);
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_DERA, v);
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_DESAVE, v);
-> +
-> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_TINTCLR, v);
-> +
-> +	if (force && (id < CSR_ALL_SIZE)) {
-> +		*v = kvm_read_sw_gcsr(csr, id);
-> +		return 0;
-> +	}
-> +
-> +	return -1;
+> +	return pgd;
 > +}
 > +
-> +int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force)
+> +/**
+> + * kvm_walk_pgd() - Walk page table with optional allocation.
+> + * @pgd:	Page directory pointer.
+> + * @addr:	Address to index page table using.
+> + * @cache:	MMU page cache to allocate new page tables from, or NULL.
+> + *
+> + * Walk the page tables pointed to by @pgd to find the PTE corresponding to the
+> + * address @addr. If page tables don't exist for @addr, they will be created
+> + * from the MMU cache if @cache is not NULL.
+> + *
+> + * Returns:	Pointer to pte_t corresponding to @addr.
+> + *		NULL if a page table doesn't exist for @addr and !@cache.
+> + *		NULL if a page table allocation failed.
+> + */
+> +static pte_t *kvm_walk_pgd(pgd_t *pgd, struct kvm_mmu_memory_cache *cache,
+> +				unsigned long addr)
 > +{
-> +	struct loongarch_csrs *csr = vcpu->arch.csr;
-> +	int ret;
+> +	p4d_t *p4d;
+> +	pud_t *pud;
+> +	pmd_t *pmd;
 > +
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_CRMD, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PRMD, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_EUEN, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_MISC, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_ECFG, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_ERA, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_BADV, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_BADI, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_EENTRY, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBIDX, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBEHI, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBELO0, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBELO1, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_ASID, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PGDL, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PGDH, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PWCTL0, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PWCTL1, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_STLBPGSIZE, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_RVACFG, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_CPUID, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS0, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS1, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS2, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS3, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS4, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS5, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS6, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS7, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TMID, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TCFG, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TVAL, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_CNTC, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_LLBCTL, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRENTRY, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRBADV, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRERA, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRSAVE, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRELO0, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRELO1, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBREHI, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRPRMD, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_DMWIN0, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_DMWIN1, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_DMWIN2, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_DMWIN3, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_MWPS, v);
-> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_FWPS, v);
+> +	pgd += pgd_index(addr);
+> +	if (pgd_none(*pgd)) {
+> +		/* Not used yet */
+> +		BUG();
+> +		return NULL;
+> +	}
+> +	p4d = p4d_offset(pgd, addr);
+> +	pud = pud_offset(p4d, addr);
+> +	if (pud_none(*pud)) {
+> +		pmd_t *new_pmd;
 > +
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_IMPCTL1, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_IMPCTL2, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRCTL, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRINFO1, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRINFO2, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRENTRY, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRERA, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRSAVE, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_CTAG, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_DEBUG, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_DERA, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_DESAVE, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_PRCFG1, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_PRCFG2, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_PRCFG3, v);
+> +		if (!cache)
+> +			return NULL;
+> +		new_pmd = kvm_mmu_memory_cache_alloc(cache);
+> +		pmd_init((void *)new_pmd);
+> +		pud_populate(NULL, pud, new_pmd);
+> +	}
+> +	pmd = pmd_offset(pud, addr);
+> +	if (pmd_none(*pmd)) {
+> +		pte_t *new_pte;
 > +
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_PGD, v);
-> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_TINTCLR, v);
+> +		if (!cache)
+> +			return NULL;
+> +		new_pte = kvm_mmu_memory_cache_alloc(cache);
+> +		clear_page(new_pte);
+> +		pmd_populate_kernel(NULL, pmd, new_pte);
+> +	}
+> +	return pte_offset_kernel(pmd, addr);
+> +}
 > +
-> +	ret = -1;
-> +	switch (id) {
-> +	case LOONGARCH_CSR_ESTAT:
-> +		write_gcsr_estat(*v);
-> +		/* estat IP0~IP7 inject through guestexcept */
-> +		write_csr_gintc(((*v) >> 2)  & 0xff);
-> +		ret = 0;
-> +		break;
-> +	default:
-> +		if (force && (id < CSR_ALL_SIZE)) {
-> +			kvm_set_sw_gcsr(csr, id, *v);
-> +			ret = 0;
+> +/* Caller must hold kvm->mm_lock */
+> +static pte_t *kvm_pte_for_gpa(struct kvm *kvm,
+> +				struct kvm_mmu_memory_cache *cache,
+> +				unsigned long addr)
+> +{
+> +	return kvm_walk_pgd(kvm->arch.gpa_mm.pgd, cache, addr);
+> +}
+> +
+> +/*
+> + * kvm_flush_gpa_{pte,pmd,pud,pgd,pt}.
+> + * Flush a range of guest physical address space from the VM's GPA page tables.
+> + */
+> +
+> +static bool kvm_flush_gpa_pte(pte_t *pte, unsigned long start_gpa,
+> +				   unsigned long end_gpa, unsigned long *data)
+> +{
+> +	int i_min = pte_index(start_gpa);
+> +	int i_max = pte_index(end_gpa);
+> +	bool safe_to_remove = (i_min == 0 && i_max == PTRS_PER_PTE - 1);
+> +	int i;
+> +
+> +	for (i = i_min; i <= i_max; ++i) {
+> +		if (!pte_present(pte[i]))
+> +			continue;
+> +
+> +		set_pte(pte + i, __pte(0));
+> +		if (data)
+> +			*data += 1;
+> +	}
+> +	return safe_to_remove;
+> +}
+> +
+> +static bool kvm_flush_gpa_pmd(pmd_t *pmd, unsigned long start_gpa,
+> +				   unsigned long end_gpa, unsigned long *data)
+> +{
+> +	pte_t *pte;
+> +	unsigned long end = ~0ul;
+> +	int i_min = pmd_index(start_gpa);
+> +	int i_max = pmd_index(end_gpa);
+> +	bool safe_to_remove = (i_min == 0 && i_max == PTRS_PER_PMD - 1);
+> +	int i;
+> +
+> +	for (i = i_min; i <= i_max; ++i, start_gpa = 0) {
+> +		if (!pmd_present(pmd[i]))
+> +			continue;
+> +
+> +		pte = pte_offset_kernel(pmd + i, 0);
+> +		if (i == i_max)
+> +			end = end_gpa;
+> +
+> +		if (kvm_flush_gpa_pte(pte, start_gpa, end, data)) {
+> +			pmd_clear(pmd + i);
+> +			pte_free_kernel(NULL, pte);
+> +		} else {
+> +			safe_to_remove = false;
 > +		}
-> +		break;
+> +	}
+> +	return safe_to_remove;
+> +}
+> +
+> +static bool kvm_flush_gpa_pud(pud_t *pud, unsigned long start_gpa,
+> +				   unsigned long end_gpa, unsigned long *data)
+> +{
+> +	pmd_t *pmd;
+> +	unsigned long end = ~0ul;
+> +	int i_min = pud_index(start_gpa);
+> +	int i_max = pud_index(end_gpa);
+> +	bool safe_to_remove = (i_min == 0 && i_max == PTRS_PER_PUD - 1);
+> +	int i;
+> +
+> +	for (i = i_min; i <= i_max; ++i, start_gpa = 0) {
+> +		if (!pud_present(pud[i]))
+> +			continue;
+> +
+> +		pmd = pmd_offset(pud + i, 0);
+> +		if (i == i_max)
+> +			end = end_gpa;
+> +
+> +		if (kvm_flush_gpa_pmd(pmd, start_gpa, end, data)) {
+> +			pud_clear(pud + i);
+> +			pmd_free(NULL, pmd);
+> +		} else {
+> +			safe_to_remove = false;
+> +		}
+> +	}
+> +	return safe_to_remove;
+> +}
+> +
+> +static bool kvm_flush_gpa_pgd(pgd_t *pgd, unsigned long start_gpa,
+> +				unsigned long end_gpa, unsigned long *data)
+> +{
+> +	p4d_t *p4d;
+> +	pud_t *pud;
+> +	unsigned long end = ~0ul;
+> +	int i_min = pgd_index(start_gpa);
+> +	int i_max = pgd_index(end_gpa);
+> +	bool safe_to_remove = (i_min == 0 && i_max == PTRS_PER_PGD - 1);
+> +	int i;
+> +
+> +	for (i = i_min; i <= i_max; ++i, start_gpa = 0) {
+> +		if (!pgd_present(pgd[i]))
+> +			continue;
+> +
+> +		p4d = p4d_offset(pgd, 0);
+> +		pud = pud_offset(p4d + i, 0);
+> +		if (i == i_max)
+> +			end = end_gpa;
+> +
+> +		if (kvm_flush_gpa_pud(pud, start_gpa, end, data)) {
+> +			pgd_clear(pgd + i);
+> +			pud_free(NULL, pud);
+> +		} else {
+> +			safe_to_remove = false;
+> +		}
+> +	}
+> +	return safe_to_remove;
+> +}
+> +
+> +/**
+> + * kvm_flush_gpa_range() - Flush a range of guest physical addresses.
+> + * @kvm:	KVM pointer.
+> + * @start_gfn:	Guest frame number of first page in GPA range to flush.
+> + * @end_gfn:	Guest frame number of last page in GPA range to flush.
+> + *
+> + * Flushes a range of GPA mappings from the GPA page tables.
+> + *
+> + * The caller must hold the @kvm->mmu_lock spinlock.
+> + *
+> + * Returns:	Whether its safe to remove the top level page directory because
+> + *		all lower levels have been removed.
+> + */
+> +static bool kvm_flush_gpa_range(struct kvm *kvm, gfn_t start_gfn, gfn_t end_gfn, void *data)
+> +{
+> +	return kvm_flush_gpa_pgd(kvm->arch.gpa_mm.pgd,
+> +				start_gfn << PAGE_SHIFT,
+> +				end_gfn << PAGE_SHIFT, (unsigned long *)data);
+> +}
+> +
+> +/*
+> + * kvm_mkclean_gpa_pt.
+> + * Mark a range of guest physical address space clean (writes fault) in the VM's
+> + * GPA page table to allow dirty page tracking.
+> + */
+> +
+> +static int kvm_mkclean_pte(pte_t *pte, unsigned long start, unsigned long end)
+> +{
+> +	int ret = 0;
+> +	int i_min = pte_index(start);
+> +	int i_max = pte_index(end);
+> +	int i;
+> +	pte_t val;
+> +
+> +	for (i = i_min; i <= i_max; ++i) {
+> +		val = pte[i];
+> +		if (pte_present(val) && pte_dirty(val)) {
+> +			set_pte(pte + i, pte_mkclean(val));
+> +			ret = 1;
+> +		}
+> +	}
+> +	return ret;
+> +}
+> +
+> +static int kvm_mkclean_pmd(pmd_t *pmd, unsigned long start, unsigned long end)
+> +{
+> +	int ret = 0;
+> +	pte_t *pte;
+> +	unsigned long cur_end = ~0ul;
+> +	int i_min = pmd_index(start);
+> +	int i_max = pmd_index(end);
+> +	int i;
+> +
+> +	for (i = i_min; i <= i_max; ++i, start = 0) {
+> +		if (!pmd_present(pmd[i]))
+> +			continue;
+> +
+> +		pte = pte_offset_kernel(pmd + i, 0);
+> +		if (i == i_max)
+> +			cur_end = end;
+> +
+> +		ret |= kvm_mkclean_pte(pte, start, cur_end);
 > +	}
 > +
 > +	return ret;
 > +}
 > +
-> +static int _kvm_get_one_reg(struct kvm_vcpu *vcpu,
-> +		const struct kvm_one_reg *reg, s64 *v)
+> +static int kvm_mkclean_pud(pud_t *pud, unsigned long start, unsigned long end)
 > +{
-> +	struct loongarch_csrs *csr = vcpu->arch.csr;
-> +	int reg_idx, ret;
+> +	int ret = 0;
+> +	pmd_t *pmd;
+> +	unsigned long cur_end = ~0ul;
+> +	int i_min = pud_index(start);
+> +	int i_max = pud_index(end);
+> +	int i;
 > +
-> +	if ((reg->id & KVM_IOC_CSRID(0)) == KVM_IOC_CSRID(0)) {
-> +		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
-> +		ret = _kvm_getcsr(vcpu, reg_idx, v, 0);
-> +		if (ret == 0)
-> +			return ret;
+> +	for (i = i_min; i <= i_max; ++i, start = 0) {
+> +		if (!pud_present(pud[i]))
+> +			continue;
+> +
+> +		pmd = pmd_offset(pud + i, 0);
+> +		if (i == i_max)
+> +			cur_end = end;
+> +
+> +		ret |= kvm_mkclean_pmd(pmd, start, cur_end);
 > +	}
-> +
-> +	switch (reg->id) {
-> +	case KVM_REG_LOONGARCH_COUNTER:
-> +		*v = drdtime() + vcpu->kvm->arch.time_offset;
-> +		break;
-> +	default:
-> +		if ((reg->id & KVM_REG_LOONGARCH_MASK) != KVM_REG_LOONGARCH_CSR)
-> +			return -EINVAL;
-> +
-> +		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
-> +		if (reg_idx < CSR_ALL_SIZE)
-> +			*v = kvm_read_sw_gcsr(csr, reg_idx);
-> +		else
-> +			return -EINVAL;
-> +	}
-> +
-> +	return 0;
+> +	return ret;
 > +}
 > +
-> +static int _kvm_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+> +static int kvm_mkclean_pgd(pgd_t *pgd, unsigned long start, unsigned long end)
+> +{
+> +	int ret = 0;
+> +	p4d_t *p4d;
+> +	pud_t *pud;
+> +	unsigned long cur_end = ~0ul;
+> +	int i_min = pgd_index(start);
+> +	int i_max = pgd_index(end);
+> +	int i;
+> +
+> +	for (i = i_min; i <= i_max; ++i, start = 0) {
+> +		if (!pgd_present(pgd[i]))
+> +			continue;
+> +
+> +		p4d = p4d_offset(pgd, 0);
+> +		pud = pud_offset(p4d + i, 0);
+> +		if (i == i_max)
+> +			cur_end = end;
+> +
+> +		ret |= kvm_mkclean_pud(pud, start, cur_end);
+> +	}
+> +	return ret;
+> +}
+> +
+> +/**
+> + * kvm_mkclean_gpa_pt() - Make a range of guest physical addresses clean.
+> + * @kvm:	KVM pointer.
+> + * @start_gfn:	Guest frame number of first page in GPA range to flush.
+> + * @end_gfn:	Guest frame number of last page in GPA range to flush.
+> + *
+> + * Make a range of GPA mappings clean so that guest writes will fault and
+> + * trigger dirty page logging.
+> + *
+> + * The caller must hold the @kvm->mmu_lock spinlock.
+> + *
+> + * Returns:	Whether any GPA mappings were modified, which would require
+> + *		derived mappings (GVA page tables & TLB enties) to be
+> + *		invalidated.
+> + */
+> +static int kvm_mkclean_gpa_pt(struct kvm *kvm, gfn_t start_gfn, gfn_t end_gfn)
+> +{
+> +	return kvm_mkclean_pgd(kvm->arch.gpa_mm.pgd, start_gfn << PAGE_SHIFT,
+> +				end_gfn << PAGE_SHIFT);
+> +}
+> +
+> +/**
+> + * kvm_arch_mmu_enable_log_dirty_pt_masked() - write protect dirty pages
+> + * @kvm:	The KVM pointer
+> + * @slot:	The memory slot associated with mask
+> + * @gfn_offset:	The gfn offset in memory slot
+> + * @mask:	The mask of dirty pages at offset 'gfn_offset' in this memory
+> + *		slot to be write protected
+> + *
+> + * Walks bits set in mask write protects the associated pte's. Caller must
+> + * acquire @kvm->mmu_lock.
+> + */
+> +void kvm_arch_mmu_enable_log_dirty_pt_masked(struct kvm *kvm,
+> +		struct kvm_memory_slot *slot,
+> +		gfn_t gfn_offset, unsigned long mask)
+> +{
+> +	gfn_t base_gfn = slot->base_gfn + gfn_offset;
+> +	gfn_t start = base_gfn +  __ffs(mask);
+> +	gfn_t end = base_gfn + __fls(mask);
+> +
+> +	kvm_mkclean_gpa_pt(kvm, start, end);
+> +}
+> +
+> +void kvm_arch_commit_memory_region(struct kvm *kvm,
+> +				   struct kvm_memory_slot *old,
+> +				   const struct kvm_memory_slot *new,
+> +				   enum kvm_mr_change change)
+> +{
+> +	int needs_flush;
+> +
+> +	/*
+> +	 * If dirty page logging is enabled, write protect all pages in the slot
+> +	 * ready for dirty logging.
+> +	 *
+> +	 * There is no need to do this in any of the following cases:
+> +	 * CREATE:	No dirty mappings will already exist.
+> +	 * MOVE/DELETE:	The old mappings will already have been cleaned up by
+> +	 *		kvm_arch_flush_shadow_memslot()
+> +	 */
+> +	if (change == KVM_MR_FLAGS_ONLY &&
+> +	    (!(old->flags & KVM_MEM_LOG_DIRTY_PAGES) &&
+> +	     new->flags & KVM_MEM_LOG_DIRTY_PAGES)) {
+> +		spin_lock(&kvm->mmu_lock);
+> +		/* Write protect GPA page table entries */
+> +		needs_flush = kvm_mkclean_gpa_pt(kvm, new->base_gfn,
+> +					new->base_gfn + new->npages - 1);
+> +		if (needs_flush)
+> +			kvm_flush_remote_tlbs(kvm);
+> +		spin_unlock(&kvm->mmu_lock);
+> +	}
+> +}
+> +
+> +void kvm_arch_flush_shadow_all(struct kvm *kvm)
+> +{
+> +	/* Flush whole GPA */
+> +	kvm_flush_gpa_range(kvm, 0, ~0UL, NULL);
+> +	/* Flush vpid for each VCPU individually */
+> +	kvm_flush_remote_tlbs(kvm);
+> +}
+> +
+> +void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
+> +		struct kvm_memory_slot *slot)
+> +{
+> +	unsigned long npages;
+> +
+> +	/*
+> +	 * The slot has been made invalid (ready for moving or deletion), so we
+> +	 * need to ensure that it can no longer be accessed by any guest VCPUs.
+> +	 */
+> +
+> +	npages = 0;
+> +	spin_lock(&kvm->mmu_lock);
+> +	/* Flush slot from GPA */
+> +	kvm_flush_gpa_range(kvm, slot->base_gfn,
+> +			slot->base_gfn + slot->npages - 1, &npages);
+> +	/* Let implementation do the rest */
+> +	if (npages)
+> +		kvm_flush_remote_tlbs(kvm);
+> +	spin_unlock(&kvm->mmu_lock);
+> +}
+> +
+> +void _kvm_destroy_mm(struct kvm *kvm)
+> +{
+> +	/* It should always be safe to remove after flushing the whole range */
+> +	WARN_ON(!kvm_flush_gpa_range(kvm, 0, ~0UL, NULL));
+Only _kvm_destroy_mm cares about return value about function
+kvm_flush_gpa_range, it always return true since it is flushing
+the whole range.
+
+Can return value of function kvm_flush_gpa_range be defined as void rather
+than bool?  By this way, safe_to_remove can be removed in function kvm_flush_gpa_pgd
+etc.
+
+Regards
+Bibo, Mao
+
+> +	pgd_free(NULL, kvm->arch.gpa_mm.pgd);
+> +	kvm->arch.gpa_mm.pgd = NULL;
+> +}
+> +
+> +/*
+> + * Mark a range of guest physical address space old (all accesses fault) in the
+> + * VM's GPA page table to allow detection of commonly used pages.
+> + */
+> +
+> +static int kvm_mkold_pte(pte_t *pte, unsigned long start, unsigned long end)
+> +{
+> +	int ret = 0;
+> +	int i_min = pte_index(start);
+> +	int i_max = pte_index(end);
+> +	int i;
+> +	pte_t old, new;
+> +
+> +	for (i = i_min; i <= i_max; ++i) {
+> +		if (!pte_present(pte[i]))
+> +			continue;
+> +
+> +		old = pte[i];
+> +		new = pte_mkold(old);
+> +		if (pte_val(new) == pte_val(old))
+> +			continue;
+> +		set_pte(pte + i, new);
+> +		ret = 1;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int kvm_mkold_pmd(pmd_t *pmd, unsigned long start, unsigned long end)
+> +{
+> +	int ret = 0;
+> +	pte_t *pte;
+> +	unsigned long cur_end = ~0ul;
+> +	int i_min = pmd_index(start);
+> +	int i_max = pmd_index(end);
+> +	int i;
+> +
+> +	for (i = i_min; i <= i_max; ++i, start = 0) {
+> +		if (!pmd_present(pmd[i]))
+> +			continue;
+> +
+> +		pte = pte_offset_kernel(pmd + i, 0);
+> +		if (i == i_max)
+> +			cur_end = end;
+> +
+> +		ret |= kvm_mkold_pte(pte, start, cur_end);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int kvm_mkold_pud(pud_t *pud, unsigned long start, unsigned long end)
+> +{
+> +	int ret = 0;
+> +	pmd_t *pmd;
+> +	unsigned long cur_end = ~0ul;
+> +	int i_min = pud_index(start);
+> +	int i_max = pud_index(end);
+> +	int i;
+> +
+> +	for (i = i_min; i <= i_max; ++i, start = 0) {
+> +		if (!pud_present(pud[i]))
+> +			continue;
+> +
+> +		pmd = pmd_offset(pud + i, 0);
+> +		if (i == i_max)
+> +			cur_end = end;
+> +
+> +		ret |= kvm_mkold_pmd(pmd, start, cur_end);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int kvm_mkold_pgd(pgd_t *pgd, unsigned long start, unsigned long end)
+> +{
+> +	int ret = 0;
+> +	p4d_t *p4d;
+> +	pud_t *pud;
+> +	unsigned long cur_end = ~0ul;
+> +	int i_min = pgd_index(start);
+> +	int i_max = pgd_index(end);
+> +	int i;
+> +
+> +	for (i = i_min; i <= i_max; ++i, start = 0) {
+> +		if (!pgd_present(pgd[i]))
+> +			continue;
+> +
+> +		p4d = p4d_offset(pgd, 0);
+> +		pud = pud_offset(p4d + i, 0);
+> +		if (i == i_max)
+> +			cur_end = end;
+> +
+> +		ret |= kvm_mkold_pud(pud, start, cur_end);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range)
+> +{
+> +	unsigned long npages = 0;
+> +
+> +	kvm_flush_gpa_range(kvm, range->start, range->end, &npages);
+> +	return npages > 0;
+> +}
+> +
+> +bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> +{
+> +	gpa_t gpa = range->start << PAGE_SHIFT;
+> +	pte_t hva_pte = range->pte;
+> +	pte_t *ptep = kvm_pte_for_gpa(kvm, NULL, gpa);
+> +	pte_t old_pte;
+> +
+> +	if (!ptep)
+> +		return false;
+> +
+> +	/* Mapping may need adjusting depending on memslot flags */
+> +	old_pte = *ptep;
+> +	if (range->slot->flags & KVM_MEM_LOG_DIRTY_PAGES && !pte_dirty(old_pte))
+> +		hva_pte = pte_mkclean(hva_pte);
+> +	else if (range->slot->flags & KVM_MEM_READONLY)
+> +		hva_pte = pte_wrprotect(hva_pte);
+> +
+> +	set_pte(ptep, hva_pte);
+> +
+> +	/* Replacing an absent or old page doesn't need flushes */
+> +	if (!pte_present(old_pte) || !pte_young(old_pte))
+> +		return false;
+> +
+> +	/* Pages swapped, aged, moved, or cleaned require flushes */
+> +	return !pte_present(hva_pte) ||
+> +	       !pte_young(hva_pte) ||
+> +	       pte_pfn(old_pte) != pte_pfn(hva_pte) ||
+> +	       (pte_dirty(old_pte) && !pte_dirty(hva_pte));
+> +}
+> +
+> +bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> +{
+> +	return kvm_mkold_pgd(kvm->arch.gpa_mm.pgd, range->start << PAGE_SHIFT,
+> +				range->end << PAGE_SHIFT);
+> +}
+> +
+> +bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+> +{
+> +	gpa_t gpa = range->start << PAGE_SHIFT;
+> +	pte_t *ptep = kvm_pte_for_gpa(kvm, NULL, gpa);
+> +
+> +	if (ptep && pte_present(*ptep) && pte_young(*ptep))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +/**
+> + * kvm_map_page_fast() - Fast path GPA fault handler.
+> + * @vcpu:		VCPU pointer.
+> + * @gpa:		Guest physical address of fault.
+> + * @write:	Whether the fault was due to a write.
+> + *
+> + * Perform fast path GPA fault handling, doing all that can be done without
+> + * calling into KVM. This handles marking old pages young (for idle page
+> + * tracking), and dirtying of clean pages (for dirty page logging).
+> + *
+> + * Returns:	0 on success, in which case we can update derived mappings and
+> + *		resume guest execution.
+> + *		-EFAULT on failure due to absent GPA mapping or write to
+> + *		read-only page, in which case KVM must be consulted.
+> + */
+> +static int kvm_map_page_fast(struct kvm_vcpu *vcpu, unsigned long gpa,
+> +				   bool write)
+> +{
+> +	struct kvm *kvm = vcpu->kvm;
+> +	gfn_t gfn = gpa >> PAGE_SHIFT;
+> +	pte_t *ptep;
+> +	kvm_pfn_t pfn = 0;
+> +	bool pfn_valid = false;
+> +	int ret = 0;
+> +
+> +	spin_lock(&kvm->mmu_lock);
+> +
+> +	/* Fast path - just check GPA page table for an existing entry */
+> +	ptep = kvm_pte_for_gpa(kvm, NULL, gpa);
+> +	if (!ptep || !pte_present(*ptep)) {
+> +		ret = -EFAULT;
+> +		goto out;
+> +	}
+> +
+> +	/* Track access to pages marked old */
+> +	if (!pte_young(*ptep)) {
+> +		set_pte(ptep, pte_mkyoung(*ptep));
+> +		pfn = pte_pfn(*ptep);
+> +		pfn_valid = true;
+> +		/* call kvm_set_pfn_accessed() after unlock */
+> +	}
+> +	if (write && !pte_dirty(*ptep)) {
+> +		if (!pte_write(*ptep)) {
+> +			ret = -EFAULT;
+> +			goto out;
+> +		}
+> +
+> +		/* Track dirtying of writeable pages */
+> +		set_pte(ptep, pte_mkdirty(*ptep));
+> +		pfn = pte_pfn(*ptep);
+> +		mark_page_dirty(kvm, gfn);
+> +		kvm_set_pfn_dirty(pfn);
+> +	}
+> +
+> +out:
+> +	spin_unlock(&kvm->mmu_lock);
+> +	if (pfn_valid)
+> +		kvm_set_pfn_accessed(pfn);
+> +	return ret;
+> +}
+> +
+> +/**
+> + * kvm_map_page() - Map a guest physical page.
+> + * @vcpu:		VCPU pointer.
+> + * @gpa:		Guest physical address of fault.
+> + * @write:	Whether the fault was due to a write.
+> + *
+> + * Handle GPA faults by creating a new GPA mapping (or updating an existing
+> + * one).
+> + *
+> + * This takes care of marking pages young or dirty (idle/dirty page tracking),
+> + * asking KVM for the corresponding PFN, and creating a mapping in the GPA page
+> + * tables. Derived mappings (GVA page tables and TLBs) must be handled by the
+> + * caller.
+> + *
+> + * Returns:	0 on success
+> + *		-EFAULT if there is no memory region at @gpa or a write was
+> + *		attempted to a read-only memory region. This is usually handled
+> + *		as an MMIO access.
+> + */
+> +static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+> +{
+> +	bool writeable;
+> +	int srcu_idx, err = 0, retry_no = 0;
+> +	unsigned long hva;
+> +	unsigned long mmu_seq;
+> +	unsigned long prot_bits;
+> +	pte_t *ptep, new_pte;
+> +	kvm_pfn_t pfn;
+> +	gfn_t gfn = gpa >> PAGE_SHIFT;
+> +	struct vm_area_struct *vma;
+> +	struct kvm *kvm = vcpu->kvm;
+> +	struct kvm_memory_slot *memslot;
+> +	struct kvm_mmu_memory_cache *memcache = &vcpu->arch.mmu_page_cache;
+> +
+> +	/* Try the fast path to handle old / clean pages */
+> +	srcu_idx = srcu_read_lock(&kvm->srcu);
+> +	err = kvm_map_page_fast(vcpu, gpa, write);
+> +	if (!err)
+> +		goto out;
+> +
+> +	memslot = gfn_to_memslot(kvm, gfn);
+> +	hva = gfn_to_hva_memslot_prot(memslot, gfn, &writeable);
+> +	if (kvm_is_error_hva(hva) || (write && !writeable))
+> +		goto out;
+> +
+> +	/* Let's check if we will get back a huge page backed by hugetlbfs */
+> +	mmap_read_lock(current->mm);
+> +	vma = find_vma_intersection(current->mm, hva, hva + 1);
+> +	if (unlikely(!vma)) {
+> +		kvm_err("Failed to find VMA for hva 0x%lx\n", hva);
+> +		mmap_read_unlock(current->mm);
+> +		err = -EFAULT;
+> +		goto out;
+> +	}
+> +	mmap_read_unlock(current->mm);
+> +
+> +	/* We need a minimum of cached pages ready for page table creation */
+> +	err = kvm_mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
+> +	if (err)
+> +		goto out;
+> +
+> +retry:
+> +	/*
+> +	 * Used to check for invalidations in progress, of the pfn that is
+> +	 * returned by pfn_to_pfn_prot below.
+> +	 */
+> +	mmu_seq = kvm->mmu_invalidate_seq;
+> +	/*
+> +	 * Ensure the read of mmu_invalidate_seq isn't reordered with PTE reads in
+> +	 * gfn_to_pfn_prot() (which calls get_user_pages()), so that we don't
+> +	 * risk the page we get a reference to getting unmapped before we have a
+> +	 * chance to grab the mmu_lock without mmu_invalidate_retry() noticing.
+> +	 *
+> +	 * This smp_rmb() pairs with the effective smp_wmb() of the combination
+> +	 * of the pte_unmap_unlock() after the PTE is zapped, and the
+> +	 * spin_lock() in kvm_mmu_invalidate_invalidate_<page|range_end>() before
+> +	 * mmu_invalidate_seq is incremented.
+> +	 */
+> +	smp_rmb();
+> +
+> +	/* Slow path - ask KVM core whether we can access this GPA */
+> +	pfn = gfn_to_pfn_prot(kvm, gfn, write, &writeable);
+> +	if (is_error_noslot_pfn(pfn)) {
+> +		err = -EFAULT;
+> +		goto out;
+> +	}
+> +
+> +	spin_lock(&kvm->mmu_lock);
+> +	/* Check if an invalidation has taken place since we got pfn */
+> +	if (mmu_invalidate_retry(kvm, mmu_seq)) {
+> +		/*
+> +		 * This can happen when mappings are changed asynchronously, but
+> +		 * also synchronously if a COW is triggered by
+> +		 * gfn_to_pfn_prot().
+> +		 */
+> +		spin_unlock(&kvm->mmu_lock);
+> +		kvm_set_pfn_accessed(pfn);
+> +		kvm_release_pfn_clean(pfn);
+> +		if (retry_no > 100) {
+> +			retry_no = 0;
+> +			schedule();
+> +		}
+> +		retry_no++;
+> +		goto retry;
+> +	}
+> +
+> +	/*
+> +	 * For emulated devices such virtio device, actual cache attribute is
+> +	 * determined by physical machine.
+> +	 * For pass through physical device, it should be uncachable
+> +	 */
+> +	prot_bits = _PAGE_PRESENT | __READABLE;
+> +	if (vma->vm_flags & (VM_IO | VM_PFNMAP))
+> +		prot_bits |= _CACHE_SUC;
+> +	else
+> +		prot_bits |= _CACHE_CC;
+> +
+> +	if (writeable) {
+> +		prot_bits |= _PAGE_WRITE;
+> +		if (write) {
+> +			prot_bits |= __WRITEABLE;
+> +			mark_page_dirty(kvm, gfn);
+> +			kvm_set_pfn_dirty(pfn);
+> +		}
+> +	}
+> +
+> +	/* Ensure page tables are allocated */
+> +	ptep = kvm_pte_for_gpa(kvm, memcache, gpa);
+> +	new_pte = pfn_pte(pfn, __pgprot(prot_bits));
+> +	set_pte(ptep, new_pte);
+> +
+> +	err = 0;
+> +	spin_unlock(&kvm->mmu_lock);
+> +	kvm_release_pfn_clean(pfn);
+> +	kvm_set_pfn_accessed(pfn);
+> +out:
+> +	srcu_read_unlock(&kvm->srcu, srcu_idx);
+> +	return err;
+> +}
+> +
+> +int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
 > +{
 > +	int ret;
-> +	s64 v;
 > +
-> +	ret = _kvm_get_one_reg(vcpu, reg, &v);
+> +	ret = kvm_map_page(vcpu, gpa, write);
 > +	if (ret)
 > +		return ret;
 > +
-> +	ret = -EINVAL;
-> +	if ((reg->id & KVM_REG_SIZE_MASK) == KVM_REG_SIZE_U64) {
-> +		u64 __user *uaddr = (u64 __user *)(long)reg->addr;
-> +
-> +		ret = put_user(v, uaddr);
-> +	} else if ((reg->id & KVM_REG_SIZE_MASK) == KVM_REG_SIZE_U32) {
-> +		u32 __user *uaddr = (u32 __user *)(long)reg->addr;
-> +		u32 v32 = (u32)v;
-> +
-> +		ret = put_user(v32, uaddr);
-> +	}
-> +
-> +	return ret;
+> +	/* Invalidate this entry in the TLB */
+> +	return kvm_flush_tlb_gpa(vcpu, gpa);
 > +}
 > +
-> +static int _kvm_set_one_reg(struct kvm_vcpu *vcpu,
-> +		const struct kvm_one_reg *reg,
-> +		s64 v)
+> +void kvm_arch_sync_dirty_log(struct kvm *kvm, struct kvm_memory_slot *memslot)
 > +{
-> +	struct loongarch_csrs *csr = vcpu->arch.csr;
-> +	int ret = 0;
-> +	unsigned long flags;
-> +	u64 val;
-> +	int reg_idx;
 > +
-> +	val = v;
-> +	if ((reg->id & KVM_IOC_CSRID(0)) == KVM_IOC_CSRID(0)) {
-> +		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
-> +		ret = _kvm_setcsr(vcpu, reg_idx, &val, 0);
-> +		if (ret == 0)
-> +			return ret;
-> +	}
-> +
-> +	switch (reg->id) {
-> +	case KVM_REG_LOONGARCH_COUNTER:
-> +		local_irq_save(flags);
-> +		/*
-> +		 * gftoffset is relative with board, not vcpu
-> +		 * only set for the first time for smp system
-> +		 */
-> +		if (vcpu->vcpu_id == 0)
-> +			vcpu->kvm->arch.time_offset = (signed long)(v - drdtime());
-> +		write_csr_gcntc((ulong)vcpu->kvm->arch.time_offset);
-> +		local_irq_restore(flags);
-> +		break;
-> +	case KVM_REG_LOONGARCH_VCPU_RESET:
-> +		kvm_reset_timer(vcpu);
-> +		memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
-> +		memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
-> +		break;
-> +	default:
-> +		if ((reg->id & KVM_REG_LOONGARCH_MASK) != KVM_REG_LOONGARCH_CSR)
-> +			return -EINVAL;
-> +
-> +		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
-> +		if (reg_idx < CSR_ALL_SIZE)
-> +			kvm_write_sw_gcsr(csr, reg_idx, v);
-> +		else
-> +			return -EINVAL;
-> +	}
-> +	return ret;
 > +}
 > +
-> +static int _kvm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+> +int kvm_arch_prepare_memory_region(struct kvm *kvm,
+> +				   const struct kvm_memory_slot *old,
+> +				   struct kvm_memory_slot *new,
+> +				   enum kvm_mr_change change)
 > +{
-> +	s64 v;
-> +	int ret;
-> +
-> +	ret = -EINVAL;
-> +	if ((reg->id & KVM_REG_SIZE_MASK) == KVM_REG_SIZE_U64) {
-> +		u64 __user *uaddr;
-> +
-> +		uaddr = (u64 __user *)(long)reg->addr;
-> +		ret = get_user(v, uaddr);
-> +	} else if ((reg->id & KVM_REG_SIZE_MASK) == KVM_REG_SIZE_U32) {
-> +		u32 __user *uaddr;
-> +		s32 v32;
-> +
-> +		uaddr = (u32 __user *)(long)reg->addr;
-> +		ret = get_user(v32, uaddr);
-> +		v = (s64)v32;
-> +	}
-> +
-> +	if (ret)
-> +		return -EFAULT;
-> +
-> +	return _kvm_set_one_reg(vcpu, reg, v);
-> +}
-> +
-> +int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu,
-> +				  struct kvm_sregs *sregs)
-> +{
-> +	return -ENOIOCTLCMD;
-> +}
-> +
-> +int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu,
-> +				  struct kvm_sregs *sregs)
-> +{
-> +	return -ENOIOCTLCMD;
-> +}
-> +
-> +int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
-> +{
-> +	int i;
-> +
-> +	vcpu_load(vcpu);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
-> +		regs->gpr[i] = vcpu->arch.gprs[i];
-> +
-> +	regs->pc = vcpu->arch.pc;
-> +
-> +	vcpu_put(vcpu);
 > +	return 0;
 > +}
 > +
-> +int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+> +void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm,
+> +					const struct kvm_memory_slot *memslot)
 > +{
-> +	int i;
-> +
-> +	vcpu_load(vcpu);
-> +
-> +	for (i = 1; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
-> +		vcpu->arch.gprs[i] = regs->gpr[i];
-> +	vcpu->arch.gprs[0] = 0; /* zero is special, and cannot be set. */
-> +	vcpu->arch.pc = regs->pc;
-> +
-> +	vcpu_put(vcpu);
-> +	return 0;
+> +	kvm_flush_remote_tlbs(kvm);
 > +}
-> +
-> +long kvm_arch_vcpu_ioctl(struct file *filp,
-> +			 unsigned int ioctl, unsigned long arg)
-> +{
-> +	struct kvm_vcpu *vcpu = filp->private_data;
-> +	void __user *argp = (void __user *)arg;
-> +	long r;
-> +
-> +	vcpu_load(vcpu);
-> +
-> +	switch (ioctl) {
-> +	case KVM_SET_ONE_REG:
-> +	case KVM_GET_ONE_REG: {
-> +		struct kvm_one_reg reg;
-> +
-> +		r = -EFAULT;
-> +		if (copy_from_user(&reg, argp, sizeof(reg)))
-> +			break;
-> +		if (ioctl == KVM_SET_ONE_REG)
-> +			r = _kvm_set_reg(vcpu, &reg);
-> +		else
-> +			r = _kvm_get_reg(vcpu, &reg);
-> +		break;
-> +	}
-> +	default:
-> +		r = -ENOIOCTLCMD;
-> +		break;
-> +	}
-> +
-> +	vcpu_put(vcpu);
-> +	return r;
-> +}
-> +
->  int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
->  {
->  	return 0;
 
