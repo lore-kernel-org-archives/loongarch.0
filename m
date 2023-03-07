@@ -1,79 +1,92 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AF920EE
-	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 07:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1678175521;
-	bh=ShRPU3wNTh5O8YKgCsDckBdQYnhVkIA4cX2nF4JG1Iw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=iNiaPLkscfV4mobaxImD/omf8R8mWHLjhWPF55T0awkn/Ofr8Dbegly2c00yvlTL2
-	 aB6WsY30Yi8qNcVXBFWsFIs+FoEZ1Ujlxh5G95CVaKLjKV1dB36nLYSEtp+6V9vdln
-	 +rVxw+vuXM9ZGYxD5tVOHNYiHnDH60/JcJjekN8o=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 95F0165AB5;
-	Tue,  7 Mar 2023 02:51:58 -0500 (EST)
-Message-ID: <d3e255e4746de44c9903c4433616d44ffcf18d1b.camel@xry111.site>
-Subject: Re: [PATCH] tools/arch/loongarch: Use __SIZEOF_LONG__ to define
- __BITS_PER_LONG
-From: Xi Ruoyao <xry111@xry111.site>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>,  WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EA7420EE
+	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 07:59:10 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxrtrN7gZkUUQJAA--.206S3;
+	Tue, 07 Mar 2023 15:59:09 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxTL7K7gZkSsRNAA--.4529S2;
+	Tue, 07 Mar 2023 15:59:07 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Date: Tue, 07 Mar 2023 15:51:57 +0800
-In-Reply-To: <1678174741-19219-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1678174741-19219-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 
+Subject: [PATCH v3 RESEND] checksyscalls: Ignore fstat to silence build warning on LoongArch
+Date: Tue,  7 Mar 2023 15:59:00 +0800
+Message-Id: <1678175940-20872-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8BxTL7K7gZkSsRNAA--.4529S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7KF47Aw4DtF4kGrWfGw4DJwb_yoW8GF47p3
+	WSya40qr95GF18uw1293W3try7Awn3ArnrGFy5urs8AFZ8tan5tr9ava98GrnFvayxKa45
+	WrWkua47XFyqgFDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
+	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
+	W8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8vApUUUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
 
-On Tue, 2023-03-07 at 15:39 +0800, Tiezhu Yang wrote:
-> Although __SIZEOF_POINTER__ is equal with _SIZEOF_LONG__ on LoongArch,
-> it is better to use __SIZEOF_LONG__ to define __BITS_PER_LONG to keep
-> consistent between arch/loongarch/include/uapi/asm/bitsperlong.h and
-> tools/arch/loongarch/include/uapi/asm/bitsperlong.h.
+fstat is replaced by statx on the new architecture, so an exception
+is added to the checksyscalls script to silence the following build
+warning on LoongArch:
 
-I believe we should unify bitsperlong.h for all ports to use
-(__SIZEOF_LONG__ * 8).  Now we specify GCC >=3D 5.1 or Clang (LLVM) >=3D
-11.0.0 in min-tool-version.sh, where __SIZEOF_LONG__ is usable [1].  The
-only remaining compiler is ICC, which is deprecated and won't be
-supported for building the kernel after 6.3 [2].
+  CALL    scripts/checksyscalls.sh
+<stdin>:569:2: warning: #warning syscall fstat not implemented [-Wcpp]
 
-[1]:https://gcc.godbolt.org/z/cnvW38vj6
-[2]:https://www.phoronix.com/news/Linux-6.3-Drops-Intel-ICC
+Suggested-by: WANG Xuerui <kernel@xen0n.name>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
->=20
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
-> =C2=A0tools/arch/loongarch/include/uapi/asm/bitsperlong.h | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
-> b/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
-> index d4e32b3..00b4ba1 100644
-> --- a/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
-> +++ b/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
-> @@ -2,7 +2,7 @@
-> =C2=A0#ifndef __ASM_LOONGARCH_BITSPERLONG_H
-> =C2=A0#define __ASM_LOONGARCH_BITSPERLONG_H
-> =C2=A0
-> -#define __BITS_PER_LONG (__SIZEOF_POINTER__ * 8)
-> +#define __BITS_PER_LONG (__SIZEOF_LONG__ * 8)
-> =C2=A0
-> =C2=A0#include <asm-generic/bitsperlong.h>
-> =C2=A0
+This warning still exists when build 6.3-rc1, it looks like
+not so good, just resend the patch (2022-08-30):
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+https://lore.kernel.org/lkml/1661830021-8643-1-git-send-email-yangtiezhu@loongson.cn/
+
+ scripts/checksyscalls.sh | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/checksyscalls.sh b/scripts/checksyscalls.sh
+index f33e61a..1e5d2ee 100755
+--- a/scripts/checksyscalls.sh
++++ b/scripts/checksyscalls.sh
+@@ -114,7 +114,6 @@ cat << EOF
+ #define __IGNORE_truncate
+ #define __IGNORE_stat
+ #define __IGNORE_lstat
+-#define __IGNORE_fstat
+ #define __IGNORE_fcntl
+ #define __IGNORE_fadvise64
+ #define __IGNORE_newfstatat
+@@ -255,6 +254,9 @@ cat << EOF
+ /* 64-bit ports never needed these, and new 32-bit ports can use statx */
+ #define __IGNORE_fstat64
+ #define __IGNORE_fstatat64
++
++/* Newer ports are not required to provide fstat in favor of statx */
++#define __IGNORE_fstat
+ EOF
+ }
+ 
+-- 
+2.1.0
+
