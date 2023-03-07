@@ -1,252 +1,268 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28183C00;
-	Tue,  7 Mar 2023 12:01:00 +0000 (UTC)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PWDXl435Nz6J7Pg;
-	Tue,  7 Mar 2023 20:00:23 +0800 (CST)
-Received: from localhost (10.126.173.40) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Tue, 7 Mar
- 2023 12:00:51 +0000
-Date: Tue, 7 Mar 2023 12:00:50 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: James Morse <james.morse@arm.com>
-CC: <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<kvmarm@lists.linux.dev>, <kvm@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-ia64@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>, Marc Zyngier
-	<maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, Sudeep Holla
-	<sudeep.holla@arm.com>, Borislav Petkov <bp@alien8.de>, H Peter Anvin
-	<hpa@zytor.com>, Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar
-	<mingo@redhat.com>, Will Deacon <will@kernel.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Huacai Chen <chenhuacai@kernel.org>, Suzuki K
- Poulose <suzuki.poulose@arm.com>, "Oliver Upton" <oliver.upton@linux.dev>,
-	Len Brown <lenb@kernel.org>, Rafael Wysocki <rafael@kernel.org>, WANG Xuerui
-	<kernel@xen0n.name>, Salil Mehta <salil.mehta@huawei.com>, Russell King
-	<linux@armlinux.org.uk>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	<kangkang.shen@futurewei.com>
-Subject: Re: [RFC PATCH 00/32] ACPI/arm64: add support for virtual
- cpuhotplug
-Message-ID: <20230307120050.000032f1@Huawei.com>
-In-Reply-To: <20230203135043.409192-1-james.morse@arm.com>
-References: <20230203135043.409192-1-james.morse@arm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639F5321D
+	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 14:36:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1678199791;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=yMscSn7/v7gE6eZusBzcl4tSE2iMOh2pPYNqXPmBjFI=;
+	b=OUohGG/J1AReH1N3f63roppCEHTIvJWMC32erNzd6xvJ/34tMeNdMo1wozUgv3cRhRlEZR
+	Yo5Ws6QW0zLD4xrp3xluty7UxMqmZWi0syRUe3r0uJKkAA/zKfgFMNj0cf4fwj5qPb3Nlh
+	gehnaeNN0oniYDkjYPo8bDxdPQ09meU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-635-8Xan7_2yOZyL38nkQLtwpw-1; Tue, 07 Mar 2023 09:36:28 -0500
+X-MC-Unique: 8Xan7_2yOZyL38nkQLtwpw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2A55D185A794;
+	Tue,  7 Mar 2023 14:36:26 +0000 (UTC)
+Received: from vschneid.remote.csb (unknown [10.33.37.13])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3D43B40CF8EE;
+	Tue,  7 Mar 2023 14:36:21 +0000 (UTC)
+From: Valentin Schneider <vschneid@redhat.com>
+To: linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	openrisc@lists.librecores.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-xtensa@linux-xtensa.org,
+	x86@kernel.org
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Guo Ren <guoren@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: [PATCH v5 0/7] Generic IPI sending tracepoint
+Date: Tue,  7 Mar 2023 14:35:51 +0000
+Message-Id: <20230307143558.294354-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.173.40]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 
-On Fri,  3 Feb 2023 13:50:11 +0000
-James Morse <james.morse@arm.com> wrote:
+Background
+==========
 
+Detecting IPI *reception* is relatively easy, e.g. using
+trace_irq_handler_{entry,exit} or even just function-trace
+flush_smp_call_function_queue() for SMP calls.  
 
-...
+Figuring out their *origin*, is trickier as there is no generic tracepoint tied
+to e.g. smp_call_function():
 
-> On a system that supports cpuhotplug the MADT has to describe every possible
-> CPU at boot. Under KVM, the vGIC needs to know about every possible vCPU before
-> the guest is started.
-> With these constraints, virtual-cpuhotplug is really just a hypervisor/firmware
-> policy about which CPUs can be brought online.
-> 
-> This series adds support for virtual-cpuhotplug as exactly that: firmware
-> policy. This may even work on a physical machine too; for a guest the part of
-> firmware is played by the VMM. (typically Qemu).
-> 
-> PSCI support is modified to return 'DENIED' if the CPU can't be brought
-> online/enabled yet. The CPU object's _STA method's enabled bit is used to
-> indicate firmware's current disposition. If the CPU has its enabled bit clear,
-> it will not be registered with sysfs, and attempts to bring it online will
-> fail. The notifications that _STA has changed its value then work in the same
-> way as physical hotplug, and firmware can cause the CPU to be registered some
-> time later, allowing it to be brought online.
+o AFAIA x86 has no tracepoint tied to sending IPIs, only receiving them
+  (cf. trace_call_function{_single}_entry()).
+o arm/arm64 do have trace_ipi_raise(), which gives us the target cpus but also a
+  mostly useless string (smp_calls will all be "Function call interrupts").
+o Other architectures don't seem to have any IPI-sending related tracepoint.  
 
-Hi James,
+I believe one reason those tracepoints used by arm/arm64 ended up as they were
+is because these archs used to handle IPIs differently from regular interrupts
+(the IRQ driver would directly invoke an IPI-handling routine), which meant they 
+never showed up in trace_irq_handler_{entry, exit}. The trace_ipi_{entry,exit}
+tracepoints gave a way to trace IPI reception but those have become redundant as
+of: 
 
-As we discussed on an LOD call a while back, I think that we need some path to
-find out if the guest supports vCPU HP or not so that info can be queried by
-an orchestrator / libvirt etc.  In general the entity responsible for allocating
-extra vCPUs may not know what support the VM has for this feature.
+      56afcd3dbd19 ("ARM: Allow IPIs to be handled as normal interrupts")
+      d3afc7f12987 ("arm64: Allow IPIs to be handled as normal interrupts")
 
-There are various ways we could get this information into the VMM.
-My immediate thought is to use one of the ACPI interfaces that lets us write
-AML that can set an emulated register. A query to the VMM can check if this
-register is set.
+which gave IPIs a "proper" handler function used through
+generic_handle_domain_irq(), which makes them show up via
+trace_irq_handler_{entry, exit}.
 
-So options.
+Changing stuff up
+=================
 
-_OSI() - Deprecated on ARM64 so lets not use that ;)
-_OSC() - Could add a bit to Table 6.13 Platform-Wide Capabilites in ACPI 6.5 spec.
-         Given x86 has a similar online capable bit perhaps this is the best option
-         though it is the one that requires a formal code first proposal to ASWG.
-_OSC() - Could add a new UUID and put it under a suitable device - maybe all CPUs?
-         You could definitely argue this feature is an operating system property.
-_DSM() - Similar to OSC but always under a device.
-         Whilst can be used for this I'm not sure it really matches intended usecase.
+Per the above, it would make sense to reshuffle trace_ipi_raise() and move it
+into generic code. This also came up during Daniel's talk on Osnoise at the CPU
+isolation MC of LPC 2022 [1]. 
 
-Assuming everyone agrees this bit of introspection is useful,
-Rafael / other ACPI specialists: Any suggestions on how best to do this?
+Now, to be useful, such a tracepoint needs to export:
+o targeted CPU(s)
+o calling context
 
-Jonathan
+The only way to get the calling context with trace_ipi_raise() is to trigger a
+stack dump, e.g. $(trace-cmd -e ipi* -T echo 42).
 
+This is instead introducing a new tracepoint which exports the relevant context
+(callsite, and requested callback for when the callsite isn't helpful), and is
+usable by all architectures as it sits in generic code. 
 
+Another thing worth mentioning is that depending on the callsite, the _RET_IP_
+fed to the tracepoint is not always useful - generic_exec_single() doesn't tell
+you much about the actual callback being sent via IPI, which is why the new
+tracepoint also has a @callback argument.
 
+Patches
+=======
 
+o Patches 1-5 spread out the tracepoint across relevant sites.
+  Patch 5 ends up sprinkling lots of #include <trace/events/ipi.h> which I'm not
+  the biggest fan of, but is the least horrible solution I've been able to come
+  up with so far.
+  
+o Patch 7 is trying to be smart about tracing the callback associated with the
+  IPI.
 
-> 
-> This creates something that looks like cpuhotplug to user-space, as the sysfs
-> files appear and disappear, and the udev notifications look the same.
-> 
-> One notable difference is the CPU present mask, which is exposed via sysfs.
-> Because the CPUs remain present throughout, they can still be seen in that mask.
-> This value does get used by webbrowsers to estimate the number of CPUs
-> as the CPU online mask is constantly changed on mobile phones.
-> 
-> Linux is tolerant of PSCI returning errors, as its always been allowed to do
-> that. To avoid confusing OS that can't tolerate this, we needed an additional
-> bit in the MADT GICC flags. This series copies ACPI_MADT_ONLINE_CAPABLE, which
-> appears to be for this purpose, but calls it ACPI_MADT_GICC_CPU_CAPABLE as it
-> has a different bit position in the GICC.
-> 
-> This code is unconditionally enabled for all ACPI architectures.
-> If there are problems with firmware tables on some devices, the CPUs will
-> already be online by the time the acpi_processor_make_enabled() is called.
-> A mismatch here causes a firmware-bug message and kernel taint. This should
-> only affect people with broken firmware who also boot with maxcpus=1, and
-> bring CPUs online later.
-> 
-> I had a go at switching the remaining architectures over to GENERIC_CPU_DEVICES,
-> so that the Kconfig symbol can be removed, but I got stuck with powerpc
-> and s390.
-> 
-> 
-> The first patch has already been posted as a fix here:
-> https://www.spinics.net/lists/linux-ia64/msg21920.html
-> I've only build tested Loongarch and ia64.
-> 
-> 
-> If folk want to play along at home, you'll need a copy of Qemu that supports this.
-> https://github.com/salil-mehta/qemu.git salil/virt-cpuhp-armv8/rfc-v1-port29092022.psci.present
-> 
-> You'll need to fix the numbers of KVM_CAP_ARM_HVC_TO_USER and KVM_CAP_ARM_PSCI_TO_USER
-> to match your host kernel. Replace your '-smp' argument with something like:
-> | -smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
-> 
-> then feed the following to the Qemu montior;
-> | (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
-> | (qemu) device_del cpu1
-> 
-> 
-> This series is based on v6.2-rc3, and can be retrieved from:
-> https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/ virtual_cpu_hotplug/rfc/v1
-> 
-> 
-> Thanks,
-> 
-> James Morse (29):
->   ia64: Fix build error due to switch case label appearing next to
->     declaration
->   ACPI: Move ACPI_HOTPLUG_CPU to be enabled per architecture
->   drivers: base: Use present CPUs in GENERIC_CPU_DEVICES
->   drivers: base: Allow parts of GENERIC_CPU_DEVICES to be overridden
->   drivers: base: Move cpu_dev_init() after node_dev_init()
->   arm64: setup: Switch over to GENERIC_CPU_DEVICES using
->     arch_register_cpu()
->   ia64/topology: Switch over to GENERIC_CPU_DEVICES
->   x86/topology: Switch over to GENERIC_CPU_DEVICES
->   LoongArch: Switch over to GENERIC_CPU_DEVICES
->   arch_topology: Make register_cpu_capacity_sysctl() tolerant to late
->     CPUs
->   ACPI: processor: Add support for processors described as container
->     packages
->   ACPI: processor: Register CPUs that are online, but not described in
->     the DSDT
->   ACPI: processor: Register all CPUs from acpi_processor_get_info()
->   ACPI: Rename ACPI_HOTPLUG_CPU to include 'present'
->   ACPI: Move acpi_bus_trim_one() before acpi_scan_hot_remove()
->   ACPI: Rename acpi_processor_hotadd_init and remove pre-processor
->     guards
->   ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
->   ACPI: Check _STA present bit before making CPUs not present
->   ACPI: Warn when the present bit changes but the feature is not enabled
->   drivers: base: Implement weak arch_unregister_cpu()
->   LoongArch: Use the __weak version of arch_unregister_cpu()
->   arm64: acpi: Move get_cpu_for_acpi_id() to a header
->   ACPICA: Add new MADT GICC flags fields [code first?]
->   arm64, irqchip/gic-v3, ACPI: Move MADT GICC enabled check into a
->     helper
->   irqchip/gic-v3: Don't return errors from gic_acpi_match_gicc()
->   irqchip/gic-v3: Add support for ACPI's disabled but 'online capable'
->     CPUs
->   ACPI: add support to register CPUs based on the _STA enabled bit
->   arm64: document virtual CPU hotplug's expectations
->   cpumask: Add enabled cpumask for present CPUs that can be brought
->     online
-> 
-> Jean-Philippe Brucker (3):
->   arm64: psci: Ignore DENIED CPUs
->   KVM: arm64: Pass hypercalls to userspace
->   KVM: arm64: Pass PSCI calls to userspace
-> 
->  Documentation/arm64/cpu-hotplug.rst       |  79 ++++++++++++
->  Documentation/arm64/index.rst             |   1 +
->  Documentation/virt/kvm/api.rst            |  31 ++++-
->  Documentation/virt/kvm/arm/hypercalls.rst |   1 +
->  arch/arm64/Kconfig                        |   1 +
->  arch/arm64/include/asm/acpi.h             |  11 ++
->  arch/arm64/include/asm/cpu.h              |   1 -
->  arch/arm64/include/asm/kvm_host.h         |   2 +
->  arch/arm64/kernel/acpi_numa.c             |  11 --
->  arch/arm64/kernel/psci.c                  |   2 +-
->  arch/arm64/kernel/setup.c                 |  13 +-
->  arch/arm64/kernel/smp.c                   |   5 +-
->  arch/arm64/kvm/arm.c                      |  15 ++-
->  arch/arm64/kvm/hypercalls.c               |  28 ++++-
->  arch/arm64/kvm/psci.c                     |  13 ++
->  arch/ia64/Kconfig                         |   2 +
->  arch/ia64/include/asm/acpi.h              |   2 +-
->  arch/ia64/include/asm/cpu.h               |  11 --
->  arch/ia64/kernel/acpi.c                   |   6 +-
->  arch/ia64/kernel/setup.c                  |   2 +-
->  arch/ia64/kernel/sys_ia64.c               |   7 +-
->  arch/ia64/kernel/topology.c               |  35 +-----
->  arch/loongarch/Kconfig                    |   2 +
->  arch/loongarch/kernel/topology.c          |  31 +----
->  arch/x86/Kconfig                          |   2 +
->  arch/x86/include/asm/cpu.h                |   6 -
->  arch/x86/kernel/acpi/boot.c               |   4 +-
->  arch/x86/kernel/topology.c                |  19 +--
->  drivers/acpi/Kconfig                      |   5 +-
->  drivers/acpi/acpi_processor.c             | 146 +++++++++++++++++-----
->  drivers/acpi/processor_core.c             |   2 +-
->  drivers/acpi/scan.c                       | 116 +++++++++++------
->  drivers/base/arch_topology.c              |  38 ++++--
->  drivers/base/cpu.c                        |  31 ++++-
->  drivers/base/init.c                       |   2 +-
->  drivers/firmware/psci/psci.c              |   2 +
->  drivers/irqchip/irq-gic-v3.c              |  38 +++---
->  include/acpi/acpi_bus.h                   |   1 +
->  include/acpi/actbl2.h                     |   1 +
->  include/kvm/arm_hypercalls.h              |   1 +
->  include/kvm/arm_psci.h                    |   4 +
->  include/linux/acpi.h                      |  10 +-
->  include/linux/cpu.h                       |   6 +
->  include/linux/cpumask.h                   |  25 ++++
->  include/uapi/linux/kvm.h                  |   2 +
->  kernel/cpu.c                              |   3 +
->  46 files changed, 532 insertions(+), 244 deletions(-)
->  create mode 100644 Documentation/arm64/cpu-hotplug.rst
-> 
+This results in having IPI trace events for:
+
+o smp_call_function*()
+o smp_send_reschedule()
+o irq_work_queue*()
+o standalone uses of __smp_call_single_queue()
+
+This is incomplete, just looking at arm64 there's more IPI types that aren't
+covered: 
+
+  IPI_CPU_STOP,
+  IPI_CPU_CRASH_STOP,
+  IPI_TIMER,
+  IPI_WAKEUP,
+
+but apart from IPI_TIMER (cf. tick_broadcast()), those IPIs are both unfrequent
+and accompanied with identifiable interference (stopper or cpuhp threads being
+scheduled). I've added a point in my todolist to handle those in a later series
+for the sake of completeness, but IMO this is ready to use.
+
+Results
+=======
+
+Using a recent enough libtraceevent (1.7.0 and above):
+
+  $ trace-cmd record -e 'ipi:*' hackbench
+  $ trace-cmd report
+	 hackbench-159   [002]   136.973122: ipi_send_cpumask:     cpumask=0 callsite=generic_exec_single+0x33 callback=nohz_csd_func+0x0
+	 hackbench-159   [002]   136.977945: ipi_send_cpumask:     cpumask=0 callsite=generic_exec_single+0x33 callback=nohz_csd_func+0x0
+	 hackbench-159   [002]   136.984576: ipi_send_cpumask:     cpumask=3 callsite=check_preempt_curr+0x37 callback=0x0
+	 hackbench-159   [002]   136.985996: ipi_send_cpumask:     cpumask=0 callsite=generic_exec_single+0x33 callback=nohz_csd_func+0x0
+	 [...]
+
+Links
+=====
+
+[1]: https://youtu.be/5gT57y4OzBM?t=14234
+
+Revisions
+=========
+
+v4: https://lore.kernel.org/lkml/20230119143619.2733236-1-vschneid@redhat.com/
+v3: https://lore.kernel.org/lkml/20221202155817.2102944-1-vschneid@redhat.com/
+v2: https://lore.kernel.org/lkml/20221102182949.3119584-1-vschneid@redhat.com/
+v1: https://lore.kernel.org/lkml/20221007154145.1877054-1-vschneid@redhat.com/
+
+v5 -> v4
+++++++++
+
+o Rebased against 6.3-rc1
+
+v3 -> v4
+++++++++
+
+o Rebased against 6.2-rc4
+  Re-ran my coccinelle scripts for the treewide change; only loongarch needed
+  changes
+o Dropped cpumask trace event field patch (now in 6.2-rc1)
+o Applied RB and Ack tags
+  Ingo, I wasn't sure if you meant to Ack the whole series or just the patch you
+  replied to, so since I didn't want to unlawfully forge any tag I only added
+  the one.
+o Did a small pass on comments and changelogs
+
+v2 -> v3
+++++++++
+
+o Dropped the generic export of smp_send_reschedule(), turned it into a macro
+  and a bunch of imports
+o Dropped the send_call_function_single_ipi() macro madness, split it into sched
+  and smp bits using some of Peter's suggestions
+
+v1 -> v2
+++++++++
+
+o Ditched single-CPU tracepoint
+o Changed tracepoint signature to include callback
+o Changed tracepoint callsite field to void *; the parameter is still UL to save
+  up on casts due to using _RET_IP_.
+o Fixed linking failures due to not exporting smp_send_reschedule()
+
+Valentin Schneider (7):
+  trace: Add trace_ipi_send_cpumask()
+  sched, smp: Trace IPIs sent via send_call_function_single_ipi()
+  smp: Trace IPIs sent via arch_send_call_function_ipi_mask()
+  irq_work: Trace self-IPIs sent via arch_irq_work_raise()
+  treewide: Trace IPIs sent via smp_send_reschedule()
+  smp: reword smp call IPI comment
+  sched, smp: Trace smp callback causing an IPI
+
+ arch/alpha/kernel/smp.c                  |  2 +-
+ arch/arc/kernel/smp.c                    |  2 +-
+ arch/arm/kernel/smp.c                    |  5 +-
+ arch/arm/mach-actions/platsmp.c          |  2 +
+ arch/arm64/kernel/smp.c                  |  3 +-
+ arch/csky/kernel/smp.c                   |  2 +-
+ arch/hexagon/kernel/smp.c                |  2 +-
+ arch/ia64/kernel/smp.c                   |  4 +-
+ arch/loongarch/kernel/smp.c              |  4 +-
+ arch/mips/include/asm/smp.h              |  2 +-
+ arch/mips/kernel/rtlx-cmp.c              |  2 +
+ arch/openrisc/kernel/smp.c               |  2 +-
+ arch/parisc/kernel/smp.c                 |  4 +-
+ arch/powerpc/kernel/smp.c                |  6 +-
+ arch/powerpc/kvm/book3s_hv.c             |  3 +
+ arch/powerpc/platforms/powernv/subcore.c |  2 +
+ arch/riscv/kernel/smp.c                  |  4 +-
+ arch/s390/kernel/smp.c                   |  2 +-
+ arch/sh/kernel/smp.c                     |  2 +-
+ arch/sparc/kernel/smp_32.c               |  2 +-
+ arch/sparc/kernel/smp_64.c               |  2 +-
+ arch/x86/include/asm/smp.h               |  2 +-
+ arch/x86/kvm/svm/svm.c                   |  4 ++
+ arch/x86/kvm/x86.c                       |  2 +
+ arch/xtensa/kernel/smp.c                 |  2 +-
+ include/linux/smp.h                      | 11 +++-
+ include/trace/events/ipi.h               | 22 +++++++
+ kernel/irq_work.c                        | 14 ++++-
+ kernel/sched/core.c                      | 19 ++++--
+ kernel/sched/smp.h                       |  2 +-
+ kernel/smp.c                             | 78 +++++++++++++++++++-----
+ virt/kvm/kvm_main.c                      |  2 +
+ 32 files changed, 164 insertions(+), 53 deletions(-)
+
+--
+2.31.1
 
