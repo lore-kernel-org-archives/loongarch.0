@@ -1,69 +1,79 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7472A20EE
-	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 07:39:03 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cxf80W6gZkrUIJAA--.11784S3;
-	Tue, 07 Mar 2023 15:39:02 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxbL4V6gZkqsBNAA--.4136S2;
-	Tue, 07 Mar 2023 15:39:01 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AF920EE
+	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 07:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1678175521;
+	bh=ShRPU3wNTh5O8YKgCsDckBdQYnhVkIA4cX2nF4JG1Iw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=iNiaPLkscfV4mobaxImD/omf8R8mWHLjhWPF55T0awkn/Ofr8Dbegly2c00yvlTL2
+	 aB6WsY30Yi8qNcVXBFWsFIs+FoEZ1Ujlxh5G95CVaKLjKV1dB36nLYSEtp+6V9vdln
+	 +rVxw+vuXM9ZGYxD5tVOHNYiHnDH60/JcJjekN8o=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 95F0165AB5;
+	Tue,  7 Mar 2023 02:51:58 -0500 (EST)
+Message-ID: <d3e255e4746de44c9903c4433616d44ffcf18d1b.camel@xry111.site>
+Subject: Re: [PATCH] tools/arch/loongarch: Use __SIZEOF_LONG__ to define
+ __BITS_PER_LONG
+From: Xi Ruoyao <xry111@xry111.site>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>,  WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH] tools/arch/loongarch: Use __SIZEOF_LONG__ to define __BITS_PER_LONG
-Date: Tue,  7 Mar 2023 15:39:01 +0800
-Message-Id: <1678174741-19219-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8DxbL4V6gZkqsBNAA--.4136S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrtrW5Aw4xCFW3uw43uF1Dtrb_yoWDCrc_Zr
-	47Jw1UCr4xWF97X3y8ZrsYqr1jgay8GFnY9FnxZr13uF4Yyw48Gws7Gas2yF4q9rs0van3
-	XFWktr9Yk3yUtjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	b7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
-	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
-	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
-	4UYxBIdaVFxhVjvjDU0xZFpf9x07jOF4_UUUUU=
+Date: Tue, 07 Mar 2023 15:51:57 +0800
+In-Reply-To: <1678174741-19219-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1678174741-19219-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
 
-Although __SIZEOF_POINTER__ is equal with _SIZEOF_LONG__ on LoongArch,
-it is better to use __SIZEOF_LONG__ to define __BITS_PER_LONG to keep
-consistent between arch/loongarch/include/uapi/asm/bitsperlong.h and
-tools/arch/loongarch/include/uapi/asm/bitsperlong.h.
+On Tue, 2023-03-07 at 15:39 +0800, Tiezhu Yang wrote:
+> Although __SIZEOF_POINTER__ is equal with _SIZEOF_LONG__ on LoongArch,
+> it is better to use __SIZEOF_LONG__ to define __BITS_PER_LONG to keep
+> consistent between arch/loongarch/include/uapi/asm/bitsperlong.h and
+> tools/arch/loongarch/include/uapi/asm/bitsperlong.h.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/arch/loongarch/include/uapi/asm/bitsperlong.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I believe we should unify bitsperlong.h for all ports to use
+(__SIZEOF_LONG__ * 8).  Now we specify GCC >=3D 5.1 or Clang (LLVM) >=3D
+11.0.0 in min-tool-version.sh, where __SIZEOF_LONG__ is usable [1].  The
+only remaining compiler is ICC, which is deprecated and won't be
+supported for building the kernel after 6.3 [2].
 
-diff --git a/tools/arch/loongarch/include/uapi/asm/bitsperlong.h b/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
-index d4e32b3..00b4ba1 100644
---- a/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
-+++ b/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
-@@ -2,7 +2,7 @@
- #ifndef __ASM_LOONGARCH_BITSPERLONG_H
- #define __ASM_LOONGARCH_BITSPERLONG_H
- 
--#define __BITS_PER_LONG (__SIZEOF_POINTER__ * 8)
-+#define __BITS_PER_LONG (__SIZEOF_LONG__ * 8)
- 
- #include <asm-generic/bitsperlong.h>
- 
--- 
-2.1.0
+[1]:https://gcc.godbolt.org/z/cnvW38vj6
+[2]:https://www.phoronix.com/news/Linux-6.3-Drops-Intel-ICC
 
+>=20
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+> =C2=A0tools/arch/loongarch/include/uapi/asm/bitsperlong.h | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
+> b/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
+> index d4e32b3..00b4ba1 100644
+> --- a/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
+> +++ b/tools/arch/loongarch/include/uapi/asm/bitsperlong.h
+> @@ -2,7 +2,7 @@
+> =C2=A0#ifndef __ASM_LOONGARCH_BITSPERLONG_H
+> =C2=A0#define __ASM_LOONGARCH_BITSPERLONG_H
+> =C2=A0
+> -#define __BITS_PER_LONG (__SIZEOF_POINTER__ * 8)
+> +#define __BITS_PER_LONG (__SIZEOF_LONG__ * 8)
+> =C2=A0
+> =C2=A0#include <asm-generic/bitsperlong.h>
+> =C2=A0
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
