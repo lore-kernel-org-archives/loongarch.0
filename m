@@ -1,672 +1,508 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C253361
-	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 02:19:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0AD6C433EF;
-	Tue,  7 Mar 2023 02:19:06 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Xuerui Wang <kernel@xen0n.name>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Ming Wang <wangming01@loongson.cn>
-Subject: [PATCH] tools/perf: Add basic support for LoongArch
-Date: Tue,  7 Mar 2023 10:18:57 +0800
-Message-Id: <20230307021857.1217951-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADB74361
+	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 02:23:53 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.170])
+	by gateway (Coremail) with SMTP id _____8Axrto3oAZkcikJAA--.12S3;
+	Tue, 07 Mar 2023 10:23:51 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx6r02oAZkU3JNAA--.4220S3;
+	Tue, 07 Mar 2023 10:23:51 +0800 (CST)
+Message-ID: <221b58cc-81b6-c55a-b1eb-68947cd19c88@loongson.cn>
+Date: Tue, 7 Mar 2023 10:23:50 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v3 09/29] LoongArch: KVM: Implement vcpu get, vcpu set
+ registers
+Content-Language: en-US
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Xi Ruoyao <xry111@xry111.site>
+References: <20230228070057.3687180-1-zhaotianrui@loongson.cn>
+ <20230228070057.3687180-10-zhaotianrui@loongson.cn>
+From: maobibo <maobibo@loongson.cn>
+In-Reply-To: <20230228070057.3687180-10-zhaotianrui@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dx6r02oAZkU3JNAA--.4220S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjvAXoW3Cw18tFy5Cr4fZryxKFy3Jwb_yoW8GF4fAo
+	Z3tw48Cr4fGw12yw47tr12qay8JFyxC3Z7ZFyrZF1F9a9rtFyfXr18AayDZryfWrnxuryU
+	Ca1qga4kuaykJ3Z8n29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
+	UUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
+	0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
+	M2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
+	CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2
+	z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2
+	IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E
+	4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGw
+	C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
+	MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
+	IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E
+	87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxYiiDUUUU
 
-Add basic support for LoongArch, which is very similar to the MIPS
-version.
 
-Signed-off-by: Ming Wang <wangming01@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- .../loongarch/include/uapi/asm/perf_regs.h    | 40 +++++++++
- .../arch/loongarch/include/uapi/asm/unistd.h  |  9 ++
- tools/perf/Makefile.config                    |  7 ++
- tools/perf/arch/loongarch/Build               |  1 +
- tools/perf/arch/loongarch/Makefile            | 27 ++++++
- .../arch/loongarch/annotate/instructions.c    | 45 ++++++++++
- .../loongarch/entry/syscalls/mksyscalltbl     | 61 +++++++++++++
- .../arch/loongarch/include/dwarf-regs-table.h | 16 ++++
- tools/perf/arch/loongarch/include/perf_regs.h | 88 +++++++++++++++++++
- tools/perf/arch/loongarch/util/Build          |  4 +
- tools/perf/arch/loongarch/util/dwarf-regs.c   | 25 ++++++
- tools/perf/arch/loongarch/util/perf_regs.c    |  6 ++
- .../arch/loongarch/util/unwind-libunwind.c    | 82 +++++++++++++++++
- tools/perf/util/annotate.c                    |  8 ++
- tools/perf/util/dwarf-regs.c                  |  7 ++
- tools/perf/util/env.c                         |  2 +
- tools/perf/util/genelf.h                      |  3 +
- tools/perf/util/syscalltbl.c                  |  4 +
- 18 files changed, 435 insertions(+)
- create mode 100644 tools/arch/loongarch/include/uapi/asm/perf_regs.h
- create mode 100644 tools/arch/loongarch/include/uapi/asm/unistd.h
- create mode 100644 tools/perf/arch/loongarch/Build
- create mode 100644 tools/perf/arch/loongarch/Makefile
- create mode 100644 tools/perf/arch/loongarch/annotate/instructions.c
- create mode 100755 tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
- create mode 100644 tools/perf/arch/loongarch/include/dwarf-regs-table.h
- create mode 100644 tools/perf/arch/loongarch/include/perf_regs.h
- create mode 100644 tools/perf/arch/loongarch/util/Build
- create mode 100644 tools/perf/arch/loongarch/util/dwarf-regs.c
- create mode 100644 tools/perf/arch/loongarch/util/perf_regs.c
- create mode 100644 tools/perf/arch/loongarch/util/unwind-libunwind.c
 
-diff --git a/tools/arch/loongarch/include/uapi/asm/perf_regs.h b/tools/arch/loongarch/include/uapi/asm/perf_regs.h
-new file mode 100644
-index 000000000000..9943d418e01d
---- /dev/null
-+++ b/tools/arch/loongarch/include/uapi/asm/perf_regs.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _ASM_LOONGARCH_PERF_REGS_H
-+#define _ASM_LOONGARCH_PERF_REGS_H
-+
-+enum perf_event_loongarch_regs {
-+	PERF_REG_LOONGARCH_PC,
-+	PERF_REG_LOONGARCH_R1,
-+	PERF_REG_LOONGARCH_R2,
-+	PERF_REG_LOONGARCH_R3,
-+	PERF_REG_LOONGARCH_R4,
-+	PERF_REG_LOONGARCH_R5,
-+	PERF_REG_LOONGARCH_R6,
-+	PERF_REG_LOONGARCH_R7,
-+	PERF_REG_LOONGARCH_R8,
-+	PERF_REG_LOONGARCH_R9,
-+	PERF_REG_LOONGARCH_R10,
-+	PERF_REG_LOONGARCH_R11,
-+	PERF_REG_LOONGARCH_R12,
-+	PERF_REG_LOONGARCH_R13,
-+	PERF_REG_LOONGARCH_R14,
-+	PERF_REG_LOONGARCH_R15,
-+	PERF_REG_LOONGARCH_R16,
-+	PERF_REG_LOONGARCH_R17,
-+	PERF_REG_LOONGARCH_R18,
-+	PERF_REG_LOONGARCH_R19,
-+	PERF_REG_LOONGARCH_R20,
-+	PERF_REG_LOONGARCH_R21,
-+	PERF_REG_LOONGARCH_R22,
-+	PERF_REG_LOONGARCH_R23,
-+	PERF_REG_LOONGARCH_R24,
-+	PERF_REG_LOONGARCH_R25,
-+	PERF_REG_LOONGARCH_R26,
-+	PERF_REG_LOONGARCH_R27,
-+	PERF_REG_LOONGARCH_R28,
-+	PERF_REG_LOONGARCH_R29,
-+	PERF_REG_LOONGARCH_R30,
-+	PERF_REG_LOONGARCH_R31,
-+	PERF_REG_LOONGARCH_MAX = PERF_REG_LOONGARCH_R31 + 1,
-+};
-+#endif /* _ASM_LOONGARCH_PERF_REGS_H */
-diff --git a/tools/arch/loongarch/include/uapi/asm/unistd.h b/tools/arch/loongarch/include/uapi/asm/unistd.h
-new file mode 100644
-index 000000000000..0c743344e92d
---- /dev/null
-+++ b/tools/arch/loongarch/include/uapi/asm/unistd.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#define __ARCH_WANT_SYS_CLONE
-+#define __ARCH_WANT_SYS_CLONE3
-+
-+#include <asm-generic/unistd.h>
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 3519a0139026..89230ae68721 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -80,6 +80,13 @@ ifeq ($(SRCARCH),arm64)
-   LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
- endif
- 
-+ifeq ($(SRCARCH),loongarch)
-+  NO_PERF_REGS := 0
-+  CFLAGS += -I$(OUTPUT)arch/loongarch/include/generated
-+  CFLAGS += -I$(OUTPUT)../arch/loongarch/include/uapi
-+  LIBUNWIND_LIBS = -lunwind -lunwind-loongarch
-+endif
-+
- ifeq ($(SRCARCH),riscv)
-   NO_PERF_REGS := 0
- endif
-diff --git a/tools/perf/arch/loongarch/Build b/tools/perf/arch/loongarch/Build
-new file mode 100644
-index 000000000000..e4e5f33c84d8
---- /dev/null
-+++ b/tools/perf/arch/loongarch/Build
-@@ -0,0 +1 @@
-+perf-y += util/
-diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
-new file mode 100644
-index 000000000000..1229157b09e1
---- /dev/null
-+++ b/tools/perf/arch/loongarch/Makefile
-@@ -0,0 +1,27 @@
-+# SPDX-License-Identifier: GPL-2.0
-+ifndef NO_DWARF
-+PERF_HAVE_DWARF_REGS := 1
-+endif
-+PERF_HAVE_JITDUMP := 1
-+
-+#
-+# Syscall table generation for perf
-+#
-+
-+out    := $(OUTPUT)arch/loongarch/include/generated/asm
-+header := $(out)/syscalls_64.c
-+incpath := $(srctree)/tools
-+sysdef := $(srctree)/tools/arch/loongarch/include/uapi/asm/unistd.h
-+sysprf := $(srctree)/tools/perf/arch/loongarch/entry/syscalls/
-+systbl := $(sysprf)/mksyscalltbl
-+
-+# Create output directory if not already present
-+_dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
-+
-+$(header): $(sysdef) $(systbl)
-+	$(Q)$(SHELL) '$(systbl)' '$(CC)' '$(HOSTCC)' $(incpath) $(sysdef) > $@
-+
-+clean::
-+	$(call QUIET_CLEAN, loongarch) $(RM) $(header)
-+
-+archheaders: $(header)
-diff --git a/tools/perf/arch/loongarch/annotate/instructions.c b/tools/perf/arch/loongarch/annotate/instructions.c
-new file mode 100644
-index 000000000000..ab21bf122135
---- /dev/null
-+++ b/tools/perf/arch/loongarch/annotate/instructions.c
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Perf annotate functions.
-+ *
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
-+
-+static
-+struct ins_ops *loongarch__associate_ins_ops(struct arch *arch, const char *name)
-+{
-+	struct ins_ops *ops = NULL;
-+
-+	if (!strncmp(name, "beqz", 4) ||
-+	    !strncmp(name, "bnez", 4) ||
-+	    !strncmp(name, "beq", 3) ||
-+	    !strncmp(name, "bne", 3) ||
-+	    !strncmp(name, "blt", 3) ||
-+	    !strncmp(name, "bge", 3) ||
-+	    !strncmp(name, "bltu", 4) ||
-+	    !strncmp(name, "bgeu", 4) ||
-+	    !strncmp(name, "bl", 2))
-+		ops = &call_ops;
-+	else if (!strncmp(name, "jirl", 4))
-+		ops = &ret_ops;
-+	else if (name[0] == 'b')
-+		ops = &jump_ops;
-+	else
-+		return NULL;
-+
-+	arch__associate_ins_ops(arch, name, ops);
-+
-+	return ops;
-+}
-+
-+static
-+int loongarch__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
-+{
-+	if (!arch->initialized) {
-+		arch->associate_instruction_ops = loongarch__associate_ins_ops;
-+		arch->initialized = true;
-+		arch->objdump.comment_char = '#';
-+	}
-+
-+	return 0;
-+}
-diff --git a/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl b/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
-new file mode 100755
-index 000000000000..c52156f7204d
---- /dev/null
-+++ b/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
-@@ -0,0 +1,61 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Generate system call table for perf. Derived from
-+# powerpc script.
-+#
-+# Author(s):  Ming Wang <wangming01@loongson.cn>
-+# Author(s):  Huacai Chen <chenhuacai@loongson.cn>
-+# Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+
-+gcc=$1
-+hostcc=$2
-+incpath=$3
-+input=$4
-+
-+if ! test -r $input; then
-+	echo "Could not read input file" >&2
-+	exit 1
-+fi
-+
-+create_table_from_c()
-+{
-+	local sc nr last_sc
-+
-+	create_table_exe=`mktemp ${TMPDIR:-/tmp}/create-table-XXXXXX`
-+
-+	{
-+
-+	cat <<-_EoHEADER
-+		#include <stdio.h>
-+		#include "$input"
-+		int main(int argc, char *argv[])
-+		{
-+	_EoHEADER
-+
-+	while read sc nr; do
-+		printf "%s\n" "	printf(\"\\t[%d] = \\\"$sc\\\",\\n\", $nr);"
-+		last_sc=$nr
-+	done
-+
-+	printf "%s\n" "	printf(\"#define SYSCALLTBL_LOONGARCH_MAX_ID %d\\n\", $last_sc);"
-+	printf "}\n"
-+
-+	} | $hostcc -I $incpath/include/uapi -o $create_table_exe -x c -
-+
-+	$create_table_exe
-+
-+	rm -f $create_table_exe
-+}
-+
-+create_table()
-+{
-+	echo "static const char *syscalltbl_loongarch[] = {"
-+	create_table_from_c
-+	echo "};"
-+}
-+
-+$gcc -E -dM -x c  -I $incpath/include/uapi $input	       \
-+	|sed -ne 's/^#define __NR_//p' \
-+	|sort -t' ' -k2 -n \
-+	|create_table
-diff --git a/tools/perf/arch/loongarch/include/dwarf-regs-table.h b/tools/perf/arch/loongarch/include/dwarf-regs-table.h
-new file mode 100644
-index 000000000000..4b2291034668
---- /dev/null
-+++ b/tools/perf/arch/loongarch/include/dwarf-regs-table.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * dwarf-regs-table.h : Mapping of DWARF debug register numbers into
-+ * register names.
-+ *
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#ifdef DEFINE_DWARF_REGSTR_TABLE
-+static const char * const loongarch_regstr_tbl[] = {
-+	"$0", "$1", "$2", "$3", "$4", "$5", "$6", "$7", "$8", "$9",
-+	"$10", "$11", "$12", "$13", "$14", "$15", "$16", "$17", "$18", "$19",
-+	"$20", "$21", "$22", "$23", "$24", "$25", "$26", "$27", "$28", "%29",
-+	"$30", "$31",
-+};
-+#endif
-diff --git a/tools/perf/arch/loongarch/include/perf_regs.h b/tools/perf/arch/loongarch/include/perf_regs.h
-new file mode 100644
-index 000000000000..82d531dcd90f
---- /dev/null
-+++ b/tools/perf/arch/loongarch/include/perf_regs.h
-@@ -0,0 +1,88 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef ARCH_PERF_REGS_H
-+#define ARCH_PERF_REGS_H
-+
-+#include <stdlib.h>
-+#include <linux/types.h>
-+#include <asm/perf_regs.h>
-+
-+#define PERF_REGS_MAX PERF_REG_LOONGARCH_MAX
-+#define PERF_REG_IP PERF_REG_LOONGARCH_PC
-+#define PERF_REG_SP PERF_REG_LOONGARCH_R3
-+
-+#define PERF_REGS_MASK ((1ULL << PERF_REG_LOONGARCH_MAX) - 1)
-+
-+static inline const char *__perf_reg_name(int id)
-+{
-+	switch (id) {
-+	case PERF_REG_LOONGARCH_PC:
-+		return "PC";
-+	case PERF_REG_LOONGARCH_R1:
-+		return "$1";
-+	case PERF_REG_LOONGARCH_R2:
-+		return "$2";
-+	case PERF_REG_LOONGARCH_R3:
-+		return "$3";
-+	case PERF_REG_LOONGARCH_R4:
-+		return "$4";
-+	case PERF_REG_LOONGARCH_R5:
-+		return "$5";
-+	case PERF_REG_LOONGARCH_R6:
-+		return "$6";
-+	case PERF_REG_LOONGARCH_R7:
-+		return "$7";
-+	case PERF_REG_LOONGARCH_R8:
-+		return "$8";
-+	case PERF_REG_LOONGARCH_R9:
-+		return "$9";
-+	case PERF_REG_LOONGARCH_R10:
-+		return "$10";
-+	case PERF_REG_LOONGARCH_R11:
-+		return "$11";
-+	case PERF_REG_LOONGARCH_R12:
-+		return "$12";
-+	case PERF_REG_LOONGARCH_R13:
-+		return "$13";
-+	case PERF_REG_LOONGARCH_R14:
-+		return "$14";
-+	case PERF_REG_LOONGARCH_R15:
-+		return "$15";
-+	case PERF_REG_LOONGARCH_R16:
-+		return "$16";
-+	case PERF_REG_LOONGARCH_R17:
-+		return "$17";
-+	case PERF_REG_LOONGARCH_R18:
-+		return "$18";
-+	case PERF_REG_LOONGARCH_R19:
-+		return "$19";
-+	case PERF_REG_LOONGARCH_R20:
-+		return "$20";
-+	case PERF_REG_LOONGARCH_R21:
-+		return "$21";
-+	case PERF_REG_LOONGARCH_R22:
-+		return "$22";
-+	case PERF_REG_LOONGARCH_R23:
-+		return "$23";
-+	case PERF_REG_LOONGARCH_R24:
-+		return "$24";
-+	case PERF_REG_LOONGARCH_R25:
-+		return "$25";
-+	case PERF_REG_LOONGARCH_R26:
-+		return "$26";
-+	case PERF_REG_LOONGARCH_R27:
-+		return "$27";
-+	case PERF_REG_LOONGARCH_R28:
-+		return "$28";
-+	case PERF_REG_LOONGARCH_R29:
-+		return "$29";
-+	case PERF_REG_LOONGARCH_R30:
-+		return "$30";
-+	case PERF_REG_LOONGARCH_R31:
-+		return "$31";
-+	default:
-+		break;
-+	}
-+	return NULL;
-+}
-+
-+#endif /* ARCH_PERF_REGS_H */
-diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
-new file mode 100644
-index 000000000000..fab48acf21c5
---- /dev/null
-+++ b/tools/perf/arch/loongarch/util/Build
-@@ -0,0 +1,4 @@
-+perf-y += perf_regs.o
-+
-+perf-$(CONFIG_DWARF)     += dwarf-regs.o
-+perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
-diff --git a/tools/perf/arch/loongarch/util/dwarf-regs.c b/tools/perf/arch/loongarch/util/dwarf-regs.c
-new file mode 100644
-index 000000000000..7db14897a384
---- /dev/null
-+++ b/tools/perf/arch/loongarch/util/dwarf-regs.c
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * dwarf-regs.c : Mapping of DWARF debug register numbers into register names.
-+ *
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ *
-+ * Derived from MIPS:
-+ * Copyright (C) 2013 Cavium, Inc.
-+ */
-+
-+#include <stdio.h>
-+#include <dwarf-regs.h>
-+
-+static const char *loongarch_gpr_names[32] = {
-+	"$0", "$1", "$2", "$3", "$4", "$5", "$6", "$7", "$8", "$9",
-+	"$10", "$11", "$12", "$13", "$14", "$15", "$16", "$17", "$18", "$19",
-+	"$20", "$21", "$22", "$23", "$24", "$25", "$26", "$27", "$28", "$29",
-+	"$30", "$31"
-+};
-+
-+const char *get_arch_regstr(unsigned int n)
-+{
-+	n %= 32;
-+	return loongarch_gpr_names[n];
-+}
-diff --git a/tools/perf/arch/loongarch/util/perf_regs.c b/tools/perf/arch/loongarch/util/perf_regs.c
-new file mode 100644
-index 000000000000..2833e101a7c6
---- /dev/null
-+++ b/tools/perf/arch/loongarch/util/perf_regs.c
-@@ -0,0 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "../../../util/perf_regs.h"
-+
-+const struct sample_reg sample_reg_masks[] = {
-+	SMPL_REG_END
-+};
-diff --git a/tools/perf/arch/loongarch/util/unwind-libunwind.c b/tools/perf/arch/loongarch/util/unwind-libunwind.c
-new file mode 100644
-index 000000000000..f693167b86ef
---- /dev/null
-+++ b/tools/perf/arch/loongarch/util/unwind-libunwind.c
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <errno.h>
-+#include <libunwind.h>
-+#include "perf_regs.h"
-+#include "../../util/unwind.h"
-+#include "util/debug.h"
-+
-+int libunwind__arch_reg_id(int regnum)
-+{
-+	switch (regnum) {
-+	case UNW_LOONGARCH64_R1:
-+		return PERF_REG_LOONGARCH_R1;
-+	case UNW_LOONGARCH64_R2:
-+		return PERF_REG_LOONGARCH_R2;
-+	case UNW_LOONGARCH64_R3:
-+		return PERF_REG_LOONGARCH_R3;
-+	case UNW_LOONGARCH64_R4:
-+		return PERF_REG_LOONGARCH_R4;
-+	case UNW_LOONGARCH64_R5:
-+		return PERF_REG_LOONGARCH_R5;
-+	case UNW_LOONGARCH64_R6:
-+		return PERF_REG_LOONGARCH_R6;
-+	case UNW_LOONGARCH64_R7:
-+		return PERF_REG_LOONGARCH_R7;
-+	case UNW_LOONGARCH64_R8:
-+		return PERF_REG_LOONGARCH_R8;
-+	case UNW_LOONGARCH64_R9:
-+		return PERF_REG_LOONGARCH_R9;
-+	case UNW_LOONGARCH64_R10:
-+		return PERF_REG_LOONGARCH_R10;
-+	case UNW_LOONGARCH64_R11:
-+		return PERF_REG_LOONGARCH_R11;
-+	case UNW_LOONGARCH64_R12:
-+		return PERF_REG_LOONGARCH_R12;
-+	case UNW_LOONGARCH64_R13:
-+		return PERF_REG_LOONGARCH_R13;
-+	case UNW_LOONGARCH64_R14:
-+		return PERF_REG_LOONGARCH_R14;
-+	case UNW_LOONGARCH64_R15:
-+		return PERF_REG_LOONGARCH_R15;
-+	case UNW_LOONGARCH64_R16:
-+		return PERF_REG_LOONGARCH_R16;
-+	case UNW_LOONGARCH64_R17:
-+		return PERF_REG_LOONGARCH_R17;
-+	case UNW_LOONGARCH64_R18:
-+		return PERF_REG_LOONGARCH_R18;
-+	case UNW_LOONGARCH64_R19:
-+		return PERF_REG_LOONGARCH_R19;
-+	case UNW_LOONGARCH64_R20:
-+		return PERF_REG_LOONGARCH_R20;
-+	case UNW_LOONGARCH64_R21:
-+		return PERF_REG_LOONGARCH_R21;
-+	case UNW_LOONGARCH64_R22:
-+		return PERF_REG_LOONGARCH_R22;
-+	case UNW_LOONGARCH64_R23:
-+		return PERF_REG_LOONGARCH_R23;
-+	case UNW_LOONGARCH64_R24:
-+		return PERF_REG_LOONGARCH_R24;
-+	case UNW_LOONGARCH64_R25:
-+		return PERF_REG_LOONGARCH_R25;
-+	case UNW_LOONGARCH64_R26:
-+		return PERF_REG_LOONGARCH_R26;
-+	case UNW_LOONGARCH64_R27:
-+		return PERF_REG_LOONGARCH_R27;
-+	case UNW_LOONGARCH64_R28:
-+		return PERF_REG_LOONGARCH_R28;
-+	case UNW_LOONGARCH64_R29:
-+		return PERF_REG_LOONGARCH_R29;
-+	case UNW_LOONGARCH64_R30:
-+		return PERF_REG_LOONGARCH_R30;
-+	case UNW_LOONGARCH64_R31:
-+		return PERF_REG_LOONGARCH_R31;
-+	case UNW_LOONGARCH64_PC:
-+		return PERF_REG_LOONGARCH_PC;
-+	default:
-+		pr_err("unwind: invalid reg id %d\n", regnum);
-+		return -EINVAL;
-+	}
-+
-+	return -EINVAL;
-+}
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index db475e44f42f..0cc7710f32da 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -149,6 +149,7 @@ static int arch__associate_ins_ops(struct arch* arch, const char *name, struct i
- #include "arch/arm/annotate/instructions.c"
- #include "arch/arm64/annotate/instructions.c"
- #include "arch/csky/annotate/instructions.c"
-+#include "arch/loongarch/annotate/instructions.c"
- #include "arch/mips/annotate/instructions.c"
- #include "arch/x86/annotate/instructions.c"
- #include "arch/powerpc/annotate/instructions.c"
-@@ -211,6 +212,13 @@ static struct arch architectures[] = {
- 			.comment_char = '#',
- 		},
- 	},
-+	{
-+		.name = "loongarch",
-+		.init = loongarch__annotate_init,
-+		.objdump = {
-+			.comment_char = '#',
-+		},
-+	},
- };
- 
- static void ins__delete(struct ins_operands *ops)
-diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
-index 3fa4486742cd..69cfaa5953bf 100644
---- a/tools/perf/util/dwarf-regs.c
-+++ b/tools/perf/util/dwarf-regs.c
-@@ -14,6 +14,10 @@
- #define EM_AARCH64	183  /* ARM 64 bit */
- #endif
- 
-+#ifndef EM_LOONGARCH
-+#define EM_LOONGARCH	258 /* LoongArch */
-+#endif
-+
- /* Define const char * {arch}_register_tbl[] */
- #define DEFINE_DWARF_REGSTR_TABLE
- #include "../arch/x86/include/dwarf-regs-table.h"
-@@ -25,6 +29,7 @@
- #include "../arch/sparc/include/dwarf-regs-table.h"
- #include "../arch/xtensa/include/dwarf-regs-table.h"
- #include "../arch/mips/include/dwarf-regs-table.h"
-+#include "../arch/loongarch/include/dwarf-regs-table.h"
- 
- #define __get_dwarf_regstr(tbl, n) (((n) < ARRAY_SIZE(tbl)) ? (tbl)[(n)] : NULL)
- 
-@@ -56,6 +61,8 @@ const char *get_dwarf_regstr(unsigned int n, unsigned int machine)
- 		return __get_dwarf_regstr(xtensa_regstr_tbl, n);
- 	case EM_MIPS:
- 		return __get_dwarf_regstr(mips_regstr_tbl, n);
-+	case EM_LOONGARCH:
-+		return __get_dwarf_regstr(loongarch_regstr_tbl, n);
- 	default:
- 		pr_err("ELF MACHINE %x is not supported.\n", machine);
- 	}
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 5b8cf6a421a4..0d5d40cb997b 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -435,6 +435,8 @@ static const char *normalize_arch(char *arch)
- 		return "mips";
- 	if (!strncmp(arch, "sh", 2) && isdigit(arch[2]))
- 		return "sh";
-+	if (!strncmp(arch, "loongarch", 9))
-+		return "loongarch";
- 
- 	return arch;
- }
-diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
-index 6af062d1c452..5f18d20ea903 100644
---- a/tools/perf/util/genelf.h
-+++ b/tools/perf/util/genelf.h
-@@ -43,6 +43,9 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
- #elif defined(__riscv) && __riscv_xlen == 64
- #define GEN_ELF_ARCH	EM_RISCV
- #define GEN_ELF_CLASS	ELFCLASS64
-+#elif defined(__loongarch__)
-+#define GEN_ELF_ARCH	EM_LOONGARCH
-+#define GEN_ELF_CLASS	ELFCLASS64
- #else
- #error "unsupported architecture"
- #endif
-diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
-index a2e906858891..313eccef6cb4 100644
---- a/tools/perf/util/syscalltbl.c
-+++ b/tools/perf/util/syscalltbl.c
-@@ -38,6 +38,10 @@ static const char **syscalltbl_native = syscalltbl_arm64;
- #include <asm/syscalls_n64.c>
- const int syscalltbl_native_max_id = SYSCALLTBL_MIPS_N64_MAX_ID;
- static const char **syscalltbl_native = syscalltbl_mips_n64;
-+#elif defined(__loongarch__)
-+#include <asm/syscalls.c>
-+const int syscalltbl_native_max_id = SYSCALLTBL_LOONGARCH_MAX_ID;
-+static const char **syscalltbl_native = syscalltbl_loongarch;
- #endif
- 
- struct syscall {
--- 
-2.39.1
+在 2023/2/28 15:00, Tianrui Zhao 写道:
+> Implement loongarch vcpu get registers and set registers operations, it
+> is called when user space use the ioctl interface to get or set regs.
+> 
+> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+> ---
+>  arch/loongarch/kvm/vcpu.c | 375 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 375 insertions(+)
+> 
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index e16b7ca852e3..dce89ace2750 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -13,6 +13,381 @@
+>  #define CREATE_TRACE_POINTS
+>  #include "trace.h"
+>  
+> +int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force)
+> +{
+> +	struct loongarch_csrs *csr = vcpu->arch.csr;
+> +
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_CRMD, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_PRMD, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_EUEN, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_MISC, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_ECFG, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_ESTAT, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_ERA, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_BADV, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_BADI, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_EENTRY, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBIDX, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBEHI, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBELO0, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBELO1, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_ASID, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_PGDL, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_PGDH, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_PWCTL0, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_PWCTL1, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_STLBPGSIZE, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_RVACFG, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_CPUID, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_PRCFG1, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_PRCFG2, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_PRCFG3, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS0, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS1, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS2, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS3, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS4, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS5, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS6, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_KS7, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TMID, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TCFG, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TVAL, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_CNTC, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_LLBCTL, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRENTRY, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRBADV, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRERA, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRSAVE, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRELO0, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRELO1, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBREHI, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_TLBRPRMD, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_DMWIN0, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_DMWIN1, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_DMWIN2, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_DMWIN3, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_MWPS, v);
+> +	GET_HW_GCSR(id, LOONGARCH_CSR_FWPS, v);
+
+#define GET_HW_GCSR(id, csrid, v)                               \
+        do {                                                    \
+                if (csrid == id) {                              \
+                        *v = (long)kvm_read_hw_gcsr(csrid);     \
+                        return 0;                               \
+                }                                               \
+        } while (0)
+
+With expanded macro, this piece of code shows like this:
+        if (LOONGARCH_CSR_CRMD == id) {
+              *v = (long)kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD);
+              return 0;
+        }
+        if (LOONGARCH_CSR_PRMD == id) {
+              *v = (long)kvm_read_hw_gcsr(LOONGARCH_CSR_PRMD);
+              return 0;
+        }
+        if (LOONGARCH_CSR_EUEN == id) {
+              *v = (long)kvm_read_hw_gcsr(LOONGARCH_CSR_EUEN);
+              return 0;
+        }
+        ...
+
+It is strange since macro kvm_read_hw_gcsr must be constant variable.
+Can we define generic csr reading function like this?
+SYM_CODE_START(kvm_csrread)
+    ldpcrel t0, 0f
+    multi.d a0, a0, CSRFUNC_SIZE
+    add.d   t0, t0, a0
+    jirl    r0, t0, 0
+
+    csrnum=0
+    .rept NR_CSR_NUM
+0 :
+        csrread  a0, csrnum
+        jirl    r0, ra, 0
+        /* Ensure that the above is CSRFUNC_ALIGN bytes max */
+        .fill 0b + CSRFUNC_SIZE - ., 1, 0xcc
+        csrnum = csrnum+1
+    .endr
+SYM_CODE_END(kvm_csrread)
+
+Wit this function, only one sentence can be used here.
+   v = kvm_csrread(id);
+
+
+Regards
+Bibo, mao
+
+
+
+
+
+> +
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_IMPCTL1, v);
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_IMPCTL2, v);
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRCTL, v);
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRINFO1, v);
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRINFO2, v);
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRENTRY, v);
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRERA, v);
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRSAVE, v);
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_CTAG, v);
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_DEBUG, v);
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_DERA, v);
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_DESAVE, v);
+> +
+> +	GET_SW_GCSR(csr, id, LOONGARCH_CSR_TINTCLR, v);
+> +
+> +	if (force && (id < CSR_ALL_SIZE)) {
+> +		*v = kvm_read_sw_gcsr(csr, id);
+> +		return 0;
+> +	}
+> +
+> +	return -1;
+> +}
+> +
+> +int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v, int force)
+> +{
+> +	struct loongarch_csrs *csr = vcpu->arch.csr;
+> +	int ret;
+> +
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_CRMD, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PRMD, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_EUEN, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_MISC, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_ECFG, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_ERA, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_BADV, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_BADI, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_EENTRY, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBIDX, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBEHI, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBELO0, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBELO1, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_ASID, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PGDL, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PGDH, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PWCTL0, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_PWCTL1, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_STLBPGSIZE, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_RVACFG, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_CPUID, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS0, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS1, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS2, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS3, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS4, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS5, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS6, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_KS7, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TMID, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TCFG, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TVAL, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_CNTC, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_LLBCTL, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRENTRY, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRBADV, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRERA, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRSAVE, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRELO0, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRELO1, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBREHI, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_TLBRPRMD, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_DMWIN0, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_DMWIN1, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_DMWIN2, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_DMWIN3, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_MWPS, v);
+> +	SET_HW_GCSR(csr, id, LOONGARCH_CSR_FWPS, v);
+> +
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_IMPCTL1, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_IMPCTL2, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRCTL, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRINFO1, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRINFO2, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRENTRY, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRERA, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_MERRSAVE, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_CTAG, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_DEBUG, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_DERA, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_DESAVE, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_PRCFG1, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_PRCFG2, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_PRCFG3, v);
+> +
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_PGD, v);
+> +	SET_SW_GCSR(csr, id, LOONGARCH_CSR_TINTCLR, v);
+> +
+> +	ret = -1;
+> +	switch (id) {
+> +	case LOONGARCH_CSR_ESTAT:
+> +		write_gcsr_estat(*v);
+> +		/* estat IP0~IP7 inject through guestexcept */
+> +		write_csr_gintc(((*v) >> 2)  & 0xff);
+> +		ret = 0;
+> +		break;
+> +	default:
+> +		if (force && (id < CSR_ALL_SIZE)) {
+> +			kvm_set_sw_gcsr(csr, id, *v);
+> +			ret = 0;
+> +		}
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int _kvm_get_one_reg(struct kvm_vcpu *vcpu,
+> +		const struct kvm_one_reg *reg, s64 *v)
+> +{
+> +	struct loongarch_csrs *csr = vcpu->arch.csr;
+> +	int reg_idx, ret;
+> +
+> +	if ((reg->id & KVM_IOC_CSRID(0)) == KVM_IOC_CSRID(0)) {
+> +		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
+> +		ret = _kvm_getcsr(vcpu, reg_idx, v, 0);
+> +		if (ret == 0)
+> +			return ret;
+> +	}
+> +
+> +	switch (reg->id) {
+> +	case KVM_REG_LOONGARCH_COUNTER:
+> +		*v = drdtime() + vcpu->kvm->arch.time_offset;
+> +		break;
+> +	default:
+> +		if ((reg->id & KVM_REG_LOONGARCH_MASK) != KVM_REG_LOONGARCH_CSR)
+> +			return -EINVAL;
+> +
+> +		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
+> +		if (reg_idx < CSR_ALL_SIZE)
+> +			*v = kvm_read_sw_gcsr(csr, reg_idx);
+> +		else
+> +			return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int _kvm_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+> +{
+> +	int ret;
+> +	s64 v;
+> +
+> +	ret = _kvm_get_one_reg(vcpu, reg, &v);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = -EINVAL;
+> +	if ((reg->id & KVM_REG_SIZE_MASK) == KVM_REG_SIZE_U64) {
+> +		u64 __user *uaddr = (u64 __user *)(long)reg->addr;
+> +
+> +		ret = put_user(v, uaddr);
+> +	} else if ((reg->id & KVM_REG_SIZE_MASK) == KVM_REG_SIZE_U32) {
+> +		u32 __user *uaddr = (u32 __user *)(long)reg->addr;
+> +		u32 v32 = (u32)v;
+> +
+> +		ret = put_user(v32, uaddr);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int _kvm_set_one_reg(struct kvm_vcpu *vcpu,
+> +		const struct kvm_one_reg *reg,
+> +		s64 v)
+> +{
+> +	struct loongarch_csrs *csr = vcpu->arch.csr;
+> +	int ret = 0;
+> +	unsigned long flags;
+> +	u64 val;
+> +	int reg_idx;
+> +
+> +	val = v;
+> +	if ((reg->id & KVM_IOC_CSRID(0)) == KVM_IOC_CSRID(0)) {
+> +		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
+> +		ret = _kvm_setcsr(vcpu, reg_idx, &val, 0);
+> +		if (ret == 0)
+> +			return ret;
+> +	}
+> +
+> +	switch (reg->id) {
+> +	case KVM_REG_LOONGARCH_COUNTER:
+> +		local_irq_save(flags);
+> +		/*
+> +		 * gftoffset is relative with board, not vcpu
+> +		 * only set for the first time for smp system
+> +		 */
+> +		if (vcpu->vcpu_id == 0)
+> +			vcpu->kvm->arch.time_offset = (signed long)(v - drdtime());
+> +		write_csr_gcntc((ulong)vcpu->kvm->arch.time_offset);
+> +		local_irq_restore(flags);
+> +		break;
+> +	case KVM_REG_LOONGARCH_VCPU_RESET:
+> +		kvm_reset_timer(vcpu);
+> +		memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
+> +		memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
+> +		break;
+> +	default:
+> +		if ((reg->id & KVM_REG_LOONGARCH_MASK) != KVM_REG_LOONGARCH_CSR)
+> +			return -EINVAL;
+> +
+> +		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
+> +		if (reg_idx < CSR_ALL_SIZE)
+> +			kvm_write_sw_gcsr(csr, reg_idx, v);
+> +		else
+> +			return -EINVAL;
+> +	}
+> +	return ret;
+> +}
+> +
+> +static int _kvm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
+> +{
+> +	s64 v;
+> +	int ret;
+> +
+> +	ret = -EINVAL;
+> +	if ((reg->id & KVM_REG_SIZE_MASK) == KVM_REG_SIZE_U64) {
+> +		u64 __user *uaddr;
+> +
+> +		uaddr = (u64 __user *)(long)reg->addr;
+> +		ret = get_user(v, uaddr);
+> +	} else if ((reg->id & KVM_REG_SIZE_MASK) == KVM_REG_SIZE_U32) {
+> +		u32 __user *uaddr;
+> +		s32 v32;
+> +
+> +		uaddr = (u32 __user *)(long)reg->addr;
+> +		ret = get_user(v32, uaddr);
+> +		v = (s64)v32;
+> +	}
+> +
+> +	if (ret)
+> +		return -EFAULT;
+> +
+> +	return _kvm_set_one_reg(vcpu, reg, v);
+> +}
+> +
+> +int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu,
+> +				  struct kvm_sregs *sregs)
+> +{
+> +	return -ENOIOCTLCMD;
+> +}
+> +
+> +int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu,
+> +				  struct kvm_sregs *sregs)
+> +{
+> +	return -ENOIOCTLCMD;
+> +}
+> +
+> +int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+> +{
+> +	int i;
+> +
+> +	vcpu_load(vcpu);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
+> +		regs->gpr[i] = vcpu->arch.gprs[i];
+> +
+> +	regs->pc = vcpu->arch.pc;
+> +
+> +	vcpu_put(vcpu);
+> +	return 0;
+> +}
+> +
+> +int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+> +{
+> +	int i;
+> +
+> +	vcpu_load(vcpu);
+> +
+> +	for (i = 1; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
+> +		vcpu->arch.gprs[i] = regs->gpr[i];
+> +	vcpu->arch.gprs[0] = 0; /* zero is special, and cannot be set. */
+> +	vcpu->arch.pc = regs->pc;
+> +
+> +	vcpu_put(vcpu);
+> +	return 0;
+> +}
+> +
+> +long kvm_arch_vcpu_ioctl(struct file *filp,
+> +			 unsigned int ioctl, unsigned long arg)
+> +{
+> +	struct kvm_vcpu *vcpu = filp->private_data;
+> +	void __user *argp = (void __user *)arg;
+> +	long r;
+> +
+> +	vcpu_load(vcpu);
+> +
+> +	switch (ioctl) {
+> +	case KVM_SET_ONE_REG:
+> +	case KVM_GET_ONE_REG: {
+> +		struct kvm_one_reg reg;
+> +
+> +		r = -EFAULT;
+> +		if (copy_from_user(&reg, argp, sizeof(reg)))
+> +			break;
+> +		if (ioctl == KVM_SET_ONE_REG)
+> +			r = _kvm_set_reg(vcpu, &reg);
+> +		else
+> +			r = _kvm_get_reg(vcpu, &reg);
+> +		break;
+> +	}
+> +	default:
+> +		r = -ENOIOCTLCMD;
+> +		break;
+> +	}
+> +
+> +	vcpu_put(vcpu);
+> +	return r;
+> +}
+> +
+>  int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+>  {
+>  	return 0;
 
