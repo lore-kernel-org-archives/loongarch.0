@@ -1,127 +1,252 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A66333D2
-	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 10:57:35 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxAf+eGAdkFVMJAA--.12143S3;
-	Tue, 07 Mar 2023 18:57:34 +0800 (CST)
-Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtOWdGAdk1vFNAA--.36843S2;
-	Tue, 07 Mar 2023 18:57:33 +0800 (CST)
-From: Youling Tang <tangyouling@loongson.cn>
-To: Huacai Chen <chenhuacai@loongson.cn>,
-	Ard Biesheuvel <ardb@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	linux-efi@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH] efistub: LoongArch: Reimplement kernel_entry_address()
-Date: Tue,  7 Mar 2023 18:57:33 +0800
-Message-Id: <1678186653-27659-1-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8BxtOWdGAdk1vFNAA--.36843S2
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXryftw1rCrWkXr48Xw1kZrb_yoW5Aw47pa
-	s0yrsxCF4ft3yfCaykAw15uFy5X3Z7KFyagF9Fk34F93W3XF1DZrWFgr98WFyDZ3y0q3ya
-	qr1YyFnFk3WUJw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
-	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
-	4UYxBIdaVFxhVjvjDU0xZFpf9x07jOuc_UUUUU=
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28183C00;
+	Tue,  7 Mar 2023 12:01:00 +0000 (UTC)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PWDXl435Nz6J7Pg;
+	Tue,  7 Mar 2023 20:00:23 +0800 (CST)
+Received: from localhost (10.126.173.40) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Tue, 7 Mar
+ 2023 12:00:51 +0000
+Date: Tue, 7 Mar 2023 12:00:50 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: James Morse <james.morse@arm.com>
+CC: <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<kvmarm@lists.linux.dev>, <kvm@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-ia64@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>, Marc Zyngier
+	<maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, Sudeep Holla
+	<sudeep.holla@arm.com>, Borislav Petkov <bp@alien8.de>, H Peter Anvin
+	<hpa@zytor.com>, Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar
+	<mingo@redhat.com>, Will Deacon <will@kernel.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Huacai Chen <chenhuacai@kernel.org>, Suzuki K
+ Poulose <suzuki.poulose@arm.com>, "Oliver Upton" <oliver.upton@linux.dev>,
+	Len Brown <lenb@kernel.org>, Rafael Wysocki <rafael@kernel.org>, WANG Xuerui
+	<kernel@xen0n.name>, Salil Mehta <salil.mehta@huawei.com>, Russell King
+	<linux@armlinux.org.uk>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	<kangkang.shen@futurewei.com>
+Subject: Re: [RFC PATCH 00/32] ACPI/arm64: add support for virtual
+ cpuhotplug
+Message-ID: <20230307120050.000032f1@Huawei.com>
+In-Reply-To: <20230203135043.409192-1-james.morse@arm.com>
+References: <20230203135043.409192-1-james.morse@arm.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.126.173.40]
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 
-When EFI_KIMG_PREFERRED_ADDRESS is not equal to PHYS_LINK_KADDR, we
-should not jump to the link address but the actual load address, so
-fix the processing of kernel_entry_address().
+On Fri,  3 Feb 2023 13:50:11 +0000
+James Morse <james.morse@arm.com> wrote:
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
-- EFI_KIMG_PREFERRED_ADDRESS = PHYS_LINK_KADDR:
-/ # cat /proc/iomem 
-00000000-0fffffff : System RAM
-  00000000-001fffff : Reserved
-  00200000-0113ffff : Kernel code
-  01140000-01a0e5ff : Kernel data
-  01a0e600-01b0b337 : Kernel bss
 
-- EFI_KIMG_PREFERRED_ADDRESS = PHYS_LINK_KADDR + 0x4000000 (Enable CONFIG_RELOCATABLE):
- # cat /proc/iomem 
-00000000-0fffffff : System RAM
-  00000000-041fffff : Reserved
-  04200000-0513ffff : Kernel code
-  05140000-05a0e5ff : Kernel data
-  05a0e600-05b0b337 : Kernel bss
+...
 
- arch/loongarch/include/asm/efi.h              |  2 --
- drivers/firmware/efi/libstub/loongarch-stub.c |  7 -------
- drivers/firmware/efi/libstub/loongarch.c      | 14 ++++++++++++--
- 3 files changed, 12 insertions(+), 11 deletions(-)
+> On a system that supports cpuhotplug the MADT has to describe every possible
+> CPU at boot. Under KVM, the vGIC needs to know about every possible vCPU before
+> the guest is started.
+> With these constraints, virtual-cpuhotplug is really just a hypervisor/firmware
+> policy about which CPUs can be brought online.
+> 
+> This series adds support for virtual-cpuhotplug as exactly that: firmware
+> policy. This may even work on a physical machine too; for a guest the part of
+> firmware is played by the VMM. (typically Qemu).
+> 
+> PSCI support is modified to return 'DENIED' if the CPU can't be brought
+> online/enabled yet. The CPU object's _STA method's enabled bit is used to
+> indicate firmware's current disposition. If the CPU has its enabled bit clear,
+> it will not be registered with sysfs, and attempts to bring it online will
+> fail. The notifications that _STA has changed its value then work in the same
+> way as physical hotplug, and firmware can cause the CPU to be registered some
+> time later, allowing it to be brought online.
 
-diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/asm/efi.h
-index 091897d40b03..eddc8e79b3fa 100644
---- a/arch/loongarch/include/asm/efi.h
-+++ b/arch/loongarch/include/asm/efi.h
-@@ -32,6 +32,4 @@ static inline unsigned long efi_get_kimg_min_align(void)
- 
- #define EFI_KIMG_PREFERRED_ADDRESS	PHYSADDR(VMLINUX_LOAD_ADDRESS)
- 
--unsigned long kernel_entry_address(void);
--
- #endif /* _ASM_LOONGARCH_EFI_H */
-diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/drivers/firmware/efi/libstub/loongarch-stub.c
-index eee7ed43cdfb..71d178f87274 100644
---- a/drivers/firmware/efi/libstub/loongarch-stub.c
-+++ b/drivers/firmware/efi/libstub/loongarch-stub.c
-@@ -44,10 +44,3 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
- 
- 	return status;
- }
--
--unsigned long kernel_entry_address(void)
--{
--	unsigned long base = (unsigned long)&kernel_offset - kernel_offset;
--
--	return (unsigned long)&kernel_entry - base + VMLINUX_LOAD_ADDRESS;
--}
-diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/efi/libstub/loongarch.c
-index 807cba2693fc..79fa16a765ce 100644
---- a/drivers/firmware/efi/libstub/loongarch.c
-+++ b/drivers/firmware/efi/libstub/loongarch.c
-@@ -37,9 +37,19 @@ static efi_status_t exit_boot_func(struct efi_boot_memmap *map, void *priv)
- 	return EFI_SUCCESS;
- }
- 
--unsigned long __weak kernel_entry_address(void)
-+/*
-+ * Get the offset of EFI_KIMG_PREFERRED_ADDRESS relative to the physical
-+ * link address.
-+ */
-+static long get_kernel_offset(void)
-+{
-+	return EFI_KIMG_PREFERRED_ADDRESS - PHYS_LINK_KADDR;
-+}
-+
-+unsigned long kernel_entry_address(void)
- {
--	return *(unsigned long *)(PHYSADDR(VMLINUX_LOAD_ADDRESS) + 8);
-+	return *(unsigned long *)(EFI_KIMG_PREFERRED_ADDRESS + 8) +
-+		get_kernel_offset();
- }
- 
- efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
--- 
-2.37.3
+Hi James,
+
+As we discussed on an LOD call a while back, I think that we need some path to
+find out if the guest supports vCPU HP or not so that info can be queried by
+an orchestrator / libvirt etc.  In general the entity responsible for allocating
+extra vCPUs may not know what support the VM has for this feature.
+
+There are various ways we could get this information into the VMM.
+My immediate thought is to use one of the ACPI interfaces that lets us write
+AML that can set an emulated register. A query to the VMM can check if this
+register is set.
+
+So options.
+
+_OSI() - Deprecated on ARM64 so lets not use that ;)
+_OSC() - Could add a bit to Table 6.13 Platform-Wide Capabilites in ACPI 6.5 spec.
+         Given x86 has a similar online capable bit perhaps this is the best option
+         though it is the one that requires a formal code first proposal to ASWG.
+_OSC() - Could add a new UUID and put it under a suitable device - maybe all CPUs?
+         You could definitely argue this feature is an operating system property.
+_DSM() - Similar to OSC but always under a device.
+         Whilst can be used for this I'm not sure it really matches intended usecase.
+
+Assuming everyone agrees this bit of introspection is useful,
+Rafael / other ACPI specialists: Any suggestions on how best to do this?
+
+Jonathan
+
+
+
+
+
+> 
+> This creates something that looks like cpuhotplug to user-space, as the sysfs
+> files appear and disappear, and the udev notifications look the same.
+> 
+> One notable difference is the CPU present mask, which is exposed via sysfs.
+> Because the CPUs remain present throughout, they can still be seen in that mask.
+> This value does get used by webbrowsers to estimate the number of CPUs
+> as the CPU online mask is constantly changed on mobile phones.
+> 
+> Linux is tolerant of PSCI returning errors, as its always been allowed to do
+> that. To avoid confusing OS that can't tolerate this, we needed an additional
+> bit in the MADT GICC flags. This series copies ACPI_MADT_ONLINE_CAPABLE, which
+> appears to be for this purpose, but calls it ACPI_MADT_GICC_CPU_CAPABLE as it
+> has a different bit position in the GICC.
+> 
+> This code is unconditionally enabled for all ACPI architectures.
+> If there are problems with firmware tables on some devices, the CPUs will
+> already be online by the time the acpi_processor_make_enabled() is called.
+> A mismatch here causes a firmware-bug message and kernel taint. This should
+> only affect people with broken firmware who also boot with maxcpus=1, and
+> bring CPUs online later.
+> 
+> I had a go at switching the remaining architectures over to GENERIC_CPU_DEVICES,
+> so that the Kconfig symbol can be removed, but I got stuck with powerpc
+> and s390.
+> 
+> 
+> The first patch has already been posted as a fix here:
+> https://www.spinics.net/lists/linux-ia64/msg21920.html
+> I've only build tested Loongarch and ia64.
+> 
+> 
+> If folk want to play along at home, you'll need a copy of Qemu that supports this.
+> https://github.com/salil-mehta/qemu.git salil/virt-cpuhp-armv8/rfc-v1-port29092022.psci.present
+> 
+> You'll need to fix the numbers of KVM_CAP_ARM_HVC_TO_USER and KVM_CAP_ARM_PSCI_TO_USER
+> to match your host kernel. Replace your '-smp' argument with something like:
+> | -smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
+> 
+> then feed the following to the Qemu montior;
+> | (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
+> | (qemu) device_del cpu1
+> 
+> 
+> This series is based on v6.2-rc3, and can be retrieved from:
+> https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/ virtual_cpu_hotplug/rfc/v1
+> 
+> 
+> Thanks,
+> 
+> James Morse (29):
+>   ia64: Fix build error due to switch case label appearing next to
+>     declaration
+>   ACPI: Move ACPI_HOTPLUG_CPU to be enabled per architecture
+>   drivers: base: Use present CPUs in GENERIC_CPU_DEVICES
+>   drivers: base: Allow parts of GENERIC_CPU_DEVICES to be overridden
+>   drivers: base: Move cpu_dev_init() after node_dev_init()
+>   arm64: setup: Switch over to GENERIC_CPU_DEVICES using
+>     arch_register_cpu()
+>   ia64/topology: Switch over to GENERIC_CPU_DEVICES
+>   x86/topology: Switch over to GENERIC_CPU_DEVICES
+>   LoongArch: Switch over to GENERIC_CPU_DEVICES
+>   arch_topology: Make register_cpu_capacity_sysctl() tolerant to late
+>     CPUs
+>   ACPI: processor: Add support for processors described as container
+>     packages
+>   ACPI: processor: Register CPUs that are online, but not described in
+>     the DSDT
+>   ACPI: processor: Register all CPUs from acpi_processor_get_info()
+>   ACPI: Rename ACPI_HOTPLUG_CPU to include 'present'
+>   ACPI: Move acpi_bus_trim_one() before acpi_scan_hot_remove()
+>   ACPI: Rename acpi_processor_hotadd_init and remove pre-processor
+>     guards
+>   ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
+>   ACPI: Check _STA present bit before making CPUs not present
+>   ACPI: Warn when the present bit changes but the feature is not enabled
+>   drivers: base: Implement weak arch_unregister_cpu()
+>   LoongArch: Use the __weak version of arch_unregister_cpu()
+>   arm64: acpi: Move get_cpu_for_acpi_id() to a header
+>   ACPICA: Add new MADT GICC flags fields [code first?]
+>   arm64, irqchip/gic-v3, ACPI: Move MADT GICC enabled check into a
+>     helper
+>   irqchip/gic-v3: Don't return errors from gic_acpi_match_gicc()
+>   irqchip/gic-v3: Add support for ACPI's disabled but 'online capable'
+>     CPUs
+>   ACPI: add support to register CPUs based on the _STA enabled bit
+>   arm64: document virtual CPU hotplug's expectations
+>   cpumask: Add enabled cpumask for present CPUs that can be brought
+>     online
+> 
+> Jean-Philippe Brucker (3):
+>   arm64: psci: Ignore DENIED CPUs
+>   KVM: arm64: Pass hypercalls to userspace
+>   KVM: arm64: Pass PSCI calls to userspace
+> 
+>  Documentation/arm64/cpu-hotplug.rst       |  79 ++++++++++++
+>  Documentation/arm64/index.rst             |   1 +
+>  Documentation/virt/kvm/api.rst            |  31 ++++-
+>  Documentation/virt/kvm/arm/hypercalls.rst |   1 +
+>  arch/arm64/Kconfig                        |   1 +
+>  arch/arm64/include/asm/acpi.h             |  11 ++
+>  arch/arm64/include/asm/cpu.h              |   1 -
+>  arch/arm64/include/asm/kvm_host.h         |   2 +
+>  arch/arm64/kernel/acpi_numa.c             |  11 --
+>  arch/arm64/kernel/psci.c                  |   2 +-
+>  arch/arm64/kernel/setup.c                 |  13 +-
+>  arch/arm64/kernel/smp.c                   |   5 +-
+>  arch/arm64/kvm/arm.c                      |  15 ++-
+>  arch/arm64/kvm/hypercalls.c               |  28 ++++-
+>  arch/arm64/kvm/psci.c                     |  13 ++
+>  arch/ia64/Kconfig                         |   2 +
+>  arch/ia64/include/asm/acpi.h              |   2 +-
+>  arch/ia64/include/asm/cpu.h               |  11 --
+>  arch/ia64/kernel/acpi.c                   |   6 +-
+>  arch/ia64/kernel/setup.c                  |   2 +-
+>  arch/ia64/kernel/sys_ia64.c               |   7 +-
+>  arch/ia64/kernel/topology.c               |  35 +-----
+>  arch/loongarch/Kconfig                    |   2 +
+>  arch/loongarch/kernel/topology.c          |  31 +----
+>  arch/x86/Kconfig                          |   2 +
+>  arch/x86/include/asm/cpu.h                |   6 -
+>  arch/x86/kernel/acpi/boot.c               |   4 +-
+>  arch/x86/kernel/topology.c                |  19 +--
+>  drivers/acpi/Kconfig                      |   5 +-
+>  drivers/acpi/acpi_processor.c             | 146 +++++++++++++++++-----
+>  drivers/acpi/processor_core.c             |   2 +-
+>  drivers/acpi/scan.c                       | 116 +++++++++++------
+>  drivers/base/arch_topology.c              |  38 ++++--
+>  drivers/base/cpu.c                        |  31 ++++-
+>  drivers/base/init.c                       |   2 +-
+>  drivers/firmware/psci/psci.c              |   2 +
+>  drivers/irqchip/irq-gic-v3.c              |  38 +++---
+>  include/acpi/acpi_bus.h                   |   1 +
+>  include/acpi/actbl2.h                     |   1 +
+>  include/kvm/arm_hypercalls.h              |   1 +
+>  include/kvm/arm_psci.h                    |   4 +
+>  include/linux/acpi.h                      |  10 +-
+>  include/linux/cpu.h                       |   6 +
+>  include/linux/cpumask.h                   |  25 ++++
+>  include/uapi/linux/kvm.h                  |   2 +
+>  kernel/cpu.c                              |   3 +
+>  46 files changed, 532 insertions(+), 244 deletions(-)
+>  create mode 100644 Documentation/arm64/cpu-hotplug.rst
+> 
 
