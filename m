@@ -1,113 +1,117 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A2710792
-	for <loongarch@lists.linux.dev>; Tue,  7 Mar 2023 21:41:59 +0000 (UTC)
-Received: by mail-pj1-f52.google.com with SMTP id qa18-20020a17090b4fd200b0023750b675f5so60752pjb.3
-        for <loongarch@lists.linux.dev>; Tue, 07 Mar 2023 13:41:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20210112.gappssmtp.com; s=20210112; t=1678225318;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h0UBWEzua7mI1E3a/+R1pzklpJ+RGJpYFy9mijom/UM=;
-        b=3d0i9L9fgsM6wfDV6SgEVPe2doCmA84h8dgaHpMbejZeZuQRklJuURRf6PhkCN7ukc
-         w/n+8nbuC+OW0mQWtjtERbzb9wBvkWnsuB3UcR0sH2Ba3g7FDMT+jDol43sV0ZSapUuU
-         afFVzDtGs7qaCnWpNgGUvXPCI9VeRCtjLQt1T3AcBXMLT19wGawFny88dkq7b+SM519J
-         izcWM0iUW0/Sac/AVhLneLvdpP7x0olNKc4YqRIWvevDICe0+qs1ypmIQEYjXt6H2n6Q
-         PGyqmNUpfeGmcTALJ+qCkHjqjpTn7tbuCsOrFtOo3YqXRw3n/PRxx6fcIN5oBf8fOwBc
-         hPrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678225318;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h0UBWEzua7mI1E3a/+R1pzklpJ+RGJpYFy9mijom/UM=;
-        b=wNP9ozDoFj6/1ptkpJTtTmye9pJXJemYugoErIJ0O0Ea1T18OcxYyzv1V80cF32cEt
-         NfcageqM4w/IajAHIsRUR3aeAQRvHAWCZcGXkaISl+7ExN+43GzXJtdPKKwgyuA3qdHC
-         VZQBjSxKX3Yv5ImiL/gJdZ5osie0ornICdGfg3ayhfsPuG5VgPOz4abgrqEzPr0sQxwr
-         wdHfFPoDdXM61K3vjGq56fGqaMPJJlknUKXGBBZ3pKv1aO/WvazPGb2iHXc5tXz+/sF2
-         OskorV2k8BgU3gRvAmXV246Nh6/jvZiosJDcPlE/VYgba9lUa+cXtt1RiAMdWwTeLJx+
-         1vsw==
-X-Gm-Message-State: AO0yUKUboncp6lYu2DByMkhaD2b1MNCplVTSs7lUA8El4yrx02dv8TpA
-	FpwI8k6bz+XswFMwnV8CjTYZnQ==
-X-Google-Smtp-Source: AK7set/K6eJAQf/eSbaq269PoSBswE0gsDc5h7lzSW9lr2zauw1plinMmCGHpVyR/4qKnDR1/eXDIg==
-X-Received: by 2002:a17:902:ce90:b0:19a:9434:af30 with SMTP id f16-20020a170902ce9000b0019a9434af30mr18505363plg.18.1678225318377;
-        Tue, 07 Mar 2023 13:41:58 -0800 (PST)
-Received: from localhost ([50.221.140.188])
-        by smtp.gmail.com with ESMTPSA id km12-20020a17090327cc00b0019e30e3068bsm8866509plb.168.2023.03.07.13.41.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Mar 2023 13:41:57 -0800 (PST)
-Date: Tue, 07 Mar 2023 13:41:57 -0800 (PST)
-X-Google-Original-Date: Tue, 07 Mar 2023 13:40:59 PST (-0800)
-Subject:     Re: [PATCH v5 12/26] riscv: Remove COMMAND_LINE_SIZE from uapi
-In-Reply-To: <20230306100508.1171812-13-alexghiti@rivosinc.com>
-CC: Greg KH <gregkh@linuxfoundation.org>, corbet@lwn.net,
-  Richard Henderson <richard.henderson@linaro.org>, ink@jurassic.park.msu.ru, mattst88@gmail.com, vgupta@kernel.org,
-  linux@armlinux.org.uk, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-  chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org, monstr@monstr.eu,
-  tsbogend@alpha.franken.de, James.Bottomley@HansenPartnership.com, deller@gmx.de, mpe@ellerman.id.au,
-  npiggin@gmail.com, christophe.leroy@csgroup.eu, Paul Walmsley <paul.walmsley@sifive.com>,
-  aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-  borntraeger@linux.ibm.com, svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
-  davem@davemloft.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-  dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
-  Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-  linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-  linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-  linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-  linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-  sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
-  alexghiti@rivosinc.com
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: alexghiti@rivosinc.com
-Message-ID: <mhng-d4be5bb5-f0ad-4e76-9b11-83732d233a45@palmer-ri-x1c9a>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E18D107BF;
+	Wed,  8 Mar 2023 20:51:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678308666; x=1709844666;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dawFCN46X6uTJdbZMi5dw9X68cMnBDF1sYbDOL4D3x4=;
+  b=RhDLagPwXJCMiSDgf2g2egGMjJ4s6Xcb6oxDMGHzesk0ycSYxSh7oq8y
+   Nr5Ay7KwvuRwYYKtsgIKER/ORL2nA2G8Vkd/dRgiPA0k7KwQVWIdgXoSq
+   du+UAur6OQFdqEMkRroRHqckXzbpdkBxvfpBeLm6WcmjxQSNu7CU6iUsP
+   x8LTzqMJHbfeOBaajllGBPsqbek+xye9FN+W+trpgCHsozrLSyugEiKzU
+   xj+7T6s8yDD8clq464k8Re6A182Kh5GMlsP4DU0d+Fh+PzxABccEz4q01
+   dR3gzdHV67NMpdWC8iIKHL0Lta7o7TWhqkFzC88CjGjygcYynIuBPL7Yx
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="320103109"
+X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
+   d="scan'208";a="320103109"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 12:51:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="670468950"
+X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
+   d="scan'208";a="670468950"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 08 Mar 2023 12:50:58 -0800
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1pa0kT-0002Oc-1p;
+	Wed, 08 Mar 2023 20:50:57 +0000
+Date: Thu, 9 Mar 2023 04:50:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: Youling Tang <tangyouling@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Ard Biesheuvel <ardb@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Xuerui Wang <kernel@xen0n.name>,
+	linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH] efistub: LoongArch: Reimplement kernel_entry_address()
+Message-ID: <202303090430.e6BB0Txr-lkp@intel.com>
+References: <1678186653-27659-1-git-send-email-tangyouling@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1678186653-27659-1-git-send-email-tangyouling@loongson.cn>
 
-On Mon, 06 Mar 2023 02:04:54 PST (-0800), alexghiti@rivosinc.com wrote:
-> As far as I can tell this is not used by userspace and thus should not
-> be part of the user-visible API.
->
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  arch/riscv/include/asm/setup.h      | 7 +++++++
->  arch/riscv/include/uapi/asm/setup.h | 2 --
->  2 files changed, 7 insertions(+), 2 deletions(-)
->  create mode 100644 arch/riscv/include/asm/setup.h
->
-> diff --git a/arch/riscv/include/asm/setup.h b/arch/riscv/include/asm/setup.h
-> new file mode 100644
-> index 000000000000..f165a14344e2
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/setup.h
-> @@ -0,0 +1,7 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +#ifndef _ASM_RISCV_SETUP_H
-> +#define _ASM_RISCV_SETUP_H
-> +
-> +#define COMMAND_LINE_SIZE       1024
-> +
-> +#endif /* _ASM_RISCV_SETUP_H */
-> diff --git a/arch/riscv/include/uapi/asm/setup.h b/arch/riscv/include/uapi/asm/setup.h
-> index 66b13a522880..17fcecd4a2f8 100644
-> --- a/arch/riscv/include/uapi/asm/setup.h
-> +++ b/arch/riscv/include/uapi/asm/setup.h
-> @@ -3,6 +3,4 @@
->  #ifndef _UAPI_ASM_RISCV_SETUP_H
->  #define _UAPI_ASM_RISCV_SETUP_H
->
-> -#define COMMAND_LINE_SIZE	1024
-> -
->  #endif /* _UAPI_ASM_RISCV_SETUP_H */
+Hi Youling,
 
-Reviewed-by: Palmer Dabbelt <palmer@rivosinc.com>
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+Thank you for the patch! Perhaps something to improve:
 
-Thanks!
+[auto build test WARNING on efi/next]
+[also build test WARNING on linus/master v6.3-rc1 next-20230308]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Youling-Tang/efistub-LoongArch-Reimplement-kernel_entry_address/20230307-190013
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git next
+patch link:    https://lore.kernel.org/r/1678186653-27659-1-git-send-email-tangyouling%40loongson.cn
+patch subject: [PATCH] efistub: LoongArch: Reimplement kernel_entry_address()
+config: loongarch-defconfig (https://download.01.org/0day-ci/archive/20230309/202303090430.e6BB0Txr-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/1f509b49ceeeeb3c59483c685592f8d87b70f169
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Youling-Tang/efistub-LoongArch-Reimplement-kernel_entry_address/20230307-190013
+        git checkout 1f509b49ceeeeb3c59483c685592f8d87b70f169
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash drivers/firmware/efi/libstub/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303090430.e6BB0Txr-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/firmware/efi/libstub/loongarch.c: In function 'get_kernel_offset':
+   drivers/firmware/efi/libstub/loongarch.c:46:45: error: 'PHYS_LINK_KADDR' undeclared (first use in this function)
+      46 |         return EFI_KIMG_PREFERRED_ADDRESS - PHYS_LINK_KADDR;
+         |                                             ^~~~~~~~~~~~~~~
+   drivers/firmware/efi/libstub/loongarch.c:46:45: note: each undeclared identifier is reported only once for each function it appears in
+   drivers/firmware/efi/libstub/loongarch.c: At top level:
+>> drivers/firmware/efi/libstub/loongarch.c:49:15: warning: no previous prototype for 'kernel_entry_address' [-Wmissing-prototypes]
+      49 | unsigned long kernel_entry_address(void)
+         |               ^~~~~~~~~~~~~~~~~~~~
+   drivers/firmware/efi/libstub/loongarch.c: In function 'get_kernel_offset':
+   drivers/firmware/efi/libstub/loongarch.c:47:1: error: control reaches end of non-void function [-Werror=return-type]
+      47 | }
+         | ^
+   cc1: some warnings being treated as errors
+
+
+vim +/kernel_entry_address +49 drivers/firmware/efi/libstub/loongarch.c
+
+    48	
+  > 49	unsigned long kernel_entry_address(void)
+    50	{
+    51		return *(unsigned long *)(EFI_KIMG_PREFERRED_ADDRESS + 8) +
+    52			get_kernel_offset();
+    53	}
+    54	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
