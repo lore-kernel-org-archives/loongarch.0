@@ -1,149 +1,171 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2BC37E6
-	for <loongarch@lists.linux.dev>; Fri, 10 Mar 2023 02:07:11 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dx3trOkApklMMKAA--.3006S3;
-	Fri, 10 Mar 2023 10:07:10 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxTuTNkApkv1lRAA--.40317S3;
-	Fri, 10 Mar 2023 10:07:10 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Add support for function error injection
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-References: <1678173001-16852-1-git-send-email-yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn, Masami Hiramatsu <mhiramat@kernel.org>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <fb573603-edc1-9c87-5739-a33e5e1db6e1@loongson.cn>
-Date: Fri, 10 Mar 2023 10:07:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6704A7E6
+	for <loongarch@lists.linux.dev>; Fri, 10 Mar 2023 02:18:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC47EC433D2;
+	Fri, 10 Mar 2023 02:17:59 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Ard Biesheuvel <ardb@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-efi@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Xuerui Wang <kernel@xen0n.name>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH V2] efi/libstub: Call setup_graphics() before handle_kernel_image()
+Date: Fri, 10 Mar 2023 10:17:49 +0800
+Message-Id: <20230310021749.921041-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1678173001-16852-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8DxTuTNkApkv1lRAA--.40317S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAF4kWry5ur4DWw1xXrW8WFg_yoWrGw15pF
-	yayrn7Grs7Gr4xX3sIyFyrZF1vvr4kCFW29F1xCa4rCrW2vr1ktr18KryqqF4kCw4UGrW0
-	gF1rGr43tF45AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bIxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4
-	xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8
-	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8w
-	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
-	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64
-	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_
-	Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
-	vEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+Content-Transfer-Encoding: 8bit
 
-This feature is related with kprobes, add Masami to CC.
+Commit 42c8ea3dca094ab8 ("efi: libstub: Factor out EFI stub entrypoint
+into separate file") moves setup_graphics() into efi_stub_common() which
+is after handle_kernel_image(). This causes efifb no longer work because
+handle_kernel_image() may move the core kernel to its preferred address,
+which means the screen_info filled by the efistub will not be the same
+as the one accessed by the core kernel. So let us call setup_graphics()
+before handle_kernel_image() which restores the old behavior.
 
-On 03/07/2023 03:10 PM, Tiezhu Yang wrote:
-> Inspired by the commit 42d038c4fb00 ("arm64: Add support for function error
-> injection") and commit ee55ff803b38 ("riscv: Add support for function error
-> injection"), support function error injection for LoongArch.
->
-> Mainly implement two functions:
-> (1) regs_set_return_value() which is used to overwrite the return value,
-> (2) override_function_with_return() which is used to override the probed
-> function returning and jump to its caller.
->
-> Here is a simple test under CONFIG_FUNCTION_ERROR_INJECTION and
-> CONFIG_FAIL_FUNCTION:
->
->   # echo sys_clone > /sys/kernel/debug/fail_function/inject
->   # echo 100 > /sys/kernel/debug/fail_function/probability
->   # dmesg
->   bash: fork: Invalid argument
->   # dmesg
->   ...
->   FAULT_INJECTION: forcing a failure.
->   name fail_function, interval 1, probability 100, space 0, times 1
->   ...
->   Call Trace:
->   [<90000000002238f4>] show_stack+0x5c/0x180
->   [<90000000012e384c>] dump_stack_lvl+0x60/0x88
->   [<9000000000b1879c>] should_fail_ex+0x1b0/0x1f4
->   [<900000000032ead4>] fei_kprobe_handler+0x28/0x6c
->   [<9000000000230970>] kprobe_breakpoint_handler+0xf0/0x118
->   [<90000000012e3e60>] do_bp+0x2c4/0x358
->   [<9000000002241924>] exception_handlers+0x1924/0x10000
->   [<900000000023b7d0>] sys_clone+0x0/0x4
->   [<90000000012e4744>] do_syscall+0x7c/0x94
->   [<9000000000221e44>] handle_syscall+0xc4/0x160
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/Kconfig              |  1 +
->  arch/loongarch/include/asm/ptrace.h |  6 ++++++
->  arch/loongarch/lib/Makefile         |  2 ++
->  arch/loongarch/lib/error-inject.c   | 10 ++++++++++
->  4 files changed, 19 insertions(+)
->  create mode 100644 arch/loongarch/lib/error-inject.c
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 7fd5125..b16ff7e 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -99,6 +99,7 @@ config LOONGARCH
->  	select HAVE_FAST_GUP
->  	select HAVE_FTRACE_MCOUNT_RECORD
->  	select HAVE_FUNCTION_ARG_ACCESS_API
-> +	select HAVE_FUNCTION_ERROR_INJECTION
->  	select HAVE_FUNCTION_GRAPH_TRACER
->  	select HAVE_FUNCTION_TRACER
->  	select HAVE_GENERIC_VDSO
-> diff --git a/arch/loongarch/include/asm/ptrace.h b/arch/loongarch/include/asm/ptrace.h
-> index d761db9..db7332a 100644
-> --- a/arch/loongarch/include/asm/ptrace.h
-> +++ b/arch/loongarch/include/asm/ptrace.h
-> @@ -154,6 +154,12 @@ static inline long regs_return_value(struct pt_regs *regs)
->  	return regs->regs[4];
->  }
->
-> +static inline void regs_set_return_value(struct pt_regs *regs,
-> +					 unsigned long val)
-> +{
-> +	regs->regs[4] = val;
-> +}
-> +
->  #define instruction_pointer(regs) ((regs)->csr_era)
->  #define profile_pc(regs) instruction_pointer(regs)
->
-> diff --git a/arch/loongarch/lib/Makefile b/arch/loongarch/lib/Makefile
-> index 40bde63..30b1595 100644
-> --- a/arch/loongarch/lib/Makefile
-> +++ b/arch/loongarch/lib/Makefile
-> @@ -5,3 +5,5 @@
->
->  lib-y	+= delay.o memset.o memcpy.o memmove.o \
->  	   clear_user.o copy_user.o dump_tlb.o unaligned.o
-> +
-> +obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
-> diff --git a/arch/loongarch/lib/error-inject.c b/arch/loongarch/lib/error-inject.c
-> new file mode 100644
-> index 0000000..afc9e1c
-> --- /dev/null
-> +++ b/arch/loongarch/lib/error-inject.c
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/error-injection.h>
-> +#include <linux/kprobes.h>
-> +
-> +void override_function_with_return(struct pt_regs *regs)
-> +{
-> +	instruction_pointer_set(regs, regs->regs[1]);
-> +}
-> +NOKPROBE_SYMBOL(override_function_with_return);
->
+The side effect is zboot will not call setup_graphics(), but I think
+zboot doesn't need it either.
+
+Fixes: 42c8ea3dca094ab8 ("efi: libstub: Factor out EFI stub entrypoint into separate file")
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+V2: Use static declaration for setup_graphics() to avoid build warnings.
+
+ drivers/firmware/efi/libstub/efi-stub-entry.c | 29 +++++++++++++++++++
+ drivers/firmware/efi/libstub/efi-stub.c       | 27 -----------------
+ 2 files changed, 29 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
+index 5245c4f031c0..f971fd25a4eb 100644
+--- a/drivers/firmware/efi/libstub/efi-stub-entry.c
++++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
+@@ -5,6 +5,30 @@
+ 
+ #include "efistub.h"
+ 
++static struct screen_info *setup_graphics(void)
++{
++	unsigned long size;
++	efi_status_t status;
++	efi_guid_t gop_proto = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
++	void **gop_handle = NULL;
++	struct screen_info *si = NULL;
++
++	size = 0;
++	status = efi_bs_call(locate_handle, EFI_LOCATE_BY_PROTOCOL,
++			     &gop_proto, NULL, &size, gop_handle);
++	if (status == EFI_BUFFER_TOO_SMALL) {
++		si = alloc_screen_info();
++		if (!si)
++			return NULL;
++		status = efi_setup_gop(si, &gop_proto, size);
++		if (status != EFI_SUCCESS) {
++			free_screen_info(si);
++			return NULL;
++		}
++	}
++	return si;
++}
++
+ /*
+  * EFI entry point for the generic EFI stub used by ARM, arm64, RISC-V and
+  * LoongArch. This is the entrypoint that is described in the PE/COFF header
+@@ -22,6 +46,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 	efi_guid_t loaded_image_proto = LOADED_IMAGE_PROTOCOL_GUID;
+ 	unsigned long reserve_addr = 0;
+ 	unsigned long reserve_size = 0;
++	struct screen_info *si;
+ 
+ 	WRITE_ONCE(efi_system_table, systab);
+ 
+@@ -47,6 +72,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 
+ 	efi_info("Booting Linux Kernel...\n");
+ 
++	si = setup_graphics();
++
+ 	status = handle_kernel_image(&image_addr, &image_size,
+ 				     &reserve_addr,
+ 				     &reserve_size,
+@@ -58,6 +85,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+ 
+ 	status = efi_stub_common(handle, image, image_addr, cmdline_ptr);
+ 
++	free_screen_info(si);
++
+ 	efi_free(image_size, image_addr);
+ 	efi_free(reserve_size, reserve_addr);
+ 
+diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+index 2955c1ac6a36..bc67af721412 100644
+--- a/drivers/firmware/efi/libstub/efi-stub.c
++++ b/drivers/firmware/efi/libstub/efi-stub.c
+@@ -56,30 +56,6 @@ void __weak free_screen_info(struct screen_info *si)
+ {
+ }
+ 
+-static struct screen_info *setup_graphics(void)
+-{
+-	efi_guid_t gop_proto = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
+-	efi_status_t status;
+-	unsigned long size;
+-	void **gop_handle = NULL;
+-	struct screen_info *si = NULL;
+-
+-	size = 0;
+-	status = efi_bs_call(locate_handle, EFI_LOCATE_BY_PROTOCOL,
+-			     &gop_proto, NULL, &size, gop_handle);
+-	if (status == EFI_BUFFER_TOO_SMALL) {
+-		si = alloc_screen_info();
+-		if (!si)
+-			return NULL;
+-		status = efi_setup_gop(si, &gop_proto, size);
+-		if (status != EFI_SUCCESS) {
+-			free_screen_info(si);
+-			return NULL;
+-		}
+-	}
+-	return si;
+-}
+-
+ static void install_memreserve_table(void)
+ {
+ 	struct linux_efi_memreserve *rsv;
+@@ -163,14 +139,12 @@ efi_status_t efi_stub_common(efi_handle_t handle,
+ 			     unsigned long image_addr,
+ 			     char *cmdline_ptr)
+ {
+-	struct screen_info *si;
+ 	efi_status_t status;
+ 
+ 	status = check_platform_features();
+ 	if (status != EFI_SUCCESS)
+ 		return status;
+ 
+-	si = setup_graphics();
+ 
+ 	efi_retrieve_tpm2_eventlog();
+ 
+@@ -190,7 +164,6 @@ efi_status_t efi_stub_common(efi_handle_t handle,
+ 
+ 	status = efi_boot_kernel(handle, image, image_addr, cmdline_ptr);
+ 
+-	free_screen_info(si);
+ 	return status;
+ }
+ 
+-- 
+2.39.1
 
