@@ -1,89 +1,161 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CB57B
-	for <loongarch@lists.linux.dev>; Sat, 11 Mar 2023 08:10:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1678522246; bh=+dkM0nzzv60Hr+kG9MKvNn/VBv9os22kziC0//E149g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lGATb0eS1zajslAEO/M8EmJIcDtNBAH4qxOMV7DLmk/LOoywobDWduyih4Hs/Mtkh
-	 aMOyQPb7e7d0uVGcGJJlQan1KdBdMzax/OMSSo64HkO8bp81zOl7/WWq7yNerkgf2a
-	 FF2s5PbG50l3MikKSRjAfvwExn4YZ39XdqA+rjig=
-Received: from [192.168.9.172] (unknown [101.228.138.55])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 3458F6011B;
-	Sat, 11 Mar 2023 16:10:46 +0800 (CST)
-Message-ID: <428e2df8-d5b7-a200-62c2-59497f3facea@xen0n.name>
-Date: Sat, 11 Mar 2023 16:10:44 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75109EC3
+	for <loongarch@lists.linux.dev>; Sun, 12 Mar 2023 22:58:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B33DC433EF;
+	Sun, 12 Mar 2023 22:58:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1678661927;
+	bh=NiBKJUwjri4XI25L0OBaGO2fI9hazYZL3AcGTP2byQQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ahJbVy9fPYwobgcguBr11/Wj67yktsn0FCGLhwmLT80fFg8Aei+1Envb7Ijk6NRt9
+	 BeZ/X8UIpcZ8J5hGqwjPf6sAWEF8d592jgP0+YguNyupe54AMElLdfgWx86iarXwbj
+	 mG74Yo62HSplJLFMYMvFJXwYoeBI+numGBdBSJ5laACV2kb/D/D0/qJRnbyWT1PPzq
+	 H7wq3TMJJI05VwCByy8syn81ZySnRlKuY2+11jrTWBOXCR3ef/uSYdYnUmyLA7vnkM
+	 lYoZJKbGHLb06MdljjTJAHGmWNfzjUoNUA27+m9XZSAPiXZEwevwI/S7RPYLtsEtKk
+	 1jzfvm7mwTJRw==
+From: Ard Biesheuvel <ardb@kernel.org>
+To: linux-efi@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+	loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] efi: libstub: Always pass screen_info via config table
+Date: Sun, 12 Mar 2023 23:58:38 +0100
+Message-Id: <20230312225838.3702574-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH V2] LoongArch: Provide kernel fpu functions
-Content-Language: en-US
-To: Christoph Hellwig <hch@infradead.org>,
- Huacai Chen <chenhuacai@loongson.cn>
-Cc: Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
- loongarch@lists.linux.dev, linux-arch@vger.kernel.org,
- Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-References: <20230306031258.99230-1-chenhuacai@loongson.cn>
- <ZAoNPuyHQTqucYxn@infradead.org>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <ZAoNPuyHQTqucYxn@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5097; i=ardb@kernel.org; h=from:subject; bh=NiBKJUwjri4XI25L0OBaGO2fI9hazYZL3AcGTP2byQQ=; b=owGbwMvMwCFmkMcZplerG8N4Wi2JIYUvUs7q3hKxptDpYYFScpu2+l1auZshupilKduswjqtv tjomERHKQuDGAeDrJgii8Dsv+92np4oVes8SxZmDisTyBAGLk4BmMjmFYwM16rPXra0OTRDkU0i 7db8/PWCpv1yBQeTL9pZPL9Z9dlKiOGf8l/js0EfV6nP6qxl284r/uOsAlc274etAma701TsXzx hAAA=
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+Content-Transfer-Encoding: 8bit
 
-On 3/10/23 00:45, Christoph Hellwig wrote:
-> NAK, this needs to be an EXPORT_SYMBOL_GPL.
->
-> Also no way we're going to merge this without an actual user.
+In some cases, we expose the kernel's struct screen_info to the EFI stub
+directly, so it gets populated before even entering the kernel.  This
+means the early console is available as soon as the early param parsing
+happens, which is nice. It also means we need two different ways to pass
+this information, as this trick only works if the EFI stub is baked into
+the core kernel image, which is not always the case.
 
-Okay so I sat down for some Saturday afternoon archaeology, and this is 
-indeed much hairier than I originally thought...
+Huacai reports that the preparatory refactoring that was needed to
+implement this alternative method for zboot resulted in a non-functional
+efifb earlycon for other cases as well, due to the reordering of the
+kernel image relocation with the population of the screen_info struct,
+and the latter now takes place after copying the image to its new
+location, which means we copy the old, uninitialized state.
 
-Basically the same conversation has happened back in 2019 [1][2][3], 
-mainly over the breakage it caused for zfs (obviously non-GPL and 
-out-of-tree, that apparently made people automatically ignore it), while 
-the introducing commit d63e79b114c02 ("x86/fpu: Uninline 
-kernel_fpu_begin()/end()") went in unnoticed at that time [4]. It's 
-clear that my opinion fell under the same camp as Andy and Paolo 
-("exporting as GPL" means "any usage of this symbol implies the module 
-is in fact derived work"), but the others disagreed ("in practice we 
-don't care if it has no in-kernel users, and even if it does it would 
-have to be GPL anyway", IIUC).
+To fix this and simplify things at the same time, let's just always use
+the config table method.
 
-For now I've only been tinkering with Navi GPUs on loongarch, and 
-haven't got to try openzfs yet, but I surely don't want to start the 
-debate all over again, and making the loongarch FPU helpers GPL-only 
-works for me. However there's probably another question that Ruoyao 
-pointed out: do we want to mark the neon/altivec/s390x helpers GPL-only 
-right away? IMO this particular feature is not inherently arch-specific 
-(the same would have to happen for every arch with optionally enabled 
-extra state and instructions, not limited to FPU actually) so 
-availability of such feature should preferably be made symmetric over 
-arches.
+Cc: loongarch@lists.linux.dev
+Cc: Xuefeng Li <lixuefeng@loongson.cn>
+Cc: Xuerui Wang <kernel@xen0n.name>
+Cc: loongson-kernel@lists.loongnix.cn
+Reported-by: Huacai Chen <chenhuacai@loongson.cn>
+Link: https://lore.kernel.org/linux-efi/20230310021749.921041-1-chenhuacai@loongson.cn/
+Fixes: 42c8ea3dca094ab8 ("efi: libstub: Factor out EFI stub entrypoint into separate file")
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ arch/arm64/kernel/image-vars.h             |  1 -
+ arch/loongarch/kernel/image-vars.h         |  1 -
+ arch/riscv/kernel/image-vars.h             |  1 -
+ drivers/firmware/efi/libstub/efi-stub.c    |  9 ---------
+ drivers/firmware/efi/libstub/screen_info.c | 19 -------------------
+ 5 files changed, 31 deletions(-)
 
-Given the topic's sensitive nature I'd want to hear from more people 
-before deciding to (not) write the patches; thanks in advance.
-
-[1]: 
-https://lore.kernel.org/all/761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org/
-[2]: https://lore.kernel.org/all/20190522044204.24207-1-cyphar@cyphar.com/
-[3]: 
-https://lore.kernel.org/all/CAB9dFdsZb-sZixeOzrt8F50h1pnUK2W2Cxx8+xjhgd0=6xs7iw@mail.gmail.com/T/#u
-[4]: 
-https://lore.kernel.org/all/1430848300-27877-51-git-send-email-mingo@kernel.org/
-
+diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+index 8309197c0ebd4a8e..01382bd99d0addea 100644
+--- a/arch/arm64/kernel/image-vars.h
++++ b/arch/arm64/kernel/image-vars.h
+@@ -27,7 +27,6 @@ PROVIDE(__efistub__text			= _text);
+ PROVIDE(__efistub__end			= _end);
+ PROVIDE(__efistub___inittext_end       	= __inittext_end);
+ PROVIDE(__efistub__edata		= _edata);
+-PROVIDE(__efistub_screen_info		= screen_info);
+ PROVIDE(__efistub__ctype		= _ctype);
+ 
+ PROVIDE(__pi___memcpy			= __pi_memcpy);
+diff --git a/arch/loongarch/kernel/image-vars.h b/arch/loongarch/kernel/image-vars.h
+index e561989d02de93c5..110cdc32cba5f28b 100644
+--- a/arch/loongarch/kernel/image-vars.h
++++ b/arch/loongarch/kernel/image-vars.h
+@@ -12,7 +12,6 @@ __efistub_kernel_entry		= kernel_entry;
+ __efistub_kernel_asize		= kernel_asize;
+ __efistub_kernel_fsize		= kernel_fsize;
+ __efistub_kernel_offset		= kernel_offset;
+-__efistub_screen_info		= screen_info;
+ 
+ #endif
+ 
+diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-vars.h
+index 7e2962ef73f92e95..5e2515fa013495cb 100644
+--- a/arch/riscv/kernel/image-vars.h
++++ b/arch/riscv/kernel/image-vars.h
+@@ -29,7 +29,6 @@ __efistub__start		= _start;
+ __efistub__start_kernel		= _start_kernel;
+ __efistub__end			= _end;
+ __efistub__edata		= _edata;
+-__efistub_screen_info		= screen_info;
+ 
+ #endif
+ 
+diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+index 2955c1ac6a36ee00..c4b9eccad0f103dc 100644
+--- a/drivers/firmware/efi/libstub/efi-stub.c
++++ b/drivers/firmware/efi/libstub/efi-stub.c
+@@ -47,15 +47,6 @@
+ static u64 virtmap_base = EFI_RT_VIRTUAL_BASE;
+ static bool flat_va_mapping = (EFI_RT_VIRTUAL_OFFSET != 0);
+ 
+-struct screen_info * __weak alloc_screen_info(void)
+-{
+-	return &screen_info;
+-}
+-
+-void __weak free_screen_info(struct screen_info *si)
+-{
+-}
+-
+ static struct screen_info *setup_graphics(void)
+ {
+ 	efi_guid_t gop_proto = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
+diff --git a/drivers/firmware/efi/libstub/screen_info.c b/drivers/firmware/efi/libstub/screen_info.c
+index 8e76a8b384ba142d..7b791541a1ad1b48 100644
+--- a/drivers/firmware/efi/libstub/screen_info.c
++++ b/drivers/firmware/efi/libstub/screen_info.c
+@@ -5,25 +5,6 @@
+ 
+ #include "efistub.h"
+ 
+-/*
+- * There are two ways of populating the core kernel's struct screen_info via the stub:
+- * - using a configuration table, like below, which relies on the EFI init code
+- *   to locate the table and copy the contents;
+- * - by linking directly to the core kernel's copy of the global symbol.
+- *
+- * The latter is preferred because it makes the EFIFB earlycon available very
+- * early, but it only works if the EFI stub is part of the core kernel image
+- * itself. The zboot decompressor can only use the configuration table
+- * approach.
+- *
+- * In order to support both methods from the same build of the EFI stub
+- * library, provide this dummy global definition of struct screen_info. If it
+- * is required to satisfy a link dependency, it means we need to override the
+- * __weak alloc and free methods with the ones below, and those will be pulled
+- * in as well.
+- */
+-struct screen_info screen_info;
+-
+ static efi_guid_t screen_info_guid = LINUX_EFI_SCREEN_INFO_TABLE_GUID;
+ 
+ struct screen_info *alloc_screen_info(void)
 -- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+2.39.2
 
