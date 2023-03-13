@@ -1,84 +1,210 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845811FD0
-	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 07:52:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3156EC4339B
-	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 07:52:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CB31FD0
+	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 07:56:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A4A9C4339C
+	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 07:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1678693954;
-	bh=u1HEe0QQErzVRLLo+70zrC2eWQ6H6hrEzlnHCwsOV44=;
+	s=k20201202; t=1678694216;
+	bh=vYFBn90YjrLJTrfF1CgtndynVuTjsbEmXV54xRsm9fQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VSE7bQK+79I8BHsSuzEW0+CxvTznAsmb6sxmomLyOchmmZl+AdirrUzgdy4zxOb5v
-	 tde/CZl8TXEv8NcaA0gzXrZM9yILllULAP/1h+RG5K1R1cF3MDSK9Idx2SAg33SjvG
-	 Npr08szVFezCyu+kgaOZj+AePx6DIldVijB6lC2/ml/A/t7YFnPV8CyYgRWJPaMy4F
-	 JF0AJFeLdjH5YbHKlKOBbrVvIRSlhpATUewmIi5WDS3mZ2nMK/hKKmJJeWyqwR/EBR
-	 DwWixlxOIZj+uGjPPUoqCshdScUmxPNbzej+dFg7zxIkREskKLmYKzbDXefyoAtZou
-	 oTxDzIxP3tcaQ==
-Received: by mail-ed1-f49.google.com with SMTP id k10so44788543edk.13
-        for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 00:52:34 -0700 (PDT)
-X-Gm-Message-State: AO0yUKU3Ga8j7TRllLRfTCxQR+RfnxCzjJVv2cQRnbtjMnSTFJnZDStN
-	TaZjOCzNQWri59DYDGfUDlKhOQbKNO4unpUa/u8=
-X-Google-Smtp-Source: AK7set9mutBWlOqLzfxMj5mhtc4t+GjjjaEUxOrmKyox1IyoDSQxEMSLY9yzVySTeeMcKpYiJCdzVFCFH5ZCsixqnPw=
-X-Received: by 2002:a50:9f0b:0:b0:4fb:f19:883 with SMTP id b11-20020a509f0b000000b004fb0f190883mr2522311edf.1.1678693952469;
- Mon, 13 Mar 2023 00:52:32 -0700 (PDT)
+	b=BI+SZpXM39jZuG+hTALx3QdomEbkzK/rOMaGDSGYwROrHIwduCLkIuu7Sq+CSu8OO
+	 erluSFPLScb+9WyARw9wRWBm+Tsn92H4zfugSiTPOsaaKCSmGZftC99FcR6pZSFo4g
+	 zUYWiYC3BgtprwbDOQw4crRolGdyXVT7vaR1DcdxWaMF0TsKAf52Z25DE1/QwxmkQ3
+	 /E2Sk3fPpBwuBdfiDlbSV09+oCjCRXJnxzcO9SkQGNgEkpsvKJgZTRHUHq/kPXX1es
+	 qctbmLQN68RaNMPLMKJHHT2xWdEsWtdVdPMbkFdB5Y3CrqyPgEmWmk79LyKLSsmqwm
+	 IWxGIashOhwVw==
+Received: by mail-ed1-f53.google.com with SMTP id o12so44923509edb.9
+        for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 00:56:56 -0700 (PDT)
+X-Gm-Message-State: AO0yUKX2XU8fn6c4aSxFu/a1uuHK2VNfOWdpVZyBsZ4bJJY/YZdpcdxM
+	Cckuws27/3uIZnc9xz6Wo6C7mEQt2TLJftTqmb4=
+X-Google-Smtp-Source: AK7set+czD8yhSuYHqcJkGtDqBmg8dfG8ZDRRF5xSq4O44ZSaVTzXgWxUbrXCRaDVhTc9XeyadVGA6Iw7Yl3uuUJdns=
+X-Received: by 2002:a50:99d6:0:b0:4fc:f0b8:7da0 with SMTP id
+ n22-20020a5099d6000000b004fcf0b87da0mr658912edb.1.1678694214468; Mon, 13 Mar
+ 2023 00:56:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230224033017.15653-1-lienze@kylinos.cn> <35f61f336d390c0117270fc4b5a0f842dd459083.camel@kylinos.cn>
-In-Reply-To: <35f61f336d390c0117270fc4b5a0f842dd459083.camel@kylinos.cn>
+References: <20230312225838.3702574-1-ardb@kernel.org> <CAMj1kXGeL8p5Ctg=fsCnJYqmA8NHeN9uMgO1JWVxoiyBdSau4Q@mail.gmail.com>
+In-Reply-To: <CAMj1kXGeL8p5Ctg=fsCnJYqmA8NHeN9uMgO1JWVxoiyBdSau4Q@mail.gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 13 Mar 2023 15:52:20 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5nFj8U_cp3o0Q41OhFZN+K809A=TbGbw0c=CpQnBCa0g@mail.gmail.com>
-Message-ID: <CAAhV-H5nFj8U_cp3o0Q41OhFZN+K809A=TbGbw0c=CpQnBCa0g@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: use EXCCODE_INT_START instead of hard coded value
-To: Enze Li <lienze@kylinos.cn>
-Cc: kernel@xen0n.name, loongarch@lists.linux.dev, enze.li@gmx.com
+Date: Mon, 13 Mar 2023 15:56:42 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6LQgEikq+E3_9sRoQzbt8jMC+LtLQ0DmLzy_nnq2jtRQ@mail.gmail.com>
+Message-ID: <CAAhV-H6LQgEikq+E3_9sRoQzbt8jMC+LtLQ0DmLzy_nnq2jtRQ@mail.gmail.com>
+Subject: Re: [PATCH] efi: libstub: Always pass screen_info via config table
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-efi@vger.kernel.org, loongarch@lists.linux.dev, 
+	Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, 
+	loongson-kernel@lists.loongnix.cn, Huacai Chen <chenhuacai@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Though EXCCODE_INT_START is 64, its meaning is not suitable in this case.
+Hi, Ard,
+
+I'm a bit confused, It seems this patch cannot solve the problem
+reported in [1] for LoongArch.
+[1] https://lore.kernel.org/linux-efi/20230310021749.921041-1-chenhuacai@lo=
+ongson.cn/
 
 Huacai
 
-On Mon, Mar 13, 2023 at 12:42=E2=80=AFPM Enze Li <lienze@kylinos.cn> wrote:
+On Mon, Mar 13, 2023 at 3:45=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> wr=
+ote:
 >
-> Hi Huacai,
->
-> Kindly PING for this tiny patch. :)
->
-> Thanks,
-> Enze
->
-> On Fri, 2023-02-24 at 11:30 +0800, Enze Li wrote:
-> > The for loop in per_cpu_trap_init function use a hard coded length
-> > while
-> > setting default exception handler.  Use the proper define instead of
-> > hard coded value.
+> On Sun, 12 Mar 2023 at 23:58, Ard Biesheuvel <ardb@kernel.org> wrote:
 > >
-> > Signed-off-by: Enze Li <lienze@kylinos.cn>
+> > In some cases, we expose the kernel's struct screen_info to the EFI stu=
+b
+> > directly, so it gets populated before even entering the kernel.  This
+> > means the early console is available as soon as the early param parsing
+> > happens, which is nice. It also means we need two different ways to pas=
+s
+> > this information, as this trick only works if the EFI stub is baked int=
+o
+> > the core kernel image, which is not always the case.
+> >
+> > Huacai reports that the preparatory refactoring that was needed to
+> > implement this alternative method for zboot resulted in a non-functiona=
+l
+> > efifb earlycon for other cases as well, due to the reordering of the
+> > kernel image relocation with the population of the screen_info struct,
+> > and the latter now takes place after copying the image to its new
+> > location, which means we copy the old, uninitialized state.
+> >
+> > To fix this and simplify things at the same time, let's just always use
+> > the config table method.
+> >
+> > Cc: loongarch@lists.linux.dev
+> > Cc: Xuefeng Li <lixuefeng@loongson.cn>
+> > Cc: Xuerui Wang <kernel@xen0n.name>
+> > Cc: loongson-kernel@lists.loongnix.cn
+> > Reported-by: Huacai Chen <chenhuacai@loongson.cn>
+> > Link: https://lore.kernel.org/linux-efi/20230310021749.921041-1-chenhua=
+cai@loongson.cn/
+> > Fixes: 42c8ea3dca094ab8 ("efi: libstub: Factor out EFI stub entrypoint =
+into separate file")
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+>
+> Please disregard - I think I can simplify this without losing the very
+> early earlycon.
+>
+>
 > > ---
-> >  arch/loongarch/kernel/traps.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >  arch/arm64/kernel/image-vars.h             |  1 -
+> >  arch/loongarch/kernel/image-vars.h         |  1 -
+> >  arch/riscv/kernel/image-vars.h             |  1 -
+> >  drivers/firmware/efi/libstub/efi-stub.c    |  9 ---------
+> >  drivers/firmware/efi/libstub/screen_info.c | 19 -------------------
+> >  5 files changed, 31 deletions(-)
 > >
-> > diff --git a/arch/loongarch/kernel/traps.c
-> > b/arch/loongarch/kernel/traps.c
-> > index de8ebe20b666..7d5784eccf19 100644
-> > --- a/arch/loongarch/kernel/traps.c
-> > +++ b/arch/loongarch/kernel/traps.c
-> > @@ -755,7 +755,7 @@ void per_cpu_trap_init(int cpu)
+> > diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-v=
+ars.h
+> > index 8309197c0ebd4a8e..01382bd99d0addea 100644
+> > --- a/arch/arm64/kernel/image-vars.h
+> > +++ b/arch/arm64/kernel/image-vars.h
+> > @@ -27,7 +27,6 @@ PROVIDE(__efistub__text                       =3D _te=
+xt);
+> >  PROVIDE(__efistub__end                 =3D _end);
+> >  PROVIDE(__efistub___inittext_end               =3D __inittext_end);
+> >  PROVIDE(__efistub__edata               =3D _edata);
+> > -PROVIDE(__efistub_screen_info          =3D screen_info);
+> >  PROVIDE(__efistub__ctype               =3D _ctype);
 > >
-> >       /* Initialise exception handlers */
-> >       if (cpu =3D=3D 0)
-> > -             for (i =3D 0; i < 64; i++)
-> > +             for (i =3D 0; i < EXCCODE_INT_START; i++)
-> >                       set_handler(i * VECSIZE, handle_reserved,
-> > VECSIZE);
+> >  PROVIDE(__pi___memcpy                  =3D __pi_memcpy);
+> > diff --git a/arch/loongarch/kernel/image-vars.h b/arch/loongarch/kernel=
+/image-vars.h
+> > index e561989d02de93c5..110cdc32cba5f28b 100644
+> > --- a/arch/loongarch/kernel/image-vars.h
+> > +++ b/arch/loongarch/kernel/image-vars.h
+> > @@ -12,7 +12,6 @@ __efistub_kernel_entry                =3D kernel_entr=
+y;
+> >  __efistub_kernel_asize         =3D kernel_asize;
+> >  __efistub_kernel_fsize         =3D kernel_fsize;
+> >  __efistub_kernel_offset                =3D kernel_offset;
+> > -__efistub_screen_info          =3D screen_info;
 > >
-> >       tlb_init(cpu);
+> >  #endif
 > >
-> > base-commit: 804f6d04b1adae9602edbd6410c0ba3a556964fe
+> > diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-v=
+ars.h
+> > index 7e2962ef73f92e95..5e2515fa013495cb 100644
+> > --- a/arch/riscv/kernel/image-vars.h
+> > +++ b/arch/riscv/kernel/image-vars.h
+> > @@ -29,7 +29,6 @@ __efistub__start              =3D _start;
+> >  __efistub__start_kernel                =3D _start_kernel;
+> >  __efistub__end                 =3D _end;
+> >  __efistub__edata               =3D _edata;
+> > -__efistub_screen_info          =3D screen_info;
+> >
+> >  #endif
+> >
+> > diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware=
+/efi/libstub/efi-stub.c
+> > index 2955c1ac6a36ee00..c4b9eccad0f103dc 100644
+> > --- a/drivers/firmware/efi/libstub/efi-stub.c
+> > +++ b/drivers/firmware/efi/libstub/efi-stub.c
+> > @@ -47,15 +47,6 @@
+> >  static u64 virtmap_base =3D EFI_RT_VIRTUAL_BASE;
+> >  static bool flat_va_mapping =3D (EFI_RT_VIRTUAL_OFFSET !=3D 0);
+> >
+> > -struct screen_info * __weak alloc_screen_info(void)
+> > -{
+> > -       return &screen_info;
+> > -}
+> > -
+> > -void __weak free_screen_info(struct screen_info *si)
+> > -{
+> > -}
+> > -
+> >  static struct screen_info *setup_graphics(void)
+> >  {
+> >         efi_guid_t gop_proto =3D EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
+> > diff --git a/drivers/firmware/efi/libstub/screen_info.c b/drivers/firmw=
+are/efi/libstub/screen_info.c
+> > index 8e76a8b384ba142d..7b791541a1ad1b48 100644
+> > --- a/drivers/firmware/efi/libstub/screen_info.c
+> > +++ b/drivers/firmware/efi/libstub/screen_info.c
+> > @@ -5,25 +5,6 @@
+> >
+> >  #include "efistub.h"
+> >
+> > -/*
+> > - * There are two ways of populating the core kernel's struct screen_in=
+fo via the stub:
+> > - * - using a configuration table, like below, which relies on the EFI =
+init code
+> > - *   to locate the table and copy the contents;
+> > - * - by linking directly to the core kernel's copy of the global symbo=
+l.
+> > - *
+> > - * The latter is preferred because it makes the EFIFB earlycon availab=
+le very
+> > - * early, but it only works if the EFI stub is part of the core kernel=
+ image
+> > - * itself. The zboot decompressor can only use the configuration table
+> > - * approach.
+> > - *
+> > - * In order to support both methods from the same build of the EFI stu=
+b
+> > - * library, provide this dummy global definition of struct screen_info=
+. If it
+> > - * is required to satisfy a link dependency, it means we need to overr=
+ide the
+> > - * __weak alloc and free methods with the ones below, and those will b=
+e pulled
+> > - * in as well.
+> > - */
+> > -struct screen_info screen_info;
+> > -
+> >  static efi_guid_t screen_info_guid =3D LINUX_EFI_SCREEN_INFO_TABLE_GUI=
+D;
+> >
+> >  struct screen_info *alloc_screen_info(void)
+> > --
+> > 2.39.2
+> >
 >
