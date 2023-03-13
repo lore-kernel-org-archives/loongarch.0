@@ -1,145 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13C01FD0
-	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 08:14:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8935C433EF;
-	Mon, 13 Mar 2023 08:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F29B23A7
+	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 08:48:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB208C433EF
+	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 08:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1678695283;
-	bh=0jP1vmnnL8uMUFT+IICEJ+Th1i1yCIGQd6+/6iwJ0dM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=nVR4WQW1dLJAwCJC5BdSa6SgI4ZtNaItCFNslRmWoRkYKNNrC/YRjxeVqHH9Lm5Gi
-	 dy5x7m1NEcXi2ntDwmz5CStOF98YddvZq+ke0EbqzdpwMuR7ZSUhw3hdnCl4Dr/+gx
-	 JO8mCTVOs/nKogGqgg323AZfmDdHJvEprTFxResLR/pP377Qxl0TKPi0t+dDzP7n7S
-	 7Jg3T3HBRoJ+vaq1O4LpcRZDR0Gaxqx9woNBwBHrh3rfFtLn7aX9KBH555aT6Pn4Y+
-	 G6s9lfIPXh1p2TuZhs8XZYfQq2pU1QEej+OSfBOw9B9Ysn2/xNvKH3V6z0t3/DKF4f
-	 YJmnmgJGoFg9Q==
-From: Ard Biesheuvel <ardb@kernel.org>
-To: linux-efi@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] efi: libstub: Use relocated version of kernel's struct screen_info
-Date: Mon, 13 Mar 2023 09:14:32 +0100
-Message-Id: <20230313081432.3769496-1-ardb@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=k20201202; t=1678697302;
+	bh=+DbQKe7hrt+KUG/wuvemcgzf1ZPH76x53joSbhJsicE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=obmcX4O00hMQUIaEqZD+KbLtn5eQ5l2NIVMN0Oj4KzHfx2f9v6M35lQN8oB21GM8H
+	 m7WWh1YtSvQSFCtAE6J0tsSSVJnROgrOPktXIjBv9NqDrXZB7wChnrbqBfGneOiM6k
+	 S9E4lLSH1NpAvlNUu8MxmzXmKC9tVE+vBGYld0o9JFLoOzJwXffymhJXRDvtmyF92A
+	 +B7yhjuWvLNoLXj+iQsZMydCsRZI0Q8xyUMUeK6lakqVJ3dXd6enFgcHzXUX6tvYKO
+	 9MHOahej8KpXu5aafZvBJNqSpQkxXoawcSozMAOzmScSeaa/zUPxW/ojTADQcWTlyh
+	 feFXnsCoBL9HQ==
+Received: by mail-lf1-f43.google.com with SMTP id y15so5157546lfa.7
+        for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 01:48:22 -0700 (PDT)
+X-Gm-Message-State: AO0yUKVhSADGKEEJNo/k4o+q95ImgaBUF/X/RQ4ifSzzFPejoadJvpg6
+	GjsuKm0ZowSzm69VfdGgYy4Qp0xJv1kkxjQpiF8=
+X-Google-Smtp-Source: AK7set/U0P1/BMANqcZ6utTxAsGL2IA04u0QZRigG2g8xGNiO8rFLoe0oRBFrBYdDCdI20aRFPaRXq2fKSCzXIPdls4=
+X-Received: by 2002:ac2:5dc7:0:b0:4dd:98c6:ee3 with SMTP id
+ x7-20020ac25dc7000000b004dd98c60ee3mr10596308lfq.4.1678697300673; Mon, 13 Mar
+ 2023 01:48:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4201; i=ardb@kernel.org; h=from:subject; bh=0jP1vmnnL8uMUFT+IICEJ+Th1i1yCIGQd6+/6iwJ0dM=; b=owGbwMvMwCFmkMcZplerG8N4Wi2JIYXvdvqC3VHtaqXbnh0L2pf7kp81Ja71fLzSmW1LH3dJc wsrL5TpKGVhEONgkBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABNpKmVkaFikqRrofnXzuUku P1iZmf68j1wy7ZTA0yxzYQGFvktqRQz/rA9pWYSWfb00328Pl+JnGemnS6t9zdXzTIq8f6fn3j3 FCwA=
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-Content-Transfer-Encoding: 8bit
+References: <20230313081432.3769496-1-ardb@kernel.org>
+In-Reply-To: <20230313081432.3769496-1-ardb@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 13 Mar 2023 09:48:09 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFBB9DK_zNL2h2=5-8P+VzOO=K1SgJ+07C55zbZoMHRLw@mail.gmail.com>
+Message-ID: <CAMj1kXFBB9DK_zNL2h2=5-8P+VzOO=K1SgJ+07C55zbZoMHRLw@mail.gmail.com>
+Subject: Re: [PATCH] efi: libstub: Use relocated version of kernel's struct screen_info
+To: linux-efi@vger.kernel.org
+Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Xuerui Wang <kernel@xen0n.name>, loongson-kernel@lists.loongnix.cn, 
+	Huacai Chen <chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-In some cases, we expose the kernel's struct screen_info to the EFI stub
-directly, so it gets populated before even entering the kernel.  This
-means the early console is available as soon as the early param parsing
-happens, which is nice. It also means we need two different ways to pass
-this information, as this trick only works if the EFI stub is baked into
-the core kernel image, which is not always the case.
+On Mon, 13 Mar 2023 at 09:14, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> In some cases, we expose the kernel's struct screen_info to the EFI stub
+> directly, so it gets populated before even entering the kernel.  This
+> means the early console is available as soon as the early param parsing
+> happens, which is nice. It also means we need two different ways to pass
+> this information, as this trick only works if the EFI stub is baked into
+> the core kernel image, which is not always the case.
+>
+> Huacai reports that the preparatory refactoring that was needed to
+> implement this alternative method for zboot resulted in a non-functional
+> efifb earlycon for other cases as well, due to the reordering of the
+> kernel image relocation with the population of the screen_info struct,
+> and the latter now takes place after copying the image to its new
+> location, which means we copy the old, uninitialized state.
+>
+> So let's ensure that alloc_screen_info() produces the correct
+> screen_info pointer, by keeping its relocated address in a global
+> variable.
+>
+> Cc: loongarch@lists.linux.dev
+> Cc: Xuefeng Li <lixuefeng@loongson.cn>
+> Cc: Xuerui Wang <kernel@xen0n.name>
+> Cc: loongson-kernel@lists.loongnix.cn
+> Reported-by: Huacai Chen <chenhuacai@loongson.cn>
+> Link: https://lore.kernel.org/linux-efi/20230310021749.921041-1-chenhuacai@loongson.cn/
+> Fixes: 42c8ea3dca094ab8 ("efi: libstub: Factor out EFI stub entrypoint into separate file")
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 
-Huacai reports that the preparatory refactoring that was needed to
-implement this alternative method for zboot resulted in a non-functional
-efifb earlycon for other cases as well, due to the reordering of the
-kernel image relocation with the population of the screen_info struct,
-and the latter now takes place after copying the image to its new
-location, which means we copy the old, uninitialized state.
+This is still not working :-(
 
-So let's ensure that alloc_screen_info() produces the correct
-screen_info pointer, by keeping its relocated address in a global
-variable.
-
-Cc: loongarch@lists.linux.dev
-Cc: Xuefeng Li <lixuefeng@loongson.cn>
-Cc: Xuerui Wang <kernel@xen0n.name>
-Cc: loongson-kernel@lists.loongnix.cn
-Reported-by: Huacai Chen <chenhuacai@loongson.cn>
-Link: https://lore.kernel.org/linux-efi/20230310021749.921041-1-chenhuacai@loongson.cn/
-Fixes: 42c8ea3dca094ab8 ("efi: libstub: Factor out EFI stub entrypoint into separate file")
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- drivers/firmware/efi/libstub/efi-stub-entry.c | 14 ++++++++++++++
- drivers/firmware/efi/libstub/efi-stub.c       |  9 ---------
- drivers/firmware/efi/libstub/screen_info.c    |  7 -------
- 3 files changed, 14 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
-index 5245c4f031c0a70a..883ef2c88f522c4b 100644
---- a/drivers/firmware/efi/libstub/efi-stub-entry.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
-@@ -5,6 +5,17 @@
- 
- #include "efistub.h"
- 
-+static struct screen_info *si;
-+
-+struct screen_info *alloc_screen_info(void)
-+{
-+	return si;
-+}
-+
-+void free_screen_info(struct screen_info *si)
-+{
-+}
-+
- /*
-  * EFI entry point for the generic EFI stub used by ARM, arm64, RISC-V and
-  * LoongArch. This is the entrypoint that is described in the PE/COFF header
-@@ -56,6 +67,9 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
- 		return status;
- 	}
- 
-+	/* point si to the relocated copy of struct screen_info */
-+	si = (void *)&screen_info + image_addr - (unsigned long)image->image_base;
-+
- 	status = efi_stub_common(handle, image, image_addr, cmdline_ptr);
- 
- 	efi_free(image_size, image_addr);
-diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-index 2955c1ac6a36ee00..c4b9eccad0f103dc 100644
---- a/drivers/firmware/efi/libstub/efi-stub.c
-+++ b/drivers/firmware/efi/libstub/efi-stub.c
-@@ -47,15 +47,6 @@
- static u64 virtmap_base = EFI_RT_VIRTUAL_BASE;
- static bool flat_va_mapping = (EFI_RT_VIRTUAL_OFFSET != 0);
- 
--struct screen_info * __weak alloc_screen_info(void)
--{
--	return &screen_info;
--}
--
--void __weak free_screen_info(struct screen_info *si)
--{
--}
--
- static struct screen_info *setup_graphics(void)
- {
- 	efi_guid_t gop_proto = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
-diff --git a/drivers/firmware/efi/libstub/screen_info.c b/drivers/firmware/efi/libstub/screen_info.c
-index 8e76a8b384ba142d..b2637420fe53911e 100644
---- a/drivers/firmware/efi/libstub/screen_info.c
-+++ b/drivers/firmware/efi/libstub/screen_info.c
-@@ -15,14 +15,7 @@
-  * early, but it only works if the EFI stub is part of the core kernel image
-  * itself. The zboot decompressor can only use the configuration table
-  * approach.
-- *
-- * In order to support both methods from the same build of the EFI stub
-- * library, provide this dummy global definition of struct screen_info. If it
-- * is required to satisfy a link dependency, it means we need to override the
-- * __weak alloc and free methods with the ones below, and those will be pulled
-- * in as well.
-  */
--struct screen_info screen_info;
- 
- static efi_guid_t screen_info_guid = LINUX_EFI_SCREEN_INFO_TABLE_GUID;
- 
--- 
-2.39.2
-
+> ---
+>  drivers/firmware/efi/libstub/efi-stub-entry.c | 14 ++++++++++++++
+>  drivers/firmware/efi/libstub/efi-stub.c       |  9 ---------
+>  drivers/firmware/efi/libstub/screen_info.c    |  7 -------
+>  3 files changed, 14 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
+> index 5245c4f031c0a70a..883ef2c88f522c4b 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub-entry.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
+> @@ -5,6 +5,17 @@
+>
+>  #include "efistub.h"
+>
+> +static struct screen_info *si;
+> +
+> +struct screen_info *alloc_screen_info(void)
+> +{
+> +       return si;
+> +}
+> +
+> +void free_screen_info(struct screen_info *si)
+> +{
+> +}
+> +
+>  /*
+>   * EFI entry point for the generic EFI stub used by ARM, arm64, RISC-V and
+>   * LoongArch. This is the entrypoint that is described in the PE/COFF header
+> @@ -56,6 +67,9 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+>                 return status;
+>         }
+>
+> +       /* point si to the relocated copy of struct screen_info */
+> +       si = (void *)&screen_info + image_addr - (unsigned long)image->image_base;
+> +
+>         status = efi_stub_common(handle, image, image_addr, cmdline_ptr);
+>
+>         efi_free(image_size, image_addr);
+> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+> index 2955c1ac6a36ee00..c4b9eccad0f103dc 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub.c
+> @@ -47,15 +47,6 @@
+>  static u64 virtmap_base = EFI_RT_VIRTUAL_BASE;
+>  static bool flat_va_mapping = (EFI_RT_VIRTUAL_OFFSET != 0);
+>
+> -struct screen_info * __weak alloc_screen_info(void)
+> -{
+> -       return &screen_info;
+> -}
+> -
+> -void __weak free_screen_info(struct screen_info *si)
+> -{
+> -}
+> -
+>  static struct screen_info *setup_graphics(void)
+>  {
+>         efi_guid_t gop_proto = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
+> diff --git a/drivers/firmware/efi/libstub/screen_info.c b/drivers/firmware/efi/libstub/screen_info.c
+> index 8e76a8b384ba142d..b2637420fe53911e 100644
+> --- a/drivers/firmware/efi/libstub/screen_info.c
+> +++ b/drivers/firmware/efi/libstub/screen_info.c
+> @@ -15,14 +15,7 @@
+>   * early, but it only works if the EFI stub is part of the core kernel image
+>   * itself. The zboot decompressor can only use the configuration table
+>   * approach.
+> - *
+> - * In order to support both methods from the same build of the EFI stub
+> - * library, provide this dummy global definition of struct screen_info. If it
+> - * is required to satisfy a link dependency, it means we need to override the
+> - * __weak alloc and free methods with the ones below, and those will be pulled
+> - * in as well.
+>   */
+> -struct screen_info screen_info;
+>
+>  static efi_guid_t screen_info_guid = LINUX_EFI_SCREEN_INFO_TABLE_GUID;
+>
+> --
+> 2.39.2
+>
