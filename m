@@ -1,110 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF70E2569
-	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 13:06:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B27C4339C
-	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 13:06:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AAB2569
+	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 13:07:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E7EEC4339E
+	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 13:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1678712799;
-	bh=L3FchjpA4bzV2jLAWJH8Wp61+XGYw1QIBcOo8caSDTA=;
+	s=k20201202; t=1678712865;
+	bh=HQNgpcS/E6wh0rv49d4yGVux/Ba225VqGXhQ+VFGl9o=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RE180UruhAMM8UVop5oq7pUX2p1H2MGkovBvw465HfPtLhxDcyQu6/pnT2XihIQTG
-	 zBxDLHiuukzCbwsWcwosjd1bM/RRtAAT+/csd36Sq9/DP662E/JJ1pp4I07VL7H3cc
-	 zAZ/qVZufBP6wf9BNFgVpW60BwkE3ZzWCxeifBl03PZj6hmurVP0GPEnWdCwfaEU1a
-	 tMRypFIcVZUreMsY1rWuO4rlyp3Xdkb0yKRi9veySmCsn1PqHU5pwUnza0Mc0jr9DN
-	 JjrLG7ez0kePG+m/o9P6dQvW7IPc8w+sff+auXw8YY1flXxEZEn8CBW3lvsvuRg0Tl
-	 jgZwuKo695wXQ==
-Received: by mail-lj1-f173.google.com with SMTP id a32so12558466ljq.1
-        for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 06:06:39 -0700 (PDT)
-X-Gm-Message-State: AO0yUKV4Bil0XIYjIYqGfLdpLGtuMrYjmlP9AX2RLAfi5/TOtY+PG/Eb
-	adYZFgC+ZjlI5B9BJ8m6Mf7yXHeelUCn7lwffnA=
-X-Google-Smtp-Source: AK7set80TmZun/vd7+zl0tCuFtzAxhkFbzEVviN9pg23pWXnEufAw1vsQxylT/+SPSZUFuQO5irRffkrDzuCe8AMAZk=
-X-Received: by 2002:a2e:a268:0:b0:295:ba26:8ad4 with SMTP id
- k8-20020a2ea268000000b00295ba268ad4mr10600967ljm.2.1678712797622; Mon, 13 Mar
- 2023 06:06:37 -0700 (PDT)
+	b=LHtZLT0P6F0Ed/uvaVFW38+oD16Sv0VtcInNsJ6tqoI7EGtFF7Df20U8hCo+KBlpX
+	 FbKf2ZGZECrv0nw1ILhtdUBcp+H19zPWMBafJTHGK43TPpjgy392aKH+pFRIgb3Y61
+	 brXzuiBWCcXtKcgCfTtnYnzX1xADqVc0rxIiXPsSJ/W2Qk4ikVOVU2EMWjJ7mzPhcA
+	 WY4M2bAA4Lko1zp5vE8Rd2mzaDNyN3xhbFJ6Hxz+g8RVvN+w7/sEys2eSE62/I5kts
+	 AC5N9V30sbRzlLOb3Z55JNqIH+Hs5cxwuEY+bTVg5CcNIdrVFA6WTvG+Ww4Dwn14nx
+	 WVsUgu7Dq1LrA==
+Received: by mail-ed1-f50.google.com with SMTP id x13so1164604edd.1
+        for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 06:07:45 -0700 (PDT)
+X-Gm-Message-State: AO0yUKVQnfSaPmspNUqdiQk71Eg55p5xel2IzGP777X1x4rWMpEceTof
+	WDoiGar12SsMujmfVyfxUbrTFUo3YTPOFIkHdRQ=
+X-Google-Smtp-Source: AK7set998oXNxg089u24M12TEznTs/T7QZKHRlg9BO1UjSJJpYrC34UZvy4i7HGHqWg3exK2buzVFnhLj3r0Ig+Ygg8=
+X-Received: by 2002:a17:906:2546:b0:8d8:4578:18e0 with SMTP id
+ j6-20020a170906254600b008d8457818e0mr17697817ejb.10.1678712863350; Mon, 13
+ Mar 2023 06:07:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230313081432.3769496-1-ardb@kernel.org> <CAMj1kXFBB9DK_zNL2h2=5-8P+VzOO=K1SgJ+07C55zbZoMHRLw@mail.gmail.com>
- <CAMj1kXGFb+0-e_t+LeRSJzqweU=SL98cfFnem625PGjjuGCv0A@mail.gmail.com> <CAAhV-H5T2iVbyUiifDG-pKHisr0HYX=tw=xDHEOn5n0Yo41eoA@mail.gmail.com>
-In-Reply-To: <CAAhV-H5T2iVbyUiifDG-pKHisr0HYX=tw=xDHEOn5n0Yo41eoA@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 13 Mar 2023 14:06:26 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXEbsCPNWWv9a_aAT3hqxyMH=rt=vzvYvVG0JJpAL4rVsA@mail.gmail.com>
-Message-ID: <CAMj1kXEbsCPNWWv9a_aAT3hqxyMH=rt=vzvYvVG0JJpAL4rVsA@mail.gmail.com>
-Subject: Re: [PATCH] efi: libstub: Use relocated version of kernel's struct screen_info
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-efi@vger.kernel.org, loongarch@lists.linux.dev, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, 
-	loongson-kernel@lists.loongnix.cn, Huacai Chen <chenhuacai@loongson.cn>
+References: <20230224033017.15653-1-lienze@kylinos.cn> <35f61f336d390c0117270fc4b5a0f842dd459083.camel@kylinos.cn>
+ <CAAhV-H5nFj8U_cp3o0Q41OhFZN+K809A=TbGbw0c=CpQnBCa0g@mail.gmail.com> <98fd597524d6a04bffab13c01dbcf0801d0a59ba.camel@kylinos.cn>
+In-Reply-To: <98fd597524d6a04bffab13c01dbcf0801d0a59ba.camel@kylinos.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 13 Mar 2023 21:07:30 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Kef8mQ3p=rwWhvhgVN7-zjfH8jeAeK_UsXgR0CMLo_w@mail.gmail.com>
+Message-ID: <CAAhV-H4Kef8mQ3p=rwWhvhgVN7-zjfH8jeAeK_UsXgR0CMLo_w@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: use EXCCODE_INT_START instead of hard coded value
+To: Enze Li <lienze@kylinos.cn>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev, enze.li@gmx.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 13 Mar 2023 at 14:04, Huacai Chen <chenhuacai@kernel.org> wrote:
+On Mon, Mar 13, 2023 at 5:18=E2=80=AFPM Enze Li <lienze@kylinos.cn> wrote:
 >
-> Hi, Ard,
+> Hi Huacai,
 >
-> On Mon, Mar 13, 2023 at 6:00=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> =
-wrote:
-> >
-> > On Mon, 13 Mar 2023 at 09:48, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > On Mon, 13 Mar 2023 at 09:14, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > >
-> > > > In some cases, we expose the kernel's struct screen_info to the EFI=
- stub
-> > > > directly, so it gets populated before even entering the kernel.  Th=
-is
-> > > > means the early console is available as soon as the early param par=
-sing
-> > > > happens, which is nice. It also means we need two different ways to=
- pass
-> > > > this information, as this trick only works if the EFI stub is baked=
- into
-> > > > the core kernel image, which is not always the case.
-> > > >
-> > > > Huacai reports that the preparatory refactoring that was needed to
-> > > > implement this alternative method for zboot resulted in a non-funct=
-ional
-> > > > efifb earlycon for other cases as well, due to the reordering of th=
-e
-> > > > kernel image relocation with the population of the screen_info stru=
-ct,
-> > > > and the latter now takes place after copying the image to its new
-> > > > location, which means we copy the old, uninitialized state.
-> > > >
-> > > > So let's ensure that alloc_screen_info() produces the correct
-> > > > screen_info pointer, by keeping its relocated address in a global
-> > > > variable.
-> > > >
-> > > > Cc: loongarch@lists.linux.dev
-> > > > Cc: Xuefeng Li <lixuefeng@loongson.cn>
-> > > > Cc: Xuerui Wang <kernel@xen0n.name>
-> > > > Cc: loongson-kernel@lists.loongnix.cn
-> > > > Reported-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > Link: https://lore.kernel.org/linux-efi/20230310021749.921041-1-che=
-nhuacai@loongson.cn/
-> > > > Fixes: 42c8ea3dca094ab8 ("efi: libstub: Factor out EFI stub entrypo=
-int into separate file")
-> > > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > >
-> > > This is still not working :-(
-> > >
-> >
-> > Huacai, could you try this patch please? It is working now - I don't
-> > know what I did wrong before when testing it.
-> I've tested, it works for me.
+> Thanks for your review :)
 >
-> Tested-by: Huacai Chen <chenhuacai@loongson.cn>
+> On Mon, 2023-03-13 at 15:52 +0800, Huacai Chen wrote:
+> > Though EXCCODE_INT_START is 64, its meaning is not suitable in this
+> > case.
 >
-> But I think my original patch is also OK, unless screen_info is needed
-> by zboot (but the earliest zboot doesn't need it).
+> Humm...Yeah.  Sharing the same macro may make things difficult to
+> understand.
 >
+> What about defining a new macro to indicate this?  Something like
+> EXCCODE_NOR_NUM or EXCCODE_EXC_NUM?
+I prefer to keep it as original.
 
-Thanks.
 
-zboot does need it, otherwise the EFI framebuffer does not work at all.
+Huacai
+>
+> For a newcomer, thank you in advance for your patience.
+>
+> Thanks,
+> Enze
+>
+> >
+> > Huacai
+> >
+> > On Mon, Mar 13, 2023 at 12:42=E2=80=AFPM Enze Li <lienze@kylinos.cn> wr=
+ote:
+> > > Hi Huacai,
+> > >
+> > > Kindly PING for this tiny patch. :)
+> > >
+> > > Thanks,
+> > > Enze
+> > >
+> > > On Fri, 2023-02-24 at 11:30 +0800, Enze Li wrote:
+> > > > The for loop in per_cpu_trap_init function use a hard coded
+> > > > length
+> > > > while
+> > > > setting default exception handler.  Use the proper define instead
+> > > > of
+> > > > hard coded value.
+> > > >
+> > > > Signed-off-by: Enze Li <lienze@kylinos.cn>
+> > > > ---
+> > > >  arch/loongarch/kernel/traps.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/arch/loongarch/kernel/traps.c
+> > > > b/arch/loongarch/kernel/traps.c
+> > > > index de8ebe20b666..7d5784eccf19 100644
+> > > > --- a/arch/loongarch/kernel/traps.c
+> > > > +++ b/arch/loongarch/kernel/traps.c
+> > > > @@ -755,7 +755,7 @@ void per_cpu_trap_init(int cpu)
+> > > >
+> > > >       /* Initialise exception handlers */
+> > > >       if (cpu =3D=3D 0)
+> > > > -             for (i =3D 0; i < 64; i++)
+> > > > +             for (i =3D 0; i < EXCCODE_INT_START; i++)
+> > > >                       set_handler(i * VECSIZE, handle_reserved,
+> > > > VECSIZE);
+> > > >
+> > > >       tlb_init(cpu);
+> > > >
+> > > > base-commit: 804f6d04b1adae9602edbd6410c0ba3a556964fe
+>
+>
