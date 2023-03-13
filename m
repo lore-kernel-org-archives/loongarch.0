@@ -1,89 +1,84 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88191FAE
-	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 07:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1678693559; bh=NFysSKVE1wf9oW0oIK6Ge70/Iljd0kpG6RDJOod3Ebc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c44oaVBiBrQ929NTBEKPUZ3u/g4f3awfMt2LgWbdXuNxB99v1Ul42FzkRwLsyZ2RD
-	 l9gx9GCTacUG9KK8/IQm5WRcIzKrXVyU4Fzch4jj4dYzui/EAwZNHs68A06sU0Yjwh
-	 HIQWqRl4LucvQOu2iC6WX4PLQpvzu1uc25uif6Ys=
-Received: from [100.100.57.122] (unknown [58.34.185.106])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 3E785600CE;
-	Mon, 13 Mar 2023 15:45:59 +0800 (CST)
-Message-ID: <4126d5a2-8752-d79c-18fc-c9342996730b@xen0n.name>
-Date: Mon, 13 Mar 2023 15:45:58 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845811FD0
+	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 07:52:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3156EC4339B
+	for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 07:52:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1678693954;
+	bh=u1HEe0QQErzVRLLo+70zrC2eWQ6H6hrEzlnHCwsOV44=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VSE7bQK+79I8BHsSuzEW0+CxvTznAsmb6sxmomLyOchmmZl+AdirrUzgdy4zxOb5v
+	 tde/CZl8TXEv8NcaA0gzXrZM9yILllULAP/1h+RG5K1R1cF3MDSK9Idx2SAg33SjvG
+	 Npr08szVFezCyu+kgaOZj+AePx6DIldVijB6lC2/ml/A/t7YFnPV8CyYgRWJPaMy4F
+	 JF0AJFeLdjH5YbHKlKOBbrVvIRSlhpATUewmIi5WDS3mZ2nMK/hKKmJJeWyqwR/EBR
+	 DwWixlxOIZj+uGjPPUoqCshdScUmxPNbzej+dFg7zxIkREskKLmYKzbDXefyoAtZou
+	 oTxDzIxP3tcaQ==
+Received: by mail-ed1-f49.google.com with SMTP id k10so44788543edk.13
+        for <loongarch@lists.linux.dev>; Mon, 13 Mar 2023 00:52:34 -0700 (PDT)
+X-Gm-Message-State: AO0yUKU3Ga8j7TRllLRfTCxQR+RfnxCzjJVv2cQRnbtjMnSTFJnZDStN
+	TaZjOCzNQWri59DYDGfUDlKhOQbKNO4unpUa/u8=
+X-Google-Smtp-Source: AK7set9mutBWlOqLzfxMj5mhtc4t+GjjjaEUxOrmKyox1IyoDSQxEMSLY9yzVySTeeMcKpYiJCdzVFCFH5ZCsixqnPw=
+X-Received: by 2002:a50:9f0b:0:b0:4fb:f19:883 with SMTP id b11-20020a509f0b000000b004fb0f190883mr2522311edf.1.1678693952469;
+ Mon, 13 Mar 2023 00:52:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH] efi: libstub: Always pass screen_info via config table
-Content-Language: en-US
-To: Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
-Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
- loongson-kernel@lists.loongnix.cn, Huacai Chen <chenhuacai@loongson.cn>
-References: <20230312225838.3702574-1-ardb@kernel.org>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230312225838.3702574-1-ardb@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20230224033017.15653-1-lienze@kylinos.cn> <35f61f336d390c0117270fc4b5a0f842dd459083.camel@kylinos.cn>
+In-Reply-To: <35f61f336d390c0117270fc4b5a0f842dd459083.camel@kylinos.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 13 Mar 2023 15:52:20 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5nFj8U_cp3o0Q41OhFZN+K809A=TbGbw0c=CpQnBCa0g@mail.gmail.com>
+Message-ID: <CAAhV-H5nFj8U_cp3o0Q41OhFZN+K809A=TbGbw0c=CpQnBCa0g@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: use EXCCODE_INT_START instead of hard coded value
+To: Enze Li <lienze@kylinos.cn>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev, enze.li@gmx.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Though EXCCODE_INT_START is 64, its meaning is not suitable in this case.
 
-On 2023/3/13 06:58, Ard Biesheuvel wrote:
-> In some cases, we expose the kernel's struct screen_info to the EFI stub
-> directly, so it gets populated before even entering the kernel.  This
-> means the early console is available as soon as the early param parsing
-> happens, which is nice. It also means we need two different ways to pass
-> this information, as this trick only works if the EFI stub is baked into
-> the core kernel image, which is not always the case.
-> 
-> Huacai reports that the preparatory refactoring that was needed to
-> implement this alternative method for zboot resulted in a non-functional
-> efifb earlycon for other cases as well, due to the reordering of the
-> kernel image relocation with the population of the screen_info struct,
-> and the latter now takes place after copying the image to its new
-> location, which means we copy the old, uninitialized state.
-> 
-> To fix this and simplify things at the same time, let's just always use
-> the config table method.
-> 
-> Cc: loongarch@lists.linux.dev
-> Cc: Xuefeng Li <lixuefeng@loongson.cn>
-> Cc: Xuerui Wang <kernel@xen0n.name>
-> Cc: loongson-kernel@lists.loongnix.cn
-> Reported-by: Huacai Chen <chenhuacai@loongson.cn>
-> Link: https://lore.kernel.org/linux-efi/20230310021749.921041-1-chenhuacai@loongson.cn/
-> Fixes: 42c8ea3dca094ab8 ("efi: libstub: Factor out EFI stub entrypoint into separate file")
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->   arch/arm64/kernel/image-vars.h             |  1 -
->   arch/loongarch/kernel/image-vars.h         |  1 -
->   arch/riscv/kernel/image-vars.h             |  1 -
->   drivers/firmware/efi/libstub/efi-stub.c    |  9 ---------
->   drivers/firmware/efi/libstub/screen_info.c | 19 -------------------
->   5 files changed, 31 deletions(-)
-> 
+Huacai
 
-The cleanup looks good to me, thanks!
-
-I'm currently unable to verify though, because my loongarch box 
-currently has an RX 6400 plugged in which won't get initialized by the 
-firmware (likely related to newer x86 emulation capability required by 
-the card's VBIOS) so I can't see the efifb. I'll swap that card out 
-maybe this week to test this (and the other "Reprobe after parsing 
-config tables" patch) though!
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+On Mon, Mar 13, 2023 at 12:42=E2=80=AFPM Enze Li <lienze@kylinos.cn> wrote:
+>
+> Hi Huacai,
+>
+> Kindly PING for this tiny patch. :)
+>
+> Thanks,
+> Enze
+>
+> On Fri, 2023-02-24 at 11:30 +0800, Enze Li wrote:
+> > The for loop in per_cpu_trap_init function use a hard coded length
+> > while
+> > setting default exception handler.  Use the proper define instead of
+> > hard coded value.
+> >
+> > Signed-off-by: Enze Li <lienze@kylinos.cn>
+> > ---
+> >  arch/loongarch/kernel/traps.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/loongarch/kernel/traps.c
+> > b/arch/loongarch/kernel/traps.c
+> > index de8ebe20b666..7d5784eccf19 100644
+> > --- a/arch/loongarch/kernel/traps.c
+> > +++ b/arch/loongarch/kernel/traps.c
+> > @@ -755,7 +755,7 @@ void per_cpu_trap_init(int cpu)
+> >
+> >       /* Initialise exception handlers */
+> >       if (cpu =3D=3D 0)
+> > -             for (i =3D 0; i < 64; i++)
+> > +             for (i =3D 0; i < EXCCODE_INT_START; i++)
+> >                       set_handler(i * VECSIZE, handle_reserved,
+> > VECSIZE);
+> >
+> >       tlb_init(cpu);
+> >
+> > base-commit: 804f6d04b1adae9602edbd6410c0ba3a556964fe
+>
