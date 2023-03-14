@@ -1,93 +1,194 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D743C30
-	for <loongarch@lists.linux.dev>; Tue, 14 Mar 2023 16:46:45 +0000 (UTC)
-Received: by mail-io1-f48.google.com with SMTP id b16so6651003iof.11
-        for <loongarch@lists.linux.dev>; Tue, 14 Mar 2023 09:46:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678812405;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=ThLTMTY4kfZsGd2CRXemaZMj0W5Geu4yukgMMkV4a24=;
-        b=P86q0C6PPyPmWNrYZg7AbKaXDevr5rFFuOs+G8nQBCHON7OsNqwwfDe4vIU74zTOfW
-         mUBSWOV3IE81Yt8zKZlpJTSU2EQ3dFf5ylEeCSARlEz2UBKGj10jbx2iR7iAIRLzrxec
-         yq/j0Bra1bPYjHTiuJO5wEfrsL6xo7sNOccuhse0m+uwRAZlhT+gNzcTAaWVDq4eG4As
-         FdBWzyzDl5cem7Kq5F3akoDKLRpIyRa2CbD/c//vQvAlvqque0Mf12ZU5Yeg1CBQ98Bo
-         31EikedV6pZDHcJme78LekMJijqMHWykLX9J9w3Vd4EQy/vOncvtPCRF/+wCmCCYNstl
-         8Sww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678812405;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ThLTMTY4kfZsGd2CRXemaZMj0W5Geu4yukgMMkV4a24=;
-        b=Elrl1h6TOG6oOL/qITPYJIkJmqDzQ4Db9SOA63Ci6fh7dwWq7B5hkwlDmolYnvjnbY
-         dSOUlY8BI0khagyqGdbN5o0ZptvI1uMjhGL9/s5cLVvIQ5ikyXYzTZFIkCW6ywx4LV9Y
-         zXkKxp2mHuleOw1FJyE7UeAYmNrqBjxeZVdl01s7gIsEs5qwezLarOrp7/6pHdIdDN3r
-         zOWFYDzCUSz0fiyB3qy2+a+ffuh20JPYNBsXnIsalHlAmsTZp9WvhC2YvhR38njVw1Ma
-         /h8GI8Z90HDapGpFNVaxAvRq/5RpXezcOL7pA4OzM8TBUF8e3x3dZuD39DpdSvAfCdo+
-         fyWA==
-X-Gm-Message-State: AO0yUKVmwUxSx8vWatvbHYUN1+f20lcQrCGHPmFAimSLss6KqIyX7NRJ
-	B9QMcdkOCwl/Pblf5vLOg5g=
-X-Google-Smtp-Source: AK7set9eOUYg3yTxMgvtg9SCUI9/kBGNhSBNasC8VbrbO1x0pBDlIe732Dl5mGhBA+nfAt0zEoJh2g==
-X-Received: by 2002:a05:6602:20c2:b0:74c:b069:f38c with SMTP id 2-20020a05660220c200b0074cb069f38cmr22109345ioz.1.1678812405114;
-        Tue, 14 Mar 2023 09:46:45 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s27-20020a02cc9b000000b0040610ade715sm311493jap.83.2023.03.14.09.46.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Mar 2023 09:46:44 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <84760aa1-4eb5-18a3-203f-22dc2b69db65@roeck-us.net>
-Date: Tue, 14 Mar 2023 09:46:42 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23370197
+	for <loongarch@lists.linux.dev>; Tue, 14 Mar 2023 22:31:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3A2FC4339C
+	for <loongarch@lists.linux.dev>; Tue, 14 Mar 2023 22:31:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1678833116;
+	bh=gk2Tymhp90otil403oGS0ANqZWeCizhGEMkb0lNl/8M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=mcLhpHQ41+l3ZFkdnFlFNE8w5Oe4LXFS6tcL8bcmYEiTnAg6X0bzqw0gUsfDrA3Q7
+	 +7Jl2uudovBM+Ukm1La2txFTa+jfv4/ZklAx4Jy1b2VAqWUh/nRMmO9qr798i1G8UW
+	 3fDalxr1MaI12yAt80xTOPWblZFUb6XXR05FhQb6VXktjaTT58Gmn5pAsR7GgufTRu
+	 9ewa9pV65lK7lLQG566fB91KrVl95+RCiDp0eSuFcMKfvYUp8nEH/XA/DnluYFVyh8
+	 OukGvkkZqQ6LI6Ofro8ayN8If5hZfTMO1/iahgyOOLDJyHelvohP274895H/Kq/2Xh
+	 ZoqARQdFChuQw==
+Received: by mail-lf1-f52.google.com with SMTP id r27so21958891lfe.10
+        for <loongarch@lists.linux.dev>; Tue, 14 Mar 2023 15:31:56 -0700 (PDT)
+X-Gm-Message-State: AO0yUKUuuq8ZmCMerZ+F5jft217d1nlvVtmcFGn2gvMH0kffPkgVjtL+
+	fFwFRqQtDbPz3+/pwdBYgRLuIvclrit1aCgWLtY=
+X-Google-Smtp-Source: AK7set9fvG9iDYqG/ZvBlfEHhTScuhZtnxiap1NyONzoBOYfBmNA4HZWcpy6H3lTt4ZiqCD9p5BTAYNc+41ucBzYWrs=
+X-Received: by 2002:ac2:4203:0:b0:4d5:ca42:e43b with SMTP id
+ y3-20020ac24203000000b004d5ca42e43bmr1239812lfh.4.1678833114813; Tue, 14 Mar
+ 2023 15:31:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: Problems when booting Loongarch in qemu with
- CONFIG_PROVE_LOCKING=y
-Content-Language: en-US
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, chenhuacai@kernel.org
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
- Xiaojuan Yang <yangxiaojuan@loongson.cn>, Song Gao <gaosong@loongson.cn>,
- Xuefeng Li <lixuefeng@loongson.cn>
-References: <8a44ad71-68d2-4926-892f-72bfc7a67e2a@roeck-us.net>
- <8e3c824a-7a33-a436-c827-60bbea11bad0@loongson.cn>
-From: Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <8e3c824a-7a33-a436-c827-60bbea11bad0@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20230310021749.921041-1-chenhuacai@loongson.cn>
+In-Reply-To: <20230310021749.921041-1-chenhuacai@loongson.cn>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 14 Mar 2023 23:31:43 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHHVxM2YGQ9Ytdf=nEB6CU9GHSDgek+V2SghYh5Aq-uSg@mail.gmail.com>
+Message-ID: <CAMj1kXHHVxM2YGQ9Ytdf=nEB6CU9GHSDgek+V2SghYh5Aq-uSg@mail.gmail.com>
+Subject: Re: [PATCH V2] efi/libstub: Call setup_graphics() before handle_kernel_image()
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, linux-efi@vger.kernel.org, 
+	loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Xuerui Wang <kernel@xen0n.name>, linux-kernel@vger.kernel.org, 
+	loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/14/23 04:48, Tiezhu Yang wrote:
-> 
-> 
-> On 03/10/2023 02:20 AM, Guenter Roeck wrote:
->> Hi,
->>
->> when trying to boot Loongarch images in qemu with
->> defconfig+CONFIG_PROVE_LOCKING=y, I get the following traceback.
->>
->> [    7.530438] BUG: MAX_STACK_TRACE_ENTRIES too low!
->> [    7.530636] turning off the locking correctness validator.
-> 
-> I can reproduce this problem on my Loongson-3A5000 machine.
-> 
->> Is this a known problem ? If so, is there a solution other than not enabling
->> CONFIG_PROVE_LOCKING ?
->>
-> 
-> The problem can be fixed with some small changes, I will
-> send a patch in the next week after some testing.
-> 
+On Fri, 10 Mar 2023 at 03:18, Huacai Chen <chenhuacai@loongson.cn> wrote:
+>
+> Commit 42c8ea3dca094ab8 ("efi: libstub: Factor out EFI stub entrypoint
+> into separate file") moves setup_graphics() into efi_stub_common() which
+> is after handle_kernel_image(). This causes efifb no longer work because
+> handle_kernel_image() may move the core kernel to its preferred address,
+> which means the screen_info filled by the efistub will not be the same
+> as the one accessed by the core kernel. So let us call setup_graphics()
+> before handle_kernel_image() which restores the old behavior.
+>
+> The side effect is zboot will not call setup_graphics(), but I think
+> zboot doesn't need it either.
+>
+> Fixes: 42c8ea3dca094ab8 ("efi: libstub: Factor out EFI stub entrypoint into separate file")
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 
-Thanks a lot!
-
-Guenter
+Please drop this patch from the loonarch tree - it is causing a
+conflict in linux-next.
 
 
+> ---
+> V2: Use static declaration for setup_graphics() to avoid build warnings.
+>
+>  drivers/firmware/efi/libstub/efi-stub-entry.c | 29 +++++++++++++++++++
+>  drivers/firmware/efi/libstub/efi-stub.c       | 27 -----------------
+>  2 files changed, 29 insertions(+), 27 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
+> index 5245c4f031c0..f971fd25a4eb 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub-entry.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
+> @@ -5,6 +5,30 @@
+>
+>  #include "efistub.h"
+>
+> +static struct screen_info *setup_graphics(void)
+> +{
+> +       unsigned long size;
+> +       efi_status_t status;
+> +       efi_guid_t gop_proto = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
+> +       void **gop_handle = NULL;
+> +       struct screen_info *si = NULL;
+> +
+> +       size = 0;
+> +       status = efi_bs_call(locate_handle, EFI_LOCATE_BY_PROTOCOL,
+> +                            &gop_proto, NULL, &size, gop_handle);
+> +       if (status == EFI_BUFFER_TOO_SMALL) {
+> +               si = alloc_screen_info();
+> +               if (!si)
+> +                       return NULL;
+> +               status = efi_setup_gop(si, &gop_proto, size);
+> +               if (status != EFI_SUCCESS) {
+> +                       free_screen_info(si);
+> +                       return NULL;
+> +               }
+> +       }
+> +       return si;
+> +}
+> +
+>  /*
+>   * EFI entry point for the generic EFI stub used by ARM, arm64, RISC-V and
+>   * LoongArch. This is the entrypoint that is described in the PE/COFF header
+> @@ -22,6 +46,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+>         efi_guid_t loaded_image_proto = LOADED_IMAGE_PROTOCOL_GUID;
+>         unsigned long reserve_addr = 0;
+>         unsigned long reserve_size = 0;
+> +       struct screen_info *si;
+>
+>         WRITE_ONCE(efi_system_table, systab);
+>
+> @@ -47,6 +72,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+>
+>         efi_info("Booting Linux Kernel...\n");
+>
+> +       si = setup_graphics();
+> +
+>         status = handle_kernel_image(&image_addr, &image_size,
+>                                      &reserve_addr,
+>                                      &reserve_size,
+> @@ -58,6 +85,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+>
+>         status = efi_stub_common(handle, image, image_addr, cmdline_ptr);
+>
+> +       free_screen_info(si);
+> +
+>         efi_free(image_size, image_addr);
+>         efi_free(reserve_size, reserve_addr);
+>
+> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+> index 2955c1ac6a36..bc67af721412 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub.c
+> @@ -56,30 +56,6 @@ void __weak free_screen_info(struct screen_info *si)
+>  {
+>  }
+>
+> -static struct screen_info *setup_graphics(void)
+> -{
+> -       efi_guid_t gop_proto = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
+> -       efi_status_t status;
+> -       unsigned long size;
+> -       void **gop_handle = NULL;
+> -       struct screen_info *si = NULL;
+> -
+> -       size = 0;
+> -       status = efi_bs_call(locate_handle, EFI_LOCATE_BY_PROTOCOL,
+> -                            &gop_proto, NULL, &size, gop_handle);
+> -       if (status == EFI_BUFFER_TOO_SMALL) {
+> -               si = alloc_screen_info();
+> -               if (!si)
+> -                       return NULL;
+> -               status = efi_setup_gop(si, &gop_proto, size);
+> -               if (status != EFI_SUCCESS) {
+> -                       free_screen_info(si);
+> -                       return NULL;
+> -               }
+> -       }
+> -       return si;
+> -}
+> -
+>  static void install_memreserve_table(void)
+>  {
+>         struct linux_efi_memreserve *rsv;
+> @@ -163,14 +139,12 @@ efi_status_t efi_stub_common(efi_handle_t handle,
+>                              unsigned long image_addr,
+>                              char *cmdline_ptr)
+>  {
+> -       struct screen_info *si;
+>         efi_status_t status;
+>
+>         status = check_platform_features();
+>         if (status != EFI_SUCCESS)
+>                 return status;
+>
+> -       si = setup_graphics();
+>
+>         efi_retrieve_tpm2_eventlog();
+>
+> @@ -190,7 +164,6 @@ efi_status_t efi_stub_common(efi_handle_t handle,
+>
+>         status = efi_boot_kernel(handle, image, image_addr, cmdline_ptr);
+>
+> -       free_screen_info(si);
+>         return status;
+>  }
+>
+> --
+> 2.39.1
+>
