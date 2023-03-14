@@ -1,80 +1,93 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C763C34
-	for <loongarch@lists.linux.dev>; Tue, 14 Mar 2023 13:31:14 +0000 (UTC)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4PbZD96Sf2z4x5R;
-	Wed, 15 Mar 2023 00:31:05 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1678800666;
-	bh=RWpQH91z9oCPCV7UgB1VjeBlCalvsZzq/D68BsBI0Ww=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Gmi2DLvR7FFuYEzpwxyajVFJgqqPUe+t2SrIuwdBqzYcgbPpV3TLjtx3waxpWL6PS
-	 Tlm2qgbZO6FByZBDH6vF20yDA6dWo8oqnebJk3mUZNrFfgeS07oV/YOl+wQ/pjVzZu
-	 NwgdFlLy64biV7j4n9vGCDKf7dkUIoM/W/PbkbUt8GCcCNGFWLT03R3isUmlhyjLoN
-	 z+e+Uak4GXq1yhQ7L0Ld0I2uWeJ7ZdLzkVARLCWcim1o6ZC2zU4FnwLI9WmUPUXLXt
-	 pck/4eDZ5TqTFY6UejLoZnpTjGPIH2V00sS3IcxUEmiEM4sMhD557XPpadOlNh7qRi
-	 JJdlXEA0IptgQ==
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Fangrui Song <maskray@google.com>, Vincenzo Frascino
- <vincenzo.frascino@arm.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Andy Lutomirski <luto@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
- Fangrui Song <maskray@google.com>
-Subject: Re: [PATCH v3] vdso: Improve cmd_vdso_check to check all dynamic
- relocations
-In-Reply-To: <20230310190750.3323802-1-maskray@google.com>
-References: <20230310190750.3323802-1-maskray@google.com>
-Date: Wed, 15 Mar 2023 00:28:53 +1100
-Message-ID: <87jzzjo416.fsf@mpe.ellerman.id.au>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D743C30
+	for <loongarch@lists.linux.dev>; Tue, 14 Mar 2023 16:46:45 +0000 (UTC)
+Received: by mail-io1-f48.google.com with SMTP id b16so6651003iof.11
+        for <loongarch@lists.linux.dev>; Tue, 14 Mar 2023 09:46:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678812405;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=ThLTMTY4kfZsGd2CRXemaZMj0W5Geu4yukgMMkV4a24=;
+        b=P86q0C6PPyPmWNrYZg7AbKaXDevr5rFFuOs+G8nQBCHON7OsNqwwfDe4vIU74zTOfW
+         mUBSWOV3IE81Yt8zKZlpJTSU2EQ3dFf5ylEeCSARlEz2UBKGj10jbx2iR7iAIRLzrxec
+         yq/j0Bra1bPYjHTiuJO5wEfrsL6xo7sNOccuhse0m+uwRAZlhT+gNzcTAaWVDq4eG4As
+         FdBWzyzDl5cem7Kq5F3akoDKLRpIyRa2CbD/c//vQvAlvqque0Mf12ZU5Yeg1CBQ98Bo
+         31EikedV6pZDHcJme78LekMJijqMHWykLX9J9w3Vd4EQy/vOncvtPCRF/+wCmCCYNstl
+         8Sww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678812405;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ThLTMTY4kfZsGd2CRXemaZMj0W5Geu4yukgMMkV4a24=;
+        b=Elrl1h6TOG6oOL/qITPYJIkJmqDzQ4Db9SOA63Ci6fh7dwWq7B5hkwlDmolYnvjnbY
+         dSOUlY8BI0khagyqGdbN5o0ZptvI1uMjhGL9/s5cLVvIQ5ikyXYzTZFIkCW6ywx4LV9Y
+         zXkKxp2mHuleOw1FJyE7UeAYmNrqBjxeZVdl01s7gIsEs5qwezLarOrp7/6pHdIdDN3r
+         zOWFYDzCUSz0fiyB3qy2+a+ffuh20JPYNBsXnIsalHlAmsTZp9WvhC2YvhR38njVw1Ma
+         /h8GI8Z90HDapGpFNVaxAvRq/5RpXezcOL7pA4OzM8TBUF8e3x3dZuD39DpdSvAfCdo+
+         fyWA==
+X-Gm-Message-State: AO0yUKVmwUxSx8vWatvbHYUN1+f20lcQrCGHPmFAimSLss6KqIyX7NRJ
+	B9QMcdkOCwl/Pblf5vLOg5g=
+X-Google-Smtp-Source: AK7set9eOUYg3yTxMgvtg9SCUI9/kBGNhSBNasC8VbrbO1x0pBDlIe732Dl5mGhBA+nfAt0zEoJh2g==
+X-Received: by 2002:a05:6602:20c2:b0:74c:b069:f38c with SMTP id 2-20020a05660220c200b0074cb069f38cmr22109345ioz.1.1678812405114;
+        Tue, 14 Mar 2023 09:46:45 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s27-20020a02cc9b000000b0040610ade715sm311493jap.83.2023.03.14.09.46.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Mar 2023 09:46:44 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <84760aa1-4eb5-18a3-203f-22dc2b69db65@roeck-us.net>
+Date: Tue, 14 Mar 2023 09:46:42 -0700
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: Problems when booting Loongarch in qemu with
+ CONFIG_PROVE_LOCKING=y
+Content-Language: en-US
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, chenhuacai@kernel.org
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ Xiaojuan Yang <yangxiaojuan@loongson.cn>, Song Gao <gaosong@loongson.cn>,
+ Xuefeng Li <lixuefeng@loongson.cn>
+References: <8a44ad71-68d2-4926-892f-72bfc7a67e2a@roeck-us.net>
+ <8e3c824a-7a33-a436-c827-60bbea11bad0@loongson.cn>
+From: Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <8e3c824a-7a33-a436-c827-60bbea11bad0@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Fangrui Song <maskray@google.com> writes:
-> The actual intention is that no dynamic relocation exists. However, some
-> GNU ld ports produce unneeded R_*_NONE. (If a port fails to determine
-> the exact .rel[a].dyn size, the trailing zeros become R_*_NONE
-> relocations. E.g. ld's powerpc port recently fixed
-> https://sourceware.org/bugzilla/show_bug.cgi?id=29540) R_*_NONE are
-> generally no-op in the dynamic loaders. So just ignore them.
->
-> With the change, we can remove ARCH_REL_TYPE_ABS. ARCH_REL_TYPE_ABS is a
-> bit misnomer as ports may check RELAVETIVE/GLOB_DAT/JUMP_SLOT which are
-> not called "absolute relocations". (The patch is motivated by the arm64
-> port missing R_AARCH64_RELATIVE.)
->
-> Signed-off-by: Fangrui Song <maskray@google.com>
-> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com> # for vDSO, aarch64
-> Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com> # for aarch64
-> ---
-> Changes from v2:
-> * rebase
->
-> Changes from v3:
-> * Add a comment before `include $(srctree)/lib/vdso/Makefile` in every touched arch Makefile
-> ---
->  arch/arm/vdso/Makefile            |  4 +---
->  arch/arm64/kernel/vdso/Makefile   |  4 +---
->  arch/arm64/kernel/vdso32/Makefile |  3 ---
->  arch/csky/kernel/vdso/Makefile    |  4 +---
->  arch/loongarch/vdso/Makefile      |  4 +---
->  arch/mips/vdso/Makefile           |  4 +---
->  arch/powerpc/kernel/vdso/Makefile |  2 +-
+On 3/14/23 04:48, Tiezhu Yang wrote:
+> 
+> 
+> On 03/10/2023 02:20 AM, Guenter Roeck wrote:
+>> Hi,
+>>
+>> when trying to boot Loongarch images in qemu with
+>> defconfig+CONFIG_PROVE_LOCKING=y, I get the following traceback.
+>>
+>> [    7.530438] BUG: MAX_STACK_TRACE_ENTRIES too low!
+>> [    7.530636] turning off the locking correctness validator.
+> 
+> I can reproduce this problem on my Loongson-3A5000 machine.
+> 
+>> Is this a known problem ? If so, is there a solution other than not enabling
+>> CONFIG_PROVE_LOCKING ?
+>>
+> 
+> The problem can be fixed with some small changes, I will
+> send a patch in the next week after some testing.
+> 
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Thanks a lot!
 
-cheers
+Guenter
+
+
