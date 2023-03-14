@@ -1,113 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 336B328F2;
-	Mon, 13 Mar 2023 15:51:04 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9C932F4;
-	Mon, 13 Mar 2023 08:51:46 -0700 (PDT)
-Received: from [10.1.196.177] (eglon.cambridge.arm.com [10.1.196.177])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74FC33F71A;
-	Mon, 13 Mar 2023 08:50:56 -0700 (PDT)
-Message-ID: <1f21673e-e5e6-a158-94a4-6ae6724c1f93@arm.com>
-Date: Mon, 13 Mar 2023 15:50:52 +0000
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B100E28EF
+	for <loongarch@lists.linux.dev>; Tue, 14 Mar 2023 08:54:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38380C433D2;
+	Tue, 14 Mar 2023 08:54:45 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH] LoongArch: Make WriteCombine configurable for ioremap()
+Date: Tue, 14 Mar 2023 16:54:33 +0800
+Message-Id: <20230314085433.4078119-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [RFC PATCH 00/32] ACPI/arm64: add support for virtual cpuhotplug
-Content-Language: en-GB
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: linux-pm@vger.kernel.org, loongarch@lists.linux.dev,
- kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- x86@kernel.org, Marc Zyngier <maz@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Len Brown <lenb@kernel.org>,
- Rafael Wysocki <rafael@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Salil Mehta <salil.mehta@huawei.com>, Russell King <linux@armlinux.org.uk>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>, kangkang.shen@futurewei.com
-References: <20230203135043.409192-1-james.morse@arm.com>
- <20230307120050.000032f1@Huawei.com>
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <20230307120050.000032f1@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Jonathan,
+LoongArch maintains cache coherency in hardware, but when works with
+LS7A chipsets the WUC attribute (Weak-ordered UnCached, which is similar
+to WriteCombine) is out of the scope of cache coherency machanism for
+PCIe devices (this is a PCIe protocol violation, may be fixed in newer
+chipsets).
 
-On 07/03/2023 12:00, Jonathan Cameron wrote:
-> On Fri,  3 Feb 2023 13:50:11 +0000
-> James Morse <james.morse@arm.com> wrote:
+This means WUC can only used for write-only memory regions now, so this
+option is disabled by default (means WUC falls back to SUC for ioremap).
+You can enable this option if the kernel is ensured to run on bug-free
+hardwares.
 
->> On a system that supports cpuhotplug the MADT has to describe every possible
->> CPU at boot. Under KVM, the vGIC needs to know about every possible vCPU before
->> the guest is started.
->> With these constraints, virtual-cpuhotplug is really just a hypervisor/firmware
->> policy about which CPUs can be brought online.
->>
->> This series adds support for virtual-cpuhotplug as exactly that: firmware
->> policy. This may even work on a physical machine too; for a guest the part of
->> firmware is played by the VMM. (typically Qemu).
->>
->> PSCI support is modified to return 'DENIED' if the CPU can't be brought
->> online/enabled yet. The CPU object's _STA method's enabled bit is used to
->> indicate firmware's current disposition. If the CPU has its enabled bit clear,
->> it will not be registered with sysfs, and attempts to bring it online will
->> fail. The notifications that _STA has changed its value then work in the same
->> way as physical hotplug, and firmware can cause the CPU to be registered some
->> time later, allowing it to be brought online.
+Suggested-by: WANG Xuerui <kernel@xen0n.name>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/Kconfig          | 14 ++++++++++++++
+ arch/loongarch/include/asm/io.h |  5 +++++
+ 2 files changed, 19 insertions(+)
 
-> As we discussed on an LOD call a while back, I think that we need some path to
-> find out if the guest supports vCPU HP or not so that info can be queried by
-> an orchestrator / libvirt etc.  In general the entity responsible for allocating
-> extra vCPUs may not know what support the VM has for this feature.
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 0d11738a861a..e3f5c422636f 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -446,6 +446,20 @@ config ARCH_IOREMAP
+ 	  protection support. However, you can enable LoongArch DMW-based
+ 	  ioremap() for better performance.
+ 
++config ARCH_WRITECOMBINE
++	bool "Enable WriteCombine (WUC) for ioremap()"
++	help
++	  LoongArch maintains cache coherency in hardware, but with LS7A
++	  chipsets the WUC attribute (Weak-ordered UnCached, which is similar
++	  to WriteCombine) is out of the scope of cache coherency machanism
++	  for PCIe devices (this is a PCIe protocol violation, may be fixed
++	  in newer chipsets).
++
++	  This means WUC can only used for write-only memory regions now, so
++	  this option is disabled by default (means WUC falls back to SUC for
++	  ioremap). You can enable this option if the kernel is ensured to run
++	  on bug-free hardwares.
++
+ config ARCH_STRICT_ALIGN
+ 	bool "Enable -mstrict-align to prevent unaligned accesses" if EXPERT
+ 	default y
+diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
+index 402a7d9e3a53..079ef897ed1a 100644
+--- a/arch/loongarch/include/asm/io.h
++++ b/arch/loongarch/include/asm/io.h
+@@ -54,8 +54,13 @@ static inline void __iomem *ioremap_prot(phys_addr_t offset, unsigned long size,
+  * @offset:    bus address of the memory
+  * @size:      size of the resource to map
+  */
++#ifdef CONFIG_ARCH_WRITECOMBINE
+ #define ioremap_wc(offset, size)	\
+ 	ioremap_prot((offset), (size), pgprot_val(PAGE_KERNEL_WUC))
++#else
++#define ioremap_wc(offset, size)	\
++	ioremap_prot((offset), (size), pgprot_val(PAGE_KERNEL_SUC))
++#endif
+ 
+ #define ioremap_cache(offset, size)	\
+ 	ioremap_prot((offset), (size), pgprot_val(PAGE_KERNEL))
+-- 
+2.39.1
 
-I agree. For arm64 this is going to be important if/when there are machines that do
-physical hotplug of CPUs too.
-
-
-> There are various ways we could get this information into the VMM.
-> My immediate thought is to use one of the ACPI interfaces that lets us write
-> AML that can set an emulated register. A query to the VMM can check if this
-> register is set.
-> 
-> So options.
-> 
-> _OSI() - Deprecated on ARM64 so lets not use that ;)
-
-News to me, I've only just discovered it!
-
-
-> _OSC() - Could add a bit to Table 6.13 Platform-Wide Capabilites in ACPI 6.5 spec.
->          Given x86 has a similar online capable bit perhaps this is the best option
->          though it is the one that requires a formal code first proposal to ASWG.
-
-I've had a go at writing this one:
-https://gitlab.arm.com/linux-arm/linux-jm/-/commit/220b0d8b0261d7467c8705e6f614d57325798859
-
-It'll appear in the v1 of the series once the kernel and qemu bits are all lined up again.
-
-
-Thanks,
-
-James
-
-
-> _OSC() - Could add a new UUID and put it under a suitable device - maybe all CPUs?
->          You could definitely argue this feature is an operating system property.
-> _DSM() - Similar to OSC but always under a device.
->          Whilst can be used for this I'm not sure it really matches intended usecase.
-> 
-> Assuming everyone agrees this bit of introspection is useful,
-> Rafael / other ACPI specialists: Any suggestions on how best to do this?
