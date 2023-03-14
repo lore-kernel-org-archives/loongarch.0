@@ -1,71 +1,80 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 365143C10
-	for <loongarch@lists.linux.dev>; Tue, 14 Mar 2023 11:48:46 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxMI8XXxBkFSMMAA--.17279S3;
-	Tue, 14 Mar 2023 19:48:39 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxmb0WXxBkfYJXAA--.19793S3;
-	Tue, 14 Mar 2023 19:48:39 +0800 (CST)
-Subject: Re: Problems when booting Loongarch in qemu with
- CONFIG_PROVE_LOCKING=y
-To: Guenter Roeck <linux@roeck-us.net>, chenhuacai@kernel.org
-References: <8a44ad71-68d2-4926-892f-72bfc7a67e2a@roeck-us.net>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
- Xiaojuan Yang <yangxiaojuan@loongson.cn>, Song Gao <gaosong@loongson.cn>,
- Xuefeng Li <lixuefeng@loongson.cn>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <8e3c824a-7a33-a436-c827-60bbea11bad0@loongson.cn>
-Date: Tue, 14 Mar 2023 19:48:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C763C34
+	for <loongarch@lists.linux.dev>; Tue, 14 Mar 2023 13:31:14 +0000 (UTC)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4PbZD96Sf2z4x5R;
+	Wed, 15 Mar 2023 00:31:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1678800666;
+	bh=RWpQH91z9oCPCV7UgB1VjeBlCalvsZzq/D68BsBI0Ww=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Gmi2DLvR7FFuYEzpwxyajVFJgqqPUe+t2SrIuwdBqzYcgbPpV3TLjtx3waxpWL6PS
+	 Tlm2qgbZO6FByZBDH6vF20yDA6dWo8oqnebJk3mUZNrFfgeS07oV/YOl+wQ/pjVzZu
+	 NwgdFlLy64biV7j4n9vGCDKf7dkUIoM/W/PbkbUt8GCcCNGFWLT03R3isUmlhyjLoN
+	 z+e+Uak4GXq1yhQ7L0Ld0I2uWeJ7ZdLzkVARLCWcim1o6ZC2zU4FnwLI9WmUPUXLXt
+	 pck/4eDZ5TqTFY6UejLoZnpTjGPIH2V00sS3IcxUEmiEM4sMhD557XPpadOlNh7qRi
+	 JJdlXEA0IptgQ==
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Fangrui Song <maskray@google.com>, Vincenzo Frascino
+ <vincenzo.frascino@arm.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Andy Lutomirski <luto@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-csky@vger.kernel.org, linux-mips@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+ Fangrui Song <maskray@google.com>
+Subject: Re: [PATCH v3] vdso: Improve cmd_vdso_check to check all dynamic
+ relocations
+In-Reply-To: <20230310190750.3323802-1-maskray@google.com>
+References: <20230310190750.3323802-1-maskray@google.com>
+Date: Wed, 15 Mar 2023 00:28:53 +1100
+Message-ID: <87jzzjo416.fsf@mpe.ellerman.id.au>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <8a44ad71-68d2-4926-892f-72bfc7a67e2a@roeck-us.net>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Cxmb0WXxBkfYJXAA--.19793S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2
-	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
-	AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E
-	5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAV
-	WUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY
-	1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
-	0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU
-	zsqWUUUUU
+Content-Type: text/plain
 
-
-
-On 03/10/2023 02:20 AM, Guenter Roeck wrote:
-> Hi,
+Fangrui Song <maskray@google.com> writes:
+> The actual intention is that no dynamic relocation exists. However, some
+> GNU ld ports produce unneeded R_*_NONE. (If a port fails to determine
+> the exact .rel[a].dyn size, the trailing zeros become R_*_NONE
+> relocations. E.g. ld's powerpc port recently fixed
+> https://sourceware.org/bugzilla/show_bug.cgi?id=29540) R_*_NONE are
+> generally no-op in the dynamic loaders. So just ignore them.
 >
-> when trying to boot Loongarch images in qemu with
-> defconfig+CONFIG_PROVE_LOCKING=y, I get the following traceback.
+> With the change, we can remove ARCH_REL_TYPE_ABS. ARCH_REL_TYPE_ABS is a
+> bit misnomer as ports may check RELAVETIVE/GLOB_DAT/JUMP_SLOT which are
+> not called "absolute relocations". (The patch is motivated by the arm64
+> port missing R_AARCH64_RELATIVE.)
 >
-> [    7.530438] BUG: MAX_STACK_TRACE_ENTRIES too low!
-> [    7.530636] turning off the locking correctness validator.
-
-I can reproduce this problem on my Loongson-3A5000 machine.
-
-> Is this a known problem ? If so, is there a solution other than not enabling
-> CONFIG_PROVE_LOCKING ?
+> Signed-off-by: Fangrui Song <maskray@google.com>
+> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com> # for vDSO, aarch64
+> Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com> # for aarch64
+> ---
+> Changes from v2:
+> * rebase
 >
+> Changes from v3:
+> * Add a comment before `include $(srctree)/lib/vdso/Makefile` in every touched arch Makefile
+> ---
+>  arch/arm/vdso/Makefile            |  4 +---
+>  arch/arm64/kernel/vdso/Makefile   |  4 +---
+>  arch/arm64/kernel/vdso32/Makefile |  3 ---
+>  arch/csky/kernel/vdso/Makefile    |  4 +---
+>  arch/loongarch/vdso/Makefile      |  4 +---
+>  arch/mips/vdso/Makefile           |  4 +---
+>  arch/powerpc/kernel/vdso/Makefile |  2 +-
 
-The problem can be fixed with some small changes, I will
-send a patch in the next week after some testing.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-Thanks,
-Tiezhu
-
+cheers
