@@ -1,68 +1,181 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9BC1361
-	for <loongarch@lists.linux.dev>; Wed, 15 Mar 2023 04:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1678854802;
-	bh=dnx8mYuIXKhY0u6LRcFBOzoqXdx1e7QKqhBvWdPzpZ8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=VgEC4Y46BOhmxYa8KoD9dQnAmGzAcqArZr0zdsHqekEdduwtfswHmehsoGT391Rm8
-	 bqoYsvYYjFe8Je30ruve6ZLKXqw/o95+2EShlqvf8wMo5Dd5rrd0rfkuUb0ajpLz0I
-	 q9IbRDObDqGGVGwHgZUMOT6HlNVEj2yllOMwS83I=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 41E4165907;
-	Wed, 15 Mar 2023 00:33:21 -0400 (EDT)
-Message-ID: <0f07fc368ef9a365f4928f97819f203e45deb345.camel@xry111.site>
-Subject: Re: [PATCH V2] LoongArch: Make WriteCombine configurable for
- ioremap()
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren
-	 <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang
-	 <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org, 
-	loongson-kernel@lists.loongnix.cn
-Date: Wed, 15 Mar 2023 12:33:19 +0800
-In-Reply-To: <20230315004450.508486-1-chenhuacai@loongson.cn>
-References: <20230315004450.508486-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.46.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D2F20EB
+	for <loongarch@lists.linux.dev>; Wed, 15 Mar 2023 05:14:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=sytJt4ZH2ciYaUZJ2jrdqraRlIjKW/6JOZO8w6mCnuM=; b=dOAYiOpB9wvXMhkb4HRsxV4/DU
+	VD4tWO/q9akt/zqW7pniC0O7hOsmpS4ix4eFov1LLKCvqssoGT3xt9onK0+UryXSFFMGoHXyfhMcZ
+	9/+qHxc+i66HQ5B3Xf0SLne2+NDKjiTViiw0wWQhC2HHtrJMRkDp2ozr729FoKOzQ7SPDOA1xTghw
+	aRUCpIYMIF4kj32L+n9i2dDDXkeRTYPoJZOCu3P1iSYpYtHOHPrVScZaiYU4wssnNwuPPCmWa8Mb2
+	kYs5tf3trPVVgFVT1bK/bZPiNWNMDi2Aw8selj2F2iCsihbbks8SWrvbySHRkVwofWjgHRPjMiaOg
+	EAnSYmIw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1pcJTL-00DYBg-SS; Wed, 15 Mar 2023 05:14:47 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: linux-arch@vger.kernel.org
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev
+Subject: [PATCH v4 13/36] loongarch: Implement the new page table range API
+Date: Wed, 15 Mar 2023 05:14:21 +0000
+Message-Id: <20230315051444.3229621-14-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20230315051444.3229621-1-willy@infradead.org>
+References: <20230315051444.3229621-1-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-T24gV2VkLCAyMDIzLTAzLTE1IGF0IDA4OjQ0ICswODAwLCBIdWFjYWkgQ2hlbiB3cm90ZToKCi8q
-IHNuaXAgKi8KCj4gK2NvbmZpZyBBUkNIX1dSSVRFQ09NQklORQo+ICvCoMKgwqDCoMKgwqDCoGJv
-b2wgIkVuYWJsZSBXcml0ZUNvbWJpbmUgKFdVQykgZm9yIGlvcmVtYXAoKSIKPiArwqDCoMKgwqDC
-oMKgwqBoZWxwCj4gK8KgwqDCoMKgwqDCoMKgwqAgTG9vbmdBcmNoIG1haW50YWlucyBjYWNoZSBj
-b2hlcmVuY3kgaW4gaGFyZHdhcmUsIGJ1dCB3aGVuIHBhaXJlZAo+ICvCoMKgwqDCoMKgwqDCoMKg
-IHdpdGggTFM3QSBjaGlwc2V0cyB0aGUgV1VDIGF0dHJpYnV0ZSAoV2Vhay1vcmRlcmVkIFVuQ2Fj
-aGVkLCB3aGljaAo+ICvCoMKgwqDCoMKgwqDCoMKgIGlzIHNpbWlsYXIgdG8gV3JpdGVDb21iaW5l
-KSBpcyBvdXQgb2YgdGhlIHNjb3BlIG9mIGNhY2hlIGNvaGVyZW5jeQo+ICvCoMKgwqDCoMKgwqDC
-oMKgIG1hY2hhbmlzbSBmb3IgUENJZSBkZXZpY2VzICh0aGlzIGlzIGEgUENJZSBwcm90b2NvbCB2
-aW9sYXRpb24sIHdoaWNoCj4gK8KgwqDCoMKgwqDCoMKgwqAgbWF5IGJlIGZpeGVkIGluIG5ld2Vy
-IGNoaXBzZXRzKS4KPiArCj4gK8KgwqDCoMKgwqDCoMKgwqAgVGhpcyBtZWFucyBXVUMgY2FuIG9u
-bHkgdXNlZCBmb3Igd3JpdGUtb25seSBtZW1vcnkgcmVnaW9ucyBub3csIHNvCj4gK8KgwqDCoMKg
-wqDCoMKgwqAgdGhpcyBvcHRpb24gaXMgZGlzYWJsZWQgYnkgZGVmYXVsdCwgbWFraW5nIFdVQyBz
-aWxlbnRseSBmYWxsYmFjayB0bwo+ICvCoMKgwqDCoMKgwqDCoMKgIFNVQyBmb3IgaW9yZW1hcCgp
-LiBZb3UgY2FuIGVuYWJsZSB0aGlzIG9wdGlvbiBpZiB0aGUga2VybmVsIGlzIGVuc3VyZWQKPiAr
-wqDCoMKgwqDCoMKgwqDCoCB0byBydW4gb24gaGFyZHdhcmUgd2l0aG91dCB0aGlzIGJ1Zy4KCidZ
-b3UgY2FuIG92ZXJyaWRlIHRoaXMgc2V0dGluZyB2aWEgd3JpdGVjb21iaW5lPXllcy9ubyBib290
-IHBhcmFtZXRlci4nCgovKiBzbmlwICovCgo+ICtzdGF0aWMgaW50IF9faW5pdCBzZXR1cF93cml0
-ZWNvbWJpbmUoY2hhciAqcCkKPiArewo+ICvCoMKgwqDCoMKgwqDCoGlmICghc3RyY21wKHAsICJv
-biIpKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwZ3Byb3Rfd2MgPSBQQUdFX0tF
-Uk5FTF9XVUM7Cj4gK8KgwqDCoMKgwqDCoMKgZWxzZSBpZiAoIXN0cmNtcChwLCAib2ZmIikpCj4g
-K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBncHJvdF93YyA9IFBBR0VfS0VSTkVMX1NV
-QzsKCmVsc2UKCXByX3dhcm4oIlVua25vd24gd3JpdGVjb21iaW5lIHNldHRpbmcgXCIlc1wiLlxu
-IiwgcCk7CgpPdGhlcndpc2UgTEdUTS4KCi0tIApYaSBSdW95YW8gPHhyeTExMUB4cnkxMTEuc2l0
-ZT4KU2Nob29sIG9mIEFlcm9zcGFjZSBTY2llbmNlIGFuZCBUZWNobm9sb2d5LCBYaWRpYW4gVW5p
-dmVyc2l0eQo=
+Add update_mmu_cache_range() and change _PFN_SHIFT to PFN_PTE_SHIFT.
+It would probably be more efficient to implement __update_tlb() by
+flushing the entire folio instead of calling __update_tlb() N times,
+but I'll leave that for someone who understands the architecture better.
+
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
+---
+ arch/loongarch/include/asm/cacheflush.h   |  2 ++
+ arch/loongarch/include/asm/pgtable-bits.h |  4 ++--
+ arch/loongarch/include/asm/pgtable.h      | 28 ++++++++++++-----------
+ arch/loongarch/mm/pgtable.c               |  2 +-
+ arch/loongarch/mm/tlb.c                   |  2 +-
+ 5 files changed, 21 insertions(+), 17 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
+index 0681788eb474..7907eb42bfbd 100644
+--- a/arch/loongarch/include/asm/cacheflush.h
++++ b/arch/loongarch/include/asm/cacheflush.h
+@@ -47,8 +47,10 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
+ #define flush_cache_vmap(start, end)			do { } while (0)
+ #define flush_cache_vunmap(start, end)			do { } while (0)
+ #define flush_icache_page(vma, page)			do { } while (0)
++#define flush_icache_pages(vma, page)			do { } while (0)
+ #define flush_icache_user_page(vma, page, addr, len)	do { } while (0)
+ #define flush_dcache_page(page)				do { } while (0)
++#define flush_dcache_folio(folio)			do { } while (0)
+ #define flush_dcache_mmap_lock(mapping)			do { } while (0)
+ #define flush_dcache_mmap_unlock(mapping)		do { } while (0)
+ 
+diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
+index 8b98d22a145b..a1eb2e25446b 100644
+--- a/arch/loongarch/include/asm/pgtable-bits.h
++++ b/arch/loongarch/include/asm/pgtable-bits.h
+@@ -48,12 +48,12 @@
+ #define _PAGE_NO_EXEC		(_ULCAST_(1) << _PAGE_NO_EXEC_SHIFT)
+ #define _PAGE_RPLV		(_ULCAST_(1) << _PAGE_RPLV_SHIFT)
+ #define _CACHE_MASK		(_ULCAST_(3) << _CACHE_SHIFT)
+-#define _PFN_SHIFT		(PAGE_SHIFT - 12 + _PAGE_PFN_SHIFT)
++#define PFN_PTE_SHIFT		(PAGE_SHIFT - 12 + _PAGE_PFN_SHIFT)
+ 
+ #define _PAGE_USER	(PLV_USER << _PAGE_PLV_SHIFT)
+ #define _PAGE_KERN	(PLV_KERN << _PAGE_PLV_SHIFT)
+ 
+-#define _PFN_MASK (~((_ULCAST_(1) << (_PFN_SHIFT)) - 1) & \
++#define _PFN_MASK (~((_ULCAST_(1) << (PFN_PTE_SHIFT)) - 1) & \
+ 		  ((_ULCAST_(1) << (_PAGE_PFN_END_SHIFT)) - 1))
+ 
+ /*
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index d28fb9dbec59..13aad0003e9a 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -237,9 +237,9 @@ extern pmd_t mk_pmd(struct page *page, pgprot_t prot);
+ extern void set_pmd_at(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp, pmd_t pmd);
+ 
+ #define pte_page(x)		pfn_to_page(pte_pfn(x))
+-#define pte_pfn(x)		((unsigned long)(((x).pte & _PFN_MASK) >> _PFN_SHIFT))
+-#define pfn_pte(pfn, prot)	__pte(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
+-#define pfn_pmd(pfn, prot)	__pmd(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
++#define pte_pfn(x)		((unsigned long)(((x).pte & _PFN_MASK) >> PFN_PTE_SHIFT))
++#define pfn_pte(pfn, prot)	__pte(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
++#define pfn_pmd(pfn, prot)	__pmd(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
+ 
+ /*
+  * Initialize a new pgd / pud / pmd table with invalid pointers.
+@@ -334,12 +334,6 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
+ 	}
+ }
+ 
+-static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+-			      pte_t *ptep, pte_t pteval)
+-{
+-	set_pte(ptep, pteval);
+-}
+-
+ static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+ {
+ 	/* Preserve global status for the pair */
+@@ -445,11 +439,19 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ extern void __update_tlb(struct vm_area_struct *vma,
+ 			unsigned long address, pte_t *ptep);
+ 
+-static inline void update_mmu_cache(struct vm_area_struct *vma,
+-			unsigned long address, pte_t *ptep)
++static inline void update_mmu_cache_range(struct vm_area_struct *vma,
++		unsigned long address, pte_t *ptep, unsigned int nr)
+ {
+-	__update_tlb(vma, address, ptep);
++	for (;;) {
++		__update_tlb(vma, address, ptep);
++		if (--nr == 0)
++			break;
++		address += PAGE_SIZE;
++		ptep++;
++	}
+ }
++#define update_mmu_cache(vma, addr, ptep) \
++	update_mmu_cache_range(vma, addr, ptep, 1)
+ 
+ #define __HAVE_ARCH_UPDATE_MMU_TLB
+ #define update_mmu_tlb	update_mmu_cache
+@@ -462,7 +464,7 @@ static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
+ 
+ static inline unsigned long pmd_pfn(pmd_t pmd)
+ {
+-	return (pmd_val(pmd) & _PFN_MASK) >> _PFN_SHIFT;
++	return (pmd_val(pmd) & _PFN_MASK) >> PFN_PTE_SHIFT;
+ }
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtable.c
+index 36a6dc0148ae..1260cf30e3ee 100644
+--- a/arch/loongarch/mm/pgtable.c
++++ b/arch/loongarch/mm/pgtable.c
+@@ -107,7 +107,7 @@ pmd_t mk_pmd(struct page *page, pgprot_t prot)
+ {
+ 	pmd_t pmd;
+ 
+-	pmd_val(pmd) = (page_to_pfn(page) << _PFN_SHIFT) | pgprot_val(prot);
++	pmd_val(pmd) = (page_to_pfn(page) << PFN_PTE_SHIFT) | pgprot_val(prot);
+ 
+ 	return pmd;
+ }
+diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+index 8bad6b0cff59..73652930b268 100644
+--- a/arch/loongarch/mm/tlb.c
++++ b/arch/loongarch/mm/tlb.c
+@@ -246,7 +246,7 @@ static void output_pgtable_bits_defines(void)
+ 	pr_define("_PAGE_WRITE_SHIFT %d\n", _PAGE_WRITE_SHIFT);
+ 	pr_define("_PAGE_NO_READ_SHIFT %d\n", _PAGE_NO_READ_SHIFT);
+ 	pr_define("_PAGE_NO_EXEC_SHIFT %d\n", _PAGE_NO_EXEC_SHIFT);
+-	pr_define("_PFN_SHIFT %d\n", _PFN_SHIFT);
++	pr_define("PFN_PTE_SHIFT %d\n", PFN_PTE_SHIFT);
+ 	pr_debug("\n");
+ }
+ 
+-- 
+2.39.2
 
