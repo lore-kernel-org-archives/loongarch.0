@@ -1,188 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C507B2F25
-	for <loongarch@lists.linux.dev>; Wed, 15 Mar 2023 10:07:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 213D2C433D2;
-	Wed, 15 Mar 2023 10:07:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1678874838;
-	bh=bdbwPo52/Ppp+QyPqw237wZWKSnBlkdHlTk0ENeNb/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZyvkiQnDQbYDPMcUjI6+iuVI5RCFEjszOjFF+VhMTt7FVKPxZNMk6gFjMgIjhzN7l
-	 Zvcn7Oxzf5yWR8BllhU+NahKG1sExq1bpZDhpCzmg9+10tZgFXSkXUEKkUypGNxSfK
-	 dEdMeA7NCtj3fKbenKhnMTbtULmPax5c2w1stHzzFwcp8UZ2OFsm+W0Z4mHSW00ToH
-	 awXTUSTyMhRbVZ4J/EyRTdWzpcOiPBg9TnWRVQIRZSO5UysDcAKHNwqxenKJk9g25H
-	 3F1uFsJcSfZmnfKMSKUJPyEqw4ulY7JutOnSuCgK0Fp6oWVAlI2QklzVaFs0P42CB7
-	 fzV55O5eLddHQ==
-Date: Wed, 15 Mar 2023 12:07:05 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v4 13/36] loongarch: Implement the new page table range
- API
-Message-ID: <ZBGYyY2WJa2TfSRD@kernel.org>
-References: <20230315051444.3229621-1-willy@infradead.org>
- <20230315051444.3229621-14-willy@infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4B2376
+	for <loongarch@lists.linux.dev>; Thu, 16 Mar 2023 04:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1678941292; bh=Oo6k/PJo2Jxh9vpeXCf8GRdwwmfbRN3ok8oQK918/08=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NY8bWzyGUkx2540c2qPs3j0mJwdb3mDYornIaB4VhA7+ZrnsWTd0ptLt9ScQrE0yh
+	 bN4qYMnXdOn7t7XwDLjf2aiKLLKCjhjTC8sTWBez7Ym0660GXKrO5AFxhkuX1SMDtM
+	 zfPf7swtMGMlFBK4ojFbXWnGi2QJhoUPJ+5hIhaQ=
+Received: from [192.168.9.172] (unknown [101.88.27.125])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 41B3E600D4;
+	Thu, 16 Mar 2023 12:34:52 +0800 (CST)
+Message-ID: <545d8512-5bc1-5c76-246a-fcad529006a4@xen0n.name>
+Date: Thu, 16 Mar 2023 12:34:51 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230315051444.3229621-14-willy@infradead.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH V3] LoongArch: Make WriteCombine configurable for
+ ioremap()
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
+ Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+References: <20230315085314.1083141-1-chenhuacai@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20230315085314.1083141-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 15, 2023 at 05:14:21AM +0000, Matthew Wilcox (Oracle) wrote:
-> Add update_mmu_cache_range() and change _PFN_SHIFT to PFN_PTE_SHIFT.
-> It would probably be more efficient to implement __update_tlb() by
-> flushing the entire folio instead of calling __update_tlb() N times,
-> but I'll leave that for someone who understands the architecture better.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: loongarch@lists.linux.dev
-
-Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
-
+On 3/15/23 16:53, Huacai Chen wrote:
+> LoongArch maintains cache coherency in hardware, but when paired with
+> LS7A chipsets the WUC attribute (Weak-ordered UnCached, which is similar
+> to WriteCombine) is out of the scope of cache coherency machanism for
+> PCIe devices (this is a PCIe protocol violation, which may be fixed in
+> newer chipsets).
+>
+> This means WUC can only used for write-only memory regions now, so this
+"can only be used for". Same for the Kconfig change.
+> option is disabled by default, making WUC silently fallback to SUC for
+> ioremap(). You can enable this option if the kernel is ensured to run on
+> hardware without this bug.
+>
+> Kernel parameter writecombine=on/off can be used to override the Kconfig
+> option.
+We normally want to document this in 
+Documentation/admin-guide/kernel-parameters too. This can be done later 
+(by you or me).
+>
+> Suggested-by: WANG Xuerui <kernel@xen0n.name>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
->  arch/loongarch/include/asm/cacheflush.h   |  2 ++
->  arch/loongarch/include/asm/pgtable-bits.h |  4 ++--
->  arch/loongarch/include/asm/pgtable.h      | 28 ++++++++++++-----------
->  arch/loongarch/mm/pgtable.c               |  2 +-
->  arch/loongarch/mm/tlb.c                   |  2 +-
->  5 files changed, 21 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/include/asm/cacheflush.h
-> index 0681788eb474..7907eb42bfbd 100644
-> --- a/arch/loongarch/include/asm/cacheflush.h
-> +++ b/arch/loongarch/include/asm/cacheflush.h
-> @@ -47,8 +47,10 @@ void local_flush_icache_range(unsigned long start, unsigned long end);
->  #define flush_cache_vmap(start, end)			do { } while (0)
->  #define flush_cache_vunmap(start, end)			do { } while (0)
->  #define flush_icache_page(vma, page)			do { } while (0)
-> +#define flush_icache_pages(vma, page)			do { } while (0)
->  #define flush_icache_user_page(vma, page, addr, len)	do { } while (0)
->  #define flush_dcache_page(page)				do { } while (0)
-> +#define flush_dcache_folio(folio)			do { } while (0)
->  #define flush_dcache_mmap_lock(mapping)			do { } while (0)
->  #define flush_dcache_mmap_unlock(mapping)		do { } while (0)
->  
-> diff --git a/arch/loongarch/include/asm/pgtable-bits.h b/arch/loongarch/include/asm/pgtable-bits.h
-> index 8b98d22a145b..a1eb2e25446b 100644
-> --- a/arch/loongarch/include/asm/pgtable-bits.h
-> +++ b/arch/loongarch/include/asm/pgtable-bits.h
-> @@ -48,12 +48,12 @@
->  #define _PAGE_NO_EXEC		(_ULCAST_(1) << _PAGE_NO_EXEC_SHIFT)
->  #define _PAGE_RPLV		(_ULCAST_(1) << _PAGE_RPLV_SHIFT)
->  #define _CACHE_MASK		(_ULCAST_(3) << _CACHE_SHIFT)
-> -#define _PFN_SHIFT		(PAGE_SHIFT - 12 + _PAGE_PFN_SHIFT)
-> +#define PFN_PTE_SHIFT		(PAGE_SHIFT - 12 + _PAGE_PFN_SHIFT)
->  
->  #define _PAGE_USER	(PLV_USER << _PAGE_PLV_SHIFT)
->  #define _PAGE_KERN	(PLV_KERN << _PAGE_PLV_SHIFT)
->  
-> -#define _PFN_MASK (~((_ULCAST_(1) << (_PFN_SHIFT)) - 1) & \
-> +#define _PFN_MASK (~((_ULCAST_(1) << (PFN_PTE_SHIFT)) - 1) & \
->  		  ((_ULCAST_(1) << (_PAGE_PFN_END_SHIFT)) - 1))
->  
->  /*
-> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
-> index d28fb9dbec59..13aad0003e9a 100644
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -237,9 +237,9 @@ extern pmd_t mk_pmd(struct page *page, pgprot_t prot);
->  extern void set_pmd_at(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp, pmd_t pmd);
->  
->  #define pte_page(x)		pfn_to_page(pte_pfn(x))
-> -#define pte_pfn(x)		((unsigned long)(((x).pte & _PFN_MASK) >> _PFN_SHIFT))
-> -#define pfn_pte(pfn, prot)	__pte(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
-> -#define pfn_pmd(pfn, prot)	__pmd(((pfn) << _PFN_SHIFT) | pgprot_val(prot))
-> +#define pte_pfn(x)		((unsigned long)(((x).pte & _PFN_MASK) >> PFN_PTE_SHIFT))
-> +#define pfn_pte(pfn, prot)	__pte(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
-> +#define pfn_pmd(pfn, prot)	__pmd(((pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
->  
->  /*
->   * Initialize a new pgd / pud / pmd table with invalid pointers.
-> @@ -334,12 +334,6 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
->  	}
->  }
->  
-> -static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
-> -			      pte_t *ptep, pte_t pteval)
-> -{
-> -	set_pte(ptep, pteval);
-> -}
-> -
->  static inline void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
->  {
->  	/* Preserve global status for the pair */
-> @@ -445,11 +439,19 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
->  extern void __update_tlb(struct vm_area_struct *vma,
->  			unsigned long address, pte_t *ptep);
->  
-> -static inline void update_mmu_cache(struct vm_area_struct *vma,
-> -			unsigned long address, pte_t *ptep)
-> +static inline void update_mmu_cache_range(struct vm_area_struct *vma,
-> +		unsigned long address, pte_t *ptep, unsigned int nr)
->  {
-> -	__update_tlb(vma, address, ptep);
-> +	for (;;) {
-> +		__update_tlb(vma, address, ptep);
-> +		if (--nr == 0)
-> +			break;
-> +		address += PAGE_SIZE;
-> +		ptep++;
-> +	}
->  }
-> +#define update_mmu_cache(vma, addr, ptep) \
-> +	update_mmu_cache_range(vma, addr, ptep, 1)
->  
->  #define __HAVE_ARCH_UPDATE_MMU_TLB
->  #define update_mmu_tlb	update_mmu_cache
-> @@ -462,7 +464,7 @@ static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
->  
->  static inline unsigned long pmd_pfn(pmd_t pmd)
->  {
-> -	return (pmd_val(pmd) & _PFN_MASK) >> _PFN_SHIFT;
-> +	return (pmd_val(pmd) & _PFN_MASK) >> PFN_PTE_SHIFT;
->  }
->  
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> diff --git a/arch/loongarch/mm/pgtable.c b/arch/loongarch/mm/pgtable.c
-> index 36a6dc0148ae..1260cf30e3ee 100644
-> --- a/arch/loongarch/mm/pgtable.c
-> +++ b/arch/loongarch/mm/pgtable.c
-> @@ -107,7 +107,7 @@ pmd_t mk_pmd(struct page *page, pgprot_t prot)
->  {
->  	pmd_t pmd;
->  
-> -	pmd_val(pmd) = (page_to_pfn(page) << _PFN_SHIFT) | pgprot_val(prot);
-> +	pmd_val(pmd) = (page_to_pfn(page) << PFN_PTE_SHIFT) | pgprot_val(prot);
->  
->  	return pmd;
->  }
-> diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-> index 8bad6b0cff59..73652930b268 100644
-> --- a/arch/loongarch/mm/tlb.c
-> +++ b/arch/loongarch/mm/tlb.c
-> @@ -246,7 +246,7 @@ static void output_pgtable_bits_defines(void)
->  	pr_define("_PAGE_WRITE_SHIFT %d\n", _PAGE_WRITE_SHIFT);
->  	pr_define("_PAGE_NO_READ_SHIFT %d\n", _PAGE_NO_READ_SHIFT);
->  	pr_define("_PAGE_NO_EXEC_SHIFT %d\n", _PAGE_NO_EXEC_SHIFT);
-> -	pr_define("_PFN_SHIFT %d\n", _PFN_SHIFT);
-> +	pr_define("PFN_PTE_SHIFT %d\n", PFN_PTE_SHIFT);
->  	pr_debug("\n");
->  }
->  
-> -- 
-> 2.39.2
-> 
+> V2: Add kernel prameter and update commit messages.
+> V3: Add a warning message for invalid kernel parameters.
+>
+>   arch/loongarch/Kconfig          | 16 ++++++++++++++++
+>   arch/loongarch/include/asm/io.h |  4 +++-
+>   arch/loongarch/kernel/setup.c   | 21 +++++++++++++++++++++
+>   3 files changed, 40 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 7fd51257e0ed..3ddde336e6a5 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -447,6 +447,22 @@ config ARCH_IOREMAP
+>   	  protection support. However, you can enable LoongArch DMW-based
+>   	  ioremap() for better performance.
+>   
+> +config ARCH_WRITECOMBINE
+> +	bool "Enable WriteCombine (WUC) for ioremap()"
+> +	help
+> +	  LoongArch maintains cache coherency in hardware, but when paired
+> +	  with LS7A chipsets the WUC attribute (Weak-ordered UnCached, which
+> +	  is similar to WriteCombine) is out of the scope of cache coherency
+> +	  machanism for PCIe devices (this is a PCIe protocol violation, which
+> +	  may be fixed in newer chipsets).
+> +
+> +	  This means WUC can only used for write-only memory regions now, so
+> +	  this option is disabled by default, making WUC silently fallback to
+> +	  SUC for ioremap(). You can enable this option if the kernel is ensured
+> +	  to run on hardware without this bug.
+> +
+> +	  You can override this setting via writecombine=on/off boot parameter.
+via the ...
+> +
+>   config ARCH_STRICT_ALIGN
+>   	bool "Enable -mstrict-align to prevent unaligned accesses" if EXPERT
+>   	default y
+> diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
+> index 402a7d9e3a53..545e2708fbf7 100644
+> --- a/arch/loongarch/include/asm/io.h
+> +++ b/arch/loongarch/include/asm/io.h
+> @@ -54,8 +54,10 @@ static inline void __iomem *ioremap_prot(phys_addr_t offset, unsigned long size,
+>    * @offset:    bus address of the memory
+>    * @size:      size of the resource to map
+>    */
+> +extern pgprot_t pgprot_wc;
+> +
+>   #define ioremap_wc(offset, size)	\
+> -	ioremap_prot((offset), (size), pgprot_val(PAGE_KERNEL_WUC))
+> +	ioremap_prot((offset), (size), pgprot_val(pgprot_wc))
+>   
+>   #define ioremap_cache(offset, size)	\
+>   	ioremap_prot((offset), (size), pgprot_val(PAGE_KERNEL))
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+> index bae84ccf6d36..27f71f9531e1 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -160,6 +160,27 @@ static void __init smbios_parse(void)
+>   	dmi_walk(find_tokens, NULL);
+>   }
+>   
+> +#ifdef CONFIG_ARCH_WRITECOMBINE
+> +pgprot_t pgprot_wc = PAGE_KERNEL_WUC;
+> +#else
+> +pgprot_t pgprot_wc = PAGE_KERNEL_SUC;
+> +#endif
+> +
+> +EXPORT_SYMBOL(pgprot_wc);
+> +
+> +static int __init setup_writecombine(char *p)
+> +{
+> +	if (!strcmp(p, "on"))
+> +		pgprot_wc = PAGE_KERNEL_WUC;
+> +	else if (!strcmp(p, "off"))
+> +		pgprot_wc = PAGE_KERNEL_SUC;
+> +	else
+> +		pr_warn("Unknown writecombine setting \"%s\".\n", p);
+> +
+> +	return 0;
+> +}
+> +early_param("writecombine", setup_writecombine);
+> +
+>   static int usermem __initdata;
+>   
+>   static int __init early_parse_mem(char *p)
+
+With the nits addressed:
+
+Reviewed-by: WANG Xuerui <git@xen0n.name>
 
 -- 
-Sincerely yours,
-Mike.
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
