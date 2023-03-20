@@ -1,72 +1,54 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB461104
-	for <loongarch@lists.linux.dev>; Mon, 20 Mar 2023 07:57:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1679299064;
-	bh=VxC0eBySV+UHVLpViRTKZxFwXRZN0yKf8KjRsWMjWtk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=mEjFeEAqrHkFNaxJiE9kTo1ygzZrIo8+6qyTMrFlHNzL2bj1xhDZcUhNhpnXu81fQ
-	 EwXVBkXxniX89j6AmwW6+0atUm8duHG92ZH+UaILg5Vy6fDxS6YFBUEueCMegimsiF
-	 kNkQHuE9fHrsfutle3QxGBoqmmEbOe4wtaCncwjA=
-Received: from [IPv6:240e:358:11f7:6300:dc73:854d:832e:4] (unknown [IPv6:240e:358:11f7:6300:dc73:854d:832e:4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 97A0B66128;
-	Mon, 20 Mar 2023 03:57:32 -0400 (EDT)
-Message-ID: <cb620bf530d98e1fe735ff5e634b203070e25115.camel@xry111.site>
-Subject: Re: [PATCH V4] LoongArch: Make WriteCombine configurable for
- ioremap()
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren
-	 <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang
-	 <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org, 
-	loongson-kernel@lists.loongnix.cn
-Date: Mon, 20 Mar 2023 15:57:24 +0800
-In-Reply-To: <20230316064142.1802468-1-chenhuacai@loongson.cn>
-References: <20230316064142.1802468-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A216E4F6
+	for <loongarch@lists.linux.dev>; Mon, 20 Mar 2023 13:48:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PB5HYAZGv9HMfQ1pr0vDKU45cXNH5QgD4Xzo7ZuzTGs=; b=nhCZ2HVyP6i0qpXdnrwj4yKV9L
+	lY3fNDHz5CYzPC9trnpffz9DShtCZ81A8g35WeHwhdWRAU6bH0CbJIVPileSo5p4dAZIywBGyUAli
+	nBhQS9Mai+oJLiKJ9uC3exaOEon3uXi+SjRnXhLvxrwchEbx+i7cc2hSRaDPsuhiHv7atay7eMW0s
+	liBhAemjna/Dif0dewXRTaBN76hKdMbX8iYRxdlSeLl0r1k8pycrgswVz+/uDwGTAEM3tbOaDw+Y+
+	VSXKTdKl2SYH9vryLajjjnC++90Qp50eou+dud6yW879o6hsWUvZtntsURHgQiWSHNDS4NroemJf/
+	q2ju+LAA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1peFrq-009EVA-1y;
+	Mon, 20 Mar 2023 13:48:06 +0000
+Date: Mon, 20 Mar 2023 06:48:06 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH V2] LoongArch: Provide kernel fpu functions
+Message-ID: <ZBhkFmGfalw/GgTY@infradead.org>
+References: <20230306031258.99230-1-chenhuacai@loongson.cn>
+ <ZAoNPuyHQTqucYxn@infradead.org>
+ <428e2df8-d5b7-a200-62c2-59497f3facea@xen0n.name>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <428e2df8-d5b7-a200-62c2-59497f3facea@xen0n.name>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, 2023-03-16 at 14:41 +0800, Huacai Chen wrote:
-> LoongArch maintains cache coherency in hardware, but when paired with
-> LS7A chipsets the WUC attribute (Weak-ordered UnCached, which is similar
-> to WriteCombine) is out of the scope of cache coherency machanism for
-> PCIe devices (this is a PCIe protocol violation, which may be fixed in
-> newer chipsets).
->=20
-> This means WUC can only used for write-only memory regions now, so this
-> option is disabled by default, making WUC silently fallback to SUC for
-> ioremap(). You can enable this option if the kernel is ensured to run on
-> hardware without this bug.
->=20
-> Kernel parameter writecombine=3Don/off can be used to override the Kconfi=
-g
-> option.
->=20
-> Suggested-by: WANG Xuerui <kernel@xen0n.name>
-> Reviewed-by: WANG Xuerui <kernel@xen0n.name>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+On Sat, Mar 11, 2023 at 04:10:44PM +0800, WANG Xuerui wrote:
+> again, and making the loongarch FPU helpers GPL-only works for me. However
+> there's probably another question that Ruoyao pointed out: do we want to
+> mark the neon/altivec/s390x helpers GPL-only right away? IMO this particular
+> feature is not inherently arch-specific (the same would have to happen for
+> every arch with optionally enabled extra state and instructions, not limited
+> to FPU actually) so availability of such feature should preferably be made
+> symmetric over arches.
 
-LGTM.
-
-I still prefer an automatic way, but anyway we can implement it later
-after a bug-free LS7A successor is launched.
-
-Should we Cc: stable@vger.kernel.org and make a PR for 6.3 as well?  To
-me it's a "bug fix" and needed for stable releases, but I'm not sure.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+In general we should, and all new code most.  For existing code please
+contact the relevant maintainers first.
