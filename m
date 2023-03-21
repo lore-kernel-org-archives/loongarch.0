@@ -1,122 +1,172 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D98B11FA0
-	for <loongarch@lists.linux.dev>; Tue, 21 Mar 2023 06:29:19 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxJFy8Thlk7UMPAA--.22737S3;
-	Tue, 21 Mar 2023 14:29:17 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxAeW7Thlk20UIAA--.35478S2;
-	Tue, 21 Mar 2023 14:29:15 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: Guenter Roeck <linux@roeck-us.net>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH] LoongArch: Check unwind_error() in arch_stack_walk()
-Date: Tue, 21 Mar 2023 14:29:14 +0800
-Message-Id: <1679380154-20308-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8DxAeW7Thlk20UIAA--.35478S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAFy7uFy7Xr47Cw1kGFy3Jwb_yoW5Xr1xpr
-	ZrZ3Z3Wr4ruF9Fqa4Dtw18ur98J3s7ur12gas8Aa4rCFnrXry2grnava4DZF4qy34kG340
-	gFnYkr909a1UJa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-	ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
-	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
-	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
-	W8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUUU
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8274F1FB8;
+	Tue, 21 Mar 2023 08:08:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679386120; x=1710922120;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QGXy2d/duKc2M5ZsAkijSTTqJVxAXEAzOUuiNs2X4TE=;
+  b=R9UMb1RRsuxPberVbwUay8ZJ2w8AyQL2Yn5+d+L31kv3hr7v4sFTucSV
+   m50ntWJ+i+a6xNL5IjAMUk/plRY4wIgBs1Zp+SC+cImfd4mX8hTlPd3ek
+   VtrSZTTtXNqlY87nTCtHHyd08cZ5x6z1XHnqmpDnm3vwppJgzKRe3AqLW
+   7YcWX2hAQ3N3ka6qdxHODxTa6OPyPjbNq7Se91JnyAG/g5h7yes+o+j79
+   Ev/bkHMU4iUYHFiVzSHLYkf/P8Kb3ga4k6gsTqwmi8nLEvGx/AQHpzU8a
+   qDeYyf3hUQL2TptxGMDNsPbEcRBBKUtRrkrs9hY16gV6ILx+ShHxJyCl+
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="338912225"
+X-IronPort-AV: E=Sophos;i="5.98,278,1673942400"; 
+   d="scan'208";a="338912225"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 01:08:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="750445952"
+X-IronPort-AV: E=Sophos;i="5.98,278,1673942400"; 
+   d="scan'208";a="750445952"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 21 Mar 2023 01:08:19 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1peX2Z-000BkM-0c;
+	Tue, 21 Mar 2023 08:08:19 +0000
+Date: Tue, 21 Mar 2023 16:07:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: Re: [PATCH v4 27/29] LoongArch: KVM: Implement vcpu world switch
+Message-ID: <202303211554.OkK5r3bb-lkp@intel.com>
+References: <20230321035651.598505-28-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230321035651.598505-28-zhaotianrui@loongson.cn>
 
-We can see the following messages with CONFIG_PROVE_LOCKING=y on
-LoongArch:
+Hi Tianrui,
 
-  BUG: MAX_STACK_TRACE_ENTRIES too low!
-  turning off the locking correctness validator.
+Thank you for the patch! Perhaps something to improve:
 
-This is because stack_trace_save() returns a big value after call
-arch_stack_walk(), here is the call trace:
+[auto build test WARNING on kvm/queue]
+[also build test WARNING on linus/master v6.3-rc3 next-20230321]
+[cannot apply to kvm/linux-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-  save_trace()
-    stack_trace_save()
-      arch_stack_walk()
-        stack_trace_consume_entry()
+url:    https://github.com/intel-lab-lkp/linux/commits/Tianrui-Zhao/LoongArch-KVM-Add-kvm-related-header-files/20230321-120249
+base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git queue
+patch link:    https://lore.kernel.org/r/20230321035651.598505-28-zhaotianrui%40loongson.cn
+patch subject: [PATCH v4 27/29] LoongArch: KVM: Implement vcpu world switch
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20230321/202303211554.OkK5r3bb-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/92ac063f865b08997b28bd090d6fa3986d0f21cb
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Tianrui-Zhao/LoongArch-KVM-Add-kvm-related-header-files/20230321-120249
+        git checkout 92ac063f865b08997b28bd090d6fa3986d0f21cb
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch prepare
 
-arch_stack_walk() should return immediately if unwind_next_frame()
-failed, no need to do the useless loops to increase the value of
-c->len in stack_trace_consume_entry(), then we can fix the above
-problem.
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303211554.OkK5r3bb-lkp@intel.com/
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/all/8a44ad71-68d2-4926-892f-72bfc7a67e2a@roeck-us.net/
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/kernel/stacktrace.c      | 3 ++-
- arch/loongarch/kernel/unwind.c          | 1 +
- arch/loongarch/kernel/unwind_prologue.c | 4 +++-
- 3 files changed, 6 insertions(+), 2 deletions(-)
+All warnings (new ones prefixed by >>):
 
-diff --git a/arch/loongarch/kernel/stacktrace.c b/arch/loongarch/kernel/stacktrace.c
-index 3a690f9..7c15ba5 100644
---- a/arch/loongarch/kernel/stacktrace.c
-+++ b/arch/loongarch/kernel/stacktrace.c
-@@ -30,7 +30,8 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
- 
- 	regs->regs[1] = 0;
- 	for (unwind_start(&state, task, regs);
--	      !unwind_done(&state); unwind_next_frame(&state)) {
-+	     !unwind_done(&state) && !unwind_error(&state);
-+	     unwind_next_frame(&state)) {
- 		addr = unwind_get_return_address(&state);
- 		if (!addr || !consume_entry(cookie, addr))
- 			break;
-diff --git a/arch/loongarch/kernel/unwind.c b/arch/loongarch/kernel/unwind.c
-index a463d69..ba324ba 100644
---- a/arch/loongarch/kernel/unwind.c
-+++ b/arch/loongarch/kernel/unwind.c
-@@ -28,5 +28,6 @@ bool default_next_frame(struct unwind_state *state)
- 
- 	} while (!get_stack_info(state->sp, state->task, info));
- 
-+	state->error = true;
- 	return false;
- }
-diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
-index 9095fde..55afc27 100644
---- a/arch/loongarch/kernel/unwind_prologue.c
-+++ b/arch/loongarch/kernel/unwind_prologue.c
-@@ -211,7 +211,7 @@ static bool next_frame(struct unwind_state *state)
- 			pc = regs->csr_era;
- 
- 			if (user_mode(regs) || !__kernel_text_address(pc))
--				return false;
-+				goto out;
- 
- 			state->first = true;
- 			state->pc = pc;
-@@ -226,6 +226,8 @@ static bool next_frame(struct unwind_state *state)
- 
- 	} while (!get_stack_info(state->sp, state->task, info));
- 
-+out:
-+	state->error = true;
- 	return false;
- }
- 
+   arch/loongarch/kernel/asm-offsets.c:17:6: warning: no previous prototype for 'output_ptreg_defines' [-Wmissing-prototypes]
+      17 | void output_ptreg_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:64:6: warning: no previous prototype for 'output_task_defines' [-Wmissing-prototypes]
+      64 | void output_task_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:79:6: warning: no previous prototype for 'output_thread_info_defines' [-Wmissing-prototypes]
+      79 | void output_thread_info_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:95:6: warning: no previous prototype for 'output_thread_defines' [-Wmissing-prototypes]
+      95 | void output_thread_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:138:6: warning: no previous prototype for 'output_thread_fpu_defines' [-Wmissing-prototypes]
+     138 | void output_thread_fpu_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:178:6: warning: no previous prototype for 'output_mm_defines' [-Wmissing-prototypes]
+     178 | void output_mm_defines(void)
+         |      ^~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:210:6: warning: no previous prototype for 'output_sc_defines' [-Wmissing-prototypes]
+     210 | void output_sc_defines(void)
+         |      ^~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:218:6: warning: no previous prototype for 'output_signal_defines' [-Wmissing-prototypes]
+     218 | void output_signal_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:256:6: warning: no previous prototype for 'output_smpboot_defines' [-Wmissing-prototypes]
+     256 | void output_smpboot_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:266:6: warning: no previous prototype for 'output_pbe_defines' [-Wmissing-prototypes]
+     266 | void output_pbe_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~
+>> arch/loongarch/kernel/asm-offsets.c:277:6: warning: no previous prototype for 'output_kvm_defines' [-Wmissing-prototypes]
+     277 | void output_kvm_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~
+--
+   arch/loongarch/kernel/asm-offsets.c:17:6: warning: no previous prototype for 'output_ptreg_defines' [-Wmissing-prototypes]
+      17 | void output_ptreg_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:64:6: warning: no previous prototype for 'output_task_defines' [-Wmissing-prototypes]
+      64 | void output_task_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:79:6: warning: no previous prototype for 'output_thread_info_defines' [-Wmissing-prototypes]
+      79 | void output_thread_info_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:95:6: warning: no previous prototype for 'output_thread_defines' [-Wmissing-prototypes]
+      95 | void output_thread_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:138:6: warning: no previous prototype for 'output_thread_fpu_defines' [-Wmissing-prototypes]
+     138 | void output_thread_fpu_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:178:6: warning: no previous prototype for 'output_mm_defines' [-Wmissing-prototypes]
+     178 | void output_mm_defines(void)
+         |      ^~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:210:6: warning: no previous prototype for 'output_sc_defines' [-Wmissing-prototypes]
+     210 | void output_sc_defines(void)
+         |      ^~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:218:6: warning: no previous prototype for 'output_signal_defines' [-Wmissing-prototypes]
+     218 | void output_signal_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:256:6: warning: no previous prototype for 'output_smpboot_defines' [-Wmissing-prototypes]
+     256 | void output_smpboot_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kernel/asm-offsets.c:266:6: warning: no previous prototype for 'output_pbe_defines' [-Wmissing-prototypes]
+     266 | void output_pbe_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~
+>> arch/loongarch/kernel/asm-offsets.c:277:6: warning: no previous prototype for 'output_kvm_defines' [-Wmissing-prototypes]
+     277 | void output_kvm_defines(void)
+         |      ^~~~~~~~~~~~~~~~~~
+   <stdin>:569:2: warning: #warning syscall fstat not implemented [-Wcpp]
+
+
+vim +/output_kvm_defines +277 arch/loongarch/kernel/asm-offsets.c
+
+   276	
+ > 277	void output_kvm_defines(void)
+
 -- 
-2.1.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
