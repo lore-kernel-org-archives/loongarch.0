@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C91FB139E
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0C431C33
 	for <loongarch@lists.linux.dev>; Tue, 21 Mar 2023 03:58:08 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxJNgKKxlkMDYPAA--.11015S3;
-	Tue, 21 Mar 2023 11:56:58 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxYcwRKxlkxDYPAA--.22619S3;
+	Tue, 21 Mar 2023 11:57:05 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD78EKxlkQB4IAA--.33942S10;
-	Tue, 21 Mar 2023 11:56:57 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD78EKxlkQB4IAA--.33942S24;
+	Tue, 21 Mar 2023 11:57:04 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -21,9 +21,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v4 08/29] LoongArch: KVM: Implement vcpu handle exit interface
-Date: Tue, 21 Mar 2023 11:56:30 +0800
-Message-Id: <20230321035651.598505-9-zhaotianrui@loongson.cn>
+Subject: [PATCH v4 22/29] LoongArch: KVM: Implement handle idle exception
+Date: Tue, 21 Mar 2023 11:56:44 +0800
+Message-Id: <20230321035651.598505-23-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230321035651.598505-1-zhaotianrui@loongson.cn>
 References: <20230321035651.598505-1-zhaotianrui@loongson.cn>
@@ -34,90 +34,53 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxD78EKxlkQB4IAA--.33942S10
+X-CM-TRANSID:AQAAf8DxD78EKxlkQB4IAA--.33942S24
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7WF17ArW5CFyrCF15uw17Jrb_yoW8Cr4Dpr
-	4xCr1Ygw4rG34xJ3sayrs0qr4Yq3s7Kr17ZrZxX3y2yFsFvas0qr48KrZFyFyrWw1FqF1f
-	Xr1rG3Z09F4jywUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
-	Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1s
-	IEY20_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4
-	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
+X-Coremail-Antispam: 1Uk129KBjvdXoW7JrW5uFykWr43XF43Ww48Zwb_yoW3ZrX_XF
+	Z7tas3WrWrX3W5Kas8t3Z8Ca43Ga1kXFy5ZF12vry3Gr1qyrW5GrWDWwn5ZryktrWUuF4Y
+	q3yvv3s7Aw1UtjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	77CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
+	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
 
-Implement vcpu handle exit interface, getting the exit code by ESTAT
-register and using kvm exception vector to handle it.
+Implement kvm handle loongarch vcpu idle exception, using kvm_vcpu_block
+to emulate it.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 46 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ arch/loongarch/kvm/exit.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index bc9e3889f..651ae5ca0 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -56,6 +56,52 @@ static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
- 	vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
- }
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index f151cc2dd..6618a410a 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -190,3 +190,15 @@ int _kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
  
-+/*
-+ * Return 1 for resume guest and "<= 0" for resume host.
-+ */
-+static int _kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
+ 	return er;
+ }
++
++int _kvm_emu_idle(struct kvm_vcpu *vcpu)
 +{
-+	unsigned long exst = vcpu->arch.host_estat;
-+	u32 intr = exst & 0x1fff; /* ignore NMI */
-+	u32 exccode = (exst & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
-+	int ret = RESUME_GUEST;
-+
-+	vcpu->mode = OUTSIDE_GUEST_MODE;
-+
-+	/* Set a default exit reason */
-+	run->exit_reason = KVM_EXIT_UNKNOWN;
-+	run->ready_for_interrupt_injection = 1;
-+
-+	local_irq_enable();
-+	guest_state_exit_irqoff();
-+
-+	trace_kvm_exit(vcpu, exccode);
-+	if (exccode) {
-+		ret = _kvm_handle_fault(vcpu, exccode);
-+	} else {
-+		WARN(!intr, "suspicious vm exiting");
-+		++vcpu->stat.int_exits;
++	++vcpu->stat.idle_exits;
++	trace_kvm_exit_idle(vcpu, KVM_TRACE_EXIT_IDLE);
++	if (!vcpu->arch.irq_pending) {
++		kvm_save_timer(vcpu);
++		kvm_vcpu_block(vcpu);
 +	}
 +
-+	cond_resched();
-+	local_irq_disable();
-+
-+	if (ret == RESUME_HOST)
-+		return ret;
-+
-+	/* Only check for signals if not already exiting to userspace */
-+	if (signal_pending(current)) {
-+		vcpu->run->exit_reason = KVM_EXIT_INTR;
-+		++vcpu->stat.signal_exits;
-+		return -EINTR;
-+	}
-+
-+	kvm_pre_enter_guest(vcpu);
-+	trace_kvm_reenter(vcpu);
-+	guest_state_enter_irqoff();
-+	return RESUME_GUEST;
++	return EMULATE_DONE;
 +}
-+
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- {
- 	unsigned long timer_hz;
 -- 
 2.31.1
 
