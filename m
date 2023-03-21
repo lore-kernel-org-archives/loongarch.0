@@ -1,54 +1,141 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A216E4F6
-	for <loongarch@lists.linux.dev>; Mon, 20 Mar 2023 13:48:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=PB5HYAZGv9HMfQ1pr0vDKU45cXNH5QgD4Xzo7ZuzTGs=; b=nhCZ2HVyP6i0qpXdnrwj4yKV9L
-	lY3fNDHz5CYzPC9trnpffz9DShtCZ81A8g35WeHwhdWRAU6bH0CbJIVPileSo5p4dAZIywBGyUAli
-	nBhQS9Mai+oJLiKJ9uC3exaOEon3uXi+SjRnXhLvxrwchEbx+i7cc2hSRaDPsuhiHv7atay7eMW0s
-	liBhAemjna/Dif0dewXRTaBN76hKdMbX8iYRxdlSeLl0r1k8pycrgswVz+/uDwGTAEM3tbOaDw+Y+
-	VSXKTdKl2SYH9vryLajjjnC++90Qp50eou+dud6yW879o6hsWUvZtntsURHgQiWSHNDS4NroemJf/
-	q2ju+LAA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1peFrq-009EVA-1y;
-	Mon, 20 Mar 2023 13:48:06 +0000
-Date: Mon, 20 Mar 2023 06:48:06 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH V2] LoongArch: Provide kernel fpu functions
-Message-ID: <ZBhkFmGfalw/GgTY@infradead.org>
-References: <20230306031258.99230-1-chenhuacai@loongson.cn>
- <ZAoNPuyHQTqucYxn@infradead.org>
- <428e2df8-d5b7-a200-62c2-59497f3facea@xen0n.name>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C72B7139C
+	for <loongarch@lists.linux.dev>; Tue, 21 Mar 2023 03:57:01 +0000 (UTC)
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8AxJIQHKxlk+zUPAA--.22520S3;
+	Tue, 21 Mar 2023 11:56:55 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD78EKxlkQB4IAA--.33942S5;
+	Tue, 21 Mar 2023 11:56:54 +0800 (CST)
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	maobibo@loongson.cn,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH v4 03/29] LoongArch: KVM: Implement kvm hardware enable, disable interface
+Date: Tue, 21 Mar 2023 11:56:25 +0800
+Message-Id: <20230321035651.598505-4-zhaotianrui@loongson.cn>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230321035651.598505-1-zhaotianrui@loongson.cn>
+References: <20230321035651.598505-1-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <428e2df8-d5b7-a200-62c2-59497f3facea@xen0n.name>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxD78EKxlkQB4IAA--.33942S5
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Ar4DJrWxKFW5ZrW8uF4kWFg_yoW8tF1kpr
+	W7AFW5Ary5Jrnagas3J3Zxtr13GrWvgay7Ja12ya45Jw4j9F4rXF95Kr9rJFy5X3y8XF1S
+	v39akFyF9F1DArUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bcAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
+	kF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
+	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-On Sat, Mar 11, 2023 at 04:10:44PM +0800, WANG Xuerui wrote:
-> again, and making the loongarch FPU helpers GPL-only works for me. However
-> there's probably another question that Ruoyao pointed out: do we want to
-> mark the neon/altivec/s390x helpers GPL-only right away? IMO this particular
-> feature is not inherently arch-specific (the same would have to happen for
-> every arch with optionally enabled extra state and instructions, not limited
-> to FPU actually) so availability of such feature should preferably be made
-> symmetric over arches.
+Implement kvm hardware enable, disable interface, setting
+the guest config register to enable virtualization features
+when called the interface.
 
-In general we should, and all new code most.  For existing code please
-contact the relevant maintainers first.
+Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+---
+ arch/loongarch/kvm/main.c | 63 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+index 2c6b4760f..d501c2e64 100644
+--- a/arch/loongarch/kvm/main.c
++++ b/arch/loongarch/kvm/main.c
+@@ -109,6 +109,69 @@ static void _kvm_init_gcsr_flag(void)
+ 	set_gcsr_sw_flag(LOONGARCH_CSR_TINTCLR);
+ }
+ 
++void kvm_init_vmcs(struct kvm *kvm)
++{
++	kvm->arch.vmcs = vmcs;
++}
++
++long kvm_arch_dev_ioctl(struct file *filp,
++			unsigned int ioctl, unsigned long arg)
++{
++	return -ENOIOCTLCMD;
++}
++
++#ifdef CONFIG_KVM_GENERIC_HARDWARE_ENABLING
++int kvm_arch_hardware_enable(void)
++{
++	unsigned long gcfg = 0;
++
++	/* First init gtlbc, gcfg, gstat, gintc. All guest use the same config */
++	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
++	write_csr_gcfg(0);
++	write_csr_gstat(0);
++	write_csr_gintc(0);
++
++	/*
++	 * Enable virtualization features granting guest direct control of
++	 * certain features:
++	 * GCI=2:       Trap on init or unimplement cache instruction.
++	 * TORU=0:      Trap on Root Unimplement.
++	 * CACTRL=1:    Root control cache.
++	 * TOP=0:       Trap on Previlege.
++	 * TOE=0:       Trap on Exception.
++	 * TIT=0:       Trap on Timer.
++	 */
++	if (cpu_has_gcip_all)
++		gcfg |= CSR_GCFG_GCI_SECURE;
++	if (cpu_has_matc_root)
++		gcfg |= CSR_GCFG_MATC_ROOT;
++
++	gcfg |= CSR_GCFG_TIT;
++	write_csr_gcfg(gcfg);
++
++	kvm_flush_tlb_all();
++
++	/* Enable using TGID  */
++	set_csr_gtlbc(CSR_GTLBC_USETGID);
++	kvm_debug("gtlbc:%llx gintc:%llx gstat:%llx gcfg:%llx",
++			read_csr_gtlbc(), read_csr_gintc(),
++			read_csr_gstat(), read_csr_gcfg());
++
++	return 0;
++}
++
++void kvm_arch_hardware_disable(void)
++{
++	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
++	write_csr_gcfg(0);
++	write_csr_gstat(0);
++	write_csr_gintc(0);
++
++	/* Flush any remaining guest TLB entries */
++	kvm_flush_tlb_all();
++}
++#endif
++
+ static int kvm_loongarch_env_init(void)
+ {
+ 	struct kvm_context *context;
+-- 
+2.31.1
+
