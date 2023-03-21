@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE1571C3C
-	for <loongarch@lists.linux.dev>; Tue, 21 Mar 2023 03:57:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C44A97C
+	for <loongarch@lists.linux.dev>; Tue, 21 Mar 2023 03:58:08 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Ax69kWKxlkLDcPAA--.22354S3;
-	Tue, 21 Mar 2023 11:57:10 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxhdgMKxlkYDYPAA--.22789S3;
+	Tue, 21 Mar 2023 11:57:00 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD78EKxlkQB4IAA--.33942S31;
-	Tue, 21 Mar 2023 11:57:10 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD78EKxlkQB4IAA--.33942S14;
+	Tue, 21 Mar 2023 11:56:59 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -21,9 +21,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v4 29/29] LoongArch: KVM: Enable kvm config and add the makefile
-Date: Tue, 21 Mar 2023 11:56:51 +0800
-Message-Id: <20230321035651.598505-30-zhaotianrui@loongson.cn>
+Subject: [PATCH v4 12/29] LoongArch: KVM: Implement vcpu interrupt operations
+Date: Tue, 21 Mar 2023 11:56:34 +0800
+Message-Id: <20230321035651.598505-13-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230321035651.598505-1-zhaotianrui@loongson.cn>
 References: <20230321035651.598505-1-zhaotianrui@loongson.cn>
@@ -34,153 +34,224 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxD78EKxlkQB4IAA--.33942S31
+X-CM-TRANSID:AQAAf8DxD78EKxlkQB4IAA--.33942S14
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWr4xGF4xXF15tw4UWFWxZwb_yoW5KFy3pF
-	4fAr1kGF4xWFn3JrZ3t34kWrs8CFn7KrW7u3Waya48CrW7Z34kur1ktr9rXFyUJ393JrW8
-	Wr1rGa1agayUJaUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxCrWfAr1fKFWkWry3Gr1rJFb_yoWrKFWDpF
+	W8Cw45Xw48Gr17G343ZFnYvr4Yqr1kKFZxCr97C3y3K347tr95XFyvyr98XF1UGw4UKF1f
+	X34SqaykCa45JwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
-	CY1x0267AKxVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
-	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
-	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
+	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
+	Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1s
+	IEY20_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4
+	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Enable loongarch kvm config and add the makefile to support build kvm
-module.
+Implement vcpu interrupt operations such as vcpu set irq and
+vcpu clear irq, using set_gcsr_estat to set irq which is
+parsed by the irq bitmap.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/Kbuild                      |  1 +
- arch/loongarch/Kconfig                     |  2 ++
- arch/loongarch/configs/loongson3_defconfig |  2 ++
- arch/loongarch/kvm/Kconfig                 | 38 ++++++++++++++++++++++
- arch/loongarch/kvm/Makefile                | 22 +++++++++++++
- 5 files changed, 65 insertions(+)
- create mode 100644 arch/loongarch/kvm/Kconfig
- create mode 100644 arch/loongarch/kvm/Makefile
+ arch/loongarch/kvm/interrupt.c | 126 +++++++++++++++++++++++++++++++++
+ arch/loongarch/kvm/vcpu.c      |  45 ++++++++++++
+ 2 files changed, 171 insertions(+)
+ create mode 100644 arch/loongarch/kvm/interrupt.c
 
-diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
-index b01f5cdb2..40be8a169 100644
---- a/arch/loongarch/Kbuild
-+++ b/arch/loongarch/Kbuild
-@@ -2,6 +2,7 @@ obj-y += kernel/
- obj-y += mm/
- obj-y += net/
- obj-y += vdso/
-+obj-y += kvm/
- 
- # for cleaning
- subdir- += boot
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 7fd51257e..f9beeb2e0 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -148,6 +148,7 @@ config LOONGARCH
- 	select USE_PERCPU_NUMA_NODE_ID
- 	select USER_STACKTRACE_SUPPORT
- 	select ZONE_DMA32
-+	select HAVE_KVM
- 
- config 32BIT
- 	bool
-@@ -588,3 +589,4 @@ source "drivers/acpi/Kconfig"
- endmenu
- 
- source "drivers/firmware/Kconfig"
-+source "arch/loongarch/kvm/Kconfig"
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index e18213f01..c99520374 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -63,6 +63,8 @@ CONFIG_EFI_ZBOOT=y
- CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
- CONFIG_EFI_CAPSULE_LOADER=m
- CONFIG_EFI_TEST=m
-+CONFIG_VIRTUALIZATION=y
-+CONFIG_KVM=m
- CONFIG_MODULES=y
- CONFIG_MODULE_FORCE_LOAD=y
- CONFIG_MODULE_UNLOAD=y
-diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
+diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
 new file mode 100644
-index 000000000..8a999b4c0
+index 000000000..02267a71d
 --- /dev/null
-+++ b/arch/loongarch/kvm/Kconfig
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# KVM configuration
-+#
++++ b/arch/loongarch/kvm/interrupt.c
+@@ -0,0 +1,126 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
 +
-+source "virt/kvm/Kconfig"
++#include <linux/errno.h>
++#include <linux/err.h>
++#include <asm/kvm_vcpu.h>
 +
-+menuconfig VIRTUALIZATION
-+	bool "Virtualization"
-+	help
-+	  Say Y here to get to see options for using your Linux host to run
-+	  other operating systems inside virtual machines (guests).
-+	  This option alone does not add any kernel code.
++static unsigned int int_to_coreint[LOONGARCH_EXC_MAX] = {
++	[LARCH_INT_TIMER]	= CPU_TIMER,
++	[LARCH_INT_IPI]		= CPU_IPI,
++	[LARCH_INT_SIP0]	= CPU_SIP0,
++	[LARCH_INT_SIP1]	= CPU_SIP1,
++	[LARCH_INT_IP0]		= CPU_IP0,
++	[LARCH_INT_IP1]		= CPU_IP1,
++	[LARCH_INT_IP2]		= CPU_IP2,
++	[LARCH_INT_IP3]		= CPU_IP3,
++	[LARCH_INT_IP4]		= CPU_IP4,
++	[LARCH_INT_IP5]		= CPU_IP5,
++	[LARCH_INT_IP6]		= CPU_IP6,
++	[LARCH_INT_IP7]		= CPU_IP7,
++};
 +
-+	  If you say N, all options in this submenu will be skipped and
-+	  disabled.
++static int _kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
++{
++	unsigned int irq = 0;
 +
-+if VIRTUALIZATION
++	clear_bit(priority, &vcpu->arch.irq_pending);
++	if (priority < LOONGARCH_EXC_MAX)
++		irq = int_to_coreint[priority];
 +
-+config KVM
-+	tristate "Kernel-based Virtual Machine (KVM) support"
-+	depends on HAVE_KVM
-+	select MMU_NOTIFIER
-+	select ANON_INODES
-+	select PREEMPT_NOTIFIERS
-+	select KVM_MMIO
-+	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
-+	select HAVE_KVM_VCPU_ASYNC_IOCTL
-+	select HAVE_KVM_EVENTFD
-+	select SRCU
-+	help
-+	  Support hosting virtualized guest machines using hardware
-+	  virtualization extensions. You will need a fairly processor
-+	  equipped with virtualization extensions.
++	switch (priority) {
++	case LARCH_INT_TIMER:
++	case LARCH_INT_IPI:
++	case LARCH_INT_SIP0:
++	case LARCH_INT_SIP1:
++		set_gcsr_estat(irq);
++		break;
 +
-+	  If unsure, say N.
++	case LARCH_INT_IP0:
++	case LARCH_INT_IP1:
++	case LARCH_INT_IP2:
++	case LARCH_INT_IP3:
++	case LARCH_INT_IP4:
++	case LARCH_INT_IP5:
++	case LARCH_INT_IP6:
++	case LARCH_INT_IP7:
++		set_csr_gintc(irq);
++		break;
 +
-+endif # VIRTUALIZATION
-diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
-new file mode 100644
-index 000000000..2335e873a
---- /dev/null
-+++ b/arch/loongarch/kvm/Makefile
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for LOONGARCH KVM support
-+#
++	default:
++		break;
++	}
 +
-+ccflags-y += -I $(srctree)/$(src)
++	return 1;
++}
 +
-+include $(srctree)/virt/kvm/Makefile.kvm
++static int _kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
++{
++	unsigned int irq = 0;
 +
-+obj-$(CONFIG_KVM) += kvm.o
++	clear_bit(priority, &vcpu->arch.irq_clear);
++	if (priority < LOONGARCH_EXC_MAX)
++		irq = int_to_coreint[priority];
 +
-+kvm-y += main.o
-+kvm-y += vm.o
-+kvm-y += vmid.o
-+kvm-y += tlb.o
-+kvm-y += mmu.o
-+kvm-y += vcpu.o
-+kvm-y += exit.o
-+kvm-y += interrupt.o
-+kvm-y += timer.o
-+kvm-y += switch.o
-+kvm-y += csr_ops.o
++	switch (priority) {
++	case LARCH_INT_TIMER:
++	case LARCH_INT_IPI:
++	case LARCH_INT_SIP0:
++	case LARCH_INT_SIP1:
++		clear_gcsr_estat(irq);
++		break;
++
++	case LARCH_INT_IP0:
++	case LARCH_INT_IP1:
++	case LARCH_INT_IP2:
++	case LARCH_INT_IP3:
++	case LARCH_INT_IP4:
++	case LARCH_INT_IP5:
++	case LARCH_INT_IP6:
++	case LARCH_INT_IP7:
++		clear_csr_gintc(irq);
++		break;
++
++	default:
++		break;
++	}
++
++	return 1;
++}
++
++void _kvm_deliver_intr(struct kvm_vcpu *vcpu)
++{
++	unsigned long *pending = &vcpu->arch.irq_pending;
++	unsigned long *pending_clr = &vcpu->arch.irq_clear;
++	unsigned int priority;
++
++	if (!(*pending) && !(*pending_clr))
++		return;
++
++	if (*pending_clr) {
++		priority = __ffs(*pending_clr);
++		while (priority <= LOONGARCH_EXC_IPNUM) {
++			_kvm_irq_clear(vcpu, priority);
++			priority = find_next_bit(pending_clr,
++					BITS_PER_BYTE * sizeof(*pending_clr),
++					priority + 1);
++		}
++	}
++
++	if (*pending) {
++		priority = __ffs(*pending);
++		while (priority <= LOONGARCH_EXC_IPNUM) {
++			_kvm_irq_deliver(vcpu, priority);
++			priority = find_next_bit(pending,
++					BITS_PER_BYTE * sizeof(*pending),
++					priority + 1);
++		}
++	}
++}
++
++int _kvm_pending_timer(struct kvm_vcpu *vcpu)
++{
++	return test_bit(LARCH_INT_TIMER, &vcpu->arch.irq_pending);
++}
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 2709ab43d..4c3b41fd1 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -327,6 +327,51 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
+ 	preempt_enable();
+ }
+ 
++int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu,
++			     struct kvm_loongarch_interrupt *irq)
++{
++	int intr = (int)irq->irq;
++	struct kvm_vcpu *dvcpu = NULL;
++
++	if (irq->cpu == -1)
++		dvcpu = vcpu;
++	else
++		dvcpu = kvm_get_vcpu(vcpu->kvm, irq->cpu);
++
++	if (intr > 0)
++		_kvm_queue_irq(dvcpu, intr);
++	else if (intr < 0)
++		_kvm_dequeue_irq(dvcpu, -intr);
++	else {
++		kvm_err("%s: invalid interrupt ioctl (%d:%d)\n", __func__,
++				irq->cpu, irq->irq);
++		return -EINVAL;
++	}
++
++	kvm_vcpu_kick(dvcpu);
++	return 0;
++}
++
++long kvm_arch_vcpu_async_ioctl(struct file *filp,
++			       unsigned int ioctl, unsigned long arg)
++{
++	struct kvm_vcpu *vcpu = filp->private_data;
++	void __user *argp = (void __user *)arg;
++
++	if (ioctl == KVM_INTERRUPT) {
++		struct kvm_loongarch_interrupt irq;
++
++		if (copy_from_user(&irq, argp, sizeof(irq)))
++			return -EFAULT;
++		kvm_debug("[%d] %s: irq: %d\n", vcpu->vcpu_id, __func__,
++			  irq.irq);
++
++		return kvm_vcpu_ioctl_interrupt(vcpu, &irq);
++	}
++
++	return -ENOIOCTLCMD;
++}
++
+ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+ {
+ 	return 0;
 -- 
 2.31.1
 
