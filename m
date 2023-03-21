@@ -1,110 +1,108 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E45B10E9
-	for <loongarch@lists.linux.dev>; Tue, 21 Mar 2023 12:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1679402137;
-	bh=WqHd6UmiflAZuHzVPLhpeirTpk1BHvePg3JeMyhBQbE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=bjCHwENxoDjb6bK4lLpiebeF4axazjLESvQBHn8qmKv1JeVbC91tDW/15BCkrCjI8
-	 StazifwyGhK3Un1Bpi3TlA2A+8DsIgbuXUx1zbE00u30XESxFaOsqicrNufmwkGRmt
-	 bmULJfddPXeEiq/qN2+xZoHBWbynPVnfGHchj5kM=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id B90D765938;
-	Tue, 21 Mar 2023 08:35:35 -0400 (EDT)
-Message-ID: <253a5dfcb7e41e44d15232e1891e7ea9d39dc953.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Check unwind_error() in arch_stack_walk()
-From: Xi Ruoyao <xry111@xry111.site>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>,  WANG Xuerui <kernel@xen0n.name>
-Cc: Guenter Roeck <linux@roeck-us.net>, loongarch@lists.linux.dev, 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662A19470
+	for <loongarch@lists.linux.dev>; Tue, 21 Mar 2023 14:25:50 +0000 (UTC)
+Received: by mail-io1-f44.google.com with SMTP id t129so6978224iof.12
+        for <loongarch@lists.linux.dev>; Tue, 21 Mar 2023 07:25:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679408749;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=j92IPH/tXuCtZZM04rrZEMBKuL+XNp59wtlpqWm2eMc=;
+        b=XYixwF/zo2JNDZ3vDZSrH7WX9PMUCvPLbXOVgWfdDNhGauVScBWFc0kotbee2pJwa8
+         LOR0er0Wzs6qwjrdK31H9MqfMcQDszYtR8h7+JMX5SlIiAk5AtduCaQ0zMHP+hDv++T7
+         MRljgjdbr+PxcqXNIuG44VrJ/roOhhuZ5oD92nftUt2Fvh6KJSS7A0hqqOqkOBRpP0c4
+         rLBh6AAIn7yci+dUnVWVxe19SSbQM3jMwy223Pi8R157yuRXOBo1NrY1l919tbQoSRpp
+         1EloxOxXGz5qRWVkUa8g6GCYmcaTzq+Hs24iB5ItasvC8EeLvysD7BYkUlcvnK6aoKdY
+         9+Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679408749;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j92IPH/tXuCtZZM04rrZEMBKuL+XNp59wtlpqWm2eMc=;
+        b=Ep4BK/by4qLFZNKVG0n18M3/flveHL1nDPAGdxprzjeyIfYm06+bHUP9HpaZGOdvb+
+         3RZvbWF1tdZfYx1Xq+SlIvk7sH8603Q88MxcECmone/rKsiR69l6i7mIWKhVMO+z0Ofk
+         ocemORLaA7j3eil9VCQ8Jkx4cFXYE5OHqpiyo+cDTozvtjkS2l5aBbszhQWQWx+p+jz0
+         VPKRpmR+tFlfPK6wkSKI9AIe+sZlr8XWeExHEUrVedLUj6AQw0I1FYwt/9Zz2bXxsN2R
+         /lzkY7qY44F8GBTY2PyMnlxebRJWEL1X7nTWAAR5stjyf7jSHIntr7WhWSTGV5EyM+83
+         qUgA==
+X-Gm-Message-State: AO0yUKVVvBgYrZtfgbNNS89i7M2ANYXPJGI4ynl1kYGYbTTX+uiGmfdz
+	4DFNfEcugu6WbyEghHQGRXk=
+X-Google-Smtp-Source: AK7set+QJ6ZbArvXrJdknp1ypG5wAeyQFaDQF8MEvVTKaXzBbdhdUQ02KeR73lXXATVNLOgfN9J7kg==
+X-Received: by 2002:a5d:89d2:0:b0:757:ef37:933c with SMTP id a18-20020a5d89d2000000b00757ef37933cmr1773464iot.16.1679408749217;
+        Tue, 21 Mar 2023 07:25:49 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d1-20020a5d9bc1000000b0074564031d75sm3828187ion.2.2023.03.21.07.25.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Mar 2023 07:25:48 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 21 Mar 2023 07:25:46 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Date: Tue, 21 Mar 2023 20:35:34 +0800
-In-Reply-To: <1679380154-20308-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: Re: [PATCH] LoongArch: Check unwind_error() in arch_stack_walk()
+Message-ID: <f61ac027-0068-40f0-87bd-17f916141884@roeck-us.net>
 References: <1679380154-20308-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.46.4 
+ <253a5dfcb7e41e44d15232e1891e7ea9d39dc953.camel@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <253a5dfcb7e41e44d15232e1891e7ea9d39dc953.camel@xry111.site>
 
-T24gVHVlLCAyMDIzLTAzLTIxIGF0IDE0OjI5ICswODAwLCBUaWV6aHUgWWFuZyB3cm90ZToKPiBX
-ZSBjYW4gc2VlIHRoZSBmb2xsb3dpbmcgbWVzc2FnZXMgd2l0aCBDT05GSUdfUFJPVkVfTE9DS0lO
-Rz15IG9uCj4gTG9vbmdBcmNoOgo+IAo+IMKgIEJVRzogTUFYX1NUQUNLX1RSQUNFX0VOVFJJRVMg
-dG9vIGxvdyEKPiDCoCB0dXJuaW5nIG9mZiB0aGUgbG9ja2luZyBjb3JyZWN0bmVzcyB2YWxpZGF0
-b3IuCj4gCj4gVGhpcyBpcyBiZWNhdXNlIHN0YWNrX3RyYWNlX3NhdmUoKSByZXR1cm5zIGEgYmln
-IHZhbHVlIGFmdGVyIGNhbGwKPiBhcmNoX3N0YWNrX3dhbGsoKSwgaGVyZSBpcyB0aGUgY2FsbCB0
-cmFjZToKPiAKPiDCoCBzYXZlX3RyYWNlKCkKPiDCoMKgwqAgc3RhY2tfdHJhY2Vfc2F2ZSgpCj4g
-wqDCoMKgwqDCoCBhcmNoX3N0YWNrX3dhbGsoKQo+IMKgwqDCoMKgwqDCoMKgIHN0YWNrX3RyYWNl
-X2NvbnN1bWVfZW50cnkoKQo+IAo+IGFyY2hfc3RhY2tfd2FsaygpIHNob3VsZCByZXR1cm4gaW1t
-ZWRpYXRlbHkgaWYgdW53aW5kX25leHRfZnJhbWUoKQo+IGZhaWxlZCwgbm8gbmVlZCB0byBkbyB0
-aGUgdXNlbGVzcyBsb29wcyB0byBpbmNyZWFzZSB0aGUgdmFsdWUgb2YKPiBjLT5sZW4gaW4gc3Rh
-Y2tfdHJhY2VfY29uc3VtZV9lbnRyeSgpLCB0aGVuIHdlIGNhbiBmaXggdGhlIGFib3ZlCj4gcHJv
-YmxlbS4KPiAKPiBSZXBvcnRlZC1ieTogR3VlbnRlciBSb2VjayA8bGludXhAcm9lY2stdXMubmV0
-Pgo+IExpbms6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC84YTQ0YWQ3MS02OGQyLTQ5MjYt
-ODkyZi03MmJmYzdhNjdlMmFAcm9lY2stdXMubmV0Lwo+IFNpZ25lZC1vZmYtYnk6IFRpZXpodSBZ
-YW5nIDx5YW5ndGllemh1QGxvb25nc29uLmNuPgoKVGhlIGZpeCBtYWtlcyBzZW5zZSwgYnV0IEkn
-bSBhc2tpbmcgdGhlIHNhbWUgcXVlc3Rpb24gYWdhaW4gKHNvcnJ5IGlmCml0J3Mgbm9pc3kpOiBz
-aG91bGQgd2UgQ2Mgc3RhYmxlQHZnZXIua2VybmVsLm9yZyBhbmQvb3IgbWFrZSBhIFBSIGZvcgo2
-LjM/CgpUbyBtZSBhIGJ1ZyBmaXhlcyBzaG91bGQgYmUgYmFja3BvcnRlZCBpbnRvIGFsbCBzdGFi
-bGUgYnJhbmNoZXMgYWZmZWN0ZWQKYnkgdGhlIGJ1ZywgdW5sZXNzIHRoZXJlIGlzIHNvbWUgc2Vy
-aW91cyBkaWZmaWN1bHR5LiAgQXMgNi4zIHJlbGVhc2UKd2lsbCB3b3JrIG9uIGxhdW5jaGVkIDNB
-NTAwMCBib2FyZHMgb3V0LW9mLWJveCwgcGVvcGxlIG1heSB3YW50IHRvIHN0b3AKc3RheWluZyBv
-biB0aGUgbGVhZGluZyBlZGdlIGFuZCB1c2UgYSBMVFMvc3RhYmxlIHJlbGVhc2Ugc2VyaWVzLiBX
-ZQpjYW4ndCBqdXN0IHNheSAob3IgYmVoYXZlIGxpa2UpICJ3ZSBkb24ndCBiYWNrcG9ydCwgcGxl
-YXNlIHVzZSBsYXRlc3QKbWFpbmxpbmUiIElNTyA6KS4KCj4gLS0tCj4gwqBhcmNoL2xvb25nYXJj
-aC9rZXJuZWwvc3RhY2t0cmFjZS5jwqDCoMKgwqDCoCB8IDMgKystCj4gwqBhcmNoL2xvb25nYXJj
-aC9rZXJuZWwvdW53aW5kLmPCoMKgwqDCoMKgwqDCoMKgwqAgfCAxICsKPiDCoGFyY2gvbG9vbmdh
-cmNoL2tlcm5lbC91bndpbmRfcHJvbG9ndWUuYyB8IDQgKysrLQo+IMKgMyBmaWxlcyBjaGFuZ2Vk
-LCA2IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gv
-bG9vbmdhcmNoL2tlcm5lbC9zdGFja3RyYWNlLmMgYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwvc3Rh
-Y2t0cmFjZS5jCj4gaW5kZXggM2E2OTBmOS4uN2MxNWJhNSAxMDA2NDQKPiAtLS0gYS9hcmNoL2xv
-b25nYXJjaC9rZXJuZWwvc3RhY2t0cmFjZS5jCj4gKysrIGIvYXJjaC9sb29uZ2FyY2gva2VybmVs
-L3N0YWNrdHJhY2UuYwo+IEBAIC0zMCw3ICszMCw4IEBAIHZvaWQgYXJjaF9zdGFja193YWxrKHN0
-YWNrX3RyYWNlX2NvbnN1bWVfZm4gY29uc3VtZV9lbnRyeSwgdm9pZCAqY29va2llLAo+IMKgCj4g
-wqDCoMKgwqDCoMKgwqDCoHJlZ3MtPnJlZ3NbMV0gPSAwOwo+IMKgwqDCoMKgwqDCoMKgwqBmb3Ig
-KHVud2luZF9zdGFydCgmc3RhdGUsIHRhc2ssIHJlZ3MpOwo+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgIXVud2luZF9kb25lKCZzdGF0ZSk7IHVud2luZF9uZXh0X2ZyYW1lKCZzdGF0ZSkpIHsK
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAhdW53aW5kX2RvbmUoJnN0YXRlKSAmJiAhdW53aW5k
-X2Vycm9yKCZzdGF0ZSk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdW53aW5kX25leHRfZnJh
-bWUoJnN0YXRlKSkgewo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYWRkciA9IHVu
-d2luZF9nZXRfcmV0dXJuX2FkZHJlc3MoJnN0YXRlKTsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoGlmICghYWRkciB8fCAhY29uc3VtZV9lbnRyeShjb29raWUsIGFkZHIpKQo+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGJyZWFrOwo+IGRp
-ZmYgLS1naXQgYS9hcmNoL2xvb25nYXJjaC9rZXJuZWwvdW53aW5kLmMgYi9hcmNoL2xvb25nYXJj
-aC9rZXJuZWwvdW53aW5kLmMKPiBpbmRleCBhNDYzZDY5Li5iYTMyNGJhIDEwMDY0NAo+IC0tLSBh
-L2FyY2gvbG9vbmdhcmNoL2tlcm5lbC91bndpbmQuYwo+ICsrKyBiL2FyY2gvbG9vbmdhcmNoL2tl
-cm5lbC91bndpbmQuYwo+IEBAIC0yOCw1ICsyOCw2IEBAIGJvb2wgZGVmYXVsdF9uZXh0X2ZyYW1l
-KHN0cnVjdCB1bndpbmRfc3RhdGUgKnN0YXRlKQo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoH0gd2hp
-bGUgKCFnZXRfc3RhY2tfaW5mbyhzdGF0ZS0+c3AsIHN0YXRlLT50YXNrLCBpbmZvKSk7Cj4gwqAK
-PiArwqDCoMKgwqDCoMKgwqBzdGF0ZS0+ZXJyb3IgPSB0cnVlOwo+IMKgwqDCoMKgwqDCoMKgwqBy
-ZXR1cm4gZmFsc2U7Cj4gwqB9Cj4gZGlmZiAtLWdpdCBhL2FyY2gvbG9vbmdhcmNoL2tlcm5lbC91
-bndpbmRfcHJvbG9ndWUuYyBiL2FyY2gvbG9vbmdhcmNoL2tlcm5lbC91bndpbmRfcHJvbG9ndWUu
-Ywo+IGluZGV4IDkwOTVmZGUuLjU1YWZjMjcgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9sb29uZ2FyY2gv
-a2VybmVsL3Vud2luZF9wcm9sb2d1ZS5jCj4gKysrIGIvYXJjaC9sb29uZ2FyY2gva2VybmVsL3Vu
-d2luZF9wcm9sb2d1ZS5jCj4gQEAgLTIxMSw3ICsyMTEsNyBAQCBzdGF0aWMgYm9vbCBuZXh0X2Zy
-YW1lKHN0cnVjdCB1bndpbmRfc3RhdGUgKnN0YXRlKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBjID0gcmVncy0+Y3NyX2VyYTsKPiDCoAo+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmICh1c2VyX21vZGUo
-cmVncykgfHwgIV9fa2VybmVsX3RleHRfYWRkcmVzcyhwYykpCj4gLcKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIGZhbHNl
-Owo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoGdvdG8gb3V0Owo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgc3RhdGUtPmZpcnN0ID0gdHJ1ZTsKPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzdGF0ZS0+cGMgPSBwYzsKPiBAQCAtMjI2
-LDYgKzIyNiw4IEBAIHN0YXRpYyBib29sIG5leHRfZnJhbWUoc3RydWN0IHVud2luZF9zdGF0ZSAq
-c3RhdGUpCj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgfSB3aGlsZSAoIWdldF9zdGFja19pbmZvKHN0
-YXRlLT5zcCwgc3RhdGUtPnRhc2ssIGluZm8pKTsKPiDCoAo+ICtvdXQ6Cj4gK8KgwqDCoMKgwqDC
-oMKgc3RhdGUtPmVycm9yID0gdHJ1ZTsKPiDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIGZhbHNlOwo+
-IMKgfQo+IMKgCgotLSAKWGkgUnVveWFvIDx4cnkxMTFAeHJ5MTExLnNpdGU+ClNjaG9vbCBvZiBB
-ZXJvc3BhY2UgU2NpZW5jZSBhbmQgVGVjaG5vbG9neSwgWGlkaWFuIFVuaXZlcnNpdHkK
+On Tue, Mar 21, 2023 at 08:35:34PM +0800, Xi Ruoyao wrote:
+> On Tue, 2023-03-21 at 14:29 +0800, Tiezhu Yang wrote:
+> > We can see the following messages with CONFIG_PROVE_LOCKING=y on
+> > LoongArch:
+> > 
+> >   BUG: MAX_STACK_TRACE_ENTRIES too low!
+> >   turning off the locking correctness validator.
+> > 
+> > This is because stack_trace_save() returns a big value after call
+> > arch_stack_walk(), here is the call trace:
+> > 
+> >   save_trace()
+> >     stack_trace_save()
+> >       arch_stack_walk()
+> >         stack_trace_consume_entry()
+> > 
+> > arch_stack_walk() should return immediately if unwind_next_frame()
+> > failed, no need to do the useless loops to increase the value of
+> > c->len in stack_trace_consume_entry(), then we can fix the above
+> > problem.
+> > 
+> > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > Link: https://lore.kernel.org/all/8a44ad71-68d2-4926-892f-72bfc7a67e2a@roeck-us.net/
+> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> 
+> The fix makes sense, but I'm asking the same question again (sorry if
+> it's noisy): should we Cc stable@vger.kernel.org and/or make a PR for
+> 6.3?
+> 
+> To me a bug fixes should be backported into all stable branches affected
+> by the bug, unless there is some serious difficulty.  As 6.3 release
+> will work on launched 3A5000 boards out-of-box, people may want to stop
+> staying on the leading edge and use a LTS/stable release series. We
+> can't just say (or behave like) "we don't backport, please use latest
+> mainline" IMO :).
 
+It is a bug fix, isn't it ? It should be backported to v6.1+. Otherwise,
+if your policy is to not backport bug fixes, I might as well stop testing
+loongarch on all but the most recent kernel branch. Let me know if this is
+what you want. If so, I think you should let all other regression testers
+know that they should only test loongarch on mainline and possibly on
+linux-next.
+
+Thanks,
+Guenter
