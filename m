@@ -1,167 +1,122 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9222185D
-	for <loongarch@lists.linux.dev>; Tue, 21 Mar 2023 03:58:08 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Ax69kJKxlkJjYPAA--.22339S3;
-	Tue, 21 Mar 2023 11:56:57 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD78EKxlkQB4IAA--.33942S9;
-	Tue, 21 Mar 2023 11:56:57 +0800 (CST)
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D98B11FA0
+	for <loongarch@lists.linux.dev>; Tue, 21 Mar 2023 06:29:19 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxJFy8Thlk7UMPAA--.22737S3;
+	Tue, 21 Mar 2023 14:29:17 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxAeW7Thlk20UIAA--.35478S2;
+	Tue, 21 Mar 2023 14:29:15 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Guenter Roeck <linux@roeck-us.net>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	Mark Brown <broonie@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	maobibo@loongson.cn,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v4 07/29] LoongArch: KVM: Implement vcpu run interface
-Date: Tue, 21 Mar 2023 11:56:29 +0800
-Message-Id: <20230321035651.598505-8-zhaotianrui@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230321035651.598505-1-zhaotianrui@loongson.cn>
-References: <20230321035651.598505-1-zhaotianrui@loongson.cn>
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH] LoongArch: Check unwind_error() in arch_stack_walk()
+Date: Tue, 21 Mar 2023 14:29:14 +0800
+Message-Id: <1679380154-20308-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8DxAeW7Thlk20UIAA--.35478S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxAFy7uFy7Xr47Cw1kGFy3Jwb_yoW5Xr1xpr
+	ZrZ3Z3Wr4ruF9Fqa4Dtw18ur98J3s7ur12gas8Aa4rCFnrXry2grnava4DZF4qy34kG340
+	gFnYkr909a1UJa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
+	ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
+	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
+	W8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxD78EKxlkQB4IAA--.33942S9
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAryruFWxJryUXw43KFWxWFg_yoW5XFWUpF
-	W8Cwn09w4rJ34xG393Jrs0vrs0qrZ5Kr17XryxtrWaqr4jy34DursakrWDAFWfA34fZF1S
-	vFn5tF4UCF1jy37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
-	Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1s
-	IEY20_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4
-	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement vcpu run interface, handling mmio, iocsr reading fault
-and deliver interrupt, lose fpu before vcpu enter guest.
+We can see the following messages with CONFIG_PROVE_LOCKING=y on
+LoongArch:
 
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+  BUG: MAX_STACK_TRACE_ENTRIES too low!
+  turning off the locking correctness validator.
+
+This is because stack_trace_save() returns a big value after call
+arch_stack_walk(), here is the call trace:
+
+  save_trace()
+    stack_trace_save()
+      arch_stack_walk()
+        stack_trace_consume_entry()
+
+arch_stack_walk() should return immediately if unwind_next_frame()
+failed, no need to do the useless loops to increase the value of
+c->len in stack_trace_consume_entry(), then we can fix the above
+problem.
+
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/all/8a44ad71-68d2-4926-892f-72bfc7a67e2a@roeck-us.net/
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 86 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+ arch/loongarch/kernel/stacktrace.c      | 3 ++-
+ arch/loongarch/kernel/unwind.c          | 1 +
+ arch/loongarch/kernel/unwind_prologue.c | 4 +++-
+ 3 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 7af2ff64b..bc9e3889f 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -18,6 +18,44 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- 	return 0;
+diff --git a/arch/loongarch/kernel/stacktrace.c b/arch/loongarch/kernel/stacktrace.c
+index 3a690f9..7c15ba5 100644
+--- a/arch/loongarch/kernel/stacktrace.c
++++ b/arch/loongarch/kernel/stacktrace.c
+@@ -30,7 +30,8 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 
+ 	regs->regs[1] = 0;
+ 	for (unwind_start(&state, task, regs);
+-	      !unwind_done(&state); unwind_next_frame(&state)) {
++	     !unwind_done(&state) && !unwind_error(&state);
++	     unwind_next_frame(&state)) {
+ 		addr = unwind_get_return_address(&state);
+ 		if (!addr || !consume_entry(cookie, addr))
+ 			break;
+diff --git a/arch/loongarch/kernel/unwind.c b/arch/loongarch/kernel/unwind.c
+index a463d69..ba324ba 100644
+--- a/arch/loongarch/kernel/unwind.c
++++ b/arch/loongarch/kernel/unwind.c
+@@ -28,5 +28,6 @@ bool default_next_frame(struct unwind_state *state)
+ 
+ 	} while (!get_stack_info(state->sp, state->task, info));
+ 
++	state->error = true;
+ 	return false;
+ }
+diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
+index 9095fde..55afc27 100644
+--- a/arch/loongarch/kernel/unwind_prologue.c
++++ b/arch/loongarch/kernel/unwind_prologue.c
+@@ -211,7 +211,7 @@ static bool next_frame(struct unwind_state *state)
+ 			pc = regs->csr_era;
+ 
+ 			if (user_mode(regs) || !__kernel_text_address(pc))
+-				return false;
++				goto out;
+ 
+ 			state->first = true;
+ 			state->pc = pc;
+@@ -226,6 +226,8 @@ static bool next_frame(struct unwind_state *state)
+ 
+ 	} while (!get_stack_info(state->sp, state->task, info));
+ 
++out:
++	state->error = true;
+ 	return false;
  }
  
-+/* Returns 1 if the guest TLB may be clobbered */
-+static int _kvm_check_requests(struct kvm_vcpu *vcpu, int cpu)
-+{
-+	int ret = 0;
-+
-+	if (!kvm_request_pending(vcpu))
-+		return 0;
-+
-+	if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu)) {
-+		/* Drop vpid for this VCPU */
-+		vcpu->arch.vpid = 0;
-+		/* This will clobber guest TLB contents too */
-+		ret = 1;
-+	}
-+
-+	return ret;
-+}
-+
-+static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
-+{
-+	int cpu;
-+
-+	/*
-+	 * handle vcpu timer, interrupts, check requests and
-+	 * check vmid before vcpu enter guest
-+	 */
-+	kvm_acquire_timer(vcpu);
-+	_kvm_deliver_intr(vcpu);
-+	/* make sure the vcpu mode has been written */
-+	smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-+	cpu = smp_processor_id();
-+	_kvm_check_requests(vcpu, cpu);
-+	_kvm_check_vmid(vcpu, cpu);
-+	vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
-+	/* clear KVM_LARCH_CSR as csr will change when enter guest */
-+	vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
-+}
-+
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- {
- 	unsigned long timer_hz;
-@@ -87,3 +125,51 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 			context->last_vcpu = NULL;
- 	}
- }
-+
-+int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
-+{
-+	int r = -EINTR;
-+	struct kvm_run *run = vcpu->run;
-+
-+	vcpu_load(vcpu);
-+
-+	kvm_sigset_activate(vcpu);
-+
-+	if (vcpu->mmio_needed) {
-+		if (!vcpu->mmio_is_write)
-+			_kvm_complete_mmio_read(vcpu, run);
-+		vcpu->mmio_needed = 0;
-+	}
-+
-+	if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
-+		if (!run->iocsr_io.is_write)
-+			_kvm_complete_iocsr_read(vcpu, run);
-+	}
-+
-+	/* clear exit_reason */
-+	run->exit_reason = KVM_EXIT_UNKNOWN;
-+	if (run->immediate_exit)
-+		goto out;
-+
-+	lose_fpu(1);
-+
-+	local_irq_disable();
-+	guest_timing_enter_irqoff();
-+
-+	kvm_pre_enter_guest(vcpu);
-+	trace_kvm_enter(vcpu);
-+
-+	guest_state_enter_irqoff();
-+	r = kvm_loongarch_ops->enter_guest(run, vcpu);
-+
-+	/* guest_state_exit_irqoff() already done.  */
-+	trace_kvm_out(vcpu);
-+	guest_timing_exit_irqoff();
-+	local_irq_enable();
-+
-+out:
-+	kvm_sigset_deactivate(vcpu);
-+
-+	vcpu_put(vcpu);
-+	return r;
-+}
 -- 
-2.31.1
+2.1.0
 
