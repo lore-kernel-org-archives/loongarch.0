@@ -1,101 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B68110E5
-	for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 00:50:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31B8FC4339C
-	for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 00:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1679446221;
-	bh=SJKVK6p4AtYmszF8lugRN21TQIYOoR26Llx9z3PyX8k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tth7EvCATjE3kn4C1Rk1Iw+REgcwOr5xpsQTu7pKPyrEGTwSZAjerPMCqRUAvl8AA
-	 f+Gn8BQhqKIEKvpi5JwPHnN0F56beQ8Hff/aaOgOXoRCMV8X+oG0320J+4Z6v2/O2r
-	 T/iDIVyXakS0g7zA4oI4bdM6gLGiynzNiT1HMHNN/fcgSxTUxtHkvLwbBssy1hnKfx
-	 1nnRaLBAnLl5M3J+HE3j0d/LxwtqIEvSG+m/4/DrECN5iDeAT6JxglUULIgtK6WHKt
-	 G7Jpba+BAR3RGIUM5XiwGFKocPJbSPN/2Tacs8uUReSAxXIUFSwCSpTeLdmu058Eht
-	 fVUxzlH5JRb8Q==
-Received: by mail-ed1-f51.google.com with SMTP id y4so66725208edo.2
-        for <loongarch@lists.linux.dev>; Tue, 21 Mar 2023 17:50:21 -0700 (PDT)
-X-Gm-Message-State: AO0yUKUD54oO3KtUepUSyFBx09mJZFi/altIchyN/ABokKCgFsnAj2Wb
-	qNTx+gL58G73TsSx3MQDZEacATPHZYYaEM8KYYk=
-X-Google-Smtp-Source: AK7set/zpKc1XeHOstNzTgHRX4aMPo7mIR05JSNxH7VOuJCZyVvpSh/MGnVJcHRxpHLWGq/bW6cm20mvQIFwEMVw0UQ=
-X-Received: by 2002:a50:9ea8:0:b0:4fb:f19:883 with SMTP id a37-20020a509ea8000000b004fb0f190883mr2702940edf.1.1679446219443;
- Tue, 21 Mar 2023 17:50:19 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ADCA15A9
+	for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 01:34:49 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.120])
+	by gateway (Coremail) with SMTP id _____8Bxfdo4WxpkrMkPAA--.12254S3;
+	Wed, 22 Mar 2023 09:34:48 +0800 (CST)
+Received: from [10.20.42.120] (unknown [10.20.42.120])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxX+Q2Wxpkt0MJAA--.37863S3;
+	Wed, 22 Mar 2023 09:34:46 +0800 (CST)
+Subject: Re: [PATCH v4 05/29] LoongArch: KVM: Add vcpu related header files
+To: Xi Ruoyao <xry111@xry111.site>, Paolo Bonzini <pbonzini@redhat.com>
+References: <20230321035651.598505-1-zhaotianrui@loongson.cn>
+ <20230321035651.598505-6-zhaotianrui@loongson.cn>
+ <75f843b2780fc3c3dcc1d0d8f78f2b955956316b.camel@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+Message-ID: <554dc19a-cd94-0f94-7e81-9cdc137dac7d@loongson.cn>
+Date: Wed, 22 Mar 2023 09:34:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1679380154-20308-1-git-send-email-yangtiezhu@loongson.cn>
- <253a5dfcb7e41e44d15232e1891e7ea9d39dc953.camel@xry111.site> <f61ac027-0068-40f0-87bd-17f916141884@roeck-us.net>
-In-Reply-To: <f61ac027-0068-40f0-87bd-17f916141884@roeck-us.net>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 22 Mar 2023 08:50:07 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5kFRt9z0U_TqSQeqX9WuUJ2cg0LOboUXHp-fLR0PoTJg@mail.gmail.com>
-Message-ID: <CAAhV-H5kFRt9z0U_TqSQeqX9WuUJ2cg0LOboUXHp-fLR0PoTJg@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Check unwind_error() in arch_stack_walk()
-To: Guenter Roeck <linux@roeck-us.net>, stable <stable@vger.kernel.org>
-Cc: Xi Ruoyao <xry111@xry111.site>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <75f843b2780fc3c3dcc1d0d8f78f2b955956316b.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxX+Q2Wxpkt0MJAA--.37863S3
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvdXoW7Xr18JrW8JryrtFyfurykKrg_yoWDZFb_Xr
+	s8JF15Ca1kWF4xtanIkFWrX347Gr43Zw15Aa1jqws0qr4rKry0qws3Krs2yrs3tw109F17
+	Cay5J3sIg3sxujkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
+	17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+	xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1ln4kS
+	14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE
+	7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
+	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8HKZJUUUUU==
 
-On Tue, Mar 21, 2023 at 10:25=E2=80=AFPM Guenter Roeck <linux@roeck-us.net>=
- wrote:
->
-> On Tue, Mar 21, 2023 at 08:35:34PM +0800, Xi Ruoyao wrote:
-> > On Tue, 2023-03-21 at 14:29 +0800, Tiezhu Yang wrote:
-> > > We can see the following messages with CONFIG_PROVE_LOCKING=3Dy on
-> > > LoongArch:
-> > >
-> > >   BUG: MAX_STACK_TRACE_ENTRIES too low!
-> > >   turning off the locking correctness validator.
-> > >
-> > > This is because stack_trace_save() returns a big value after call
-> > > arch_stack_walk(), here is the call trace:
-> > >
-> > >   save_trace()
-> > >     stack_trace_save()
-> > >       arch_stack_walk()
-> > >         stack_trace_consume_entry()
-> > >
-> > > arch_stack_walk() should return immediately if unwind_next_frame()
-> > > failed, no need to do the useless loops to increase the value of
-> > > c->len in stack_trace_consume_entry(), then we can fix the above
-> > > problem.
-> > >
-> > > Reported-by: Guenter Roeck <linux@roeck-us.net>
-> > > Link: https://lore.kernel.org/all/8a44ad71-68d2-4926-892f-72bfc7a67e2=
-a@roeck-us.net/
-> > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> >
-> > The fix makes sense, but I'm asking the same question again (sorry if
-> > it's noisy): should we Cc stable@vger.kernel.org and/or make a PR for
-> > 6.3?
-> >
-> > To me a bug fixes should be backported into all stable branches affecte=
-d
-> > by the bug, unless there is some serious difficulty.  As 6.3 release
-> > will work on launched 3A5000 boards out-of-box, people may want to stop
-> > staying on the leading edge and use a LTS/stable release series. We
-> > can't just say (or behave like) "we don't backport, please use latest
-> > mainline" IMO :).
->
-> It is a bug fix, isn't it ? It should be backported to v6.1+. Otherwise,
-> if your policy is to not backport bug fixes, I might as well stop testing
-> loongarch on all but the most recent kernel branch. Let me know if this i=
-s
-> what you want. If so, I think you should let all other regression testers
-> know that they should only test loongarch on mainline and possibly on
-> linux-next.
-This is of course a bug fix, but should Tiezhu resend this patch? Or
-just replying to this message with CC stable@vger.kernel.org is
-enough?
 
-Huacai
+
+在 2023年03月21日 20:30, Xi Ruoyao 写道:
+> On Tue, 2023-03-21 at 11:56 +0800, Tianrui Zhao wrote:
+>> +/* Tracepoints for VM exits */
+>> +#define kvm_trace_symbol_exit_types                    \
+>> +       ({ KVM_TRACE_EXIT_IDLE,         "IDLE" },       \
+>> +       { KVM_TRACE_EXIT_CACHE,         "CACHE" },      \
+>> +       { KVM_TRACE_EXIT_SIGNAL,        "Signal" })
+> Looks like there shouldn't be "(" and ")".
 >
-> Thanks,
-> Guenter
+>> +#define kvm_trace_symbol_aux_op				\
+>> +	({ KVM_TRACE_AUX_RESTORE,	"restore" },	\
+>> +	{ KVM_TRACE_AUX_SAVE,		"save" },	\
+>> +	{ KVM_TRACE_AUX_ENABLE,		"enable" },	\
+>> +	{ KVM_TRACE_AUX_DISABLE,	"disable" },	\
+>> +	{ KVM_TRACE_AUX_DISCARD,	"discard" })
+> Likewise.
+>
+> See the test robot report, and https://godbolt.org/z/bE8q97z1o.
+>
+> The lesson: if a text book claims "you should always wrap the content of
+> a macro in ( ... )", we should burn it in the fire! :)
+>
+
+Thanks, it should remove the "()" statement in the macros. The reason I 
+did this before because an error was triggered when I use checkpatch.py 
+to check it,  and now I know this error can be ignored.
+
+Thanks
+Tianrui Zhao
+
