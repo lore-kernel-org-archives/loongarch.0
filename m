@@ -1,110 +1,164 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E5F23D4
-	for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 11:09:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1679483362; bh=Dx4KKfYUa3saxw4ZiDY+1yllUPKh1pQ5ZReMkCQ6IZs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S6xuEyMzM7kohFb0GwgobajiVP/rDKkcAZSPuy50FFfkC8xSY+ZOjKZRxaPUwqsTl
-	 UTOj9hWGv4hyhH9EIqV8txow8/D8LhDuWsN9FNiNPaFS6RtwHbjcns8XVbK7cHe0W1
-	 oji4sn0qmYcSoEnx/BlcpbRBnXrGbMZX+18y8eFs=
-Received: from [100.100.33.167] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 3EE826006F;
-	Wed, 22 Mar 2023 19:09:22 +0800 (CST)
-Message-ID: <c6096bc7-4325-a826-4ff0-eaa4c8067e91@xen0n.name>
-Date: Wed, 22 Mar 2023 19:09:21 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AC12566
+	for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 11:25:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1679484303;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CeeQx+I+dRtKj5nSnz4ngzuZMZMfDzExS1NioY8sNjE=;
+	b=YiHCcEMklnPO1Nnsc6FZEFkoAjKCP+8zw8PmMOPG8ZtoPhd4DcKa40P5t1WvJCGLw1i9/Z
+	xGOfqk5p/rol+DVvScIDktQyC1nlY7yLxxbrXh4UjvoDYSbqbtgY4jZ09TLgqTzFSTXShx
+	tE5Bxrp6JhkLWOsiCe7J+lRfmR19q+U=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-557-RE-FD5U8Og6I5IZZ1bcrfg-1; Wed, 22 Mar 2023 07:25:02 -0400
+X-MC-Unique: RE-FD5U8Og6I5IZZ1bcrfg-1
+Received: by mail-qt1-f199.google.com with SMTP id v7-20020a05622a188700b003e0e27bbc2eso5741489qtc.8
+        for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 04:25:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679484302;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CeeQx+I+dRtKj5nSnz4ngzuZMZMfDzExS1NioY8sNjE=;
+        b=vpL8zs6kooi6+q+BoLLcctiqpEZSlh36bue+GQ5KxJthTrJyE5N/VJ+RFNx88Zz3XF
+         W9OdFRHLQiAorYgeaso0OO+/fE3l0LIylrE4XsbV2a8QK9DK4RTSnDsAvM72DJ0+yauW
+         KkBZ1kkhOYhQRkrEQnBNNaYeoGXnvYuJDf5R266cV6Uh92QFeBLvY64RSO3hWbx3zveg
+         RnWJRA6PQxvyqJ1UbR5Fjne3i3fcNeIxlEnnqlZgFyIKRIgEvB2kuY7veGpc4anKo7v7
+         RFGvocVofL6ow26WU7DWh76/qPxiiNBUoE1C139MMsW8NhK5TzkYxggq4/AjMpTYNMPj
+         VuLQ==
+X-Gm-Message-State: AO0yUKUf5AtyDG3GxUrcT4eb6MdE5+VLV/dnX09j9dw7zsRLXBLPF6d9
+	sz5ynU1YZMT76sR6+jsxoVdk7I9zEe3pTqS5bYnKuFODCx5GTV3mUB/M+XvXZfNq5yZaQKL7u/v
+	wjVk9oP0dvhegB9YuKHCA
+X-Received: by 2002:a05:6214:5087:b0:5a3:2f3c:4ee2 with SMTP id kk7-20020a056214508700b005a32f3c4ee2mr4440560qvb.42.1679484301885;
+        Wed, 22 Mar 2023 04:25:01 -0700 (PDT)
+X-Google-Smtp-Source: AK7set9pQPCTrnu5TcJ8+anXt5wOGunOW6pbx+MNpUrdRaYmFZLBIEbvfDpQn22VZvxy9XYWlsJV9g==
+X-Received: by 2002:a05:6214:5087:b0:5a3:2f3c:4ee2 with SMTP id kk7-20020a056214508700b005a32f3c4ee2mr4440518qvb.42.1679484301639;
+        Wed, 22 Mar 2023 04:25:01 -0700 (PDT)
+Received: from vschneid.remote.csb ([154.57.232.159])
+        by smtp.gmail.com with ESMTPSA id f66-20020a37d245000000b00745f3200f54sm11036821qkj.112.2023.03.22.04.24.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Mar 2023 04:25:00 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-xtensa@linux-xtensa.org, x86@kernel.org, Steven Rostedt
+ <rostedt@goodmis.org>, "Paul E. McKenney" <paulmck@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>, Daniel
+ Bristot de Oliveira <bristot@redhat.com>, Marcelo Tosatti
+ <mtosatti@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Marc
+ Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell
+ King <linux@armlinux.org.uk>, Nicholas Piggin <npiggin@gmail.com>, Guo Ren
+ <guoren@kernel.org>, "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v5 1/7] trace: Add trace_ipi_send_cpumask()
+In-Reply-To: <20230322103004.GA571242@hirez.programming.kicks-ass.net>
+References: <20230307143558.294354-1-vschneid@redhat.com>
+ <20230307143558.294354-2-vschneid@redhat.com>
+ <20230322093955.GR2017917@hirez.programming.kicks-ass.net>
+ <20230322103004.GA571242@hirez.programming.kicks-ass.net>
+Date: Wed, 22 Mar 2023 11:24:53 +0000
+Message-ID: <xhsmhpm91c9kq.mognet@vschneid.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.9.0
-Subject: Re: [PATCH] LoongArch: cpuinfo: standardize the "model name" field
-Content-Language: en-US
-To: Enze Li <lienze@kylinos.cn>, chenhuacai@kernel.org
-Cc: loongarch@lists.linux.dev, enze.li@gmx.com
-References: <20230322090533.4079453-1-lienze@kylinos.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20230322090533.4079453-1-lienze@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On 2023/3/22 17:05, Enze Li wrote:
-> When I use the latest version of lscpu to check my CPU info, I see,
-> 
-> ======
-> Architecture:          loongarch64
->    Byte Order:          Little Endian
-> CPU(s):                4
->    On-line CPU(s) list: 0-3
-> Model name:            -
->    Thread(s) per core:  1
->    Core(s) per socket:  4
-> ...
-> ======
-> 
-> Obviously, the "Model name" field shows me with a "-", which means the
-> lscpu failed to retrieve the correct information from the /proc/cpuinfo
-> file.
-> 
-> The main problem is that, the lscpu only identifies the data by its
-> "model name" field.  However, on the LoongArch platform, only 'Model
-> Name' is provided, which cannot be accurately identified due to case
-> sensitivity issues.  And I think that must be an oversight.
-> 
-> This patch fixes this issue.  With this patch applied, I get,
-> 
-> ======
-> Architecture:          loongarch64
->    Byte Order:          Little Endian
-> CPU(s):                4
->    On-line CPU(s) list: 0-3
-> Model name:            Loongson-3A5000-HV
->    Thread(s) per core:  1
->    Core(s) per socket:  4
-> ...
-> ======
-> 
-> Signed-off-by: Enze Li <lienze@kylinos.cn>
-> ---
->   arch/loongarch/kernel/proc.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
-> index 5c67cc4fd56d..7da56f9ee15c 100644
-> --- a/arch/loongarch/kernel/proc.c
-> +++ b/arch/loongarch/kernel/proc.c
-> @@ -50,7 +50,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
->   	seq_printf(m, "package\t\t\t: %d\n", cpu_data[n].package);
->   	seq_printf(m, "core\t\t\t: %d\n", cpu_data[n].core);
->   	seq_printf(m, "CPU Family\t\t: %s\n", __cpu_family[n]);
-> -	seq_printf(m, "Model Name\t\t: %s\n", __cpu_full_name[n]);
-> +	seq_printf(m, "model name\t\t: %s\n", __cpu_full_name[n]);
+On 22/03/23 11:30, Peter Zijlstra wrote:
+> On Wed, Mar 22, 2023 at 10:39:55AM +0100, Peter Zijlstra wrote:
+>> On Tue, Mar 07, 2023 at 02:35:52PM +0000, Valentin Schneider wrote:
+>> > +TRACE_EVENT(ipi_send_cpumask,
+>> > +
+>> > +	TP_PROTO(const struct cpumask *cpumask, unsigned long callsite, void *callback),
+>> > +
+>> > +	TP_ARGS(cpumask, callsite, callback),
+>> > +
+>> > +	TP_STRUCT__entry(
+>> > +		__cpumask(cpumask)
+>> > +		__field(void *, callsite)
+>> > +		__field(void *, callback)
+>> > +	),
+>> > +
+>> > +	TP_fast_assign(
+>> > +		__assign_cpumask(cpumask, cpumask_bits(cpumask));
+>> > +		__entry->callsite = (void *)callsite;
+>> > +		__entry->callback = callback;
+>> > +	),
+>> > +
+>> > +	TP_printk("cpumask=%s callsite=%pS callback=%pS",
+>> > +		  __get_cpumask(cpumask), __entry->callsite, __entry->callback)
+>> > +);
+>>
+>> Would it make sense to add a variant like: ipi_send_cpu() that records a
+>> single cpu instead of a cpumask. A lot of sites seems to do:
+>> cpumask_of(cpu) for that first argument, and it seems to me it is quite
+>> daft to have to memcpy a full multi-word cpumask in those cases.
+>>
+>> Remember, nr_possible_cpus > 64 is quite common these days.
+>
+> Something we litte bit like so...
+>
 
-NAK: it's userspace-visible ABI change. AFAIK there are already multiple 
-downstream adaptations (made by Loongson folks) that rely on the current 
-spelling, which may not have any fallback mechanism built in (e.g. 
-recognize both "Model Name" and "model name", match case-insensitively, 
-etc).
+I was wondering whether we could stick with a single trace event, but let
+ftrace be aware of weight=1 vs weight>1 cpumasks.
 
-It's better to adapt the downstream projects instead, for example you 
-could make them more resilient to a hypothetic future arch's similar 
-change by making them match case-insensitively.
+For weight>1, it would memcpy() as usual, for weight=1, it could write a
+pointer to a cpu_bit_bitmap[] equivalent embedded in the trace itself.
 
->   	seq_printf(m, "CPU Revision\t\t: 0x%02x\n", version);
->   	seq_printf(m, "FPU Revision\t\t: 0x%02x\n", fp_version);
->   	seq_printf(m, "CPU MHz\t\t\t: %llu.%02llu\n",
-> 
-> base-commit: fc89d7fb499b0162e081f434d45e8d1b47e82ece
+Unfortunately, Ftrace bitmasks are represented as a u32 made of two 16 bit
+values: [offset in event record, size], so there isn't a straightforward
+way to point to a "reusable" cpumask. AFAICT the only alternative would be
+to do that via a different trace event, but then we should just go with a
+plain old uint - i.e. do what you're doing here, so:
 
--- 
-WANG "xen0n" Xuerui
+Tested-and-reviewed-by: Valentin Schneider <vschneid@redhat.com>
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+(with the tiny typo fix below)
+
+> @@ -35,6 +35,28 @@ TRACE_EVENT(ipi_raise,
+>       TP_printk("target_mask=%s (%s)", __get_bitmask(target_cpus), __entry->reason)
+>  );
+>
+> +TRACE_EVENT(ipi_send_cpu,
+> +
+> +	TP_PROTO(const unsigned int cpu, unsigned long callsite, void *callback),
+> +
+> +	TP_ARGS(cpu, callsite, callback),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(unsigned int, cpu)
+> +		__field(void *, callsite)
+> +		__field(void *, callback)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->cpu = cpu;
+> +		__entry->callsite = (void *)callsite;
+> +		__entry->callback = callback;
+> +	),
+> +
+> +	TP_printk("cpu=%s callsite=%pS callback=%pS",
+                        ^
+                      s/s/u/
+
+> +		  __entry->cpu, __entry->callsite, __entry->callback)
+> +);
+> +
 
