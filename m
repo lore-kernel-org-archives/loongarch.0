@@ -1,208 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22C46FAA
-	for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 14:10:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3944C433D2;
-	Wed, 22 Mar 2023 14:10:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1679494247;
-	bh=UCoMh4hSwyIK8JgF8/rWDzBDYL17Hkon+pbKcPK/av0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Je1OzQCFa3dNy6+rMvAdKavR4adUUHQN0VMolmUU3FQiSuzgPAhi0L5nMthp3PIfO
-	 EfLD+gKWY4eh44h17fV13ecWnMl+uQ7wlnsyJfgdZOU1L+WApkTDgTNXSmICLpt+Og
-	 RhnzaSb4rvzGWaqSF3fJJIrp9qNe7XU7kxSmSvL1fdUX7kFugT7IwOYs6OnQBZwjNy
-	 b8M+4i0dRGPQipvK94aalKymbaCh7sVFKGM7X454YzWXfNtUtlQr99JsLQwygy8KpM
-	 07ZRFF5pd6C+U2T4krBOpDfYBw6j1CX8xeEGNS/gpNrTcrFMrj6GlnK7UMgTjTiBQn
-	 YKrN3/oRQVW5A==
-From: Ard Biesheuvel <ardb@kernel.org>
-To: linux-efi@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v2] efi: libstub: Use relocated version of kernel's struct screen_info
-Date: Wed, 22 Mar 2023 15:10:37 +0100
-Message-Id: <20230322141037.3684946-1-ardb@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5262FAF
+	for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 17:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1679504486;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2ZS63eR35hQQpuztlWGnGcv/jaBVlYMjTvbdWWfPWAY=;
+	b=FgVeN3ywielGmnIKlkUxi2lu2L66Njnin9F4bXjtVV4gsVezh0NCxRL602DyedZptsYGqb
+	kglwzYbFR3gz8OgPL4HYr6SdRVUy5Mr1nUj5JeH5iBjGPOlALjTmezPMMFGKxXzXBM/CcD
+	lWoj5C7S62XFCa+7gWNchCXmw9TLrsU=
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
+ [209.85.167.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-252-sWs2epszOYaonyzIrH6tOg-1; Wed, 22 Mar 2023 13:01:22 -0400
+X-MC-Unique: sWs2epszOYaonyzIrH6tOg-1
+Received: by mail-oi1-f199.google.com with SMTP id bg21-20020a056808179500b003869b702d75so7864144oib.17
+        for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 10:01:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679504482;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ZS63eR35hQQpuztlWGnGcv/jaBVlYMjTvbdWWfPWAY=;
+        b=3nCo0yvfFeWgdeQ8tSPyJJM0Mw/c0ZTXbutzu+NajJfbeT0VXfX07TkZRZp/4c5Ij2
+         y058+pxtCSgBoVIfMIogv8dM2PStSmaJwvVqIws24ZnVrOO1xQaRST54/YCva8RKA+b7
+         pNwwzAIGZdf6dlWBTzoC22EgLNgyUOZXwpKjJJViZvA4bkFYy95taMwo75GUL2VgIdJl
+         d8ARFiOZnG7FNYhi81zJPYsAAg6zBwqcy8OD4PmINQj9203pdZOMinGrE6i5H8FIHGVE
+         SjxHySm7KWM7ePe6sTYS84sWEUcfUgAN1QPib9lS80BJTVW8doFMKX1Axq1LSxjKYIEz
+         4tmg==
+X-Gm-Message-State: AO0yUKWCo3azO3/HiY7kYBBnpOlD8/8fbr0wVVJe/YBVFQEkImlkWpza
+	+NTewIyq1sjfLsIepQewWuQwajzmSxkYLXL7eHjBiAFwPKPx9YbPoZ39EoZe8FJTRcOO7ylbAvf
+	Pp3HdvajBhXYu0ZwAU3gn
+X-Received: by 2002:a05:6830:1397:b0:69b:c665:95ef with SMTP id d23-20020a056830139700b0069bc66595efmr1849088otq.32.1679504481961;
+        Wed, 22 Mar 2023 10:01:21 -0700 (PDT)
+X-Google-Smtp-Source: AK7set9OhxWG20qH1i/Yp6i2el5aA4zIJA9CTIhUo/MbvkBAyasdde0EdhDBEsgwB6QV+kPj7JTH5w==
+X-Received: by 2002:a05:6830:1397:b0:69b:c665:95ef with SMTP id d23-20020a056830139700b0069bc66595efmr1849034otq.32.1679504481408;
+        Wed, 22 Mar 2023 10:01:21 -0700 (PDT)
+Received: from vschneid.remote.csb ([154.57.232.159])
+        by smtp.gmail.com with ESMTPSA id g19-20020a05620a40d300b007290be5557bsm11733172qko.38.2023.03.22.10.01.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Mar 2023 10:01:20 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-xtensa@linux-xtensa.org, x86@kernel.org, "Paul E. McKenney"
+ <paulmck@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>, Daniel
+ Bristot de Oliveira <bristot@redhat.com>, Marcelo Tosatti
+ <mtosatti@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Marc
+ Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell
+ King <linux@armlinux.org.uk>, Nicholas Piggin <npiggin@gmail.com>, Guo Ren
+ <guoren@kernel.org>, "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v5 7/7] sched, smp: Trace smp callback causing an IPI
+In-Reply-To: <20230322140434.GC2357380@hirez.programming.kicks-ass.net>
+References: <20230307143558.294354-1-vschneid@redhat.com>
+ <20230307143558.294354-8-vschneid@redhat.com>
+ <20230322095329.GS2017917@hirez.programming.kicks-ass.net>
+ <xhsmhmt45c703.mognet@vschneid.remote.csb>
+ <20230322140434.GC2357380@hirez.programming.kicks-ass.net>
+Date: Wed, 22 Mar 2023 17:01:13 +0000
+Message-ID: <xhsmhjzz8d8km.mognet@vschneid.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6658; i=ardb@kernel.org; h=from:subject; bh=UCoMh4hSwyIK8JgF8/rWDzBDYL17Hkon+pbKcPK/av0=; b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUWaJyZbRfW7j7nV5nOPdUPma2ebzCrQs0/YOrPGeZKKe 8Xmm2c6SlkYxDgYZMUUWQRm/3238/REqVrnWbIwc1iZQIYwcHEKwEQc9jMyzGlz+n7GI/77nHeG b5hPCM+4E9WR+lFbp+T/7EhWjZqnnxj+p6QGP7Zh/Kq27NXE9EXewtxnD3vY8/IGGosUhUR4H3d hAAA=
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-In some cases, we expose the kernel's struct screen_info to the EFI stub
-directly, so it gets populated before even entering the kernel.  This
-means the early console is available as soon as the early param parsing
-happens, which is nice. It also means we need two different ways to pass
-this information, as this trick only works if the EFI stub is baked into
-the core kernel image, which is not always the case.
+On 22/03/23 15:04, Peter Zijlstra wrote:
+> On Wed, Mar 22, 2023 at 12:20:28PM +0000, Valentin Schneider wrote:
+>> On 22/03/23 10:53, Peter Zijlstra wrote:
+>
+>> > Hurmph... so we only really consume @func when we IPI. Would it not be
+>> > more useful to trace this thing for *every* csd enqeued?
+>>
+>> It's true that any CSD enqueued on that CPU's call_single_queue in the
+>> [first CSD llist_add()'ed, IPI IRQ hits] timeframe is a potential source of
+>> interference.
+>>
+>> However, can we be sure that first CSD isn't an indirect cause for the
+>> following ones? say the target CPU exits RCU EQS due to the IPI, there's a
+>> bit of time before it gets to flush_smp_call_function_queue() where some other CSD
+>> could be enqueued *because* of that change in state.
+>>
+>> I couldn't find a easy example of that, I might be biased as this is where
+>> I'd like to go wrt IPI'ing isolated CPUs in usermode. But regardless, when
+>> correlating an IPI IRQ with its source, we'd always have to look at the
+>> first CSD in that CSD stack.
+>
+> So I was thinking something like this:
+>
+> ---
+> Subject: trace,smp: Trace all smp_function_call*() invocations
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Wed Mar 22 14:58:36 CET 2023
+>
+> (Ab)use the trace_ipi_send_cpu*() family to trace all
+> smp_function_call*() invocations, not only those that result in an
+> actual IPI.
+>
+> The queued entries log their callback function while the actual IPIs
+> are traced on generic_smp_call_function_single_interrupt().
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/smp.c |   58 ++++++++++++++++++++++++++++++----------------------------
+>  1 file changed, 30 insertions(+), 28 deletions(-)
+>
+> --- a/kernel/smp.c
+> +++ b/kernel/smp.c
+> @@ -106,18 +106,20 @@ void __init call_function_init(void)
+>  }
+>
+>  static __always_inline void
+> -send_call_function_single_ipi(int cpu, smp_call_func_t func)
+> +send_call_function_single_ipi(int cpu)
+>  {
+>       if (call_function_single_prep_ipi(cpu)) {
+> -		trace_ipi_send_cpu(cpu, _RET_IP_, func);
+> +		trace_ipi_send_cpu(cpu, _RET_IP_,
+> +				   generic_smp_call_function_single_interrupt);
 
-Huacai reports that the preparatory refactoring that was needed to
-implement this alternative method for zboot resulted in a non-functional
-efifb earlycon for other cases as well, due to the reordering of the
-kernel image relocation with the population of the screen_info struct,
-and the latter now takes place after copying the image to its new
-location, which means we copy the old, uninitialized state.
+Hm, this does get rid of the func being passed down the helpers, but this
+means the trace events are now stateful, i.e. I need the first and last
+events in a CSD stack to figure out which one actually caused the IPI.
 
-So let's ensure that the same-image version of alloc_screen_info()
-produces the correct screen_info pointer, by taking the displacement of
-the loaded image into account.
+It also requires whoever is looking at the trace to be aware of which IPIs
+are attached to a CSD, and which ones aren't. ATM that's only the resched
+IPI, but per the cover letter there's more to come (e.g. tick_broadcast()
+for arm64/riscv and a few others). For instance:
 
-Cc: loongarch@lists.linux.dev
-Cc: Xuefeng Li <lixuefeng@loongson.cn>
-Cc: Xuerui Wang <kernel@xen0n.name>
-Cc: loongson-kernel@lists.loongnix.cn
-Reported-by: Huacai Chen <chenhuacai@loongson.cn>
-Link: https://lore.kernel.org/linux-efi/20230310021749.921041-1-chenhuacai@loongson.cn/
-Fixes: 42c8ea3dca094ab8 ("efi: libstub: Factor out EFI stub entrypoint into separate file")
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+       hackbench-157   [001]    10.894320: ipi_send_cpu:         cpu=3 callsite=check_preempt_curr+0x37 callback=0x0
+       hackbench-157   [001]    10.895068: ipi_send_cpu:         cpu=3 callsite=try_to_wake_up+0x29e callback=sched_ttwu_pending+0x0
+       hackbench-157   [001]    10.895068: ipi_send_cpu:         cpu=3 callsite=try_to_wake_up+0x29e callback=generic_smp_call_function_single_interrupt+0x0
+
+That first one sent a RESCHEDULE IPI, the second one a CALL_FUNCTION one,
+but you really have to know what you're looking at...
+
+Are you worried about the @func being pushed down? Staring at x86 asm is
+not good for the soul, but AFAICT this does cause an extra register to be
+popped in the prologue because all of the helpers are __always_inline, so
+both paths of the static key(s) are in the same stackframe.
+
+I can "improve" this with:
+
 ---
-v2:
-- ensure image->image_base is accurate (Redhat has shipped broken GRUB
-  versions that put bogus values in there)
-- ensure that the config table screen_info version is only used when
-  needed
-
- drivers/firmware/efi/libstub/arm64-stub.c     |  4 +++-
- drivers/firmware/efi/libstub/efi-stub-entry.c | 15 +++++++++++++++
- drivers/firmware/efi/libstub/efi-stub.c       |  9 ---------
- drivers/firmware/efi/libstub/efistub.h        |  1 +
- drivers/firmware/efi/libstub/screen_info.c    |  9 +--------
- drivers/firmware/efi/libstub/zboot.c          |  9 +++++++++
- 6 files changed, 29 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
-index b996553cdb4c3587..770b8ecb73984c61 100644
---- a/drivers/firmware/efi/libstub/arm64-stub.c
-+++ b/drivers/firmware/efi/libstub/arm64-stub.c
-@@ -85,8 +85,10 @@ efi_status_t handle_kernel_image(unsigned long *image_addr,
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 5cd680a7e78ef..55f120dae1713 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -511,6 +511,26 @@ raw_smp_call_single_queue(int cpu, struct llist_node *node, smp_call_func_t func
+ 
+ static DEFINE_PER_CPU_SHARED_ALIGNED(call_single_data_t, csd_data);
+ 
++static noinline void __smp_call_single_queue_trace(int cpu, struct llist_node *node)
++{
++	call_single_data_t *csd;
++	smp_call_func_t func;
++
++
++	/*
++	 * We have to check the type of the CSD before queueing it, because
++	 * once queued it can have its flags cleared by
++	 *   flush_smp_call_function_queue()
++	 * even if we haven't sent the smp_call IPI yet (e.g. the stopper
++	 * executes migration_cpu_stop() on the remote CPU).
++	 */
++	csd = container_of(node, call_single_data_t, node.llist);
++	func = CSD_TYPE(csd) == CSD_TYPE_TTWU ?
++		sched_ttwu_pending : csd->func;
++
++	raw_smp_call_single_queue(cpu, node, func);
++}
++
+ void __smp_call_single_queue(int cpu, struct llist_node *node)
+ {
+ #ifdef CONFIG_CSD_LOCK_WAIT_DEBUG
+@@ -525,25 +545,10 @@ void __smp_call_single_queue(int cpu, struct llist_node *node)
  		}
  	}
- 
--	if (image->image_base != _text)
-+	if (image->image_base != _text) {
- 		efi_err("FIRMWARE BUG: efi_loaded_image_t::image_base has bogus value\n");
-+		image->image_base = _text;
-+	}
- 
- 	if (!IS_ALIGNED((u64)_text, SEGMENT_ALIGN))
- 		efi_err("FIRMWARE BUG: kernel image not aligned on %dk boundary\n",
-diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
-index 5245c4f031c0a70a..d66e400cd4ccfa19 100644
---- a/drivers/firmware/efi/libstub/efi-stub-entry.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
-@@ -5,6 +5,19 @@
- 
- #include "efistub.h"
- 
-+static unsigned long screen_info_offset;
-+
-+struct screen_info *alloc_screen_info(void)
-+{
-+	if (IS_ENABLED(CONFIG_ARM))
-+		return __alloc_screen_info();
-+	return (void *)&screen_info + screen_info_offset;
-+}
-+
-+void __weak free_screen_info(struct screen_info *si)
-+{
-+}
-+
- /*
-  * EFI entry point for the generic EFI stub used by ARM, arm64, RISC-V and
-  * LoongArch. This is the entrypoint that is described in the PE/COFF header
-@@ -56,6 +69,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
- 		return status;
- 	}
- 
-+	screen_info_offset = image_addr - (unsigned long)image->image_base;
-+
- 	status = efi_stub_common(handle, image, image_addr, cmdline_ptr);
- 
- 	efi_free(image_size, image_addr);
-diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-index 2955c1ac6a36ee00..c4b9eccad0f103dc 100644
---- a/drivers/firmware/efi/libstub/efi-stub.c
-+++ b/drivers/firmware/efi/libstub/efi-stub.c
-@@ -47,15 +47,6 @@
- static u64 virtmap_base = EFI_RT_VIRTUAL_BASE;
- static bool flat_va_mapping = (EFI_RT_VIRTUAL_OFFSET != 0);
- 
--struct screen_info * __weak alloc_screen_info(void)
--{
--	return &screen_info;
--}
+ #endif
+-	/*
+-	 * We have to check the type of the CSD before queueing it, because
+-	 * once queued it can have its flags cleared by
+-	 *   flush_smp_call_function_queue()
+-	 * even if we haven't sent the smp_call IPI yet (e.g. the stopper
+-	 * executes migration_cpu_stop() on the remote CPU).
+-	 */
+-	if (trace_ipi_send_cpumask_enabled()) {
+-		call_single_data_t *csd;
+-		smp_call_func_t func;
 -
--void __weak free_screen_info(struct screen_info *si)
--{
--}
+-		csd = container_of(node, call_single_data_t, node.llist);
+-		func = CSD_TYPE(csd) == CSD_TYPE_TTWU ?
+-			sched_ttwu_pending : csd->func;
 -
- static struct screen_info *setup_graphics(void)
- {
- 	efi_guid_t gop_proto = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index bd9c38a93bbce09c..148013bcb5f89fdd 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -1062,6 +1062,7 @@ efi_enable_reset_attack_mitigation(void) { }
- void efi_retrieve_tpm2_eventlog(void);
- 
- struct screen_info *alloc_screen_info(void);
-+struct screen_info *__alloc_screen_info(void);
- void free_screen_info(struct screen_info *si);
- 
- void efi_cache_sync_image(unsigned long image_base,
-diff --git a/drivers/firmware/efi/libstub/screen_info.c b/drivers/firmware/efi/libstub/screen_info.c
-index 8e76a8b384ba142d..4be1c4d1f922becd 100644
---- a/drivers/firmware/efi/libstub/screen_info.c
-+++ b/drivers/firmware/efi/libstub/screen_info.c
-@@ -15,18 +15,11 @@
-  * early, but it only works if the EFI stub is part of the core kernel image
-  * itself. The zboot decompressor can only use the configuration table
-  * approach.
-- *
-- * In order to support both methods from the same build of the EFI stub
-- * library, provide this dummy global definition of struct screen_info. If it
-- * is required to satisfy a link dependency, it means we need to override the
-- * __weak alloc and free methods with the ones below, and those will be pulled
-- * in as well.
-  */
--struct screen_info screen_info;
- 
- static efi_guid_t screen_info_guid = LINUX_EFI_SCREEN_INFO_TABLE_GUID;
- 
--struct screen_info *alloc_screen_info(void)
-+struct screen_info *__alloc_screen_info(void)
- {
- 	struct screen_info *si;
- 	efi_status_t status;
-diff --git a/drivers/firmware/efi/libstub/zboot.c b/drivers/firmware/efi/libstub/zboot.c
-index ba234e062a1a29da..10a161e6d5555fe1 100644
---- a/drivers/firmware/efi/libstub/zboot.c
-+++ b/drivers/firmware/efi/libstub/zboot.c
-@@ -57,6 +57,15 @@ void __weak efi_cache_sync_image(unsigned long image_base,
- 	// executable code loaded into memory to be safe for execution.
+-		raw_smp_call_single_queue(cpu, node, func);
+-	} else {
++	if (trace_ipi_send_cpumask_enabled())
++		__smp_call_single_queue_trace(cpu, node);
++	else
+ 		raw_smp_call_single_queue(cpu, node, NULL);
+-	}
  }
  
-+struct screen_info *alloc_screen_info(void)
-+{
-+	return __alloc_screen_info();
-+}
-+
-+void __weak free_screen_info(struct screen_info *si)
-+{
-+}
-+
- asmlinkage efi_status_t __efiapi
- efi_zboot_entry(efi_handle_t handle, efi_system_table_t *systab)
- {
--- 
-2.39.2
+ /*
 
