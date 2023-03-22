@@ -1,125 +1,163 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4993D23AD
-	for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 09:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dfqJs0p1KTlCgT/AzQPPoQtSmUdmtzuztLmCgmrMzTI=; b=CzzNDRhr38Kip/OFg6dq3dQ4EV
-	+GktrtbeR8GTSIKCXFNIi+R0Uog/v4u3G/O25UfC/mgZT3ndlGcMabgm6LrFN6fGis9ydvHcppxLT
-	VwY3AmsL8HPpn5zrgxUXGj6CeuAuLVZoJ7UhzkhlIInAFBW3QLRk/B/v7JvwmMujV1bNxp++Hjosy
-	wZt5vtgdBxpEoKGx18nO98pgqPhFFQBy0Pj+s5w9JmrOA97n6Bu/+USPMl8ce2eWJVbxbyQjTP6hs
-	mqyM/HOaIsbNgCi2gGUWk2nA/SAiwaMSIlKMsEneUn3H6IgrNoG7/6DpUd9PIcenBZzlTeCjIrCVD
-	xEhMpymQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pev9u-002tfl-CF; Wed, 22 Mar 2023 09:53:30 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B96773001F7;
-	Wed, 22 Mar 2023 10:53:29 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A09DA205D08C3; Wed, 22 Mar 2023 10:53:29 +0100 (CET)
-Date: Wed, 22 Mar 2023 10:53:29 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-	x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Nicholas Piggin <npiggin@gmail.com>, Guo Ren <guoren@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v5 7/7] sched, smp: Trace smp callback causing an IPI
-Message-ID: <20230322095329.GS2017917@hirez.programming.kicks-ass.net>
-References: <20230307143558.294354-1-vschneid@redhat.com>
- <20230307143558.294354-8-vschneid@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FB823AD;
+	Wed, 22 Mar 2023 10:01:52 +0000 (UTC)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailout.west.internal (Postfix) with ESMTP id 7CE4F32000E5;
+	Wed, 22 Mar 2023 06:01:50 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 22 Mar 2023 06:01:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to;
+	 s=fm3; t=1679479310; x=1679565710; bh=tksBhuI42p2luAwAEh3xskDZ4
+	xXmt+ilm+hjIA+mRRE=; b=B9g58SpKhEACZLB9igUV4QmnS6KEFiF14eFpIQSW1
+	4s+xaaXUX47Vwd+OyPSUgMkh9GGZ6GJVn1JJDxInlwqvoWqZx0VihQqxNYCbOpe8
+	B5UsE9AjuMngOTvoGeBqsSg0IZFEixdkztDDj0O16CBYCpv10hTLRyRd095iK75g
+	SRLfWWfAvPHSzkSJZSoFVFK/EjMjSzr772/tm8lVo3nSe2q8Xg0b7FEYMaHk/fHl
+	GIYCRTcqi/+o/4D30pZMbr5Og1X1qCuLL9ZMWjdw4Lw0i5tWSOXHSnhHIsBolSIX
+	wGzHWNGc3dfwlbUf/zJc9opmL0DJW8t9mcecfXE5OUf+A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1679479310; x=1679565710; bh=tksBhuI42p2luAwAEh3xskDZ4xXmt+ilm+h
+	jIA+mRRE=; b=QSu6QhKAu2QHim0t9WSsa77m7oRiFkUPM2t/g1G9wWgGQGpOe/P
+	YpBATEXSFRuKbji9GPBgae5lEutEf5JQ8t1m946MmR9KA8mAhpj6/yyNX7y2H/Zy
+	LlMLCnfSzCrro8PA6UT9OE4FHk9p3Z8ejaBWwewkIL0XRR6L/Wrz/kRvY1QdLIMj
+	hStvfj7f2wxkLtycg8MBCqwqXyF3B4xLY6whFdTufnSuF5Bd+IRUGEKKTiqZoMkV
+	kjYyrl1LfRPBaRPOwSmcNDOzPToWznqQM2riK88Ox3t3pO/hrAGNM7ZyZcy32i5I
+	+lLd8gE0lBjWse44npZrrqRBOUAbVN5agZQ==
+X-ME-Sender: <xms:DdIaZIFmaQlRBW1DzyDkTgOZnEQ58wLUVzIHPjeRpBvGkS_SUfuI9Q>
+    <xme:DdIaZBWn2limaKZ9bLSrtbjva0Gih_PKdaH1MztQY1TqHz-J4H0uD_-YBUkTCeLHs
+    SOxkbpiupWEZth-4SU>
+X-ME-Received: <xmr:DdIaZCJa8ntxkV8DuzDvBoOxQjFPWB2h2chG9rxIe3Dq3CjMnl3je9JiID0rfCvvr4-5pA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdegvddgudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpedfmfhi
+    rhhilhhlucetrdcuufhhuhhtvghmohhvfdcuoehkihhrihhllhesshhhuhhtvghmohhvrd
+    hnrghmvgeqnecuggftrfgrthhtvghrnhepvdeuieelgeduteffiedvveejgffhteehfffh
+    feetveekteevveetveethfeljeeinecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdptd
+    durdhorhhgpdhgihhthhhusghushgvrhgtohhnthgvnhhtrdgtohhmnecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirhhilhhlsehshhhuth
+    gvmhhovhdrnhgrmhgv
+X-ME-Proxy: <xmx:DdIaZKFYZltaV5i4DrEQbodniD9hXcOn7nbzwBhHlD4XtKe1pXheCA>
+    <xmx:DdIaZOUm5GztP6H4RB9f9qhttO5wMBiKKZbDJZTemYReNYRNDvGAFA>
+    <xmx:DdIaZNPpGEqrG6b4mRLYJYdS3kWNGQFk11MZqFZiFN46C60iHtnxuw>
+    <xmx:DtIaZJEgwMyV2Xl-AzTUetenlzp0BS1hZPr89kGLua1crL6KYj1qMg>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 22 Mar 2023 06:01:49 -0400 (EDT)
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id 3141010A603; Wed, 22 Mar 2023 13:01:46 +0300 (+03)
+Date: Wed, 22 Mar 2023 13:01:46 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>,
+	kernel test robot <lkp@intel.com>, loongarch@lists.linux.dev,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [linux-next:master 3778/4413] include/linux/mmzone.h:1749:2:
+ error: #error Allocator MAX_ORDER exceeds SECTION_SIZE
+Message-ID: <20230322100146.tamr3khnfza3eiwq@box>
+References: <202303201615.Qfu18nWV-lkp@intel.com>
+ <20230320155626.hirui3frcaunnajj@box.shutemov.name>
+ <CAAhV-H4P-HUBvd=UnZxEyrqNZeOCzHabYCBEF=C+vfW+oQvqCA@mail.gmail.com>
+ <ZBqxTw5ooh7D80IT@kernel.org>
+ <723b2eb6-2f4c-8947-0041-a0ced7657885@xen0n.name>
+ <ZBq4Q25tqTQQbj2h@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230307143558.294354-8-vschneid@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZBq4Q25tqTQQbj2h@kernel.org>
 
-On Tue, Mar 07, 2023 at 02:35:58PM +0000, Valentin Schneider wrote:
+On Wed, Mar 22, 2023 at 10:11:47AM +0200, Mike Rapoport wrote:
+> On Wed, Mar 22, 2023 at 03:54:09PM +0800, WANG Xuerui wrote:
+> > On 2023/3/22 15:42, Mike Rapoport wrote:
+> > > On Tue, Mar 21, 2023 at 10:59:36AM +0800, Huacai Chen wrote:
+> > > > Hi, all,
+> > > > 
+> > > > On Mon, Mar 20, 2023 at 11:56 PM Kirill A. Shutemov
+> > > > <kirill@shutemov.name> wrote:
+> > > > > 
+> > > > > On Mon, Mar 20, 2023 at 04:06:33PM +0800, kernel test robot wrote:
+> > > > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+> > > > > > head:   73f2c2a7e1d2b31fdd5faa6dfa151c437a6c0a5a
+> > > > > > commit: af8daebdbc0833b8095767ccef7ddce55e9fdf32 [3778/4413] mm, treewide: redefine MAX_ORDER sanely
+> > > > > > config: loongarch-buildonly-randconfig-r003-20230320 (https://download.01.org/0day-ci/archive/20230320/202303201615.Qfu18nWV-lkp@intel.com/config)
+> > > > > > compiler: loongarch64-linux-gcc (GCC) 12.1.0
+> > > > > > reproduce (this is a W=1 build):
+> > > > > >          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> > > > > >          chmod +x ~/bin/make.cross
+> > > > > >          # https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=af8daebdbc0833b8095767ccef7ddce55e9fdf32
+> > > > > >          git remote add linux-next https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> > > > > >          git fetch --no-tags linux-next master
+> > > > > >          git checkout af8daebdbc0833b8095767ccef7ddce55e9fdf32
+> > > > > >          # save the config file
+> > > > > >          mkdir build_dir && cp config build_dir/.config
+> > > > > >          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch olddefconfig
+> > > > > >          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch prepare
+> > > > > > 
+> > > > > > If you fix the issue, kindly add following tag where applicable
+> > > > > > | Reported-by: kernel test robot <lkp@intel.com>
+> > > > > > | Link: https://lore.kernel.org/oe-kbuild-all/202303201615.Qfu18nWV-lkp@intel.com/
+> > > > > > 
+> > > > > > All errors (new ones prefixed by >>):
+> > > > > > 
+> > > > > >     In file included from include/linux/gfp.h:7,
+> > > > > >                      from include/linux/mm.h:7,
+> > > > > >                      from arch/loongarch/kernel/asm-offsets.c:9:
+> > > > > > > > include/linux/mmzone.h:1749:2: error: #error Allocator MAX_ORDER exceeds SECTION_SIZE
+> > > > > >      1749 | #error Allocator MAX_ORDER exceeds SECTION_SIZE
+> > > > > >           |  ^~~~~
+> > > > > 
+> > > > > +Loongarch folks.
+> > > > LoongArch defines SECTION_SIZE_BITS as 29, so I think the upper limit
+> > > > of ARCH_FORCE_MAX_ORDER should not be 63, MIPS is similar.
+> > > The ranges MIPS add LoongArch define for ARCH_FORCE_MAX_ORDER are insane.
+> > > I'm going to drop them and leave ARCH_FORCE_MAX_ORDER an int with sane
+> > > defaults.
+> > > 
+> > > As for this splat, in the .config above ARCH_FORCE_MAX_ORDER=14 and
+> > > PAGE_SIZE=64k, so we end up with MAX_ORDER + PAGE_SHIFT being 30, that's
+> > > larger than SECTION_SIZE.
+> > > 
+> > > AFAIK randconfig does not randomize integers, so it's unclear to me how
+> > > ARCH_FORCE_MAX_ORDER got to 14.
+> > > 
+> > 
+> > As far as I can see, arch/loongarch/Kconfig has the following lines:
+> > 
+> > > config ARCH_FORCE_MAX_ORDER
+> > >         int "Maximum zone order"
+> > >         range 14 64 if PAGE_SIZE_64KB
+> > >         default "14" if PAGE_SIZE_64KB
+> > >         range 12 64 if PAGE_SIZE_16KB
+> > >         default "12" if PAGE_SIZE_16KB
+> > >         range 11 64
+> > >         default "11"
+> > 
+> > So the value 14 is because PAGE_SIZE_64KB is being set, which I confirmed to
+> > be the case with this particular run. And I believe the stanza is inherited
+> > from arch/mips.
+> 
+> With Kirill's patch the range became '13 63', so I don't see why randconfig
+> would set ARCH_FORCE_MAX_ORDER to 14.
 
-> @@ -477,6 +490,25 @@ static __always_inline void csd_unlock(struct __call_single_data *csd)
->  	smp_store_release(&csd->node.u_flags, 0);
->  }
->  
-> +static __always_inline void
-> +raw_smp_call_single_queue(int cpu, struct llist_node *node, smp_call_func_t func)
-> +{
-> +	/*
-> +	 * The list addition should be visible to the target CPU when it pops
-> +	 * the head of the list to pull the entry off it in the IPI handler
-> +	 * because of normal cache coherency rules implied by the underlying
-> +	 * llist ops.
-> +	 *
-> +	 * If IPIs can go out of order to the cache coherency protocol
-> +	 * in an architecture, sufficient synchronisation should be added
-> +	 * to arch code to make it appear to obey cache coherency WRT
-> +	 * locking and barrier primitives. Generic code isn't really
-> +	 * equipped to do the right thing...
-> +	 */
-> +	if (llist_add(node, &per_cpu(call_single_queue, cpu)))
-> +		send_call_function_single_ipi(cpu, func);
-> +}
-> +
->  static DEFINE_PER_CPU_SHARED_ALIGNED(call_single_data_t, csd_data);
->  
->  void __smp_call_single_queue(int cpu, struct llist_node *node)
-> @@ -493,21 +525,25 @@ void __smp_call_single_queue(int cpu, struct llist_node *node)
->  		}
->  	}
->  #endif
->  	/*
-> +	 * We have to check the type of the CSD before queueing it, because
-> +	 * once queued it can have its flags cleared by
-> +	 *   flush_smp_call_function_queue()
-> +	 * even if we haven't sent the smp_call IPI yet (e.g. the stopper
-> +	 * executes migration_cpu_stop() on the remote CPU).
->  	 */
-> +	if (trace_ipi_send_cpumask_enabled()) {
-> +		call_single_data_t *csd;
-> +		smp_call_func_t func;
-> +
-> +		csd = container_of(node, call_single_data_t, node.llist);
-> +		func = CSD_TYPE(csd) == CSD_TYPE_TTWU ?
-> +			sched_ttwu_pending : csd->func;
-> +
-> +		raw_smp_call_single_queue(cpu, node, func);
-> +	} else {
-> +		raw_smp_call_single_queue(cpu, node, NULL);
-> +	}
->  }
+I think the failure just due to 0day having old config it tries to re-use.
 
-Hurmph... so we only really consume @func when we IPI. Would it not be
-more useful to trace this thing for *every* csd enqeued?
-
-
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
