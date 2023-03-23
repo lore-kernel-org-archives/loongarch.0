@@ -1,124 +1,148 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7473E23C3
-	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 07:02:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1679554976;
-	bh=kPusCXazgWVH4g9ObHa+7OH3KfxjLbHZCO1dh/gQDoM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Uu3e7L4fKG4q6wwuewrmVw45wMsvyFXRthz0HbcbonRAptSyJMRg8KMNj2rKHvFIH
-	 o6TppyVEwZXwdJLrnIt+RXqd61bfcvJZfbirNMgdAzngYDhc2h7Pcyo0GQt5i1BvE2
-	 XWBHTxmv1m+ovUbvD19IoDCDT9OLwJ37ZbvExo6o=
-Received: from localhost.localdomain (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id B24AF65BFF;
-	Thu, 23 Mar 2023 03:02:55 -0400 (EDT)
-Message-ID: <d6423a5f92b44c65327cc01abe4b29fa9d7072aa.camel@xry111.site>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF27723C3
+	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 07:05:30 +0000 (UTC)
+X-UUID: f9ad4909f44e4d5c9739ede7511e0f08-20230323
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.20,REQID:ed970b57-4f9e-4cae-95f1-0ed693c640ae,IP:10,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-4
+X-CID-INFO: VERSION:1.1.20,REQID:ed970b57-4f9e-4cae-95f1-0ed693c640ae,IP:10,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-4
+X-CID-META: VersionHash:25b5999,CLOUDID:3f1facf6-ddba-41c3-91d9-10eeade8eac7,B
+	ulkID:230322180247TBWX6R8M,BulkQuantity:5,Recheck:0,SF:38|24|17|19|44|102,
+	TC:nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:40,QS:nil,BEC:nil,COL:0,
+	OSI:0,OSA:0,AV:0
+X-CID-BVR: 0
+X-UUID: f9ad4909f44e4d5c9739ede7511e0f08-20230323
+X-User: lienze@kylinos.cn
+Received: from [172.30.60.63] [(210.12.40.82)] by mailgw
+	(envelope-from <lienze@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 549283152; Thu, 23 Mar 2023 15:05:21 +0800
+Message-ID: <ada9e89a70c6435cc7a832718a7b9b0f10d56fdd.camel@kylinos.cn>
 Subject: Re: [PATCH] LoongArch: cpuinfo: standardize the "model name" field
-From: Xi Ruoyao <xry111@xry111.site>
-To: Enze Li <lienze@kylinos.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	chenhuacai@kernel.org
+From: Enze Li <lienze@kylinos.cn>
+To: Xi Ruoyao <xry111@xry111.site>, chenhuacai@kernel.org, kernel@xen0n.name
 Cc: loongarch@lists.linux.dev, enze.li@gmx.com
-Date: Thu, 23 Mar 2023 15:02:54 +0800
-In-Reply-To: <df8b7ec01580cb1ea825a409b53155121f44754c.camel@kylinos.cn>
+Date: Thu, 23 Mar 2023 15:05:20 +0800
+In-Reply-To: <3421f5632586b932bd05df1021290ed7def2fe18.camel@xry111.site>
 References: <20230322090533.4079453-1-lienze@kylinos.cn>
-	 <c6096bc7-4325-a826-4ff0-eaa4c8067e91@xen0n.name>
-	 <df8b7ec01580cb1ea825a409b53155121f44754c.camel@kylinos.cn>
+	 <3421f5632586b932bd05df1021290ed7def2fe18.camel@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 
+User-Agent: Evolution 3.36.5-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2023-03-23 at 14:37 +0800, Enze Li wrote:
+Hi Ruoyao,
 
->=20
-> > NAK: it's userspace-visible ABI change. AFAIK there are already
-> > multiple=20
-> > downstream adaptations (made by Loongson folks) that rely on the
-> > current=20
-> > spelling, which may not have any fallback mechanism built in (e.g.=20
-> > recognize both "Model Name" and "model name", match case-
-> > insensitively,=20
-> > etc).
->=20
-> I can hardly believe that the 'Model Name' has been widely adopted.
-> AFAIK, the latest official releases[1][2][3] use 'model name'(*NOT* the
-> same with the upstream).=C2=A0 Wouldn't Loongson folks use their own
-> distribution for downstream software development?
+It's very kind of you to have this review.  :)
 
-No they wouldn't.  Loongnix is fundamentally incompatible with whatever
-in the upstream code base.  Xuerui has explained it before:
+Please see below.
 
-   As of 2022-07-18, all commercial LoongArch distributions are
-   incompatible with all community distributions. All binary software built
-   on community distributions, and some software written in high-level
-   languages and existing in forms like source code or bytecode (such as
-   those written in Python or Java) cannot run on commercial distributions,
-   and vice versa. All closed-source software from ISVs such as WPS Office
-   are built on commercial distributions, so they are extremely unlikely to
-   work as-is on community distributions.
-  =20
-   This is the so-called compatibility problem between the old-world and
-   the new-world. Because the Loongson Corporation finished all commercial
-   moves before announcing the LoongArch to the open-source community, the
-   open-source LoongArch ecosystem is the new world; in contrast to this,
-   all commercial distributions and the ecosystem associated make up the
-   old world. The two worlds are to be united eventually, but are two
-   parallel universes for now; and the technical difficulty of making the
-   two worlds compatible with each other is enormous.
+On Wed, 2023-03-22 at 18:02 +0800, Xi Ruoyao wrote:
+> On Wed, 2023-03-22 at 17:05 +0800, Enze Li wrote:
+> > When I use the latest version of lscpu to check my CPU info, I see,
+> > 
+> > ======
+> > Architecture:          loongarch64
+> >   Byte Order:          Little Endian
+> > CPU(s):                4
+> >   On-line CPU(s) list: 0-3
+> > Model name:            -
+> >   Thread(s) per core:  1
+> >   Core(s) per socket:  4
+> > ...
+> > ======
+> > 
+> > Obviously, the "Model name" field shows me with a "-", which means
+> > the
+> > lscpu failed to retrieve the correct information from the
+> > /proc/cpuinfo
+> > file.
+> > 
+> > The main problem is that, the lscpu only identifies the data by its
+> > "model name" field.  However, on the LoongArch platform, only
+> > 'Model
+> > Name' is provided, which cannot be accurately identified due to
+> > case
+> > sensitivity issues.  And I think that must be an oversight.
+> 
+> If I read lscpu code correctly, it also matches "cpu MHz" (instead of
+> "CPU MHz"), "address sizes" (instead of "Address Sizes"), "features"
+> (instead of "Features"), "cpu family" (instead of "CPU Family"), and
+> "CPU revision" (instead of "CPU Revision").  Maybe you want to "fix"
+> them as well.
 
-> It's undeniable that there are still a few developers who develop
-> downstream software based on the upstream kernel, but it's only a small
-> portion.=C2=A0 AFAIK, there are three pre-release versions that use the
-> upstream kernel, namely Archlinux, fedora-remix-loongarch, and Gentoo.
-> However, none of them have released an official version, which means
-> they are not widely used.
+I didn't notice the "issues" you mentioned, so it remains to be seen if
+they are "real" problems.  However, I think changes like this should be
+approached with caution, and we should refer to the official Loongson
+website's distribution versions[1] (which are widely used) for
+guidance.
 
-<sarcasm>
-   Then should we switch to the old MIPS-style UAPI, like Loongnix? =C2=A0A=
-nd
-   get arch/loongarch kicked out from linux.git by Linus?
-</sarcasm>
+> 
+> But this is just strange: both "CPU" and "MHz" are some sort of
+> abbreviations ("Central Process Unit" and "Mega Hertz") so why "cpu"
+> should be lower case but "MHz" should not?  And why "CPU revision"
+> but
+> "cpu MHz"?
+> 
+> To me it's a util-linux bug.  Can you report it at
+> https://github.com/util-linux/util-linux/issues and let's wait for
+> the
+> response from util-linux maintainers?
 
-> Considering that the 'Model Name' field only exists in upstream code
-> and hasn't been widely adopted so far, I cautiously believe that this
-> issue needs to be fixed as soon as possible to avoid disrupting the
-> LoongArch ecosystem.
+Also, I'd like to know why the LoongArch architecture is different from
+other architectures on this issue?  If this is a bug, then all existing
+software that uses the 'model name' field will have this bug for
+LoongArch.  This will require all maintainers to adapt to LoongArch (by
+adjusting it to be case-insensitive), which will unnecessarily increase
+the difficulty of adapting to LoongArch, won't it?
 
-It's already disrupted, unfortunately.  And the disruption cannot be
-"fixed" with a little adjustment here, a little adjustment there.
+Best Regards,
+Enze
 
-> > It's better to adapt the downstream projects instead, for example
-> > you=20
-> > could make them more resilient to a hypothetic future arch's similar
-> > change by making them match case-insensitively.
->=20
-> Yes, I used to think the same way.=C2=A0 But then I found out that almost
-> all architectures, except for LoongArch, use the 'model name' field for
-> identification.=C2=A0 In this case, if I were a maintainer in the util-li=
-nux=20
-> community, I don't think I would approve the change if someone
-> submitted a patch like that, because the code would disrupt the overall
-> structure and make it less aesthetically pleasing.
+> 
+> > This patch fixes this issue.  With this patch applied, I get,
+> > 
+> > ======
+> > Architecture:          loongarch64
+> >   Byte Order:          Little Endian
+> > CPU(s):                4
+> >   On-line CPU(s) list: 0-3
+> > Model name:            Loongson-3A5000-HV
+> >   Thread(s) per core:  1
+> >   Core(s) per socket:  4
+> > ...
+> > ======
+> > 
+> > Signed-off-by: Enze Li <lienze@kylinos.cn>
+> > ---
+> >  arch/loongarch/kernel/proc.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/loongarch/kernel/proc.c
+> > b/arch/loongarch/kernel/proc.c
+> > index 5c67cc4fd56d..7da56f9ee15c 100644
+> > --- a/arch/loongarch/kernel/proc.c
+> > +++ b/arch/loongarch/kernel/proc.c
+> > @@ -50,7 +50,7 @@ static int show_cpuinfo(struct seq_file *m, void
+> > *v)
+> >         seq_printf(m, "package\t\t\t: %d\n", cpu_data[n].package);
+> >         seq_printf(m, "core\t\t\t: %d\n", cpu_data[n].core);
+> >         seq_printf(m, "CPU Family\t\t: %s\n", __cpu_family[n]);
+> > -       seq_printf(m, "Model Name\t\t: %s\n", __cpu_full_name[n]);
+> > +       seq_printf(m, "model name\t\t: %s\n", __cpu_full_name[n]);
+> >         seq_printf(m, "CPU Revision\t\t: 0x%02x\n", version);
+> >         seq_printf(m, "FPU Revision\t\t: 0x%02x\n", fp_version);
+> >         seq_printf(m, "CPU MHz\t\t\t: %llu.%02llu\n",
+> > 
+> > base-commit: fc89d7fb499b0162e081f434d45e8d1b47e82ece
 
-It would not disrupt the overall structure.  I know because I've already
-written the code:
-
-https://github.com/util-linux/util-linux/pull/2128
-
-There is already many architecture specific code in lscpu (with a
-comment like /* aarch64 */ or /* sparc */).
-
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
