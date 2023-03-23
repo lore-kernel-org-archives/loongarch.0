@@ -1,126 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF1315B4
-	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 01:31:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2835CC433D2
-	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 01:31:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1679535063;
-	bh=Ot5hvcQeLnVZ+qQdLf6laKQ2NtMhh4KUe2xmfxdFmpA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Wh/4SRvy1oGFHxG1F3VeFwKlwlrfEqd8MXR+i/5CJAn7DvNqjbMUQDRjYxt/vSUaR
-	 u1gQA0y8Bx5lbAzUt70i4QfVzstMFPya3XxrK3uwQHynbGE/ZaUx5Pk4d+n9bGXV0v
-	 YBLgv2l3STg3fzIepLNbzsNxkUdXJ8kqNKzJDcO+ByNK4bvJPNp8kL0ICi4JIlzFr8
-	 +6J+qGIXyXJx67NXGzo1XBz6GNjt2GetV6GRDMqZHznxDAg4Ox+YVzn9trfUjeZIBL
-	 slbneUV0Oa6TV0wXvzjcz0hX+LMKGnLsW1FLbyARSDuBjjF0Jk5twGUCzubP802quE
-	 ZSpbwHGH06h3g==
-Received: by mail-ed1-f47.google.com with SMTP id y4so80479918edo.2
-        for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 18:31:03 -0700 (PDT)
-X-Gm-Message-State: AO0yUKUCIm+KcDqY3AS4he6pnW9i2hCk5t/CIOok6H/mFsGTQ8ueQ/0a
-	aNOJdmMiLOjWSe5Dt4qSLqmDlufnVovKQPo41hg=
-X-Google-Smtp-Source: AK7set8JSq4K/B6pM2JnVQ3yUOzDZeZHRnLuujLTMBPSNeW8Qumnt/x9Wvc+9CRPKkwiG3kPO3ZtUyeAD1jI32gzCDM=
-X-Received: by 2002:a17:907:784:b0:92f:b348:8f93 with SMTP id
- xd4-20020a170907078400b0092fb3488f93mr4409449ejb.10.1679535061387; Wed, 22
- Mar 2023 18:31:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E23823A8
+	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 06:37:20 +0000 (UTC)
+X-UUID: 69f6614ebf404d69bd866ce56851de9a-20230323
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.20,REQID:343798be-d0a2-4b09-817b-1e07d9c1b14f,IP:10,
+	URL:25,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:26
+X-CID-INFO: VERSION:1.1.20,REQID:343798be-d0a2-4b09-817b-1e07d9c1b14f,IP:10,UR
+	L:25,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:26
+X-CID-META: VersionHash:25b5999,CLOUDID:359b3c29-564d-42d9-9875-7c868ee415ec,B
+	ulkID:230322180247TBWX6R8M,BulkQuantity:3,Recheck:0,SF:38|24|17|19|44|102,
+	TC:nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:40,QS:nil,BEC:nil,COL
+	:0,OSI:0,OSA:0,AV:0
+X-CID-BVR: 0
+X-UUID: 69f6614ebf404d69bd866ce56851de9a-20230323
+X-User: lienze@kylinos.cn
+Received: from [172.30.60.63] [(210.12.40.82)] by mailgw
+	(envelope-from <lienze@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1955700903; Thu, 23 Mar 2023 14:37:09 +0800
+Message-ID: <df8b7ec01580cb1ea825a409b53155121f44754c.camel@kylinos.cn>
+Subject: Re: [PATCH] LoongArch: cpuinfo: standardize the "model name" field
+From: Enze Li <lienze@kylinos.cn>
+To: WANG Xuerui <kernel@xen0n.name>, chenhuacai@kernel.org
+Cc: loongarch@lists.linux.dev, enze.li@gmx.com
+Date: Thu, 23 Mar 2023 14:37:08 +0800
+In-Reply-To: <c6096bc7-4325-a826-4ff0-eaa4c8067e91@xen0n.name>
+References: <20230322090533.4079453-1-lienze@kylinos.cn>
+	 <c6096bc7-4325-a826-4ff0-eaa4c8067e91@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1679380154-20308-1-git-send-email-yangtiezhu@loongson.cn>
- <253a5dfcb7e41e44d15232e1891e7ea9d39dc953.camel@xry111.site>
- <f61ac027-0068-40f0-87bd-17f916141884@roeck-us.net> <CAAhV-H5kFRt9z0U_TqSQeqX9WuUJ2cg0LOboUXHp-fLR0PoTJg@mail.gmail.com>
- <b4592fa4-35ec-4062-b965-962fc1ea12f6@roeck-us.net>
-In-Reply-To: <b4592fa4-35ec-4062-b965-962fc1ea12f6@roeck-us.net>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 23 Mar 2023 09:30:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6DieadTzUqdCMeALhcmRyT9Da_QkzyG_RoO-S0PikfFw@mail.gmail.com>
-Message-ID: <CAAhV-H6DieadTzUqdCMeALhcmRyT9Da_QkzyG_RoO-S0PikfFw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Check unwind_error() in arch_stack_walk()
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: stable <stable@vger.kernel.org>, Xi Ruoyao <xry111@xry111.site>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-OK, thanks.
+Hi Xuerui,
 
-Huacai
+Thanks for your review!  A few comments inlined below.
 
-On Wed, Mar 22, 2023 at 10:20=E2=80=AFAM Guenter Roeck <linux@roeck-us.net>=
- wrote:
->
-> On Wed, Mar 22, 2023 at 08:50:07AM +0800, Huacai Chen wrote:
-> > On Tue, Mar 21, 2023 at 10:25=E2=80=AFPM Guenter Roeck <linux@roeck-us.=
-net> wrote:
-> > >
-> > > On Tue, Mar 21, 2023 at 08:35:34PM +0800, Xi Ruoyao wrote:
-> > > > On Tue, 2023-03-21 at 14:29 +0800, Tiezhu Yang wrote:
-> > > > > We can see the following messages with CONFIG_PROVE_LOCKING=3Dy o=
-n
-> > > > > LoongArch:
-> > > > >
-> > > > >   BUG: MAX_STACK_TRACE_ENTRIES too low!
-> > > > >   turning off the locking correctness validator.
-> > > > >
-> > > > > This is because stack_trace_save() returns a big value after call
-> > > > > arch_stack_walk(), here is the call trace:
-> > > > >
-> > > > >   save_trace()
-> > > > >     stack_trace_save()
-> > > > >       arch_stack_walk()
-> > > > >         stack_trace_consume_entry()
-> > > > >
-> > > > > arch_stack_walk() should return immediately if unwind_next_frame(=
-)
-> > > > > failed, no need to do the useless loops to increase the value of
-> > > > > c->len in stack_trace_consume_entry(), then we can fix the above
-> > > > > problem.
-> > > > >
-> > > > > Reported-by: Guenter Roeck <linux@roeck-us.net>
-> > > > > Link: https://lore.kernel.org/all/8a44ad71-68d2-4926-892f-72bfc7a=
-67e2a@roeck-us.net/
-> > > > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > > >
-> > > > The fix makes sense, but I'm asking the same question again (sorry =
-if
-> > > > it's noisy): should we Cc stable@vger.kernel.org and/or make a PR f=
-or
-> > > > 6.3?
-> > > >
-> > > > To me a bug fixes should be backported into all stable branches aff=
-ected
-> > > > by the bug, unless there is some serious difficulty.  As 6.3 releas=
-e
-> > > > will work on launched 3A5000 boards out-of-box, people may want to =
-stop
-> > > > staying on the leading edge and use a LTS/stable release series. We
-> > > > can't just say (or behave like) "we don't backport, please use late=
-st
-> > > > mainline" IMO :).
-> > >
-> > > It is a bug fix, isn't it ? It should be backported to v6.1+. Otherwi=
-se,
-> > > if your policy is to not backport bug fixes, I might as well stop tes=
-ting
-> > > loongarch on all but the most recent kernel branch. Let me know if th=
-is is
-> > > what you want. If so, I think you should let all other regression tes=
-ters
-> > > know that they should only test loongarch on mainline and possibly on
-> > > linux-next.
-> > This is of course a bug fix, but should Tiezhu resend this patch? Or
-> > just replying to this message with CC stable@vger.kernel.org is
-> > enough?
-> >
->
-> Normally the maintainer, before sending a pull request to Linus, would ad=
-d
-> "Cc: stable@vger.kernel.org" to the patch. Actually sending the patch to
-> the stable@ mailing list is only necessary if it was applied to the
-> upstream kernel without Cc: stable@ in the commit message.
->
-> Guenter
+On Wed, 2023-03-22 at 19:09 +0800, WANG Xuerui wrote:
+> On 2023/3/22 17:05, Enze Li wrote:
+> > When I use the latest version of lscpu to check my CPU info, I see,
+> > 
+> > ======
+> > Architecture:          loongarch64
+> >    Byte Order:          Little Endian
+> > CPU(s):                4
+> >    On-line CPU(s) list: 0-3
+> > Model name:            -
+> >    Thread(s) per core:  1
+> >    Core(s) per socket:  4
+> > ...
+> > ======
+> > 
+> > Obviously, the "Model name" field shows me with a "-", which means
+> > the
+> > lscpu failed to retrieve the correct information from the
+> > /proc/cpuinfo
+> > file.
+> > 
+> > The main problem is that, the lscpu only identifies the data by its
+> > "model name" field.  However, on the LoongArch platform, only
+> > 'Model
+> > Name' is provided, which cannot be accurately identified due to
+> > case
+> > sensitivity issues.  And I think that must be an oversight.
+> > 
+> > This patch fixes this issue.  With this patch applied, I get,
+> > 
+> > ======
+> > Architecture:          loongarch64
+> >    Byte Order:          Little Endian
+> > CPU(s):                4
+> >    On-line CPU(s) list: 0-3
+> > Model name:            Loongson-3A5000-HV
+> >    Thread(s) per core:  1
+> >    Core(s) per socket:  4
+> > ...
+> > ======
+> > 
+> > Signed-off-by: Enze Li <lienze@kylinos.cn>
+> > ---
+> >   arch/loongarch/kernel/proc.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/loongarch/kernel/proc.c
+> > b/arch/loongarch/kernel/proc.c
+> > index 5c67cc4fd56d..7da56f9ee15c 100644
+> > --- a/arch/loongarch/kernel/proc.c
+> > +++ b/arch/loongarch/kernel/proc.c
+> > @@ -50,7 +50,7 @@ static int show_cpuinfo(struct seq_file *m, void
+> > *v)
+> >   	seq_printf(m, "package\t\t\t: %d\n", cpu_data[n].package);
+> >   	seq_printf(m, "core\t\t\t: %d\n", cpu_data[n].core);
+> >   	seq_printf(m, "CPU Family\t\t: %s\n", __cpu_family[n]);
+> > -	seq_printf(m, "Model Name\t\t: %s\n", __cpu_full_name[n]);
+> > +	seq_printf(m, "model name\t\t: %s\n", __cpu_full_name[n]);
+> 
+> NAK: it's userspace-visible ABI change. AFAIK there are already
+> multiple 
+> downstream adaptations (made by Loongson folks) that rely on the
+> current 
+> spelling, which may not have any fallback mechanism built in (e.g. 
+> recognize both "Model Name" and "model name", match case-
+> insensitively, 
+> etc).
+
+I can hardly believe that the 'Model Name' has been widely adopted.
+AFAIK, the latest official releases[1][2][3] use 'model name'(*NOT* the
+same with the upstream).  Wouldn't Loongson folks use their own
+distribution for downstream software development?
+
+It's undeniable that there are still a few developers who develop
+downstream software based on the upstream kernel, but it's only a small
+portion.  AFAIK, there are three pre-release versions that use the
+upstream kernel, namely Archlinux, fedora-remix-loongarch, and Gentoo.
+However, none of them have released an official version, which means
+they are not widely used.
+
+Considering that the 'Model Name' field only exists in upstream code
+and hasn't been widely adopted so far, I cautiously believe that this
+issue needs to be fixed as soon as possible to avoid disrupting the
+LoongArch ecosystem.
+
+> 
+> It's better to adapt the downstream projects instead, for example
+> you 
+> could make them more resilient to a hypothetic future arch's similar 
+> change by making them match case-insensitively.
+
+Yes, I used to think the same way.  But then I found out that almost
+all architectures, except for LoongArch, use the 'model name' field for
+identification.  In this case, if I were a maintainer in the util-linux 
+community, I don't think I would approve the change if someone
+submitted a patch like that, because the code would disrupt the overall
+structure and make it less aesthetically pleasing.
+
+[1] 
+http://pkg.loongnix.cn/loongnix-server/8.4/isos/8.4.0/Loongnix-server-8.4.0.livecd.loongarch64.iso
+[2] 
+http://pkg.loongnix.cn/loongnix/isos/Loongnix-20.3/Loongnix-20.3.livecd.mate.loongarch64.iso
+[3] 
+http://pkg.loongnix.cn/loongnix/isos/Loongnix-20.3/Loongnix-20.3.sp1.livecd.cartoon.loongarch64.iso
+
+Best Regards,
+Enze
+
+> 
+> >   	seq_printf(m, "CPU Revision\t\t: 0x%02x\n", version);
+> >   	seq_printf(m, "FPU Revision\t\t: 0x%02x\n", fp_version);
+> >   	seq_printf(m, "CPU MHz\t\t\t: %llu.%02llu\n",
+> > 
+> > base-commit: fc89d7fb499b0162e081f434d45e8d1b47e82ece
+
