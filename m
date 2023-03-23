@@ -1,132 +1,141 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C954628E8
-	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 08:26:52 +0000 (UTC)
-X-UUID: b4a6db3a996b4404b4e6840fa6c91753-20230323
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.20,REQID:d7bc6158-bf4c-4b37-9a7a-4757037edb0a,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.20,REQID:d7bc6158-bf4c-4b37-9a7a-4757037edb0a,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:25b5999,CLOUDID:4ea7aef6-ddba-41c3-91d9-10eeade8eac7,B
-	ulkID:230322180247TBWX6R8M,BulkQuantity:7,Recheck:0,SF:38|24|17|19|44|102,
-	TC:nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:40,QS:nil,BEC:nil,COL:0,
-	OSI:0,OSA:0,AV:0
-X-CID-BVR: 0,NGT
-X-UUID: b4a6db3a996b4404b4e6840fa6c91753-20230323
-X-User: lienze@kylinos.cn
-Received: from [172.30.60.63] [(210.12.40.82)] by mailgw
-	(envelope-from <lienze@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1598213134; Thu, 23 Mar 2023 16:16:04 +0800
-Message-ID: <ff0de60d60185dc45ca1f03430969f51353feca3.camel@kylinos.cn>
-Subject: Re: [PATCH] LoongArch: cpuinfo: standardize the "model name" field
-From: Enze Li <lienze@kylinos.cn>
-To: Xi Ruoyao <xry111@xry111.site>, chenhuacai@kernel.org, kernel@xen0n.name
-Cc: loongarch@lists.linux.dev, enze.li@gmx.com
-Date: Thu, 23 Mar 2023 16:16:02 +0800
-In-Reply-To: <02360140686b6cc74ea5b48207b639fd64a29365.camel@xry111.site>
-References: <20230322090533.4079453-1-lienze@kylinos.cn>
-	 <3421f5632586b932bd05df1021290ed7def2fe18.camel@xry111.site>
-	 <ada9e89a70c6435cc7a832718a7b9b0f10d56fdd.camel@kylinos.cn>
-	 <02360140686b6cc74ea5b48207b639fd64a29365.camel@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C3515AA
+	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 08:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1679560328; bh=aHImbr1Y0KsprZQxOTFkikHQm5Xg9i8YFnAluTHIroA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DvhFCmLSn4x2PCu347zxbIIdRiwa87d2fHwhaYQtj/uZQ+PsBq6DXxEuttpvb+3Vy
+	 kIK5gikF4GjBOVbbNt9aJ/yzqST33OrQNXm4y/YECm7hbO0KfL6qCqMX9qumdgIEK9
+	 +GmCXboMxVWCBEGSlrAC1LnjHcp+m8B4CBCVotXQ=
+Received: from [100.100.33.167] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 4005F600AE;
+	Thu, 23 Mar 2023 16:32:08 +0800 (CST)
+Message-ID: <793a6d0f-fc79-ffd4-856f-9dff6e431352@xen0n.name>
+Date: Thu, 23 Mar 2023 16:32:07 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.9.0
+Subject: Re: [PATCH] LoongArch: cpuinfo: standardize the "model name" field
+Content-Language: en-US
+To: Enze Li <lienze@kylinos.cn>, chenhuacai@kernel.org
+Cc: loongarch@lists.linux.dev, enze.li@gmx.com
+References: <20230322090533.4079453-1-lienze@kylinos.cn>
+ <c6096bc7-4325-a826-4ff0-eaa4c8067e91@xen0n.name>
+ <df8b7ec01580cb1ea825a409b53155121f44754c.camel@kylinos.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <df8b7ec01580cb1ea825a409b53155121f44754c.camel@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2023-03-23 at 16:04 +0800, Xi Ruoyao wrote:
-> On Thu, 2023-03-23 at 15:05 +0800, Enze Li wrote:
+On 2023/3/23 14:37, Enze Li wrote:
+> Hi Xuerui,
 > 
-> > > If I read lscpu code correctly, it also matches "cpu MHz"
-> > > (instead of
-> > > "CPU MHz"), "address sizes" (instead of "Address Sizes"),
-> > > "features"
-> > > (instead of "Features"), "cpu family" (instead of "CPU Family"),
-> > > and
-> > > "CPU revision" (instead of "CPU Revision").  Maybe you want to
-> > > "fix"
-> > > them as well.
-> > 
-> > I didn't notice the "issues" you mentioned, so it remains to be
-> > seen if
-> > they are "real" problems.  However, I think changes like this
-> > should be
-> > approached with caution, and we should refer to the official
-> > Loongson
-> > website's distribution versions[1] (which are widely used) for
-> > guidance.
+> Thanks for your review!  A few comments inlined below.
 > 
-> Not found the link to 1.  And again we should not refer to the
-> "official" Loongson distributions for kernel development, at all,
-> because the commercial distributions are *fundamentally* incompatible
-> with the upstream kernel.
+> On Wed, 2023-03-22 at 19:09 +0800, WANG Xuerui wrote:
+>> On 2023/3/22 17:05, Enze Li wrote:
+>>
+>> <snip>
+>>
+>> NAK: it's userspace-visible ABI change. AFAIK there are already
+>> multiple
+>> downstream adaptations (made by Loongson folks) that rely on the
+>> current
+>> spelling, which may not have any fallback mechanism built in (e.g.
+>> recognize both "Model Name" and "model name", match case-
+>> insensitively,
+>> etc).
 > 
-> > > But this is just strange: both "CPU" and "MHz" are some sort of
-> > > abbreviations ("Central Process Unit" and "Mega Hertz") so why
-> > > "cpu"
-> > > should be lower case but "MHz" should not?  And why "CPU
-> > > revision"
-> > > but
-> > > "cpu MHz"?
-> > > 
-> > > To me it's a util-linux bug.  Can you report it at
-> > > https://github.com/util-linux/util-linux/issues and let's wait
-> > > for
-> > > the
-> > > response from util-linux maintainers?
-> > 
-> > Also, I'd like to know why the LoongArch architecture is different
-> > from
-> > other architectures on this issue?  If this is a bug, then all
-> > existing
-> > software that uses the 'model name' field will have this bug for
-> > LoongArch.
+> I can hardly believe that the 'Model Name' has been widely adopted.
+> AFAIK, the latest official releases[1][2][3] use 'model name'(*NOT* the
+> same with the upstream).  Wouldn't Loongson folks use their own
+> distribution for downstream software development?
 > 
-> Only arch/x86, arch/ia64, arch/arm, and arch/x86_64 provides a "model
-> name" field in cpuinfo.  arch/ppc and arch/sparc use "cpu" field
-> instead
-> of "model name" and lscpu accepts it.
-> 
-> If some code only matches "model name" and it blows up when the
-> matching
-> fails, it's definitely a bug because the code is already broken on 19
-> Linux ports out of 23.  It's 19 out of 23, or 82%, not loongarch
-> alone
-> out of 23.
-> 
-> > This will require all maintainers to adapt to LoongArch (by
-> > adjusting it to be case-insensitive), which will unnecessarily
-> > increase
-> > the difficulty of adapting to LoongArch, won't it?
-> 
-> Yes, on the day "Model Name" was written, it was an unnecessary
-> difficulty and we made an error.  But once arch/loongarch is released
-> in
-> 5.19, it becomes a necessary difficulty.  If we just change it now,
-> it
-> will be another error.
-> 
-> It's just like we all know implicit fall-thorough in switch-case
-> statements is a design error, but we cannot just change the compiler
-> to
-> silently add a "break" before all "case".
-> 
+> It's undeniable that there are still a few developers who develop
+> downstream software based on the upstream kernel, but it's only a small
+> portion.  AFAIK, there are three pre-release versions that use the
+> upstream kernel, namely Archlinux, fedora-remix-loongarch, and Gentoo.
+> However, none of them have released an official version, which means
+> they are not widely used.
 
-Got you!  Thanks a lot for your explanation and patience.
+As a matter of fact, Archlinux and Gentoo (and their derivatives) are 
+"rolling-release" distros. Which means they *never* release "official 
+versions", if you mean things like tagged releases and corresponding LTS 
+branches.
 
-I'll keep an eye on this architecture to see if there's any help I can
-do.
+And AFAIK users of all three can be seen in the wild, I've definitely 
+seen them upstream, maybe you need to look elsewhere than you previously 
+used to.
 
-Thanks,
-Enze
+> 
+> Considering that the 'Model Name' field only exists in upstream code
+> and hasn't been widely adopted so far, I cautiously believe that this
+> issue needs to be fixed as soon as possible to avoid disrupting the
+> LoongArch ecosystem.
+> 
+>>
+>> It's better to adapt the downstream projects instead, for example
+>> you
+>> could make them more resilient to a hypothetic future arch's similar
+>> change by making them match case-insensitively.
+> 
+> Yes, I used to think the same way.  But then I found out that almost
+> all architectures, except for LoongArch, use the 'model name' field for
+> identification.  In this case, if I were a maintainer in the util-linux
+> community, I don't think I would approve the change if someone
+> submitted a patch like that, because the code would disrupt the overall
+> structure and make it less aesthetically pleasing.
 
+Casing is generally considered personal taste, and different people's 
+tastes can hugely vary. For example, in contrast to your belief, the 
+current spelling is in fact *more* aesthetically pleasing to Huacai: 
+compare the initial arch/loongarch port's [v5] and [v6] where the case 
+change was introduced.
+
+(I had talked with Huacai about the field keys but the conversation was 
+private & in Chinese; I was actually proposing all-lowercase keys but he 
+insisted on "mhz" being "incorrect", then as a result he had to Title 
+Case everything else because of *aesthetic reasons* which I didn't and 
+still don't agree with. I later criticized him because he left 
+"processor", "package" and "core" lowercased, but he never gave any 
+satisfying justification nor backed out the change, so as a result we 
+are left with the current situation. You can say anything, but as a 
+matter of fact, the ship has sailed.)
+
+[v5]: 
+https://lore.kernel.org/lkml/20211013071117.3097969-3-chenhuacai@loongson.cn/#Z31arch:loongarch:kernel:proc.c
+[v6]: 
+https://lore.kernel.org/all/20220226110338.77547-17-chenhuacai@loongson.cn/#Z31arch:loongarch:kernel:proc.c
+
+> 
+> [1]
+> http://pkg.loongnix.cn/loongnix-server/8.4/isos/8.4.0/Loongnix-server-8.4.0.livecd.loongarch64.iso
+> [2]
+> http://pkg.loongnix.cn/loongnix/isos/Loongnix-20.3/Loongnix-20.3.livecd.mate.loongarch64.iso
+> [3]
+> http://pkg.loongnix.cn/loongnix/isos/Loongnix-20.3/Loongnix-20.3.sp1.livecd.cartoon.loongarch64.iso
+
+In general we don't recommend caring about the old world. They are 
+essentially forks/downstream of the various projects we talk 
+about/contribute to, which are stuck to the previous non-"peer-reviewed" 
+ABI due to non-technical reasons. (There are multiple possible ways to 
+get unstuck but that's unrelated to the current topic.) As the upstream 
+has moved on, and considering that much of Loongnix modification has no 
+chance being accepted upstream, it's probably better to just maintain 
+patches downstream in favor of keeping the boundary of the two clear.
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
