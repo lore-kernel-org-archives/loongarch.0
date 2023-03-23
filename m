@@ -1,240 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DAE320A
-	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 09:33:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B688C433A0
-	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 09:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1679564036;
-	bh=DGKZC1OHgdJG6o8Idmbtp2aTGI4a6sfyoWdx6/GH+Qg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TXXVAKYowMG1OgpvymicsYRdUCZUTW1rQFGh+jrpj1CtiSjP4bcE9Ob5ddl+BIt/F
-	 YfHdU8WkQ3jHnKznbGnIKJ36oJhaiYs4Qmy5UAi6TX2ZLAKeLI8L0iNoARRvS0iO4y
-	 0/f4PmKIUG7OTIn1ERJAdm8OB8ZqvFKd4dLxhoecI3gUKc8mpZjAstuhurgQSPSz24
-	 gLV8bO/HVFaK0Es9gKYTnToColarI38S7VHwV9c1mP56fToUY4f9p+6UcW4jt7URV3
-	 iBN1O3kK73inghaYVsNnxuAeFF6B5SFz88TUp32UVdT42rmw26mzcvIvobn7OWdo29
-	 jjU0NAixm70tw==
-Received: by mail-ed1-f47.google.com with SMTP id cy23so83592726edb.12
-        for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 02:33:56 -0700 (PDT)
-X-Gm-Message-State: AO0yUKUjuPmziaFbAvwT624u3KptWyVquwu2NwuSEgJ/ZIXaBS+JAmpU
-	TduGXBHJPzcRQxMt0IK1y6VR73+22CgyH1mFLY8=
-X-Google-Smtp-Source: AK7set/dHunoYdWYcWlmemEEYxDQYnx2zAeuFc1zABepjKB8nHJTPC/yyKIqxJ+YPyvz+6UC+0CUZXOJFtwsSCLvyFQ=
-X-Received: by 2002:a50:951e:0:b0:4fc:1608:68c8 with SMTP id
- u30-20020a50951e000000b004fc160868c8mr5008916eda.1.1679564034421; Thu, 23 Mar
- 2023 02:33:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA87A93A
+	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 16:25:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1679588733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rf1EargHhjBzXfO07IgMLtInuWGSM9rCL6OoPVE8vbA=;
+	b=W1J2Dj6m3XZr0e82JEfmyLw8IEFVbrfdc/45MjHu+Kd6HfmLDpBfVLRpu8bGSGH7Ma5R5l
+	1DzZQmJUdV2ZT8HBt34qqMRcgR4yxRU84NTnumUCfscbu8u8DP+WsVtKP2JkAH8LPKDTZ6
+	DOQQLGC6aO+S3Ch8iFZyl5fi0GBioDw=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-467-Ovto7zVeOMGZ7epCjf4CjQ-1; Thu, 23 Mar 2023 12:25:29 -0400
+X-MC-Unique: Ovto7zVeOMGZ7epCjf4CjQ-1
+Received: by mail-wm1-f69.google.com with SMTP id e5-20020a05600c4e4500b003edc5824521so1279233wmq.0
+        for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 09:25:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679588728;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rf1EargHhjBzXfO07IgMLtInuWGSM9rCL6OoPVE8vbA=;
+        b=p6tfiqQNmip9QzLKNzPWGQewBmBQy7xZSd/dbAWJpYHwGRMlhjcTqQgYc5EguDFPdH
+         KOGeVCgceuv9xljcvk8SoUaTqdr0qJBCyCQ88KybudCp1Zb6VIUvXBW6kg8fXkXCl7f1
+         JvrG+PNiJOWXVDvr6FzekhfGbi2kPjQfPALDUida5xgqiKka1FoJCIII8nBi2Nf+hcZR
+         H0U7nHfAJQAmuRuK7QBbE64q1m3BustN7g1tqlTQ7S86y4/aTEikr9PzIG4J0R8T+GUy
+         xpELzuu/99CbLia7ewjU0xwAjpG8S442016V8/fkp/9ONCvGub+3Rbhz2IKm0FDGEUPL
+         12hg==
+X-Gm-Message-State: AAQBX9duJuRMvYHwZUfgnu5Ava8e1d25NmU27fsUhsMnWCdBuLqKp/Ps
+	8vDoG8P01hcb6IXibxQ/zM+qhZKLVXG5mbAryEz70jCyVXMjc31qW8pLH26mkckZJhX+A2x1Zo6
+	oPLm7qEqrBqRHvKBfesRA
+X-Received: by 2002:a5d:4568:0:b0:2c7:e5f:e0e0 with SMTP id a8-20020a5d4568000000b002c70e5fe0e0mr2967354wrc.65.1679588728476;
+        Thu, 23 Mar 2023 09:25:28 -0700 (PDT)
+X-Google-Smtp-Source: AKy350Z2pOP19Ooh7wiG9F4iyBZnUcLGOtnlVl1iiXTySJV6QCXnwRVxEdgZiRrRO9IHVKHT4hkvPQ==
+X-Received: by 2002:a5d:4568:0:b0:2c7:e5f:e0e0 with SMTP id a8-20020a5d4568000000b002c70e5fe0e0mr2967333wrc.65.1679588728212;
+        Thu, 23 Mar 2023 09:25:28 -0700 (PDT)
+Received: from vschneid.remote.csb ([154.57.232.159])
+        by smtp.gmail.com with ESMTPSA id d10-20020adfe88a000000b002c70e60abd4sm16586783wrm.2.2023.03.23.09.25.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Mar 2023 09:25:27 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-xtensa@linux-xtensa.org, x86@kernel.org, "Paul E. McKenney"
+ <paulmck@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>, Daniel
+ Bristot de Oliveira <bristot@redhat.com>, Marcelo Tosatti
+ <mtosatti@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Marc
+ Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell
+ King <linux@armlinux.org.uk>, Nicholas Piggin <npiggin@gmail.com>, Guo Ren
+ <guoren@kernel.org>, "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v5 7/7] sched, smp: Trace smp callback causing an IPI
+In-Reply-To: <20230322140434.GC2357380@hirez.programming.kicks-ass.net>
+References: <20230307143558.294354-1-vschneid@redhat.com>
+ <20230307143558.294354-8-vschneid@redhat.com>
+ <20230322095329.GS2017917@hirez.programming.kicks-ass.net>
+ <xhsmhmt45c703.mognet@vschneid.remote.csb>
+ <20230322140434.GC2357380@hirez.programming.kicks-ass.net>
+Date: Thu, 23 Mar 2023 16:25:25 +0000
+Message-ID: <xhsmhbkkjcu4q.mognet@vschneid.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230322141037.3684946-1-ardb@kernel.org>
-In-Reply-To: <20230322141037.3684946-1-ardb@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 23 Mar 2023 17:33:43 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6=MOR265Srkk7gJ8RyFFEZ5QSJ26XiO=g+AGZR-9dgHw@mail.gmail.com>
-Message-ID: <CAAhV-H6=MOR265Srkk7gJ8RyFFEZ5QSJ26XiO=g+AGZR-9dgHw@mail.gmail.com>
-Subject: Re: [PATCH v2] efi: libstub: Use relocated version of kernel's struct screen_info
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi@vger.kernel.org, loongarch@lists.linux.dev, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, 
-	loongson-kernel@lists.loongnix.cn, Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-Tested-by: Huacai Chen <chenhuacai@loongson.cn>
+On 22/03/23 15:04, Peter Zijlstra wrote:
+> @@ -798,14 +794,20 @@ static void smp_call_function_many_cond(
+>  		}
+>  
+>  		/*
+> +		 * Trace each smp_function_call_*() as an IPI, actual IPIs
+> +		 * will be traced with func==generic_smp_call_function_single_ipi().
+> +		 */
+> +		trace_ipi_send_cpumask(cfd->cpumask_ipi, _RET_IP_, func);
 
-On Wed, Mar 22, 2023 at 10:10=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> w=
-rote:
->
-> In some cases, we expose the kernel's struct screen_info to the EFI stub
-> directly, so it gets populated before even entering the kernel.  This
-> means the early console is available as soon as the early param parsing
-> happens, which is nice. It also means we need two different ways to pass
-> this information, as this trick only works if the EFI stub is baked into
-> the core kernel image, which is not always the case.
->
-> Huacai reports that the preparatory refactoring that was needed to
-> implement this alternative method for zboot resulted in a non-functional
-> efifb earlycon for other cases as well, due to the reordering of the
-> kernel image relocation with the population of the screen_info struct,
-> and the latter now takes place after copying the image to its new
-> location, which means we copy the old, uninitialized state.
->
-> So let's ensure that the same-image version of alloc_screen_info()
-> produces the correct screen_info pointer, by taking the displacement of
-> the loaded image into account.
->
-> Cc: loongarch@lists.linux.dev
-> Cc: Xuefeng Li <lixuefeng@loongson.cn>
-> Cc: Xuerui Wang <kernel@xen0n.name>
-> Cc: loongson-kernel@lists.loongnix.cn
-> Reported-by: Huacai Chen <chenhuacai@loongson.cn>
-> Link: https://lore.kernel.org/linux-efi/20230310021749.921041-1-chenhuaca=
-i@loongson.cn/
-> Fixes: 42c8ea3dca094ab8 ("efi: libstub: Factor out EFI stub entrypoint in=
-to separate file")
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
-> v2:
-> - ensure image->image_base is accurate (Redhat has shipped broken GRUB
->   versions that put bogus values in there)
-> - ensure that the config table screen_info version is only used when
->   needed
->
->  drivers/firmware/efi/libstub/arm64-stub.c     |  4 +++-
->  drivers/firmware/efi/libstub/efi-stub-entry.c | 15 +++++++++++++++
->  drivers/firmware/efi/libstub/efi-stub.c       |  9 ---------
->  drivers/firmware/efi/libstub/efistub.h        |  1 +
->  drivers/firmware/efi/libstub/screen_info.c    |  9 +--------
->  drivers/firmware/efi/libstub/zboot.c          |  9 +++++++++
->  6 files changed, 29 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware=
-/efi/libstub/arm64-stub.c
-> index b996553cdb4c3587..770b8ecb73984c61 100644
-> --- a/drivers/firmware/efi/libstub/arm64-stub.c
-> +++ b/drivers/firmware/efi/libstub/arm64-stub.c
-> @@ -85,8 +85,10 @@ efi_status_t handle_kernel_image(unsigned long *image_=
-addr,
->                 }
->         }
->
-> -       if (image->image_base !=3D _text)
-> +       if (image->image_base !=3D _text) {
->                 efi_err("FIRMWARE BUG: efi_loaded_image_t::image_base has=
- bogus value\n");
-> +               image->image_base =3D _text;
-> +       }
->
->         if (!IS_ALIGNED((u64)_text, SEGMENT_ALIGN))
->                 efi_err("FIRMWARE BUG: kernel image not aligned on %dk bo=
-undary\n",
-> diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firm=
-ware/efi/libstub/efi-stub-entry.c
-> index 5245c4f031c0a70a..d66e400cd4ccfa19 100644
-> --- a/drivers/firmware/efi/libstub/efi-stub-entry.c
-> +++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
-> @@ -5,6 +5,19 @@
->
->  #include "efistub.h"
->
-> +static unsigned long screen_info_offset;
-> +
-> +struct screen_info *alloc_screen_info(void)
-> +{
-> +       if (IS_ENABLED(CONFIG_ARM))
-> +               return __alloc_screen_info();
-> +       return (void *)&screen_info + screen_info_offset;
-> +}
-> +
-> +void __weak free_screen_info(struct screen_info *si)
-> +{
-> +}
-> +
->  /*
->   * EFI entry point for the generic EFI stub used by ARM, arm64, RISC-V a=
-nd
->   * LoongArch. This is the entrypoint that is described in the PE/COFF he=
-ader
-> @@ -56,6 +69,8 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
->                 return status;
->         }
->
-> +       screen_info_offset =3D image_addr - (unsigned long)image->image_b=
-ase;
-> +
->         status =3D efi_stub_common(handle, image, image_addr, cmdline_ptr=
-);
->
->         efi_free(image_size, image_addr);
-> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/e=
-fi/libstub/efi-stub.c
-> index 2955c1ac6a36ee00..c4b9eccad0f103dc 100644
-> --- a/drivers/firmware/efi/libstub/efi-stub.c
-> +++ b/drivers/firmware/efi/libstub/efi-stub.c
-> @@ -47,15 +47,6 @@
->  static u64 virtmap_base =3D EFI_RT_VIRTUAL_BASE;
->  static bool flat_va_mapping =3D (EFI_RT_VIRTUAL_OFFSET !=3D 0);
->
-> -struct screen_info * __weak alloc_screen_info(void)
-> -{
-> -       return &screen_info;
-> -}
-> -
-> -void __weak free_screen_info(struct screen_info *si)
-> -{
-> -}
-> -
->  static struct screen_info *setup_graphics(void)
->  {
->         efi_guid_t gop_proto =3D EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
-> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/ef=
-i/libstub/efistub.h
-> index bd9c38a93bbce09c..148013bcb5f89fdd 100644
-> --- a/drivers/firmware/efi/libstub/efistub.h
-> +++ b/drivers/firmware/efi/libstub/efistub.h
-> @@ -1062,6 +1062,7 @@ efi_enable_reset_attack_mitigation(void) { }
->  void efi_retrieve_tpm2_eventlog(void);
->
->  struct screen_info *alloc_screen_info(void);
-> +struct screen_info *__alloc_screen_info(void);
->  void free_screen_info(struct screen_info *si);
->
->  void efi_cache_sync_image(unsigned long image_base,
-> diff --git a/drivers/firmware/efi/libstub/screen_info.c b/drivers/firmwar=
-e/efi/libstub/screen_info.c
-> index 8e76a8b384ba142d..4be1c4d1f922becd 100644
-> --- a/drivers/firmware/efi/libstub/screen_info.c
-> +++ b/drivers/firmware/efi/libstub/screen_info.c
-> @@ -15,18 +15,11 @@
->   * early, but it only works if the EFI stub is part of the core kernel i=
-mage
->   * itself. The zboot decompressor can only use the configuration table
->   * approach.
-> - *
-> - * In order to support both methods from the same build of the EFI stub
-> - * library, provide this dummy global definition of struct screen_info. =
-If it
-> - * is required to satisfy a link dependency, it means we need to overrid=
-e the
-> - * __weak alloc and free methods with the ones below, and those will be =
-pulled
-> - * in as well.
->   */
-> -struct screen_info screen_info;
->
->  static efi_guid_t screen_info_guid =3D LINUX_EFI_SCREEN_INFO_TABLE_GUID;
->
-> -struct screen_info *alloc_screen_info(void)
-> +struct screen_info *__alloc_screen_info(void)
->  {
->         struct screen_info *si;
->         efi_status_t status;
-> diff --git a/drivers/firmware/efi/libstub/zboot.c b/drivers/firmware/efi/=
-libstub/zboot.c
-> index ba234e062a1a29da..10a161e6d5555fe1 100644
-> --- a/drivers/firmware/efi/libstub/zboot.c
-> +++ b/drivers/firmware/efi/libstub/zboot.c
-> @@ -57,6 +57,15 @@ void __weak efi_cache_sync_image(unsigned long image_b=
-ase,
->         // executable code loaded into memory to be safe for execution.
->  }
->
-> +struct screen_info *alloc_screen_info(void)
-> +{
-> +       return __alloc_screen_info();
-> +}
-> +
-> +void __weak free_screen_info(struct screen_info *si)
-> +{
-> +}
-> +
->  asmlinkage efi_status_t __efiapi
->  efi_zboot_entry(efi_handle_t handle, efi_system_table_t *systab)
->  {
-> --
-> 2.39.2
->
->
+I just got a trace pointing out this can emit an event even though no IPI
+is sent if e.g. the cond_func predicate filters all CPUs in the argument
+mask:
+
+  ipi_send_cpumask:     cpumask= callsite=on_each_cpu_cond_mask+0x3c callback=flush_tlb_func+0x0
+
+Maybe something like so on top?
+
+---
+diff --git a/kernel/smp.c b/kernel/smp.c
+index ba5478814e677..1dc452017d000 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -791,6 +791,8 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+ 			}
+ 		}
+ 
++		if (!nr_cpus)
++			goto local;
+ 		/*
+ 		 * Trace each smp_function_call_*() as an IPI, actual IPIs
+ 		 * will be traced with func==generic_smp_call_function_single_ipi().
+@@ -804,10 +806,10 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+ 		 */
+ 		if (nr_cpus == 1)
+ 			send_call_function_single_ipi(last_cpu);
+-		else if (likely(nr_cpus > 1))
++		else
+ 			send_call_function_ipi_mask(cfd->cpumask_ipi);
+ 	}
+-
++local:
+ 	if (run_local && (!cond_func || cond_func(this_cpu, info))) {
+ 		unsigned long flags;
+ 
+
