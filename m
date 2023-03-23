@@ -1,160 +1,188 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01AEBBA54
-	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 17:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=uknWkbKCt7r7d+Uri/V39eu4SUqBOmf1+zXqyPceR/Q=; b=dDxw8FpzxhqVLTwZLp+6PLqsZb
-	sRJ3X8JsTwZ/JiVyuRpgwQqpktLFA6bvn6+Z5BUFJqFkJRGddW2MQ80jsQJfIgRgfreJe2ASji3Ok
-	ubgdvdDoJEumb5zC8iamfg/Bj2JpUUoIIkbWbcU+eS2YQIKqSfzW3woiON0TO/xxXdEJFV3HgvHvO
-	sXiZid3LBW1uxBADyBwicyQ2lIEhNgqEfn2o6vq+arvPTl9YSvFX++J11S113A+M+rXKiwhf9f2WT
-	HAcSaWWs+/beDL4nUBnINhc313sBkIdpEH77HQ1cT1mXenwbLj9N8jiiOSWeGoraLKmJYcbpzRY9+
-	kwRmLaAw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1pfOwQ-004vDx-2T;
-	Thu, 23 Mar 2023 17:41:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7E8ED3002FC;
-	Thu, 23 Mar 2023 18:41:29 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 68B95240DB73A; Thu, 23 Mar 2023 18:41:29 +0100 (CET)
-Date: Thu, 23 Mar 2023 18:41:29 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Valentin Schneider <vschneid@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1B93C04
+	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 18:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1679596303;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OQhuytQNa//R38jUclcb8GrjXYgITp5dQj88746r1Bo=;
+	b=hzzGJfyMtg4+UYZoLvcYhCd5Zk005nkpFZgR0cdlzrx/hOqAQ2LUYi85ah3jZCHs+und4z
+	d/RRANXxSfkwckr2w3euoDn84gzckfO/k3WOBsHaZo2dGyyNjJVzMuKPbxFep4+VqsheOd
+	JbyoMkzpBilWzvfKoxlJQy7I04aZ1Ok=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-553-jN2zbSFXMrCboWtWsCMbjA-1; Thu, 23 Mar 2023 14:31:42 -0400
+X-MC-Unique: jN2zbSFXMrCboWtWsCMbjA-1
+Received: by mail-wm1-f70.google.com with SMTP id u6-20020a05600c19c600b003ed7cb98a8dso1337349wmq.9
+        for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 11:31:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679596301;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OQhuytQNa//R38jUclcb8GrjXYgITp5dQj88746r1Bo=;
+        b=XEOZJdjGvnmFSloV+Pq3Xz6mVZLpEYDhp8phidUFyuWsE7fBvZFSHoNGs/LFB9vpkT
+         me67kL9tvmal5/8JrVgpatoE5To6tRnobGoVT7F9judQha/zMrvJ3duhA3wk8aIWLUM4
+         OhFqq7JpVYZ5Ugh1dWmVeIj/UydRAhQZBH/y6YBraBhoGh+1UKPvr6SRrhks8fLzMjH8
+         2Bsl1jHCt3RrS9YcIcIJrnHWjrL+bN/rPK2aa5WvI9i7+IRkG+IgWb9xXIrhQjieR8L5
+         cHI7Ca7gssNxSX4z1Zct2WdufOzwLhuM3DUUkquF+x1/07ih89KHv48zQeXkq8ngdFth
+         S9gQ==
+X-Gm-Message-State: AAQBX9cv1nmzhnVDXT2Ksd5YyMBsxiJDR8l5B1tB5uQO9pIVoqzbhyMF
+	p+MayIDqFq24quuaPJp01AFeJsie2Okqa1ruWsC9fTcBy4oFzAiYloNdAqM7Iyt1Ab6qV4egmN6
+	jLSPHMRq+qeJ7VKMKgy4i
+X-Received: by 2002:adf:ee4e:0:b0:2d2:f3e3:115d with SMTP id w14-20020adfee4e000000b002d2f3e3115dmr104081wro.59.1679596301160;
+        Thu, 23 Mar 2023 11:31:41 -0700 (PDT)
+X-Google-Smtp-Source: AKy350akLKxXWb1wSOfhINrcngkAYQLWnw4Bp2RUkomUFDjjiyXwtTV3jYctLuET3Ky7jfggPrYKfQ==
+X-Received: by 2002:adf:ee4e:0:b0:2d2:f3e3:115d with SMTP id w14-20020adfee4e000000b002d2f3e3115dmr104063wro.59.1679596300886;
+        Thu, 23 Mar 2023 11:31:40 -0700 (PDT)
+Received: from vschneid.remote.csb ([154.57.232.159])
+        by smtp.gmail.com with ESMTPSA id s17-20020a5d4251000000b002d1801018e2sm16702552wrr.63.2023.03.23.11.31.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Mar 2023 11:31:39 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
 Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-	x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Nicholas Piggin <npiggin@gmail.com>, Guo Ren <guoren@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-xtensa@linux-xtensa.org, x86@kernel.org, "Paul E. McKenney"
+ <paulmck@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>, Daniel
+ Bristot de Oliveira <bristot@redhat.com>, Marcelo Tosatti
+ <mtosatti@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Marc
+ Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell
+ King <linux@armlinux.org.uk>, Nicholas Piggin <npiggin@gmail.com>, Guo Ren
+ <guoren@kernel.org>, "David S. Miller" <davem@davemloft.net>
 Subject: Re: [PATCH v5 7/7] sched, smp: Trace smp callback causing an IPI
-Message-ID: <20230323174129.GA2753619@hirez.programming.kicks-ass.net>
+In-Reply-To: <20230323174129.GA2753619@hirez.programming.kicks-ass.net>
 References: <20230307143558.294354-1-vschneid@redhat.com>
  <20230307143558.294354-8-vschneid@redhat.com>
  <20230322095329.GS2017917@hirez.programming.kicks-ass.net>
  <xhsmhmt45c703.mognet@vschneid.remote.csb>
  <20230322140434.GC2357380@hirez.programming.kicks-ass.net>
  <xhsmhbkkjcu4q.mognet@vschneid.remote.csb>
+ <20230323174129.GA2753619@hirez.programming.kicks-ass.net>
+Date: Thu, 23 Mar 2023 18:31:37 +0000
+Message-ID: <xhsmh8rfncoae.mognet@vschneid.remote.csb>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xhsmhbkkjcu4q.mognet@vschneid.remote.csb>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On Thu, Mar 23, 2023 at 04:25:25PM +0000, Valentin Schneider wrote:
-> On 22/03/23 15:04, Peter Zijlstra wrote:
-> > @@ -798,14 +794,20 @@ static void smp_call_function_many_cond(
-> >  		}
-> >  
-> >  		/*
-> > +		 * Trace each smp_function_call_*() as an IPI, actual IPIs
-> > +		 * will be traced with func==generic_smp_call_function_single_ipi().
-> > +		 */
-> > +		trace_ipi_send_cpumask(cfd->cpumask_ipi, _RET_IP_, func);
-> 
-> I just got a trace pointing out this can emit an event even though no IPI
-> is sent if e.g. the cond_func predicate filters all CPUs in the argument
-> mask:
-> 
->   ipi_send_cpumask:     cpumask= callsite=on_each_cpu_cond_mask+0x3c callback=flush_tlb_func+0x0
-> 
-> Maybe something like so on top?
-> 
-> ---
-> diff --git a/kernel/smp.c b/kernel/smp.c
-> index ba5478814e677..1dc452017d000 100644
+On 23/03/23 18:41, Peter Zijlstra wrote:
+> On Thu, Mar 23, 2023 at 04:25:25PM +0000, Valentin Schneider wrote:
+>> On 22/03/23 15:04, Peter Zijlstra wrote:
+>> > @@ -798,14 +794,20 @@ static void smp_call_function_many_cond(
+>> >  		}
+>> >  
+>> >  		/*
+>> > +		 * Trace each smp_function_call_*() as an IPI, actual IPIs
+>> > +		 * will be traced with func==generic_smp_call_function_single_ipi().
+>> > +		 */
+>> > +		trace_ipi_send_cpumask(cfd->cpumask_ipi, _RET_IP_, func);
+>> 
+>> I just got a trace pointing out this can emit an event even though no IPI
+>> is sent if e.g. the cond_func predicate filters all CPUs in the argument
+>> mask:
+>> 
+>>   ipi_send_cpumask:     cpumask= callsite=on_each_cpu_cond_mask+0x3c callback=flush_tlb_func+0x0
+>> 
+>> Maybe something like so on top?
+>> 
+>> ---
+>> diff --git a/kernel/smp.c b/kernel/smp.c
+>> index ba5478814e677..1dc452017d000 100644
+>> --- a/kernel/smp.c
+>> +++ b/kernel/smp.c
+>> @@ -791,6 +791,8 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+>>  			}
+>>  		}
+>>  
+>> +		if (!nr_cpus)
+>> +			goto local;
+>
+> Hmm, this isn't right. You can get nr_cpus==0 even though it did add
+> some to various lists but never was first.
+>
+
+Duh, glanced over that.
+
+> But urgh, even if we were to say count nr_queued we'd never get the mask
+> right, because we don't track which CPUs have the predicate matched,
+> only those we need to actually send an IPI to :/
+>
+> Ooh, I think we can clear those bits from cfd->cpumask, arguably that's
+> a correctness fix too, because the 'run_remote && wait' case shouldn't
+> wait on things we didn't queue.
+>
+
+Yeah, that makes sense to me. Just one tiny suggestion below.
+
+> Hmm?
+>
+>
 > --- a/kernel/smp.c
 > +++ b/kernel/smp.c
-> @@ -791,6 +791,8 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+> @@ -728,9 +728,9 @@ static void smp_call_function_many_cond(
+>  	int cpu, last_cpu, this_cpu = smp_processor_id();
+>  	struct call_function_data *cfd;
+>  	bool wait = scf_flags & SCF_WAIT;
+> +	int nr_cpus = 0, nr_queued = 0;
+>  	bool run_remote = false;
+>  	bool run_local = false;
+> -	int nr_cpus = 0;
+>  
+>  	lockdep_assert_preemption_disabled();
+>  
+> @@ -772,8 +772,10 @@ static void smp_call_function_many_cond(
+>  		for_each_cpu(cpu, cfd->cpumask) {
+>  			call_single_data_t *csd = per_cpu_ptr(cfd->csd, cpu);
+>  
+> -			if (cond_func && !cond_func(cpu, info))
+> +			if (cond_func && !cond_func(cpu, info)) {
+> +				__cpumask_clear_cpu(cpu, cfd->cpumask);
+>  				continue;
+> +			}
+>  
+>  			csd_lock(csd);
+>  			if (wait)
+> @@ -789,13 +791,15 @@ static void smp_call_function_many_cond(
+>  				nr_cpus++;
+>  				last_cpu = cpu;
 >  			}
+> +			nr_queued++;
 >  		}
 >  
-> +		if (!nr_cpus)
-> +			goto local;
+>  		/*
+>  		 * Trace each smp_function_call_*() as an IPI, actual IPIs
+>  		 * will be traced with func==generic_smp_call_function_single_ipi().
+>  		 */
+> -		trace_ipi_send_cpumask(cfd->cpumask_ipi, _RET_IP_, func);
+> +		if (nr_queued)
 
-Hmm, this isn't right. You can get nr_cpus==0 even though it did add
-some to various lists but never was first.
+With your change to cfd->cpumask, we could ditch nr_queued and make this
 
-But urgh, even if we were to say count nr_queued we'd never get the mask
-right, because we don't track which CPUs have the predicate matched,
-only those we need to actually send an IPI to :/
+                if (!cpumask_empty(cfd->cpumask))
 
-Ooh, I think we can clear those bits from cfd->cpumask, arguably that's
-a correctness fix too, because the 'run_remote && wait' case shouldn't
-wait on things we didn't queue.
+since cfd->cpumask now only contains CPUs that have had a CSD queued.
 
-Hmm?
-
-
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -728,9 +728,9 @@ static void smp_call_function_many_cond(
- 	int cpu, last_cpu, this_cpu = smp_processor_id();
- 	struct call_function_data *cfd;
- 	bool wait = scf_flags & SCF_WAIT;
-+	int nr_cpus = 0, nr_queued = 0;
- 	bool run_remote = false;
- 	bool run_local = false;
--	int nr_cpus = 0;
- 
- 	lockdep_assert_preemption_disabled();
- 
-@@ -772,8 +772,10 @@ static void smp_call_function_many_cond(
- 		for_each_cpu(cpu, cfd->cpumask) {
- 			call_single_data_t *csd = per_cpu_ptr(cfd->csd, cpu);
- 
--			if (cond_func && !cond_func(cpu, info))
-+			if (cond_func && !cond_func(cpu, info)) {
-+				__cpumask_clear_cpu(cpu, cfd->cpumask);
- 				continue;
-+			}
- 
- 			csd_lock(csd);
- 			if (wait)
-@@ -789,13 +791,15 @@ static void smp_call_function_many_cond(
- 				nr_cpus++;
- 				last_cpu = cpu;
- 			}
-+			nr_queued++;
- 		}
- 
- 		/*
- 		 * Trace each smp_function_call_*() as an IPI, actual IPIs
- 		 * will be traced with func==generic_smp_call_function_single_ipi().
- 		 */
--		trace_ipi_send_cpumask(cfd->cpumask_ipi, _RET_IP_, func);
-+		if (nr_queued)
-+			trace_ipi_send_cpumask(cfd->cpumask, _RET_IP_, func);
- 
- 		/*
- 		 * Choose the most efficient way to send an IPI. Note that the
+> +			trace_ipi_send_cpumask(cfd->cpumask, _RET_IP_, func);
+>  
+>  		/*
+>  		 * Choose the most efficient way to send an IPI. Note that the
 
