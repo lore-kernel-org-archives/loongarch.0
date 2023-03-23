@@ -1,138 +1,126 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD83BA53
-	for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 23:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hKMA4pE4ZC1WEjwlMS0oahB5WbuLzi761bi+OVXv/X8=; b=k4/hIANBdxC2Z8c++HmkBPk16F
-	hq1n4vi1aFY7d/izKMGpm0/zkTd++0c77IZs+Q5bV257Gjkiy34yMSDd8L7TKq46+CV0zDSHb27H+
-	4KSIRSylcgYZ2OMei78Bb1gC7STjWled8MJkcwhhG29tpOAa6HtPIFWPyA9seeGrRiJr3vWUYPsTp
-	3Vu3FPyPpiLcCMVxhaxuIGSboSf1mmZy7nxDek09nDmg/P6bBJA5M4EMw//9ErW/pvBC1TxeGCDAY
-	4DGmD2DpR96GbtKoxaTV3TYyxFMIuFbNKoIU/LaGvb2xuytoT+Rk3V4s2DX53haN44indyDWk1fXo
-	N1G/mBcw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1pf7f5-004hB6-38;
-	Wed, 22 Mar 2023 23:14:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9046D30035F;
-	Thu, 23 Mar 2023 00:14:28 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 73D47202F7F60; Thu, 23 Mar 2023 00:14:28 +0100 (CET)
-Date: Thu, 23 Mar 2023 00:14:28 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-	x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Nicholas Piggin <npiggin@gmail.com>, Guo Ren <guoren@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v5 7/7] sched, smp: Trace smp callback causing an IPI
-Message-ID: <20230322231428.GV2017917@hirez.programming.kicks-ass.net>
-References: <20230307143558.294354-1-vschneid@redhat.com>
- <20230307143558.294354-8-vschneid@redhat.com>
- <20230322095329.GS2017917@hirez.programming.kicks-ass.net>
- <xhsmhmt45c703.mognet@vschneid.remote.csb>
- <20230322140434.GC2357380@hirez.programming.kicks-ass.net>
- <xhsmhjzz8d8km.mognet@vschneid.remote.csb>
- <20230322172242.GH2357380@hirez.programming.kicks-ass.net>
- <xhsmhh6ucd4t7.mognet@vschneid.remote.csb>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF1315B4
+	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 01:31:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2835CC433D2
+	for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 01:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1679535063;
+	bh=Ot5hvcQeLnVZ+qQdLf6laKQ2NtMhh4KUe2xmfxdFmpA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Wh/4SRvy1oGFHxG1F3VeFwKlwlrfEqd8MXR+i/5CJAn7DvNqjbMUQDRjYxt/vSUaR
+	 u1gQA0y8Bx5lbAzUt70i4QfVzstMFPya3XxrK3uwQHynbGE/ZaUx5Pk4d+n9bGXV0v
+	 YBLgv2l3STg3fzIepLNbzsNxkUdXJ8kqNKzJDcO+ByNK4bvJPNp8kL0ICi4JIlzFr8
+	 +6J+qGIXyXJx67NXGzo1XBz6GNjt2GetV6GRDMqZHznxDAg4Ox+YVzn9trfUjeZIBL
+	 slbneUV0Oa6TV0wXvzjcz0hX+LMKGnLsW1FLbyARSDuBjjF0Jk5twGUCzubP802quE
+	 ZSpbwHGH06h3g==
+Received: by mail-ed1-f47.google.com with SMTP id y4so80479918edo.2
+        for <loongarch@lists.linux.dev>; Wed, 22 Mar 2023 18:31:03 -0700 (PDT)
+X-Gm-Message-State: AO0yUKUCIm+KcDqY3AS4he6pnW9i2hCk5t/CIOok6H/mFsGTQ8ueQ/0a
+	aNOJdmMiLOjWSe5Dt4qSLqmDlufnVovKQPo41hg=
+X-Google-Smtp-Source: AK7set8JSq4K/B6pM2JnVQ3yUOzDZeZHRnLuujLTMBPSNeW8Qumnt/x9Wvc+9CRPKkwiG3kPO3ZtUyeAD1jI32gzCDM=
+X-Received: by 2002:a17:907:784:b0:92f:b348:8f93 with SMTP id
+ xd4-20020a170907078400b0092fb3488f93mr4409449ejb.10.1679535061387; Wed, 22
+ Mar 2023 18:31:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xhsmhh6ucd4t7.mognet@vschneid.remote.csb>
+References: <1679380154-20308-1-git-send-email-yangtiezhu@loongson.cn>
+ <253a5dfcb7e41e44d15232e1891e7ea9d39dc953.camel@xry111.site>
+ <f61ac027-0068-40f0-87bd-17f916141884@roeck-us.net> <CAAhV-H5kFRt9z0U_TqSQeqX9WuUJ2cg0LOboUXHp-fLR0PoTJg@mail.gmail.com>
+ <b4592fa4-35ec-4062-b965-962fc1ea12f6@roeck-us.net>
+In-Reply-To: <b4592fa4-35ec-4062-b965-962fc1ea12f6@roeck-us.net>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 23 Mar 2023 09:30:49 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6DieadTzUqdCMeALhcmRyT9Da_QkzyG_RoO-S0PikfFw@mail.gmail.com>
+Message-ID: <CAAhV-H6DieadTzUqdCMeALhcmRyT9Da_QkzyG_RoO-S0PikfFw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Check unwind_error() in arch_stack_walk()
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: stable <stable@vger.kernel.org>, Xi Ruoyao <xry111@xry111.site>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 22, 2023 at 06:22:28PM +0000, Valentin Schneider wrote:
-> On 22/03/23 18:22, Peter Zijlstra wrote:
+OK, thanks.
 
-> >>        hackbench-157   [001]    10.894320: ipi_send_cpu:         cpu=3 callsite=check_preempt_curr+0x37 callback=0x0
+Huacai
+
+On Wed, Mar 22, 2023 at 10:20=E2=80=AFAM Guenter Roeck <linux@roeck-us.net>=
+ wrote:
+>
+> On Wed, Mar 22, 2023 at 08:50:07AM +0800, Huacai Chen wrote:
+> > On Tue, Mar 21, 2023 at 10:25=E2=80=AFPM Guenter Roeck <linux@roeck-us.=
+net> wrote:
+> > >
+> > > On Tue, Mar 21, 2023 at 08:35:34PM +0800, Xi Ruoyao wrote:
+> > > > On Tue, 2023-03-21 at 14:29 +0800, Tiezhu Yang wrote:
+> > > > > We can see the following messages with CONFIG_PROVE_LOCKING=3Dy o=
+n
+> > > > > LoongArch:
+> > > > >
+> > > > >   BUG: MAX_STACK_TRACE_ENTRIES too low!
+> > > > >   turning off the locking correctness validator.
+> > > > >
+> > > > > This is because stack_trace_save() returns a big value after call
+> > > > > arch_stack_walk(), here is the call trace:
+> > > > >
+> > > > >   save_trace()
+> > > > >     stack_trace_save()
+> > > > >       arch_stack_walk()
+> > > > >         stack_trace_consume_entry()
+> > > > >
+> > > > > arch_stack_walk() should return immediately if unwind_next_frame(=
+)
+> > > > > failed, no need to do the useless loops to increase the value of
+> > > > > c->len in stack_trace_consume_entry(), then we can fix the above
+> > > > > problem.
+> > > > >
+> > > > > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > > > > Link: https://lore.kernel.org/all/8a44ad71-68d2-4926-892f-72bfc7a=
+67e2a@roeck-us.net/
+> > > > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > > >
+> > > > The fix makes sense, but I'm asking the same question again (sorry =
+if
+> > > > it's noisy): should we Cc stable@vger.kernel.org and/or make a PR f=
+or
+> > > > 6.3?
+> > > >
+> > > > To me a bug fixes should be backported into all stable branches aff=
+ected
+> > > > by the bug, unless there is some serious difficulty.  As 6.3 releas=
+e
+> > > > will work on launched 3A5000 boards out-of-box, people may want to =
+stop
+> > > > staying on the leading edge and use a LTS/stable release series. We
+> > > > can't just say (or behave like) "we don't backport, please use late=
+st
+> > > > mainline" IMO :).
+> > >
+> > > It is a bug fix, isn't it ? It should be backported to v6.1+. Otherwi=
+se,
+> > > if your policy is to not backport bug fixes, I might as well stop tes=
+ting
+> > > loongarch on all but the most recent kernel branch. Let me know if th=
+is is
+> > > what you want. If so, I think you should let all other regression tes=
+ters
+> > > know that they should only test loongarch on mainline and possibly on
+> > > linux-next.
+> > This is of course a bug fix, but should Tiezhu resend this patch? Or
+> > just replying to this message with CC stable@vger.kernel.org is
+> > enough?
 > >
-> > Arguably we should be setting callback to scheduler_ipi(), except
-> > ofcourse, that's not an actual function...
-> >
-> > Maybe we can do "extern inline" for the actual users and provide a dummy
-> > function for the symbol when tracing.
-> >
-> 
-> Huh, I wasn't aware that was an option, I'll look into that. I did scribble
-> down a comment next to smp_send_reschedule(), but having a decodable
-> function name would be better!
-
-So clang-15 builds the below (and generates the expected code), but
-gcc-12 vomits nonsense about a non-static inline calling a static inline
-or somesuch bollocks :-/
-
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1991,7 +1991,7 @@ extern char *__get_task_comm(char *to, s
- })
- 
- #ifdef CONFIG_SMP
--static __always_inline void scheduler_ipi(void)
-+extern __always_inline void scheduler_ipi(void)
- {
- 	/*
- 	 * Fold TIF_NEED_RESCHED into the preempt_count; anybody setting
---- a/include/linux/smp.h
-+++ b/include/linux/smp.h
-@@ -130,9 +130,9 @@ extern void arch_smp_send_reschedule(int
-  * scheduler_ipi() is inline so can't be passed as callback reason, but the
-  * callsite IP should be sufficient for root-causing IPIs sent from here.
-  */
--#define smp_send_reschedule(cpu) ({		  \
--	trace_ipi_send_cpu(cpu, _RET_IP_, NULL);  \
--	arch_smp_send_reschedule(cpu);		  \
-+#define smp_send_reschedule(cpu) ({				\
-+	trace_ipi_send_cpu(cpu, _RET_IP_, &scheduler_ipi);	\
-+	arch_smp_send_reschedule(cpu);				\
- })
- 
- /*
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3790,6 +3790,15 @@ static int ttwu_runnable(struct task_str
- }
- 
- #ifdef CONFIG_SMP
-+void scheduler_ipi(void)
-+{
-+	/*
-+	 * Actual users should end up using the extern inline, this is only
-+	 * here for the symbol.
-+	 */
-+	BUG();
-+}
-+
- void sched_ttwu_pending(void *arg)
- {
- 	struct llist_node *llist = arg;
+>
+> Normally the maintainer, before sending a pull request to Linus, would ad=
+d
+> "Cc: stable@vger.kernel.org" to the patch. Actually sending the patch to
+> the stable@ mailing list is only necessary if it was applied to the
+> upstream kernel without Cc: stable@ in the commit message.
+>
+> Guenter
