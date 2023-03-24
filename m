@@ -1,11 +1,11 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4601F2101
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4446420F5
 	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 06:09:06 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.153])
-	by gateway (Coremail) with SMTP id _____8AxJNh6Ph1kOJwQAA--.13659S3;
+	by gateway (Coremail) with SMTP id _____8Dx3tp6Ph1kO5wQAA--.13969S3;
 	Fri, 24 Mar 2023 14:08:58 +0800 (CST)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.153])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axmr12Ph1kY_QKAA--.2874S2;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axmr12Ph1kY_QKAA--.2874S3;
 	Fri, 24 Mar 2023 14:08:58 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -16,10 +16,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH V1 0/5] Fix some issues of irq controllers for dual-bridges scenario 
-Date: Fri, 24 Mar 2023 14:08:49 +0800
-Message-Id: <20230324060854.29375-1-lvjianmin@loongson.cn>
+Subject: [PATCH V1 1/5] irqchip/loongson-eiointc: Fix returned value on parsing MADT
+Date: Fri, 24 Mar 2023 14:08:50 +0800
+Message-Id: <20230324060854.29375-2-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20230324060854.29375-1-lvjianmin@loongson.cn>
+References: <20230324060854.29375-1-lvjianmin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -27,39 +29,68 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axmr12Ph1kY_QKAA--.2874S2
+X-CM-TRANSID:AQAAf8Axmr12Ph1kY_QKAA--.2874S3
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Jw1xWFyxXw1kury7AFW7twb_yoWxAFXE9F
-	y0vFWkGr1xWF1xXa9rZry5Ar98XayUW3Z09FWjgFW5W3yIyw13AF12yws8Wa1xXF4rZFn5
-	Wrs5Zr1xCr12yjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUAVWUZwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
-	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-	JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-	v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
-	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
-	W8JbIYCTnIWIevJa73UjIFyTuYvjxU7TKZDUUUU
+X-Coremail-Antispam: 1Uk129KBjvJXoW7trWkZF45Kw48uF4rtFWkJFb_yoW8Aryxpa
+	y7ArZ8tr4Yy3yxCr1ktas8Xry5Z39xuayxtFWrG3yFvr1DCrWUJF4fA3Wj9rn2yFWUG3Wj
+	vF4Fqa15ua15A3DanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
+	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
+	1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY
+	6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
+	AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x
+	07jnR6wUUUUU=
 
-In dual-bridges scenario, some bugs were found for irq
-controllers drivers, so the patch serie is used to fix them.
+In pch_pic_parse_madt(), a NULL parent pointer will be
+returned from acpi_get_vec_parent() for second pch-pic domain
+related to second bridge while calling eiointc_acpi_init() at
+first time, where the parent of it has not been initialized
+yet, and will be initialized during second time calling
+eiointc_acpi_init(). So, it's reasonable to return zero so
+that failure of acpi_table_parse_madt() will be avoided, or else
+acpi_cascade_irqdomain_init() will return and initialization of
+followed pch_msi domain will be skipped.
 
-Jianmin Lv (5):
-  irqchip/loongson-eiointc: Fix returned value on parsing MADT
-  irqchip/loongson-eiointc: Fix incorrect use of acpi_get_vec_parent
-  irqchip/loongson-pch-pic: Fix pch_pic_acpi_init calling
-  irqchip/loongson-eiointc: Fix registration of syscore_ops
-  irqchip/loongson-pch-pic: Fix registration of syscore_ops
+Although it does not matter when pch_msi_parse_madt() returns
+-EINVAL if no invalid parent is found, it's also reasonable to
+return zero for that.
 
- drivers/irqchip/irq-loongson-eiointc.c | 27 ++++++++++++++++----------
- drivers/irqchip/irq-loongson-pch-pic.c |  6 +++++-
- 2 files changed, 22 insertions(+), 11 deletions(-)
+Change-Id: I4d278534999ec3e5c8db6d40155ba2665d9de86f
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+---
+ drivers/irqchip/irq-loongson-eiointc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index d15fd38c1756..62a632d73991 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -343,7 +343,7 @@ static int __init pch_pic_parse_madt(union acpi_subtable_headers *header,
+ 	if (parent)
+ 		return pch_pic_acpi_init(parent, pchpic_entry);
+ 
+-	return -EINVAL;
++	return 0;
+ }
+ 
+ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+@@ -355,7 +355,7 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+ 	if (parent)
+ 		return pch_msi_acpi_init(parent, pchmsi_entry);
+ 
+-	return -EINVAL;
++	return 0;
+ }
+ 
+ static int __init acpi_cascade_irqdomain_init(void)
 -- 
 2.31.1
 
