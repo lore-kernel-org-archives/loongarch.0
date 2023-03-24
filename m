@@ -1,119 +1,77 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47B39210B
-	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 06:09:06 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.153])
-	by gateway (Coremail) with SMTP id _____8DxE4R6Ph1kQ5wQAA--.25203S3;
-	Fri, 24 Mar 2023 14:08:58 +0800 (CST)
-Received: from loongson-pc.loongson.cn (unknown [10.20.42.153])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axmr12Ph1kY_QKAA--.2874S4;
-	Fri, 24 Mar 2023 14:08:58 +0800 (CST)
-From: Jianmin Lv <lvjianmin@loongson.cn>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH V1 2/5] irqchip/loongson-eiointc: Fix incorrect use of acpi_get_vec_parent
-Date: Fri, 24 Mar 2023 14:08:51 +0800
-Message-Id: <20230324060854.29375-3-lvjianmin@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230324060854.29375-1-lvjianmin@loongson.cn>
-References: <20230324060854.29375-1-lvjianmin@loongson.cn>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B737E
+	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 06:32:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C83CC4339B
+	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 06:32:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1679639534;
+	bh=Y5MMaZi0o7RlD8qMkDwmPie+nRo/SORxygZ7ZKxmpI0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=D5/+LaiVp4HRPVvkZx3dj6XKOg+VwzAILuk5+BU7bsSdYMm9Jq39Zp2+RtvaUFtKr
+	 blE+vRSIzXetAUa48W5nY8OzFY4qCxMV9AeuJEbWXd3ilfbv54rbzVBFf0GxHwopdu
+	 8fzU4EaUVGfUGoZ17NVqaEJ6+ItaFov9N6ej4o40clzdbtcQZ5fgaBwjgPzI9FUsni
+	 Splvvi/3txwI/uTWxAoUv+qz0ewWRrgR2ysjMV8V3KF8Cj3dCusJESJYCmkbkvx4Pa
+	 q87HgI0D9CC/+UlRZbiONLWwm5j3NHMWsfOaBhbwMet7gV2xCxa4TZdAM/mMPUWcZi
+	 lDIljoRcoNHeg==
+Received: by mail-ed1-f41.google.com with SMTP id b20so3919669edd.1
+        for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 23:32:14 -0700 (PDT)
+X-Gm-Message-State: AAQBX9dWZwzE2F8LoxjGVXoPH+avrXnjmyPOZm7ucaUJhqy62iXaEAot
+	n8qcXxOLdbo8P9hCbcgGc4LERL2Qncy+F8QQw3E=
+X-Google-Smtp-Source: AKy350ZkigswArINqxGmNoRt5tjC+y678vUz2AKeNWNeVyMaJ06ynxPwoTh63yhb8jD6UtkRhQsZYt7hC6zS4w+WzkA=
+X-Received: by 2002:a50:cdda:0:b0:4fb:dc5e:6501 with SMTP id
+ h26-20020a50cdda000000b004fbdc5e6501mr888360edj.1.1679639532646; Thu, 23 Mar
+ 2023 23:32:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axmr12Ph1kY_QKAA--.2874S4
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZw47GF48Zr4DCr48Cr1rWFg_yoW5WrWkpF
-	W7AFWDtr43X3y5uryftan8X34ftr1rZanFqa1fCaySyFsxuryUKF1rCF1UCr90krW8Xa1a
-	9a1YvF1UZF13AwUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JFv_Jw1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
-	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
-	1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY
-	6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
-	AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
-	vjxUFc_-DUUUU
+References: <20230324060854.29375-1-lvjianmin@loongson.cn>
+In-Reply-To: <20230324060854.29375-1-lvjianmin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 24 Mar 2023 14:32:01 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7NpUwaf5OCZL=2_GAN_RYGOkPeVAcDiVR5b1M2jdzkDA@mail.gmail.com>
+Message-ID: <CAAhV-H7NpUwaf5OCZL=2_GAN_RYGOkPeVAcDiVR5b1M2jdzkDA@mail.gmail.com>
+Subject: Re: [PATCH V1 0/5] Fix some issues of irq controllers for
+ dual-bridges scenario
+To: Jianmin Lv <lvjianmin@loongson.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In eiointc_acpi_init(), a *eiointc* node is passed into
-acpi_get_vec_parent() instead of a required *NUMA* node (on some chip
-like 3C5000L, a *NUMA* node means a *eiointc* node, but on some chip
-like 3C5000, a *NUMA* node contains 4 *eiointc* nodes), and node in
-struct acpi_vector_group is essentially a *NUMA* node, which will
-lead to no parent matched for passed *eiointc* node. so the patch
-adjusts code to use *NUMA* node for parameter node of
-acpi_set_vec_parent/acpi_get_vec_parent.
+Hi, Jianmin,
 
-Change-Id: Iddd8423f9694cadc1ce28ee290c2e98ca17dfccc
-Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
----
- drivers/irqchip/irq-loongson-eiointc.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+1, Please remove the Change-Id: lines in every patch;
+2, Please Cc: stable@vger.kernel.org to make them be backported to
+stable branch;
+3, Maybe changing the order of Patch3/Patch4 is better.
 
-diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index 62a632d73991..b165c27a3609 100644
---- a/drivers/irqchip/irq-loongson-eiointc.c
-+++ b/drivers/irqchip/irq-loongson-eiointc.c
-@@ -280,9 +280,6 @@ static void acpi_set_vec_parent(int node, struct irq_domain *parent, struct acpi
- {
- 	int i;
- 
--	if (cpu_has_flatmode)
--		node = cpu_to_node(node * CORES_PER_EIO_NODE);
--
- 	for (i = 0; i < MAX_IO_PICS; i++) {
- 		if (node == vec_group[i].node) {
- 			vec_group[i].parent = parent;
-@@ -349,8 +346,13 @@ static int __init pch_pic_parse_madt(union acpi_subtable_headers *header,
- static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
- 					const unsigned long end)
- {
-+	struct irq_domain *parent;
- 	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
--	struct irq_domain *parent = acpi_get_vec_parent(eiointc_priv[nr_pics - 1]->node, msi_group);
-+	int node = eiointc_priv[nr_pics - 1]->node;
-+
-+	if (cpu_has_flatmode)
-+		node = cpu_to_node(node * CORES_PER_EIO_NODE);
-+	parent = acpi_get_vec_parent(node, msi_group);
- 
- 	if (parent)
- 		return pch_msi_acpi_init(parent, pchmsi_entry);
-@@ -379,6 +381,7 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
- 	int i, ret, parent_irq;
- 	unsigned long node_map;
- 	struct eiointc_priv *priv;
-+	int node = acpi_eiointc->node;
- 
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -421,8 +424,10 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
- 				  "irqchip/loongarch/intc:starting",
- 				  eiointc_router_init, NULL);
- 
--	acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, pch_group);
--	acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, msi_group);
-+	if (cpu_has_flatmode)
-+		node = cpu_to_node(node * CORES_PER_EIO_NODE);
-+	acpi_set_vec_parent(node, priv->eiointc_domain, pch_group);
-+	acpi_set_vec_parent(node, priv->eiointc_domain, msi_group);
- 	ret = acpi_cascade_irqdomain_init();
- 
- 	return ret;
--- 
-2.31.1
+Huacai
 
+On Fri, Mar 24, 2023 at 2:09=E2=80=AFPM Jianmin Lv <lvjianmin@loongson.cn> =
+wrote:
+>
+> In dual-bridges scenario, some bugs were found for irq
+> controllers drivers, so the patch serie is used to fix them.
+>
+> Jianmin Lv (5):
+>   irqchip/loongson-eiointc: Fix returned value on parsing MADT
+>   irqchip/loongson-eiointc: Fix incorrect use of acpi_get_vec_parent
+>   irqchip/loongson-pch-pic: Fix pch_pic_acpi_init calling
+>   irqchip/loongson-eiointc: Fix registration of syscore_ops
+>   irqchip/loongson-pch-pic: Fix registration of syscore_ops
+>
+>  drivers/irqchip/irq-loongson-eiointc.c | 27 ++++++++++++++++----------
+>  drivers/irqchip/irq-loongson-pch-pic.c |  6 +++++-
+>  2 files changed, 22 insertions(+), 11 deletions(-)
+>
+> --
+> 2.31.1
+>
+>
