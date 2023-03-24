@@ -1,77 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B737E
-	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 06:32:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C83CC4339B
-	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 06:32:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1679639534;
-	bh=Y5MMaZi0o7RlD8qMkDwmPie+nRo/SORxygZ7ZKxmpI0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=D5/+LaiVp4HRPVvkZx3dj6XKOg+VwzAILuk5+BU7bsSdYMm9Jq39Zp2+RtvaUFtKr
-	 blE+vRSIzXetAUa48W5nY8OzFY4qCxMV9AeuJEbWXd3ilfbv54rbzVBFf0GxHwopdu
-	 8fzU4EaUVGfUGoZ17NVqaEJ6+ItaFov9N6ej4o40clzdbtcQZ5fgaBwjgPzI9FUsni
-	 Splvvi/3txwI/uTWxAoUv+qz0ewWRrgR2ysjMV8V3KF8Cj3dCusJESJYCmkbkvx4Pa
-	 q87HgI0D9CC/+UlRZbiONLWwm5j3NHMWsfOaBhbwMet7gV2xCxa4TZdAM/mMPUWcZi
-	 lDIljoRcoNHeg==
-Received: by mail-ed1-f41.google.com with SMTP id b20so3919669edd.1
-        for <loongarch@lists.linux.dev>; Thu, 23 Mar 2023 23:32:14 -0700 (PDT)
-X-Gm-Message-State: AAQBX9dWZwzE2F8LoxjGVXoPH+avrXnjmyPOZm7ucaUJhqy62iXaEAot
-	n8qcXxOLdbo8P9hCbcgGc4LERL2Qncy+F8QQw3E=
-X-Google-Smtp-Source: AKy350ZkigswArINqxGmNoRt5tjC+y678vUz2AKeNWNeVyMaJ06ynxPwoTh63yhb8jD6UtkRhQsZYt7hC6zS4w+WzkA=
-X-Received: by 2002:a50:cdda:0:b0:4fb:dc5e:6501 with SMTP id
- h26-20020a50cdda000000b004fbdc5e6501mr888360edj.1.1679639532646; Thu, 23 Mar
- 2023 23:32:12 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6625A7E
+	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 07:08:17 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.153])
+	by gateway (Coremail) with SMTP id _____8AxJNhfTB1k4p8QAA--.13691S3;
+	Fri, 24 Mar 2023 15:08:15 +0800 (CST)
+Received: from [10.20.42.153] (unknown [10.20.42.153])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxhbxeTB1kC_4KAA--.2813S3;
+	Fri, 24 Mar 2023 15:08:15 +0800 (CST)
+Subject: Re: [PATCH V1 0/5] Fix some issues of irq controllers for
+ dual-bridges scenario
+To: loongson-kernel@lists.loongnix.cn
+Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+References: <20230324060854.29375-1-lvjianmin@loongson.cn>
+ <CAAhV-H7NpUwaf5OCZL=2_GAN_RYGOkPeVAcDiVR5b1M2jdzkDA@mail.gmail.com>
+From: Jianmin Lv <lvjianmin@loongson.cn>
+Message-ID: <80e79c80-b06c-2d5a-b90b-305b439ac91e@loongson.cn>
+Date: Fri, 24 Mar 2023 15:08:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230324060854.29375-1-lvjianmin@loongson.cn>
-In-Reply-To: <20230324060854.29375-1-lvjianmin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 24 Mar 2023 14:32:01 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7NpUwaf5OCZL=2_GAN_RYGOkPeVAcDiVR5b1M2jdzkDA@mail.gmail.com>
-Message-ID: <CAAhV-H7NpUwaf5OCZL=2_GAN_RYGOkPeVAcDiVR5b1M2jdzkDA@mail.gmail.com>
-Subject: Re: [PATCH V1 0/5] Fix some issues of irq controllers for
- dual-bridges scenario
-To: Jianmin Lv <lvjianmin@loongson.cn>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H7NpUwaf5OCZL=2_GAN_RYGOkPeVAcDiVR5b1M2jdzkDA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxhbxeTB1kC_4KAA--.2813S3
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7tFWfKrW7Gr17Ary8JFy8Grg_yoW8GrW7pa
+	13Ga90kr48GryxCas3Aryjg3WYyw1fJrZrt3yft395XryDWw1DZF1UZ3ZYgrnrAr9xGr1j
+	qFW0gr18CF4UAFUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
+	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
+	JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
+	1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
+	YxBIdaVFxhVjvjDU0xZFpf9x07jFa0PUUUUU=
 
-Hi, Jianmin,
+Hi, Huacai
 
-1, Please remove the Change-Id: lines in every patch;
-2, Please Cc: stable@vger.kernel.org to make them be backported to
-stable branch;
-3, Maybe changing the order of Patch3/Patch4 is better.
+Thanks very much for your reminder and suggestion, I'll change them in 
+next version.
 
-Huacai
+On 2023/3/24 下午2:32, Huacai Chen wrote:
+> Hi, Jianmin,
+> 
+> 1, Please remove the Change-Id: lines in every patch;
+> 2, Please Cc: stable@vger.kernel.org to make them be backported to
+> stable branch;
+> 3, Maybe changing the order of Patch3/Patch4 is better.
+> 
+> Huacai
+> 
+> On Fri, Mar 24, 2023 at 2:09 PM Jianmin Lv <lvjianmin@loongson.cn> wrote:
+>>
+>> In dual-bridges scenario, some bugs were found for irq
+>> controllers drivers, so the patch serie is used to fix them.
+>>
+>> Jianmin Lv (5):
+>>    irqchip/loongson-eiointc: Fix returned value on parsing MADT
+>>    irqchip/loongson-eiointc: Fix incorrect use of acpi_get_vec_parent
+>>    irqchip/loongson-pch-pic: Fix pch_pic_acpi_init calling
+>>    irqchip/loongson-eiointc: Fix registration of syscore_ops
+>>    irqchip/loongson-pch-pic: Fix registration of syscore_ops
+>>
+>>   drivers/irqchip/irq-loongson-eiointc.c | 27 ++++++++++++++++----------
+>>   drivers/irqchip/irq-loongson-pch-pic.c |  6 +++++-
+>>   2 files changed, 22 insertions(+), 11 deletions(-)
+>>
+>> --
+>> 2.31.1
+>>
+>>
+> _______________________________________________
+> Loongson-kernel mailing list -- loongson-kernel@lists.loongnix.cn
+> To unsubscribe send an email to loongson-kernel-leave@lists.loongnix.cn
+> 
 
-On Fri, Mar 24, 2023 at 2:09=E2=80=AFPM Jianmin Lv <lvjianmin@loongson.cn> =
-wrote:
->
-> In dual-bridges scenario, some bugs were found for irq
-> controllers drivers, so the patch serie is used to fix them.
->
-> Jianmin Lv (5):
->   irqchip/loongson-eiointc: Fix returned value on parsing MADT
->   irqchip/loongson-eiointc: Fix incorrect use of acpi_get_vec_parent
->   irqchip/loongson-pch-pic: Fix pch_pic_acpi_init calling
->   irqchip/loongson-eiointc: Fix registration of syscore_ops
->   irqchip/loongson-pch-pic: Fix registration of syscore_ops
->
->  drivers/irqchip/irq-loongson-eiointc.c | 27 ++++++++++++++++----------
->  drivers/irqchip/irq-loongson-pch-pic.c |  6 +++++-
->  2 files changed, 22 insertions(+), 11 deletions(-)
->
-> --
-> 2.31.1
->
->
