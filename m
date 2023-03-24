@@ -1,11 +1,11 @@
 Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B855661
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192485665
 	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 12:45:32 +0000 (UTC)
 Received: from ubuntu.localdomain (unknown [117.133.56.22])
-	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id E2B81580A5C;
-	Fri, 24 Mar 2023 20:37:41 +0800 (CST)
+	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 56892580A58;
+	Fri, 24 Mar 2023 20:37:40 +0800 (CST)
 From: Donglin Peng <pengdonglin@sangfor.com.cn>
 To: mhiramat@kernel.org,
 	rostedt@goodmis.org,
@@ -34,9 +34,9 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: [PATCH v7 4/8] arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-Date: Fri, 24 Mar 2023 05:37:27 -0700
-Message-Id: <20230324123731.3801920-5-pengdonglin@sangfor.com.cn>
+Subject: [PATCH v7 3/8] ARM: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Date: Fri, 24 Mar 2023 05:37:26 -0700
+Message-Id: <20230324123731.3801920-4-pengdonglin@sangfor.com.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230324123731.3801920-1-pengdonglin@sangfor.com.cn>
 References: <20230324123731.3801920-1-pengdonglin@sangfor.com.cn>
@@ -48,59 +48,58 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHkMfVk5JH00aHUIYTkxMHlUTARMWGhIXJBQOD1
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTUJDVk4ZTU8fTBgYGR8YGVUTARMWGhIXJBQOD1
 	lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS09ISFVKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NCI6Aww6LT0NCw89MElCERUI
-	SDJPCUJVSlVKTUxCTU1KT01IT0pCVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-	WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFOSkJMNwY+
-X-HM-Tid: 0a87139ff5ad2eb7kusne2b81580a5c
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Oj46DAw5Sj0IMQ88CkgtEQ8U
+	DD8KCxhVSlVKTUxCTU1KT01KQ09JVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+	WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFPQ05LNwY+
+X-HM-Tid: 0a87139fefa02eb7kusn56892580a58
 X-HM-MType: 1
 
-The commit d4815c5d1bbd ("function_graph: Support recording and
-printing the return value of function") laid the groundwork for the
-for the funcgraph-retval, and this modification makes it available
-on the ARM64 platform.
+The commit d4815c5d1bbd ("function_graph: Support recording and printing
+the return value of function") laid the groundwork for the for the
+funcgraph-retval, and this modification makes it available on the
+ARM platform.
 
-We introduce a new structure called fgraph_ret_regs for the ARM64
-platform to hold return registers and the frame pointer. We then
-fill its content in the return_to_handler and pass its address to
-the function ftrace_return_to_handler to record the return value.
+We introduce a new structure called fgraph_ret_regs for the ARM platform
+to hold return registers and the frame pointer. We then fill its content
+in the return_to_handler and pass its address to the function
+ftrace_return_to_handler to record the return value.
 
 Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
 ---
- arch/arm64/Kconfig               |  1 +
- arch/arm64/include/asm/ftrace.h  | 23 +++++++++++++++++++++++
- arch/arm64/kernel/entry-ftrace.S |  9 +++++----
- 3 files changed, 29 insertions(+), 4 deletions(-)
+ arch/arm/Kconfig               |  1 +
+ arch/arm/include/asm/ftrace.h  | 22 ++++++++++++++++++++++
+ arch/arm/kernel/entry-ftrace.S |  6 +++++-
+ 3 files changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 1023e896d46b..48856d230800 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -195,6 +195,7 @@ config ARM64
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_TRACER
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index e24a9820e12f..73061379855a 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -98,6 +98,7 @@ config ARM
+ 	select HAVE_FAST_GUP if ARM_LPAE
+ 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
  	select HAVE_FUNCTION_ERROR_INJECTION
 +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
  	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
  	select HAVE_GCC_PLUGINS
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS
-diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-index 1c2672bbbf37..f68dcc41be3b 100644
---- a/arch/arm64/include/asm/ftrace.h
-+++ b/arch/arm64/include/asm/ftrace.h
-@@ -170,4 +170,27 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
- }
+diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
+index 7e9251ca29fe..e3bed4949558 100644
+--- a/arch/arm/include/asm/ftrace.h
++++ b/arch/arm/include/asm/ftrace.h
+@@ -77,4 +77,26 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+ 
  #endif /* ifndef __ASSEMBLY__ */
  
++
 +#ifndef __ASSEMBLY__
 +
 +#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
 +struct fgraph_ret_regs {
-+	/* x0 - x7 */
-+	u64 regs[8];
-+
-+	u64 fp;
++	unsigned long regs[4];
++	unsigned long fp;
 +};
 +
 +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
@@ -116,39 +115,28 @@ index 1c2672bbbf37..f68dcc41be3b 100644
 +
 +#endif
 +
- #endif /* __ASM_FTRACE_H */
-diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
-index 350ed81324ac..8ac6f952e68f 100644
---- a/arch/arm64/kernel/entry-ftrace.S
-+++ b/arch/arm64/kernel/entry-ftrace.S
-@@ -270,14 +270,15 @@ SYM_FUNC_END(ftrace_stub_graph)
-  */
- SYM_CODE_START(return_to_handler)
- 	/* save return value regs */
--	sub sp, sp, #64
-+	sub sp, sp, #72
- 	stp x0, x1, [sp]
- 	stp x2, x3, [sp, #16]
- 	stp x4, x5, [sp, #32]
- 	stp x6, x7, [sp, #48]
-+	str x29,    [sp, #64]		//     parent's fp
+ #endif /* _ASM_ARM_FTRACE */
+diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
+index 3e7bcaca5e07..5f1e74555b25 100644
+--- a/arch/arm/kernel/entry-ftrace.S
++++ b/arch/arm/kernel/entry-ftrace.S
+@@ -257,11 +257,15 @@ ENDPROC(ftrace_graph_regs_caller)
  
--	mov	x0, x29			//     parent's fp
--	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
-+	mov	x0, sp
-+	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(regs);
- 	mov	x30, x0			// restore the original return address
- 
- 	/* restore return value regs */
-@@ -285,7 +286,7 @@ SYM_CODE_START(return_to_handler)
- 	ldp x2, x3, [sp, #16]
- 	ldp x4, x5, [sp, #32]
- 	ldp x6, x7, [sp, #48]
--	add sp, sp, #64
-+	add sp, sp, #72
- 
- 	ret
- SYM_CODE_END(return_to_handler)
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ ENTRY(return_to_handler)
++	sub	sp, sp, #4
+ 	stmdb	sp!, {r0-r3}
+-	add	r0, sp, #16		@ sp at exit of instrumented routine
++	add	r0, sp, #20		@ sp at exit of instrumented routine
++	str	r0, [sp, #16]
++	mov	r0, sp
+ 	bl	ftrace_return_to_handler
+ 	mov	lr, r0			@ r0 has real ret addr
+ 	ldmia	sp!, {r0-r3}
++	add	sp, sp, #4		@ skip fp
+ 	ret	lr
+ ENDPROC(return_to_handler)
+ #endif
 -- 
 2.25.1
 
