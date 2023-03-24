@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D48D210D
-	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 06:09:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DA992116
+	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 06:09:07 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.153])
-	by gateway (Coremail) with SMTP id _____8BxEJV7Ph1kSpwQAA--.25349S3;
-	Fri, 24 Mar 2023 14:08:59 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxYeV8Ph1kWJwQAA--.25427S3;
+	Fri, 24 Mar 2023 14:09:00 +0800 (CST)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.153])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axmr12Ph1kY_QKAA--.2874S5;
-	Fri, 24 Mar 2023 14:08:58 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axmr12Ph1kY_QKAA--.2874S7;
+	Fri, 24 Mar 2023 14:08:59 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Marc Zyngier <maz@kernel.org>
@@ -16,9 +16,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH V1 3/5] irqchip/loongson-pch-pic: Fix pch_pic_acpi_init calling
-Date: Fri, 24 Mar 2023 14:08:52 +0800
-Message-Id: <20230324060854.29375-4-lvjianmin@loongson.cn>
+Subject: [PATCH V1 5/5] irqchip/loongson-pch-pic: Fix registration of syscore_ops
+Date: Fri, 24 Mar 2023 14:08:54 +0800
+Message-Id: <20230324060854.29375-6-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20230324060854.29375-1-lvjianmin@loongson.cn>
 References: <20230324060854.29375-1-lvjianmin@loongson.cn>
@@ -29,78 +29,52 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axmr12Ph1kY_QKAA--.2874S5
+X-CM-TRANSID:AQAAf8Axmr12Ph1kY_QKAA--.2874S7
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7tw17uw1xJw4DGF1UCFy7Awb_yoW8urWDpF
-	Wag39Iyr48JryxCFZ7C3y5XryfAwnxu3y2gF4rC3yFvr4qkas5Gr4xta1UCrWkCrsrJF4a
-	vr4FqF1j93WUAaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
-	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
-	1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY
-	6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
-	AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
-	vjxU4AhLUUUUU
+X-Coremail-Antispam: 1Uk129KBjvdXoW7Xr43Xr4UCFyUAryDuFy8Zrb_yoWkCrcEgr
+	yIqFnrAr1xZr1Uu3y3Zr15XF1ayF4UW3ZY9FZaqFy3J3yFq34fJrnFyr9xCw47Ga48Ary3
+	C395Wwn7CryxCjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	y7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0Ex4A2
+	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s02
+	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
+	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvE
+	c7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
+	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
+	07j6sjUUUUUU=
 
-For dual-bridges scenario, pch_pic_acpi_init() will be called in
-following path:
+When support suspend/resume for loongson-pch-pic, the syscore_ops is
+registered twice in dual-bridges machines where there are two pch-pic IRQ
+domains. Repeated registration of an same syscore_ops broke syscore_ops_list,
+so the patch will corret it.
 
-cpuintc_acpi_init
-  acpi_cascade_irqdomain_init(in cpuintc driver)
-    acpi_table_parse_madt
-      eiointc_parse_madt
-        eiointc_acpi_init /* this will be called two times corresponding
-                             to parsing two eiointc entrys in MADT under
-                             dual-bridges scenario*/
-          acpi_cascade_irqdomain_init(in pch_pic driver)
-            acpi_table_parse_madt
-              pch_pic_parse_madt
-                pch_pic_acpi_init /* this will be called depend on valid parent IRQ
-                                     domain handle for one or two times corresponding
-                                     to parsing two pchpic entrys in MADT druring
-                                     calling eiointc_acpi_init() under dual-bridges
-                                     scenario*/
-
-During the first eiointc_acpi_init() calling, the pch_pic_acpi_init()
-will be called just one time since only one valid parent IRQ domain
-handle will be found for current eiointc IRQ domain.
-
-During the second eiointc_acpi_init() calling, the pch_pic_acpi_init()
-will be called two times since two valid parent IRQ domain handles
-will be found. So in pch_pic_acpi_init(), we must have a reasonable
-way to prevent from creating second same pch_pic IRQ domain.
-
-The patch matches gsi base information in created pch_pic IRQ domains
-to check if the target domain has been created to avoid the bug
-mentioned above.
-
-Change-Id: Iacba57be83dcbfe7f61b94632d472bccfaaddc22
+Change-Id: Ib08e102931f1b90082d8eaa752287f60147bf777
+Fixes: 1ed008a2c331 ("irqchip/loongson-pch-pic: Add suspend/resume support")
 Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-pch-pic.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/irqchip/irq-loongson-pch-pic.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
-index 437f1af693d0..e3c698ca11e9 100644
+index e3c698ca11e9..e5fe4d50be05 100644
 --- a/drivers/irqchip/irq-loongson-pch-pic.c
 +++ b/drivers/irqchip/irq-loongson-pch-pic.c
-@@ -403,6 +403,9 @@ int __init pch_pic_acpi_init(struct irq_domain *parent,
- 	int ret, vec_base;
- 	struct fwnode_handle *domain_handle;
+@@ -311,7 +311,8 @@ static int pch_pic_init(phys_addr_t addr, unsigned long size, int vec_base,
+ 	pch_pic_handle[nr_pics] = domain_handle;
+ 	pch_pic_priv[nr_pics++] = priv;
  
-+	if (find_pch_pic(acpi_pchpic->gsi_base) >= 0)
-+		return 0;
-+
- 	vec_base = acpi_pchpic->gsi_base - GSI_MIN_PCH_IRQ;
+-	register_syscore_ops(&pch_pic_syscore_ops);
++	if (nr_pics == 1)
++		register_syscore_ops(&pch_pic_syscore_ops);
  
- 	domain_handle = irq_domain_alloc_fwnode(&acpi_pchpic->address);
+ 	return 0;
+ 
 -- 
 2.31.1
 
