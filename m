@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900F96FDF
-	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 15:34:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40422C4339E;
-	Fri, 24 Mar 2023 15:34:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD577471
+	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 15:36:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C145C433D2;
+	Fri, 24 Mar 2023 15:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1679672051;
-	bh=c1GJ178dbtFcDJeY4wYI58g4hBLah/8oQTpGD/PF/+U=;
+	s=k20201202; t=1679672210;
+	bh=JCroMqQZjd+JN22GhzD0TxeeMsNCRchQHQcBnwVYkSM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kJu3KeRtRCZTSwAtXO9Sqi2IQG1yh03Evu5bxRfuEGyOUzqdPWhed7oKHkWd3ZOuZ
-	 fztqPULouwQCgH5Mn6D1xoKC+Tko80Isj4VcGxRGk2P74o/lUYBDINb9AXbQptmerd
-	 kWFmlyH/iqWLgdFe1Cvoy9anAZQ1qTU4xFyA/2YZP4kikW0zjDOfz48hAKOPx7Atkv
-	 dwnCCNsUq2o2jLvH7FS/5LZ6ipyZWm4ilNfO3Rwfg03xqHLQGz0b71fNBXtKyHLl/P
-	 xl3zcKn7PtJVB31mx8kWrcSRPacs7J/NUwBciku6cxE8675IRaoaXf9Peh8sPcyArF
-	 GTowZ3AwMflZQ==
+	b=gY3e/mJ/BAEHGarQPwK4hywyE8CuCrzDNeEE540i+DpqezkKjOVjmMyRZexUJY6Lb
+	 vWxMcSccIzeO51DiWhBAtsYucy4FefYh+y3B34M/Nqh171V5v3N2+PbGAMweEKPu7V
+	 JFg8AJ/kcexTespW/ib1WlZh6d5tV4jyMv8jRPyqVJu+5ZOSDzkmQt+TPifXn0hcCM
+	 J4keEAw0fdrMyhFL79Zz+YlCDwtbu9vuvSzfqboDoYGxDRXO7OrS81KlOgfNYT7gp7
+	 pVEeq4O3wNtqaRUSpajXW4dr/NpYHbIOCFLTigNejBGX4GFhlZ0RzZSWHUS5iSCEN9
+	 hGWOileIrm66Q==
 Received: from [104.132.96.108] (helo=wait-a-minute.misterjones.org)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1pfjQe-002rBP-Qd;
-	Fri, 24 Mar 2023 15:34:09 +0000
-Date: Fri, 24 Mar 2023 15:34:05 +0000
-Message-ID: <87ileqgo42.wl-maz@kernel.org>
+	id 1pfjTD-002rFu-B2;
+	Fri, 24 Mar 2023 15:36:47 +0000
+Date: Fri, 24 Mar 2023 15:36:43 +0000
+Message-ID: <87h6uagnzo.wl-maz@kernel.org>
 From: Marc Zyngier <maz@kernel.org>
 To: Jianmin Lv <lvjianmin@loongson.cn>
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -32,10 +32,10 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH V1 2/5] irqchip/loongson-eiointc: Fix incorrect use of acpi_get_vec_parent
-In-Reply-To: <20230324060854.29375-3-lvjianmin@loongson.cn>
+Subject: Re: [PATCH V1 1/5] irqchip/loongson-eiointc: Fix returned value on parsing MADT
+In-Reply-To: <20230324060854.29375-2-lvjianmin@loongson.cn>
 References: <20230324060854.29375-1-lvjianmin@loongson.cn>
-	<20230324060854.29375-3-lvjianmin@loongson.cn>
+	<20230324060854.29375-2-lvjianmin@loongson.cn>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -51,89 +51,42 @@ X-SA-Exim-Rcpt-To: lvjianmin@loongson.cn, tglx@linutronix.de, linux-kernel@vger.
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Fri, 24 Mar 2023 06:08:51 +0000,
+On Fri, 24 Mar 2023 06:08:50 +0000,
 Jianmin Lv <lvjianmin@loongson.cn> wrote:
 > 
-> In eiointc_acpi_init(), a *eiointc* node is passed into
-> acpi_get_vec_parent() instead of a required *NUMA* node (on some chip
-> like 3C5000L, a *NUMA* node means a *eiointc* node, but on some chip
-> like 3C5000, a *NUMA* node contains 4 *eiointc* nodes), and node in
-> struct acpi_vector_group is essentially a *NUMA* node, which will
-> lead to no parent matched for passed *eiointc* node. so the patch
-> adjusts code to use *NUMA* node for parameter node of
-> acpi_set_vec_parent/acpi_get_vec_parent.
+> In pch_pic_parse_madt(), a NULL parent pointer will be
+> returned from acpi_get_vec_parent() for second pch-pic domain
+> related to second bridge while calling eiointc_acpi_init() at
+> first time, where the parent of it has not been initialized
+> yet, and will be initialized during second time calling
+> eiointc_acpi_init(). So, it's reasonable to return zero so
+> that failure of acpi_table_parse_madt() will be avoided, or else
+> acpi_cascade_irqdomain_init() will return and initialization of
+> followed pch_msi domain will be skipped.
 > 
-> Change-Id: Iddd8423f9694cadc1ce28ee290c2e98ca17dfccc
+> Although it does not matter when pch_msi_parse_madt() returns
+> -EINVAL if no invalid parent is found, it's also reasonable to
+> return zero for that.
+> 
+> Change-Id: I4d278534999ec3e5c8db6d40155ba2665d9de86f
 > Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 > ---
->  drivers/irqchip/irq-loongson-eiointc.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
+>  drivers/irqchip/irq-loongson-eiointc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-> index 62a632d73991..b165c27a3609 100644
+> index d15fd38c1756..62a632d73991 100644
 > --- a/drivers/irqchip/irq-loongson-eiointc.c
 > +++ b/drivers/irqchip/irq-loongson-eiointc.c
-> @@ -280,9 +280,6 @@ static void acpi_set_vec_parent(int node, struct irq_domain *parent, struct acpi
->  {
->  	int i;
->  
-> -	if (cpu_has_flatmode)
-> -		node = cpu_to_node(node * CORES_PER_EIO_NODE);
-> -
->  	for (i = 0; i < MAX_IO_PICS; i++) {
->  		if (node == vec_group[i].node) {
->  			vec_group[i].parent = parent;
-> @@ -349,8 +346,13 @@ static int __init pch_pic_parse_madt(union acpi_subtable_headers *header,
->  static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
->  					const unsigned long end)
->  {
-> +	struct irq_domain *parent;
->  	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
-> -	struct irq_domain *parent = acpi_get_vec_parent(eiointc_priv[nr_pics - 1]->node, msi_group);
-> +	int node = eiointc_priv[nr_pics - 1]->node;
-> +
-> +	if (cpu_has_flatmode)
-> +		node = cpu_to_node(node * CORES_PER_EIO_NODE);
-
-This is a bit unreadable. I'd rather see:
-
-	int node;
-
-	if (cpu_has_flatmode)
-		node = ....;
-	else
-		node = ....;
-
-which makes it easy to detect the use of an uninitialised 'node'
-rather than using the wrong default variable.
-
-> +	parent = acpi_get_vec_parent(node, msi_group);
->  
+> @@ -343,7 +343,7 @@ static int __init pch_pic_parse_madt(union acpi_subtable_headers *header,
 >  	if (parent)
->  		return pch_msi_acpi_init(parent, pchmsi_entry);
-> @@ -379,6 +381,7 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
->  	int i, ret, parent_irq;
->  	unsigned long node_map;
->  	struct eiointc_priv *priv;
-> +	int node = acpi_eiointc->node;
+>  		return pch_pic_acpi_init(parent, pchpic_entry);
 >  
->  	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
->  	if (!priv)
-> @@ -421,8 +424,10 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
->  				  "irqchip/loongarch/intc:starting",
->  				  eiointc_router_init, NULL);
->  
-> -	acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, pch_group);
-> -	acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, msi_group);
-> +	if (cpu_has_flatmode)
-> +		node = cpu_to_node(node * CORES_PER_EIO_NODE);
-> +	acpi_set_vec_parent(node, priv->eiointc_domain, pch_group);
-> +	acpi_set_vec_parent(node, priv->eiointc_domain, msi_group);
->  	ret = acpi_cascade_irqdomain_init();
->  
->  	return ret;
+> -	return -EINVAL;
+> +	return 0;
 
-Same thing here.
+Why can't you detect this particular case instead of blindly
+suppressing the error?
 
 	M.
 
