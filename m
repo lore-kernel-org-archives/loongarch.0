@@ -1,93 +1,174 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6625A7E
-	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 07:08:17 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.153])
-	by gateway (Coremail) with SMTP id _____8AxJNhfTB1k4p8QAA--.13691S3;
-	Fri, 24 Mar 2023 15:08:15 +0800 (CST)
-Received: from [10.20.42.153] (unknown [10.20.42.153])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxhbxeTB1kC_4KAA--.2813S3;
-	Fri, 24 Mar 2023 15:08:15 +0800 (CST)
-Subject: Re: [PATCH V1 0/5] Fix some issues of irq controllers for
- dual-bridges scenario
-To: loongson-kernel@lists.loongnix.cn
-Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
-References: <20230324060854.29375-1-lvjianmin@loongson.cn>
- <CAAhV-H7NpUwaf5OCZL=2_GAN_RYGOkPeVAcDiVR5b1M2jdzkDA@mail.gmail.com>
-From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <80e79c80-b06c-2d5a-b90b-305b439ac91e@loongson.cn>
-Date: Fri, 24 Mar 2023 15:08:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019B953B9
+	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 12:38:04 +0000 (UTC)
+Received: from ubuntu.localdomain (unknown [117.133.56.22])
+	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 099C358090C;
+	Fri, 24 Mar 2023 20:37:45 +0800 (CST)
+From: Donglin Peng <pengdonglin@sangfor.com.cn>
+To: mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	linux@armlinux.org.uk,
+	mark.rutland@arm.com,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	tglx@linutronix.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	chenhuacai@kernel.org,
+	zhangqing@loongson.cn,
+	kernel@xen0n.name,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	xiehuan09@gmail.com,
+	dinghui@sangfor.com.cn,
+	huangcun@sangfor.com.cn,
+	dolinux.peng@gmail.com
+Cc: linux-trace-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Donglin Peng <pengdonglin@sangfor.com.cn>
+Subject: [PATCH v7 6/8] x86/ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Date: Fri, 24 Mar 2023 05:37:29 -0700
+Message-Id: <20230324123731.3801920-7-pengdonglin@sangfor.com.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230324123731.3801920-1-pengdonglin@sangfor.com.cn>
+References: <20230324123731.3801920-1-pengdonglin@sangfor.com.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7NpUwaf5OCZL=2_GAN_RYGOkPeVAcDiVR5b1M2jdzkDA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxhbxeTB1kC_4KAA--.2813S3
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7tFWfKrW7Gr17Ary8JFy8Grg_yoW8GrW7pa
-	13Ga90kr48GryxCas3Aryjg3WYyw1fJrZrt3yft395XryDWw1DZF1UZ3ZYgrnrAr9xGr1j
-	qFW0gr18CF4UAFUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
-	JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
-	1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
-	YxBIdaVFxhVjvjDU0xZFpf9x07jFa0PUUUUU=
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDH08ZVh9JGkpDS09CSR9MTlUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS09ISFVKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Njo6CDo5ET0THw8iCkgNEREt
+	NTIaCxpVSlVKTUxCTU1KT01NTktJVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+	WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFOTUlMNwY+
+X-HM-Tid: 0a8713a001d52eb7kusn099c358090c
+X-HM-MType: 1
 
-Hi, Huacai
+The commit d4815c5d1bbd ("function_graph: Support recording and
+printing the return value of function") laid the groundwork for the
+for the funcgraph-retval, and this modification makes it available
+on the x86 platform.
 
-Thanks very much for your reminder and suggestion, I'll change them in 
-next version.
+We introduce a new structure called fgraph_ret_regs for the x86
+platform to hold return registers and the frame pointer. We then
+fill its content in the return_to_handler and pass its address
+to the function ftrace_return_to_handler to record the return
+value.
 
-On 2023/3/24 下午2:32, Huacai Chen wrote:
-> Hi, Jianmin,
-> 
-> 1, Please remove the Change-Id: lines in every patch;
-> 2, Please Cc: stable@vger.kernel.org to make them be backported to
-> stable branch;
-> 3, Maybe changing the order of Patch3/Patch4 is better.
-> 
-> Huacai
-> 
-> On Fri, Mar 24, 2023 at 2:09 PM Jianmin Lv <lvjianmin@loongson.cn> wrote:
->>
->> In dual-bridges scenario, some bugs were found for irq
->> controllers drivers, so the patch serie is used to fix them.
->>
->> Jianmin Lv (5):
->>    irqchip/loongson-eiointc: Fix returned value on parsing MADT
->>    irqchip/loongson-eiointc: Fix incorrect use of acpi_get_vec_parent
->>    irqchip/loongson-pch-pic: Fix pch_pic_acpi_init calling
->>    irqchip/loongson-eiointc: Fix registration of syscore_ops
->>    irqchip/loongson-pch-pic: Fix registration of syscore_ops
->>
->>   drivers/irqchip/irq-loongson-eiointc.c | 27 ++++++++++++++++----------
->>   drivers/irqchip/irq-loongson-pch-pic.c |  6 +++++-
->>   2 files changed, 22 insertions(+), 11 deletions(-)
->>
->> --
->> 2.31.1
->>
->>
-> _______________________________________________
-> Loongson-kernel mailing list -- loongson-kernel@lists.loongnix.cn
-> To unsubscribe send an email to loongson-kernel-leave@lists.loongnix.cn
-> 
+Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+---
+ arch/x86/Kconfig              |  1 +
+ arch/x86/include/asm/ftrace.h | 22 ++++++++++++++++++++++
+ arch/x86/kernel/ftrace_32.S   |  8 +++++---
+ arch/x86/kernel/ftrace_64.S   |  7 ++++---
+ 4 files changed, 32 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index a825bf031f49..956cc988bdf9 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -214,6 +214,7 @@ config X86
+ 	select HAVE_FAST_GUP
+ 	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
+ 	select HAVE_FTRACE_MCOUNT_RECORD
++	select HAVE_FUNCTION_GRAPH_RETVAL	if HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_GRAPH_TRACER	if X86_32 || (X86_64 && DYNAMIC_FTRACE)
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_GCC_PLUGINS
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index 5061ac98ffa1..bb12f5b7505a 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -147,4 +147,26 @@ static inline bool arch_trace_is_compat_syscall(struct pt_regs *regs)
+ #endif /* !COMPILE_OFFSETS */
+ #endif /* !__ASSEMBLY__ */
+ 
++#ifndef __ASSEMBLY__
++
++#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
++struct fgraph_ret_regs {
++	unsigned long ax;
++	unsigned long dx;
++	unsigned long bp;
++};
++
++static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
++{
++	return ret_regs->ax;
++}
++
++static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
++{
++	return ret_regs->bp;
++}
++#endif
++
++#endif
++
+ #endif /* _ASM_X86_FTRACE_H */
+diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
+index a0ed0e4a2c0c..5a9cc723f81f 100644
+--- a/arch/x86/kernel/ftrace_32.S
++++ b/arch/x86/kernel/ftrace_32.S
+@@ -182,12 +182,14 @@ SYM_CODE_END(ftrace_graph_caller)
+ 
+ .globl return_to_handler
+ return_to_handler:
+-	pushl	%eax
++	pushl	$0
+ 	pushl	%edx
+-	movl	$0, %eax
++	pushl	%eax
++	movl	%esp, %eax
+ 	call	ftrace_return_to_handler
+ 	movl	%eax, %ecx
+-	popl	%edx
+ 	popl	%eax
++	popl	%edx
++	addl	$4, %esp		# skip ebp
+ 	JMP_NOSPEC ecx
+ #endif
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index fb4f1e01b64a..ef78c0bbae62 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -344,12 +344,13 @@ STACK_FRAME_NON_STANDARD_FP(__fentry__)
+ SYM_CODE_START(return_to_handler)
+ 	UNWIND_HINT_EMPTY
+ 	ANNOTATE_NOENDBR
+-	subq  $16, %rsp
++	subq  $24, %rsp
+ 
+ 	/* Save the return values */
+ 	movq %rax, (%rsp)
+ 	movq %rdx, 8(%rsp)
+-	movq %rbp, %rdi
++	movq %rbp, 16(%rsp)
++	movq %rsp, %rdi
+ 
+ 	call ftrace_return_to_handler
+ 
+@@ -357,7 +358,7 @@ SYM_CODE_START(return_to_handler)
+ 	movq 8(%rsp), %rdx
+ 	movq (%rsp), %rax
+ 
+-	addq $16, %rsp
++	addq $24, %rsp
+ 	/*
+ 	 * Jump back to the old return address. This cannot be JMP_NOSPEC rdi
+ 	 * since IBT would demand that contain ENDBR, which simply isn't so for
+-- 
+2.25.1
 
