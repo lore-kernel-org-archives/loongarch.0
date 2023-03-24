@@ -1,141 +1,159 @@
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1755E5662
-	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 12:45:33 +0000 (UTC)
-Received: from ubuntu.localdomain (unknown [117.133.56.22])
-	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 79ED4580A59;
-	Fri, 24 Mar 2023 20:37:43 +0800 (CST)
-From: Donglin Peng <pengdonglin@sangfor.com.cn>
-To: mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	linux@armlinux.org.uk,
-	mark.rutland@arm.com,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	tglx@linutronix.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	chenhuacai@kernel.org,
-	zhangqing@loongson.cn,
-	kernel@xen0n.name,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	xiehuan09@gmail.com,
-	dinghui@sangfor.com.cn,
-	huangcun@sangfor.com.cn,
-	dolinux.peng@gmail.com
-Cc: linux-trace-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: [PATCH v7 5/8] riscv: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-Date: Fri, 24 Mar 2023 05:37:28 -0700
-Message-Id: <20230324123731.3801920-6-pengdonglin@sangfor.com.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230324123731.3801920-1-pengdonglin@sangfor.com.cn>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C96E5662
+	for <loongarch@lists.linux.dev>; Fri, 24 Mar 2023 12:58:19 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B64711FB;
+	Fri, 24 Mar 2023 05:58:56 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.56.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BC043F766;
+	Fri, 24 Mar 2023 05:58:07 -0700 (PDT)
+Date: Fri, 24 Mar 2023 12:57:18 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc: mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+	will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, tglx@linutronix.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	chenhuacai@kernel.org, zhangqing@loongson.cn, kernel@xen0n.name,
+	mingo@redhat.com, peterz@infradead.org, xiehuan09@gmail.com,
+	dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
+	dolinux.peng@gmail.com, linux-trace-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 4/8] arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Message-ID: <ZB2eLsD4aoR3LEOV@FVFF77S0Q05N>
 References: <20230324123731.3801920-1-pengdonglin@sangfor.com.cn>
+ <20230324123731.3801920-5-pengdonglin@sangfor.com.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDGh8ZVktCSkoYSBkYGB4aQlUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS09ISFVKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mxw6Tww5NT0SNQ8vT041EQ01
-	MTQwChRVSlVKTUxCTU1KT01PQk5OVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-	WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFPQkpPNwY+
-X-HM-Tid: 0a87139ffbc82eb7kusn79ed4580a59
-X-HM-MType: 1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230324123731.3801920-5-pengdonglin@sangfor.com.cn>
 
-The commit d4815c5d1bbd ("function_graph: Support recording and
-printing the return value of function") laid the groundwork for the
-for the funcgraph-retval, and this modification makes it available
-on the RISC-V platform.
+On Fri, Mar 24, 2023 at 05:37:27AM -0700, Donglin Peng wrote:
+> The commit d4815c5d1bbd ("function_graph: Support recording and
+> printing the return value of function") laid the groundwork for the
+> for the funcgraph-retval, and this modification makes it available
+> on the ARM64 platform.
+> 
+> We introduce a new structure called fgraph_ret_regs for the ARM64
+> platform to hold return registers and the frame pointer. We then
+> fill its content in the return_to_handler and pass its address to
+> the function ftrace_return_to_handler to record the return value.
 
-We introduce a new structure called fgraph_ret_regs for the RISC-V
-platform to hold return registers and the frame pointer. We then
-fill its content in the return_to_handler and pass its address to
-the function ftrace_return_to_handler to record the return value.
+I'm happy with this, or with using ftrace_regs and capturing more regs here.
 
-Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
----
- arch/riscv/Kconfig              |  1 +
- arch/riscv/include/asm/ftrace.h | 23 +++++++++++++++++++++++
- arch/riscv/kernel/mcount.S      |  7 +------
- 3 files changed, 25 insertions(+), 6 deletions(-)
+This overall looks good, but there's one functional issue and a couple of minor
+nits which I've detailed below.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index c5e42cc37604..a616af85defb 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -138,6 +138,7 @@ config RISCV
- 	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && $(cc-option,-fpatchable-function-entry=8)
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
-+	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
- 
-diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-index d47d87c2d7e3..ff2d04301de6 100644
---- a/arch/riscv/include/asm/ftrace.h
-+++ b/arch/riscv/include/asm/ftrace.h
-@@ -111,4 +111,27 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
- 
- #endif /* CONFIG_DYNAMIC_FTRACE */
- 
-+#ifndef __ASSEMBLY__
-+
-+#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
-+struct fgraph_ret_regs {
-+	unsigned long a1;
-+	unsigned long a0;
-+	unsigned long s0;
-+	unsigned long ra;
-+};
-+
-+static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
-+{
-+	return ret_regs->a0;
-+}
-+
-+static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
-+{
-+	return ret_regs->s0;
-+}
-+#endif
-+
-+#endif
-+
- #endif /* _ASM_RISCV_FTRACE_H */
-diff --git a/arch/riscv/kernel/mcount.S b/arch/riscv/kernel/mcount.S
-index 30102aadc4d7..8a6e5a9e842a 100644
---- a/arch/riscv/kernel/mcount.S
-+++ b/arch/riscv/kernel/mcount.S
-@@ -65,13 +65,8 @@ ENTRY(return_to_handler)
-  * So alternatively we check the *old* frame pointer position, that is, the
-  * value stored in -16(s0) on entry, and the s0 on return.
-  */
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
--	mv	t6, s0
--#endif
- 	SAVE_RET_ABI_STATE
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
--	mv	a0, t6
--#endif
-+	mv	a0, sp
- 	call	ftrace_return_to_handler
- 	mv	a2, a0
- 	RESTORE_RET_ABI_STATE
--- 
-2.25.1
+> 
+> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+> ---
+>  arch/arm64/Kconfig               |  1 +
+>  arch/arm64/include/asm/ftrace.h  | 23 +++++++++++++++++++++++
+>  arch/arm64/kernel/entry-ftrace.S |  9 +++++----
+>  3 files changed, 29 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 1023e896d46b..48856d230800 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -195,6 +195,7 @@ config ARM64
+>  	select HAVE_FTRACE_MCOUNT_RECORD
+>  	select HAVE_FUNCTION_TRACER
+>  	select HAVE_FUNCTION_ERROR_INJECTION
+> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_GCC_PLUGINS
+>  	select HAVE_HW_BREAKPOINT if PERF_EVENTS
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> index 1c2672bbbf37..f68dcc41be3b 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -170,4 +170,27 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+>  }
+>  #endif /* ifndef __ASSEMBLY__ */
+>  
+> +#ifndef __ASSEMBLY__
+> +
+> +#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+> +struct fgraph_ret_regs {
+> +	/* x0 - x7 */
+> +	u64 regs[8];
+> +
+> +	u64 fp;
+> +};
 
+As a minor nit, for ftrace_regs we used `unsigned long` rather than `u64`;
+could we do the same here for consistency?
+
+This will need to be padded to 16 bytes, as within the kernel, arm64 requires
+the SP to be aligned to 16 bytes at all time. Please can you add an `__unused`
+field, like we have in ftrace_regs, to ensure that?
+
+> +
+> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->regs[0];
+> +}
+> +
+> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->fp;
+> +}
+> +#endif
+> +
+> +#endif
+> +
+>  #endif /* __ASM_FTRACE_H */
+> diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
+> index 350ed81324ac..8ac6f952e68f 100644
+> --- a/arch/arm64/kernel/entry-ftrace.S
+> +++ b/arch/arm64/kernel/entry-ftrace.S
+> @@ -270,14 +270,15 @@ SYM_FUNC_END(ftrace_stub_graph)
+>   */
+>  SYM_CODE_START(return_to_handler)
+>  	/* save return value regs */
+> -	sub sp, sp, #64
+> +	sub sp, sp, #72
+>  	stp x0, x1, [sp]
+>  	stp x2, x3, [sp, #16]
+>  	stp x4, x5, [sp, #32]
+>  	stp x6, x7, [sp, #48]
+> +	str x29,    [sp, #64]		//     parent's fp
+
+As above, this will need to be padded to keep the stack aligned to 16 bytes,
+and I'd prefer if we could use asm-offsets so that we can have something like:
+
+	sub	sp, sp, #FRET_REGS_SIZE
+	stp	x0, x1, [sp, #FRET_REGS_X0]
+	stp	x2, x3, [sp, #FRET_REGS_X2]
+	stp	x4, x5, [sp, #FRET_REGS_X4]
+	stp	x6, x7, [sp, #FRET_REGS_X6]
+	str	x29, [sp, FRET_REGS_FP]
+
+>  
+> -	mov	x0, x29			//     parent's fp
+> -	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
+> +	mov	x0, sp
+> +	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(regs);
+>  	mov	x30, x0			// restore the original return address
+>  
+>  	/* restore return value regs */
+> @@ -285,7 +286,7 @@ SYM_CODE_START(return_to_handler)
+>  	ldp x2, x3, [sp, #16]
+>  	ldp x4, x5, [sp, #32]
+>  	ldp x6, x7, [sp, #48]
+> -	add sp, sp, #64
+> +	add sp, sp, #72
+
+Likewise here.
+
+Other than that, this looks good to me, thanks for respinning!
+
+Thanks,
+Mark.
