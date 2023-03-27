@@ -1,190 +1,128 @@
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B43622
-	for <loongarch@lists.linux.dev>; Mon, 27 Mar 2023 03:04:01 +0000 (UTC)
-Received: from [192.168.2.16] (unknown [106.38.161.27])
-	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 8A9D35807D9;
-	Mon, 27 Mar 2023 11:03:38 +0800 (CST)
-Message-ID: <3c8e08d5-1069-4df8-5f53-5bd5c6aedd75@sangfor.com.cn>
-Date: Mon, 27 Mar 2023 11:03:39 +0800
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3733622
+	for <loongarch@lists.linux.dev>; Mon, 27 Mar 2023 03:59:00 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.153])
+	by gateway (Coremail) with SMTP id _____8DxldiCFCFkdRoSAA--.32617S3;
+	Mon, 27 Mar 2023 11:58:58 +0800 (CST)
+Received: from [10.20.42.153] (unknown [10.20.42.153])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxib2BFCFkf8wNAA--.6983S3;
+	Mon, 27 Mar 2023 11:58:58 +0800 (CST)
+Subject: Re: [PATCH V1 1/5] irqchip/loongson-eiointc: Fix returned value on
+ parsing MADT
+To: loongson-kernel@lists.loongnix.cn
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+References: <20230324060854.29375-1-lvjianmin@loongson.cn>
+ <20230324060854.29375-2-lvjianmin@loongson.cn> <87h6uagnzo.wl-maz@kernel.org>
+From: Jianmin Lv <lvjianmin@loongson.cn>
+Message-ID: <cfc7fd9f-67cf-3140-0ec5-a240a45506b9@loongson.cn>
+Date: Mon, 27 Mar 2023 11:58:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v7 4/8] arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
- will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
- paul.walmsley@sifive.com, tglx@linutronix.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, chenhuacai@kernel.org, zhangqing@loongson.cn,
- kernel@xen0n.name, mingo@redhat.com, peterz@infradead.org,
- xiehuan09@gmail.com, dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
- dolinux.peng@gmail.com, linux-trace-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20230324123731.3801920-1-pengdonglin@sangfor.com.cn>
- <20230324123731.3801920-5-pengdonglin@sangfor.com.cn>
- <ZB2eLsD4aoR3LEOV@FVFF77S0Q05N>
-From: Donglin Peng <pengdonglin@sangfor.com.cn>
-In-Reply-To: <ZB2eLsD4aoR3LEOV@FVFF77S0Q05N>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHU1LVkNJHRlDSU5KSE9IT1UTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpLTVVIQ1VKTUpVSUxZV1kWGg8SFR0UWUFZT0tIVUpKS09ISFVKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MC46Szo4SD0IMQwfKwECMy8t
-	CSxPCj1VSlVKTUxCQ0NNSUlLSk9MVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-	WRILWUFZSktNVUhDVUpNSlVJTFlXWQgBWUFMSUpKNwY+
-X-HM-Tid: 0a872105794b2eb7kusn8a9d35807d9
-X-HM-MType: 1
+In-Reply-To: <87h6uagnzo.wl-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dxib2BFCFkf8wNAA--.6983S3
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZFWUGFyxWF4xur4UJw15CFg_yoW5ZFW3pa
+	y2qFZ8tr4rt34xCr92yr1UXr1rZwn3uayxtrWrGayFvr4DCry3JF42ya1jvryIkr4UGF42
+	vF4Yqa15uw45A3DanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
+	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
-On 2023/3/24 20:57, Mark Rutland wrote:
-> On Fri, Mar 24, 2023 at 05:37:27AM -0700, Donglin Peng wrote:
->> The commit d4815c5d1bbd ("function_graph: Support recording and
->> printing the return value of function") laid the groundwork for the
->> for the funcgraph-retval, and this modification makes it available
->> on the ARM64 platform.
+
+
+On 2023/3/24 下午11:36, Marc Zyngier wrote:
+> On Fri, 24 Mar 2023 06:08:50 +0000,
+> Jianmin Lv <lvjianmin@loongson.cn> wrote:
 >>
->> We introduce a new structure called fgraph_ret_regs for the ARM64
->> platform to hold return registers and the frame pointer. We then
->> fill its content in the return_to_handler and pass its address to
->> the function ftrace_return_to_handler to record the return value.
-> 
-> I'm happy with this, or with using ftrace_regs and capturing more regs here.
-
-Thanks, I think ftrace_regs has several members that are unnecessary to
-fill. And each function that can be traced will do this work when using
-function graph tracer, so the overhead is bit high.
-
-> 
-> This overall looks good, but there's one functional issue and a couple of minor
-> nits which I've detailed below.
-
-Thanks.
-
-> 
+>> In pch_pic_parse_madt(), a NULL parent pointer will be
+>> returned from acpi_get_vec_parent() for second pch-pic domain
+>> related to second bridge while calling eiointc_acpi_init() at
+>> first time, where the parent of it has not been initialized
+>> yet, and will be initialized during second time calling
+>> eiointc_acpi_init(). So, it's reasonable to return zero so
+>> that failure of acpi_table_parse_madt() will be avoided, or else
+>> acpi_cascade_irqdomain_init() will return and initialization of
+>> followed pch_msi domain will be skipped.
 >>
->> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+>> Although it does not matter when pch_msi_parse_madt() returns
+>> -EINVAL if no invalid parent is found, it's also reasonable to
+>> return zero for that.
+>>
+>> Change-Id: I4d278534999ec3e5c8db6d40155ba2665d9de86f
+>> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 >> ---
->>   arch/arm64/Kconfig               |  1 +
->>   arch/arm64/include/asm/ftrace.h  | 23 +++++++++++++++++++++++
->>   arch/arm64/kernel/entry-ftrace.S |  9 +++++----
->>   3 files changed, 29 insertions(+), 4 deletions(-)
+>>   drivers/irqchip/irq-loongson-eiointc.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
 >>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 1023e896d46b..48856d230800 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -195,6 +195,7 @@ config ARM64
->>   	select HAVE_FTRACE_MCOUNT_RECORD
->>   	select HAVE_FUNCTION_TRACER
->>   	select HAVE_FUNCTION_ERROR_INJECTION
->> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
->>   	select HAVE_FUNCTION_GRAPH_TRACER
->>   	select HAVE_GCC_PLUGINS
->>   	select HAVE_HW_BREAKPOINT if PERF_EVENTS
->> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
->> index 1c2672bbbf37..f68dcc41be3b 100644
->> --- a/arch/arm64/include/asm/ftrace.h
->> +++ b/arch/arm64/include/asm/ftrace.h
->> @@ -170,4 +170,27 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
->>   }
->>   #endif /* ifndef __ASSEMBLY__ */
+>> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+>> index d15fd38c1756..62a632d73991 100644
+>> --- a/drivers/irqchip/irq-loongson-eiointc.c
+>> +++ b/drivers/irqchip/irq-loongson-eiointc.c
+>> @@ -343,7 +343,7 @@ static int __init pch_pic_parse_madt(union acpi_subtable_headers *header,
+>>   	if (parent)
+>>   		return pch_pic_acpi_init(parent, pchpic_entry);
 >>   
->> +#ifndef __ASSEMBLY__
->> +
->> +#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
->> +struct fgraph_ret_regs {
->> +	/* x0 - x7 */
->> +	u64 regs[8];
->> +
->> +	u64 fp;
->> +};
+>> -	return -EINVAL;
+>> +	return 0;
 > 
-> As a minor nit, for ftrace_regs we used `unsigned long` rather than `u64`;
-> could we do the same here for consistency?
-
-Yes, I will fix it.
-
-> 
-> This will need to be padded to 16 bytes, as within the kernel, arm64 requires
-> the SP to be aligned to 16 bytes at all time. Please can you add an `__unused`
-> field, like we have in ftrace_regs, to ensure that?
+> Why can't you detect this particular case instead of blindly
+> suppressing the error?
 > 
 
-Yes, I will fix it.
+For dual-bridges scenario, parent handle for pch_pic IRQ domain will be 
+set by acpi_set_vec_parent() during each eiointc initialization. And
+the parent handle for one pch_pic will be set during *first* eiointc
+entry parsing, and the parent handle for another pch_pic will be
+set during *second* eiointc entry parsing. But two pch_pic entries
+will be parsed during each eiointc entry parsing, so a NULL parent
+pointer must be returned druing first eiointc initialization, which
+is reasonable and should not be treated as an error.
 
->> +
->> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
->> +{
->> +	return ret_regs->regs[0];
->> +}
->> +
->> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
->> +{
->> +	return ret_regs->fp;
->> +}
->> +#endif
->> +
->> +#endif
->> +
->>   #endif /* __ASM_FTRACE_H */
->> diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
->> index 350ed81324ac..8ac6f952e68f 100644
->> --- a/arch/arm64/kernel/entry-ftrace.S
->> +++ b/arch/arm64/kernel/entry-ftrace.S
->> @@ -270,14 +270,15 @@ SYM_FUNC_END(ftrace_stub_graph)
->>    */
->>   SYM_CODE_START(return_to_handler)
->>   	/* save return value regs */
->> -	sub sp, sp, #64
->> +	sub sp, sp, #72
->>   	stp x0, x1, [sp]
->>   	stp x2, x3, [sp, #16]
->>   	stp x4, x5, [sp, #32]
->>   	stp x6, x7, [sp, #48]
->> +	str x29,    [sp, #64]		//     parent's fp
-> 
-> As above, this will need to be padded to keep the stack aligned to 16 bytes,
-> and I'd prefer if we could use asm-offsets so that we can have something like:
-> 
-> 	sub	sp, sp, #FRET_REGS_SIZE
-> 	stp	x0, x1, [sp, #FRET_REGS_X0]
-> 	stp	x2, x3, [sp, #FRET_REGS_X2]
-> 	stp	x4, x5, [sp, #FRET_REGS_X4]
-> 	stp	x6, x7, [sp, #FRET_REGS_X6]
-> 	str	x29, [sp, FRET_REGS_FP]
+The calling stack of pch_pic_parse_madt (where acpi_get_vec_parent is 
+called to get parent handle) is like this:
 
-Thank you, I will fix it.
+cpuintc_acpi_init
+   acpi_cascade_irqdomain_init(in cpuintc driver)
+     acpi_table_parse_madt
+       eiointc_parse_madt
+         eiointc_acpi_init /* this will be called two times 
+corresponding  to parsing two eiointc entries in MADT under dual-bridges 
+scenario*/
+           acpi_set_vec_parent /* set parent handle for one pch_pic 
+during first eiointc entry parsing, and set parent handle for another 
+pch_pic during second eiointc entry parsing*/
+             acpi_cascade_irqdomain_init(in eiointc driver)
+               acpi_table_parse_madt
+                 pch_pic_parse_madt /* this will be called twice because 
+of two pchpic entries, and only one valid parent handle will be returned 
+from acpi_get_vec_parent() during first eiointc entry parsing (another 
+parent handle is not set yet), so a NULL parent pointer must be returned 
+during first eiointc entry parsing, which is reasonable and should not 
+be treated as an error.*/
 
-> 
->>   
->> -	mov	x0, x29			//     parent's fp
->> -	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
->> +	mov	x0, sp
->> +	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(regs);
->>   	mov	x30, x0			// restore the original return address
->>   
->>   	/* restore return value regs */
->> @@ -285,7 +286,7 @@ SYM_CODE_START(return_to_handler)
->>   	ldp x2, x3, [sp, #16]
->>   	ldp x4, x5, [sp, #32]
->>   	ldp x6, x7, [sp, #48]
->> -	add sp, sp, #64
->> +	add sp, sp, #72
-> 
-> Likewise here.
+Thanks!
 
-Thank you, I will fix it.
-
+> 	M.
 > 
-> Other than that, this looks good to me, thanks for respinning!
-> 
-> Thanks,
-> Mark.
 
