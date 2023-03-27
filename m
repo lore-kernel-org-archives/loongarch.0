@@ -1,147 +1,117 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E570A622
-	for <loongarch@lists.linux.dev>; Mon, 27 Mar 2023 04:00:34 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.153])
-	by gateway (Coremail) with SMTP id _____8AxJAzhFCFkvxoSAA--.27390S3;
-	Mon, 27 Mar 2023 12:00:33 +0800 (CST)
-Received: from [10.20.42.153] (unknown [10.20.42.153])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxMuXgFCFk6MwNAA--.44815S3;
-	Mon, 27 Mar 2023 12:00:33 +0800 (CST)
-Subject: Re: [PATCH V1 2/5] irqchip/loongson-eiointc: Fix incorrect use of
- acpi_get_vec_parent
-To: loongson-kernel@lists.loongnix.cn
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
-References: <20230324060854.29375-1-lvjianmin@loongson.cn>
- <20230324060854.29375-3-lvjianmin@loongson.cn> <87ileqgo42.wl-maz@kernel.org>
-From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <c0ad9408-26a0-2b39-586c-a65cb08d4b76@loongson.cn>
-Date: Mon, 27 Mar 2023 12:00:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC409A29
+	for <loongarch@lists.linux.dev>; Mon, 27 Mar 2023 09:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=NQ76cs9m2PfyRb1nvWbSz8Et10awSsHsXz4HNPXF8yg=; b=QZ9Vn6XQoPo/vkVnwWKgjNwNQF
+	i+T6Yl3JETlALqU5VTD5LuRKWBkxlUZfMnccx1V/R8P1y1jb2Nn5vNn7qwhEJjK8c6CJnqa+IvXYv
+	fSsK289ahjDc6UcYJ6PNuPJdYbA6zEy2NiIQ1OKZDK5Ou9RVm5ztS1GIL6bIVPQLOz4PR1pye5B0O
+	3vVEIr7XrOnjpURdrjUhayo44zsagA6WzNAlLWxZihURKdHXLk/exMEpuHu1wCA+H5uKVfWFO4jHw
+	sx55zP9IskZDpk3E1MCtVVDVaPNI846+iakQvvoZc3HFZinQFEwTulPbXBfyfpt6jwzMW6C0Vf0N7
+	kIjdICDw==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1pgjAz-0007hb-0h; Mon, 27 Mar 2023 11:30:05 +0200
+Received: from [219.59.88.22] (helo=localhost.localdomain)
+	by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1pgjAw-000UQh-Hd; Mon, 27 Mar 2023 11:30:03 +0200
+Subject: Re: [PATCH] loongarch/bpf: Fix bpf load failed with
+ CONFIG_BPF_JIT_ALWAYS_ON, caused by jit (BPF_ST | BPF_NOSPEC) code
+To: George Guo <guodongtai@kylinos.cn>, chenhuacai@kernel.org,
+ masahiroy@kernel.org, michal.lkml@markovi.net
+Cc: kernel@xen0n.name, ndesaulniers@google.com, ast@kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, bpf@vger.kernel.org
+References: <20230326044019.2139628-1-guodongtai@kylinos.cn>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <c1932d0d-cf3f-5005-958d-7e08dddf42c9@iogearbox.net>
+Date: Mon, 27 Mar 2023 11:29:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <87ileqgo42.wl-maz@kernel.org>
+In-Reply-To: <20230326044019.2139628-1-guodongtai@kylinos.cn>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxMuXgFCFk6MwNAA--.44815S3
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxJFWxAFWDWw45WF18GFW8Xrb_yoW5try5pF
-	yxAFWDtr43XrWUur1ftFs8Xr1Sqw1rZFs7ta1fGayFyanruF1kGF1FkF1UCr9akrW7GF4a
-	va1YqF1UZF13A37anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-	1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
-	CVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
-	1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUv
-	cSsGvfC2KfnxnUUI43ZEXa7IU8EeHDUUUUU==
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.8/26856/Mon Mar 27 09:24:05 2023)
 
+On 3/26/23 6:40 AM, George Guo wrote:
+> Here just skip the code(BPF_ST | BPF_NOSPEC) that has no couterpart to the loongarch.
+> 
+> To verify, use ltp testcase:
+> 
+> Without this patch:
+> $ ./bpf_prog02
+> ... ...
+> bpf_common.c:123: TBROK: Failed verification: ??? (524)
+> 
+> Summary:
+> passed   0
+> failed   0
+> broken   1
+> skipped  0
+> warnings 0
+> 
+> With this patch:
+> $ ./bpf_prog02
+> ... ...
+> Summary:
+> passed   0
+> failed   0
+> broken   0
+> skipped  0
+> warnings 0
+> 
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> ---
+>   arch/loongarch/net/bpf_jit.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 288003a9f0ca..745d344385ed 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -1046,6 +1046,11 @@ static int build_body(struct jit_ctx *ctx, bool extra_pass)
+>   		if (ctx->image == NULL)
+>   			ctx->offset[i] = ctx->idx;
+>   
+> +		/* skip the code that has no couterpart to the host arch */
+> +		if(insn->code == (BPF_ST | BPF_NOSPEC)) {
+> +			continue;
+> +		}
 
+Small nit, but could we align with other JIT implementations and place it into similar
+location for consistency? Above looks a bit out of place and it should really be part
+of build_insn.
 
-On 2023/3/24 下午11:34, Marc Zyngier wrote:
-> On Fri, 24 Mar 2023 06:08:51 +0000,
-> Jianmin Lv <lvjianmin@loongson.cn> wrote:
->>
->> In eiointc_acpi_init(), a *eiointc* node is passed into
->> acpi_get_vec_parent() instead of a required *NUMA* node (on some chip
->> like 3C5000L, a *NUMA* node means a *eiointc* node, but on some chip
->> like 3C5000, a *NUMA* node contains 4 *eiointc* nodes), and node in
->> struct acpi_vector_group is essentially a *NUMA* node, which will
->> lead to no parent matched for passed *eiointc* node. so the patch
->> adjusts code to use *NUMA* node for parameter node of
->> acpi_set_vec_parent/acpi_get_vec_parent.
->>
->> Change-Id: Iddd8423f9694cadc1ce28ee290c2e98ca17dfccc
->> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
->> ---
->>   drivers/irqchip/irq-loongson-eiointc.c | 17 +++++++++++------
->>   1 file changed, 11 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
->> index 62a632d73991..b165c27a3609 100644
->> --- a/drivers/irqchip/irq-loongson-eiointc.c
->> +++ b/drivers/irqchip/irq-loongson-eiointc.c
->> @@ -280,9 +280,6 @@ static void acpi_set_vec_parent(int node, struct irq_domain *parent, struct acpi
->>   {
->>   	int i;
->>   
->> -	if (cpu_has_flatmode)
->> -		node = cpu_to_node(node * CORES_PER_EIO_NODE);
->> -
->>   	for (i = 0; i < MAX_IO_PICS; i++) {
->>   		if (node == vec_group[i].node) {
->>   			vec_group[i].parent = parent;
->> @@ -349,8 +346,13 @@ static int __init pch_pic_parse_madt(union acpi_subtable_headers *header,
->>   static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
->>   					const unsigned long end)
->>   {
->> +	struct irq_domain *parent;
->>   	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
->> -	struct irq_domain *parent = acpi_get_vec_parent(eiointc_priv[nr_pics - 1]->node, msi_group);
->> +	int node = eiointc_priv[nr_pics - 1]->node;
->> +
->> +	if (cpu_has_flatmode)
->> +		node = cpu_to_node(node * CORES_PER_EIO_NODE);
-> 
-> This is a bit unreadable. I'd rather see:
-> 
-> 	int node;
-> 
-> 	if (cpu_has_flatmode)
-> 		node = ....;
-> 	else
-> 		node = ....;
-> 
-> which makes it easy to detect the use of an uninitialised 'node'
-> rather than using the wrong default variable.
-> 
->> +	parent = acpi_get_vec_parent(node, msi_group);
->>   
->>   	if (parent)
->>   		return pch_msi_acpi_init(parent, pchmsi_entry);
->> @@ -379,6 +381,7 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
->>   	int i, ret, parent_irq;
->>   	unsigned long node_map;
->>   	struct eiointc_priv *priv;
->> +	int node = acpi_eiointc->node;
->>   
->>   	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
->>   	if (!priv)
->> @@ -421,8 +424,10 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
->>   				  "irqchip/loongarch/intc:starting",
->>   				  eiointc_router_init, NULL);
->>   
->> -	acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, pch_group);
->> -	acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, msi_group);
->> +	if (cpu_has_flatmode)
->> +		node = cpu_to_node(node * CORES_PER_EIO_NODE);
->> +	acpi_set_vec_parent(node, priv->eiointc_domain, pch_group);
->> +	acpi_set_vec_parent(node, priv->eiointc_domain, msi_group);
->>   	ret = acpi_cascade_irqdomain_init();
->>   
->>   	return ret;
-> 
-> Same thing here.
-> 
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 288003a9f0ca..d586df48ecc6 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1022,6 +1022,10 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+                 emit_atomic(insn, ctx);
+                 break;
 
-Ok, I'll change them  in next version.
-
-Thanks!
-
-> 	M.
-> 
++       /* Speculation barrier */
++       case BPF_ST | BPF_NOSPEC:
++               break;
++
+         default:
+                 pr_err("bpf_jit: unknown opcode %02x\n", code);
+                 return -EINVAL;
 
