@@ -1,186 +1,190 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE7E1377
-	for <loongarch@lists.linux.dev>; Sun, 26 Mar 2023 19:28:51 +0000 (UTC)
-Received: by mail-yb1-f174.google.com with SMTP id z83so7977014ybb.2
-        for <loongarch@lists.linux.dev>; Sun, 26 Mar 2023 12:28:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679858930;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GGoqSojZH/9f2pXTveP8tBPP8ZFTICSBZJCZUtmlG0c=;
-        b=FEL2vNbZzXmhtX5A4PbxmqoBt+gIItbE8G4MYObzwezMm3TC97WjPQxfbhRyXOoSHO
-         8Yw9GEmnNWgekRyg0KUO1b75OACsXLQks2WGUU60DwjG7U/rzuvrT2uz8fIGfnUFZ0Yd
-         5S1kTq1cBATn/X/z2Riua+kg0FAXGEOR0UR0H2EIkh0DIAi0zq4cTc34sS1wMT/dS43F
-         eLMeipcYrg9g42vt+rkBsCHXHtPYZd0bk+N4dCy1yJlw60Ds6o4OBEZSOore82OxtM1w
-         sMqt39uYl+lj/QN5XVgURyYMYF/8LkoZRzHWi7HmUDee+NJQMx0f8iMZbuS2P9V5x7JY
-         xrzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679858930;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GGoqSojZH/9f2pXTveP8tBPP8ZFTICSBZJCZUtmlG0c=;
-        b=vYoqO3mbuk32jVcRm0UdA4x0NCGSpjem9X7JX3sno+xpt1ODJ2/COIB5OVcedl59ai
-         JMY44AOOJwi2+qZvGXpeOvtSlxM6Pw7pPnVrZLVBcWV1LE+Pre0BEiRu1Jtf5kbgUPi4
-         tFV6uhEeARU6hh5Ip4ZDSTeZtnZ4JM+ULEQ5hj+DEN/dWh6LBgjtBolVKN64oz/Z5M/V
-         1UzSRnzF5WkWmfv+Xh8h+o35ogTTlhK5jg8I2UnAkzMq6YEmtgsPuDRy1KDupTtLyDcG
-         mp94Mgz7RzO9JaUjkSPfjs/ciPyN7T2+tsg5CUsASn028Yhs2a4Ko0kj+PYiMZKHx4pa
-         0AIg==
-X-Gm-Message-State: AAQBX9eQZnYjIMsUh6pJbPudF41xH2JJ5TciGoNU6dkS6fWud9tLSBuy
-	OFL06yyt288QrDtiAhj0CEM9AziB5SI9HM8Ntyw=
-X-Google-Smtp-Source: AKy350ZqrMEue00ANUn1tgzuPk4ToglTa+Veyc3QywBb5Oe/4uEkJbhTQrUUveBrMI3bliRnRcuEQkdY+85XS6umWj4=
-X-Received: by 2002:a05:6902:120f:b0:b73:caa7:f05e with SMTP id
- s15-20020a056902120f00b00b73caa7f05emr5706350ybu.2.1679858930371; Sun, 26 Mar
- 2023 12:28:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B43622
+	for <loongarch@lists.linux.dev>; Mon, 27 Mar 2023 03:04:01 +0000 (UTC)
+Received: from [192.168.2.16] (unknown [106.38.161.27])
+	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 8A9D35807D9;
+	Mon, 27 Mar 2023 11:03:38 +0800 (CST)
+Message-ID: <3c8e08d5-1069-4df8-5f53-5bd5c6aedd75@sangfor.com.cn>
+Date: Mon, 27 Mar 2023 11:03:39 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230305205628.27385-1-ubizjak@gmail.com> <20230305205628.27385-2-ubizjak@gmail.com>
- <ZB2v+avNt52ac/+w@FVFF77S0Q05N> <CAFULd4ZCgxDYnyy--qdgKoAo_y7MbNSaQdbdBFefnFuMoM2OYw@mail.gmail.com>
- <ZB3MR8lGbnea9ui6@FVFF77S0Q05N> <ZB3QtDYuWdpiD5qk@FVFF77S0Q05N>
-In-Reply-To: <ZB3QtDYuWdpiD5qk@FVFF77S0Q05N>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Sun, 26 Mar 2023 21:28:38 +0200
-Message-ID: <CAFULd4aFUF5k=QJD8tDp4qzm2iBF7=rNvp1SJWrg44X5hTFxtQ@mail.gmail.com>
-Subject: Re: [PATCH 01/10] locking/atomic: Add missing cast to try_cmpxchg() fallbacks
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v7 4/8] arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
 To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+ will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, tglx@linutronix.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, hpa@zytor.com, chenhuacai@kernel.org, zhangqing@loongson.cn,
+ kernel@xen0n.name, mingo@redhat.com, peterz@infradead.org,
+ xiehuan09@gmail.com, dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
+ dolinux.peng@gmail.com, linux-trace-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20230324123731.3801920-1-pengdonglin@sangfor.com.cn>
+ <20230324123731.3801920-5-pengdonglin@sangfor.com.cn>
+ <ZB2eLsD4aoR3LEOV@FVFF77S0Q05N>
+From: Donglin Peng <pengdonglin@sangfor.com.cn>
+In-Reply-To: <ZB2eLsD4aoR3LEOV@FVFF77S0Q05N>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHU1LVkNJHRlDSU5KSE9IT1UTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpLTVVIQ1VKTUpVSUxZV1kWGg8SFR0UWUFZT0tIVUpKS09ISFVKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MC46Szo4SD0IMQwfKwECMy8t
+	CSxPCj1VSlVKTUxCQ0NNSUlLSk9MVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+	WRILWUFZSktNVUhDVUpNSlVJTFlXWQgBWUFMSUpKNwY+
+X-HM-Tid: 0a872105794b2eb7kusn8a9d35807d9
+X-HM-MType: 1
 
-On Fri, Mar 24, 2023 at 5:33=E2=80=AFPM Mark Rutland <mark.rutland@arm.com>=
- wrote:
->
-> On Fri, Mar 24, 2023 at 04:14:22PM +0000, Mark Rutland wrote:
-> > On Fri, Mar 24, 2023 at 04:43:32PM +0100, Uros Bizjak wrote:
-> > > On Fri, Mar 24, 2023 at 3:13=E2=80=AFPM Mark Rutland <mark.rutland@ar=
-m.com> wrote:
-> > > >
-> > > > On Sun, Mar 05, 2023 at 09:56:19PM +0100, Uros Bizjak wrote:
-> > > > > Cast _oldp to the type of _ptr to avoid incompatible-pointer-type=
-s warning.
-> > > >
-> > > > Can you give an example of where we are passing an incompatible poi=
-nter?
-> > >
-> > > An example is patch 10/10 from the series, which will fail without
-> > > this fix when fallback code is used. We have:
-> > >
-> > > -       } while (local_cmpxchg(&rb->head, offset, head) !=3D offset);
-> > > +       } while (!local_try_cmpxchg(&rb->head, &offset, head));
-> > >
-> > > where rb->head is defined as:
-> > >
-> > > typedef struct {
-> > >    atomic_long_t a;
-> > > } local_t;
-> > >
-> > > while offset is defined as 'unsigned long'.
-> >
-> > Ok, but that's because we're doing the wrong thing to start with.
-> >
-> > Since local_t is defined in terms of atomic_long_t, we should define th=
-e
-> > generic local_try_cmpxchg() in terms of atomic_long_try_cmpxchg(). We'l=
-l still
-> > have a mismatch between 'long *' and 'unsigned long *', but then we can=
- fix
-> > that in the callsite:
-> >
-> >       while (!local_try_cmpxchg(&rb->head, &(long *)offset, head))
->
-> Sorry, that should be:
->
->         while (!local_try_cmpxchg(&rb->head, (long *)&offset, head))
+On 2023/3/24 20:57, Mark Rutland wrote:
+> On Fri, Mar 24, 2023 at 05:37:27AM -0700, Donglin Peng wrote:
+>> The commit d4815c5d1bbd ("function_graph: Support recording and
+>> printing the return value of function") laid the groundwork for the
+>> for the funcgraph-retval, and this modification makes it available
+>> on the ARM64 platform.
+>>
+>> We introduce a new structure called fgraph_ret_regs for the ARM64
+>> platform to hold return registers and the frame pointer. We then
+>> fill its content in the return_to_handler and pass its address to
+>> the function ftrace_return_to_handler to record the return value.
+> 
+> I'm happy with this, or with using ftrace_regs and capturing more regs here.
 
-The fallbacks are a bit more complicated than above, and are different
-from atomic_try_cmpxchg.
+Thanks, I think ftrace_regs has several members that are unnecessary to
+fill. And each function that can be traced will do this work when using
+function graph tracer, so the overhead is bit high.
 
-Please note in patch 2/10, the falbacks when arch_try_cmpxchg_local
-are not defined call arch_cmpxchg_local. Also in patch 2/10,
-try_cmpxchg_local is introduced, where it calls
-arch_try_cmpxchg_local. Targets (and generic code) simply define (e.g.
-:
+> 
+> This overall looks good, but there's one functional issue and a couple of minor
+> nits which I've detailed below.
 
-#define local_cmpxchg(l, o, n) \
-       (cmpxchg_local(&((l)->a.counter), (o), (n)))
-+#define local_try_cmpxchg(l, po, n) \
-+       (try_cmpxchg_local(&((l)->a.counter), (po), (n)))
+Thanks.
 
-which is part of the local_t API. Targets should either define all
-these #defines, or none. There are no partial fallbacks as is the case
-with atomic_t.
+> 
+>>
+>> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+>> ---
+>>   arch/arm64/Kconfig               |  1 +
+>>   arch/arm64/include/asm/ftrace.h  | 23 +++++++++++++++++++++++
+>>   arch/arm64/kernel/entry-ftrace.S |  9 +++++----
+>>   3 files changed, 29 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 1023e896d46b..48856d230800 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -195,6 +195,7 @@ config ARM64
+>>   	select HAVE_FTRACE_MCOUNT_RECORD
+>>   	select HAVE_FUNCTION_TRACER
+>>   	select HAVE_FUNCTION_ERROR_INJECTION
+>> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>>   	select HAVE_FUNCTION_GRAPH_TRACER
+>>   	select HAVE_GCC_PLUGINS
+>>   	select HAVE_HW_BREAKPOINT if PERF_EVENTS
+>> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+>> index 1c2672bbbf37..f68dcc41be3b 100644
+>> --- a/arch/arm64/include/asm/ftrace.h
+>> +++ b/arch/arm64/include/asm/ftrace.h
+>> @@ -170,4 +170,27 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+>>   }
+>>   #endif /* ifndef __ASSEMBLY__ */
+>>   
+>> +#ifndef __ASSEMBLY__
+>> +
+>> +#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+>> +struct fgraph_ret_regs {
+>> +	/* x0 - x7 */
+>> +	u64 regs[8];
+>> +
+>> +	u64 fp;
+>> +};
+> 
+> As a minor nit, for ftrace_regs we used `unsigned long` rather than `u64`;
+> could we do the same here for consistency?
 
-The core of the local_h API is in the local.h header. If the target
-doesn't define its own local.h header, then asm-generic/local.h is
-used that does exactly what you propose above regarding the usage of
-atomic functions.
+Yes, I will fix it.
 
-OTOH, when the target defines its own local.h, then the above
-target-dependent #define path applies. The target should define its
-own arch_try_cmpxchg_local, otherwise a "generic" target-dependent
-fallback that calls target arch_cmpxchg_local applies. In the case of
-x86, patch 9/10 enables new instruction by defining
-arch_try_cmpxchg_local.
+> 
+> This will need to be padded to 16 bytes, as within the kernel, arm64 requires
+> the SP to be aligned to 16 bytes at all time. Please can you add an `__unused`
+> field, like we have in ftrace_regs, to ensure that?
+> 
 
-FYI, the patch sequence is carefully chosen so that x86 also exercises
-fallback code between different patches in the series.
+Yes, I will fix it.
 
-Targets are free to define local_t to whatever they like, but for some
-reason they all define it to:
+>> +
+>> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
+>> +{
+>> +	return ret_regs->regs[0];
+>> +}
+>> +
+>> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
+>> +{
+>> +	return ret_regs->fp;
+>> +}
+>> +#endif
+>> +
+>> +#endif
+>> +
+>>   #endif /* __ASM_FTRACE_H */
+>> diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
+>> index 350ed81324ac..8ac6f952e68f 100644
+>> --- a/arch/arm64/kernel/entry-ftrace.S
+>> +++ b/arch/arm64/kernel/entry-ftrace.S
+>> @@ -270,14 +270,15 @@ SYM_FUNC_END(ftrace_stub_graph)
+>>    */
+>>   SYM_CODE_START(return_to_handler)
+>>   	/* save return value regs */
+>> -	sub sp, sp, #64
+>> +	sub sp, sp, #72
+>>   	stp x0, x1, [sp]
+>>   	stp x2, x3, [sp, #16]
+>>   	stp x4, x5, [sp, #32]
+>>   	stp x6, x7, [sp, #48]
+>> +	str x29,    [sp, #64]		//     parent's fp
+> 
+> As above, this will need to be padded to keep the stack aligned to 16 bytes,
+> and I'd prefer if we could use asm-offsets so that we can have something like:
+> 
+> 	sub	sp, sp, #FRET_REGS_SIZE
+> 	stp	x0, x1, [sp, #FRET_REGS_X0]
+> 	stp	x2, x3, [sp, #FRET_REGS_X2]
+> 	stp	x4, x5, [sp, #FRET_REGS_X4]
+> 	stp	x6, x7, [sp, #FRET_REGS_X6]
+> 	str	x29, [sp, FRET_REGS_FP]
 
-typedef struct {
-    atomic_long_t a;
-} local_t;
+Thank you, I will fix it.
 
-so they have to dig the variable out of the struct like:
+> 
+>>   
+>> -	mov	x0, x29			//     parent's fp
+>> -	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
+>> +	mov	x0, sp
+>> +	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(regs);
+>>   	mov	x30, x0			// restore the original return address
+>>   
+>>   	/* restore return value regs */
+>> @@ -285,7 +286,7 @@ SYM_CODE_START(return_to_handler)
+>>   	ldp x2, x3, [sp, #16]
+>>   	ldp x4, x5, [sp, #32]
+>>   	ldp x6, x7, [sp, #48]
+>> -	add sp, sp, #64
+>> +	add sp, sp, #72
+> 
+> Likewise here.
 
-#define local_cmpxchg(l, o, n) \
-     (cmpxchg_local(&((l)->a.counter), (o), (n)))
+Thank you, I will fix it.
 
-Regarding the mismatch of 'long *' vs 'unsigned long *': x86
-target-specific code does for try_cmpxchg:
+> 
+> Other than that, this looks good to me, thanks for respinning!
+> 
+> Thanks,
+> Mark.
 
-#define __raw_try_cmpxchg(_ptr, _pold, _new, size, lock) \
-({ \
-bool success; \
-__typeof__(_ptr) _old =3D (__typeof__(_ptr))(_pold); \
-__typeof__(*(_ptr)) __old =3D *_old; \
-__typeof__(*(_ptr)) __new =3D (_new); \
-
-so, it *does* cast the "old" pointer to the type of "ptr". The generic
-code does *not*. This difference is dangerous, since the compilation
-of some code involving try_cmpxchg will compile OK for x86 but will
-break for other targets that use try_cmpxchg fallback templates (I was
-the unlucky one that tripped on this in the past). Please note that
-this problem is not specific to the proposed local_try_cmpxchg series,
-but affects the existing try_cmpxchg API.
-
-Also, I don't think that "fixing" callsites is the right thing to do.
-The generic code should follow x86 and cast the "old" pointer to the
-type of "ptr" inside the fallback.
-
-> The fundamenalthing I'm trying to say is that the
-> atomic/atomic64/atomic_long/local/local64 APIs should be type-safe, and f=
-or
-> their try_cmpxchg() implementations, the type signature should be:
->
->         ${atomictype}_try_cmpxchg(${atomictype} *ptr, ${inttype} *old, ${=
-inttype} new)
-
-This conversion should be performed also for the cmpxchg family of
-functions, if desired at all. try_cmpxchg fallback is just cmpxchg
-with some extra code around.
-
-Thanks,
-Uros.
