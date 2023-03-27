@@ -1,23 +1,23 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3733622
-	for <loongarch@lists.linux.dev>; Mon, 27 Mar 2023 03:59:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E570A622
+	for <loongarch@lists.linux.dev>; Mon, 27 Mar 2023 04:00:34 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.153])
-	by gateway (Coremail) with SMTP id _____8DxldiCFCFkdRoSAA--.32617S3;
-	Mon, 27 Mar 2023 11:58:58 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxJAzhFCFkvxoSAA--.27390S3;
+	Mon, 27 Mar 2023 12:00:33 +0800 (CST)
 Received: from [10.20.42.153] (unknown [10.20.42.153])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxib2BFCFkf8wNAA--.6983S3;
-	Mon, 27 Mar 2023 11:58:58 +0800 (CST)
-Subject: Re: [PATCH V1 1/5] irqchip/loongson-eiointc: Fix returned value on
- parsing MADT
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxMuXgFCFk6MwNAA--.44815S3;
+	Mon, 27 Mar 2023 12:00:33 +0800 (CST)
+Subject: Re: [PATCH V1 2/5] irqchip/loongson-eiointc: Fix incorrect use of
+ acpi_get_vec_parent
 To: loongson-kernel@lists.loongnix.cn
 Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
  loongarch@lists.linux.dev, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
  Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 References: <20230324060854.29375-1-lvjianmin@loongson.cn>
- <20230324060854.29375-2-lvjianmin@loongson.cn> <87h6uagnzo.wl-maz@kernel.org>
+ <20230324060854.29375-3-lvjianmin@loongson.cn> <87ileqgo42.wl-maz@kernel.org>
 From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <cfc7fd9f-67cf-3140-0ec5-a240a45506b9@loongson.cn>
-Date: Mon, 27 Mar 2023 11:58:57 +0800
+Message-ID: <c0ad9408-26a0-2b39-586c-a65cb08d4b76@loongson.cn>
+Date: Mon, 27 Mar 2023 12:00:32 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -26,100 +26,119 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <87h6uagnzo.wl-maz@kernel.org>
+In-Reply-To: <87ileqgo42.wl-maz@kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxib2BFCFkf8wNAA--.6983S3
+X-CM-TRANSID:AQAAf8CxMuXgFCFk6MwNAA--.44815S3
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZFWUGFyxWF4xur4UJw15CFg_yoW5ZFW3pa
-	y2qFZ8tr4rt34xCr92yr1UXr1rZwn3uayxtrWrGayFvr4DCry3JF42ya1jvryIkr4UGF42
-	vF4Yqa15uw45A3DanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxJFWxAFWDWw45WF18GFW8Xrb_yoW5try5pF
+	yxAFWDtr43XrWUur1ftFs8Xr1Sqw1rZFs7ta1fGayFyanruF1kGF1FkF1UCr9akrW7GF4a
+	va1YqF1UZF13A37anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
 	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
 	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
-	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
-	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
-	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
-	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
+	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+	1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
+	CVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
+	1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU8EeHDUUUUU==
 
 
 
-On 2023/3/24 下午11:36, Marc Zyngier wrote:
-> On Fri, 24 Mar 2023 06:08:50 +0000,
+On 2023/3/24 下午11:34, Marc Zyngier wrote:
+> On Fri, 24 Mar 2023 06:08:51 +0000,
 > Jianmin Lv <lvjianmin@loongson.cn> wrote:
 >>
->> In pch_pic_parse_madt(), a NULL parent pointer will be
->> returned from acpi_get_vec_parent() for second pch-pic domain
->> related to second bridge while calling eiointc_acpi_init() at
->> first time, where the parent of it has not been initialized
->> yet, and will be initialized during second time calling
->> eiointc_acpi_init(). So, it's reasonable to return zero so
->> that failure of acpi_table_parse_madt() will be avoided, or else
->> acpi_cascade_irqdomain_init() will return and initialization of
->> followed pch_msi domain will be skipped.
+>> In eiointc_acpi_init(), a *eiointc* node is passed into
+>> acpi_get_vec_parent() instead of a required *NUMA* node (on some chip
+>> like 3C5000L, a *NUMA* node means a *eiointc* node, but on some chip
+>> like 3C5000, a *NUMA* node contains 4 *eiointc* nodes), and node in
+>> struct acpi_vector_group is essentially a *NUMA* node, which will
+>> lead to no parent matched for passed *eiointc* node. so the patch
+>> adjusts code to use *NUMA* node for parameter node of
+>> acpi_set_vec_parent/acpi_get_vec_parent.
 >>
->> Although it does not matter when pch_msi_parse_madt() returns
->> -EINVAL if no invalid parent is found, it's also reasonable to
->> return zero for that.
->>
->> Change-Id: I4d278534999ec3e5c8db6d40155ba2665d9de86f
+>> Change-Id: Iddd8423f9694cadc1ce28ee290c2e98ca17dfccc
 >> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 >> ---
->>   drivers/irqchip/irq-loongson-eiointc.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>   drivers/irqchip/irq-loongson-eiointc.c | 17 +++++++++++------
+>>   1 file changed, 11 insertions(+), 6 deletions(-)
 >>
 >> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
->> index d15fd38c1756..62a632d73991 100644
+>> index 62a632d73991..b165c27a3609 100644
 >> --- a/drivers/irqchip/irq-loongson-eiointc.c
 >> +++ b/drivers/irqchip/irq-loongson-eiointc.c
->> @@ -343,7 +343,7 @@ static int __init pch_pic_parse_madt(union acpi_subtable_headers *header,
->>   	if (parent)
->>   		return pch_pic_acpi_init(parent, pchpic_entry);
+>> @@ -280,9 +280,6 @@ static void acpi_set_vec_parent(int node, struct irq_domain *parent, struct acpi
+>>   {
+>>   	int i;
 >>   
->> -	return -EINVAL;
->> +	return 0;
+>> -	if (cpu_has_flatmode)
+>> -		node = cpu_to_node(node * CORES_PER_EIO_NODE);
+>> -
+>>   	for (i = 0; i < MAX_IO_PICS; i++) {
+>>   		if (node == vec_group[i].node) {
+>>   			vec_group[i].parent = parent;
+>> @@ -349,8 +346,13 @@ static int __init pch_pic_parse_madt(union acpi_subtable_headers *header,
+>>   static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+>>   					const unsigned long end)
+>>   {
+>> +	struct irq_domain *parent;
+>>   	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
+>> -	struct irq_domain *parent = acpi_get_vec_parent(eiointc_priv[nr_pics - 1]->node, msi_group);
+>> +	int node = eiointc_priv[nr_pics - 1]->node;
+>> +
+>> +	if (cpu_has_flatmode)
+>> +		node = cpu_to_node(node * CORES_PER_EIO_NODE);
 > 
-> Why can't you detect this particular case instead of blindly
-> suppressing the error?
+> This is a bit unreadable. I'd rather see:
+> 
+> 	int node;
+> 
+> 	if (cpu_has_flatmode)
+> 		node = ....;
+> 	else
+> 		node = ....;
+> 
+> which makes it easy to detect the use of an uninitialised 'node'
+> rather than using the wrong default variable.
+> 
+>> +	parent = acpi_get_vec_parent(node, msi_group);
+>>   
+>>   	if (parent)
+>>   		return pch_msi_acpi_init(parent, pchmsi_entry);
+>> @@ -379,6 +381,7 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
+>>   	int i, ret, parent_irq;
+>>   	unsigned long node_map;
+>>   	struct eiointc_priv *priv;
+>> +	int node = acpi_eiointc->node;
+>>   
+>>   	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+>>   	if (!priv)
+>> @@ -421,8 +424,10 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
+>>   				  "irqchip/loongarch/intc:starting",
+>>   				  eiointc_router_init, NULL);
+>>   
+>> -	acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, pch_group);
+>> -	acpi_set_vec_parent(acpi_eiointc->node, priv->eiointc_domain, msi_group);
+>> +	if (cpu_has_flatmode)
+>> +		node = cpu_to_node(node * CORES_PER_EIO_NODE);
+>> +	acpi_set_vec_parent(node, priv->eiointc_domain, pch_group);
+>> +	acpi_set_vec_parent(node, priv->eiointc_domain, msi_group);
+>>   	ret = acpi_cascade_irqdomain_init();
+>>   
+>>   	return ret;
+> 
+> Same thing here.
 > 
 
-For dual-bridges scenario, parent handle for pch_pic IRQ domain will be 
-set by acpi_set_vec_parent() during each eiointc initialization. And
-the parent handle for one pch_pic will be set during *first* eiointc
-entry parsing, and the parent handle for another pch_pic will be
-set during *second* eiointc entry parsing. But two pch_pic entries
-will be parsed during each eiointc entry parsing, so a NULL parent
-pointer must be returned druing first eiointc initialization, which
-is reasonable and should not be treated as an error.
-
-The calling stack of pch_pic_parse_madt (where acpi_get_vec_parent is 
-called to get parent handle) is like this:
-
-cpuintc_acpi_init
-   acpi_cascade_irqdomain_init(in cpuintc driver)
-     acpi_table_parse_madt
-       eiointc_parse_madt
-         eiointc_acpi_init /* this will be called two times 
-corresponding  to parsing two eiointc entries in MADT under dual-bridges 
-scenario*/
-           acpi_set_vec_parent /* set parent handle for one pch_pic 
-during first eiointc entry parsing, and set parent handle for another 
-pch_pic during second eiointc entry parsing*/
-             acpi_cascade_irqdomain_init(in eiointc driver)
-               acpi_table_parse_madt
-                 pch_pic_parse_madt /* this will be called twice because 
-of two pchpic entries, and only one valid parent handle will be returned 
-from acpi_get_vec_parent() during first eiointc entry parsing (another 
-parent handle is not set yet), so a NULL parent pointer must be returned 
-during first eiointc entry parsing, which is reasonable and should not 
-be treated as an error.*/
+Ok, I'll change them  in next version.
 
 Thanks!
 
