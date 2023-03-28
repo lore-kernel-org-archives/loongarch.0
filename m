@@ -1,161 +1,92 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257978465
-	for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 14:13:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=04vP3RzMs3P/u6ra9aohOJriuOsHdgwipqyExrFrTjc=; b=mh6/AUJNqn+FdcuZzLxS1JRPCX
-	9PjtU4toaTdFVFl8Oq9o4nbuQoE4aiZM9QOcGREWE4jLWY5DoSYbELFv8DeY1wFP2mTYG070hd6Wd
-	Tfe7eR5++Rk8eczns5zb+jJ9Ky7ydT3o9MEOVkd+Mvo6y2Qjj49i8W/cXrM3mUJ50OxS/wVoAjwtZ
-	4xrdvc55AKGF1grOslzBDBZlBkvSAxdNwdMzb7XPRz/+prNath1ct2o3sL3EpinKQF/tOKsNcQqQw
-	Ig2781259z8H1OdssQ8MsAn/tTHXr6eCszj7n0Dxt3/by0YcDWPkadhEKH46s76AMvQbseCeW5+h7
-	yic00bRw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51186)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1ph9uX-0006Pz-8z; Tue, 28 Mar 2023 15:02:53 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1ph9uJ-0006WX-6C; Tue, 28 Mar 2023 15:02:39 +0100
-Date: Tue, 28 Mar 2023 15:02:39 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Donglin Peng <pengdonglin@sangfor.com.cn>
-Cc: mhiramat@kernel.org, rostedt@goodmis.org, mark.rutland@arm.com,
-	will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
-	paul.walmsley@sifive.com, tglx@linutronix.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	chenhuacai@kernel.org, zhangqing@loongson.cn, kernel@xen0n.name,
-	mingo@redhat.com, peterz@infradead.org, xiehuan09@gmail.com,
-	dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
-	dolinux.peng@gmail.com, linux-trace-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 3/8] ARM: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-Message-ID: <ZCLzf6RX4U00g9Cu@shell.armlinux.org.uk>
-References: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
- <20230328134319.2185812-4-pengdonglin@sangfor.com.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBEB8465
+	for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 14:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1680012824;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+E8HtZqTun8UNt8XZcvENJSCBWpeQntcGXMLkFXrU3g=;
+	b=h7ZwJ+bkLupsPQhmuRzYNKRgKgd9LpwVQuA6IxM+HS3SoEFvB7JsoSRrSquhic8i4qo1pp
+	TfBeJxAtm4NleARp8MJcYbDuNPwfKHb1Ab7x4oPEGy6f0Cb45JcOsJ3IEoV+1qshsjVFgR
+	HS2bt3lXhU3XRShN7rnirXvV5+mfRi4=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-617-YhfwicaOPPiuFepuwfb_Kw-1; Tue, 28 Mar 2023 10:13:43 -0400
+X-MC-Unique: YhfwicaOPPiuFepuwfb_Kw-1
+Received: by mail-ed1-f70.google.com with SMTP id i22-20020a05640242d600b004f5962985f4so17990317edc.12
+        for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 07:13:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680012822;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+E8HtZqTun8UNt8XZcvENJSCBWpeQntcGXMLkFXrU3g=;
+        b=H3paOL3o85riCMMYpt9rQcBbeiPnT11BXxY25bTCqPEAvvkXOlpuaskeEd7hhus6gs
+         iFnjTl9gQC4XKua3gM0yzlvKWMA0Z54AZf3WN+0teaJHQFFzMsf66LquKg/+CMkfa6ft
+         sdoqqYvdyb06poVVhivHLDdUrIcIdoZPUYryf59XNKQpu5A4A9nrxU8aIt0nCC6tLwUJ
+         S0hG9yg7pJpWAJCdGFKhUbyppUtoH87I91DeXIxv38jRQcgTJ80gOuCTthDN7wYzlLZt
+         siifHEIfUe+DDheqK3nv5JBSPq5O9E/BDcQE3mx5MMCVt/J0M0zitfMC+kPyaTC5cgfg
+         Xqag==
+X-Gm-Message-State: AAQBX9fuefprfJU0ewyYHL/pSelANkvefQwXpoIEf2ZLtZMtO5AvHagD
+	rHAOQmc+FEdBvi8tlZ/1blZX8utbEeZgiok6IXsyUYKhZ1vLbt4ScSiHdfdGeYPjoI8jBATLBn8
+	b+t5Kmdqsqm5Z8b/XVJl5
+X-Received: by 2002:a17:907:8a08:b0:944:44d:c736 with SMTP id sc8-20020a1709078a0800b00944044dc736mr12059623ejc.64.1680012821900;
+        Tue, 28 Mar 2023 07:13:41 -0700 (PDT)
+X-Google-Smtp-Source: AKy350bq4jWUmHpYItDc9v2j+gaXcLGVHaVKbHyNxW/udCKRUqQ5mrD9MVmzHsiurNkpWO6mf3ruIQ==
+X-Received: by 2002:a17:907:8a08:b0:944:44d:c736 with SMTP id sc8-20020a1709078a0800b00944044dc736mr12059587ejc.64.1680012821634;
+        Tue, 28 Mar 2023 07:13:41 -0700 (PDT)
+Received: from ?IPV6:2001:b07:6468:f312:1c09:f536:3de6:228c? ([2001:b07:6468:f312:1c09:f536:3de6:228c])
+        by smtp.googlemail.com with ESMTPSA id u23-20020a170906409700b009334a6ef3e8sm13334074ejj.141.2023.03.28.07.13.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Mar 2023 07:13:41 -0700 (PDT)
+Message-ID: <55c79f33-2549-38eb-f868-8e6141d7d322@redhat.com>
+Date: Tue, 28 Mar 2023 16:13:39 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230328134319.2185812-4-pengdonglin@sangfor.com.cn>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PING PATCH v4 27/29] LoongArch: KVM: Implement vcpu world switch
+To: Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+ Xi Ruoyao <xry111@xry111.site>
+References: <20230328123119.3649361-1-zhaotianrui@loongson.cn>
+ <20230328123119.3649361-28-zhaotianrui@loongson.cn>
+From: Paolo Bonzini <pbonzini@redhat.com>
+In-Reply-To: <20230328123119.3649361-28-zhaotianrui@loongson.cn>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 28, 2023 at 06:43:14AM -0700, Donglin Peng wrote:
-> The commit d4815c5d1bbd ("function_graph: Support recording and printing
-> the return value of function") laid the groundwork for the for the
-> funcgraph-retval, and this modification makes it available on the
-> ARM platform.
-> 
-> We introduce a new structure called fgraph_ret_regs for the ARM platform
-> to hold return registers and the frame pointer. We then fill its content
-> in the return_to_handler and pass its address to the function
-> ftrace_return_to_handler to record the return value.
-> 
-> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
-> ---
-> v8:
->  - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
-> ---
->  arch/arm/Kconfig               |  1 +
->  arch/arm/include/asm/ftrace.h  | 18 ++++++++++++++++++
->  arch/arm/kernel/entry-ftrace.S |  6 +++++-
->  3 files changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index e24a9820e12f..73061379855a 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -98,6 +98,7 @@ config ARM
->  	select HAVE_FAST_GUP if ARM_LPAE
->  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
->  	select HAVE_FUNCTION_ERROR_INJECTION
-> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
->  	select HAVE_FUNCTION_GRAPH_TRACER
->  	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
->  	select HAVE_GCC_PLUGINS
-> diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
-> index 7e9251ca29fe..2ab4bee21d79 100644
-> --- a/arch/arm/include/asm/ftrace.h
-> +++ b/arch/arm/include/asm/ftrace.h
-> @@ -77,4 +77,22 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
->  
->  #endif /* ifndef __ASSEMBLY__ */
->  
-> +
-> +#ifndef __ASSEMBLY__
-> +struct fgraph_ret_regs {
-> +	unsigned long regs[4];
-> +	unsigned long fp;
-> +};
-> +
-> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
-> +{
-> +	return ret_regs->regs[0];
-> +}
-> +
-> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
-> +{
-> +	return ret_regs->fp;
-> +}
-> +#endif
-> +
->  #endif /* _ASM_ARM_FTRACE */
-> diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
-> index 3e7bcaca5e07..5f1e74555b25 100644
-> --- a/arch/arm/kernel/entry-ftrace.S
-> +++ b/arch/arm/kernel/entry-ftrace.S
-> @@ -257,11 +257,15 @@ ENDPROC(ftrace_graph_regs_caller)
->  
->  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->  ENTRY(return_to_handler)
-> +	sub	sp, sp, #4
->  	stmdb	sp!, {r0-r3}
-> -	add	r0, sp, #16		@ sp at exit of instrumented routine
-> +	add	r0, sp, #20		@ sp at exit of instrumented routine
-> +	str	r0, [sp, #16]
-> +	mov	r0, sp
+On 3/28/23 14:31, Tianrui Zhao wrote:
+> + * prepare switch to guest
+> + * @param:
+> + *  KVM_ARCH: kvm_vcpu_arch, don't touch it until 'ertn'
+> + *  GPRNUM: KVM_ARCH gpr number
 
-1) EABI wants the stack to be aligned to 8 bytes.
-2) We can do better than this.
+Stale comment (should be "a2: kvm_vcpu_arch, don't touch it until 'ertn'").
 
-	mov	ip, sp
-	stmdb	sp!, {r0-r3, ip, lr}
-	mov	r0, sp
+Since you are at it, I noticed now that tmp and tmp1 aren't too useful 
+because all registers will be overwritten before the end of the macro. 
+You choose whether to keep or remove them.
 
->  	bl	ftrace_return_to_handler
->  	mov	lr, r0			@ r0 has real ret addr
->  	ldmia	sp!, {r0-r3}
+Paolo
 
-	ldmia	sp, {r0-r3}		@ since we need to manually adjust sp,
+> + *  tmp, tmp1: temp register
+> + */
 
-> +	add	sp, sp, #4		@ skip fp
-
-	add	sp, sp, #4 * 6		@ restore stack pointer here
-
->  	ret	lr
->  ENDPROC(return_to_handler)
->  #endif
-> -- 
-> 2.25.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
