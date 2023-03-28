@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC518320F
-	for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 12:31:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C5383210
+	for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 12:31:26 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxEk4b3iJkFBkTAA--.17814S3;
+	by gateway (Coremail) with SMTP id _____8BxONkb3iJkLBkTAA--.29121S3;
 	Tue, 28 Mar 2023 20:31:23 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxPL4X3iJku2cPAA--.12046S14;
-	Tue, 28 Mar 2023 20:31:22 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxPL4X3iJku2cPAA--.12046S16;
+	Tue, 28 Mar 2023 20:31:23 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PING PATCH v4 12/29] LoongArch: KVM: Implement vcpu interrupt operations
-Date: Tue, 28 Mar 2023 20:31:02 +0800
-Message-Id: <20230328123119.3649361-13-zhaotianrui@loongson.cn>
+Subject: [PING PATCH v4 14/29] LoongArch: KVM: Implement vcpu load and vcpu put operations
+Date: Tue, 28 Mar 2023 20:31:04 +0800
+Message-Id: <20230328123119.3649361-15-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230328123119.3649361-1-zhaotianrui@loongson.cn>
 References: <20230328123119.3649361-1-zhaotianrui@loongson.cn>
@@ -35,224 +35,243 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxPL4X3iJku2cPAA--.12046S14
+X-CM-TRANSID:AQAAf8CxPL4X3iJku2cPAA--.12046S16
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxCrWfAr1fKFWkWry3Gr1rJFb_yoWrKFWDpF
-	W8Cw45Xw48Gr17G343ZFnYvr4Yqr1kKFZxCr97C3y3K347tr95XFyvyr98XF1UGw4UKF1f
-	X34SqaykCa45JwUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW3JFWrXFW8XFWkAF18Xr43Jrb_yoWfJF17pr
+	1qgFW09rWUKF9rtF15ArsFvr13WF4Sy34rJr17t3y2qrn8Z3s5ZF4IyFy7JFyFq3WxXF1I
+	y3s8C39a9r4ktw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
 	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
 	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
 	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
 	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
 	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
 	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRR5l1PUUUUU==
+	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
 
-Implement vcpu interrupt operations such as vcpu set irq and
-vcpu clear irq, using set_gcsr_estat to set irq which is
-parsed by the irq bitmap.
+Implement loongarch vcpu load and vcpu put operations, including
+load csr value into hardware and save csr value into vcpu structure.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/interrupt.c | 126 +++++++++++++++++++++++++++++++++
- arch/loongarch/kvm/vcpu.c      |  45 ++++++++++++
- 2 files changed, 171 insertions(+)
- create mode 100644 arch/loongarch/kvm/interrupt.c
+ arch/loongarch/kvm/vcpu.c | 199 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 199 insertions(+)
 
-diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
-new file mode 100644
-index 000000000..02267a71d
---- /dev/null
-+++ b/arch/loongarch/kvm/interrupt.c
-@@ -0,0 +1,126 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/err.h>
-+#include <asm/kvm_vcpu.h>
-+
-+static unsigned int int_to_coreint[LOONGARCH_EXC_MAX] = {
-+	[LARCH_INT_TIMER]	= CPU_TIMER,
-+	[LARCH_INT_IPI]		= CPU_IPI,
-+	[LARCH_INT_SIP0]	= CPU_SIP0,
-+	[LARCH_INT_SIP1]	= CPU_SIP1,
-+	[LARCH_INT_IP0]		= CPU_IP0,
-+	[LARCH_INT_IP1]		= CPU_IP1,
-+	[LARCH_INT_IP2]		= CPU_IP2,
-+	[LARCH_INT_IP3]		= CPU_IP3,
-+	[LARCH_INT_IP4]		= CPU_IP4,
-+	[LARCH_INT_IP5]		= CPU_IP5,
-+	[LARCH_INT_IP6]		= CPU_IP6,
-+	[LARCH_INT_IP7]		= CPU_IP7,
-+};
-+
-+static int _kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
-+{
-+	unsigned int irq = 0;
-+
-+	clear_bit(priority, &vcpu->arch.irq_pending);
-+	if (priority < LOONGARCH_EXC_MAX)
-+		irq = int_to_coreint[priority];
-+
-+	switch (priority) {
-+	case LARCH_INT_TIMER:
-+	case LARCH_INT_IPI:
-+	case LARCH_INT_SIP0:
-+	case LARCH_INT_SIP1:
-+		set_gcsr_estat(irq);
-+		break;
-+
-+	case LARCH_INT_IP0:
-+	case LARCH_INT_IP1:
-+	case LARCH_INT_IP2:
-+	case LARCH_INT_IP3:
-+	case LARCH_INT_IP4:
-+	case LARCH_INT_IP5:
-+	case LARCH_INT_IP6:
-+	case LARCH_INT_IP7:
-+		set_csr_gintc(irq);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 1;
-+}
-+
-+static int _kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
-+{
-+	unsigned int irq = 0;
-+
-+	clear_bit(priority, &vcpu->arch.irq_clear);
-+	if (priority < LOONGARCH_EXC_MAX)
-+		irq = int_to_coreint[priority];
-+
-+	switch (priority) {
-+	case LARCH_INT_TIMER:
-+	case LARCH_INT_IPI:
-+	case LARCH_INT_SIP0:
-+	case LARCH_INT_SIP1:
-+		clear_gcsr_estat(irq);
-+		break;
-+
-+	case LARCH_INT_IP0:
-+	case LARCH_INT_IP1:
-+	case LARCH_INT_IP2:
-+	case LARCH_INT_IP3:
-+	case LARCH_INT_IP4:
-+	case LARCH_INT_IP5:
-+	case LARCH_INT_IP6:
-+	case LARCH_INT_IP7:
-+		clear_csr_gintc(irq);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 1;
-+}
-+
-+void _kvm_deliver_intr(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long *pending = &vcpu->arch.irq_pending;
-+	unsigned long *pending_clr = &vcpu->arch.irq_clear;
-+	unsigned int priority;
-+
-+	if (!(*pending) && !(*pending_clr))
-+		return;
-+
-+	if (*pending_clr) {
-+		priority = __ffs(*pending_clr);
-+		while (priority <= LOONGARCH_EXC_IPNUM) {
-+			_kvm_irq_clear(vcpu, priority);
-+			priority = find_next_bit(pending_clr,
-+					BITS_PER_BYTE * sizeof(*pending_clr),
-+					priority + 1);
-+		}
-+	}
-+
-+	if (*pending) {
-+		priority = __ffs(*pending);
-+		while (priority <= LOONGARCH_EXC_IPNUM) {
-+			_kvm_irq_deliver(vcpu, priority);
-+			priority = find_next_bit(pending,
-+					BITS_PER_BYTE * sizeof(*pending),
-+					priority + 1);
-+		}
-+	}
-+}
-+
-+int _kvm_pending_timer(struct kvm_vcpu *vcpu)
-+{
-+	return test_bit(LARCH_INT_TIMER, &vcpu->arch.irq_pending);
-+}
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 2709ab43d..4c3b41fd1 100644
+index 131aa2240..319129de4 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -327,6 +327,51 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
- 	preempt_enable();
+@@ -626,6 +626,205 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+ 	}
  }
  
-+int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu,
-+			     struct kvm_loongarch_interrupt *irq)
++static int _kvm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
 +{
-+	int intr = (int)irq->irq;
-+	struct kvm_vcpu *dvcpu = NULL;
++	struct kvm_context *context;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++	bool migrated, all;
 +
-+	if (irq->cpu == -1)
-+		dvcpu = vcpu;
-+	else
-+		dvcpu = kvm_get_vcpu(vcpu->kvm, irq->cpu);
++	/*
++	 * Have we migrated to a different CPU?
++	 * If so, any old guest TLB state may be stale.
++	 */
++	migrated = (vcpu->arch.last_sched_cpu != cpu);
 +
-+	if (intr > 0)
-+		_kvm_queue_irq(dvcpu, intr);
-+	else if (intr < 0)
-+		_kvm_dequeue_irq(dvcpu, -intr);
-+	else {
-+		kvm_err("%s: invalid interrupt ioctl (%d:%d)\n", __func__,
-+				irq->cpu, irq->irq);
-+		return -EINVAL;
-+	}
++	/*
++	 * Was this the last VCPU to run on this CPU?
++	 * If not, any old guest state from this VCPU will have been clobbered.
++	 */
++	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
++	all = migrated || (context->last_vcpu != vcpu);
++	context->last_vcpu = vcpu;
 +
-+	kvm_vcpu_kick(dvcpu);
++	/*
++	 * Restore timer state regardless
++	 */
++	kvm_restore_timer(vcpu);
++
++	/* Control guest page CCA attribute */
++	change_csr_gcfg(CSR_GCFG_MATC_MASK, CSR_GCFG_MATC_ROOT);
++	/* Don't bother restoring registers multiple times unless necessary */
++	if (!all)
++		return 0;
++
++	write_csr_gcntc((ulong)vcpu->kvm->arch.time_offset);
++	/*
++	 * Restore guest CSR registers
++	 */
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_CRMD);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PRMD);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_EUEN);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_MISC);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ECFG);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ERA);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_BADV);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_BADI);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_EENTRY);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBIDX);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBEHI);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBELO0);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBELO1);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ASID);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PGDL);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PGDH);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PWCTL0);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PWCTL1);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_STLBPGSIZE);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_RVACFG);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_CPUID);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS0);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS1);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS2);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS3);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS4);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS5);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS6);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS7);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TMID);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_CNTC);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRENTRY);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRBADV);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRERA);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRSAVE);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRELO0);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRELO1);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBREHI);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRPRMD);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN0);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN1);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN2);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN3);
++	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_LLBCTL);
++
++	/* restore Root.Guestexcept from unused Guest guestexcept register */
++	write_csr_gintc(csr->csrs[LOONGARCH_CSR_GINTC]);
++
++	/*
++	 * We should clear linked load bit to break interrupted atomics. This
++	 * prevents a SC on the next VCPU from succeeding by matching a LL on
++	 * the previous VCPU.
++	 */
++	if (vcpu->kvm->created_vcpus > 1)
++		set_gcsr_llbctl(CSR_LLBCTL_WCLLB);
++
 +	return 0;
 +}
 +
-+long kvm_arch_vcpu_async_ioctl(struct file *filp,
-+			       unsigned int ioctl, unsigned long arg)
++void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
 +{
-+	struct kvm_vcpu *vcpu = filp->private_data;
-+	void __user *argp = (void __user *)arg;
++	unsigned long flags;
 +
-+	if (ioctl == KVM_INTERRUPT) {
-+		struct kvm_loongarch_interrupt irq;
-+
-+		if (copy_from_user(&irq, argp, sizeof(irq)))
-+			return -EFAULT;
-+		kvm_debug("[%d] %s: irq: %d\n", vcpu->vcpu_id, __func__,
-+			  irq.irq);
-+
-+		return kvm_vcpu_ioctl_interrupt(vcpu, &irq);
++	local_irq_save(flags);
++	vcpu->cpu = cpu;
++	if (vcpu->arch.last_sched_cpu != cpu) {
++		kvm_debug("[%d->%d]KVM VCPU[%d] switch\n",
++				vcpu->arch.last_sched_cpu, cpu, vcpu->vcpu_id);
++		/*
++		 * Migrate the timer interrupt to the current CPU so that it
++		 * always interrupts the guest and synchronously triggers a
++		 * guest timer interrupt.
++		 */
++		kvm_migrate_count(vcpu);
 +	}
 +
-+	return -ENOIOCTLCMD;
++	/* restore guest state to registers */
++	_kvm_vcpu_load(vcpu, cpu);
++	local_irq_restore(flags);
 +}
 +
- int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
++static int _kvm_vcpu_put(struct kvm_vcpu *vcpu, int cpu)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++
++	kvm_lose_fpu(vcpu);
++	/*
++	 * update csr state from hardware if software csr state is stale,
++	 * most csr registers are kept unchanged during process context
++	 * switch except csr registers like remaining timer tick value and
++	 * injected interrupt state.
++	 */
++	if (!(vcpu->arch.aux_inuse & KVM_LARCH_CSR)) {
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_CRMD);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PRMD);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_EUEN);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_MISC);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ECFG);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ERA);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_BADV);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_BADI);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_EENTRY);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBIDX);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBEHI);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBELO0);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBELO1);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ASID);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PGDL);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PGDH);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PGD);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PWCTL0);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PWCTL1);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_STLBPGSIZE);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_RVACFG);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_CPUID);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PRCFG1);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PRCFG2);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PRCFG3);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS0);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS1);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS2);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS3);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS4);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS5);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS6);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS7);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TMID);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_CNTC);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_LLBCTL);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRENTRY);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRBADV);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRERA);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRSAVE);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRELO0);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRELO1);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBREHI);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRPRMD);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN0);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN1);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN2);
++		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN3);
++		vcpu->arch.aux_inuse |= KVM_LARCH_CSR;
++	}
++	/* save Root.Guestexcept in unused Guest guestexcept register */
++	kvm_save_timer(vcpu);
++	csr->csrs[LOONGARCH_CSR_GINTC] = read_csr_gintc();
++	return 0;
++}
++
++void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
++{
++	unsigned long flags;
++	int cpu;
++
++	local_irq_save(flags);
++	cpu = smp_processor_id();
++	vcpu->arch.last_sched_cpu = cpu;
++	vcpu->cpu = -1;
++
++	/* save guest state in registers */
++	_kvm_vcpu_put(vcpu, cpu);
++	local_irq_restore(flags);
++}
++
+ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
  {
- 	return 0;
+ 	int r = -EINTR;
 -- 
 2.31.1
 
