@@ -1,175 +1,161 @@
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E47479FF
-	for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 13:43:45 +0000 (UTC)
-Received: from ubuntu.localdomain (unknown [117.133.56.22])
-	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 9B3475801BB;
-	Tue, 28 Mar 2023 21:43:24 +0800 (CST)
-From: Donglin Peng <pengdonglin@sangfor.com.cn>
-To: mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	linux@armlinux.org.uk,
-	mark.rutland@arm.com,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	tglx@linutronix.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	chenhuacai@kernel.org,
-	zhangqing@loongson.cn,
-	kernel@xen0n.name,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	xiehuan09@gmail.com,
-	dinghui@sangfor.com.cn,
-	huangcun@sangfor.com.cn,
-	dolinux.peng@gmail.com
-Cc: linux-trace-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: [PATCH v8 2/8] tracing: Add documentation for funcgraph-retval and funcgraph-retval-hex
-Date: Tue, 28 Mar 2023 06:43:13 -0700
-Message-Id: <20230328134319.2185812-3-pengdonglin@sangfor.com.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257978465
+	for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 14:13:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=04vP3RzMs3P/u6ra9aohOJriuOsHdgwipqyExrFrTjc=; b=mh6/AUJNqn+FdcuZzLxS1JRPCX
+	9PjtU4toaTdFVFl8Oq9o4nbuQoE4aiZM9QOcGREWE4jLWY5DoSYbELFv8DeY1wFP2mTYG070hd6Wd
+	Tfe7eR5++Rk8eczns5zb+jJ9Ky7ydT3o9MEOVkd+Mvo6y2Qjj49i8W/cXrM3mUJ50OxS/wVoAjwtZ
+	4xrdvc55AKGF1grOslzBDBZlBkvSAxdNwdMzb7XPRz/+prNath1ct2o3sL3EpinKQF/tOKsNcQqQw
+	Ig2781259z8H1OdssQ8MsAn/tTHXr6eCszj7n0Dxt3/by0YcDWPkadhEKH46s76AMvQbseCeW5+h7
+	yic00bRw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51186)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1ph9uX-0006Pz-8z; Tue, 28 Mar 2023 15:02:53 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1ph9uJ-0006WX-6C; Tue, 28 Mar 2023 15:02:39 +0100
+Date: Tue, 28 Mar 2023 15:02:39 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc: mhiramat@kernel.org, rostedt@goodmis.org, mark.rutland@arm.com,
+	will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, tglx@linutronix.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	chenhuacai@kernel.org, zhangqing@loongson.cn, kernel@xen0n.name,
+	mingo@redhat.com, peterz@infradead.org, xiehuan09@gmail.com,
+	dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
+	dolinux.peng@gmail.com, linux-trace-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 3/8] ARM: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Message-ID: <ZCLzf6RX4U00g9Cu@shell.armlinux.org.uk>
 References: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
+ <20230328134319.2185812-4-pengdonglin@sangfor.com.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTEJNVktKS0IYSBhITR0fS1UTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpISkJIT1VKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OBQ6LQw6MD0QSFYVAQodDz40
-	ORcaFBRVSlVKTUNLS0pKS0tNS0pJVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-	WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFMSUJMNwY+
-X-HM-Tid: 0a8728758e632eb7kusn9b3475801bb
-X-HM-MType: 1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230328134319.2185812-4-pengdonglin@sangfor.com.cn>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Add documentation for the two newly introduced options for the
-function_graph tracer. The funcgraph-retval option is used to
-control whether or not to display the return value, while the
-funcgraph-retval-hex option is used to control the display
-format of the return value.
+On Tue, Mar 28, 2023 at 06:43:14AM -0700, Donglin Peng wrote:
+> The commit d4815c5d1bbd ("function_graph: Support recording and printing
+> the return value of function") laid the groundwork for the for the
+> funcgraph-retval, and this modification makes it available on the
+> ARM platform.
+> 
+> We introduce a new structure called fgraph_ret_regs for the ARM platform
+> to hold return registers and the frame pointer. We then fill its content
+> in the return_to_handler and pass its address to the function
+> ftrace_return_to_handler to record the return value.
+> 
+> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+> ---
+> v8:
+>  - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+> ---
+>  arch/arm/Kconfig               |  1 +
+>  arch/arm/include/asm/ftrace.h  | 18 ++++++++++++++++++
+>  arch/arm/kernel/entry-ftrace.S |  6 +++++-
+>  3 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index e24a9820e12f..73061379855a 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -98,6 +98,7 @@ config ARM
+>  	select HAVE_FAST_GUP if ARM_LPAE
+>  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+>  	select HAVE_FUNCTION_ERROR_INJECTION
+> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+>  	select HAVE_GCC_PLUGINS
+> diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
+> index 7e9251ca29fe..2ab4bee21d79 100644
+> --- a/arch/arm/include/asm/ftrace.h
+> +++ b/arch/arm/include/asm/ftrace.h
+> @@ -77,4 +77,22 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+>  
+>  #endif /* ifndef __ASSEMBLY__ */
+>  
+> +
+> +#ifndef __ASSEMBLY__
+> +struct fgraph_ret_regs {
+> +	unsigned long regs[4];
+> +	unsigned long fp;
+> +};
+> +
+> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->regs[0];
+> +}
+> +
+> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->fp;
+> +}
+> +#endif
+> +
+>  #endif /* _ASM_ARM_FTRACE */
+> diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
+> index 3e7bcaca5e07..5f1e74555b25 100644
+> --- a/arch/arm/kernel/entry-ftrace.S
+> +++ b/arch/arm/kernel/entry-ftrace.S
+> @@ -257,11 +257,15 @@ ENDPROC(ftrace_graph_regs_caller)
+>  
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>  ENTRY(return_to_handler)
+> +	sub	sp, sp, #4
+>  	stmdb	sp!, {r0-r3}
+> -	add	r0, sp, #16		@ sp at exit of instrumented routine
+> +	add	r0, sp, #20		@ sp at exit of instrumented routine
+> +	str	r0, [sp, #16]
+> +	mov	r0, sp
 
-Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
----
-v7:
- - Rename trace option 'graph_retval_hex' to 'funcgraph-retval-hex'
- - Update documentation description
+1) EABI wants the stack to be aligned to 8 bytes.
+2) We can do better than this.
 
-v6:
- - Modify the limitations for funcgraph-retval
- - Optimize the English expression
+	mov	ip, sp
+	stmdb	sp!, {r0-r3, ip, lr}
+	mov	r0, sp
 
-v5:
- - Describe the limitations of funcgraph-retval
----
- Documentation/trace/ftrace.rst | 74 ++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+>  	bl	ftrace_return_to_handler
+>  	mov	lr, r0			@ r0 has real ret addr
+>  	ldmia	sp!, {r0-r3}
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index b927fb2b94dc..cdf94b97876f 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1328,6 +1328,19 @@ Options for function_graph tracer:
- 	only a closing curly bracket "}" is displayed for
- 	the return of a function.
- 
-+  funcgraph-retval
-+	When set, the return value of each traced function
-+	will be printed after an equal sign "=". By default
-+	this is off.
-+
-+  funcgraph-retval-hex
-+	When set, the return value will always be printed
-+	in hexadecimal format. If the option is not set and
-+	the return value is an error code, it will be printed
-+	in signed decimal format; otherwise it will also be
-+	printed in hexadecimal format. By default, this option
-+	is off.
-+
-   sleep-time
- 	When running function graph tracer, to include
- 	the time a task schedules out in its function.
-@@ -2673,6 +2686,67 @@ It is default disabled.
-     0)   1.757 us    |        } /* kmem_cache_free() */
-     0)   2.861 us    |      } /* putname() */
- 
-+The return value of each traced function can be displayed after
-+an equal sign "=". When encountering system call failures, it
-+can be verfy helpful to quickly locate the function that first
-+returns an error code.
-+
-+	- hide: echo nofuncgraph-retval > trace_options
-+	- show: echo funcgraph-retval > trace_options
-+
-+  Example with funcgraph-retval::
-+
-+    1)               |    cgroup_migrate() {
-+    1)   0.651 us    |      cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
-+    1)               |      cgroup_migrate_execute() {
-+    1)               |        cpu_cgroup_can_attach() {
-+    1)               |          cgroup_taskset_first() {
-+    1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
-+    1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
-+    1)   0.380 us    |          sched_rt_can_attach(); /* = 0x0 */
-+    1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
-+    1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
-+    1)   7.143 us    |    } /* cgroup_migrate = -22 */
-+
-+The above example shows that the function cpu_cgroup_can_attach
-+returned the error code -22 firstly, then we can read the code
-+of this function to get the root cause.
-+
-+When the option funcgraph-retval-hex is not set, the return value can
-+be displayed in a smart way. Specifically, if it is an error code,
-+it will be printed in signed decimal format, otherwise it will
-+printed in hexadecimal format.
-+
-+	- smart: echo nofuncgraph-retval-hex > trace_options
-+	- hexadecimal always: echo funcgraph-retval-hex > trace_options
-+
-+  Example with funcgraph-retval-hex::
-+
-+    1)               |      cgroup_migrate() {
-+    1)   0.651 us    |        cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
-+    1)               |        cgroup_migrate_execute() {
-+    1)               |          cpu_cgroup_can_attach() {
-+    1)               |            cgroup_taskset_first() {
-+    1)   0.732 us    |              cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
-+    1)   1.232 us    |            } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
-+    1)   0.380 us    |            sched_rt_can_attach(); /* = 0x0 */
-+    1)   2.335 us    |          } /* cpu_cgroup_can_attach = 0xffffffea */
-+    1)   4.369 us    |        } /* cgroup_migrate_execute = 0xffffffea */
-+    1)   7.143 us    |      } /* cgroup_migrate = 0xffffffea */
-+
-+At present, there are some limitations when using the funcgraph-retval
-+option, which may be addressed in the future:
-+
-+- Even if the function return type is void, a return value will still
-+  be printed, and you can just ignore it.
-+
-+- Even if return values are stored in multiple registers, only the
-+  value contained in the first register will be recorded and printed.
-+  To illustrate, in the x86 architecture, eax and edx are used to store
-+  a 64-bit return value, with the lower 32 bits saved in eax and the
-+  upper 32 bits saved in edx. However, only the value stored in eax
-+  will be recorded and printed.
-+
- You can put some comments on specific functions by using
- trace_printk() For example, if you want to put a comment inside
- the __might_sleep() function, you just have to include
+	ldmia	sp, {r0-r3}		@ since we need to manually adjust sp,
+
+> +	add	sp, sp, #4		@ skip fp
+
+	add	sp, sp, #4 * 6		@ restore stack pointer here
+
+>  	ret	lr
+>  ENDPROC(return_to_handler)
+>  #endif
+> -- 
+> 2.25.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
 -- 
-2.25.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
