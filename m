@@ -1,117 +1,107 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC409A29
-	for <loongarch@lists.linux.dev>; Mon, 27 Mar 2023 09:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=NQ76cs9m2PfyRb1nvWbSz8Et10awSsHsXz4HNPXF8yg=; b=QZ9Vn6XQoPo/vkVnwWKgjNwNQF
-	i+T6Yl3JETlALqU5VTD5LuRKWBkxlUZfMnccx1V/R8P1y1jb2Nn5vNn7qwhEJjK8c6CJnqa+IvXYv
-	fSsK289ahjDc6UcYJ6PNuPJdYbA6zEy2NiIQ1OKZDK5Ou9RVm5ztS1GIL6bIVPQLOz4PR1pye5B0O
-	3vVEIr7XrOnjpURdrjUhayo44zsagA6WzNAlLWxZihURKdHXLk/exMEpuHu1wCA+H5uKVfWFO4jHw
-	sx55zP9IskZDpk3E1MCtVVDVaPNI846+iakQvvoZc3HFZinQFEwTulPbXBfyfpt6jwzMW6C0Vf0N7
-	kIjdICDw==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1pgjAz-0007hb-0h; Mon, 27 Mar 2023 11:30:05 +0200
-Received: from [219.59.88.22] (helo=localhost.localdomain)
-	by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1pgjAw-000UQh-Hd; Mon, 27 Mar 2023 11:30:03 +0200
-Subject: Re: [PATCH] loongarch/bpf: Fix bpf load failed with
- CONFIG_BPF_JIT_ALWAYS_ON, caused by jit (BPF_ST | BPF_NOSPEC) code
-To: George Guo <guodongtai@kylinos.cn>, chenhuacai@kernel.org,
- masahiroy@kernel.org, michal.lkml@markovi.net
-Cc: kernel@xen0n.name, ndesaulniers@google.com, ast@kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, bpf@vger.kernel.org
-References: <20230326044019.2139628-1-guodongtai@kylinos.cn>
-From: Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <c1932d0d-cf3f-5005-958d-7e08dddf42c9@iogearbox.net>
-Date: Mon, 27 Mar 2023 11:29:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C27FEBB
+	for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 07:19:10 +0000 (UTC)
+X-UUID: 0fdb51c7ccf84897a8c346005d2bc822-20230328
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.20,REQID:530e9fa5-b352-4298-a12d-a821b6d44155,IP:20,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:11
+X-CID-INFO: VERSION:1.1.20,REQID:530e9fa5-b352-4298-a12d-a821b6d44155,IP:20,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:11
+X-CID-META: VersionHash:25b5999,CLOUDID:d07ab529-564d-42d9-9875-7c868ee415ec,B
+	ulkID:230328151339VN7RZSUH,BulkQuantity:0,Recheck:0,SF:24|17|19|42|102,TC:
+	nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
+	I:0,OSA:0,AV:0
+X-CID-BVR: 0
+X-UUID: 0fdb51c7ccf84897a8c346005d2bc822-20230328
+X-User: guodongtai@kylinos.cn
+Received: from localhost.localdomain [(210.12.40.82)] by mailgw
+	(envelope-from <guodongtai@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 910755339; Tue, 28 Mar 2023 15:13:38 +0800
+From: George Guo <guodongtai@kylinos.cn>
+To: daniel@iogearbox.net
+Cc: ast@kernel.org,
+	bpf@vger.kernel.org,
+	chenhuacai@kernel.org,
+	guodongtai@kylinos.cn,
+	kernel@xen0n.name,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	masahiroy@kernel.org,
+	michal.lkml@markovi.net,
+	ndesaulniers@google.com
+Subject: [PATCH v2] loongarch/bpf: Skip speculation barrier opcode, which caused ltp testcase bpf_prog02 to fail
+Date: Tue, 28 Mar 2023 15:13:35 +0800
+Message-Id: <20230328071335.2664966-1-guodongtai@kylinos.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <c1932d0d-cf3f-5005-958d-7e08dddf42c9@iogearbox.net>
+References: <c1932d0d-cf3f-5005-958d-7e08dddf42c9@iogearbox.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230326044019.2139628-1-guodongtai@kylinos.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.8/26856/Mon Mar 27 09:24:05 2023)
+Content-Transfer-Encoding: 8bit
 
-On 3/26/23 6:40 AM, George Guo wrote:
-> Here just skip the code(BPF_ST | BPF_NOSPEC) that has no couterpart to the loongarch.
-> 
-> To verify, use ltp testcase:
-> 
-> Without this patch:
-> $ ./bpf_prog02
-> ... ...
-> bpf_common.c:123: TBROK: Failed verification: ??? (524)
-> 
-> Summary:
-> passed   0
-> failed   0
-> broken   1
-> skipped  0
-> warnings 0
-> 
-> With this patch:
-> $ ./bpf_prog02
-> ... ...
-> Summary:
-> passed   0
-> failed   0
-> broken   0
-> skipped  0
-> warnings 0
-> 
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->   arch/loongarch/net/bpf_jit.c | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index 288003a9f0ca..745d344385ed 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1046,6 +1046,11 @@ static int build_body(struct jit_ctx *ctx, bool extra_pass)
->   		if (ctx->image == NULL)
->   			ctx->offset[i] = ctx->idx;
->   
-> +		/* skip the code that has no couterpart to the host arch */
-> +		if(insn->code == (BPF_ST | BPF_NOSPEC)) {
-> +			continue;
-> +		}
+Here just skip the opcode(BPF_ST | BPF_NOSPEC) that has no couterpart to the loongarch.
 
-Small nit, but could we align with other JIT implementations and place it into similar
-location for consistency? Above looks a bit out of place and it should really be part
-of build_insn.
+To verify, use ltp testcase:
+
+Without this patch:
+$ ./bpf_prog02
+... ...
+bpf_common.c:123: TBROK: Failed verification: ??? (524)
+
+Summary:
+passed   0
+failed   0
+broken   1
+skipped  0
+warnings 0
+
+With this patch:
+$ ./bpf_prog02
+... ...
+Summary:
+passed   0
+failed   0
+broken   0
+skipped  0
+warnings 0
+
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+
+---
+Changelog:
+v2:
+	- place it to build_insn
+	- add printing for skipping bpf_jit the opcode
+---
+ arch/loongarch/net/bpf_jit.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 288003a9f0ca..d586df48ecc6 100644
+index 288003a9f0ca..d3c6b1c4ccbb 100644
 --- a/arch/loongarch/net/bpf_jit.c
 +++ b/arch/loongarch/net/bpf_jit.c
-@@ -1022,6 +1022,10 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
-                 emit_atomic(insn, ctx);
-                 break;
-
-+       /* Speculation barrier */
-+       case BPF_ST | BPF_NOSPEC:
-+               break;
+@@ -1022,6 +1022,11 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 		emit_atomic(insn, ctx);
+ 		break;
+ 
++	/* Speculation barrier */
++	case BPF_ST | BPF_NOSPEC:
++		pr_info_once("bpf_jit: skip speculation barrier opcode %0x2x\n", code);
++		break;
 +
-         default:
-                 pr_err("bpf_jit: unknown opcode %02x\n", code);
-                 return -EINVAL;
+ 	default:
+ 		pr_err("bpf_jit: unknown opcode %02x\n", code);
+ 		return -EINVAL;
+-- 
+2.34.1
 
