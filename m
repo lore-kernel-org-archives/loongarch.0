@@ -1,187 +1,310 @@
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6A610E1
-	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 04:31:26 +0000 (UTC)
-Received: from [10.128.10.193] (unknown [117.133.56.22])
-	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 42A495801FC;
-	Wed, 29 Mar 2023 12:31:15 +0800 (CST)
-Message-ID: <115b1771-8204-749a-0a93-7835e74ea6ba@sangfor.com.cn>
-Date: Wed, 29 Mar 2023 12:31:13 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7185710E3
+	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 05:52:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1680069139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ObUDCyiUsnFV1cy9shzpagULe7hh9olQM4+SK/lwxlA=;
+	b=DKWvKmxBTtCPIC+wD41bCymfjUeZW5Pvi1G8dUjMBR2BWVH6xTuN9/7oXujqaJsaKrNW3S
+	aLhWgDSsE+oUWDlXvPD5ZiY5uv2eidrwjHFI26dHauy+Lo5NWlrfgAhIvcNwUhqkdPdBYK
+	SbctQY2SV6inlM13W7KkC7iUhq0aefE=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-416-kV6ProaOPfexy4w-AlGkIg-1; Wed, 29 Mar 2023 01:52:18 -0400
+X-MC-Unique: kV6ProaOPfexy4w-AlGkIg-1
+Received: by mail-pg1-f199.google.com with SMTP id d34-20020a630e22000000b005039e28b68cso3969987pgl.13
+        for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 22:52:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680069137; x=1682661137;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ObUDCyiUsnFV1cy9shzpagULe7hh9olQM4+SK/lwxlA=;
+        b=6tIvugddvna7Lsiw4Whnt41iiA0nuBWVOp1gq2Kr1cxxsww420m/Uk6WZYlckDAFWE
+         2L7dCZSSXS+eQ2fNC/ipxHgwa2WwVY9jgry4W9BpefHyU9CUaSeQ2tFvxtZA7ZeuBWf+
+         VWpbJUOCu/Y8BwUnTcBRfwP2HlwT60h3EC1ph3sYYCbzB+2Fr0QjM5l2Xe58LWXlIujL
+         rZ6jQDNZkUvkxHv2nB6e/wfw3hznOXmaJ6T1jRWAwSW4otqgRmXbKgPqxzAAcquj9Ipz
+         TIQUrWT5W/Gm3b/YRyOK3CToFTqWEdXX624pQYYxS05us/o+7nS563SxY673K+ClJ0u0
+         pkfA==
+X-Gm-Message-State: AAQBX9fhVeK6lbGWOcZdsE0P9hgl68FBbuHSJnM9isn/ADXGJF/hEmXa
+	hkans/e1CkGsfo+KHOySZ8B0edlOIkTqIhbGS6gDNgfl9LFLFhPN/8Evtpx/ruPeXxnZBFqjHAe
+	F8n27odJ+c3Qtn7VyaRxf
+X-Received: by 2002:aa7:8b1a:0:b0:628:630:a374 with SMTP id f26-20020aa78b1a000000b006280630a374mr16086103pfd.2.1680069136916;
+        Tue, 28 Mar 2023 22:52:16 -0700 (PDT)
+X-Google-Smtp-Source: AKy350asRmMJZp2hmdpkoKSWcwC36pg3waaI7AAJ2maRryhwQrlS9edWxJxJU43lWsoujJkkL3PQZg==
+X-Received: by 2002:aa7:8b1a:0:b0:628:630:a374 with SMTP id f26-20020aa78b1a000000b006280630a374mr16086084pfd.2.1680069136580;
+        Tue, 28 Mar 2023 22:52:16 -0700 (PDT)
+Received: from [10.66.61.39] ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id i12-20020aa787cc000000b00580e3917af7sm15101517pfo.117.2023.03.28.22.52.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Mar 2023 22:52:16 -0700 (PDT)
+Message-ID: <e17627fb-283e-dd42-94c1-f89dea167577@redhat.com>
+Date: Wed, 29 Mar 2023 13:52:07 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v8 7/8] LoongArch: ftrace: Enable
- HAVE_FUNCTION_GRAPH_RETVAL
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [RFC PATCH 00/32] ACPI/arm64: add support for virtual cpuhotplug
+To: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
+ loongarch@lists.linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Len Brown <lenb@kernel.org>,
+ Rafael Wysocki <rafael@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Salil Mehta <salil.mehta@huawei.com>, Russell King <linux@armlinux.org.uk>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>
+References: <20230203135043.409192-1-james.morse@arm.com>
+From: Shaoqin Huang <shahuang@redhat.com>
+In-Reply-To: <20230203135043.409192-1-james.morse@arm.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-To: Qing Zhang <zhangqing@loongson.cn>, mhiramat@kernel.org,
- rostedt@goodmis.org, linux@armlinux.org.uk, mark.rutland@arm.com,
- will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
- paul.walmsley@sifive.com, tglx@linutronix.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, chenhuacai@kernel.org, kernel@xen0n.name,
- mingo@redhat.com, peterz@infradead.org, xiehuan09@gmail.com,
- dinghui@sangfor.com.cn, huangcun@sangfor.com.cn, dolinux.peng@gmail.com
-Cc: linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
- <20230328134319.2185812-8-pengdonglin@sangfor.com.cn>
- <28389252-4611-977f-ab80-baeca99d9080@loongson.cn>
-From: Donglin Peng <pengdonglin@sangfor.com.cn>
-In-Reply-To: <28389252-4611-977f-ab80-baeca99d9080@loongson.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTxlMVkMaGhkaGE5CTk1KS1UTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS0hKTFVKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OlE6ITo4Hj0PTEstSjoqPUgu
-	VilPCz5VSlVKTUNLS01PSUxNTU9MVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-	WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFMQ09PNwY+
-X-HM-Tid: 0a872ba266f92eb7kusn42a495801fc
-X-HM-MType: 1
+Content-Transfer-Encoding: 7bit
 
-On 2023/3/29 12:08, Qing Zhang wrote:
-> Hi, Donglin
+Hi James,
+
+On 2/3/23 21:50, James Morse wrote:
+> Hello!
 > 
-> On 2023/3/28 下午9:43, Donglin Peng wrote:
->> The commit d4815c5d1bbd ("function_graph: Support recording and
->> printing the return value of function") laid the groundwork for the
->> for the funcgraph-retval, and this modification makes it available
->> on the LoongArch platform.
->>
->> We introduce a new structure called fgraph_ret_regs for the LoongArch
->> platform to hold return registers and the frame pointer. We then fill
->> its content in the return_to_handler and pass its address to the
->> function ftrace_return_to_handler to record the return value.
->>
->> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
->> ---
->> v8:
->>   - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
->> ---
->>   arch/loongarch/Kconfig              |  1 +
->>   arch/loongarch/include/asm/ftrace.h | 18 ++++++++++++++++++
->>   arch/loongarch/kernel/mcount.S      |  6 ++++--
->>   arch/loongarch/kernel/mcount_dyn.S  |  7 ++++---
->>   4 files changed, 27 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> index 7fd51257e0ed..4bf60132869b 100644
->> --- a/arch/loongarch/Kconfig
->> +++ b/arch/loongarch/Kconfig
->> @@ -99,6 +99,7 @@ config LOONGARCH
->>       select HAVE_FAST_GUP
->>       select HAVE_FTRACE_MCOUNT_RECORD
->>       select HAVE_FUNCTION_ARG_ACCESS_API
->> +    select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
->>       select HAVE_FUNCTION_GRAPH_TRACER
->>       select HAVE_FUNCTION_TRACER
->>       select HAVE_GENERIC_VDSO
->> diff --git a/arch/loongarch/include/asm/ftrace.h 
->> b/arch/loongarch/include/asm/ftrace.h
->> index 3418d32d4fc7..433c6218888b 100644
->> --- a/arch/loongarch/include/asm/ftrace.h
->> +++ b/arch/loongarch/include/asm/ftrace.h
->> @@ -63,4 +63,22 @@ void ftrace_graph_func(unsigned long ip, unsigned 
->> long parent_ip,
->>   #endif /* CONFIG_FUNCTION_TRACER */
->> +#ifndef __ASSEMBLY__
->> +struct fgraph_ret_regs {
->> +    unsigned long a0;
->> +    unsigned long a1;
->> +    unsigned long fp;
->> +};
+> This series adds what looks like cpuhotplug support to arm64 for use in
+> virtual machines. It does this by moving the cpu_register() calls for
+> architectures that support ACPI out of the arch code by using
+> GENERIC_CPU_DEVICES, then into the ACPI processor driver.
 > 
-> This overall looks good, but some places need attention:
+> The kubernetes folk really want to be able to add CPUs to an existing VM,
+> in exactly the same way they do on x86. The use-case is pre-booting guests
+> with one CPU, then adding the number that were actually needed when the
+> workload is provisioned.
 > 
-> This will need to be padded to 16 bytes, as within the kernel,
-> loongarch requires the SP to be aligned to 16 bytes at all time.
-> Please can you add an `__unused/padding` field to ensure.
+> Wait? Doesn't arm64 support cpuhotplug already!?
+> In the arm world, cpuhotplug gets used to mean removing the power from a CPU.
+> The CPU is offline, and remains present. For x86, and ACPI, cpuhotplug
+> has the additional step of physically removing the CPU, so that it isn't
+> present anymore.
+> 
+> Arm64 doesn't support this, and can't support it: CPUs are really a slice
+> of the SoC, and there is not enough information in the existing ACPI tables
+> to describe which bits of the slice also got removed. Without a reference
+> machine: adding this support to the spec is a wild goose chase.
+> 
+> Critically: everything described in the firmware tables must remain present.
+> 
+> For a virtual machine this is easy as all the other bits of 'virtual SoC'
+> are emulated, so they can (and do) remain present when a vCPU is 'removed'.
+> 
+> On a system that supports cpuhotplug the MADT has to describe every possible
+> CPU at boot. Under KVM, the vGIC needs to know about every possible vCPU before
+> the guest is started.
+> With these constraints, virtual-cpuhotplug is really just a hypervisor/firmware
+> policy about which CPUs can be brought online.
+> 
+> This series adds support for virtual-cpuhotplug as exactly that: firmware
+> policy. This may even work on a physical machine too; for a guest the part of
+> firmware is played by the VMM. (typically Qemu).
+> 
+> PSCI support is modified to return 'DENIED' if the CPU can't be brought
+> online/enabled yet. The CPU object's _STA method's enabled bit is used to
+> indicate firmware's current disposition. If the CPU has its enabled bit clear,
+> it will not be registered with sysfs, and attempts to bring it online will
+> fail. The notifications that _STA has changed its value then work in the same
+> way as physical hotplug, and firmware can cause the CPU to be registered some
+> time later, allowing it to be brought online.
+> 
+> This creates something that looks like cpuhotplug to user-space, as the sysfs
+> files appear and disappear, and the udev notifications look the same.
+> 
+> One notable difference is the CPU present mask, which is exposed via sysfs.
+> Because the CPUs remain present throughout, they can still be seen in that mask.
+> This value does get used by webbrowsers to estimate the number of CPUs
+> as the CPU online mask is constantly changed on mobile phones.
+> 
+> Linux is tolerant of PSCI returning errors, as its always been allowed to do
+> that. To avoid confusing OS that can't tolerate this, we needed an additional
+> bit in the MADT GICC flags. This series copies ACPI_MADT_ONLINE_CAPABLE, which
+> appears to be for this purpose, but calls it ACPI_MADT_GICC_CPU_CAPABLE as it
+> has a different bit position in the GICC.
+> 
+> This code is unconditionally enabled for all ACPI architectures.
+> If there are problems with firmware tables on some devices, the CPUs will
+> already be online by the time the acpi_processor_make_enabled() is called.
+> A mismatch here causes a firmware-bug message and kernel taint. This should
+> only affect people with broken firmware who also boot with maxcpus=1, and
+> bring CPUs online later.
+> 
+> I had a go at switching the remaining architectures over to GENERIC_CPU_DEVICES,
+> so that the Kconfig symbol can be removed, but I got stuck with powerpc
+> and s390.
+> 
+> 
+> The first patch has already been posted as a fix here:
+> https://www.spinics.net/lists/linux-ia64/msg21920.html
+> I've only build tested Loongarch and ia64.
+> 
+> 
+> If folk want to play along at home, you'll need a copy of Qemu that supports this.
+> https://github.com/salil-mehta/qemu.git salil/virt-cpuhp-armv8/rfc-v1-port29092022.psci.present
+> 
+> You'll need to fix the numbers of KVM_CAP_ARM_HVC_TO_USER and KVM_CAP_ARM_PSCI_TO_USER
+> to match your host kernel. Replace your '-smp' argument with something like:
+> | -smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
+> 
+> then feed the following to the Qemu montior;
+> | (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
+> | (qemu) device_del cpu1
+> 
+> 
+> This series is based on v6.2-rc3, and can be retrieved from:
+> https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/ virtual_cpu_hotplug/rfc/v1
 
-Thank you for pointing out this issue, and I will fix it.
+I applied this patch series on v6.2-rc3 and using the QEMU cloned from 
+the salil-mehta/qemu.git repo. But when I try to run the QEMU, it shows:
 
->> +
->> +static inline unsigned long fgraph_ret_regs_return_value(struct 
->> fgraph_ret_regs *ret_regs)
->> +{
->> +    return ret_regs->a0;
->> +}
->> +
->> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct 
->> fgraph_ret_regs *ret_regs)
->> +{
->> +    return ret_regs->fp;
->> +}
->> +#endif
->> +
->>   #endif /* _ASM_LOONGARCH_FTRACE_H */
->> diff --git a/arch/loongarch/kernel/mcount.S 
->> b/arch/loongarch/kernel/mcount.S
->> index 8cdc1563cd33..3e405c0212c0 100644
->> --- a/arch/loongarch/kernel/mcount.S
->> +++ b/arch/loongarch/kernel/mcount.S
->> @@ -79,10 +79,12 @@ SYM_FUNC_START(ftrace_graph_caller)
->>   SYM_FUNC_END(ftrace_graph_caller)
->>   SYM_FUNC_START(return_to_handler)
->> -    PTR_ADDI    sp, sp, -2 * SZREG
->> +    PTR_ADDI    sp, sp, -3 * SZREG
-> As above, this will need to be padded to keep the stack aligned to 16
-> bytes.
->      PTR_ADDI    sp, sp, -4 * SZREG
+$ qemu-system-aarch64: -accel kvm: Failed to enable 
+KVM_CAP_ARM_PSCI_TO_USER cap.
 
-Thanks.
+Here is the command I use:
+
+$ qemu-system-aarch64
+-machine virt
+-bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd
+-accel kvm
+-m 4096
+-smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
+-cpu host
+-qmp unix:./src.socket,server,nowait
+-hda ./XXX.qcow2
+-serial unix:./src.serial,server,nowait
+-monitor stdio
+
+It seems something related to your notice: You'll need to fix the 
+numbers of KVM_CAP_ARM_HVC_TO_USER and KVM_CAP_ARM_PSCI_TO_USER
+to match your host kernel.
+
+But I'm not actually understand what should I fix, since I haven't 
+review the patch series. Could you give me some more information? Maybe 
+I'm doing something wrong.
+
+Thanks,
 
 > 
->>       PTR_S        a0, sp, 0
->>       PTR_S        a1, sp, SZREG
->> +    PTR_S        zero, sp, 2 * SZREG
->> +    move        a0, sp
->>       bl        ftrace_return_to_handler
->>       /* Restore the real parent address: a0 -> ra */
->> @@ -90,7 +92,7 @@ SYM_FUNC_START(return_to_handler)
->>       PTR_L        a0, sp, 0
->>       PTR_L        a1, sp, SZREG
->> -    PTR_ADDI    sp, sp, 2 * SZREG
->> +    PTR_ADDI    sp, sp, 3 * SZREG
->>       jr        ra
->>   SYM_FUNC_END(return_to_handler)
->>   #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
->> diff --git a/arch/loongarch/kernel/mcount_dyn.S 
->> b/arch/loongarch/kernel/mcount_dyn.S
->> index bbabf06244c2..ab85a953c6d3 100644
->> --- a/arch/loongarch/kernel/mcount_dyn.S
->> +++ b/arch/loongarch/kernel/mcount_dyn.S
->> @@ -131,18 +131,19 @@ SYM_CODE_END(ftrace_graph_caller)
->>   SYM_CODE_START(return_to_handler)
->>       /* Save return value regs */
->> -    PTR_ADDI     sp, sp, -2 * SZREG
->> +    PTR_ADDI     sp, sp, -3 * SZREG
-> as above.
-
-Thanks.
-
 > 
 > Thanks,
-> - Qing
->>       PTR_S        a0, sp, 0
->>       PTR_S        a1, sp, SZREG
->> +    PTR_S        zero, sp, 2 * SZREG
->> -    move        a0, zero
->> +    move        a0, sp
->>       bl        ftrace_return_to_handler
->>       move        ra, a0
->>       /* Restore return value regs */
->>       PTR_L        a0, sp, 0
->>       PTR_L        a1, sp, SZREG
->> -    PTR_ADDI     sp, sp, 2 * SZREG
->> +    PTR_ADDI     sp, sp, 3 * SZREG
->>       jr        ra
->>   SYM_CODE_END(return_to_handler)
->>
 > 
+> James Morse (29):
+>    ia64: Fix build error due to switch case label appearing next to
+>      declaration
+>    ACPI: Move ACPI_HOTPLUG_CPU to be enabled per architecture
+>    drivers: base: Use present CPUs in GENERIC_CPU_DEVICES
+>    drivers: base: Allow parts of GENERIC_CPU_DEVICES to be overridden
+>    drivers: base: Move cpu_dev_init() after node_dev_init()
+>    arm64: setup: Switch over to GENERIC_CPU_DEVICES using
+>      arch_register_cpu()
+>    ia64/topology: Switch over to GENERIC_CPU_DEVICES
+>    x86/topology: Switch over to GENERIC_CPU_DEVICES
+>    LoongArch: Switch over to GENERIC_CPU_DEVICES
+>    arch_topology: Make register_cpu_capacity_sysctl() tolerant to late
+>      CPUs
+>    ACPI: processor: Add support for processors described as container
+>      packages
+>    ACPI: processor: Register CPUs that are online, but not described in
+>      the DSDT
+>    ACPI: processor: Register all CPUs from acpi_processor_get_info()
+>    ACPI: Rename ACPI_HOTPLUG_CPU to include 'present'
+>    ACPI: Move acpi_bus_trim_one() before acpi_scan_hot_remove()
+>    ACPI: Rename acpi_processor_hotadd_init and remove pre-processor
+>      guards
+>    ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
+>    ACPI: Check _STA present bit before making CPUs not present
+>    ACPI: Warn when the present bit changes but the feature is not enabled
+>    drivers: base: Implement weak arch_unregister_cpu()
+>    LoongArch: Use the __weak version of arch_unregister_cpu()
+>    arm64: acpi: Move get_cpu_for_acpi_id() to a header
+>    ACPICA: Add new MADT GICC flags fields [code first?]
+>    arm64, irqchip/gic-v3, ACPI: Move MADT GICC enabled check into a
+>      helper
+>    irqchip/gic-v3: Don't return errors from gic_acpi_match_gicc()
+>    irqchip/gic-v3: Add support for ACPI's disabled but 'online capable'
+>      CPUs
+>    ACPI: add support to register CPUs based on the _STA enabled bit
+>    arm64: document virtual CPU hotplug's expectations
+>    cpumask: Add enabled cpumask for present CPUs that can be brought
+>      online
+> 
+> Jean-Philippe Brucker (3):
+>    arm64: psci: Ignore DENIED CPUs
+>    KVM: arm64: Pass hypercalls to userspace
+>    KVM: arm64: Pass PSCI calls to userspace
+> 
+>   Documentation/arm64/cpu-hotplug.rst       |  79 ++++++++++++
+>   Documentation/arm64/index.rst             |   1 +
+>   Documentation/virt/kvm/api.rst            |  31 ++++-
+>   Documentation/virt/kvm/arm/hypercalls.rst |   1 +
+>   arch/arm64/Kconfig                        |   1 +
+>   arch/arm64/include/asm/acpi.h             |  11 ++
+>   arch/arm64/include/asm/cpu.h              |   1 -
+>   arch/arm64/include/asm/kvm_host.h         |   2 +
+>   arch/arm64/kernel/acpi_numa.c             |  11 --
+>   arch/arm64/kernel/psci.c                  |   2 +-
+>   arch/arm64/kernel/setup.c                 |  13 +-
+>   arch/arm64/kernel/smp.c                   |   5 +-
+>   arch/arm64/kvm/arm.c                      |  15 ++-
+>   arch/arm64/kvm/hypercalls.c               |  28 ++++-
+>   arch/arm64/kvm/psci.c                     |  13 ++
+>   arch/ia64/Kconfig                         |   2 +
+>   arch/ia64/include/asm/acpi.h              |   2 +-
+>   arch/ia64/include/asm/cpu.h               |  11 --
+>   arch/ia64/kernel/acpi.c                   |   6 +-
+>   arch/ia64/kernel/setup.c                  |   2 +-
+>   arch/ia64/kernel/sys_ia64.c               |   7 +-
+>   arch/ia64/kernel/topology.c               |  35 +-----
+>   arch/loongarch/Kconfig                    |   2 +
+>   arch/loongarch/kernel/topology.c          |  31 +----
+>   arch/x86/Kconfig                          |   2 +
+>   arch/x86/include/asm/cpu.h                |   6 -
+>   arch/x86/kernel/acpi/boot.c               |   4 +-
+>   arch/x86/kernel/topology.c                |  19 +--
+>   drivers/acpi/Kconfig                      |   5 +-
+>   drivers/acpi/acpi_processor.c             | 146 +++++++++++++++++-----
+>   drivers/acpi/processor_core.c             |   2 +-
+>   drivers/acpi/scan.c                       | 116 +++++++++++------
+>   drivers/base/arch_topology.c              |  38 ++++--
+>   drivers/base/cpu.c                        |  31 ++++-
+>   drivers/base/init.c                       |   2 +-
+>   drivers/firmware/psci/psci.c              |   2 +
+>   drivers/irqchip/irq-gic-v3.c              |  38 +++---
+>   include/acpi/acpi_bus.h                   |   1 +
+>   include/acpi/actbl2.h                     |   1 +
+>   include/kvm/arm_hypercalls.h              |   1 +
+>   include/kvm/arm_psci.h                    |   4 +
+>   include/linux/acpi.h                      |  10 +-
+>   include/linux/cpu.h                       |   6 +
+>   include/linux/cpumask.h                   |  25 ++++
+>   include/uapi/linux/kvm.h                  |   2 +
+>   kernel/cpu.c                              |   3 +
+>   46 files changed, 532 insertions(+), 244 deletions(-)
+>   create mode 100644 Documentation/arm64/cpu-hotplug.rst
+> 
+
+-- 
+Shaoqin
 
