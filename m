@@ -1,310 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7185710E3
-	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 05:52:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680069139;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ObUDCyiUsnFV1cy9shzpagULe7hh9olQM4+SK/lwxlA=;
-	b=DKWvKmxBTtCPIC+wD41bCymfjUeZW5Pvi1G8dUjMBR2BWVH6xTuN9/7oXujqaJsaKrNW3S
-	aLhWgDSsE+oUWDlXvPD5ZiY5uv2eidrwjHFI26dHauy+Lo5NWlrfgAhIvcNwUhqkdPdBYK
-	SbctQY2SV6inlM13W7KkC7iUhq0aefE=
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
- [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-416-kV6ProaOPfexy4w-AlGkIg-1; Wed, 29 Mar 2023 01:52:18 -0400
-X-MC-Unique: kV6ProaOPfexy4w-AlGkIg-1
-Received: by mail-pg1-f199.google.com with SMTP id d34-20020a630e22000000b005039e28b68cso3969987pgl.13
-        for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 22:52:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63F76FA2
+	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 19:02:50 +0000 (UTC)
+Received: by mail-pj1-f53.google.com with SMTP id r7-20020a17090b050700b002404be7920aso15547383pjz.5
+        for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 12:02:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680116570;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rysh7R9x0DwpV/wCJCeDcK+KSngeOrcjw+kFGG6R2os=;
+        b=U//sM9A7XL/kcpEYXKup4m2J/Sp3DBWPcq+cj4HsJc7+dUi9AsjU02Lwq3JoL1NQmq
+         ismSymj4IoQJ4VYIXTTfXj4IhuTC9V8imTeRJJl8wtp+cLMVycZbZpe5adelriSCB34Z
+         5JRPjQUp4XUV1p1ZJpj8FcgAadV1Nt3xAimI5KHOUF00ILkLWslBnB0DEXYGfhDpjDhs
+         aIvCu/RV/2Kg07dVMVnAXRKweMCcgh7xxmTEuGKD2hPrODR6SjG1EW0qSYoJJ5V2d+iM
+         usSHbr1+aiPi29yP82LVwaPfhD1cK7k46uCFb9ZLK21U4JbQEzxGF/pBiIfUsLTD3aFK
+         EHOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680069137; x=1682661137;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ObUDCyiUsnFV1cy9shzpagULe7hh9olQM4+SK/lwxlA=;
-        b=6tIvugddvna7Lsiw4Whnt41iiA0nuBWVOp1gq2Kr1cxxsww420m/Uk6WZYlckDAFWE
-         2L7dCZSSXS+eQ2fNC/ipxHgwa2WwVY9jgry4W9BpefHyU9CUaSeQ2tFvxtZA7ZeuBWf+
-         VWpbJUOCu/Y8BwUnTcBRfwP2HlwT60h3EC1ph3sYYCbzB+2Fr0QjM5l2Xe58LWXlIujL
-         rZ6jQDNZkUvkxHv2nB6e/wfw3hznOXmaJ6T1jRWAwSW4otqgRmXbKgPqxzAAcquj9Ipz
-         TIQUrWT5W/Gm3b/YRyOK3CToFTqWEdXX624pQYYxS05us/o+7nS563SxY673K+ClJ0u0
-         pkfA==
-X-Gm-Message-State: AAQBX9fhVeK6lbGWOcZdsE0P9hgl68FBbuHSJnM9isn/ADXGJF/hEmXa
-	hkans/e1CkGsfo+KHOySZ8B0edlOIkTqIhbGS6gDNgfl9LFLFhPN/8Evtpx/ruPeXxnZBFqjHAe
-	F8n27odJ+c3Qtn7VyaRxf
-X-Received: by 2002:aa7:8b1a:0:b0:628:630:a374 with SMTP id f26-20020aa78b1a000000b006280630a374mr16086103pfd.2.1680069136916;
-        Tue, 28 Mar 2023 22:52:16 -0700 (PDT)
-X-Google-Smtp-Source: AKy350asRmMJZp2hmdpkoKSWcwC36pg3waaI7AAJ2maRryhwQrlS9edWxJxJU43lWsoujJkkL3PQZg==
-X-Received: by 2002:aa7:8b1a:0:b0:628:630:a374 with SMTP id f26-20020aa78b1a000000b006280630a374mr16086084pfd.2.1680069136580;
-        Tue, 28 Mar 2023 22:52:16 -0700 (PDT)
-Received: from [10.66.61.39] ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id i12-20020aa787cc000000b00580e3917af7sm15101517pfo.117.2023.03.28.22.52.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Mar 2023 22:52:16 -0700 (PDT)
-Message-ID: <e17627fb-283e-dd42-94c1-f89dea167577@redhat.com>
-Date: Wed, 29 Mar 2023 13:52:07 +0800
+        d=1e100.net; s=20210112; t=1680116570;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rysh7R9x0DwpV/wCJCeDcK+KSngeOrcjw+kFGG6R2os=;
+        b=IXAcb1Hr6xWpAuy9MRvnDCQhFhmTu7qJHCGl3R32yiSqlX9FjySyaFKwtSZFFEOMvf
+         qP3DHd8eHB5rUkj/eCUQtsPQg4d2DC+IGomlP9RI0+z3qrJ60U7fBE2c2BTYmi5iPYik
+         2U3YGWOrO8U6wN8DK73JWBj+d5TSJC6aEbZf5z9J+01APtOnstPnSCFxtcjVeDVOZe2p
+         32abR42pFvDs64EvvEjq5gGNB6O/RShCIiXIHU4VrtG5BC9tln6UiELwPK7UJp84fhIy
+         Tx+tcnrL0ZRFa6iV+5a4ZTbtke2FSEMttuGFUBx8kCiPxzBdzRH4o7teWHlC2FOw78Eq
+         d8aQ==
+X-Gm-Message-State: AAQBX9c9Sc0JUx8XihpSUzpYhojYFJKeb7wXOvw2ADQXzinAow+d3XgO
+	cMwdt9wI0ogyOJFdMc8t9QMG2BRWyu/OYaRgDoE=
+X-Google-Smtp-Source: AKy350a8ZyVGR+YsV1iqviDdiXUJrnHDdWNYLxQJ15oR6ir8sjH7TDn0yq8OS/FxjL5RmpSszu69Red3FULJ3Z/k/d4=
+X-Received: by 2002:a17:902:c213:b0:199:49d7:cead with SMTP id
+ 19-20020a170902c21300b0019949d7ceadmr7378827pll.11.1680116570333; Wed, 29 Mar
+ 2023 12:02:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [RFC PATCH 00/32] ACPI/arm64: add support for virtual cpuhotplug
-To: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
- loongarch@lists.linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Len Brown <lenb@kernel.org>,
- Rafael Wysocki <rafael@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Salil Mehta <salil.mehta@huawei.com>, Russell King <linux@armlinux.org.uk>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>
-References: <20230203135043.409192-1-james.morse@arm.com>
-From: Shaoqin Huang <shahuang@redhat.com>
-In-Reply-To: <20230203135043.409192-1-james.morse@arm.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20230328111714.2056-1-zhangqing@loongson.cn>
+In-Reply-To: <20230328111714.2056-1-zhangqing@loongson.cn>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Wed, 29 Mar 2023 21:02:39 +0200
+Message-ID: <CA+fCnZevgYh7CzJ9gOWJ80SwY4Y9w8UO2ZiFAXEnAhQhFgrffA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
+To: Qing Zhang <zhangqing@loongson.cn>
+Cc: Jonathan Corbet <corbet@lwn.net>, Huacai Chen <chenhuacai@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Alexander Potapenko <glider@google.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, kasan-dev@googlegroups.com, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi James,
+> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> index f7ef70661ce2..3b91b941873d 100644
+> --- a/include/linux/kasan.h
+> +++ b/include/linux/kasan.h
+> @@ -54,11 +54,13 @@ extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D];
+>  int kasan_populate_early_shadow(const void *shadow_start,
+>                                 const void *shadow_end);
+>
+> +#ifndef __HAVE_ARCH_SHADOW_MAP
+>  static inline void *kasan_mem_to_shadow(const void *addr)
+>  {
+>         return (void *)((unsigned long)addr >> KASAN_SHADOW_SCALE_SHIFT)
+>                 + KASAN_SHADOW_OFFSET;
+>  }
+> +#endif
+>
+>  int kasan_add_zero_shadow(void *start, unsigned long size);
+>  void kasan_remove_zero_shadow(void *start, unsigned long size);
+> diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> index e5eef670735e..f86194750df5 100644
+> --- a/mm/kasan/generic.c
+> +++ b/mm/kasan/generic.c
+> @@ -175,6 +175,11 @@ static __always_inline bool check_region_inline(unsigned long addr,
+>         if (unlikely(!addr_has_metadata((void *)addr)))
+>                 return !kasan_report(addr, size, write, ret_ip);
+>
+> +#ifndef __HAVE_ARCH_SHADOW_MAP
+> +       if (unlikely(kasan_mem_to_shadow((unsigned long *)addr) == NULL))
+> +               return !kasan_report(addr, size, write, ret_ip);
+> +#endif
 
-On 2/3/23 21:50, James Morse wrote:
-> Hello!
-> 
-> This series adds what looks like cpuhotplug support to arm64 for use in
-> virtual machines. It does this by moving the cpu_register() calls for
-> architectures that support ACPI out of the arch code by using
-> GENERIC_CPU_DEVICES, then into the ACPI processor driver.
-> 
-> The kubernetes folk really want to be able to add CPUs to an existing VM,
-> in exactly the same way they do on x86. The use-case is pre-booting guests
-> with one CPU, then adding the number that were actually needed when the
-> workload is provisioned.
-> 
-> Wait? Doesn't arm64 support cpuhotplug already!?
-> In the arm world, cpuhotplug gets used to mean removing the power from a CPU.
-> The CPU is offline, and remains present. For x86, and ACPI, cpuhotplug
-> has the additional step of physically removing the CPU, so that it isn't
-> present anymore.
-> 
-> Arm64 doesn't support this, and can't support it: CPUs are really a slice
-> of the SoC, and there is not enough information in the existing ACPI tables
-> to describe which bits of the slice also got removed. Without a reference
-> machine: adding this support to the spec is a wild goose chase.
-> 
-> Critically: everything described in the firmware tables must remain present.
-> 
-> For a virtual machine this is easy as all the other bits of 'virtual SoC'
-> are emulated, so they can (and do) remain present when a vCPU is 'removed'.
-> 
-> On a system that supports cpuhotplug the MADT has to describe every possible
-> CPU at boot. Under KVM, the vGIC needs to know about every possible vCPU before
-> the guest is started.
-> With these constraints, virtual-cpuhotplug is really just a hypervisor/firmware
-> policy about which CPUs can be brought online.
-> 
-> This series adds support for virtual-cpuhotplug as exactly that: firmware
-> policy. This may even work on a physical machine too; for a guest the part of
-> firmware is played by the VMM. (typically Qemu).
-> 
-> PSCI support is modified to return 'DENIED' if the CPU can't be brought
-> online/enabled yet. The CPU object's _STA method's enabled bit is used to
-> indicate firmware's current disposition. If the CPU has its enabled bit clear,
-> it will not be registered with sysfs, and attempts to bring it online will
-> fail. The notifications that _STA has changed its value then work in the same
-> way as physical hotplug, and firmware can cause the CPU to be registered some
-> time later, allowing it to be brought online.
-> 
-> This creates something that looks like cpuhotplug to user-space, as the sysfs
-> files appear and disappear, and the udev notifications look the same.
-> 
-> One notable difference is the CPU present mask, which is exposed via sysfs.
-> Because the CPUs remain present throughout, they can still be seen in that mask.
-> This value does get used by webbrowsers to estimate the number of CPUs
-> as the CPU online mask is constantly changed on mobile phones.
-> 
-> Linux is tolerant of PSCI returning errors, as its always been allowed to do
-> that. To avoid confusing OS that can't tolerate this, we needed an additional
-> bit in the MADT GICC flags. This series copies ACPI_MADT_ONLINE_CAPABLE, which
-> appears to be for this purpose, but calls it ACPI_MADT_GICC_CPU_CAPABLE as it
-> has a different bit position in the GICC.
-> 
-> This code is unconditionally enabled for all ACPI architectures.
-> If there are problems with firmware tables on some devices, the CPUs will
-> already be online by the time the acpi_processor_make_enabled() is called.
-> A mismatch here causes a firmware-bug message and kernel taint. This should
-> only affect people with broken firmware who also boot with maxcpus=1, and
-> bring CPUs online later.
-> 
-> I had a go at switching the remaining architectures over to GENERIC_CPU_DEVICES,
-> so that the Kconfig symbol can be removed, but I got stuck with powerpc
-> and s390.
-> 
-> 
-> The first patch has already been posted as a fix here:
-> https://www.spinics.net/lists/linux-ia64/msg21920.html
-> I've only build tested Loongarch and ia64.
-> 
-> 
-> If folk want to play along at home, you'll need a copy of Qemu that supports this.
-> https://github.com/salil-mehta/qemu.git salil/virt-cpuhp-armv8/rfc-v1-port29092022.psci.present
-> 
-> You'll need to fix the numbers of KVM_CAP_ARM_HVC_TO_USER and KVM_CAP_ARM_PSCI_TO_USER
-> to match your host kernel. Replace your '-smp' argument with something like:
-> | -smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
-> 
-> then feed the following to the Qemu montior;
-> | (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
-> | (qemu) device_del cpu1
-> 
-> 
-> This series is based on v6.2-rc3, and can be retrieved from:
-> https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/ virtual_cpu_hotplug/rfc/v1
+This should have been ifdef, right?
 
-I applied this patch series on v6.2-rc3 and using the QEMU cloned from 
-the salil-mehta/qemu.git repo. But when I try to run the QEMU, it shows:
+But I don't think you need this check here at all: addr_has_metadata
+already checks that shadow exists.
 
-$ qemu-system-aarch64: -accel kvm: Failed to enable 
-KVM_CAP_ARM_PSCI_TO_USER cap.
+> +
+>         if (likely(!memory_is_poisoned(addr, size)))
+>                 return true;
+>
+> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+> index cc64ed6858c6..860061a22ca9 100644
+> --- a/mm/kasan/init.c
+> +++ b/mm/kasan/init.c
+> @@ -166,8 +166,9 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
+>                                 if (!p)
+>                                         return -ENOMEM;
+>                         } else {
+> -                               pud_populate(&init_mm, pud,
+> -                                       early_alloc(PAGE_SIZE, NUMA_NO_NODE));
+> +                               p = early_alloc(PAGE_SIZE, NUMA_NO_NODE);
+> +                               pmd_init(p);
+> +                               pud_populate(&init_mm, pud, p);
+>                         }
+>                 }
+>                 zero_pmd_populate(pud, addr, next);
+> @@ -207,8 +208,9 @@ static int __ref zero_p4d_populate(pgd_t *pgd, unsigned long addr,
+>                                 if (!p)
+>                                         return -ENOMEM;
+>                         } else {
+> -                               p4d_populate(&init_mm, p4d,
+> -                                       early_alloc(PAGE_SIZE, NUMA_NO_NODE));
+> +                               p = early_alloc(PAGE_SIZE, NUMA_NO_NODE);
+> +                               pud_init(p);
+> +                               p4d_populate(&init_mm, p4d, p);
 
-Here is the command I use:
+Please explain why these changes are needed in the patch description.
 
-$ qemu-system-aarch64
--machine virt
--bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd
--accel kvm
--m 4096
--smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
--cpu host
--qmp unix:./src.socket,server,nowait
--hda ./XXX.qcow2
--serial unix:./src.serial,server,nowait
--monitor stdio
-
-It seems something related to your notice: You'll need to fix the 
-numbers of KVM_CAP_ARM_HVC_TO_USER and KVM_CAP_ARM_PSCI_TO_USER
-to match your host kernel.
-
-But I'm not actually understand what should I fix, since I haven't 
-review the patch series. Could you give me some more information? Maybe 
-I'm doing something wrong.
-
-Thanks,
-
-> 
-> 
-> Thanks,
-> 
-> James Morse (29):
->    ia64: Fix build error due to switch case label appearing next to
->      declaration
->    ACPI: Move ACPI_HOTPLUG_CPU to be enabled per architecture
->    drivers: base: Use present CPUs in GENERIC_CPU_DEVICES
->    drivers: base: Allow parts of GENERIC_CPU_DEVICES to be overridden
->    drivers: base: Move cpu_dev_init() after node_dev_init()
->    arm64: setup: Switch over to GENERIC_CPU_DEVICES using
->      arch_register_cpu()
->    ia64/topology: Switch over to GENERIC_CPU_DEVICES
->    x86/topology: Switch over to GENERIC_CPU_DEVICES
->    LoongArch: Switch over to GENERIC_CPU_DEVICES
->    arch_topology: Make register_cpu_capacity_sysctl() tolerant to late
->      CPUs
->    ACPI: processor: Add support for processors described as container
->      packages
->    ACPI: processor: Register CPUs that are online, but not described in
->      the DSDT
->    ACPI: processor: Register all CPUs from acpi_processor_get_info()
->    ACPI: Rename ACPI_HOTPLUG_CPU to include 'present'
->    ACPI: Move acpi_bus_trim_one() before acpi_scan_hot_remove()
->    ACPI: Rename acpi_processor_hotadd_init and remove pre-processor
->      guards
->    ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
->    ACPI: Check _STA present bit before making CPUs not present
->    ACPI: Warn when the present bit changes but the feature is not enabled
->    drivers: base: Implement weak arch_unregister_cpu()
->    LoongArch: Use the __weak version of arch_unregister_cpu()
->    arm64: acpi: Move get_cpu_for_acpi_id() to a header
->    ACPICA: Add new MADT GICC flags fields [code first?]
->    arm64, irqchip/gic-v3, ACPI: Move MADT GICC enabled check into a
->      helper
->    irqchip/gic-v3: Don't return errors from gic_acpi_match_gicc()
->    irqchip/gic-v3: Add support for ACPI's disabled but 'online capable'
->      CPUs
->    ACPI: add support to register CPUs based on the _STA enabled bit
->    arm64: document virtual CPU hotplug's expectations
->    cpumask: Add enabled cpumask for present CPUs that can be brought
->      online
-> 
-> Jean-Philippe Brucker (3):
->    arm64: psci: Ignore DENIED CPUs
->    KVM: arm64: Pass hypercalls to userspace
->    KVM: arm64: Pass PSCI calls to userspace
-> 
->   Documentation/arm64/cpu-hotplug.rst       |  79 ++++++++++++
->   Documentation/arm64/index.rst             |   1 +
->   Documentation/virt/kvm/api.rst            |  31 ++++-
->   Documentation/virt/kvm/arm/hypercalls.rst |   1 +
->   arch/arm64/Kconfig                        |   1 +
->   arch/arm64/include/asm/acpi.h             |  11 ++
->   arch/arm64/include/asm/cpu.h              |   1 -
->   arch/arm64/include/asm/kvm_host.h         |   2 +
->   arch/arm64/kernel/acpi_numa.c             |  11 --
->   arch/arm64/kernel/psci.c                  |   2 +-
->   arch/arm64/kernel/setup.c                 |  13 +-
->   arch/arm64/kernel/smp.c                   |   5 +-
->   arch/arm64/kvm/arm.c                      |  15 ++-
->   arch/arm64/kvm/hypercalls.c               |  28 ++++-
->   arch/arm64/kvm/psci.c                     |  13 ++
->   arch/ia64/Kconfig                         |   2 +
->   arch/ia64/include/asm/acpi.h              |   2 +-
->   arch/ia64/include/asm/cpu.h               |  11 --
->   arch/ia64/kernel/acpi.c                   |   6 +-
->   arch/ia64/kernel/setup.c                  |   2 +-
->   arch/ia64/kernel/sys_ia64.c               |   7 +-
->   arch/ia64/kernel/topology.c               |  35 +-----
->   arch/loongarch/Kconfig                    |   2 +
->   arch/loongarch/kernel/topology.c          |  31 +----
->   arch/x86/Kconfig                          |   2 +
->   arch/x86/include/asm/cpu.h                |   6 -
->   arch/x86/kernel/acpi/boot.c               |   4 +-
->   arch/x86/kernel/topology.c                |  19 +--
->   drivers/acpi/Kconfig                      |   5 +-
->   drivers/acpi/acpi_processor.c             | 146 +++++++++++++++++-----
->   drivers/acpi/processor_core.c             |   2 +-
->   drivers/acpi/scan.c                       | 116 +++++++++++------
->   drivers/base/arch_topology.c              |  38 ++++--
->   drivers/base/cpu.c                        |  31 ++++-
->   drivers/base/init.c                       |   2 +-
->   drivers/firmware/psci/psci.c              |   2 +
->   drivers/irqchip/irq-gic-v3.c              |  38 +++---
->   include/acpi/acpi_bus.h                   |   1 +
->   include/acpi/actbl2.h                     |   1 +
->   include/kvm/arm_hypercalls.h              |   1 +
->   include/kvm/arm_psci.h                    |   4 +
->   include/linux/acpi.h                      |  10 +-
->   include/linux/cpu.h                       |   6 +
->   include/linux/cpumask.h                   |  25 ++++
->   include/uapi/linux/kvm.h                  |   2 +
->   kernel/cpu.c                              |   3 +
->   46 files changed, 532 insertions(+), 244 deletions(-)
->   create mode 100644 Documentation/arm64/cpu-hotplug.rst
-> 
-
--- 
-Shaoqin
-
+>                         }
+>                 }
+>                 zero_pud_populate(p4d, addr, next);
+> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+> index a61eeee3095a..033335c13b25 100644
+> --- a/mm/kasan/kasan.h
+> +++ b/mm/kasan/kasan.h
+> @@ -291,16 +291,22 @@ struct kasan_stack_ring {
+>
+>  #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
+>
+> +#ifndef __HAVE_ARCH_SHADOW_MAP
+>  static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
+>  {
+>         return (void *)(((unsigned long)shadow_addr - KASAN_SHADOW_OFFSET)
+>                 << KASAN_SHADOW_SCALE_SHIFT);
+>  }
+> +#endif
+>
+>  static __always_inline bool addr_has_metadata(const void *addr)
+>  {
+> +#ifdef __HAVE_ARCH_SHADOW_MAP
+> +       return (kasan_mem_to_shadow((void *)addr) != NULL);
+> +#else
+>         return (kasan_reset_tag(addr) >=
+>                 kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
+> +#endif
+>  }
+>
+>  /**
+> --
+> 2.20.1
+>
