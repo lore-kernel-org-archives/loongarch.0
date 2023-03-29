@@ -1,106 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C970B8465
-	for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 14:16:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680013007;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=McVfL5jdOZS7kfAfgWz7ZBlWLPWSFJhKhjaCyPWzQL0=;
-	b=GnD3nNgHPUrHMdgVDBmOlvT600nCLCzYQGpFebD+unhGOIhyqT4SCbnDfZTK77jK6KbOe8
-	4hv2bCAX3ps4roftrwODwseiYSOBRHYH23gayGETf39tr8fUyCcRQlRjGBj2OVzbQObEdI
-	RUS8dvCnOrgBkOXcZEblRmA321GY8BI=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-449-fhWN6KaxMTGjecssWnce7w-1; Tue, 28 Mar 2023 10:16:46 -0400
-X-MC-Unique: fhWN6KaxMTGjecssWnce7w-1
-Received: by mail-ed1-f72.google.com with SMTP id k30-20020a50ce5e000000b00500544ebfb1so17645904edj.7
-        for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 07:16:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680012994;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=McVfL5jdOZS7kfAfgWz7ZBlWLPWSFJhKhjaCyPWzQL0=;
-        b=e3mYm/khpNIdnWVUblYpbmu+V7F5gOysrSO7WYLa0pjzU2V0S03UMQAKpJlSUJTOxK
-         YfMD54jjsU9nwk6Cr4uSqLp6jlnZD+iFCavyyxF+OfvGmiDMS/uxTlaGL6ArU94+KInW
-         5bgyVu0kcjnds20xJw1GEdeps9tyZMb6qb4FlbygXbjHOhD6oFKhSyZzfDA1j9OTlYZN
-         7NPZ5GathaHhZEhnXFB0ZfBWALV2YWvKM9ZDybf66RlIsXjFyKrLyUB4o/HpwF7AhTMF
-         bzMzIElChokNstc8FCyGbslrWZ5byem5kXgIIbXOe7aTsS/opcu9tXKO3YkNLC/YaW+c
-         fYJQ==
-X-Gm-Message-State: AAQBX9fxZ19OFjobxZCPSB485UgtNf1hCrkk5P94DwvrGsRMyKwqF6Rn
-	/OVRWXIBbmuPlOo3pZo+CfpGTrgn4vmmJrP38lowygNpf/+dekgoFzyMW2rdaaTH6pYdWJeG683
-	CBUpWJwnI9b4WppFqqyjv
-X-Received: by 2002:a17:906:5a43:b0:8aa:be5c:b7c5 with SMTP id my3-20020a1709065a4300b008aabe5cb7c5mr17112815ejc.41.1680012994691;
-        Tue, 28 Mar 2023 07:16:34 -0700 (PDT)
-X-Google-Smtp-Source: AKy350aoU2aSW/2CIaXWA1zbjboShcLbK5aGfXZD89zPwYbyXrwZeU0E5CjgejUESFiorIvBi+i+dA==
-X-Received: by 2002:a17:906:5a43:b0:8aa:be5c:b7c5 with SMTP id my3-20020a1709065a4300b008aabe5cb7c5mr17112786ejc.41.1680012994437;
-        Tue, 28 Mar 2023 07:16:34 -0700 (PDT)
-Received: from ?IPV6:2001:b07:6468:f312:1c09:f536:3de6:228c? ([2001:b07:6468:f312:1c09:f536:3de6:228c])
-        by smtp.googlemail.com with ESMTPSA id i11-20020a170906264b00b009255b14e91dsm15283127ejc.46.2023.03.28.07.16.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Mar 2023 07:16:33 -0700 (PDT)
-Message-ID: <e142e2ac-2207-2d97-55b6-fb2ed0e9db89@redhat.com>
-Date: Tue, 28 Mar 2023 16:16:32 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94557B
+	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 00:22:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A87C3C4339B
+	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 00:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1680049369;
+	bh=LsCNXXpY1cFgoqXqOINeaOkusUqANiRdFYpk75Ep5Ko=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kohoHxDpAa2IveHTr7jy9tKAbRaVBIuF6zCV3lP6pauXbsIULM4TR8vENRdV+sRxi
+	 s5iplqD8Kf9yZuUxFVFKtOP+MzK3P6mQ+plHNV3Pc1W+xW2+wDzKj3kn/InfhxPQsK
+	 qHF5hwPbzf6hYqCZkQ1qNCr6cCtoRhmaEbfCKecP408IxUMGZsGvYWXzz4Y1r4iFB1
+	 9Xot0ltF4q/FhMB1xgQpe0vZApT+GQgGWH02F44s7TDcmGm8Vjo3ijDdx58KOHKl/9
+	 OEFaINyEJDyfWI7phFuz82Mzxc6RoYHFMGbRoekUSjlXIBwyHNiIM0UvnH7TNu3E80
+	 Jn7U1RHYAKRxg==
+Received: by mail-ed1-f43.google.com with SMTP id i5so56898300eda.0
+        for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 17:22:49 -0700 (PDT)
+X-Gm-Message-State: AAQBX9dqlM8qDMIo7DS/JK4MxttkSa7H3yiQtSeBxbOxbx9y5W3flETV
+	0qLx+KB5SahOiTzCWifA3kEiO+su4/tKJBpzplM=
+X-Google-Smtp-Source: AKy350YShqqhafJiKivPvV3UEwHbIXvSZz7vIGbGfm68OD1wOOOEvCMQ8EQ72tLPfqXEpoJkur924JeuV1TKMI9pjxw=
+X-Received: by 2002:a50:a444:0:b0:4fc:6494:81c3 with SMTP id
+ v4-20020a50a444000000b004fc649481c3mr8371871edb.1.1680049367907; Tue, 28 Mar
+ 2023 17:22:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PING PATCH v4 00/29] Add KVM LoongArch support
-To: Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
- Xi Ruoyao <xry111@xry111.site>
-References: <20230328123119.3649361-1-zhaotianrui@loongson.cn>
-From: Paolo Bonzini <pbonzini@redhat.com>
-In-Reply-To: <20230328123119.3649361-1-zhaotianrui@loongson.cn>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20230328111714.2056-1-zhangqing@loongson.cn> <9817aaa043e9f0ed964bd523773447bd64f6e2c0.camel@xry111.site>
+ <1c231587-3b70-22ab-d554-ebe3de407909@loongson.cn>
+In-Reply-To: <1c231587-3b70-22ab-d554-ebe3de407909@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 29 Mar 2023 08:22:37 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5APsBxC8nNa81t3HXum1EU1hOj4S6UC7xLHD7_BCJd7g@mail.gmail.com>
+Message-ID: <CAAhV-H5APsBxC8nNa81t3HXum1EU1hOj4S6UC7xLHD7_BCJd7g@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
+To: Qing Zhang <zhangqing@loongson.cn>
+Cc: Xi Ruoyao <xry111@xry111.site>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Potapenko <glider@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, kasan-dev@googlegroups.com, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/28/23 14:30, Tianrui Zhao wrote:
-> Ping patch series, please help for reviewing the loongarch kvm patch
-> set. Thanks very much.
-> 
-> This series adds KVM LoongArch support. Loongson 3A5000 supports hardware
-> assisted virtualization. With cpu virtualization, there are separate
-> hw-supported user mode and kernel mode in guest mode. With memory
-> virtualization, there are two-level hw mmu table for guest mode and host
-> mode. Also there is separate hw cpu timer with consant frequency in
-> guest mode, so that vm can migrate between hosts with different freq.
-> Currently, we are able to boot LoongArch Linux Guests.
-> 
-> Few key aspects of KVM LoongArch added by this series are:
-> 1. Enable kvm hardware function when kvm module is loaded.
-> 2. Implement VM and vcpu related ioctl interface such as vcpu create,
->     vcpu run etc. GET_ONE_REG/SET_ONE_REG ioctl commands are use to
->     get general registers one by one.
-> 3. Hardware access about MMU, timer and csr are emulated in kernel.
-> 4. Hardwares such as mmio and iocsr device are emulated in user space
->     such as APIC, IPI, pci devices etc.
+On Tue, Mar 28, 2023 at 8:15=E2=80=AFPM Qing Zhang <zhangqing@loongson.cn> =
+wrote:
+>
+> Hi, Ruoyao
+>
+> On 2023/3/28 =E4=B8=8B=E5=8D=887:39, Xi Ruoyao wrote:
+> > On Tue, 2023-03-28 at 19:17 +0800, Qing Zhang wrote:
+> >
+> > /* snip */
+> >
+> >
+> >> -void * __init relocate_kernel(void)
+> >> +unsigned long __init relocate_kernel(void)
+> >
+> > Why we must modify relocate_kernel for KASAN?
+>
+> When the CONFIG_RANDOMIZE_BASE is enabled, the kernel will be updated to
+> a random new address.
+> Kasan needs to call kasan_early_init before start_kernel.
+> There are two situations:
+> 1> After enabling CONFIG_RELOCATABLE, call kasan_early_init.
+> 2> After CONFIG_RELOCATABLE is not enabled, call kasan_early_init.
+>
+> In order to prevent code redundancy and semantic problems caused by
+> calling kasan_early_init (before jr a0) at the old PC.
+In my opinion, you can call kasan_early_init before relocate_kernel in
+head.S, then no redundancy.
 
-Please check Documentation/virtual/kvm/api.rst and document the 
-loongarch-specific parts of the API, in particular ioctls that have 
-architecture-specific semantics (KVM_GET/SET_ONE_REG, KVM_INTERRUPT) and 
-vcpu->run fields.
-
-Code-wise what I could understand looked okay, I only made a suggestion 
-on the handling of idle; thanks for going through the previous review 
-carefully.
-
-Paolo
-
+Huacai
+>
+> Thanks,
+> -Qing
+> >
+> >>   {
+> >>          unsigned long kernel_length;
+> >>          unsigned long random_offset =3D 0;
+> >>          void *location_new =3D _text; /* Default to original kernel s=
+tart */
+> >> -       void *kernel_entry =3D start_kernel; /* Default to original ke=
+rnel entry point */
+> >>          char *cmdline =3D early_ioremap(fw_arg1, COMMAND_LINE_SIZE); =
+/* Boot command line is passed in fw_arg1 */
+> >>
+> >>          strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
+> >> @@ -190,9 +189,6 @@ void * __init relocate_kernel(void)
+> >>
+> >>                  reloc_offset +=3D random_offset;
+> >>
+> >> -               /* Return the new kernel's entry point */
+> >> -               kernel_entry =3D RELOCATED_KASLR(start_kernel);
+> >> -
+> >>                  /* The current thread is now within the relocated ker=
+nel */
+> >>                  __current_thread_info =3D RELOCATED_KASLR(__current_t=
+hread_info);
+> >>
+> >> @@ -204,7 +200,7 @@ void * __init relocate_kernel(void)
+> >>
+> >>          relocate_absolute(random_offset);
+> >>
+> >> -       return kernel_entry;
+> >> +       return random_offset;
+> >
+>
