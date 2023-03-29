@@ -1,114 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94557B
-	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 00:22:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A87C3C4339B
-	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 00:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1680049369;
-	bh=LsCNXXpY1cFgoqXqOINeaOkusUqANiRdFYpk75Ep5Ko=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kohoHxDpAa2IveHTr7jy9tKAbRaVBIuF6zCV3lP6pauXbsIULM4TR8vENRdV+sRxi
-	 s5iplqD8Kf9yZuUxFVFKtOP+MzK3P6mQ+plHNV3Pc1W+xW2+wDzKj3kn/InfhxPQsK
-	 qHF5hwPbzf6hYqCZkQ1qNCr6cCtoRhmaEbfCKecP408IxUMGZsGvYWXzz4Y1r4iFB1
-	 9Xot0ltF4q/FhMB1xgQpe0vZApT+GQgGWH02F44s7TDcmGm8Vjo3ijDdx58KOHKl/9
-	 OEFaINyEJDyfWI7phFuz82Mzxc6RoYHFMGbRoekUSjlXIBwyHNiIM0UvnH7TNu3E80
-	 Jn7U1RHYAKRxg==
-Received: by mail-ed1-f43.google.com with SMTP id i5so56898300eda.0
-        for <loongarch@lists.linux.dev>; Tue, 28 Mar 2023 17:22:49 -0700 (PDT)
-X-Gm-Message-State: AAQBX9dqlM8qDMIo7DS/JK4MxttkSa7H3yiQtSeBxbOxbx9y5W3flETV
-	0qLx+KB5SahOiTzCWifA3kEiO+su4/tKJBpzplM=
-X-Google-Smtp-Source: AKy350YShqqhafJiKivPvV3UEwHbIXvSZz7vIGbGfm68OD1wOOOEvCMQ8EQ72tLPfqXEpoJkur924JeuV1TKMI9pjxw=
-X-Received: by 2002:a50:a444:0:b0:4fc:6494:81c3 with SMTP id
- v4-20020a50a444000000b004fc649481c3mr8371871edb.1.1680049367907; Tue, 28 Mar
- 2023 17:22:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5747B
+	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 01:15:25 +0000 (UTC)
+Received: from [10.128.10.193] (unknown [117.133.56.22])
+	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 495325805E3;
+	Wed, 29 Mar 2023 09:15:12 +0800 (CST)
+Message-ID: <c043935e-3961-8896-45de-03fcad676e08@sangfor.com.cn>
+Date: Wed, 29 Mar 2023 09:15:11 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230328111714.2056-1-zhangqing@loongson.cn> <9817aaa043e9f0ed964bd523773447bd64f6e2c0.camel@xry111.site>
- <1c231587-3b70-22ab-d554-ebe3de407909@loongson.cn>
-In-Reply-To: <1c231587-3b70-22ab-d554-ebe3de407909@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 29 Mar 2023 08:22:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5APsBxC8nNa81t3HXum1EU1hOj4S6UC7xLHD7_BCJd7g@mail.gmail.com>
-Message-ID: <CAAhV-H5APsBxC8nNa81t3HXum1EU1hOj4S6UC7xLHD7_BCJd7g@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
-To: Qing Zhang <zhangqing@loongson.cn>
-Cc: Xi Ruoyao <xry111@xry111.site>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alexander Potapenko <glider@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, kasan-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v8 3/8] ARM: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Content-Language: en-US
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: mhiramat@kernel.org, rostedt@goodmis.org, mark.rutland@arm.com,
+ will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, tglx@linutronix.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, hpa@zytor.com, chenhuacai@kernel.org, zhangqing@loongson.cn,
+ kernel@xen0n.name, mingo@redhat.com, peterz@infradead.org,
+ xiehuan09@gmail.com, dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
+ dolinux.peng@gmail.com, linux-trace-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
+ <20230328134319.2185812-4-pengdonglin@sangfor.com.cn>
+ <ZCLzf6RX4U00g9Cu@shell.armlinux.org.uk>
+From: Donglin Peng <pengdonglin@sangfor.com.cn>
+In-Reply-To: <ZCLzf6RX4U00g9Cu@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSE9PVh9NGRhJSE0fT00dSlUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS09LQ1VKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NBQ6Kww4Oj0cOVYRDyssOigM
+	GQ9PCkJVSlVKTUNLS05JTkpITEpDVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+	WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFNSUtNNwY+
+X-HM-Tid: 0a872aeee9a02eb7kusn495325805e3
+X-HM-MType: 1
 
-On Tue, Mar 28, 2023 at 8:15=E2=80=AFPM Qing Zhang <zhangqing@loongson.cn> =
-wrote:
->
-> Hi, Ruoyao
->
-> On 2023/3/28 =E4=B8=8B=E5=8D=887:39, Xi Ruoyao wrote:
-> > On Tue, 2023-03-28 at 19:17 +0800, Qing Zhang wrote:
-> >
-> > /* snip */
-> >
-> >
-> >> -void * __init relocate_kernel(void)
-> >> +unsigned long __init relocate_kernel(void)
-> >
-> > Why we must modify relocate_kernel for KASAN?
->
-> When the CONFIG_RANDOMIZE_BASE is enabled, the kernel will be updated to
-> a random new address.
-> Kasan needs to call kasan_early_init before start_kernel.
-> There are two situations:
-> 1> After enabling CONFIG_RELOCATABLE, call kasan_early_init.
-> 2> After CONFIG_RELOCATABLE is not enabled, call kasan_early_init.
->
-> In order to prevent code redundancy and semantic problems caused by
-> calling kasan_early_init (before jr a0) at the old PC.
-In my opinion, you can call kasan_early_init before relocate_kernel in
-head.S, then no redundancy.
+On 2023/3/28 22:02, Russell King (Oracle) wrote:
+> On Tue, Mar 28, 2023 at 06:43:14AM -0700, Donglin Peng wrote:
+>> The commit d4815c5d1bbd ("function_graph: Support recording and printing
+>> the return value of function") laid the groundwork for the for the
+>> funcgraph-retval, and this modification makes it available on the
+>> ARM platform.
+>>
+>> We introduce a new structure called fgraph_ret_regs for the ARM platform
+>> to hold return registers and the frame pointer. We then fill its content
+>> in the return_to_handler and pass its address to the function
+>> ftrace_return_to_handler to record the return value.
+>>
+>> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+>> ---
+>> v8:
+>>   - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+>> ---
+>>   arch/arm/Kconfig               |  1 +
+>>   arch/arm/include/asm/ftrace.h  | 18 ++++++++++++++++++
+>>   arch/arm/kernel/entry-ftrace.S |  6 +++++-
+>>   3 files changed, 24 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> index e24a9820e12f..73061379855a 100644
+>> --- a/arch/arm/Kconfig
+>> +++ b/arch/arm/Kconfig
+>> @@ -98,6 +98,7 @@ config ARM
+>>   	select HAVE_FAST_GUP if ARM_LPAE
+>>   	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+>>   	select HAVE_FUNCTION_ERROR_INJECTION
+>> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>>   	select HAVE_FUNCTION_GRAPH_TRACER
+>>   	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+>>   	select HAVE_GCC_PLUGINS
+>> diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
+>> index 7e9251ca29fe..2ab4bee21d79 100644
+>> --- a/arch/arm/include/asm/ftrace.h
+>> +++ b/arch/arm/include/asm/ftrace.h
+>> @@ -77,4 +77,22 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+>>   
+>>   #endif /* ifndef __ASSEMBLY__ */
+>>   
+>> +
+>> +#ifndef __ASSEMBLY__
+>> +struct fgraph_ret_regs {
+>> +	unsigned long regs[4];
+>> +	unsigned long fp;
+>> +};
+>> +
+>> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
+>> +{
+>> +	return ret_regs->regs[0];
+>> +}
+>> +
+>> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
+>> +{
+>> +	return ret_regs->fp;
+>> +}
+>> +#endif
+>> +
+>>   #endif /* _ASM_ARM_FTRACE */
+>> diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
+>> index 3e7bcaca5e07..5f1e74555b25 100644
+>> --- a/arch/arm/kernel/entry-ftrace.S
+>> +++ b/arch/arm/kernel/entry-ftrace.S
+>> @@ -257,11 +257,15 @@ ENDPROC(ftrace_graph_regs_caller)
+>>   
+>>   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>>   ENTRY(return_to_handler)
+>> +	sub	sp, sp, #4
+>>   	stmdb	sp!, {r0-r3}
+>> -	add	r0, sp, #16		@ sp at exit of instrumented routine
+>> +	add	r0, sp, #20		@ sp at exit of instrumented routine
+>> +	str	r0, [sp, #16]
+>> +	mov	r0, sp
+> 
+> 1) EABI wants the stack to be aligned to 8 bytes.
+> 2) We can do better than this.
+> 
+> 	mov	ip, sp
+> 	stmdb	sp!, {r0-r3, ip, lr}
+> 	mov	r0, sp
 
-Huacai
->
-> Thanks,
-> -Qing
-> >
-> >>   {
-> >>          unsigned long kernel_length;
-> >>          unsigned long random_offset =3D 0;
-> >>          void *location_new =3D _text; /* Default to original kernel s=
-tart */
-> >> -       void *kernel_entry =3D start_kernel; /* Default to original ke=
-rnel entry point */
-> >>          char *cmdline =3D early_ioremap(fw_arg1, COMMAND_LINE_SIZE); =
-/* Boot command line is passed in fw_arg1 */
-> >>
-> >>          strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
-> >> @@ -190,9 +189,6 @@ void * __init relocate_kernel(void)
-> >>
-> >>                  reloc_offset +=3D random_offset;
-> >>
-> >> -               /* Return the new kernel's entry point */
-> >> -               kernel_entry =3D RELOCATED_KASLR(start_kernel);
-> >> -
-> >>                  /* The current thread is now within the relocated ker=
-nel */
-> >>                  __current_thread_info =3D RELOCATED_KASLR(__current_t=
-hread_info);
-> >>
-> >> @@ -204,7 +200,7 @@ void * __init relocate_kernel(void)
-> >>
-> >>          relocate_absolute(random_offset);
-> >>
-> >> -       return kernel_entry;
-> >> +       return random_offset;
-> >
->
+Great, I will modify it.
+
+> 
+>>   	bl	ftrace_return_to_handler
+>>   	mov	lr, r0			@ r0 has real ret addr
+>>   	ldmia	sp!, {r0-r3}
+> 
+> 	ldmia	sp, {r0-r3}		@ since we need to manually adjust sp,
+
+Thanks, I will modify it.
+
+> 
+>> +	add	sp, sp, #4		@ skip fp
+> 
+> 	add	sp, sp, #4 * 6		@ restore stack pointer here
+
+Thanks, I will modify it.
+
+> 
+>>   	ret	lr
+>>   ENDPROC(return_to_handler)
+>>   #endif
+>> -- 
+>> 2.25.1
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+> 
+
