@@ -1,138 +1,191 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6527EEB8
-	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 02:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680057346;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uk4XWZ2laUwaUBSfpuB6h6JbrXDzKovTQURHIz2YxOo=;
-	b=LBzyg+p090FT/29biEzBj7flauJn4PwUbVN9W//paVILIRI7Nxr1ad4mVL/+NOtdgQ2wN5
-	6UoKQ+BIFqlDK0oL/AGZRnniXSd2ZuDUzNrIzCcd9CbL4pC7zzVQPzzHpuD5HrXfXDrdx4
-	9L3dSITcAj9b7WLxUbSfSl/UEH0w0rs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-228-KlnEoq3DMH2x9S4ZkzV4HA-1; Tue, 28 Mar 2023 22:35:40 -0400
-X-MC-Unique: KlnEoq3DMH2x9S4ZkzV4HA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C45E8801210;
-	Wed, 29 Mar 2023 02:35:38 +0000 (UTC)
-Received: from [10.72.13.230] (ovpn-13-230.pek2.redhat.com [10.72.13.230])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 66F4A140E96A;
-	Wed, 29 Mar 2023 02:35:21 +0000 (UTC)
-Reply-To: Gavin Shan <gshan@redhat.com>
-Subject: Re: [RFC PATCH 00/32] ACPI/arm64: add support for virtual cpuhotplug
-To: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
- loongarch@lists.linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Len Brown <lenb@kernel.org>,
- Rafael Wysocki <rafael@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Salil Mehta <salil.mehta@huawei.com>, Russell King <linux@armlinux.org.uk>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>
-References: <20230203135043.409192-1-james.morse@arm.com>
-From: Gavin Shan <gshan@redhat.com>
-Message-ID: <41dd71ab-a6a7-fd93-73ec-64a6b0ca468e@redhat.com>
-Date: Wed, 29 Mar 2023 10:35:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E40BEB8
+	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 04:08:59 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxYeXauSNk5IgTAA--.30210S3;
+	Wed, 29 Mar 2023 12:08:58 +0800 (CST)
+Received: from [10.130.0.102] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxeb3WuSNkgBcQAA--.10240S3;
+	Wed, 29 Mar 2023 12:08:56 +0800 (CST)
+Subject: Re: [PATCH v8 7/8] LoongArch: ftrace: Enable
+ HAVE_FUNCTION_GRAPH_RETVAL
+To: Donglin Peng <pengdonglin@sangfor.com.cn>, mhiramat@kernel.org,
+ rostedt@goodmis.org, linux@armlinux.org.uk, mark.rutland@arm.com,
+ will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, tglx@linutronix.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, hpa@zytor.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ mingo@redhat.com, peterz@infradead.org, xiehuan09@gmail.com,
+ dinghui@sangfor.com.cn, huangcun@sangfor.com.cn, dolinux.peng@gmail.com
+Cc: linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
+ <20230328134319.2185812-8-pengdonglin@sangfor.com.cn>
+From: Qing Zhang <zhangqing@loongson.cn>
+Message-ID: <28389252-4611-977f-ab80-baeca99d9080@loongson.cn>
+Date: Wed, 29 Mar 2023 12:08:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230203135043.409192-1-james.morse@arm.com>
+In-Reply-To: <20230328134319.2185812-8-pengdonglin@sangfor.com.cn>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cxeb3WuSNkgBcQAA--.10240S3
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXF4UKrWUCr17WF43CFW5GFg_yoWrCryrpr
+	ZrA3WkGrWvgFs3Cryav34rWr98Arn3G34a9F9rtr9YkrnIgr15uw10yryDXFyvq3y8GrWv
+	9F4Fkr4aya1DXa7anT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+	s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
+	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jr9NsUUUUU=
 
-Hi James,
+Hi, Donglin
 
-On 2/3/23 9:50 PM, James Morse wrote:
+On 2023/3/28 下午9:43, Donglin Peng wrote:
+> The commit d4815c5d1bbd ("function_graph: Support recording and
+> printing the return value of function") laid the groundwork for the
+> for the funcgraph-retval, and this modification makes it available
+> on the LoongArch platform.
+> 
+> We introduce a new structure called fgraph_ret_regs for the LoongArch
+> platform to hold return registers and the frame pointer. We then fill
+> its content in the return_to_handler and pass its address to the
+> function ftrace_return_to_handler to record the return value.
+> 
+> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+> ---
+> v8:
+>   - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+> ---
+>   arch/loongarch/Kconfig              |  1 +
+>   arch/loongarch/include/asm/ftrace.h | 18 ++++++++++++++++++
+>   arch/loongarch/kernel/mcount.S      |  6 ++++--
+>   arch/loongarch/kernel/mcount_dyn.S  |  7 ++++---
+>   4 files changed, 27 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 7fd51257e0ed..4bf60132869b 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -99,6 +99,7 @@ config LOONGARCH
+>   	select HAVE_FAST_GUP
+>   	select HAVE_FTRACE_MCOUNT_RECORD
+>   	select HAVE_FUNCTION_ARG_ACCESS_API
+> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>   	select HAVE_FUNCTION_GRAPH_TRACER
+>   	select HAVE_FUNCTION_TRACER
+>   	select HAVE_GENERIC_VDSO
+> diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
+> index 3418d32d4fc7..433c6218888b 100644
+> --- a/arch/loongarch/include/asm/ftrace.h
+> +++ b/arch/loongarch/include/asm/ftrace.h
+> @@ -63,4 +63,22 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>   
+>   #endif /* CONFIG_FUNCTION_TRACER */
+>   
+> +#ifndef __ASSEMBLY__
+> +struct fgraph_ret_regs {
+> +	unsigned long a0;
+> +	unsigned long a1;
+> +	unsigned long fp;
+> +};
 
-[...]
+This overall looks good, but some places need attention:
 
-> 
-> 
-> The first patch has already been posted as a fix here:
-> https://www.spinics.net/lists/linux-ia64/msg21920.html
-> I've only build tested Loongarch and ia64.
-> 
+This will need to be padded to 16 bytes, as within the kernel,
+loongarch requires the SP to be aligned to 16 bytes at all time.
+Please can you add an `__unused/padding` field to ensure.
+> +
+> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->a0;
+> +}
+> +
+> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->fp;
+> +}
+> +#endif
+> +
+>   #endif /* _ASM_LOONGARCH_FTRACE_H */
+> diff --git a/arch/loongarch/kernel/mcount.S b/arch/loongarch/kernel/mcount.S
+> index 8cdc1563cd33..3e405c0212c0 100644
+> --- a/arch/loongarch/kernel/mcount.S
+> +++ b/arch/loongarch/kernel/mcount.S
+> @@ -79,10 +79,12 @@ SYM_FUNC_START(ftrace_graph_caller)
+>   SYM_FUNC_END(ftrace_graph_caller)
+>   
+>   SYM_FUNC_START(return_to_handler)
+> -	PTR_ADDI	sp, sp, -2 * SZREG
+> +	PTR_ADDI	sp, sp, -3 * SZREG
+As above, this will need to be padded to keep the stack aligned to 16
+bytes.
+	PTR_ADDI	sp, sp, -4 * SZREG
 
-It has been merged to upstream.
-
-> 
-> If folk want to play along at home, you'll need a copy of Qemu that supports this.
-> https://github.com/salil-mehta/qemu.git salil/virt-cpuhp-armv8/rfc-v1-port29092022.psci.present
-> 
-> You'll need to fix the numbers of KVM_CAP_ARM_HVC_TO_USER and KVM_CAP_ARM_PSCI_TO_USER
-> to match your host kernel. Replace your '-smp' argument with something like:
-> | -smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
-> 
-> then feed the following to the Qemu montior;
-> | (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
-> | (qemu) device_del cpu1
-> 
-> 
-> This series is based on v6.2-rc3, and can be retrieved from:
-> https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/ virtual_cpu_hotplug/rfc/v1
-> 
-
-I give it a try, but the hot-added CPU needs to be put into online
-state manually. I'm not sure if it's expected or not.
-
-     /home/gavin/sandbox/qemu.main/build/qemu-system-aarch64                \
-     -accel kvm,dirty-ring-size=65536                                       \
-     -machine virt,gic-version=host,nvdimm=on                               \
-     -cpu host -smp maxcpus=8,cpus=1,sockets=1,clusters=1,cores=8,threads=1 \
-     -m 1024M,slots=16,maxmem=64G                                           \
-     -object memory-backend-ram,id=mem0,size=1024M                          \
-     -numa node,nodeid=0,memdev=mem0                                        \
-     -L /home/gavin/sandbox/qemu.main/build/pc-bios                         \
-     -monitor none -serial mon:stdio -nographic -gdb tcp::1234              \
-     -bios /home/gavin/sandbox/qemu.main/build/pc-bios/edk2-aarch64-code.fd \
-     -kernel /home/gavin/sandbox/linux.guest/arch/arm64/boot/Image          \
-     -initrd /home/gavin/sandbox/images/rootfs.cpio.xz                      \
-     -append memhp_default_state=online_movable                             \
-        :
-        :
-     guest# cat /proc/cpuinfo | grep "CPU implementer" | wc -l
-     1
-     (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
-     guest# cat /proc/cpuinfo | grep "CPU implementer" | wc -l
-     1
-     guest# echo 1 > /sys/devices/system/cpu/cpu1/online
-     guest# cat /proc/cpuinfo | grep "CPU implementer" | wc -l
-     2
-     (qemu) device_del cpu1
-     guest# cat /proc/cpuinfo | grep "CPU implementer" | wc -l
-     1
-
-Note that the QEMU binary is directly built from Salil's repository and
-the kernel image is built from v6.3-rc4, plus this patchset excluding the
-first patch since it has been merged.
+>   	PTR_S		a0, sp, 0
+>   	PTR_S		a1, sp, SZREG
+> +	PTR_S		zero, sp, 2 * SZREG
+>   
+> +	move		a0, sp
+>   	bl		ftrace_return_to_handler
+>   
+>   	/* Restore the real parent address: a0 -> ra */
+> @@ -90,7 +92,7 @@ SYM_FUNC_START(return_to_handler)
+>   
+>   	PTR_L		a0, sp, 0
+>   	PTR_L		a1, sp, SZREG
+> -	PTR_ADDI	sp, sp, 2 * SZREG
+> +	PTR_ADDI	sp, sp, 3 * SZREG
+>   	jr		ra
+>   SYM_FUNC_END(return_to_handler)
+>   #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+> diff --git a/arch/loongarch/kernel/mcount_dyn.S b/arch/loongarch/kernel/mcount_dyn.S
+> index bbabf06244c2..ab85a953c6d3 100644
+> --- a/arch/loongarch/kernel/mcount_dyn.S
+> +++ b/arch/loongarch/kernel/mcount_dyn.S
+> @@ -131,18 +131,19 @@ SYM_CODE_END(ftrace_graph_caller)
+>   
+>   SYM_CODE_START(return_to_handler)
+>   	/* Save return value regs */
+> -	PTR_ADDI 	sp, sp, -2 * SZREG
+> +	PTR_ADDI 	sp, sp, -3 * SZREG
+as above.
 
 Thanks,
-Gavin
-
-
-
+- Qing
+>   	PTR_S		a0, sp, 0
+>   	PTR_S		a1, sp, SZREG
+> +	PTR_S		zero, sp, 2 * SZREG
+>   
+> -	move		a0, zero
+> +	move		a0, sp
+>   	bl		ftrace_return_to_handler
+>   	move		ra, a0
+>   
+>   	/* Restore return value regs */
+>   	PTR_L		a0, sp, 0
+>   	PTR_L		a1, sp, SZREG
+> -	PTR_ADDI 	sp, sp, 2 * SZREG
+> +	PTR_ADDI 	sp, sp, 3 * SZREG
+>   
+>   	jr		ra
+>   SYM_CODE_END(return_to_handler)
+> 
 
