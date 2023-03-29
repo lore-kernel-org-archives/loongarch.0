@@ -1,128 +1,138 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46CEB7B
-	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 02:02:03 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cxf80ZnCNkknsTAA--.29928S3;
-	Wed, 29 Mar 2023 10:02:01 +0800 (CST)
-Received: from [10.130.0.102] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxPL4XnCNkIQQQAA--.12984S3;
-	Wed, 29 Mar 2023 10:02:01 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Xi Ruoyao <xry111@xry111.site>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
- Alexander Potapenko <glider@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-mm@kvack.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20230328111714.2056-1-zhangqing@loongson.cn>
- <9817aaa043e9f0ed964bd523773447bd64f6e2c0.camel@xry111.site>
- <1c231587-3b70-22ab-d554-ebe3de407909@loongson.cn>
- <CAAhV-H5APsBxC8nNa81t3HXum1EU1hOj4S6UC7xLHD7_BCJd7g@mail.gmail.com>
-From: Qing Zhang <zhangqing@loongson.cn>
-Message-ID: <9a6f11a3-d01c-e0c9-a4f3-47db25ce02f3@loongson.cn>
-Date: Wed, 29 Mar 2023 10:01:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6527EEB8
+	for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 02:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1680057346;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uk4XWZ2laUwaUBSfpuB6h6JbrXDzKovTQURHIz2YxOo=;
+	b=LBzyg+p090FT/29biEzBj7flauJn4PwUbVN9W//paVILIRI7Nxr1ad4mVL/+NOtdgQ2wN5
+	6UoKQ+BIFqlDK0oL/AGZRnniXSd2ZuDUzNrIzCcd9CbL4pC7zzVQPzzHpuD5HrXfXDrdx4
+	9L3dSITcAj9b7WLxUbSfSl/UEH0w0rs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-228-KlnEoq3DMH2x9S4ZkzV4HA-1; Tue, 28 Mar 2023 22:35:40 -0400
+X-MC-Unique: KlnEoq3DMH2x9S4ZkzV4HA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C45E8801210;
+	Wed, 29 Mar 2023 02:35:38 +0000 (UTC)
+Received: from [10.72.13.230] (ovpn-13-230.pek2.redhat.com [10.72.13.230])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 66F4A140E96A;
+	Wed, 29 Mar 2023 02:35:21 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [RFC PATCH 00/32] ACPI/arm64: add support for virtual cpuhotplug
+To: James Morse <james.morse@arm.com>, linux-pm@vger.kernel.org,
+ loongarch@lists.linux.dev, kvmarm@lists.linux.dev, kvm@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Len Brown <lenb@kernel.org>,
+ Rafael Wysocki <rafael@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Salil Mehta <salil.mehta@huawei.com>, Russell King <linux@armlinux.org.uk>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>
+References: <20230203135043.409192-1-james.morse@arm.com>
+From: Gavin Shan <gshan@redhat.com>
+Message-ID: <41dd71ab-a6a7-fd93-73ec-64a6b0ca468e@redhat.com>
+Date: Wed, 29 Mar 2023 10:35:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5APsBxC8nNa81t3HXum1EU1hOj4S6UC7xLHD7_BCJd7g@mail.gmail.com>
+In-Reply-To: <20230203135043.409192-1-james.morse@arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxPL4XnCNkIQQQAA--.12984S3
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7uF43ur1UArykKF4xtw43Wrg_yoW8tw4Upr
-	y8GF4rtw48Jr40vrs2q34Duryjv3Z2qw1agr4DK34rZ3sF9F98Kr4DWr13uF929r1j9F4Y
-	vFWrtFWa934UJaDanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bDAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2kK
-	e7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280
-	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
-	xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC
-	6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-	6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 
-Hi, Huacai
+Hi James,
 
-On 2023/3/29 上午8:22, Huacai Chen wrote:
-> On Tue, Mar 28, 2023 at 8:15 PM Qing Zhang <zhangqing@loongson.cn> wrote:
->>
->> Hi, Ruoyao
->>
->> On 2023/3/28 下午7:39, Xi Ruoyao wrote:
->>> On Tue, 2023-03-28 at 19:17 +0800, Qing Zhang wrote:
->>>
->>> /* snip */
->>>
->>>
->>>> -void * __init relocate_kernel(void)
->>>> +unsigned long __init relocate_kernel(void)
->>>
->>> Why we must modify relocate_kernel for KASAN?
->>
->> When the CONFIG_RANDOMIZE_BASE is enabled, the kernel will be updated to
->> a random new address.
->> Kasan needs to call kasan_early_init before start_kernel.
->> There are two situations:
->> 1> After enabling CONFIG_RELOCATABLE, call kasan_early_init.
->> 2> After CONFIG_RELOCATABLE is not enabled, call kasan_early_init.
->>
->> In order to prevent code redundancy and semantic problems caused by
->> calling kasan_early_init (before jr a0) at the old PC.
-> In my opinion, you can call kasan_early_init before relocate_kernel in
-> head.S, then no redundancy.
+On 2/3/23 9:50 PM, James Morse wrote:
+
+[...]
+
 > 
-It has no effect now, but kasan_early_init generally maps everything to
-a single page of zeroes in kasan area, if placed
-Before relocate_kernel, when the kernel was relocated, I worried that
-there were changes other than the memory layout.
+> 
+> The first patch has already been posted as a fix here:
+> https://www.spinics.net/lists/linux-ia64/msg21920.html
+> I've only build tested Loongarch and ia64.
+> 
+
+It has been merged to upstream.
+
+> 
+> If folk want to play along at home, you'll need a copy of Qemu that supports this.
+> https://github.com/salil-mehta/qemu.git salil/virt-cpuhp-armv8/rfc-v1-port29092022.psci.present
+> 
+> You'll need to fix the numbers of KVM_CAP_ARM_HVC_TO_USER and KVM_CAP_ARM_PSCI_TO_USER
+> to match your host kernel. Replace your '-smp' argument with something like:
+> | -smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
+> 
+> then feed the following to the Qemu montior;
+> | (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
+> | (qemu) device_del cpu1
+> 
+> 
+> This series is based on v6.2-rc3, and can be retrieved from:
+> https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/ virtual_cpu_hotplug/rfc/v1
+> 
+
+I give it a try, but the hot-added CPU needs to be put into online
+state manually. I'm not sure if it's expected or not.
+
+     /home/gavin/sandbox/qemu.main/build/qemu-system-aarch64                \
+     -accel kvm,dirty-ring-size=65536                                       \
+     -machine virt,gic-version=host,nvdimm=on                               \
+     -cpu host -smp maxcpus=8,cpus=1,sockets=1,clusters=1,cores=8,threads=1 \
+     -m 1024M,slots=16,maxmem=64G                                           \
+     -object memory-backend-ram,id=mem0,size=1024M                          \
+     -numa node,nodeid=0,memdev=mem0                                        \
+     -L /home/gavin/sandbox/qemu.main/build/pc-bios                         \
+     -monitor none -serial mon:stdio -nographic -gdb tcp::1234              \
+     -bios /home/gavin/sandbox/qemu.main/build/pc-bios/edk2-aarch64-code.fd \
+     -kernel /home/gavin/sandbox/linux.guest/arch/arm64/boot/Image          \
+     -initrd /home/gavin/sandbox/images/rootfs.cpio.xz                      \
+     -append memhp_default_state=online_movable                             \
+        :
+        :
+     guest# cat /proc/cpuinfo | grep "CPU implementer" | wc -l
+     1
+     (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
+     guest# cat /proc/cpuinfo | grep "CPU implementer" | wc -l
+     1
+     guest# echo 1 > /sys/devices/system/cpu/cpu1/online
+     guest# cat /proc/cpuinfo | grep "CPU implementer" | wc -l
+     2
+     (qemu) device_del cpu1
+     guest# cat /proc/cpuinfo | grep "CPU implementer" | wc -l
+     1
+
+Note that the QEMU binary is directly built from Salil's repository and
+the kernel image is built from v6.3-rc4, plus this patchset excluding the
+first patch since it has been merged.
 
 Thanks,
-- Qing
-> Huacai
->>
->> Thanks,
->> -Qing
->>>
->>>>    {
->>>>           unsigned long kernel_length;
->>>>           unsigned long random_offset = 0;
->>>>           void *location_new = _text; /* Default to original kernel start */
->>>> -       void *kernel_entry = start_kernel; /* Default to original kernel entry point */
->>>>           char *cmdline = early_ioremap(fw_arg1, COMMAND_LINE_SIZE); /* Boot command line is passed in fw_arg1 */
->>>>
->>>>           strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
->>>> @@ -190,9 +189,6 @@ void * __init relocate_kernel(void)
->>>>
->>>>                   reloc_offset += random_offset;
->>>>
->>>> -               /* Return the new kernel's entry point */
->>>> -               kernel_entry = RELOCATED_KASLR(start_kernel);
->>>> -
->>>>                   /* The current thread is now within the relocated kernel */
->>>>                   __current_thread_info = RELOCATED_KASLR(__current_thread_info);
->>>>
->>>> @@ -204,7 +200,7 @@ void * __init relocate_kernel(void)
->>>>
->>>>           relocate_absolute(random_offset);
->>>>
->>>> -       return kernel_entry;
->>>> +       return random_offset;
->>>
->>
+Gavin
+
+
+
 
