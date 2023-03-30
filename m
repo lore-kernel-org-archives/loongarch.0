@@ -1,11 +1,11 @@
 Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEF51FAC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4C21FB2
 	for <loongarch@lists.linux.dev>; Thu, 30 Mar 2023 11:39:43 +0000 (UTC)
 Received: from ubuntu.localdomain (unknown [117.133.56.22])
-	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 61763580C1D;
-	Thu, 30 Mar 2023 19:39:28 +0800 (CST)
+	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 7701D580844;
+	Thu, 30 Mar 2023 19:39:33 +0800 (CST)
 From: Donglin Peng <pengdonglin@sangfor.com.cn>
 To: mhiramat@kernel.org,
 	rostedt@goodmis.org,
@@ -37,9 +37,9 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: [PATCH v9 5/8] riscv: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-Date: Thu, 30 Mar 2023 04:39:12 -0700
-Message-Id: <5e0e8e493565b098236e8725c086b8c30444710d.1680176068.git.pengdonglin@sangfor.com.cn>
+Subject: [PATCH v9 8/8] selftests/ftrace: Add funcgraph-retval test case
+Date: Thu, 30 Mar 2023 04:39:15 -0700
+Message-Id: <cb47d0312b935c6bf6d6a917237698efca0960f3.1680176068.git.pengdonglin@sangfor.com.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1680176068.git.pengdonglin@sangfor.com.cn>
 References: <cover.1680176068.git.pengdonglin@sangfor.com.cn>
@@ -51,96 +51,71 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSRoZVk8fHUJCTR9CHUtDSVUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS0hKTFVKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MyI6EBw4Dj0VVk83KC5NST0x
-	QiEwFDdVSlVKTUNLSkxNSE1CQkxDVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-	WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFOSk9NNwY+
-X-HM-Tid: 0a873250cf3a2eb7kusn61763580c1d
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDS0tOVklJQh4fHh0dGkIfGlUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS09LQ1VKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MTY6Hio6DT0WSE8*AiwdSTkv
+	PxwwCRBVSlVKTUNLSkxNSExOS0lLVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+	WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFPSklONwY+
+X-HM-Tid: 0a873250e31c2eb7kusn7701d580844
 X-HM-MType: 1
 
-The previous patch ("function_graph: Support recording and printing
-the return value of function") has laid the groundwork for the for
-the funcgraph-retval, and this modification makes it available on
-the RISC-V platform.
-
-We introduce a new structure called fgraph_ret_regs for the RISC-V
-platform to hold return registers and the frame pointer. We then
-fill its content in the return_to_handler and pass its address to
-the function ftrace_return_to_handler to record the return value.
+Add a test case for the funcgraph-retval and funcgraph-retval-hex
+trace options.
 
 Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
 ---
-v9:
- - Update the commit message
-
 v8:
- - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+ - Fix issues in selftest
 ---
- arch/riscv/Kconfig              |  1 +
- arch/riscv/include/asm/ftrace.h | 19 +++++++++++++++++++
- arch/riscv/kernel/mcount.S      |  7 +------
- 3 files changed, 21 insertions(+), 6 deletions(-)
+ .../ftrace/test.d/ftrace/fgraph-retval.tc     | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index c5e42cc37604..a616af85defb 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -138,6 +138,7 @@ config RISCV
- 	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && $(cc-option,-fpatchable-function-entry=8)
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
-+	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
- 
-diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-index d47d87c2d7e3..8e1b9cfc0619 100644
---- a/arch/riscv/include/asm/ftrace.h
-+++ b/arch/riscv/include/asm/ftrace.h
-@@ -111,4 +111,23 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
- 
- #endif /* CONFIG_DYNAMIC_FTRACE */
- 
-+#ifndef __ASSEMBLY__
-+struct fgraph_ret_regs {
-+	unsigned long a1;
-+	unsigned long a0;
-+	unsigned long s0;
-+	unsigned long ra;
-+};
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+new file mode 100644
+index 000000000000..ac6d0183e4d9
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+@@ -0,0 +1,39 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: ftrace - function graph print function return value
++# requires: set_graph_function options/funcgraph-retval options/funcgraph-retval-hex function_graph:tracer
 +
-+static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
-+{
-+	return ret_regs->a0;
++# Make sure that funcgraph-retval works
++
++fail() { # msg
++    echo $1
++    exit_fail
 +}
 +
-+static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
-+{
-+	return ret_regs->s0;
-+}
-+#endif
++echo proc_reg_write > set_graph_function
++echo function_graph > current_tracer
++echo funcgraph-retval > trace_options
 +
- #endif /* _ASM_RISCV_FTRACE_H */
-diff --git a/arch/riscv/kernel/mcount.S b/arch/riscv/kernel/mcount.S
-index 30102aadc4d7..8a6e5a9e842a 100644
---- a/arch/riscv/kernel/mcount.S
-+++ b/arch/riscv/kernel/mcount.S
-@@ -65,13 +65,8 @@ ENTRY(return_to_handler)
-  * So alternatively we check the *old* frame pointer position, that is, the
-  * value stored in -16(s0) on entry, and the s0 on return.
-  */
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
--	mv	t6, s0
--#endif
- 	SAVE_RET_ABI_STATE
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
--	mv	a0, t6
--#endif
-+	mv	a0, sp
- 	call	ftrace_return_to_handler
- 	mv	a2, a0
- 	RESTORE_RET_ABI_STATE
++enable_tracing
++
++set +e
++echo > /proc/interrupts
++set -e
++
++disable_tracing
++
++: "Test printing the error code in signed decimal format"
++echo nofuncgraph-retval-hex > trace_options
++count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
++if [ $count -eq 0 ]; then
++    fail "Return value can not be printed in signed decimal format"
++fi
++
++: "Test printing the error code in hexadecimal format"
++echo funcgraph-retval-hex > trace_options
++count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
++if [ $count -eq 0 ]; then
++    fail "Return value can not be printed in hexadecimal format"
++fi
++
++exit 0
 -- 
 2.25.1
 
