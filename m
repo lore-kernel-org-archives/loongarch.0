@@ -1,89 +1,106 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035481380
-	for <loongarch@lists.linux.dev>; Thu, 30 Mar 2023 02:56:08 +0000 (UTC)
-Received: by mail-pj1-f41.google.com with SMTP id a16so15958146pjs.4
-        for <loongarch@lists.linux.dev>; Wed, 29 Mar 2023 19:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680144968;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zcIEVyxOQ9ThEvdTZ3QimlrlYxsMccblwZq0nJEQf8Q=;
-        b=Zec5lJk4rXTCbA+qbB6XLLMkQsH0baL9XmFKOIVsa6DGOJodAy/QjlUIPA+YuJnisG
-         BLviy5bd66/mXjAw691bc1vI4BTemWYukYKjCZ1+jPr0XjLytUY1NT/zNqXehvPbHQ60
-         u//4jHceldp9UErdH8WTE+kZplg5WaFpToTSV3UlAnqAe5F6GUY6hMTMdwhuQqDTtOD2
-         u3vm2zcCg1Kk0SMP5H8FbNCOoU5dUs/LXyL76kqX2uLO96d7wuz5Ri66atDLcCfotByZ
-         DA0qxNlVVaf2BFurz3bXwPR7biZ4WJlZrmKAdrpggFJhgH5bTzqvysSpK1iQKoTWivaM
-         qsbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680144968;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zcIEVyxOQ9ThEvdTZ3QimlrlYxsMccblwZq0nJEQf8Q=;
-        b=yWCsPBrC6G9uCtXOeFXesAvIL74MVQak/ZeN5YV9ih5bbyOH5Ge57lgtOTSWKb5GgD
-         Rox8QxL7iOcQo0lx8Elc3sdajKix/TvBd9vQtqA+l7qhiw7W/uDYfMKoA5dMxpRW5smW
-         844gjQM9ARxfx2rniWJp64TeP3Zj/gM+PcyykOLfybmUqGstUKuaYUrwvCbNGNB3v2qX
-         vcDsLlsqoDDNGw1cBfQ7Rn1y4gu7cJNX/82idRBgb/R0pPB9hyGFqpnvBzCC5UJI8RlJ
-         9Sx/mPVc/Aqw2ed8YVhZdJgN2GnUv7OEg1VdZwq/xIl6G5tJXr4dPGxDnmERQS98SFVh
-         rJLg==
-X-Gm-Message-State: AAQBX9c1Ql0IOVlPXdWFIYrte6GyUCZkW2/FXpU83WF6tOCBG0C+CXXZ
-	4XvJEMSol1bMkAMBJyxfXQuw0A+ucz4FSSfCtak=
-X-Google-Smtp-Source: AKy350aaSitWK+oMnPBGI/HdGFv4oj337IShewGHsQKImjbS99hwBRaF/179UbwYduEu4LT8WrbvDdBJHlGFglrepNY=
-X-Received: by 2002:a17:902:ecc2:b0:1a0:7630:8ef1 with SMTP id
- a2-20020a170902ecc200b001a076308ef1mr8673024plh.11.1680144968218; Wed, 29 Mar
- 2023 19:56:08 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5867C15A0
+	for <loongarch@lists.linux.dev>; Thu, 30 Mar 2023 03:33:41 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxPNoTAyVkMzIUAA--.19744S3;
+	Thu, 30 Mar 2023 11:33:39 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axmr0SAyVks_MQAA--.11425S3;
+	Thu, 30 Mar 2023 11:33:39 +0800 (CST)
+Subject: Re: loongarch wakeup build error
+To: Randy Dunlap <rdunlap@infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+References: <11215033-fa3c-ecb1-2fc0-e9aeba47be9b@infradead.org>
+Cc: loongarch@lists.linux.dev
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <af6281f5-9c6c-d2d7-5978-b637b8d18473@loongson.cn>
+Date: Thu, 30 Mar 2023 11:33:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230328111714.2056-1-zhangqing@loongson.cn> <CA+fCnZevgYh7CzJ9gOWJ80SwY4Y9w8UO2ZiFAXEnAhQhFgrffA@mail.gmail.com>
- <dccfbff3-7bad-de33-4d96-248bdff44a8b@loongson.cn>
-In-Reply-To: <dccfbff3-7bad-de33-4d96-248bdff44a8b@loongson.cn>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Thu, 30 Mar 2023 04:55:57 +0200
-Message-ID: <CA+fCnZddt50+10SZ+hZRKBudsmMF0W9XpsDG6=58p1ot62LjXQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
-To: Qing Zhang <zhangqing@loongson.cn>
-Cc: Jonathan Corbet <corbet@lwn.net>, Huacai Chen <chenhuacai@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Alexander Potapenko <glider@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, kasan-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <11215033-fa3c-ecb1-2fc0-e9aeba47be9b@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Axmr0SAyVks_MQAA--.11425S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7tFyfCFykur45Cr18GF4Uurg_yoW8Aw17p3
+	9Fvryrtw4Fkr95X3yDJ3s8WF98Jrn8G34IgFWay348CF47Ww15Zrn2k34kWF1jg3s5GFW0
+	9rWxJan09F4UJa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
+	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2DUUUUUUU
 
-On Thu, Mar 30, 2023 at 4:06=E2=80=AFAM Qing Zhang <zhangqing@loongson.cn> =
-wrote:
+
+
+On 03/30/2023 06:55 AM, Randy Dunlap wrote:
+> Hi,
 >
-> > But I don't think you need this check here at all: addr_has_metadata
-> > already checks that shadow exists.
-> >
-> On LongArch, there's a lot of holes between different segments, so kasan
-> shadow area is some different type of memory that we concatenate, we
-> can't use if (unlikely((void *)addr <
-> kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) to determine the
-> validity, and in arch/loongarch/include/asm/kasan.h I construct invalid
-> NULL.
+> I don't know if this has been reported previously, so here goes.
+>
+> When CONFIG_SUSPEND is not set:
+>
+> loongarch64-linux-ld: drivers/acpi/sleep.o: in function `acpi_pm_prepare':
+> sleep.c:(.text+0x278): undefined reference to `loongarch_wakeup_start'
+> loongarch64-linux-ld: sleep.c:(.text+0x27c): undefined reference to `loongarch_wakeup_start'
+> loongarch64-linux-ld: sleep.c:(.text+0x27c): undefined reference to `loongarch_wakeup_start'
+>
+> A complete randconfig file is attached.
+>
 
-I get that, but you already added a special case for
-__HAVE_ARCH_SHADOW_MAP to addr_has_metadata, so you can just call it?
+I can reproduce this build error on LoongArch.
 
-> This is because in pagetable_init on loongarch/mips, we populate pmd/pud
-> with invalid_pmd_table/invalid_pud_table,
+Here is the call trace:
 
-I see. Please add this into the patch description for v2.
+acpi_pm_prepare()
+   __acpi_pm_prepare()
+     acpi_sleep_prepare()
+       acpi_get_wakeup_address()
+         loongarch_wakeup_start()
 
-> So pmd_init/pud_init(p) is required, perhaps we define them as __weak in
-> mm/kasan/init.c, like mm/sparse-vmemmap.c.
 
-Yes, this makes sense to do, so that KASAN doesn't depend on
-definitions from sparse-vmemmap.c.
+loongarch_wakeup_start() is defined in arch/loongarch/power/suspend_asm.S
+which is built under CONFIG_SUSPEND. In order to fix the build error, just
+define a empty loongarch_wakeup_start() if CONFIG_SUSPEND is not set.
 
-Thank you!
+diff --git a/arch/loongarch/include/asm/acpi.h 
+b/arch/loongarch/include/asm/acpi.h
+index 4198753aa1d0..7b812a836a5a 100644
+--- a/arch/loongarch/include/asm/acpi.h
++++ b/arch/loongarch/include/asm/acpi.h
+@@ -39,9 +39,14 @@ extern int loongarch_acpi_suspend(void);
+  extern int (*acpi_suspend_lowlevel)(void);
+  extern void loongarch_suspend_enter(void);
+
++#ifdef CONFIG_SUSPEND
++extern void loongarch_wakeup_start(void);
++#else
++static inline void loongarch_wakeup_start(void) {}
++#endif
++
+  static inline unsigned long acpi_get_wakeup_address(void)
+  {
+-	extern void loongarch_wakeup_start(void);
+  	return (unsigned long)loongarch_wakeup_start;
+  }
+
+If the above change makes sense, I will send a formal patch later.
+
+Thanks,
+Tiezhu
+
