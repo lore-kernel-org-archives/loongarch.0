@@ -1,11 +1,11 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54136256D
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51E21256A
 	for <loongarch@lists.linux.dev>; Fri, 31 Mar 2023 11:39:02 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.153])
-	by gateway (Coremail) with SMTP id _____8BxtthVxiZkNu0UAA--.37125S3;
+	by gateway (Coremail) with SMTP id _____8AxJNhVxiZkPe0UAA--.20717S3;
 	Fri, 31 Mar 2023 19:39:01 +0800 (CST)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.153])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx57xUxiZkmwASAA--.12675S5;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx57xUxiZkmwASAA--.12675S6;
 	Fri, 31 Mar 2023 19:39:00 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
@@ -17,9 +17,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	loongson-kernel@lists.loongnix.cn,
 	stable@vger.kernel.org
-Subject: [PATCH V2 3/5] irqchip/loongson-eiointc: Fix registration of syscore_ops
-Date: Fri, 31 Mar 2023 19:38:58 +0800
-Message-Id: <20230331113900.9105-4-lvjianmin@loongson.cn>
+Subject: [PATCH V2 4/5] irqchip/loongson-pch-pic: Fix registration of syscore_ops
+Date: Fri, 31 Mar 2023 19:38:59 +0800
+Message-Id: <20230331113900.9105-5-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20230331113900.9105-1-lvjianmin@loongson.cn>
 References: <20230331113900.9105-1-lvjianmin@loongson.cn>
@@ -30,58 +30,51 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx57xUxiZkmwASAA--.12675S5
+X-CM-TRANSID:AQAAf8Bx57xUxiZkmwASAA--.12675S6
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7ZFW7XFyrJF1kWrWDXry5Jwb_yoW8XFy8p3
-	y8Ca4jgr4rWa48Cr9IqFyDZFy5Awn5ZrW7AayrXayavF98Gwn8CF1FyF1q9FWqkwsrGF1j
-	9F40qrWUua15Aw7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JFv_Jw1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
-	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
-	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s02
-	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
-	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvE
-	c7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
-	07UCoGQUUUUU=
+X-Coremail-Antispam: 1Uk129KBjvdXoW7Xr43Xr4UCFyUAryDuFy8Zrb_yoWkJrbEgr
+	yIqFsrJw18Zr1Uu3y3Zr15XF43ta1UWFn5uFZ8KF9xJ3yrX34fJr12yrn8Cw47Ga48AFnx
+	G398WrnakryxCjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	g7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUAVWUZwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
+	e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
+	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
+	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E
+	5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtV
+	W8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY
+	1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
+	0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U8XyCJUUUUU==
 
-When support suspend/resume for loongson-eiointc, the syscore_ops
+When support suspend/resume for loongson-pch-pic, the syscore_ops
 is registered twice in dual-bridges machines where there are two
-eiointc IRQ domains. Repeated registration of an same syscore_ops
-broke syscore_ops_list. Also, cpuhp_setup_state_nocalls is only
-needed to call for once. So the patch will corret them.
+pch-pic IRQ domains. Repeated registration of an same syscore_ops
+broke syscore_ops_list, so the patch will corret it.
 
-Fixes: a90335c2dfb4 ("irqchip/loongson-eiointc: Add suspend/resume support")
-
+Fixes: 1ed008a2c331 ("irqchip/loongson-pch-pic: Add suspend/resume support")
 Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-eiointc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-loongson-pch-pic.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index d16ed64feb3d..90181c42840b 100644
---- a/drivers/irqchip/irq-loongson-eiointc.c
-+++ b/drivers/irqchip/irq-loongson-eiointc.c
-@@ -422,10 +422,12 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
- 	parent_irq = irq_create_mapping(parent, acpi_eiointc->cascade);
- 	irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
+diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
+index 437f1af693d0..64fa67d4ee7a 100644
+--- a/drivers/irqchip/irq-loongson-pch-pic.c
++++ b/drivers/irqchip/irq-loongson-pch-pic.c
+@@ -311,7 +311,8 @@ static int pch_pic_init(phys_addr_t addr, unsigned long size, int vec_base,
+ 	pch_pic_handle[nr_pics] = domain_handle;
+ 	pch_pic_priv[nr_pics++] = priv;
  
--	register_syscore_ops(&eiointc_syscore_ops);
--	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_LOONGARCH_STARTING,
-+	if (nr_pics == 1) {
-+		register_syscore_ops(&eiointc_syscore_ops);
-+		cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_LOONGARCH_STARTING,
- 				  "irqchip/loongarch/intc:starting",
- 				  eiointc_router_init, NULL);
-+	}
+-	register_syscore_ops(&pch_pic_syscore_ops);
++	if (nr_pics == 1)
++		register_syscore_ops(&pch_pic_syscore_ops);
  
- 	if (cpu_has_flatmode)
- 		node = cpu_to_node(acpi_eiointc->node * CORES_PER_EIO_NODE);
+ 	return 0;
+ 
 -- 
 2.31.1
 
