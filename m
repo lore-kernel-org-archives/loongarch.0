@@ -1,83 +1,71 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8744C1FB1
-	for <loongarch@lists.linux.dev>; Fri, 31 Mar 2023 08:15:31 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxAf+WliZkCuEUAA--.32382S3;
-	Fri, 31 Mar 2023 16:15:18 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axmr1FliZkPusRAA--.12839S2;
-	Fri, 31 Mar 2023 16:13:58 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH] LoongArch: Clean up plat_swiotlb_setup() related code
-Date: Fri, 31 Mar 2023 16:13:52 +0800
-Message-Id: <1680250432-9396-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8Axmr1FliZkPusRAA--.12839S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7KFWDAF1UCw18AryDWr1rWFg_yoW8WrW3pF
-	9rZrykJF48Gr97Za4DAw1kuFy5Jw1kGw12ga17uas5ArnrWr1DXr1vqr9xZF10qayrJF4F
-	ga4rKasIv3WUJ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
-	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FED12569
+	for <loongarch@lists.linux.dev>; Fri, 31 Mar 2023 11:39:02 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.153])
+	by gateway (Coremail) with SMTP id _____8BxMMxUxiZkJO0UAA--.32256S3;
+	Fri, 31 Mar 2023 19:39:00 +0800 (CST)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.153])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx57xUxiZkmwASAA--.12675S2;
+	Fri, 31 Mar 2023 19:39:00 +0800 (CST)
+From: Jianmin Lv <lvjianmin@loongson.cn>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	loongson-kernel@lists.loongnix.cn,
+	stable@vger.kernel.org
+Subject: [PATCH V2 0/5] Fix some issues of irq controllers for dual-bridges scenario 
+Date: Fri, 31 Mar 2023 19:38:55 +0800
+Message-Id: <20230331113900.9105-1-lvjianmin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bx57xUxiZkmwASAA--.12675S2
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvdXoW7Jw1xWFyxXw1kury7AFW7twb_yoW3CwbE9F
+	y0vrWkGr48WF1xZa9rZry5Ar9xJFWUW3Z09FyUKFy3X340yw15Jr12ywsxG3WxK3WrXFn5
+	urs5Gr1xCr12yjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	b7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUAVWUZwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
+	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
+	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+	GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+	0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
+	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
+	4UYxBIdaVFxhVjvjDU0xZFpf9x07jjpB-UUUUU=
 
-After commit c78c43fe7d42 ("LoongArch: Use acpi_arch_dma_setup()
-and remove ARCH_HAS_PHYS_TO_DMA"), plat_swiotlb_setup() has been
-deleted, clean up the related code.
+In dual-bridges scenario, some bugs were found for irq
+controllers drivers, so the patch serie is used to fix them.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/bootinfo.h | 1 -
- arch/loongarch/kernel/setup.c         | 4 ++--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+V1->V2:
+1. Remove all of ChangeID in patches
+2. Exchange the sequence of some patches
+3. Adjust code style of if...else... in patch[2]
 
-diff --git a/arch/loongarch/include/asm/bootinfo.h b/arch/loongarch/include/asm/bootinfo.h
-index 0051b52..c607968 100644
---- a/arch/loongarch/include/asm/bootinfo.h
-+++ b/arch/loongarch/include/asm/bootinfo.h
-@@ -13,7 +13,6 @@ const char *get_system_type(void);
- extern void init_environ(void);
- extern void memblock_init(void);
- extern void platform_init(void);
--extern void plat_swiotlb_setup(void);
- extern int __init init_numa_memory(void);
- 
- struct loongson_board_info {
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 27f71f9..4444b13 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -389,8 +389,8 @@ static void __init arch_mem_init(char **cmdline_p)
- 	/*
- 	 * In order to reduce the possibility of kernel panic when failed to
- 	 * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
--	 * low memory as small as possible before plat_swiotlb_setup(), so
--	 * make sparse_init() using top-down allocation.
-+	 * low memory as small as possible before swiotlb_init(), so make
-+	 * sparse_init() using top-down allocation.
- 	 */
- 	memblock_set_bottom_up(false);
- 	sparse_init();
+Jianmin Lv (5):
+  irqchip/loongson-eiointc: Fix returned value on parsing MADT
+  irqchip/loongson-eiointc: Fix incorrect use of acpi_get_vec_parent
+  irqchip/loongson-eiointc: Fix registration of syscore_ops
+  irqchip/loongson-pch-pic: Fix registration of syscore_ops
+  irqchip/loongson-pch-pic: Fix pch_pic_acpi_init calling
+
+ drivers/irqchip/irq-loongson-eiointc.c | 32 ++++++++++++++++++--------
+ drivers/irqchip/irq-loongson-pch-pic.c |  6 ++++-
+ 2 files changed, 27 insertions(+), 11 deletions(-)
+
 -- 
-2.1.0
+2.31.1
 
