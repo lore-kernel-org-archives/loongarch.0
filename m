@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C77F72571
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 560C8256F
 	for <loongarch@lists.linux.dev>; Fri, 31 Mar 2023 11:39:02 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.153])
-	by gateway (Coremail) with SMTP id _____8AxrtpVxiZkRO0UAA--.20644S3;
-	Fri, 31 Mar 2023 19:39:01 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Axz_9UxiZkJ+0UAA--.32302S3;
+	Fri, 31 Mar 2023 19:39:00 +0800 (CST)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.153])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx57xUxiZkmwASAA--.12675S7;
-	Fri, 31 Mar 2023 19:39:01 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx57xUxiZkmwASAA--.12675S3;
+	Fri, 31 Mar 2023 19:39:00 +0800 (CST)
 From: Jianmin Lv <lvjianmin@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Marc Zyngier <maz@kernel.org>
@@ -17,9 +17,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	loongson-kernel@lists.loongnix.cn,
 	stable@vger.kernel.org
-Subject: [PATCH V2 5/5] irqchip/loongson-pch-pic: Fix pch_pic_acpi_init calling
-Date: Fri, 31 Mar 2023 19:39:00 +0800
-Message-Id: <20230331113900.9105-6-lvjianmin@loongson.cn>
+Subject: [PATCH V2 1/5] irqchip/loongson-eiointc: Fix returned value on parsing MADT
+Date: Fri, 31 Mar 2023 19:38:56 +0800
+Message-Id: <20230331113900.9105-2-lvjianmin@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20230331113900.9105-1-lvjianmin@loongson.cn>
 References: <20230331113900.9105-1-lvjianmin@loongson.cn>
@@ -30,83 +30,67 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx57xUxiZkmwASAA--.12675S7
+X-CM-TRANSID:AQAAf8Bx57xUxiZkmwASAA--.12675S3
 X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7tw17uw1xJw4DGF1UCFy7Awb_yoW8Zw1kpF
-	Waq39Iyr48JryxCFZ2k3y5XryfA3sxC3y2gF4Fk3yrZr4qka4kCr4Iya1UCr4kCFsrGa1a
-	vF4FqF1jk3W5AaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7trWkZF45Kw48uF4rtFWkJFb_yoW8WFW7pa
+	y7ArZ8tr4Yy3yxCr4kt3s8X345A39xuayxtFWrG3yFvr4qkrWDXF4fA3Wj9rn2yFWUG3Wj
+	vF4Fqa15uw45A3DanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	b3xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
 	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
 	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0Ex4A2
-	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
+	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
 	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s02
 	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
-	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvE
-	c7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
-	07j6sjUUUUUU=
+	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvE
+	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
+	v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U8TE_tUUUUU==
 
-For dual-bridges scenario, pch_pic_acpi_init() will be called
-in following path:
+In pch_pic_parse_madt(), a NULL parent pointer will be
+returned from acpi_get_vec_parent() for second pch-pic domain
+related to second bridge while calling eiointc_acpi_init() at
+first time, where the parent of it has not been initialized
+yet, and will be initialized during second time calling
+eiointc_acpi_init(). So, it's reasonable to return zero so
+that failure of acpi_table_parse_madt() will be avoided, or else
+acpi_cascade_irqdomain_init() will return and initialization of
+followed pch_msi domain will be skipped.
 
-cpuintc_acpi_init
-  acpi_cascade_irqdomain_init(in cpuintc driver)
-    acpi_table_parse_madt
-      eiointc_parse_madt
-        eiointc_acpi_init /* this will be called two times
-                             correspondingto parsing two
-                             eiointc entries in MADT under
-                             dual-bridges scenario*/
-          acpi_cascade_irqdomain_init(in eiointc driver)
-            acpi_table_parse_madt
-              pch_pic_parse_madt
-                pch_pic_acpi_init /* this will be called depend
-                                     on valid parent IRQ domain
-                                     handle for one or two times
-                                     corresponding to parsing
-                                     two pchpic entries in MADT
-                                     druring calling
-                                     eiointc_acpi_init() under
-                                     dual-bridges scenario*/
-
-During the first eiointc_acpi_init() calling, the
-pch_pic_acpi_init() will be called just one time since only
-one valid parent IRQ domain handle will be found for current
-eiointc IRQ domain.
-
-During the second eiointc_acpi_init() calling, the
-pch_pic_acpi_init() will be called two times since two valid
-parent IRQ domain handles will be found. So in pch_pic_acpi_init(),
-we must have a reasonable way to prevent from creating second same
-pch_pic IRQ domain.
-
-The patch matches gsi base information in created pch_pic IRQ
-domains to check if the target domain has been created to avoid the
-bug mentioned above.
+Although it does not matter when pch_msi_parse_madt() returns
+-EINVAL if no invalid parent is found, it's also reasonable to
+return zero for that.
 
 Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-pch-pic.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/irqchip/irq-loongson-eiointc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
-index 64fa67d4ee7a..e5fe4d50be05 100644
---- a/drivers/irqchip/irq-loongson-pch-pic.c
-+++ b/drivers/irqchip/irq-loongson-pch-pic.c
-@@ -404,6 +404,9 @@ int __init pch_pic_acpi_init(struct irq_domain *parent,
- 	int ret, vec_base;
- 	struct fwnode_handle *domain_handle;
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index d15fd38c1756..62a632d73991 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -343,7 +343,7 @@ static int __init pch_pic_parse_madt(union acpi_subtable_headers *header,
+ 	if (parent)
+ 		return pch_pic_acpi_init(parent, pchpic_entry);
  
-+	if (find_pch_pic(acpi_pchpic->gsi_base) >= 0)
-+		return 0;
-+
- 	vec_base = acpi_pchpic->gsi_base - GSI_MIN_PCH_IRQ;
+-	return -EINVAL;
++	return 0;
+ }
  
- 	domain_handle = irq_domain_alloc_fwnode(&acpi_pchpic->address);
+ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+@@ -355,7 +355,7 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+ 	if (parent)
+ 		return pch_msi_acpi_init(parent, pchmsi_entry);
+ 
+-	return -EINVAL;
++	return 0;
+ }
+ 
+ static int __init acpi_cascade_irqdomain_init(void)
 -- 
 2.31.1
 
