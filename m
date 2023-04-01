@@ -1,26 +1,32 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01E747C
-	for <loongarch@lists.linux.dev>; Sat,  1 Apr 2023 01:36:21 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.153])
-	by gateway (Coremail) with SMTP id _____8BxMMyTiidkhB4VAA--.32597S3;
-	Sat, 01 Apr 2023 09:36:19 +0800 (CST)
-Received: from [10.20.42.153] (unknown [10.20.42.153])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxLL6SiidkP30SAA--.15525S3;
-	Sat, 01 Apr 2023 09:36:18 +0800 (CST)
-Subject: Re: [PATCH V2 1/5] irqchip/loongson-eiointc: Fix returned value on
- parsing MADT
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>,
- loongson-kernel@lists.loongnix.cn, stable@vger.kernel.org
-References: <20230331113900.9105-1-lvjianmin@loongson.cn>
- <20230331113900.9105-2-lvjianmin@loongson.cn> <ZCbdUbVhH7lmh3PI@kroah.com>
-From: Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <f00383ba-6f2a-3111-9a55-c412f9a50e7f@loongson.cn>
-Date: Sat, 1 Apr 2023 09:36:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 905E717C7
+	for <loongarch@lists.linux.dev>; Sat,  1 Apr 2023 03:23:30 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxlF2woydk8yQVAA--.32460S3;
+	Sat, 01 Apr 2023 11:23:28 +0800 (CST)
+Received: from [10.130.0.102] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axnr6uoydka4sSAA--.45160S3;
+	Sat, 01 Apr 2023 11:23:28 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
+To: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Huacai Chen <chenhuacai@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-mm@kvack.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Andrey Ryabinin <ryabinin.a.a@gmail.com>
+References: <20230328111714.2056-1-zhangqing@loongson.cn>
+ <CA+fCnZevgYh7CzJ9gOWJ80SwY4Y9w8UO2ZiFAXEnAhQhFgrffA@mail.gmail.com>
+ <dccfbff3-7bad-de33-4d96-248bdff44a8b@loongson.cn>
+ <CA+fCnZddt50+10SZ+hZRKBudsmMF0W9XpsDG6=58p1ot62LjXQ@mail.gmail.com>
+ <2360000f-7292-9da8-d6b5-94b125c5f2b0@loongson.cn>
+ <CA+fCnZfoTszdoy7o_EfPXOc4QYo_Jgw9Qf0ua2JoNp0PXdrTPA@mail.gmail.com>
+From: Qing Zhang <zhangqing@loongson.cn>
+Message-ID: <34a1a391-6ad9-8722-b206-1e830711b096@loongson.cn>
+Date: Sat, 1 Apr 2023 11:23:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -28,60 +34,45 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ZCbdUbVhH7lmh3PI@kroah.com>
+In-Reply-To: <CA+fCnZfoTszdoy7o_EfPXOc4QYo_Jgw9Qf0ua2JoNp0PXdrTPA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxLL6SiidkP30SAA--.15525S3
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7tFWUCF1DZr47urW5Xry3CFg_yoW8JF4fpa
-	y7X398tr4Yy34fCw4ftw1rXFyrXa93Ca4ftr45WwsYkr1DurnrW3WIvw4I9F93CFW3Ka12
-	vF4aqan5Aw45A3DanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bf8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1ln4kS
-	14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
-	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
-	8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
-	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
-	1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsG
-	vfC2KfnxnUUI43ZEXa7IU8fsqJUUUUU==
+X-CM-TRANSID:AQAAf8Axnr6uoydka4sSAA--.45160S3
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUPEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
+	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
+	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4c8EcI0En4kS14v26r126r1DMxAqzxv26xkF
+	7I0En4kS14v26r126r1DMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r
+	1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73Uj
+	IFyTuYvjxUcCD7UUUUU
 
-Ok, thanks, got it.
+On 2023/3/31 下午11:58, Andrey Konovalov wrote:
+> On Thu, Mar 30, 2023 at 6:32 AM Qing Zhang <zhangqing@loongson.cn> wrote:
+>>
+>>> I get that, but you already added a special case for
+>>> __HAVE_ARCH_SHADOW_MAP to addr_has_metadata, so you can just call it?
+>>>
+>> ok, all the changes are going to be in v2.
+> 
+> Could you also please put changes to the common KASAN code into a
+> separate patch/patches? This will simplify any potential backporting
+> of common KASAN code changes in the future.
+> 
+ok, no problem.
 
-On 2023/3/31 下午9:17, Greg KH wrote:
-> On Fri, Mar 31, 2023 at 07:38:56PM +0800, Jianmin Lv wrote:
->> In pch_pic_parse_madt(), a NULL parent pointer will be
->> returned from acpi_get_vec_parent() for second pch-pic domain
->> related to second bridge while calling eiointc_acpi_init() at
->> first time, where the parent of it has not been initialized
->> yet, and will be initialized during second time calling
->> eiointc_acpi_init(). So, it's reasonable to return zero so
->> that failure of acpi_table_parse_madt() will be avoided, or else
->> acpi_cascade_irqdomain_init() will return and initialization of
->> followed pch_msi domain will be skipped.
->>
->> Although it does not matter when pch_msi_parse_madt() returns
->> -EINVAL if no invalid parent is found, it's also reasonable to
->> return zero for that.
->>
->> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
->> ---
->>   drivers/irqchip/irq-loongson-eiointc.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> <formletter>
-> 
-> This is not the correct way to submit patches for inclusion in the
-> stable kernel tree.  Please read:
->      https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> for how to do this properly.
-> 
-> </formletter>
+Thanks,
+-Qing
+> Thanks!
 > 
 
