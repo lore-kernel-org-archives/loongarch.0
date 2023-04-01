@@ -1,78 +1,139 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 905E717C7
-	for <loongarch@lists.linux.dev>; Sat,  1 Apr 2023 03:23:30 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxlF2woydk8yQVAA--.32460S3;
-	Sat, 01 Apr 2023 11:23:28 +0800 (CST)
-Received: from [10.130.0.102] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axnr6uoydka4sSAA--.45160S3;
-	Sat, 01 Apr 2023 11:23:28 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
-To: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Huacai Chen <chenhuacai@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-mm@kvack.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Andrey Ryabinin <ryabinin.a.a@gmail.com>
-References: <20230328111714.2056-1-zhangqing@loongson.cn>
- <CA+fCnZevgYh7CzJ9gOWJ80SwY4Y9w8UO2ZiFAXEnAhQhFgrffA@mail.gmail.com>
- <dccfbff3-7bad-de33-4d96-248bdff44a8b@loongson.cn>
- <CA+fCnZddt50+10SZ+hZRKBudsmMF0W9XpsDG6=58p1ot62LjXQ@mail.gmail.com>
- <2360000f-7292-9da8-d6b5-94b125c5f2b0@loongson.cn>
- <CA+fCnZfoTszdoy7o_EfPXOc4QYo_Jgw9Qf0ua2JoNp0PXdrTPA@mail.gmail.com>
-From: Qing Zhang <zhangqing@loongson.cn>
-Message-ID: <34a1a391-6ad9-8722-b206-1e830711b096@loongson.cn>
-Date: Sat, 1 Apr 2023 11:23:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254A48F66
+	for <loongarch@lists.linux.dev>; Sat,  1 Apr 2023 22:04:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90AB5C433EF;
+	Sat,  1 Apr 2023 22:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1680386653;
+	bh=CLqLBHeDg33hin5CXQIorMaJsFgSptjcHpMkJE5afS0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uWR7Dec1ppg9NOxS2uvSf3ASZ3Az+Zc8atwKZAtBua7kumMcc+zPBU642v1S3lt/s
+	 5yzwq9ZMPJSjw1PvgdLLEEDqvXwR94gaGBn7IMGZVU6DEkiIL432czlu/pEUzg6UEN
+	 mFyIuEJCqmRulgoTPayIg3P5nR1CwXopgBaKGvku8peL6K3aisounVrfxeAvP1fhDG
+	 ct9BTYPMW5s4P3ov78EmtLgQgkYqa2Mut3QPjRoXhZsrmDATx+FhP/oYbu9CMabPzp
+	 Tnslc5ZJ3p18LyW3KfEELqS8AScZfiQPzJ635WolKcn0AAT/0tmyHsejrUdVk5ZbZJ
+	 XCGcQ/w4bEzdA==
+Date: Sun, 2 Apr 2023 07:04:06 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc: rostedt@goodmis.org, linux@armlinux.org.uk, mark.rutland@arm.com,
+ will@kernel.org, catalin.marinas@arm.com, rmk+kernel@armlinux.org.uk,
+ palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+ tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org, zhangqing@loongson.cn,
+ kernel@xen0n.name, mingo@redhat.com, peterz@infradead.org,
+ xiehuan09@gmail.com, dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
+ dolinux.peng@gmail.com, linux-trace-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 8/8] selftests/ftrace: Add funcgraph-retval test
+ case
+Message-Id: <20230402070406.177f09cc34f9860baf3e6ec2@kernel.org>
+In-Reply-To: <ba23c2429f1ef798946ce65e21c7a7a2bff0019e.1680265828.git.pengdonglin@sangfor.com.cn>
+References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
+	<ba23c2429f1ef798946ce65e21c7a7a2bff0019e.1680265828.git.pengdonglin@sangfor.com.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <CA+fCnZfoTszdoy7o_EfPXOc4QYo_Jgw9Qf0ua2JoNp0PXdrTPA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axnr6uoydka4sSAA--.45160S3
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUPEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
-	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
-	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4c8EcI0En4kS14v26r126r1DMxAqzxv26xkF
-	7I0En4kS14v26r126r1DMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r
-	1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-	67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2I
-	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
-	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73Uj
-	IFyTuYvjxUcCD7UUUUU
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2023/3/31 下午11:58, Andrey Konovalov wrote:
-> On Thu, Mar 30, 2023 at 6:32 AM Qing Zhang <zhangqing@loongson.cn> wrote:
->>
->>> I get that, but you already added a special case for
->>> __HAVE_ARCH_SHADOW_MAP to addr_has_metadata, so you can just call it?
->>>
->> ok, all the changes are going to be in v2.
+On Fri, 31 Mar 2023 05:47:44 -0700
+Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
+
+> Add a test case for the funcgraph-retval and funcgraph-retval-hex
+> trace options.
 > 
-> Could you also please put changes to the common KASAN code into a
-> separate patch/patches? This will simplify any potential backporting
-> of common KASAN code changes in the future.
+> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+> ---
+> v10:
+>  - Fix issues in selftest
 > 
-ok, no problem.
+> v8:
+>  - Fix issues in selftest
+> ---
+>  .../ftrace/test.d/ftrace/fgraph-retval.tc     | 43 +++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+> new file mode 100644
+> index 000000000000..5819aa2dd6ad
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+> @@ -0,0 +1,43 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: ftrace - function graph print function return value
+> +# requires: options/funcgraph-retval options/funcgraph-retval-hex function_graph:tracer
+> +
+> +# Make sure that funcgraph-retval works
+> +
+> +fail() { # msg
+> +    echo $1
+> +    exit_fail
+> +}
+> +
+> +disable_tracing
+> +clear_trace
+> +
+> +read PID _ < /proc/self/stat
+
+You can use "$$" for self pid.
+
+> +[ -f set_ftrace_pid ] && echo ${PID} > set_ftrace_pid
+> +[ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
+> +[ -f set_graph_function ] && echo proc_reg_write > set_graph_function
+
+You should set the required files for this test, so that the test result
+is always same. BTW, you need to set either 'set_ftrace_filter' or
+'set_graph_function'.
+
+> +echo function_graph > current_tracer
+> +echo funcgraph-retval > trace_options
+> +
+> +set +e
+> +enable_tracing
+> +echo > /proc/interrupts
+> +disable_tracing
+> +set -e
+> +
+> +: "Test printing the error code in signed decimal format"
+> +echo nofuncgraph-retval-hex > trace_options
+
+echo 0 > options/funcgraph-retval-hex
+
+If you require 'options/funcgraph-retval-hex' file, you can use the
+file to set it or clear it.
+
+> +count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
+> +if [ $count -eq 0 ]; then
+> +    fail "Return value can not be printed in signed decimal format"
+> +fi
+> +
+> +: "Test printing the error code in hexadecimal format"
+> +echo funcgraph-retval-hex > trace_options
+
+Ditto.
 
 Thanks,
--Qing
-> Thanks!
+
+> +count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
+> +if [ $count -eq 0 ]; then
+> +    fail "Return value can not be printed in hexadecimal format"
+> +fi
+> +
+> +exit 0
+> -- 
+> 2.25.1
 > 
 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
