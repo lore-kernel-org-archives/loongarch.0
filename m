@@ -1,75 +1,87 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95D779DE
-	for <loongarch@lists.linux.dev>; Fri, 31 Mar 2023 15:58:44 +0000 (UTC)
-Received: by mail-pl1-f171.google.com with SMTP id c18so21619506ple.11
-        for <loongarch@lists.linux.dev>; Fri, 31 Mar 2023 08:58:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680278324;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fxJeRCNlob7RdsmYmplWDSRv896kgREUT/PanUMpg+I=;
-        b=df94nsGP/LSbkeu4EwTcd6OWf4bwFCVeTX2AV6GGuJjRqHHCAMue+ucZDrKHUhmKYG
-         rF1GcVAwowFS+Lw4R2ZOUyVGlohHcI6cjfHM7qK93vDDAl7K4QkmPtop0JyXgqtHXc7H
-         /5vLStTMRgLSeUXBayN0bKd/AONKgI/U1KUKS5/OQNcRAufgEZpwDgrUSWGMu6Y857ge
-         adjCqeJIwjNQ9e0ozCbwL/KW0l7dQvZWabnDNyAgsHKLIX9dRbhWd87DZu9ExUYc0qUd
-         3JnEV11La2lDBJeuBzAsXlD+zwvLmegtNhi0v+YBndpY86p8Vd75hORyoRDkG0cpykNS
-         EsYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680278324;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fxJeRCNlob7RdsmYmplWDSRv896kgREUT/PanUMpg+I=;
-        b=OS4aWt1cJZIagDsrxudKWHKTuS2CnFKv1JmU2Z3iRKZMEHxhknzxhFkc1iwYHQXFtA
-         Zl9NpdHoWi+DJBWARkhH3yK9JBN0LgUuMmuFD8fY9dSJ/BiwsiTuGvAaLJcRkrueQHzF
-         nhaC+MhRhS6QHAU6dLLtvV0tNLPzesKlxVzBDIv+m80JAct21XyYUrGFZd5jScWFkpRB
-         LNS2yHEy67+l+1iuI1ADQvtVRChO1Ax0iGfxDPVyqhBd82BUSUciWyZ9z+8Tt0S9X9q1
-         e4RMrl7OAYUcNsCqPyRKX7yuB+sczysR6zlM9LME04kEtT3dtec1h/g8498EaEyXfwtf
-         Llbg==
-X-Gm-Message-State: AAQBX9e0L1k6OfcEjUZTlhe+S2wPnKzl7PnU8P9xBPqyI3WuZ3Sz8PMB
-	g2yODPpOs1CbFNtrJIsdhNJAjdrmSOZn2H6Hltk=
-X-Google-Smtp-Source: AKy350bz/tztNwieqBPr0YpIGhRToLQzKICehLEvyBJaRV3QsLjS5DSIpsQJaRhwDGwOw8j+ci7/+u06sPwz0OatqIU=
-X-Received: by 2002:a17:902:b48e:b0:1a1:dfd6:b0f0 with SMTP id
- y14-20020a170902b48e00b001a1dfd6b0f0mr9675817plr.11.1680278324230; Fri, 31
- Mar 2023 08:58:44 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01E747C
+	for <loongarch@lists.linux.dev>; Sat,  1 Apr 2023 01:36:21 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.153])
+	by gateway (Coremail) with SMTP id _____8BxMMyTiidkhB4VAA--.32597S3;
+	Sat, 01 Apr 2023 09:36:19 +0800 (CST)
+Received: from [10.20.42.153] (unknown [10.20.42.153])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxLL6SiidkP30SAA--.15525S3;
+	Sat, 01 Apr 2023 09:36:18 +0800 (CST)
+Subject: Re: [PATCH V2 1/5] irqchip/loongson-eiointc: Fix returned value on
+ parsing MADT
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>,
+ loongson-kernel@lists.loongnix.cn, stable@vger.kernel.org
+References: <20230331113900.9105-1-lvjianmin@loongson.cn>
+ <20230331113900.9105-2-lvjianmin@loongson.cn> <ZCbdUbVhH7lmh3PI@kroah.com>
+From: Jianmin Lv <lvjianmin@loongson.cn>
+Message-ID: <f00383ba-6f2a-3111-9a55-c412f9a50e7f@loongson.cn>
+Date: Sat, 1 Apr 2023 09:36:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230328111714.2056-1-zhangqing@loongson.cn> <CA+fCnZevgYh7CzJ9gOWJ80SwY4Y9w8UO2ZiFAXEnAhQhFgrffA@mail.gmail.com>
- <dccfbff3-7bad-de33-4d96-248bdff44a8b@loongson.cn> <CA+fCnZddt50+10SZ+hZRKBudsmMF0W9XpsDG6=58p1ot62LjXQ@mail.gmail.com>
- <2360000f-7292-9da8-d6b5-94b125c5f2b0@loongson.cn>
-In-Reply-To: <2360000f-7292-9da8-d6b5-94b125c5f2b0@loongson.cn>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Fri, 31 Mar 2023 17:58:33 +0200
-Message-ID: <CA+fCnZfoTszdoy7o_EfPXOc4QYo_Jgw9Qf0ua2JoNp0PXdrTPA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
-To: Qing Zhang <zhangqing@loongson.cn>
-Cc: Jonathan Corbet <corbet@lwn.net>, Huacai Chen <chenhuacai@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Alexander Potapenko <glider@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, kasan-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZCbdUbVhH7lmh3PI@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxLL6SiidkP30SAA--.15525S3
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7tFWUCF1DZr47urW5Xry3CFg_yoW8JF4fpa
+	y7X398tr4Yy34fCw4ftw1rXFyrXa93Ca4ftr45WwsYkr1DurnrW3WIvw4I9F93CFW3Ka12
+	vF4aqan5Aw45A3DanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bf8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8JVW8Jr1ln4kS
+	14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
+	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
+	8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
+	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU8fsqJUUUUU==
 
-On Thu, Mar 30, 2023 at 6:32=E2=80=AFAM Qing Zhang <zhangqing@loongson.cn> =
-wrote:
->
-> > I get that, but you already added a special case for
-> > __HAVE_ARCH_SHADOW_MAP to addr_has_metadata, so you can just call it?
-> >
-> ok, all the changes are going to be in v2.
+Ok, thanks, got it.
 
-Could you also please put changes to the common KASAN code into a
-separate patch/patches? This will simplify any potential backporting
-of common KASAN code changes in the future.
+On 2023/3/31 下午9:17, Greg KH wrote:
+> On Fri, Mar 31, 2023 at 07:38:56PM +0800, Jianmin Lv wrote:
+>> In pch_pic_parse_madt(), a NULL parent pointer will be
+>> returned from acpi_get_vec_parent() for second pch-pic domain
+>> related to second bridge while calling eiointc_acpi_init() at
+>> first time, where the parent of it has not been initialized
+>> yet, and will be initialized during second time calling
+>> eiointc_acpi_init(). So, it's reasonable to return zero so
+>> that failure of acpi_table_parse_madt() will be avoided, or else
+>> acpi_cascade_irqdomain_init() will return and initialization of
+>> followed pch_msi domain will be skipped.
+>>
+>> Although it does not matter when pch_msi_parse_madt() returns
+>> -EINVAL if no invalid parent is found, it's also reasonable to
+>> return zero for that.
+>>
+>> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+>> ---
+>>   drivers/irqchip/irq-loongson-eiointc.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> <formletter>
+> 
+> This is not the correct way to submit patches for inclusion in the
+> stable kernel tree.  Please read:
+>      https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> for how to do this properly.
+> 
+> </formletter>
+> 
 
-Thanks!
