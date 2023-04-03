@@ -1,136 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFACA137A
-	for <loongarch@lists.linux.dev>; Mon,  3 Apr 2023 06:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680503160;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=afBNaZ0DMuI7GB+2iDCGbyFFwGSVdQ773bP8QWimT1I=;
-	b=hVt84RZB1Lu91P0oGv2K24vng+TC4k4uSIffBfcZfn62oUIQoW4CZpkU+zWbVJr1rgB6+X
-	c6o8jp3nKng/EC7jBdAvjVPxbBjnirMiYc1Gg8sJ1A2WniM3alfYAgmOSCMjL7GBgNgH5C
-	xznGjOmUH1Ow6EM4awrGrZ0C+SmKQug=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-244-28z4qi46NM2VpjD3-hJMRQ-1; Mon, 03 Apr 2023 02:25:57 -0400
-X-MC-Unique: 28z4qi46NM2VpjD3-hJMRQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0C99A801210;
-	Mon,  3 Apr 2023 06:25:56 +0000 (UTC)
-Received: from [10.72.12.158] (ovpn-12-158.pek2.redhat.com [10.72.12.158])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2D5BAC15BA0;
-	Mon,  3 Apr 2023 06:25:40 +0000 (UTC)
-Reply-To: Gavin Shan <gshan@redhat.com>
-Subject: Re: [RFC PATCH 00/32] ACPI/arm64: add support for virtual cpuhotplug
-To: Shaoqin Huang <shahuang@redhat.com>, James Morse <james.morse@arm.com>,
- linux-pm@vger.kernel.org, loongarch@lists.linux.dev, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Len Brown <lenb@kernel.org>,
- Rafael Wysocki <rafael@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Salil Mehta <salil.mehta@huawei.com>, Russell King <linux@armlinux.org.uk>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>
-References: <20230203135043.409192-1-james.morse@arm.com>
- <e17627fb-283e-dd42-94c1-f89dea167577@redhat.com>
-From: Gavin Shan <gshan@redhat.com>
-Message-ID: <972ed7df-78cd-e02a-7376-78c806181b5f@redhat.com>
-Date: Mon, 3 Apr 2023 14:25:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C2DB20E1
+	for <loongarch@lists.linux.dev>; Mon,  3 Apr 2023 08:13:43 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43786FEC;
+	Mon,  3 Apr 2023 01:14:21 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.57.89])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44A603F6C4;
+	Mon,  3 Apr 2023 01:13:26 -0700 (PDT)
+Date: Mon, 3 Apr 2023 09:13:20 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc: mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+	will@kernel.org, catalin.marinas@arm.com,
+	rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, bp@alien8.de,
+	hpa@zytor.com, chenhuacai@kernel.org, zhangqing@loongson.cn,
+	kernel@xen0n.name, mingo@redhat.com, peterz@infradead.org,
+	xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+	huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+	linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 4/8] arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Message-ID: <ZCqKoPrqoKwSVsY7@FVFF77S0Q05N>
+References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
+ <8f75bbf69eb49afb8e14b10dad6e091c43cff4e2.1680265828.git.pengdonglin@sangfor.com.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <e17627fb-283e-dd42-94c1-f89dea167577@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f75bbf69eb49afb8e14b10dad6e091c43cff4e2.1680265828.git.pengdonglin@sangfor.com.cn>
 
-Hi Shaoqin,
-
-On 3/29/23 1:52 PM, Shaoqin Huang wrote:
-> On 2/3/23 21:50, James Morse wrote:
-
-[...]
-
->>
->> The first patch has already been posted as a fix here:
->> https://www.spinics.net/lists/linux-ia64/msg21920.html
->> I've only build tested Loongarch and ia64.
->>
->>
->> If folk want to play along at home, you'll need a copy of Qemu that supports this.
->> https://github.com/salil-mehta/qemu.git salil/virt-cpuhp-armv8/rfc-v1-port29092022.psci.present
->>
->> You'll need to fix the numbers of KVM_CAP_ARM_HVC_TO_USER and KVM_CAP_ARM_PSCI_TO_USER
->> to match your host kernel. Replace your '-smp' argument with something like:
->> | -smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
->>
->> then feed the following to the Qemu montior;
->> | (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
->> | (qemu) device_del cpu1
->>
->>
->> This series is based on v6.2-rc3, and can be retrieved from:
->> https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/ virtual_cpu_hotplug/rfc/v1
+On Fri, Mar 31, 2023 at 05:47:40AM -0700, Donglin Peng wrote:
+> The previous patch ("function_graph: Support recording and printing
+> the return value of function") has laid the groundwork for the for
+> the funcgraph-retval, and this modification makes it available on
+> the ARM64 platform.
 > 
-> I applied this patch series on v6.2-rc3 and using the QEMU cloned from the salil-mehta/qemu.git repo. But when I try to run the QEMU, it shows:
+> We introduce a new structure called fgraph_ret_regs for the ARM64
+> platform to hold return registers and the frame pointer. We then
+> fill its content in the return_to_handler and pass its address to
+> the function ftrace_return_to_handler to record the return value.
 > 
-> $ qemu-system-aarch64: -accel kvm: Failed to enable KVM_CAP_ARM_PSCI_TO_USER cap.
+> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+
+Thanks for working through all the feedback!
+
+The structual changes all look good to me, and I've given this a spin to check
+that it doesn't break graph tracing, so:
+
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Tested-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> ---
+> v10:
+>  - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
 > 
-> Here is the command I use:
+> v9:
+>  - Update the commit message
 > 
-> $ qemu-system-aarch64
-> -machine virt
-> -bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd
-> -accel kvm
-> -m 4096
-> -smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
-> -cpu host
-> -qmp unix:./src.socket,server,nowait
-> -hda ./XXX.qcow2
-> -serial unix:./src.serial,server,nowait
-> -monitor stdio
+> v8:
+>  - Fix issues in ARM64 asm code
+>  - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+> ---
+>  arch/arm64/Kconfig               |  1 +
+>  arch/arm64/include/asm/ftrace.h  | 22 ++++++++++++++++++++++
+>  arch/arm64/kernel/asm-offsets.c  | 13 +++++++++++++
+>  arch/arm64/kernel/entry-ftrace.S | 27 ++++++++++++++-------------
+>  4 files changed, 50 insertions(+), 13 deletions(-)
 > 
-> It seems something related to your notice: You'll need to fix the numbers of KVM_CAP_ARM_HVC_TO_USER and KVM_CAP_ARM_PSCI_TO_USER
-> to match your host kernel.
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 1023e896d46b..48856d230800 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -195,6 +195,7 @@ config ARM64
+>  	select HAVE_FTRACE_MCOUNT_RECORD
+>  	select HAVE_FUNCTION_TRACER
+>  	select HAVE_FUNCTION_ERROR_INJECTION
+> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_GCC_PLUGINS
+>  	select HAVE_HW_BREAKPOINT if PERF_EVENTS
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> index 1c2672bbbf37..657adcbd80a4 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -170,4 +170,26 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+>  }
+>  #endif /* ifndef __ASSEMBLY__ */
+>  
+> +#ifndef __ASSEMBLY__
+> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> +struct fgraph_ret_regs {
+> +	/* x0 - x7 */
+> +	unsigned long regs[8];
+> +
+> +	unsigned long fp;
+> +	unsigned long __unused;
+> +};
+> +
+> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->regs[0];
+> +}
+> +
+> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->fp;
+> +}
+> +#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER  */
+> +#endif
+> +
+>  #endif /* __ASM_FTRACE_H */
+> diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+> index ae345b06e9f7..75082e0409bf 100644
+> --- a/arch/arm64/kernel/asm-offsets.c
+> +++ b/arch/arm64/kernel/asm-offsets.c
+> @@ -197,6 +197,19 @@ int main(void)
+>  #endif
+>  #ifdef CONFIG_FUNCTION_TRACER
+>    DEFINE(FTRACE_OPS_FUNC,		offsetof(struct ftrace_ops, func));
+> +#endif
+> +  BLANK();
+> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> +  DEFINE(FGRET_REGS_X0,			offsetof(struct fgraph_ret_regs, regs[0]));
+> +  DEFINE(FGRET_REGS_X1,			offsetof(struct fgraph_ret_regs, regs[1]));
+> +  DEFINE(FGRET_REGS_X2,			offsetof(struct fgraph_ret_regs, regs[2]));
+> +  DEFINE(FGRET_REGS_X3,			offsetof(struct fgraph_ret_regs, regs[3]));
+> +  DEFINE(FGRET_REGS_X4,			offsetof(struct fgraph_ret_regs, regs[4]));
+> +  DEFINE(FGRET_REGS_X5,			offsetof(struct fgraph_ret_regs, regs[5]));
+> +  DEFINE(FGRET_REGS_X6,			offsetof(struct fgraph_ret_regs, regs[6]));
+> +  DEFINE(FGRET_REGS_X7,			offsetof(struct fgraph_ret_regs, regs[7]));
+> +  DEFINE(FGRET_REGS_FP,			offsetof(struct fgraph_ret_regs, fp));
+> +  DEFINE(FGRET_REGS_SIZE,		sizeof(struct fgraph_ret_regs));
+>  #endif
+>    return 0;
+>  }
+> diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
+> index 350ed81324ac..da1443bcf776 100644
+> --- a/arch/arm64/kernel/entry-ftrace.S
+> +++ b/arch/arm64/kernel/entry-ftrace.S
+> @@ -270,22 +270,23 @@ SYM_FUNC_END(ftrace_stub_graph)
+>   */
+>  SYM_CODE_START(return_to_handler)
+>  	/* save return value regs */
+> -	sub sp, sp, #64
+> -	stp x0, x1, [sp]
+> -	stp x2, x3, [sp, #16]
+> -	stp x4, x5, [sp, #32]
+> -	stp x6, x7, [sp, #48]
+> +	sub sp, sp, #FGRET_REGS_SIZE
+> +	stp x0, x1, [sp, #FGRET_REGS_X0]
+> +	stp x2, x3, [sp, #FGRET_REGS_X2]
+> +	stp x4, x5, [sp, #FGRET_REGS_X4]
+> +	stp x6, x7, [sp, #FGRET_REGS_X6]
+> +	str x29,    [sp, #FGRET_REGS_FP]	// parent's fp
+>  
+> -	mov	x0, x29			//     parent's fp
+> -	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
+> -	mov	x30, x0			// restore the original return address
+> +	mov	x0, sp
+> +	bl	ftrace_return_to_handler	// addr = ftrace_return_to_hander(regs);
+> +	mov	x30, x0				// restore the original return address
+>  
+>  	/* restore return value regs */
+> -	ldp x0, x1, [sp]
+> -	ldp x2, x3, [sp, #16]
+> -	ldp x4, x5, [sp, #32]
+> -	ldp x6, x7, [sp, #48]
+> -	add sp, sp, #64
+> +	ldp x0, x1, [sp, #FGRET_REGS_X0]
+> +	ldp x2, x3, [sp, #FGRET_REGS_X2]
+> +	ldp x4, x5, [sp, #FGRET_REGS_X4]
+> +	ldp x6, x7, [sp, #FGRET_REGS_X6]
+> +	add sp, sp, #FGRET_REGS_SIZE
+>  
+>  	ret
+>  SYM_CODE_END(return_to_handler)
+> -- 
+> 2.25.1
 > 
-> But I'm not actually understand what should I fix, since I haven't review the patch series. Could you give me some more information? Maybe I'm doing something wrong.
-> 
-
-When the kernel is rebased to v6.2.rc3, the two capabilities are conflictsing
-between QEMU and host kernel. Please adjust them like below and have a try:
-
-In qemu/linux-headers/linux/kvm.h
-
-#define KVM_CAP_ARM_HVC_TO_USER 250 /* TODO: as per linux 6.1-rc2 */
-#define KVM_CAP_ARM_PSCI_TO_USER 251 /* TODO: as per linux 6.1-rc2 */
-
-In linux/include/uapi/linux/kvm.h
-
-#define KVM_CAP_ARM_HVC_TO_USER 250
-#define KVM_CAP_ARM_PSCI_TO_USER 251
-
-Thanks,
-Gavin
-
-
