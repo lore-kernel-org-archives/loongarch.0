@@ -1,13 +1,13 @@
 Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43187C
-	for <loongarch@lists.linux.dev>; Mon,  3 Apr 2023 02:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E24364
+	for <loongarch@lists.linux.dev>; Mon,  3 Apr 2023 05:01:49 +0000 (UTC)
 Received: from [10.128.10.193] (unknown [117.133.56.22])
-	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 3C5025805A8;
-	Mon,  3 Apr 2023 10:33:10 +0800 (CST)
-Message-ID: <f4eabd56-2f91-05fc-b882-9dd8328f87ae@sangfor.com.cn>
-Date: Mon, 3 Apr 2023 10:33:09 +0800
+	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 16233580203;
+	Mon,  3 Apr 2023 13:01:31 +0800 (CST)
+Message-ID: <7088643e-400b-4cd4-edd3-63b3baa36a7c@sangfor.com.cn>
+Date: Mon, 3 Apr 2023 13:01:30 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -17,6 +17,8 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
 Subject: Re: [PATCH v10 8/8] selftests/ftrace: Add funcgraph-retval test case
+Content-Language: en-US
+From: Donglin Peng <pengdonglin@sangfor.com.cn>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: rostedt@goodmis.org, linux@armlinux.org.uk, mark.rutland@arm.com,
  will@kernel.org, catalin.marinas@arm.com, rmk+kernel@armlinux.org.uk,
@@ -31,131 +33,152 @@ Cc: rostedt@goodmis.org, linux@armlinux.org.uk, mark.rutland@arm.com,
 References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
  <ba23c2429f1ef798946ce65e21c7a7a2bff0019e.1680265828.git.pengdonglin@sangfor.com.cn>
  <20230402070406.177f09cc34f9860baf3e6ec2@kernel.org>
-Content-Language: en-US
-From: Donglin Peng <pengdonglin@sangfor.com.cn>
-In-Reply-To: <20230402070406.177f09cc34f9860baf3e6ec2@kernel.org>
+ <f4eabd56-2f91-05fc-b882-9dd8328f87ae@sangfor.com.cn>
+In-Reply-To: <f4eabd56-2f91-05fc-b882-9dd8328f87ae@sangfor.com.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZTU9LVh8fS0pNTk5KGEhJGFUTARMWGhIXJBQOD1
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGEseVhlMHUwdGEoaTEtDTlUTARMWGhIXJBQOD1
 	lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS0hKTFVKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PyI6Mhw*Fz0KEjo4Kig4OkMw
-	UUsKFEtVSlVKTUNLT0NCSkJJS0hOVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-	WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFNSktDNwY+
-X-HM-Tid: 0a8744f6185f2eb7kusn3c5025805a8
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PS46Sww6FT0VKDoNFkIeLitR
+	SDkKCRFVSlVKTUNLT0JDS0JJTUpCVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+	WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFMS0pKNwY+
+X-HM-Tid: 0a87457de8552eb7kusn16233580203
 X-HM-MType: 1
 
-On 2023/4/2 6:04, Masami Hiramatsu (Google) wrote:
-> On Fri, 31 Mar 2023 05:47:44 -0700
-> Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
-> 
->> Add a test case for the funcgraph-retval and funcgraph-retval-hex
->> trace options.
+On 2023/4/3 10:33, Donglin Peng wrote:
+> On 2023/4/2 6:04, Masami Hiramatsu (Google) wrote:
+>> On Fri, 31 Mar 2023 05:47:44 -0700
+>> Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
 >>
->> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
->> ---
->> v10:
->>   - Fix issues in selftest
+>>> Add a test case for the funcgraph-retval and funcgraph-retval-hex
+>>> trace options.
+>>>
+>>> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+>>> ---
+>>> v10:
+>>>   - Fix issues in selftest
+>>>
+>>> v8:
+>>>   - Fix issues in selftest
+>>> ---
+>>>   .../ftrace/test.d/ftrace/fgraph-retval.tc     | 43 +++++++++++++++++++
+>>>   1 file changed, 43 insertions(+)
+>>>   create mode 100644 
+>>> tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+>>>
+>>> diff --git 
+>>> a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc 
+>>> b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+>>> new file mode 100644
+>>> index 000000000000..5819aa2dd6ad
+>>> --- /dev/null
+>>> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+>>> @@ -0,0 +1,43 @@
+>>> +#!/bin/sh
+>>> +# SPDX-License-Identifier: GPL-2.0
+>>> +# description: ftrace - function graph print function return value
+>>> +# requires: options/funcgraph-retval options/funcgraph-retval-hex 
+>>> function_graph:tracer
+>>> +
+>>> +# Make sure that funcgraph-retval works
+>>> +
+>>> +fail() { # msg
+>>> +    echo $1
+>>> +    exit_fail
+>>> +}
+>>> +
+>>> +disable_tracing
+>>> +clear_trace
+>>> +
+>>> +read PID _ < /proc/self/stat
 >>
->> v8:
->>   - Fix issues in selftest
->> ---
->>   .../ftrace/test.d/ftrace/fgraph-retval.tc     | 43 +++++++++++++++++++
->>   1 file changed, 43 insertions(+)
->>   create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+>> You can use "$$" for self pid.
+> 
+> Yeah, I will fix it.
+
+I found that ftracetest used () to launch a new child process for
+executing a .tc script file, however the $$ value remains unchanged,
+so we can not use $$ here, because it is PPID. Therefore I think we
+have to get PID from /proc/self/stat.
+
+Here is the code from ftracetest that launches a child shell for 
+executing the .tc file.
+
+__run_test() { # testfile
+   # setup PID and PPID, $$ is *not* updated.
+   (cd $TRACING_DIR; read PID _ < /proc/self/stat; set -e; set -x;
+    checkreq $1; initialize_ftrace; . $1)
+   [ $? -ne 0 ] && kill -s $SIG_FAIL $SIG_PID
+}
+
+> 
 >>
->> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
->> new file mode 100644
->> index 000000000000..5819aa2dd6ad
->> --- /dev/null
->> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
->> @@ -0,0 +1,43 @@
->> +#!/bin/sh
->> +# SPDX-License-Identifier: GPL-2.0
->> +# description: ftrace - function graph print function return value
->> +# requires: options/funcgraph-retval options/funcgraph-retval-hex function_graph:tracer
->> +
->> +# Make sure that funcgraph-retval works
->> +
->> +fail() { # msg
->> +    echo $1
->> +    exit_fail
->> +}
->> +
->> +disable_tracing
->> +clear_trace
->> +
->> +read PID _ < /proc/self/stat
-> 
-> You can use "$$" for self pid.
-
-Yeah, I will fix it.
-
-> 
->> +[ -f set_ftrace_pid ] && echo ${PID} > set_ftrace_pid
->> +[ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
->> +[ -f set_graph_function ] && echo proc_reg_write > set_graph_function
-> 
-> You should set the required files for this test, so that the test result
-> is always same. BTW, you need to set either 'set_ftrace_filter' or
-> 'set_graph_function'.
-
-Yes, but I discovered that set_ftrace_filter and set_graph_function rely 
-on the CONFIG_DYNAMIC_FTRACE configuration, which means that these two 
-files are not present when CONFIG_DYNAMIC_FTRACE is disabled, even if 
-CONFIG_FUNCTION_GRAPH_RETVAL is enabled. Therefore, I think that these 
-two trace files are not necessary for this test.
-
-I will modify the above like this:
-
-[ -f set_ftrace_pid ] && echo $$ > set_ftrace_pid
-[ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
-
-> 
->> +echo function_graph > current_tracer
->> +echo funcgraph-retval > trace_options
->> +
->> +set +e
->> +enable_tracing
->> +echo > /proc/interrupts
->> +disable_tracing
->> +set -e
->> +
->> +: "Test printing the error code in signed decimal format"
->> +echo nofuncgraph-retval-hex > trace_options
-> 
-> echo 0 > options/funcgraph-retval-hex
-> 
-> If you require 'options/funcgraph-retval-hex' file, you can use the
-> file to set it or clear it.
-
-Yeah.
-
-> 
->> +count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
->> +if [ $count -eq 0 ]; then
->> +    fail "Return value can not be printed in signed decimal format"
->> +fi
->> +
->> +: "Test printing the error code in hexadecimal format"
->> +echo funcgraph-retval-hex > trace_options
-> 
-> Ditto.
-
-Thanks.
-
-> 
-> Thanks,
-> 
->> +count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
->> +if [ $count -eq 0 ]; then
->> +    fail "Return value can not be printed in hexadecimal format"
->> +fi
->> +
->> +exit 0
->> -- 
->> 2.25.1
+>>> +[ -f set_ftrace_pid ] && echo ${PID} > set_ftrace_pid
+>>> +[ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
+>>> +[ -f set_graph_function ] && echo proc_reg_write > set_graph_function
 >>
+>> You should set the required files for this test, so that the test result
+>> is always same. BTW, you need to set either 'set_ftrace_filter' or
+>> 'set_graph_function'.
 > 
+> Yes, but I discovered that set_ftrace_filter and set_graph_function rely 
+> on the CONFIG_DYNAMIC_FTRACE configuration, which means that these two 
+> files are not present when CONFIG_DYNAMIC_FTRACE is disabled, even if 
+> CONFIG_FUNCTION_GRAPH_RETVAL is enabled. Therefore, I think that these 
+> two trace files are not necessary for this test.
+> 
+> I will modify the above like this:
+> 
+> [ -f set_ftrace_pid ] && echo $$ > set_ftrace_pid
+> [ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
+> 
+>>
+>>> +echo function_graph > current_tracer
+>>> +echo funcgraph-retval > trace_options
+>>> +
+>>> +set +e
+>>> +enable_tracing
+>>> +echo > /proc/interrupts
+>>> +disable_tracing
+>>> +set -e
+>>> +
+>>> +: "Test printing the error code in signed decimal format"
+>>> +echo nofuncgraph-retval-hex > trace_options
+>>
+>> echo 0 > options/funcgraph-retval-hex
+>>
+>> If you require 'options/funcgraph-retval-hex' file, you can use the
+>> file to set it or clear it.
+> 
+> Yeah.
+> 
+>>
+>>> +count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
+>>> +if [ $count -eq 0 ]; then
+>>> +    fail "Return value can not be printed in signed decimal format"
+>>> +fi
+>>> +
+>>> +: "Test printing the error code in hexadecimal format"
+>>> +echo funcgraph-retval-hex > trace_options
+>>
+>> Ditto.
+> 
+> Thanks.
+> 
+>>
+>> Thanks,
+>>
+>>> +count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
+>>> +if [ $count -eq 0 ]; then
+>>> +    fail "Return value can not be printed in hexadecimal format"
+>>> +fi
+>>> +
+>>> +exit 0
+>>> -- 
+>>> 2.25.1
+>>>
+>>
+>>
 > 
 
