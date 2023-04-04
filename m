@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF10F374
-	for <loongarch@lists.linux.dev>; Tue,  4 Apr 2023 08:43:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A40767E
+	for <loongarch@lists.linux.dev>; Tue,  4 Apr 2023 08:43:14 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxlF0g4ytkuV0WAA--.34409S3;
-	Tue, 04 Apr 2023 16:43:12 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dxj80h4ytkxV0WAA--.34721S3;
+	Tue, 04 Apr 2023 16:43:13 +0800 (CST)
 Received: from localhost.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxT+Qc4ytkChcVAA--.55041S3;
-	Tue, 04 Apr 2023 16:43:11 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxT+Qc4ytkChcVAA--.55041S4;
+	Tue, 04 Apr 2023 16:43:12 +0800 (CST)
 From: Qing Zhang <zhangqing@loongson.cn>
 To: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
 	Jonathan Corbet <corbet@lwn.net>,
@@ -24,9 +24,9 @@ Cc: Alexander Potapenko <glider@google.com>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 5/6] kasan: Add (pmd|pud)_init for LoongArch zero_(pud|p4d)_populate process
-Date: Tue,  4 Apr 2023 16:43:07 +0800
-Message-Id: <20230404084308.813-2-zhangqing@loongson.cn>
+Subject: [PATCH v2 6/6] LoongArch: Add ARCH_HAS_FORTIFY_SOURCE
+Date: Tue,  4 Apr 2023 16:43:08 +0800
+Message-Id: <20230404084308.813-3-zhangqing@loongson.cn>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20230404084308.813-1-zhangqing@loongson.cn>
 References: <20230404084308.813-1-zhangqing@loongson.cn>
@@ -37,85 +37,66 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxT+Qc4ytkChcVAA--.55041S3
+X-CM-TRANSID:AQAAf8AxT+Qc4ytkChcVAA--.55041S4
 X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw4DXF1rtr1DZry7tF4fZrb_yoW8Ar17pF
-	WUW3W0qw43Xa9rXws3Jr1vgry7Jan7K3W7Kay2kr1rA345XrWUXFy8Jr1q9r45AFWkZFyS
-	yan3Gry3C3WDJaDanT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7uF1xtF18KFW5Gr1ktw4DXFb_yoW8WFyrpF
+	nrA3s5Jr48CFn7AFWjy34UWryUWF97Kr42gFyYya48AFy3XryDXrs2q3Z0vFy5Za1rG3yx
+	uFyfWa4aqF4DX37anT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bhkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	b6xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
 	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-	M2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
-	CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVW3AVW8Xw1lYx0E
-	x4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7
-	CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l
-	4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
-	WUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
-	wI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20x
-	vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j4PfQUUUUU=
+	wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
+	JwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4
+	CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_ZF0_GryDMcIj
+	6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMx
+	kF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+	MxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+	0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+	14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07j4PfQUUUUU=
 
-Loongarch populate pmd/pud with invalid_pmd_table/invalid_pud_table in
-pagetable_init, So pmd_init/pud_init(p) is required, define them as __weak
-in mm/kasan/init.c, like mm/sparse-vmemmap.c.
+FORTIFY_SOURCE could detect various overflows at compile and run time.
+ARCH_HAS_FORTIFY_SOURCE means that the architecture can be built and
+run with CONFIG_FORTIFY_SOURCE. Select it in LoongArch.
+
+See more about this feature from commit 6974f0c4555e
+("include/linux/string.h: add the option of fortified string.h functions").
 
 Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
 ---
- mm/kasan/init.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ arch/loongarch/Kconfig              | 1 +
+ arch/loongarch/include/asm/string.h | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/mm/kasan/init.c b/mm/kasan/init.c
-index cc64ed6858c6..a7fa223b96e4 100644
---- a/mm/kasan/init.c
-+++ b/mm/kasan/init.c
-@@ -139,6 +139,10 @@ static int __ref zero_pmd_populate(pud_t *pud, unsigned long addr,
- 	return 0;
- }
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 61f883c51045..6c525e50bb7c 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -11,6 +11,7 @@ config LOONGARCH
+ 	select ARCH_ENABLE_MEMORY_HOTPLUG
+ 	select ARCH_ENABLE_MEMORY_HOTREMOVE
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
++	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+diff --git a/arch/loongarch/include/asm/string.h b/arch/loongarch/include/asm/string.h
+index a6482abdc8b3..5bb5a90d2681 100644
+--- a/arch/loongarch/include/asm/string.h
++++ b/arch/loongarch/include/asm/string.h
+@@ -28,6 +28,10 @@ extern void *__memmove(void *__dest, __const__ void *__src, size_t __n);
+ #define memcpy(dst, src, len) __memcpy(dst, src, len)
+ #define memmove(dst, src, len) __memmove(dst, src, len)
  
-+void __weak __meminit pmd_init(void *addr)
-+{
-+}
++#ifndef __NO_FORTIFY
++#define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
++#endif
 +
- static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
- 				unsigned long end)
- {
-@@ -166,8 +170,9 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
- 				if (!p)
- 					return -ENOMEM;
- 			} else {
--				pud_populate(&init_mm, pud,
--					early_alloc(PAGE_SIZE, NUMA_NO_NODE));
-+				p = early_alloc(PAGE_SIZE, NUMA_NO_NODE);
-+				pmd_init(p);
-+				pud_populate(&init_mm, pud, p);
- 			}
- 		}
- 		zero_pmd_populate(pud, addr, next);
-@@ -176,6 +181,10 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
- 	return 0;
- }
+ #endif
  
-+void __weak __meminit pud_init(void *addr)
-+{
-+}
-+
- static int __ref zero_p4d_populate(pgd_t *pgd, unsigned long addr,
- 				unsigned long end)
- {
-@@ -207,8 +216,9 @@ static int __ref zero_p4d_populate(pgd_t *pgd, unsigned long addr,
- 				if (!p)
- 					return -ENOMEM;
- 			} else {
--				p4d_populate(&init_mm, p4d,
--					early_alloc(PAGE_SIZE, NUMA_NO_NODE));
-+				p = early_alloc(PAGE_SIZE, NUMA_NO_NODE);
-+				pud_init(p);
-+				p4d_populate(&init_mm, p4d, p);
- 			}
- 		}
- 		zero_pud_populate(p4d, addr, next);
+ #endif /* _ASM_STRING_H */
 -- 
 2.20.1
 
