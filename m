@@ -1,188 +1,139 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8AD6AB8
-	for <loongarch@lists.linux.dev>; Tue,  4 Apr 2023 13:23:22 +0000 (UTC)
-Received: by mail-qk1-f175.google.com with SMTP id br40so3712247qkb.9
-        for <loongarch@lists.linux.dev>; Tue, 04 Apr 2023 06:23:22 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE42D2F2
+	for <loongarch@lists.linux.dev>; Tue,  4 Apr 2023 22:09:30 +0000 (UTC)
+Received: by mail-pj1-f41.google.com with SMTP id lr16-20020a17090b4b9000b0023f187954acso35408664pjb.2
+        for <loongarch@lists.linux.dev>; Tue, 04 Apr 2023 15:09:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680614601;
+        d=gmail.com; s=20210112; t=1680646170;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kVV5FfyLXKvr30JASXaFzrtmOvguU/pSGwBivgkkCt8=;
-        b=CxCzEj2L7VIhJL6LkhpoeSyjitfjUIwxyK7WygTAvIMrtL8sNfxriP0xlU7D62WQoz
-         JS8ax3M/Eesvd5oi0sr1H03A3xMMSSa82fhef9qRDqrlsouM+KCZqqtCxNs6kzj4t5Ub
-         F7DDt5YscrWWbseYb3G5W9hFZRpZsQPXo27yv0jzn2w9mDA1ooRuDwc7z6znLG2Vi+Bi
-         tq4rA2ZMQA51NCQ7Ksdo8VwWalrmJJS5r9RCMSPpRrKxpS4no0h4o3ze6IAi22w6AMMd
-         0et5DLzt+KCxhgyjPFDLnq1TYfArzjvJxF3PKXuT3UfUffLUWpYKI/WE/kzz1oDnvdpX
-         Etng==
+        bh=ypW3uCkatd85laSwJoEHyhvz6A6Q9ytym+XuTNT93dU=;
+        b=JoPIXnG83ROdZ1kq4xk1n+ZIq8MPvMAtV87d4GO9cK1Ht5tNTGA78J92/9fyfQ8qOz
+         zOkXvSQyi0fCdcUqwDCF1aySQtYSj47zHGZnMA6yXhwZv9AQyrF4VswADo/gInOgv8cV
+         EDAQSv8DIu5lKaQgYKo3yqqGWLmwn21LgwsYD2Hyci1hzAh6UsJvZJCr+689gc8dKlqn
+         eS1k5e6m5h04Bp+/UQ/F13SBvUKzlkK5oXRvgxzxk3Kk5KyPaC5gueNPmztxsO+0cjDR
+         KyU54efHq5YIukhd5Dzmoy4gKq97Wol87Sn4yfXNtziL0Ij6a9VFiH9OrZ1WyDfc4cc6
+         lwxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680614601;
+        d=1e100.net; s=20210112; t=1680646170;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kVV5FfyLXKvr30JASXaFzrtmOvguU/pSGwBivgkkCt8=;
-        b=ZO8WIsSi2iL822/qxpZT+yeK0v3Vc6iAMv0+tEm0TT3qk7EpBNIvQDL7NGBpD8xWpv
-         sWVZd66SQrfWNoomzVPFgOmQpLnUSR8TPr7tw03nDm5g79Lj2J+42+NoqVCVLlBEvyek
-         yswLNYnVeoja//itssOQeBfjlU35OwhptVV/QGB5H+Q7RN7zDM781wtclLtlOPHxj2GC
-         YfrKKg5nk8ySazALhmZCjmc9sj3xOv2qgsp3tJn3Ut15BfP0b3KifOeY+nOLsDS60uGU
-         1xUktIJ1/y3rgxqvAKsz79uDoSH6/7sgrWHLoJwwvFKrCq70CSxBC6mTc6K1AdSarNP7
-         NtWw==
-X-Gm-Message-State: AAQBX9e4EKSIk0QIyTWV95nNDIUMHTHm3YdyJjjc6CPGzSzX3Vz4c1v0
-	hTbl3hWygyHZKsmw8t6HqukfAiX4qvqq34ipCNk=
-X-Google-Smtp-Source: AKy350b/r9epx7QN6cXCoxgIbACmW4sFS0VlXrzPHDsCvgVLRBRS+bIi9gMlH812VAfYBgK5rBITGvtyCoxFOxnCyYI=
-X-Received: by 2002:a05:620a:404f:b0:74a:28c4:64ea with SMTP id
- i15-20020a05620a404f00b0074a28c464eamr911755qko.6.1680614600864; Tue, 04 Apr
- 2023 06:23:20 -0700 (PDT)
+        bh=ypW3uCkatd85laSwJoEHyhvz6A6Q9ytym+XuTNT93dU=;
+        b=FWR0OlyikoDHompYYNRZfkSYc+RD8sJ0Vkg1YCNlt/xaXwgbDVCcrHJHPgS31MsGU+
+         BOHKYQ1bzLB5tOOZfAhYWx2vK5u+S78/kTn41lSPkkdgKDpWn+kI92iEwlaJZCSdgZ6B
+         B6s4wv1W7fJvNUTCmQqAJtj3UxlaCKoh+f/p74OT1CaRUHPzIFghfGCqgOjJJ1ygiDUu
+         7TsZoPgyWuIH9q9kgEJkA/h94GycnYKirHPtvPqJlUtFWVK8m6GeyZi8IzKeRJMPJaGP
+         INcp57nDxQT/TPCS6YZ1UfWCTa7vT9xG21y+pQ7rIpHDBG3qHBF/sTgMaW/CN82PG6Ma
+         Yo1w==
+X-Gm-Message-State: AAQBX9ei33WexnBv7fk5n1FFZOhBnrJ78YJaqlmv9imPFRs69zi3noVp
+	Zg3rg6LoCQAThD8kswfOv2cQ31d1AuIYAq7R2Nk=
+X-Google-Smtp-Source: AKy350auMB5aAW5vcPRu5Z3zk0kCG0J70wFTxHDdx38zTGhfy79hnQwCL23EHjo5fAbzVlHyZYpeRiAzV27aaZOYeGI=
+X-Received: by 2002:a17:902:8604:b0:1a0:48ff:539c with SMTP id
+ f4-20020a170902860400b001a048ff539cmr1636900plo.11.1680646170341; Tue, 04 Apr
+ 2023 15:09:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230305205628.27385-1-ubizjak@gmail.com> <20230305205628.27385-2-ubizjak@gmail.com>
- <ZB2v+avNt52ac/+w@FVFF77S0Q05N> <CAFULd4ZCgxDYnyy--qdgKoAo_y7MbNSaQdbdBFefnFuMoM2OYw@mail.gmail.com>
- <ZB3MR8lGbnea9ui6@FVFF77S0Q05N> <ZB3QtDYuWdpiD5qk@FVFF77S0Q05N>
- <CAFULd4aFUF5k=QJD8tDp4qzm2iBF7=rNvp1SJWrg44X5hTFxtQ@mail.gmail.com>
- <ZCqoRNU8EJhKJVEu@FVFF77S0Q05N> <CAFULd4ZUnbtDYXBBbuTJnq9wLSf5cZTc=hUPxg6-8KRNA7YVeQ@mail.gmail.com>
- <ZCwj19okhYNRN8er@FVFF77S0Q05N.cambridge.arm.com>
-In-Reply-To: <ZCwj19okhYNRN8er@FVFF77S0Q05N.cambridge.arm.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Tue, 4 Apr 2023 15:23:09 +0200
-Message-ID: <CAFULd4ZypxQULgq-MYgzsYd8k_BV0aH0eRhggX3MHWCgvKW=Bg@mail.gmail.com>
-Subject: Re: [PATCH 01/10] locking/atomic: Add missing cast to try_cmpxchg() fallbacks
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Boqun Feng <boqun.feng@gmail.com>
+References: <20230404084308.813-1-zhangqing@loongson.cn> <20230404084308.813-2-zhangqing@loongson.cn>
+In-Reply-To: <20230404084308.813-2-zhangqing@loongson.cn>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Wed, 5 Apr 2023 00:09:19 +0200
+Message-ID: <CA+fCnZf-segLxa3QxStd6v15ZCge=3=3rOL-9Q_eMc-y2j1nhg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] kasan: Add (pmd|pud)_init for LoongArch
+ zero_(pud|p4d)_populate process
+To: Qing Zhang <zhangqing@loongson.cn>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Huacai Chen <chenhuacai@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, kasan-dev@googlegroups.com, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 4, 2023 at 3:19=E2=80=AFPM Mark Rutland <mark.rutland@arm.com> =
+On Tue, Apr 4, 2023 at 10:43=E2=80=AFAM Qing Zhang <zhangqing@loongson.cn> =
 wrote:
 >
-> On Tue, Apr 04, 2023 at 02:24:38PM +0200, Uros Bizjak wrote:
-> > On Mon, Apr 3, 2023 at 12:19=E2=80=AFPM Mark Rutland <mark.rutland@arm.=
-com> wrote:
-> > >
-> > > On Sun, Mar 26, 2023 at 09:28:38PM +0200, Uros Bizjak wrote:
-> > > > On Fri, Mar 24, 2023 at 5:33=E2=80=AFPM Mark Rutland <mark.rutland@=
-arm.com> wrote:
-> > > > >
-> > > > > On Fri, Mar 24, 2023 at 04:14:22PM +0000, Mark Rutland wrote:
-> > > > > > On Fri, Mar 24, 2023 at 04:43:32PM +0100, Uros Bizjak wrote:
-> > > > > > > On Fri, Mar 24, 2023 at 3:13=E2=80=AFPM Mark Rutland <mark.ru=
-tland@arm.com> wrote:
-> > > > > > > >
-> > > > > > > > On Sun, Mar 05, 2023 at 09:56:19PM +0100, Uros Bizjak wrote=
-:
-> > > > > > > > > Cast _oldp to the type of _ptr to avoid incompatible-poin=
-ter-types warning.
-> > > > > > > >
-> > > > > > > > Can you give an example of where we are passing an incompat=
-ible pointer?
-> > > > > > >
-> > > > > > > An example is patch 10/10 from the series, which will fail wi=
-thout
-> > > > > > > this fix when fallback code is used. We have:
-> > > > > > >
-> > > > > > > -       } while (local_cmpxchg(&rb->head, offset, head) !=3D =
-offset);
-> > > > > > > +       } while (!local_try_cmpxchg(&rb->head, &offset, head)=
+> Loongarch populate pmd/pud with invalid_pmd_table/invalid_pud_table in
+> pagetable_init, So pmd_init/pud_init(p) is required, define them as __wea=
+k
+> in mm/kasan/init.c, like mm/sparse-vmemmap.c.
+>
+> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+> ---
+>  mm/kasan/init.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+>
+> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+> index cc64ed6858c6..a7fa223b96e4 100644
+> --- a/mm/kasan/init.c
+> +++ b/mm/kasan/init.c
+> @@ -139,6 +139,10 @@ static int __ref zero_pmd_populate(pud_t *pud, unsig=
+ned long addr,
+>         return 0;
+>  }
+>
+> +void __weak __meminit pmd_init(void *addr)
+> +{
+> +}
+> +
+>  static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
+>                                 unsigned long end)
+>  {
+> @@ -166,8 +170,9 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsign=
+ed long addr,
+>                                 if (!p)
+>                                         return -ENOMEM;
+>                         } else {
+> -                               pud_populate(&init_mm, pud,
+> -                                       early_alloc(PAGE_SIZE, NUMA_NO_NO=
+DE));
+> +                               p =3D early_alloc(PAGE_SIZE, NUMA_NO_NODE=
 );
-> > > > > > >
-> > > > > > > where rb->head is defined as:
-> > > > > > >
-> > > > > > > typedef struct {
-> > > > > > >    atomic_long_t a;
-> > > > > > > } local_t;
-> > > > > > >
-> > > > > > > while offset is defined as 'unsigned long'.
-> > > > > >
-> > > > > > Ok, but that's because we're doing the wrong thing to start wit=
-h.
-> > > > > >
-> > > > > > Since local_t is defined in terms of atomic_long_t, we should d=
-efine the
-> > > > > > generic local_try_cmpxchg() in terms of atomic_long_try_cmpxchg=
-(). We'll still
-> > > > > > have a mismatch between 'long *' and 'unsigned long *', but the=
-n we can fix
-> > > > > > that in the callsite:
-> > > > > >
-> > > > > >       while (!local_try_cmpxchg(&rb->head, &(long *)offset, hea=
-d))
-> > > > >
-> > > > > Sorry, that should be:
-> > > > >
-> > > > >         while (!local_try_cmpxchg(&rb->head, (long *)&offset, hea=
-d))
-> > > >
-> > > > The fallbacks are a bit more complicated than above, and are differ=
-ent
-> > > > from atomic_try_cmpxchg.
-> > > >
-> > > > Please note in patch 2/10, the falbacks when arch_try_cmpxchg_local
-> > > > are not defined call arch_cmpxchg_local. Also in patch 2/10,
-> > > > try_cmpxchg_local is introduced, where it calls
-> > > > arch_try_cmpxchg_local. Targets (and generic code) simply define (e=
-.g.
-> > > > :
-> > > >
-> > > > #define local_cmpxchg(l, o, n) \
-> > > >        (cmpxchg_local(&((l)->a.counter), (o), (n)))
-> > > > +#define local_try_cmpxchg(l, po, n) \
-> > > > +       (try_cmpxchg_local(&((l)->a.counter), (po), (n)))
-> > > >
-> > > > which is part of the local_t API. Targets should either define all
-> > > > these #defines, or none. There are no partial fallbacks as is the c=
-ase
-> > > > with atomic_t.
-> > >
-> > > Whether or not there are fallbacks is immaterial.
-> > >
-> > > In those cases, architectures can just as easily write C wrappers, e.=
-g.
-> > >
-> > > long local_cmpxchg(local_t *l, long old, long new)
-> > > {
-> > >         return cmpxchg_local(&l->a.counter, old, new);
-> > > }
-> > >
-> > > long local_try_cmpxchg(local_t *l, long *old, long new)
-> > > {
-> > >         return try_cmpxchg_local(&l->a.counter, old, new);
-> > > }
-> >
-> > Please find attached the complete prototype patch that implements the
-> > above suggestion.
-> >
-> > The patch includes:
-> > - implementation of instrumented try_cmpxchg{,64}_local definitions
-> > - corresponding arch_try_cmpxchg{,64}_local fallback definitions
-> > - generic local{,64}_try_cmpxchg (and local{,64}_cmpxchg) C wrappers
-> >
-> > - x86 specific local_try_cmpxchg (and local_cmpxchg) C wrappers
-> > - x86 specific arch_try_cmpxchg_local definition
-> >
-> > - kernel/events/ring_buffer.c change to test local_try_cmpxchg
-> > implementation and illustrate the transition
-> > - arch/x86/events/core.c change to test local64_try_cmpxchg
-> > implementation and illustrate the transition
-> >
-> > The definition of atomic_long_t is different for 64-bit and 32-bit
-> > targets (s64 vs int), so target specific C wrappers have to use
-> > different casts to account for this difference.
-> >
-> > Uros.
+> +                               pmd_init(p);
+> +                               pud_populate(&init_mm, pud, p);
+>                         }
+>                 }
+>                 zero_pmd_populate(pud, addr, next);
+> @@ -176,6 +181,10 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsig=
+ned long addr,
+>         return 0;
+>  }
 >
-> Thanks for this!
+> +void __weak __meminit pud_init(void *addr)
+> +{
+> +}
+> +
+>  static int __ref zero_p4d_populate(pgd_t *pgd, unsigned long addr,
+>                                 unsigned long end)
+>  {
+> @@ -207,8 +216,9 @@ static int __ref zero_p4d_populate(pgd_t *pgd, unsign=
+ed long addr,
+>                                 if (!p)
+>                                         return -ENOMEM;
+>                         } else {
+> -                               p4d_populate(&init_mm, p4d,
+> -                                       early_alloc(PAGE_SIZE, NUMA_NO_NO=
+DE));
+> +                               p =3D early_alloc(PAGE_SIZE, NUMA_NO_NODE=
+);
+> +                               pud_init(p);
+> +                               p4d_populate(&init_mm, p4d, p);
+>                         }
+>                 }
+>                 zero_pud_populate(p4d, addr, next);
+> --
+> 2.20.1
 >
-> FWIW, the patch (inline below) looks good to me.
 
-Thanks, I will prepare a patch series for submission later today.
+Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
 
-Uros.
+Thanks!
