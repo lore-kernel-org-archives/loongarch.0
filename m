@@ -1,211 +1,147 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA6D633CC
-	for <loongarch@lists.linux.dev>; Mon,  3 Apr 2023 10:19:53 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A5C41063;
-	Mon,  3 Apr 2023 03:20:37 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.57.89])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18E933F840;
-	Mon,  3 Apr 2023 03:19:50 -0700 (PDT)
-Date: Mon, 3 Apr 2023 11:19:48 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [PATCH 01/10] locking/atomic: Add missing cast to try_cmpxchg()
- fallbacks
-Message-ID: <ZCqoRNU8EJhKJVEu@FVFF77S0Q05N>
-References: <20230305205628.27385-1-ubizjak@gmail.com>
- <20230305205628.27385-2-ubizjak@gmail.com>
- <ZB2v+avNt52ac/+w@FVFF77S0Q05N>
- <CAFULd4ZCgxDYnyy--qdgKoAo_y7MbNSaQdbdBFefnFuMoM2OYw@mail.gmail.com>
- <ZB3MR8lGbnea9ui6@FVFF77S0Q05N>
- <ZB3QtDYuWdpiD5qk@FVFF77S0Q05N>
- <CAFULd4aFUF5k=QJD8tDp4qzm2iBF7=rNvp1SJWrg44X5hTFxtQ@mail.gmail.com>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF582ECE
+	for <loongarch@lists.linux.dev>; Tue,  4 Apr 2023 08:42:09 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxONna4itkP10WAA--.34378S3;
+	Tue, 04 Apr 2023 16:42:02 +0800 (CST)
+Received: from localhost.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxwOTW4itkYRYVAA--.55009S3;
+	Tue, 04 Apr 2023 16:42:00 +0800 (CST)
+From: Qing Zhang <zhangqing@loongson.cn>
+To: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	kasan-dev@googlegroups.com,
+	linux-doc@vger.kernel.org,
+	linux-mm@kvack.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 1/6] LoongArch: Simplified randomization layout after jump new kernel processing
+Date: Tue,  4 Apr 2023 16:41:43 +0800
+Message-Id: <20230404084148.744-2-zhangqing@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20230404084148.744-1-zhangqing@loongson.cn>
+References: <20230404084148.744-1-zhangqing@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFULd4aFUF5k=QJD8tDp4qzm2iBF7=rNvp1SJWrg44X5hTFxtQ@mail.gmail.com>
+X-CM-TRANSID:AQAAf8DxwOTW4itkYRYVAA--.55009S3
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxCFy5JFyUAw4rur18urW7Arb_yoW5AF45pr
+	y7Zw1kJr45Grs7J34qqa4Dury5XwnrWw1aganrK34rZr12qFy5Xw1kurnrWFWjq3yFgr4S
+	qFyrKF9Iva1UJ3DanT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
+	Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
+	O2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+	WUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+	Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
+	JbIYCTnIWIevJa73UjIFyTuYvjxU4eMKDUUUU
 
-On Sun, Mar 26, 2023 at 09:28:38PM +0200, Uros Bizjak wrote:
-> On Fri, Mar 24, 2023 at 5:33 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > On Fri, Mar 24, 2023 at 04:14:22PM +0000, Mark Rutland wrote:
-> > > On Fri, Mar 24, 2023 at 04:43:32PM +0100, Uros Bizjak wrote:
-> > > > On Fri, Mar 24, 2023 at 3:13 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > > > >
-> > > > > On Sun, Mar 05, 2023 at 09:56:19PM +0100, Uros Bizjak wrote:
-> > > > > > Cast _oldp to the type of _ptr to avoid incompatible-pointer-types warning.
-> > > > >
-> > > > > Can you give an example of where we are passing an incompatible pointer?
-> > > >
-> > > > An example is patch 10/10 from the series, which will fail without
-> > > > this fix when fallback code is used. We have:
-> > > >
-> > > > -       } while (local_cmpxchg(&rb->head, offset, head) != offset);
-> > > > +       } while (!local_try_cmpxchg(&rb->head, &offset, head));
-> > > >
-> > > > where rb->head is defined as:
-> > > >
-> > > > typedef struct {
-> > > >    atomic_long_t a;
-> > > > } local_t;
-> > > >
-> > > > while offset is defined as 'unsigned long'.
-> > >
-> > > Ok, but that's because we're doing the wrong thing to start with.
-> > >
-> > > Since local_t is defined in terms of atomic_long_t, we should define the
-> > > generic local_try_cmpxchg() in terms of atomic_long_try_cmpxchg(). We'll still
-> > > have a mismatch between 'long *' and 'unsigned long *', but then we can fix
-> > > that in the callsite:
-> > >
-> > >       while (!local_try_cmpxchg(&rb->head, &(long *)offset, head))
-> >
-> > Sorry, that should be:
-> >
-> >         while (!local_try_cmpxchg(&rb->head, (long *)&offset, head))
-> 
-> The fallbacks are a bit more complicated than above, and are different
-> from atomic_try_cmpxchg.
-> 
-> Please note in patch 2/10, the falbacks when arch_try_cmpxchg_local
-> are not defined call arch_cmpxchg_local. Also in patch 2/10,
-> try_cmpxchg_local is introduced, where it calls
-> arch_try_cmpxchg_local. Targets (and generic code) simply define (e.g.
-> :
-> 
-> #define local_cmpxchg(l, o, n) \
->        (cmpxchg_local(&((l)->a.counter), (o), (n)))
-> +#define local_try_cmpxchg(l, po, n) \
-> +       (try_cmpxchg_local(&((l)->a.counter), (po), (n)))
-> 
-> which is part of the local_t API. Targets should either define all
-> these #defines, or none. There are no partial fallbacks as is the case
-> with atomic_t.
+Modified relocate_kernel is not returned directly new kernel's entry point，
+instead, we share start_kernel processing with the normal kernel, which avoids
+calling 'jr a0' directly and we can do other operations(eg: kasan_early_init)
+before start_kernel when CONFIG_RANDOMIZE_BASE is turned on.
 
-Whether or not there are fallbacks is immaterial.
+Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+---
+ arch/loongarch/include/asm/setup.h |  2 +-
+ arch/loongarch/kernel/head.S       | 10 +++++-----
+ arch/loongarch/kernel/relocate.c   |  8 ++------
+ 3 files changed, 8 insertions(+), 12 deletions(-)
 
-In those cases, architectures can just as easily write C wrappers, e.g.
+diff --git a/arch/loongarch/include/asm/setup.h b/arch/loongarch/include/asm/setup.h
+index be05c0e706a2..2dca0d1dd90a 100644
+--- a/arch/loongarch/include/asm/setup.h
++++ b/arch/loongarch/include/asm/setup.h
+@@ -33,7 +33,7 @@ extern long __la_abs_end;
+ extern long __rela_dyn_begin;
+ extern long __rela_dyn_end;
+ 
+-extern void * __init relocate_kernel(void);
++extern unsigned long __init relocate_kernel(void);
+ 
+ #endif
+ 
+diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+index aa64b179744f..35c4a78614c3 100644
+--- a/arch/loongarch/kernel/head.S
++++ b/arch/loongarch/kernel/head.S
+@@ -95,12 +95,12 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
+ 	PTR_LI		sp, (_THREAD_SIZE - PT_SIZE)
+ 	PTR_ADD		sp, sp, tp
+ 	set_saved_sp	sp, t0, t1
+-#endif
+-
+-	/* relocate_kernel() returns the new kernel entry point */
+-	jr		a0
+-	ASM_BUG()
+ 
++	/* Jump to new kernel: new_pc = current_pc + random_offset */
++	pcaddi		t0, 0
++	add.d		t0, t0, a0
++	jirl		zero, t0, 0xc
++#endif
+ #endif
+ 
+ 	bl		start_kernel
+diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
+index 01f94d1e3edf..6c3eff9af9fb 100644
+--- a/arch/loongarch/kernel/relocate.c
++++ b/arch/loongarch/kernel/relocate.c
+@@ -157,12 +157,11 @@ static inline void __init update_reloc_offset(unsigned long *addr, long random_o
+ 	*new_addr = (unsigned long)reloc_offset;
+ }
+ 
+-void * __init relocate_kernel(void)
++unsigned long __init relocate_kernel(void)
+ {
+ 	unsigned long kernel_length;
+ 	unsigned long random_offset = 0;
+ 	void *location_new = _text; /* Default to original kernel start */
+-	void *kernel_entry = start_kernel; /* Default to original kernel entry point */
+ 	char *cmdline = early_ioremap(fw_arg1, COMMAND_LINE_SIZE); /* Boot command line is passed in fw_arg1 */
+ 
+ 	strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
+@@ -190,9 +189,6 @@ void * __init relocate_kernel(void)
+ 
+ 		reloc_offset += random_offset;
+ 
+-		/* Return the new kernel's entry point */
+-		kernel_entry = RELOCATED_KASLR(start_kernel);
+-
+ 		/* The current thread is now within the relocated kernel */
+ 		__current_thread_info = RELOCATED_KASLR(__current_thread_info);
+ 
+@@ -204,7 +200,7 @@ void * __init relocate_kernel(void)
+ 
+ 	relocate_absolute(random_offset);
+ 
+-	return kernel_entry;
++	return random_offset;
+ }
+ 
+ /*
+-- 
+2.20.1
 
-long local_cmpxchg(local_t *l, long old, long new)
-{
-	return cmpxchg_local(&l->a.counter, old, new);
-}
-
-long local_try_cmpxchg(local_t *l, long *old, long new)
-{
-	return try_cmpxchg_local(&l->a.counter, old, new);
-}
-
-> The core of the local_h API is in the local.h header. If the target
-> doesn't define its own local.h header, then asm-generic/local.h is
-> used that does exactly what you propose above regarding the usage of
-> atomic functions.
-> 
-> OTOH, when the target defines its own local.h, then the above
-> target-dependent #define path applies. The target should define its
-> own arch_try_cmpxchg_local, otherwise a "generic" target-dependent
-> fallback that calls target arch_cmpxchg_local applies. In the case of
-> x86, patch 9/10 enables new instruction by defining
-> arch_try_cmpxchg_local.
-> 
-> FYI, the patch sequence is carefully chosen so that x86 also exercises
-> fallback code between different patches in the series.
-> 
-> Targets are free to define local_t to whatever they like, but for some
-> reason they all define it to:
-> 
-> typedef struct {
->     atomic_long_t a;
-> } local_t;
-
-Yes, which is why I used atomic_long() above.
-
-> so they have to dig the variable out of the struct like:
-> 
-> #define local_cmpxchg(l, o, n) \
->      (cmpxchg_local(&((l)->a.counter), (o), (n)))
-> 
-> Regarding the mismatch of 'long *' vs 'unsigned long *': x86
-> target-specific code does for try_cmpxchg:
-> 
-> #define __raw_try_cmpxchg(_ptr, _pold, _new, size, lock) \
-> ({ \
-> bool success; \
-> __typeof__(_ptr) _old = (__typeof__(_ptr))(_pold); \
-> __typeof__(*(_ptr)) __old = *_old; \
-> __typeof__(*(_ptr)) __new = (_new); \
-> 
-> so, it *does* cast the "old" pointer to the type of "ptr". The generic
-> code does *not*. This difference is dangerous, since the compilation
-> of some code involving try_cmpxchg will compile OK for x86 but will
-> break for other targets that use try_cmpxchg fallback templates (I was
-> the unlucky one that tripped on this in the past). Please note that
-> this problem is not specific to the proposed local_try_cmpxchg series,
-> but affects the existing try_cmpxchg API.
-
-I understand the problem of arch code differing from generic code, and that we
-want to have *a* consistent behaviour for hte API.
-
-What I'm saying is that the behaviour we should aim for is where the 'old'
-pointer has a specific type (long), and we always require that, as we do for
-the various atomic_*() APIs of which local_*() is a cousin.
-
-> Also, I don't think that "fixing" callsites is the right thing to do.
-
-Why? What's wrong with doing that?
-
-The documentation in Documentation/core-api/local_ops.rst says:
-
-    The ``local_t`` type is defined as an opaque ``signed long``
-
-So the obvious and least surprising thing is for the local_*() functions to use
-'long' for values and 'long *' for pointers to values.
-
-Requiring a cast in a few places is not the end of the world.
-
-> The generic code should follow x86 and cast the "old" pointer to the
-> type of "ptr" inside the fallback.
-
-Why?
-
-I disagree, and think it's far better to be strict by default. That way,
-accidental usage of the wrong type will be caught by the compiler, and if
-someone *really* wants to use a differently type then can use a cast in the
-callsite, which makes it really obvious when that is happening.
-
-I appreciate that may require some preparatory cleanup, but I think that's a
-small price to pay for having this in a clearer and more maintainable state.
-
-> > The fundamenalthing I'm trying to say is that the
-> > atomic/atomic64/atomic_long/local/local64 APIs should be type-safe, and for
-> > their try_cmpxchg() implementations, the type signature should be:
-> >
-> >         ${atomictype}_try_cmpxchg(${atomictype} *ptr, ${inttype} *old, ${inttype} new)
-> 
-> This conversion should be performed also for the cmpxchg family of
-> functions, if desired at all. try_cmpxchg fallback is just cmpxchg
-> with some extra code around.
-
-FWIW, I agree that we *should* make try_cmpxchg() check that ptr and old
-pointer are the same type.
-
-However, I don't think that's a prerequisite for doing so for
-local_try_cmpxchg().
-
-Plese make local_try_cmpxchg() have a proper type-safe C prototype, as we do
-with the atomic*_try_cmpxchg() APIs.
-
-Thanks,
-Mark,
