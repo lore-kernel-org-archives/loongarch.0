@@ -1,102 +1,284 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A40767E
-	for <loongarch@lists.linux.dev>; Tue,  4 Apr 2023 08:43:14 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dxj80h4ytkxV0WAA--.34721S3;
-	Tue, 04 Apr 2023 16:43:13 +0800 (CST)
-Received: from localhost.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxT+Qc4ytkChcVAA--.55041S4;
-	Tue, 04 Apr 2023 16:43:12 +0800 (CST)
-From: Qing Zhang <zhangqing@loongson.cn>
-To: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	kasan-dev@googlegroups.com,
-	linux-doc@vger.kernel.org,
-	linux-mm@kvack.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 6/6] LoongArch: Add ARCH_HAS_FORTIFY_SOURCE
-Date: Tue,  4 Apr 2023 16:43:08 +0800
-Message-Id: <20230404084308.813-3-zhangqing@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230404084308.813-1-zhangqing@loongson.cn>
-References: <20230404084308.813-1-zhangqing@loongson.cn>
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788457C
+	for <loongarch@lists.linux.dev>; Tue,  4 Apr 2023 12:03:14 +0000 (UTC)
+Received: from [10.128.10.193] (unknown [117.133.56.22])
+	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 7CA695809D2;
+	Tue,  4 Apr 2023 20:02:48 +0800 (CST)
+Message-ID: <d8b58492-e702-05b7-399e-054892ba6ded@sangfor.com.cn>
+Date: Tue, 4 Apr 2023 20:02:44 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxT+Qc4ytkChcVAA--.55041S4
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7uF1xtF18KFW5Gr1ktw4DXFb_yoW8WFyrpF
-	nrA3s5Jr48CFn7AFWjy34UWryUWF97Kr42gFyYya48AFy3XryDXrs2q3Z0vFy5Za1rG3yx
-	uFyfWa4aqF4DX37anT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b6xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
-	JwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4
-	CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_ZF0_GryDMcIj
-	6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMx
-	kF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
-	MxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
-	0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
-	14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07j4PfQUUUUU=
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+From: Donglin Peng <pengdonglin@sangfor.com.cn>
+Subject: Re: [PATCH v10 2/8] tracing: Add documentation for funcgraph-retval
+ and funcgraph-retval-hex
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+ will@kernel.org, catalin.marinas@arm.com, rmk+kernel@armlinux.org.uk,
+ palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+ tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org, zhangqing@loongson.cn,
+ kernel@xen0n.name, mingo@redhat.com, peterz@infradead.org,
+ xiehuan09@gmail.com, dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
+ dolinux.peng@gmail.com, linux-trace-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
+ <a3dcdd61b3ac07eefabc1b11fc18e9fae23d8cbe.1680265828.git.pengdonglin@sangfor.com.cn>
+ <ZCqOl1TCHGhbf0hf@FVFF77S0Q05N>
+Content-Language: en-US
+In-Reply-To: <ZCqOl1TCHGhbf0hf@FVFF77S0Q05N>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTE4YVkIZQ0lMGEIdTUtJH1UTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS0hKTFVKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nxw6GCo*GD0OGj4WAQ8tAQlO
+	EiwKC0xVSlVKTUNLTUtCTExLSkJNVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+	WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFKSkpLTTcG
+X-HM-Tid: 0a874c25f8c72eb7kusn7ca695809d2
+X-HM-MType: 1
 
-FORTIFY_SOURCE could detect various overflows at compile and run time.
-ARCH_HAS_FORTIFY_SOURCE means that the architecture can be built and
-run with CONFIG_FORTIFY_SOURCE. Select it in LoongArch.
+On 2023/4/3 16:30, Mark Rutland wrote:
+> On Fri, Mar 31, 2023 at 05:47:38AM -0700, Donglin Peng wrote:
+>> Add documentation for the two newly introduced options for the
+>> function_graph tracer. The funcgraph-retval option is used to
+>> control whether or not to display the return value, while the
+>> funcgraph-retval-hex option is used to control the display
+>> format of the return value.
+>>
+>> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+>> ---
+>> v9:
+>>   - Update limitation description
+>>
+>> v7:
+>>   - Rename trace option 'graph_retval_hex' to 'funcgraph-retval-hex'
+>>   - Update documentation description
+>>
+>> v6:
+>>   - Modify the limitations for funcgraph-retval
+>>   - Optimize the English expression
+>>
+>> v5:
+>>   - Describe the limitations of funcgraph-retval
+>> ---
+>>   Documentation/trace/ftrace.rst | 74 ++++++++++++++++++++++++++++++++++
+>>   1 file changed, 74 insertions(+)
+>>
+>> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+>> index b927fb2b94dc..f572ae419219 100644
+>> --- a/Documentation/trace/ftrace.rst
+>> +++ b/Documentation/trace/ftrace.rst
+>> @@ -1328,6 +1328,19 @@ Options for function_graph tracer:
+>>   	only a closing curly bracket "}" is displayed for
+>>   	the return of a function.
+>>   
+>> +  funcgraph-retval
+>> +	When set, the return value of each traced function
+>> +	will be printed after an equal sign "=". By default
+>> +	this is off.
+>> +
+>> +  funcgraph-retval-hex
+>> +	When set, the return value will always be printed
+>> +	in hexadecimal format. If the option is not set and
+>> +	the return value is an error code, it will be printed
+>> +	in signed decimal format; otherwise it will also be
+>> +	printed in hexadecimal format. By default, this option
+>> +	is off.
+>> +
+>>     sleep-time
+>>   	When running function graph tracer, to include
+>>   	the time a task schedules out in its function.
+>> @@ -2673,6 +2686,67 @@ It is default disabled.
+>>       0)   1.757 us    |        } /* kmem_cache_free() */
+>>       0)   2.861 us    |      } /* putname() */
+>>   
+>> +The return value of each traced function can be displayed after
+>> +an equal sign "=". When encountering system call failures, it
+>> +can be verfy helpful to quickly locate the function that first
+>> +returns an error code.
+>> +
+>> +	- hide: echo nofuncgraph-retval > trace_options
+>> +	- show: echo funcgraph-retval > trace_options
+>> +
+>> +  Example with funcgraph-retval::
+>> +
+>> +    1)               |    cgroup_migrate() {
+>> +    1)   0.651 us    |      cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
+>> +    1)               |      cgroup_migrate_execute() {
+>> +    1)               |        cpu_cgroup_can_attach() {
+>> +    1)               |          cgroup_taskset_first() {
+>> +    1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
+>> +    1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
+>> +    1)   0.380 us    |          sched_rt_can_attach(); /* = 0x0 */
+>> +    1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
+>> +    1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
+>> +    1)   7.143 us    |    } /* cgroup_migrate = -22 */
+>> +
+>> +The above example shows that the function cpu_cgroup_can_attach
+>> +returned the error code -22 firstly, then we can read the code
+>> +of this function to get the root cause.
+>> +
+>> +When the option funcgraph-retval-hex is not set, the return value can
+>> +be displayed in a smart way. Specifically, if it is an error code,
+>> +it will be printed in signed decimal format, otherwise it will
+>> +printed in hexadecimal format.
+>> +
+>> +	- smart: echo nofuncgraph-retval-hex > trace_options
+>> +	- hexadecimal always: echo funcgraph-retval-hex > trace_options
+>> +
+>> +  Example with funcgraph-retval-hex::
+>> +
+>> +    1)               |      cgroup_migrate() {
+>> +    1)   0.651 us    |        cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
+>> +    1)               |        cgroup_migrate_execute() {
+>> +    1)               |          cpu_cgroup_can_attach() {
+>> +    1)               |            cgroup_taskset_first() {
+>> +    1)   0.732 us    |              cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
+>> +    1)   1.232 us    |            } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
+>> +    1)   0.380 us    |            sched_rt_can_attach(); /* = 0x0 */
+>> +    1)   2.335 us    |          } /* cpu_cgroup_can_attach = 0xffffffea */
+>> +    1)   4.369 us    |        } /* cgroup_migrate_execute = 0xffffffea */
+>> +    1)   7.143 us    |      } /* cgroup_migrate = 0xffffffea */
+>> +
+>> +At present, there are some limitations when using the funcgraph-retval
+>> +option, and these limitations will be eliminated in the future:
+>> +
+>> +- Even if the function return type is void, a return value will still
+>> +  be printed, and you can just ignore it.
+>> +
+>> +- Even if return values are stored in multiple registers, only the
+>> +  value contained in the first register will be recorded and printed.
+>> +  To illustrate, in the x86 architecture, eax and edx are used to store
+>> +  a 64-bit return value, with the lower 32 bits saved in eax and the
+>> +  upper 32 bits saved in edx. However, only the value stored in eax
+>> +  will be recorded and printed.
+> 
+> With some procedure call standards (e.g. arm64's AAPCS64), when a type is
+> smaller than a GPR it's up to the consumer to perform the narrowing, and the
+> upport bits may contain UNKNOWN values. For example, with a u8 in a 64-bit GPR,
+> bits [3:8] may contain arbitrary values.
 
-See more about this feature from commit 6974f0c4555e
-("include/linux/string.h: add the option of fortified string.h functions").
+Thank you. Just to clarify, Should it be that bits [63:8] may contain
+arbitrary values in such cases?
 
-Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
----
- arch/loongarch/Kconfig              | 1 +
- arch/loongarch/include/asm/string.h | 4 ++++
- 2 files changed, 5 insertions(+)
+> 
+> It's probably worth noting that this means *some* manual processing will always
+> be necessary for such cases.
+> 
+> That's mostly visible around where largelr types get truncated (whether
+> explciitly or implicitly), e.g.
+> 
+> 	u8 narrow_to_u8(u64 val)
+> 	{
+> 		// implicitly truncated
+> 		return val;
+> 	}
+> 
+> ... could be compiled to:
+> 
+> 	narrow_to_u8:
+> 		< ... ftrace instrumentation ... >
+> 		RET
+> 
+> ... and so:
+> 	
+> 	narrow_to_u8(0x123456789abcdef);
+> 
+> ... might be recorded as returning 0x123456789abcdef rather than 0xef.
+> 
+> 
+> That can happen in surprising ways, e.g.
+> 
+> 	int error_if_not_4g_aligned(u64 val)
+> 	{
+> 		if (val & GENMASK(63, 32))
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 61f883c51045..6c525e50bb7c 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -11,6 +11,7 @@ config LOONGARCH
- 	select ARCH_ENABLE_MEMORY_HOTPLUG
- 	select ARCH_ENABLE_MEMORY_HOTREMOVE
- 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
-+	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
-diff --git a/arch/loongarch/include/asm/string.h b/arch/loongarch/include/asm/string.h
-index a6482abdc8b3..5bb5a90d2681 100644
---- a/arch/loongarch/include/asm/string.h
-+++ b/arch/loongarch/include/asm/string.h
-@@ -28,6 +28,10 @@ extern void *__memmove(void *__dest, __const__ void *__src, size_t __n);
- #define memcpy(dst, src, len) __memcpy(dst, src, len)
- #define memmove(dst, src, len) __memmove(dst, src, len)
- 
-+#ifndef __NO_FORTIFY
-+#define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
-+#endif
-+
- #endif
- 
- #endif /* _ASM_STRING_H */
--- 
-2.20.1
+Should it be GENMASK(31, 0)?
 
+> 			return -EINVAL;
+> 
+> 		return 0;
+> 	}
+> 
+> ... could be compiled to:
+> 
+> 	error_if_not_4g_aligned:
+> 		CBNZ	w0, .Lnot_aligned
+> 		RET				// bits [31:0] are zero, bits
+> 						// [63:32] are UNKNOWN
+> 	.Lnot_aligned:
+> 		MOV	x0, #-EINVAL
+> 		RET
+> 
+> .... and so:
+> 
+> 	error_if_not_4g_aligned(SZ_8G)
+> 
+> ... could return with bits [63:32] non-zero
+> 
+> Thanks,
+> Mark.
+
+Thank you for sharing this note. I will append the following limitation.
+
+In certain procedure call standards, such as arm64's AAPCS64, when a
+type is smaller than a GPR, it is the responsibility of the consumer to
+perform the narrowing, and the upper bits may contain UNKNOWN values.
+Therefore, it is advisable to check the code for such cases. For
+instance,when using a u8 in a 64-bit GPR, bits [63:8] may contain
+arbitrary values, especially when larger types are truncated, whether
+explicitly or implicitly. Here are some specific cases to illustrate
+this point:
+
+  - Case One:
+
+   The function narrow_to_u8 is defined as follows:
+
+  	u8 narrow_to_u8(u64 val)
+	{
+		// implicitly truncated
+		return val;
+	}
+
+   It may be compiled to:
+
+	narrow_to_u8:
+		< ... ftrace instrumentation ... >
+		RET
+
+   If you pass 0x123456789abcdef to this function and want to narrow it,
+   it may be recorded as 0x123456789abcdef instead of 0xef.
+
+   - Case Two:
+
+   The function error_if_not_4g_aligned is defined as follows:
+
+	int error_if_not_4g_aligned(u64 val)
+	{
+		if (val & GENMASK(31, 0))
+			return -EINVAL;
+
+		return 0;
+	}
+
+   It could be compile to:
+
+	error_if_not_4g_aligned:
+		CBNZ	w0, .Lnot_aligned
+		RET				// bits [31:0] are zero, bits
+						// [63:32] are UNKNOWN
+	.Lnot_aligned:
+		MOV	x0, #-EINVAL
+		RET
+
+   When passing 0x2_0000_0000 to it, the return value may be recorded as
+   0x2_0000_0000 instead of 0.
