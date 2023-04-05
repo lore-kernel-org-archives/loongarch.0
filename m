@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1C57FC
-	for <loongarch@lists.linux.dev>; Wed,  5 Apr 2023 08:14:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97802C4339C
-	for <loongarch@lists.linux.dev>; Wed,  5 Apr 2023 08:14:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565F87FC
+	for <loongarch@lists.linux.dev>; Wed,  5 Apr 2023 08:20:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02AB8C4339E
+	for <loongarch@lists.linux.dev>; Wed,  5 Apr 2023 08:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1680682451;
-	bh=1nSglfItAuDI4ol4In4nVcuiP9G4IB0lSOQfSgEOfCY=;
+	s=k20201202; t=1680682804;
+	bh=HTUknxnqfIabBIx4Bda/TFF4Z3TEp0Sas+BirzctAuw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=L2Yi2n4zcZcm4bQPPU9sZ242yVQyuXbhGtQaan735qEWwqiZ3wEPVMZQsqABQgPEE
-	 h4Kuprkm89+5gPA24oQ2/9I6eV+LxhDUM2DUcXKpKVy5YXk7ArZN8NAuzjgl5VARRM
-	 wcer0NjYmQr4y7zJeSmHLlI0s9iLgrNG/AiSJm3oCm76Psb/7/jWEHFAIoE64Br1Ir
-	 lkpXFbN/G+Wp+8QoAUqC4V96V88RgLk80ykpJndM/K6uzZYw3/LwclwTFJxRWBOlFP
-	 4KsAIdE+vLwRKmB/mycLYLgwJ26PzfrOT1aGIFg+RaabKatVZcAOnvHIPkiwmY5GQd
-	 GpKW41dSctb4g==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-4fa3c1a7a5aso208042a12.3
-        for <loongarch@lists.linux.dev>; Wed, 05 Apr 2023 01:14:11 -0700 (PDT)
-X-Gm-Message-State: AAQBX9e1E/H3gforuqaJyMiUdhpIEV+tDkxUwkYcgB2ZPgGGYVX+kL6F
-	UUH1cl0fk4+u0+lOIh4PmDodkdR/4ORf8YoXnJA=
-X-Google-Smtp-Source: AKy350aZNiqLEErKnpGDDjTYf9nmSTpBW2y8eaHbCzbBzYF6e/OECEGTKWU0mUgFMSf3y0GLmz5oA6Fxo7YXcJdc8Xk=
-X-Received: by 2002:a50:9509:0:b0:4ab:49b9:686d with SMTP id
- u9-20020a509509000000b004ab49b9686dmr691501eda.1.1680682449803; Wed, 05 Apr
- 2023 01:14:09 -0700 (PDT)
+	b=kSuXUMKrCmDVPP7YdYF5B1KZdZsXKhv5ReOe//XhzwlOTtVG5843dJTjiKmn6+Hwg
+	 cFzJYU09s3QlYP/q3HGLf5+dsltnSemW1ImYkWj/E7cy9BJpCMvJxdUYglRoVJ/nsL
+	 ERUcLCt9qEuHt1XcWAcsNY/4AijQgAYc/5oW098n1lk8QPAEsY0Cf9qP0HHNiR4frz
+	 iPgjEErQa/vbsYX4K7FLggbv55ZiZTw0cxBVVEjKAo/WglkgKcGsH6b9iEq4znogK6
+	 pQQXAWh703bn43eCxecGaVBOMvKD2tOhDzpR4lvYBTo68uz2FO+VwRkpCmLS3CfPtt
+	 Z3V0COP3LSVHQ==
+Received: by mail-lf1-f46.google.com with SMTP id x17so45622982lfu.5
+        for <loongarch@lists.linux.dev>; Wed, 05 Apr 2023 01:20:03 -0700 (PDT)
+X-Gm-Message-State: AAQBX9euUZ5Da0MgeleJLDwG/QR9a0xLc8rdcQRGToWMwKquR/dxWUC2
+	QnwO8WQRAZIF2EzZ/T1t6xPpPsVcLlVKDm1nG+o=
+X-Google-Smtp-Source: AKy350Y1vsozuiEohMdC88enx0BW5x8KnWhTDNQHmY6q/zjfeBiLMb9D+cbTNBPI11aW/NvjzPzzm9TqBufZeyFWyII=
+X-Received: by 2002:a05:6512:32d0:b0:4e8:4409:bb76 with SMTP id
+ f16-20020a05651232d000b004e84409bb76mr1033018lfg.2.1680682801960; Wed, 05 Apr
+ 2023 01:20:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -32,149 +32,175 @@ MIME-Version: 1.0
 References: <20230301085545.2373646-1-chenhuacai@loongson.cn>
  <aba37b65-6fc4-721e-ebc5-df52533e4791@loongson.cn> <CAAhV-H6xAKQ94T5=+iVASwi8F=7+G_ptSGVVBOw4L1fCR+EQOw@mail.gmail.com>
  <dfd6a1cb-25be-cc11-4134-b2e92e353c00@loongson.cn> <CAAhV-H4q2+s2fV6DqSK8H0cByvJsd78GBB_Vw9gxHMfBu2Scug@mail.gmail.com>
-In-Reply-To: <CAAhV-H4q2+s2fV6DqSK8H0cByvJsd78GBB_Vw9gxHMfBu2Scug@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 5 Apr 2023 16:13:57 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H54MWEXgqPqv+23vQxQU455iMnwON37uiByyci9cgh5Hg@mail.gmail.com>
-Message-ID: <CAAhV-H54MWEXgqPqv+23vQxQU455iMnwON37uiByyci9cgh5Hg@mail.gmail.com>
+ <CAAhV-H54MWEXgqPqv+23vQxQU455iMnwON37uiByyci9cgh5Hg@mail.gmail.com>
+In-Reply-To: <CAAhV-H54MWEXgqPqv+23vQxQU455iMnwON37uiByyci9cgh5Hg@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 5 Apr 2023 10:19:50 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEe37g=1DEQcWFEDCLRihZLX14Kso0dwon71W+5jqyDrA@mail.gmail.com>
+Message-ID: <CAMj1kXEe37g=1DEQcWFEDCLRihZLX14Kso0dwon71W+5jqyDrA@mail.gmail.com>
 Subject: Re: [PATCH] efi/loongarch: Reintroduce efi_relocate_kernel() to
  relocate kernel
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, 
-	loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Xuerui Wang <kernel@xen0n.name>, linux-kernel@vger.kernel.org, 
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Youling Tang <tangyouling@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	linux-efi@vger.kernel.org, loongarch@lists.linux.dev, 
+	Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, linux-kernel@vger.kernel.org, 
 	loongson-kernel@lists.loongnix.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Ard,
-
-What is the status of this patch now?
-
-Huacai
-
-On Wed, Mar 1, 2023 at 8:06=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org> =
-wrote:
+On Wed, 5 Apr 2023 at 10:14, Huacai Chen <chenhuacai@kernel.org> wrote:
 >
-> Hi, Youling,
+> Hi, Ard,
 >
-> On Wed, Mar 1, 2023 at 6:08=E2=80=AFPM Youling Tang <tangyouling@loongson=
-.cn> wrote:
+> What is the status of this patch now?
+>
+
+I'd still like to understand how zboot is affected. It has
+
+static unsigned long alloc_preferred_address(unsigned long alloc_size)
+{
+#ifdef EFI_KIMG_PREFERRED_ADDRESS
+        efi_physical_addr_t efi_addr =3D EFI_KIMG_PREFERRED_ADDRESS;
+
+        if (efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS, EFI_LOADER_DA=
+TA,
+                        alloc_size / EFI_PAGE_SIZE, &efi_addr) =3D=3D EFI_S=
+UCCESS)
+                return efi_addr;
+#endif
+        return ULONG_MAX;
+}
+
+and if I understand you correctly, we never needed this in the first place?
+
+(I understand this is a separate issue, but it would be nice to get
+rid of EFI_KIMG_PREFERRED_ADDRESS entirely if we can.)
+
+
+
+> On Wed, Mar 1, 2023 at 8:06=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
+> wrote:
 > >
-> > Hi, Huacai
+> > Hi, Youling,
 > >
-> > On 03/01/2023 05:30 PM, Huacai Chen wrote:
-> > > Hi, Youling,
+> > On Wed, Mar 1, 2023 at 6:08=E2=80=AFPM Youling Tang <tangyouling@loongs=
+on.cn> wrote:
 > > >
-> > > On Wed, Mar 1, 2023 at 5:21=E2=80=AFPM Youling Tang <tangyouling@loon=
-gson.cn> wrote:
-> > >>
-> > >> Hi, Huacai
-> > >>
-> > >> On 03/01/2023 04:55 PM, Huacai Chen wrote:
-> > >>> Since Linux-6.3, LoongArch supports PIE kernel now, so let's reintr=
-oduce
-> > >>> efi_relocate_kernel() to relocate the core kernel.
-> > >>
-> > >> If we strongly rely on the PIE feature after the modification, we ne=
-ed
-> > >> to modify it as follows,
-> > > There is no strong rely, efi_relocate_kernel() can also handle the
-> > > non-PIE kernel.
-> >
-> > IMHO, if EFI_KIMG_PREFERRED_ADDRESS is no longer defined as
-> > `PHYSADDR(VMLINUX_LOAD_ADDRESS)` (physical link address), we need to
-> > relocate through the RELOCATABLE function, so it is recommended to
-> > select RELOCATABLE if EFI_STUB is enabled
-> We can select RELOCATABLE when we modify EFI_KIMG_PREFERRED_ADDRESS.
-> Before that I prefer to give a chance to build a non-PIE kernel.
->
-> Huacai
-> >
-> > Youling.
+> > > Hi, Huacai
 > > >
-> > > Huacai
-> > >>
-> > >> --- a/arch/loongarch/Kconfig
-> > >> +++ b/arch/loongarch/Kconfig
-> > >> @@ -137,6 +137,7 @@ config LOONGARCH
-> > >>          select PCI_MSI_ARCH_FALLBACKS
-> > >>          select PCI_QUIRKS
-> > >>          select PERF_USE_VMALLOC
-> > >> +       select RELOCATABLE
-> > >>          select RTC_LIB
-> > >>          select SMP
-> > >>          select SPARSE_IRQ
-> > >>
-> > >> or:
-> > >>
-> > >> --- a/arch/loongarch/Kconfig
-> > >> +++ b/arch/loongarch/Kconfig
-> > >> @@ -360,6 +360,7 @@ config EFI_STUB
-> > >>          default y
-> > >>          depends on EFI
-> > >>          select EFI_GENERIC_STUB
-> > >> +       select RELOCATABLE
-> > >>          help
-> > >>
-> > >> Youling.
-> > >>
-> > >>>
-> > >>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > >>> ---
-> > >>>  drivers/firmware/efi/libstub/loongarch-stub.c | 24 ++++++---------=
-----
-> > >>>  1 file changed, 7 insertions(+), 17 deletions(-)
-> > >>>
-> > >>> diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/driver=
-s/firmware/efi/libstub/loongarch-stub.c
-> > >>> index eee7ed43cdfb..72c71ae201f0 100644
-> > >>> --- a/drivers/firmware/efi/libstub/loongarch-stub.c
-> > >>> +++ b/drivers/firmware/efi/libstub/loongarch-stub.c
-> > >>> @@ -21,26 +21,16 @@ efi_status_t handle_kernel_image(unsigned long =
-*image_addr,
-> > >>>                                efi_loaded_image_t *image,
-> > >>>                                efi_handle_t image_handle)
-> > >>>  {
-> > >>> -     int nr_pages =3D round_up(kernel_asize, EFI_ALLOC_ALIGN) / EF=
-I_PAGE_SIZE;
-> > >>> -     efi_physical_addr_t kernel_addr =3D EFI_KIMG_PREFERRED_ADDRES=
-S;
-> > >>>       efi_status_t status;
-> > >>> +     unsigned long kernel_addr =3D 0;
-> > >>>
-> > >>> -     /*
-> > >>> -      * Allocate space for the kernel image at the preferred offse=
-t. This is
-> > >>> -      * the only location in memory from where we can execute the =
-image, so
-> > >>> -      * no point in falling back to another allocation.
-> > >>> -      */
-> > >>> -     status =3D efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
-> > >>> -                          EFI_LOADER_DATA, nr_pages, &kernel_addr)=
-;
-> > >>> -     if (status !=3D EFI_SUCCESS)
-> > >>> -             return status;
-> > >>> -
-> > >>> -     *image_addr =3D EFI_KIMG_PREFERRED_ADDRESS;
-> > >>> -     *image_size =3D kernel_asize;
-> > >>> +     kernel_addr =3D (unsigned long)&kernel_offset - kernel_offset=
-;
-> > >>> +
-> > >>> +     status =3D efi_relocate_kernel(&kernel_addr, kernel_fsize, ke=
-rnel_asize,
-> > >>> +                  EFI_KIMG_PREFERRED_ADDRESS, efi_get_kimg_min_ali=
-gn(), 0x0);
-> > >>>
-> > >>> -     memcpy((void *)EFI_KIMG_PREFERRED_ADDRESS,
-> > >>> -            (void *)&kernel_offset - kernel_offset,
-> > >>> -            kernel_fsize);
-> > >>> +     *image_addr =3D kernel_addr;
-> > >>> +     *image_size =3D kernel_asize;
-> > >>>
-> > >>>       return status;
-> > >>>  }
-> > >>>
-> > >>
+> > > On 03/01/2023 05:30 PM, Huacai Chen wrote:
+> > > > Hi, Youling,
+> > > >
+> > > > On Wed, Mar 1, 2023 at 5:21=E2=80=AFPM Youling Tang <tangyouling@lo=
+ongson.cn> wrote:
+> > > >>
+> > > >> Hi, Huacai
+> > > >>
+> > > >> On 03/01/2023 04:55 PM, Huacai Chen wrote:
+> > > >>> Since Linux-6.3, LoongArch supports PIE kernel now, so let's rein=
+troduce
+> > > >>> efi_relocate_kernel() to relocate the core kernel.
+> > > >>
+> > > >> If we strongly rely on the PIE feature after the modification, we =
+need
+> > > >> to modify it as follows,
+> > > > There is no strong rely, efi_relocate_kernel() can also handle the
+> > > > non-PIE kernel.
+> > >
+> > > IMHO, if EFI_KIMG_PREFERRED_ADDRESS is no longer defined as
+> > > `PHYSADDR(VMLINUX_LOAD_ADDRESS)` (physical link address), we need to
+> > > relocate through the RELOCATABLE function, so it is recommended to
+> > > select RELOCATABLE if EFI_STUB is enabled
+> > We can select RELOCATABLE when we modify EFI_KIMG_PREFERRED_ADDRESS.
+> > Before that I prefer to give a chance to build a non-PIE kernel.
 > >
-> >
+> > Huacai
+> > >
+> > > Youling.
+> > > >
+> > > > Huacai
+> > > >>
+> > > >> --- a/arch/loongarch/Kconfig
+> > > >> +++ b/arch/loongarch/Kconfig
+> > > >> @@ -137,6 +137,7 @@ config LOONGARCH
+> > > >>          select PCI_MSI_ARCH_FALLBACKS
+> > > >>          select PCI_QUIRKS
+> > > >>          select PERF_USE_VMALLOC
+> > > >> +       select RELOCATABLE
+> > > >>          select RTC_LIB
+> > > >>          select SMP
+> > > >>          select SPARSE_IRQ
+> > > >>
+> > > >> or:
+> > > >>
+> > > >> --- a/arch/loongarch/Kconfig
+> > > >> +++ b/arch/loongarch/Kconfig
+> > > >> @@ -360,6 +360,7 @@ config EFI_STUB
+> > > >>          default y
+> > > >>          depends on EFI
+> > > >>          select EFI_GENERIC_STUB
+> > > >> +       select RELOCATABLE
+> > > >>          help
+> > > >>
+> > > >> Youling.
+> > > >>
+> > > >>>
+> > > >>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > >>> ---
+> > > >>>  drivers/firmware/efi/libstub/loongarch-stub.c | 24 ++++++-------=
+------
+> > > >>>  1 file changed, 7 insertions(+), 17 deletions(-)
+> > > >>>
+> > > >>> diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/driv=
+ers/firmware/efi/libstub/loongarch-stub.c
+> > > >>> index eee7ed43cdfb..72c71ae201f0 100644
+> > > >>> --- a/drivers/firmware/efi/libstub/loongarch-stub.c
+> > > >>> +++ b/drivers/firmware/efi/libstub/loongarch-stub.c
+> > > >>> @@ -21,26 +21,16 @@ efi_status_t handle_kernel_image(unsigned lon=
+g *image_addr,
+> > > >>>                                efi_loaded_image_t *image,
+> > > >>>                                efi_handle_t image_handle)
+> > > >>>  {
+> > > >>> -     int nr_pages =3D round_up(kernel_asize, EFI_ALLOC_ALIGN) / =
+EFI_PAGE_SIZE;
+> > > >>> -     efi_physical_addr_t kernel_addr =3D EFI_KIMG_PREFERRED_ADDR=
+ESS;
+> > > >>>       efi_status_t status;
+> > > >>> +     unsigned long kernel_addr =3D 0;
+> > > >>>
+> > > >>> -     /*
+> > > >>> -      * Allocate space for the kernel image at the preferred off=
+set. This is
+> > > >>> -      * the only location in memory from where we can execute th=
+e image, so
+> > > >>> -      * no point in falling back to another allocation.
+> > > >>> -      */
+> > > >>> -     status =3D efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS=
+,
+> > > >>> -                          EFI_LOADER_DATA, nr_pages, &kernel_add=
+r);
+> > > >>> -     if (status !=3D EFI_SUCCESS)
+> > > >>> -             return status;
+> > > >>> -
+> > > >>> -     *image_addr =3D EFI_KIMG_PREFERRED_ADDRESS;
+> > > >>> -     *image_size =3D kernel_asize;
+> > > >>> +     kernel_addr =3D (unsigned long)&kernel_offset - kernel_offs=
+et;
+> > > >>> +
+> > > >>> +     status =3D efi_relocate_kernel(&kernel_addr, kernel_fsize, =
+kernel_asize,
+> > > >>> +                  EFI_KIMG_PREFERRED_ADDRESS, efi_get_kimg_min_a=
+lign(), 0x0);
+> > > >>>
+> > > >>> -     memcpy((void *)EFI_KIMG_PREFERRED_ADDRESS,
+> > > >>> -            (void *)&kernel_offset - kernel_offset,
+> > > >>> -            kernel_fsize);
+> > > >>> +     *image_addr =3D kernel_addr;
+> > > >>> +     *image_size =3D kernel_asize;
+> > > >>>
+> > > >>>       return status;
+> > > >>>  }
+> > > >>>
+> > > >>
+> > >
+> > >
