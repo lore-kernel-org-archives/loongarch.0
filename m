@@ -1,134 +1,180 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42335D2F2
-	for <loongarch@lists.linux.dev>; Tue,  4 Apr 2023 22:09:50 +0000 (UTC)
-Received: by mail-pj1-f47.google.com with SMTP id qe8-20020a17090b4f8800b0023f07253a2cso35379801pjb.3
-        for <loongarch@lists.linux.dev>; Tue, 04 Apr 2023 15:09:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680646190;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FhW41Lz+Mez52y9+7Sqb35hmOmVdAZ3fg2uw11nAPAE=;
-        b=gUnEta5Yb6BtuCcTbAobNapAGPwc0djL/m8TaRV6zg1dmzIbN9ViSxcJdaPoUxzS4b
-         lqAg8chb72IJSS+FDlhtOK8Q6TNt1dX6HhF5uUTVwsIiKbA7yXZaggFVpSNKPB/kpfG5
-         UGE6OA1h2UEWP7hBlWDMJIm6VAA88W4h5iUein/TQ4pBlGSVHPr+4gtWEGZz1NccX+1O
-         pzrByG745s8cPaG1Bv9BjxgAeCG+TOnfx7Zf8ZthRcuoQ7uY/PzreoHfTKIwH39L6NMf
-         +ihHktT0J0n+iD3LRnqvnglDvtpJ0jraXnTyclvvFj3bOpjrIKalZFNddiclc0ueDpSP
-         hxZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680646190;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FhW41Lz+Mez52y9+7Sqb35hmOmVdAZ3fg2uw11nAPAE=;
-        b=YGBgRy218UFVmN3/t19jBdUACfpFGCfRSJ1CND7+GXSuZb0PCWIfF9YS5nWW/RRKZt
-         jaAUG7IIUOEhuK6lYEumXKL6RYk59WecTmZ89VdYA56oPU4MCBKsClBLmopV5x0POj0l
-         y32zO4SzCZrteMz1TJKjwLxaZnzokc2qKUe5DhY8bXohvrRoufSl0am3X68C+kQ3IAZq
-         OiXmzDXG2oO0H+dkTL8mS1O7VOX+ayEXricYg3d+48QiusSYWCqRnDt/LfIe6wr38HAh
-         6ZmvrqyyceD1yLSLMjAG4aqEc9Or0AeLfQ5736vfwQXR9e8TuaIqm40xZbWOhwBakMDv
-         muAA==
-X-Gm-Message-State: AAQBX9eJLPKMQrcuwslku+9ieJ0lHaOW/nEtPCbvTRntvTDFRbmO2uIQ
-	arkjYNLNO4l9jHTZbwnsNLUrkgCdDUQMNVS2lNE=
-X-Google-Smtp-Source: AKy350bBMyaLkYHcsUf3JTXKneddX4ZVx0+3AX9RSmsTAdcXvoVPs11LPU8Ekd9MaEE01X2e0f3RDUQs/sOmoWXiTBE=
-X-Received: by 2002:a17:90b:e09:b0:240:228:95bd with SMTP id
- ge9-20020a17090b0e0900b00240022895bdmr1533929pjb.5.1680646189645; Tue, 04 Apr
- 2023 15:09:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1C57FC
+	for <loongarch@lists.linux.dev>; Wed,  5 Apr 2023 08:14:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97802C4339C
+	for <loongarch@lists.linux.dev>; Wed,  5 Apr 2023 08:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1680682451;
+	bh=1nSglfItAuDI4ol4In4nVcuiP9G4IB0lSOQfSgEOfCY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=L2Yi2n4zcZcm4bQPPU9sZ242yVQyuXbhGtQaan735qEWwqiZ3wEPVMZQsqABQgPEE
+	 h4Kuprkm89+5gPA24oQ2/9I6eV+LxhDUM2DUcXKpKVy5YXk7ArZN8NAuzjgl5VARRM
+	 wcer0NjYmQr4y7zJeSmHLlI0s9iLgrNG/AiSJm3oCm76Psb/7/jWEHFAIoE64Br1Ir
+	 lkpXFbN/G+Wp+8QoAUqC4V96V88RgLk80ykpJndM/K6uzZYw3/LwclwTFJxRWBOlFP
+	 4KsAIdE+vLwRKmB/mycLYLgwJ26PzfrOT1aGIFg+RaabKatVZcAOnvHIPkiwmY5GQd
+	 GpKW41dSctb4g==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-4fa3c1a7a5aso208042a12.3
+        for <loongarch@lists.linux.dev>; Wed, 05 Apr 2023 01:14:11 -0700 (PDT)
+X-Gm-Message-State: AAQBX9e1E/H3gforuqaJyMiUdhpIEV+tDkxUwkYcgB2ZPgGGYVX+kL6F
+	UUH1cl0fk4+u0+lOIh4PmDodkdR/4ORf8YoXnJA=
+X-Google-Smtp-Source: AKy350aZNiqLEErKnpGDDjTYf9nmSTpBW2y8eaHbCzbBzYF6e/OECEGTKWU0mUgFMSf3y0GLmz5oA6Fxo7YXcJdc8Xk=
+X-Received: by 2002:a50:9509:0:b0:4ab:49b9:686d with SMTP id
+ u9-20020a509509000000b004ab49b9686dmr691501eda.1.1680682449803; Wed, 05 Apr
+ 2023 01:14:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230404084308.813-1-zhangqing@loongson.cn>
-In-Reply-To: <20230404084308.813-1-zhangqing@loongson.cn>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Wed, 5 Apr 2023 00:09:38 +0200
-Message-ID: <CA+fCnZentBDXuyyrZFzPLpt8Vdfo7YyAyxbgb506LFrR+v-D9Q@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] kasan: Add __HAVE_ARCH_SHADOW_MAP to support arch
- specific mapping
-To: Qing Zhang <zhangqing@loongson.cn>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Huacai Chen <chenhuacai@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, WANG Xuerui <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, kasan-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20230301085545.2373646-1-chenhuacai@loongson.cn>
+ <aba37b65-6fc4-721e-ebc5-df52533e4791@loongson.cn> <CAAhV-H6xAKQ94T5=+iVASwi8F=7+G_ptSGVVBOw4L1fCR+EQOw@mail.gmail.com>
+ <dfd6a1cb-25be-cc11-4134-b2e92e353c00@loongson.cn> <CAAhV-H4q2+s2fV6DqSK8H0cByvJsd78GBB_Vw9gxHMfBu2Scug@mail.gmail.com>
+In-Reply-To: <CAAhV-H4q2+s2fV6DqSK8H0cByvJsd78GBB_Vw9gxHMfBu2Scug@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 5 Apr 2023 16:13:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H54MWEXgqPqv+23vQxQU455iMnwON37uiByyci9cgh5Hg@mail.gmail.com>
+Message-ID: <CAAhV-H54MWEXgqPqv+23vQxQU455iMnwON37uiByyci9cgh5Hg@mail.gmail.com>
+Subject: Re: [PATCH] efi/loongarch: Reintroduce efi_relocate_kernel() to
+ relocate kernel
+To: Youling Tang <tangyouling@loongson.cn>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, 
+	loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Xuerui Wang <kernel@xen0n.name>, linux-kernel@vger.kernel.org, 
+	loongson-kernel@lists.loongnix.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 4, 2023 at 10:43=E2=80=AFAM Qing Zhang <zhangqing@loongson.cn> =
+Hi, Ard,
+
+What is the status of this patch now?
+
+Huacai
+
+On Wed, Mar 1, 2023 at 8:06=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org> =
 wrote:
 >
-> Like the LoongArch, which has many holes between different segments
-> and valid address space(256T available) is insufficient to map all
-> these segments to kasan shadow memory with the common formula provided
-> by kasan core, We need architecture specific mapping formula,different
-> segments are mapped individually, and only limited length of space of
-> that specific segment is mapped to shadow.
+> Hi, Youling,
 >
-> Therefore, when the incoming address is converted to a shadow, we need
-> to add a condition to determine whether it is valid.
+> On Wed, Mar 1, 2023 at 6:08=E2=80=AFPM Youling Tang <tangyouling@loongson=
+.cn> wrote:
+> >
+> > Hi, Huacai
+> >
+> > On 03/01/2023 05:30 PM, Huacai Chen wrote:
+> > > Hi, Youling,
+> > >
+> > > On Wed, Mar 1, 2023 at 5:21=E2=80=AFPM Youling Tang <tangyouling@loon=
+gson.cn> wrote:
+> > >>
+> > >> Hi, Huacai
+> > >>
+> > >> On 03/01/2023 04:55 PM, Huacai Chen wrote:
+> > >>> Since Linux-6.3, LoongArch supports PIE kernel now, so let's reintr=
+oduce
+> > >>> efi_relocate_kernel() to relocate the core kernel.
+> > >>
+> > >> If we strongly rely on the PIE feature after the modification, we ne=
+ed
+> > >> to modify it as follows,
+> > > There is no strong rely, efi_relocate_kernel() can also handle the
+> > > non-PIE kernel.
+> >
+> > IMHO, if EFI_KIMG_PREFERRED_ADDRESS is no longer defined as
+> > `PHYSADDR(VMLINUX_LOAD_ADDRESS)` (physical link address), we need to
+> > relocate through the RELOCATABLE function, so it is recommended to
+> > select RELOCATABLE if EFI_STUB is enabled
+> We can select RELOCATABLE when we modify EFI_KIMG_PREFERRED_ADDRESS.
+> Before that I prefer to give a chance to build a non-PIE kernel.
 >
-> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
-> ---
->  include/linux/kasan.h | 2 ++
->  mm/kasan/kasan.h      | 6 ++++++
->  2 files changed, 8 insertions(+)
->
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index f7ef70661ce2..3b91b941873d 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -54,11 +54,13 @@ extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D]=
+> Huacai
+> >
+> > Youling.
+> > >
+> > > Huacai
+> > >>
+> > >> --- a/arch/loongarch/Kconfig
+> > >> +++ b/arch/loongarch/Kconfig
+> > >> @@ -137,6 +137,7 @@ config LOONGARCH
+> > >>          select PCI_MSI_ARCH_FALLBACKS
+> > >>          select PCI_QUIRKS
+> > >>          select PERF_USE_VMALLOC
+> > >> +       select RELOCATABLE
+> > >>          select RTC_LIB
+> > >>          select SMP
+> > >>          select SPARSE_IRQ
+> > >>
+> > >> or:
+> > >>
+> > >> --- a/arch/loongarch/Kconfig
+> > >> +++ b/arch/loongarch/Kconfig
+> > >> @@ -360,6 +360,7 @@ config EFI_STUB
+> > >>          default y
+> > >>          depends on EFI
+> > >>          select EFI_GENERIC_STUB
+> > >> +       select RELOCATABLE
+> > >>          help
+> > >>
+> > >> Youling.
+> > >>
+> > >>>
+> > >>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > >>> ---
+> > >>>  drivers/firmware/efi/libstub/loongarch-stub.c | 24 ++++++---------=
+----
+> > >>>  1 file changed, 7 insertions(+), 17 deletions(-)
+> > >>>
+> > >>> diff --git a/drivers/firmware/efi/libstub/loongarch-stub.c b/driver=
+s/firmware/efi/libstub/loongarch-stub.c
+> > >>> index eee7ed43cdfb..72c71ae201f0 100644
+> > >>> --- a/drivers/firmware/efi/libstub/loongarch-stub.c
+> > >>> +++ b/drivers/firmware/efi/libstub/loongarch-stub.c
+> > >>> @@ -21,26 +21,16 @@ efi_status_t handle_kernel_image(unsigned long =
+*image_addr,
+> > >>>                                efi_loaded_image_t *image,
+> > >>>                                efi_handle_t image_handle)
+> > >>>  {
+> > >>> -     int nr_pages =3D round_up(kernel_asize, EFI_ALLOC_ALIGN) / EF=
+I_PAGE_SIZE;
+> > >>> -     efi_physical_addr_t kernel_addr =3D EFI_KIMG_PREFERRED_ADDRES=
+S;
+> > >>>       efi_status_t status;
+> > >>> +     unsigned long kernel_addr =3D 0;
+> > >>>
+> > >>> -     /*
+> > >>> -      * Allocate space for the kernel image at the preferred offse=
+t. This is
+> > >>> -      * the only location in memory from where we can execute the =
+image, so
+> > >>> -      * no point in falling back to another allocation.
+> > >>> -      */
+> > >>> -     status =3D efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
+> > >>> -                          EFI_LOADER_DATA, nr_pages, &kernel_addr)=
 ;
->  int kasan_populate_early_shadow(const void *shadow_start,
->                                 const void *shadow_end);
->
-> +#ifndef __HAVE_ARCH_SHADOW_MAP
->  static inline void *kasan_mem_to_shadow(const void *addr)
->  {
->         return (void *)((unsigned long)addr >> KASAN_SHADOW_SCALE_SHIFT)
->                 + KASAN_SHADOW_OFFSET;
->  }
-> +#endif
->
->  int kasan_add_zero_shadow(void *start, unsigned long size);
->  void kasan_remove_zero_shadow(void *start, unsigned long size);
-> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> index a61eeee3095a..033335c13b25 100644
-> --- a/mm/kasan/kasan.h
-> +++ b/mm/kasan/kasan.h
-> @@ -291,16 +291,22 @@ struct kasan_stack_ring {
->
->  #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
->
-> +#ifndef __HAVE_ARCH_SHADOW_MAP
->  static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
->  {
->         return (void *)(((unsigned long)shadow_addr - KASAN_SHADOW_OFFSET=
-)
->                 << KASAN_SHADOW_SCALE_SHIFT);
->  }
-> +#endif
->
->  static __always_inline bool addr_has_metadata(const void *addr)
->  {
-> +#ifdef __HAVE_ARCH_SHADOW_MAP
-> +       return (kasan_mem_to_shadow((void *)addr) !=3D NULL);
-> +#else
->         return (kasan_reset_tag(addr) >=3D
->                 kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
-> +#endif
->  }
->
->  /**
-> --
-> 2.20.1
->
-
-Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
-
-Thanks!
+> > >>> -     if (status !=3D EFI_SUCCESS)
+> > >>> -             return status;
+> > >>> -
+> > >>> -     *image_addr =3D EFI_KIMG_PREFERRED_ADDRESS;
+> > >>> -     *image_size =3D kernel_asize;
+> > >>> +     kernel_addr =3D (unsigned long)&kernel_offset - kernel_offset=
+;
+> > >>> +
+> > >>> +     status =3D efi_relocate_kernel(&kernel_addr, kernel_fsize, ke=
+rnel_asize,
+> > >>> +                  EFI_KIMG_PREFERRED_ADDRESS, efi_get_kimg_min_ali=
+gn(), 0x0);
+> > >>>
+> > >>> -     memcpy((void *)EFI_KIMG_PREFERRED_ADDRESS,
+> > >>> -            (void *)&kernel_offset - kernel_offset,
+> > >>> -            kernel_fsize);
+> > >>> +     *image_addr =3D kernel_addr;
+> > >>> +     *image_size =3D kernel_asize;
+> > >>>
+> > >>>       return status;
+> > >>>  }
+> > >>>
+> > >>
+> >
+> >
