@@ -1,195 +1,141 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB036ABC
-	for <loongarch@lists.linux.dev>; Wed,  5 Apr 2023 16:02:17 +0000 (UTC)
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 335Ex0qK002073;
-	Wed, 5 Apr 2023 15:12:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=EP7H/BG3XCUIVobBKkorHkQj2TA2B5DpLLQdBFgYKS4=;
- b=XbWxDBkfY2fo/oPyI6TrXqcU1euUz4IzeWoGlM8pMsRk498yO8yVE/7T1S6eJTb2S1UY
- Ce4n6uRJXGbJACtJS5PEQm7yDaXiLZ77NckRKQQQ5DNapH75rb5fd/ItpAm5JdaIGkJB
- EjYbhhlQ0ryc2KE5ooaYTcsk8RJlUZZfLediFtvaH7EkQ1SjyGt/Xzy43DdKyba2DK/C
- mj3z1Ouz77q3PQdLEc8JzeNlXRNO2YNOk1g5JnRZp+nfYv7EYFBF1bpKeDuLr8vDL+6n
- b4UH/HRs8HkTZNjSxDyvmPDruJP3v3TVMAV46NXQWSanaU69dM9Hykbwz50y1ICQraWy Mw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ps9mdkkrq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Apr 2023 15:12:47 +0000
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 335Ena21018706;
-	Wed, 5 Apr 2023 15:12:46 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ps9mdkkpp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Apr 2023 15:12:45 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-	by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 335DwTrM010607;
-	Wed, 5 Apr 2023 15:12:43 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3ppc86tktp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Apr 2023 15:12:43 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 335FCejC27853382
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Apr 2023 15:12:40 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7493520040;
-	Wed,  5 Apr 2023 15:12:40 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CE7A920043;
-	Wed,  5 Apr 2023 15:12:38 +0000 (GMT)
-Received: from [9.155.211.163] (unknown [9.155.211.163])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Apr 2023 15:12:38 +0000 (GMT)
-Message-ID: <248a41a536d5a3c9e81e8e865b34c5bf74cd36d4.camel@linux.ibm.com>
-Subject: Re: [PATCH v4] Kconfig: introduce HAS_IOPORT option and select it
- as necessary
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Arnd Bergmann <arnd@arndb.de>,
-        Richard Henderson
- <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Geert
- Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Paul Walmsley
- <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou
- <aou@eecs.berkeley.edu>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich
- Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas
- <bhelgaas@google.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab
- <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J.
- Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
-        Arnd Bergmann
- <arnd@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org
-Date: Wed, 05 Apr 2023 17:12:38 +0200
-In-Reply-To: <20230323163354.1454196-1-schnelle@linux.ibm.com>
-References: <20230323163354.1454196-1-schnelle@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Chh8ozZVKyRilF6r1sDguQSl3KT7MF3_
-X-Proofpoint-GUID: RSLPMutPzrPKT5ywknWUr1qrnGdzz6Rn
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354296FD0
+	for <loongarch@lists.linux.dev>; Wed,  5 Apr 2023 16:07:33 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5005c57f95cso76625a12.1
+        for <loongarch@lists.linux.dev>; Wed, 05 Apr 2023 09:07:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1680710851; x=1683302851;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ir3s/Lf5lvCAlrm1TfcesrDtB2jAmtZCISN/6dp3hBc=;
+        b=VNUObGKko6sqyyipxJHZOjjD7Vgl2nINPanPLg9CF5dNFM42M+zPkinw5lJovFp5IT
+         KgryiwfHZwGoUCHvFhE9cgxsLTI65w6qpIN9bd0/wPOfFcL5qWWLKMUORCChrg/EDytj
+         /mEZ5jrCc5FzC1si2MslaSmste3VoXKbRjv7g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680710851; x=1683302851;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ir3s/Lf5lvCAlrm1TfcesrDtB2jAmtZCISN/6dp3hBc=;
+        b=U4PSScDjbBNYl0ZKA+hfEWrbZUydzohjTBJZ5iccHaDvLb4BnpCADS/KSTTfA4MKx6
+         GalLOrHO7j96Ly+xYhqAEXGHWMzvQreC9GMG3HT4NeKqUFjStyd9HoENeyhlaZW89Lnz
+         WNhUQuEpzoysOzRZM9vo4wpWWsCGGJjzREWPFca2RwKPjAwgSh9qhERuGihqoFafGbfr
+         04tFyFeGSB7biIvBZTEqbtJbxZ8rAdMaje3lqX5ylgpOr9b3lhUBJ/nqMezTNNC/IRB6
+         AQcgzM5HacjoXph8hXXyXn24Tb7eE5Bu/Q0Re+Wetm8yEHFHKlBZqTDCuYolvlwnIoDm
+         1jLQ==
+X-Gm-Message-State: AAQBX9fEFB0LnpzvFBO2PjStF029ULwMYAcWz/7EFvQhXx7rUfwW/Y0M
+	KbZ53QbaCdNUpaQTqMYPMWxmbA==
+X-Google-Smtp-Source: AKy350aQMCCIGd+ttlIn6lmvnbNQhhwBJ1Oi0jxEBwn9z6WIX2aUYNMX4MoVCA82q+F4FspzQF+uZA==
+X-Received: by 2002:a17:906:10c9:b0:931:4285:ea16 with SMTP id v9-20020a17090610c900b009314285ea16mr2360239ejv.7.1680710851411;
+        Wed, 05 Apr 2023 09:07:31 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-33.fiber7.init7.net. [212.51.149.33])
+        by smtp.gmail.com with ESMTPSA id a23-20020a170906369700b0092a59ee224csm7492153ejc.185.2023.04.05.09.07.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Apr 2023 09:07:31 -0700 (PDT)
+Date: Wed, 5 Apr 2023 18:07:28 +0200
+From: Daniel Vetter <daniel@ffwll.ch>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Daniel Vetter <daniel.vetter@ffwll.ch>,
+	Helge Deller <deller@gmx.de>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linux-Arch <linux-arch@vger.kernel.org>,
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 01/18] fbdev: Prepare generic architecture helpers
+Message-ID: <ZC2cwIJJlyDWge+B@phenom.ffwll.local>
+Mail-Followup-To: Arnd Bergmann <arnd@arndb.de>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Helge Deller <deller@gmx.de>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linux-Arch <linux-arch@vger.kernel.org>,
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org
+References: <20230405150554.30540-1-tzimmermann@suse.de>
+ <20230405150554.30540-2-tzimmermann@suse.de>
+ <92fe3838-41f0-4e27-8467-161553ff724f@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-05_09,2023-04-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 phishscore=0 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 adultscore=0 clxscore=1011 bulkscore=0 spamscore=0
- malwarescore=0 mlxlogscore=438 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2303200000 definitions=main-2304050136
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <92fe3838-41f0-4e27-8467-161553ff724f@app.fastmail.com>
+X-Operating-System: Linux phenom 6.1.0-7-amd64 
 
-On Thu, 2023-03-23 at 17:33 +0100, Niklas Schnelle wrote:
-> We introduce a new HAS_IOPORT Kconfig option to indicate support for I/O
-> Port access. In a future patch HAS_IOPORT=3Dn will disable compilation of
-> the I/O accessor functions inb()/outb() and friends on architectures
-> which can not meaningfully support legacy I/O spaces such as s390.
->=20
-> The following architectures do not select HAS_IOPORT:
->=20
-> * ARC
-> * C-SKY
-> * Hexagon
-> * Nios II
-> * OpenRISC
-> * s390
-> * User-Mode Linux
-> * Xtensa
->=20
-> All other architectures select HAS_IOPORT at least conditionally.
->=20
-> The "depends on" relations on HAS_IOPORT in drivers as well as ifdefs
-> for HAS_IOPORT specific sections will be added in subsequent patches on
-> a per subsystem basis.
->=20
-> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-> Acked-by: Johannes Berg <johannes@sipsolutions.net> # for ARCH=3Dum
-> Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
-> Note: This patch is the initial patch of a larger series[0]. This patch
-> introduces the HAS_IOPORT config option while the rest of the series adds
-> driver dependencies and the final patch removes inb() / outb() and friend=
-s on
-> platforms that don't support them.=20
->=20
-> Thus each of the per-subsystem patches is independent from each other but
-> depends on this patch while the final patch depends on the whole series. =
-Thus
-> splitting this initial patch off allows the per-subsytem HAS_IOPORT depen=
-dency
-> addition be merged separately via different trees without breaking the bu=
-ild.
->=20
-> [0] https://lore.kernel.org/lkml/20230314121216.413434-1-schnelle@linux.i=
-bm.com/
->=20
-> Changes since v3:
-> - List archs without HAS_IOPORT in commit message (Arnd)
-> - Select HAS_IOPORT for LoongArch (Arnd)
-> - Use "select HAS_IOPORT if (E)ISA || .." instead of a "depends on" for (=
-E)ISA
->   for m68k and parisc
-> - Select HAS_IOPORT with config GSC on parisc (Arnd)
-> - Drop "depends on HAS_IOPORT" for um's config ISA (Johannes)
-> - Drop "depends on HAS_IOPORT" for config ISA on x86 and parisc where it =
-is
->   always selected (Arnd)
->=20
+On Wed, Apr 05, 2023 at 05:53:03PM +0200, Arnd Bergmann wrote:
+> On Wed, Apr 5, 2023, at 17:05, Thomas Zimmermann wrote:
+> > Generic implementations of fb_pgprotect() and fb_is_primary_device()
+> > have been in the source code for a long time. Prepare the header file
+> > to make use of them.
+> >
+> > Improve the code by using an inline function for fb_pgprotect() and
+> > by removing include statements.
+> >
+> > Symbols are protected by preprocessor guards. Architectures that
+> > provide a symbol need to define a preprocessor token of the same
+> > name and value. Otherwise the header file will provide a generic
+> > implementation. This pattern has been taken from <asm/io.h>.
+> >
+> > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> 
+> Moving this into generic code is good, but I'm not sure
+> about the default for fb_pgprotect():
+> 
+> > +
+> > +#ifndef fb_pgprotect
+> > +#define fb_pgprotect fb_pgprotect
+> > +static inline void fb_pgprotect(struct file *file, struct vm_area_struct *vma,
+> > +				unsigned long off)
+> > +{ }
+> > +#endif
+> 
+> I think most architectures will want the version we have on
+> arc, arm, arm64, loongarch, and sh already:
+> 
+> static inline void fb_pgprotect(struct file *file, struct vm_area_struct *vma,
+>                                 unsigned long off)
+> {
+>        vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
+> }
+> 
+> so I'd suggest making that version the default, and treating the
+> empty ones (m68knommu, sparc32) as architecture specific
+> workarounds.
 
-Gentle ping. As far as I can tell this hasn't been picked to any tree
-sp far but also hasn't seen complains so I'm wondering if I should send
-a new version of the combined series of this patch plus the added
-HAS_IOPORT dependencies per subsystem or wait until this is picked up.
+Yeah I was about to type the same suggestion :-)
+-Daniel
 
-Thanks,
-Niklas
+ 
+> I see that sparc64 and parisc use pgprot_uncached here, but as
+> they don't define a custom pgprot_writecombine, this ends up being
+> the same, and they can use the above definition as well.
+> 
+> mips defines pgprot_writecombine but uses pgprot_noncached
+> in fb_pgprotect(), which is probably a mistake and should have
+> been updated as part of commit 4b050ba7a66c ("MIPS: pgtable.h:
+> Implement the pgprot_writecombine function for MIPS").
+> 
+>     Arnd
 
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
