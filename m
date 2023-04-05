@@ -1,114 +1,154 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164E03234
-	for <loongarch@lists.linux.dev>; Wed,  5 Apr 2023 18:53:57 +0000 (UTC)
-Received: by mail-qk1-f172.google.com with SMTP id q2so12196512qki.3
-        for <loongarch@lists.linux.dev>; Wed, 05 Apr 2023 11:53:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680720837;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DRtXFO8p+VJqvb8EGOqoRE2s3RWE1f66fx+Rp1t5D9o=;
-        b=OMlSV93FLik5uu6Z8lBQaDkNCKwnSNM3KQNtekolqO7lEAxeuPLjS7vAMwzAzhfHZ9
-         iiFaH/lpB9PdL8VEOyRPJ2pWuyf0eRnq8GXT9u4Qo7TmPlJABcbGiYYymYezYDB9VYTc
-         xkNWzfRwbvB7nsbQtDV4/jeva/rzwD/SG5iPLBdW1yU5S04rD1O1LmD0uMbkKZ9cGtiw
-         +p904lLQLMu8a2ioQfdd0zG/38JialqxNkswfgAIGzhFtqnihwTUUxXK7+i0iOfKFj0n
-         RxGvXaOp6UMT9qYlKaIWuENHXQXsbghZYBb+ZiWjtEDaJJlLAe6PZq1h6UR5rPhPq351
-         o8gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680720837;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DRtXFO8p+VJqvb8EGOqoRE2s3RWE1f66fx+Rp1t5D9o=;
-        b=v2Rf4sElptSdGBAmVjAZ6VvkLdOka5WXyyjV2EMop4DPKSOuBmQ0Y8m4pUJExRFvLs
-         DiUKb8DEgGhh4dXtZcBwmnLZdtfVY3UZe3L0cXJBDUydRb9h5YyqqqJGU0KSYlXq18Z8
-         6ZLRxDBVxGE4SAhzy4ZG5SIfRm1GnbBTnVlSgCK9wCfputnER99pzzthHJ4FWIfZukLq
-         z/2UjgSfwHhzeToDKFProKU1uoKdkNUjM/zGIdIJy/tcUN215vWHl/Dsi/Zb72yILCf5
-         05+o7arfchknB9pPxYkMXrK3xk901jqht2cQl8O38X+zd+tQ4mFz2deqz0rQ3x6rGeek
-         spHA==
-X-Gm-Message-State: AAQBX9faFKDEYBu1FOq6GdnqSMOpKoNyhiKeMmyER+Cade339ZbFLQhc
-	GSKOGXepw8bkAy8hKRscD72IkPEAc8shf9SFCmo=
-X-Google-Smtp-Source: AKy350aArjUI2H96/efNuT4p4Gns0LFchwaT84DgmUSYAPmyhG0Hxnacumi6y7a0qpoFL35F7ev0gS5BSSlbBVcMbIg=
-X-Received: by 2002:a05:620a:280a:b0:745:7249:49ed with SMTP id
- f10-20020a05620a280a00b00745724949edmr1345672qkp.6.1680720836842; Wed, 05 Apr
- 2023 11:53:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C6D749A
+	for <loongarch@lists.linux.dev>; Wed,  5 Apr 2023 20:24:06 +0000 (UTC)
+Received: from [127.0.0.1] ([73.223.221.228])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 335K0Sot3654908
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 5 Apr 2023 13:00:29 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 335K0Sot3654908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2023030901; t=1680724836;
+	bh=e+7idCFcOldUdf6Kn1N4qPSHOAd8AGbMfDqGpl68/MY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=EcXIoUqgD3GVk8dx9ASffLO9ApOOB/n4lbb3fej1ORvYHN0/iMb/OoqoAXejO+Zl0
+	 Rw/g8eHLmO+3g1cgp+fB4K8y/Tv66bULY41CG0VNoNe1xXssQzoSffnMPSdWphcYwf
+	 ZzGlpNJKo4CsJ2a2nk0pmTpZD0wBYq7o8dQL4gvncAtMrlBPm5aJCuPjVQ630EH6kU
+	 RTKT9BP7sk08N3WlXh3R+KcPbOQKrbUAmaN/sN+VsgfhU1MyFvVfA0l5ideAWavhGi
+	 1hSCNrnhuIGoxexs5BAE4C0+dBVdtOYUI9AG6FgCpZuqROhanSelavXMtP8wX3ELEQ
+	 7+LEVmStcCTzw==
+Date: Wed, 05 Apr 2023 13:00:27 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Niklas Schnelle <schnelle@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Yoshinori Sato <ysato@users.osdn.me>, Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?ISO-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
+        Arnd Bergmann <arnd@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-m68k@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v4=5D_Kconfig=3A_introduce_HAS=5FI?= =?US-ASCII?Q?OPORT_option_and_select_it_as_necessary?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <248a41a536d5a3c9e81e8e865b34c5bf74cd36d4.camel@linux.ibm.com>
+References: <20230323163354.1454196-1-schnelle@linux.ibm.com> <248a41a536d5a3c9e81e8e865b34c5bf74cd36d4.camel@linux.ibm.com>
+Message-ID: <B1EC1AC7-6BB5-4B66-B171-24687C3CBFB3@zytor.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230405141710.3551-1-ubizjak@gmail.com> <7360ffd2-a5aa-1373-8309-93e71ff36cbb@intel.com>
-In-Reply-To: <7360ffd2-a5aa-1373-8309-93e71ff36cbb@intel.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Wed, 5 Apr 2023 20:53:45 +0200
-Message-ID: <CAFULd4a6u=LB0ivfHtHt=jRxeJeLWuBot=Pync6pbrvKi=CdjA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
-To: Dave Hansen <dave.hansen@intel.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-alpha@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, 
-	linux-arch@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Jun Yi <yijun@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 5, 2023 at 6:37=E2=80=AFPM Dave Hansen <dave.hansen@intel.com> =
-wrote:
+On April 5, 2023 8:12:38 AM PDT, Niklas Schnelle <schnelle@linux=2Eibm=2Eco=
+m> wrote:
+>On Thu, 2023-03-23 at 17:33 +0100, Niklas Schnelle wrote:
+>> We introduce a new HAS_IOPORT Kconfig option to indicate support for I/=
+O
+>> Port access=2E In a future patch HAS_IOPORT=3Dn will disable compilatio=
+n of
+>> the I/O accessor functions inb()/outb() and friends on architectures
+>> which can not meaningfully support legacy I/O spaces such as s390=2E
+>>=20
+>> The following architectures do not select HAS_IOPORT:
+>>=20
+>> * ARC
+>> * C-SKY
+>> * Hexagon
+>> * Nios II
+>> * OpenRISC
+>> * s390
+>> * User-Mode Linux
+>> * Xtensa
+>>=20
+>> All other architectures select HAS_IOPORT at least conditionally=2E
+>>=20
+>> The "depends on" relations on HAS_IOPORT in drivers as well as ifdefs
+>> for HAS_IOPORT specific sections will be added in subsequent patches on
+>> a per subsystem basis=2E
+>>=20
+>> Co-developed-by: Arnd Bergmann <arnd@kernel=2Eorg>
+>> Signed-off-by: Arnd Bergmann <arnd@kernel=2Eorg>
+>> Acked-by: Johannes Berg <johannes@sipsolutions=2Enet> # for ARCH=3Dum
+>> Acked-by: Geert Uytterhoeven <geert@linux-m68k=2Eorg>
+>> Signed-off-by: Niklas Schnelle <schnelle@linux=2Eibm=2Ecom>
+>> ---
+>> Note: This patch is the initial patch of a larger series[0]=2E This pat=
+ch
+>> introduces the HAS_IOPORT config option while the rest of the series ad=
+ds
+>> driver dependencies and the final patch removes inb() / outb() and frie=
+nds on
+>> platforms that don't support them=2E=20
+>>=20
+>> Thus each of the per-subsystem patches is independent from each other b=
+ut
+>> depends on this patch while the final patch depends on the whole series=
+=2E Thus
+>> splitting this initial patch off allows the per-subsytem HAS_IOPORT dep=
+endency
+>> addition be merged separately via different trees without breaking the =
+build=2E
+>>=20
+>> [0] https://lore=2Ekernel=2Eorg/lkml/20230314121216=2E413434-1-schnelle=
+@linux=2Eibm=2Ecom/
+>>=20
+>> Changes since v3:
+>> - List archs without HAS_IOPORT in commit message (Arnd)
+>> - Select HAS_IOPORT for LoongArch (Arnd)
+>> - Use "select HAS_IOPORT if (E)ISA || =2E=2E" instead of a "depends on"=
+ for (E)ISA
+>>   for m68k and parisc
+>> - Select HAS_IOPORT with config GSC on parisc (Arnd)
+>> - Drop "depends on HAS_IOPORT" for um's config ISA (Johannes)
+>> - Drop "depends on HAS_IOPORT" for config ISA on x86 and parisc where i=
+t is
+>>   always selected (Arnd)
+>>=20
 >
-> On 4/5/23 07:17, Uros Bizjak wrote:
-> > Add generic and target specific support for local{,64}_try_cmpxchg
-> > and wire up support for all targets that use local_t infrastructure.
+>Gentle ping=2E As far as I can tell this hasn't been picked to any tree
+>sp far but also hasn't seen complains so I'm wondering if I should send
+>a new version of the combined series of this patch plus the added
+>HAS_IOPORT dependencies per subsystem or wait until this is picked up=2E
 >
-> I feel like I'm missing some context.
+>Thanks,
+>Niklas
 >
-> What are the actual end user visible effects of this series?  Is there a
-> measurable decrease in perf overhead?  Why go to all this trouble for
-> perf?  Who else will use local_try_cmpxchg()?
+>
 
-This functionality was requested by perf people [1], so perhaps Steven
-can give us some concrete examples. In general, apart from the removal
-of unneeded compare instruction on x86, usage of try_cmpxchg also
-results in slightly better code on non-x86 targets [2], since the code
-now correctly identifies fast-path through the cmpxchg loop.
+You need this on a system supporting not just ISA but also PCI=2E
 
-Also important is that try_cmpxchg code reuses the result of cmpxchg
-instruction in the loop, so a read from the memory in the loop is
-eliminated. When reviewing the cmpxchg usage sites, I found numerous
-places where unnecessary read from memory was present in the loop, two
-examples can be seen in the last patch of this series.
-
-Also, using try_cmpxchg prevents inconsistencies of the cmpxchg loop,
-where the result of the cmpxchg is compared with the wrong "old" value
-- one such bug is still lurking in x86 APIC code, please see [3].
-
-Please note that apart from perf subsystem, event subsystem can also
-be improved by using local_try_cmpxchg. This is the reason that the
-last patch includes a change in events/core.c.
-
-> I'm all for improving things, and perf is an important user.  But, if
-> the goal here is improving performance, it would be nice to see at least
-> a stab at quantifying the performance delta.
-
-[1] https://lore.kernel.org/lkml/20230301131831.6c8d4ff5@gandalf.local.home=
-/
-[2] https://lore.kernel.org/lkml/Yo91omfDZtTgXhyn@FVFF77S0Q05N.cambridge.ar=
-m.com/
-[3] https://lore.kernel.org/lkml/20230227160917.107820-1-ubizjak@gmail.com/
-
-Uros.
+Typically on non-x86 architectures this is simply mapped into a memory win=
+dow=2E
