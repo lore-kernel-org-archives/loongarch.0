@@ -1,43 +1,43 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF1933EA
-	for <loongarch@lists.linux.dev>; Wed,  5 Apr 2023 14:17:50 +0000 (UTC)
-Received: by mail-ed1-f48.google.com with SMTP id b20so141489502edd.1
-        for <loongarch@lists.linux.dev>; Wed, 05 Apr 2023 07:17:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D313C0F
+	for <loongarch@lists.linux.dev>; Wed,  5 Apr 2023 14:17:51 +0000 (UTC)
+Received: by mail-ed1-f50.google.com with SMTP id r11so141500279edd.5
+        for <loongarch@lists.linux.dev>; Wed, 05 Apr 2023 07:17:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680704268;
+        d=gmail.com; s=20210112; t=1680704270;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IR5uya/6k59Z6vjpJ5eLjtKZNYMu0vN6LL4bpPspKvA=;
-        b=hzv4HYQ5T2nwEJbzGw8dJN/I+F4Ay7RqJgdT+/nU+XX7ZoGg8P8l9L8teClCdkpmvP
-         3VP7uCz0Z+YqdgWXL+MH2tFmXHoR+WPJu2bf+Fr9qb/QvhkGpEoSrJ0NhG0eAx/0QiTJ
-         UQgtBAkuIqKtB9v5p/5vYSrI08EmluGXK/WD03V/0fdbsdMfx/eWMRDY+C4T7hDoaYaj
-         NOE2x6GoeZ01oYXffPbqWgJlIPw1nNp4nyMKkgNQHZrTuLm7YYwS07BBvNmSqjpH876L
-         /ISIl/kFQdHhrGtYe0xrraw5d1lTLHXAuQ1Znq44pBtvm8+Xiwqr3RT/FspKMHRWIraX
-         TSSA==
+        bh=5Aezn9KwOiaMHT8QBIvXqxw3/7pRoTbwoU4+L6kaZfo=;
+        b=h6B0D1guAAz/+Fh3o2MFRuBp2njF7Fye/Xxf2r9nX8V7xNi91MOio5aDjUQBXijRT0
+         75EwXqWNYR/1gi60t0DEKttu9WLaqB3/MY8gXnTwiu4Oz4MkVmFrs2JDhb+L8fnPcptQ
+         7nrJoQYBcxE0Ipea11+gFcYnJH92f8uuVoDqyuTltBWba1oiCcF6uWTEYtwCT5xdTLlI
+         qcI67O3MKKtm2Ll2/izFTSnFMbusRse/8HmyoHl63V/KzowbwYrV1X/+8pt5J0I287/X
+         g/ngG/l9UiDfge5nIclREoyJnIxf0VVxBnBlDK8hGh94SIMNrCXES8Wpb/gmo+IR/6pP
+         21wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680704268;
+        d=1e100.net; s=20210112; t=1680704270;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IR5uya/6k59Z6vjpJ5eLjtKZNYMu0vN6LL4bpPspKvA=;
-        b=SB0ySdF9bbF2kKBBLhnw5OLd6wPCh91uwEZjrSxgIFrO/9SECV4LmUwXvDSIUeVbb4
-         ehJ0PjsUoLfMNsbccMBLWGN8USfp0i2z4fblErHSwtrJfo5XugoRvLjr0Vh0HH10W5I5
-         C3doOxmGf4OXshlrY42BnLv4Bo10efekMx3XI3kMvcqPKOawPq8lIqK8tsXE41R997KN
-         fey6qzJXkg6h9IdoxwIpc5qbVrmAhTTgddA3JV9f/t8Tke+0w/9rhzV7n55PRirAsIwB
-         DgKJn8KmgJ+7yZDxKMfQGtZvff92/UFZEysBlGRj1xxu871x6peEQHrNc+QS+CY8ucEF
-         rHNQ==
-X-Gm-Message-State: AAQBX9eRznOI1QCvlTO8UHFcFdL0w8l3DtNhOcuhXBMeWfO9mMFKZt3B
-	1an+eInjO54lJdZeH8r0+iU=
-X-Google-Smtp-Source: AKy350apZB614sloiIbQFvOjRXtcEBijYMBgr256Z113Bx8z9JeSHopzv9p9oPRNRJ0o5MWKc6tu/g==
-X-Received: by 2002:a17:906:ece1:b0:93d:ae74:fa9e with SMTP id qt1-20020a170906ece100b0093dae74fa9emr3077789ejb.7.1680704268119;
-        Wed, 05 Apr 2023 07:17:48 -0700 (PDT)
+        bh=5Aezn9KwOiaMHT8QBIvXqxw3/7pRoTbwoU4+L6kaZfo=;
+        b=oN65DR09Qwe17EPKTpl0pnqcLrMJCj1ahbpIXR3AjpBWt5wSoptp5Z3f9bFtZob1a3
+         Zs3OBcCm0ndN0GqpCtZJSYjDarT89QdRDkxsxrQEF77eekqU1njQvZpa1AFLFJOQRUR+
+         uoEPl1GYkEAEaaOzrSzC2GGx530hlo5JZKhkvfSU6BYUYo1h1mpk+nCmpwOzhDCJ9yhM
+         jM1GZPlOXGD1a33ARbTVbK1BWRAkBUrHip+j247/CDoEB1ljMUEIvxudxaEY0Zhlqx/t
+         22I1sdr/j3UIJXdcMdIDDGAZl7twiVocqvO/luJYIZPcV1I1Ar+ztRTC1lVCYm7jYvN/
+         OFbg==
+X-Gm-Message-State: AAQBX9f1AMp1g/BqPdkALtj96/taXF6+nS6vhscbz4LQjhbzwklLtN8Q
+	bmEuhadYG97Ky5RmPB8marg=
+X-Google-Smtp-Source: AKy350Z/3xgh/xSykpZuUX3JQoJOOenna0pCFqtY30j4WZoVD6fIcb1JmDg2U9Ji+C4VhgW2S0ytyw==
+X-Received: by 2002:a17:906:d977:b0:8b0:f277:5cde with SMTP id rp23-20020a170906d97700b008b0f2775cdemr3133825ejb.32.1680704270128;
+        Wed, 05 Apr 2023 07:17:50 -0700 (PDT)
 Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id g6-20020a170906348600b009334219656dsm7381246ejb.56.2023.04.05.07.17.47
+        by smtp.gmail.com with ESMTPSA id g6-20020a170906348600b009334219656dsm7381246ejb.56.2023.04.05.07.17.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 07:17:47 -0700 (PDT)
+        Wed, 05 Apr 2023 07:17:49 -0700 (PDT)
 From: Uros Bizjak <ubizjak@gmail.com>
 To: linux-alpha@vger.kernel.org,
 	loongarch@lists.linux.dev,
@@ -48,13 +48,10 @@ To: linux-alpha@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2 1/5] locking/atomic: Add generic try_cmpxchg{,64}_local support
-Date: Wed,  5 Apr 2023 16:17:06 +0200
-Message-Id: <20230405141710.3551-2-ubizjak@gmail.com>
+	Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2 2/5] locking/generic: Wire up local{,64}_try_cmpxchg
+Date: Wed,  5 Apr 2023 16:17:07 +0200
+Message-Id: <20230405141710.3551-3-ubizjak@gmail.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230405141710.3551-1-ubizjak@gmail.com>
 References: <20230405141710.3551-1-ubizjak@gmail.com>
@@ -66,125 +63,65 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add generic support for try_cmpxchg{,64}_local and their falbacks.
+Implement generic support for local{,64}_try_cmpxchg.
 
-These provides the generic try_cmpxchg_local family of functions
-from the arch_ prefixed version, also adding explicit instrumentation.
+Redirect to the atomic_ family of functions when the target
+does not provide its own local.h definitions.
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+For 64-bit targets, implement local64_try_cmpxchg and
+local64_cmpxchg using typed C wrappers that call local_
+family of functions and provide additional checking
+of their input arguments.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 ---
- include/linux/atomic/atomic-arch-fallback.h | 24 ++++++++++++++++++++-
- include/linux/atomic/atomic-instrumented.h  | 20 ++++++++++++++++-
- scripts/atomic/gen-atomic-fallback.sh       |  4 ++++
- scripts/atomic/gen-atomic-instrumented.sh   |  2 +-
- 4 files changed, 47 insertions(+), 3 deletions(-)
+ include/asm-generic/local.h   |  1 +
+ include/asm-generic/local64.h | 12 +++++++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/atomic/atomic-arch-fallback.h b/include/linux/atomic/atomic-arch-fallback.h
-index 77bc5522e61c..36c92851cdee 100644
---- a/include/linux/atomic/atomic-arch-fallback.h
-+++ b/include/linux/atomic/atomic-arch-fallback.h
-@@ -217,6 +217,28 @@
+diff --git a/include/asm-generic/local.h b/include/asm-generic/local.h
+index fca7f1d84818..7f97018df66f 100644
+--- a/include/asm-generic/local.h
++++ b/include/asm-generic/local.h
+@@ -42,6 +42,7 @@ typedef struct
+ #define local_inc_return(l) atomic_long_inc_return(&(l)->a)
  
- #endif /* arch_try_cmpxchg64_relaxed */
+ #define local_cmpxchg(l, o, n) atomic_long_cmpxchg((&(l)->a), (o), (n))
++#define local_try_cmpxchg(l, po, n) atomic_long_try_cmpxchg((&(l)->a), (po), (n))
+ #define local_xchg(l, n) atomic_long_xchg((&(l)->a), (n))
+ #define local_add_unless(l, _a, u) atomic_long_add_unless((&(l)->a), (_a), (u))
+ #define local_inc_not_zero(l) atomic_long_inc_not_zero(&(l)->a)
+diff --git a/include/asm-generic/local64.h b/include/asm-generic/local64.h
+index 765be0b7d883..14963a7a6253 100644
+--- a/include/asm-generic/local64.h
++++ b/include/asm-generic/local64.h
+@@ -42,7 +42,16 @@ typedef struct {
+ #define local64_sub_return(i, l) local_sub_return((i), (&(l)->a))
+ #define local64_inc_return(l)	local_inc_return(&(l)->a)
  
-+#ifndef arch_try_cmpxchg_local
-+#define arch_try_cmpxchg_local(_ptr, _oldp, _new) \
-+({ \
-+	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \
-+	___r = arch_cmpxchg_local((_ptr), ___o, (_new)); \
-+	if (unlikely(___r != ___o)) \
-+		*___op = ___r; \
-+	likely(___r == ___o); \
-+})
-+#endif /* arch_try_cmpxchg_local */
+-#define local64_cmpxchg(l, o, n) local_cmpxchg((&(l)->a), (o), (n))
++static inline s64 local64_cmpxchg(local64_t *l, s64 old, s64 new)
++{
++	return local_cmpxchg(&l->a, old, new);
++}
 +
-+#ifndef arch_try_cmpxchg64_local
-+#define arch_try_cmpxchg64_local(_ptr, _oldp, _new) \
-+({ \
-+	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \
-+	___r = arch_cmpxchg64_local((_ptr), ___o, (_new)); \
-+	if (unlikely(___r != ___o)) \
-+		*___op = ___r; \
-+	likely(___r == ___o); \
-+})
-+#endif /* arch_try_cmpxchg64_local */
++static inline bool local64_try_cmpxchg(local64_t *l, s64 *old, s64 new)
++{
++	return local_try_cmpxchg(&l->a, (long *)old, new);
++}
 +
- #ifndef arch_atomic_read_acquire
- static __always_inline int
- arch_atomic_read_acquire(const atomic_t *v)
-@@ -2456,4 +2478,4 @@ arch_atomic64_dec_if_positive(atomic64_t *v)
- #endif
+ #define local64_xchg(l, n)	local_xchg((&(l)->a), (n))
+ #define local64_add_unless(l, _a, u) local_add_unless((&(l)->a), (_a), (u))
+ #define local64_inc_not_zero(l)	local_inc_not_zero(&(l)->a)
+@@ -81,6 +90,7 @@ typedef struct {
+ #define local64_inc_return(l)	atomic64_inc_return(&(l)->a)
  
- #endif /* _LINUX_ATOMIC_FALLBACK_H */
--// b5e87bdd5ede61470c29f7a7e4de781af3770f09
-+// 1f49bd4895a4b7a5383906649027205c52ec80ab
-diff --git a/include/linux/atomic/atomic-instrumented.h b/include/linux/atomic/atomic-instrumented.h
-index 7a139ec030b0..14a9212cc987 100644
---- a/include/linux/atomic/atomic-instrumented.h
-+++ b/include/linux/atomic/atomic-instrumented.h
-@@ -2066,6 +2066,24 @@ atomic_long_dec_if_positive(atomic_long_t *v)
- 	arch_sync_cmpxchg(__ai_ptr, __VA_ARGS__); \
- })
- 
-+#define try_cmpxchg_local(ptr, oldp, ...) \
-+({ \
-+	typeof(ptr) __ai_ptr = (ptr); \
-+	typeof(oldp) __ai_oldp = (oldp); \
-+	instrument_atomic_write(__ai_ptr, sizeof(*__ai_ptr)); \
-+	instrument_atomic_write(__ai_oldp, sizeof(*__ai_oldp)); \
-+	arch_try_cmpxchg_local(__ai_ptr, __ai_oldp, __VA_ARGS__); \
-+})
-+
-+#define try_cmpxchg64_local(ptr, oldp, ...) \
-+({ \
-+	typeof(ptr) __ai_ptr = (ptr); \
-+	typeof(oldp) __ai_oldp = (oldp); \
-+	instrument_atomic_write(__ai_ptr, sizeof(*__ai_ptr)); \
-+	instrument_atomic_write(__ai_oldp, sizeof(*__ai_oldp)); \
-+	arch_try_cmpxchg64_local(__ai_ptr, __ai_oldp, __VA_ARGS__); \
-+})
-+
- #define cmpxchg_double(ptr, ...) \
- ({ \
- 	typeof(ptr) __ai_ptr = (ptr); \
-@@ -2083,4 +2101,4 @@ atomic_long_dec_if_positive(atomic_long_t *v)
- })
- 
- #endif /* _LINUX_ATOMIC_INSTRUMENTED_H */
--// 764f741eb77a7ad565dc8d99ce2837d5542e8aee
-+// 456e206c7e4e681126c482e4edcc6f46921ac731
-diff --git a/scripts/atomic/gen-atomic-fallback.sh b/scripts/atomic/gen-atomic-fallback.sh
-index 3a07695e3c89..6e853f0dad8d 100755
---- a/scripts/atomic/gen-atomic-fallback.sh
-+++ b/scripts/atomic/gen-atomic-fallback.sh
-@@ -225,6 +225,10 @@ for cmpxchg in "cmpxchg" "cmpxchg64"; do
- 	gen_try_cmpxchg_fallbacks "${cmpxchg}"
- done
- 
-+for cmpxchg in "cmpxchg_local" "cmpxchg64_local"; do
-+	gen_try_cmpxchg_fallback "${cmpxchg}" ""
-+done
-+
- grep '^[a-z]' "$1" | while read name meta args; do
- 	gen_proto "${meta}" "${name}" "atomic" "int" ${args}
- done
-diff --git a/scripts/atomic/gen-atomic-instrumented.sh b/scripts/atomic/gen-atomic-instrumented.sh
-index 77c06526a574..c8165e9431bf 100755
---- a/scripts/atomic/gen-atomic-instrumented.sh
-+++ b/scripts/atomic/gen-atomic-instrumented.sh
-@@ -173,7 +173,7 @@ for xchg in "xchg" "cmpxchg" "cmpxchg64" "try_cmpxchg" "try_cmpxchg64"; do
- 	done
- done
- 
--for xchg in "cmpxchg_local" "cmpxchg64_local" "sync_cmpxchg"; do
-+for xchg in "cmpxchg_local" "cmpxchg64_local" "sync_cmpxchg" "try_cmpxchg_local" "try_cmpxchg64_local" ; do
- 	gen_xchg "${xchg}" "" ""
- 	printf "\n"
- done
+ #define local64_cmpxchg(l, o, n) atomic64_cmpxchg((&(l)->a), (o), (n))
++#define local64_try_cmpxchg(l, po, n) atomic64_try_cmpxchg((&(l)->a), (po), (n))
+ #define local64_xchg(l, n)	atomic64_xchg((&(l)->a), (n))
+ #define local64_add_unless(l, _a, u) atomic64_add_unless((&(l)->a), (_a), (u))
+ #define local64_inc_not_zero(l)	atomic64_inc_not_zero(&(l)->a)
 -- 
 2.39.2
 
