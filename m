@@ -1,42 +1,42 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A768B846D
-	for <loongarch@lists.linux.dev>; Thu,  6 Apr 2023 14:30:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A178471
+	for <loongarch@lists.linux.dev>; Thu,  6 Apr 2023 14:30:33 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5FF952277F;
-	Thu,  6 Apr 2023 14:30:29 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 75E252277D;
+	Thu,  6 Apr 2023 14:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1680791429; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1680791427; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=izY6+qBDYEUqkeroQbujW+njsCjxZaJEANgDBVtEYP0=;
-	b=Eq3wThr5sSaM5XKjRQ2hGczBzmIDcmKgi6/3rnbG6lLm88bRerfuw5AlWjO2bTcypkio4z
-	WHiJjeSyV3swrqR2BoWihoUqtfDndPAXEVVo4mD90cNZUPq8UzMKQ/qCZL3UrUyySl8zIs
-	2UwfYtRioVUvIRQEhjUmG9QUafaqcgI=
+	bh=q+mpH3lWZVvZZw0GybWkLSjYq5BHB3GhQ0nOupAiXow=;
+	b=UxnzXeFODMJJDuqjyoc1E+ZiDj0weNshjPMaS+iJ3CCTdva4+xgdFRYRli8iX+/x0t6/Fk
+	sGUdfOGT3Up18RS/0rfJPblcXVqHU6HmxEH5051pVV1Ojic8HcKm7PvteZOpKpDZWovCrv
+	viJdQGq3yzKLlAPoXafQOPBF97xacWE=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1680791429;
+	s=susede2_ed25519; t=1680791427;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=izY6+qBDYEUqkeroQbujW+njsCjxZaJEANgDBVtEYP0=;
-	b=1J6JJEWpwMxRTrmlEmPtUMDMnzL3GEksxPIT1Sjc2pgaKnnLSEbQ/eN8fQP3LuZPYSxTQA
-	i2c6m9W/RP2BrRAA==
+	bh=q+mpH3lWZVvZZw0GybWkLSjYq5BHB3GhQ0nOupAiXow=;
+	b=iO1KHIOvtsxPbMNd0a/ZQZhpo74giMMe6Hue8jyuBgHhKEbIhoT0UwDGX4J3iuP+WaHmcQ
+	KqO9jBNOG1lT6hAQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DA9E413A1D;
-	Thu,  6 Apr 2023 14:30:28 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 113A013A1D;
+	Thu,  6 Apr 2023 14:30:27 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 0KxiNITXLmS4LgAAMHmgww
-	(envelope-from <tzimmermann@suse.de>); Thu, 06 Apr 2023 14:30:28 +0000
+	id kPIVA4PXLmS4LgAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Thu, 06 Apr 2023 14:30:27 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: arnd@arndb.de,
 	daniel.vetter@ffwll.ch,
@@ -59,14 +59,12 @@ Cc: linux-arch@vger.kernel.org,
 	sparclinux@vger.kernel.org,
 	x86@kernel.org,
 	Thomas Zimmermann <tzimmermann@suse.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v2 19/19] arch/x86: Implement <asm/fb.h> with generic helpers
-Date: Thu,  6 Apr 2023 16:30:19 +0200
-Message-Id: <20230406143019.6709-20-tzimmermann@suse.de>
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v2 15/19] arch/powerpc: Implement <asm/fb.h> with generic helpers
+Date: Thu,  6 Apr 2023 16:30:15 +0200
+Message-Id: <20230406143019.6709-16-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230406143019.6709-1-tzimmermann@suse.de>
 References: <20230406143019.6709-1-tzimmermann@suse.de>
@@ -78,51 +76,44 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Include <asm-generic/fb.h> and set the required preprocessor tokens
-correctly. x86 now implements its own set of fb helpers, but still
-follows the overall pattern.
+Replace the architecture's fb_is_primary_device() with the generic
+one from <asm-generic/fb.h>. No functional changes.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/x86/include/asm/fb.h | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/powerpc/include/asm/fb.h | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/fb.h b/arch/x86/include/asm/fb.h
-index ab4c960146e3..a3fb801f12f1 100644
---- a/arch/x86/include/asm/fb.h
-+++ b/arch/x86/include/asm/fb.h
-@@ -2,10 +2,11 @@
- #ifndef _ASM_X86_FB_H
- #define _ASM_X86_FB_H
+diff --git a/arch/powerpc/include/asm/fb.h b/arch/powerpc/include/asm/fb.h
+index 6541ab77c5b9..5f1a2e5f7654 100644
+--- a/arch/powerpc/include/asm/fb.h
++++ b/arch/powerpc/include/asm/fb.h
+@@ -2,8 +2,8 @@
+ #ifndef _ASM_FB_H_
+ #define _ASM_FB_H_
  
 -#include <linux/fb.h>
--#include <linux/fs.h>
+ #include <linux/fs.h>
++
  #include <asm/page.h>
  
-+struct fb_info;
-+struct file;
-+
  static inline void fb_pgprotect(struct file *file, struct vm_area_struct *vma,
- 				unsigned long off)
- {
-@@ -16,7 +17,11 @@ static inline void fb_pgprotect(struct file *file, struct vm_area_struct *vma,
- 		pgprot_val(vma->vm_page_prot) =
- 			prot | cachemode2protval(_PAGE_CACHE_MODE_UC_MINUS);
+@@ -13,10 +13,8 @@ static inline void fb_pgprotect(struct file *file, struct vm_area_struct *vma,
+ 						 vma->vm_end - vma->vm_start,
+ 						 vma->vm_page_prot);
  }
 +#define fb_pgprotect fb_pgprotect
-+
-+int fb_is_primary_device(struct fb_info *info);
-+#define fb_is_primary_device fb_is_primary_device
  
--extern int fb_is_primary_device(struct fb_info *info);
+-static inline int fb_is_primary_device(struct fb_info *info)
+-{
+-	return 0;
+-}
 +#include <asm-generic/fb.h>
  
- #endif /* _ASM_X86_FB_H */
+ #endif /* _ASM_FB_H_ */
 -- 
 2.40.0
 
