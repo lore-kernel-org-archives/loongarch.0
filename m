@@ -1,95 +1,240 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFABEBF
-	for <loongarch@lists.linux.dev>; Thu,  6 Apr 2023 09:01:57 +0000 (UTC)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-80-upD2WwgLO3ejICcwmG1kqw-1; Thu, 06 Apr 2023 10:01:53 +0100
-X-MC-Unique: upD2WwgLO3ejICcwmG1kqw-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 6 Apr
- 2023 10:01:23 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 6 Apr 2023 10:01:23 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Uros Bizjak' <ubizjak@gmail.com>
-CC: Dave Hansen <dave.hansen@intel.com>, "linux-alpha@vger.kernel.org"
-	<linux-alpha@vger.kernel.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "linux-mips@vger.kernel.org"
-	<linux-mips@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org"
-	<linuxppc-dev@lists.ozlabs.org>, "x86@kernel.org" <x86@kernel.org>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Richard
- Henderson" <richard.henderson@linaro.org>, Ivan Kokshaysky
-	<ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Huacai Chen
-	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Thomas Bogendoerfer
-	<tsbogend@alpha.franken.de>, Michael Ellerman <mpe@ellerman.id.au>, "Nicholas
- Piggin" <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>, "Peter
- Zijlstra" <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Namhyung
- Kim" <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Will Deacon
-	<will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Jiaxun Yang
-	<jiaxun.yang@flygoat.com>, Jun Yi <yijun@loongson.cn>
-Subject: RE: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
-Thread-Topic: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
-Thread-Index: AQHZZ9zo4aQfYkHe8kGrF8tSkNZCGa8d8QYA///04ICAABW6oA==
-Date: Thu, 6 Apr 2023 09:01:23 +0000
-Message-ID: <e464af64ef68488285b1ef3445cbed41@AcuMS.aculab.com>
-References: <20230405141710.3551-1-ubizjak@gmail.com>
- <7360ffd2-a5aa-1373-8309-93e71ff36cbb@intel.com>
- <5c10520ac747430cb421badcb293c706@AcuMS.aculab.com>
- <CAFULd4YPM18B6Nv=-rNd=D0TmCbn64oLvgbDJ3CWc9DsdJG8gg@mail.gmail.com>
-In-Reply-To: <CAFULd4YPM18B6Nv=-rNd=D0TmCbn64oLvgbDJ3CWc9DsdJG8gg@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6737EA
+	for <loongarch@lists.linux.dev>; Thu,  6 Apr 2023 10:36:16 +0000 (UTC)
+Received: from [172.23.196.59] (unknown [121.32.254.147])
+	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 38C2F58045F;
+	Thu,  6 Apr 2023 18:35:53 +0800 (CST)
+Message-ID: <1ee16ad1-925a-411d-c67e-5ddab2fb6074@sangfor.com.cn>
+Date: Thu, 6 Apr 2023 18:35:50 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v10 8/8] selftests/ftrace: Add funcgraph-retval test case
+From: Donglin Peng <pengdonglin@sangfor.com.cn>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: rostedt@goodmis.org, linux@armlinux.org.uk, mark.rutland@arm.com,
+ will@kernel.org, catalin.marinas@arm.com, rmk+kernel@armlinux.org.uk,
+ palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+ tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org, zhangqing@loongson.cn,
+ kernel@xen0n.name, mingo@redhat.com, peterz@infradead.org,
+ xiehuan09@gmail.com, dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
+ dolinux.peng@gmail.com, linux-trace-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
+ <ba23c2429f1ef798946ce65e21c7a7a2bff0019e.1680265828.git.pengdonglin@sangfor.com.cn>
+ <20230402070406.177f09cc34f9860baf3e6ec2@kernel.org>
+ <f4eabd56-2f91-05fc-b882-9dd8328f87ae@sangfor.com.cn>
+ <7088643e-400b-4cd4-edd3-63b3baa36a7c@sangfor.com.cn>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <7088643e-400b-4cd4-edd3-63b3baa36a7c@sangfor.com.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSxhIVktMQktLTUkeGRoaS1UTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKSktISkxVSktLVUtZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PBg6Gjo6Mj0WODNMMDA8CAgy
+	FitPFCpVSlVKTUNLTExMSE5PQ0pMVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+	WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBQ01IQzcG
+X-HM-Tid: 0a8756231c5c2eb7kusn38c2f58045f
+X-HM-MType: 1
 
-RnJvbTogVXJvcyBCaXpqYWsNCj4gU2VudDogMDYgQXByaWwgMjAyMyAwOTozOQ0KPiANCj4gT24g
-VGh1LCBBcHIgNiwgMjAyMyBhdCAxMDoyNuKAr0FNIERhdmlkIExhaWdodCA8RGF2aWQuTGFpZ2h0
-QGFjdWxhYi5jb20+IHdyb3RlOg0KPiA+DQo+ID4gRnJvbTogRGF2ZSBIYW5zZW4NCj4gPiA+IFNl
-bnQ6IDA1IEFwcmlsIDIwMjMgMTc6MzcNCj4gPiA+DQo+ID4gPiBPbiA0LzUvMjMgMDc6MTcsIFVy
-b3MgQml6amFrIHdyb3RlOg0KPiA+ID4gPiBBZGQgZ2VuZXJpYyBhbmQgdGFyZ2V0IHNwZWNpZmlj
-IHN1cHBvcnQgZm9yIGxvY2Fseyw2NH1fdHJ5X2NtcHhjaGcNCj4gPiA+ID4gYW5kIHdpcmUgdXAg
-c3VwcG9ydCBmb3IgYWxsIHRhcmdldHMgdGhhdCB1c2UgbG9jYWxfdCBpbmZyYXN0cnVjdHVyZS4N
-Cj4gPiA+DQo+ID4gPiBJIGZlZWwgbGlrZSBJJ20gbWlzc2luZyBzb21lIGNvbnRleHQuDQo+ID4g
-Pg0KPiA+ID4gV2hhdCBhcmUgdGhlIGFjdHVhbCBlbmQgdXNlciB2aXNpYmxlIGVmZmVjdHMgb2Yg
-dGhpcyBzZXJpZXM/ICBJcyB0aGVyZSBhDQo+ID4gPiBtZWFzdXJhYmxlIGRlY3JlYXNlIGluIHBl
-cmYgb3ZlcmhlYWQ/ICBXaHkgZ28gdG8gYWxsIHRoaXMgdHJvdWJsZSBmb3INCj4gPiA+IHBlcmY/
-ICBXaG8gZWxzZSB3aWxsIHVzZSBsb2NhbF90cnlfY21weGNoZygpPw0KPiA+DQo+ID4gSSdtIGFz
-c3VtaW5nIHRoZSBsb2NhbF94eHggb3BlcmF0aW9ucyBvbmx5IGhhdmUgdG8gYmUgc2F2ZSB3cnQg
-aW50ZXJydXB0cz8NCj4gPiBPbiB4ODYgaXQgaXMgcG9zc2libGUgdGhhdCBhbiBhbHRlcm5hdGUg
-aW5zdHJ1Y3Rpb24gc2VxdWVuY2UNCj4gPiB0aGF0IGRvZXNuJ3QgdXNlIGEgbG9ja2VkIGluc3Ry
-dWN0aW9uIG1heSBhY3R1YWxseSBiZSBmYXN0ZXIhDQo+IA0KPiBQbGVhc2Ugbm90ZSB0aGF0ICJs
-b2NhbCIgZnVuY3Rpb25zIGRvIG5vdCB1c2UgbG9jayBwcmVmaXguIE9ubHkgYXRvbWljDQo+IHBy
-b3BlcnRpZXMgb2YgY21weGNoZyBpbnN0cnVjdGlvbiBhcmUgZXhwbG9pdGVkIHNpbmNlIGl0IG9u
-bHkgbmVlZHMgdG8NCj4gYmUgc2FmZSB3cnQgaW50ZXJydXB0cy4NCg0KR2FoLCBJIHdhcyBhc3N1
-bWluZyB0aGF0IExPQ0sgd2FzIGltcGxpZWQgLSBsaWtlIGl0IGlzIGZvciB4Y2hnDQphbmQgYWxs
-IHRoZSBiaXQgaW5zdHJ1Y3Rpb25zLg0KDQpJbiBhbnkgY2FzZSBJIHN1c3BlY3QgaXQgbWFrZXMg
-bGl0dGxlIGRpZmZlcmVuY2UgdW5sZXNzIHRoZQ0KbG9ja2VkIHZhcmlhbnQgYWZmZWN0cyB0aGUg
-aW5zdHJ1Y3Rpb24gcGlwZWxpbmUuDQpJbiBmYWN0LCB5b3UgbWF5IHdhbnQgdG8gc3RvcCB0aGUg
-Y2FjaGVsaW5lIGJlaW5nIGludmFsaWRhdGVkDQpiZXR3ZWVuIHRoZSByZWFkIGFuZCB3cml0ZSBp
-biBvcmRlciB0byBhdm9pZCBhbiBleHRyYSBjYWNoZQ0KbGluZSBib3VuY2UuDQoNCglEYXZpZA0K
-DQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFy
-bSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAo
-V2FsZXMpDQo=
+On 2023/4/3 13:01, Donglin Peng wrote:
+> On 2023/4/3 10:33, Donglin Peng wrote:
+>> On 2023/4/2 6:04, Masami Hiramatsu (Google) wrote:
+>>> On Fri, 31 Mar 2023 05:47:44 -0700
+>>> Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
+>>>
+>>>> Add a test case for the funcgraph-retval and funcgraph-retval-hex
+>>>> trace options.
+>>>>
+>>>> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+>>>> ---
+>>>> v10:
+>>>>   - Fix issues in selftest
+>>>>
+>>>> v8:
+>>>>   - Fix issues in selftest
+>>>> ---
+>>>>   .../ftrace/test.d/ftrace/fgraph-retval.tc     | 43 
+>>>> +++++++++++++++++++
+>>>>   1 file changed, 43 insertions(+)
+>>>>   create mode 100644 
+>>>> tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+>>>>
+>>>> diff --git 
+>>>> a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc 
+>>>> b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+>>>> new file mode 100644
+>>>> index 000000000000..5819aa2dd6ad
+>>>> --- /dev/null
+>>>> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+>>>> @@ -0,0 +1,43 @@
+>>>> +#!/bin/sh
+>>>> +# SPDX-License-Identifier: GPL-2.0
+>>>> +# description: ftrace - function graph print function return value
+>>>> +# requires: options/funcgraph-retval options/funcgraph-retval-hex 
+>>>> function_graph:tracer
+>>>> +
+>>>> +# Make sure that funcgraph-retval works
+>>>> +
+>>>> +fail() { # msg
+>>>> +    echo $1
+>>>> +    exit_fail
+>>>> +}
+>>>> +
+>>>> +disable_tracing
+>>>> +clear_trace
+>>>> +
+>>>> +read PID _ < /proc/self/stat
+>>>
+>>> You can use "$$" for self pid.
+>>
+>> Yeah, I will fix it.
+> 
+> I found that ftracetest used () to launch a new child process for
+> executing a .tc script file, however the $$ value remains unchanged,
+> so we can not use $$ here, because it is PPID. Therefore I think we
+> have to get PID from /proc/self/stat.
+> 
+> Here is the code from ftracetest that launches a child shell for 
+> executing the .tc file.
+> 
+> __run_test() { # testfile
+>    # setup PID and PPID, $$ is *not* updated.
+>    (cd $TRACING_DIR; read PID _ < /proc/self/stat; set -e; set -x;
+>     checkreq $1; initialize_ftrace; . $1)
+>    [ $? -ne 0 ] && kill -s $SIG_FAIL $SIG_PID
+> }
+> 
+>>
+>>>
+>>>> +[ -f set_ftrace_pid ] && echo ${PID} > set_ftrace_pid
+>>>> +[ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
+>>>> +[ -f set_graph_function ] && echo proc_reg_write > set_graph_function
+>>>
+>>> You should set the required files for this test, so that the test result
+>>> is always same. BTW, you need to set either 'set_ftrace_filter' or
+>>> 'set_graph_function'.
+>>
+>> Yes, but I discovered that set_ftrace_filter and set_graph_function 
+>> rely on the CONFIG_DYNAMIC_FTRACE configuration, which means that 
+>> these two files are not present when CONFIG_DYNAMIC_FTRACE is 
+>> disabled, even if CONFIG_FUNCTION_GRAPH_RETVAL is enabled. Therefore, 
+>> I think that these two trace files are not necessary for this test.
+>>
+>> I will modify the above like this:
+>>
+>> [ -f set_ftrace_pid ] && echo $$ > set_ftrace_pid
+>> [ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
+>>
+>>>
+>>>> +echo function_graph > current_tracer
+>>>> +echo funcgraph-retval > trace_options
+>>>> +
+>>>> +set +e
+>>>> +enable_tracing
+>>>> +echo > /proc/interrupts
+>>>> +disable_tracing
+>>>> +set -e
+>>>> +
+>>>> +: "Test printing the error code in signed decimal format"
+>>>> +echo nofuncgraph-retval-hex > trace_options
+>>>
+>>> echo 0 > options/funcgraph-retval-hex
+>>>
+>>> If you require 'options/funcgraph-retval-hex' file, you can use the
+>>> file to set it or clear it.
+>>
+>> Yeah.
+>>
+>>>
+>>>> +count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
+>>>> +if [ $count -eq 0 ]; then
+>>>> +    fail "Return value can not be printed in signed decimal format"
+>>>> +fi
+>>>> +
+>>>> +: "Test printing the error code in hexadecimal format"
+>>>> +echo funcgraph-retval-hex > trace_options
+>>>
+>>> Ditto.
+>>
+>> Thanks.
+>>
+>>>
+>>> Thanks,
+>>>
+>>>> +count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
+>>>> +if [ $count -eq 0 ]; then
+>>>> +    fail "Return value can not be printed in hexadecimal format"
+>>>> +fi
+>>>> +
+>>>> +exit 0
+>>>> -- 
+>>>> 2.25.1
+>>>>
+>>>
+>>>
+>>
+> 
+
+Hi Masami,
+
+I will update the selftest as follows, according to the comments:
+
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0
+# description: ftrace - function graph print function return value
+# requires: options/funcgraph-retval options/funcgraph-retval-hex 
+function_graph:tracer
+
+# Make sure that funcgraph-retval works
+
+fail() { # msg
+     echo $1
+     exit_fail
+}
+
+disable_tracing
+clear_trace
+
+# get self PID, can not use $$, because it is PPID
+read PID _ < /proc/self/stat
+
+[ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
+[ -f set_ftrace_pid ] && echo ${PID} > set_ftrace_pid
+echo function_graph > current_tracer
+echo 1 > options/funcgraph-retval
+
+set +e
+enable_tracing
+echo > /proc/interrupts
+disable_tracing
+set -e
+
+: "Test printing the error code in signed decimal format"
+echo 0 > options/funcgraph-retval-hex
+count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
+if [ $count -eq 0 ]; then
+     fail "Return value can not be printed in signed decimal format"
+fi
+
+: "Test printing the error code in hexadecimal format"
+echo 1 > options/funcgraph-retval-hex
+count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
+if [ $count -eq 0 ]; then
+     fail "Return value can not be printed in hexadecimal format"
+fi
+
+exit 0
+
+
 
