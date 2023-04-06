@@ -1,42 +1,42 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A178471
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7036B79F9
 	for <loongarch@lists.linux.dev>; Thu,  6 Apr 2023 14:30:33 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 75E252277D;
-	Thu,  6 Apr 2023 14:30:27 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 40C5722777;
+	Thu,  6 Apr 2023 14:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1680791427; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1680791426; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=q+mpH3lWZVvZZw0GybWkLSjYq5BHB3GhQ0nOupAiXow=;
-	b=UxnzXeFODMJJDuqjyoc1E+ZiDj0weNshjPMaS+iJ3CCTdva4+xgdFRYRli8iX+/x0t6/Fk
-	sGUdfOGT3Up18RS/0rfJPblcXVqHU6HmxEH5051pVV1Ojic8HcKm7PvteZOpKpDZWovCrv
-	viJdQGq3yzKLlAPoXafQOPBF97xacWE=
+	bh=j7KSwiPY7uLbw1IME3LYZuU9gFambIBR3xxySUb2+TI=;
+	b=xDf429YTk1jOpz03UVkkP0t8DNNZD3073nN+ZUC/SUruNL5FUssRoJwrYIoa95n5FouBYa
+	ZwKlniR1cbDvIuCPnTEkiLxt8q3dbyXeFCW4trtu1uYQQlqdUrZ0vzzIWYxlTpGBOmrGps
+	OofV8XTIanTOvwWBK6SjJ5ixz2B0/qk=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1680791427;
+	s=susede2_ed25519; t=1680791426;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=q+mpH3lWZVvZZw0GybWkLSjYq5BHB3GhQ0nOupAiXow=;
-	b=iO1KHIOvtsxPbMNd0a/ZQZhpo74giMMe6Hue8jyuBgHhKEbIhoT0UwDGX4J3iuP+WaHmcQ
-	KqO9jBNOG1lT6hAQ==
+	bh=j7KSwiPY7uLbw1IME3LYZuU9gFambIBR3xxySUb2+TI=;
+	b=1DHS3IjUMu5fze5xRXBFWJk2WJ1lzl58thXytb3eJsg4NPmZnylUAV4dqkLDmm0Iej43QM
+	E2MhuWtSMU+pafCw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 113A013A1D;
-	Thu,  6 Apr 2023 14:30:27 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D12451351F;
+	Thu,  6 Apr 2023 14:30:25 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id kPIVA4PXLmS4LgAAMHmgww
-	(envelope-from <tzimmermann@suse.de>); Thu, 06 Apr 2023 14:30:27 +0000
+	id UEZLMoHXLmS4LgAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Thu, 06 Apr 2023 14:30:25 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: arnd@arndb.de,
 	daniel.vetter@ffwll.ch,
@@ -59,12 +59,10 @@ Cc: linux-arch@vger.kernel.org,
 	sparclinux@vger.kernel.org,
 	x86@kernel.org,
 	Thomas Zimmermann <tzimmermann@suse.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v2 15/19] arch/powerpc: Implement <asm/fb.h> with generic helpers
-Date: Thu,  6 Apr 2023 16:30:15 +0200
-Message-Id: <20230406143019.6709-16-tzimmermann@suse.de>
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Subject: [PATCH v2 12/19] arch/parisc: Remove trailing whitespaces
+Date: Thu,  6 Apr 2023 16:30:12 +0200
+Message-Id: <20230406143019.6709-13-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230406143019.6709-1-tzimmermann@suse.de>
 References: <20230406143019.6709-1-tzimmermann@suse.de>
@@ -76,44 +74,28 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace the architecture's fb_is_primary_device() with the generic
-one from <asm-generic/fb.h>. No functional changes.
+Fix trailing whitespaces. No functional changes.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
 ---
- arch/powerpc/include/asm/fb.h | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/parisc/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/fb.h b/arch/powerpc/include/asm/fb.h
-index 6541ab77c5b9..5f1a2e5f7654 100644
---- a/arch/powerpc/include/asm/fb.h
-+++ b/arch/powerpc/include/asm/fb.h
-@@ -2,8 +2,8 @@
- #ifndef _ASM_FB_H_
- #define _ASM_FB_H_
+diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
+index a2d8600521f9..0d049a6f6a60 100644
+--- a/arch/parisc/Makefile
++++ b/arch/parisc/Makefile
+@@ -11,7 +11,7 @@
+ # Copyright (C) 1994 by Linus Torvalds
+ # Portions Copyright (C) 1999 The Puffin Group
+ #
+-# Modified for PA-RISC Linux by Paul Lahaie, Alex deVries, 
++# Modified for PA-RISC Linux by Paul Lahaie, Alex deVries,
+ # Mike Shaver, Helge Deller and Martin K. Petersen
+ #
  
--#include <linux/fb.h>
- #include <linux/fs.h>
-+
- #include <asm/page.h>
- 
- static inline void fb_pgprotect(struct file *file, struct vm_area_struct *vma,
-@@ -13,10 +13,8 @@ static inline void fb_pgprotect(struct file *file, struct vm_area_struct *vma,
- 						 vma->vm_end - vma->vm_start,
- 						 vma->vm_page_prot);
- }
-+#define fb_pgprotect fb_pgprotect
- 
--static inline int fb_is_primary_device(struct fb_info *info)
--{
--	return 0;
--}
-+#include <asm-generic/fb.h>
- 
- #endif /* _ASM_FB_H_ */
 -- 
 2.40.0
 
