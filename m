@@ -1,56 +1,105 @@
-Received: from mail.sf-mail.de (mail.sf-mail.de [116.202.16.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80040AD47
-	for <loongarch@lists.linux.dev>; Thu,  6 Apr 2023 19:13:52 +0000 (UTC)
-Received: (qmail 22137 invoked from network); 6 Apr 2023 19:07:16 -0000
-Received: from unknown ([2001:9e8:6dc6:3c00:76d4:35ff:feb7:be92]:59950 HELO eto.sf-tec.de) (auth=eike@sf-mail.de)
-	by mail.sf-mail.de (Qsmtpd 0.38dev) with (TLS_AES_256_GCM_SHA384 encrypted) ESMTPSA
-	for <arnd@arndb.de>; Thu, 06 Apr 2023 21:07:16 +0200
-From: Rolf Eike Beer <eike-kernel@sf-tec.de>
-To: arnd@arndb.de, daniel.vetter@ffwll.ch, deller@gmx.de, javierm@redhat.com, gregkh@linuxfoundation.org, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org, Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH 00/18] arch: Consolidate <asm/fb.h>
-Date: Thu, 06 Apr 2023 21:06:57 +0200
-Message-ID: <2675533.mvXUDI8C0e@eto.sf-tec.de>
-In-Reply-To: <20230405150554.30540-1-tzimmermann@suse.de>
-References: <20230405150554.30540-1-tzimmermann@suse.de>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D84EEA2
+	for <loongarch@lists.linux.dev>; Fri,  7 Apr 2023 02:00:15 +0000 (UTC)
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8Ax69kseS9kGqcXAA--.36413S3;
+	Fri, 07 Apr 2023 10:00:12 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxLL4jeS9k17sXAA--.23369S19;
+	Fri, 07 Apr 2023 10:00:12 +0800 (CST)
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	maobibo@loongson.cn,
+	Xi Ruoyao <xry111@xry111.site>,
+	zhaotianrui@loongson.cn
+Subject: [PATCH v5 17/30] LoongArch: KVM: Implement virtual machine tlb operations
+Date: Fri,  7 Apr 2023 09:59:50 +0800
+Message-Id: <20230407020003.3651096-18-zhaotianrui@loongson.cn>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230407020003.3651096-1-zhaotianrui@loongson.cn>
+References: <20230407020003.3651096-1-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart12183111.O9o76ZdvQC"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxLL4jeS9k17sXAA--.23369S19
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7XF1kXF1ktFWUXr1ftF13Arb_yoW8JF4rpF
+	yfurs5Kw4fX3ZrW39xXwn7Wr13Xr4vkF17ZFW3ua4rZrZrtr1vyFnakryDJFWUtayrCr48
+	W34ftF4jgFWUJwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
+	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
+	Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1s
+	IEY20_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4
+	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
---nextPart12183111.O9o76ZdvQC
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Rolf Eike Beer <eike-kernel@sf-tec.de>
-Subject: Re: [PATCH 00/18] arch: Consolidate <asm/fb.h>
-Date: Thu, 06 Apr 2023 21:06:57 +0200
-Message-ID: <2675533.mvXUDI8C0e@eto.sf-tec.de>
-In-Reply-To: <20230405150554.30540-1-tzimmermann@suse.de>
-References: <20230405150554.30540-1-tzimmermann@suse.de>
+Implement loongarch virtual machine tlb operations such as flush tlb by
+specific gpa parameter and flush all of the virt machines tlb.
 
-Am Mittwoch, 5. April 2023, 17:05:36 CEST schrieb Thomas Zimmermann:
-> Various architectures provide <arm/fb.h> with helpers for fbdev
-                                  ^ *lol*
+Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+---
+ arch/loongarch/kvm/tlb.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 arch/loongarch/kvm/tlb.c
 
-Eike
---nextPart12183111.O9o76ZdvQC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSaYVDeqwKa3fTXNeNcpIk+abn8TgUCZC8YUQAKCRBcpIk+abn8
-Tg14AJ9zd7fmAHjabsNv4XQ0wrtRdP3wSACcCiALyhR78u5AwNndFsBEhTvFQg8=
-=2czj
------END PGP SIGNATURE-----
-
---nextPart12183111.O9o76ZdvQC--
-
-
+diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
+new file mode 100644
+index 000000000..66e116cf2
+--- /dev/null
++++ b/arch/loongarch/kvm/tlb.c
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/kvm_host.h>
++#include <asm/tlb.h>
++
++int kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
++{
++	preempt_disable();
++	gpa &= (PAGE_MASK << 1);
++	invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
++	preempt_enable();
++	return 0;
++}
++
++/**
++ * kvm_flush_tlb_all() - Flush all root TLB entries for
++ * guests.
++ *
++ * Invalidate all entries including GVA-->GPA and GPA-->HPA mappings.
++ */
++void kvm_flush_tlb_all(void)
++{
++	unsigned long flags;
++
++	local_irq_save(flags);
++	invtlb_all(INVTLB_ALLGID, 0, 0);
++	local_irq_restore(flags);
++}
+-- 
+2.31.1
 
