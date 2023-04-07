@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4671AEC0
-	for <loongarch@lists.linux.dev>; Fri,  7 Apr 2023 02:01:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BC09EA4
+	for <loongarch@lists.linux.dev>; Fri,  7 Apr 2023 02:03:48 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxidkreS9k8qYXAA--.25148S3;
-	Fri, 07 Apr 2023 10:00:11 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cxf80peS9kvKYXAA--.36689S3;
+	Fri, 07 Apr 2023 10:00:09 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxLL4jeS9k17sXAA--.23369S15;
-	Fri, 07 Apr 2023 10:00:11 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxLL4jeS9k17sXAA--.23369S10;
+	Fri, 07 Apr 2023 10:00:08 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v5 13/30] LoongArch: KVM: Implement misc vcpu related interfaces
-Date: Fri,  7 Apr 2023 09:59:46 +0800
-Message-Id: <20230407020003.3651096-14-zhaotianrui@loongson.cn>
+Subject: [PATCH v5 08/30] LoongArch: KVM: Implement vcpu handle exit interface
+Date: Fri,  7 Apr 2023 09:59:41 +0800
+Message-Id: <20230407020003.3651096-9-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230407020003.3651096-1-zhaotianrui@loongson.cn>
 References: <20230407020003.3651096-1-zhaotianrui@loongson.cn>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxLL4jeS9k17sXAA--.23369S15
+X-CM-TRANSID:AQAAf8BxLL4jeS9k17sXAA--.23369S10
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxJw4kZr1xKr1kXFWfZrWfGrg_yoW5ur4Dpr
-	s7Cw45Xw4rGr47Gw1ftws09rsI93ykKr17ZryxW3yY9rsrtF15Ar4kKrWDAFW5JryrZFyS
-	vrn8Aa1Dua1Yy3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7WF17ArW5CFyrCF15uw17Jrb_yoW8Cr4Dpr
+	4xCr1Ygw4rG34xJ3sayrs0qr4Yq3s7Kr17ZrZxX3y2yFsFvas0qr48KrZFyFyrWw1FqF1f
+	Xr1rG3Z09F4jywUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
 	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
@@ -51,136 +51,74 @@ X-Coremail-Antispam: 1Uk129KBjvJXoWxJw4kZr1xKr1kXFWfZrWfGrg_yoW5ur4Dpr
 	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
 	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
 	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
-	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-Implement some misc vcpu relaterd interfaces, such as vcpu runnable,
-vcpu should kick, vcpu dump regs, etc.
+Implement vcpu handle exit interface, getting the exit code by ESTAT
+register and using kvm exception vector to handle it.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 108 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 46 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index ee648bdb6..af9aa3fbb 100644
+index bc9e3889f..651ae5ca0 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -13,6 +13,114 @@
- #define CREATE_TRACE_POINTS
- #include "trace.h"
+@@ -56,6 +56,52 @@ static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
+ 	vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
+ }
  
-+int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
-+{
-+	return !!(vcpu->arch.irq_pending) &&
-+		vcpu->arch.mp_state.mp_state == KVM_MP_STATE_RUNNABLE;
-+}
-+
-+int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
-+{
-+	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
-+}
-+
-+bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
-+{
-+	return false;
-+}
-+
-+vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
-+{
-+	return VM_FAULT_SIGBUS;
-+}
-+
-+int kvm_arch_vcpu_ioctl_translate(struct kvm_vcpu *vcpu,
-+				  struct kvm_translation *tr)
-+{
-+	return -EINVAL;
-+}
-+
-+int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
-+{
-+	return _kvm_pending_timer(vcpu) ||
-+		kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT) &
-+			(1 << (EXCCODE_TIMER - EXCCODE_INT_START));
-+}
-+
-+int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu)
-+{
-+	int i;
-+
-+	if (!vcpu)
-+		return -1;
-+
-+	kvm_debug("VCPU Register Dump:\n");
-+	kvm_debug("\tpc = 0x%08lx\n", vcpu->arch.pc);
-+	kvm_debug("\texceptions: %08lx\n", vcpu->arch.irq_pending);
-+
-+	for (i = 0; i < 32; i += 4) {
-+		kvm_debug("\tgpr%02d: %08lx %08lx %08lx %08lx\n", i,
-+		       vcpu->arch.gprs[i],
-+		       vcpu->arch.gprs[i + 1],
-+		       vcpu->arch.gprs[i + 2], vcpu->arch.gprs[i + 3]);
-+	}
-+
-+	kvm_debug("\tCRMOD: 0x%08llx, exst: 0x%08llx\n",
-+		  kvm_read_hw_gcsr(LOONGARCH_CSR_CRMD),
-+		  kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT));
-+
-+	kvm_debug("\tERA: 0x%08llx\n", kvm_read_hw_gcsr(LOONGARCH_CSR_ERA));
-+
-+	return 0;
-+}
-+
-+int kvm_arch_vcpu_ioctl_get_mpstate(struct kvm_vcpu *vcpu,
-+				struct kvm_mp_state *mp_state)
-+{
-+	*mp_state = vcpu->arch.mp_state;
-+
-+	return 0;
-+}
-+
-+int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
-+				struct kvm_mp_state *mp_state)
-+{
-+	int ret = 0;
-+
-+	switch (mp_state->mp_state) {
-+	case KVM_MP_STATE_RUNNABLE:
-+		vcpu->arch.mp_state = *mp_state;
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
-+					struct kvm_guest_debug *dbg)
-+{
-+	return -EINVAL;
-+}
-+
-+/**
-+ * kvm_migrate_count() - Migrate timer.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Migrate hrtimer to the current CPU by cancelling and restarting it
-+ * if it was running prior to being cancelled.
-+ *
-+ * Must be called when the VCPU is migrated to a different CPU to ensure that
-+ * timer expiry during guest execution interrupts the guest and causes the
-+ * interrupt to be delivered in a timely manner.
++/*
++ * Return 1 for resume guest and "<= 0" for resume host.
 + */
-+static void kvm_migrate_count(struct kvm_vcpu *vcpu)
++static int _kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
 +{
-+	if (hrtimer_cancel(&vcpu->arch.swtimer))
-+		hrtimer_restart(&vcpu->arch.swtimer);
++	unsigned long exst = vcpu->arch.host_estat;
++	u32 intr = exst & 0x1fff; /* ignore NMI */
++	u32 exccode = (exst & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
++	int ret = RESUME_GUEST;
++
++	vcpu->mode = OUTSIDE_GUEST_MODE;
++
++	/* Set a default exit reason */
++	run->exit_reason = KVM_EXIT_UNKNOWN;
++	run->ready_for_interrupt_injection = 1;
++
++	local_irq_enable();
++	guest_state_exit_irqoff();
++
++	trace_kvm_exit(vcpu, exccode);
++	if (exccode) {
++		ret = _kvm_handle_fault(vcpu, exccode);
++	} else {
++		WARN(!intr, "suspicious vm exiting");
++		++vcpu->stat.int_exits;
++	}
++
++	cond_resched();
++	local_irq_disable();
++
++	if (ret == RESUME_HOST)
++		return ret;
++
++	/* Only check for signals if not already exiting to userspace */
++	if (signal_pending(current)) {
++		vcpu->run->exit_reason = KVM_EXIT_INTR;
++		++vcpu->stat.signal_exits;
++		return -EINTR;
++	}
++
++	kvm_pre_enter_guest(vcpu);
++	trace_kvm_reenter(vcpu);
++	guest_state_enter_irqoff();
++	return RESUME_GUEST;
 +}
 +
- int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v)
+ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
  {
- 	unsigned long val;
+ 	unsigned long timer_hz;
 -- 
 2.31.1
 
