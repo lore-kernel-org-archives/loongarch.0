@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 323F3EB8
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34FC4EBB
 	for <loongarch@lists.linux.dev>; Fri,  7 Apr 2023 02:01:47 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxPNooeS9ksKYXAA--.25354S3;
-	Fri, 07 Apr 2023 10:00:08 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxUU8qeS9k0KYXAA--.25135S3;
+	Fri, 07 Apr 2023 10:00:10 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxLL4jeS9k17sXAA--.23369S9;
-	Fri, 07 Apr 2023 10:00:08 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxLL4jeS9k17sXAA--.23369S12;
+	Fri, 07 Apr 2023 10:00:09 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v5 07/30] LoongArch: KVM: Implement vcpu run interface
-Date: Fri,  7 Apr 2023 09:59:40 +0800
-Message-Id: <20230407020003.3651096-8-zhaotianrui@loongson.cn>
+Subject: [PATCH v5 10/30] LoongArch: KVM: Implement vcpu ENABLE_CAP ioctl interface
+Date: Fri,  7 Apr 2023 09:59:43 +0800
+Message-Id: <20230407020003.3651096-11-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230407020003.3651096-1-zhaotianrui@loongson.cn>
 References: <20230407020003.3651096-1-zhaotianrui@loongson.cn>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxLL4jeS9k17sXAA--.23369S9
+X-CM-TRANSID:AQAAf8BxLL4jeS9k17sXAA--.23369S12
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAryruFWxJryUXw43KFWxWFg_yoW5XFWUpF
-	W8Cwn09w4rJ34xG393Jrs0vrs0qrZ5Kr17XryxtrWaqr4jy34DursakrWDAFWfA34fZF1S
-	vFn5tF4UCF1jy37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw4fJr4xJrWUJF1rAr1kKrg_yoW8JFyUpF
+	srCr90qr4rtrWxWwnxtws5Wr1aqrWkKrs7ZF9rX3y5AF42kry5GF4FkrWDAFW5ta1rGF1I
+	qr1rt3Wj9Fn8AwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bxxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
 	CY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487
@@ -50,119 +50,61 @@ X-Coremail-Antispam: 1Uk129KBjvJXoWxAryruFWxJryUXw43KFWxWFg_yoW5XFWUpF
 	JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4
 	AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
 	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
+	IIjxv20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement vcpu run interface, handling mmio, iocsr reading fault
-and deliver interrupt, lose fpu before vcpu enter guest.
+Implement loongarch vcpu KVM_ENABLE_CAP ioctl interface.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 86 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 7af2ff64b..bc9e3889f 100644
+index 9ad6a285c..e1e616769 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -18,6 +18,44 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+@@ -187,6 +187,23 @@ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
  	return 0;
  }
  
-+/* Returns 1 if the guest TLB may be clobbered */
-+static int _kvm_check_requests(struct kvm_vcpu *vcpu, int cpu)
++static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
++				     struct kvm_enable_cap *cap)
 +{
-+	int ret = 0;
++	int r = 0;
 +
-+	if (!kvm_request_pending(vcpu))
-+		return 0;
++	if (!kvm_vm_ioctl_check_extension(vcpu->kvm, cap->cap))
++		return -EINVAL;
++	if (cap->flags)
++		return -EINVAL;
++	if (cap->args[0])
++		return -EINVAL;
++	if (cap->cap)
++		return -EINVAL;
 +
-+	if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu)) {
-+		/* Drop vpid for this VCPU */
-+		vcpu->arch.vpid = 0;
-+		/* This will clobber guest TLB contents too */
-+		ret = 1;
-+	}
-+
-+	return ret;
-+}
-+
-+static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
-+{
-+	int cpu;
-+
-+	/*
-+	 * handle vcpu timer, interrupts, check requests and
-+	 * check vmid before vcpu enter guest
-+	 */
-+	kvm_acquire_timer(vcpu);
-+	_kvm_deliver_intr(vcpu);
-+	/* make sure the vcpu mode has been written */
-+	smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-+	cpu = smp_processor_id();
-+	_kvm_check_requests(vcpu, cpu);
-+	_kvm_check_vmid(vcpu, cpu);
-+	vcpu->arch.host_eentry = csr_read64(LOONGARCH_CSR_EENTRY);
-+	/* clear KVM_LARCH_CSR as csr will change when enter guest */
-+	vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
-+}
-+
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- {
- 	unsigned long timer_hz;
-@@ -87,3 +125,51 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 			context->last_vcpu = NULL;
- 	}
- }
-+
-+int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
-+{
-+	int r = -EINTR;
-+	struct kvm_run *run = vcpu->run;
-+
-+	vcpu_load(vcpu);
-+
-+	kvm_sigset_activate(vcpu);
-+
-+	if (vcpu->mmio_needed) {
-+		if (!vcpu->mmio_is_write)
-+			_kvm_complete_mmio_read(vcpu, run);
-+		vcpu->mmio_needed = 0;
-+	}
-+
-+	if (run->exit_reason == KVM_EXIT_LOONGARCH_IOCSR) {
-+		if (!run->iocsr_io.is_write)
-+			_kvm_complete_iocsr_read(vcpu, run);
-+	}
-+
-+	/* clear exit_reason */
-+	run->exit_reason = KVM_EXIT_UNKNOWN;
-+	if (run->immediate_exit)
-+		goto out;
-+
-+	lose_fpu(1);
-+
-+	local_irq_disable();
-+	guest_timing_enter_irqoff();
-+
-+	kvm_pre_enter_guest(vcpu);
-+	trace_kvm_enter(vcpu);
-+
-+	guest_state_enter_irqoff();
-+	r = kvm_loongarch_ops->enter_guest(run, vcpu);
-+
-+	/* guest_state_exit_irqoff() already done.  */
-+	trace_kvm_out(vcpu);
-+	guest_timing_exit_irqoff();
-+	local_irq_enable();
-+
-+out:
-+	kvm_sigset_deactivate(vcpu);
-+
-+	vcpu_put(vcpu);
 +	return r;
 +}
++
+ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 			 unsigned int ioctl, unsigned long arg)
+ {
+@@ -210,6 +227,15 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 			r = _kvm_get_reg(vcpu, &reg);
+ 		break;
+ 	}
++	case KVM_ENABLE_CAP: {
++		struct kvm_enable_cap cap;
++
++		r = -EFAULT;
++		if (copy_from_user(&cap, argp, sizeof(cap)))
++			break;
++		r = kvm_vcpu_ioctl_enable_cap(vcpu, &cap);
++		break;
++	}
+ 	default:
+ 		r = -ENOIOCTLCMD;
+ 		break;
 -- 
 2.31.1
 
