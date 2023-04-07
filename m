@@ -1,96 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42639C2C9
-	for <loongarch@lists.linux.dev>; Fri,  7 Apr 2023 09:10:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E049DC4339B
-	for <loongarch@lists.linux.dev>; Fri,  7 Apr 2023 09:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1680858635;
-	bh=dywClRW4j4O7p5Ksngwq5/7eKvi5yJ/JMWGVgSMfKrg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SmhaHTMKberTU3jKu/cfFjAJAG4UHco3QrSttH7hJZqRCRyIcVo3F80q0nz6JkUvP
-	 vX7lMtkivLpN3WBMUTJ/kkpjy4fs7hbX5LX9uJDNFaMYlFnTc+EBZZtKnGT7hjSYUA
-	 W37a6TvPdIkIzB7uq7PgjTGyGqwPvFYU0JRzitIAQMywYcxpe/AJw8tmL+bIP83asE
-	 /BNe2ylBj+xj9lLo1/v1AnYPcyptpEts2o+V3b0T0qdviAbFEDBAoztYWwx0vsNuWz
-	 33hwVAjpZNl0ZULCEw6Z6b0qRQJA7xc4px5V4LhwO28FNP3yD2G2kJ94dmr1UKTMiZ
-	 ZFjCeqObG6xSg==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-93071f06a9fso188175366b.2
-        for <loongarch@lists.linux.dev>; Fri, 07 Apr 2023 02:10:35 -0700 (PDT)
-X-Gm-Message-State: AAQBX9frCFrGcxE2Q9s86SPMw7454k4yOofh+GukutYrRw0wGLjizGDF
-	wKhukk5DLQg6ZOXKJaKcdNcZVhUjkDwNigQvAR4=
-X-Google-Smtp-Source: AKy350Ysf2bvaTDCE0nhTKwRJBgdESkqgUVFGtmCYhNIxwm561HQuPCCCZq00XDF/RWNan1UbPnBpWVe5WNIueNg+jo=
-X-Received: by 2002:a05:6402:14d5:b0:501:e26e:502b with SMTP id
- f21-20020a05640214d500b00501e26e502bmr1687603edx.29.1680858634187; Fri, 07
- Apr 2023 02:10:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB621FDB
+	for <loongarch@lists.linux.dev>; Fri,  7 Apr 2023 09:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1680861117; bh=xStM71TMN048Ko9ww+BuNB+3v2DyF7jsusOnwx7u2zY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Kj0ExMKphuz60PvZsIJCRm+JsuEv1z4mLaBEJcQ4YmsrfI0LZt30DSJrhzej9b8qc
+	 /15UHuafi18hwdUZ0jvwZmquzx2iBA5l/Ot6RAvK/H12YBNMwxrhVGJnpWQU9iCMHB
+	 EktiuswpPJNE3yKtZ2aTinyLtVhniLARJj5gwnSI=
+Received: from [100.100.33.167] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 795E4600F8;
+	Fri,  7 Apr 2023 17:51:57 +0800 (CST)
+Message-ID: <ab4f20ff-6aeb-f343-c4dc-24c46919176c@xen0n.name>
+Date: Fri, 7 Apr 2023 17:51:57 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230406025036.3022894-1-chenhuacai@loongson.cn>
-In-Reply-To: <20230406025036.3022894-1-chenhuacai@loongson.cn>
-From: Guo Ren <guoren@kernel.org>
-Date: Fri, 7 Apr 2023 17:10:22 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRjYra4yhWq0UYMmLYfSZ84fHJjC9JcCVpS4NQho7rvGw@mail.gmail.com>
-Message-ID: <CAJF2gTRjYra4yhWq0UYMmLYfSZ84fHJjC9JcCVpS4NQho7rvGw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: module: set section addresses to 0x0
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org, 
-	loongson-kernel@lists.loongnix.cn, stable@vger.kernel.org, 
-	Chong Qiao <qiaochong@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.9.1
+Subject: Re: [RFC PATCH 2/3] LoongArch: Add larch_insn_gen_break() to generate
+ break insn
+Content-Language: en-US
+To: Youling Tang <tangyouling@loongson.cn>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+References: <1680833701-1727-1-git-send-email-yangtiezhu@loongson.cn>
+ <1680833701-1727-3-git-send-email-yangtiezhu@loongson.cn>
+ <0d309725-3b91-6902-de67-08bda48ccf57@loongson.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <0d309725-3b91-6902-de67-08bda48ccf57@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 6, 2023 at 10:51=E2=80=AFAM Huacai Chen <chenhuacai@loongson.cn=
-> wrote:
->
-> These got*, plt* and .text.ftrace_trampoline sections specified for
-> LoongArch have non-zero addressses. Non-zero section addresses in a
-> relocatable ELF would confuse GDB when it tries to compute the section
-> offsets and it ends up printing wrong symbol addresses. Therefore, set
-> them to zero, which mirrors the change in commit 5d8591bc0fbaeb6ded
-> ("arm64 module: set plt* section addresses to 0x0").
-Good point, maybe I would check RISC-V!
+On 2023/4/7 10:30, Youling Tang wrote:
+> /* snip */
+> 
+>> diff --git a/arch/loongarch/kernel/kprobes.c 
+>> b/arch/loongarch/kernel/kprobes.c
+>> index 08c78d2..a5c3712 100644
+>> --- a/arch/loongarch/kernel/kprobes.c
+>> +++ b/arch/loongarch/kernel/kprobes.c
+>> @@ -4,19 +4,8 @@
+>>  #include <linux/preempt.h>
+>>  #include <asm/break.h>
+>>
+>> -static const union loongarch_instruction breakpoint_insn = {
+>> -    .reg0i15_format = {
+>> -        .opcode = break_op,
+>> -        .immediate = BRK_KPROBE_BP,
+>> -    }
+>> -};
+>> -
+>> -static const union loongarch_instruction singlestep_insn = {
+>> -    .reg0i15_format = {
+>> -        .opcode = break_op,
+>> -        .immediate = BRK_KPROBE_SSTEPBP,
+>> -    }
+>> -};
+>> +#define breakpoint_insn larch_insn_gen_break(BRK_KPROBE_BP)
+>> +#define singlestep_insn larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
+> 
+> IMO, Defined as KPROBE_BP_INSN, KPROBE_SSTEPBP_INSN may be better.
 
-Thx.
+Are you suggesting to hardcode the instruction words for those two BREAK 
+flavors? I don't think it's better because even more structured info is 
+lost, and the compiler would generate the same code (if not, it's the 
+compiler that's to be fixed).
 
-Reviewed-by: Guo Ren <guoren@kernel.org>
+Actually, I don't know why this commit was necessary in the first place. 
+For the very least, it consisted of two logical changes (pass around 
+instruction words instead of unions; and change the BREAK insns to make 
+them words) that should get split; but again, the generated code should 
+be identical anyway, so it seems a lot of churn for no benefit and 
+reduced readability.
 
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->  arch/loongarch/include/asm/module.lds.h | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/module.lds.h b/arch/loongarch/inc=
-lude/asm/module.lds.h
-> index 438f09d4ccf4..88554f92e010 100644
-> --- a/arch/loongarch/include/asm/module.lds.h
-> +++ b/arch/loongarch/include/asm/module.lds.h
-> @@ -2,8 +2,8 @@
->  /* Copyright (C) 2020-2022 Loongson Technology Corporation Limited */
->  SECTIONS {
->         . =3D ALIGN(4);
-> -       .got : { BYTE(0) }
-> -       .plt : { BYTE(0) }
-> -       .plt.idx : { BYTE(0) }
-> -       .ftrace_trampoline : { BYTE(0) }
-> +       .got 0 : { BYTE(0) }
-> +       .plt 0 : { BYTE(0) }
-> +       .plt.idx 0 : { BYTE(0) }
-> +       .ftrace_trampoline 0 : { BYTE(0) }
->  }
-> --
-> 2.39.1
->
+-- 
+WANG "xen0n" Xuerui
 
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
---=20
-Best Regards
- Guo Ren
