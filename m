@@ -1,66 +1,184 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46210EA2
-	for <loongarch@lists.linux.dev>; Fri,  7 Apr 2023 02:15:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3007EA6
+	for <loongarch@lists.linux.dev>; Fri,  7 Apr 2023 02:15:04 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxidmnfC9kjKkXAA--.25184S3;
+	by gateway (Coremail) with SMTP id _____8AxJISnfC9kkqkXAA--.36846S3;
 	Fri, 07 Apr 2023 10:15:03 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxSL2lfC9k2cEXAA--.21395S2;
-	Fri, 07 Apr 2023 10:15:02 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxSL2lfC9k2cEXAA--.21395S3;
+	Fri, 07 Apr 2023 10:15:03 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [RFC PATCH 0/3] Add uprobes support for LoongArch
-Date: Fri,  7 Apr 2023 10:14:58 +0800
-Message-Id: <1680833701-1727-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: [RFC PATCH 1/3] LoongArch: Move three functions from kprobes.c to inst.h
+Date: Fri,  7 Apr 2023 10:14:59 +0800
+Message-Id: <1680833701-1727-2-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8DxSL2lfC9k2cEXAA--.21395S2
+In-Reply-To: <1680833701-1727-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1680833701-1727-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID:AQAAf8DxSL2lfC9k2cEXAA--.21395S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Xw13CFWrWr13ZrWxZw18Xwb_yoWfWFb_ua
-	43Ja48CrW8JayUXa4qvw4fJrWUGa18KFn0yasFqrW7GF13Jr13Jr4kW3W5Z3sFgrWkWrs8
-	ArW0grn5Zr1UKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
-	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
-	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
-	W8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUUU
+X-Coremail-Antispam: 1Uk129KBjvJXoWxGF4kXw1fAr47Jr15KFWktFb_yoWrWw4kpF
+	sxCw1fJr48WFn3XrZ8Jw4Yvr1Fyrsa93sFqF17Jayrtr12qry5JF1kK3yFvF9xK39Fkr4I
+	qF1YyryrWa1fAaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8wNVDUUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-RFC patches sent for review, more testing is working in progress.
+The following three functions will be used for uprobes, move them
+from kprobes.c to inst.h:
 
-Tiezhu Yang (3):
-  LoongArch: Move three functions from kprobes.c to inst.h
-  LoongArch: Add larch_insn_gen_break() to generate break insn
-  LoongArch: Add uprobes support
+  insns_not_supported()
+  insns_need_simulation()
+  arch_simulate_insn()
 
- arch/loongarch/Kconfig               |   3 +
- arch/loongarch/include/asm/inst.h    |  63 ++++++++++++++++
- arch/loongarch/include/asm/kprobes.h |   2 +-
- arch/loongarch/include/asm/uprobes.h |  36 +++++++++
- arch/loongarch/kernel/Makefile       |   1 +
- arch/loongarch/kernel/inst.c         |   9 +++
- arch/loongarch/kernel/kprobes.c      |  63 ++--------------
- arch/loongarch/kernel/traps.c        |   7 +-
- arch/loongarch/kernel/uprobes.c      | 138 +++++++++++++++++++++++++++++++++++
- 9 files changed, 259 insertions(+), 63 deletions(-)
- create mode 100644 arch/loongarch/include/asm/uprobes.h
- create mode 100644 arch/loongarch/kernel/uprobes.c
+This is preparation for later patch, no functionality change.
 
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/include/asm/inst.h | 39 +++++++++++++++++++++++++++++++++
+ arch/loongarch/kernel/kprobes.c   | 46 ++-------------------------------------
+ 2 files changed, 41 insertions(+), 44 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index a04fe75..af494b5 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -409,6 +409,45 @@ static inline bool is_self_loop_ins(union loongarch_instruction *ip, struct pt_r
+ void simu_pc(struct pt_regs *regs, union loongarch_instruction insn);
+ void simu_branch(struct pt_regs *regs, union loongarch_instruction insn);
+ 
++static inline bool insns_not_supported(union loongarch_instruction insn)
++{
++	switch (insn.reg2i14_format.opcode) {
++	case llw_op:
++	case lld_op:
++	case scw_op:
++	case scd_op:
++		pr_notice("kprobe: ll and sc instructions are not supported\n");
++		return true;
++	}
++
++	switch (insn.reg1i21_format.opcode) {
++	case bceqz_op:
++		pr_notice("kprobe: bceqz and bcnez instructions are not supported\n");
++		return true;
++	}
++
++	return false;
++}
++
++static inline bool insns_need_simulation(union loongarch_instruction insn)
++{
++	if (is_pc_ins(&insn))
++		return true;
++
++	if (is_branch_ins(&insn))
++		return true;
++
++	return false;
++}
++
++static inline void arch_simulate_insn(union loongarch_instruction insn, struct pt_regs *regs)
++{
++	if (is_pc_ins(&insn))
++		simu_pc(regs, insn);
++	else if (is_branch_ins(&insn))
++		simu_branch(regs, insn);
++}
++
+ int larch_insn_read(void *addr, u32 *insnp);
+ int larch_insn_write(void *addr, u32 insn);
+ int larch_insn_patch_text(void *addr, u32 insn);
+diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
+index 56c8c4b..08c78d2 100644
+--- a/arch/loongarch/kernel/kprobes.c
++++ b/arch/loongarch/kernel/kprobes.c
+@@ -21,48 +21,6 @@ static const union loongarch_instruction singlestep_insn = {
+ DEFINE_PER_CPU(struct kprobe *, current_kprobe);
+ DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
+ 
+-static bool insns_not_supported(union loongarch_instruction insn)
+-{
+-	switch (insn.reg2i14_format.opcode) {
+-	case llw_op:
+-	case lld_op:
+-	case scw_op:
+-	case scd_op:
+-		pr_notice("kprobe: ll and sc instructions are not supported\n");
+-		return true;
+-	}
+-
+-	switch (insn.reg1i21_format.opcode) {
+-	case bceqz_op:
+-		pr_notice("kprobe: bceqz and bcnez instructions are not supported\n");
+-		return true;
+-	}
+-
+-	return false;
+-}
+-NOKPROBE_SYMBOL(insns_not_supported);
+-
+-static bool insns_need_simulation(struct kprobe *p)
+-{
+-	if (is_pc_ins(&p->opcode))
+-		return true;
+-
+-	if (is_branch_ins(&p->opcode))
+-		return true;
+-
+-	return false;
+-}
+-NOKPROBE_SYMBOL(insns_need_simulation);
+-
+-static void arch_simulate_insn(struct kprobe *p, struct pt_regs *regs)
+-{
+-	if (is_pc_ins(&p->opcode))
+-		simu_pc(regs, p->opcode);
+-	else if (is_branch_ins(&p->opcode))
+-		simu_branch(regs, p->opcode);
+-}
+-NOKPROBE_SYMBOL(arch_simulate_insn);
+-
+ static void arch_prepare_ss_slot(struct kprobe *p)
+ {
+ 	p->ainsn.insn[0] = *p->addr;
+@@ -89,7 +47,7 @@ int arch_prepare_kprobe(struct kprobe *p)
+ 	if (insns_not_supported(p->opcode))
+ 		return -EINVAL;
+ 
+-	if (insns_need_simulation(p)) {
++	if (insns_need_simulation(p->opcode)) {
+ 		p->ainsn.insn = NULL;
+ 	} else {
+ 		p->ainsn.insn = get_insn_slot();
+@@ -220,7 +178,7 @@ static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
+ 		regs->csr_era = (unsigned long)p->ainsn.insn;
+ 	} else {
+ 		/* simulate single steping */
+-		arch_simulate_insn(p, regs);
++		arch_simulate_insn(p->opcode, regs);
+ 		/* now go for post processing */
+ 		post_kprobe_handler(p, kcb, regs);
+ 	}
 -- 
 2.1.0
 
