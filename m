@@ -1,126 +1,237 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47DEB4408
-	for <loongarch@lists.linux.dev>; Fri,  7 Apr 2023 12:02:34 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axu5dXBjBk8d4XAA--.37202S3;
-	Fri, 07 Apr 2023 20:02:32 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxC75WBjBk_18YAA--.24086S3;
-	Fri, 07 Apr 2023 20:02:31 +0800 (CST)
-Subject: Re: [RFC PATCH 2/3] LoongArch: Add larch_insn_gen_break() to generate
- break insn
-To: WANG Xuerui <kernel@xen0n.name>, Youling Tang <tangyouling@loongson.cn>
-References: <1680833701-1727-1-git-send-email-yangtiezhu@loongson.cn>
- <1680833701-1727-3-git-send-email-yangtiezhu@loongson.cn>
- <0d309725-3b91-6902-de67-08bda48ccf57@loongson.cn>
- <ab4f20ff-6aeb-f343-c4dc-24c46919176c@xen0n.name>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <9433a12a-b24b-4438-fdc8-0213522c71ba@loongson.cn>
-Date: Fri, 7 Apr 2023 20:02:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01AB6C2F7
+	for <loongarch@lists.linux.dev>; Sat,  8 Apr 2023 12:42:50 +0000 (UTC)
+Received: from ubuntu.localdomain (unknown [121.32.254.147])
+	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 049785802B3;
+	Sat,  8 Apr 2023 20:42:29 +0800 (CST)
+From: Donglin Peng <pengdonglin@sangfor.com.cn>
+To: mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	linux@armlinux.org.uk,
+	mark.rutland@arm.com,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	rmk+kernel@armlinux.org.uk,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	aou@eecs.berkeley.edu,
+	tglx@linutronix.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	bp@alien8.de,
+	hpa@zytor.com,
+	chenhuacai@kernel.org,
+	zhangqing@loongson.cn,
+	kernel@xen0n.name,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	xiehuan09@gmail.com,
+	dinghui@sangfor.com.cn,
+	huangcun@sangfor.com.cn,
+	dolinux.peng@gmail.com
+Cc: linux-trace-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Donglin Peng <pengdonglin@sangfor.com.cn>
+Subject: [PATCH v11 2/8] tracing: Add documentation for funcgraph-retval and funcgraph-retval-hex
+Date: Sat,  8 Apr 2023 05:42:16 -0700
+Message-Id: <2b5635f05146161b54c9ea6307e25efe5ccebdad.1680954589.git.pengdonglin@sangfor.com.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
+References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ab4f20ff-6aeb-f343-c4dc-24c46919176c@xen0n.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8DxC75WBjBk_18YAA--.24086S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7KF4kWF47WryruFWkuFyUZFb_yoW8Kryfpr
-	1DAF15Zrs8W3yrG34vqw15ZF4Sqw4kWr4qqF4DJ3y3GrW7Xrn8tFn2gryakFyYvw4jgay0
-	q3ZFgFWIva4jyaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
-	e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280
-	aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
-	AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-	Wlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
-	6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
-	0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
-	cSsGvfC2KfnxnUUI43ZEXa7IU8eT5JUUUUU==
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaHR5IVkhISh9KQ0saQhpCS1UTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKSEpCSE9VSktLVUtZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NE06Djo*Cj0PGjcOMxwBVg4p
+	Q0oKC05VSlVKTUNLQk5MTE5KTUxJVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+	WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBQkpLSTcG
+X-HM-Tid: 0a8760e3bf4c2eb7kusn049785802b3
+X-HM-MType: 1
 
+Add documentation for the two newly introduced options for the
+function_graph tracer. The funcgraph-retval option is used to
+control whether or not to display the return value, while the
+funcgraph-retval-hex option is used to control the display
+format of the return value.
 
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+---
+v11:
+ - Add a limitation discovered by Mark.
 
-On 04/07/2023 05:51 PM, WANG Xuerui wrote:
-> On 2023/4/7 10:30, Youling Tang wrote:
->> /* snip */
->>
->>> diff --git a/arch/loongarch/kernel/kprobes.c
->>> b/arch/loongarch/kernel/kprobes.c
->>> index 08c78d2..a5c3712 100644
->>> --- a/arch/loongarch/kernel/kprobes.c
->>> +++ b/arch/loongarch/kernel/kprobes.c
->>> @@ -4,19 +4,8 @@
->>>  #include <linux/preempt.h>
->>>  #include <asm/break.h>
->>>
->>> -static const union loongarch_instruction breakpoint_insn = {
->>> -    .reg0i15_format = {
->>> -        .opcode = break_op,
->>> -        .immediate = BRK_KPROBE_BP,
->>> -    }
->>> -};
->>> -
->>> -static const union loongarch_instruction singlestep_insn = {
->>> -    .reg0i15_format = {
->>> -        .opcode = break_op,
->>> -        .immediate = BRK_KPROBE_SSTEPBP,
->>> -    }
->>> -};
->>> +#define breakpoint_insn larch_insn_gen_break(BRK_KPROBE_BP)
->>> +#define singlestep_insn larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
->>
->> IMO, Defined as KPROBE_BP_INSN, KPROBE_SSTEPBP_INSN may be better.
->
-> Are you suggesting to hardcode the instruction words for those two BREAK
-> flavors?
+v9:
+ - Update limitation description
 
-I think what Youling said is:
+v7:
+ - Rename trace option 'graph_retval_hex' to 'funcgraph-retval-hex'
+ - Update documentation description
 
-#define KPROBE_BP_INSN         larch_insn_gen_break(BRK_KPROBE_BP)
-#define KPROBE_SSTEPBP_INSN    larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
+v6:
+ - Modify the limitations for funcgraph-retval
+ - Optimize the English expression
 
-> I don't think it's better because even more structured info is
-> lost, and the compiler would generate the same code (if not, it's the
-> compiler that's to be fixed).
->
-> Actually, I don't know why this commit was necessary in the first place.
-> For the very least, it consisted of two logical changes (pass around
-> instruction words instead of unions; and change the BREAK insns to make
-> them words) that should get split;
+v5:
+ - Describe the limitations of funcgraph-retval
+---
+ Documentation/trace/ftrace.rst | 126 +++++++++++++++++++++++++++++++++
+ 1 file changed, 126 insertions(+)
 
-Yes, thanks for your suggestion, I will split it into two patches
-in the next version.
-
-> but again, the generated code should
-> be identical anyway, so it seems a lot of churn for no benefit and
-> reduced readability.
->
-
-Define and use larch_insn_gen_break() is to avoid hardcoding the
-uprobe break instruction in patch #3.
-
-We do not like the following definitions:
-
-#define UPROBE_SWBP_INSN	0x002a000c
-#define UPROBE_XOLBP_INSN	0x002a000d
-
-Using larch_insn_gen_break() seems better:
-
-#define UPROBE_SWBP_INSN	larch_insn_gen_break(BRK_UPROBE_BP)
-#define UPROBE_XOLBP_INSN	larch_insn_gen_break(BRK_UPROBE_XOLBP)
-
-Thanks,
-Tiezhu
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index b927fb2b94dc..bd3e2b96f3f3 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -1328,6 +1328,19 @@ Options for function_graph tracer:
+ 	only a closing curly bracket "}" is displayed for
+ 	the return of a function.
+ 
++  funcgraph-retval
++	When set, the return value of each traced function
++	will be printed after an equal sign "=". By default
++	this is off.
++
++  funcgraph-retval-hex
++	When set, the return value will always be printed
++	in hexadecimal format. If the option is not set and
++	the return value is an error code, it will be printed
++	in signed decimal format; otherwise it will also be
++	printed in hexadecimal format. By default, this option
++	is off.
++
+   sleep-time
+ 	When running function graph tracer, to include
+ 	the time a task schedules out in its function.
+@@ -2673,6 +2686,119 @@ It is default disabled.
+     0)   1.757 us    |        } /* kmem_cache_free() */
+     0)   2.861 us    |      } /* putname() */
+ 
++The return value of each traced function can be displayed after
++an equal sign "=". When encountering system call failures, it
++can be verfy helpful to quickly locate the function that first
++returns an error code.
++
++	- hide: echo nofuncgraph-retval > trace_options
++	- show: echo funcgraph-retval > trace_options
++
++  Example with funcgraph-retval::
++
++    1)               |    cgroup_migrate() {
++    1)   0.651 us    |      cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
++    1)               |      cgroup_migrate_execute() {
++    1)               |        cpu_cgroup_can_attach() {
++    1)               |          cgroup_taskset_first() {
++    1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
++    1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
++    1)   0.380 us    |          sched_rt_can_attach(); /* = 0x0 */
++    1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
++    1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
++    1)   7.143 us    |    } /* cgroup_migrate = -22 */
++
++The above example shows that the function cpu_cgroup_can_attach
++returned the error code -22 firstly, then we can read the code
++of this function to get the root cause.
++
++When the option funcgraph-retval-hex is not set, the return value can
++be displayed in a smart way. Specifically, if it is an error code,
++it will be printed in signed decimal format, otherwise it will
++printed in hexadecimal format.
++
++	- smart: echo nofuncgraph-retval-hex > trace_options
++	- hexadecimal: echo funcgraph-retval-hex > trace_options
++
++  Example with funcgraph-retval-hex::
++
++    1)               |      cgroup_migrate() {
++    1)   0.651 us    |        cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
++    1)               |        cgroup_migrate_execute() {
++    1)               |          cpu_cgroup_can_attach() {
++    1)               |            cgroup_taskset_first() {
++    1)   0.732 us    |              cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
++    1)   1.232 us    |            } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
++    1)   0.380 us    |            sched_rt_can_attach(); /* = 0x0 */
++    1)   2.335 us    |          } /* cpu_cgroup_can_attach = 0xffffffea */
++    1)   4.369 us    |        } /* cgroup_migrate_execute = 0xffffffea */
++    1)   7.143 us    |      } /* cgroup_migrate = 0xffffffea */
++
++At present, there are some limitations when using the funcgraph-retval
++option, and these limitations will be eliminated in the future:
++
++- Even if the function return type is void, a return value will still
++  be printed, and you can just ignore it.
++
++- Even if return values are stored in multiple registers, only the
++  value contained in the first register will be recorded and printed.
++  To illustrate, in the x86 architecture, eax and edx are used to store
++  a 64-bit return value, with the lower 32 bits saved in eax and the
++  upper 32 bits saved in edx. However, only the value stored in eax
++  will be recorded and printed.
++
++- In certain procedure call standards, such as arm64's AAPCS64, when a
++  type is smaller than a GPR, it is the responsibility of the consumer
++  to perform the narrowing, and the upper bits may contain UNKNOWN values.
++  Therefore, it is advisable to check the code for such cases. For instance,
++  when using a u8 in a 64-bit GPR, bits [63:8] may contain arbitrary values,
++  especially when larger types are truncated, whether explicitly or implicitly.
++  Here are some specific cases to illustrate this point:
++
++  **Case One**::
++
++  The function narrow_to_u8 is defined as follows::
++
++	u8 narrow_to_u8(u64 val)
++	{
++		// implicitly truncated
++		return val;
++	}
++
++  It may be compiled to::
++
++	narrow_to_u8:
++		< ... ftrace instrumentation ... >
++		RET
++
++  If you pass 0x123456789abcdef to this function and want to narrow it,
++  it may be recorded as 0x123456789abcdef instead of 0xef.
++
++  **Case Two**::
++
++  The function error_if_not_4g_aligned is defined as follows::
++
++	int error_if_not_4g_aligned(u64 val)
++	{
++		if (val & GENMASK(31, 0))
++			return -EINVAL;
++
++		return 0;
++	}
++
++  It could be compiled to::
++
++	error_if_not_4g_aligned:
++		CBNZ    w0, .Lnot_aligned
++		RET			// bits [31:0] are zero, bits
++					// [63:32] are UNKNOWN
++	.Lnot_aligned:
++		MOV    x0, #-EINVAL
++		RET
++
++  When passing 0x2_0000_0000 to it, the return value may be recorded as
++  0x2_0000_0000 instead of 0.
++
+ You can put some comments on specific functions by using
+ trace_printk() For example, if you want to put a comment inside
+ the __might_sleep() function, you just have to include
+-- 
+2.25.1
 
