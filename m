@@ -1,11 +1,11 @@
 Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDFA185F
-	for <loongarch@lists.linux.dev>; Sat,  8 Apr 2023 12:42:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08324185D
+	for <loongarch@lists.linux.dev>; Sat,  8 Apr 2023 12:42:51 +0000 (UTC)
 Received: from ubuntu.localdomain (unknown [121.32.254.147])
-	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id CDEFD5802E7;
-	Sat,  8 Apr 2023 20:42:36 +0800 (CST)
+	by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 0EC145801A9;
+	Sat,  8 Apr 2023 20:42:40 +0800 (CST)
 From: Donglin Peng <pengdonglin@sangfor.com.cn>
 To: mhiramat@kernel.org,
 	rostedt@goodmis.org,
@@ -37,9 +37,9 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: [PATCH v11 6/8] x86/ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-Date: Sat,  8 Apr 2023 05:42:20 -0700
-Message-Id: <53a506f0f18ff4b7aeb0feb762f1c9a5e9b83ee9.1680954589.git.pengdonglin@sangfor.com.cn>
+Subject: [PATCH v11 8/8] selftests/ftrace: Add funcgraph-retval test case
+Date: Sat,  8 Apr 2023 05:42:22 -0700
+Message-Id: <9fedbd25e63f012cade5dad13be21225fec2fb5d.1680954589.git.pengdonglin@sangfor.com.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
 References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
@@ -51,134 +51,82 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCQ0oaVkNDSEhLTEMdGRpDTVUTARMWGhIXJBQOD1
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSB1LVk4fSR9NSB4dQ0lJTVUTARMWGhIXJBQOD1
 	lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKSktPSEhVSktLVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6KxQ6Ehw4OD0KDjdNFRxKVhAO
-	CD4KCzZVSlVKTUNLQk5MTE5DSE1KVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-	WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBTUtITzcG
-X-HM-Tid: 0a8760e3d9dc2eb7kusncdefd5802e7
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Myo6Egw6OD0cSzcWFRwsVgtP
+	VjcaFBVVSlVKTUNLQk5MTE1KTkJPVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+	WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBT0hNSzcG
+X-HM-Tid: 0a8760e3e6582eb7kusn0ec145801a9
 X-HM-MType: 1
 
-The previous patch ("function_graph: Support recording and printing
-the return value of function") has laid the groundwork for the for
-the funcgraph-retval, and this modification makes it available on
-the x86 platform.
-
-We introduce a new structure called fgraph_ret_regs for the x86
-platform to hold return registers and the frame pointer. We then
-fill its content in the return_to_handler and pass its address
-to the function ftrace_return_to_handler to record the return
-value.
+Add a test case for the funcgraph-retval and funcgraph-retval-hex
+trace options.
 
 Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
 ---
-v10:
- - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
+v11:
+ - Fix selftest issues
 
-v9:
- - Update the commit message
+v10:
+ - Fix issues in selftest
 
 v8:
- - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+ - Fix issues in selftest
 ---
- arch/x86/Kconfig              |  1 +
- arch/x86/include/asm/ftrace.h | 20 ++++++++++++++++++++
- arch/x86/kernel/ftrace_32.S   |  8 +++++---
- arch/x86/kernel/ftrace_64.S   |  7 ++++---
- 4 files changed, 30 insertions(+), 6 deletions(-)
+ .../ftrace/test.d/ftrace/fgraph-retval.tc     | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index a825bf031f49..956cc988bdf9 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -214,6 +214,7 @@ config X86
- 	select HAVE_FAST_GUP
- 	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
- 	select HAVE_FTRACE_MCOUNT_RECORD
-+	select HAVE_FUNCTION_GRAPH_RETVAL	if HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_GRAPH_TRACER	if X86_32 || (X86_64 && DYNAMIC_FTRACE)
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_GCC_PLUGINS
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index 5061ac98ffa1..38d1df9aed37 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -147,4 +147,24 @@ static inline bool arch_trace_is_compat_syscall(struct pt_regs *regs)
- #endif /* !COMPILE_OFFSETS */
- #endif /* !__ASSEMBLY__ */
- 
-+#ifndef __ASSEMBLY__
-+#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+struct fgraph_ret_regs {
-+	unsigned long ax;
-+	unsigned long dx;
-+	unsigned long bp;
-+};
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+new file mode 100644
+index 000000000000..e34c0bdef3ed
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+@@ -0,0 +1,44 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: ftrace - function graph print function return value
++# requires: options/funcgraph-retval options/funcgraph-retval-hex function_graph:tracer
 +
-+static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
-+{
-+	return ret_regs->ax;
++# Make sure that funcgraph-retval works
++
++fail() { # msg
++    echo $1
++    exit_fail
 +}
 +
-+static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
-+{
-+	return ret_regs->bp;
-+}
-+#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER */
-+#endif
++disable_tracing
++clear_trace
 +
- #endif /* _ASM_X86_FTRACE_H */
-diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
-index a0ed0e4a2c0c..5a9cc723f81f 100644
---- a/arch/x86/kernel/ftrace_32.S
-+++ b/arch/x86/kernel/ftrace_32.S
-@@ -182,12 +182,14 @@ SYM_CODE_END(ftrace_graph_caller)
- 
- .globl return_to_handler
- return_to_handler:
--	pushl	%eax
-+	pushl	$0
- 	pushl	%edx
--	movl	$0, %eax
-+	pushl	%eax
-+	movl	%esp, %eax
- 	call	ftrace_return_to_handler
- 	movl	%eax, %ecx
--	popl	%edx
- 	popl	%eax
-+	popl	%edx
-+	addl	$4, %esp		# skip ebp
- 	JMP_NOSPEC ecx
- #endif
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index fb4f1e01b64a..ef78c0bbae62 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -344,12 +344,13 @@ STACK_FRAME_NON_STANDARD_FP(__fentry__)
- SYM_CODE_START(return_to_handler)
- 	UNWIND_HINT_EMPTY
- 	ANNOTATE_NOENDBR
--	subq  $16, %rsp
-+	subq  $24, %rsp
- 
- 	/* Save the return values */
- 	movq %rax, (%rsp)
- 	movq %rdx, 8(%rsp)
--	movq %rbp, %rdi
-+	movq %rbp, 16(%rsp)
-+	movq %rsp, %rdi
- 
- 	call ftrace_return_to_handler
- 
-@@ -357,7 +358,7 @@ SYM_CODE_START(return_to_handler)
- 	movq 8(%rsp), %rdx
- 	movq (%rsp), %rax
- 
--	addq $16, %rsp
-+	addq $24, %rsp
- 	/*
- 	 * Jump back to the old return address. This cannot be JMP_NOSPEC rdi
- 	 * since IBT would demand that contain ENDBR, which simply isn't so for
++# get self PID, can not use $$, because it is PPID
++read PID _ < /proc/self/stat
++
++[ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
++[ -f set_ftrace_pid ] && echo ${PID} > set_ftrace_pid
++echo function_graph > current_tracer
++echo 1 > options/funcgraph-retval
++
++set +e
++enable_tracing
++echo > /proc/interrupts
++disable_tracing
++set -e
++
++: "Test printing the error code in signed decimal format"
++echo 0 > options/funcgraph-retval-hex
++count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
++if [ $count -eq 0 ]; then
++    fail "Return value can not be printed in signed decimal format"
++fi
++
++: "Test printing the error code in hexadecimal format"
++echo 1 > options/funcgraph-retval-hex
++count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
++if [ $count -eq 0 ]; then
++    fail "Return value can not be printed in hexadecimal format"
++fi
++
++exit 0
 -- 
 2.25.1
 
