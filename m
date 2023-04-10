@@ -1,34 +1,34 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDEB1C04
-	for <loongarch@lists.linux.dev>; Mon, 10 Apr 2023 14:36:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C921C04
+	for <loongarch@lists.linux.dev>; Mon, 10 Apr 2023 14:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1681137405;
-	bh=7Ou+Ia0snPVjCODygIjKbRhpJiBd7TgzfRo2LeXCpN4=;
+	s=default; t=1681137491;
+	bh=he6UU8yYdaTIql9YV8y79tAkMBS2BT8Bu40h6/N3/Zw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=dYhgOa377ymqvloqAJ/dBdaDbatV1kYqiNLnYBpeTr77mS01SVWX1PFiFeqH4Ic1J
-	 6qbj3mTsyQ65sA+PuPFxWGo0mroRTEApyDTGO0dMYXELPHMXGJ8ysoMV+OWMy40oAd
-	 XOmHzjkNFu6GCtM84K4/Tk94SA09kTgCfGnR2tRo=
+	b=nKObKDzrur0ahiZcC/8m24MvI8iuzzJtZrcsd38bT/ivqJJ9neg4fX3WCmaGx4S1u
+	 QQCCuZrDNUi6311xdYDpSeUGN7O8LogRURLzUu+E6s6Cw4miG6knYC6syLYzKNMSey
+	 nth0/bKAobvVTNKyF35swi4G3/p9J+wSgaDS95QE=
 Received: from [IPv6:240e:358:1117:7c00:dc73:854d:832e:5] (unknown [IPv6:240e:358:1117:7c00:dc73:854d:832e:5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 7DF4165A30;
-	Mon, 10 Apr 2023 10:36:40 -0400 (EDT)
-Message-ID: <8aeb6d8dc4cbe8c992b69d75d8953d59b71a2c38.camel@xry111.site>
+	by xry111.site (Postfix) with ESMTPSA id D136A65A39;
+	Mon, 10 Apr 2023 10:38:06 -0400 (EDT)
+Message-ID: <f568fd917bb8789fcef4206e256ef045176605e2.camel@xry111.site>
 Subject: Re: [PATCH] LoongArch: Improve memory ops
 From: Xi Ruoyao <xry111@xry111.site>
 To: Rui Wang <wangrui@loongson.cn>
 Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
 	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
 	loongson-kernel@lists.loongnix.cn
-Date: Mon, 10 Apr 2023 22:36:26 +0800
-In-Reply-To: <CAHirt9ib2LPXMbxb+UCJB1MsBnUuWNLb5+uyqcR5Wiw2fsJi6w@mail.gmail.com>
+Date: Mon, 10 Apr 2023 22:37:56 +0800
+In-Reply-To: <CAHirt9jXQcvSQPEFgW6B-qeakcRXGFfd1eYCw2g23Fmu4bbS8g@mail.gmail.com>
 References: <20230410115734.93365-1-wangrui@loongson.cn>
-	 <b80e083baa49f0443abee66eb888fac920f66e79.camel@xry111.site>
-	 <CAHirt9ib2LPXMbxb+UCJB1MsBnUuWNLb5+uyqcR5Wiw2fsJi6w@mail.gmail.com>
+	 <c90c442fe029bfb9c4487284366800b8781954e1.camel@xry111.site>
+	 <CAHirt9jXQcvSQPEFgW6B-qeakcRXGFfd1eYCw2g23Fmu4bbS8g@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.0 
@@ -39,31 +39,27 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Mon, 2023-04-10 at 22:22 +0800, Rui Wang wrote:
-> On Mon, Apr 10, 2023 at 8:54=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wr=
+On Mon, 2023-04-10 at 22:19 +0800, Rui Wang wrote:
+> On Mon, Apr 10, 2023 at 8:20=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wr=
 ote:
-> > Regarding these functions: we have -ffreestanding which is
-> > preventing
-> > the compiler from optimizing for e.g. "memcpy(a, b, 8);" into a
-> > simple
-> > ld.d/st.d pair.=C2=A0 A explicit compiler built-in usage like
 > >=20
-> > =C2=A0 #define memcpy(a, b, c) __builtin_memcpy(a, b, c)
+> > On Mon, 2023-04-10 at 19:57 +0800, WANG rui wrote:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* align up address */
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 andi=C2=A0=C2=A0=C2=A0 t1, a0, =
+7
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sub.d=C2=A0=C2=A0 a0, a0, t1
 > >=20
-> > would allow the compiler to do such kind of optimization.=C2=A0=C2=A0 W=
-ill
-> > this
-> > improve the performance?
+> > bstrins.d a0, zero, 2, 0
+> >=20
+> > Likewise for other aligning operations if the temporary is not used.
 >=20
-> That's a good question. IIUC, the current compiler generates
-> inefficient code for constant-length memcpy, which may sacrifice
-> performance for compatibility, as not all hardware supports unaligned
-> memory access. We need a runtime CPU feature dispatch mechanism
-> similar to alternatives to improve the compiler. This is indeed a
-> problem that needs to be addressed.
+> I think we're on the same page. I had previously tested this on the
+> user-space version[1], but it's not a performance-critical area.
 
-Hmm, yep, GCC does not take the advantage of -mstrict-align expanding
-memcpy etc.  I'll add it into my TODO list for GCC 14.
+The point is "if you can reduce one instruction and one register usage
+with no harm, why not do it?" :)
+
+AFAIK bstrins.d should be available on all 64-bit LoongArch CPUs.
 
 
 --=20
