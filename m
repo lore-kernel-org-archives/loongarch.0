@@ -1,80 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1971360
-	for <loongarch@lists.linux.dev>; Sun,  9 Apr 2023 01:45:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B0B8C4339C
-	for <loongarch@lists.linux.dev>; Sun,  9 Apr 2023 01:45:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681004706;
-	bh=3SYGLnydrT6U3B3mbzApI6UyguCUIgtRBx1wg6L0WIs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=A3abUllHd6tUByytut79S+//VAgNDqJXSYBaTqKQA7IhA3ZfyylmeWIoFNPST1izu
-	 xC8VuRzoFgpb+EtqAuGi0H6p0g/hIoCuQfd8C9hnZIXdSWNfk6XDYGUV18e5LMkmdV
-	 j0PvKSwvbieJlOV+V/o9YEudIvUXhSYSGfnPhN/2gNtM/g9TUtVX6ucfEkRMPvCawx
-	 qAEvtIA5Bz6kzTYcJOlFizhw+as8JQCdwFXClP9/LNgEa00rZrgL+zb9WFH6BpgiRp
-	 2MUNjdOqZTXq2ji1D8FgnJtQ0sf38JmOTpJSbEhaV/lRFfP7Ewt/tvbA7y91OLHzOE
-	 c1l04UaL/D/SA==
-Received: by mail-ej1-f44.google.com with SMTP id sh8so5034795ejc.10
-        for <loongarch@lists.linux.dev>; Sat, 08 Apr 2023 18:45:06 -0700 (PDT)
-X-Gm-Message-State: AAQBX9c0tn/TwUoWeK9vZ6mdFZwd3IUMarCV4xnQfQvWTKR7Gu4+JKGt
-	o1GW7MWcc4K9y5gn5NE5pKpL7O/7aLRJBVjvfaw=
-X-Google-Smtp-Source: AKy350aXfl3i+ozWe0us1Eu0tkBIFe3pvFanAx5pvJQuBpocgywnM8ZhqLVq3vPmuQw+A6MtrsYrbypt3OdposEHMUM=
-X-Received: by 2002:a17:907:7207:b0:942:3d67:34bc with SMTP id
- dr7-20020a170907720700b009423d6734bcmr1882126ejc.10.1681004704599; Sat, 08
- Apr 2023 18:45:04 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097F415AE;
+	Mon, 10 Apr 2023 01:37:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681090627; x=1712626627;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kM3MVlxT3U4OwC09SKYW+x+Zuer/Bey+4Mm+quIUoZI=;
+  b=b232ZjDR2kbXrLer8y0oe+8gbWhGJeVfgOSajqgMQy7HEO1oK3AonP0u
+   aCfe3GshMDgAZnhwHnPHBBGl3BFjOW1hIM+FTGMvx+3A2papS6hF6fetN
+   VQFcgU+KK8H0duP5HexmlvvT2GN7uKTmWbp6PYRh4jlR8w4C/+ebv9V6T
+   0DErPdcRlpy8ZaaWd0tS95n2/cUAiaRyo9EYpIJU3iqmLxvi+CuI6EHcI
+   2fMpeVLe18Byu35vxj1Jjg7kFEWgZ0SHXEkqwgTmesiB1AQwCF20fVzGc
+   iLN9GwZDWaGzURJQd+vlH3scTTvRNwPZ0HuwtV2ibOLKiypkPxd4zFKTA
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10675"; a="429551538"
+X-IronPort-AV: E=Sophos;i="5.98,332,1673942400"; 
+   d="scan'208";a="429551538"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2023 18:37:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10675"; a="688106998"
+X-IronPort-AV: E=Sophos;i="5.98,332,1673942400"; 
+   d="scan'208";a="688106998"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 09 Apr 2023 18:37:02 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1plgSr-000UuD-17;
+	Mon, 10 Apr 2023 01:37:01 +0000
+Date: Mon, 10 Apr 2023 09:36:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+	Xi Ruoyao <xry111@xry111.site>, zhaotianrui@loongson.cn
+Subject: Re: [PATCH v5 30/30] LoongArch: KVM: Supplement kvm document about
+ loongarch-specific part
+Message-ID: <202304100944.xF4XkTAE-lkp@intel.com>
+References: <20230407020003.3651096-31-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230407083453.6305-1-lvjianmin@loongson.cn>
-In-Reply-To: <20230407083453.6305-1-lvjianmin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 9 Apr 2023 09:44:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H40eg-cufG87k_vGbAShuSu3ceTn9uqFjwS+kqT+SYzhw@mail.gmail.com>
-Message-ID: <CAAhV-H40eg-cufG87k_vGbAShuSu3ceTn9uqFjwS+kqT+SYzhw@mail.gmail.com>
-Subject: Re: [PATCH V3 0/5] Fix some issues of irq controllers for
- dual-bridges scenario
-To: Jianmin Lv <lvjianmin@loongson.cn>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	loongson-kernel@lists.loongnix.cn, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230407020003.3651096-31-zhaotianrui@loongson.cn>
 
-For the whole series
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Hi Tianrui,
 
-On Fri, Apr 7, 2023 at 4:35=E2=80=AFPM Jianmin Lv <lvjianmin@loongson.cn> w=
-rote:
->
-> In dual-bridges scenario, some bugs were found for irq
-> controllers drivers, so the patch serie is used to fix them.
->
-> V2->V3:
-> 1. Add Cc: stable@vger.kernel.org to make them be backported to stable br=
-anch
->
-> V1->V2:
-> 1. Remove all of ChangeID in patches
-> 2. Exchange the sequence of some patches
-> 3. Adjust code style of if...else... in patch[2]
->
-> Jianmin Lv (5):
->   irqchip/loongson-eiointc: Fix returned value on parsing MADT
->   irqchip/loongson-eiointc: Fix incorrect use of acpi_get_vec_parent
->   irqchip/loongson-eiointc: Fix registration of syscore_ops
->   irqchip/loongson-pch-pic: Fix registration of syscore_ops
->   irqchip/loongson-pch-pic: Fix pch_pic_acpi_init calling
->
->  drivers/irqchip/irq-loongson-eiointc.c | 32 ++++++++++++++++++--------
->  drivers/irqchip/irq-loongson-pch-pic.c |  6 ++++-
->  2 files changed, 27 insertions(+), 11 deletions(-)
->
-> --
-> 2.31.1
->
->
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on kvm/queue]
+[also build test WARNING on linus/master v6.3-rc6 next-20230406]
+[cannot apply to kvm/linux-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Tianrui-Zhao/LoongArch-KVM-Add-kvm-related-header-files/20230407-100816
+base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git queue
+patch link:    https://lore.kernel.org/r/20230407020003.3651096-31-zhaotianrui%40loongson.cn
+patch subject: [PATCH v5 30/30] LoongArch: KVM: Supplement kvm document about loongarch-specific part
+reproduce:
+        # https://github.com/intel-lab-lkp/linux/commit/a4ea2786cae9b2350b1aed613edcc003ce93cfc2
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Tianrui-Zhao/LoongArch-KVM-Add-kvm-related-header-files/20230407-100816
+        git checkout a4ea2786cae9b2350b1aed613edcc003ce93cfc2
+        make menuconfig
+        # enable CONFIG_COMPILE_TEST, CONFIG_WARN_MISSING_DOCUMENTS, CONFIG_WARN_ABI_ERRORS
+        make htmldocs
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304100944.xF4XkTAE-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Documentation/virt/kvm/api.rst:423: WARNING: Literal block ends without a blank line; unexpected unindent.
+
+vim +423 Documentation/virt/kvm/api.rst
+
+   399	
+   400	  /* x86 */
+   401	  struct kvm_regs {
+   402		/* out (KVM_GET_REGS) / in (KVM_SET_REGS) */
+   403		__u64 rax, rbx, rcx, rdx;
+   404		__u64 rsi, rdi, rsp, rbp;
+   405		__u64 r8,  r9,  r10, r11;
+   406		__u64 r12, r13, r14, r15;
+   407		__u64 rip, rflags;
+   408	  };
+   409	
+   410	  /* mips */
+   411	  struct kvm_regs {
+   412		/* out (KVM_GET_REGS) / in (KVM_SET_REGS) */
+   413		__u64 gpr[32];
+   414		__u64 hi;
+   415		__u64 lo;
+   416		__u64 pc;
+   417	  };
+   418	
+   419	  /* loongarch */
+   420	  struct kvm_regs {
+   421	        unsigned long gpr[32];
+   422	        unsigned long pc;
+ > 423	};
+   424	
+   425	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
