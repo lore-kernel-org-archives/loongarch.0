@@ -1,125 +1,73 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891BE322B
-	for <loongarch@lists.linux.dev>; Mon, 10 Apr 2023 14:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1681136192; bh=JFxIGato1Hvx8g9xV9cO3IPTvj8x3ok57KNjAO1cBMU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=flfjmvOgDlm6XfvrXM/Rc73uluo1Ja5YN2jPl5HPGCSA7LhEe832Hz/sa+6H0+dA/
-	 wy/FyYdvpMcMK9gct0oClYwhbqiX8HY7qFhXPtfjvRpoPkhhxZVZ7GItMX3k3/pBf6
-	 sXaI8KuNqyxRZpehkw9iGpsMjZp4V+uTgm6q6tNU=
-Received: from [100.100.33.167] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 0BD26600AE;
-	Mon, 10 Apr 2023 22:16:32 +0800 (CST)
-Message-ID: <01dcb3b6-efdb-af17-93a5-f6288b3f816d@xen0n.name>
-Date: Mon, 10 Apr 2023 22:16:31 +0800
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6577322B
+	for <loongarch@lists.linux.dev>; Mon, 10 Apr 2023 14:20:05 +0000 (UTC)
+Received: from loongson.cn (unknown [209.85.128.46])
+	by gateway (Coremail) with SMTP id _____8Axz_8SGzRksyEZAA--.38863S3;
+	Mon, 10 Apr 2023 22:20:03 +0800 (CST)
+Received: from mail-wm1-f46.google.com (unknown [209.85.128.46])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxyr0OGzRkvqYcAA--.30075S3;
+	Mon, 10 Apr 2023 22:20:02 +0800 (CST)
+Received: by mail-wm1-f46.google.com with SMTP id l26-20020a05600c1d1a00b003edd24054e0so4363460wms.4
+        for <loongarch@lists.linux.dev>; Mon, 10 Apr 2023 07:20:01 -0700 (PDT)
+X-Gm-Message-State: AAQBX9fJ3/s89NtfZIGq4G74RB9SCWsHQWIevQOHaJ/OuE1nwNmuJmPG
+	xmvxY+iojmpix/HzDwXqZJ8oRTn8f3zdNe6ZHkem4Q==
+X-Google-Smtp-Source: AKy350YZXNiBBM1EIRFVqDYPRhTbA1AdBFRq46FGsSzubrD07qtNxFiw40NpzFqHrk3GYLGwWeBqYK6eWi7ePA9PBls=
+X-Received: by 2002:a1c:7708:0:b0:3ed:d2fc:2fe7 with SMTP id
+ t8-20020a1c7708000000b003edd2fc2fe7mr2187905wmi.0.1681136398193; Mon, 10 Apr
+ 2023 07:19:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.9.1
-Subject: Re: [RFC PATCH 2/3] LoongArch: Add larch_insn_gen_break() to generate
- break insn
-Content-Language: en-US
-To: Tiezhu Yang <yangtiezhu@loongson.cn>,
- Youling Tang <tangyouling@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-References: <1680833701-1727-1-git-send-email-yangtiezhu@loongson.cn>
- <1680833701-1727-3-git-send-email-yangtiezhu@loongson.cn>
- <0d309725-3b91-6902-de67-08bda48ccf57@loongson.cn>
- <ab4f20ff-6aeb-f343-c4dc-24c46919176c@xen0n.name>
- <9433a12a-b24b-4438-fdc8-0213522c71ba@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <9433a12a-b24b-4438-fdc8-0213522c71ba@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20230410115734.93365-1-wangrui@loongson.cn> <c90c442fe029bfb9c4487284366800b8781954e1.camel@xry111.site>
+In-Reply-To: <c90c442fe029bfb9c4487284366800b8781954e1.camel@xry111.site>
+From: Rui Wang <wangrui@loongson.cn>
+Date: Mon, 10 Apr 2023 22:19:47 +0800
+X-Gmail-Original-Message-ID: <CAHirt9jXQcvSQPEFgW6B-qeakcRXGFfd1eYCw2g23Fmu4bbS8g@mail.gmail.com>
+Message-ID: <CAHirt9jXQcvSQPEFgW6B-qeakcRXGFfd1eYCw2g23Fmu4bbS8g@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Improve memory ops
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:AQAAf8Dxyr0OGzRkvqYcAA--.30075S3
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E
+	14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280
+	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzsqWUUUUU
 
-On 2023/4/7 20:02, Tiezhu Yang wrote:
-> 
-> 
-> On 04/07/2023 05:51 PM, WANG Xuerui wrote:
->> On 2023/4/7 10:30, Youling Tang wrote:
->>> /* snip */
->>>
->>>> diff --git a/arch/loongarch/kernel/kprobes.c
->>>> b/arch/loongarch/kernel/kprobes.c
->>>> index 08c78d2..a5c3712 100644
->>>> --- a/arch/loongarch/kernel/kprobes.c
->>>> +++ b/arch/loongarch/kernel/kprobes.c
->>>> @@ -4,19 +4,8 @@
->>>>  #include <linux/preempt.h>
->>>>  #include <asm/break.h>
->>>>
->>>> -static const union loongarch_instruction breakpoint_insn = {
->>>> -    .reg0i15_format = {
->>>> -        .opcode = break_op,
->>>> -        .immediate = BRK_KPROBE_BP,
->>>> -    }
->>>> -};
->>>> -
->>>> -static const union loongarch_instruction singlestep_insn = {
->>>> -    .reg0i15_format = {
->>>> -        .opcode = break_op,
->>>> -        .immediate = BRK_KPROBE_SSTEPBP,
->>>> -    }
->>>> -};
->>>> +#define breakpoint_insn larch_insn_gen_break(BRK_KPROBE_BP)
->>>> +#define singlestep_insn larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
->>>
->>> IMO, Defined as KPROBE_BP_INSN, KPROBE_SSTEPBP_INSN may be better.
->>
->> Are you suggesting to hardcode the instruction words for those two BREAK
->> flavors?
-> 
-> I think what Youling said is:
-> 
-> #define KPROBE_BP_INSN         larch_insn_gen_break(BRK_KPROBE_BP)
-> #define KPROBE_SSTEPBP_INSN    larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
-> 
->> I don't think it's better because even more structured info is
->> lost, and the compiler would generate the same code (if not, it's the
->> compiler that's to be fixed).
->>
->> Actually, I don't know why this commit was necessary in the first place.
->> For the very least, it consisted of two logical changes (pass around
->> instruction words instead of unions; and change the BREAK insns to make
->> them words) that should get split;
-> 
-> Yes, thanks for your suggestion, I will split it into two patches
-> in the next version.
-> 
->> but again, the generated code should
->> be identical anyway, so it seems a lot of churn for no benefit and
->> reduced readability.
->>
-> 
-> Define and use larch_insn_gen_break() is to avoid hardcoding the
-> uprobe break instruction in patch #3.
-> 
-> We do not like the following definitions:
-> 
-> #define UPROBE_SWBP_INSN    0x002a000c
-> #define UPROBE_XOLBP_INSN    0x002a000d
-> 
-> Using larch_insn_gen_break() seems better:
-> 
-> #define UPROBE_SWBP_INSN    larch_insn_gen_break(BRK_UPROBE_BP)
-> #define UPROBE_XOLBP_INSN    larch_insn_gen_break(BRK_UPROBE_XOLBP)
+On Mon, Apr 10, 2023 at 8:20=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
+e:
+>
+> On Mon, 2023-04-10 at 19:57 +0800, WANG rui wrote:
+> > +       /* align up address */
+> > +       andi    t1, a0, 7
+> > +       sub.d   a0, a0, t1
+>
+> bstrins.d a0, zero, 2, 0
+>
+> Likewise for other aligning operations if the temporary is not used.
 
-Sorry, I meant *not* ditching the union-typed parameters. IMO they 
-should behave the same codegen-wise (i.e. unchanged performance), and 
-have the benefit of being clearly typed unlike plain u32's.
+I think we're on the same page. I had previously tested this on the
+user-space version[1], but it's not a performance-critical area.
 
--- 
-WANG "xen0n" Xuerui
+[1] https://github.com/heiher/mem-bench/blob/0083d4e5a82e57939517413da3bcad=
+81e01adbea/memset-int.S#L35-L37
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+Regards,
+Rui
 
