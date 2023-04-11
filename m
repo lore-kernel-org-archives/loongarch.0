@@ -1,51 +1,50 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30BF2F2D
-	for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 08:10:19 +0000 (UTC)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-54ee9ad5eb3so139338167b3.1
-        for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 01:10:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CFF2F2D
+	for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 08:20:15 +0000 (UTC)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-54c0c86a436so264164627b3.6
+        for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 01:20:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681200619;
+        d=1e100.net; s=20210112; t=1681201215;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BKyKsR4WjWkIQ4662w2UQ58EahuI+KkHYModkQblq2M=;
-        b=hU4ewZpazsjmXH3VgaIrESVzne5M4bUMHzbfhEasoOpqibVnnw16QJIvyBSLlNNqIt
-         GOKbI1xy0QfDfR5T29ZhoQ76UjUjyxFjzy/UWTMW/VPZP6begvnc9S8VGgnGXpf64UCq
-         8IPThLw72lTpBX+YJodjsyxwY9cn+4JQuYH5/bzW8OnetI+frJl40nYKPduRrS2mM3Zu
-         4BEMNOo4ChEcLUQy/UKMXY3Fw726m8yxqEj1smaPbSZFXclg25YUs9diJ5bOYdVOQTzD
-         QWI0eB2O56pq1qZ1C3MHrXi9ypKtvhEwo27DSGpEf4SfU7HfURNxaF3xWoPGc8BD5rCy
-         LmDg==
-X-Gm-Message-State: AAQBX9f9Yd4eSqKh787Jaig18Og+awO4QXvhL8lUA2/T56pl4BEzYGAc
-	2xlGiR+ZXQJV2Ag1iMd+UnlVwwTSKsCzgA==
-X-Google-Smtp-Source: AKy350ahLnK4On5ikdmNIRKe7aKS6WNOJMdIei92yjFY4eKTdgvG2nlKvK7yYA4YY6FtgSvMNfpa+w==
-X-Received: by 2002:a0d:e24c:0:b0:54c:2500:defb with SMTP id l73-20020a0de24c000000b0054c2500defbmr6003497ywe.41.1681200618766;
-        Tue, 11 Apr 2023 01:10:18 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id p5-20020a81b105000000b00545a08184c6sm3348097ywh.86.2023.04.11.01.10.16
+        bh=KOXdqLxEHLBZ7hy/2mM/9REbA1X5ZreSZtF+7etv6Sw=;
+        b=zknsnDG4piDhTTdt+IzlKfW0gUL2FPcmGn2GPVRpVZu1lwIpT10UTS2+eZcwsyhpvv
+         uL6kkXuF61lBdi2ZSJRZG/S+DKq1H50I3uTwJZHU6hzBFQb/xLrGrI5v/V42i0xGtZeq
+         XURmpkjuoJHgknA3rOkRuS77pFWvyIFr12Zv/hjd8WMZ/9FXDXv1sk6811ADlf8v9lPq
+         PDriXCgasc85x0IwfjgbiVu/bpZUHuJf+BeZVCfuseUBSmlQb0eyLPSSyxEIngfOWuqb
+         0CDaFWVX6OK3tOvwbbYFWiVOjHiJM4+4NhFiN9FX8oLxEpRnjaSU7KoQ1mgJz2mJBUl8
+         ddYg==
+X-Gm-Message-State: AAQBX9dbkoDnl/KGqtTHlhNwg5nn1KhP0aab2/+cQASrT4V4Vx3M5SYh
+	rDzc8ew/wA7EzQAWL2dGXX/ZtWYi2rdZDg==
+X-Google-Smtp-Source: AKy350YQMDOvduhA3jijBMEI5RoOzWF6Qyd5+htSlqYCvWb0KRj8CMmp+0XArxBXzkz7I8krhLzmOA==
+X-Received: by 2002:a81:c213:0:b0:544:5816:b93 with SMTP id z19-20020a81c213000000b0054458160b93mr1457110ywc.10.1681201214651;
+        Tue, 11 Apr 2023 01:20:14 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id bx12-20020a05690c080c00b00545a08184dcsm3299117ywb.108.2023.04.11.01.20.13
         for <loongarch@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Apr 2023 01:10:17 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-54c0c86a436so263792457b3.6
-        for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 01:10:16 -0700 (PDT)
-X-Received: by 2002:a81:bc08:0:b0:54e:e490:d190 with SMTP id
- a8-20020a81bc08000000b0054ee490d190mr1216128ywi.4.1681200616792; Tue, 11 Apr
- 2023 01:10:16 -0700 (PDT)
+        Tue, 11 Apr 2023 01:20:13 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id h198so13688871ybg.12
+        for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 01:20:13 -0700 (PDT)
+X-Received: by 2002:a25:d447:0:b0:b75:9519:dbcd with SMTP id
+ m68-20020a25d447000000b00b759519dbcdmr960089ybf.12.1681201212819; Tue, 11 Apr
+ 2023 01:20:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230406143019.6709-1-tzimmermann@suse.de> <20230406143019.6709-8-tzimmermann@suse.de>
-In-Reply-To: <20230406143019.6709-8-tzimmermann@suse.de>
+References: <20230406143019.6709-1-tzimmermann@suse.de> <20230406143019.6709-9-tzimmermann@suse.de>
+In-Reply-To: <20230406143019.6709-9-tzimmermann@suse.de>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 11 Apr 2023 10:10:04 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWY2KdnpuunRqADjDjt_vnEdyD_yfwJySTi4s5N+A1ZgA@mail.gmail.com>
-Message-ID: <CAMuHMdWY2KdnpuunRqADjDjt_vnEdyD_yfwJySTi4s5N+A1ZgA@mail.gmail.com>
-Subject: Re: [PATCH v2 07/19] arch/m68k: Merge variants of fb_pgprotect() into
- single function
+Date: Tue, 11 Apr 2023 10:20:00 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVmZ2GRKqEnZgQKzJ1-Hy-Cz8yoUOhD0TMMqZriH82-tQ@mail.gmail.com>
+Message-ID: <CAMuHMdVmZ2GRKqEnZgQKzJ1-Hy-Cz8yoUOhD0TMMqZriH82-tQ@mail.gmail.com>
+Subject: Re: [PATCH v2 08/19] arch/m68k: Implement <asm/fb.h> with generic helpers
 To: Thomas Zimmermann <tzimmermann@suse.de>
 Cc: arnd@arndb.de, daniel.vetter@ffwll.ch, deller@gmx.de, javierm@redhat.com, 
 	gregkh@linuxfoundation.org, linux-arch@vger.kernel.org, 
@@ -61,21 +60,22 @@ Content-Transfer-Encoding: quoted-printable
 
 On Thu, Apr 6, 2023 at 4:30=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse.=
 de> wrote:
-> Merge all variants of fb_pgprotect() into a single function body.
-> There are two different cases for MMU systems. For non-MMU systems,
-> the function body will be empty. No functional changes, but this
-> will help with the switch to <asm-generic/fb.h>.
+> Replace the architecture's fb_is_primary_device() with the generic
+> one from <asm-generic/fb.h>. No functional changes.
+>
+> v2:
+>         * provide empty fb_pgprotect() on non-MMU systems
 >
 > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
 Gr{oetje,eeting}s,
 
                         Geert
 
---=20
+--
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
 .org
 
