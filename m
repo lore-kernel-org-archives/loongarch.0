@@ -1,66 +1,62 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED3B33C04
-	for <loongarch@lists.linux.dev>; Mon, 10 Apr 2023 15:54:19 +0000 (UTC)
-Received: from loongson.cn (unknown [209.85.221.54])
-	by gateway (Coremail) with SMTP id _____8BxIk4qMTRkDikZAA--.38718S3;
-	Mon, 10 Apr 2023 23:54:18 +0800 (CST)
-Received: from mail-wr1-f54.google.com (unknown [209.85.221.54])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxIL8lMTRkVbwcAA--.65101S3;
-	Mon, 10 Apr 2023 23:54:17 +0800 (CST)
-Received: by mail-wr1-f54.google.com with SMTP id v29so4876871wra.13
-        for <loongarch@lists.linux.dev>; Mon, 10 Apr 2023 08:54:16 -0700 (PDT)
-X-Gm-Message-State: AAQBX9fE5k6EBJxjfZsQ1KDHDhOTnBkbAnpfzTEoR5ypFobihdaWEqan
-	6KbwaciUu3d+/61zFRjSR7v8L/hpScxdHOS6eNqbYA==
-X-Google-Smtp-Source: AKy350ZAuQTgY0PQc2XWYXAUmPOujcjixIrHnF9HRJ9jXsgcZ+54prxApgwGkqm1CXbvxaqr9+20hrzUfJPrWRTcgEY=
-X-Received: by 2002:a5d:6a8c:0:b0:2e5:e0e8:9c8d with SMTP id
- s12-20020a5d6a8c000000b002e5e0e89c8dmr1839172wru.13.1681142051984; Mon, 10
- Apr 2023 08:54:11 -0700 (PDT)
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBC520F0
+	for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 06:21:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1681194104;
+	bh=eVnY1kjH/ofehDpdMAtkqUmPwETHEUX9WhBgW4u0MOk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=XgCO1SdV5+rD4cuOtwSRDHjPNGvJ8q7SFSAWArLuD5QB8OfARC82x0qe7n/DW+gZ3
+	 XOqc/6D2PmJvR9aSkB59ILuD4N4euCOgjXzbimbmQqryJ8KXOAnOFMkwF2DVGTcVgF
+	 yTqr9H64MIBnL468FwnxjAWSHnCo5SsikN3qZTF8=
+Received: from [IPv6:240e:358:11f1:2100:dc73:854d:832e:6] (unknown [IPv6:240e:358:11f1:2100:dc73:854d:832e:6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384))
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 0138466497;
+	Tue, 11 Apr 2023 02:21:37 -0400 (EDT)
+Message-ID: <24484e693147283d11bffe286ca1bb974df7db42.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: Improve memory ops
+From: Xi Ruoyao <xry111@xry111.site>
+To: WANG Rui <wangrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	loongson-kernel@lists.loongnix.cn
+Date: Tue, 11 Apr 2023 14:21:31 +0800
+In-Reply-To: <CAHirt9hMbQcq34Dgtc5u3=841_hzjUc4TYiEbhchZO=jkCvbVA@mail.gmail.com>
+References: <20230410115734.93365-1-wangrui@loongson.cn>
+	 <b80e083baa49f0443abee66eb888fac920f66e79.camel@xry111.site>
+	 <CAHirt9ib2LPXMbxb+UCJB1MsBnUuWNLb5+uyqcR5Wiw2fsJi6w@mail.gmail.com>
+	 <8aeb6d8dc4cbe8c992b69d75d8953d59b71a2c38.camel@xry111.site>
+	 <CAHirt9hMbQcq34Dgtc5u3=841_hzjUc4TYiEbhchZO=jkCvbVA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.0 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230410115734.93365-1-wangrui@loongson.cn> <c90c442fe029bfb9c4487284366800b8781954e1.camel@xry111.site>
- <CAHirt9jXQcvSQPEFgW6B-qeakcRXGFfd1eYCw2g23Fmu4bbS8g@mail.gmail.com> <f568fd917bb8789fcef4206e256ef045176605e2.camel@xry111.site>
-In-Reply-To: <f568fd917bb8789fcef4206e256ef045176605e2.camel@xry111.site>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Mon, 10 Apr 2023 23:53:59 +0800
-X-Gmail-Original-Message-ID: <CAHirt9gnFGF1kbGFYxcNHjxpysXRLLWjX6mrcOKaN=g7E-uBQw@mail.gmail.com>
-Message-ID: <CAHirt9gnFGF1kbGFYxcNHjxpysXRLLWjX6mrcOKaN=g7E-uBQw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Improve memory ops
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:AQAAf8AxIL8lMTRkVbwcAA--.65101S3
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUBGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E
-	14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280
-	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7V
-	AKI48JMxAqzxv262kKe7AKxVWUAVWUtwCF54CYxVCY1x0262kKe7AKxVWUAVWUtwCFx2Iq
-	xVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r
-	18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
-	r41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr
-	1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvE
-	x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UWHqcUUUUU=
 
-On Mon, Apr 10, 2023 at 10:38=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wro=
-te:
->
-> The point is "if you can reduce one instruction and one register usage
-> with no harm, why not do it?" :)
->
-> AFAIK bstrins.d should be available on all 64-bit LoongArch CPUs.
+On Mon, 2023-04-10 at 23:52 +0800, WANG Rui wrote:
+> On Mon, Apr 10, 2023 at 10:36=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> w=
+rote:
+> >=20
+> > Hmm, yep, GCC does not take the advantage of -mstrict-align expanding
+> > memcpy etc.=C2=A0 I'll add it into my TODO list for GCC 14.
 
-Hmm, I will make the change in the next version. :)
+Technically, it takes the advantage but not very well.  It's now
+https://gcc.gnu.org/PR109465.
 
-Rui
+> Great! It looks like you already have some good ideas, and I look
+> forward to hearing your good news.
+>=20
+> Rui
+>=20
 
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
