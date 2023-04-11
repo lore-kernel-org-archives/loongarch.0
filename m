@@ -1,50 +1,51 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098132F2D
-	for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 08:09:02 +0000 (UTC)
-Received: by mail-yb1-f179.google.com with SMTP id h198so13660911ybg.12
-        for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 01:09:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30BF2F2D
+	for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 08:10:19 +0000 (UTC)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-54ee9ad5eb3so139338167b3.1
+        for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 01:10:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681200542;
+        d=1e100.net; s=20210112; t=1681200619;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hALJfm4jnccIo090MDgna4b/Z74t0kji7w+cuP7uYXI=;
-        b=qj3/Rl5O5HhQF6K28JOPhmNT+wS5DUMMB0+8v7CGaw6fgigUDygRWkLWQb/LLfqehm
-         wi5wr03uZQ2dCTXJhYJ6REBBGoEfRJsCUqCumToTIpa5VVqw7Ji0Tzje4YA0zJ1J9ovl
-         9zsMwWzqLWDVBBda9dHDycHe/ivTSwAQu7bp7NpmQ19oi4Y3VowBxQxk3xZJmkEGa+XZ
-         iRqvcHkgAzgELm7fAQ6lpd2vmUabSO/7lNtL6uhK+P2YH4KqRcO/ievVDYCUDbqgQoId
-         kpOHVj+QNA7WG7mAUPAudh3bE8XoNoTCmbm3QySXhohPz1CaLQ9pqjZzBgGG5N3/+WF3
-         XtPw==
-X-Gm-Message-State: AAQBX9cgVhsi4EQCJl5ro/ltUWwV545YClAjEjcnOUKhgvqkPp2UgloF
-	kV3Rhd7sMC7zySEY+zn6wzrNKxQIV3bhCQ==
-X-Google-Smtp-Source: AKy350YFN1J4Ug5H+xCyFGKhZz/T6Ic+h3Id1UnM3dHuzxlKLvNHI2tFjJTwGG6HXmIwUPcnUGPBxg==
-X-Received: by 2002:a25:13c9:0:b0:b0f:dde5:e389 with SMTP id 192-20020a2513c9000000b00b0fdde5e389mr6446194ybt.41.1681200541775;
-        Tue, 11 Apr 2023 01:09:01 -0700 (PDT)
+        bh=BKyKsR4WjWkIQ4662w2UQ58EahuI+KkHYModkQblq2M=;
+        b=hU4ewZpazsjmXH3VgaIrESVzne5M4bUMHzbfhEasoOpqibVnnw16QJIvyBSLlNNqIt
+         GOKbI1xy0QfDfR5T29ZhoQ76UjUjyxFjzy/UWTMW/VPZP6begvnc9S8VGgnGXpf64UCq
+         8IPThLw72lTpBX+YJodjsyxwY9cn+4JQuYH5/bzW8OnetI+frJl40nYKPduRrS2mM3Zu
+         4BEMNOo4ChEcLUQy/UKMXY3Fw726m8yxqEj1smaPbSZFXclg25YUs9diJ5bOYdVOQTzD
+         QWI0eB2O56pq1qZ1C3MHrXi9ypKtvhEwo27DSGpEf4SfU7HfURNxaF3xWoPGc8BD5rCy
+         LmDg==
+X-Gm-Message-State: AAQBX9f9Yd4eSqKh787Jaig18Og+awO4QXvhL8lUA2/T56pl4BEzYGAc
+	2xlGiR+ZXQJV2Ag1iMd+UnlVwwTSKsCzgA==
+X-Google-Smtp-Source: AKy350ahLnK4On5ikdmNIRKe7aKS6WNOJMdIei92yjFY4eKTdgvG2nlKvK7yYA4YY6FtgSvMNfpa+w==
+X-Received: by 2002:a0d:e24c:0:b0:54c:2500:defb with SMTP id l73-20020a0de24c000000b0054c2500defbmr6003497ywe.41.1681200618766;
+        Tue, 11 Apr 2023 01:10:18 -0700 (PDT)
 Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id q145-20020a819997000000b00545ef25cec6sm1176320ywg.105.2023.04.11.01.09.00
+        by smtp.gmail.com with ESMTPSA id p5-20020a81b105000000b00545a08184c6sm3348097ywh.86.2023.04.11.01.10.16
         for <loongarch@lists.linux.dev>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Apr 2023 01:09:00 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-54f64b29207so35919457b3.8
-        for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 01:09:00 -0700 (PDT)
-X-Received: by 2002:a81:e401:0:b0:54c:19a6:480 with SMTP id
- r1-20020a81e401000000b0054c19a60480mr7173247ywl.4.1681200539960; Tue, 11 Apr
- 2023 01:08:59 -0700 (PDT)
+        Tue, 11 Apr 2023 01:10:17 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-54c0c86a436so263792457b3.6
+        for <loongarch@lists.linux.dev>; Tue, 11 Apr 2023 01:10:16 -0700 (PDT)
+X-Received: by 2002:a81:bc08:0:b0:54e:e490:d190 with SMTP id
+ a8-20020a81bc08000000b0054ee490d190mr1216128ywi.4.1681200616792; Tue, 11 Apr
+ 2023 01:10:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230406143019.6709-1-tzimmermann@suse.de> <20230406143019.6709-2-tzimmermann@suse.de>
-In-Reply-To: <20230406143019.6709-2-tzimmermann@suse.de>
+References: <20230406143019.6709-1-tzimmermann@suse.de> <20230406143019.6709-8-tzimmermann@suse.de>
+In-Reply-To: <20230406143019.6709-8-tzimmermann@suse.de>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 11 Apr 2023 10:08:47 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUfViWzPbB+GcGUwxmGNxAohfq71Jed3DzS=Cb+gBzotg@mail.gmail.com>
-Message-ID: <CAMuHMdUfViWzPbB+GcGUwxmGNxAohfq71Jed3DzS=Cb+gBzotg@mail.gmail.com>
-Subject: Re: [PATCH v2 01/19] fbdev: Prepare generic architecture helpers
+Date: Tue, 11 Apr 2023 10:10:04 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWY2KdnpuunRqADjDjt_vnEdyD_yfwJySTi4s5N+A1ZgA@mail.gmail.com>
+Message-ID: <CAMuHMdWY2KdnpuunRqADjDjt_vnEdyD_yfwJySTi4s5N+A1ZgA@mail.gmail.com>
+Subject: Re: [PATCH v2 07/19] arch/m68k: Merge variants of fb_pgprotect() into
+ single function
 To: Thomas Zimmermann <tzimmermann@suse.de>
 Cc: arnd@arndb.de, daniel.vetter@ffwll.ch, deller@gmx.de, javierm@redhat.com, 
 	gregkh@linuxfoundation.org, linux-arch@vger.kernel.org, 
@@ -58,67 +59,17 @@ Cc: arnd@arndb.de, daniel.vetter@ffwll.ch, deller@gmx.de, javierm@redhat.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Thomas,
-
 On Thu, Apr 6, 2023 at 4:30=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse.=
 de> wrote:
-> Generic implementations of fb_pgprotect() and fb_is_primary_device()
-> have been in the source code for a long time. Prepare the header file
-> to make use of them.
->
-> Improve the code by using an inline function for fb_pgprotect()
-> and by removing include statements. The default mode set by
-> fb_pgprotect() is now writecombine, which is what most platforms
-> want.
->
-> Symbols are protected by preprocessor guards. Architectures that
-> provide a symbol need to define a preprocessor token of the same
-> name and value. Otherwise the header file will provide a generic
-> implementation. This pattern has been taken from <asm/io.h>.
->
-> v2:
->         *  use writecombine mappings by default (Arnd)
+> Merge all variants of fb_pgprotect() into a single function body.
+> There are two different cases for MMU systems. For non-MMU systems,
+> the function body will be empty. No functional changes, but this
+> will help with the switch to <asm-generic/fb.h>.
 >
 > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-Thanks for your patch!
-
-> --- a/include/asm-generic/fb.h
-> +++ b/include/asm-generic/fb.h
-> @@ -1,13 +1,32 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
-> +
->  #ifndef __ASM_GENERIC_FB_H_
->  #define __ASM_GENERIC_FB_H_
-> -#include <linux/fb.h>
->
-> -#define fb_pgprotect(...) do {} while (0)
-> +/*
-> + * Only include this header file from your architecture's <asm/fb.h>.
-> + */
-> +
-> +#include <asm/page.h>
-> +
-> +struct fb_info;
-> +struct file;
-> +
-> +#ifndef fb_pgprotect
-> +#define fb_pgprotect fb_pgprotect
-> +static inline void fb_pgprotect(struct file *file, struct vm_area_struct=
- *vma,
-> +                               unsigned long off)
-
-Does this affect any noMMU platforms that relied on fb_pgprotect()
-doing nothing before?
-Perhaps the body below should be protected by "#ifdef CONFIG_MMU"?
-
-> +{
-> +       vma->vm_page_prot =3D pgprot_writecombine(vma->vm_page_prot);
-
-Shouldn't this use the pgprot_val() wrapper?
-
-> +}
-> +#endif
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
 Gr{oetje,eeting}s,
 
