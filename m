@@ -1,117 +1,184 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1687D2F24
-	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 09:54:49 +0000 (UTC)
-X-UUID: 35eeddcdc4954451ab74c89fb61f2d95-20230412
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.22,REQID:376d09bc-b81f-48fb-97c0-ac0579071961,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.22,REQID:376d09bc-b81f-48fb-97c0-ac0579071961,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:120426c,CLOUDID:7e0ed183-cd9c-45f5-8134-710979e3df0e,B
-	ulkID:230412170848Z8CZ0TBW,BulkQuantity:2,Recheck:0,SF:24|17|19|44|38|102,
-	TC:nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:40,QS:nil,BEC:nil,COL:0,
-	OSI:0,OSA:0,AV:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-UUID: 35eeddcdc4954451ab74c89fb61f2d95-20230412
-X-User: lienze@kylinos.cn
-Received: from [172.30.60.63] [(210.12.40.82)] by mailgw
-	(envelope-from <lienze@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 111464440; Wed, 12 Apr 2023 17:54:43 +0800
-Message-ID: <163de01b34fd5c7207f849c51bdb2eea2ae719aa.camel@kylinos.cn>
-Subject: Re: [PATCH] LoongArch: Use VALEN instead of hard code in comments
-From: Enze Li <lienze@kylinos.cn>
-To: WANG Xuerui <kernel@xen0n.name>, chenhuacai@kernel.org
-Cc: loongarch@lists.linux.dev, enze.li@gmx.com
-Date: Wed, 12 Apr 2023 17:54:00 +0800
-In-Reply-To: <d5f906aa-2fcd-90c0-09dc-df1d8f0cd643@xen0n.name>
-References: <20230412025525.116668-1-lienze@kylinos.cn>
-	 <d5f906aa-2fcd-90c0-09dc-df1d8f0cd643@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42C1F2F24
+	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 10:05:09 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxTNpTgjZkqiwbAA--.30729S3;
+	Wed, 12 Apr 2023 18:05:07 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxSL1SgjZke9wgAA--.34313S3;
+	Wed, 12 Apr 2023 18:05:07 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v1 1/4] LoongArch: Move three functions from kprobes.c to inst.h
+Date: Wed, 12 Apr 2023 18:04:58 +0800
+Message-Id: <1681293901-24918-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1681293901-24918-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1681293901-24918-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID:AQAAf8DxSL1SgjZke9wgAA--.34313S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxGF4kXw1fAr47Jr15KFWktFb_yoWrWw4kpF
+	sxCw1fJr48WFn3XrZ8Jw4Yvr1Fyrsa93sFqF17Jayrtr12qry5JF1kK3yFvF9xK39Fkr4I
+	qF1YyryrWa1fAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
+	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
+	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
+	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
+	4UYxBIdaVFxhVjvjDU0xZFpf9x07jOb18UUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 
-Hi Xuerui,
+The following three functions will be used for uprobes, move them
+from kprobes.c to inst.h:
 
-Thanks for your review.
+  insns_not_supported()
+  insns_need_simulation()
+  arch_simulate_insn()
 
-On Wed, 2023-04-12 at 17:08 +0800, WANG Xuerui wrote:
-> On 2023/4/12 10:55, Enze Li wrote:
-> > Refer to the online documentation[1] for Loongson, use the accurate
-> > VALEN in comments to avoid misleading others.
-> 
-> Reworded some Chinglish for you:
+This is preparation for later patch, no functionality change.
 
-My English sucks :( Please bear with me.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/include/asm/inst.h | 39 +++++++++++++++++++++++++++++++++
+ arch/loongarch/kernel/kprobes.c   | 46 ++-------------------------------------
+ 2 files changed, 41 insertions(+), 44 deletions(-)
 
-> 
-> Subject: LoongArch: Replace hard-coded values in comments with VALEN
-> 
-> According to LoongArch documentation [1], CSR.PGDL and CSR.PGDH are 
-> concerned with the VA's MSB which is VALEN-1 instead of always being
-> 47. 
-> Fix comments to avoid misleading others.
-> 
-> > [1] 
-> > https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#page-global-directory-base-address-for-lower-half-address-space
-> 
-> Nit: add a colon after [1]. (i.e. "[1]: xxxxx")
-> 
-> > Signed-off-by: Enze Li <lienze@kylinos.cn>
-> > ---
-> >   arch/loongarch/include/asm/loongarch.h | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/loongarch/include/asm/loongarch.h
-> > b/arch/loongarch/include/asm/loongarch.h
-> > index 65b7dcdea16d..a182a1579148 100644
-> > --- a/arch/loongarch/include/asm/loongarch.h
-> > +++ b/arch/loongarch/include/asm/loongarch.h
-> > @@ -423,9 +423,9 @@ static __always_inline void iocsr_write64(u64
-> > val, u32 reg)
-> >   #define  CSR_ASID_ASID_WIDTH		10
-> >   #define  CSR_ASID_ASID			(_ULCAST_(0x3ff) <<
-> > CSR_ASID_ASID_SHIFT)
-> >   
-> > -#define LOONGARCH_CSR_PGDL		0x19	/* Page table base
-> > address when VA[47] = 0 */
-> > +#define LOONGARCH_CSR_PGDL		0x19	/* Page table base
-> > address when VA[VALEN-1] = 0 */
-> >   
-> > -#define LOONGARCH_CSR_PGDH		0x1a	/* Page table base
-> > address when VA[47] = 1 */
-> > +#define LOONGARCH_CSR_PGDH		0x1a	/* Page table base
-> > address when VA[VALEN-1] = 1 */
-> >   
-> >   #define LOONGARCH_CSR_PGD		0x1b	/* Page table base
-> > */
-> >   
-> > 
-> > base-commit: fc89d7fb499b0162e081f434d45e8d1b47e82ece
-> 
-> Change itself is trivial enough, thanks!
-
-I was very impressed with your patience and willingness to help.
-
-Best Regards,
-Enze
-
-> 
-> With the nits addressed: (Huacai may apply the suggestion while
-> applying 
-> to loongarch-next, so you won't have to resend v2)
-> 
-> Reviewed-by: WANG Xuerui <git@xen0n.name>
-> 
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index a04fe75..af494b5 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -409,6 +409,45 @@ static inline bool is_self_loop_ins(union loongarch_instruction *ip, struct pt_r
+ void simu_pc(struct pt_regs *regs, union loongarch_instruction insn);
+ void simu_branch(struct pt_regs *regs, union loongarch_instruction insn);
+ 
++static inline bool insns_not_supported(union loongarch_instruction insn)
++{
++	switch (insn.reg2i14_format.opcode) {
++	case llw_op:
++	case lld_op:
++	case scw_op:
++	case scd_op:
++		pr_notice("kprobe: ll and sc instructions are not supported\n");
++		return true;
++	}
++
++	switch (insn.reg1i21_format.opcode) {
++	case bceqz_op:
++		pr_notice("kprobe: bceqz and bcnez instructions are not supported\n");
++		return true;
++	}
++
++	return false;
++}
++
++static inline bool insns_need_simulation(union loongarch_instruction insn)
++{
++	if (is_pc_ins(&insn))
++		return true;
++
++	if (is_branch_ins(&insn))
++		return true;
++
++	return false;
++}
++
++static inline void arch_simulate_insn(union loongarch_instruction insn, struct pt_regs *regs)
++{
++	if (is_pc_ins(&insn))
++		simu_pc(regs, insn);
++	else if (is_branch_ins(&insn))
++		simu_branch(regs, insn);
++}
++
+ int larch_insn_read(void *addr, u32 *insnp);
+ int larch_insn_write(void *addr, u32 insn);
+ int larch_insn_patch_text(void *addr, u32 insn);
+diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
+index 56c8c4b..08c78d2 100644
+--- a/arch/loongarch/kernel/kprobes.c
++++ b/arch/loongarch/kernel/kprobes.c
+@@ -21,48 +21,6 @@ static const union loongarch_instruction singlestep_insn = {
+ DEFINE_PER_CPU(struct kprobe *, current_kprobe);
+ DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
+ 
+-static bool insns_not_supported(union loongarch_instruction insn)
+-{
+-	switch (insn.reg2i14_format.opcode) {
+-	case llw_op:
+-	case lld_op:
+-	case scw_op:
+-	case scd_op:
+-		pr_notice("kprobe: ll and sc instructions are not supported\n");
+-		return true;
+-	}
+-
+-	switch (insn.reg1i21_format.opcode) {
+-	case bceqz_op:
+-		pr_notice("kprobe: bceqz and bcnez instructions are not supported\n");
+-		return true;
+-	}
+-
+-	return false;
+-}
+-NOKPROBE_SYMBOL(insns_not_supported);
+-
+-static bool insns_need_simulation(struct kprobe *p)
+-{
+-	if (is_pc_ins(&p->opcode))
+-		return true;
+-
+-	if (is_branch_ins(&p->opcode))
+-		return true;
+-
+-	return false;
+-}
+-NOKPROBE_SYMBOL(insns_need_simulation);
+-
+-static void arch_simulate_insn(struct kprobe *p, struct pt_regs *regs)
+-{
+-	if (is_pc_ins(&p->opcode))
+-		simu_pc(regs, p->opcode);
+-	else if (is_branch_ins(&p->opcode))
+-		simu_branch(regs, p->opcode);
+-}
+-NOKPROBE_SYMBOL(arch_simulate_insn);
+-
+ static void arch_prepare_ss_slot(struct kprobe *p)
+ {
+ 	p->ainsn.insn[0] = *p->addr;
+@@ -89,7 +47,7 @@ int arch_prepare_kprobe(struct kprobe *p)
+ 	if (insns_not_supported(p->opcode))
+ 		return -EINVAL;
+ 
+-	if (insns_need_simulation(p)) {
++	if (insns_need_simulation(p->opcode)) {
+ 		p->ainsn.insn = NULL;
+ 	} else {
+ 		p->ainsn.insn = get_insn_slot();
+@@ -220,7 +178,7 @@ static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
+ 		regs->csr_era = (unsigned long)p->ainsn.insn;
+ 	} else {
+ 		/* simulate single steping */
+-		arch_simulate_insn(p, regs);
++		arch_simulate_insn(p->opcode, regs);
+ 		/* now go for post processing */
+ 		post_kprobe_handler(p, kcb, regs);
+ 	}
+-- 
+2.1.0
 
