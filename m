@@ -1,11 +1,11 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0071323A0
-	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 08:30:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F6602F30
+	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 08:30:41 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8DxldgvbDZkIiIbAA--.47086S3;
-	Wed, 12 Apr 2023 16:30:39 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxJ_AwbDZkMyIbAA--.42082S3;
+	Wed, 12 Apr 2023 16:30:40 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxC74fbDZkdKwgAA--.35751S30;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxC74fbDZkdKwgAA--.35751S31;
 	Wed, 12 Apr 2023 16:30:39 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v6 28/30] LoongArch: KVM: Implement probe virtualization when loongarch cpu init
-Date: Wed, 12 Apr 2023 16:30:21 +0800
-Message-Id: <20230412083023.1693910-29-zhaotianrui@loongson.cn>
+Subject: [PATCH v6 29/30] LoongArch: KVM: Enable kvm config and add the makefile
+Date: Wed, 12 Apr 2023 16:30:22 +0800
+Message-Id: <20230412083023.1693910-30-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230412083023.1693910-1-zhaotianrui@loongson.cn>
 References: <20230412083023.1693910-1-zhaotianrui@loongson.cn>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxC74fbDZkdKwgAA--.35751S30
+X-CM-TRANSID:AQAAf8DxC74fbDZkdKwgAA--.35751S31
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw1fCFWfZw1DGr1DXw1UWrg_yoW8tFyDpr
-	W2vFW3trWUKr92ga93Gr1agrnxtFWkKa129F47ta1fAr4Ut3W5Xwn3C34UCFs7Zw4xAryr
-	Xrn7A3WvqF1DX3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWr4xGF4xXF17KrWkuF4DJwb_yoW5Kw43pF
+	4fZr1kGF4xWFn3JrZ3t34kWrs8CFn7KFW7u3Waya48CrW7Z34kur18tr9rXFyUJ393JrW8
+	Wr1rGa1agFWUJaUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -54,85 +54,134 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw1fCFWfZw1DGr1DXw1UWrg_yoW8tFyDpr
 	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
 	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
 
-Implement probe virtualization when loongarch cpu init, including guest
-gid info, guest fpu info, etc.
+Enable loongarch kvm config and add the makefile to support build kvm
+module.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kernel/cpu-probe.c | 53 +++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ arch/loongarch/Kbuild                      |  1 +
+ arch/loongarch/Kconfig                     |  2 ++
+ arch/loongarch/configs/loongson3_defconfig |  2 ++
+ arch/loongarch/kvm/Kconfig                 | 38 ++++++++++++++++++++++
+ arch/loongarch/kvm/Makefile                | 22 +++++++++++++
+ 5 files changed, 65 insertions(+)
+ create mode 100644 arch/loongarch/kvm/Kconfig
+ create mode 100644 arch/loongarch/kvm/Makefile
 
-diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index 3a3fce2d7846..9c3483d9a131 100644
---- a/arch/loongarch/kernel/cpu-probe.c
-+++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -176,6 +176,57 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
- 	}
- }
+diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
+index b01f5cdb27e0..40be8a1696f9 100644
+--- a/arch/loongarch/Kbuild
++++ b/arch/loongarch/Kbuild
+@@ -2,6 +2,7 @@ obj-y += kernel/
+ obj-y += mm/
+ obj-y += net/
+ obj-y += vdso/
++obj-y += kvm/
  
-+static inline void cpu_probe_guestinfo(struct cpuinfo_loongarch *c)
-+{
-+	unsigned long guestinfo;
-+
-+	guestinfo = read_csr_gstat();
-+	if (guestinfo & CSR_GSTAT_GIDBIT) {
-+		c->options |= LOONGARCH_CPU_GUESTID;
-+		write_csr_gstat(0);
-+	}
-+}
-+
-+static inline void cpu_probe_lvz(struct cpuinfo_loongarch *c)
-+{
-+	unsigned long gcfg, gprcfg1;
-+
-+	cpu_probe_guestinfo(c);
-+
-+	c->guest.options |= LOONGARCH_CPU_FPU;
-+	c->guest.options_dyn |= LOONGARCH_CPU_FPU;
-+	c->guest.options_dyn |= LOONGARCH_CPU_PMP;
-+
-+	c->guest.ases |= LOONGARCH_CPU_LSX;
-+	c->guest.ases_dyn |= LOONGARCH_CPU_LSX;
-+	gprcfg1 = read_gcsr_prcfg1();
-+	c->guest.kscratch_mask = GENMASK((gprcfg1 & CSR_CONF1_KSNUM) - 1, 0);
-+
-+	gcfg = read_csr_gcfg();
-+	if (gcfg & CSR_GCFG_MATP_GUEST)
-+		c->guest_cfg |= BIT(0);
-+	if (gcfg & CSR_GCFG_MATP_ROOT)
-+		c->guest_cfg |= BIT(1);
-+	if (gcfg & CSR_GCFG_MATP_NEST)
-+		c->guest_cfg |= BIT(2);
-+	if (gcfg & CSR_GCFG_SITP)
-+		c->guest_cfg |= BIT(6);
-+	if (gcfg & CSR_GCFG_TITP)
-+		c->guest_cfg |= BIT(8);
-+	if (gcfg & CSR_GCFG_TOEP)
-+		c->guest_cfg |= BIT(10);
-+	if (gcfg & CSR_GCFG_TOPP)
-+		c->guest_cfg |= BIT(12);
-+	if (gcfg & CSR_GCFG_TORUP)
-+		c->guest_cfg |= BIT(14);
-+	if (gcfg & CSR_GCFG_GCIP_ALL)
-+		c->guest_cfg |= BIT(16);
-+	if (gcfg & CSR_GCFG_GCIP_HIT)
-+		c->guest_cfg |= BIT(17);
-+	if (gcfg & CSR_GCFG_GCIP_SECURE)
-+		c->guest_cfg |= BIT(18);
-+}
-+
- #define MAX_NAME_LEN	32
- #define VENDOR_OFFSET	0
- #define CPUNAME_OFFSET	9
-@@ -289,6 +340,8 @@ void cpu_probe(void)
- 	if (cpu == 0)
- 		__ua_limit = ~((1ull << cpu_vabits) - 1);
- #endif
-+	if (cpu_has_lvz)
-+		cpu_probe_lvz(c);
+ # for cleaning
+ subdir- += boot
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 7fd51257e0ed..f9beeb2e0cc9 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -148,6 +148,7 @@ config LOONGARCH
+ 	select USE_PERCPU_NUMA_NODE_ID
+ 	select USER_STACKTRACE_SUPPORT
+ 	select ZONE_DMA32
++	select HAVE_KVM
  
- 	cpu_report();
- }
+ config 32BIT
+ 	bool
+@@ -588,3 +589,4 @@ source "drivers/acpi/Kconfig"
+ endmenu
+ 
+ source "drivers/firmware/Kconfig"
++source "arch/loongarch/kvm/Kconfig"
+diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+index e18213f01cc4..c99520374aef 100644
+--- a/arch/loongarch/configs/loongson3_defconfig
++++ b/arch/loongarch/configs/loongson3_defconfig
+@@ -63,6 +63,8 @@ CONFIG_EFI_ZBOOT=y
+ CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
+ CONFIG_EFI_CAPSULE_LOADER=m
+ CONFIG_EFI_TEST=m
++CONFIG_VIRTUALIZATION=y
++CONFIG_KVM=m
+ CONFIG_MODULES=y
+ CONFIG_MODULE_FORCE_LOAD=y
+ CONFIG_MODULE_UNLOAD=y
+diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
+new file mode 100644
+index 000000000000..8a999b4c0232
+--- /dev/null
++++ b/arch/loongarch/kvm/Kconfig
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# KVM configuration
++#
++
++source "virt/kvm/Kconfig"
++
++menuconfig VIRTUALIZATION
++	bool "Virtualization"
++	help
++	  Say Y here to get to see options for using your Linux host to run
++	  other operating systems inside virtual machines (guests).
++	  This option alone does not add any kernel code.
++
++	  If you say N, all options in this submenu will be skipped and
++	  disabled.
++
++if VIRTUALIZATION
++
++config KVM
++	tristate "Kernel-based Virtual Machine (KVM) support"
++	depends on HAVE_KVM
++	select MMU_NOTIFIER
++	select ANON_INODES
++	select PREEMPT_NOTIFIERS
++	select KVM_MMIO
++	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
++	select HAVE_KVM_VCPU_ASYNC_IOCTL
++	select HAVE_KVM_EVENTFD
++	select SRCU
++	help
++	  Support hosting virtualized guest machines using hardware
++	  virtualization extensions. You will need a fairly processor
++	  equipped with virtualization extensions.
++
++	  If unsure, say N.
++
++endif # VIRTUALIZATION
+diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+new file mode 100644
+index 000000000000..2335e873a6ef
+--- /dev/null
++++ b/arch/loongarch/kvm/Makefile
+@@ -0,0 +1,22 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Makefile for LOONGARCH KVM support
++#
++
++ccflags-y += -I $(srctree)/$(src)
++
++include $(srctree)/virt/kvm/Makefile.kvm
++
++obj-$(CONFIG_KVM) += kvm.o
++
++kvm-y += main.o
++kvm-y += vm.o
++kvm-y += vmid.o
++kvm-y += tlb.o
++kvm-y += mmu.o
++kvm-y += vcpu.o
++kvm-y += exit.o
++kvm-y += interrupt.o
++kvm-y += timer.o
++kvm-y += switch.o
++kvm-y += csr_ops.o
 -- 
 2.31.1
 
