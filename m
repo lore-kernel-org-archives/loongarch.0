@@ -1,74 +1,96 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48568362
-	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 02:57:16 +0000 (UTC)
-X-UUID: e5a5ec4fb6e44989b78edb6a082d616c-20230412
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.22,REQID:d3b35364-88ad-4cfa-ab01-9e29b3350cee,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.22,REQID:d3b35364-88ad-4cfa-ab01-9e29b3350cee,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:120426c,CLOUDID:8bd706a1-8fcb-430b-954a-ba3f00fa94a5,B
-	ulkID:230412105206DARUS60N,BulkQuantity:0,Recheck:0,SF:38|24|17|19|44|102,
-	TC:nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
-	,OSI:0,OSA:0,AV:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-UUID: e5a5ec4fb6e44989b78edb6a082d616c-20230412
-X-User: lienze@kylinos.cn
-Received: from localhost.localdomain [(210.12.40.82)] by mailgw
-	(envelope-from <lienze@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1460695367; Wed, 12 Apr 2023 10:52:03 +0800
-From: Enze Li <lienze@kylinos.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: loongarch@lists.linux.dev,
-	enze.li@gmx.com,
-	lienze@kylinos.cn
-Subject: [PATCH] LoongArch: Use VALEN instead of hard code in comments
-Date: Wed, 12 Apr 2023 10:55:25 +0800
-Message-Id: <20230412025525.116668-1-lienze@kylinos.cn>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588AC17C3
+	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 06:18:11 +0000 (UTC)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4PxCF401xjz4xFj;
+	Wed, 12 Apr 2023 16:17:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1681280282;
+	bh=mVus6VBYhH8GmWv60JhlJfNhVtxbImSRmEm6BDRrW3s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=lTZEAUAJ2QZsc9UPHGoexeIDhivQg0OZP2tQ8N178oguDiIOjU/GS5yjDEkHA0ZQY
+	 UoSdL/mLxTXV/wa3HPEVjblwcxsdx2c+OnuyDK5Tv1Pbg7hiKGkpXXQYiHyY9ZXKUK
+	 6CSwY02DKtu+cGQJMahEUbmjJakfBQLvnLNWdj1LScutIwzO/9mPiHZFRCutiHgFFy
+	 LDNwBaVtxl/OmcZoIc9q0YGGvsTAR4vPp6o9KxvHWYHacDs55AZq5ZD42D7HmgmLSM
+	 12TeMwxecBFtXBTtmtuIhlm5OkckoQGJYZdQPchk2E7CbMKkKzVuJ/odBCPWTELN7l
+	 5ijFDMn/S4fVA==
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Thomas Zimmermann <tzimmermann@suse.de>, arnd@arndb.de,
+ daniel.vetter@ffwll.ch, deller@gmx.de, javierm@redhat.com,
+ gregkh@linuxfoundation.org
+Cc: linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-snps-arc@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
+ Thomas Zimmermann <tzimmermann@suse.de>, Nicholas Piggin
+ <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH v2 15/19] arch/powerpc: Implement <asm/fb.h> with
+ generic helpers
+In-Reply-To: <20230406143019.6709-16-tzimmermann@suse.de>
+References: <20230406143019.6709-1-tzimmermann@suse.de>
+ <20230406143019.6709-16-tzimmermann@suse.de>
+Date: Wed, 12 Apr 2023 16:17:59 +1000
+Message-ID: <87r0spipyg.fsf@mpe.ellerman.id.au>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Refer to the online documentation[1] for Loongson, use the accurate
-VALEN in comments to avoid misleading others.
+Thomas Zimmermann <tzimmermann@suse.de> writes:
+> Replace the architecture's fb_is_primary_device() with the generic
+> one from <asm-generic/fb.h>. No functional changes.
+>
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+>  arch/powerpc/include/asm/fb.h | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
 
-[1] https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#page-global-directory-base-address-for-lower-half-address-space
+Looks fine.
 
-Signed-off-by: Enze Li <lienze@kylinos.cn>
----
- arch/loongarch/include/asm/loongarch.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 65b7dcdea16d..a182a1579148 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -423,9 +423,9 @@ static __always_inline void iocsr_write64(u64 val, u32 reg)
- #define  CSR_ASID_ASID_WIDTH		10
- #define  CSR_ASID_ASID			(_ULCAST_(0x3ff) << CSR_ASID_ASID_SHIFT)
- 
--#define LOONGARCH_CSR_PGDL		0x19	/* Page table base address when VA[47] = 0 */
-+#define LOONGARCH_CSR_PGDL		0x19	/* Page table base address when VA[VALEN-1] = 0 */
- 
--#define LOONGARCH_CSR_PGDH		0x1a	/* Page table base address when VA[47] = 1 */
-+#define LOONGARCH_CSR_PGDH		0x1a	/* Page table base address when VA[VALEN-1] = 1 */
- 
- #define LOONGARCH_CSR_PGD		0x1b	/* Page table base */
- 
+cheers
 
-base-commit: fc89d7fb499b0162e081f434d45e8d1b47e82ece
--- 
-2.39.2
-
+> diff --git a/arch/powerpc/include/asm/fb.h b/arch/powerpc/include/asm/fb.h
+> index 6541ab77c5b9..5f1a2e5f7654 100644
+> --- a/arch/powerpc/include/asm/fb.h
+> +++ b/arch/powerpc/include/asm/fb.h
+> @@ -2,8 +2,8 @@
+>  #ifndef _ASM_FB_H_
+>  #define _ASM_FB_H_
+>  
+> -#include <linux/fb.h>
+>  #include <linux/fs.h>
+> +
+>  #include <asm/page.h>
+>  
+>  static inline void fb_pgprotect(struct file *file, struct vm_area_struct *vma,
+> @@ -13,10 +13,8 @@ static inline void fb_pgprotect(struct file *file, struct vm_area_struct *vma,
+>  						 vma->vm_end - vma->vm_start,
+>  						 vma->vm_page_prot);
+>  }
+> +#define fb_pgprotect fb_pgprotect
+>  
+> -static inline int fb_is_primary_device(struct fb_info *info)
+> -{
+> -	return 0;
+> -}
+> +#include <asm-generic/fb.h>
+>  
+>  #endif /* _ASM_FB_H_ */
+> -- 
+> 2.40.0
