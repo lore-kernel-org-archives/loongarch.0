@@ -1,11 +1,11 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 144462597
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDEE2257B
 	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 08:30:36 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxJMQmbDZkdCEbAA--.30508S3;
-	Wed, 12 Apr 2023 16:30:30 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dx3tolbDZkXCEbAA--.30645S3;
+	Wed, 12 Apr 2023 16:30:29 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxC74fbDZkdKwgAA--.35751S13;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxC74fbDZkdKwgAA--.35751S12;
 	Wed, 12 Apr 2023 16:30:29 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v6 11/30] LoongArch: KVM: Implement fpu related operations for vcpu
-Date: Wed, 12 Apr 2023 16:30:04 +0800
-Message-Id: <20230412083023.1693910-12-zhaotianrui@loongson.cn>
+Subject: [PATCH v6 10/30] LoongArch: KVM: Implement vcpu ENABLE_CAP ioctl interface
+Date: Wed, 12 Apr 2023 16:30:03 +0800
+Message-Id: <20230412083023.1693910-11-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230412083023.1693910-1-zhaotianrui@loongson.cn>
 References: <20230412083023.1693910-1-zhaotianrui@loongson.cn>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxC74fbDZkdKwgAA--.35751S13
+X-CM-TRANSID:AQAAf8DxC74fbDZkdKwgAA--.35751S12
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7KF1UXF4kKw4xXw1rWryxAFb_yoW8ur1kpF
-	W7Ar90qayrG3WxK34aqr1jgr1avrWkKr1xXa47WryfAr1UtryrZF4vkrW2vF98Jw1xZFyI
-	vF1rGF1UCFyDAwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw4fJr4xJrWUJF1rAr1kKrg_yoW8JFy3pF
+	4DCr90qr4rJrWxWwnxtws3Wr1aqrWkKr4xZF9rX3y5AF42kry5GF4FkrWDAFW5ta1rGF1S
+	qr1rt3Wj9Fs8AwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	b4kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
 	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
@@ -51,88 +51,60 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7KF1UXF4kKw4xXw1rWryxAFb_yoW8ur1kpF
 	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
 	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
 	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement loongarch fpu related interface for vcpu, such as get fpu, set
-fpu, own fpu and lose fpu, etc.
+Implement loongarch vcpu KVM_ENABLE_CAP ioctl interface.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 60 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index e1e6167699de..d1e8cd402900 100644
+index 9ad6a285cbb4..e1e6167699de 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -245,6 +245,66 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 	return r;
+@@ -187,6 +187,23 @@ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+ 	return 0;
  }
  
-+int kvm_arch_vcpu_ioctl_get_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
++static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
++				     struct kvm_enable_cap *cap)
 +{
-+	int i = 0;
++	int r = 0;
 +
-+	/* no need vcpu_load and vcpu_put */
-+	fpu->fcsr = vcpu->arch.fpu.fcsr;
-+	fpu->fcc = vcpu->arch.fpu.fcc;
-+	for (i = 0; i < NUM_FPU_REGS; i++)
-+		memcpy(&fpu->fpr[i], &vcpu->arch.fpu.fpr[i], FPU_REG_WIDTH / 64);
++	if (!kvm_vm_ioctl_check_extension(vcpu->kvm, cap->cap))
++		return -EINVAL;
++	if (cap->flags)
++		return -EINVAL;
++	if (cap->args[0])
++		return -EINVAL;
++	if (cap->cap)
++		return -EINVAL;
 +
-+	return 0;
++	return r;
 +}
 +
-+int kvm_arch_vcpu_ioctl_set_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
-+{
-+	int i = 0;
-+
-+	/* no need vcpu_load and vcpu_put */
-+	vcpu->arch.fpu.fcsr = fpu->fcsr;
-+	vcpu->arch.fpu.fcc = fpu->fcc;
-+	for (i = 0; i < NUM_FPU_REGS; i++)
-+		memcpy(&vcpu->arch.fpu.fpr[i], &fpu->fpr[i], FPU_REG_WIDTH / 64);
-+
-+	return 0;
-+}
-+
-+/* Enable FPU for guest and restore context */
-+void kvm_own_fpu(struct kvm_vcpu *vcpu)
-+{
-+	preempt_disable();
-+
-+	/*
-+	 * Enable FPU for guest
-+	 */
-+	set_csr_euen(CSR_EUEN_FPEN);
-+
-+	kvm_restore_fpu(&vcpu->arch.fpu);
-+	vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
-+	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_FPU);
-+
-+	preempt_enable();
-+}
-+
-+/* Save and disable FPU */
-+void kvm_lose_fpu(struct kvm_vcpu *vcpu)
-+{
-+	preempt_disable();
-+
-+	if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
-+		kvm_save_fpu(&vcpu->arch.fpu);
-+		vcpu->arch.aux_inuse &= ~KVM_LARCH_FPU;
-+		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_FPU);
-+
-+		/* Disable FPU */
-+		clear_csr_euen(CSR_EUEN_FPEN);
-+	}
-+
-+	preempt_enable();
-+}
-+
- int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 			 unsigned int ioctl, unsigned long arg)
  {
- 	return 0;
+@@ -210,6 +227,15 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 			r = _kvm_get_reg(vcpu, &reg);
+ 		break;
+ 	}
++	case KVM_ENABLE_CAP: {
++		struct kvm_enable_cap cap;
++
++		r = -EFAULT;
++		if (copy_from_user(&cap, argp, sizeof(cap)))
++			break;
++		r = kvm_vcpu_ioctl_enable_cap(vcpu, &cap);
++		break;
++	}
+ 	default:
+ 		r = -ENOIOCTLCMD;
+ 		break;
 -- 
 2.31.1
 
