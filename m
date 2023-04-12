@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85C93258D
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85CCF28EA
 	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 08:31:54 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxztoqbDZk0SEbAA--.30367S3;
-	Wed, 12 Apr 2023 16:30:34 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxEJUlbDZkViEbAA--.41983S3;
+	Wed, 12 Apr 2023 16:30:29 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxC74fbDZkdKwgAA--.35751S23;
-	Wed, 12 Apr 2023 16:30:33 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxC74fbDZkdKwgAA--.35751S11;
+	Wed, 12 Apr 2023 16:30:28 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v6 21/30] LoongArch: KVM: Implement handle iocsr exception
-Date: Wed, 12 Apr 2023 16:30:14 +0800
-Message-Id: <20230412083023.1693910-22-zhaotianrui@loongson.cn>
+Subject: [PATCH v6 09/30] LoongArch: KVM: Implement vcpu get, vcpu set registers
+Date: Wed, 12 Apr 2023 16:30:02 +0800
+Message-Id: <20230412083023.1693910-10-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230412083023.1693910-1-zhaotianrui@loongson.cn>
 References: <20230412083023.1693910-1-zhaotianrui@loongson.cn>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxC74fbDZkdKwgAA--.35751S23
+X-CM-TRANSID:AQAAf8DxC74fbDZkdKwgAA--.35751S11
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWFWrGw17Kry5ZFy7ZrWfAFb_yoWrJF1Upa
-	yjvryktrW8Wwn3twsxJrs7Xr1aqF48Gry7XFZxJw4S9rW2ya45Jr4vkrnFvFZ8K39xGr4I
-	vw1fJryxuF1qy3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW3ArW7Aw4UJr47Ar1DGFWkXrb_yoW3GrWrpF
+	17A3y5WrW8KrWxCwn3trs09r4Ygrn7KrWxZFyxuFWSyr17tryYyF4vkry3JFy5GFyruF1S
+	9as0yF409Fs8A37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	b4kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
 	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
@@ -51,159 +51,318 @@ X-Coremail-Antispam: 1Uk129KBjvJXoWxWFWrGw17Kry5ZFy7ZrWfAFb_yoWrJF1Upa
 	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
 	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
 	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement kvm handle vcpu iocsr exception, setting the iocsr info into
-vcpu_run and return to user space to handle it.
+Implement loongarch vcpu get registers and set registers operations, it
+is called when user space use the ioctl interface to get or set regs.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/include/asm/inst.h | 16 ++++++
- arch/loongarch/kvm/exit.c         | 92 +++++++++++++++++++++++++++++++
- 2 files changed, 108 insertions(+)
+ arch/loongarch/kvm/csr_ops.S |  76 +++++++++++++
+ arch/loongarch/kvm/vcpu.c    | 206 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 282 insertions(+)
+ create mode 100644 arch/loongarch/kvm/csr_ops.S
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index a04fe755d719..e95040e880fa 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -56,6 +56,14 @@ enum reg2_op {
- 	revbd_op	= 0x0f,
- 	revh2w_op	= 0x10,
- 	revhd_op	= 0x11,
-+	iocsrrdb_op     = 0x19200,
-+	iocsrrdh_op     = 0x19201,
-+	iocsrrdw_op     = 0x19202,
-+	iocsrrdd_op     = 0x19203,
-+	iocsrwrb_op     = 0x19204,
-+	iocsrwrh_op     = 0x19205,
-+	iocsrwrw_op     = 0x19206,
-+	iocsrwrd_op     = 0x19207,
- };
- 
- enum reg2i5_op {
-@@ -272,6 +280,13 @@ struct reg3sa2_format {
- 	unsigned int opcode : 15;
- };
- 
-+struct reg2csr_format {
-+	unsigned int rd : 5;
-+	unsigned int rj : 5;
-+	unsigned int csr : 14;
-+	unsigned int opcode : 8;
-+};
+diff --git a/arch/loongarch/kvm/csr_ops.S b/arch/loongarch/kvm/csr_ops.S
+new file mode 100644
+index 000000000000..962b96d8291a
+--- /dev/null
++++ b/arch/loongarch/kvm/csr_ops.S
+@@ -0,0 +1,76 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
 +
- union loongarch_instruction {
- 	unsigned int word;
- 	struct reg0i15_format	reg0i15_format;
-@@ -287,6 +302,7 @@ union loongarch_instruction {
- 	struct reg2bstrd_format	reg2bstrd_format;
- 	struct reg3_format	reg3_format;
- 	struct reg3sa2_format	reg3sa2_format;
-+	struct reg2csr_format   reg2csr_format;
- };
++#include <asm/regdef.h>
++#include <linux/linkage.h>
++	.text
++	.section        .text
++	.cfi_sections   .debug_frame
++/*
++ * we have splited hw gcsr into three parts, so we can
++ * calculate the code offset by gcsrid and jump here to
++ * run the gcsrwr instruction.
++ */
++SYM_FUNC_START(set_hw_gcsr)
++	addi.d      t0,   a0,   0
++	addi.w      t1,   zero, 96
++	bltu        t1,   t0,   1f
++	la.pcrel    t0,   10f
++	alsl.d      t0,   a0,   t0, 3
++	jirl        zero, t0,   0
++1:
++	addi.w      t1,   a0,   -128
++	addi.w      t2,   zero, 15
++	bltu        t2,   t1,   2f
++	la.pcrel    t0,   11f
++	alsl.d      t0,   t1,   t0, 3
++	jirl        zero, t0,   0
++2:
++	addi.w      t1,   a0,   -384
++	addi.w      t2,   zero, 3
++	bltu        t2,   t1,   3f
++	la.pcrel    t0,   12f
++	alsl.d      t0,   t1,   t0, 3
++	jirl        zero, t0,   0
++3:
++	addi.w      a0,   zero, -1
++	jirl        zero, ra,   0
++/*
++ * write guest csr
++ * 0x05000000 | (LOONGARCH_CSR_XXX << 10) | 1 << 5 | a1
++ * range from 0x0(KVM_CSR_CRMD) to 0x60 (KVM_CSR_LLBCTL)
++ */
++10:
++	csrnum = 0
++	.rept 0x61
++		.word 0x05000020 | csrnum << 10 | 5
++		jirl zero, ra, 0
++		csrnum = csrnum + 1
++	.endr
++/*
++ * write guest csr
++ * 0x05000000 | (LOONGARCH_CSR_XXX << 10) | 1<<5 | a1
++ * range from 0x80 (KVM_CSR_IMPCTL1) to 0x8f (KVM_CSR_TLBRPRMD)
++ */
++11:
++	csrnum = 0x80
++	.rept 0x10
++		.word 0x05000020 | csrnum << 10 | 5
++		jirl zero, ra, 0
++		csrnum = csrnum + 1
++	.endr
++/*
++ * write guest csr
++ * 0x05000000 | (LOONGARCH_CSR_XXX << 10) | 1<<5 | a1
++ * range from 0x180(KVM_CSR_DMWIN0) to 0x183(KVM_CSR_DMWIN3)
++ */
++12:
++	csrnum = 0x180
++	.rept 0x4
++		.word 0x05000020 | csrnum << 10 | 5
++		jirl zero, ra, 0
++		csrnum = csrnum + 1
++	.endr
++SYM_FUNC_END(set_hw_gcsr)
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 651ae5ca0691..9ad6a285cbb4 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -13,6 +13,212 @@
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
  
- #define LOONGARCH_INSN_SIZE	sizeof(union loongarch_instruction)
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index dcb8eb815b74..f151cc2dd0b9 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -98,3 +98,95 @@ static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
- 
- 	return EMULATE_DONE;
- }
-+
-+int _kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu)
++int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v)
 +{
-+	u32 rd, rj, opcode;
-+	u32 addr;
 +	unsigned long val;
-+	int ret;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++
++	if (id >= CSR_ALL_SIZE || !(get_gcsr_flag(id) & (HW_GCSR | SW_GCSR)))
++		return -EINVAL;
++
++	if (id == LOONGARCH_CSR_ESTAT) {
++		/* interrupt status IP0 -- IP7 from GINTC */
++		val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & 0xff;
++		*v = kvm_read_sw_gcsr(csr, id) | (val << 2);
++		return 0;
++	}
 +
 +	/*
-+	 * Each IOCSR with different opcode
++	 * get software csr state if csrid is valid, since software
++	 * csr state is consistent with hardware
 +	 */
-+	rd = inst.reg2_format.rd;
-+	rj = inst.reg2_format.rj;
-+	opcode = inst.reg2_format.opcode;
-+	addr = vcpu->arch.gprs[rj];
-+	ret = EMULATE_DO_IOCSR;
-+	run->iocsr_io.phys_addr = addr;
-+	run->iocsr_io.is_write = 0;
++	*v = kvm_read_sw_gcsr(csr, id);
 +
-+	/* LoongArch is Little endian */
-+	switch (opcode) {
-+	case iocsrrdb_op:
-+		run->iocsr_io.len = 1;
-+		break;
-+	case iocsrrdh_op:
-+		run->iocsr_io.len = 2;
-+		break;
-+	case iocsrrdw_op:
-+		run->iocsr_io.len = 4;
-+		break;
-+	case iocsrrdd_op:
-+		run->iocsr_io.len = 8;
-+		break;
-+	case iocsrwrb_op:
-+		run->iocsr_io.len = 1;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	case iocsrwrh_op:
-+		run->iocsr_io.len = 2;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	case iocsrwrw_op:
-+		run->iocsr_io.len = 4;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	case iocsrwrd_op:
-+		run->iocsr_io.len = 8;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	default:
-+		ret = EMULATE_FAIL;
-+		break;
++	return 0;
++}
++
++int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++	int ret = 0, gintc;
++
++	if (id >= CSR_ALL_SIZE || !(get_gcsr_flag(id) & (HW_GCSR | SW_GCSR)))
++		return -EINVAL;
++
++	if (id == LOONGARCH_CSR_ESTAT) {
++		/* estat IP0~IP7 inject through guestexcept */
++		gintc = (val >> 2) & 0xff;
++		write_csr_gintc(gintc);
++		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
++
++		gintc = val & ~(0xffUL << 2);
++		write_gcsr_estat(gintc);
++		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
++
++		return ret;
 +	}
 +
-+	if (ret == EMULATE_DO_IOCSR) {
-+		if (run->iocsr_io.is_write) {
-+			val = vcpu->arch.gprs[rd];
-+			memcpy(run->iocsr_io.data, &val, run->iocsr_io.len);
-+		}
-+		vcpu->arch.io_gpr = rd;
-+	}
++	if (get_gcsr_flag(id) & HW_GCSR) {
++		set_hw_gcsr(id, val);
++		/* write sw gcsr to keep consistent with hardware */
++		kvm_write_sw_gcsr(csr, id, val);
++	} else
++		kvm_write_sw_gcsr(csr, id, val);
 +
 +	return ret;
 +}
 +
-+int _kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
++static int _kvm_get_one_reg(struct kvm_vcpu *vcpu,
++		const struct kvm_one_reg *reg, s64 *v)
 +{
-+	unsigned long *gpr = &vcpu->arch.gprs[vcpu->arch.io_gpr];
-+	enum emulation_result er = EMULATE_DONE;
++	int reg_idx, ret = 0;
 +
-+	switch (run->iocsr_io.len) {
-+	case 8:
-+		*gpr = *(s64 *)run->iocsr_io.data;
++	if ((reg->id & KVM_REG_LOONGARCH_MASK) == KVM_REG_LOONGARCH_CSR) {
++		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
++		ret = _kvm_getcsr(vcpu, reg_idx, v);
++	} else if (reg->id == KVM_REG_LOONGARCH_COUNTER)
++		*v = drdtime() + vcpu->kvm->arch.time_offset;
++	else
++		ret = -EINVAL;
++
++	return ret;
++}
++
++static int _kvm_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
++{
++	int ret = -EINVAL;
++	s64 v;
++
++	if ((reg->id & KVM_REG_SIZE_MASK) != KVM_REG_SIZE_U64)
++		return ret;
++
++	if (_kvm_get_one_reg(vcpu, reg, &v))
++		return ret;
++
++	return put_user(v, (u64 __user *)(long)reg->addr);
++}
++
++static int _kvm_set_one_reg(struct kvm_vcpu *vcpu,
++			const struct kvm_one_reg *reg,
++			s64 v)
++{
++	int ret = 0;
++	unsigned long flags;
++	u64 val;
++	int reg_idx;
++
++	val = v;
++	if ((reg->id & KVM_REG_LOONGARCH_MASK) == KVM_REG_LOONGARCH_CSR) {
++		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
++		ret = _kvm_setcsr(vcpu, reg_idx, val);
++	} else if (reg->id == KVM_REG_LOONGARCH_COUNTER) {
++		local_irq_save(flags);
++		/*
++		 * gftoffset is relative with board, not vcpu
++		 * only set for the first time for smp system
++		 */
++		if (vcpu->vcpu_id == 0)
++			vcpu->kvm->arch.time_offset = (signed long)(v - drdtime());
++		write_csr_gcntc((ulong)vcpu->kvm->arch.time_offset);
++		local_irq_restore(flags);
++	} else if (reg->id == KVM_REG_LOONGARCH_VCPU_RESET) {
++		kvm_reset_timer(vcpu);
++		memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
++		memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
++	} else
++		ret = -EINVAL;
++
++	return ret;
++}
++
++static int _kvm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
++{
++	s64 v;
++	int ret = -EINVAL;
++
++	if ((reg->id & KVM_REG_SIZE_MASK) != KVM_REG_SIZE_U64)
++		return ret;
++
++	if (get_user(v, (u64 __user *)(long)reg->addr))
++		return ret;
++
++	return _kvm_set_one_reg(vcpu, reg, v);
++}
++
++int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu,
++				  struct kvm_sregs *sregs)
++{
++	return -ENOIOCTLCMD;
++}
++
++int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu,
++				  struct kvm_sregs *sregs)
++{
++	return -ENOIOCTLCMD;
++}
++
++int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
++{
++	int i;
++
++	vcpu_load(vcpu);
++
++	for (i = 0; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
++		regs->gpr[i] = vcpu->arch.gprs[i];
++
++	regs->pc = vcpu->arch.pc;
++
++	vcpu_put(vcpu);
++	return 0;
++}
++
++int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
++{
++	int i;
++
++	vcpu_load(vcpu);
++
++	for (i = 1; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
++		vcpu->arch.gprs[i] = regs->gpr[i];
++	vcpu->arch.gprs[0] = 0; /* zero is special, and cannot be set. */
++	vcpu->arch.pc = regs->pc;
++
++	vcpu_put(vcpu);
++	return 0;
++}
++
++long kvm_arch_vcpu_ioctl(struct file *filp,
++			 unsigned int ioctl, unsigned long arg)
++{
++	struct kvm_vcpu *vcpu = filp->private_data;
++	void __user *argp = (void __user *)arg;
++	long r;
++
++	vcpu_load(vcpu);
++
++	switch (ioctl) {
++	case KVM_SET_ONE_REG:
++	case KVM_GET_ONE_REG: {
++		struct kvm_one_reg reg;
++
++		r = -EFAULT;
++		if (copy_from_user(&reg, argp, sizeof(reg)))
++			break;
++		if (ioctl == KVM_SET_ONE_REG)
++			r = _kvm_set_reg(vcpu, &reg);
++		else
++			r = _kvm_get_reg(vcpu, &reg);
 +		break;
-+	case 4:
-+		*gpr = *(int *)run->iocsr_io.data;
-+		break;
-+	case 2:
-+		*gpr = *(short *)run->iocsr_io.data;
-+		break;
-+	case 1:
-+		*gpr = *(char *) run->iocsr_io.data;
-+		break;
++	}
 +	default:
-+		kvm_err("Bad IOCSR length: %d,addr is 0x%lx",
-+				run->iocsr_io.len, vcpu->arch.badv);
-+		er = EMULATE_FAIL;
++		r = -ENOIOCTLCMD;
 +		break;
 +	}
 +
-+	return er;
++	vcpu_put(vcpu);
++	return r;
 +}
++
+ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+ {
+ 	return 0;
 -- 
 2.31.1
 
