@@ -1,60 +1,84 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE3633C1
-	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 11:08:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1681297710;
-	bh=ALuqxXkknpPb+XGh4R8O0PTpAo7fqkBau9qQsFBl8xE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Q3UzUbY44p7ukE1Tkt1fkkTKSZnCiVbjhMP40lTMU1NdYplbK/fbWmQFJ6h2N/WyC
-	 ikBWXyKkCCsKSyIe65lIOvEXErMceOLdWGm6tvO549f1cZPL8zv58JIFG+zAPaD3/4
-	 EDvANhuTMKwll7GZI+yYHGr98enV3ChBYfl+FAhM=
-Received: from [192.168.124.11] (unknown [113.140.11.6])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB20B3C02
+	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 11:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ptb2avmE0b7kYpkD6HQ5sKXtmJgMCEPhKl497g20A1Q=; b=OeJpnwPQVQrSrkQnsPYnkVz6Xn
+	MQHlpDq4OctaeZMIotctQRvuZFYgTUiewZ7yhKiM52JM3lAIDo3z9I7QtTxis1qzyh+z8drUYv/WV
+	bfbaBd2P8XywYXeiBMI5PritExaKlrWXJd7/wY7wiQAHiZblhmhYLud/MzynJ+MYFFW0+5xyzQc6I
+	virTasGQ1pP9Bw2IUpE4ZnHiiBOZdruaGxw9KZH5HnVc+61Syh0q79vu8y30TAFx7q+e26Z3cuEp/
+	bsMrHDSoGfQD+fNsEp4WZY7Lu2KON5AN0m6qsqM2FWXzkMBO2BMwFxx8Is50hsXaD3MySaIdcQUTV
+	LkPO9Wwg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1pmYiM-006owg-IO; Wed, 12 Apr 2023 11:32:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 3CCC966212;
-	Wed, 12 Apr 2023 07:08:29 -0400 (EDT)
-Message-ID: <bf4bda7a88bd5f33bd3bdc7fc715bc24fa4add8f.camel@xry111.site>
-Subject: Re: [PATCH v1 3/4] LoongArch: Use larch_insn_gen_break() for kprobes
-From: Xi Ruoyao <xry111@xry111.site>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>,  WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	loongson-kernel@lists.loongnix.cn
-Date: Wed, 12 Apr 2023 19:08:21 +0800
-In-Reply-To: <1681293901-24918-4-git-send-email-yangtiezhu@loongson.cn>
-References: <1681293901-24918-1-git-send-email-yangtiezhu@loongson.cn>
-	 <1681293901-24918-4-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.0 
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D3F083002A6;
+	Wed, 12 Apr 2023 13:32:31 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A7D4525E5A38B; Wed, 12 Apr 2023 13:32:31 +0200 (CEST)
+Date: Wed, 12 Apr 2023 13:32:31 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	x86@kernel.org, linux-arch@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Jun Yi <yijun@loongson.cn>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v2 3/5] locking/arch: Wire up local_try_cmpxchg
+Message-ID: <20230412113231.GA628377@hirez.programming.kicks-ass.net>
+References: <20230405141710.3551-1-ubizjak@gmail.com>
+ <20230405141710.3551-4-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230405141710.3551-4-ubizjak@gmail.com>
 
-On Wed, 2023-04-12 at 18:05 +0800, Tiezhu Yang wrote:
-> -static inline bool insns_not_supported(union loongarch_instruction insn)
-> +static inline bool insns_not_supported(u32 code)
-> =C2=A0{
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0union loongarch_instruction in=
-sn;
+On Wed, Apr 05, 2023 at 04:17:08PM +0200, Uros Bizjak wrote:
+> diff --git a/arch/powerpc/include/asm/local.h b/arch/powerpc/include/asm/local.h
+> index bc4bd19b7fc2..45492fb5bf22 100644
+> --- a/arch/powerpc/include/asm/local.h
+> +++ b/arch/powerpc/include/asm/local.h
+> @@ -90,6 +90,17 @@ static __inline__ long local_cmpxchg(local_t *l, long o, long n)
+>  	return t;
+>  }
+>  
+> +static __inline__ bool local_try_cmpxchg(local_t *l, long *po, long n)
+> +{
+> +	long o = *po, r;
 > +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0insn.word =3D code;
+> +	r = local_cmpxchg(l, o, n);
+> +	if (unlikely(r != o))
+> +		*po = r;
+> +
+> +	return likely(r == o);
+> +}
 > +
 
-I remember Xuerui disliked this change.  Maybe we can add
-__attribute__ (__transparent_union__) [1] for union
-loongarch_instruction instead?
-
-[1]: https://gcc.gnu.org/onlinedocs/gcc/Common-Type-Attributes.html#index-t=
-ransparent_005funion-type-attribute
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Why is the ppc one different from the rest? Why can't it use the
+try_cmpxchg_local() fallback and needs to have it open-coded?
