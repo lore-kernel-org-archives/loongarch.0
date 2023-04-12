@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3077C211A
-	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 08:30:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2B3F2104
+	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 08:30:32 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxJAwpbDZksyEbAA--.41729S3;
-	Wed, 12 Apr 2023 16:30:33 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxC9ohbDZkACEbAA--.48066S3;
+	Wed, 12 Apr 2023 16:30:25 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxC74fbDZkdKwgAA--.35751S20;
-	Wed, 12 Apr 2023 16:30:31 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxC74fbDZkdKwgAA--.35751S4;
+	Wed, 12 Apr 2023 16:30:25 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v6 18/30] LoongArch: KVM: Implement vcpu timer operations
-Date: Wed, 12 Apr 2023 16:30:11 +0800
-Message-Id: <20230412083023.1693910-19-zhaotianrui@loongson.cn>
+Subject: [PATCH v6 02/30] LoongArch: KVM: Implement kvm module related interface
+Date: Wed, 12 Apr 2023 16:29:55 +0800
+Message-Id: <20230412083023.1693910-3-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230412083023.1693910-1-zhaotianrui@loongson.cn>
 References: <20230412083023.1693910-1-zhaotianrui@loongson.cn>
@@ -35,309 +35,318 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxC74fbDZkdKwgAA--.35751S20
+X-CM-TRANSID:AQAAf8DxC74fbDZkdKwgAA--.35751S4
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxtw18Kw4UAFyDXF1kCrWrAFb_yoW3Zw48pr
-	WIkryIqr48Xryjgwn3AFs0vrn8W3yrK3W7Gry7J3ySyrnxJ3s8XF40gryDJFZxGFyIvF1S
-	vryrAwn8Ar4kA3DanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWfGrWkuw1fAw4xAw1rZw4kXrb_yoWkGr4DpF
+	W0krWUAry7KFnrWa4rXw1Y9w4rJrZ29a9YyF15trWktwnFqrWrWa4IkF17JFy5Jw1xZF1j
+	k3Z5Cas3uF4kXrUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+	bcxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
+	CjxVAFwI0_Cr1j6rxdM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc80
+	4VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY2
+	0_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_
+	Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r
+	1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267
+	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
 
-Implement loongarch vcpu timer operations such as init kvm timer,
-require kvm timer, save kvm timer and restore kvm timer. When
-vcpu exit, we use kvm soft timer to emulate hardware timer. If
-timeout happens, the vcpu timer interrupt will be set and it is
-going to be handled at vcpu next entrance.
+Implement loongarch kvm module init, module exit interface,
+using kvm context to save the vpid info and vcpu world switch
+interface pointer.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/timer.c | 266 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 266 insertions(+)
- create mode 100644 arch/loongarch/kvm/timer.c
+ arch/loongarch/kvm/main.c | 277 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 277 insertions(+)
+ create mode 100644 arch/loongarch/kvm/main.c
 
-diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
 new file mode 100644
-index 000000000000..2c7677248746
+index 000000000000..59b93512cb99
 --- /dev/null
-+++ b/arch/loongarch/kvm/timer.c
-@@ -0,0 +1,266 @@
++++ b/arch/loongarch/kvm/main.c
+@@ -0,0 +1,277 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
 + */
 +
++#include <linux/err.h>
++#include <linux/module.h>
 +#include <linux/kvm_host.h>
-+#include <asm/kvm_csr.h>
-+#include <asm/kvm_vcpu.h>
++#include <asm/kvm_host.h>
++#include <asm/cacheflush.h>
 +
-+/* low level hrtimer wake routine */
-+enum hrtimer_restart kvm_swtimer_wakeup(struct hrtimer *timer)
++static struct kvm_context __percpu *vmcs;
++struct kvm_world_switch *kvm_loongarch_ops;
++unsigned long vpid_mask;
++static int gcsr_flag[CSR_ALL_SIZE];
++
++int get_gcsr_flag(int csr)
 +{
-+	struct kvm_vcpu *vcpu;
++	return gcsr_flag[csr];
++}
 +
-+	vcpu = container_of(timer, struct kvm_vcpu, arch.swtimer);
-+	_kvm_queue_irq(vcpu, LARCH_INT_TIMER);
-+	rcuwait_wake_up(&vcpu->wait);
-+	return kvm_count_timeout(vcpu);
++static inline void set_gcsr_sw_flag(int csr)
++{
++	gcsr_flag[csr] |= SW_GCSR;
++}
++
++static inline void set_gcsr_hw_flag(int csr)
++{
++	gcsr_flag[csr] |= HW_GCSR;
 +}
 +
 +/*
-+ * ktime_to_tick() - Scale ktime_t to a 64-bit stable timer.
-+ *
-+ * Caches the dynamic nanosecond bias in vcpu->arch.timer_dyn_bias.
++ * The default value of gcsr_flag[CSR] is 0(INVALID_GCSR), and we use this
++ * function to set the flag to 1(SW_GCSR) or 2(HW_GCSR) if the gcsr is software
++ * or hardware. It will be used by get/set_gcsr, if gcsr_flag is HW we should
++ * use gcsrrd/gcsrwr to access it, else use sw csr to emulate it.
 + */
-+static unsigned long ktime_to_tick(struct kvm_vcpu *vcpu, ktime_t now)
++static void _kvm_init_gcsr_flag(void)
 +{
-+	s64 now_ns, periods;
-+	unsigned long delta;
++	set_gcsr_hw_flag(LOONGARCH_CSR_CRMD);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PRMD);
++	set_gcsr_hw_flag(LOONGARCH_CSR_EUEN);
++	set_gcsr_hw_flag(LOONGARCH_CSR_MISC);
++	set_gcsr_hw_flag(LOONGARCH_CSR_ECFG);
++	set_gcsr_hw_flag(LOONGARCH_CSR_ESTAT);
++	set_gcsr_hw_flag(LOONGARCH_CSR_ERA);
++	set_gcsr_hw_flag(LOONGARCH_CSR_BADV);
++	set_gcsr_hw_flag(LOONGARCH_CSR_BADI);
++	set_gcsr_hw_flag(LOONGARCH_CSR_EENTRY);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBIDX);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBEHI);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBELO0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBELO1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_ASID);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PGDL);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PGDH);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PWCTL0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PWCTL1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_STLBPGSIZE);
++	set_gcsr_hw_flag(LOONGARCH_CSR_RVACFG);
++	set_gcsr_hw_flag(LOONGARCH_CSR_CPUID);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PRCFG1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PRCFG2);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PRCFG3);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS2);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS3);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS4);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS5);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS6);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS7);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TMID);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TCFG);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TVAL);
++	set_gcsr_hw_flag(LOONGARCH_CSR_CNTC);
++	set_gcsr_hw_flag(LOONGARCH_CSR_LLBCTL);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRENTRY);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRBADV);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRERA);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRSAVE);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRELO0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRELO1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBREHI);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRPRMD);
++	set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN2);
++	set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN3);
++	set_gcsr_hw_flag(LOONGARCH_CSR_MWPS);
++	set_gcsr_hw_flag(LOONGARCH_CSR_FWPS);
 +
-+	now_ns = ktime_to_ns(now);
-+	delta = now_ns + vcpu->arch.timer_dyn_bias;
++	set_gcsr_sw_flag(LOONGARCH_CSR_IMPCTL1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IMPCTL2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRCTL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRINFO1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRINFO2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRENTRY);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRERA);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRSAVE);
++	set_gcsr_sw_flag(LOONGARCH_CSR_CTAG);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DEBUG);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DERA);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DESAVE);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PRCFG1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PRCFG2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PRCFG3);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PGD);
++	set_gcsr_sw_flag(LOONGARCH_CSR_TINTCLR);
 +
-+	if (delta >= vcpu->arch.timer_period) {
-+		/* If delta is out of safe range the bias needs adjusting */
-+		periods = div64_s64(now_ns, vcpu->arch.timer_period);
-+		vcpu->arch.timer_dyn_bias = -periods * vcpu->arch.timer_period;
-+		/* Recalculate delta with new bias */
-+		delta = now_ns + vcpu->arch.timer_dyn_bias;
++	set_gcsr_sw_flag(LOONGARCH_CSR_FWPS);
++	set_gcsr_sw_flag(LOONGARCH_CSR_FWPC);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MWPS);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MWPC);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB0ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB0MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB0CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB0ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB1ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB1MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB1CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB1ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB2ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB2MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB2CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB2ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB3ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB3MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB3CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB3ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB4ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB4MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB4CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB4ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB5ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB5MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB5CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB5ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB6ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB6MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB6CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB6ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB7ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB7MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB7CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB7ASID);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB0ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB0MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB0CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB0ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB1ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB1MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB1CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB1ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB2ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB2MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB2CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB2ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB3ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB3MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB3CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB3ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB4ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB4MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB4CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB4ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB5ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB5MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB5CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB5ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB6ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB6MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB6CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB6ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB7ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB7MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB7CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB7ASID);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL0);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR0);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL3);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR3);
++}
++
++static int kvm_loongarch_env_init(void)
++{
++	struct kvm_context *context;
++	int cpu, order;
++	void *addr;
++
++	vmcs = alloc_percpu(struct kvm_context);
++	if (!vmcs) {
++		pr_err("kvm: failed to allocate percpu kvm_context\n");
++		return -ENOMEM;
 +	}
 +
-+	/*
-+	 * We've ensured that:
-+	 *   delta < timer_period
-+	 */
-+	return div_u64(delta * vcpu->arch.timer_mhz, MNSEC_PER_SEC);
-+}
-+
-+/**
-+ * kvm_resume_hrtimer() - Resume hrtimer, updating expiry.
-+ * @vcpu:	Virtual CPU.
-+ * @now:	ktime at point of resume.
-+ * @val:	stable timer at point of resume.
-+ *
-+ * Resumes the timer and updates the timer expiry based on @now and @count.
-+ */
-+static void kvm_resume_hrtimer(struct kvm_vcpu *vcpu, ktime_t now,
-+				unsigned long val)
-+{
-+	unsigned long delta;
-+	ktime_t expire;
-+
-+	/* Stable timer decreased to zero or
-+	 * initialize to zero, set 4 second timer
-+	 */
-+	delta = div_u64(val * MNSEC_PER_SEC, vcpu->arch.timer_mhz);
-+	expire = ktime_add_ns(now, delta);
-+
-+	/* Update hrtimer to use new timeout */
-+	hrtimer_cancel(&vcpu->arch.swtimer);
-+	hrtimer_start(&vcpu->arch.swtimer, expire, HRTIMER_MODE_ABS_PINNED);
-+}
-+
-+/**
-+ * kvm_init_timer() - Initialise stable timer.
-+ * @vcpu:	Virtual CPU.
-+ * @timer_hz:	Frequency of timer.
-+ *
-+ * Initialise the timer to the specified frequency, zero it, and set it going if
-+ * it's enabled.
-+ */
-+void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long timer_hz)
-+{
-+	ktime_t now;
-+	unsigned long ticks;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+
-+	ticks = (unsigned long)MNSEC_PER_SEC * CSR_TCFG_VAL;
-+	vcpu->arch.timer_mhz = timer_hz >> 20;
-+	vcpu->arch.timer_period = div_u64(ticks, vcpu->arch.timer_mhz);
-+	vcpu->arch.timer_dyn_bias = 0;
-+
-+	/* Starting at 0 */
-+	ticks = 0;
-+	now = ktime_get();
-+	vcpu->arch.timer_bias = ticks - ktime_to_tick(vcpu, now);
-+	vcpu->arch.timer_bias &= CSR_TCFG_VAL;
-+	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_TVAL, ticks);
-+}
-+
-+/**
-+ * kvm_count_timeout() - Push timer forward on timeout.
-+ * @vcpu:	Virtual CPU.
-+ *
-+ * Handle an hrtimer event by push the hrtimer forward a period.
-+ *
-+ * Returns:	The hrtimer_restart value to return to the hrtimer subsystem.
-+ */
-+enum hrtimer_restart kvm_count_timeout(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long cfg;
-+
-+	/* Add the Count period to the current expiry time */
-+	cfg = kvm_read_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_TCFG);
-+	if (cfg & CSR_TCFG_PERIOD) {
-+		hrtimer_add_expires_ns(&vcpu->arch.swtimer, cfg & CSR_TCFG_VAL);
-+		return HRTIMER_RESTART;
-+	} else
-+		return HRTIMER_NORESTART;
-+}
-+
-+/*
-+ * kvm_restore_timer() - Restore timer state.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Restore soft timer state from saved context.
-+ */
-+void kvm_restore_timer(struct kvm_vcpu *vcpu)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	ktime_t saved_ktime, now;
-+	unsigned long val, new, delta;
-+	int expired = 0;
-+	unsigned long cfg;
++	kvm_loongarch_ops = kzalloc(sizeof(*kvm_loongarch_ops), GFP_KERNEL);
++	if (!kvm_loongarch_ops)
++		return -ENOMEM;
 +
 +	/*
-+	 * Set guest stable timer cfg csr
++	 * There will be problem in world switch code if there
++	 * is page fault reenter, since pgd register is shared
++	 * between root kernel and kvm hypervisor. World switch
++	 * entry need be unmapped area, cannot be tlb mapped area.
++	 * In future if hw pagetable walking is supported, or there
++	 * is separate pgd registers between root kernel and kvm
++	 * hypervisor, copying about world switch code will not be used.
 +	 */
-+	cfg = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TCFG);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	if (!(cfg & CSR_TCFG_EN)) {
-+		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TCFG);
-+		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TVAL);
-+		return;
++
++	order = get_order(kvm_vector_size + kvm_enter_guest_size);
++	addr = (void *)__get_free_pages(GFP_KERNEL, order);
++	if (!addr) {
++		free_percpu(vmcs);
++		return -ENOMEM;
 +	}
 +
-+	now = ktime_get();
-+	saved_ktime = vcpu->arch.stable_ktime_saved;
-+	val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TVAL);
++	memcpy(addr, kvm_vector_entry, kvm_vector_size);
++	memcpy(addr + kvm_vector_size, kvm_enter_guest, kvm_enter_guest_size);
++	flush_icache_range((unsigned long)addr, (unsigned long)addr +
++				kvm_vector_size + kvm_enter_guest_size);
++	kvm_loongarch_ops->guest_eentry = addr;
++	kvm_loongarch_ops->enter_guest = addr + kvm_vector_size;
++	kvm_loongarch_ops->page_order = order;
 +
-+	/*hrtimer not expire */
-+	delta = ktime_to_tick(vcpu, ktime_sub(now, saved_ktime));
-+	if (delta >= val) {
-+		expired = 1;
-+		if (cfg & CSR_TCFG_PERIOD)
-+			new = (delta - val) % (cfg & CSR_TCFG_VAL);
-+		else
-+			new = 1;
-+	} else
-+		new = val - delta;
++	vpid_mask = read_csr_gstat();
++	vpid_mask = (vpid_mask & CSR_GSTAT_GIDBIT) >> CSR_GSTAT_GIDBIT_SHIFT;
++	if (vpid_mask)
++		vpid_mask = GENMASK(vpid_mask - 1, 0);
 +
-+	new &= CSR_TCFG_VAL;
-+	write_gcsr_timercfg(cfg);
-+	write_gcsr_timertick(new);
-+	if (expired)
-+		_kvm_queue_irq(vcpu, LARCH_INT_TIMER);
-+}
-+
-+/*
-+ * kvm_acquire_timer() - Switch to hard timer state.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Restore hard timer state on top of existing soft timer state if possible.
-+ *
-+ * Since hard timer won't remain active over preemption, preemption should be
-+ * disabled by the caller.
-+ */
-+void kvm_acquire_timer(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long flags, guestcfg;
-+
-+	guestcfg = read_csr_gcfg();
-+	if (!(guestcfg & CSR_GCFG_TIT))
-+		return;
-+
-+	/* enable guest access to hard timer */
-+	write_csr_gcfg(guestcfg & ~CSR_GCFG_TIT);
-+
-+	/*
-+	 * Freeze the soft-timer and sync the guest stable timer with it. We do
-+	 * this with interrupts disabled to avoid latency.
-+	 */
-+	local_irq_save(flags);
-+	hrtimer_cancel(&vcpu->arch.swtimer);
-+	local_irq_restore(flags);
-+}
-+
-+
-+/*
-+ * _kvm_save_timer() - Switch to software emulation of guest timer.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Save guest timer state and switch to software emulation of guest
-+ * timer. The hard timer must already be in use, so preemption should be
-+ * disabled.
-+ */
-+static ktime_t _kvm_save_timer(struct kvm_vcpu *vcpu, unsigned long *val)
-+{
-+	unsigned long end_time;
-+	ktime_t before_time;
-+
-+	before_time = ktime_get();
-+
-+	/*
-+	 * Record a final stable timer which we will transfer to the soft-timer.
-+	 */
-+	end_time = read_gcsr_timertick();
-+	*val = end_time;
-+
-+	kvm_resume_hrtimer(vcpu, before_time, end_time);
-+	return before_time;
-+}
-+
-+/*
-+ * kvm_save_timer() - Save guest timer state.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Save guest timer state and switch to soft guest timer if hard timer was in
-+ * use.
-+ */
-+void kvm_save_timer(struct kvm_vcpu *vcpu)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	unsigned long guestcfg, val;
-+	ktime_t save_ktime;
-+
-+	preempt_disable();
-+	guestcfg = read_csr_gcfg();
-+	if (!(guestcfg & CSR_GCFG_TIT)) {
-+		/* disable guest use of hard timer */
-+		write_csr_gcfg(guestcfg | CSR_GCFG_TIT);
-+
-+		/* save hard timer state */
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TCFG);
-+		if (kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TCFG) & CSR_TCFG_EN) {
-+			save_ktime = _kvm_save_timer(vcpu, &val);
-+			kvm_write_sw_gcsr(csr, LOONGARCH_CSR_TVAL, val);
-+			vcpu->arch.stable_ktime_saved = save_ktime;
-+			if (val == CSR_TCFG_VAL)
-+				_kvm_queue_irq(vcpu, LARCH_INT_TIMER);
-+		} else {
-+			kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TVAL);
-+		}
++	for_each_possible_cpu(cpu) {
++		context = per_cpu_ptr(vmcs, cpu);
++		context->vpid_cache = vpid_mask + 1;
++		context->last_vcpu = NULL;
 +	}
 +
-+	/* save timer-related state to VCPU context */
-+	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	preempt_enable();
++	_kvm_init_fault();
++	_kvm_init_gcsr_flag();
++
++	return 0;
 +}
 +
-+void kvm_reset_timer(struct kvm_vcpu *vcpu)
++static void kvm_loongarch_env_exit(void)
 +{
-+	write_gcsr_timercfg(0);
-+	kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_TCFG, 0);
-+	hrtimer_cancel(&vcpu->arch.swtimer);
++	free_pages((unsigned long)kvm_loongarch_ops->guest_eentry, kvm_loongarch_ops->page_order);
++	free_percpu(vmcs);
 +}
++
++static int kvm_loongarch_init(void)
++{
++	int r;
++
++	if (!cpu_has_lvz)
++		return 0;
++
++	r = kvm_loongarch_env_init();
++	if (r)
++		return r;
++
++	return kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
++}
++
++static void kvm_loongarch_exit(void)
++{
++	kvm_exit();
++	kvm_loongarch_env_exit();
++}
++
++module_init(kvm_loongarch_init);
++module_exit(kvm_loongarch_exit);
 -- 
 2.31.1
 
