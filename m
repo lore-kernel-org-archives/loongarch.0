@@ -1,139 +1,91 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85C742574
-	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 08:31:54 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxYcwnbDZklyEbAA--.42001S3;
-	Wed, 12 Apr 2023 16:30:31 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxC74fbDZkdKwgAA--.35751S18;
-	Wed, 12 Apr 2023 16:30:31 +0800 (CST)
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	Mark Brown <broonie@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	maobibo@loongson.cn,
-	Xi Ruoyao <xry111@xry111.site>,
-	zhaotianrui@loongson.cn
-Subject: [PATCH v6 16/30] LoongArch: KVM: Implement update VM id function
-Date: Wed, 12 Apr 2023 16:30:09 +0800
-Message-Id: <20230412083023.1693910-17-zhaotianrui@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230412083023.1693910-1-zhaotianrui@loongson.cn>
-References: <20230412083023.1693910-1-zhaotianrui@loongson.cn>
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB312F24
+	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 09:08:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1681290522; bh=pFCbhykmw7bNP0wz9hvfELkLjySh0vNS5D8ZUvESsPA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oUKmmJ9QLFR/S6QUZo7IILLVlrKF7SUX724BaCPp8zY8rXCgNuNGqsmKh9RhDT5vw
+	 9gX99+m8EgXijk2DvlbS7Rh+DBZKVcoiB4vqDxC5eeBPFZHyyU31Pv/NJEMk21Wx07
+	 Cek+zeJ8Cbaj/Ler7y1MGrfc9G/ScQ8CKpL6IyhI=
+Received: from [100.100.33.167] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 8DCA06014E;
+	Wed, 12 Apr 2023 17:08:42 +0800 (CST)
+Message-ID: <d5f906aa-2fcd-90c0-09dc-df1d8f0cd643@xen0n.name>
+Date: Wed, 12 Apr 2023 17:08:41 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxC74fbDZkdKwgAA--.35751S18
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Aw1kJrWDZF4Dur48Aw1UWrg_yoW8tryDpF
-	WxCrn5Wr48Xwnxu3sIqw10qr1Y9395JF13Xa47Ja4Yyr17t3sFkrWvkrWDAFyrXr1rAryx
-	XF15tF4YkF18A37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.9.1
+Subject: Re: [PATCH] LoongArch: Use VALEN instead of hard code in comments
+Content-Language: en-US
+To: Enze Li <lienze@kylinos.cn>, chenhuacai@kernel.org
+Cc: loongarch@lists.linux.dev, enze.li@gmx.com
+References: <20230412025525.116668-1-lienze@kylinos.cn>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20230412025525.116668-1-lienze@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Implement kvm check vmid and update vmid, the vmid should be checked before
-vcpu enter guest.
+On 2023/4/12 10:55, Enze Li wrote:
+> Refer to the online documentation[1] for Loongson, use the accurate
+> VALEN in comments to avoid misleading others.
 
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
----
- arch/loongarch/kvm/vmid.c | 65 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 arch/loongarch/kvm/vmid.c
+Reworded some Chinglish for you:
 
-diff --git a/arch/loongarch/kvm/vmid.c b/arch/loongarch/kvm/vmid.c
-new file mode 100644
-index 000000000000..7d9688c24184
---- /dev/null
-+++ b/arch/loongarch/kvm/vmid.c
-@@ -0,0 +1,65 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/kvm_host.h>
-+#include <asm/kvm_host.h>
-+#include "trace.h"
-+
-+static void _kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
-+{
-+	struct kvm_context *context;
-+	unsigned long vpid;
-+
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+	vpid = context->vpid_cache + 1;
-+	if (!(vpid & vpid_mask)) {
-+		/* finish round of 64 bit loop */
-+		if (unlikely(!vpid))
-+			vpid = vpid_mask + 1;
-+
-+		/* vpid 0 reserved for root */
-+		++vpid;
-+
-+		/* start new vpid cycle */
-+		kvm_flush_tlb_all();
-+	}
-+
-+	context->vpid_cache = vpid;
-+	vcpu->arch.vpid = vpid;
-+}
-+
-+void _kvm_check_vmid(struct kvm_vcpu *vcpu, int cpu)
-+{
-+	struct kvm_context *context;
-+	bool migrated;
-+	unsigned long ver, old, vpid;
-+
-+	/*
-+	 * Are we entering guest context on a different CPU to last time?
-+	 * If so, the VCPU's guest TLB state on this CPU may be stale.
-+	 */
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+	migrated = (vcpu->arch.last_exec_cpu != cpu);
-+	vcpu->arch.last_exec_cpu = cpu;
-+
-+	/*
-+	 * Check if our vpid is of an older version
-+	 *
-+	 * We also discard the stored vpid if we've executed on
-+	 * another CPU, as the guest mappings may have changed without
-+	 * hypervisor knowledge.
-+	 */
-+	ver = vcpu->arch.vpid & ~vpid_mask;
-+	old = context->vpid_cache  & ~vpid_mask;
-+	if (migrated || (ver != old)) {
-+		_kvm_update_vpid(vcpu, cpu);
-+		trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
-+	}
-+
-+	/* Restore GSTAT(0x50).vpid */
-+	vpid = (vcpu->arch.vpid & vpid_mask)
-+		<< CSR_GSTAT_GID_SHIFT;
-+	change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
-+}
+Subject: LoongArch: Replace hard-coded values in comments with VALEN
+
+According to LoongArch documentation [1], CSR.PGDL and CSR.PGDH are 
+concerned with the VA's MSB which is VALEN-1 instead of always being 47. 
+Fix comments to avoid misleading others.
+
+> 
+> [1] https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#page-global-directory-base-address-for-lower-half-address-space
+
+Nit: add a colon after [1]. (i.e. "[1]: xxxxx")
+
+> 
+> Signed-off-by: Enze Li <lienze@kylinos.cn>
+> ---
+>   arch/loongarch/include/asm/loongarch.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+> index 65b7dcdea16d..a182a1579148 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -423,9 +423,9 @@ static __always_inline void iocsr_write64(u64 val, u32 reg)
+>   #define  CSR_ASID_ASID_WIDTH		10
+>   #define  CSR_ASID_ASID			(_ULCAST_(0x3ff) << CSR_ASID_ASID_SHIFT)
+>   
+> -#define LOONGARCH_CSR_PGDL		0x19	/* Page table base address when VA[47] = 0 */
+> +#define LOONGARCH_CSR_PGDL		0x19	/* Page table base address when VA[VALEN-1] = 0 */
+>   
+> -#define LOONGARCH_CSR_PGDH		0x1a	/* Page table base address when VA[47] = 1 */
+> +#define LOONGARCH_CSR_PGDH		0x1a	/* Page table base address when VA[VALEN-1] = 1 */
+>   
+>   #define LOONGARCH_CSR_PGD		0x1b	/* Page table base */
+>   
+> 
+> base-commit: fc89d7fb499b0162e081f434d45e8d1b47e82ece
+
+Change itself is trivial enough, thanks!
+
+With the nits addressed: (Huacai may apply the suggestion while applying 
+to loongarch-next, so you won't have to resend v2)
+
+Reviewed-by: WANG Xuerui <git@xen0n.name>
+
 -- 
-2.31.1
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
