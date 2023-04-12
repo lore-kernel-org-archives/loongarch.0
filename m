@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9A1C2561
-	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 08:30:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 144462597
+	for <loongarch@lists.linux.dev>; Wed, 12 Apr 2023 08:30:36 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxJPwlbDZkRSEbAA--.41833S3;
-	Wed, 12 Apr 2023 16:30:29 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxJMQmbDZkdCEbAA--.30508S3;
+	Wed, 12 Apr 2023 16:30:30 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxC74fbDZkdKwgAA--.35751S10;
-	Wed, 12 Apr 2023 16:30:27 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxC74fbDZkdKwgAA--.35751S13;
+	Wed, 12 Apr 2023 16:30:29 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v6 08/30] LoongArch: KVM: Implement vcpu handle exit interface
-Date: Wed, 12 Apr 2023 16:30:01 +0800
-Message-Id: <20230412083023.1693910-9-zhaotianrui@loongson.cn>
+Subject: [PATCH v6 11/30] LoongArch: KVM: Implement fpu related operations for vcpu
+Date: Wed, 12 Apr 2023 16:30:04 +0800
+Message-Id: <20230412083023.1693910-12-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230412083023.1693910-1-zhaotianrui@loongson.cn>
 References: <20230412083023.1693910-1-zhaotianrui@loongson.cn>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxC74fbDZkdKwgAA--.35751S10
+X-CM-TRANSID:AQAAf8DxC74fbDZkdKwgAA--.35751S13
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7WF17AryDJFyxCFW8GFW7Arb_yoW8Cry7pr
-	WxCrn0gw4rG34xJasayrs0qr4Yg3s7Kr17ZrZxX3y2yFsFvas0vr48KrZFyFy5W34FqF1f
-	Xr1rG3WY9F4jywUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7KF1UXF4kKw4xXw1rWryxAFb_yoW8ur1kpF
+	W7Ar90qayrG3WxK34aqr1jgr1avrWkKr1xXa47WryfAr1UtryrZF4vkrW2vF98Jw1xZFyI
+	vF1rGF1UCFyDAwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
 	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
@@ -51,74 +51,88 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7WF17AryDJFyxCFW8GFW7Arb_yoW8Cry7pr
 	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
 	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
 	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
 
-Implement vcpu handle exit interface, getting the exit code by ESTAT
-register and using kvm exception vector to handle it.
+Implement loongarch fpu related interface for vcpu, such as get fpu, set
+fpu, own fpu and lose fpu, etc.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 46 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ arch/loongarch/kvm/vcpu.c | 60 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index bc9e3889fee1..651ae5ca0691 100644
+index e1e6167699de..d1e8cd402900 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -56,6 +56,52 @@ static void kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
- 	vcpu->arch.aux_inuse &= ~KVM_LARCH_CSR;
+@@ -245,6 +245,66 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 	return r;
  }
  
-+/*
-+ * Return 1 for resume guest and "<= 0" for resume host.
-+ */
-+static int _kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
++int kvm_arch_vcpu_ioctl_get_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
 +{
-+	unsigned long exst = vcpu->arch.host_estat;
-+	u32 intr = exst & 0x1fff; /* ignore NMI */
-+	u32 exccode = (exst & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
-+	int ret = RESUME_GUEST;
++	int i = 0;
 +
-+	vcpu->mode = OUTSIDE_GUEST_MODE;
++	/* no need vcpu_load and vcpu_put */
++	fpu->fcsr = vcpu->arch.fpu.fcsr;
++	fpu->fcc = vcpu->arch.fpu.fcc;
++	for (i = 0; i < NUM_FPU_REGS; i++)
++		memcpy(&fpu->fpr[i], &vcpu->arch.fpu.fpr[i], FPU_REG_WIDTH / 64);
 +
-+	/* Set a default exit reason */
-+	run->exit_reason = KVM_EXIT_UNKNOWN;
-+	run->ready_for_interrupt_injection = 1;
-+
-+	local_irq_enable();
-+	guest_state_exit_irqoff();
-+
-+	trace_kvm_exit(vcpu, exccode);
-+	if (exccode) {
-+		ret = _kvm_handle_fault(vcpu, exccode);
-+	} else {
-+		WARN(!intr, "suspicious vm exiting");
-+		++vcpu->stat.int_exits;
-+	}
-+
-+	cond_resched();
-+	local_irq_disable();
-+
-+	if (ret == RESUME_HOST)
-+		return ret;
-+
-+	/* Only check for signals if not already exiting to userspace */
-+	if (signal_pending(current)) {
-+		vcpu->run->exit_reason = KVM_EXIT_INTR;
-+		++vcpu->stat.signal_exits;
-+		return -EINTR;
-+	}
-+
-+	kvm_pre_enter_guest(vcpu);
-+	trace_kvm_reenter(vcpu);
-+	guest_state_enter_irqoff();
-+	return RESUME_GUEST;
++	return 0;
 +}
 +
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
++int kvm_arch_vcpu_ioctl_set_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
++{
++	int i = 0;
++
++	/* no need vcpu_load and vcpu_put */
++	vcpu->arch.fpu.fcsr = fpu->fcsr;
++	vcpu->arch.fpu.fcc = fpu->fcc;
++	for (i = 0; i < NUM_FPU_REGS; i++)
++		memcpy(&vcpu->arch.fpu.fpr[i], &fpu->fpr[i], FPU_REG_WIDTH / 64);
++
++	return 0;
++}
++
++/* Enable FPU for guest and restore context */
++void kvm_own_fpu(struct kvm_vcpu *vcpu)
++{
++	preempt_disable();
++
++	/*
++	 * Enable FPU for guest
++	 */
++	set_csr_euen(CSR_EUEN_FPEN);
++
++	kvm_restore_fpu(&vcpu->arch.fpu);
++	vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
++	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_FPU);
++
++	preempt_enable();
++}
++
++/* Save and disable FPU */
++void kvm_lose_fpu(struct kvm_vcpu *vcpu)
++{
++	preempt_disable();
++
++	if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
++		kvm_save_fpu(&vcpu->arch.fpu);
++		vcpu->arch.aux_inuse &= ~KVM_LARCH_FPU;
++		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_FPU);
++
++		/* Disable FPU */
++		clear_csr_euen(CSR_EUEN_FPEN);
++	}
++
++	preempt_enable();
++}
++
+ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
  {
- 	unsigned long timer_hz;
+ 	return 0;
 -- 
 2.31.1
 
