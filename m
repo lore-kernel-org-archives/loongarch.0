@@ -1,110 +1,165 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7E3E2C9C;
-	Thu, 13 Apr 2023 11:52:56 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.120])
-	by gateway (Coremail) with SMTP id _____8CxC9oR7Tdk9+IbAA--.49326S3;
-	Thu, 13 Apr 2023 19:52:49 +0800 (CST)
-Received: from [10.20.42.120] (unknown [10.20.42.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxxrwQ7Tdkl1oiAA--.36338S3;
-	Thu, 13 Apr 2023 19:52:48 +0800 (CST)
-Subject: Re: [PATCH v6 29/30] LoongArch: KVM: Enable kvm config and add the
- makefile
-To: Xi Ruoyao <xry111@xry111.site>, kernel test robot <lkp@intel.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-References: <20230412083023.1693910-30-zhaotianrui@loongson.cn>
- <202304131526.iXfLaVZc-lkp@intel.com>
- <ee3b287c78d9fbbbc996a787053b4c37fe365c2c.camel@xry111.site>
-Cc: oe-kbuild-all@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-Message-ID: <cead582c-ebc4-e8cf-2326-349933e11afd@loongson.cn>
-Date: Thu, 13 Apr 2023 19:52:58 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DFF2C9C;
+	Thu, 13 Apr 2023 18:36:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681410971; x=1712946971;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=r97ETdLe83X1qhr3CYIugk6zwVDKsPmPWxIRW6Sbhmw=;
+  b=OnIrChrrF8Kgza2FRaYiTkJcsT5lWQu7nlxIS8DkCzN+vnhHiLQDDvpc
+   gOquhVSEJpKUBA6x/xLtwf5BpF5Kc84dgxfZNUgmTr8GHZKTXry2B+zdh
+   PFqIkEoZhmJis3gnumJ4wP/711ZBchDEVS5z+q2+Bb9Ah+AmTxFJhrzz/
+   JwupX31R9DJ0lNTuMutszEZgD5UenJ6Hqn9UEZjjOBHgZiXrU8U6LyPBJ
+   1COCMg+zG+t8078nXibqvDCxDrwy1a8iYGYZBVf4yGp1dxJekGNBxIwyg
+   efXpQuxCUJ+ydOyQRnZ/0DGcuIV4YxCQtSnvcfzuDOzB1beAbEsa6oqO9
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="328411525"
+X-IronPort-AV: E=Sophos;i="5.99,194,1677571200"; 
+   d="scan'208";a="328411525"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 11:36:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="800906389"
+X-IronPort-AV: E=Sophos;i="5.99,194,1677571200"; 
+   d="scan'208";a="800906389"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Apr 2023 11:36:05 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1pn1nb-000YsN-19;
+	Thu, 13 Apr 2023 18:35:59 +0000
+Date: Fri, 14 Apr 2023 02:35:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-rtc@vger.kernel.org, linux-mips@vger.kernel.org,
+	loongarch@lists.linux.dev, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org,
+	Qing Zhang <zhangqing@loongson.cn>,
+	zhaoxiao <zhaoxiao@uniontech.com>, keguang.zhang@gmail.com,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: Re: [PATCH V3 2/7] rtc: Add support for the Loongson-2K/LS7A RTC
+Message-ID: <202304140202.URh2nrLx-lkp@intel.com>
+References: <09f381f445cfbcf857845f61d10238452037b2e8.1681370153.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ee3b287c78d9fbbbc996a787053b4c37fe365c2c.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxxrwQ7Tdkl1oiAA--.36338S3
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7KF4UKF1rWw45Cw4fGFW8Xrb_yoW8uFyxpa
-	srAr4UKF4vqryjkw1jyF1xt3Z5tryfGay8JF1jvwn8ZF4Ut3s7Jr4UGryrKFWaqas8GF4Y
-	gaySqws0kw18JF7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bDAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
-	e7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280
-	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
-	xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC
-	6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-	6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <09f381f445cfbcf857845f61d10238452037b2e8.1681370153.git.zhoubinbin@loongson.cn>
+
+Hi Binbin,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on abelloni/rtc-next]
+[also build test WARNING on robh/for-next linus/master v6.3-rc6 next-20230412]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/dt-bindings-rtc-Subdivision-of-LS2X-RTC-compatible/20230413-155906
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git rtc-next
+patch link:    https://lore.kernel.org/r/09f381f445cfbcf857845f61d10238452037b2e8.1681370153.git.zhoubinbin%40loongson.cn
+patch subject: [PATCH V3 2/7] rtc: Add support for the Loongson-2K/LS7A RTC
+config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20230414/202304140202.URh2nrLx-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project 9638da200e00bd069e6dd63604e14cbafede9324)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm64 cross compiling tool for clang build
+        # apt-get install binutils-aarch64-linux-gnu
+        # https://github.com/intel-lab-lkp/linux/commit/30ef4691d0ab95241315bf9ba7cf20b7d549b071
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Binbin-Zhou/dt-bindings-rtc-Subdivision-of-LS2X-RTC-compatible/20230413-155906
+        git checkout 30ef4691d0ab95241315bf9ba7cf20b7d549b071
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash drivers/rtc/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304140202.URh2nrLx-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/rtc/rtc-ls2x.c:276:25: warning: cast to smaller integer type 'enum ls2x_pm_offset' from 'const void *' [-Wvoid-pointer-to-enum-cast]
+           priv->pm_base = regs - (enum ls2x_pm_offset)device_get_match_data(dev);
+                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 warning generated.
 
 
+vim +276 drivers/rtc/rtc-ls2x.c
 
-在 2023年04月13日 16:33, Xi Ruoyao 写道:
-> On Thu, 2023-04-13 at 15:32 +0800, kernel test robot wrote:
->
->> vim +/asm +244 arch/loongarch/include/asm/loongarch.h
->>
->> f2ac457a61389b Huacai Chen  2022-05-31  238
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  239  /* GCSR */
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  240  static inline u64 gcsr_read(u32 reg)
-> Try __always_inline instead of inline because this "function" will
-> definitely break up if it's not inlined.
->
-> And I guess we should have something like:
->
-> extern u64 __compiletime_error("gcsr_read parameter is not a constant")
-> __gcsr_read_non_const(void);
->
-> static __always_inline u64 gcsr_read(u32 reg)
-> {
-> 	u64 val = 0;
->
-> 	if (!__builtin_constant_p(reg))
-> 		return __gcsr_read_non_const();
->
-> 	asm volatile (
-> ... ...
->
-> Or perhaps we should just rewrite gcsr_read to a macro.
->
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  241  {
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  242     u64 val = 0;
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  243     /* Instructions will be available in binutils later */
->> 2c87b678639d25 Tianrui Zhao 2023-04-12 @244     asm volatile (
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  245             "parse_r __reg, %[val]\n\t"
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  246             /*
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  247              * read val from guest csr register %[reg]
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  248              * gcsrrd %[val], %[reg]
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  249              */
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  250             ".word 0x5 << 24 | %[reg] << 10 | 0 << 5 | __reg\n\t"
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  251             : [val] "+r" (val)
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  252             : [reg] "i" (reg)
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  253             : "memory");
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  254
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  255     return val;
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  256  }
->> 2c87b678639d25 Tianrui Zhao 2023-04-12  257
->>
-Thanks, it really should use __always_inline there, and I will reconsider to fix this function mistakes about compiling.
+   249	
+   250	static int ls2x_rtc_probe(struct platform_device *pdev)
+   251	{
+   252		int ret;
+   253		void __iomem *regs;
+   254		struct ls2x_rtc_priv *priv;
+   255		struct device *dev = &pdev->dev;
+   256	
+   257		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+   258		if (!priv)
+   259			return -ENOMEM;
+   260	
+   261		regs = devm_platform_ioremap_resource(pdev, 0);
+   262		if (IS_ERR(regs))
+   263			return dev_err_probe(dev, PTR_ERR(regs),
+   264					     "devm_platform_ioremap_resource failed\n");
+   265	
+   266		priv->regmap = devm_regmap_init_mmio(dev, regs,
+   267						     &ls2x_rtc_regmap_config);
+   268		if (IS_ERR(priv->regmap))
+   269			return dev_err_probe(dev, PTR_ERR(priv->regmap),
+   270					     "devm_regmap_init_mmio failed\n");
+   271	
+   272		device_init_wakeup(dev, 1);
+   273		spin_lock_init(&priv->lock);
+   274		platform_set_drvdata(pdev, priv);
+   275	
+ > 276		priv->pm_base = regs - (enum ls2x_pm_offset)device_get_match_data(dev);
+   277	
+   278		if (has_acpi_companion(dev))
+   279			acpi_install_fixed_event_handler(ACPI_EVENT_RTC,
+   280							 ls2x_rtc_handler, priv);
+   281	
+   282		priv->rtcdev = devm_rtc_allocate_device(dev);
+   283		if (IS_ERR(priv->rtcdev))
+   284			return dev_err_probe(dev, PTR_ERR(priv->rtcdev),
+   285					     "devm_rtc_allocate_device failed\n");
+   286	
+   287		priv->rtcdev->ops = &ls2x_rtc_ops;
+   288		priv->rtcdev->range_min = RTC_TIMESTAMP_BEGIN_2000;
+   289		priv->rtcdev->range_max = RTC_TIMESTAMP_END_2099;
+   290	
+   291		priv->irq = platform_get_irq(pdev, 0);
+   292		if (priv->irq < 0)
+   293			return dev_err_probe(dev, priv->irq, "platform_get_irq failed\n");
+   294	
+   295		ret = devm_request_irq(dev, priv->irq, ls2x_rtc_isr,
+   296				       IRQF_TRIGGER_RISING, "ls2x-alarm", priv);
+   297		if (ret < 0)
+   298			return dev_err_probe(dev, ret, "Unable to request irq %d\n",
+   299					     priv->irq);
+   300	
+   301		return devm_rtc_register_device(priv->rtcdev);
+   302	}
+   303	
 
-Thanks
-Tianrui Zhao
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
