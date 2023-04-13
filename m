@@ -1,76 +1,146 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7899361
-	for <loongarch@lists.linux.dev>; Thu, 13 Apr 2023 01:58:56 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxztrfYTdko5EbAA--.31086S3;
-	Thu, 13 Apr 2023 09:58:55 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxsOTdYTdk9bkhAA--.9170S3;
-	Thu, 13 Apr 2023 09:58:53 +0800 (CST)
-Subject: Re: [PATCH v1 3/4] LoongArch: Use larch_insn_gen_break() for kprobes
-To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>
-References: <1681293901-24918-1-git-send-email-yangtiezhu@loongson.cn>
- <1681293901-24918-4-git-send-email-yangtiezhu@loongson.cn>
- <bf4bda7a88bd5f33bd3bdc7fc715bc24fa4add8f.camel@xry111.site>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <3249ca98-6293-a83d-d49b-d1d52827a062@loongson.cn>
-Date: Thu, 13 Apr 2023 09:58:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9060B7E;
+	Thu, 13 Apr 2023 07:32:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681371171; x=1712907171;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=j9RjopZ1zWdwidiAtobep0zbvNZuMsow/F+RhAfslE4=;
+  b=d3Yd+Egt1C4TZg+lVFPGxo9SO49p+4Xn5SS5nGbwhAMrDRZtpCpnTYf8
+   RGq0SY89KjgINJS1E0N+U46jrEpvUEknrFdL/KOIvRFrh+y9mutkxjfz7
+   6n4Iz2gkDHDHzKn3W3rWerbSwW4NcrAioLc2d6Y/LAyDWLY7Pc7/OdQ5z
+   D1V23Uc/qX1H5lOdHvPY00rQ84qUhICrXoni/oRRTvwGZqqVpS9BvoLdL
+   QyOs7+xv7CLf/NM4agLMzT8WLDR4WL4zFYJRovO3ueoXPNcX2fg2+KK9Y
+   kyvGRh0HU4pFRMWZFEfNRQVGFagSOTEPiJXdariHVRX0PsXFOzFXqKTOJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="345904188"
+X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
+   d="scan'208";a="345904188"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 00:32:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="682850359"
+X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
+   d="scan'208";a="682850359"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 13 Apr 2023 00:32:41 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1pmrRg-000YUX-0B;
+	Thu, 13 Apr 2023 07:32:40 +0000
+Date: Thu, 13 Apr 2023 15:32:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+	Xi Ruoyao <xry111@xry111.site>, zhaotianrui@loongson.cn
+Subject: Re: [PATCH v6 29/30] LoongArch: KVM: Enable kvm config and add the
+ makefile
+Message-ID: <202304131526.iXfLaVZc-lkp@intel.com>
+References: <20230412083023.1693910-30-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <bf4bda7a88bd5f33bd3bdc7fc715bc24fa4add8f.camel@xry111.site>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8CxsOTdYTdk9bkhAA--.9170S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrKw4rGr1rZw45tFWUWryxuFg_yoW3Awc_ur
-	18ZryUCF98Za9xZw4UKa13ZFykGayxX3WUArykZw47Cwn8Xa4UArZIkr1kZa1jgryfXrnI
-	kFnIqFWFkry7ujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	47kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-	xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
-	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04
-	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
-	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr4
-	1lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1l
-	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
-	A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1LiSJUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230412083023.1693910-30-zhaotianrui@loongson.cn>
+
+Hi Tianrui,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on kvm/queue]
+[also build test ERROR on linus/master v6.3-rc6 next-20230412]
+[cannot apply to kvm/linux-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Tianrui-Zhao/LoongArch-KVM-Add-kvm-related-header-files/20230412-163935
+base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git queue
+patch link:    https://lore.kernel.org/r/20230412083023.1693910-30-zhaotianrui%40loongson.cn
+patch subject: [PATCH v6 29/30] LoongArch: KVM: Enable kvm config and add the makefile
+config: loongarch-randconfig-c033-20230413 (https://download.01.org/0day-ci/archive/20230413/202304131526.iXfLaVZc-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/19c2472bf2612603ce4671e06fb185516a99e040
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Tianrui-Zhao/LoongArch-KVM-Add-kvm-related-header-files/20230412-163935
+        git checkout 19c2472bf2612603ce4671e06fb185516a99e040
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash arch/loongarch/kvm/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304131526.iXfLaVZc-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   In file included from arch/loongarch/include/asm/cpu-info.h:11,
+                    from arch/loongarch/include/asm/processor.h:13,
+                    from arch/loongarch/include/asm/thread_info.h:15,
+                    from include/linux/thread_info.h:60,
+                    from include/asm-generic/preempt.h:5,
+                    from ./arch/loongarch/include/generated/asm/preempt.h:1,
+                    from include/linux/preempt.h:78,
+                    from include/linux/percpu.h:6,
+                    from include/linux/context_tracking_state.h:5,
+                    from include/linux/hardirq.h:5,
+                    from include/linux/kvm_host.h:7,
+                    from arch/loongarch/kvm/vcpu.c:6:
+   In function 'gcsr_read',
+       inlined from 'kvm_save_hw_gcsr' at arch/loongarch/include/asm/kvm_csr.h:24:19:
+>> arch/loongarch/include/asm/loongarch.h:244:9: warning: 'asm' operand 1 probably does not match constraints
+     244 |         asm volatile (
+         |         ^~~
+>> arch/loongarch/include/asm/loongarch.h:244:9: error: impossible constraint in 'asm'
+   In function 'gcsr_write',
+       inlined from 'kvm_restore_hw_gcsr' at arch/loongarch/include/asm/kvm_csr.h:29:2:
+   arch/loongarch/include/asm/loongarch.h:261:9: warning: 'asm' operand 1 probably does not match constraints
+     261 |         asm volatile (
+         |         ^~~
 
 
+vim +/asm +244 arch/loongarch/include/asm/loongarch.h
 
-On 04/12/2023 07:08 PM, Xi Ruoyao wrote:
-> On Wed, 2023-04-12 at 18:05 +0800, Tiezhu Yang wrote:
->> -static inline bool insns_not_supported(union loongarch_instruction insn)
->> +static inline bool insns_not_supported(u32 code)
->>  {
->> +       union loongarch_instruction insn;
->> +
->> +       insn.word = code;
->> +
->
-> I remember Xuerui disliked this change.  Maybe we can add
-> __attribute__ (__transparent_union__) [1] for union
-> loongarch_instruction instead?
->
-> [1]: https://gcc.gnu.org/onlinedocs/gcc/Common-Type-Attributes.html#index-transparent_005funion-type-attribute
->
+f2ac457a61389b Huacai Chen  2022-05-31  238  
+2c87b678639d25 Tianrui Zhao 2023-04-12  239  /* GCSR */
+2c87b678639d25 Tianrui Zhao 2023-04-12  240  static inline u64 gcsr_read(u32 reg)
+2c87b678639d25 Tianrui Zhao 2023-04-12  241  {
+2c87b678639d25 Tianrui Zhao 2023-04-12  242  	u64 val = 0;
+2c87b678639d25 Tianrui Zhao 2023-04-12  243  	/* Instructions will be available in binutils later */
+2c87b678639d25 Tianrui Zhao 2023-04-12 @244  	asm volatile (
+2c87b678639d25 Tianrui Zhao 2023-04-12  245  		"parse_r __reg, %[val]\n\t"
+2c87b678639d25 Tianrui Zhao 2023-04-12  246  		/*
+2c87b678639d25 Tianrui Zhao 2023-04-12  247  		 * read val from guest csr register %[reg]
+2c87b678639d25 Tianrui Zhao 2023-04-12  248  		 * gcsrrd %[val], %[reg]
+2c87b678639d25 Tianrui Zhao 2023-04-12  249  		 */
+2c87b678639d25 Tianrui Zhao 2023-04-12  250  		".word 0x5 << 24 | %[reg] << 10 | 0 << 5 | __reg\n\t"
+2c87b678639d25 Tianrui Zhao 2023-04-12  251  		: [val] "+r" (val)
+2c87b678639d25 Tianrui Zhao 2023-04-12  252  		: [reg] "i" (reg)
+2c87b678639d25 Tianrui Zhao 2023-04-12  253  		: "memory");
+2c87b678639d25 Tianrui Zhao 2023-04-12  254  
+2c87b678639d25 Tianrui Zhao 2023-04-12  255  	return val;
+2c87b678639d25 Tianrui Zhao 2023-04-12  256  }
+2c87b678639d25 Tianrui Zhao 2023-04-12  257  
 
-OK, let me pass union parameter, then define a local variable
-to do type conversion for callers, the changes are small and
-then the code may be more readable, thank you.
-
-Thanks,
-Tiezhu
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
