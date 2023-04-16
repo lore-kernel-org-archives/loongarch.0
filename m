@@ -1,28 +1,30 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E0C7B
-	for <loongarch@lists.linux.dev>; Sun, 16 Apr 2023 06:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081C310F5
+	for <loongarch@lists.linux.dev>; Sun, 16 Apr 2023 06:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1681625041; bh=on96DI9EuCoyz36SIh15Mdt9zC0w3c/o2t/6RTcm0mA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aKcSlv+LnnMh4Gfi2MyE9dAmQVYqQ5EGFU0GWImXFbMMtYe4KvgIZCHOfLXawPYF2
-	 H2wjBbTbOfwu/OCYi5pBaS+GDHN3RaaevjEQ+hxne53n6kdGlDgq+N+nOYviD5PV/o
-	 IofFpCS1Si8lnZBl5ZdYbi6PmeUYwDpnGByviKAo=
+	t=1681625049; bh=4xvr4rnMnOUPULji9NeKGy18qcqyBSpBn2/u4SQ4zt4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=S8Uvdh6MX/Mi23JVx9glnTcQElOxIktOXPBNS9cZU46TLQ/epUcy/KaPDEd65HAo7
+	 63Lw6ZBYTdt+KzZEEI4wAEpp+y7OxVFkQ7CUYkunJ2RKFsrL70VqFgjAOou0SFAMNG
+	 25ZWAGHwmPK2KTIR5Qsf2U85WjkizB6q4Cl8z934=
 Received: from ld50.lan (unknown [101.228.138.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 1213B60157;
-	Sun, 16 Apr 2023 14:03:59 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id A791360193;
+	Sun, 16 Apr 2023 14:04:09 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v4 00/12] LoongArch: Better backtraces
-Date: Sun, 16 Apr 2023 14:03:44 +0800
-Message-Id: <20230416060356.3711529-1-kernel@xen0n.name>
+Subject: [PATCH v4 03/12] LoongArch: Print GPRs with ABI names when showing registers
+Date: Sun, 16 Apr 2023 14:03:47 +0800
+Message-Id: <20230416060356.3711529-4-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
+In-Reply-To: <20230416060356.3711529-1-kernel@xen0n.name>
+References: <20230416060356.3711529-1-kernel@xen0n.name>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -33,102 +35,69 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Hi,
+Print 3 registers per line to fit the entire line within 75 columns even
+with timestamp prefixed to each line, to ease future copy-pastes for all.
 
-Here are a bunch of tweaks to the backtrace code, so the Quality of Life
-for unfortunate LoongArch kernel devs (including but not limited to,
-myself) could be marginally improved by relieving them of having to
-mentally decode the register names and CSR bitfields.
+And show the syscall restart flag (in place of the saved "$zero") if
+non-zero.
 
-This is nearly the same as v3 (which received no replies unfortunately):
-only one patch (the last) is added, which is a by-product of another
-patch series (coming soon).
+Signed-off-by: WANG Xuerui <git@xen0n.name>
+---
+ arch/loongarch/kernel/traps.c | 38 +++++++++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 13 deletions(-)
 
-Before:
-
-> [   17.879976] $ 0   : 0000000000000000 9000000000cc980c 90000001002cc000 90000001002cfe30
-> [   17.887936] $ 4   : 0000000000000010 9000000000f1f770 90000001002cc000 9000000000cc3468
-> [   17.895895] $ 8   : 900000010028fd00 0000000000000001 000055558e569190 0000000000000004
-> [   17.903853] $12   : 0000000000000000 0000000000000004 9000000001026000 900000000132b2d8
-> [   17.911811] $16   : 9000000001026000 000000006674b539 9000000000d51d10 0000000000000001
-> [   17.919769] $20   : 0000000000000000 900000000025c27c 0000000000000004 0000000000000002
-> [   17.927727] $24   : 900000000102e5b0 900000000102e508 0000000000000000 0000000000000004
-> [   17.935686] $28   : 9000000009007840 0000000000000004 0000000000000000 0000000000000004
-> [   17.943644] era   : 90000000002215a0 __arch_cpu_idle+0x20/0x24
-> [   17.949438] ra    : 9000000000cc980c default_idle_call+0x34/0x5c
-> [   17.955406] CSR crmd: 000000b0
-> [   17.955408] CSR prmd: 00000004
-> [   17.958521] CSR euen: 00000000
-> [   17.961635] CSR ecfg: 00071c1c
-> [   17.964748] CSR estat: 00001000
-> [   17.971062] ExcCode : 0 (SubCode 0)
-> [   17.974522] PrId  : 0014c010 (Loongson-64bit)
-
-After:
-
-> [  113.936553] tp 90000000010f8000 sp 90000000010fbdc0 a0 0000000000000000
-> [  113.943125] a1 9000000000ff5158 a2 90000000010f8000 a3 9000000000d6233c
-> [  113.949696] a4 9000000104603e00 a5 0000000000000000 a6 00000000000b9800
-> [  113.956267] a7 0000000000000004 t0 0000000000000000 t1 0000000000000004
-> [  113.962838] t2 900000000110a000 t3 900000000141b5e0 t4 900000000110a000
-> [  113.969408] t5 00000002a6d585d7 t6 9000000000e02118 t7 0000000000000001
-> [  113.975979] t8 0000000000000000 u0 0000001a3dae9000 s9 9000000001035c80
-> [  113.982550] s0 0000000000000000 s1 90000000011125d0 s2 9000000001112528
-> [  113.989121] s3 0000000000000000 s4 0000000000000004 s5 9000000005521880
-> [  113.995692] s6 90000000055218b2 s7 0000000000000000 s8 9000000001035c80
-> [  114.002263]   era: 9000000000221600 __arch_cpu_idle+0x20/0x24
-> [  114.007972]    ra: 9000000000d687f0 default_idle_call+0x34/0x5c
-> [  114.013854]  crmd: 000000b0 (-WE DACM=CC DACF=CC +PG -DA -IE PLV0)
-> [  114.020005]  prmd: 00000004 (-PWE +PIE PPLV0)
-> [  114.024334]  euen: 00000000 (-BTE -ASXE -SXE -FPE)
-> [  114.029096]  ecfg: 00071c1d (VS=7 LIE=0,2-4,10-12)
-> [  114.033855] estat: 00001000 [INT] (EsubCode=0 ECode=0 IS=12)
-> [  114.039479]  prid: 0014c010 (Loongson-64bit)
-
-Changes in v4:
-
-- rebased on top of current loongarch-next
-- show CSR.BADV in case of BCE too
-
-Changes in v3:
-
-- rebased and tested on top of v6.2-rc8
-- restored the "era" name for PC per review suggestion
-- show "u0" in case of r21 according to kernel register convention
-- removed redundant print of $ra
-- print the syscall restart flag if non-zero
-
-Changes in v2:
-
-- rebased and tested on top of next-20221226
-- removed the mass symbol renamings per Huacai's suggestion (but the
-  output still uses the ISA manual names because users are expected to
-  be more familiar with those)
-
-WANG Xuerui (12):
-  LoongArch: Clean up the architectural interrupt definitions
-  LoongArch: Add exception subcode definitions for the watchpoint
-    exception
-  LoongArch: Print GPRs with ABI names when showing registers
-  LoongArch: Print symbol info for CSR.ERA and $ra only for kernel-mode
-    contexts
-  LoongArch: Fix format of CSR lines during show_regs
-  LoongArch: Humanize the CRMD line when showing registers
-  LoongArch: Humanize the PRMD line when showing registers
-  LoongArch: Humanize the EUEN line when showing registers
-  LoongArch: Humanize the ECFG line when showing registers
-  LoongArch: Humanize the ESTAT line when showing registers
-  LoongArch: Use lowercase ISA manual names for BADV and CPUCFG.PRID
-    lines in show_regs
-  LoongArch: Include CSR.BADV in show_regs in case of BCE exceptions
-
- arch/loongarch/include/asm/loongarch.h |  60 ++++---
- arch/loongarch/kernel/irq.c            |   2 +-
- arch/loongarch/kernel/perf_event.c     |   2 +-
- arch/loongarch/kernel/time.c           |   2 +-
- arch/loongarch/kernel/traps.c          | 227 +++++++++++++++++++++----
- 5 files changed, 233 insertions(+), 60 deletions(-)
-
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index 2f4279f612e7..f61de72e0c3a 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -158,22 +158,34 @@ static void __show_regs(const struct pt_regs *regs)
+ 	const int field = 2 * sizeof(unsigned long);
+ 	unsigned int excsubcode;
+ 	unsigned int exccode;
+-	int i;
+ 
+ 	show_regs_print_info(KERN_DEFAULT);
+ 
+-	/*
+-	 * Saved main processor registers
+-	 */
+-	for (i = 0; i < 32; ) {
+-		if ((i % 4) == 0)
+-			printk("$%2d   :", i);
+-		pr_cont(" %0*lx", field, regs->regs[i]);
+-
+-		i++;
+-		if ((i % 4) == 0)
+-			pr_cont("\n");
+-	}
++	/* Print most of the GPRs, 3 per row to fit output in 75 columns */
++	pr_cont("tp %0*lx sp %0*lx a0 %0*lx\n",
++		field, regs->regs[2], field, regs->regs[3], field, regs->regs[4]);
++	pr_cont("a1 %0*lx a2 %0*lx a3 %0*lx\n",
++		field, regs->regs[5], field, regs->regs[6], field, regs->regs[7]);
++	pr_cont("a4 %0*lx a5 %0*lx a6 %0*lx\n",
++		field, regs->regs[8], field, regs->regs[9], field, regs->regs[10]);
++	pr_cont("a7 %0*lx t0 %0*lx t1 %0*lx\n",
++		field, regs->regs[11], field, regs->regs[12], field, regs->regs[13]);
++	pr_cont("t2 %0*lx t3 %0*lx t4 %0*lx\n",
++		field, regs->regs[14], field, regs->regs[15], field, regs->regs[16]);
++	pr_cont("t5 %0*lx t6 %0*lx t7 %0*lx\n",
++		field, regs->regs[17], field, regs->regs[18], field, regs->regs[19]);
++	pr_cont("t8 %0*lx u0 %0*lx s9 %0*lx\n",
++		field, regs->regs[20], field, regs->regs[21], field, regs->regs[22]);
++	pr_cont("s0 %0*lx s1 %0*lx s2 %0*lx\n",
++		field, regs->regs[23], field, regs->regs[24], field, regs->regs[25]);
++	pr_cont("s3 %0*lx s4 %0*lx s5 %0*lx\n",
++		field, regs->regs[26], field, regs->regs[27], field, regs->regs[28]);
++	pr_cont("s6 %0*lx s7 %0*lx s8 %0*lx\n",
++		field, regs->regs[29], field, regs->regs[30], field, regs->regs[31]);
++
++	/* The slot for $zero is reused as the syscall restart flag */
++	if (regs->regs[0])
++		pr_cont("syscall restart flag: %0*lx\n", field, regs->regs[0]);
+ 
+ 	/*
+ 	 * Saved csr registers
 -- 
 2.40.0
 
