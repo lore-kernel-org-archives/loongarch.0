@@ -1,71 +1,112 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E2610F5
-	for <loongarch@lists.linux.dev>; Sun, 16 Apr 2023 06:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1681625079; bh=iQ9rgWYJsljA03eshsQJSpVcvnHSKMsOsW6T7uFoSKU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ewWTrS9AudYKHuK2wLMcfGP8oL/Tg3jA7oNOCPunweXkfcJCTGANGbOET5ZZXuhhE
-	 KHu2NkAbR5o/r0ev74SnuJLmv+rL70tWJQp+d02Y2yoZ7JdytFqqVcziQzKGkcMnKs
-	 vvoaJnl7F+CRePn5h2mB1AbN9CjLO7UwBj09aBg8=
-Received: from ld50.lan (unknown [101.228.138.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id ACFDD6018A;
-	Sun, 16 Apr 2023 14:04:39 +0800 (CST)
-From: WANG Xuerui <kernel@xen0n.name>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v4 12/12] LoongArch: Include CSR.BADV in show_regs in case of BCE exceptions
-Date: Sun, 16 Apr 2023 14:03:56 +0800
-Message-Id: <20230416060356.3711529-13-kernel@xen0n.name>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230416060356.3711529-1-kernel@xen0n.name>
-References: <20230416060356.3711529-1-kernel@xen0n.name>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152507B
+	for <loongarch@lists.linux.dev>; Sun, 16 Apr 2023 17:31:03 +0000 (UTC)
+Received: by mail-ej1-f51.google.com with SMTP id fw30so5595371ejc.5
+        for <loongarch@lists.linux.dev>; Sun, 16 Apr 2023 10:31:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681666262; x=1684258262;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=t2xdlz8zT+95r3jmtcx8udaHAYRhzx4/xxqNOYfEnyQ=;
+        b=UPY/xgMpRi7Kh3LDgP73wLTw2JkroVmtHnv/SAQoKEFd9c1Wf02DTgKcc1vp/Kxr73
+         bdru6k/Dw1+Bm6LbrYS8dhsiZQOMSrbhyRRRX0meRpBqV/8g1Nx7ycJL5KjzZu+8gXPn
+         aUjJe4lKUq8AenHDO+FCIYZWc76l/DCsxHz+15NYhpf+wBpRAn+tSFHrIBhhApOh++Gu
+         TtZAW2J8607Q+zeHwPgkerUTI4O0T3R9rEtt/45UFrZbvYrYRiUN3JwNwgBHTMkt8fKv
+         /8g+7NDp9FBTyowBuslUKfhZUdsPiCEg7MsPq3a0Q213pd85yUp4OubyfM0Djxbb3X7z
+         e38Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681666262; x=1684258262;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t2xdlz8zT+95r3jmtcx8udaHAYRhzx4/xxqNOYfEnyQ=;
+        b=j5dv/omE6R82Q+b1kmIDhrmKptq049eVLF8G6vuSwuF2NNHuC2Uk21oDyc7yb3/vB/
+         6qbG7DecEoKXF9X7TgEME3d8i7mqr1kEgsC87ewH9JPGM8qlOJQMiwMe+1W081oJCVm5
+         gi6sRcdA+L2FqsOk3EQOw5kQ0WY+e3Zb918HOxACK5kSRvAvdQK+NHBY/bQqQK1G5MMC
+         REgRgenU+exokAqcZCgtwb/QbMp9El/7tMdJNme/CLNUuoKqrw249rTqnxXYL15BIEnI
+         uFtD1y1nY6kiP1t7CHH1swmU5XIh5sCUhQg4LgMcKQa505pBTMExXg/9MXnVKjdZnhcK
+         RgSQ==
+X-Gm-Message-State: AAQBX9fqnScfOIEZypPU9Z/KPDU1NRHEEY7b0Bb2KeoPLONs+Z0MCcGJ
+	oj8iqq0nUjOWYO5+dh6oTMeXEg==
+X-Google-Smtp-Source: AKy350bBiTeu1+2CyyTo8pFcohBJFEKu8qa2Y86EZfdwvjg5nTgSrLcbsgbgwIeXPh0aZSNxI/5L/A==
+X-Received: by 2002:a17:906:2dd4:b0:94f:a03:3d3b with SMTP id h20-20020a1709062dd400b0094f0a033d3bmr4288204eji.20.1681666262173;
+        Sun, 16 Apr 2023 10:31:02 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:f9e3:1d38:66a7:ae92? ([2a02:810d:15c0:828:f9e3:1d38:66a7:ae92])
+        by smtp.gmail.com with ESMTPSA id sg32-20020a170907a42000b008c16025b318sm5344804ejc.155.2023.04.16.10.31.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Apr 2023 10:31:01 -0700 (PDT)
+Message-ID: <b4b23751-a44c-2b38-0d55-a34711ad53c4@linaro.org>
+Date: Sun, 16 Apr 2023 19:31:00 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH V3 1/7] dt-bindings: rtc: Subdivision of LS2X RTC
+ compatible
+Content-Language: en-US
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+ Alessandro Zummo <a.zummo@towertech.it>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>,
+ WANG Xuerui <kernel@xen0n.name>
+Cc: linux-rtc@vger.kernel.org, linux-mips@vger.kernel.org,
+ loongarch@lists.linux.dev, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ devicetree@vger.kernel.org, Qing Zhang <zhangqing@loongson.cn>,
+ zhaoxiao <zhaoxiao@uniontech.com>, keguang.zhang@gmail.com
+References: <cover.1681370153.git.zhoubinbin@loongson.cn>
+ <35f43a8cfc32b5a065e4a04eb6cc6abf311f2700.1681370153.git.zhoubinbin@loongson.cn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <35f43a8cfc32b5a065e4a04eb6cc6abf311f2700.1681370153.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: WANG Xuerui <git@xen0n.name>
+On 13/04/2023 09:57, Binbin Zhou wrote:
+> The LS2X RTC alarm depends on the associated registers in a separate
+> power management domain.
+> 
+> In order to define the PM domain addresses of the different chips, a
+> more detailed description of compatible is required.
 
-According to the LoongArch ISA Manual's description for CSR.BADV
-(Volume 1, Section 7.4.8), CSR.BADV is supposed to be updated in case of
-BCE [Bound checking error] too, in addition to the current implemented
-list of exceptions.
+This does not match your diff at all.
 
-Note: in my experiments CSR.BADV actually does *not* seem to reflect the
-offending out-of-bounds value at all, regardless of the instruction used
-(neither asrt{gt,le} nor {ld,st}{gt,le}). My wild guess is that when the
-assertion fails, the execution of the instruction has not proceeded to
-MEM stage yet, and that only in this stage is CSR.BADV potentially
-updated. We show it nevertheless because it does not hurt and it is
-generally better to maintain consistency with the manuals.
+> 
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  Documentation/devicetree/bindings/rtc/trivial-rtc.yaml | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+> index a3603e638c37..2928811b83a0 100644
+> --- a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+> +++ b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+> @@ -47,8 +47,11 @@ properties:
+>        - isil,isl1218
+>        # Intersil ISL12022 Real-time Clock
+>        - isil,isl12022
+> -      # Loongson-2K Socs/LS7A bridge Real-time Clock
+> -      - loongson,ls2x-rtc
 
-Signed-off-by: WANG Xuerui <git@xen0n.name>
----
- arch/loongarch/kernel/traps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Why removing it?
 
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index e8708b362da4..a060481198af 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -354,7 +354,7 @@ static void __show_regs(const struct pt_regs *regs)
- 	print_ecfg(regs->csr_ecfg);
- 	print_estat(regs->csr_estat);
- 
--	if (exccode >= EXCCODE_TLBL && exccode <= EXCCODE_ALE)
-+	if (exccode >= EXCCODE_TLBL && exccode <= EXCCODE_OOB)
- 		pr_cont(" badv: %0*lx\n", field, regs->csr_badvaddr);
- 
- 	pr_cont(" prid: %08x (%s)\n", read_cpucfg(LOONGARCH_CPUCFG0),
--- 
-2.40.0
+> +      # Loongson LS7A bridge Real-time Clock
+> +      - loongson,ls7a-rtc
+> +      # Loongson-2K Socs Real-time Clock
+> +      - loongson,ls2k0500-rtc
+> +      - loongson,ls2k1000-rtc
+
+That's even more surprising...
+
+I don't understand what you are doing here at all.
+
+Best regards,
+Krzysztof
 
