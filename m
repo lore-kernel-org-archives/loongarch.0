@@ -1,89 +1,87 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED1C7B
-	for <loongarch@lists.linux.dev>; Sun, 16 Apr 2023 17:33:36 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id dx24so14364858ejb.11
-        for <loongarch@lists.linux.dev>; Sun, 16 Apr 2023 10:33:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681666414; x=1684258414;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hr4sCeQla+eaEpjaF4AQP0D0MlU+2odQ5sAy4A+PCY0=;
-        b=XgirmbUw4U2cxiuYQHTKTuHaRKy7CocNxLXAKlnqPaaqutrCM3h1diaybz3UaUXjcz
-         l3lzWXxz/iB70nhIqwhy1DIuvZSfcEIk0NKeXZjDfWyRZdeu45FV1rU4JZlK4qWxc1Ev
-         qaobEA9R6heVjmk3p/86GmbSouRNSvrpArE9k220z0zsnRxYrcG0e/bymZvmtBJWw+0r
-         jz1BzSTBwgEwgOuGqy0QDZP14TmX1bqaEj7Em6uFLYPyhRsVfNgqvp+29cpcr0nMK4BN
-         R+BFGSXfX/891dBvppv5WZlLNDNkHkdKp+u/m2aEZzHeQ1fvh58Gk0wbpzPjw3h0PX89
-         CDgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681666414; x=1684258414;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hr4sCeQla+eaEpjaF4AQP0D0MlU+2odQ5sAy4A+PCY0=;
-        b=jXWdGSjP5skUuMKqymX0AEy1b7KH/RL1qyXcx8GBqeUjX3Exhmd37ZuhAhiTkfj/6E
-         44nRoBE+9zl2d52PqIVMlfPVb2labno5jUByts0sO97QzInN5Yl6DQnC07I+8DbxcZX4
-         Op0IFqJrKDUMaVtpco40y597RHxHtHXfdPV7s6U97EzqevM5g8UZZ2WcA0PQhjYhiI0M
-         ftfIqJ4LJPVfzxFG8ZHfh0J+EHaQqLarJtafvVUqxZ8+RQ3gdi/S+kB6BiP2tTpEDvPz
-         5SVR3iXu6DclpNkshvLmbMBbN9zg/Vq8xN5SGK6K4w5VoTh8KRHFY6ocvpGgRq/d9yJ4
-         jl/A==
-X-Gm-Message-State: AAQBX9cmrW/FBSKANxx9RWOpA5OWNQ00KNH+BrxbI3a6/99haiaQUY+R
-	P1rTosF4UQYwOd2Czh5wKvdcZw==
-X-Google-Smtp-Source: AKy350ZKMw7Z86LdcmkNX7vdTVn0BL9KWnwpwevn4POP/KaTAQLRqu/+pILoMfXhDC07BxkbXQlggg==
-X-Received: by 2002:a17:907:c00f:b0:94f:2a13:4df6 with SMTP id ss15-20020a170907c00f00b0094f2a134df6mr3899223ejc.36.1681666414671;
-        Sun, 16 Apr 2023 10:33:34 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:f9e3:1d38:66a7:ae92? ([2a02:810d:15c0:828:f9e3:1d38:66a7:ae92])
-        by smtp.gmail.com with ESMTPSA id n25-20020a17090625d900b0094e62aa8bcesm5324293ejb.29.2023.04.16.10.33.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Apr 2023 10:33:34 -0700 (PDT)
-Message-ID: <2d785047-3d54-f796-8e31-19409e197e08@linaro.org>
-Date: Sun, 16 Apr 2023 19:33:33 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A7E7B
+	for <loongarch@lists.linux.dev>; Sun, 16 Apr 2023 17:33:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1681666435; bh=C3MiRL1+jYzT7/gFD6IpyMpli5bJnPrV9TtMIyTDig0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QeUEGgypVv4OEKyF6o72zsRqKKb2xLx+r3jI4AiNLXafL4929vXhDtQGx6No9mlFc
+	 cGcFRC9F7/EcnqQhbvuLgsmyr2sh8vKhwga8Bsnj4YiRnv6VcnXECOtfo9j9PTfGmD
+	 pVfqmjMVGuqDpVi0kKDsGTKFgBs+ZoSNd1q3mPd8=
+Received: from ld50.lan (unknown [101.228.138.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 9B0436011C;
+	Mon, 17 Apr 2023 01:33:52 +0800 (CST)
+From: WANG Xuerui <kernel@xen0n.name>
+To: loongarch@lists.linux.dev
+Cc: WANG Xuerui <git@xen0n.name>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xi Ruoyao <xry111@xry111.site>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-api@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] LoongArch: Make bounds-checking instructions useful
+Date: Mon, 17 Apr 2023 01:33:24 +0800
+Message-Id: <20230416173326.3995295-1-kernel@xen0n.name>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH V3 7/7] MIPS: Loongson: Enable LS2X RTC in
- loongson2k_defconfig
-Content-Language: en-US
-To: Binbin Zhou <zhoubinbin@loongson.cn>,
- Alessandro Zummo <a.zummo@towertech.it>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>,
- WANG Xuerui <kernel@xen0n.name>
-Cc: linux-rtc@vger.kernel.org, linux-mips@vger.kernel.org,
- loongarch@lists.linux.dev, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- devicetree@vger.kernel.org, Qing Zhang <zhangqing@loongson.cn>,
- zhaoxiao <zhaoxiao@uniontech.com>, keguang.zhang@gmail.com,
- WANG Xuerui <git@xen0n.name>
-References: <cover.1681370153.git.zhoubinbin@loongson.cn>
- <6c4e9e4c2da51ecbd6a05ec2a973bc06a282d58f.1681370153.git.zhoubinbin@loongson.cn>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <6c4e9e4c2da51ecbd6a05ec2a973bc06a282d58f.1681370153.git.zhoubinbin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 13/04/2023 09:58, Binbin Zhou wrote:
-> This is now supported, enable for Loongson-2K systems. Other systems are
-> unaffected.
+From: WANG Xuerui <git@xen0n.name>
 
-I don't understand what do you want to say here. How defconfig change
-could affect other systems?
+Hi,
 
-> 
-> Signed-off-by: WANG Xuerui <git@xen0n.name>
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+The LoongArch-64 base architecture is capable of performing
+bounds-checking either before memory accesses or alone, with specialized
+instructions generating BCEs (bounds-checking error) in case of failed
+assertions (ISA manual Volume 1, Sections 2.2.6.1 [1] and 2.2.10.3 [2]).
+This could be useful for managed runtimes, but the exception is not
+being handled so far, resulting in SIGSYSes in these cases, which is
+incorrect and warrants a fix in itself.
 
-Squash with previous defconfig change. There is no point in enabling
-options one by one.
+During experimentation, it was discovered that there is already UAPI for
+expressing such semantics: SIGSEGV with si_code=SEGV_BNDERR. This was
+originally added for Intel MPX, and there is currently no user (!) after
+the removal of MPX support a few years ago. Although the semantics is
+not a 1:1 match to that of LoongArch, still it is better than
+alternatives such as SIGTRAP or SIGBUS of BUS_OBJERR kind, due to being
+able to convey both the value that failed assertion and the bound value.
 
-Best regards,
-Krzysztof
+This patch series implements just this approach: translating BCEs into
+SIGSEGVs with si_code=SEGV_BNDERR, si_value set to the offending value,
+and si_lower and si_upper set to resemble a range with both lower and
+upper bound while in fact there is only one.
+
+The instructions are not currently used anywhere yet in the fledgling
+LoongArch ecosystem, so it's not very urgent and we could take the time
+to figure out the best way forward (should SEGV_BNDERR turn out not
+suitable).
+
+[1]: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#bound-check-memory-access-instructions
+[2]: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#_asrtlegt_d
+
+WANG Xuerui (2):
+  LoongArch: Add opcodes of bounds-checking instructions
+  LoongArch: Relay BCE exceptions to userland as SIGSEGVs with
+    si_code=SEGV_BNDERR
+
+ arch/loongarch/include/asm/inst.h   |  26 +++++++
+ arch/loongarch/include/asm/kdebug.h |   1 +
+ arch/loongarch/kernel/genex.S       |   1 +
+ arch/loongarch/kernel/traps.c       | 107 ++++++++++++++++++++++++++++
+ 4 files changed, 135 insertions(+)
+
+-- 
+2.40.0
 
