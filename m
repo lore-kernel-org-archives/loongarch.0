@@ -1,175 +1,116 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F08851C30
-	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:22:34 +0000 (UTC)
-Received: from loongson.cn (unknown [192.168.200.1])
-	by gateway (Coremail) with SMTP id _____8CxhdjZDz1kKOEdAA--.46673S3;
-	Mon, 17 Apr 2023 17:22:33 +0800 (CST)
-Received: from [0.0.0.0] (unknown [192.168.200.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx8eTYDz1klqQqAA--.20178S3;
-	Mon, 17 Apr 2023 17:22:33 +0800 (CST)
-Subject: Re: [PATCH V2] tools/perf: Add basic support for LoongArch
-To: Huacai Chen <chenhuacai@kernel.org>
-References: <20230410111823.2538831-1-chenhuacai@loongson.cn>
- <0a278ab5-751a-9433-3d1f-19a5a6b99d39@loongson.cn>
- <CAAhV-H5sxLDS7+MOaC_Y+gd-=Qrog7gzidKDkYa=DWC2Ci_5_Q@mail.gmail.com>
- <d50d7779-3bff-1a83-2641-36abdb077ac1@loongson.cn>
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
- Tiezhu Yang <yangtiezhu@loongson.cn>, Xuerui Wang <kernel@xen0n.name>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn, Ming Wang <wangming01@loongson.cn>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <b1cdd754-fa38-4b2e-0a93-b13d9cfd7a8a@loongson.cn>
-Date: Mon, 17 Apr 2023 17:22:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from wnew2-smtp.messagingengine.com (wnew2-smtp.messagingengine.com [64.147.123.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555B51C30
+	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:22:50 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailnew.west.internal (Postfix) with ESMTP id DD2C02B066BA;
+	Mon, 17 Apr 2023 05:22:47 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Mon, 17 Apr 2023 05:22:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+	1681723367; x=1681730567; bh=peYP/lOIqmvTTJ2GJZFK05PdIeVxfQrMTMT
+	dWlxN2bY=; b=hoxslnOKq5L0fgq1KZ5uwFxkfCsDUbQoEitttD9Gb157/4VvDaL
+	fzRTYgwNrKhMTGBEWYk5kV4pCoKxj3IQV0FpUtGeddLg5GfVlMhZex8QF6mhL8p9
+	gvwX4MSUzxesv1YcnaqKaa4Hf8aEonHOEB+LqYDIenoy4k9B5AvOOz7WXYv6rPww
+	vauHxzq0EC93J9INj8HpYFP0uokUJZlvJ0DGwXpWQ8LUcqRJMmLECR08O/Gg7C4C
+	FExoluX3ejusbKwfN3AFnDxBNc0Jh1L5n5E2k8MJ529jR2BSvuckTFMjwePw4/jA
+	IVxKZIBctylYcZmrJ3YTpI6yusKyhHnhjmw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1681723367; x=1681730567; bh=peYP/lOIqmvTTJ2GJZFK05PdIeVxfQrMTMT
+	dWlxN2bY=; b=MR4yxKuz3/tjr23pAzsFitwD0Txq7SZ+LasC5Fyh1rdL9W+5uLQ
+	QWuTkcsnaN+XbFlYxewK49c7zL/ltjC0cAxyGzvY+pAqila9tzloSXls1fSGTLU8
+	83j+ql9LP2Am/jKxSL+2eFTD9s2a+pAHNF1s4l+85O8VFC4gAEQAX/IiexVaT7mA
+	1njCOrvD++JH4RDb7rqDNfo30GjQVpEJWnie2UNVdXN3+HoTO7VAHqni1UoK4zJb
+	K0nmV8AH3mMhRqTjxdJcDOoA4dxU/4N4+juQYM/HVijErDhMcN+7kkXCY9vJtEKX
+	A6hZ5WwaK7trmU2l173N30Rm9x+GYS13Hyg==
+X-ME-Sender: <xms:5g89ZGh1XGEKu3GOwuyxUAI_aRj0-gXb1yU9cH41yOyGtrZXXEBRxw>
+    <xme:5g89ZHCJrzk8kcvbfI9uoi9xOXxIpgIcnUMY2tPn_xA8atud9UMgflJi8xJj_xxVr
+    3CIR7jk9VrljLNWmYA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdeliedguddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
+    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:5g89ZOF82A9szmMdiIKfUdndIY5Y_J2WWepzSI164UFVULZ600rDfg>
+    <xmx:5g89ZPS9rsGZ3-6dQW4K4hejhxqnpa-f-mX9DnhlkCPRmeMFlap6YA>
+    <xmx:5g89ZDzdQ2ec3Pn4h3UEvgarbJnSwOf3ZSGbcWd6YhZnAMBHYJ805Q>
+    <xmx:5w89ZEqvqQ-8qIHbFuXLaLZUzpDWtqOdQ0aVq4skLKD0cgTZu8vkwIppGeY>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 2AD08B60086; Mon, 17 Apr 2023 05:22:46 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-334-g8c072af647-fm-20230330.001-g8c072af6
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <d50d7779-3bff-1a83-2641-36abdb077ac1@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Cx8eTYDz1klqQqAA--.20178S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxGw4DAFy5WFyrWFy7GFyfZwb_yoW5tw4UpF
-	4xAFW7tF18Xr4jywn0vas8Wr9rt3yYqasYq34xGFy3Z3Wqy3Z3GwsxJrW5GF1xu347GFy8
-	Za1YyFsxWF90yFJanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bsAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxv
-	r21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8V
-	WrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr
-	1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7xRR5l1PUU
-	UUU==
+Mime-Version: 1.0
+Message-Id: <55abd7af-acb8-47ce-89db-1722bcf0cb9c@app.fastmail.com>
+In-Reply-To: <2b4f75b8-aa83-8e41-7c99-7c8d573c0f31@suse.de>
+References: <20230406143019.6709-1-tzimmermann@suse.de>
+ <20230406143019.6709-2-tzimmermann@suse.de>
+ <CAMuHMdUfViWzPbB+GcGUwxmGNxAohfq71Jed3DzS=Cb+gBzotg@mail.gmail.com>
+ <2b4f75b8-aa83-8e41-7c99-7c8d573c0f31@suse.de>
+Date: Mon, 17 Apr 2023 11:22:24 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>
+Cc: "Daniel Vetter" <daniel.vetter@ffwll.ch>, "Helge Deller" <deller@gmx.de>,
+ "Javier Martinez Canillas" <javierm@redhat.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ Linux-Arch <linux-arch@vger.kernel.org>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-snps-arc@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v2 01/19] fbdev: Prepare generic architecture helpers
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-/* snip */
+On Mon, Apr 17, 2023, at 11:03, Thomas Zimmermann wrote:
+> Am 11.04.23 um 10:08 schrieb Geert Uytterhoeven:
+>> On Thu, Apr 6, 2023 at 4:30=E2=80=AFPM Thomas Zimmermann <tzimmermann=
+@suse.de> wrote:
 
->>>> --- /dev/null
->>>> +++ b/tools/perf/arch/loongarch/util/dwarf-regs.c
->>>> @@ -0,0 +1,44 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * dwarf-regs.c : Mapping of DWARF debug register numbers into
->>>> register names.
->>>> + *
->>>> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
->>>> + */
->>>> +
->>>> +#include <stdio.h>
->>>> +#include <errno.h> /* for EINVAL */
->>>> +#include <string.h> /* for strcmp */
->>>> +#include <dwarf-regs.h>
->>>> +
->>>> +struct pt_regs_dwarfnum {
->>>> +     const char *name;
->>>> +     unsigned int dwarfnum;
->>>> +};
->>>> +
->>>> +static struct pt_regs_dwarfnum loongarch_gpr_table[] = {
->>>> +     {"$0", 0}, {"$1", 1}, {"$2", 2}, {"$3", 3},
->>>> +     {"$4", 4}, {"$5", 5}, {"$6", 6}, {"$7", 7},
->>>> +     {"$8", 8}, {"$9", 9}, {"$10", 10}, {"$11", 11},
->>>> +     {"$12", 12}, {"$13", 13}, {"$14", 14}, {"$15", 15},
->>>> +     {"$16", 16}, {"$17", 17}, {"$18", 18}, {"$19", 19},
->>>> +     {"$20", 20}, {"$21", 21}, {"$22", 22}, {"$23", 23},
->>>> +     {"$24", 24}, {"$25", 25}, {"$26", 26}, {"$27", 27},
->>>> +     {"$28", 28}, {"$29", 29}, {"$30", 30}, {"$31", 31},
->>>> +     {NULL, 0}
->>>> +};
->>> Do you need to change it to the following:
->>>
->>> #define GPR_DWARFNUM_NAME(num) {.name = __stringify($r##num), .dwarfnum
->>> = num}
->>> #define REG_DWARFNUM_END {.name = NULL, .dwarfnum = 0}
->>>
->>> static const struct pt_regs_dwarfnum regdwarfnum_table[] = {
->>>          GPR_DWARFNUM_NAME(0),
->>>          GPR_DWARFNUM_NAME(1),
->>>          GPR_DWARFNUM_NAME(2),
->>>          GPR_DWARFNUM_NAME(3),
->>>          GPR_DWARFNUM_NAME(4),
->>>          GPR_DWARFNUM_NAME(5),
->>>          GPR_DWARFNUM_NAME(6),
->>>          GPR_DWARFNUM_NAME(7),
->>>          GPR_DWARFNUM_NAME(8),
->>>          GPR_DWARFNUM_NAME(9),
->>>          GPR_DWARFNUM_NAME(10),
->>>          GPR_DWARFNUM_NAME(11),
->>>          GPR_DWARFNUM_NAME(12),
->>>          GPR_DWARFNUM_NAME(13),
->>>          GPR_DWARFNUM_NAME(14),
->>>          GPR_DWARFNUM_NAME(15),
->>>          GPR_DWARFNUM_NAME(16),
->>>          GPR_DWARFNUM_NAME(17),
->>>          GPR_DWARFNUM_NAME(18),
->>>          GPR_DWARFNUM_NAME(19),
->>>          GPR_DWARFNUM_NAME(20),
->>>          GPR_DWARFNUM_NAME(21),
->>>          GPR_DWARFNUM_NAME(22),
->>>          GPR_DWARFNUM_NAME(23),
->>>          GPR_DWARFNUM_NAME(24),
->>>          GPR_DWARFNUM_NAME(25),
->>>          GPR_DWARFNUM_NAME(26),
->>>          GPR_DWARFNUM_NAME(27),
->>>          GPR_DWARFNUM_NAME(28),
->>>          GPR_DWARFNUM_NAME(29),
->>>          REG_DWARFNUM_NAME(30),
->>>          REG_DWARFNUM_NAME(31),
->>>          REG_DWARFNUM_END,
->>> };
->>>
->>> At the same time, "$rx" is used in __perf_reg_name_loongarch and
->>> loongarch_regstr_tbl, which is consistent with assembly.
->> OK, I will use the "$rx" format, but I don't want to use macros.
-> Use the "rx" format to make regs_query_register_offset consistent with
-> arch/loongarch/kernel/ptrace.c (that is, the names in
-> loongarch_gpr_table and regoffset_table are consistent)
-
-If we want to be consistent with the usage of `trace probe`, we should
-use "%rx".
-
-eg:
-    # echo "p:myuprobe /tmp/test:0x4194 %r4 %r5" > uprobe_events
-
-parse_probe_arg()
-          case '%': regs_query_register_offset()
-
-Youling.
+>>> +#ifndef fb_pgprotect
+>>> +#define fb_pgprotect fb_pgprotect
+>>> +static inline void fb_pgprotect(struct file *file, struct vm_area_s=
+truct *vma,
+>>> +                               unsigned long off)
+>>=20
+>> Does this affect any noMMU platforms that relied on fb_pgprotect()
+>> doing nothing before?
+>> Perhaps the body below should be protected by "#ifdef CONFIG_MMU"?
 >
-> Youling.
->>
->> Huacai
->>>
->>>> +
->>>> +const char *get_arch_regstr(unsigned int n)
->>>> +{
->>>> +     n %= 32;
->>>> +     return loongarch_gpr_table[n].name;
->>>> +}
->>>> +
->>>> +int regs_query_register_offset(const char *name)
->>>> +{
->>>> +     const struct pt_regs_dwarfnum *roff;
->>>> +
->>>> +     for (roff = loongarch_gpr_table; roff->name != NULL; roff++)
->>>> +             if (!strcmp(roff->name, name))
->>>> +                     return roff->dwarfnum;
->>>> +     return -EINVAL;
->>>> +}
+> I cannot conclusively answer this question, but I did some grep'ing=20
+> ('git grep ndef | grep CONFIG_MMU'):
 >
+> Only the architectures in this patchset provide <asm/fb.h> but nothing=20
+> anywhere uses <asm-generic/fb.h> yet. And of those architectures, only=20
+> arm and m68k have !CONFIG_MMU cases. Those are handled in the rsp=20
+> patches. I think we're good.
 
+Agreed. The generic version is just a more elaborate way to do
+nothing here, as the=20
+
+     vma->vm_page_prot =3D pgprot_writecombine(vma->vm_page_prot);
+
+line on nommu just turns into a self-assignment of the same member
+that was set the line before.
+
+     Arnd
