@@ -1,141 +1,107 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15BC1C16
-	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:04:41 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 55A821F381;
-	Mon, 17 Apr 2023 09:04:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1681722280; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b6sKemqSNeqSuzvlbtysiTKcK5tWpdbhBfOYMbe1xpA=;
-	b=lEbyRvZ0mhA+HTDSg/bXcfjaxsomSGRcRcjAVr8tOXKoCIe65JHXtQwHv+wj7v7Ke+mxUp
-	bIvywh/2mTvYmeDpIakryjRc6GWveByKR+d8zJyovqzoed8ILUJDIM9PJ1iTG2s35Y4y2b
-	/H4VpktNgiA/80+JLQ6zI2hzIjIGiiM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1681722280;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b6sKemqSNeqSuzvlbtysiTKcK5tWpdbhBfOYMbe1xpA=;
-	b=EFaog30zlwFDQPmFwOt7LFAWdUfZI1apM55oIu7KK0oVl8+PIBxm8zHlg/ELchgxNZjEUD
-	aIQOnTvp5Q6hvbAA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DA51213319;
-	Mon, 17 Apr 2023 09:04:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id EEoeNKcLPWRGVwAAMHmgww
-	(envelope-from <tzimmermann@suse.de>); Mon, 17 Apr 2023 09:04:39 +0000
-Message-ID: <4450d4bf-a6e0-764e-d1c4-efba272f0529@suse.de>
-Date: Mon, 17 Apr 2023 11:04:39 +0200
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 480C1C2ED
+	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:19:02 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxttgFDz1k2eAdAA--.51221S3;
+	Mon, 17 Apr 2023 17:19:01 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxur0DDz1kGKMqAA--.50497S3;
+	Mon, 17 Apr 2023 17:19:00 +0800 (CST)
+Subject: Re: [PATCH v2 4/4] LoongArch: Add uprobes support
+To: Youling Tang <tangyouling@loongson.cn>
+References: <1681464781-4428-1-git-send-email-yangtiezhu@loongson.cn>
+ <1681464781-4428-5-git-send-email-yangtiezhu@loongson.cn>
+ <26d4d13f-d678-be54-6b40-b87c71856eff@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ loongson-kernel@lists.loongnix.cn
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <6cadd23c-6aca-a0f6-f862-a6b23b5c7d0a@loongson.cn>
+Date: Mon, 17 Apr 2023 17:18:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2 02/19] arch/arc: Implement <asm/fb.h> with generic
- helpers
-Content-Language: en-US
-To: Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel.vetter@ffwll.ch>,
- Helge Deller <deller@gmx.de>, Javier Martinez Canillas <javierm@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-snps-arc@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
- Vineet Gupta <vgupta@kernel.org>
-References: <20230406143019.6709-1-tzimmermann@suse.de>
- <20230406143019.6709-3-tzimmermann@suse.de>
- <27c1210f-4e40-4bbc-905b-155427465e00@app.fastmail.com>
-From: Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <27c1210f-4e40-4bbc-905b-155427465e00@app.fastmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------iPEL9xuP1J0A8seUIdWajJMz"
+In-Reply-To: <26d4d13f-d678-be54-6b40-b87c71856eff@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Cxur0DDz1kGKMqAA--.50497S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Ar1ktF1xtr1rZr48Kw1xKrg_yoW8WF17pF
+	WDCFWUGFZ5GFn5JFyDX39a9F12qr95Gr4Ik3W2yayrAF42vrn3ur1kursrJa4jy390qr40
+	gFy8tayF9ay5tF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
+	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------iPEL9xuP1J0A8seUIdWajJMz
-Content-Type: multipart/mixed; boundary="------------ITCxEOG7I6GWaznxs8pYlTkW";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel.vetter@ffwll.ch>,
- Helge Deller <deller@gmx.de>, Javier Martinez Canillas <javierm@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-snps-arc@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
- Vineet Gupta <vgupta@kernel.org>
-Message-ID: <4450d4bf-a6e0-764e-d1c4-efba272f0529@suse.de>
-Subject: Re: [PATCH v2 02/19] arch/arc: Implement <asm/fb.h> with generic
- helpers
-References: <20230406143019.6709-1-tzimmermann@suse.de>
- <20230406143019.6709-3-tzimmermann@suse.de>
- <27c1210f-4e40-4bbc-905b-155427465e00@app.fastmail.com>
-In-Reply-To: <27c1210f-4e40-4bbc-905b-155427465e00@app.fastmail.com>
 
---------------ITCxEOG7I6GWaznxs8pYlTkW
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
 
-DQoNCkFtIDA2LjA0LjIzIHVtIDE2OjQzIHNjaHJpZWIgQXJuZCBCZXJnbWFubjoNCj4gT24g
-VGh1LCBBcHIgNiwgMjAyMywgYXQgMTY6MzAsIFRob21hcyBaaW1tZXJtYW5uIHdyb3RlOg0K
-Pj4gKw0KPj4gICBzdGF0aWMgaW5saW5lIHZvaWQgZmJfcGdwcm90ZWN0KHN0cnVjdCBmaWxl
-ICpmaWxlLCBzdHJ1Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZtYSwNCj4+ICAgCQkJCXVuc2lnbmVk
-IGxvbmcgb2ZmKQ0KPj4gICB7DQo+PiAgIAl2bWEtPnZtX3BhZ2VfcHJvdCA9IHBncHJvdF9u
-b25jYWNoZWQodm1hLT52bV9wYWdlX3Byb3QpOw0KPj4gICB9DQo+PiArI2RlZmluZSBmYl9w
-Z3Byb3RlY3QgZmJfcGdwcm90ZWN0DQo+IA0KPiBJIHN0aWxsIGZlZWwgdGhhdCBmb3IgYXJj
-aGl0ZWN0dXJlcyBsaWtlIGFyYyB0aGF0IGRvbid0IGhhdmUNCj4gcGdwcm90X3dyaXRlY29t
-YmluZSgpLCBpdCB3b3VsZCBiIGJlc3QgdG8gZ28gd2l0aCB0aGUNCj4gZ2VuZXJpYyBpbXBs
-ZW1lbnRhdGlvbiB0aGF0IGN1cnJlbnRseSBiZWhhdmVzIHRoZSBleGFjdA0KPiBzYW1lIHdh
-eS4gSWYgcGdwcm90X3dyaXRlY29tYmluZSgpIGdldHMgYWRkZWQgaW4gdGhlIGZ1dHVyZSwN
-Cj4gaXQgd291bGQgY2F1c2UgdGhlIGFyY2hpdGVjdHVyZSB0byBiZWhhdmUgYXMgZXhwZWN0
-ZWQgcmF0aGVyDQo+IHRoYW4gaW50cm9kdWNpbmcgdGhlIHNhbWUgYnVnIHRoYXQgbWlwcyBo
-YXMuDQoNCk9LLCBJJ2xsIGNoYW5nZSBpdC4NCg0KPiANCj4gICAgICAgIEFybmQNCg0KLS0g
-DQpUaG9tYXMgWmltbWVybWFubg0KR3JhcGhpY3MgRHJpdmVyIERldmVsb3Blcg0KU1VTRSBT
-b2Z0d2FyZSBTb2x1dGlvbnMgR2VybWFueSBHbWJIDQpNYXhmZWxkc3RyLiA1LCA5MDQwOSBO
-w7xybmJlcmcsIEdlcm1hbnkNCihIUkIgMzY4MDksIEFHIE7DvHJuYmVyZykNCkdlc2Now6Rm
-dHNmw7xocmVyOiBJdm8gVG90ZXYNCg==
+On 04/17/2023 10:04 AM, Youling Tang wrote:
+> Hi, Tiezhu
+>
+> On 04/14/2023 05:33 PM, Tiezhu Yang wrote:
+>
+> /* snip */
+>
+>> diff --git a/arch/loongarch/kernel/traps.c
+>> b/arch/loongarch/kernel/traps.c
+>> index de8ebe2..cfc2e0c 100644
+>> --- a/arch/loongarch/kernel/traps.c
+>> +++ b/arch/loongarch/kernel/traps.c
+>> @@ -45,6 +45,7 @@
+>>  #include <asm/tlb.h>
+>>  #include <asm/types.h>
+>>  #include <asm/unwind.h>
+>> +#include <asm/uprobes.h>
+>>
+>>  #include "access-helper.h"
+>>
+>> @@ -440,7 +441,6 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
+>>      if (regs->csr_prmd & CSR_PRMD_PIE)
+>>          local_irq_enable();
+>>
+>> -    current->thread.trap_nr = read_csr_excode();
+>>      if (__get_inst(&opcode, (u32 *)era, user))
+>>          goto out_sigsegv;
+>>
+>> @@ -462,18 +462,17 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
+>>          else
+>>              break;
+>>      case BRK_UPROBE_BP:
+>> -        if (notify_die(DIE_UPROBE, "Uprobe", regs, bcode,
+>> -                   current->thread.trap_nr, SIGTRAP) == NOTIFY_STOP)
+>> +        if (uprobe_breakpoint_handler(regs))
+>>              goto out;
+>>          else
+>>              break;
+>>      case BRK_UPROBE_XOLBP:
+>> -        if (notify_die(DIE_UPROBE_XOL, "Uprobe_XOL", regs, bcode,
+>> -                   current->thread.trap_nr, SIGTRAP) == NOTIFY_STOP)
+>> +        if (uprobe_singlestep_handler(regs))
+>
+> After the above modification, we should remove the DIE_UPROBE and
+> DIE_UPROBE_XOL definitions in arch/loongarch/include/asm/kdebug.h.
+>
+> At the same time DIE_BREAK, DIE_SSTEPBP and DIE_PAGE_FAULT also need to
+> be removed after 6d4cc40fb5f581 ("LoongArch: Add kprobes support").
+>
 
---------------ITCxEOG7I6GWaznxs8pYlTkW--
+OK, thank you, will do it.
 
---------------iPEL9xuP1J0A8seUIdWajJMz
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+Thanks,
+Tiezhu
 
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmQ9C6cFAwAAAAAACgkQlh/E3EQov+Ac
-QBAAsfmjop5GpI2/M6n6MvSHBTqHHtmA95cabDcKwQFUOYGC55wDQtKCk1YbTbOeOOp4DHs0Rob4
-xWSoykdeIUiYGbc8U+MPXGhCdo2C2sKIZkY1wgmuti3n3EkfC6k6Cx9aCz+tiJ+jd9E45wBaOnaE
-56XOzZWvxMz+zYzMPsC0pDMXkpZW1XtmvqXrjF6Ohri8O/In5if4HwkiXyJhY0aEXDHB5qLJU+SI
-b+YsRcUJLtzaBG/4xUkrhyP1kpTB/tNLYF4Z9fw7YtOUj+DXACQArqlHD8tVe+Z8HfxPmhRId6bp
-XouIgS+7VDb0Utb5Nd22dACIzY1DC6CXiz04MI8o++SCFEAK/FZedYlrXtkriEEYX2pcvlUbU+1p
-1RB16i/tjmLBhntUmgiUCOQZxk1IIcpOn13HiEGxkin8oFdsKztsrpK15yCcuTY0/1vlx/bahdFv
-Mtsy0ss6D9F1XmgpgRJjQkxR1KNV6LNvXzC56bQdk1qiPg6hRRIh5V65ygR1nowW8PHA3kZw5aS0
-tGeYxjnvqz41zAoXzDM3bDKjPcdgFfuzm25s3Z3nwqLsD8nKpoSR6Jr+IpXKNxikB8yx3b9GCTbe
-C/MTua22YAkNdKZ2MS00YzB8dMZ0u2ZCINsYOTcIYIN+s8mpb7LPO7Zj36RDWZCJMILkijh/NUmM
-Xe0=
-=9BHz
------END PGP SIGNATURE-----
-
---------------iPEL9xuP1J0A8seUIdWajJMz--
