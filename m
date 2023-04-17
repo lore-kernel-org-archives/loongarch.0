@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A1A02586
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C35C468A
 	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:48:24 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxJISQFT1kk+MdAA--.46515S3;
-	Mon, 17 Apr 2023 17:46:56 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxJDSSFT1ky+MdAA--.47161S3;
+	Mon, 17 Apr 2023 17:46:58 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxtryKFT1kyagqAA--.47974S19;
-	Mon, 17 Apr 2023 17:46:56 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxtryKFT1kyagqAA--.47974S25;
+	Mon, 17 Apr 2023 17:46:58 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v7 17/30] LoongArch: KVM: Implement virtual machine tlb operations
-Date: Mon, 17 Apr 2023 17:46:36 +0800
-Message-Id: <20230417094649.874671-18-zhaotianrui@loongson.cn>
+Subject: [PATCH v7 23/30] LoongArch: KVM: Implement handle gspr exception
+Date: Mon, 17 Apr 2023 17:46:42 +0800
+Message-Id: <20230417094649.874671-24-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230417094649.874671-1-zhaotianrui@loongson.cn>
 References: <20230417094649.874671-1-zhaotianrui@loongson.cn>
@@ -35,70 +35,155 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxtryKFT1kyagqAA--.47974S19
+X-CM-TRANSID:AQAAf8CxtryKFT1kyagqAA--.47974S25
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7WrW7Xw4fGF4xGw1xtw43KFg_yoW8JF4kpF
-	yfurs5Kw4fX3ZxW39xXwn7Wr13Xr4vkF17ZFW3ua4rZrsrtr1vyFnakrykJFWUtayrCr48
-	W34ftF4jgFWUJw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZrW3CrWrJF18Ary8tr13Jwb_yoW5ZF4kpr
+	W7Z34F9r4kJrySyw4aqrsYvrn0va18Kry7XasxJ343u3y7t3s5Jr40yrZFyF1DKrySvF4x
+	Za15tF13CF1UAaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	bzxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	kF7I0E14v26F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
 	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48J
+	MxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxV
+	WUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWDJVCq3wCI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcS
+	sGvfC2KfnxnUUI43ZEXa7xRihFxUUUUUU==
 
-Implement loongarch virtual machine tlb operations such as flush tlb by
-specific gpa parameter and flush all of the virt machines tlb.
+Implement kvm handle gspr exception interface, including emulate the
+reading and writing of cpucfg, csr, iocsr resource.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/tlb.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 arch/loongarch/kvm/tlb.c
+ arch/loongarch/kvm/exit.c | 115 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 115 insertions(+)
 
-diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
-new file mode 100644
-index 000000000000..66e116cf2486
---- /dev/null
-+++ b/arch/loongarch/kvm/tlb.c
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index 3fdb42939a05..26283a9d3c6d 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -208,3 +208,118 @@ int _kvm_emu_idle(struct kvm_vcpu *vcpu)
+ 
+ 	return EMULATE_DONE;
+ }
 +
-+#include <linux/kvm_host.h>
-+#include <asm/tlb.h>
-+
-+int kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
++static int _kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
 +{
-+	preempt_disable();
-+	gpa &= (PAGE_MASK << 1);
-+	invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
-+	preempt_enable();
-+	return 0;
++	enum emulation_result er = EMULATE_DONE;
++	struct kvm_run *run = vcpu->run;
++	larch_inst inst;
++	unsigned long curr_pc;
++	int rd, rj;
++	unsigned int index;
++
++	/*
++	 *  Fetch the instruction.
++	 */
++	inst.word = vcpu->arch.badi;
++	curr_pc = vcpu->arch.pc;
++	update_pc(&vcpu->arch);
++
++	trace_kvm_exit_gspr(vcpu, inst.word);
++	er = EMULATE_FAIL;
++	switch (((inst.word >> 24) & 0xff)) {
++	case 0x0:
++		/* cpucfg GSPR */
++		if (inst.reg2_format.opcode == 0x1B) {
++			rd = inst.reg2_format.rd;
++			rj = inst.reg2_format.rj;
++			++vcpu->stat.cpucfg_exits;
++			index = vcpu->arch.gprs[rj];
++
++			vcpu->arch.gprs[rd] = read_cpucfg(index);
++			/* Nested KVM is not supported */
++			if (index == 2)
++				vcpu->arch.gprs[rd] &= ~CPUCFG2_LVZP;
++			if (index == 6)
++				vcpu->arch.gprs[rd] &= ~CPUCFG6_PMP;
++			er = EMULATE_DONE;
++		}
++		break;
++	case 0x4:
++		/* csr GSPR */
++		er = _kvm_handle_csr(vcpu, inst);
++		break;
++	case 0x6:
++		/* iocsr,cache,idle GSPR */
++		switch (((inst.word >> 22) & 0x3ff)) {
++		case 0x18:
++			/* cache GSPR */
++			er = EMULATE_DONE;
++			trace_kvm_exit_cache(vcpu, KVM_TRACE_EXIT_CACHE);
++			break;
++		case 0x19:
++			/* iocsr/idle GSPR */
++			switch (((inst.word >> 15) & 0x1ffff)) {
++			case 0xc90:
++				/* iocsr GSPR */
++				er = _kvm_emu_iocsr(inst, run, vcpu);
++				break;
++			case 0xc91:
++				/* idle GSPR */
++				er = _kvm_emu_idle(vcpu);
++				break;
++			default:
++				er = EMULATE_FAIL;
++				break;
++			}
++			break;
++		default:
++			er = EMULATE_FAIL;
++			break;
++		}
++		break;
++	default:
++		er = EMULATE_FAIL;
++		break;
++	}
++
++	/* Rollback PC only if emulation was unsuccessful */
++	if (er == EMULATE_FAIL) {
++		kvm_err("[%#lx]%s: unsupported gspr instruction 0x%08x\n",
++			curr_pc, __func__, inst.word);
++
++		kvm_arch_vcpu_dump_regs(vcpu);
++		vcpu->arch.pc = curr_pc;
++	}
++	return er;
 +}
 +
-+/**
-+ * kvm_flush_tlb_all() - Flush all root TLB entries for
-+ * guests.
-+ *
-+ * Invalidate all entries including GVA-->GPA and GPA-->HPA mappings.
++/*
++ * Execute cpucfg instruction will tirggerGSPR,
++ * Also the access to unimplemented csrs 0x15
++ * 0x16, 0x50~0x53, 0x80, 0x81, 0x90~0x95, 0x98
++ * 0xc0~0xff, 0x100~0x109, 0x500~0x502,
++ * cache_op, idle_op iocsr ops the same
 + */
-+void kvm_flush_tlb_all(void)
++static int _kvm_handle_gspr(struct kvm_vcpu *vcpu)
 +{
-+	unsigned long flags;
++	enum emulation_result er = EMULATE_DONE;
++	int ret = RESUME_GUEST;
 +
-+	local_irq_save(flags);
-+	invtlb_all(INVTLB_ALLGID, 0, 0);
-+	local_irq_restore(flags);
++	er = _kvm_trap_handle_gspr(vcpu);
++
++	if (er == EMULATE_DONE) {
++		ret = RESUME_GUEST;
++	} else if (er == EMULATE_DO_MMIO) {
++		vcpu->run->exit_reason = KVM_EXIT_MMIO;
++		ret = RESUME_HOST;
++	} else if (er == EMULATE_DO_IOCSR) {
++		vcpu->run->exit_reason = KVM_EXIT_LOONGARCH_IOCSR;
++		ret = RESUME_HOST;
++	} else {
++		kvm_err("%s internal error\n", __func__);
++		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
++		ret = RESUME_HOST;
++	}
++	return ret;
 +}
 -- 
 2.31.1
