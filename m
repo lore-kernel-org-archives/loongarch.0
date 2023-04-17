@@ -1,152 +1,352 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833A1468A
-	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:50:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1681725043;
-	bh=O/cKAdPP1ntH7IK9e/3cclJfPJoYfiCKYcnR1FDS28c=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=E5ZnmxxoCi42LLMmO5z0FR3DlqAoAY5yiajei+fCHQX57j4JBVZRuMDZiTncJykyh
-	 MqkIeXj9QPaMbH2TEpJA+cyEtEDz72q/MhY7nble68s8WYuOCo6UfpWh6gtX/oQqyZ
-	 EjNGC9LdHmSREBfn9zK60G0/Qx4weomdm7z9QWL4=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 2A3F865C4E;
-	Mon, 17 Apr 2023 05:50:42 -0400 (EDT)
-Message-ID: <f54abfae989023fcfdabb4e9800a66847c357b85.camel@xry111.site>
-Subject: Re: [PATCH 0/2] LoongArch: Make bounds-checking instructions useful
-From: Xi Ruoyao <xry111@xry111.site>
-To: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Cc: WANG Xuerui <git@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>, Eric
- Biederman <ebiederm@xmission.com>, Al Viro <viro@zeniv.linux.org.uk>, Arnd
- Bergmann <arnd@arndb.de>,  linux-api@vger.kernel.org,
- linux-arch@vger.kernel.org,  linux-kernel@vger.kernel.org
-Date: Mon, 17 Apr 2023 17:50:40 +0800
-In-Reply-To: <6ca642a9-62a6-00e5-39ac-f14ef36f6bdb@xen0n.name>
-References: <20230416173326.3995295-1-kernel@xen0n.name>
-	 <e593541e7995cc46359da3dd4eb3a69094e969e2.camel@xry111.site>
-	 <6ca642a9-62a6-00e5-39ac-f14ef36f6bdb@xen0n.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.0 
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 396B42586
+	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:59:53 +0000 (UTC)
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8BxedmYGD1k2OUdAA--.46576S3;
+	Mon, 17 Apr 2023 17:59:52 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx57yWGD1kua0qAA--.48254S4;
+	Mon, 17 Apr 2023 17:59:51 +0800 (CST)
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>,
+	Mark Brown <broonie@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	maobibo@loongson.cn,
+	Xi Ruoyao <xry111@xry111.site>,
+	zhaotianrui@loongson.cn
+Subject: [PATCH v7 02/30] LoongArch: KVM: Implement kvm module related interface
+Date: Mon, 17 Apr 2023 17:59:22 +0800
+Message-Id: <20230417095950.875228-3-zhaotianrui@loongson.cn>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230417095950.875228-1-zhaotianrui@loongson.cn>
+References: <20230417095950.875228-1-zhaotianrui@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bx57yWGD1kua0qAA--.48254S4
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWfGrWkuw1fAw4xAw1rZw4kXrb_yoWkGr4DpF
+	W0krWUAry7KFnrWa4rXw1Y9w4rJrZ29a9YyF15trWktwnFqrWrWa4IkF17JFy5Jw1xZF1j
+	k3Z5Cas3uF4kXrUanT9S1TB71UUUU8UqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
+	kF7I0E14v26F4UJVW0owAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r4a
+	6rW5MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU8bo7tUUUUU==
 
-On Mon, 2023-04-17 at 15:54 +0800, WANG Xuerui wrote:
-> On 2023/4/17 14:47, Xi Ruoyao wrote:
-> > On Mon, 2023-04-17 at 01:33 +0800, WANG Xuerui wrote:
-> > > From: WANG Xuerui <git@xen0n.name>
-> > >=20
-> > > Hi,
-> > >=20
-> > > The LoongArch-64 base architecture is capable of performing
-> > > bounds-checking either before memory accesses or alone, with speciali=
-zed
-> > > instructions generating BCEs (bounds-checking error) in case of faile=
-d
-> > > assertions (ISA manual Volume 1, Sections 2.2.6.1 [1] and 2.2.10.3 [2=
-]).
-> > > This could be useful for managed runtimes, but the exception is not
-> > > being handled so far, resulting in SIGSYSes in these cases, which is
-> > > incorrect and warrants a fix in itself.
-> > >=20
-> > > During experimentation, it was discovered that there is already UAPI =
-for
-> > > expressing such semantics: SIGSEGV with si_code=3DSEGV_BNDERR. This w=
-as
-> > > originally added for Intel MPX, and there is currently no user (!) af=
-ter
-> > > the removal of MPX support a few years ago. Although the semantics is
-> > > not a 1:1 match to that of LoongArch, still it is better than
-> > > alternatives such as SIGTRAP or SIGBUS of BUS_OBJERR kind, due to bei=
-ng
-> > > able to convey both the value that failed assertion and the bound val=
-ue.
-> > >=20
-> > > This patch series implements just this approach: translating BCEs int=
-o
-> > > SIGSEGVs with si_code=3DSEGV_BNDERR, si_value set to the offending va=
-lue,
-> > > and si_lower and si_upper set to resemble a range with both lower and
-> > > upper bound while in fact there is only one.
-> > >=20
-> > > The instructions are not currently used anywhere yet in the fledgling
-> > > LoongArch ecosystem, so it's not very urgent and we could take the ti=
-me
-> > > to figure out the best way forward (should SEGV_BNDERR turn out not
-> > > suitable).
-> >=20
-> > I don't think these instructions can be used in any systematic way
-> > within a Linux userspace in 2023.=C2=A0 IMO they should not exist in
-> > LoongArch at all because they have all the same disadvantages of Intel
-> > MPX; MPX has been removed by Intel in 2019, and LoongArch is designed
-> > after 2019.
->=20
-> Well, the difference is IMO significant enough to make LoongArch=20
-> bounds-checking more useful, at least for certain use cases. For=20
-> example, the bounds were a separate register bank in Intel MPX, but in
-> LoongArch they are just values in GPRs. This fits naturally into=20
-> JIT-ting or other managed runtimes (e.g. Go) whose slice indexing ops=20
-> already bounds-check with a temporary register per bound anyway, so it's=
-=20
-> just a matter of this snippet (or something like it)
->=20
-> - calculate element address
-> - if address < base: goto fail
-> - load/calculate upper bound
-> - if address >=3D upper bound: goto fail
-> - access memory
->=20
-> becoming
->=20
-> - calculate element address
-> - asrtgt address, base - 1
-> - load/calculate upper bound
-> - {ld,st}le address, upper bound
->=20
-> then in SIGSEGV handler, check PC to associate the signal back with the=
-=20
-> exact access op;
+Implement loongarch kvm module init, module exit interface,
+using kvm context to save the vpid info and vcpu world switch
+interface pointer.
 
-I remember using the signal handler for "usual" error handling can be a
-very bad idea but I can't remember where I've read about it.  Is there
-any managed environments doing so in practice?
+Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+---
+ arch/loongarch/kvm/main.c | 277 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 277 insertions(+)
+ create mode 100644 arch/loongarch/kvm/main.c
 
-If we redefine new_ldle/new_stle as "if [[likely]] the address is in-
-bound, do the load/store and skip the next instruction; otherwise do
-nothing", we can say:
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+new file mode 100644
+index 000000000000..59b93512cb99
+--- /dev/null
++++ b/arch/loongarch/kvm/main.c
+@@ -0,0 +1,277 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/kvm_host.h>
++#include <asm/kvm_host.h>
++#include <asm/cacheflush.h>
++
++static struct kvm_context __percpu *vmcs;
++struct kvm_world_switch *kvm_loongarch_ops;
++unsigned long vpid_mask;
++static int gcsr_flag[CSR_ALL_SIZE];
++
++int get_gcsr_flag(int csr)
++{
++	return gcsr_flag[csr];
++}
++
++static inline void set_gcsr_sw_flag(int csr)
++{
++	gcsr_flag[csr] |= SW_GCSR;
++}
++
++static inline void set_gcsr_hw_flag(int csr)
++{
++	gcsr_flag[csr] |= HW_GCSR;
++}
++
++/*
++ * The default value of gcsr_flag[CSR] is 0(INVALID_GCSR), and we use this
++ * function to set the flag to 1(SW_GCSR) or 2(HW_GCSR) if the gcsr is software
++ * or hardware. It will be used by get/set_gcsr, if gcsr_flag is HW we should
++ * use gcsrrd/gcsrwr to access it, else use sw csr to emulate it.
++ */
++static void _kvm_init_gcsr_flag(void)
++{
++	set_gcsr_hw_flag(LOONGARCH_CSR_CRMD);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PRMD);
++	set_gcsr_hw_flag(LOONGARCH_CSR_EUEN);
++	set_gcsr_hw_flag(LOONGARCH_CSR_MISC);
++	set_gcsr_hw_flag(LOONGARCH_CSR_ECFG);
++	set_gcsr_hw_flag(LOONGARCH_CSR_ESTAT);
++	set_gcsr_hw_flag(LOONGARCH_CSR_ERA);
++	set_gcsr_hw_flag(LOONGARCH_CSR_BADV);
++	set_gcsr_hw_flag(LOONGARCH_CSR_BADI);
++	set_gcsr_hw_flag(LOONGARCH_CSR_EENTRY);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBIDX);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBEHI);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBELO0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBELO1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_ASID);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PGDL);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PGDH);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PWCTL0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PWCTL1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_STLBPGSIZE);
++	set_gcsr_hw_flag(LOONGARCH_CSR_RVACFG);
++	set_gcsr_hw_flag(LOONGARCH_CSR_CPUID);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PRCFG1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PRCFG2);
++	set_gcsr_hw_flag(LOONGARCH_CSR_PRCFG3);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS2);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS3);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS4);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS5);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS6);
++	set_gcsr_hw_flag(LOONGARCH_CSR_KS7);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TMID);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TCFG);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TVAL);
++	set_gcsr_hw_flag(LOONGARCH_CSR_CNTC);
++	set_gcsr_hw_flag(LOONGARCH_CSR_LLBCTL);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRENTRY);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRBADV);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRERA);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRSAVE);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRELO0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRELO1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBREHI);
++	set_gcsr_hw_flag(LOONGARCH_CSR_TLBRPRMD);
++	set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN0);
++	set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN1);
++	set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN2);
++	set_gcsr_hw_flag(LOONGARCH_CSR_DMWIN3);
++	set_gcsr_hw_flag(LOONGARCH_CSR_MWPS);
++	set_gcsr_hw_flag(LOONGARCH_CSR_FWPS);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_IMPCTL1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IMPCTL2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRCTL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRINFO1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRINFO2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRENTRY);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRERA);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MERRSAVE);
++	set_gcsr_sw_flag(LOONGARCH_CSR_CTAG);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DEBUG);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DERA);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DESAVE);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PRCFG1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PRCFG2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PRCFG3);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PGD);
++	set_gcsr_sw_flag(LOONGARCH_CSR_TINTCLR);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_FWPS);
++	set_gcsr_sw_flag(LOONGARCH_CSR_FWPC);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MWPS);
++	set_gcsr_sw_flag(LOONGARCH_CSR_MWPC);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB0ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB0MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB0CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB0ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB1ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB1MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB1CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB1ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB2ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB2MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB2CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB2ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB3ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB3MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB3CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB3ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB4ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB4MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB4CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB4ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB5ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB5MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB5CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB5ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB6ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB6MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB6CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB6ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB7ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB7MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB7CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_DB7ASID);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB0ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB0MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB0CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB0ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB1ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB1MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB1CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB1ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB2ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB2MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB2CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB2ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB3ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB3MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB3CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB3ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB4ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB4MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB4CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB4ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB5ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB5MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB5CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB5ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB6ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB6MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB6CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB6ASID);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB7ADDR);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB7MASK);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB7CTRL);
++	set_gcsr_sw_flag(LOONGARCH_CSR_IB7ASID);
++
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL0);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR0);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR1);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR2);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCTRL3);
++	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR3);
++}
++
++static int kvm_loongarch_env_init(void)
++{
++	struct kvm_context *context;
++	int cpu, order;
++	void *addr;
++
++	vmcs = alloc_percpu(struct kvm_context);
++	if (!vmcs) {
++		pr_err("kvm: failed to allocate percpu kvm_context\n");
++		return -ENOMEM;
++	}
++
++	kvm_loongarch_ops = kzalloc(sizeof(*kvm_loongarch_ops), GFP_KERNEL);
++	if (!kvm_loongarch_ops)
++		return -ENOMEM;
++
++	/*
++	 * There will be problem in world switch code if there
++	 * is page fault reenter, since pgd register is shared
++	 * between root kernel and kvm hypervisor. World switch
++	 * entry need be unmapped area, cannot be tlb mapped area.
++	 * In future if hw pagetable walking is supported, or there
++	 * is separate pgd registers between root kernel and kvm
++	 * hypervisor, copying about world switch code will not be used.
++	 */
++
++	order = get_order(kvm_vector_size + kvm_enter_guest_size);
++	addr = (void *)__get_free_pages(GFP_KERNEL, order);
++	if (!addr) {
++		free_percpu(vmcs);
++		return -ENOMEM;
++	}
++
++	memcpy(addr, kvm_vector_entry, kvm_vector_size);
++	memcpy(addr + kvm_vector_size, kvm_enter_guest, kvm_enter_guest_size);
++	flush_icache_range((unsigned long)addr, (unsigned long)addr +
++				kvm_vector_size + kvm_enter_guest_size);
++	kvm_loongarch_ops->guest_eentry = addr;
++	kvm_loongarch_ops->enter_guest = addr + kvm_vector_size;
++	kvm_loongarch_ops->page_order = order;
++
++	vpid_mask = read_csr_gstat();
++	vpid_mask = (vpid_mask & CSR_GSTAT_GIDBIT) >> CSR_GSTAT_GIDBIT_SHIFT;
++	if (vpid_mask)
++		vpid_mask = GENMASK(vpid_mask - 1, 0);
++
++	for_each_possible_cpu(cpu) {
++		context = per_cpu_ptr(vmcs, cpu);
++		context->vpid_cache = vpid_mask + 1;
++		context->last_vcpu = NULL;
++	}
++
++	_kvm_init_fault();
++	_kvm_init_gcsr_flag();
++
++	return 0;
++}
++
++static void kvm_loongarch_env_exit(void)
++{
++	free_pages((unsigned long)kvm_loongarch_ops->guest_eentry, kvm_loongarch_ops->page_order);
++	free_percpu(vmcs);
++}
++
++static int kvm_loongarch_init(void)
++{
++	int r;
++
++	if (!cpu_has_lvz)
++		return 0;
++
++	r = kvm_loongarch_env_init();
++	if (r)
++		return r;
++
++	return kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
++}
++
++static void kvm_loongarch_exit(void)
++{
++	kvm_exit();
++	kvm_loongarch_env_exit();
++}
++
++module_init(kvm_loongarch_init);
++module_exit(kvm_loongarch_exit);
+-- 
+2.31.1
 
-blt        address, base, 1f
-new_ldle.d rd, address, upperbound
-1:b        panic_oob_access
-xor        rd, rd, 42 // use rd to do something
-
-This is more versatile, and useful for building a loop as well:
-
-or            a0, r0, r0
-0:new_ldle.d  t1, t0, t2
-b             1f
-add.d         a0, t1, a0
-add.d         t0, t0, 8
-b             0b
-1:bl          do_something_with_the_sum
-
-Yes it's "non-RISC", but at least more RISC than the current ldle: if
-you want a trap anyway you can say
-
-blt        address, base, 1f
-new_ldle.d rd, address, upperbound
-1:break    {a code defined for OOB}
-xor        rd, rd, 42 // use rd
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
