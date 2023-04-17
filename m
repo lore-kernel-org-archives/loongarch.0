@@ -1,209 +1,152 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE3484C83
-	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:48:25 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxedmSFT1kt+MdAA--.46547S3;
-	Mon, 17 Apr 2023 17:46:58 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxtryKFT1kyagqAA--.47974S23;
-	Mon, 17 Apr 2023 17:46:57 +0800 (CST)
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	Mark Brown <broonie@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	maobibo@loongson.cn,
-	Xi Ruoyao <xry111@xry111.site>,
-	zhaotianrui@loongson.cn
-Subject: [PATCH v7 21/30] LoongArch: KVM: Implement handle iocsr exception
-Date: Mon, 17 Apr 2023 17:46:40 +0800
-Message-Id: <20230417094649.874671-22-zhaotianrui@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230417094649.874671-1-zhaotianrui@loongson.cn>
-References: <20230417094649.874671-1-zhaotianrui@loongson.cn>
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833A1468A
+	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:50:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1681725043;
+	bh=O/cKAdPP1ntH7IK9e/3cclJfPJoYfiCKYcnR1FDS28c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=E5ZnmxxoCi42LLMmO5z0FR3DlqAoAY5yiajei+fCHQX57j4JBVZRuMDZiTncJykyh
+	 MqkIeXj9QPaMbH2TEpJA+cyEtEDz72q/MhY7nble68s8WYuOCo6UfpWh6gtX/oQqyZ
+	 EjNGC9LdHmSREBfn9zK60G0/Qx4weomdm7z9QWL4=
+Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 2A3F865C4E;
+	Mon, 17 Apr 2023 05:50:42 -0400 (EDT)
+Message-ID: <f54abfae989023fcfdabb4e9800a66847c357b85.camel@xry111.site>
+Subject: Re: [PATCH 0/2] LoongArch: Make bounds-checking instructions useful
+From: Xi Ruoyao <xry111@xry111.site>
+To: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
+Cc: WANG Xuerui <git@xen0n.name>, Huacai Chen <chenhuacai@kernel.org>, Eric
+ Biederman <ebiederm@xmission.com>, Al Viro <viro@zeniv.linux.org.uk>, Arnd
+ Bergmann <arnd@arndb.de>,  linux-api@vger.kernel.org,
+ linux-arch@vger.kernel.org,  linux-kernel@vger.kernel.org
+Date: Mon, 17 Apr 2023 17:50:40 +0800
+In-Reply-To: <6ca642a9-62a6-00e5-39ac-f14ef36f6bdb@xen0n.name>
+References: <20230416173326.3995295-1-kernel@xen0n.name>
+	 <e593541e7995cc46359da3dd4eb3a69094e969e2.camel@xry111.site>
+	 <6ca642a9-62a6-00e5-39ac-f14ef36f6bdb@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.0 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxtryKFT1kyagqAA--.47974S23
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWFWrGw17Kry5ZFy7ZrWfAFb_yoWrJF1Upa
-	yjvryktrW8Wwn3twsxJrs7Xr1aqF48Gr9rXFZxJw4furW2ya45Jr4vkrnFvFZ8K393Gr4I
-	vw1fJryxuF1qy3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
 
-Implement kvm handle vcpu iocsr exception, setting the iocsr info into
-vcpu_run and return to user space to handle it.
+On Mon, 2023-04-17 at 15:54 +0800, WANG Xuerui wrote:
+> On 2023/4/17 14:47, Xi Ruoyao wrote:
+> > On Mon, 2023-04-17 at 01:33 +0800, WANG Xuerui wrote:
+> > > From: WANG Xuerui <git@xen0n.name>
+> > >=20
+> > > Hi,
+> > >=20
+> > > The LoongArch-64 base architecture is capable of performing
+> > > bounds-checking either before memory accesses or alone, with speciali=
+zed
+> > > instructions generating BCEs (bounds-checking error) in case of faile=
+d
+> > > assertions (ISA manual Volume 1, Sections 2.2.6.1 [1] and 2.2.10.3 [2=
+]).
+> > > This could be useful for managed runtimes, but the exception is not
+> > > being handled so far, resulting in SIGSYSes in these cases, which is
+> > > incorrect and warrants a fix in itself.
+> > >=20
+> > > During experimentation, it was discovered that there is already UAPI =
+for
+> > > expressing such semantics: SIGSEGV with si_code=3DSEGV_BNDERR. This w=
+as
+> > > originally added for Intel MPX, and there is currently no user (!) af=
+ter
+> > > the removal of MPX support a few years ago. Although the semantics is
+> > > not a 1:1 match to that of LoongArch, still it is better than
+> > > alternatives such as SIGTRAP or SIGBUS of BUS_OBJERR kind, due to bei=
+ng
+> > > able to convey both the value that failed assertion and the bound val=
+ue.
+> > >=20
+> > > This patch series implements just this approach: translating BCEs int=
+o
+> > > SIGSEGVs with si_code=3DSEGV_BNDERR, si_value set to the offending va=
+lue,
+> > > and si_lower and si_upper set to resemble a range with both lower and
+> > > upper bound while in fact there is only one.
+> > >=20
+> > > The instructions are not currently used anywhere yet in the fledgling
+> > > LoongArch ecosystem, so it's not very urgent and we could take the ti=
+me
+> > > to figure out the best way forward (should SEGV_BNDERR turn out not
+> > > suitable).
+> >=20
+> > I don't think these instructions can be used in any systematic way
+> > within a Linux userspace in 2023.=C2=A0 IMO they should not exist in
+> > LoongArch at all because they have all the same disadvantages of Intel
+> > MPX; MPX has been removed by Intel in 2019, and LoongArch is designed
+> > after 2019.
+>=20
+> Well, the difference is IMO significant enough to make LoongArch=20
+> bounds-checking more useful, at least for certain use cases. For=20
+> example, the bounds were a separate register bank in Intel MPX, but in
+> LoongArch they are just values in GPRs. This fits naturally into=20
+> JIT-ting or other managed runtimes (e.g. Go) whose slice indexing ops=20
+> already bounds-check with a temporary register per bound anyway, so it's=
+=20
+> just a matter of this snippet (or something like it)
+>=20
+> - calculate element address
+> - if address < base: goto fail
+> - load/calculate upper bound
+> - if address >=3D upper bound: goto fail
+> - access memory
+>=20
+> becoming
+>=20
+> - calculate element address
+> - asrtgt address, base - 1
+> - load/calculate upper bound
+> - {ld,st}le address, upper bound
+>=20
+> then in SIGSEGV handler, check PC to associate the signal back with the=
+=20
+> exact access op;
 
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
----
- arch/loongarch/include/asm/inst.h | 16 ++++++
- arch/loongarch/kvm/exit.c         | 92 +++++++++++++++++++++++++++++++
- 2 files changed, 108 insertions(+)
+I remember using the signal handler for "usual" error handling can be a
+very bad idea but I can't remember where I've read about it.  Is there
+any managed environments doing so in practice?
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index a04fe755d719..e95040e880fa 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -56,6 +56,14 @@ enum reg2_op {
- 	revbd_op	= 0x0f,
- 	revh2w_op	= 0x10,
- 	revhd_op	= 0x11,
-+	iocsrrdb_op     = 0x19200,
-+	iocsrrdh_op     = 0x19201,
-+	iocsrrdw_op     = 0x19202,
-+	iocsrrdd_op     = 0x19203,
-+	iocsrwrb_op     = 0x19204,
-+	iocsrwrh_op     = 0x19205,
-+	iocsrwrw_op     = 0x19206,
-+	iocsrwrd_op     = 0x19207,
- };
- 
- enum reg2i5_op {
-@@ -272,6 +280,13 @@ struct reg3sa2_format {
- 	unsigned int opcode : 15;
- };
- 
-+struct reg2csr_format {
-+	unsigned int rd : 5;
-+	unsigned int rj : 5;
-+	unsigned int csr : 14;
-+	unsigned int opcode : 8;
-+};
-+
- union loongarch_instruction {
- 	unsigned int word;
- 	struct reg0i15_format	reg0i15_format;
-@@ -287,6 +302,7 @@ union loongarch_instruction {
- 	struct reg2bstrd_format	reg2bstrd_format;
- 	struct reg3_format	reg3_format;
- 	struct reg3sa2_format	reg3sa2_format;
-+	struct reg2csr_format   reg2csr_format;
- };
- 
- #define LOONGARCH_INSN_SIZE	sizeof(union loongarch_instruction)
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 508cbce31aa5..bd33fe0c6424 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -96,3 +96,95 @@ static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
- 
- 	return EMULATE_DONE;
- }
-+
-+int _kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu)
-+{
-+	u32 rd, rj, opcode;
-+	u32 addr;
-+	unsigned long val;
-+	int ret;
-+
-+	/*
-+	 * Each IOCSR with different opcode
-+	 */
-+	rd = inst.reg2_format.rd;
-+	rj = inst.reg2_format.rj;
-+	opcode = inst.reg2_format.opcode;
-+	addr = vcpu->arch.gprs[rj];
-+	ret = EMULATE_DO_IOCSR;
-+	run->iocsr_io.phys_addr = addr;
-+	run->iocsr_io.is_write = 0;
-+
-+	/* LoongArch is Little endian */
-+	switch (opcode) {
-+	case iocsrrdb_op:
-+		run->iocsr_io.len = 1;
-+		break;
-+	case iocsrrdh_op:
-+		run->iocsr_io.len = 2;
-+		break;
-+	case iocsrrdw_op:
-+		run->iocsr_io.len = 4;
-+		break;
-+	case iocsrrdd_op:
-+		run->iocsr_io.len = 8;
-+		break;
-+	case iocsrwrb_op:
-+		run->iocsr_io.len = 1;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	case iocsrwrh_op:
-+		run->iocsr_io.len = 2;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	case iocsrwrw_op:
-+		run->iocsr_io.len = 4;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	case iocsrwrd_op:
-+		run->iocsr_io.len = 8;
-+		run->iocsr_io.is_write = 1;
-+		break;
-+	default:
-+		ret = EMULATE_FAIL;
-+		break;
-+	}
-+
-+	if (ret == EMULATE_DO_IOCSR) {
-+		if (run->iocsr_io.is_write) {
-+			val = vcpu->arch.gprs[rd];
-+			memcpy(run->iocsr_io.data, &val, run->iocsr_io.len);
-+		}
-+		vcpu->arch.io_gpr = rd;
-+	}
-+
-+	return ret;
-+}
-+
-+int _kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
-+{
-+	unsigned long *gpr = &vcpu->arch.gprs[vcpu->arch.io_gpr];
-+	enum emulation_result er = EMULATE_DONE;
-+
-+	switch (run->iocsr_io.len) {
-+	case 8:
-+		*gpr = *(s64 *)run->iocsr_io.data;
-+		break;
-+	case 4:
-+		*gpr = *(int *)run->iocsr_io.data;
-+		break;
-+	case 2:
-+		*gpr = *(short *)run->iocsr_io.data;
-+		break;
-+	case 1:
-+		*gpr = *(char *) run->iocsr_io.data;
-+		break;
-+	default:
-+		kvm_err("Bad IOCSR length: %d,addr is 0x%lx",
-+				run->iocsr_io.len, vcpu->arch.badv);
-+		er = EMULATE_FAIL;
-+		break;
-+	}
-+
-+	return er;
-+}
--- 
-2.31.1
+If we redefine new_ldle/new_stle as "if [[likely]] the address is in-
+bound, do the load/store and skip the next instruction; otherwise do
+nothing", we can say:
 
+blt        address, base, 1f
+new_ldle.d rd, address, upperbound
+1:b        panic_oob_access
+xor        rd, rd, 42 // use rd to do something
+
+This is more versatile, and useful for building a loop as well:
+
+or            a0, r0, r0
+0:new_ldle.d  t1, t0, t2
+b             1f
+add.d         a0, t1, a0
+add.d         t0, t0, 8
+b             0b
+1:bl          do_something_with_the_sum
+
+Yes it's "non-RISC", but at least more RISC than the current ldle: if
+you want a trap anyway you can say
+
+blt        address, base, 1f
+new_ldle.d rd, address, upperbound
+1:break    {a code defined for OOB}
+xor        rd, rd, 42 // use rd
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
