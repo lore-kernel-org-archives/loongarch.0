@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF4931FDD
-	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:46:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 508D91FC5
+	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:46:55 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxIk6QFT1kieMdAA--.46101S3;
-	Mon, 17 Apr 2023 17:46:56 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxE4SMFT1k+uIdAA--.46352S3;
+	Mon, 17 Apr 2023 17:46:52 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxtryKFT1kyagqAA--.47974S18;
-	Mon, 17 Apr 2023 17:46:56 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxtryKFT1kyagqAA--.47974S5;
+	Mon, 17 Apr 2023 17:46:51 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v7 16/30] LoongArch: KVM: Implement update VM id function
-Date: Mon, 17 Apr 2023 17:46:35 +0800
-Message-Id: <20230417094649.874671-17-zhaotianrui@loongson.cn>
+Subject: [PATCH v7 03/30] LoongArch: KVM: Implement kvm hardware enable, disable interface
+Date: Mon, 17 Apr 2023 17:46:22 +0800
+Message-Id: <20230417094649.874671-4-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230417094649.874671-1-zhaotianrui@loongson.cn>
 References: <20230417094649.874671-1-zhaotianrui@loongson.cn>
@@ -35,105 +35,108 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxtryKFT1kyagqAA--.47974S18
+X-CM-TRANSID:AQAAf8CxtryKFT1kyagqAA--.47974S5
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Aw1kJrWDZF4Dur48Aw1UWrg_yoW8tryDpF
-	WxCrn5Wr48Xwnxu3sIqw10qr1Y9395JF13Xa47Ja4Yyr17t3sFkrWvkrWDAFyrXr1rAryx
-	XF15tF4YkF18A37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Ar4DJrWxKFW5ur4DKry5XFb_yoW8tF4fpr
+	WUCFW5Ary5tr1Sgas3J3Zxtr13GrWvgayxXa12ya45Jw4j9F4rXF95Kr9rJFyUX3y8ZF1S
+	v39YyFyF9F1DArUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	bw8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
+	kF7I0E14v26F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
 	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48J
+	MxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxV
+	WUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
+	0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
+	VjvjDU0xZFpf9x0zRByIUUUUUU=
 
-Implement kvm check vmid and update vmid, the vmid should be checked before
-vcpu enter guest.
+Implement kvm hardware enable, disable interface, setting
+the guest config register to enable virtualization features
+when called the interface.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vmid.c | 65 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 arch/loongarch/kvm/vmid.c
+ arch/loongarch/kvm/main.c | 63 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-diff --git a/arch/loongarch/kvm/vmid.c b/arch/loongarch/kvm/vmid.c
-new file mode 100644
-index 000000000000..7d9688c24184
---- /dev/null
-+++ b/arch/loongarch/kvm/vmid.c
-@@ -0,0 +1,65 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/kvm_host.h>
-+#include <asm/kvm_host.h>
-+#include "trace.h"
-+
-+static void _kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+index 59b93512cb99..dca6ae878a7f 100644
+--- a/arch/loongarch/kvm/main.c
++++ b/arch/loongarch/kvm/main.c
+@@ -189,6 +189,69 @@ static void _kvm_init_gcsr_flag(void)
+ 	set_gcsr_sw_flag(LOONGARCH_CSR_PERFCNTR3);
+ }
+ 
++void kvm_init_vmcs(struct kvm *kvm)
 +{
-+	struct kvm_context *context;
-+	unsigned long vpid;
-+
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+	vpid = context->vpid_cache + 1;
-+	if (!(vpid & vpid_mask)) {
-+		/* finish round of 64 bit loop */
-+		if (unlikely(!vpid))
-+			vpid = vpid_mask + 1;
-+
-+		/* vpid 0 reserved for root */
-+		++vpid;
-+
-+		/* start new vpid cycle */
-+		kvm_flush_tlb_all();
-+	}
-+
-+	context->vpid_cache = vpid;
-+	vcpu->arch.vpid = vpid;
++	kvm->arch.vmcs = vmcs;
 +}
 +
-+void _kvm_check_vmid(struct kvm_vcpu *vcpu, int cpu)
++long kvm_arch_dev_ioctl(struct file *filp,
++			unsigned int ioctl, unsigned long arg)
 +{
-+	struct kvm_context *context;
-+	bool migrated;
-+	unsigned long ver, old, vpid;
-+
-+	/*
-+	 * Are we entering guest context on a different CPU to last time?
-+	 * If so, the VCPU's guest TLB state on this CPU may be stale.
-+	 */
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+	migrated = (vcpu->arch.last_exec_cpu != cpu);
-+	vcpu->arch.last_exec_cpu = cpu;
-+
-+	/*
-+	 * Check if our vpid is of an older version
-+	 *
-+	 * We also discard the stored vpid if we've executed on
-+	 * another CPU, as the guest mappings may have changed without
-+	 * hypervisor knowledge.
-+	 */
-+	ver = vcpu->arch.vpid & ~vpid_mask;
-+	old = context->vpid_cache  & ~vpid_mask;
-+	if (migrated || (ver != old)) {
-+		_kvm_update_vpid(vcpu, cpu);
-+		trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
-+	}
-+
-+	/* Restore GSTAT(0x50).vpid */
-+	vpid = (vcpu->arch.vpid & vpid_mask)
-+		<< CSR_GSTAT_GID_SHIFT;
-+	change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
++	return -ENOIOCTLCMD;
 +}
++
++#ifdef CONFIG_KVM_GENERIC_HARDWARE_ENABLING
++int kvm_arch_hardware_enable(void)
++{
++	unsigned long gcfg = 0;
++
++	/* First init gtlbc, gcfg, gstat, gintc. All guest use the same config */
++	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
++	write_csr_gcfg(0);
++	write_csr_gstat(0);
++	write_csr_gintc(0);
++
++	/*
++	 * Enable virtualization features granting guest direct control of
++	 * certain features:
++	 * GCI=2:       Trap on init or unimplement cache instruction.
++	 * TORU=0:      Trap on Root Unimplement.
++	 * CACTRL=1:    Root control cache.
++	 * TOP=0:       Trap on Previlege.
++	 * TOE=0:       Trap on Exception.
++	 * TIT=0:       Trap on Timer.
++	 */
++	if (cpu_has_gcip_all)
++		gcfg |= CSR_GCFG_GCI_SECURE;
++	if (cpu_has_matc_root)
++		gcfg |= CSR_GCFG_MATC_ROOT;
++
++	gcfg |= CSR_GCFG_TIT;
++	write_csr_gcfg(gcfg);
++
++	kvm_flush_tlb_all();
++
++	/* Enable using TGID  */
++	set_csr_gtlbc(CSR_GTLBC_USETGID);
++	kvm_debug("gtlbc:%llx gintc:%llx gstat:%llx gcfg:%llx",
++			read_csr_gtlbc(), read_csr_gintc(),
++			read_csr_gstat(), read_csr_gcfg());
++
++	return 0;
++}
++
++void kvm_arch_hardware_disable(void)
++{
++	clear_csr_gtlbc(CSR_GTLBC_USETGID | CSR_GTLBC_TOTI);
++	write_csr_gcfg(0);
++	write_csr_gstat(0);
++	write_csr_gintc(0);
++
++	/* Flush any remaining guest TLB entries */
++	kvm_flush_tlb_all();
++}
++#endif
++
+ static int kvm_loongarch_env_init(void)
+ {
+ 	struct kvm_context *context;
 -- 
 2.31.1
 
