@@ -1,131 +1,107 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5967379C7
-	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 12:57:08 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A995021A91;
-	Mon, 17 Apr 2023 12:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1681736226; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DBWm/Eu0c07u8Xvk5dygRLn1Yr7Deg++IVzIGW64CBY=;
-	b=QIDnQQM6FqpjVgjC60BIzr4jVLzaGkJrPhU59Raug1vVtqluGTEOViO9AGJkOal2qP0Dhw
-	aZzVrXsrEkBYww32/dW3b+o+nzsoWpJ3KlWyp/2eDW7Po7BW/deXGqlaSDhQpfJvzU431t
-	7vS4Z5CGgWaKjF2W4IdAHL05KRzLHEY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1681736226;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DBWm/Eu0c07u8Xvk5dygRLn1Yr7Deg++IVzIGW64CBY=;
-	b=ZsavFsQ/L/cdP5k8oM+73/uhqDnYVY4bVtRCFGtxGI8UdCvsLyzOZjdO14bzgBtVSfTG1F
-	/seSez5j0RSvfPDQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 356921390E;
-	Mon, 17 Apr 2023 12:57:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id CEEjDCJCPWToWwAAMHmgww
-	(envelope-from <tzimmermann@suse.de>); Mon, 17 Apr 2023 12:57:06 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: arnd@arndb.de,
-	daniel.vetter@ffwll.ch,
-	deller@gmx.de,
-	javierm@redhat.com,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E00A6FCB
+	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 13:11:16 +0000 (UTC)
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.95)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1poOUm-001XyT-HU; Mon, 17 Apr 2023 15:02:12 +0200
+Received: from p5b13a017.dip0.t-ipconnect.de ([91.19.160.23] helo=[192.168.178.81])
+          by inpost2.zedat.fu-berlin.de (Exim 4.95)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1poOUm-003hGd-9V; Mon, 17 Apr 2023 15:02:12 +0200
+Message-ID: <3c188e948506dc97112dcc070cf16e36209c6cc5.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v3 16/19] arch/sh: Implement <asm/fb.h> with generic
+ helpers
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Thomas Zimmermann <tzimmermann@suse.de>, arnd@arndb.de, 
+	daniel.vetter@ffwll.ch, deller@gmx.de, javierm@redhat.com, 
 	gregkh@linuxfoundation.org
-Cc: linux-arch@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v3 19/19] arch/x86: Implement <asm/fb.h> with generic helpers
-Date: Mon, 17 Apr 2023 14:56:51 +0200
-Message-Id: <20230417125651.25126-20-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230417125651.25126-1-tzimmermann@suse.de>
+Cc: linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-snps-arc@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, 
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>
+Date: Mon, 17 Apr 2023 15:02:11 +0200
+In-Reply-To: <20230417125651.25126-17-tzimmermann@suse.de>
 References: <20230417125651.25126-1-tzimmermann@suse.de>
+	 <20230417125651.25126-17-tzimmermann@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.0 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 91.19.160.23
+X-ZEDAT-Hint: PO
 
-Include <asm-generic/fb.h> and set the required preprocessor tokens
-correctly. x86 now implements its own set of fb helpers, but still
-follows the overall pattern of the other <asm/fb.h> files.
+Hi Thomas!
 
-v3:
-	* clarified commit message
+On Mon, 2023-04-17 at 14:56 +0200, Thomas Zimmermann wrote:
+> Replace the architecture's fbdev helpers with the generic
+> ones from <asm-generic/fb.h>. No functional changes.
+>=20
+> v2:
+> 	* use default implementation for fb_pgprotect() (Arnd)
+>=20
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> ---
+>  arch/sh/include/asm/fb.h | 15 +--------------
+>  1 file changed, 1 insertion(+), 14 deletions(-)
+>=20
+> diff --git a/arch/sh/include/asm/fb.h b/arch/sh/include/asm/fb.h
+> index 9a0bca2686fd..19df13ee9ca7 100644
+> --- a/arch/sh/include/asm/fb.h
+> +++ b/arch/sh/include/asm/fb.h
+> @@ -2,19 +2,6 @@
+>  #ifndef _ASM_FB_H_
+>  #define _ASM_FB_H_
+> =20
+> -#include <linux/fb.h>
+> -#include <linux/fs.h>
+> -#include <asm/page.h>
+> -
+> -static inline void fb_pgprotect(struct file *file, struct vm_area_struct=
+ *vma,
+> -				unsigned long off)
+> -{
+> -	vma->vm_page_prot =3D pgprot_writecombine(vma->vm_page_prot);
+> -}
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/include/asm/fb.h | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Looking at the macro in asm-generic/fb.h, fb_pgprotect() is being replaced =
+with
+a no-op function. Is that intentional? Can you briefly explain the backgrou=
+nd
+for this change?
 
-diff --git a/arch/x86/include/asm/fb.h b/arch/x86/include/asm/fb.h
-index ab4c960146e3..a3fb801f12f1 100644
---- a/arch/x86/include/asm/fb.h
-+++ b/arch/x86/include/asm/fb.h
-@@ -2,10 +2,11 @@
- #ifndef _ASM_X86_FB_H
- #define _ASM_X86_FB_H
- 
--#include <linux/fb.h>
--#include <linux/fs.h>
- #include <asm/page.h>
- 
-+struct fb_info;
-+struct file;
-+
- static inline void fb_pgprotect(struct file *file, struct vm_area_struct *vma,
- 				unsigned long off)
- {
-@@ -16,7 +17,11 @@ static inline void fb_pgprotect(struct file *file, struct vm_area_struct *vma,
- 		pgprot_val(vma->vm_page_prot) =
- 			prot | cachemode2protval(_PAGE_CACHE_MODE_UC_MINUS);
- }
-+#define fb_pgprotect fb_pgprotect
-+
-+int fb_is_primary_device(struct fb_info *info);
-+#define fb_is_primary_device fb_is_primary_device
- 
--extern int fb_is_primary_device(struct fb_info *info);
-+#include <asm-generic/fb.h>
- 
- #endif /* _ASM_X86_FB_H */
--- 
-2.40.0
+> -static inline int fb_is_primary_device(struct fb_info *info)
+> -{
+> -	return 0;
+> -}
+> +#include <asm-generic/fb.h>
+> =20
+>  #endif /* _ASM_FB_H_ */
 
+Thanks,
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
