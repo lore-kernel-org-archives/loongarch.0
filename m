@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C4494C8F
-	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:59:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB7912586
+	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:59:57 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Axkk6aGD1kM+YdAA--.46079S3;
-	Mon, 17 Apr 2023 17:59:54 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Bxok6bGD1kd+YdAA--.34804S3;
+	Mon, 17 Apr 2023 17:59:55 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx57yWGD1kua0qAA--.48254S12;
-	Mon, 17 Apr 2023 17:59:53 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx57yWGD1kua0qAA--.48254S19;
+	Mon, 17 Apr 2023 17:59:55 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v7 10/30] LoongArch: KVM: Implement vcpu ENABLE_CAP ioctl interface
-Date: Mon, 17 Apr 2023 17:59:30 +0800
-Message-Id: <20230417095950.875228-11-zhaotianrui@loongson.cn>
+Subject: [PATCH v7 17/30] LoongArch: KVM: Implement virtual machine tlb operations
+Date: Mon, 17 Apr 2023 17:59:37 +0800
+Message-Id: <20230417095950.875228-18-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230417095950.875228-1-zhaotianrui@loongson.cn>
 References: <20230417095950.875228-1-zhaotianrui@loongson.cn>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx57yWGD1kua0qAA--.48254S12
+X-CM-TRANSID:AQAAf8Bx57yWGD1kua0qAA--.48254S19
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw4fJr4xJrWUJF1rAr1kKrg_yoW8JFy3pF
-	4DCr90qr4rJrWxWwnxtws3Wr1aqrWkKr4xZF9rX3y5AF42kry5GF4FkrWDAFW5ta1rGF1S
-	qr1rt3Wj9Fs8AwUanT9S1TB71UUUU8UqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7WrW7Xw4fGF4xGw1xtw43KFg_yoW8JF4kpF
+	yfurs5Kw4fX3ZxW39xXwn7Wr13Xr4vkF17ZFW3ua4rZrsrtr1vyFnakrykJFWUtayrCr48
+	W34ftF4jgFWUJw7anT9S1TB71UUUU8UqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	bcAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
@@ -54,57 +54,52 @@ X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw4fJr4xJrWUJF1rAr1kKrg_yoW8JFy3pF
 	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6xkF7I
 	0E14v26F4UJVW0obIYCTnIWIevJa73UjIFyTuYvjxU75l1DUUUU
 
-Implement loongarch vcpu KVM_ENABLE_CAP ioctl interface.
+Implement loongarch virtual machine tlb operations such as flush tlb by
+specific gpa parameter and flush all of the virt machines tlb.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ arch/loongarch/kvm/tlb.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 arch/loongarch/kvm/tlb.c
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 9ad6a285cbb4..e1e6167699de 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -187,6 +187,23 @@ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
- 	return 0;
- }
- 
-+static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
-+				     struct kvm_enable_cap *cap)
+diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
+new file mode 100644
+index 000000000000..66e116cf2486
+--- /dev/null
++++ b/arch/loongarch/kvm/tlb.c
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <linux/kvm_host.h>
++#include <asm/tlb.h>
++
++int kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
 +{
-+	int r = 0;
-+
-+	if (!kvm_vm_ioctl_check_extension(vcpu->kvm, cap->cap))
-+		return -EINVAL;
-+	if (cap->flags)
-+		return -EINVAL;
-+	if (cap->args[0])
-+		return -EINVAL;
-+	if (cap->cap)
-+		return -EINVAL;
-+
-+	return r;
++	preempt_disable();
++	gpa &= (PAGE_MASK << 1);
++	invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
++	preempt_enable();
++	return 0;
 +}
 +
- long kvm_arch_vcpu_ioctl(struct file *filp,
- 			 unsigned int ioctl, unsigned long arg)
- {
-@@ -210,6 +227,15 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 			r = _kvm_get_reg(vcpu, &reg);
- 		break;
- 	}
-+	case KVM_ENABLE_CAP: {
-+		struct kvm_enable_cap cap;
++/**
++ * kvm_flush_tlb_all() - Flush all root TLB entries for
++ * guests.
++ *
++ * Invalidate all entries including GVA-->GPA and GPA-->HPA mappings.
++ */
++void kvm_flush_tlb_all(void)
++{
++	unsigned long flags;
 +
-+		r = -EFAULT;
-+		if (copy_from_user(&cap, argp, sizeof(cap)))
-+			break;
-+		r = kvm_vcpu_ioctl_enable_cap(vcpu, &cap);
-+		break;
-+	}
- 	default:
- 		r = -ENOIOCTLCMD;
- 		break;
++	local_irq_save(flags);
++	invtlb_all(INVTLB_ALLGID, 0, 0);
++	local_irq_restore(flags);
++}
 -- 
 2.31.1
 
