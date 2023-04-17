@@ -1,33 +1,64 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 821E84C9A
-	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 10:01:44 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8CxjdqaGD1kReYdAA--.35061S3;
-	Mon, 17 Apr 2023 17:59:54 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx57yWGD1kua0qAA--.48254S14;
-	Mon, 17 Apr 2023 17:59:53 +0800 (CST)
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	loongarch@lists.linux.dev,
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480273FC2
+	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 12:57:00 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 65ACA1F86C;
+	Mon, 17 Apr 2023 12:56:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1681736218; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=TjKFT65nFde0KHYwvUCAIbizOxCNdL0ntslOVRl87lE=;
+	b=qU6w2kY5MzqEXwd8TMNs58RhCH9e5hAM3giF5jjQmYT6lBuIWGXS/c+WHrP5T+pN3SY2vp
+	NA5N6GTN/+zI0Nkuz0JjvVnZJyhucRMUl5SOITpu5xAQg48nvBBYq194+Km0t5IwM18z2J
+	BTyIpDo3bUNDxPWIkyVoQeOFNoGNWP4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1681736218;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=TjKFT65nFde0KHYwvUCAIbizOxCNdL0ntslOVRl87lE=;
+	b=oVQCEIp+Zsfrb6hp9far1l809Ib3e3nbzdCxJOOQ2f8MndGptEVdK0mKoxA4OcCHq1YcqT
+	IcKcAyErDVaEE+AQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E43D31390E;
+	Mon, 17 Apr 2023 12:56:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id yBGhNhlCPWToWwAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Mon, 17 Apr 2023 12:56:57 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: arnd@arndb.de,
+	daniel.vetter@ffwll.ch,
+	deller@gmx.de,
+	javierm@redhat.com,
+	gregkh@linuxfoundation.org
+Cc: linux-arch@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-snps-arc@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	Mark Brown <broonie@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	maobibo@loongson.cn,
-	Xi Ruoyao <xry111@xry111.site>,
-	zhaotianrui@loongson.cn
-Subject: [PATCH v7 12/30] LoongArch: KVM: Implement vcpu interrupt operations
-Date: Mon, 17 Apr 2023 17:59:32 +0800
-Message-Id: <20230417095950.875228-13-zhaotianrui@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230417095950.875228-1-zhaotianrui@loongson.cn>
-References: <20230417095950.875228-1-zhaotianrui@loongson.cn>
+	linux-arm-kernel@lists.infradead.org,
+	linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v3 00/19] arch: Consolidate <asm/fb.h>
+Date: Mon, 17 Apr 2023 14:56:32 +0200
+Message-Id: <20230417125651.25126-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,224 +66,99 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx57yWGD1kua0qAA--.48254S14
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxCrWfAr1fKFWkWry3Gr1rJFb_yoWrKw4UpF
-	W8Cw45Xw48Gr17G343ZFnY9r1Yqr1kKFZxGr97C3y3K347tr95XFyvyr98XF1UGw4UKF1f
-	X34SvaykCa45JwUanT9S1TB71UUUU8UqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bcAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_GcCE3s1ln4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF
-	6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaVAv8V
-	WrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVW8ZVWr
-	XwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-	8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6xkF7I
-	0E14v26F4UJVW0obIYCTnIWIevJa73UjIFyTuYvjxU75l1DUUUU
 
-Implement vcpu interrupt operations such as vcpu set irq and
-vcpu clear irq, using set_gcsr_estat to set irq which is
-parsed by the irq bitmap.
+Various architectures provide <asm/fb.h> with helpers for fbdev
+framebuffer devices. Share the contained code where possible. There
+is already <asm-generic/fb.h>, which implements generic (as in
+'empty') functions of the fbdev helpers. The header was added in
+commit aafe4dbed0bf ("asm-generic: add generic versions of common
+headers"), but never used.
 
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
----
- arch/loongarch/kvm/interrupt.c | 126 +++++++++++++++++++++++++++++++++
- arch/loongarch/kvm/vcpu.c      |  45 ++++++++++++
- 2 files changed, 171 insertions(+)
- create mode 100644 arch/loongarch/kvm/interrupt.c
+Each per-architecture header file declares and/or implements fbdev
+helpers and defines a preprocessor token for each. The generic
+header then provides the remaining helpers. It works like the I/O
+helpers in <asm/io.h>.
 
-diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
-new file mode 100644
-index 000000000000..02267a71d1aa
---- /dev/null
-+++ b/arch/loongarch/kvm/interrupt.c
-@@ -0,0 +1,126 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/err.h>
-+#include <asm/kvm_vcpu.h>
-+
-+static unsigned int int_to_coreint[LOONGARCH_EXC_MAX] = {
-+	[LARCH_INT_TIMER]	= CPU_TIMER,
-+	[LARCH_INT_IPI]		= CPU_IPI,
-+	[LARCH_INT_SIP0]	= CPU_SIP0,
-+	[LARCH_INT_SIP1]	= CPU_SIP1,
-+	[LARCH_INT_IP0]		= CPU_IP0,
-+	[LARCH_INT_IP1]		= CPU_IP1,
-+	[LARCH_INT_IP2]		= CPU_IP2,
-+	[LARCH_INT_IP3]		= CPU_IP3,
-+	[LARCH_INT_IP4]		= CPU_IP4,
-+	[LARCH_INT_IP5]		= CPU_IP5,
-+	[LARCH_INT_IP6]		= CPU_IP6,
-+	[LARCH_INT_IP7]		= CPU_IP7,
-+};
-+
-+static int _kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
-+{
-+	unsigned int irq = 0;
-+
-+	clear_bit(priority, &vcpu->arch.irq_pending);
-+	if (priority < LOONGARCH_EXC_MAX)
-+		irq = int_to_coreint[priority];
-+
-+	switch (priority) {
-+	case LARCH_INT_TIMER:
-+	case LARCH_INT_IPI:
-+	case LARCH_INT_SIP0:
-+	case LARCH_INT_SIP1:
-+		set_gcsr_estat(irq);
-+		break;
-+
-+	case LARCH_INT_IP0:
-+	case LARCH_INT_IP1:
-+	case LARCH_INT_IP2:
-+	case LARCH_INT_IP3:
-+	case LARCH_INT_IP4:
-+	case LARCH_INT_IP5:
-+	case LARCH_INT_IP6:
-+	case LARCH_INT_IP7:
-+		set_csr_gintc(irq);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 1;
-+}
-+
-+static int _kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
-+{
-+	unsigned int irq = 0;
-+
-+	clear_bit(priority, &vcpu->arch.irq_clear);
-+	if (priority < LOONGARCH_EXC_MAX)
-+		irq = int_to_coreint[priority];
-+
-+	switch (priority) {
-+	case LARCH_INT_TIMER:
-+	case LARCH_INT_IPI:
-+	case LARCH_INT_SIP0:
-+	case LARCH_INT_SIP1:
-+		clear_gcsr_estat(irq);
-+		break;
-+
-+	case LARCH_INT_IP0:
-+	case LARCH_INT_IP1:
-+	case LARCH_INT_IP2:
-+	case LARCH_INT_IP3:
-+	case LARCH_INT_IP4:
-+	case LARCH_INT_IP5:
-+	case LARCH_INT_IP6:
-+	case LARCH_INT_IP7:
-+		clear_csr_gintc(irq);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 1;
-+}
-+
-+void _kvm_deliver_intr(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long *pending = &vcpu->arch.irq_pending;
-+	unsigned long *pending_clr = &vcpu->arch.irq_clear;
-+	unsigned int priority;
-+
-+	if (!(*pending) && !(*pending_clr))
-+		return;
-+
-+	if (*pending_clr) {
-+		priority = __ffs(*pending_clr);
-+		while (priority <= LOONGARCH_EXC_IPNUM) {
-+			_kvm_irq_clear(vcpu, priority);
-+			priority = find_next_bit(pending_clr,
-+					BITS_PER_BYTE * sizeof(*pending_clr),
-+					priority + 1);
-+		}
-+	}
-+
-+	if (*pending) {
-+		priority = __ffs(*pending);
-+		while (priority <= LOONGARCH_EXC_IPNUM) {
-+			_kvm_irq_deliver(vcpu, priority);
-+			priority = find_next_bit(pending,
-+					BITS_PER_BYTE * sizeof(*pending),
-+					priority + 1);
-+		}
-+	}
-+}
-+
-+int _kvm_pending_timer(struct kvm_vcpu *vcpu)
-+{
-+	return test_bit(LARCH_INT_TIMER, &vcpu->arch.irq_pending);
-+}
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index d1e8cd402900..ee648bdb657c 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -305,6 +305,51 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
- 	preempt_enable();
- }
- 
-+int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu,
-+			     struct kvm_loongarch_interrupt *irq)
-+{
-+	int intr = (int)irq->irq;
-+	struct kvm_vcpu *dvcpu = NULL;
-+
-+	if (irq->cpu == -1)
-+		dvcpu = vcpu;
-+	else
-+		dvcpu = kvm_get_vcpu(vcpu->kvm, irq->cpu);
-+
-+	if (intr > 0)
-+		_kvm_queue_irq(dvcpu, intr);
-+	else if (intr < 0)
-+		_kvm_dequeue_irq(dvcpu, -intr);
-+	else {
-+		kvm_err("%s: invalid interrupt ioctl (%d:%d)\n", __func__,
-+				irq->cpu, irq->irq);
-+		return -EINVAL;
-+	}
-+
-+	kvm_vcpu_kick(dvcpu);
-+	return 0;
-+}
-+
-+long kvm_arch_vcpu_async_ioctl(struct file *filp,
-+			       unsigned int ioctl, unsigned long arg)
-+{
-+	struct kvm_vcpu *vcpu = filp->private_data;
-+	void __user *argp = (void __user *)arg;
-+
-+	if (ioctl == KVM_INTERRUPT) {
-+		struct kvm_loongarch_interrupt irq;
-+
-+		if (copy_from_user(&irq, argp, sizeof(irq)))
-+			return -EFAULT;
-+		kvm_debug("[%d] %s: irq: %d\n", vcpu->vcpu_id, __func__,
-+			  irq.irq);
-+
-+		return kvm_vcpu_ioctl_interrupt(vcpu, &irq);
-+	}
-+
-+	return -ENOIOCTLCMD;
-+}
-+
- int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- {
- 	return 0;
+For PARISC, the architecture helpers are mixed up with helpers
+for the system's STI graphics firmware. We first move the STI code
+to appropriate locations under video/ and then move the architecture
+helper under arch/parisc.
+
+For Sparc, there's an additional patch that moves the implementation
+from the header into a source file. This allows to avoid some include
+statements in the header file.
+
+Built on arm, arm64, m68k, mips, parisc, powerpc, sparc and x86.
+
+v3:
+	* use default fb_pgprotect() on arc, parisc, sparc64 (Arnd)
+	* fix includes in generic fb.h
+v2:
+	* make writecombine the default mapping mode (Arnd)
+	* rework fb_pgprotect() on m68k
+
+Thomas Zimmermann (19):
+  fbdev: Prepare generic architecture helpers
+  arch/arc: Implement <asm/fb.h> with generic helpers
+  arch/arm: Implement <asm/fb.h> with generic helpers
+  arch/arm64: Implement <asm/fb.h> with generic helpers
+  arch/ia64: Implement <asm/fb.h> with generic helpers
+  arch/loongarch: Implement <asm/fb.h> with generic helpers
+  arch/m68k: Merge variants of fb_pgprotect() into single function
+  arch/m68k: Implement <asm/fb.h> with generic helpers
+  arch/mips: Implement <asm/fb.h> with generic helpers
+  video: Remove trailing whitespaces
+  video: Move HP PARISC STI core code to shared location
+  arch/parisc: Remove trailing whitespaces
+  arch/parisc: Implement fb_is_primary_device() under arch/parisc
+  arch/parisc: Implement <asm/fb.h> with generic helpers
+  arch/powerpc: Implement <asm/fb.h> with generic helpers
+  arch/sh: Implement <asm/fb.h> with generic helpers
+  arch/sparc: Implement fb_is_primary_device() in source file
+  arch/sparc: Implement <asm/fb.h> with generic helpers
+  arch/x86: Implement <asm/fb.h> with generic helpers
+
+ arch/arc/include/asm/fb.h                     |  16 +-
+ arch/arm/include/asm/fb.h                     |  15 +-
+ arch/arm64/include/asm/fb.h                   |  15 +-
+ arch/ia64/include/asm/fb.h                    |  11 +-
+ arch/loongarch/include/asm/fb.h               |  15 +-
+ arch/m68k/include/asm/fb.h                    |  22 +--
+ arch/mips/include/asm/fb.h                    |  10 +-
+ arch/parisc/Makefile                          |   4 +-
+ arch/parisc/include/asm/fb.h                  |  20 +--
+ arch/parisc/video/Makefile                    |   3 +
+ arch/parisc/video/fbdev.c                     |  27 +++
+ arch/powerpc/include/asm/fb.h                 |   8 +-
+ arch/sh/include/asm/fb.h                      |  15 +-
+ arch/sparc/Makefile                           |   1 +
+ arch/sparc/include/asm/fb.h                   |  33 ++--
+ arch/sparc/video/Makefile                     |   3 +
+ arch/sparc/video/fbdev.c                      |  24 +++
+ arch/x86/include/asm/fb.h                     |  11 +-
+ drivers/video/Kconfig                         |   7 +
+ drivers/video/Makefile                        |   1 +
+ drivers/video/console/Kconfig                 |   1 +
+ drivers/video/console/Makefile                |   4 +-
+ drivers/video/console/sticon.c                |   6 +-
+ drivers/video/fbdev/Kconfig                   |   3 +-
+ drivers/video/fbdev/stifb.c                   | 158 +++++++++---------
+ drivers/video/{console => }/sticore.c         | 123 ++++++--------
+ include/asm-generic/fb.h                      |  24 ++-
+ .../video/fbdev => include/video}/sticore.h   |  16 +-
+ 28 files changed, 285 insertions(+), 311 deletions(-)
+ create mode 100644 arch/parisc/video/Makefile
+ create mode 100644 arch/parisc/video/fbdev.c
+ create mode 100644 arch/sparc/video/Makefile
+ create mode 100644 arch/sparc/video/fbdev.c
+ rename drivers/video/{console => }/sticore.c (95%)
+ rename {drivers/video/fbdev => include/video}/sticore.h (99%)
+
+
+base-commit: c7cfe0c7215db9556ffe7ce33d1f60f768336cfd
+prerequisite-patch-id: 0aa359f6144c4015c140c8a6750be19099c676fb
+prerequisite-patch-id: c67e5d886a47b7d0266d81100837557fda34cb24
+prerequisite-patch-id: cbc453ee02fae02af22fbfdce56ab732c7a88c36
 -- 
-2.31.1
+2.40.0
 
