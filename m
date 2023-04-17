@@ -1,23 +1,22 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 480C1C2ED
-	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:19:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 853D91C30
+	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:22:28 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxttgFDz1k2eAdAA--.51221S3;
-	Mon, 17 Apr 2023 17:19:01 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxQMzSDz1kEuEdAA--.46438S3;
+	Mon, 17 Apr 2023 17:22:26 +0800 (CST)
 Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxur0DDz1kGKMqAA--.50497S3;
-	Mon, 17 Apr 2023 17:19:00 +0800 (CST)
-Subject: Re: [PATCH v2 4/4] LoongArch: Add uprobes support
-To: Youling Tang <tangyouling@loongson.cn>
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHuTRDz1kgqQqAA--.18602S3;
+	Mon, 17 Apr 2023 17:22:26 +0800 (CST)
+Subject: Re: [PATCH v2 0/4] Add uprobes support for LoongArch
+To: Hengqi Chen <chenhengqi@outlook.com>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
 References: <1681464781-4428-1-git-send-email-yangtiezhu@loongson.cn>
- <1681464781-4428-5-git-send-email-yangtiezhu@loongson.cn>
- <26d4d13f-d678-be54-6b40-b87c71856eff@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ <SY4P282MB351877A70A0333C790FE85A5C09C9@SY4P282MB3518.AUSP282.PROD.OUTLOOK.COM>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
  loongson-kernel@lists.loongnix.cn
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <6cadd23c-6aca-a0f6-f862-a6b23b5c7d0a@loongson.cn>
-Date: Mon, 17 Apr 2023 17:18:59 +0800
+Message-ID: <8478fc34-01e9-2bdd-254b-982533ef3856@loongson.cn>
+Date: Mon, 17 Apr 2023 17:22:25 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -26,81 +25,44 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <26d4d13f-d678-be54-6b40-b87c71856eff@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <SY4P282MB351877A70A0333C790FE85A5C09C9@SY4P282MB3518.AUSP282.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Cxur0DDz1kGKMqAA--.50497S3
+X-CM-TRANSID:AQAAf8BxHuTRDz1kgqQqAA--.18602S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Ar1ktF1xtr1rZr48Kw1xKrg_yoW8WF17pF
-	WDCFWUGFZ5GFn5JFyDX39a9F12qr95Gr4Ik3W2yayrAF42vrn3ur1kursrJa4jy390qr40
-	gFy8tayF9ay5tF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
-	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwI
-	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
-	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
-	C2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s02
+	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF
+	0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvE
+	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
+	v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U8w0eJUUUUU==
 
 
 
-On 04/17/2023 10:04 AM, Youling Tang wrote:
-> Hi, Tiezhu
->
-> On 04/14/2023 05:33 PM, Tiezhu Yang wrote:
->
-> /* snip */
->
->> diff --git a/arch/loongarch/kernel/traps.c
->> b/arch/loongarch/kernel/traps.c
->> index de8ebe2..cfc2e0c 100644
->> --- a/arch/loongarch/kernel/traps.c
->> +++ b/arch/loongarch/kernel/traps.c
->> @@ -45,6 +45,7 @@
->>  #include <asm/tlb.h>
->>  #include <asm/types.h>
->>  #include <asm/unwind.h>
->> +#include <asm/uprobes.h>
->>
->>  #include "access-helper.h"
->>
->> @@ -440,7 +441,6 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
->>      if (regs->csr_prmd & CSR_PRMD_PIE)
->>          local_irq_enable();
->>
->> -    current->thread.trap_nr = read_csr_excode();
->>      if (__get_inst(&opcode, (u32 *)era, user))
->>          goto out_sigsegv;
->>
->> @@ -462,18 +462,17 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
->>          else
->>              break;
->>      case BRK_UPROBE_BP:
->> -        if (notify_die(DIE_UPROBE, "Uprobe", regs, bcode,
->> -                   current->thread.trap_nr, SIGTRAP) == NOTIFY_STOP)
->> +        if (uprobe_breakpoint_handler(regs))
->>              goto out;
->>          else
->>              break;
->>      case BRK_UPROBE_XOLBP:
->> -        if (notify_die(DIE_UPROBE_XOL, "Uprobe_XOL", regs, bcode,
->> -                   current->thread.trap_nr, SIGTRAP) == NOTIFY_STOP)
->> +        if (uprobe_singlestep_handler(regs))
->
-> After the above modification, we should remove the DIE_UPROBE and
-> DIE_UPROBE_XOL definitions in arch/loongarch/include/asm/kdebug.h.
->
-> At the same time DIE_BREAK, DIE_SSTEPBP and DIE_PAGE_FAULT also need to
-> be removed after 6d4cc40fb5f581 ("LoongArch: Add kprobes support").
+On 04/17/2023 11:17 AM, Hengqi Chen wrote:
+> Hi Tiezhu:
 >
 
-OK, thank you, will do it.
+...
+
+>
+> When I try to uprobe the pthread_spin_lock calls, the application core dumped.
+> On X86, this will return -EINVAL instead of crashing the userspace application.
+> Probably, we should add more opcode to insns_not_supported().
+>
+
+Yes, the atomic memory access instructions such as amswap_db.w
+should not be supported, like llsc instructions, let me add them
+in insns_not_supported(), thank you.
 
 Thanks,
 Tiezhu
