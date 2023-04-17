@@ -1,43 +1,43 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0C1A94D
-	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 20:53:21 +0000 (UTC)
-Received: by mail-pl1-f174.google.com with SMTP id d15so10120531pll.12
-        for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 13:53:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319EBAD24
+	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 20:53:23 +0000 (UTC)
+Received: by mail-pj1-f48.google.com with SMTP id kx14so7224266pjb.1
+        for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 13:53:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681764801; x=1684356801;
+        d=gmail.com; s=20221208; t=1681764803; x=1684356803;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tniPUuVL526Jec1TVIaHRLAUx7OruO8jRIKlA5wqt8Q=;
-        b=p/jfRaNPQGaoJd3ujqaeLDuUP7t0WkHa2oZwiGdpehhESyVFAOdOmg0fusWkZ2XuJJ
-         Yw6K8nYA6/5N6tLufuYh20gi7M7wxwYV1IodMymMAu3e2vjlzp/s4l9Vf7kZibjxovMR
-         cghNEQkYGyGSVWGuIAzI28gyVhrT8GgnWs6YLc4dnuPB71AZU/a5qfpWgaMEJ0Qfl1S+
-         OG2NEJp7fE32TkPWsKahDfFv2MiE7qQWnDtWKvNsVMNbEDAHg0y2Zsbd1R1MkIpv2dly
-         3HDaLyPuLXfOS4PxJXenmM3XNPnXJ5LYctnHIHC9Ub4peO/zkx0GIKpeh+s1nuyRNP2C
-         xoAQ==
+        bh=M2PCFvKq9JWcIC4Exd9oDYO0v0PQOHyXRap+yEgbOb4=;
+        b=Sg9gXChNrNLShRRgfwOKl/OTTCvmKSrllpuIiui1MavGQQvyi4/hV9+QaVJ3t9hABY
+         7LNyY9zC8MZPe/8uyGF6BwZFFCebqKsRkCF7WD2/MczVElNAeTdXAZoU8m9zjTh6P7Zy
+         0Ui6eydpR2I1tZyrhRUO19d2JsU/fHL/oyFe81PNxO86Jxw/ya4bgHlBy023YgAYk0Ea
+         ro6AAOx594UY8fA/m7D7bEpjpZMo/caINuRe5NJsUpyuSeut+/oOBeuT5hXbXmkAYI67
+         Pav/++zqcV0Pbp5FUcdmVoTNUO7tgK9EwNCc3eK51W0dnm+P+Og2+jgMY/+82hRUmWz8
+         imHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681764801; x=1684356801;
+        d=1e100.net; s=20221208; t=1681764803; x=1684356803;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tniPUuVL526Jec1TVIaHRLAUx7OruO8jRIKlA5wqt8Q=;
-        b=SwSToyJvHxBBvppfXfywbEapkqbxwCc0smxphukWWujpFfgjgjxi07RVdrA+Tw6fOt
-         V+ZG7eRZZyZT2BF9DvL7SS3iXEWNC0xcDjBqSvAJPyDD2Wn0bOwfMYWzTDOKu+oiPC/Q
-         5JDqonO3TA2Lme0yOXoG326DzZkT+knnIDWU0Xr7V14ePryC22rh+oUggWoCHwxP0Rc1
-         /4xN+w/PvEocgtKmOZewBm9RMuWnEHWtVe9wk4BpbTNXunhxSrI39qeIb/FKADG8Hvgh
-         dBLoZ+u/smCpfduZFEgZW1f+uJGIlwC+mok/1HU4JfW0bNzLjA7CogNJr1AvWojKf0SH
-         /IYg==
-X-Gm-Message-State: AAQBX9ew/B09mkpQp/PohqqzuaDreTuAudJrZffS6RC5McxmclDmfhjc
-	NVo2yh3Nv6dbZHNOpLim6QA=
-X-Google-Smtp-Source: AKy350YG/84D/pba4O2jep64IWrC+mjA+ueyHqImP8NgwjI0qVBUMRNq8Z2uYJzIP+ywt0PW/sWA2w==
-X-Received: by 2002:a17:90a:8048:b0:247:78c0:125e with SMTP id e8-20020a17090a804800b0024778c0125emr8083390pjw.15.1681764801496;
-        Mon, 17 Apr 2023 13:53:21 -0700 (PDT)
+        bh=M2PCFvKq9JWcIC4Exd9oDYO0v0PQOHyXRap+yEgbOb4=;
+        b=IfiEvQeZ+XMi04qldz2CSybJJ016y+HkzEp+bU5kzFiR8WDsSbEoOczJ3iap24N9zq
+         FXqEIDiwYME7lbHHFitgBzln/nsApE5Xpv6LFhvwcOaq8gkmYu/yUAPpPIC2aq29CMC6
+         7ZmpeYiX/FK52U+/OezKBOjBEd60fYJadB26m7Zt6NweVkcKTRWZCwHR8sL88kqclKU9
+         tv3KCD6+vzTlU5qcn/nh8a3tuOU/WhApHz5qdlKsbIMPHCPx8VdtjLkG+kYQou1515Pu
+         84ZKZd23D1MMEiftGuEAFwboGkPP9Nn5dQSEBx9GM6dUnEr4uZvuO+ze2U97qeWm4gu8
+         SeuA==
+X-Gm-Message-State: AAQBX9cLq2l7utTRdjDAnLL4vh1Puw/KUnfOygAnb6IbQemKN3s3VGMp
+	u6u7vWftL3n4c4UD8kukjqY=
+X-Google-Smtp-Source: AKy350ZH2s2lfJdxSYj+T2S9Ef0UoYzkgLYY3eeGq1S7Q2hAbd0lFGX52BFTYQkOd2khPVGSck6LXA==
+X-Received: by 2002:a17:90a:e28f:b0:247:4200:7432 with SMTP id d15-20020a17090ae28f00b0024742007432mr11696070pjz.40.1681764802858;
+        Mon, 17 Apr 2023 13:53:22 -0700 (PDT)
 Received: from fedora.hsd1.ca.comcast.net ([2601:644:937f:7f20::c139])
-        by smtp.googlemail.com with ESMTPSA id h7-20020a17090ac38700b0022335f1dae2sm7609707pjt.22.2023.04.17.13.53.20
+        by smtp.googlemail.com with ESMTPSA id h7-20020a17090ac38700b0022335f1dae2sm7609707pjt.22.2023.04.17.13.53.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Apr 2023 13:53:21 -0700 (PDT)
+        Mon, 17 Apr 2023 13:53:22 -0700 (PDT)
 From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Matthew Wilcox <willy@infradead.org>
@@ -59,9 +59,9 @@ Cc: linux-mm@kvack.org,
 	xen-devel@lists.xenproject.org,
 	kvm@vger.kernel.org,
 	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Subject: [PATCH 26/33] nios2: Convert __pte_free_tlb() to use ptdescs
-Date: Mon, 17 Apr 2023 13:50:41 -0700
-Message-Id: <20230417205048.15870-27-vishal.moola@gmail.com>
+Subject: [PATCH 27/33] openrisc: Convert __pte_free_tlb() to use ptdescs
+Date: Mon, 17 Apr 2023 13:50:42 -0700
+Message-Id: <20230417205048.15870-28-vishal.moola@gmail.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230417205048.15870-1-vishal.moola@gmail.com>
 References: <20230417205048.15870-1-vishal.moola@gmail.com>
@@ -78,28 +78,28 @@ ptdesc equivalents.
 
 Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
 ---
- arch/nios2/include/asm/pgalloc.h | 8 ++++----
+ arch/openrisc/include/asm/pgalloc.h | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/nios2/include/asm/pgalloc.h b/arch/nios2/include/asm/pgalloc.h
-index ecd1657bb2ce..ed868f4c0ca9 100644
---- a/arch/nios2/include/asm/pgalloc.h
-+++ b/arch/nios2/include/asm/pgalloc.h
-@@ -28,10 +28,10 @@ static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmd,
+diff --git a/arch/openrisc/include/asm/pgalloc.h b/arch/openrisc/include/asm/pgalloc.h
+index b7b2b8d16fad..14e641686281 100644
+--- a/arch/openrisc/include/asm/pgalloc.h
++++ b/arch/openrisc/include/asm/pgalloc.h
+@@ -66,10 +66,10 @@ extern inline pgd_t *pgd_alloc(struct mm_struct *mm)
  
- extern pgd_t *pgd_alloc(struct mm_struct *mm);
+ extern pte_t *pte_alloc_one_kernel(struct mm_struct *mm);
  
--#define __pte_free_tlb(tlb, pte, addr)				\
--	do {							\
--		pgtable_pte_page_dtor(pte);			\
--		tlb_remove_page((tlb), (pte));			\
-+#define __pte_free_tlb(tlb, pte, addr)					\
-+	do {								\
-+		ptdesc_pte_dtor(page_ptdesc(pte));			\
-+		tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));	\
- 	} while (0)
+-#define __pte_free_tlb(tlb, pte, addr)	\
+-do {					\
+-	pgtable_pte_page_dtor(pte);	\
+-	tlb_remove_page((tlb), (pte));	\
++#define __pte_free_tlb(tlb, pte, addr)				\
++do {								\
++	ptdesc_pte_dtor(page_ptdesc(pte));			\
++	tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));	\
+ } while (0)
  
- #endif /* _ASM_NIOS2_PGALLOC_H */
+ #endif
 -- 
 2.39.2
 
