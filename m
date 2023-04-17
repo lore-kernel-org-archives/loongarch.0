@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A6584C92
-	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 10:00:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92E254C95
+	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 10:00:04 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxJNidGD1kquYdAA--.34672S3;
-	Mon, 17 Apr 2023 17:59:57 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxTNqeGD1k0uYdAA--.35073S3;
+	Mon, 17 Apr 2023 17:59:59 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx57yWGD1kua0qAA--.48254S24;
-	Mon, 17 Apr 2023 17:59:56 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx57yWGD1kua0qAA--.48254S28;
+	Mon, 17 Apr 2023 17:59:58 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v7 22/30] LoongArch: KVM: Implement handle idle exception
-Date: Mon, 17 Apr 2023 17:59:42 +0800
-Message-Id: <20230417095950.875228-23-zhaotianrui@loongson.cn>
+Subject: [PATCH v7 26/30] LoongArch: KVM: Implement kvm exception vector
+Date: Mon, 17 Apr 2023 17:59:46 +0800
+Message-Id: <20230417095950.875228-27-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230417095950.875228-1-zhaotianrui@loongson.cn>
 References: <20230417095950.875228-1-zhaotianrui@loongson.cn>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Bx57yWGD1kua0qAA--.48254S24
+X-CM-TRANSID:AQAAf8Bx57yWGD1kua0qAA--.48254S28
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7JrW5uFykWr43XF4UXFyUAwb_yoWkXrb_ZF
-	Z7Jas5GrWrXF45Ka4Dt3s8Ka4Ygw4kXFWYvFW7ury3GF1qyrWUC39rWwn5ZrWkKFWUZFW5
-	K3ykZas7Zw12qjkaLaAFLSUrUUUU7b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	O7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
+X-Coremail-Antispam: 1Uk129KBjvJXoW7Kw15tF1UurWUKF17uF4UJwb_yoW8ZFWfpF
+	yfA34Yyr48W342va4akw1vgF13AayxKr17WrW7G343uw4jqryrtrWkK397JF43KryrZF1x
+	AFZ8tr15uF4UG37anT9S1TB71UUUU8UqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bcxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
 	0267AKxVW0oVCq3wAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCE
 	c2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6cx26r
 	WlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r4a6rW5
@@ -54,41 +54,69 @@ X-Coremail-Antispam: 1Uk129KBjvdXoW7JrW5uFykWr43XF4UXFyUAwb_yoWkXrb_ZF
 	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJr0_GcWlIxAIcVC2z280aVCY1x0267
 	AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa7IU8bo7tUUUUU==
 
-Implement kvm handle loongarch vcpu idle exception, using kvm_vcpu_block
-to emulate it.
+Implement kvm exception vector, using _kvm_fault_tables array to save
+the handle function pointer and it is used when vcpu handle exit.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/loongarch/kvm/exit.c | 48 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
 diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index bd33fe0c6424..3fdb42939a05 100644
+index 10f9922a7e76..286ab5de7f26 100644
 --- a/arch/loongarch/kvm/exit.c
 +++ b/arch/loongarch/kvm/exit.c
-@@ -188,3 +188,23 @@ int _kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
- 
- 	return er;
+@@ -657,3 +657,51 @@ static int _kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
+ 	kvm_own_fpu(vcpu);
+ 	return RESUME_GUEST;
  }
 +
-+int _kvm_emu_idle(struct kvm_vcpu *vcpu)
++/*
++ * Loongarch KVM callback handling for not implemented guest exiting
++ */
++static int _kvm_fault_ni(struct kvm_vcpu *vcpu)
 +{
-+	++vcpu->stat.idle_exits;
-+	trace_kvm_exit_idle(vcpu, KVM_TRACE_EXIT_IDLE);
++	unsigned long estat, badv;
++	unsigned int exccode, inst;
 +
-+	if (!kvm_arch_vcpu_runnable(vcpu)) {
-+		/*
-+		 * Switch to the software timer before halt-polling/blocking as
-+		 * the guest's timer may be a break event for the vCPU, and the
-+		 * hypervisor timer runs only when the CPU is in guest mode.
-+		 * Switch before halt-polling so that KVM recognizes an expired
-+		 * timer before blocking.
-+		 */
-+		kvm_save_timer(vcpu);
-+		kvm_vcpu_block(vcpu);
-+	}
++	/*
++	 *  Fetch the instruction.
++	 */
++	badv = vcpu->arch.badv;
++	estat = vcpu->arch.host_estat;
++	exccode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
++	inst = vcpu->arch.badi;
++	kvm_err("Exccode: %d PC=%#lx inst=0x%08x BadVaddr=%#lx estat=%#llx\n",
++			exccode, vcpu->arch.pc, inst, badv, read_gcsr_estat());
++	kvm_arch_vcpu_dump_regs(vcpu);
++	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
 +
-+	return EMULATE_DONE;
++	return RESUME_HOST;
++}
++
++static exit_handle_fn _kvm_fault_tables[EXCCODE_INT_START] = {
++	[EXCCODE_TLBL]		= _kvm_handle_read_fault,
++	[EXCCODE_TLBI]		= _kvm_handle_read_fault,
++	[EXCCODE_TLBNR]		= _kvm_handle_read_fault,
++	[EXCCODE_TLBNX]		= _kvm_handle_read_fault,
++	[EXCCODE_TLBS]		= _kvm_handle_write_fault,
++	[EXCCODE_TLBM]		= _kvm_handle_write_fault,
++	[EXCCODE_FPDIS]		= _kvm_handle_fpu_disabled,
++	[EXCCODE_GSPR]		= _kvm_handle_gspr,
++};
++
++int _kvm_handle_fault(struct kvm_vcpu *vcpu, int fault)
++{
++	return _kvm_fault_tables[fault](vcpu);
++}
++
++void _kvm_init_fault(void)
++{
++	int i;
++
++	for (i = 0; i < EXCCODE_INT_START; i++)
++		if (!_kvm_fault_tables[i])
++			_kvm_fault_tables[i] = _kvm_fault_ni;
 +}
 -- 
 2.31.1
