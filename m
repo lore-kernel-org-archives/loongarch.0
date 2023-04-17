@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5834846B8
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60E8546BB
 	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:48:25 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8DxldiRFT1kneMdAA--.51528S3;
-	Mon, 17 Apr 2023 17:46:57 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxXNqNFT1kFOMdAA--.34960S3;
+	Mon, 17 Apr 2023 17:46:53 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxtryKFT1kyagqAA--.47974S20;
-	Mon, 17 Apr 2023 17:46:56 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxtryKFT1kyagqAA--.47974S8;
+	Mon, 17 Apr 2023 17:46:52 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v7 18/30] LoongArch: KVM: Implement vcpu timer operations
-Date: Mon, 17 Apr 2023 17:46:37 +0800
-Message-Id: <20230417094649.874671-19-zhaotianrui@loongson.cn>
+Subject: [PATCH v7 06/30] LoongArch: KVM: Implement vcpu create and destroy interface
+Date: Mon, 17 Apr 2023 17:46:25 +0800
+Message-Id: <20230417094649.874671-7-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230417094649.874671-1-zhaotianrui@loongson.cn>
 References: <20230417094649.874671-1-zhaotianrui@loongson.cn>
@@ -35,308 +35,130 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxtryKFT1kyagqAA--.47974S20
+X-CM-TRANSID:AQAAf8CxtryKFT1kyagqAA--.47974S8
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxtw18Kw4UAFyDXF1kCrWrAFb_yoW3Zw48pr
-	WIkryIqr48Xryjgwn3AFs0vrn8W3yrK3W7Gry7J3ySyrnxJ3s8XF40gryDJFZxGFyIvF1S
-	vryrAwn8Ar4kA3DanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxur1fAw1xCF1xCFyrAw17GFg_yoW5CrWkpF
+	WIkw15Ww48J347Jw1fXrn0vrn0qrW8uF12ga47X3ySyr1DtryFvF4vkrWDAFZxXayfZF1S
+	vF1rJF1Uuw4UAw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+	b4xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aV
+	CY1x0267AKxVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaV
+	Av8VWrMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zR9iSdUUUUU=
 
-Implement loongarch vcpu timer operations such as init kvm timer,
-require kvm timer, save kvm timer and restore kvm timer. When
-vcpu exit, we use kvm soft timer to emulate hardware timer. If
-timeout happens, the vcpu timer interrupt will be set and it is
-going to be handled at vcpu next entrance.
+Implement vcpu create and destroy interface, saving some info
+into vcpu arch structure such as vcpu exception entrance, vcpu
+enter guest pointer, etc. Init vcpu timer and set address
+translation mode when vcpu create.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/timer.c | 266 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 266 insertions(+)
- create mode 100644 arch/loongarch/kvm/timer.c
+ arch/loongarch/kvm/vcpu.c | 89 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 arch/loongarch/kvm/vcpu.c
 
-diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
 new file mode 100644
-index 000000000000..2c7677248746
+index 000000000000..7af2ff64b8c7
 --- /dev/null
-+++ b/arch/loongarch/kvm/timer.c
-@@ -0,0 +1,266 @@
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -0,0 +1,89 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
 + */
 +
 +#include <linux/kvm_host.h>
-+#include <asm/kvm_csr.h>
-+#include <asm/kvm_vcpu.h>
++#include <asm/fpu.h>
++#include <asm/loongarch.h>
++#include <asm/setup.h>
++#include <asm/time.h>
++#include <asm/kvm_host.h>
 +
-+/* low level hrtimer wake routine */
-+enum hrtimer_restart kvm_swtimer_wakeup(struct hrtimer *timer)
++#define CREATE_TRACE_POINTS
++#include "trace.h"
++
++int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
 +{
-+	struct kvm_vcpu *vcpu;
-+
-+	vcpu = container_of(timer, struct kvm_vcpu, arch.swtimer);
-+	_kvm_queue_irq(vcpu, LARCH_INT_TIMER);
-+	rcuwait_wake_up(&vcpu->wait);
-+	return kvm_count_timeout(vcpu);
++	return 0;
 +}
 +
-+/*
-+ * ktime_to_tick() - Scale ktime_t to a 64-bit stable timer.
-+ *
-+ * Caches the dynamic nanosecond bias in vcpu->arch.timer_dyn_bias.
-+ */
-+static unsigned long ktime_to_tick(struct kvm_vcpu *vcpu, ktime_t now)
++int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
 +{
-+	s64 now_ns, periods;
-+	unsigned long delta;
++	unsigned long timer_hz;
++	struct loongarch_csrs *csr;
 +
-+	now_ns = ktime_to_ns(now);
-+	delta = now_ns + vcpu->arch.timer_dyn_bias;
++	vcpu->arch.vpid = 0;
 +
-+	if (delta >= vcpu->arch.timer_period) {
-+		/* If delta is out of safe range the bias needs adjusting */
-+		periods = div64_s64(now_ns, vcpu->arch.timer_period);
-+		vcpu->arch.timer_dyn_bias = -periods * vcpu->arch.timer_period;
-+		/* Recalculate delta with new bias */
-+		delta = now_ns + vcpu->arch.timer_dyn_bias;
-+	}
++	hrtimer_init(&vcpu->arch.swtimer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED);
++	vcpu->arch.swtimer.function = kvm_swtimer_wakeup;
++	vcpu->kvm->arch.online_vcpus = vcpu->vcpu_id + 1;
++
++	vcpu->arch.guest_eentry = (unsigned long)kvm_loongarch_ops->guest_eentry;
++	vcpu->arch.handle_exit = _kvm_handle_exit;
++	vcpu->arch.csr = kzalloc(sizeof(struct loongarch_csrs), GFP_KERNEL);
++	if (!vcpu->arch.csr)
++		return -ENOMEM;
 +
 +	/*
-+	 * We've ensured that:
-+	 *   delta < timer_period
++	 * kvm all exceptions share one exception entry, and host <-> guest switch
++	 * also switch excfg.VS field, keep host excfg.VS info here
 +	 */
-+	return div_u64(delta * vcpu->arch.timer_mhz, MNSEC_PER_SEC);
++	vcpu->arch.host_ecfg = (read_csr_ecfg() & CSR_ECFG_VS);
++
++	/* Init */
++	vcpu->arch.last_sched_cpu = -1;
++	vcpu->arch.last_exec_cpu = -1;
++
++	/*
++	 * Initialize guest register state to valid architectural reset state.
++	 */
++	timer_hz = calc_const_freq();
++	kvm_init_timer(vcpu, timer_hz);
++
++	/* Set Initialize mode for GUEST */
++	csr = vcpu->arch.csr;
++	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CRMD, CSR_CRMD_DA);
++
++	/* Set cpuid */
++	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_TMID, vcpu->vcpu_id);
++
++	/* start with no pending virtual guest interrupts */
++	csr->csrs[LOONGARCH_CSR_GINTC] = 0;
++
++	return 0;
 +}
 +
-+/**
-+ * kvm_resume_hrtimer() - Resume hrtimer, updating expiry.
-+ * @vcpu:	Virtual CPU.
-+ * @now:	ktime at point of resume.
-+ * @val:	stable timer at point of resume.
-+ *
-+ * Resumes the timer and updates the timer expiry based on @now and @count.
-+ */
-+static void kvm_resume_hrtimer(struct kvm_vcpu *vcpu, ktime_t now,
-+				unsigned long val)
++void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
 +{
-+	unsigned long delta;
-+	ktime_t expire;
++}
 +
-+	/* Stable timer decreased to zero or
-+	 * initialize to zero, set 4 second timer
-+	 */
-+	delta = div_u64(val * MNSEC_PER_SEC, vcpu->arch.timer_mhz);
-+	expire = ktime_add_ns(now, delta);
++void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
++{
++	int cpu;
++	struct kvm_context *context;
 +
-+	/* Update hrtimer to use new timeout */
 +	hrtimer_cancel(&vcpu->arch.swtimer);
-+	hrtimer_start(&vcpu->arch.swtimer, expire, HRTIMER_MODE_ABS_PINNED);
-+}
-+
-+/**
-+ * kvm_init_timer() - Initialise stable timer.
-+ * @vcpu:	Virtual CPU.
-+ * @timer_hz:	Frequency of timer.
-+ *
-+ * Initialise the timer to the specified frequency, zero it, and set it going if
-+ * it's enabled.
-+ */
-+void kvm_init_timer(struct kvm_vcpu *vcpu, unsigned long timer_hz)
-+{
-+	ktime_t now;
-+	unsigned long ticks;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+
-+	ticks = (unsigned long)MNSEC_PER_SEC * CSR_TCFG_VAL;
-+	vcpu->arch.timer_mhz = timer_hz >> 20;
-+	vcpu->arch.timer_period = div_u64(ticks, vcpu->arch.timer_mhz);
-+	vcpu->arch.timer_dyn_bias = 0;
-+
-+	/* Starting at 0 */
-+	ticks = 0;
-+	now = ktime_get();
-+	vcpu->arch.timer_bias = ticks - ktime_to_tick(vcpu, now);
-+	vcpu->arch.timer_bias &= CSR_TCFG_VAL;
-+	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_TVAL, ticks);
-+}
-+
-+/**
-+ * kvm_count_timeout() - Push timer forward on timeout.
-+ * @vcpu:	Virtual CPU.
-+ *
-+ * Handle an hrtimer event by push the hrtimer forward a period.
-+ *
-+ * Returns:	The hrtimer_restart value to return to the hrtimer subsystem.
-+ */
-+enum hrtimer_restart kvm_count_timeout(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long cfg;
-+
-+	/* Add the Count period to the current expiry time */
-+	cfg = kvm_read_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_TCFG);
-+	if (cfg & CSR_TCFG_PERIOD) {
-+		hrtimer_add_expires_ns(&vcpu->arch.swtimer, cfg & CSR_TCFG_VAL);
-+		return HRTIMER_RESTART;
-+	} else
-+		return HRTIMER_NORESTART;
-+}
-+
-+/*
-+ * kvm_restore_timer() - Restore timer state.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Restore soft timer state from saved context.
-+ */
-+void kvm_restore_timer(struct kvm_vcpu *vcpu)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	ktime_t saved_ktime, now;
-+	unsigned long val, new, delta;
-+	int expired = 0;
-+	unsigned long cfg;
++	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
++	kfree(vcpu->arch.csr);
 +
 +	/*
-+	 * Set guest stable timer cfg csr
++	 * If the VCPU is freed and reused as another VCPU, we don't want the
++	 * matching pointer wrongly hanging around in last_vcpu.
 +	 */
-+	cfg = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TCFG);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	if (!(cfg & CSR_TCFG_EN)) {
-+		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TCFG);
-+		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TVAL);
-+		return;
++	for_each_possible_cpu(cpu) {
++		context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
++		if (context->last_vcpu == vcpu)
++			context->last_vcpu = NULL;
 +	}
-+
-+	now = ktime_get();
-+	saved_ktime = vcpu->arch.stable_ktime_saved;
-+	val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TVAL);
-+
-+	/*hrtimer not expire */
-+	delta = ktime_to_tick(vcpu, ktime_sub(now, saved_ktime));
-+	if (delta >= val) {
-+		expired = 1;
-+		if (cfg & CSR_TCFG_PERIOD)
-+			new = (delta - val) % (cfg & CSR_TCFG_VAL);
-+		else
-+			new = 1;
-+	} else
-+		new = val - delta;
-+
-+	new &= CSR_TCFG_VAL;
-+	write_gcsr_timercfg(cfg);
-+	write_gcsr_timertick(new);
-+	if (expired)
-+		_kvm_queue_irq(vcpu, LARCH_INT_TIMER);
-+}
-+
-+/*
-+ * kvm_acquire_timer() - Switch to hard timer state.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Restore hard timer state on top of existing soft timer state if possible.
-+ *
-+ * Since hard timer won't remain active over preemption, preemption should be
-+ * disabled by the caller.
-+ */
-+void kvm_acquire_timer(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long flags, guestcfg;
-+
-+	guestcfg = read_csr_gcfg();
-+	if (!(guestcfg & CSR_GCFG_TIT))
-+		return;
-+
-+	/* enable guest access to hard timer */
-+	write_csr_gcfg(guestcfg & ~CSR_GCFG_TIT);
-+
-+	/*
-+	 * Freeze the soft-timer and sync the guest stable timer with it. We do
-+	 * this with interrupts disabled to avoid latency.
-+	 */
-+	local_irq_save(flags);
-+	hrtimer_cancel(&vcpu->arch.swtimer);
-+	local_irq_restore(flags);
-+}
-+
-+
-+/*
-+ * _kvm_save_timer() - Switch to software emulation of guest timer.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Save guest timer state and switch to software emulation of guest
-+ * timer. The hard timer must already be in use, so preemption should be
-+ * disabled.
-+ */
-+static ktime_t _kvm_save_timer(struct kvm_vcpu *vcpu, unsigned long *val)
-+{
-+	unsigned long end_time;
-+	ktime_t before_time;
-+
-+	before_time = ktime_get();
-+
-+	/*
-+	 * Record a final stable timer which we will transfer to the soft-timer.
-+	 */
-+	end_time = read_gcsr_timertick();
-+	*val = end_time;
-+
-+	kvm_resume_hrtimer(vcpu, before_time, end_time);
-+	return before_time;
-+}
-+
-+/*
-+ * kvm_save_timer() - Save guest timer state.
-+ * @vcpu:       Virtual CPU.
-+ *
-+ * Save guest timer state and switch to soft guest timer if hard timer was in
-+ * use.
-+ */
-+void kvm_save_timer(struct kvm_vcpu *vcpu)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	unsigned long guestcfg, val;
-+	ktime_t save_ktime;
-+
-+	preempt_disable();
-+	guestcfg = read_csr_gcfg();
-+	if (!(guestcfg & CSR_GCFG_TIT)) {
-+		/* disable guest use of hard timer */
-+		write_csr_gcfg(guestcfg | CSR_GCFG_TIT);
-+
-+		/* save hard timer state */
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TCFG);
-+		if (kvm_read_sw_gcsr(csr, LOONGARCH_CSR_TCFG) & CSR_TCFG_EN) {
-+			save_ktime = _kvm_save_timer(vcpu, &val);
-+			kvm_write_sw_gcsr(csr, LOONGARCH_CSR_TVAL, val);
-+			vcpu->arch.stable_ktime_saved = save_ktime;
-+			if (val == CSR_TCFG_VAL)
-+				_kvm_queue_irq(vcpu, LARCH_INT_TIMER);
-+		} else {
-+			kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TVAL);
-+		}
-+	}
-+
-+	/* save timer-related state to VCPU context */
-+	kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	preempt_enable();
-+}
-+
-+void kvm_reset_timer(struct kvm_vcpu *vcpu)
-+{
-+	write_gcsr_timercfg(0);
-+	kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_TCFG, 0);
-+	hrtimer_cancel(&vcpu->arch.swtimer);
 +}
 -- 
 2.31.1
