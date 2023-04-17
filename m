@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C35C468A
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C0F72F4E
 	for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 09:48:24 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxJDSSFT1ky+MdAA--.47161S3;
-	Mon, 17 Apr 2023 17:46:58 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Axu5eOFT1kVOMdAA--.46741S3;
+	Mon, 17 Apr 2023 17:46:54 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxtryKFT1kyagqAA--.47974S25;
-	Mon, 17 Apr 2023 17:46:58 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxtryKFT1kyagqAA--.47974S14;
+	Mon, 17 Apr 2023 17:46:54 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Huacai Chen <chenhuacai@kernel.org>,
@@ -22,9 +22,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v7 23/30] LoongArch: KVM: Implement handle gspr exception
-Date: Mon, 17 Apr 2023 17:46:42 +0800
-Message-Id: <20230417094649.874671-24-zhaotianrui@loongson.cn>
+Subject: [PATCH v7 12/30] LoongArch: KVM: Implement vcpu interrupt operations
+Date: Mon, 17 Apr 2023 17:46:31 +0800
+Message-Id: <20230417094649.874671-13-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230417094649.874671-1-zhaotianrui@loongson.cn>
 References: <20230417094649.874671-1-zhaotianrui@loongson.cn>
@@ -35,156 +35,224 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxtryKFT1kyagqAA--.47974S25
+X-CM-TRANSID:AQAAf8CxtryKFT1kyagqAA--.47974S14
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZrW3CrWrJF18Ary8tr13Jwb_yoW5ZF4kpr
-	W7Z34F9r4kJrySyw4aqrsYvrn0va18Kry7XasxJ343u3y7t3s5Jr40yrZFyF1DKrySvF4x
-	Za15tF13CF1UAaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxCrWfAr1fKFWkWry3Gr1rJFb_yoWrKw4UpF
+	W8Cw45Xw48Gr17G343ZFnY9r1Yqr1kKFZxGr97C3y3K347tr95XFyvyr98XF1UGw4UKF1f
+	X34SvaykCa45JwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bzxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
+	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
 	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48J
-	MxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxV
-	WUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWDJVCq3wCI42
-	IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcS
-	sGvfC2KfnxnUUI43ZEXa7xRihFxUUUUUU==
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
 
-Implement kvm handle gspr exception interface, including emulate the
-reading and writing of cpucfg, csr, iocsr resource.
+Implement vcpu interrupt operations such as vcpu set irq and
+vcpu clear irq, using set_gcsr_estat to set irq which is
+parsed by the irq bitmap.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/kvm/exit.c | 115 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 115 insertions(+)
+ arch/loongarch/kvm/interrupt.c | 126 +++++++++++++++++++++++++++++++++
+ arch/loongarch/kvm/vcpu.c      |  45 ++++++++++++
+ 2 files changed, 171 insertions(+)
+ create mode 100644 arch/loongarch/kvm/interrupt.c
 
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 3fdb42939a05..26283a9d3c6d 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -208,3 +208,118 @@ int _kvm_emu_idle(struct kvm_vcpu *vcpu)
- 
- 	return EMULATE_DONE;
- }
-+
-+static int _kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
-+{
-+	enum emulation_result er = EMULATE_DONE;
-+	struct kvm_run *run = vcpu->run;
-+	larch_inst inst;
-+	unsigned long curr_pc;
-+	int rd, rj;
-+	unsigned int index;
-+
-+	/*
-+	 *  Fetch the instruction.
-+	 */
-+	inst.word = vcpu->arch.badi;
-+	curr_pc = vcpu->arch.pc;
-+	update_pc(&vcpu->arch);
-+
-+	trace_kvm_exit_gspr(vcpu, inst.word);
-+	er = EMULATE_FAIL;
-+	switch (((inst.word >> 24) & 0xff)) {
-+	case 0x0:
-+		/* cpucfg GSPR */
-+		if (inst.reg2_format.opcode == 0x1B) {
-+			rd = inst.reg2_format.rd;
-+			rj = inst.reg2_format.rj;
-+			++vcpu->stat.cpucfg_exits;
-+			index = vcpu->arch.gprs[rj];
-+
-+			vcpu->arch.gprs[rd] = read_cpucfg(index);
-+			/* Nested KVM is not supported */
-+			if (index == 2)
-+				vcpu->arch.gprs[rd] &= ~CPUCFG2_LVZP;
-+			if (index == 6)
-+				vcpu->arch.gprs[rd] &= ~CPUCFG6_PMP;
-+			er = EMULATE_DONE;
-+		}
-+		break;
-+	case 0x4:
-+		/* csr GSPR */
-+		er = _kvm_handle_csr(vcpu, inst);
-+		break;
-+	case 0x6:
-+		/* iocsr,cache,idle GSPR */
-+		switch (((inst.word >> 22) & 0x3ff)) {
-+		case 0x18:
-+			/* cache GSPR */
-+			er = EMULATE_DONE;
-+			trace_kvm_exit_cache(vcpu, KVM_TRACE_EXIT_CACHE);
-+			break;
-+		case 0x19:
-+			/* iocsr/idle GSPR */
-+			switch (((inst.word >> 15) & 0x1ffff)) {
-+			case 0xc90:
-+				/* iocsr GSPR */
-+				er = _kvm_emu_iocsr(inst, run, vcpu);
-+				break;
-+			case 0xc91:
-+				/* idle GSPR */
-+				er = _kvm_emu_idle(vcpu);
-+				break;
-+			default:
-+				er = EMULATE_FAIL;
-+				break;
-+			}
-+			break;
-+		default:
-+			er = EMULATE_FAIL;
-+			break;
-+		}
-+		break;
-+	default:
-+		er = EMULATE_FAIL;
-+		break;
-+	}
-+
-+	/* Rollback PC only if emulation was unsuccessful */
-+	if (er == EMULATE_FAIL) {
-+		kvm_err("[%#lx]%s: unsupported gspr instruction 0x%08x\n",
-+			curr_pc, __func__, inst.word);
-+
-+		kvm_arch_vcpu_dump_regs(vcpu);
-+		vcpu->arch.pc = curr_pc;
-+	}
-+	return er;
-+}
-+
+diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
+new file mode 100644
+index 000000000000..02267a71d1aa
+--- /dev/null
++++ b/arch/loongarch/kvm/interrupt.c
+@@ -0,0 +1,126 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Execute cpucfg instruction will tirggerGSPR,
-+ * Also the access to unimplemented csrs 0x15
-+ * 0x16, 0x50~0x53, 0x80, 0x81, 0x90~0x95, 0x98
-+ * 0xc0~0xff, 0x100~0x109, 0x500~0x502,
-+ * cache_op, idle_op iocsr ops the same
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
 + */
-+static int _kvm_handle_gspr(struct kvm_vcpu *vcpu)
++
++#include <linux/errno.h>
++#include <linux/err.h>
++#include <asm/kvm_vcpu.h>
++
++static unsigned int int_to_coreint[LOONGARCH_EXC_MAX] = {
++	[LARCH_INT_TIMER]	= CPU_TIMER,
++	[LARCH_INT_IPI]		= CPU_IPI,
++	[LARCH_INT_SIP0]	= CPU_SIP0,
++	[LARCH_INT_SIP1]	= CPU_SIP1,
++	[LARCH_INT_IP0]		= CPU_IP0,
++	[LARCH_INT_IP1]		= CPU_IP1,
++	[LARCH_INT_IP2]		= CPU_IP2,
++	[LARCH_INT_IP3]		= CPU_IP3,
++	[LARCH_INT_IP4]		= CPU_IP4,
++	[LARCH_INT_IP5]		= CPU_IP5,
++	[LARCH_INT_IP6]		= CPU_IP6,
++	[LARCH_INT_IP7]		= CPU_IP7,
++};
++
++static int _kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
 +{
-+	enum emulation_result er = EMULATE_DONE;
-+	int ret = RESUME_GUEST;
++	unsigned int irq = 0;
 +
-+	er = _kvm_trap_handle_gspr(vcpu);
++	clear_bit(priority, &vcpu->arch.irq_pending);
++	if (priority < LOONGARCH_EXC_MAX)
++		irq = int_to_coreint[priority];
 +
-+	if (er == EMULATE_DONE) {
-+		ret = RESUME_GUEST;
-+	} else if (er == EMULATE_DO_MMIO) {
-+		vcpu->run->exit_reason = KVM_EXIT_MMIO;
-+		ret = RESUME_HOST;
-+	} else if (er == EMULATE_DO_IOCSR) {
-+		vcpu->run->exit_reason = KVM_EXIT_LOONGARCH_IOCSR;
-+		ret = RESUME_HOST;
-+	} else {
-+		kvm_err("%s internal error\n", __func__);
-+		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-+		ret = RESUME_HOST;
++	switch (priority) {
++	case LARCH_INT_TIMER:
++	case LARCH_INT_IPI:
++	case LARCH_INT_SIP0:
++	case LARCH_INT_SIP1:
++		set_gcsr_estat(irq);
++		break;
++
++	case LARCH_INT_IP0:
++	case LARCH_INT_IP1:
++	case LARCH_INT_IP2:
++	case LARCH_INT_IP3:
++	case LARCH_INT_IP4:
++	case LARCH_INT_IP5:
++	case LARCH_INT_IP6:
++	case LARCH_INT_IP7:
++		set_csr_gintc(irq);
++		break;
++
++	default:
++		break;
 +	}
-+	return ret;
++
++	return 1;
 +}
++
++static int _kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
++{
++	unsigned int irq = 0;
++
++	clear_bit(priority, &vcpu->arch.irq_clear);
++	if (priority < LOONGARCH_EXC_MAX)
++		irq = int_to_coreint[priority];
++
++	switch (priority) {
++	case LARCH_INT_TIMER:
++	case LARCH_INT_IPI:
++	case LARCH_INT_SIP0:
++	case LARCH_INT_SIP1:
++		clear_gcsr_estat(irq);
++		break;
++
++	case LARCH_INT_IP0:
++	case LARCH_INT_IP1:
++	case LARCH_INT_IP2:
++	case LARCH_INT_IP3:
++	case LARCH_INT_IP4:
++	case LARCH_INT_IP5:
++	case LARCH_INT_IP6:
++	case LARCH_INT_IP7:
++		clear_csr_gintc(irq);
++		break;
++
++	default:
++		break;
++	}
++
++	return 1;
++}
++
++void _kvm_deliver_intr(struct kvm_vcpu *vcpu)
++{
++	unsigned long *pending = &vcpu->arch.irq_pending;
++	unsigned long *pending_clr = &vcpu->arch.irq_clear;
++	unsigned int priority;
++
++	if (!(*pending) && !(*pending_clr))
++		return;
++
++	if (*pending_clr) {
++		priority = __ffs(*pending_clr);
++		while (priority <= LOONGARCH_EXC_IPNUM) {
++			_kvm_irq_clear(vcpu, priority);
++			priority = find_next_bit(pending_clr,
++					BITS_PER_BYTE * sizeof(*pending_clr),
++					priority + 1);
++		}
++	}
++
++	if (*pending) {
++		priority = __ffs(*pending);
++		while (priority <= LOONGARCH_EXC_IPNUM) {
++			_kvm_irq_deliver(vcpu, priority);
++			priority = find_next_bit(pending,
++					BITS_PER_BYTE * sizeof(*pending),
++					priority + 1);
++		}
++	}
++}
++
++int _kvm_pending_timer(struct kvm_vcpu *vcpu)
++{
++	return test_bit(LARCH_INT_TIMER, &vcpu->arch.irq_pending);
++}
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index d1e8cd402900..ee648bdb657c 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -305,6 +305,51 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
+ 	preempt_enable();
+ }
+ 
++int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu,
++			     struct kvm_loongarch_interrupt *irq)
++{
++	int intr = (int)irq->irq;
++	struct kvm_vcpu *dvcpu = NULL;
++
++	if (irq->cpu == -1)
++		dvcpu = vcpu;
++	else
++		dvcpu = kvm_get_vcpu(vcpu->kvm, irq->cpu);
++
++	if (intr > 0)
++		_kvm_queue_irq(dvcpu, intr);
++	else if (intr < 0)
++		_kvm_dequeue_irq(dvcpu, -intr);
++	else {
++		kvm_err("%s: invalid interrupt ioctl (%d:%d)\n", __func__,
++				irq->cpu, irq->irq);
++		return -EINVAL;
++	}
++
++	kvm_vcpu_kick(dvcpu);
++	return 0;
++}
++
++long kvm_arch_vcpu_async_ioctl(struct file *filp,
++			       unsigned int ioctl, unsigned long arg)
++{
++	struct kvm_vcpu *vcpu = filp->private_data;
++	void __user *argp = (void __user *)arg;
++
++	if (ioctl == KVM_INTERRUPT) {
++		struct kvm_loongarch_interrupt irq;
++
++		if (copy_from_user(&irq, argp, sizeof(irq)))
++			return -EFAULT;
++		kvm_debug("[%d] %s: irq: %d\n", vcpu->vcpu_id, __func__,
++			  irq.irq);
++
++		return kvm_vcpu_ioctl_interrupt(vcpu, &irq);
++	}
++
++	return -ENOIOCTLCMD;
++}
++
+ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+ {
+ 	return 0;
 -- 
 2.31.1
 
