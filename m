@@ -1,252 +1,122 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9C011FA0
-	for <loongarch@lists.linux.dev>; Tue, 18 Apr 2023 09:20:04 +0000 (UTC)
-Received: from loongson.cn (unknown [10.20.42.120])
-	by gateway (Coremail) with SMTP id _____8Cxf83DYD5kLWEeAA--.47337S3;
-	Tue, 18 Apr 2023 17:20:03 +0800 (CST)
-Received: from [10.20.42.120] (unknown [10.20.42.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxib2_YD5kJq4sAA--.51467S3;
-	Tue, 18 Apr 2023 17:20:00 +0800 (CST)
-Subject: Re: [PATCH v7 00/30] Add KVM LoongArch support
-To: Paolo Bonzini <pbonzini@redhat.com>
-References: <20230417094649.874671-1-zhaotianrui@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>,
- Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
- Xi Ruoyao <xry111@xry111.site>
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-Message-ID: <4cf93458-e5e1-d02d-4728-c2ddb4ea2088@loongson.cn>
-Date: Tue, 18 Apr 2023 17:19:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6834A1C02
+	for <loongarch@lists.linux.dev>; Tue, 18 Apr 2023 15:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1681832711;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=27YuiGTc/1Ayk3pIwHwifC0cK9cQSm41NYDsP6qMI7E=;
+	b=U8JMYrlgiEj994b1hrSfSqrDjhhXCK47LNEPZZlIOsQi+ZB22f0Al53zFXUWl8isy99rZY
+	/qiEg+Isjo2jy6vWzMdVtAfsrkfsetV/WtgOJsiwFZmMyk40b0apRxF8eL5nY9q9Ll9Px2
+	Hb+JKTRNdIWqNkGQHQPaweFerSjxz0U=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-544-VCndm2b2PgmfHetBKSrjmQ-1; Tue, 18 Apr 2023 11:45:07 -0400
+X-MC-Unique: VCndm2b2PgmfHetBKSrjmQ-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-3f08ed462c0so42522905e9.1
+        for <loongarch@lists.linux.dev>; Tue, 18 Apr 2023 08:45:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681832706; x=1684424706;
+        h=content-transfer-encoding:in-reply-to:organization:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=27YuiGTc/1Ayk3pIwHwifC0cK9cQSm41NYDsP6qMI7E=;
+        b=dwumbpWaBMgZ427+Fdgplk02245v+XACw66rGjO14avdHF/JKVtQMNDfG1PVsL8gWz
+         Pxm6+iTf0CGGe49MrKo9e7A/WjGoFv9yAAh93gGFBRWjkqe0mlsnRFyIEDG2CEgSsYvi
+         pkAnm4iNRH4LKaThq3/7KbdxAckQFdYGmrMvvH7nUgFMi9AHOnsNgv6QSSRjLA2mpGzs
+         0VKL3Efu3x5vKiWjR/bqOE50sL1XkI6efYFLy5023K7XbuB73LeOkFsPujiUNulqDAyb
+         rVKFA4YYL3bxR6+6dTh1BdKidPdChFbpB4TBZ4RNklgAmauTHZNm9AAUYfFZjR+mb9P7
+         NVWQ==
+X-Gm-Message-State: AAQBX9eVAiZ6MG2VuZk5iVQA6O1lLpF8qexbJFgcOgI/bEY73kjR66lv
+	nDYIWRd6I/QHVTZzJAYy3xwxYtSJ38YJvNP8kKk7KsbVeqsgTNtyfJvCZSZ3Ox33bqcQMdC2BX2
+	ZNERbr6xLuIcyThBLfd4E
+X-Received: by 2002:a5d:6dcc:0:b0:2ef:b8ae:8791 with SMTP id d12-20020a5d6dcc000000b002efb8ae8791mr2341933wrz.10.1681832706619;
+        Tue, 18 Apr 2023 08:45:06 -0700 (PDT)
+X-Google-Smtp-Source: AKy350boD2pgyaTgtT87B/OGZT/ZiXFytTcP4U4+Qx8x/yMODSTgYDG7+n20ySQtuSYJgFc2NPKTdg==
+X-Received: by 2002:a5d:6dcc:0:b0:2ef:b8ae:8791 with SMTP id d12-20020a5d6dcc000000b002efb8ae8791mr2341904wrz.10.1681832706235;
+        Tue, 18 Apr 2023 08:45:06 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c715:3f00:7545:deb6:f2f4:27ef? (p200300cbc7153f007545deb6f2f427ef.dip0.t-ipconnect.de. [2003:cb:c715:3f00:7545:deb6:f2f4:27ef])
+        by smtp.gmail.com with ESMTPSA id z10-20020a5d654a000000b002daeb108304sm13380984wrv.33.2023.04.18.08.45.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Apr 2023 08:45:05 -0700 (PDT)
+Message-ID: <da600570-51c7-8088-b46b-7524c9e66e5d@redhat.com>
+Date: Tue, 18 Apr 2023 17:45:03 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230417094649.874671-1-zhaotianrui@loongson.cn>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH 01/33] s390: Use _pt_s390_gaddr for gmap address tracking
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>
+Cc: linux-mm@kvack.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-um@lists.infradead.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org
+References: <20230417205048.15870-1-vishal.moola@gmail.com>
+ <20230417205048.15870-2-vishal.moola@gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+In-Reply-To: <20230417205048.15870-2-vishal.moola@gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxib2_YD5kJq4sAA--.51467S3
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3KF47Ar4fGF1rCFykZw1fJFb_yoWDAFWxpF
-	W7urn8Gr4kGrsaqws3t34kurn8Xr1xGrWag3Wa9348CrW2qrykZFykKr9FvFZrZ3yrJr10
-	qr1rKw1ag3WUAaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
-	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
-	JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
-	1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUv
-	cSsGvfC2KfnxnUUI43ZEXa7IU8q2NtUUUUU==
+Content-Transfer-Encoding: 7bit
 
-Please ignore this mail message, as it is not a complete patch series.  
-Please see the next V7 patches I have sent.
+On 17.04.23 22:50, Vishal Moola (Oracle) wrote:
+> s390 uses page->index to keep track of page tables for the guest address
+> space. In an attempt to consolidate the usage of page fields in s390,
+> replace _pt_pad_2 with _pt_s390_gaddr to replace page->index in gmap.
+> 
+> This will help with the splitting of struct ptdesc from struct page, as
+> well as allow s390 to use _pt_frag_refcount for fragmented page table
+> tracking.
+> 
+> Since page->_pt_s390_gaddr aliases with mapping, ensure its set to NULL
+> before freeing the pages as well.
+> 
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> ---
 
-Thanks
-Tianrui Zhao
+[...]
 
-在 2023年04月17日 17:46, Tianrui Zhao 写道:
-> This series adds KVM LoongArch support. Loongson 3A5000 supports hardware
-> assisted virtualization. With cpu virtualization, there are separate
-> hw-supported user mode and kernel mode in guest mode. With memory
-> virtualization, there are two-level hw mmu table for guest mode and host
-> mode. Also there is separate hw cpu timer with consant frequency in
-> guest mode, so that vm can migrate between hosts with different freq.
-> Currently, we are able to boot LoongArch Linux Guests.
->
-> Few key aspects of KVM LoongArch added by this series are:
-> 1. Enable kvm hardware function when kvm module is loaded.
-> 2. Implement VM and vcpu related ioctl interface such as vcpu create,
->     vcpu run etc. GET_ONE_REG/SET_ONE_REG ioctl commands are use to
->     get general registers one by one.
-> 3. Hardware access about MMU, timer and csr are emulated in kernel.
-> 4. Hardwares such as mmio and iocsr device are emulated in user space
->     such as APIC, IPI, pci devices etc.
->
-> The running environment of LoongArch virt machine:
-> 1. Cross tools to build kernel and uefi:
->     $ wget https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-6.3-cross-tools-gcc-glibc.tar.xz
->     tar -vxf loongarch64-clfs-6.3-cross-tools-gcc-glibc.tar.xz  -C /opt
->     export PATH=/opt/cross-tools/bin:$PATH
->     export LD_LIBRARY_PATH=/opt/cross-tools/lib:$LD_LIBRARY_PATH
->     export LD_LIBRARY_PATH=/opt/cross-tools/loongarch64-unknown-linux-gnu/lib/:$LD_LIBRARY_PATH
-> 2. This series is based on the linux source code:
->     https://github.com/loongson/linux-loongarch-kvm
->     Build command:
->     git checkout kvm-loongarch
->     make ARCH=loongarch CROSS_COMPILE=loongarch64-unknown-linux-gnu- loongson3_defconfig
->     make ARCH=loongarch CROSS_COMPILE=loongarch64-unknown-linux-gnu-
-> 3. QEMU hypervisor with LoongArch supported:
->     https://github.com/loongson/qemu
->     Build command:
->     git checkout kvm-loongarch
->     ./configure --target-list="loongarch64-softmmu"  --enable-kvm
->     make
-> 4. Uefi bios of LoongArch virt machine:
->     Link: https://github.com/tianocore/edk2-platforms/tree/master/Platform/Loongson/LoongArchQemuPkg#readme
-> 5. you can also access the binary files we have already build:
->     https://github.com/yangxiaojuan-loongson/qemu-binary
-> The command to boot loongarch virt machine:
->     $ qemu-system-loongarch64 -machine virt -m 4G -cpu la464 \
->     -smp 1 -bios QEMU_EFI.fd -kernel vmlinuz.efi -initrd ramdisk \
->     -serial stdio   -monitor telnet:localhost:4495,server,nowait \
->     -append "root=/dev/ram rdinit=/sbin/init console=ttyS0,115200" \
->     --nographic
->
-> Changes for v7:
-> 1. Fix the kvm_save/restore_hw_gcsr compiling warnings reported by
-> kernel test robot. The report link is:
-> https://lore.kernel.org/oe-kbuild-all/202304131526.iXfLaVZc-lkp@intel.com/
-> 2. Fix loongarch kvm trace related compiling problems.
->
-> Changes for v6:
-> 1. Fix the Documentation/virt/kvm/api.rst compile warning about
-> loongarch parts.
->
-> Changes for v5:
-> 1. Implement get/set mp_state ioctl interface, and only the
-> KVM_MP_STATE_RUNNABLE state is supported now, and other states
-> will be completed in the future. The state is also used when vcpu
-> run idle instruction, if vcpu state is changed to RUNNABLE, the
-> vcpu will have the possibility to be woken up.
-> 2. Supplement kvm document about loongarch-specific part, such as add
-> api introduction for GET/SET_ONE_REG, GET/SET_FPU, GET/SET_MP_STATE,
-> etc.
-> 3. Improve the kvm_switch_to_guest function in switch.S, remove the
-> previous tmp,tmp1 arguments and replace it with t0,t1 reg.
->
-> Changes for v4:
-> 1. Add a csr_need_update flag in _vcpu_put, as most csr registers keep
-> unchanged during process context switch, so we need not to update it
-> every time. We can do this only if the soft csr is different form hardware.
-> That is to say all of csrs should update after vcpu enter guest, as for
-> set_csr_ioctl, we have written soft csr to keep consistent with hardware.
-> 2. Improve get/set_csr_ioctl interface, we set SW or HW or INVALID flag
-> for all csrs according to it's features when kvm init. In get/set_csr_ioctl,
-> if csr is HW, we use gcsrrd/ gcsrwr instruction to access it, else if csr is
-> SW, we use software to emulate it, and others return false.
-> 3. Add set_hw_gcsr function in csr_ops.S, and it is used in set_csr_ioctl.
-> We have splited hw gcsr into three parts, so we can calculate the code offset
-> by gcsrid and jump here to run the gcsrwr instruction. We use this function to
-> make the code easier and avoid to use the previous SET_HW_GCSR(XXX) interface.
-> 4. Improve kvm mmu functions, such as flush page table and make clean page table
-> interface.
->
-> Changes for v3:
-> 1. Remove the vpid array list in kvm_vcpu_arch and use a vpid variable here,
-> because a vpid will never be recycled if a vCPU migrates from physical CPU A
-> to B and back to A.
-> 2. Make some constant variables in kvm_context to global such as vpid_mask,
-> guest_eentry, enter_guest, etc.
-> 3. Add some new tracepoints, such as kvm_trace_idle, kvm_trace_cache,
-> kvm_trace_gspr, etc.
-> 4. There are some duplicate codes in kvm_handle_exit and kvm_vcpu_run,
-> so we move it to a new function kvm_pre_enter_guest.
-> 5. Change the RESUME_HOST, RESUME_GUEST value, return 1 for resume guest
-> and "<= 0" for resume host.
-> 6. Fcsr and fpu registers are saved/restored together.
->
-> Changes for v2:
-> 1. Seprate the original patch-01 and patch-03 into small patches, and the
-> patches mainly contain kvm module init, module exit, vcpu create, vcpu run,
-> etc.
-> 2. Remove the original KVM_{GET,SET}_CSRS ioctl in the kvm uapi header,
-> and we use the common KVM_{GET,SET}_ONE_REG to access register.
-> 3. Use BIT(x) to replace the "1 << n_bits" statement.
->
-> Tianrui Zhao (30):
->    LoongArch: KVM: Add kvm related header files
->    LoongArch: KVM: Implement kvm module related interface
->    LoongArch: KVM: Implement kvm hardware enable, disable interface
->    LoongArch: KVM: Implement VM related functions
->    LoongArch: KVM: Add vcpu related header files
->    LoongArch: KVM: Implement vcpu create and destroy interface
->    LoongArch: KVM: Implement vcpu run interface
->    LoongArch: KVM: Implement vcpu handle exit interface
->    LoongArch: KVM: Implement vcpu get, vcpu set registers
->    LoongArch: KVM: Implement vcpu ENABLE_CAP ioctl interface
->    LoongArch: KVM: Implement fpu related operations for vcpu
->    LoongArch: KVM: Implement vcpu interrupt operations
->    LoongArch: KVM: Implement misc vcpu related interfaces
->    LoongArch: KVM: Implement vcpu load and vcpu put operations
->    LoongArch: KVM: Implement vcpu status description
->    LoongArch: KVM: Implement update VM id function
->    LoongArch: KVM: Implement virtual machine tlb operations
->    LoongArch: KVM: Implement vcpu timer operations
->    LoongArch: KVM: Implement kvm mmu operations
->    LoongArch: KVM: Implement handle csr excption
->    LoongArch: KVM: Implement handle iocsr exception
->    LoongArch: KVM: Implement handle idle exception
->    LoongArch: KVM: Implement handle gspr exception
->    LoongArch: KVM: Implement handle mmio exception
->    LoongArch: KVM: Implement handle fpu exception
->    LoongArch: KVM: Implement kvm exception vector
->    LoongArch: KVM: Implement vcpu world switch
->    LoongArch: KVM: Implement probe virtualization when loongarch cpu init
->    LoongArch: KVM: Enable kvm config and add the makefile
->    LoongArch: KVM: Supplement kvm document about loongarch-specific part
->
->   Documentation/virt/kvm/api.rst             |  71 +-
->   arch/loongarch/Kbuild                      |   1 +
->   arch/loongarch/Kconfig                     |   2 +
->   arch/loongarch/configs/loongson3_defconfig |   2 +
->   arch/loongarch/include/asm/cpu-features.h  |  22 +
->   arch/loongarch/include/asm/cpu-info.h      |  13 +
->   arch/loongarch/include/asm/inst.h          |  16 +
->   arch/loongarch/include/asm/kvm_csr.h       |  58 ++
->   arch/loongarch/include/asm/kvm_host.h      | 268 +++++++
->   arch/loongarch/include/asm/kvm_types.h     |  11 +
->   arch/loongarch/include/asm/kvm_vcpu.h      | 114 +++
->   arch/loongarch/include/asm/loongarch.h     | 213 ++++-
->   arch/loongarch/include/uapi/asm/kvm.h      | 107 +++
->   arch/loongarch/kernel/asm-offsets.c        |  32 +
->   arch/loongarch/kernel/cpu-probe.c          |  53 ++
->   arch/loongarch/kvm/Kconfig                 |  38 +
->   arch/loongarch/kvm/Makefile                |  22 +
->   arch/loongarch/kvm/csr_ops.S               |  76 ++
->   arch/loongarch/kvm/exit.c                  | 707 +++++++++++++++++
->   arch/loongarch/kvm/interrupt.c             | 126 +++
->   arch/loongarch/kvm/main.c                  | 340 ++++++++
->   arch/loongarch/kvm/mmu.c                   | 730 +++++++++++++++++
->   arch/loongarch/kvm/switch.S                | 301 +++++++
->   arch/loongarch/kvm/timer.c                 | 266 +++++++
->   arch/loongarch/kvm/tlb.c                   |  31 +
->   arch/loongarch/kvm/trace.h                 | 168 ++++
->   arch/loongarch/kvm/vcpu.c                  | 882 +++++++++++++++++++++
->   arch/loongarch/kvm/vm.c                    |  79 ++
->   arch/loongarch/kvm/vmid.c                  |  65 ++
->   include/uapi/linux/kvm.h                   |   9 +
->   30 files changed, 4808 insertions(+), 15 deletions(-)
->   create mode 100644 arch/loongarch/include/asm/kvm_csr.h
->   create mode 100644 arch/loongarch/include/asm/kvm_host.h
->   create mode 100644 arch/loongarch/include/asm/kvm_types.h
->   create mode 100644 arch/loongarch/include/asm/kvm_vcpu.h
->   create mode 100644 arch/loongarch/include/uapi/asm/kvm.h
->   create mode 100644 arch/loongarch/kvm/Kconfig
->   create mode 100644 arch/loongarch/kvm/Makefile
->   create mode 100644 arch/loongarch/kvm/csr_ops.S
->   create mode 100644 arch/loongarch/kvm/exit.c
->   create mode 100644 arch/loongarch/kvm/interrupt.c
->   create mode 100644 arch/loongarch/kvm/main.c
->   create mode 100644 arch/loongarch/kvm/mmu.c
->   create mode 100644 arch/loongarch/kvm/switch.S
->   create mode 100644 arch/loongarch/kvm/timer.c
->   create mode 100644 arch/loongarch/kvm/tlb.c
->   create mode 100644 arch/loongarch/kvm/trace.h
->   create mode 100644 arch/loongarch/kvm/vcpu.c
->   create mode 100644 arch/loongarch/kvm/vm.c
->   create mode 100644 arch/loongarch/kvm/vmid.c
->
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 3fc9e680f174..2616d64c0e8c 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -144,7 +144,7 @@ struct page {
+>   		struct {	/* Page table pages */
+>   			unsigned long _pt_pad_1;	/* compound_head */
+>   			pgtable_t pmd_huge_pte; /* protected by page->ptl */
+> -			unsigned long _pt_pad_2;	/* mapping */
+> +			unsigned long _pt_s390_gaddr;	/* mapping */
+>   			union {
+>   				struct mm_struct *pt_mm; /* x86 pgds only */
+>   				atomic_t pt_frag_refcount; /* powerpc */
+
+The confusing part is, that these gmap page tables are not ordinary 
+process page tables that we would ordinarily place into this section 
+here. That's why they are also not allocated/freed using the typical 
+page table constructor/destructor ...
+
+-- 
+Thanks,
+
+David / dhildenb
 
