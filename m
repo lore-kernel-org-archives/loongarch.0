@@ -1,280 +1,828 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4DF1381;
-	Tue, 18 Apr 2023 02:13:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681784000; x=1713320000;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wqlsjQk8Hlncd0Tit9Ob615YFcxS+GeVN0PRT6FhUrY=;
-  b=ayzWXYJpIVZLSBDWQiP68VtNfvYbroBYAigNuAN5GsdljrhDOKPtiNc1
-   I5LEPhCbLBDMtxHSMm6B+Xb/ZI03ZDGJ7qBYjNXMDDECK+fnCPe5BLE5H
-   MkSTr9NICLvH80ZTG4BoxCyl3MjrXoaFYzlh7Rh9rjur/YHE4EZdNGAPO
-   GBGMEMZauP38L33qoS2Bo4HdVnVdrGDwNCG8OPY6v1bHZ8QocPRlMZikC
-   rO7sMoxU8q9bqrMHL7SZGrW3FRkohLOAqFZu0Fh9Fg6m0j+MUd9aoEJY2
-   s3H+y6BLXHqvN4T+E7AY4kPLJsCsPPKQ6rU5eiS/pq9Chx/tEXoQBCcgd
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="343806396"
-X-IronPort-AV: E=Sophos;i="5.99,205,1677571200"; 
-   d="scan'208";a="343806396"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 19:13:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="723460357"
-X-IronPort-AV: E=Sophos;i="5.99,205,1677571200"; 
-   d="scan'208";a="723460357"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 17 Apr 2023 19:13:13 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1poaqG-000cqb-33;
-	Tue, 18 Apr 2023 02:13:12 +0000
-Date: Tue, 18 Apr 2023 10:13:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Subject: Re: [PATCH 12/33] mm: Create ptdesc equivalents for
- pgtable_{pte,pmd}_page_{ctor,dtor}
-Message-ID: <202304180959.YFCTfVKw-lkp@intel.com>
-References: <20230417205048.15870-13-vishal.moola@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE0E1381
+	for <loongarch@lists.linux.dev>; Tue, 18 Apr 2023 02:24:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F417C433EF;
+	Tue, 18 Apr 2023 02:23:56 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Xuerui Wang <kernel@xen0n.name>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Ming Wang <wangming01@loongson.cn>
+Subject: [PATCH V3] tools/perf: Add basic support for LoongArch
+Date: Tue, 18 Apr 2023 10:23:16 +0800
+Message-Id: <20230418022316.1964506-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230417205048.15870-13-vishal.moola@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Vishal,
+Add basic support for LoongArch, which is very similar to the MIPS
+version.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Ming Wang <wangming01@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+V2: Add libdw support.
+V3: Use %rx register format.
 
-[auto build test WARNING on akpm-mm/mm-everything]
-[also build test WARNING on next-20230417]
-[cannot apply to s390/features powerpc/next powerpc/fixes geert-m68k/for-next geert-m68k/for-linus linus/master v6.3-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+ .../loongarch/include/uapi/asm/perf_regs.h    | 40 +++++++++
+ .../arch/loongarch/include/uapi/asm/unistd.h  |  9 ++
+ tools/perf/Makefile.config                    | 12 ++-
+ tools/perf/arch/loongarch/Build               |  1 +
+ tools/perf/arch/loongarch/Makefile            | 28 +++++++
+ .../arch/loongarch/annotate/instructions.c    | 45 ++++++++++
+ .../loongarch/entry/syscalls/mksyscalltbl     | 61 ++++++++++++++
+ .../arch/loongarch/include/dwarf-regs-table.h | 16 ++++
+ tools/perf/arch/loongarch/include/perf_regs.h | 15 ++++
+ tools/perf/arch/loongarch/util/Build          |  5 ++
+ tools/perf/arch/loongarch/util/dwarf-regs.c   | 44 ++++++++++
+ tools/perf/arch/loongarch/util/perf_regs.c    |  6 ++
+ tools/perf/arch/loongarch/util/unwind-libdw.c | 56 +++++++++++++
+ .../arch/loongarch/util/unwind-libunwind.c    | 82 +++++++++++++++++++
+ tools/perf/check-headers.sh                   |  1 +
+ tools/perf/util/annotate.c                    |  8 ++
+ tools/perf/util/dwarf-regs.c                  |  7 ++
+ tools/perf/util/env.c                         |  2 +
+ tools/perf/util/genelf.h                      |  3 +
+ tools/perf/util/perf_regs.c                   | 76 +++++++++++++++++
+ tools/perf/util/syscalltbl.c                  |  4 +
+ 21 files changed, 518 insertions(+), 3 deletions(-)
+ create mode 100644 tools/arch/loongarch/include/uapi/asm/perf_regs.h
+ create mode 100644 tools/arch/loongarch/include/uapi/asm/unistd.h
+ create mode 100644 tools/perf/arch/loongarch/Build
+ create mode 100644 tools/perf/arch/loongarch/Makefile
+ create mode 100644 tools/perf/arch/loongarch/annotate/instructions.c
+ create mode 100755 tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
+ create mode 100644 tools/perf/arch/loongarch/include/dwarf-regs-table.h
+ create mode 100644 tools/perf/arch/loongarch/include/perf_regs.h
+ create mode 100644 tools/perf/arch/loongarch/util/Build
+ create mode 100644 tools/perf/arch/loongarch/util/dwarf-regs.c
+ create mode 100644 tools/perf/arch/loongarch/util/perf_regs.c
+ create mode 100644 tools/perf/arch/loongarch/util/unwind-libdw.c
+ create mode 100644 tools/perf/arch/loongarch/util/unwind-libunwind.c
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vishal-Moola-Oracle/s390-Use-_pt_s390_gaddr-for-gmap-address-tracking/20230418-045832
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20230417205048.15870-13-vishal.moola%40gmail.com
-patch subject: [PATCH 12/33] mm: Create ptdesc equivalents for pgtable_{pte,pmd}_page_{ctor,dtor}
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20230418/202304180959.YFCTfVKw-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/d53de56a2dbf659b53aee1aa2eac60bcc936f10b
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Vishal-Moola-Oracle/s390-Use-_pt_s390_gaddr-for-gmap-address-tracking/20230418-045832
-        git checkout d53de56a2dbf659b53aee1aa2eac60bcc936f10b
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sh olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sh prepare
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202304180959.YFCTfVKw-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from arch/sh/kernel/asm-offsets.c:14:
-   include/linux/mm.h: In function 'virt_to_ptdesc':
-   include/linux/mm.h:2723:16: error: implicit declaration of function 'page_ptdesc' [-Werror=implicit-function-declaration]
-    2723 |         return page_ptdesc(virt_to_head_page(x));
-         |                ^~~~~~~~~~~
-   include/linux/mm.h:2723:16: warning: returning 'int' from a function with return type 'struct ptdesc *' makes pointer from integer without a cast [-Wint-conversion]
-    2723 |         return page_ptdesc(virt_to_head_page(x));
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from arch/sh/include/asm/thread_info.h:13,
-                    from include/linux/thread_info.h:60,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/sh/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:78,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/mm.h:7:
-   include/linux/mm.h: In function 'ptdesc_to_virt':
-   include/linux/mm.h:2728:29: error: implicit declaration of function 'ptdesc_page'; did you mean 'pte_page'? [-Werror=implicit-function-declaration]
-    2728 |         return page_to_virt(ptdesc_page(pt));
-         |                             ^~~~~~~~~~~
-   arch/sh/include/asm/page.h:139:27: note: in definition of macro '___va'
-     139 | #define ___va(x)        ((x)+PAGE_OFFSET)
-         |                           ^
-   include/linux/mm.h:117:25: note: in expansion of macro '__va'
-     117 | #define page_to_virt(x) __va(PFN_PHYS(page_to_pfn(x)))
-         |                         ^~~~
-   include/linux/mm.h:117:30: note: in expansion of macro 'PFN_PHYS'
-     117 | #define page_to_virt(x) __va(PFN_PHYS(page_to_pfn(x)))
-         |                              ^~~~~~~~
-   include/asm-generic/memory_model.h:64:21: note: in expansion of macro '__page_to_pfn'
-      64 | #define page_to_pfn __page_to_pfn
-         |                     ^~~~~~~~~~~~~
-   include/linux/mm.h:2728:16: note: in expansion of macro 'page_to_virt'
-    2728 |         return page_to_virt(ptdesc_page(pt));
-         |                ^~~~~~~~~~~~
-   include/asm-generic/memory_model.h:46:35: warning: initialization of 'const struct page *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-      46 | ({      const struct page *__pg = (pg);                         \
-         |                                   ^
-   arch/sh/include/asm/page.h:139:27: note: in definition of macro '___va'
-     139 | #define ___va(x)        ((x)+PAGE_OFFSET)
-         |                           ^
-   include/linux/mm.h:117:25: note: in expansion of macro '__va'
-     117 | #define page_to_virt(x) __va(PFN_PHYS(page_to_pfn(x)))
-         |                         ^~~~
-   include/linux/mm.h:117:30: note: in expansion of macro 'PFN_PHYS'
-     117 | #define page_to_virt(x) __va(PFN_PHYS(page_to_pfn(x)))
-         |                              ^~~~~~~~
-   include/asm-generic/memory_model.h:64:21: note: in expansion of macro '__page_to_pfn'
-      64 | #define page_to_pfn __page_to_pfn
-         |                     ^~~~~~~~~~~~~
-   include/linux/mm.h:117:39: note: in expansion of macro 'page_to_pfn'
-     117 | #define page_to_virt(x) __va(PFN_PHYS(page_to_pfn(x)))
-         |                                       ^~~~~~~~~~~
-   include/linux/mm.h:2728:16: note: in expansion of macro 'page_to_virt'
-    2728 |         return page_to_virt(ptdesc_page(pt));
-         |                ^~~~~~~~~~~~
-   include/linux/mm.h: In function 'ptdesc_address':
-   include/linux/mm.h:2733:30: error: implicit declaration of function 'ptdesc_folio'; did you mean 'page_folio'? [-Werror=implicit-function-declaration]
-    2733 |         return folio_address(ptdesc_folio(pt));
-         |                              ^~~~~~~~~~~~
-         |                              page_folio
-   include/linux/mm.h:2733:30: warning: passing argument 1 of 'folio_address' makes pointer from integer without a cast [-Wint-conversion]
-    2733 |         return folio_address(ptdesc_folio(pt));
-         |                              ^~~~~~~~~~~~~~~~
-         |                              |
-         |                              int
-   include/linux/mm.h:2151:55: note: expected 'const struct folio *' but argument is of type 'int'
-    2151 | static inline void *folio_address(const struct folio *folio)
-         |                                   ~~~~~~~~~~~~~~~~~~~~^~~~~
-   include/linux/mm.h: In function 'ptdesc_is_reserved':
-   include/linux/mm.h:2738:36: warning: passing argument 1 of 'folio_test_reserved' makes pointer from integer without a cast [-Wint-conversion]
-    2738 |         return folio_test_reserved(ptdesc_folio(pt));
-         |                                    ^~~~~~~~~~~~~~~~
-         |                                    |
-         |                                    int
-   In file included from include/linux/mmzone.h:23:
-   include/linux/page-flags.h:375:62: note: expected 'struct folio *' but argument is of type 'int'
-     375 | static __always_inline bool folio_test_##lname(struct folio *folio)     \
-         |                                                ~~~~~~~~~~~~~~^~~~~
-   include/linux/page-flags.h:423:9: note: in expansion of macro 'TESTPAGEFLAG'
-     423 |         TESTPAGEFLAG(uname, lname, policy)                              \
-         |         ^~~~~~~~~~~~
-   include/linux/page-flags.h:494:1: note: in expansion of macro 'PAGEFLAG'
-     494 | PAGEFLAG(Reserved, reserved, PF_NO_COMPOUND)
-         | ^~~~~~~~
-   include/linux/mm.h: In function 'ptdesc_alloc':
-   include/linux/mm.h:2745:16: warning: returning 'int' from a function with return type 'struct ptdesc *' makes pointer from integer without a cast [-Wint-conversion]
-    2745 |         return page_ptdesc(page);
-         |                ^~~~~~~~~~~~~~~~~
-   include/linux/mm.h: In function 'ptdesc_free':
-   include/linux/mm.h:2750:29: warning: initialization of 'struct page *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-    2750 |         struct page *page = ptdesc_page(pt);
-         |                             ^~~~~~~~~~~
-   include/linux/mm.h: In function 'ptdesc_pte_ctor':
->> include/linux/mm.h:2826:31: warning: initialization of 'struct folio *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-    2826 |         struct folio *folio = ptdesc_folio(ptdesc);
-         |                               ^~~~~~~~~~~~
-   include/linux/mm.h: In function 'pgtable_pte_page_ctor':
-   include/linux/mm.h:2837:32: warning: passing argument 1 of 'ptdesc_pte_ctor' makes pointer from integer without a cast [-Wint-conversion]
-    2837 |         return ptdesc_pte_ctor(page_ptdesc(page));
-         |                                ^~~~~~~~~~~~~~~~~
-         |                                |
-         |                                int
-   include/linux/mm.h:2824:51: note: expected 'struct ptdesc *' but argument is of type 'int'
-    2824 | static inline bool ptdesc_pte_ctor(struct ptdesc *ptdesc)
-         |                                    ~~~~~~~~~~~~~~~^~~~~~
-   include/linux/mm.h: In function 'ptdesc_pte_dtor':
-   include/linux/mm.h:2842:31: warning: initialization of 'struct folio *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-    2842 |         struct folio *folio = ptdesc_folio(ptdesc);
-         |                               ^~~~~~~~~~~~
-   include/linux/mm.h: In function 'pgtable_pte_page_dtor':
-   include/linux/mm.h:2851:25: warning: passing argument 1 of 'ptdesc_pte_dtor' makes pointer from integer without a cast [-Wint-conversion]
-    2851 |         ptdesc_pte_dtor(page_ptdesc(page));
-         |                         ^~~~~~~~~~~~~~~~~
-         |                         |
-         |                         int
-   include/linux/mm.h:2840:51: note: expected 'struct ptdesc *' but argument is of type 'int'
-    2840 | static inline void ptdesc_pte_dtor(struct ptdesc *ptdesc)
-         |                                    ~~~~~~~~~~~~~~~^~~~~~
-   include/linux/mm.h: In function 'ptdesc_pmd_ctor':
-   include/linux/mm.h:2935:31: warning: initialization of 'struct folio *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-    2935 |         struct folio *folio = ptdesc_folio(ptdesc);
-         |                               ^~~~~~~~~~~~
-   include/linux/mm.h: In function 'pgtable_pmd_page_ctor':
-   include/linux/mm.h:2946:32: warning: passing argument 1 of 'ptdesc_pmd_ctor' makes pointer from integer without a cast [-Wint-conversion]
-    2946 |         return ptdesc_pmd_ctor(page_ptdesc(page));
-         |                                ^~~~~~~~~~~~~~~~~
-         |                                |
-         |                                int
-   include/linux/mm.h:2933:51: note: expected 'struct ptdesc *' but argument is of type 'int'
-    2933 | static inline bool ptdesc_pmd_ctor(struct ptdesc *ptdesc)
-         |                                    ~~~~~~~~~~~~~~~^~~~~~
-   include/linux/mm.h: In function 'ptdesc_pmd_dtor':
-   include/linux/mm.h:2951:31: warning: initialization of 'struct folio *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-    2951 |         struct folio *folio = ptdesc_folio(ptdesc);
-         |                               ^~~~~~~~~~~~
-   include/linux/mm.h: In function 'pgtable_pmd_page_dtor':
-   include/linux/mm.h:2960:25: warning: passing argument 1 of 'ptdesc_pmd_dtor' makes pointer from integer without a cast [-Wint-conversion]
-    2960 |         ptdesc_pmd_dtor(page_ptdesc(page));
-         |                         ^~~~~~~~~~~~~~~~~
-         |                         |
-         |                         int
-   include/linux/mm.h:2949:51: note: expected 'struct ptdesc *' but argument is of type 'int'
-    2949 | static inline void ptdesc_pmd_dtor(struct ptdesc *ptdesc)
-         |                                    ~~~~~~~~~~~~~~~^~~~~~
-   include/linux/mm.h: In function 'free_reserved_ptdesc':
-   include/linux/mm.h:3016:28: warning: passing argument 1 of 'free_reserved_page' makes pointer from integer without a cast [-Wint-conversion]
-    3016 |         free_reserved_page(ptdesc_page(pt));
-         |                            ^~~~~~~~~~~~~~~
-         |                            |
-         |                            int
-   include/linux/mm.h:2999:52: note: expected 'struct page *' but argument is of type 'int'
-    2999 | static inline void free_reserved_page(struct page *page)
-         |                                       ~~~~~~~~~~~~~^~~~
-   cc1: some warnings being treated as errors
-   make[2]: *** [scripts/Makefile.build:114: arch/sh/kernel/asm-offsets.s] Error 1
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:1286: prepare0] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:226: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
-
-
-vim +2826 include/linux/mm.h
-
-  2823	
-  2824	static inline bool ptdesc_pte_ctor(struct ptdesc *ptdesc)
-  2825	{
-> 2826		struct folio *folio = ptdesc_folio(ptdesc);
-  2827	
-  2828		if (!ptlock_init(ptdesc))
-  2829			return false;
-  2830		__SetPageTable(&folio->page);
-  2831		lruvec_stat_add_folio(folio, NR_PAGETABLE);
-  2832		return true;
-  2833	}
-  2834	
-
+diff --git a/tools/arch/loongarch/include/uapi/asm/perf_regs.h b/tools/arch/loongarch/include/uapi/asm/perf_regs.h
+new file mode 100644
+index 000000000000..29d69c00fc7a
+--- /dev/null
++++ b/tools/arch/loongarch/include/uapi/asm/perf_regs.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _ASM_LOONGARCH_PERF_REGS_H
++#define _ASM_LOONGARCH_PERF_REGS_H
++
++enum perf_event_loongarch_regs {
++	PERF_REG_LOONGARCH_PC,
++	PERF_REG_LOONGARCH_R1,
++	PERF_REG_LOONGARCH_R2,
++	PERF_REG_LOONGARCH_R3,
++	PERF_REG_LOONGARCH_R4,
++	PERF_REG_LOONGARCH_R5,
++	PERF_REG_LOONGARCH_R6,
++	PERF_REG_LOONGARCH_R7,
++	PERF_REG_LOONGARCH_R8,
++	PERF_REG_LOONGARCH_R9,
++	PERF_REG_LOONGARCH_R10,
++	PERF_REG_LOONGARCH_R11,
++	PERF_REG_LOONGARCH_R12,
++	PERF_REG_LOONGARCH_R13,
++	PERF_REG_LOONGARCH_R14,
++	PERF_REG_LOONGARCH_R15,
++	PERF_REG_LOONGARCH_R16,
++	PERF_REG_LOONGARCH_R17,
++	PERF_REG_LOONGARCH_R18,
++	PERF_REG_LOONGARCH_R19,
++	PERF_REG_LOONGARCH_R20,
++	PERF_REG_LOONGARCH_R21,
++	PERF_REG_LOONGARCH_R22,
++	PERF_REG_LOONGARCH_R23,
++	PERF_REG_LOONGARCH_R24,
++	PERF_REG_LOONGARCH_R25,
++	PERF_REG_LOONGARCH_R26,
++	PERF_REG_LOONGARCH_R27,
++	PERF_REG_LOONGARCH_R28,
++	PERF_REG_LOONGARCH_R29,
++	PERF_REG_LOONGARCH_R30,
++	PERF_REG_LOONGARCH_R31,
++	PERF_REG_LOONGARCH_MAX,
++};
++#endif /* _ASM_LOONGARCH_PERF_REGS_H */
+diff --git a/tools/arch/loongarch/include/uapi/asm/unistd.h b/tools/arch/loongarch/include/uapi/asm/unistd.h
+new file mode 100644
+index 000000000000..0c743344e92d
+--- /dev/null
++++ b/tools/arch/loongarch/include/uapi/asm/unistd.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#define __ARCH_WANT_SYS_CLONE
++#define __ARCH_WANT_SYS_CLONE3
++
++#include <asm-generic/unistd.h>
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 3519a0139026..c0a208f9b67b 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -38,7 +38,7 @@ ifneq ($(NO_SYSCALL_TABLE),1)
+       NO_SYSCALL_TABLE := 0
+     endif
+   else
+-    ifeq ($(SRCARCH),$(filter $(SRCARCH),powerpc arm64 s390 mips))
++    ifeq ($(SRCARCH),$(filter $(SRCARCH),powerpc arm64 s390 mips loongarch))
+       NO_SYSCALL_TABLE := 0
+     endif
+   endif
+@@ -80,6 +80,12 @@ ifeq ($(SRCARCH),arm64)
+   LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
+ endif
+ 
++ifeq ($(SRCARCH),loongarch)
++  NO_PERF_REGS := 0
++  CFLAGS += -I$(OUTPUT)arch/loongarch/include/generated
++  LIBUNWIND_LIBS = -lunwind -lunwind-loongarch64
++endif
++
+ ifeq ($(SRCARCH),riscv)
+   NO_PERF_REGS := 0
+ endif
+@@ -107,7 +113,7 @@ endif
+ # Disable it on all other architectures in case libdw unwind
+ # support is detected in system. Add supported architectures
+ # to the check.
+-ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390 csky riscv))
++ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390 csky riscv loongarch))
+   NO_LIBDW_DWARF_UNWIND := 1
+ endif
+ 
+@@ -129,7 +135,7 @@ endef
+ ifdef LIBUNWIND_DIR
+   LIBUNWIND_CFLAGS  = -I$(LIBUNWIND_DIR)/include
+   LIBUNWIND_LDFLAGS = -L$(LIBUNWIND_DIR)/lib
+-  LIBUNWIND_ARCHS = x86 x86_64 arm aarch64 debug-frame-arm debug-frame-aarch64
++  LIBUNWIND_ARCHS = x86 x86_64 arm aarch64 debug-frame-arm debug-frame-aarch64 loongarch
+   $(foreach libunwind_arch,$(LIBUNWIND_ARCHS),$(call libunwind_arch_set_flags,$(libunwind_arch)))
+ endif
+ 
+diff --git a/tools/perf/arch/loongarch/Build b/tools/perf/arch/loongarch/Build
+new file mode 100644
+index 000000000000..e4e5f33c84d8
+--- /dev/null
++++ b/tools/perf/arch/loongarch/Build
+@@ -0,0 +1 @@
++perf-y += util/
+diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
+new file mode 100644
+index 000000000000..c392e7af4743
+--- /dev/null
++++ b/tools/perf/arch/loongarch/Makefile
+@@ -0,0 +1,28 @@
++# SPDX-License-Identifier: GPL-2.0
++ifndef NO_DWARF
++PERF_HAVE_DWARF_REGS := 1
++endif
++PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
++PERF_HAVE_JITDUMP := 1
++
++#
++# Syscall table generation for perf
++#
++
++out    := $(OUTPUT)arch/loongarch/include/generated/asm
++header := $(out)/syscalls.c
++incpath := $(srctree)/tools
++sysdef := $(srctree)/tools/arch/loongarch/include/uapi/asm/unistd.h
++sysprf := $(srctree)/tools/perf/arch/loongarch/entry/syscalls/
++systbl := $(sysprf)/mksyscalltbl
++
++# Create output directory if not already present
++_dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
++
++$(header): $(sysdef) $(systbl)
++	$(Q)$(SHELL) '$(systbl)' '$(CC)' '$(HOSTCC)' $(incpath) $(sysdef) > $@
++
++clean::
++	$(call QUIET_CLEAN, loongarch) $(RM) $(header)
++
++archheaders: $(header)
+diff --git a/tools/perf/arch/loongarch/annotate/instructions.c b/tools/perf/arch/loongarch/annotate/instructions.c
+new file mode 100644
+index 000000000000..ab21bf122135
+--- /dev/null
++++ b/tools/perf/arch/loongarch/annotate/instructions.c
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Perf annotate functions.
++ *
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++static
++struct ins_ops *loongarch__associate_ins_ops(struct arch *arch, const char *name)
++{
++	struct ins_ops *ops = NULL;
++
++	if (!strncmp(name, "beqz", 4) ||
++	    !strncmp(name, "bnez", 4) ||
++	    !strncmp(name, "beq", 3) ||
++	    !strncmp(name, "bne", 3) ||
++	    !strncmp(name, "blt", 3) ||
++	    !strncmp(name, "bge", 3) ||
++	    !strncmp(name, "bltu", 4) ||
++	    !strncmp(name, "bgeu", 4) ||
++	    !strncmp(name, "bl", 2))
++		ops = &call_ops;
++	else if (!strncmp(name, "jirl", 4))
++		ops = &ret_ops;
++	else if (name[0] == 'b')
++		ops = &jump_ops;
++	else
++		return NULL;
++
++	arch__associate_ins_ops(arch, name, ops);
++
++	return ops;
++}
++
++static
++int loongarch__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
++{
++	if (!arch->initialized) {
++		arch->associate_instruction_ops = loongarch__associate_ins_ops;
++		arch->initialized = true;
++		arch->objdump.comment_char = '#';
++	}
++
++	return 0;
++}
+diff --git a/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl b/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
+new file mode 100755
+index 000000000000..c52156f7204d
+--- /dev/null
++++ b/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
+@@ -0,0 +1,61 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++#
++# Generate system call table for perf. Derived from
++# powerpc script.
++#
++# Author(s):  Ming Wang <wangming01@loongson.cn>
++# Author(s):  Huacai Chen <chenhuacai@loongson.cn>
++# Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++
++gcc=$1
++hostcc=$2
++incpath=$3
++input=$4
++
++if ! test -r $input; then
++	echo "Could not read input file" >&2
++	exit 1
++fi
++
++create_table_from_c()
++{
++	local sc nr last_sc
++
++	create_table_exe=`mktemp ${TMPDIR:-/tmp}/create-table-XXXXXX`
++
++	{
++
++	cat <<-_EoHEADER
++		#include <stdio.h>
++		#include "$input"
++		int main(int argc, char *argv[])
++		{
++	_EoHEADER
++
++	while read sc nr; do
++		printf "%s\n" "	printf(\"\\t[%d] = \\\"$sc\\\",\\n\", $nr);"
++		last_sc=$nr
++	done
++
++	printf "%s\n" "	printf(\"#define SYSCALLTBL_LOONGARCH_MAX_ID %d\\n\", $last_sc);"
++	printf "}\n"
++
++	} | $hostcc -I $incpath/include/uapi -o $create_table_exe -x c -
++
++	$create_table_exe
++
++	rm -f $create_table_exe
++}
++
++create_table()
++{
++	echo "static const char *syscalltbl_loongarch[] = {"
++	create_table_from_c
++	echo "};"
++}
++
++$gcc -E -dM -x c  -I $incpath/include/uapi $input	       \
++	|sed -ne 's/^#define __NR_//p' \
++	|sort -t' ' -k2 -n \
++	|create_table
+diff --git a/tools/perf/arch/loongarch/include/dwarf-regs-table.h b/tools/perf/arch/loongarch/include/dwarf-regs-table.h
+new file mode 100644
+index 000000000000..bb3944f5764a
+--- /dev/null
++++ b/tools/perf/arch/loongarch/include/dwarf-regs-table.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * dwarf-regs-table.h : Mapping of DWARF debug register numbers into
++ * register names.
++ *
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#ifdef DEFINE_DWARF_REGSTR_TABLE
++static const char * const loongarch_regstr_tbl[] = {
++	"%r0", "%r1", "%r2", "%r3", "%r4", "%r5", "%r6", "%r7",
++	"%r8", "%r9", "%r10", "%r11", "%r12", "%r13", "%r14", "%r15",
++	"%r16", "%r17", "%r18", "%r19", "%r20", "%r21", "%r22", "%r23",
++	"%r24", "%r25", "%r26", "%r27", "%r28", "%r29", "%r30", "%r31",
++};
++#endif
+diff --git a/tools/perf/arch/loongarch/include/perf_regs.h b/tools/perf/arch/loongarch/include/perf_regs.h
+new file mode 100644
+index 000000000000..7833c7dbd38d
+--- /dev/null
++++ b/tools/perf/arch/loongarch/include/perf_regs.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef ARCH_PERF_REGS_H
++#define ARCH_PERF_REGS_H
++
++#include <stdlib.h>
++#include <linux/types.h>
++#include <asm/perf_regs.h>
++
++#define PERF_REGS_MAX PERF_REG_LOONGARCH_MAX
++#define PERF_REG_IP PERF_REG_LOONGARCH_PC
++#define PERF_REG_SP PERF_REG_LOONGARCH_R3
++
++#define PERF_REGS_MASK ((1ULL << PERF_REG_LOONGARCH_MAX) - 1)
++
++#endif /* ARCH_PERF_REGS_H */
+diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
+new file mode 100644
+index 000000000000..d776125a2d06
+--- /dev/null
++++ b/tools/perf/arch/loongarch/util/Build
+@@ -0,0 +1,5 @@
++perf-y += perf_regs.o
++
++perf-$(CONFIG_DWARF)     += dwarf-regs.o
++perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
++perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/loongarch/util/dwarf-regs.c b/tools/perf/arch/loongarch/util/dwarf-regs.c
+new file mode 100644
+index 000000000000..0f6ebc387463
+--- /dev/null
++++ b/tools/perf/arch/loongarch/util/dwarf-regs.c
+@@ -0,0 +1,44 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * dwarf-regs.c : Mapping of DWARF debug register numbers into register names.
++ *
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#include <stdio.h>
++#include <errno.h> /* for EINVAL */
++#include <string.h> /* for strcmp */
++#include <dwarf-regs.h>
++
++struct pt_regs_dwarfnum {
++	const char *name;
++	unsigned int dwarfnum;
++};
++
++static struct pt_regs_dwarfnum loongarch_gpr_table[] = {
++	{"%r0", 0}, {"%r1", 1}, {"%r2", 2}, {"%r3", 3},
++	{"%r4", 4}, {"%r5", 5}, {"%r6", 6}, {"%r7", 7},
++	{"%r8", 8}, {"%r9", 9}, {"%r10", 10}, {"%r11", 11},
++	{"%r12", 12}, {"%r13", 13}, {"%r14", 14}, {"%r15", 15},
++	{"%r16", 16}, {"%r17", 17}, {"%r18", 18}, {"%r19", 19},
++	{"%r20", 20}, {"%r21", 21}, {"%r22", 22}, {"%r23", 23},
++	{"%r24", 24}, {"%r25", 25}, {"%r26", 26}, {"%r27", 27},
++	{"%r28", 28}, {"%r29", 29}, {"%r30", 30}, {"%r31", 31},
++	{NULL, 0}
++};
++
++const char *get_arch_regstr(unsigned int n)
++{
++	n %= 32;
++	return loongarch_gpr_table[n].name;
++}
++
++int regs_query_register_offset(const char *name)
++{
++	const struct pt_regs_dwarfnum *roff;
++
++	for (roff = loongarch_gpr_table; roff->name != NULL; roff++)
++		if (!strcmp(roff->name, name))
++			return roff->dwarfnum;
++	return -EINVAL;
++}
+diff --git a/tools/perf/arch/loongarch/util/perf_regs.c b/tools/perf/arch/loongarch/util/perf_regs.c
+new file mode 100644
+index 000000000000..2833e101a7c6
+--- /dev/null
++++ b/tools/perf/arch/loongarch/util/perf_regs.c
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "../../../util/perf_regs.h"
++
++const struct sample_reg sample_reg_masks[] = {
++	SMPL_REG_END
++};
+diff --git a/tools/perf/arch/loongarch/util/unwind-libdw.c b/tools/perf/arch/loongarch/util/unwind-libdw.c
+new file mode 100644
+index 000000000000..a9415385230a
+--- /dev/null
++++ b/tools/perf/arch/loongarch/util/unwind-libdw.c
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (C) 2020-2023 Loongson Technology Corporation Limited */
++
++#include <elfutils/libdwfl.h>
++#include "../../util/unwind-libdw.h"
++#include "../../util/perf_regs.h"
++#include "../../util/sample.h"
++
++bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
++{
++	struct unwind_info *ui = arg;
++	struct regs_dump *user_regs = &ui->sample->user_regs;
++	Dwarf_Word dwarf_regs[PERF_REG_LOONGARCH_MAX];
++
++#define REG(r) ({							\
++	Dwarf_Word val = 0;						\
++	perf_reg_value(&val, user_regs, PERF_REG_LOONGARCH_##r);	\
++	val;								\
++})
++
++	dwarf_regs[0]  = 0;
++	dwarf_regs[1]  = REG(R1);
++	dwarf_regs[2]  = REG(R2);
++	dwarf_regs[3]  = REG(R3);
++	dwarf_regs[4]  = REG(R4);
++	dwarf_regs[5]  = REG(R5);
++	dwarf_regs[6]  = REG(R6);
++	dwarf_regs[7]  = REG(R7);
++	dwarf_regs[8]  = REG(R8);
++	dwarf_regs[9]  = REG(R9);
++	dwarf_regs[10] = REG(R10);
++	dwarf_regs[11] = REG(R11);
++	dwarf_regs[12] = REG(R12);
++	dwarf_regs[13] = REG(R13);
++	dwarf_regs[14] = REG(R14);
++	dwarf_regs[15] = REG(R15);
++	dwarf_regs[16] = REG(R16);
++	dwarf_regs[17] = REG(R17);
++	dwarf_regs[18] = REG(R18);
++	dwarf_regs[19] = REG(R19);
++	dwarf_regs[20] = REG(R20);
++	dwarf_regs[21] = REG(R21);
++	dwarf_regs[22] = REG(R22);
++	dwarf_regs[23] = REG(R23);
++	dwarf_regs[24] = REG(R24);
++	dwarf_regs[25] = REG(R25);
++	dwarf_regs[26] = REG(R26);
++	dwarf_regs[27] = REG(R27);
++	dwarf_regs[28] = REG(R28);
++	dwarf_regs[29] = REG(R29);
++	dwarf_regs[30] = REG(R30);
++	dwarf_regs[31] = REG(R31);
++	dwfl_thread_state_register_pc(thread, REG(PC));
++
++	return dwfl_thread_state_registers(thread, 0, PERF_REG_LOONGARCH_MAX, dwarf_regs);
++}
+diff --git a/tools/perf/arch/loongarch/util/unwind-libunwind.c b/tools/perf/arch/loongarch/util/unwind-libunwind.c
+new file mode 100644
+index 000000000000..f693167b86ef
+--- /dev/null
++++ b/tools/perf/arch/loongarch/util/unwind-libunwind.c
+@@ -0,0 +1,82 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <errno.h>
++#include <libunwind.h>
++#include "perf_regs.h"
++#include "../../util/unwind.h"
++#include "util/debug.h"
++
++int libunwind__arch_reg_id(int regnum)
++{
++	switch (regnum) {
++	case UNW_LOONGARCH64_R1:
++		return PERF_REG_LOONGARCH_R1;
++	case UNW_LOONGARCH64_R2:
++		return PERF_REG_LOONGARCH_R2;
++	case UNW_LOONGARCH64_R3:
++		return PERF_REG_LOONGARCH_R3;
++	case UNW_LOONGARCH64_R4:
++		return PERF_REG_LOONGARCH_R4;
++	case UNW_LOONGARCH64_R5:
++		return PERF_REG_LOONGARCH_R5;
++	case UNW_LOONGARCH64_R6:
++		return PERF_REG_LOONGARCH_R6;
++	case UNW_LOONGARCH64_R7:
++		return PERF_REG_LOONGARCH_R7;
++	case UNW_LOONGARCH64_R8:
++		return PERF_REG_LOONGARCH_R8;
++	case UNW_LOONGARCH64_R9:
++		return PERF_REG_LOONGARCH_R9;
++	case UNW_LOONGARCH64_R10:
++		return PERF_REG_LOONGARCH_R10;
++	case UNW_LOONGARCH64_R11:
++		return PERF_REG_LOONGARCH_R11;
++	case UNW_LOONGARCH64_R12:
++		return PERF_REG_LOONGARCH_R12;
++	case UNW_LOONGARCH64_R13:
++		return PERF_REG_LOONGARCH_R13;
++	case UNW_LOONGARCH64_R14:
++		return PERF_REG_LOONGARCH_R14;
++	case UNW_LOONGARCH64_R15:
++		return PERF_REG_LOONGARCH_R15;
++	case UNW_LOONGARCH64_R16:
++		return PERF_REG_LOONGARCH_R16;
++	case UNW_LOONGARCH64_R17:
++		return PERF_REG_LOONGARCH_R17;
++	case UNW_LOONGARCH64_R18:
++		return PERF_REG_LOONGARCH_R18;
++	case UNW_LOONGARCH64_R19:
++		return PERF_REG_LOONGARCH_R19;
++	case UNW_LOONGARCH64_R20:
++		return PERF_REG_LOONGARCH_R20;
++	case UNW_LOONGARCH64_R21:
++		return PERF_REG_LOONGARCH_R21;
++	case UNW_LOONGARCH64_R22:
++		return PERF_REG_LOONGARCH_R22;
++	case UNW_LOONGARCH64_R23:
++		return PERF_REG_LOONGARCH_R23;
++	case UNW_LOONGARCH64_R24:
++		return PERF_REG_LOONGARCH_R24;
++	case UNW_LOONGARCH64_R25:
++		return PERF_REG_LOONGARCH_R25;
++	case UNW_LOONGARCH64_R26:
++		return PERF_REG_LOONGARCH_R26;
++	case UNW_LOONGARCH64_R27:
++		return PERF_REG_LOONGARCH_R27;
++	case UNW_LOONGARCH64_R28:
++		return PERF_REG_LOONGARCH_R28;
++	case UNW_LOONGARCH64_R29:
++		return PERF_REG_LOONGARCH_R29;
++	case UNW_LOONGARCH64_R30:
++		return PERF_REG_LOONGARCH_R30;
++	case UNW_LOONGARCH64_R31:
++		return PERF_REG_LOONGARCH_R31;
++	case UNW_LOONGARCH64_PC:
++		return PERF_REG_LOONGARCH_PC;
++	default:
++		pr_err("unwind: invalid reg id %d\n", regnum);
++		return -EINVAL;
++	}
++
++	return -EINVAL;
++}
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index eacca9a874e2..9d6232f681ce 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -40,6 +40,7 @@ arch/x86/lib/x86-opcode-map.txt
+ arch/x86/tools/gen-insn-attr-x86.awk
+ arch/arm/include/uapi/asm/perf_regs.h
+ arch/arm64/include/uapi/asm/perf_regs.h
++arch/loongarch/include/uapi/asm/perf_regs.h
+ arch/mips/include/uapi/asm/perf_regs.h
+ arch/powerpc/include/uapi/asm/perf_regs.h
+ arch/s390/include/uapi/asm/perf_regs.h
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index db475e44f42f..0cc7710f32da 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -149,6 +149,7 @@ static int arch__associate_ins_ops(struct arch* arch, const char *name, struct i
+ #include "arch/arm/annotate/instructions.c"
+ #include "arch/arm64/annotate/instructions.c"
+ #include "arch/csky/annotate/instructions.c"
++#include "arch/loongarch/annotate/instructions.c"
+ #include "arch/mips/annotate/instructions.c"
+ #include "arch/x86/annotate/instructions.c"
+ #include "arch/powerpc/annotate/instructions.c"
+@@ -211,6 +212,13 @@ static struct arch architectures[] = {
+ 			.comment_char = '#',
+ 		},
+ 	},
++	{
++		.name = "loongarch",
++		.init = loongarch__annotate_init,
++		.objdump = {
++			.comment_char = '#',
++		},
++	},
+ };
+ 
+ static void ins__delete(struct ins_operands *ops)
+diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
+index 3fa4486742cd..69cfaa5953bf 100644
+--- a/tools/perf/util/dwarf-regs.c
++++ b/tools/perf/util/dwarf-regs.c
+@@ -14,6 +14,10 @@
+ #define EM_AARCH64	183  /* ARM 64 bit */
+ #endif
+ 
++#ifndef EM_LOONGARCH
++#define EM_LOONGARCH	258 /* LoongArch */
++#endif
++
+ /* Define const char * {arch}_register_tbl[] */
+ #define DEFINE_DWARF_REGSTR_TABLE
+ #include "../arch/x86/include/dwarf-regs-table.h"
+@@ -25,6 +29,7 @@
+ #include "../arch/sparc/include/dwarf-regs-table.h"
+ #include "../arch/xtensa/include/dwarf-regs-table.h"
+ #include "../arch/mips/include/dwarf-regs-table.h"
++#include "../arch/loongarch/include/dwarf-regs-table.h"
+ 
+ #define __get_dwarf_regstr(tbl, n) (((n) < ARRAY_SIZE(tbl)) ? (tbl)[(n)] : NULL)
+ 
+@@ -56,6 +61,8 @@ const char *get_dwarf_regstr(unsigned int n, unsigned int machine)
+ 		return __get_dwarf_regstr(xtensa_regstr_tbl, n);
+ 	case EM_MIPS:
+ 		return __get_dwarf_regstr(mips_regstr_tbl, n);
++	case EM_LOONGARCH:
++		return __get_dwarf_regstr(loongarch_regstr_tbl, n);
+ 	default:
+ 		pr_err("ELF MACHINE %x is not supported.\n", machine);
+ 	}
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 5b8cf6a421a4..0d5d40cb997b 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -435,6 +435,8 @@ static const char *normalize_arch(char *arch)
+ 		return "mips";
+ 	if (!strncmp(arch, "sh", 2) && isdigit(arch[2]))
+ 		return "sh";
++	if (!strncmp(arch, "loongarch", 9))
++		return "loongarch";
+ 
+ 	return arch;
+ }
+diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
+index 6af062d1c452..5f18d20ea903 100644
+--- a/tools/perf/util/genelf.h
++++ b/tools/perf/util/genelf.h
+@@ -43,6 +43,9 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
+ #elif defined(__riscv) && __riscv_xlen == 64
+ #define GEN_ELF_ARCH	EM_RISCV
+ #define GEN_ELF_CLASS	ELFCLASS64
++#elif defined(__loongarch__)
++#define GEN_ELF_ARCH	EM_LOONGARCH
++#define GEN_ELF_CLASS	ELFCLASS64
+ #else
+ #error "unsupported architecture"
+ #endif
+diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+index 57a567ee2cea..9bdbaa37f813 100644
+--- a/tools/perf/util/perf_regs.c
++++ b/tools/perf/util/perf_regs.c
+@@ -28,6 +28,7 @@ uint64_t __weak arch__user_reg_mask(void)
+ 
+ #include "../../arch/arm/include/uapi/asm/perf_regs.h"
+ #include "../../arch/csky/include/uapi/asm/perf_regs.h"
++#include "../../arch/loongarch/include/uapi/asm/perf_regs.h"
+ #include "../../arch/mips/include/uapi/asm/perf_regs.h"
+ #include "../../arch/powerpc/include/uapi/asm/perf_regs.h"
+ #include "../../arch/riscv/include/uapi/asm/perf_regs.h"
+@@ -236,6 +237,79 @@ static const char *__perf_reg_name_csky(int id)
+ 	return NULL;
+ }
+ 
++static inline const char *__perf_reg_name_loongarch(int id)
++{
++	switch (id) {
++	case PERF_REG_LOONGARCH_PC:
++		return "PC";
++	case PERF_REG_LOONGARCH_R1:
++		return "%r1";
++	case PERF_REG_LOONGARCH_R2:
++		return "%r2";
++	case PERF_REG_LOONGARCH_R3:
++		return "%r3";
++	case PERF_REG_LOONGARCH_R4:
++		return "%r4";
++	case PERF_REG_LOONGARCH_R5:
++		return "%r5";
++	case PERF_REG_LOONGARCH_R6:
++		return "%r6";
++	case PERF_REG_LOONGARCH_R7:
++		return "%r7";
++	case PERF_REG_LOONGARCH_R8:
++		return "%r8";
++	case PERF_REG_LOONGARCH_R9:
++		return "%r9";
++	case PERF_REG_LOONGARCH_R10:
++		return "%r10";
++	case PERF_REG_LOONGARCH_R11:
++		return "%r11";
++	case PERF_REG_LOONGARCH_R12:
++		return "%r12";
++	case PERF_REG_LOONGARCH_R13:
++		return "%r13";
++	case PERF_REG_LOONGARCH_R14:
++		return "%r14";
++	case PERF_REG_LOONGARCH_R15:
++		return "%r15";
++	case PERF_REG_LOONGARCH_R16:
++		return "%r16";
++	case PERF_REG_LOONGARCH_R17:
++		return "%r17";
++	case PERF_REG_LOONGARCH_R18:
++		return "%r18";
++	case PERF_REG_LOONGARCH_R19:
++		return "%r19";
++	case PERF_REG_LOONGARCH_R20:
++		return "%r20";
++	case PERF_REG_LOONGARCH_R21:
++		return "%r21";
++	case PERF_REG_LOONGARCH_R22:
++		return "%r22";
++	case PERF_REG_LOONGARCH_R23:
++		return "%r23";
++	case PERF_REG_LOONGARCH_R24:
++		return "%r24";
++	case PERF_REG_LOONGARCH_R25:
++		return "%r25";
++	case PERF_REG_LOONGARCH_R26:
++		return "%r26";
++	case PERF_REG_LOONGARCH_R27:
++		return "%r27";
++	case PERF_REG_LOONGARCH_R28:
++		return "%r28";
++	case PERF_REG_LOONGARCH_R29:
++		return "%r29";
++	case PERF_REG_LOONGARCH_R30:
++		return "%r30";
++	case PERF_REG_LOONGARCH_R31:
++		return "%r31";
++	default:
++		break;
++	}
++	return NULL;
++}
++
+ static const char *__perf_reg_name_mips(int id)
+ {
+ 	switch (id) {
+@@ -670,6 +744,8 @@ const char *perf_reg_name(int id, const char *arch)
+ 
+ 	if (!strcmp(arch, "csky"))
+ 		reg_name = __perf_reg_name_csky(id);
++	else if (!strcmp(arch, "loongarch"))
++		reg_name = __perf_reg_name_loongarch(id);
+ 	else if (!strcmp(arch, "mips"))
+ 		reg_name = __perf_reg_name_mips(id);
+ 	else if (!strcmp(arch, "powerpc"))
+diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+index a2e906858891..313eccef6cb4 100644
+--- a/tools/perf/util/syscalltbl.c
++++ b/tools/perf/util/syscalltbl.c
+@@ -38,6 +38,10 @@ static const char **syscalltbl_native = syscalltbl_arm64;
+ #include <asm/syscalls_n64.c>
+ const int syscalltbl_native_max_id = SYSCALLTBL_MIPS_N64_MAX_ID;
+ static const char **syscalltbl_native = syscalltbl_mips_n64;
++#elif defined(__loongarch__)
++#include <asm/syscalls.c>
++const int syscalltbl_native_max_id = SYSCALLTBL_LOONGARCH_MAX_ID;
++static const char **syscalltbl_native = syscalltbl_loongarch;
+ #endif
+ 
+ struct syscall {
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.39.1
+
