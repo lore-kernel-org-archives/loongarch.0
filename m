@@ -1,177 +1,249 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A826910F6
-	for <loongarch@lists.linux.dev>; Tue, 18 Apr 2023 01:15:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E71C433A4
-	for <loongarch@lists.linux.dev>; Tue, 18 Apr 2023 01:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681780505;
-	bh=jsS1F46hAQbhHVpD+vXSY2C2u6Z+ww/kmcB8nSA4RKg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ManG2OfNtk/zGAtRVUTd1eGyebp0k9xtlGagHt9sOeG/HWiCDHWd28EPCXQb2dezj
-	 GldNZndaDjzYwt/1u5nPVrKt0qc1ZM7/76yzJYzWOcHfhq5kYwNt9webhWCzDT6Pjp
-	 4j4ZrIwaB4cCeaCmA7I/rPy4ObCLcDKbmFM+5CaVi8CjJm90Fi24gHVft5vb3ddy27
-	 igvJZfYVxw+HatzH7KVV8kK0dMf8yWhtHMxdY76uJqpv67HR63uYvfWU8q0TirYFbw
-	 LyCjV05r+NZmNFlcIlMJathLXomrf8S6lhklYMsy02NwZJIryFntYba8okwDI3hshh
-	 +90IzBVz4R4kA==
-Received: by mail-ej1-f50.google.com with SMTP id kt6so30874245ejb.0
-        for <loongarch@lists.linux.dev>; Mon, 17 Apr 2023 18:15:05 -0700 (PDT)
-X-Gm-Message-State: AAQBX9eAuY6qclhQTXIIXiMFA2Vn3qE/8ypVt1w7gehgKo6ZaiCzEtBb
-	VBbi4DZd1LCjyy0eiZF46lZXGE0Bfc8flPM78Zk=
-X-Google-Smtp-Source: AKy350Yv7c0ey003enetxa4tjEVr2HZE1ag9Xgcg8Xk15eWDUpN2lh4W6w3Ix+T1adES7c0pru0HDx6KP6MW1F8YPdk=
-X-Received: by 2002:a17:906:5e12:b0:92d:878e:8566 with SMTP id
- n18-20020a1709065e1200b0092d878e8566mr4631793eju.10.1681780503472; Mon, 17
- Apr 2023 18:15:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A271360;
+	Tue, 18 Apr 2023 01:23:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681780995; x=1713316995;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xxj4orMdwSEXYJlb7suHd8py6WoU3VU9TrspjC7QyJg=;
+  b=B2WATH725jhPwhvXWwyjKNKHdv7XlVQum4L7P01ob/RZ1VI0PvNXlB7W
+   7zWwrG+BdIRow6qDekG3HNRz1TYNeUma5oYJGjb8ZWl6UeeEct5KK0hT+
+   nmDpzc1vOG2YPxBBNMmcpT/4dQ/Um3eDRdujtFtj+oeslBRZWmlDsGP7t
+   2ov+HafaXH4fE2uWI411gnIpyhxjUaPbdUzrKLi8hkKSXUUuRDNHByHIe
+   ZWdlnToCvzQMO79RmSUKog9xfd9CSVE+pcyeN4TxJTi2Nf7NOwPY7ZyVd
+   +9syg30SRKFwbDnz2lvo/DyaHj0RqcY2E9BLQfpSU5B/3j0dubfLIuVfM
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="410264156"
+X-IronPort-AV: E=Sophos;i="5.99,205,1677571200"; 
+   d="scan'208";a="410264156"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 18:23:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="668298836"
+X-IronPort-AV: E=Sophos;i="5.99,205,1677571200"; 
+   d="scan'208";a="668298836"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 17 Apr 2023 18:23:10 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1poa3p-000co7-26;
+	Tue, 18 Apr 2023 01:23:09 +0000
+Date: Tue, 18 Apr 2023 09:22:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Subject: Re: [PATCH 04/33] mm: add utility functions for ptdesc
+Message-ID: <202304180913.p1BuXrBb-lkp@intel.com>
+References: <20230417205048.15870-5-vishal.moola@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230410111823.2538831-1-chenhuacai@loongson.cn>
- <0a278ab5-751a-9433-3d1f-19a5a6b99d39@loongson.cn> <CAAhV-H5sxLDS7+MOaC_Y+gd-=Qrog7gzidKDkYa=DWC2Ci_5_Q@mail.gmail.com>
- <d50d7779-3bff-1a83-2641-36abdb077ac1@loongson.cn> <b1cdd754-fa38-4b2e-0a93-b13d9cfd7a8a@loongson.cn>
-In-Reply-To: <b1cdd754-fa38-4b2e-0a93-b13d9cfd7a8a@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 18 Apr 2023 09:14:51 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5EMaobTNrCX5FthD6zPLwZB6c46M0Y=kTqEUetRpwo3w@mail.gmail.com>
-Message-ID: <CAAhV-H5EMaobTNrCX5FthD6zPLwZB6c46M0Y=kTqEUetRpwo3w@mail.gmail.com>
-Subject: Re: [PATCH V2] tools/perf: Add basic support for LoongArch
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, loongarch@lists.linux.dev, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Xuerui Wang <kernel@xen0n.name>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn, 
-	Ming Wang <wangming01@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230417205048.15870-5-vishal.moola@gmail.com>
 
-On Mon, Apr 17, 2023 at 5:22=E2=80=AFPM Youling Tang <tangyouling@loongson.=
-cn> wrote:
->
-> /* snip */
->
-> >>>> --- /dev/null
-> >>>> +++ b/tools/perf/arch/loongarch/util/dwarf-regs.c
-> >>>> @@ -0,0 +1,44 @@
-> >>>> +// SPDX-License-Identifier: GPL-2.0
-> >>>> +/*
-> >>>> + * dwarf-regs.c : Mapping of DWARF debug register numbers into
-> >>>> register names.
-> >>>> + *
-> >>>> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-> >>>> + */
-> >>>> +
-> >>>> +#include <stdio.h>
-> >>>> +#include <errno.h> /* for EINVAL */
-> >>>> +#include <string.h> /* for strcmp */
-> >>>> +#include <dwarf-regs.h>
-> >>>> +
-> >>>> +struct pt_regs_dwarfnum {
-> >>>> +     const char *name;
-> >>>> +     unsigned int dwarfnum;
-> >>>> +};
-> >>>> +
-> >>>> +static struct pt_regs_dwarfnum loongarch_gpr_table[] =3D {
-> >>>> +     {"$0", 0}, {"$1", 1}, {"$2", 2}, {"$3", 3},
-> >>>> +     {"$4", 4}, {"$5", 5}, {"$6", 6}, {"$7", 7},
-> >>>> +     {"$8", 8}, {"$9", 9}, {"$10", 10}, {"$11", 11},
-> >>>> +     {"$12", 12}, {"$13", 13}, {"$14", 14}, {"$15", 15},
-> >>>> +     {"$16", 16}, {"$17", 17}, {"$18", 18}, {"$19", 19},
-> >>>> +     {"$20", 20}, {"$21", 21}, {"$22", 22}, {"$23", 23},
-> >>>> +     {"$24", 24}, {"$25", 25}, {"$26", 26}, {"$27", 27},
-> >>>> +     {"$28", 28}, {"$29", 29}, {"$30", 30}, {"$31", 31},
-> >>>> +     {NULL, 0}
-> >>>> +};
-> >>> Do you need to change it to the following:
-> >>>
-> >>> #define GPR_DWARFNUM_NAME(num) {.name =3D __stringify($r##num), .dwar=
-fnum
-> >>> =3D num}
-> >>> #define REG_DWARFNUM_END {.name =3D NULL, .dwarfnum =3D 0}
-> >>>
-> >>> static const struct pt_regs_dwarfnum regdwarfnum_table[] =3D {
-> >>>          GPR_DWARFNUM_NAME(0),
-> >>>          GPR_DWARFNUM_NAME(1),
-> >>>          GPR_DWARFNUM_NAME(2),
-> >>>          GPR_DWARFNUM_NAME(3),
-> >>>          GPR_DWARFNUM_NAME(4),
-> >>>          GPR_DWARFNUM_NAME(5),
-> >>>          GPR_DWARFNUM_NAME(6),
-> >>>          GPR_DWARFNUM_NAME(7),
-> >>>          GPR_DWARFNUM_NAME(8),
-> >>>          GPR_DWARFNUM_NAME(9),
-> >>>          GPR_DWARFNUM_NAME(10),
-> >>>          GPR_DWARFNUM_NAME(11),
-> >>>          GPR_DWARFNUM_NAME(12),
-> >>>          GPR_DWARFNUM_NAME(13),
-> >>>          GPR_DWARFNUM_NAME(14),
-> >>>          GPR_DWARFNUM_NAME(15),
-> >>>          GPR_DWARFNUM_NAME(16),
-> >>>          GPR_DWARFNUM_NAME(17),
-> >>>          GPR_DWARFNUM_NAME(18),
-> >>>          GPR_DWARFNUM_NAME(19),
-> >>>          GPR_DWARFNUM_NAME(20),
-> >>>          GPR_DWARFNUM_NAME(21),
-> >>>          GPR_DWARFNUM_NAME(22),
-> >>>          GPR_DWARFNUM_NAME(23),
-> >>>          GPR_DWARFNUM_NAME(24),
-> >>>          GPR_DWARFNUM_NAME(25),
-> >>>          GPR_DWARFNUM_NAME(26),
-> >>>          GPR_DWARFNUM_NAME(27),
-> >>>          GPR_DWARFNUM_NAME(28),
-> >>>          GPR_DWARFNUM_NAME(29),
-> >>>          REG_DWARFNUM_NAME(30),
-> >>>          REG_DWARFNUM_NAME(31),
-> >>>          REG_DWARFNUM_END,
-> >>> };
-> >>>
-> >>> At the same time, "$rx" is used in __perf_reg_name_loongarch and
-> >>> loongarch_regstr_tbl, which is consistent with assembly.
-> >> OK, I will use the "$rx" format, but I don't want to use macros.
-> > Use the "rx" format to make regs_query_register_offset consistent with
-> > arch/loongarch/kernel/ptrace.c (that is, the names in
-> > loongarch_gpr_table and regoffset_table are consistent)
->
-> If we want to be consistent with the usage of `trace probe`, we should
-> use "%rx".
-OK, make sense.
+Hi Vishal,
 
-Huacai
->
-> eg:
->     # echo "p:myuprobe /tmp/test:0x4194 %r4 %r5" > uprobe_events
->
-> parse_probe_arg()
->           case '%': regs_query_register_offset()
->
-> Youling.
-> >
-> > Youling.
-> >>
-> >> Huacai
-> >>>
-> >>>> +
-> >>>> +const char *get_arch_regstr(unsigned int n)
-> >>>> +{
-> >>>> +     n %=3D 32;
-> >>>> +     return loongarch_gpr_table[n].name;
-> >>>> +}
-> >>>> +
-> >>>> +int regs_query_register_offset(const char *name)
-> >>>> +{
-> >>>> +     const struct pt_regs_dwarfnum *roff;
-> >>>> +
-> >>>> +     for (roff =3D loongarch_gpr_table; roff->name !=3D NULL; roff+=
-+)
-> >>>> +             if (!strcmp(roff->name, name))
-> >>>> +                     return roff->dwarfnum;
-> >>>> +     return -EINVAL;
-> >>>> +}
-> >
->
->
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on akpm-mm/mm-everything]
+[also build test ERROR on s390/features powerpc/next powerpc/fixes geert-m68k/for-next geert-m68k/for-linus linus/master v6.3-rc7 next-20230417]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Vishal-Moola-Oracle/s390-Use-_pt_s390_gaddr-for-gmap-address-tracking/20230418-045832
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20230417205048.15870-5-vishal.moola%40gmail.com
+patch subject: [PATCH 04/33] mm: add utility functions for ptdesc
+config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20230418/202304180913.p1BuXrBb-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/1b6f8137ca50a543ad2937092836635ca58c78ce
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Vishal-Moola-Oracle/s390-Use-_pt_s390_gaddr-for-gmap-address-tracking/20230418-045832
+        git checkout 1b6f8137ca50a543ad2937092836635ca58c78ce
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sh olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sh prepare
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304180913.p1BuXrBb-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   In file included from arch/sh/kernel/asm-offsets.c:14:
+   include/linux/mm.h: In function 'virt_to_ptdesc':
+>> include/linux/mm.h:2723:16: error: implicit declaration of function 'page_ptdesc' [-Werror=implicit-function-declaration]
+    2723 |         return page_ptdesc(virt_to_head_page(x));
+         |                ^~~~~~~~~~~
+>> include/linux/mm.h:2723:16: warning: returning 'int' from a function with return type 'struct ptdesc *' makes pointer from integer without a cast [-Wint-conversion]
+    2723 |         return page_ptdesc(virt_to_head_page(x));
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   In file included from arch/sh/include/asm/thread_info.h:13,
+                    from include/linux/thread_info.h:60,
+                    from include/asm-generic/preempt.h:5,
+                    from ./arch/sh/include/generated/asm/preempt.h:1,
+                    from include/linux/preempt.h:78,
+                    from include/linux/spinlock.h:56,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:7,
+                    from include/linux/mm.h:7:
+   include/linux/mm.h: In function 'ptdesc_to_virt':
+>> include/linux/mm.h:2728:29: error: implicit declaration of function 'ptdesc_page'; did you mean 'pte_page'? [-Werror=implicit-function-declaration]
+    2728 |         return page_to_virt(ptdesc_page(pt));
+         |                             ^~~~~~~~~~~
+   arch/sh/include/asm/page.h:139:27: note: in definition of macro '___va'
+     139 | #define ___va(x)        ((x)+PAGE_OFFSET)
+         |                           ^
+   include/linux/mm.h:117:25: note: in expansion of macro '__va'
+     117 | #define page_to_virt(x) __va(PFN_PHYS(page_to_pfn(x)))
+         |                         ^~~~
+   include/linux/mm.h:117:30: note: in expansion of macro 'PFN_PHYS'
+     117 | #define page_to_virt(x) __va(PFN_PHYS(page_to_pfn(x)))
+         |                              ^~~~~~~~
+   include/asm-generic/memory_model.h:64:21: note: in expansion of macro '__page_to_pfn'
+      64 | #define page_to_pfn __page_to_pfn
+         |                     ^~~~~~~~~~~~~
+   include/linux/mm.h:2728:16: note: in expansion of macro 'page_to_virt'
+    2728 |         return page_to_virt(ptdesc_page(pt));
+         |                ^~~~~~~~~~~~
+>> include/asm-generic/memory_model.h:46:35: warning: initialization of 'const struct page *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+      46 | ({      const struct page *__pg = (pg);                         \
+         |                                   ^
+   arch/sh/include/asm/page.h:139:27: note: in definition of macro '___va'
+     139 | #define ___va(x)        ((x)+PAGE_OFFSET)
+         |                           ^
+   include/linux/mm.h:117:25: note: in expansion of macro '__va'
+     117 | #define page_to_virt(x) __va(PFN_PHYS(page_to_pfn(x)))
+         |                         ^~~~
+   include/linux/mm.h:117:30: note: in expansion of macro 'PFN_PHYS'
+     117 | #define page_to_virt(x) __va(PFN_PHYS(page_to_pfn(x)))
+         |                              ^~~~~~~~
+   include/asm-generic/memory_model.h:64:21: note: in expansion of macro '__page_to_pfn'
+      64 | #define page_to_pfn __page_to_pfn
+         |                     ^~~~~~~~~~~~~
+   include/linux/mm.h:117:39: note: in expansion of macro 'page_to_pfn'
+     117 | #define page_to_virt(x) __va(PFN_PHYS(page_to_pfn(x)))
+         |                                       ^~~~~~~~~~~
+   include/linux/mm.h:2728:16: note: in expansion of macro 'page_to_virt'
+    2728 |         return page_to_virt(ptdesc_page(pt));
+         |                ^~~~~~~~~~~~
+   include/linux/mm.h: In function 'ptdesc_address':
+>> include/linux/mm.h:2733:30: error: implicit declaration of function 'ptdesc_folio'; did you mean 'page_folio'? [-Werror=implicit-function-declaration]
+    2733 |         return folio_address(ptdesc_folio(pt));
+         |                              ^~~~~~~~~~~~
+         |                              page_folio
+>> include/linux/mm.h:2733:30: warning: passing argument 1 of 'folio_address' makes pointer from integer without a cast [-Wint-conversion]
+    2733 |         return folio_address(ptdesc_folio(pt));
+         |                              ^~~~~~~~~~~~~~~~
+         |                              |
+         |                              int
+   include/linux/mm.h:2151:55: note: expected 'const struct folio *' but argument is of type 'int'
+    2151 | static inline void *folio_address(const struct folio *folio)
+         |                                   ~~~~~~~~~~~~~~~~~~~~^~~~~
+   include/linux/mm.h: In function 'ptdesc_is_reserved':
+>> include/linux/mm.h:2738:36: warning: passing argument 1 of 'folio_test_reserved' makes pointer from integer without a cast [-Wint-conversion]
+    2738 |         return folio_test_reserved(ptdesc_folio(pt));
+         |                                    ^~~~~~~~~~~~~~~~
+         |                                    |
+         |                                    int
+   In file included from include/linux/mmzone.h:23:
+   include/linux/page-flags.h:375:62: note: expected 'struct folio *' but argument is of type 'int'
+     375 | static __always_inline bool folio_test_##lname(struct folio *folio)     \
+         |                                                ~~~~~~~~~~~~~~^~~~~
+   include/linux/page-flags.h:423:9: note: in expansion of macro 'TESTPAGEFLAG'
+     423 |         TESTPAGEFLAG(uname, lname, policy)                              \
+         |         ^~~~~~~~~~~~
+   include/linux/page-flags.h:494:1: note: in expansion of macro 'PAGEFLAG'
+     494 | PAGEFLAG(Reserved, reserved, PF_NO_COMPOUND)
+         | ^~~~~~~~
+   include/linux/mm.h: In function 'ptdesc_alloc':
+   include/linux/mm.h:2745:16: warning: returning 'int' from a function with return type 'struct ptdesc *' makes pointer from integer without a cast [-Wint-conversion]
+    2745 |         return page_ptdesc(page);
+         |                ^~~~~~~~~~~~~~~~~
+   include/linux/mm.h: In function 'ptdesc_free':
+>> include/linux/mm.h:2750:29: warning: initialization of 'struct page *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+    2750 |         struct page *page = ptdesc_page(pt);
+         |                             ^~~~~~~~~~~
+   include/linux/mm.h: In function 'free_reserved_ptdesc':
+>> include/linux/mm.h:2988:28: warning: passing argument 1 of 'free_reserved_page' makes pointer from integer without a cast [-Wint-conversion]
+    2988 |         free_reserved_page(ptdesc_page(pt));
+         |                            ^~~~~~~~~~~~~~~
+         |                            |
+         |                            int
+   include/linux/mm.h:2971:52: note: expected 'struct page *' but argument is of type 'int'
+    2971 | static inline void free_reserved_page(struct page *page)
+         |                                       ~~~~~~~~~~~~~^~~~
+   cc1: some warnings being treated as errors
+   make[2]: *** [scripts/Makefile.build:114: arch/sh/kernel/asm-offsets.s] Error 1
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:1286: prepare0] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:226: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
+
+vim +/page_ptdesc +2723 include/linux/mm.h
+
+  2720	
+  2721	static inline struct ptdesc *virt_to_ptdesc(const void *x)
+  2722	{
+> 2723		return page_ptdesc(virt_to_head_page(x));
+  2724	}
+  2725	
+  2726	static inline void *ptdesc_to_virt(struct ptdesc *pt)
+  2727	{
+> 2728		return page_to_virt(ptdesc_page(pt));
+  2729	}
+  2730	
+  2731	static inline void *ptdesc_address(struct ptdesc *pt)
+  2732	{
+> 2733		return folio_address(ptdesc_folio(pt));
+  2734	}
+  2735	
+  2736	static inline bool ptdesc_is_reserved(struct ptdesc *pt)
+  2737	{
+> 2738		return folio_test_reserved(ptdesc_folio(pt));
+  2739	}
+  2740	
+  2741	static inline struct ptdesc *ptdesc_alloc(gfp_t gfp, unsigned int order)
+  2742	{
+  2743		struct page *page = alloc_pages(gfp | __GFP_COMP, order);
+  2744	
+  2745		return page_ptdesc(page);
+  2746	}
+  2747	
+  2748	static inline void ptdesc_free(struct ptdesc *pt)
+  2749	{
+> 2750		struct page *page = ptdesc_page(pt);
+  2751	
+  2752		__free_pages(page, compound_order(page));
+  2753	}
+  2754	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
