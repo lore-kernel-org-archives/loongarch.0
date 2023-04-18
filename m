@@ -1,440 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06212EA0
-	for <loongarch@lists.linux.dev>; Tue, 18 Apr 2023 02:32:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F41B2C433D2;
-	Tue, 18 Apr 2023 02:32:39 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Min Zhou <zhoumin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: crypto: Add crc32 and crc32c hw acceleration
-Date: Tue, 18 Apr 2023 10:32:13 +0800
-Message-Id: <20230418023213.1995119-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04593185A
+	for <loongarch@lists.linux.dev>; Tue, 18 Apr 2023 07:45:01 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1CEA11F8D5;
+	Tue, 18 Apr 2023 07:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1681803900; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k4kCGiDu7eZCY2kHWyBi9arEU5jU+OwaWl9LlmgBgTo=;
+	b=01AbIdbC2ZN0fhxv/iYxLgj8ciDX6tD9uCd3cIhELGAw4YSRK9w6/GGAiuAaLtZg7KlYip
+	UPvsdBcpWNtNJ71zbqUvLKTD1lA83nSqPPrphOIt3mJsfodK1zfwzqX4BEKAaXkUnOToit
+	aPED/mfiOl6WMMIYqzVnNBr0VoJ5y+A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1681803900;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k4kCGiDu7eZCY2kHWyBi9arEU5jU+OwaWl9LlmgBgTo=;
+	b=Rmm87b7uMzS061Xyb6C7LuYQh7WlZOBtlpx0lMkwJOlh/1UTUlnJfZxcIJZTcTRQYKl8ZJ
+	E719xeledovycCBA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B324C139CC;
+	Tue, 18 Apr 2023 07:44:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id lXeyKntKPmTxagAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Tue, 18 Apr 2023 07:44:59 +0000
+Message-ID: <5fa98536-a4b0-7b71-7342-9ba05158062f@suse.de>
+Date: Tue, 18 Apr 2023 09:44:59 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3 00/19] arch: Consolidate <asm/fb.h>
+Content-Language: en-US
+To: Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel.vetter@ffwll.ch>,
+ Helge Deller <deller@gmx.de>, Javier Martinez Canillas <javierm@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-fbdev@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-sh@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
+ sparclinux@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+References: <20230417125651.25126-1-tzimmermann@suse.de>
+ <1641007d-7953-426a-a3de-ca9c90f6c5a9@app.fastmail.com>
+From: Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <1641007d-7953-426a-a3de-ca9c90f6c5a9@app.fastmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------rFRj0NtGM3Zijx0xyHfeKvB1"
 
-From: Min Zhou <zhoumin@loongson.cn>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------rFRj0NtGM3Zijx0xyHfeKvB1
+Content-Type: multipart/mixed; boundary="------------18o4xqtdrHnA7yRGq0Gjgi9D";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel.vetter@ffwll.ch>,
+ Helge Deller <deller@gmx.de>, Javier Martinez Canillas <javierm@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-fbdev@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-sh@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
+ sparclinux@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Message-ID: <5fa98536-a4b0-7b71-7342-9ba05158062f@suse.de>
+Subject: Re: [PATCH v3 00/19] arch: Consolidate <asm/fb.h>
+References: <20230417125651.25126-1-tzimmermann@suse.de>
+ <1641007d-7953-426a-a3de-ca9c90f6c5a9@app.fastmail.com>
+In-Reply-To: <1641007d-7953-426a-a3de-ca9c90f6c5a9@app.fastmail.com>
 
-With a blatant copy of some MIPS bits we introduce the crc32 and crc32c
-hw accelerated module to LoongArch.
+--------------18o4xqtdrHnA7yRGq0Gjgi9D
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-LoongArch has provided these instructions to calculate crc32 and crc32c:
-        * crc.w.b.w    crcc.w.b.w
-        * crc.w.h.w    crcc.w.h.w
-        * crc.w.w.w    crcc.w.w.w
-        * crc.w.d.w    crcc.w.d.w
+SGkNCg0KQW0gMTcuMDQuMjMgdW0gMTY6MTIgc2NocmllYiBBcm5kIEJlcmdtYW5uOg0KPiBP
+biBNb24sIEFwciAxNywgMjAyMywgYXQgMTQ6NTYsIFRob21hcyBaaW1tZXJtYW5uIHdyb3Rl
+Og0KPj4gVmFyaW91cyBhcmNoaXRlY3R1cmVzIHByb3ZpZGUgPGFzbS9mYi5oPiB3aXRoIGhl
+bHBlcnMgZm9yIGZiZGV2DQo+PiBmcmFtZWJ1ZmZlciBkZXZpY2VzLiBTaGFyZSB0aGUgY29u
+dGFpbmVkIGNvZGUgd2hlcmUgcG9zc2libGUuIFRoZXJlDQo+PiBpcyBhbHJlYWR5IDxhc20t
+Z2VuZXJpYy9mYi5oPiwgd2hpY2ggaW1wbGVtZW50cyBnZW5lcmljIChhcyBpbg0KPj4gJ2Vt
+cHR5JykgZnVuY3Rpb25zIG9mIHRoZSBmYmRldiBoZWxwZXJzLiBUaGUgaGVhZGVyIHdhcyBh
+ZGRlZCBpbg0KPj4gY29tbWl0IGFhZmU0ZGJlZDBiZiAoImFzbS1nZW5lcmljOiBhZGQgZ2Vu
+ZXJpYyB2ZXJzaW9ucyBvZiBjb21tb24NCj4+IGhlYWRlcnMiKSwgYnV0IG5ldmVyIHVzZWQu
+DQo+Pg0KPj4gRWFjaCBwZXItYXJjaGl0ZWN0dXJlIGhlYWRlciBmaWxlIGRlY2xhcmVzIGFu
+ZC9vciBpbXBsZW1lbnRzIGZiZGV2DQo+PiBoZWxwZXJzIGFuZCBkZWZpbmVzIGEgcHJlcHJv
+Y2Vzc29yIHRva2VuIGZvciBlYWNoLiBUaGUgZ2VuZXJpYw0KPj4gaGVhZGVyIHRoZW4gcHJv
+dmlkZXMgdGhlIHJlbWFpbmluZyBoZWxwZXJzLiBJdCB3b3JrcyBsaWtlIHRoZSBJL08NCj4+
+IGhlbHBlcnMgaW4gPGFzbS9pby5oPi4NCj4gDQo+IExvb2tzIGFsbCBnb29kIHRvIG1lLA0K
+PiANCj4gQWNrZWQtYnk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+DQoNClRoYW5r
+cyBhIGxvdC4gSSBrbm93IHRoYXQgSGVsZ2Ugd2FudHMgdG8gdGVzdCB0aGUgUEFSSVNDIGNo
+YW5nZXMsIHNvIA0KSSdsbCBrZWVwIHRoaXMgc2VyaWVzIHBlbmRpbmcgZm9yIGEgYml0IGxv
+bmdlci4gSSdkIGxpa2UgdG8gbWVyZ2UgdGhlIA0KcGF0Y2hlcyB0aHJvdWdoIHRoZSBEUk0g
+dHJlZSwgaWYgbm8gb25lIG9iamVjdHMuDQoNCkJlc3QgcmVnYXJkcw0KVGhvbWFzDQoNCj4g
+DQo+ICAgICAgIEFybmQNCg0KLS0gDQpUaG9tYXMgWmltbWVybWFubg0KR3JhcGhpY3MgRHJp
+dmVyIERldmVsb3Blcg0KU1VTRSBTb2Z0d2FyZSBTb2x1dGlvbnMgR2VybWFueSBHbWJIDQpN
+YXhmZWxkc3RyLiA1LCA5MDQwOSBOw7xybmJlcmcsIEdlcm1hbnkNCihIUkIgMzY4MDksIEFH
+IE7DvHJuYmVyZykNCkdlc2Now6RmdHNmw7xocmVyOiBJdm8gVG90ZXYNCg==
 
-So we can make use of these instructions to improve the performance of
-calculation for crc32(c) checksums.
+--------------18o4xqtdrHnA7yRGq0Gjgi9D--
 
-As can be seen from the following test results, crc32(c) instructions
-can improve the performance by 58%.
+--------------rFRj0NtGM3Zijx0xyHfeKvB1
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
-                  Software implemention    Hardware acceleration
-  Buffer size     time cost (seconds)      time cost (seconds)    Accel.
-   100 KB                0.000845                 0.000534        59.1%
-     1 MB                0.007758                 0.004836        59.4%
-    10 MB                0.076593                 0.047682        59.4%
-   100 MB                0.756734                 0.479126        58.5%
-  1000 MB                7.563841                 4.778266        58.5%
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Min Zhou <zhoumin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/Makefile                 |   2 +
- arch/loongarch/crypto/Kconfig           |  14 ++
- arch/loongarch/crypto/Makefile          |   6 +
- arch/loongarch/crypto/crc32-loongarch.c | 304 ++++++++++++++++++++++++
- crypto/Kconfig                          |   3 +
- 5 files changed, 329 insertions(+)
- create mode 100644 arch/loongarch/crypto/Kconfig
- create mode 100644 arch/loongarch/crypto/Makefile
- create mode 100644 arch/loongarch/crypto/crc32-loongarch.c
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmQ+SnsFAwAAAAAACgkQlh/E3EQov+Dd
+XQ//Zqe+Ke6gkghrBiUGQ20ACZc8VRAA3V1KtkJbElUAoQFaUum7w/yrlS81UEEJjoRMuX1FFcG+
+Rgbn5SQ/UepB6HwWPDfLlwvC4oUfNthoc8c95PMqnBG4qC6ln8pmzQf0Kh3KqcP7JSLUCZQ5hk0S
+UQ5o4XBTJvdwLDkcwaKIk8l4Up8BSKjx4CtpCLiplMu6raS6B2gHyKJ4Z5JRPPQBfR8XmfJKoBGA
+cJaPYTFMY4Nds0+lkFOgVFZeXpMuhIEt+jScoLwoDxb/2Ee+uaacWl7kCE2BQ8Hdhtm5Z18SDIUv
+oI7I2ASXRLCQbUMl+7R2paUr8KyYfV3f3FOq9KIfU0GiZP07CCLHEkojxcdp001KJV4Y8/u91nqe
+XPAjD+qEVK/Dqfe8J1nSZESRHsy3f30yr4kUhVBpZpeqdt205SA3Aa3z8Wa+bbk8vJ+7hqoc1pXp
+OAwdl1qf48I5AvxZiDdJ9d3lAJBhzEzStBvilwdb+hloJ1vlt/N7eG9d10qCSvEfHdMOma7ym+da
+0cHlXkncuXTzhVUj4UWbF/qWakRRElf7lGym4/Ns7gdxWb5/sHGmamxH8cT7lu16UXcGO6JyKi8J
+GT7X/bWqUKOYRFUujmWoafHadee1TGvLnPd3nI9GHLZ9WIH6fz8EopcK3bOx3WIBF3E/KBhrZYHH
+Nvk=
+=wq7p
+-----END PGP SIGNATURE-----
 
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index f71edf574101..a27e264bdaa5 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -115,6 +115,8 @@ endif
- libs-y += arch/loongarch/lib/
- libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
- 
-+drivers-y		+= arch/loongarch/crypto/
-+
- # suspend and hibernation support
- drivers-$(CONFIG_PM)	+= arch/loongarch/power/
- 
-diff --git a/arch/loongarch/crypto/Kconfig b/arch/loongarch/crypto/Kconfig
-new file mode 100644
-index 000000000000..200a6e8b43b1
---- /dev/null
-+++ b/arch/loongarch/crypto/Kconfig
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+menu "Accelerated Cryptographic Algorithms for CPU (loongarch)"
-+
-+config CRYPTO_CRC32_LOONGARCH
-+	tristate "CRC32c and CRC32"
-+	select CRC32
-+	select CRYPTO_HASH
-+	help
-+	  CRC32c and CRC32 CRC algorithms
-+
-+	  Architecture: LoongArch with CRC32 instructions
-+
-+endmenu
-diff --git a/arch/loongarch/crypto/Makefile b/arch/loongarch/crypto/Makefile
-new file mode 100644
-index 000000000000..d22613d27ce9
---- /dev/null
-+++ b/arch/loongarch/crypto/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for LoongArch crypto files..
-+#
-+
-+obj-$(CONFIG_CRYPTO_CRC32_LOONGARCH) += crc32-loongarch.o
-diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/crypto/crc32-loongarch.c
-new file mode 100644
-index 000000000000..1f2a2c3839bc
---- /dev/null
-+++ b/arch/loongarch/crypto/crc32-loongarch.c
-@@ -0,0 +1,304 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * crc32.c - CRC32 and CRC32C using LoongArch crc* instructions
-+ *
-+ * Module based on mips/crypto/crc32-mips.c
-+ *
-+ * Copyright (C) 2014 Linaro Ltd <yazen.ghannam@linaro.org>
-+ * Copyright (C) 2018 MIPS Tech, LLC
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/module.h>
-+#include <crypto/internal/hash.h>
-+
-+#include <asm/cpu-features.h>
-+#include <asm/unaligned.h>
-+
-+#define _CRC32(crc, value, size, type)			\
-+do {							\
-+	__asm__ __volatile__(				\
-+		#type ".w." #size ".w" " %0, %1, %0\n\t"\
-+		: "+r" (crc)				\
-+		: "r" (value)				\
-+		: "memory");				\
-+} while (0)
-+
-+#define CRC32(crc, value, size)		_CRC32(crc, value, size, crc)
-+#define CRC32C(crc, value, size)	_CRC32(crc, value, size, crcc)
-+
-+static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
-+{
-+	u32 crc = crc_;
-+
-+	while (len >= sizeof(u64)) {
-+		u64 value = get_unaligned_le64(p);
-+
-+		CRC32(crc, value, d);
-+		p += sizeof(u64);
-+		len -= sizeof(u64);
-+	}
-+
-+	if (len & sizeof(u32)) {
-+		u32 value = get_unaligned_le32(p);
-+
-+		CRC32(crc, value, w);
-+		p += sizeof(u32);
-+		len -= sizeof(u32);
-+	}
-+
-+	if (len & sizeof(u16)) {
-+		u16 value = get_unaligned_le16(p);
-+
-+		CRC32(crc, value, h);
-+		p += sizeof(u16);
-+	}
-+
-+	if (len & sizeof(u8)) {
-+		u8 value = *p++;
-+
-+		CRC32(crc, value, b);
-+	}
-+
-+	return crc;
-+}
-+
-+static u32 crc32c_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
-+{
-+	u32 crc = crc_;
-+
-+	while (len >= sizeof(u64)) {
-+		u64 value = get_unaligned_le64(p);
-+
-+		CRC32C(crc, value, d);
-+		p += sizeof(u64);
-+		len -= sizeof(u64);
-+	}
-+
-+	if (len & sizeof(u32)) {
-+		u32 value = get_unaligned_le32(p);
-+
-+		CRC32C(crc, value, w);
-+		p += sizeof(u32);
-+		len -= sizeof(u32);
-+	}
-+
-+	if (len & sizeof(u16)) {
-+		u16 value = get_unaligned_le16(p);
-+
-+		CRC32C(crc, value, h);
-+		p += sizeof(u16);
-+	}
-+
-+	if (len & sizeof(u8)) {
-+		u8 value = *p++;
-+
-+		CRC32C(crc, value, b);
-+	}
-+
-+	return crc;
-+}
-+
-+#define CHKSUM_BLOCK_SIZE	1
-+#define CHKSUM_DIGEST_SIZE	4
-+
-+struct chksum_ctx {
-+	u32 key;
-+};
-+
-+struct chksum_desc_ctx {
-+	u32 crc;
-+};
-+
-+static int chksum_init(struct shash_desc *desc)
-+{
-+	struct chksum_ctx *mctx = crypto_shash_ctx(desc->tfm);
-+	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
-+
-+	ctx->crc = mctx->key;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Setting the seed allows arbitrary accumulators and flexible XOR policy
-+ * If your algorithm starts with ~0, then XOR with ~0 before you set the seed.
-+ */
-+static int chksum_setkey(struct crypto_shash *tfm, const u8 *key, unsigned int keylen)
-+{
-+	struct chksum_ctx *mctx = crypto_shash_ctx(tfm);
-+
-+	if (keylen != sizeof(mctx->key))
-+		return -EINVAL;
-+
-+	mctx->key = get_unaligned_le32(key);
-+
-+	return 0;
-+}
-+
-+static int chksum_update(struct shash_desc *desc, const u8 *data, unsigned int length)
-+{
-+	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
-+
-+	ctx->crc = crc32_loongarch_hw(ctx->crc, data, length);
-+	return 0;
-+}
-+
-+static int chksumc_update(struct shash_desc *desc, const u8 *data, unsigned int length)
-+{
-+	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
-+
-+	ctx->crc = crc32c_loongarch_hw(ctx->crc, data, length);
-+	return 0;
-+}
-+
-+static int chksum_final(struct shash_desc *desc, u8 *out)
-+{
-+	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
-+
-+	put_unaligned_le32(ctx->crc, out);
-+	return 0;
-+}
-+
-+static int chksumc_final(struct shash_desc *desc, u8 *out)
-+{
-+	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
-+
-+	put_unaligned_le32(~ctx->crc, out);
-+	return 0;
-+}
-+
-+static int __chksum_finup(u32 crc, const u8 *data, unsigned int len, u8 *out)
-+{
-+	put_unaligned_le32(crc32_loongarch_hw(crc, data, len), out);
-+	return 0;
-+}
-+
-+static int __chksumc_finup(u32 crc, const u8 *data, unsigned int len, u8 *out)
-+{
-+	put_unaligned_le32(~crc32c_loongarch_hw(crc, data, len), out);
-+	return 0;
-+}
-+
-+static int chksum_finup(struct shash_desc *desc, const u8 *data, unsigned int len, u8 *out)
-+{
-+	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
-+
-+	return __chksum_finup(ctx->crc, data, len, out);
-+}
-+
-+static int chksumc_finup(struct shash_desc *desc, const u8 *data, unsigned int len, u8 *out)
-+{
-+	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
-+
-+	return __chksumc_finup(ctx->crc, data, len, out);
-+}
-+
-+static int chksum_digest(struct shash_desc *desc, const u8 *data, unsigned int length, u8 *out)
-+{
-+	struct chksum_ctx *mctx = crypto_shash_ctx(desc->tfm);
-+
-+	return __chksum_finup(mctx->key, data, length, out);
-+}
-+
-+static int chksumc_digest(struct shash_desc *desc, const u8 *data, unsigned int length, u8 *out)
-+{
-+	struct chksum_ctx *mctx = crypto_shash_ctx(desc->tfm);
-+
-+	return __chksumc_finup(mctx->key, data, length, out);
-+}
-+
-+static int chksum_cra_init(struct crypto_tfm *tfm)
-+{
-+	struct chksum_ctx *mctx = crypto_tfm_ctx(tfm);
-+
-+	mctx->key = 0;
-+	return 0;
-+}
-+
-+static int chksumc_cra_init(struct crypto_tfm *tfm)
-+{
-+	struct chksum_ctx *mctx = crypto_tfm_ctx(tfm);
-+
-+	mctx->key = ~0;
-+	return 0;
-+}
-+
-+static struct shash_alg crc32_alg = {
-+	.digestsize		=	CHKSUM_DIGEST_SIZE,
-+	.setkey			=	chksum_setkey,
-+	.init			=	chksum_init,
-+	.update			=	chksum_update,
-+	.final			=	chksum_final,
-+	.finup			=	chksum_finup,
-+	.digest			=	chksum_digest,
-+	.descsize		=	sizeof(struct chksum_desc_ctx),
-+	.base			=	{
-+		.cra_name		=	"crc32",
-+		.cra_driver_name	=	"crc32-loongarch",
-+		.cra_priority		=	300,
-+		.cra_flags		=	CRYPTO_ALG_OPTIONAL_KEY,
-+		.cra_blocksize		=	CHKSUM_BLOCK_SIZE,
-+		.cra_alignmask		=	0,
-+		.cra_ctxsize		=	sizeof(struct chksum_ctx),
-+		.cra_module		=	THIS_MODULE,
-+		.cra_init		=	chksum_cra_init,
-+	}
-+};
-+
-+static struct shash_alg crc32c_alg = {
-+	.digestsize		=	CHKSUM_DIGEST_SIZE,
-+	.setkey			=	chksum_setkey,
-+	.init			=	chksum_init,
-+	.update			=	chksumc_update,
-+	.final			=	chksumc_final,
-+	.finup			=	chksumc_finup,
-+	.digest			=	chksumc_digest,
-+	.descsize		=	sizeof(struct chksum_desc_ctx),
-+	.base			=	{
-+		.cra_name		=	"crc32c",
-+		.cra_driver_name	=	"crc32c-loongarch",
-+		.cra_priority		=	300,
-+		.cra_flags		=	CRYPTO_ALG_OPTIONAL_KEY,
-+		.cra_blocksize		=	CHKSUM_BLOCK_SIZE,
-+		.cra_alignmask		=	0,
-+		.cra_ctxsize		=	sizeof(struct chksum_ctx),
-+		.cra_module		=	THIS_MODULE,
-+		.cra_init		=	chksumc_cra_init,
-+	}
-+};
-+
-+static int __init crc32_mod_init(void)
-+{
-+	int err;
-+
-+	if (!cpu_has(CPU_FEATURE_CRC32))
-+		return 0;
-+
-+	err = crypto_register_shash(&crc32_alg);
-+	if (err)
-+		return err;
-+
-+	err = crypto_register_shash(&crc32c_alg);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static void __exit crc32_mod_exit(void)
-+{
-+	if (!cpu_has(CPU_FEATURE_CRC32))
-+		return;
-+
-+	crypto_unregister_shash(&crc32_alg);
-+	crypto_unregister_shash(&crc32c_alg);
-+}
-+
-+module_init(crc32_mod_init);
-+module_exit(crc32_mod_exit);
-+
-+MODULE_AUTHOR("Min Zhou <zhoumin@loongson.cn>");
-+MODULE_AUTHOR("Huacai Chen <chenhuacai@loongson.cn>");
-+MODULE_DESCRIPTION("CRC32 and CRC32C using LoongArch crc* instructions");
-+MODULE_LICENSE("GPL v2");
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index 9c86f7045157..a0e080d5f6ae 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -1395,6 +1395,9 @@ endif
- if ARM64
- source "arch/arm64/crypto/Kconfig"
- endif
-+if LOONGARCH
-+source "arch/loongarch/crypto/Kconfig"
-+endif
- if MIPS
- source "arch/mips/crypto/Kconfig"
- endif
--- 
-2.39.1
-
+--------------rFRj0NtGM3Zijx0xyHfeKvB1--
