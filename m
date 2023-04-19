@@ -1,91 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551D32F52
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 10:05:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87EA5C433EF;
-	Wed, 19 Apr 2023 10:05:54 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.3-final
-Date: Wed, 19 Apr 2023 18:05:17 +0800
-Message-Id: <20230419100517.3647508-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E222F3F
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 10:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1681900957;
+	bh=NnE0CzIOhkCFuAdtNBZ4R7pyy7AFXsTSMSAcvOT6l9w=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=NycJOzskKcJJLuSWJPr4QbUapy7gTm4VqcUuSLE6mBqpZOBGbI2+buO8tNt6YMPp+
+	 nx6NG59RDKagt2u8P2rZKHR/HPoTdsiQTMFoGgYfCxbR7zlCXSn0hWZyI4UdY57Cxz
+	 pR1aar1PZILK2u6WCZV0K8qSXlp3TJxjSth1KjkU=
+Received: from [192.168.124.11] (unknown [113.140.11.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 2508C65C28;
+	Wed, 19 Apr 2023 06:42:35 -0400 (EDT)
+Message-ID: <a7fa32c3af68083855e7690f67824d060d5c6135.camel@xry111.site>
+Subject: Re: [PATCH 1/2] LoongArch: Add pad structure members for explicit
+ alignment
+From: Xi Ruoyao <xry111@xry111.site>
+To: Qing Zhang <zhangqing@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+  WANG Xuerui <kernel@xen0n.name>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 19 Apr 2023 18:42:28 +0800
+In-Reply-To: <20230418091348.9239-1-zhangqing@loongson.cn>
+References: <20230418091348.9239-1-zhangqing@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.48.0 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The following changes since commit 6a8f57ae2eb07ab39a6f0ccad60c760743051026:
+T24gVHVlLCAyMDIzLTA0LTE4IGF0IDE3OjEzICswODAwLCBRaW5nIFpoYW5nIHdyb3RlOgo+IFRo
+aXMgaXMgZG9uZSBpbiBvcmRlciB0byBlYXNpbHkgY2FsY3VsYXRlIHRoZSBudW1iZXIgb2YgYnJl
+YWtwb2ludHMKPiBpbiBod19icmVha19nZXQuCj4gCj4gU2lnbmVkLW9mZi1ieTogUWluZyBaaGFu
+ZyA8emhhbmdxaW5nQGxvb25nc29uLmNuPgo+IC0tLQo+IMKgYXJjaC9sb29uZ2FyY2gvaW5jbHVk
+ZS91YXBpL2FzbS9wdHJhY2UuaCB8wqAgMyArKy0KPiDCoGFyY2gvbG9vbmdhcmNoL2tlcm5lbC9w
+dHJhY2UuY8KgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMTMgKysrKysrKysrLS0tLQo+IMKgMiBmaWxl
+cyBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1n
+aXQgYS9hcmNoL2xvb25nYXJjaC9pbmNsdWRlL3VhcGkvYXNtL3B0cmFjZS5oCj4gYi9hcmNoL2xv
+b25nYXJjaC9pbmNsdWRlL3VhcGkvYXNtL3B0cmFjZS5oCj4gaW5kZXggMjI4MmFlMWZkM2I2Li4w
+NmUzYmU1MmNiMDQgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9sb29uZ2FyY2gvaW5jbHVkZS91YXBpL2Fz
+bS9wdHJhY2UuaAo+ICsrKyBiL2FyY2gvbG9vbmdhcmNoL2luY2x1ZGUvdWFwaS9hc20vcHRyYWNl
+LmgKPiBAQCAtNTcsMTEgKzU3LDEyIEBAIHN0cnVjdCB1c2VyX2xhc3hfc3RhdGUgewo+IMKgfTsK
+PiDCoAo+IMKgc3RydWN0IHVzZXJfd2F0Y2hfc3RhdGUgewo+IC3CoMKgwqDCoMKgwqDCoHVpbnQx
+Nl90IGRiZ19pbmZvOwo+ICvCoMKgwqDCoMKgwqDCoHVpbnQ2NF90IGRiZ19pbmZvOwoKT3VjaC4g
+IFRoaXMgaXMgYSBicmVha2luZyBjaGFuZ2Ugd2hlbiB3ZSBjb25zaWRlciB1c2VyIGNvZGUgbGlr
+ZQpgcHJpbnRmKFBSSXUxNiAiXG4iLCBwdHItPmRiZ19pbmZvKTtgLiAgSXMgaXQgcmVhbGx5IG5l
+Y2Vzc2FyeT8KCj4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCB7Cj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqB1aW50NjRfdMKgwqDCoCBhZGRyOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgdWludDY0X3TCoMKgwqAgbWFzazsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoHVpbnQzMl90wqDCoMKgIGN0cmw7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoHVpbnQzMl90wqDCoMKgIHBhZDsKPiDCoMKgwqDCoMKgwqDCoMKgfSBkYmdfcmVnc1s4
+XTsKPiDCoH07Cj4gwqAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gva2VybmVsL3B0cmFj
+ZS5jCj4gYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwvcHRyYWNlLmMKPiBpbmRleCAwYzdjNDFlNDFj
+YWQuLjljM2JjMWJiZjJmZiAxMDA2NDQKPiAtLS0gYS9hcmNoL2xvb25nYXJjaC9rZXJuZWwvcHRy
+YWNlLmMKPiArKysgYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwvcHRyYWNlLmMKPiBAQCAtNDc1LDEw
+ICs0NzUsMTAgQEAgc3RhdGljIGludCBwdHJhY2VfaGJwX2ZpbGxfYXR0cl9jdHJsKHVuc2lnbmVk
+Cj4gaW50IG5vdGVfdHlwZSwKPiDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIDA7Cj4gwqB9Cj4gwqAK
+PiAtc3RhdGljIGludCBwdHJhY2VfaGJwX2dldF9yZXNvdXJjZV9pbmZvKHVuc2lnbmVkIGludCBu
+b3RlX3R5cGUsIHUxNgo+ICppbmZvKQo+ICtzdGF0aWMgaW50IHB0cmFjZV9oYnBfZ2V0X3Jlc291
+cmNlX2luZm8odW5zaWduZWQgaW50IG5vdGVfdHlwZSwgdTY0Cj4gKmluZm8pCj4gwqB7Cj4gwqDC
+oMKgwqDCoMKgwqDCoHU4IG51bTsKPiAtwqDCoMKgwqDCoMKgwqB1MTYgcmVnID0gMDsKPiArwqDC
+oMKgwqDCoMKgwqB1NjQgcmVnID0gMDsKPiDCoAo+IMKgwqDCoMKgwqDCoMKgwqBzd2l0Y2ggKG5v
+dGVfdHlwZSkgewo+IMKgwqDCoMKgwqDCoMKgwqBjYXNlIE5UX0xPT05HQVJDSF9IV19CUkVBSzoK
+PiBAQCAtNjE2LDcgKzYxNiw3IEBAIHN0YXRpYyBpbnQgaHdfYnJlYWtfZ2V0KHN0cnVjdCB0YXNr
+X3N0cnVjdAo+ICp0YXJnZXQsCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgY29uc3Qgc3RydWN0IHVzZXJfcmVnc2V0ICpyZWdzZXQsCj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IG1lbWJ1ZiB0bykK
+PiDCoHsKPiAtwqDCoMKgwqDCoMKgwqB1MTYgaW5mbzsKPiArwqDCoMKgwqDCoMKgwqB1NjQgaW5m
+bzsKPiDCoMKgwqDCoMKgwqDCoMKgdTMyIGN0cmw7Cj4gwqDCoMKgwqDCoMKgwqDCoHU2NCBhZGRy
+LCBtYXNrOwo+IMKgwqDCoMKgwqDCoMKgwqBpbnQgcmV0LCBpZHggPSAwOwo+IEBAIC02NDYsNiAr
+NjQ2LDcgQEAgc3RhdGljIGludCBod19icmVha19nZXQoc3RydWN0IHRhc2tfc3RydWN0Cj4gKnRh
+cmdldCwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoG1lbWJ1Zl9zdG9yZSgmdG8s
+IGFkZHIpOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbWVtYnVmX3N0b3JlKCZ0
+bywgbWFzayk7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtZW1idWZfc3RvcmUo
+JnRvLCBjdHJsKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbWVtYnVmX3plcm8o
+JnRvLCBzaXplb2YodTMyKSk7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZHgr
+KzsKPiDCoMKgwqDCoMKgwqDCoMKgfQo+IMKgCj4gQEAgLTY2Miw3ICs2NjMsNyBAQCBzdGF0aWMg
+aW50IGh3X2JyZWFrX3NldChzdHJ1Y3QgdGFza19zdHJ1Y3QKPiAqdGFyZ2V0LAo+IMKgwqDCoMKg
+wqDCoMKgwqBpbnQgcmV0LCBpZHggPSAwLCBvZmZzZXQsIGxpbWl0Owo+IMKgwqDCoMKgwqDCoMKg
+wqB1bnNpZ25lZCBpbnQgbm90ZV90eXBlID0gcmVnc2V0LT5jb3JlX25vdGVfdHlwZTsKPiDCoAo+
+IC3CoMKgwqDCoMKgwqDCoC8qIFJlc291cmNlIGluZm8gKi8KPiArwqDCoMKgwqDCoMKgwqAvKiBS
+ZXNvdXJjZSBpbmZvIGFuZCBwYWQgKi8KPiDCoMKgwqDCoMKgwqDCoMKgb2Zmc2V0ID0gb2Zmc2V0
+b2Yoc3RydWN0IHVzZXJfd2F0Y2hfc3RhdGUsIGRiZ19yZWdzKTsKPiDCoMKgwqDCoMKgwqDCoMKg
+dXNlcl9yZWdzZXRfY29weWluX2lnbm9yZSgmcG9zLCAmY291bnQsICZrYnVmLCAmdWJ1ZiwgMCwK
+PiBvZmZzZXQpOwo+IMKgCj4gQEAgLTcwNCw2ICs3MDUsMTAgQEAgc3RhdGljIGludCBod19icmVh
+a19zZXQoc3RydWN0IHRhc2tfc3RydWN0Cj4gKnRhcmdldCwKPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoGlmIChyZXQpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgcmV0dXJuIHJldDsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoG9mZnNldCArPSBQVFJBQ0VfSEJQX0NUUkxfU1o7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqB1c2VyX3JlZ3NldF9jb3B5aW5faWdub3JlKCZwb3MsICZjb3VudCwgJmti
+dWYsICZ1YnVmLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBvZmZzZXQsIG9mZnNldCArCj4g
+UFRSQUNFX0hCUF9QQURfU1opOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBvZmZz
+ZXQgKz0gUFRSQUNFX0hCUF9QQURfU1o7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqBpZHgrKzsKPiDCoMKgwqDCoMKgwqDCoMKgfQo+IMKgCgotLSAKWGkgUnVveWFvIDx4cnkxMTFA
+eHJ5MTExLnNpdGU+ClNjaG9vbCBvZiBBZXJvc3BhY2UgU2NpZW5jZSBhbmQgVGVjaG5vbG9neSwg
+WGlkaWFuIFVuaXZlcnNpdHkK
 
-  Linux 6.3-rc7 (2023-04-16 15:23:53 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.3-1
-
-for you to fetch changes up to b5533e990dd1de5872a34cba2f4f7f508c9b2ec3:
-
-  tools/loongarch: Use __SIZEOF_LONG__ to define __BITS_PER_LONG (2023-04-19 12:07:34 +0800)
-
-----------------------------------------------------------------
-LoongArch fixes for v6.3-final
-
-Some bug fixes, some build fixes, a comment fix and a trivial cleanup.
-----------------------------------------------------------------
-Enze Li (1):
-      LoongArch: Replace hard-coded values in comments with VALEN
-
-Huacai Chen (6):
-      LoongArch: Make WriteCombine configurable for ioremap()
-      LoongArch: Fix probing of the CRC32 feature
-      LoongArch: Fix build error if CONFIG_SUSPEND is not set
-      LoongArch: Enable PG when wakeup from suspend
-      LoongArch: Mark 3 symbol exports as non-GPL
-      LoongArch: module: set section addresses to 0x0
-
-Qing Zhang (3):
-      LoongArch: Fix _CONST64_(x) as unsigned
-      LoongArch: Adjust user_watch_state for explicit alignment
-      LoongArch: Adjust user_regset_copyin parameter to the correct offset
-
-Tiezhu Yang (3):
-      LoongArch: Check unwind_error() in arch_stack_walk()
-      LoongArch: Clean up plat_swiotlb_setup() related code
-      tools/loongarch: Use __SIZEOF_LONG__ to define __BITS_PER_LONG
-
- Documentation/admin-guide/kernel-parameters.rst    |  1 +
- Documentation/admin-guide/kernel-parameters.txt    |  6 ++++
- arch/loongarch/Kconfig                             | 16 +++++++++
- arch/loongarch/include/asm/acpi.h                  |  3 ++
- arch/loongarch/include/asm/addrspace.h             |  4 +--
- arch/loongarch/include/asm/bootinfo.h              |  1 -
- arch/loongarch/include/asm/cpu-features.h          |  1 +
- arch/loongarch/include/asm/cpu.h                   | 40 ++++++++++++----------
- arch/loongarch/include/asm/io.h                    |  4 ++-
- arch/loongarch/include/asm/loongarch.h             |  6 ++--
- arch/loongarch/include/asm/module.lds.h            |  8 ++---
- arch/loongarch/include/uapi/asm/ptrace.h           |  3 +-
- arch/loongarch/kernel/cpu-probe.c                  |  9 +++--
- arch/loongarch/kernel/proc.c                       |  1 +
- arch/loongarch/kernel/ptrace.c                     | 25 +++++++++-----
- arch/loongarch/kernel/setup.c                      | 25 ++++++++++++--
- arch/loongarch/kernel/stacktrace.c                 |  2 +-
- arch/loongarch/kernel/unwind.c                     |  1 +
- arch/loongarch/kernel/unwind_prologue.c            |  4 ++-
- arch/loongarch/mm/init.c                           |  4 +--
- arch/loongarch/power/suspend_asm.S                 |  4 +++
- .../arch/loongarch/include/uapi/asm/bitsperlong.h  |  2 +-
- 22 files changed, 121 insertions(+), 49 deletions(-)
