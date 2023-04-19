@@ -1,153 +1,167 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4959B28F2
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 09:38:59 +0000 (UTC)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-54fc337a650so240966297b3.4
-        for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 02:38:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681897138; x=1684489138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mRHcjArQaNr6nNzWwoStBzQEW/Ojj9XJqinqP7AUllA=;
-        b=sMDTeUZJ2K7fC4FgthyKO7A+JpxYJjkilgpcCdJ2zcAWwD8qmbUK3RlcoawKSDKbPk
-         dMZRFJGBabT2dqYifM/mbk2SbUGWTP/Ik5z7zZ8k8UIMMoF85ISqNOjIY+447ymZZ7Co
-         aKq/LCl3RNIjfMsvZq0GbSZWsXKCLOkbULa3dokT6lq13E1+7BOUQ3EG7PwG3BTFvXsv
-         1Ecug5pLDMXfj7KQWdFv+2SHro6ri/fOEOaDOK7FPQhL4D3L/WOwNodHL9FSHRuU2UWi
-         TIVcoty/gKa5MVSECC/GO9EcbOFZUDCr46BTALAtR0EthF37Ls4Ojh/Dr89K5fi1YoPS
-         KFoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681897138; x=1684489138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mRHcjArQaNr6nNzWwoStBzQEW/Ojj9XJqinqP7AUllA=;
-        b=IR/CIJGTrlMwljLj2sejUH2w5Ck+9k5BLQj9SuNCkX+ZBp1K0tG46lmRrTmfLaFW55
-         8uxXa4WY203xH9Q7jE7uB3Y/AqQC1uaCB6U8wzEhvQjGmtl2RoZKRmkj3GlHzk4vVdD9
-         6HjPiTU7S2utDc86rBFNQbLOFfcsydeaH46EbL3qDxeECtEKkCX9GkYq1GHgbTza44HE
-         OLxHoUgb27N/HMAEQJxj7Rtmy+fLJdIaIrxEQ59RJJdd5EMB8NIBxpaoI09d2LL3dTkV
-         j2z1MMEK7D5c1YEeVPFsfBWfrq8OQPmL4Trzz50w8fNVghq0guJkm2S7sE6jKYMlbrR6
-         NvaA==
-X-Gm-Message-State: AAQBX9eKI0BZzVPgFLgJmKGmrE8khGBwB0cGuBdlE3hK/R3pd9ob8RjQ
-	1wQA5dM1bNE9a96MC5jwNTnHg+ejOixwKAuZKdE=
-X-Google-Smtp-Source: AKy350Ylx9KmB1gHOHjRlU3RnR/lCkV6QxNTGy5VlOsWgBa7IZ11v8LZfMSjQ3ftSwL9SIUcHjpCEsd9nZN/huxcNqU=
-X-Received: by 2002:a0d:cc0b:0:b0:552:c30d:2243 with SMTP id
- o11-20020a0dcc0b000000b00552c30d2243mr1639675ywd.11.1681897138171; Wed, 19
- Apr 2023 02:38:58 -0700 (PDT)
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C7EA28F2
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 09:57:24 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxJAz+uj9k6OEeAA--.47900S3;
+	Wed, 19 Apr 2023 17:57:18 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxbb78uj9kXuguAA--.15680S5;
+	Wed, 19 Apr 2023 17:57:18 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v3 3/6] LoongArch: Use larch_insn_gen_break() for kprobes
+Date: Wed, 19 Apr 2023 17:56:58 +0800
+Message-Id: <1681898221-27828-4-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1681898221-27828-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1681898221-27828-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID:AQAAf8Bxbb78uj9kXuguAA--.15680S5
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWFW5AF15ZF13Cw47Zr1UKFg_yoWrXFWUpF
+	nrCwnaqr4rJan5Cr9rJw4UZr1Syw48u3yqqFWUC3ySyr17Xwn8JF1xKrZ0yF98K3yvkFWS
+	qwnxtrW8Za4xAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+	v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xva
+	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
+	W8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8gAw7UUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <cover.1681370153.git.zhoubinbin@loongson.cn> <35f43a8cfc32b5a065e4a04eb6cc6abf311f2700.1681370153.git.zhoubinbin@loongson.cn>
- <b4b23751-a44c-2b38-0d55-a34711ad53c4@linaro.org> <CAMpQs4+XBQD9KB3XOPe4zp_vC5RxPaOZU0aJQZKTW=+9r5nmag@mail.gmail.com>
- <05ebf834-2220-d1e6-e07a-529b8f9cb100@linaro.org>
-In-Reply-To: <05ebf834-2220-d1e6-e07a-529b8f9cb100@linaro.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Wed, 19 Apr 2023 17:38:45 +0800
-Message-ID: <CAMpQs4+oMZ=BA2O0L8mgBKatyWK5WJsOsrGKua0h2kGHax4JFg@mail.gmail.com>
-Subject: Re: [PATCH V3 1/7] dt-bindings: rtc: Subdivision of LS2X RTC compatible
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Alessandro Zummo <a.zummo@towertech.it>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, linux-rtc@vger.kernel.org, 
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, devicetree@vger.kernel.org, 
-	Qing Zhang <zhangqing@loongson.cn>, keguang.zhang@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 19, 2023 at 4:52=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 19/04/2023 09:12, Binbin Zhou wrote:
-> > On Mon, Apr 17, 2023 at 1:31=E2=80=AFAM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 13/04/2023 09:57, Binbin Zhou wrote:
-> >>> The LS2X RTC alarm depends on the associated registers in a separate
-> >>> power management domain.
-> >>>
-> >>> In order to define the PM domain addresses of the different chips, a
-> >>> more detailed description of compatible is required.
-> >>
-> >> This does not match your diff at all.
-> >>
-> >>>
-> >>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/rtc/trivial-rtc.yaml | 7 +++++--
-> >>>  1 file changed, 5 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml b=
-/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> >>> index a3603e638c37..2928811b83a0 100644
-> >>> --- a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> >>> +++ b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> >>> @@ -47,8 +47,11 @@ properties:
-> >>>        - isil,isl1218
-> >>>        # Intersil ISL12022 Real-time Clock
-> >>>        - isil,isl12022
-> >>> -      # Loongson-2K Socs/LS7A bridge Real-time Clock
-> >>> -      - loongson,ls2x-rtc
-> >>
-> >> Why removing it?
-> >>
-> >>> +      # Loongson LS7A bridge Real-time Clock
-> >>> +      - loongson,ls7a-rtc
-> >>> +      # Loongson-2K Socs Real-time Clock
-> >>> +      - loongson,ls2k0500-rtc
-> >>> +      - loongson,ls2k1000-rtc
-> >>
-> >> That's even more surprising...
-> >>
-> >> I don't understand what you are doing here at all.
-> > Hi Krzysztof:
-> >
-> > Sorry, maybe my description was not accurate.
-> >
-> > Looking back at my V2 patchset, the first patch was to add ls2x-rtc com=
-patible.
-> > (https://lore.kernel.org/linux-rtc/0288efeb4209e4a49af07de6399045aaa00a=
-970c.1673227292.git.zhoubinbin@loongson.cn/)
-> >
-> > In the process of modifying the V2 patchset, it was discovered that
-> > the ACPI domain offset addresses on some of the socs (LS2K1000) were
-> > different and I wanted to differentiate them by soc compatible. So I
-> > was going to drop the ls2x-rtc compatible directly from the V3 patch
-> > set.
-> > However, when I rebased the V3 patchset, I found that the previous
-> > ls2x-rtc compatible patch had been merged (commit 473a8ce756fd). So I
-> > had to remove it and add soc compatible.
->
-> Can all folks in Loongson stop adding wildcards as compatibles? Several
-> compatibles were acked, because we do not know what 'x' stands for. Now,
-> it turns out it's a wildcard which is not allowed.
->
-> https://elixir.bootlin.com/linux/v6.1-rc1/source/Documentation/devicetree=
-/bindings/writing-bindings.rst#L42
->
-> >
-> > How about the following description:
-> > Since commit 473a8ce756fd (dt-bindings: rtc: Add Loongson LS2X RTC
-> > support), the ls2x-rtc compatible has been added. But the specific soc
-> > compatible is needed to be used to define different ACPI domain offset
-> > addresses.
-> >
-> It's better. Anyway, SoC parts are rarely trivial devices, so this
-> should be probably moved to its own schema.
+For now, we can use larch_insn_gen_break() to define KPROBE_BP_INSN and
+KPROBE_SSTEPBP_INSN. Because larch_insn_gen_break() returns instruction
+word, define kprobe_opcode_t as u32, then do some small changes related
+with type conversion, no functional change intended.
 
-OK, I'll move these from rivial-rtc.yaml to a separate schema file.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/include/asm/kprobes.h |  2 +-
+ arch/loongarch/kernel/kprobes.c      | 33 ++++++++++++++-------------------
+ 2 files changed, 15 insertions(+), 20 deletions(-)
 
+diff --git a/arch/loongarch/include/asm/kprobes.h b/arch/loongarch/include/asm/kprobes.h
+index 798020a..7ef7a0f 100644
+--- a/arch/loongarch/include/asm/kprobes.h
++++ b/arch/loongarch/include/asm/kprobes.h
+@@ -22,7 +22,7 @@ do {									\
+ 
+ #define kretprobe_blacklist_size	0
+ 
+-typedef union loongarch_instruction kprobe_opcode_t;
++typedef u32 kprobe_opcode_t;
+ 
+ /* Architecture specific copy of original instruction */
+ struct arch_specific_insn {
+diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
+index 08c78d2..1835102 100644
+--- a/arch/loongarch/kernel/kprobes.c
++++ b/arch/loongarch/kernel/kprobes.c
+@@ -4,19 +4,8 @@
+ #include <linux/preempt.h>
+ #include <asm/break.h>
+ 
+-static const union loongarch_instruction breakpoint_insn = {
+-	.reg0i15_format = {
+-		.opcode = break_op,
+-		.immediate = BRK_KPROBE_BP,
+-	}
+-};
+-
+-static const union loongarch_instruction singlestep_insn = {
+-	.reg0i15_format = {
+-		.opcode = break_op,
+-		.immediate = BRK_KPROBE_SSTEPBP,
+-	}
+-};
++#define KPROBE_BP_INSN		larch_insn_gen_break(BRK_KPROBE_BP)
++#define KPROBE_SSTEPBP_INSN	larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
+ 
+ DEFINE_PER_CPU(struct kprobe *, current_kprobe);
+ DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
+@@ -24,7 +13,7 @@ DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
+ static void arch_prepare_ss_slot(struct kprobe *p)
+ {
+ 	p->ainsn.insn[0] = *p->addr;
+-	p->ainsn.insn[1] = singlestep_insn;
++	p->ainsn.insn[1] = KPROBE_SSTEPBP_INSN;
+ 	p->ainsn.restore = (unsigned long)p->addr + LOONGARCH_INSN_SIZE;
+ }
+ NOKPROBE_SYMBOL(arch_prepare_ss_slot);
+@@ -37,17 +26,20 @@ NOKPROBE_SYMBOL(arch_prepare_simulate);
+ 
+ int arch_prepare_kprobe(struct kprobe *p)
+ {
++	union loongarch_instruction insn;
++
+ 	if ((unsigned long)p->addr & 0x3)
+ 		return -EILSEQ;
+ 
+ 	/* copy instruction */
+ 	p->opcode = *p->addr;
++	insn.word = p->opcode;
+ 
+ 	/* decode instruction */
+-	if (insns_not_supported(p->opcode))
++	if (insns_not_supported(insn))
+ 		return -EINVAL;
+ 
+-	if (insns_need_simulation(p->opcode)) {
++	if (insns_need_simulation(insn)) {
+ 		p->ainsn.insn = NULL;
+ 	} else {
+ 		p->ainsn.insn = get_insn_slot();
+@@ -68,7 +60,7 @@ NOKPROBE_SYMBOL(arch_prepare_kprobe);
+ /* Install breakpoint in text */
+ void arch_arm_kprobe(struct kprobe *p)
+ {
+-	*p->addr = breakpoint_insn;
++	*p->addr = KPROBE_BP_INSN;
+ 	flush_insn_slot(p);
+ }
+ NOKPROBE_SYMBOL(arch_arm_kprobe);
+@@ -163,6 +155,8 @@ NOKPROBE_SYMBOL(post_kprobe_handler);
+ static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
+ 			     struct kprobe_ctlblk *kcb, int reenter)
+ {
++	union loongarch_instruction insn;
++
+ 	if (reenter) {
+ 		save_previous_kprobe(kcb);
+ 		set_current_kprobe(p);
+@@ -178,7 +172,8 @@ static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
+ 		regs->csr_era = (unsigned long)p->ainsn.insn;
+ 	} else {
+ 		/* simulate single steping */
+-		arch_simulate_insn(p->opcode, regs);
++		insn.word = p->opcode;
++		arch_simulate_insn(insn, regs);
+ 		/* now go for post processing */
+ 		post_kprobe_handler(p, kcb, regs);
+ 	}
+@@ -253,7 +248,7 @@ bool kprobe_breakpoint_handler(struct pt_regs *regs)
+ 		}
+ 	}
+ 
+-	if (addr->word != breakpoint_insn.word) {
++	if (*addr != KPROBE_BP_INSN) {
+ 		/*
+ 		 * The breakpoint instruction was removed right
+ 		 * after we hit it.  Another cpu has removed
+-- 
+2.1.0
 
-Thanks.
-Binbin
-
->
-> Best regards,
-> Krzysztof
->
