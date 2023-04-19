@@ -1,24 +1,22 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9004CC941
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 17:23:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1681924974; i=deller@gmx.de;
-	bh=C5yrQi1O5H/ZJ6i2wZhc9S+TYhhPSe8koYmOSkrsxpg=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=refzFEX/nVgK8/0c/yNY2CyfC3AdkpdTH+IYk+xIV5Q+38dlY1vRhZEFTmpMyUDc/
-	 9kvkEZP0kVR01Hn28FwdYcvQkmsX1L9UWL+i8vZhz0goEWhOLvIAIfwTtlVmCjbgUD
-	 u0lHmNPk61xpVh/6OWDJbveUXhuyj8lAjtP3C/VV7CHk+16/4VihPYwuUHEvivlYBw
-	 UlL1VdmKWD8uIdo0Aoh5XASGCGmlY7GyOYsX3ffFnBo5KedAYvGh4FHhvglxT+KgCd
-	 xQN6ABCnavylRmWcBFmE/lQHqF7hO3CioLhryov1vpJhVvImQ4wtSXMt4z9yTImXug
-	 5i3ajdU7cJ5LA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.60] ([94.134.144.134]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MatVb-1qRYCj0P8t-00cRzi; Wed, 19
- Apr 2023 19:22:54 +0200
-Message-ID: <b1f90fa4-85c7-e785-ba14-f32962f87d5e@gmx.de>
-Date: Wed, 19 Apr 2023 19:22:50 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B65C941
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 17:24:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1681925065; bh=UyddDLaSnHim8LvLfZeMZsuxwKd9NlUs6I+vTPaquA8=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=x4QuBhvrOVumU6lfmBATy7YcNq7Tt4ewJHbz9/HPgMIR6VUWSNmzp8NjZKD+QTkD/
+	 +6G3U0woQCjF0LaMUeejFEfk+8s4aLN18oAOl5tUla9wfOJYvZ2R3pTzjzJArE6rui
+	 njab+fTPihLz2H19NWoSu5CX4yep5VFHIzeHSeGI=
+Received: from [192.168.9.172] (unknown [101.228.138.124])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 3460D6011C;
+	Thu, 20 Apr 2023 01:24:25 +0800 (CST)
+Message-ID: <48bc7236-638d-9086-daaf-62eacea80dd2@xen0n.name>
+Date: Thu, 20 Apr 2023 01:24:24 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -26,76 +24,136 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v3 00/19] arch: Consolidate <asm/fb.h>
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 1/2] LoongArch: Add pad structure members for explicit
+ alignment
 Content-Language: en-US
-To: Thomas Zimmermann <tzimmermann@suse.de>, Arnd Bergmann <arnd@arndb.de>,
- Daniel Vetter <daniel.vetter@ffwll.ch>,
- Javier Martinez Canillas <javierm@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-fbdev@vger.kernel.org,
- linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-sh@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
- sparclinux@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-References: <20230417125651.25126-1-tzimmermann@suse.de>
- <1641007d-7953-426a-a3de-ca9c90f6c5a9@app.fastmail.com>
- <5fa98536-a4b0-7b71-7342-9ba05158062f@suse.de>
-From: Helge Deller <deller@gmx.de>
-In-Reply-To: <5fa98536-a4b0-7b71-7342-9ba05158062f@suse.de>
+From: WANG Xuerui <kernel@xen0n.name>
+To: Xi Ruoyao <xry111@xry111.site>, Qing Zhang <zhangqing@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20230418091348.9239-1-zhangqing@loongson.cn>
+ <a7fa32c3af68083855e7690f67824d060d5c6135.camel@xry111.site>
+ <899085c1-7a74-8bab-1429-1b6e9e4c2c30@xen0n.name>
+In-Reply-To: <899085c1-7a74-8bab-1429-1b6e9e4c2c30@xen0n.name>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:H9qZXkCOPDN+3vsO7z+9ttDKPCRSFaiF/4cDmiO5ovofGlBxTzT
- kMlRPG3r4Q6KYGeHBb//fU40kwtmWj1gVkdx7p7FELLCFOD5Nql8qYPGjnWefhzsS88zNIK
- xaqD2s84khdceDbFsitlOpU2HidQYYXlykQQ9SD+p1IgyfdLRLZnqUmFoBDr2Oq3uB/Hpmu
- vy6bniwylk05WNGd4sCJg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:5ox/8AYo9cY=;DXfWBLw0Wfb00Me5ctwgZzfIUZ/
- 1GcLaW7zyF+rDR6gv5OFGKt/ECtMI2VLnGHaGgup0zhzHr7BbEMURzdNk4ut1hQ/I1Ur1dsc0
- 1JvQBABCmnEIVKxSHIzxSDISBJC4Qap+OiyTLFMWZ9un0xA1yRdsUs2M1yt+a2EqGcCluQlae
- 19JYqGAwJcB9zy4M2luWaDfLR+ZKhj9ZKj8YSY34zxXwBPDgYmXrjwHYmJ4VTpPq9lQoP7XYz
- zFNmrhEsoPBmtBzXWAha6jdgOhp/DgbHDRiAP61aoHFFNbzRmhAGM4NsKuWZgVMGEWTXl21UX
- RWqLtp/2wf2qeOu3egFZaXc8jYCWg1NlAIcF9HZ3295DdF25gExyuV9did7VXP77oNQQ+QXPc
- fhCOeNGtft8Mand8MEWSS+3kWNhuIfz07igr9+fsGtxP3ysYKTaY3WPhXV0YMVT8Bep0brJsz
- it0ElaUn+GMQsDuKpgWJIn6dE2RbkRjrP0KTWEny7DHSk8JEWgia6+A8qE0EY++w+1sCntVun
- q6L6YvL6bob4Q1BUg6FQGSTaWbEOj1aXk0c3aEh6x+vXVvTOLaLYYUvW1lFtPoRMygYgZx4wQ
- rJN3kennM/9oLujbd5BqjhpxyFEKAHVCVXS45wO+oSJnirRTWt+IU+XGjNEY0ptfkn3mN4x/q
- kvGcY6cnurtogkHbIzoeA9JDtK7wJr1dYuVhIbxaw4ROiwNGBzb/BR3lIpmxi2xnCf7zxwLP8
- po9pTOMtKhkJLo/DaIoVdM7R07TLStHRQWeCtVEbKyLKDvKxPjppGZ6s5Tz5A6AXYgiSFhuW4
- cGKpK8tRgRhTmcAGp6W5xqVoysF2XWyW46xmjytoEwKEd8r8g4J//wzQ3dLfMvZ9GduabVyKy
- Tq5+OYpXodvPTj/P2JbKEivhf9ZtS7PrHr8f0DO4nsV7nYIV9I/xwMZ3jymGdPYzWNpnTiyox
- UXVSng==
+Content-Transfer-Encoding: 8bit
 
-Hi Thomas,
-
-> Am 17.04.23 um 16:12 schrieb Arnd Bergmann:>> On Mon, Apr 17, 2023, at 1=
-4:56, Thomas Zimmermann wrote:
->>> Various architectures provide <asm/fb.h> with helpers for fbdev
->>> framebuffer devices. Share the contained code where possible. There
->>> is already <asm-generic/fb.h>, which implements generic (as in
->>> 'empty') functions of the fbdev helpers. The header was added in
->>> commit aafe4dbed0bf ("asm-generic: add generic versions of common
->>> headers"), but never used.
+On 4/19/23 19:00, WANG Xuerui wrote:
+> On 2023/4/19 18:42, Xi Ruoyao wrote:
+>> On Tue, 2023-04-18 at 17:13 +0800, Qing Zhang wrote:
+>>> This is done in order to easily calculate the number of breakpoints
+>>> in hw_break_get.
 >>>
->>> Each per-architecture header file declares and/or implements fbdev
->>> helpers and defines a preprocessor token for each. The generic
->>> header then provides the remaining helpers. It works like the I/O
->>> helpers in <asm/io.h>.
->>
->> Looks all good to me,
->>
->> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>>> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+>>> ---
+>>>   arch/loongarch/include/uapi/asm/ptrace.h |  3 ++-
+>>>   arch/loongarch/kernel/ptrace.c           | 13 +++++++++----
+>>>   2 files changed, 11 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/arch/loongarch/include/uapi/asm/ptrace.h
+>>> b/arch/loongarch/include/uapi/asm/ptrace.h
+>>> index 2282ae1fd3b6..06e3be52cb04 100644
+>>> --- a/arch/loongarch/include/uapi/asm/ptrace.h
+>>> +++ b/arch/loongarch/include/uapi/asm/ptrace.h
+>>> @@ -57,11 +57,12 @@ struct user_lasx_state {
 >
-> Thanks a lot. I know that Helge wants to test the PARISC changes, so
-> I'll keep this series pending for a bit longer. I'd like to merge the
-> patches through the DRM tree, if no one objects.
+> Drive-by comment to the patch author: there is no "user_lasx_state" 
+> yet. Please always state your base commit if not obvious, or you 
+> should start from some well-known upstream HEAD (e.g. Linus' rc tags, 
+> loongarch-fixes, or loongarch-next).
+>
+>>>   };
+>>>     struct user_watch_state {
+>>> -       uint16_t dbg_info;
+>>> +       uint64_t dbg_info;
+>>
+>> Ouch.  This is a breaking change when we consider user code like
+>> `printf(PRIu16 "\n", ptr->dbg_info);`.  Is it really necessary?
+>
+> Ah right. This is UAPI so without *very* concrete and convicing reason 
+> why the change is not going to impact any potential users, it's gonna 
+> be a presumed NAK. In other words you must demonstrate (1) why it's 
+> absolutely necessary to make the change and (2) that it's impossible 
+> to impact anyone, before any such changes can even be considered.
+Please ignore all of this. The memory layout is actually the same after 
+the change due to the padding, I was somehow thinking in big-endian a 
+few hours ago. (The commit message didn't help either, I think both 
+Ruoyao and me got into the habitual thinking that changes like this are 
+most likely just churn without real benefits, after *not* seeing the 
+rationale in the commit message which was kinda expected.)
+>
+>>
+>>>          struct {
+>>>                  uint64_t    addr;
+>>>                  uint64_t    mask;
+>>>                  uint32_t    ctrl;
+>>> +               uint32_t    pad;
+>>>          } dbg_regs[8];
+>>>   };
+>>>   diff --git a/arch/loongarch/kernel/ptrace.c
+>>> b/arch/loongarch/kernel/ptrace.c
+>>> index 0c7c41e41cad..9c3bc1bbf2ff 100644
+>>> --- a/arch/loongarch/kernel/ptrace.c
+>>> +++ b/arch/loongarch/kernel/ptrace.c
+>>> @@ -475,10 +475,10 @@ static int ptrace_hbp_fill_attr_ctrl(unsigned
+>>> int note_type,
+>>>          return 0;
+>>>   }
+>>>   -static int ptrace_hbp_get_resource_info(unsigned int note_type, u16
+>>> *info)
+>>> +static int ptrace_hbp_get_resource_info(unsigned int note_type, u64
+>>> *info)
+>>>   {
+>>>          u8 num;
+>>> -       u16 reg = 0;
+>>> +       u64 reg = 0;
+>>>            switch (note_type) {
+>>>          case NT_LOONGARCH_HW_BREAK:
+>>> @@ -616,7 +616,7 @@ static int hw_break_get(struct task_struct
+>>> *target,
+>>>                          const struct user_regset *regset,
+>>>                          struct membuf to)
+>>>   {
+>>> -       u16 info;
+>>> +       u64 info;
+>>>          u32 ctrl;
+>>>          u64 addr, mask;
+>>>          int ret, idx = 0;
+>>> @@ -646,6 +646,7 @@ static int hw_break_get(struct task_struct
+>>> *target,
+>>>                  membuf_store(&to, addr);
+>>>                  membuf_store(&to, mask);
+>>>                  membuf_store(&to, ctrl);
+>>> +               membuf_zero(&to, sizeof(u32));
+>>>                  idx++;
+>>>          }
+>>>   @@ -662,7 +663,7 @@ static int hw_break_set(struct task_struct
+>>> *target,
+>>>          int ret, idx = 0, offset, limit;
+>>>          unsigned int note_type = regset->core_note_type;
+>>>   -       /* Resource info */
+>>> +       /* Resource info and pad */
+>>>          offset = offsetof(struct user_watch_state, dbg_regs);
+>>>          user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 0,
+>>> offset);
+>>>   @@ -704,6 +705,10 @@ static int hw_break_set(struct task_struct
+>>> *target,
+>>>                  if (ret)
+>>>                          return ret;
+>>>                  offset += PTRACE_HBP_CTRL_SZ;
+>>> +
+>>> +               user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+>>> +                                         offset, offset +
+>>> PTRACE_HBP_PAD_SZ);
+>>> +               offset += PTRACE_HBP_PAD_SZ;
+>>>                  idx++;
+>>>          }
+>>
+>
+-- 
+WANG "xen0n" Xuerui
 
-Yes, patch is good and I've tested it on parisc. Thanks!
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
-You may add:
-Acked-by: Helge Deller <deller@gmx.de>
-to the series and take it through the drm tree.
-
-Helge
