@@ -1,22 +1,45 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B65C941
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 17:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1681925065; bh=UyddDLaSnHim8LvLfZeMZsuxwKd9NlUs6I+vTPaquA8=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=x4QuBhvrOVumU6lfmBATy7YcNq7Tt4ewJHbz9/HPgMIR6VUWSNmzp8NjZKD+QTkD/
-	 +6G3U0woQCjF0LaMUeejFEfk+8s4aLN18oAOl5tUla9wfOJYvZ2R3pTzjzJArE6rui
-	 njab+fTPihLz2H19NWoSu5CX4yep5VFHIzeHSeGI=
-Received: from [192.168.9.172] (unknown [101.228.138.124])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 3460D6011C;
-	Thu, 20 Apr 2023 01:24:25 +0800 (CST)
-Message-ID: <48bc7236-638d-9086-daaf-62eacea80dd2@xen0n.name>
-Date: Thu, 20 Apr 2023 01:24:24 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5127C977
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 20:09:45 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-94f1a6e66c9so14675866b.2
+        for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 13:09:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681934984; x=1684526984;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Xw+KJbFyACMkRJGroXOI3BeGOTCCUWrYEe/1oBLkoRQ=;
+        b=zxLiR99eSsw7BjcTYQ5S8E/CLIhKw3VB5JtlrC3z5U9ubcd67bhgmEL6qhgyiYHXnN
+         1FKFTMdCsvP8cWawQqMJH8WcsJXs7jKvHzVzsgZjss3z7mRJuhEnp2MklmWlA5gMjRXG
+         mAUhXVOcM/JlvX7vsTfyiWiz3Rmwe3D+OhArJEsHNLImFAO2I3OTIlHXI/TCRRyyhFR7
+         fgT92UqMmmJC/mx078VhIgAqtju+3rvlsQx52kdYVGRerlNjhFJv2cUxNcROuWBOjM+a
+         eR1UeOFNXCkXI1ObwK1mMXi0GZI7DEGzgsoWiT7tdYkbkrHnV27T/TMX25BRd/GWv2DD
+         1tug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681934984; x=1684526984;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xw+KJbFyACMkRJGroXOI3BeGOTCCUWrYEe/1oBLkoRQ=;
+        b=Ikywi4QmvM1ODBZQKbpKQP+mVXQ5wscX3axCiRl3RNUxbKIgMS8a9wMuM22atK7JQl
+         YM2P91Vg2QKi4+qiU9aCbmMTlOnZENmymIcwgHhZcAGbGAy6+9ONqANAW6TZ523d3Yt9
+         G33K45HQ4rQGmtEByxLOXuc0YnhfSxGH0rXEmn9K325jB8D1gqzAku0x6nYDfpd4akZN
+         LbKYAUXToldwD21GDMr1R7W5ixw0coPfoi+eScBciMl2s3PT/KI0JKtiJ9V7ll0H8E87
+         Awa3QmUdDQCEOUeQ3f/VaCDz5hD6uMIAco3BYuHzX+qzzFYITKFDL1f7c3KpJz4alkFR
+         kXtA==
+X-Gm-Message-State: AAQBX9df4QMP5xdxVae0zZu80rgU08KAE5pHm7Uj3UO3weKuoevBm1wS
+	aaN+d8raVDMQINS+Ke/wCCWkMA==
+X-Google-Smtp-Source: AKy350a3Apxx+KuNFbakTzHCxKVnVUVMPDVeV2R93lEsA74lMQBPm+5IF/g1O8tqNFYYN6/peDtnqw==
+X-Received: by 2002:a05:6402:650:b0:504:b313:5898 with SMTP id u16-20020a056402065000b00504b3135898mr7270539edx.27.1681934983797;
+        Wed, 19 Apr 2023 13:09:43 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:976c:1d6c:6ed0:8935? ([2a02:810d:15c0:828:976c:1d6c:6ed0:8935])
+        by smtp.gmail.com with ESMTPSA id i10-20020aa7dd0a000000b0050685927971sm6858485edv.30.2023.04.19.13.09.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Apr 2023 13:09:43 -0700 (PDT)
+Message-ID: <f9b62f48-5c8b-2674-313d-4552c61c4302@linaro.org>
+Date: Wed, 19 Apr 2023 22:09:42 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -25,135 +48,110 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH 1/2] LoongArch: Add pad structure members for explicit
- alignment
+Subject: Re: [PATCH V3 1/2] dt-bindings: interrupt-controller: Add Loongson
+ EIOINTC
 Content-Language: en-US
-From: WANG Xuerui <kernel@xen0n.name>
-To: Xi Ruoyao <xry111@xry111.site>, Qing Zhang <zhangqing@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20230418091348.9239-1-zhangqing@loongson.cn>
- <a7fa32c3af68083855e7690f67824d060d5c6135.camel@xry111.site>
- <899085c1-7a74-8bab-1429-1b6e9e4c2c30@xen0n.name>
-In-Reply-To: <899085c1-7a74-8bab-1429-1b6e9e4c2c30@xen0n.name>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>,
+ linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+ loongarch@lists.linux.dev, devicetree@vger.kernel.org,
+ loongson-kernel@lists.loongnix.cn
+References: <cover.1681887790.git.zhoubinbin@loongson.cn>
+ <3b9c4f05eaf14bc3b16aebec3ff84c8a2d52c4a5.1681887790.git.zhoubinbin@loongson.cn>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <3b9c4f05eaf14bc3b16aebec3ff84c8a2d52c4a5.1681887790.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 4/19/23 19:00, WANG Xuerui wrote:
-> On 2023/4/19 18:42, Xi Ruoyao wrote:
->> On Tue, 2023-04-18 at 17:13 +0800, Qing Zhang wrote:
->>> This is done in order to easily calculate the number of breakpoints
->>> in hw_break_get.
->>>
->>> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
->>> ---
->>>   arch/loongarch/include/uapi/asm/ptrace.h |  3 ++-
->>>   arch/loongarch/kernel/ptrace.c           | 13 +++++++++----
->>>   2 files changed, 11 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/arch/loongarch/include/uapi/asm/ptrace.h
->>> b/arch/loongarch/include/uapi/asm/ptrace.h
->>> index 2282ae1fd3b6..06e3be52cb04 100644
->>> --- a/arch/loongarch/include/uapi/asm/ptrace.h
->>> +++ b/arch/loongarch/include/uapi/asm/ptrace.h
->>> @@ -57,11 +57,12 @@ struct user_lasx_state {
->
-> Drive-by comment to the patch author: there is no "user_lasx_state" 
-> yet. Please always state your base commit if not obvious, or you 
-> should start from some well-known upstream HEAD (e.g. Linus' rc tags, 
-> loongarch-fixes, or loongarch-next).
->
->>>   };
->>>     struct user_watch_state {
->>> -       uint16_t dbg_info;
->>> +       uint64_t dbg_info;
->>
->> Ouch.  This is a breaking change when we consider user code like
->> `printf(PRIu16 "\n", ptr->dbg_info);`.  Is it really necessary?
->
-> Ah right. This is UAPI so without *very* concrete and convicing reason 
-> why the change is not going to impact any potential users, it's gonna 
-> be a presumed NAK. In other words you must demonstrate (1) why it's 
-> absolutely necessary to make the change and (2) that it's impossible 
-> to impact anyone, before any such changes can even be considered.
-Please ignore all of this. The memory layout is actually the same after 
-the change due to the padding, I was somehow thinking in big-endian a 
-few hours ago. (The commit message didn't help either, I think both 
-Ruoyao and me got into the habitual thinking that changes like this are 
-most likely just churn without real benefits, after *not* seeing the 
-rationale in the commit message which was kinda expected.)
->
->>
->>>          struct {
->>>                  uint64_t    addr;
->>>                  uint64_t    mask;
->>>                  uint32_t    ctrl;
->>> +               uint32_t    pad;
->>>          } dbg_regs[8];
->>>   };
->>>   diff --git a/arch/loongarch/kernel/ptrace.c
->>> b/arch/loongarch/kernel/ptrace.c
->>> index 0c7c41e41cad..9c3bc1bbf2ff 100644
->>> --- a/arch/loongarch/kernel/ptrace.c
->>> +++ b/arch/loongarch/kernel/ptrace.c
->>> @@ -475,10 +475,10 @@ static int ptrace_hbp_fill_attr_ctrl(unsigned
->>> int note_type,
->>>          return 0;
->>>   }
->>>   -static int ptrace_hbp_get_resource_info(unsigned int note_type, u16
->>> *info)
->>> +static int ptrace_hbp_get_resource_info(unsigned int note_type, u64
->>> *info)
->>>   {
->>>          u8 num;
->>> -       u16 reg = 0;
->>> +       u64 reg = 0;
->>>            switch (note_type) {
->>>          case NT_LOONGARCH_HW_BREAK:
->>> @@ -616,7 +616,7 @@ static int hw_break_get(struct task_struct
->>> *target,
->>>                          const struct user_regset *regset,
->>>                          struct membuf to)
->>>   {
->>> -       u16 info;
->>> +       u64 info;
->>>          u32 ctrl;
->>>          u64 addr, mask;
->>>          int ret, idx = 0;
->>> @@ -646,6 +646,7 @@ static int hw_break_get(struct task_struct
->>> *target,
->>>                  membuf_store(&to, addr);
->>>                  membuf_store(&to, mask);
->>>                  membuf_store(&to, ctrl);
->>> +               membuf_zero(&to, sizeof(u32));
->>>                  idx++;
->>>          }
->>>   @@ -662,7 +663,7 @@ static int hw_break_set(struct task_struct
->>> *target,
->>>          int ret, idx = 0, offset, limit;
->>>          unsigned int note_type = regset->core_note_type;
->>>   -       /* Resource info */
->>> +       /* Resource info and pad */
->>>          offset = offsetof(struct user_watch_state, dbg_regs);
->>>          user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 0,
->>> offset);
->>>   @@ -704,6 +705,10 @@ static int hw_break_set(struct task_struct
->>> *target,
->>>                  if (ret)
->>>                          return ret;
->>>                  offset += PTRACE_HBP_CTRL_SZ;
->>> +
->>> +               user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
->>> +                                         offset, offset +
->>> PTRACE_HBP_PAD_SZ);
->>> +               offset += PTRACE_HBP_PAD_SZ;
->>>                  idx++;
->>>          }
->>
->
--- 
-WANG "xen0n" Xuerui
+On 19/04/2023 09:17, Binbin Zhou wrote:
+> Add Loongson Extended I/O Interrupt controller binding with DT schema
+> format using json-schema.
+> 
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  .../loongson,eiointc.yaml                     | 74 +++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
+> new file mode 100644
+> index 000000000000..4ab4efb061e1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
+> @@ -0,0 +1,74 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/loongson,eiointc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson Extended I/O Interrupt Controller
+> +
+> +maintainers:
+> +  - Binbin Zhou <zhoubinbin@loongson.cn>
+> +
+> +description: |
+> +  This interrupt controller is found on the Loongson-3 family chips and
+> +  Loongson-2K series chips and is used to distribute interrupts directly to
+> +  individual cores without forwarding them through the HT's interrupt line.
+> +
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - loongson,ls2k0500-eiointc
+> +      - loongson,ls2k2000-eiointc
+> +
+> +  reg:
+> +    items:
+> +      - description: Interrupt enable registers
+> +      - description: Interrupt status registers
+> +      - description: Interrupt clear registers
+> +      - description: Interrupt routing configuration registers
+> +
+> +  reg-names:
+> +    items:
+> +      - const: enable
+> +      - const: status
+> +      - const: clear
+> +      - const: route
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    eiointc: interrupt-controller@1fe11600 {
+> +      compatible = "loongson,ls2k0500-eiointc";
+> +      reg = <0x1fe11600 0x10>,
+> +            <0x1fe11700 0x10>,
+> +            <0x1fe11800 0x10>,
+> +            <0x1fe114c0 0x4>;
 
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+Binding is OK, but are you sure you want to split the address space like
+this? It looks like two address spaces (enable+clear+status should be
+one). Are you sure this is correct?
+
+Best regards,
+Krzysztof
 
