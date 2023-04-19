@@ -1,108 +1,159 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E222F3F
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 10:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1681900957;
-	bh=NnE0CzIOhkCFuAdtNBZ4R7pyy7AFXsTSMSAcvOT6l9w=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=NycJOzskKcJJLuSWJPr4QbUapy7gTm4VqcUuSLE6mBqpZOBGbI2+buO8tNt6YMPp+
-	 nx6NG59RDKagt2u8P2rZKHR/HPoTdsiQTMFoGgYfCxbR7zlCXSn0hWZyI4UdY57Cxz
-	 pR1aar1PZILK2u6WCZV0K8qSXlp3TJxjSth1KjkU=
-Received: from [192.168.124.11] (unknown [113.140.11.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 2508C65C28;
-	Wed, 19 Apr 2023 06:42:35 -0400 (EDT)
-Message-ID: <a7fa32c3af68083855e7690f67824d060d5c6135.camel@xry111.site>
-Subject: Re: [PATCH 1/2] LoongArch: Add pad structure members for explicit
- alignment
-From: Xi Ruoyao <xry111@xry111.site>
-To: Qing Zhang <zhangqing@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-  WANG Xuerui <kernel@xen0n.name>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 19 Apr 2023 18:42:28 +0800
-In-Reply-To: <20230418091348.9239-1-zhangqing@loongson.cn>
-References: <20230418091348.9239-1-zhangqing@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.0 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEBF33C4
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 11:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1681902021; bh=b1S7VJTLIRifd308ZQCu1pgx8j+nrYSNjvqtm9fCDZ0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qt/nkV1qlcmzYXM5lAtGyfya/IffhNNuZp7fuDPWC3sQL5rOpD3cDXMnm9NbaPexZ
+	 7j72+2BiB23Mo9DhpUGyiN5UT7BPUI0HqnJUg5/jsnJfC4ePUTSE5pmkucrBVl0IMZ
+	 i0oc8AAKSgSVJhUqGWY9Pn+StgGdUKrB6L1k4tlc=
+Received: from [100.100.33.167] (unknown [220.248.53.61])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id E23D86011E;
+	Wed, 19 Apr 2023 19:00:20 +0800 (CST)
+Message-ID: <899085c1-7a74-8bab-1429-1b6e9e4c2c30@xen0n.name>
+Date: Wed, 19 Apr 2023 19:00:20 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.10.0
+Subject: Re: [PATCH 1/2] LoongArch: Add pad structure members for explicit
+ alignment
+Content-Language: en-US
+To: Xi Ruoyao <xry111@xry111.site>, Qing Zhang <zhangqing@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20230418091348.9239-1-zhangqing@loongson.cn>
+ <a7fa32c3af68083855e7690f67824d060d5c6135.camel@xry111.site>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <a7fa32c3af68083855e7690f67824d060d5c6135.camel@xry111.site>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-T24gVHVlLCAyMDIzLTA0LTE4IGF0IDE3OjEzICswODAwLCBRaW5nIFpoYW5nIHdyb3RlOgo+IFRo
-aXMgaXMgZG9uZSBpbiBvcmRlciB0byBlYXNpbHkgY2FsY3VsYXRlIHRoZSBudW1iZXIgb2YgYnJl
-YWtwb2ludHMKPiBpbiBod19icmVha19nZXQuCj4gCj4gU2lnbmVkLW9mZi1ieTogUWluZyBaaGFu
-ZyA8emhhbmdxaW5nQGxvb25nc29uLmNuPgo+IC0tLQo+IMKgYXJjaC9sb29uZ2FyY2gvaW5jbHVk
-ZS91YXBpL2FzbS9wdHJhY2UuaCB8wqAgMyArKy0KPiDCoGFyY2gvbG9vbmdhcmNoL2tlcm5lbC9w
-dHJhY2UuY8KgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMTMgKysrKysrKysrLS0tLQo+IMKgMiBmaWxl
-cyBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1n
-aXQgYS9hcmNoL2xvb25nYXJjaC9pbmNsdWRlL3VhcGkvYXNtL3B0cmFjZS5oCj4gYi9hcmNoL2xv
-b25nYXJjaC9pbmNsdWRlL3VhcGkvYXNtL3B0cmFjZS5oCj4gaW5kZXggMjI4MmFlMWZkM2I2Li4w
-NmUzYmU1MmNiMDQgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9sb29uZ2FyY2gvaW5jbHVkZS91YXBpL2Fz
-bS9wdHJhY2UuaAo+ICsrKyBiL2FyY2gvbG9vbmdhcmNoL2luY2x1ZGUvdWFwaS9hc20vcHRyYWNl
-LmgKPiBAQCAtNTcsMTEgKzU3LDEyIEBAIHN0cnVjdCB1c2VyX2xhc3hfc3RhdGUgewo+IMKgfTsK
-PiDCoAo+IMKgc3RydWN0IHVzZXJfd2F0Y2hfc3RhdGUgewo+IC3CoMKgwqDCoMKgwqDCoHVpbnQx
-Nl90IGRiZ19pbmZvOwo+ICvCoMKgwqDCoMKgwqDCoHVpbnQ2NF90IGRiZ19pbmZvOwoKT3VjaC4g
-IFRoaXMgaXMgYSBicmVha2luZyBjaGFuZ2Ugd2hlbiB3ZSBjb25zaWRlciB1c2VyIGNvZGUgbGlr
-ZQpgcHJpbnRmKFBSSXUxNiAiXG4iLCBwdHItPmRiZ19pbmZvKTtgLiAgSXMgaXQgcmVhbGx5IG5l
-Y2Vzc2FyeT8KCj4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCB7Cj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqB1aW50NjRfdMKgwqDCoCBhZGRyOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgdWludDY0X3TCoMKgwqAgbWFzazsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoHVpbnQzMl90wqDCoMKgIGN0cmw7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoHVpbnQzMl90wqDCoMKgIHBhZDsKPiDCoMKgwqDCoMKgwqDCoMKgfSBkYmdfcmVnc1s4
-XTsKPiDCoH07Cj4gwqAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gva2VybmVsL3B0cmFj
-ZS5jCj4gYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwvcHRyYWNlLmMKPiBpbmRleCAwYzdjNDFlNDFj
-YWQuLjljM2JjMWJiZjJmZiAxMDA2NDQKPiAtLS0gYS9hcmNoL2xvb25nYXJjaC9rZXJuZWwvcHRy
-YWNlLmMKPiArKysgYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwvcHRyYWNlLmMKPiBAQCAtNDc1LDEw
-ICs0NzUsMTAgQEAgc3RhdGljIGludCBwdHJhY2VfaGJwX2ZpbGxfYXR0cl9jdHJsKHVuc2lnbmVk
-Cj4gaW50IG5vdGVfdHlwZSwKPiDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIDA7Cj4gwqB9Cj4gwqAK
-PiAtc3RhdGljIGludCBwdHJhY2VfaGJwX2dldF9yZXNvdXJjZV9pbmZvKHVuc2lnbmVkIGludCBu
-b3RlX3R5cGUsIHUxNgo+ICppbmZvKQo+ICtzdGF0aWMgaW50IHB0cmFjZV9oYnBfZ2V0X3Jlc291
-cmNlX2luZm8odW5zaWduZWQgaW50IG5vdGVfdHlwZSwgdTY0Cj4gKmluZm8pCj4gwqB7Cj4gwqDC
-oMKgwqDCoMKgwqDCoHU4IG51bTsKPiAtwqDCoMKgwqDCoMKgwqB1MTYgcmVnID0gMDsKPiArwqDC
-oMKgwqDCoMKgwqB1NjQgcmVnID0gMDsKPiDCoAo+IMKgwqDCoMKgwqDCoMKgwqBzd2l0Y2ggKG5v
-dGVfdHlwZSkgewo+IMKgwqDCoMKgwqDCoMKgwqBjYXNlIE5UX0xPT05HQVJDSF9IV19CUkVBSzoK
-PiBAQCAtNjE2LDcgKzYxNiw3IEBAIHN0YXRpYyBpbnQgaHdfYnJlYWtfZ2V0KHN0cnVjdCB0YXNr
-X3N0cnVjdAo+ICp0YXJnZXQsCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgY29uc3Qgc3RydWN0IHVzZXJfcmVnc2V0ICpyZWdzZXQsCj4gwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IG1lbWJ1ZiB0bykK
-PiDCoHsKPiAtwqDCoMKgwqDCoMKgwqB1MTYgaW5mbzsKPiArwqDCoMKgwqDCoMKgwqB1NjQgaW5m
-bzsKPiDCoMKgwqDCoMKgwqDCoMKgdTMyIGN0cmw7Cj4gwqDCoMKgwqDCoMKgwqDCoHU2NCBhZGRy
-LCBtYXNrOwo+IMKgwqDCoMKgwqDCoMKgwqBpbnQgcmV0LCBpZHggPSAwOwo+IEBAIC02NDYsNiAr
-NjQ2LDcgQEAgc3RhdGljIGludCBod19icmVha19nZXQoc3RydWN0IHRhc2tfc3RydWN0Cj4gKnRh
-cmdldCwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoG1lbWJ1Zl9zdG9yZSgmdG8s
-IGFkZHIpOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbWVtYnVmX3N0b3JlKCZ0
-bywgbWFzayk7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtZW1idWZfc3RvcmUo
-JnRvLCBjdHJsKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbWVtYnVmX3plcm8o
-JnRvLCBzaXplb2YodTMyKSk7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZHgr
-KzsKPiDCoMKgwqDCoMKgwqDCoMKgfQo+IMKgCj4gQEAgLTY2Miw3ICs2NjMsNyBAQCBzdGF0aWMg
-aW50IGh3X2JyZWFrX3NldChzdHJ1Y3QgdGFza19zdHJ1Y3QKPiAqdGFyZ2V0LAo+IMKgwqDCoMKg
-wqDCoMKgwqBpbnQgcmV0LCBpZHggPSAwLCBvZmZzZXQsIGxpbWl0Owo+IMKgwqDCoMKgwqDCoMKg
-wqB1bnNpZ25lZCBpbnQgbm90ZV90eXBlID0gcmVnc2V0LT5jb3JlX25vdGVfdHlwZTsKPiDCoAo+
-IC3CoMKgwqDCoMKgwqDCoC8qIFJlc291cmNlIGluZm8gKi8KPiArwqDCoMKgwqDCoMKgwqAvKiBS
-ZXNvdXJjZSBpbmZvIGFuZCBwYWQgKi8KPiDCoMKgwqDCoMKgwqDCoMKgb2Zmc2V0ID0gb2Zmc2V0
-b2Yoc3RydWN0IHVzZXJfd2F0Y2hfc3RhdGUsIGRiZ19yZWdzKTsKPiDCoMKgwqDCoMKgwqDCoMKg
-dXNlcl9yZWdzZXRfY29weWluX2lnbm9yZSgmcG9zLCAmY291bnQsICZrYnVmLCAmdWJ1ZiwgMCwK
-PiBvZmZzZXQpOwo+IMKgCj4gQEAgLTcwNCw2ICs3MDUsMTAgQEAgc3RhdGljIGludCBod19icmVh
-a19zZXQoc3RydWN0IHRhc2tfc3RydWN0Cj4gKnRhcmdldCwKPiDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoGlmIChyZXQpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgcmV0dXJuIHJldDsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoG9mZnNldCArPSBQVFJBQ0VfSEJQX0NUUkxfU1o7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqB1c2VyX3JlZ3NldF9jb3B5aW5faWdub3JlKCZwb3MsICZjb3VudCwgJmti
-dWYsICZ1YnVmLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBvZmZzZXQsIG9mZnNldCArCj4g
-UFRSQUNFX0hCUF9QQURfU1opOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBvZmZz
-ZXQgKz0gUFRSQUNFX0hCUF9QQURfU1o7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqBpZHgrKzsKPiDCoMKgwqDCoMKgwqDCoMKgfQo+IMKgCgotLSAKWGkgUnVveWFvIDx4cnkxMTFA
-eHJ5MTExLnNpdGU+ClNjaG9vbCBvZiBBZXJvc3BhY2UgU2NpZW5jZSBhbmQgVGVjaG5vbG9neSwg
-WGlkaWFuIFVuaXZlcnNpdHkK
+On 2023/4/19 18:42, Xi Ruoyao wrote:
+> On Tue, 2023-04-18 at 17:13 +0800, Qing Zhang wrote:
+>> This is done in order to easily calculate the number of breakpoints
+>> in hw_break_get.
+>>
+>> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+>> ---
+>>   arch/loongarch/include/uapi/asm/ptrace.h |  3 ++-
+>>   arch/loongarch/kernel/ptrace.c           | 13 +++++++++----
+>>   2 files changed, 11 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/loongarch/include/uapi/asm/ptrace.h
+>> b/arch/loongarch/include/uapi/asm/ptrace.h
+>> index 2282ae1fd3b6..06e3be52cb04 100644
+>> --- a/arch/loongarch/include/uapi/asm/ptrace.h
+>> +++ b/arch/loongarch/include/uapi/asm/ptrace.h
+>> @@ -57,11 +57,12 @@ struct user_lasx_state {
+
+Drive-by comment to the patch author: there is no "user_lasx_state" yet. 
+Please always state your base commit if not obvious, or you should start 
+from some well-known upstream HEAD (e.g. Linus' rc tags, 
+loongarch-fixes, or loongarch-next).
+
+>>   };
+>>   
+>>   struct user_watch_state {
+>> -       uint16_t dbg_info;
+>> +       uint64_t dbg_info;
+> 
+> Ouch.  This is a breaking change when we consider user code like
+> `printf(PRIu16 "\n", ptr->dbg_info);`.  Is it really necessary?
+
+Ah right. This is UAPI so without *very* concrete and convicing reason 
+why the change is not going to impact any potential users, it's gonna be 
+a presumed NAK. In other words you must demonstrate (1) why it's 
+absolutely necessary to make the change and (2) that it's impossible to 
+impact anyone, before any such changes can even be considered.
+
+> 
+>>          struct {
+>>                  uint64_t    addr;
+>>                  uint64_t    mask;
+>>                  uint32_t    ctrl;
+>> +               uint32_t    pad;
+>>          } dbg_regs[8];
+>>   };
+>>   
+>> diff --git a/arch/loongarch/kernel/ptrace.c
+>> b/arch/loongarch/kernel/ptrace.c
+>> index 0c7c41e41cad..9c3bc1bbf2ff 100644
+>> --- a/arch/loongarch/kernel/ptrace.c
+>> +++ b/arch/loongarch/kernel/ptrace.c
+>> @@ -475,10 +475,10 @@ static int ptrace_hbp_fill_attr_ctrl(unsigned
+>> int note_type,
+>>          return 0;
+>>   }
+>>   
+>> -static int ptrace_hbp_get_resource_info(unsigned int note_type, u16
+>> *info)
+>> +static int ptrace_hbp_get_resource_info(unsigned int note_type, u64
+>> *info)
+>>   {
+>>          u8 num;
+>> -       u16 reg = 0;
+>> +       u64 reg = 0;
+>>   
+>>          switch (note_type) {
+>>          case NT_LOONGARCH_HW_BREAK:
+>> @@ -616,7 +616,7 @@ static int hw_break_get(struct task_struct
+>> *target,
+>>                          const struct user_regset *regset,
+>>                          struct membuf to)
+>>   {
+>> -       u16 info;
+>> +       u64 info;
+>>          u32 ctrl;
+>>          u64 addr, mask;
+>>          int ret, idx = 0;
+>> @@ -646,6 +646,7 @@ static int hw_break_get(struct task_struct
+>> *target,
+>>                  membuf_store(&to, addr);
+>>                  membuf_store(&to, mask);
+>>                  membuf_store(&to, ctrl);
+>> +               membuf_zero(&to, sizeof(u32));
+>>                  idx++;
+>>          }
+>>   
+>> @@ -662,7 +663,7 @@ static int hw_break_set(struct task_struct
+>> *target,
+>>          int ret, idx = 0, offset, limit;
+>>          unsigned int note_type = regset->core_note_type;
+>>   
+>> -       /* Resource info */
+>> +       /* Resource info and pad */
+>>          offset = offsetof(struct user_watch_state, dbg_regs);
+>>          user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 0,
+>> offset);
+>>   
+>> @@ -704,6 +705,10 @@ static int hw_break_set(struct task_struct
+>> *target,
+>>                  if (ret)
+>>                          return ret;
+>>                  offset += PTRACE_HBP_CTRL_SZ;
+>> +
+>> +               user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+>> +                                         offset, offset +
+>> PTRACE_HBP_PAD_SZ);
+>> +               offset += PTRACE_HBP_PAD_SZ;
+>>                  idx++;
+>>          }
+>>   
+> 
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
