@@ -1,150 +1,152 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0D62580
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 08:52:55 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id u3so27683367ejj.12
-        for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 01:52:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681894373; x=1684486373;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PduK/plWRjdmEIPxSdh8pvf2swuzHYiuVB01GLQkQ1I=;
-        b=hRFGLc7SCnxuhFp/K84EVRgkHYM7RJKmeX15fMVvCPq5iWDqksye0t5d/F1EpeDGaN
-         yZnOTFMzXPYZGIP/h6vYgSoB0rHGbUj+UUDDvuKPPKCWO+wQo0jZO/tCjctLMWlGzRvY
-         6ckpvPbSqSGHh0wH7PZBzbYf7Obpmbvzq7DSaRUnW/KaKiV9hnfEpA66PMvMj0yq6t4d
-         BfQzZ5k6weVb2nOofS4WQg7XdQx2NgHmssB33HpeRu2uSRm0TAFsIJwSx0oPCy9Tg5FP
-         ERigo1s6hpdnEzLMR4d1nBwJn1m9drcq360+h2hxZ/7Hax0htG4Ja2Ap7n9RrEvgoahV
-         TkRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681894373; x=1684486373;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PduK/plWRjdmEIPxSdh8pvf2swuzHYiuVB01GLQkQ1I=;
-        b=g5EJ3zlY8aRnIZXTEHBTScjKnIGutS5bIWmXPHJgWHAxnSveXYwEOIYUR+X62xuABE
-         e8jokkBYFbmuExXNzlaKtvLyAWm6YyLycW/VShIZxK+W1i+/J5zahpc7RndgCA+strxU
-         Hf+iOK+TW9EW0hypz+WrtWAwRgmgvmnfSutwhEkhKTDf0q7oYTbxbwHNhudCL7/vY5o1
-         IpEPeRaE/yYsXBGv5y/noBYTa+BnChTQLKTf6cwpmZ8xeNbQf+VBTtZzBqK5zUK2toQU
-         3b7c4wBLgs5r7ba9aiofbNFzIrtrRJwB6pekiW0h5x3VzFu45oPsVwpA8y8cJnEy3GWs
-         8RGg==
-X-Gm-Message-State: AAQBX9dE1Fm48ZomB/FxPgn09qKMCu9nmjPH4saJLwQPok1u0aV4nMV7
-	tfVLyowEuv7B43oW7gy+5jjDWA==
-X-Google-Smtp-Source: AKy350ZFWiW0hGkCbNsxjK6vG6qEmnVmVQFNTRf9l1nODW+fWb8LJyQgCAFPx7AU+x2vmvQbclIzEQ==
-X-Received: by 2002:a17:906:1ec8:b0:906:3373:cfe9 with SMTP id m8-20020a1709061ec800b009063373cfe9mr13868776ejj.10.1681894373413;
-        Wed, 19 Apr 2023 01:52:53 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:62f5:eb43:f726:5fee? ([2a02:810d:15c0:828:62f5:eb43:f726:5fee])
-        by smtp.gmail.com with ESMTPSA id p3-20020a17090635c300b0094ed14a5b75sm8064533ejb.51.2023.04.19.01.52.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Apr 2023 01:52:53 -0700 (PDT)
-Message-ID: <05ebf834-2220-d1e6-e07a-529b8f9cb100@linaro.org>
-Date: Wed, 19 Apr 2023 10:52:51 +0200
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C58A32580
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 08:53:41 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.120])
+	by gateway (Coremail) with SMTP id _____8DxUOUUrD9kc9weAA--.48244S3;
+	Wed, 19 Apr 2023 16:53:40 +0800 (CST)
+Received: from [10.20.42.120] (unknown [10.20.42.120])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxWb0SrD9k6tIuAA--.54393S3;
+	Wed, 19 Apr 2023 16:53:39 +0800 (CST)
+Subject: Re: [PATCH v7 16/30] LoongArch: KVM: Implement update VM id function
+To: Huacai Chen <chenhuacai@kernel.org>
+References: <20230417094649.874671-1-zhaotianrui@loongson.cn>
+ <20230417094649.874671-17-zhaotianrui@loongson.cn>
+ <CAAhV-H4pyBi=0ckNDLErz6G_b5G7ti2wVDXF3a7xv-MiJtF_tA@mail.gmail.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+ Xi Ruoyao <xry111@xry111.site>
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+Message-ID: <d2dbcf54-4015-81ec-6b96-47cdcc22cd13@loongson.cn>
+Date: Wed, 19 Apr 2023 16:53:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH V3 1/7] dt-bindings: rtc: Subdivision of LS2X RTC
- compatible
-Content-Language: en-US
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
- Alessandro Zummo <a.zummo@towertech.it>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>,
- WANG Xuerui <kernel@xen0n.name>, linux-rtc@vger.kernel.org,
- linux-mips@vger.kernel.org, loongarch@lists.linux.dev,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- devicetree@vger.kernel.org, Qing Zhang <zhangqing@loongson.cn>,
- zhaoxiao <zhaoxiao@uniontech.com>, keguang.zhang@gmail.com
-References: <cover.1681370153.git.zhoubinbin@loongson.cn>
- <35f43a8cfc32b5a065e4a04eb6cc6abf311f2700.1681370153.git.zhoubinbin@loongson.cn>
- <b4b23751-a44c-2b38-0d55-a34711ad53c4@linaro.org>
- <CAMpQs4+XBQD9KB3XOPe4zp_vC5RxPaOZU0aJQZKTW=+9r5nmag@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAMpQs4+XBQD9KB3XOPe4zp_vC5RxPaOZU0aJQZKTW=+9r5nmag@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CAAhV-H4pyBi=0ckNDLErz6G_b5G7ti2wVDXF3a7xv-MiJtF_tA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxWb0SrD9k6tIuAA--.54393S3
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxCrykGw17uw4fuFyDGFW7Jwb_yoW5Xry3pF
+	WxCFn5Gr4xJr13C34aqr1FqFnI9395KF12va47t3WYyr12kwn5CrWvkrWDCFyrXr1rCr1I
+	vF15tF4akF1jy37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+	n4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+	s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
+	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2
+	jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz5lbUUUUU=
 
-On 19/04/2023 09:12, Binbin Zhou wrote:
-> On Mon, Apr 17, 2023 at 1:31 AM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 13/04/2023 09:57, Binbin Zhou wrote:
->>> The LS2X RTC alarm depends on the associated registers in a separate
->>> power management domain.
->>>
->>> In order to define the PM domain addresses of the different chips, a
->>> more detailed description of compatible is required.
->>
->> This does not match your diff at all.
->>
->>>
->>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
->>> ---
->>>  Documentation/devicetree/bindings/rtc/trivial-rtc.yaml | 7 +++++--
->>>  1 file changed, 5 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
->>> index a3603e638c37..2928811b83a0 100644
->>> --- a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
->>> +++ b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
->>> @@ -47,8 +47,11 @@ properties:
->>>        - isil,isl1218
->>>        # Intersil ISL12022 Real-time Clock
->>>        - isil,isl12022
->>> -      # Loongson-2K Socs/LS7A bridge Real-time Clock
->>> -      - loongson,ls2x-rtc
->>
->> Why removing it?
->>
->>> +      # Loongson LS7A bridge Real-time Clock
->>> +      - loongson,ls7a-rtc
->>> +      # Loongson-2K Socs Real-time Clock
->>> +      - loongson,ls2k0500-rtc
->>> +      - loongson,ls2k1000-rtc
->>
->> That's even more surprising...
->>
->> I don't understand what you are doing here at all.
-> Hi Krzysztof:
-> 
-> Sorry, maybe my description was not accurate.
-> 
-> Looking back at my V2 patchset, the first patch was to add ls2x-rtc compatible.
-> (https://lore.kernel.org/linux-rtc/0288efeb4209e4a49af07de6399045aaa00a970c.1673227292.git.zhoubinbin@loongson.cn/)
-> 
-> In the process of modifying the V2 patchset, it was discovered that
-> the ACPI domain offset addresses on some of the socs (LS2K1000) were
-> different and I wanted to differentiate them by soc compatible. So I
-> was going to drop the ls2x-rtc compatible directly from the V3 patch
-> set.
-> However, when I rebased the V3 patchset, I found that the previous
-> ls2x-rtc compatible patch had been merged (commit 473a8ce756fd). So I
-> had to remove it and add soc compatible.
 
-Can all folks in Loongson stop adding wildcards as compatibles? Several
-compatibles were acked, because we do not know what 'x' stands for. Now,
-it turns out it's a wildcard which is not allowed.
 
-https://elixir.bootlin.com/linux/v6.1-rc1/source/Documentation/devicetree/bindings/writing-bindings.rst#L42
+在 2023年04月19日 10:01, Huacai Chen 写道:
+> Hi, Tianrui,
+>
+> On Mon, Apr 17, 2023 at 5:47 PM Tianrui Zhao <zhaotianrui@loongson.cn> wrote:
+>> Implement kvm check vmid and update vmid, the vmid should be checked before
+>> vcpu enter guest.
+>>
+>> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+>> ---
+>>   arch/loongarch/kvm/vmid.c | 65 +++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 65 insertions(+)
+>>   create mode 100644 arch/loongarch/kvm/vmid.c
+>>
+>> diff --git a/arch/loongarch/kvm/vmid.c b/arch/loongarch/kvm/vmid.c
+>> new file mode 100644
+>> index 000000000000..7d9688c24184
+>> --- /dev/null
+>> +++ b/arch/loongarch/kvm/vmid.c
+>> @@ -0,0 +1,65 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+>> + */
+>> +
+>> +#include <linux/kvm_host.h>
+>> +#include <asm/kvm_host.h>
+> linux/kvm_host.h already include asm/kvm_host.h
+>
+> Huacai
+Thanks, I will remove the asm/kvm_host.h.
 
-> 
-> How about the following description:
-> Since commit 473a8ce756fd (dt-bindings: rtc: Add Loongson LS2X RTC
-> support), the ls2x-rtc compatible has been added. But the specific soc
-> compatible is needed to be used to define different ACPI domain offset
-> addresses.
-> 
-It's better. Anyway, SoC parts are rarely trivial devices, so this
-should be probably moved to its own schema.
-
-Best regards,
-Krzysztof
+Thanks
+Tianrui Zhao
+>> +#include "trace.h"
+>> +
+>> +static void _kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
+>> +{
+>> +       struct kvm_context *context;
+>> +       unsigned long vpid;
+>> +
+>> +       context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
+>> +       vpid = context->vpid_cache + 1;
+>> +       if (!(vpid & vpid_mask)) {
+>> +               /* finish round of 64 bit loop */
+>> +               if (unlikely(!vpid))
+>> +                       vpid = vpid_mask + 1;
+>> +
+>> +               /* vpid 0 reserved for root */
+>> +               ++vpid;
+>> +
+>> +               /* start new vpid cycle */
+>> +               kvm_flush_tlb_all();
+>> +       }
+>> +
+>> +       context->vpid_cache = vpid;
+>> +       vcpu->arch.vpid = vpid;
+>> +}
+>> +
+>> +void _kvm_check_vmid(struct kvm_vcpu *vcpu, int cpu)
+>> +{
+>> +       struct kvm_context *context;
+>> +       bool migrated;
+>> +       unsigned long ver, old, vpid;
+>> +
+>> +       /*
+>> +        * Are we entering guest context on a different CPU to last time?
+>> +        * If so, the VCPU's guest TLB state on this CPU may be stale.
+>> +        */
+>> +       context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
+>> +       migrated = (vcpu->arch.last_exec_cpu != cpu);
+>> +       vcpu->arch.last_exec_cpu = cpu;
+>> +
+>> +       /*
+>> +        * Check if our vpid is of an older version
+>> +        *
+>> +        * We also discard the stored vpid if we've executed on
+>> +        * another CPU, as the guest mappings may have changed without
+>> +        * hypervisor knowledge.
+>> +        */
+>> +       ver = vcpu->arch.vpid & ~vpid_mask;
+>> +       old = context->vpid_cache  & ~vpid_mask;
+>> +       if (migrated || (ver != old)) {
+>> +               _kvm_update_vpid(vcpu, cpu);
+>> +               trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
+>> +       }
+>> +
+>> +       /* Restore GSTAT(0x50).vpid */
+>> +       vpid = (vcpu->arch.vpid & vpid_mask)
+>> +               << CSR_GSTAT_GID_SHIFT;
+>> +       change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
+>> +}
+>> --
+>> 2.31.1
+>>
 
