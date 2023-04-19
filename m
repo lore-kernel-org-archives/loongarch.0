@@ -1,159 +1,199 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEBF33C4
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 11:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1681902021; bh=b1S7VJTLIRifd308ZQCu1pgx8j+nrYSNjvqtm9fCDZ0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qt/nkV1qlcmzYXM5lAtGyfya/IffhNNuZp7fuDPWC3sQL5rOpD3cDXMnm9NbaPexZ
-	 7j72+2BiB23Mo9DhpUGyiN5UT7BPUI0HqnJUg5/jsnJfC4ePUTSE5pmkucrBVl0IMZ
-	 i0oc8AAKSgSVJhUqGWY9Pn+StgGdUKrB6L1k4tlc=
-Received: from [100.100.33.167] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id E23D86011E;
-	Wed, 19 Apr 2023 19:00:20 +0800 (CST)
-Message-ID: <899085c1-7a74-8bab-1429-1b6e9e4c2c30@xen0n.name>
-Date: Wed, 19 Apr 2023 19:00:20 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755533D67
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 13:34:03 +0000 (UTC)
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-63d4595d60fso6953584b3a.0
+        for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 06:34:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681911243; x=1684503243;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PxKBdJz6P62xw3o1oOHy6gvL/UmSXqmJ0vRsGDHfXz4=;
+        b=mzt7zUu9/LUJvSIPaNj+nC+ArFvk3Wmz36d7P4hExfQnu/+5EJ/luadmhJCFNiq8eA
+         5mamh3uH/3u0VIJzJy4W31TNXYt1DvfBn6ZHGOaQZO/LaodxyaE7yMJE8BXQrMBetDD1
+         or6ct0PxWqhNSzFTI7QUR0GNkBsKZpZ79DqaN9iIdwxdDsEv8FenNeci7+RSvuikuLAT
+         68J4r2aw28njQbzjpScT2QNoBA3X+SSSqlRvn9uiCaccB9t2Uwb/G4C4D/IZDIaojb9q
+         azW1GR2HjveVXh0qkoLiSeS/y+b+MPHfKKr5FHg+1Fk7e61fzU4VCdWEM74x3aiYuZwi
+         ZxNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681911243; x=1684503243;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PxKBdJz6P62xw3o1oOHy6gvL/UmSXqmJ0vRsGDHfXz4=;
+        b=MmpqKQ03SXPplTd6q6Te09A2NO+hF9t0R6p11zfCA7YvwInWZTx15f+Behb1Qi51X5
+         ImfSf0lPkwSU0K4nuh9xC/z9qsf4crkbR4wt+nGJW7zqDFUJqiLFBXt+pzTDgNZOmiVm
+         NO3yobgnS50ZPrerbwtbK4f+azxpdxtW/bcwpN2sMiXbzEaW+kAAKXxxCwGO+P9WmeWY
+         2IAXpO9rSV36o6rwWD/7TPjEz9HAqJFIGrOKqdByrTo7kC/m2qMdMUm8U56oGNsUKI9w
+         3UNZGi5BhyEDTMb9dRPP1kMRLDSOnK9UFMRYfBhofAiP/UN/9IonWcnvoGhUFq5mQNMH
+         oWgA==
+X-Gm-Message-State: AAQBX9dRNPYBL95DelMQZBmmZnApTKECgePK8503bMBgFgvNb4ysnezO
+	T39mFRgijz4/32CH9NiYqfY=
+X-Google-Smtp-Source: AKy350YIBnQaE7WQxRLYlOkzgJwtc2fN5JwvE5Bu5492IB3LxeDfFswMVcmvTtBOzAP11iX9vi1kMA==
+X-Received: by 2002:a17:90a:c095:b0:247:4e73:cbdd with SMTP id o21-20020a17090ac09500b002474e73cbddmr2798673pjs.9.1681911242426;
+        Wed, 19 Apr 2023 06:34:02 -0700 (PDT)
+Received: from vernon-pc ([114.231.52.113])
+        by smtp.gmail.com with ESMTPSA id fv5-20020a17090b0e8500b0023b4d4ca3a9sm1392755pjb.50.2023.04.19.06.33.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Apr 2023 06:34:02 -0700 (PDT)
+Date: Wed, 19 Apr 2023 21:33:54 +0800
+From: Vernon Yang <vernon2gm@gmail.com>
+To: Vishal Moola <vishal.moola@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 4/33] mm: add utility functions for ptdesc
+Message-ID: <ZD/syK8RYO9FZ6ks@vernon-pc>
+References: <20230417205048.15870-1-vishal.moola@gmail.com>
+ <20230417205048.15870-5-vishal.moola@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.0
-Subject: Re: [PATCH 1/2] LoongArch: Add pad structure members for explicit
- alignment
-Content-Language: en-US
-To: Xi Ruoyao <xry111@xry111.site>, Qing Zhang <zhangqing@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20230418091348.9239-1-zhangqing@loongson.cn>
- <a7fa32c3af68083855e7690f67824d060d5c6135.camel@xry111.site>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <a7fa32c3af68083855e7690f67824d060d5c6135.camel@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230417205048.15870-5-vishal.moola@gmail.com>
 
-On 2023/4/19 18:42, Xi Ruoyao wrote:
-> On Tue, 2023-04-18 at 17:13 +0800, Qing Zhang wrote:
->> This is done in order to easily calculate the number of breakpoints
->> in hw_break_get.
->>
->> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
->> ---
->>   arch/loongarch/include/uapi/asm/ptrace.h |  3 ++-
->>   arch/loongarch/kernel/ptrace.c           | 13 +++++++++----
->>   2 files changed, 11 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/loongarch/include/uapi/asm/ptrace.h
->> b/arch/loongarch/include/uapi/asm/ptrace.h
->> index 2282ae1fd3b6..06e3be52cb04 100644
->> --- a/arch/loongarch/include/uapi/asm/ptrace.h
->> +++ b/arch/loongarch/include/uapi/asm/ptrace.h
->> @@ -57,11 +57,12 @@ struct user_lasx_state {
+On Mon, Apr 17, 2023 at 01:50:19PM -0700, Vishal Moola wrote:
+> Introduce utility functions setting the foundation for ptdescs. These
+> will also assist in the splitting out of ptdesc from struct page.
+>
+> ptdesc_alloc() is defined to allocate new ptdesc pages as compound
+> pages. This is to standardize ptdescs by allowing for one allocation
+> and one free function, in contrast to 2 allocation and 2 free functions.
+>
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> ---
+>  include/asm-generic/tlb.h | 11 ++++++++++
+>  include/linux/mm.h        | 44 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/pgtable.h   | 13 ++++++++++++
+>  3 files changed, 68 insertions(+)
+>
+> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+> index b46617207c93..6bade9e0e799 100644
+> --- a/include/asm-generic/tlb.h
+> +++ b/include/asm-generic/tlb.h
+> @@ -481,6 +481,17 @@ static inline void tlb_remove_page(struct mmu_gather *tlb, struct page *page)
+>  	return tlb_remove_page_size(tlb, page, PAGE_SIZE);
+>  }
+>
+> +static inline void tlb_remove_ptdesc(struct mmu_gather *tlb, void *pt)
+> +{
+> +	tlb_remove_table(tlb, pt);
+> +}
+> +
+> +/* Like tlb_remove_ptdesc, but for page-like page directories. */
+> +static inline void tlb_remove_page_ptdesc(struct mmu_gather *tlb, struct ptdesc *pt)
+> +{
+> +	tlb_remove_page(tlb, ptdesc_page(pt));
+> +}
+> +
+>  static inline void tlb_change_page_size(struct mmu_gather *tlb,
+>  						     unsigned int page_size)
+>  {
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index b18848ae7e22..ec3cbe2fa665 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2744,6 +2744,45 @@ static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long a
+>  }
+>  #endif /* CONFIG_MMU */
+>
+> +static inline struct ptdesc *virt_to_ptdesc(const void *x)
+> +{
+> +	return page_ptdesc(virt_to_head_page(x));
+> +}
+> +
+> +static inline void *ptdesc_to_virt(struct ptdesc *pt)
+> +{
+> +	return page_to_virt(ptdesc_page(pt));
+> +}
+> +
+> +static inline void *ptdesc_address(struct ptdesc *pt)
+> +{
+> +	return folio_address(ptdesc_folio(pt));
+> +}
+> +
+> +static inline bool ptdesc_is_reserved(struct ptdesc *pt)
+> +{
+> +	return folio_test_reserved(ptdesc_folio(pt));
+> +}
+> +
+> +static inline struct ptdesc *ptdesc_alloc(gfp_t gfp, unsigned int order)
+> +{
+> +	struct page *page = alloc_pages(gfp | __GFP_COMP, order);
+> +
+> +	return page_ptdesc(page);
+> +}
+> +
+> +static inline void ptdesc_free(struct ptdesc *pt)
+> +{
+> +	struct page *page = ptdesc_page(pt);
+> +
+> +	__free_pages(page, compound_order(page));
+> +}
+> +
+> +static inline void ptdesc_clear(void *x)
+> +{
+> +	clear_page(x);
+> +}
+> +
+>  #if USE_SPLIT_PTE_PTLOCKS
+>  #if ALLOC_SPLIT_PTLOCKS
+>  void __init ptlock_cache_init(void);
+> @@ -2970,6 +3009,11 @@ static inline void mark_page_reserved(struct page *page)
+>  	adjust_managed_page_count(page, -1);
+>  }
+>
+> +static inline void free_reserved_ptdesc(struct ptdesc *pt)
+> +{
+> +	free_reserved_page(ptdesc_page(pt));
+> +}
+> +
+>  /*
+>   * Default method to free all the __init memory into the buddy system.
+>   * The freed pages will be poisoned with pattern "poison" if it's within
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 7cc6ea057ee9..7cd803aa38eb 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -97,6 +97,19 @@ TABLE_MATCH(ptl, ptl);
+>  #undef TABLE_MATCH
+>  static_assert(sizeof(struct ptdesc) <= sizeof(struct page));
+>
+> +#define ptdesc_page(pt)			(_Generic((pt),			\
+> +	const struct ptdesc *:		(const struct page *)(pt),	\
+> +	struct ptdesc *:		(struct page *)(pt)))
+> +
+> +#define ptdesc_folio(pt)		(_Generic((pt),			\
+> +	const struct ptdesc *:		(const struct folio *)(pt),	\
+> +	struct ptdesc *:		(struct folio *)(pt)))
+> +
+> +static inline struct ptdesc *page_ptdesc(struct page *page)
+> +{
+> +	return (struct ptdesc *)page;
+> +}
 
-Drive-by comment to the patch author: there is no "user_lasx_state" yet. 
-Please always state your base commit if not obvious, or you should start 
-from some well-known upstream HEAD (e.g. Linus' rc tags, 
-loongarch-fixes, or loongarch-next).
+Hi Vishal,
 
->>   };
->>   
->>   struct user_watch_state {
->> -       uint16_t dbg_info;
->> +       uint64_t dbg_info;
-> 
-> Ouch.  This is a breaking change when we consider user code like
-> `printf(PRIu16 "\n", ptr->dbg_info);`.  Is it really necessary?
+I'm a little curious, why is the page_ptdesc() using inline functions instead of macro?
+If this is any magic, please tell me, thank you very much.
 
-Ah right. This is UAPI so without *very* concrete and convicing reason 
-why the change is not going to impact any potential users, it's gonna be 
-a presumed NAK. In other words you must demonstrate (1) why it's 
-absolutely necessary to make the change and (2) that it's impossible to 
-impact anyone, before any such changes can even be considered.
-
-> 
->>          struct {
->>                  uint64_t    addr;
->>                  uint64_t    mask;
->>                  uint32_t    ctrl;
->> +               uint32_t    pad;
->>          } dbg_regs[8];
->>   };
->>   
->> diff --git a/arch/loongarch/kernel/ptrace.c
->> b/arch/loongarch/kernel/ptrace.c
->> index 0c7c41e41cad..9c3bc1bbf2ff 100644
->> --- a/arch/loongarch/kernel/ptrace.c
->> +++ b/arch/loongarch/kernel/ptrace.c
->> @@ -475,10 +475,10 @@ static int ptrace_hbp_fill_attr_ctrl(unsigned
->> int note_type,
->>          return 0;
->>   }
->>   
->> -static int ptrace_hbp_get_resource_info(unsigned int note_type, u16
->> *info)
->> +static int ptrace_hbp_get_resource_info(unsigned int note_type, u64
->> *info)
->>   {
->>          u8 num;
->> -       u16 reg = 0;
->> +       u64 reg = 0;
->>   
->>          switch (note_type) {
->>          case NT_LOONGARCH_HW_BREAK:
->> @@ -616,7 +616,7 @@ static int hw_break_get(struct task_struct
->> *target,
->>                          const struct user_regset *regset,
->>                          struct membuf to)
->>   {
->> -       u16 info;
->> +       u64 info;
->>          u32 ctrl;
->>          u64 addr, mask;
->>          int ret, idx = 0;
->> @@ -646,6 +646,7 @@ static int hw_break_get(struct task_struct
->> *target,
->>                  membuf_store(&to, addr);
->>                  membuf_store(&to, mask);
->>                  membuf_store(&to, ctrl);
->> +               membuf_zero(&to, sizeof(u32));
->>                  idx++;
->>          }
->>   
->> @@ -662,7 +663,7 @@ static int hw_break_set(struct task_struct
->> *target,
->>          int ret, idx = 0, offset, limit;
->>          unsigned int note_type = regset->core_note_type;
->>   
->> -       /* Resource info */
->> +       /* Resource info and pad */
->>          offset = offsetof(struct user_watch_state, dbg_regs);
->>          user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 0,
->> offset);
->>   
->> @@ -704,6 +705,10 @@ static int hw_break_set(struct task_struct
->> *target,
->>                  if (ret)
->>                          return ret;
->>                  offset += PTRACE_HBP_CTRL_SZ;
->> +
->> +               user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
->> +                                         offset, offset +
->> PTRACE_HBP_PAD_SZ);
->> +               offset += PTRACE_HBP_PAD_SZ;
->>                  idx++;
->>          }
->>   
-> 
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+> +
+>  /*
+>   * A page table page can be thought of an array like this: pXd_t[PTRS_PER_PxD]
+>   *
+>
+> --
+> 2.39.2
+>
