@@ -1,158 +1,559 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1492564
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 07:54:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1681890851;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ku4/Si8D6xrlYmDkiBxBM7QW/Zhm4h1GUH6h0hqbhBo=;
-	b=KEl+iPBF+usjCmxggqrsRVXnav4zRJuun8FrN9XXc+MKcjf0bERK0b1H1FCAyzVksqFg77
-	iEcyx6SxHhLMZKFKSu0kA8NOs/iFynlywZEXMJIbk9G4Rtkf34FiYn4HLI+tN9iYrZciI+
-	o7nsSzj1VMsuNi31HJqUWJTCDeJhSus=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-662-b-S-VDOkMfm_Xyien24CJA-1; Wed, 19 Apr 2023 03:54:10 -0400
-X-MC-Unique: b-S-VDOkMfm_Xyien24CJA-1
-Received: by mail-wm1-f69.google.com with SMTP id q19-20020a05600c46d300b003ef69894934so826549wmo.6
-        for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 00:54:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681890849; x=1684482849;
-        h=content-transfer-encoding:in-reply-to:subject:organization:from
-         :references:cc:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ku4/Si8D6xrlYmDkiBxBM7QW/Zhm4h1GUH6h0hqbhBo=;
-        b=GRP7EoLrCPVaZDy9QtDXgWC3RWXb9E9s90rhetEiChgT/RZkTGSXkNGzNtPAZXCIIp
-         XsE0ExEuniJPa68IZr1qbnU9R8w0aS+vPAhx3QxjRg+w4oRNdbG/rsPmVJhhOzRX71Xo
-         ZfpSJM7m3L9Z/gu53GvMs9e5J1hT4ifQkRupgiPqkrIqeynXVNwonPN2HeslxlW1uUx0
-         hfz4CS+ADOMaZ8Otwkf2pmlysyEMZTTxQm2cUuyeX6y6mZKbu/C4HagXV2sV5amrMTHb
-         B0HPZv+I03DXbyBpIGTZ1BlY4FHKmZMjgrD+3v3Tvxko5m6andMDrsWJRWbJtEJ/0QEW
-         3DXA==
-X-Gm-Message-State: AAQBX9cY9ukbAzKXfJEQ909WzNh6TS+2NUcePjbmRr/lsrKKlUl/bHNx
-	osD2wLSpG7kDYffFq/1Vmi9JYSyh9c7i4m8WJ11Syj5PgsDXQ9Q08exAUksyrbZ+Rw6nCIY3dOv
-	K4ujCZ6MChbDM0ibRlxis
-X-Received: by 2002:a05:600c:2305:b0:3f1:728a:1881 with SMTP id 5-20020a05600c230500b003f1728a1881mr7565078wmo.31.1681890848810;
-        Wed, 19 Apr 2023 00:54:08 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZGeCzv8hHHPCLoBp3+kn6wkQN0cMnv6OhMvvwsxXxMwENw712YUrmrVhvIskYHJBvgTLUksw==
-X-Received: by 2002:a05:600c:2305:b0:3f1:728a:1881 with SMTP id 5-20020a05600c230500b003f1728a1881mr7565048wmo.31.1681890848428;
-        Wed, 19 Apr 2023 00:54:08 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c70b:7b00:7c52:a5fa:8004:96fd? (p200300cbc70b7b007c52a5fa800496fd.dip0.t-ipconnect.de. [2003:cb:c70b:7b00:7c52:a5fa:8004:96fd])
-        by smtp.gmail.com with ESMTPSA id l26-20020a1ced1a000000b003eeb1d6a470sm1327085wmh.13.2023.04.19.00.54.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Apr 2023 00:54:08 -0700 (PDT)
-Message-ID: <e0c0ad67-f23f-ff35-80bf-841dcfd43d99@redhat.com>
-Date: Wed, 19 Apr 2023 09:54:06 +0200
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84E172580
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 08:46:08 +0000 (UTC)
+Received: from loongson.cn (unknown [10.20.42.120])
+	by gateway (Coremail) with SMTP id _____8AxlF1Oqj9k5tseAA--.47907S3;
+	Wed, 19 Apr 2023 16:46:06 +0800 (CST)
+Received: from [10.20.42.120] (unknown [10.20.42.120])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx+71Mqj9kJtAuAA--.56872S3;
+	Wed, 19 Apr 2023 16:46:04 +0800 (CST)
+Subject: Re: [PATCH v7 01/30] LoongArch: KVM: Add kvm related header files
+To: Huacai Chen <chenhuacai@kernel.org>
+References: <20230417095950.875228-1-zhaotianrui@loongson.cn>
+ <20230417095950.875228-2-zhaotianrui@loongson.cn>
+ <CAAhV-H7TH7fbaR908MSGQpZ5Y_+x+DWiXPV20dpm0Duvc4GDsg@mail.gmail.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
+ Xi Ruoyao <xry111@xry111.site>
+From: Tianrui Zhao <zhaotianrui@loongson.cn>
+Message-ID: <6bf35372-a3fb-bdcd-2be9-b297ff8a295a@loongson.cn>
+Date: Wed, 19 Apr 2023 16:46:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-To: Vishal Moola <vishal.moola@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
- xen-devel@lists.xenproject.org, kvm@vger.kernel.org
-References: <20230417205048.15870-1-vishal.moola@gmail.com>
- <20230417205048.15870-2-vishal.moola@gmail.com>
- <da600570-51c7-8088-b46b-7524c9e66e5d@redhat.com>
- <CAOzc2pwpRhNoFbdzdzuvrqbZdf2OsrTvBGs40QCZJjA5fS_q1A@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH 01/33] s390: Use _pt_s390_gaddr for gmap address tracking
-In-Reply-To: <CAOzc2pwpRhNoFbdzdzuvrqbZdf2OsrTvBGs40QCZJjA5fS_q1A@mail.gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <CAAhV-H7TH7fbaR908MSGQpZ5Y_+x+DWiXPV20dpm0Duvc4GDsg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Cx+71Mqj9kJtAuAA--.56872S3
+X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvAXoW3Cw18CF1xGr4kJr4fJF4fXwb_yoW8WF43to
+	W3tF4Igw48Gr1UCws8G342qa45Z34rKw47Aa13C3s3X3W7ta4DGr48Kw4FqF43uF1kKrW7
+	uasxX3WDZay2vwn5n29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
+	UUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
+	0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
+	M2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
+	CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2
+	z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2
+	IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E
+	4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGw
+	C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
+	MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
+	IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
+	87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
 
-On 18.04.23 23:33, Vishal Moola wrote:
-> On Tue, Apr 18, 2023 at 8:45 AM David Hildenbrand <david@redhat.com> wrote:
+
+
+在 2023年04月19日 09:53, Huacai Chen 写道:
+> Hi, Tianrui,
+>
+> On Mon, Apr 17, 2023 at 5:59 PM Tianrui Zhao <zhaotianrui@loongson.cn> wrote:
+>> Add LoongArch KVM related header files, including kvm.h,
+>> kvm_host.h, kvm_types.h. All of those are about LoongArch
+>> virtualization features and kvm interfaces.
 >>
->> On 17.04.23 22:50, Vishal Moola (Oracle) wrote:
->>> s390 uses page->index to keep track of page tables for the guest address
->>> space. In an attempt to consolidate the usage of page fields in s390,
->>> replace _pt_pad_2 with _pt_s390_gaddr to replace page->index in gmap.
->>>
->>> This will help with the splitting of struct ptdesc from struct page, as
->>> well as allow s390 to use _pt_frag_refcount for fragmented page table
->>> tracking.
->>>
->>> Since page->_pt_s390_gaddr aliases with mapping, ensure its set to NULL
->>> before freeing the pages as well.
->>>
->>> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
->>> ---
+>> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+>> ---
+>>   arch/loongarch/include/asm/cpu-features.h |  22 ++
+>>   arch/loongarch/include/asm/kvm_host.h     | 268 ++++++++++++++++++++++
+>>   arch/loongarch/include/asm/kvm_types.h    |  11 +
+>>   arch/loongarch/include/uapi/asm/kvm.h     | 107 +++++++++
+>>   include/uapi/linux/kvm.h                  |   9 +
+>>   5 files changed, 417 insertions(+)
+>>   create mode 100644 arch/loongarch/include/asm/kvm_host.h
+>>   create mode 100644 arch/loongarch/include/asm/kvm_types.h
+>>   create mode 100644 arch/loongarch/include/uapi/asm/kvm.h
 >>
->> [...]
+>> diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
+>> index b07974218393..345b7674a15f 100644
+>> --- a/arch/loongarch/include/asm/cpu-features.h
+>> +++ b/arch/loongarch/include/asm/cpu-features.h
+>> @@ -64,5 +64,27 @@
+>>   #define cpu_has_guestid                cpu_opt(LOONGARCH_CPU_GUESTID)
+>>   #define cpu_has_hypervisor     cpu_opt(LOONGARCH_CPU_HYPERVISOR)
 >>
->>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
->>> index 3fc9e680f174..2616d64c0e8c 100644
->>> --- a/include/linux/mm_types.h
->>> +++ b/include/linux/mm_types.h
->>> @@ -144,7 +144,7 @@ struct page {
->>>                struct {        /* Page table pages */
->>>                        unsigned long _pt_pad_1;        /* compound_head */
->>>                        pgtable_t pmd_huge_pte; /* protected by page->ptl */
->>> -                     unsigned long _pt_pad_2;        /* mapping */
->>> +                     unsigned long _pt_s390_gaddr;   /* mapping */
->>>                        union {
->>>                                struct mm_struct *pt_mm; /* x86 pgds only */
->>>                                atomic_t pt_frag_refcount; /* powerpc */
+>> +#define cpu_has_matc_guest     (cpu_data[0].guest_cfg & BIT(0))
+>> +#define cpu_has_matc_root      (cpu_data[0].guest_cfg & BIT(1))
+>> +#define cpu_has_matc_nest      (cpu_data[0].guest_cfg & BIT(2))
+>> +#define cpu_has_sitp           (cpu_data[0].guest_cfg & BIT(6))
+>> +#define cpu_has_titp           (cpu_data[0].guest_cfg & BIT(8))
+>> +#define cpu_has_toep           (cpu_data[0].guest_cfg & BIT(10))
+>> +#define cpu_has_topp           (cpu_data[0].guest_cfg & BIT(12))
+>> +#define cpu_has_torup          (cpu_data[0].guest_cfg & BIT(14))
+>> +#define cpu_has_gcip_all       (cpu_data[0].guest_cfg & BIT(16))
+>> +#define cpu_has_gcip_hit       (cpu_data[0].guest_cfg & BIT(17))
+>> +#define cpu_has_gcip_secure    (cpu_data[0].guest_cfg & BIT(18))
+>> +
+>> +/*
+>> + * Guest capabilities
+>> + */
+>> +#define cpu_guest_has_conf1    (cpu_data[0].guest.conf & BIT(1))
+>> +#define cpu_guest_has_conf2    (cpu_data[0].guest.conf & BIT(2))
+>> +#define cpu_guest_has_conf3    (cpu_data[0].guest.conf & BIT(3))
+>> +#define cpu_guest_has_fpu      (cpu_data[0].guest.options & LOONGARCH_CPU_FPU)
+>> +#define cpu_guest_has_perf     (cpu_data[0].guest.options & LOONGARCH_CPU_PMP)
+>> +#define cpu_guest_has_watch    (cpu_data[0].guest.options & LOONGARCH_CPU_WATCH)
+>> +#define cpu_guest_has_lsx      (cpu_data[0].guest.ases & LOONGARCH_ASE_LSX)
+> For the host cpu info, ases has combined into options, I think it is
+> better do the same thing for KVM.
+>
+> Huacai
+Thanks, I will combine the ases into guest.options.
+
+Thanks
+Tianrui Zhao
+>>   #endif /* __ASM_CPU_FEATURES_H */
+>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>> new file mode 100644
+>> index 000000000000..bd239079b36f
+>> --- /dev/null
+>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>> @@ -0,0 +1,268 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+>> + */
+>> +
+>> +#ifndef __ASM_LOONGARCH_KVM_HOST_H__
+>> +#define __ASM_LOONGARCH_KVM_HOST_H__
+>> +
+>> +#include <linux/cpumask.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/hrtimer.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/types.h>
+>> +#include <linux/kvm.h>
+>> +#include <linux/kvm_types.h>
+>> +#include <linux/threads.h>
+>> +#include <linux/spinlock.h>
+>> +
+>> +#include <asm/inst.h>
+>> +#include <asm/loongarch.h>
+>> +
+>> +/* Loongarch KVM register ids */
+>> +#define LOONGARCH_CSR_32(_R, _S)       \
+>> +       (KVM_REG_LOONGARCH_CSR | KVM_REG_SIZE_U32 | (8 * (_R) + (_S)))
+>> +
+>> +#define LOONGARCH_CSR_64(_R, _S)       \
+>> +       (KVM_REG_LOONGARCH_CSR | KVM_REG_SIZE_U64 | (8 * (_R) + (_S)))
+>> +
+>> +#define KVM_IOC_CSRID(id)              LOONGARCH_CSR_64(id, 0)
+>> +#define KVM_GET_IOC_CSRIDX(id)         ((id & KVM_CSR_IDX_MASK) >> 3)
+>> +
+>> +#define KVM_MAX_VCPUS                  256
+>> +/* memory slots that does not exposed to userspace */
+>> +#define KVM_PRIVATE_MEM_SLOTS          0
+>> +
+>> +#define KVM_HALT_POLL_NS_DEFAULT       500000
+>> +
+>> +struct kvm_vm_stat {
+>> +       struct kvm_vm_stat_generic generic;
+>> +};
+>> +
+>> +struct kvm_vcpu_stat {
+>> +       struct kvm_vcpu_stat_generic generic;
+>> +       u64 idle_exits;
+>> +       u64 signal_exits;
+>> +       u64 int_exits;
+>> +       u64 cpucfg_exits;
+>> +};
+>> +
+>> +struct kvm_arch_memory_slot {
+>> +};
+>> +
+>> +struct kvm_context {
+>> +       unsigned long vpid_cache;
+>> +       struct kvm_vcpu *last_vcpu;
+>> +};
+>> +
+>> +struct kvm_world_switch {
+>> +       int (*guest_eentry)(void);
+>> +       int (*enter_guest)(struct kvm_run *run, struct kvm_vcpu *vcpu);
+>> +       unsigned long page_order;
+>> +};
+>> +
+>> +struct kvm_arch {
+>> +       /* Guest physical mm */
+>> +       struct mm_struct gpa_mm;
+>> +       /* Mask of CPUs needing GPA ASID flush */
+>> +       cpumask_t asid_flush_mask;
+>> +
+>> +       unsigned char online_vcpus;
+>> +       unsigned char is_migrate;
+>> +       s64 time_offset;
+>> +       struct kvm_context __percpu *vmcs;
+>> +       unsigned long gpa_size;
+>> +};
+>> +
+>> +
+>> +#define LOONGARCH_CSRS         0x100
+>> +#define CSR_UCWIN_BASE         0x100
+>> +#define CSR_UCWIN_SIZE         0x10
+>> +#define CSR_DMWIN_BASE         0x180
+>> +#define CSR_DMWIN_SIZE         0x4
+>> +#define CSR_PERF_BASE          0x200
+>> +#define CSR_PERF_SIZE          0x8
+>> +#define CSR_DEBUG_BASE         0x500
+>> +#define CSR_DEBUG_SIZE         0x3
+>> +#define CSR_ALL_SIZE           0x800
+>> +
+>> +struct loongarch_csrs {
+>> +       unsigned long csrs[CSR_ALL_SIZE];
+>> +};
+>> +
+>> +/* Resume Flags */
+>> +#define RESUME_GUEST           1
+>> +#define RESUME_HOST            0
+>> +
+>> +enum emulation_result {
+>> +       EMULATE_DONE,           /* no further processing */
+>> +       EMULATE_DO_MMIO,        /* kvm_run filled with MMIO request */
+>> +       EMULATE_FAIL,           /* can't emulate this instruction */
+>> +       EMULATE_WAIT,           /* WAIT instruction */
+>> +       EMULATE_EXCEPT,         /* A guest exception has been generated */
+>> +       EMULATE_DO_IOCSR,       /* handle IOCSR request */
+>> +};
+>> +
+>> +#define KVM_NR_MEM_OBJS                4
+>> +#define KVM_LARCH_FPU          (0x1 << 0)
+>> +#define KVM_LARCH_CSR          (0x1 << 1)
+>> +
+>> +struct kvm_vcpu_arch {
+>> +       /*
+>> +        * Switch pointer-to-function type to unsigned long
+>> +        * for loading the value into register directly.
+>> +        */
+>> +       unsigned long guest_eentry;
+>> +       unsigned long host_eentry;
+>> +
+>> +       /* Pointers stored here for easy access from assembly code. */
+>> +       int (*handle_exit)(struct kvm_run *run, struct kvm_vcpu *vcpu);
+>> +
+>> +       /* Host registers preserved across guest mode execution */
+>> +       unsigned long host_stack;
+>> +       unsigned long host_gp;
+>> +       unsigned long host_pgd;
+>> +       unsigned long host_pgdhi;
+>> +       unsigned long host_entryhi;
+>> +
+>> +       /* Host CSR registers used when handling exits from guest */
+>> +       unsigned long badv;
+>> +       unsigned long host_estat;
+>> +       unsigned long badi;
+>> +       unsigned long host_ecfg;
+>> +       unsigned long host_percpu;
+>> +
+>> +       /* GPRS */
+>> +       unsigned long gprs[32];
+>> +       unsigned long pc;
+>> +
+>> +       /* FPU State */
+>> +       struct loongarch_fpu fpu FPU_ALIGN;
+>> +       /* Which auxiliary state is loaded (KVM_LOONGARCH_AUX_*) */
+>> +       unsigned int aux_inuse;
+>> +
+>> +       /* CSR State */
+>> +       struct loongarch_csrs *csr;
+>> +
+>> +       /* GPR used as IO source/target */
+>> +       u32 io_gpr;
+>> +
+>> +       struct hrtimer swtimer;
+>> +       /* Count timer control KVM register */
+>> +       u32 count_ctl;
+>> +
+>> +       /* Bitmask of exceptions that are pending */
+>> +       unsigned long irq_pending;
+>> +       /* Bitmask of pending exceptions to be cleared */
+>> +       unsigned long irq_clear;
+>> +
+>> +       /* Cache some mmu pages needed inside spinlock regions */
+>> +       struct kvm_mmu_memory_cache mmu_page_cache;
+>> +
+>> +       /* vcpu's vpid */
+>> +       u64 vpid;
+>> +
+>> +       /* Period of stable timer tick in ns */
+>> +       u64 timer_period;
+>> +       /* Frequency of stable timer in Hz */
+>> +       u64 timer_mhz;
+>> +       /* Stable bias from the raw time */
+>> +       u64 timer_bias;
+>> +       /* Dynamic nanosecond bias (multiple of timer_period) to avoid overflow */
+>> +       s64 timer_dyn_bias;
+>> +       /* Save ktime */
+>> +       ktime_t stable_ktime_saved;
+>> +
+>> +       u64 core_ext_ioisr[4];
+>> +
+>> +       /* Last CPU the VCPU state was loaded on */
+>> +       int last_sched_cpu;
+>> +       /* Last CPU the VCPU actually executed guest code on */
+>> +       int last_exec_cpu;
+>> +       /* mp state */
+>> +       struct kvm_mp_state mp_state;
+>> +};
+>> +
+>> +static inline unsigned long readl_sw_gcsr(struct loongarch_csrs *csr, int reg)
+>> +{
+>> +       return csr->csrs[reg];
+>> +}
+>> +
+>> +static inline void writel_sw_gcsr(struct loongarch_csrs *csr, int reg,
+>> +               unsigned long val)
+>> +{
+>> +       csr->csrs[reg] = val;
+>> +}
+>> +
+>> +/* Helpers */
+>> +static inline bool _kvm_guest_has_fpu(struct kvm_vcpu_arch *arch)
+>> +{
+>> +       return cpu_has_fpu;
+>> +}
+>> +
+>> +void _kvm_init_fault(void);
+>> +
+>> +/* Debug: dump vcpu state */
+>> +int kvm_arch_vcpu_dump_regs(struct kvm_vcpu *vcpu);
+>> +
+>> +/* MMU handling */
+>> +int kvm_handle_mm_fault(struct kvm_vcpu *vcpu, unsigned long badv, bool write);
+>> +void kvm_flush_tlb_all(void);
+>> +void _kvm_destroy_mm(struct kvm *kvm);
+>> +pgd_t *kvm_pgd_alloc(void);
+>> +
+>> +#define KVM_ARCH_WANT_MMU_NOTIFIER
+>> +int kvm_unmap_hva_range(struct kvm *kvm,
+>> +                       unsigned long start, unsigned long end, bool blockable);
+>> +void kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+>> +int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+>> +int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+>> +
+>> +static inline void update_pc(struct kvm_vcpu_arch *arch)
+>> +{
+>> +       arch->pc += 4;
+>> +}
+>> +
+>> +/**
+>> + * kvm_is_ifetch_fault() - Find whether a TLBL exception is due to ifetch fault.
+>> + * @vcpu:      Virtual CPU.
+>> + *
+>> + * Returns:    Whether the TLBL exception was likely due to an instruction
+>> + *             fetch fault rather than a data load fault.
+>> + */
+>> +static inline bool kvm_is_ifetch_fault(struct kvm_vcpu_arch *arch)
+>> +{
+>> +       if (arch->pc == arch->badv)
+>> +               return true;
+>> +
+>> +       return false;
+>> +}
+>> +
+>> +/* Misc */
+>> +static inline void kvm_arch_hardware_unsetup(void) {}
+>> +static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+>> +static inline void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen) {}
+>> +static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
+>> +static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
+>> +static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
+>> +static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
+>> +static inline void kvm_arch_free_memslot(struct kvm *kvm,
+>> +                                  struct kvm_memory_slot *slot) {}
+>> +void _kvm_check_vmid(struct kvm_vcpu *vcpu, int cpu);
+>> +enum hrtimer_restart kvm_swtimer_wakeup(struct hrtimer *timer);
+>> +int kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa);
+>> +void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm,
+>> +                                       const struct kvm_memory_slot *memslot);
+>> +void kvm_init_vmcs(struct kvm *kvm);
+>> +void kvm_vector_entry(void);
+>> +int  kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu);
+>> +extern const unsigned long kvm_vector_size;
+>> +extern const unsigned long kvm_enter_guest_size;
+>> +extern unsigned long vpid_mask;
+>> +extern struct kvm_world_switch *kvm_loongarch_ops;
+>> +
+>> +#define SW_GCSR        (1 << 0)
+>> +#define HW_GCSR        (1 << 1)
+>> +int get_gcsr_flag(int csr);
+>> +extern void set_hw_gcsr(int csr_id, unsigned long val);
+>> +#endif /* __ASM_LOONGARCH_KVM_HOST_H__ */
+>> diff --git a/arch/loongarch/include/asm/kvm_types.h b/arch/loongarch/include/asm/kvm_types.h
+>> new file mode 100644
+>> index 000000000000..060647b5fe2e
+>> --- /dev/null
+>> +++ b/arch/loongarch/include/asm/kvm_types.h
+>> @@ -0,0 +1,11 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+>> + */
+>> +
+>> +#ifndef _ASM_LOONGARCH_KVM_TYPES_H
+>> +#define _ASM_LOONGARCH_KVM_TYPES_H
+>> +
+>> +#define KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE      4
+>> +
+>> +#endif /* _ASM_LOONGARCH_KVM_TYPES_H */
+>> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+>> new file mode 100644
+>> index 000000000000..074d86ba532c
+>> --- /dev/null
+>> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+>> @@ -0,0 +1,107 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+>> +/*
+>> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+>> + */
+>> +
+>> +#ifndef __UAPI_ASM_LOONGARCH_KVM_H
+>> +#define __UAPI_ASM_LOONGARCH_KVM_H
+>> +
+>> +#include <linux/types.h>
+>> +
+>> +/*
+>> + * KVM Loongarch specific structures and definitions.
+>> + *
+>> + * Some parts derived from the x86 version of this file.
+>> + */
+>> +
+>> +#define __KVM_HAVE_READONLY_MEM
+>> +
+>> +#define KVM_COALESCED_MMIO_PAGE_OFFSET 1
+>> +
+>> +/*
+>> + * for KVM_GET_REGS and KVM_SET_REGS
+>> + */
+>> +struct kvm_regs {
+>> +       /* out (KVM_GET_REGS) / in (KVM_SET_REGS) */
+>> +       __u64 gpr[32];
+>> +       __u64 pc;
+>> +};
+>> +
+>> +/*
+>> + * for KVM_GET_FPU and KVM_SET_FPU
+>> + */
+>> +struct kvm_fpu {
+>> +       __u32 fcsr;
+>> +       __u32 none;
+>> +       __u64 fcc;    /* 8x8 */
+>> +       struct kvm_fpureg {
+>> +               __u64 val64[4];
+>> +       } fpr[32];
+>> +};
+>> +
+>> +/*
+>> + * For LoongArch, we use KVM_SET_ONE_REG and KVM_GET_ONE_REG to access various
+>> + * registers.  The id field is broken down as follows:
+>> + *
+>> + *  bits[63..52] - As per linux/kvm.h
+>> + *  bits[51..32] - Must be zero.
+>> + *  bits[31..16] - Register set.
+>> + *
+>> + * Register set = 0: GP registers from kvm_regs (see definitions below).
+>> + *
+>> + * Register set = 1: CSR registers.
+>> + *
+>> + * Register set = 2: KVM specific registers (see definitions below).
+>> + *
+>> + * Register set = 3: FPU / SIMD registers (see definitions below).
+>> + *
+>> + * Other sets registers may be added in the future.  Each set would
+>> + * have its own identifier in bits[31..16].
+>> + */
+>> +
+>> +#define KVM_REG_LOONGARCH_GP           (KVM_REG_LOONGARCH | 0x00000ULL)
+>> +#define KVM_REG_LOONGARCH_CSR          (KVM_REG_LOONGARCH | 0x10000ULL)
+>> +#define KVM_REG_LOONGARCH_KVM          (KVM_REG_LOONGARCH | 0x20000ULL)
+>> +#define KVM_REG_LOONGARCH_FPU          (KVM_REG_LOONGARCH | 0x30000ULL)
+>> +#define KVM_REG_LOONGARCH_MASK         (KVM_REG_LOONGARCH | 0x30000ULL)
+>> +#define KVM_CSR_IDX_MASK               (0x10000 - 1)
+>> +
+>> +/*
+>> + * KVM_REG_LOONGARCH_KVM - KVM specific control registers.
+>> + */
+>> +
+>> +#define KVM_REG_LOONGARCH_COUNTER      (KVM_REG_LOONGARCH_KVM | KVM_REG_SIZE_U64 | 3)
+>> +#define KVM_REG_LOONGARCH_VCPU_RESET   (KVM_REG_LOONGARCH_KVM | KVM_REG_SIZE_U64 | 4)
+>> +
+>> +struct kvm_debug_exit_arch {
+>> +};
+>> +
+>> +/* for KVM_SET_GUEST_DEBUG */
+>> +struct kvm_guest_debug_arch {
+>> +};
+>> +
+>> +/* definition of registers in kvm_run */
+>> +struct kvm_sync_regs {
+>> +};
+>> +
+>> +/* dummy definition */
+>> +struct kvm_sregs {
+>> +};
+>> +
+>> +struct kvm_iocsr_entry {
+>> +       __u32 addr;
+>> +       __u32 pad;
+>> +       __u64 data;
+>> +};
+>> +
+>> +struct kvm_loongarch_interrupt {
+>> +       /* in */
+>> +       __u32 cpu;
+>> +       __u32 irq;
+>> +};
+>> +
+>> +#define KVM_NR_IRQCHIPS                1
+>> +#define KVM_IRQCHIP_NUM_PINS   64
+>> +#define KVM_MAX_CORES          256
+>> +
+>> +#endif /* __UAPI_ASM_LOONGARCH_KVM_H */
+>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+>> index d77aef872a0a..d14fde87ae35 100644
+>> --- a/include/uapi/linux/kvm.h
+>> +++ b/include/uapi/linux/kvm.h
+>> @@ -264,6 +264,7 @@ struct kvm_xen_exit {
+>>   #define KVM_EXIT_RISCV_SBI        35
+>>   #define KVM_EXIT_RISCV_CSR        36
+>>   #define KVM_EXIT_NOTIFY           37
+>> +#define KVM_EXIT_LOONGARCH_IOCSR  38
 >>
->> The confusing part is, that these gmap page tables are not ordinary
->> process page tables that we would ordinarily place into this section
->> here. That's why they are also not allocated/freed using the typical
->> page table constructor/destructor ...
-> 
-> I initially thought the same, so I was quite confused when I saw
-> __gmap_segment_gaddr was using pmd_pgtable_page().
-> 
-> Although they are not ordinary process page tables, since we
-> eventually want to move them out of struct page, I think shifting them
-> to be in ptdescs, being a memory descriptor for page tables, makes
-> the most sense.
-
-Seeing utilities like tlb_remove_page_ptdesc() that don't really apply 
-to such page tables, I wonder if we should much rather treat such 
-shadow/auxiliary/... page tables (just like other architectures like 
-x86, arm, ... employ as well) as a distinct type.
-
-And have ptdesc be the common type for all process page tables.
-
-> 
-> Another option is to leave pmd_pgtable_page() as is just for this case.
-> Or we can revert commit 7e25de77bc5ea which uses the function here
-> then figure out where these gmap pages table pages will go later.
-
-I'm always confused when reading gmap code, so let me have another look :)
-
-The confusing part is that s390x shares the lowest level page tables 
-(PTE tables) between the process and gmap ("guest mapping", similar to 
-EPT on x86-64). It maps these process PTE tables (covering 1 MiB) into 
-gmap-specific PMD tables.
-
-pmd_pgtable_page() should indeed always give us a gmap-specific 
-PMD-table. In fact, something allocated via gmap_alloc_table().
-
-Decoupling both concepts sounds like a good idea.
-
--- 
-Thanks,
-
-David / dhildenb
+>>   /* For KVM_EXIT_INTERNAL_ERROR */
+>>   /* Emulate instruction failed. */
+>> @@ -336,6 +337,13 @@ struct kvm_run {
+>>                          __u32 len;
+>>                          __u8  is_write;
+>>                  } mmio;
+>> +               /* KVM_EXIT_LOONGARCH_IOCSR */
+>> +               struct {
+>> +                       __u64 phys_addr;
+>> +                       __u8  data[8];
+>> +                       __u32 len;
+>> +                       __u8  is_write;
+>> +               } iocsr_io;
+>>                  /* KVM_EXIT_HYPERCALL */
+>>                  struct {
+>>                          __u64 nr;
+>> @@ -1354,6 +1362,7 @@ struct kvm_dirty_tlb {
+>>   #define KVM_REG_ARM64          0x6000000000000000ULL
+>>   #define KVM_REG_MIPS           0x7000000000000000ULL
+>>   #define KVM_REG_RISCV          0x8000000000000000ULL
+>> +#define KVM_REG_LOONGARCH      0x9000000000000000ULL
+>>
+>>   #define KVM_REG_SIZE_SHIFT     52
+>>   #define KVM_REG_SIZE_MASK      0x00f0000000000000ULL
+>> --
+>> 2.31.1
+>>
+>>
 
