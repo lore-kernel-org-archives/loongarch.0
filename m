@@ -1,95 +1,88 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5009E23C3
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 07:16:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1681888609; bh=7s/jLHBctsRrU3qW3AWEjYwuAveEJvUVNRGYx1QOcas=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=A7dabfFt4fv1j4OwftiUanXz4+GWoe+UDksFoMlt3IEV7k9Vk/UyV9OlrDCKcy7qk
-	 CL6u3sKz61CwndSKbps4goOJB4ozhYxt/VvV76lQaGtra0ULCum8oJsbIwh3yqtus3
-	 WjlSkY119xN26Bcntn3H5acyHPeEX9Auwbesr88o=
-Received: from [100.100.33.167] (unknown [220.248.53.61])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id E3C956011C;
-	Wed, 19 Apr 2023 15:16:48 +0800 (CST)
-Message-ID: <1fba4e9e-dd98-39d7-5ff9-027987551a88@xen0n.name>
-Date: Wed, 19 Apr 2023 15:16:48 +0800
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BEB823D0
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 07:17:35 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.110.113])
+	by gateway (Coremail) with SMTP id _____8Dxj82KlT9kENEeAA--.48161S3;
+	Wed, 19 Apr 2023 15:17:30 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.110.113])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxWb2JlT9koa8uAA--.54188S2;
+	Wed, 19 Apr 2023 15:17:29 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH V3 0/2] irqchip: loongson-eiointc: Add DT init support
+Date: Wed, 19 Apr 2023 15:17:04 +0800
+Message-Id: <cover.1681887790.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.0
-Subject: Re: [PATCH v4 03/12] LoongArch: Print GPRs with ABI names when
- showing registers
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, WANG Xuerui <git@xen0n.name>
-References: <20230416060356.3711529-1-kernel@xen0n.name>
- <20230416060356.3711529-4-kernel@xen0n.name>
- <CAAhV-H4JmVq9y02gPxOCm6dFO+BS9=BLj_u276UdtEJ+DUHbUw@mail.gmail.com>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <CAAhV-H4JmVq9y02gPxOCm6dFO+BS9=BLj_u276UdtEJ+DUHbUw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxWb2JlT9koa8uAA--.54188S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjvdXoWrtFWxtF4ruw43KFW8Cw17Jrb_yoWDXrXE9a
+	4I9a48XFyqqF12qayUJr4xJr9xZrWj93Wqka1DKF18u3Z8Ar15GFnrA3ZxWF4SvF4Yvrn8
+	ZrZ5Cr1xZ3W7CjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	A7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
+	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
+	kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
+	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
+	JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
+	1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU8m9aDUUUUU==
 
-On 2023/4/19 14:49, Huacai Chen wrote:
-> On Sun, Apr 16, 2023 at 2:04 PM WANG Xuerui <kernel@xen0n.name> wrote:
->>
->> From: WANG Xuerui <git@xen0n.name>
->>
->> Print 3 registers per line to fit the entire line within 75 columns even
->> with timestamp prefixed to each line, to ease future copy-pastes for all.
->>
->> And show the syscall restart flag (in place of the saved "$zero") if
->> non-zero.
->>
->> Signed-off-by: WANG Xuerui <git@xen0n.name>
->> ---
->>   arch/loongarch/kernel/traps.c | 38 +++++++++++++++++++++++------------
->>   1 file changed, 25 insertions(+), 13 deletions(-)
->>
->> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
->> index 2f4279f612e7..f61de72e0c3a 100644
->> --- a/arch/loongarch/kernel/traps.c
->> +++ b/arch/loongarch/kernel/traps.c
->> @@ -158,22 +158,34 @@ static void __show_regs(const struct pt_regs *regs)
->>          const int field = 2 * sizeof(unsigned long);
->>          unsigned int excsubcode;
->>          unsigned int exccode;
->> -       int i;
->>
->>          show_regs_print_info(KERN_DEFAULT);
->>
->> -       /*
->> -        * Saved main processor registers
->> -        */
->> -       for (i = 0; i < 32; ) {
->> -               if ((i % 4) == 0)
->> -                       printk("$%2d   :", i);
->> -               pr_cont(" %0*lx", field, regs->regs[i]);
->> -
->> -               i++;
->> -               if ((i % 4) == 0)
->> -                       pr_cont("\n");
->> -       }
->> +       /* Print most of the GPRs, 3 per row to fit output in 75 columns */
-> I prefer print 4 registers per line, including r0 (for alignment we
-> don't use zero).
-> e.g.,
-> r0(r0) .... r1(ra) .... r2(tp) .... r3(sp) ....
+Add EIOINTC irqchip DT support, which is needed for Loongson chips
+that are DT-based and support EIOINTC, such as the Loongson-2K0500 chip.
 
-I don't agree here. The rationale for 3 GPRs per row is clearly stated 
-in the commit message and *this exact comment*. If we can somehow fit 4 
-GPRs within 75 columns I'd be all for changing, but sadly we can't.
+---
+V3:
+- patch(1/2)
+  - Drop quotes;
+  - Drop interrupt-names;
+  - Drop loongson,eio-num-vecs;
+  - SoC-based compatibles instead of version-based compatibles.
+- patch (2/2)
+  - irq_set_handler_data() is used to get parent irq form DTS;
+  - Set vec_count by judging compatibles.
+
+V2:
+- Add the dt-bindings file (1/2);
+- patch(2/2)
+  - Remove forgotten debugging messages;
+  - Change compatible string name to "loongson,eiointc-1.0".
+
+Binbin Zhou (2):
+  dt-bindings: interrupt-controller: Add Loongson EIOINTC
+  irqchip/loongson-eiointc: Add DT init support
+
+ .../loongson,eiointc.yaml                     |  74 ++++++++++
+ drivers/irqchip/irq-loongson-eiointc.c        | 129 +++++++++++++-----
+ 2 files changed, 169 insertions(+), 34 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
 
 -- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+2.39.1
 
