@@ -1,17 +1,18 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C58A32580
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 08:53:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12E2428F2
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 08:59:02 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.120])
-	by gateway (Coremail) with SMTP id _____8DxUOUUrD9kc9weAA--.48244S3;
-	Wed, 19 Apr 2023 16:53:40 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxjdpVrT9k3dweAA--.36843S3;
+	Wed, 19 Apr 2023 16:59:01 +0800 (CST)
 Received: from [10.20.42.120] (unknown [10.20.42.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxWb0SrD9k6tIuAA--.54393S3;
-	Wed, 19 Apr 2023 16:53:39 +0800 (CST)
-Subject: Re: [PATCH v7 16/30] LoongArch: KVM: Implement update VM id function
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxbb5UrT9kp9UuAA--.15562S3;
+	Wed, 19 Apr 2023 16:59:01 +0800 (CST)
+Subject: Re: [PATCH v7 17/30] LoongArch: KVM: Implement virtual machine tlb
+ operations
 To: Huacai Chen <chenhuacai@kernel.org>
 References: <20230417094649.874671-1-zhaotianrui@loongson.cn>
- <20230417094649.874671-17-zhaotianrui@loongson.cn>
- <CAAhV-H4pyBi=0ckNDLErz6G_b5G7ti2wVDXF3a7xv-MiJtF_tA@mail.gmail.com>
+ <20230417094649.874671-18-zhaotianrui@loongson.cn>
+ <CAAhV-H4Ca18bo-DV8gzaJeVCDT8o_dqFfX4+ruQLHL+V+HrmOg@mail.gmail.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev,
  linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
@@ -20,8 +21,8 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
  Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
  Xi Ruoyao <xry111@xry111.site>
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
-Message-ID: <d2dbcf54-4015-81ec-6b96-47cdcc22cd13@loongson.cn>
-Date: Wed, 19 Apr 2023 16:53:38 +0800
+Message-ID: <9209324c-28c5-1305-8ff3-95e79b380f4d@loongson.cn>
+Date: Wed, 19 Apr 2023 16:59:00 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -30,121 +31,86 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4pyBi=0ckNDLErz6G_b5G7ti2wVDXF3a7xv-MiJtF_tA@mail.gmail.com>
+In-Reply-To: <CAAhV-H4Ca18bo-DV8gzaJeVCDT8o_dqFfX4+ruQLHL+V+HrmOg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxWb0SrD9k6tIuAA--.54393S3
+X-CM-TRANSID:AQAAf8Bxbb5UrT9kp9UuAA--.15562S3
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxCrykGw17uw4fuFyDGFW7Jwb_yoW5Xry3pF
-	WxCFn5Gr4xJr13C34aqr1FqFnI9395KF12va47t3WYyr12kwn5CrWvkrWDCFyrXr1rCr1I
-	vF15tF4akF1jy37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7tw18uF1kJF43uF4rCF18Grg_yoW8Ar4fpF
+	y8uF4rtF4xXrnrJ3sIqw13WFnxZrWkKF12vFWSv34fArZFkr18Kr9akr98GFyrJ34rJr10
+	va4rtrsFgF1UJ37anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
 	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-	AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
-	s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI
-	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
-	IxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
-	AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2
-	jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz5lbUUUUU=
+	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
+	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
+	AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj
+	6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
+	cSsGvfC2KfnxnUUI43ZEXa7IU8N6pPUUUUU==
 
 
 
-在 2023年04月19日 10:01, Huacai Chen 写道:
+在 2023年04月19日 10:02, Huacai Chen 写道:
 > Hi, Tianrui,
 >
 > On Mon, Apr 17, 2023 at 5:47 PM Tianrui Zhao <zhaotianrui@loongson.cn> wrote:
->> Implement kvm check vmid and update vmid, the vmid should be checked before
->> vcpu enter guest.
->>
+>> Implement loongarch virtual machine tlb operations such as flush tlb by
+>> specific gpa parameter and flush all of the virt machines tlb.
+> Use LoongArch instead of loongarch in commit messages and comments, please.
+>
+> Huacai
+Ok, I will replace loongarch with LoongArch, thanks.
+
+Thanks
+Tianrui Zhao
 >> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 >> ---
->>   arch/loongarch/kvm/vmid.c | 65 +++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 65 insertions(+)
->>   create mode 100644 arch/loongarch/kvm/vmid.c
+>>   arch/loongarch/kvm/tlb.c | 31 +++++++++++++++++++++++++++++++
+>>   1 file changed, 31 insertions(+)
+>>   create mode 100644 arch/loongarch/kvm/tlb.c
 >>
->> diff --git a/arch/loongarch/kvm/vmid.c b/arch/loongarch/kvm/vmid.c
+>> diff --git a/arch/loongarch/kvm/tlb.c b/arch/loongarch/kvm/tlb.c
 >> new file mode 100644
->> index 000000000000..7d9688c24184
+>> index 000000000000..66e116cf2486
 >> --- /dev/null
->> +++ b/arch/loongarch/kvm/vmid.c
->> @@ -0,0 +1,65 @@
+>> +++ b/arch/loongarch/kvm/tlb.c
+>> @@ -0,0 +1,31 @@
 >> +// SPDX-License-Identifier: GPL-2.0
 >> +/*
 >> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
 >> + */
 >> +
 >> +#include <linux/kvm_host.h>
->> +#include <asm/kvm_host.h>
-> linux/kvm_host.h already include asm/kvm_host.h
->
-> Huacai
-Thanks, I will remove the asm/kvm_host.h.
-
-Thanks
-Tianrui Zhao
->> +#include "trace.h"
+>> +#include <asm/tlb.h>
 >> +
->> +static void _kvm_update_vpid(struct kvm_vcpu *vcpu, int cpu)
+>> +int kvm_flush_tlb_gpa(struct kvm_vcpu *vcpu, unsigned long gpa)
 >> +{
->> +       struct kvm_context *context;
->> +       unsigned long vpid;
->> +
->> +       context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
->> +       vpid = context->vpid_cache + 1;
->> +       if (!(vpid & vpid_mask)) {
->> +               /* finish round of 64 bit loop */
->> +               if (unlikely(!vpid))
->> +                       vpid = vpid_mask + 1;
->> +
->> +               /* vpid 0 reserved for root */
->> +               ++vpid;
->> +
->> +               /* start new vpid cycle */
->> +               kvm_flush_tlb_all();
->> +       }
->> +
->> +       context->vpid_cache = vpid;
->> +       vcpu->arch.vpid = vpid;
+>> +       preempt_disable();
+>> +       gpa &= (PAGE_MASK << 1);
+>> +       invtlb(INVTLB_GID_ADDR, read_csr_gstat() & CSR_GSTAT_GID, gpa);
+>> +       preempt_enable();
+>> +       return 0;
 >> +}
 >> +
->> +void _kvm_check_vmid(struct kvm_vcpu *vcpu, int cpu)
+>> +/**
+>> + * kvm_flush_tlb_all() - Flush all root TLB entries for
+>> + * guests.
+>> + *
+>> + * Invalidate all entries including GVA-->GPA and GPA-->HPA mappings.
+>> + */
+>> +void kvm_flush_tlb_all(void)
 >> +{
->> +       struct kvm_context *context;
->> +       bool migrated;
->> +       unsigned long ver, old, vpid;
+>> +       unsigned long flags;
 >> +
->> +       /*
->> +        * Are we entering guest context on a different CPU to last time?
->> +        * If so, the VCPU's guest TLB state on this CPU may be stale.
->> +        */
->> +       context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
->> +       migrated = (vcpu->arch.last_exec_cpu != cpu);
->> +       vcpu->arch.last_exec_cpu = cpu;
->> +
->> +       /*
->> +        * Check if our vpid is of an older version
->> +        *
->> +        * We also discard the stored vpid if we've executed on
->> +        * another CPU, as the guest mappings may have changed without
->> +        * hypervisor knowledge.
->> +        */
->> +       ver = vcpu->arch.vpid & ~vpid_mask;
->> +       old = context->vpid_cache  & ~vpid_mask;
->> +       if (migrated || (ver != old)) {
->> +               _kvm_update_vpid(vcpu, cpu);
->> +               trace_kvm_vpid_change(vcpu, vcpu->arch.vpid);
->> +       }
->> +
->> +       /* Restore GSTAT(0x50).vpid */
->> +       vpid = (vcpu->arch.vpid & vpid_mask)
->> +               << CSR_GSTAT_GID_SHIFT;
->> +       change_csr_gstat(vpid_mask << CSR_GSTAT_GID_SHIFT, vpid);
+>> +       local_irq_save(flags);
+>> +       invtlb_all(INVTLB_ALLGID, 0, 0);
+>> +       local_irq_restore(flags);
 >> +}
 >> --
 >> 2.31.1
