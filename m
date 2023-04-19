@@ -1,136 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8440223B3
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 06:49:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DB39C4339B
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 06:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681886977;
-	bh=0ostpy3TuuaDejDrULgWLaQbiqsyq0vh98ZP12rBy78=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=iIY4g9v1goc/d815e1BKtzAEcZU+ZVB/jeXKpRMd8p7RmquX1PmegOeYvgMl70HGc
-	 39xSeoZJkSMA+2Y3ePbjwz5mH9xEHThLFLkzD0oiK4hXjnYQlE6A2BMMytCsYZpMgR
-	 /kn7Vx3UXqQ5Z+78/kK2ztVaWECSyhAkPldHauQ4ezQKPlc8At3VnfHY09w89t6Fzx
-	 JKiyPCjJJkCMM0PbnuKcAaQOXY2YnHO13ow4q1/q1/XY8MqaD1LtB/LAUUFLMTCNt6
-	 j9MRsmCaGSVOkFHJd+nSkonnDFPpo+kX4Io+5W+C3mSEoxxcnYhz+9J5RL/xi7RF0M
-	 e3SB5LKYyzuTA==
-Received: by mail-ej1-f51.google.com with SMTP id c9so40165042ejz.1
-        for <loongarch@lists.linux.dev>; Tue, 18 Apr 2023 23:49:37 -0700 (PDT)
-X-Gm-Message-State: AAQBX9cthj9DxRrZyQNUHuKBeD+jOwAV7g6TKPlHvTS81jlNTqgDiD33
-	Wq/27gHTY8jleEDI1e2rBHL942d5wXJ2z0h4GVk=
-X-Google-Smtp-Source: AKy350bb//Y/uHr9TqKGGuxHYM1Xm72Pvmj3skKjzvfZorjTu6X9mBblELQfApAG2Kzjk+Upp2/iZ0lDoOmdd+cG4tY=
-X-Received: by 2002:a17:906:82cc:b0:942:3d67:34bc with SMTP id
- a12-20020a17090682cc00b009423d6734bcmr6504859ejy.10.1681886975404; Tue, 18
- Apr 2023 23:49:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CF223C3
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 07:12:47 +0000 (UTC)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-552fb3c2bb7so80197117b3.10
+        for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 00:12:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681888366; x=1684480366;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rVeP5cq2EO+OuFnBm8kw67Gm0GIgoI+tGwrWWLx/Nfo=;
+        b=XRcAPnyy3uDOLCkbfRI6mRjEFYyzPVN4fbDVZAlQCSshqYISt8vQ4hJ5Y7Y69U1oH7
+         fOCwk8iwvWxhbYfJ3QnmesGtSweIm1O5kMxSXd85JPG2n2xciBUBD8tWS1Zewoek1Rg2
+         ae4F3biyV+5QHpByh/2RFMNCFmUO8AAv9o+pJeP0Q/bK8zDAbhYQ7T3hFXiC8WJRB6/f
+         FSqomCDIoBcadvuHgfpsKTe94r9gArmep+eiicA9TpW/tZEAkJKka3pZ5Vk+UfhBr6Ly
+         vYwCYqr7M4468AtrsJI8aWTVM93SatQ3LQ7YWCr1ixKRY6KNu2r1DO/PvMKVboDmTsis
+         llwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681888366; x=1684480366;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rVeP5cq2EO+OuFnBm8kw67Gm0GIgoI+tGwrWWLx/Nfo=;
+        b=KLQI58ppH9C6+i3T1vDuT9Y9Q7YR/FsCl3yRPxjatatQaReur6qZ2OChfj45hexK3/
+         a/CkW0Ko1eG/KXS2YameY8UHti64eoYbo4kgdHGSNu8mT0tFZGDzfZOO/iiJRFs7fI9V
+         yxlahN2U/EjqLBAMfy0EsrcBO/J8wiqm9DwS2og3uFwlAf/PE5IC1e61VNgmy56cCZZg
+         g8zzPdWfQh9BYjIchzJNvgdb0nwE4BpBscWyctNOvL2aDsrMkdgdL7fjf9eXJtlAWJe+
+         Aw/NpXvN8IlaQ0aUqcZfZP4yai3bE2JVnJCYg25LFfnjQPNvLJywIHdiN6HWUGON6weg
+         Qlcg==
+X-Gm-Message-State: AAQBX9dF1885uuC5NxE/icaj1iHhiHUm18PO0KXiQUlNxu9Al6TcPa2J
+	8aZ6tox1ZM/pCfNFTM5mOFMdOpBRkAxmE7Gt6x8=
+X-Google-Smtp-Source: AKy350ZaiH/YXTwaKNsql0vzNT9tYTds/ENyfbs45+TYlcHgZ0DnD6bJDoXycB1ytGAij9IS4gyefD0mfCnaa4QV41I=
+X-Received: by 2002:a81:4810:0:b0:54f:b857:7fdc with SMTP id
+ v16-20020a814810000000b0054fb8577fdcmr2274661ywa.17.1681888366292; Wed, 19
+ Apr 2023 00:12:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230416060356.3711529-1-kernel@xen0n.name> <20230416060356.3711529-4-kernel@xen0n.name>
-In-Reply-To: <20230416060356.3711529-4-kernel@xen0n.name>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 19 Apr 2023 14:49:23 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4JmVq9y02gPxOCm6dFO+BS9=BLj_u276UdtEJ+DUHbUw@mail.gmail.com>
-Message-ID: <CAAhV-H4JmVq9y02gPxOCm6dFO+BS9=BLj_u276UdtEJ+DUHbUw@mail.gmail.com>
-Subject: Re: [PATCH v4 03/12] LoongArch: Print GPRs with ABI names when
- showing registers
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, WANG Xuerui <git@xen0n.name>
+References: <cover.1681370153.git.zhoubinbin@loongson.cn> <35f43a8cfc32b5a065e4a04eb6cc6abf311f2700.1681370153.git.zhoubinbin@loongson.cn>
+ <b4b23751-a44c-2b38-0d55-a34711ad53c4@linaro.org>
+In-Reply-To: <b4b23751-a44c-2b38-0d55-a34711ad53c4@linaro.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Wed, 19 Apr 2023 15:12:34 +0800
+Message-ID: <CAMpQs4+XBQD9KB3XOPe4zp_vC5RxPaOZU0aJQZKTW=+9r5nmag@mail.gmail.com>
+Subject: Re: [PATCH V3 1/7] dt-bindings: rtc: Subdivision of LS2X RTC compatible
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Alessandro Zummo <a.zummo@towertech.it>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, linux-rtc@vger.kernel.org, 
+	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, devicetree@vger.kernel.org, 
+	Qing Zhang <zhangqing@loongson.cn>, zhaoxiao <zhaoxiao@uniontech.com>, keguang.zhang@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 16, 2023 at 2:04=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wro=
-te:
+On Mon, Apr 17, 2023 at 1:31=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
-> From: WANG Xuerui <git@xen0n.name>
+> On 13/04/2023 09:57, Binbin Zhou wrote:
+> > The LS2X RTC alarm depends on the associated registers in a separate
+> > power management domain.
+> >
+> > In order to define the PM domain addresses of the different chips, a
+> > more detailed description of compatible is required.
 >
-> Print 3 registers per line to fit the entire line within 75 columns even
-> with timestamp prefixed to each line, to ease future copy-pastes for all.
+> This does not match your diff at all.
 >
-> And show the syscall restart flag (in place of the saved "$zero") if
-> non-zero.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  Documentation/devicetree/bindings/rtc/trivial-rtc.yaml | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml b/D=
+ocumentation/devicetree/bindings/rtc/trivial-rtc.yaml
+> > index a3603e638c37..2928811b83a0 100644
+> > --- a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+> > +++ b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+> > @@ -47,8 +47,11 @@ properties:
+> >        - isil,isl1218
+> >        # Intersil ISL12022 Real-time Clock
+> >        - isil,isl12022
+> > -      # Loongson-2K Socs/LS7A bridge Real-time Clock
+> > -      - loongson,ls2x-rtc
 >
-> Signed-off-by: WANG Xuerui <git@xen0n.name>
-> ---
->  arch/loongarch/kernel/traps.c | 38 +++++++++++++++++++++++------------
->  1 file changed, 25 insertions(+), 13 deletions(-)
+> Why removing it?
 >
-> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.=
-c
-> index 2f4279f612e7..f61de72e0c3a 100644
-> --- a/arch/loongarch/kernel/traps.c
-> +++ b/arch/loongarch/kernel/traps.c
-> @@ -158,22 +158,34 @@ static void __show_regs(const struct pt_regs *regs)
->         const int field =3D 2 * sizeof(unsigned long);
->         unsigned int excsubcode;
->         unsigned int exccode;
-> -       int i;
+> > +      # Loongson LS7A bridge Real-time Clock
+> > +      - loongson,ls7a-rtc
+> > +      # Loongson-2K Socs Real-time Clock
+> > +      - loongson,ls2k0500-rtc
+> > +      - loongson,ls2k1000-rtc
 >
->         show_regs_print_info(KERN_DEFAULT);
+> That's even more surprising...
 >
-> -       /*
-> -        * Saved main processor registers
-> -        */
-> -       for (i =3D 0; i < 32; ) {
-> -               if ((i % 4) =3D=3D 0)
-> -                       printk("$%2d   :", i);
-> -               pr_cont(" %0*lx", field, regs->regs[i]);
-> -
-> -               i++;
-> -               if ((i % 4) =3D=3D 0)
-> -                       pr_cont("\n");
-> -       }
-> +       /* Print most of the GPRs, 3 per row to fit output in 75 columns =
-*/
-I prefer print 4 registers per line, including r0 (for alignment we
-don't use zero).
-e.g.,
-r0(r0) .... r1(ra) .... r2(tp) .... r3(sp) ....
+> I don't understand what you are doing here at all.
+Hi Krzysztof:
 
-Huacai
+Sorry, maybe my description was not accurate.
 
-> +       pr_cont("tp %0*lx sp %0*lx a0 %0*lx\n",
-> +               field, regs->regs[2], field, regs->regs[3], field, regs->=
-regs[4]);
-> +       pr_cont("a1 %0*lx a2 %0*lx a3 %0*lx\n",
-> +               field, regs->regs[5], field, regs->regs[6], field, regs->=
-regs[7]);
-> +       pr_cont("a4 %0*lx a5 %0*lx a6 %0*lx\n",
-> +               field, regs->regs[8], field, regs->regs[9], field, regs->=
-regs[10]);
-> +       pr_cont("a7 %0*lx t0 %0*lx t1 %0*lx\n",
-> +               field, regs->regs[11], field, regs->regs[12], field, regs=
-->regs[13]);
-> +       pr_cont("t2 %0*lx t3 %0*lx t4 %0*lx\n",
-> +               field, regs->regs[14], field, regs->regs[15], field, regs=
-->regs[16]);
-> +       pr_cont("t5 %0*lx t6 %0*lx t7 %0*lx\n",
-> +               field, regs->regs[17], field, regs->regs[18], field, regs=
-->regs[19]);
-> +       pr_cont("t8 %0*lx u0 %0*lx s9 %0*lx\n",
-> +               field, regs->regs[20], field, regs->regs[21], field, regs=
-->regs[22]);
-> +       pr_cont("s0 %0*lx s1 %0*lx s2 %0*lx\n",
-> +               field, regs->regs[23], field, regs->regs[24], field, regs=
-->regs[25]);
-> +       pr_cont("s3 %0*lx s4 %0*lx s5 %0*lx\n",
-> +               field, regs->regs[26], field, regs->regs[27], field, regs=
-->regs[28]);
-> +       pr_cont("s6 %0*lx s7 %0*lx s8 %0*lx\n",
-> +               field, regs->regs[29], field, regs->regs[30], field, regs=
-->regs[31]);
-> +
-> +       /* The slot for $zero is reused as the syscall restart flag */
-> +       if (regs->regs[0])
-> +               pr_cont("syscall restart flag: %0*lx\n", field, regs->reg=
-s[0]);
+Looking back at my V2 patchset, the first patch was to add ls2x-rtc compati=
+ble.
+(https://lore.kernel.org/linux-rtc/0288efeb4209e4a49af07de6399045aaa00a970c=
+.1673227292.git.zhoubinbin@loongson.cn/)
+
+In the process of modifying the V2 patchset, it was discovered that
+the ACPI domain offset addresses on some of the socs (LS2K1000) were
+different and I wanted to differentiate them by soc compatible. So I
+was going to drop the ls2x-rtc compatible directly from the V3 patch
+set.
+However, when I rebased the V3 patchset, I found that the previous
+ls2x-rtc compatible patch had been merged (commit 473a8ce756fd). So I
+had to remove it and add soc compatible.
+
+How about the following description:
+Since commit 473a8ce756fd (dt-bindings: rtc: Add Loongson LS2X RTC
+support), the ls2x-rtc compatible has been added. But the specific soc
+compatible is needed to be used to define different ACPI domain offset
+addresses.
+
+Thanks.
+Binbin
+
 >
->         /*
->          * Saved csr registers
-> --
-> 2.40.0
+> Best regards,
+> Krzysztof
 >
 >
