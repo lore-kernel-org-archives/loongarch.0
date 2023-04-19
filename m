@@ -1,192 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC0315A8
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 02:10:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BB5BC4339C
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 02:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8440223B3
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 06:49:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DB39C4339B
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 06:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681870248;
-	bh=GYHhiCs3TCFO1Q2756iuxoVYD2YOA1/S/6qXx4tlCRA=;
+	s=k20201202; t=1681886977;
+	bh=0ostpy3TuuaDejDrULgWLaQbiqsyq0vh98ZP12rBy78=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HSEdJXSazY14OL8Cl+nDEnJWvE2k29E5+QeKe+3HZah00pvxiA708sXGELdsIvxpU
-	 FCZDSEy2MbnH2nJW+TklX1ErsHuvwbkXmr+U8YgsdNThBwCkwZgeRLEBbbfFVOFAp5
-	 uDTaFV1NCZBZoz9MVK31gU5Oo1T5a+L3c4yvhuaZbyVvbGBFywfkmI8/vmCYVa2Cxv
-	 5Apvo+v30RzOcVJ5WxNDR4kz3WQvOIcVuBHuO4aXpkDfD27nTs5JdtFWej4t+F+Ew3
-	 61clJT8eIV0weQhVjI9f3oxtjyr32/FSlvbw325X90XE1kpB1kVndc4GL6xNpu1faH
-	 0iPrQKJNvjxXA==
-Received: by mail-ej1-f50.google.com with SMTP id xi5so77881419ejb.13
-        for <loongarch@lists.linux.dev>; Tue, 18 Apr 2023 19:10:48 -0700 (PDT)
-X-Gm-Message-State: AAQBX9eIs31rN9gDK+rige/59tYQhZM+EuoOLJfpiwepu0mLmCH+H2mE
-	LenOpKFnPJf1VodjAh1K3Vto0WZS9qJXyyzGnLM=
-X-Google-Smtp-Source: AKy350Yux5eICBg4RaYzzxhXfc38uxr70BMG8PNiecifdwORaLcP13Iwrh9nDaXKtSF4lrUvpBOeBkB9D2J1jtVDDJ8=
-X-Received: by 2002:a17:906:5e12:b0:92d:878e:8566 with SMTP id
- n18-20020a1709065e1200b0092d878e8566mr6392709eju.10.1681870246325; Tue, 18
- Apr 2023 19:10:46 -0700 (PDT)
+	b=iIY4g9v1goc/d815e1BKtzAEcZU+ZVB/jeXKpRMd8p7RmquX1PmegOeYvgMl70HGc
+	 39xSeoZJkSMA+2Y3ePbjwz5mH9xEHThLFLkzD0oiK4hXjnYQlE6A2BMMytCsYZpMgR
+	 /kn7Vx3UXqQ5Z+78/kK2ztVaWECSyhAkPldHauQ4ezQKPlc8At3VnfHY09w89t6Fzx
+	 JKiyPCjJJkCMM0PbnuKcAaQOXY2YnHO13ow4q1/q1/XY8MqaD1LtB/LAUUFLMTCNt6
+	 j9MRsmCaGSVOkFHJd+nSkonnDFPpo+kX4Io+5W+C3mSEoxxcnYhz+9J5RL/xi7RF0M
+	 e3SB5LKYyzuTA==
+Received: by mail-ej1-f51.google.com with SMTP id c9so40165042ejz.1
+        for <loongarch@lists.linux.dev>; Tue, 18 Apr 2023 23:49:37 -0700 (PDT)
+X-Gm-Message-State: AAQBX9cthj9DxRrZyQNUHuKBeD+jOwAV7g6TKPlHvTS81jlNTqgDiD33
+	Wq/27gHTY8jleEDI1e2rBHL942d5wXJ2z0h4GVk=
+X-Google-Smtp-Source: AKy350bb//Y/uHr9TqKGGuxHYM1Xm72Pvmj3skKjzvfZorjTu6X9mBblELQfApAG2Kzjk+Upp2/iZ0lDoOmdd+cG4tY=
+X-Received: by 2002:a17:906:82cc:b0:942:3d67:34bc with SMTP id
+ a12-20020a17090682cc00b009423d6734bcmr6504859ejy.10.1681886975404; Tue, 18
+ Apr 2023 23:49:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230417095950.875228-1-zhaotianrui@loongson.cn> <20230417095950.875228-30-zhaotianrui@loongson.cn>
-In-Reply-To: <20230417095950.875228-30-zhaotianrui@loongson.cn>
+References: <20230416060356.3711529-1-kernel@xen0n.name> <20230416060356.3711529-4-kernel@xen0n.name>
+In-Reply-To: <20230416060356.3711529-4-kernel@xen0n.name>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 19 Apr 2023 10:10:33 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5nxRLzLn65OEnPQJi6CQtFhQOYNZjEE9ZoouM8Ug5hOw@mail.gmail.com>
-Message-ID: <CAAhV-H5nxRLzLn65OEnPQJi6CQtFhQOYNZjEE9ZoouM8Ug5hOw@mail.gmail.com>
-Subject: Re: [PATCH v7 29/30] LoongArch: KVM: Enable kvm config and add the makefile
-To: Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>, Mark Brown <broonie@kernel.org>, 
-	Alex Deucher <alexander.deucher@amd.com>, Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn, 
-	Xi Ruoyao <xry111@xry111.site>, kernel test robot <lkp@intel.com>
+Date: Wed, 19 Apr 2023 14:49:23 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4JmVq9y02gPxOCm6dFO+BS9=BLj_u276UdtEJ+DUHbUw@mail.gmail.com>
+Message-ID: <CAAhV-H4JmVq9y02gPxOCm6dFO+BS9=BLj_u276UdtEJ+DUHbUw@mail.gmail.com>
+Subject: Re: [PATCH v4 03/12] LoongArch: Print GPRs with ABI names when
+ showing registers
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, WANG Xuerui <git@xen0n.name>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Tianrui,
-
-On Mon, Apr 17, 2023 at 6:00=E2=80=AFPM Tianrui Zhao <zhaotianrui@loongson.=
-cn> wrote:
+On Sun, Apr 16, 2023 at 2:04=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wro=
+te:
 >
-> Enable loongarch kvm config and add the makefile to support build kvm
-> module.
+> From: WANG Xuerui <git@xen0n.name>
 >
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/oe-kbuild-all/202304131526.iXfLaVZc-lkp@int=
-el.com/
-> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
+> Print 3 registers per line to fit the entire line within 75 columns even
+> with timestamp prefixed to each line, to ease future copy-pastes for all.
+>
+> And show the syscall restart flag (in place of the saved "$zero") if
+> non-zero.
+>
+> Signed-off-by: WANG Xuerui <git@xen0n.name>
 > ---
->  arch/loongarch/Kbuild                      |  1 +
->  arch/loongarch/Kconfig                     |  2 ++
->  arch/loongarch/configs/loongson3_defconfig |  2 ++
->  arch/loongarch/kvm/Kconfig                 | 38 ++++++++++++++++++++++
->  arch/loongarch/kvm/Makefile                | 22 +++++++++++++
->  5 files changed, 65 insertions(+)
->  create mode 100644 arch/loongarch/kvm/Kconfig
->  create mode 100644 arch/loongarch/kvm/Makefile
+>  arch/loongarch/kernel/traps.c | 38 +++++++++++++++++++++++------------
+>  1 file changed, 25 insertions(+), 13 deletions(-)
 >
-> diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
-> index b01f5cdb27e0..40be8a1696f9 100644
-> --- a/arch/loongarch/Kbuild
-> +++ b/arch/loongarch/Kbuild
-> @@ -2,6 +2,7 @@ obj-y +=3D kernel/
->  obj-y +=3D mm/
->  obj-y +=3D net/
->  obj-y +=3D vdso/
-> +obj-y +=3D kvm/
+> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.=
+c
+> index 2f4279f612e7..f61de72e0c3a 100644
+> --- a/arch/loongarch/kernel/traps.c
+> +++ b/arch/loongarch/kernel/traps.c
+> @@ -158,22 +158,34 @@ static void __show_regs(const struct pt_regs *regs)
+>         const int field =3D 2 * sizeof(unsigned long);
+>         unsigned int excsubcode;
+>         unsigned int exccode;
+> -       int i;
 >
->  # for cleaning
->  subdir- +=3D boot
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 7fd51257e0ed..f9beeb2e0cc9 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -148,6 +148,7 @@ config LOONGARCH
->         select USE_PERCPU_NUMA_NODE_ID
->         select USER_STACKTRACE_SUPPORT
->         select ZONE_DMA32
-> +       select HAVE_KVM
-Use alpha-betical order, please.
+>         show_regs_print_info(KERN_DEFAULT);
+>
+> -       /*
+> -        * Saved main processor registers
+> -        */
+> -       for (i =3D 0; i < 32; ) {
+> -               if ((i % 4) =3D=3D 0)
+> -                       printk("$%2d   :", i);
+> -               pr_cont(" %0*lx", field, regs->regs[i]);
+> -
+> -               i++;
+> -               if ((i % 4) =3D=3D 0)
+> -                       pr_cont("\n");
+> -       }
+> +       /* Print most of the GPRs, 3 per row to fit output in 75 columns =
+*/
+I prefer print 4 registers per line, including r0 (for alignment we
+don't use zero).
+e.g.,
+r0(r0) .... r1(ra) .... r2(tp) .... r3(sp) ....
 
 Huacai
+
+> +       pr_cont("tp %0*lx sp %0*lx a0 %0*lx\n",
+> +               field, regs->regs[2], field, regs->regs[3], field, regs->=
+regs[4]);
+> +       pr_cont("a1 %0*lx a2 %0*lx a3 %0*lx\n",
+> +               field, regs->regs[5], field, regs->regs[6], field, regs->=
+regs[7]);
+> +       pr_cont("a4 %0*lx a5 %0*lx a6 %0*lx\n",
+> +               field, regs->regs[8], field, regs->regs[9], field, regs->=
+regs[10]);
+> +       pr_cont("a7 %0*lx t0 %0*lx t1 %0*lx\n",
+> +               field, regs->regs[11], field, regs->regs[12], field, regs=
+->regs[13]);
+> +       pr_cont("t2 %0*lx t3 %0*lx t4 %0*lx\n",
+> +               field, regs->regs[14], field, regs->regs[15], field, regs=
+->regs[16]);
+> +       pr_cont("t5 %0*lx t6 %0*lx t7 %0*lx\n",
+> +               field, regs->regs[17], field, regs->regs[18], field, regs=
+->regs[19]);
+> +       pr_cont("t8 %0*lx u0 %0*lx s9 %0*lx\n",
+> +               field, regs->regs[20], field, regs->regs[21], field, regs=
+->regs[22]);
+> +       pr_cont("s0 %0*lx s1 %0*lx s2 %0*lx\n",
+> +               field, regs->regs[23], field, regs->regs[24], field, regs=
+->regs[25]);
+> +       pr_cont("s3 %0*lx s4 %0*lx s5 %0*lx\n",
+> +               field, regs->regs[26], field, regs->regs[27], field, regs=
+->regs[28]);
+> +       pr_cont("s6 %0*lx s7 %0*lx s8 %0*lx\n",
+> +               field, regs->regs[29], field, regs->regs[30], field, regs=
+->regs[31]);
+> +
+> +       /* The slot for $zero is reused as the syscall restart flag */
+> +       if (regs->regs[0])
+> +               pr_cont("syscall restart flag: %0*lx\n", field, regs->reg=
+s[0]);
 >
->  config 32BIT
->         bool
-> @@ -588,3 +589,4 @@ source "drivers/acpi/Kconfig"
->  endmenu
->
->  source "drivers/firmware/Kconfig"
-> +source "arch/loongarch/kvm/Kconfig"
-> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/=
-configs/loongson3_defconfig
-> index e18213f01cc4..c99520374aef 100644
-> --- a/arch/loongarch/configs/loongson3_defconfig
-> +++ b/arch/loongarch/configs/loongson3_defconfig
-> @@ -63,6 +63,8 @@ CONFIG_EFI_ZBOOT=3Dy
->  CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=3Dy
->  CONFIG_EFI_CAPSULE_LOADER=3Dm
->  CONFIG_EFI_TEST=3Dm
-> +CONFIG_VIRTUALIZATION=3Dy
-> +CONFIG_KVM=3Dm
->  CONFIG_MODULES=3Dy
->  CONFIG_MODULE_FORCE_LOAD=3Dy
->  CONFIG_MODULE_UNLOAD=3Dy
-> diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
-> new file mode 100644
-> index 000000000000..8a999b4c0232
-> --- /dev/null
-> +++ b/arch/loongarch/kvm/Kconfig
-> @@ -0,0 +1,38 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# KVM configuration
-> +#
-> +
-> +source "virt/kvm/Kconfig"
-> +
-> +menuconfig VIRTUALIZATION
-> +       bool "Virtualization"
-> +       help
-> +         Say Y here to get to see options for using your Linux host to r=
-un
-> +         other operating systems inside virtual machines (guests).
-> +         This option alone does not add any kernel code.
-> +
-> +         If you say N, all options in this submenu will be skipped and
-> +         disabled.
-> +
-> +if VIRTUALIZATION
-> +
-> +config KVM
-> +       tristate "Kernel-based Virtual Machine (KVM) support"
-> +       depends on HAVE_KVM
-> +       select MMU_NOTIFIER
-> +       select ANON_INODES
-> +       select PREEMPT_NOTIFIERS
-> +       select KVM_MMIO
-> +       select KVM_GENERIC_DIRTYLOG_READ_PROTECT
-> +       select HAVE_KVM_VCPU_ASYNC_IOCTL
-> +       select HAVE_KVM_EVENTFD
-> +       select SRCU
-> +       help
-> +         Support hosting virtualized guest machines using hardware
-> +         virtualization extensions. You will need a fairly processor
-> +         equipped with virtualization extensions.
-> +
-> +         If unsure, say N.
-> +
-> +endif # VIRTUALIZATION
-> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
-> new file mode 100644
-> index 000000000000..2335e873a6ef
-> --- /dev/null
-> +++ b/arch/loongarch/kvm/Makefile
-> @@ -0,0 +1,22 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Makefile for LOONGARCH KVM support
-> +#
-> +
-> +ccflags-y +=3D -I $(srctree)/$(src)
-> +
-> +include $(srctree)/virt/kvm/Makefile.kvm
-> +
-> +obj-$(CONFIG_KVM) +=3D kvm.o
-> +
-> +kvm-y +=3D main.o
-> +kvm-y +=3D vm.o
-> +kvm-y +=3D vmid.o
-> +kvm-y +=3D tlb.o
-> +kvm-y +=3D mmu.o
-> +kvm-y +=3D vcpu.o
-> +kvm-y +=3D exit.o
-> +kvm-y +=3D interrupt.o
-> +kvm-y +=3D timer.o
-> +kvm-y +=3D switch.o
-> +kvm-y +=3D csr_ops.o
+>         /*
+>          * Saved csr registers
 > --
-> 2.31.1
+> 2.40.0
+>
 >
