@@ -1,150 +1,158 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5894B23C3
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 07:17:35 +0000 (UTC)
-Received: from loongson.cn (unknown [112.20.110.113])
-	by gateway (Coremail) with SMTP id _____8CxxtiMlT9kGdEeAA--.47667S3;
-	Wed, 19 Apr 2023 15:17:32 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.110.113])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxWb2JlT9koa8uAA--.54188S3;
-	Wed, 19 Apr 2023 15:17:30 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Marc Zyngier <maz@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: Jianmin Lv <lvjianmin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH V3 1/2] dt-bindings: interrupt-controller: Add Loongson EIOINTC
-Date: Wed, 19 Apr 2023 15:17:05 +0800
-Message-Id: <3b9c4f05eaf14bc3b16aebec3ff84c8a2d52c4a5.1681887790.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <cover.1681887790.git.zhoubinbin@loongson.cn>
-References: <cover.1681887790.git.zhoubinbin@loongson.cn>
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1492564
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 07:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1681890851;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ku4/Si8D6xrlYmDkiBxBM7QW/Zhm4h1GUH6h0hqbhBo=;
+	b=KEl+iPBF+usjCmxggqrsRVXnav4zRJuun8FrN9XXc+MKcjf0bERK0b1H1FCAyzVksqFg77
+	iEcyx6SxHhLMZKFKSu0kA8NOs/iFynlywZEXMJIbk9G4Rtkf34FiYn4HLI+tN9iYrZciI+
+	o7nsSzj1VMsuNi31HJqUWJTCDeJhSus=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-662-b-S-VDOkMfm_Xyien24CJA-1; Wed, 19 Apr 2023 03:54:10 -0400
+X-MC-Unique: b-S-VDOkMfm_Xyien24CJA-1
+Received: by mail-wm1-f69.google.com with SMTP id q19-20020a05600c46d300b003ef69894934so826549wmo.6
+        for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 00:54:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681890849; x=1684482849;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ku4/Si8D6xrlYmDkiBxBM7QW/Zhm4h1GUH6h0hqbhBo=;
+        b=GRP7EoLrCPVaZDy9QtDXgWC3RWXb9E9s90rhetEiChgT/RZkTGSXkNGzNtPAZXCIIp
+         XsE0ExEuniJPa68IZr1qbnU9R8w0aS+vPAhx3QxjRg+w4oRNdbG/rsPmVJhhOzRX71Xo
+         ZfpSJM7m3L9Z/gu53GvMs9e5J1hT4ifQkRupgiPqkrIqeynXVNwonPN2HeslxlW1uUx0
+         hfz4CS+ADOMaZ8Otwkf2pmlysyEMZTTxQm2cUuyeX6y6mZKbu/C4HagXV2sV5amrMTHb
+         B0HPZv+I03DXbyBpIGTZ1BlY4FHKmZMjgrD+3v3Tvxko5m6andMDrsWJRWbJtEJ/0QEW
+         3DXA==
+X-Gm-Message-State: AAQBX9cY9ukbAzKXfJEQ909WzNh6TS+2NUcePjbmRr/lsrKKlUl/bHNx
+	osD2wLSpG7kDYffFq/1Vmi9JYSyh9c7i4m8WJ11Syj5PgsDXQ9Q08exAUksyrbZ+Rw6nCIY3dOv
+	K4ujCZ6MChbDM0ibRlxis
+X-Received: by 2002:a05:600c:2305:b0:3f1:728a:1881 with SMTP id 5-20020a05600c230500b003f1728a1881mr7565078wmo.31.1681890848810;
+        Wed, 19 Apr 2023 00:54:08 -0700 (PDT)
+X-Google-Smtp-Source: AKy350ZGeCzv8hHHPCLoBp3+kn6wkQN0cMnv6OhMvvwsxXxMwENw712YUrmrVhvIskYHJBvgTLUksw==
+X-Received: by 2002:a05:600c:2305:b0:3f1:728a:1881 with SMTP id 5-20020a05600c230500b003f1728a1881mr7565048wmo.31.1681890848428;
+        Wed, 19 Apr 2023 00:54:08 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c70b:7b00:7c52:a5fa:8004:96fd? (p200300cbc70b7b007c52a5fa800496fd.dip0.t-ipconnect.de. [2003:cb:c70b:7b00:7c52:a5fa:8004:96fd])
+        by smtp.gmail.com with ESMTPSA id l26-20020a1ced1a000000b003eeb1d6a470sm1327085wmh.13.2023.04.19.00.54.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Apr 2023 00:54:08 -0700 (PDT)
+Message-ID: <e0c0ad67-f23f-ff35-80bf-841dcfd43d99@redhat.com>
+Date: Wed, 19 Apr 2023 09:54:06 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+To: Vishal Moola <vishal.moola@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+ xen-devel@lists.xenproject.org, kvm@vger.kernel.org
+References: <20230417205048.15870-1-vishal.moola@gmail.com>
+ <20230417205048.15870-2-vishal.moola@gmail.com>
+ <da600570-51c7-8088-b46b-7524c9e66e5d@redhat.com>
+ <CAOzc2pwpRhNoFbdzdzuvrqbZdf2OsrTvBGs40QCZJjA5fS_q1A@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH 01/33] s390: Use _pt_s390_gaddr for gmap address tracking
+In-Reply-To: <CAOzc2pwpRhNoFbdzdzuvrqbZdf2OsrTvBGs40QCZJjA5fS_q1A@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxWb2JlT9koa8uAA--.54188S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Ww43Gry8Ar45KFy5uF47CFg_yoW5Jr43pF
-	W7Ca9xXr40qF13Aa97KFy0kr15Zr98CwnxC3s7A3yUGr9xKa4jqr4akF95J3W3Cr97Xa42
-	9FyF9a48Kay7AF7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
-	Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
-	O2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-	Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
-	WUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
-	JbIYCTnIWIevJa73UjIFyTuYvjxUxhiSDUUUU
 
-Add Loongson Extended I/O Interrupt controller binding with DT schema
-format using json-schema.
+On 18.04.23 23:33, Vishal Moola wrote:
+> On Tue, Apr 18, 2023 at 8:45 AM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 17.04.23 22:50, Vishal Moola (Oracle) wrote:
+>>> s390 uses page->index to keep track of page tables for the guest address
+>>> space. In an attempt to consolidate the usage of page fields in s390,
+>>> replace _pt_pad_2 with _pt_s390_gaddr to replace page->index in gmap.
+>>>
+>>> This will help with the splitting of struct ptdesc from struct page, as
+>>> well as allow s390 to use _pt_frag_refcount for fragmented page table
+>>> tracking.
+>>>
+>>> Since page->_pt_s390_gaddr aliases with mapping, ensure its set to NULL
+>>> before freeing the pages as well.
+>>>
+>>> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+>>> ---
+>>
+>> [...]
+>>
+>>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+>>> index 3fc9e680f174..2616d64c0e8c 100644
+>>> --- a/include/linux/mm_types.h
+>>> +++ b/include/linux/mm_types.h
+>>> @@ -144,7 +144,7 @@ struct page {
+>>>                struct {        /* Page table pages */
+>>>                        unsigned long _pt_pad_1;        /* compound_head */
+>>>                        pgtable_t pmd_huge_pte; /* protected by page->ptl */
+>>> -                     unsigned long _pt_pad_2;        /* mapping */
+>>> +                     unsigned long _pt_s390_gaddr;   /* mapping */
+>>>                        union {
+>>>                                struct mm_struct *pt_mm; /* x86 pgds only */
+>>>                                atomic_t pt_frag_refcount; /* powerpc */
+>>
+>> The confusing part is, that these gmap page tables are not ordinary
+>> process page tables that we would ordinarily place into this section
+>> here. That's why they are also not allocated/freed using the typical
+>> page table constructor/destructor ...
+> 
+> I initially thought the same, so I was quite confused when I saw
+> __gmap_segment_gaddr was using pmd_pgtable_page().
+> 
+> Although they are not ordinary process page tables, since we
+> eventually want to move them out of struct page, I think shifting them
+> to be in ptdescs, being a memory descriptor for page tables, makes
+> the most sense.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- .../loongson,eiointc.yaml                     | 74 +++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
+Seeing utilities like tlb_remove_page_ptdesc() that don't really apply 
+to such page tables, I wonder if we should much rather treat such 
+shadow/auxiliary/... page tables (just like other architectures like 
+x86, arm, ... employ as well) as a distinct type.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
-new file mode 100644
-index 000000000000..4ab4efb061e1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
-@@ -0,0 +1,74 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/loongson,eiointc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson Extended I/O Interrupt Controller
-+
-+maintainers:
-+  - Binbin Zhou <zhoubinbin@loongson.cn>
-+
-+description: |
-+  This interrupt controller is found on the Loongson-3 family chips and
-+  Loongson-2K series chips and is used to distribute interrupts directly to
-+  individual cores without forwarding them through the HT's interrupt line.
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - loongson,ls2k0500-eiointc
-+      - loongson,ls2k2000-eiointc
-+
-+  reg:
-+    items:
-+      - description: Interrupt enable registers
-+      - description: Interrupt status registers
-+      - description: Interrupt clear registers
-+      - description: Interrupt routing configuration registers
-+
-+  reg-names:
-+    items:
-+      - const: enable
-+      - const: status
-+      - const: clear
-+      - const: route
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    eiointc: interrupt-controller@1fe11600 {
-+      compatible = "loongson,ls2k0500-eiointc";
-+      reg = <0x1fe11600 0x10>,
-+            <0x1fe11700 0x10>,
-+            <0x1fe11800 0x10>,
-+            <0x1fe114c0 0x4>;
-+      reg-names = "enable", "status", "clear", "route";
-+
-+      interrupt-controller;
-+      #interrupt-cells = <1>;
-+
-+      interrupt-parent = <&cpuintc>;
-+      interrupts = <3>;
-+    };
-+
-+...
+And have ptdesc be the common type for all process page tables.
+
+> 
+> Another option is to leave pmd_pgtable_page() as is just for this case.
+> Or we can revert commit 7e25de77bc5ea which uses the function here
+> then figure out where these gmap pages table pages will go later.
+
+I'm always confused when reading gmap code, so let me have another look :)
+
+The confusing part is that s390x shares the lowest level page tables 
+(PTE tables) between the process and gmap ("guest mapping", similar to 
+EPT on x86-64). It maps these process PTE tables (covering 1 MiB) into 
+gmap-specific PMD tables.
+
+pmd_pgtable_page() should indeed always give us a gmap-specific 
+PMD-table. In fact, something allocated via gmap_alloc_table().
+
+Decoupling both concepts sounds like a good idea.
+
 -- 
-2.39.1
+Thanks,
+
+David / dhildenb
 
