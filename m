@@ -1,211 +1,91 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EB5E2CAB
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 09:57:28 +0000 (UTC)
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxJ_ABuz9k9eEeAA--.48352S3;
-	Wed, 19 Apr 2023 17:57:21 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxbb78uj9kXuguAA--.15680S7;
-	Wed, 19 Apr 2023 17:57:19 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551D32F52
+	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 10:05:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87EA5C433EF;
+	Wed, 19 Apr 2023 10:05:54 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v3 5/6] LoongArch: Check atomic instructions in insns_not_supported()
-Date: Wed, 19 Apr 2023 17:57:00 +0800
-Message-Id: <1681898221-27828-6-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1681898221-27828-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1681898221-27828-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID:AQAAf8Bxbb78uj9kXuguAA--.15680S7
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWw45Zw4xZF1rXF4fZr4xWFg_yoWrZF4rpF
-	ZrZrn5Gr48W3WfWr9rtas3Zr4Utw4v939IqF13X34xC3y7Xr15Jr1xKryUXF1Dt395Kr40
-	qrW7JrZIva13JaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s
-	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-	JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-	v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xva
-	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-	W8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8QJ57UUUUU==
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.3-final
+Date: Wed, 19 Apr 2023 18:05:17 +0800
+Message-Id: <20230419100517.3647508-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Like llsc instructions, the atomic memory access instructions should
-not be supported for probing, check them in insns_not_supported().
+The following changes since commit 6a8f57ae2eb07ab39a6f0ccad60c760743051026:
 
-Here is a simple example with CONFIG_UPROBE_EVENTS=y:
+  Linux 6.3-rc7 (2023-04-16 15:23:53 -0700)
 
-  # cat pthread.c
-  #include <stdio.h>
-  #include <stdlib.h>
-  #include <pthread.h>
+are available in the Git repository at:
 
-  static pthread_spinlock_t lock;
-  static pthread_t t1, t2;
-  static int count = 0;
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.3-1
 
-  void *t1_start(void *arg)
-  {
-  	  for (int i = 0; i < 10000; i++)
-	  {
-		  pthread_spin_lock(&lock);
-		  count++;
-		  pthread_spin_unlock(&lock);
-	  }
-  }
+for you to fetch changes up to b5533e990dd1de5872a34cba2f4f7f508c9b2ec3:
 
-  void *t2_start(void *arg)
-  {
-	  for (int i = 0; i < 20000; i++)
-	  {
-		  pthread_spin_lock(&lock);
-		  count++;
-		  pthread_spin_unlock(&lock);
-	  }
-  }
+  tools/loongarch: Use __SIZEOF_LONG__ to define __BITS_PER_LONG (2023-04-19 12:07:34 +0800)
 
-  int main()
-  {
-	  int ret;
+----------------------------------------------------------------
+LoongArch fixes for v6.3-final
 
-	  ret = pthread_spin_init(&lock, PTHREAD_PROCESS_PRIVATE);
-	  if (ret)
-		  return -1;
+Some bug fixes, some build fixes, a comment fix and a trivial cleanup.
+----------------------------------------------------------------
+Enze Li (1):
+      LoongArch: Replace hard-coded values in comments with VALEN
 
-	  ret = pthread_create(&t1, NULL, t1_start, NULL);
-	  if (ret)
-		  exit(1);
+Huacai Chen (6):
+      LoongArch: Make WriteCombine configurable for ioremap()
+      LoongArch: Fix probing of the CRC32 feature
+      LoongArch: Fix build error if CONFIG_SUSPEND is not set
+      LoongArch: Enable PG when wakeup from suspend
+      LoongArch: Mark 3 symbol exports as non-GPL
+      LoongArch: module: set section addresses to 0x0
 
-	  ret = pthread_create(&t2, NULL, t2_start, NULL);
-	  if (ret)
-		  exit(1);
+Qing Zhang (3):
+      LoongArch: Fix _CONST64_(x) as unsigned
+      LoongArch: Adjust user_watch_state for explicit alignment
+      LoongArch: Adjust user_regset_copyin parameter to the correct offset
 
-	  pthread_join(t1, NULL);
-	  pthread_join(t2, NULL);
-	  pthread_spin_destroy(&lock);
+Tiezhu Yang (3):
+      LoongArch: Check unwind_error() in arch_stack_walk()
+      LoongArch: Clean up plat_swiotlb_setup() related code
+      tools/loongarch: Use __SIZEOF_LONG__ to define __BITS_PER_LONG
 
-	  printf("%d\n", count);
-	  return 0;
-  }
-  # gcc pthread.c -o /tmp/pthread
-  # objdump -d /lib64/libc.so.6 | grep -w "pthread_spin_lock" -A 5 | head -5
-  00000000000886a4 <pthread_spin_lock@@GLIBC_2.36>:
-     886a4:	  0280040d 	  addi.w      	  $t1, $zero, 1(0x1)
-     886a8:	  3869348c 	  amswap_db.w 	  $t0, $t1, $a0
-     886ac:	  0040818c 	  slli.w      	  $t0, $t0, 0x0
-     886b0:	  44003180 	  bnez        	  $t0, 48(0x30)	  # 886e0 <pthread_spin_lock@@GLIBC_2.36+0x3c>
-  # cd /sys/kernel/debug/tracing
-  # echo > uprobe_events
-  # echo "p:myuprobe /lib64/libc.so.6:0x886a4" > uprobe_events
-
-Without this patch:
-
-  # echo 1 > events/uprobes/enable
-  # echo 1 > tracing_on
-  # /tmp/pthread
-  Trace/breakpoint trap (core dumped)
-
-With this patch:
-
-  # echo 1 > events/uprobes/enable
-  bash: echo: write error: Invalid argument
-
-Reported-by: Hengqi Chen <hengqi.chen@gmail.com>
-Link: https://lore.kernel.org/all/SY4P282MB351877A70A0333C790FE85A5C09C9@SY4P282MB3518.AUSP282.PROD.OUTLOOK.COM/
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/inst.h | 26 ++++++++++++++++++++++++++
- arch/loongarch/kernel/inst.c      |  6 ++++++
- arch/loongarch/kernel/uprobes.c   |  9 +++++----
- 3 files changed, 37 insertions(+), 4 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 061c0ea..09d5656 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -176,6 +176,32 @@ enum reg3_op {
- 	amord_op	= 0x70c7,
- 	amxorw_op	= 0x70c8,
- 	amxord_op	= 0x70c9,
-+	ammaxw_op	= 0x70ca,
-+	ammaxd_op	= 0x70cb,
-+	amminw_op	= 0x70cc,
-+	ammind_op	= 0x70cd,
-+	ammaxwu_op	= 0x70ce,
-+	ammaxdu_op	= 0x70cf,
-+	amminwu_op	= 0x70d0,
-+	ammindu_op	= 0x70d1,
-+	amswapdbw_op	= 0x70d2,
-+	amswapdbd_op	= 0x70d3,
-+	amadddbw_op	= 0x70d4,
-+	amadddbd_op	= 0x70d5,
-+	amanddbw_op	= 0x70d6,
-+	amanddbd_op	= 0x70d7,
-+	amordbw_op	= 0x70d8,
-+	amordbd_op	= 0x70d9,
-+	amxordbw_op	= 0x70da,
-+	amxordbd_op	= 0x70db,
-+	ammaxdbw_op	= 0x70dc,
-+	ammaxdbd_op	= 0x70dd,
-+	ammindbw_op	= 0x70de,
-+	ammindbd_op	= 0x70df,
-+	ammaxdbwu_op	= 0x70e0,
-+	ammaxdbdu_op	= 0x70e1,
-+	ammindbwu_op	= 0x70e2,
-+	ammindbdu_op	= 0x70e3,
- };
- 
- enum reg3sa2_op {
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index 1d7d579..ce25a63 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -135,6 +135,12 @@ void simu_branch(struct pt_regs *regs, union loongarch_instruction insn)
- 
- bool insns_not_supported(union loongarch_instruction insn)
- {
-+	switch (insn.reg3_format.opcode) {
-+	case amswapw_op ... ammindbdu_op:
-+		pr_notice("atomic memory access instructions are not supported\n");
-+		return true;
-+	}
-+
- 	switch (insn.reg2i14_format.opcode) {
- 	case llw_op:
- 	case lld_op:
-diff --git a/arch/loongarch/kernel/uprobes.c b/arch/loongarch/kernel/uprobes.c
-index 628c39d..bc6ec74 100644
---- a/arch/loongarch/kernel/uprobes.c
-+++ b/arch/loongarch/kernel/uprobes.c
-@@ -15,10 +15,11 @@ int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe,
- 	if (addr & 0x3)
- 		return -EILSEQ;
- 
--	insn.word = auprobe->insn[0];
--
--	if (insns_not_supported(insn))
--		return -EINVAL;
-+	for (int idx = ARRAY_SIZE(auprobe->insn) - 1; idx >= 0; idx--) {
-+		insn.word = auprobe->insn[idx];
-+		if (insns_not_supported(insn))
-+			return -EINVAL;
-+	}
- 
- 	if (insns_need_simulation(insn)) {
- 		auprobe->ixol[0] = larch_insn_gen_nop();
--- 
-2.1.0
-
+ Documentation/admin-guide/kernel-parameters.rst    |  1 +
+ Documentation/admin-guide/kernel-parameters.txt    |  6 ++++
+ arch/loongarch/Kconfig                             | 16 +++++++++
+ arch/loongarch/include/asm/acpi.h                  |  3 ++
+ arch/loongarch/include/asm/addrspace.h             |  4 +--
+ arch/loongarch/include/asm/bootinfo.h              |  1 -
+ arch/loongarch/include/asm/cpu-features.h          |  1 +
+ arch/loongarch/include/asm/cpu.h                   | 40 ++++++++++++----------
+ arch/loongarch/include/asm/io.h                    |  4 ++-
+ arch/loongarch/include/asm/loongarch.h             |  6 ++--
+ arch/loongarch/include/asm/module.lds.h            |  8 ++---
+ arch/loongarch/include/uapi/asm/ptrace.h           |  3 +-
+ arch/loongarch/kernel/cpu-probe.c                  |  9 +++--
+ arch/loongarch/kernel/proc.c                       |  1 +
+ arch/loongarch/kernel/ptrace.c                     | 25 +++++++++-----
+ arch/loongarch/kernel/setup.c                      | 25 ++++++++++++--
+ arch/loongarch/kernel/stacktrace.c                 |  2 +-
+ arch/loongarch/kernel/unwind.c                     |  1 +
+ arch/loongarch/kernel/unwind_prologue.c            |  4 ++-
+ arch/loongarch/mm/init.c                           |  4 +--
+ arch/loongarch/power/suspend_asm.S                 |  4 +++
+ .../arch/loongarch/include/uapi/asm/bitsperlong.h  |  2 +-
+ 22 files changed, 121 insertions(+), 49 deletions(-)
