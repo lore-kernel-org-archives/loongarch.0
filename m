@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBE3417ED
-	for <loongarch@lists.linux.dev>; Thu, 20 Apr 2023 02:37:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2264E17ED
+	for <loongarch@lists.linux.dev>; Thu, 20 Apr 2023 03:32:11 +0000 (UTC)
 Received: from loongson.cn (unknown [10.20.42.120])
-	by gateway (Coremail) with SMTP id _____8AxUU9NpUBksD4fAA--.37016S3;
-	Thu, 20 Apr 2023 10:37:01 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Axbdo6skBkG0YfAA--.48680S3;
+	Thu, 20 Apr 2023 11:32:10 +0800 (CST)
 Received: from [10.20.42.120] (unknown [10.20.42.120])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxWbJLpUBknmkwAA--.35S3;
-	Thu, 20 Apr 2023 10:36:59 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxtrU4skBkCHgwAA--.121S3;
+	Thu, 20 Apr 2023 11:32:09 +0800 (CST)
 Subject: Re: [PATCH v7 01/30] LoongArch: KVM: Add kvm related header files
 To: WANG Xuerui <kernel@xen0n.name>, Paolo Bonzini <pbonzini@redhat.com>
 References: <20230417094649.874671-1-zhaotianrui@loongson.cn>
@@ -20,8 +20,8 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
  Oliver Upton <oliver.upton@linux.dev>, maobibo@loongson.cn,
  Xi Ruoyao <xry111@xry111.site>
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
-Message-ID: <db57e7ba-5914-b543-d514-960e474a96be@loongson.cn>
-Date: Thu, 20 Apr 2023 10:36:59 +0800
+Message-ID: <31de3597-91e3-90d6-2aee-88198d1fa395@loongson.cn>
+Date: Thu, 20 Apr 2023 11:32:08 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 Precedence: bulk
@@ -33,25 +33,25 @@ MIME-Version: 1.0
 In-Reply-To: <f80d89fb-3428-a0c3-b41e-9619ed5adc8c@xen0n.name>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxWbJLpUBknmkwAA--.35S3
+X-CM-TRANSID:AQAAf8DxtrU4skBkCHgwAA--.121S3
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvAXoW3Cw18CF1xGr4kJr4fGFy5XFb_yoW8Cry8uo
-	W7ta1Igw48Gw1UCw4DG34jqa45Z34rKw47Aa13A3s3X3W7ta4DGr48Kw4rXF43uFn5KrW7
-	uasxX3WDZay2vwn5n29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+X-Coremail-Antispam: 1Uk129KBjvAXoW3Cw18CF1xGr4kJr4fGFy5XFb_yoW8CFW3Ao
+	W3tF4Igw48Gw1UCw4DG34jva45Z34Fkw47Aa13A3s5X3Wxtas8Gr48Kw48XF43uFn5KrW7
+	CasxX3WDZayIvwn5n29KB7ZKAUJUUUUt529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
 	J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
-	UUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
+	UUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s
 	0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
-	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-	M2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
-	CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2
-	z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2
-	IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
-	O2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-	Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rV
-	WUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4U
-	YxBIdaVFxhVjvjDU0xZFpf9x07j5xhLUUUUU=
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+	ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
+	w2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2
+	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
+	AI1cAE67vIY487MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCa
+	FVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI
+	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+	IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280
+	aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUec6pPUUUUU==
 
 
 
@@ -95,22 +95,12 @@ X-Coremail-Antispam: 1Uk129KBjvAXoW3Cw18CF1xGr4kJr4fGFy5XFb_yoW8Cry8uo
 >
 > We don't have guest_cfg yet in the cpu_data structure. You may have to 
 > re-organize a little bit to avoid referencing things from future commits.
-Thanks, I will re-organize the order of commits to make the cpu_data 
-structure suitable.
-
-Thanks
-Tianrui Zhao
 >
 > Also you may want to make more use of the definitions already in 
 > <asm/loongarch.h>, e.g. the BIT(6) here is just CSR_GCFG_SITP, and it 
 > seems the matc_{guest,root,nest} definitions here conflict with the 
 > definitions in <asm/loongarch.h> which implies the MATC is a plain 
 > value instead of a bunch of bit flags.
-Thanks, the MATC is really a plain value instead of bit flags, and I 
-will re-consider this.
-
-Thanks
-Tianrui Zhao
 >
 >> +
 >> +/*
@@ -129,6 +119,10 @@ Tianrui Zhao
 >> LOONGARCH_ASE_LSX)
 >
 > There is no LOONGARCH_ASE_LSX either.
+Thanks, I will fix the LOONGARCH_ASE_LSX macro
+
+Thanks
+Tianrui Zhao
 >
 >>     #endif /* __ASM_CPU_FEATURES_H */
 >> diff --git a/arch/loongarch/include/asm/kvm_host.h 
@@ -229,12 +223,21 @@ Tianrui Zhao
 > absolutely no sense in LoongArch. However e.g. there are indeed 4 
 > DMWINs in total, so I think you may want to say "number of xxx" 
 > instead (in which case you should probably name them "CSR_XXX_NUM").
+Thanks, the meaning of the macro should be CSR max numbers, and I will 
+change the macro name.
+
+Thanks
+Tianrui Zhao
 >
 > Also there are duplications here too.  CSR_UCWIN_BASE is just 
 > LOONGARCH_CSR_UCAWIN, CSR_DMWIN_BASE is LOONGARCH_CSR_DMWIN0, 
 > CSR_PERF_BASE is LOONGARCH_CSR_PERFCTRL0, and CSR_DEBUG_BASE is 
 > LOONGARCH_CSR_DEBUG. You should at least avoid repeating the magic 
 > numbers.
+Thanks, I will remove the duplicate definitions of CSRs.
+
+Thanks
+Tianrui Zhao
 >
 >> +
 >> +struct loongarch_csrs {
@@ -269,6 +272,10 @@ Tianrui Zhao
 >> +    /* Pointers stored here for easy access from assembly code. */
 >
 > nit: remove trailing period
+Thanks, I will remove the trailing period
+
+Thanks
+Tianrui Zhao
 >
 >> +    int (*handle_exit)(struct kvm_run *run, struct kvm_vcpu *vcpu);
 >> +
@@ -282,6 +289,10 @@ Tianrui Zhao
 >> +    /* Host CSR registers used when handling exits from guest */
 >
 > nit: "Host CSRs"
+Thanks, I will fix it.
+
+Thanks
+Tianrui Zhao
 >
 >> +    unsigned long badv;
 >> +    unsigned long host_estat;
@@ -292,6 +303,10 @@ Tianrui Zhao
 >> +    /* GPRS */
 >
 > nit: "GPRs"
+Thanks, I will fix it
+
+Thanks
+Tianrui Zhao
 >
 >> +    unsigned long gprs[32];
 >> +    unsigned long pc;
@@ -299,6 +314,10 @@ Tianrui Zhao
 >> +    /* FPU State */
 >
 > nit: "state"
+Thanks, I will fix it.
+
+Thanks
+Tianrui Zhao
 >
 >> +    struct loongarch_fpu fpu FPU_ALIGN;
 >> +    /* Which auxiliary state is loaded (KVM_LOONGARCH_AUX_*) */
@@ -315,6 +334,11 @@ Tianrui Zhao
 >
 > This doesn't make sense, how can the timer control KVM? Seems 
 > something like "KVM register to control count timer" but I'm not sure.
+Ok, I will fix this comment.
+
+Thanks
+Tianrui Zhao
+>
 >
 >> +    u32 count_ctl;
 >> +
@@ -337,11 +361,19 @@ Tianrui Zhao
 >
 > Can you make it "timer_period_ns" or are you following other arches' 
 > conventions?
+Thanks, I will change the name to timer_period_ns.
+
+Thanks
+Tianrui Zhao
 >
 >> +    /* Frequency of stable timer in Hz */
 >> +    u64 timer_mhz;
 >
 > Is it really MHz or Hz?
+Yes, it is MHz.
+
+Thanks
+Tianrui Zhao
 >
 >> +    /* Stable bias from the raw time */
 >> +    u64 timer_bias;
@@ -352,6 +384,10 @@ Tianrui Zhao
 >
 > The comment seems redundant (code is too trivial so the comment 
 > doesn't add any information).
+Thanks I will remove this comment
+
+Thanks
+Tianrui Zhao
 >
 >> +    ktime_t stable_ktime_saved;
 >> +
@@ -360,6 +396,10 @@ Tianrui Zhao
 >> +    /* Last CPU the VCPU state was loaded on */
 >
 > Use consistent spelling: "vCPU".
+Ok, I will fix it.
+
+Thanks
+Tianrui Zhao
 >
 >> +    int last_sched_cpu;
 >> +    /* Last CPU the VCPU actually executed guest code on */
@@ -430,6 +470,10 @@ Tianrui Zhao
 > return arch->pc == arch->badv;
 >
 > All other such occurrences should preferably be simplified too.
+Thanks, I will fix this.
+
+Thanks
+Tianrui Zhao
 >
 >> +}
 >> +
@@ -482,6 +526,10 @@ Tianrui Zhao
 > Is there any difference with KVM_NR_MEM_OBJS in <asm/kvm_host.h> in 
 > the same commit? If they are actually the same thing you should avoid 
 > duplicating the "4".
+Yes, I will remove the KVM_NR_MEM_OBJS in <asm/kvm_host.h>.
+
+Thanks
+Tianrui Zhao
 >
 >> +
 >> +#endif /* _ASM_LOONGARCH_KVM_TYPES_H */
@@ -530,6 +578,10 @@ Tianrui Zhao
 >
 > Is this field an explicit padding? Probably it's better to use a more 
 > descriptive name like __pad0 if it's the case.
+No, it is not a padding but a unused reg
+
+Thanks
+Tianrui Zhao
 >
 >> +    __u64 fcc;    /* 8x8 */
 >> +    struct kvm_fpureg {
