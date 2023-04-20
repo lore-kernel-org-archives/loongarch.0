@@ -1,66 +1,154 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E0E3212;
-	Thu, 20 Apr 2023 18:50:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1682016657;
-	bh=aOUOncamuei97Vu6sivVlt041a1msFjzaF6U6ySdhyo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=S8PyOqu04pGaR4bVpGhUhQCdT+EevZ6qo2jJPGXFyaqD2sWInj9lzHU+ZuAPdscVF
-	 7DtEtS6fi0w/ssAidneNLViBRNxtAX5jStdzPJ2b+8k4QaK9vKrX8j2cs6WszCrLzH
-	 vGEECDWuZD/xASVPp0MIVavcXpBPrFU3C1Nxrj2M=
-Received: from localhost.localdomain (xry111.site [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 20B3066144;
-	Thu, 20 Apr 2023 14:50:55 -0400 (EDT)
-Message-ID: <18c7a2891d8a192f4a88b10d403baeaa8b31797e.camel@xry111.site>
-Subject: Re: [PATCH v2 6/7] MIPS: Fallback CPU -march CFLAG to ISA level if
- unsupported
-From: Xi Ruoyao <xry111@xry111.site>
-To: Nick Desaulniers <ndesaulniers@google.com>, Thomas Bogendoerfer
-	 <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, 
-	llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>, Huacai Chen
-	 <chenhuacai@kernel.org>, kernel@xen0n.name, loongarch@lists.linux.dev
-Date: Fri, 21 Apr 2023 02:50:54 +0800
-In-Reply-To: <c91beae684ba1f45d22be1f3d8542c89711df6a7.camel@xry111.site>
-References: <20230414080701.15503-1-jiaxun.yang@flygoat.com>
-	 <20230414080701.15503-7-jiaxun.yang@flygoat.com>
-	 <CAKwvOdkttvdZQyxrP60hAziaRQ4HWRBBSuA-vN25_USg-zEJqg@mail.gmail.com>
-	 <550FCA0F-2C48-4133-85B0-D9494CC1C23C@flygoat.com>
-	 <CAKwvOd=sNyOq9J=CS09XXQ6YY3y3ytLnwHxKoHNdddcxYk=nJQ@mail.gmail.com>
-	 <20230419221500.GA17797@alpha.franken.de>
-	 <CAKwvOdkZA6DVCbgF=P1xZcHiyGFTnYvGReJZTzVnmeZdsH0L3w@mail.gmail.com>
-	 <c91beae684ba1f45d22be1f3d8542c89711df6a7.camel@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.0 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AE68F68;
+	Thu, 20 Apr 2023 19:16:19 +0000 (UTC)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id 39F4B32001AB;
+	Thu, 20 Apr 2023 15:16:18 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Thu, 20 Apr 2023 15:16:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm1; t=
+	1682018177; x=1682104577; bh=pbDnR67Pa+Q38iOPlfqE8mwiOTvo9Nuikap
+	uw/p64Lo=; b=yOrMxfK0a2MmAp31iOViwo4xNBnusHSCzcJTNZ9G4gdCgl7ijs2
+	7lvKSqZ++OlJ1qDsHPFyI2W722/UR3F1s3NjzJ8awMxqv+UhTsWT+3mrEYDh301x
+	s269uN1psuHFWBkFm2wGnXd7XeikdcUgsopxQfXtyU7Z4yrBw9Y/rHIy2sjt3RCV
+	9T/hA1uiuuHTYAAd3FYT2GYX3iRtLBbLJ7B303S175Qeyy2hStToqU2Ea0UJjn2R
+	ae26+isLh7h3EkQYRkBFwf5R0uUChToiigMMMPMDbjfKAK7lTve+7Ojd6rPOWqyr
+	w7wlYnLCaUZL/x3TPyjvKpQ9hKCxHwHuJxw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1682018177; x=1682104577; bh=pbDnR67Pa+Q38iOPlfqE8mwiOTvo9Nuikap
+	uw/p64Lo=; b=P/TsETXMgMavuHW6rJV/JsznXP9ynOqTLNdMfU60yqdTaG8qrm7
+	ZwQNlInSzLlTyJ4fTBrpGm4J08t02rc0hdF/08yowoekEtP7JLX7oUHPgbZ0FtAY
+	NXUa3HfG9ckTvnRljzcn1PhDOvYiGKofYY+rAunvAXSlSBrTOAzC9KgGQbngf4Rc
+	6nQwsrwFGoIB3my4iXbcoYX8EPm43jQOn1oTMstteNBn+inwp8iqoKbzuceLCA3k
+	k8+0KntKqSoGP1nxfBXErUhtZgJvbuziL3FIm4W88BIzZy33kzszk8DatBAKVy5P
+	4BqMMSe7QVJ5qZQbQqIBtDuqHo8x6TmP2yA==
+X-ME-Sender: <xms:gY9BZODpYhn7iKaHVujRQm2xZX-wGdgZs-JjGfF4_NyV8BZK3PLeew>
+    <xme:gY9BZIjwss_VUN4PRhwzf8vRJZLKucc_1hcz5g3XVJNVcjLpXF6UjtvhTSLJyyudH
+    kQ9Sfr9C2-rVSfIl3I>
+X-ME-Received: <xmr:gY9BZBnyCtjfA3rYZBIeleXdk4-XEdZvVl5liGlwbk4Axad1Vl4zMTbtokTkj4tMxCWE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedtvddgudefgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpegtggfuhfgjffevgffkfhfvofesthhqmhdthhdtjeenucfhrhhomheplfhi
+    rgiguhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqe
+    enucggtffrrghtthgvrhhnpeduleefueeggfeitdfgkeeukeetjedvveelieeviedvueek
+    ueeljefhleeugefhudenucffohhmrghinhepghhithhhuhgsrdgtohhmpdifihhkihhpvg
+    guihgrrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:gY9BZMz2GvQUPnYZAWqMAHMPJrfiX18TGWIu_l2vhq4eQ5dJ4sJMhA>
+    <xmx:gY9BZDQhitFUU3BcJPfT_yFnl8vienSEbIBhJkCMoN8UCNP3p_Cnlg>
+    <xmx:gY9BZHZ3e4b8k93gEYDBGu8DWJhbJWLZmXgyWlvncNDa2ky1KfXL-w>
+    <xmx:gY9BZCGH3tysjKbQpcNzsdsOpQ4MAU8SjdYsKrfiuoM5lmkQUezKZQ>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 20 Apr 2023 15:16:16 -0400 (EDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.500.231\))
+Subject: Re: [PATCH v2 6/7] MIPS: Fallback CPU -march CFLAG to ISA level if
+ unsupported
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+In-Reply-To: <CAKwvOdkZA6DVCbgF=P1xZcHiyGFTnYvGReJZTzVnmeZdsH0L3w@mail.gmail.com>
+Date: Thu, 20 Apr 2023 20:16:05 +0100
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ llvm@lists.linux.dev,
+ Nathan Chancellor <nathan@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Xuerui Wang <kernel@xen0n.name>,
+ loongarch@lists.linux.dev
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5EBF3474-13B4-4920-AD14-B3F258303DC4@flygoat.com>
+References: <20230414080701.15503-1-jiaxun.yang@flygoat.com>
+ <20230414080701.15503-7-jiaxun.yang@flygoat.com>
+ <CAKwvOdkttvdZQyxrP60hAziaRQ4HWRBBSuA-vN25_USg-zEJqg@mail.gmail.com>
+ <550FCA0F-2C48-4133-85B0-D9494CC1C23C@flygoat.com>
+ <CAKwvOd=sNyOq9J=CS09XXQ6YY3y3ytLnwHxKoHNdddcxYk=nJQ@mail.gmail.com>
+ <20230419221500.GA17797@alpha.franken.de>
+ <CAKwvOdkZA6DVCbgF=P1xZcHiyGFTnYvGReJZTzVnmeZdsH0L3w@mail.gmail.com>
+To: Nick Desaulniers <ndesaulniers@google.com>
+X-Mailer: Apple Mail (2.3731.500.231)
 
-On Fri, 2023-04-21 at 02:42 +0800, Xi Ruoyao wrote:
-> Hi Nick,
+
+
+> 2023=E5=B9=B44=E6=9C=8820=E6=97=A5 17:32=EF=BC=8CNick Desaulniers =
+<ndesaulniers@google.com> =E5=86=99=E9=81=93=EF=BC=9A
 >=20
-> On Thu, 2023-04-20 at 09:32 -0700, Nick Desaulniers wrote:
-> > Separate question to Huacai, Wang, and the loongarch list; I know
-> > LLVM
-> > landed the Loongarch backend recently; any idea what's the status of
-> > building arch=3Dloongarch with LLVM=3D1 (linux kernel)?
+> On Wed, Apr 19, 2023 at 3:15=E2=80=AFPM Thomas Bogendoerfer
+> <tsbogend@alpha.franken.de> wrote:
+>>=20
+>> On Wed, Apr 19, 2023 at 02:35:02PM -0700, Nick Desaulniers wrote:
+>>> On Wed, Apr 19, 2023 at 9:50=E2=80=AFAM Jiaxun Yang =
+<jiaxun.yang@flygoat.com> wrote:
+>>>>=20
+>>>>=20
+>>>>=20
+>>>>> 2023=E5=B9=B44=E6=9C=8818=E6=97=A5 21:07=EF=BC=8CNick Desaulniers =
+<ndesaulniers@google.com> =E5=86=99=E9=81=93=EF=BC=9A
+>>>>>=20
+>>>>> On Fri, Apr 14, 2023 at 1:07=E2=80=AFAM Jiaxun Yang =
+<jiaxun.yang@flygoat.com> wrote:
+>>>>>>=20
+>>>>>> LLVM does not implement some of -march options. However those =
+options
+>>>>>> are not mandatory for kernel to build for those CPUs.
+>>>>>>=20
+>>>>>> Fallback -march CFLAG to ISA level if unsupported by toolchain so
+>>>>>> we can get those kernel to build with LLVM.
+>>>>>>=20
+>>>>>> Link: https://github.com/ClangBuiltLinux/linux/issues/1544
+>>>>>> Reported-by: Nathan Chancellor <nathan@kernel.org>
+>>>>>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>>>>>=20
+>>>>> Thanks for the patch! Maybe it's more obvious to folks who work on
+>>>>> mips, but how did you determine that say `p5600` is `mips32r5` or
+>>>>> `r10000` is `mips4`?
+>>>>=20
+>>>> Wikipedia [1] should fit the purpose.
+>>>>=20
+>>>> [1]: =
+https://en.wikipedia.org/wiki/List_of_MIPS_architecture_processors
+>>>=20
+>>> Mostly! Though I was not able to verify:
+>>> - p5600
+>>=20
+>> mips32r5
+>>=20
+>>> - r5500
+>>=20
+>> mips4
+>>=20
+>>> - rm5200
+>>=20
+>> mips4
+>>=20
+>>> - sb1
+>>=20
+>> mips64r1
 >=20
-> AFAIK there are some issues not resolved yet:
-> https://github.com/ClangBuiltLinux/linux/issues/1787
+> Thomas, thanks for reviewing datasheets to verify this.
+>=20
+> Jiaxun, for SB1, you have cc-option fall back to -march=3Dmips4, does
+> that need to be -march=3Dmips64r1?
 
-I must be completely stupid: I didn't see you are the one raised the
-ticket :).
+Yep, my bad, was reading the manual wrong.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Will fix in next rev.
+
+Thanks.
+- Jiaxun=
