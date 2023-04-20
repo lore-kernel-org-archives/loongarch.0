@@ -1,55 +1,114 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1C31FD3
-	for <loongarch@lists.linux.dev>; Thu, 20 Apr 2023 04:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1681964932;
-	bh=qjJvhRPJtTB9s4JlA/d32awcwTdfGFqpmvhyPup6Wc8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=PX8JwbhZLO8D/l7LmC2fOX9ytOGvUVJ9EOfaiI/asRKpWeIcsq52EOOtOcjL4xGX3
-	 Cm7vIEg1QTGA+PCU/mGiwKCKnSfberDERsRTbGMR3lIh1UFoBgiWKJ/JN1yNwOV9bg
-	 ve/iK0dphdPBJg66mXWEqNhRuzNBiP+FK9GWJat8=
-Received: from [IPv6:240e:358:116f:3d00:dc73:854d:832e:2] (unknown [IPv6:240e:358:116f:3d00:dc73:854d:832e:2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id DCE7C663E6;
-	Thu, 20 Apr 2023 00:28:48 -0400 (EDT)
-Message-ID: <4c8bd175b3749631ebd3ab1b70693b3f7e748c69.camel@xry111.site>
-Subject: Re: [PATCH 1/2] LoongArch: Add pad structure members for explicit
- alignment
-From: Xi Ruoyao <xry111@xry111.site>
-To: Qing Zhang <zhangqing@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Date: Thu, 20 Apr 2023 12:28:43 +0800
-In-Reply-To: <51051bd7e42378cdf465494389ab76a30ca3acf2.camel@xry111.site>
-References: <20230418091348.9239-1-zhangqing@loongson.cn>
-	 <a7fa32c3af68083855e7690f67824d060d5c6135.camel@xry111.site>
-	 <899085c1-7a74-8bab-1429-1b6e9e4c2c30@xen0n.name>
-	 <48bc7236-638d-9086-daaf-62eacea80dd2@xen0n.name>
-	 <111c1e81-dfae-4388-9fc6-a3f247641398@loongson.cn>
-	 <51051bd7e42378cdf465494389ab76a30ca3acf2.camel@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.0 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E36F3C04
+	for <loongarch@lists.linux.dev>; Thu, 20 Apr 2023 08:21:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13E4FC433EF
+	for <loongarch@lists.linux.dev>; Thu, 20 Apr 2023 08:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1681978899;
+	bh=V8tTQfaQLfaqXBpeDFQADL4hlD5VjTx3GR/FZ7oCLII=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uJm8x8y7XAHrzLPrw1d2L9hPUir0fzy6ZzeKVuHBwZ8wjqfwq+BUzkt6lLPAXl2Lj
+	 aGsyBjHQgV3KDeGdwgqmErIsxnGZ7Id8fM2ZAL+RJNgi6qK5UOroPOkHkbHGmBsjLv
+	 1p1W0z9ot5DysA/Kz0s2Trco5YxpLbnebaoZVBE8fey/KfDghKR7tOx5tjnv3o5MkG
+	 iJIc2j/hCPFywYtA+nUFbr45N/VwK+6eh8mPm6cHlbV6/OcWgjGE/6yiQX4nFl+yaO
+	 smPNVdl2lYykRcFRotnJcaxxijMs9rC0zC2UVtHaeKZDPLNW3bZaWw3np+3Qv8ewh0
+	 53OSqqP1jsaTw==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-506bdf29712so3106865a12.0
+        for <loongarch@lists.linux.dev>; Thu, 20 Apr 2023 01:21:38 -0700 (PDT)
+X-Gm-Message-State: AAQBX9fICs0iyxYw7y+DnQcaCHmsptXGSmoMGWIFIq6Y4R12fskqb0Mw
+	u+3dvGCanc3LrO/ZNpaF8E6GGkLV6D9c5rhy+RE=
+X-Google-Smtp-Source: AKy350YopyYiTPvdnzPIXwrQ0+FWi5yn72Z7uUZKakzQ3T/b+ltGYKTrB66bg1oD5qQjv0BbrKrUaLDCCwonerbqSr0=
+X-Received: by 2002:aa7:cc12:0:b0:4fc:d331:515 with SMTP id
+ q18-20020aa7cc12000000b004fcd3310515mr645108edt.5.1681978897102; Thu, 20 Apr
+ 2023 01:21:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20230416060356.3711529-1-kernel@xen0n.name> <20230416060356.3711529-4-kernel@xen0n.name>
+ <CAAhV-H4JmVq9y02gPxOCm6dFO+BS9=BLj_u276UdtEJ+DUHbUw@mail.gmail.com> <1fba4e9e-dd98-39d7-5ff9-027987551a88@xen0n.name>
+In-Reply-To: <1fba4e9e-dd98-39d7-5ff9-027987551a88@xen0n.name>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 20 Apr 2023 16:21:24 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6AjLh+-K4aprFL8KyTKvhFkJ-TbmJAN1KNxcnKqh-u3Q@mail.gmail.com>
+Message-ID: <CAAhV-H6AjLh+-K4aprFL8KyTKvhFkJ-TbmJAN1KNxcnKqh-u3Q@mail.gmail.com>
+Subject: Re: [PATCH v4 03/12] LoongArch: Print GPRs with ABI names when
+ showing registers
+To: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, WANG Xuerui <git@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2023-04-20 at 12:24 +0800, Xi Ruoyao wrote:
-> undefined behavior.=C2=A0 `printf(PRIu16 "\n", ptr->dbg_info);` is an
-> undefined behavior if ptr->dbg_info is a int16_t, because the standard
-                                           ^^^^^^^ uint64_t
+On Wed, Apr 19, 2023 at 3:17=E2=80=AFPM WANG Xuerui <kernel@xen0n.name> wro=
+te:
+>
+> On 2023/4/19 14:49, Huacai Chen wrote:
+> > On Sun, Apr 16, 2023 at 2:04=E2=80=AFPM WANG Xuerui <kernel@xen0n.name>=
+ wrote:
+> >>
+> >> From: WANG Xuerui <git@xen0n.name>
+> >>
+> >> Print 3 registers per line to fit the entire line within 75 columns ev=
+en
+> >> with timestamp prefixed to each line, to ease future copy-pastes for a=
+ll.
+> >>
+> >> And show the syscall restart flag (in place of the saved "$zero") if
+> >> non-zero.
+> >>
+> >> Signed-off-by: WANG Xuerui <git@xen0n.name>
+> >> ---
+> >>   arch/loongarch/kernel/traps.c | 38 +++++++++++++++++++++++----------=
+--
+> >>   1 file changed, 25 insertions(+), 13 deletions(-)
+> >>
+> >> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/tra=
+ps.c
+> >> index 2f4279f612e7..f61de72e0c3a 100644
+> >> --- a/arch/loongarch/kernel/traps.c
+> >> +++ b/arch/loongarch/kernel/traps.c
+> >> @@ -158,22 +158,34 @@ static void __show_regs(const struct pt_regs *re=
+gs)
+> >>          const int field =3D 2 * sizeof(unsigned long);
+> >>          unsigned int excsubcode;
+> >>          unsigned int exccode;
+> >> -       int i;
+> >>
+> >>          show_regs_print_info(KERN_DEFAULT);
+> >>
+> >> -       /*
+> >> -        * Saved main processor registers
+> >> -        */
+> >> -       for (i =3D 0; i < 32; ) {
+> >> -               if ((i % 4) =3D=3D 0)
+> >> -                       printk("$%2d   :", i);
+> >> -               pr_cont(" %0*lx", field, regs->regs[i]);
+> >> -
+> >> -               i++;
+> >> -               if ((i % 4) =3D=3D 0)
+> >> -                       pr_cont("\n");
+> >> -       }
+> >> +       /* Print most of the GPRs, 3 per row to fit output in 75 colum=
+ns */
+> > I prefer print 4 registers per line, including r0 (for alignment we
+> > don't use zero).
+> > e.g.,
+> > r0(r0) .... r1(ra) .... r2(tp) .... r3(sp) ....
+>
+> I don't agree here. The rationale for 3 GPRs per row is clearly stated
+> in the commit message and *this exact comment*. If we can somehow fit 4
+> GPRs within 75 columns I'd be all for changing, but sadly we can't.
+We don't need to be limited by 75 columns for the output, you know,
+even the limit of 80 columns of code has been removed.
 
-:(
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Huacai
+>
+> --
+> WANG "xen0n" Xuerui
+>
+> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+>
