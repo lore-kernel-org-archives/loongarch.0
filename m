@@ -1,102 +1,138 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C958C15
-	for <loongarch@lists.linux.dev>; Thu, 20 Apr 2023 15:52:24 +0000 (UTC)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-94eff00bcdaso89426166b.1
-        for <loongarch@lists.linux.dev>; Thu, 20 Apr 2023 08:52:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BACC8C04
+	for <loongarch@lists.linux.dev>; Thu, 20 Apr 2023 16:32:49 +0000 (UTC)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-54f6a796bd0so48851267b3.12
+        for <loongarch@lists.linux.dev>; Thu, 20 Apr 2023 09:32:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1682005942; x=1684597942;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6wNV6vuEnDx323qiEZUPunRODUIJ2Mg30GBaFfSSX3w=;
-        b=KUtGBpFZ4K9dSucECVZlT2qy5FvnWxP46zuHOMVJsi91f5wQw9RmX+hqV9rMJRjNWC
-         bvim1ZW9BruSUXh7t24xkD3E9qIDDtOL2WfURgKcM2ITYHMdr0ZBeDhuidNarsqaSc0r
-         yqe4GJjZQs13isZMujvMrIcwjP1EtTq/AmwONYNGk84c30P61LpkPI1ihZgK/5a/kcsQ
-         b+tH1uPgz8oc1SstFQE1V/sba0WNunH5lWfib68TvZme9Q0X4I1rsPIlqiwAowJyjdgq
-         gP7z4PD2Y24KMaDINb0teLYR4fj+RqFRpQcUOZpkLkSVfPnN3Vau0dNrArU1iweUL6p1
-         +hyA==
+        d=google.com; s=20221208; t=1682008368; x=1684600368;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x3BSroRGTMjZwdWoqTKLfU1BwyXpXpK1CaYKOa1IhhA=;
+        b=i1AYBs8uVK8brvleQAYqQGZPGcHCo8NkcuLi+lk7QlkZRzLXczecbwnHc2vEd3T3Md
+         PfbKp6VSZaD3MeOVF4239vPmz3TbDBbw9lq0nXv1fzz7FCAiJlmMDtT1wiTOZVcjDxai
+         kPI4A0jTiWieP1nCDhQ4VYXH7W/hwLNrESVTRG/RRIqoDtKy2NiZv2VQR6XyV4Lj9Czj
+         nExymAAFbb3YZzvMjuFYCAYrt9itelr661Deu63vXoByzV3rko8BZHgjSwwLK6qCOpfK
+         tbnscG88Njr/fQkPfOLtXDoMmB8ENZUE1qk6lIEAUdpwCKVcwfiRpPuxW2zCIDDpzLJF
+         Q9+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682005942; x=1684597942;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6wNV6vuEnDx323qiEZUPunRODUIJ2Mg30GBaFfSSX3w=;
-        b=bAL3kTLjBlyFzOF3hT1SF4ARtYqUXGvRh8cKt3aMu9Lb+AVcCzYQz9FM3ZNdrtNx/k
-         CHcMDGX33dcybc5GoWB62dTuvEIr8VZpKS0KEU62mbE0XTDYQmcEiuB13p9LHnBlL4BN
-         vaMZCnzxZjYNqdbQuctPX+KKlJGMpvEZMgT/KgC+vHtHTyQxzQMLZ0utk5lYuKnCzceB
-         BlsssiQLpIaCTvinIp9H78zdjGj9F49dik2EOfNn7LHUrzfwzTpSJ96ek3gHiyJY1oQ5
-         uQ1DYu4PabTTRtPiVH69RBytky8h/0ALffoON0YuKQuklnoDnRoS5J1sSoG6LVQjHGNp
-         PgoA==
-X-Gm-Message-State: AAQBX9cWSC9khr45UuaVp+tX6Tnb/er/bAdxRFfiKnt8YR0wiczAPe4x
-	ErBkXQjPWNnhO6vtCqDi5/vRww==
-X-Google-Smtp-Source: AKy350aPmsWqtsiLlXtFEKjMdEfdFTHARCOQr/LjyoR6a22xRet0wGy1eSSq3Rw+P0/E+xbmTBCyWg==
-X-Received: by 2002:a05:6402:6d9:b0:506:833c:abcf with SMTP id n25-20020a05640206d900b00506833cabcfmr2405927edy.42.1682005942297;
-        Thu, 20 Apr 2023 08:52:22 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:bcb8:77e6:8f45:4771? ([2a02:810d:15c0:828:bcb8:77e6:8f45:4771])
-        by smtp.gmail.com with ESMTPSA id k10-20020aa7c04a000000b005076635b02bsm884526edo.13.2023.04.20.08.52.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Apr 2023 08:52:21 -0700 (PDT)
-Message-ID: <75231886-cdf6-cfde-d6b9-183b1fbf98da@linaro.org>
-Date: Thu, 20 Apr 2023 17:52:20 +0200
+        d=1e100.net; s=20221208; t=1682008368; x=1684600368;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x3BSroRGTMjZwdWoqTKLfU1BwyXpXpK1CaYKOa1IhhA=;
+        b=GI8yyy1V2xfvezPsD93ivQhpYhIvd4Pbqc5J5eKp6saMKxhO8y0lMyoOwyIbeYJudm
+         tmsSnzKoZsvtTuVDjSSd3LWz8By/f5JCaZVjTll+OyCNjKAXlEkzmaBU2vtEqLBHdTgh
+         UtC/ctLEzMTTTAeVibHi4zwkk6f33kbCDcNatXH3M5Y2nbCGHdKmOCoxyieN5Ymcy+mx
+         JMyFIa/57oCz5wrciaSYjEYkT67YppiE+ZF12DpENtU5n96bjufmLz8HEA0j5ASg49/E
+         2ZSIRRjmq4Q56UcXysixupJnxOkt1iF4Gyx3Ov3EtGT7ynk2gkgFr/ypZY6H5Stoh8ed
+         NiZA==
+X-Gm-Message-State: AAQBX9fhNAF91kT14XrHULKZAque/3MlPpG3kwjYMvn5XfepxC2Ark0b
+	+os1KvWqpViAFAB4L7yFXH8jn4BxM+4LIapmBy2aaw==
+X-Google-Smtp-Source: AKy350bS4Uph/moJnEKQings6CW8NakkSPNVDca75rNKjnPYS7Vm9ht4TnvcuOxwihcePODQeNmC90SYvB3pfCHYWfM=
+X-Received: by 2002:a0d:d911:0:b0:54f:5cec:a643 with SMTP id
+ b17-20020a0dd911000000b0054f5ceca643mr1364521ywe.41.1682008368023; Thu, 20
+ Apr 2023 09:32:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH V3 1/2] dt-bindings: interrupt-controller: Add Loongson
- EIOINTC
-Content-Language: en-US
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Gleixner <tglx@linutronix.de>,
- Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>,
- linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
- loongarch@lists.linux.dev, devicetree@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-References: <cover.1681887790.git.zhoubinbin@loongson.cn>
- <3b9c4f05eaf14bc3b16aebec3ff84c8a2d52c4a5.1681887790.git.zhoubinbin@loongson.cn>
- <f9b62f48-5c8b-2674-313d-4552c61c4302@linaro.org>
- <CAMpQs4JjHvVOzQz-1Y-q9ut6tWUpakrHeozuwPg0dzoDcUFEGA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAMpQs4JjHvVOzQz-1Y-q9ut6tWUpakrHeozuwPg0dzoDcUFEGA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230414080701.15503-1-jiaxun.yang@flygoat.com>
+ <20230414080701.15503-7-jiaxun.yang@flygoat.com> <CAKwvOdkttvdZQyxrP60hAziaRQ4HWRBBSuA-vN25_USg-zEJqg@mail.gmail.com>
+ <550FCA0F-2C48-4133-85B0-D9494CC1C23C@flygoat.com> <CAKwvOd=sNyOq9J=CS09XXQ6YY3y3ytLnwHxKoHNdddcxYk=nJQ@mail.gmail.com>
+ <20230419221500.GA17797@alpha.franken.de>
+In-Reply-To: <20230419221500.GA17797@alpha.franken.de>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Thu, 20 Apr 2023 09:32:36 -0700
+Message-ID: <CAKwvOdkZA6DVCbgF=P1xZcHiyGFTnYvGReJZTzVnmeZdsH0L3w@mail.gmail.com>
+Subject: Re: [PATCH v2 6/7] MIPS: Fallback CPU -march CFLAG to ISA level if unsupported
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, llvm@lists.linux.dev, 
+	Nathan Chancellor <nathan@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, kernel@xen0n.name, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 20/04/2023 15:00, Binbin Zhou wrote:
->>> +examples:
->>> +  - |
->>> +    eiointc: interrupt-controller@1fe11600 {
->>> +      compatible = "loongson,ls2k0500-eiointc";
->>> +      reg = <0x1fe11600 0x10>,
->>> +            <0x1fe11700 0x10>,
->>> +            <0x1fe11800 0x10>,
->>> +            <0x1fe114c0 0x4>;
->>
->> Binding is OK, but are you sure you want to split the address space like
->> this? It looks like two address spaces (enable+clear+status should be
->> one). Are you sure this is correct?
->>
-> Hi Krzysztof:
-> 
-> These registers are all in the range of chip configuration registers,
-> in the case of LS2K0500, which has a base address of 0x1fe10000.
-> However, the individual register addresses are not contiguous with
-> each other, and most are distributed across modules, so I feel that
-> they should be listed in detail as they are used.
+On Wed, Apr 19, 2023 at 3:15=E2=80=AFPM Thomas Bogendoerfer
+<tsbogend@alpha.franken.de> wrote:
+>
+> On Wed, Apr 19, 2023 at 02:35:02PM -0700, Nick Desaulniers wrote:
+> > On Wed, Apr 19, 2023 at 9:50=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygoa=
+t.com> wrote:
+> > >
+> > >
+> > >
+> > > > 2023=E5=B9=B44=E6=9C=8818=E6=97=A5 21:07=EF=BC=8CNick Desaulniers <=
+ndesaulniers@google.com> =E5=86=99=E9=81=93=EF=BC=9A
+> > > >
+> > > > On Fri, Apr 14, 2023 at 1:07=E2=80=AFAM Jiaxun Yang <jiaxun.yang@fl=
+ygoat.com> wrote:
+> > > >>
+> > > >> LLVM does not implement some of -march options. However those opti=
+ons
+> > > >> are not mandatory for kernel to build for those CPUs.
+> > > >>
+> > > >> Fallback -march CFLAG to ISA level if unsupported by toolchain so
+> > > >> we can get those kernel to build with LLVM.
+> > > >>
+> > > >> Link: https://github.com/ClangBuiltLinux/linux/issues/1544
+> > > >> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> > > >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > > >
+> > > > Thanks for the patch! Maybe it's more obvious to folks who work on
+> > > > mips, but how did you determine that say `p5600` is `mips32r5` or
+> > > > `r10000` is `mips4`?
+> > >
+> > > Wikipedia [1] should fit the purpose.
+> > >
+> > > [1]: https://en.wikipedia.org/wiki/List_of_MIPS_architecture_processo=
+rs
+> >
+> > Mostly! Though I was not able to verify:
+> > - p5600
+>
+> mips32r5
+>
+> > - r5500
+>
+> mips4
+>
+> > - rm5200
+>
+> mips4
+>
+> > - sb1
+>
+> mips64r1
 
-Do you want to say that:
-Between 0x1fe11600 and 0x1fe11700 there are EIOINTC registers and other
-(independent) module registers?
+Thomas, thanks for reviewing datasheets to verify this.
 
+Jiaxun, for SB1, you have cc-option fall back to -march=3Dmips4, does
+that need to be -march=3Dmips64r1?
 
-Best regards,
-Krzysztof
+(With that last question resolved, I'm happy to sign off on this patch)
 
+>
+> all information taken from datasheets.
+>
+> > - loongson*
+>
+> probably depends on the exact type, but as I don't have datasheets
+> I can't say what it is exactly, probaly mips32r2/mips64r2.
+
+Oh look Jiaxun, you are the maintainer for
+"MIPS/LOONGSON64 ARCHITECTURE"
+ok then I will trust your knowledge of this architecture!
+
+---
+Separate question to Huacai, Wang, and the loongarch list; I know LLVM
+landed the Loongarch backend recently; any idea what's the status of
+building arch=3Dloongarch with LLVM=3D1 (linux kernel)?
+
+--=20
+Thanks,
+~Nick Desaulniers
