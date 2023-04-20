@@ -1,358 +1,190 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A89320C
-	for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 22:57:10 +0000 (UTC)
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-63b5465fc13so366025b3a.3
-        for <loongarch@lists.linux.dev>; Wed, 19 Apr 2023 15:57:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1681945030; x=1684537030;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yb6/i5wvA5aqg7D8OxOUWOO0Hm18poXHV7fpSzZnAys=;
-        b=f/keZsFsRpPyIorAm94ME+WfSd7KDG8/BCFf8R105b11Ffbgzo9pzq82YxXSDVqjJO
-         RAL0ohhvLSzGUV9NQcjZjhqrAR/qHB43wWIHePRtjqAsuC10cirRBAifx8Ei2JUh23ob
-         cLyiXukGwpoVOUWteGcvINVlZG2UD8Xz1AuKg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681945030; x=1684537030;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Yb6/i5wvA5aqg7D8OxOUWOO0Hm18poXHV7fpSzZnAys=;
-        b=jhAI7RyoqrUmQPif+rqzSozVzPNBeVQ/WmzCTrCIQdJG3yH1gl7RvhZMf6MnQCu6RO
-         F0gfUsq4d+68m2Wxqj87Ky2eTHfTor81Uvw7OyqAAZ52VV9ckCt7a5L5hrgN03q1df4O
-         vCvSHUdlrSPaC5u6m3AOW3MBYhe2NqYFe1figqI/JGqNFcOXfWKO+reyyyNx4cziKX2h
-         nVquHiZ3tD9/iQiiCCaFFg+q37/XuhAsOk8x/JdcWB9L2yEMymwsFgwxdq1UYqZ1hDKB
-         TxN85toFGLIDr2n0vRlPJpQsrTnUB7+F1AHDqEU58L3x2flCN8eu0SmPpzzacRvrUT2i
-         cwNQ==
-X-Gm-Message-State: AAQBX9cEVMmC0SZ7A/CtF+6mt6cskCuNhMNqz7k8me6fSOnaLrWx3Gh0
-	S8oa9/XzfKskygxCe+gCiCElyQ==
-X-Google-Smtp-Source: AKy350bC/5PM+ohv9/mlWqv8/0FC6IWAoMFnR21tmHI/E3Ye/uJYm0ouOTrfyEROhwU6t4EAkcC5kQ==
-X-Received: by 2002:a05:6a20:3c8d:b0:ee:6c12:6c95 with SMTP id b13-20020a056a203c8d00b000ee6c126c95mr232937pzj.21.1681945030329;
-        Wed, 19 Apr 2023 15:57:10 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:8b1:fa03:670e:b784])
-        by smtp.gmail.com with ESMTPSA id h15-20020a17090aea8f00b00246ea338c96sm1847101pjz.53.2023.04.19.15.57.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Apr 2023 15:57:09 -0700 (PDT)
-From: Douglas Anderson <dianders@chromium.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Sumit Garg <sumit.garg@linaro.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>
-Cc: ito-yuichi@fujitsu.com,
-	kgdb-bugreport@lists.sourceforge.net,
-	Chen-Yu Tsai <wens@csie.org>,
-	Masayoshi Mizuma <msys.mizuma@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Stephen Boyd <swboyd@chromium.org>,
-	Lecopzer Chen <lecopzer.chen@mediatek.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-perf-users@vger.kernel.org,
-	Douglas Anderson <dianders@chromium.org>,
-	Ben Dooks <ben-linux@fluff.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Gaosheng Cui <cuigaosheng1@huawei.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Guo Ren <guoren@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Jinyang He <hejinyang@loongson.cn>,
-	Kees Cook <keescook@chromium.org>,
-	Laurent Dufour <ldufour@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-	Qing Zhang <zhangqing@loongson.cn>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Russell King <linux@armlinux.org.uk>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v8 04/10] nmi: backtrace: Allow runtime arch specific override
-Date: Wed, 19 Apr 2023 15:55:58 -0700
-Message-ID: <20230419155341.v8.4.I3929b13cb2fab48772537aa308cd89e6f8a6753c@changeid>
-X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
-In-Reply-To: <20230419225604.21204-1-dianders@chromium.org>
-References: <20230419225604.21204-1-dianders@chromium.org>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCFE617C9
+	for <loongarch@lists.linux.dev>; Thu, 20 Apr 2023 02:14:19 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Bxok75n0BkYzwfAA--.37210S3;
+	Thu, 20 Apr 2023 10:14:17 +0800 (CST)
+Received: from [10.130.0.102] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxjrP4n0Bk8mIwAA--.9S3;
+	Thu, 20 Apr 2023 10:14:17 +0800 (CST)
+Subject: Re: [PATCH 1/2] LoongArch: Add pad structure members for explicit
+ alignment
+To: WANG Xuerui <kernel@xen0n.name>, Xi Ruoyao <xry111@xry111.site>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20230418091348.9239-1-zhangqing@loongson.cn>
+ <a7fa32c3af68083855e7690f67824d060d5c6135.camel@xry111.site>
+ <899085c1-7a74-8bab-1429-1b6e9e4c2c30@xen0n.name>
+ <48bc7236-638d-9086-daaf-62eacea80dd2@xen0n.name>
+From: Qing Zhang <zhangqing@loongson.cn>
+Message-ID: <111c1e81-dfae-4388-9fc6-a3f247641398@loongson.cn>
+Date: Thu, 20 Apr 2023 10:14:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <48bc7236-638d-9086-daaf-62eacea80dd2@xen0n.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxjrP4n0Bk8mIwAA--.9S3
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3XryfGr1fKryxWw4DGrW8Xrb_yoWxXr1kpr
+	n7JFyUJrW5Jr1kJr1jqr1UXryDtryUJw1UJr1UJa48Jr43Xr1Ygr1UWr1qgr1UJr48Jr1U
+	Jr15Jr17uF1UJr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	bIxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
+	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
+	M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4
+	xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8
+	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8w
+	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64
+	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_
+	Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
+	vEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
 
-From: Sumit Garg <sumit.garg@linaro.org>
+Hi, Xuerui and Ruoyao
 
-Add a boolean return to arch_trigger_cpumask_backtrace() to support a
-use-case where a particular architecture detects at runtime if it supports
-NMI backtrace or it would like to fallback to default implementation using
-SMP cross-calls.
+On 2023/4/20 上午1:24, WANG Xuerui wrote:
+> On 4/19/23 19:00, WANG Xuerui wrote:
+>> On 2023/4/19 18:42, Xi Ruoyao wrote:
+>>> On Tue, 2023-04-18 at 17:13 +0800, Qing Zhang wrote:
+>>>> This is done in order to easily calculate the number of breakpoints
+>>>> in hw_break_get.
+>>>>
+>>>> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+>>>> ---
+>>>>   arch/loongarch/include/uapi/asm/ptrace.h |  3 ++-
+>>>>   arch/loongarch/kernel/ptrace.c           | 13 +++++++++----
+>>>>   2 files changed, 11 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/include/uapi/asm/ptrace.h
+>>>> b/arch/loongarch/include/uapi/asm/ptrace.h
+>>>> index 2282ae1fd3b6..06e3be52cb04 100644
+>>>> --- a/arch/loongarch/include/uapi/asm/ptrace.h
+>>>> +++ b/arch/loongarch/include/uapi/asm/ptrace.h
+>>>> @@ -57,11 +57,12 @@ struct user_lasx_state {
+>>
+>> Drive-by comment to the patch author: there is no "user_lasx_state" 
+>> yet. Please always state your base commit if not obvious, or you 
+>> should start from some well-known upstream HEAD (e.g. Linus' rc tags, 
+>> loongarch-fixes, or loongarch-next).
+>>
+>>>>   };
+>>>>     struct user_watch_state {
+>>>> -       uint16_t dbg_info;
+>>>> +       uint64_t dbg_info;
+>>>
+>>> Ouch.  This is a breaking change when we consider user code like
+>>> `printf(PRIu16 "\n", ptr->dbg_info);`.  Is it really necessary?
+>>
+>> Ah right. This is UAPI so without *very* concrete and convicing reason 
+>> why the change is not going to impact any potential users, it's gonna 
+>> be a presumed NAK. In other words you must demonstrate (1) why it's 
+>> absolutely necessary to make the change and (2) that it's impossible 
+>> to impact anyone, before any such changes can even be considered.
+> Please ignore all of this. The memory layout is actually the same after 
+> the change due to the padding, I was somehow thinking in big-endian a 
+> few hours ago. (The commit message didn't help either, I think both 
+> Ruoyao and me got into the habitual thinking that changes like this are 
+> most likely just churn without real benefits, after *not* seeing the 
+> rationale in the commit message which was kinda expected.)
+>>
 
-Currently such an architecture example is arm64 supporting pseudo NMIs
-feature which is only available on platforms which have support for GICv3
-or later version.
+This patch does not change the size of the structure. The structure
+itself is implicitly aligned. We changed it to explicit alignment for
+the convenience of hw_break_get/set (using membuf.left) to calculate the
+offset and prevent breaks. Count overflow.
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-Tested-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+With pad explicit alignment, after membuf_write(&to, &info, 
+sizeof(info)); to.left=200-8 bytes,
+Thus,
+membuf_store(&to, addr);
+membuf_store(&to, mask);
+membuf_store(&to, ctrl);
+membuf_zero(&to, sizeof(u32));
+After that, to.left is decremented by 24 bytes each time,
+so the number of breakpoints will not overflow.
 
-Changes in v8:
-- Add loongarch support, too
+The user support code has not been submitted to the upstream, so
+the current uapi change has no effect.
 
- arch/arm/include/asm/irq.h       |  2 +-
- arch/arm/kernel/smp.c            |  3 ++-
- arch/loongarch/include/asm/irq.h |  2 +-
- arch/loongarch/kernel/process.c  |  3 ++-
- arch/mips/include/asm/irq.h      |  2 +-
- arch/mips/kernel/process.c       |  3 ++-
- arch/powerpc/include/asm/nmi.h   |  2 +-
- arch/powerpc/kernel/stacktrace.c |  3 ++-
- arch/sparc/include/asm/irq_64.h  |  2 +-
- arch/sparc/kernel/process_64.c   |  4 +++-
- arch/x86/include/asm/irq.h       |  2 +-
- arch/x86/kernel/apic/hw_nmi.c    |  3 ++-
- include/linux/nmi.h              | 12 ++++--------
- 13 files changed, 23 insertions(+), 20 deletions(-)
-
-diff --git a/arch/arm/include/asm/irq.h b/arch/arm/include/asm/irq.h
-index a7c2337b0c7d..e6b62c7d6f0e 100644
---- a/arch/arm/include/asm/irq.h
-+++ b/arch/arm/include/asm/irq.h
-@@ -32,7 +32,7 @@ void init_IRQ(void);
- #ifdef CONFIG_SMP
- #include <linux/cpumask.h>
- 
--extern void arch_trigger_cpumask_backtrace(const cpumask_t *mask,
-+extern bool arch_trigger_cpumask_backtrace(const cpumask_t *mask,
- 					   bool exclude_self);
- #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
- #endif
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index 0b8c25763adc..acb97d9219b1 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -849,7 +849,8 @@ static void raise_nmi(cpumask_t *mask)
- 	__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
- }
- 
--void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
-+bool arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
- {
- 	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_nmi);
-+	return true;
- }
-diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
-index a115e8999c69..c7a152d6bf0c 100644
---- a/arch/loongarch/include/asm/irq.h
-+++ b/arch/loongarch/include/asm/irq.h
-@@ -40,7 +40,7 @@ void spurious_interrupt(void);
- #define NR_IRQS_LEGACY 16
- 
- #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
--void arch_trigger_cpumask_backtrace(const struct cpumask *mask, bool exclude_self);
-+bool arch_trigger_cpumask_backtrace(const struct cpumask *mask, bool exclude_self);
- 
- #define MAX_IO_PICS 2
- #define NR_IRQS	(64 + (256 * MAX_IO_PICS))
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index fa2443c7afb2..8f7f818f5c4e 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -339,9 +339,10 @@ static void raise_backtrace(cpumask_t *mask)
- 	}
- }
- 
--void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
-+bool arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
- {
- 	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_backtrace);
-+	return true;
- }
- 
- #ifdef CONFIG_64BIT
-diff --git a/arch/mips/include/asm/irq.h b/arch/mips/include/asm/irq.h
-index 44f9824c1d8c..daf16173486a 100644
---- a/arch/mips/include/asm/irq.h
-+++ b/arch/mips/include/asm/irq.h
-@@ -77,7 +77,7 @@ extern int cp0_fdc_irq;
- 
- extern int get_c0_fdc_int(void);
- 
--void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
-+bool arch_trigger_cpumask_backtrace(const struct cpumask *mask,
- 				    bool exclude_self);
- #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
- 
-diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
-index 093dbbd6b843..7d538571830a 100644
---- a/arch/mips/kernel/process.c
-+++ b/arch/mips/kernel/process.c
-@@ -750,9 +750,10 @@ static void raise_backtrace(cpumask_t *mask)
- 	}
- }
- 
--void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
-+bool arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
- {
- 	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_backtrace);
-+	return true;
- }
- 
- int mips_get_process_fp_mode(struct task_struct *task)
-diff --git a/arch/powerpc/include/asm/nmi.h b/arch/powerpc/include/asm/nmi.h
-index c3c7adef74de..135f65adcf63 100644
---- a/arch/powerpc/include/asm/nmi.h
-+++ b/arch/powerpc/include/asm/nmi.h
-@@ -12,7 +12,7 @@ static inline void watchdog_nmi_set_timeout_pct(u64 pct) {}
- #endif
- 
- #ifdef CONFIG_NMI_IPI
--extern void arch_trigger_cpumask_backtrace(const cpumask_t *mask,
-+extern bool arch_trigger_cpumask_backtrace(const cpumask_t *mask,
- 					   bool exclude_self);
- #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
- #endif
-diff --git a/arch/powerpc/kernel/stacktrace.c b/arch/powerpc/kernel/stacktrace.c
-index 5de8597eaab8..0fee4bded7ba 100644
---- a/arch/powerpc/kernel/stacktrace.c
-+++ b/arch/powerpc/kernel/stacktrace.c
-@@ -221,8 +221,9 @@ static void raise_backtrace_ipi(cpumask_t *mask)
- 	}
- }
- 
--void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
-+bool arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
- {
- 	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_backtrace_ipi);
-+	return true;
- }
- #endif /* defined(CONFIG_PPC_BOOK3S_64) && defined(CONFIG_NMI_IPI) */
-diff --git a/arch/sparc/include/asm/irq_64.h b/arch/sparc/include/asm/irq_64.h
-index 154df2cf19f4..00a0051a9da0 100644
---- a/arch/sparc/include/asm/irq_64.h
-+++ b/arch/sparc/include/asm/irq_64.h
-@@ -87,7 +87,7 @@ static inline unsigned long get_softint(void)
- 	return retval;
- }
- 
--void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
-+bool arch_trigger_cpumask_backtrace(const struct cpumask *mask,
- 				    bool exclude_self);
- #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
- 
-diff --git a/arch/sparc/kernel/process_64.c b/arch/sparc/kernel/process_64.c
-index 91c2b8124527..f9aea1df3adf 100644
---- a/arch/sparc/kernel/process_64.c
-+++ b/arch/sparc/kernel/process_64.c
-@@ -236,7 +236,7 @@ static void __global_reg_poll(struct global_reg_snapshot *gp)
- 	}
- }
- 
--void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
-+bool arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
- {
- 	struct thread_info *tp = current_thread_info();
- 	struct pt_regs *regs = get_irq_regs();
-@@ -291,6 +291,8 @@ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
- 	memset(global_cpu_snapshot, 0, sizeof(global_cpu_snapshot));
- 
- 	spin_unlock_irqrestore(&global_cpu_snapshot_lock, flags);
-+
-+	return true;
- }
- 
- #ifdef CONFIG_MAGIC_SYSRQ
-diff --git a/arch/x86/include/asm/irq.h b/arch/x86/include/asm/irq.h
-index 768aa234cbb4..f731638cc38e 100644
---- a/arch/x86/include/asm/irq.h
-+++ b/arch/x86/include/asm/irq.h
-@@ -43,7 +43,7 @@ extern void init_ISA_irqs(void);
- extern void __init init_IRQ(void);
- 
- #ifdef CONFIG_X86_LOCAL_APIC
--void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
-+bool arch_trigger_cpumask_backtrace(const struct cpumask *mask,
- 				    bool exclude_self);
- 
- #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
-diff --git a/arch/x86/kernel/apic/hw_nmi.c b/arch/x86/kernel/apic/hw_nmi.c
-index 34a992e275ef..e7dcd28bc824 100644
---- a/arch/x86/kernel/apic/hw_nmi.c
-+++ b/arch/x86/kernel/apic/hw_nmi.c
-@@ -34,10 +34,11 @@ static void nmi_raise_cpu_backtrace(cpumask_t *mask)
- 	apic->send_IPI_mask(mask, NMI_VECTOR);
- }
- 
--void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
-+bool arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
- {
- 	nmi_trigger_cpumask_backtrace(mask, exclude_self,
- 				      nmi_raise_cpu_backtrace);
-+	return true;
- }
- 
- static int nmi_cpu_backtrace_handler(unsigned int cmd, struct pt_regs *regs)
-diff --git a/include/linux/nmi.h b/include/linux/nmi.h
-index 048c0b9aa623..7d8a77cd1e03 100644
---- a/include/linux/nmi.h
-+++ b/include/linux/nmi.h
-@@ -145,26 +145,22 @@ static inline void touch_nmi_watchdog(void)
- #ifdef arch_trigger_cpumask_backtrace
- static inline bool trigger_all_cpu_backtrace(void)
- {
--	arch_trigger_cpumask_backtrace(cpu_online_mask, false);
--	return true;
-+	return arch_trigger_cpumask_backtrace(cpu_online_mask, false);
- }
- 
- static inline bool trigger_allbutself_cpu_backtrace(void)
- {
--	arch_trigger_cpumask_backtrace(cpu_online_mask, true);
--	return true;
-+	return arch_trigger_cpumask_backtrace(cpu_online_mask, true);
- }
- 
- static inline bool trigger_cpumask_backtrace(struct cpumask *mask)
- {
--	arch_trigger_cpumask_backtrace(mask, false);
--	return true;
-+	return arch_trigger_cpumask_backtrace(mask, false);
- }
- 
- static inline bool trigger_single_cpu_backtrace(int cpu)
- {
--	arch_trigger_cpumask_backtrace(cpumask_of(cpu), false);
--	return true;
-+	return arch_trigger_cpumask_backtrace(cpumask_of(cpu), false);
- }
- 
- /* generic implementation */
--- 
-2.40.0.634.g4ca3ef3211-goog
+Thanks,
+-Qing
+>>>
+>>>>          struct {
+>>>>                  uint64_t    addr;
+>>>>                  uint64_t    mask;
+>>>>                  uint32_t    ctrl;
+>>>> +               uint32_t    pad;
+>>>>          } dbg_regs[8];
+>>>>   };
+>>>>   diff --git a/arch/loongarch/kernel/ptrace.c
+>>>> b/arch/loongarch/kernel/ptrace.c
+>>>> index 0c7c41e41cad..9c3bc1bbf2ff 100644
+>>>> --- a/arch/loongarch/kernel/ptrace.c
+>>>> +++ b/arch/loongarch/kernel/ptrace.c
+>>>> @@ -475,10 +475,10 @@ static int ptrace_hbp_fill_attr_ctrl(unsigned
+>>>> int note_type,
+>>>>          return 0;
+>>>>   }
+>>>>   -static int ptrace_hbp_get_resource_info(unsigned int note_type, u16
+>>>> *info)
+>>>> +static int ptrace_hbp_get_resource_info(unsigned int note_type, u64
+>>>> *info)
+>>>>   {
+>>>>          u8 num;
+>>>> -       u16 reg = 0;
+>>>> +       u64 reg = 0;
+>>>>            switch (note_type) {
+>>>>          case NT_LOONGARCH_HW_BREAK:
+>>>> @@ -616,7 +616,7 @@ static int hw_break_get(struct task_struct
+>>>> *target,
+>>>>                          const struct user_regset *regset,
+>>>>                          struct membuf to)
+>>>>   {
+>>>> -       u16 info;
+>>>> +       u64 info;
+>>>>          u32 ctrl;
+>>>>          u64 addr, mask;
+>>>>          int ret, idx = 0;
+>>>> @@ -646,6 +646,7 @@ static int hw_break_get(struct task_struct
+>>>> *target,
+>>>>                  membuf_store(&to, addr);
+>>>>                  membuf_store(&to, mask);
+>>>>                  membuf_store(&to, ctrl);
+>>>> +               membuf_zero(&to, sizeof(u32));
+>>>>                  idx++;
+>>>>          }
+>>>>   @@ -662,7 +663,7 @@ static int hw_break_set(struct task_struct
+>>>> *target,
+>>>>          int ret, idx = 0, offset, limit;
+>>>>          unsigned int note_type = regset->core_note_type;
+>>>>   -       /* Resource info */
+>>>> +       /* Resource info and pad */
+>>>>          offset = offsetof(struct user_watch_state, dbg_regs);
+>>>>          user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf, 0,
+>>>> offset);
+>>>>   @@ -704,6 +705,10 @@ static int hw_break_set(struct task_struct
+>>>> *target,
+>>>>                  if (ret)
+>>>>                          return ret;
+>>>>                  offset += PTRACE_HBP_CTRL_SZ;
+>>>> +
+>>>> +               user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+>>>> +                                         offset, offset +
+>>>> PTRACE_HBP_PAD_SZ);
+>>>> +               offset += PTRACE_HBP_PAD_SZ;
+>>>>                  idx++;
+>>>>          }
+>>>
+>>
 
