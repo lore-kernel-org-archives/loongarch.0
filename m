@@ -1,27 +1,27 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE066AB2
-	for <loongarch@lists.linux.dev>; Sat, 22 Apr 2023 17:35:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7366AB2
+	for <loongarch@lists.linux.dev>; Sat, 22 Apr 2023 17:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1682184926; bh=AFAX51Q9uLQ6mmzovjvAjkUJ1U6CS4Seacatcn2z4uc=;
+	t=1682184934; bh=5y+kk3Lal9VQEQnkaCNnbNH8ZaXxJZUk3itLemoS9X0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mCoB7B9V3V4fQclep4Ya9v95dqBjYiS/JyU+dTuHa+aEQKvhkSqMWDnVOSE3UHe4l
-	 A3jyyt1Uc3vKalG7cKuBc3c5vwzrLm2kDjRd71YbGSwV1zlG0DxDDgIWnlypr0oc2w
-	 IVAQdhiKwI0GVelqWHjM9OOtBhbqD4/PvM7iNulc=
+	b=TzYrhbmu1EdaFUlGGRlvk4iqJkNmrB11pco+xqrsn4d4Qwx684kODhaImBz85wI2X
+	 55UAzMTl+ED/KsL/u5pABWjpJxWbk0jiDieWfJoZwx4nLTddhFl9zuWn5esasMJrL9
+	 KuytsLx4k5Zv9r35Ey5v7ZZ4vCV9FRWgr8GOHkjI=
 Received: from ld50.lan (unknown [101.228.138.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 142E560132;
-	Sun, 23 Apr 2023 01:35:26 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id C2364600DA;
+	Sun, 23 Apr 2023 01:35:34 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v6 06/13] LoongArch: Humanize the CRMD line when showing registers
-Date: Sun, 23 Apr 2023 01:34:48 +0800
-Message-Id: <20230422173455.3354690-7-kernel@xen0n.name>
+Subject: [PATCH v6 07/13] LoongArch: Humanize the PRMD line when showing registers
+Date: Sun, 23 Apr 2023 01:34:49 +0800
+Message-Id: <20230422173455.3354690-8-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230422173455.3354690-1-kernel@xen0n.name>
 References: <20230422173455.3354690-1-kernel@xen0n.name>
@@ -37,87 +37,42 @@ From: WANG Xuerui <git@xen0n.name>
 
 Example output looks like:
 
-[   xx.xxxxxx]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
-
-Some initial machinery for this pretty-printing format has been included
-in this patch as well.
+[   xx.xxxxxx]  PRMD: 00000004 (PPLV0 +PIE -PWE)
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/kernel/traps.c | 46 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
+ arch/loongarch/kernel/traps.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 8130063ed553..fb6d293e93d2 100644
+index fb6d293e93d2..3d4987d24552 100644
 --- a/arch/loongarch/kernel/traps.c
 +++ b/arch/loongarch/kernel/traps.c
-@@ -3,6 +3,7 @@
-  * Author: Huacai Chen <chenhuacai@loongson.cn>
-  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-  */
-+#include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/bug.h>
- #include <linux/compiler.h>
-@@ -153,6 +154,49 @@ static void show_code(unsigned int *pc, bool user)
- 	pr_cont("\n");
+@@ -197,6 +197,15 @@ static void print_crmd(unsigned long x)
+ 	pr_cont(")\n");
  }
  
-+static void print_bool_fragment(const char *key, unsigned long val, bool first)
++static void print_prmd(unsigned long x)
 +{
-+	/* e.g. "+PG", "-DA" */
-+	pr_cont("%s%c%s", first ? "" : " ", val ? '+' : '-', key);
-+}
-+
-+static void print_plv_fragment(const char *key, int val)
-+{
-+	/* e.g. "PLV0", "PPLV3" */
-+	pr_cont("%s%d", key, val);
-+}
-+
-+static void print_memory_type_fragment(const char *key, unsigned long val)
-+{
-+	/* e.g. "DATM=WUC" */
-+	const char *humanized_type = NULL;
-+
-+	switch (val) {
-+	case 0: humanized_type = "SUC"; break;
-+	case 1: humanized_type = "CC"; break;
-+	case 2: humanized_type = "WUC"; break;
-+	}
-+
-+	if (humanized_type) {
-+		pr_cont(" %s=%s", key, humanized_type);
-+	} else {
-+		pr_cont(" %s=Reserved(%lu)", key, val);
-+	}
-+}
-+
-+static void print_crmd(unsigned long x)
-+{
-+	pr_cont(" CRMD: %08lx (", x);
-+	print_plv_fragment("PLV", (int) FIELD_GET(CSR_CRMD_PLV, x));
-+	print_bool_fragment("IE", FIELD_GET(CSR_CRMD_IE, x), false);
-+	print_bool_fragment("DA", FIELD_GET(CSR_CRMD_DA, x), false);
-+	print_bool_fragment("PG", FIELD_GET(CSR_CRMD_PG, x), false);
-+	print_memory_type_fragment("DACF", FIELD_GET(CSR_CRMD_DACF, x));
-+	print_memory_type_fragment("DACM", FIELD_GET(CSR_CRMD_DACM, x));
-+	print_bool_fragment("WE", FIELD_GET(CSR_CRMD_WE, x), false);
++	pr_cont(" PRMD: %08lx (", x);
++	print_plv_fragment("PPLV", (int) FIELD_GET(CSR_PRMD_PPLV, x));
++	print_bool_fragment("PIE", FIELD_GET(CSR_PRMD_PIE, x), false);
++	print_bool_fragment("PWE", FIELD_GET(CSR_PRMD_PWE, x), false);
 +	pr_cont(")\n");
 +}
 +
  static void __show_regs(const struct pt_regs *regs)
  {
  	const int field = 2 * sizeof(unsigned long);
-@@ -194,7 +238,7 @@ static void __show_regs(const struct pt_regs *regs)
- #undef GPR_FIELD
+@@ -239,7 +248,7 @@ static void __show_regs(const struct pt_regs *regs)
  
  	/* Print important CSRs */
--	pr_cont(" CRMD: %08lx\n", regs->csr_crmd);
-+	print_crmd(regs->csr_crmd);
- 	pr_cont(" PRMD: %08lx\n", regs->csr_prmd);
+ 	print_crmd(regs->csr_crmd);
+-	pr_cont(" PRMD: %08lx\n", regs->csr_prmd);
++	print_prmd(regs->csr_prmd);
  	pr_cont(" EUEN: %08lx\n", regs->csr_euen);
  	pr_cont(" ECFG: %08lx\n", regs->csr_ecfg);
+ 	pr_cont("ESTAT: %08lx\n", regs->csr_estat);
 -- 
 2.40.0
 
