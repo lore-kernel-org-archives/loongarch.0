@@ -1,30 +1,35 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8B36AB5
-	for <loongarch@lists.linux.dev>; Sat, 22 Apr 2023 17:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C6A6AB5
+	for <loongarch@lists.linux.dev>; Sat, 22 Apr 2023 17:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1682184963; bh=XkLYwVMSVrt+lmTFA5hnmrKvYmL53R39LXpOGei+nHA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uXjlRJEoT+o6OyDNbDGSYmi7LckcymKXJBr8DCRuDaJdXKiPDfBedZCPTscZLMZNu
-	 4x1VNTb10wqG6VKqdFFxfonLigmVEN88mc6NE8VteBQpP5xYL2BcXRiGstLGl5b9tK
-	 ySiOnK5sypGu3dD3HMDk+zQUE62EV6/yvUmE7gtc=
+	t=1682186234; bh=Av45NfRoNWrmwrDlg/7iwNEk5cNcTXe/Apg381TE9cc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Fz3ZgnjO3hS4PjxTm80vD2yKCWd/OhZHTccXsoeXvyYk49q27YYpqPCX6h087K4Ux
+	 bj4CNpZBPvl4ssChpsidAIzxGTTVBAja4Scox2QrJ3FK1GEgM8Yrpd/OIS9fxYINAn
+	 b/P1BkV3UjmEJX0MZvlAuB/z7DMNCX704gJA+2NA=
 Received: from ld50.lan (unknown [101.228.138.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 57271600DA;
-	Sun, 23 Apr 2023 01:36:03 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 0F92F600BD;
+	Sun, 23 Apr 2023 01:57:13 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v6 13/13] LoongArch: Also include current CPU's full name in show_regs output
-Date: Sun, 23 Apr 2023 01:34:55 +0800
-Message-Id: <20230422173455.3354690-14-kernel@xen0n.name>
+To: loongarch@lists.linux.dev
+Cc: WANG Xuerui <git@xen0n.name>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xi Ruoyao <xry111@xry111.site>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-api@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] LoongArch: Make bounds-checking instructions useful
+Date: Sun, 23 Apr 2023 01:57:03 +0800
+Message-Id: <20230422175705.3444561-1-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230422173455.3354690-1-kernel@xen0n.name>
-References: <20230422173455.3354690-1-kernel@xen0n.name>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,31 +40,52 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-It may be more helpful for developers looking at the resulting dumps,
-because multiple distinct CPU models may share the same PRID. Not having
-this info available may hide problems only found on some but not all of
-the models sharing one specific PRID.
+Hi,
 
-Signed-off-by: WANG Xuerui <git@xen0n.name>
----
- arch/loongarch/kernel/traps.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The LoongArch-64 base architecture is capable of performing
+bounds-checking either before memory accesses or alone, with specialized
+instructions generating BCEs (bounds-checking error) in case of failed
+assertions (ISA manual Volume 1, Sections 2.2.6.1 [1] and 2.2.10.3 [2]).
+This could be useful for managed runtimes, but the exception is not
+being handled so far, resulting in SIGSYSes in these cases, which is
+incorrect and warrants a fix in itself.
 
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 6c8ecc05183a..8b268c133b92 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -353,8 +353,8 @@ static void __show_regs(const struct pt_regs *regs)
- 	if (exccode >= EXCCODE_TLBL && exccode <= EXCCODE_OOB)
- 		pr_cont(" BADV: %0*lx\n", field, regs->csr_badvaddr);
- 
--	pr_cont(" PRID: %08x (%s)\n", read_cpucfg(LOONGARCH_CPUCFG0),
--	       cpu_family_string());
-+	pr_cont(" PRID: %08x (%s, %s)\n", read_cpucfg(LOONGARCH_CPUCFG0),
-+		cpu_family_string(), cpu_full_name_string());
- }
- 
- void show_regs(struct pt_regs *regs)
+During experimentation, it was discovered that there is already UAPI for
+expressing such semantics: SIGSEGV with si_code=SEGV_BNDERR. This was
+originally added for Intel MPX, and there is currently no user (!) after
+the removal of MPX support a few years ago. Although the semantics is
+not a 1:1 match to that of LoongArch, still it is better than
+alternatives such as SIGTRAP or SIGBUS of BUS_OBJERR kind, due to being
+able to convey both the value that failed assertion and the bound value.
+
+This patch series implements just this approach: translating BCEs into
+SIGSEGVs with si_code=SEGV_BNDERR, si_value set to the offending value,
+and si_lower and si_upper set to resemble a range with both lower and
+upper bound while in fact there is only one.
+
+The instructions are not currently used anywhere yet in the fledgling
+LoongArch ecosystem, so it's not very urgent and we could take the time
+to figure out the best way forward (should SEGV_BNDERR turn out not
+suitable).
+
+[1]: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#bound-check-memory-access-instructions
+[2]: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#_asrtlegt_d
+
+Changes since v1:
+
+- rebased on top of current loongarch-next
+- removed code related to the kprobe notifier mechanism
+
+WANG Xuerui (2):
+  LoongArch: Add opcodes of bounds-checking instructions
+  LoongArch: Relay BCE exceptions to userland as SIGSEGVs with
+    si_code=SEGV_BNDERR
+
+ arch/loongarch/include/asm/inst.h | 26 ++++++++
+ arch/loongarch/kernel/genex.S     |  1 +
+ arch/loongarch/kernel/traps.c     | 99 +++++++++++++++++++++++++++++++
+ 3 files changed, 126 insertions(+)
+
 -- 
 2.40.0
 
