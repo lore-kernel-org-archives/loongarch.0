@@ -1,125 +1,379 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B27371
-	for <loongarch@lists.linux.dev>; Sun, 23 Apr 2023 08:31:12 +0000 (UTC)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-54fe25c2765so47967547b3.3
-        for <loongarch@lists.linux.dev>; Sun, 23 Apr 2023 01:31:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682238672; x=1684830672;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7QYHi1U0H8xeoz+ojliRlXjskKQpNh5ZppQiWqXTPmg=;
-        b=n29GfRgV2KM71xU0PJGUus7tcaVrQNRqxRyd9+C9ZSMxc8Yq/JBo/iyYfjmiVoYYVj
-         qyYpoSFV4EujOpAf8Wg1c+bCAVeXWsCkfQ2qKGa6aDClLJX5kdMICEN5JxRZPiOnrkjZ
-         qk8nMo0M7GYahnpKfhmGCnZ2lgiCs82VuqTGk/yZSDcJrz9qMsp44xHGI8IK2GGFO1HA
-         GyjMDS0KD10qaZ9TDbZt84E4LOQ5QQnu+EG/eKNjMOhMSRaOXXguE6q9kSopTiTOtl/k
-         Ekx4/5wyneuO1PYQCELdkr6kn6rI2Vtz5FpnjdZPRMk3rnc9ySYn59vCp02SK2gn1IL/
-         uRYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682238672; x=1684830672;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7QYHi1U0H8xeoz+ojliRlXjskKQpNh5ZppQiWqXTPmg=;
-        b=f6Zm1yNFrY4zW6/UfHQqGIigw3s92rEaeweUtzpm+eUmoxEuU4wFKfeWBO4pslTgZB
-         4AHkrzcKJJr61T29SQw1ft7+rYsL2uLn/m84E2xbY4jkdSm+DH0FxqJcQYHb0kOpx5Kq
-         HV3ZiGsiFxMQMniYiSexINSNpOVu0qlmXCPcCE+JP/FPNpj7hSWw4QnziCcWVtcULD6k
-         mrvcaBezMp8k7s3S15YKS/6tLLKmRR/gxrp8Y04ayW3uil+uquLrSuMZIU2O/KSpyOnq
-         7kKaHhlP7S9+DtvFcuFaGvpsRyEgvdwwm3j7NA5BWs1ir2AEoqX5xRHNBH5yC0kYaUJp
-         3trA==
-X-Gm-Message-State: AAQBX9doUrerH+IJjQDsmmJ8hSr+WdlVdu6naJd5KsW2wqIH+bEb1C/b
-	Aj/hWb76pchXmb5f0o1upwrYAqDdSMEWjxZCvYM=
-X-Google-Smtp-Source: AKy350ao+/7bEok4Abt9/zxZOar007y/ULFW6xkLcjzlu7/jxRV1Ag/ua7DsMXMSEICNjxr3Wld7QUpS6J0Lp/BeZVM=
-X-Received: by 2002:a0d:df4a:0:b0:54f:b4fa:3271 with SMTP id
- i71-20020a0ddf4a000000b0054fb4fa3271mr5522576ywe.21.1682238671839; Sun, 23
- Apr 2023 01:31:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAEE632
+	for <loongarch@lists.linux.dev>; Sun, 23 Apr 2023 13:12:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B585FC433EF
+	for <loongarch@lists.linux.dev>; Sun, 23 Apr 2023 13:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1682255551;
+	bh=0031/scqhLp0WEja20wYDqHeTQ71Br55rcOHz3KzjCk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=W7bcJSPnViEYycltJWP7jRDaphfWbAHjGHu+YiIPmSBJsmSAd1eQlvDO8Y/cTnhTr
+	 /mnqy0vRCP9leJ4NHSWvviJjLLO+0TFIDXtpZ9l41WBX2zswhM6ahDtGeNVMR/PXyY
+	 W1o76eJ88VNAAY7hODOJIqBngL6KrtAU4LZrOtIOlGTIsSnVJ393C5A1YZx38lxPeO
+	 cYilw6A5m6Fyw35ghen2NBofOLQkZ3TMcvM7RSmTu8cg7+zBkjaAZAR6SAWaKkft0F
+	 JMOZgNdm6JV0cECoivk/SzVN3NfVAbEqz8TxS8xHCamdkluSjtggOKdmxsNcDcWHTv
+	 aRzG0/k7vHJIA==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-505934ccc35so5788981a12.2
+        for <loongarch@lists.linux.dev>; Sun, 23 Apr 2023 06:12:31 -0700 (PDT)
+X-Gm-Message-State: AAQBX9czKBGOAiPbpM9yjPgZM55YX3VV6Vj4WTIX0E1Mqb8Y6BOkyEnM
+	YzosfnNX6n+9KHktJ+OWeDZFOnFwoQJCI6cCDh0=
+X-Google-Smtp-Source: AKy350YYaPyjy0YWODJRE3MhXCZaxJ64XYq0eUUyYnqujWuzv624lkG2tV47lTjGOZpHARhvSjrjgMyRvBIXRxygX1M=
+X-Received: by 2002:aa7:d444:0:b0:509:c6e6:c002 with SMTP id
+ q4-20020aa7d444000000b00509c6e6c002mr3824303edr.39.1682255549908; Sun, 23 Apr
+ 2023 06:12:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1681887790.git.zhoubinbin@loongson.cn> <3b9c4f05eaf14bc3b16aebec3ff84c8a2d52c4a5.1681887790.git.zhoubinbin@loongson.cn>
- <f9b62f48-5c8b-2674-313d-4552c61c4302@linaro.org> <CAMpQs4JjHvVOzQz-1Y-q9ut6tWUpakrHeozuwPg0dzoDcUFEGA@mail.gmail.com>
- <75231886-cdf6-cfde-d6b9-183b1fbf98da@linaro.org>
-In-Reply-To: <75231886-cdf6-cfde-d6b9-183b1fbf98da@linaro.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Sun, 23 Apr 2023 16:30:57 +0800
-Message-ID: <CAMpQs4Jp8WPKJEuJD-_83oRPBbPELxS5ufqp-nHow0D9D+R+ig@mail.gmail.com>
-Subject: Re: [PATCH V3 1/2] dt-bindings: interrupt-controller: Add Loongson EIOINTC
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Jianmin Lv <lvjianmin@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>, linux-kernel@vger.kernel.org, 
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-	devicetree@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+References: <1681898221-27828-1-git-send-email-yangtiezhu@loongson.cn> <1681898221-27828-5-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1681898221-27828-5-git-send-email-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 23 Apr 2023 21:12:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Z_Y+XC-yMGRA1zq9FBU-tAVK+8+Jd4t5x4L4DFXAPJA@mail.gmail.com>
+Message-ID: <CAAhV-H7Z_Y+XC-yMGRA1zq9FBU-tAVK+8+Jd4t5x4L4DFXAPJA@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] LoongArch: Add uprobes support
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 20, 2023 at 11:52=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+Hi, Tiezhu,
+
+On Wed, Apr 19, 2023 at 5:57=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
-> On 20/04/2023 15:00, Binbin Zhou wrote:
-> >>> +examples:
-> >>> +  - |
-> >>> +    eiointc: interrupt-controller@1fe11600 {
-> >>> +      compatible =3D "loongson,ls2k0500-eiointc";
-> >>> +      reg =3D <0x1fe11600 0x10>,
-> >>> +            <0x1fe11700 0x10>,
-> >>> +            <0x1fe11800 0x10>,
-> >>> +            <0x1fe114c0 0x4>;
-> >>
-> >> Binding is OK, but are you sure you want to split the address space li=
-ke
-> >> this? It looks like two address spaces (enable+clear+status should be
-> >> one). Are you sure this is correct?
-> >>
-> > Hi Krzysztof:
-> >
-> > These registers are all in the range of chip configuration registers,
-> > in the case of LS2K0500, which has a base address of 0x1fe10000.
-> > However, the individual register addresses are not contiguous with
-> > each other, and most are distributed across modules, so I feel that
-> > they should be listed in detail as they are used.
+> Uprobes is the user-space counterpart to kprobes, this commit
+> adds uprobes support for LoongArch.
 >
-> Do you want to say that:
-> Between 0x1fe11600 and 0x1fe11700 there are EIOINTC registers and other
-> (independent) module registers?
-
-No, this section is all EIO-related configuration, but there will be
-undefined space here.
-
-Throughout the chip configuration space, there are some relatively
-common areas, such as the definition of 0x1fe1_14c0.
-Because our chip supports two interrupt modes, node legacy I/O
-interrupt and extended I/O interrupt, both modes require interrupt
-routing registers.
-Their registers are then defined together: the legacy interrupt I/O
-start address is 0x1fe1_1400, while the extended I/O interrupt start
-address is 0x1fe1_14c0.
-
-Then I have carefully compared the chip configuration space in
-LS2K0500 and LS2K2000 and can see that:
-
-1. The chip configuration space base addresses are different, but they
-both have a size of 64KB;
-2. The offset addresses of the EIO related registers are the same, for
-example the offset of the enable register is 0x1600.
-
-Wouldn't it be better to declare the entire configuration space (64KB)
-directly in the dts and use the offsets to access the corresponding
-registers?
-
-Example:
-reg =3D <0x1fe10000 0x10000>.
-
-Thanks.
-Binbin
-
+> Here is a simple example with CONFIG_UPROBE_EVENTS=3Dy:
 >
-> Best regards,
-> Krzysztof
+>   # cat test.c
+>   #include <stdio.h>
+>
+>   int add(int a, int b)
+>   {
+>           return a + b;
+>   }
+>
+>   int main()
+>   {
+>           return add(2, 7);
+>   }
+>   # gcc test.c -o /tmp/test
+>   # nm /tmp/test | grep add
+>   0000000120004194 T add
+>   # cd /sys/kernel/debug/tracing
+>   # echo > uprobe_events
+>   # echo "p:myuprobe /tmp/test:0x4194 %r4 %r5" > uprobe_events
+>   # echo "r:myuretprobe /tmp/test:0x4194 %r4" >> uprobe_events
+>   # echo 1 > events/uprobes/enable
+>   # echo 1 > tracing_on
+>   # /tmp/test
+>   # cat trace
+>   ...
+>   #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+>   #              | |         |   |||||     |         |
+>               test-1060    [001] DNZff  1015.770620: myuprobe: (0x1200041=
+94) arg1=3D0x2 arg2=3D0x7
+>               test-1060    [001] DNZff  1015.770930: myuretprobe: (0x1200=
+041f0 <- 0x120004194) arg1=3D0x9
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/Kconfig               |   3 +
+>  arch/loongarch/include/asm/uprobes.h |  36 +++++++++
+>  arch/loongarch/kernel/Makefile       |   1 +
+>  arch/loongarch/kernel/traps.c        |   9 +--
+>  arch/loongarch/kernel/uprobes.c      | 142 +++++++++++++++++++++++++++++=
+++++++
+>  5 files changed, 186 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/uprobes.h
+>  create mode 100644 arch/loongarch/kernel/uprobes.c
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 7fd5125..ab66ad2 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -574,6 +574,9 @@ config ARCH_MMAP_RND_BITS_MIN
+>  config ARCH_MMAP_RND_BITS_MAX
+>         default 18
+>
+> +config ARCH_SUPPORTS_UPROBES
+> +       def_bool y
+> +
+>  menu "Power management options"
+>
+>  config ARCH_SUSPEND_POSSIBLE
+> diff --git a/arch/loongarch/include/asm/uprobes.h b/arch/loongarch/includ=
+e/asm/uprobes.h
+> new file mode 100644
+> index 0000000..59e2683
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/uprobes.h
+> @@ -0,0 +1,36 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef __ASM_LOONGARCH_UPROBES_H
+> +#define __ASM_LOONGARCH_UPROBES_H
+> +
+> +#include <asm/inst.h>
+> +
+> +typedef u32 uprobe_opcode_t;
+> +
+> +#define MAX_UINSN_BYTES                8
+> +#define UPROBE_XOL_SLOT_BYTES  MAX_UINSN_BYTES
+In old versions we define UPROBE_XOL_SLOT_BYTES to 128, why we use 8 now?
+
+> +
+> +#define UPROBE_XOLBP_INSN      larch_insn_gen_break(BRK_UPROBE_XOLBP)
+> +#define UPROBE_SWBP_INSN       larch_insn_gen_break(BRK_UPROBE_BP)
+> +#define UPROBE_SWBP_INSN_SIZE  LOONGARCH_INSN_SIZE
+> +
+> +struct arch_uprobe {
+> +       union {
+> +               u32 insn[2];
+> +               u32 ixol[2];
+> +       };
+> +       bool simulate;
+> +};
+> +
+> +struct arch_uprobe_task {
+> +       unsigned long saved_trap_nr;
+> +};
+> +
+> +#ifdef CONFIG_UPROBES
+> +bool uprobe_breakpoint_handler(struct pt_regs *regs);
+> +bool uprobe_singlestep_handler(struct pt_regs *regs);
+> +#else /* !CONFIG_UPROBES */
+> +static inline bool uprobe_breakpoint_handler(struct pt_regs *regs) { ret=
+urn false; }
+> +static inline bool uprobe_singlestep_handler(struct pt_regs *regs) { ret=
+urn false; }
+> +#endif /* CONFIG_UPROBES */
+> +
+> +#endif /* __ASM_LOONGARCH_UPROBES_H */
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makef=
+ile
+> index 78d4e33..67b9c26 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -53,5 +53,6 @@ obj-$(CONFIG_PERF_EVENTS)     +=3D perf_event.o perf_re=
+gs.o
+>  obj-$(CONFIG_HAVE_HW_BREAKPOINT)       +=3D hw_breakpoint.o
+>
+>  obj-$(CONFIG_KPROBES)          +=3D kprobes.o kprobes_trampoline.o
+> +obj-$(CONFIG_UPROBES)          +=3D uprobes.o
+>
+>  CPPFLAGS_vmlinux.lds           :=3D $(KBUILD_CFLAGS)
+> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.=
+c
+> index de8ebe2..cfc2e0c 100644
+> --- a/arch/loongarch/kernel/traps.c
+> +++ b/arch/loongarch/kernel/traps.c
+> @@ -45,6 +45,7 @@
+>  #include <asm/tlb.h>
+>  #include <asm/types.h>
+>  #include <asm/unwind.h>
+> +#include <asm/uprobes.h>
+>
+>  #include "access-helper.h"
+>
+> @@ -440,7 +441,6 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
+>         if (regs->csr_prmd & CSR_PRMD_PIE)
+>                 local_irq_enable();
+>
+> -       current->thread.trap_nr =3D read_csr_excode();
+>         if (__get_inst(&opcode, (u32 *)era, user))
+>                 goto out_sigsegv;
+>
+> @@ -462,18 +462,17 @@ asmlinkage void noinstr do_bp(struct pt_regs *regs)
+>                 else
+>                         break;
+>         case BRK_UPROBE_BP:
+> -               if (notify_die(DIE_UPROBE, "Uprobe", regs, bcode,
+> -                              current->thread.trap_nr, SIGTRAP) =3D=3D N=
+OTIFY_STOP)
+> +               if (uprobe_breakpoint_handler(regs))
+>                         goto out;
+>                 else
+>                         break;
+>         case BRK_UPROBE_XOLBP:
+> -               if (notify_die(DIE_UPROBE_XOL, "Uprobe_XOL", regs, bcode,
+> -                              current->thread.trap_nr, SIGTRAP) =3D=3D N=
+OTIFY_STOP)
+> +               if (uprobe_singlestep_handler(regs))
+As I know, XOL means "execute out of line", is it an alias of "single step"=
+?
+
+Huacai
+>                         goto out;
+>                 else
+>                         break;
+>         default:
+> +               current->thread.trap_nr =3D read_csr_excode();
+>                 if (notify_die(DIE_TRAP, "Break", regs, bcode,
+>                                current->thread.trap_nr, SIGTRAP) =3D=3D N=
+OTIFY_STOP)
+>                         goto out;
+> diff --git a/arch/loongarch/kernel/uprobes.c b/arch/loongarch/kernel/upro=
+bes.c
+> new file mode 100644
+> index 0000000..628c39d
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/uprobes.c
+> @@ -0,0 +1,142 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <linux/highmem.h>
+> +#include <linux/ptrace.h>
+> +#include <linux/uprobes.h>
+> +#include <linux/sched.h>
+> +#include <asm/cacheflush.h>
+> +
+> +#define UPROBE_TRAP_NR UINT_MAX
+> +
+> +int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe,
+> +                            struct mm_struct *mm, unsigned long addr)
+> +{
+> +       union loongarch_instruction insn;
+> +
+> +       if (addr & 0x3)
+> +               return -EILSEQ;
+> +
+> +       insn.word =3D auprobe->insn[0];
+> +
+> +       if (insns_not_supported(insn))
+> +               return -EINVAL;
+> +
+> +       if (insns_need_simulation(insn)) {
+> +               auprobe->ixol[0] =3D larch_insn_gen_nop();
+> +               auprobe->simulate =3D true;
+> +       } else {
+> +               auprobe->ixol[0] =3D auprobe->insn[0];
+> +               auprobe->simulate =3D false;
+> +       }
+> +
+> +       auprobe->ixol[1] =3D UPROBE_XOLBP_INSN;
+> +
+> +       return 0;
+> +}
+> +
+> +int arch_uprobe_pre_xol(struct arch_uprobe *auprobe, struct pt_regs *reg=
+s)
+> +{
+> +       struct uprobe_task *utask =3D current->utask;
+> +
+> +       utask->autask.saved_trap_nr =3D current->thread.trap_nr;
+> +       current->thread.trap_nr =3D UPROBE_TRAP_NR;
+> +       instruction_pointer_set(regs, utask->xol_vaddr);
+> +
+> +       return 0;
+> +}
+> +
+> +int arch_uprobe_post_xol(struct arch_uprobe *auprobe, struct pt_regs *re=
+gs)
+> +{
+> +       struct uprobe_task *utask =3D current->utask;
+> +
+> +       WARN_ON_ONCE(current->thread.trap_nr !=3D UPROBE_TRAP_NR);
+> +       current->thread.trap_nr =3D utask->autask.saved_trap_nr;
+> +       instruction_pointer_set(regs, utask->vaddr + LOONGARCH_INSN_SIZE)=
+;
+> +
+> +       return 0;
+> +}
+> +
+> +void arch_uprobe_abort_xol(struct arch_uprobe *auprobe, struct pt_regs *=
+regs)
+> +{
+> +       struct uprobe_task *utask =3D current->utask;
+> +
+> +       current->thread.trap_nr =3D utask->autask.saved_trap_nr;
+> +       instruction_pointer_set(regs, utask->vaddr);
+> +}
+> +
+> +bool arch_uprobe_xol_was_trapped(struct task_struct *t)
+> +{
+> +       if (t->thread.trap_nr !=3D UPROBE_TRAP_NR)
+> +               return true;
+> +
+> +       return false;
+> +}
+> +
+> +bool arch_uprobe_skip_sstep(struct arch_uprobe *auprobe, struct pt_regs =
+*regs)
+> +{
+> +       union loongarch_instruction insn;
+> +
+> +       if (!auprobe->simulate)
+> +               return false;
+> +
+> +       insn.word =3D auprobe->insn[0];
+> +       arch_simulate_insn(insn, regs);
+> +
+> +       return true;
+> +}
+> +
+> +unsigned long arch_uretprobe_hijack_return_addr(unsigned long trampoline=
+_vaddr,
+> +                                               struct pt_regs *regs)
+> +{
+> +       unsigned long ra =3D regs->regs[1];
+> +
+> +       regs->regs[1] =3D trampoline_vaddr;
+> +
+> +       return ra;
+> +}
+> +
+> +bool arch_uretprobe_is_alive(struct return_instance *ret,
+> +                            enum rp_check ctx, struct pt_regs *regs)
+> +{
+> +       if (ctx =3D=3D RP_CHECK_CHAIN_CALL)
+> +               return regs->regs[3] <=3D ret->stack;
+> +       else
+> +               return regs->regs[3] < ret->stack;
+> +}
+> +
+> +int arch_uprobe_exception_notify(struct notifier_block *self,
+> +                                unsigned long val, void *data)
+> +{
+> +       return NOTIFY_DONE;
+> +}
+> +
+> +bool uprobe_breakpoint_handler(struct pt_regs *regs)
+> +{
+> +       if (uprobe_pre_sstep_notifier(regs))
+> +               return true;
+> +
+> +       return false;
+> +}
+> +
+> +bool uprobe_singlestep_handler(struct pt_regs *regs)
+> +{
+> +       if (uprobe_post_sstep_notifier(regs))
+> +               return true;
+> +
+> +       return false;
+> +}
+> +
+> +unsigned long uprobe_get_swbp_addr(struct pt_regs *regs)
+> +{
+> +       return instruction_pointer(regs);
+> +}
+> +
+> +void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+> +                          void *src, unsigned long len)
+> +{
+> +       void *kaddr =3D kmap_local_page(page);
+> +       void *dst =3D kaddr + (vaddr & ~PAGE_MASK);
+> +
+> +       memcpy(dst, src, len);
+> +       flush_icache_range((unsigned long)dst, (unsigned long)dst + len);
+> +       kunmap_local(kaddr);
+> +}
+> --
+> 2.1.0
+>
