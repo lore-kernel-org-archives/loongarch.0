@@ -1,240 +1,125 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431AD6AB5
-	for <loongarch@lists.linux.dev>; Sat, 22 Apr 2023 17:57:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1682186243; bh=HXXYuFEBmSyKsiMJlNx/0TnAcXA/avZNHLVfmtY016E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=xP4n34yalLfIFyUVVY7/xam3g64taijI94UojDjyoleVPF/PTsufkN8SM2Ajp/A38
-	 5ZfSlJAjq0R4nDRfNVOpwuo057dJ7/uG1IsT83BnShQ9CTTARy6JPQ62fMCiV7hqXA
-	 9iGl2QgCYw8Aar8f1cnzvZhEBizck9V+J5vMsOjM=
-Received: from ld50.lan (unknown [101.228.138.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 2203060B16;
-	Sun, 23 Apr 2023 01:57:22 +0800 (CST)
-From: WANG Xuerui <kernel@xen0n.name>
-To: loongarch@lists.linux.dev
-Cc: WANG Xuerui <git@xen0n.name>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xi Ruoyao <xry111@xry111.site>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Arnd Bergmann <arnd@arndb.de>,
-	linux-api@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] LoongArch: Relay BCE exceptions to userland as SIGSEGVs with si_code=SEGV_BNDERR
-Date: Sun, 23 Apr 2023 01:57:05 +0800
-Message-Id: <20230422175705.3444561-3-kernel@xen0n.name>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230422175705.3444561-1-kernel@xen0n.name>
-References: <20230422175705.3444561-1-kernel@xen0n.name>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B27371
+	for <loongarch@lists.linux.dev>; Sun, 23 Apr 2023 08:31:12 +0000 (UTC)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-54fe25c2765so47967547b3.3
+        for <loongarch@lists.linux.dev>; Sun, 23 Apr 2023 01:31:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682238672; x=1684830672;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7QYHi1U0H8xeoz+ojliRlXjskKQpNh5ZppQiWqXTPmg=;
+        b=n29GfRgV2KM71xU0PJGUus7tcaVrQNRqxRyd9+C9ZSMxc8Yq/JBo/iyYfjmiVoYYVj
+         qyYpoSFV4EujOpAf8Wg1c+bCAVeXWsCkfQ2qKGa6aDClLJX5kdMICEN5JxRZPiOnrkjZ
+         qk8nMo0M7GYahnpKfhmGCnZ2lgiCs82VuqTGk/yZSDcJrz9qMsp44xHGI8IK2GGFO1HA
+         GyjMDS0KD10qaZ9TDbZt84E4LOQ5QQnu+EG/eKNjMOhMSRaOXXguE6q9kSopTiTOtl/k
+         Ekx4/5wyneuO1PYQCELdkr6kn6rI2Vtz5FpnjdZPRMk3rnc9ySYn59vCp02SK2gn1IL/
+         uRYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682238672; x=1684830672;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7QYHi1U0H8xeoz+ojliRlXjskKQpNh5ZppQiWqXTPmg=;
+        b=f6Zm1yNFrY4zW6/UfHQqGIigw3s92rEaeweUtzpm+eUmoxEuU4wFKfeWBO4pslTgZB
+         4AHkrzcKJJr61T29SQw1ft7+rYsL2uLn/m84E2xbY4jkdSm+DH0FxqJcQYHb0kOpx5Kq
+         HV3ZiGsiFxMQMniYiSexINSNpOVu0qlmXCPcCE+JP/FPNpj7hSWw4QnziCcWVtcULD6k
+         mrvcaBezMp8k7s3S15YKS/6tLLKmRR/gxrp8Y04ayW3uil+uquLrSuMZIU2O/KSpyOnq
+         7kKaHhlP7S9+DtvFcuFaGvpsRyEgvdwwm3j7NA5BWs1ir2AEoqX5xRHNBH5yC0kYaUJp
+         3trA==
+X-Gm-Message-State: AAQBX9doUrerH+IJjQDsmmJ8hSr+WdlVdu6naJd5KsW2wqIH+bEb1C/b
+	Aj/hWb76pchXmb5f0o1upwrYAqDdSMEWjxZCvYM=
+X-Google-Smtp-Source: AKy350ao+/7bEok4Abt9/zxZOar007y/ULFW6xkLcjzlu7/jxRV1Ag/ua7DsMXMSEICNjxr3Wld7QUpS6J0Lp/BeZVM=
+X-Received: by 2002:a0d:df4a:0:b0:54f:b4fa:3271 with SMTP id
+ i71-20020a0ddf4a000000b0054fb4fa3271mr5522576ywe.21.1682238671839; Sun, 23
+ Apr 2023 01:31:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1681887790.git.zhoubinbin@loongson.cn> <3b9c4f05eaf14bc3b16aebec3ff84c8a2d52c4a5.1681887790.git.zhoubinbin@loongson.cn>
+ <f9b62f48-5c8b-2674-313d-4552c61c4302@linaro.org> <CAMpQs4JjHvVOzQz-1Y-q9ut6tWUpakrHeozuwPg0dzoDcUFEGA@mail.gmail.com>
+ <75231886-cdf6-cfde-d6b9-183b1fbf98da@linaro.org>
+In-Reply-To: <75231886-cdf6-cfde-d6b9-183b1fbf98da@linaro.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Sun, 23 Apr 2023 16:30:57 +0800
+Message-ID: <CAMpQs4Jp8WPKJEuJD-_83oRPBbPELxS5ufqp-nHow0D9D+R+ig@mail.gmail.com>
+Subject: Re: [PATCH V3 1/2] dt-bindings: interrupt-controller: Add Loongson EIOINTC
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Jianmin Lv <lvjianmin@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>, linux-kernel@vger.kernel.org, 
+	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: WANG Xuerui <git@xen0n.name>
+On Thu, Apr 20, 2023 at 11:52=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 20/04/2023 15:00, Binbin Zhou wrote:
+> >>> +examples:
+> >>> +  - |
+> >>> +    eiointc: interrupt-controller@1fe11600 {
+> >>> +      compatible =3D "loongson,ls2k0500-eiointc";
+> >>> +      reg =3D <0x1fe11600 0x10>,
+> >>> +            <0x1fe11700 0x10>,
+> >>> +            <0x1fe11800 0x10>,
+> >>> +            <0x1fe114c0 0x4>;
+> >>
+> >> Binding is OK, but are you sure you want to split the address space li=
+ke
+> >> this? It looks like two address spaces (enable+clear+status should be
+> >> one). Are you sure this is correct?
+> >>
+> > Hi Krzysztof:
+> >
+> > These registers are all in the range of chip configuration registers,
+> > in the case of LS2K0500, which has a base address of 0x1fe10000.
+> > However, the individual register addresses are not contiguous with
+> > each other, and most are distributed across modules, so I feel that
+> > they should be listed in detail as they are used.
+>
+> Do you want to say that:
+> Between 0x1fe11600 and 0x1fe11700 there are EIOINTC registers and other
+> (independent) module registers?
 
-SEGV_BNDERR was introduced initially for supporting the Intel MPX, but
-fell into disuse after the MPX support was removed. The LoongArch
-bounds-checking instructions behave very differently than MPX, but
-overall the interface is still kind of suitable for conveying the
-information to userland when bounds-checking assertions trigger, so we
-wouldn't have to invent more UAPI. Specifically, when the BCE triggers,
-a SEGV_BNDERR is sent to userland, with si_addr set to the out-of-bounds
-address or value (in asrt{gt,le}'s case), and one of si_lower or
-si_upper set to the configured bound depending on the faulting
-instruction. The other bound is set to either 0 or ULONG_MAX to resemble
-a range with both lower and upper bounds.
+No, this section is all EIO-related configuration, but there will be
+undefined space here.
 
-Note that it is possible to have si_addr == si_lower in case of a
-failing asrtgt or {ld,st}gt, because those instructions test for strict
-greater-than relationship. This should not pose a problem for userland,
-though, because the faulting PC is available for the application to
-associate back to the exact instruction for figuring out the
-expectation.
+Throughout the chip configuration space, there are some relatively
+common areas, such as the definition of 0x1fe1_14c0.
+Because our chip supports two interrupt modes, node legacy I/O
+interrupt and extended I/O interrupt, both modes require interrupt
+routing registers.
+Their registers are then defined together: the legacy interrupt I/O
+start address is 0x1fe1_1400, while the extended I/O interrupt start
+address is 0x1fe1_14c0.
 
-Somewhat contrary to the v1.03 ISA manual's wording, CSR.BADV does not
-seem to contain the out-of-bounds value when BCE occurs in my
-experiments. So we have to resort to pattern-matching the instruction
-word to pull out the appropriate operand ourselves from the context.
+Then I have carefully compared the chip configuration space in
+LS2K0500 and LS2K2000 and can see that:
 
-Example exception context generated by a faulting `asrtgt.d t0, t1`
-(assert t0 > t1 or BCE) with t0=100 and t1=200:
+1. The chip configuration space base addresses are different, but they
+both have a size of 64KB;
+2. The offset addresses of the EIO related registers are the same, for
+example the offset of the enable register is 0x1600.
 
-> pc 00005555558206a4 ra 00007ffff2d854fc tp 00007ffff2f2f180 sp 00007ffffbf9fb80
-> a0 0000000000000002 a1 00007ffffbf9fce8 a2 00007ffffbf9fd00 a3 00007ffff2ed4558
-> a4 0000000000000000 a5 00007ffff2f044c8 a6 00007ffffbf9fce0 a7 fffffffffffff000
-> t0 0000000000000064 t1 00000000000000c8 t2 00007ffffbfa2d5e t3 00007ffff2f12aa0
-> t4 00007ffff2ed6158 t5 00007ffff2ed6158 t6 000000000000002e t7 0000000003d8f538
-> t8 0000000000000005 u0 0000000000000000 s9 0000000000000000 s0 00007ffffbf9fce8
-> s1 0000000000000002 s2 0000000000000000 s3 00007ffff2f2c038 s4 0000555555820610
-> s5 00007ffff2ed5000 s6 0000555555827e38 s7 00007ffffbf9fd00 s8 0000555555827e38
->    ra: 00007ffff2d854fc
->   ERA: 00005555558206a4
->  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
->  PRMD: 00000007 (PPLV3 +PIE -PWE)
->  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
->  ECFG: 0007181c (LIE=2-4,11-12 VS=7)
-> ESTAT: 000a0000 [BCE] (IS= ECode=10 EsubCode=0)
->  PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
+Wouldn't it be better to declare the entire configuration space (64KB)
+directly in the dts and use the offsets to access the corresponding
+registers?
 
-Signed-off-by: WANG Xuerui <git@xen0n.name>
----
- arch/loongarch/kernel/genex.S |  1 +
- arch/loongarch/kernel/traps.c | 99 +++++++++++++++++++++++++++++++++++
- 2 files changed, 100 insertions(+)
+Example:
+reg =3D <0x1fe10000 0x10000>.
 
-diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
-index 44ff1ff64260..78f066384657 100644
---- a/arch/loongarch/kernel/genex.S
-+++ b/arch/loongarch/kernel/genex.S
-@@ -82,6 +82,7 @@ SYM_FUNC_END(except_vec_cex)
- 
- 	BUILD_HANDLER ade ade badv
- 	BUILD_HANDLER ale ale badv
-+	BUILD_HANDLER bce bce none
- 	BUILD_HANDLER bp bp none
- 	BUILD_HANDLER fpe fpe fcsr
- 	BUILD_HANDLER fpu fpu none
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 8b268c133b92..5b3bb6b55e05 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -36,6 +36,7 @@
- #include <asm/break.h>
- #include <asm/cpu.h>
- #include <asm/fpu.h>
-+#include <asm/inst.h>
- #include <asm/loongarch.h>
- #include <asm/mmu_context.h>
- #include <asm/pgtable.h>
-@@ -51,6 +52,7 @@
- 
- extern asmlinkage void handle_ade(void);
- extern asmlinkage void handle_ale(void);
-+extern asmlinkage void handle_bce(void);
- extern asmlinkage void handle_sys(void);
- extern asmlinkage void handle_bp(void);
- extern asmlinkage void handle_ri(void);
-@@ -585,6 +587,102 @@ static void bug_handler(struct pt_regs *regs)
- 	}
- }
- 
-+asmlinkage void noinstr do_bce(struct pt_regs *regs)
-+{
-+	irqentry_state_t state = irqentry_enter(regs);
-+	bool user = user_mode(regs);
-+	unsigned long era = exception_era(regs);
-+	union loongarch_instruction insn;
-+	u64 badv = 0, lower = 0, upper = ULONG_MAX;
-+
-+	if (regs->csr_prmd & CSR_PRMD_PIE)
-+		local_irq_enable();
-+
-+	current->thread.trap_nr = read_csr_excode();
-+
-+	die_if_kernel("Bounds check error in kernel code", regs);
-+
-+	/*
-+	 * Pull out the address that failed bounds checking, and the lower /
-+	 * upper bound, by minimally looking at the faulting instruction word
-+	 * and reading from the correct register.
-+	 *
-+	 * Somewhat counter-intuitively (but kinds of makes sense), BCEs
-+	 * during checked memory accesses *do not* update CSR.BADV. So badv
-+	 * still comes from regs[rj] in these cases.
-+	 */
-+	if (__get_inst(&insn.word, (u32 *)era, user))
-+		goto bad_era;
-+
-+	switch (insn.reg3_format.opcode) {
-+	case asrtle_op:
-+		if (insn.reg3_format.rd != 0)
-+			/* not asrtle */
-+			break;
-+		badv = regs->regs[insn.reg3_format.rj];
-+		upper = regs->regs[insn.reg3_format.rk];
-+		break;
-+
-+	case asrtgt_op:
-+		if (insn.reg3_format.rd != 0)
-+			/* not asrtgt */
-+			break;
-+		badv = regs->regs[insn.reg3_format.rj];
-+		lower = regs->regs[insn.reg3_format.rk];
-+		break;
-+
-+	case fldles_op:
-+	case fldled_op:
-+	case fstles_op:
-+	case fstled_op:
-+	case ldleb_op:
-+	case ldleh_op:
-+	case ldlew_op:
-+	case ldled_op:
-+	case stleb_op:
-+	case stleh_op:
-+	case stlew_op:
-+	case stled_op:
-+		badv = regs->regs[insn.reg3_format.rj];
-+		upper = regs->regs[insn.reg3_format.rk];
-+		break;
-+
-+	case fldgts_op:
-+	case fldgtd_op:
-+	case fstgts_op:
-+	case fstgtd_op:
-+	case ldgtb_op:
-+	case ldgth_op:
-+	case ldgtw_op:
-+	case ldgtd_op:
-+	case stgtb_op:
-+	case stgth_op:
-+	case stgtw_op:
-+	case stgtd_op:
-+		badv = regs->regs[insn.reg3_format.rj];
-+		lower = regs->regs[insn.reg3_format.rk];
-+		break;
-+	}
-+
-+	force_sig_bnderr((void __user *)badv, (void __user *)lower,
-+			 (void __user *)upper);
-+
-+out:
-+	if (regs->csr_prmd & CSR_PRMD_PIE)
-+		local_irq_disable();
-+
-+	irqentry_exit(regs, state);
-+	return;
-+
-+bad_era:
-+	/*
-+	 * Cannot pull out the instruction word, hence cannot provide more
-+	 * info than a regular SIGSEGV in this case.
-+	 */
-+	force_sig(SIGSEGV);
-+	goto out;
-+}
-+
- asmlinkage void noinstr do_bp(struct pt_regs *regs)
- {
- 	bool user = user_mode(regs);
-@@ -952,6 +1050,7 @@ void __init trap_init(void)
- 
- 	set_handler(EXCCODE_ADE * VECSIZE, handle_ade, VECSIZE);
- 	set_handler(EXCCODE_ALE * VECSIZE, handle_ale, VECSIZE);
-+	set_handler(EXCCODE_OOB * VECSIZE, handle_bce, VECSIZE);
- 	set_handler(EXCCODE_SYS * VECSIZE, handle_sys, VECSIZE);
- 	set_handler(EXCCODE_BP * VECSIZE, handle_bp, VECSIZE);
- 	set_handler(EXCCODE_INE * VECSIZE, handle_ri, VECSIZE);
--- 
-2.40.0
+Thanks.
+Binbin
 
+>
+> Best regards,
+> Krzysztof
