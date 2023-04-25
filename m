@@ -1,27 +1,27 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E4D1114
-	for <loongarch@lists.linux.dev>; Tue, 25 Apr 2023 08:10:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714251114
+	for <loongarch@lists.linux.dev>; Tue, 25 Apr 2023 08:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1682410241; bh=jBGsVH7DU5WqQAnW4tS4wwSAbjtU1fwq/scTf16+sAo=;
+	t=1682410242; bh=PGb6V4V0Y58pQ9pxRo8f1eQYFs2NQJTEO/6J604YAyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u+/fMQVk5GAFCWu8ddw19GCgTrm8pBXKsM0NxuXn3cZIdy3uIusqXozr1oGRRewhV
-	 u6nfTAB5kPBJNrHXiEPR0lc75z7hq5Hsn6EXq2WB+n1/LWZG+FXuTqTTEjXCF1iNej
-	 jY+mRMNx85nmo+yqmXgucdPGvtAnZokEGomE7+Bc=
+	b=kbaxO6b6oBr6I6uZfXK3EqoVpM/ho1vBDTxJLQlBeksjJKRpwVKieIj6IQzyWDXM0
+	 YST7IPjBrwko/TUTkkhxRj4HwALPW68u8a+SU1cV3ewz+T/A4sSrxViw49fYJ/ogLo
+	 dWreRPN9OoBb9nuXleMfwH/FrOEZZRKb3OJHmhF0=
 Received: from ld50.lan (unknown [101.228.138.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 5B19060B22;
-	Tue, 25 Apr 2023 16:10:41 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 691D4600A6;
+	Tue, 25 Apr 2023 16:10:42 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v7 09/12] LoongArch: Humanize the ECFG line when showing registers
-Date: Tue, 25 Apr 2023 16:10:20 +0800
-Message-Id: <20230425081023.3809434-10-kernel@xen0n.name>
+Subject: [PATCH v7 10/12] LoongArch: Humanize the ESTAT line when showing registers
+Date: Tue, 25 Apr 2023 16:10:21 +0800
+Message-Id: <20230425081023.3809434-11-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230425081023.3809434-1-kernel@xen0n.name>
 References: <20230425081023.3809434-1-kernel@xen0n.name>
@@ -37,53 +37,118 @@ From: WANG Xuerui <git@xen0n.name>
 
 Example output looks like:
 
-[   xx.xxxxxx]  ECFG: 00071c1c (LIE=2-4,10-12 VS=7)
+[   xx.xxxxxx] ESTAT: 00001000 [INT] (IS=12 ECode=0 EsubCode=0)
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/kernel/traps.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/loongarch/kernel/traps.c | 84 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 77 insertions(+), 7 deletions(-)
 
 diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 8b44cb417c5d..6f62f039906a 100644
+index 6f62f039906a..c7ef902800a4 100644
 --- a/arch/loongarch/kernel/traps.c
 +++ b/arch/loongarch/kernel/traps.c
-@@ -184,6 +184,12 @@ static void print_memory_type_fragment(const char *key, unsigned long val)
- 	}
+@@ -229,11 +229,85 @@ static void print_ecfg(unsigned long x)
+ 	pr_cont(" VS=%d)\n", (int) FIELD_GET(CSR_ECFG_VS, x));
  }
  
-+static void print_intr_fragment(const char *key, unsigned long val)
++static const char *humanize_exc_name(unsigned int ecode, unsigned int esubcode)
 +{
-+	/* e.g. "LIE=0-1,3,5-7" */
-+	pr_cont("%s=%*pbl", key, EXCCODE_INT_NUM, &val);
++	/*
++	 * Right now the kernel source refers to the exceptions using mostly
++	 * MIPS-esque names, but LoongArch users and developers are probably
++	 * more familiar with those in the ISA manual, so we are going to
++	 * print out the latter. Expect much friction between the two sides
++	 * below...
++	 */
++	switch (ecode) {
++	case EXCCODE_RSV: return "INT";
++	case EXCCODE_TLBL: return "PIL";
++	case EXCCODE_TLBS: return "PIS";
++	case EXCCODE_TLBI: return "PIF";
++	case EXCCODE_TLBM: return "PME";
++	case EXCCODE_TLBNR: return "PNR";
++	case EXCCODE_TLBNX: return "PNX";
++	case EXCCODE_TLBPE: return "PPI";
++	case EXCCODE_ADE:
++		switch (esubcode) {
++		case EXSUBCODE_ADEF: return "ADEF";
++		case EXSUBCODE_ADEM: return "ADEM";
++		}
++		break;
++	case EXCCODE_ALE: return "ALE";
++	case EXCCODE_OOB: return "BCE";
++	case EXCCODE_SYS: return "SYS";
++	case EXCCODE_BP: return "BRK";
++	case EXCCODE_INE: return "INE";
++	case EXCCODE_IPE: return "IPE";
++	case EXCCODE_FPDIS: return "FPD";
++	case EXCCODE_LSXDIS: return "SXD";
++	case EXCCODE_LASXDIS: return "ASXD";
++	case EXCCODE_FPE:
++		switch (esubcode) {
++		case EXCSUBCODE_FPE: return "FPE";
++		case EXCSUBCODE_VFPE: return "VFPE";
++		}
++		break;
++	case EXCCODE_WATCH:
++		switch (esubcode) {
++		case EXCSUBCODE_WPEF: return "WPEF";
++		case EXCSUBCODE_WPEM: return "WPEM";
++		}
++		break;
++	case EXCCODE_BTDIS: return "BTD";
++	case EXCCODE_BTE: return "BTE";
++	case EXCCODE_PSI: return "GSPR";
++	case EXCCODE_HYP: return "HVC";
++	case EXCCODE_GCM:
++		switch (esubcode) {
++		case EXCSUBCODE_GCSC: return "GCSC";
++		case EXCSUBCODE_GCHC: return "GCHC";
++		}
++		break;
++	/*
++	 * The manual did not mention the EXCCODE_SE case, but print out it
++	 * nevertheless.
++	 */
++	case EXCCODE_SE: return "SE";
++	}
++
++	return "???";
 +}
 +
- static void print_crmd(unsigned long x)
- {
- 	pr_cont(" CRMD: %08lx (", x);
-@@ -216,6 +222,13 @@ static void print_euen(unsigned long x)
- 	pr_cont(")\n");
- }
- 
-+static void print_ecfg(unsigned long x)
++static void print_estat(unsigned long x)
 +{
-+	pr_cont(" ECFG: %08lx (", x);
-+	print_intr_fragment("LIE", FIELD_GET(CSR_ECFG_IM, x));
-+	pr_cont(" VS=%d)\n", (int) FIELD_GET(CSR_ECFG_VS, x));
++	unsigned int ecode = FIELD_GET(CSR_ESTAT_EXC, x);
++	unsigned int esubcode = FIELD_GET(CSR_ESTAT_ESUBCODE, x);
++
++	pr_cont("ESTAT: %08lx [%s] (", x, humanize_exc_name(ecode, esubcode));
++	print_intr_fragment("IS", FIELD_GET(CSR_ESTAT_IS, x));
++	pr_cont(" ECode=%d EsubCode=%d)\n", (int) ecode, (int) esubcode);
 +}
 +
  static void __show_regs(const struct pt_regs *regs)
  {
  	const int field = 2 * sizeof(unsigned long);
-@@ -260,7 +273,7 @@ static void __show_regs(const struct pt_regs *regs)
- 	print_crmd(regs->csr_crmd);
+-	unsigned int excsubcode;
+-	unsigned int exccode;
++	unsigned int exccode = FIELD_GET(CSR_ESTAT_EXC, regs->csr_estat);
+ 
+ 	show_regs_print_info(KERN_DEFAULT);
+ 
+@@ -274,11 +348,7 @@ static void __show_regs(const struct pt_regs *regs)
  	print_prmd(regs->csr_prmd);
  	print_euen(regs->csr_euen);
--	pr_cont(" ECFG: %08lx\n", regs->csr_ecfg);
-+	print_ecfg(regs->csr_ecfg);
- 	pr_cont("ESTAT: %08lx\n", regs->csr_estat);
+ 	print_ecfg(regs->csr_ecfg);
+-	pr_cont("ESTAT: %08lx\n", regs->csr_estat);
+-
+-	exccode = ((regs->csr_estat) & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
+-	excsubcode = ((regs->csr_estat) & CSR_ESTAT_ESUBCODE) >> CSR_ESTAT_ESUBCODE_SHIFT;
+-	printk("ExcCode : %x (SubCode %x)\n", exccode, excsubcode);
++	print_estat(regs->csr_estat);
  
- 	exccode = ((regs->csr_estat) & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
+ 	if (exccode >= EXCCODE_TLBL && exccode <= EXCCODE_ALE)
+ 		printk("BadVA : %0*lx\n", field, regs->csr_badvaddr);
 -- 
 2.40.0
 
