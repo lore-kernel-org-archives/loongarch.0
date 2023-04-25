@@ -1,27 +1,27 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124FA1111
-	for <loongarch@lists.linux.dev>; Tue, 25 Apr 2023 08:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E3D110E
+	for <loongarch@lists.linux.dev>; Tue, 25 Apr 2023 08:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1682410230; bh=nKO9WjlsrDvh7m1jahXthku7r5mk4inw4fi+v2RVTvo=;
+	t=1682410238; bh=MH0FijNPRY3ecOzlloz4DVZfgeGglolnRuy0Mm62xSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IPF7dC3CpgZEpN7X8Kgw/NdpirryuYRPuQBnBLgR2+kdgMSRe7aKWLznBlSk6jfr0
-	 yZ8Jbz0VUA7CoLdiGTXS8FkxIAHEzNTvUbVQ0UibG8CUmtZTllPjkHyc5GM4qZ+RUX
-	 aW7Xg8mvbxhNScwRj52mgPRklWd1XDlVH+p9958Y=
+	b=cjKbgBGc4J3T1gT3My0FjiGeQTlHasydqIqxlnEnM8OBZ6GRHjeRJmYys3bmNgke/
+	 s/gt9BNR8nRtfHXnt9zb+J7tnP9rKKbopsTJE+ylKAxXw+TWzAY00i3YcGu523/IlL
+	 CyI2vpnZ/iosGxTPYMFkC2ZtB+uAZA4iSjYEkOE4=
 Received: from ld50.lan (unknown [101.228.138.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 2A77E6014B;
-	Tue, 25 Apr 2023 16:10:30 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id ABDDB60B20;
+	Tue, 25 Apr 2023 16:10:38 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v7 01/12] LoongArch: Clean up the architectural interrupt definitions
-Date: Tue, 25 Apr 2023 16:10:12 +0800
-Message-Id: <20230425081023.3809434-2-kernel@xen0n.name>
+Subject: [PATCH v7 07/12] LoongArch: Humanize the PRMD line when showing registers
+Date: Tue, 25 Apr 2023 16:10:18 +0800
+Message-Id: <20230425081023.3809434-8-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230425081023.3809434-1-kernel@xen0n.name>
 References: <20230425081023.3809434-1-kernel@xen0n.name>
@@ -35,162 +35,44 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-While interrupts are assigned ECodes `64 + interrupt number`, all
-existing use sites of interrupt numbers want the 64 subtracted.
-Re-arrange the definitions so that the actual interrupt number is used
-everywhere, and make EXCCODE_INT_END inclusive as it is more intuitive
-that way.
+Example output looks like:
 
-While at it, according to the asm/loongarch.h definitions, the total
-number of architectural interrupts should be 14 instead of 13. Relevant
-bitfields and masks have been adjusted as well.
+[   xx.xxxxxx]  PRMD: 00000004 (PPLV0 +PIE -PWE)
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/include/asm/loongarch.h | 47 ++++++++++++++------------
- arch/loongarch/kernel/irq.c            |  2 +-
- arch/loongarch/kernel/perf_event.c     |  2 +-
- arch/loongarch/kernel/time.c           |  2 +-
- arch/loongarch/kernel/traps.c          |  8 +++--
- 5 files changed, 33 insertions(+), 28 deletions(-)
+ arch/loongarch/kernel/traps.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 83da5d29e2d1..7d8b83dd32e9 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -311,8 +311,8 @@ static __always_inline void iocsr_write64(u64 val, u32 reg)
- #define  CSR_ECFG_VS_WIDTH		3
- #define  CSR_ECFG_VS			(_ULCAST_(0x7) << CSR_ECFG_VS_SHIFT)
- #define  CSR_ECFG_IM_SHIFT		0
--#define  CSR_ECFG_IM_WIDTH		13
--#define  CSR_ECFG_IM			(_ULCAST_(0x1fff) << CSR_ECFG_IM_SHIFT)
-+#define  CSR_ECFG_IM_WIDTH		14
-+#define  CSR_ECFG_IM			(_ULCAST_(0x3fff) << CSR_ECFG_IM_SHIFT)
- 
- #define LOONGARCH_CSR_ESTAT		0x5	/* Exception status */
- #define  CSR_ESTAT_ESUBCODE_SHIFT	22
-@@ -322,8 +322,8 @@ static __always_inline void iocsr_write64(u64 val, u32 reg)
- #define  CSR_ESTAT_EXC_WIDTH		6
- #define  CSR_ESTAT_EXC			(_ULCAST_(0x3f) << CSR_ESTAT_EXC_SHIFT)
- #define  CSR_ESTAT_IS_SHIFT		0
--#define  CSR_ESTAT_IS_WIDTH		15
--#define  CSR_ESTAT_IS			(_ULCAST_(0x7fff) << CSR_ESTAT_IS_SHIFT)
-+#define  CSR_ESTAT_IS_WIDTH		14
-+#define  CSR_ESTAT_IS			(_ULCAST_(0x3fff) << CSR_ESTAT_IS_SHIFT)
- 
- #define LOONGARCH_CSR_ERA		0x6	/* ERA */
- 
-@@ -1090,7 +1090,7 @@ static __always_inline void iocsr_write64(u64 val, u32 reg)
- #define ECFGF_IPI		(_ULCAST_(1) << ECFGB_IPI)
- #define ECFGF(hwirq)		(_ULCAST_(1) << hwirq)
- 
--#define ESTATF_IP		0x00001fff
-+#define ESTATF_IP		0x00003fff
- 
- #define LOONGARCH_IOCSR_FEATURES	0x8
- #define  IOCSRF_TEMP			BIT_ULL(0)
-@@ -1418,23 +1418,26 @@ __BUILD_CSR_OP(tlbidx)
- 	#define EXCSUBCODE_GCHC		1	/* Hardware caused */
- #define EXCCODE_SE		25	/* Security */
- 
--#define EXCCODE_INT_START   64
--#define EXCCODE_SIP0        64
--#define EXCCODE_SIP1        65
--#define EXCCODE_IP0         66
--#define EXCCODE_IP1         67
--#define EXCCODE_IP2         68
--#define EXCCODE_IP3         69
--#define EXCCODE_IP4         70
--#define EXCCODE_IP5         71
--#define EXCCODE_IP6         72
--#define EXCCODE_IP7         73
--#define EXCCODE_PMC         74 /* Performance Counter */
--#define EXCCODE_TIMER       75
--#define EXCCODE_IPI         76
--#define EXCCODE_NMI         77
--#define EXCCODE_INT_END     78
--#define EXCCODE_INT_NUM	    (EXCCODE_INT_END - EXCCODE_INT_START)
-+/* Interrupt numbers */
-+#define INT_SWI0	0	/* Software Interrupts */
-+#define INT_SWI1	1
-+#define INT_HWI0	2	/* Hardware Interrupts */
-+#define INT_HWI1	3
-+#define INT_HWI2	4
-+#define INT_HWI3	5
-+#define INT_HWI4	6
-+#define INT_HWI5	7
-+#define INT_HWI6	8
-+#define INT_HWI7	9
-+#define INT_PCOV	10	/* Performance Counter Overflow */
-+#define INT_TI		11	/* Timer */
-+#define INT_IPI		12
-+#define INT_NMI		13
-+
-+/* ExcCodes corresponding to interrupts */
-+#define EXCCODE_INT_NUM		(INT_NMI + 1)
-+#define EXCCODE_INT_START	64
-+#define EXCCODE_INT_END		(EXCCODE_INT_START + EXCCODE_INT_NUM - 1)
- 
- /* FPU register names */
- #define LOONGARCH_FCSR0	$r0
-diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
-index 0524bf1169b7..883e5066ae44 100644
---- a/arch/loongarch/kernel/irq.c
-+++ b/arch/loongarch/kernel/irq.c
-@@ -92,7 +92,7 @@ static int __init get_ipi_irq(void)
- 	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
- 
- 	if (d)
--		return irq_create_mapping(d, EXCCODE_IPI - EXCCODE_INT_START);
-+		return irq_create_mapping(d, INT_IPI);
- 
- 	return -EINVAL;
- }
-diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
-index 707bd32e5c4f..ff28f99b47d7 100644
---- a/arch/loongarch/kernel/perf_event.c
-+++ b/arch/loongarch/kernel/perf_event.c
-@@ -461,7 +461,7 @@ static int get_pmc_irq(void)
- 	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
- 
- 	if (d)
--		return irq_create_mapping(d, EXCCODE_PMC - EXCCODE_INT_START);
-+		return irq_create_mapping(d, INT_PCOV);
- 
- 	return -EINVAL;
- }
-diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-index 4351f69d9950..f377e50f3c66 100644
---- a/arch/loongarch/kernel/time.c
-+++ b/arch/loongarch/kernel/time.c
-@@ -133,7 +133,7 @@ static int get_timer_irq(void)
- 	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
- 
- 	if (d)
--		return irq_create_mapping(d, EXCCODE_TIMER - EXCCODE_INT_START);
-+		return irq_create_mapping(d, INT_TI);
- 
- 	return -EINVAL;
- }
 diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index de8ebe20b666..529165eb6e6b 100644
+index b93d3b44a5f9..ff8c72565c3c 100644
 --- a/arch/loongarch/kernel/traps.c
 +++ b/arch/loongarch/kernel/traps.c
-@@ -791,9 +791,11 @@ void __init trap_init(void)
+@@ -197,6 +197,15 @@ static void print_crmd(unsigned long x)
+ 	pr_cont(")\n");
+ }
+ 
++static void print_prmd(unsigned long x)
++{
++	pr_cont(" PRMD: %08lx (", x);
++	print_plv_fragment("PPLV", (int) FIELD_GET(CSR_PRMD_PPLV, x));
++	print_bool_fragment("PIE", FIELD_GET(CSR_PRMD_PIE, x), false);
++	print_bool_fragment("PWE", FIELD_GET(CSR_PRMD_PWE, x), false);
++	pr_cont(")\n");
++}
++
+ static void __show_regs(const struct pt_regs *regs)
  {
- 	long i;
+ 	const int field = 2 * sizeof(unsigned long);
+@@ -239,7 +248,7 @@ static void __show_regs(const struct pt_regs *regs)
  
--	/* Set interrupt vector handler */
--	for (i = EXCCODE_INT_START; i < EXCCODE_INT_END; i++)
--		set_handler(i * VECSIZE, handle_vint, VECSIZE);
-+	/* Set handlers for hardware interrupts */
-+	for (i = EXCCODE_INT_START; i <= EXCCODE_INT_END; i++)
-+		/* NMIs don't go through handle_vint */
-+		if (i - EXCCODE_INT_START != INT_NMI)
-+			set_handler(i * VECSIZE, handle_vint, VECSIZE);
- 
- 	set_handler(EXCCODE_ADE * VECSIZE, handle_ade, VECSIZE);
- 	set_handler(EXCCODE_ALE * VECSIZE, handle_ale, VECSIZE);
+ 	/* Print important CSRs */
+ 	print_crmd(regs->csr_crmd);
+-	pr_cont(" PRMD: %08lx\n", regs->csr_prmd);
++	print_prmd(regs->csr_prmd);
+ 	pr_cont(" EUEN: %08lx\n", regs->csr_euen);
+ 	pr_cont(" ECFG: %08lx\n", regs->csr_ecfg);
+ 	pr_cont("ESTAT: %08lx\n", regs->csr_estat);
 -- 
 2.40.0
 
