@@ -1,27 +1,27 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B73110C
-	for <loongarch@lists.linux.dev>; Tue, 25 Apr 2023 08:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B21F110E
+	for <loongarch@lists.linux.dev>; Tue, 25 Apr 2023 08:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1682410231; bh=TjU6eqiRK1crClPaSs+/FZgpf/zsP/abTfWWIOmeE+4=;
+	t=1682410234; bh=/6HkY/3Y30XAUy4FvUwaYQezXNhdANQJNtBNNnyTDyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zu98eG4T3/kbWhMwVC+aFhwqFSI7Lkaxjt4SVzmavrEqOWv1Uh3QtLTFabnTQKrbI
-	 6kq97ZoMqBCD/jWWqlpBGkyP9WCUI61UMhB6674rqFtBNTxPFNyvH3660rkVhg42zI
-	 ThV97OI6fo0zAieRm5DposskLHNTcjJpwgNJCGIo=
+	b=xEgjJQAAs1MbR11TJT7proP2bahTLizuTF7QyeV+N8LduCa3LGFvkEHuPIEf7Lbw9
+	 pLO19QARJUTS44v+WUzQZPQUqW3aH7fo9+Qz0MdpFhpat8L8Viua+btCCWSDZMZHE9
+	 3iX2snrQ/szXV/BKBqduDDeZmOIZxzJWaAwC51aY=
 Received: from ld50.lan (unknown [101.228.138.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 4C22A60B16;
-	Tue, 25 Apr 2023 16:10:31 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id CC28660B1F;
+	Tue, 25 Apr 2023 16:10:34 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v7 02/12] LoongArch: Add exception subcode definitions for the watchpoint exception
-Date: Tue, 25 Apr 2023 16:10:13 +0800
-Message-Id: <20230425081023.3809434-3-kernel@xen0n.name>
+Subject: [PATCH v7 05/12] LoongArch: Fix format of CSR lines during show_regs
+Date: Tue, 25 Apr 2023 16:10:16 +0800
+Message-Id: <20230425081023.3809434-6-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230425081023.3809434-1-kernel@xen0n.name>
 References: <20230425081023.3809434-1-kernel@xen0n.name>
@@ -35,29 +35,39 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Add them to enable matching the sub-exceptions for humanization purposes
-later.
+Use uppercase CSR names throughout for consistency with the manual
+wording, and right-align the keys. The "CSR" part is inferrable from
+context, hence dropped for more horizontal space.
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/include/asm/loongarch.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/loongarch/kernel/traps.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index 7d8b83dd32e9..da5b572b2d2f 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -1408,7 +1408,9 @@ __BUILD_CSR_OP(tlbidx)
- #define EXCCODE_FPE		18	/* Floating Point Exception */
- 	#define EXCSUBCODE_FPE		0	/* Floating Point Exception */
- 	#define EXCSUBCODE_VFPE		1	/* Vector Exception */
--#define EXCCODE_WATCH		19	/* Watch address reference */
-+#define EXCCODE_WATCH		19	/* WatchPoint Exception */
-+	#define EXCSUBCODE_WPEF		0	/* ... on instruction Fetch */
-+	#define EXCSUBCODE_WPEM		1	/* ... on Memory access */
- #define EXCCODE_BTDIS		20	/* Binary Trans. Disabled */
- #define EXCCODE_BTE		21	/* Binary Trans. Exception */
- #define EXCCODE_PSI		22	/* Guest Privileged Error */
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index 434bf2ddc679..f7bb15a52ccf 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -193,13 +193,12 @@ static void __show_regs(const struct pt_regs *regs)
+ 	}
+ #undef GPR_FIELD
+ 
+-	printk("CSR crmd: %08lx	", regs->csr_crmd);
+-	printk("CSR prmd: %08lx	", regs->csr_prmd);
+-	printk("CSR euen: %08lx	", regs->csr_euen);
+-	printk("CSR ecfg: %08lx	", regs->csr_ecfg);
+-	printk("CSR estat: %08lx	", regs->csr_estat);
+-
+-	pr_cont("\n");
++	/* Print important CSRs */
++	pr_cont(" CRMD: %08lx\n", regs->csr_crmd);
++	pr_cont(" PRMD: %08lx\n", regs->csr_prmd);
++	pr_cont(" EUEN: %08lx\n", regs->csr_euen);
++	pr_cont(" ECFG: %08lx\n", regs->csr_ecfg);
++	pr_cont("ESTAT: %08lx\n", regs->csr_estat);
+ 
+ 	exccode = ((regs->csr_estat) & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
+ 	excsubcode = ((regs->csr_estat) & CSR_ESTAT_ESUBCODE) >> CSR_ESTAT_ESUBCODE_SHIFT;
 -- 
 2.40.0
 
