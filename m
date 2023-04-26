@@ -1,27 +1,27 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1049A185D
-	for <loongarch@lists.linux.dev>; Wed, 26 Apr 2023 07:45:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64730185D
+	for <loongarch@lists.linux.dev>; Wed, 26 Apr 2023 07:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1682495137; bh=rzRlDjjqnEkl35Nn9pU/AnM22fv0IU57WoOcEA/+Mbo=;
+	t=1682495140; bh=bZmWuJJpwjh4eRFw022nm6hCGU6/LJZ0EqJZ6NK7E50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B4zc+J4Ns/Q8thWKVt5KOEiTTaTniVZAgdjyotqfPAmfVw0RgO7VvJFleILCSdU5L
-	 vUwwg5X/veRrNY+1PrMNccQ47ndlt0fD2lId8b0d2D0ktRFoSwGuWSs35+k1I4/m7y
-	 iMAMjtmvhCe70OGGRBhgibgADSJRbh5p+MjOZ5Mo=
+	b=kuNukuS6fyzkZKusQsLgp2p8/EQuTgbr8q7kAOLtV2YrUwOcQ9qLU04QOdG1DyXqj
+	 ey1yyyGYHVtvH1H2SJMW6F/qUWey2qPu7HCG67tfTKwQLVYFULoSo47PAUiqoBfcaQ
+	 L1yLkC2MAeppRyCIoKWFPdyZwWjbjx8sbCI4YhLk=
 Received: from ld50.lan (unknown [101.228.138.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 6939B60B17;
-	Wed, 26 Apr 2023 15:45:37 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 0421E600CE;
+	Wed, 26 Apr 2023 15:45:39 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v8 03/12] LoongArch: Print GPRs with ABI names when showing registers
-Date: Wed, 26 Apr 2023 15:45:16 +0800
-Message-Id: <20230426074525.3906327-4-kernel@xen0n.name>
+Subject: [PATCH v8 04/12] LoongArch: Print symbol info for CSR.ERA and $ra only for kernel-mode contexts
+Date: Wed, 26 Apr 2023 15:45:17 +0800
+Message-Id: <20230426074525.3906327-5-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230426074525.3906327-1-kernel@xen0n.name>
 References: <20230426074525.3906327-1-kernel@xen0n.name>
@@ -35,64 +35,46 @@ Content-Transfer-Encoding: 8bit
 
 From: WANG Xuerui <git@xen0n.name>
 
-Show PC (CSR.ERA) in place of $zero, and also show the syscall restart
-flag (conveniently stuffed in regs[0]) if non-zero.
+Otherwise the addresses wouldn't make sense at all.
+
+While at it, align the "map keys" to maintain right-alignment with the
+"estat:" line too; also swap the ERA and ra lines so all CSRs are shown
+together.
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/kernel/traps.c | 36 ++++++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 13 deletions(-)
+ arch/loongarch/kernel/traps.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 3fb4709c3b19..57768a6de1cf 100644
+index 57768a6de1cf..ab08548315b8 100644
 --- a/arch/loongarch/kernel/traps.c
 +++ b/arch/loongarch/kernel/traps.c
-@@ -158,22 +158,32 @@ static void __show_regs(const struct pt_regs *regs)
- 	const int field = 2 * sizeof(unsigned long);
- 	unsigned int excsubcode;
- 	unsigned int exccode;
--	int i;
- 
- 	show_regs_print_info(KERN_DEFAULT);
- 
--	/*
--	 * Saved main processor registers
--	 */
--	for (i = 0; i < 32; ) {
--		if ((i % 4) == 0)
--			printk("$%2d   :", i);
--		pr_cont(" %0*lx", field, regs->regs[i]);
--
--		i++;
--		if ((i % 4) == 0)
--			pr_cont("\n");
--	}
-+	/* Print saved GPRs except $zero (substituting with PC/ERA) */
-+#define GPR_FIELD(x) field, regs->regs[x]
-+	printk("pc %0*lx ra %0*lx tp %0*lx sp %0*lx\n",
-+	       field, regs->csr_era, GPR_FIELD(1), GPR_FIELD(2), GPR_FIELD(3));
-+	printk("a0 %0*lx a1 %0*lx a2 %0*lx a3 %0*lx\n",
-+	       GPR_FIELD(4), GPR_FIELD(5), GPR_FIELD(6), GPR_FIELD(7));
-+	printk("a4 %0*lx a5 %0*lx a6 %0*lx a7 %0*lx\n",
-+	       GPR_FIELD(8), GPR_FIELD(9), GPR_FIELD(10), GPR_FIELD(11));
-+	printk("t0 %0*lx t1 %0*lx t2 %0*lx t3 %0*lx\n",
-+	       GPR_FIELD(12), GPR_FIELD(13), GPR_FIELD(14), GPR_FIELD(15));
-+	printk("t4 %0*lx t5 %0*lx t6 %0*lx t7 %0*lx\n",
-+	       GPR_FIELD(16), GPR_FIELD(17), GPR_FIELD(18), GPR_FIELD(19));
-+	printk("t8 %0*lx u0 %0*lx s9 %0*lx s0 %0*lx\n",
-+	       GPR_FIELD(20), GPR_FIELD(21), GPR_FIELD(22), GPR_FIELD(23));
-+	printk("s1 %0*lx s2 %0*lx s3 %0*lx s4 %0*lx\n",
-+	       GPR_FIELD(24), GPR_FIELD(25), GPR_FIELD(26), GPR_FIELD(27));
-+	printk("s5 %0*lx s6 %0*lx s7 %0*lx s8 %0*lx\n",
-+	       GPR_FIELD(28), GPR_FIELD(29), GPR_FIELD(30), GPR_FIELD(31));
+@@ -183,16 +183,19 @@ static void __show_regs(const struct pt_regs *regs)
+ 	/* The slot for $zero is reused as the syscall restart flag */
+ 	if (regs->regs[0])
+ 		printk("syscall restart flag: %0*lx\n", GPR_FIELD(0));
 +
-+	/* The slot for $zero is reused as the syscall restart flag */
-+	if (regs->regs[0])
-+		printk("syscall restart flag: %0*lx\n", GPR_FIELD(0));
-+#undef GPR_FIELD
++	if (user_mode(regs)) {
++		printk("   ra: %0*lx\n", GPR_FIELD(1));
++		printk("  ERA: %0*lx\n", field, regs->csr_era);
++	} else {
++		printk("   ra: %0*lx %pS\n", GPR_FIELD(1), (void *) regs->regs[1]);
++		printk("  ERA: %0*lx %pS\n", field, regs->csr_era, (void *) regs->csr_era);
++	}
+ #undef GPR_FIELD
  
  	/*
  	 * Saved csr registers
+ 	 */
+-	printk("era   : %0*lx %pS\n", field, regs->csr_era,
+-	       (void *) regs->csr_era);
+-	printk("ra    : %0*lx %pS\n", field, regs->regs[1],
+-	       (void *) regs->regs[1]);
+-
+ 	printk("CSR crmd: %08lx	", regs->csr_crmd);
+ 	printk("CSR prmd: %08lx	", regs->csr_prmd);
+ 	printk("CSR euen: %08lx	", regs->csr_euen);
 -- 
 2.40.0
 
