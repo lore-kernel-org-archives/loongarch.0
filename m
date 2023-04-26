@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4B14110B
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6CAD111F
 	for <loongarch@lists.linux.dev>; Wed, 26 Apr 2023 01:49:24 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx9egeg0hkX9AAAA--.1396S3;
-	Wed, 26 Apr 2023 09:49:18 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxdfAcg0hkUdAAAA--.1502S3;
+	Wed, 26 Apr 2023 09:49:16 +0800 (CST)
 Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx97Uag0hkROI7AA--.15428S4;
-	Wed, 26 Apr 2023 09:49:17 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx97Uag0hkROI7AA--.15428S2;
+	Wed, 26 Apr 2023 09:49:14 +0800 (CST)
 From: Youling Tang <tangyouling@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -17,223 +17,84 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	linux-trace-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH 2/5] LoongArch: ftrace: Implement ftrace_find_callable_addr() to simplify code
-Date: Wed, 26 Apr 2023 09:49:11 +0800
-Message-Id: <1682473754-25077-3-git-send-email-tangyouling@loongson.cn>
+Subject: [PATCH 0/5] LoongArch: ftrace: Add direct call support code simplification
+Date: Wed, 26 Apr 2023 09:49:09 +0800
+Message-Id: <1682473754-25077-1-git-send-email-tangyouling@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1682473754-25077-1-git-send-email-tangyouling@loongson.cn>
-References: <1682473754-25077-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID:AQAAf8Dx97Uag0hkROI7AA--.15428S4
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3GrWxGw43uFyxAF48WrWxZwb_yoW7GrykpF
-	Zxtw15JrWjqFZ2gFZ2yr1DZr15KrykGa42qFW7K34Skw1DXF45ZFy7C3sxKa45t3ykWFW3
-	ZFWfAFW5CrW3X3JanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
-	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
-	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s02
-	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
-	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvE
-	c7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
-	07jz2NtUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Dx97Uag0hkROI7AA--.15428S2
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7uFWUJFWrWF4kJr1xXF15twb_yoW8trWDpr
+	W3uasrGF48AFsxWwsI9a45WF13t34xAFyDua15CryYkFyDur4UZrsayFZxG343J3s5GrW2
+	qFnrJw18KF13ZaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64
+	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I
+	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+	GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
+	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
+	4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
 
-In the module processing part, the same code is reused by implementing
-ftrace_find_callable_addr().
+[Patch 1-2]: Fix build errors and simplify code.
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
- arch/loongarch/kernel/ftrace_dyn.c | 120 +++++++++++++++--------------
- 1 file changed, 61 insertions(+), 59 deletions(-)
+[Patch 3-4]:
+This series adds DYNAMIC_FTRACE_WITH_DIRECT_CALLS support for LoongArch.
+SAMPLE_FTRACE_DIRECT and SAMPLE_FTRACE_DIRECT_MULTI are also included
+here as the samples for testing DIRECT_CALLS related interface.
 
-diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
-index c5f4b4681ddc..3cc4f8159f48 100644
---- a/arch/loongarch/kernel/ftrace_dyn.c
-+++ b/arch/loongarch/kernel/ftrace_dyn.c
-@@ -31,16 +31,11 @@ static int ftrace_modify_code(unsigned long pc, u32 old, u32 new, bool validate)
- }
- 
- #ifdef CONFIG_MODULES
--static inline int __get_mod(struct module **mod, unsigned long addr)
-+static bool reachable_by_bl(unsigned long addr, unsigned long pc)
- {
--	preempt_disable();
--	*mod = __module_text_address(addr);
--	preempt_enable();
-+	long offset = (long)addr - (long)pc;
- 
--	if (WARN_ON(!(*mod)))
--		return -EINVAL;
--
--	return 0;
-+	return offset >= -SZ_128M && offset < SZ_128M;
- }
- 
- static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
-@@ -56,18 +51,63 @@ static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
- 	return NULL;
- }
- 
--static unsigned long get_plt_addr(struct module *mod, unsigned long addr)
-+/*
-+ * Find the address the callsite must branch to in order to reach '*addr'.
-+ *
-+ * Due to the limited range of 'bl' instructions, modules may be placed too far
-+ * away to branch directly and must use a PLT.
-+ *
-+ * Returns true when '*addr' contains a reachable target address, or has been
-+ * modified to contain a PLT address. Returns false otherwise.
-+ */
-+static bool ftrace_find_callable_addr(struct dyn_ftrace *rec, struct module *mod,
-+				      unsigned long *addr)
- {
-+	unsigned long pc = rec->ip + LOONGARCH_INSN_SIZE;
- 	struct plt_entry *plt;
- 
--	plt = get_ftrace_plt(mod, addr);
-+	/*
-+	 * When the target is within range of the 'bl' instruction, use 'addr'
-+	 * as-is and branch to that directly.
-+	 */
-+	if (reachable_by_bl(*addr, pc))
-+		return true;
-+
-+	/*
-+	 * 'mod' is only set at module load time, but if we end up
-+	 * dealing with an out-of-range condition, we can assume it
-+	 * is due to a module being loaded far away from the kernel.
-+	 *
-+	 * NOTE: __module_text_address() must be called with preemption
-+	 * disabled, but we can rely on ftrace_lock to ensure that 'mod'
-+	 * retains its validity throughout the remainder of this code.
-+	 */
-+	if (!mod) {
-+		preempt_disable();
-+		mod = __module_text_address(pc);
-+		preempt_enable();
-+	}
-+
-+	if (WARN_ON(!mod))
-+		return false;
-+
-+	plt = get_ftrace_plt(mod, *addr);
- 	if (!plt) {
--		pr_err("ftrace: no module PLT for %ps\n", (void *)addr);
--		return -EINVAL;
-+		pr_err("ftrace: no module PLT for %ps\n", (void *)*addr);
-+		return false;
- 	}
- 
--	return (unsigned long)plt;
-+	*addr = (unsigned long)plt;
-+	return true;
- }
-+
-+#else /* !CONFIG_MODULES */
-+static bool ftrace_find_callable_addr(struct dyn_ftrace *rec, struct module *mod,
-+				      unsigned long *addr)
-+{
-+	return true;
-+}
-+
- #endif
- 
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-@@ -75,26 +115,14 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr, unsigned
- {
- 	u32 old, new;
- 	unsigned long pc;
--	long offset __maybe_unused;
- 
- 	pc = rec->ip + LOONGARCH_INSN_SIZE;
- 
--#ifdef CONFIG_MODULES
--	offset = (long)pc - (long)addr;
--
--	if (offset < -SZ_128M || offset >= SZ_128M) {
--		int ret;
--		struct module *mod;
--
--		ret = __get_mod(&mod, pc);
--		if (ret)
--			return ret;
--
--		addr = get_plt_addr(mod, addr);
-+	if (!ftrace_find_callable_addr(rec, NULL, &addr))
-+		return -EINVAL;
- 
--		old_addr = get_plt_addr(mod, old_addr);
--	}
--#endif
-+	if (!ftrace_find_callable_addr(rec, NULL, &old_addr))
-+		return -EINVAL;
- 
- 	new = larch_insn_gen_bl(pc, addr);
- 	old = larch_insn_gen_bl(pc, old_addr);
-@@ -151,24 +179,11 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
- {
- 	u32 old, new;
- 	unsigned long pc;
--	long offset __maybe_unused;
- 
- 	pc = rec->ip + LOONGARCH_INSN_SIZE;
- 
--#ifdef CONFIG_MODULES
--	offset = (long)pc - (long)addr;
--
--	if (offset < -SZ_128M || offset >= SZ_128M) {
--		int ret;
--		struct module *mod;
--
--		ret = __get_mod(&mod, pc);
--		if (ret)
--			return ret;
--
--		addr = get_plt_addr(mod, addr);
--	}
--#endif
-+	if (!ftrace_find_callable_addr(rec, NULL, &addr))
-+		return -EINVAL;
- 
- 	old = larch_insn_gen_nop();
- 	new = larch_insn_gen_bl(pc, addr);
-@@ -180,24 +195,11 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long ad
- {
- 	u32 old, new;
- 	unsigned long pc;
--	long offset __maybe_unused;
- 
- 	pc = rec->ip + LOONGARCH_INSN_SIZE;
- 
--#ifdef CONFIG_MODULES
--	offset = (long)pc - (long)addr;
--
--	if (offset < -SZ_128M || offset >= SZ_128M) {
--		int ret;
--		struct module *mod;
--
--		ret = __get_mod(&mod, pc);
--		if (ret)
--			return ret;
--
--		addr = get_plt_addr(mod, addr);
--	}
--#endif
-+	if (!ftrace_find_callable_addr(rec, NULL, &addr))
-+		return -EINVAL;
- 
- 	new = larch_insn_gen_nop();
- 	old = larch_insn_gen_bl(pc, addr);
+Part of the code refers to arm64 and riscv.
+
+The following tests have been passed in my local 3A5000 machine.
+ - ftrace*.ko
+ - tools/testing/selftests/ftrace/
+
+eg:
+[loongson@linux linux]$ sudo insmod samples/ftrace/ftrace-direct-too.ko
+[root@linux linux]# cat /sys/kernel/debug/tracing/trace | tail
+           rmmod-4552    [001] .....  3166.654540: 0xffff800002094040: handle mm fault vma=00000000d0dbdb16 address=7ffff2a793e8 flags=254
+           rmmod-4552    [001] .....  3166.654550: 0xffff800002094040: handle mm fault vma=0000000047694d8b address=555570700008 flags=255
+           rmmod-4552    [001] .....  3166.654557: 0xffff800002094040: handle mm fault vma=00000000d0dbdb16 address=7ffff29e6eb0 flags=254
+           rmmod-4552    [001] .....  3166.654561: 0xffff800002094040: handle mm fault vma=00000000d0dbdb16 address=7ffff297d480 flags=254
+
+[Patch 5]: Abstract DYNAMIC_FTRACE_WITH_ARGS accesses.
+Note: This patch depends on regs_set_return_value() in the patch
+"LoongArch: Add support for function error injection".
+
+Qing Zhang (1):
+  LoongArch: Abstract DYNAMIC_FTRACE_WITH_ARGS accesses
+
+Youling Tang (4):
+  LoongArch: Fix build error if CONFIG_DYNAMIC_FTRACE_WITH_REGS is not
+    set
+  LoongArch: ftrace: Implement ftrace_find_callable_addr() to simplify
+    code
+  LoongArch: ftrace: Add direct call support
+  LoongArch: ftrace: Add direct call trampoline samples support
+
+ arch/loongarch/Kconfig                      |   3 +
+ arch/loongarch/include/asm/ftrace.h         |  37 ++++++
+ arch/loongarch/kernel/ftrace_dyn.c          | 132 +++++++++++---------
+ arch/loongarch/kernel/mcount_dyn.S          |   7 +-
+ samples/ftrace/ftrace-direct-modify.c       |  34 +++++
+ samples/ftrace/ftrace-direct-multi-modify.c |  41 ++++++
+ samples/ftrace/ftrace-direct-multi.c        |  25 ++++
+ samples/ftrace/ftrace-direct-too.c          |  27 ++++
+ samples/ftrace/ftrace-direct.c              |  23 ++++
+ 9 files changed, 266 insertions(+), 63 deletions(-)
+
 -- 
 2.37.1
 
