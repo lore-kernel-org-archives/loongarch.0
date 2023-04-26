@@ -1,27 +1,27 @@
 Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1C81C05
-	for <loongarch@lists.linux.dev>; Wed, 26 Apr 2023 07:45:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC5A185D
+	for <loongarch@lists.linux.dev>; Wed, 26 Apr 2023 07:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1682495145; bh=L/AR4EX39PV+IunPdKoCcouGQqva3rRnO+FIcB/le74=;
+	t=1682495147; bh=m5ZZ/ikSLTWwF2zcfjKoPe9XBrOdI40zTyDPn/r8uQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YnVsUY9EIyXTh9DPgtBqJHTdyxx3yJDwG3+GWXlNF3mGslvkxKiVmCStgHSvgMSzS
-	 KF80K5GS4eLWQ8lXlz+NLWuyKJvfcVbA8vVtTF8nE8s3qFKcggNgGLRMo81LG4kxN8
-	 pUBiemOqLlSaX6SRrYwWjcow9wzP+jWxAxpwwm3M=
+	b=d6kpVCZH/nC7EAMzQgY2U7YO6dY0LfVWY8L0K64QOWfFj964y/PU9SfHmoPlxPvC0
+	 tlTOxwTwO9qxtUjCvx2H8g9iZCA8rK4EDgK7VNLEb3xpE9AZoMCYEIgt5zlHUnXVZk
+	 cX8Ovj9vWYjETffRoMJCZoe7vnAa58IbR4Q1VHWw=
 Received: from ld50.lan (unknown [101.228.138.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 577D1600CE;
-	Wed, 26 Apr 2023 15:45:45 +0800 (CST)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 2DB1C6014E;
+	Wed, 26 Apr 2023 15:45:47 +0800 (CST)
 From: WANG Xuerui <kernel@xen0n.name>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
 	WANG Xuerui <git@xen0n.name>
-Subject: [PATCH v8 08/12] LoongArch: Humanize the EUEN line when showing registers
-Date: Wed, 26 Apr 2023 15:45:21 +0800
-Message-Id: <20230426074525.3906327-9-kernel@xen0n.name>
+Subject: [PATCH v8 09/12] LoongArch: Humanize the ECFG line when showing registers
+Date: Wed, 26 Apr 2023 15:45:22 +0800
+Message-Id: <20230426074525.3906327-10-kernel@xen0n.name>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230426074525.3906327-1-kernel@xen0n.name>
 References: <20230426074525.3906327-1-kernel@xen0n.name>
@@ -37,43 +37,53 @@ From: WANG Xuerui <git@xen0n.name>
 
 Example output looks like:
 
-[   xx.xxxxxx]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
+[   xx.xxxxxx]  ECFG: 00071c1c (LIE=2-4,10-12 VS=7)
 
 Signed-off-by: WANG Xuerui <git@xen0n.name>
 ---
- arch/loongarch/kernel/traps.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/loongarch/kernel/traps.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 9f092e1cc782..bd6be798f81d 100644
+index bd6be798f81d..6376997f2ae9 100644
 --- a/arch/loongarch/kernel/traps.c
 +++ b/arch/loongarch/kernel/traps.c
-@@ -211,6 +211,16 @@ static void print_prmd(unsigned long x)
+@@ -189,6 +189,12 @@ static void print_memory_type_fragment(const char *key, unsigned long val)
+ 	pr_cont(" %s=%s", key, humanized_type);
+ }
+ 
++static void print_intr_fragment(const char *key, unsigned long val)
++{
++	/* e.g. "LIE=0-1,3,5-7" */
++	pr_cont("%s=%*pbl", key, EXCCODE_INT_NUM, &val);
++}
++
+ static void print_crmd(unsigned long x)
+ {
+ 	printk(" CRMD: %08lx (", x);
+@@ -221,6 +227,13 @@ static void print_euen(unsigned long x)
  	pr_cont(")\n");
  }
  
-+static void print_euen(unsigned long x)
++static void print_ecfg(unsigned long x)
 +{
-+	printk(" EUEN: %08lx (", x);
-+	print_bool_fragment("FPE", FIELD_GET(CSR_EUEN_FPEN, x), true);
-+	print_bool_fragment("SXE", FIELD_GET(CSR_EUEN_LSXEN, x), false);
-+	print_bool_fragment("ASXE", FIELD_GET(CSR_EUEN_LASXEN, x), false);
-+	print_bool_fragment("BTE", FIELD_GET(CSR_EUEN_LBTEN, x), false);
-+	pr_cont(")\n");
++	printk(" ECFG: %08lx (", x);
++	print_intr_fragment("LIE", FIELD_GET(CSR_ECFG_IM, x));
++	pr_cont(" VS=%d)\n", (int) FIELD_GET(CSR_ECFG_VS, x));
 +}
 +
  static void __show_regs(const struct pt_regs *regs)
  {
  	const int field = 2 * sizeof(unsigned long);
-@@ -254,7 +264,7 @@ static void __show_regs(const struct pt_regs *regs)
- 	/* Print saved important CSRs */
+@@ -265,7 +278,7 @@ static void __show_regs(const struct pt_regs *regs)
  	print_crmd(regs->csr_crmd);
  	print_prmd(regs->csr_prmd);
--	printk(" EUEN: %08lx\n", regs->csr_euen);
-+	print_euen(regs->csr_euen);
- 	printk(" ECFG: %08lx\n", regs->csr_ecfg);
+ 	print_euen(regs->csr_euen);
+-	printk(" ECFG: %08lx\n", regs->csr_ecfg);
++	print_ecfg(regs->csr_ecfg);
  	printk("ESTAT: %08lx\n", regs->csr_estat);
  
+ 	exccode = ((regs->csr_estat) & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
 -- 
 2.40.0
 
