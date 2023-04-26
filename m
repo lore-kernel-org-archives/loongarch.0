@@ -1,63 +1,239 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9313C33E5
-	for <loongarch@lists.linux.dev>; Tue, 25 Apr 2023 18:55:19 +0000 (UTC)
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-187b70ab997so32797901fac.0
-        for <loongarch@lists.linux.dev>; Tue, 25 Apr 2023 11:55:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682448918; x=1685040918;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LUVIEnaXOkJ1tFgH9AeXar4KfvKOEaKKLJ3vhZHk8mY=;
-        b=ZLkcSndngyzZDOCEBtoHV0Km8V/GCimE8K8XuBl9rbRAkwd+RkU8LhxTqIGQg04uE8
-         Na3e1VV9J/KIHhk4ngk1ci715PhPnEKt5xqLqOAAltwqFtdfsZ9N6La/WJ6S0uEnn194
-         vQQKBtERzMjC2LxK3oiHecszJ4IqQS/31SQeQwpB1Up4mE/cBImsUnSriLgDktRcndX5
-         80viuVeCXJdhvXw0emcpJCo90b8qnbRyQmHBbpwYE5S+avZRVhkjGMxEsejl/lHK+QmN
-         f2ZdvjSL+kdDQlC3fBTMuPAUG67meOeaF4ET95Qb9JNVgU0JPVP5oDS/ZriX4cD9G6uJ
-         yHtw==
-X-Gm-Message-State: AAQBX9fI32akbJ9bK5QoIrKZ7FOTmyb331RfC+KF+NUkloOLw0M3RSn+
-	DIgRyR5XEDPCDduUNfN7Xg==
-X-Google-Smtp-Source: AKy350YhPbP4S0aK9DNndj5vp2UAbhUr/VFFpoNmKCnoLDBKVTCrqXLdcK5AjOK9AB8lNe10G1smng==
-X-Received: by 2002:a05:6830:1e75:b0:6a6:463a:1a0b with SMTP id m21-20020a0568301e7500b006a6463a1a0bmr6587841otr.1.1682448918510;
-        Tue, 25 Apr 2023 11:55:18 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id l2-20020a05683004a200b006a43519523fsm1418611otd.1.2023.04.25.11.55.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Apr 2023 11:55:18 -0700 (PDT)
-Received: (nullmailer pid 2080148 invoked by uid 1000);
-	Tue, 25 Apr 2023 18:55:16 -0000
-Date: Tue, 25 Apr 2023 13:55:16 -0500
-From: Rob Herring <robh@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Marc Zyngier <maz@kernel.org>, loongarch@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>, linux-kernel@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, loongson-kernel@lists.loongnix.cn, linux-mips@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>
-Subject: Re: [PATCH V4 1/2] dt-bindings: interrupt-controller: Add Loongson
- EIOINTC
-Message-ID: <168244891614.2080093.10385024053617861631.robh@kernel.org>
-References: <cover.1682328016.git.zhoubinbin@loongson.cn>
- <c45c402c1a524c89cbde6e1e42caaf04650ee480.1682328016.git.zhoubinbin@loongson.cn>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4B14110B
+	for <loongarch@lists.linux.dev>; Wed, 26 Apr 2023 01:49:24 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx9egeg0hkX9AAAA--.1396S3;
+	Wed, 26 Apr 2023 09:49:18 +0800 (CST)
+Received: from bogon.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx97Uag0hkROI7AA--.15428S4;
+	Wed, 26 Apr 2023 09:49:17 +0800 (CST)
+From: Youling Tang <tangyouling@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH 2/5] LoongArch: ftrace: Implement ftrace_find_callable_addr() to simplify code
+Date: Wed, 26 Apr 2023 09:49:11 +0800
+Message-Id: <1682473754-25077-3-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1682473754-25077-1-git-send-email-tangyouling@loongson.cn>
+References: <1682473754-25077-1-git-send-email-tangyouling@loongson.cn>
+X-CM-TRANSID:AQAAf8Dx97Uag0hkROI7AA--.15428S4
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3GrWxGw43uFyxAF48WrWxZwb_yoW7GrykpF
+	Zxtw15JrWjqFZ2gFZ2yr1DZr15KrykGa42qFW7K34Skw1DXF45ZFy7C3sxKa45t3ykWFW3
+	ZFWfAFW5CrW3X3JanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
+	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s02
+	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
+	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvE
+	c7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
+	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
+	07jz2NtUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c45c402c1a524c89cbde6e1e42caaf04650ee480.1682328016.git.zhoubinbin@loongson.cn>
 
+In the module processing part, the same code is reused by implementing
+ftrace_find_callable_addr().
 
-On Mon, 24 Apr 2023 20:49:11 +0800, Binbin Zhou wrote:
-> Add Loongson Extended I/O Interrupt controller binding with DT schema
-> format using json-schema.
-> 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  .../loongson,eiointc.yaml                     | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
-> 
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+---
+ arch/loongarch/kernel/ftrace_dyn.c | 120 +++++++++++++++--------------
+ 1 file changed, 61 insertions(+), 59 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
+index c5f4b4681ddc..3cc4f8159f48 100644
+--- a/arch/loongarch/kernel/ftrace_dyn.c
++++ b/arch/loongarch/kernel/ftrace_dyn.c
+@@ -31,16 +31,11 @@ static int ftrace_modify_code(unsigned long pc, u32 old, u32 new, bool validate)
+ }
+ 
+ #ifdef CONFIG_MODULES
+-static inline int __get_mod(struct module **mod, unsigned long addr)
++static bool reachable_by_bl(unsigned long addr, unsigned long pc)
+ {
+-	preempt_disable();
+-	*mod = __module_text_address(addr);
+-	preempt_enable();
++	long offset = (long)addr - (long)pc;
+ 
+-	if (WARN_ON(!(*mod)))
+-		return -EINVAL;
+-
+-	return 0;
++	return offset >= -SZ_128M && offset < SZ_128M;
+ }
+ 
+ static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
+@@ -56,18 +51,63 @@ static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
+ 	return NULL;
+ }
+ 
+-static unsigned long get_plt_addr(struct module *mod, unsigned long addr)
++/*
++ * Find the address the callsite must branch to in order to reach '*addr'.
++ *
++ * Due to the limited range of 'bl' instructions, modules may be placed too far
++ * away to branch directly and must use a PLT.
++ *
++ * Returns true when '*addr' contains a reachable target address, or has been
++ * modified to contain a PLT address. Returns false otherwise.
++ */
++static bool ftrace_find_callable_addr(struct dyn_ftrace *rec, struct module *mod,
++				      unsigned long *addr)
+ {
++	unsigned long pc = rec->ip + LOONGARCH_INSN_SIZE;
+ 	struct plt_entry *plt;
+ 
+-	plt = get_ftrace_plt(mod, addr);
++	/*
++	 * When the target is within range of the 'bl' instruction, use 'addr'
++	 * as-is and branch to that directly.
++	 */
++	if (reachable_by_bl(*addr, pc))
++		return true;
++
++	/*
++	 * 'mod' is only set at module load time, but if we end up
++	 * dealing with an out-of-range condition, we can assume it
++	 * is due to a module being loaded far away from the kernel.
++	 *
++	 * NOTE: __module_text_address() must be called with preemption
++	 * disabled, but we can rely on ftrace_lock to ensure that 'mod'
++	 * retains its validity throughout the remainder of this code.
++	 */
++	if (!mod) {
++		preempt_disable();
++		mod = __module_text_address(pc);
++		preempt_enable();
++	}
++
++	if (WARN_ON(!mod))
++		return false;
++
++	plt = get_ftrace_plt(mod, *addr);
+ 	if (!plt) {
+-		pr_err("ftrace: no module PLT for %ps\n", (void *)addr);
+-		return -EINVAL;
++		pr_err("ftrace: no module PLT for %ps\n", (void *)*addr);
++		return false;
+ 	}
+ 
+-	return (unsigned long)plt;
++	*addr = (unsigned long)plt;
++	return true;
+ }
++
++#else /* !CONFIG_MODULES */
++static bool ftrace_find_callable_addr(struct dyn_ftrace *rec, struct module *mod,
++				      unsigned long *addr)
++{
++	return true;
++}
++
+ #endif
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+@@ -75,26 +115,14 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr, unsigned
+ {
+ 	u32 old, new;
+ 	unsigned long pc;
+-	long offset __maybe_unused;
+ 
+ 	pc = rec->ip + LOONGARCH_INSN_SIZE;
+ 
+-#ifdef CONFIG_MODULES
+-	offset = (long)pc - (long)addr;
+-
+-	if (offset < -SZ_128M || offset >= SZ_128M) {
+-		int ret;
+-		struct module *mod;
+-
+-		ret = __get_mod(&mod, pc);
+-		if (ret)
+-			return ret;
+-
+-		addr = get_plt_addr(mod, addr);
++	if (!ftrace_find_callable_addr(rec, NULL, &addr))
++		return -EINVAL;
+ 
+-		old_addr = get_plt_addr(mod, old_addr);
+-	}
+-#endif
++	if (!ftrace_find_callable_addr(rec, NULL, &old_addr))
++		return -EINVAL;
+ 
+ 	new = larch_insn_gen_bl(pc, addr);
+ 	old = larch_insn_gen_bl(pc, old_addr);
+@@ -151,24 +179,11 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ {
+ 	u32 old, new;
+ 	unsigned long pc;
+-	long offset __maybe_unused;
+ 
+ 	pc = rec->ip + LOONGARCH_INSN_SIZE;
+ 
+-#ifdef CONFIG_MODULES
+-	offset = (long)pc - (long)addr;
+-
+-	if (offset < -SZ_128M || offset >= SZ_128M) {
+-		int ret;
+-		struct module *mod;
+-
+-		ret = __get_mod(&mod, pc);
+-		if (ret)
+-			return ret;
+-
+-		addr = get_plt_addr(mod, addr);
+-	}
+-#endif
++	if (!ftrace_find_callable_addr(rec, NULL, &addr))
++		return -EINVAL;
+ 
+ 	old = larch_insn_gen_nop();
+ 	new = larch_insn_gen_bl(pc, addr);
+@@ -180,24 +195,11 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long ad
+ {
+ 	u32 old, new;
+ 	unsigned long pc;
+-	long offset __maybe_unused;
+ 
+ 	pc = rec->ip + LOONGARCH_INSN_SIZE;
+ 
+-#ifdef CONFIG_MODULES
+-	offset = (long)pc - (long)addr;
+-
+-	if (offset < -SZ_128M || offset >= SZ_128M) {
+-		int ret;
+-		struct module *mod;
+-
+-		ret = __get_mod(&mod, pc);
+-		if (ret)
+-			return ret;
+-
+-		addr = get_plt_addr(mod, addr);
+-	}
+-#endif
++	if (!ftrace_find_callable_addr(rec, NULL, &addr))
++		return -EINVAL;
+ 
+ 	new = larch_insn_gen_nop();
+ 	old = larch_insn_gen_bl(pc, addr);
+-- 
+2.37.1
 
