@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C19015B2
-	for <loongarch@lists.linux.dev>; Thu, 27 Apr 2023 02:12:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCEE815A6
+	for <loongarch@lists.linux.dev>; Thu, 27 Apr 2023 02:12:48 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxSuoX2klk0F4BAA--.2348S3;
-	Thu, 27 Apr 2023 10:12:39 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxVPAe2klk6F4BAA--.2314S3;
+	Thu, 27 Apr 2023 10:12:46 +0800 (CST)
 Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqrYQ2klkZ_U9AA--.18515S4;
-	Thu, 27 Apr 2023 10:12:37 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqrYQ2klkZ_U9AA--.18515S7;
+	Thu, 27 Apr 2023 10:12:45 +0800 (CST)
 From: Youling Tang <tangyouling@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -16,224 +16,90 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v2 2/5] LoongArch: ftrace: Implement ftrace_find_callable_addr() to simplify code
-Date: Thu, 27 Apr 2023 10:12:29 +0800
-Message-Id: <1682561552-32324-3-git-send-email-tangyouling@loongson.cn>
+	loongson-kernel@lists.loongnix.cn,
+	Qing Zhang <zhangqing@loongson.cn>
+Subject: [PATCH v2 5/5] LoongArch: Abstract DYNAMIC_FTRACE_WITH_ARGS accesses
+Date: Thu, 27 Apr 2023 10:12:32 +0800
+Message-Id: <1682561552-32324-6-git-send-email-tangyouling@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1682561552-32324-1-git-send-email-tangyouling@loongson.cn>
 References: <1682561552-32324-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID:AQAAf8CxqrYQ2klkZ_U9AA--.18515S4
+X-CM-TRANSID:AQAAf8CxqrYQ2klkZ_U9AA--.18515S7
 X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3GrWxGw43uFyxAF48WrWxZwb_yoW7GrykpF
-	Zxtw15JrWjqFZ2gFZ2yr1DZr15KrykGa42qFW7K34Skw1DXF45ZFy7C3sxKa45t3ykWFW3
-	ZFWfAFW5CrW3X3JanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7uw1xCF1xJFWDJrWfWFWrAFb_yoW8uw48pr
+	ySk3Z8GFW7CFs2k3W29F15Xr1rJryrAry8CryIkw13AFn8Jw18Zry3uryqyrWUtayxJrWa
+	vF1akwsxWrn09a7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	ba8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
 	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2Iq
-	xVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r
-	1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY
-	6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
-	AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuY
-	vjxU4AhLUUUUU
+	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
+	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
+	M2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
+	CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2
+	z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I
+	3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxV
+	WUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8I
+	cVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aV
+	AFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZE
+	Xa7IU0E38UUUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-In the module processing part, the same code is reused by implementing
-ftrace_find_callable_addr().
+From: Qing Zhang <zhangqing@loongson.cn>
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+1. Adds new ftrace_regs_{get,set}_*() helpers which can be used to manipulate
+ftrace_regs. When CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS=y, these can always
+be used on any ftrace_regs, and when CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS=n
+these can be used when regs are available. A new ftrace_regs_has_args(fregs)
+helper is added which code can use to check when these are usable.
+
+2. Prepare ftrace_regs_set_instruction_pointer support in advance.
+
+Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
 ---
- arch/loongarch/kernel/ftrace_dyn.c | 120 +++++++++++++++--------------
- 1 file changed, 61 insertions(+), 59 deletions(-)
+ arch/loongarch/include/asm/ftrace.h | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
-index c5f4b4681ddc..3cc4f8159f48 100644
---- a/arch/loongarch/kernel/ftrace_dyn.c
-+++ b/arch/loongarch/kernel/ftrace_dyn.c
-@@ -31,16 +31,11 @@ static int ftrace_modify_code(unsigned long pc, u32 old, u32 new, bool validate)
+diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
+index f789e680f633..30ee01243416 100644
+--- a/arch/loongarch/include/asm/ftrace.h
++++ b/arch/loongarch/include/asm/ftrace.h
+@@ -54,6 +54,31 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
+ 	return &fregs->regs;
  }
  
- #ifdef CONFIG_MODULES
--static inline int __get_mod(struct module **mod, unsigned long addr)
-+static bool reachable_by_bl(unsigned long addr, unsigned long pc)
- {
--	preempt_disable();
--	*mod = __module_text_address(addr);
--	preempt_enable();
-+	long offset = (long)addr - (long)pc;
- 
--	if (WARN_ON(!(*mod)))
--		return -EINVAL;
--
--	return 0;
-+	return offset >= -SZ_128M && offset < SZ_128M;
- }
- 
- static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
-@@ -56,18 +51,63 @@ static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
- 	return NULL;
- }
- 
--static unsigned long get_plt_addr(struct module *mod, unsigned long addr)
-+/*
-+ * Find the address the callsite must branch to in order to reach '*addr'.
-+ *
-+ * Due to the limited range of 'bl' instructions, modules may be placed too far
-+ * away to branch directly and must use a PLT.
-+ *
-+ * Returns true when '*addr' contains a reachable target address, or has been
-+ * modified to contain a PLT address. Returns false otherwise.
-+ */
-+static bool ftrace_find_callable_addr(struct dyn_ftrace *rec, struct module *mod,
-+				      unsigned long *addr)
- {
-+	unsigned long pc = rec->ip + LOONGARCH_INSN_SIZE;
- 	struct plt_entry *plt;
- 
--	plt = get_ftrace_plt(mod, addr);
-+	/*
-+	 * When the target is within range of the 'bl' instruction, use 'addr'
-+	 * as-is and branch to that directly.
-+	 */
-+	if (reachable_by_bl(*addr, pc))
-+		return true;
-+
-+	/*
-+	 * 'mod' is only set at module load time, but if we end up
-+	 * dealing with an out-of-range condition, we can assume it
-+	 * is due to a module being loaded far away from the kernel.
-+	 *
-+	 * NOTE: __module_text_address() must be called with preemption
-+	 * disabled, but we can rely on ftrace_lock to ensure that 'mod'
-+	 * retains its validity throughout the remainder of this code.
-+	 */
-+	if (!mod) {
-+		preempt_disable();
-+		mod = __module_text_address(pc);
-+		preempt_enable();
-+	}
-+
-+	if (WARN_ON(!mod))
-+		return false;
-+
-+	plt = get_ftrace_plt(mod, *addr);
- 	if (!plt) {
--		pr_err("ftrace: no module PLT for %ps\n", (void *)addr);
--		return -EINVAL;
-+		pr_err("ftrace: no module PLT for %ps\n", (void *)*addr);
-+		return false;
- 	}
- 
--	return (unsigned long)plt;
-+	*addr = (unsigned long)plt;
-+	return true;
- }
-+
-+#else /* !CONFIG_MODULES */
-+static bool ftrace_find_callable_addr(struct dyn_ftrace *rec, struct module *mod,
-+				      unsigned long *addr)
++static __always_inline void
++ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
++				    unsigned long ip)
 +{
-+	return true;
++	regs_set_return_value(&fregs->regs, ip);
 +}
 +
- #endif
- 
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-@@ -75,26 +115,14 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr, unsigned
- {
- 	u32 old, new;
- 	unsigned long pc;
--	long offset __maybe_unused;
- 
- 	pc = rec->ip + LOONGARCH_INSN_SIZE;
- 
--#ifdef CONFIG_MODULES
--	offset = (long)pc - (long)addr;
--
--	if (offset < -SZ_128M || offset >= SZ_128M) {
--		int ret;
--		struct module *mod;
--
--		ret = __get_mod(&mod, pc);
--		if (ret)
--			return ret;
--
--		addr = get_plt_addr(mod, addr);
-+	if (!ftrace_find_callable_addr(rec, NULL, &addr))
-+		return -EINVAL;
- 
--		old_addr = get_plt_addr(mod, old_addr);
--	}
--#endif
-+	if (!ftrace_find_callable_addr(rec, NULL, &old_addr))
-+		return -EINVAL;
- 
- 	new = larch_insn_gen_bl(pc, addr);
- 	old = larch_insn_gen_bl(pc, old_addr);
-@@ -151,24 +179,11 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
- {
- 	u32 old, new;
- 	unsigned long pc;
--	long offset __maybe_unused;
- 
- 	pc = rec->ip + LOONGARCH_INSN_SIZE;
- 
--#ifdef CONFIG_MODULES
--	offset = (long)pc - (long)addr;
--
--	if (offset < -SZ_128M || offset >= SZ_128M) {
--		int ret;
--		struct module *mod;
--
--		ret = __get_mod(&mod, pc);
--		if (ret)
--			return ret;
--
--		addr = get_plt_addr(mod, addr);
--	}
--#endif
-+	if (!ftrace_find_callable_addr(rec, NULL, &addr))
-+		return -EINVAL;
- 
- 	old = larch_insn_gen_nop();
- 	new = larch_insn_gen_bl(pc, addr);
-@@ -180,24 +195,11 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long ad
- {
- 	u32 old, new;
- 	unsigned long pc;
--	long offset __maybe_unused;
- 
- 	pc = rec->ip + LOONGARCH_INSN_SIZE;
- 
--#ifdef CONFIG_MODULES
--	offset = (long)pc - (long)addr;
--
--	if (offset < -SZ_128M || offset >= SZ_128M) {
--		int ret;
--		struct module *mod;
--
--		ret = __get_mod(&mod, pc);
--		if (ret)
--			return ret;
--
--		addr = get_plt_addr(mod, addr);
--	}
--#endif
-+	if (!ftrace_find_callable_addr(rec, NULL, &addr))
-+		return -EINVAL;
- 
- 	new = larch_insn_gen_nop();
- 	old = larch_insn_gen_bl(pc, addr);
++static __always_inline unsigned long
++ftrace_regs_get_instruction_pointer(struct ftrace_regs *fregs)
++{
++	return instruction_pointer(&fregs->regs);
++}
++
++#define ftrace_regs_get_argument(fregs, n) \
++	regs_get_kernel_argument(&(fregs)->regs, n)
++#define ftrace_regs_get_stack_pointer(fregs) \
++	kernel_stack_pointer(&(fregs)->regs)
++#define ftrace_regs_return_value(fregs) \
++	regs_return_value(&(fregs)->regs)
++#define ftrace_regs_set_return_value(fregs, ret) \
++	regs_set_return_value(&(fregs)->regs, ret)
++#define ftrace_override_function_with_return(fregs) \
++	override_function_with_return(&(fregs)->regs)
++#define ftrace_regs_query_register_offset(name) \
++
+ #define ftrace_graph_func ftrace_graph_func
+ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+ 		       struct ftrace_ops *op, struct ftrace_regs *fregs);
 -- 
 2.37.1
 
