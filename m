@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE65915A6
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 251A715B1
 	for <loongarch@lists.linux.dev>; Thu, 27 Apr 2023 02:12:45 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxKuoV2klkxV4BAA--.2334S3;
-	Thu, 27 Apr 2023 10:12:37 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxOuoc2klk4F4BAA--.2303S3;
+	Thu, 27 Apr 2023 10:12:44 +0800 (CST)
 Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqrYQ2klkZ_U9AA--.18515S2;
-	Thu, 27 Apr 2023 10:12:33 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqrYQ2klkZ_U9AA--.18515S6;
+	Thu, 27 Apr 2023 10:12:42 +0800 (CST)
 From: Youling Tang <tangyouling@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -16,90 +16,272 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v2 0/5] LoongArch: ftrace: Add direct call support and code simplification
-Date: Thu, 27 Apr 2023 10:12:27 +0800
-Message-Id: <1682561552-32324-1-git-send-email-tangyouling@loongson.cn>
+	loongson-kernel@lists.loongnix.cn,
+	Qing Zhang <zhangqing@loongson.cn>
+Subject: [PATCH v2 4/5] LoongArch: ftrace: Add direct call trampoline samples support
+Date: Thu, 27 Apr 2023 10:12:31 +0800
+Message-Id: <1682561552-32324-5-git-send-email-tangyouling@loongson.cn>
 X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1682561552-32324-1-git-send-email-tangyouling@loongson.cn>
+References: <1682561552-32324-1-git-send-email-tangyouling@loongson.cn>
+X-CM-TRANSID:AQAAf8CxqrYQ2klkZ_U9AA--.18515S6
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3JrW3XFW7JF4UZFW5CFyrXrb_yoWxWrW8pF
+	WxurZ3G3WFyFsrKas7ua4xWF17Xry8u3y7KasxAa4jvasIk3yDJrW7Krn7AryxJr13ZFZ7
+	XFyUZryYkF4UZaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	ba8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
+	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
+	M2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
+	CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2
+	z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I
+	3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxV
+	WUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8I
+	cVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aV
+	AFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZE
+	Xa7IU8EeHDUUUUU==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxqrYQ2klkZ_U9AA--.18515S2
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7uFWUJFWrWF4kJr1xXF15twb_yoW8tFW5pr
-	W3uasrGF48AFsxWwsI9a45WF13t34xAFyDZa15CryYkFyDur4UZrsayFZxG343J3s5G3y2
-	qFnrJw18KF13ZaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b3xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
-	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2
-	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
-	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s02
-	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
-	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvE
-	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
-	U8sL05UUUUU==
 
-[Patch 1-2]: Fix build errors and simplify code.
+The ftrace samples need per-architecture trampoline implementations
+to save and restore argument registers around the calls to
+my_direct_func* and to restore polluted registers (eg: ra).
 
-[Patch 3-4]:
-This series adds DYNAMIC_FTRACE_WITH_DIRECT_CALLS support for LoongArch.
-SAMPLE_FTRACE_DIRECT and SAMPLE_FTRACE_DIRECT_MULTI are also included
-here as the samples for testing DIRECT_CALLS related interface.
+Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+---
+ arch/loongarch/Kconfig                      |  2 +
+ samples/ftrace/ftrace-direct-modify.c       | 34 +++++++++++++++++
+ samples/ftrace/ftrace-direct-multi-modify.c | 41 +++++++++++++++++++++
+ samples/ftrace/ftrace-direct-multi.c        | 25 +++++++++++++
+ samples/ftrace/ftrace-direct-too.c          | 27 ++++++++++++++
+ samples/ftrace/ftrace-direct.c              | 23 ++++++++++++
+ 6 files changed, 152 insertions(+)
 
-Part of the code refers to arm64 and riscv.
-
-The following tests have been passed in my local 3A5000 machine.
- - ftrace*.ko
- - tools/testing/selftests/ftrace/
-
-eg:
-[loongson@linux linux]$ sudo insmod samples/ftrace/ftrace-direct-too.ko
-[root@linux linux]# cat /sys/kernel/debug/tracing/trace | tail
-           rmmod-4552    [001] .....  3166.654540: 0xffff800002094040: handle mm fault vma=00000000d0dbdb16 address=7ffff2a793e8 flags=254
-           rmmod-4552    [001] .....  3166.654550: 0xffff800002094040: handle mm fault vma=0000000047694d8b address=555570700008 flags=255
-           rmmod-4552    [001] .....  3166.654557: 0xffff800002094040: handle mm fault vma=00000000d0dbdb16 address=7ffff29e6eb0 flags=254
-           rmmod-4552    [001] .....  3166.654561: 0xffff800002094040: handle mm fault vma=00000000d0dbdb16 address=7ffff297d480 flags=254
-
-[Patch 5]: Abstract DYNAMIC_FTRACE_WITH_ARGS accesses.
-Note: This patch depends on regs_set_return_value() in the patch
-"LoongArch: Add support for function error injection".
-
-
-Changes in v2:
- - Rewrite commit message.
-
-Qing Zhang (1):
-  LoongArch: Abstract DYNAMIC_FTRACE_WITH_ARGS accesses
-
-Youling Tang (4):
-  LoongArch: Fix build error if CONFIG_DYNAMIC_FTRACE_WITH_REGS is not
-    set
-  LoongArch: ftrace: Implement ftrace_find_callable_addr() to simplify
-    code
-  LoongArch: ftrace: Add direct call support
-  LoongArch: ftrace: Add direct call trampoline samples support
-
- arch/loongarch/Kconfig                      |   3 +
- arch/loongarch/include/asm/ftrace.h         |  37 ++++++
- arch/loongarch/kernel/ftrace_dyn.c          | 132 +++++++++++---------
- arch/loongarch/kernel/mcount_dyn.S          |   7 +-
- samples/ftrace/ftrace-direct-modify.c       |  34 +++++
- samples/ftrace/ftrace-direct-multi-modify.c |  41 ++++++
- samples/ftrace/ftrace-direct-multi.c        |  25 ++++
- samples/ftrace/ftrace-direct-too.c          |  27 ++++
- samples/ftrace/ftrace-direct.c              |  23 ++++
- 9 files changed, 266 insertions(+), 63 deletions(-)
-
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index b4e039729bc7..5e87eb686ed3 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -122,6 +122,8 @@ config LOONGARCH
+ 	select HAVE_PERF_USER_STACK_DUMP
+ 	select HAVE_REGS_AND_STACK_ACCESS_API
+ 	select HAVE_RSEQ
++	select HAVE_SAMPLE_FTRACE_DIRECT
++	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+ 	select HAVE_SETUP_PER_CPU_AREA if NUMA
+ 	select HAVE_STACKPROTECTOR
+ 	select HAVE_SYSCALL_TRACEPOINTS
+diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
+index d93abbcb1f4c..ca72c3b710eb 100644
+--- a/samples/ftrace/ftrace-direct-modify.c
++++ b/samples/ftrace/ftrace-direct-modify.c
+@@ -96,6 +96,40 @@ asm (
+ 
+ #endif /* CONFIG_S390 */
+ 
++#ifdef CONFIG_LOONGARCH
++
++asm (
++"	.pushsection    .text, \"ax\", @progbits\n"
++"	.type		my_tramp1, @function\n"
++"	.globl		my_tramp1\n"
++"   my_tramp1:\n"
++"	addi.d	$sp, $sp, -16\n"
++"	st.d	$t0, $sp, 0\n"
++"	st.d	$ra, $sp, 8\n"
++"	bl	my_direct_func1\n"
++"	ld.d	$t0, $sp, 0\n"
++"	ld.d	$ra, $sp, 8\n"
++"	addi.d	$sp, $sp, 16\n"
++"	jr	$t0\n"
++"	.size		my_tramp1, .-my_tramp1\n"
++
++"	.type		my_tramp2, @function\n"
++"	.globl		my_tramp2\n"
++"   my_tramp2:\n"
++"	addi.d	$sp, $sp, -16\n"
++"	st.d	$t0, $sp, 0\n"
++"	st.d	$ra, $sp, 8\n"
++"	bl	my_direct_func2\n"
++"	ld.d	$t0, $sp, 0\n"
++"	ld.d	$ra, $sp, 8\n"
++"	addi.d	$sp, $sp, 16\n"
++"	jr	$t0\n"
++"	.size		my_tramp2, .-my_tramp2\n"
++"	.popsection\n"
++);
++
++#endif /* CONFIG_LOONGARCH */
++
+ static unsigned long my_tramp = (unsigned long)my_tramp1;
+ static unsigned long tramps[2] = {
+ 	(unsigned long)my_tramp1,
+diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
+index b58c594efb51..4708c24d47c6 100644
+--- a/samples/ftrace/ftrace-direct-multi-modify.c
++++ b/samples/ftrace/ftrace-direct-multi-modify.c
+@@ -103,6 +103,47 @@ asm (
+ 
+ #endif /* CONFIG_S390 */
+ 
++#ifdef CONFIG_LOONGARCH
++#include <asm/asm.h>
++
++asm (
++"	.pushsection    .text, \"ax\", @progbits\n"
++"	.type		my_tramp1, @function\n"
++"	.globl		my_tramp1\n"
++"   my_tramp1:\n"
++"	addi.d	$sp, $sp, -32\n"
++"	st.d	$a0, $sp, 0\n"
++"	st.d	$t0, $sp, 8\n"
++"	st.d	$ra, $sp, 16\n"
++"	move	$a0, $t0\n"
++"	bl	my_direct_func1\n"
++"	ld.d	$a0, $sp, 0\n"
++"	ld.d	$t0, $sp, 8\n"
++"	ld.d	$ra, $sp, 16\n"
++"	addi.d	$sp, $sp, 32\n"
++"	jr	$t0\n"
++"	.size		my_tramp1, .-my_tramp1\n"
++
++"	.type		my_tramp2, @function\n"
++"	.globl		my_tramp2\n"
++"   my_tramp2:\n"
++"	addi.d	$sp, $sp, -32\n"
++"	st.d	$a0, $sp, 0\n"
++"	st.d	$t0, $sp, 8\n"
++"	st.d	$ra, $sp, 16\n"
++"	move	$a0, $t0\n"
++"	bl	my_direct_func2\n"
++"	ld.d	$a0, $sp, 0\n"
++"	ld.d	$t0, $sp, 8\n"
++"	ld.d	$ra, $sp, 16\n"
++"	addi.d	$sp, $sp, 32\n"
++"	jr	$t0\n"
++"	.size		my_tramp2, .-my_tramp2\n"
++"	.popsection\n"
++);
++
++#endif /* CONFIG_LOONGARCH */
++
+ static unsigned long my_tramp = (unsigned long)my_tramp1;
+ static unsigned long tramps[2] = {
+ 	(unsigned long)my_tramp1,
+diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
+index c27cf130c319..c2f1652c67bc 100644
+--- a/samples/ftrace/ftrace-direct-multi.c
++++ b/samples/ftrace/ftrace-direct-multi.c
+@@ -66,6 +66,31 @@ asm (
+ 
+ #endif /* CONFIG_S390 */
+ 
++#ifdef CONFIG_LOONGARCH
++
++#include <asm/asm.h>
++asm (
++"	.pushsection	.text, \"ax\", @progbits\n"
++"	.type		my_tramp, @function\n"
++"	.globl		my_tramp\n"
++"   my_tramp:\n"
++"	addi.d	$sp, $sp, -32\n"
++"	st.d	$a0, $sp, 0\n"
++"	st.d	$t0, $sp, 8\n"
++"	st.d	$ra, $sp, 16\n"
++"	move	$a0, $t0\n"
++"	bl	my_direct_func\n"
++"	ld.d	$a0, $sp, 0\n"
++"	ld.d	$t0, $sp, 8\n"
++"	ld.d	$ra, $sp, 16\n"
++"	addi.d	$sp, $sp, 32\n"
++"	jr	$t0\n"
++"	.size		my_tramp, .-my_tramp\n"
++"	.popsection\n"
++);
++
++#endif /* CONFIG_LOONGARCH */
++
+ static struct ftrace_ops direct;
+ 
+ static int __init ftrace_direct_multi_init(void)
+diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
+index 8139dce2a31c..ef64d7509773 100644
+--- a/samples/ftrace/ftrace-direct-too.c
++++ b/samples/ftrace/ftrace-direct-too.c
+@@ -70,6 +70,33 @@ asm (
+ 
+ #endif /* CONFIG_S390 */
+ 
++#ifdef CONFIG_LOONGARCH
++
++asm (
++"	.pushsection	.text, \"ax\", @progbits\n"
++"	.type		my_tramp, @function\n"
++"	.globl		my_tramp\n"
++"   my_tramp:\n"
++"	addi.d	$sp, $sp, -48\n"
++"	st.d	$a0, $sp, 0\n"
++"	st.d	$a1, $sp, 8\n"
++"	st.d	$a2, $sp, 16\n"
++"	st.d	$t0, $sp, 24\n"
++"	st.d	$ra, $sp, 32\n"
++"	bl	my_direct_func\n"
++"	ld.d	$a0, $sp, 0\n"
++"	ld.d	$a1, $sp, 8\n"
++"	ld.d	$a2, $sp, 16\n"
++"	ld.d	$t0, $sp, 24\n"
++"	ld.d	$ra, $sp, 32\n"
++"	addi.d	$sp, $sp, 48\n"
++"	jr	$t0\n"
++"	.size		my_tramp, .-my_tramp\n"
++"	.popsection\n"
++);
++
++#endif /* CONFIG_LOONGARCH */
++
+ static int __init ftrace_direct_init(void)
+ {
+ 	return register_ftrace_direct((unsigned long)handle_mm_fault,
+diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
+index 1d3d307ca33d..9be720957bf8 100644
+--- a/samples/ftrace/ftrace-direct.c
++++ b/samples/ftrace/ftrace-direct.c
+@@ -63,6 +63,29 @@ asm (
+ 
+ #endif /* CONFIG_S390 */
+ 
++#ifdef CONFIG_LOONGARCH
++
++asm (
++"	.pushsection	.text, \"ax\", @progbits\n"
++"	.type		my_tramp, @function\n"
++"	.globl		my_tramp\n"
++"   my_tramp:\n"
++"	addi.d	$sp, $sp, -32\n"
++"	st.d	$a0, $sp, 0\n"
++"	st.d	$t0, $sp, 8\n"
++"	st.d	$ra, $sp, 16\n"
++"	bl	my_direct_func\n"
++"	ld.d	$a0, $sp, 0\n"
++"	ld.d	$t0, $sp, 8\n"
++"	ld.d	$ra, $sp, 16\n"
++"	addi.d	$sp, $sp, 32\n"
++"	jr	$t0\n"
++"	.size		my_tramp, .-my_tramp\n"
++"	.popsection\n"
++);
++
++#endif /* CONFIG_LOONGARCH */
++
+ static int __init ftrace_direct_init(void)
+ {
+ 	return register_ftrace_direct((unsigned long)wake_up_process,
 -- 
 2.37.1
 
