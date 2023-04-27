@@ -1,160 +1,104 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560611363
-	for <loongarch@lists.linux.dev>; Thu, 27 Apr 2023 02:04:18 +0000 (UTC)
-X-UUID: c29bcdaa86e24dd6ab17969ad69ee9e6-20230427
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.22,REQID:6e913d94-6017-4748-8ba7-8ea9b3166115,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:-32768,SF:-32768,FILE:0,BULK:-32768,RULE:Rel
-	ease_Ham,ACTION:release,TS:10
-X-CID-INFO: VERSION:1.1.22,REQID:6e913d94-6017-4748-8ba7-8ea9b3166115,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:-32768,SF:-32768,FILE:0,BULK:-32768,RULE:Relea
-	se_Ham,ACTION:release,TS:10
-X-CID-META: VersionHash:120426c,CLOUDID:9e1a10bf-e32c-4c97-918d-fbb3fc224d4e,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:-2,UR
-	L:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-UUID: c29bcdaa86e24dd6ab17969ad69ee9e6-20230427
-X-User: lienze@kylinos.cn
-Received: from fedora [(210.12.40.82)] by mailgw
-	(envelope-from <lienze@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2053398059; Thu, 27 Apr 2023 10:03:56 +0800
-From: Enze Li <lienze@kylinos.cn>
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Huacai Chen <chenhuacai@kernel.org>,  loongarch@lists.linux.dev,  WANG
- Xuerui <git@xen0n.name>
-Subject: Re: [PATCH v7 03/12] LoongArch: Print GPRs with ABI names when
- showing registers
-In-Reply-To: <293fb6d9-db3a-1435-5f1a-55103677d42c@xen0n.name> (WANG Xuerui's
-	message of "Tue, 25 Apr 2023 21:39:13 +0800")
-References: <20230425081023.3809434-1-kernel@xen0n.name>
-	<20230425081023.3809434-4-kernel@xen0n.name>
-	<e9bfc2e3f9d90797c032798b7bb762537a56a68e.camel@kylinos.cn>
-	<293fb6d9-db3a-1435-5f1a-55103677d42c@xen0n.name>
-Date: Thu, 27 Apr 2023 10:07:57 +0800
-Message-ID: <87leie6ps2.fsf@kylinos.cn>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C03F515A9
+	for <loongarch@lists.linux.dev>; Thu, 27 Apr 2023 02:12:45 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Ax1egV2klkx14BAA--.2391S3;
+	Thu, 27 Apr 2023 10:12:37 +0800 (CST)
+Received: from bogon.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqrYQ2klkZ_U9AA--.18515S3;
+	Thu, 27 Apr 2023 10:12:36 +0800 (CST)
+From: Youling Tang <tangyouling@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v2 1/5] LoongArch: Fix build error if CONFIG_DYNAMIC_FTRACE_WITH_REGS is not set
+Date: Thu, 27 Apr 2023 10:12:28 +0800
+Message-Id: <1682561552-32324-2-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1682561552-32324-1-git-send-email-tangyouling@loongson.cn>
+References: <1682561552-32324-1-git-send-email-tangyouling@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxqrYQ2klkZ_U9AA--.18515S3
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7tr13Gw1fWr13ur18Xw43ZFb_yoW8Aw4xpr
+	W2kw1DJ3yUKFs7KF9F9ryrWrnrWrZrG34aqa17K34FkrWqq3WUXryUZr1DWa45t3s7WrWf
+	ZFyfZrWqya17XwUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+	b3xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
+	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
+	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s02
+	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
+	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvE
+	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
+	v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U8TE_tUUUUU==
 
-T24gVHVlLCBBcHIgMjUgMjAyMyBhdCAwOTozOToxMyBQTSArMDgwMCwgV0FORyBYdWVydWkgd3Jv
-dGU6DQoNCj4gT24gMjAyMy80LzI1IDIxOjA2LCBFbnplIExpIHdyb3RlOg0KPj4gSGkgWHVlcnVp
-LA0KPj4gVGhhbmtzIGZvciBkb2luZyB0aGlzLiAgT3ZlcmFsbCwgSSBsaWtlIHRoaXMgaWRlYSwg
-YnV0IEkgdGhpbmsgSQ0KPj4gZm91bmQNCj4+IGFuIGVhc2lseSBmaXhhYmxlIHByb2JsZW0gaW4g
-dGhpcyBwYXRjaCwgcGxlYXNlIHNlZSBiZWxvdy4NCj4+IE9uIFR1ZSwgMjAyMy0wNC0yNSBhdCAx
-NjoxMCArMDgwMCwgV0FORyBYdWVydWkgd3JvdGU6DQo+Pj4gRnJvbTogV0FORyBYdWVydWkgPGdp
-dEB4ZW4wbi5uYW1lPg0KPj4+DQo+Pj4gU2hvdyBQQyAoQ1NSLkVSQSkgaW4gcGxhY2Ugb2YgJHpl
-cm8sIGFuZCBhbHNvIHNob3cgdGhlIHN5c2NhbGwNCj4+PiByZXN0YXJ0DQo+Pj4gZmxhZyAoY29u
-dmVuaWVudGx5IHN0dWZmZWQgaW4gcmVnc1swXSkgaWYgbm9uLXplcm8uDQo+Pj4NCj4+PiBTaWdu
-ZWQtb2ZmLWJ5OiBXQU5HIFh1ZXJ1aSA8Z2l0QHhlbjBuLm5hbWU+DQo+Pj4gLS0tDQo+Pj4gIMKg
-YXJjaC9sb29uZ2FyY2gva2VybmVsL3RyYXBzLmMgfCAzNiArKysrKysrKysrKysrKysrKysrKysr
-LS0tLS0tLS0tLS0NCj4+PiAtLQ0KPj4+ICDCoDEgZmlsZSBjaGFuZ2VkLCAyMyBpbnNlcnRpb25z
-KCspLCAxMyBkZWxldGlvbnMoLSkNCj4+Pg0KPj4+IGRpZmYgLS1naXQgYS9hcmNoL2xvb25nYXJj
-aC9rZXJuZWwvdHJhcHMuYw0KPj4+IGIvYXJjaC9sb29uZ2FyY2gva2VybmVsL3RyYXBzLmMNCj4+
-PiBpbmRleCA1MjkxNjVlYjZlNmIuLmNkYjE3ZDZhZmM3NyAxMDA2NDQNCj4+PiAtLS0gYS9hcmNo
-L2xvb25nYXJjaC9rZXJuZWwvdHJhcHMuYw0KPj4+ICsrKyBiL2FyY2gvbG9vbmdhcmNoL2tlcm5l
-bC90cmFwcy5jDQo+Pj4gQEAgLTE1OCwyMiArMTU4LDMyIEBAIHN0YXRpYyB2b2lkIF9fc2hvd19y
-ZWdzKGNvbnN0IHN0cnVjdCBwdF9yZWdzDQo+Pj4gKnJlZ3MpDQo+Pj4gIMKgwqDCoMKgwqDCoMKg
-wqBjb25zdCBpbnQgZmllbGQgPSAyICogc2l6ZW9mKHVuc2lnbmVkIGxvbmcpOw0KPj4+ICDCoMKg
-wqDCoMKgwqDCoMKgdW5zaWduZWQgaW50IGV4Y3N1YmNvZGU7DQo+Pj4gIMKgwqDCoMKgwqDCoMKg
-wqB1bnNpZ25lZCBpbnQgZXhjY29kZTsNCj4+PiAtwqDCoMKgwqDCoMKgwqBpbnQgaTsNCj4+PiAg
-ICDCoMKgwqDCoMKgwqDCoMKgc2hvd19yZWdzX3ByaW50X2luZm8oS0VSTl9ERUZBVUxUKTsNCj4+
-PiAgIC3CoMKgwqDCoMKgwqDCoC8qDQo+Pj4gLcKgwqDCoMKgwqDCoMKgICogU2F2ZWQgbWFpbiBw
-cm9jZXNzb3IgcmVnaXN0ZXJzDQo+Pj4gLcKgwqDCoMKgwqDCoMKgICovDQo+Pj4gLcKgwqDCoMKg
-wqDCoMKgZm9yIChpID0gMDsgaSA8IDMyOyApIHsNCj4+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgaWYgKChpICUgNCkgPT0gMCkNCj4+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHByaW50aygiJCUyZMKgwqAgOiIsIGkpOw0KPj4+IC3CoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwcl9jb250KCIgJTAqbHgiLCBmaWVsZCwgcmVncy0+
-cmVnc1tpXSk7DQo+Pj4gLQ0KPj4+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpKys7
-DQo+Pj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmICgoaSAlIDQpID09IDApDQo+
-Pj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwcl9jb250
-KCJcbiIpOw0KPj4+IC3CoMKgwqDCoMKgwqDCoH0NCj4+PiArwqDCoMKgwqDCoMKgwqAvKiBQcmlu
-dCBHUFJzIGV4Y2VwdCAkemVybyAoc3Vic3RpdHV0aW5nIHdpdGggUEMvRVJBKSAqLw0KPj4+ICsj
-ZGVmaW5lIEdQUl9GSUVMRCh4KSBmaWVsZCwgcmVncy0+cmVnc1t4XQ0KPj4gVGhlIGNoZWNrcGF0
-Y2gucGwgdGhyb3dzIHVwIHRoZSBmb2xsb3dpbmcgZXJyb3IsDQo+PiAtLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+PiBF
-UlJPUjogTWFjcm9zIHdpdGggY29tcGxleCB2YWx1ZXMgc2hvdWxkIGJlIGVuY2xvc2VkIGluIHBh
-cmVudGhlc2VzDQo+PiAjNDA6IEZJTEU6IGFyY2gvbG9vbmdhcmNoL2tlcm5lbC90cmFwcy5jOjE2
-NToNCj4+ICsjZGVmaW5lIEdQUl9GSUVMRCh4KSBmaWVsZCwgcmVncy0+cmVnc1t4XQ0KPj4gLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLQ0KPj4gYW5kIEkgdGhpbmsgYWRkaW5nIGEgcGFpciBvZiBwYXJlbnRoZXNlcyBpcyBh
-IGdvb2Qgd2F5LCBsaWtlIHRoaXMsDQo+PiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPj4gLS0tIGEvYXJjaC9s
-b29uZ2FyY2gva2VybmVsL3RyYXBzLmMNCj4+ICsrKyBiL2FyY2gvbG9vbmdhcmNoL2tlcm5lbC90
-cmFwcy5jDQo+PiBAQCAtMTYyLDcgKzE2Miw3IEBAIHN0YXRpYyB2b2lkIF9fc2hvd19yZWdzKGNv
-bnN0IHN0cnVjdCBwdF9yZWdzICpyZWdzKQ0KPj4gICAgICAgICAgc2hvd19yZWdzX3ByaW50X2lu
-Zm8oS0VSTl9ERUZBVUxUKTsNCj4+ICAgICAgICAgICAgLyogUHJpbnQgR1BScyBleGNlcHQgJHpl
-cm8gKHN1YnN0aXR1dGluZyB3aXRoIFBDL0VSQSkgKi8NCj4+IC0jZGVmaW5lIEdQUl9GSUVMRCh4
-KSBmaWVsZCwgcmVncy0+cmVnc1t4XQ0KPj4gKyNkZWZpbmUgR1BSX0ZJRUxEKHgpIChmaWVsZCwg
-cmVncy0+cmVnc1t4XSkNCj4NCj4gSGF2ZSB5b3UgY2hlY2tlZCB3aGV0aGVyIHRoZSBjb2RlIGV2
-ZW4gY29tcGlsZXMgYWZ0ZXIgbWFraW5nIHRoaXMgY2hhbmdlPw0KPg0KPiBUaGUgbWFjcm8gdXNl
-IGhlcmUgaXMgZGVsaWJlcmF0ZSBiZWNhdXNlIG90aGVyd2lzZSBmb3IgZXZlcnkgcmVnaXN0ZXIN
-Cj4gcHJpbnRlZCB3ZSB3b3VsZCBoYXZlIHRvIHJlcGVhdCB0aGUgImZpZWxkIiBhcmd1bWVudCBv
-bmNlLCBsZWFkaW5nIHRvDQo+IHZlcnkgbG9uZyBsaW5lcyBvciBtb3JlIHZlcnRpY2FsIHNwYWNl
-IG9jY3VwaWVkLiAoVGhlIGtlcm5lbCB2c3ByaW50Zg0KPiBpbXBsZW1lbnRhdGlvbiBkb2Vzbid0
-IHN1cHBvcnQgb3ZlcnJpZGluZyBhcmd1bWVudCBwb3NpdGlvbnMgbGlrZSB3aXRoDQo+ICIlMCox
-JGx4IiwgdW5saWtlIG1vZGVybiBDLikNCg0KWWVhaCwgeW91J3JlIHJpZ2h0LiAgVGhpbmdzIGFy
-ZSBub3QgYWx3YXlzIHdoYXQgdGhleSBhcHBlYXIgdG8gYmUuDQoNCkkgdHJpZWQgc2V2ZXJhbCBv
-dGhlciB3YXlzLCBidXQgdGhleSBhbGwgZmFpbGVkLiAgSSB0aGluayB5b3VyIG1ldGhvZA0Kc2hv
-dWxkIGJlIHRoZSBtb3N0IHN1aXRhYmxlLg0KDQo+DQo+PiAgICAgICAgICBwcl9jb250KCJwYyAl
-MCpseCByYSAlMCpseCB0cCAlMCpseCBzcCAlMCpseFxuIiwNCj4+ICAgICAgICAgICAgICAgICAg
-ZmllbGQsIHJlZ3MtPmNzcl9lcmEsIEdQUl9GSUVMRCgxKSwgR1BSX0ZJRUxEKDIpLA0KPj4gR1BS
-X0ZJRUxEKDMpKTsNCj4+ICAgICAgICAgIHByX2NvbnQoImEwICUwKmx4IGExICUwKmx4IGEyICUw
-Kmx4IGEzICUwKmx4XG4iLA0KPj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4+IEluIGFkZGl0aW9uLCB0aGUg
-Y2hlY2twYXRjaC5wbCBhbHNvIHRocm93cyB1cCBzb21lIHdhcm5pbmdzLiAgU2hvdWxkDQo+PiB0
-aGVzZSB1c2UgcHJfaW5mbygpIGluc3RlYWQ/DQo+DQo+IEhtbSBwZXJoYXBzLiBJIG9yaWdpbmFs
-bHkgdGhvdWdodCBvZiB0aGUgd2hvbGUgc2hvd19yZWdzIG91dHB1dCBhcyBvbmUNCj4gZW50cnku
-IE5vdyBJIHNlZSBob3cgdGhhdCdzIG5vdCB0aGUgY2FzZSBhbmQgSSdsbCB0d2VhayBhIGJpdC4g
-VGhhbmtzDQo+IGZvciBwb2ludGluZyBvdXQuDQo+DQo+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4gV0FSTklORzogQXZvaWQgbG9n
-Z2luZyBjb250aW51YXRpb24gdXNlcyB3aGVyZSBmZWFzaWJsZQ0KPj4gIzQxOiBGSUxFOiBhcmNo
-L2xvb25nYXJjaC9rZXJuZWwvdHJhcHMuYzoxNjY6DQo+PiArCXByX2NvbnQoInBjICUwKmx4IHJh
-ICUwKmx4IHRwICUwKmx4IHNwICUwKmx4XG4iLA0KPj4gV0FSTklORzogQXZvaWQgbG9nZ2luZyBj
-b250aW51YXRpb24gdXNlcyB3aGVyZSBmZWFzaWJsZQ0KPj4gIzQzOiBGSUxFOiBhcmNoL2xvb25n
-YXJjaC9rZXJuZWwvdHJhcHMuYzoxNjg6DQo+PiArCXByX2NvbnQoImEwICUwKmx4IGExICUwKmx4
-IGEyICUwKmx4IGEzICUwKmx4XG4iLA0KPj4gV0FSTklORzogQXZvaWQgbG9nZ2luZyBjb250aW51
-YXRpb24gdXNlcyB3aGVyZSBmZWFzaWJsZQ0KPj4gIzQ1OiBGSUxFOiBhcmNoL2xvb25nYXJjaC9r
-ZXJuZWwvdHJhcHMuYzoxNzA6DQo+PiArCXByX2NvbnQoImE0ICUwKmx4IGE1ICUwKmx4IGE2ICUw
-Kmx4IGE3ICUwKmx4XG4iLA0KPj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IEJlc3QgUmVnYXJkcywNCj4+IEVuemUNCj4+IA0KPj4+
-ICvCoMKgwqDCoMKgwqDCoHByX2NvbnQoInBjICUwKmx4IHJhICUwKmx4IHRwICUwKmx4IHNwICUw
-Kmx4XG4iLA0KPj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBmaWVsZCwgcmVncy0+
-Y3NyX2VyYSwgR1BSX0ZJRUxEKDEpLCBHUFJfRklFTEQoMiksDQo+Pj4gR1BSX0ZJRUxEKDMpKTsN
-Cj4+PiArwqDCoMKgwqDCoMKgwqBwcl9jb250KCJhMCAlMCpseCBhMSAlMCpseCBhMiAlMCpseCBh
-MyAlMCpseFxuIiwNCj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgR1BSX0ZJRUxE
-KDQpLCBHUFJfRklFTEQoNSksIEdQUl9GSUVMRCg2KSwNCj4+PiBHUFJfRklFTEQoNykpOw0KPj4+
-ICvCoMKgwqDCoMKgwqDCoHByX2NvbnQoImE0ICUwKmx4IGE1ICUwKmx4IGE2ICUwKmx4IGE3ICUw
-Kmx4XG4iLA0KPj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBHUFJfRklFTEQoOCks
-IEdQUl9GSUVMRCg5KSwgR1BSX0ZJRUxEKDEwKSwNCj4+PiBHUFJfRklFTEQoMTEpKTsNCj4+PiAr
-wqDCoMKgwqDCoMKgwqBwcl9jb250KCJ0MCAlMCpseCB0MSAlMCpseCB0MiAlMCpseCB0MyAlMCps
-eFxuIiwNCj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgR1BSX0ZJRUxEKDEyKSwg
-R1BSX0ZJRUxEKDEzKSwgR1BSX0ZJRUxEKDE0KSwNCj4+PiBHUFJfRklFTEQoMTUpKTsNCj4+PiAr
-wqDCoMKgwqDCoMKgwqBwcl9jb250KCJ0NCAlMCpseCB0NSAlMCpseCB0NiAlMCpseCB0NyAlMCps
-eFxuIiwNCj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgR1BSX0ZJRUxEKDE2KSwg
-R1BSX0ZJRUxEKDE3KSwgR1BSX0ZJRUxEKDE4KSwNCj4+PiBHUFJfRklFTEQoMTkpKTsNCj4+PiAr
-wqDCoMKgwqDCoMKgwqBwcl9jb250KCJ0OCAlMCpseCB1MCAlMCpseCBzOSAlMCpseCBzMCAlMCps
-eFxuIiwNCj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgR1BSX0ZJRUxEKDIwKSwg
-R1BSX0ZJRUxEKDIxKSwgR1BSX0ZJRUxEKDIyKSwNCj4+PiBHUFJfRklFTEQoMjMpKTsNCj4+PiAr
-wqDCoMKgwqDCoMKgwqBwcl9jb250KCJzMSAlMCpseCBzMiAlMCpseCBzMyAlMCpseCBzNCAlMCps
-eFxuIiwNCj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgR1BSX0ZJRUxEKDI0KSwg
-R1BSX0ZJRUxEKDI1KSwgR1BSX0ZJRUxEKDI2KSwNCj4+PiBHUFJfRklFTEQoMjcpKTsNCj4+PiAr
-wqDCoMKgwqDCoMKgwqBwcl9jb250KCJzNSAlMCpseCBzNiAlMCpseCBzNyAlMCpseCBzOCAlMCps
-eFxuIiwNCj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgR1BSX0ZJRUxEKDI4KSwg
-R1BSX0ZJRUxEKDI5KSwgR1BSX0ZJRUxEKDMwKSwNCj4+PiBHUFJfRklFTEQoMzEpKTsNCj4+PiAr
-DQo+Pj4gK8KgwqDCoMKgwqDCoMKgLyogVGhlIHNsb3QgZm9yICR6ZXJvIGlzIHJldXNlZCBhcyB0
-aGUgc3lzY2FsbCByZXN0YXJ0IGZsYWcNCj4+PiAqLw0KPj4+ICvCoMKgwqDCoMKgwqDCoGlmIChy
-ZWdzLT5yZWdzWzBdKQ0KPj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwcl9jb250
-KCJzeXNjYWxsIHJlc3RhcnQgZmxhZzogJTAqbHhcbiIsDQo+Pj4gR1BSX0ZJRUxEKDApKTsNCg0K
-Pj4+ICsjdW5kZWYgR1BSX0ZJRUxEDQoNCkJUVywgSSBsaWtlIHRoaXMgaGFiaXQuICBJdCBtYWtl
-cyBpdCBjbGVhcmVyIHRvIHNlZSB0aGUgc2NvcGUgb2Ygd2hhdA0KdGhlIG1hY3JvIGFwcGxpZXMg
-dG8sIHRoYW5rIHlvdS4NCg0KQ2hlZXJzIQ0KRW56ZQ0KDQo+Pj4gICAgwqDCoMKgwqDCoMKgwqDC
-oC8qDQo+Pj4gIMKgwqDCoMKgwqDCoMKgwqAgKiBTYXZlZCBjc3IgcmVnaXN0ZXJzDQo+PiANCg==
+We can see the following build error on LoongArch if CONFIG_DYNAMIC_FTRACE_WITH_REGS
+is not set:
+
+arch/loongarch/kernel/ftrace_dyn.c: In function ‘ftrace_make_call’:
+arch/loongarch/kernel/ftrace_dyn.c:167:23: error: implicit declaration of function ‘__get_mod’
+  167 |                 ret = __get_mod(&mod, pc);
+      |                       ^~~~~~~~~
+arch/loongarch/kernel/ftrace_dyn.c:171:24: error: implicit declaration of function ‘get_plt_addr’
+  171 |                 addr = get_plt_addr(mod, addr);
+      |                        ^~~~~~~~~~~~
+
+The reason is that the __get_mod and get_plt_addr functions will be called
+in ftrace_make_{call,nop}.
+
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+---
+ arch/loongarch/kernel/ftrace_dyn.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
+index 4a3ef8516ccc..c5f4b4681ddc 100644
+--- a/arch/loongarch/kernel/ftrace_dyn.c
++++ b/arch/loongarch/kernel/ftrace_dyn.c
+@@ -30,8 +30,6 @@ static int ftrace_modify_code(unsigned long pc, u32 old, u32 new, bool validate)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+-
+ #ifdef CONFIG_MODULES
+ static inline int __get_mod(struct module **mod, unsigned long addr)
+ {
+@@ -72,6 +70,7 @@ static unsigned long get_plt_addr(struct module *mod, unsigned long addr)
+ }
+ #endif
+ 
++#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr, unsigned long addr)
+ {
+ 	u32 old, new;
+@@ -102,7 +101,6 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr, unsigned
+ 
+ 	return ftrace_modify_code(pc, old, new, true);
+ }
+-
+ #endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
+ 
+ int ftrace_update_ftrace_func(ftrace_func_t func)
+-- 
+2.37.1
+
