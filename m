@@ -1,104 +1,187 @@
-Received: from mailrelay5-1.pub.mailoutpod2-cph3.one.com (mailrelay5-1.pub.mailoutpod2-cph3.one.com [46.30.211.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2860323D5
-	for <loongarch@lists.linux.dev>; Thu, 27 Apr 2023 17:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=3aPWmuilP5wLRilofoqbOrLGxKBwB7pAtJ4SXkaLvoc=;
-	b=TLJMIi0RX8F2D4MECviwMXYvEcVb0lEsEy3+u8aUlSP8SU8rlCRGlNNmsB/nVOCzgK5pBrkqJQZ1F
-	 4Pk0P0hLFN1/gQl0wOoX80yo5LMFFkY8AFk8tIjenbcNtBTjLcrXTVOu35BU0ZgXdWnnSf7qi6nZ3E
-	 orNHCnRqwI7LiLkgzVpEQaOMbxTZLeop5dV4q915EpZK5kidlhmu8EBhfMffenaiZSY9k7inpdXkTU
-	 Jqtqf/GAdMoncZ0gbyd6bbDaxV/c7d0xakYFi8MhdcA4DCSizJdUq7VgNEnQ2ErW0+f+L1lpNilWl3
-	 /TH/k1Te5r34DMQFVMUEym1QgkeLrjQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=3aPWmuilP5wLRilofoqbOrLGxKBwB7pAtJ4SXkaLvoc=;
-	b=G5LZPAqKFgpnZqaJfT/ouJ07IZWuTH9E70Iw4lwAnH6U6PTleuFBBWfBI+H0sNsJGesQJZYrDGZOe
-	 rwUJGIwDg==
-X-HalOne-ID: 62b9268b-e51f-11ed-ad1f-231b2edd0ed2
-Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-	by mailrelay5 (Halon) with ESMTPSA
-	id 62b9268b-e51f-11ed-ad1f-231b2edd0ed2;
-	Thu, 27 Apr 2023 17:17:31 +0000 (UTC)
-Date: Thu, 27 Apr 2023 19:17:29 +0200
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: deller@gmx.de, geert@linux-m68k.org, javierm@redhat.com,
-	daniel@ffwll.ch, vgupta@kernel.org, chenhuacai@kernel.org,
-	kernel@xen0n.name, davem@davemloft.net,
-	James.Bottomley@hansenpartnership.com, arnd@arndb.de,
-	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-arch@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-parisc@vger.kernel.org
-Subject: Re: [PATCH 0/5] fbdev: Move framebuffer I/O helpers to <asm/fb.h>
-Message-ID: <20230427171729.GA3899979@ravnborg.org>
-References: <20230426130420.19942-1-tzimmermann@suse.de>
- <20230426192110.GA3791243@ravnborg.org>
- <3e33ab1d-b478-fdf5-6fbe-6580000182d1@suse.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1B02567
+	for <loongarch@lists.linux.dev>; Fri, 28 Apr 2023 09:27:16 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 580052002E;
+	Fri, 28 Apr 2023 09:27:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1682674035; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5VYWy/AvbpTwYMUvgq/Qf7JvO1LdK29uHbuVPQM8w+I=;
+	b=GVDAylSdFB2aC8MzuHMzQQpnFsJO4b+FYu4OUDiHDHTyD+mATNULQ82rwHCWtJJ2n7oa4O
+	wmtSxgAGOys9EGQlQlyGj32QskSRu6EmzTrpvbR8TcTaUiGEWxITGrBNjm9U13oGsvKd9E
+	L3rjOzqF3CBsko70lonU/BQKqTYWGMo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1682674035;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5VYWy/AvbpTwYMUvgq/Qf7JvO1LdK29uHbuVPQM8w+I=;
+	b=OVW7mKvhPqZ91zi25yBTo9BJR5O4Kqqzh5IohkbwFTzfRAquwndXbRpfe1BoyZ0d8UJeDt
+	2gGjf0nPmiJngkBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EE31E139C3;
+	Fri, 28 Apr 2023 09:27:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id 0HViOXKRS2ReFwAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Fri, 28 Apr 2023 09:27:14 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: deller@gmx.de,
+	geert@linux-m68k.org,
+	javierm@redhat.com,
+	daniel@ffwll.ch,
+	vgupta@kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	davem@davemloft.net,
+	James.Bottomley@HansenPartnership.com,
+	arnd@arndb.de,
+	sam@ravnborg.org
+Cc: linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arch@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	sparclinux@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-parisc@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v2 5/5] fbdev: Define framebuffer I/O from Linux' I/O functions
+Date: Fri, 28 Apr 2023 11:27:11 +0200
+Message-Id: <20230428092711.406-6-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.40.0
+In-Reply-To: <20230428092711.406-1-tzimmermann@suse.de>
+References: <20230428092711.406-1-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3e33ab1d-b478-fdf5-6fbe-6580000182d1@suse.de>
+Content-Transfer-Encoding: 8bit
 
-Hi Thomas,
+Implement framebuffer I/O helpers, such as fb_read*() and fb_write*()
+with Linux' regular I/O functions. Remove all ifdef cases for the
+various architectures.
 
-On Thu, Apr 27, 2023 at 09:22:47AM +0200, Thomas Zimmermann wrote:
-> Hi Sam
-> 
-> Am 26.04.23 um 21:21 schrieb Sam Ravnborg:
-> > Hi Thomas.
-> > 
-> > On Wed, Apr 26, 2023 at 03:04:15PM +0200, Thomas Zimmermann wrote:
-> > > Fbdev provides helpers for framebuffer I/O, such as fb_readl(),
-> > > fb_writel() or fb_memcpy_to_fb(). The implementation of each helper
-> > > depends on the architecture. It's still all located in fbdev's main
-> > > header file <linux/fb.h>. Move all of it into each archtecture's
-> > > <asm/fb.h>, with shared code in <asm-generic/fb.h>.
-> > 
-> > For once I think this cleanup is moving things in the wrong direction.
-> > 
-> > The fb_* helpers predates the generic io.h support and try to
-> > add a generic layer for read read / write operations.
-> > 
-> > The right fix would be to migrate fb_* to use the io helpers
-> > we have today - so we use the existing way to handle the architecture
-> > specific details.
-> 
-> I looked through the existing versions of the fb_() I/O helpers. They can
-> apparently be implemented with the regular helpers of similar names.
-> 
-> I'm not sure, but even Sparc looks compatible. At least these sbus_
-> functions seem to be equivalent to the __raw_() I/O helpers of similar
-> names.
+Most of the supported architectures use __raw_() I/O functions or treat
+framebuffer memory like regular memory. This is also implemented by the
+architectures' I/O function, so we can use them instead.
 
-> Do you still have that Sparc emulator?
-I used qemu the last time I played with sparc and saved the instructions
-somewhere how to redo it - but that would use to bohcs driver only I think.
-I have saprc machines, but none of these are easy to get operational.
-We can always ask on sparclinux to get some testing feedback.
+Sparc uses SBus to connect to framebuffer devices. It provides respective
+implementations of the framebuffer I/O helpers. The involved sbus_()
+I/O helpers map to the same code as Sparc's regular I/O functions. As
+with other platforms, we can use those instead.
 
-> 
-> > 
-> >  From a quick look there seems to be some challenges but the current
-> > helpers that re-do part of io.h is not the way forward and hiding them
-> > in arch/include/asm/fb.h seems counter productive.
-> 
-> Which challenges did you see?
-sparc was the main thing - but maybe I did not look close enough.
-And then I tried to map the macros to some of the more highlevel ones
-from io.h, but as Arnd says the __raw* is the way to go here.
+We leave a TODO item to replace all fb_() functions with their regular
+I/O counterparts throughout the fbdev drivers.
 
-	Sam
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+---
+ include/linux/fb.h | 63 +++++++++++-----------------------------------
+ 1 file changed, 15 insertions(+), 48 deletions(-)
+
+diff --git a/include/linux/fb.h b/include/linux/fb.h
+index 08cb47da71f8..4aa9e90edd17 100644
+--- a/include/linux/fb.h
++++ b/include/linux/fb.h
+@@ -15,7 +15,6 @@
+ #include <linux/list.h>
+ #include <linux/backlight.h>
+ #include <linux/slab.h>
+-#include <asm/io.h>
+ 
+ struct vm_area_struct;
+ struct fb_info;
+@@ -511,58 +510,26 @@ struct fb_info {
+  */
+ #define STUPID_ACCELF_TEXT_SHIT
+ 
+-// This will go away
+-#if defined(__sparc__)
+-
+-/* We map all of our framebuffers such that big-endian accesses
+- * are what we want, so the following is sufficient.
++/*
++ * TODO: Update fbdev drivers to call the I/O helpers directly and
++ *       remove the fb_() tokens.
+  */
+-
+-// This will go away
+-#define fb_readb sbus_readb
+-#define fb_readw sbus_readw
+-#define fb_readl sbus_readl
+-#define fb_readq sbus_readq
+-#define fb_writeb sbus_writeb
+-#define fb_writew sbus_writew
+-#define fb_writel sbus_writel
+-#define fb_writeq sbus_writeq
+-#define fb_memset sbus_memset_io
+-#define fb_memcpy_fromfb sbus_memcpy_fromio
+-#define fb_memcpy_tofb sbus_memcpy_toio
+-
+-#elif defined(__i386__) || defined(__alpha__) || defined(__x86_64__) ||	\
+-	defined(__hppa__) || defined(__sh__) || defined(__powerpc__) ||	\
+-	defined(__arm__) || defined(__aarch64__) || defined(__mips__)
+-
+-#define fb_readb __raw_readb
+-#define fb_readw __raw_readw
+-#define fb_readl __raw_readl
+-#define fb_readq __raw_readq
+-#define fb_writeb __raw_writeb
+-#define fb_writew __raw_writew
+-#define fb_writel __raw_writel
+-#define fb_writeq __raw_writeq
++#define fb_readb readb
++#define fb_readw readw
++#define fb_readl readl
++#if defined(CONFIG_64BIT)
++#define fb_readq readq
++#endif
++#define fb_writeb writeb
++#define fb_writew writew
++#define fb_writel writel
++#if defined(CONFIG_64BIT)
++#define fb_writeq writeq
++#endif
+ #define fb_memset memset_io
+ #define fb_memcpy_fromfb memcpy_fromio
+ #define fb_memcpy_tofb memcpy_toio
+ 
+-#else
+-
+-#define fb_readb(addr) (*(volatile u8 *) (addr))
+-#define fb_readw(addr) (*(volatile u16 *) (addr))
+-#define fb_readl(addr) (*(volatile u32 *) (addr))
+-#define fb_readq(addr) (*(volatile u64 *) (addr))
+-#define fb_writeb(b,addr) (*(volatile u8 *) (addr) = (b))
+-#define fb_writew(b,addr) (*(volatile u16 *) (addr) = (b))
+-#define fb_writel(b,addr) (*(volatile u32 *) (addr) = (b))
+-#define fb_writeq(b,addr) (*(volatile u64 *) (addr) = (b))
+-#define fb_memset memset
+-#define fb_memcpy_fromfb memcpy
+-#define fb_memcpy_tofb memcpy
+-
+-#endif
+-
+ #define FB_LEFT_POS(p, bpp)          (fb_be_math(p) ? (32 - (bpp)) : 0)
+ #define FB_SHIFT_HIGH(p, val, bits)  (fb_be_math(p) ? (val) >> (bits) : \
+ 						      (val) << (bits))
+-- 
+2.40.0
+
