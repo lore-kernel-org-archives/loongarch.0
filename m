@@ -1,42 +1,38 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1B02567
-	for <loongarch@lists.linux.dev>; Fri, 28 Apr 2023 09:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5A62567
+	for <loongarch@lists.linux.dev>; Fri, 28 Apr 2023 09:27:20 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 580052002E;
-	Fri, 28 Apr 2023 09:27:15 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3BA8221A2D;
+	Fri, 28 Apr 2023 09:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1682674035; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5VYWy/AvbpTwYMUvgq/Qf7JvO1LdK29uHbuVPQM8w+I=;
-	b=GVDAylSdFB2aC8MzuHMzQQpnFsJO4b+FYu4OUDiHDHTyD+mATNULQ82rwHCWtJJ2n7oa4O
-	wmtSxgAGOys9EGQlQlyGj32QskSRu6EmzTrpvbR8TcTaUiGEWxITGrBNjm9U13oGsvKd9E
-	L3rjOzqF3CBsko70lonU/BQKqTYWGMo=
+	t=1682674033; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=H634jX8sSYMwnQT1vLr7vYP2Eo6TaCU+J3gzKVsIAq4=;
+	b=VbHHcK4793S8Ps7niwJ/Fwfmq+pXThNJc0kyX1jeLNE6xy35UoTR3ljF9sLnSM3cZintOy
+	YdHtZSHPLoPgN1oikxQp2DXNqWBiENQRuP0ROqwzpUBiK1jRzN3nwlptu1ijUTjf0zvy/d
+	zq4KTdTSkchp187Tn9tNbgxtKTUcp6U=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1682674035;
+	s=susede2_ed25519; t=1682674033;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5VYWy/AvbpTwYMUvgq/Qf7JvO1LdK29uHbuVPQM8w+I=;
-	b=OVW7mKvhPqZ91zi25yBTo9BJR5O4Kqqzh5IohkbwFTzfRAquwndXbRpfe1BoyZ0d8UJeDt
-	2gGjf0nPmiJngkBg==
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=H634jX8sSYMwnQT1vLr7vYP2Eo6TaCU+J3gzKVsIAq4=;
+	b=DW2G43drDfPSAccNnQi6KBQ7vl1Fmv8Co40ZZveXyfpskVMHp3yPMtZ6tOE7+kr7M00llZ
+	MhFKTW90T3B8rDAQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EE31E139C3;
-	Fri, 28 Apr 2023 09:27:14 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C0F21138FA;
+	Fri, 28 Apr 2023 09:27:12 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 0HViOXKRS2ReFwAAMHmgww
-	(envelope-from <tzimmermann@suse.de>); Fri, 28 Apr 2023 09:27:14 +0000
+	id jkouLnCRS2ReFwAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Fri, 28 Apr 2023 09:27:12 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: deller@gmx.de,
 	geert@linux-m68k.org,
@@ -61,12 +57,10 @@ Cc: linux-fbdev@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-parisc@vger.kernel.org,
 	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v2 5/5] fbdev: Define framebuffer I/O from Linux' I/O functions
-Date: Fri, 28 Apr 2023 11:27:11 +0200
-Message-Id: <20230428092711.406-6-tzimmermann@suse.de>
+Subject: [PATCH v2 0/5] fbdev: Use regular I/O function for framebuffers
+Date: Fri, 28 Apr 2023 11:27:06 +0200
+Message-Id: <20230428092711.406-1-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230428092711.406-1-tzimmermann@suse.de>
-References: <20230428092711.406-1-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -75,113 +69,71 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement framebuffer I/O helpers, such as fb_read*() and fb_write*()
-with Linux' regular I/O functions. Remove all ifdef cases for the
-various architectures.
+(was: fbdev: Move framebuffer I/O helpers to <asm/fb.h>)
 
-Most of the supported architectures use __raw_() I/O functions or treat
-framebuffer memory like regular memory. This is also implemented by the
-architectures' I/O function, so we can use them instead.
+Fbdev provides helpers for framebuffer I/O, such as fb_readl(),
+fb_writel() or fb_memcpy_to_fb(). The implementation of each helper
+depends on the architecture, but they all come down to regular I/O
+functions of similar names. So use the regular functions instead.
 
-Sparc uses SBus to connect to framebuffer devices. It provides respective
-implementations of the framebuffer I/O helpers. The involved sbus_()
-I/O helpers map to the same code as Sparc's regular I/O functions. As
-with other platforms, we can use those instead.
+The first patch a simple whitespace cleanup.
 
-We leave a TODO item to replace all fb_() functions with their regular
-I/O counterparts throughout the fbdev drivers.
+Until now, <linux/fb.h> contained an include of <asm/io.h>. As this
+will go away patches 2 to 4 prepare include statements in the various
+drivers. Source files that use regular I/O helpers, such as readl(),
+now include <linux/io.h>. Source files that use framebuffer I/O
+helpers, such as fb_readl(), also include <linux/io.h>.
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- include/linux/fb.h | 63 +++++++++++-----------------------------------
- 1 file changed, 15 insertions(+), 48 deletions(-)
+Patch 5 replaces the architecture-based if-else branching in 
+<linux/fb.h> by define statements that map to Linux' I/O fucntions.
 
-diff --git a/include/linux/fb.h b/include/linux/fb.h
-index 08cb47da71f8..4aa9e90edd17 100644
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -15,7 +15,6 @@
- #include <linux/list.h>
- #include <linux/backlight.h>
- #include <linux/slab.h>
--#include <asm/io.h>
- 
- struct vm_area_struct;
- struct fb_info;
-@@ -511,58 +510,26 @@ struct fb_info {
-  */
- #define STUPID_ACCELF_TEXT_SHIT
- 
--// This will go away
--#if defined(__sparc__)
--
--/* We map all of our framebuffers such that big-endian accesses
-- * are what we want, so the following is sufficient.
-+/*
-+ * TODO: Update fbdev drivers to call the I/O helpers directly and
-+ *       remove the fb_() tokens.
-  */
--
--// This will go away
--#define fb_readb sbus_readb
--#define fb_readw sbus_readw
--#define fb_readl sbus_readl
--#define fb_readq sbus_readq
--#define fb_writeb sbus_writeb
--#define fb_writew sbus_writew
--#define fb_writel sbus_writel
--#define fb_writeq sbus_writeq
--#define fb_memset sbus_memset_io
--#define fb_memcpy_fromfb sbus_memcpy_fromio
--#define fb_memcpy_tofb sbus_memcpy_toio
--
--#elif defined(__i386__) || defined(__alpha__) || defined(__x86_64__) ||	\
--	defined(__hppa__) || defined(__sh__) || defined(__powerpc__) ||	\
--	defined(__arm__) || defined(__aarch64__) || defined(__mips__)
--
--#define fb_readb __raw_readb
--#define fb_readw __raw_readw
--#define fb_readl __raw_readl
--#define fb_readq __raw_readq
--#define fb_writeb __raw_writeb
--#define fb_writew __raw_writew
--#define fb_writel __raw_writel
--#define fb_writeq __raw_writeq
-+#define fb_readb readb
-+#define fb_readw readw
-+#define fb_readl readl
-+#if defined(CONFIG_64BIT)
-+#define fb_readq readq
-+#endif
-+#define fb_writeb writeb
-+#define fb_writew writew
-+#define fb_writel writel
-+#if defined(CONFIG_64BIT)
-+#define fb_writeq writeq
-+#endif
- #define fb_memset memset_io
- #define fb_memcpy_fromfb memcpy_fromio
- #define fb_memcpy_tofb memcpy_toio
- 
--#else
--
--#define fb_readb(addr) (*(volatile u8 *) (addr))
--#define fb_readw(addr) (*(volatile u16 *) (addr))
--#define fb_readl(addr) (*(volatile u32 *) (addr))
--#define fb_readq(addr) (*(volatile u64 *) (addr))
--#define fb_writeb(b,addr) (*(volatile u8 *) (addr) = (b))
--#define fb_writew(b,addr) (*(volatile u16 *) (addr) = (b))
--#define fb_writel(b,addr) (*(volatile u32 *) (addr) = (b))
--#define fb_writeq(b,addr) (*(volatile u64 *) (addr) = (b))
--#define fb_memset memset
--#define fb_memcpy_fromfb memcpy
--#define fb_memcpy_tofb memcpy
--
--#endif
--
- #define FB_LEFT_POS(p, bpp)          (fb_be_math(p) ? (32 - (bpp)) : 0)
- #define FB_SHIFT_HIGH(p, val, bits)  (fb_be_math(p) ? (val) >> (bits) : \
- 						      (val) << (bits))
+After this change has been merged and included in a few release
+without complains, we can update the drivers to regular I/O functions
+and remove the fbdev-specific defines.
+
+The patchset has been built for a variety of platforms, such as x86-64,
+arm, aarch64, ppc64, parisc, m64k, mips and sparc.
+
+v2:
+	* use Linux I/O helpers (Sam, Arnd)
+
+Thomas Zimmermann (5):
+  fbdev/matrox: Remove trailing whitespaces
+  ipu-v3: Include <linux/io.h>
+  fbdev: Include <linux/io.h> in various drivers
+  fbdev: Include <linux/io.h> in drivers
+  fbdev: Define framebuffer I/O from Linux' I/O functions
+
+ drivers/gpu/ipu-v3/ipu-prv.h                |  1 +
+ drivers/video/fbdev/arcfb.c                 |  1 +
+ drivers/video/fbdev/arkfb.c                 |  1 +
+ drivers/video/fbdev/aty/atyfb.h             |  2 +
+ drivers/video/fbdev/aty/mach64_cursor.c     |  3 +-
+ drivers/video/fbdev/chipsfb.c               |  1 +
+ drivers/video/fbdev/cirrusfb.c              |  1 +
+ drivers/video/fbdev/core/cfbcopyarea.c      |  2 +-
+ drivers/video/fbdev/core/cfbfillrect.c      |  2 +
+ drivers/video/fbdev/core/cfbimgblt.c        |  2 +
+ drivers/video/fbdev/core/fbmem.c            |  1 +
+ drivers/video/fbdev/core/svgalib.c          |  2 +-
+ drivers/video/fbdev/hgafb.c                 |  2 +-
+ drivers/video/fbdev/hitfb.c                 |  2 +-
+ drivers/video/fbdev/kyro/fbdev.c            |  2 +-
+ drivers/video/fbdev/matrox/matroxfb_accel.c |  8 ++-
+ drivers/video/fbdev/matrox/matroxfb_base.h  |  6 +-
+ drivers/video/fbdev/pm2fb.c                 |  1 +
+ drivers/video/fbdev/pm3fb.c                 |  1 +
+ drivers/video/fbdev/pvr2fb.c                |  1 +
+ drivers/video/fbdev/s3fb.c                  |  1 +
+ drivers/video/fbdev/sstfb.c                 |  2 +-
+ drivers/video/fbdev/tdfxfb.c                |  2 +-
+ drivers/video/fbdev/tridentfb.c             |  1 +
+ drivers/video/fbdev/vga16fb.c               |  2 +-
+ drivers/video/fbdev/vt8623fb.c              |  1 +
+ drivers/video/fbdev/wmt_ge_rops.c           |  2 +
+ include/linux/fb.h                          | 63 +++++----------------
+ 28 files changed, 52 insertions(+), 64 deletions(-)
+
 -- 
 2.40.0
 
