@@ -1,43 +1,43 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E47C6FD9
-	for <loongarch@lists.linux.dev>; Mon,  1 May 2023 19:29:21 +0000 (UTC)
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1a69f686345so21088505ad.2
-        for <loongarch@lists.linux.dev>; Mon, 01 May 2023 12:29:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9658C746F
+	for <loongarch@lists.linux.dev>; Mon,  1 May 2023 19:29:22 +0000 (UTC)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1aaec6f189cso12402305ad.3
+        for <loongarch@lists.linux.dev>; Mon, 01 May 2023 12:29:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682969361; x=1685561361;
+        d=gmail.com; s=20221208; t=1682969362; x=1685561362;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CSVYEUhM0zGHlDR1yqa5KIpwwPynV1rh1Z3AvIT239o=;
-        b=YCg1YMo/xitXPr8EH+7i7/M0wYddD4PRgw+Xim9LG20m92WUdC9kOQT3fMeSkFJ8bz
-         2xW9Qv874by/73QMdHiVk+wqz4B7HUYL6Uj2zbe5cOYZkoH3JAXPoFdQlYFWToTwzHn7
-         dFfF9W+SZdFlY3dKNimMml0EcpIP5K8qP91gmqtjuJ3sBzpu94RZheVZlyc0ZtXP5Kh9
-         Ho0HyuApLfDJnfV0KIWHGVL4xeGycAgKdLMplPIR2oWrmLtc//uxDTAq/yAuqmVSMzMJ
-         fvK8MGrkhlBYA+kuhjIoxK7FCwuGLTfgfMGFdrbgTVFBoKNwWCi+6p4VuuSzDnIOEdqU
-         o3Sw==
+        bh=m8/b+eKq2obnq3wrn4AaChyOhPXbZKipyE2UTOB7XHg=;
+        b=Q3jl6YttJDwUuWKyn1dVs6I8W94SFWxxciTJdLpT/LELBYCeGyev+ExIC9w29x2Yt1
+         zXHIDz5du52vN2frCHR+hIpcwuJ6c3WNhfC/Gsy1nS14RuXHFXtXj5G9xq8KbaH8upCB
+         hoZ+KR9ZQITjkQA540sZmLX6PX4iGNe7NpnWG1G2AsO+NZdypSRuEfFuzqh0wPvQQaGw
+         4XpO3Q1D/iCtA92s97XY1Or0L7GqG2SHJxpwKx0yuxfIbjPslNXarskrtkCCtU8UwW5x
+         DSxt7iwfG4oFpxWasaAVqe2jz7cH5xxqomQxklMjhuQacqvGLIa7+5cde3ROrtfKL2NP
+         oDNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682969361; x=1685561361;
+        d=1e100.net; s=20221208; t=1682969362; x=1685561362;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CSVYEUhM0zGHlDR1yqa5KIpwwPynV1rh1Z3AvIT239o=;
-        b=QT/8uDYoVhZbjYbh7x5FL126Lf0ZGmnJ6H8PvsoZag+APLmnn43cFIVuijcElig1UD
-         lCcXzKlBPKj9gWgaFEEHULJIFSsr736WQ9gB+ozpU9JXi/sQUF8mvcXE0reGVIlCDemn
-         /CQftr5QjEwZmkMiz2Xu/xmVr8ZietUVMaFd3jwoFdD4055Di+lmePah+OokapTquYXn
-         D6VhO4MGmtxnalM5VsYQ0dZhVjXPiPCnkoPlmJEmDUMFJWKjHbBb0VsAY1/FtKfl/Qtm
-         m2ZIDTqMnfb9x0LD+bIbzrp/t/BG/qr+0ngGL3LmLcHS6xXPv4adomwh64Ofm1RMn9yR
-         V0Uw==
-X-Gm-Message-State: AC+VfDwffJMctAbY7Ki53Pvr5njlg6V0lx2Nu51jCIk9ne+EFtxaOvjG
-	1tM1yOCYPI3TG5gwboXd9Zo=
-X-Google-Smtp-Source: ACHHUZ6yreaxJl7mf5rX62OpE7ktDECZCzzaxE5NqOb8jR7RBUIdxZHYmi631H3wh4Z5BZGAmm3BhA==
-X-Received: by 2002:a17:902:c712:b0:1ab:3ba:d2c1 with SMTP id p18-20020a170902c71200b001ab03bad2c1mr1428915plp.44.1682969360924;
-        Mon, 01 May 2023 12:29:20 -0700 (PDT)
+        bh=m8/b+eKq2obnq3wrn4AaChyOhPXbZKipyE2UTOB7XHg=;
+        b=hYHq4kA5A8L7t61mU5dRXAesOEtibh8A4He7oo3lXEod6C8gsQNGb4og7IlyN9jXVs
+         OBGGt6sjncekmUiPoFV8gow9b1C7X4UoBBQr8FdmCXITqOG8LfKUnIk4Z5xDCukXULRZ
+         TaymniB8nBd/z3wsJmDzktUjsbHOrHYuJ6BItiWkJQaMG3XFjwCfETvHrnD6bMvsBs+E
+         yaFWBCEs1zdBljpjftS3thVbpM/q9hWrg48lxG30HqhAhx9fPsl8fBuoNqLgQ4etvF8F
+         cdFIvMQ2sJshk7Opt5VT/084cMevpoA4IjjBdsjc2PVD+Ppc9xg2oUfGFcm21a4Ox7SC
+         GvPA==
+X-Gm-Message-State: AC+VfDyPokMcHoEoaI91DoaFp+T5piPSsSbrmnXzFblhQ//iY1oqU+PW
+	RoLWik3q0HH9VzX64fosog0=
+X-Google-Smtp-Source: ACHHUZ7SACaylL3/aSyKhkx7S2g1HYBvFG08B1pme9nPnu6u4pSNBbJS188a/Kq3fbmOV3eKOsv72w==
+X-Received: by 2002:a17:902:db0b:b0:1aa:e5cd:647a with SMTP id m11-20020a170902db0b00b001aae5cd647amr7875588plx.23.1682969362180;
+        Mon, 01 May 2023 12:29:22 -0700 (PDT)
 Received: from fedora.hsd1.ca.comcast.net ([2601:644:937f:7f20::9a2c])
-        by smtp.googlemail.com with ESMTPSA id u8-20020a170902bf4800b0019c13d032d8sm18175622pls.253.2023.05.01.12.29.19
+        by smtp.googlemail.com with ESMTPSA id u8-20020a170902bf4800b0019c13d032d8sm18175622pls.253.2023.05.01.12.29.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 May 2023 12:29:20 -0700 (PDT)
+        Mon, 01 May 2023 12:29:21 -0700 (PDT)
 From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Matthew Wilcox <willy@infradead.org>
@@ -59,10 +59,10 @@ Cc: linux-mm@kvack.org,
 	xen-devel@lists.xenproject.org,
 	kvm@vger.kernel.org,
 	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>
-Subject: [PATCH v2 32/34] sparc: Convert pgtable_pte_page_{ctor, dtor}() to ptdesc equivalents
-Date: Mon,  1 May 2023 12:28:27 -0700
-Message-Id: <20230501192829.17086-33-vishal.moola@gmail.com>
+	Richard Weinberger <richard@nod.at>
+Subject: [PATCH v2 33/34] um: Convert {pmd, pte}_free_tlb() to use ptdescs
+Date: Mon,  1 May 2023 12:28:28 -0700
+Message-Id: <20230501192829.17086-34-vishal.moola@gmail.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230501192829.17086-1-vishal.moola@gmail.com>
 References: <20230501192829.17086-1-vishal.moola@gmail.com>
@@ -74,37 +74,47 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Part of the conversions to replace pgtable pte constructor/destructors with
-ptdesc equivalents.
+Part of the conversions to replace pgtable constructor/destructors with
+ptdesc equivalents. Also cleans up some spacing issues.
 
 Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
 ---
- arch/sparc/mm/srmmu.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/um/include/asm/pgalloc.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-index 13f027afc875..964938aa7b88 100644
---- a/arch/sparc/mm/srmmu.c
-+++ b/arch/sparc/mm/srmmu.c
-@@ -355,7 +355,8 @@ pgtable_t pte_alloc_one(struct mm_struct *mm)
- 		return NULL;
- 	page = pfn_to_page(__nocache_pa((unsigned long)ptep) >> PAGE_SHIFT);
- 	spin_lock(&mm->page_table_lock);
--	if (page_ref_inc_return(page) == 2 && !pgtable_pte_page_ctor(page)) {
-+	if (page_ref_inc_return(page) == 2 &&
-+			!ptdesc_pte_ctor(page_ptdesc(page))) {
- 		page_ref_dec(page);
- 		ptep = NULL;
- 	}
-@@ -371,7 +372,7 @@ void pte_free(struct mm_struct *mm, pgtable_t ptep)
- 	page = pfn_to_page(__nocache_pa((unsigned long)ptep) >> PAGE_SHIFT);
- 	spin_lock(&mm->page_table_lock);
- 	if (page_ref_dec_return(page) == 1)
--		pgtable_pte_page_dtor(page);
-+		ptdesc_pte_dtor(page_ptdesc(page));
- 	spin_unlock(&mm->page_table_lock);
+diff --git a/arch/um/include/asm/pgalloc.h b/arch/um/include/asm/pgalloc.h
+index 8ec7cd46dd96..760b029505c1 100644
+--- a/arch/um/include/asm/pgalloc.h
++++ b/arch/um/include/asm/pgalloc.h
+@@ -25,19 +25,19 @@
+  */
+ extern pgd_t *pgd_alloc(struct mm_struct *);
  
- 	srmmu_free_nocache(ptep, SRMMU_PTE_TABLE_SIZE);
+-#define __pte_free_tlb(tlb,pte, address)		\
+-do {							\
+-	pgtable_pte_page_dtor(pte);			\
+-	tlb_remove_page((tlb),(pte));			\
++#define __pte_free_tlb(tlb, pte, address)			\
++do {								\
++	ptdesc_pte_dtor(page_ptdesc(pte));			\
++	tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));	\
+ } while (0)
+ 
+ #ifdef CONFIG_3_LEVEL_PGTABLES
+ 
+-#define __pmd_free_tlb(tlb, pmd, address)		\
+-do {							\
+-	pgtable_pmd_page_dtor(virt_to_page(pmd));	\
+-	tlb_remove_page((tlb),virt_to_page(pmd));	\
+-} while (0)						\
++#define __pmd_free_tlb(tlb, pmd, address)			\
++do {								\
++	ptdesc_pmd_dtor(virt_to_ptdesc(pmd));			\
++	tlb_remove_page_ptdesc((tlb), virt_to_ptdesc(pmd));	\
++} while (0)
+ 
+ #endif
+ 
 -- 
 2.39.2
 
