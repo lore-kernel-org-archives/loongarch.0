@@ -1,254 +1,169 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D7A7E
-	for <loongarch@lists.linux.dev>; Tue,  2 May 2023 13:02:35 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4AFB321FD9;
-	Tue,  2 May 2023 13:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1683032548; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V5smhVNnov7m4A55DYdhwmZ5Y9gsYQLIUAvwyfQy1iw=;
-	b=YgAQQGGhS9p5y+Qswq2XdSC0Nb5dRapZC8k3SeCH8ou3A7cBdpeF9R1VcV/D98SVwf2rqe
-	0/HTdmP3C415eNlicuQLimYKjbyJJmXE/+RevYro6XFUrrADggGk+JzkjCj37yrvnbcWUc
-	CPnxgHuTmqGD/7I9ChAO48pm4esmuco=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1683032548;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V5smhVNnov7m4A55DYdhwmZ5Y9gsYQLIUAvwyfQy1iw=;
-	b=V6uRErJzJdt0ssGWz2NlWwz2l3uwbLi85IInTKe1+Lc39r1ohNgsoEqJ7rVGTetXUVCdaL
-	Bwkd9zjgj4ixg2AQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DFF23134FB;
-	Tue,  2 May 2023 13:02:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 8NHLNeMJUWRYTQAAMHmgww
-	(envelope-from <tzimmermann@suse.de>); Tue, 02 May 2023 13:02:27 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: deller@gmx.de,
-	geert@linux-m68k.org,
-	javierm@redhat.com,
-	daniel@ffwll.ch,
-	vgupta@kernel.org,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	davem@davemloft.net,
-	James.Bottomley@HansenPartnership.com,
-	arnd@arndb.de,
-	sam@ravnborg.org
-Cc: linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-arch@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org,
-	sparclinux@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-parisc@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v3 6/6] fbdev: Rename fb_mem*() helpers
-Date: Tue,  2 May 2023 15:02:23 +0200
-Message-Id: <20230502130223.14719-7-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230502130223.14719-1-tzimmermann@suse.de>
-References: <20230502130223.14719-1-tzimmermann@suse.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F61D7E
+	for <loongarch@lists.linux.dev>; Tue,  2 May 2023 14:24:43 +0000 (UTC)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1aaebed5bd6so20628765ad.1
+        for <loongarch@lists.linux.dev>; Tue, 02 May 2023 07:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683037483; x=1685629483;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s1aeen3ZK+Eot6IC/oOTAkZg5Jx6a7diThkYUUdZei0=;
+        b=o7eV6bV5rpKciv6EIj9ga4Omoc8JiajzV/SXD9s6GTpCIHwLsqIeUrnFZuC+xAIaiW
+         WjEsJu1B2GKv/VlyiP9foiCAZE6F++nD+BWDCHQtjX8GXp25FXxTTDqEhJfEaCmCRZnW
+         r/TojnhdtU1uIxMuMFFOdIT7Ow7MxYnqTZbrKtm4QgaRKGsCrFqUlZThCmVisJrJf8LM
+         /bNVZ2wUIhggAaUQvPy2HmP3xLnCZxM2nh9Oy/B1JiqMdIiCPGs2rAsKMpXcHd+3R9I1
+         ZjnOJ4VKyNowo/00zxs8soF2kfewUpLu4llf08zWCp8MVLdUhOzj6mQ/SdBcj0q0dUoG
+         ml+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683037483; x=1685629483;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=s1aeen3ZK+Eot6IC/oOTAkZg5Jx6a7diThkYUUdZei0=;
+        b=MHU9YG9zTD42RCAPz3L3aXseGfFtO9beOn9e1fVNMvvgVze8UpGm27JZ75clkYc1sJ
+         PFI9jpT7Yw9/OB5l22/zMKNaJC3EAWrHg7Xqpuiu6q21LsqGTr3cKmVP0x0QEjxAYfge
+         z9Y5zUJOh0PmX4bFlHe0TwpDpT5xbMQUShpPH8Rj8c4GzU5Ji0Nfn1DlvrQHeb9KgbcE
+         pQGf1rDXPDsQKq9zFqxSUdAIq1mu15vd3MCxwbIiIxs4MBHMbn+4cjzQv+atUXKXVkVa
+         AOAiNjG28i1zC8EwAVzV+gesvyoZtnXO3NkASTqI9y830G5ZcciECscET1+IxJhEI8Y6
+         O2iQ==
+X-Gm-Message-State: AC+VfDwm7DjTeNqP214RWmg2rghG5Q0y1P5lmLcfYjUDunMJNPf8+shp
+	yDF/VMSMKNdj3/9MxlHmz9k=
+X-Google-Smtp-Source: ACHHUZ7J8Aas1J2Rc20jnb1KGckFkPjq+j4uXL85mWslpQ5/EpkOpe4cYomHtpe0qtAoy+AsMW7sBg==
+X-Received: by 2002:a17:902:d349:b0:1a9:2823:dad3 with SMTP id l9-20020a170902d34900b001a92823dad3mr18355696plk.42.1683037482638;
+        Tue, 02 May 2023 07:24:42 -0700 (PDT)
+Received: from localhost (118-208-214-188.tpgi.com.au. [118.208.214.188])
+        by smtp.gmail.com with ESMTPSA id x10-20020a170902b40a00b001ab05aaaf8fsm2012505plr.104.2023.05.02.07.24.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 May 2023 07:24:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 03 May 2023 00:24:24 +1000
+Message-Id: <CSBUZL6M3MSS.316JRNGXVMLB@wheely>
+Subject: Re: [PATCH] Remove HAVE_VIRT_CPU_ACCOUNTING_GEN option
+From: "Nicholas Piggin" <npiggin@gmail.com>
+To: "Palmer Dabbelt" <palmer@dabbelt.com>
+Cc: "Arnd Bergmann" <arnd@arndb.de>, <linux-arch@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <vgupta@kernel.org>,
+ <linux-snps-arc@lists.infradead.org>, <bcain@quicinc.com>,
+ <linux-hexagon@vger.kernel.org>, <chenhuacai@kernel.org>,
+ <loongarch@lists.linux.dev>, <geert@linux-m68k.org>,
+ <linux-m68k@lists.linux-m68k.org>, <monstr@monstr.eu>,
+ <tsbogend@alpha.franken.de>, <linux-mips@vger.kernel.org>,
+ <dinguyen@kernel.org>, <jonas@southpole.se>,
+ <stefan.kristiansson@saunalahti.fi>, <shorne@gmail.com>,
+ <linux-openrisc@vger.kernel.org>, <James.Bottomley@HansenPartnership.com>,
+ <deller@gmx.de>, <linux-parisc@vger.kernel.org>, "Paul Walmsley"
+ <paul.walmsley@sifive.com>, <aou@eecs.berkeley.edu>,
+ <linux-riscv@lists.infradead.org>, <ysato@users.sourceforge.jp>,
+ <dalias@libc.org>, <glaubitz@physik.fu-berlin.de>,
+ <linux-sh@vger.kernel.org>, <davem@davemloft.net>,
+ <sparclinux@vger.kernel.org>, <richard@nod.at>,
+ <anton.ivanov@cambridgegreys.com>, <johannes@sipsolutions.net>,
+ <linux-um@lists.infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+ <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+ <hpa@zytor.com>, <khilman@baylibre.com>, <frederic@kernel.org>
+X-Mailer: aerc 0.14.0
+References: <20230429063348.125544-1-npiggin@gmail.com>
+ <mhng-7ec0443b-2201-41b7-996c-78c3a61f0230@palmer-ri-x1c9a>
+In-Reply-To: <mhng-7ec0443b-2201-41b7-996c-78c3a61f0230@palmer-ri-x1c9a>
 
-Update the names of the fb_mem*() helpers to be consistent with their
-regular counterparts. Hence, fb_memset() now becomes fb_memset_io(),
-fb_memcpy_fromfb() now becomes fb_memcpy_fromio() and fb_memcpy_tofb()
-becomes fb_memcpy_toio(). No functional changes.
+On Sun Apr 30, 2023 at 6:14 AM AEST, Palmer Dabbelt wrote:
+> On Fri, 28 Apr 2023 23:33:48 PDT (-0700), npiggin@gmail.com wrote:
+> > This option was created in commit 554b0004d0ec4 ("vtime: Add
+> > HAVE_VIRT_CPU_ACCOUNTING_GEN Kconfig") for architectures to indicate
+> > they support the 64-bit cputime_t required for VIRT_CPU_ACCOUNTING_GEN.
+> >
+> > The cputime_t type has since been removed, so this doesn't have any
+> > meaning. Remove it.
+> >
+> > Cc: linux-arch@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: Vineet Gupta <vgupta@kernel.org>
+> > Cc: linux-snps-arc@lists.infradead.org
+> > Cc: Brian Cain <bcain@quicinc.com>
+> > Cc: linux-hexagon@vger.kernel.org
+> > Cc: Huacai Chen <chenhuacai@kernel.org>
+> > Cc: loongarch@lists.linux.dev
+> > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Cc: linux-m68k@lists.linux-m68k.org
+> > Cc: Michal Simek <monstr@monstr.eu>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: Dinh Nguyen <dinguyen@kernel.org>
+> > Cc: Jonas Bonn <jonas@southpole.se>
+> > Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+> > Cc: Stafford Horne <shorne@gmail.com>
+> > Cc: linux-openrisc@vger.kernel.org
+> > Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+> > Cc: Helge Deller <deller@gmx.de>
+> > Cc: linux-parisc@vger.kernel.org
+> > Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> > Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> > Cc: Albert Ou <aou@eecs.berkeley.edu>
+> > Cc: linux-riscv@lists.infradead.org
+> > Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> > Cc: Rich Felker <dalias@libc.org>
+> > Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> > Cc: linux-sh@vger.kernel.org
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: sparclinux@vger.kernel.org
+> > Cc: Richard Weinberger <richard@nod.at>
+> > Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+> > Cc: Johannes Berg <johannes@sipsolutions.net>
+> > Cc: linux-um@lists.infradead.org
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: x86@kernel.org
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Kevin Hilman <khilman@baylibre.com>
+> > Cc: Frederic Weisbecker <frederic@kernel.org>
+> > Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+> > ---
+> > Hi,
+> >
+> > Could we tidy this? I don't know what tree it can go in, timers,
+> > sched, asm-generic, probably doesn't matter.
+> >
+> > The only thing this actually does is gate VIRT_CPU_ACCOUNTING_GEN and
+> > NO_HZ_FULL so if your arch has some other issue that requires this
+> > then the documentation needs to change. Any concerns from the archs?
+> > I.e., 32-bit that does *not* define HAVE_VIRT_CPU_ACCOUNTING_GEN
+> > which looks to be:
+> >
+> > arc
+> > hexagon
+> > loongarch 32-bit with SMP
+> > m68k
+> > microblaze
+> > mips 32-bit with SMP
+> > nios2
+> > openrisc
+> > parisc 32-bit
+> > riscv 32-bit
+>
+> Nothing's jumping out, though I haven't tested this yet so I'm not 100%. =
+=20
+> I assume this isn't aimed for this merge window, given the timing? =20
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- drivers/video/fbdev/aty/mach64_cursor.c |  2 +-
- drivers/video/fbdev/chipsfb.c           |  2 +-
- drivers/video/fbdev/core/fbmem.c        |  4 ++--
- drivers/video/fbdev/kyro/fbdev.c        |  2 +-
- drivers/video/fbdev/pvr2fb.c            |  2 +-
- drivers/video/fbdev/sstfb.c             |  2 +-
- drivers/video/fbdev/stifb.c             |  4 ++--
- drivers/video/fbdev/tdfxfb.c            |  2 +-
- include/asm-generic/fb.h                | 16 ++++++++--------
- 9 files changed, 18 insertions(+), 18 deletions(-)
+No, maybe the next one though.
 
-diff --git a/drivers/video/fbdev/aty/mach64_cursor.c b/drivers/video/fbdev/aty/mach64_cursor.c
-index a848aaff510c..6adbcf366a98 100644
---- a/drivers/video/fbdev/aty/mach64_cursor.c
-+++ b/drivers/video/fbdev/aty/mach64_cursor.c
-@@ -153,7 +153,7 @@ static int atyfb_cursor(struct fb_info *info, struct fb_cursor *cursor)
- 	    u8 m, b;
- 
- 	    // Clear cursor image with 1010101010...
--	    fb_memset(dst, 0xaa, 1024);
-+	    fb_memset_io(dst, 0xaa, 1024);
- 
- 	    offset = align - width*2;
- 
-diff --git a/drivers/video/fbdev/chipsfb.c b/drivers/video/fbdev/chipsfb.c
-index 9f9ee13ba2be..297ca6eeac1e 100644
---- a/drivers/video/fbdev/chipsfb.c
-+++ b/drivers/video/fbdev/chipsfb.c
-@@ -333,7 +333,7 @@ static const struct fb_var_screeninfo chipsfb_var = {
- 
- static void init_chips(struct fb_info *p, unsigned long addr)
- {
--	fb_memset(p->screen_base, 0, 0x100000);
-+	fb_memset_io(p->screen_base, 0, 0x100000);
- 
- 	p->fix = chipsfb_fix;
- 	p->fix.smem_start = addr;
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index 3fd95a79e4c3..a696399f2160 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -804,7 +804,7 @@ fb_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 	while (count) {
- 		c  = (count > PAGE_SIZE) ? PAGE_SIZE : count;
- 		dst = buffer;
--		fb_memcpy_fromfb(dst, src, c);
-+		fb_memcpy_fromio(dst, src, c);
- 		dst += c;
- 		src += c;
- 
-@@ -881,7 +881,7 @@ fb_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
- 			break;
- 		}
- 
--		fb_memcpy_tofb(dst, src, c);
-+		fb_memcpy_toio(dst, src, c);
- 		dst += c;
- 		src += c;
- 		*ppos += c;
-diff --git a/drivers/video/fbdev/kyro/fbdev.c b/drivers/video/fbdev/kyro/fbdev.c
-index 8b6c3318bf8c..59a6b71fba44 100644
---- a/drivers/video/fbdev/kyro/fbdev.c
-+++ b/drivers/video/fbdev/kyro/fbdev.c
-@@ -738,7 +738,7 @@ static int kyrofb_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 			       info->var.bits_per_pixel);
- 	size *= info->var.yres_virtual;
- 
--	fb_memset(info->screen_base, 0, size);
-+	fb_memset_io(info->screen_base, 0, size);
- 
- 	if (register_framebuffer(info) < 0)
- 		goto out_unmap;
-diff --git a/drivers/video/fbdev/pvr2fb.c b/drivers/video/fbdev/pvr2fb.c
-index 1dfb75b15eea..5f85207e91f7 100644
---- a/drivers/video/fbdev/pvr2fb.c
-+++ b/drivers/video/fbdev/pvr2fb.c
-@@ -800,7 +800,7 @@ static int __maybe_unused pvr2fb_common_init(void)
- 		goto out_err;
- 	}
- 
--	fb_memset(fb_info->screen_base, 0, pvr2_fix.smem_len);
-+	fb_memset_io(fb_info->screen_base, 0, pvr2_fix.smem_len);
- 
- 	pvr2_fix.ypanstep	= nopan  ? 0 : 1;
- 	pvr2_fix.ywrapstep	= nowrap ? 0 : 1;
-diff --git a/drivers/video/fbdev/sstfb.c b/drivers/video/fbdev/sstfb.c
-index 1ee4bea467b4..327831b64b85 100644
---- a/drivers/video/fbdev/sstfb.c
-+++ b/drivers/video/fbdev/sstfb.c
-@@ -335,7 +335,7 @@ static int sst_calc_pll(const int freq, int *freq_out, struct pll_timing *t)
- static void sstfb_clear_screen(struct fb_info *info)
- {
- 	/* clear screen */
--	fb_memset(info->screen_base, 0, info->fix.smem_len);
-+	fb_memset_io(info->screen_base, 0, info->fix.smem_len);
- }
- 
- 
-diff --git a/drivers/video/fbdev/stifb.c b/drivers/video/fbdev/stifb.c
-index a3b837a5fb81..93107909155a 100644
---- a/drivers/video/fbdev/stifb.c
-+++ b/drivers/video/fbdev/stifb.c
-@@ -529,8 +529,8 @@ rattlerSetupPlanes(struct stifb_info *fb)
- 	fb->id = saved_id;
- 
- 	for (y = 0; y < fb->info.var.yres; ++y)
--		fb_memset(fb->info.screen_base + y * fb->info.fix.line_length,
--			0xff, fb->info.var.xres * fb->info.var.bits_per_pixel/8);
-+		fb_memset_io(fb->info.screen_base + y * fb->info.fix.line_length,
-+			     0xff, fb->info.var.xres * fb->info.var.bits_per_pixel/8);
- 
- 	CRX24_SET_OVLY_MASK(fb);
- 	SETUP_FB(fb);
-diff --git a/drivers/video/fbdev/tdfxfb.c b/drivers/video/fbdev/tdfxfb.c
-index 5ed8f670f51c..bc8108396c22 100644
---- a/drivers/video/fbdev/tdfxfb.c
-+++ b/drivers/video/fbdev/tdfxfb.c
-@@ -1117,7 +1117,7 @@ static int tdfxfb_cursor(struct fb_info *info, struct fb_cursor *cursor)
- 		u8 *mask = (u8 *)cursor->mask;
- 		int i;
- 
--		fb_memset(cursorbase, 0, 1024);
-+		fb_memset_io(cursorbase, 0, 1024);
- 
- 		for (i = 0; i < cursor->image.height; i++) {
- 			int h = 0;
-diff --git a/include/asm-generic/fb.h b/include/asm-generic/fb.h
-index 0540eccdbeca..bb7ee9c70e60 100644
---- a/include/asm-generic/fb.h
-+++ b/include/asm-generic/fb.h
-@@ -108,28 +108,28 @@ static inline void fb_writeq(u64 b, volatile void __iomem *addr)
- #endif
- #endif
- 
--#ifndef fb_memcpy_fromfb
--static inline void fb_memcpy_fromfb(void *to, const volatile void __iomem *from, size_t n)
-+#ifndef fb_memcpy_fromio
-+static inline void fb_memcpy_fromio(void *to, const volatile void __iomem *from, size_t n)
- {
- 	memcpy_fromio(to, from, n);
- }
--#define fb_memcpy_fromfb fb_memcpy_fromfb
-+#define fb_memcpy_fromio fb_memcpy_fromio
- #endif
- 
--#ifndef fb_memcpy_tofb
--static inline void fb_memcpy_tofb(volatile void __iomem *to, const void *from, size_t n)
-+#ifndef fb_memcpy_toio
-+static inline void fb_memcpy_toio(volatile void __iomem *to, const void *from, size_t n)
- {
- 	memcpy_toio(to, from, n);
- }
--#define fb_memcpy_tofb fb_memcpy_tofb
-+#define fb_memcpy_toio fb_memcpy_toio
- #endif
- 
- #ifndef fb_memset
--static inline void fb_memset(volatile void __iomem *addr, int c, size_t n)
-+static inline void fb_memset_io(volatile void __iomem *addr, int c, size_t n)
- {
- 	memset_io(addr, c, n);
- }
--#define fb_memset fb_memset
-+#define fb_memset fb_memset_io
- #endif
- 
- #endif /* __ASM_GENERIC_FB_H_ */
--- 
-2.40.1
+> Probably best to give this sort of thing time to bake in linux-next, but=
+=20
+> I doubt anyone is even paying attention to rv32/NO_HZ_FULL so no big=20
+> deal either way on my end.
+>
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com> # RISC-V
 
+Thanks,
+Nick
