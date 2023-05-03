@@ -1,122 +1,159 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4084C23AF
-	for <loongarch@lists.linux.dev>; Wed,  3 May 2023 08:09:54 +0000 (UTC)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-559e317eef1so59867537b3.0
-        for <loongarch@lists.linux.dev>; Wed, 03 May 2023 01:09:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683101393; x=1685693393;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3SVmNF978sXXspcYjjZLpiBDqyot8IfsoBtpE1ZoRNc=;
-        b=jHqEeBTZK+tK3ZAZ4b2Q9iAz9sGSRdARCn4ZZbDhE1VWTdy/+6lih9pEeUi0l55hW4
-         Jj38CxGf0FsN/F7XKiXXeLmnbkFTt7ZV55sLWAwHJwWArX0/v21t6TCDSf7qD9o3Tf7o
-         3l5x8Fn+CWGkAkQ67BazKpynV65tOVZnp9eRaxq/I7E4z1zhwzzZpNeCeXTx4nHMn9jl
-         5m5ZmSaZ1mnkC5Rz3aVtLzHF0tNcWmdTpDgW9NB5rkfVc4gAYkY2Ad16N1brKF6801nf
-         NEzu281ADsexLDej3KXryhsUj3AlsyVGelNhJXIoo/maMh6n8UtRU3o39AU3qi8Y1DyS
-         MW4g==
-X-Gm-Message-State: AC+VfDw+y7oGjyzY302WzcyMw5ykfpYLnCLAiGMSk1c7gvnEIXQ8SGrS
-	m3MR/mNyYPWAleAenUmKOd/+u4PYwIJXww==
-X-Google-Smtp-Source: ACHHUZ5GtJBWE2UnkDjDqTfnDtx86T+32o/v0lvFxMHss4uHM/neo6iZO8xYi813rz20RM/HG51haA==
-X-Received: by 2002:a0d:ca50:0:b0:55a:6d87:6431 with SMTP id m77-20020a0dca50000000b0055a6d876431mr7972747ywd.26.1683101392822;
-        Wed, 03 May 2023 01:09:52 -0700 (PDT)
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
-        by smtp.gmail.com with ESMTPSA id h7-20020a0dde07000000b0054662f7b42dsm8430943ywe.63.2023.05.03.01.09.50
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 May 2023 01:09:51 -0700 (PDT)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-55a2cb9788dso48012677b3.2
-        for <loongarch@lists.linux.dev>; Wed, 03 May 2023 01:09:50 -0700 (PDT)
-X-Received: by 2002:a0d:c347:0:b0:556:dd1b:3bb7 with SMTP id
- f68-20020a0dc347000000b00556dd1b3bb7mr19301020ywd.43.1683101390642; Wed, 03
- May 2023 01:09:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F59138F
+	for <loongarch@lists.linux.dev>; Wed,  3 May 2023 08:12:36 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 20EC9200C6;
+	Wed,  3 May 2023 08:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1683101555; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tc9DIPq7pTkoGAht2wWI5nJunFRzyPMlSCfbCZiBK1c=;
+	b=AfL6iumxVF5n6IeMDDLsMqi8GAlhyHaR3kxkrAEw5LnrYWieIJZS2G6Ts+xRLr/c8FGjyS
+	m6Am9kPZxnfO7W1jhSUc3DraDg+JgcMeLiHpJczw8yyNzgIrhc7jI1xqvf/b0+WrkoYEYa
+	Us6CRneW8nTxDe1t+psl10HBXWsJJ6k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1683101555;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tc9DIPq7pTkoGAht2wWI5nJunFRzyPMlSCfbCZiBK1c=;
+	b=FGzkoeTCbAxNseTk6a0KodvewqCUifKU/cEBznf4woz4fVH8jrwLfQfXnKA+dtvcl7WpaY
+	2zRnYIhzuUnF2cBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id ACF2013584;
+	Wed,  3 May 2023 08:12:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id MDUrKXIXUmQdZwAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Wed, 03 May 2023 08:12:34 +0000
+Message-ID: <97bbdb2f-6245-caf2-c0f6-d628873bd6db@suse.de>
+Date: Wed, 3 May 2023 10:12:34 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230502130223.14719-1-tzimmermann@suse.de> <20230502130223.14719-5-tzimmermann@suse.de>
- <20230502195429.GA319489@ravnborg.org> <563673c0-799d-e353-974c-91b1ab881a22@suse.de>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3 4/6] fbdev: Include <linux/io.h> via <asm/fb.h>
+Content-Language: en-US
+To: Javier Martinez Canillas <javierm@redhat.com>,
+ Sam Ravnborg <sam@ravnborg.org>
+Cc: linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org, arnd@arndb.de,
+ deller@gmx.de, chenhuacai@kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, James.Bottomley@hansenpartnership.com,
+ linux-m68k@lists.linux-m68k.org, geert@linux-m68k.org,
+ loongarch@lists.linux.dev, vgupta@kernel.org, sparclinux@vger.kernel.org,
+ kernel@xen0n.name, linux-snps-arc@lists.infradead.org, davem@davemloft.net,
+ linux-arm-kernel@lists.infradead.org
+References: <20230502130223.14719-1-tzimmermann@suse.de>
+ <20230502130223.14719-5-tzimmermann@suse.de>
+ <20230502195429.GA319489@ravnborg.org>
+ <563673c0-799d-e353-974c-91b1ab881a22@suse.de>
+ <87354dyj9i.fsf@minerva.mail-host-address-is-not-set>
+From: Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <87354dyj9i.fsf@minerva.mail-host-address-is-not-set>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------dSf0EVbufBs83iVbfepPLDAU"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------dSf0EVbufBs83iVbfepPLDAU
+Content-Type: multipart/mixed; boundary="------------jY06Zzru0ezybpxu1Q2sypmE";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Javier Martinez Canillas <javierm@redhat.com>,
+ Sam Ravnborg <sam@ravnborg.org>
+Cc: linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org, arnd@arndb.de,
+ deller@gmx.de, chenhuacai@kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, James.Bottomley@hansenpartnership.com,
+ linux-m68k@lists.linux-m68k.org, geert@linux-m68k.org,
+ loongarch@lists.linux.dev, vgupta@kernel.org, sparclinux@vger.kernel.org,
+ kernel@xen0n.name, linux-snps-arc@lists.infradead.org, davem@davemloft.net,
+ linux-arm-kernel@lists.infradead.org
+Message-ID: <97bbdb2f-6245-caf2-c0f6-d628873bd6db@suse.de>
+Subject: Re: [PATCH v3 4/6] fbdev: Include <linux/io.h> via <asm/fb.h>
+References: <20230502130223.14719-1-tzimmermann@suse.de>
+ <20230502130223.14719-5-tzimmermann@suse.de>
+ <20230502195429.GA319489@ravnborg.org>
+ <563673c0-799d-e353-974c-91b1ab881a22@suse.de>
  <87354dyj9i.fsf@minerva.mail-host-address-is-not-set>
 In-Reply-To: <87354dyj9i.fsf@minerva.mail-host-address-is-not-set>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 3 May 2023 10:09:39 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW8Sm7sBu47XQ1xygn6fzq2FzQeiuK0ncMVGHan-_k4Ow@mail.gmail.com>
-Message-ID: <CAMuHMdW8Sm7sBu47XQ1xygn6fzq2FzQeiuK0ncMVGHan-_k4Ow@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] fbdev: Include <linux/io.h> via <asm/fb.h>
-To: Javier Martinez Canillas <javierm@redhat.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>, Sam Ravnborg <sam@ravnborg.org>, linux-arch@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	loongarch@lists.linux.dev, arnd@arndb.de, deller@gmx.de, 
-	chenhuacai@kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, James.Bottomley@hansenpartnership.com, 
-	linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org, 
-	vgupta@kernel.org, sparclinux@vger.kernel.org, kernel@xen0n.name, 
-	linux-snps-arc@lists.infradead.org, davem@davemloft.net, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 3, 2023 at 9:19=E2=80=AFAM Javier Martinez Canillas
-<javierm@redhat.com> wrote:
-> Thomas Zimmermann <tzimmermann@suse.de> writes:
-> > Am 02.05.23 um 21:54 schrieb Sam Ravnborg:
-> >> On Tue, May 02, 2023 at 03:02:21PM +0200, Thomas Zimmermann wrote:
->
-> [...]
->
-> >>>   #include <linux/console.h> /* Why should fb driver call console fun=
-ctions? because console_lock() */
-> >>>   #include <video/vga.h>
-> >>>
-> >>> +#include <asm/fb.h>
-> >>
-> >> When we have a header like linux/fb.h - it is my understanding that it=
- is
-> >> preferred to include that file, and not the asm/fb.h variant.
-> >>
-> >> This is assuming the linux/fb.h contains the generic stuff, and includ=
-es
-> >> asm/fb.h for the architecture specific parts.
-> >>
-> >> So drivers will include linux/fb.h and then they automatically get the
-> >> architecture specific parts from asm/fb.h.
-> >>
-> >> In other words, drivers are not supposed to include asm/fb.h, if
-> >> linux.fb.h exists - and linux/fb.h shall include the asm/fb.h.
-> >>
-> >> If the above holds true, then it is wrong and not needed to add asm/fb=
-.h
-> >> as seen above.
-> >>
-> >>
-> >> There are countless examples where the above are not followed,
-> >> but to my best understanding the above it the preferred way to do it.
-> >
-> > Where did youher this? I only know about this in the case of asm/io.h
-> > vs. linux/io.h.
-> >
->
-> I understand that's the case too. I believe even checkpatch.pl complains
-> about it? (not that the script always get right, but just as an example).
+--------------jY06Zzru0ezybpxu1Q2sypmE
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-One more to chime in: in general, drivers should only include <linux/foo.h>=
-.
-Including <asm/foo.h> directly is the exception.
+SGkNCg0KQW0gMDMuMDUuMjMgdW0gMDk6MTkgc2NocmllYiBKYXZpZXIgTWFydGluZXogQ2Fu
+aWxsYXM6DQo+IFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPiB3cml0
+ZXM6DQo+IA0KPiBIZWxsbyBUaG9tYXMsDQo+IA0KPj4gQW0gMDIuMDUuMjMgdW0gMjE6NTQg
+c2NocmllYiBTYW0gUmF2bmJvcmc6DQo+Pj4gT24gVHVlLCBNYXkgMDIsIDIwMjMgYXQgMDM6
+MDI6MjFQTSArMDIwMCwgVGhvbWFzIFppbW1lcm1hbm4gd3JvdGU6DQo+IA0KPiBbLi4uXQ0K
+PiANCj4+Pj4gICAgI2luY2x1ZGUgPGxpbnV4L2NvbnNvbGUuaD4gLyogV2h5IHNob3VsZCBm
+YiBkcml2ZXIgY2FsbCBjb25zb2xlIGZ1bmN0aW9ucz8gYmVjYXVzZSBjb25zb2xlX2xvY2so
+KSAqLw0KPj4+PiAgICAjaW5jbHVkZSA8dmlkZW8vdmdhLmg+DQo+Pj4+ICAgIA0KPj4+PiAr
+I2luY2x1ZGUgPGFzbS9mYi5oPg0KPj4+DQo+Pj4gV2hlbiB3ZSBoYXZlIGEgaGVhZGVyIGxp
+a2UgbGludXgvZmIuaCAtIGl0IGlzIG15IHVuZGVyc3RhbmRpbmcgdGhhdCBpdCBpcw0KPj4+
+IHByZWZlcnJlZCB0byBpbmNsdWRlIHRoYXQgZmlsZSwgYW5kIG5vdCB0aGUgYXNtL2ZiLmgg
+dmFyaWFudC4NCj4+Pg0KPj4+IFRoaXMgaXMgYXNzdW1pbmcgdGhlIGxpbnV4L2ZiLmggY29u
+dGFpbnMgdGhlIGdlbmVyaWMgc3R1ZmYsIGFuZCBpbmNsdWRlcw0KPj4+IGFzbS9mYi5oIGZv
+ciB0aGUgYXJjaGl0ZWN0dXJlIHNwZWNpZmljIHBhcnRzLg0KPj4+DQo+Pj4gU28gZHJpdmVy
+cyB3aWxsIGluY2x1ZGUgbGludXgvZmIuaCBhbmQgdGhlbiB0aGV5IGF1dG9tYXRpY2FsbHkg
+Z2V0IHRoZQ0KPj4+IGFyY2hpdGVjdHVyZSBzcGVjaWZpYyBwYXJ0cyBmcm9tIGFzbS9mYi5o
+Lg0KPj4+DQo+Pj4gSW4gb3RoZXIgd29yZHMsIGRyaXZlcnMgYXJlIG5vdCBzdXBwb3NlZCB0
+byBpbmNsdWRlIGFzbS9mYi5oLCBpZg0KPj4+IGxpbnV4LmZiLmggZXhpc3RzIC0gYW5kIGxp
+bnV4L2ZiLmggc2hhbGwgaW5jbHVkZSB0aGUgYXNtL2ZiLmguDQo+Pj4NCj4+PiBJZiB0aGUg
+YWJvdmUgaG9sZHMgdHJ1ZSwgdGhlbiBpdCBpcyB3cm9uZyBhbmQgbm90IG5lZWRlZCB0byBh
+ZGQgYXNtL2ZiLmgNCj4+PiBhcyBzZWVuIGFib3ZlLg0KPj4+DQo+Pj4NCj4+PiBUaGVyZSBh
+cmUgY291bnRsZXNzIGV4YW1wbGVzIHdoZXJlIHRoZSBhYm92ZSBhcmUgbm90IGZvbGxvd2Vk
+LA0KPj4+IGJ1dCB0byBteSBiZXN0IHVuZGVyc3RhbmRpbmcgdGhlIGFib3ZlIGl0IHRoZSBw
+cmVmZXJyZWQgd2F5IHRvIGRvIGl0Lg0KPj4NCj4+IFdoZXJlIGRpZCB5b3VoZXIgdGhpcz8g
+SSBvbmx5IGtub3cgYWJvdXQgdGhpcyBpbiB0aGUgY2FzZSBvZiBhc20vaW8uaA0KPj4gdnMu
+IGxpbnV4L2lvLmguDQo+Pg0KPiANCj4gSSB1bmRlcnN0YW5kIHRoYXQncyB0aGUgY2FzZSB0
+b28uIEkgYmVsaWV2ZSBldmVuIGNoZWNrcGF0Y2gucGwgY29tcGxhaW5zDQo+IGFib3V0IGl0
+PyAobm90IHRoYXQgdGhlIHNjcmlwdCBhbHdheXMgZ2V0IHJpZ2h0LCBidXQganVzdCBhcyBh
+biBleGFtcGxlKS4NCg0KRG8geW91IGtub3cgaWYgdGhhdCdzIHRoZSBnZW5lcmFsIHJ1bGU/
+IElmIHNvLCB3ZSBtaWdodCB3YW50IHRvIA0KcmVwdXJwb3NlIDxhc20vZmJpby5oPiBmb3Ig
+dGhlIGZyYW1lYnVmZmVyIEkvTyBmdW5jdGlvbnMuDQoNCkJlc3QgcmVnYXJkcw0KVGhvbWFz
+DQoNCj4gDQoNCi0tIA0KVGhvbWFzIFppbW1lcm1hbm4NCkdyYXBoaWNzIERyaXZlciBEZXZl
+bG9wZXINClNVU0UgU29mdHdhcmUgU29sdXRpb25zIEdlcm1hbnkgR21iSA0KRnJhbmtlbnN0
+cmFzc2UgMTQ2LCA5MDQ2MSBOdWVybmJlcmcsIEdlcm1hbnkNCkdGOiBJdm8gVG90ZXYsIEFu
+ZHJldyBNeWVycywgQW5kcmV3IE1jRG9uYWxkLCBCb3VkaWVuIE1vZXJtYW4NCkhSQiAzNjgw
+OSAoQUcgTnVlcm5iZXJnKQ0K
 
-Gr{oetje,eeting}s,
+--------------jY06Zzru0ezybpxu1Q2sypmE--
 
-                        Geert
+--------------dSf0EVbufBs83iVbfepPLDAU
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+-----BEGIN PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmRSF3IFAwAAAAAACgkQlh/E3EQov+Co
+3g/6A1O5+d0Sok09homhPOuVYuX/fK3UvhI7SSV8CChfilInrDjHcBh3jZGT5VD8NdGux1i8OQxK
+SNEswIVXK40SH6+Y0VAdvKHmixI6U2QTDsL7MBhKwd5zqxJaC633oR+0O5npj9Uo53fZexFuxt2V
+e/CxFlEFP30w+g5h8llM8g4Orz09mTPc2adxi5sG2jxhW6W/2sln8thofU3yEW+ktvjmpe+mu8fT
+72z8h3S5FP2SiZx09O6cKPR6GAf77CRPpigHnaw9SGeLDC3av+/X0Cet6toxCdExmHUKOqooBdQp
+MqElnyMAn8XN5YTFfwd2IfIFVyUdgni/3Kj0NAF2OtX6Y6u3gM/zoRZu4dBoThTh3P7alznR5hHX
+0rOZUuoOooOsRvjyx9nwL1zfgW5PbSrgC0RP0kka8Rbqofr7cCqLq2JxczFEOEzDZJc1c2fyw5PJ
+QxN47HbhHLwTQ4vjSy9USnQgxUz5Jg9yleUgYY/BvZZjEgHJWx/h7k2U+bgjWbJYaX0KyHe8uSto
+TVHJWxWdhESiQ3IqKgNzEj4iWc0Ocyeb5WdhBxWFyu3CuzN2Nr9LBsXEdDrUoTpySpABcGwOtjWJ
+CdQhriQsbKyN63JDZU7KL211DvtCm4TQn7hLgIIwfJoNQcc7FvwDJYkgNXl2IVsfLHQcbDpJiGjV
+J3o=
+=n0cz
+-----END PGP SIGNATURE-----
+
+--------------dSf0EVbufBs83iVbfepPLDAU--
