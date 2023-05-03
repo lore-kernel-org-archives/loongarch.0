@@ -1,165 +1,116 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CE6EDA
-	for <loongarch@lists.linux.dev>; Wed,  3 May 2023 08:15:49 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 39EE42243F;
-	Wed,  3 May 2023 08:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1683101747; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VW0FfpZ5EtETq7yCOkYo+qlix2ZyBUBojsHtq2hd8TA=;
-	b=MuQvChSfA2IDS6S05iNDyQyZ2a6O9gkfCvfv/juDEp+/JjYfCXaw5aRdllBqtORd4w0lvH
-	MMpF1p0h+HksQzidlVaG1vTBVkrGE6k5WfrGi9yOZqvMjIqK0X/anK3bUtV69XdPDWSyzT
-	ktL7D5G363WQJN2rFiox3mUujejjMqY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1683101747;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VW0FfpZ5EtETq7yCOkYo+qlix2ZyBUBojsHtq2hd8TA=;
-	b=FhwTHUpLesjcxw7yI5n/tkbaRQvucKeGimE41tUf5EiJbg1iyL+bNuq0pfbzjRTqSeLlA+
-	R9NJc45dKlBxqIAw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BF39413584;
-	Wed,  3 May 2023 08:15:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id m070LDIYUmQ/aQAAMHmgww
-	(envelope-from <tzimmermann@suse.de>); Wed, 03 May 2023 08:15:46 +0000
-Message-ID: <828664d0-3562-56cc-019d-1bb8a55826b5@suse.de>
-Date: Wed, 3 May 2023 10:15:46 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E438B4A15
+	for <loongarch@lists.linux.dev>; Wed,  3 May 2023 08:22:05 +0000 (UTC)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-55a5a830238so29720867b3.3
+        for <loongarch@lists.linux.dev>; Wed, 03 May 2023 01:22:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683102125; x=1685694125;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yf0nQOOKHL0GEtmAgACXt9/1DKDkHK6ft7tmYSYGTKo=;
+        b=HeyNcKb53/MlIlxMUawp6my3udvMbFRFpqjTLupzLHVbxQ3cbTAHddGJBOTxSLEXe1
+         MbdPXa53JxoJf7as2Yy8kbBZaNuOIcgJmYswJXvaPAwSNbmgB6gSzrFt40ySfo7BjngI
+         GQhekQ4lPNYo5+WH0OWWZAsEn1i8TGz99gk23mWIdwxAjdy7tBs8mnQcZvtU3Hy6S/yI
+         c/DQ8VXFMz3LrZyaCQpA1K5AMXpqfNMjY2CHyzmcw5FMiezLlPL9Km4gEGfssWW1kptS
+         bmGPp8cnV2w0ICn9YaT947NZN9q8ygO7yuAQtI5eWnbebdYwjVbfodxr9THtAEatiw0m
+         Gbag==
+X-Gm-Message-State: AC+VfDyagZdYSD3XU1PLwKCVfHDrC7WWPRFyC7SlL/Wpa4iS//TZcO7U
+	p/eo7zJhBFpFAuIR0cQj7ZxgaWiUpm1Mtw==
+X-Google-Smtp-Source: ACHHUZ4Zso4xKXVm3Dmd5mnu3vkrH5YdSKKIwx5mlPTrsklvp+rZNEt02J1Lc7KGmAULvf53QL7oIw==
+X-Received: by 2002:a0d:cb4f:0:b0:55a:46d3:5a3c with SMTP id n76-20020a0dcb4f000000b0055a46d35a3cmr9617165ywd.16.1683102124706;
+        Wed, 03 May 2023 01:22:04 -0700 (PDT)
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
+        by smtp.gmail.com with ESMTPSA id u14-20020a81840e000000b0055a85ab2704sm1286395ywf.20.2023.05.03.01.22.02
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 May 2023 01:22:03 -0700 (PDT)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-55c939fb24dso2907617b3.2
+        for <loongarch@lists.linux.dev>; Wed, 03 May 2023 01:22:02 -0700 (PDT)
+X-Received: by 2002:a25:240f:0:b0:b9d:d5dc:596c with SMTP id
+ k15-20020a25240f000000b00b9dd5dc596cmr11998230ybk.12.1683102122353; Wed, 03
+ May 2023 01:22:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3 6/6] fbdev: Rename fb_mem*() helpers
-Content-Language: en-US
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: deller@gmx.de, geert@linux-m68k.org, javierm@redhat.com, daniel@ffwll.ch,
- vgupta@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
- davem@davemloft.net, James.Bottomley@hansenpartnership.com, arnd@arndb.de,
- linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-arch@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-parisc@vger.kernel.org
 References: <20230502130223.14719-1-tzimmermann@suse.de>
- <20230502130223.14719-7-tzimmermann@suse.de>
- <20230502200813.GC319489@ravnborg.org>
-From: Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <20230502200813.GC319489@ravnborg.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------Yg2pS7gKZkskFTz8vk2lKAPH"
+In-Reply-To: <20230502130223.14719-1-tzimmermann@suse.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 3 May 2023 10:21:50 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV06LN17KzOh42vjyF504myT=D=a-zz3MduOmQPEmv5SA@mail.gmail.com>
+Message-ID: <CAMuHMdV06LN17KzOh42vjyF504myT=D=a-zz3MduOmQPEmv5SA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] fbdev: Move framebuffer I/O helpers to <asm/fb.h>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: deller@gmx.de, javierm@redhat.com, daniel@ffwll.ch, vgupta@kernel.org, 
+	chenhuacai@kernel.org, kernel@xen0n.name, davem@davemloft.net, 
+	James.Bottomley@hansenpartnership.com, arnd@arndb.de, sam@ravnborg.org, 
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-arch@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-parisc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------Yg2pS7gKZkskFTz8vk2lKAPH
-Content-Type: multipart/mixed; boundary="------------v700H0v7Hs7IzDa1ExtAP020";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: deller@gmx.de, geert@linux-m68k.org, javierm@redhat.com, daniel@ffwll.ch,
- vgupta@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
- davem@davemloft.net, James.Bottomley@hansenpartnership.com, arnd@arndb.de,
- linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-arch@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-parisc@vger.kernel.org
-Message-ID: <828664d0-3562-56cc-019d-1bb8a55826b5@suse.de>
-Subject: Re: [PATCH v3 6/6] fbdev: Rename fb_mem*() helpers
-References: <20230502130223.14719-1-tzimmermann@suse.de>
- <20230502130223.14719-7-tzimmermann@suse.de>
- <20230502200813.GC319489@ravnborg.org>
-In-Reply-To: <20230502200813.GC319489@ravnborg.org>
+Hi Thomas,
 
---------------v700H0v7Hs7IzDa1ExtAP020
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+On Tue, May 2, 2023 at 3:02=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse.=
+de> wrote:
+> (was: fbdev: Use regular I/O function for framebuffers)
+>
+> Fbdev provides helpers for framebuffer I/O, such as fb_readl(),
+> fb_writel() or fb_memcpy_to_fb(). The implementation of each helper
+> depends on the architecture, but they are all equivalent to regular
+> I/O functions of similar names. So use regular functions instead and
+> move all helpers into <asm-generic/fb.h>
+>
+> The first patch a simple whitespace cleanup.
+>
+> Until now, <linux/fb.h> contained an include of <asm/io.h>. As this
+> will go away patches 2 to 4 prepare include statements in the various
+> drivers. Source files that use regular I/O helpers, such as readl(),
+> now include <linux/io.h>. Source files that use framebuffer I/O
+> helpers, such as fb_readl(), also include <asm/fb.h>.
+>
+> Patch 5 replaces the architecture-based if-else branching in
+> <linux/fb.h> by helpers in <asm-generic/fb.h>. All helpers use Linux'
+> existing I/O functions.
+>
+> Patch 6 harmonizes naming among fbdev and existing I/O functions.
+>
+> The patchset has been built for a variety of platforms, such as x86-64,
+> arm, aarch64, ppc64, parisc, m64k, mips and sparc.
+>
+> v3:
+>         * add the new helpers in <asm-generic/fb.h>
+>         * support reordering and native byte order (Geert, Arnd)
 
-SGkNCg0KQW0gMDIuMDUuMjMgdW0gMjI6MDggc2NocmllYiBTYW0gUmF2bmJvcmc6DQo+IEhp
-IFRob21hcy4NCj4gDQo+IE9uIFR1ZSwgTWF5IDAyLCAyMDIzIGF0IDAzOjAyOjIzUE0gKzAy
-MDAsIFRob21hcyBaaW1tZXJtYW5uIHdyb3RlOg0KPj4gVXBkYXRlIHRoZSBuYW1lcyBvZiB0
-aGUgZmJfbWVtKigpIGhlbHBlcnMgdG8gYmUgY29uc2lzdGVudCB3aXRoIHRoZWlyDQo+PiBy
-ZWd1bGFyIGNvdW50ZXJwYXJ0cy4gSGVuY2UsIGZiX21lbXNldCgpIG5vdyBiZWNvbWVzIGZi
-X21lbXNldF9pbygpLA0KPj4gZmJfbWVtY3B5X2Zyb21mYigpIG5vdyBiZWNvbWVzIGZiX21l
-bWNweV9mcm9taW8oKSBhbmQgZmJfbWVtY3B5X3RvZmIoKQ0KPj4gYmVjb21lcyBmYl9tZW1j
-cHlfdG9pbygpLiBObyBmdW5jdGlvbmFsIGNoYW5nZXMuDQo+Pg0KPj4gU2lnbmVkLW9mZi1i
-eTogVGhvbWFzIFppbW1lcm1hbm4gPHR6aW1tZXJtYW5uQHN1c2UuZGU+DQo+PiAtLS0NCj4g
-Li4uDQo+PiAgIA0KPj4gLSNpZm5kZWYgZmJfbWVtY3B5X2Zyb21mYg0KPj4gLXN0YXRpYyBp
-bmxpbmUgdm9pZCBmYl9tZW1jcHlfZnJvbWZiKHZvaWQgKnRvLCBjb25zdCB2b2xhdGlsZSB2
-b2lkIF9faW9tZW0gKmZyb20sIHNpemVfdCBuKQ0KPj4gKyNpZm5kZWYgZmJfbWVtY3B5X2Zy
-b21pbw0KPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBmYl9tZW1jcHlfZnJvbWlvKHZvaWQgKnRv
-LCBjb25zdCB2b2xhdGlsZSB2b2lkIF9faW9tZW0gKmZyb20sIHNpemVfdCBuKQ0KPj4gICB7
-DQo+PiAgIAltZW1jcHlfZnJvbWlvKHRvLCBmcm9tLCBuKTsNCj4+ICAgfQ0KPj4gLSNkZWZp
-bmUgZmJfbWVtY3B5X2Zyb21mYiBmYl9tZW1jcHlfZnJvbWZiDQo+PiArI2RlZmluZSBmYl9t
-ZW1jcHlfZnJvbWlvIGZiX21lbWNweV9mcm9taW8NCj4+ICAgI2VuZGlmDQo+PiAgIA0KPj4g
-LSNpZm5kZWYgZmJfbWVtY3B5X3RvZmINCj4+IC1zdGF0aWMgaW5saW5lIHZvaWQgZmJfbWVt
-Y3B5X3RvZmIodm9sYXRpbGUgdm9pZCBfX2lvbWVtICp0bywgY29uc3Qgdm9pZCAqZnJvbSwg
-c2l6ZV90IG4pDQo+PiArI2lmbmRlZiBmYl9tZW1jcHlfdG9pbw0KPj4gK3N0YXRpYyBpbmxp
-bmUgdm9pZCBmYl9tZW1jcHlfdG9pbyh2b2xhdGlsZSB2b2lkIF9faW9tZW0gKnRvLCBjb25z
-dCB2b2lkICpmcm9tLCBzaXplX3QgbikNCj4+ICAgew0KPj4gICAJbWVtY3B5X3RvaW8odG8s
-IGZyb20sIG4pOw0KPj4gICB9DQo+PiAtI2RlZmluZSBmYl9tZW1jcHlfdG9mYiBmYl9tZW1j
-cHlfdG9mYg0KPj4gKyNkZWZpbmUgZmJfbWVtY3B5X3RvaW8gZmJfbWVtY3B5X3RvaW8NCj4+
-ICAgI2VuZGlmDQo+PiAgIA0KPj4gICAjaWZuZGVmIGZiX21lbXNldA0KPj4gLXN0YXRpYyBp
-bmxpbmUgdm9pZCBmYl9tZW1zZXQodm9sYXRpbGUgdm9pZCBfX2lvbWVtICphZGRyLCBpbnQg
-Yywgc2l6ZV90IG4pDQo+PiArc3RhdGljIGlubGluZSB2b2lkIGZiX21lbXNldF9pbyh2b2xh
-dGlsZSB2b2lkIF9faW9tZW0gKmFkZHIsIGludCBjLCBzaXplX3QgbikNCj4+ICAgew0KPj4g
-ICAJbWVtc2V0X2lvKGFkZHIsIGMsIG4pOw0KPj4gICB9DQo+PiAtI2RlZmluZSBmYl9tZW1z
-ZXQgZmJfbWVtc2V0DQo+PiArI2RlZmluZSBmYl9tZW1zZXQgZmJfbWVtc2V0X2lvDQo+IA0K
-PiBUaGUgc3RhdGljIGlubGluZXMgd3JhcHBlcnMgZG9lcyBub3QgcHJvdmlkZSBhbnkgdmFs
-dWUsIGFuZCBjb3VsZCBiZSByZXBsYWNlZCBieQ0KPiBkaXJlY3QgY2FsbHMgdG8gbWVtY3B5
-X2Zyb21pbygpLCBtZW1jcHlfdG9pbygpLCBtZW1zZXRfaW8oKS4NCj4gDQo+IElmIHlvdSBk
-ZWNpZGUgdG8ga2VlcCB0aGUgd3JhcHBlcnMgSSB3aWxsIG5vdCBob2xkIHlvdSBiYWNrLCBz
-byB0aGUNCj4gcGF0Y2ggaGFzIG15Og0KPiBSZXZpZXdlZC1ieTogU2FtIFJhdm5ib3JnIDxz
-YW1AcmF2bmJvcmcub3JnPg0KPiANCj4gQnV0IEkgcHJlZmVyIHRoZSBkaXJlY3QgY2FsbHMg
-d2l0aG91dCB0aGUgd3JhcHBlcnMuLi4uDQoNCkF0IGZpcnN0IEkgd2FzIGFsc28gc2tlcHRp
-Y2FsIGlmIHRob3NlIGZiX21lbSooKSB3cmFwcGVycyBhcmUgbmVlZGVkLiANCkJ1dCBBcm5k
-IG1lbnRpb25lZCB0aGF0IHRoZXJlIGFyZSBzdWJ0bGUgZGlmZmVyZW5jZXMgYmV0d2VlbiB0
-aGUgY3VycmVudCANCmNvZGUgYW5kIExpbnV4JyBtZW0qX2lvKCkgZnVuY3Rpb25zLiBLZWVw
-aW5nIHRoZSB3cmFwcGVycyBtaWdodCBiZSBuZWVkZWQuDQoNCkJlc3QgcmVnYXJkcw0KVGhv
-bWFzDQoNCj4gDQo+IAlTYW0NCg0KLS0gDQpUaG9tYXMgWmltbWVybWFubg0KR3JhcGhpY3Mg
-RHJpdmVyIERldmVsb3Blcg0KU1VTRSBTb2Z0d2FyZSBTb2x1dGlvbnMgR2VybWFueSBHbWJI
-DQpGcmFua2Vuc3RyYXNzZSAxNDYsIDkwNDYxIE51ZXJuYmVyZywgR2VybWFueQ0KR0Y6IEl2
-byBUb3RldiwgQW5kcmV3IE15ZXJzLCBBbmRyZXcgTWNEb25hbGQsIEJvdWRpZW4gTW9lcm1h
-bg0KSFJCIDM2ODA5IChBRyBOdWVybmJlcmcpDQo=
+Thanks, this fixes the mangled display I was seeing on ARAnyM
+with bpp=3D16.
 
---------------v700H0v7Hs7IzDa1ExtAP020--
+BTW, this series seems to have mixed dependencies: the change
+to include/asm-generic/fb.h depends on "[PATCH v3 00/19] arch:
+Consolidate <asm/fb.h>"[1], but with that applied, I had to manually
+fixup drivers/video/fbdev/core/fb_cfb_fops.c.
 
---------------Yg2pS7gKZkskFTz8vk2lKAPH
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+[1] https://lore.kernel.org/all/20230417125651.25126-1-tzimmermann@suse.de,
 
------BEGIN PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmRSGDIFAwAAAAAACgkQlh/E3EQov+DQ
-UxAAyalpNZAKb+SrH+ZBEi1COJSY+VhSOQs2gPTxEyeIhMZ0BQ9iD4lt7OQZS8FeatCbVejmWfb1
-/4M6l90NWRpBa5fqGNqjh0dysWlKrAbogUPoA9yp3TAh3pmOEj0zlqMD3QngLS6HvcQt71O5fjSB
-dM3nUOXtaLEMc7wPPXigGONwageohdTlo4qQd0XRzp/XhMVCfdLlI/xKPMnTpUbsrQQec4CzdIiq
-zHRQfUJBh4NZmh6JhywwduXSyr2FyA+i8DGLCLCosfVes3lbNm3lPDMfXH8kR/auMzC/x4WnZ7gG
-WoEKOCGTmgPvi2YCfhbEDyW/l4+2Dm66KDdYEPNR+XCGJ61g//44HJy2DcrDthjPN/LnxJPMyJMm
-DYKyTdGWT7xOXyn/hTDEweo12E75EX6BoQuhEDpZ905S13BoKwKYuyHii6Sa6Ht8wBNtScDQzGFW
-E9Oa7tjJZSQJAWP2RyeG2LGu9P0K+uEMu15hGlo3gJUUxevTITb9QWoBns1Ij9JPSGU/Vse/l6Ho
-8ncA2bhhIC18Yl4tOilWtsckgmDCInIrgwlMrfEEiWJ00HU989oGKLzbPGb4xxKTKreJOrbDHuRb
-ooiLu0shYcBWKEG9B9cwiF4+nHb8BEWEFMpu0X1sOpoIvBs2WGQPIGsIX1gy1+WkDa6+ZpCu3MMx
-fqo=
-=YD1+
------END PGP SIGNATURE-----
+                        Geert
 
---------------Yg2pS7gKZkskFTz8vk2lKAPH--
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
