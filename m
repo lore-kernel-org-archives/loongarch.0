@@ -1,116 +1,107 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wnew2-smtp.messagingengine.com (wnew2-smtp.messagingengine.com [64.147.123.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E438B4A15
-	for <loongarch@lists.linux.dev>; Wed,  3 May 2023 08:22:05 +0000 (UTC)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-55a5a830238so29720867b3.3
-        for <loongarch@lists.linux.dev>; Wed, 03 May 2023 01:22:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683102125; x=1685694125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yf0nQOOKHL0GEtmAgACXt9/1DKDkHK6ft7tmYSYGTKo=;
-        b=HeyNcKb53/MlIlxMUawp6my3udvMbFRFpqjTLupzLHVbxQ3cbTAHddGJBOTxSLEXe1
-         MbdPXa53JxoJf7as2Yy8kbBZaNuOIcgJmYswJXvaPAwSNbmgB6gSzrFt40ySfo7BjngI
-         GQhekQ4lPNYo5+WH0OWWZAsEn1i8TGz99gk23mWIdwxAjdy7tBs8mnQcZvtU3Hy6S/yI
-         c/DQ8VXFMz3LrZyaCQpA1K5AMXpqfNMjY2CHyzmcw5FMiezLlPL9Km4gEGfssWW1kptS
-         bmGPp8cnV2w0ICn9YaT947NZN9q8ygO7yuAQtI5eWnbebdYwjVbfodxr9THtAEatiw0m
-         Gbag==
-X-Gm-Message-State: AC+VfDyagZdYSD3XU1PLwKCVfHDrC7WWPRFyC7SlL/Wpa4iS//TZcO7U
-	p/eo7zJhBFpFAuIR0cQj7ZxgaWiUpm1Mtw==
-X-Google-Smtp-Source: ACHHUZ4Zso4xKXVm3Dmd5mnu3vkrH5YdSKKIwx5mlPTrsklvp+rZNEt02J1Lc7KGmAULvf53QL7oIw==
-X-Received: by 2002:a0d:cb4f:0:b0:55a:46d3:5a3c with SMTP id n76-20020a0dcb4f000000b0055a46d35a3cmr9617165ywd.16.1683102124706;
-        Wed, 03 May 2023 01:22:04 -0700 (PDT)
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
-        by smtp.gmail.com with ESMTPSA id u14-20020a81840e000000b0055a85ab2704sm1286395ywf.20.2023.05.03.01.22.02
-        for <loongarch@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 May 2023 01:22:03 -0700 (PDT)
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-55c939fb24dso2907617b3.2
-        for <loongarch@lists.linux.dev>; Wed, 03 May 2023 01:22:02 -0700 (PDT)
-X-Received: by 2002:a25:240f:0:b0:b9d:d5dc:596c with SMTP id
- k15-20020a25240f000000b00b9dd5dc596cmr11998230ybk.12.1683102122353; Wed, 03
- May 2023 01:22:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8945DED2
+	for <loongarch@lists.linux.dev>; Wed,  3 May 2023 08:52:58 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailnew.west.internal (Postfix) with ESMTP id E927C2B0695E;
+	Wed,  3 May 2023 04:52:55 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 03 May 2023 04:52:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1683103975; x=1683111175; bh=IS
+	4EM5wdsuSjV61ICnK1JWQzvfZmpsEGvr2M9gQsBDg=; b=xFunroi/7DC9ShYZYF
+	0mkS1O4uFFPq6Ixts8x5XfA1TtFTRvtgFMSPwmY/QxmzmL4BwSEk1AAGZOWlkaw8
+	G/Qp1sWYevvX+sFvbpTZcf3rjLOBulkJ8Uiuvi16V7J3DjTqeQNEK8iP4a9KjnGf
+	AZFDczkFoeVbNFRXPynwrYtDmJgetJTY2yHzUYvc3J0ZzuF1bobFPZSiPlRGEuYf
+	3e67ij/DjoLjlsBxu1+3uM5MYZv9w2R9m7KD9LMhSly7TtZLqeq0jrg0Gls3kupf
+	1G1xcF49uh5fi9NgbQILKNzf3cG1mEsLRM3xpKbKP5GH0OST4rDQ5eyIyIPDKIcL
+	OBAQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm3; t=1683103975; x=1683111175; bh=IS4EM5wdsuSjV
+	61ICnK1JWQzvfZmpsEGvr2M9gQsBDg=; b=fOZ/xI4I2hlVOsmaVXohE0GxuJ/WQ
+	5W+sIMqjJ3nKPDW8LmKpdh2luVCCtpTNFkUrKdi1fAsUK6C/2B6+1tLefS1ddRsr
+	MmMAFZgcqtocNbZny1ua3NZ6+E5xbqP8/5bWqckB5cYLDA5DGxh9x+UY8Pw2fq+p
+	S79jlVyAhJjFWrlrypp8EpWc1dMwsc5a9hw/oePA/lCbQIxkR5ZeY/6Xsftlhc+l
+	Htz3SpG1C/s3uhEXjE4MxVAJDLcu8PvU5jAfsiTFb/NVUr9dk100g0e4uViCzcCf
+	84BNNVhGsrK57sej9W1I7Khq+NtVWqm5iYASgfRGRnF5bgsaTBk7l9gdA==
+X-ME-Sender: <xms:5iBSZB6waEbkoZSuAcdjwPbQtxZjM_QjNWuH9Z89bJoEVoKZECP9XQ>
+    <xme:5iBSZO4MbLBKe8qyXRGJZconrK-wkSHbbvOY5Nn3ucu39n3eNmHGgS9BbDQks5mVi
+    9deu1Go1vvXng1b94w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedvkedgtdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:5iBSZIetZ3io1_WwWrG5A5y-vWMtX6jG-iRLHYUbU3H91u2JRZxyIg>
+    <xmx:5iBSZKKYY7kwklx5HX9jBu4cyX4FKYnhz1QuC9yZ8w_mnITQhCunaw>
+    <xmx:5iBSZFJNJdiIT89CdIrMdBTAeYA7OFOs9bKV0VCjpS-TfgXa9njB7Q>
+    <xmx:5yBSZKCtfTyRWweziCf0h6B7K9kpLs7LYO6VLyOu5dz5_qpxplsAo3N_Uvk>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 45BA2B60086; Wed,  3 May 2023 04:52:54 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-386-g2404815117-fm-20230425.001-g24048151
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Message-Id: <0ecbc92c-7e42-4958-988b-abc265f039bf@app.fastmail.com>
+In-Reply-To: <97bbdb2f-6245-caf2-c0f6-d628873bd6db@suse.de>
 References: <20230502130223.14719-1-tzimmermann@suse.de>
-In-Reply-To: <20230502130223.14719-1-tzimmermann@suse.de>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 3 May 2023 10:21:50 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV06LN17KzOh42vjyF504myT=D=a-zz3MduOmQPEmv5SA@mail.gmail.com>
-Message-ID: <CAMuHMdV06LN17KzOh42vjyF504myT=D=a-zz3MduOmQPEmv5SA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] fbdev: Move framebuffer I/O helpers to <asm/fb.h>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: deller@gmx.de, javierm@redhat.com, daniel@ffwll.ch, vgupta@kernel.org, 
-	chenhuacai@kernel.org, kernel@xen0n.name, davem@davemloft.net, 
-	James.Bottomley@hansenpartnership.com, arnd@arndb.de, sam@ravnborg.org, 
-	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-arch@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-parisc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <20230502130223.14719-5-tzimmermann@suse.de>
+ <20230502195429.GA319489@ravnborg.org>
+ <563673c0-799d-e353-974c-91b1ab881a22@suse.de>
+ <87354dyj9i.fsf@minerva.mail-host-address-is-not-set>
+ <97bbdb2f-6245-caf2-c0f6-d628873bd6db@suse.de>
+Date: Wed, 03 May 2023 10:52:34 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "Javier Martinez Canillas" <javierm@redhat.com>,
+ "Sam Ravnborg" <sam@ravnborg.org>
+Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-fbdev@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+ "Helge Deller" <deller@gmx.de>, "Huacai Chen" <chenhuacai@kernel.org>,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ linux-m68k@lists.linux-m68k.org, "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ loongarch@lists.linux.dev, "Vineet Gupta" <vgupta@kernel.org>,
+ sparclinux@vger.kernel.org, "WANG Xuerui" <kernel@xen0n.name>,
+ linux-snps-arc@lists.infradead.org, "David S . Miller" <davem@davemloft.net>,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 4/6] fbdev: Include <linux/io.h> via <asm/fb.h>
+Content-Type: text/plain
 
-Hi Thomas,
-
-On Tue, May 2, 2023 at 3:02=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse.=
-de> wrote:
-> (was: fbdev: Use regular I/O function for framebuffers)
+On Wed, May 3, 2023, at 10:12, Thomas Zimmermann wrote:
+> Am 03.05.23 um 09:19 schrieb Javier Martinez Canillas:
+>> Thomas Zimmermann <tzimmermann@suse.de> writes:
+>>>>
+>>>> There are countless examples where the above are not followed,
+>>>> but to my best understanding the above it the preferred way to do it.
+>>>
+>>> Where did youher this? I only know about this in the case of asm/io.h
+>>> vs. linux/io.h.
+>>>
+>> 
+>> I understand that's the case too. I believe even checkpatch.pl complains
+>> about it? (not that the script always get right, but just as an example).
 >
-> Fbdev provides helpers for framebuffer I/O, such as fb_readl(),
-> fb_writel() or fb_memcpy_to_fb(). The implementation of each helper
-> depends on the architecture, but they are all equivalent to regular
-> I/O functions of similar names. So use regular functions instead and
-> move all helpers into <asm-generic/fb.h>
->
-> The first patch a simple whitespace cleanup.
->
-> Until now, <linux/fb.h> contained an include of <asm/io.h>. As this
-> will go away patches 2 to 4 prepare include statements in the various
-> drivers. Source files that use regular I/O helpers, such as readl(),
-> now include <linux/io.h>. Source files that use framebuffer I/O
-> helpers, such as fb_readl(), also include <asm/fb.h>.
->
-> Patch 5 replaces the architecture-based if-else branching in
-> <linux/fb.h> by helpers in <asm-generic/fb.h>. All helpers use Linux'
-> existing I/O functions.
->
-> Patch 6 harmonizes naming among fbdev and existing I/O functions.
->
-> The patchset has been built for a variety of platforms, such as x86-64,
-> arm, aarch64, ppc64, parisc, m64k, mips and sparc.
->
-> v3:
->         * add the new helpers in <asm-generic/fb.h>
->         * support reordering and native byte order (Geert, Arnd)
+> Do you know if that's the general rule? If so, we might want to 
+> repurpose <asm/fbio.h> for the framebuffer I/O functions.
 
-Thanks, this fixes the mangled display I was seeing on ARAnyM
-with bpp=3D16.
+It's certainly the general trend across all of the kernel to have
+drivers prefer including linux/*.h, and to move stuff from asm/*.h
+to linux/*.h as it gets generalized across architectures.
 
-BTW, this series seems to have mixed dependencies: the change
-to include/asm-generic/fb.h depends on "[PATCH v3 00/19] arch:
-Consolidate <asm/fb.h>"[1], but with that applied, I had to manually
-fixup drivers/video/fbdev/core/fb_cfb_fops.c.
-
-[1] https://lore.kernel.org/all/20230417125651.25126-1-tzimmermann@suse.de,
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+     Arnd
