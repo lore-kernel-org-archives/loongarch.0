@@ -1,120 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FA1111E
-	for <loongarch@lists.linux.dev>; Wed,  3 May 2023 07:19:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1683098366;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JWuwBsoA7E+ixFPnuQyU62/zGQyUSXimh/xtxQzzOds=;
-	b=Yih/rFJAHiaY8DcTzymU86MuRim2k6zUA0W3Eysk7pU/42d2CSiANyDtU2oEPKsW0GHeeu
-	9yQVvzZO/+sXgBHFGSwqBiTV/l9uzH8CfUb6mbArG+Vng9CT49t7qBA973Gp2SvERKGl7X
-	Q+knl9oug8drqKei940PcigipRUFEgU=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-22-SwTqiXdoNUKN5Ip_Hk7mQg-1; Wed, 03 May 2023 03:19:24 -0400
-X-MC-Unique: SwTqiXdoNUKN5Ip_Hk7mQg-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-30641258c9eso146027f8f.2
-        for <loongarch@lists.linux.dev>; Wed, 03 May 2023 00:19:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4084C23AF
+	for <loongarch@lists.linux.dev>; Wed,  3 May 2023 08:09:54 +0000 (UTC)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-559e317eef1so59867537b3.0
+        for <loongarch@lists.linux.dev>; Wed, 03 May 2023 01:09:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683098363; x=1685690363;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JWuwBsoA7E+ixFPnuQyU62/zGQyUSXimh/xtxQzzOds=;
-        b=gGczPUtD9LALXVU62b1rgl+eF/Gi0/XTIdnFnNe57MDitkA4qhHeLZ68BxFx81pnsY
-         5nAuTA69RlFBNf4NX0mwte9qufBBEY0CM3hBEG+n/2sQlCYFK4ff7M66/aa30WNDEDXP
-         kTNETGuAaZBtowqOXhSaWBrM+TwRTd80eg2oQDAf+F9noldlB3e5wcukiU6ktcTf62GY
-         9fyPzdxSKERkUwtD8GWPCRnMRtxpYghiq/Tz4fNFWJf+xfslpFPky0/2NKelovWAofVR
-         gwTWIIjHTy7QnHx9h0/jVMxPL9tzV/ZuVpDiIaml3rWQhKQzoGBEnw5qKeyy1UWTN+c1
-         QPug==
-X-Gm-Message-State: AC+VfDy8A+VFfgCAGP1/ucNdBEkMLc2FArb69tZ2OD72ZAUyN1DUSzPI
-	zxBBqrQiGGf8U+629lrOkPOR69es0TXd8UqnWW7mVqbSrNdsRxaPT2nDNxAhd+xbpIrRccvPF+J
-	ZZuLJh940YLCXpLAC3OHa
-X-Received: by 2002:a5d:4536:0:b0:2f9:4fe9:74de with SMTP id j22-20020a5d4536000000b002f94fe974demr14583298wra.16.1683098363277;
-        Wed, 03 May 2023 00:19:23 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4YmDJ5fSjEX9bYJcvGxxrKGNEefuG/olEhGMwhxvTP6ZpCZhJEgcZLb8yFcLBX87Q12Wuhlg==
-X-Received: by 2002:a5d:4536:0:b0:2f9:4fe9:74de with SMTP id j22-20020a5d4536000000b002f94fe974demr14583271wra.16.1683098363001;
-        Wed, 03 May 2023 00:19:23 -0700 (PDT)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id u7-20020a5d5147000000b002cde25fba30sm33050954wrt.1.2023.05.03.00.19.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 May 2023 00:19:22 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, Sam Ravnborg <sam@ravnborg.org>
-Cc: linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, arnd@arndb.de,
- deller@gmx.de, chenhuacai@kernel.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, James.Bottomley@hansenpartnership.com,
- linux-m68k@lists.linux-m68k.org, geert@linux-m68k.org,
- linux-parisc@vger.kernel.org, vgupta@kernel.org,
- sparclinux@vger.kernel.org, kernel@xen0n.name,
- linux-snps-arc@lists.infradead.org, davem@davemloft.net,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 4/6] fbdev: Include <linux/io.h> via <asm/fb.h>
-In-Reply-To: <563673c0-799d-e353-974c-91b1ab881a22@suse.de>
-References: <20230502130223.14719-1-tzimmermann@suse.de>
- <20230502130223.14719-5-tzimmermann@suse.de>
- <20230502195429.GA319489@ravnborg.org>
- <563673c0-799d-e353-974c-91b1ab881a22@suse.de>
-Date: Wed, 03 May 2023 09:19:21 +0200
-Message-ID: <87354dyj9i.fsf@minerva.mail-host-address-is-not-set>
+        d=1e100.net; s=20221208; t=1683101393; x=1685693393;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3SVmNF978sXXspcYjjZLpiBDqyot8IfsoBtpE1ZoRNc=;
+        b=jHqEeBTZK+tK3ZAZ4b2Q9iAz9sGSRdARCn4ZZbDhE1VWTdy/+6lih9pEeUi0l55hW4
+         Jj38CxGf0FsN/F7XKiXXeLmnbkFTt7ZV55sLWAwHJwWArX0/v21t6TCDSf7qD9o3Tf7o
+         3l5x8Fn+CWGkAkQ67BazKpynV65tOVZnp9eRaxq/I7E4z1zhwzzZpNeCeXTx4nHMn9jl
+         5m5ZmSaZ1mnkC5Rz3aVtLzHF0tNcWmdTpDgW9NB5rkfVc4gAYkY2Ad16N1brKF6801nf
+         NEzu281ADsexLDej3KXryhsUj3AlsyVGelNhJXIoo/maMh6n8UtRU3o39AU3qi8Y1DyS
+         MW4g==
+X-Gm-Message-State: AC+VfDw+y7oGjyzY302WzcyMw5ykfpYLnCLAiGMSk1c7gvnEIXQ8SGrS
+	m3MR/mNyYPWAleAenUmKOd/+u4PYwIJXww==
+X-Google-Smtp-Source: ACHHUZ5GtJBWE2UnkDjDqTfnDtx86T+32o/v0lvFxMHss4uHM/neo6iZO8xYi813rz20RM/HG51haA==
+X-Received: by 2002:a0d:ca50:0:b0:55a:6d87:6431 with SMTP id m77-20020a0dca50000000b0055a6d876431mr7972747ywd.26.1683101392822;
+        Wed, 03 May 2023 01:09:52 -0700 (PDT)
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
+        by smtp.gmail.com with ESMTPSA id h7-20020a0dde07000000b0054662f7b42dsm8430943ywe.63.2023.05.03.01.09.50
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 May 2023 01:09:51 -0700 (PDT)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-55a2cb9788dso48012677b3.2
+        for <loongarch@lists.linux.dev>; Wed, 03 May 2023 01:09:50 -0700 (PDT)
+X-Received: by 2002:a0d:c347:0:b0:556:dd1b:3bb7 with SMTP id
+ f68-20020a0dc347000000b00556dd1b3bb7mr19301020ywd.43.1683101390642; Wed, 03
+ May 2023 01:09:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+References: <20230502130223.14719-1-tzimmermann@suse.de> <20230502130223.14719-5-tzimmermann@suse.de>
+ <20230502195429.GA319489@ravnborg.org> <563673c0-799d-e353-974c-91b1ab881a22@suse.de>
+ <87354dyj9i.fsf@minerva.mail-host-address-is-not-set>
+In-Reply-To: <87354dyj9i.fsf@minerva.mail-host-address-is-not-set>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 3 May 2023 10:09:39 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW8Sm7sBu47XQ1xygn6fzq2FzQeiuK0ncMVGHan-_k4Ow@mail.gmail.com>
+Message-ID: <CAMuHMdW8Sm7sBu47XQ1xygn6fzq2FzQeiuK0ncMVGHan-_k4Ow@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] fbdev: Include <linux/io.h> via <asm/fb.h>
+To: Javier Martinez Canillas <javierm@redhat.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>, Sam Ravnborg <sam@ravnborg.org>, linux-arch@vger.kernel.org, 
+	linux-fbdev@vger.kernel.org, linux-ia64@vger.kernel.org, 
+	loongarch@lists.linux.dev, arnd@arndb.de, deller@gmx.de, 
+	chenhuacai@kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, James.Bottomley@hansenpartnership.com, 
+	linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org, 
+	vgupta@kernel.org, sparclinux@vger.kernel.org, kernel@xen0n.name, 
+	linux-snps-arc@lists.infradead.org, davem@davemloft.net, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
-
-Hello Thomas,
-
-> Am 02.05.23 um 21:54 schrieb Sam Ravnborg:
->> On Tue, May 02, 2023 at 03:02:21PM +0200, Thomas Zimmermann wrote:
-
-[...]
-
->>>   #include <linux/console.h> /* Why should fb driver call console functions? because console_lock() */
->>>   #include <video/vga.h>
->>>   
->>> +#include <asm/fb.h>
->> 
->> When we have a header like linux/fb.h - it is my understanding that it is
->> preferred to include that file, and not the asm/fb.h variant.
->> 
->> This is assuming the linux/fb.h contains the generic stuff, and includes
->> asm/fb.h for the architecture specific parts.
->> 
->> So drivers will include linux/fb.h and then they automatically get the
->> architecture specific parts from asm/fb.h.
->> 
->> In other words, drivers are not supposed to include asm/fb.h, if
->> linux.fb.h exists - and linux/fb.h shall include the asm/fb.h.
->> 
->> If the above holds true, then it is wrong and not needed to add asm/fb.h
->> as seen above.
->> 
->> 
->> There are countless examples where the above are not followed,
->> but to my best understanding the above it the preferred way to do it.
+On Wed, May 3, 2023 at 9:19=E2=80=AFAM Javier Martinez Canillas
+<javierm@redhat.com> wrote:
+> Thomas Zimmermann <tzimmermann@suse.de> writes:
+> > Am 02.05.23 um 21:54 schrieb Sam Ravnborg:
+> >> On Tue, May 02, 2023 at 03:02:21PM +0200, Thomas Zimmermann wrote:
 >
-> Where did youher this? I only know about this in the case of asm/io.h 
-> vs. linux/io.h.
+> [...]
 >
+> >>>   #include <linux/console.h> /* Why should fb driver call console fun=
+ctions? because console_lock() */
+> >>>   #include <video/vga.h>
+> >>>
+> >>> +#include <asm/fb.h>
+> >>
+> >> When we have a header like linux/fb.h - it is my understanding that it=
+ is
+> >> preferred to include that file, and not the asm/fb.h variant.
+> >>
+> >> This is assuming the linux/fb.h contains the generic stuff, and includ=
+es
+> >> asm/fb.h for the architecture specific parts.
+> >>
+> >> So drivers will include linux/fb.h and then they automatically get the
+> >> architecture specific parts from asm/fb.h.
+> >>
+> >> In other words, drivers are not supposed to include asm/fb.h, if
+> >> linux.fb.h exists - and linux/fb.h shall include the asm/fb.h.
+> >>
+> >> If the above holds true, then it is wrong and not needed to add asm/fb=
+.h
+> >> as seen above.
+> >>
+> >>
+> >> There are countless examples where the above are not followed,
+> >> but to my best understanding the above it the preferred way to do it.
+> >
+> > Where did youher this? I only know about this in the case of asm/io.h
+> > vs. linux/io.h.
+> >
+>
+> I understand that's the case too. I believe even checkpatch.pl complains
+> about it? (not that the script always get right, but just as an example).
 
-I understand that's the case too. I believe even checkpatch.pl complains
-about it? (not that the script always get right, but just as an example).
+One more to chime in: in general, drivers should only include <linux/foo.h>=
+.
+Including <asm/foo.h> directly is the exception.
 
--- 
-Best regards,
+Gr{oetje,eeting}s,
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+                        Geert
 
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
