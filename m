@@ -1,189 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailrelay1-1.pub.mailoutpod2-cph3.one.com (mailrelay1-1.pub.mailoutpod2-cph3.one.com [46.30.211.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF787E
-	for <loongarch@lists.linux.dev>; Thu,  4 May 2023 12:54:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C39C433D2;
-	Thu,  4 May 2023 12:54:44 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v6.4
-Date: Thu,  4 May 2023 20:54:09 +0800
-Message-Id: <20230504125409.2444851-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2E12F48
+	for <loongarch@lists.linux.dev>; Thu,  4 May 2023 15:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=rsa1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=9OJXCjk1pQ5JPAczTbrYybaJ9yabhk+psqf49vWpZU0=;
+	b=qvdNlqsBf3EoYvHRBBEpiAYN3JzfiOdN6jSoMib4fSHXY6tHmBqjeEye3YBBnQuOKlWgJbulyd9UO
+	 jXb4IaCN8kX7dVnV05joCTZniXryC4lrp6RnU2s7jkJl8wdsPp6Q9OZJRYK7vfSOzXS4rmS40/eTZk
+	 Oj8wFMqUI5Uf91JBzDLM6lwl/AI9nYaZL5MM0+ScxSnZS/IO/f0jfqapazU7a2UnCPXICl2bDXeIun
+	 cpFA4+5zlWP+xxx7duxSDE9p2dLtJQt9zPGpmx+m59A/DqeQkbQKqGGVNVvHnMEXAS+E65XGv8vXxP
+	 Xw2bDTTmGVCCvcUOan+7GsoDw8Ub2IQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=ed1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=9OJXCjk1pQ5JPAczTbrYybaJ9yabhk+psqf49vWpZU0=;
+	b=A41ejzmStbYNhncUAuSBS4onolrQNPxZTtME0No712Sqv3KLgK2LD8qZyKm6pcZPa7vmoiglPmcsF
+	 +lL4ka5AQ==
+X-HalOne-ID: 87f70a6c-ea91-11ed-bbbe-99461c6a3fe8
+Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
+	by mailrelay1 (Halon) with ESMTPSA
+	id 87f70a6c-ea91-11ed-bbbe-99461c6a3fe8;
+	Thu, 04 May 2023 15:37:12 +0000 (UTC)
+Date: Thu, 4 May 2023 17:37:10 +0200
+From: Sam Ravnborg <sam@ravnborg.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: deller@gmx.de, geert@linux-m68k.org, javierm@redhat.com,
+	daniel@ffwll.ch, vgupta@kernel.org, chenhuacai@kernel.org,
+	kernel@xen0n.name, davem@davemloft.net,
+	James.Bottomley@hansenpartnership.com, arnd@arndb.de,
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-arch@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-parisc@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] fbdev: Include <linux/fb.h> instead of <asm/fb.h>
+Message-ID: <20230504153710.GA518522@ravnborg.org>
+References: <20230504074539.8181-1-tzimmermann@suse.de>
+ <20230504074539.8181-5-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230504074539.8181-5-tzimmermann@suse.de>
 
-The following changes since commit 457391b0380335d5e9a5babdec90ac53928b23b4:
+Hi Thomas,
 
-  Linux 6.3 (2023-04-23 12:02:52 -0700)
+On Thu, May 04, 2023 at 09:45:37AM +0200, Thomas Zimmermann wrote:
+> Replace include statements for <asm/fb.h> with <linux/fb.h>. Fixes
+> the coding style: if a header is available in asm/ and linux/, it
+> is preferable to include the header from linux/. This only affects
+> a few source files, most of which already include <linux/fb.h>.
+> 
+> Suggested-by: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.4
-
-for you to fetch changes up to 2fa5ebe3bc4e31e07a99196455498472417842f2:
-
-  tools/perf: Add basic support for LoongArch (2023-05-01 17:19:59 +0800)
-
-----------------------------------------------------------------
-LoongArch changes for v6.4
-
-1, Better backtraces for humanization;
-2, Relay BCE exceptions to userland as SIGSEGV;
-3, Provide kernel fpu functions;
-4, Optimize memory ops (memset/memcpy/memmove);
-5, Optimize checksum and crc32(c) calculation;
-6, Add ARCH_HAS_FORTIFY_SOURCE selection;
-7, Add function error injection support;
-8, Add ftrace with direct call support;
-9, Add basic perf tools support.
-
-Note: There are merge conflicts in these files but can be simply fixed
-by adjusting context around "static struct ftrace_ops direct":
-
-  samples/ftrace/ftrace-direct-modify.c
-  samples/ftrace/ftrace-direct-too.c
-  samples/ftrace/ftrace-direct.c
-
-----------------------------------------------------------------
-Bibo Mao (1):
-      LoongArch: Add checksum optimization for 64-bit system
-
-Huacai Chen (3):
-      Merge 'irq/loongarch-fixes-6.4' into loongarch-next
-      LoongArch: Provide kernel fpu functions
-      tools/perf: Add basic support for LoongArch
-
-Jianmin Lv (5):
-      irqchip/loongson-eiointc: Fix returned value on parsing MADT
-      irqchip/loongson-eiointc: Fix incorrect use of acpi_get_vec_parent
-      irqchip/loongson-eiointc: Fix registration of syscore_ops
-      irqchip/loongson-pch-pic: Fix registration of syscore_ops
-      irqchip/loongson-pch-pic: Fix pch_pic_acpi_init calling
-
-Min Zhou (1):
-      LoongArch: crypto: Add crc32 and crc32c hw acceleration
-
-Qing Zhang (2):
-      LoongArch: Add ARCH_HAS_FORTIFY_SOURCE selection
-      LoongArch: ftrace: Abstract DYNAMIC_FTRACE_WITH_ARGS accesses
-
-Tiezhu Yang (1):
-      LoongArch: Add support for function error injection
-
-WANG Rui (1):
-      LoongArch: Optimize memory ops (memset/memcpy/memmove)
-
-WANG Xuerui (12):
-      LoongArch: Clean up the architectural interrupt definitions
-      LoongArch: Define regular names for BCE/WATCH/HVC/GSPR exceptions
-      LoongArch: Print GPRs with ABI names when showing registers
-      LoongArch: Print symbol info for $ra and CSR.ERA only for kernel-mode contexts
-      LoongArch: Fix format of CSR lines during show_regs()
-      LoongArch: Humanize the CRMD line when showing registers
-      LoongArch: Humanize the PRMD line when showing registers
-      LoongArch: Humanize the EUEN line when showing registers
-      LoongArch: Humanize the ECFG line when showing registers
-      LoongArch: Humanize the ESTAT line when showing registers
-      LoongArch: Tweak the BADV and CPUCFG.PRID lines in show_regs()
-      LoongArch: Relay BCE exceptions to userland as SIGSEGV with si_code=SEGV_BNDERR
-
-Youling Tang (4):
-      LoongArch: ftrace: Fix build error if DYNAMIC_FTRACE_WITH_REGS is not set
-      LoongArch: ftrace: Implement ftrace_find_callable_addr() to simplify code
-      LoongArch: ftrace: Add direct call support
-      LoongArch: ftrace: Add direct call trampoline samples support
-
- arch/loongarch/Kconfig                             |   5 +
- arch/loongarch/Makefile                            |   2 +
- arch/loongarch/crypto/Kconfig                      |  14 +
- arch/loongarch/crypto/Makefile                     |   6 +
- arch/loongarch/crypto/crc32-loongarch.c            | 304 ++++++++++++++++++++
- arch/loongarch/include/asm/checksum.h              |  66 +++++
- arch/loongarch/include/asm/fpu.h                   |   3 +
- arch/loongarch/include/asm/ftrace.h                |  37 +++
- arch/loongarch/include/asm/inst.h                  |  26 ++
- arch/loongarch/include/asm/loongarch.h             |  57 ++--
- arch/loongarch/include/asm/ptrace.h                |   5 +
- arch/loongarch/kernel/Makefile                     |   2 +-
- arch/loongarch/kernel/ftrace_dyn.c                 | 128 +++++----
- arch/loongarch/kernel/genex.S                      |   1 +
- arch/loongarch/kernel/irq.c                        |   2 +-
- arch/loongarch/kernel/kfpu.c                       |  43 +++
- arch/loongarch/kernel/mcount_dyn.S                 |  13 +-
- arch/loongarch/kernel/perf_event.c                 |   2 +-
- arch/loongarch/kernel/time.c                       |   2 +-
- arch/loongarch/kernel/traps.c                      | 318 ++++++++++++++++++---
- arch/loongarch/lib/Makefile                        |   4 +-
- arch/loongarch/lib/clear_user.S                    | 136 ++++++++-
- arch/loongarch/lib/copy_user.S                     | 251 ++++++++++++----
- arch/loongarch/lib/csum.c                          | 141 +++++++++
- arch/loongarch/lib/error-inject.c                  |  10 +
- arch/loongarch/lib/memcpy.S                        | 147 ++++++++--
- arch/loongarch/lib/memmove.S                       | 120 ++++----
- arch/loongarch/lib/memset.S                        | 116 ++++++--
- crypto/Kconfig                                     |   3 +
- drivers/irqchip/irq-loongson-eiointc.c             |  32 ++-
- drivers/irqchip/irq-loongson-pch-pic.c             |   6 +-
- samples/ftrace/ftrace-direct-modify.c              |  34 +++
- samples/ftrace/ftrace-direct-multi-modify.c        |  41 +++
- samples/ftrace/ftrace-direct-multi.c               |  25 ++
- samples/ftrace/ftrace-direct-too.c                 |  27 ++
- samples/ftrace/ftrace-direct.c                     |  23 ++
- tools/arch/loongarch/include/uapi/asm/perf_regs.h  |  40 +++
- tools/arch/loongarch/include/uapi/asm/unistd.h     |   9 +
- tools/perf/Makefile.config                         |  12 +-
- tools/perf/arch/loongarch/Build                    |   1 +
- tools/perf/arch/loongarch/Makefile                 |  28 ++
- tools/perf/arch/loongarch/annotate/instructions.c  |  45 +++
- .../arch/loongarch/entry/syscalls/mksyscalltbl     |  61 ++++
- .../perf/arch/loongarch/include/dwarf-regs-table.h |  16 ++
- tools/perf/arch/loongarch/include/perf_regs.h      |  15 +
- tools/perf/arch/loongarch/util/Build               |   5 +
- tools/perf/arch/loongarch/util/dwarf-regs.c        |  44 +++
- tools/perf/arch/loongarch/util/perf_regs.c         |   6 +
- tools/perf/arch/loongarch/util/unwind-libdw.c      |  56 ++++
- tools/perf/arch/loongarch/util/unwind-libunwind.c  |  82 ++++++
- tools/perf/check-headers.sh                        |   1 +
- tools/perf/util/annotate.c                         |   8 +
- tools/perf/util/dwarf-regs.c                       |   7 +
- tools/perf/util/env.c                              |   2 +
- tools/perf/util/genelf.h                           |   3 +
- tools/perf/util/perf_regs.c                        |  76 +++++
- tools/perf/util/syscalltbl.c                       |   4 +
- 57 files changed, 2364 insertions(+), 309 deletions(-)
- create mode 100644 arch/loongarch/crypto/Kconfig
- create mode 100644 arch/loongarch/crypto/Makefile
- create mode 100644 arch/loongarch/crypto/crc32-loongarch.c
- create mode 100644 arch/loongarch/include/asm/checksum.h
- create mode 100644 arch/loongarch/kernel/kfpu.c
- create mode 100644 arch/loongarch/lib/csum.c
- create mode 100644 arch/loongarch/lib/error-inject.c
- create mode 100644 tools/arch/loongarch/include/uapi/asm/perf_regs.h
- create mode 100644 tools/arch/loongarch/include/uapi/asm/unistd.h
- create mode 100644 tools/perf/arch/loongarch/Build
- create mode 100644 tools/perf/arch/loongarch/Makefile
- create mode 100644 tools/perf/arch/loongarch/annotate/instructions.c
- create mode 100755 tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
- create mode 100644 tools/perf/arch/loongarch/include/dwarf-regs-table.h
- create mode 100644 tools/perf/arch/loongarch/include/perf_regs.h
- create mode 100644 tools/perf/arch/loongarch/util/Build
- create mode 100644 tools/perf/arch/loongarch/util/dwarf-regs.c
- create mode 100644 tools/perf/arch/loongarch/util/perf_regs.c
- create mode 100644 tools/perf/arch/loongarch/util/unwind-libdw.c
- create mode 100644 tools/perf/arch/loongarch/util/unwind-libunwind.c
+Thanks,
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
