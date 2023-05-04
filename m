@@ -1,22 +1,22 @@
-Received: from 189.cn (ptr.189.cn [183.61.185.101])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D38661868
-	for <loongarch@lists.linux.dev>; Thu,  4 May 2023 11:34:16 +0000 (UTC)
-HMM_SOURCE_IP:10.64.8.31:33766.1806946331
+Received: from 189.cn (ptr.189.cn [183.61.185.102])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 026A810EC
+	for <loongarch@lists.linux.dev>; Thu,  4 May 2023 11:34:20 +0000 (UTC)
+HMM_SOURCE_IP:10.64.8.31:60818.335703915
 HMM_ATTACHE_NUM:0000
 HMM_SOURCE_TYPE:SMTP
 Received: from clientip-114.242.206.180 (unknown [10.64.8.31])
-	by 189.cn (HERMES) with SMTP id 6339F1001C8;
-	Thu,  4 May 2023 19:30:15 +0800 (CST)
+	by 189.cn (HERMES) with SMTP id F2BE71002A7;
+	Thu,  4 May 2023 19:34:16 +0800 (CST)
 Received: from  ([114.242.206.180])
-	by gateway-151646-dep-85667d6c59-lhcrq with ESMTP id 2f3efb12223041b6ba940f4f90629d4f for tzimmermann@suse.de;
-	Thu, 04 May 2023 19:30:25 CST
-X-Transaction-ID: 2f3efb12223041b6ba940f4f90629d4f
+	by gateway-151646-dep-85667d6c59-lhcrq with ESMTP id a032e0a425314ba48f3e110afb4a4634 for tzimmermann@suse.de;
+	Thu, 04 May 2023 19:34:20 CST
+X-Transaction-ID: a032e0a425314ba48f3e110afb4a4634
 X-Real-From: 15330273260@189.cn
 X-Receive-IP: 114.242.206.180
 X-MEDUSA-Status: 0
 Sender: 15330273260@189.cn
-Message-ID: <4c3444e2-390b-8c9e-e136-bf888fccd10f@189.cn>
-Date: Thu, 4 May 2023 19:30:15 +0800
+Message-ID: <348508a2-1640-46b1-2ac9-72a7d5d4f859@189.cn>
+Date: Thu, 4 May 2023 19:34:15 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -25,7 +25,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [v4,2/6] ipu-v3: Include <linux/io.h>
+Subject: Re: [v4,4/6] fbdev: Include <linux/fb.h> instead of <asm/fb.h>
+Content-Language: en-US
 To: Thomas Zimmermann <tzimmermann@suse.de>, deller@gmx.de,
  geert@linux-m68k.org, javierm@redhat.com, daniel@ffwll.ch,
  vgupta@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
@@ -37,10 +38,9 @@ Cc: linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org,
  linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
  sparclinux@vger.kernel.org, linux-snps-arc@lists.infradead.org,
  linux-arm-kernel@lists.infradead.org
-References: <20230504074539.8181-3-tzimmermann@suse.de>
-Content-Language: en-US
+References: <20230504074539.8181-5-tzimmermann@suse.de>
 From: Sui Jingfeng <15330273260@189.cn>
-In-Reply-To: <20230504074539.8181-3-tzimmermann@suse.de>
+In-Reply-To: <20230504074539.8181-5-tzimmermann@suse.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
@@ -49,24 +49,112 @@ Reviewed-by: Sui Jingfeng <suijingfeng@loongson.cn>
 
 
 On 2023/5/4 15:45, Thomas Zimmermann wrote:
-> The code uses readl() and writel(). Include the header file to
-> get the declarations.
+> Replace include statements for <asm/fb.h> with <linux/fb.h>. Fixes
+> the coding style: if a header is available in asm/ and linux/, it
+> is preferable to include the header from linux/. This only affects
+> a few source files, most of which already include <linux/fb.h>.
 >
+> Suggested-by: Sam Ravnborg <sam@ravnborg.org>
 > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 > ---
->   drivers/gpu/ipu-v3/ipu-prv.h | 1 +
->   1 file changed, 1 insertion(+)
+>   arch/parisc/video/fbdev.c        | 3 +--
+>   arch/sparc/video/fbdev.c         | 1 -
+>   arch/x86/video/fbdev.c           | 2 --
+>   drivers/staging/sm750fb/sm750.c  | 2 +-
+>   drivers/video/fbdev/core/fbcon.c | 1 -
+>   drivers/video/fbdev/core/fbmem.c | 2 --
+>   include/linux/fb.h               | 2 ++
+>   7 files changed, 4 insertions(+), 9 deletions(-)
 >
-> diff --git a/drivers/gpu/ipu-v3/ipu-prv.h b/drivers/gpu/ipu-v3/ipu-prv.h
-> index 291ac1bab66d..d4621b1ea7f1 100644
-> --- a/drivers/gpu/ipu-v3/ipu-prv.h
-> +++ b/drivers/gpu/ipu-v3/ipu-prv.h
-> @@ -8,6 +8,7 @@
+> diff --git a/arch/parisc/video/fbdev.c b/arch/parisc/video/fbdev.c
+> index 4a0ae08fc75b..137561d98246 100644
+> --- a/arch/parisc/video/fbdev.c
+> +++ b/arch/parisc/video/fbdev.c
+> @@ -5,10 +5,9 @@
+>    * Copyright (C) 2001-2002 Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+>    */
 >   
->   struct ipu_soc;
+> +#include <linux/fb.h>
+>   #include <linux/module.h>
 >   
-> +#include <linux/io.h>
->   #include <linux/types.h>
->   #include <linux/device.h>
->   #include <linux/clk.h>
+> -#include <asm/fb.h>
+> -
+>   #include <video/sticore.h>
+>   
+>   int fb_is_primary_device(struct fb_info *info)
+> diff --git a/arch/sparc/video/fbdev.c b/arch/sparc/video/fbdev.c
+> index dadd5799fbb3..25837f128132 100644
+> --- a/arch/sparc/video/fbdev.c
+> +++ b/arch/sparc/video/fbdev.c
+> @@ -4,7 +4,6 @@
+>   #include <linux/fb.h>
+>   #include <linux/module.h>
+>   
+> -#include <asm/fb.h>
+>   #include <asm/prom.h>
+>   
+>   int fb_is_primary_device(struct fb_info *info)
+> diff --git a/arch/x86/video/fbdev.c b/arch/x86/video/fbdev.c
+> index 57ee3c158f97..f41a17ebac48 100644
+> --- a/arch/x86/video/fbdev.c
+> +++ b/arch/x86/video/fbdev.c
+> @@ -7,8 +7,6 @@
+>    *
+>    */
+>   
+> -#include <asm/fb.h>
+> -
+>   #include <linux/fb.h>
+>   #include <linux/module.h>
+>   #include <linux/pci.h>
+> diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
+> index 22ace3168723..55e302a27847 100644
+> --- a/drivers/staging/sm750fb/sm750.c
+> +++ b/drivers/staging/sm750fb/sm750.c
+> @@ -16,7 +16,7 @@
+>   #include <linux/pagemap.h>
+>   #include <linux/screen_info.h>
+>   #include <linux/console.h>
+> -#include <asm/fb.h>
+> +
+>   #include "sm750.h"
+>   #include "sm750_accel.h"
+>   #include "sm750_cursor.h"
+> diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+> index eb565a10e5cd..c6c9d040bdec 100644
+> --- a/drivers/video/fbdev/core/fbcon.c
+> +++ b/drivers/video/fbdev/core/fbcon.c
+> @@ -75,7 +75,6 @@
+>   #include <linux/interrupt.h>
+>   #include <linux/crc32.h> /* For counting font checksums */
+>   #include <linux/uaccess.h>
+> -#include <asm/fb.h>
+>   #include <asm/irq.h>
+>   
+>   #include "fbcon.h"
+> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+> index 3fd95a79e4c3..38f7e83fa6e3 100644
+> --- a/drivers/video/fbdev/core/fbmem.c
+> +++ b/drivers/video/fbdev/core/fbmem.c
+> @@ -37,8 +37,6 @@
+>   #include <linux/mem_encrypt.h>
+>   #include <linux/pci.h>
+>   
+> -#include <asm/fb.h>
+> -
+>   #include <video/nomodeset.h>
+>   #include <video/vga.h>
+>   
+> diff --git a/include/linux/fb.h b/include/linux/fb.h
+> index 08cb47da71f8..c0f97160ebbf 100644
+> --- a/include/linux/fb.h
+> +++ b/include/linux/fb.h
+> @@ -15,6 +15,8 @@
+>   #include <linux/list.h>
+>   #include <linux/backlight.h>
+>   #include <linux/slab.h>
+> +
+> +#include <asm/fb.h>
+>   #include <asm/io.h>
+>   
+>   struct vm_area_struct;
