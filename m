@@ -1,67 +1,53 @@
-Received: from mailrelay1-1.pub.mailoutpod2-cph3.one.com (mailrelay1-1.pub.mailoutpod2-cph3.one.com [46.30.211.176])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2E12F48
-	for <loongarch@lists.linux.dev>; Thu,  4 May 2023 15:37:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=9OJXCjk1pQ5JPAczTbrYybaJ9yabhk+psqf49vWpZU0=;
-	b=qvdNlqsBf3EoYvHRBBEpiAYN3JzfiOdN6jSoMib4fSHXY6tHmBqjeEye3YBBnQuOKlWgJbulyd9UO
-	 jXb4IaCN8kX7dVnV05joCTZniXryC4lrp6RnU2s7jkJl8wdsPp6Q9OZJRYK7vfSOzXS4rmS40/eTZk
-	 Oj8wFMqUI5Uf91JBzDLM6lwl/AI9nYaZL5MM0+ScxSnZS/IO/f0jfqapazU7a2UnCPXICl2bDXeIun
-	 cpFA4+5zlWP+xxx7duxSDE9p2dLtJQt9zPGpmx+m59A/DqeQkbQKqGGVNVvHnMEXAS+E65XGv8vXxP
-	 Xw2bDTTmGVCCvcUOan+7GsoDw8Ub2IQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=9OJXCjk1pQ5JPAczTbrYybaJ9yabhk+psqf49vWpZU0=;
-	b=A41ejzmStbYNhncUAuSBS4onolrQNPxZTtME0No712Sqv3KLgK2LD8qZyKm6pcZPa7vmoiglPmcsF
-	 +lL4ka5AQ==
-X-HalOne-ID: 87f70a6c-ea91-11ed-bbbe-99461c6a3fe8
-Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-	by mailrelay1 (Halon) with ESMTPSA
-	id 87f70a6c-ea91-11ed-bbbe-99461c6a3fe8;
-	Thu, 04 May 2023 15:37:12 +0000 (UTC)
-Date: Thu, 4 May 2023 17:37:10 +0200
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: deller@gmx.de, geert@linux-m68k.org, javierm@redhat.com,
-	daniel@ffwll.ch, vgupta@kernel.org, chenhuacai@kernel.org,
-	kernel@xen0n.name, davem@davemloft.net,
-	James.Bottomley@hansenpartnership.com, arnd@arndb.de,
-	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-arch@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-parisc@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] fbdev: Include <linux/fb.h> instead of <asm/fb.h>
-Message-ID: <20230504153710.GA518522@ravnborg.org>
-References: <20230504074539.8181-1-tzimmermann@suse.de>
- <20230504074539.8181-5-tzimmermann@suse.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5358F182B2
+	for <loongarch@lists.linux.dev>; Thu,  4 May 2023 19:49:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 083FEC4331D;
+	Thu,  4 May 2023 19:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1683229787;
+	bh=5is9BJh48Sh8OU1to9aD+FXYypeVd0rC97qk9+V8flg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=GiKQ8WQhQyreZNSuV6lU2qOEkmaMczFIZbgBXAgYNyCYokNKFYaFop6OAsF+QjcGq
+	 oJNQ9mSBUk9yfq8AyYigY30hP8UTyiEgeM6w1T/gqNwVNmwhnp87zMJkfuJOniKaGU
+	 elHRP+KAAt8WFRuqZ2twTyZdFDqxcFUdsNgbyASEJRIfl86JlKFgmr0aT2+3UKI/0O
+	 LB1S8crTgcrMOLadeIijt1P58ajq55WYVOkSfb/xbSJtga8hchf98W7yNHcD9XEN36
+	 2cicX5cffd+vSKKkd7oJooFbigSr+7lJHkloGRKeGf8lOtDbMS1P1GQjSSbxJzahNx
+	 QQjP81478Hrww==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E5C82E5FFC4;
+	Thu,  4 May 2023 19:49:46 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch changes for v6.4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20230504125409.2444851-1-chenhuacai@loongson.cn>
+References: <20230504125409.2444851-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-arch.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230504125409.2444851-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.4
+X-PR-Tracked-Commit-Id: 2fa5ebe3bc4e31e07a99196455498472417842f2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 611c9d88302cb9ac3b0f58f4a06c0ffb98345bd2
+Message-Id: <168322978693.14542.16341768166165628811.pr-tracker-bot@kernel.org>
+Date: Thu, 04 May 2023 19:49:46 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230504074539.8181-5-tzimmermann@suse.de>
 
-Hi Thomas,
+The pull request you sent on Thu,  4 May 2023 20:54:09 +0800:
 
-On Thu, May 04, 2023 at 09:45:37AM +0200, Thomas Zimmermann wrote:
-> Replace include statements for <asm/fb.h> with <linux/fb.h>. Fixes
-> the coding style: if a header is available in asm/ and linux/, it
-> is preferable to include the header from linux/. This only affects
-> a few source files, most of which already include <linux/fb.h>.
-> 
-> Suggested-by: Sam Ravnborg <sam@ravnborg.org>
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.4
 
-Thanks,
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/611c9d88302cb9ac3b0f58f4a06c0ffb98345bd2
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
