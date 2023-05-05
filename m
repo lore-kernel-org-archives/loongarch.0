@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6583E79C4
-	for <loongarch@lists.linux.dev>; Fri,  5 May 2023 09:49:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50ABD3FC7
+	for <loongarch@lists.linux.dev>; Fri,  5 May 2023 09:49:31 +0000 (UTC)
 Received: from loongson.cn (unknown [112.20.110.102])
-	by gateway (Coremail) with SMTP id _____8DxDeuz0FRkUyQFAA--.8523S3;
-	Fri, 05 May 2023 17:47:31 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxFum00FRkXCQFAA--.8450S3;
+	Fri, 05 May 2023 17:47:32 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.110.102])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxKL2u0FRkQKZLAA--.7843S3;
-	Fri, 05 May 2023 17:47:29 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxKL2u0FRkQKZLAA--.7843S4;
+	Fri, 05 May 2023 17:47:31 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
@@ -21,11 +21,10 @@ Cc: Jianmin Lv <lvjianmin@loongson.cn>,
 	loongarch@lists.linux.dev,
 	devicetree@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Rob Herring <robh@kernel.org>
-Subject: [PATCH V5 1/2] dt-bindings: interrupt-controller: Add Loongson EIOINTC
-Date: Fri,  5 May 2023 17:46:48 +0800
-Message-Id: <4369959615eda101e612c450b8974d76ce7e8821.1683279769.git.zhoubinbin@loongson.cn>
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH V5 2/2] irqchip/loongson-eiointc: Add DT init support
+Date: Fri,  5 May 2023 17:46:49 +0800
+Message-Id: <764e02d924094580ac0f1d15535f4b98308705c6.1683279769.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <cover.1683279769.git.zhoubinbin@loongson.cn>
 References: <cover.1683279769.git.zhoubinbin@loongson.cn>
@@ -36,101 +35,248 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxKL2u0FRkQKZLAA--.7843S3
+X-CM-TRANSID:AQAAf8BxKL2u0FRkQKZLAA--.7843S4
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7CF4kCFWfGr1DAry8CF4UJwb_yoW8ury3pF
-	W7CanxWF40qF13A39xKFy0k3W5ZrZ8AwnrCws7A3yUtr9rKa4jqr4akF95J3W3Cr97Xa42
-	vFyF93W8KasrJaUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW3JFWUCr1fWw18ur4kAr48Xrb_yoWxZFykpF
+	WUCF98trWrXFy7WrWrta1DX343Aws5urW7Xa4fWFWftanrCr18GF1FyF1qkryjk3yrXF4a
+	vF4UZr1Uu3W5Kw7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	bSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
 	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
-	w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
-	kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-	07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-	1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8
-	JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
-	1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
-	YxBIdaVFxhVjvjDU0xZFpf9x07j2MKZUUUUU=
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
+	ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWl
+	n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
+	Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
+	O2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+	WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+	Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
+	JbIYCTnIWIevJa73UjIFyTuYvjxUxhiSDUUUU
 
-Add Loongson Extended I/O Interrupt controller binding with DT schema
-format using json-schema.
+Add EIOINTC irqchip DT support, which is needed for Loongson chips
+based on DT and supporting EIOINTC, such as the Loongson-2K0500 SOC.
 
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../loongson,eiointc.yaml                     | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
+ drivers/irqchip/irq-loongson-eiointc.c | 133 ++++++++++++++++++-------
+ 1 file changed, 98 insertions(+), 35 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
-new file mode 100644
-index 000000000000..393c128a41d8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/loongson,eiointc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index 90181c42840b..b3905146524f 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -39,6 +39,7 @@ static int nr_pics;
+ 
+ struct eiointc_priv {
+ 	u32			node;
++	u32			vec_count;
+ 	nodemask_t		node_map;
+ 	cpumask_t		cpuspan_map;
+ 	struct fwnode_handle	*domain_handle;
+@@ -156,18 +157,18 @@ static int eiointc_router_init(unsigned int cpu)
+ 	if ((cpu_logical_map(cpu) % CORES_PER_EIO_NODE) == 0) {
+ 		eiointc_enable();
+ 
+-		for (i = 0; i < VEC_COUNT / 32; i++) {
++		for (i = 0; i < eiointc_priv[0]->vec_count / 32; i++) {
+ 			data = (((1 << (i * 2 + 1)) << 16) | (1 << (i * 2)));
+ 			iocsr_write32(data, EIOINTC_REG_NODEMAP + i * 4);
+ 		}
+ 
+-		for (i = 0; i < VEC_COUNT / 32 / 4; i++) {
++		for (i = 0; i < eiointc_priv[0]->vec_count / 32 / 4; i++) {
+ 			bit = BIT(1 + index); /* Route to IP[1 + index] */
+ 			data = bit | (bit << 8) | (bit << 16) | (bit << 24);
+ 			iocsr_write32(data, EIOINTC_REG_IPMAP + i * 4);
+ 		}
+ 
+-		for (i = 0; i < VEC_COUNT / 4; i++) {
++		for (i = 0; i < eiointc_priv[0]->vec_count / 4; i++) {
+ 			/* Route to Node-0 Core-0 */
+ 			if (index == 0)
+ 				bit = BIT(cpu_logical_map(0));
+@@ -178,7 +179,7 @@ static int eiointc_router_init(unsigned int cpu)
+ 			iocsr_write32(data, EIOINTC_REG_ROUTE + i * 4);
+ 		}
+ 
+-		for (i = 0; i < VEC_COUNT / 32; i++) {
++		for (i = 0; i < eiointc_priv[0]->vec_count / 32; i++) {
+ 			data = 0xffffffff;
+ 			iocsr_write32(data, EIOINTC_REG_ENABLE + i * 4);
+ 			iocsr_write32(data, EIOINTC_REG_BOUNCE + i * 4);
+@@ -198,7 +199,7 @@ static void eiointc_irq_dispatch(struct irq_desc *desc)
+ 
+ 	chained_irq_enter(chip, desc);
+ 
+-	for (i = 0; i < VEC_REG_COUNT; i++) {
++	for (i = 0; i < eiointc_priv[0]->vec_count / VEC_COUNT_PER_REG; i++) {
+ 		pending = iocsr_read64(EIOINTC_REG_ISR + (i << 3));
+ 		iocsr_write64(pending, EIOINTC_REG_ISR + (i << 3));
+ 		while (pending) {
+@@ -313,7 +314,7 @@ static void eiointc_resume(void)
+ 	eiointc_router_init(0);
+ 
+ 	for (i = 0; i < nr_pics; i++) {
+-		for (j = 0; j < VEC_COUNT; j++) {
++		for (j = 0; j < eiointc_priv[0]->vec_count; j++) {
+ 			desc = irq_resolve_mapping(eiointc_priv[i]->eiointc_domain, j);
+ 			if (desc && desc->handle_irq && desc->handle_irq != handle_bad_irq) {
+ 				raw_spin_lock(&desc->lock);
+@@ -378,11 +379,47 @@ static int __init acpi_cascade_irqdomain_init(void)
+ 	return 0;
+ }
+ 
++static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
++			       u64 node_map)
++{
++	int i;
 +
-+title: Loongson Extended I/O Interrupt Controller
++	node_map = node_map ? node_map : -1ULL;
++	for_each_possible_cpu(i) {
++		if (node_map & (1ULL << (cpu_to_eio_node(i)))) {
++			node_set(cpu_to_eio_node(i), priv->node_map);
++			cpumask_or(&priv->cpuspan_map, &priv->cpuspan_map,
++				   cpumask_of(i));
++		}
++	}
 +
-+maintainers:
-+  - Binbin Zhou <zhoubinbin@loongson.cn>
++	priv->eiointc_domain = irq_domain_create_linear(priv->domain_handle,
++							priv->vec_count,
++							&eiointc_domain_ops,
++							priv);
++	if (!priv->eiointc_domain) {
++		pr_err("loongson-extioi: cannot add IRQ domain\n");
++		return -ENOMEM;
++	}
 +
-+description: |
-+  This interrupt controller is found on the Loongson-3 family chips and
-+  Loongson-2K series chips and is used to distribute interrupts directly to
-+  individual cores without forwarding them through the HT's interrupt line.
++	eiointc_priv[nr_pics++] = priv;
++	eiointc_router_init(0);
++	irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
 +
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
++	if (nr_pics == 1) {
++		register_syscore_ops(&eiointc_syscore_ops);
++		cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_LOONGARCH_STARTING,
++					  "irqchip/loongarch/intc:starting",
++					  eiointc_router_init, NULL);
++	}
 +
-+properties:
-+  compatible:
-+    enum:
-+      - loongson,ls2k0500-eiointc
-+      - loongson,ls2k2000-eiointc
++	return 0;
++}
 +
-+  reg:
-+    maxItems: 1
+ int __init eiointc_acpi_init(struct irq_domain *parent,
+ 				     struct acpi_madt_eio_pic *acpi_eiointc)
+ {
+-	int i, ret, parent_irq;
+-	unsigned long node_map;
++	int parent_irq, ret;
+ 	struct eiointc_priv *priv;
+ 	int node;
+ 
+@@ -397,37 +434,14 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
+ 		goto out_free_priv;
+ 	}
+ 
++	priv->vec_count = VEC_COUNT;
+ 	priv->node = acpi_eiointc->node;
+-	node_map = acpi_eiointc->node_map ? : -1ULL;
+-
+-	for_each_possible_cpu(i) {
+-		if (node_map & (1ULL << cpu_to_eio_node(i))) {
+-			node_set(cpu_to_eio_node(i), priv->node_map);
+-			cpumask_or(&priv->cpuspan_map, &priv->cpuspan_map, cpumask_of(i));
+-		}
+-	}
+-
+-	/* Setup IRQ domain */
+-	priv->eiointc_domain = irq_domain_create_linear(priv->domain_handle, VEC_COUNT,
+-					&eiointc_domain_ops, priv);
+-	if (!priv->eiointc_domain) {
+-		pr_err("loongson-eiointc: cannot add IRQ domain\n");
+-		goto out_free_handle;
+-	}
+-
+-	eiointc_priv[nr_pics++] = priv;
+-
+-	eiointc_router_init(0);
+ 
+ 	parent_irq = irq_create_mapping(parent, acpi_eiointc->cascade);
+-	irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
+ 
+-	if (nr_pics == 1) {
+-		register_syscore_ops(&eiointc_syscore_ops);
+-		cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_LOONGARCH_STARTING,
+-				  "irqchip/loongarch/intc:starting",
+-				  eiointc_router_init, NULL);
+-	}
++	ret = eiointc_init(priv, parent_irq, acpi_eiointc->node_map);
++	if (ret < 0)
++		goto out_free_handle;
+ 
+ 	if (cpu_has_flatmode)
+ 		node = cpu_to_node(acpi_eiointc->node * CORES_PER_EIO_NODE);
+@@ -435,7 +449,10 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
+ 		node = acpi_eiointc->node;
+ 	acpi_set_vec_parent(node, priv->eiointc_domain, pch_group);
+ 	acpi_set_vec_parent(node, priv->eiointc_domain, msi_group);
 +
-+  interrupts:
-+    maxItems: 1
+ 	ret = acpi_cascade_irqdomain_init();
++	if (ret < 0)
++		goto out_free_handle;
+ 
+ 	return ret;
+ 
+@@ -447,3 +464,49 @@ int __init eiointc_acpi_init(struct irq_domain *parent,
+ 
+ 	return -ENOMEM;
+ }
 +
-+  interrupt-controller: true
++static int __init eiointc_of_init(struct device_node *of_node,
++				  struct device_node *parent)
++{
++	int parent_irq, ret;
++	struct eiointc_priv *priv;
 +
-+  '#interrupt-cells':
-+    const: 1
++	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - '#interrupt-cells'
++	parent_irq = irq_of_parse_and_map(of_node, 0);
++	if (parent_irq <= 0) {
++		ret = -ENODEV;
++		goto out_free_priv;
++	}
 +
-+unevaluatedProperties: false
++	ret = irq_set_handler_data(parent_irq, priv);
++	if (ret < 0)
++		goto out_free_priv;
 +
-+examples:
-+  - |
-+    eiointc: interrupt-controller@1fe11600 {
-+      compatible = "loongson,ls2k0500-eiointc";
-+      reg = <0x1fe10000 0x10000>;
++	/*
++	 * In particular, the number of devices supported by the LS2K0500
++	 * extended I/O interrupt vector is 128.
++	 */
++	if (of_device_is_compatible(of_node, "loongson,ls2k0500-eiointc"))
++		priv->vec_count = 128;
++	else
++		priv->vec_count = VEC_COUNT;
 +
-+      interrupt-controller;
-+      #interrupt-cells = <1>;
++	priv->node = 0;
++	priv->domain_handle = of_node_to_fwnode(of_node);
 +
-+      interrupt-parent = <&cpuintc>;
-+      interrupts = <3>;
-+    };
++	ret = eiointc_init(priv, parent_irq, 0);
++	if (ret < 0)
++		goto out_free_priv;
 +
-+...
++	return 0;
++
++out_free_priv:
++	kfree(priv);
++	return ret;
++}
++
++IRQCHIP_DECLARE(loongson_ls2k0500_eiointc, "loongson,ls2k0500-eiointc", eiointc_of_init);
++IRQCHIP_DECLARE(loongson_ls2k2000_eiointc, "loongson,ls2k2000-eiointc", eiointc_of_init);
 -- 
 2.39.1
 
