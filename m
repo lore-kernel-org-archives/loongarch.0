@@ -1,137 +1,100 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4434ED1
-	for <loongarch@lists.linux.dev>; Fri,  5 May 2023 07:02:59 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AC6F81F8C1;
-	Fri,  5 May 2023 07:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1683270171; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gOrOGx3lMD1w9ofRRYAf49PbmfCwS48eXyJm0E0pD1c=;
-	b=Ecrw1DAzmwxX/uqKs8Vom1VVBmDqZPvG3WS4lCSmKveqOyfAXCIDHtn8iL3hofoxL0EqGf
-	cXoxqEv30OrnapC3xS3MDFjm6hFLaH6e7p0lWeBwQfo+h+QpXqxXpUhFKNqVeqL8pHT2+S
-	6MC0uW83/f+o1bFy1PNxCrG3usE/lYA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1683270171;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gOrOGx3lMD1w9ofRRYAf49PbmfCwS48eXyJm0E0pD1c=;
-	b=GstDDcCGpClaxlkDLaX8l2KxRaTEym4X010TtMsx+1N5klHo2Oq/RL4t4d3F4uBZA+A4YJ
-	0IiOapld3hUTMpDg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F193113488;
-	Fri,  5 May 2023 07:02:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id nevqORqqVGQUEgAAMHmgww
-	(envelope-from <tzimmermann@suse.de>); Fri, 05 May 2023 07:02:50 +0000
-Message-ID: <54679884-9307-f828-dca4-34cb781dc463@suse.de>
-Date: Fri, 5 May 2023 09:02:50 +0200
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FE4E79C3
+	for <loongarch@lists.linux.dev>; Fri,  5 May 2023 09:49:31 +0000 (UTC)
+Received: from loongson.cn (unknown [112.20.110.102])
+	by gateway (Coremail) with SMTP id _____8AxdfCw0FRkSSQFAA--.8598S3;
+	Fri, 05 May 2023 17:47:28 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.110.102])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxKL2u0FRkQKZLAA--.7843S2;
+	Fri, 05 May 2023 17:47:27 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Marc Zyngier <maz@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Jianmin Lv <lvjianmin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH V5 0/2] irqchip: loongson-eiointc: Add DT init support
+Date: Fri,  5 May 2023 17:46:47 +0800
+Message-Id: <cover.1683279769.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 4/6] fbdev: Include <linux/fb.h> instead of <asm/fb.h>
-Content-Language: en-US
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, arnd@arndb.de,
- deller@gmx.de, chenhuacai@kernel.org, javierm@redhat.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- James.Bottomley@hansenpartnership.com, linux-m68k@lists.linux-m68k.org,
- geert@linux-m68k.org, linux-parisc@vger.kernel.org, vgupta@kernel.org,
- sparclinux@vger.kernel.org, kernel@xen0n.name,
- linux-snps-arc@lists.infradead.org, davem@davemloft.net,
- linux-arm-kernel@lists.infradead.org
-References: <20230504074539.8181-1-tzimmermann@suse.de>
- <20230504074539.8181-5-tzimmermann@suse.de>
- <20230504153710.GA518522@ravnborg.org>
-From: Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <20230504153710.GA518522@ravnborg.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------OVNAYynKUsk0MtSxKZ0ZybeJ"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxKL2u0FRkQKZLAA--.7843S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjvdXoW7Jr1Utry5KF4UCFyUWFy3Jwb_yoWkKFgE9r
+	yI9a4kJryqqF17Xay8Jr4xJr9rurWjg3Wjka1DKr18Was5Ar15CrnrA3ZxWa1IkF4Yyrn5
+	ZrZ5uryxZw17WjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	W7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+	xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
+	e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280
+	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4
+	kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+	1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
+	6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
+	0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIY
+	CTnIWIevJa73UjIFyTuYvjxUxUGYDUUUU
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------OVNAYynKUsk0MtSxKZ0ZybeJ
-Content-Type: multipart/mixed; boundary="------------w56d0we4Beh0uPurMRS337ha";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org,
- linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, arnd@arndb.de,
- deller@gmx.de, chenhuacai@kernel.org, javierm@redhat.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- James.Bottomley@hansenpartnership.com, linux-m68k@lists.linux-m68k.org,
- geert@linux-m68k.org, linux-parisc@vger.kernel.org, vgupta@kernel.org,
- sparclinux@vger.kernel.org, kernel@xen0n.name,
- linux-snps-arc@lists.infradead.org, davem@davemloft.net,
- linux-arm-kernel@lists.infradead.org
-Message-ID: <54679884-9307-f828-dca4-34cb781dc463@suse.de>
-Subject: Re: [PATCH v4 4/6] fbdev: Include <linux/fb.h> instead of <asm/fb.h>
-References: <20230504074539.8181-1-tzimmermann@suse.de>
- <20230504074539.8181-5-tzimmermann@suse.de>
- <20230504153710.GA518522@ravnborg.org>
-In-Reply-To: <20230504153710.GA518522@ravnborg.org>
+Hi all:
 
---------------w56d0we4Beh0uPurMRS337ha
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Add EIOINTC irqchip DT support, which is needed for Loongson chips
+that are DT-based and support EIOINTC, such as the Loongson-2K0500 chip.
 
-SGkNCg0KQW0gMDQuMDUuMjMgdW0gMTc6Mzcgc2NocmllYiBTYW0gUmF2bmJvcmc6DQo+IEhp
-IFRob21hcywNCj4gDQo+IE9uIFRodSwgTWF5IDA0LCAyMDIzIGF0IDA5OjQ1OjM3QU0gKzAy
-MDAsIFRob21hcyBaaW1tZXJtYW5uIHdyb3RlOg0KPj4gUmVwbGFjZSBpbmNsdWRlIHN0YXRl
-bWVudHMgZm9yIDxhc20vZmIuaD4gd2l0aCA8bGludXgvZmIuaD4uIEZpeGVzDQo+PiB0aGUg
-Y29kaW5nIHN0eWxlOiBpZiBhIGhlYWRlciBpcyBhdmFpbGFibGUgaW4gYXNtLyBhbmQgbGlu
-dXgvLCBpdA0KPj4gaXMgcHJlZmVyYWJsZSB0byBpbmNsdWRlIHRoZSBoZWFkZXIgZnJvbSBs
-aW51eC8uIFRoaXMgb25seSBhZmZlY3RzDQo+PiBhIGZldyBzb3VyY2UgZmlsZXMsIG1vc3Qg
-b2Ygd2hpY2ggYWxyZWFkeSBpbmNsdWRlIDxsaW51eC9mYi5oPi4NCj4+DQo+PiBTdWdnZXN0
-ZWQtYnk6IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4NCj4+IFNpZ25lZC1vZmYt
-Ynk6IFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPg0KPiANCj4gVGhh
-bmtzLA0KPiBSZXZpZXdlZC1ieTogU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcub3JnPg0K
-DQpUaGFua3MgZm9yIHJldmlld2luZy4gSSBpbnRlbnQgdG8gbWVyZ2UgdGhpcyBlYXJseSBu
-ZXh0IHdlZWsgYWZ0ZXIgdGhlIA0KdXBjb21pbmcgLXJjMSBoYXMgbGFuZGVkIGluIHRoZSBE
-Uk0gbWlzYyB0cmVlcy4NCg0KQmVzdCByZWdhcmRzDQpUaG9tYXMNCg0KLS0gDQpUaG9tYXMg
-WmltbWVybWFubg0KR3JhcGhpY3MgRHJpdmVyIERldmVsb3Blcg0KU1VTRSBTb2Z0d2FyZSBT
-b2x1dGlvbnMgR2VybWFueSBHbWJIDQpGcmFua2Vuc3RyYXNzZSAxNDYsIDkwNDYxIE51ZXJu
-YmVyZywgR2VybWFueQ0KR0Y6IEl2byBUb3RldiwgQW5kcmV3IE15ZXJzLCBBbmRyZXcgTWNE
-b25hbGQsIEJvdWRpZW4gTW9lcm1hbg0KSFJCIDM2ODA5IChBRyBOdWVybmJlcmcpDQo=
+Thanks.
 
---------------w56d0we4Beh0uPurMRS337ha--
+---
+V5:
+- patch(2/2)
+  - Rebased on top of latest loongarch-next(v6.3.0).
 
---------------OVNAYynKUsk0MtSxKZ0ZybeJ
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+V4:
+- patch(1/2)
+  - Simplify the definition of the reg attribute by declaring the entire
+    chip configuration space directly.
 
------BEGIN PGP SIGNATURE-----
+V3:
+- patch(1/2)
+  - Drop quotes;
+  - Drop interrupt-names;
+  - Drop loongson,eio-num-vecs;
+  - SoC-based compatibles instead of version-based compatibles.
+- patch (2/2)
+  - irq_set_handler_data() is used to get parent irq form DTS;
+  - Set vec_count by judging compatibles.
 
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmRUqhoFAwAAAAAACgkQlh/E3EQov+BS
-ExAAk6joIh9cdDj+QXWNzSZK8ZvX7kdroXQJShSXL0qeH/0/Enm5utlSP6lnNpxO8utZSygCPx49
-5is8IZ12TOOMwPuoe7jmbepPlRg9oI33B/ch5GRPT6JBRu4YkQgnMrI2xD8m/ENCIRkDcQsXl5b8
-xzdrSxUySEZxtFHABCXVVNffMqzDpeC7FdfplfsCtPKk2DS3XxAOEw6hvG9f6zdasELsMFGL+5wO
-yYdOKyV7FPkZoHmMXxLdAgUjDd0oLshyzmDnPcPSQbrdsdh9Sj/jJpUAPHtohndBXzCHd+69zNIV
-s0Z5ScYl03jlO1Tue7ggA9GDMb6vTEG7mmc70m1bROeLrzxjChbzEJFqDZKxPKPrCRtIeRTWgIcM
-HdEX9R75aaLlikt+eAyc2eL4LRUPKOMDmJqiPp7r/RzLbFbxcDLjeTkzBvWOBM4OWfI+5K9ad/xL
-L7/vFBoXsfGl96dULvEzu5wPX9KESYeEu4u5hby2jwtN5FpUH5JewvTkdZNjk35Ad0awpDC2qt4h
-aZtYGMplwRguhc06s7GEAehycRuhld/IQdlOEQgOEoM8OT8qSnVKj+uBEG6Hkzda0eEGY+xlzUTA
-Dh7H8V6PqhvFIj1FA+DRzw/XE9xWO0uBFv/mLu5DWE7hRph1xfBkDPExqayoPjQqBXRVoFAx+ZSe
-QdM=
-=z1Er
------END PGP SIGNATURE-----
+V2:
+- Add the dt-bindings file (1/2);
+- patch(2/2)
+  - Remove forgotten debugging messages;
+  - Change compatible string name to "loongson,eiointc-1.0".
 
---------------OVNAYynKUsk0MtSxKZ0ZybeJ--
+Binbin Zhou (2):
+  dt-bindings: interrupt-controller: Add Loongson EIOINTC
+  irqchip/loongson-eiointc: Add DT init support
+
+ .../loongson,eiointc.yaml                     |  59 ++++++++
+ drivers/irqchip/irq-loongson-eiointc.c        | 133 +++++++++++++-----
+ 2 files changed, 157 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,eiointc.yaml
+
+-- 
+2.39.1
+
