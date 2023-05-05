@@ -1,402 +1,342 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0F07E
-	for <loongarch@lists.linux.dev>; Fri,  5 May 2023 02:28:30 +0000 (UTC)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-b9ef06cb784so1614562276.0
-        for <loongarch@lists.linux.dev>; Thu, 04 May 2023 19:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683253709; x=1685845709;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IQTwCtOioJF8t/OiNx/dPasS+fdTMROa/SSWtKZQgKs=;
-        b=JIWVovMpQ3sB1Y2LItd2ey9cLqND5SVtLG/8J4+W6kJJosibN1+m8+ousRJlYRLjms
-         pFD42ttOvGyeO0vBmCLohiRM/cmdb3MEslUpdzxtDeEqb0XLI+Nv88W8baeZka2pUK83
-         UTCAQNM/6duTyT8/c5ngSJaFw6ocRwUNOd8mydPI84GdzFbgSAKdJbqJWJl6Nl/W66tN
-         UmAVwigIsyaIH5OWjFSQe6cYlBKFaE87zB7VL/4zOcbCDjMOiP0Ccha1IjsgDeyh3uuZ
-         LnBOZEHjyUntMlacBaSUb5kDv5FC8cFQXH8xoReYqYbVlcDa0rK8idPo2sG0u2pCrByo
-         Rlkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683253709; x=1685845709;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IQTwCtOioJF8t/OiNx/dPasS+fdTMROa/SSWtKZQgKs=;
-        b=OuRKmytLZFfSP4qLPaciIGZOkU12bE5OsC+gZuCA6/JgsikdiB4881UP0QfPV9lje8
-         6Z48FFU0fXJi7hS+LNNqAebL1LRtq8YsAtGgGGxAzI9V/VDEa1rZNTS69o80QO84FSm/
-         ERzwa8y2Y7ImTsjG0XRv9X8x1xS9+40EPv5xdgnoaRgUJDl9FKd4OoLB2kxEQGDdBath
-         lRnSZm56AMKTpeUu9trN6q0t6rUkuqPynbXphFF4UlvERw7cjPMuMRelEvoaf962HFSy
-         A1U7EwWScvF/mSY318LeZZq0dbuJni35T027oXcn29gz3VWz+04ZzWlBXNqr9epwl9wg
-         8vUQ==
-X-Gm-Message-State: AC+VfDyZ2qTI3JnH3oBO95HFyFyhNAEjBecqxD14G7Uxsbc331PZ5kTA
-	zQMrB3pXlECfWxZSDq0uVq6G13hGGhEPGggOTX8=
-X-Google-Smtp-Source: ACHHUZ6s8kmM5Dp5ih24Bs2hjigFmkgmEJakDis6EgSGdU/4H1aET/JyFpi3QqfwTFH10DYcjaA8FESVKsOzzJ1oQFQ=
-X-Received: by 2002:a25:c78f:0:b0:b9a:8298:d873 with SMTP id
- w137-20020a25c78f000000b00b9a8298d873mr30812ybe.49.1683253709325; Thu, 04 May
- 2023 19:28:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D39ED1
+	for <loongarch@lists.linux.dev>; Fri,  5 May 2023 07:00:02 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 617DA22C9A;
+	Fri,  5 May 2023 06:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1683269995; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PrkMGLEn8FpZvYcvSKrKXg+ASI+lfItobIifPEElAjk=;
+	b=Wgi8hq5yVc0nZRFlZfJLf/IOj+5+2sqFsdXcs+s8hyznp1h1KjMSn6eJmIFRo0u9o4PRpR
+	SqpzJ3JpbQqMrKB1LlmQ2azvTK3JbtYU5/yy3eg+ydvmk3zMpn9WukI792fvZyBdFankMY
+	zFIN6jCzo/mJIxk4BFSnf8Yo0hpt7Zk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1683269995;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PrkMGLEn8FpZvYcvSKrKXg+ASI+lfItobIifPEElAjk=;
+	b=yrkfeyn4aDDi8sqi5VXpu7a72l1Pis0UY7XymFiYqSjR5akrFpMQXrRXBT3IanvAp0nyOj
+	Fwey+aGd+sA232CA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E84A613488;
+	Fri,  5 May 2023 06:59:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id h5+FN2qpVGSaEAAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Fri, 05 May 2023 06:59:54 +0000
+Message-ID: <4fc02a83-3bd6-8ef4-1003-d37aa7e02d9a@suse.de>
+Date: Fri, 5 May 2023 08:59:54 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1681370153.git.zhoubinbin@loongson.cn> <09f381f445cfbcf857845f61d10238452037b2e8.1681370153.git.zhoubinbin@loongson.cn>
- <20230416194901b538cb7c@mail.local>
-In-Reply-To: <20230416194901b538cb7c@mail.local>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 5 May 2023 10:28:16 +0800
-Message-ID: <CAMpQs4LhkupxQExQCqg9qJ0eWCzLZEaeKDrJThTVyezz=ne53A@mail.gmail.com>
-Subject: Re: [PATCH V3 2/7] rtc: Add support for the Loongson-2K/LS7A RTC
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Alessandro Zummo <a.zummo@towertech.it>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Huacai Chen <chenhuacai@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, linux-rtc@vger.kernel.org, 
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, devicetree@vger.kernel.org, 
-	keguang.zhang@gmail.com, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <git@xen0n.name>, zhangbaoqi@loongson.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [v4,5/6] fbdev: Move framebuffer I/O helpers into <asm/fb.h>
+Content-Language: en-US
+To: Sui Jingfeng <15330273260@189.cn>, deller@gmx.de, geert@linux-m68k.org,
+ javierm@redhat.com, daniel@ffwll.ch, vgupta@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, davem@davemloft.net,
+ James.Bottomley@HansenPartnership.com, arnd@arndb.de, sam@ravnborg.org
+Cc: linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
+ sparclinux@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20230504074539.8181-6-tzimmermann@suse.de>
+ <d4930b1a-d79e-6deb-6683-f13bbe1170ff@189.cn>
+From: Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <d4930b1a-d79e-6deb-6683-f13bbe1170ff@189.cn>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------uoo0zgZq3uEuuNZetkGvcZrQ"
 
-On Mon, Apr 17, 2023 at 3:49=E2=80=AFAM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> On 13/04/2023 15:57:34+0800, Binbin Zhou wrote:
-> > This RTC module is integrated into the Loongson-2K SoC and the LS7A
-> > bridge chip. This version is almost entirely rewritten to make use of
-> > current kernel API, and it supports both ACPI and DT.
-> >
-> > This driver is shared by MIPS-based Loongson-3A4000 system (use FDT) an=
-d
-> > LoongArch-based Loongson-3A5000 system (use ACPI).
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@kernel.org>
-> > Signed-off-by: WANG Xuerui <git@xen0n.name>
-> > ---
-> >  drivers/rtc/Kconfig    |  11 ++
-> >  drivers/rtc/Makefile   |   1 +
-> >  drivers/rtc/rtc-ls2x.c | 345 +++++++++++++++++++++++++++++++++++++++++
->
-> This is v3 and this is still not merged in rtc-ls1x.c.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------uoo0zgZq3uEuuNZetkGvcZrQ
+Content-Type: multipart/mixed; boundary="------------BKPWk7DxbW4ngG5FSzHXs044";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Sui Jingfeng <15330273260@189.cn>, deller@gmx.de, geert@linux-m68k.org,
+ javierm@redhat.com, daniel@ffwll.ch, vgupta@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, davem@davemloft.net,
+ James.Bottomley@HansenPartnership.com, arnd@arndb.de, sam@ravnborg.org
+Cc: linux-arch@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
+ sparclinux@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org
+Message-ID: <4fc02a83-3bd6-8ef4-1003-d37aa7e02d9a@suse.de>
+Subject: Re: [v4,5/6] fbdev: Move framebuffer I/O helpers into <asm/fb.h>
+References: <20230504074539.8181-6-tzimmermann@suse.de>
+ <d4930b1a-d79e-6deb-6683-f13bbe1170ff@189.cn>
+In-Reply-To: <d4930b1a-d79e-6deb-6683-f13bbe1170ff@189.cn>
 
-Hi Alexandre:
+--------------BKPWk7DxbW4ngG5FSzHXs044
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-The ls1x rtc has been merged in at my local repository and Keguang has
-helped test it through, so it will be ready for release in the next
-version.
-In the meantime rtc-ls2x will be renamed to rtc-loongson.
+SGkNCg0KQW0gMDQuMDUuMjMgdW0gMTM6NTkgc2NocmllYiBTdWkgSmluZ2Zlbmc6DQo+IEhp
+LA0KPiANCj4gSSB0ZXN0ZWQgdGhlIHdob2xlIHBhdGNoIHNldCBvbiBhIExTM0E1MDAwKExv
+b25nQXJjaCltYWNoaW5lIHdpdGggZWZpZmIgDQo+IGRyaXZlciwNCj4gDQo+IHdpdGggYm90
+aCBmYnRlc3QgYW5kIGZiZGV2IG9mIElHVCzCoCBUaGUgdGVzdCByZXN1bHQgc2F5IHBhc3Nl
+ZCBhbmQgSSBjYW4gDQo+IG5vdCBzZWUgYW55dGhpbmcgd2lyZWQgaGFwcGVuLg0KPiANCj4g
+DQo+IFRlc3RlZC1ieTogU3VpIEppbmdmZW5nIDxzdWlqaW5nZmVuZ0Bsb29uZ3Nvbi5jbj4N
+Cg0KVGhhbmtzIGZvciB0ZXN0aW5nLg0KDQo+IA0KPiANCj4gT24gMjAyMy81LzQgMTU6NDUs
+IFRob21hcyBaaW1tZXJtYW5uIHdyb3RlOg0KPj4gSW1wbGVtZW50IGZyYW1lYnVmZmVyIEkv
+TyBoZWxwZXJzLCBzdWNoIGFzIGZiX3JlYWQqKCkgYW5kIGZiX3dyaXRlKigpLA0KPj4gaW4g
+dGhlIGFyY2hpdGVjdHVyZSdzIDxhc20vZmIuaD4gaGVhZGVyIGZpbGUgb3IgdGhlIGdlbmVy
+aWMgb25lLg0KPj4NCj4+IFRoZSBjb21tb24gY2FzZSBoYXMgYmVlbiB0aGUgdXNlIG9mIHJl
+Z3VsYXIgSS9PIGZ1bmN0aW9ucywgc3VjaCBhcw0KPj4gX19yYXdfcmVhZGIoKSBvciBtZW1z
+ZXRfaW8oKS4gQSBmZXcgYXJjaGl0ZWN0dXJlcyB1c2VkIHBsYWluIHN5c3RlbS0NCj4+IG1l
+bW9yeSByZWFkcyBhbmQgd3JpdGVzLiBTcGFyYyB1c2VkIGhlbHBlcnMgZm9yIGl0cyBTQnVz
+Lg0KPj4NCj4+IFRoZSBhcmNoaXRlY3R1cmVzIHRoYXQgdXNlZCBzcGVjaWFsIGNhc2VzIHBy
+b3ZpZGUgdGhlIHNhbWUgY29kZSBpbg0KPj4gdGhlaXIgX19yYXdfKigpIEkvTyBoZWxwZXJz
+LiBTbyB0aGUgcGF0Y2ggcmVwbGFjZXMgdGhpcyBjb2RlIHdpdGggdGhlDQo+PiBfX3Jhd18q
+KCkgZnVuY3Rpb25zIGFuZCBtb3ZlcyBpdCB0byA8YXNtLWdlbmVyaWMvZmIuaD4gZm9yIGFs
+bA0KPj4gYXJjaGl0ZWN0dXJlcy4NCj4+DQo+PiB2NDoNCj4+IMKgwqDCoMKgKiBpYTY0LCBs
+b29uZ2FyY2gsIHNwYXJjNjQ6IGFkZCBmYl9tZW0qKCkgdG8gYXJjaCBoZWFkZXJzDQo+PiDC
+oMKgwqDCoMKgIHRvIGtlZXAgY3VycmVudCBzZW1hbnRpY3MgKEFybmQpDQo+PiB2MzoNCj4+
+IMKgwqDCoMKgKiBpbXBsZW1lbnQgYWxsIGFyY2hpdGVjdHVyZXMgd2l0aCBnZW5lcmljIGhl
+bHBlcnMNCj4+IMKgwqDCoMKgKiBzdXBwb3J0IHJlb3JkZXJpbmcgYW5kIG5hdGl2ZSBieXRl
+IG9yZGVyIChHZWVydCwgQXJuZCkNCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBUaG9tYXMgWmlt
+bWVybWFubiA8dHppbW1lcm1hbm5Ac3VzZS5kZT4NCj4+IC0tLQ0KPj4gwqAgYXJjaC9pYTY0
+L2luY2x1ZGUvYXNtL2ZiLmjCoMKgwqDCoMKgIHzCoCAyMCArKysrKysrDQo+PiDCoCBhcmNo
+L2xvb25nYXJjaC9pbmNsdWRlL2FzbS9mYi5oIHzCoCAyMSArKysrKysrDQo+PiDCoCBhcmNo
+L3NwYXJjL2luY2x1ZGUvYXNtL2ZiLmjCoMKgwqDCoCB8wqAgMjAgKysrKysrKw0KPj4gwqAg
+aW5jbHVkZS9hc20tZ2VuZXJpYy9mYi5owqDCoMKgwqDCoMKgwqAgfCAxMDEgKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysNCj4+IMKgIGluY2x1ZGUvbGludXgvZmIuaMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCA1MyAtLS0tLS0tLS0tLS0tLS0tLQ0KPj4gwqAg
+NSBmaWxlcyBjaGFuZ2VkLCAxNjIgaW5zZXJ0aW9ucygrKSwgNTMgZGVsZXRpb25zKC0pDQo+
+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvaWE2NC9pbmNsdWRlL2FzbS9mYi5oIGIvYXJjaC9p
+YTY0L2luY2x1ZGUvYXNtL2ZiLmgNCj4+IGluZGV4IDAyMDhmNjRhMGRhMC4uYmNmOTgyMDQz
+YTVjIDEwMDY0NA0KPj4gLS0tIGEvYXJjaC9pYTY0L2luY2x1ZGUvYXNtL2ZiLmgNCj4+ICsr
+KyBiL2FyY2gvaWE2NC9pbmNsdWRlL2FzbS9mYi5oDQo+PiBAQCAtMiw3ICsyLDkgQEANCj4+
+IMKgICNpZm5kZWYgX0FTTV9GQl9IXw0KPj4gwqAgI2RlZmluZSBfQVNNX0ZCX0hfDQo+PiAr
+I2luY2x1ZGUgPGxpbnV4L2NvbXBpbGVyLmg+DQo+PiDCoCAjaW5jbHVkZSA8bGludXgvZWZp
+Lmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4L3N0cmluZy5oPg0KPj4gwqAgI2luY2x1ZGUgPGFz
+bS9wYWdlLmg+DQo+PiBAQCAtMTgsNiArMjAsMjQgQEAgc3RhdGljIGlubGluZSB2b2lkIGZi
+X3BncHJvdGVjdChzdHJ1Y3QgZmlsZSAqZmlsZSwgDQo+PiBzdHJ1Y3Qgdm1fYXJlYV9zdHJ1
+Y3QgKnZtYSwNCj4+IMKgIH0NCj4+IMKgICNkZWZpbmUgZmJfcGdwcm90ZWN0IGZiX3BncHJv
+dGVjdA0KPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBmYl9tZW1jcHlfZnJvbWZiKHZvaWQgKnRv
+LCBjb25zdCB2b2xhdGlsZSB2b2lkIA0KPj4gX19pb21lbSAqZnJvbSwgc2l6ZV90IG4pDQo+
+PiArew0KPj4gK8KgwqDCoCBtZW1jcHkodG8sICh2b2lkIF9fZm9yY2UgKilmcm9tLCBuKTsN
+Cj4+ICt9DQo+PiArI2RlZmluZSBmYl9tZW1jcHlfZnJvbWZiIGZiX21lbWNweV9mcm9tZmIN
+Cj4+ICsNCj4+ICtzdGF0aWMgaW5saW5lIHZvaWQgZmJfbWVtY3B5X3RvZmIodm9sYXRpbGUg
+dm9pZCBfX2lvbWVtICp0bywgY29uc3QgDQo+PiB2b2lkICpmcm9tLCBzaXplX3QgbikNCj4+
+ICt7DQo+PiArwqDCoMKgIG1lbWNweSgodm9pZCBfX2ZvcmNlICopdG8sIGZyb20sIG4pOw0K
+Pj4gK30NCj4+ICsjZGVmaW5lIGZiX21lbWNweV90b2ZiIGZiX21lbWNweV90b2ZiDQo+PiAr
+DQo+PiArc3RhdGljIGlubGluZSB2b2lkIGZiX21lbXNldCh2b2xhdGlsZSB2b2lkIF9faW9t
+ZW0gKmFkZHIsIGludCBjLCANCj4+IHNpemVfdCBuKQ0KPj4gK3sNCj4+ICvCoMKgwqAgbWVt
+c2V0KCh2b2lkIF9fZm9yY2UgKilhZGRyLCBjLCBuKTsNCj4+ICt9DQo+PiArI2RlZmluZSBm
+Yl9tZW1zZXQgZmJfbWVtc2V0DQo+PiArDQo+PiDCoCAjaW5jbHVkZSA8YXNtLWdlbmVyaWMv
+ZmIuaD4NCj4+IMKgICNlbmRpZiAvKiBfQVNNX0ZCX0hfICovDQo+PiBkaWZmIC0tZ2l0IGEv
+YXJjaC9sb29uZ2FyY2gvaW5jbHVkZS9hc20vZmIuaCANCj4+IGIvYXJjaC9sb29uZ2FyY2gv
+aW5jbHVkZS9hc20vZmIuaA0KPj4gaW5kZXggZmY4MmYyMDY4NWM4Li5jNmZjN2VmMzc0YTQg
+MTAwNjQ0DQo+PiAtLS0gYS9hcmNoL2xvb25nYXJjaC9pbmNsdWRlL2FzbS9mYi5oDQo+PiAr
+KysgYi9hcmNoL2xvb25nYXJjaC9pbmNsdWRlL2FzbS9mYi5oDQo+PiBAQCAtNSw2ICs1LDI3
+IEBADQo+PiDCoCAjaWZuZGVmIF9BU01fRkJfSF8NCj4+IMKgICNkZWZpbmUgX0FTTV9GQl9I
+Xw0KPj4gKyNpbmNsdWRlIDxsaW51eC9jb21waWxlci5oPg0KPj4gKyNpbmNsdWRlIDxsaW51
+eC9zdHJpbmcuaD4NCj4+ICsNCj4+ICtzdGF0aWMgaW5saW5lIHZvaWQgZmJfbWVtY3B5X2Zy
+b21mYih2b2lkICp0bywgY29uc3Qgdm9sYXRpbGUgdm9pZCANCj4+IF9faW9tZW0gKmZyb20s
+IHNpemVfdCBuKQ0KPj4gK3sNCj4+ICvCoMKgwqAgbWVtY3B5KHRvLCAodm9pZCBfX2ZvcmNl
+ICopZnJvbSwgbik7DQo+PiArfQ0KPj4gKyNkZWZpbmUgZmJfbWVtY3B5X2Zyb21mYiBmYl9t
+ZW1jcHlfZnJvbWZiDQo+PiArDQo+PiArc3RhdGljIGlubGluZSB2b2lkIGZiX21lbWNweV90
+b2ZiKHZvbGF0aWxlIHZvaWQgX19pb21lbSAqdG8sIGNvbnN0IA0KPj4gdm9pZCAqZnJvbSwg
+c2l6ZV90IG4pDQo+PiArew0KPj4gK8KgwqDCoCBtZW1jcHkoKHZvaWQgX19mb3JjZSAqKXRv
+LCBmcm9tLCBuKTsNCj4+ICt9DQo+PiArI2RlZmluZSBmYl9tZW1jcHlfdG9mYiBmYl9tZW1j
+cHlfdG9mYg0KPj4gKw0KPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBmYl9tZW1zZXQodm9sYXRp
+bGUgdm9pZCBfX2lvbWVtICphZGRyLCBpbnQgYywgDQo+PiBzaXplX3QgbikNCj4+ICt7DQo+
+PiArwqDCoMKgIG1lbXNldCgodm9pZCBfX2ZvcmNlICopYWRkciwgYywgbik7DQo+PiArfQ0K
+Pj4gKyNkZWZpbmUgZmJfbWVtc2V0IGZiX21lbXNldA0KPj4gKw0KPj4gwqAgI2luY2x1ZGUg
+PGFzbS1nZW5lcmljL2ZiLmg+DQo+IA0KPiBIZXJlIHdvcmtzIGFzIHRoZSBwYXN0LCBidXTC
+oCB3aHkgYm90aGVyIGNhc3QgaXQgdG8gKHZvaWQgX19mb3JjZSAqKSA/DQo+IA0KPiB3aHkg
+bm90IHVzZSBfX21lbWNweV9mcm9taW8sIF9fbWVtY3B5X3RvaW8gYW5kIF9fbWVtc2V0X2lv
+IGRpcmVjdGx5Pw0KPiANCj4gSSBtb2RpZnkgaXQgdGhpcyBwYXRjaCBhcyBmb2xsb3dpbmcs
+IGl0IHN0aWxsIHdvcmtzLg0KPiANCj4gDQo+IA0KPiAgwqBzdGF0aWMgaW5saW5lIHZvaWQg
+ZmJfbWVtY3B5X2Zyb21pbyh2b2lkICp0bywgY29uc3Qgdm9sYXRpbGUgdm9pZCANCj4gX19p
+b21lbSAqZnJvbSwgc2l6ZV90IG4pDQo+ICDCoHsNCj4gLcKgwqDCoMKgwqDCoCBtZW1jcHko
+dG8sICh2b2lkIF9fZm9yY2UgKilmcm9tLCBuKTsNCj4gK8KgwqDCoMKgwqDCoCBfX21lbWNw
+eV9mcm9taW8odG8sIGZyb20sIG4pOw0KPiAgwqB9DQo+ICDCoCNkZWZpbmUgZmJfbWVtY3B5
+X2Zyb21pbyBmYl9tZW1jcHlfZnJvbWlvDQo+IA0KPiAgwqBzdGF0aWMgaW5saW5lIHZvaWQg
+ZmJfbWVtY3B5X3RvaW8odm9sYXRpbGUgdm9pZCBfX2lvbWVtICp0bywgY29uc3QgDQo+IHZv
+aWQgKmZyb20sIHNpemVfdCBuKQ0KPiAgwqB7DQo+IC3CoMKgwqDCoMKgwqAgbWVtY3B5KCh2
+b2lkIF9fZm9yY2UgKil0bywgZnJvbSwgbik7DQo+ICvCoMKgwqDCoMKgwqAgX19tZW1jcHlf
+dG9pbyh0bywgZnJvbSwgbik7DQo+ICDCoH0NCj4gIMKgI2RlZmluZSBmYl9tZW1jcHlfdG9p
+byBmYl9tZW1jcHlfdG9pbw0KPiANCj4gIMKgc3RhdGljIGlubGluZSB2b2lkIGZiX21lbXNl
+dF9pbyh2b2xhdGlsZSB2b2lkIF9faW9tZW0gKmFkZHIsIGludCBjLCANCj4gc2l6ZV90IG4p
+DQo+ICDCoHsNCj4gLcKgwqDCoMKgwqDCoCBtZW1zZXQoKHZvaWQgX19mb3JjZSAqKWFkZHIs
+IGMsIG4pOw0KPiArwqDCoMKgwqDCoMKgIF9fbWVtc2V0X2lvKGFkZHIsIGMsIG4pOw0KPiAg
+wqB9DQo+ICDCoCNkZWZpbmUgZmJfbWVtc2V0IGZiX21lbXNldF9pbw0KPiANCj4+IMKgICNl
+bmRpZiAvKiBfQVNNX0ZCX0hfICovDQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9zcGFyYy9pbmNs
+dWRlL2FzbS9mYi5oIGIvYXJjaC9zcGFyYy9pbmNsdWRlL2FzbS9mYi5oDQo+PiBpbmRleCA2
+ODllZTVjNjAwNTQuLjA3N2RhOTFhZWJhMSAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvc3BhcmMv
+aW5jbHVkZS9hc20vZmIuaA0KPj4gKysrIGIvYXJjaC9zcGFyYy9pbmNsdWRlL2FzbS9mYi5o
+DQo+PiBAQCAtMiw2ICsyLDggQEANCj4+IMKgICNpZm5kZWYgX1NQQVJDX0ZCX0hfDQo+PiDC
+oCAjZGVmaW5lIF9TUEFSQ19GQl9IXw0KPj4gKyNpbmNsdWRlIDxsaW51eC9pby5oPg0KPj4g
+Kw0KPj4gwqAgc3RydWN0IGZiX2luZm87DQo+PiDCoCBzdHJ1Y3QgZmlsZTsNCj4+IMKgIHN0
+cnVjdCB2bV9hcmVhX3N0cnVjdDsNCj4+IEBAIC0xNiw2ICsxOCwyNCBAQCBzdGF0aWMgaW5s
+aW5lIHZvaWQgZmJfcGdwcm90ZWN0KHN0cnVjdCBmaWxlICpmaWxlLCANCj4+IHN0cnVjdCB2
+bV9hcmVhX3N0cnVjdCAqdm1hLA0KPj4gwqAgaW50IGZiX2lzX3ByaW1hcnlfZGV2aWNlKHN0
+cnVjdCBmYl9pbmZvICppbmZvKTsNCj4+IMKgICNkZWZpbmUgZmJfaXNfcHJpbWFyeV9kZXZp
+Y2UgZmJfaXNfcHJpbWFyeV9kZXZpY2UNCj4+ICtzdGF0aWMgaW5saW5lIHZvaWQgZmJfbWVt
+Y3B5X2Zyb21mYih2b2lkICp0bywgY29uc3Qgdm9sYXRpbGUgdm9pZCANCj4+IF9faW9tZW0g
+KmZyb20sIHNpemVfdCBuKQ0KPj4gK3sNCj4+ICvCoMKgwqAgc2J1c19tZW1jcHlfZnJvbWlv
+KHRvLCBmcm9tLCBuKTsNCj4+ICt9DQo+PiArI2RlZmluZSBmYl9tZW1jcHlfZnJvbWZiIGZi
+X21lbWNweV9mcm9tZmINCj4+ICsNCj4+ICtzdGF0aWMgaW5saW5lIHZvaWQgZmJfbWVtY3B5
+X3RvZmIodm9sYXRpbGUgdm9pZCBfX2lvbWVtICp0bywgY29uc3QgDQo+PiB2b2lkICpmcm9t
+LCBzaXplX3QgbikNCj4+ICt7DQo+PiArwqDCoMKgIHNidXNfbWVtY3B5X3RvaW8odG8sIGZy
+b20sIG4pOw0KPj4gK30NCj4+ICsjZGVmaW5lIGZiX21lbWNweV90b2ZiIGZiX21lbWNweV90
+b2ZiDQo+PiArDQo+PiArc3RhdGljIGlubGluZSB2b2lkIGZiX21lbXNldCh2b2xhdGlsZSB2
+b2lkIF9faW9tZW0gKmFkZHIsIGludCBjLCANCj4+IHNpemVfdCBuKQ0KPj4gK3sNCj4+ICvC
+oMKgwqAgc2J1c19tZW1zZXRfaW8oYWRkciwgYywgbik7DQo+PiArfQ0KPj4gKyNkZWZpbmUg
+ZmJfbWVtc2V0IGZiX21lbXNldA0KPj4gKw0KPj4gwqAgI2luY2x1ZGUgPGFzbS1nZW5lcmlj
+L2ZiLmg+DQo+PiDCoCAjZW5kaWYgLyogX1NQQVJDX0ZCX0hfICovDQo+PiBkaWZmIC0tZ2l0
+IGEvaW5jbHVkZS9hc20tZ2VuZXJpYy9mYi5oIGIvaW5jbHVkZS9hc20tZ2VuZXJpYy9mYi5o
+DQo+PiBpbmRleCBjOGFmOTlmNWE1MzUuLjZlZjYyNGIzY2UxMiAxMDA2NDQNCj4+IC0tLSBh
+L2luY2x1ZGUvYXNtLWdlbmVyaWMvZmIuaA0KPj4gKysrIGIvaW5jbHVkZS9hc20tZ2VuZXJp
+Yy9mYi5oDQo+PiBAQCAtMzAsNCArMzAsMTA1IEBAIHN0YXRpYyBpbmxpbmUgaW50IGZiX2lz
+X3ByaW1hcnlfZGV2aWNlKHN0cnVjdCANCj4+IGZiX2luZm8gKmluZm8pDQo+PiDCoCB9DQo+
+PiDCoCAjZW5kaWYNCj4+ICsvKg0KPj4gKyAqIEkvTyBoZWxwZXJzIGZvciB0aGUgZnJhbWVi
+dWZmZXIuIFByZWZlciB0aGVzZSBmdW5jdGlvbnMgb3ZlciB0aGVpcg0KPj4gKyAqIHJlZ3Vs
+YXIgY291bnRlcnBhcnRzLiBUaGUgcmVndWxhciBJL08gZnVuY3Rpb25zIHByb3ZpZGUgaW4t
+b3JkZXINCj4+ICsgKiBhY2Nlc3MgYW5kIHN3YXAgYnl0ZXMgdG8vZnJvbSBsaXR0bGUtZW5k
+aWFuIG9yZGVyaW5nLiBOZWl0aGVyIGlzDQo+PiArICogcmVxdWlyZWQgZm9yIGZyYW1lYnVm
+ZmVycy4gSW5zdGVhZCwgdGhlIGhlbHBlcnMgcmVhZCBhbmQgd3JpdGUNCj4+ICsgKiByYXcg
+ZnJhbWVidWZmZXIgZGF0YS4gSW5kZXBlbmRlbnQgb3BlcmF0aW9ucyBjYW4gYmUgcmVvcmRl
+cmVkIGZvcg0KPj4gKyAqIGltcHJvdmVkIHBlcmZvcm1hbmNlLg0KPj4gKyAqLw0KPj4gKw0K
+Pj4gKyNpZm5kZWYgZmJfcmVhZGINCj4+ICtzdGF0aWMgaW5saW5lIHU4IGZiX3JlYWRiKGNv
+bnN0IHZvbGF0aWxlIHZvaWQgX19pb21lbSAqYWRkcikNCj4+ICt7DQo+PiArwqDCoMKgIHJl
+dHVybiBfX3Jhd19yZWFkYihhZGRyKTsNCj4+ICt9DQo+PiArI2RlZmluZSBmYl9yZWFkYiBm
+Yl9yZWFkYg0KPj4gKyNlbmRpZg0KPj4gKw0KPj4gKyNpZm5kZWYgZmJfcmVhZHcNCj4+ICtz
+dGF0aWMgaW5saW5lIHUxNiBmYl9yZWFkdyhjb25zdCB2b2xhdGlsZSB2b2lkIF9faW9tZW0g
+KmFkZHIpDQo+PiArew0KPj4gK8KgwqDCoCByZXR1cm4gX19yYXdfcmVhZHcoYWRkcik7DQo+
+PiArfQ0KPj4gKyNkZWZpbmUgZmJfcmVhZHcgZmJfcmVhZHcNCj4+ICsjZW5kaWYNCj4+ICsN
+Cj4+ICsjaWZuZGVmIGZiX3JlYWRsDQo+PiArc3RhdGljIGlubGluZSB1MzIgZmJfcmVhZGwo
+Y29uc3Qgdm9sYXRpbGUgdm9pZCBfX2lvbWVtICphZGRyKQ0KPj4gK3sNCj4+ICvCoMKgwqAg
+cmV0dXJuIF9fcmF3X3JlYWRsKGFkZHIpOw0KPj4gK30NCj4+ICsjZGVmaW5lIGZiX3JlYWRs
+IGZiX3JlYWRsDQo+PiArI2VuZGlmDQo+PiArDQo+PiArI2lmbmRlZiBmYl9yZWFkcQ0KPj4g
+KyNpZiBkZWZpbmVkKF9fcmF3X3JlYWRxKQ0KPj4gK3N0YXRpYyBpbmxpbmUgdTY0IGZiX3Jl
+YWRxKGNvbnN0IHZvbGF0aWxlIHZvaWQgX19pb21lbSAqYWRkcikNCj4+ICt7DQo+PiArwqDC
+oMKgIHJldHVybiBfX3Jhd19yZWFkcShhZGRyKTsNCj4+ICt9DQo+PiArI2RlZmluZSBmYl9y
+ZWFkcSBmYl9yZWFkcQ0KPj4gKyNlbmRpZg0KPj4gKyNlbmRpZg0KPj4gKw0KPj4gKyNpZm5k
+ZWYgZmJfd3JpdGViDQo+PiArc3RhdGljIGlubGluZSB2b2lkIGZiX3dyaXRlYih1OCBiLCB2
+b2xhdGlsZSB2b2lkIF9faW9tZW0gKmFkZHIpDQo+PiArew0KPj4gK8KgwqDCoCBfX3Jhd193
+cml0ZWIoYiwgYWRkcik7DQo+PiArfQ0KPj4gKyNkZWZpbmUgZmJfd3JpdGViIGZiX3dyaXRl
+Yg0KPj4gKyNlbmRpZg0KPj4gKw0KPj4gKyNpZm5kZWYgZmJfd3JpdGV3DQo+PiArc3RhdGlj
+IGlubGluZSB2b2lkIGZiX3dyaXRldyh1MTYgYiwgdm9sYXRpbGUgdm9pZCBfX2lvbWVtICph
+ZGRyKQ0KPj4gK3sNCj4+ICvCoMKgwqAgX19yYXdfd3JpdGV3KGIsIGFkZHIpOw0KPj4gK30N
+Cj4+ICsjZGVmaW5lIGZiX3dyaXRldyBmYl93cml0ZXcNCj4+ICsjZW5kaWYNCj4+ICsNCj4+
+ICsjaWZuZGVmIGZiX3dyaXRlbA0KPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBmYl93cml0ZWwo
+dTMyIGIsIHZvbGF0aWxlIHZvaWQgX19pb21lbSAqYWRkcikNCj4+ICt7DQo+PiArwqDCoMKg
+IF9fcmF3X3dyaXRlbChiLCBhZGRyKTsNCj4+ICt9DQo+PiArI2RlZmluZSBmYl93cml0ZWwg
+ZmJfd3JpdGVsDQo+PiArI2VuZGlmDQo+PiArDQo+PiArI2lmbmRlZiBmYl93cml0ZXENCj4+
+ICsjaWYgZGVmaW5lZChfX3Jhd193cml0ZXEpDQo+PiArc3RhdGljIGlubGluZSB2b2lkIGZi
+X3dyaXRlcSh1NjQgYiwgdm9sYXRpbGUgdm9pZCBfX2lvbWVtICphZGRyKQ0KPj4gK3sNCj4+
+ICvCoMKgwqAgX19yYXdfd3JpdGVxKGIsIGFkZHIpOw0KPj4gK30NCj4+ICsjZGVmaW5lIGZi
+X3dyaXRlcSBmYl93cml0ZXENCj4+ICsjZW5kaWYNCj4+ICsjZW5kaWYNCj4+ICsNCj4+ICsj
+aWZuZGVmIGZiX21lbWNweV9mcm9tZmINCj4+ICtzdGF0aWMgaW5saW5lIHZvaWQgZmJfbWVt
+Y3B5X2Zyb21mYih2b2lkICp0bywgY29uc3Qgdm9sYXRpbGUgdm9pZCANCj4+IF9faW9tZW0g
+KmZyb20sIHNpemVfdCBuKQ0KPj4gK3sNCj4+ICvCoMKgwqAgbWVtY3B5X2Zyb21pbyh0bywg
+ZnJvbSwgbik7DQo+PiArfQ0KPj4gKyNkZWZpbmUgZmJfbWVtY3B5X2Zyb21mYiBmYl9tZW1j
+cHlfZnJvbWZiDQo+PiArI2VuZGlmDQo+PiArDQo+PiArI2lmbmRlZiBmYl9tZW1jcHlfdG9m
+Yg0KPj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBmYl9tZW1jcHlfdG9mYih2b2xhdGlsZSB2b2lk
+IF9faW9tZW0gKnRvLCBjb25zdCANCj4+IHZvaWQgKmZyb20sIHNpemVfdCBuKQ0KPj4gK3sN
+Cj4+ICvCoMKgwqAgbWVtY3B5X3RvaW8odG8sIGZyb20sIG4pOw0KPj4gK30NCj4+ICsjZGVm
+aW5lIGZiX21lbWNweV90b2ZiIGZiX21lbWNweV90b2ZiDQo+PiArI2VuZGlmDQo+PiArDQo+
+PiArI2lmbmRlZiBmYl9tZW1zZXQNCj4+ICtzdGF0aWMgaW5saW5lIHZvaWQgZmJfbWVtc2V0
+KHZvbGF0aWxlIHZvaWQgX19pb21lbSAqYWRkciwgaW50IGMsIA0KPj4gc2l6ZV90IG4pDQo+
+PiArew0KPj4gK8KgwqDCoCBtZW1zZXRfaW8oYWRkciwgYywgbik7DQo+PiArfQ0KPj4gKyNk
+ZWZpbmUgZmJfbWVtc2V0IGZiX21lbXNldA0KPj4gKyNlbmRpZg0KPj4gKw0KPj4gwqAgI2Vu
+ZGlmIC8qIF9fQVNNX0dFTkVSSUNfRkJfSF8gKi8NCj4+IGRpZmYgLS1naXQgYS9pbmNsdWRl
+L2xpbnV4L2ZiLmggYi9pbmNsdWRlL2xpbnV4L2ZiLmgNCj4+IGluZGV4IGMwZjk3MTYwZWJi
+Zi4uZWI3ZTUyOTQwYzYwIDEwMDY0NA0KPj4gLS0tIGEvaW5jbHVkZS9saW51eC9mYi5oDQo+
+PiArKysgYi9pbmNsdWRlL2xpbnV4L2ZiLmgNCj4+IEBAIC0xNyw3ICsxNyw2IEBADQo+PiDC
+oCAjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KPj4gwqAgI2luY2x1ZGUgPGFzbS9mYi5oPg0K
+Pj4gLSNpbmNsdWRlIDxhc20vaW8uaD4NCj4+IMKgIHN0cnVjdCB2bV9hcmVhX3N0cnVjdDsN
+Cj4+IMKgIHN0cnVjdCBmYl9pbmZvOw0KPj4gQEAgLTUxMyw1OCArNTEyLDYgQEAgc3RydWN0
+IGZiX2luZm8gew0KPj4gwqDCoCAqLw0KPj4gwqAgI2RlZmluZSBTVFVQSURfQUNDRUxGX1RF
+WFRfU0hJVA0KPj4gLS8vIFRoaXMgd2lsbCBnbyBhd2F5DQo+PiAtI2lmIGRlZmluZWQoX19z
+cGFyY19fKQ0KPj4gLQ0KPj4gLS8qIFdlIG1hcCBhbGwgb2Ygb3VyIGZyYW1lYnVmZmVycyBz
+dWNoIHRoYXQgYmlnLWVuZGlhbiBhY2Nlc3Nlcw0KPj4gLSAqIGFyZSB3aGF0IHdlIHdhbnQs
+IHNvIHRoZSBmb2xsb3dpbmcgaXMgc3VmZmljaWVudC4NCj4+IC0gKi8NCj4+IC0NCj4+IC0v
+LyBUaGlzIHdpbGwgZ28gYXdheQ0KPj4gLSNkZWZpbmUgZmJfcmVhZGIgc2J1c19yZWFkYg0K
+Pj4gLSNkZWZpbmUgZmJfcmVhZHcgc2J1c19yZWFkdw0KPj4gLSNkZWZpbmUgZmJfcmVhZGwg
+c2J1c19yZWFkbA0KPj4gLSNkZWZpbmUgZmJfcmVhZHEgc2J1c19yZWFkcQ0KPj4gLSNkZWZp
+bmUgZmJfd3JpdGViIHNidXNfd3JpdGViDQo+PiAtI2RlZmluZSBmYl93cml0ZXcgc2J1c193
+cml0ZXcNCj4+IC0jZGVmaW5lIGZiX3dyaXRlbCBzYnVzX3dyaXRlbA0KPj4gLSNkZWZpbmUg
+ZmJfd3JpdGVxIHNidXNfd3JpdGVxDQo+PiAtI2RlZmluZSBmYl9tZW1zZXQgc2J1c19tZW1z
+ZXRfaW8NCj4+IC0jZGVmaW5lIGZiX21lbWNweV9mcm9tZmIgc2J1c19tZW1jcHlfZnJvbWlv
+DQo+PiAtI2RlZmluZSBmYl9tZW1jcHlfdG9mYiBzYnVzX21lbWNweV90b2lvDQo+PiAtDQo+
+PiAtI2VsaWYgZGVmaW5lZChfX2kzODZfXykgfHwgZGVmaW5lZChfX2FscGhhX18pIHx8IGRl
+ZmluZWQoX194ODZfNjRfXykgDQo+PiB8fMKgwqDCoCBcDQo+PiAtwqDCoMKgIGRlZmluZWQo
+X19ocHBhX18pIHx8IGRlZmluZWQoX19zaF9fKSB8fCBkZWZpbmVkKF9fcG93ZXJwY19fKSB8
+fMKgwqDCoCBcDQo+PiAtwqDCoMKgIGRlZmluZWQoX19hcm1fXykgfHwgZGVmaW5lZChfX2Fh
+cmNoNjRfXykgfHwgZGVmaW5lZChfX21pcHNfXykNCj4+IC0NCj4+IC0jZGVmaW5lIGZiX3Jl
+YWRiIF9fcmF3X3JlYWRiDQo+PiAtI2RlZmluZSBmYl9yZWFkdyBfX3Jhd19yZWFkdw0KPj4g
+LSNkZWZpbmUgZmJfcmVhZGwgX19yYXdfcmVhZGwNCj4+IC0jZGVmaW5lIGZiX3JlYWRxIF9f
+cmF3X3JlYWRxDQo+PiAtI2RlZmluZSBmYl93cml0ZWIgX19yYXdfd3JpdGViDQo+PiAtI2Rl
+ZmluZSBmYl93cml0ZXcgX19yYXdfd3JpdGV3DQo+PiAtI2RlZmluZSBmYl93cml0ZWwgX19y
+YXdfd3JpdGVsDQo+PiAtI2RlZmluZSBmYl93cml0ZXEgX19yYXdfd3JpdGVxDQo+PiAtI2Rl
+ZmluZSBmYl9tZW1zZXQgbWVtc2V0X2lvDQo+PiAtI2RlZmluZSBmYl9tZW1jcHlfZnJvbWZi
+IG1lbWNweV9mcm9taW8NCj4+IC0jZGVmaW5lIGZiX21lbWNweV90b2ZiIG1lbWNweV90b2lv
+DQo+PiAtDQo+PiAtI2Vsc2UNCj4+IC0NCj4+IC0jZGVmaW5lIGZiX3JlYWRiKGFkZHIpICgq
+KHZvbGF0aWxlIHU4ICopIChhZGRyKSkNCj4+IC0jZGVmaW5lIGZiX3JlYWR3KGFkZHIpICgq
+KHZvbGF0aWxlIHUxNiAqKSAoYWRkcikpDQo+PiAtI2RlZmluZSBmYl9yZWFkbChhZGRyKSAo
+Kih2b2xhdGlsZSB1MzIgKikgKGFkZHIpKQ0KPj4gLSNkZWZpbmUgZmJfcmVhZHEoYWRkcikg
+KCoodm9sYXRpbGUgdTY0ICopIChhZGRyKSkNCj4+IC0jZGVmaW5lIGZiX3dyaXRlYihiLGFk
+ZHIpICgqKHZvbGF0aWxlIHU4ICopIChhZGRyKSA9IChiKSkNCj4+IC0jZGVmaW5lIGZiX3dy
+aXRldyhiLGFkZHIpICgqKHZvbGF0aWxlIHUxNiAqKSAoYWRkcikgPSAoYikpDQo+PiAtI2Rl
+ZmluZSBmYl93cml0ZWwoYixhZGRyKSAoKih2b2xhdGlsZSB1MzIgKikgKGFkZHIpID0gKGIp
+KQ0KPj4gLSNkZWZpbmUgZmJfd3JpdGVxKGIsYWRkcikgKCoodm9sYXRpbGUgdTY0ICopIChh
+ZGRyKSA9IChiKSkNCj4+IC0jZGVmaW5lIGZiX21lbXNldCBtZW1zZXQNCj4+IC0jZGVmaW5l
+IGZiX21lbWNweV9mcm9tZmIgbWVtY3B5DQo+PiAtI2RlZmluZSBmYl9tZW1jcHlfdG9mYiBt
+ZW1jcHkNCj4+IC0NCj4+IC0jZW5kaWYNCj4+IC0NCj4+IMKgICNkZWZpbmUgRkJfTEVGVF9Q
+T1MocCwgYnBwKcKgwqDCoMKgwqDCoMKgwqDCoCAoZmJfYmVfbWF0aChwKSA/ICgzMiAtIChi
+cHApKSA6IDApDQo+PiDCoCAjZGVmaW5lIEZCX1NISUZUX0hJR0gocCwgdmFsLCBiaXRzKcKg
+IChmYl9iZV9tYXRoKHApID8gKHZhbCkgPj4gDQo+PiAoYml0cykgOiBcDQo+PiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCAodmFsKSA8PCAoYml0cykpDQoNCi0tIA0KVGhvbWFzIFppbW1lcm1hbm4NCkdyYXBoaWNz
+IERyaXZlciBEZXZlbG9wZXINClNVU0UgU29mdHdhcmUgU29sdXRpb25zIEdlcm1hbnkgR21i
+SA0KRnJhbmtlbnN0cmFzc2UgMTQ2LCA5MDQ2MSBOdWVybmJlcmcsIEdlcm1hbnkNCkdGOiBJ
+dm8gVG90ZXYsIEFuZHJldyBNeWVycywgQW5kcmV3IE1jRG9uYWxkLCBCb3VkaWVuIE1vZXJt
+YW4NCkhSQiAzNjgwOSAoQUcgTnVlcm5iZXJnKQ0K
 
->
-> >  3 files changed, 357 insertions(+)
-> >  create mode 100644 drivers/rtc/rtc-ls2x.c
-> >
-> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> > index 753872408615..e1b9d64d2678 100644
-> > --- a/drivers/rtc/Kconfig
-> > +++ b/drivers/rtc/Kconfig
-> > @@ -1706,6 +1706,17 @@ config RTC_DRV_LPC32XX
-> >         This driver can also be built as a module. If so, the module
-> >         will be called rtc-lpc32xx.
-> >
-> > +config RTC_DRV_LS2X
-> > +     tristate "Loongson LS2X RTC"
-> > +     depends on MACH_LOONGSON64 || COMPILE_TEST
-> > +     select REGMAP_MMIO
-> > +     help
-> > +       If you say yes here you get support for the RTC on the Loongson=
--2K
-> > +       SoC and LS7A bridge, which first appeared on the Loongson-2H.
-> > +
-> > +       This driver can also be built as a module. If so, the module
-> > +       will be called rtc-ls2x.
-> > +
-> >  config RTC_DRV_PM8XXX
-> >       tristate "Qualcomm PMIC8XXX RTC"
-> >       depends on MFD_PM8XXX || MFD_SPMI_PMIC || COMPILE_TEST
-> > diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> > index ea445d1ebb17..cff5df09fc60 100644
-> > --- a/drivers/rtc/Makefile
-> > +++ b/drivers/rtc/Makefile
-> > @@ -82,6 +82,7 @@ obj-$(CONFIG_RTC_DRV_LOONGSON1)     +=3D rtc-ls1x.o
-> >  obj-$(CONFIG_RTC_DRV_LP8788) +=3D rtc-lp8788.o
-> >  obj-$(CONFIG_RTC_DRV_LPC24XX)        +=3D rtc-lpc24xx.o
-> >  obj-$(CONFIG_RTC_DRV_LPC32XX)        +=3D rtc-lpc32xx.o
-> > +obj-$(CONFIG_RTC_DRV_LS2X)   +=3D rtc-ls2x.o
-> >  obj-$(CONFIG_RTC_DRV_M41T80) +=3D rtc-m41t80.o
-> >  obj-$(CONFIG_RTC_DRV_M41T93) +=3D rtc-m41t93.o
-> >  obj-$(CONFIG_RTC_DRV_M41T94) +=3D rtc-m41t94.o
-> > diff --git a/drivers/rtc/rtc-ls2x.c b/drivers/rtc/rtc-ls2x.c
-> > new file mode 100644
-> > index 000000000000..c74dd88ae11b
-> > --- /dev/null
-> > +++ b/drivers/rtc/rtc-ls2x.c
-> > @@ -0,0 +1,345 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * Loongson-2K/LS7A RTC driver
-> > + *
-> > + * Based on the original out-of-tree Loongson-2H RTC driver for Linux =
-2.6.32,
-> > + * by Shaozong Liu <liushaozong@loongson.cn>.
-> > + *
-> > + * Maintained out-of-tree by Huacai Chen <chenhuacai@kernel.org>.
-> > + * Rewritten for mainline by WANG Xuerui <git@xen0n.name>.
-> > + *                           Binbin Zhou <zhoubinbin@loongson.cn>
-> > + */
-> > +
-> > +#include <linux/bitfield.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/rtc.h>
-> > +#include <linux/acpi.h>
-> > +
-> > +/* Time Of Year(TOY) counters registers */
-> > +#define TOY_TRIM_REG         0x20 /* Must be initialized to 0 */
-> > +#define TOY_WRITE0_REG               0x24 /* TOY low 32-bits value (wr=
-ite-only) */
-> > +#define TOY_WRITE1_REG               0x28 /* TOY high 32-bits value (w=
-rite-only) */
-> > +#define TOY_READ0_REG                0x2c /* TOY low 32-bits value (re=
-ad-only) */
-> > +#define TOY_READ1_REG                0x30 /* TOY high 32-bits value (r=
-ead-only) */
-> > +#define TOY_MATCH0_REG               0x34 /* TOY timing interrupt 0 */
-> > +#define TOY_MATCH1_REG               0x38 /* TOY timing interrupt 1 */
-> > +#define TOY_MATCH2_REG               0x3c /* TOY timing interrupt 2 */
-> > +
-> > +/* RTC counters registers */
-> > +#define RTC_CTRL_REG         0x40 /* TOY and RTC control register */
-> > +#define RTC_TRIM_REG         0x60 /* Must be initialized to 0 */
-> > +#define RTC_WRITE0_REG               0x64 /* RTC counters value (write=
--only) */
-> > +#define RTC_READ0_REG                0x68 /* RTC counters value (read-=
-only) */
-> > +#define RTC_MATCH0_REG               0x6c /* RTC timing interrupt 0 */
-> > +#define RTC_MATCH1_REG               0x70 /* RTC timing interrupt 1 */
-> > +#define RTC_MATCH2_REG               0x74 /* RTC timing interrupt 2 */
-> > +
-> > +/* bitmask of TOY_WRITE0_REG */
-> > +#define TOY_MON                      GENMASK(31, 26)
-> > +#define TOY_DAY                      GENMASK(25, 21)
-> > +#define TOY_HOUR             GENMASK(20, 16)
-> > +#define TOY_MIN                      GENMASK(15, 10)
-> > +#define TOY_SEC                      GENMASK(9, 4)
-> > +#define TOY_MSEC             GENMASK(3, 0)
-> > +
-> > +/* bitmask of TOY_MATCH0/1/2_REG */
-> > +#define TOY_MATCH_YEAR               GENMASK(31, 26)
-> > +#define TOY_MATCH_MON                GENMASK(25, 22)
-> > +#define TOY_MATCH_DAY                GENMASK(21, 17)
-> > +#define TOY_MATCH_HOUR               GENMASK(16, 12)
-> > +#define TOY_MATCH_MIN                GENMASK(11, 6)
-> > +#define TOY_MATCH_SEC                GENMASK(5, 0)
-> > +
-> > +/* bitmask of RTC_CTRL_REG */
-> > +#define RTC_ENABLE           BIT(13) /* 1: RTC counters enable */
-> > +#define TOY_ENABLE           BIT(11) /* 1: TOY counters enable */
-> > +#define OSC_ENABLE           BIT(8) /* 1: 32.768k crystal enable */
-> > +#define TOY_ENABLE_MASK              (TOY_ENABLE | OSC_ENABLE)
-> > +
-> > +/* PM domain registers */
-> > +#define PM1_STS_REG          0x0c /* Power management 1 status registe=
-r */
-> > +#define RTC_STS                      BIT(10) /* RTC status */
-> > +#define PM1_EN_REG           0x10 /* Power management 1 enable registe=
-r */
-> > +#define RTC_EN                       BIT(10) /* RTC event enable */
-> > +
-> > +/* Offset of PM domain from RTC domain, for rtc alarm */
-> > +enum ls2x_pm_offset {
-> > +     GENERIC_OFFSET =3D 0x100,
-> > +     LS2K1000_OFFSET =3D 0x800,
-> > +};
-> > +
-> > +struct ls2x_rtc_priv {
-> > +     spinlock_t lock; /* protects PM registers access */
-> > +     int irq;
-> > +     struct rtc_device *rtcdev;
-> > +     struct regmap *regmap;
-> > +     void __iomem *pm_base; /* PM domain base, for rtc alarm */
-> > +};
-> > +
-> > +static const struct regmap_config ls2x_rtc_regmap_config =3D {
-> > +     .reg_bits =3D 32,
-> > +     .val_bits =3D 32,
-> > +     .reg_stride =3D 4,
-> > +};
-> > +
-> > +/* IRQ Handlers */
-> > +static irqreturn_t ls2x_rtc_isr(int irq, void *id)
-> > +{
-> > +     struct ls2x_rtc_priv *priv =3D (struct ls2x_rtc_priv *)id;
-> > +
-> > +     rtc_update_irq(priv->rtcdev, 1, RTC_AF | RTC_IRQF);
-> > +     return IRQ_HANDLED;
-> > +}
-> > +
-> > +static u32 ls2x_rtc_handler(void *id)
-> > +{
-> > +     u32 ret;
-> > +     struct ls2x_rtc_priv *priv =3D (struct ls2x_rtc_priv *)id;
-> > +
-> > +     spin_lock(&priv->lock);
-> > +     /* Disable rtc event */
-> > +     writel(readl(priv->pm_base + PM1_EN_REG) & ~RTC_EN,
-> > +            priv->pm_base + PM1_EN_REG);
-> > +
-> > +     /* Clear rtc interrupt status */
-> > +     writel(RTC_STS, priv->pm_base + PM1_STS_REG);
-> > +     spin_unlock(&priv->lock);
-> > +
-> > +     /*
-> > +      * The TOY_MATCH0_REG should be cleared 0 here,
-> > +      * otherwise the interrupt cannot be cleared.
-> > +      */
-> > +     ret =3D regmap_write(priv->regmap, TOY_MATCH0_REG, 0);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     rtc_update_irq(priv->rtcdev, 1, RTC_AF | RTC_IRQF);
-> > +     return 0;
-> > +}
-> > +
-> > +static int ls2x_rtc_read_time(struct device *dev, struct rtc_time *tm)
-> > +{
-> > +     int ret;
-> > +     u32 ctrl_data, rtc_data[2];
-> > +     struct ls2x_rtc_priv *priv =3D dev_get_drvdata(dev);
-> > +
-> > +     ret =3D regmap_read(priv->regmap, RTC_CTRL_REG, &ctrl_data);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     if (!(ctrl_data & TOY_ENABLE_MASK))
-> > +             return -EINVAL;
-> > +
-> > +     ret =3D regmap_bulk_read(priv->regmap, TOY_READ0_REG, rtc_data,
-> > +                            ARRAY_SIZE(rtc_data));
->
-> There is still no answer on whether the TOY_READ0_REG and TOY_READ1_REG
-> are latched.
->
+--------------BKPWk7DxbW4ngG5FSzHXs044--
 
-After talking to colleagues offline, the RTC hardware itself can
-guarantee atomicity for bulk reads.
+--------------uoo0zgZq3uEuuNZetkGvcZrQ
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     tm->tm_sec =3D FIELD_GET(TOY_SEC, rtc_data[0]);
-> > +     tm->tm_min =3D FIELD_GET(TOY_MIN, rtc_data[0]);
-> > +     tm->tm_hour =3D FIELD_GET(TOY_HOUR, rtc_data[0]);
-> > +     tm->tm_mday =3D FIELD_GET(TOY_DAY, rtc_data[0]);
-> > +     tm->tm_mon =3D FIELD_GET(TOY_MON, rtc_data[0]) - 1;
-> > +     tm->tm_year =3D rtc_data[1];
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int ls2x_rtc_set_time(struct device *dev, struct rtc_time *tm)
-> > +{
-> > +     int ret;
-> > +     u32 rtc_data[2];
-> > +     struct ls2x_rtc_priv *priv =3D dev_get_drvdata(dev);
-> > +
-> > +     rtc_data[0] =3D FIELD_PREP(TOY_SEC, tm->tm_sec)
-> > +                 | FIELD_PREP(TOY_MIN, tm->tm_min)
-> > +                 | FIELD_PREP(TOY_HOUR, tm->tm_hour)
-> > +                 | FIELD_PREP(TOY_DAY, tm->tm_mday)
-> > +                 | FIELD_PREP(TOY_MON, tm->tm_mon + 1);
-> > +     rtc_data[1] =3D tm->tm_year;
-> > +
-> > +     ret =3D regmap_bulk_write(priv->regmap, TOY_WRITE0_REG, rtc_data,
-> > +                             ARRAY_SIZE(rtc_data));
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     /* Enable RTC TOY counters and crystal */
-> > +     return regmap_update_bits(priv->regmap, RTC_CTRL_REG, TOY_ENABLE_=
-MASK,
-> > +                               TOY_ENABLE_MASK);
-> > +}
-> > +
-> > +static int ls2x_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *=
-alrm)
-> > +{
-> > +     int ret;
-> > +     u32 alarm_data;
-> > +     struct ls2x_rtc_priv *priv =3D dev_get_drvdata(dev);
-> > +
-> > +     ret =3D regmap_read(priv->regmap, TOY_MATCH0_REG, &alarm_data);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     alrm->time.tm_sec =3D FIELD_GET(TOY_MATCH_SEC, alarm_data);
-> > +     alrm->time.tm_min =3D FIELD_GET(TOY_MATCH_MIN, alarm_data);
-> > +     alrm->time.tm_hour =3D FIELD_GET(TOY_MATCH_HOUR, alarm_data);
-> > +     alrm->time.tm_mday =3D FIELD_GET(TOY_MATCH_DAY, alarm_data);
-> > +     alrm->time.tm_mon =3D FIELD_GET(TOY_MATCH_MON, alarm_data) - 1;
-> > +     /*
-> > +      * This is a hardware bug.
-> > +      * The year field in the SYS_TOYMATCH has only 6 bits(bits[31:26]=
-),
-> > +      * so it can only be set from 1900 to 1963.
-> > +      * In order to avoid an invalid alarm value during booting, we ma=
-nually
-> > +      * add 64 after reading the year field (equivalent to filling in =
-the
-> > +      * high bits).
-> > +      */
-> > +     alrm->time.tm_year =3D FIELD_GET(TOY_MATCH_YEAR, alarm_data) + 64=
-;
->
-> This is restricting to the 1964 to 2027 range whereas you claim the RTC
-> has a 2000 to 2099 range. Why don't you simply do 2000 to 2063 which
-> would at least match most of it.
->
+-----BEGIN PGP SIGNATURE-----
 
-I have compiled a description of this hardware defect:
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmRUqWoFAwAAAAAACgkQlh/E3EQov+Bn
+6Q//Yfi7ybY4ot1HUsuhcItH50Za4V4p9pzazDCOnGyFERG9M8GlW1Fy1QQRR2w+9mMhnDSNGvjA
+wKmGbq4W+MWfHfNm9fbZUFQJ6RtxLMuHEII71dXxFDnl0bcSgSyu1NbIWQwCf7G/PvheiqQ8PYw3
++CqtoOIpNEiHyUQeEAfQj+8weEqkfzd7xlsv1PJxhuJsQXJ8f8DenJSr9azzt+WDFoldGOlMdWvZ
+WCjFfpsaC+JbUqI3XvO/u/W+DnIcIR2ttzPZGIoc7Z6H/yFQTHP/QRTwbYAHcIPu6l6vzYis6zaT
+Ir8uqFjzPp5TdSSlslIDsSlZsJ+X50YET01rmXd/dQUkblLhBXHufAt7NqkYrszuZjOQG8vnpSSU
+1bgmKkG57w1OXgzVGggf/L+Rk1r4mJVHlC8fI4Z9B9KniHm+M/U+Gft+gB4zaJHGWOauYwuBdfxu
+haa4/hv1uVtW6fjq+NYBeef7KVKlVn+LmONpcUIYnx6DhQjNLhOJLcMHstzD/ilFOUm7t1gdOgN8
+ruRCzr3WKHjNPef8U3PyJwASGnJcOzh5pO1kZdcph8dFw62XpOa9AkamflW0Y0kLZPntcEnqAMus
+5LwnbzCi+A773IDPggRZjJm5vMqHsQb77n4xFXQYXBsk/b1/V6qptdtwIUDtEbw7ZIP50qZfvQZf
+NbI=
+=wJdw
+-----END PGP SIGNATURE-----
 
-Firstly, the root cause of the defect is that there are not enough
-bits in the MATCH register to indicate the year, only 6 bits.
-The rtc hardware uses the MATCH register to compare the alarm time
-values and to determine if an alarm is triggered.
-
-Therefore, we have to ensure that the lower 6 bits remain unchanged
-during the conversion of the year value . Otherwise the rtc hardware
-will definitely not succeed when matching and thus the alarm function
-will not work.
-In summary, here we can only add or subtract 64 (or a multiple of 64).
-
-To avoid the year being described only up to 2027, how about the
-following solution:
-1. define the global variable year_offset, which holds the required offset.
-2. In ls2x_rtc_read_time(), calculate year_offset =3D tm->tm_year / 64 * 64=
-.
-
-> I am very very disappointed. I had all these comments on v1 and v2, you
-> are sending v3 with the exact same issues. How can I trust this is ever
-> going to progress in the right direction?
-
-I apologise that the time between these two patch sets is a bit long
-and I did not double check the relevant change points.
-I will double check each point that needs to be changed before sending
-out subsequent patches.
-
-Again, I apologise.
-
-Thanks.
-Binbin
-
->
->
-> --
-> Alexandre Belloni, co-owner and COO, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
+--------------uoo0zgZq3uEuuNZetkGvcZrQ--
