@@ -1,32 +1,32 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB88C11CAF
-	for <loongarch@lists.linux.dev>; Mon,  8 May 2023 21:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7227111CB9
+	for <loongarch@lists.linux.dev>; Mon,  8 May 2023 21:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=qJ542JOkywuQy44rpDjAFBKOiAWpMNGNJLpO6nBwf7o=; b=GCaGOZktpNu5GOB/jf0mGRtijV
-	mJjATlNWDd6SpBMT0GoDulcBW1hcIzOdTn5XhuUoWUS40W40EmvP/Ba+1cC5BlIeEHDbZMyU7r+Ts
-	q4lxWlfhSq+/6Z4ZoBLEH5z07leAlubUAa6eCSlgEFGy+M1QlR4+cSigU7UpnV8K/b6pl5VZKiVcC
-	PYdNZ+HURFsuY6dSKxl/mzaTAdmZKJRz4xV+ABE+v6sxMLoiA0OOsJd+/0ejC7U2Xpe+lqdLnjIrc
-	MXNeUu36aaxP3qYNZLefq7wou8XtduYSxulv3eAYJqZMDaxELMQh+wpZ+hl5oh5atAB2nLfocRqRE
-	iWjSG27A==;
+	bh=bEROWOrEuHGtVGNiYWuINxVA4qSy8ulUpF6Cr1VtAOk=; b=Rw8MxGzMcck/SmtNHPxJBTkUJ2
+	glIi2eVEv3SEs7dwl7ZznmvfLWL/+hcH6+HqoI/0OpRAKtLEwozOzJIP1ucdO77zKFOBYmn2HAeik
+	Q9dVu9HEGaXeNwVh9YkItAwMOYPP5acMOrWwhH140v6BsV7TML3Gh6CG7Esu0OG6hyOvl9rB+1wb5
+	nA2pozVz0eUelrQmFssZEfx0yQZGfDWONRB5yt5jJnnXeSQ68+9CxDgZTz/0A9VMRaQiqImxK6CE9
+	BWcxxygJsv3c8ji0Cuzqxdn6Fvj3pVdTCleFQKnOhQuG3y4YayiE6ujN/Xz0m7h3YRbQcyTHwR5gI
+	ptGi/ITg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pw8UY-00EW3c-6r; Mon, 08 May 2023 21:33:58 +0000
+	id 1pw8UZ-00EW3p-Dg; Mon, 08 May 2023 21:33:59 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6903330612F;
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 93D41306137;
 	Mon,  8 May 2023 23:33:48 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id 2E3152482941A; Mon,  8 May 2023 23:33:48 +0200 (CEST)
-Message-ID: <20230508213147.448097252@infradead.org>
+	id 356B62482941D; Mon,  8 May 2023 23:33:48 +0200 (CEST)
+Message-ID: <20230508213147.583344579@infradead.org>
 User-Agent: quilt/0.66
-Date: Mon, 08 May 2023 23:19:52 +0200
+Date: Mon, 08 May 2023 23:19:54 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: bigeasy@linutronix.de
 Cc: mark.rutland@arm.com,
@@ -79,7 +79,7 @@ Cc: mark.rutland@arm.com,
  kvm@vger.kernel.org,
  linux-hyperv@vger.kernel.org,
  linux-pm@vger.kernel.org
-Subject: [RFC][PATCH 1/9] seqlock/latch: Provide raw_read_seqcount_latch_retry()
+Subject: [RFC][PATCH 3/9] arm64/io: Always inline all of __raw_{read,write}[bwlq]()
 References: <20230508211951.901961964@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -89,132 +89,68 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-The read side of seqcount_latch consists of:
+The next patch will want to use __raw_readl() from a noinstr section
+and as such that needs to be marked __always_inline to avoid the
+compiler being a silly bugger.
 
-  do {
-    seq = raw_read_seqcount_latch(&latch->seq);
-    ...
-  } while (read_seqcount_latch_retry(&latch->seq, seq));
-
-which is asymmetric in the raw_ department, and sure enough,
-read_seqcount_latch_retry() includes (explicit) instrumentation where
-raw_read_seqcount_latch() does not.
-
-This inconsistency becomes a problem when trying to use it from
-noinstr code. As such, fix it by renaming and re-implementing
-raw_read_seqcount_latch_retry() without the instrumentation.
-
-Specifically the instrumentation in question is kcsan_atomic_next(0)
-in do___read_seqcount_retry(). Loosing this annotation is not a
-problem because raw_read_seqcount_latch() does not pass through
-kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX).
+Turns out it already is, but its siblings are not.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/linux/rbtree_latch.h |    2 +-
- include/linux/seqlock.h      |   15 ++++++++-------
- kernel/printk/printk.c       |    2 +-
- kernel/time/sched_clock.c    |    2 +-
- kernel/time/timekeeping.c    |    4 ++--
- 5 files changed, 13 insertions(+), 12 deletions(-)
+ arch/arm64/include/asm/io.h |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/include/linux/rbtree_latch.h
-+++ b/include/linux/rbtree_latch.h
-@@ -206,7 +206,7 @@ latch_tree_find(void *key, struct latch_
- 	do {
- 		seq = raw_read_seqcount_latch(&root->seq);
- 		node = __lt_find(key, root, seq & 1, ops->comp);
--	} while (read_seqcount_latch_retry(&root->seq, seq));
-+	} while (raw_read_seqcount_latch_retry(&root->seq, seq));
- 
- 	return node;
- }
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -671,9 +671,9 @@ typedef struct {
-  *
-  * Return: sequence counter raw value. Use the lowest bit as an index for
-  * picking which data copy to read. The full counter must then be checked
-- * with read_seqcount_latch_retry().
-+ * with raw_read_seqcount_latch_retry().
+--- a/arch/arm64/include/asm/io.h
++++ b/arch/arm64/include/asm/io.h
+@@ -22,13 +22,13 @@
+  * Generic IO read/write.  These perform native-endian accesses.
   */
--static inline unsigned raw_read_seqcount_latch(const seqcount_latch_t *s)
-+static __always_inline unsigned raw_read_seqcount_latch(const seqcount_latch_t *s)
+ #define __raw_writeb __raw_writeb
+-static inline void __raw_writeb(u8 val, volatile void __iomem *addr)
++static __always_inline void __raw_writeb(u8 val, volatile void __iomem *addr)
  {
- 	/*
- 	 * Pairs with the first smp_wmb() in raw_write_seqcount_latch().
-@@ -683,16 +683,17 @@ static inline unsigned raw_read_seqcount
+ 	asm volatile("strb %w0, [%1]" : : "rZ" (val), "r" (addr));
  }
  
- /**
-- * read_seqcount_latch_retry() - end a seqcount_latch_t read section
-+ * raw_read_seqcount_latch_retry() - end a seqcount_latch_t read section
-  * @s:		Pointer to seqcount_latch_t
-  * @start:	count, from raw_read_seqcount_latch()
-  *
-  * Return: true if a read section retry is required, else false
-  */
--static inline int
--read_seqcount_latch_retry(const seqcount_latch_t *s, unsigned start)
-+static __always_inline int
-+raw_read_seqcount_latch_retry(const seqcount_latch_t *s, unsigned start)
+ #define __raw_writew __raw_writew
+-static inline void __raw_writew(u16 val, volatile void __iomem *addr)
++static __always_inline void __raw_writew(u16 val, volatile void __iomem *addr)
  {
--	return read_seqcount_retry(&s->seqcount, start);
-+	smp_rmb();
-+	return unlikely(READ_ONCE(s->seqcount.sequence) != start);
+ 	asm volatile("strh %w0, [%1]" : : "rZ" (val), "r" (addr));
+ }
+@@ -40,13 +40,13 @@ static __always_inline void __raw_writel
  }
  
- /**
-@@ -752,7 +753,7 @@ read_seqcount_latch_retry(const seqcount
-  *			entry = data_query(latch->data[idx], ...);
-  *
-  *		// This includes needed smp_rmb()
-- *		} while (read_seqcount_latch_retry(&latch->seq, seq));
-+ *		} while (raw_read_seqcount_latch_retry(&latch->seq, seq));
-  *
-  *		return entry;
-  *	}
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -597,7 +597,7 @@ static u64 latched_seq_read_nolock(struc
- 		seq = raw_read_seqcount_latch(&ls->latch);
- 		idx = seq & 0x1;
- 		val = ls->val[idx];
--	} while (read_seqcount_latch_retry(&ls->latch, seq));
-+	} while (raw_read_seqcount_latch_retry(&ls->latch, seq));
- 
- 	return val;
- }
---- a/kernel/time/sched_clock.c
-+++ b/kernel/time/sched_clock.c
-@@ -77,7 +77,7 @@ notrace struct clock_read_data *sched_cl
- 
- notrace int sched_clock_read_retry(unsigned int seq)
+ #define __raw_writeq __raw_writeq
+-static inline void __raw_writeq(u64 val, volatile void __iomem *addr)
++static __always_inline void __raw_writeq(u64 val, volatile void __iomem *addr)
  {
--	return read_seqcount_latch_retry(&cd.seq, seq);
-+	return raw_read_seqcount_latch_retry(&cd.seq, seq);
+ 	asm volatile("str %x0, [%1]" : : "rZ" (val), "r" (addr));
  }
  
- unsigned long long notrace sched_clock(void)
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -450,7 +450,7 @@ static __always_inline u64 __ktime_get_f
- 		tkr = tkf->base + (seq & 0x01);
- 		now = ktime_to_ns(tkr->base);
- 		now += fast_tk_get_delta_ns(tkr);
--	} while (read_seqcount_latch_retry(&tkf->seq, seq));
-+	} while (raw_read_seqcount_latch_retry(&tkf->seq, seq));
- 
- 	return now;
+ #define __raw_readb __raw_readb
+-static inline u8 __raw_readb(const volatile void __iomem *addr)
++static __always_inline u8 __raw_readb(const volatile void __iomem *addr)
+ {
+ 	u8 val;
+ 	asm volatile(ALTERNATIVE("ldrb %w0, [%1]",
+@@ -57,7 +57,7 @@ static inline u8 __raw_readb(const volat
  }
-@@ -566,7 +566,7 @@ static __always_inline u64 __ktime_get_r
- 		basem = ktime_to_ns(tkr->base);
- 		baser = ktime_to_ns(tkr->base_real);
- 		delta = fast_tk_get_delta_ns(tkr);
--	} while (read_seqcount_latch_retry(&tkf->seq, seq));
-+	} while (raw_read_seqcount_latch_retry(&tkf->seq, seq));
  
- 	if (mono)
- 		*mono = basem + delta;
+ #define __raw_readw __raw_readw
+-static inline u16 __raw_readw(const volatile void __iomem *addr)
++static __always_inline u16 __raw_readw(const volatile void __iomem *addr)
+ {
+ 	u16 val;
+ 
+@@ -80,7 +80,7 @@ static __always_inline u32 __raw_readl(c
+ }
+ 
+ #define __raw_readq __raw_readq
+-static inline u64 __raw_readq(const volatile void __iomem *addr)
++static __always_inline u64 __raw_readq(const volatile void __iomem *addr)
+ {
+ 	u64 val;
+ 	asm volatile(ALTERNATIVE("ldr %0, [%1]",
 
 
