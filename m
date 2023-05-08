@@ -1,110 +1,143 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410E01FAF
-	for <loongarch@lists.linux.dev>; Sat,  6 May 2023 11:40:10 +0000 (UTC)
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.95)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1pvGCa-002hVY-AY; Sat, 06 May 2023 13:35:48 +0200
-Received: from p57bd9cee.dip0.t-ipconnect.de ([87.189.156.238] helo=suse-laptop.fritz.box)
-          by inpost2.zedat.fu-berlin.de (Exim 4.95)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1pvGCZ-000Sf9-Vs; Sat, 06 May 2023 13:35:48 +0200
-Message-ID: <c0677d21a4b6caa2e5018af000294a974121d9e8.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v2 30/34] sh: Convert pte_free_tlb() to use ptdescs
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>, Andrew Morton
-	 <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>
-Cc: linux-mm@kvack.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-um@lists.infradead.org, xen-devel@lists.xenproject.org, 
-	kvm@vger.kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>
-Date: Sat, 06 May 2023 13:35:46 +0200
-In-Reply-To: <20230501192829.17086-31-vishal.moola@gmail.com>
-References: <20230501192829.17086-1-vishal.moola@gmail.com>
-	 <20230501192829.17086-31-vishal.moola@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E911E171AF
+	for <loongarch@lists.linux.dev>; Mon,  8 May 2023 11:48:39 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id EB97C21D1E;
+	Mon,  8 May 2023 11:48:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1683546511; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=9Sebc4x1LtKsCXOKUFkPrRuThN42LEoCL9B7L3OU8Kc=;
+	b=iq8iKwt6Ve77LLPIfH0nlw1Lw3NCgGCEf77dia+bCG7rwiu8ivTHobHUsQrHNkgAB07b3J
+	UFHQ0HM0eoTujpICjcoHcZVkpDnfDEXP5h4uTvIyc288DUNI7YFU8tau8LLYnoabaED30i
+	8DLC9MXQKzQPx8rDMNkVHrgQO2HcZ18=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1683546511;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=9Sebc4x1LtKsCXOKUFkPrRuThN42LEoCL9B7L3OU8Kc=;
+	b=6ioBTZWbuMAZgGUHWtl0jsPX1qOMJtBJsYg0JblVAjrrxM7pNYcYez/6zX0ce0wgibhl4W
+	/te6CT8S5sKG4wDQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 874881346B;
+	Mon,  8 May 2023 11:48:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id klD5H4/hWGQvNwAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Mon, 08 May 2023 11:48:31 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: deller@gmx.de,
+	geert@linux-m68k.org,
+	javierm@redhat.com,
+	daniel@ffwll.ch,
+	vgupta@kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	davem@davemloft.net,
+	James.Bottomley@HansenPartnership.com,
+	arnd@arndb.de,
+	sam@ravnborg.org,
+	suijingfeng@loongson.cn
+Cc: linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arch@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	sparclinux@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-parisc@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v5 0/6] fbdev: Move framebuffer I/O helpers to <asm/fb.h>
+Date: Mon,  8 May 2023 13:48:24 +0200
+Message-Id: <20230508114830.28182-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 87.189.156.238
-X-ZEDAT-Hint: PO
+Content-Transfer-Encoding: 8bit
 
-Hi Vishal!
+Fbdev provides helpers for framebuffer I/O, such as fb_readl(),
+fb_writel() or fb_memcpy_to_fb(). The implementation of each helper
+depends on the architecture, but they are all equivalent to regular
+I/O functions of similar names. So use regular functions instead and
+move all helpers into <asm-generic/fb.h>
 
-On Mon, 2023-05-01 at 12:28 -0700, Vishal Moola (Oracle) wrote:
-> Part of the conversions to replace pgtable constructor/destructors with
-> ptdesc equivalents. Also cleans up some spacing issues.
->=20
-> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
-> ---
->  arch/sh/include/asm/pgalloc.h | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->=20
-> diff --git a/arch/sh/include/asm/pgalloc.h b/arch/sh/include/asm/pgalloc.=
-h
-> index a9e98233c4d4..ce2ba99dbd84 100644
-> --- a/arch/sh/include/asm/pgalloc.h
-> +++ b/arch/sh/include/asm/pgalloc.h
-> @@ -2,6 +2,7 @@
->  #ifndef __ASM_SH_PGALLOC_H
->  #define __ASM_SH_PGALLOC_H
-> =20
-> +#include <linux/mm.h>
->  #include <asm/page.h>
-> =20
->  #define __HAVE_ARCH_PMD_ALLOC_ONE
-> @@ -31,10 +32,10 @@ static inline void pmd_populate(struct mm_struct *mm,=
- pmd_t *pmd,
->  	set_pmd(pmd, __pmd((unsigned long)page_address(pte)));
->  }
-> =20
-> -#define __pte_free_tlb(tlb,pte,addr)			\
-> -do {							\
-> -	pgtable_pte_page_dtor(pte);			\
-> -	tlb_remove_page((tlb), (pte));			\
-> +#define __pte_free_tlb(tlb, pte, addr)				\
-> +do {								\
-> +	ptdesc_pte_dtor(page_ptdesc(pte));			\
-> +	tlb_remove_page_ptdesc((tlb), (page_ptdesc(pte)));	\
->  } while (0)
-> =20
->  #endif /* __ASM_SH_PGALLOC_H */
+The first patch a simple whitespace cleanup.
 
-Looking at the patch which introduces tlb_remove_page_ptdesc() [1], it seem=
-s that
-tlb_remove_page_ptdesc() already calls tlb_remove_page() with ptdesc_page(p=
-t), so
-I'm not sure whether the above tlb_remove_page_ptdesc((tlb), (page_ptdesc(p=
-te)))
-is correct.
+Until now, <linux/fb.h> contained an include of <asm/io.h>. As this
+will go away, patches 2 to 4 prepare include statements in the various
+drivers. Source files that use regular I/O helpers, such as readl(),
+now include <linux/io.h>. Source files that use framebuffer I/O
+helpers, such as fb_readl(), now include <linux/fb.h>.
 
-Shouldn't it just be tlb_remove_page_ptdesc((tlb), (pte))?
+Patch 5 replaces the architecture-based if-else branching in 
+<linux/fb.h> by helpers in <asm-generic/fb.h>. All helpers use Linux'
+existing I/O functions.
 
-Thanks,
-Adrian
+Patch 6 harmonizes naming among fbdev and existing I/O functions.
 
-> [1] https://lore.kernel.org/linux-mm/20230417205048.15870-5-vishal.moola@=
-gmail.com/
+The patchset has been built for a variety of platforms, such as x86-64,
+arm, aarch64, ppc64, parisc, m64k, mips and sparc.
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+v5:
+	* fix build on s390
+v4:
+	* keep fb_mem*() as-is on ia64, loongarch, sparc64 (Arnd)
+	* don't include <asm/fb.h> (Sam)
+v3:
+	* add the new helpers in <asm-generic/fb.h>
+	* support reordering and native byte order (Geert, Arnd)
+v2:
+	* use Linux I/O helpers (Sam, Arnd)
+
+Thomas Zimmermann (6):
+  fbdev/matrox: Remove trailing whitespaces
+  ipu-v3: Include <linux/io.h>
+  fbdev: Include <linux/io.h> in various drivers
+  fbdev: Include <linux/fb.h> instead of <asm/fb.h>
+  fbdev: Move framebuffer I/O helpers into <asm/fb.h>
+  fbdev: Rename fb_mem*() helpers
+
+ arch/ia64/include/asm/fb.h                  |  20 ++++
+ arch/loongarch/include/asm/fb.h             |  21 ++++
+ arch/parisc/video/fbdev.c                   |   3 +-
+ arch/sparc/include/asm/fb.h                 |  20 ++++
+ arch/sparc/video/fbdev.c                    |   1 -
+ arch/x86/video/fbdev.c                      |   2 -
+ drivers/gpu/ipu-v3/ipu-prv.h                |   1 +
+ drivers/staging/sm750fb/sm750.c             |   2 +-
+ drivers/video/fbdev/arcfb.c                 |   1 +
+ drivers/video/fbdev/aty/atyfb.h             |   2 +
+ drivers/video/fbdev/aty/mach64_cursor.c     |   2 +-
+ drivers/video/fbdev/chipsfb.c               |   2 +-
+ drivers/video/fbdev/core/fbcon.c            |   1 -
+ drivers/video/fbdev/core/fbmem.c            |   6 +-
+ drivers/video/fbdev/kyro/fbdev.c            |   2 +-
+ drivers/video/fbdev/matrox/matroxfb_accel.c |   6 +-
+ drivers/video/fbdev/matrox/matroxfb_base.h  |   4 +-
+ drivers/video/fbdev/pvr2fb.c                |   2 +-
+ drivers/video/fbdev/sstfb.c                 |   2 +-
+ drivers/video/fbdev/stifb.c                 |   4 +-
+ drivers/video/fbdev/tdfxfb.c                |   2 +-
+ drivers/video/fbdev/wmt_ge_rops.c           |   2 +
+ include/asm-generic/fb.h                    | 102 ++++++++++++++++++++
+ include/linux/fb.h                          |  55 +----------
+ 24 files changed, 188 insertions(+), 77 deletions(-)
+
+-- 
+2.40.1
+
