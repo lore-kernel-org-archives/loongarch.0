@@ -1,33 +1,33 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC4911CB9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC7811CBD
 	for <loongarch@lists.linux.dev>; Mon,  8 May 2023 21:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=33CfYuIrVYZl2aHKgRGfmqvRmjmw9yx5a1cynu5QEgI=; b=U9/HqRh7NJpCcAxxxSP9FV7Eie
-	MEdu0Gh7Nzrq0ve2MN/sx6wfa0QOt4/gbjQrkl78uzjuzEIZsWWix+2VhgAgc1XjOprqwXwMF01cF
-	bLy0VwWAuIYQH6zrX1IwaTGgccbW97pHN72DaYLsAS1P93TRGkzZyg7AICjrNkpnkvVR+karqqZ9z
-	EOU9eRirRrG0WkvMJIp7RSZF/d/ELAc57IFffCvMubgAdeMB3uH+EakU1wrGrNQX4lQKtAPJhAKl1
-	8G3WeOtMnc7DecO1M2xS9WheTs8e4srdZTcoiTuoXxr1WrBE8VJ8Os1qKOwN6/vHmgPXq28TUTDZ0
-	zfjhfmvQ==;
+	bh=VYuNexE2e9xbspcsGvZenlIDjWfgw2N2vaQA4HRdjvE=; b=PHoZYCvvmT1hG95taohLWS5MV8
+	r4yrd4PaEq7f4WAmF+OTmLvnxZVSfMakDad5wTPn12JXCXWk2GLwT8/dDR82lB8BOQgFZxdza3qHL
+	vmxpyGPlEnNdGUt4eFmlC32sPr4sJFcHvhAD2uTDLW/dYr36FMZqntEuhrQa0hheIe5LqniryDfKw
+	pwnQ8F7RbF1IuPFFlYQv1mEDAd6PbOe1gq/ETRL7d3PmsKqIw4GTCGhKk+RvisoI9lVQLhXJf7NVE
+	XQyDGswjUQDEGh3rXK4Pkdl/fMoSt3pHhzKUVr0swTsjJO5WhI208u84das+E8Ia8JtL5ygbTPqG8
+	kTf/vQsQ==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1pw8UY-005J1B-0f;
+	id 1pw8UY-005J1D-2b;
 	Mon, 08 May 2023 21:34:15 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B9CCD306144;
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B286C306141;
 	Mon,  8 May 2023 23:33:48 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id 48C572482942B; Mon,  8 May 2023 23:33:48 +0200 (CEST)
-Message-ID: <20230508213147.853677542@infradead.org>
+	id 4178324829420; Mon,  8 May 2023 23:33:48 +0200 (CEST)
+Message-ID: <20230508213147.786238095@infradead.org>
 User-Agent: quilt/0.66
-Date: Mon, 08 May 2023 23:19:58 +0200
+Date: Mon, 08 May 2023 23:19:57 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: bigeasy@linutronix.de
 Cc: mark.rutland@arm.com,
@@ -80,7 +80,7 @@ Cc: mark.rutland@arm.com,
  kvm@vger.kernel.org,
  linux-hyperv@vger.kernel.org,
  linux-pm@vger.kernel.org
-Subject: [RFC][PATCH 7/9] x86/tsc: Provide sched_clock_noinstr()
+Subject: [RFC][PATCH 6/9] s390/time: Provide sched_clock_noinstr()
 References: <20230508211951.901961964@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -99,184 +99,86 @@ function.
 Specifically, preempt_enable_*() calls out to schedule(), which upsets
 noinstr validation efforts.
 
-  vmlinux.o: warning: objtool: native_sched_clock+0x96: call to preempt_schedule_notrace_thunk() leaves .noinstr.text section
-  vmlinux.o: warning: objtool: kvm_clock_read+0x22: call to preempt_schedule_notrace_thunk() leaves .noinstr.text section
-
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/kernel/kvmclock.c         |    4 +--
- arch/x86/kernel/tsc.c              |   38 ++++++++++++++++++++++++++++---------
- arch/x86/xen/time.c                |    3 --
- drivers/clocksource/hyperv_timer.c |    4 +--
- include/clocksource/hyperv_timer.h |    4 +--
- 5 files changed, 36 insertions(+), 17 deletions(-)
+ arch/s390/include/asm/timex.h |   13 +++++++++----
+ arch/s390/kernel/time.c       |   11 ++++++++++-
+ 2 files changed, 19 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kernel/kvmclock.c
-+++ b/arch/x86/kernel/kvmclock.c
-@@ -71,7 +71,7 @@ static int kvm_set_wallclock(const struc
- 	return -ENODEV;
+--- a/arch/s390/include/asm/timex.h
++++ b/arch/s390/include/asm/timex.h
+@@ -63,7 +63,7 @@ static inline int store_tod_clock_ext_cc
+ 	return cc;
  }
  
--static noinstr u64 kvm_clock_read(void)
-+static u64 kvm_clock_read(void)
+-static inline void store_tod_clock_ext(union tod_clock *tod)
++static __always_inline void store_tod_clock_ext(union tod_clock *tod)
  {
- 	u64 ret;
+ 	asm volatile("stcke %0" : "=Q" (*tod) : : "cc");
+ }
+@@ -177,7 +177,7 @@ static inline void local_tick_enable(uns
  
-@@ -88,7 +88,7 @@ static u64 kvm_clock_get_cycles(struct c
+ typedef unsigned long cycles_t;
  
- static noinstr u64 kvm_sched_clock_read(void)
+-static inline unsigned long get_tod_clock(void)
++static __always_inline unsigned long get_tod_clock(void)
  {
--	return kvm_clock_read() - kvm_sched_clock_offset;
-+	return pvclock_clocksource_read_nowd(this_cpu_pvti()) - kvm_sched_clock_offset;
- }
+ 	union tod_clock clk;
  
- static inline void kvm_sched_clock_init(bool stable)
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -69,12 +69,10 @@ static int __init tsc_early_khz_setup(ch
- }
- early_param("tsc_early_khz", tsc_early_khz_setup);
+@@ -204,6 +204,11 @@ void init_cpu_timer(void);
  
--__always_inline void cyc2ns_read_begin(struct cyc2ns_data *data)
-+__always_inline void __cyc2ns_read(struct cyc2ns_data *data)
- {
- 	int seq, idx;
+ extern union tod_clock tod_clock_base;
  
--	preempt_disable_notrace();
--
- 	do {
- 		seq = this_cpu_read(cyc2ns.seq.seqcount.sequence);
- 		idx = seq & 1;
-@@ -86,6 +84,12 @@ __always_inline void cyc2ns_read_begin(s
- 	} while (unlikely(seq != this_cpu_read(cyc2ns.seq.seqcount.sequence)));
- }
- 
-+__always_inline void cyc2ns_read_begin(struct cyc2ns_data *data)
++static __always_inline unsigned long __get_tod_clock_monotonic(void)
 +{
-+	preempt_disable_notrace();
-+	__cyc2ns_read(data);
++	return get_tod_clock() - tod_clock_base.tod;
 +}
 +
- __always_inline void cyc2ns_read_end(void)
- {
+ /**
+  * get_clock_monotonic - returns current time in clock rate units
+  *
+@@ -216,7 +221,7 @@ static inline unsigned long get_tod_cloc
+ 	unsigned long tod;
+ 
+ 	preempt_disable_notrace();
+-	tod = get_tod_clock() - tod_clock_base.tod;
++	tod = __get_tod_clock_monotonic();
  	preempt_enable_notrace();
-@@ -115,18 +119,25 @@ __always_inline void cyc2ns_read_end(voi
-  *                      -johnstul@us.ibm.com "math is hard, lets go shopping!"
+ 	return tod;
+ }
+@@ -240,7 +245,7 @@ static inline unsigned long get_tod_cloc
+  * -> ns = (th * 125) + ((tl * 125) >> 9);
+  *
   */
- 
--static __always_inline unsigned long long cycles_2_ns(unsigned long long cyc)
-+static __always_inline unsigned long long __cycles_2_ns(unsigned long long cyc)
+-static inline unsigned long tod_to_ns(unsigned long todval)
++static __always_inline unsigned long tod_to_ns(unsigned long todval)
  {
- 	struct cyc2ns_data data;
- 	unsigned long long ns;
+ 	return ((todval >> 9) * 125) + (((todval & 0x1ff) * 125) >> 9);
+ }
+--- a/arch/s390/kernel/time.c
++++ b/arch/s390/kernel/time.c
+@@ -102,12 +102,21 @@ void __init time_early_init(void)
+ 			((long) qui.old_leap * 4096000000L);
+ }
  
--	cyc2ns_read_begin(&data);
-+	__cyc2ns_read(&data);
- 
- 	ns = data.cyc2ns_offset;
- 	ns += mul_u64_u32_shr(cyc, data.cyc2ns_mul, data.cyc2ns_shift);
- 
--	cyc2ns_read_end();
-+	return ns;
-+}
- 
-+static __always_inline unsigned long long cycles_2_ns(unsigned long long cyc)
++unsigned long long noinstr sched_clock_noinstr(void)
 +{
++	return tod_to_ns(__get_tod_clock_monotonic());
++}
++
+ /*
+  * Scheduler clock - returns current time in nanosec units.
+  */
+ unsigned long long notrace sched_clock(void)
+ {
+-	return tod_to_ns(get_tod_clock_monotonic());
 +	unsigned long long ns;
 +	preempt_disable_notrace();
-+	ns = __cycles_2_ns(cyc);
++	ns = tod_to_ns(get_tod_clock_monotonic());
 +	preempt_enable_notrace();
- 	return ns;
++	return ns;
  }
+ NOKPROBE_SYMBOL(sched_clock);
  
-@@ -223,7 +234,7 @@ noinstr u64 native_sched_clock(void)
- 		u64 tsc_now = rdtsc();
- 
- 		/* return the value in ns */
--		return cycles_2_ns(tsc_now);
-+		return __cycles_2_ns(tsc_now);
- 	}
- 
- 	/*
-@@ -250,7 +261,7 @@ u64 native_sched_clock_from_tsc(u64 tsc)
- /* We need to define a real function for sched_clock, to override the
-    weak default version */
- #ifdef CONFIG_PARAVIRT
--noinstr u64 sched_clock(void)
-+noinstr u64 sched_clock_noinstr(void)
- {
- 	return paravirt_sched_clock();
- }
-@@ -260,11 +271,20 @@ bool using_native_sched_clock(void)
- 	return static_call_query(pv_sched_clock) == native_sched_clock;
- }
- #else
--u64 sched_clock(void) __attribute__((alias("native_sched_clock")));
-+u64 sched_clock_noinstr(void) __attribute__((alias("native_sched_clock")));
- 
- bool using_native_sched_clock(void) { return true; }
- #endif
- 
-+notrace u64 sched_clock(void)
-+{
-+	u64 now;
-+	preempt_disable_notrace();
-+	now = sched_clock_noinstr();
-+	preempt_enable_notrace();
-+	return now;
-+}
-+
- int check_tsc_unstable(void)
- {
- 	return tsc_unstable;
---- a/arch/x86/xen/time.c
-+++ b/arch/x86/xen/time.c
-@@ -66,11 +66,10 @@ static noinstr u64 xen_sched_clock(void)
-         struct pvclock_vcpu_time_info *src;
- 	u64 ret;
- 
--	preempt_disable_notrace();
- 	src = &__this_cpu_read(xen_vcpu)->time;
- 	ret = pvclock_clocksource_read_nowd(src);
- 	ret -= xen_sched_clock_offset;
--	preempt_enable_notrace();
-+
- 	return ret;
- }
- 
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -408,9 +408,9 @@ static u64 notrace read_hv_clock_tsc_cs(
- 	return read_hv_clock_tsc();
- }
- 
--static u64 notrace read_hv_sched_clock_tsc(void)
-+static u64 noinstr read_hv_sched_clock_tsc(void)
- {
--	return (read_hv_clock_tsc() - hv_sched_clock_offset) *
-+	return (hv_read_tsc_page(hv_get_tsc_page()) - hv_sched_clock_offset) *
- 		(NSEC_PER_SEC / HV_CLOCK_HZ);
- }
- 
---- a/include/clocksource/hyperv_timer.h
-+++ b/include/clocksource/hyperv_timer.h
-@@ -38,7 +38,7 @@ extern void hv_remap_tsc_clocksource(voi
- extern unsigned long hv_get_tsc_pfn(void);
- extern struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
- 
--static inline notrace u64
-+static __always_inline notrace u64
- hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg, u64 *cur_tsc)
- {
- 	u64 scale, offset;
-@@ -85,7 +85,7 @@ hv_read_tsc_page_tsc(const struct ms_hyp
- 	return mul_u64_u64_shr(*cur_tsc, scale, 64) + offset;
- }
- 
--static inline notrace u64
-+static __always_inline notrace u64
- hv_read_tsc_page(const struct ms_hyperv_tsc_page *tsc_pg)
- {
- 	u64 cur_tsc;
 
 
