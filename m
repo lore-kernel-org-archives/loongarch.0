@@ -1,184 +1,131 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC7811CBD
-	for <loongarch@lists.linux.dev>; Mon,  8 May 2023 21:35:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85D611CBD
+	for <loongarch@lists.linux.dev>; Mon,  8 May 2023 21:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
-	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To;
-	bh=VYuNexE2e9xbspcsGvZenlIDjWfgw2N2vaQA4HRdjvE=; b=PHoZYCvvmT1hG95taohLWS5MV8
-	r4yrd4PaEq7f4WAmF+OTmLvnxZVSfMakDad5wTPn12JXCXWk2GLwT8/dDR82lB8BOQgFZxdza3qHL
-	vmxpyGPlEnNdGUt4eFmlC32sPr4sJFcHvhAD2uTDLW/dYr36FMZqntEuhrQa0hheIe5LqniryDfKw
-	pwnQ8F7RbF1IuPFFlYQv1mEDAd6PbOe1gq/ETRL7d3PmsKqIw4GTCGhKk+RvisoI9lVQLhXJf7NVE
-	XQyDGswjUQDEGh3rXK4Pkdl/fMoSt3pHhzKUVr0swTsjJO5WhI208u84das+E8Ia8JtL5ygbTPqG8
-	kTf/vQsQ==;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qtKNFxhPgg3BSrBuRAoPQsywMwqf2dNNecUmmWb61Pk=; b=gSLBBfzyucafrU1IhbOQWelFJk
+	SYVF8xaPH8v5HaQQcRZdUvZLnUEgHAhGO055CrkW3Ii/iMdhA2pLLxSHigt0lnVMvSpmD38T+JM3y
+	Lok473TP3/vzc8DjMGt+eGB2XPFV/eHsB8P0xNZVKqvdp27vFKu816ASgbymZMJpkgM4YPZ7Pxq3g
+	gJPeipxxMXF0oR3AABkZEFPxKYeBGJjqkkXXcgB2/gWEPFq145/IjrpBUGcZZTwKXspiKmONezmCF
+	Xa4Q8JeUFPWNNPoLVcgZyTku3fRON8GcmgNqN4THBtiA2guHC+jAV1VCPDiWlaNFWT+lnViszKaou
+	UmORhKBw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1pw8UY-005J1D-2b;
-	Mon, 08 May 2023 21:34:15 +0000
+	id 1pw8ec-005JE6-1b;
+	Mon, 08 May 2023 21:44:25 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B286C306141;
-	Mon,  8 May 2023 23:33:48 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-	id 4178324829420; Mon,  8 May 2023 23:33:48 +0200 (CEST)
-Message-ID: <20230508213147.786238095@infradead.org>
-User-Agent: quilt/0.66
-Date: Mon, 08 May 2023 23:19:57 +0200
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1C461300786;
+	Mon,  8 May 2023 23:44:20 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0101B243D394B; Mon,  8 May 2023 23:44:19 +0200 (CEST)
+Date: Mon, 8 May 2023 23:44:19 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: bigeasy@linutronix.de
-Cc: mark.rutland@arm.com,
- maz@kernel.org,
- catalin.marinas@arm.com,
- will@kernel.org,
- chenhuacai@kernel.org,
- kernel@xen0n.name,
- hca@linux.ibm.com,
- gor@linux.ibm.com,
- agordeev@linux.ibm.com,
- borntraeger@linux.ibm.com,
- svens@linux.ibm.com,
- pbonzini@redhat.com,
- wanpengli@tencent.com,
- vkuznets@redhat.com,
- tglx@linutronix.de,
- mingo@redhat.com,
- bp@alien8.de,
- dave.hansen@linux.intel.com,
- x86@kernel.org,
- hpa@zytor.com,
- jgross@suse.com,
- boris.ostrovsky@oracle.com,
- daniel.lezcano@linaro.org,
- kys@microsoft.com,
- haiyangz@microsoft.com,
- wei.liu@kernel.org,
- decui@microsoft.com,
- rafael@kernel.org,
- peterz@infradead.org,
- longman@redhat.com,
- boqun.feng@gmail.com,
- pmladek@suse.com,
- senozhatsky@chromium.org,
- rostedt@goodmis.org,
- john.ogness@linutronix.de,
- juri.lelli@redhat.com,
- vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com,
- bsegall@google.com,
- mgorman@suse.de,
- bristot@redhat.com,
- vschneid@redhat.com,
- jstultz@google.com,
- sboyd@kernel.org,
- linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev,
- linux-s390@vger.kernel.org,
- kvm@vger.kernel.org,
- linux-hyperv@vger.kernel.org,
- linux-pm@vger.kernel.org
-Subject: [RFC][PATCH 6/9] s390/time: Provide sched_clock_noinstr()
+Cc: mark.rutland@arm.com, maz@kernel.org, catalin.marinas@arm.com,
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com, svens@linux.ibm.com, pbonzini@redhat.com,
+	wanpengli@tencent.com, vkuznets@redhat.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, jgross@suse.com,
+	boris.ostrovsky@oracle.com, daniel.lezcano@linaro.org,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, rafael@kernel.org, longman@redhat.com,
+	boqun.feng@gmail.com, pmladek@suse.com, senozhatsky@chromium.org,
+	rostedt@goodmis.org, john.ogness@linutronix.de,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, jstultz@google.com,
+	sboyd@kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-s390@vger.kernel.org,
+	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [RFC][PATCH 7/9] x86/tsc: Provide sched_clock_noinstr()
+Message-ID: <20230508214419.GA2053935@hirez.programming.kicks-ass.net>
 References: <20230508211951.901961964@infradead.org>
+ <20230508213147.853677542@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230508213147.853677542@infradead.org>
 
-With the intent to provide local_clock_noinstr(), a variant of
-local_clock() that's safe to be called from noinstr code (with the
-assumption that any such code will already be non-preemptible),
-prepare for things by providing a noinstr sched_clock_noinstr()
-function.
+On Mon, May 08, 2023 at 11:19:58PM +0200, Peter Zijlstra wrote:
 
-Specifically, preempt_enable_*() calls out to schedule(), which upsets
-noinstr validation efforts.
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -408,9 +408,9 @@ static u64 notrace read_hv_clock_tsc_cs(
+>  	return read_hv_clock_tsc();
+>  }
+>  
+> -static u64 notrace read_hv_sched_clock_tsc(void)
+> +static u64 noinstr read_hv_sched_clock_tsc(void)
+>  {
+> -	return (read_hv_clock_tsc() - hv_sched_clock_offset) *
+> +	return (hv_read_tsc_page(hv_get_tsc_page()) - hv_sched_clock_offset) *
+>  		(NSEC_PER_SEC / HV_CLOCK_HZ);
+>  }
+>  
+> --- a/include/clocksource/hyperv_timer.h
+> +++ b/include/clocksource/hyperv_timer.h
+> @@ -38,7 +38,7 @@ extern void hv_remap_tsc_clocksource(voi
+>  extern unsigned long hv_get_tsc_pfn(void);
+>  extern struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
+>  
+> -static inline notrace u64
+> +static __always_inline notrace u64
+>  hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg, u64 *cur_tsc)
+>  {
+>  	u64 scale, offset;
+> @@ -85,7 +85,7 @@ hv_read_tsc_page_tsc(const struct ms_hyp
+>  	return mul_u64_u64_shr(*cur_tsc, scale, 64) + offset;
+>  }
+>  
+> -static inline notrace u64
+> +static __always_inline notrace u64
+>  hv_read_tsc_page(const struct ms_hyperv_tsc_page *tsc_pg)
+>  {
+>  	u64 cur_tsc;
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/s390/include/asm/timex.h |   13 +++++++++----
- arch/s390/kernel/time.c       |   11 ++++++++++-
- 2 files changed, 19 insertions(+), 5 deletions(-)
+Hyper-V folks!
 
---- a/arch/s390/include/asm/timex.h
-+++ b/arch/s390/include/asm/timex.h
-@@ -63,7 +63,7 @@ static inline int store_tod_clock_ext_cc
- 	return cc;
- }
- 
--static inline void store_tod_clock_ext(union tod_clock *tod)
-+static __always_inline void store_tod_clock_ext(union tod_clock *tod)
- {
- 	asm volatile("stcke %0" : "=Q" (*tod) : : "cc");
- }
-@@ -177,7 +177,7 @@ static inline void local_tick_enable(uns
- 
- typedef unsigned long cycles_t;
- 
--static inline unsigned long get_tod_clock(void)
-+static __always_inline unsigned long get_tod_clock(void)
- {
- 	union tod_clock clk;
- 
-@@ -204,6 +204,11 @@ void init_cpu_timer(void);
- 
- extern union tod_clock tod_clock_base;
- 
-+static __always_inline unsigned long __get_tod_clock_monotonic(void)
-+{
-+	return get_tod_clock() - tod_clock_base.tod;
-+}
-+
- /**
-  * get_clock_monotonic - returns current time in clock rate units
-  *
-@@ -216,7 +221,7 @@ static inline unsigned long get_tod_cloc
- 	unsigned long tod;
- 
- 	preempt_disable_notrace();
--	tod = get_tod_clock() - tod_clock_base.tod;
-+	tod = __get_tod_clock_monotonic();
- 	preempt_enable_notrace();
- 	return tod;
- }
-@@ -240,7 +245,7 @@ static inline unsigned long get_tod_cloc
-  * -> ns = (th * 125) + ((tl * 125) >> 9);
-  *
-  */
--static inline unsigned long tod_to_ns(unsigned long todval)
-+static __always_inline unsigned long tod_to_ns(unsigned long todval)
- {
- 	return ((todval >> 9) * 125) + (((todval & 0x1ff) * 125) >> 9);
- }
---- a/arch/s390/kernel/time.c
-+++ b/arch/s390/kernel/time.c
-@@ -102,12 +102,21 @@ void __init time_early_init(void)
- 			((long) qui.old_leap * 4096000000L);
- }
- 
-+unsigned long long noinstr sched_clock_noinstr(void)
-+{
-+	return tod_to_ns(__get_tod_clock_monotonic());
-+}
-+
- /*
-  * Scheduler clock - returns current time in nanosec units.
-  */
- unsigned long long notrace sched_clock(void)
- {
--	return tod_to_ns(get_tod_clock_monotonic());
-+	unsigned long long ns;
-+	preempt_disable_notrace();
-+	ns = tod_to_ns(get_tod_clock_monotonic());
-+	preempt_enable_notrace();
-+	return ns;
- }
- NOKPROBE_SYMBOL(sched_clock);
- 
+While reviewing all this I found the following 'gem':
+
+hv_init_clocksource()
+  hv_setup_sched_clock()
+    paravirt_set_sched_clock(read_hv_sched_clock_msr)
+
+read_hv_sched_clock_msr() [notrace]
+  read_hv_clock_msr()     [notrace]
+    hv_get_register()      *traced*
+      hv_get_non_nested_register() ...
+        hv_ghcb_msr_read()
+	  WARN_ON(in_nmi())
+	  ...
+	  local_irq_save()
 
 
+Note that:
+
+ a) sched_clock() is used in NMI context a *LOT*
+ b) sched_clock() is notrace (or even noinstr with these patches)
+    and local_irq_save() implies tracing
+
+
+Can you pretty please:
+
+ 1) delete all this; or,
+ 2) fix it in a hurry?
+
+Thanks!
