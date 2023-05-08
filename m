@@ -1,41 +1,41 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658D3171B1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61965171B0
 	for <loongarch@lists.linux.dev>; Mon,  8 May 2023 11:48:40 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3F42E1FE44;
-	Mon,  8 May 2023 11:48:33 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CF55722029;
+	Mon,  8 May 2023 11:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1683546513; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1683546512; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=S1yfv6u4qx/1SbgHOOfGF6a15XUqEes+242RJIs05U0=;
-	b=1p3uF0dfH61T0fcSDDTVVXyM9+TyBNGvKlmL1qeGua7XjyeCLr6mK75sxb8gU3Gx4pCMcI
-	cclADgfud+zO7cmFPRwsvjg+U5hFET3kB18fzW5Uupz/e7N0Fs+2oh9Ti3Es7Ba2jbFlH1
-	zme9VYcjHcCTmwYcXB2vIx6xzmOiSrk=
+	bh=GpirxxPIzSwE4dodVNvwFtI/Zb5W/9sOLzpyePzzZeA=;
+	b=JYE6igKFjR6Lo0XPzHSiBI9wjuG92/HPL9yEl4VIFp4g9SlMZEP6dfnYpBCeTWK5hqrLhm
+	Hd1LqmH81Z9+iiZJhtmvXySBM4OuJUFzUF98dWI4DsCtwqVvLbXzh/Go31tf7t2vOnPMtk
+	EL3zAdRBGXRhxQapvtDyWfHUpATAdkc=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1683546513;
+	s=susede2_ed25519; t=1683546512;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=S1yfv6u4qx/1SbgHOOfGF6a15XUqEes+242RJIs05U0=;
-	b=iRrK19IwxhVyz3WuNAI65+K5nBunVmEUdTC1nxhraTbHKQIvf13IVDdjsq2P65PXeeB5ov
-	U7kgC6+kY4rtmCAA==
+	bh=GpirxxPIzSwE4dodVNvwFtI/Zb5W/9sOLzpyePzzZeA=;
+	b=wvZRfFAJP/8DyIVssTE8hHYOfmDrjYauqRH2AGZ6pDw5uPI/lTED497vW35Jr5XW6kFK+k
+	ae+HZqgYt/dxnjCg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D397E139F8;
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 62A051346B;
 	Mon,  8 May 2023 11:48:32 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id iH7LMpDhWGQvNwAAMHmgww
+	id qH/uFpDhWGQvNwAAMHmgww
 	(envelope-from <tzimmermann@suse.de>); Mon, 08 May 2023 11:48:32 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: deller@gmx.de,
@@ -62,9 +62,9 @@ Cc: linux-fbdev@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-parisc@vger.kernel.org,
 	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v5 3/6] fbdev: Include <linux/io.h> in various drivers
-Date: Mon,  8 May 2023 13:48:27 +0200
-Message-Id: <20230508114830.28182-4-tzimmermann@suse.de>
+Subject: [PATCH v5 2/6] ipu-v3: Include <linux/io.h>
+Date: Mon,  8 May 2023 13:48:26 +0200
+Message-Id: <20230508114830.28182-3-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230508114830.28182-1-tzimmermann@suse.de>
 References: <20230508114830.28182-1-tzimmermann@suse.de>
@@ -76,60 +76,29 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The code uses writel() and similar I/O-memory helpers. Include
-the header file to get the declarations.
+The code uses readl() and writel(). Include the header file to
+get the declarations.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 Reviewed-by: Sui Jingfeng <suijingfeng@loongson.cn>
 ---
- drivers/video/fbdev/arcfb.c       | 1 +
- drivers/video/fbdev/aty/atyfb.h   | 2 ++
- drivers/video/fbdev/wmt_ge_rops.c | 2 ++
- 3 files changed, 5 insertions(+)
+ drivers/gpu/ipu-v3/ipu-prv.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/video/fbdev/arcfb.c b/drivers/video/fbdev/arcfb.c
-index 45e64016db32..d631d53f42ad 100644
---- a/drivers/video/fbdev/arcfb.c
-+++ b/drivers/video/fbdev/arcfb.c
-@@ -41,6 +41,7 @@
- #include <linux/vmalloc.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
-+#include <linux/io.h>
- #include <linux/fb.h>
- #include <linux/init.h>
- #include <linux/arcfb.h>
-diff --git a/drivers/video/fbdev/aty/atyfb.h b/drivers/video/fbdev/aty/atyfb.h
-index 465f55beb97f..30da3e82ed3c 100644
---- a/drivers/video/fbdev/aty/atyfb.h
-+++ b/drivers/video/fbdev/aty/atyfb.h
-@@ -3,8 +3,10 @@
-  *  ATI Frame Buffer Device Driver Core Definitions
-  */
+diff --git a/drivers/gpu/ipu-v3/ipu-prv.h b/drivers/gpu/ipu-v3/ipu-prv.h
+index 291ac1bab66d..d4621b1ea7f1 100644
+--- a/drivers/gpu/ipu-v3/ipu-prv.h
++++ b/drivers/gpu/ipu-v3/ipu-prv.h
+@@ -8,6 +8,7 @@
+ 
+ struct ipu_soc;
  
 +#include <linux/io.h>
- #include <linux/spinlock.h>
- #include <linux/wait.h>
-+
-     /*
-      *  Elements of the hardware specific atyfb_par structure
-      */
-diff --git a/drivers/video/fbdev/wmt_ge_rops.c b/drivers/video/fbdev/wmt_ge_rops.c
-index 42255d27a1db..99c7b0aea615 100644
---- a/drivers/video/fbdev/wmt_ge_rops.c
-+++ b/drivers/video/fbdev/wmt_ge_rops.c
-@@ -9,7 +9,9 @@
- 
- #include <linux/module.h>
- #include <linux/fb.h>
-+#include <linux/io.h>
- #include <linux/platform_device.h>
-+
- #include "core/fb_draw.h"
- #include "wmt_ge_rops.h"
- 
+ #include <linux/types.h>
+ #include <linux/device.h>
+ #include <linux/clk.h>
 -- 
 2.40.1
 
