@@ -1,12 +1,12 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C4C2171CC
-	for <loongarch@lists.linux.dev>; Tue,  9 May 2023 07:54:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C854B3C0C
+	for <loongarch@lists.linux.dev>; Tue,  9 May 2023 07:55:09 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxX+sc_Flk3uMGAA--.11558S3;
-	Tue, 09 May 2023 15:54:04 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Ax2ekQ_Flk3uIGAA--.11634S3;
+	Tue, 09 May 2023 15:53:52 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFLUK_FlkIEhSAA--.16908S31;
-	Tue, 09 May 2023 15:54:03 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFLUK_FlkIEhSAA--.16908S11;
+	Tue, 09 May 2023 15:53:51 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>,
 	Huacai Chen <chenhuacai@kernel.org>,
@@ -21,11 +21,10 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
-	zhaotianrui@loongson.cn,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH v9 29/30] LoongArch: KVM: Enable kvm config and add the makefile
-Date: Tue,  9 May 2023 15:53:45 +0800
-Message-Id: <20230509075346.1023386-30-zhaotianrui@loongson.cn>
+	zhaotianrui@loongson.cn
+Subject: [PATCH v9 09/30] LoongArch: KVM: Implement vcpu get, vcpu set registers
+Date: Tue,  9 May 2023 15:53:25 +0800
+Message-Id: <20230509075346.1023386-10-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230509075346.1023386-1-zhaotianrui@loongson.cn>
 References: <20230509075346.1023386-1-zhaotianrui@loongson.cn>
@@ -36,155 +35,334 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxFLUK_FlkIEhSAA--.16908S31
+X-CM-TRANSID:AQAAf8BxFLUK_FlkIEhSAA--.16908S11
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZw15Xw48uF15Gw1fCF4rXwb_yoWrGF48pF
-	4fArykGF4xWFn3JrZ3t34kWrs8CF97Kay3u3W3Aa48Cry7Z34kur10yr9rXFyUA395JrW8
-	Wr1rGF4agFWUJw7anT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW3ArW7Aw4UJr47Ar1DGFWkXrb_yoW3GrWrpF
+	17A398WrW8KrWxCwn3trs09r4Ygrn7KrWxZFWxuFWSyr17tryYyF4vkry3JFy5GryruF1S
+	9as0yF4I9Fs8A37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
 	b4kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
 	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
 	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc80
-	4VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY2
-	0_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_
-	Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r
-	1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7
+	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
+	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
+	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7
 	CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Enable LoongArch kvm config and add the makefile to support build kvm
-module.
+Implement LoongArch vcpu get registers and set registers operations, it
+is called when user space use the ioctl interface to get or set regs.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/oe-kbuild-all/202304131526.iXfLaVZc-lkp@intel.com/
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/Kbuild                      |  1 +
- arch/loongarch/Kconfig                     |  2 ++
- arch/loongarch/configs/loongson3_defconfig |  2 ++
- arch/loongarch/kvm/Kconfig                 | 38 ++++++++++++++++++++++
- arch/loongarch/kvm/Makefile                | 22 +++++++++++++
- 5 files changed, 65 insertions(+)
- create mode 100644 arch/loongarch/kvm/Kconfig
- create mode 100644 arch/loongarch/kvm/Makefile
+ arch/loongarch/kvm/csr_ops.S |  76 +++++++++++++
+ arch/loongarch/kvm/vcpu.c    | 206 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 282 insertions(+)
+ create mode 100644 arch/loongarch/kvm/csr_ops.S
 
-diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
-index b01f5cdb27e0..40be8a1696f9 100644
---- a/arch/loongarch/Kbuild
-+++ b/arch/loongarch/Kbuild
-@@ -2,6 +2,7 @@ obj-y += kernel/
- obj-y += mm/
- obj-y += net/
- obj-y += vdso/
-+obj-y += kvm/
- 
- # for cleaning
- subdir- += boot
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index d38b066fc931..16ddf4f6f9bd 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -113,6 +113,7 @@ config LOONGARCH
- 	select HAVE_KPROBES
- 	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_KRETPROBES
-+	select HAVE_KVM
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
- 	select HAVE_PCI
-@@ -604,3 +605,4 @@ source "drivers/acpi/Kconfig"
- endmenu
- 
- source "drivers/firmware/Kconfig"
-+source "arch/loongarch/kvm/Kconfig"
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index 6cd26dd3c134..3c0cbe6ad08f 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -63,6 +63,8 @@ CONFIG_EFI_ZBOOT=y
- CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
- CONFIG_EFI_CAPSULE_LOADER=m
- CONFIG_EFI_TEST=m
-+CONFIG_VIRTUALIZATION=y
-+CONFIG_KVM=m
- CONFIG_MODULES=y
- CONFIG_MODULE_FORCE_LOAD=y
- CONFIG_MODULE_UNLOAD=y
-diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
+diff --git a/arch/loongarch/kvm/csr_ops.S b/arch/loongarch/kvm/csr_ops.S
 new file mode 100644
-index 000000000000..8a999b4c0232
+index 000000000000..962b96d8291a
 --- /dev/null
-+++ b/arch/loongarch/kvm/Kconfig
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# KVM configuration
-+#
++++ b/arch/loongarch/kvm/csr_ops.S
+@@ -0,0 +1,76 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
 +
-+source "virt/kvm/Kconfig"
++#include <asm/regdef.h>
++#include <linux/linkage.h>
++	.text
++	.section        .text
++	.cfi_sections   .debug_frame
++/*
++ * we have splited hw gcsr into three parts, so we can
++ * calculate the code offset by gcsrid and jump here to
++ * run the gcsrwr instruction.
++ */
++SYM_FUNC_START(set_hw_gcsr)
++	addi.d      t0,   a0,   0
++	addi.w      t1,   zero, 96
++	bltu        t1,   t0,   1f
++	la.pcrel    t0,   10f
++	alsl.d      t0,   a0,   t0, 3
++	jirl        zero, t0,   0
++1:
++	addi.w      t1,   a0,   -128
++	addi.w      t2,   zero, 15
++	bltu        t2,   t1,   2f
++	la.pcrel    t0,   11f
++	alsl.d      t0,   t1,   t0, 3
++	jirl        zero, t0,   0
++2:
++	addi.w      t1,   a0,   -384
++	addi.w      t2,   zero, 3
++	bltu        t2,   t1,   3f
++	la.pcrel    t0,   12f
++	alsl.d      t0,   t1,   t0, 3
++	jirl        zero, t0,   0
++3:
++	addi.w      a0,   zero, -1
++	jirl        zero, ra,   0
++/*
++ * write guest csr
++ * 0x05000000 | (LOONGARCH_CSR_XXX << 10) | 1 << 5 | a1
++ * range from 0x0(KVM_CSR_CRMD) to 0x60 (KVM_CSR_LLBCTL)
++ */
++10:
++	csrnum = 0
++	.rept 0x61
++		.word 0x05000020 | csrnum << 10 | 5
++		jirl zero, ra, 0
++		csrnum = csrnum + 1
++	.endr
++/*
++ * write guest csr
++ * 0x05000000 | (LOONGARCH_CSR_XXX << 10) | 1<<5 | a1
++ * range from 0x80 (KVM_CSR_IMPCTL1) to 0x8f (KVM_CSR_TLBRPRMD)
++ */
++11:
++	csrnum = 0x80
++	.rept 0x10
++		.word 0x05000020 | csrnum << 10 | 5
++		jirl zero, ra, 0
++		csrnum = csrnum + 1
++	.endr
++/*
++ * write guest csr
++ * 0x05000000 | (LOONGARCH_CSR_XXX << 10) | 1<<5 | a1
++ * range from 0x180(KVM_CSR_DMWIN0) to 0x183(KVM_CSR_DMWIN3)
++ */
++12:
++	csrnum = 0x180
++	.rept 0x4
++		.word 0x05000020 | csrnum << 10 | 5
++		jirl zero, ra, 0
++		csrnum = csrnum + 1
++	.endr
++SYM_FUNC_END(set_hw_gcsr)
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index ddea480fa5b0..278fbafc59b4 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -12,6 +12,212 @@
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
+ 
++int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v)
++{
++	unsigned long val;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
 +
-+menuconfig VIRTUALIZATION
-+	bool "Virtualization"
-+	help
-+	  Say Y here to get to see options for using your Linux host to run
-+	  other operating systems inside virtual machines (guests).
-+	  This option alone does not add any kernel code.
++	if (id >= CSR_MAX_NUMS || !(get_gcsr_flag(id) & (HW_GCSR | SW_GCSR)))
++		return -EINVAL;
 +
-+	  If you say N, all options in this submenu will be skipped and
-+	  disabled.
++	if (id == LOONGARCH_CSR_ESTAT) {
++		/* interrupt status IP0 -- IP7 from GINTC */
++		val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & 0xff;
++		*v = kvm_read_sw_gcsr(csr, id) | (val << 2);
++		return 0;
++	}
 +
-+if VIRTUALIZATION
++	/*
++	 * get software csr state if csrid is valid, since software
++	 * csr state is consistent with hardware
++	 */
++	*v = kvm_read_sw_gcsr(csr, id);
 +
-+config KVM
-+	tristate "Kernel-based Virtual Machine (KVM) support"
-+	depends on HAVE_KVM
-+	select MMU_NOTIFIER
-+	select ANON_INODES
-+	select PREEMPT_NOTIFIERS
-+	select KVM_MMIO
-+	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
-+	select HAVE_KVM_VCPU_ASYNC_IOCTL
-+	select HAVE_KVM_EVENTFD
-+	select SRCU
-+	help
-+	  Support hosting virtualized guest machines using hardware
-+	  virtualization extensions. You will need a fairly processor
-+	  equipped with virtualization extensions.
++	return 0;
++}
 +
-+	  If unsure, say N.
++int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
++{
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++	int ret = 0, gintc;
 +
-+endif # VIRTUALIZATION
-diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
-new file mode 100644
-index 000000000000..2335e873a6ef
---- /dev/null
-+++ b/arch/loongarch/kvm/Makefile
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for LOONGARCH KVM support
-+#
++	if (id >= CSR_MAX_NUMS || !(get_gcsr_flag(id) & (HW_GCSR | SW_GCSR)))
++		return -EINVAL;
 +
-+ccflags-y += -I $(srctree)/$(src)
++	if (id == LOONGARCH_CSR_ESTAT) {
++		/* estat IP0~IP7 inject through guestexcept */
++		gintc = (val >> 2) & 0xff;
++		write_csr_gintc(gintc);
++		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
 +
-+include $(srctree)/virt/kvm/Makefile.kvm
++		gintc = val & ~(0xffUL << 2);
++		write_gcsr_estat(gintc);
++		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
 +
-+obj-$(CONFIG_KVM) += kvm.o
++		return ret;
++	}
 +
-+kvm-y += main.o
-+kvm-y += vm.o
-+kvm-y += vmid.o
-+kvm-y += tlb.o
-+kvm-y += mmu.o
-+kvm-y += vcpu.o
-+kvm-y += exit.o
-+kvm-y += interrupt.o
-+kvm-y += timer.o
-+kvm-y += switch.o
-+kvm-y += csr_ops.o
++	if (get_gcsr_flag(id) & HW_GCSR) {
++		set_hw_gcsr(id, val);
++		/* write sw gcsr to keep consistent with hardware */
++		kvm_write_sw_gcsr(csr, id, val);
++	} else
++		kvm_write_sw_gcsr(csr, id, val);
++
++	return ret;
++}
++
++static int _kvm_get_one_reg(struct kvm_vcpu *vcpu,
++		const struct kvm_one_reg *reg, s64 *v)
++{
++	int reg_idx, ret = 0;
++
++	if ((reg->id & KVM_REG_LOONGARCH_MASK) == KVM_REG_LOONGARCH_CSR) {
++		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
++		ret = _kvm_getcsr(vcpu, reg_idx, v);
++	} else if (reg->id == KVM_REG_LOONGARCH_COUNTER)
++		*v = drdtime() + vcpu->kvm->arch.time_offset;
++	else
++		ret = -EINVAL;
++
++	return ret;
++}
++
++static int _kvm_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
++{
++	int ret = -EINVAL;
++	s64 v;
++
++	if ((reg->id & KVM_REG_SIZE_MASK) != KVM_REG_SIZE_U64)
++		return ret;
++
++	if (_kvm_get_one_reg(vcpu, reg, &v))
++		return ret;
++
++	return put_user(v, (u64 __user *)(long)reg->addr);
++}
++
++static int _kvm_set_one_reg(struct kvm_vcpu *vcpu,
++			const struct kvm_one_reg *reg,
++			s64 v)
++{
++	int ret = 0;
++	unsigned long flags;
++	u64 val;
++	int reg_idx;
++
++	val = v;
++	if ((reg->id & KVM_REG_LOONGARCH_MASK) == KVM_REG_LOONGARCH_CSR) {
++		reg_idx = KVM_GET_IOC_CSRIDX(reg->id);
++		ret = _kvm_setcsr(vcpu, reg_idx, val);
++	} else if (reg->id == KVM_REG_LOONGARCH_COUNTER) {
++		local_irq_save(flags);
++		/*
++		 * gftoffset is relative with board, not vcpu
++		 * only set for the first time for smp system
++		 */
++		if (vcpu->vcpu_id == 0)
++			vcpu->kvm->arch.time_offset = (signed long)(v - drdtime());
++		write_csr_gcntc((ulong)vcpu->kvm->arch.time_offset);
++		local_irq_restore(flags);
++	} else if (reg->id == KVM_REG_LOONGARCH_VCPU_RESET) {
++		kvm_reset_timer(vcpu);
++		memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
++		memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
++	} else
++		ret = -EINVAL;
++
++	return ret;
++}
++
++static int _kvm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
++{
++	s64 v;
++	int ret = -EINVAL;
++
++	if ((reg->id & KVM_REG_SIZE_MASK) != KVM_REG_SIZE_U64)
++		return ret;
++
++	if (get_user(v, (u64 __user *)(long)reg->addr))
++		return ret;
++
++	return _kvm_set_one_reg(vcpu, reg, v);
++}
++
++int kvm_arch_vcpu_ioctl_get_sregs(struct kvm_vcpu *vcpu,
++				  struct kvm_sregs *sregs)
++{
++	return -ENOIOCTLCMD;
++}
++
++int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu,
++				  struct kvm_sregs *sregs)
++{
++	return -ENOIOCTLCMD;
++}
++
++int kvm_arch_vcpu_ioctl_get_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
++{
++	int i;
++
++	vcpu_load(vcpu);
++
++	for (i = 0; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
++		regs->gpr[i] = vcpu->arch.gprs[i];
++
++	regs->pc = vcpu->arch.pc;
++
++	vcpu_put(vcpu);
++	return 0;
++}
++
++int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
++{
++	int i;
++
++	vcpu_load(vcpu);
++
++	for (i = 1; i < ARRAY_SIZE(vcpu->arch.gprs); i++)
++		vcpu->arch.gprs[i] = regs->gpr[i];
++	vcpu->arch.gprs[0] = 0; /* zero is special, and cannot be set. */
++	vcpu->arch.pc = regs->pc;
++
++	vcpu_put(vcpu);
++	return 0;
++}
++
++long kvm_arch_vcpu_ioctl(struct file *filp,
++			 unsigned int ioctl, unsigned long arg)
++{
++	struct kvm_vcpu *vcpu = filp->private_data;
++	void __user *argp = (void __user *)arg;
++	long r;
++
++	vcpu_load(vcpu);
++
++	switch (ioctl) {
++	case KVM_SET_ONE_REG:
++	case KVM_GET_ONE_REG: {
++		struct kvm_one_reg reg;
++
++		r = -EFAULT;
++		if (copy_from_user(&reg, argp, sizeof(reg)))
++			break;
++		if (ioctl == KVM_SET_ONE_REG)
++			r = _kvm_set_reg(vcpu, &reg);
++		else
++			r = _kvm_get_reg(vcpu, &reg);
++		break;
++	}
++	default:
++		r = -ENOIOCTLCMD;
++		break;
++	}
++
++	vcpu_put(vcpu);
++	return r;
++}
++
+ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+ {
+ 	return 0;
 -- 
 2.31.1
 
