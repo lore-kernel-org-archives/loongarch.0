@@ -1,123 +1,73 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF11D17D3
-	for <loongarch@lists.linux.dev>; Tue,  9 May 2023 06:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Wv7LrPlxWTrZ14rkME2VRRQZSVOQ7wE/+VS+80j6MWc=; b=XcKBtk/zB7EKluL3QCHMkIHg1L
-	FRyFBoIxzUPSmPGR49L0FShoMMEuUXInLYKLMDtkZe020PTEIsJ+xmhApEuZrrROlqBqx1+T/6VTL
-	eSH5dMiMSPBMO+6IX2KK4ybVnENgJi2emZ7dTiW5ir2Pk+1MKekBFJ0cmhipyVLRJrxhUMQzd64yd
-	RyGljbAyDofd+E8+SJkFDGv2QFdrmZYKgTbjis4G+rNumyanlw88RqgCXZg5OwYjSpRzpleiAIMvd
-	t0P7f/h/yj/cCbEXd7s7HSKwUrEYeL25K0kjvErZ4E8pM3vLhLoU0SlnmtH83/1Ztjba9/ohE/7yw
-	p/5KCCGQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pwH3L-00EybA-HS; Tue, 09 May 2023 06:42:27 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 54E3630026A;
-	Tue,  9 May 2023 08:42:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 313FC2B0DE80D; Tue,  9 May 2023 08:42:22 +0200 (CEST)
-Date: Tue, 9 May 2023 08:42:22 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: bigeasy@linutronix.de, mark.rutland@arm.com, maz@kernel.org,
-	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
-	kernel@xen0n.name, gor@linux.ibm.com, agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com, svens@linux.ibm.com, pbonzini@redhat.com,
-	wanpengli@tencent.com, vkuznets@redhat.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, jgross@suse.com,
-	boris.ostrovsky@oracle.com, daniel.lezcano@linaro.org,
-	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, rafael@kernel.org, longman@redhat.com,
-	boqun.feng@gmail.com, pmladek@suse.com, senozhatsky@chromium.org,
-	rostedt@goodmis.org, john.ogness@linutronix.de,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, jstultz@google.com,
-	sboyd@kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: Re: [RFC][PATCH 6/9] s390/time: Provide sched_clock_noinstr()
-Message-ID: <20230509064222.GA2065796@hirez.programming.kicks-ass.net>
-References: <20230508211951.901961964@infradead.org>
- <20230508213147.786238095@infradead.org>
- <ZFnkp6dlOuJqm2II@osiris>
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B79E17D3
+	for <loongarch@lists.linux.dev>; Tue,  9 May 2023 06:49:40 +0000 (UTC)
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxI_AC7VlkMd4GAA--.11372S3;
+	Tue, 09 May 2023 14:49:39 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHLcB7VlkQzlSAA--.16393S2;
+	Tue, 09 May 2023 14:49:37 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Catalin Marinas <catalin.marinas@arm.com>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	loongson-kernel@lists.loongnix.cn
+Subject: [PATCH] LoongArch: Select HAVE_DEBUG_KMEMLEAK to support kmemleak
+Date: Tue,  9 May 2023 14:49:31 +0800
+Message-Id: <1683614971-10744-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID:AQAAf8BxHLcB7VlkQzlSAA--.16393S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvdXoWrtF4fZFW7Cw4xur4kuryrCrg_yoW3tFX_Ja
+	9xA3W8GF15GrWj9rnxZ3yFgr1fZayrWFs8ZrW2yr4UWw17Xw13J3y8Ww1rZr42g3yjgFWr
+	ZrWFqr98Cr10yjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	X7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
+	xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWln4kS
+	14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2
+	AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
+	xVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
+	C2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_
+	JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	WUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBI
+	daVFxhVjvjDU0xZFpf9x07jeq2NUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZFnkp6dlOuJqm2II@osiris>
 
-On Tue, May 09, 2023 at 08:13:59AM +0200, Heiko Carstens wrote:
-> 
-> 1;115;0cOn Mon, May 08, 2023 at 11:19:57PM +0200, Peter Zijlstra wrote:
-> > With the intent to provide local_clock_noinstr(), a variant of
-> > local_clock() that's safe to be called from noinstr code (with the
-> > assumption that any such code will already be non-preemptible),
-> > prepare for things by providing a noinstr sched_clock_noinstr()
-> > function.
-> > 
-> > Specifically, preempt_enable_*() calls out to schedule(), which upsets
-> > noinstr validation efforts.
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  arch/s390/include/asm/timex.h |   13 +++++++++----
-> >  arch/s390/kernel/time.c       |   11 ++++++++++-
-> >  2 files changed, 19 insertions(+), 5 deletions(-)
-> ...
-> > +static __always_inline unsigned long __get_tod_clock_monotonic(void)
-> > +{
-> > +	return get_tod_clock() - tod_clock_base.tod;
-> > +}
-> > +
-> >  /**
-> >   * get_clock_monotonic - returns current time in clock rate units
-> >   *
-> > @@ -216,7 +221,7 @@ static inline unsigned long get_tod_cloc
-> >  	unsigned long tod;
-> >  
-> >  	preempt_disable_notrace();
-> > -	tod = get_tod_clock() - tod_clock_base.tod;
-> > +	tod = __get_tod_clock_monotonic();
-> >  	preempt_enable_notrace();
-> >  	return tod;
-> >  }
-> ...
-> > +unsigned long long noinstr sched_clock_noinstr(void)
-> > +{
-> > +	return tod_to_ns(__get_tod_clock_monotonic());
-> > +}
-> > +
-> >  /*
-> >   * Scheduler clock - returns current time in nanosec units.
-> >   */
-> >  unsigned long long notrace sched_clock(void)
-> >  {
-> > -	return tod_to_ns(get_tod_clock_monotonic());
-> > +	unsigned long long ns;
-> > +	preempt_disable_notrace();
-> > +	ns = tod_to_ns(get_tod_clock_monotonic());
-> > +	preempt_enable_notrace();
-> > +	return ns;
-> >  }
-> >  NOKPROBE_SYMBOL(sched_clock);
-> 
-> This disables preemption twice within sched_clock(). So this should either
-> call __get_tod_clock_monotonic() instead, or the function could stay as it
-> is, which I would prefer.
+We can see that DEBUG_KMEMLEAK depends on HAVE_DEBUG_KMEMLEAK after
+commit b69ec42b1b19 ("Kconfig: clean up the long arch list for the
+DEBUG_KMEMLEAK config option"), just select HAVE_DEBUG_KMEMLEAK to
+support kmemleak on LoongArch.
 
-Duh. Will fix.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+
+This is based on 6.4-rc1
+
+ arch/loongarch/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index d38b066..1e64edd 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -90,6 +90,7 @@ config LOONGARCH
+ 	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_CONTEXT_TRACKING_USER
+ 	select HAVE_C_RECORDMCOUNT
++	select HAVE_DEBUG_KMEMLEAK
+ 	select HAVE_DEBUG_STACKOVERFLOW
+ 	select HAVE_DMA_CONTIGUOUS
+ 	select HAVE_DYNAMIC_FTRACE
+-- 
+2.1.0
+
