@@ -1,277 +1,206 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C857F171CC
-	for <loongarch@lists.linux.dev>; Tue,  9 May 2023 07:55:09 +0000 (UTC)
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Ax3eoS_FlkHOMGAA--.11405S3;
-	Tue, 09 May 2023 15:53:54 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFLUK_FlkIEhSAA--.16908S16;
-	Tue, 09 May 2023 15:53:53 +0800 (CST)
-From: Tianrui Zhao <zhaotianrui@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	Mark Brown <broonie@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	maobibo@loongson.cn,
-	Xi Ruoyao <xry111@xry111.site>,
-	zhaotianrui@loongson.cn
-Subject: [PATCH v9 14/30] LoongArch: KVM: Implement vcpu load and vcpu put operations
-Date: Tue,  9 May 2023 15:53:30 +0800
-Message-Id: <20230509075346.1023386-15-zhaotianrui@loongson.cn>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230509075346.1023386-1-zhaotianrui@loongson.cn>
-References: <20230509075346.1023386-1-zhaotianrui@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B0F0171CC
+	for <loongarch@lists.linux.dev>; Tue,  9 May 2023 07:59:24 +0000 (UTC)
+Received: from loongson.cn (unknown [192.168.100.1])
+	by gateway (Coremail) with SMTP id _____8Bxb+tb_VlkguQGAA--.11302S3;
+	Tue, 09 May 2023 15:59:23 +0800 (CST)
+Received: from [0.0.0.0] (unknown [192.168.100.1])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFLVZ_VlkgktSAA--.16934S3;
+	Tue, 09 May 2023 15:59:22 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Add jump-label implementation
+To: Huacai Chen <chenhuacai@kernel.org>
+References: <1683617390-18015-1-git-send-email-tangyouling@loongson.cn>
+Cc: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>,
+ WANG Xuerui <kernel@xen0n.name>, Zhangjin Wu <falcon@tinylab.org>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <88e4943e-275c-9eac-4b82-def5bf42c42c@loongson.cn>
+Date: Tue, 9 May 2023 15:59:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxFLUK_FlkIEhSAA--.16908S16
-X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3AF13Kw15Zw17AFW5Aw13Arb_yoWfJF4Upr
-	1qgFW09rWUKF9rtF15ArsFvr13WF4Sy34rJr17K3y2qrn8Z3s5ZFs2yFy3JFyFq3WxXF1I
-	y3s8C39a9r4ktw7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+In-Reply-To: <1683617390-18015-1-git-send-email-tangyouling@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8BxFLVZ_VlkgktSAA--.16934S3
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3Ww15AryDAFy7JFWxCw43trb_yoW7XFW5pr
+	1UArn5CF4kGF1fJrZ8tryDur45tws3G3W2gF43Kry8AFnrZ34v9rnakrWDuF1kJa93JrW0
+	qF1S9Fs09a1UJ3JanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+	bIxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0V
+	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Cr0_Gr1U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcV
+	C2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1A9N7UUUUU==
 
-Implement LoongArch vcpu load and vcpu put operations, including
-load csr value into hardware and save csr value into vcpu structure.
+On 05/09/2023 03:29 PM, Youling Tang wrote:
+> Add jump-label implementation based on the ARM64 version.
+>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> ---
+>  .../core/jump-labels/arch-support.txt         |  2 +-
+>  arch/loongarch/Kconfig                        |  2 +
+>  arch/loongarch/configs/loongson3_defconfig    |  1 +
+>  arch/loongarch/include/asm/jump_label.h       | 52 +++++++++++++++++++
+>  arch/loongarch/kernel/Makefile                |  2 +
+>  arch/loongarch/kernel/jump_label.c            | 23 ++++++++
+>  6 files changed, 81 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/loongarch/include/asm/jump_label.h
+>  create mode 100644 arch/loongarch/kernel/jump_label.c
+>
+> diff --git a/Documentation/features/core/jump-labels/arch-support.txt b/Documentation/features/core/jump-labels/arch-support.txt
+> index 2328eada3a49..94d9dece580f 100644
+> --- a/Documentation/features/core/jump-labels/arch-support.txt
+> +++ b/Documentation/features/core/jump-labels/arch-support.txt
+> @@ -13,7 +13,7 @@
+>      |        csky: |  ok  |
+>      |     hexagon: | TODO |
+>      |        ia64: | TODO |
+> -    |   loongarch: | TODO |
+> +    |   loongarch: |  ok  |
+>      |        m68k: | TODO |
+>      |  microblaze: | TODO |
+>      |        mips: |  ok  |
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index d38b066fc931..193a959a5611 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -83,6 +83,8 @@ config LOONGARCH
+>  	select GPIOLIB
+>  	select HAS_IOPORT
+>  	select HAVE_ARCH_AUDITSYSCALL
+> +	select HAVE_ARCH_JUMP_LABEL
+> +	select HAVE_ARCH_JUMP_LABEL_RELATIVE
+>  	select HAVE_ARCH_MMAP_RND_BITS if MMU
+>  	select HAVE_ARCH_SECCOMP_FILTER
+>  	select HAVE_ARCH_TRACEHOOK
+> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+> index 6cd26dd3c134..33a0f5f742f6 100644
+> --- a/arch/loongarch/configs/loongson3_defconfig
+> +++ b/arch/loongarch/configs/loongson3_defconfig
+> @@ -63,6 +63,7 @@ CONFIG_EFI_ZBOOT=y
+>  CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
+>  CONFIG_EFI_CAPSULE_LOADER=m
+>  CONFIG_EFI_TEST=m
+> +CONFIG_JUMP_LABEL=y
+>  CONFIG_MODULES=y
+>  CONFIG_MODULE_FORCE_LOAD=y
+>  CONFIG_MODULE_UNLOAD=y
+> diff --git a/arch/loongarch/include/asm/jump_label.h b/arch/loongarch/include/asm/jump_label.h
+> new file mode 100644
+> index 000000000000..453a0cd3ddf0
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/jump_label.h
+> @@ -0,0 +1,52 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> + *
+> + * Based on arch/arm64/include/asm/jump_label.h
+> + */
+> +#ifndef __ASM_JUMP_LABEL_H
+> +#define __ASM_JUMP_LABEL_H
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +#include <linux/types.h>
+> +#include <asm/inst.h>
+> +
+> +#define JUMP_LABEL_NOP_SIZE		LOONGARCH_INSN_SIZE
+> +
+> +static __always_inline bool arch_static_branch(struct static_key * const key,
+> +					       const bool branch)
+> +{
+> +	asm_volatile_goto(
+> +		"1:	nop					\n\t"
+> +		 "	.pushsection	__jump_table, \"aw\"	\n\t"
+> +		 "	.align		3			\n\t"
+> +		 "	.long		1b - ., %l[l_yes] - .	\n\t"
+> +		 "	.quad		%0 - .			\n\t"
+> +		 "	.popsection				\n\t"
+> +		 :  :  "i"(&((char *)key)[branch]) :  : l_yes);
+> +
+> +	return false;
+> +l_yes:
+> +	return true;
+> +}
+> +
+> +static __always_inline bool arch_static_branch_jump(struct static_key * const key,
+> +						    const bool branch)
+> +{
+> +	asm_volatile_goto(
+> +		"1:	b		%l[l_yes]		\n\t"
+> +		 "	.pushsection	__jump_table, \"aw\"	\n\t"
+> +		 "	.align		3			\n\t"
+> +		 "	.long		1b - ., %l[l_yes] - .	\n\t"
+> +		 "	.quad		%0 - .			\n\t"
+> +		 "	.popsection				\n\t"
+> +		 :  :  "i"(&((char *)key)[branch]) :  : l_yes);
+> +
+> +	return false;
+> +l_yes:
+> +	return true;
+> +}
+> +
+> +#endif  /* __ASSEMBLY__ */
+> +#endif	/* __ASM_JUMP_LABEL_H */
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+> index 9a72d91cd104..64ea76f60e2c 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -54,4 +54,6 @@ obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+>
+>  obj-$(CONFIG_KPROBES)		+= kprobes.o kprobes_trampoline.o
+>
+> +obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o
+> +
+>  CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
+> diff --git a/arch/loongarch/kernel/jump_label.c b/arch/loongarch/kernel/jump_label.c
+> new file mode 100644
+> index 000000000000..c3ebaa4cf1e5
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/jump_label.c
+> @@ -0,0 +1,23 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> + *
+> + * Based on arch/arm64/include/asm/jump_label.h
+Sorry, this should be changed to,
+Based on arch/arm64/kernel/jump_label.c
 
-Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
----
- arch/loongarch/kvm/vcpu.c | 199 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 199 insertions(+)
-
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index a314fb441962..2c9298e8817c 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -616,6 +616,205 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 	}
- }
- 
-+static int _kvm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-+{
-+	struct kvm_context *context;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	bool migrated, all;
-+
-+	/*
-+	 * Have we migrated to a different CPU?
-+	 * If so, any old guest TLB state may be stale.
-+	 */
-+	migrated = (vcpu->arch.last_sched_cpu != cpu);
-+
-+	/*
-+	 * Was this the last vCPU to run on this CPU?
-+	 * If not, any old guest state from this vCPU will have been clobbered.
-+	 */
-+	context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
-+	all = migrated || (context->last_vcpu != vcpu);
-+	context->last_vcpu = vcpu;
-+
-+	/*
-+	 * Restore timer state regardless
-+	 */
-+	kvm_restore_timer(vcpu);
-+
-+	/* Control guest page CCA attribute */
-+	change_csr_gcfg(CSR_GCFG_MATC_MASK, CSR_GCFG_MATC_ROOT);
-+	/* Don't bother restoring registers multiple times unless necessary */
-+	if (!all)
-+		return 0;
-+
-+	write_csr_gcntc((ulong)vcpu->kvm->arch.time_offset);
-+	/*
-+	 * Restore guest CSR registers
-+	 */
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_CRMD);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PRMD);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_EUEN);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_MISC);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ECFG);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ERA);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_BADV);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_BADI);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_EENTRY);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBIDX);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBEHI);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBELO0);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBELO1);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ASID);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PGDL);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PGDH);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PWCTL0);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_PWCTL1);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_STLBPGSIZE);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_RVACFG);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_CPUID);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS0);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS1);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS2);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS3);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS4);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS5);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS6);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_KS7);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TMID);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_CNTC);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRENTRY);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRBADV);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRERA);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRSAVE);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRELO0);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRELO1);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBREHI);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_TLBRPRMD);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN0);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN1);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN2);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_DMWIN3);
-+	kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_LLBCTL);
-+
-+	/* restore Root.Guestexcept from unused Guest guestexcept register */
-+	write_csr_gintc(csr->csrs[LOONGARCH_CSR_GINTC]);
-+
-+	/*
-+	 * We should clear linked load bit to break interrupted atomics. This
-+	 * prevents a SC on the next vCPU from succeeding by matching a LL on
-+	 * the previous vCPU.
-+	 */
-+	if (vcpu->kvm->created_vcpus > 1)
-+		set_gcsr_llbctl(CSR_LLBCTL_WCLLB);
-+
-+	return 0;
-+}
-+
-+void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-+{
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+	vcpu->cpu = cpu;
-+	if (vcpu->arch.last_sched_cpu != cpu) {
-+		kvm_debug("[%d->%d]KVM vCPU[%d] switch\n",
-+				vcpu->arch.last_sched_cpu, cpu, vcpu->vcpu_id);
-+		/*
-+		 * Migrate the timer interrupt to the current CPU so that it
-+		 * always interrupts the guest and synchronously triggers a
-+		 * guest timer interrupt.
-+		 */
-+		kvm_migrate_count(vcpu);
-+	}
-+
-+	/* restore guest state to registers */
-+	_kvm_vcpu_load(vcpu, cpu);
-+	local_irq_restore(flags);
-+}
-+
-+static int _kvm_vcpu_put(struct kvm_vcpu *vcpu, int cpu)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+
-+	kvm_lose_fpu(vcpu);
-+	/*
-+	 * update csr state from hardware if software csr state is stale,
-+	 * most csr registers are kept unchanged during process context
-+	 * switch except csr registers like remaining timer tick value and
-+	 * injected interrupt state.
-+	 */
-+	if (!(vcpu->arch.aux_inuse & KVM_LARCH_CSR)) {
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_CRMD);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PRMD);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_EUEN);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_MISC);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ECFG);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ERA);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_BADV);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_BADI);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_EENTRY);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBIDX);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBEHI);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBELO0);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBELO1);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_ASID);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PGDL);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PGDH);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PGD);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PWCTL0);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PWCTL1);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_STLBPGSIZE);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_RVACFG);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_CPUID);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PRCFG1);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PRCFG2);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_PRCFG3);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS0);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS1);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS2);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS3);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS4);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS5);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS6);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_KS7);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TMID);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_CNTC);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_LLBCTL);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRENTRY);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRBADV);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRERA);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRSAVE);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRELO0);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRELO1);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBREHI);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_TLBRPRMD);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN0);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN1);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN2);
-+		kvm_save_hw_gcsr(csr, LOONGARCH_CSR_DMWIN3);
-+		vcpu->arch.aux_inuse |= KVM_LARCH_CSR;
-+	}
-+	/* save Root.Guestexcept in unused Guest guestexcept register */
-+	kvm_save_timer(vcpu);
-+	csr->csrs[LOONGARCH_CSR_GINTC] = read_csr_gintc();
-+	return 0;
-+}
-+
-+void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long flags;
-+	int cpu;
-+
-+	local_irq_save(flags);
-+	cpu = smp_processor_id();
-+	vcpu->arch.last_sched_cpu = cpu;
-+	vcpu->cpu = -1;
-+
-+	/* save guest state in registers */
-+	_kvm_vcpu_put(vcpu, cpu);
-+	local_irq_restore(flags);
-+}
-+
- int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- {
- 	int r = -EINTR;
--- 
-2.31.1
+> + */
+> +#include <linux/jump_label.h>
+> +#include <linux/kernel.h>
+> +#include <asm/inst.h>
+> +
+> +void arch_jump_label_transform(struct jump_entry *entry,
+> +			       enum jump_label_type type)
+> +{
+> +	void *addr = (void *)jump_entry_code(entry);
+> +	u32 insn;
+> +
+> +	if (type == JUMP_LABEL_JMP)
+> +		insn = larch_insn_gen_b(jump_entry_code(entry), jump_entry_target(entry));
+> +	else
+> +		insn = larch_insn_gen_nop();
+> +
+> +	larch_insn_patch_text(addr, insn);
+> +}
+>
 
