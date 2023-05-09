@@ -1,73 +1,90 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B79E17D3
-	for <loongarch@lists.linux.dev>; Tue,  9 May 2023 06:49:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0891566B
+	for <loongarch@lists.linux.dev>; Tue,  9 May 2023 06:55:54 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxI_AC7VlkMd4GAA--.11372S3;
-	Tue, 09 May 2023 14:49:39 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxvOp57llkid4GAA--.11170S3;
+	Tue, 09 May 2023 14:55:53 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHLcB7VlkQzlSAA--.16393S2;
-	Tue, 09 May 2023 14:49:37 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxoOR47llkUDtSAA--.16572S2;
+	Tue, 09 May 2023 14:55:53 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Cc: loongarch@lists.linux.dev,
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH] LoongArch: Select HAVE_DEBUG_KMEMLEAK to support kmemleak
-Date: Tue,  9 May 2023 14:49:31 +0800
-Message-Id: <1683614971-10744-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH] perf symbol: Add LoongArch case in get_plt_sizes()
+Date: Tue,  9 May 2023 14:55:52 +0800
+Message-Id: <1683615352-10794-1-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8BxHLcB7VlkQzlSAA--.16393S2
+X-CM-TRANSID:AQAAf8BxoOR47llkUDtSAA--.16572S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrtF4fZFW7Cw4xur4kuryrCrg_yoW3tFX_Ja
-	9xA3W8GF15GrWj9rnxZ3yFgr1fZayrWFs8ZrW2yr4UWw17Xw13J3y8Ww1rZr42g3yjgFWr
-	ZrWFqr98Cr10yjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+X-Coremail-Antispam: 1Uk129KBjvdXoW7Jr4DWFWxGr1UGF4Utw47Jwb_yoWkGwb_ta
+	4fuF40yw1UArWvyrWDCrW5uFWruayrZFs5uFyDWw4xCa1ftF45WF47Zr93uF15Zw1Yvr9x
+	Jwn2q3yfArs8GjkaLaAFLSUrUUUUnb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
 	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-	X7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-	AFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-	6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
+	W7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+	AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+	6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
 	xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWln4kS
 	14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2
 	AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
 	xVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_
-	JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
-	WUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBI
-	daVFxhVjvjDU0xZFpf9x07jeq2NUUUUU=
+	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
+	Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
+	CTnIWIevJa73UjIFyTuYvjxU4Xo7DUUUU
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-We can see that DEBUG_KMEMLEAK depends on HAVE_DEBUG_KMEMLEAK after
-commit b69ec42b1b19 ("Kconfig: clean up the long arch list for the
-DEBUG_KMEMLEAK config option"), just select HAVE_DEBUG_KMEMLEAK to
-support kmemleak on LoongArch.
+We can see the following definitions in bfd/elfnn-loongarch.c:
 
+  #define PLT_HEADER_INSNS 8
+  #define PLT_HEADER_SIZE (PLT_HEADER_INSNS * 4)
+
+  #define PLT_ENTRY_INSNS 4
+  #define PLT_ENTRY_SIZE (PLT_ENTRY_INSNS * 4)
+
+so plt header size is 32 and plt entry size is 16 on LoongArch,
+let us add LoongArch case in get_plt_sizes().
+
+Link: https://sourceware.org/git/?p=binutils-gdb.git;a=blob;f=bfd/elfnn-loongarch.c
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
 
 This is based on 6.4-rc1
 
- arch/loongarch/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/symbol-elf.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index d38b066..1e64edd 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -90,6 +90,7 @@ config LOONGARCH
- 	select HAVE_ASM_MODVERSIONS
- 	select HAVE_CONTEXT_TRACKING_USER
- 	select HAVE_C_RECORDMCOUNT
-+	select HAVE_DEBUG_KMEMLEAK
- 	select HAVE_DEBUG_STACKOVERFLOW
- 	select HAVE_DMA_CONTIGUOUS
- 	select HAVE_DYNAMIC_FTRACE
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index b2ed9cc..5d409c2 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -411,6 +411,10 @@ static bool get_plt_sizes(struct dso *dso, GElf_Ehdr *ehdr, GElf_Shdr *shdr_plt,
+ 		*plt_header_size = 32;
+ 		*plt_entry_size = 16;
+ 		return true;
++	case EM_LOONGARCH:
++		*plt_header_size = 32;
++		*plt_entry_size = 16;
++		return true;
+ 	case EM_SPARC:
+ 		*plt_header_size = 48;
+ 		*plt_entry_size = 12;
 -- 
 2.1.0
 
