@@ -1,266 +1,129 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3807C
-	for <loongarch@lists.linux.dev>; Tue,  9 May 2023 10:34:40 +0000 (UTC)
-X-UUID: d7a081788efd4b19bc571412c01d7c3f-20230509
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.22,REQID:90058afd-4b39-4e2c-b393-8a509900c318,IP:20,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:6
-X-CID-INFO: VERSION:1.1.22,REQID:90058afd-4b39-4e2c-b393-8a509900c318,IP:20,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:6
-X-CID-META: VersionHash:120426c,CLOUDID:746343c0-e32c-4c97-918d-fbb3fc224d4e,B
-	ulkID:230509174649WJ486XEL,BulkQuantity:0,Recheck:0,SF:45|24|17|19|102,TC:
-	nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
-	I:0,OSA:0,AV:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-UUID: d7a081788efd4b19bc571412c01d7c3f-20230509
-X-User: lienze@kylinos.cn
-Received: from fedora [(210.12.40.82)] by mailgw
-	(envelope-from <lienze@kylinos.cn>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 878831980; Tue, 09 May 2023 17:46:48 +0800
-From: Enze Li <lienze@kylinos.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,  Huacai Chen
- <chenhuacai@kernel.org>,  WANG Xuerui <kernel@xen0n.name>,  Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,  loongarch@lists.linux.dev,
-  linux-kernel@vger.kernel.org,  kvm@vger.kernel.org,  Jens Axboe
- <axboe@kernel.dk>,  Mark Brown <broonie@kernel.org>,  Alex Deucher
- <alexander.deucher@amd.com>,  Oliver Upton <oliver.upton@linux.dev>,
-  maobibo@loongson.cn,  Xi Ruoyao <xry111@xry111.site>
-Subject: Re: [PATCH v9 30/30] LoongArch: KVM: Supplement kvm document about
- LoongArch-specific part
-In-Reply-To: <20230509075346.1023386-31-zhaotianrui@loongson.cn> (Tianrui
-	Zhao's message of "Tue, 9 May 2023 15:53:46 +0800")
-References: <20230509075346.1023386-1-zhaotianrui@loongson.cn>
-	<20230509075346.1023386-31-zhaotianrui@loongson.cn>
-Date: Tue, 09 May 2023 17:50:59 +0800
-Message-ID: <87bkitomt8.fsf@kylinos.cn>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1FDD17FE2
+	for <loongarch@lists.linux.dev>; Tue,  9 May 2023 14:52:00 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73AD3FEC;
+	Tue,  9 May 2023 07:52:44 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.34.150])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 026403F663;
+	Tue,  9 May 2023 07:51:53 -0700 (PDT)
+Date: Tue, 9 May 2023 15:51:51 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: bigeasy@linutronix.de, maz@kernel.org, catalin.marinas@arm.com,
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com, svens@linux.ibm.com, pbonzini@redhat.com,
+	wanpengli@tencent.com, vkuznets@redhat.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, jgross@suse.com,
+	boris.ostrovsky@oracle.com, daniel.lezcano@linaro.org,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, rafael@kernel.org, longman@redhat.com,
+	boqun.feng@gmail.com, pmladek@suse.com, senozhatsky@chromium.org,
+	rostedt@goodmis.org, john.ogness@linutronix.de,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, jstultz@google.com,
+	sboyd@kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-s390@vger.kernel.org,
+	kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [RFC][PATCH 3/9] arm64/io: Always inline all of
+ __raw_{read,write}[bwlq]()
+Message-ID: <ZFpeBzFD4N5Cuwcb@FVFF77S0Q05N.cambridge.arm.com>
+References: <20230508211951.901961964@infradead.org>
+ <20230508213147.583344579@infradead.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230508213147.583344579@infradead.org>
 
-Hi Tianrui,
+On Mon, May 08, 2023 at 11:19:54PM +0200, Peter Zijlstra wrote:
+> The next patch will want to use __raw_readl() from a noinstr section
+> and as such that needs to be marked __always_inline to avoid the
+> compiler being a silly bugger.
+> 
+> Turns out it already is, but its siblings are not.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Thank you for working on this.  Only one small nit, please see below.
+FWIW, on arm64 we shouldn't ever end up with the MMIO counter being our
+{sched,local}_clock() -- several things blow up if we don't have the "CP15"
+version, and if we do have the CP15 version we'll use that as our preferred
+clocksource (and yes, the code is a mess).
 
-On Tue, May 09 2023 at 03:53:46 PM +0800, Tianrui Zhao wrote:
+Regardless, for consistency I agree we should mark these all as __always_inline.
 
-> Supplement kvm document about LoongArch-specific part, such as add
-> api introduction for GET/SET_ONE_REG, GET/SET_FPU, GET/SET_MP_STATE,
-> etc.
->
-> Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
-> ---
->  Documentation/virt/kvm/api.rst | 71 +++++++++++++++++++++++++++++-----
->  1 file changed, 62 insertions(+), 9 deletions(-)
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index add067793b90..ae7d6a2cd54f 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -416,6 +416,12 @@ Reads the general purpose registers from the vcpu.
->  	__u64 pc;
->    };
->  
-> +  /* LoongArch */
-> +  struct kvm_regs {
-> +        unsigned long gpr[32];
-> +        unsigned long pc;
-> +  };
-> +
->  
->  4.12 KVM_SET_REGS
->  -----------------
-> @@ -506,7 +512,7 @@ translation mode.
->  ------------------
->  
->  :Capability: basic
-> -:Architectures: x86, ppc, mips, riscv
-> +:Architectures: x86, ppc, mips, riscv, loongarch
->  :Type: vcpu ioctl
->  :Parameters: struct kvm_interrupt (in)
->  :Returns: 0 on success, negative on failure.
-> @@ -592,6 +598,14 @@ b) KVM_INTERRUPT_UNSET
->  
->  This is an asynchronous vcpu ioctl and can be invoked from any thread.
->  
-> +LOONGARCH:
-> +^^^^^^^^^^
-> +
-> +Queues an external interrupt to be injected into the virtual CPU. A negative
-> +interrupt number dequeues the interrupt.
-> +
-> +This is an asynchronous vcpu ioctl and can be invoked from any thread.
-> +
->  
->  4.17 KVM_DEBUG_GUEST
->  --------------------
-> @@ -737,7 +751,7 @@ signal mask.
->  ----------------
->  
->  :Capability: basic
-> -:Architectures: x86
-> +:Architectures: x86, loongarch
->  :Type: vcpu ioctl
->  :Parameters: struct kvm_fpu (out)
->  :Returns: 0 on success, -1 on error
-> @@ -746,7 +760,7 @@ Reads the floating point state from the vcpu.
->  
->  ::
->  
-> -  /* for KVM_GET_FPU and KVM_SET_FPU */
-> +  /* x86: for KVM_GET_FPU and KVM_SET_FPU */
->    struct kvm_fpu {
->  	__u8  fpr[8][16];
->  	__u16 fcw;
-> @@ -761,12 +775,22 @@ Reads the floating point state from the vcpu.
->  	__u32 pad2;
->    };
->  
-> +  /* LoongArch: for KVM_GET_FPU and KVM_SET_FPU */
-> +  struct kvm_fpu {
-> +        __u32 fcsr;
-> +        __u32 none;
-> +        __u64 fcc;
-> +        struct kvm_fpureg {
-> +                __u64 val64[4];
-> +        }fpr[32];
-> +  };
-> +
->  
->  4.23 KVM_SET_FPU
->  ----------------
->  
->  :Capability: basic
-> -:Architectures: x86
-> +:Architectures: x86, loongarch
->  :Type: vcpu ioctl
->  :Parameters: struct kvm_fpu (in)
->  :Returns: 0 on success, -1 on error
-> @@ -775,7 +799,7 @@ Writes the floating point state to the vcpu.
->  
->  ::
->  
-> -  /* for KVM_GET_FPU and KVM_SET_FPU */
-> +  /* x86: for KVM_GET_FPU and KVM_SET_FPU */
->    struct kvm_fpu {
->  	__u8  fpr[8][16];
->  	__u16 fcw;
-> @@ -790,6 +814,16 @@ Writes the floating point state to the vcpu.
->  	__u32 pad2;
->    };
->  
-> +  /* LoongArch: for KVM_GET_FPU and KVM_SET_FPU */
-> +  struct kvm_fpu {
-> +        __u32 fcsr;
-> +        __u32 none;
-> +        __u64 fcc;
-> +        struct kvm_fpureg {
-> +                __u64 val64[4];
-> +        }fpr[32];
-> +  };
-> +
->  
->  4.24 KVM_CREATE_IRQCHIP
->  -----------------------
-> @@ -1387,7 +1421,7 @@ documentation when it pops into existence).
->  -------------------
->  
->  :Capability: KVM_CAP_ENABLE_CAP
-> -:Architectures: mips, ppc, s390, x86
-> +:Architectures: mips, ppc, s390, x86, loongarch
->  :Type: vcpu ioctl
->  :Parameters: struct kvm_enable_cap (in)
->  :Returns: 0 on success; -1 on error
-> @@ -1442,7 +1476,7 @@ for vm-wide capabilities.
->  ---------------------
->  
->  :Capability: KVM_CAP_MP_STATE
-> -:Architectures: x86, s390, arm64, riscv
-> +:Architectures: x86, s390, arm64, riscv, loongarch
->  :Type: vcpu ioctl
->  :Parameters: struct kvm_mp_state (out)
->  :Returns: 0 on success; -1 on error
-> @@ -1460,7 +1494,7 @@ Possible values are:
->  
->     ==========================    ===============================================
->     KVM_MP_STATE_RUNNABLE         the vcpu is currently running
-> -                                 [x86,arm64,riscv]
-> +                                 [x86,arm64,riscv,loongarch]
->     KVM_MP_STATE_UNINITIALIZED    the vcpu is an application processor (AP)
->                                   which has not yet received an INIT signal [x86]
->     KVM_MP_STATE_INIT_RECEIVED    the vcpu has received an INIT signal, and is
-> @@ -1516,11 +1550,14 @@ For riscv:
->  The only states that are valid are KVM_MP_STATE_STOPPED and
->  KVM_MP_STATE_RUNNABLE which reflect if the vcpu is paused or not.
->
+It looks like we marked __raw_{readl,writel}() as noinstr in commit:
 
-> +On LoongArch, the KVM_MP_STATE_RUNNABLE state is only used which reflect the
-> +vcpu is runnable.
+  e43f1331e2ef913b ("arm64: Ask the compiler to __always_inline functions used by KVM at HYP")
 
-There seems to be a grammatical error here.  The original sentence uses
-"which" to connect two clauses, but lacks a subject to introduce the
-second clause.  I think we should correct it like this,
-
-"On LoongArch, the KVM_MP_STATE_RUNNABLE state is only used to reflect
-whether the vcpu is runnable."
-
-> +
->  4.39 KVM_SET_MP_STATE
->  ---------------------
->  
->  :Capability: KVM_CAP_MP_STATE
-> -:Architectures: x86, s390, arm64, riscv
-> +:Architectures: x86, s390, arm64, riscv, loongarch
->  :Type: vcpu ioctl
->  :Parameters: struct kvm_mp_state (in)
->  :Returns: 0 on success; -1 on error
-> @@ -1538,6 +1575,9 @@ For arm64/riscv:
->  The only states that are valid are KVM_MP_STATE_STOPPED and
->  KVM_MP_STATE_RUNNABLE which reflect if the vcpu should be paused or not.
->
-
-
-> +On LoongArch, the KVM_MP_STATE_RUNNABLE state is only used which reflect the
-> +vcpu is runnable.
-
-Likewise here.
-
-WDYT?
+... and it'd be nice to mention that in the commit message.
 
 Thanks,
-Enze
+Mark.
 
-> +
->  4.40 KVM_SET_IDENTITY_MAP_ADDR
->  ------------------------------
+> ---
+>  arch/arm64/include/asm/io.h |   12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> --- a/arch/arm64/include/asm/io.h
+> +++ b/arch/arm64/include/asm/io.h
+> @@ -22,13 +22,13 @@
+>   * Generic IO read/write.  These perform native-endian accesses.
+>   */
+>  #define __raw_writeb __raw_writeb
+> -static inline void __raw_writeb(u8 val, volatile void __iomem *addr)
+> +static __always_inline void __raw_writeb(u8 val, volatile void __iomem *addr)
+>  {
+>  	asm volatile("strb %w0, [%1]" : : "rZ" (val), "r" (addr));
+>  }
 >  
-> @@ -2839,6 +2879,19 @@ Following are the RISC-V D-extension registers:
->    0x8020 0000 0600 0020 fcsr      Floating point control and status register
->  ======================= ========= =============================================
+>  #define __raw_writew __raw_writew
+> -static inline void __raw_writew(u16 val, volatile void __iomem *addr)
+> +static __always_inline void __raw_writew(u16 val, volatile void __iomem *addr)
+>  {
+>  	asm volatile("strh %w0, [%1]" : : "rZ" (val), "r" (addr));
+>  }
+> @@ -40,13 +40,13 @@ static __always_inline void __raw_writel
+>  }
 >  
-> +LoongArch registers are mapped using the lower 32 bits. The upper 16 bits of
-> +that is the register group type.
-> +
-> +LoongArch csr registers are used to control guest cpu or get status of guest
-> +cpu, and they have the following id bit patterns::
-> +
-> +  0x9030 0000 0001 00 <reg:5> <sel:3>   (64-bit)
-> +
-> +LoongArch KVM control registers are used to implement some new defined functions
-> +such as set vcpu counter or reset vcpu, and they have the following id bit patterns::
-> +
-> +  0x9030 0000 0002 <reg:16>
-> +
+>  #define __raw_writeq __raw_writeq
+> -static inline void __raw_writeq(u64 val, volatile void __iomem *addr)
+> +static __always_inline void __raw_writeq(u64 val, volatile void __iomem *addr)
+>  {
+>  	asm volatile("str %x0, [%1]" : : "rZ" (val), "r" (addr));
+>  }
 >  
->  4.69 KVM_GET_ONE_REG
->  --------------------
+>  #define __raw_readb __raw_readb
+> -static inline u8 __raw_readb(const volatile void __iomem *addr)
+> +static __always_inline u8 __raw_readb(const volatile void __iomem *addr)
+>  {
+>  	u8 val;
+>  	asm volatile(ALTERNATIVE("ldrb %w0, [%1]",
+> @@ -57,7 +57,7 @@ static inline u8 __raw_readb(const volat
+>  }
+>  
+>  #define __raw_readw __raw_readw
+> -static inline u16 __raw_readw(const volatile void __iomem *addr)
+> +static __always_inline u16 __raw_readw(const volatile void __iomem *addr)
+>  {
+>  	u16 val;
+>  
+> @@ -80,7 +80,7 @@ static __always_inline u32 __raw_readl(c
+>  }
+>  
+>  #define __raw_readq __raw_readq
+> -static inline u64 __raw_readq(const volatile void __iomem *addr)
+> +static __always_inline u64 __raw_readq(const volatile void __iomem *addr)
+>  {
+>  	u64 val;
+>  	asm volatile(ALTERNATIVE("ldr %0, [%1]",
+> 
+> 
