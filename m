@@ -1,11 +1,11 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B592217AA0
-	for <loongarch@lists.linux.dev>; Tue,  9 May 2023 07:53:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53FEB17AB5
+	for <loongarch@lists.linux.dev>; Tue,  9 May 2023 07:54:00 +0000 (UTC)
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxLusW_Flka+MGAA--.11642S3;
+	by gateway (Coremail) with SMTP id _____8AxFukW_FlkfeMGAA--.11442S3;
 	Tue, 09 May 2023 15:53:58 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFLUK_FlkIEhSAA--.16908S22;
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFLUK_FlkIEhSAA--.16908S24;
 	Tue, 09 May 2023 15:53:57 +0800 (CST)
 From: Tianrui Zhao <zhaotianrui@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>,
@@ -22,9 +22,9 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	maobibo@loongson.cn,
 	Xi Ruoyao <xry111@xry111.site>,
 	zhaotianrui@loongson.cn
-Subject: [PATCH v9 20/30] LoongArch: KVM: Implement handle csr excption
-Date: Tue,  9 May 2023 15:53:36 +0800
-Message-Id: <20230509075346.1023386-21-zhaotianrui@loongson.cn>
+Subject: [PATCH v9 22/30] LoongArch: KVM: Implement handle idle exception
+Date: Tue,  9 May 2023 15:53:38 +0800
+Message-Id: <20230509075346.1023386-23-zhaotianrui@loongson.cn>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230509075346.1023386-1-zhaotianrui@loongson.cn>
 References: <20230509075346.1023386-1-zhaotianrui@loongson.cn>
@@ -35,199 +35,57 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxFLUK_FlkIEhSAA--.16908S22
+X-CM-TRANSID:AQAAf8BxFLUK_FlkIEhSAA--.16908S24
 X-CM-SenderInfo: p2kd03xldq233l6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxKryDWr4kur4rZF1kJFWfuFg_yoW7Xr1fpF
-	WkC3W5Zw40qw1Skas3trs0vrs8X3ykGr12qFy2q34Iv3W2yF95XFWvgryDXF98Ga9aqFWa
-	qay5trs5ur4UtaUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b4AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-	jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-	x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWDJVCq3wCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUUUUU==
+X-Coremail-Antispam: 1Uk129KBjvdXoW7JrW5uFykWr43XF4UXFyUAwb_yoWkXrb_ZF
+	Z7Jas5GFWrXF45Ka4Dt345Ka4Ygw4kXFWY9FW7ury3GF1qyrWUC39rWw1DZrWkKFWUZFW5
+	K3ykZas7Zw12qjkaLaAFLSUrUUUU0b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+	xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+	z7CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7
+	CjxVAFwI0_Cr1j6rxdM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc80
+	4VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY2
+	0_WwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_
+	Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r
+	1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4RKpBTUUUUU
 
-Implement kvm handle LoongArch vcpu exit caused by reading and
-writing csr. Using csr structure to emulate the registers.
+Implement kvm handle LoongArch vcpu idle exception, using kvm_vcpu_block
+to emulate it.
 
 Signed-off-by: Tianrui Zhao <zhaotianrui@loongson.cn>
 ---
- arch/loongarch/include/asm/kvm_csr.h | 57 ++++++++++++++++
- arch/loongarch/kvm/exit.c            | 98 ++++++++++++++++++++++++++++
- 2 files changed, 155 insertions(+)
- create mode 100644 arch/loongarch/include/asm/kvm_csr.h
- create mode 100644 arch/loongarch/kvm/exit.c
+ arch/loongarch/kvm/exit.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/arch/loongarch/include/asm/kvm_csr.h b/arch/loongarch/include/asm/kvm_csr.h
-new file mode 100644
-index 000000000000..2c572a332d53
---- /dev/null
-+++ b/arch/loongarch/include/asm/kvm_csr.h
-@@ -0,0 +1,57 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
-+
-+#ifndef __ASM_LOONGARCH_KVM_CSR_H__
-+#define __ASM_LOONGARCH_KVM_CSR_H__
-+#include <asm/loongarch.h>
-+#include <asm/kvm_vcpu.h>
-+#include <linux/uaccess.h>
-+#include <linux/kvm_host.h>
-+
-+#define kvm_read_hw_gcsr(id)		gcsr_read(id)
-+#define kvm_write_hw_gcsr(csr, id, val)	gcsr_write(val, id)
-+
-+int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *v);
-+int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 v);
-+
-+int _kvm_emu_iocsr(larch_inst inst, struct kvm_run *run, struct kvm_vcpu *vcpu);
-+
-+static __always_inline void kvm_save_hw_gcsr(struct loongarch_csrs *csr, int gid)
-+{
-+	csr->csrs[gid] = gcsr_read(gid);
-+}
-+
-+static __always_inline void kvm_restore_hw_gcsr(struct loongarch_csrs *csr, int gid)
-+{
-+	gcsr_write(csr->csrs[gid], gid);
-+}
-+
-+static __always_inline unsigned long kvm_read_sw_gcsr(struct loongarch_csrs *csr, int gid)
-+{
-+	return csr->csrs[gid];
-+}
-+
-+static __always_inline void kvm_write_sw_gcsr(struct loongarch_csrs *csr,
-+					      int gid, unsigned long val)
-+{
-+	csr->csrs[gid] = val;
-+}
-+
-+static __always_inline void kvm_set_sw_gcsr(struct loongarch_csrs *csr,
-+					    int gid, unsigned long val)
-+{
-+	csr->csrs[gid] |= val;
-+}
-+
-+static __always_inline void kvm_change_sw_gcsr(struct loongarch_csrs *csr,
-+					       int gid, unsigned long mask,
-+					       unsigned long val)
-+{
-+	unsigned long _mask = mask;
-+
-+	csr->csrs[gid] &= ~_mask;
-+	csr->csrs[gid] |= val & _mask;
-+}
-+#endif	/* __ASM_LOONGARCH_KVM_CSR_H__ */
 diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-new file mode 100644
-index 000000000000..508cbce31aa5
---- /dev/null
+index bd33fe0c6424..3fdb42939a05 100644
+--- a/arch/loongarch/kvm/exit.c
 +++ b/arch/loongarch/kvm/exit.c
-@@ -0,0 +1,98 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
-+ */
+@@ -188,3 +188,23 @@ int _kvm_complete_iocsr_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
+ 
+ 	return er;
+ }
 +
-+#include <linux/errno.h>
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/preempt.h>
-+#include <linux/vmalloc.h>
-+#include <asm/fpu.h>
-+#include <asm/inst.h>
-+#include <asm/time.h>
-+#include <asm/tlb.h>
-+#include <asm/loongarch.h>
-+#include <asm/numa.h>
-+#include <asm/kvm_vcpu.h>
-+#include <asm/kvm_csr.h>
-+#include <linux/kvm_host.h>
-+#include <asm/mmzone.h>
-+#include "trace.h"
-+
-+static unsigned long _kvm_emu_read_csr(struct kvm_vcpu *vcpu, int csrid)
++int _kvm_emu_idle(struct kvm_vcpu *vcpu)
 +{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	unsigned long val = 0;
++	++vcpu->stat.idle_exits;
++	trace_kvm_exit_idle(vcpu, KVM_TRACE_EXIT_IDLE);
 +
-+	if (csrid < 4096 && (get_gcsr_flag(csrid) & SW_GCSR))
-+		val = kvm_read_sw_gcsr(csr, csrid);
-+	else
-+		pr_warn_once("Unsupport csrread 0x%x with pc %lx\n",
-+			csrid, vcpu->arch.pc);
-+	return val;
-+}
-+
-+static void _kvm_emu_write_csr(struct kvm_vcpu *vcpu, int csrid,
-+	unsigned long val)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+
-+	if (csrid < 4096 && (get_gcsr_flag(csrid) & SW_GCSR))
-+		kvm_write_sw_gcsr(csr, csrid, val);
-+	else
-+		pr_warn_once("Unsupport csrwrite 0x%x with pc %lx\n",
-+				csrid, vcpu->arch.pc);
-+}
-+
-+static void _kvm_emu_xchg_csr(struct kvm_vcpu *vcpu, int csrid,
-+	unsigned long csr_mask, unsigned long val)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+
-+	if (csrid < 4096 && (get_gcsr_flag(csrid) & SW_GCSR)) {
-+		unsigned long orig;
-+
-+		orig = kvm_read_sw_gcsr(csr, csrid);
-+		orig &= ~csr_mask;
-+		orig |= val & csr_mask;
-+		kvm_write_sw_gcsr(csr, csrid, orig);
-+	} else
-+		pr_warn_once("Unsupport csrxchg 0x%x with pc %lx\n",
-+				csrid, vcpu->arch.pc);
-+}
-+
-+static int _kvm_handle_csr(struct kvm_vcpu *vcpu, larch_inst inst)
-+{
-+	unsigned int rd, rj, csrid;
-+	unsigned long csr_mask;
-+	unsigned long val = 0;
-+
-+	/*
-+	 * CSR value mask imm
-+	 * rj = 0 means csrrd
-+	 * rj = 1 means csrwr
-+	 * rj != 0,1 means csrxchg
-+	 */
-+	rd = inst.reg2csr_format.rd;
-+	rj = inst.reg2csr_format.rj;
-+	csrid = inst.reg2csr_format.csr;
-+
-+	/* Process CSR ops */
-+	if (rj == 0) {
-+		/* process csrrd */
-+		val = _kvm_emu_read_csr(vcpu, csrid);
-+		vcpu->arch.gprs[rd] = val;
-+	} else if (rj == 1) {
-+		/* process csrwr */
-+		val = vcpu->arch.gprs[rd];
-+		_kvm_emu_write_csr(vcpu, csrid, val);
-+	} else {
-+		/* process csrxchg */
-+		val = vcpu->arch.gprs[rd];
-+		csr_mask = vcpu->arch.gprs[rj];
-+		_kvm_emu_xchg_csr(vcpu, csrid, csr_mask, val);
++	if (!kvm_arch_vcpu_runnable(vcpu)) {
++		/*
++		 * Switch to the software timer before halt-polling/blocking as
++		 * the guest's timer may be a break event for the vCPU, and the
++		 * hypervisor timer runs only when the CPU is in guest mode.
++		 * Switch before halt-polling so that KVM recognizes an expired
++		 * timer before blocking.
++		 */
++		kvm_save_timer(vcpu);
++		kvm_vcpu_block(vcpu);
 +	}
 +
 +	return EMULATE_DONE;
