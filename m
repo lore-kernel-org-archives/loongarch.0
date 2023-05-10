@@ -1,217 +1,148 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E83E63E
-	for <loongarch@lists.linux.dev>; Wed, 10 May 2023 09:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1683710933; bh=Iwd4HphEtoXFGpfJUevca/hbM8Q5YO+WAm14znZJ13k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ure98uSxlqxpy3kj2lJZZLp+wJOVoHih0i3q9H3v6hyHP9iCSPjbSN/BSAhuGS4WE
-	 tUyWj4INmQGl44m5Pcoh8NwrHJHxocpXHLl5jdxX/UAWWZbKEki+caa5EVhfj37XeS
-	 JrWt0+Jb4HhtLXpM4plniB7kEM40+qqUO6xZj8Vo=
-Received: from [100.100.57.122] (unknown [58.34.185.106])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C154F20B55
+	for <loongarch@lists.linux.dev>; Wed, 10 May 2023 11:06:07 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id CD4E2600CE;
-	Wed, 10 May 2023 17:28:52 +0800 (CST)
-Message-ID: <3b360532-6ad5-b22c-b02a-103be491be4c@xen0n.name>
-Date: Wed, 10 May 2023 17:28:52 +0800
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B2BA11F388;
+	Wed, 10 May 2023 11:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1683716765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=8W+Q+r0g3mw6ipQ9VB8oBVPwJD25yg38F3zvEI0QrWI=;
+	b=xsqTAyRUUHiT1tcTopM9KBzj2+MMqQbkJhsuxa0/vyp3il1j+EufLJjTLSNhmwY736dymt
+	beipLzXFzi2x06B170786gLMc00/aufz0q+zQ9JJ2aR9U29J6fLzaZ3ENrPtnxG+X7OjKg
+	NqFl67xrzCTyQ/5vVpXGiOsoNWbZsL4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1683716765;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=8W+Q+r0g3mw6ipQ9VB8oBVPwJD25yg38F3zvEI0QrWI=;
+	b=S3VjVYLm7fDDz6TEUjM2HUYJgPdTN/ojk7o3k5n/zTMAV6d6H21pXszVtOT1O1zccafNDB
+	+4CWx0QCUD0RTCCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 42DE713519;
+	Wed, 10 May 2023 11:06:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id bC02D516W2QfRAAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Wed, 10 May 2023 11:06:05 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: deller@gmx.de,
+	geert@linux-m68k.org,
+	javierm@redhat.com,
+	daniel@ffwll.ch,
+	vgupta@kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	davem@davemloft.net,
+	James.Bottomley@HansenPartnership.com,
+	arnd@arndb.de,
+	sam@ravnborg.org,
+	suijingfeng@loongson.cn
+Cc: linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arch@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	sparclinux@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-parisc@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v6 0/6] fbdev: Move framebuffer I/O helpers to <asm/fb.h>
+Date: Wed, 10 May 2023 13:05:51 +0200
+Message-Id: <20230510110557.14343-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.1
-Subject: Re: [PATCH v2] LoongArch: Add jump-label implementation
-Content-Language: en-US
-To: Youling Tang <tangyouling@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>,
- Zhangjin Wu <falcon@tinylab.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-References: <1683710206-23905-1-git-send-email-tangyouling@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <1683710206-23905-1-git-send-email-tangyouling@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Youling,
+Fbdev provides helpers for framebuffer I/O, such as fb_readl(),
+fb_writel() or fb_memcpy_to_fb(). The implementation of each helper
+depends on the architecture, but they are all equivalent to regular
+I/O functions of similar names. So use regular functions instead and
+move all helpers into <asm-generic/fb.h>
 
-On 2023/5/10 17:16, Youling Tang wrote:
-> Add jump-label implementation based on the ARM64 version.
+The first patch a simple whitespace cleanup.
 
-"Add support for jump labels based on ..." sounds better IMO.
+Until now, <linux/fb.h> contained an include of <asm/io.h>. As this
+will go away, patches 2 to 4 prepare include statements in the various
+drivers. Source files that use regular I/O helpers, such as readl(),
+now include <linux/io.h>. Source files that use framebuffer I/O
+helpers, such as fb_readl(), now include <linux/fb.h>.
 
-> 
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> ---
-> Changes in v2:
-> - Fix build errors.
-> - fix comment.
-> 
->   .../core/jump-labels/arch-support.txt         |  2 +-
->   arch/loongarch/Kconfig                        |  2 +
->   arch/loongarch/configs/loongson3_defconfig    |  1 +
->   arch/loongarch/include/asm/jump_label.h       | 51 +++++++++++++++++++
->   arch/loongarch/kernel/Makefile                |  2 +
->   arch/loongarch/kernel/jump_label.c            | 23 +++++++++
->   6 files changed, 80 insertions(+), 1 deletion(-)
->   create mode 100644 arch/loongarch/include/asm/jump_label.h
->   create mode 100644 arch/loongarch/kernel/jump_label.c
-> 
-> diff --git a/Documentation/features/core/jump-labels/arch-support.txt b/Documentation/features/core/jump-labels/arch-support.txt
-> index 2328eada3a49..94d9dece580f 100644
-> --- a/Documentation/features/core/jump-labels/arch-support.txt
-> +++ b/Documentation/features/core/jump-labels/arch-support.txt
-> @@ -13,7 +13,7 @@
->       |        csky: |  ok  |
->       |     hexagon: | TODO |
->       |        ia64: | TODO |
-> -    |   loongarch: | TODO |
-> +    |   loongarch: |  ok  |
+Patch 5 replaces the architecture-based if-else branching in 
+<linux/fb.h> by helpers in <asm-generic/fb.h>. All helpers use Linux'
+existing I/O functions.
 
-+1 for updating the docs along with the implementation!
+Patch 6 harmonizes naming among fbdev and existing I/O functions.
 
->       |        m68k: | TODO |
->       |  microblaze: | TODO |
->       |        mips: |  ok  |
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index d38b066fc931..193a959a5611 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -83,6 +83,8 @@ config LOONGARCH
->   	select GPIOLIB
->   	select HAS_IOPORT
->   	select HAVE_ARCH_AUDITSYSCALL
-> +	select HAVE_ARCH_JUMP_LABEL
-> +	select HAVE_ARCH_JUMP_LABEL_RELATIVE
->   	select HAVE_ARCH_MMAP_RND_BITS if MMU
->   	select HAVE_ARCH_SECCOMP_FILTER
->   	select HAVE_ARCH_TRACEHOOK
-> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-> index 6cd26dd3c134..33a0f5f742f6 100644
-> --- a/arch/loongarch/configs/loongson3_defconfig
-> +++ b/arch/loongarch/configs/loongson3_defconfig
-> @@ -63,6 +63,7 @@ CONFIG_EFI_ZBOOT=y
->   CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
->   CONFIG_EFI_CAPSULE_LOADER=m
->   CONFIG_EFI_TEST=m
-> +CONFIG_JUMP_LABEL=y
->   CONFIG_MODULES=y
->   CONFIG_MODULE_FORCE_LOAD=y
->   CONFIG_MODULE_UNLOAD=y
-> diff --git a/arch/loongarch/include/asm/jump_label.h b/arch/loongarch/include/asm/jump_label.h
-> new file mode 100644
-> index 000000000000..2f9fdec256c5
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/jump_label.h
-> @@ -0,0 +1,51 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2023 Loongson Technology Corporation Limited
-> + *
-> + * Based on arch/arm64/include/asm/jump_label.h
-> + */
-> +#ifndef __ASM_JUMP_LABEL_H
-> +#define __ASM_JUMP_LABEL_H
-> +
-> +#ifndef __ASSEMBLY__
-> +
-> +#include <linux/types.h>
-> +
-> +#define JUMP_LABEL_NOP_SIZE	4
+The patchset has been built for a variety of platforms, such as x86-64,
+arm, aarch64, ppc64, parisc, m64k, mips and sparc.
 
-Saying LOONGARCH_INSN_SIZE here might be better for reducing redundancy, 
-although that'll necessitate an extra include of <asm/inst.h>. Leaving 
-the 4 alone won't cause much harm so I'm fine with either.
+v6:
+	* fix build on 64-bit mips (kernel test robot)
+	* update fb_io_fops.c
+v5:
+      	* fix build on s390
+v4:
+	* keep fb_mem*() as-is on ia64, loongarch, sparc64 (Arnd)
+	* don't include <asm/fb.h> (Sam)
+v3:
+	* add the new helpers in <asm-generic/fb.h>
+	* support reordering and native byte order (Geert, Arnd)
+v2:
+	* use Linux I/O helpers (Sam, Arnd)
 
-> +
-> +static __always_inline bool arch_static_branch(struct static_key * const key,
-> +					       const bool branch)
-> +{
-> +	asm_volatile_goto(
-> +		"1:	nop					\n\t"
-> +		 "	.pushsection	__jump_table, \"aw\"	\n\t"
-> +		 "	.align		3			\n\t"
-> +		 "	.long		1b - ., %l[l_yes] - .	\n\t"
-> +		 "	.quad		%0 - .			\n\t"
-> +		 "	.popsection				\n\t"
-> +		 :  :  "i"(&((char *)key)[branch]) :  : l_yes);
-> +
-> +	return false;
-> +l_yes:
-> +	return true;
-> +}
-> +
-> +static __always_inline bool arch_static_branch_jump(struct static_key * const key,
-> +						    const bool branch)
-> +{
-> +	asm_volatile_goto(
-> +		"1:	b		%l[l_yes]		\n\t"
-> +		 "	.pushsection	__jump_table, \"aw\"	\n\t"
-> +		 "	.align		3			\n\t"
-> +		 "	.long		1b - ., %l[l_yes] - .	\n\t"
-> +		 "	.quad		%0 - .			\n\t"
-> +		 "	.popsection				\n\t"
-> +		 :  :  "i"(&((char *)key)[branch]) :  : l_yes);
-> +
-> +	return false;
-> +l_yes:
-> +	return true;
-> +}
-> +
-> +#endif  /* __ASSEMBLY__ */
-> +#endif	/* __ASM_JUMP_LABEL_H */
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-> index 9a72d91cd104..64ea76f60e2c 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -54,4 +54,6 @@ obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
->   
->   obj-$(CONFIG_KPROBES)		+= kprobes.o kprobes_trampoline.o
->   
-> +obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o
-> +
->   CPPFLAGS_vmlinux.lds		:= $(KBUILD_CFLAGS)
-> diff --git a/arch/loongarch/kernel/jump_label.c b/arch/loongarch/kernel/jump_label.c
-> new file mode 100644
-> index 000000000000..b06245955f7a
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/jump_label.c
-> @@ -0,0 +1,23 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2023 Loongson Technology Corporation Limited
-> + *
-> + * Based on arch/arm64/kernel/jump_label.c
-> + */
-> +#include <linux/jump_label.h>
-> +#include <linux/kernel.h>
-> +#include <asm/inst.h>
-> +
-> +void arch_jump_label_transform(struct jump_entry *entry,
-> +			       enum jump_label_type type)
-> +{
-> +	void *addr = (void *)jump_entry_code(entry);
-> +	u32 insn;
-> +
-> +	if (type == JUMP_LABEL_JMP)
+Thomas Zimmermann (6):
+  fbdev/matrox: Remove trailing whitespaces
+  ipu-v3: Include <linux/io.h>
+  fbdev: Include <linux/io.h> in various drivers
+  fbdev: Include <linux/fb.h> instead of <asm/fb.h>
+  fbdev: Move framebuffer I/O helpers into <asm/fb.h>
+  fbdev: Rename fb_mem*() helpers
 
-Please use a switch for dealing with enum-typed values.
-
-> +		insn = larch_insn_gen_b(jump_entry_code(entry), jump_entry_target(entry));
-> +	else
-> +		insn = larch_insn_gen_nop();
-> +
-> +	larch_insn_patch_text(addr, insn);
-> +}
+ arch/ia64/include/asm/fb.h                  |  20 ++++
+ arch/loongarch/include/asm/fb.h             |  21 ++++
+ arch/mips/include/asm/fb.h                  |  22 +++++
+ arch/parisc/video/fbdev.c                   |   3 +-
+ arch/sparc/include/asm/fb.h                 |  20 ++++
+ arch/sparc/video/fbdev.c                    |   1 -
+ arch/x86/video/fbdev.c                      |   2 -
+ drivers/gpu/ipu-v3/ipu-prv.h                |   1 +
+ drivers/staging/sm750fb/sm750.c             |   2 +-
+ drivers/video/fbdev/arcfb.c                 |   1 +
+ drivers/video/fbdev/aty/atyfb.h             |   2 +
+ drivers/video/fbdev/aty/mach64_cursor.c     |   2 +-
+ drivers/video/fbdev/chipsfb.c               |   2 +-
+ drivers/video/fbdev/core/fb_io_fops.c       |   4 +-
+ drivers/video/fbdev/core/fbcon.c            |   1 -
+ drivers/video/fbdev/core/fbmem.c            |   2 -
+ drivers/video/fbdev/kyro/fbdev.c            |   2 +-
+ drivers/video/fbdev/matrox/matroxfb_accel.c |   6 +-
+ drivers/video/fbdev/matrox/matroxfb_base.h  |   4 +-
+ drivers/video/fbdev/pvr2fb.c                |   2 +-
+ drivers/video/fbdev/sstfb.c                 |   2 +-
+ drivers/video/fbdev/stifb.c                 |   4 +-
+ drivers/video/fbdev/tdfxfb.c                |   2 +-
+ drivers/video/fbdev/wmt_ge_rops.c           |   2 +
+ include/asm-generic/fb.h                    | 102 ++++++++++++++++++++
+ include/linux/fb.h                          |  55 +----------
+ 26 files changed, 210 insertions(+), 77 deletions(-)
 
 -- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+2.40.1
 
