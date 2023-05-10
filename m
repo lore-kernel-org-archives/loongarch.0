@@ -1,88 +1,144 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BB08F4D
-	for <loongarch@lists.linux.dev>; Wed, 10 May 2023 11:23:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=QbzoChfNbmTPAWVYTeVTH2VekWVcJSNCB9AwQAbgzcA=; b=FgxufkvO0GetjfD6zrhAGQ8OT1
-	KOYVMDTYuYoeCc25K0fCN/t0UcEn1LE+dP93KXRPDRmwXVOd7HkbsIl9LZMFh6tGqRC+M0c5o6Lw5
-	Jg15V5qs4F5hDFKQQ6zjgFFaF95r2zGNUEdtI7nGL6FVy9PiYWJs1RsPA/KISDiikM2zXwiE2R10m
-	s2OUSWm03W7jstFisa0+5qRKuuVzDtHnyw+PI2aXHVUeM5JOtztCZ9K6qQuyNQXw7rA/Zqb0Fgo6J
-	cGvdFpYGpdTUriawNxVFJCxDK2dzEHWiYhMIT34iWbhVkgJPdgu4piKQxzQ/kSDaWENkeZ/dyxNwG
-	C5CuKsbw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pwhuc-00GDJC-Pd; Wed, 10 May 2023 11:23:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9ECCD300023;
-	Wed, 10 May 2023 13:23:11 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 65E3720B04BA9; Wed, 10 May 2023 13:23:11 +0200 (CEST)
-Date: Wed, 10 May 2023 13:23:11 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Youling Tang <tangyouling@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Zhangjin Wu <falcon@tinylab.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v2] LoongArch: Add jump-label implementation
-Message-ID: <20230510112311.GA2176161@hirez.programming.kicks-ass.net>
-References: <1683710206-23905-1-git-send-email-tangyouling@loongson.cn>
- <20230510092723.GK4253@hirez.programming.kicks-ass.net>
- <15594820-0a95-94bb-132f-5008d31c041f@xen0n.name>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56E420B23
+	for <loongarch@lists.linux.dev>; Wed, 10 May 2023 12:34:48 +0000 (UTC)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-559e53d1195so103599227b3.2
+        for <loongarch@lists.linux.dev>; Wed, 10 May 2023 05:34:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683722087; x=1686314087;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kGY/0htSfGIvsVgPn7bx+ykp3agguIOsAu0irnl44Xg=;
+        b=TAVi687ffhoqVsP4C4054NrP4QNhhSF1ao3qYWAn67f6lWT+xHou+mhUP9varENXQ+
+         uKU6YWzN09hcRriTBeejOzfHAF0Mynqx8EWGwJ7VoqO8TWnTzCjQkPMoDMw3VifBZh0q
+         jdZJkoZena7BzmkqlD/WZAd8J/SeE7IP5VlbfDRqbqfoTWFcE0PGyozNDtMP9TsF366Z
+         RiLAmCp2jaN22I9wCyKdg45t8okCST1SoCT5otdfGbpzuTqXZh1iLCj8+avBwIrh6qS8
+         qaILCjJw9yP7eS36QBfK6f2OS0lNnSHX0k38/Q9Gv8nlUbDqsGqZJj/6dFmc2T9DvrNR
+         V61g==
+X-Gm-Message-State: AC+VfDz3Im6Hlsk1mS0POLyI+aHf8PSTPFCMjnoF9epz2aEwJW9x0eOq
+	1m9Z2wUjP6s6utI1AndtMouJaLEYmwp3Uw==
+X-Google-Smtp-Source: ACHHUZ6HkRaDgu0pJFbblZo5iZq31p+7cluxWkH5Keap2Rikf4AFPEKC1NeZuFVqOMZ2ypKO6aou3w==
+X-Received: by 2002:a81:4f08:0:b0:55a:8037:84ca with SMTP id d8-20020a814f08000000b0055a803784camr20639125ywb.46.1683722087316;
+        Wed, 10 May 2023 05:34:47 -0700 (PDT)
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
+        by smtp.gmail.com with ESMTPSA id e2-20020a0df502000000b0055d820f11bcsm4067249ywf.12.2023.05.10.05.34.45
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 May 2023 05:34:45 -0700 (PDT)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-559de1d36a9so103567637b3.1
+        for <loongarch@lists.linux.dev>; Wed, 10 May 2023 05:34:45 -0700 (PDT)
+X-Received: by 2002:a0d:ead7:0:b0:55a:ae08:163f with SMTP id
+ t206-20020a0dead7000000b0055aae08163fmr22367018ywe.32.1683722085095; Wed, 10
+ May 2023 05:34:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <15594820-0a95-94bb-132f-5008d31c041f@xen0n.name>
+References: <20230510110557.14343-1-tzimmermann@suse.de> <20230510110557.14343-6-tzimmermann@suse.de>
+In-Reply-To: <20230510110557.14343-6-tzimmermann@suse.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 10 May 2023 14:34:33 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVV-MQV3C_o6JxPj23h3zo0kMmsn9ZEWJxsrzr6YpKmyg@mail.gmail.com>
+Message-ID: <CAMuHMdVV-MQV3C_o6JxPj23h3zo0kMmsn9ZEWJxsrzr6YpKmyg@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] fbdev: Move framebuffer I/O helpers into <asm/fb.h>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: deller@gmx.de, javierm@redhat.com, daniel@ffwll.ch, vgupta@kernel.org, 
+	chenhuacai@kernel.org, kernel@xen0n.name, davem@davemloft.net, 
+	James.Bottomley@hansenpartnership.com, arnd@arndb.de, sam@ravnborg.org, 
+	suijingfeng@loongson.cn, linux-fbdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-arch@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-ia64@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-m68k@lists.linux-m68k.org, sparclinux@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 10, 2023 at 05:34:33PM +0800, WANG Xuerui wrote:
-> Hi Peter,
-> 
-> My 2 cents:
-> 
-> On 2023/5/10 17:27, Peter Zijlstra wrote:
-> > On Wed, May 10, 2023 at 05:16:46PM +0800, Youling Tang wrote:
-> > > Add jump-label implementation based on the ARM64 version.
-> > > 
-> > > Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> > 
-> > > <snip>
-> > > 
-> > > +	if (type == JUMP_LABEL_JMP)
-> > > +		insn = larch_insn_gen_b(jump_entry_code(entry), jump_entry_target(entry));
-> > > +	else
-> > > +		insn = larch_insn_gen_nop();
-> > > +
-> > > +	larch_insn_patch_text(addr, insn);
-> > > +}
-> > 
-> > This all implies Loongarch is fine with the nop<->b transition (much
-> > like arm64 is), but I found no actual mention of what transitions are
-> > valid for the architecture in your inst.c file -- perhaps you could put
-> > a small comment there to elucidate the occasional reader that doesn't
-> > have your arch manual memorized?
-> 
-> Do you mean by "valid transition" something like "what kind of
-> self-modification is architecturally sound, taking ICache /
-> micro-architecture behavior etc. into consideration"?
+Hi Thomas,
 
-Yes that. There are definitely architectures that have limitations on
-what instructions can be hot-patched in the face of concurrent execution
-without jumping through too many hoops.
+On Wed, May 10, 2023 at 1:06=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse=
+.de> wrote:
+> Implement framebuffer I/O helpers, such as fb_read*() and fb_write*(),
+> in the architecture's <asm/fb.h> header file or the generic one.
+>
+> The common case has been the use of regular I/O functions, such as
+> __raw_readb() or memset_io(). A few architectures used plain system-
+> memory reads and writes. Sparc used helpers for its SBus.
+>
+> The architectures that used special cases provide the same code in
+> their __raw_*() I/O helpers. So the patch replaces this code with the
+> __raw_*() functions and moves it to <asm-generic/fb.h> for all
+> architectures.
+>
+> v6:
+>         * fix fb_readq()/fb_writeq() on 64-bit mips (kernel test robot)
+> v5:
+>         * include <linux/io.h> in <asm-generic/fb>; fix s390 build
+> v4:
+>         * ia64, loongarch, sparc64: add fb_mem*() to arch headers
+>           to keep current semantics (Arnd)
+> v3:
+>         * implement all architectures with generic helpers
+>         * support reordering and native byte order (Geert, Arnd)
+>
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Tested-by: Sui Jingfeng <suijingfeng@loongson.cn>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>
+> add mips fb_q()
 
+> --- a/arch/mips/include/asm/fb.h
+> +++ b/arch/mips/include/asm/fb.h
+> @@ -12,6 +12,28 @@ static inline void fb_pgprotect(struct file *file, str=
+uct vm_area_struct *vma,
+>  }
+>  #define fb_pgprotect fb_pgprotect
+>
+> +/*
+> + * MIPS doesn't define __raw_ I/O macros, so the helpers
+> + * in <asm-generic/fb.h> don't generate fb_readq() and
+> + * fb_write(). We have to provide them here.
 
+MIPS does not include <asm-generic/io.h>,  nor define its own
+__raw_readq() and __raw_writeq()...
 
+> + *
+> + * TODO: Convert MIPS to generic I/O. The helpers below can
+> + *       then be removed.
+> + */
+> +#ifdef CONFIG_64BIT
+> +static inline u64 fb_readq(const volatile void __iomem *addr)
+> +{
+> +       return __raw_readq(addr);
+
+... so how can this call work?
+
+> +}
+> +#define fb_readq fb_readq
+> +
+> +static inline void fb_writeq(u64 b, volatile void __iomem *addr)
+> +{
+> +       __raw_writeq(b, addr);
+> +}
+> +#define fb_writeq fb_writeq
+> +#endif
+> +
+>  #include <asm-generic/fb.h>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
