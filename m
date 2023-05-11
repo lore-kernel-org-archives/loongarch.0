@@ -1,281 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580052112
-	for <loongarch@lists.linux.dev>; Thu, 11 May 2023 19:40:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAB94C433D2;
-	Thu, 11 May 2023 19:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1683834016;
-	bh=iBbMJ4OT6Okws+/8Aq4QYIVmJgt6KYB2M66A88XXqus=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QWJ1zr8DfGAhnmjiO57f/2VZYyJuds3seCJR3vQIXTe5MZHAjlZqqLGJF3PRMz0Nt
-	 1QoAxyuKo2IUIsHTs2nTx12b0ExHrmZAPwFWmFOmF0J7egx7Hb9x590cOmT3LyFGcX
-	 EqbjbFMJjwKSMg1gZ2cCwVxPRiJCcMHlAUHQOZJcSs6YSQqLXzI3tbj9VzkXz64BJQ
-	 ASYDDQVcAzz8dqaImNCO/zVmhgF6Un5eIVuxi3lVdBLULlotyfXXHKUVbtnmp1vaBr
-	 gXX9BtRCPga2J2gspa7qkT9lF1t9DBDKThCyfITRdg8PPLUtjnCYTpV1QZY9yVS3Cm
-	 F0IiacO3LDPVg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: WANG Xuerui <git@xen0n.name>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Sasha Levin <sashal@kernel.org>,
-	chenhuacai@kernel.org,
-	yangtiezhu@loongson.cn,
-	zhangqing@loongson.cn,
-	hejinyang@loongson.cn,
-	tangyouling@loongson.cn,
-	jiaxun.yang@flygoat.com,
-	loongarch@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 6/9] LoongArch: Relay BCE exceptions to userland as SIGSEGV with si_code=SEGV_BNDERR
-Date: Thu, 11 May 2023 15:39:39 -0400
-Message-Id: <20230511193945.623476-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230511193945.623476-1-sashal@kernel.org>
-References: <20230511193945.623476-1-sashal@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41D8206B0
+	for <loongarch@lists.linux.dev>; Thu, 11 May 2023 20:24:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=E5l2shnH01QrTljpAFFGCJicO6JUqqgyxvzlIMkP6A0=; b=eszcc0bs0lf/dqVDO8eQ4oUVkU
+	cMqG0k06X+5D5Liq1lzWonVEHUZhG+C4fHoBAx0b2kIHABcyMm6+cnaOofe8PHLUvnloriwFbxFoV
+	Yqem1gFhi9OYmna/FWqs44k/rS2+x6h8vxkpOaqvEyZ6z9ng2JWTiy+HodorH5wmvv7WM0YTRAVUy
+	qPTYmsTBy69OorstP119zRNMNMdRXh9iAua0LPGy+eE2xLKjO0XL4HM5sgiM3D/O7OzRWPVxpdQKv
+	x6jrzvogksLb37T9oN2EKWjffwa5kV/zWypFMtC+VxyMR+i4uabOkU0shVvaJEjBXed5+1s03gDUT
+	qFxpBLLQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1pxCpO-008NaG-2j;
+	Thu, 11 May 2023 20:23:55 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(Client did not present a certificate)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B76C1300244;
+	Thu, 11 May 2023 22:23:51 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9F2A32C7C5BE0; Thu, 11 May 2023 22:23:51 +0200 (CEST)
+Date: Thu, 11 May 2023 22:23:51 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Michael Kelley <mikelley@microsoft.com>, ltykernel@gmail.com,
+	bigeasy@linutronix.de, mark.rutland@arm.com, maz@kernel.org,
+	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+	kernel@xen0n.name, hca@linux.ibm.com, gor@linux.ibm.com,
+	agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+	svens@linux.ibm.com, pbonzini@redhat.com, wanpengli@tencent.com,
+	vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, jgross@suse.com, boris.ostrovsky@oracle.com,
+	daniel.lezcano@linaro.org, kys@microsoft.com,
+	haiyangz@microsoft.com, decui@microsoft.com, rafael@kernel.org,
+	longman@redhat.com, boqun.feng@gmail.com, pmladek@suse.com,
+	senozhatsky@chromium.org, rostedt@goodmis.org,
+	john.ogness@linutronix.de, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+	vschneid@redhat.com, jstultz@google.com, sboyd@kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [RFC][PATCH 7/9] x86/tsc: Provide sched_clock_noinstr()
+Message-ID: <20230511202351.GE2296992@hirez.programming.kicks-ass.net>
+References: <20230508211951.901961964@infradead.org>
+ <20230508213147.853677542@infradead.org>
+ <20230508214419.GA2053935@hirez.programming.kicks-ass.net>
+ <ZFmGI1EN24xroPHa@liuwe-devbox-debian-v2>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZFmGI1EN24xroPHa@liuwe-devbox-debian-v2>
 
-From: WANG Xuerui <git@xen0n.name>
+On Mon, May 08, 2023 at 11:30:43PM +0000, Wei Liu wrote:
+> On Mon, May 08, 2023 at 11:44:19PM +0200, Peter Zijlstra wrote:
+> > On Mon, May 08, 2023 at 11:19:58PM +0200, Peter Zijlstra wrote:
+> > 
+> > > --- a/drivers/clocksource/hyperv_timer.c
+> > > +++ b/drivers/clocksource/hyperv_timer.c
+> > > @@ -408,9 +408,9 @@ static u64 notrace read_hv_clock_tsc_cs(
+> > >  	return read_hv_clock_tsc();
+> > >  }
+> > >  
+> > > -static u64 notrace read_hv_sched_clock_tsc(void)
+> > > +static u64 noinstr read_hv_sched_clock_tsc(void)
+> > >  {
+> > > -	return (read_hv_clock_tsc() - hv_sched_clock_offset) *
+> > > +	return (hv_read_tsc_page(hv_get_tsc_page()) - hv_sched_clock_offset) *
+> > >  		(NSEC_PER_SEC / HV_CLOCK_HZ);
+> > >  }
+> > >  
+> > > --- a/include/clocksource/hyperv_timer.h
+> > > +++ b/include/clocksource/hyperv_timer.h
+> > > @@ -38,7 +38,7 @@ extern void hv_remap_tsc_clocksource(voi
+> > >  extern unsigned long hv_get_tsc_pfn(void);
+> > >  extern struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
+> > >  
+> > > -static inline notrace u64
+> > > +static __always_inline notrace u64
+> > >  hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg, u64 *cur_tsc)
+> > >  {
+> > >  	u64 scale, offset;
+> > > @@ -85,7 +85,7 @@ hv_read_tsc_page_tsc(const struct ms_hyp
+> > >  	return mul_u64_u64_shr(*cur_tsc, scale, 64) + offset;
+> > >  }
+> > >  
+> > > -static inline notrace u64
+> > > +static __always_inline notrace u64
+> > >  hv_read_tsc_page(const struct ms_hyperv_tsc_page *tsc_pg)
+> > >  {
+> > >  	u64 cur_tsc;
+> > 
+> > Hyper-V folks!
+> > 
+> > While reviewing all this I found the following 'gem':
+> > 
+> > hv_init_clocksource()
+> >   hv_setup_sched_clock()
+> >     paravirt_set_sched_clock(read_hv_sched_clock_msr)
+> > 
+> > read_hv_sched_clock_msr() [notrace]
+> >   read_hv_clock_msr()     [notrace]
+> >     hv_get_register()      *traced*
+> >       hv_get_non_nested_register() ...
+> >         hv_ghcb_msr_read()
+> > 	  WARN_ON(in_nmi())
+> > 	  ...
+> > 	  local_irq_save()
+> > 
+> > 
+> > Note that:
+> > 
+> >  a) sched_clock() is used in NMI context a *LOT*
+> >  b) sched_clock() is notrace (or even noinstr with these patches)
+> >     and local_irq_save() implies tracing
+> > 
+> 
+> Tianyu and Michael, what's your thought on this?
+> 
+> Is the MSR-based GHCB usable at this point?
+> 
+> What other clock source can be used?
 
-[ Upstream commit c23e7f01cf621290770069d968ca4c8356a50d00 ]
+You do have TSC support -- which is what I fixed for you. It's just the
+whole MSR thing that is comically broken.
 
-SEGV_BNDERR was introduced initially for supporting the Intel MPX, but
-fell into disuse after the MPX support was removed. The LoongArch
-bounds-checking instructions behave very differently than MPX, but
-overall the interface is still kind of suitable for conveying the
-information to userland when bounds-checking assertions trigger, so we
-wouldn't have to invent more UAPI. Specifically, when the BCE triggers,
-a SEGV_BNDERR is sent to userland, with si_addr set to the out-of-bounds
-address or value (in asrt{gt,le}'s case), and one of si_lower or
-si_upper set to the configured bound depending on the faulting
-instruction. The other bound is set to either 0 or ULONG_MAX to resemble
-a range with both lower and upper bounds.
+You could do a read_hv_clock_msr() implementation using
+__rdmsr() and add some sanity checking that anything GHCB using (SEV?)
+*will* use TSC.
 
-Note that it is possible to have si_addr == si_lower in case of a
-failing asrtgt or {ld,st}gt, because those instructions test for strict
-greater-than relationship. This should not pose a problem for userland,
-though, because the faulting PC is available for the application to
-associate back to the exact instruction for figuring out the
-expectation.
-
-Example exception context generated by a faulting `asrtgt.d t0, t1`
-(assert t0 > t1 or BCE) with t0=100 and t1=200:
-
-> pc 00005555558206a4 ra 00007ffff2d854fc tp 00007ffff2f2f180 sp 00007ffffbf9fb80
-> a0 0000000000000002 a1 00007ffffbf9fce8 a2 00007ffffbf9fd00 a3 00007ffff2ed4558
-> a4 0000000000000000 a5 00007ffff2f044c8 a6 00007ffffbf9fce0 a7 fffffffffffff000
-> t0 0000000000000064 t1 00000000000000c8 t2 00007ffffbfa2d5e t3 00007ffff2f12aa0
-> t4 00007ffff2ed6158 t5 00007ffff2ed6158 t6 000000000000002e t7 0000000003d8f538
-> t8 0000000000000005 u0 0000000000000000 s9 0000000000000000 s0 00007ffffbf9fce8
-> s1 0000000000000002 s2 0000000000000000 s3 00007ffff2f2c038 s4 0000555555820610
-> s5 00007ffff2ed5000 s6 0000555555827e38 s7 00007ffffbf9fd00 s8 0000555555827e38
->    ra: 00007ffff2d854fc
->   ERA: 00005555558206a4
->  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
->  PRMD: 00000007 (PPLV3 +PIE -PWE)
->  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
->  ECFG: 0007181c (LIE=2-4,11-12 VS=7)
-> ESTAT: 000a0000 [BCE] (IS= ECode=10 EsubCode=0)
->  PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
-
-Signed-off-by: WANG Xuerui <git@xen0n.name>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/loongarch/include/asm/inst.h | 26 +++++++++
- arch/loongarch/kernel/genex.S     |  1 +
- arch/loongarch/kernel/traps.c     | 92 +++++++++++++++++++++++++++++++
- 3 files changed, 119 insertions(+)
-
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index fce1843ceebb3..d476a88b9616c 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -105,6 +105,8 @@ enum reg2bstrd_op {
- };
- 
- enum reg3_op {
-+	asrtle_op	= 0x02,
-+	asrtgt_op	= 0x03,
- 	addw_op		= 0x20,
- 	addd_op		= 0x21,
- 	subw_op		= 0x22,
-@@ -156,6 +158,30 @@ enum reg3_op {
- 	amord_op	= 0x70c7,
- 	amxorw_op	= 0x70c8,
- 	amxord_op	= 0x70c9,
-+	fldgts_op	= 0x70e8,
-+	fldgtd_op	= 0x70e9,
-+	fldles_op	= 0x70ea,
-+	fldled_op	= 0x70eb,
-+	fstgts_op	= 0x70ec,
-+	fstgtd_op	= 0x70ed,
-+	fstles_op	= 0x70ee,
-+	fstled_op	= 0x70ef,
-+	ldgtb_op	= 0x70f0,
-+	ldgth_op	= 0x70f1,
-+	ldgtw_op	= 0x70f2,
-+	ldgtd_op	= 0x70f3,
-+	ldleb_op	= 0x70f4,
-+	ldleh_op	= 0x70f5,
-+	ldlew_op	= 0x70f6,
-+	ldled_op	= 0x70f7,
-+	stgtb_op	= 0x70f8,
-+	stgth_op	= 0x70f9,
-+	stgtw_op	= 0x70fa,
-+	stgtd_op	= 0x70fb,
-+	stleb_op	= 0x70fc,
-+	stleh_op	= 0x70fd,
-+	stlew_op	= 0x70fe,
-+	stled_op	= 0x70ff,
- };
- 
- enum reg3sa2_op {
-diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
-index 75e5be807a0d5..42ff28eadf04d 100644
---- a/arch/loongarch/kernel/genex.S
-+++ b/arch/loongarch/kernel/genex.S
-@@ -79,6 +79,7 @@ SYM_FUNC_END(except_vec_cex)
- 
- 	BUILD_HANDLER ade ade badv
- 	BUILD_HANDLER ale ale badv
-+	BUILD_HANDLER bce bce none
- 	BUILD_HANDLER bp bp none
- 	BUILD_HANDLER fpe fpe fcsr
- 	BUILD_HANDLER fpu fpu none
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 1a4dce84ebc60..5d5ae11d9f67e 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -35,6 +35,7 @@
- #include <asm/break.h>
- #include <asm/cpu.h>
- #include <asm/fpu.h>
-+#include <asm/inst.h>
- #include <asm/loongarch.h>
- #include <asm/mmu_context.h>
- #include <asm/pgtable.h>
-@@ -50,6 +51,7 @@
- 
- extern asmlinkage void handle_ade(void);
- extern asmlinkage void handle_ale(void);
-+extern asmlinkage void handle_bce(void);
- extern asmlinkage void handle_sys(void);
- extern asmlinkage void handle_bp(void);
- extern asmlinkage void handle_ri(void);
-@@ -401,6 +403,95 @@ static void bug_handler(struct pt_regs *regs)
- 	}
- }
- 
-+asmlinkage void noinstr do_bce(struct pt_regs *regs)
-+{
-+	bool user = user_mode(regs);
-+	unsigned long era = exception_era(regs);
-+	u64 badv = 0, lower = 0, upper = ULONG_MAX;
-+	union loongarch_instruction insn;
-+	irqentry_state_t state = irqentry_enter(regs);
-+
-+	if (regs->csr_prmd & CSR_PRMD_PIE)
-+		local_irq_enable();
-+
-+	current->thread.trap_nr = read_csr_excode();
-+
-+	die_if_kernel("Bounds check error in kernel code", regs);
-+
-+	/*
-+	 * Pull out the address that failed bounds checking, and the lower /
-+	 * upper bound, by minimally looking at the faulting instruction word
-+	 * and reading from the correct register.
-+	 */
-+	if (__get_inst(&insn.word, (u32 *)era, user))
-+		goto bad_era;
-+
-+	switch (insn.reg3_format.opcode) {
-+	case asrtle_op:
-+		if (insn.reg3_format.rd != 0)
-+			break;	/* not asrtle */
-+		badv = regs->regs[insn.reg3_format.rj];
-+		upper = regs->regs[insn.reg3_format.rk];
-+		break;
-+
-+	case asrtgt_op:
-+		if (insn.reg3_format.rd != 0)
-+			break;	/* not asrtgt */
-+		badv = regs->regs[insn.reg3_format.rj];
-+		lower = regs->regs[insn.reg3_format.rk];
-+		break;
-+
-+	case ldleb_op:
-+	case ldleh_op:
-+	case ldlew_op:
-+	case ldled_op:
-+	case stleb_op:
-+	case stleh_op:
-+	case stlew_op:
-+	case stled_op:
-+	case fldles_op:
-+	case fldled_op:
-+	case fstles_op:
-+	case fstled_op:
-+		badv = regs->regs[insn.reg3_format.rj];
-+		upper = regs->regs[insn.reg3_format.rk];
-+		break;
-+
-+	case ldgtb_op:
-+	case ldgth_op:
-+	case ldgtw_op:
-+	case ldgtd_op:
-+	case stgtb_op:
-+	case stgth_op:
-+	case stgtw_op:
-+	case stgtd_op:
-+	case fldgts_op:
-+	case fldgtd_op:
-+	case fstgts_op:
-+	case fstgtd_op:
-+		badv = regs->regs[insn.reg3_format.rj];
-+		lower = regs->regs[insn.reg3_format.rk];
-+		break;
-+	}
-+
-+	force_sig_bnderr((void __user *)badv, (void __user *)lower, (void __user *)upper);
-+
-+out:
-+	if (regs->csr_prmd & CSR_PRMD_PIE)
-+		local_irq_disable();
-+
-+	irqentry_exit(regs, state);
-+	return;
-+
-+bad_era:
-+	/*
-+	 * Cannot pull out the instruction word, hence cannot provide more
-+	 * info than a regular SIGSEGV in this case.
-+	 */
-+	force_sig(SIGSEGV);
-+	goto out;
-+}
-+
- asmlinkage void noinstr do_bp(struct pt_regs *regs)
- {
- 	bool user = user_mode(regs);
-@@ -721,6 +812,7 @@ void __init trap_init(void)
- 
- 	set_handler(EXCCODE_ADE * VECSIZE, handle_ade, VECSIZE);
- 	set_handler(EXCCODE_ALE * VECSIZE, handle_ale, VECSIZE);
-+	set_handler(EXCCODE_BCE * VECSIZE, handle_bce, VECSIZE);
- 	set_handler(EXCCODE_SYS * VECSIZE, handle_sys, VECSIZE);
- 	set_handler(EXCCODE_BP * VECSIZE, handle_bp, VECSIZE);
- 	set_handler(EXCCODE_INE * VECSIZE, handle_ri, VECSIZE);
--- 
-2.39.2
-
+Anyway, will you guys do that, or should I pull out the chainsaw and fix
+it for you?
