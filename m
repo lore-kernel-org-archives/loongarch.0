@@ -1,90 +1,167 @@
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 792241B902
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2542B1B90B
 	for <loongarch@lists.linux.dev>; Thu, 11 May 2023 08:06:21 +0000 (UTC)
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxKur7oVxkMq0HAA--.12931S3;
-	Thu, 11 May 2023 16:06:19 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxdfD8oVxkQq0HAA--.13010S3;
+	Thu, 11 May 2023 16:06:20 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxqjr5oVxk7XNVAA--.21787S2;
-	Thu, 11 May 2023 16:06:18 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxqjr5oVxk7XNVAA--.21787S5;
+	Thu, 11 May 2023 16:06:20 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v4 0/6] Add uprobes support for LoongArch
-Date: Thu, 11 May 2023 16:06:06 +0800
-Message-Id: <1683792372-29338-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v4 3/6] LoongArch: Use larch_insn_gen_break() for kprobes
+Date: Thu, 11 May 2023 16:06:09 +0800
+Message-Id: <1683792372-29338-4-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID:AQAAf8Cxqjr5oVxk7XNVAA--.21787S2
+In-Reply-To: <1683792372-29338-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1683792372-29338-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID:AQAAf8Cxqjr5oVxk7XNVAA--.21787S5
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7tr1kZw1xKw4DKrWDXw1UKFg_yoW8AF4fpF
-	srursxGr45G34fXr9xt34fur1Yyr4xGrW2q3Zxt34rJr4jqr15JF18KrZ8AF98t3y5KrW0
-	qF1rG3yYga1UA37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWFW5AF15ZF13Cw47Zr1UKFg_yoWrXFWUpF
+	nrCwnaqr4rJan5Cr9rJw4UZr1Syw48u3yqqFWUC3ySyr17Xwn8JF1xKrZ0yF98K3yvkFWS
+	qwnxtrW8Za4xAFJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+	b28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
 	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
 	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4U
+	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4U
 	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
 	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
 	6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
-	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
+	AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 
-v4:
-  -- Rebased on 6.4rc1
-  -- Fix problem about "perf probe -x /lib64/libc.so.6 malloc"
+For now, we can use larch_insn_gen_break() to define KPROBE_BP_INSN and
+KPROBE_SSTEPBP_INSN. Because larch_insn_gen_break() returns instruction
+word, define kprobe_opcode_t as u32, then do some small changes related
+with type conversion, no functional change intended.
 
-v3:
-  -- Check atomic instructions in insns_not_supported()
-  -- Remove five DIE_* definitions in kdebug.h
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/include/asm/kprobes.h |  2 +-
+ arch/loongarch/kernel/kprobes.c      | 33 ++++++++++++++-------------------
+ 2 files changed, 15 insertions(+), 20 deletions(-)
 
-v2:
-  -- Move the functions to inst.c in patch #1
-  -- Pass around union for insns_not_supported(),
-     insns_need_simulation() and arch_simulate_insn()
-
-v1:
-  -- Split the RFC patch #2 into two patches
-  -- Use larch_insn_gen_break() to generate break insns
-     for kprobes and uprobes
-  -- Pass around instruction word instead of union for
-     insns_not_supported(), insns_need_simulation() and
-     arch_simulate_insn() to avoid type conversion for callers
-  -- Add a simple test case for uprobes in the commit message
-
-Tiezhu Yang (6):
-  LoongArch: Move three functions from kprobes.c to inst.c
-  LoongArch: Add larch_insn_gen_break() to generate break insns
-  LoongArch: Use larch_insn_gen_break() for kprobes
-  LoongArch: Add uprobes support
-  LoongArch: Check atomic instructions in insns_not_supported()
-  LoongArch: Remove five DIE_* definitions in kdebug.h
-
- arch/loongarch/Kconfig               |   3 +
- arch/loongarch/include/asm/inst.h    |  42 ++++++++++
- arch/loongarch/include/asm/kdebug.h  |   5 --
- arch/loongarch/include/asm/kprobes.h |   2 +-
- arch/loongarch/include/asm/uprobes.h |  35 +++++++++
- arch/loongarch/kernel/Makefile       |   1 +
- arch/loongarch/kernel/inst.c         |  54 +++++++++++++
- arch/loongarch/kernel/kprobes.c      |  75 ++++--------------
- arch/loongarch/kernel/traps.c        |   9 +--
- arch/loongarch/kernel/uprobes.c      | 148 +++++++++++++++++++++++++++++++++++
- 10 files changed, 302 insertions(+), 72 deletions(-)
- create mode 100644 arch/loongarch/include/asm/uprobes.h
- create mode 100644 arch/loongarch/kernel/uprobes.c
-
+diff --git a/arch/loongarch/include/asm/kprobes.h b/arch/loongarch/include/asm/kprobes.h
+index 798020a..7ef7a0f 100644
+--- a/arch/loongarch/include/asm/kprobes.h
++++ b/arch/loongarch/include/asm/kprobes.h
+@@ -22,7 +22,7 @@ do {									\
+ 
+ #define kretprobe_blacklist_size	0
+ 
+-typedef union loongarch_instruction kprobe_opcode_t;
++typedef u32 kprobe_opcode_t;
+ 
+ /* Architecture specific copy of original instruction */
+ struct arch_specific_insn {
+diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
+index 08c78d2..1835102 100644
+--- a/arch/loongarch/kernel/kprobes.c
++++ b/arch/loongarch/kernel/kprobes.c
+@@ -4,19 +4,8 @@
+ #include <linux/preempt.h>
+ #include <asm/break.h>
+ 
+-static const union loongarch_instruction breakpoint_insn = {
+-	.reg0i15_format = {
+-		.opcode = break_op,
+-		.immediate = BRK_KPROBE_BP,
+-	}
+-};
+-
+-static const union loongarch_instruction singlestep_insn = {
+-	.reg0i15_format = {
+-		.opcode = break_op,
+-		.immediate = BRK_KPROBE_SSTEPBP,
+-	}
+-};
++#define KPROBE_BP_INSN		larch_insn_gen_break(BRK_KPROBE_BP)
++#define KPROBE_SSTEPBP_INSN	larch_insn_gen_break(BRK_KPROBE_SSTEPBP)
+ 
+ DEFINE_PER_CPU(struct kprobe *, current_kprobe);
+ DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
+@@ -24,7 +13,7 @@ DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
+ static void arch_prepare_ss_slot(struct kprobe *p)
+ {
+ 	p->ainsn.insn[0] = *p->addr;
+-	p->ainsn.insn[1] = singlestep_insn;
++	p->ainsn.insn[1] = KPROBE_SSTEPBP_INSN;
+ 	p->ainsn.restore = (unsigned long)p->addr + LOONGARCH_INSN_SIZE;
+ }
+ NOKPROBE_SYMBOL(arch_prepare_ss_slot);
+@@ -37,17 +26,20 @@ NOKPROBE_SYMBOL(arch_prepare_simulate);
+ 
+ int arch_prepare_kprobe(struct kprobe *p)
+ {
++	union loongarch_instruction insn;
++
+ 	if ((unsigned long)p->addr & 0x3)
+ 		return -EILSEQ;
+ 
+ 	/* copy instruction */
+ 	p->opcode = *p->addr;
++	insn.word = p->opcode;
+ 
+ 	/* decode instruction */
+-	if (insns_not_supported(p->opcode))
++	if (insns_not_supported(insn))
+ 		return -EINVAL;
+ 
+-	if (insns_need_simulation(p->opcode)) {
++	if (insns_need_simulation(insn)) {
+ 		p->ainsn.insn = NULL;
+ 	} else {
+ 		p->ainsn.insn = get_insn_slot();
+@@ -68,7 +60,7 @@ NOKPROBE_SYMBOL(arch_prepare_kprobe);
+ /* Install breakpoint in text */
+ void arch_arm_kprobe(struct kprobe *p)
+ {
+-	*p->addr = breakpoint_insn;
++	*p->addr = KPROBE_BP_INSN;
+ 	flush_insn_slot(p);
+ }
+ NOKPROBE_SYMBOL(arch_arm_kprobe);
+@@ -163,6 +155,8 @@ NOKPROBE_SYMBOL(post_kprobe_handler);
+ static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
+ 			     struct kprobe_ctlblk *kcb, int reenter)
+ {
++	union loongarch_instruction insn;
++
+ 	if (reenter) {
+ 		save_previous_kprobe(kcb);
+ 		set_current_kprobe(p);
+@@ -178,7 +172,8 @@ static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
+ 		regs->csr_era = (unsigned long)p->ainsn.insn;
+ 	} else {
+ 		/* simulate single steping */
+-		arch_simulate_insn(p->opcode, regs);
++		insn.word = p->opcode;
++		arch_simulate_insn(insn, regs);
+ 		/* now go for post processing */
+ 		post_kprobe_handler(p, kcb, regs);
+ 	}
+@@ -253,7 +248,7 @@ bool kprobe_breakpoint_handler(struct pt_regs *regs)
+ 		}
+ 	}
+ 
+-	if (addr->word != breakpoint_insn.word) {
++	if (*addr != KPROBE_BP_INSN) {
+ 		/*
+ 		 * The breakpoint instruction was removed right
+ 		 * after we hit it.  Another cpu has removed
 -- 
 2.1.0
 
