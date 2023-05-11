@@ -1,166 +1,281 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B7CA53
-	for <loongarch@lists.linux.dev>; Thu, 11 May 2023 17:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1683824541; i=deller@gmx.de;
-	bh=TUfys7E+944TFOkISLZBtPQGBgxCF4KtXqESXjvmNFU=;
-	h=X-UI-Sender-Class:Date:To:Cc:References:From:Subject:In-Reply-To;
-	b=scv9qxT93PJ7A0UpCn69G+Ly5nTi+CXfVcQmXYY0h5U3YKxRkMjuKYktk2on7nOFP
-	 +AXaTie+FVz84ad9703BT/WeO4aZ7ptb8tnaiPfzz6ORJatrz384WE4XZ8i9GYVhna
-	 7KmGx8EJWaX1F5XLWgxdLVx7/8Nv5MzpRCysPIfOrdmu9U/LbeEaZxifvRcrDJL3fS
-	 tL8aoUk5gGBorCdu0HZi7DBndQn+2pRPNZBWktrMw3KCcIZEMSqDrxjeC3V6adWcZu
-	 etqXIWGauT8+6v/BDBVW/JNiEzv+ZuzNug/MObZqzswP6TaulVmOafXNvyFot1jhf6
-	 L9qea8qKFiFcA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.60] ([94.134.146.253]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MiJZO-1qRW5D0kr8-00fRyc; Thu, 11
- May 2023 19:02:21 +0200
-Message-ID: <1c7ca6d3-76d7-047b-42ac-716e12946f90@gmx.de>
-Date: Thu, 11 May 2023 19:02:19 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7F620695
+	for <loongarch@lists.linux.dev>; Thu, 11 May 2023 19:38:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F3CC4339B;
+	Thu, 11 May 2023 19:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1683833921;
+	bh=R/2lmrsWm9MQtnWAG1FwpNzYCMdJtFyrkU49IoS33R8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=s229Dr56eD3ZDPRv6T5QMaDy2WronSLI7IAcWA0oOEitmM0yXJTVw2I6OfEF4PJTo
+	 SKTpy5oIG3k98SXaQlFDyYsvodBjd/b3LiHRfgLhAHpYS63x+64E7X3qCYHiHH3GY3
+	 05/hgd52N8OlDNG8reZT0aC91i4NSqKvDVbNgvHcn7hXjP8SDfU3tQhNA2OSlL6VYk
+	 BOZCMBwZU/nyyElL5ov0ioe/jMDlHuq+hZcSX5sKYt2voUznmF5axhyVn/af3/UbHv
+	 A4sPVmr+y+JlqlbLQPCoQ980KS3rtnnCTlk7Q/lJ+PhvKsrvoHnIo5y0V8R9ebvGmY
+	 oxnPxW5tqK2qA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: WANG Xuerui <git@xen0n.name>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Sasha Levin <sashal@kernel.org>,
+	chenhuacai@kernel.org,
+	yangtiezhu@loongson.cn,
+	zhangqing@loongson.cn,
+	hejinyang@loongson.cn,
+	tangyouling@loongson.cn,
+	jiaxun.yang@flygoat.com,
+	loongarch@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.3 07/11] LoongArch: Relay BCE exceptions to userland as SIGSEGV with si_code=SEGV_BNDERR
+Date: Thu, 11 May 2023 15:37:50 -0400
+Message-Id: <20230511193757.623114-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230511193757.623114-1-sashal@kernel.org>
+References: <20230511193757.623114-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Content-Language: en-US
-To: Thomas Zimmermann <tzimmermann@suse.de>, Sui Jingfeng
- <15330273260@189.cn>, geert@linux-m68k.org, javierm@redhat.com,
- daniel@ffwll.ch, vgupta@kernel.org, chenhuacai@kernel.org,
- kernel@xen0n.name, davem@davemloft.net, arnd@arndb.de, sam@ravnborg.org
-Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-arch@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-parisc@vger.kernel.org
-References: <20230510110557.14343-1-tzimmermann@suse.de>
- <20230510110557.14343-2-tzimmermann@suse.de>
- <0e13efbf-9a48-6e70-fdf3-8290f28c6dc7@189.cn>
- <a2315b9a-0747-1f0f-1f0a-1c6773931db4@suse.de>
- <15fe1489-f0fa-bbf6-ec08-a270bd4f1559@gmx.de>
- <e7bd021c-1a6b-6e47-143a-36ae2fd2fe6b@suse.de>
-From: Helge Deller <deller@gmx.de>
-Subject: Re: [PATCH v6 1/6] fbdev/matrox: Remove trailing whitespaces
-In-Reply-To: <e7bd021c-1a6b-6e47-143a-36ae2fd2fe6b@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ufxNy/weZGscP6z1+yJxtdDriOq+3MhqVBYT0w/Jb/4wi8A99Ir
- q3ByFzMRRO4dUqy7hFc+cC6yNkkK2QSqIE54t5POprgelcLfG2ncw6s4alEeJ111FqnqJFa
- 8Kp05TDsMboSk///SW2zrtsgTJUrfeLaADKzc6qnZG/Mlam9qihDJzKya1HMoK80D71UubL
- wAcLsIQy/lrxpKfcj/x1Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1SaGdAIIpdA=;9AItiyXmKn/Gp7RMlGxwmCRodmr
- CWgfSrtW37wCM0eDyOgjgDthyt7iwvZxUQNOKI/GSiLUf5QrDOLS3fBoliHuMG2JxPPo3p6zW
- ys7XBwtkfXF6888crwuYFTFYt6DOu8MUXAPTy5QpV1zcCkbORuigAI4JMNScZW9U4R6zwl608
- lDCYZHTHDaoX1sFBFD/F7hSovTMkxooObtEJe3lLBtrcj02z+3iC9IaPTZp1Dk+u0NTRLhOc2
- p3Ni45n755W/QPjVeW64D5nwYN+WN0c1NM4Q0E/Zy0inYF4QmTAnINJ42+nqRIXzOp4CDefOD
- TahZjko9NbIqPwZDlv2ca65IJISU4ZXxyl0CwIfRWK3PrPROxY5R4Qp28iMuzuMl2GEZrdS8n
- gxXGsBtGQhWh6PPcbDeZ6EEzWeoZDZOdAXsNpXnd1lNQpvUyx4Yed/88XM/rafMboYdnaJmBY
- orb7xp1ZfLXqbaGCUzGh02pxQ/oBKek13pI6o6sB4sZ/ZnO/43dbfdpvjILnA6kV6O0V1Jhx/
- YofcmeYIg9H1KJgoIkTdN1KELUR9kzilR4xETfVWMdC8dkXeqUh1AGaOqag3iU97brNv/ilLD
- n2NltCLggIAu4psorNUxCx705HkK2uFfOWi6B3r4RbX5V4/D0CMzUIpSEwd6oB7ORk+5BY8qN
- e2LFmWrtkGd55nGb+MBbTFccLE6jNdNW/qAolaxEYq21PiSA+WwkPnW3Toelu0Y2EjDlaO/mD
- VB2IIkHuaI15Ctzb5wVa613FEyt2c6/6K9hRfXtRGn8O5pItAxtb4okfEUTgdd+jMOxNy4zAb
- UoaCQv8l1eBXdWgQwQ0m1Z3zIDXeLrJODqLk2XTzGJxg+WyWQTzHJtHIVuSSxfkyhT2wdwEBA
- ic+AnpERUoBaWMpNmC2aEGeMMWq6Qnz4FCozkmhRStfC1q501JfllQvAz40v6a9zMa+ZE9N4b
- eVR7qc1FPZIoBv1aUAH2VDqh+Ww=
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 
-On 5/11/23 16:27, Thomas Zimmermann wrote:
->>> But the work I do within fbdev is mostly for improving DRM.
->>
->> Sure.
->>
->>> For the
->>> other issues in this file, I don't think that matroxfb should even be
->>> around any longer. Fbdev has been deprecated for a long time. But a
->>> small number of drivers are still in use and we still need its
->>> framebuffer console. So someone should either put significant effort
->>> into maintaining fbdev, or it should be phased out. But neither is
->>> happening.
->>
->> You're wrong.
->
+From: WANG Xuerui <git@xen0n.name>
 
-> I'm not. I don't claim that these drivers are all broken. But fbdev
-> as a whole is bit-rotting and no one attempts to address this. There
-> are several recent examples of this:
->
-> * I recently send out a 100-patches series to improve parameter
-> parsing and avoid memory leaks. That got shot down. I didn't attempt
-> to support parameter parsing for module builds.
+[ Upstream commit c23e7f01cf621290770069d968ca4c8356a50d00 ]
 
-Your work is appreciated and it wasn't shot down, but it wasn't perfect ei=
-ther.
+SEGV_BNDERR was introduced initially for supporting the Intel MPX, but
+fell into disuse after the MPX support was removed. The LoongArch
+bounds-checking instructions behave very differently than MPX, but
+overall the interface is still kind of suitable for conveying the
+information to userland when bounds-checking assertions trigger, so we
+wouldn't have to invent more UAPI. Specifically, when the BCE triggers,
+a SEGV_BNDERR is sent to userland, with si_addr set to the out-of-bounds
+address or value (in asrt{gt,le}'s case), and one of si_lower or
+si_upper set to the configured bound depending on the faulting
+instruction. The other bound is set to either 0 or ULONG_MAX to resemble
+a range with both lower and upper bounds.
 
-> * There's been a 15-yrs old bug in fbdev's read/write where they
-> return an incorrect value.
+Note that it is possible to have si_addr == si_lower in case of a
+failing asrtgt or {ld,st}gt, because those instructions test for strict
+greater-than relationship. This should not pose a problem for userland,
+though, because the faulting PC is available for the application to
+associate back to the exact instruction for figuring out the
+expectation.
 
-?
+Example exception context generated by a faulting `asrtgt.d t0, t1`
+(assert t0 > t1 or BCE) with t0=100 and t1=200:
 
-> * See the other discussion on this patchset on the state of hitfb.
->
-> * The fbdev code I recently cleaned up had bugs in how it uses some
-> of fbdev's basic building blocks (see the screen_base/screen_buffer
-> confusion).
+> pc 00005555558206a4 ra 00007ffff2d854fc tp 00007ffff2f2f180 sp 00007ffffbf9fb80
+> a0 0000000000000002 a1 00007ffffbf9fce8 a2 00007ffffbf9fd00 a3 00007ffff2ed4558
+> a4 0000000000000000 a5 00007ffff2f044c8 a6 00007ffffbf9fce0 a7 fffffffffffff000
+> t0 0000000000000064 t1 00000000000000c8 t2 00007ffffbfa2d5e t3 00007ffff2f12aa0
+> t4 00007ffff2ed6158 t5 00007ffff2ed6158 t6 000000000000002e t7 0000000003d8f538
+> t8 0000000000000005 u0 0000000000000000 s9 0000000000000000 s0 00007ffffbf9fce8
+> s1 0000000000000002 s2 0000000000000000 s3 00007ffff2f2c038 s4 0000555555820610
+> s5 00007ffff2ed5000 s6 0000555555827e38 s7 00007ffffbf9fd00 s8 0000555555827e38
+>    ra: 00007ffff2d854fc
+>   ERA: 00005555558206a4
+>  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
+>  PRMD: 00000007 (PPLV3 +PIE -PWE)
+>  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
+>  ECFG: 0007181c (LIE=2-4,11-12 VS=7)
+> ESTAT: 000a0000 [BCE] (IS= ECode=10 EsubCode=0)
+>  PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
 
-As you said... some (little-used/outdated) drivers may have issues
-which of course show up if one starts to clean up, as you do.
-On a per-driver basis it can make sense to drop a specific driver.
+Signed-off-by: WANG Xuerui <git@xen0n.name>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/loongarch/include/asm/inst.h | 26 +++++++++
+ arch/loongarch/kernel/genex.S     |  1 +
+ arch/loongarch/kernel/traps.c     | 92 +++++++++++++++++++++++++++++++
+ 3 files changed, 119 insertions(+)
 
-> * <asm-generic/fb.h> has been in the tree since 2009 and no one
-> attempted to include it until now.
->
-> None of this is a sign of good maintenance.
-> As I've worked on DRM's fbdev emulation a lot, I try to be a good
-> kernel citizen and clean up in fbdev as well when I see a problem.> But =
-I'd really like to see most of these drivers being moved into
-> staging and deleted soon afterwards. Users will complain about those
-> drivers that are really still required. Those might be worth to spend
-> effort on.
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index a04fe755d7193..b09887ffcd15d 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -121,6 +121,8 @@ enum reg2bstrd_op {
+ };
+ 
+ enum reg3_op {
++	asrtle_op	= 0x02,
++	asrtgt_op	= 0x03,
+ 	addw_op		= 0x20,
+ 	addd_op		= 0x21,
+ 	subw_op		= 0x22,
+@@ -176,6 +178,30 @@ enum reg3_op {
+ 	amord_op	= 0x70c7,
+ 	amxorw_op	= 0x70c8,
+ 	amxord_op	= 0x70c9,
++	fldgts_op	= 0x70e8,
++	fldgtd_op	= 0x70e9,
++	fldles_op	= 0x70ea,
++	fldled_op	= 0x70eb,
++	fstgts_op	= 0x70ec,
++	fstgtd_op	= 0x70ed,
++	fstles_op	= 0x70ee,
++	fstled_op	= 0x70ef,
++	ldgtb_op	= 0x70f0,
++	ldgth_op	= 0x70f1,
++	ldgtw_op	= 0x70f2,
++	ldgtd_op	= 0x70f3,
++	ldleb_op	= 0x70f4,
++	ldleh_op	= 0x70f5,
++	ldlew_op	= 0x70f6,
++	ldled_op	= 0x70f7,
++	stgtb_op	= 0x70f8,
++	stgth_op	= 0x70f9,
++	stgtw_op	= 0x70fa,
++	stgtd_op	= 0x70fb,
++	stleb_op	= 0x70fc,
++	stleh_op	= 0x70fd,
++	stlew_op	= 0x70fe,
++	stled_op	= 0x70ff,
+ };
+ 
+ enum reg3sa2_op {
+diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/genex.S
+index 44ff1ff642601..78f0663846575 100644
+--- a/arch/loongarch/kernel/genex.S
++++ b/arch/loongarch/kernel/genex.S
+@@ -82,6 +82,7 @@ SYM_FUNC_END(except_vec_cex)
+ 
+ 	BUILD_HANDLER ade ade badv
+ 	BUILD_HANDLER ale ale badv
++	BUILD_HANDLER bce bce none
+ 	BUILD_HANDLER bp bp none
+ 	BUILD_HANDLER fpe fpe fcsr
+ 	BUILD_HANDLER fpu fpu none
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index de8ebe20b666c..03ebfd2a4392f 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -35,6 +35,7 @@
+ #include <asm/break.h>
+ #include <asm/cpu.h>
+ #include <asm/fpu.h>
++#include <asm/inst.h>
+ #include <asm/loongarch.h>
+ #include <asm/mmu_context.h>
+ #include <asm/pgtable.h>
+@@ -50,6 +51,7 @@
+ 
+ extern asmlinkage void handle_ade(void);
+ extern asmlinkage void handle_ale(void);
++extern asmlinkage void handle_bce(void);
+ extern asmlinkage void handle_sys(void);
+ extern asmlinkage void handle_bp(void);
+ extern asmlinkage void handle_ri(void);
+@@ -430,6 +432,95 @@ static void bug_handler(struct pt_regs *regs)
+ 	}
+ }
+ 
++asmlinkage void noinstr do_bce(struct pt_regs *regs)
++{
++	bool user = user_mode(regs);
++	unsigned long era = exception_era(regs);
++	u64 badv = 0, lower = 0, upper = ULONG_MAX;
++	union loongarch_instruction insn;
++	irqentry_state_t state = irqentry_enter(regs);
++
++	if (regs->csr_prmd & CSR_PRMD_PIE)
++		local_irq_enable();
++
++	current->thread.trap_nr = read_csr_excode();
++
++	die_if_kernel("Bounds check error in kernel code", regs);
++
++	/*
++	 * Pull out the address that failed bounds checking, and the lower /
++	 * upper bound, by minimally looking at the faulting instruction word
++	 * and reading from the correct register.
++	 */
++	if (__get_inst(&insn.word, (u32 *)era, user))
++		goto bad_era;
++
++	switch (insn.reg3_format.opcode) {
++	case asrtle_op:
++		if (insn.reg3_format.rd != 0)
++			break;	/* not asrtle */
++		badv = regs->regs[insn.reg3_format.rj];
++		upper = regs->regs[insn.reg3_format.rk];
++		break;
++
++	case asrtgt_op:
++		if (insn.reg3_format.rd != 0)
++			break;	/* not asrtgt */
++		badv = regs->regs[insn.reg3_format.rj];
++		lower = regs->regs[insn.reg3_format.rk];
++		break;
++
++	case ldleb_op:
++	case ldleh_op:
++	case ldlew_op:
++	case ldled_op:
++	case stleb_op:
++	case stleh_op:
++	case stlew_op:
++	case stled_op:
++	case fldles_op:
++	case fldled_op:
++	case fstles_op:
++	case fstled_op:
++		badv = regs->regs[insn.reg3_format.rj];
++		upper = regs->regs[insn.reg3_format.rk];
++		break;
++
++	case ldgtb_op:
++	case ldgth_op:
++	case ldgtw_op:
++	case ldgtd_op:
++	case stgtb_op:
++	case stgth_op:
++	case stgtw_op:
++	case stgtd_op:
++	case fldgts_op:
++	case fldgtd_op:
++	case fstgts_op:
++	case fstgtd_op:
++		badv = regs->regs[insn.reg3_format.rj];
++		lower = regs->regs[insn.reg3_format.rk];
++		break;
++	}
++
++	force_sig_bnderr((void __user *)badv, (void __user *)lower, (void __user *)upper);
++
++out:
++	if (regs->csr_prmd & CSR_PRMD_PIE)
++		local_irq_disable();
++
++	irqentry_exit(regs, state);
++	return;
++
++bad_era:
++	/*
++	 * Cannot pull out the instruction word, hence cannot provide more
++	 * info than a regular SIGSEGV in this case.
++	 */
++	force_sig(SIGSEGV);
++	goto out;
++}
++
+ asmlinkage void noinstr do_bp(struct pt_regs *regs)
+ {
+ 	bool user = user_mode(regs);
+@@ -797,6 +888,7 @@ void __init trap_init(void)
+ 
+ 	set_handler(EXCCODE_ADE * VECSIZE, handle_ade, VECSIZE);
+ 	set_handler(EXCCODE_ALE * VECSIZE, handle_ale, VECSIZE);
++	set_handler(EXCCODE_BCE * VECSIZE, handle_bce, VECSIZE);
+ 	set_handler(EXCCODE_SYS * VECSIZE, handle_sys, VECSIZE);
+ 	set_handler(EXCCODE_BP * VECSIZE, handle_bp, VECSIZE);
+ 	set_handler(EXCCODE_INE * VECSIZE, handle_ri, VECSIZE);
+-- 
+2.39.2
 
-I'd really like to see a way forward and get the required drivers over to
-DRM, e.g. based on your simpledrm driver.
-If there is a way to get basic on-screen 2D bitblt and fillrect support,
-it would drop the need for most of the fbdev drivers.
-The current way of bitblt'ing from a buffer on regular basis istoo slow fo=
-r such older cards. Even on new hardware in emulators there
-is a big slowdown visible.
-
->> You don't mention that for most older machines DRM isn't an
->> acceptable way to go due to it's limitations, e.g. it's low-speed
->> due to missing 2D-acceleration for older cards and and it's
->> incapability to change screen resolution at runtime (just to name
->> two of the bigger limitations here).
->
-> You can change resolution at runtime; just not through fbdev ioctls.
-> There's no technical limitation here. No one found any use for this,
-> so it's not there.
-
-fbdev drivers would need that when ported to DRM.
->> So, unless we somehow find a good way to move such drivers over to
->> DRM (with a set of minimal 2D acceleration), they are still
->> important.
->
-> 2d acceleration is mostly useful for the framebuffer console.
-
-and X11
-
-> You can
-> do that with DRM and drivers have (nouveau). It just didn't make a
-> meaningful difference in most cases.
-
-if nouveau got it, can't it be done for simpledrm in a generic way too?
-
->> Actually, I just did test matroxfb and pm2fb successfully a few
->> days back, and they worked. For some smaller issues I've prepared
->> patches, which are on hold due conflicts with your latest
->> file-move-around- and whitespace-changes which are partly in
->> drm-misc. And I do have some upcoming additional patches for
->> console support.
-
-Helge
