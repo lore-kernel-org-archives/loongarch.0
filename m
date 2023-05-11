@@ -1,250 +1,202 @@
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4139EECC
-	for <loongarch@lists.linux.dev>; Thu, 11 May 2023 01:33:41 +0000 (UTC)
-Received: from loongson.cn (unknown [192.168.100.1])
-	by gateway (Coremail) with SMTP id _____8Cx9ej0RVxkSpgHAA--.12929S3;
-	Thu, 11 May 2023 09:33:40 +0800 (CST)
-Received: from [0.0.0.0] (unknown [192.168.100.1])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxBMXxRVxk8AxVAA--.21003S3;
-	Thu, 11 May 2023 09:33:38 +0800 (CST)
-Subject: Re: [PATCH v2] LoongArch: Add jump-label implementation
-To: WANG Xuerui <kernel@xen0n.name>
-References: <1683710206-23905-1-git-send-email-tangyouling@loongson.cn>
- <3b360532-6ad5-b22c-b02a-103be491be4c@xen0n.name>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Jason Baron <jbaron@akamai.com>, Zhangjin Wu <falcon@tinylab.org>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <72b6c81a-d4ee-575a-ff48-6be7e034ac96@loongson.cn>
-Date: Thu, 11 May 2023 09:33:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABA11B8E2
+	for <loongarch@lists.linux.dev>; Thu, 11 May 2023 07:55:07 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EB9051F85D;
+	Thu, 11 May 2023 07:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1683791705; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AM4W6jJZ/DRI5gVfTermbLti5sn9zWX//g7jXz1jDPk=;
+	b=Jebl1yEmrQniCo3BzBBis1gTCEAysxs90jLGiBBWTOPX8x0YJYrBbsSWMgclkZpVYE/S0T
+	Wa7tTCfg1rrhPVgSDOSfEALqS3XB0e1VspyS9n0dl0qlM5vglgCSkiIQ+0IjcdR6bniSyD
+	VGVg4/WK/ngqitSQnYlpcOkK5moWadw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1683791705;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AM4W6jJZ/DRI5gVfTermbLti5sn9zWX//g7jXz1jDPk=;
+	b=sfoZd7Xwl2k7Bjxp8Q72VotHNfj1fGZvEVsTKpoQ3Y+ZNZ25WHCQih193RiZ94Xx8PRGs+
+	8FxmWwEMkddp9gBQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7E226134B2;
+	Thu, 11 May 2023 07:55:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id Oo7oHVmfXGQxZwAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Thu, 11 May 2023 07:55:05 +0000
+Message-ID: <a2315b9a-0747-1f0f-1f0a-1c6773931db4@suse.de>
+Date: Thu, 11 May 2023 09:55:05 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <3b360532-6ad5-b22c-b02a-103be491be4c@xen0n.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8BxBMXxRVxk8AxVAA--.21003S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3Wr13uryfZF4DAr4UZr1rCrg_yoWxGr4fpF
-	1UCan5GF4kGF1fJrZ0qw1Dur1Yq393Gr12gF13tFy8AFnFvry8Arnakryq9F1ktaykWrWI
-	vF1ruFsIva1UJa7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	bfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-	x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2kK
-	e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
-	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
-	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
-	xVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
-	Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
-	WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
-	CTnIWIevJa73UjIFyTuYvjxU4AhLUUUUU
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH v6 1/6] fbdev/matrox: Remove trailing whitespaces
+Content-Language: en-US
+To: Sui Jingfeng <15330273260@189.cn>, deller@gmx.de, geert@linux-m68k.org,
+ javierm@redhat.com, daniel@ffwll.ch, vgupta@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, davem@davemloft.net,
+ James.Bottomley@HansenPartnership.com, arnd@arndb.de, sam@ravnborg.org
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-arch@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-parisc@vger.kernel.org
+References: <20230510110557.14343-1-tzimmermann@suse.de>
+ <20230510110557.14343-2-tzimmermann@suse.de>
+ <0e13efbf-9a48-6e70-fdf3-8290f28c6dc7@189.cn>
+From: Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <0e13efbf-9a48-6e70-fdf3-8290f28c6dc7@189.cn>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------bJhfL5TcgYF7U975xKghZg4q"
 
-Hi, Xuerui
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------bJhfL5TcgYF7U975xKghZg4q
+Content-Type: multipart/mixed; boundary="------------5i7j814v73FAY6o1aqJ1mx3I";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Sui Jingfeng <15330273260@189.cn>, deller@gmx.de, geert@linux-m68k.org,
+ javierm@redhat.com, daniel@ffwll.ch, vgupta@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, davem@davemloft.net,
+ James.Bottomley@HansenPartnership.com, arnd@arndb.de, sam@ravnborg.org
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-arch@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-parisc@vger.kernel.org
+Message-ID: <a2315b9a-0747-1f0f-1f0a-1c6773931db4@suse.de>
+Subject: Re: [PATCH v6 1/6] fbdev/matrox: Remove trailing whitespaces
+References: <20230510110557.14343-1-tzimmermann@suse.de>
+ <20230510110557.14343-2-tzimmermann@suse.de>
+ <0e13efbf-9a48-6e70-fdf3-8290f28c6dc7@189.cn>
+In-Reply-To: <0e13efbf-9a48-6e70-fdf3-8290f28c6dc7@189.cn>
 
-On 05/10/2023 05:28 PM, WANG Xuerui wrote:
-> Hi Youling,
->
-> On 2023/5/10 17:16, Youling Tang wrote:
->> Add jump-label implementation based on the ARM64 version.
->
-> "Add support for jump labels based on ..." sounds better IMO.
+--------------5i7j814v73FAY6o1aqJ1mx3I
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-OK.
+SGkNCg0KQW0gMTAuMDUuMjMgdW0gMjA6MjAgc2NocmllYiBTdWkgSmluZ2Zlbmc6DQo+IEhp
+LCBUaG9tYXMNCj4gDQo+IA0KPiBJIGxvdmUgeW91ciBwYXRjaCwgeWV0IHNvbWV0aGluZyB0
+byBpbXByb3ZlOg0KPiANCj4gDQo+IE9uIDIwMjMvNS8xMCAxOTowNSwgVGhvbWFzIFppbW1l
+cm1hbm4gd3JvdGU6DQo+PiBGaXggY29kaW5nIHN0eWxlLiBObyBmdW5jdGlvbmFsIGNoYW5n
+ZXMuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogVGhvbWFzIFppbW1lcm1hbm4gPHR6aW1tZXJt
+YW5uQHN1c2UuZGU+DQo+PiBSZXZpZXdlZC1ieTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5k
+Yi5kZT4NCj4+IFJldmlld2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+
+DQo+PiBSZXZpZXdlZC1ieTogU3VpIEppbmdmZW5nIDxzdWlqaW5nZmVuZ0Bsb29uZ3Nvbi5j
+bj4NCj4+IFRlc3RlZC1ieTogU3VpIEppbmdmZW5nIDxzdWlqaW5nZmVuZ0Bsb29uZ3Nvbi5j
+bj4NCj4+IC0tLQ0KPj4gwqAgZHJpdmVycy92aWRlby9mYmRldi9tYXRyb3gvbWF0cm94ZmJf
+YWNjZWwuYyB8IDYgKysrLS0tDQo+PiDCoCBkcml2ZXJzL3ZpZGVvL2ZiZGV2L21hdHJveC9t
+YXRyb3hmYl9iYXNlLmjCoCB8IDQgKystLQ0KPj4gwqAgMiBmaWxlcyBjaGFuZ2VkLCA1IGlu
+c2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvdmlkZW8vZmJkZXYvbWF0cm94L21hdHJveGZiX2FjY2VsLmMgDQo+PiBiL2RyaXZlcnMv
+dmlkZW8vZmJkZXYvbWF0cm94L21hdHJveGZiX2FjY2VsLmMNCj4+IGluZGV4IDljYjA2ODVm
+ZWRkZC4uY2U1MTIyNzc5OGExIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy92aWRlby9mYmRl
+di9tYXRyb3gvbWF0cm94ZmJfYWNjZWwuYw0KPj4gKysrIGIvZHJpdmVycy92aWRlby9mYmRl
+di9tYXRyb3gvbWF0cm94ZmJfYWNjZWwuYw0KPj4gQEAgLTg4LDcgKzg4LDcgQEANCj4+IMKg
+IHN0YXRpYyBpbmxpbmUgdm9pZCBtYXRyb3hfY2ZiNF9wYWwodV9pbnQzMl90KiBwYWwpIHsN
+Cj4+IMKgwqDCoMKgwqAgdW5zaWduZWQgaW50IGk7DQo+PiAtDQo+PiArDQo+PiDCoMKgwqDC
+oMKgIGZvciAoaSA9IDA7IGkgPCAxNjsgaSsrKSB7DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAg
+cGFsW2ldID0gaSAqIDB4MTExMTExMTFVOw0KPj4gwqDCoMKgwqDCoCB9DQo+PiBAQCAtOTYs
+NyArOTYsNyBAQCBzdGF0aWMgaW5saW5lIHZvaWQgbWF0cm94X2NmYjRfcGFsKHVfaW50MzJf
+dCogcGFsKSB7DQo+PiDCoCBzdGF0aWMgaW5saW5lIHZvaWQgbWF0cm94X2NmYjhfcGFsKHVf
+aW50MzJfdCogcGFsKSB7DQo+PiDCoMKgwqDCoMKgIHVuc2lnbmVkIGludCBpOw0KPj4gLQ0K
+Pj4gKw0KPj4gwqDCoMKgwqDCoCBmb3IgKGkgPSAwOyBpIDwgMTY7IGkrKykgew0KPj4gwqDC
+oMKgwqDCoMKgwqDCoMKgIHBhbFtpXSA9IGkgKiAweDAxMDEwMTAxVTsNCj4+IMKgwqDCoMKg
+wqAgfQ0KPj4gQEAgLTQ4Miw3ICs0ODIsNyBAQCBzdGF0aWMgdm9pZCBtYXRyb3hmYl8xYnBw
+X2ltYWdlYmxpdChzdHJ1Y3QgDQo+PiBtYXRyb3hfZmJfaW5mbyAqbWluZm8sIHVfaW50MzJf
+dCBmZ3gsDQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAvKiBUZWxsLi4uIHdlbGws
+IHdoeSBib3RoZXIuLi4gKi8NCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHdoaWxl
+IChoZWlnaHQtLSkgew0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBz
+aXplX3QgaTsNCj4+IC0NCj4+ICsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgZm9yIChpID0gMDsgaSA8IHN0ZXA7IGkgKz0gNCkgew0KPj4gwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8qIEhvcGUgdGhhdCB0aGVyZSBhcmUg
+YXQgbGVhc3QgdGhyZWUgcmVhZGFibGUgDQo+PiBieXRlcyBiZXlvbmQgdGhlIGVuZCBvZiBi
+aXRtYXAgKi8NCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBmYl93cml0ZWwoZ2V0X3VuYWxpZ25lZCgodV9pbnQzMl90KikoY2hhcmRhdGEgKyANCj4+
+IGkpKSxtbWlvLnZhZGRyKTsNCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZpZGVvL2ZiZGV2
+L21hdHJveC9tYXRyb3hmYl9iYXNlLmggDQo+PiBiL2RyaXZlcnMvdmlkZW8vZmJkZXYvbWF0
+cm94L21hdHJveGZiX2Jhc2UuaA0KPj4gaW5kZXggOTU4YmU2ODA1Zjg3Li5jOTNjNjliYmNk
+NTcgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL3ZpZGVvL2ZiZGV2L21hdHJveC9tYXRyb3hm
+Yl9iYXNlLmgNCj4+ICsrKyBiL2RyaXZlcnMvdmlkZW8vZmJkZXYvbWF0cm94L21hdHJveGZi
+X2Jhc2UuaA0KPj4gQEAgLTMwMSw5ICszMDEsOSBAQCBzdHJ1Y3QgbWF0cm94X2FsdG91dCB7
+DQo+PiDCoMKgwqDCoMKgIGludMKgwqDCoMKgwqDCoMKgICgqdmVyaWZ5bW9kZSkodm9pZCog
+YWx0b3V0X2RldiwgdV9pbnQzMl90IG1vZGUpOw0KPj4gwqDCoMKgwqDCoCBpbnTCoMKgwqDC
+oMKgwqDCoCAoKmdldHF1ZXJ5Y3RybCkodm9pZCogYWx0b3V0X2RldiwNCj4+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3QgdjRsMl9xdWVyeWN0
+cmwqIGN0cmwpOw0KPiANCj4gTm90aWNlZCB0aGF0IHRoZXJlIGFyZSBwbGVudHkgb2YgY29k
+aW5nIHN0eWxlIHByb2JsZW1zIGluIG1hdHJveGZiX2Jhc2UuaCwNCj4gDQo+IHdoeSB5b3Ug
+b25seSBmaXggYSBmZXcgb2YgdGhlbT/CoMKgIFRha2UgdGhpcyB0d28gbGluZSBhcyBhbiBl
+eGFtcGxlLCANCj4gc2hvdWxkbid0DQo+IA0KPiB0aGV5IGJlIGZpeGVkIGFsc28gYXMgZm9s
+bG93aW5nPw0KDQpJIGNvbmZpZ3VyZWQgbXkgdGV4dCBlZGl0b3IgdG8gcmVtb3ZlIHRyYWls
+aW5nIHdoaXRlc3BhY2VzIA0KYXV0b21hdGljYWxseS4gVGhhdCBrZWVwcyBteSBvd24gcGF0
+Y2hlcyBmcmVlIG9mIHRoZW0uICBCdXQgdGhlIGVkaXRvciANCnJlbW92ZXMgYWxsIHRyYWls
+aW5nIHdoaXRlc3BhY2VzLCBpbmNsdWRpbmcgdGhvc2UgdGhhdCBoYXZlIGJlZW4gdGhlcmUg
+DQpiZWZvcmUuIElmIEkgZW5jb3VudGVyIHN1Y2ggYSBjYXNlLCBJIHNwbGl0IG91dCB0aGUg
+d2hpdGVzcGFjZSBmaXggYW5kIA0Kc3VibWl0IGl0IHNlcGFyYXRlbHkuDQoNCkJ1dCB0aGUg
+d29yayBJIGRvIHdpdGhpbiBmYmRldiBpcyBtb3N0bHkgZm9yIGltcHJvdmluZyBEUk0uIEZv
+ciB0aGUgDQpvdGhlciBpc3N1ZXMgaW4gdGhpcyBmaWxlLCBJIGRvbid0IHRoaW5rIHRoYXQg
+bWF0cm94ZmIgc2hvdWxkIGV2ZW4gYmUgDQphcm91bmQgYW55IGxvbmdlci4gRmJkZXYgaGFz
+IGJlZW4gZGVwcmVjYXRlZCBmb3IgYSBsb25nIHRpbWUuIEJ1dCBhIA0Kc21hbGwgbnVtYmVy
+IG9mIGRyaXZlcnMgYXJlIHN0aWxsIGluIHVzZSBhbmQgd2Ugc3RpbGwgbmVlZCBpdHMgDQpm
+cmFtZWJ1ZmZlciBjb25zb2xlLiBTbyBzb21lb25lIHNob3VsZCBlaXRoZXIgcHV0IHNpZ25p
+ZmljYW50IGVmZm9ydCANCmludG8gbWFpbnRhaW5pbmcgZmJkZXYsIG9yIGl0IHNob3VsZCBi
+ZSBwaGFzZWQgb3V0LiBCdXQgbmVpdGhlciBpcyANCmhhcHBlbmluZy4NCg0KQmVzdCByZWdh
+cmRzDQpUaG9tYXMNCg0KPiANCj4gDQo+ICDCoMKgwqDCoCBpbnTCoMKgwqDCoMKgwqDCoCAo
+KnZlcmlmeW1vZGUpKHZvaWQgKmFsdG91dF9kZXYsIHVfaW50MzJfdCBtb2RlKTsNCj4gIMKg
+wqDCoMKgIGludMKgwqDCoMKgwqDCoMKgICgqZ2V0cXVlcnljdHJsKSh2b2lkICphbHRvdXRf
+ZGV2LA0KPiAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1
+Y3QgdjRsMl9xdWVyeWN0cmwgKmN0cmwpOw0KPiANCj4gDQo+PiAtwqDCoMKgIGludMKgwqDC
+oMKgwqDCoMKgICgqZ2V0Y3RybCkodm9pZCogYWx0b3V0X2RldiwNCj4+ICvCoMKgwqAgaW50
+wqDCoMKgwqDCoMKgwqAgKCpnZXRjdHJsKSh2b2lkICphbHRvdXRfZGV2LA0KPj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3QgdjRsMl9jb250cm9s
+KiBjdHJsKTsNCj4+IC3CoMKgwqAgaW50wqDCoMKgwqDCoMKgwqAgKCpzZXRjdHJsKSh2b2lk
+KiBhbHRvdXRfZGV2LA0KPj4gK8KgwqDCoCBpbnTCoMKgwqDCoMKgwqDCoCAoKnNldGN0cmwp
+KHZvaWQgKmFsdG91dF9kZXYsDQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIHN0cnVjdCB2NGwyX2NvbnRyb2wqIGN0cmwpOw0KPj4gwqAgfTsNCg0KLS0g
+DQpUaG9tYXMgWmltbWVybWFubg0KR3JhcGhpY3MgRHJpdmVyIERldmVsb3Blcg0KU1VTRSBT
+b2Z0d2FyZSBTb2x1dGlvbnMgR2VybWFueSBHbWJIDQpGcmFua2Vuc3RyYXNzZSAxNDYsIDkw
+NDYxIE51ZXJuYmVyZywgR2VybWFueQ0KR0Y6IEl2byBUb3RldiwgQW5kcmV3IE15ZXJzLCBB
+bmRyZXcgTWNEb25hbGQsIEJvdWRpZW4gTW9lcm1hbg0KSFJCIDM2ODA5IChBRyBOdWVybmJl
+cmcpDQo=
 
->
->>
->> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
->> ---
->> Changes in v2:
->> - Fix build errors.
->> - fix comment.
->>
->>   .../core/jump-labels/arch-support.txt         |  2 +-
->>   arch/loongarch/Kconfig                        |  2 +
->>   arch/loongarch/configs/loongson3_defconfig    |  1 +
->>   arch/loongarch/include/asm/jump_label.h       | 51 +++++++++++++++++++
->>   arch/loongarch/kernel/Makefile                |  2 +
->>   arch/loongarch/kernel/jump_label.c            | 23 +++++++++
->>   6 files changed, 80 insertions(+), 1 deletion(-)
->>   create mode 100644 arch/loongarch/include/asm/jump_label.h
->>   create mode 100644 arch/loongarch/kernel/jump_label.c
->>
->> diff --git a/Documentation/features/core/jump-labels/arch-support.txt
->> b/Documentation/features/core/jump-labels/arch-support.txt
->> index 2328eada3a49..94d9dece580f 100644
->> --- a/Documentation/features/core/jump-labels/arch-support.txt
->> +++ b/Documentation/features/core/jump-labels/arch-support.txt
->> @@ -13,7 +13,7 @@
->>       |        csky: |  ok  |
->>       |     hexagon: | TODO |
->>       |        ia64: | TODO |
->> -    |   loongarch: | TODO |
->> +    |   loongarch: |  ok  |
->
-> +1 for updating the docs along with the implementation!
->
->>       |        m68k: | TODO |
->>       |  microblaze: | TODO |
->>       |        mips: |  ok  |
->> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> index d38b066fc931..193a959a5611 100644
->> --- a/arch/loongarch/Kconfig
->> +++ b/arch/loongarch/Kconfig
->> @@ -83,6 +83,8 @@ config LOONGARCH
->>       select GPIOLIB
->>       select HAS_IOPORT
->>       select HAVE_ARCH_AUDITSYSCALL
->> +    select HAVE_ARCH_JUMP_LABEL
->> +    select HAVE_ARCH_JUMP_LABEL_RELATIVE
->>       select HAVE_ARCH_MMAP_RND_BITS if MMU
->>       select HAVE_ARCH_SECCOMP_FILTER
->>       select HAVE_ARCH_TRACEHOOK
->> diff --git a/arch/loongarch/configs/loongson3_defconfig
->> b/arch/loongarch/configs/loongson3_defconfig
->> index 6cd26dd3c134..33a0f5f742f6 100644
->> --- a/arch/loongarch/configs/loongson3_defconfig
->> +++ b/arch/loongarch/configs/loongson3_defconfig
->> @@ -63,6 +63,7 @@ CONFIG_EFI_ZBOOT=y
->>   CONFIG_EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER=y
->>   CONFIG_EFI_CAPSULE_LOADER=m
->>   CONFIG_EFI_TEST=m
->> +CONFIG_JUMP_LABEL=y
->>   CONFIG_MODULES=y
->>   CONFIG_MODULE_FORCE_LOAD=y
->>   CONFIG_MODULE_UNLOAD=y
->> diff --git a/arch/loongarch/include/asm/jump_label.h
->> b/arch/loongarch/include/asm/jump_label.h
->> new file mode 100644
->> index 000000000000..2f9fdec256c5
->> --- /dev/null
->> +++ b/arch/loongarch/include/asm/jump_label.h
->> @@ -0,0 +1,51 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Copyright (C) 2023 Loongson Technology Corporation Limited
->> + *
->> + * Based on arch/arm64/include/asm/jump_label.h
->> + */
->> +#ifndef __ASM_JUMP_LABEL_H
->> +#define __ASM_JUMP_LABEL_H
->> +
->> +#ifndef __ASSEMBLY__
->> +
->> +#include <linux/types.h>
->> +
->> +#define JUMP_LABEL_NOP_SIZE    4
->
-> Saying LOONGARCH_INSN_SIZE here might be better for reducing redundancy,
-> although that'll necessitate an extra include of <asm/inst.h>. Leaving
-> the 4 alone won't cause much harm so I'm fine with either.
+--------------5i7j814v73FAY6o1aqJ1mx3I--
 
-Using LOONGARCH_INSN_SIZE in v1, but causing build errors due to
-inclusion of <asm/inst.h> [1].
+--------------bJhfL5TcgYF7U975xKghZg4q
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
-So I removed the <asm/inst.h> include and used hardcoded 4.
+-----BEGIN PGP SIGNATURE-----
 
-[1]: 
-https://lore.kernel.org/loongarch/202305100412.gazWW71q-lkp@intel.com/T/#m0d8393aaf529aea0a4dcc5985469e698d63d66b3
->
->> +
->> +static __always_inline bool arch_static_branch(struct static_key *
->> const key,
->> +                           const bool branch)
->> +{
->> +    asm_volatile_goto(
->> +        "1:    nop                    \n\t"
->> +         "    .pushsection    __jump_table, \"aw\"    \n\t"
->> +         "    .align        3            \n\t"
->> +         "    .long        1b - ., %l[l_yes] - .    \n\t"
->> +         "    .quad        %0 - .            \n\t"
->> +         "    .popsection                \n\t"
->> +         :  :  "i"(&((char *)key)[branch]) :  : l_yes);
->> +
->> +    return false;
->> +l_yes:
->> +    return true;
->> +}
->> +
->> +static __always_inline bool arch_static_branch_jump(struct static_key
->> * const key,
->> +                            const bool branch)
->> +{
->> +    asm_volatile_goto(
->> +        "1:    b        %l[l_yes]        \n\t"
->> +         "    .pushsection    __jump_table, \"aw\"    \n\t"
->> +         "    .align        3            \n\t"
->> +         "    .long        1b - ., %l[l_yes] - .    \n\t"
->> +         "    .quad        %0 - .            \n\t"
->> +         "    .popsection                \n\t"
->> +         :  :  "i"(&((char *)key)[branch]) :  : l_yes);
->> +
->> +    return false;
->> +l_yes:
->> +    return true;
->> +}
->> +
->> +#endif  /* __ASSEMBLY__ */
->> +#endif    /* __ASM_JUMP_LABEL_H */
->> diff --git a/arch/loongarch/kernel/Makefile
->> b/arch/loongarch/kernel/Makefile
->> index 9a72d91cd104..64ea76f60e2c 100644
->> --- a/arch/loongarch/kernel/Makefile
->> +++ b/arch/loongarch/kernel/Makefile
->> @@ -54,4 +54,6 @@ obj-$(CONFIG_HAVE_HW_BREAKPOINT)    += hw_breakpoint.o
->>     obj-$(CONFIG_KPROBES)        += kprobes.o kprobes_trampoline.o
->>   +obj-$(CONFIG_JUMP_LABEL)    += jump_label.o
->> +
->>   CPPFLAGS_vmlinux.lds        := $(KBUILD_CFLAGS)
->> diff --git a/arch/loongarch/kernel/jump_label.c
->> b/arch/loongarch/kernel/jump_label.c
->> new file mode 100644
->> index 000000000000..b06245955f7a
->> --- /dev/null
->> +++ b/arch/loongarch/kernel/jump_label.c
->> @@ -0,0 +1,23 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (C) 2023 Loongson Technology Corporation Limited
->> + *
->> + * Based on arch/arm64/kernel/jump_label.c
->> + */
->> +#include <linux/jump_label.h>
->> +#include <linux/kernel.h>
->> +#include <asm/inst.h>
->> +
->> +void arch_jump_label_transform(struct jump_entry *entry,
->> +                   enum jump_label_type type)
->> +{
->> +    void *addr = (void *)jump_entry_code(entry);
->> +    u32 insn;
->> +
->> +    if (type == JUMP_LABEL_JMP)
->
-> Please use a switch for dealing with enum-typed values.
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmRcn1kFAwAAAAAACgkQlh/E3EQov+C9
+OxAAqhBorNkTOz+Q460bIwbzDPC8060V7y9mfqMtxjM7xhcAL/jLLBs/y20OIbWrkMcEMKYE5ERq
+/as0MgOKcM22gRk58GSoD2YxRy7TZapielYpCWK/GRwFIoTOqEaclN97aY556vbzyDS6OTdiGQE3
+bsL9XbG6f06/BWzNX0johRW2bAp67olapLCEf2ClfUkSUl+PPgtYy6sjP2rJiFX5se3kJ1EPh6eK
+8fAmkUB5KidgIiQ6Vb1zTCKtv4AicVGpFoEE/yhlNNBwmQwM7gArtSo4wmFnQV3EmcTgUDb0EHXe
+dM0iz6K3C2RmtZ85SIP4Yyua77IAPXmarf3QPVjLrTfEaecfWCe2+N9W9IOOnEHHx6M86j1qYLqH
+9lwrIhLWeCTSpjJYmwgyyYiMN8WwhYEu2PoAE62iTAN0v3r0y4F2fDnmsOGmCuRe0IkDFDZgbnU4
++soqxQK3NEcKeuKdjKC4oRyu6LDh1whWZ1H3G2NBx2NYcMRrPcltpAWqDCtH+f1eCFU3Q2l3b6Ro
+ranVnVsxyYtqZrshXMbvt4hYUhG8a7Zunm8oIwTwcdYvZItbmSFs4z8ULkmxNiwBouwGnhECpMBn
+b8khSwvi0O6KO4t2zn62L2lynSr8DUTHJM/yIUlOug0uDtAktQaWu9nkSjuY+lwKPLnL/024VuO2
+m6Q=
+=DLpe
+-----END PGP SIGNATURE-----
 
-Because the current type only has JUMP_LABEL_NOP and JUMP_LABEL_JMP,
-using if may be simpler than switch.
-
-Thanks,
-Youling.
->
->> +        insn = larch_insn_gen_b(jump_entry_code(entry),
->> jump_entry_target(entry));
->> +    else
->> +        insn = larch_insn_gen_nop();
->> +
->> +    larch_insn_patch_text(addr, insn);
->> +}
->
-
+--------------bJhfL5TcgYF7U975xKghZg4q--
