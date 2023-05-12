@@ -1,42 +1,42 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0798ED309
-	for <loongarch@lists.linux.dev>; Fri, 12 May 2023 10:24:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D624DD30E
+	for <loongarch@lists.linux.dev>; Fri, 12 May 2023 10:24:49 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2D04E22837;
-	Fri, 12 May 2023 10:24:47 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 13F4C22851;
+	Fri, 12 May 2023 10:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1683887087; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1683887088; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZAByYFXXfyQ6LxBft8mvuJgV6t/OqQpXaQEUtMHX5eg=;
-	b=XR2wcemv7Hu90f7ekzCtB9jCDgUHSkiiS3v+zhDILyXcOEMgMT8aZHXyXhWOMeGYACEZBi
-	zDdhpS5ako4ivi1ir78M/W1nKgxMzb5xsYTnufn94Hs/ggZKm/etQd6sQzGFWWQeVMIaTw
-	/4RazVayVWnQJM+Um72OrFVu8PPQTZg=
+	bh=03FKWvzl+iydak6zPBgn3CINrXf9q24laH3mFu/UDVA=;
+	b=efQrtDvcMNmdx7Lf3hPzhgO+haLQO8FFkihKcR4RW6GMgCizKSa5taKF1ivd1Wul2WlBI7
+	yYifZlqYEWZuns6ICOgPip0ZAIkz+iqMb/X5lFqeg3aUpxwXTGXlSM2T8bQb667IYIXy29
+	YzTfy8QYFhxTNGBrbeCFATtgp+Hl1Vs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1683887087;
+	s=susede2_ed25519; t=1683887088;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZAByYFXXfyQ6LxBft8mvuJgV6t/OqQpXaQEUtMHX5eg=;
-	b=JIIix7is7HfKPwEUPfqWWeqtQcubG5MQR66ManTqDUuU+ewTzD6QAwMBZpf7AnM7g/eMel
-	Ez7nwSHimWe0FpDw==
+	bh=03FKWvzl+iydak6zPBgn3CINrXf9q24laH3mFu/UDVA=;
+	b=u/CCArIGXSgjvSc67gCWzgTlB6iJbsD6FCzIRHoAlgiPiMEcmDNuRKIugzjo0RGV4tSzoT
+	EK3HhoeWHRS2vbBQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BE5E013A0A;
-	Fri, 12 May 2023 10:24:46 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A7E5213466;
+	Fri, 12 May 2023 10:24:47 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id uOCELe4TXmS5XwAAMHmgww
-	(envelope-from <tzimmermann@suse.de>); Fri, 12 May 2023 10:24:46 +0000
+	id 2EAjKO8TXmS5XwAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Fri, 12 May 2023 10:24:47 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: deller@gmx.de,
 	geert@linux-m68k.org,
@@ -62,9 +62,9 @@ Cc: linux-fbdev@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-parisc@vger.kernel.org,
 	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v7 2/7] fbdev/matrox: Remove trailing whitespaces
-Date: Fri, 12 May 2023 12:24:39 +0200
-Message-Id: <20230512102444.5438-3-tzimmermann@suse.de>
+Subject: [PATCH v7 4/7] fbdev: Include <linux/io.h> in various drivers
+Date: Fri, 12 May 2023 12:24:41 +0200
+Message-Id: <20230512102444.5438-5-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230512102444.5438-1-tzimmermann@suse.de>
 References: <20230512102444.5438-1-tzimmermann@suse.de>
@@ -76,64 +76,59 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix coding style. No functional changes.
+The code uses writel() and similar I/O-memory helpers. Include
+the header file to get the declarations.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 Reviewed-by: Sui Jingfeng <suijingfeng@loongson.cn>
-Tested-by: Sui Jingfeng <suijingfeng@loongson.cn>
 ---
- drivers/video/fbdev/matrox/matroxfb_accel.c | 6 +++---
- drivers/video/fbdev/matrox/matroxfb_base.h  | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/video/fbdev/arcfb.c       | 1 +
+ drivers/video/fbdev/aty/atyfb.h   | 2 ++
+ drivers/video/fbdev/wmt_ge_rops.c | 2 ++
+ 3 files changed, 5 insertions(+)
 
-diff --git a/drivers/video/fbdev/matrox/matroxfb_accel.c b/drivers/video/fbdev/matrox/matroxfb_accel.c
-index 9cb0685feddd..ce51227798a1 100644
---- a/drivers/video/fbdev/matrox/matroxfb_accel.c
-+++ b/drivers/video/fbdev/matrox/matroxfb_accel.c
-@@ -88,7 +88,7 @@
+diff --git a/drivers/video/fbdev/arcfb.c b/drivers/video/fbdev/arcfb.c
+index 7750e020839e..ace104850e50 100644
+--- a/drivers/video/fbdev/arcfb.c
++++ b/drivers/video/fbdev/arcfb.c
+@@ -41,6 +41,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
++#include <linux/io.h>
+ #include <linux/fb.h>
+ #include <linux/init.h>
+ #include <linux/arcfb.h>
+diff --git a/drivers/video/fbdev/aty/atyfb.h b/drivers/video/fbdev/aty/atyfb.h
+index 465f55beb97f..30da3e82ed3c 100644
+--- a/drivers/video/fbdev/aty/atyfb.h
++++ b/drivers/video/fbdev/aty/atyfb.h
+@@ -3,8 +3,10 @@
+  *  ATI Frame Buffer Device Driver Core Definitions
+  */
  
- static inline void matrox_cfb4_pal(u_int32_t* pal) {
- 	unsigned int i;
--	
++#include <linux/io.h>
+ #include <linux/spinlock.h>
+ #include <linux/wait.h>
 +
- 	for (i = 0; i < 16; i++) {
- 		pal[i] = i * 0x11111111U;
- 	}
-@@ -96,7 +96,7 @@ static inline void matrox_cfb4_pal(u_int32_t* pal) {
+     /*
+      *  Elements of the hardware specific atyfb_par structure
+      */
+diff --git a/drivers/video/fbdev/wmt_ge_rops.c b/drivers/video/fbdev/wmt_ge_rops.c
+index 3ed143457d22..b70961901683 100644
+--- a/drivers/video/fbdev/wmt_ge_rops.c
++++ b/drivers/video/fbdev/wmt_ge_rops.c
+@@ -9,7 +9,9 @@
  
- static inline void matrox_cfb8_pal(u_int32_t* pal) {
- 	unsigned int i;
--	
+ #include <linux/module.h>
+ #include <linux/fb.h>
++#include <linux/io.h>
+ #include <linux/platform_device.h>
 +
- 	for (i = 0; i < 16; i++) {
- 		pal[i] = i * 0x01010101U;
- 	}
-@@ -482,7 +482,7 @@ static void matroxfb_1bpp_imageblit(struct matrox_fb_info *minfo, u_int32_t fgx,
- 			/* Tell... well, why bother... */
- 			while (height--) {
- 				size_t i;
--				
-+
- 				for (i = 0; i < step; i += 4) {
- 					/* Hope that there are at least three readable bytes beyond the end of bitmap */
- 					fb_writel(get_unaligned((u_int32_t*)(chardata + i)),mmio.vaddr);
-diff --git a/drivers/video/fbdev/matrox/matroxfb_base.h b/drivers/video/fbdev/matrox/matroxfb_base.h
-index 958be6805f87..c93c69bbcd57 100644
---- a/drivers/video/fbdev/matrox/matroxfb_base.h
-+++ b/drivers/video/fbdev/matrox/matroxfb_base.h
-@@ -301,9 +301,9 @@ struct matrox_altout {
- 	int		(*verifymode)(void* altout_dev, u_int32_t mode);
- 	int		(*getqueryctrl)(void* altout_dev,
- 					struct v4l2_queryctrl* ctrl);
--	int		(*getctrl)(void* altout_dev, 
-+	int		(*getctrl)(void *altout_dev,
- 				   struct v4l2_control* ctrl);
--	int		(*setctrl)(void* altout_dev, 
-+	int		(*setctrl)(void *altout_dev,
- 				   struct v4l2_control* ctrl);
- };
+ #include "core/fb_draw.h"
+ #include "wmt_ge_rops.h"
  
 -- 
 2.40.1
