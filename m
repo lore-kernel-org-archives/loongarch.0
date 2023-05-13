@@ -1,188 +1,127 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2024.outbound.protection.outlook.com [40.92.18.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6FF7F0
-	for <loongarch@lists.linux.dev>; Fri, 12 May 2023 11:45:25 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 79447221A9;
-	Fri, 12 May 2023 11:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1683891923; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tXKUOtR/PIk89HqE7MgG8GxQHnfyvtKDvaIsJ4SR4K4=;
-	b=waIBtqdaFPdJRAOeODnnJqOGhRE4T811/kUYD0x0fR7PbJ7Y+7Iy9KhCcvOFra39frB0Xe
-	gCK2KglZlA3kvVbdSXoxpQtjYMnh/hMD3eln7r4iQ4kSgT64lEl/mLlCcGMOL6DCQhOO9o
-	QGvaCxBQzGe3H8g4l6QGPVM7UPooUew=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1683891923;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tXKUOtR/PIk89HqE7MgG8GxQHnfyvtKDvaIsJ4SR4K4=;
-	b=YOfvR57P0MXGkU7butoyJCOSKO/XEs4hWBDCAffYPCrU5aQIYFSjZ5GKbxdp4bnQmKKiIS
-	bhcl2rT9h6O/G1BA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F297E13499;
-	Fri, 12 May 2023 11:45:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id dyNVOtImXmRkCQAAMHmgww
-	(envelope-from <tzimmermann@suse.de>); Fri, 12 May 2023 11:45:22 +0000
-Message-ID: <ab63aa0b-0db8-dfa0-cb63-2f16a66fe2f2@suse.de>
-Date: Fri, 12 May 2023 13:45:22 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D29822603
+	for <loongarch@lists.linux.dev>; Sat, 13 May 2023 14:46:17 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QkSA6j/X4Z+rp24NmW72NGi5CH0eNWnUiOQRXfECmTNrj1yqIQnW+ACl6Q2cccIH4QwjCy0VK1Nb46lJeDXHKdA4SISFa6QoTDzpbsJ8rcJWDlRzxfAGCDaP38cphz6YwjImPPoMa7Vus6tohLsQ6efAb/P/q/lQf92qIfKAHNa7EbvQ8mPB+M8vowYEa8xVWxjQ8om7HVfViYMYU1+FdxlHg5XL+X0ADpPmLKA9ypC1nbnxzrZ2pS0MNZYRokZi0frGIycXAx+7tGvCDbLcshs9gEHPWeT9gTPCLuHcbUgTfVAbk5+GP3dx+dISQGBWlPHJew7OiOxL9XqmTeGBiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QqjfHygK+RUtnCXnLMttbbKxL5rcOWChexL8SNKSU8Q=;
+ b=cheI0c+d7UaLAJOr54p/n2zgdxZIFBVO9KQtKNphW0UQXUBcNry4RJ9Yaf2UTCSvW+zSsjMLbriq0kGrmIyQp/8fS9I9clKqGk4nsagv0ZPUJ+m4CqV0bp5UGC9MYob6R5JF6S+tJOsw03yCtEOi4cw6dVZgBcc4IXyiR64h//eb+j/dfQyH4jn+f+LxDKkiLr7FNK8A+YIgJv/OHy54iJhglTNudLUKSQDeARmCHOGFhj5lx/MSejxNYuoIfncM4cNEueRL/Ap0bkcC+pPbHrYMqJ1GQ8Eh0rUeXsuZaaxDg6FUJR6HGO2o75HXXfXAkUxdkYM2tZMMF+mFo3ziig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QqjfHygK+RUtnCXnLMttbbKxL5rcOWChexL8SNKSU8Q=;
+ b=qCl3CQpSaEl2pCRTSG7RK778B3cgSeQR4qjyeA/FS8GCDYbSesaM09Dqi+1pQWmuNss09DPLkqek5cnFG5l1zsjFFackWpOTimrl8ulGrXBeAVOpGSXrxwmMhWyp757z1x+nPnga5KGvMECXSFXwKgAyPy85yW5umaibIdoW+XSFRnDc3kIfz9o/vHauALW32ITHZ97wQAJkYQD9ihf8XrotafUI2UFIJCwXTPbKJdUU83A7CbyE4PSj9dBg+XjxzIaRywE6dZGOf5JjVva/IoS7+d760fq8E7T2sCUwn2NGGVognHqViMC4m3RgmMZabNa10QFQMO9ikMnkw638Mw==
+Received: from CY5PR12MB6455.namprd12.prod.outlook.com (2603:10b6:930:35::10)
+ by PH7PR12MB6657.namprd12.prod.outlook.com (2603:10b6:510:1fe::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.24; Sat, 13 May
+ 2023 14:46:15 +0000
+Received: from CY5PR12MB6455.namprd12.prod.outlook.com
+ ([fe80::eece:c2b8:c7ea:a6]) by CY5PR12MB6455.namprd12.prod.outlook.com
+ ([fe80::eece:c2b8:c7ea:a6%6]) with mapi id 15.20.6340.031; Sat, 13 May 2023
+ 14:46:15 +0000
+From: mirimmad@outlook.com
+To:
+Cc: skhan@linuxfoundation.org,
+	Immad Mir <mirimmad17@gmail.com>,
+	Ivan Orlov <ivan.orlov0322@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] loongarch: fix debugfs_create_dir error checking
+Date: Sat, 13 May 2023 20:15:29 +0530
+Message-ID:
+ <CY5PR12MB64557005ECDAFFC89FC8C7B3C67A9@CY5PR12MB6455.namprd12.prod.outlook.com>
+X-Mailer: git-send-email 2.40.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [FZBOP/zqqhSB1eBn8dYsU2ozcboGbYjfmQEuDZGFUQeWAiWgViJSue2A2ENZVpey]
+X-ClientProxiedBy: BM1P287CA0014.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:b00:40::29) To CY5PR12MB6455.namprd12.prod.outlook.com
+ (2603:10b6:930:35::10)
+X-Microsoft-Original-Message-ID:
+ <20230513144530.140410-1-mirimmad@outlook.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [PATCH v7 1/7] fbdev/hitfb: Cast I/O offset to address
-Content-Language: en-US
-To: David Laight <David.Laight@ACULAB.COM>, "deller@gmx.de" <deller@gmx.de>,
- "geert@linux-m68k.org" <geert@linux-m68k.org>,
- "javierm@redhat.com" <javierm@redhat.com>, "daniel@ffwll.ch"
- <daniel@ffwll.ch>, "vgupta@kernel.org" <vgupta@kernel.org>,
- "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
- "kernel@xen0n.name" <kernel@xen0n.name>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "James.Bottomley@HansenPartnership.com"
- <James.Bottomley@HansenPartnership.com>, "arnd@arndb.de" <arnd@arndb.de>,
- "sam@ravnborg.org" <sam@ravnborg.org>,
- "suijingfeng@loongson.cn" <suijingfeng@loongson.cn>
-Cc: "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
- "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
- kernel test robot <lkp@intel.com>,
- "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
- "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, Artur Rojek <contact@artur-rojek.eu>
-References: <20230512102444.5438-1-tzimmermann@suse.de>
- <20230512102444.5438-2-tzimmermann@suse.de>
- <c25758dd7b4a4563b0d33c751da8cf6d@AcuMS.aculab.com>
-From: Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <c25758dd7b4a4563b0d33c751da8cf6d@AcuMS.aculab.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------JM5nB8sgx4nqVg9dYq6bHUNg"
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6455:EE_|PH7PR12MB6657:EE_
+X-MS-Office365-Filtering-Correlation-Id: e08031b5-e9dc-4061-b4d5-08db53c0cd34
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	QPCkCNus5tkYGAJKRayxPM77KPQ9B2hKUMLDubZqMtj8tVWF/90hGa4vfNP+p3EAlkrz8FN8RuNhJkxSlJTwbe6bml4l9d0DaNakrxOYPA4YQsKbdDCZRbbIfMMnoxB3v54ggY3xVrt5XL6tutgOnOrAz1qx40X7VOvHbKPzHMlATbfVLSpmghjT1P+ijGHohvnOG7aIjKtoWmZZzWywzLNdltEtsdUGXwiC4UVCSAPp7dXIlvLdUSHzOomCyo633lTsRekslp6oARzhNCihqeQIHJJ21BudVWka9uG5lzSCDCbAlQgZlwy1RkOTR/Yg4uJWEVXpapOarEfeaXdpjBdFRNrkECnMylJfjJgBcVUaqTYT7tCb7nKaqmaVX52d33NBkhG1PLZpQv5ZGL40cvYuIFLSn4P2gTXdl1lG2heTVLdABShk6DkuqJQEfHEBmfvQEOt7U9d7mSxOAXIZw2z5g0R2KE1mCGoAgfddKmRspaJXH8lphLmGrQRoy1AE4Wo2SimY8MV6eWuD9x6IbT2davRyVpuzL0tTTAiWVdQpDjT+EBziRel/gsCoskBu
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?lWahLwpxr0foIbJ3eSnDMRgKentKpF76eDj2iAMSjFw79VUVwSIycHw/kPdm?=
+ =?us-ascii?Q?7D02r3hAfXYOzgkfRxz2LHQUnyS46nNNqHQbjiJ8VHecKH00rPqDcj665eps?=
+ =?us-ascii?Q?bfRtBrbtH126CcuZgR/Y+/DhvBH1OHGgZrvtgcYXf0oeezNL867MGnUkASjl?=
+ =?us-ascii?Q?e1571aXZmS6yRD/NB9Y4EaJzXl+Sr15Kv4w+OlwjWKtTDYElC8cze8w9UYxx?=
+ =?us-ascii?Q?gXEjoy+O1q4LILrYQJvrzc02mjFAJWF82QSGgS9Qe0mScH8bDMa5gEOUg0yR?=
+ =?us-ascii?Q?Tmclmt0MNNqLkJfNpO52YotNF+hYm142745CHC8R8yBXeDyxHEa8xZ1rjDjj?=
+ =?us-ascii?Q?KugFLTPIG4aHr6x3h6PKcvWkKyIg1570DrQgMGrEk3CPPV/OBpoXM3UNlDm2?=
+ =?us-ascii?Q?VK4t7IdBrcb0LbYmT1C2yFhmUraFzd7rJK4dQK8RYdslKT7PNTrFoRZHbPiy?=
+ =?us-ascii?Q?tVAMr+d+EcLxStekxAtP69ywqVd2vood07uTcieuDtKLNwD0GyoycNdnsVXe?=
+ =?us-ascii?Q?oELaa4hPhsqQGRiy9tV7h2gd7JKzQyEclVazytLLItNXM6NLznSACl4Wf86l?=
+ =?us-ascii?Q?aUc+2SPQCQDV7RwvB7u4t0ugBrkWwPQh3/1MR89CmaKE5JZiyHQC1dwffiJt?=
+ =?us-ascii?Q?9txHPhsYzAZ6uZIEXn6Z/g06uVXNob1zleNE9G15iTQzLr0dMvwPdQjTZ/+4?=
+ =?us-ascii?Q?8BDeRiWjrQ3C+v6Dc3r8ksvUvTYCCklFVRcbUAJSgHPHz/IZ/q/pU7nynvSk?=
+ =?us-ascii?Q?qsnZj295nofXEPZ2YucS8PO7P1F//8FCPnZxNOvPVt81jYI+7OcugIlLCtyb?=
+ =?us-ascii?Q?3CGmf/AUV3kgZBPYQypkb4tgKcm+ar88TWYpiTzroJy/t73nyPRCzeekUO1a?=
+ =?us-ascii?Q?tcGl57Orcwgy94lmtE2nuKodVdmH1pCZfj1BGNxPHgsNBubd4yFOtAm8ZcFY?=
+ =?us-ascii?Q?YwKdsvzu6EOOdzWhpTjxXB1qeuMdMCkdznQdCTyNrnfKr8F5pFoljXZqyK0P?=
+ =?us-ascii?Q?BggisAJ6K15Tbiuq/PEIECnwcfEV5SaxOe2gOTCrUVWZ2EDo0saLwpoj+wXQ?=
+ =?us-ascii?Q?ANy++3u75hHgLFCDEZLF1C2frHBFCyEnYBXTd9wctG8+EVmmIV4fro/L07j5?=
+ =?us-ascii?Q?1luP7lt1CgrQX+0fb8FscJgfn9e2SrhgXd5ZzWRfBC0NgHNkrcHMQ4QDyruH?=
+ =?us-ascii?Q?JL46cbSaQgdIxk9y8nREmVM+JLzTr9Akp9LeNfU8nKUWcPKxnoKKTTnSRJEk?=
+ =?us-ascii?Q?deKKbAr8TE46V6o9+yVCq/q7sL6BQwR82W8e4GLkpg=3D=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e08031b5-e9dc-4061-b4d5-08db53c0cd34
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6455.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2023 14:46:15.1546
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6657
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------JM5nB8sgx4nqVg9dYq6bHUNg
-Content-Type: multipart/mixed; boundary="------------W0dMN7bLCE0vgvZ6rIE6p3Tq";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: David Laight <David.Laight@ACULAB.COM>, "deller@gmx.de" <deller@gmx.de>,
- "geert@linux-m68k.org" <geert@linux-m68k.org>,
- "javierm@redhat.com" <javierm@redhat.com>, "daniel@ffwll.ch"
- <daniel@ffwll.ch>, "vgupta@kernel.org" <vgupta@kernel.org>,
- "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
- "kernel@xen0n.name" <kernel@xen0n.name>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "James.Bottomley@HansenPartnership.com"
- <James.Bottomley@HansenPartnership.com>, "arnd@arndb.de" <arnd@arndb.de>,
- "sam@ravnborg.org" <sam@ravnborg.org>,
- "suijingfeng@loongson.cn" <suijingfeng@loongson.cn>
-Cc: "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
- "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
- kernel test robot <lkp@intel.com>,
- "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
- "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, Artur Rojek <contact@artur-rojek.eu>
-Message-ID: <ab63aa0b-0db8-dfa0-cb63-2f16a66fe2f2@suse.de>
-Subject: Re: [PATCH v7 1/7] fbdev/hitfb: Cast I/O offset to address
-References: <20230512102444.5438-1-tzimmermann@suse.de>
- <20230512102444.5438-2-tzimmermann@suse.de>
- <c25758dd7b4a4563b0d33c751da8cf6d@AcuMS.aculab.com>
-In-Reply-To: <c25758dd7b4a4563b0d33c751da8cf6d@AcuMS.aculab.com>
+From: Immad Mir <mirimmad17@gmail.com>
 
---------------W0dMN7bLCE0vgvZ6rIE6p3Tq
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+The debugfs_create_dir returns ERR_PTR incase of an error and the
+correct way of checking it by using the IS_ERR inline function, and
+not the simple null comparision. This patch fixes this.
 
-SGkNCg0KQW0gMTIuMDUuMjMgdW0gMTM6MTYgc2NocmllYiBEYXZpZCBMYWlnaHQ6DQo+IEZy
-b206IFRob21hcyBaaW1tZXJtYW5uDQo+PiBTZW50OiAxMiBNYXkgMjAyMyAxMToyNQ0KPj4N
-Cj4+IENhc3QgSS9PIG9mZnNldHMgdG8gcG9pbnRlcnMgdG8gdXNlIHRoZW0gd2l0aCBJL08g
-ZnVuY3Rpb25zLiBUaGUgSS9PDQo+PiBmdW5jdGlvbnMgZXhwZWN0IHBvaW50ZXJzIG9mIHR5
-cGUgJ3ZvbGF0aWxlIHZvaWQgX19pb21lbSAqJywgYnV0IHRoZQ0KPj4gb2Zmc2V0cyBhcmUg
-cGxhaW4gaW50ZWdlcnMuIEJ1aWxkIHdhcm5pbmdzIGFyZQ0KPj4NCj4+ICAgIC4uL2RyaXZl
-cnMvdmlkZW8vZmJkZXYvaGl0ZmIuYzogSW4gZnVuY3Rpb24gJ2hpdGZiX2FjY2VsX3dhaXQn
-Og0KPj4gICAgLi4vYXJjaC94ODYvaW5jbHVkZS9hc20vaGQ2NDQ2MS5oOjE4OjMzOiB3YXJu
-aW5nOiBwYXNzaW5nIGFyZ3VtZW50IDEgb2YgJ2ZiX3JlYWR3JyBtYWtlcyBwb2ludGVyDQo+
-PiBmcm9tIGludGVnZXIgd2l0aG91dCBhIGNhc3QgWy1XaW50LWNvbnZlcnNpb25dDQo+PiAg
-ICAgMTggfCAjZGVmaW5lIEhENjQ0NjFfSU9fT0ZGU0VUKHgpICAgIChIRDY0NDYxX0lPQkFT
-RSArICh4KSkNCj4+ICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-Xn5+fn5+fn5+fn5+fn5+fn5+fn5+fg0KPiAuLi4NCj4+ICAgICA1MiB8IHN0YXRpYyBpbmxp
-bmUgdTE2IGZiX3JlYWR3KGNvbnN0IHZvbGF0aWxlIHZvaWQgX19pb21lbSAqYWRkcikNCj4+
-ICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+
-fn5+fn5+fn5+fn5+Xn5+fg0KPj4NCj4+IFRoaXMgcGF0Y2ggb25seSBmaXhlcyB0aGUgYnVp
-bGQgd2FybmluZ3MuIEl0J3Mgbm90IGNsZWFyIGlmIHRoZSBJL08NCj4+IG9mZnNldHMgY2Fu
-IGxlZ2FsbHkgYmUgcGFzc2VkIHRvIHRoZSBJL08gaGVscGVycy4gSXQgd2FzIGFwcGFyZW50
-bHkNCj4+IGJyb2tlbiBpbiAyMDA3IHdoZW4gY3VzdG9tIGludygpL291dHcoKSBoZWxwZXJz
-IGdvdCByZW1vdmVkIGJ5DQo+PiBjb21taXQgMzRhNzgwYTBhZmViICgic2g6IGhwNnh4IHBh
-dGFfcGxhdGZvcm0gc3VwcG9ydC4iKS4gRml4aW5nIHRoZQ0KPj4gZHJpdmVyIHdvdWxkIHJl
-cXVpcmUgc2V0dGluZyB0aGUgSS9PIGJhc2UgYWRkcmVzcy4NCj4gDQo+IERpZCB5b3UgdHJ5
-IGNoYW5naW5nIHRoZSBkZWZpbml0aW9uIG9mIEhENjQ0NjFfSU9CQVNFIHRvIGluY2x1ZGUN
-Cj4gYSAodm9sYXRpbGUgdm9pZCBfX2lvbWVtICopIGNhc3Q/DQoNCkkgdGhvdWdodCBhYm91
-dCBpdCwgYnV0IGRpZG4ndCB0cnkgaXQuIEkgZGlkbid0IHdhbnQgYmVuZCB0aGUgbWVhbmlu
-ZyBvZiANCk9GRlNFVCBhbmQgSU9CQVNFIHRvbyBtdWNoLiBUaGV5IHNvdW5kIGxpa2UgaW50
-ZWdlciBjb25zdGFudHMgdG8gbWUuDQoNCj4gQSBsb3QgbGVzcyBjaHVybi4uLg0KPiANCj4g
-SSdtIGd1ZXNzaW5nIHRoYXQgJ3NoJyBkZW9zbid0IGhhdmUgaW4vb3V0IGluc3RydWN0aW9u
-cyBzbyB0aGlzDQo+IGlzIHNvbWV0aGluZyB0aGF0IGlzIGFsd2F5cyBtYXBwZWQgYXQgYSBm
-aXhlZCBrZXJuZWwgdmlydHVhbCBhZGRyZXNzPw0KDQpObyBpZGVhLiBJIGNhbm5vdCB0cnkg
-dGhlIGRyaXZlciBhbmQgd2FzIG9ubHkgYWJsZSB0byBidWlsZCBpdCBieSANCmhhY2tpbmcg
-dXAgc29tZXRoaW5nIHRoYXQgbWFrZXMgQ09NUElMRV9URVNUIHdvcmsuDQoNClRoZSBjdXJy
-ZW50IHBhdGNoIHNlZW1lZCBsaWtlIHRoZSBzYWZlc3QgYmV0LCBldmVuIHdpdGggdGhlIGNo
-dXJuLg0KDQpCZXN0IHJlZ2FyZHMNClRob21hcw0KDQo+IA0KPiAJRGF2aWQNCj4gDQo+IC0N
-Cj4gUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZh
-cm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQo+IFJlZ2lzdHJhdGlvbiBObzogMTM5
-NzM4NiAoV2FsZXMpDQo+IA0KDQotLSANClRob21hcyBaaW1tZXJtYW5uDQpHcmFwaGljcyBE
-cml2ZXIgRGV2ZWxvcGVyDQpTVVNFIFNvZnR3YXJlIFNvbHV0aW9ucyBHZXJtYW55IEdtYkgN
-CkZyYW5rZW5zdHJhc3NlIDE0NiwgOTA0NjEgTnVlcm5iZXJnLCBHZXJtYW55DQpHRjogSXZv
-IFRvdGV2LCBBbmRyZXcgTXllcnMsIEFuZHJldyBNY0RvbmFsZCwgQm91ZGllbiBNb2VybWFu
-DQpIUkIgMzY4MDkgKEFHIE51ZXJuYmVyZykNCg==
+Suggested-By: Ivan Orlov <ivan.orlov0322@gmail.com>
+Signed-off-by: Immad Mir <mirimmad17@gmail.com>
+---
+ arch/loongarch/kernel/unaligned.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---------------W0dMN7bLCE0vgvZ6rIE6p3Tq--
+diff --git a/arch/loongarch/kernel/unaligned.c b/arch/loongarch/kernel/unaligned.c
+index bdff825d2..be2a5bdc5 100644
+--- a/arch/loongarch/kernel/unaligned.c
++++ b/arch/loongarch/kernel/unaligned.c
+@@ -485,7 +485,7 @@ static int __init debugfs_unaligned(void)
+ 	struct dentry *d;
 
---------------JM5nB8sgx4nqVg9dYq6bHUNg
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+ 	d = debugfs_create_dir("loongarch", NULL);
+-	if (!d)
++	if (IS_ERR(d))
+ 		return -ENOMEM;
 
------BEGIN PGP SIGNATURE-----
+ 	debugfs_create_u32("unaligned_instructions_user",
+--
+2.40.0
 
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmReJtIFAwAAAAAACgkQlh/E3EQov+Cg
-KBAAwMnnYbZmaroQcFpzQ9rorvEdj50+6Ae0gk1HnRN5cp8HoaN/apdvOmnvlN50RTGFEBUG8lV2
-SAPnVNx5ud8av/a5pRKfuX4zBDpOW2v+oQAL7ZQBf6BzWv6Sv0twB9aCMEUSW1X9Zvua3y+Buod/
-DPVplFTrGvCp8qHEc0zMrgOfNSYtTHOv1Cjwl81wW0pzx2r+1lPxyVXddQGZKpZgsZeAif/a4/ia
-4qo5OuosEL9coiQ3BQ8fmYvguybgZJQ1ZRqLRaXNmi7kw6Ydt4v4j0u1LTJWuTY5Z5U+Rhd5/knX
-654E+P6fZb89OC1VUopjqk2+NpT13xlZArniWG/JwApwQcj3Y42YABUMAGfVkRdb90zWvkwreZgZ
-OX6kkOaLP+AnL8TSBvy9G0oOQaKcafQZI+WiwDqdXCwZ25J+i9bFOvNwaydt+VvEY0deCJs3HCmH
-IVSrhELOuxDrXcMXWKNO/NUNW94LUiXEZpUwxeczy/StApXcge4KvmJAM8fdihHFOIY0QXKnKPlu
-St4p/ajQMo3gmt0dKAh4hfV6f0WZ0T+IB6JCI7HgSawxGOngg4Vl0mvW1jRE4Ry3LitYJydtTH37
-eYXAqIPqBAMiD4CfOUdGSSGuISnTR5jET1pNgHogc24rooXpOnGN/fy27iYNIbxbbnLnS/P5p0h0
-yYA=
-=F4EL
------END PGP SIGNATURE-----
-
---------------JM5nB8sgx4nqVg9dYq6bHUNg--
